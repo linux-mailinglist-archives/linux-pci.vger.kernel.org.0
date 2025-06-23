@@ -1,234 +1,199 @@
-Return-Path: <linux-pci+bounces-30333-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30334-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98B07AE3367
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 03:47:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CF5FAE336B
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 03:54:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A2B916EA70
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 01:47:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66A323AF09F
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jun 2025 01:53:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1CD84AEE0;
-	Mon, 23 Jun 2025 01:47:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B02813B298;
+	Mon, 23 Jun 2025 01:54:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovBpB65l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L42STwlM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75AD249EB;
-	Mon, 23 Jun 2025 01:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B16C120;
+	Mon, 23 Jun 2025 01:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750643225; cv=none; b=SzZTNEO6/DTuI+tHS09haUKpFXFMLxTQlNfNyu16++ntZ9E277KUrBS+iHBM14DoNSN0nJrqDXlCNQODvcMri+qng5Y1UrheUXrwUb6M/mgJsBofbKW6n4/ZThKYtZXL/L1bO4keOHmpRhJA6RL2rLUwLUG8APBVe09Rdg3KUyM=
+	t=1750643653; cv=none; b=lGxvh6xSad3nMYsOpKSV4ES0AwksCllTEvyx+SlPiznlu9xBRP4j7dqVfa8dC6B9gQHSOY1DAfJtfGKdwiz+/jg0x5rAJGFCWLjEhWy95Dc2e1TjVVJ8PW5tnONCwLoAuaQ7cO+9zXicamiSDyVrQQViJgaRwtpSUTkIbhMFwTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750643225; c=relaxed/simple;
-	bh=9K/JNnFHU/bRcV1bPmo9xcwEo+QxFRz0+qWwMxVyvcU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pIZKLxC3LqeIT0xhdK1BPMVsURnoIXq/ZsVHlQNPhtvfbXb7KV+Iux+ONDbFEPu0ZhAN1OSXbyZ8mL1H+vjnhhyKmQA+x1EoSY7Z8x0Fi0EjePst7DxE5kSA/XJiIDUpd7fbUhf19K754sp6/cfIhRSyQpG5+sMS10Jq3mgBi98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovBpB65l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91A58C4CEE3;
-	Mon, 23 Jun 2025 01:47:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750643225;
-	bh=9K/JNnFHU/bRcV1bPmo9xcwEo+QxFRz0+qWwMxVyvcU=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=ovBpB65lGd6q18BTSYHYs0FfMkaowoGWczDuAuAxGgXglrSWf2dz9sdcNWj838Zk1
-	 qaKfRARrFZghBxYGqQplUBndapEGkjfcgIC6NG/IBl7QZ5ZNS0Px3cEnJguyyTmPov
-	 cImR4g/ucjhSBeWeVlcjvh2XspwGfpTgMXifbMtk3gltSvwRGXG1sNbjg3eQBe1zQg
-	 2KE+Chw3Xhx4UudmZs9+FO303fh6hi6SzbZkropsuqShZrEQOBonhtk+r9g+emD7ad
-	 dS9A3HVJs8Jaxo/qd6nGxVYKAMGT8oMnUR62BkxitkP6he9sYM05re8ivNJ5hzZHJU
-	 l+FU7hbDsUepw==
-Message-ID: <c5950427-8a65-4659-96d1-5bb013955090@kernel.org>
-Date: Sun, 22 Jun 2025 20:47:03 -0500
+	s=arc-20240116; t=1750643653; c=relaxed/simple;
+	bh=wWJEX0DVPBCbisuNFB9aAnHyDRmsnvdwYFxdfTU994Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PgRP7LnpUnQjgNHjgydK71+IqtPI2pb2R5qEj3EY2WdNNxhPYtmPpQ4uEvNkP8LQE3JhizSH8ooSQz8r4AYvj2C6dzAGVlU8CmTlIObSv18wRjDaOtrhXjJXLLIhkpNynI9WNBDjk2QEVjBT8AbXItBmzWSpUB8bU3Bn5auGTLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L42STwlM; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a43972dcd7so47054841cf.3;
+        Sun, 22 Jun 2025 18:54:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750643650; x=1751248450; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bO1dHf2WX4GfP4yOH2iZsshs6S9Z5o1yqjaiqASpRX4=;
+        b=L42STwlMrmz64AA9SwpskqGLEqg72atrnPBh3kYoVf/LzeC1nEBA8zpCQSJkudiJFZ
+         VVHZwlHmTOg2suzr0YV3CdlGUn7RMcszyFvXqoOfmYP742lyy9jFmLjlPR3XGUlExReV
+         hrMo/9KoHzE1+NR32hsTSzh9QqRh39WgdvyIL3cHV/nZfq76AG+0M2rv7rXF7SWP9cqu
+         IfMxsyZv+T5f6G1AIOKa/8VKrp1s+HT/6K4de9yQEIOIOKKHYDuIg6X/BqAh9foTsDYU
+         fkkBayXh2YSYIvK5eD7f8I+YkIS9La3QfZvh3mrJop1K0AjtH/d13iguzDYoSqbaaY/w
+         i1HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750643650; x=1751248450;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bO1dHf2WX4GfP4yOH2iZsshs6S9Z5o1yqjaiqASpRX4=;
+        b=buSpELPOX9aKFw7cX4YTHLYTi5FW7KaoXC+xUd6z92VxyhpVnDqseT14jhF8OYgSvy
+         wmd0143FH6znpD3jC5Ht8vpNh2ibSXkvKEFCY6F6p1jqZZ4njM8RwF+D8GFTumjeRebQ
+         sHcMEEUx8afsb5C5oBApF2etWoDYXXGnpyvv8Lw+fR5ng6evAh/8s5/6rx3wBaMJRb6q
+         4VZFeljUnrfNwxaliHjjuWGppSg/1z4akm6p0jU2FuOr3sIf/pIl0Fi/V72qlXbXW6by
+         bwlFAfDmkgWGSrvSPZqrFJdxzeGTXML88vaa6oSX8frGxeK8wh0X0j528xqowK3XeXO/
+         KaaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUadLXzFbC/EkfcXs+oZmLFnzTE1DkFP/wMXqUVxv3HEgewwNqAYDfVTafCvzB93uZsMD7w28HGOniJdb3FSpA=@vger.kernel.org, AJvYcCVbKctc0DLM75Nv67/rSPdmGyGhtFUCCff/cYCVTfFqcCeZqKhWCy4en1CtMdV0dQKWIS3QOKROjCaI@vger.kernel.org, AJvYcCVgz1mLXBs5vEIUbYxdRkofKOoL5XLrtM2M22raDaX+1yrkAhw7QiUAVcGYLpJEPScmYaTZb22ZIRTl+ls=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+objLJpQPINaqFm+wcYLrWgafCSKJCJF4zMhEHDqDg6N3OovO
+	btgoxiZN+3GyFdf90aFS+j5t+3BDC2GNxazFBl/so+kELrAzxWhFjhkFqalnbA==
+X-Gm-Gg: ASbGncuuf62YTNI1XZxltZWE5CJYoAdGhZgFSSjp9+w3GxfZvDy9RSjKai7Tw7COtY2
+	l7TmwuLx/NxmaWOUt3faRfWj9yUMI53SJrIpGkIooVriarzLCu6v9L5mMOx8MJpwwca/HrdfNZg
+	9KcRgfsklj1APyq3FjVwgettxpDDFi/Lc/mQuxuMFM9QBiuGdJWVcmfwYEwNbr2HkT/2W6WhKu9
+	HpPmQnFmjhIyNx44pHJBUPb3i9kL9tQ8Bccgd3chYWAouQZmr/Ua6hVnNdCkDCbvepN4XzWyNpD
+	kYuxswfascTcSFqn80uic7sZu38wEHrTtT/QzAUNtJUenJLdDXLDIyHZiPQcPkwLi6IvCs/LUtp
+	VVzoqoLl2dc0RTvGOjijf12mFyNW7n1xtYOHsrz1Sh6r8imUfkXMHyN4ducK6rhQ=
+X-Google-Smtp-Source: AGHT+IE8wfhWXG/jzR6FY9KxhXUECpZuE8WMeIi7fiM/52hbCWiBgXWGj1BgvzH2vxMh8d5tCA1q8g==
+X-Received: by 2002:a05:622a:1b01:b0:4a6:fa5b:5438 with SMTP id d75a77b69052e-4a77a1a3e6bmr177679461cf.4.1750643650439;
+        Sun, 22 Jun 2025 18:54:10 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a77a089ccesm33375951cf.78.2025.06.22.18.54.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Jun 2025 18:54:09 -0700 (PDT)
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 361DE1200043;
+	Sun, 22 Jun 2025 21:54:09 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Sun, 22 Jun 2025 21:54:09 -0400
+X-ME-Sender: <xms:wbNYaPVoAYbswaNolrMUHoHVkKP0Y3ybvob9Zh8eNetcdskYE6XJNw>
+    <xme:wbNYaHnqt9Lhl6Et3D1K14nmRjCo0sf0GuYsaPmQX-X8AFE5R4TxAsaBsJcaM42qc
+    lz5OWAmvj8FEoKr1g>
+X-ME-Received: <xmr:wbNYaLbj4wFpqu6neNHxRrx_sio7wEpwTyD35fr5nbqj_ZN8sUJF5l-iKw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdduheejhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedv
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
+    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
+    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
+    drnhgrmhgvpdhnsggprhgtphhtthhopedvtddpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhheslh
+    hinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehg
+    rghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprh
+    hothhonhhmrghilhdrtghomhdprhgtphhtthhopehlohhsshhinheskhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:wbNYaKXkSJEsRkn9cXrm9uUGN1xd6V_2O8knHShPzXmh1y6j16hbIg>
+    <xmx:wbNYaJlc1XM3lFszL52z3VW7ibxLf7oxCiKuMygeC72iDemZnLn5Mg>
+    <xmx:wbNYaHd__I6ZPW_fTf6SnC6Sq35f_9R0BSxT6s0AsMXP3Fq7OVAI6Q>
+    <xmx:wbNYaDHBWOIMprnjPBtz5kuweQYZWxoVVCxrr2J-_L-dNyPywYgthQ>
+    <xmx:wbNYaLkUOb0DiDgzDTtEBsmuvP6ZGqhfPrdrcinRx1LR24EJXu14WaB->
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 22 Jun 2025 21:54:08 -0400 (EDT)
+Date: Sun, 22 Jun 2025 18:54:07 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] rust: devres: get rid of Devres' inner Arc
+Message-ID: <aFizv7suXTADJU3f@Mac.home>
+References: <20250622164050.20358-1-dakr@kernel.org>
+ <20250622164050.20358-4-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] PCI: Fix runtime PM usage count underflow on
- device unplug
-From: Mario Limonciello <superm1@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250620025535.3425049-1-superm1@kernel.org>
- <20250620025535.3425049-3-superm1@kernel.org> <aFcCaw_IZr-JuUYY@wunner.de>
- <8d4d98b6-fec5-466f-bd2c-059d702c7860@kernel.org>
- <aFeJ83O9PRUrM2Ir@wunner.de>
- <295bf182-7fed-4ffd-93a4-fb5ddf5f1bb4@kernel.org>
-Content-Language: en-US
-In-Reply-To: <295bf182-7fed-4ffd-93a4-fb5ddf5f1bb4@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250622164050.20358-4-dakr@kernel.org>
 
-
-
-On 6/22/25 1:39 PM, Mario Limonciello wrote:
-> On 6/21/2025 11:43 PM, Lukas Wunner wrote:
->> On Sat, Jun 21, 2025 at 02:56:08PM -0500, Mario Limonciello wrote:
->>> On 6/21/25 2:05 PM, Lukas Wunner wrote:
->>>> In the dmesg output attached to...
->>>>
->>>> https://bugzilla.kernel.org/show_bug.cgi?id=220216
->>>>
->>>> ... the device exhibiting the refcount underflow is a PCIe port.
->>>> Are you also seeing this on a PCIe port or is it a different device?
->>>
->>> The device with the underflow is the disconnected PCIe bridge.
->>>
->>> In my case it was this bridge that was downstream.
->>
->> Okay, in both cases the refcount underflow occurs on a PCIe port.
->> So it seems likely the gratuitous refcount decrement is in portdrv.c
->> or one of the port services drivers.
->>
->> Your patch changes the code path for *all* PCI devices.
->> Not just PCIe ports.  Hence it's likely not the right fix.
->>
->> It may fix the issue on this particular PCIe port but
->> I strongly suspect it'll leak a runtime PM ref on all other devices.
->>
+On Sun, Jun 22, 2025 at 06:40:40PM +0200, Danilo Krummrich wrote:
+> So far Devres uses an inner memory allocation and reference count, i.e.
+> an inner Arc, in order to ensure that the devres callback can't run into
+> a use-after-free in case where the Devres object is dropped while the
+> devres callback runs concurrently.
 > 
-> Thanks, I see your point.
+> Instead, use a completion in order to avoid a potential UAF: In
+> Devres::drop(), if we detect that we can't remove the devres action
+> anymore, we wait for the completion that is completed from the devres
+> callback. If, in turn, we were able to successfully remove the devres
+> action, we can just go ahead.
 > 
->>
->>>> So the refcount decrement happens in pcie_portdrv_probe() and
->>>> the refcount increment happens in pcie_portdrv_remove().
->>>> Both times it's conditional on pci_bridge_d3_possible().
->>>> Does that return a different value on probe versus remove?
->>
->> Could you please answer this?
+> This, again, allows us to get rid of the internal Arc, and instead let
+
+I like the idea ;-)
+
+> Devres consume an `impl PinInit<T, E>` in order to return an
+> `impl PinInit<Devres<T>, E>`, which enables us to get away with less
+> memory allocations.
 > 
-> I did this check and yes specifically on this PCIe port with the 
-> underflow the d3 possible lookup returns false during 
-> pcie_portdrv_remove().  It returns true during pcie_portdrv_probe().
+> Additionally, having the resulting explicit synchronization in
+> Devres::drop() prevents potential subtle undesired side effects of the
+> devres callback dropping the final Arc reference asynchronously within
+> the devres callback.
 > 
->>
->>
->>>> Does any of the port service drivers decrement the refcount
->>>> once too often?  I've just looked through pciehp but cannot
->>>> find anything out of the ordinary.
->>>>
->>>> Looking through recent changes, 002bf2fbc00e and bca84a7b93fd
->>>> look like potential candidates causing a regression, but the
->>>> former is for AER (which isn't used in the dmesg attached to
->>>> the bugzilla) and the latter touches suspend on system sleep,
->>>> not runtime suspend.
->>>>
->>>> Can you maybe instrument the pm_runtime_{get,put}*() functions
->>>> with a printk() and/or dump_stack() to see where a gratuitous
->>>> refcount decrement occurs?
->>>
->>> That's exactly what I did to conclude this call was an extra one.
->>>
->>> Here's the drop to 0:
->>
->> The drop to 0 is uninteresting.  You need to record *all*
->> refcount increments/decrements so that we can see where the
->> gratuitous one occurs.  It happens earlier than the drop to 0.
->>
->> However, please first check whether the pci_bridge_d3_possible()
->> return value changes on probe versus remove of the PCIe port
->> in question.  If it does, then that's the root cause and there's
->> no need to look any further.
->>
-> 
-> That was a great hypothesis that's spot on.
-> 
-> Just for posterity this was all the increment/decrement calls that I saw 
-> happen.
-> 
-> pci 0000:02:04.0: inc usage cnt from 0, caller: pci_pm_init+0x84/0x2d0
-> pci 0000:02:04.0: inc usage cnt from 1, caller: 
-> pci_scan_bridge_extend+0x6d/0x710
-> pci 0000:02:04.0: dec usage cnt from 2, caller: 
-> pci_scan_bridge_extend+0x19e/0x710
-> pci 0000:02:04.0: inc usage cnt from 1, caller: 
-> pci_scan_bridge_extend+0x6d/0x710
-> pci 0000:02:04.0: dec usage cnt from 2, caller: 
-> pci_scan_bridge_extend+0x19e/0x710
-> pcieport 0000:02:04.0: inc usage cnt from 1, caller: 
-> local_pci_probe+0x2d/0xa0
-> pcieport 0000:02:04.0: inc usage cnt from 2, caller: 
-> __device_attach+0x9c/0x1b0
-> pcieport 0000:02:04.0: inc usage cnt from 3, caller: 
-> __driver_probe_device+0x5c/0x150
-> pcieport 0000:02:04.0: dec usage cnt from 4, caller: 
-> __driver_probe_device+0x9a/0x150
-> pcieport 0000:02:04.0: dec usage cnt from 3, caller: 
-> __device_attach+0x145/0x1b0
-> pcieport 0000:02:04.0: dec usage cnt from 2, caller: 
-> pcie_portdrv_probe+0x19d/0x6d0
-> pcieport 0000:02:04.0: dec usage cnt from 1, caller: 
-> pcie_portdrv_probe+0x1a5/0x6d0
-> pcieport 0000:02:04.0: inc usage cnt from 0, caller: 
-> device_release_driver_internal+0xac/0x200
-> pcieport 0000:02:04.0: dec usage cnt from 1, caller: 
-> device_release_driver_internal+0x197/0x200
-> pcieport 0000:02:04.0: inc usage cnt from 0, caller: 
-> pci_device_remove+0x2d/0xb0
-> pcieport 0000:02:04.0: dec usage cnt from 0, caller: 
-> pci_device_remove+0x7e/0xb0
-> pcieport 0000:02:04.0: Runtime PM usage cnt underflow!
-> 
-> What's your suggestion on what to actually do here then?
-> 
-> 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+[...]
+> +impl<T> Devres<T> {
+[...]
+>  
+>      #[allow(clippy::missing_safety_doc)]
+>      unsafe extern "C" fn devres_callback(ptr: *mut kernel::ffi::c_void) {
+> -        let ptr = ptr as *mut DevresInner<T>;
+> -        // Devres owned this memory; now that we received the callback, drop the `Arc` and hence the
+> -        // reference.
+> -        // SAFETY: Safe, since we leaked an `Arc` reference to devm_add_action() in
+> -        //         `DevresInner::new`.
+> -        let inner = unsafe { Arc::from_raw(ptr) };
+> +        // SAFETY: In `Self::new` we've passed a valid pointer to `Inner` to `devm_add_action()`,
+> +        // hence `ptr` must be a valid pointer to `Inner`.
 
-Actually I came up with the idea to forbid runtime PM on the service 
-when it doesn't allow d3 at probe which I believe means no need to check 
-again on remove.
+I think you also need to mention that `inner` only remains valid until
+`inner.devm.complete_all()` unblocks `Devres::drop()`, because after
+`Devres::drop()`'s `devm.wait_for_completion()` returns, `inner` may be
+dropped or freed.
 
-This works cleanly for me.  LMK what you think of this.
+Regards,
+Boqun
 
-diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-index e8318fd5f6ed5..a85cd7412cf4d 100644
---- a/drivers/pci/pcie/portdrv.c
-+++ b/drivers/pci/pcie/portdrv.c
-@@ -717,6 +717,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
-                 pm_runtime_mark_last_busy(&dev->dev);
-                 pm_runtime_put_autosuspend(&dev->dev);
-                 pm_runtime_allow(&dev->dev);
-+       } else {
-+               pm_runtime_forbid(&dev->dev);
-         }
-
-         return 0;
-@@ -724,11 +726,9 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
-
-  static void pcie_portdrv_remove(struct pci_dev *dev)
-  {
--       if (pci_bridge_d3_possible(dev)) {
--               pm_runtime_forbid(&dev->dev);
--               pm_runtime_get_noresume(&dev->dev);
--               pm_runtime_dont_use_autosuspend(&dev->dev);
--       }
-+       pm_runtime_forbid(&dev->dev);
-+       pm_runtime_get_noresume(&dev->dev);
-+       pm_runtime_dont_use_autosuspend(&dev->dev);
-
-         pcie_port_device_remove(dev);
-
-@@ -737,11 +737,9 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
-
-  static void pcie_portdrv_shutdown(struct pci_dev *dev)
-  {
--       if (pci_bridge_d3_possible(dev)) {
--               pm_runtime_forbid(&dev->dev);
--               pm_runtime_get_noresume(&dev->dev);
--               pm_runtime_dont_use_autosuspend(&dev->dev);
--       }
-+       pm_runtime_forbid(&dev->dev);
-+       pm_runtime_get_noresume(&dev->dev);
-+       pm_runtime_dont_use_autosuspend(&dev->dev);
-
-         pcie_port_device_remove(dev);
-  }
+> +        let inner = unsafe { &*ptr.cast::<Inner<T>>() };
+>  
+>          if !inner.data.revoke() {
+>              // If `revoke()` returns false, it means that `Devres::drop` already started revoking
+> -            // `inner.data` for us. Hence we have to wait until `Devres::drop()` signals that it
+> -            // completed revoking `inner.data`.
+> +            // `data` for us. Hence we have to wait until `Devres::drop` signals that it
+> +            // completed revoking `data`.
+>              inner.revoke.wait_for_completion();
+>          }
+[...]
+> +        // Signal that we're done using `inner`.
+> +        inner.devm.complete_all();
+> +    }
+[...]
 
