@@ -1,167 +1,123 @@
-Return-Path: <linux-pci+bounces-30554-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30560-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1367AE71BE
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 23:55:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 96AA9AE7202
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 00:01:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E096178E0F
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 21:55:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC2CE17D6DE
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 22:01:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4A6F25B1DC;
-	Tue, 24 Jun 2025 21:55:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 800AC2550A4;
+	Tue, 24 Jun 2025 22:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TzwY3hrJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [65.21.191.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5F725B1D8;
-	Tue, 24 Jun 2025 21:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.191.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540C5248880;
+	Tue, 24 Jun 2025 22:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750802123; cv=none; b=uo17PNNtpWGLpcHJFdpoPL3kKyCR7Giw+jMjtyEHafFvJIamUdXHioXllzybx73XVMkPjagpm6nKTEqoS+szdVGYivahlGxUaJj5eiQ1vQXn4yDaJFvjkKx9Qcfk+auV3Q8DLqfocKNeXo9I8Q/YdwmMXpUkFGuqC5vvaWS+N6M=
+	t=1750802463; cv=none; b=rFmLLShxuPkVS/Xx4hDtTowtXkgDaNw5TI7l5FUeTrTmMKu9CE6QNpcX+UZUXcRXtGlxzQavbIxZIjwAXfp7w04mGbFKb0dhiISkkJw79GTpnMWc3/66/VCm/kIabgJOTvFNT3AEWiIcSzNg7xNL+g6m55sDIo0h4MarLYTAaCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750802123; c=relaxed/simple;
-	bh=crb6erNNhhWTPlpZtTQ0hl4obVmhGYWyu1a8c/mTIBs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=h8r4rGPviVNw8+6aDcq6cA7Z3qjdjtcRRevxADhMu8a40cKi1C6iDtG7vaIAU/U//NFaifkH1nLGYkuPeUts2ZpMy5rI/P1+/1L826MgmqRRL7ninPWYohHrXFn0ex457nYgHtCrrRyN/pYMF2tMK7W5uTD4PCjk0zzOajUGvfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk; spf=pass smtp.mailfrom=decadent.org.uk; arc=none smtp.client-ip=65.21.191.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=decadent.org.uk
-Received: from [2a02:578:851f:1502:391e:c5f5:10e2:b9a3] (helo=deadeye)
-	by maynard with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1uUBbS-003Crc-1o;
-	Tue, 24 Jun 2025 21:54:53 +0000
-Received: from ben by deadeye with local (Exim 4.98.2)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1uUBbQ-00000002x1R-2RhR;
-	Tue, 24 Jun 2025 23:54:52 +0200
-Message-ID: <9077aab5304e1839786df9adb33c334d10c69397.camel@decadent.org.uk>
-Subject: Re: [PATCH] agp/amd64: Bind to unsupported devices only if AGP is
- present
-From: Ben Hutchings <ben@decadent.org.uk>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: David Airlie <airlied@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>, 
- Joerg Roedel <joro@8bytes.org>, Suravee Suthikulpanit
- <suravee.suthikulpanit@amd.com>, Andi Kleen	 <ak@linux.intel.com>, Ahmed
- Salem <x0rw3ll@gmail.com>, Borislav Petkov	 <bp@alien8.de>,
- dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, 
-	linux-pci@vger.kernel.org
-Date: Tue, 24 Jun 2025 23:54:46 +0200
-In-Reply-To: <aFa8JJaRP-FUyy6Y@wunner.de>
-References: 
-	<f8ff40f35a9a5836d1371f60e85c09c5735e3c5e.1750497201.git.lukas@wunner.de>
-	 <b73fbb3e3f03d842f36e6ba2e6a8ad0bb4b904fd.camel@decadent.org.uk>
-	 <aFalrV1500saBto5@wunner.de>
-	 <279f63810875f2168c591aab0f30f8284d12fe02.camel@decadent.org.uk>
-	 <aFa8JJaRP-FUyy6Y@wunner.de>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-1ac14mP05+O+KBtwB9Gp"
-User-Agent: Evolution 3.56.1-1 
+	s=arc-20240116; t=1750802463; c=relaxed/simple;
+	bh=oMqP58jBtpzhindTCdhlaRR+YnhL9McdIKzis2Sd23c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=l9xVfj8KlM8me7y5cLJTi6KkdbDX2aE6IrrIkAYHaVqtpCOYPc41p7pvviSlDo0uuGdC4KGGATfkGoqt2RFVg2tEeRqJE+68IXS39BDBejuov4fMnoOuS+nTEgaNYDWsnaqUUVsrTCtm0RoVriRP7Riqt6rpyyylIrgY/MwcTqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TzwY3hrJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A55A9C4CEE3;
+	Tue, 24 Jun 2025 22:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750802462;
+	bh=oMqP58jBtpzhindTCdhlaRR+YnhL9McdIKzis2Sd23c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=TzwY3hrJPk/8OWo+Z8/JCb/1jDkOJ6zOkhc4v9XufSwZJXJ+mru7NigLoLTQCZ9ol
+	 Q8fbHYMyoFNK0ERXV+UYR/HjxPwGIhP7Q/9vsNy54QqCwxSHlfOqehw6UJRbGH3K5q
+	 TV0xMxCQqLZf+6YMELdPSY1GYXwXqJjHBjxq5V20kqr0MYxoPA1cvlNC/6J8ZAc72K
+	 QBYaYdJmonZJ0zTXZKv+Xk/DbC7U7sVMBqSKqxQCXDGMqmLc3enONWkYAMIKgZARAJ
+	 I3g6WQ9hvVLxhLubYe2rTPHHZm5iyblrlQEBuUMDkSdBStTj7XNFlAf9RYLEZVUNEZ
+	 TF+yL44fTk0xw==
+Date: Tue, 24 Jun 2025 17:01:01 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] PCI: brcmstb: Use "num-lanes" DT property if present
+Message-ID: <20250624220101.GA1532842@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a02:578:851f:1502:391e:c5f5:10e2:b9a3
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530224035.41886-3-james.quinlan@broadcom.com>
 
+On Fri, May 30, 2025 at 06:40:33PM -0400, Jim Quinlan wrote:
+> By default, we use automatic HW negotiation to ascertain the number of
+> lanes of the PCIe connection.  If the "num-lanes" DT property is present,
+> assume that the chip's built-in capability information is incorrect or
+> undesired, and use the specified value instead.
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 26 +++++++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index e19628e13898..79fc6d00b7bc 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -46,6 +46,7 @@
+>  #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK	0xffffff
+>  
+>  #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
+> +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK	0x1f0
+>  #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
+>  
+>  #define PCIE_RC_CFG_PRIV1_ROOT_CAP			0x4f8
+   #define  PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK      0xf8
 
---=-1ac14mP05+O+KBtwB9Gp
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+If you squint, PCIE_RC_CFG_PRIV1_LINK_CAPABILITY looks a little like
+these standard PCIe things:
 
-On Sat, 2025-06-21 at 16:05 +0200, Lukas Wunner wrote:
-> On Sat, Jun 21, 2025 at 03:51:44PM +0200, Ben Hutchings wrote:
-> > On Sat, 2025-06-21 at 14:29 +0200, Lukas Wunner wrote:
-> > > On Sat, Jun 21, 2025 at 02:07:40PM +0200, Ben Hutchings wrote:
-> > > > On Sat, 2025-06-21 at 11:40 +0200, Lukas Wunner wrote:
-> > > > > Since commit 172efbb40333 ("AGP: Try unsupported AGP chipsets on =
-x86-64 by
-> > > > > default"), the AGP driver for AMD Opteron/Athlon64 CPUs attempts =
-to bind
-> > > > > to any PCI device.
-> > > > >=20
-> > > > > On modern CPUs exposing an AMD IOMMU, this results in a message w=
-ith
-> > > > > KERN_CRIT severity:
-> > > > >=20
-> > > > >   pci 0000:00:00.2: Resources present before probing
-> > > > >=20
-> > > > > The driver used to bind only to devices exposing the AGP Capabili=
-ty, but
-> > > > > that restriction was removed by commit 6fd024893911 ("amd64-agp: =
-Probe
-> > > > > unknown AGP devices the right way").
-> > > >=20
-> > > > That didn't remove any restriction as the probe function still star=
-ted
-> > > > by checking for an AGP capability.  The change I made was that the
-> > > > driver would actually bind to devices with the AGP capability inste=
-ad of
-> > > > starting to use them without binding.
-> > >=20
-> > > The message above would not be emitted without your change.
-> > >=20
-> > > The check for the AGP capability in agp_amd64_probe() is too late
-> > > to prevent the message.  That's because the message is emitted
-> > > before ->probe() is even called.
-> >=20
-> > I understand that.  But I don't feel that the explanation above
-> > accurately described the history here.
->=20
-> So please propose a more accurate explanation.
+  #define PCI_EXP_LNKCAP          0x0c    /* Link Capabilities */
+  #define  PCI_EXP_LNKCAP_MLW     0x000003f0 /* Maximum Link Width */
+  #define  PCI_EXP_LNKCAP_ASPMS   0x00000c00 /* ASPM Support */
 
-Something like "The driver iterates over all PCI devices, checking for
-an AGP capability.  Since commit 6fd024893911 ("amd64-agp: Probe unknown
-AGP devices the right way") this is done with driver_attach() and a
-wildcard PCI ID table, and the preparation for probing the IOMMU device
-produces this error message."
+  #define PCI_EXP_DEVCTL2         0x28    /* Device Control 2 */
 
-Thinking about this further:
+So I was hoping we had an opportunity to use PCI_EXP_LNKCAP_MLW and
+PCI_EXP_LNKCAP_ASPMS instead of
+PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK and
+PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK.
 
-- Why *does* the IOMMU device have resources assigned but no driver
-  bound?  Is that the real bug?
+But I guess PCIE_RC_CFG_PRIV1_LINK_CAPABILITY is probably not actually
+PCI_EXP_LNKCAP, because PCI_EXP_LNKCAP being 0x0c into a PCIe
+Capability would mean the cap started at 0x04d0, and
+PCIE_RC_CFG_PRIV1_ROOT_CAP would be at offset 0x28
+(0x04d0 + 0x28 == 0x04f8).
 
-- If=C2=A0not, and there's a general problem with this promiscuous probing,
-  would it make more sense to:
-  1. Restore the search for an AGP capability in agp_amd64_init().
-  2. If and only if an AGP device is found, poke the appropriate device
-     ID into agp_amd64_pci_promisc_table and then call driver_attach().
-  ?
+But offset 0x28 in a PCIe Capability would be PCI_EXP_DEVCTL2, not 
+PCIE_RC_CFG_PRIV1_ROOT_CAP, and I can't squint hard enough to see
+anything related to L1SS anywhere in the PCIe Capability.
 
-Ben.
+So never mind ;)
 
---=20
-Ben Hutchings
-Horngren's Observation:
-              Among economists, the real world is often a special case.
-
---=-1ac14mP05+O+KBtwB9Gp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmhbHqcACgkQ57/I7JWG
-EQmq+Q//a55Y8Fao7E/XxVGieu3OVSsiSzpd5f/Re/J6IC2eVkPzZvd72/LuMYSq
-5vsD/RWkhpkdJeab75FE0lxV0iQQ8uc3aRUoyJgf0hbOiYllNVpaubCiFdpP/fO5
-klg2cksoulrf6W/ABvB+RSOVNP+XNQZSIMKoFCBYxcNY2CZ6uRdFPXWmnhfcKUl3
-eViszycu7JBsLNLL24EvtoOu8JFJMXBUzVyEfvcHVcaPiLOUFsDSphEJkTMyYSGm
-XrrTQTau/bzVMpjLeEZPZXKrR17EFGjpuNLbip75rt3B85Nnv+emSBjEI82UFuwy
-ugTKoPRdkV+Gq1/Jzl8/6i+JArqE2PugVNQem52J97BN4MWJLczdMJGb7rg1YPNw
-OMOr3CUpkvsEKY3Lq3+KFTcmjGrzp86oFkOtdPJinuL4UNXY8+FKg2dR6UM7rAMz
-/HFkUdB8jOxWhvNrmRf3Gqde9mXEkennBgqyc5ERh31JVbbWsauZyLun6Sv1jpYk
-yqJ1KpYyAXR7u+gpVoA9MPj6hoUOBPZPQ1xBww4tnGhJFkZRxykAAEO9lx8JY9qr
-kqfjpe1Ah+jRh5iSmrcHoQ3drp7DYVzc0QoHYIPAquqTl9mDAX597qAKccgKYVMf
-2mjKPmzRa4rWKb7Qu7MavAaBEuBaXZJyxcAvq3u+eGNj0hWm304=
-=zBBS
------END PGP SIGNATURE-----
-
---=-1ac14mP05+O+KBtwB9Gp--
+Bjorn
 
