@@ -1,119 +1,122 @@
-Return-Path: <linux-pci+bounces-30472-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30473-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42BC8AE5A16
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 04:29:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 799FAAE5B8E
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 06:42:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D1BB64C1725
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 02:29:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E5563B069B
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 04:41:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1255E204C36;
-	Tue, 24 Jun 2025 02:29:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E431A2253EE;
+	Tue, 24 Jun 2025 04:42:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DN9qdWgY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YwdNlFnv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6F31DFE12;
-	Tue, 24 Jun 2025 02:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EFB21B9F6
+	for <linux-pci@vger.kernel.org>; Tue, 24 Jun 2025 04:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750732159; cv=none; b=lR0JHaLnQjZnvNxBSr3k9o2C/vp6wNQPc+mE7ozYmGtqFLA82mr0PhwMYqmzp88DRRRFUHDZLjCeh/6kUmjXUWMPltA/WwSRH7lOxjgb8y/OaXPYltCGKh//S7dl1x80PMZykgcpEJP9ScWuZBBzAxJ4LS9yJPXClFuLrwB1qyE=
+	t=1750740138; cv=none; b=MoWs7qp4f9TbTi6fuHrIvMCZxYUFvzFg8/k2B67k4jfJvHVUd7I9umyTXrRHEHKZduWEq0YmSVlIz2oNuDSJ2SYbXZxmaAJR19NB4Z3O9Oh6fu7yhOh0jIu20N9x/dsdKPKTuYUH5GcC3zYTw9SAxHNLL3aoaWauX5h2FeOdU4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750732159; c=relaxed/simple;
-	bh=aCq7pU8kNb4mHcl6rtEIZfZyJWT3bMbgZHNQ3Cyafh4=;
+	s=arc-20240116; t=1750740138; c=relaxed/simple;
+	bh=ODU4jJItg+QGmO7Iwq9xVFXyh13W+yU1dp1f37ZoWM8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JPjf5pRhd52OzssruU8yPmgmkdIk25dZrCs5/dSLKITvAGXiUzR8jttFDCLzV5txCxLfXK27je4zmobLpQw0SHBli+Ofs/6lAZJZIuqt0+ljKAWm2Wz4ssmdIkObGd6CFo229RRlpNMYT5VDoAO+bhgmp12R3G5dU8JkGyPbbHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DN9qdWgY; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MmQy0n6pH9lzdkkjnUzjs+eBrcnJjaXpeM9H2bzwP4pCSH9QU3s9AURp+FxSjHMX2jgenULSNGAH5b+AGED1xNUf3Wm/aMTdhXb2WHwzvjuZK98jgNBqHfzr6kxZw7VLZi1v7AXjm/6oDs0rP8DcwGpTKdmkbeEcVMu2QAHdptU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YwdNlFnv; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750732158; x=1782268158;
+  t=1750740138; x=1782276138;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=aCq7pU8kNb4mHcl6rtEIZfZyJWT3bMbgZHNQ3Cyafh4=;
-  b=DN9qdWgYVaPlRxSQCVP/G9AzezzZR+CeW7E3r1ZaHdjOLzac4ffSuPib
-   V4eWZGQeIPQTjmCi2imaWksKmaZPmjUPfIBev93YGe5raA/usuN5delcM
-   MBOcxRAaQljl1NIE3akWaLv03bEO5Mw7Edt1CE9NIw1DKIU9besEanR7U
-   6M12+Fypr4S20ZWCBa4HgAIEAeObyXNTkkbq7ceVE9ycZl9UFOefhoO3T
-   X9GOT71mCsTSFqeWnBvmjawAYLf7f+9RnTUPP14sFBSHSRTwK70098fkP
-   4bxAHlQA8jVYUyx4hcipo0504aI9k7yAX7mIBy97zm6/VXHc7EmM/RBm0
+  bh=ODU4jJItg+QGmO7Iwq9xVFXyh13W+yU1dp1f37ZoWM8=;
+  b=YwdNlFnv95M7ATH0bglDh6/Xy6Gq4pfC/hN8VUQ5Jogy+LCFa39rGTUE
+   0E0udl/Io0fKmQd1hiWWUXlkOcBh/xXQ/6GqYP6Ulio+HfMB+IqoVxs+c
+   20NANUD+1GAOOCmB/8uKt4uESBI1bbnvHDbpuxtyjNC/HIqcF3N9KW1ZH
+   nh7hTGCHjwLBDNBKvDzxkxrCZcFhrpWaAp5RIGiodPpWHrDeBrS/33i4C
+   TKtAxDQPZzGaG08ki2QpBIDB+XGw36iH8+ntF1uENdUBT6Xpx2cNtD4OH
+   uj9ezEZ1fNjD74paFy+tq512fuZIkZtQlOQIrAR5+f1Ru/wDE9ngX1Mnu
    g==;
-X-CSE-ConnectionGUID: AYELB+vNSEKptdvvDNFABw==
-X-CSE-MsgGUID: +GWRGvdzTC6/IW/eCFSskg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56629117"
+X-CSE-ConnectionGUID: 5/9YO6lRS6en4tyTGvfHxA==
+X-CSE-MsgGUID: xW4kka51QZW/vJvwcw6vmQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52681568"
 X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="56629117"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 19:29:17 -0700
-X-CSE-ConnectionGUID: yMfGDS/9QleenYCj1nIOxw==
-X-CSE-MsgGUID: KnB9MCWvQ7y/CioVZQ06Rg==
+   d="scan'208";a="52681568"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 21:42:17 -0700
+X-CSE-ConnectionGUID: felMlOWLTKuKNtNuzawB8w==
+X-CSE-MsgGUID: UuxEOzMhTrypWlUtsOu6wQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="182808464"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 23 Jun 2025 19:29:14 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uTtPK-000Rdi-1a;
-	Tue, 24 Jun 2025 02:29:10 +0000
-Date: Tue, 24 Jun 2025 10:29:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sai Krishna Musham <sai.krishna.musham@amd.com>, bhelgaas@google.com,
-	lpieralisi@kernel.org, kw@linux.com, mani@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	cassel@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
-	thippeswamy.havalige@amd.com, sai.krishna.musham@amd.com
-Subject: Re: [PATCH v3 2/2] PCI: amd-mdb: Add support for PCIe RP PERST#
- signal handling
-Message-ID: <202506241020.rPD1a2Vr-lkp@intel.com>
-References: <20250618080931.2472366-3-sai.krishna.musham@amd.com>
+   d="scan'208";a="157291935"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa004.fm.intel.com with ESMTP; 23 Jun 2025 21:42:15 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 4DA30138; Tue, 24 Jun 2025 07:42:13 +0300 (EEST)
+Date: Tue, 24 Jun 2025 07:42:13 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Laurent Bigonville <bigon@bigon.be>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/ACPI: Fix runtime PM ref imbalance on hot-plug
+ capable ports
+Message-ID: <20250624044213.GZ2824380@black.fi.intel.com>
+References: <86c3bd52bda4552d63ffb48f8a30343167e85271.1750698221.git.lukas@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250618080931.2472366-3-sai.krishna.musham@amd.com>
+In-Reply-To: <86c3bd52bda4552d63ffb48f8a30343167e85271.1750698221.git.lukas@wunner.de>
 
-Hi Sai,
+On Mon, Jun 23, 2025 at 07:08:20PM +0200, Lukas Wunner wrote:
+> pcie_portdrv_probe() and pcie_portdrv_remove() both call
+> pci_bridge_d3_possible() to determine whether to use runtime power
+> management.  The underlying assumption is that pci_bridge_d3_possible()
+> always returns the same value because otherwise a runtime PM reference
+> imbalance occurs.
+> 
+> That assumption falls apart if the device is inaccessible on ->remove()
+> due to hot-unplug:  pci_bridge_d3_possible() calls pciehp_is_native(),
+> which accesses Config Space to determine whether the device is Hot-Plug
+> Capable.   An inaccessible device returns "all ones", which is converted
+> to "all zeroes" by pcie_capability_read_dword().  Hence the device no
+> longer seems Hot-Plug Capable on ->remove() even though it was on
+> ->probe().
+> 
+> The resulting runtime PM ref imbalance causes errors such as:
+> 
+>   pcieport 0000:02:04.0: Runtime PM usage count underflow!
+> 
+> The Hot-Plug Capable bit is cached in pci_dev->is_hotplug_bridge.
+> pci_bridge_d3_possible() only calls pciehp_is_native() if that flag is
+> set.  Re-checking the bit in pciehp_is_native() is thus unnecessary.
+> 
+> However pciehp_is_native() is also called from hotplug_is_native().  Move
+> the Config Space access to that function.  The function is only invoked
+> from acpiphp_glue.c, so move it there instead of keeping it in a publicly
+> visible header.
+> 
+> Fixes: 5352a44a561d ("PCI: pciehp: Make pciehp_is_native() stricter")
+> Reported-by: Laurent Bigonville <bigon@bigon.be>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220216
+> Reported-by: Mario Limonciello <mario.limonciello@amd.com>
+> Closes: https://lore.kernel.org/r/20250609020223.269407-3-superm1@kernel.org/
+> Link: https://lore.kernel.org/all/20250620025535.3425049-3-superm1@kernel.org/T/#u
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Cc: stable@vger.kernel.org # v4.18+
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.16-rc3 next-20250623]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Sai-Krishna-Musham/dt-bindings-PCI-amd-mdb-Add-reset-gpios-property-for-PCIe-RP-PERST-handling/20250618-161100
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250618080931.2472366-3-sai.krishna.musham%40amd.com
-patch subject: [PATCH v3 2/2] PCI: amd-mdb: Add support for PCIe RP PERST# signal handling
-config: csky-randconfig-002-20250621 (https://download.01.org/0day-ci/archive/20250624/202506241020.rPD1a2Vr-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506241020.rPD1a2Vr-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506241020.rPD1a2Vr-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> Warning: drivers/pci/controller/dwc/pcie-amd-mdb.c:68 struct member 'perst_gpio' not described in 'amd_mdb_pcie'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
