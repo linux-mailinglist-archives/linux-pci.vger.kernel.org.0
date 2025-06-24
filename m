@@ -1,231 +1,163 @@
-Return-Path: <linux-pci+bounces-30493-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30494-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6369AAE635E
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 13:11:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F4B3AE6382
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 13:23:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A4071925F9F
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 11:11:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ECB3A17B4D5
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 11:23:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D150A288C8B;
-	Tue, 24 Jun 2025 11:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B97FD248F6F;
+	Tue, 24 Jun 2025 11:23:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="BP/1+Q4i"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GVgcU9KG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022086.outbound.protection.outlook.com [40.107.75.86])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DDC221F17;
-	Tue, 24 Jun 2025 11:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750763489; cv=fail; b=LSqMspFN2/RSYUnZwnhpTUdTKFa/4n9ZHuNfI14kCIWAx9xSH1Mz3PNyonE2cJTNx6jxZWg7Gc1mumlAevq5kjgwujKYxE8L35c2kikKAxA+geb9yJ2IKhLYjtPUELbDrBCIGyHGKSGnzjx7YAD/V1WFpbU9RUJ22bpfEPoTVUQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750763489; c=relaxed/simple;
-	bh=HNXJaCIVZiVtk80fPFW9ea2GJTxJmHYuTJo/2i4RB0M=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=TU6lNtpQ4Lkke9f3868WS5+NlDhmrjpFnaAWYszoDcXGqPRnhq9DqXP02XWCy4frG1vYSH74f6fxoPbTmoGdgoJ0pLCaQcL3RRMM3sAEMst9bN/jk1oPve+9G4EoG7CZj9oZJWn/8VHx+zUBzupt26kmvUxgF1s4q7VpkRzegiY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=BP/1+Q4i; arc=fail smtp.client-ip=40.107.75.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RMXiWxXefGbBC56bRzNdbPtB/ARWo606C5B+uLeraveHIE1pSZIfwy4T0y58561H3QzCoJLMQOPtkWk5O2x0Zos2kkqDW6ceizKT9wZvPFovPJ2c1Yaa2AI9OgdMSJvXhVQvy0yZiqa0a3t9SYGKzTQNgwhILAHoI6e5ApBDD4a/0+AN2taOQmnPpVISlzmcgocGnxIc4VRj5NvpmWuIW/AgH1fQmu/oSa/lTloJjVODd6HAeBdDZubZtRbvMjfMB/d0JQAYwKrp/2AkG0qIibVHfeokuWGgLT/grSH2D4MVJxcBmq8ZC9xea/odQ1bEEZtxQkd66Y4QCHXzCWszWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HNXJaCIVZiVtk80fPFW9ea2GJTxJmHYuTJo/2i4RB0M=;
- b=ZpTdxCUQw3LmXa9u32rgApfTxeiEZPuve91h6sLMpNrGVALvSjneotHEdu0NjrdvwJhlOMGL6yELj39gtF5B2Mw/pwdRpEYvQKN09XywS3kI7O2IAMaZYtE70pad2sa4qGqI/6xA0Zbz5EnYT8n6ddrVu3ieruOQzlaVX8GXFWSmuksYq5giw+K2VE3bAyi7sGssWeNTq+ICnGEtg4rrIQFP7qbYqTckWK1VTKKHJVcn3O7HosH4MINqITlaRr6PPzIdqhcV/5ImWnogZXdqlV0fN4ush/hfKvCycCr5SrB8CZhBkQ3jeuLAxWt0aMu4QTUMF/dZ9hImWksrkZvtvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HNXJaCIVZiVtk80fPFW9ea2GJTxJmHYuTJo/2i4RB0M=;
- b=BP/1+Q4iYfPMT0JuGOeERZAFyOiSkRQi+UaHo0/jHQXX3rdcUEF7vds21Ej0lzRoyONoq0xDnAy6bXTqE+23U/jKRNmm7cuY3+HMSOuhETAsYyHSIJod79Vknx3xRBfi9ho5vABJdo4bJwJmrS7C6erHwZndz+7xl5L9GoM80NdaEy3V50LJxU/5Cby3yvyw6tfvbPZ4GcEx5cox5lw2oYhfQGc6qmgqEdLeMAL96qtqnnWan+YUnxBNpO3nY0Cv+MQ6KcjVzmmFXVSeegQw77mFUhgFqEMDvm1qZYAGiwNe+TS5b0/uOGSKODgNUdYyIt2yCZy8tE2bwQEu4wxamQ==
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
- by SEZPR06MB7080.apcprd06.prod.outlook.com (2603:1096:101:1f3::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.27; Tue, 24 Jun
- 2025 11:11:23 +0000
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28%5]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
- 11:11:23 +0000
-From: Jacky Chou <jacky_chou@aspeedtech.com>
-To: =?utf-8?B?SWxwbyBKw6RydmluZW4=?= <ilpo.jarvinen@linux.intel.com>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "joel@jms.id.au" <joel@jms.id.au>,
-	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
-	"vkoul@kernel.org" <vkoul@kernel.org>, "kishon@kernel.org"
-	<kishon@kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>,
-	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"elbadrym@google.com" <elbadrym@google.com>, "romlem@google.com"
-	<romlem@google.com>, "anhphan@google.com" <anhphan@google.com>,
-	"wak@google.com" <wak@google.com>, "yuxiaozhang@google.com"
-	<yuxiaozhang@google.com>, BMC-SW <BMC-SW@aspeedtech.com>
-Subject:
- =?utf-8?B?5Zue6KaGOiBbUEFUQ0ggNy83XSBwY2k6IGFzcGVlZDogQWRkIEFTUEVFRCBQ?=
- =?utf-8?Q?CIe_host_controller_driver?=
-Thread-Topic: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
-Thread-Index: AQHb3BN5QYkLFJ4SFk66wBBeIABUJbQA/lGAgA8cdnCAAhiQAIAAAwxg
-Date: Tue, 24 Jun 2025 11:11:22 +0000
-Message-ID:
- <SEYPR06MB5134378DDE51A94D9F83E7439D78A@SEYPR06MB5134.apcprd06.prod.outlook.com>
-References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
- <20250613033001.3153637-8-jacky_chou@aspeedtech.com>
- <40d1c5bd-0457-55ea-2514-ba27e6a4c720@linux.intel.com>
- <SEYPR06MB5134973F678EB5B163DD50809D79A@SEYPR06MB5134.apcprd06.prod.outlook.com>
- <a618588d-54fe-69a9-27f7-7b19ba905a52@linux.intel.com>
-In-Reply-To: <a618588d-54fe-69a9-27f7-7b19ba905a52@linux.intel.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|SEZPR06MB7080:EE_
-x-ms-office365-filtering-correlation-id: a04761f8-fcdc-4628-ebdc-08ddb30fdaa0
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?NnM1TmYzR1pZSmRvRUF4WFZyZHdna2tUWGE5NTBMSnlOb0VTSGM5SkRLOGRn?=
- =?utf-8?B?a0Z2WHM4OGRXZnZOa0pvUXkxZ25MZC9UUlhCYUM5SWNXeDQ2TzY5K0dvWnFO?=
- =?utf-8?B?TWRvayt0SFhhSG1jMkRmNjBhMXo0L00xVlB4M0lod0lFaWR5QjMzUmVZbkxD?=
- =?utf-8?B?SjlHc1NrM0VpRENNWHVlL0hOOW0zUWY0QUJJNXlmUndDWXpXQzN1VGY1Q05Y?=
- =?utf-8?B?K1FRR2dDaXVwR296ZFVyV2k3clQ1N1RpNFNuY1RBQi9tclp1QjZGdmNybDhw?=
- =?utf-8?B?ZmdObm8vcDQvejZMWWpVdW8wYW10amo2MDRQRnZFcDNyNmNNWjNPbG1NS2Vs?=
- =?utf-8?B?bmNZbURXdzQyMFJSNDlKWk5sWkVILzc5ME56VHVBbnJNVHNpNVJYUXNlRkdS?=
- =?utf-8?B?VUZOcnJKMjRwaC93Z2oySEZCR0hHSFkrRk5LSjFvblpNbHpsRnpzZzNXU2dK?=
- =?utf-8?B?Rzl6bXVMUzZTQkp0V1JSa0craXgrU2JRbU03VVo0aUJJSTdvaUdGMWl0YnFS?=
- =?utf-8?B?bzhQK01JbmpRK0ZZWUppd3NZeVd2R2paazM4M3B2ZFdPRDR6L3cxZ3plK29H?=
- =?utf-8?B?VnJNek1ucFdaeU1vcUdTcDRSdVhxZ20zbFJKcSs5TzF6K21GcWFMbEFJcFMw?=
- =?utf-8?B?OTZzZHZjaWtSSEY3UXhyOHkyMnV5dXBQdDloYzZHN0IxLzBGUkxmWWxLSU45?=
- =?utf-8?B?SFVoTnlkYzdLbFRidys2bmNQcEUzWnNEWERuN3dzTFY1dEVDRkZlczM2aWdQ?=
- =?utf-8?B?RGNoL3lhNVZNVkdrSnJnNzlxeG5MWmlrS2NuN3lDeGgxNWJHTzl5WGJQWlNn?=
- =?utf-8?B?ZExrMm51N3VuWVMzL1VlY0NsMFp4K2tZckpRL1JTV0g5QU9nTXhOZW5TeG15?=
- =?utf-8?B?ZkFOcE9ycWNiQWZNd3VraklkeVpSbzc4TXNRSmhiZUpnN2lITU9xU2FFczJ5?=
- =?utf-8?B?QzUveVp3em5MRFNWUkhKYlFRZUh1bHpQSU5mcUN3eUI5Q2VsOS9BYWlwdGQ3?=
- =?utf-8?B?aEpvbDhzVStmdmNIMTZYcVEray9EaEhSclFqTDhiNjErcHp6ZmpSeWdyQ1Zj?=
- =?utf-8?B?NlZXRWwrTC9CMHFxYTJkTXNDV1A4by9IcVpQOEJmMnZZVWI1VUNnWUFsWDVm?=
- =?utf-8?B?Tk5vQTlDaU9QNTlSTE96bnUxRE5BOVBWZWNUamFOUmJpUG1CMGkwSHV6MFNV?=
- =?utf-8?B?Uk5xT1dFRmZBaUZ1SXNXeGJ0K2l4dDh4SzVONmpvcVdROFdFcVRCN1dzcFM4?=
- =?utf-8?B?TXpweVNxV2pKR3hrUzdsNzJEU3JsT284Sk1QSzJYL0xRS01SVzVTcStZazd0?=
- =?utf-8?B?UkFNcDVtKzlIK3ZlOTVQdG9CTnVodFJQUHpPSGkxRU5YWWJQejFFVm1DOFFW?=
- =?utf-8?B?VkZUenJhd201NkVKYWRSWkIyN3dDbk5WODVzbkloam5FdlFyUmNWVEJLYzBu?=
- =?utf-8?B?QmNOZDY5S3VUR1FqY0Z1ai85WWx4TThZUDZ4dXpMeXA2VE40VDc3Y0VhZ25U?=
- =?utf-8?B?Z00zWllLdWV5SmRVM2RkWStUZlpFYjhVcmdUdTJnYjZqbVJJYnpkT3hGUHpk?=
- =?utf-8?B?MXpSdElUYUdzZjI2NlVXYXY5YXpGOHpkejZDaUYyeGRLTkYweExONitOMjVC?=
- =?utf-8?B?MEI2K20zeWxyRXc2T1NQbE1acklGalZOMEJhcHdvLzdBZjEvTjFqRE9GVlpa?=
- =?utf-8?B?eU41eERqejd6THlIQWlKRkdPZkZGMmdjTG9JdTFmdzhJRHUwdkR6eXB3ZmJm?=
- =?utf-8?B?Qm8wSGpmZzcvTTFncGpGVUt6UlJ6THlMWVMreCtUeEduRmtkQitlbVFScmFB?=
- =?utf-8?B?NEpGc3FtaU1RVyszMVJxcnFXcERmVlU3RGpRamtLalA4SWF5U1c3Q3AxVXp1?=
- =?utf-8?B?VUliMnVxTjFZU3ZESjB3ekNYOWVkSW9rclFYdUg2WGl5VUFFT1ZUT0lMTHZO?=
- =?utf-8?B?dzV3bzVFck5mUm1aeisrcVBhbFFBWm4ycWpJaTIzd2hYN21Eaks5bVBjaExL?=
- =?utf-8?B?RnBOU1FFL2N3PT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?a1lKMVdaU2tndTdkdHpKV1BtZDExQ1VoRGd6SXQxU0lqSTFpOVpacnR6Umlx?=
- =?utf-8?B?WlFLSlVha1YwSmRnT1lBY2tKMW5NbW5ac29EWWswQjZYdndoaXlQZGw0OWw5?=
- =?utf-8?B?RkNtei9UaHJoQkhGSSt0MDVQZHNuWHNhWVNQTlBFenR2bHJaUGQ1d3hib1FL?=
- =?utf-8?B?R3ZvYkEwbVVOd0VkTUQ5STRxcFhPRExIMmFPR2JjQ3NmdkZNTU92em84ZmVw?=
- =?utf-8?B?NUlKNXdLOHdlWjducVF5QXdadkt3RjZQNUFJVnVMdDF4OUMvNVBHeHg4NjBl?=
- =?utf-8?B?dkZGczljS2owc3pWSVFnWmhQTmZQV3lsVyt2Vjl1ZGdFc1lzbUdxQUpHOHpo?=
- =?utf-8?B?cnRndiszNTlrU1ZUSEVUU0dXZXMvbkljYnl3MUllaHNmOVFyeWhvNWpsYXhW?=
- =?utf-8?B?M09VcTRrZ29tMDhVSksybXU0UFN2MWs3dGtUbitPTURaekdORzIyRGtvRWhy?=
- =?utf-8?B?M3FUa0x6YUZSVWYyTC8vc09ES29XR3oweFM4anp1VDhnWml4RXNOK09GNzhr?=
- =?utf-8?B?dGFFbDJCcXJkOWRzZVJWZllMdnd6WHJqeG9uNHJjZVliUm1HMUhRR05jV1FB?=
- =?utf-8?B?ay9FSE5ybVZnaC84N2M1TU1xQW05L3VQeS95bUxkU3JYbkU4M2tVK3VxeU5Z?=
- =?utf-8?B?T25RWSs0S3lTZDVvMUVpUVJJeEJoQnYzanB2WFQ4dDJjYTYwWjl6N01ZbnVR?=
- =?utf-8?B?NFltQ09Pemszell2WnhOcE5wbVd1Rkg3MG9OWEY2MG9kS1ZGY3UzeWZHdkYv?=
- =?utf-8?B?OXFWa21EdmZwTXVCTlVIbUtiK0JWNGlHTlRWZ0J3OGdQejhXV3RYZFkvTlFR?=
- =?utf-8?B?cVBVb2xlaEhFcjFVRStNU2NMTU5wYi9ZdXF4MDNlOUFacC9jdE9TWUZYKzhX?=
- =?utf-8?B?anFWVUkrVHBJYzMwRmNqS3BObERKODhXVGxOeXdCMzNhZFNISXhNdVlTQWhE?=
- =?utf-8?B?QmFnbzhNcDNDNDBUSmhoblN5OWo1VkJuS0VjTlk4eHpUOXFjbk1NUzFEVExC?=
- =?utf-8?B?T044b0I4WkQxVTQydU5ZbGRFRHMwaXQ4WmszNHlkK1U4N2x5bVp4bndsMjdD?=
- =?utf-8?B?emFoZnZBT0JXbTN4SFhHYWxvaTM3Rjl4Q0lmank0K1ZxRlpRaVBValdDbEFC?=
- =?utf-8?B?SjhpTDBPdS80MCtUOTMyWGNTZWNxZ3JRMllqbFlXbEFUU29PREN4d2p5MmRK?=
- =?utf-8?B?S09pQm1INis4UkRnZHpYRXJOSFBSZFNoU1BhcEk5SXMva2lORXIxTXhDOHVB?=
- =?utf-8?B?WURtQ3dLN3ZTbXh4RlhuYU5wa3RkaUJjU1c4YWRnbEZraXlWUjUyc0JWQXlx?=
- =?utf-8?B?WDFuVi9OMUJCRUJpVlVPa29hcUVndThDdi8vQlFTNjQ0OVNXdE05NWh1NVFH?=
- =?utf-8?B?ZDNmcjYzdkM5cW9oemhYNm5hYkg5U3dDc09ZTHR3UFJYMy9aNS9tNk43MFhU?=
- =?utf-8?B?VXdVTXFiUVVuNGR1MWtSK1V3WGNYczlQSEJnTXZIbHVYQ2ZKeGZsYm1OOGZn?=
- =?utf-8?B?OHVUSG5PTkV0M3FDaWhEeVA5dmFOeksyQVdyZ2ZNVmNManIvVTFYSlJWZ1o3?=
- =?utf-8?B?ZHFUaUtxL0xvWWxUSXpPNld6eUpvaUY1YWEwRXBub2IyNlVaeXlIMmw4Q3ZM?=
- =?utf-8?B?SHhwcWxEY0QvbnN0NFZjUWVWNWduNE1Na2JVK2pEVy9NZG1YaXlBMHkxRnNw?=
- =?utf-8?B?Z3VJVEt6VDU2KzBwRWxzQlZ1SnIzaUNUVW1mcDBwdURZU1ZxYXgybFh0K3dl?=
- =?utf-8?B?eG05aHpXMUVmZHcxdXk5ZFMxKzlOL05EM0RKRzJGdjU4bzkzNnhuNHNhNjlo?=
- =?utf-8?B?OVhrZHFPa25KTU90MzQ3L0RaMTZYUUNEM2hRTGpxNnl6L2JrNlhPVjdQL2xt?=
- =?utf-8?B?RnROYlRxd3Q2bVhyMkVtcEliTHNZOE5UdXZtSnlkZDBVMm82ODNvcU1XQU5q?=
- =?utf-8?B?b1Q0ZHJYWm9ZWUJ6VFg4UVpPbXZjWVFFVis2MVh5eURscjIyQXI1RWVWWGcy?=
- =?utf-8?B?ME9iNjhLdXI1Yzhwc1Q3WGxOdFdlaHlySWdHWVhLM2hicUErUVdUa0h2NzNu?=
- =?utf-8?B?MURCVTRBRUZCeXpOS08yVVp3YjdqQjlEYjZCR1F2UWtPZklQVC9hUW1nUVZL?=
- =?utf-8?Q?6+KabtPCuUWIiP3JpWMwuEIvR?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA54B289E3F
+	for <linux-pci@vger.kernel.org>; Tue, 24 Jun 2025 11:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750764221; cv=none; b=DVUI3rh4WT18GEzUUuA/5asE0ROSPOoJd6ljvjg8AwRcbG3DVefwTyaPvMXgzW9sZW4t6Z+CMegfuUMrU0FN9AqAbekH5V3OwQoeRHpdQ+uBuHPCq5sycp4zOL6zk9oI7T3RT23rq3f1cTYJf7O26qFLkgCVZ0fOJ/2JPj2Vu7Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750764221; c=relaxed/simple;
+	bh=Pdd2IqOay3tUA/o6SLZEbrS+Ws8JwXxYI2q35gKztm0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=oQAHK6+M9NcRl6fKn3N5eGN31XZfh4+4FLFsDWvUFGxXChCotwIc3Qzg0jJd81oNTSHMPRk8F6q6DN8/Mmdn0C7pLvbmIYdQ4peec8k4vxR+eAD8EPCtsxBReFPr4e60hzO0mCzFbdZRM+shfJ3IWREpe8UVFehYMpMFuQ9caWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GVgcU9KG; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750764220; x=1782300220;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Pdd2IqOay3tUA/o6SLZEbrS+Ws8JwXxYI2q35gKztm0=;
+  b=GVgcU9KG/bTIZgiO5RHD7GESNOKXxHmU9UrAxdGoSp4M0/8sdAb006qk
+   Z2M0uMVvQFdg43RtGjLQtUMrVd+zEsEjRh/TFfLfk0fFMcfKWCGLS1v6X
+   fwZ5tSe7S7sTset0pxve+VHzF8HfrnsDo778+I4gpHlkKCQ8isRQpGk7D
+   ymUCJjOO+5YtCbDtWe9CsTrzJAzc1hqb48YJoRMXLZQfw7CL5r6OszkFX
+   LF5jS1B2yDkpluJSkqqmYDiYxEwR1ofQOhhVaicNhfJgpaf+4+rmpI+wg
+   r23fuCkb5+mZENlOkIZRzjPCAEG2DDMGj+gmWIjoUqpMA/C0+gjUKB45u
+   g==;
+X-CSE-ConnectionGUID: ULNf8607TyuZiMfHAROhwg==
+X-CSE-MsgGUID: gAzneI/oQ02HirpzTzKQyA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52867902"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="52867902"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:23:39 -0700
+X-CSE-ConnectionGUID: Qo3RS344QTOuVthfYWpYuA==
+X-CSE-MsgGUID: aAGp3UH2TE+hUeJfPIj1FA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="157386992"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.16])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:23:36 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 24 Jun 2025 14:23:33 +0300 (EEST)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Bjorn Helgaas <helgaas@kernel.org>, Andrew <andreasx0@protonmail.com>, 
+    "Maciej W. Rozycki" <macro@orcam.me.uk>, 
+    Matthew W Carlis <mattc@purestorage.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Fix link speed calculation on retrain failure
+In-Reply-To: <1c92ef6bcb314ee6977839b46b393282e4f52e74.1750684771.git.lukas@wunner.de>
+Message-ID: <78b87a33-3e46-aabd-3f88-db5c1130c20c@linux.intel.com>
+References: <1c92ef6bcb314ee6977839b46b393282e4f52e74.1750684771.git.lukas@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a04761f8-fcdc-4628-ebdc-08ddb30fdaa0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2025 11:11:22.9788
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1HLSO9xOXLbd6+G9HzaD4sBRDFHSSMeaT4zRQqf+0FjVYmOw+PK+/F828Ux2PsLQBabM9fv39c5B6by7Gq5WC+9QEGpEHyHZWjcY18UCb44=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB7080
+Content-Type: multipart/mixed; boundary="8323328-880527929-1750764213=:943"
 
-PiA+ID4gPiArCXUzMiByZWc7DQo+ID4gPiA+ICsJYm9vbCBsaW5rOw0KPiA+ID4gPiArDQo+ID4g
-PiA+ICsJcmVnbWFwX3JlYWQocGNpZS0+cGNpZXBoeSwgUEVIUl9NSVNDXzMwMCwgJnJlZyk7DQo+
-ID4gPiA+ICsJaWYgKHJlZyAmIENBUEFCSUxJVFlfR0VOMikgew0KPiA+ID4gPiArCQlyZWdtYXBf
-cmVhZChwY2llLT5wY2llcGh5LCBQRUhSX01JU0NfMzQ0LCAmcmVnKTsNCj4gPiA+ID4gKwkJbGlu
-ayA9ICEhKHJlZyAmIExJTktfU1RBVFVTX0dFTjIpOw0KPiA+ID4gPiArCX0gZWxzZSB7DQo+ID4g
-PiA+ICsJCXJlZ21hcF9yZWFkKHBjaWUtPnBjaWVwaHksIFBFSFJfTUlTQ18zNTgsICZyZWcpOw0K
-PiA+ID4gPiArCQlsaW5rID0gISEocmVnICYgTElOS19TVEFUVVNfR0VONCk7DQo+ID4gPg0KPiA+
-ID4gV2hpbGUgSSBkb24ndCBlbnRpcmVseSBrbm93IHRoZSBtZWFuaW5nIG9mIHRoZXNlIGJpdHMs
-IHdoYXQgaWYgdGhlDQo+ID4gPiBsaW5rIGlzIG5vdCB1c2luZyBtYXhpbXVtIHNwZWVkIGl0IGlz
-IGNhcGFibGUgb2YsIGRvZXMgdGhpcyBjaGVjaw0KPiBtaXNiZWhhdmU/DQo+ID4gPg0KPiA+DQo+
-ID4gSW4gb3VyIEFTVDI3MDAsIHRoZXJlIGFyZSBnZW40IFJDIGFuZCBnZW4yIFJDLg0KPiA+IFRo
-ZXJlZm9yZSwgaGVyZSB3aWxsIGdldCBjYXBhYmlsaXR5IHRvIGNvbmZpcm0gaXQgaXMgZ2VuMiBv
-ciBnZW40Lg0KPiA+IEFuZCB0aGUgbGluayBzdGF0dXMgaXMgaW4gZGlmZmVyZW50IHJlZ2lzdGVy
-Lg0KPiANCj4gT2theSwgYnV0IHRoZW4gSSdtIGEgYml0IHdvcnJpZWQgdGhlIG5hbWluZyBvZiB0
-aGUgZGVmaW5lcyBhcyAiTGluayBTdGF0dXMiIGhhcw0KPiBhIHdlbGwta25vd24gbWVhbmluZyBp
-biBQQ0llIFNwZWMgc28gaXQgaXMgY29uZnVzaW5nIHRvIGNhbGwgc29tZXRoaW5nIGVsc2UNCj4g
-TElOS19TVEFUVVNfKi4gRG9lcyB0aGF0IG5hbWUgY29tZSBmcm9tIHNvbWUgQVNUIHNwZWM/IElu
-IG5vdCwgY2hhbmdlIHRoZQ0KPiBkZWZpbmUgbmFtaW5nLiBJZiB5ZXMsIHlvdSBzaG91bGQgcHJl
-Zml4IGl0IHdpdGggc28gaXQgaXMgY2xlYXIgdGhpcyBpcyBub3QgcmVmZXJyaW5nDQo+IHRvIGEg
-Z2VuZXJpYyBQQ0llIHRoaW5nIGFuZCBJIHN1Z2dlc3QgYWxzbyBhZGRpbmcgYSBjb21tZW50IGFi
-b3ZlIHRob3NlDQo+IGRlZmluZXMgdG9vIHNvIGFueW9uZSBsb29raW5nIHRoZW0gbGF0ZXIgd29u
-J3Qgd29uZGVyIGlmIHlvdSdyZSBqdXN0DQo+IGR1cGxpY2F0aW5nIHNvbWV0aGluZyBmcm9tIHRo
-ZSBQQ0llIHNwZWMuDQoNClRoYW5rcyBmb3IgeW91ciByZW1pbmRlci4NClRoaXMgY29kZSBpcyB1
-c2VkIHRvIGdldCBpbmZvcm1hdGlvbiB3aGV0aGVyIFBDSWUgaGF2ZSBjb21wbGV0ZWQgcGh5c2lj
-YWwgdHJhaW5pbmcuDQpJIHNob3VsZCBjaGFuZ2UgdGhlbSB0byBjYWxsIExJTktfVVBfR0VOMiBh
-bmQgTElOS19VUF9HRU40Lg0KSSB3aWxsIG1vZGlmeSB0aGlzIHBhcnQgdG8gYXZvaWQgY29uZnVz
-aW9uIGFuZCBhZGQgbW9yZSBjb21tZW50LCBhcyB5b3Ugc2FpZC4NCg0KVGhhbmtzLA0KSmFja3kN
-Cg0K
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-880527929-1750764213=:943
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Mon, 23 Jun 2025, Lukas Wunner wrote:
+
+> When pcie_failed_link_retrain() fails to retrain, it tries to revert to
+> the previous link speed.  However it calculates that speed from the Link
+> Control 2 register without masking out non-speed bits first.
+>=20
+> PCIE_LNKCTL2_TLS2SPEED() converts such incorrect values to
+> PCI_SPEED_UNKNOWN, which in turn causes a WARN splat in
+> pcie_set_target_speed():
+>=20
+>   pci 0000:00:01.1: [1022:14ed] type 01 class 0x060400 PCIe Root Port
+>   pci 0000:00:01.1: broken device, retraining non-functional downstream l=
+ink at 2.5GT/s
+>   pci 0000:00:01.1: retraining failed
+>   WARNING: CPU: 1 PID: 1 at drivers/pci/pcie/bwctrl.c:168 pcie_set_target=
+_speed
+>   RDX: 0000000000000001 RSI: 00000000000000ff RDI: ffff9acd82efa000
+>   pcie_failed_link_retrain
+>   pci_device_add
+>   pci_scan_single_device
+>   pci_scan_slot
+>   pci_scan_child_bus_extend
+>   acpi_pci_root_create
+>   pci_acpi_scan_root
+>   acpi_pci_root_add
+>   acpi_bus_attach
+>   device_for_each_child
+>   acpi_dev_for_each_child
+>   acpi_bus_attach
+>   device_for_each_child
+>   acpi_dev_for_each_child
+>   acpi_bus_attach
+>   acpi_bus_scan
+>   acpi_scan_init
+>   acpi_init
+>=20
+> Per the calling convention of the System V AMD64 ABI, the arguments to
+> pcie_set_target_speed(struct pci_dev *, enum pci_bus_speed, bool) are
+> stored in RDI, RSI, RDX.  As visible above, RSI contains 0xff, i.e.
+> PCI_SPEED_UNKNOWN.
+>=20
+> Fixes: f68dea13405c ("PCI: Revert to the original speed after PCIe failed=
+ link retraining")
+> Reported-by: Andrew <andreasx0@protonmail.com>
+> Closes: https://lore.kernel.org/r/7iNzXbCGpf8yUMJZBQjLdbjPcXrEJqBxy5-bHfp=
+pz0ek-h4_-G93b1KUrm106r2VNF2FV_sSq0nENv4RsRIUGnlYZMlQr2ZD2NyB5sdj5aU=3D@pro=
+tonmail.com/
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Cc: stable@vger.kernel.org # v6.12+
+> ---
+>  drivers/pci/quirks.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index d7f4ee6..deaaf4f 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -108,7 +108,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
+>  =09pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
+>  =09pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+>  =09if (!(lnksta & PCI_EXP_LNKSTA_DLLLA) && pcie_lbms_seen(dev, lnksta)) =
+{
+> -=09=09u16 oldlnkctl2 =3D lnkctl2;
+> +=09=09u16 oldlnkctl2 =3D lnkctl2 & PCI_EXP_LNKCTL2_TLS;
+> =20
+>  =09=09pci_info(dev, "broken device, retraining non-functional downstream=
+ link at 2.5GT/s\n");
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+IIRC, there was a patch from somebody else which fixed this a bit=20
+differently but never got applied (many months ago by now).
+
+--=20
+ i.
+
+--8323328-880527929-1750764213=:943--
 
