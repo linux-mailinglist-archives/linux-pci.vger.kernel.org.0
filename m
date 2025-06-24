@@ -1,271 +1,119 @@
-Return-Path: <linux-pci+bounces-30471-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30472-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91750AE5956
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 03:43:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42BC8AE5A16
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 04:29:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 408871B64CA7
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 01:43:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D1BB64C1725
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 02:29:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 862E919DF4A;
-	Tue, 24 Jun 2025 01:42:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1255E204C36;
+	Tue, 24 Jun 2025 02:29:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LqLRI/bW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DN9qdWgY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2056.outbound.protection.outlook.com [40.107.92.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC41E19CD01;
-	Tue, 24 Jun 2025 01:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750729379; cv=fail; b=WKqd5p0ENKaIgCURrV21ss0n46jt7H/mswt1VqJWWRZ8Fp81cdvk8/co5sr6W6P2OeNkPjJblJAlDu8XdxDxHYpG0qlgzSFS9Bw1UqS97L/uQI4AbGWVamki9KoCbULNKgCKvo144WinoL1R69ccrGDgjgEvcr6mI3srsxJL120=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750729379; c=relaxed/simple;
-	bh=RGROFycoQ93rm+ZgwmFqbVuEA/Xf9Z/8YqHMPQBteZA=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=bKWiE0aUnN/3LQ95JFI/ULJ2vfk++Ax2JLqqyPnR38bhgRUH5yKRHhrLoFEU669AGT5OQAqix6lPNXTlTpeCRMVldX3po+qx6/Pnsq3hmy1gQBEbpdkK6LuhvfOO3xDyAr15MMUmAlX4MGlw0ZhtCYDPeNUUi6efuVSTkimJcn4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LqLRI/bW; arc=fail smtp.client-ip=40.107.92.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LWpSGRODPsvRWg+8qwfwodhrAQUcGUHBTHgXQk9p3QFv2uNhMz0MLVi/74BYpyi0sJcLsMcqOPD7A8CAca8Zf4EcfrOwaX2s3gII2Bj3TT7ZDRnT3M/UHoCBmVNllGjgpopvKYWMXffG45r+TNEsm1D0tyfOiVOIVxr5DBg53ZVnnJ9oYl0yMIj9eclQPK+DZyqndnxAjqQqg5vnfPfvwEvGBDVzjXgpbKw23nMu5NfsiM4upYRYF8bIZuAwIJtsqd+TCd4c1VikXb63C1soyUVoPVP9XWTETAgAY9xUZkS5fj5C2asShEKgvH5i4r50m7x8tL71+jLPKnXR/CaF5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CrrcNtz+1B7DgCLcVyuu1S0O1xGRonbINXsJUmvY/8U=;
- b=ZUfppuYTHqjvq3FAjmKmaN2TqDjizOspmlyFBfGuuMxHjPH1R26jEqwTcPvf+vMeWGWwsTGBCLv+Lc2i2aBBX8HPTB0Suwn6ctboGfvOpMU66MQdeI9hvj/VPjnvLN0egjKfHSi1/elOBxEhDO3SU1aWMHRVip+OBvXF2U/x8Zbx6Gkav99/rLlqPuHFCNDUp5WM9EPr+W7tIgDqZwrUO6uZs7esXrcv8Wpdos40q8EF69eGKDZevFBpxo7iHujJR9cciV+fsHLoLf9npt3HQGx8OXOdDGT+h4WIHlaHWRng+t/yw0+Kk4PIGMFne7FmZrgrmMumaEF7ESQ4yDhOzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CrrcNtz+1B7DgCLcVyuu1S0O1xGRonbINXsJUmvY/8U=;
- b=LqLRI/bW/XNaEHnigTzBqTlWjNvQPrlP+6lnsPbBpX+znMT2953M/b36S3EyxqWTMTW3v1JH0jodS5o0QJwYATMb48Rae7fqwTIO9HyqFjrHAg/lgtXZShABqqLbqMigaAndRB1NwDlzLgxgjy2geVFFwttWDBfPF8UJcOUJ8SQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by DM3PR12MB9287.namprd12.prod.outlook.com (2603:10b6:8:1ac::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Tue, 24 Jun
- 2025 01:42:54 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::1e6b:ca8b:7715:6fee]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::1e6b:ca8b:7715:6fee%7]) with mapi id 15.20.8857.019; Tue, 24 Jun 2025
- 01:42:54 +0000
-Message-ID: <930fc54c-a88c-49b3-a1a7-6ad9228d84ac@amd.com>
-Date: Tue, 24 Jun 2025 11:42:47 +1000
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC PATCH] PCI: Add quirk to always map ivshmem as write-back
-From: Alexey Kardashevskiy <aik@amd.com>
-To: linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
- David Woodhouse <dwmw@amazon.co.uk>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Santosh Shukla <santosh.shukla@amd.com>,
- "Nikunj A. Dadhania" <nikunj@amd.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <20250612082233.3008318-1-aik@amd.com>
- <52f0d07a-b1a0-432c-8f6f-8c9bf59c1843@amd.com>
-Content-Language: en-US
-In-Reply-To: <52f0d07a-b1a0-432c-8f6f-8c9bf59c1843@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SY8P282CA0025.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:29b::30) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6F31DFE12;
+	Tue, 24 Jun 2025 02:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750732159; cv=none; b=lR0JHaLnQjZnvNxBSr3k9o2C/vp6wNQPc+mE7ozYmGtqFLA82mr0PhwMYqmzp88DRRRFUHDZLjCeh/6kUmjXUWMPltA/WwSRH7lOxjgb8y/OaXPYltCGKh//S7dl1x80PMZykgcpEJP9ScWuZBBzAxJ4LS9yJPXClFuLrwB1qyE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750732159; c=relaxed/simple;
+	bh=aCq7pU8kNb4mHcl6rtEIZfZyJWT3bMbgZHNQ3Cyafh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JPjf5pRhd52OzssruU8yPmgmkdIk25dZrCs5/dSLKITvAGXiUzR8jttFDCLzV5txCxLfXK27je4zmobLpQw0SHBli+Ofs/6lAZJZIuqt0+ljKAWm2Wz4ssmdIkObGd6CFo229RRlpNMYT5VDoAO+bhgmp12R3G5dU8JkGyPbbHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DN9qdWgY; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750732158; x=1782268158;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aCq7pU8kNb4mHcl6rtEIZfZyJWT3bMbgZHNQ3Cyafh4=;
+  b=DN9qdWgYVaPlRxSQCVP/G9AzezzZR+CeW7E3r1ZaHdjOLzac4ffSuPib
+   V4eWZGQeIPQTjmCi2imaWksKmaZPmjUPfIBev93YGe5raA/usuN5delcM
+   MBOcxRAaQljl1NIE3akWaLv03bEO5Mw7Edt1CE9NIw1DKIU9besEanR7U
+   6M12+Fypr4S20ZWCBa4HgAIEAeObyXNTkkbq7ceVE9ycZl9UFOefhoO3T
+   X9GOT71mCsTSFqeWnBvmjawAYLf7f+9RnTUPP14sFBSHSRTwK70098fkP
+   4bxAHlQA8jVYUyx4hcipo0504aI9k7yAX7mIBy97zm6/VXHc7EmM/RBm0
+   g==;
+X-CSE-ConnectionGUID: AYELB+vNSEKptdvvDNFABw==
+X-CSE-MsgGUID: +GWRGvdzTC6/IW/eCFSskg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56629117"
+X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
+   d="scan'208";a="56629117"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 19:29:17 -0700
+X-CSE-ConnectionGUID: yMfGDS/9QleenYCj1nIOxw==
+X-CSE-MsgGUID: KnB9MCWvQ7y/CioVZQ06Rg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
+   d="scan'208";a="182808464"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 23 Jun 2025 19:29:14 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTtPK-000Rdi-1a;
+	Tue, 24 Jun 2025 02:29:10 +0000
+Date: Tue, 24 Jun 2025 10:29:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sai Krishna Musham <sai.krishna.musham@amd.com>, bhelgaas@google.com,
+	lpieralisi@kernel.org, kw@linux.com, mani@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	cassel@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
+	thippeswamy.havalige@amd.com, sai.krishna.musham@amd.com
+Subject: Re: [PATCH v3 2/2] PCI: amd-mdb: Add support for PCIe RP PERST#
+ signal handling
+Message-ID: <202506241020.rPD1a2Vr-lkp@intel.com>
+References: <20250618080931.2472366-3-sai.krishna.musham@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DM3PR12MB9287:EE_
-X-MS-Office365-Filtering-Correlation-Id: 10b27cf4-44f8-45f3-895b-08ddb2c06fe4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bXJaVDFkTC8weXhOK3VJZE5oSUUvbkliQ2ZZRVdRVkg0N09xMjc4aDFuaExQ?=
- =?utf-8?B?Zkx3c2FxTlZuNExTbml3cmpHWklHN2xOR2FETnhITm5tc2dHTHRhNGpNOW00?=
- =?utf-8?B?VDBDRjN2S1IyNmtJOGhZOXpKekxnOWVlNUtuaWNXTFE0WTVFQjdwa2k3bzg2?=
- =?utf-8?B?aFkxOURYTWF0bXFWaHlBZ3ZpV2pVTlgxU2QvazhGTnJMdHJiMHlTWnhsSDk3?=
- =?utf-8?B?OHFPV3RtNnI2OEpnbW45dUpVVWZPWTNjaVJqaS9INVBZYUJnQkdYOUY3RGNr?=
- =?utf-8?B?eDNuVEtoRDloaHk5cjNiMy9wMThIQXErR2k3dnlnbHl2aVVmQ2JHd1loWU9J?=
- =?utf-8?B?c21teG9mbmVkaDJvRDVwdzVEOGJ4OHdTamV2RW5Xd1BnZEVicCtsck5lNHBM?=
- =?utf-8?B?WGxjdGRpcGh0M3Q5akJwaW5LRWlYK2ljaUFuVGVZL2s1eVE2anBUSHRjdXNH?=
- =?utf-8?B?MDlRTXhwWXpFcnhwQkVJWW1uSWYxQmM3elFQVm9YeDlFcllNaG9rU0hMTDZw?=
- =?utf-8?B?TkFJaG9vREUySkplZllqb1IyTXhmRjB5ZVZDS2hobmJmUGxseW9EcDhJMXJr?=
- =?utf-8?B?Q1ZaL1BEUDkxNFp3SCtWUXdkV0tnMlh3dFhnTVBkazJDdGJTYzdUS0xYZnZI?=
- =?utf-8?B?WDR3RHJSNktkY2pKeTY3a2s1eWhIWkdYdlZiSHdiZWQ0MjBVRFBZYkVsMitn?=
- =?utf-8?B?TU9FVjVxNjdqbG9xK0tlU2RveXVuMGUrYnJlVlhXUFVMMTdIb3FVOTJlL3hJ?=
- =?utf-8?B?NEQ3NldyZDFCTUhQSER1RCtwN0NQcUlIMVRXVzF0eVhsOUh3UjE3M0E5V1V6?=
- =?utf-8?B?RnUxbjFQYjJPS0pJTlZ2UDdqbUZsMW1iYkRsOEg1S2t3U0lxMkZYNGhieHUx?=
- =?utf-8?B?Z3Y1cDcwNFJQZE1BUnp5d3lWNGRTbE1FRFFXajhNTW9JaHNUWkp0NE5xd1JN?=
- =?utf-8?B?bVhIZXk4T1dxSWNTSXVCbGRaOEtjVy9Ja2g1eFRtajBQT2F5MjB6MzJqMGNU?=
- =?utf-8?B?dHE5QUZGME4wYnpTVXpDYUQvcUhIbnoxaDNxQkFVTlBPc1lGNVpLWm83SG4v?=
- =?utf-8?B?WTIxRFI2Tm1VUm1nRVRjN0d1MU11dm5DcWNKek1UMi9kb2dMUGZsWWNSK0dC?=
- =?utf-8?B?ZTF5Mi84c2lZVzJabHlyeVhZQ3A3R1JDK1k4cENHRkVsSVFaaHVaemhSYWY3?=
- =?utf-8?B?R2M4VFhqY3VHdlpPZ1FDSHg1c1ZpSkVjWUNhc0lkYnc5R1ZxR09ycFVEeDdU?=
- =?utf-8?B?TFRhR3JiY0lpY0NtSEtEOVpKeXdUVWtidTdJNS93MUxZOUN2ZkpNaDUwZ2NT?=
- =?utf-8?B?SGVEY0xBTXhnbmhCYmVGYlNSZWxjSFhxOElScUdQRjhqRFU2dms0RCswdzlr?=
- =?utf-8?B?VmRleE9mU1JNcllCN2ZlY0g4Wk1OamdkUVNyZ1MrWThuMWRYVnZUcUEzTXUx?=
- =?utf-8?B?MzNvYVkzUS8zd2N0VDZMOGVNNVFCNkIzc1V4U2x3Q1NXYkJBdXVMVFJlSjRR?=
- =?utf-8?B?MjM3U2h6aGIrUUgyYUIrRkFBVm9UMjU3YWQ1dFZ4NVkxSGppQ0dWSncyU1VG?=
- =?utf-8?B?Q1ZWWmdSajlBMlRISkt6a3ZFYi9vRFBHZkdGSERZK0NvVkVodTRMaTlya3Ft?=
- =?utf-8?B?WXdhMStObDVVUUlINGgwVFplM0ZEcStWc3ljTzJ5L0ZyR3NiQUFYOXVnL3Bv?=
- =?utf-8?B?OUdMejdndUNtTDVqc2JrZktJUUhrR0YxSWZUeFZ2M2ZPNEk5bklXdVBWK0s1?=
- =?utf-8?B?eE11RHV0eE9vcmp0bWNwUHZYcFk0aXkvV3hkU01pTkRDREhjaER0dkpRLy9h?=
- =?utf-8?B?TFZpWlI0aERIZ01jRUh4SzIyWWh0akxhdlRIR3FuNXhHdTNkckt6K3NaQ09C?=
- =?utf-8?B?QWNicGE5dTFMdCtRVTV1Umx2T0g1RFl4Rk43MnV4T2tmT0RRSUZWa0d4WERE?=
- =?utf-8?Q?HMaTJCQTfpQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dVJ5dXNERk9KYUZ4bUphZW80RUpRRzNMcmNRUFBHaVMxNHp0eTN1eElVbk1S?=
- =?utf-8?B?Y2NrWElPd2d3TWM2RDlnaXJOSjFHc1Jjemt5QWsyOG55UUpUS1lNcUo2QmJR?=
- =?utf-8?B?aTQzazMycFhxZGkvcllJblpVcDZzbmsrb09pNC9yVnA1aXB3dVJRS2RJK2lK?=
- =?utf-8?B?QTBzWWY4QUloWC85RVZ2ek9hZ2ZGWUxkUkNtcS9FcEUxNXMyRlpQQ0hRUHBE?=
- =?utf-8?B?b0xGbEZSdng5bU1VcFduTExFNU9XdzFQOU8zTjFqOXpDOGVsbElLMlJsc2RU?=
- =?utf-8?B?Q0YxaHVwTFdtK0FCazY0UU9MZzlONW9vNGxaN3Z1d29DNzROWVU0UnM4bFVK?=
- =?utf-8?B?OEFwTG5sME14Mk5SQTJ5dFdpK0lkY2YxTWJFSUdSVUZZam1rNU5Mb3h1RW9H?=
- =?utf-8?B?ZkFWYlFla3JQZVFpSUtyOUk4Q25iYkhMNVU2bk5Hbm1IR3VEb3JXOUpySGda?=
- =?utf-8?B?aHNyMnRpUWdSN2E0cVQ1YVQxdlFHRW1jd296ZTdQeDVUYTN5L1lYRXdvQjAw?=
- =?utf-8?B?TzJLdnNmSm5MbEw2bkxtdTIwbitxQ3I3UmR2cWFxMTk2MENvNkNUWmErUDda?=
- =?utf-8?B?dlZwZ0FFRVVSMG9pZm85dm11VGQ2OU14TmVPWkNhcmZWeU55NndzcXJwVXVR?=
- =?utf-8?B?eFdJM3ByMmtKamFkZWpJZmd1a2djS3lSRHUrY3U5MU5IcEV0TnRtUWE4SU15?=
- =?utf-8?B?VzVjZE5McmM2T1BkMzIxZ1Nod29GdElueGlSb2tGYXVNYmhIM05kOHQ0RnYy?=
- =?utf-8?B?TEpXWmFIbkkyeGZJSHBLbkJKM003dHlDUlVxaFFEOEMxMVlwbE5LNG9LdVE0?=
- =?utf-8?B?a0hvbGNRYnVMdFVacUVSYnBqTEtPbkUxYWhpWWI2NEFJVGJoOVhEZDBHNjMr?=
- =?utf-8?B?RzhDL1dRcERGVElMTDV0enJsU3kxUmtDMldMZ2pXbysxNVBmOGE2YUhJRXpL?=
- =?utf-8?B?MXpxWGd2aWhyV0xhNDJLOEVwVzNmcUxzd1d4NzB3aWNzL3plc2tCcjZHZVRT?=
- =?utf-8?B?VytTaWVRdHRCTjRCUXlGelJTRDhySVV6ajFFdDllclpodlhmeGVtcFdjQm5N?=
- =?utf-8?B?STFhVThIa0RGQml0MFJOZ0RTejhrK3NqZVRsNnkxVHFaKzJOR05Ib21xNDl2?=
- =?utf-8?B?Q0lXajdlNkl6RkNsMWFzQlZVZjZ1d2V0RmZyNXQxZG9xeFM2OUxKWmFpN1Nq?=
- =?utf-8?B?YmQzcEhuMW9VQVduRXFnV3poTmxYWmFFVjhtb0pLZXB6MnVFd3FlQUJqR09i?=
- =?utf-8?B?ZThEcFZJOHBrY01URk5BUnFsOUtkSHI5dFRJUG1tdS80VGRlOVJsTlBVanhY?=
- =?utf-8?B?Z3BnTThkeFh0TmMweVpTSUh5VThwQUQzT01pUW94NHdlVmYweWdITkJ6UWQy?=
- =?utf-8?B?SFlaY2hLUVFON3dxNHJXM0JhdGdRUU42NFQxM2FhR3RLYUtwemVpR3NjWVpZ?=
- =?utf-8?B?VUVEUThmNy9LRTR2WVI3ZGdQRWh6Rkk2OTRzVmI3OXZJTXpFbGpQMGRIQ0NV?=
- =?utf-8?B?RXZ3SmdWZTNmMGd1UndoRkxMR1NhU3I3cm5odnNwbzFqV0lZZnNBNjkwZ1lZ?=
- =?utf-8?B?MWZMay9HUmtOUjJ4ZlV4SmRGcEdLeDl5SmNqR002YkdkazR0amE0TmVOR0xW?=
- =?utf-8?B?dC9NNkNyVnFFNUFiWVZvK2psR2NDb0JZcVIyUytTNWZCenl4aThHZUVBL0dz?=
- =?utf-8?B?WWVod1d5a2dQZzRxa0xOYWhESmU2SzZFRUxOam1BV200VnFNMTRGc25HR0Zs?=
- =?utf-8?B?TkgwQTNqYS9VTmhwcTd4MHlSSVo0c1ZnclJPZ0grVllLOXNXT1JpSDcwY0Y1?=
- =?utf-8?B?NzlMSzhLNEZWQVJHVmx6WE9RQSsvTkRSclFzdVNQVm5peU5YQi9LdVVsRmdx?=
- =?utf-8?B?YWlXN2FrN0R3QzJMMFcyYzUvM3FYRzB2V0p0WXJGTWxWMDkvdk9PZlBzNHRW?=
- =?utf-8?B?bnJWNGVlVytpUEpJYnpIbkpMT2NMTThjQWx4SWwxVXU4ZDVIZkdFMzk5dWNQ?=
- =?utf-8?B?NXRKdCtMbU04VERhT1ZWenBwY28wZm1jN1duQndRQUpxYWt2Y0w1NzAxelov?=
- =?utf-8?B?bDRWMzlkdDhvR05aZU05U0lGTG0yTmdLQkxLZFk3T0NzNVlDMnpCVWtNTGFo?=
- =?utf-8?Q?VPbyA9BOjMMUzrOAdx4G3FZes?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10b27cf4-44f8-45f3-895b-08ddb2c06fe4
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 01:42:54.0700
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tiongESJxVf6Uvj/1wyRAlAWVF2WwiHuaZXVIixc4iDzn8VvSERoFjbAHak8/BP6tPdtA92oIZ4Ta0rd5uvSGA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9287
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618080931.2472366-3-sai.krishna.musham@amd.com>
 
-Ping? Thanks,
+Hi Sai,
 
+kernel test robot noticed the following build warnings:
 
-On 12/6/25 18:27, Alexey Kardashevskiy wrote:
-> Wrong email for Nikunj :) And I missed the KVM ml. Sorry for the noise.
-> 
-> 
-> On 12/6/25 18:22, Alexey Kardashevskiy wrote:
->> QEMU Inter-VM Shared Memory (ivshmem) is designed to share a memory
->> region between guest and host. The host creates a file, passes it to QEMU
->> which it presents to the guest via PCI BAR#2. The guest userspace
->> can map /sys/bus/pci/devices/0000:01:02.3/resource2(_wc) to use the region
->> without having the guest driver for the device at all.
->>
->> The problem with this, since it is a PCI resource, the PCI sysfs
->> reasonably enforces:
->> - no caching when mapped via "resourceN" (PTE::PCD on x86) or
->> - write-through when mapped via "resourceN_wc" (PTE::PWT on x86).
->>
->> As the result, the host writes are seen by the guest immediately
->> (as the region is just a mapped file) but it takes quite some time for
->> the host to see non-cached guest writes.
->>
->> Add a quirk to always map ivshmem's BAR2 as cacheable (==write-back) as
->> ivshmem is backed by RAM anyway.
->> (Re)use already defined but not used IORESOURCE_CACHEABLE flag.
->>
->> This does not affect other ways of mapping a PCI BAR, a driver can use
->> memremap() for this functionality.
->>
->> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
->> ---
->>
->> What is this IORESOURCE_CACHEABLE for actually?
->>
->> Anyway, the alternatives are:
->>
->> 1. add a new node in sysfs - "resourceN_wb" - for mapping as writeback
->> but this requires changing existing (and likely old) userspace tools;
->>
->> 2. fix the kernel to strictly follow /proc/mtrr (now it is rather
->> a recommendation) but Documentation/arch/x86/mtrr.rst says it is replaced
->> with PAT which does not seem to allow overriding caching for specific
->> devices (==MMIO ranges).
->>
->> ---
->>   drivers/pci/mmap.c   | 6 ++++++
->>   drivers/pci/quirks.c | 8 ++++++++
->>   2 files changed, 14 insertions(+)
->>
->> diff --git a/drivers/pci/mmap.c b/drivers/pci/mmap.c
->> index 8da3347a95c4..8495bee08fae 100644
->> --- a/drivers/pci/mmap.c
->> +++ b/drivers/pci/mmap.c
->> @@ -35,6 +35,7 @@ int pci_mmap_resource_range(struct pci_dev *pdev, int bar,
->>       if (write_combine)
->>           vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
->>       else
->> +    else if (!(pci_resource_flags(pdev, bar) & IORESOURCE_CACHEABLE))
->>           vma->vm_page_prot = pgprot_device(vma->vm_page_prot);
->>       if (mmap_state == pci_mmap_io) {
->> @@ -46,6 +47,11 @@ int pci_mmap_resource_range(struct pci_dev *pdev, int bar,
->>       vma->vm_ops = &pci_phys_vm_ops;
->> +    if (pci_resource_flags(pdev, bar) & IORESOURCE_CACHEABLE)
->> +        return remap_pfn_range_notrack(vma, vma->vm_start, vma->vm_pgoff,
->> +                           vma->vm_end - vma->vm_start,
->> +                           vma->vm_page_prot);
->> +
->>       return io_remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
->>                     vma->vm_end - vma->vm_start,
->>                     vma->vm_page_prot);
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index d7f4ee634263..858869ec6612 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -6335,3 +6335,11 @@ static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
->>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
->>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
->>   #endif
->> +
->> +static void pci_ivshmem_writeback(struct pci_dev *dev)
->> +{
->> +    struct resource *r = &dev->resource[2];
->> +
->> +    r->flags |= IORESOURCE_CACHEABLE;
->> +}
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT_QUMRANET, 0x1110, pci_ivshmem_writeback);
-> 
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.16-rc3 next-20250623]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Sai-Krishna-Musham/dt-bindings-PCI-amd-mdb-Add-reset-gpios-property-for-PCIe-RP-PERST-handling/20250618-161100
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250618080931.2472366-3-sai.krishna.musham%40amd.com
+patch subject: [PATCH v3 2/2] PCI: amd-mdb: Add support for PCIe RP PERST# signal handling
+config: csky-randconfig-002-20250621 (https://download.01.org/0day-ci/archive/20250624/202506241020.rPD1a2Vr-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506241020.rPD1a2Vr-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506241020.rPD1a2Vr-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Warning: drivers/pci/controller/dwc/pcie-amd-mdb.c:68 struct member 'perst_gpio' not described in 'amd_mdb_pcie'
 
 -- 
-Alexey
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
