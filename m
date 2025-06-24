@@ -1,122 +1,268 @@
-Return-Path: <linux-pci+bounces-30484-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30485-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B6C6AE5FD3
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 10:47:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E565DAE6037
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 11:06:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 124ED7AC9F4
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 08:45:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B9D51924411
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 09:07:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE529279357;
-	Tue, 24 Jun 2025 08:47:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF1ED27AC21;
+	Tue, 24 Jun 2025 09:06:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m1l/IGIF"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xi/QlwlW";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Y9LCmN9J";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="E5mo4GVk";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oREfj0fF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA42025D201
-	for <linux-pci@vger.kernel.org>; Tue, 24 Jun 2025 08:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A919827A90A
+	for <linux-pci@vger.kernel.org>; Tue, 24 Jun 2025 09:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750754821; cv=none; b=O7widtsNbWu6DaelzoDe/XihW/9Q3Xdtq+avEMWJrND7ruJiun28ZA0qaUaEInAtk75VNyqOifVl4GIThGT0krE/CG+TJQyz9RMgudDA+u+nq+K7vTp7wc+rltBMFhHLQRS7xj0IuH1XizLjkzXegDS0zhyMq+GpXuCx/gqhLlI=
+	t=1750756007; cv=none; b=kh7UL0gE34faywm/qqQ7/ll+1fe1Dh4ZfnWQbbyrk17i7HozSkHHNZzOUZ+LvVLU/OVmMintuGkTvS8EJH1Oh+8dSabGg3m0trDAinRzzK41iPTVFnG+8SSGgGXRFuhhrx3NemUgouyBBadli0gguZl3066GnNRxgIi9+FxMd6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750754821; c=relaxed/simple;
-	bh=sk99YcymbIDU19hq8yXmjqecjjp1A89+tlm6gAQgGH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gmrsw01FE7auG2CIvNtr8Qmutfp8Y/5vdU4bHZr9cdjeiJgU/vW+gWfKVTK73nrWtPqgIeph3o4/KdKCb9BAkC3+jtaZMtAJitLnXR7bOH8zwmm5GUWiisCMANhx0u4w8HLXE1ZHjCtaN2nkstGqCYhQ/YcfMb6RIvAahjFTXnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m1l/IGIF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0869C4CEE3;
-	Tue, 24 Jun 2025 08:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750754821;
-	bh=sk99YcymbIDU19hq8yXmjqecjjp1A89+tlm6gAQgGH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m1l/IGIFur09LbrENEiSXp+yRgP2dqYvAtNRdjv7/3LacgwqItYRniMP8/xWq+jdb
-	 G/mWb32kRFU5mL7GiuL/5c8M3Y5pDf1Hd56GIca9GETux12zD0LFopuOnJRNrolIn9
-	 Dwm3urw/VGWCJrqOCtCu2ZWhUgM59CJfjhauV7TV08ccpDsfqLtoqLWUg+6L/cLTmG
-	 PHrhMSBcEHJZBZvGsXoiz8iHlLod6iNn4yNDJWSqFe86gqF2w0LJucsghtqnJQ+1Es
-	 HJG0Lb8lnTSO/d9xi0wowqhPLi8TMyxes5Vkf03DYFH6scpJnOPbW4DkZS+mewvNWX
-	 4PWzYkgvnS9lw==
-Date: Tue, 24 Jun 2025 10:46:57 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: linux-pci@vger.kernel.org, Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 2/2] PCI: endpoint: Fix configfs group removal on
- driver teardown
-Message-ID: <aFpmAXWSx0zlDkkQ@ryzen>
-References: <20250624081949.289664-1-dlemoal@kernel.org>
- <20250624081949.289664-3-dlemoal@kernel.org>
+	s=arc-20240116; t=1750756007; c=relaxed/simple;
+	bh=oxW2aAAfKBhOjlWbxlJ/FAtpZq04AOHQ+xCrx3SgYHY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NjPLPxenXSRBCioFTcFCeVnCiW6asafP8Gr368UKKOSZyGhRCXPql3hJKG5c5VDfpsuP8IOWzKJ4RoEOZDAXKL6EViqTgYmJ59rJ9llu4+G54AAIX0p4PdQ6QP9hpOL7KX8yCWPDZwDmYQiDpClcXUknZ01frKLd8koFbAv9c3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xi/QlwlW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Y9LCmN9J; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=E5mo4GVk; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oREfj0fF; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D7A7A21174;
+	Tue, 24 Jun 2025 09:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750756003; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=9lICjNkiewMZFMzrpHfU5ovumYbwTZRme9bMEyMsD/M=;
+	b=xi/QlwlWq8NLVSwyspSzkPKvKMA6Uvj8/W9IFdzSFQMZ+ayNwxoQ7cp2wwdex97PvJgFlo
+	x2f/4oVPrxX02VMjazKS8ra2I9oaBaKqNmT3rxbP2v97idRqli2arNKpl/rNn7z5z2COdO
+	7+ljTlARtsgKwvd1zlhYhRoTz1XsnuM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750756003;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=9lICjNkiewMZFMzrpHfU5ovumYbwTZRme9bMEyMsD/M=;
+	b=Y9LCmN9JTWkqSIjoqHkEfxTSRml/p11vY01knXb//RDebqmAaD1GQiHEbhGpors9cm5R2y
+	CTBVZa09ODuiO0Bw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=E5mo4GVk;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=oREfj0fF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750756002; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=9lICjNkiewMZFMzrpHfU5ovumYbwTZRme9bMEyMsD/M=;
+	b=E5mo4GVk3aRBGPmQF64SGv7r/9Z7BrhMxT4Br3ozs8DXcDb//Oxu3nHGSXqq7o7Mb7CLZo
+	IMLqC5HhH2wB7OabuAKDxSBbULfeVUwIiW40R1/IDWT12tchJxMWR5KfDDB9oIDWVupYrc
+	wnYgtTWRX1PCzt/kDQ6JBbhPNcnau4c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750756002;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=9lICjNkiewMZFMzrpHfU5ovumYbwTZRme9bMEyMsD/M=;
+	b=oREfj0fFjtCcmySuYyx4a2eVlsi9oKqRPyLTW1pAnJyz47RDYq0CXOXEI70b1LsSzPwU5h
+	OgkxMNrQ9mrgSXBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 35F1213A24;
+	Tue, 24 Jun 2025 09:06:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gHhlC6JqWmhnFgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 24 Jun 2025 09:06:42 +0000
+Message-ID: <6dedf895-1681-4fe3-8ca4-68fd05070ef2@suse.de>
+Date: Tue, 24 Jun 2025 11:06:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624081949.289664-3-dlemoal@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 6/8] Fix access to video_is_primary_device() when
+ compiled without CONFIG_VIDEO
+To: Mario Limonciello <superm1@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Lukas Wunner <lukas@wunner.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
+ Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+ "open list:SOUND" <linux-sound@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ kernel test robot <lkp@intel.com>
+References: <20250623184757.3774786-1-superm1@kernel.org>
+ <20250623184757.3774786-7-superm1@kernel.org>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250623184757.3774786-7-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_DN_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[26];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[amd.com,gmail.com,ffwll.ch,wunner.de,linux.intel.com,kernel.org,infradead.org,8bytes.org,arm.com,redhat.com,perex.cz,suse.com,lists.freedesktop.org,vger.kernel.org,lists.linux.dev,nvidia.com,intel.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLqbkuqg11osc55coksncbnarj)];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid,suse.de:email,intel.com:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: D7A7A21174
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.51
 
-On Tue, Jun 24, 2025 at 05:19:49PM +0900, Damien Le Moal wrote:
-> An endpoint driver configfs attributes group is added to the
-> epf_group list of struct pci_epf_driver by pci_epf_add_cfs() but an
-> added group is not removed from this list when the attribute group is
-> unregistered with pci_ep_cfs_remove_epf_group().
-> 
-> Add the missing list_del_init() call in fpci_ep_cfs_remove_epf_group()
-> to correctly remove the attribute group from the driver list.
-> 
-> With this change, once the loop over all attribute groups in
-> pci_epf_remove_cfs() completes, the driver epf_group list should be
-> empty. Add a WARN_ON() to make sure of that.
-> 
-> Fixes: ef1433f717a2 ("PCI: endpoint: Create configfs entry for each pci_epf_device_id table entry")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+
+
+Am 23.06.25 um 20:47 schrieb Mario Limonciello:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>
+> When compiled without CONFIG_VIDEO the architecture specific
+> implementations of video_is_primary_device() include prototypes and
+> assume that video-common.c will be linked. Guard against this so that the
+> fallback inline implementation that returns false will be used when
+> compiled without CONFIG_VIDEO.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202506221312.49Fy1aNA-lkp@intel.com/
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+
 > ---
->  drivers/pci/endpoint/pci-ep-cfs.c   | 1 +
->  drivers/pci/endpoint/pci-epf-core.c | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
-> index d712c7a866d2..63876537e7dc 100644
-> --- a/drivers/pci/endpoint/pci-ep-cfs.c
-> +++ b/drivers/pci/endpoint/pci-ep-cfs.c
-> @@ -691,6 +691,7 @@ void pci_ep_cfs_remove_epf_group(struct config_group *group)
->  	if (IS_ERR_OR_NULL(group))
->  		return;
->  
-> +	list_del_init(&group->group_entry);
+> v4:
+>   * new patch
+> ---
+>   arch/parisc/include/asm/video.h | 2 +-
+>   arch/sparc/include/asm/video.h  | 2 ++
+>   arch/x86/include/asm/video.h    | 2 ++
+>   3 files changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/parisc/include/asm/video.h b/arch/parisc/include/asm/video.h
+> index c5dff3223194a..a9d50ebd6e769 100644
+> --- a/arch/parisc/include/asm/video.h
+> +++ b/arch/parisc/include/asm/video.h
+> @@ -6,7 +6,7 @@
+>   
+>   struct device;
+>   
+> -#if defined(CONFIG_STI_CORE)
+> +#if defined(CONFIG_STI_CORE) && defined(CONFIG_VIDEO)
+>   bool video_is_primary_device(struct device *dev);
+>   #define video_is_primary_device video_is_primary_device
+>   #endif
+> diff --git a/arch/sparc/include/asm/video.h b/arch/sparc/include/asm/video.h
+> index a6f48f52db584..773717b6d4914 100644
+> --- a/arch/sparc/include/asm/video.h
+> +++ b/arch/sparc/include/asm/video.h
+> @@ -19,8 +19,10 @@ static inline pgprot_t pgprot_framebuffer(pgprot_t prot,
+>   #define pgprot_framebuffer pgprot_framebuffer
+>   #endif
+>   
+> +#ifdef CONFIG_VIDEO
+>   bool video_is_primary_device(struct device *dev);
+>   #define video_is_primary_device video_is_primary_device
+> +#endif
+>   
+>   static inline void fb_memcpy_fromio(void *to, const volatile void __iomem *from, size_t n)
+>   {
+> diff --git a/arch/x86/include/asm/video.h b/arch/x86/include/asm/video.h
+> index 0950c9535fae9..08ec328203ef8 100644
+> --- a/arch/x86/include/asm/video.h
+> +++ b/arch/x86/include/asm/video.h
+> @@ -13,8 +13,10 @@ pgprot_t pgprot_framebuffer(pgprot_t prot,
+>   			    unsigned long offset);
+>   #define pgprot_framebuffer pgprot_framebuffer
+>   
+> +#ifdef CONFIG_VIDEO
+>   bool video_is_primary_device(struct device *dev);
+>   #define video_is_primary_device video_is_primary_device
+> +#endif
+>   
+>   #include <asm-generic/video.h>
+>   
 
-Nit: I think this can be a list_del() since configfs_unregister_default_group()
-will call kfree() on 'group', so there should be no need to set the next and
-prev pointers of the removed entry itself to NULL.
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-
->  	configfs_unregister_default_group(group);
->  }
->  EXPORT_SYMBOL(pci_ep_cfs_remove_epf_group);
-> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-> index defc6aecfdef..167dc6ee63f7 100644
-> --- a/drivers/pci/endpoint/pci-epf-core.c
-> +++ b/drivers/pci/endpoint/pci-epf-core.c
-> @@ -338,6 +338,7 @@ static void pci_epf_remove_cfs(struct pci_epf_driver *driver)
->  	mutex_lock(&pci_epf_mutex);
->  	list_for_each_entry_safe(group, tmp, &driver->epf_group, group_entry)
->  		pci_ep_cfs_remove_epf_group(group);
-> +	WARN_ON(!list_empty(&driver->epf_group));
->  	mutex_unlock(&pci_epf_mutex);
->  }
->  
-> -- 
-> 2.49.0
-> 
-
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
 
