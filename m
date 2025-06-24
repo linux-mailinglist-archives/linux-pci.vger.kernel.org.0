@@ -1,61 +1,79 @@
-Return-Path: <linux-pci+bounces-30517-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30518-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F56DAE6B2C
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 17:34:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FD87AE6B84
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 17:43:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D822F3A401A
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 15:30:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E72D71C418CC
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 15:35:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7F212E175E;
-	Tue, 24 Jun 2025 15:18:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EE692DAFC2;
+	Tue, 24 Jun 2025 15:28:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQlJUGTV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aX667HMm"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADE42D8DC4;
-	Tue, 24 Jun 2025 15:18:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B34F2DAFBD;
+	Tue, 24 Jun 2025 15:28:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750778310; cv=none; b=lZxGd95g7a6Cc/vNGPh9vIHPDWroW5dJwExXiASJUAKIXzGUue6vnEaCGebr+TZQ+z3PQKrzh3uscreulKGyOUUWPqDqTIjFp9ewUaszgeAApT50w12ahKt/K6gvwesB6Ql7Z3VHwqNLlbxeLdv6pCpXonk5LSgzB6WddB3wAoI=
+	t=1750778898; cv=none; b=HWywMPk3DKvbvZkMqjn6iNWyDSQj4WXLEa1etuCtRRfVarqeimwGvpuz4pjEya08sjXVkFLD1bDaMFyUA9Ymq+TNNCBHvkMwn/mD/SvwEY6JA6J9fZMk1OWiLxXMx7utRVjj24P1x/AWP+fW104a0Q98DL6ayIymQQTXSN711F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750778310; c=relaxed/simple;
-	bh=4bDKQc8ZdrkM28JhnaFABoCB0feiVBRNt+Kx9AsEEEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QOs/Qbdo9GK/1yN4U+ugDAgFtwrZdpvzsJGjA2wgBdk304jvxrDj33PvLYu8vfmkDm6j3JFk1b4Q/DWDJcr5tEfLNyLGTbCrYWxgLiCprretyiw0DYN+ieSkcOyGhpozxKMf+yWChA3MylC0Qoy/jzTiFAieiXVe+7duKAYEEvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQlJUGTV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85640C4CEE3;
-	Tue, 24 Jun 2025 15:18:26 +0000 (UTC)
+	s=arc-20240116; t=1750778898; c=relaxed/simple;
+	bh=Pl3NFZyhrvklSpvN1eF/J9iEI8F8auASAYz/1jCX/eI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=iNQZUZNBTZWkTikUfsmXM7B1zJU6Sd6XzaxYrVTpK3mt3510AXwTlE4WHsvcEd4vis8QHlZTw/ZB5IKXjc2OTJd5NkudvPWlu9yx1ClTAse0OKQvsbfnK9kwGy+XQjbeWkrLBwczuRi2ga8zWPgzK9Zu27BhFp6ub4ZZ4Yt/dkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aX667HMm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BF9FC4CEE3;
+	Tue, 24 Jun 2025 15:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750778310;
-	bh=4bDKQc8ZdrkM28JhnaFABoCB0feiVBRNt+Kx9AsEEEw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lQlJUGTVjwVdmwf6czfXHbVrjXEoNzFfJwmRD0Bu8b8mU0n/llu9SSgZW/lHasjax
-	 +s8nQIhdj8kszM/pdS70uqcq7wpKMghXaLAEkyKcavPClxKbMIHsx/F66wuUa0/1R5
-	 GlfUUQ+ryaaAu2CN5u0yDvI7PA8Ux3kzdYggTVEEhrAbv97YyVjyk1dwbxn6Tc5Ndr
-	 vCbffXChwdqUsl/kM8I1FitAu2gSPBylUA7eUb6dwCFr7aNt1Rr7B0p2qVCK+AnAgE
-	 SjEQMoAruKQ7QzxOX4SmDJjqvAoowu3CxKTlZFebgDstPBCZ5CnSl/j2DElxOGy3/B
-	 l2fesWBbQGYHg==
-Date: Tue, 24 Jun 2025 17:18:23 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
-	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] rust: devres: get rid of Devres' inner Arc
-Message-ID: <aFrBvwFrUGD45TeF@cassiopeiae>
-References: <20250622164050.20358-1-dakr@kernel.org>
- <20250622164050.20358-4-dakr@kernel.org>
- <aFizv7suXTADJU3f@Mac.home>
+	s=k20201202; t=1750778896;
+	bh=Pl3NFZyhrvklSpvN1eF/J9iEI8F8auASAYz/1jCX/eI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=aX667HMmD7Y51beRdU5f4Hd584kRCoEk7KvoexSEew+t+eRh1pj1fR9UYQkqZHZfh
+	 fWZBuBKFpWbUuR18ZgET27bcKTR21VWtudD2h/MiJg6xbrWNzJmKi4wWdNJxp8UTpF
+	 cLfLjNx7iOPtPZpUkfu58+hbZmJ888pu5bFPuQLLNe3jewq+aBRDEgJjvD7ycC26mJ
+	 gerZK14v2YkZRrVmf2+j4+xZpI9yO8HqO8Rg7b5p731cuNj3lCL5h1fcWXBFxZrqNF
+	 KCL0s7tmxxejQDhFnb583lC+8Fm9OWcJ3n4gkCCspwZLuTbTLsDNKxeUPWTTXNkXBe
+	 /ynLZbIg6aNbg==
+Date: Tue, 24 Jun 2025 10:28:14 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"joel@jms.id.au" <joel@jms.id.au>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	"vkoul@kernel.org" <vkoul@kernel.org>,
+	"kishon@kernel.org" <kishon@kernel.org>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"elbadrym@google.com" <elbadrym@google.com>,
+	"romlem@google.com" <romlem@google.com>,
+	"anhphan@google.com" <anhphan@google.com>,
+	"wak@google.com" <wak@google.com>,
+	"yuxiaozhang@google.com" <yuxiaozhang@google.com>,
+	BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: =?utf-8?B?5Zue6KaG?= =?utf-8?Q?=3A?= [PATCH 5/7] ARM: dts:
+ aspeed-g6: Add PCIe RC node
+Message-ID: <20250624152814.GA1477818@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,20 +82,25 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aFizv7suXTADJU3f@Mac.home>
+In-Reply-To: <SEYPR06MB51343F38D4F9C130A4CE3FED9D7CA@SEYPR06MB5134.apcprd06.prod.outlook.com>
 
-On Sun, Jun 22, 2025 at 06:54:07PM -0700, Boqun Feng wrote:
-> I think you also need to mention that `inner` only remains valid until
-> `inner.devm.complete_all()` unblocks `Devres::drop()`, because after
-> `Devres::drop()`'s `devm.wait_for_completion()` returns, `inner` may be
-> dropped or freed.
+On Fri, Jun 20, 2025 at 05:24:39AM +0000, Jacky Chou wrote:
+> > > +				resets = <&syscon ASPEED_RESET_H2X>,
+> > > +					 <&syscon ASPEED_RESET_PCIE_RC_O>;
+> > > +				reset-names = "h2x", "perst";
+> > 
+> > PERST# is clearly a per-Root Port item since it's a signal on the
+> > PCIe connector.  Can you separate this and any other per-Root Port
+> > things into a Root Port stanza to leave open the possibility of
+> > future hardware that supports multiple Root Ports in the RC?
+> 
+> The PCIe RC that designed by us is only one root port.
 
-I think of it the other way around: The invariant guarantees that `inner` is
-*always* valid.
+Yes.  But this driver may be used in the future for other RCs that
+include more than one Root Port, and it would be good if that didn't
+require structural changes to the DT.  Also, there are RCs from other
+vendors that include more than one Root Port, and I'd like all the DTs
+and drivers to have similar structure.
 
-The the `drop_in_place(inner)` call has to justify that it upholds this
-invariant, by ensuring that at the time it is called no other code that accesses
-`inner` can ever run.
-
-Defining it the other way around would make the `inner()` accessor unsafe.
+Bjorn
 
