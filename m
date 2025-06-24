@@ -1,167 +1,99 @@
-Return-Path: <linux-pci+bounces-30547-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30548-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B78CAE70E5
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 22:34:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DCE9AE70EB
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 22:35:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F6575A7E1D
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 20:33:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B45FF3B006D
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 20:34:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 898732F3623;
-	Tue, 24 Jun 2025 20:31:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B4752E8895;
+	Tue, 24 Jun 2025 20:32:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQlK2FPj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RRHIxi1f"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F16E2F363F;
-	Tue, 24 Jun 2025 20:31:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE0B26CE23;
+	Tue, 24 Jun 2025 20:32:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750797071; cv=none; b=XuPUwqXuD7EI6H2/jd4cvQC5Ej+/kc0eEkW/5XtDP8yum8b4cf6ifCHb4bTRicri3SHj/SEVrFnuuzueOZd6awFFWf0XAqLJ/LKgPuXag5z2TNaGqzUfwivgTMi1u936p6xtSbW2jxAe+hn0LRuv9VYatoRBAzmsMO7OZGWz2zQ=
+	t=1750797140; cv=none; b=Ugsp0nGY8aHYrEE79qfHLvy8J4Foyz9jynfYqhrZKrmGoGBe5v7f5/MhXUsArXIvjXQ3dUAIBO9JLHIKvWksy2TPP7FtDfoqZRlPMmt3eqRUcgOJj9mM5yEYgL8OmpKpAYcSovSja8B67HJbjwo65KoYVzK7bMTjZjeDxjZrIgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750797071; c=relaxed/simple;
-	bh=wM2bSTdZ79jUE3zyr7FAmD4oLwJqwdJQwmMFYKhFlKU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oTHG6qKE8zelZUhnmnCjYcvYkCtIkwHk8AC87+8yk7L4l23Ph0dm7spD0GC8lgu+Luf+mli2uiiN88MTC/FVMVFaDVb6Aeft4R0mRXYrF0M4LlzTSU/ELd9S1hENArcuW9JdaOtJDzorYUtXnw05aat2j16JwcDr0lwQCBBUCcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQlK2FPj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB08EC4CEE3;
-	Tue, 24 Jun 2025 20:31:08 +0000 (UTC)
+	s=arc-20240116; t=1750797140; c=relaxed/simple;
+	bh=XCDfAzSe3v5F6wUubtknrcpSgjVyoC+pMzibwnbJWew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hGuqbXoeFazFy5m3hv/NxcZzVEwo0Q4CBjZde4aX5+TYE+fPNIu7f9gJZoHc24/0byc90N+TfuBacS8NL7EOOO+DllVNAhhn1QIUXkX6pkYmjYCb8DQQ+ikCGqW7/6yC7NDMUvHHiYEBClpEWvg6GOx4o+EX+FAUMbjx0KJdp5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RRHIxi1f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CBD5C4CEE3;
+	Tue, 24 Jun 2025 20:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750797070;
-	bh=wM2bSTdZ79jUE3zyr7FAmD4oLwJqwdJQwmMFYKhFlKU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qQlK2FPjVa6ekb+NmbvTShAdEs6MzKU4zYhV6yfdzNPUQLXXLV1OnJW1kBh5kJXP/
-	 zbdgn+tkr3HNWm6RAcvKVAj9XF5rp6876WuiWyh490/VsfIW7O+iNgt6t1SyMPS35B
-	 LyWqtvKiX6gskjCIZE2CC/zdBeef4dk38iPOrskonZcuaz/fg3MGEWveQ5nq7MQGR4
-	 9p19VkWDUohGMsYCXFgmS9HZGZ99FNVd3UYs1AChTwwRnFuvdStEBw+tDuLBoRxEJJ
-	 1g5g4zW51XZ3v4LMQS+ewcpSScNGWVlGl7XrlzCo6N4jEis8CfQvha8gpjruB0K78d
-	 QaJ55g/sLrMrg==
-From: Mario Limonciello <superm1@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Lukas Wunner <lukas@wunner.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-kernel@vger.kernel.org (open list),
-	iommu@lists.linux.dev (open list:INTEL IOMMU (VT-d)),
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	kvm@vger.kernel.org (open list:VFIO DRIVER),
-	linux-sound@vger.kernel.org (open list:SOUND),
-	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v5 9/9] PCI: Add a new 'boot_display' attribute
-Date: Tue, 24 Jun 2025 15:30:42 -0500
-Message-ID: <20250624203042.1102346-10-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250624203042.1102346-1-superm1@kernel.org>
-References: <20250624203042.1102346-1-superm1@kernel.org>
+	s=k20201202; t=1750797139;
+	bh=XCDfAzSe3v5F6wUubtknrcpSgjVyoC+pMzibwnbJWew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RRHIxi1fQ+n4A2kB/lD7P5ZitD1OcDHBSEFHdAxKXCMyrVsL45HaNNuqiPyKcxaRj
+	 eFmU6ljdUdbeEYP8mtGU0pz5MwrGO8u7NpKpjPowFP4SUVQhd/60TzGxwWKsfxaPp+
+	 bx6UtWFYeqUILMIRZYGYOVhXqxenfrQeRw2q6YnvUR+mrBSjV5W1eDZ4cloDN1Y85c
+	 o/3i9x1A0mxa5PwpRP/Yaubgg7EmkubQjWO8t9x3TMAcu8HoUt0SPVteRWkpmfkAsA
+	 hOfDI/tiUT0QKjKuEploqVXgXvOhG43BLPl0nO53uGh/vvH0GT0AaF+ubrBKdlfASF
+	 mxQG3k9tCFz1A==
+Date: Tue, 24 Jun 2025 14:32:17 -0600
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: kernel test robot <lkp@intel.com>, llvm@lists.linux.dev, 
+	oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [pci:endpoint/epf-vntb 3/3] Warning:
+ drivers/pci/endpoint/functions/pci-epf-vntb.c:695 function parameter 'bar'
+ not described in 'epf_ntb_find_bar'
+Message-ID: <plmgfnjrht5ffpqpz2fcw7wdoompgrq66znm5nuhkablozys4i@kmnq52ge6gxj>
+References: <202506240711.TJdFg8To-lkp@intel.com>
+ <1jcyatjww6.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1jcyatjww6.fsf@starbuckisacylon.baylibre.com>
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Tue, Jun 24, 2025 at 11:45:29AM +0200, Jerome Brunet wrote:
+> On Tue 24 Jun 2025 at 07:49, kernel test robot <lkp@intel.com> wrote:
+> 
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint/epf-vntb
+> > head:   a0cc6e6fd072616315147ac68a12672d5a2fa223
+> > commit: a0cc6e6fd072616315147ac68a12672d5a2fa223 [3/3] PCI: endpoint: pci-epf-vntb: Allow BAR assignment via configfs
+> > config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250624/202506240711.TJdFg8To-lkp@intel.com/config)
+> > compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240711.TJdFg8To-lkp@intel.com/reproduce)
+> >
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202506240711.TJdFg8To-lkp@intel.com/
+> >
+> > All warnings (new ones prefixed by >>):
+> >
+> >>> Warning: drivers/pci/endpoint/functions/pci-epf-vntb.c:695 function
+> >parameter 'bar' not described in 'epf_ntb_find_bar'
+> 
+> Hi Manivannan,
+> 
+> Sorry about that. Do you prefer a fix on top of what you have already
+> merged in your 'endpoint/epf-vntb' branch or a complete respin of the
+> series ?
+> 
 
-On systems with multiple GPUs there can be uncertainty which GPU is the
-primary one used to drive the display at bootup. In order to disambiguate
-this add a new sysfs attribute 'boot_display' that uses the output of
-video_is_primary_device() to populate whether a PCI device was used for
-driving the display.
+No worries. I fixed it in the branch.
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v4:
- * new patch
----
- Documentation/ABI/testing/sysfs-bus-pci |  9 +++++++++
- drivers/pci/pci-sysfs.c                 | 14 ++++++++++++++
- 2 files changed, 23 insertions(+)
+- Mani
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 69f952fffec72..897cfc1b0de0f 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -612,3 +612,12 @@ Description:
- 
- 		  # ls doe_features
- 		  0001:01        0001:02        doe_discovery
-+
-+What:		/sys/bus/pci/devices/.../boot_display
-+Date:		October 2025
-+Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
-+Description:
-+		This file indicates whether the device was used as a boot
-+		display. If the device was used as the boot display, the file
-+		will contain "1". If the device is a display device but wasn't
-+		used as a boot display, the file will contain "0".
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 268c69daa4d57..5bbf79b1b953d 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -30,6 +30,7 @@
- #include <linux/msi.h>
- #include <linux/of.h>
- #include <linux/aperture.h>
-+#include <asm/video.h>
- #include "pci.h"
- 
- #ifndef ARCH_PCI_DEV_GROUPS
-@@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
- 	NULL,
- };
- 
-+static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
-+				 char *buf)
-+{
-+	return sysfs_emit(buf, "%u\n", video_is_primary_device(dev));
-+}
-+static DEVICE_ATTR_RO(boot_display);
-+
- static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf)
- {
-@@ -1698,6 +1706,7 @@ late_initcall(pci_sysfs_init);
- 
- static struct attribute *pci_dev_dev_attrs[] = {
- 	&dev_attr_boot_vga.attr,
-+	&dev_attr_boot_display.attr,
- 	NULL,
- };
- 
-@@ -1710,6 +1719,11 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
- 	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
- 		return a->mode;
- 
-+#ifdef CONFIG_VIDEO
-+	if (a == &dev_attr_boot_display.attr && pci_is_display(pdev))
-+		return a->mode;
-+#endif
-+
- 	return 0;
- }
- 
 -- 
-2.43.0
-
+மணிவண்ணன் சதாசிவம்
 
