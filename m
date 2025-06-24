@@ -1,333 +1,271 @@
-Return-Path: <linux-pci+bounces-30469-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30471-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BED6AE58E0
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 02:59:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91750AE5956
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 03:43:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3980C3A55AD
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 00:58:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 408871B64CA7
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 01:43:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36BD9126C05;
-	Tue, 24 Jun 2025 00:59:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 862E919DF4A;
+	Tue, 24 Jun 2025 01:42:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="KPRlnFAj"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LqLRI/bW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2056.outbound.protection.outlook.com [40.107.92.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648E32F2A
-	for <linux-pci@vger.kernel.org>; Tue, 24 Jun 2025 00:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750726754; cv=none; b=DFgPhBhT1xyWXSMj6mMnk4N3UOe8IclTMmjxZD2gGGmQYKD1mbWNTAYGoNDOhIlw4/B3cHI4qhfQAHd46nSxDIZFzwI8bNvTsyxHvhqj7FMbBfjuio3meGfe4nqfFaHpYCeNYuvcJ2j8I/QWGFpDMkWwpGuyNn8M4uwzzTjp0C4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750726754; c=relaxed/simple;
-	bh=+QjQn+/zdiVqNUNc2ovZr7FJSQgKgSDXf0S3CbeODmw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZFJRYvjsEemqtNBO07FeQNmIRHuDY4RkKrn37wyIRMZ6y3d1hawN/k7HAWAJU9KO5RoDLmISjzl+W2262n/MGvthWz5iU0ZPGi1n1Bb8VhxPBLkt3irCNhRMTuXECk70wFKo7lqj94gZm66+XYRZysI+oO4h5ixkycSW1NN97YM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=KPRlnFAj; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from [192.168.1.3] (unknown [183.241.39.48])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 501223F924;
-	Tue, 24 Jun 2025 00:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1750726742;
-	bh=tyM2lQk1cmNF+PHmxH9oif3Z8lXvSuwgpS7JUtqYqaI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=KPRlnFAjxYULId4QlKFk1VhNSnDBHhmhWrsraQ5ToqJkAOi2/iwtFjPLoh79DLFj+
-	 dxyKzJlqaBkgq4eNLKQY9Q0m44cfeTRoLN/U8RP4ng5aE9vpomIrVlki5mn3lFGcl1
-	 zogm6Mh47t4lGaFrDt+Ed/F/DXpf8gGbz8p3tG8dknbHDFsKAc2nc+XongLGXKyCtZ
-	 pT7psS6vLj9QKsb20+5Sax0mu6DakFIy3hBh9om0ft7IJ6iZF8MvlyRczoII/xdNGw
-	 KOodhG9JGXc+P9M2Ta8cgZX9WeThYrvQuvAWMw3S0IxPnfUAyL4y+f9TYLtlaoFAC/
-	 dhKym9oc+yn5w==
-Message-ID: <2f7566fe-f662-4cf9-a363-c67dccdde846@canonical.com>
-Date: Tue, 24 Jun 2025 08:58:57 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC41E19CD01;
+	Tue, 24 Jun 2025 01:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750729379; cv=fail; b=WKqd5p0ENKaIgCURrV21ss0n46jt7H/mswt1VqJWWRZ8Fp81cdvk8/co5sr6W6P2OeNkPjJblJAlDu8XdxDxHYpG0qlgzSFS9Bw1UqS97L/uQI4AbGWVamki9KoCbULNKgCKvo144WinoL1R69ccrGDgjgEvcr6mI3srsxJL120=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750729379; c=relaxed/simple;
+	bh=RGROFycoQ93rm+ZgwmFqbVuEA/Xf9Z/8YqHMPQBteZA=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=bKWiE0aUnN/3LQ95JFI/ULJ2vfk++Ax2JLqqyPnR38bhgRUH5yKRHhrLoFEU669AGT5OQAqix6lPNXTlTpeCRMVldX3po+qx6/Pnsq3hmy1gQBEbpdkK6LuhvfOO3xDyAr15MMUmAlX4MGlw0ZhtCYDPeNUUi6efuVSTkimJcn4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LqLRI/bW; arc=fail smtp.client-ip=40.107.92.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LWpSGRODPsvRWg+8qwfwodhrAQUcGUHBTHgXQk9p3QFv2uNhMz0MLVi/74BYpyi0sJcLsMcqOPD7A8CAca8Zf4EcfrOwaX2s3gII2Bj3TT7ZDRnT3M/UHoCBmVNllGjgpopvKYWMXffG45r+TNEsm1D0tyfOiVOIVxr5DBg53ZVnnJ9oYl0yMIj9eclQPK+DZyqndnxAjqQqg5vnfPfvwEvGBDVzjXgpbKw23nMu5NfsiM4upYRYF8bIZuAwIJtsqd+TCd4c1VikXb63C1soyUVoPVP9XWTETAgAY9xUZkS5fj5C2asShEKgvH5i4r50m7x8tL71+jLPKnXR/CaF5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CrrcNtz+1B7DgCLcVyuu1S0O1xGRonbINXsJUmvY/8U=;
+ b=ZUfppuYTHqjvq3FAjmKmaN2TqDjizOspmlyFBfGuuMxHjPH1R26jEqwTcPvf+vMeWGWwsTGBCLv+Lc2i2aBBX8HPTB0Suwn6ctboGfvOpMU66MQdeI9hvj/VPjnvLN0egjKfHSi1/elOBxEhDO3SU1aWMHRVip+OBvXF2U/x8Zbx6Gkav99/rLlqPuHFCNDUp5WM9EPr+W7tIgDqZwrUO6uZs7esXrcv8Wpdos40q8EF69eGKDZevFBpxo7iHujJR9cciV+fsHLoLf9npt3HQGx8OXOdDGT+h4WIHlaHWRng+t/yw0+Kk4PIGMFne7FmZrgrmMumaEF7ESQ4yDhOzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CrrcNtz+1B7DgCLcVyuu1S0O1xGRonbINXsJUmvY/8U=;
+ b=LqLRI/bW/XNaEHnigTzBqTlWjNvQPrlP+6lnsPbBpX+znMT2953M/b36S3EyxqWTMTW3v1JH0jodS5o0QJwYATMb48Rae7fqwTIO9HyqFjrHAg/lgtXZShABqqLbqMigaAndRB1NwDlzLgxgjy2geVFFwttWDBfPF8UJcOUJ8SQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by DM3PR12MB9287.namprd12.prod.outlook.com (2603:10b6:8:1ac::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Tue, 24 Jun
+ 2025 01:42:54 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::1e6b:ca8b:7715:6fee]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::1e6b:ca8b:7715:6fee%7]) with mapi id 15.20.8857.019; Tue, 24 Jun 2025
+ 01:42:54 +0000
+Message-ID: <930fc54c-a88c-49b3-a1a7-6ad9228d84ac@amd.com>
+Date: Tue, 24 Jun 2025 11:42:47 +1000
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [RFC PATCH] PCI: Add quirk to always map ivshmem as write-back
+From: Alexey Kardashevskiy <aik@amd.com>
+To: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ David Woodhouse <dwmw@amazon.co.uk>,
+ Kai-Heng Feng <kai.heng.feng@canonical.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Santosh Shukla <santosh.shukla@amd.com>,
+ "Nikunj A. Dadhania" <nikunj@amd.com>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <20250612082233.3008318-1-aik@amd.com>
+ <52f0d07a-b1a0-432c-8f6f-8c9bf59c1843@amd.com>
+Content-Language: en-US
+In-Reply-To: <52f0d07a-b1a0-432c-8f6f-8c9bf59c1843@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SY8P282CA0025.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:29b::30) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Disable RRS polling for Intel SSDPE2KX020T8 nvme
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
- raphael.norwitz@nutanix.com, alay.shah@nutanix.com,
- suresh.gumpula@nutanix.com, ilpo.jarvinen@linux.intel.com,
- Nirmal Patel <nirmal.patel@linux.intel.com>,
- Jonathan Derrick <jonathan.derrick@linux.dev>,
- Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
- =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-References: <20250623225835.GA1449671@bhelgaas>
-Content-Language: en-US
-From: Hui Wang <hui.wang@canonical.com>
-In-Reply-To: <20250623225835.GA1449671@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DM3PR12MB9287:EE_
+X-MS-Office365-Filtering-Correlation-Id: 10b27cf4-44f8-45f3-895b-08ddb2c06fe4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bXJaVDFkTC8weXhOK3VJZE5oSUUvbkliQ2ZZRVdRVkg0N09xMjc4aDFuaExQ?=
+ =?utf-8?B?Zkx3c2FxTlZuNExTbml3cmpHWklHN2xOR2FETnhITm5tc2dHTHRhNGpNOW00?=
+ =?utf-8?B?VDBDRjN2S1IyNmtJOGhZOXpKekxnOWVlNUtuaWNXTFE0WTVFQjdwa2k3bzg2?=
+ =?utf-8?B?aFkxOURYTWF0bXFWaHlBZ3ZpV2pVTlgxU2QvazhGTnJMdHJiMHlTWnhsSDk3?=
+ =?utf-8?B?OHFPV3RtNnI2OEpnbW45dUpVVWZPWTNjaVJqaS9INVBZYUJnQkdYOUY3RGNr?=
+ =?utf-8?B?eDNuVEtoRDloaHk5cjNiMy9wMThIQXErR2k3dnlnbHl2aVVmQ2JHd1loWU9J?=
+ =?utf-8?B?c21teG9mbmVkaDJvRDVwdzVEOGJ4OHdTamV2RW5Xd1BnZEVicCtsck5lNHBM?=
+ =?utf-8?B?WGxjdGRpcGh0M3Q5akJwaW5LRWlYK2ljaUFuVGVZL2s1eVE2anBUSHRjdXNH?=
+ =?utf-8?B?MDlRTXhwWXpFcnhwQkVJWW1uSWYxQmM3elFQVm9YeDlFcllNaG9rU0hMTDZw?=
+ =?utf-8?B?TkFJaG9vREUySkplZllqb1IyTXhmRjB5ZVZDS2hobmJmUGxseW9EcDhJMXJr?=
+ =?utf-8?B?Q1ZaL1BEUDkxNFp3SCtWUXdkV0tnMlh3dFhnTVBkazJDdGJTYzdUS0xYZnZI?=
+ =?utf-8?B?WDR3RHJSNktkY2pKeTY3a2s1eWhIWkdYdlZiSHdiZWQ0MjBVRFBZYkVsMitn?=
+ =?utf-8?B?TU9FVjVxNjdqbG9xK0tlU2RveXVuMGUrYnJlVlhXUFVMMTdIb3FVOTJlL3hJ?=
+ =?utf-8?B?NEQ3NldyZDFCTUhQSER1RCtwN0NQcUlIMVRXVzF0eVhsOUh3UjE3M0E5V1V6?=
+ =?utf-8?B?RnUxbjFQYjJPS0pJTlZ2UDdqbUZsMW1iYkRsOEg1S2t3U0lxMkZYNGhieHUx?=
+ =?utf-8?B?Z3Y1cDcwNFJQZE1BUnp5d3lWNGRTbE1FRFFXajhNTW9JaHNUWkp0NE5xd1JN?=
+ =?utf-8?B?bVhIZXk4T1dxSWNTSXVCbGRaOEtjVy9Ja2g1eFRtajBQT2F5MjB6MzJqMGNU?=
+ =?utf-8?B?dHE5QUZGME4wYnpTVXpDYUQvcUhIbnoxaDNxQkFVTlBPc1lGNVpLWm83SG4v?=
+ =?utf-8?B?WTIxRFI2Tm1VUm1nRVRjN0d1MU11dm5DcWNKek1UMi9kb2dMUGZsWWNSK0dC?=
+ =?utf-8?B?ZTF5Mi84c2lZVzJabHlyeVhZQ3A3R1JDK1k4cENHRkVsSVFaaHVaemhSYWY3?=
+ =?utf-8?B?R2M4VFhqY3VHdlpPZ1FDSHg1c1ZpSkVjWUNhc0lkYnc5R1ZxR09ycFVEeDdU?=
+ =?utf-8?B?TFRhR3JiY0lpY0NtSEtEOVpKeXdUVWtidTdJNS93MUxZOUN2ZkpNaDUwZ2NT?=
+ =?utf-8?B?SGVEY0xBTXhnbmhCYmVGYlNSZWxjSFhxOElScUdQRjhqRFU2dms0RCswdzlr?=
+ =?utf-8?B?VmRleE9mU1JNcllCN2ZlY0g4Wk1OamdkUVNyZ1MrWThuMWRYVnZUcUEzTXUx?=
+ =?utf-8?B?MzNvYVkzUS8zd2N0VDZMOGVNNVFCNkIzc1V4U2x3Q1NXYkJBdXVMVFJlSjRR?=
+ =?utf-8?B?MjM3U2h6aGIrUUgyYUIrRkFBVm9UMjU3YWQ1dFZ4NVkxSGppQ0dWSncyU1VG?=
+ =?utf-8?B?Q1ZWWmdSajlBMlRISkt6a3ZFYi9vRFBHZkdGSERZK0NvVkVodTRMaTlya3Ft?=
+ =?utf-8?B?WXdhMStObDVVUUlINGgwVFplM0ZEcStWc3ljTzJ5L0ZyR3NiQUFYOXVnL3Bv?=
+ =?utf-8?B?OUdMejdndUNtTDVqc2JrZktJUUhrR0YxSWZUeFZ2M2ZPNEk5bklXdVBWK0s1?=
+ =?utf-8?B?eE11RHV0eE9vcmp0bWNwUHZYcFk0aXkvV3hkU01pTkRDREhjaER0dkpRLy9h?=
+ =?utf-8?B?TFZpWlI0aERIZ01jRUh4SzIyWWh0akxhdlRIR3FuNXhHdTNkckt6K3NaQ09C?=
+ =?utf-8?B?QWNicGE5dTFMdCtRVTV1Umx2T0g1RFl4Rk43MnV4T2tmT0RRSUZWa0d4WERE?=
+ =?utf-8?Q?HMaTJCQTfpQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dVJ5dXNERk9KYUZ4bUphZW80RUpRRzNMcmNRUFBHaVMxNHp0eTN1eElVbk1S?=
+ =?utf-8?B?Y2NrWElPd2d3TWM2RDlnaXJOSjFHc1Jjemt5QWsyOG55UUpUS1lNcUo2QmJR?=
+ =?utf-8?B?aTQzazMycFhxZGkvcllJblpVcDZzbmsrb09pNC9yVnA1aXB3dVJRS2RJK2lK?=
+ =?utf-8?B?QTBzWWY4QUloWC85RVZ2ek9hZ2ZGWUxkUkNtcS9FcEUxNXMyRlpQQ0hRUHBE?=
+ =?utf-8?B?b0xGbEZSdng5bU1VcFduTExFNU9XdzFQOU8zTjFqOXpDOGVsbElLMlJsc2RU?=
+ =?utf-8?B?Q0YxaHVwTFdtK0FCazY0UU9MZzlONW9vNGxaN3Z1d29DNzROWVU0UnM4bFVK?=
+ =?utf-8?B?OEFwTG5sME14Mk5SQTJ5dFdpK0lkY2YxTWJFSUdSVUZZam1rNU5Mb3h1RW9H?=
+ =?utf-8?B?ZkFWYlFla3JQZVFpSUtyOUk4Q25iYkhMNVU2bk5Hbm1IR3VEb3JXOUpySGda?=
+ =?utf-8?B?aHNyMnRpUWdSN2E0cVQ1YVQxdlFHRW1jd296ZTdQeDVUYTN5L1lYRXdvQjAw?=
+ =?utf-8?B?TzJLdnNmSm5MbEw2bkxtdTIwbitxQ3I3UmR2cWFxMTk2MENvNkNUWmErUDda?=
+ =?utf-8?B?dlZwZ0FFRVVSMG9pZm85dm11VGQ2OU14TmVPWkNhcmZWeU55NndzcXJwVXVR?=
+ =?utf-8?B?eFdJM3ByMmtKamFkZWpJZmd1a2djS3lSRHUrY3U5MU5IcEV0TnRtUWE4SU15?=
+ =?utf-8?B?VzVjZE5McmM2T1BkMzIxZ1Nod29GdElueGlSb2tGYXVNYmhIM05kOHQ0RnYy?=
+ =?utf-8?B?TEpXWmFIbkkyeGZJSHBLbkJKM003dHlDUlVxaFFEOEMxMVlwbE5LNG9LdVE0?=
+ =?utf-8?B?a0hvbGNRYnVMdFVacUVSYnBqTEtPbkUxYWhpWWI2NEFJVGJoOVhEZDBHNjMr?=
+ =?utf-8?B?RzhDL1dRcERGVElMTDV0enJsU3kxUmtDMldMZ2pXbysxNVBmOGE2YUhJRXpL?=
+ =?utf-8?B?MXpxWGd2aWhyV0xhNDJLOEVwVzNmcUxzd1d4NzB3aWNzL3plc2tCcjZHZVRT?=
+ =?utf-8?B?VytTaWVRdHRCTjRCUXlGelJTRDhySVV6ajFFdDllclpodlhmeGVtcFdjQm5N?=
+ =?utf-8?B?STFhVThIa0RGQml0MFJOZ0RTejhrK3NqZVRsNnkxVHFaKzJOR05Ib21xNDl2?=
+ =?utf-8?B?Q0lXajdlNkl6RkNsMWFzQlZVZjZ1d2V0RmZyNXQxZG9xeFM2OUxKWmFpN1Nq?=
+ =?utf-8?B?YmQzcEhuMW9VQVduRXFnV3poTmxYWmFFVjhtb0pLZXB6MnVFd3FlQUJqR09i?=
+ =?utf-8?B?ZThEcFZJOHBrY01URk5BUnFsOUtkSHI5dFRJUG1tdS80VGRlOVJsTlBVanhY?=
+ =?utf-8?B?Z3BnTThkeFh0TmMweVpTSUh5VThwQUQzT01pUW94NHdlVmYweWdITkJ6UWQy?=
+ =?utf-8?B?SFlaY2hLUVFON3dxNHJXM0JhdGdRUU42NFQxM2FhR3RLYUtwemVpR3NjWVpZ?=
+ =?utf-8?B?VUVEUThmNy9LRTR2WVI3ZGdQRWh6Rkk2OTRzVmI3OXZJTXpFbGpQMGRIQ0NV?=
+ =?utf-8?B?RXZ3SmdWZTNmMGd1UndoRkxMR1NhU3I3cm5odnNwbzFqV0lZZnNBNjkwZ1lZ?=
+ =?utf-8?B?MWZMay9HUmtOUjJ4ZlV4SmRGcEdLeDl5SmNqR002YkdkazR0amE0TmVOR0xW?=
+ =?utf-8?B?dC9NNkNyVnFFNUFiWVZvK2psR2NDb0JZcVIyUytTNWZCenl4aThHZUVBL0dz?=
+ =?utf-8?B?WWVod1d5a2dQZzRxa0xOYWhESmU2SzZFRUxOam1BV200VnFNMTRGc25HR0Zs?=
+ =?utf-8?B?TkgwQTNqYS9VTmhwcTd4MHlSSVo0c1ZnclJPZ0grVllLOXNXT1JpSDcwY0Y1?=
+ =?utf-8?B?NzlMSzhLNEZWQVJHVmx6WE9RQSsvTkRSclFzdVNQVm5peU5YQi9LdVVsRmdx?=
+ =?utf-8?B?YWlXN2FrN0R3QzJMMFcyYzUvM3FYRzB2V0p0WXJGTWxWMDkvdk9PZlBzNHRW?=
+ =?utf-8?B?bnJWNGVlVytpUEpJYnpIbkpMT2NMTThjQWx4SWwxVXU4ZDVIZkdFMzk5dWNQ?=
+ =?utf-8?B?NXRKdCtMbU04VERhT1ZWenBwY28wZm1jN1duQndRQUpxYWt2Y0w1NzAxelov?=
+ =?utf-8?B?bDRWMzlkdDhvR05aZU05U0lGTG0yTmdLQkxLZFk3T0NzNVlDMnpCVWtNTGFo?=
+ =?utf-8?Q?VPbyA9BOjMMUzrOAdx4G3FZes?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10b27cf4-44f8-45f3-895b-08ddb2c06fe4
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 01:42:54.0700
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tiongESJxVf6Uvj/1wyRAlAWVF2WwiHuaZXVIixc4iDzn8VvSERoFjbAHak8/BP6tPdtA92oIZ4Ta0rd5uvSGA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9287
 
-Sorry for late response, I was OOO the past week.
-
-This is the log after applied your patch: 
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/comments/61
-
-Looks like the "retry" makes the nvme work.
+Ping? Thanks,
 
 
-On 6/24/25 06:58, Bjorn Helgaas wrote:
-> Ping, any chance you could try the patch below to collect a little
-> more data.  The proposed quirk covers up a deeper problem, and I want
-> to fix that problem instead of covering it up.
->
-> On Tue, Jun 17, 2025 at 03:12:55PM -0500, Bjorn Helgaas wrote:
->> [+cc Chaitanya, Ville for possible Intel NVMe contacts]
+On 12/6/25 18:27, Alexey Kardashevskiy wrote:
+> Wrong email for Nikunj :) And I missed the KVM ml. Sorry for the noise.
+> 
+> 
+> On 12/6/25 18:22, Alexey Kardashevskiy wrote:
+>> QEMU Inter-VM Shared Memory (ivshmem) is designed to share a memory
+>> region between guest and host. The host creates a file, passes it to QEMU
+>> which it presents to the guest via PCI BAR#2. The guest userspace
+>> can map /sys/bus/pci/devices/0000:01:02.3/resource2(_wc) to use the region
+>> without having the guest driver for the device at all.
 >>
->> On Mon, Jun 16, 2025 at 09:38:25PM +0800, Hui Wang wrote:
->>> On 6/16/25 19:55, Hui Wang wrote:
->>>> On 6/13/25 00:48, Bjorn Helgaas wrote:
->>>>> [+cc VMD folks]
->>>>>
->>>>> On Wed, Jun 11, 2025 at 06:14:42PM +0800, Hui Wang wrote:
->>>>>> Prior to commit d591f6804e7e ("PCI: Wait for device readiness with
->>>>>> Configuration RRS"), this Intel nvme [8086:0a54] works well. Since
->>>>>> that patch is merged to the kernel, this nvme stops working.
->>>>>>
->>>>>> Through debugging, we found that commit introduces the RRS polling in
->>>>>> the pci_dev_wait(), for this nvme, when polling the PCI_VENDOR_ID, it
->>>>>> will return ~0 if the config access is not ready yet, but the polling
->>>>>> expects a return value of 0x0001 or a valid vendor_id, so the RRS
->>>>>> polling doesn't work for this nvme.
->>>>> Sorry for breaking this, and thanks for all your work in debugging
->>>>> this!  Issues like this are really hard to track down.
->>>>>
->>>>> I would think we would have heard about this earlier if the NVMe
->>>>> device were broken on all systems.  Maybe there's some connection with
->>>>> VMD?  From the non-working dmesg log in your bug report
->>>>> (https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/+attachment/5879970/+files/dmesg-60.txt):
->>>>>
->>>>>
->>>>>     DMI: ASUSTeK COMPUTER INC. ESC8000 G4/Z11PG-D24 Series, BIOS 5501
->>>>> 04/17/2019
->>>>>     vmd 0000:d7:05.5: PCI host bridge to bus 10000:00
->>>>>     pci 10000:00:02.0: [8086:2032] type 01 class 0x060400 PCIe Root Port
->>>>>     pci 10000:00:02.0: PCI bridge to [bus 01]
->>>>>     pci 10000:00:02.0: bridge window [mem 0xf8000000-0xf81fffff]:
->>>>> assigned
->>>>>     pci 10000:01:00.0: [8086:0a54] type 00 class 0x010802 PCIe Endpoint
->>>>>     pci 10000:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
->>>>>
->>>>>     <I think vmd_enable_domain() calls pci_reset_bus() here>
->>>> Yes, and the pci_dev_wait() is called here. With the RRS polling, will
->>>> get a ~0 from PCI_VENDOR_ID, then will get 0xfffffff when configuring
->>>> the BAR0 subsequently. With the original polling method, it will get
->>>> enough delay in the pci_dev_wait(), so nvme works normally.
->>>>
->>>> The line "[   10.193589] hhhhhhhhhhhhhhhhhhhhhhhhhhhh dev->device = 0a54
->>>> id = ffffffff" is output from pci_dev_wait(), please refer to
->>>> https://launchpadlibrarian.net/798708446/LP2111521-dmesg-test9.txt
->>>>
->>>>>     pci 10000:01:00.0: BAR 0 [mem 0xf8010000-0xf8013fff 64bit]: assigned
->>>>>     pci 10000:01:00.0: BAR 0: error updating (high 0x00000000 !=
->>>>> 0xffffffff)
->>>>>     pci 10000:01:00.0: BAR 0 [mem 0xf8010000-0xf8013fff 64bit]: assigned
->>>>>     pci 10000:01:00.0: BAR 0: error updating (0xf8010004 != 0xffffffff)
->>>>>     nvme nvme0: pci function 10000:01:00.0
->>>>>     nvme 10000:01:00.0: enabling device (0000 -> 0002)
->>>>>
->>>>> Things I notice:
->>>>>
->>>>>     - The 10000:01:00.0 NVMe device is behind a VMD bridge
->>>>>
->>>>>     - We successfully read the Vendor & Device IDs (8086:0a54)
->>>>>
->>>>>     - The NVMe device is uninitialized.  We successfully sized the BAR,
->>>>>       which included successful config reads and writes.  The BAR
->>>>>       wasn't assigned by BIOS, which is normal since it's behind VMD.
->>>>>
->>>>>     - We allocated space for BAR 0 but the config writes to program the
->>>>>       BAR failed.  The read back from the BAR was 0xffffffff; probably a
->>>>>       PCIe error, e.g., the NVMe device didn't respond.
->>>>>
->>>>>     - The device *did* respond when nvme_probe() enabled it: the
->>>>>       "enabling device (0000 -> 0002)" means pci_enable_resources() read
->>>>>       PCI_COMMAND and got 0x0000.
->>>>>
->>>>>     - The dmesg from the working config doesn't include the "enabling
->>>>>       device" line, which suggests that pci_enable_resources() saw
->>>>>       PCI_COMMAND_MEMORY (0x0002) already set and didn't bother setting
->>>>>       it again.  I don't know why it would already be set.
->>>>>       d591f6804e7e really only changes pci_dev_wait(), which is used after
->>>>>       device resets.  I think vmd_enable_domain() resets the VMD Root Ports
->>>>>       after pci_scan_child_bus(), and maybe we're not waiting long enough
->>>>>       afterwards.
->>>>>
->>>>> My guess is that we got the ~0 because we did a config read too soon
->>>>> after reset and the device didn't respond.  The Root Port would time
->>>>> out, log an error, and synthesize ~0 data to complete the CPU read
->>>>> (see PCIe r6.0, sec 2.3.2 implementation note).
->>>>>
->>>>> It's *possible* that we waited long enough but the NVMe device is
->>>>> broken and didn't respond when it should have, but my money is on a
->>>>> software defect.
->>>>>
->>>>> There are a few pci_dbg() calls about these delays; can you set
->>>>> CONFIG_DYNAMIC_DEBUG=y and boot with dyndbg="file drivers/pci/* +p" to
->>>>> collect that output?  Please also collect the "sudo lspci -vv" output
->>>>> from a working system.
->>>> Already passed the testing request to bug reporters, wait for their
->>>> feedback.
->>>>
->>>> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/comments/55
->>> This is the dmesg with dyndbg="file drivers/pci/* +p"
->>>
->>> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/comments/56
->> Thank you very much!  I'm stumped.
+>> The problem with this, since it is a PCI resource, the PCI sysfs
+>> reasonably enforces:
+>> - no caching when mapped via "resourceN" (PTE::PCD on x86) or
+>> - write-through when mapped via "resourceN_wc" (PTE::PWT on x86).
 >>
->> Both Ports here are capable of 8GT/s, and the Root Port is hot-plug
->> capable and supports Data Link Layer Link Active Reporting but not DRS:
+>> As the result, the host writes are seen by the guest immediately
+>> (as the region is just a mapped file) but it takes quite some time for
+>> the host to see non-cached guest writes.
 >>
->>    10000:00:02.0 Intel Sky Lake-E PCI Express Root Port C
->>      LnkCap: Port #11, Speed 8GT/s, Width x4, ASPM L1, Exit Latency L1 <16us
->>              ClockPM- Surprise+ LLActRep+ BwNot+ ASPMOptComp+
->>      LnkSta: Speed 8GT/s, Width x4
->>              TrErr- Train- SlotClk+ DLActive+ BWMgmt- ABWMgmt-
->>      SltCap: AttnBtn- PwrCtrl- MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+
->>      LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer- 2Retimers- DRS-
+>> Add a quirk to always map ivshmem's BAR2 as cacheable (==write-back) as
+>> ivshmem is backed by RAM anyway.
+>> (Re)use already defined but not used IORESOURCE_CACHEABLE flag.
 >>
->>    10000:01:00.0 Intel NVMe Datacenter SSD
->>      LnkCap: Port #0, Speed 8GT/s, Width x4, ASPM L0s, Exit Latency L0s <64ns
+>> This does not affect other ways of mapping a PCI BAR, a driver can use
+>> memremap() for this functionality.
 >>
->> After a reset, we have to delay before doing config reads.  The wait
->> time requirements are in PCIe r6.0, sec 6.6.1:
+>> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+>> ---
 >>
->>    • ... For cases where system software cannot determine that DRS is
->>      supported by the attached device, or by the Downstream Port above
->>      the attached device [as in this case]:
+>> What is this IORESOURCE_CACHEABLE for actually?
 >>
->>      ◦ ...
+>> Anyway, the alternatives are:
 >>
->>      ◦ With a Downstream Port that supports Link speeds greater than
->>        5.0 GT/s, software must wait a minimum of 100 ms after Link
->>        training completes before sending a Configuration Request to the
->>        device immediately below that Port. Software can determine when
->>        Link training completes by polling the Data Link Layer Link
->>        Active bit or by setting up an associated interrupt (see §
->>        Section 6.7.3.3). It is strongly recommended for software to
->>        use this mechanism whenever the Downstream Port supports it.
+>> 1. add a new node in sysfs - "resourceN_wb" - for mapping as writeback
+>> but this requires changing existing (and likely old) userspace tools;
 >>
->> Since the Port supports 8GT/s, we should wait 100ms after Link training
->> completes (PCI_EXP_LNKSTA_DLLLA becomes set), and based on the code
->> path below, I think we *do*:
+>> 2. fix the kernel to strictly follow /proc/mtrr (now it is rather
+>> a recommendation) but Documentation/arch/x86/mtrr.rst says it is replaced
+>> with PAT which does not seem to allow overriding caching for specific
+>> devices (==MMIO ranges).
 >>
->>    pci_bridge_secondary_bus_reset
->>      pcibios_reset_secondary_bus
->>        pci_reset_secondary_bus
->>          # assert PCI_BRIDGE_CTL_BUS_RESET
->>      pci_bridge_wait_for_secondary_bus(bridge, "bus reset")
->>        pci_dbg("waiting %d ms for downstream link, after activation\n") # 10.86
->>        delay = pci_bus_max_d3cold_delay()    # default 100ms
->>        pcie_wait_for_link_delay(bridge, active=true, delay=100)
->>          pcie_wait_for_link_status(use_lt=false, active=true)
->>            end_jiffies = jiffies + PCIE_LINK_RETRAIN_TIMEOUT_MS
->>            do {
->>              pcie_capability_read_word(PCI_EXP_LNKSTA, &lnksta)
->>              if ((lnksta & PCI_EXP_LNKSTA_DLLLA) == PCI_EXP_LNKSTA_DLLLA)
->>                return 0
->>              msleep(1)                       # likely wait several ms for link active
->>            } while (time_before(jiffies, end_jiffies))
->>          if (active)                         # (true)
->>            msleep(delay)                     # wait 100ms here
->>        pci_dev_wait(child, "bus reset", PCIE_RESET_READY_POLL_MS - delay)
->>          delay = 1
->>          for (;;) {
->>            pci_read_config_dword(PCI_VENDOR_ID, &id)
->>            if (!pci_bus_rrs_vendor_id(id))   # got 0xffff, assume valid
->>              break;
->>          }
->>          pci_dbg("ready 0ms after bus reset", delay - 1)  # 11.11
+>> ---
+>>   drivers/pci/mmap.c   | 6 ++++++
+>>   drivers/pci/quirks.c | 8 ++++++++
+>>   2 files changed, 14 insertions(+)
 >>
->> And from the dmesg log:
->>
->>    [   10.862226] pci 10000:00:02.0: waiting 100 ms for downstream link, after activation
->>    [   11.109581] pci 10000:01:00.0: ready 0ms after bus reset
->>
->> it looks like we waited about .25s (250ms) after the link came up
->> before trying to read the Vendor ID, which should be plenty.
->>
->> I guess maybe this device requires more than 250ms after reset before
->> it can respond?  That still seems surprising to me; I *assume* Intel
->> would have tested this for spec conformance.  But maybe there's some
->> erratum.  I added a couple Intel folks who are mentioned in the nvme
->> history in case they have pointers.
->>
->> But it *is* also true that pci_dev_wait() doesn't know how to handle
->> PCIe errors at all, and maybe there's a way to make it smarter.
->>
->> Can you try adding the patch below and collect another dmesg log (with
->> dyndbg="file drivers/pci/* +p" as before)?  This isn't a fix, but
->> might give a little more insight into what's happening.
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index e9448d55113b..42a36ff5c6cd 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -1268,6 +1268,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
->>   	bool retrain = false;
->>   	struct pci_dev *root, *bridge;
->>   
->> +	pci_dbg(dev, "%s: %s timeout %d\n", __func__, reset_type, timeout);
->>   	root = pcie_find_root_port(dev);
->>   
->>   	if (pci_is_pcie(dev)) {
->> @@ -1305,14 +1306,32 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
->>   
->>   		if (root && root->config_rrs_sv) {
->>   			pci_read_config_dword(dev, PCI_VENDOR_ID, &id);
->> -			if (!pci_bus_rrs_vendor_id(id))
->> -				break;
->> +			pci_dbg(dev, "%s: vf %d read %#06x\n", __func__,
->> +				dev->is_virtfn, id);
->> +			if (pci_bus_rrs_vendor_id(id))
->> +				goto retry;
+>> diff --git a/drivers/pci/mmap.c b/drivers/pci/mmap.c
+>> index 8da3347a95c4..8495bee08fae 100644
+>> --- a/drivers/pci/mmap.c
+>> +++ b/drivers/pci/mmap.c
+>> @@ -35,6 +35,7 @@ int pci_mmap_resource_range(struct pci_dev *pdev, int bar,
+>>       if (write_combine)
+>>           vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
+>>       else
+>> +    else if (!(pci_resource_flags(pdev, bar) & IORESOURCE_CACHEABLE))
+>>           vma->vm_page_prot = pgprot_device(vma->vm_page_prot);
+>>       if (mmap_state == pci_mmap_io) {
+>> @@ -46,6 +47,11 @@ int pci_mmap_resource_range(struct pci_dev *pdev, int bar,
+>>       vma->vm_ops = &pci_phys_vm_ops;
+>> +    if (pci_resource_flags(pdev, bar) & IORESOURCE_CACHEABLE)
+>> +        return remap_pfn_range_notrack(vma, vma->vm_start, vma->vm_pgoff,
+>> +                           vma->vm_end - vma->vm_start,
+>> +                           vma->vm_page_prot);
 >> +
->> +			/*
->> +			 * We might read 0xffff if the device is a VF and
->> +			 * the read was successful (the VF Vendor ID is
->> +			 * 0xffff per spec).
->> +			 *
->> +			 * If the device is not a VF, 0xffff likely means
->> +			 * there was an error on PCIe.  E.g., maybe the
->> +			 * device couldn't even respond with RRS status,
->> +			 * and the RC timed out and synthesized ~0 data.
->> +			 */
->> +			if (PCI_POSSIBLE_ERROR(id) && !dev->is_virtfn)
->> +				    goto retry;
+>>       return io_remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
+>>                     vma->vm_end - vma->vm_start,
+>>                     vma->vm_page_prot);
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index d7f4ee634263..858869ec6612 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -6335,3 +6335,11 @@ static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
+>>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
+>>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
+>>   #endif
 >> +
->> +			break;
->>   		} else {
->>   			pci_read_config_dword(dev, PCI_COMMAND, &id);
->>   			if (!PCI_POSSIBLE_ERROR(id))
->>   				break;
->>   		}
->>   
->> +retry:
->>   		if (delay > timeout) {
->>   			pci_warn(dev, "not ready %dms after %s; giving up\n",
->>   				 delay - 1, reset_type);
->> @@ -4760,6 +4779,8 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
->>   	 * Some controllers might not implement link active reporting. In this
->>   	 * case, we wait for 1000 ms + any delay requested by the caller.
->>   	 */
->> +	pci_dbg(pdev, "%s: active %d delay %d link_active_reporting %d\n",
->> +		__func__, active, delay, pdev->link_active_reporting);
->>   	if (!pdev->link_active_reporting) {
->>   		msleep(PCIE_LINK_RETRAIN_TIMEOUT_MS + delay);
->>   		return true;
+>> +static void pci_ivshmem_writeback(struct pci_dev *dev)
+>> +{
+>> +    struct resource *r = &dev->resource[2];
+>> +
+>> +    r->flags |= IORESOURCE_CACHEABLE;
+>> +}
+>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT_QUMRANET, 0x1110, pci_ivshmem_writeback);
+> 
+
+-- 
+Alexey
+
 
