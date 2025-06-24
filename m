@@ -1,210 +1,167 @@
-Return-Path: <linux-pci+bounces-30559-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30554-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90351AE71CA
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 23:57:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1367AE71BE
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 23:55:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 59307189FE7D
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 21:57:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E096178E0F
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 21:55:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B1A625B30E;
-	Tue, 24 Jun 2025 21:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UKcdUGuS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4A6F25B1DC;
+	Tue, 24 Jun 2025 21:55:23 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [65.21.191.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E433E25B30D;
-	Tue, 24 Jun 2025 21:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5F725B1D8;
+	Tue, 24 Jun 2025 21:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.191.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750802186; cv=none; b=bEb55GM+Um+jDTP2vBBQv1SVpD9V9xsy+gbd1Kkx9XuERCOk8fZzWdxVKwxD1iEsH1/haZHmQ4WrEQTX1dZoLUkoOAwSZDxfRb1n1UP7CZ6CeI+BGiEDEqmJ6MRR0ek9Ow/QXzASKHaSHLiBYEsPwHMOEmITCMon/2WYApZIvts=
+	t=1750802123; cv=none; b=uo17PNNtpWGLpcHJFdpoPL3kKyCR7Giw+jMjtyEHafFvJIamUdXHioXllzybx73XVMkPjagpm6nKTEqoS+szdVGYivahlGxUaJj5eiQ1vQXn4yDaJFvjkKx9Qcfk+auV3Q8DLqfocKNeXo9I8Q/YdwmMXpUkFGuqC5vvaWS+N6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750802186; c=relaxed/simple;
-	bh=YW/ds6pprKKQoy3LKVLjqadOwFxWlgr4J1KG6YTdzrQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Fv2iNRZce9ZI7HyCXkCP9BLVdw/TF+t+PD9G1jZUGll9gU0kPDvGr5Qa9kY61TTxiVQjVvqFe99xgOXyZ0o1YwFm6Umy65miM05kKDDYVUXuwLcqJWjKLBbKyo8ihm8un8OQIzadEu2TmQY953dhUI55HHHN6DqFkAm791MzRTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UKcdUGuS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91EEEC4CEE3;
-	Tue, 24 Jun 2025 21:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750802185;
-	bh=YW/ds6pprKKQoy3LKVLjqadOwFxWlgr4J1KG6YTdzrQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UKcdUGuSMF5k9b0dDwYIXsT6x4C30Gad32hUYQh9PartgGZtbWG6Id2KBkxQxieDB
-	 ZYW5xVr51JWs3xs1bnkik5K56+IGVmDXOluAUbJNg32XoLUbufCVojGxe2eCZQV0ZB
-	 VX2HAfRPSfKmCVqtga4JrcZ4dTArSnRdQTDNBGQoFTGNI9p6/+g8AceQ0wF6DopVyQ
-	 QZzxBiYXWWU+pkUVOp5dcnUXJ+NTd4iAKElMSoWjZSaPjILJ+MIFA3ZwmSvOfxFm00
-	 9dCuCAQzDA3Ec4VSeBuKVhuPDm+3OsShpFl7GNjXVI8jVpP+2nOh3/5dadH92aTztG
-	 Nq1oUy+gKlWOA==
-From: Danilo Krummrich <dakr@kernel.org>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	david.m.ertman@intel.com,
-	ira.weiny@intel.com,
-	leon@kernel.org,
-	kwilczynski@kernel.org,
-	bhelgaas@google.com
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v3 4/4] rust: devres: implement register_release()
-Date: Tue, 24 Jun 2025 23:54:02 +0200
-Message-ID: <20250624215600.221167-5-dakr@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250624215600.221167-1-dakr@kernel.org>
-References: <20250624215600.221167-1-dakr@kernel.org>
+	s=arc-20240116; t=1750802123; c=relaxed/simple;
+	bh=crb6erNNhhWTPlpZtTQ0hl4obVmhGYWyu1a8c/mTIBs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=h8r4rGPviVNw8+6aDcq6cA7Z3qjdjtcRRevxADhMu8a40cKi1C6iDtG7vaIAU/U//NFaifkH1nLGYkuPeUts2ZpMy5rI/P1+/1L826MgmqRRL7ninPWYohHrXFn0ex457nYgHtCrrRyN/pYMF2tMK7W5uTD4PCjk0zzOajUGvfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk; spf=pass smtp.mailfrom=decadent.org.uk; arc=none smtp.client-ip=65.21.191.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=decadent.org.uk
+Received: from [2a02:578:851f:1502:391e:c5f5:10e2:b9a3] (helo=deadeye)
+	by maynard with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ben@decadent.org.uk>)
+	id 1uUBbS-003Crc-1o;
+	Tue, 24 Jun 2025 21:54:53 +0000
+Received: from ben by deadeye with local (Exim 4.98.2)
+	(envelope-from <ben@decadent.org.uk>)
+	id 1uUBbQ-00000002x1R-2RhR;
+	Tue, 24 Jun 2025 23:54:52 +0200
+Message-ID: <9077aab5304e1839786df9adb33c334d10c69397.camel@decadent.org.uk>
+Subject: Re: [PATCH] agp/amd64: Bind to unsupported devices only if AGP is
+ present
+From: Ben Hutchings <ben@decadent.org.uk>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: David Airlie <airlied@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>, 
+ Joerg Roedel <joro@8bytes.org>, Suravee Suthikulpanit
+ <suravee.suthikulpanit@amd.com>, Andi Kleen	 <ak@linux.intel.com>, Ahmed
+ Salem <x0rw3ll@gmail.com>, Borislav Petkov	 <bp@alien8.de>,
+ dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, 
+	linux-pci@vger.kernel.org
+Date: Tue, 24 Jun 2025 23:54:46 +0200
+In-Reply-To: <aFa8JJaRP-FUyy6Y@wunner.de>
+References: 
+	<f8ff40f35a9a5836d1371f60e85c09c5735e3c5e.1750497201.git.lukas@wunner.de>
+	 <b73fbb3e3f03d842f36e6ba2e6a8ad0bb4b904fd.camel@decadent.org.uk>
+	 <aFalrV1500saBto5@wunner.de>
+	 <279f63810875f2168c591aab0f30f8284d12fe02.camel@decadent.org.uk>
+	 <aFa8JJaRP-FUyy6Y@wunner.de>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-1ac14mP05+O+KBtwB9Gp"
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a02:578:851f:1502:391e:c5f5:10e2:b9a3
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
 
-register_release() is useful when a device resource has associated data,
-but does not require the capability of accessing it or manually releasing
-it.
 
-If we would want to be able to access the device resource and release the
-device resource manually before the device is unbound, but still keep
-access to the associated data, we could implement it as follows.
+--=-1ac14mP05+O+KBtwB9Gp
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-	struct Registration<T> {
-	   inner: Devres<RegistrationInner>,
-	   data: T,
-	}
+On Sat, 2025-06-21 at 16:05 +0200, Lukas Wunner wrote:
+> On Sat, Jun 21, 2025 at 03:51:44PM +0200, Ben Hutchings wrote:
+> > On Sat, 2025-06-21 at 14:29 +0200, Lukas Wunner wrote:
+> > > On Sat, Jun 21, 2025 at 02:07:40PM +0200, Ben Hutchings wrote:
+> > > > On Sat, 2025-06-21 at 11:40 +0200, Lukas Wunner wrote:
+> > > > > Since commit 172efbb40333 ("AGP: Try unsupported AGP chipsets on =
+x86-64 by
+> > > > > default"), the AGP driver for AMD Opteron/Athlon64 CPUs attempts =
+to bind
+> > > > > to any PCI device.
+> > > > >=20
+> > > > > On modern CPUs exposing an AMD IOMMU, this results in a message w=
+ith
+> > > > > KERN_CRIT severity:
+> > > > >=20
+> > > > >   pci 0000:00:00.2: Resources present before probing
+> > > > >=20
+> > > > > The driver used to bind only to devices exposing the AGP Capabili=
+ty, but
+> > > > > that restriction was removed by commit 6fd024893911 ("amd64-agp: =
+Probe
+> > > > > unknown AGP devices the right way").
+> > > >=20
+> > > > That didn't remove any restriction as the probe function still star=
+ted
+> > > > by checking for an AGP capability.  The change I made was that the
+> > > > driver would actually bind to devices with the AGP capability inste=
+ad of
+> > > > starting to use them without binding.
+> > >=20
+> > > The message above would not be emitted without your change.
+> > >=20
+> > > The check for the AGP capability in agp_amd64_probe() is too late
+> > > to prevent the message.  That's because the message is emitted
+> > > before ->probe() is even called.
+> >=20
+> > I understand that.  But I don't feel that the explanation above
+> > accurately described the history here.
+>=20
+> So please propose a more accurate explanation.
 
-However, if we never need to access the resource or release it manually,
-register_release() is great optimization for the above, since it does not
-require the synchronization of the Devres type.
+Something like "The driver iterates over all PCI devices, checking for
+an AGP capability.  Since commit 6fd024893911 ("amd64-agp: Probe unknown
+AGP devices the right way") this is done with driver_attach() and a
+wildcard PCI ID table, and the preparation for probing the IOMMU device
+produces this error message."
 
-Suggested-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
----
- rust/kernel/devres.rs | 90 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+Thinking about this further:
 
-diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-index eeffdc8115aa..ff33e835c44f 100644
---- a/rust/kernel/devres.rs
-+++ b/rust/kernel/devres.rs
-@@ -16,6 +16,7 @@
-     sync::{rcu, Completion},
-     types::{ARef, ForeignOwnable, ScopeGuard, Opaque},
- };
-+use core::ops::Deref;
- 
- use pin_init::Wrapper;
- 
-@@ -347,3 +348,92 @@ pub fn register<T, E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flag
- 
-     register_foreign(dev, data)
- }
-+
-+/// [`Devres`]-releaseable resource.
-+///
-+/// Register an object implementing this trait with [`register_release`]. Its `release`
-+/// function will be called once the device is being unbound.
-+pub trait Release {
-+    /// Called once the [`Device`] given to [`register_release`] is unbound.
-+    fn release(&self);
-+}
-+
-+impl<T: Release> Release for crate::sync::ArcBorrow<'_, T> {
-+    fn release(&self) {
-+        self.deref().release();
-+    }
-+}
-+
-+impl<T: Release> Release for Pin<&'_ T> {
-+    fn release(&self) {
-+        self.deref().release();
-+    }
-+}
-+
-+impl<T: Release> Release for &'_ T {
-+    fn release(&self) {
-+        (*self).release();
-+    }
-+}
-+
-+/// Consume the `data`, [`Release::release`] and [`Drop::drop`] `data` once `dev` is unbound.
-+///
-+/// # Examples
-+///
-+/// ```no_run
-+/// use kernel::{device::{Bound, Device}, devres, devres::Release, sync::Arc};
-+///
-+/// /// Registration of e.g. a class device, IRQ, etc.
-+/// struct Registration<T> {
-+///     data: T,
-+/// }
-+///
-+/// impl<T> Registration<T> {
-+///     fn new(data: T) -> Result<Arc<Self>> {
-+///         // register
-+///
-+///         Ok(Arc::new(Self { data }, GFP_KERNEL)?)
-+///     }
-+/// }
-+///
-+/// impl<T> Release for Registration<T> {
-+///     fn release(&self) {
-+///        // unregister
-+///     }
-+/// }
-+///
-+/// fn from_bound_context(dev: &Device<Bound>) -> Result {
-+///     let reg = Registration::new(0x42)?;
-+///
-+///     devres::register_release(dev, reg.clone())
-+/// }
-+/// ```
-+pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
-+where
-+    P: ForeignOwnable + 'static,
-+    for<'a> P::Borrowed<'a>: Release,
-+{
-+    let ptr = data.into_foreign();
-+
-+    #[allow(clippy::missing_safety_doc)]
-+    unsafe extern "C" fn callback<P>(ptr: *mut kernel::ffi::c_void)
-+    where
-+        P: ForeignOwnable,
-+        for<'a> P::Borrowed<'a>: Release,
-+    {
-+        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked above and hence valid.
-+        unsafe { P::borrow(ptr.cast()) }.release();
-+
-+        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked above and hence valid.
-+        drop(unsafe { P::from_foreign(ptr.cast()) });
-+    }
-+
-+    // SAFETY:
-+    // - `dev.as_raw()` is a pointer to a valid and bound device.
-+    // - `ptr` is a valid pointer the `ForeignOwnable` devres takes ownership of.
-+    to_result(unsafe {
-+        // `devm_add_action_or_reset()` also calls `callback` on failure, such that the
-+        // `ForeignOwnable` is released eventually.
-+        bindings::devm_add_action_or_reset(dev.as_raw(), Some(callback::<P>), ptr.cast())
-+    })
-+}
--- 
-2.49.0
+- Why *does* the IOMMU device have resources assigned but no driver
+  bound?  Is that the real bug?
 
+- If=C2=A0not, and there's a general problem with this promiscuous probing,
+  would it make more sense to:
+  1. Restore the search for an AGP capability in agp_amd64_init().
+  2. If and only if an AGP device is found, poke the appropriate device
+     ID into agp_amd64_pci_promisc_table and then call driver_attach().
+  ?
+
+Ben.
+
+--=20
+Ben Hutchings
+Horngren's Observation:
+              Among economists, the real world is often a special case.
+
+--=-1ac14mP05+O+KBtwB9Gp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmhbHqcACgkQ57/I7JWG
+EQmq+Q//a55Y8Fao7E/XxVGieu3OVSsiSzpd5f/Re/J6IC2eVkPzZvd72/LuMYSq
+5vsD/RWkhpkdJeab75FE0lxV0iQQ8uc3aRUoyJgf0hbOiYllNVpaubCiFdpP/fO5
+klg2cksoulrf6W/ABvB+RSOVNP+XNQZSIMKoFCBYxcNY2CZ6uRdFPXWmnhfcKUl3
+eViszycu7JBsLNLL24EvtoOu8JFJMXBUzVyEfvcHVcaPiLOUFsDSphEJkTMyYSGm
+XrrTQTau/bzVMpjLeEZPZXKrR17EFGjpuNLbip75rt3B85Nnv+emSBjEI82UFuwy
+ugTKoPRdkV+Gq1/Jzl8/6i+JArqE2PugVNQem52J97BN4MWJLczdMJGb7rg1YPNw
+OMOr3CUpkvsEKY3Lq3+KFTcmjGrzp86oFkOtdPJinuL4UNXY8+FKg2dR6UM7rAMz
+/HFkUdB8jOxWhvNrmRf3Gqde9mXEkennBgqyc5ERh31JVbbWsauZyLun6Sv1jpYk
+yqJ1KpYyAXR7u+gpVoA9MPj6hoUOBPZPQ1xBww4tnGhJFkZRxykAAEO9lx8JY9qr
+kqfjpe1Ah+jRh5iSmrcHoQ3drp7DYVzc0QoHYIPAquqTl9mDAX597qAKccgKYVMf
+2mjKPmzRa4rWKb7Qu7MavAaBEuBaXZJyxcAvq3u+eGNj0hWm304=
+=zBBS
+-----END PGP SIGNATURE-----
+
+--=-1ac14mP05+O+KBtwB9Gp--
 
