@@ -1,191 +1,193 @@
-Return-Path: <linux-pci+bounces-30524-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30525-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C50F0AE6BF2
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 18:00:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52522AE6C42
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 18:16:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82FED3AB2DB
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 16:00:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 666023AE8BA
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 16:15:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E465F2E11D9;
-	Tue, 24 Jun 2025 16:00:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD34411CA9;
+	Tue, 24 Jun 2025 16:15:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gm6qAgWt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lesE9Hel"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B608028468E;
-	Tue, 24 Jun 2025 16:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE893597E
+	for <linux-pci@vger.kernel.org>; Tue, 24 Jun 2025 16:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750780851; cv=none; b=lLSHtB7BLglX06gBi0r5BnLL5M3dBwwcyJD1FEHr48UN+n26+U2v0xr777crhzBaM5XuIASGRIKA3IoUqJ5fzmpfq34PeZG5HWF+1B11PYNLWUzM3Brkw4cKstd4rpLCf/bAO80DgZY7k09L5nUXlpnQwgRI6VdqBYTbynuhgiA=
+	t=1750781743; cv=none; b=hBR/PgBZeJGP/f1p/in0nbFBIPktf8CoskkqNmRDAm8YE7n9jGKjXuDq9LA/VIeROcR0GGh8rsyN/xRk0MnZO36FbuYMTqwE2S0t+fFATq6h/bT6d/v71NrMXM0OzyjHfYzRYj2y1QC+ueUIzuzTu/fi/RTyTqmPRFqennZIjQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750780851; c=relaxed/simple;
-	bh=Z8jA80S3zwy20ZT2jiHgqV2tMjx8AnSmArLZvzv3nvs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jIvYCFPEEdXDwsrhgaTnl7RgP3iysLqlNEyoikFRgyuXqrMbSvf/QbYPj5rnOPcsC/boy8jndYBVXPQZeb9z+Sxnre1OmlWMYfeuYtrnaiNpjDhEuqxV+D6+ZMHHPbmO9se/mdMzT1tjFghuHiHMDO0ksJTl/BkHjvglHiyJee4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gm6qAgWt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B0BC4CEE3;
-	Tue, 24 Jun 2025 16:00:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750780851;
-	bh=Z8jA80S3zwy20ZT2jiHgqV2tMjx8AnSmArLZvzv3nvs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Gm6qAgWtekRL84jy+ZUefdYbAADtOsCjYh2ciwsENfw341fbejMX2TDi5cfNJl/CD
-	 ICKJmnx6l8JyjRFSWtI9POmr1Wm/AGdsz5Pr5U+v+/bK9eET9si6UvGoZbdGTiNcGY
-	 rMoSvtffoFcRWzS64WjZ2ACXC71itT8eYiRturXjhUmTbK5UBlDG6Yk5SYMQtDu7wK
-	 /4+dmb4TGispkcEalM5ACbAvfgThuAmVvW9FraoHlJYLc+tLuyYWmCgk91ZGtz9eE1
-	 /WrqqzHy4yc3dXWkx9kNLUgf9DuIbrBFdc4HvBTGck6TEmgsYfUD70HvIsr3MjFq5b
-	 boGBcYNJoyPTA==
-Date: Tue, 24 Jun 2025 11:00:49 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sai Krishna Musham <sai.krishna.musham@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, cassel@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
-	thippeswamy.havalige@amd.com
-Subject: Re: [PATCH v3 2/2] PCI: amd-mdb: Add support for PCIe RP PERST#
- signal handling
-Message-ID: <20250624160049.GA1479461@bhelgaas>
+	s=arc-20240116; t=1750781743; c=relaxed/simple;
+	bh=5D5lzf3JHSBPEWQJoTqwA7KCztB2mIqIqDvJsYrSmpg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=KRsq8kgwXXP0Vw0T/Ohb5Y6ZCoxnKlfol1eyvpkBD0bXLC+0hJPD3iK5Cnav5UmQYFHcRGMt7PVYyDjG9+aLfe71hFqGcSeoRkgF1sRrYM8d4ZlDvFaCUHdrVe3uFkbpMAYrankGC7CCdcrRjt05V+4dRtVNA0WFuld+NI+UKl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lesE9Hel; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750781742; x=1782317742;
+  h=date:from:to:cc:subject:message-id;
+  bh=5D5lzf3JHSBPEWQJoTqwA7KCztB2mIqIqDvJsYrSmpg=;
+  b=lesE9Helq0PaGXSkQSBogeQ2Z84Vq0ci2peiImWLeqfzivOVqr0XMbca
+   P3CCzUKMHSduY5nHfn3W8Zp9aIA6exzdAkWi+07KxYiUxQX9vyqy4wu+y
+   +EnuybgEhrji+013JNh4a+f30BlwJAzi/+Y1Ya2sqvUS4WzEzouakMvgQ
+   dOeuinX6dm8H8kwbQF4h1rTL2Ohu41B5fG3G/Ro3vww7udjnS3/GnpJTJ
+   rFm604Ux4VlD7BSQ0wpKYnlbodsjOFZmbhsF7Ft2O78RHgsX+mpLWZWvI
+   IFvhUDpg9mtRh/9k74rbHKRsX4qWfIRoqxvr0WMmScT1Uojd+fCPKhzp+
+   g==;
+X-CSE-ConnectionGUID: DKQD0xNaR4S9eHgQkXm0IQ==
+X-CSE-MsgGUID: 8eZ3nERNQWi046cELHWxRA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="53169742"
+X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
+   d="scan'208";a="53169742"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 09:15:41 -0700
+X-CSE-ConnectionGUID: CkhJB4xYR/m2bfNQZW04uQ==
+X-CSE-MsgGUID: IY8vM+0mTkinPnECdDTT4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
+   d="scan'208";a="152087562"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 24 Jun 2025 09:15:40 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uU6J7-000SJK-35;
+	Tue, 24 Jun 2025 16:15:37 +0000
+Date: Wed, 25 Jun 2025 00:15:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:pwrctrl] BUILD SUCCESS
+ 3aa54d162490f14d1f1fdf3b3d1170b2ea50276b
+Message-ID: <202506250025.e1h63dwj-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618080931.2472366-3-sai.krishna.musham@amd.com>
 
-On Wed, Jun 18, 2025 at 01:39:31PM +0530, Sai Krishna Musham wrote:
-> Add GPIO based PERST# signal handling for AMD Versal Gen 2 MDB
-> PCIe Root Port.
-> 
-> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
-> ---
-> Changes in v3:
-> - Implement amd_mdb_parse_pcie_port to parse bridge node for reset-gpios property.
-> 
-> Changes in v2:
-> - Change delay to PCIE_T_PVPERL_MS
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pwrctrl
+branch HEAD: 3aa54d162490f14d1f1fdf3b3d1170b2ea50276b  PCI/pwrctrl: Fix the kerneldoc tag for private fields
 
-v3 https://lore.kernel.org/r/20250618080931.2472366-1-sai.krishna.musham@amd.com/
-v2 https://lore.kernel.org/r/20250429090046.1512000-1-sai.krishna.musham@amd.com/
-v1 https://lore.kernel.org/r/20250326041507.98232-1-sai.krishna.musham@amd.com/
+elapsed time: 1319m
 
-> ---
->  drivers/pci/controller/dwc/pcie-amd-mdb.c | 45 ++++++++++++++++++++++-
->  1 file changed, 44 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-amd-mdb.c b/drivers/pci/controller/dwc/pcie-amd-mdb.c
-> index 4eb2a4e8189d..b4c5b71900a5 100644
-> --- a/drivers/pci/controller/dwc/pcie-amd-mdb.c
-> +++ b/drivers/pci/controller/dwc/pcie-amd-mdb.c
-> @@ -18,6 +18,7 @@
->  #include <linux/resource.h>
->  #include <linux/types.h>
->  
-> +#include "../../pci.h"
->  #include "pcie-designware.h"
->  
->  #define AMD_MDB_TLP_IR_STATUS_MISC		0x4C0
-> @@ -63,6 +64,7 @@ struct amd_mdb_pcie {
->  	void __iomem			*slcr;
->  	struct irq_domain		*intx_domain;
->  	struct irq_domain		*mdb_domain;
-> +	struct gpio_desc		*perst_gpio;
->  	int				intx_irq;
->  };
->  
-> @@ -284,7 +286,7 @@ static int amd_mdb_pcie_init_irq_domains(struct amd_mdb_pcie *pcie,
->  	struct device_node *pcie_intc_node;
->  	int err;
->  
-> -	pcie_intc_node = of_get_next_child(node, NULL);
-> +	pcie_intc_node = of_get_child_by_name(node, "interrupt-controller");
+configs tested: 100
+configs skipped: 1
 
-Is this change logically part of the PERST# support?  If not, this
-could be a separate patch.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->  	if (!pcie_intc_node) {
->  		dev_err(dev, "No PCIe Intc node found\n");
->  		return -ENODEV;
-> @@ -402,6 +404,34 @@ static int amd_mdb_setup_irq(struct amd_mdb_pcie *pcie,
->  	return 0;
->  }
->  
-> +static int amd_mdb_parse_pcie_port(struct amd_mdb_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->pci.dev;
-> +	struct device_node *pcie_port_node;
-> +
-> +	pcie_port_node = of_get_next_child_with_prefix(dev->of_node, NULL, "pcie");
-> +	if (!pcie_port_node) {
-> +		dev_err(dev, "No PCIe Bridge node found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* Request the GPIO for PCIe reset signal and assert */
-> +	pcie->perst_gpio = devm_fwnode_gpiod_get(dev, of_fwnode_handle(pcie_port_node),
-> +						 "reset", GPIOD_OUT_HIGH, NULL);
-> +	if (IS_ERR(pcie->perst_gpio)) {
-> +		if (PTR_ERR(pcie->perst_gpio) != -ENOENT) {
-> +			of_node_put(pcie_port_node);
-> +			return dev_err_probe(dev, PTR_ERR(pcie->perst_gpio),
-> +					     "Failed to request reset GPIO\n");
-> +		}
-> +		pcie->perst_gpio = NULL;
-> +	}
-> +
-> +	of_node_put(pcie_port_node);
-> +
-> +	return 0;
-> +}
-> +
->  static int amd_mdb_add_pcie_port(struct amd_mdb_pcie *pcie,
->  				 struct platform_device *pdev)
->  {
-> @@ -426,6 +456,14 @@ static int amd_mdb_add_pcie_port(struct amd_mdb_pcie *pcie,
->  
->  	pp->ops = &amd_mdb_pcie_host_ops;
->  
-> +	if (pcie->perst_gpio) {
-> +		mdelay(PCIE_T_PVPERL_MS);
-> +
-> +		/* Deassert the reset signal */
-> +		gpiod_set_value_cansleep(pcie->perst_gpio, 0);
-> +		mdelay(PCIE_T_RRS_READY_MS);
-> +	}
-> +
->  	err = dw_pcie_host_init(pp);
->  	if (err) {
->  		dev_err(dev, "Failed to initialize host, err=%d\n", err);
-> @@ -444,6 +482,7 @@ static int amd_mdb_pcie_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct amd_mdb_pcie *pcie;
->  	struct dw_pcie *pci;
-> +	int ret;
->  
->  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
->  	if (!pcie)
-> @@ -454,6 +493,10 @@ static int amd_mdb_pcie_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, pcie);
->  
-> +	ret = amd_mdb_parse_pcie_port(pcie);
-> +	if (ret)
-> +		return ret;
-> +
->  	return amd_mdb_add_pcie_port(pcie, pdev);
->  }
->  
-> -- 
-> 2.43.0
-> 
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    clang-19
+arc                              allmodconfig    clang-19
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    clang-19
+arc                   randconfig-001-20250624    gcc-12.4.0
+arc                   randconfig-001-20250624    gcc-8.5.0
+arc                   randconfig-002-20250624    gcc-8.5.0
+arm                              allmodconfig    clang-19
+arm                               allnoconfig    clang-21
+arm                               allnoconfig    gcc-15.1.0
+arm                              allyesconfig    clang-19
+arm                   randconfig-001-20250624    gcc-13.3.0
+arm                   randconfig-001-20250624    gcc-8.5.0
+arm                   randconfig-002-20250624    gcc-8.5.0
+arm                   randconfig-003-20250624    gcc-12.4.0
+arm                   randconfig-003-20250624    gcc-8.5.0
+arm                   randconfig-004-20250624    clang-17
+arm                   randconfig-004-20250624    gcc-8.5.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250624    clang-21
+arm64                 randconfig-001-20250624    gcc-8.5.0
+arm64                 randconfig-002-20250624    gcc-10.5.0
+arm64                 randconfig-002-20250624    gcc-8.5.0
+arm64                 randconfig-003-20250624    clang-21
+arm64                 randconfig-003-20250624    gcc-8.5.0
+arm64                 randconfig-004-20250624    clang-21
+arm64                 randconfig-004-20250624    gcc-8.5.0
+csky                              allnoconfig    gcc-15.1.0
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-21
+hexagon                           allnoconfig    gcc-15.1.0
+hexagon                          allyesconfig    clang-19
+i386                             allmodconfig    clang-20
+i386                              allnoconfig    clang-20
+i386                             allyesconfig    clang-20
+i386        buildonly-randconfig-001-20250624    clang-20
+i386        buildonly-randconfig-001-20250624    gcc-12
+i386        buildonly-randconfig-002-20250624    gcc-12
+i386        buildonly-randconfig-003-20250624    clang-20
+i386        buildonly-randconfig-003-20250624    gcc-12
+i386        buildonly-randconfig-004-20250624    clang-20
+i386        buildonly-randconfig-004-20250624    gcc-12
+i386        buildonly-randconfig-005-20250624    clang-20
+i386        buildonly-randconfig-005-20250624    gcc-12
+i386        buildonly-randconfig-006-20250624    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-15.1.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    gcc-15.1.0
+riscv                            allmodconfig    gcc-15.1.0
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    gcc-15.1.0
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-19
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250624    clang-20
+x86_64      buildonly-randconfig-002-20250624    clang-20
+x86_64      buildonly-randconfig-002-20250624    gcc-12
+x86_64      buildonly-randconfig-003-20250624    clang-20
+x86_64      buildonly-randconfig-004-20250624    clang-20
+x86_64      buildonly-randconfig-005-20250624    clang-20
+x86_64      buildonly-randconfig-006-20250624    clang-20
+x86_64      buildonly-randconfig-006-20250624    gcc-12
+x86_64                              defconfig    clang-20
+x86_64                                  kexec    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
