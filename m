@@ -1,111 +1,112 @@
-Return-Path: <linux-pci+bounces-30474-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30475-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA748AE5B97
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 06:44:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2028AE5CC9
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 08:30:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6ECAE2C304C
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 04:44:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C5F71B63F87
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 06:30:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08248226CF1;
-	Tue, 24 Jun 2025 04:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LtJg/Vod"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D1C41D63C0;
+	Tue, 24 Jun 2025 06:29:56 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E37CB652;
-	Tue, 24 Jun 2025 04:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D53E230996;
+	Tue, 24 Jun 2025 06:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750740256; cv=none; b=ZMIhutsfOx6V8qsdx0pv3R/LQ1ReTcYd/Byv4aThUJ+8FU4R/iZwbbA2R8yTiceXNfAxAd99f/4pRyN0S7aPIXSNgaPv5SQLhvLDLgEP/PlLpN2JpdDEjwods05CFVSbdq82RZcuEqfn6wFboqITFPMaQJqCHMuuFueisQZsdlU=
+	t=1750746596; cv=none; b=uKwHtNHCIf2cMCfLtcyGblEGtuiNC9s5ZcpLZ0cP+b/eDTzMIKxuefucGyolMrI2O8V+OmL70Mjw6AFCYVLoRXXjmVWJV4qPCfVBhikbI6f4yR9MRaZ8SXdaFopEmkb3Xzv7JvhFkcz3oj1Y6XiavVk4dv/3qYLAOrbmpZfrIXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750740256; c=relaxed/simple;
-	bh=70vF/+LDkN4q7jTfHlGAIAhxNTippQO8QdvV+YYKln0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HQhckBpxnIgfvs3RBd+JFVbLnC8kp/rgRP5ve00N7Rl2pc/ghtM3uzlpMcLMFHFtiS7vZILbp4AlzRYtd1DGtKX/Zhx+kOjo59g7ydsErZkimmASwWTIreA3/VYRccfnfiBaKDizbpCak2Uxm+4+S4E4hHN/QsHuE5eHKEO/ess=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LtJg/Vod; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750740255; x=1782276255;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=70vF/+LDkN4q7jTfHlGAIAhxNTippQO8QdvV+YYKln0=;
-  b=LtJg/VodfdOJE0vsCBm0M4TQNyrN5nxq20QX2i5afMTULXVLmiHC9azW
-   1bbBRV5aRdiPdCxhmk1i/VmAEFTPDikYXq+RVBk7Qpc6FFBhMMw0clXcn
-   f+JxwNu8kJG9+gGgX7DrLbWj+rb3wBZJyp2+fittPdZpNRpKTy+WdyQyf
-   acgfAmLpuuhr6wBpHVhwUDW03GDtsZ41YSPz2e4e539FcaDUHDtekXxdH
-   Xzva66R3IRroVEN/1+Ld4fbb9G5I96u4zVg8DRfYxZGFbMHDx09/LMoaE
-   hAXQw27z7s+/UU2FY/D+eoVF8/xU+Q3ZKnszsDz6JDWZjb8FZ32SaACMh
-   A==;
-X-CSE-ConnectionGUID: d47SEBL/Rcq+3r46AZ9mkQ==
-X-CSE-MsgGUID: CVxzRt2oQeSNyGOIIrXJ5w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="53097156"
-X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="53097156"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 21:44:14 -0700
-X-CSE-ConnectionGUID: /IMDF3uBQ862VPPddpuBuw==
-X-CSE-MsgGUID: ZdH+2z/NRSGVG1dkvjtRHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="157578062"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 21:44:08 -0700
-Message-ID: <06992407-0c84-4f3f-a89a-5986024928a4@linux.intel.com>
-Date: Tue, 24 Jun 2025 12:42:51 +0800
+	s=arc-20240116; t=1750746596; c=relaxed/simple;
+	bh=Xlgt+AJdlMJAX9PYVZcWhhPh/iLrjRKOC69qLTabt28=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G1coY2Yg4MH7zJZdRFoCRR36LzaeMob4lFGRdMTDbEyRV4qQWWk3bBzfhMoPOFKRBGPOKz2qjiBnqSPpl6QHWGw7hoyGLadFZkXFlImeA2Kizf0aoEsFg0pBTLyxwtHORtFdjn99QNiQB71VBDPKAnrFDXg0fGOcdHXJI8u6sHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.149])
+	by gateway (Coremail) with SMTP id _____8BxIK_dRVpo1wwcAQ--.60552S3;
+	Tue, 24 Jun 2025 14:29:49 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.149])
+	by front1 (Coremail) with SMTP id qMiowMCxqhrPRVpomGsoAQ--.33729S2;
+	Tue, 24 Jun 2025 14:29:48 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>
+Cc: linux-pci@vger.kernel.org,
+	Juergen Gross <jgross@suse.com>,
+	virtualization@lists.linux.dev,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] PCI: Extend isolated function probing to LoongArch
+Date: Tue, 24 Jun 2025 14:29:27 +0800
+Message-ID: <20250624062927.4037734-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/8] iommu/vt-d: Use pci_is_display()
-To: Mario Limonciello <superm1@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Lukas Wunner <lukas@wunner.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Woodhouse <dwmw2@infradead.org>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
- "open list:SOUND" <linux-sound@vger.kernel.org>,
- Daniel Dadap <ddadap@nvidia.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Simona Vetter <simona.vetter@ffwll.ch>, Bjorn Helgaas <helgaas@kernel.org>
-References: <20250623184757.3774786-1-superm1@kernel.org>
- <20250623184757.3774786-5-superm1@kernel.org>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20250623184757.3774786-5-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxqhrPRVpomGsoAQ--.33729S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Jw1UAFWfCrW8JrWrWrW5XFc_yoWDtwc_Aw
+	n3XF4xWrs7ZFy2ga9rWrZ7JF1rWw40yr1rZr1vqr4Ykas0ya1DGwnrJF9xJ3W8GF47ZrZI
+	k3WfW3ySyr12gosvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Cr1j6rxdM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
 
-On 6/24/25 02:47, Mario Limonciello wrote:
-> From: Mario Limonciello<mario.limonciello@amd.com>
-> 
-> The inline pci_is_display() helper does the same thing.  Use it.
-> 
-> Reviewed-by: Daniel Dadap<ddadap@nvidia.com>
-> Reviewed-by: Simona Vetter<simona.vetter@ffwll.ch>
-> Suggested-by: Bjorn Helgaas<helgaas@kernel.org>
-> Signed-off-by: Mario Limonciello<mario.limonciello@amd.com>
+Like s390 and the jailhouse hypervisor, LoongArch's PCI architecture
+allows passing isolated PCI functions to a guest OS instance. So it is
+possible that there is a multi-function device without function 0 for
+the host or guest.
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Allow probing such functions by adding a IS_ENABLED(CONFIG_LOONGARCH)
+case in the hypervisor_isolated_pci_functions() helper.
+
+This is similar to commit 189c6c33ff421def040b9 ("PCI: Extend isolated
+function probing to s390").
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ include/linux/hypervisor.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/linux/hypervisor.h b/include/linux/hypervisor.h
+index 9efbc54e35e5..be5417303ecf 100644
+--- a/include/linux/hypervisor.h
++++ b/include/linux/hypervisor.h
+@@ -37,6 +37,9 @@ static inline bool hypervisor_isolated_pci_functions(void)
+ 	if (IS_ENABLED(CONFIG_S390))
+ 		return true;
+ 
++	if (IS_ENABLED(CONFIG_LOONGARCH))
++		return true;
++
+ 	return jailhouse_paravirt();
+ }
+ 
+-- 
+2.47.1
+
 
