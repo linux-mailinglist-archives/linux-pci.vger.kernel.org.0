@@ -1,167 +1,137 @@
-Return-Path: <linux-pci+bounces-30512-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30513-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F1DAAE6A0B
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 17:05:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FA45AE6A9B
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 17:21:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0CEF188FE0B
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 14:57:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC3111C27FC9
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 15:15:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2951F291C1A;
-	Tue, 24 Jun 2025 14:57:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 387BC2ECD3E;
+	Tue, 24 Jun 2025 15:08:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZW58Sxw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ci3fiVp7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFF624A061;
-	Tue, 24 Jun 2025 14:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A732ECD0F
+	for <linux-pci@vger.kernel.org>; Tue, 24 Jun 2025 15:08:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750777021; cv=none; b=ki9ojwgJb7zbtFil7JATVQfIMCl1xGOuh9iX99TBs0SI7SJt+4Qrqac1pyou0rIgClKeR3PTxxo51Hl3HGf6r0h7iBs2I16sjKYPPhP1qz53HaqW6aSEMRBKBT6C1PIMadtc1tjhTIMXwJAP9E+0yoEqg5iYK+asvfeUPyhqhVo=
+	t=1750777719; cv=none; b=pnXP1SGtGlzat/QYRAFNRRI3u+wopvca8adneF3VDqMvdVD+hY15TPVuGk2nWbzllDXn9KsIbiFCGu5Ityom/xmqS0aJgbTI39a42MXzb8nKpmgkToIqQIU7ZDJJSVTQEwffz9ORV8WmJfszohfDyXzp8IzHMsUn06zdjeJMjc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750777021; c=relaxed/simple;
-	bh=qC2AQ1Lw6HN7N4g1YhVAubrvXg5LAd5u7Gh1vWIUfrg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l/aLR0ZVEo1H9jWpsyxma+sUOExPvPVAweYV6dmcb0tVwJmDRGPPcU7ukhCPfQZs2y2vncsJSdNktkRwsCYNp+X5RkjNtQ9q896C8c6OEogUm/JzWPWjHrZCuKTFxm2FU8SsDpjR3n3JSLo0kTtL89NFDgcaqfxV6QNFFEC8Eaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZW58Sxw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01464C4CEE3;
-	Tue, 24 Jun 2025 14:56:56 +0000 (UTC)
+	s=arc-20240116; t=1750777719; c=relaxed/simple;
+	bh=uH2AZGtjE58eszZ1WMtgyH4tcUczHVZcdGvJK/Ru9Ek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rSnuF1Ovvi9BC7Qb1d/FJ8Foy0CxncEA+Xf00pQaUyKCkS0fnO06H3GYvPcV4MWK3txaDbVZL6iLe98n74ELJX30buJyx2zyyBADeMEV+un4kqFGrdmKBw9NiHktaItpP96UbFfgM+PbDYHfRj7TjhjL7Z8PBPrEjEIrLdv0IgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ci3fiVp7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CDD9C4CEF0;
+	Tue, 24 Jun 2025 15:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750777020;
-	bh=qC2AQ1Lw6HN7N4g1YhVAubrvXg5LAd5u7Gh1vWIUfrg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nZW58SxwTBlqqKNnohjDEkSoza6dXOupBV8Da96J7Bvrs3nWMqKEs2XqsN0k+qQFr
-	 1wxD230VQkqc3m8CTirl6HxacphKkDbR7LOZna1klvrRwnkqCZGjyBS86pI4tjttiA
-	 gXpRfQmxux57wzT52SOuhfBMv4rsZLjJhqOzfXRanqZwLoQm0F0RJCB+RAgCZqiDm0
-	 vhSqXiNT3A8UWJxFHK4v5RCiTYLExtm4tLAC7XyYDnxwGPp6iMSM8bn+c8H3sYD3Yd
-	 YUpZykmhAVvUbJIE2zKA3NVoufSx9xwXd7zitfVh3hP2F+B/pJxDtmaL1AXpVfdGHS
-	 pbPxnJ6X9Rleg==
-Date: Tue, 24 Jun 2025 16:56:54 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, Benno Lossin <lossin@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?iso-8859-1?Q?Wilczy=B4nski?= <kwilczynski@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 3/6] rust: irq: add support for non-threaded IRQs and
- handlers
-Message-ID: <aFq8tiJfU-KshBIN@cassiopeiae>
-References: <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com>
- <DAU0NHTHTDG4.2HNEABNAI8GHZ@kernel.org>
- <aFmPZMLGngAE_IHJ@tardis.local>
- <aFmodsQK6iatXKoZ@tardis.local>
- <DAU5TAFKJQOF.2DFO7YAHZA4V2@kernel.org>
- <DB7F39EC-5F7D-49DA-BF2B-6200998B45E2@collabora.com>
- <DAURVNHM7PKM.PLUFKFRVXR25@kernel.org>
- <CAH5fLggs=mUi0xAEuiLvZrua4qrMYjBDEmyK8xc-kkXVyUKRog@mail.gmail.com>
- <aFq3P_4XgP0dUrAS@Mac.home>
- <aFq5PVhm3ybiw12I@Mac.home>
+	s=k20201202; t=1750777718;
+	bh=uH2AZGtjE58eszZ1WMtgyH4tcUczHVZcdGvJK/Ru9Ek=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ci3fiVp7rYwgsprSSdNG9LeUBHSO4IwgTA9hTNkdq74sbccJPUMd5YJ7Ds9qKG+RD
+	 j84REUru0jRKyE8oN45gB0aFV7FBBAZMN2FNiUndLdqejjQ85PUOjGey/4EF6AgrV1
+	 Yzj0yErWwAa4e1lmpQuqwygXdwvVCOG6iCvfh4QW5DJJPp5k85OVXTreWswd95ho/8
+	 HEA2kGHSAQIfPBdtD1jlxPzv9Nvgeh6ARK/wf1VlaVtTfsOb4yokdus4WjeeWOEIKB
+	 yafNhXjCGgfd7WkcRFqNWk5es++M+xNminuJ0ELRAA3H/qXMj63Uqakcy/wPsggWd6
+	 Q+0/qipDUAyZQ==
+Message-ID: <b21f3d5a-bc46-4e04-8dcc-657f1146378e@kernel.org>
+Date: Tue, 24 Jun 2025 10:08:37 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] PCI/PM: Skip resuming to D0 if disconnected
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: mario.limonciello@amd.com, linux-pci@vger.kernel.org,
+ Mika Westerberg <westeri@kernel.org>
+References: <20250623191335.3780832-1-superm1@kernel.org>
+ <aFpSTT_UHakY91_q@wunner.de>
+ <CAJZ5v0gjCdpARy5NzCZ71xb_M0-LU0110F_eGaPZsuCHGWWARg@mail.gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <CAJZ5v0gjCdpARy5NzCZ71xb_M0-LU0110F_eGaPZsuCHGWWARg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aFq5PVhm3ybiw12I@Mac.home>
 
-On Tue, Jun 24, 2025 at 07:42:05AM -0700, Boqun Feng wrote:
-> On Tue, Jun 24, 2025 at 07:33:35AM -0700, Boqun Feng wrote:
-> > On Tue, Jun 24, 2025 at 02:50:23PM +0100, Alice Ryhl wrote:
-> > > On Tue, Jun 24, 2025 at 1:46 PM Benno Lossin <lossin@kernel.org> wrote:
-> > > >
-> > > > On Tue Jun 24, 2025 at 2:31 PM CEST, Daniel Almeida wrote:
-> > > > > On 23 Jun 2025, at 16:28, Benno Lossin <lossin@kernel.org> wrote:
-> > > > >> On Mon Jun 23, 2025 at 9:18 PM CEST, Boqun Feng wrote:
-> > > > >>>    try_pin_init!(&this in Self {
-> > > > >>>        handler,
-> > > > >>>        inner: Devres::new(
-> > > > >>>            dev,
-> > > > >>>            RegistrationInner {
-> > > > >>>                // Needs to use `handler` address as cookie, same for
-> > > > >>>                // request_irq().
-> > > > >>>                cookie: &raw (*(this.as_ptr().cast()).handler),
-> > > > >>>                irq: {
-> > > > >>>                     to_result(unsafe { bindings::request_irq(...) })?;
-> > > > >>>  irq
-> > > > >>> }
-> > > > >>>             },
-> > > > >>>             GFP_KERNEL,
-> > > > >>>        )?,
-> > > > >>>        _pin: PhantomPinned
-> > > > >>>    })
-> > > > >>
-> > > > >> Well yes and no, with the Devres changes, the `cookie` can just be the
-> > > > >> address of the `RegistrationInner` & we can do it this way :)
-> > > > >>
-> > > > >> ---
-> > > > >> Cheers,
-> > > > >> Benno
-> > > > >
-> > > > >
-> > > > > No, we need this to be the address of the the whole thing (i.e.
-> > > > > Registration<T>), otherwise you can’t access the handler in the irq
-> > > > > callback.
-> > 
-> > You only need the access of `handler` in the irq callback, right? I.e.
-> > passing the address of `handler` would suffice (of course you need
-> > to change the irq callback as well).
-> > 
-> > > >
-> > > > Gotcha, so you keep the cookie field, but you should still be able to
-> > > > use `try_pin_init` & the devres improvements to avoid the use of
-> > > > `pin_init_from_closure`.
-> > > 
-> > > It sounds like this is getting too complicated and that
-> > > `pin_init_from_closure` is the simpler way to go.
-> > 
-> > Even if we use `pin_init_from_closure`, we still need the other
-> > `try_pin_init` anyway for `Devres::new()` (or alternatively we can
-> > implement a `RegistrationInner::new()`).
-> > 
-> > Below is what would look like with the Devres changes in mind:
-> > 
-> > 
-> >     try_pin_init!(&this in Self {
-> >         handler,
-> >         inner: <- Devres::new(
-> >             dev,
-> >             try_pin_init!( RegistrationInner {
-> >                 // Needs to use `handler` address as cookie, same for
-> >                 // request_irq().
-> >                 cookie: &raw (*(this.as_ptr().cast()).handler),
-> > 		// @Benno, would this "this" work here?
-> >                 irq: {
-> >                      to_result(unsafe { bindings::request_irq(...) })?;
-> >                      irq
-> > 		}
-> >              }),
-> >         )?,
-> >         _pin: PhantomPinned
-> >     })
-> > 
-> > 
+On 6/24/25 5:24 AM, Rafael J. Wysocki wrote:
+> On Tue, Jun 24, 2025 at 9:22 AM Lukas Wunner <lukas@wunner.de> wrote:
+>>
+>> [cc += Rafael, Mika]
+>>
+>> On Mon, Jun 23, 2025 at 02:13:34PM -0500, Mario Limonciello wrote:
+>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>
+>>> When a USB4 dock is unplugged the PCIe bridge it's connected to will
+>>> issue a "Link Down" and "Card not detected event". The PCI core will
+>>> treat this as a surprise hotplug event and unconfigure all downstream
+>>> devices. This involves setting the device error state to
+>>> `pci_channel_io_perm_failure` which pci_dev_is_disconnected() will check.
+>>>
+>>> It doesn't make sense to runtime resume disconnected devices to D0 and
+>>> report the (expected) error, so bail early.
+>>>
+>>> Suggested-by: Lukas Wunner <lukas@wunner.de>
+>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+>>
+>>> ---
+>>> v4:
+>>>   * no info message
+>>> v3:
+>>>   * Adjust text and subject
+>>>   * Add an info message instead
+>>> v2:
+>>>   * Use pci_dev_is_disconnected()
+>>> v1: https://lore.kernel.org/linux-usb/20250609020223.269407-1-superm1@kernel.org/T/#mf95c947990d016fbfccfd11afe60b8ae08aafa0b
+>>> ---
+>>>   drivers/pci/pci.c | 5 +++++
+>>>   1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>> index 9e42090fb1089..160a9a482c732 100644
+>>> --- a/drivers/pci/pci.c
+>>> +++ b/drivers/pci/pci.c
+>>> @@ -1374,6 +1374,11 @@ int pci_power_up(struct pci_dev *dev)
+>>>                return -EIO;
+>>>        }
+>>>
+>>> +     if (pci_dev_is_disconnected(dev)) {
+>>> +             dev->current_state = PCI_D3cold;
 > 
-> Never mind, `dev` is a `Device<Bound>` so it cannot be unbounded during
-> the call ;-)
+> Why not PCI_UNKNOWN?
 
-We even know that `dev` won't be unbound as long as the returned
-`impl PinInit<Self, Error> + 'a` lives. :)
+It was following what other situations of failure did:
+* existing error in pci_power_up()
+* error in pci_update_current_state()
+* error in pci_set_low_power_state()
+
+I view all of these cases as unrecoverable failures.
+
+So perhaps if changing this one to PCI_UNKNOWN those three should those 
+also be PCI_UNKNOWN?
+
+Bjorn, Lukas, thoughts?
+
+> 
+>>> +             return -EIO;
+>>> +     }
+>>> +
+>>>        pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>>>        if (PCI_POSSIBLE_ERROR(pmcsr)) {
+>>>                pci_err(dev, "Unable to change power state from %s to D0, device inaccessible\n",
+>>> --
+>>> 2.43.0
+
 
