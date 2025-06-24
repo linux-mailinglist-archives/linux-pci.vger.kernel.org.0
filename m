@@ -1,45 +1,46 @@
-Return-Path: <linux-pci+bounces-30555-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30556-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A58EAE71C0
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 23:56:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96AFEAE71C2
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 23:56:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B99C9178CEF
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 21:56:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0DE19178F30
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jun 2025 21:56:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27E6725A63D;
-	Tue, 24 Jun 2025 21:56:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 740CD25B314;
+	Tue, 24 Jun 2025 21:56:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYAUjcqw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2GT07sN"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1972550A4;
-	Tue, 24 Jun 2025 21:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4558F2550A4;
+	Tue, 24 Jun 2025 21:56:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750802168; cv=none; b=Nf/NsezkHaOiGRNk471WwrpA+oMhWKIenVOEyDwLxA/N07dAQGY8NtQmKnrtAhyisi9XoBU4ghLJh0rqjqIHmwd4Kt1yxW2VUQtM1oG9A2xo0EOap9hZDj5d80Y8QAMk41sGkGR5kKBn+od3YKN8Ho0CTBkN+v40xaIGFt7q1C8=
+	t=1750802172; cv=none; b=k9EK0lV2tFVftL/G/uu8T/OobvaTUuZDZoX1YcoGekbpZ1ti7meouqh+O4DTeFfj99q1Yrc+nWe+RYF/duks897+qS5j791kchgfxQoXsFpjodpYefdNEZA5kCBLhU0cxFwuV4+4W8zAf8iY3Js5DPbCKNSMtXkAY129gCih8oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750802168; c=relaxed/simple;
-	bh=JRa97lfPaZOPo8bGvoEroFHrSxN0ICPZca9EWd5GZ7Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cCyWH0B+1Kw8o/ilupjiRoWFrkaukgMfRglaQSmKzEuzralTmGM+dXwicoEzJwT8C9ooxDDZ4LDOBUREGt/IM8dF1INJogow8/+eWEbUKumG45QQtp/sgfYNI0TzGizTm9BuRHaD6cwylWQ8aIcWiHaXr33H3PG23E9JeaWHSyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYAUjcqw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E48AC4CEE3;
-	Tue, 24 Jun 2025 21:56:03 +0000 (UTC)
+	s=arc-20240116; t=1750802172; c=relaxed/simple;
+	bh=2iMU85xcd+FS2UmQuxpkKbGqhdtchAImhjzX8IQdIV8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KIa3yPjqxjcKGXl/2Lb2UIQnSt7GitWXwwPWZB7tQ0g/AAE955HqTaMrS6ljJm1zbKeC9SUGSqR6nMZegjSV9LFFOK6shD4tbO/j9PxSSw49VXil5LrWNpqmqNx4edP/ssOBGwXBKzNL8c+Zzrn1RnoZv8J4Vs8v3QVJnMawyyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2GT07sN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E22EDC4CEF2;
+	Tue, 24 Jun 2025 21:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750802167;
-	bh=JRa97lfPaZOPo8bGvoEroFHrSxN0ICPZca9EWd5GZ7Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gYAUjcqwjPhzMHl2io5vhXV5qO/D7WVWZF//d5XlNsRtjv7Kdk/QPRQk1Hd4J51FJ
-	 pGo2HE/ubtdkXSAu1CuQhoEoFpE7/DG2d1N/cHVXOOLzpGuNB2gV50xF880ZvXkB6E
-	 0ZdzQWE/YkmzNX+hxHrVWUhOL2NDmXwXfLoJHcf+afUf8YjH8L++CRLUU4Ya4ZRkAs
-	 mONi0Mi4nIkF3ivKkl12bRyRLodvlbp5rROLJIgjwuEYU1GzAfGDbZFAYIlWjQBdrL
-	 9laxL61TwqZNnAhyIUfVmlAsEWfR66pEHLsIsNNZ6tyOH7lBfdXO4DX84uxxL3+xm4
-	 XNAvYc2foPN0g==
+	s=k20201202; t=1750802171;
+	bh=2iMU85xcd+FS2UmQuxpkKbGqhdtchAImhjzX8IQdIV8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=m2GT07sNIb6uQupbUfR0mmbAejF5QjJCOLyCoIQI36IJGMY8MVKIg8O9PKTH7dUbj
+	 eQpa2qFLACq0US5DEBq1suBADL4yD0VOKqO2bKzC1x3Eh1JnwtqlB0Lk+n5Ckn5pqP
+	 fjYlnR3+FamjtbxHA6qmG5dm+rH6NJmUScY/6u7XgR+ofnAaxAtBAUMq5PfOUO++S3
+	 yX89CUXrJzNw5m9mAj1X6WzH+YRFlH2g+9Ao+2O0Rp9CHLdJnAaVuwUJ7nJ9Gc5PZ8
+	 1PLuY/znG/c6tV/8nWD0TvQXVU+t9c0r33JGCyR52lZnTQL8d4Hr02wyVT75YcsZzD
+	 awNhj0MOfD8YA==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -61,10 +62,12 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v3 0/4] Improvements for Devres
-Date: Tue, 24 Jun 2025 23:53:58 +0200
-Message-ID: <20250624215600.221167-1-dakr@kernel.org>
+Subject: [PATCH v3 1/4] rust: revocable: support fallible PinInit types
+Date: Tue, 24 Jun 2025 23:53:59 +0200
+Message-ID: <20250624215600.221167-2-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250624215600.221167-1-dakr@kernel.org>
+References: <20250624215600.221167-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,80 +76,57 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series provides some optimizations for Devres:
+Currently, Revocable::new() only supports infallible PinInit
+implementations, i.e. impl PinInit<T, Infallible>.
 
-  1) Provide a more lightweight replacement for Devres::new_foreign_owned().
+This has been sufficient so far, since users such as Devres do not
+support fallibility.
 
-  2) Get rid of Devres' inner Arc and instead consume and provide an
-     impl PinInit instead.
+Since this is about to change, make Revocable::new() generic over the
+error type E.
 
-     Additionally, having the resulting explicit synchronization in
-     Devres::drop() prevents potential subtle undesired side effects of the
-     devres callback dropping the final Arc reference asynchronously within
-     the devres callback.
+Reviewed-by: Benno Lossin <lossin@kernel.org>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+---
+ rust/kernel/devres.rs    | 2 +-
+ rust/kernel/revocable.rs | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-  3) An optimization for when we never need to access the resource or release
-     it manually.
-
-Thanks to Alice and Benno for some great offline discussions on this topic.
-
-This patch series depends on the Opaque patch in [1] and the pin-init patch in
-[2], which Benno will provide a signed tag for. A branch containing the patches
-can be found in [3].
-
-[1] https://lore.kernel.org/lkml/20250610-b4-rust_miscdevice_registrationdata-v6-1-b03f5dfce998@gmail.com/
-[2] https://lore.kernel.org/rust-for-linux/20250529081027.297648-2-lossin@kernel.org/
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/devres
-
-Changes in v3:
-  - devres::register:
-    - add 'static bound for ForeignOwnable
-    - use drop() instead of `let _ =`
-  - Devres:
-    - use ptr::from_ref() instead of Inner::as_ptr()
-    - use &raw mut instead of addr_of_mut!()
-    - use SAFETY comment proposal from Benno
-    - add invariant for `Devres::inner`
-    - use ScopeGuard in devres_callback()
-  - devres::register_release():
-    - add impl<T: Release> Release for &T
-    - add 'static bound for ForeignOwnable
-    - use drop() instead of `let _ =`
-
-Changes in v2:
-  - Revocable:
-    - remove Error: From<E> bound
-  - devres::register:
-    - rename devres::register_foreign_boxed() to just devres::register()
-    - move T: 'static bound to the function rather than the impl block
-  - Devres:
-    - Fix aliasing issue by using an Opaque<Inner>; should be
-      UnsafePinned<Inner> once available.
-    - Add doc-comments for a couple of private fields.
-    - Link Revocable on 'revoke' in Devres::new().
-  - devres::register_release():
-    - expand documentation of Release
-    - rename devres::register_foreign_release() for devres::register_release()
-
-Danilo Krummrich (4):
-  rust: revocable: support fallible PinInit types
-  rust: devres: replace Devres::new_foreign_owned()
-  rust: devres: get rid of Devres' inner Arc
-  rust: devres: implement register_release()
-
- drivers/gpu/nova-core/driver.rs |   7 +-
- drivers/gpu/nova-core/gpu.rs    |   6 +-
- rust/helpers/device.c           |   7 +
- rust/kernel/cpufreq.rs          |  11 +-
- rust/kernel/devres.rs           | 372 +++++++++++++++++++++++---------
- rust/kernel/drm/driver.rs       |  14 +-
- rust/kernel/pci.rs              |  20 +-
- rust/kernel/revocable.rs        |   6 +-
- samples/rust/rust_driver_pci.rs |  19 +-
- 9 files changed, 327 insertions(+), 135 deletions(-)
-
-
-base-commit: d752224c81ec2e5c0e86635c4b1cc835f9ca4151
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+index 57502534d985..544e50efab43 100644
+--- a/rust/kernel/devres.rs
++++ b/rust/kernel/devres.rs
+@@ -100,7 +100,7 @@ struct DevresInner<T> {
+ impl<T> DevresInner<T> {
+     fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
+         let inner = Arc::pin_init(
+-            pin_init!( DevresInner {
++            try_pin_init!( DevresInner {
+                 dev: dev.into(),
+                 callback: Self::devres_callback,
+                 data <- Revocable::new(data),
+diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+index fa1fd70efa27..46768b374656 100644
+--- a/rust/kernel/revocable.rs
++++ b/rust/kernel/revocable.rs
+@@ -82,11 +82,11 @@ unsafe impl<T: Sync + Send> Sync for Revocable<T> {}
+ 
+ impl<T> Revocable<T> {
+     /// Creates a new revocable instance of the given data.
+-    pub fn new(data: impl PinInit<T>) -> impl PinInit<Self> {
+-        pin_init!(Self {
++    pub fn new<E>(data: impl PinInit<T, E>) -> impl PinInit<Self, E> {
++        try_pin_init!(Self {
+             is_available: AtomicBool::new(true),
+             data <- Opaque::pin_init(data),
+-        })
++        }? E)
+     }
+ 
+     /// Tries to access the revocable wrapped object.
 -- 
 2.49.0
+
 
