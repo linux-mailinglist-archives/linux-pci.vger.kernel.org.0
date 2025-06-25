@@ -1,84 +1,85 @@
-Return-Path: <linux-pci+bounces-30620-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30621-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFF3BAE82C2
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 14:32:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3512BAE82C8
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 14:32:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 14B9016AE33
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 12:32:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8C87F16E52B
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 12:32:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 122BF25C83F;
-	Wed, 25 Jun 2025 12:32:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BAF225B30D;
+	Wed, 25 Jun 2025 12:32:43 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BBC1E4AB;
-	Wed, 25 Jun 2025 12:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5187320ED;
+	Wed, 25 Jun 2025 12:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750854743; cv=none; b=ks1tFL30HE3gU9hyRRZ1j1uI9Keva2MtvUJHwwu3AiW3zm5ss8cqZvQuRU9bcTWdpua0VrZcHIEodvyteQvA/pRlaccwmWxTUzLwRbkcTeoomJm+n1sFxc06rIqkXGiLH6AuwWnkLEQtNA13bEANbpbpqsAiUdeiZDfQRdTfgv4=
+	t=1750854763; cv=none; b=S/yW7gcx/cqCmam8SR8tcFLOtUc81SJ9xF77Mcd1B8BojOXDlbSD06Mw7zvyZv+2KPNwGhMHZz46gC4W/ACLFr/oPsR98JDX95NorYGYy1RAdQF6TDz07KUlEjNeuRfSrC5vue90Cw5xAhgvdL9yHZgXNwCD4zEeYy9YZYoWBA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750854743; c=relaxed/simple;
-	bh=lVxVt6Tzp8eXMjAWiBYR4oAuo/0N6cIdJecyIzgeHiY=;
+	s=arc-20240116; t=1750854763; c=relaxed/simple;
+	bh=87mJ9VzWAGBYYDWbcJKYJXwwdQ7zz/Uq9n1FMv03kX4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tTtFEBOKSueK0jhoZeAK+lo45up9GzHQIp4y5N8TQto7c1hjjxZSsXN4J6IQs/j/2UkS09VPc/5C1d1Vhykd7xPeUWCkzEYGYGnXqyIhQXC0j9xYYsvIOECx+Cajg60cRRiLdoAKmTzxKA8RIpUafYxCIGqRcg6vn+vXBzpkKqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.178
+	 To:Cc:Content-Type; b=OqLcnFYiVKimWRGFJ+KZfsplu7soqmWr1m9U7KNt469cnPkE9b9PveWzUTx92+D2wFs7kdfTRpssgasOK9QfYucOnGiatRfjq+lngTMMe7yoliSNTg+bxgpe+ZU9MSgtd74hRvIbUUdiDdLs1N/GMpFxCHKwrdLJ3ksQos4yDGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a4323fe8caso40996931cf.2;
-        Wed, 25 Jun 2025 05:32:19 -0700 (PDT)
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4a4bb155edeso16734581cf.2;
+        Wed, 25 Jun 2025 05:32:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750854738; x=1751459538;
+        d=1e100.net; s=20230601; t=1750854759; x=1751459559;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=B8p2OpGo8CDaPQfPclMnd2uTE+ODzAt+oveKwlFe1wI=;
-        b=pu0KoRyOm9GsRN44jdGxMyKjfKynoRLfB/SBcc/8+/rqTJdPrzY0qduosSTG7LqoQg
-         lW/3GBiTt1c3vEr2sEg4TQJvOUlVMc7ONEY5qDQKna/3HkyvDYpCrhM2ln5tUbsiae1I
-         Zebobi5OsPQqnBxAaYod91eSEtAXnbRpynCjahl/+OWVAGE51V6aFRT6+wtr5rpQFg/G
-         Zmt6txBRPYyJm2BxWpOvdtDP8EPZOZmY9NV9NVHJ2uZFTFMT6bdjMLcD1vePI1GwFQwI
-         ffdngnnnAyyV05ZEklxCU9aEgEjeUCLDv23cpoj/nEsaUIvX1C59GmZQccBEMsRcd27X
-         0q1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVUf4zpTHLz/quR7u9lYIQ8jlhxZ13q5LL0Dt0+j6k6D8r+Hk/UEBub7lkNMpYW2Uao/58VRiew6O9E@vger.kernel.org, AJvYcCVl1Vx15lBdHYo7omzQHdzvv2RWONKYTQg58gSRvb1janDKXsKag4WQ/vz4DQwyJ5xyiH1tFEQ1MaxgrL4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR0SpxtKHsC1Svt77fRDX5e8GBbQZ2vSBkZuth7WM0JeM6kmiN
-	IT0biwXh0+9nNhvk7ZSpRkePhonTQY4nVxDwdHt/VpJaGRYDO2S0IvIwXlqGlK1n
-X-Gm-Gg: ASbGncsw/I3Yju16i+DRn28HwZi8vPmQc78kHqcze1OI4g/mKUfmOa94TlpLbtmIFQi
-	vyWJyO2l5Umh8V7jVRQyjgMRvixQLI6Axk5dHZ7OC8Colx3BT3GWiTuTezXb+kcS2ibH+e8aGMo
-	h0EpN/TJTnAHzdFJaC4gu9DwW5Xnh7wwE5qgfQfV3QM3ImiE3Ljxrzx+NIvZkPfWgqRsTYb7Uan
-	VwfwA+eZ6S2VGK1LGbLf7DD7k7OLTVqJNf5rOayO6z3tHep8Kp1h+v/Sl+0MKroUI3PnYzXetsi
-	ykR0iyHK42c3/O2TZMTg2fJt/mBTI7BZPqdvan69OOB09EvwDLZNmejHKyvp6xVmMwh3KCxBINe
-	9VuFpHj8DqGQt43zSERC4OWmxtFvy065+FTE=
-X-Google-Smtp-Source: AGHT+IHBGnaM6Vvkq/mYAUdnI2UPzC0G9O9hrH5Qp92ibx8/IDugKUXsOlWB84rO7CFtW2NthjOfDQ==
-X-Received: by 2002:a05:622a:90:b0:4a7:24b4:8c21 with SMTP id d75a77b69052e-4a7c07d4eb7mr40913491cf.29.1750854737774;
-        Wed, 25 Jun 2025 05:32:17 -0700 (PDT)
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com. [209.85.219.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f9a06e61sm600164685a.105.2025.06.25.05.32.17
+        bh=NhTGhxf402H0iQPCNCiqCI6RIMS+rgS0mxhxD4XS+R4=;
+        b=c/5PsQYes7Ksd7pbcHTYqYQnLKoyITVNBSUqYHtNhdMqWrVZCDaGym72o/1tnIZU/F
+         lOpuYWrFEMWjlGYaSaYU/aJVprY3vMMEd2GG/c2mwhF+Lzu0DQ1k+MXF6O4QvQWxBOgi
+         UYK0HJF4oWcEiYOcu+iz/qWPQPzO7pX0jEPGKJbCEDkgviWdzuVg9gkxA4Md/S2Vgr/L
+         l34uz8fwT6P6hWOIGl8o8CwBcoQPek8uQuDqlLrFDu7bGbXcN5hNET4gmqoQTb31z4Ho
+         d/tCvQwEoHNDkYam1sXB9Nr59AuGo4PWgWpCqXD2kARjZgqDy4uCFK/1WZmXjROJ7ZTg
+         nYGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUN6J3ld0iTcMUmWiVLy++0U0/c8B5gzcpy8eGiwXnIBhTJSMTYOg3i20KucAgqFsJh/i9XEHq+I9MLjDs=@vger.kernel.org, AJvYcCXC0AH/ixqNa7tDitBv6hEB6MO76hdzXkO45zr1GQN8VStDuXg1bQb8EdlZzPgBsSdJqimBrd9rx+cr@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKqh6wqx/SW+jjOnRaQV89dRKAjmVu6TKsK4Ud7l/fXYmdjjuJ
+	fL1jNJTmZYQDs5YRAzxPtgz2JFZnjbNfhpGDkWUAtZygzsse8bwRjtLzqTGGi1Zq
+X-Gm-Gg: ASbGncsta1nJmsDRQZz/0afG3bOsAP+l/FLDzHn8dR2DK4YM/iBmfOVvechdYZLCkq6
+	oj8HMC7TS70/+Mb39+8BLbrlmY2HVD+losq5km5rEt8AoxULlrWzLuqr8at2XZTQSyw7OU3aIpH
+	dcfUIaR/Vs/psAnhDValeH4PfcJaFxEAQXkOtZQAzYX8qVoipZnbWsgmNqKTHppUHxG8MOCST1P
+	m3rnmv9VxQ3wpMLbDa2xgzU5zmzIZL1EC36A/3nOSUaDDmdCFUr81C565G/NnR82Tivqdy3psCo
+	0uuM5n/9+s/WVf/KzxMOOACylQr/+yABa7M0TYIBrAsdlRKTu+LxVwACWH4JAQGbg6o45cqbplw
+	ziU1/3P1JzTZyOMCh0bVNlFsmRVxV
+X-Google-Smtp-Source: AGHT+IEJMw/zuQyNFF3UICmIJVC3GPXpuBrNQ9HI2fAwHWO7iwR2ssXh2CrfnWcjIaZW2YfpnANW1w==
+X-Received: by 2002:a05:622a:8c0e:b0:4a6:f57a:8638 with SMTP id d75a77b69052e-4a7f15493aamr2250941cf.8.1750854759256;
+        Wed, 25 Jun 2025 05:32:39 -0700 (PDT)
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com. [209.85.222.169])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779e95716sm58850671cf.75.2025.06.25.05.32.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 05:32:17 -0700 (PDT)
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6fad4e6d949so37495566d6.0;
-        Wed, 25 Jun 2025 05:32:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVPRwW3g9psMGI0uxC2kBDNArdg/RTKJpH5m96tPXiROgHWG0rAUz1RA8sv+mgCyBtsdF1NV/zKd2WI0YA=@vger.kernel.org, AJvYcCVYF/Etwig+BC3L+MG/+SMz2nwNHS5S/31oUt3q9orI5qAsYQhDeGfCH3uO1/DDfqF1QJn9kbSkrJt9@vger.kernel.org
-X-Received: by 2002:a05:620a:198b:b0:7d0:9ed4:d269 with SMTP id
- af79cd13be357-7d429710333mr334230485a.2.1750854737237; Wed, 25 Jun 2025
- 05:32:17 -0700 (PDT)
+        Wed, 25 Jun 2025 05:32:38 -0700 (PDT)
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7d3efcb9bd6so137420485a.1;
+        Wed, 25 Jun 2025 05:32:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVJ/fwFCZ0sXTuWZOlPUwPw/wVEd9eNJHZ5h6zjpoqpCZJ1DU23izK2zNxBRlLyApUPoVyUKzTzW4TD@vger.kernel.org, AJvYcCXmkYGd3HOb3e3gB5jFQZ3U2ox0sq0v5gI+Giuzv9GPpwi+ARU5vCsd1/OGNCFqFTj385VRfvbYa7a/Rdw=@vger.kernel.org
+X-Received: by 2002:a05:620a:8011:b0:7cd:5b2a:979e with SMTP id
+ af79cd13be357-7d42971e484mr353693085a.30.1750854758407; Wed, 25 Jun 2025
+ 05:32:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625111806.4153773-1-maz@kernel.org> <20250625111806.4153773-3-maz@kernel.org>
-In-Reply-To: <20250625111806.4153773-3-maz@kernel.org>
+References: <20250625111806.4153773-1-maz@kernel.org> <20250625111806.4153773-4-maz@kernel.org>
+In-Reply-To: <20250625111806.4153773-4-maz@kernel.org>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 25 Jun 2025 14:32:05 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVQLEQziPueu64ueCrkhh9PtZeGWGVR-yHkbKBUTPfFyw@mail.gmail.com>
-X-Gm-Features: Ac12FXyYeQYex53YhZaoUKJ8ttY42d8BJ7oEfG35VrnSztAFwUMET7EHu4gB7r8
-Message-ID: <CAMuHMdVQLEQziPueu64ueCrkhh9PtZeGWGVR-yHkbKBUTPfFyw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] PCI: apple: Add tracking of probed root ports
+Date: Wed, 25 Jun 2025 14:32:26 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWE-hnQEL4EU5H7ciFGUPUfN2c86ePjOG51tEiR_xhL1A@mail.gmail.com>
+X-Gm-Features: Ac12FXwRxxe4uRV1CN0dx9-vvun5P0zm41CVyhHyZ3rpCXz5PgKojsS4sa7YJUs
+Message-ID: <CAMuHMdWE-hnQEL4EU5H7ciFGUPUfN2c86ePjOG51tEiR_xhL1A@mail.gmail.com>
+Subject: Re: [PATCH 3/3] Revert "PCI: ecam: Allow cfg->priv to be
+ pre-populated from the root port device"
 To: Marc Zyngier <maz@kernel.org>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
 	Rob Herring <robh@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
@@ -89,16 +90,10 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>, Alyssa Rosenzweig <alyssa@rosenzweig.io
 Content-Type: text/plain; charset="UTF-8"
 
 On Wed, 25 Jun 2025 at 13:18, Marc Zyngier <maz@kernel.org> wrote:
-> The apple driver relies on being able to directly find the matching
-> root port structure from the platform device that represents this
-> port.
+> This reverts commit 4900454b4f819e88e9c57ed93542bf9325d7e161.
 >
-> A previous hack stashed a pointer to the root port structure in
-> the config window private pointer, but that ended up relying on
-> assumptions that break other drivers.
->
-> Instead, bite the bullet and track the association as part of the
-> driver itself as a list of probed root ports.
+> Now that nobody relies of cfg->priv containing anything useful before
+> the .init() callback is used, restore the previous behaviour.
 >
 > Signed-off-by: Marc Zyngier <maz@kernel.org>
 
