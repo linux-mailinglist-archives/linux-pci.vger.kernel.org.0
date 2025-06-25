@@ -1,329 +1,178 @@
-Return-Path: <linux-pci+bounces-30640-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30641-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CCE4AE8D15
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 20:53:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13D80AE8E15
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 21:10:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1A6C94A1019
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 18:53:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5F6557B32B3
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 19:09:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 998D92D5C82;
-	Wed, 25 Jun 2025 18:53:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BD9B2DECCF;
+	Wed, 25 Jun 2025 19:10:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ppeUKjip"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DHcoxDLT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5051CAA7B;
-	Wed, 25 Jun 2025 18:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35BA2DCC0D
+	for <linux-pci@vger.kernel.org>; Wed, 25 Jun 2025 19:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750877624; cv=none; b=KzkY2rR7MQkK6FaTzpuR0D1Sw4q5UZ30xT3TVZgkBF4Kf491C9rZuSAZlxasdYOrDsUbG3oPmt5vBikwVYaB1t79PapejtK2xSheXGrS6Ss3EDL+QnP8LjqZyNyf97q4hd5CaIlWDEv2EtIes2+22wmaX7bYjyYCdVBavrn6Oo0=
+	t=1750878602; cv=none; b=QFiBRowRR2MBNP/zzrbfiNm8odJREpAtDoicTHCEVk72eEFEOQcRpCwOPdsTNxRE1I8nr++Wa21gYwmiM9KkL0acP3AUPl3kLP17fCr3ijHvRNNMSWgG/I9ta7eLv54npf44k7eAl138nfbl0yDx1Bt8RZF/vlhS8LbKpgmNdBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750877624; c=relaxed/simple;
-	bh=8MrvaYOz4FiqCxr7LmGqB3MEhbBqse7v9vTKMvsiFOM=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MwmWUega1XUjaFRmVOf0J3eYwBBIm1hz5aVEoaAQlCF7b5iOfiEch9Tb0ZcfMqo4/H1/AbNdMtPjgR+PdyAs5iZS1sKmswP9IxdQyCk617Ls3kTkGvohhUoXSJr1AaugTbZoQ2IJhr8O5OD2eMVNQPssvHvJQJv7W6Q/zWzpv5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ppeUKjip; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB210C4CEEA;
-	Wed, 25 Jun 2025 18:53:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750877623;
-	bh=8MrvaYOz4FiqCxr7LmGqB3MEhbBqse7v9vTKMvsiFOM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ppeUKjipB2yJbHdKKPlRyVDqbUX77oJxRhZL7ud1YUoWYEEc27uWBBlAZLBezVolW
-	 ChewIFEAAclm7IdOJPUUGDjVZ3/MC0WzysEt8xqtZhMGJw4yJc6tZeINByuTKz+boE
-	 mhJR9E962ubHGzH0zDyasotU1RFr2cXiBV6mV/yQvTWXA5gDQ2BcKdR56Y3+jPDvJq
-	 wZvA5EjnucM0MTLaIkoACEQuaQo7rhBTC4CQ+sYZkwrsTT2uurEexbd/VVyqEs9Z3h
-	 9paYrB25VlQFRZ1OhgEbXOFw+pJLk1BlNon+BKDU+oehoL3sbV4KqlXl1PUIgVhP2Y
-	 vtjkp9a0WbjMw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uUVFd-00A04o-Gz;
-	Wed, 25 Jun 2025 19:53:41 +0100
-Date: Wed, 25 Jun 2025 19:53:41 +0100
-Message-ID: <861pr7d556.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 18/27] arm64: smp: Support non-SGIs for IPIs
-In-Reply-To: <20250618-gicv5-host-v5-18-d9e622ac5539@kernel.org>
-References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
-	<20250618-gicv5-host-v5-18-d9e622ac5539@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1750878602; c=relaxed/simple;
+	bh=2bB7vPFiR82NefYXBt0U6WnlFITpDcWiy9Z3+apDBH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QegaFlzULXsM33LFRdFDef6DXJ8j1Ug+SKsIgbGKBNG098PBKPDEpINOYOQv8lcRrFAVfrOFjaq2rM/wAG2GrvxeiO6E08tm0SBAEhEjur1aiOYuwSrdmbyVFLNuO5vX/pldJYL/VL/RRSqNcpglLBbuOnu7tw5DqGFs+laOzUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DHcoxDLT; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7490acf57b9so250793b3a.2
+        for <linux-pci@vger.kernel.org>; Wed, 25 Jun 2025 12:10:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1750878600; x=1751483400; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=o0Ju6aCN24wZr3uVZs3SbxTR4fn7gitkctCIzfzOgoc=;
+        b=DHcoxDLTMPzs8f7pG3NcdQlTJGG0cWRtHNx2p9Xkf5G/L7R+1QpL/I/aRiOLkkAzp8
+         0IseWwOffNSl+fqs4aboYZaIkV/V76Bzih9C6CBGj/uAUa7s38hduTlHcQzEJYp8Ko1q
+         /TaSO6lwey2imDQdCUrvseSKn7MPxHA5P2bPo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750878600; x=1751483400;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o0Ju6aCN24wZr3uVZs3SbxTR4fn7gitkctCIzfzOgoc=;
+        b=ANfirn7mIsnpG+6fDdRj0vYcUzWNpjynVrQoxHhJWu4b4r6eO5/NWEOooVY+ELoJWu
+         ZbEw3nABzUPIZVQAxydGeo/NkFZpP7+VGsOq8KTmaVIgha98HT0GF+6sYUhAuNqpPzsZ
+         WCSAB+D86wunwilaUlX6kDkylgADZtwXre/fDXeWeNlqSsix0GIvF7/14YoblaiRjh+A
+         d96C/ICrmq7rWxooMXqH2sphpbstNlR6RfH5uwF7X5apHxB91MhvwXaRDNPHhLsAc4g5
+         /Gc37ca+70t9nX3quTT94rMh3Vd4DvrSqkMcZ6tlsTRuin/i6h/WZ/Lqs1SdD6kQ9O9v
+         tVkA==
+X-Forwarded-Encrypted: i=1; AJvYcCWA+NCGtC3oKS78YPOD/5zqPLQETWKqIddul6QfhPtNI14uSxWd7IAfwRZ1tu5aGljkC1dZMUVjBZo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPT2tzdZ/YEiUNXm7a5O8+KQJ8JtFhY2xSkpQUmx7LeOTLXzqI
+	7xTxhk/f0IBN3r+WG//R/xNm0gSB+V87luB4GQZuM5TN8uj5q3njL3/8/WnqIRrAdA==
+X-Gm-Gg: ASbGnctSW6wURn64MKrSEBT1LlPAHJ39MWYihs5yFpTDAdiyf19D4m3Huhw7FZlQNeb
+	qGmGkn9oRO7ugSnXiSniZlSepUf2+X3qFMknMpr/kXBOTyBxNJbzx7Gy0wHxmCyxvqUBHsqoLyY
+	LnRShtpQGlhCD/rA43ZYWva1OInwV4neF+H6z77CFTnLn1dKzJqOLJPuyuf1QhZm5vtfsUGPIDu
+	2M/AlFsqCHGvVynuKnl454DW8xUiM9eBnwRbx9Z/9a3u9TnUOx2qy/CtHO0LXGmmzLydR/U1MmY
+	JAwqHsecABK5HLjKaJIihtRMFtHuDIOELaO82hlXV8s3qkF285IaHlKT2x/fVVQqrIqZkJ+//Wn
+	DsQhpFQGMYd0lZoxVJlTClf60GA==
+X-Google-Smtp-Source: AGHT+IHtKCeR3mNQuZjKw/LxFiZxZrGAtvXQtQeH7qGm7c4Q8vzCq5hRLQONNTo8uXUtyVJkmfvDEg==
+X-Received: by 2002:a05:6a00:39a1:b0:742:8d52:62f1 with SMTP id d2e1a72fcca58-74ad4477262mr7141643b3a.8.1750878599991;
+        Wed, 25 Jun 2025 12:09:59 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c88313fdsm5242219b3a.92.2025.06.25.12.09.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 12:09:59 -0700 (PDT)
+Message-ID: <3ae39319-0962-4e1a-ad0e-27aca86c2075@broadcom.com>
+Date: Wed, 25 Jun 2025 12:09:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, Jonathan.Cameron@huawei.com, timothy.hayes@arm.com, bhelgaas@google.com, Liam.Howlett@oracle.com, peter.maydell@linaro.org, mark.rutland@arm.com, jirislaby@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH stblinux/next] pinctrl: rp1: Implement RaspberryPi RP1
+ pinmux/pinconf support
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>,
+ Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+ Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+References: <8c282b89b1aa8b9e3c00f6bd3980332c47d82df7.1750778806.git.andrea.porta@suse.com>
+ <9d31a4d7-ffd1-48ca-8df6-0ddc6683a49c@broadcom.com>
+ <CACRpkdbAxyZK_f8y6mzX_eJ3UM5ZtuXEpSmXE+QpUXaHKw_NGg@mail.gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <CACRpkdbAxyZK_f8y6mzX_eJ3UM5ZtuXEpSmXE+QpUXaHKw_NGg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 18 Jun 2025 11:17:33 +0100,
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On 6/25/25 01:45, Linus Walleij wrote:
+> On Tue, Jun 24, 2025 at 11:11 PM Florian Fainelli
+> <florian.fainelli@broadcom.com> wrote:
+>> On 6/24/25 08:36, Andrea della Porta wrote:
+>>> The current implementation for the pin controller peripheral
+>>> on the RP1 chipset supports gpio functionality and just the
+>>> basic configuration of pin hw capabilities.
+>>>
+>>> Add support for selecting the pin alternate function (pinmux)
+>>> and full configuration of the pin (pinconf).
+>>>
+>>> Related pins are also gathered into groups.
+>>>
+>>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+>>
+>> Linus, can I get an ack or reviewed by tag from you and take that in the
+>> next few days to go with the Broadcom ARM SoC pull requests? Thanks!
 > 
-> From: Marc Zyngier <maz@kernel.org>
+> I was just very confused by the "stblinux/next" thing in the
+> subject ... what is that even. I thought the patch was for some
+> outoftree stuff.
 > 
-> The arm64 arch has relied so far on GIC architectural software
-> generated interrupt (SGIs) to handle IPIs. Those are per-cpu
-> software generated interrupts.
-> 
-> arm64 architecture code that allocates the IPIs virtual IRQs and
-> IRQ descriptors was written accordingly.
-> 
-> On GICv5 systems, IPIs are implemented using LPIs that are not
-> per-cpu interrupts - they are just normal routable IRQs.
-> 
-> Add arch code to set-up IPIs on systems where they are handled
-> using normal routable IRQs.
-> 
-> For those systems, force the IRQ affinity (and make it immutable)
-> to the cpu a given IRQ was assigned to.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> [timothy.hayes@arm.com: fixed ipi/irq conversion, irq flags]
-> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
-> [lpieralisi: changed affinity set-up, log]
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> ---
->  arch/arm64/include/asm/smp.h |   7 ++-
->  arch/arm64/kernel/smp.c      | 142 ++++++++++++++++++++++++++++++++-----------
->  2 files changed, 114 insertions(+), 35 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-> index 2510eec026f7..d6fd6efb66a6 100644
-> --- a/arch/arm64/include/asm/smp.h
-> +++ b/arch/arm64/include/asm/smp.h
-> @@ -53,7 +53,12 @@ extern void smp_init_cpus(void);
->  /*
->   * Register IPI interrupts with the arch SMP code
->   */
-> -extern void set_smp_ipi_range(int ipi_base, int nr_ipi);
-> +extern void set_smp_ipi_range_percpu(int ipi_base, int nr_ipi, int ncpus);
-> +
-> +static inline void set_smp_ipi_range(int ipi_base, int n)
-> +{
-> +	set_smp_ipi_range_percpu(ipi_base, n, 0);
-> +}
->  
->  /*
->   * Called from the secondary holding pen, this is the secondary CPU entry point.
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index 3b3f6b56e733..7fd6bec80750 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -83,7 +83,31 @@ enum ipi_msg_type {
->  
->  static int ipi_irq_base __ro_after_init;
->  static int nr_ipi __ro_after_init = NR_IPI;
-> -static struct irq_desc *ipi_desc[MAX_IPI] __ro_after_init;
-> +
-> +struct ipi_descs {
-> +	struct irq_desc *descs[MAX_IPI];
-> +};
-> +
-> +static DEFINE_PER_CPU(struct ipi_descs, pcpu_ipi_desc);
+> But go ahead!
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-I wish we would make this __ro_after_init, but it doesn't see to be
-possible to do that. At least make it read_mostly, which may help a
-bit.
-
-> +
-> +#define get_ipi_desc(__cpu, __ipi) (per_cpu_ptr(&pcpu_ipi_desc, __cpu)->descs[__ipi])
-> +
-> +static bool percpu_ipi_descs __ro_after_init;
-> +
-> +static int ipi_to_irq_percpu(int ipi, int cpu)
-> +{
-> +	return ipi_irq_base + (cpu * nr_ipi) + ipi;
-> +}
-> +
-> +static int ipi_to_irq(int ipi)
-> +{
-> +	return ipi_to_irq_percpu(ipi, 0);
-> +}
-> +
-> +static int irq_to_ipi(int irq)
-> +{
-> +	return (irq - ipi_irq_base) % nr_ipi;
-> +}
-
-Most of these helpers are used only once, and they are so similar that
-I get cross-eyed. Consider expanding them in their calling spot.
-
->  
->  static bool crash_stop;
->  
-> @@ -844,7 +868,7 @@ int arch_show_interrupts(struct seq_file *p, int prec)
->  		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
->  			   prec >= 4 ? " " : "");
->  		for_each_online_cpu(cpu)
-> -			seq_printf(p, "%10u ", irq_desc_kstat_cpu(ipi_desc[i], cpu));
-> +			seq_printf(p, "%10u ", irq_desc_kstat_cpu(get_ipi_desc(cpu, i), cpu));
->  		seq_printf(p, "      %s\n", ipi_types[i]);
->  	}
->  
-> @@ -919,7 +943,13 @@ static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs
->  
->  static void arm64_backtrace_ipi(cpumask_t *mask)
->  {
-> -	__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
-> +	unsigned int cpu;
-> +
-> +	if (!percpu_ipi_descs)
-> +		__ipi_send_mask(get_ipi_desc(0, IPI_CPU_BACKTRACE), mask);
-> +	else
-> +		for_each_cpu(cpu, mask)
-> +			__ipi_send_single(get_ipi_desc(cpu, IPI_CPU_BACKTRACE), cpu);
->  }
->  
->  void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
-> @@ -944,7 +974,7 @@ void kgdb_roundup_cpus(void)
->  		if (cpu == this_cpu)
->  			continue;
->  
-> -		__ipi_send_single(ipi_desc[IPI_KGDB_ROUNDUP], cpu);
-> +		__ipi_send_single(get_ipi_desc(cpu, IPI_KGDB_ROUNDUP), cpu);
->  	}
->  }
->  #endif
-> @@ -1013,14 +1043,21 @@ static void do_handle_IPI(int ipinr)
->  
->  static irqreturn_t ipi_handler(int irq, void *data)
->  {
-> -	do_handle_IPI(irq - ipi_irq_base);
-> +	do_handle_IPI(irq_to_ipi(irq));
->  	return IRQ_HANDLED;
->  }
->  
->  static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
->  {
-> +	unsigned int cpu;
-> +
->  	trace_ipi_raise(target, ipi_types[ipinr]);
-> -	__ipi_send_mask(ipi_desc[ipinr], target);
-> +
-> +	if (!percpu_ipi_descs)
-> +		__ipi_send_mask(get_ipi_desc(0, ipinr), target);
-> +	else
-> +		for_each_cpu(cpu, target)
-> +			__ipi_send_single(get_ipi_desc(cpu, ipinr), cpu);
-
-Having a helper for this construct would definitely be a good thing:
-
-@@ -924,15 +919,20 @@ static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs
- #endif
- }
- 
--static void arm64_backtrace_ipi(cpumask_t *mask)
-+static void arm64_send_ipi(const cpumask_t *mask, unsigned int nr)
- {
- 	unsigned int cpu;
- 
- 	if (!percpu_ipi_descs)
--		__ipi_send_mask(get_ipi_desc(0, IPI_CPU_BACKTRACE), mask);
-+		__ipi_send_mask(get_ipi_desc(0, nr), mask);
- 	else
- 		for_each_cpu(cpu, mask)
--			__ipi_send_single(get_ipi_desc(cpu, IPI_CPU_BACKTRACE), cpu);
-+			__ipi_send_single(get_ipi_desc(cpu, nr), cpu);
-+}
-+
-+static void arm64_backtrace_ipi(cpumask_t *mask)
-+{
-+	arm64_send_ipi(mask, IPI_CPU_BACKTRACE);
- }
- 
-and similarly for smp_cross_call().
-
->  }
->  
->  static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
-> @@ -1046,11 +1083,15 @@ static void ipi_setup(int cpu)
->  		return;
->  
->  	for (i = 0; i < nr_ipi; i++) {
-> -		if (ipi_should_be_nmi(i)) {
-> -			prepare_percpu_nmi(ipi_irq_base + i);
-> -			enable_percpu_nmi(ipi_irq_base + i, 0);
-> +		if (!percpu_ipi_descs) {
-> +			if (ipi_should_be_nmi(i)) {
-> +				prepare_percpu_nmi(ipi_irq_base + i);
-> +				enable_percpu_nmi(ipi_irq_base + i, 0);
-> +			} else {
-> +				enable_percpu_irq(ipi_irq_base + i, 0);
-> +			}
->  		} else {
-> -			enable_percpu_irq(ipi_irq_base + i, 0);
-> +			enable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
->  		}
->  	}
->  }
-> @@ -1064,44 +1105,77 @@ static void ipi_teardown(int cpu)
->  		return;
->  
->  	for (i = 0; i < nr_ipi; i++) {
-> -		if (ipi_should_be_nmi(i)) {
-> -			disable_percpu_nmi(ipi_irq_base + i);
-> -			teardown_percpu_nmi(ipi_irq_base + i);
-> +		if (!percpu_ipi_descs) {
-> +			if (ipi_should_be_nmi(i)) {
-> +				disable_percpu_nmi(ipi_irq_base + i);
-> +				teardown_percpu_nmi(ipi_irq_base + i);
-> +			} else {
-> +				disable_percpu_irq(ipi_irq_base + i);
-> +			}
->  		} else {
-> -			disable_percpu_irq(ipi_irq_base + i);
-> +			disable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
->  		}
->  	}
->  }
->  #endif
->  
-> -void __init set_smp_ipi_range(int ipi_base, int n)
-> +static void ipi_setup_ppi(int ipi)
-
-This sets up SGIs, not PPIs. They are indeed Per Processor Interrupts,
-but given that you use "lpi" for GICv5, consider naming it
-consistently.
-
-Thanks,
-
-	M.
-
+Applied to drivers/next, thanks!
 -- 
-Without deviation from the norm, progress is not possible.
+Florian
 
