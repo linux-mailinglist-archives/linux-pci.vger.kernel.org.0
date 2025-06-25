@@ -1,106 +1,199 @@
-Return-Path: <linux-pci+bounces-30626-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30627-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7D91AE84BA
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 15:31:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21042AE85B5
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 16:09:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C88397AA48C
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 13:28:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3ECEF170A8E
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 14:08:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE5D92609FA;
-	Wed, 25 Jun 2025 13:29:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E4CE1F460B;
+	Wed, 25 Jun 2025 14:08:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WL9Xp+WK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BHXJYYNm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9155260563;
-	Wed, 25 Jun 2025 13:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932F73074B2
+	for <linux-pci@vger.kernel.org>; Wed, 25 Jun 2025 14:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750858191; cv=none; b=CYIVpCrQG3BxywTCL+cRA5dIgL3WPdCWvjsja2cwtkPtOWj0JaJn+p7X+JedF4CiUh1csWHspzv6bL+9/M8WhcfnPQ9T/Pengzh8UlkfaHTLO77dUaGCWr5V7kyBIZDRcaaXMUdZUoBdtYzDsUT90P60phVgGHAPFkOqFopxe+c=
+	t=1750860528; cv=none; b=lA3/I75Lm1o6c9R1v00EdUIXtfokFEyWLZHF01pzXgVNn6Iiv5c57joypyqIbxCZu4woSS45zaDVal5SjiDnYIZY/LKnHmitOdO2BdYvs6aaJvhcBHnCc+MQX1DSRDlY2b74P/B0nLAqwlB2O8SjRVIGMuqimTJyD55qwu5JpjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750858191; c=relaxed/simple;
-	bh=1XnOVUk2FHxr2/AMNsDMwgOAlwlX7mRmXj/UKnoVNGI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=fkj0sdZraLY4PdoxwzFHQ5Ecvad4nE0/Fz9EiqhDSOF2fgSxQNQE6BBgd4iwmP5zFbTOwoSF8Ul7kyXTDlU8RlKl7ugLoZTz9HmuEUg32P/pdpoW9RQexsB2L1sS9wHyexHWfp2SE+39+WlrqGO38z35Znpossaf2Mg0P2lG+S4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WL9Xp+WK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EFDCC4CEEE;
-	Wed, 25 Jun 2025 13:29:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750858191;
-	bh=1XnOVUk2FHxr2/AMNsDMwgOAlwlX7mRmXj/UKnoVNGI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=WL9Xp+WKv90uVhgXxY6pmrgba9Ie/AiqM+WGlsv63ZFh9prR19mLn7slDOJu/vmbs
-	 MnFavOPUHIzben83ZttjjVPbj91bIj6eF2Itwhxsi4reYmn9bb2qIEAKRjLb1uCvYN
-	 j1DIToRLeHwHmG1Bqy+g+o7O0QfmsRBwTX41jAO6SVJ2XQDXxyCeO4Z5RQm8COlotj
-	 K1R5Ou+0bJG8z0lgKskK0tRl/B2r2uH0lXj8IIq0zNSNVhq43dmE743lib3ppWU2vx
-	 Z0wb4u3J3FM5bsl58wknhCwIxWGvR5zMThNWTlbvZQDADKnBBD2Aa/0z9WEbW+uP9L
-	 AIUdieur8/RiA==
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Jingoo Han <jingoohan1@gmail.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Heiko Stuebner <heiko@sntech.de>, Shawn Lin <shawn.lin@rock-chips.com>, 
- Kevin Xie <kevin.xie@starfivetech.com>, Simon Xue <xxm@rock-chips.com>, 
- Kever Yang <kever.yang@rock-chips.com>, 
- Stanimir Varbanov <svarbanov@mm-sol.com>, Niklas Cassel <cassel@kernel.org>
-Cc: Wilfred Mallawa <wilfred.mallawa@wdc.com>, 
- Damien Le Moal <dlemoal@kernel.org>, Laszlo Fiat <laszlo.fiat@proton.me>, 
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org
-In-Reply-To: <20250625102347.1205584-9-cassel@kernel.org>
-References: <20250625102347.1205584-9-cassel@kernel.org>
-Subject: Re: [PATCH v4 0/7] PCI: dwc: Do not enumerate bus before endpoint
- devices are ready
-Message-Id: <175085818998.6505.2530660642460588895.b4-ty@kernel.org>
-Date: Wed, 25 Jun 2025 07:29:49 -0600
+	s=arc-20240116; t=1750860528; c=relaxed/simple;
+	bh=5m2LV3NQViC121KO9PlG+IFJdz7/D4RmJLMcY2oekcs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tOZ1x4eV8VZjDsdf09adOYnXavDaoM5L0oMD2Lr/hCRmwj5nVs9DltjO3Aery3DDw/t6xieXZbueIwIXkRicqFPTIUG68hKCRaKflqeK7E+DaHglePQHA5QnvUDco01lA8ZF7uE4nJgmO1WfTGsOps4ftdWa3fpFJA/TEB1/yUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BHXJYYNm; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750860525;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V4+K3avD7GoDzKHCaevIc+37/y9NZXSewwiBIBUmICw=;
+	b=BHXJYYNm7JEO30nwald4idGy9zPNyQ5qFxvUXsek7QnmrJy6kwGYedvtb6dZ0G0FK4szRI
+	5bUJdVigSBoMKTaZ1K3pZ5F01oMdaRWK+DYldVEMM7Ar98Qk3BuE3HwyCzz+S1+1x5hXHB
+	4pNKvJrYadS+YmB9Kzxrbqf/3nGf3Hc=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-384-ftmixwGIPYmVcncA1q8rPg-1; Wed, 25 Jun 2025 10:08:44 -0400
+X-MC-Unique: ftmixwGIPYmVcncA1q8rPg-1
+X-Mimecast-MFC-AGG-ID: ftmixwGIPYmVcncA1q8rPg_1750860523
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ad89c32a8a6so170262066b.3
+        for <linux-pci@vger.kernel.org>; Wed, 25 Jun 2025 07:08:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750860523; x=1751465323;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V4+K3avD7GoDzKHCaevIc+37/y9NZXSewwiBIBUmICw=;
+        b=C/TUne1XUG73RYBzThCe08iETWcbSgrR6Mdh/fQD1ty4CIxWHvpIsEAe+veJgzFhMo
+         L0G5t18xxDE+lWtmafQq0zAQ4Hl0l99i3P4Lc+wMdaWQjySG+j7c6Yk4PkGcqLxGANlA
+         cMaBxPML+Yu//gIDr350NPICy2qTWxwtqeMj7wnbguDHzdpXnKpdCQFB0s9hT9xCk/D9
+         FO/ek4AQDkjLjlXTLEXL0py6vMw3bN3AH6AitAUSB+gmkfI7QfB+RzLjNvsuNL/x6iuf
+         /WwgmFvav7ljv8hVzaDth9z+KW1aKXXzMh2fK4Bp/WF04sg003LHIV7nh2MthIhJwx7j
+         jILA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3/7ihbBvb2D2xBFqhzQsRnZCyiZHWsqqC2lsC+74jZQokOZj9iV+xolJMLFefm2LUG9kcOjdOdP0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylDKhuFyXhqUxyyFyiianBkrZst18Uk2TAWTzmR+Efy01auhwS
+	Yb9qFoTlAZWCrLhQbE44mLdbGveBtkrLtda/J//7TKEm40TArilyuWp+W+COFHnnL4m/tLgln+K
+	id8bEbfV4XQ13QEAArIzrFWXhizqcbhN3h/qa9ftgynjahFZz64MyCPJUc/wDCw==
+X-Gm-Gg: ASbGncuACXDSQlg6VFIbV+2SlIDXXqo2eB0jL6Mv3tu6uCTSPpzbcNQl8TFWLTCrTQG
+	fJaUiv+TVjLN913oKBzi2kZ/EMLRyJQkB7nwYbsEZYcGxEjwMzJNDO95m1Pw0fOqW31+69XXN4S
+	qopN5/6/tRpkTejIx/uCb36vrI9XA95XEDccqTV3E90rg+HTwxrlL5lld4ocvoMMizpM9rsHtr6
+	s+bIwHbPH0QrMXzEY1hQwFl0ZZLUcdgeQ9uZluXbZPxrGIh+hxf6tiHNHJt0tkJYtMYy6HKpfhk
+	pHMAn7iubGmyeQAPc5HKkvumW0q43woOjcig3UHPbz/ilSA1go/VbM8S6+Lw75kKRiOrm8D5ou6
+	0bDH1N+WV37CuimNAqfVEnXo86k+Abh48HvA+JBnr0rIxgkIosfW8AZXGTXn4aHWYJ14yyZxlRA
+	==
+X-Received: by 2002:a17:907:3f16:b0:ade:9b52:4cc0 with SMTP id a640c23a62f3a-ae0d0bbff7amr10282166b.26.1750860521295;
+        Wed, 25 Jun 2025 07:08:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE5Qpscb/cqw9IejULOiGOs7xdQutSOhkhMnafJly1OjTfXu1ZIPsra55NDTVtRCoKZhHpE3A==
+X-Received: by 2002:a17:907:3f16:b0:ade:9b52:4cc0 with SMTP id a640c23a62f3a-ae0d0bbff7amr10276266b.26.1750860520679;
+        Wed, 25 Jun 2025 07:08:40 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0a2d922c9sm362700166b.96.2025.06.25.07.08.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 07:08:40 -0700 (PDT)
+Message-ID: <98012c55-1e0d-4c1b-b650-5bb189d78009@redhat.com>
+Date: Wed, 25 Jun 2025 16:08:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] agp/amd64: Bind to unsupported devices only if AGP is
+ present
+To: Ben Hutchings <ben@decadent.org.uk>, Lukas Wunner <lukas@wunner.de>
+Cc: David Airlie <airlied@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>,
+ Joerg Roedel <joro@8bytes.org>,
+ Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+ Andi Kleen <ak@linux.intel.com>, Ahmed Salem <x0rw3ll@gmail.com>,
+ Borislav Petkov <bp@alien8.de>, dri-devel@lists.freedesktop.org,
+ iommu@lists.linux.dev, linux-pci@vger.kernel.org
+References: <f8ff40f35a9a5836d1371f60e85c09c5735e3c5e.1750497201.git.lukas@wunner.de>
+ <b73fbb3e3f03d842f36e6ba2e6a8ad0bb4b904fd.camel@decadent.org.uk>
+ <aFalrV1500saBto5@wunner.de>
+ <279f63810875f2168c591aab0f30f8284d12fe02.camel@decadent.org.uk>
+ <aFa8JJaRP-FUyy6Y@wunner.de>
+ <9077aab5304e1839786df9adb33c334d10c69397.camel@decadent.org.uk>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <9077aab5304e1839786df9adb33c334d10c69397.camel@decadent.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Hi,
 
-On Wed, 25 Jun 2025 12:23:46 +0200, Niklas Cassel wrote:
-> The DWC PCIe controller driver currently does not follow the PCIe
-> specification with regards to the delays after link training, before
-> sending out configuration requests. This series fixes this.
+On 24-Jun-25 11:54 PM, Ben Hutchings wrote:
+> On Sat, 2025-06-21 at 16:05 +0200, Lukas Wunner wrote:
+>> On Sat, Jun 21, 2025 at 03:51:44PM +0200, Ben Hutchings wrote:
+>>> On Sat, 2025-06-21 at 14:29 +0200, Lukas Wunner wrote:
+>>>> On Sat, Jun 21, 2025 at 02:07:40PM +0200, Ben Hutchings wrote:
+>>>>> On Sat, 2025-06-21 at 11:40 +0200, Lukas Wunner wrote:
+>>>>>> Since commit 172efbb40333 ("AGP: Try unsupported AGP chipsets on x86-64 by
+>>>>>> default"), the AGP driver for AMD Opteron/Athlon64 CPUs attempts to bind
+>>>>>> to any PCI device.
+>>>>>>
+>>>>>> On modern CPUs exposing an AMD IOMMU, this results in a message with
+>>>>>> KERN_CRIT severity:
+>>>>>>
+>>>>>>   pci 0000:00:00.2: Resources present before probing
+>>>>>>
+>>>>>> The driver used to bind only to devices exposing the AGP Capability, but
+>>>>>> that restriction was removed by commit 6fd024893911 ("amd64-agp: Probe
+>>>>>> unknown AGP devices the right way").
+>>>>>
+>>>>> That didn't remove any restriction as the probe function still started
+>>>>> by checking for an AGP capability.  The change I made was that the
+>>>>> driver would actually bind to devices with the AGP capability instead of
+>>>>> starting to use them without binding.
+>>>>
+>>>> The message above would not be emitted without your change.
+>>>>
+>>>> The check for the AGP capability in agp_amd64_probe() is too late
+>>>> to prevent the message.  That's because the message is emitted
+>>>> before ->probe() is even called.
+>>>
+>>> I understand that.  But I don't feel that the explanation above
+>>> accurately described the history here.
+>>
+>> So please propose a more accurate explanation.
 > 
-> At the same time, PATCH 3/7 addresses a regression where a Plextor
-> NVMe drive fails to be configured correctly. With this series, the
-> Plextor NVMe drive works once again.
+> Something like "The driver iterates over all PCI devices, checking for
+> an AGP capability.  Since commit 6fd024893911 ("amd64-agp: Probe unknown
+> AGP devices the right way") this is done with driver_attach() and a
+> wildcard PCI ID table, and the preparation for probing the IOMMU device
+> produces this error message."
 > 
-> [...]
+> Thinking about this further:
+> 
+> - Why *does* the IOMMU device have resources assigned but no driver
+>   bound?  Is that the real bug?
 
-Applied, thanks!
+Arguably yes, but I assume that this is done because the IOMMU needs
+to be setup early, before any drivers probe() methods run.
 
-[1/7] PCI: Rename PCIE_RESET_CONFIG_DEVICE_WAIT_MS to PCIE_RESET_CONFIG_WAIT_MS
-      commit: 817f989700fddefa56e5e443e7d138018ca6709d
-[2/7] PCI: rockchip-host: Use macro PCIE_RESET_CONFIG_WAIT_MS
-      commit: bbc6a829ad3f054181d24a56944f944002e68898
-[3/7] PCI: dw-rockchip: Wait PCIE_RESET_CONFIG_WAIT_MS after link-up IRQ
-      commit: c7eb9c5e1498882951b7583c56add0b77bfc162e
-[4/7] PCI: qcom: Wait PCIE_RESET_CONFIG_WAIT_MS after link-up IRQ
-      commit: 15b6b243cc2b1017cf89e2477aa0b4e1a306a82a
-[5/7] PCI: dwc: Ensure that dw_pcie_wait_for_link() waits 100 ms after link up
-      commit: 80dc18a0cba8dea42614f021b20a04354b213d86
-[6/7] PCI: Move link up wait time and max retries macros to pci.h
-      commit: d7467bc72ce4e3f64062017d6c9ae3816e8a7b0e
-[7/7] PCI: Reduce PCIE_LINK_WAIT_SLEEP_MS
-      commit: 470f10f18b482b3d46429c9e6723ff0f7854d049
+Note that cbbc00be2ce3 ("iommu/amd: Prevent binding other PCI drivers
+to IOMMU PCI devices") which has been reverted did effectively ban
+other drivers from binding. So arguably that needs to be unreverted
+and then this problem will go away.
 
-Best regards,
--- 
-Manivannan Sadhasivam <mani@kernel.org>
+> - If not, and there's a general problem with this promiscuous probing,
+>   would it make more sense to:
+>   1. Restore the search for an AGP capability in agp_amd64_init().
+>   2. If and only if an AGP device is found, poke the appropriate device
+>      ID into agp_amd64_pci_promisc_table and then call driver_attach().
+>   ?
+
+Lukas made me aware of this attempt to fix the KERN_CRIT msg, because
+I wrote a slightly different patch to fix this:
+
+https://lore.kernel.org/dri-devel/20250625112411.4123-1-hansg@kernel.org/
+
+This seems like a cleaner fix to me and something which would be good
+to have regardless since currently the driver_attach() call is doing
+too much work because the promisc table catches an unnecessary wide
+net / match matching many PCI devices which cannot be AGP capable
+at all.
+
+Regards,
+
+Hans
+
+
+
+
+> 
+> Ben.
+> 
 
 
