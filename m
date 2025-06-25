@@ -1,188 +1,122 @@
-Return-Path: <linux-pci+bounces-30604-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30605-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1013AE7EFF
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 12:21:43 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCB2BAE7F25
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 12:25:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80196188F1E5
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 10:21:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 002F07B4750
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 10:22:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F18F127F170;
-	Wed, 25 Jun 2025 10:21:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3914428E607;
+	Wed, 25 Jun 2025 10:24:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="tzkHB94w"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HSDzvOOt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0811EE7B7;
-	Wed, 25 Jun 2025 10:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB4927FD74;
+	Wed, 25 Jun 2025 10:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750846898; cv=none; b=Q2E4ino0fjE5yuD6t6KCGrk2xUQo4cOkNSiQYGmEwfpgVIRk8XnYFPHb8kHSoqq49ozwb0uzSorGSlkvC+POqeKc/hYnMRcVyUuK9sHZw637X0z9gVOTQxVDXHAsUqGL2iXHaX3PO9iZFUFsEsZMwT36T8DPs8qWvZDL4RE5Qt4=
+	t=1750847047; cv=none; b=Rwx7Kd6wkHeuYerd/brQhvV6drC2xGFMQDQwdXbzvztrXdgxy1TEiahUt3ly5CIKxL/W4XFDMcXQAm9/F/JxQMAB3Eo9QU1r+WLcmG0hvyj5I6+6RpvwGYFOX9HKtf2HM8JyCu8MmhtLyTnhZxGdCzy7X6bzznN22k5IEz9DjoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750846898; c=relaxed/simple;
-	bh=MOhEYC1cKOgyHi8EznYqnXZzLpwz8XMCahZZ5D2On4U=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=VIniTiDys0sQJA9zxabaqJHHx3iuD6UKXc5NM0vRaf5LveP5E16o59Bl7hnr+9VnStC1w8nkdHiYXXpD7qKn3i11CeJ6ujBjZQzOf/ud9uf9SdYy/mJqT6ZHU41mg7Y61+JAXfou1lg0Wwcu92p2koOR9zaIhDzUCXKn7EGQwfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=tzkHB94w; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P62V3v021991;
-	Wed, 25 Jun 2025 12:21:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	C4yzJ1noedDWVQEaOZSM94W1Wxwn8zZ9kpiO6XR9LxU=; b=tzkHB94wRKqAwx4c
-	0lvTUd/MYGBUx70suX7tiBjmz0UtKwRUjtVPIihur62TbMpXnmXpdcWmAcdp5xpW
-	pJhiDVqchowhT7pV99S6j6SU6rDAOWYXhkkVwFxxMyC4wjjDYTsf0eHmDBFfiURV
-	rU9kKk2Ce52GLRFVg3ZaOeyIaes040BDjPmJk81aWNwBTwCNso39GT/ejla9qTYW
-	PqSVpiw4Ed0mzE2VIisvjpYOTdwxw3RJNg0AR5LWINIBu6zV9J+fp3aNyf5Y4M+D
-	HRRQsYRdb9v8xpc3neYRQgJVZHr4su1XCjrpysVrcRguZdv2L4yM2cGfSe5ewNjS
-	3LpBlw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dkmjryqn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 12:21:11 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 04F1A40046;
-	Wed, 25 Jun 2025 12:19:41 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 12132AE5D21;
-	Wed, 25 Jun 2025 12:18:21 +0200 (CEST)
-Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 25 Jun
- 2025 12:18:20 +0200
-Message-ID: <01dbb6cf-3ab4-4922-b301-661464c9e56d@foss.st.com>
-Date: Wed, 25 Jun 2025 12:18:16 +0200
+	s=arc-20240116; t=1750847047; c=relaxed/simple;
+	bh=lz4N5vzyJfYNDcEemSYn52O1R2oIT0tnhkw8QrN40KI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fgE13/BmOIVy48iwmhvolk3ZmQjvttLvFsX35iMW+Rqi+0+djktnr30lfxIFbeTHjVDxW4FG6+N1DK9PgvLUGK1AActxCnajyLvuzUKpCup8sqM3ctHiUYNVlP03Vz3tz8il8IzaJq1OsekdVOy1TNNdQ/bC4zkB8oa895QD9e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HSDzvOOt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D8C6C4CEEA;
+	Wed, 25 Jun 2025 10:24:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750847046;
+	bh=lz4N5vzyJfYNDcEemSYn52O1R2oIT0tnhkw8QrN40KI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HSDzvOOt9QZbS5sSeRxHGHrTd0sVPRkyhyqCW7IKD2PNZ1YzXJPHMfg8IYKi3sMpo
+	 j548/ZgmsJ7BslOPqlVlZYPBwqg6TjQcwogidxU51Au8pV2SfffpUYMuRpoWDn8mgd
+	 SKl76C1UHM+Hpxgv7lcBBdf6McMMjDq6GK+e8N+YZsbSgov2/srVckeCLyYs67zMkX
+	 iUW7jgc8Hytdj98nvWO3Z+DZjIfZFNUI/ajjzvy4BEzzuW3Oci55OtylUob6uf/Zo+
+	 w2zrhh0TOmSHcCac0MrnUyXet9ZChvtZfCVmRzvmSyYb3mXWapNBwuQD1d+Z1iAlLu
+	 UOsM4AVRsD8Cw==
+From: Niklas Cassel <cassel@kernel.org>
+To: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	Simon Xue <xxm@rock-chips.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Laszlo Fiat <laszlo.fiat@proton.me>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org
+Subject: [PATCH v4 0/7] PCI: dwc: Do not enumerate bus before endpoint devices are ready
+Date: Wed, 25 Jun 2025 12:23:46 +0200
+Message-ID: <20250625102347.1205584-9-cassel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Christian Bruel <christian.bruel@foss.st.com>
-Subject: Re: (subset) [PATCH v12 0/9] Add STM32MP25 PCIe drivers
-To: Manivannan Sadhasivam <mani@kernel.org>,
-        Bjorn Helgaas
-	<helgaas@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <johan+linaro@kernel.org>,
-        <cassel@kernel.org>, <shradha.t@samsung.com>,
-        <thippeswamy.havalige@amd.com>, <quic_schintav@quicinc.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <175068078778.15794.15418191733712827693.b4-ty@kernel.org>
- <20250624222206.GA1537968@bhelgaas>
- <3bmw76gzqjq2nmjvj7tb6gi5x233zzfrhv44uyjopl2lxyzbkh@zg5skeu62nbh>
-Content-Language: en-US
-In-Reply-To: <3bmw76gzqjq2nmjvj7tb6gi5x233zzfrhv44uyjopl2lxyzbkh@zg5skeu62nbh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1569; i=cassel@kernel.org; h=from:subject; bh=lz4N5vzyJfYNDcEemSYn52O1R2oIT0tnhkw8QrN40KI=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDKizxk/Urnx8TPnvbnLnkcwKCgxv3jWYLPqsYZuQPTEv d+8/tQ0d5SyMIhxMciKKbL4/nDZX9ztPuW44h0bmDmsTCBDGLg4BWAi7M8Y/ocbbdYsPTl7z+zN d9fZBVcKMboJlm67/mwNc3B8QeOROS8ZGaZ1Rf9wLPh41sPfj7/z8ckMxYfG6yp59Ixa32zzWF+ vxAgA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
+
+Hello all,
+
+The DWC PCIe controller driver currently does not follow the PCIe
+specification with regards to the delays after link training, before
+sending out configuration requests. This series fixes this.
+
+At the same time, PATCH 3/7 addresses a regression where a Plextor
+NVMe drive fails to be configured correctly. With this series, the
+Plextor NVMe drive works once again.
 
 
-
-On 6/25/25 06:00, Manivannan Sadhasivam wrote:
-> On Tue, Jun 24, 2025 at 05:22:06PM -0500, Bjorn Helgaas wrote:
->> On Mon, Jun 23, 2025 at 06:13:07AM -0600, Manivannan Sadhasivam wrote:
->>> On Tue, 10 Jun 2025 11:07:05 +0200, Christian Bruel wrote:
->>>> Changes in v12;
->>>>     Fix warning reported by kernel test robot <lkp@intel.com>
->>>>
->>>> Changes in v11;
->>>>     Address comments from Manivanna:
->>>>     - RC driver: Do not call pm_runtime_get_noresume in probe
->>>>                  More uses of dev_err_probe
->>>>     - EP driver: Use level triggered PERST# irq
->>>>
->>>> [...]
->>>
->>> Applied, thanks!
->>>
->>> [1/9] dt-bindings: PCI: Add STM32MP25 PCIe Root Complex bindings
->>>        commit: 41d5cfbdda7a61c5d646a54035b697205cff1cf0
->>> [2/9] PCI: stm32: Add PCIe host support for STM32MP25
->>>        commit: f6111bc2d8fe6ffc741661126a2174523124dc11
->>> [3/9] dt-bindings: PCI: Add STM32MP25 PCIe Endpoint bindings
->>>        commit: 203cfc4a23506ffb9c48d1300348c290dbf9368e
->>> [4/9] PCI: stm32: Add PCIe Endpoint support for STM32MP25
->>>        commit: 8869fb36a107a9ff18dab8c224de6afff1e81dec
->>> [5/9] MAINTAINERS: add entry for ST STM32MP25 PCIe drivers
->>>        commit: 003902ed7778d62083120253cd282a9112674986
->>
->> This doesn't build for me with the attached config:
->>
->>    $ make drivers/pci/controller/dwc/pcie-stm32.o
->>      CALL    scripts/checksyscalls.sh
->>      DESCEND objtool
->>      INSTALL libsubcmd_headers
->>      CC      drivers/pci/controller/dwc/pcie-stm32.o
->>    drivers/pci/controller/dwc/pcie-stm32.c: In function ‘stm32_pcie_suspend_noirq’:
->>    drivers/pci/controller/dwc/pcie-stm32.c:83:16: error: implicit declaration of function ‘pinctrl_pm_select_sleep_state’ [-Werror=implicit-function-declaration]
->>       83 |         return pinctrl_pm_select_sleep_state(dev);
->> 	|                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>    drivers/pci/controller/dwc/pcie-stm32.c: In function ‘stm32_pcie_resume_noirq’:
->>    drivers/pci/controller/dwc/pcie-stm32.c:96:24: error: ‘structdevice’ has no member named ‘pins’
->>       96 |         if (!IS_ERR(dev->pins->init_state))
->> 	|                        ^~
->>    drivers/pci/controller/dwc/pcie-stm32.c:97:23: error: implicit declaration of function ‘pinctrl_select_state’ [-Werror=implicit-function-declaration]
->>       97 |                 ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
->> 	|                       ^~~~~~~~~~~~~~~~~~~~
->>    drivers/pci/controller/dwc/pcie-stm32.c:97:47: error: ‘structdevice’ has no member named ‘pins’
->>       97 |                 ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
->> 	|                                               ^~
->>    drivers/pci/controller/dwc/pcie-stm32.c:97:61: error: ‘structdevice’ has no member named ‘pins’
->>       97 |                 ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
->> 	|                                                             ^~
->>    drivers/pci/controller/dwc/pcie-stm32.c:99:23: error: implicit declaration of function ‘pinctrl_pm_select_default_state’ [-Werror=implicit-function-declaration]
->>       99 |                 ret = pinctrl_pm_select_default_state(dev);
->> 	|                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>
-> 
-> Hmm... I see two issues here. First is, wrong pinctrl header used. The correct
-> one is:
-> 
-> #include <linux/pinctrl/consumer.h>
-
-ah yes, the missing pinctrl_pm_select_default_state() should indeed be 
-fixed by using the correct header.
-
-> 
-> Second issue is the driver accessing "struct device::pins" directly. The "pins"
-> member won't be available if CONFIG_PINCTRL is not set (which is what your
-> .config has). So either the member should not be accessed directly or the
-> driver has to depend on CONFIG_PINCTRL. The latter one is not acceptable.It
-> also looks weird that only this driver is accessing the "pins" member directly
-> apart from the pinctrl core. So I think this part needs a revisit.
-> 
-> Christian?
-The pinctrl "init" and "default" configurations are managed effectively 
-by the probing code. The same approach is required in 
-stm32_pcie_resume_noirq().
-
-In this case, would introducing a new helper function, 
-pinctrl_pm_select_init_state(), be preferable, even if we are the only 
-consumer?
-
-Thank you
+Kind regards,
+Niklas
 
 
-> 
-> - Mani
-> 
+Changes since v3:
+-Move LINK_WAIT_MAX_RETRIES and LINK_WAIT_SLEEP_MS to pci.h (Mani)
+-Only wait PCIE_RESET_CONFIG_WAIT_MS if > 5 GT/s (Mani)
+-Fix nit in commit log (Mani)
+
+
+Niklas Cassel (7):
+  PCI: Rename PCIE_RESET_CONFIG_DEVICE_WAIT_MS to
+    PCIE_RESET_CONFIG_WAIT_MS
+  PCI: rockchip-host: Use macro PCIE_RESET_CONFIG_WAIT_MS
+  PCI: dw-rockchip: Wait PCIE_RESET_CONFIG_WAIT_MS after link-up IRQ
+  PCI: qcom: Wait PCIE_RESET_CONFIG_WAIT_MS after link-up IRQ
+  PCI: dwc: Ensure that dw_pcie_wait_for_link() waits 100 ms after link
+    up
+  PCI: Move link up wait time and max retries macros to pci.h
+  PCI: Reduce PCIE_LINK_WAIT_SLEEP_MS
+
+ drivers/pci/controller/dwc/pcie-designware.c  | 20 +++++++++++++++----
+ drivers/pci/controller/dwc/pcie-designware.h  |  4 ----
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c |  1 +
+ drivers/pci/controller/dwc/pcie-qcom.c        |  1 +
+ drivers/pci/controller/pcie-rockchip-host.c   |  2 +-
+ drivers/pci/controller/plda/pcie-starfive.c   |  2 +-
+ drivers/pci/pci.h                             | 18 +++++++++--------
+ 7 files changed, 30 insertions(+), 18 deletions(-)
+
+-- 
+2.49.0
+
 
