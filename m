@@ -1,170 +1,329 @@
-Return-Path: <linux-pci+bounces-30639-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30640-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E817CAE8CF7
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 20:50:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CCE4AE8D15
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 20:53:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2E9B67BAB3E
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 18:44:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1A6C94A1019
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 18:53:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1B012DFA3D;
-	Wed, 25 Jun 2025 18:43:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 998D92D5C82;
+	Wed, 25 Jun 2025 18:53:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BpvlLuDe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ppeUKjip"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449132DECAE
-	for <linux-pci@vger.kernel.org>; Wed, 25 Jun 2025 18:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5051CAA7B;
+	Wed, 25 Jun 2025 18:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750877032; cv=none; b=qH2Wb7j7Sf7BqCUhbLfRO4KMYV7nA2Aqm6zlh/YO2QFC++plPplDlzwj7prqazfknQlkwyH68kWW+O/39wtA7JaIp0l9k4GgdRbyzzvLbZLaUp9LIjUthlOBsnmQcyxSxFWRx+AOekC5iTdeIUjJPyWTp3yxcRtk6QXFB5bI184=
+	t=1750877624; cv=none; b=KzkY2rR7MQkK6FaTzpuR0D1Sw4q5UZ30xT3TVZgkBF4Kf491C9rZuSAZlxasdYOrDsUbG3oPmt5vBikwVYaB1t79PapejtK2xSheXGrS6Ss3EDL+QnP8LjqZyNyf97q4hd5CaIlWDEv2EtIes2+22wmaX7bYjyYCdVBavrn6Oo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750877032; c=relaxed/simple;
-	bh=OKwCn9nMtCrh7A1p8wSY3LMlYeqvq9ekkcCgYTWGuSQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c+Ye+/Xi+B+1Yg50ATHhUd4czQ8ulO1t0NztHEEAtC/mDWVZYYmcbuDY9bMI4vOaYykUj83FFpmf3mOS2SBIWo1mW3rgUKIYPkn4+gXPyLhoUMqKohsOUZEOp9sfWg3HOIkqOWigh1I9XyuMIKR5fcQwyGdv8MM06La0c3UAsVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BpvlLuDe; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750877030;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EfMGLbUmp82Vp8zLQyE3ZcrJ967ELQfIfMW3hfSNO04=;
-	b=BpvlLuDeZh/V3OVj1AMEQf8mLDqk3d/TpqlRb+NKWcWPUBoPzfXogByjgyKxfrTvJQAjDu
-	7TuvKnF3oRXOeRRjoULdZeyqN2phPsxz29deX5l8qEYC6nqGzUIuehtxNAIxtK+DBpKF7Z
-	/tIJ3FttnGxRivY7P4RSKoeMKUW/XU8=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-164-j6-7de4iNROhQHOmy67Jmw-1; Wed, 25 Jun 2025 14:43:48 -0400
-X-MC-Unique: j6-7de4iNROhQHOmy67Jmw-1
-X-Mimecast-MFC-AGG-ID: j6-7de4iNROhQHOmy67Jmw_1750877027
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ade6db50b9cso18014266b.1
-        for <linux-pci@vger.kernel.org>; Wed, 25 Jun 2025 11:43:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750877027; x=1751481827;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EfMGLbUmp82Vp8zLQyE3ZcrJ967ELQfIfMW3hfSNO04=;
-        b=URp0sX8J0JIFxqp8Oi2UdRYWn0JLb+whx/4ZDo4qifvVMoZhOd1w0R323n3uEYvTkt
-         1PyHsZEK/nYuCL6ZI/MeKwLxq/9uN7yG+tM4Y9yzs+kJujKBJvY6UxPNAG+TcOs3B7cz
-         yjHfKNPyoLRsBgqioh2Q48cYM/vdWCj+IYFBQXavgBSW77zinrYckeftWet3bvmAzOqu
-         Ldp7UM9tMXO0P54ez0jWJ7zewWYphycndpHIIXhvbkzckgiq7fQav6vt+obHWDf5S9Ux
-         wS6M1p/EiHWi7yIsnN96obbA7e/xpJv33ZBulkjZxxbcfpOJLVaJhLONet+XYZ3tOs/z
-         BsmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6/wWNZukeY1kgpD4HrQ2a6VW2TyWi6zzFnn5vrBCgjjPlBhm5d/2MOcCBRA1FEtsHBjxyASeHj5g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXT2xXKkXULI7reQTttW/TOBiHLc3zGdMdsB+UsJTubpGE3vx5
-	WCwkWmOUnAXzM7vc8vqI/cLO4buNB2Dma/zL1zeajEA91ZAG5LJOVvZo5W14d8q0nKzUI8MXW98
-	9WXj5xf23Zh1afvhpwVoirCtMVE1MwEHVz7OtuPy+E3Bs4MtURRBSn2Dixuj2AA==
-X-Gm-Gg: ASbGncuhERdvmeDG7mPOKr9DHhlIgID7Bv9Wzi/ShE0UYQmtgOya+KbZih3jCnIAu4T
-	TNcyXb/50/7tSLSKYiwftmKeQTvaP90tcpMnBE9UPIaSI3zkTPbYiQK8wbbaI7y7DxbwzxzZ/Bx
-	+4nCiu/Ll+9hFhbOTTAdI1AsPlMqro0FA8w3QZFPFhgn08+uig84IYzmqUzuyjF9jvgieDiLUad
-	g+KqlNZMGl1nKIl6aMQJPZdE/Z5zI3sdKMYumMGWBlMSF8LpnPbGcut+wKv5IXEUJTjs9mqj/aG
-	pNZHoCotjiULe6scFk8KA7iKsxlQsKbI/NtL778Rm9OdC0XPDGcifK8ob4i8rvxqdTvgHbs+0nK
-	YnZuekb8/bAXuSaG8sFqhfhR213PhOGr8zRDHDWdKp/wmN+8StoZ8R+JDLmmtpajmDc0Oa8IhVg
-	==
-X-Received: by 2002:a17:906:4fc9:b0:ae0:bd4d:4d66 with SMTP id a640c23a62f3a-ae0d0bcaf6bmr112315666b.27.1750877027402;
-        Wed, 25 Jun 2025 11:43:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF6yAfvOAABPEeadvXNEjRArNtdC8kCRJRHcRqV9aMzVyjyH3zlO48tY6N9PtKcjd+DMp4mkg==
-X-Received: by 2002:a17:906:4fc9:b0:ae0:bd4d:4d66 with SMTP id a640c23a62f3a-ae0d0bcaf6bmr112312966b.27.1750877026869;
-        Wed, 25 Jun 2025 11:43:46 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0a9e514f9sm349350466b.63.2025.06.25.11.43.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 11:43:46 -0700 (PDT)
-Message-ID: <eb98477c-2d5c-4980-ab21-6aed8f0451c9@redhat.com>
-Date: Wed, 25 Jun 2025 20:43:45 +0200
+	s=arc-20240116; t=1750877624; c=relaxed/simple;
+	bh=8MrvaYOz4FiqCxr7LmGqB3MEhbBqse7v9vTKMvsiFOM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MwmWUega1XUjaFRmVOf0J3eYwBBIm1hz5aVEoaAQlCF7b5iOfiEch9Tb0ZcfMqo4/H1/AbNdMtPjgR+PdyAs5iZS1sKmswP9IxdQyCk617Ls3kTkGvohhUoXSJr1AaugTbZoQ2IJhr8O5OD2eMVNQPssvHvJQJv7W6Q/zWzpv5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ppeUKjip; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB210C4CEEA;
+	Wed, 25 Jun 2025 18:53:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750877623;
+	bh=8MrvaYOz4FiqCxr7LmGqB3MEhbBqse7v9vTKMvsiFOM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ppeUKjipB2yJbHdKKPlRyVDqbUX77oJxRhZL7ud1YUoWYEEc27uWBBlAZLBezVolW
+	 ChewIFEAAclm7IdOJPUUGDjVZ3/MC0WzysEt8xqtZhMGJw4yJc6tZeINByuTKz+boE
+	 mhJR9E962ubHGzH0zDyasotU1RFr2cXiBV6mV/yQvTWXA5gDQ2BcKdR56Y3+jPDvJq
+	 wZvA5EjnucM0MTLaIkoACEQuaQo7rhBTC4CQ+sYZkwrsTT2uurEexbd/VVyqEs9Z3h
+	 9paYrB25VlQFRZ1OhgEbXOFw+pJLk1BlNon+BKDU+oehoL3sbV4KqlXl1PUIgVhP2Y
+	 vtjkp9a0WbjMw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uUVFd-00A04o-Gz;
+	Wed, 25 Jun 2025 19:53:41 +0100
+Date: Wed, 25 Jun 2025 19:53:41 +0100
+Message-ID: <861pr7d556.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 18/27] arm64: smp: Support non-SGIs for IPIs
+In-Reply-To: <20250618-gicv5-host-v5-18-d9e622ac5539@kernel.org>
+References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
+	<20250618-gicv5-host-v5-18-d9e622ac5539@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] agp/amd64: Bind to unsupported devices only if AGP is
- present
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Ben Hutchings <ben@decadent.org.uk>, David Airlie <airlied@redhat.com>,
- Bjorn Helgaas <helgaas@kernel.org>, Joerg Roedel <joro@8bytes.org>,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Andi Kleen <ak@linux.intel.com>, Ahmed Salem <x0rw3ll@gmail.com>,
- Borislav Petkov <bp@alien8.de>, dri-devel@lists.freedesktop.org,
- iommu@lists.linux.dev, linux-pci@vger.kernel.org
-References: <f8ff40f35a9a5836d1371f60e85c09c5735e3c5e.1750497201.git.lukas@wunner.de>
- <b73fbb3e3f03d842f36e6ba2e6a8ad0bb4b904fd.camel@decadent.org.uk>
- <aFalrV1500saBto5@wunner.de>
- <279f63810875f2168c591aab0f30f8284d12fe02.camel@decadent.org.uk>
- <aFa8JJaRP-FUyy6Y@wunner.de>
- <9077aab5304e1839786df9adb33c334d10c69397.camel@decadent.org.uk>
- <98012c55-1e0d-4c1b-b650-5bb189d78009@redhat.com>
- <aFwIu0QveVuJZNoU@wunner.de>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <aFwIu0QveVuJZNoU@wunner.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, Jonathan.Cameron@huawei.com, timothy.hayes@arm.com, bhelgaas@google.com, Liam.Howlett@oracle.com, peter.maydell@linaro.org, mark.rutland@arm.com, jirislaby@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi,
-
-On 25-Jun-25 4:33 PM, Lukas Wunner wrote:
-> On Wed, Jun 25, 2025 at 04:08:38PM +0200, Hans de Goede wrote:
->> Lukas made me aware of this attempt to fix the KERN_CRIT msg, because
->> I wrote a slightly different patch to fix this:
->>
->> https://lore.kernel.org/dri-devel/20250625112411.4123-1-hansg@kernel.org/
->>
->> This seems like a cleaner fix to me and something which would be good
->> to have regardless since currently the driver_attach() call is doing
->> too much work because the promisc table catches an unnecessary wide
->> net / match matching many PCI devices which cannot be AGP capable
->> at all.
+On Wed, 18 Jun 2025 11:17:33 +0100,
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> So how do you know that all of these unsupported devices have
-> PCI_CLASS_BRIDGE_HOST?
-
-The top of the driver says
-
- * This is a GART driver for the AMD Opteron/Athlon64 on-CPU northbridge.
- * It also includes support for the AMD 8151 AGP bridge
-
-Note this only talks about north bridges.
-
-Also given the age of AGP, I would expect the agp_amd64_pci_table[]
-to be pretty much complete and the need for probing for unknown AGP
-capable bridges is likely a relic which can be disabled by default.
-
-Actually the amd64-agp code is weird in that has support for
-unknown AGP bridges enabled by default in the first place.
-
-The global probe unknown AGP bridges bool which is called
-agp_try_unsupported_boot is false by default.
-
-As discussed in the thread with my patch, we should probably
-just change the AMD specific agp_try_unsupported to default
-to false too.
-
-> The only thing we know is that an AGP
-> Capability must be present.
+> From: Marc Zyngier <maz@kernel.org>
 > 
-> In particular, AGP 3.0 sec 2.5 explicitly allows PCI-to-PCI bridges
-> in addition to Host-to-PCI bridges.
+> The arm64 arch has relied so far on GIC architectural software
+> generated interrupt (SGIs) to handle IPIs. Those are per-cpu
+> software generated interrupts.
+> 
+> arm64 architecture code that allocates the IPIs virtual IRQs and
+> IRQ descriptors was written accordingly.
+> 
+> On GICv5 systems, IPIs are implemented using LPIs that are not
+> per-cpu interrupts - they are just normal routable IRQs.
+> 
+> Add arch code to set-up IPIs on systems where they are handled
+> using normal routable IRQs.
+> 
+> For those systems, force the IRQ affinity (and make it immutable)
+> to the cpu a given IRQ was assigned to.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> [timothy.hayes@arm.com: fixed ipi/irq conversion, irq flags]
+> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+> [lpieralisi: changed affinity set-up, log]
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> ---
+>  arch/arm64/include/asm/smp.h |   7 ++-
+>  arch/arm64/kernel/smp.c      | 142 ++++++++++++++++++++++++++++++++-----------
+>  2 files changed, 114 insertions(+), 35 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+> index 2510eec026f7..d6fd6efb66a6 100644
+> --- a/arch/arm64/include/asm/smp.h
+> +++ b/arch/arm64/include/asm/smp.h
+> @@ -53,7 +53,12 @@ extern void smp_init_cpus(void);
+>  /*
+>   * Register IPI interrupts with the arch SMP code
+>   */
+> -extern void set_smp_ipi_range(int ipi_base, int nr_ipi);
+> +extern void set_smp_ipi_range_percpu(int ipi_base, int nr_ipi, int ncpus);
+> +
+> +static inline void set_smp_ipi_range(int ipi_base, int n)
+> +{
+> +	set_smp_ipi_range_percpu(ipi_base, n, 0);
+> +}
+>  
+>  /*
+>   * Called from the secondary holding pen, this is the secondary CPU entry point.
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 3b3f6b56e733..7fd6bec80750 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -83,7 +83,31 @@ enum ipi_msg_type {
+>  
+>  static int ipi_irq_base __ro_after_init;
+>  static int nr_ipi __ro_after_init = NR_IPI;
+> -static struct irq_desc *ipi_desc[MAX_IPI] __ro_after_init;
+> +
+> +struct ipi_descs {
+> +	struct irq_desc *descs[MAX_IPI];
+> +};
+> +
+> +static DEFINE_PER_CPU(struct ipi_descs, pcpu_ipi_desc);
 
-Ok, so we can add a second entry to the agp_amd64_pci_promisc_table[]
-to match PCI to PCI bridges just to be sure, that still feels
-cleaner to me.
+I wish we would make this __ro_after_init, but it doesn't see to be
+possible to do that. At least make it read_mostly, which may help a
+bit.
 
-Regards,
+> +
+> +#define get_ipi_desc(__cpu, __ipi) (per_cpu_ptr(&pcpu_ipi_desc, __cpu)->descs[__ipi])
+> +
+> +static bool percpu_ipi_descs __ro_after_init;
+> +
+> +static int ipi_to_irq_percpu(int ipi, int cpu)
+> +{
+> +	return ipi_irq_base + (cpu * nr_ipi) + ipi;
+> +}
+> +
+> +static int ipi_to_irq(int ipi)
+> +{
+> +	return ipi_to_irq_percpu(ipi, 0);
+> +}
+> +
+> +static int irq_to_ipi(int irq)
+> +{
+> +	return (irq - ipi_irq_base) % nr_ipi;
+> +}
 
-Hans
+Most of these helpers are used only once, and they are so similar that
+I get cross-eyed. Consider expanding them in their calling spot.
 
+>  
+>  static bool crash_stop;
+>  
+> @@ -844,7 +868,7 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+>  		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
+>  			   prec >= 4 ? " " : "");
+>  		for_each_online_cpu(cpu)
+> -			seq_printf(p, "%10u ", irq_desc_kstat_cpu(ipi_desc[i], cpu));
+> +			seq_printf(p, "%10u ", irq_desc_kstat_cpu(get_ipi_desc(cpu, i), cpu));
+>  		seq_printf(p, "      %s\n", ipi_types[i]);
+>  	}
+>  
+> @@ -919,7 +943,13 @@ static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs
+>  
+>  static void arm64_backtrace_ipi(cpumask_t *mask)
+>  {
+> -	__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
+> +	unsigned int cpu;
+> +
+> +	if (!percpu_ipi_descs)
+> +		__ipi_send_mask(get_ipi_desc(0, IPI_CPU_BACKTRACE), mask);
+> +	else
+> +		for_each_cpu(cpu, mask)
+> +			__ipi_send_single(get_ipi_desc(cpu, IPI_CPU_BACKTRACE), cpu);
+>  }
+>  
+>  void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+> @@ -944,7 +974,7 @@ void kgdb_roundup_cpus(void)
+>  		if (cpu == this_cpu)
+>  			continue;
+>  
+> -		__ipi_send_single(ipi_desc[IPI_KGDB_ROUNDUP], cpu);
+> +		__ipi_send_single(get_ipi_desc(cpu, IPI_KGDB_ROUNDUP), cpu);
+>  	}
+>  }
+>  #endif
+> @@ -1013,14 +1043,21 @@ static void do_handle_IPI(int ipinr)
+>  
+>  static irqreturn_t ipi_handler(int irq, void *data)
+>  {
+> -	do_handle_IPI(irq - ipi_irq_base);
+> +	do_handle_IPI(irq_to_ipi(irq));
+>  	return IRQ_HANDLED;
+>  }
+>  
+>  static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
+>  {
+> +	unsigned int cpu;
+> +
+>  	trace_ipi_raise(target, ipi_types[ipinr]);
+> -	__ipi_send_mask(ipi_desc[ipinr], target);
+> +
+> +	if (!percpu_ipi_descs)
+> +		__ipi_send_mask(get_ipi_desc(0, ipinr), target);
+> +	else
+> +		for_each_cpu(cpu, target)
+> +			__ipi_send_single(get_ipi_desc(cpu, ipinr), cpu);
 
+Having a helper for this construct would definitely be a good thing:
+
+@@ -924,15 +919,20 @@ static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs
+ #endif
+ }
+ 
+-static void arm64_backtrace_ipi(cpumask_t *mask)
++static void arm64_send_ipi(const cpumask_t *mask, unsigned int nr)
+ {
+ 	unsigned int cpu;
+ 
+ 	if (!percpu_ipi_descs)
+-		__ipi_send_mask(get_ipi_desc(0, IPI_CPU_BACKTRACE), mask);
++		__ipi_send_mask(get_ipi_desc(0, nr), mask);
+ 	else
+ 		for_each_cpu(cpu, mask)
+-			__ipi_send_single(get_ipi_desc(cpu, IPI_CPU_BACKTRACE), cpu);
++			__ipi_send_single(get_ipi_desc(cpu, nr), cpu);
++}
++
++static void arm64_backtrace_ipi(cpumask_t *mask)
++{
++	arm64_send_ipi(mask, IPI_CPU_BACKTRACE);
+ }
+ 
+and similarly for smp_cross_call().
+
+>  }
+>  
+>  static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
+> @@ -1046,11 +1083,15 @@ static void ipi_setup(int cpu)
+>  		return;
+>  
+>  	for (i = 0; i < nr_ipi; i++) {
+> -		if (ipi_should_be_nmi(i)) {
+> -			prepare_percpu_nmi(ipi_irq_base + i);
+> -			enable_percpu_nmi(ipi_irq_base + i, 0);
+> +		if (!percpu_ipi_descs) {
+> +			if (ipi_should_be_nmi(i)) {
+> +				prepare_percpu_nmi(ipi_irq_base + i);
+> +				enable_percpu_nmi(ipi_irq_base + i, 0);
+> +			} else {
+> +				enable_percpu_irq(ipi_irq_base + i, 0);
+> +			}
+>  		} else {
+> -			enable_percpu_irq(ipi_irq_base + i, 0);
+> +			enable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
+>  		}
+>  	}
+>  }
+> @@ -1064,44 +1105,77 @@ static void ipi_teardown(int cpu)
+>  		return;
+>  
+>  	for (i = 0; i < nr_ipi; i++) {
+> -		if (ipi_should_be_nmi(i)) {
+> -			disable_percpu_nmi(ipi_irq_base + i);
+> -			teardown_percpu_nmi(ipi_irq_base + i);
+> +		if (!percpu_ipi_descs) {
+> +			if (ipi_should_be_nmi(i)) {
+> +				disable_percpu_nmi(ipi_irq_base + i);
+> +				teardown_percpu_nmi(ipi_irq_base + i);
+> +			} else {
+> +				disable_percpu_irq(ipi_irq_base + i);
+> +			}
+>  		} else {
+> -			disable_percpu_irq(ipi_irq_base + i);
+> +			disable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
+>  		}
+>  	}
+>  }
+>  #endif
+>  
+> -void __init set_smp_ipi_range(int ipi_base, int n)
+> +static void ipi_setup_ppi(int ipi)
+
+This sets up SGIs, not PPIs. They are indeed Per Processor Interrupts,
+but given that you use "lpi" for GICv5, consider naming it
+consistently.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
 
