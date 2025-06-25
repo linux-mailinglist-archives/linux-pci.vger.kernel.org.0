@@ -1,121 +1,169 @@
-Return-Path: <linux-pci+bounces-30577-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30578-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90545AE78CE
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 09:39:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66650AE78E9
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 09:42:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C6CE189388B
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 07:39:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E65E5A04E6
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 07:41:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C7D71DC198;
-	Wed, 25 Jun 2025 07:37:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CA2A1DFD86;
+	Wed, 25 Jun 2025 07:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QptVOFEz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14A272626
-	for <linux-pci@vger.kernel.org>; Wed, 25 Jun 2025 07:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024351DB958;
+	Wed, 25 Jun 2025 07:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750837070; cv=none; b=gwOpCJA1zlG5IT9kyZImHXbHeKy67MiJWnA83fET0JW7RZO4Qcoz62+1JL/qi23IRumhnrFJmwnM/2JqYRHKHW92tiXa7RDTccFtda8CMwkk2GY+E6xQFxYJsUo+iarEV3dXqEeifyHx+06lkt35LZ3MUP4bmCUgLyFlUBwWBJg=
+	t=1750837338; cv=none; b=op8QIJ6g9KPtjLRs1I5td4I8PVkMdjHwTCv46geH8mP35CduYuDV9MYRZy7BFw/Py0GtoNf8TnVbvi1r0UosHv8e1JGL7LQ4+L6C4PKlMweOSCBdvuJIwtGDTBv1mcZI+Ek7Ze31km0GnuDp37oLG3ZgtcTAl19TldIooXQ+L/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750837070; c=relaxed/simple;
-	bh=B3TDpSRtafxe1v6Rt4x+cYS2KtQSCfonWa8o0vaGG7s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KDZRiQYIFcbd2M2fFQ7XjobeOOr8Tv6goHNVW8lDMBRn8mwmgkZozBjYDjkaXrpZ8A1hh/wXhZAybrInE/aYBU3OZ/DTub4uii6kT7g34X3MqN2KuRNY++P+mWTSDr4q3P7RdXH0uhtqmMH1Ltr5IVZiv4EN6cOdqhRnfyn7da0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 05E1C2C051CF;
-	Wed, 25 Jun 2025 09:37:39 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id C84843C7E4; Wed, 25 Jun 2025 09:37:38 +0200 (CEST)
-Date: Wed, 25 Jun 2025 09:37:38 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Laurent Bigonville <bigon@bigon.be>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <westeri@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/ACPI: Fix runtime PM ref imbalance on hot-plug
- capable ports
-Message-ID: <aFunQlDHNyQV4S_W@wunner.de>
-References: <86c3bd52bda4552d63ffb48f8a30343167e85271.1750698221.git.lukas@wunner.de>
- <20250624142407.GA1473261@bhelgaas>
+	s=arc-20240116; t=1750837338; c=relaxed/simple;
+	bh=ee5KpT/bkyI5pdWN+/FTJfhNU5lp2kqGEPaGJ/4m8CI=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PHWLMtfWHc6/xJhd+1Nsek5DguHZ58u4prHaGFQJLQvTOReo33R4pgJqjPDBvMHG+zKy43xjhQRdE2Bv8KzY3H6NV3ti4rnWGcawZSjQ/MGQtskkbNkV8WLYqmXLbBrNu6VnIKG9cllKMxuBK4ddkKuPOG/poGDdkHdsnMnAcVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QptVOFEz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 825FEC4CEEA;
+	Wed, 25 Jun 2025 07:42:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750837336;
+	bh=ee5KpT/bkyI5pdWN+/FTJfhNU5lp2kqGEPaGJ/4m8CI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QptVOFEzhdEF/NA7m5AHYEde2n+dfbMvp+8KFy1dXur2sGa2Tcjk1RmuP6iAvVKgM
+	 8x4c3JKrqlwCWZ6zzEJr5hwC2tOVr0FaKR3TdhqzbvT5iZmbfwvRobsJGMlQnUdNwC
+	 tFnifQXNaglfKS0iSseuGVAW5PEkdBcSk9IhnXYCCJLwTlJuDJGSwEBH8b0Piby14I
+	 BiyyjAgmXDmcqRPqNHTAq0eRqAR0QQwZY6WpNSbhcImoI8XQB23rAAyENA7E4tKvVt
+	 AP/rSsqc9K8yqPmDCyZo9x03Y3vou1mxA6tU83ojz7jgnUTWO9AFQOKP5nGVj8tCj3
+	 BK3df+3YaYFsA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uUKlq-009m7c-1v;
+	Wed, 25 Jun 2025 08:42:14 +0100
+Date: Wed, 25 Jun 2025 08:42:13 +0100
+Message-ID: <875xgkfesq.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: 	Bjorn Helgaas <bhelgaas@google.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,	Will Deacon <will@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,	Krzysztof =?UTF-8?B?V2lsY3p5?=
+ =?UTF-8?B?xYRza2k=?= <kwilczynski@kernel.org>,	Conor Dooley
+ <conor.dooley@microchip.com>,	Daire McNamara
+ <daire.mcnamara@microchip.com>,	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: host-generic: Set driver_data before calling gen_pci_init()
+In-Reply-To: <774290708a6f0f683711914fda110742c18a7fb2.1750787223.git.geert+renesas@glider.be>
+References: <774290708a6f0f683711914fda110742c18a7fb2.1750787223.git.geert+renesas@glider.be>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624142407.GA1473261@bhelgaas>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: bhelgaas@google.com, geert+renesas@glider.be, alyssa@rosenzweig.io, robh@kernel.org, mani@kernel.org, will@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org, conor.dooley@microchip.com, daire.mcnamara@microchip.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, Jun 24, 2025 at 09:24:07AM -0500, Bjorn Helgaas wrote:
-> On Mon, Jun 23, 2025 at 07:08:20PM +0200, Lukas Wunner wrote:
-> > pcie_portdrv_probe() and pcie_portdrv_remove() both call
-> > pci_bridge_d3_possible() to determine whether to use runtime power
-> > management.  The underlying assumption is that pci_bridge_d3_possible()
-> > always returns the same value because otherwise a runtime PM reference
-> > imbalance occurs.
-> > 
-> > That assumption falls apart if the device is inaccessible on ->remove()
-> > due to hot-unplug:  pci_bridge_d3_possible() calls pciehp_is_native(),
-> > which accesses Config Space to determine whether the device is Hot-Plug
-> > Capable.   An inaccessible device returns "all ones", which is converted
-> > to "all zeroes" by pcie_capability_read_dword().  Hence the device no
-> > longer seems Hot-Plug Capable on ->remove() even though it was on
-> > ->probe().
+On Tue, 24 Jun 2025 18:50:10 +0100,
+Geert Uytterhoeven <geert+renesas@glider.be> wrote:
 > 
-> This is pretty subtle; thanks for chasing it down.
+> On MicroChip MPFS Icicle:
 > 
-> It doesn't look like anything in pci_bridge_d3_possible() should 
-> change over the life of the device, although acpi_pci_bridge_d3() is
-> non-trivial.
+>     microchip-pcie 2000000000.pcie: host bridge /soc/pcie@2000000000 ranges:
+>     microchip-pcie 2000000000.pcie: Parsing ranges property...
+>     microchip-pcie 2000000000.pcie:      MEM 0x2008000000..0x2087ffffff -> 0x0008000000
+>     Unable to handle kernel NULL pointer dereference at virtual address 0000000000000368
+>     Current swapper/0 pgtable: 4K pagesize, 39-bit VAs, pgdp=0x00000000814f1000
+>     [0000000000000368] pgd=0000000000000000, p4d=0000000000000000, pud=0000000000000000
+>     Oops [#1]
+>     Modules linked in:
+>     CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.15.0-rc1-icicle-00003-gafc0a570bb61 #232 NONE
+>     Hardware name: Microchip PolarFire-SoC Icicle Kit (DT)
+>     [...]
+>     [<ffffffff803fb8a4>] plda_pcie_setup_iomems+0xe/0x78
+>     [<ffffffff803fc246>] mc_platform_init+0x80/0x1d2
+>     [<ffffffff803f9c88>] pci_ecam_create+0x104/0x1e2
+>     [<ffffffff8000adbe>] pci_host_common_init+0x120/0x228
+>     [<ffffffff8000af42>] pci_host_common_probe+0x7c/0x8a
 > 
-> Should we consider calling pci_bridge_d3_possible() only once and
-> caching the result?  We already call it in pci_pm_init() and save the
-> result in dev->bridge_d3.  That member can be changed by
-> pci_bridge_d3_update(), but we could add another copy that we never
-> update after pci_pm_init().
+> The initialization of driver_data was moved after the call to
+> gen_pci_init(), while the pci_ecam_ops.init() callback
+> mc_platform_init() expects it has already been initialized.
+> 
+> Fix this by moving the initialization of driver_data up.
+> 
+> Fixes: afc0a570bb613871 ("PCI: host-generic: Extract an ECAM bridge creation helper from pci_host_common_probe()")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Notes:
+>   1. Before, driver_data was initialized before calling
+>      of_pci_check_probe_only(), but the latter doesn't rely on that,
+>   2. drivers/pci/controller/plda/pcie-microchip-host.c seems to be the
+>      only driver relying on driver_data being set.
+> ---
+>  drivers/pci/controller/pci-host-common.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+> index b0992325dd65f0da..b37052863847162d 100644
+> --- a/drivers/pci/controller/pci-host-common.c
+> +++ b/drivers/pci/controller/pci-host-common.c
+> @@ -64,13 +64,13 @@ int pci_host_common_init(struct platform_device *pdev,
+>  
+>  	of_pci_check_probe_only();
+>  
+> +	platform_set_drvdata(pdev, bridge);
+> +
+>  	/* Parse and map our Configuration Space windows */
+>  	cfg = gen_pci_init(dev, bridge, ops);
+>  	if (IS_ERR(cfg))
+>  		return PTR_ERR(cfg);
+>  
+> -	platform_set_drvdata(pdev, bridge);
+> -
+>  	bridge->sysdata = cfg;
+>  	bridge->ops = (struct pci_ops *)&ops->pci_ops;
+>  	bridge->enable_device = ops->enable_device;
 
-If we did that, I think we'd still want to have a WARN_ON() like this in
-pcie_portdrv_remove():
+This is going to break what was introduced in 4900454b4f819 ("PCI:
+ecam: Allow cfg->priv to be pre-populated from the root port device").
 
-+	WARN_ON(dev->bridge_d3_orig != pci_bridge_d3_possible(dev));
-+
-+	if (dev->bridge_d3_orig) {
--	if (pci_bridge_d3_possible(dev)) {
+The Apple PCIe driver uses drvdata to pass a pointer to its root port
+structure from its probe routine to the .init ECAM callback. If we
+overwrite drvdata with the bridge *before* calling pci_ecam_create(),
+this data is lost, and drama follows.
 
-Because without the WARN_ON(), such bugs would fly under the radar.
+Obviously, multi-purpose private fields are not great...
 
-However currently we get the WARN_ON() for free because of the runtime PM
-refcount underflow.
+If we are going down the road of going back to the previous situation,
+two things need to be done:
 
-So caching the original return value of pci_bridge_d3_possible(dev)
-wouldn't be a net positive.
+- the Apple PCIe driver needs to grow some form of root port
+  registration in order to map a 'struct device' back to the pcie
+  tracking structure
 
-Also note that the bug isn't catastrophic:  The struct device is about
-to be free()'d anyway because it's been hot-removed.  It's just the
-annoying warning message that we want to get rid of.
+- 4900454b4f819 needs to be reverted, because it obviously doesn't
+  serve any purpose anymore.
 
-But maybe we should amend the kernel-doc of pci_bridge_d3_possible()
-to clearly state that the return value must be constant across the
-entire lifetime of the device.  For me that's obvious because I was
-involved when the code was originally conceived, but I realized upon
-seeing Mario's attempts to solve this that it may not be obvious at all
-for anyone else.
+I'll look into the first point.
 
 Thanks,
 
-Lukas
+	M.
+
+-- 
+Jazz isn't dead. It just smells funny.
 
