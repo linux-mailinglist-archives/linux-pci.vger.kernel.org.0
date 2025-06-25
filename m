@@ -1,57 +1,57 @@
-Return-Path: <linux-pci+bounces-30664-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30665-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDA2DAE90A1
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 23:59:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8160AE90D1
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 00:10:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 58F467AC7AF
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 21:58:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BDCF3BD904
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 22:10:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4817926E6E7;
-	Wed, 25 Jun 2025 21:58:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C689926E6F0;
+	Wed, 25 Jun 2025 22:10:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHs7BUrN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXAoUDov"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB1826E6E6;
-	Wed, 25 Jun 2025 21:58:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A170B26E6E6
+	for <linux-pci@vger.kernel.org>; Wed, 25 Jun 2025 22:10:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750888732; cv=none; b=Y/ZSdIli46rGx9OYSpwm+cQftovUkTayJXMe7I9FKjNnwdMuArV02oPOKsYSiwzXU05Yc2o3TdFbmr6wpDGRmWGzKxVj7QUC0l/kJlPYVpuV0z8CIny3ahrMHDoN0oQyVcQOAbTKG9fqSL16wK17CI+iDoyr1kqjwE/NLD4hmWc=
+	t=1750889440; cv=none; b=E5tmoDgeIqyNusKwzkcsQP8Gdq38awwY1GtOI1TQCe1+7AVVBhDSMIIl6zle7dfMuGXKLuc4yOifje80oXTpKYgqYOJnLDDc/Hl72dyiJR+sxTTM8ROJOXwRnu12lRbDVdklAPhSSIE+rxdsvTo1fjAys4vu1UNLjpDesYfsvAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750888732; c=relaxed/simple;
-	bh=oOHVi7WKulJD5Ln7DJz9kKtqOwBywgrMuliFZ1+w+HI=;
+	s=arc-20240116; t=1750889440; c=relaxed/simple;
+	bh=iEOfpyhrZau/LTAC6DMZMLu5SokkcqAUXz3XAwcpf6M=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NUIN10EdTda3YmNS3RoCI3/YMP1QaOl4BSvGOTqyiCHnUYZ6mj/vDxfsJdqytmOiHCoN9Sle3PpWRF+Xhps8XUMGXqiAbYG+2koZ9XFni0wttBkAIbRiY+YWUWTBNnxPMAW77ll/aWqO6F14AAgIByzEBXfXveQpE5ebaue4Ak8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHs7BUrN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A42FEC4CEEA;
-	Wed, 25 Jun 2025 21:58:50 +0000 (UTC)
+	 MIME-Version:Content-Type; b=qinaUN9TFins8Ga4eMB1uPK5ZNhwftp7LlvGQQRguL1dwlYgibCy9eqLdEe6krppr97wCSoHgODJjgBg6Y1tZlmfI3M9fh+GuB3SGD8vQPwiKCnpKUUiRD61hRl7rVhYsm5A7tbbC9ZgD/6T9fLnKRg1XMwbliSL63GfGImOIyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXAoUDov; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EEB2C4CEEA;
+	Wed, 25 Jun 2025 22:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750888731;
-	bh=oOHVi7WKulJD5Ln7DJz9kKtqOwBywgrMuliFZ1+w+HI=;
+	s=k20201202; t=1750889438;
+	bh=iEOfpyhrZau/LTAC6DMZMLu5SokkcqAUXz3XAwcpf6M=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=gHs7BUrNu9peedXSq1UccpV5094B6OcM9oumLr6Asgee1dA0TvTBQbq4auS5Ez/Qj
-	 cy6a6Ot6tZgS1guQZZGKrKPwvBtR1+Q0AApWW9l83i352c9dlAXZ7fnvN7H1guwaoM
-	 fNhtrj9zrFIep+dq8nr/GPljwfB1NRKNjfOiogGSfsyYMFrN+ArK0NS8jMXA+07ZXl
-	 bx+8pYU7A58CVDU/xzh20co/F9VEGInKVO3RMV11lo8+deg7oCtV/5RBKJI8zrisB2
-	 J2NFRIjOmlVZv9ulkCRGPktF6vufB1+zJVzes+Yvvaewl2KYsOQ+Zfb8q67QJxjAIt
-	 q48ndaErFJmaA==
+	b=oXAoUDovanNWEwxDLKR/jeGb16Nm9pLcC7TnV5nGWguhYfJ/qiWWWsq19FphJcToi
+	 MZmGq7xtTOml7KcuuTS3fPkFZuiYccIda1a/M5/aAh/7xRw4meSwOG9zhClZqFOiCs
+	 PtL1EMm7ZPpQtCgqnod9zy/Vpk/AlInnmbKbm3vjAMBT71Dn14r25dQmBGlreZuZaT
+	 LTDyEJphEw2bM3QkcMl0M2CLgcUfKndJ6gE+lRE5exH4KwZwze5bK9Yi+10LPp7400
+	 txRPgtWtjHPbGhvlNmztsjHc+x7YGnIEYHuaXo91k/jdpHK0cRQn67abJemDiozjZB
+	 27QpPeyN3W0DQ==
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, 
- jingoohan1@gmail.com, Hans Zhang <18255117159@163.com>
-Cc: robh@kernel.org, linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250612161226.950937-1-18255117159@163.com>
-References: <20250612161226.950937-1-18255117159@163.com>
-Subject: Re: [PATCH] PCI: dwc: Simplify boolean condition returns in
- debugfs
-Message-Id: <175088873054.30154.8954618034013748758.b4-ty@kernel.org>
-Date: Wed, 25 Jun 2025 15:58:50 -0600
+To: linux-pci@vger.kernel.org, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Damien Le Moal <dlemoal@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>
+In-Reply-To: <20250624114544.342159-1-dlemoal@kernel.org>
+References: <20250624114544.342159-1-dlemoal@kernel.org>
+Subject: Re: [PATCH v3 0/2] Fix EPF configfs attribute group removal
+Message-Id: <175088943642.35267.18082641117885459492.b4-ty@kernel.org>
+Date: Wed, 25 Jun 2025 16:10:36 -0600
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,20 +63,22 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Fri, 13 Jun 2025 00:12:26 +0800, Hans Zhang wrote:
-> Replace redundant ternary conditional expressions with direct boolean
-> returns in PTM visibility functions. Specifically change this pattern:
+On Tue, 24 Jun 2025 20:45:42 +0900, Damien Le Moal wrote:
+> A couple of patches to fix removal of configfs attribute groups of a PCI
+> endpoint function driver.
 > 
->     return (condition) ? true : false;
-> 
-> to the simpler:
+> Changes from v2:
+>  - Use list_del() instead of list_del_init() in patch 2
+>  - Added Niklas' review tags
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] PCI: dwc: Simplify boolean condition returns in debugfs
-      commit: 032f05be51ab4a1d67d08a8083ec16dd934d255e
+[1/2] PCI: endpoint: Fix configfs group list head handling
+      commit: d79123d79a8154b4318529b7b2ff7e15806f480b
+[2/2] PCI: endpoint: Fix configfs group removal on driver teardown
+      commit: 910bdb8197f9322790c738bb32feaa11dba26909
 
 Best regards,
 -- 
