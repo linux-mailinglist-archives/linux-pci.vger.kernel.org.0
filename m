@@ -1,132 +1,183 @@
-Return-Path: <linux-pci+bounces-30643-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30651-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E59CAE8E61
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 21:18:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC6BDAE8EA7
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 21:27:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 118301C20878
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 19:18:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0C3BA7A6FAC
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 19:25:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8E6B2DCC0D;
-	Wed, 25 Jun 2025 19:18:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C80622E2EF8;
+	Wed, 25 Jun 2025 19:25:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m44wtbqB"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="biwk2G0k"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com [209.85.219.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E01C2DCBEC;
-	Wed, 25 Jun 2025 19:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D952E06C7;
+	Wed, 25 Jun 2025 19:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750879083; cv=none; b=hcOoumqqkV4o16ifFa2oYjDZFhjv4Lx5QFcRYlCgKf6RhzBV1wXe/xjLH5PvIgUFz0X8swp4zhrikRgm/7nT+7ofxSCdfONGFh3W75K9yaw57EiSFah2/h5YvnQsnv6YVTeliox5wydbW2zBu0yfnNJ9k8Gkl+z7obLVxqF9ACE=
+	t=1750879553; cv=none; b=jdiJzDKRx+IOsJ+3NpkR6Dh4GrO9wLKhSBgmAPFT7uDeXozItHcRgMLPNCm0I2uXa91bLHKdhJwPd699eGhmTeZbvo0gT/pTuER1RaNeXtlrnKj2mHGlhq1I5V1EJJgDrE6Yrnk1wahRwBGGTc4BS7+TUBDMoSndtuV25HqGyiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750879083; c=relaxed/simple;
-	bh=r4Jd7amZN0Y++n+cxyUCk6FX3dy8XmJ4WfVyH1KUlkA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=j18ue/pHJwjPwbgwbVBKzUNQSryvhtLCNEEn4kXXk4b98T+STS+xOC/15PwqUy9Ba9O3zdhimC95/fFtA2x+dy8VA7iW7Yv6msE7hq+VwVP8a9DgComEZ1WjHT4I6PYBxlG/iw00qBURCOrKGpqI6j7/ODYydJ0GzCLeRvR6xFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m44wtbqB; arc=none smtp.client-ip=209.85.219.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f194.google.com with SMTP id 3f1490d57ef6-e81a7d90835so142787276.1;
-        Wed, 25 Jun 2025 12:18:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750879081; x=1751483881; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8403cEKgjhhrx1TsMbshffovgr9tyzdkU6aIUKCINXk=;
-        b=m44wtbqBw0uy6VANJ3KUvIvNX7iepvodFICO/5pfl2w0VQfw3M3o1mXQS+/DDpeK/U
-         n1lofqIlDJtS1YVdF1Sacu7jAU2P2aq+bO+muHRa5qIt/qnYaqviwTaWB5J3U2vplUAa
-         hjrAIKza4AKDc0XgOK3zHc+Gy++7rmhnP95nF80rbLZC9gnu6Vy+8fbnn+DTxiXLBsd/
-         u8DW3XVB0VHU+x3lDmNZv99Ds3Mt+6OpGDdLRaJCr9//61eu14LO/qtcGhNTSFleCsgX
-         ySJzklpTwBa2k1ZWjInTNsoQRR1qzgh0N3T1OjSFdXePTKhpu1eULijXTo/3vv3gyhCb
-         kocg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750879081; x=1751483881;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8403cEKgjhhrx1TsMbshffovgr9tyzdkU6aIUKCINXk=;
-        b=AMwDsz3ONkw5HKlvJkfESOCTQ9fWRoJZLga+YD77CwAT5jDqn5vnOACE/i3toJiY8A
-         Pk3CfgFbVoFeik1WU+xp9hH27VgY6Hp3TtDNKLEQs6mROXOxLTl5nZICMWGWIJskxBqT
-         wZeUDQ2kCKRweojuw56S2R3n/UTP5AYIHEkNXcN/qqN00Rxu+8ErLOgMY8WG7zgnUQJH
-         8vXP1Ce2COYSCi25YT/9HYc4Dcm1i0/nvTXQmPTlfslTWe7cLvwIkxOdHAKjwEcD4plS
-         9wt3/YRGMYiz7XPsVqkGQZJC1uO5npuxIKOT3H6wsI73LlNG4Sim5OZ9mZMaqm323SE1
-         ntCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTjA0ALMi7Cf55s4CNlS0r9N6Ts5jHEe5qtiTPCLWpnNsfkOOT3+WH55/xYIZsW5snhcsoV5me4po0rOBPH4A=@vger.kernel.org, AJvYcCUq1XR6ilcySY5g9NkT+e71Aa4Vhea9+53V64OeAeerrywdda000Mhk3ixGsiWFlgq620UxkLOKk89B@vger.kernel.org, AJvYcCXdxQa7qbRTeaHBKGEHUxBlomRUlRzecCRD/3we9p3h/tCqBqaLLtXPxP7jjgdWMwG9VmkrFRuG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgcCbR/i7niaHtyIrc0v8kQJyUiaLyQ4s80KYJf/F3OFQY7wx7
-	bpEyFV2VHKc87cHCDGnTgcYni81J0ZWwoCEiO4mMGK1HT8NIl0WPyJWMitqTUuhiPVTEE8NeAgl
-	zYhJhvzLWQtS1dX9E7NyMj8OG7ryuWxhf5jJvVMU=
-X-Gm-Gg: ASbGncs+PJLp/g4mI0j63NMQN/C3G+2bPjiqlnNzBEgVxLziciA9QxsPLwQ3qFfgitO
-	kwjqOVJKubi2iBsYrPLNse9zQQHQaOFYlAqPo6aUfJU/eh2nZzwgzcYP09ryC2iG/SGtFGmxg1s
-	BZmp+jYfmvT/Qx/smeTDwIUEoKZPPjH/uQMP2ztABEL2il0Q==
-X-Google-Smtp-Source: AGHT+IEBJ1HQs0iJN6i2v3yoEYIATq1lJulVqezGwirJwda+5IVis0IKTmDBeXLkkfhMuPo/Gu6h1RQpTOE45CdVKtA=
-X-Received: by 2002:a05:690c:3804:b0:714:13:357a with SMTP id
- 00721157ae682-71406db2354mr62440497b3.20.1750879080340; Wed, 25 Jun 2025
- 12:18:00 -0700 (PDT)
+	s=arc-20240116; t=1750879553; c=relaxed/simple;
+	bh=c9On8ljBPBpRJ/9+nmlX6D8ilQ5INGRpXRcdThXexWo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bnXz72tJAXfiJrMOFu982wIpz+l/h2elJjXAUaIH+mbF1Uo8pYgkyLvF+tvufTFK+bwyad8spbFX/owCcXfsDloV0eLHo+Nz1M9BfVH5QVgo9EHsPP3j6DSVbptwyAuUYWhw2N57qhTuAPsbGrazr5pAsTte1uIJLP8MGRYxkFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=biwk2G0k; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+Received: from kreacher.localnet (unknown [5.63.189.50])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 4E66C66E7DE;
+	Wed, 25 Jun 2025 21:25:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1750879543;
+	bh=c9On8ljBPBpRJ/9+nmlX6D8ilQ5INGRpXRcdThXexWo=;
+	h=From:Subject:Date;
+	b=biwk2G0kp7xQx/3X+3GqiGcqKZxYkM0E8dsJUKdoRvJUzdXs1qhPQJUhP+8SJOHhf
+	 AFqbBSGg1DdthW8+ETLck4O/YPWMFl4bSwQ9/5JTpThSEHQf1NRC7ZA7WHTbWmANfB
+	 N543BFOdgMVVsnnft9FhE5dKg6HU7U/0ZQ7PTcNd+nRJtCRBms/e0otBceGy1BILTG
+	 kXSq/KfSXhemmqHieDj/jVNkKkobVV+GHdFhu7Kg76SGrh+qLO2nFcUcV3y9uHEvO5
+	 Xn78QrLOMCVThm5M+2ry1hhnZQJXprqBX0UzP6x4ZjhLygvT2GAmc4eZNOP+wdc/2s
+	 9ufWEVJdGKaXw==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux ACPI <linux-acpi@vger.kernel.org>,
+ Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject:
+ [PATCH v1 3/9] PM: Make pm_runtime_force_resume() work with
+ DPM_FLAG_SMART_SUSPEND
+Date: Wed, 25 Jun 2025 21:18:51 +0200
+Message-ID: <1847016.VLH7GnMWUR@rjwysocki.net>
+In-Reply-To: <22759968.EfDdHjke4D@rjwysocki.net>
+References: <22759968.EfDdHjke4D@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Bandhan Pramanik <bandhanpramanik06.foss@gmail.com>
-Date: Thu, 26 Jun 2025 00:47:49 +0530
-X-Gm-Features: AX0GCFvRn0BDXlBswPH6d5ky9QP8oDFSJMjA4U3BLjHSMHUHJF7QbU0sAtdUwJ4
-Message-ID: <CAEmM+Qi-Waxk5qcR+nfip-QGXaKk0-Kq7QSq890e9oYOPjW+bA@mail.gmail.com>
-Subject: Instability in ALL stable and LTS distro kernels (IRQ #16 being
- disabled, PCIe bus errors, ath10k_pci) in Dell Inspiron 5567
-To: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, 
-	stable@vger.kernel.org
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 5.63.189.50
+X-CLIENT-HOSTNAME: 5.63.189.50
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: dmFkZTFU16MN1onAmfTggu3iKnPYA/STqEnOhMRWZkwNQSI5OpDf+u5DT2NkIXE+Nhe4mqxr9ks7U05Tnfbp21L5zWLAY+X8uGCUnkPai/a2KG4xxKx6eBqQiVngKpLwnPSZjvR8Q4dQfv5MKNDuphWx1Et6P/rcNTpUFGeZ3Ng1C9/8uA5jpLaNlvEnYZjWpU/0SCP+rHDTsSrswgF9Mks70F5evvoz0a/MhrLqsCe8JTvEOP0IBVuaTh/K6p4bcE/yKwFXFB6GIgqfD+zcy9GvwASdPeWl27ugbAiFeVCNlB4LFehOIpnBvg5juGRVEZAUcpiQXLbFVpM3kyVvpaAi61rFnJlhqw0pdzc1mdIsuUwlM0Ndu+7rNtFwwoJepNlkaxTWpRKd2jI2vxQZj6Dx2Fo67Ri1tcuM/ZVpmZFJhFAMPxsURlPACIWG7sQDBa4Y3JxTuBt1RtvmkpdxAgEGDfeUjf+Dn6Az/j368FTJliT7jIy7cnejiwTYQniCOz5T0Wc+ZAkXzQ98goWCiFvxvZN0LgoNfgiKsTlJ6/iexny0jtdnLJMP2fv+RYMJeTkpQMj7en6K7QRlLUPYIVBy11yh9X81ndTjfLyYeDWdCDJ9aYyZtU27fpmr/FRz4LSTiRYbqpJ/tsYRm+J+XFZ91jBcXcyryy5VQQofHSoFI9FlLA
+X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
 
-Hello,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-The following is the original thread, where a bug was reported to the
-linux-wireless and ath10k mailing lists. The specific bug has been
-detailed clearly here.
+Curently, drivers using pm_runtime_force_suspend/resume() cannot set
+DPM_FLAG_SMART_SUSPEND because the devices with that flag set may need
+to be resumed during system-wide resume regardless of whether or not
+they have power.needs_force_resume set.  That can happen due to a
+dependency resolved at the beginning of a system-wide resume transition
+(for instance, a bus type or PM domain has decided to resume a
+subordinate device with DPM_FLAG_SMART_SUSPEND and its parent and
+suppliers also need to be resumed).
 
-https://lore.kernel.org/linux-wireless/690B1DB2-C9DC-4FAD-8063-4CED659B1701@gmail.com/T/#t
+To overcome this limitation, modify pm_runtime_force_resume() to check
+the device's power.smart_suspend flag (which is set for devices with
+DPM_FLAG_SMART_SUSPEND set that meet some additional requirements) and
+the device's runtime PM status in addition to power.needs_force_resume.
+Also change it to clear power.smart_suspend to ensure that it will not
+handle the same device twice during one transition.
 
-There is also a Bugzilla report by me, which was opened later:
-https://bugzilla.kernel.org/show_bug.cgi?id=220264
+The underlying observation is that there are two cases in which the
+device needs to be resumed by pm_runtime_force_resume().  One of them
+is when the device has power.needs_force_resume set, which means that
+pm_runtime_force_suspend() has suspended it and decided that it should
+be resumed during the subsequent system resume.  The other one is when
+power.smart_suspend is set and the device's runtume PM status is
+RPM_ACTIVE.
 
-As stated, it is highly encouraged to check out all the logs,
-especially the line of IRQ #16 in /proc/interrupts.
+Update kerneldoc comments in accordance with the code changes.
 
-Here is where all the logs are:
-https://gist.github.com/BandhanPramanik/ddb0cb23eca03ca2ea43a1d832a16180
-(these logs are taken from an Arch liveboot)
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/base/power/runtime.c |   38 +++++++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
 
-On my daily driver, I found these on my IRQ #16:
+--- a/drivers/base/power/runtime.c
++++ b/drivers/base/power/runtime.c
+@@ -1964,10 +1964,6 @@
+  * sure the device is put into low power state and it should only be used during
+  * system-wide PM transitions to sleep states.  It assumes that the analogous
+  * pm_runtime_force_resume() will be used to resume the device.
+- *
+- * Do not use with DPM_FLAG_SMART_SUSPEND as this can lead to an inconsistent
+- * state where this function has called the ->runtime_suspend callback but the
+- * PM core marks the driver as runtime active.
+  */
+ int pm_runtime_force_suspend(struct device *dev)
+ {
+@@ -2014,20 +2010,28 @@
+  * pm_runtime_force_resume - Force a device into resume state if needed.
+  * @dev: Device to resume.
+  *
+- * Prior invoking this function we expect the user to have brought the device
+- * into low power state by a call to pm_runtime_force_suspend(). Here we reverse
+- * those actions and bring the device into full power, if it is expected to be
+- * used on system resume.  In the other case, we defer the resume to be managed
+- * via runtime PM.
++ * This function expects that either pm_runtime_force_suspend() has put the
++ * device into a low-power state prior to calling it, or the device had been
++ * runtime-suspended before the preceding system-wide suspend transition and it
++ * was left in suspend during that transition.
++ *
++ * The actions carried out by pm_runtime_force_suspend(), or by a runtime
++ * suspend in general, are reversed and the device is brought back into full
++ * power if it is expected to be used on system resume, which is the case when
++ * its needs_force_resume flag is set or when its smart_suspend flag is set and
++ * its runtime PM status is "active".
++ *
++ * In other cases, the resume is deferred to be managed via runtime PM.
+  *
+- * Typically this function may be invoked from a system resume callback.
++ * Typically, this function may be invoked from a system resume callback.
+  */
+ int pm_runtime_force_resume(struct device *dev)
+ {
+ 	int (*callback)(struct device *);
+ 	int ret = 0;
+ 
+-	if (!dev->power.needs_force_resume)
++	if (!dev->power.needs_force_resume && (!dev_pm_smart_suspend(dev) ||
++	    pm_runtime_status_suspended(dev)))
+ 		goto out;
+ 
+ 	callback = RPM_GET_CALLBACK(dev, runtime_resume);
+@@ -2041,8 +2045,20 @@
+ 	}
+ 
+ 	pm_runtime_mark_last_busy(dev);
++
+ out:
++	/*
++	 * The smart_suspend flag can be cleared here because it is not going
++	 * to be necessary until the next system-wide suspend transition that
++	 * will update it again.
++	 */
++	dev->power.smart_suspend = false;
++	/*
++	 * Also clear needs_force_resume to make this function skip devices that
++	 * have been seen by it once.
++	 */
+ 	dev->power.needs_force_resume = false;
++
+ 	pm_runtime_enable(dev);
+ 	return ret;
+ }
 
-  16:     173210          0          0          0 IR-IO-APIC
-16-fasteoi   i2c_designware.0, idma64.0, i801_smbus
 
-The fixes stated on the Reddit post for this Wi-Fi card didn't quite
-work. (But git-cloning the firmware files did give me some more time
-to have stable internet)
 
-This time, I had to go for the GRUB kernel parameters.
-
-Right now, I'm using "irqpoll" to curb the errors caused.
-"intel_iommu=off" did not work, and the Wi-Fi was constantly crashing
-even then. Did not try out "pci=noaer" this time.
-
-If it's of any concern, there is a very weird error in Chromium-based
-browsers which has only happened after I started using irqpoll. When I
-Google something, the background of the individual result boxes shows
-as pure black, while the surrounding space is the usual
-greyish-blackish, like we see in Dark Mode. Here is a picture of the
-exact thing I'm experiencing: https://files.catbox.moe/mjew6g.png
-
-If you notice anything in my logs/bug reports, please let me know.
-(Because it seems like Wi-Fi errors are just a red herring, there are
-some ACPI or PCIe-related errors in the computers of this model - just
-a naive speculation, though.)
-
-Thanking you,
-Bandhan Pramanik
 
