@@ -1,165 +1,150 @@
-Return-Path: <linux-pci+bounces-30662-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30663-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0198EAE9074
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 23:50:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EA6FAE908A
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 23:56:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA6353A65E2
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 21:49:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 580423AACE1
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 21:56:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2741821FF5B;
-	Wed, 25 Jun 2025 21:50:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8744253F13;
+	Wed, 25 Jun 2025 21:56:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oYk5T0Mh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BPQ3cNGS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D432080C4;
-	Wed, 25 Jun 2025 21:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292531C861D
+	for <linux-pci@vger.kernel.org>; Wed, 25 Jun 2025 21:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750888219; cv=none; b=LRQg7NDHvvQSp+jUmOK0p+DrkDpLYhPbRqBDHZzTTfEE+QmlFDg/6ZqiHi09v2UlD+twY/UbPw2UZEaZYCGu2wB/6EBB6LVpi2MitZJu2I9/dLeRPOqbCIaURCSh90UxrLGPumgWFU5zHfaGNOIErK2PODQFIWTBN+GghbuXQIM=
+	t=1750888596; cv=none; b=mrjuyT/W+fmBIpIu+AhmBlNXjxLWSo07fmXmuW9bo+IovyUg2ZV5IMOkMWjTJscp7Fl0+ebZ7XDdMwIEiZ0rAggHTQ/76rygroX/efg41sL0wjRZPoQqYdKHZN9cYQxvzdlpIEiqxjE8IxyLZ0UViEz6tW/soEF5qTUoXk/fasY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750888219; c=relaxed/simple;
-	bh=dmiwvHrq20K4u2vHveigUjMypKXxfJB0t/PI8qx1mlo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DnSCBSctSen4BT5kRKURP58LdcJx7HMXxgZ3zsTM3MsfeByYrMCApMuVclO+ObkMFQahfUth+lJzjT7CIRcEcrBF8LpVnnIuHBTc5nTVQOe0EIEezNxlPiRahhqS/GYSbu1SdFQlouBmww+PaQusPbc2unL22GPVbxDC3jY0nuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oYk5T0Mh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42AD3C4CEEA;
-	Wed, 25 Jun 2025 21:50:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750888218;
-	bh=dmiwvHrq20K4u2vHveigUjMypKXxfJB0t/PI8qx1mlo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oYk5T0MhHnnsC8r5IcS9ZzR+lUEedaC7Nl19Hci1qtGjyjRwkD8VQ7fApeK8aRPxx
-	 +o65L0dBxH5la4KE7SDYnr2p+OsrOWkQeZZ4x525W2ku+lWQpN6PtiGq/Yd1wvlGjG
-	 N7xbv5Hh70vE1caNvbfthO4nY/z39U8uaCstEIorIzTBixpLI6OeQ72FewVKPP/a0Z
-	 0DeDw/drEUQtnR9huigRtrEB2Hew7rDJ53DRYa1/57mlkOCanb0hk1wU7d0JPTEzXb
-	 qQ+rbzsCNKbQ3MpW84vy9qc0PLYWkH/7WSI9VX5CxhA22LeIC9l3KpL36VjPdOkuOo
-	 2xqfAjV6Gv/6Q==
-Date: Wed, 25 Jun 2025 15:50:12 -0600
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Mike Looijmans <mike.looijmans@topic.nl>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Michal Simek <michal.simek@amd.com>, 
-	Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] PCI: xilinx: Wait for link-up status during
- initialization
-Message-ID: <cto6st65jsa36vbyrnazwrdu6m4f7rocmtz6ez25qoija73s74@fkpw6wla5cma>
-References: <20250610185734.GA819344@bhelgaas>
- <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.bd37b5e5-7e20-4db7-b2f4-b11b97bc1326@emailsignatures365.codetwo.com>
- <9f8a7c43-4862-45aa-951c-bf3e3c1f5513@topic.nl>
- <vwipw5opvx42e6l7ofphg47rlsoebbts7dwzq5knaf4iz4hmhw@gk6lo4b6plxh>
+	s=arc-20240116; t=1750888596; c=relaxed/simple;
+	bh=A5r4ydyqACtqFHlbEq0LkQiT4jSJv8dZJETlZg0TklQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=qXIB+1hs/EayuDY9+T7k3SNN66UQGd+89qvOPK+y4W45STAWZ6ApJcDt9DvgD3ZREJbNoeUqvkMsdjtaCfhhGbPaiij+2H/W6wEAcn0gToQbu7MnzncmGMjk5bgCXH3XOY9UX9JoRAsmNY6h8Vb3ywLf3cpuh527GP63/tr9QWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BPQ3cNGS; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750888595; x=1782424595;
+  h=date:from:to:cc:subject:message-id;
+  bh=A5r4ydyqACtqFHlbEq0LkQiT4jSJv8dZJETlZg0TklQ=;
+  b=BPQ3cNGStqWLLK0vVHn0kjNKuwc2sYuNykqWiPtR4TM61TUYdxle/dV1
+   x6/HKNnAQ0Q6Z3Sw0gSC5+4xcrNC1qFB/wceK6GboJfbNJwrz+GgmabIe
+   pdWpkYdqiDl3dXhrQud76YdGm+JXfTkyXq1Je8hN1EGk0Rrr6pKeEz0u9
+   cYRt8XRDVG61a4Cf5vjTrbfG5+cniiAf79/T8RBOQs0WfaOvQu4i3en7+
+   SUG9Dh44Z7Ym/XyNsE3wqll1y2Fr2SW/equBvukw2ZbAt8u90yeNCrOH1
+   85A8aJEDXcHqI676HQTnPPSMpBLoB4lfR+f1jz6dNtHsgXR4M31OnI0WF
+   w==;
+X-CSE-ConnectionGUID: M8Hq4hrMSZyc5DQf4IBtvw==
+X-CSE-MsgGUID: TosyUistTDu/q6QZDaMM5Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64608118"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="64608118"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 14:56:35 -0700
+X-CSE-ConnectionGUID: 3SXEZtbWSiGBn9KZ2KY62Q==
+X-CSE-MsgGUID: EwzAYNEQR5aqQ49M9tccJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="152636669"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 25 Jun 2025 14:56:33 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uUY6Z-000TTu-1d;
+	Wed, 25 Jun 2025 21:56:31 +0000
+Date: Thu, 26 Jun 2025 05:56:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:enumeration] BUILD SUCCESS
+ b85af48de3ece4e5bbdb2248a5360a409991cf67
+Message-ID: <202506260551.IGiheiHA-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <vwipw5opvx42e6l7ofphg47rlsoebbts7dwzq5knaf4iz4hmhw@gk6lo4b6plxh>
 
-On Wed, Jun 25, 2025 at 03:46:56PM -0600, Manivannan Sadhasivam wrote:
-> On Wed, Jun 11, 2025 at 08:48:51AM +0200, Mike Looijmans wrote:
-> > 
-> > Met vriendelijke groet / kind regards,
-> > 
-> > Mike Looijmans
-> > System Expert
-> > 
-> > 
-> > TOPIC Embedded Products B.V.
-> > Materiaalweg 4, 5681 RJ Best
-> > The Netherlands
-> > 
-> > T: +31 (0) 499 33 69 69
-> > E: mike.looijmans@topic.nl
-> > W: www.topic.nl
-> > 
-> > Please consider the environment before printing this e-mail
-> > On 10-06-2025 20:57, Bjorn Helgaas wrote:
-> > > On Tue, Jun 10, 2025 at 04:39:03PM +0200, Mike Looijmans wrote:
-> > > > When the driver loads, the transceiver and endpoint may still be setting
-> > > > up a link. Wait for that to complete before continuing. This fixes that
-> > > > the PCIe core does not work when loading the PL bitstream from
-> > > > userspace. Existing reference designs worked because the endpoint and
-> > > > PL were initialized by a bootloader. If the endpoint power and/or reset
-> > > > is supplied by the kernel, or if the PL is programmed from within the
-> > > > kernel, the link won't be up yet and the driver just has to wait for
-> > > > link training to finish.
-> > > > 
-> > > > As the PCIe spec allows up to 100 ms time to establish a link, we'll
-> > > > allow up to 200ms before giving up.
-> > > > +static int xilinx_pci_wait_link_up(struct xilinx_pcie *pcie)
-> > > > +{
-> > > > +	u32 val;
-> > > > +
-> > > > +	/*
-> > > > +	 * PCIe r6.0, sec 6.6.1 provides 100ms timeout. Since this is FPGA
-> > > > +	 * fabric, we're more lenient and allow 200 ms for link training.
-> > > > +	 */
-> > > > +	return readl_poll_timeout(pcie->reg_base + XILINX_PCIE_REG_PSCR, val,
-> > > > +			(val & XILINX_PCIE_REG_PSCR_LNKUP), 2 * USEC_PER_MSEC,
-> > > > +			2 * PCIE_T_RRS_READY_MS * USEC_PER_MSEC);
-> > > > +}
-> > > I don't think this is what PCIE_T_RRS_READY_MS is for.  Sec 6.6.1
-> > > requires 100ms *after* the link is up before sending config requests:
-> > > 
-> > >    For cases where system software cannot determine that DRS is
-> > >    supported by the attached device, or by the Downstream Port above
-> > >    the attached device:
-> > > 
-> > >      ◦ With a Downstream Port that does not support Link speeds greater
-> > >        than 5.0 GT/s, software must wait a minimum of 100 ms following
-> > >        exit from a Conventional Reset before sending a Configuration
-> > >        Request to the device immediately below that Port.
-> > > 
-> > >      ◦ With a Downstream Port that supports Link speeds greater than
-> > >        5.0 GT/s, software must wait a minimum of 100 ms after Link
-> > >        training completes before sending a Configuration Request to the
-> > >        device immediately below that Port. Software can determine when
-> > >        Link training completes by polling the Data Link Layer Link
-> > >        Active bit or by setting up an associated interrupt (see §
-> > >        Section 6.7.3.3).  It is strongly recommended for software to
-> > >        use this mechanism whenever the Downstream Port supports it.
-> > > 
-> > Yeah, true, I misread the comment in pci.h. I cannot find any #define to
-> > match the "how long to wait for link training". Each driver appears to use
-> > its own timeout. So I should just create my own?
-> > 
-> 
-> We recently merged a series that moved the timing definitions to
-> drivers/pci/pci.h:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/linkup-fix&id=470f10f18b482b3d46429c9e6723ff0f7854d049
-> 
-> So if you base your series on top this branch, you could reuse the definitions.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
+branch HEAD: b85af48de3ece4e5bbdb2248a5360a409991cf67  PCI: Adjust the position of reading the Link Control 2 register
 
-You could also introduce a new macro if all you need is 1s:
+elapsed time: 1451m
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 9d20f0222fb1..f03bb882bf2e 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -64,6 +64,7 @@ struct pcie_tlp_log;
-  */
- #define PCIE_LINK_WAIT_MAX_RETRIES     100
- #define PCIE_LINK_WAIT_SLEEP_MS                10
-+#define PCIE_LINK_WAIT_MS              PCIE_LINK_WAIT_MAX_RETRIES * PCIE_LINK_WAIT_SLEEP_MS
- 
- /* Message Routing (r[2:0]); PCIe r6.0, sec 2.2.8 */
- #define PCIE_MSG_TYPE_R_RC     0
+configs tested: 57
+configs skipped: 1
 
-- Mani
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--- 
-மணிவண்ணன் சதாசிவம்
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                   randconfig-001-20250625    gcc-11.5.0
+arc                   randconfig-002-20250625    gcc-12.4.0
+arm                               allnoconfig    clang-21
+arm                   randconfig-001-20250625    clang-21
+arm                   randconfig-002-20250625    gcc-11.5.0
+arm                   randconfig-003-20250625    gcc-13.3.0
+arm                   randconfig-004-20250625    gcc-15.1.0
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250625    gcc-11.5.0
+arm64                 randconfig-002-20250625    clang-20
+arm64                 randconfig-003-20250625    gcc-12.3.0
+arm64                 randconfig-004-20250625    clang-20
+csky                              allnoconfig    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+i386        buildonly-randconfig-001-20250625    clang-20
+i386        buildonly-randconfig-002-20250625    gcc-12
+i386        buildonly-randconfig-003-20250625    gcc-12
+i386        buildonly-randconfig-004-20250625    gcc-12
+i386        buildonly-randconfig-005-20250625    clang-20
+i386        buildonly-randconfig-006-20250625    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+openrisc                          allnoconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+riscv                             allnoconfig    gcc-15.1.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+x86_64      buildonly-randconfig-001-20250625    gcc-12
+x86_64      buildonly-randconfig-002-20250625    clang-20
+x86_64      buildonly-randconfig-003-20250625    clang-20
+x86_64      buildonly-randconfig-004-20250625    clang-20
+x86_64      buildonly-randconfig-005-20250625    clang-20
+x86_64      buildonly-randconfig-006-20250625    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
