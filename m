@@ -1,169 +1,121 @@
-Return-Path: <linux-pci+bounces-30578-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30579-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66650AE78E9
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 09:42:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FD4AAE798B
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 10:08:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E65E5A04E6
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 07:41:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F25A817C105
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 08:08:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CA2A1DFD86;
-	Wed, 25 Jun 2025 07:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QptVOFEz"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3959520CCE5;
+	Wed, 25 Jun 2025 08:08:15 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024351DB958;
-	Wed, 25 Jun 2025 07:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9F31E5B95;
+	Wed, 25 Jun 2025 08:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750837338; cv=none; b=op8QIJ6g9KPtjLRs1I5td4I8PVkMdjHwTCv46geH8mP35CduYuDV9MYRZy7BFw/Py0GtoNf8TnVbvi1r0UosHv8e1JGL7LQ4+L6C4PKlMweOSCBdvuJIwtGDTBv1mcZI+Ek7Ze31km0GnuDp37oLG3ZgtcTAl19TldIooXQ+L/Y=
+	t=1750838895; cv=none; b=FLD3X6a6UCKFArcfciaI9ZTe2MUjtTuN4RRBPZKORr7uIeqeOMIe2TLibOB28rbOfLsZJYFSFYRQHcyp9xRNqAjvwC+b7HuHlCCkVRlkzBv8jo4drUuRJ6hfTCh4Qw+/ROQ9UKJF/QB0rOyP4s/OYZIVc03uxSmyobgcv3ZkjsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750837338; c=relaxed/simple;
-	bh=ee5KpT/bkyI5pdWN+/FTJfhNU5lp2kqGEPaGJ/4m8CI=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PHWLMtfWHc6/xJhd+1Nsek5DguHZ58u4prHaGFQJLQvTOReo33R4pgJqjPDBvMHG+zKy43xjhQRdE2Bv8KzY3H6NV3ti4rnWGcawZSjQ/MGQtskkbNkV8WLYqmXLbBrNu6VnIKG9cllKMxuBK4ddkKuPOG/poGDdkHdsnMnAcVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QptVOFEz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 825FEC4CEEA;
-	Wed, 25 Jun 2025 07:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750837336;
-	bh=ee5KpT/bkyI5pdWN+/FTJfhNU5lp2kqGEPaGJ/4m8CI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QptVOFEzhdEF/NA7m5AHYEde2n+dfbMvp+8KFy1dXur2sGa2Tcjk1RmuP6iAvVKgM
-	 8x4c3JKrqlwCWZ6zzEJr5hwC2tOVr0FaKR3TdhqzbvT5iZmbfwvRobsJGMlQnUdNwC
-	 tFnifQXNaglfKS0iSseuGVAW5PEkdBcSk9IhnXYCCJLwTlJuDJGSwEBH8b0Piby14I
-	 BiyyjAgmXDmcqRPqNHTAq0eRqAR0QQwZY6WpNSbhcImoI8XQB23rAAyENA7E4tKvVt
-	 AP/rSsqc9K8yqPmDCyZo9x03Y3vou1mxA6tU83ojz7jgnUTWO9AFQOKP5nGVj8tCj3
-	 BK3df+3YaYFsA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uUKlq-009m7c-1v;
-	Wed, 25 Jun 2025 08:42:14 +0100
-Date: Wed, 25 Jun 2025 08:42:13 +0100
-Message-ID: <875xgkfesq.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: 	Bjorn Helgaas <bhelgaas@google.com>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,	Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,	Will Deacon <will@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,	Krzysztof =?UTF-8?B?V2lsY3p5?=
- =?UTF-8?B?xYRza2k=?= <kwilczynski@kernel.org>,	Conor Dooley
- <conor.dooley@microchip.com>,	Daire McNamara
- <daire.mcnamara@microchip.com>,	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: host-generic: Set driver_data before calling gen_pci_init()
-In-Reply-To: <774290708a6f0f683711914fda110742c18a7fb2.1750787223.git.geert+renesas@glider.be>
-References: <774290708a6f0f683711914fda110742c18a7fb2.1750787223.git.geert+renesas@glider.be>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1750838895; c=relaxed/simple;
+	bh=EYBnaryO2t2j1TYPtDQ15vC+AkkaRRLZ5JYRisv3DBw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nyEbyVwky626ke6q3vBUvZAXE/RbEdOFd5xtwrjcNwnFfmtMZFkdCKU57tuV2HFZVNQH+Soy3lGKSch0jaOuWBX5j341Ow2F/wPpoW1NXgdP7nog+NvNMA4BXcxwENaefvDElDVbgH1Niclr2hjUd0+4Z+c9M006xFawgz0ZwHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id E93BD2C06E33;
+	Wed, 25 Jun 2025 10:08:02 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id E3CED3B708B; Wed, 25 Jun 2025 10:08:02 +0200 (CEST)
+Date: Wed, 25 Jun 2025 10:08:02 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Krishna Kumar <krishnak@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org,
+	Timothy Pearson <tpearson@raptorengineering.com>,
+	Shawn Anastasio <sanastasio@raptorengineering.com>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	"\"linux-pci\"," <linux-pci@vger.kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	christophe leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	"\"Bjorn Helgaas\"," <bhelgaas@google.com>
+Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention
+ indicator
+Message-ID: <aFuuYq0m0hDAdPRF@wunner.de>
+References: <20250618190146.GA1213349@bhelgaas>
+ <1469323476.1312174.1750293474949.JavaMail.zimbra@raptorengineeringinc.com>
+ <19689b53-ac23-4b48-97c7-b26f360a7b75@linux.ibm.com>
+ <aFaCfYre9N52ARWH@wunner.de>
+ <f13a2d2b-af52-4934-b4fa-66bc1e5ece32@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: bhelgaas@google.com, geert+renesas@glider.be, alyssa@rosenzweig.io, robh@kernel.org, mani@kernel.org, will@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org, conor.dooley@microchip.com, daire.mcnamara@microchip.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f13a2d2b-af52-4934-b4fa-66bc1e5ece32@linux.ibm.com>
 
-On Tue, 24 Jun 2025 18:50:10 +0100,
-Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+On Wed, Jun 25, 2025 at 09:38:19AM +0530, Krishna Kumar wrote:
+> On 6/21/25 3:29 PM, Lukas Wunner wrote:
+> > On Fri, Jun 20, 2025 at 02:56:51PM +0530, Krishna Kumar wrote:
+> > > 5. If point 3 and 4 does not solve the problem, then only we should
+> > > move to pciehp.c. But AFAIK, PPC/Powernv is DT based while pciehp.c
+> > > may be only supporting acpi (I have to check it on this). We need to
+> > > provide PHB related information via DTB and maintain the related
+> > > topology information via dtb and then it can be doable.
+> > 
+> > pciehp is not ACPI-specific.  The PCIe port service driver in
+> > drivers/pci/pcie/portdrv.c binds to any PCIe port, examines the
+> > port's capabilities (e.g. hotplug, AER, DPC, ...) and instantiates
+> > sub-devices to which pciehp and the other drivers such as aer bind.
 > 
-> On MicroChip MPFS Icicle:
+> 1. If we get PHB info from mmcfg via acpi table in x86 and create a
+>    root port from there with some address/entity and if this Acpi and
+>    associated entity is not present for PPC, then it can be a problem.
 > 
->     microchip-pcie 2000000000.pcie: host bridge /soc/pcie@2000000000 ranges:
->     microchip-pcie 2000000000.pcie: Parsing ranges property...
->     microchip-pcie 2000000000.pcie:      MEM 0x2008000000..0x2087ffffff -> 0x0008000000
->     Unable to handle kernel NULL pointer dereference at virtual address 0000000000000368
->     Current swapper/0 pgtable: 4K pagesize, 39-bit VAs, pgdp=0x00000000814f1000
->     [0000000000000368] pgd=0000000000000000, p4d=0000000000000000, pud=0000000000000000
->     Oops [#1]
->     Modules linked in:
->     CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.15.0-rc1-icicle-00003-gafc0a570bb61 #232 NONE
->     Hardware name: Microchip PolarFire-SoC Icicle Kit (DT)
->     [...]
->     [<ffffffff803fb8a4>] plda_pcie_setup_iomems+0xe/0x78
->     [<ffffffff803fc246>] mc_platform_init+0x80/0x1d2
->     [<ffffffff803f9c88>] pci_ecam_create+0x104/0x1e2
->     [<ffffffff8000adbe>] pci_host_common_init+0x120/0x228
->     [<ffffffff8000af42>] pci_host_common_probe+0x7c/0x8a
+> 2. PPC is normally based on DTB entity and it identifies PHB and pcie
+>    devices from there. If this all the information is correctly map
+>    via portdrv.c then there is no problem and whatever you are telling
+>    is correct and it will work.
 > 
-> The initialization of driver_data was moved after the call to
-> gen_pci_init(), while the pci_ecam_ops.init() callback
-> mc_platform_init() expects it has already been initialized.
-> 
-> Fix this by moving the initialization of driver_data up.
-> 
-> Fixes: afc0a570bb613871 ("PCI: host-generic: Extract an ECAM bridge creation helper from pci_host_common_probe()")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Notes:
->   1. Before, driver_data was initialized before calling
->      of_pci_check_probe_only(), but the latter doesn't rely on that,
->   2. drivers/pci/controller/plda/pcie-microchip-host.c seems to be the
->      only driver relying on driver_data being set.
-> ---
->  drivers/pci/controller/pci-host-common.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
-> index b0992325dd65f0da..b37052863847162d 100644
-> --- a/drivers/pci/controller/pci-host-common.c
-> +++ b/drivers/pci/controller/pci-host-common.c
-> @@ -64,13 +64,13 @@ int pci_host_common_init(struct platform_device *pdev,
->  
->  	of_pci_check_probe_only();
->  
-> +	platform_set_drvdata(pdev, bridge);
-> +
->  	/* Parse and map our Configuration Space windows */
->  	cfg = gen_pci_init(dev, bridge, ops);
->  	if (IS_ERR(cfg))
->  		return PTR_ERR(cfg);
->  
-> -	platform_set_drvdata(pdev, bridge);
-> -
->  	bridge->sysdata = cfg;
->  	bridge->ops = (struct pci_ops *)&ops->pci_ops;
->  	bridge->enable_device = ops->enable_device;
+> 3. But if point 2 is not handled correctly we need to just aligned with
+>    port related data structure to make it work.
 
-This is going to break what was introduced in 4900454b4f819 ("PCI:
-ecam: Allow cfg->priv to be pre-populated from the root port device").
+PCI devices do not have to be enumerated in the devicetree (or in ACPI
+DSDT) because PCI is an enumerable bus (like USB).  Only the host bridge
+has to be enumerated in the devicetree or DSDT.  The kernel can find the
+PCI devices below the host bridge itself.  Hot-plugged devices are
+usually not described in the devicetree or DSDT because one doesn't
+know their properties in advance.
 
-The Apple PCIe driver uses drvdata to pass a pointer to its root port
-structure from its probe routine to the .init ECAM callback. If we
-overwrite drvdata with the bridge *before* calling pci_ecam_create(),
-this data is lost, and drama follows.
+pnv_php.c seems to search the devicetree for hotplug slots and
+instantiates them.  My expectation would be that any hotplug-capable
+PCIe Root Port or Downstream Port, which is *not* described in the
+devicetree such that pnv_php.c creates a slot for it, is handled by
+pciehp.
 
-Obviously, multi-purpose private fields are not great...
-
-If we are going down the road of going back to the previous situation,
-two things need to be done:
-
-- the Apple PCIe driver needs to grow some form of root port
-  registration in order to map a 'struct device' back to the pcie
-  tracking structure
-
-- 4900454b4f819 needs to be reverted, because it obviously doesn't
-  serve any purpose anymore.
-
-I'll look into the first point.
+Timothy was talking about a Microsemi PCIe switch below the Root Port.
+My understanding is that the Downstream Ports of that switch are
+hotplug-capable.  So unless you've disabled CONFIG_HOTPLUG_PCI_PCIE,
+I'd expect those ports to be handled by pciehp.  Assuming they're not
+described as a "ibm,ioda2-phb" compatible device in the devicetree,
+but why would they?
 
 Thanks,
 
-	M.
-
--- 
-Jazz isn't dead. It just smells funny.
+Lukas
 
