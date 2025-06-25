@@ -1,62 +1,62 @@
-Return-Path: <linux-pci+bounces-30679-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30680-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65F56AE9446
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 04:40:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53BDDAE944A
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 04:40:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A774E4E0A91
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 02:40:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5AE3A7B3AC9
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 02:38:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71E562367C9;
-	Thu, 26 Jun 2025 02:37:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D797220E6F7;
+	Thu, 26 Jun 2025 02:38:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="klTNCORw"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QjzfzeDz"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DE12343AE
-	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 02:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86C023770A
+	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 02:38:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750905478; cv=none; b=FaOxWXiOK3/gK4l+zzTsmGNKor74qgy8G3QlDSbBSaZNDlmAj9X3C6MRZDHTqt89O3Y1kkctdvvUlUp0braYY3v4oEqTaTc95PXL/MWLEAIRyvRi2VhGjGyvNQhKHsYF0bTnrhBO10xAWuvZy+WlBzGOlsAfKf1XAdEy6/siN1w=
+	t=1750905482; cv=none; b=OuPituzf+q7auyOMpaDEaPathxSeh9Uzy/V/Rq2RAWxqElu8eANl3sJWNoa80eZ80slupNqvpJAHHW94edl+Yv5GNonwGR+rZHOyFzo1r3alIeUYqlcqALPPB2PZs2oitefzCk5GGrQDe7/X2CfbdnmtTqBmoMH8cMg0GtpqwFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750905478; c=relaxed/simple;
-	bh=MGUuk1VWqmy4wKoxbhUg19YNy5HOWgcKMRuk/3Bp89c=;
+	s=arc-20240116; t=1750905482; c=relaxed/simple;
+	bh=FKLQu0+uWVlKGUZ1wJN/GzcsmbKVFDMojnxvBYfT7v8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=dI+SjWi3PrflpOxtcRjsfQoYV7oyAQM6i3y6vBZ5nGxHQc7VF3TC54gEbZ8zseYVIaKwkihXDctaA3kjL2ndL7abRMEZh+JznIucn51PtC/unQ4X3+iTNDJ96DtWTo1fDqeMhqYt+puMJr9TIoN1U7J8j0S/Q61GeaLShneskdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=klTNCORw; arc=none smtp.client-ip=203.254.224.34
+	 Content-Type:References; b=X09784v/NqpZwOXP6gKRoBHmS7GqWWzM0LRog01KSdj8GUf8p090byhbtrEvv79EhFidM6n3Knm2as+Y6LLJdxrNJwIJiiUtEWcpWPBg4lk3PraMi9x92Yi+rdV36+a1B3p5dFc5myohdPbjNVYhV85xmFipFQoIW1dCpqlfQJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QjzfzeDz; arc=none smtp.client-ip=203.254.224.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250626023754epoutp0478fc40ec8801c5d2936b1c5b56bb96c0~Md0CcE3t62445724457epoutp044
-	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 02:37:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250626023754epoutp0478fc40ec8801c5d2936b1c5b56bb96c0~Md0CcE3t62445724457epoutp044
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250626023759epoutp0422cf202a8406efdcb3ac947374bd6efd~Md0GyBdB52539025390epoutp04q
+	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 02:37:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250626023759epoutp0422cf202a8406efdcb3ac947374bd6efd~Md0GyBdB52539025390epoutp04q
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750905474;
-	bh=z0KBGm2Z9iLRXAIDe5VoGTTaKpckXActfWq12mD0U20=;
+	s=mail20170921; t=1750905479;
+	bh=g/dIw6y8kcmo8LyyHZHnCh5ijJd2K5kh6Hh1rXMgcz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=klTNCORwMgow+itX6xFE6Az9oyh3P5GJ4Qm5ERkWR7jpzWABJu1pjbpKXWoA8Ozpi
-	 mSTgbL1XXfR0H10n97ptalIE8Q/lYXWNLbkWGul7qJXw5VuVxYSW4h0isJpSlLy1Qy
-	 2Zy3p0ka/lk+2SACL2WXVffDXU9DdQfB5Flwp0WY=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250626023753epcas5p24213f30c5d8fe7065b5ef595c4d66640~Md0Bxd52J3175331753epcas5p2t;
-	Thu, 26 Jun 2025 02:37:53 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.180]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4bSNC34p2Xz6B9mF; Thu, 26 Jun
-	2025 02:37:51 +0000 (GMT)
+	b=QjzfzeDzSu11dJtU03IFmwks7HTQtYobUEFeMtWjMBlywO7uzes2YYd8QVLSOtzNb
+	 xV3gy+hvjB0DJKC2xaOC5CiHMR0USNCj4my89vu8oW/lGZV6DXFJOcx5t/xV0GagR1
+	 Cv6i/jA1JK+cEm5e/HubiGjbaefCAAWMcli237Uw=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250626023758epcas5p4b32b1be235660e5c1f067356e4728958~Md0GSjQ4W0510205102epcas5p44;
+	Thu, 26 Jun 2025 02:37:58 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.179]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4bSNC838BWz6B9m5; Thu, 26 Jun
+	2025 02:37:56 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250625165327epcas5p2c51b6032a6439cd1a7a884b360be1354~MV1wB36CA0634006340epcas5p2J;
-	Wed, 25 Jun 2025 16:53:27 +0000 (GMT)
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250625165332epcas5p4e138b7f7c8ebb938dc526c5dc29412bb~MV1z_GoE62849628496epcas5p4H;
+	Wed, 25 Jun 2025 16:53:32 +0000 (GMT)
 Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250625165324epsmtip298c2ff07671bc186e195912ba4e23ca2~MV1tSs9zM1750917509epsmtip2X;
-	Wed, 25 Jun 2025 16:53:24 +0000 (GMT)
+	20250625165329epsmtip2fc6e559e500702fdd2b1ad06ee61e433~MV1xNmFnm1255612556epsmtip2e;
+	Wed, 25 Jun 2025 16:53:28 +0000 (GMT)
 From: Shradha Todi <shradha.t@samsung.com>
 To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
@@ -68,9 +68,10 @@ Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
 	vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de,
 	m.szyprowski@samsung.com, jh80.chung@samsung.com, pankaj.dubey@samsung.com,
 	Shradha Todi <shradha.t@samsung.com>
-Subject: [PATCH v2 09/10] PCI: exynos: Add support for Tesla FSD SoC
-Date: Wed, 25 Jun 2025 22:22:28 +0530
-Message-ID: <20250625165229.3458-10-shradha.t@samsung.com>
+Subject: [PATCH v2 10/10] arm64: dts: fsd: Add PCIe support for Tesla FSD
+ SoC
+Date: Wed, 25 Jun 2025 22:22:29 +0530
+Message-ID: <20250625165229.3458-11-shradha.t@samsung.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250625165229.3458-1-shradha.t@samsung.com>
 Precedence: bulk
@@ -80,458 +81,325 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250625165327epcas5p2c51b6032a6439cd1a7a884b360be1354
+X-CMS-MailID: 20250625165332epcas5p4e138b7f7c8ebb938dc526c5dc29412bb
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 cpgsPolicy: CPGSC10-541,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250625165327epcas5p2c51b6032a6439cd1a7a884b360be1354
+X-CMS-RootMailID: 20250625165332epcas5p4e138b7f7c8ebb938dc526c5dc29412bb
 References: <20250625165229.3458-1-shradha.t@samsung.com>
-	<CGME20250625165327epcas5p2c51b6032a6439cd1a7a884b360be1354@epcas5p2.samsung.com>
+	<CGME20250625165332epcas5p4e138b7f7c8ebb938dc526c5dc29412bb@epcas5p4.samsung.com>
 
-Add host and endpoint controller driver support for FSD SoC.
+Add the support for PCIe controller driver and phy driver for Tesla FSD.
+It includes support for both RC and EP.
 
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
 Signed-off-by: Shradha Todi <shradha.t@samsung.com>
 ---
- drivers/pci/controller/dwc/pci-exynos.c | 331 +++++++++++++++++++++++-
- 1 file changed, 323 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/tesla/fsd-evb.dts      |  36 +++++
+ arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi |  65 +++++++++
+ arch/arm64/boot/dts/tesla/fsd.dtsi         | 147 +++++++++++++++++++++
+ 3 files changed, 248 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index dff23cf648f5..5b525156b9f5 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -20,6 +20,8 @@
- #include <linux/regulator/consumer.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
+diff --git a/arch/arm64/boot/dts/tesla/fsd-evb.dts b/arch/arm64/boot/dts/tesla/fsd-evb.dts
+index 9ff22e1c8723..c8f2019e6abf 100644
+--- a/arch/arm64/boot/dts/tesla/fsd-evb.dts
++++ b/arch/arm64/boot/dts/tesla/fsd-evb.dts
+@@ -19,6 +19,8 @@ / {
+ 	aliases {
+ 		serial0 = &serial_0;
+ 		serial1 = &serial_1;
++		pciephy0 = &pciephy0;
++		pciephy1 = &pciephy1;
+ 	};
  
- #include "pcie-designware.h"
- 
-@@ -49,17 +51,46 @@
- #define EXYNOS_PCIE_ELBI_SLV_ARMISC		0x120
- #define EXYNOS_PCIE_ELBI_SLV_DBI_ENABLE		BIT(21)
- 
-+#define FSD_IRQ2_STS				0x008
-+#define FSD_IRQ_MSI_ENABLE			BIT(17)
-+#define FSD_IRQ2_EN				0x018
-+#define FSD_PCIE_APP_LTSSM_ENABLE		0x054
-+#define FSD_PCIE_LTSSM_ENABLE			0x1
-+#define FSD_PCIE_DEVICE_TYPE			0x080
-+#define FSD_DEVICE_TYPE_RC			0x4
-+#define FSD_DEVICE_TYPE_EP			0x0
-+#define FSD_PCIE_CXPL_DEBUG_00_31		0x2C8
+ 	chosen {
+@@ -130,3 +132,37 @@ &serial_0 {
+ &ufs {
+ 	status = "okay";
+ };
 +
-+/* to store different SoC variants of Samsung */
-+enum samsung_pcie_variants {
-+	FSD,
-+	EXYNOS_5433,
++&pcierc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie1_clkreq>, <&pcie1_wake>, <&pcie1_preset>,
++			<&pcie0_slot1>;
 +};
 +
-+/* Values to be written to SYSREG to view DBI space as CDM/DBI2/IATU/DMA */
-+enum fsd_pcie_addr_type {
-+	ADDR_TYPE_DBI = 0x0,
-+	ADDR_TYPE_DBI2 = 0x12,
-+	ADDR_TYPE_ATU = 0x36,
-+	ADDR_TYPE_DMA = 0x3f,
++&pcieep2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie1_clkreq>, <&pcie1_wake>, <&pcie1_preset>,
++			<&pcie0_slot1>;
 +};
 +
- struct samsung_pcie_pdata {
- 	struct pci_ops				*pci_ops;
- 	const struct dw_pcie_ops		*dwc_ops;
- 	const struct dw_pcie_host_ops		*host_ops;
-+	const struct dw_pcie_ep_ops		*ep_ops;
- 	const struct samsung_res_ops		*res_ops;
-+	unsigned int				soc_variant;
-+	enum dw_pcie_device_mode		device_mode;
++&pcierc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie0_clkreq>, <&pcie0_wake0>, <&pcie0_preset0>,
++			 <&pcie0_slot0>;
++};
++
++&pcieep0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie0_clkreq>, <&pcie0_wake0>, <&pcie0_preset0>,
++			 <&pcie0_slot0>;
++};
++
++&pcierc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie0_clkreq>, <&pcie0_wake1>, <&pcie0_preset0>;
++};
++
++&pcieep1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie0_clkreq>, <&pcie0_wake1>, <&pcie0_preset0>;
++};
+diff --git a/arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi b/arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi
+index 6f4658f57453..fa99aa4b9906 100644
+--- a/arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi
++++ b/arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi
+@@ -120,6 +120,27 @@ eth0_mdio: eth0-mdio-pins {
+ 		samsung,pin-pud = <FSD_PIN_PULL_NONE>;
+ 		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
+ 	};
++
++	pcie1_clkreq: pcie1-clkreq-pins {
++		samsung,pins = "gpf6-0";
++		samsung,pin-function = <FSD_PIN_FUNC_2>;
++		samsung,pin-pud = <FSD_PIN_PULL_UP>;
++		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
++	};
++
++	pcie1_wake: pcie1-wake-pins {
++		samsung,pins = "gpf6-1";
++		samsung,pin-function = <FSD_PIN_FUNC_2>;
++		samsung,pin-pud = <FSD_PIN_PULL_UP>;
++		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
++	};
++
++	pcie1_preset: pcie1-preset-pins {
++		samsung,pins = "gpf6-2";
++		samsung,pin-function = <FSD_PIN_FUNC_2>;
++		samsung,pin-pud = <FSD_PIN_PULL_UP>;
++		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
++	};
  };
  
- struct exynos_pcie {
- 	struct dw_pcie			pci;
- 	void __iomem			*elbi_base;
- 	const struct samsung_pcie_pdata	*pdata;
-+	struct regmap			*sysreg;
-+	unsigned int			sysreg_offset;
- 	struct clk_bulk_data		*clks;
- 	struct phy			*phy;
- 	struct regulator_bulk_data	*supplies;
-@@ -69,6 +100,7 @@ struct exynos_pcie {
- struct samsung_res_ops {
- 	int (*init_regulator)(struct exynos_pcie *ep);
- 	irqreturn_t (*pcie_irq_handler)(int irq, void *arg);
-+	void (*set_device_mode)(struct exynos_pcie *ep);
+ &pinctrl_peric {
+@@ -493,6 +514,50 @@ eth1_mdio: eth1-mdio-pins {
+ 		samsung,pin-pud = <FSD_PIN_PULL_UP>;
+ 		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
+ 	};
++
++	pcie0_clkreq: pcie0-clkreq-pins {
++		samsung,pins = "gpc8-0";
++		samsung,pin-function = <FSD_PIN_FUNC_2>;
++		samsung,pin-pud = <FSD_PIN_PULL_UP>;
++		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
++	};
++
++	pcie0_wake0: pcie0-wake0-pins {
++		samsung,pins = "gpc8-1";
++		samsung,pin-function = <FSD_PIN_FUNC_2>;
++		samsung,pin-pud = <FSD_PIN_PULL_UP>;
++		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
++	};
++
++	pcie0_preset0: pcie0-preset0-pins {
++		samsung,pins = "gpc8-2";
++		samsung,pin-function = <FSD_PIN_FUNC_2>;
++		samsung,pin-pud = <FSD_PIN_PULL_UP>;
++		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
++	};
++
++	pcie0_wake1: pcie0-wake1-pins {
++		samsung,pins = "gpc8-3";
++		samsung,pin-function = <FSD_PIN_FUNC_2>;
++		samsung,pin-pud = <FSD_PIN_PULL_UP>;
++		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
++	};
++
++	pcie0_slot0: pcie0-gpio22-pins {
++		samsung,pins = "gpg2-6";
++		samsung,pin-function = <FSD_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <FSD_PIN_PULL_UP>;
++		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
++		samsung,pin-val = <1>;
++	};
++
++	pcie0_slot1: pcie0-gpio23-pins {
++		samsung,pins = "gpg2-7";
++		samsung,pin-function = <FSD_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <FSD_PIN_PULL_UP>;
++		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
++		samsung,pin-val = <1>;
++	};
  };
  
- static void exynos_pcie_writel(void __iomem *base, u32 val, u32 reg)
-@@ -326,11 +358,203 @@ static const struct dw_pcie_ops exynos_dw_pcie_ops = {
- 	.start_link = exynos_pcie_start_link,
- };
+ &pinctrl_pmu {
+diff --git a/arch/arm64/boot/dts/tesla/fsd.dtsi b/arch/arm64/boot/dts/tesla/fsd.dtsi
+index a5ebb3f9b18f..9e2d095546fa 100644
+--- a/arch/arm64/boot/dts/tesla/fsd.dtsi
++++ b/arch/arm64/boot/dts/tesla/fsd.dtsi
+@@ -1009,6 +1009,16 @@ ethernet1: ethernet@14300000 {
+ 			status = "disabled";
+ 		};
  
-+static void fsd_pcie_stop_link(struct dw_pcie *pci)
-+{
-+	u32 val;
-+	struct exynos_pcie *ep = to_exynos_pcie(pci);
++		pciephy0: pcie-phy@15080000 {
++			compatible = "tesla,fsd-pcie-phy";
++			#phy-cells = <0>;
++			reg = <0x0 0x15080000 0x0 0x2000>,
++			      <0x0 0x150a0000 0x0 0x1000>;
++			samsung,pmu-syscon = <&pmu_system_controller>;
++			samsung,fsys-sysreg = <&sysreg_fsys0>;
++			status = "disabled";
++		};
 +
-+	val = readl(ep->elbi_base + FSD_PCIE_APP_LTSSM_ENABLE);
-+	val &= ~FSD_PCIE_LTSSM_ENABLE;
-+	writel(val, ep->elbi_base + FSD_PCIE_APP_LTSSM_ENABLE);
-+}
+ 		ufs: ufs@15120000 {
+ 			compatible = "tesla,fsd-ufs";
+ 			reg = <0x0 0x15120000 0x0 0x200>,  /* 0: HCI standard */
+@@ -1057,6 +1067,143 @@ ethernet0: ethernet@15300000 {
+ 			iommus = <&smmu_fsys0 0x0 0x1>;
+ 			status = "disabled";
+ 		};
 +
-+static int fsd_pcie_start_link(struct dw_pcie *pci)
-+{
-+	struct exynos_pcie *ep = to_exynos_pcie(pci);
-+	struct dw_pcie_ep *dw_ep = &pci->ep;
++		pcierc2: pcie@15400000 {
++			compatible = "tesla,fsd-pcie";
++			reg = <0x0 0x15400000 0x0 0x2000>,
++			      <0x0 0x15090000 0x0 0x1000>,
++			      <0x0 0x15800000 0x0 0x1000>;
++			reg-names = "dbi", "elbi", "config";
++			ranges =  <0x82000000 0 0x15801000 0 0x15801000 0 0xffefff>;
++			clocks = <&clock_fsys0 PCIE_SUBCTRL_INST0_AUX_CLK_SOC>,
++				 <&clock_fsys0 PCIE_SUBCTRL_INST0_DBI_ACLK_SOC>,
++				 <&clock_fsys0 PCIE_SUBCTRL_INST0_MSTR_ACLK_SOC>,
++				 <&clock_fsys0 PCIE_SUBCTRL_INST0_SLV_ACLK_SOC>;
++			clock-names = "aux", "dbi", "mstr", "slv";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			dma-coherent;
++			device_type = "pci";
++			interrupts = <GIC_SPI 93 IRQ_TYPE_EDGE_RISING>;
++			num-lanes = <4>;
++			samsung,syscon-pcie = <&sysreg_fsys0 0x434>;
++			phys = <&pciephy0>;
++			iommu-map = <0x0 &smmu_fsys0 0x4 0x10000>;
++			iommu-map-mask = <0x0>;
++			status = "disabled";
++		};
 +
-+	if (dw_pcie_link_up(pci))
-+		return 0;
++		pcieep2: pcie-ep@15400000 {
++			compatible = "tesla,fsd-pcie-ep";
++			reg = <0x0 0x15090000 0x0 0x1000>,
++			      <0x0 0x15400000 0x0 0x2000>,
++			      <0x0 0x15402000 0x0 0x80>,
++			      <0x0 0x15800000 0x0 0xff0000>;
++			reg-names = "elbi", "dbi", "dbi2", "addr_space";
++			clocks = <&clock_fsys0 PCIE_SUBCTRL_INST0_AUX_CLK_SOC>,
++				 <&clock_fsys0 PCIE_SUBCTRL_INST0_DBI_ACLK_SOC>,
++				 <&clock_fsys0 PCIE_SUBCTRL_INST0_MSTR_ACLK_SOC>,
++				 <&clock_fsys0 PCIE_SUBCTRL_INST0_SLV_ACLK_SOC>;
++			clock-names = "aux", "dbi", "mstr", "slv";
++			num-lanes = <4>;
++			samsung,syscon-pcie = <&sysreg_fsys0 0x434>;
++			phys = <&pciephy0>;
++			status = "disabled";
++		};
 +
-+	writel(FSD_PCIE_LTSSM_ENABLE, ep->elbi_base + FSD_PCIE_APP_LTSSM_ENABLE);
++		pciephy1: pcie-phy@16880000 {
++			compatible = "tesla,fsd-pcie-phy";
++			#phy-cells = <0>;
++			reg = <0x0 0x16880000 0x0 0x2000>,
++			      <0x0 0x16860000 0x0 0x1000>;
++			samsung,pmu-syscon = <&pmu_system_controller>;
++			samsung,fsys-sysreg = <&sysreg_fsys1>;
++			status = "disabled";
++		};
 +
-+	/* no need to wait for link in case of host as core files take care */
-+	if (ep->pdata->device_mode == DW_PCIE_RC_TYPE)
-+		return 0;
++		pcierc0: pcie@16a00000 {
++			compatible = "tesla,fsd-pcie";
++			reg = <0x0 0x16a00000 0x0 0x2000>,
++			      <0x0 0x168b0000 0x0 0x1000>,
++			      <0x0 0x17000000 0x0 0x1000>;
++			reg-names = "dbi", "elbi", "config";
++			ranges =  <0x82000000 0 0x17001000 0 0x17001000 0 0xffefff>;
++			clocks = <&clock_fsys1 PCIE_LINK0_IPCLKPORT_AUX_ACLK>,
++				 <&clock_fsys1 PCIE_LINK0_IPCLKPORT_DBI_ACLK>,
++				 <&clock_fsys1 PCIE_LINK0_IPCLKPORT_MSTR_ACLK>,
++				 <&clock_fsys1 PCIE_LINK0_IPCLKPORT_SLV_ACLK>;
++			clock-names = "aux", "dbi", "mstr", "slv";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			dma-coherent;
++			device_type = "pci";
++			interrupts = <GIC_SPI 115 IRQ_TYPE_EDGE_RISING>;
++			num-lanes = <4>;
++			samsung,syscon-pcie = <&sysreg_fsys1 0x50c>;
++			phys = <&pciephy1>;
++			iommu-map = <0x0 &smmu_imem 0x0 0x10000>;
++			iommu-map-mask = <0x0>;
++			status = "disabled";
++		};
 +
-+	/* check if the link is up or not in case of EP */
-+	if (!dw_pcie_wait_for_link(pci)) {
-+		dw_pcie_ep_linkup(dw_ep);
-+		return 0;
-+	}
++		pcieep0: pcie-ep@16a00000 {
++			compatible = "tesla,fsd-pcie-ep";
++			reg = <0x0 0x168b0000 0x0 0x1000>,
++			      <0x0 0x16a00000 0x0 0x2000>,
++			      <0x0 0x16a02000 0x0 0x80>,
++			      <0x0 0x17000000 0x0 0xff0000>;
++			reg-names = "elbi", "dbi", "dbi2", "addr_space";
++			clocks = <&clock_fsys1 PCIE_LINK0_IPCLKPORT_AUX_ACLK>,
++				 <&clock_fsys1 PCIE_LINK0_IPCLKPORT_DBI_ACLK>,
++				 <&clock_fsys1 PCIE_LINK0_IPCLKPORT_MSTR_ACLK>,
++				 <&clock_fsys1 PCIE_LINK0_IPCLKPORT_SLV_ACLK>;
++			clock-names = "aux", "dbi", "mstr", "slv";
++			num-lanes = <4>;
++			samsung,syscon-pcie = <&sysreg_fsys1 0x50c>;
++			phys = <&pciephy1>;
++			status = "disabled";
++		};
 +
-+	return -ETIMEDOUT;
-+}
++		pcierc1: pcie@16b00000 {
++			compatible = "tesla,fsd-pcie";
++			reg = <0x0 0x16b00000 0x0 0x2000>,
++			      <0x0 0x168c0000 0x0 0x1000>,
++			      <0x0 0x18000000 0x0 0x1000>;
++			reg-names = "dbi", "elbi", "config";
++			ranges =  <0x82000000 0 0x18001000 0 0x18001000 0 0xffefff>;
++			clocks = <&clock_fsys1 PCIE_LINK1_IPCLKPORT_AUX_ACLK>,
++				 <&clock_fsys1 PCIE_LINK1_IPCLKPORT_DBI_ACLK>,
++				 <&clock_fsys1 PCIE_LINK1_IPCLKPORT_MSTR_ACLK>,
++				 <&clock_fsys1 PCIE_LINK1_IPCLKPORT_SLV_ACLK>;
++			clock-names = "aux", "dbi", "mstr", "slv";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			dma-coherent;
++			device_type = "pci";
++			interrupts = <GIC_SPI 117 IRQ_TYPE_EDGE_RISING>;
++			num-lanes = <4>;
++			samsung,syscon-pcie = <&sysreg_fsys1 0x510>;
++			phys = <&pciephy1>;
++			status = "disabled";
++		};
 +
-+static irqreturn_t fsd_pcie_irq_handler(int irq, void *arg)
-+{
-+	u32 val;
-+	struct exynos_pcie *ep = arg;
-+	struct dw_pcie *pci = &ep->pci;
-+	struct dw_pcie_rp *pp = &pci->pp;
-+
-+	val = readl(ep->elbi_base + FSD_IRQ2_STS);
-+	if ((val & FSD_IRQ_MSI_ENABLE) == FSD_IRQ_MSI_ENABLE) {
-+		val &= FSD_IRQ_MSI_ENABLE;
-+		writel(val, ep->elbi_base + FSD_IRQ2_STS);
-+		dw_handle_msi_irq(pp);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void fsd_pcie_msi_init(struct exynos_pcie *ep)
-+{
-+	int val;
-+
-+	val = readl(ep->elbi_base + FSD_IRQ2_EN);
-+	val |= FSD_IRQ_MSI_ENABLE;
-+	writel(val, ep->elbi_base + FSD_IRQ2_EN);
-+}
-+
-+static void __iomem *fsd_atu_setting(struct dw_pcie *pci, void __iomem *base)
-+{
-+	struct exynos_pcie *ep = to_exynos_pcie(pci);
-+
-+	if (base >= pci->atu_base) {
-+		regmap_write(ep->sysreg, ep->sysreg_offset, ADDR_TYPE_ATU);
-+		return (base - DEFAULT_DBI_ATU_OFFSET);
-+	} else if (base == pci->dbi_base) {
-+		regmap_write(ep->sysreg, ep->sysreg_offset, ADDR_TYPE_DBI);
-+	} else if (base == pci->dbi_base2) {
-+		regmap_write(ep->sysreg, ep->sysreg_offset, ADDR_TYPE_DBI2);
-+	}
-+
-+	return base;
-+}
-+
-+static u32 fsd_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
-+				u32 reg, size_t size)
-+{
-+	void __iomem *addr;
-+	u32 val;
-+
-+	addr = fsd_atu_setting(pci, base);
-+
-+	dw_pcie_read(addr + reg, size, &val);
-+
-+	return val;
-+}
-+
-+static void fsd_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base,
-+				u32 reg, size_t size, u32 val)
-+{
-+	void __iomem *addr;
-+
-+	addr = fsd_atu_setting(pci, base);
-+
-+	dw_pcie_write(addr + reg, size, val);
-+}
-+
-+static void fsd_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base,
-+				u32 reg, size_t size, u32 val)
-+{
-+	struct exynos_pcie *ep = to_exynos_pcie(pci);
-+
-+	fsd_atu_setting(pci, base);
-+	dw_pcie_write(pci->dbi_base + reg, size, val);
-+	regmap_write(ep->sysreg, ep->sysreg_offset, ADDR_TYPE_DBI);
-+}
-+
-+static bool fsd_pcie_link_up(struct dw_pcie *pci)
-+{
-+	u32 val;
-+	struct exynos_pcie *ep = to_exynos_pcie(pci);
-+
-+	val = readl(ep->elbi_base + FSD_PCIE_CXPL_DEBUG_00_31);
-+	val &= PORT_LOGIC_LTSSM_STATE_MASK;
-+
-+	return (val == PORT_LOGIC_LTSSM_STATE_L0);
-+}
-+
-+static int fsd_pcie_host_init(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct exynos_pcie *ep = to_exynos_pcie(pci);
-+
-+	phy_init(ep->phy);
-+	fsd_pcie_msi_init(ep);
-+
-+	return 0;
-+}
-+
-+static const struct dw_pcie_host_ops fsd_pcie_host_ops = {
-+	.init = fsd_pcie_host_init,
-+};
-+
-+static int fsd_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-+				 unsigned int type, u16 interrupt_num)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+
-+	switch (type) {
-+	case PCI_IRQ_INTX:
-+		return dw_pcie_ep_raise_intx_irq(ep, func_no);
-+	case PCI_IRQ_MSIX:
-+		dev_err(pci->dev, "EP does not support MSIX\n");
-+		return -EINVAL;
-+	case PCI_IRQ_MSI:
-+		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-+	default:
-+		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pci_epc_features fsd_pcie_epc_features = {
-+	.linkup_notifier = false,
-+	.msi_capable = true,
-+	.msix_capable = false,
-+};
-+
-+static const struct pci_epc_features *fsd_pcie_get_features(struct dw_pcie_ep *ep)
-+{
-+	return &fsd_pcie_epc_features;
-+}
-+
-+static const struct dw_pcie_ep_ops fsd_ep_ops = {
-+	.raise_irq	= fsd_pcie_raise_irq,
-+	.get_features	= fsd_pcie_get_features,
-+};
-+
-+static void fsd_set_device_mode(struct exynos_pcie *ep)
-+{
-+	if (ep->pdata->device_mode == DW_PCIE_RC_TYPE)
-+		writel(FSD_DEVICE_TYPE_RC, ep->elbi_base + FSD_PCIE_DEVICE_TYPE);
-+	else
-+		writel(FSD_DEVICE_TYPE_EP, ep->elbi_base + FSD_PCIE_DEVICE_TYPE);
-+}
-+
-+static const struct dw_pcie_ops fsd_dw_pcie_ops = {
-+	.read_dbi	= fsd_pcie_read_dbi,
-+	.write_dbi	= fsd_pcie_write_dbi,
-+	.write_dbi2	= fsd_pcie_write_dbi2,
-+	.start_link	= fsd_pcie_start_link,
-+	.stop_link	= fsd_pcie_stop_link,
-+	.link_up	= fsd_pcie_link_up,
-+};
-+
- static const struct samsung_res_ops exynos_res_ops_data = {
- 	.init_regulator		= exynos_init_regulator,
- 	.pcie_irq_handler	= exynos_pcie_irq_handler,
- };
- 
-+static const struct samsung_res_ops fsd_res_ops_data = {
-+	.pcie_irq_handler	= fsd_pcie_irq_handler,
-+	.set_device_mode	= fsd_set_device_mode,
-+};
-+
- static int exynos_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -353,6 +577,26 @@ static int exynos_pcie_probe(struct platform_device *pdev)
- 	if (IS_ERR(ep->phy))
- 		return PTR_ERR(ep->phy);
- 
-+	if (ep->pdata->soc_variant == FSD) {
-+		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(36));
-+		if (ret)
-+			return ret;
-+
-+		ep->sysreg = syscon_regmap_lookup_by_phandle(dev->of_node,
-+				"samsung,syscon-pcie");
-+		if (IS_ERR(ep->sysreg)) {
-+			dev_err(dev, "sysreg regmap lookup failed.\n");
-+			return PTR_ERR(ep->sysreg);
-+		}
-+
-+		ret = of_property_read_u32_index(dev->of_node, "samsung,syscon-pcie", 1,
-+						 &ep->sysreg_offset);
-+		if (ret) {
-+			dev_err(dev, "couldn't get the register offset for syscon!\n");
-+			return ret;
-+		}
-+	}
-+
- 	/* External Local Bus interface (ELBI) registers */
- 	ep->elbi_base = devm_platform_ioremap_resource_byname(pdev, "elbi");
- 	if (IS_ERR(ep->elbi_base))
-@@ -373,13 +617,43 @@ static int exynos_pcie_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	platform_set_drvdata(pdev, ep);
--	ret = samsung_irq_init(ep, pdev);
--	if (ret)
--		goto fail_regulator;
--	ep->pci.pp.ops = pdata->host_ops;
--	ret = dw_pcie_host_init(&ep->pci.pp);
--	if (ret < 0)
-+
-+	if (pdata->res_ops->set_device_mode)
-+		pdata->res_ops->set_device_mode(ep);
-+
-+	switch (ep->pdata->device_mode) {
-+	case DW_PCIE_RC_TYPE:
-+		ret = samsung_irq_init(ep, pdev);
-+		if (ret)
-+			goto fail_regulator;
-+
-+		ep->pci.pp.ops = pdata->host_ops;
-+
-+		ret = dw_pcie_host_init(&ep->pci.pp);
-+		if (ret < 0)
-+			goto fail_phy_init;
-+
-+		break;
-+	case DW_PCIE_EP_TYPE:
-+		phy_init(ep->phy);
-+
-+		ep->pci.ep.ops = pdata->ep_ops;
-+
-+		ret = dw_pcie_ep_init(&ep->pci.ep);
-+		if (ret < 0)
-+			goto fail_phy_init;
-+
-+		ret = dw_pcie_ep_init_registers(&ep->pci.ep);
-+		if (ret)
-+			goto fail_phy_init;
-+
-+		pci_epc_init_notify(ep->pci.ep.epc);
-+
-+		break;
-+	default:
-+		dev_err(dev, "invalid device type\n");
- 		goto fail_phy_init;
-+	}
- 
- 	return 0;
- 
-@@ -395,8 +669,11 @@ static void exynos_pcie_remove(struct platform_device *pdev)
- {
- 	struct exynos_pcie *ep = platform_get_drvdata(pdev);
- 
-+	if (ep->pdata->device_mode == DW_PCIE_EP_TYPE)
-+		return;
- 	dw_pcie_host_deinit(&ep->pci.pp);
--	exynos_pcie_assert_core_reset(ep);
-+	if (ep->pdata->soc_variant == EXYNOS_5433)
-+		exynos_pcie_assert_core_reset(ep);
- 	phy_power_off(ep->phy);
- 	phy_exit(ep->phy);
- 	samsung_regulator_disable(ep);
-@@ -405,8 +682,16 @@ static void exynos_pcie_remove(struct platform_device *pdev)
- static int exynos_pcie_suspend_noirq(struct device *dev)
- {
- 	struct exynos_pcie *ep = dev_get_drvdata(dev);
-+	struct dw_pcie *pci = &ep->pci;
- 
--	exynos_pcie_assert_core_reset(ep);
-+	if (ep->pdata->device_mode == DW_PCIE_EP_TYPE)
-+		return 0;
-+
-+	if (ep->pdata->dwc_ops->stop_link)
-+		ep->pdata->dwc_ops->stop_link(pci);
-+
-+	if (ep->pdata->soc_variant == EXYNOS_5433)
-+		exynos_pcie_assert_core_reset(ep);
- 	phy_power_off(ep->phy);
- 	phy_exit(ep->phy);
- 	samsung_regulator_disable(ep);
-@@ -421,6 +706,9 @@ static int exynos_pcie_resume_noirq(struct device *dev)
- 	struct dw_pcie_rp *pp = &pci->pp;
- 	int ret;
- 
-+	if (ep->pdata->device_mode == DW_PCIE_EP_TYPE)
-+		return 0;
-+
- 	ret = samsung_regulator_enable(ep);
- 	if (ret)
- 		return ret;
-@@ -437,11 +725,30 @@ static const struct dev_pm_ops exynos_pcie_pm_ops = {
- 				  exynos_pcie_resume_noirq)
- };
- 
-+
-+static const struct samsung_pcie_pdata fsd_hw3_pcie_rc_pdata = {
-+	.dwc_ops		= &fsd_dw_pcie_ops,
-+	.host_ops		= &fsd_pcie_host_ops,
-+	.res_ops		= &fsd_res_ops_data,
-+	.soc_variant		= FSD,
-+	.device_mode		= DW_PCIE_RC_TYPE,
-+};
-+
-+static const struct samsung_pcie_pdata fsd_hw3_pcie_ep_pdata = {
-+	.dwc_ops		= &fsd_dw_pcie_ops,
-+	.ep_ops			= &fsd_ep_ops,
-+	.res_ops		= &fsd_res_ops_data,
-+	.soc_variant		= FSD,
-+	.device_mode		= DW_PCIE_EP_TYPE,
-+};
-+
- static const struct samsung_pcie_pdata exynos_5433_pcie_rc_pdata = {
- 	.dwc_ops		= &exynos_dw_pcie_ops,
- 	.pci_ops		= &exynos_pci_ops,
- 	.host_ops		= &exynos_pcie_host_ops,
- 	.res_ops		= &exynos_res_ops_data,
-+	.soc_variant		= EXYNOS_5433,
-+	.device_mode		= DW_PCIE_RC_TYPE,
- };
- 
- static const struct of_device_id exynos_pcie_of_match[] = {
-@@ -449,6 +756,14 @@ static const struct of_device_id exynos_pcie_of_match[] = {
- 		.compatible = "samsung,exynos5433-pcie",
- 		.data = (void *) &exynos_5433_pcie_rc_pdata,
- 	},
-+	{
-+		.compatible = "tesla,fsd-pcie",
-+		.data = (void *) &fsd_hw3_pcie_rc_pdata,
-+	},
-+	{
-+		.compatible = "tesla,fsd-pcie-ep",
-+		.data = (void *) &fsd_hw3_pcie_ep_pdata,
-+	},
- 	{ },
++		pcieep1: pcie-ep@16b00000 {
++			compatible = "tesla,fsd-pcie-ep";
++			reg = <0x0 0x168c0000 0x0 0x1000>,
++			      <0x0 0x16b00000 0x0 0x2000>,
++			      <0x0 0x16b02000 0x0 0x80>,
++			      <0x0 0x18000000 0x0 0xff0000>;
++			reg-names = "elbi", "dbi", "dbi2", "addr_space";
++			clocks = <&clock_fsys1 PCIE_LINK1_IPCLKPORT_AUX_ACLK>,
++				 <&clock_fsys1 PCIE_LINK1_IPCLKPORT_DBI_ACLK>,
++				 <&clock_fsys1 PCIE_LINK1_IPCLKPORT_MSTR_ACLK>,
++				 <&clock_fsys1 PCIE_LINK1_IPCLKPORT_SLV_ACLK>;
++			clock-names = "aux", "dbi", "mstr", "slv";
++			num-lanes = <4>;
++			samsung,syscon-pcie = <&sysreg_fsys1 0x510>;
++			phys = <&pciephy1>;
++			status = "disabled";
++		};
+ 	};
  };
  
 -- 
