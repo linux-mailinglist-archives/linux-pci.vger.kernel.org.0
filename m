@@ -1,222 +1,133 @@
-Return-Path: <linux-pci+bounces-30581-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30582-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D8FDAE7A52
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 10:34:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2CEBAE7ADC
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 10:51:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5ED7C4A28E2
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 08:34:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 814857B5919
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 08:45:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC490272811;
-	Wed, 25 Jun 2025 08:32:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0551F28936B;
+	Wed, 25 Jun 2025 08:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="M/LgXsOK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LwbAQ1Cr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022142.outbound.protection.outlook.com [52.101.126.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0937272804;
-	Wed, 25 Jun 2025 08:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.142
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750840341; cv=fail; b=ov5Q5OnvbSNkvyhER8RsD18KvXIdiDsMRnSEHUmxYsMCh4U+sbqtmSDH2JsgbDEVH7lxBpQiSKI5sh7jDduURNUiokzbPvVc/tB2KeZlFhhwKUOWfUTOLW71sKfNSScYy7JLsDmCpictc2EGHsMSY/i+XAGG20fD/1JKu/POoaE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750840341; c=relaxed/simple;
-	bh=Qitvdw7y71M0si5J6Xr4PF4TX/okXwb+cexPgZIERK4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SWqlbjsyhP5FHwRtQQKmoZd/DRA3ej6aD+K8GtRxpVBYwuYC5xrdURstr8QuTBNfcAmla2A6ET4U4GB6if3qGPy8YhM6iV7YladcNGhlvkC1E4FGtmT+lhO6FjTDHzaKdov5UIhMlTqvVOATovrp/kNT8df7JmOBrVquvL2B2bk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=M/LgXsOK; arc=fail smtp.client-ip=52.101.126.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RqTufMNnpvFJzqR8eFTf22BzOXJ+V4K4o24NsiVcp7FtzBI2wB7Ugn2mnpqVF5+PnxfMIhK4tCfa4OC+2d+etVQrqi4M6paTf+qyDl8idxCiIWXkvFqx101QJ2TjaMh0ou73a3m5X0M4aD2yPvQwXs4igKrYJMnj1bWsa82F4crZymBKoiAceRgd8FesIpluqP2GJg8Ip606XDEAq3zYg0zJ0CwMN7c1cBzw0ZIwKM9BDyHU+Nv69KQovyFsNmaDQrsepQPpSyzAaqjcZc9m1uX0OjGd9hMhaQisXSW6FHG+BDOQHasJgytVGO8QlrTSBE1ZfdrqJ/77LgIOtnNAFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qitvdw7y71M0si5J6Xr4PF4TX/okXwb+cexPgZIERK4=;
- b=R4T4TxweD5HOh3QtLPl1FKkmQEX/adybRQM7US3f5ZQbnYdaqviCeb9V31K/ve0WlKNCSDx8jvnowI0vmXGoKjWK0lwqHE9ew0mreMpmBp/+685+lIg1O874JFLm2zr4nXA7y/DSnjKxUeSW3CCNHLreA+s2VQYz8xzL9pT0g07s9DlaBKvrq6CHDklf8ylnPqngcXYIJ6opktqS3DOHXK7F7/yHflQe770Rhibn29KTOkMzbQVRxRNOk2ibohQExOQgOWK0mFOsRXOEwWceQipyaz9LlboAHe6VEje7hLe34L0CDUDlR5WAe/IdvZrVUm5Yu6UGnxseJP6vdfwdKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qitvdw7y71M0si5J6Xr4PF4TX/okXwb+cexPgZIERK4=;
- b=M/LgXsOKA3OUjYd8n/NbrC6phJ4JTSLsczQ7ZQ65i0GB5SY2u5/YS8yiUtYXb8I63bqfezZWpbzyx/LtilxevlmdAdQHliNmnRUjYseBFwHueAuowL9P/vycN4sUZgYblBB1JqJjpNcG3skCrZPywtimYxH6mU1HkcHmM47O0/kPM4wM0t1YHPCo7CJbCq6+x2fNr4zGJarQ8izc3fVgd25khQ/OaG+A3B0DQpy3aYLJNc1NnGDgb3L01jZZNP8zgbh39a5KyeeM2Lhve+7OhYryyVJKVGYuFL934yctvUFFcOhfHhKECSCKUimWEAxuTrf8JxhjeobZRgWQgkdrfw==
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
- by SEYPR06MB6130.apcprd06.prod.outlook.com (2603:1096:101:db::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Wed, 25 Jun
- 2025 08:32:14 +0000
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28%5]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
- 08:32:14 +0000
-From: Jacky Chou <jacky_chou@aspeedtech.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: =?utf-8?B?SWxwbyBKw6RydmluZW4=?= <ilpo.jarvinen@linux.intel.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "joel@jms.id.au" <joel@jms.id.au>,
-	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
-	"vkoul@kernel.org" <vkoul@kernel.org>, "kishon@kernel.org"
-	<kishon@kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>,
-	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"elbadrym@google.com" <elbadrym@google.com>, "romlem@google.com"
-	<romlem@google.com>, "anhphan@google.com" <anhphan@google.com>,
-	"wak@google.com" <wak@google.com>, "yuxiaozhang@google.com"
-	<yuxiaozhang@google.com>, BMC-SW <BMC-SW@aspeedtech.com>
-Subject:
- =?utf-8?B?5Zue6KaGOiBbUEFUQ0ggNy83XSBwY2k6IGFzcGVlZDogQWRkIEFTUEVFRCBQ?=
- =?utf-8?Q?CIe_host_controller_driver?=
-Thread-Topic: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
-Thread-Index: AQHb3BN5QYkLFJ4SFk66wBBeIABUJbQA/lGAgA8cdnCAAmnUAIABGaYQ
-Date: Wed, 25 Jun 2025 08:32:13 +0000
-Message-ID:
- <SEYPR06MB5134003D5FA55835C9A5537E9D7BA@SEYPR06MB5134.apcprd06.prod.outlook.com>
-References:
- <SEYPR06MB5134973F678EB5B163DD50809D79A@SEYPR06MB5134.apcprd06.prod.outlook.com>
- <20250624154058.GA1478094@bhelgaas>
-In-Reply-To: <20250624154058.GA1478094@bhelgaas>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|SEYPR06MB6130:EE_
-x-ms-office365-filtering-correlation-id: f725c3ef-6f6a-4e3e-4b1a-08ddb3c2c969
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?SnlRVzZyaG81cFdWUmVlVFlYWFlzQ2szZGhsYm5ubS9xVHdUNGlpTFZCVzZ3?=
- =?utf-8?B?dXRLbkk3WEQxcjNBTitpMGVWSzN0NU93cWttbHh5dlZqdjA1Q1F1YmkxdjJP?=
- =?utf-8?B?WHlJNEllcEtLU3FxSFhDS2tXeUNnVUROWHJ6ak1WaTY2QXZUTVFCcm9tMzNX?=
- =?utf-8?B?TlJkVno1ZVJQM0xVV21FOGcwMEN6d0hwNWdrWFZJUU5ZTy9haVZ1NC93WUo1?=
- =?utf-8?B?M3RHOFNiRWM3SlNYQW5EWkZ0QUIxU3loTnVnRnlQeWlsejlYcTB0SEFnMWVW?=
- =?utf-8?B?SFRENlI1ZDE0bnhZOEMvWEk3eVBCVDRranFIQ1pmQTlFV3g0ZEYwamJmMmZa?=
- =?utf-8?B?dzBoQ0RUQktSVTdmZVVib0o2OFUwMEVqTDZwUTB4dWE5Ti9JN3VrNy9DOG5z?=
- =?utf-8?B?b05aNFluSTFiaCt3cUtiRFFFZFpyTDZJS2tIeWt0STlKTmR6L1BKYU5Oa2NL?=
- =?utf-8?B?RnhHZnlnS2ZKdTR5L0J4amdnK01BR2pJdTZCdVBrWjFqVnZRMDliNnZrN0N2?=
- =?utf-8?B?T0IxSStuVm9ydlVSTHp4L29rQks1QmdZc2hacjg0VDBvMFBWRGx5ejh6d2M4?=
- =?utf-8?B?ZzFWVDNoMFd6SVhrMGRZbm5wK2hjb29jNUVpaE9TZmZkSVJTUEdVcXFnSUFO?=
- =?utf-8?B?cFpPazNDNjE2TFNZdUsrN1A5eTZ6NlBXVVNBM1lCU1gwVWp2dG13V2JIbS9m?=
- =?utf-8?B?MXI5NmpJbXJGUHIzYnBYTTNLcE1EWTRkektEcHo2UWVQSEJaNXUxS3E3Nkh2?=
- =?utf-8?B?QU94UmhWNUY5ZmV4M2x1aThzSVI0MTdpejZyRUVYNHBMMEVUVHU3YlNXUUtG?=
- =?utf-8?B?WGxRd1VCdUpuNHMrMFpka0dtMWFCWFFGUmRXOWFBRFpBK3g2MG1Ub0dnYzVP?=
- =?utf-8?B?T2FhYXViOHR5anE4TFNLV3hGUVh5Q2ZHb0oxRTJoTVJXMG1rZEx2N3pIWHBD?=
- =?utf-8?B?WWNBNUZURHlkL1VQb2dxaTE4RGUvSk0zOXJNWUE5ak5jaFp5TW5sOWRsR3lt?=
- =?utf-8?B?MnhFOXFvSEpZQ2ZOZFhaSkJQaDd4MFRhN2F5QWQvZGdqdW1HcFc2Nm1TbWgy?=
- =?utf-8?B?dGp6aHg2K0lUb2tacVJjWHhXN1Jod256a3N4U2d1L3lnQ0ZBeDZsNGhhVjlJ?=
- =?utf-8?B?UmpONGg2OW5QS2QwWXRJVmc0eUt5eVdDd3N5YmNLb0RmaHplTk5XbWo3aWQw?=
- =?utf-8?B?K3QrZjFIb3dxQzArak05QzdQYm1OOUhHTWZuWkVRcDJjYU0vVlVxeWVGdzRj?=
- =?utf-8?B?Y0hkL3FBZzFWb09Wb05pT2xjcFhXRDBWb3FjcmlDb3ltN0xycjBMamppWjJH?=
- =?utf-8?B?WklGbWZiMktTWHdpZm1XV2ZSNVFFOHVFTWpibjJQbXN5MHRnSzl4SmFJc0tD?=
- =?utf-8?B?Wlh3VnE5OW9tKzM3Ukp2YXNVS1BINGVrOXRNRm05OWoyOURLaGs4UkFRUHlv?=
- =?utf-8?B?Q2REMnZ6SmRZNnVseG9RUE0vU3FpL2FPMlNnZlBPU1RKNTdaWTdPMklaemlu?=
- =?utf-8?B?MFkvYmdmYUp1bmRtYkMwTC9TejB3K245SDhKbEthUzAyR1ZOeXpncjVvcWdk?=
- =?utf-8?B?eGIvd21PdEE3K0E3N3dDM1Z1emx0aXBtQ3FkL2xmWXZNUlBDeVhnMnhvYVZa?=
- =?utf-8?B?WXBGeDJlUmw5YjI3QkFGRURBSUtvMk9acUZJT2pMdXovOWkyejZkUWxiNGFM?=
- =?utf-8?B?ZCtUN0NnK29nUy9pRVAxbTdsbGkwQ1dQWFFIRVk0azdQZjNSdTFuUzRXZUlE?=
- =?utf-8?B?MjNQVEhBbCszN2RZc2IzZUJjOGdUZGtvTDREWi9IYU5ZRUxGS3RRandnMU9P?=
- =?utf-8?B?Q2R0czZhQjFzcy9vMS85SVZtbElPQmFJQVpYMVNBakt5dFM0T2hYSmN2Nkt4?=
- =?utf-8?B?cHNEaDhkNE54eFFpQWxGbzVPMXp1U3Z0a0xZTHBtY0VxNnJHTXhCS1lQWUt2?=
- =?utf-8?B?UWhSbnBDa3ZnWHpSWU5McjZNcFRON00wZDB2L1lBaEJaS0xscnZnTzNTOWdK?=
- =?utf-8?B?Si9GdHhZcGFBPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?ZWE1bmlnamhFKy9lSmZSYktFWlpGVi91L3JycWs2Z1dQQkl6b1pVclJNdlpM?=
- =?utf-8?B?bFQ2NWFXSCtJam1HVGx2bFpNaGRMaGh6aGprU1JSeTVpcUVaQzdremF4N2Ev?=
- =?utf-8?B?d1FMMVowbDJHdStsRFF3ZG5QZjdNVy9Gck5VV1UvUy9COGRKSVZOd1o2T1Q3?=
- =?utf-8?B?SGluWFB2WXNkenUrSDUxK0ZxVU14RzB6NHJ5emRXYmUrbERHOGw5SHM1dEls?=
- =?utf-8?B?VFRNd2xhVm1ic1lvckpxQ25tdXAyUW1XUUtYellaUXh6MDhEOXlWRW9CWnZX?=
- =?utf-8?B?Vmp6czZFcjdXZTNSNnNqc041V01xQzBkYVc5TmEwb3NETVExdjJvZFF5S1Uw?=
- =?utf-8?B?RWozaGI4WGdiT1psUFlOT1hJRkgyOEZScnlEMThZa2xvZHFMNU5lcENVbU5q?=
- =?utf-8?B?VjNTY1RkU3NKSGxlRGkzaFJsMTluV25XVUhkTXp6eXlWbVNSQmxta2I0KzlZ?=
- =?utf-8?B?aCtGUnZMRFR0R2dqMjhtME1DUmpQYy9ZaDZQNWg4VWpoQ3BnNnpmWHZFaGhB?=
- =?utf-8?B?VVQ2eVpYTWJWdXJaeXRCY05ERnh6YTAzTTYxVjdCTlFOSnhTYThpa25xN1ZC?=
- =?utf-8?B?K05MN1BZanYwcDViM0c5VE9wczZHNmJaVXQwSEppRHFKbHdzTEp2RURHcW5P?=
- =?utf-8?B?UHllVkUwVlZqUHFlWk5meW8xb2I3NkhoK2tQWXZ1T05BbTNTT3NnVVJGWXBu?=
- =?utf-8?B?R1VLR3JVd1c0K3ZtaDZVYkNpMzFGY2hlMi85ZU5oUVpGY0grMWxEZDFlZzRm?=
- =?utf-8?B?MnJmK0RONjlNUWtzcnRqZGd0bXNvZVJaL0dIbFlsb2FzNnM1WFJEL3ZSZUt2?=
- =?utf-8?B?aW44WmkzV1l0dnZReU8vYkJYZWwyUFdDck5ZN3VpMTlYeThmQUwwd2l1M0lL?=
- =?utf-8?B?Rm51WDAyNnpZNjNXMUhPUHNQQlZ4NWtUYU10OXF3V1lNS21uMVIvNVZoL0ZO?=
- =?utf-8?B?TmdUSEZTYnkyNm1VWVpLdVBWdkh6RlFORCtWaTRXdEIrNi9vdldlbDdXY3l0?=
- =?utf-8?B?UGpiZnJablhSMk9IWk1XSkNrRzUyWGxiK2pCdmtycTc1ZitENHZ2dDU3Nkpz?=
- =?utf-8?B?WXdYdFQyeTN4Y2tnbDAyWUVaTFVnd2ZiVktURzJKbnp0ZWhTU3VJWWlURGNY?=
- =?utf-8?B?NnF1MFZSZFpiaWlYenppVm1ZYVV5c0FZVGpsNmNWcHZGUTBuWEdLMlFFUDVV?=
- =?utf-8?B?Q1psWU5kN2t6WXh5NnRlSFhjaHBIOFVUNVdvVzZXVjRpbm5ibGpqUXhMTkRp?=
- =?utf-8?B?eHpFYmM5SjVFWkxlMy91bG1yWU0vajZON2hOYnA2TXowMExQWFZqbDAxOVl4?=
- =?utf-8?B?OGxQdEQwdW81REJKakJ0eUVvYXIvbXpHUVp3OVZNdVBuR2Nzby9vRERrSWNX?=
- =?utf-8?B?WnQ2VmJpeEgwdFJEaDNFYUYvcUZnK2NyODBXbE1yVnZyZTNqL24wa2kzZ2J2?=
- =?utf-8?B?U1htbmR0aklpN28zQXdRWVhZdEFpZnQ4Qm1LL1lYY3pEdmVFTTl5NE9YZlFQ?=
- =?utf-8?B?dGhtK0FjbXp1bTAweHV2aFU5eVlkRWtDeFU0SGpVOFlwVmpDWFllSElMaEEy?=
- =?utf-8?B?ZHNpdEZwbDYrUU8wejN3b1VTOC8yZ0tlWk1oQ2pUL284QkFEVGJnQXRwZUYr?=
- =?utf-8?B?TzdVTHhQY2RPS2puK0M3K0JjMHJXTlRBaXh5WlR2RmxkelJNVFQ5T2t2QTB6?=
- =?utf-8?B?VDQ2TmUxVzZLbzFlTkUwTlNOdHNqUEhrNjhFNC9BS3BNUzVqTUxDL1M5SjN1?=
- =?utf-8?B?TitsYjhSODhwNXg4cEl4ajZrSzVIRUtqbDZUVENIMHZLbHZQbGZQV3VTOFdF?=
- =?utf-8?B?ZXcxTzlMV2hyMFY3enRlYUpWNjJoWlk5VUhrUUY1VS9iMjZaTmdoNWYvZUdL?=
- =?utf-8?B?NHNoNTZHRmdnV0dEMUxYQXF0dW9lcURhL0dVTHo3NTREalNBRWw3YlJzSG1H?=
- =?utf-8?B?eUsxbE9qdDNwUjgyQ2VpK29rNFdkSUpBOHIzb0hwb2pXcHlLbXF2R0hKeEw5?=
- =?utf-8?B?ejVmOStTTTBpYWhrdkozV3JkMlhsMko3RlJmaE0rL1FiMjUvTzg3VkNLVFhL?=
- =?utf-8?B?blhyT2tFV3BqNUxRdXI0Q0ZkU2t4OWU4Y2oxR1VtR085ZWJHTGVYUHRuWHE2?=
- =?utf-8?Q?9v9RHDUj2TEHxVKBWGy2RgH93?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC72288CB2
+	for <linux-pci@vger.kernel.org>; Wed, 25 Jun 2025 08:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750841130; cv=none; b=iGqiggPYt/xfGDfIPMnSugPLHUn2OM4oJGPDl7wLA9G+pOh807xBL4UwoJXBRMxFc4rYt70V1SBI9Uq5OPWHSvMovoJL3vNK8YX8a/7tL3zmIhBx5WUT9HF3UapeeL2MxSseFD38TPE34FSFOp2Pg4oXuPxViWq3+RqWwgfqTFk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750841130; c=relaxed/simple;
+	bh=4CWyVOg1ySsSGm3tCccXgrCtfZcjTGRY536tD9B4aXc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YEOhe8YQ1M3cipBqkWoGo6c3CvPWSJQAGZmvtJOX/S2qecMzp+qXisw5F7s5gb4t+B8HA4LzS4mkhVaVUYFH0BfOacpoBv+ka52bEEi1j3N2VOA4HVlAqO4FafFNnvatbqu+poRIoRsyqOhpVaVF34Gjb702G4t7/2A+h6P685E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LwbAQ1Cr; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32add56e9ddso51976891fa.2
+        for <linux-pci@vger.kernel.org>; Wed, 25 Jun 2025 01:45:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750841127; x=1751445927; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4CWyVOg1ySsSGm3tCccXgrCtfZcjTGRY536tD9B4aXc=;
+        b=LwbAQ1Cr3YZihFgPa5aK9bUmn44ivPfF5qkBM8w6l/uw+BGgxyzRFFDannqOEjx/gX
+         aEAc1T+yPBUSAdiG2JCq0B6E0+1sWJekOFyCwpg4qbTAMUc5iTIsqyNbO4ifOIZrBXBf
+         GRtlQKXAPk2dxGqlv7WDWt/42F/TdnxWe/05eLVL4iDJ7iW5/AbCaQyl/qgqOWSoW+QI
+         cQptVJGDMMS7hXIK9qUicyEmM0RVLlilpu4h3tSBTy94ehG8IysLPlyXksaUyD1QFIih
+         DYyoiOQI6Vfwr3R4As1c0LSjYYvso/oycxykAAg4S98+/RyfAfEzPdDE2SVE89IJNrnP
+         9KqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750841127; x=1751445927;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4CWyVOg1ySsSGm3tCccXgrCtfZcjTGRY536tD9B4aXc=;
+        b=gVjMGQFkijl0vrQiHcYtwvRe2Bn6xViAMAbmaKAogTKsjT6/VXLEuUTC2S+sIucbMn
+         OnAk8Rn6SLNfpB4f8rLzplWKQ1GGa5XMSz9vgsEpPBiMjjviOFsJb/Fr19W579NFfAl8
+         u/Xl0uPDZ1okNrqtw0BjnYEqY99Qt2k0aWdxaqmPBRzIEM1uzx59WajeIUg3f2IfJ8Ap
+         GUv3L+gF4/64qXE/xhSz3h7AIRyetNmclHxWfQwvJmE+qltq4tQLlV6VT5AG7zvrZBPk
+         Ut1ilts/YnXR7zxVUVwNhvRHW9cIcCvHKJG+wsqZ5aPRdGzQfll4drxZ8/XFDm4o/Hkf
+         varQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWyhFJWGwmSaLwKxvWIqvV/u9jy0uLfytdWRWhx8avxNzX7xaABwI/VR8yOTXk3YEvCk7HPR1pdBeU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfKBxq4Sk0hR2O0YFmvXs8bc5zYMaOf9fWNyF2DRxlflBfgxOa
+	0Ygei/tGpoA0gpJR8EL2v4vsekafcD32N1AUE2K6zI0sj07y3DgBldayfDiMRxYs4NPgrwZPmC4
+	WVrOy7aaC2gwgRlbfYLbG+aIWxABJ9KtMQSy5FeqdzA==
+X-Gm-Gg: ASbGncuM25OQSD9w313sA9GjKDwHJgaRKUO65+IP6fAOsFiIpM7FUzLNAhbEvhhFShF
+	Hjh9AI2HoGShBYSQDdrJwjow7HqYMYwWznuEnpQlZTtOrzFdrRoqgvJ4Hod39vA1/UufS9xzKXX
+	GPf2WFn5rVBrvN42odEzQB2gjn0Pe7rFmZ9Mt0zzMOAtM=
+X-Google-Smtp-Source: AGHT+IE+JyenPgPvT+Svvv9s+V0VraZ6su8hbOajVsCqvqbMTxCrk4fBzjbCyvVMQ0l2eId9Zjx6ak0ozUYWm+PwBYY=
+X-Received: by 2002:a05:651c:4201:b0:32b:533a:ef76 with SMTP id
+ 38308e7fff4ca-32cc6490c2cmr5605931fa.13.1750841127084; Wed, 25 Jun 2025
+ 01:45:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f725c3ef-6f6a-4e3e-4b1a-08ddb3c2c969
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2025 08:32:14.0506
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wmi2/N8DgvtVTkcCVsWxRlVmfhpIi6dP3+ystsZUX6NOrsUsm57N1hLErCczKyfMCO7bP/5z78uVqt3z43h9Qz/2ETc6ZMcnmRhAm1JfCr8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6130
+References: <8c282b89b1aa8b9e3c00f6bd3980332c47d82df7.1750778806.git.andrea.porta@suse.com>
+ <9d31a4d7-ffd1-48ca-8df6-0ddc6683a49c@broadcom.com>
+In-Reply-To: <9d31a4d7-ffd1-48ca-8df6-0ddc6683a49c@broadcom.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 25 Jun 2025 10:45:15 +0200
+X-Gm-Features: AX0GCFs5reLO3eAptejwJU5aIb8qpce34Nq1CQTt9TXYf2HTB17zcNXvrt_8Yc4
+Message-ID: <CACRpkdbAxyZK_f8y6mzX_eJ3UM5ZtuXEpSmXE+QpUXaHKw_NGg@mail.gmail.com>
+Subject: Re: [PATCH stblinux/next] pinctrl: rp1: Implement RaspberryPi RP1
+ pinmux/pinconf support
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof Wilczynski <kw@linux.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Masahiro Yamada <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>, 
+	Herve Codina <herve.codina@bootlin.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Phil Elwell <phil@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PiA+ID4gPiArLyogVExQIGNvbmZpZ3VyYXRpb24gdHlwZSAwIGFuZCB0eXBlIDEgKi8NCj4gPiA+
-ID4gKyNkZWZpbmUgQ1JHX1JFQURfRk1UVFlQRSh0eXBlKQkJKDB4MDQwMDAwMDAgfCAodHlwZSA8
-PCAyNCkpDQo+ID4gPiA+ICsjZGVmaW5lIENSR19XUklURV9GTVRUWVBFKHR5cGUpCQkoMHg0NDAw
-MDAwMCB8ICh0eXBlIDw8IDI0KSkNCj4gPiA+DQo+ID4gPiBUaGVzZSBhcmUgc3RyYWlnaHQgZnJv
-bSBQQ0llIHNwZWMsIHJpZ2h0Pw0KPiA+ID4NCj4gPiA+IEkgdGhpbmsgdGhvc2Ugc2hvdWxkIGNv
-bWUgZnJvbSBkZWZpbmVzIGluc2lkZQ0KPiA+ID4gaW5jbHVkZS91YXBpL2xpbnV4L3BjaV9yZWdz
-LmgsIHRoZXJlIG1pZ2h0IG5vdCBiZSBvbmUgYWxyZWFkeSwgc28NCj4gPiA+IHlvdSBtaWdodCBo
-YXZlIHRvIGFkZCB0aGVtLg0KPiA+ID4NCj4gPiA+IEkgYWxzbyB0aGluayB5b3Ugc2hvdWxkIGFj
-dHVhbGx5IHVzZSB0aGUgdHlwZSBhcyBib29sZWFuLCBhbmQgcmV0dXJuDQo+ID4gPiBvbmUgb2Yg
-dGhlIHR3byBkZWZpbmVzIGJhc2VkIG9uIGl0LiBBIGhlbHBlciB0byBkbyB0aGF0IG1pZ2h0IGJl
-DQo+ID4gPiBnZW5lcmljIFBDSSBoZWFkZXIgbWF0ZXJpYWwgYXMgd2VsbC4NCj4gPiA+DQo+ID4N
-Cj4gPiBBZ3JlZWQuICBUaGlzIGRlZmluaXRpb24gaXMgdXNlZCBvbiBUTFAgaGVhZGVyLiAgTWF5
-YmUgSSB3aWxsIHRyeSB0bw0KPiA+IGFkZCBzb21lIGRlZmluaXRpb25zIHRvIHBjaV9yZWdzLmgg
-b3IgcGNpLmgNCj4gDQo+IFRoaXMgdmFsdWVzIG1pZ2h0IGNvbWUgZnJvbSB0aGUgUENJZSBzcGVj
-LCBidXQgdW5sZXNzIHRoZXkgYXJlIG5lZWRlZCBvdXRzaWRlDQo+IGRyaXZlcnMvcGNpLCBhbnkg
-I2RlZmluZXMgc2hvdWxkIHByb2JhYmx5IGdvIGluIGRyaXZlcnMvcGNpL3BjaS5oLg0KDQpHb3Qg
-aXQuIEkgd2lsbCBzcGVyYXRlIHNvbWUgZGVmaW5pdGlvbnMgdGhhdCBhcmUgZnJvbSBQQ0llIHNw
-ZWMgdG8gZHJpdmVycy9wY2kvcGNpLmgNCkluIG5leHQgdmVyc2lvbi4NClRoZXNlIHZhbHVlcyBh
-cmUgbGlrZSB0aGUgY29udGVudCBvZiBUTFAgaGVhZGVyIGZvcm1hdC4gSSB3aWxsIGRlZmluZSB0
-aGVtIGluIA0KZHJpdmVycy9wY2kvcGNpLmguDQoNClRoYW5rcywNCkphY2t5DQo=
+On Tue, Jun 24, 2025 at 11:11=E2=80=AFPM Florian Fainelli
+<florian.fainelli@broadcom.com> wrote:
+> On 6/24/25 08:36, Andrea della Porta wrote:
+> > The current implementation for the pin controller peripheral
+> > on the RP1 chipset supports gpio functionality and just the
+> > basic configuration of pin hw capabilities.
+> >
+> > Add support for selecting the pin alternate function (pinmux)
+> > and full configuration of the pin (pinconf).
+> >
+> > Related pins are also gathered into groups.
+> >
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+>
+> Linus, can I get an ack or reviewed by tag from you and take that in the
+> next few days to go with the Broadcom ARM SoC pull requests? Thanks!
+
+I was just very confused by the "stblinux/next" thing in the
+subject ... what is that even. I thought the patch was for some
+outoftree stuff.
+
+But go ahead!
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
 
