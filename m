@@ -1,62 +1,62 @@
-Return-Path: <linux-pci+bounces-30678-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30679-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DDE9AE9443
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 04:39:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65F56AE9446
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 04:40:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 00E683B79E8
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 02:39:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A774E4E0A91
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 02:40:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAACA232367;
-	Thu, 26 Jun 2025 02:37:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71E562367C9;
+	Thu, 26 Jun 2025 02:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KalJDQIK"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="klTNCORw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63E4230D0E
-	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 02:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DE12343AE
+	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 02:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750905475; cv=none; b=gM6XSy72Z6pqpxCXJeSPqzbkN2Uw1GW3zXT9P7BieaXtLyMN5Wsy9mO7740War06g03Cknw0y7ZKyy3smT0I+HAZVnzwBS5xMQ16Vr/PH6lv2BiRoJ9jpbTKiUEgPNXJsq+khL+UA/sT2VKotLey7HCXw73W9JewAbPqLODxLWc=
+	t=1750905478; cv=none; b=FaOxWXiOK3/gK4l+zzTsmGNKor74qgy8G3QlDSbBSaZNDlmAj9X3C6MRZDHTqt89O3Y1kkctdvvUlUp0braYY3v4oEqTaTc95PXL/MWLEAIRyvRi2VhGjGyvNQhKHsYF0bTnrhBO10xAWuvZy+WlBzGOlsAfKf1XAdEy6/siN1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750905475; c=relaxed/simple;
-	bh=Wbc2+RfHeqtmOeNADPHwurzKqcvE/S8J8bwJ7a+PLJA=;
+	s=arc-20240116; t=1750905478; c=relaxed/simple;
+	bh=MGUuk1VWqmy4wKoxbhUg19YNy5HOWgcKMRuk/3Bp89c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=NjLZvJTidzVkrdmXDToquJiccRTRcdAAbTnP05PIsZkgsR4BSB84NadhcX0g7MO5jCYJh1XBmHA1gEgPufzROrx8DO/JWAinNGGrPiNgFiCfCMs9xotVq/StM8rdz3KN4SkTlWS++AC8JJHbN8Pih9mHEzsvMlqvh2awOoNKv4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=KalJDQIK; arc=none smtp.client-ip=203.254.224.33
+	 Content-Type:References; b=dI+SjWi3PrflpOxtcRjsfQoYV7oyAQM6i3y6vBZ5nGxHQc7VF3TC54gEbZ8zseYVIaKwkihXDctaA3kjL2ndL7abRMEZh+JznIucn51PtC/unQ4X3+iTNDJ96DtWTo1fDqeMhqYt+puMJr9TIoN1U7J8j0S/Q61GeaLShneskdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=klTNCORw; arc=none smtp.client-ip=203.254.224.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250626023748epoutp03f5e7ceea6bfd4d29a3446f90cd1d9eb0~Mdz83IM1f1724017240epoutp03e
-	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 02:37:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250626023748epoutp03f5e7ceea6bfd4d29a3446f90cd1d9eb0~Mdz83IM1f1724017240epoutp03e
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250626023754epoutp0478fc40ec8801c5d2936b1c5b56bb96c0~Md0CcE3t62445724457epoutp044
+	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 02:37:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250626023754epoutp0478fc40ec8801c5d2936b1c5b56bb96c0~Md0CcE3t62445724457epoutp044
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750905468;
-	bh=hypIB6EeD7SA8ky1sUTiu7LEMiY1BgdF3951Sy1jLbo=;
+	s=mail20170921; t=1750905474;
+	bh=z0KBGm2Z9iLRXAIDe5VoGTTaKpckXActfWq12mD0U20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KalJDQIKs0mkAjI9/GLSiQTCM/NIYI06ARc5vL3yxHORVarCpWSKjBF7QHL+lFMCd
-	 AZ5xSRu9dzSFo9Gg3IVdUA1SP1zy91F5GqdDmSQpBgZB9leVXAO8spwnG2b14dx8fc
-	 EKASEqBUh9YiHTfDsAU8JFHQ7FZ6gMEK8TeInJUc=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250626023747epcas5p39892427826074d8057a24e5353deb00a~Mdz8CAyNL2141821418epcas5p3s;
-	Thu, 26 Jun 2025 02:37:47 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.181]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4bSNBx75T8z2SSKd; Thu, 26 Jun
-	2025 02:37:45 +0000 (GMT)
+	b=klTNCORwMgow+itX6xFE6Az9oyh3P5GJ4Qm5ERkWR7jpzWABJu1pjbpKXWoA8Ozpi
+	 mSTgbL1XXfR0H10n97ptalIE8Q/lYXWNLbkWGul7qJXw5VuVxYSW4h0isJpSlLy1Qy
+	 2Zy3p0ka/lk+2SACL2WXVffDXU9DdQfB5Flwp0WY=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250626023753epcas5p24213f30c5d8fe7065b5ef595c4d66640~Md0Bxd52J3175331753epcas5p2t;
+	Thu, 26 Jun 2025 02:37:53 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4bSNC34p2Xz6B9mF; Thu, 26 Jun
+	2025 02:37:51 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250625165323epcas5p44d291cb0b46df7e015907e4c2903447f~MV1sCqbbU2145921459epcas5p4T;
-	Wed, 25 Jun 2025 16:53:23 +0000 (GMT)
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250625165327epcas5p2c51b6032a6439cd1a7a884b360be1354~MV1wB36CA0634006340epcas5p2J;
+	Wed, 25 Jun 2025 16:53:27 +0000 (GMT)
 Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250625165320epsmtip2624f6329040ec6dc48d1bd48c57e56c9~MV1pSM69W1746917469epsmtip2Y;
-	Wed, 25 Jun 2025 16:53:20 +0000 (GMT)
+	20250625165324epsmtip298c2ff07671bc186e195912ba4e23ca2~MV1tSs9zM1750917509epsmtip2X;
+	Wed, 25 Jun 2025 16:53:24 +0000 (GMT)
 From: Shradha Todi <shradha.t@samsung.com>
 To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
@@ -68,9 +68,9 @@ Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
 	vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de,
 	m.szyprowski@samsung.com, jh80.chung@samsung.com, pankaj.dubey@samsung.com,
 	Shradha Todi <shradha.t@samsung.com>
-Subject: [PATCH v2 08/10] phy: exynos: Add PCIe PHY support for FSD SoC
-Date: Wed, 25 Jun 2025 22:22:27 +0530
-Message-ID: <20250625165229.3458-9-shradha.t@samsung.com>
+Subject: [PATCH v2 09/10] PCI: exynos: Add support for Tesla FSD SoC
+Date: Wed, 25 Jun 2025 22:22:28 +0530
+Message-ID: <20250625165229.3458-10-shradha.t@samsung.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250625165229.3458-1-shradha.t@samsung.com>
 Precedence: bulk
@@ -80,390 +80,459 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250625165323epcas5p44d291cb0b46df7e015907e4c2903447f
+X-CMS-MailID: 20250625165327epcas5p2c51b6032a6439cd1a7a884b360be1354
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 cpgsPolicy: CPGSC10-541,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250625165323epcas5p44d291cb0b46df7e015907e4c2903447f
+X-CMS-RootMailID: 20250625165327epcas5p2c51b6032a6439cd1a7a884b360be1354
 References: <20250625165229.3458-1-shradha.t@samsung.com>
-	<CGME20250625165323epcas5p44d291cb0b46df7e015907e4c2903447f@epcas5p4.samsung.com>
+	<CGME20250625165327epcas5p2c51b6032a6439cd1a7a884b360be1354@epcas5p2.samsung.com>
 
-Add PCIe PHY support for Tesla FSD SoC.
+Add host and endpoint controller driver support for FSD SoC.
 
 Signed-off-by: Shradha Todi <shradha.t@samsung.com>
 ---
- drivers/phy/samsung/phy-exynos-pcie.c | 317 +++++++++++++++++++++++++-
- 1 file changed, 316 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pci-exynos.c | 331 +++++++++++++++++++++++-
+ 1 file changed, 323 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/phy/samsung/phy-exynos-pcie.c b/drivers/phy/samsung/phy-exynos-pcie.c
-index 53c9230c2907..001a49bde2f4 100644
---- a/drivers/phy/samsung/phy-exynos-pcie.c
-+++ b/drivers/phy/samsung/phy-exynos-pcie.c
-@@ -34,11 +34,113 @@
- /* PMU PCIE PHY isolation control */
- #define EXYNOS5433_PMU_PCIE_PHY_OFFSET		0x730
+diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+index dff23cf648f5..5b525156b9f5 100644
+--- a/drivers/pci/controller/dwc/pci-exynos.c
++++ b/drivers/pci/controller/dwc/pci-exynos.c
+@@ -20,6 +20,8 @@
+ #include <linux/regulator/consumer.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
  
-+/* FSD: PCIe PHY common registers */
-+#define FSD_PCIE_PHY_TRSV_CMN_REG03	0x000c
-+#define FSD_PCIE_PHY_TRSV_CMN_REG01E	0x0078
-+#define FSD_PCIE_PHY_TRSV_CMN_REG02D	0x00b4
-+#define FSD_PCIE_PHY_TRSV_CMN_REG031	0x00c4
-+#define FSD_PCIE_PHY_TRSV_CMN_REG036	0x00d8
-+#define FSD_PCIE_PHY_TRSV_CMN_REG05F	0x017c
-+#define FSD_PCIE_PHY_TRSV_CMN_REG060	0x0180
-+#define FSD_PCIE_PHY_TRSV_CMN_REG062	0x0188
-+#define FSD_PCIE_PHY_TRSV_CMN_REG061	0x0184
-+#define FSD_PCIE_PHY_AGG_BIF_RESET	0x0200
-+#define FSD_PCIE_PHY_AGG_BIF_CLOCK	0x0208
-+#define FSD_PCIE_PHY_CMN_RESET		0x0228
+ #include "pcie-designware.h"
+ 
+@@ -49,17 +51,46 @@
+ #define EXYNOS_PCIE_ELBI_SLV_ARMISC		0x120
+ #define EXYNOS_PCIE_ELBI_SLV_DBI_ENABLE		BIT(21)
+ 
++#define FSD_IRQ2_STS				0x008
++#define FSD_IRQ_MSI_ENABLE			BIT(17)
++#define FSD_IRQ2_EN				0x018
++#define FSD_PCIE_APP_LTSSM_ENABLE		0x054
++#define FSD_PCIE_LTSSM_ENABLE			0x1
++#define FSD_PCIE_DEVICE_TYPE			0x080
++#define FSD_DEVICE_TYPE_RC			0x4
++#define FSD_DEVICE_TYPE_EP			0x0
++#define FSD_PCIE_CXPL_DEBUG_00_31		0x2C8
 +
-+/* FSD: PCIe PHY lane registers */
-+#define FSD_PCIE_LANE_OFFSET		0x0400
-+#define FSD_PCIE_NUM_LANES		0x4
-+
-+#define FSD_PCIE_PHY_TRSV_REG001_LN_N	0x0404
-+#define FSD_PCIE_PHY_TRSV_REG002_LN_N	0x0408
-+#define FSD_PCIE_PHY_TRSV_REG005_LN_N	0x0414
-+#define FSD_PCIE_PHY_TRSV_REG006_LN_N	0x0418
-+#define FSD_PCIE_PHY_TRSV_REG007_LN_N	0x041c
-+#define FSD_PCIE_PHY_TRSV_REG009_LN_N	0x0424
-+#define FSD_PCIE_PHY_TRSV_REG00A_LN_N	0x0428
-+#define FSD_PCIE_PHY_TRSV_REG00C_LN_N	0x0430
-+#define FSD_PCIE_PHY_TRSV_REG012_LN_N	0x0448
-+#define FSD_PCIE_PHY_TRSV_REG013_LN_N	0x044c
-+#define FSD_PCIE_PHY_TRSV_REG014_LN_N	0x0450
-+#define FSD_PCIE_PHY_TRSV_REG015_LN_N	0x0454
-+#define FSD_PCIE_PHY_TRSV_REG016_LN_N	0x0458
-+#define FSD_PCIE_PHY_TRSV_REG018_LN_N	0x0460
-+#define FSD_PCIE_PHY_TRSV_REG020_LN_N	0x0480
-+#define FSD_PCIE_PHY_TRSV_REG026_LN_N	0x0498
-+#define FSD_PCIE_PHY_TRSV_REG029_LN_N	0x04a4
-+#define FSD_PCIE_PHY_TRSV_REG031_LN_N	0x04c4
-+#define FSD_PCIE_PHY_TRSV_REG036_LN_N	0x04d8
-+#define FSD_PCIE_PHY_TRSV_REG039_LN_N	0x04e4
-+#define FSD_PCIE_PHY_TRSV_REG03B_LN_N	0x04ec
-+#define FSD_PCIE_PHY_TRSV_REG03C_LN_N	0x04f0
-+#define FSD_PCIE_PHY_TRSV_REG03E_LN_N	0x04f8
-+#define FSD_PCIE_PHY_TRSV_REG03F_LN_N	0x04fc
-+#define FSD_PCIE_PHY_TRSV_REG043_LN_N	0x050c
-+#define FSD_PCIE_PHY_TRSV_REG044_LN_N	0x0510
-+#define FSD_PCIE_PHY_TRSV_REG046_LN_N	0x0518
-+#define FSD_PCIE_PHY_TRSV_REG048_LN_N	0x0520
-+#define FSD_PCIE_PHY_TRSV_REG049_LN_N	0x0524
-+#define FSD_PCIE_PHY_TRSV_REG04E_LN_N	0x0538
-+#define FSD_PCIE_PHY_TRSV_REG052_LN_N	0x0548
-+#define FSD_PCIE_PHY_TRSV_REG068_LN_N	0x05a0
-+#define FSD_PCIE_PHY_TRSV_REG069_LN_N	0x05a4
-+#define FSD_PCIE_PHY_TRSV_REG06A_LN_N	0x05a8
-+#define FSD_PCIE_PHY_TRSV_REG06B_LN_N	0x05ac
-+#define FSD_PCIE_PHY_TRSV_REG07B_LN_N	0x05ec
-+#define FSD_PCIE_PHY_TRSV_REG083_LN_N	0x060c
-+#define FSD_PCIE_PHY_TRSV_REG084_LN_N	0x0610
-+#define FSD_PCIE_PHY_TRSV_REG086_LN_N	0x0618
-+#define FSD_PCIE_PHY_TRSV_REG087_LN_N	0x061c
-+#define FSD_PCIE_PHY_TRSV_REG08B_LN_N	0x062c
-+#define FSD_PCIE_PHY_TRSV_REG09C_LN_N	0x0670
-+#define FSD_PCIE_PHY_TRSV_REG09D_LN_N	0x0674
-+#define FSD_PCIE_PHY_TRSV_REG09E_LN_N	0x0678
-+#define FSD_PCIE_PHY_TRSV_REG09F_LN_N	0x067c
-+#define FSD_PCIE_PHY_TRSV_REG0A2_LN_N	0x0688
-+#define FSD_PCIE_PHY_TRSV_REG0A4_LN_N	0x0690
-+#define FSD_PCIE_PHY_TRSV_REG0CE_LN_N	0x0738
-+#define FSD_PCIE_PHY_TRSV_REG0FC_LN_N	0x07f0
-+#define FSD_PCIE_PHY_TRSV_REG0FD_LN_N	0x07f4
-+#define FSD_PCIE_PHY_TRSV_REG0FE_LN_N	0x07f8
-+#define FSD_PCIE_PHY_TRSV_REG0CE_LN_1	0x0b38
-+#define FSD_PCIE_PHY_TRSV_REG0CE_LN_2	0x0f38
-+#define FSD_PCIE_PHY_TRSV_REG0CE_LN_3	0x1338
-+
-+/* FSD: PCIe PCS registers */
-+#define FSD_PCIE_PCS_BRF_0		0x0004
-+#define FSD_PCIE_PCS_BRF_1		0x0804
-+#define FSD_PCIE_PCS_CLK		0x0180
-+
-+/* FSD: PCIe SYSREG registers */
-+#define FSD_PCIE_SYSREG_PHY_0_CON			0x042c
-+#define FSD_PCIE_SYSREG_PHY_0_CON_MASK			0x03ff
-+#define FSD_PCIE_SYSREG_PHY_0_REF_SEL			(0x2 << 0)
-+#define FSD_PCIE_SYSREG_PHY_0_REF_SEL_MASK		0x3
-+#define FSD_PCIE_SYSREG_PHY_0_AUX_EN			BIT(4)
-+#define FSD_PCIE_SYSREG_PHY_0_CMN_RSTN			BIT(8)
-+#define FSD_PCIE_SYSREG_PHY_0_INIT_RSTN			BIT(9)
-+
-+#define FSD_PCIE_SYSREG_PHY_1_CON			0x0500
-+#define FSD_PCIE_SYSREG_PHY_1_CON_MASK			0x01ff
-+#define FSD_PCIE_SYSREG_PHY_1_REF_SEL			(0x2 << 4)
-+#define FSD_PCIE_SYSREG_PHY_1_REF_SEL_MASK		0x30
-+#define FSD_PCIE_SYSREG_PHY_1_AUX_EN			BIT(0)
-+#define FSD_PCIE_SYSREG_PHY_1_CMN_RSTN			BIT(1)
-+#define FSD_PCIE_SYSREG_PHY_1_INIT_RSTN			BIT(3)
-+
- /* For Exynos pcie phy */
- struct exynos_pcie_phy {
- 	void __iomem *base;
-+	void __iomem *pcs_base;
- 	struct regmap *pmureg;
- 	struct regmap *fsysreg;
-+	int phy_id;
-+	const struct samsung_drv_data *drv_data;
++/* to store different SoC variants of Samsung */
++enum samsung_pcie_variants {
++	FSD,
++	EXYNOS_5433,
 +};
 +
-+struct samsung_drv_data {
-+	const struct phy_ops *phy_ops;
++/* Values to be written to SYSREG to view DBI space as CDM/DBI2/IATU/DMA */
++enum fsd_pcie_addr_type {
++	ADDR_TYPE_DBI = 0x0,
++	ADDR_TYPE_DBI2 = 0x12,
++	ADDR_TYPE_ATU = 0x36,
++	ADDR_TYPE_DMA = 0x3f,
++};
++
+ struct samsung_pcie_pdata {
+ 	struct pci_ops				*pci_ops;
+ 	const struct dw_pcie_ops		*dwc_ops;
+ 	const struct dw_pcie_host_ops		*host_ops;
++	const struct dw_pcie_ep_ops		*ep_ops;
+ 	const struct samsung_res_ops		*res_ops;
++	unsigned int				soc_variant;
++	enum dw_pcie_device_mode		device_mode;
  };
  
- static void exynos_pcie_phy_writel(void __iomem *base, u32 val, u32 offset)
-@@ -133,9 +235,212 @@ static const struct phy_ops exynos5433_phy_ops = {
- 	.owner		= THIS_MODULE,
+ struct exynos_pcie {
+ 	struct dw_pcie			pci;
+ 	void __iomem			*elbi_base;
+ 	const struct samsung_pcie_pdata	*pdata;
++	struct regmap			*sysreg;
++	unsigned int			sysreg_offset;
+ 	struct clk_bulk_data		*clks;
+ 	struct phy			*phy;
+ 	struct regulator_bulk_data	*supplies;
+@@ -69,6 +100,7 @@ struct exynos_pcie {
+ struct samsung_res_ops {
+ 	int (*init_regulator)(struct exynos_pcie *ep);
+ 	irqreturn_t (*pcie_irq_handler)(int irq, void *arg);
++	void (*set_device_mode)(struct exynos_pcie *ep);
  };
  
-+static void fsd_pcie_phy_writel(struct exynos_pcie_phy *phy_ctrl, u32 offset, u32 val)
+ static void exynos_pcie_writel(void __iomem *base, u32 val, u32 reg)
+@@ -326,11 +358,203 @@ static const struct dw_pcie_ops exynos_dw_pcie_ops = {
+ 	.start_link = exynos_pcie_start_link,
+ };
+ 
++static void fsd_pcie_stop_link(struct dw_pcie *pci)
 +{
-+	void __iomem *phy_base = phy_ctrl->base;
-+	u32 i;
++	u32 val;
++	struct exynos_pcie *ep = to_exynos_pcie(pci);
 +
-+	for (i = 0; i < FSD_PCIE_NUM_LANES; i++)
-+		writel(val, phy_base + (offset + i * FSD_PCIE_LANE_OFFSET));
++	val = readl(ep->elbi_base + FSD_PCIE_APP_LTSSM_ENABLE);
++	val &= ~FSD_PCIE_LTSSM_ENABLE;
++	writel(val, ep->elbi_base + FSD_PCIE_APP_LTSSM_ENABLE);
 +}
 +
-+struct fsd_pcie_phy_pdata {
-+	u32 phy_con_offset;
-+	u32 phy_con_mask;
-+	u32 phy_ref_sel;
-+	u32 phy_ref_sel_mask;
-+	u32 phy_aux_en;
-+	u32 phy_cmn_rstn;
-+	u32 phy_init_rstn;
-+};
-+
-+static const struct fsd_pcie_phy_pdata fsd_phy_con[] = {
++static int fsd_pcie_start_link(struct dw_pcie *pci)
 +{
-+	.phy_con_offset		= FSD_PCIE_SYSREG_PHY_0_CON,
-+	.phy_con_mask		= FSD_PCIE_SYSREG_PHY_0_CON_MASK,
-+	.phy_ref_sel		= FSD_PCIE_SYSREG_PHY_0_REF_SEL,
-+	.phy_ref_sel_mask	= FSD_PCIE_SYSREG_PHY_0_REF_SEL_MASK,
-+	.phy_aux_en		= FSD_PCIE_SYSREG_PHY_0_AUX_EN,
-+	.phy_cmn_rstn		= FSD_PCIE_SYSREG_PHY_0_CMN_RSTN,
-+	.phy_init_rstn		= FSD_PCIE_SYSREG_PHY_0_INIT_RSTN,
-+	},
-+	{
-+	.phy_con_offset		= FSD_PCIE_SYSREG_PHY_1_CON,
-+	.phy_con_mask		= FSD_PCIE_SYSREG_PHY_1_CON_MASK,
-+	.phy_ref_sel		= FSD_PCIE_SYSREG_PHY_1_REF_SEL,
-+	.phy_ref_sel_mask	= FSD_PCIE_SYSREG_PHY_1_REF_SEL_MASK,
-+	.phy_aux_en		= FSD_PCIE_SYSREG_PHY_1_AUX_EN,
-+	.phy_cmn_rstn		= FSD_PCIE_SYSREG_PHY_1_CMN_RSTN,
-+	.phy_init_rstn		= FSD_PCIE_SYSREG_PHY_1_INIT_RSTN,
-+	},
-+	{ },
-+};
++	struct exynos_pcie *ep = to_exynos_pcie(pci);
++	struct dw_pcie_ep *dw_ep = &pci->ep;
 +
-+static int fsd_pcie_phy_reset(struct phy *phy)
-+{
-+	struct exynos_pcie_phy *phy_ctrl = phy_get_drvdata(phy);
-+	const struct fsd_pcie_phy_pdata *pdata = &fsd_phy_con[phy_ctrl->phy_id];
++	if (dw_pcie_link_up(pci))
++		return 0;
 +
-+	writel(0x1, phy_ctrl->pcs_base + FSD_PCIE_PCS_CLK);
++	writel(FSD_PCIE_LTSSM_ENABLE, ep->elbi_base + FSD_PCIE_APP_LTSSM_ENABLE);
 +
-+	regmap_update_bits(phy_ctrl->fsysreg, pdata->phy_con_offset,
-+			pdata->phy_con_mask, 0x0);
-+	regmap_update_bits(phy_ctrl->fsysreg, pdata->phy_con_offset,
-+			pdata->phy_aux_en, pdata->phy_aux_en);
-+	regmap_update_bits(phy_ctrl->fsysreg, pdata->phy_con_offset,
-+			pdata->phy_ref_sel_mask, pdata->phy_ref_sel);
-+	/* perform init reset release */
-+	regmap_update_bits(phy_ctrl->fsysreg, pdata->phy_con_offset,
-+			pdata->phy_init_rstn, pdata->phy_init_rstn);
++	/* no need to wait for link in case of host as core files take care */
++	if (ep->pdata->device_mode == DW_PCIE_RC_TYPE)
++		return 0;
 +
-+	return 0;
-+}
-+
-+static void fsd_pcie_phy1_init(struct exynos_pcie_phy *phy_ctrl)
-+{
-+	void __iomem *pbase = phy_ctrl->base;
-+
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG07B_LN_N, 0x20);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG052_LN_N, 0x00);
-+	writel(0xaa, pbase + FSD_PCIE_PHY_TRSV_CMN_REG01E);
-+	writel(0x28, pbase + FSD_PCIE_PHY_TRSV_CMN_REG02D);
-+	writel(0x28, pbase + FSD_PCIE_PHY_TRSV_CMN_REG031);
-+	writel(0x21, pbase + FSD_PCIE_PHY_TRSV_CMN_REG036);
-+	writel(0x12, pbase + FSD_PCIE_PHY_TRSV_CMN_REG05F);
-+	writel(0x23, pbase + FSD_PCIE_PHY_TRSV_CMN_REG060);
-+	writel(0x0, pbase + FSD_PCIE_PHY_TRSV_CMN_REG061);
-+	writel(0x0, pbase + FSD_PCIE_PHY_TRSV_CMN_REG062);
-+	writel(0x15, pbase + FSD_PCIE_PHY_TRSV_CMN_REG03);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG039_LN_N, 0xf);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG03B_LN_N, 0x13);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG03C_LN_N, 0x66);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG044_LN_N, 0x57);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG03E_LN_N, 0x10);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG03F_LN_N, 0x44);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG043_LN_N, 0x11);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG046_LN_N, 0xef);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG048_LN_N, 0x06);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG049_LN_N, 0xaf);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG04E_LN_N, 0x28);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG068_LN_N, 0x1f);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG069_LN_N, 0xc);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG06A_LN_N, 0x8);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG06B_LN_N, 0x78);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG083_LN_N, 0xa);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG084_LN_N, 0x80);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG087_LN_N, 0x30);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG08B_LN_N, 0xa0);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG09C_LN_N, 0xf7);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG09E_LN_N, 0x33);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG0A2_LN_N, 0xfa);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG0A4_LN_N, 0xf2);
-+	writel(0x8, pbase + FSD_PCIE_PHY_TRSV_REG0CE_LN_N);
-+	writel(0x9, pbase + FSD_PCIE_PHY_TRSV_REG0CE_LN_1);
-+	writel(0x9, pbase + FSD_PCIE_PHY_TRSV_REG0CE_LN_2);
-+	writel(0x9, pbase + FSD_PCIE_PHY_TRSV_REG0CE_LN_3);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG0FE_LN_N, 0x33);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG001_LN_N, 0x3f);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG005_LN_N, 0x2b);
-+}
-+
-+static void fsd_pcie_phy0_init(struct exynos_pcie_phy *phy_ctrl)
-+{
-+	void __iomem *pbase = phy_ctrl->base;
-+
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG07B_LN_N, 0x20);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG052_LN_N, 0x00);
-+	writel(0x11, pbase + FSD_PCIE_PHY_TRSV_CMN_REG05F);
-+	writel(0x23, pbase + FSD_PCIE_PHY_TRSV_CMN_REG060);
-+	writel(0x0, pbase + FSD_PCIE_PHY_TRSV_CMN_REG062);
-+	writel(0x15, pbase + FSD_PCIE_PHY_TRSV_CMN_REG03);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG0CE_LN_N, 0x8);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG039_LN_N, 0xf);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG03B_LN_N, 0x13);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG03C_LN_N, 0xf6);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG044_LN_N, 0x57);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG03E_LN_N, 0x10);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG03F_LN_N, 0x04);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG043_LN_N, 0x11);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG049_LN_N, 0x6f);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG04E_LN_N, 0x18);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG068_LN_N, 0x1f);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG069_LN_N, 0xc);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG06B_LN_N, 0x78);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG083_LN_N, 0xa);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG084_LN_N, 0x80);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG086_LN_N, 0xff);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG087_LN_N, 0x3c);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG09D_LN_N, 0x7c);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG09E_LN_N, 0x33);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG09F_LN_N, 0x33);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG001_LN_N, 0x3f);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG002_LN_N, 0x1c);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG005_LN_N, 0x2b);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG006_LN_N, 0x3);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG007_LN_N, 0x0c);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG009_LN_N, 0x10);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG00A_LN_N, 0x1);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG00C_LN_N, 0x93);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG012_LN_N, 0x1);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG013_LN_N, 0x0);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG014_LN_N, 0x70);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG015_LN_N, 0x0);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG016_LN_N, 0x70);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG0FC_LN_N, 0x80);
-+	fsd_pcie_phy_writel(phy_ctrl, FSD_PCIE_PHY_TRSV_REG0FD_LN_N, 0x0);
-+}
-+
-+static int fsd_pcie_phy_init(struct phy *phy)
-+{
-+	struct exynos_pcie_phy *phy_ctrl = phy_get_drvdata(phy);
-+	void __iomem *phy_base = phy_ctrl->base;
-+	const struct fsd_pcie_phy_pdata *pdata = &fsd_phy_con[phy_ctrl->phy_id];
-+
-+	fsd_pcie_phy_reset(phy);
-+
-+	if (phy_ctrl->phy_id == 1)
-+		writel(0x2, phy_base + FSD_PCIE_PHY_CMN_RESET);
-+
-+	writel(0x00, phy_ctrl->pcs_base + FSD_PCIE_PCS_BRF_0);
-+	writel(0x00, phy_ctrl->pcs_base + FSD_PCIE_PCS_BRF_1);
-+	writel(0x00, phy_base + FSD_PCIE_PHY_AGG_BIF_RESET);
-+	writel(0x00, phy_base + FSD_PCIE_PHY_AGG_BIF_CLOCK);
-+
-+	if (phy_ctrl->phy_id == 1) {
-+		fsd_pcie_phy1_init(phy_ctrl);
-+		writel(0x3, phy_base + FSD_PCIE_PHY_CMN_RESET);
-+	} else {
-+		fsd_pcie_phy0_init(phy_ctrl);
++	/* check if the link is up or not in case of EP */
++	if (!dw_pcie_wait_for_link(pci)) {
++		dw_pcie_ep_linkup(dw_ep);
++		return 0;
 +	}
 +
-+	regmap_update_bits(phy_ctrl->fsysreg, pdata->phy_con_offset,
-+			pdata->phy_cmn_rstn, pdata->phy_cmn_rstn);
++	return -ETIMEDOUT;
++}
++
++static irqreturn_t fsd_pcie_irq_handler(int irq, void *arg)
++{
++	u32 val;
++	struct exynos_pcie *ep = arg;
++	struct dw_pcie *pci = &ep->pci;
++	struct dw_pcie_rp *pp = &pci->pp;
++
++	val = readl(ep->elbi_base + FSD_IRQ2_STS);
++	if ((val & FSD_IRQ_MSI_ENABLE) == FSD_IRQ_MSI_ENABLE) {
++		val &= FSD_IRQ_MSI_ENABLE;
++		writel(val, ep->elbi_base + FSD_IRQ2_STS);
++		dw_handle_msi_irq(pp);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static void fsd_pcie_msi_init(struct exynos_pcie *ep)
++{
++	int val;
++
++	val = readl(ep->elbi_base + FSD_IRQ2_EN);
++	val |= FSD_IRQ_MSI_ENABLE;
++	writel(val, ep->elbi_base + FSD_IRQ2_EN);
++}
++
++static void __iomem *fsd_atu_setting(struct dw_pcie *pci, void __iomem *base)
++{
++	struct exynos_pcie *ep = to_exynos_pcie(pci);
++
++	if (base >= pci->atu_base) {
++		regmap_write(ep->sysreg, ep->sysreg_offset, ADDR_TYPE_ATU);
++		return (base - DEFAULT_DBI_ATU_OFFSET);
++	} else if (base == pci->dbi_base) {
++		regmap_write(ep->sysreg, ep->sysreg_offset, ADDR_TYPE_DBI);
++	} else if (base == pci->dbi_base2) {
++		regmap_write(ep->sysreg, ep->sysreg_offset, ADDR_TYPE_DBI2);
++	}
++
++	return base;
++}
++
++static u32 fsd_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
++				u32 reg, size_t size)
++{
++	void __iomem *addr;
++	u32 val;
++
++	addr = fsd_atu_setting(pci, base);
++
++	dw_pcie_read(addr + reg, size, &val);
++
++	return val;
++}
++
++static void fsd_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base,
++				u32 reg, size_t size, u32 val)
++{
++	void __iomem *addr;
++
++	addr = fsd_atu_setting(pci, base);
++
++	dw_pcie_write(addr + reg, size, val);
++}
++
++static void fsd_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base,
++				u32 reg, size_t size, u32 val)
++{
++	struct exynos_pcie *ep = to_exynos_pcie(pci);
++
++	fsd_atu_setting(pci, base);
++	dw_pcie_write(pci->dbi_base + reg, size, val);
++	regmap_write(ep->sysreg, ep->sysreg_offset, ADDR_TYPE_DBI);
++}
++
++static bool fsd_pcie_link_up(struct dw_pcie *pci)
++{
++	u32 val;
++	struct exynos_pcie *ep = to_exynos_pcie(pci);
++
++	val = readl(ep->elbi_base + FSD_PCIE_CXPL_DEBUG_00_31);
++	val &= PORT_LOGIC_LTSSM_STATE_MASK;
++
++	return (val == PORT_LOGIC_LTSSM_STATE_L0);
++}
++
++static int fsd_pcie_host_init(struct dw_pcie_rp *pp)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	struct exynos_pcie *ep = to_exynos_pcie(pci);
++
++	phy_init(ep->phy);
++	fsd_pcie_msi_init(ep);
 +
 +	return 0;
 +}
 +
-+static const struct phy_ops fsd_phy_ops = {
-+	.init		= fsd_pcie_phy_init,
-+	.reset		= fsd_pcie_phy_reset,
-+	.owner		= THIS_MODULE,
++static const struct dw_pcie_host_ops fsd_pcie_host_ops = {
++	.init = fsd_pcie_host_init,
 +};
 +
-+static const struct samsung_drv_data exynos5433_drv_data = {
-+	.phy_ops		= &exynos5433_phy_ops,
++static int fsd_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
++				 unsigned int type, u16 interrupt_num)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
++
++	switch (type) {
++	case PCI_IRQ_INTX:
++		return dw_pcie_ep_raise_intx_irq(ep, func_no);
++	case PCI_IRQ_MSIX:
++		dev_err(pci->dev, "EP does not support MSIX\n");
++		return -EINVAL;
++	case PCI_IRQ_MSI:
++		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
++	default:
++		dev_err(pci->dev, "UNKNOWN IRQ type\n");
++	}
++
++	return 0;
++}
++
++static const struct pci_epc_features fsd_pcie_epc_features = {
++	.linkup_notifier = false,
++	.msi_capable = true,
++	.msix_capable = false,
 +};
 +
-+static const struct samsung_drv_data fsd_drv_data = {
-+	.phy_ops		= &fsd_phy_ops,
++static const struct pci_epc_features *fsd_pcie_get_features(struct dw_pcie_ep *ep)
++{
++	return &fsd_pcie_epc_features;
++}
++
++static const struct dw_pcie_ep_ops fsd_ep_ops = {
++	.raise_irq	= fsd_pcie_raise_irq,
++	.get_features	= fsd_pcie_get_features,
 +};
 +
- static const struct of_device_id exynos_pcie_phy_match[] = {
- 	{
- 		.compatible = "samsung,exynos5433-pcie-phy",
-+		.data = &exynos5433_drv_data,
++static void fsd_set_device_mode(struct exynos_pcie *ep)
++{
++	if (ep->pdata->device_mode == DW_PCIE_RC_TYPE)
++		writel(FSD_DEVICE_TYPE_RC, ep->elbi_base + FSD_PCIE_DEVICE_TYPE);
++	else
++		writel(FSD_DEVICE_TYPE_EP, ep->elbi_base + FSD_PCIE_DEVICE_TYPE);
++}
++
++static const struct dw_pcie_ops fsd_dw_pcie_ops = {
++	.read_dbi	= fsd_pcie_read_dbi,
++	.write_dbi	= fsd_pcie_write_dbi,
++	.write_dbi2	= fsd_pcie_write_dbi2,
++	.start_link	= fsd_pcie_start_link,
++	.stop_link	= fsd_pcie_stop_link,
++	.link_up	= fsd_pcie_link_up,
++};
++
+ static const struct samsung_res_ops exynos_res_ops_data = {
+ 	.init_regulator		= exynos_init_regulator,
+ 	.pcie_irq_handler	= exynos_pcie_irq_handler,
+ };
+ 
++static const struct samsung_res_ops fsd_res_ops_data = {
++	.pcie_irq_handler	= fsd_pcie_irq_handler,
++	.set_device_mode	= fsd_set_device_mode,
++};
++
+ static int exynos_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -353,6 +577,26 @@ static int exynos_pcie_probe(struct platform_device *pdev)
+ 	if (IS_ERR(ep->phy))
+ 		return PTR_ERR(ep->phy);
+ 
++	if (ep->pdata->soc_variant == FSD) {
++		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(36));
++		if (ret)
++			return ret;
++
++		ep->sysreg = syscon_regmap_lookup_by_phandle(dev->of_node,
++				"samsung,syscon-pcie");
++		if (IS_ERR(ep->sysreg)) {
++			dev_err(dev, "sysreg regmap lookup failed.\n");
++			return PTR_ERR(ep->sysreg);
++		}
++
++		ret = of_property_read_u32_index(dev->of_node, "samsung,syscon-pcie", 1,
++						 &ep->sysreg_offset);
++		if (ret) {
++			dev_err(dev, "couldn't get the register offset for syscon!\n");
++			return ret;
++		}
++	}
++
+ 	/* External Local Bus interface (ELBI) registers */
+ 	ep->elbi_base = devm_platform_ioremap_resource_byname(pdev, "elbi");
+ 	if (IS_ERR(ep->elbi_base))
+@@ -373,13 +617,43 @@ static int exynos_pcie_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	platform_set_drvdata(pdev, ep);
+-	ret = samsung_irq_init(ep, pdev);
+-	if (ret)
+-		goto fail_regulator;
+-	ep->pci.pp.ops = pdata->host_ops;
+-	ret = dw_pcie_host_init(&ep->pci.pp);
+-	if (ret < 0)
++
++	if (pdata->res_ops->set_device_mode)
++		pdata->res_ops->set_device_mode(ep);
++
++	switch (ep->pdata->device_mode) {
++	case DW_PCIE_RC_TYPE:
++		ret = samsung_irq_init(ep, pdev);
++		if (ret)
++			goto fail_regulator;
++
++		ep->pci.pp.ops = pdata->host_ops;
++
++		ret = dw_pcie_host_init(&ep->pci.pp);
++		if (ret < 0)
++			goto fail_phy_init;
++
++		break;
++	case DW_PCIE_EP_TYPE:
++		phy_init(ep->phy);
++
++		ep->pci.ep.ops = pdata->ep_ops;
++
++		ret = dw_pcie_ep_init(&ep->pci.ep);
++		if (ret < 0)
++			goto fail_phy_init;
++
++		ret = dw_pcie_ep_init_registers(&ep->pci.ep);
++		if (ret)
++			goto fail_phy_init;
++
++		pci_epc_init_notify(ep->pci.ep.epc);
++
++		break;
++	default:
++		dev_err(dev, "invalid device type\n");
+ 		goto fail_phy_init;
++	}
+ 
+ 	return 0;
+ 
+@@ -395,8 +669,11 @@ static void exynos_pcie_remove(struct platform_device *pdev)
+ {
+ 	struct exynos_pcie *ep = platform_get_drvdata(pdev);
+ 
++	if (ep->pdata->device_mode == DW_PCIE_EP_TYPE)
++		return;
+ 	dw_pcie_host_deinit(&ep->pci.pp);
+-	exynos_pcie_assert_core_reset(ep);
++	if (ep->pdata->soc_variant == EXYNOS_5433)
++		exynos_pcie_assert_core_reset(ep);
+ 	phy_power_off(ep->phy);
+ 	phy_exit(ep->phy);
+ 	samsung_regulator_disable(ep);
+@@ -405,8 +682,16 @@ static void exynos_pcie_remove(struct platform_device *pdev)
+ static int exynos_pcie_suspend_noirq(struct device *dev)
+ {
+ 	struct exynos_pcie *ep = dev_get_drvdata(dev);
++	struct dw_pcie *pci = &ep->pci;
+ 
+-	exynos_pcie_assert_core_reset(ep);
++	if (ep->pdata->device_mode == DW_PCIE_EP_TYPE)
++		return 0;
++
++	if (ep->pdata->dwc_ops->stop_link)
++		ep->pdata->dwc_ops->stop_link(pci);
++
++	if (ep->pdata->soc_variant == EXYNOS_5433)
++		exynos_pcie_assert_core_reset(ep);
+ 	phy_power_off(ep->phy);
+ 	phy_exit(ep->phy);
+ 	samsung_regulator_disable(ep);
+@@ -421,6 +706,9 @@ static int exynos_pcie_resume_noirq(struct device *dev)
+ 	struct dw_pcie_rp *pp = &pci->pp;
+ 	int ret;
+ 
++	if (ep->pdata->device_mode == DW_PCIE_EP_TYPE)
++		return 0;
++
+ 	ret = samsung_regulator_enable(ep);
+ 	if (ret)
+ 		return ret;
+@@ -437,11 +725,30 @@ static const struct dev_pm_ops exynos_pcie_pm_ops = {
+ 				  exynos_pcie_resume_noirq)
+ };
+ 
++
++static const struct samsung_pcie_pdata fsd_hw3_pcie_rc_pdata = {
++	.dwc_ops		= &fsd_dw_pcie_ops,
++	.host_ops		= &fsd_pcie_host_ops,
++	.res_ops		= &fsd_res_ops_data,
++	.soc_variant		= FSD,
++	.device_mode		= DW_PCIE_RC_TYPE,
++};
++
++static const struct samsung_pcie_pdata fsd_hw3_pcie_ep_pdata = {
++	.dwc_ops		= &fsd_dw_pcie_ops,
++	.ep_ops			= &fsd_ep_ops,
++	.res_ops		= &fsd_res_ops_data,
++	.soc_variant		= FSD,
++	.device_mode		= DW_PCIE_EP_TYPE,
++};
++
+ static const struct samsung_pcie_pdata exynos_5433_pcie_rc_pdata = {
+ 	.dwc_ops		= &exynos_dw_pcie_ops,
+ 	.pci_ops		= &exynos_pci_ops,
+ 	.host_ops		= &exynos_pcie_host_ops,
+ 	.res_ops		= &exynos_res_ops_data,
++	.soc_variant		= EXYNOS_5433,
++	.device_mode		= DW_PCIE_RC_TYPE,
+ };
+ 
+ static const struct of_device_id exynos_pcie_of_match[] = {
+@@ -449,6 +756,14 @@ static const struct of_device_id exynos_pcie_of_match[] = {
+ 		.compatible = "samsung,exynos5433-pcie",
+ 		.data = (void *) &exynos_5433_pcie_rc_pdata,
+ 	},
++	{
++		.compatible = "tesla,fsd-pcie",
++		.data = (void *) &fsd_hw3_pcie_rc_pdata,
 +	},
 +	{
-+		.compatible = "tesla,fsd-pcie-phy",
-+		.data = &fsd_drv_data,
- 	},
- 	{},
++		.compatible = "tesla,fsd-pcie-ep",
++		.data = (void *) &fsd_hw3_pcie_ep_pdata,
++	},
+ 	{ },
  };
-@@ -146,11 +451,18 @@ static int exynos_pcie_phy_probe(struct platform_device *pdev)
- 	struct exynos_pcie_phy *exynos_phy;
- 	struct phy *generic_phy;
- 	struct phy_provider *phy_provider;
-+	const struct samsung_drv_data *drv_data;
-+
-+	drv_data = of_device_get_match_data(dev);
-+	if (!drv_data)
-+		return -ENODEV;
- 
- 	exynos_phy = devm_kzalloc(dev, sizeof(*exynos_phy), GFP_KERNEL);
- 	if (!exynos_phy)
- 		return -ENOMEM;
- 
-+	exynos_phy->drv_data = drv_data;
-+
- 	exynos_phy->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(exynos_phy->base))
- 		return PTR_ERR(exynos_phy->base);
-@@ -169,12 +481,15 @@ static int exynos_pcie_phy_probe(struct platform_device *pdev)
- 		return PTR_ERR(exynos_phy->fsysreg);
- 	}
- 
--	generic_phy = devm_phy_create(dev, dev->of_node, &exynos5433_phy_ops);
-+	generic_phy = devm_phy_create(dev, dev->of_node, drv_data->phy_ops);
- 	if (IS_ERR(generic_phy)) {
- 		dev_err(dev, "failed to create PHY\n");
- 		return PTR_ERR(generic_phy);
- 	}
- 
-+	exynos_phy->pcs_base = devm_platform_ioremap_resource(pdev, 1);
-+
-+	exynos_phy->phy_id = of_alias_get_id(dev->of_node, "pciephy");
- 	phy_set_drvdata(generic_phy, exynos_phy);
- 	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
  
 -- 
 2.49.0
