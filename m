@@ -1,133 +1,145 @@
-Return-Path: <linux-pci+bounces-30582-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30583-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2CEBAE7ADC
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 10:51:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77D1DAE7AAF
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 10:47:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 814857B5919
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 08:45:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 630B31BC0479
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jun 2025 08:47:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0551F28936B;
-	Wed, 25 Jun 2025 08:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LwbAQ1Cr"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22BD128DF3D;
+	Wed, 25 Jun 2025 08:45:44 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC72288CB2
-	for <linux-pci@vger.kernel.org>; Wed, 25 Jun 2025 08:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D501828A1D4;
+	Wed, 25 Jun 2025 08:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750841130; cv=none; b=iGqiggPYt/xfGDfIPMnSugPLHUn2OM4oJGPDl7wLA9G+pOh807xBL4UwoJXBRMxFc4rYt70V1SBI9Uq5OPWHSvMovoJL3vNK8YX8a/7tL3zmIhBx5WUT9HF3UapeeL2MxSseFD38TPE34FSFOp2Pg4oXuPxViWq3+RqWwgfqTFk=
+	t=1750841144; cv=none; b=gt6qPTOJ3U9pXjTPEyxwFAG+eN9AtXALV08NPyXDe8arMO+qdRiSY3uSEaBxAJI87CbndXWXo2wW+PDeVoRnV8GqRfUOy1axH7xT6LcLYoKle8wTrS6i8FmleaqApGfmL0/aZ3C4NPIYB9Ym0zvBQyEDU0M3HmVINU/S3LRJ170=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750841130; c=relaxed/simple;
-	bh=4CWyVOg1ySsSGm3tCccXgrCtfZcjTGRY536tD9B4aXc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YEOhe8YQ1M3cipBqkWoGo6c3CvPWSJQAGZmvtJOX/S2qecMzp+qXisw5F7s5gb4t+B8HA4LzS4mkhVaVUYFH0BfOacpoBv+ka52bEEi1j3N2VOA4HVlAqO4FafFNnvatbqu+poRIoRsyqOhpVaVF34Gjb702G4t7/2A+h6P685E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LwbAQ1Cr; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32add56e9ddso51976891fa.2
-        for <linux-pci@vger.kernel.org>; Wed, 25 Jun 2025 01:45:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750841127; x=1751445927; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4CWyVOg1ySsSGm3tCccXgrCtfZcjTGRY536tD9B4aXc=;
-        b=LwbAQ1Cr3YZihFgPa5aK9bUmn44ivPfF5qkBM8w6l/uw+BGgxyzRFFDannqOEjx/gX
-         aEAc1T+yPBUSAdiG2JCq0B6E0+1sWJekOFyCwpg4qbTAMUc5iTIsqyNbO4ifOIZrBXBf
-         GRtlQKXAPk2dxGqlv7WDWt/42F/TdnxWe/05eLVL4iDJ7iW5/AbCaQyl/qgqOWSoW+QI
-         cQptVJGDMMS7hXIK9qUicyEmM0RVLlilpu4h3tSBTy94ehG8IysLPlyXksaUyD1QFIih
-         DYyoiOQI6Vfwr3R4As1c0LSjYYvso/oycxykAAg4S98+/RyfAfEzPdDE2SVE89IJNrnP
-         9KqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750841127; x=1751445927;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4CWyVOg1ySsSGm3tCccXgrCtfZcjTGRY536tD9B4aXc=;
-        b=gVjMGQFkijl0vrQiHcYtwvRe2Bn6xViAMAbmaKAogTKsjT6/VXLEuUTC2S+sIucbMn
-         OnAk8Rn6SLNfpB4f8rLzplWKQ1GGa5XMSz9vgsEpPBiMjjviOFsJb/Fr19W579NFfAl8
-         u/Xl0uPDZ1okNrqtw0BjnYEqY99Qt2k0aWdxaqmPBRzIEM1uzx59WajeIUg3f2IfJ8Ap
-         GUv3L+gF4/64qXE/xhSz3h7AIRyetNmclHxWfQwvJmE+qltq4tQLlV6VT5AG7zvrZBPk
-         Ut1ilts/YnXR7zxVUVwNhvRHW9cIcCvHKJG+wsqZ5aPRdGzQfll4drxZ8/XFDm4o/Hkf
-         varQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyhFJWGwmSaLwKxvWIqvV/u9jy0uLfytdWRWhx8avxNzX7xaABwI/VR8yOTXk3YEvCk7HPR1pdBeU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfKBxq4Sk0hR2O0YFmvXs8bc5zYMaOf9fWNyF2DRxlflBfgxOa
-	0Ygei/tGpoA0gpJR8EL2v4vsekafcD32N1AUE2K6zI0sj07y3DgBldayfDiMRxYs4NPgrwZPmC4
-	WVrOy7aaC2gwgRlbfYLbG+aIWxABJ9KtMQSy5FeqdzA==
-X-Gm-Gg: ASbGncuM25OQSD9w313sA9GjKDwHJgaRKUO65+IP6fAOsFiIpM7FUzLNAhbEvhhFShF
-	Hjh9AI2HoGShBYSQDdrJwjow7HqYMYwWznuEnpQlZTtOrzFdrRoqgvJ4Hod39vA1/UufS9xzKXX
-	GPf2WFn5rVBrvN42odEzQB2gjn0Pe7rFmZ9Mt0zzMOAtM=
-X-Google-Smtp-Source: AGHT+IE+JyenPgPvT+Svvv9s+V0VraZ6su8hbOajVsCqvqbMTxCrk4fBzjbCyvVMQ0l2eId9Zjx6ak0ozUYWm+PwBYY=
-X-Received: by 2002:a05:651c:4201:b0:32b:533a:ef76 with SMTP id
- 38308e7fff4ca-32cc6490c2cmr5605931fa.13.1750841127084; Wed, 25 Jun 2025
- 01:45:27 -0700 (PDT)
+	s=arc-20240116; t=1750841144; c=relaxed/simple;
+	bh=C1O7OsyYahrbb5xTlS/F31FLcQAAo/jwL30cSWQC9g0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P8RLUSU5huk8Ds4ZQCwcOmIp1mXSs18eI2cn+4TDx9/2/KpLWLhBdMkoiXbAhGccIFxNL1zbEZxMvvYvsrXMa9HxfgoyOqoCMc+d4m3jQia/KqRRJvZLRk8B1etB3imF9YeBoBqcd/jFsnMNphMUqYn02+QZzL1eS6CzsZkehVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 904BB2C05264;
+	Wed, 25 Jun 2025 10:45:38 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 477423B709D; Wed, 25 Jun 2025 10:45:38 +0200 (CEST)
+Date: Wed, 25 Jun 2025 10:45:38 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Timothy Pearson <tpearson@raptorengineering.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-pci <linux-pci@vger.kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	christophe leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Anastasio <sanastasio@raptorengineering.com>
+Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches with
+ broken
+Message-ID: <aFu3Mg9SqlaDTw9z@wunner.de>
+References: <20250618201722.GA1220739@bhelgaas>
+ <1155677312.1313623.1750361373491.JavaMail.zimbra@raptorengineeringinc.com>
+ <aFUTV87SMdpHRbt8@wunner.de>
+ <318974284.1316210.1750437945118.JavaMail.zimbra@raptorengineeringinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8c282b89b1aa8b9e3c00f6bd3980332c47d82df7.1750778806.git.andrea.porta@suse.com>
- <9d31a4d7-ffd1-48ca-8df6-0ddc6683a49c@broadcom.com>
-In-Reply-To: <9d31a4d7-ffd1-48ca-8df6-0ddc6683a49c@broadcom.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 25 Jun 2025 10:45:15 +0200
-X-Gm-Features: AX0GCFs5reLO3eAptejwJU5aIb8qpce34Nq1CQTt9TXYf2HTB17zcNXvrt_8Yc4
-Message-ID: <CACRpkdbAxyZK_f8y6mzX_eJ3UM5ZtuXEpSmXE+QpUXaHKw_NGg@mail.gmail.com>
-Subject: Re: [PATCH stblinux/next] pinctrl: rp1: Implement RaspberryPi RP1
- pinmux/pinconf support
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Andrea della Porta <andrea.porta@suse.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof Wilczynski <kw@linux.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, 
-	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Masahiro Yamada <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>, 
-	Herve Codina <herve.codina@bootlin.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Phil Elwell <phil@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <318974284.1316210.1750437945118.JavaMail.zimbra@raptorengineeringinc.com>
 
-On Tue, Jun 24, 2025 at 11:11=E2=80=AFPM Florian Fainelli
-<florian.fainelli@broadcom.com> wrote:
-> On 6/24/25 08:36, Andrea della Porta wrote:
-> > The current implementation for the pin controller peripheral
-> > on the RP1 chipset supports gpio functionality and just the
-> > basic configuration of pin hw capabilities.
-> >
-> > Add support for selecting the pin alternate function (pinmux)
-> > and full configuration of the pin (pinconf).
-> >
-> > Related pins are also gathered into groups.
-> >
-> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
->
-> Linus, can I get an ack or reviewed by tag from you and take that in the
-> next few days to go with the Broadcom ARM SoC pull requests? Thanks!
+On Fri, Jun 20, 2025 at 11:45:45AM -0500, Timothy Pearson wrote:
+> From: "Lukas Wunner" <lukas@wunner.de>
+> > I don't know how much PCIe hotplug on PowerNV differs from native,
+> > spec-compliant PCIe hotplug.  If the differences are vast (and I
+> > get the feeling they might be if I read terms like "PHB" and
+> > "EEH unfreeze", which sound completely foreign to me), it might
+> > be easier to refactor pnv_php.c and copy patterns or code from
+> > pciehp, than to integrate the functionality from pnv_php.c into
+> > pciehp.
+> 
+> The differences at the root level (PHB) are quite significant -- the
+> controller is more advanced in many ways than standard PCIe root
+> complexes [1] -- and those differences need very special handling.
+> Once we are looking at devices downstream of the root complex,
+> standard PCIe hotplug and AER specifications apply, so we're in a
+> strange spot of really wanting to use pciehp (to handle all nested
+> downstream bridges), but pciehp still needs to understand how to deal
+> with our unqiue root complex.
+> 
+> One idea I had was to use the existing modularity of pciehp's source
+> and add a new pciehp_powernv.c file with all of our root complex
+> handling methods.  We could then #ifdef swap the assocated root complex
+> calls to that external file when compiled in PowerNV mode.
 
-I was just very confused by the "stblinux/next" thing in the
-subject ... what is that even. I thought the patch was for some
-outoftree stuff.
+We've traditionally dealt with such issues by inserting pcibios_*()
+hooks in generic code, with a __weak implementation (which is usually
+an empty stub) and a custom implementation in arch/powerpc/.
 
-But go ahead!
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+The linker then chooses the custom implementation over the __weak one.
 
-Yours,
-Linus Walleij
+You can find the existing hooks with:
+
+git grep "__weak .*pcibios" -- drivers/pci
+git grep pcibios -- arch/powerpc
+
+An alternative method is to add a callback to struct pci_host_bridge.
+
+> > One thing I don't quite understand is, it sounds like you've
+> > attached a PCIe switch to a Root Port and the hotplug ports
+> > are on the PCIe switch.  Aren't those hotplug ports just
+> > bog-standard ones that can be driven by pciehp?  My expectation
+> > would have been that a PowerNV-specific hotplug driver would
+> > only be necessary for hotplug-capable Root Ports.
+> 
+> That's the problem -- the pciehp driver assumes x86 root ports,
+
+Nah, there's nothing x86-specific about it.  pciehp is used on all
+kinds of arches, it's just an implementation of the PCIe Base Spec.
+
+> and the powernv driver ends up duplicating (badly) parts of the pciehp
+> functionality for downstream bridges.  That's one reason I'd like to
+> abstract the root port handling in pciehp and eventually move the
+> PowerNV root port handling into that module.
+
+Sounds like you're currently describing the Switch Downstream Ports with
+an "ibm,ioda-phb2" compatible string in the devicetree?  That would feel
+wrong since they're not host bridges.
+
+> [1] Among other interesting differences, it is both capable of and has
+> been tested to properly block and report all invalid accesses from a
+> PCIe device to system memory.  This breaks assumptions in many PCIe
+> device drivers, but is also a significant security advantage.
+> EEH freeze is effectively this security mechanism kicking in -- on
+> detecting an invalid access, the PHB itself will block the access and
+> put the PE into a frozen state where no PCIe traffic is permitted.
+
+That sounds somewhat similar to what the PCIe Access Control Services
+Capability provides.  I think at least some IOMMUs support raising an
+exception on illegal accesses, so the EEH functionality is probably not
+*that* special.
+
+Thanks,
+
+Lukas
 
