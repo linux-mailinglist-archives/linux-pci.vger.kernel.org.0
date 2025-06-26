@@ -1,244 +1,403 @@
-Return-Path: <linux-pci+bounces-30693-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30694-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25C9CAE96FA
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 09:41:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D775AE99D7
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 11:22:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D96A3189B1F6
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 07:41:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7DF3617FB07
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 09:22:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BCB4255F49;
-	Thu, 26 Jun 2025 07:40:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 904F225C70D;
+	Thu, 26 Jun 2025 09:22:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="U3SVVEsN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JJ1AYg1L"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013003.outbound.protection.outlook.com [40.107.159.3])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0F82517A5;
-	Thu, 26 Jun 2025 07:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.3
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750923638; cv=fail; b=bycQV/Vgfe+sWLBl9iUyvXQsjJhJbilF7qSnLK8PudTYcXxTyA45IsbSOZ++zmQxRB0rKX8eluvkYGAjS3FwjQLqF00AEL/20BwJiGBL/aHh2zKMmPioV24PSW3UgVxFkj69pKHdS6AiQOaxF0SA3LlrHRrytmadtt0d7g/Ezy4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750923638; c=relaxed/simple;
-	bh=5zxyQk8sBsHit1j+VFOjhWGiRO0vGHPG8DFw9Q61nQM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nanm8GzzZKbDWyFyuOrBw0DawxbtPMEFYJAaJqgUtt4aV8+Qph9CCqCmt4xMCpfy5u9kHXz1FKTx8ypwERFBuokjx2BXZ9vQQMOMieR1IO+AHCdQi6X8iBFmwCa2Xf3erWSG+2Xq1OSRGSwMXiTZLzYxtBYlg/FuzHgmadseH4Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=U3SVVEsN; arc=fail smtp.client-ip=40.107.159.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hVyOnjckZB6EJArSNn61rhkZY0HL9P9JJFm1KewBBOpy/Tzak3KDJO0mia6TEwutucwhkhV2qRgNVHIw/XNuSpC9yHbHHQf8qnZv97qNfe+gTvIB79oDrxHpD5HDQEf7yj0JFpROMinWqQ5nSE5FUPNd37lAyILYwym3hBeL8LKU4vmCgEVdGWPoPafmJq9z3CqbbocruVkwf560BOWUxq0JYs291J9m8e0CoUMkqwiLmHZU0XGU6oYRR7HMgptccCoG/ByrPmM1FnwD9jYShiAA5AWUYorJY2mlf2d/ubgjyaebc5382x+yGSetchwyVaPKKAUpHVL91Ft2zVg5Tw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=taXVF/P+T6UOGAxWwW2qLlDfpmZ0Syy5dXbz0TslR+4=;
- b=kVUDUGo9naKfWv3o8NtlaTOL4vwvR9jcrqBaNlJodG8enxURwwqHeh48nMHoZFKxb1rHUdbJGCq8ob+EQrE7l21+iZxAM/5rsS98rd60zcgxjU7l4PT9BL6rc5LZAwXZjAto5zE9Gc/+MfgrNFasy6+r/v8hFVrTLWBHTBCbMD6Sj+iCua+PIjbDZ2yXr3DsFMLXyToDXnTbo7Qa6m+6CyXfO9/FqQ0AIXLQDhlY/E6Iskxws83gzXRrEQX9EVP3PEzm6uf8qqqxwWAFwPW30og/V5Og63G81WgeI/OP90E6iaDzAPk3ZKXTSInvaKuKugbYI/tpbBAQ79ruihzkPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=taXVF/P+T6UOGAxWwW2qLlDfpmZ0Syy5dXbz0TslR+4=;
- b=U3SVVEsNnG5A+vGS324XGAycVbYxCqBQykXTnKBKYtw4EPKwIyQIPLFsPpvNDD+eleMfI2trcYJqlJI+uRJSQzklTyL/5Lg3AzBKGgHCg7ACDwnLUMLnJHZCSmmwgfr1CM0bR3WdNxyYasbQ7/fN97D9SU87meR4ALD56FQz9chInKwN6oBIL02O2JZuIXQF77tG6zg3q9XDTwRgBkf3jTBt6/lntaBXRF8La6Kiv9/k7xpvibwahKcAO1vaR8LQZtHu3l0CAgeeG4S9mt6HxwMOKS/SEdgCq45dIE2ffiE210Sg6lxkNnxOOfa7GemGlN3Yx7N5xJybjZYTRvpZ6w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
- by PAXPR04MB8425.eurprd04.prod.outlook.com (2603:10a6:102:1c7::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.27; Thu, 26 Jun
- 2025 07:40:31 +0000
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93]) by AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93%4]) with mapi id 15.20.8857.026; Thu, 26 Jun 2025
- 07:40:31 +0000
-From: Richard Zhu <hongxing.zhu@nxp.com>
-To: frank.li@nxp.com,
-	l.stach@pengutronix.de,
-	lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	mani@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	bhelgaas@google.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com
-Cc: linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v4 3/3] PCI: imx6: Add external reference clock mode support
-Date: Thu, 26 Jun 2025 15:38:04 +0800
-Message-Id: <20250626073804.3113757-4-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20250626073804.3113757-1-hongxing.zhu@nxp.com>
-References: <20250626073804.3113757-1-hongxing.zhu@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MA0PR01CA0035.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:81::6) To AS8PR04MB8676.eurprd04.prod.outlook.com
- (2603:10a6:20b:42b::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871F9299937;
+	Thu, 26 Jun 2025 09:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750929772; cv=none; b=kcxu9aEp3ePxeKroZbIW697HJUh0RKnfshwin28OE08IjH0l2s8p8WpE2c2FC3kjagDcNqFvWy4E+/GwR73CIkaiUykDbj2Alh9Pmzouykl4K0yV14mMqIXYxsTSgVp0Ncdi25OOcVjNhpS03sMF5exNkUSQ1CoKLG+LSmZZqW0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750929772; c=relaxed/simple;
+	bh=ddGGzGpYLlRuCDvqVCcNOvCnXRCFwC+8YXTk6irxDck=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=cFsYu+6e1/s5mb50bxDVzYPqUd4JTWkq7I6SP5GwWmRWsvp8awWDSgdUwwE8zMhYusUzdIggrbmwf85EzRWcOFEW8nc5Ggmb/JcuUq/JparDMX5cDIzmIa9EXZsvpHRdALr9NEArjPvG8q9pQWfQOE0NN8j8iY1yHMctPEYnS0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JJ1AYg1L; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750929771; x=1782465771;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ddGGzGpYLlRuCDvqVCcNOvCnXRCFwC+8YXTk6irxDck=;
+  b=JJ1AYg1LiqQEgYDvt1+jLxWujnSdrLl5xuMO3fCMgoLkblvvzANxD3is
+   KV292A706YkjOvFS75jo9+4fHs5/yqTbN/zhbai264RnVOfdTVq5y1pwo
+   wAGWRJu9VtCN8/L+yuThV/GDJtETxUQDSeV9TWbl2meej4YutgBPuADZq
+   EuBxoURZUh/N14okkKecCyJh6GF5ZY4Q1MVC4PflnS/RjgN4BLOwJezXb
+   q/NDS3JgCAHwqpGhQOwHr+Bc0glXmW+6Y7PCdwBdTjlwnH3FBv+H9kST4
+   ZmfuYxiFrdK7ikKWUwVm1o6sBLYZWgywhjX09wMNQXbmzu3srotytP5BM
+   Q==;
+X-CSE-ConnectionGUID: qL723f4rSQCJ5RKjNQ7brA==
+X-CSE-MsgGUID: tgCFo470T2S53/1fGC9v4g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="75760139"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="75760139"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 02:22:50 -0700
+X-CSE-ConnectionGUID: wY2AZvnbTj2WvT0omS9X5g==
+X-CSE-MsgGUID: MqIYRcf2QnyZUIbPDYq7KQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="152226117"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 02:22:46 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 26 Jun 2025 12:22:43 +0300 (EEST)
+To: D Scott Phillips <scott@os.amperecomputing.com>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
+    Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+In-Reply-To: <86ms9vlfxr.fsf@scott-ph-mail.amperecomputing.com>
+Message-ID: <8f5e28dd-9e21-0381-5b32-0850f9f039ca@linux.intel.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com> <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com> <86plf0lgit.fsf@scott-ph-mail.amperecomputing.com> <e20e3171-7aa5-0646-7934-e6b10cdefc4e@linux.intel.com>
+ <86ms9vlfxr.fsf@scott-ph-mail.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8676:EE_|PAXPR04MB8425:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3801925-99c7-4d17-3d5e-08ddb484ba98
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|52116014|1800799024|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?bjGqVyve2jF8PGZZb3HrvgGpoCjZjcBBbYhocFq7g7b74wtHd8Q5F5JxYO0G?=
- =?us-ascii?Q?dwAHmH9QRZNbtVdFs6yVmtIZ4GvtFHR73WhXWW4xfmBZJIClpSO3fyCKcDSc?=
- =?us-ascii?Q?Ngoh5kQADx9FaCQS6DFVV81X4m3Wq0GnEaf0RiT3HmB5dy10k5x57gl3D485?=
- =?us-ascii?Q?7VPzGSWvXHVNQYpHGbf649SnKM9D3XeGKydY3eG5uUpI71rlkGcO+zMqLGRT?=
- =?us-ascii?Q?LseuNbg6L+Nq4stGpiC6xESu2vIK56WbbHS5D/UqTZeARMSw0w+H0SBb6hOG?=
- =?us-ascii?Q?D9HqeOfsMvhNa4UhoDaOJb6oOgx92qBlvrXocydBeao7cHaPcywrxYJJNgw3?=
- =?us-ascii?Q?EjHw3EgyStSEX5DnF66MlkaygGb1dh95kOC+e/LooMlHmJ7dRsU8xyYO9StD?=
- =?us-ascii?Q?g2nqlly1DELgUNQM0CStXJGdmPmYiU2l8VTimDq2ZrGcKjwF6sUD6Y6lDvpp?=
- =?us-ascii?Q?a6WFahcp78+QLLi9hXkwUavxo88xSLolVf56HVSTbXHLJQdb7BcHGDjRJZbV?=
- =?us-ascii?Q?hyE5NcSWEKRWfD60wPC6Wh17pB8mqmiBmjjSjWYXm/ZMj153SKEUs/fRodAe?=
- =?us-ascii?Q?QneZnW/3TRXj6jPyBtfOH1KDgL1NK2Ohjp7cH8rClonP+rAR5uGQiUWADOej?=
- =?us-ascii?Q?4yDQxwlf+84sdTGYsanWNxRwg0nDkI0vOImlKOc7glK5k5WQM7duE/CVYHcp?=
- =?us-ascii?Q?R/el7YCZWBKzKKVw8aH+7TqULmW6oPWWDZj7iuMAleV18aYZyVbzrkHoYmrL?=
- =?us-ascii?Q?2JpzKGdk51z7EHwCceXqhIzuxq7az5iQoHdihHGIiu5Cr3I6g4cjO7DdBmuj?=
- =?us-ascii?Q?OwNH3fG6ftAfDiHL8TWa6TctbnJeQjiOm8xPWc+9ijbFXwpqfnF0GUDprr2P?=
- =?us-ascii?Q?KWexDoJ6UJ+hbCjrYt1g94x61K3llW7WpuYbwq/+YEdEiaJJuqIuSAgwA28r?=
- =?us-ascii?Q?0imVUrSHC79IOM1atOw+fneQVdE1DGpGhY3NgQqs52dGWWpwa3MDPmSnExEi?=
- =?us-ascii?Q?aFtcSludXJdaMplWtaEYaIs2pOKfY3/X+zViGxrwAdeXoGRHlNlR4VZlTGd1?=
- =?us-ascii?Q?IqzGWGDGmEePLYQ+KWO3dyKPnfuAa2kXY0ybiIrBPDybADDzUrVO2dxMKOwL?=
- =?us-ascii?Q?fyMJJ4sLQELvlWueiq9MMzChnQgEivX8qkgBmCa88F8tLRUw6fXLoYQV38hF?=
- =?us-ascii?Q?pGkLMveMEzvm/gtEm+d3WqAGiloOW8jz2ziyEIBTp9dzIzgIGPAEhyfeYW8N?=
- =?us-ascii?Q?DwTgGFuY4nfXwfr6dhec6460Pn7FVm6206oMSB4XDltS8Z4hL4aGRUrxiDM2?=
- =?us-ascii?Q?bwyGzU89MRlvv5uoPA0IXXiAoueIUO0KEV05IstANGR2o+Qj2B04gqYfvWU7?=
- =?us-ascii?Q?aTR+Kb0+1EP9H3MsaY9DF2Q//ComW7H3aqs3i0mP0vf4NYFmh2LnBq0vEUtN?=
- =?us-ascii?Q?SIpFnT/n940ghvNzpxV5raIAYtzbpK/OsJ9nO0QpPIT2+tvOinPwj4zEIwii?=
- =?us-ascii?Q?5MumccEszb+I1QI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(52116014)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?oLrgjOczwRQN1AJwgll0N0fChODii0muJFCd8TeqDoLIYsErpSXxCRIRCRnr?=
- =?us-ascii?Q?fAgEg+cw0xiZO40F0SIf1GVcLMpkuaI/AN79/QPFKOk8L0aI6KQqU96jrl3I?=
- =?us-ascii?Q?SjjN0P4YmbVnPllqn9XNY0zzn/IowwydZ3P0p0vPIklPwHnsAG4xHDlizaR/?=
- =?us-ascii?Q?BytX8kLUbYvC7h/o1M8BPoytGZcy3kNdpS96ZEbeFuRdxol9fEKErMMcnwWd?=
- =?us-ascii?Q?Ma3SLSL0PAXlXk1wOOSS6RgQpZuoKWy9edsGs4Nog8KZU1CrFxLw4c+Z00NC?=
- =?us-ascii?Q?88tGS0haRbwZxSxrJrK+1lwBkjXWq+9OP8DD9v8nlpMCDOIzZA4MCxnLzTtT?=
- =?us-ascii?Q?DmzsDOeVGkKmBlE7FtHQQdjwsHuCwhBnD1b8M1l1hwvchXh2IJXL6bfM4fSY?=
- =?us-ascii?Q?xP7LfWQOwd7XbAYJKSA+v3ClsjlRyxm6IRet8C9qYpk6cZ5jFIyPyJFUnpev?=
- =?us-ascii?Q?MvLDKjhnICUvSOSS/YO9qaS3nzHIbKLbDVq7RRo5Al7mg+ZvvW82gCi8wOnq?=
- =?us-ascii?Q?ZG5ZOeaXT24OKzHggOODorqlc3Dgs3NQrBezEZ1t5zgUY8RuCDBz1qpRHaEh?=
- =?us-ascii?Q?Az69pKjYC02Ay0uX3GDym+Li7cNfoEQdbVSSmH21ZjlgVWnYWay105JKwoof?=
- =?us-ascii?Q?FavMBbAg/cwOSOrrzo+6XIGa7d09GsCiLBcxa3E25Cb659vEqgBwuFU1xBkc?=
- =?us-ascii?Q?lpIW7o/4HabGr7xkBXgTR0vjbCPcmeCCkpjbZQvNJImYa5JGBcID/zbgoJCQ?=
- =?us-ascii?Q?868/1x5gIBRMNSbLzkOGCRAXdjlkgJ7SvZzWdJhGjdun1cSnuHbbpEOkHK5r?=
- =?us-ascii?Q?K1deVe+8WR9SEf4wNNTZYmWLyo13peJqYa5NvOtfAGx3phUeHBL1VMTFPGhX?=
- =?us-ascii?Q?aJoceLUwJekjzzCRo0CMnRLVaklsOLLO2wFoViS4+AkndcWMS9HDaX28VG/U?=
- =?us-ascii?Q?VP9bCA+JvFY5I7jScQs8A3nURV+REshWBUD0ykdTkkyk5rlVDV/UQ0q15/nH?=
- =?us-ascii?Q?u7CEvNKejbkD1CwpeltVHvvhxtFytQmxU6KR8GMQqrAbGk/6A+DA7uSf37Z0?=
- =?us-ascii?Q?DGqAxELwJeiPbZabmr3Pf8WMYZIYaAwfEDih8daP8E1QTUqHQVoAgcBXLyaO?=
- =?us-ascii?Q?3PZo3g04snmcYRs5SA3odNoLOG1iH4+rzDUXL30pAC9qGq9jxkEnZLTNGy1Z?=
- =?us-ascii?Q?3ItIT2eodmKchu8JSUm57yjx7jEN+5PdVETdmWvFdPSVaZEgF2IfUQ/xDbK+?=
- =?us-ascii?Q?/NsY4noR80UzJ6bI/j6jLw97lDUfbr8ZzI1nj7qYHSt4J4Usg20rbLD8rIZc?=
- =?us-ascii?Q?3NBaZtmjDqL9oJeBkMdFx5XnooFhAWtmKgaj7kjAInngR2tbkqsZS1HerhOC?=
- =?us-ascii?Q?H9EHhREpqcSx2NzdhhnNEdnFbFzuhBjAopseB4AXMJ5fOSUH+FuwP8OzloJz?=
- =?us-ascii?Q?RnPKJWFpxGbT47LbG4uF6xOz2Rok8umnjUhRxAAI4ENii8hMUkKfBYwtHrgz?=
- =?us-ascii?Q?l79TOH2Zcao3nRdghOZUQjJvkt6oocREiSCl/RjvjUSdBFnavA+tb2i/Kcpi?=
- =?us-ascii?Q?eFzAKZO6eVQyettuAg8Tn/0iRIGyKhNWNPENCFzq?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3801925-99c7-4d17-3d5e-08ddb484ba98
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 07:40:31.7894
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3+kjxozaXpgVHoKWsIlo2VbVbwdSEfyhtBYOFtJwCLVPv7kICTynDa1ZklXCyhH9Fcw/2AWzKcEOTW5FXzGZQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8425
+Content-Type: multipart/mixed; boundary="8323328-120266576-1750929763=:930"
 
-The PCI Express reference clock of i.MX9 PCIes might come from external
-clock source. Add the external reference clock mode support.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+--8323328-120266576-1750929763=:930
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 5a38cfaf989b..9309959874c0 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -149,6 +149,7 @@ struct imx_pcie {
- 	struct gpio_desc	*reset_gpiod;
- 	struct clk_bulk_data	*clks;
- 	int			num_clks;
-+	bool			enable_ext_refclk;
- 	struct regmap		*iomuxc_gpr;
- 	u16			msi_ctrl;
- 	u32			controller_id;
-@@ -241,6 +242,8 @@ static unsigned int imx_pcie_grp_offset(const struct imx_pcie *imx_pcie)
- 
- static int imx95_pcie_init_phy(struct imx_pcie *imx_pcie)
- {
-+	bool ext = imx_pcie->enable_ext_refclk;
-+
- 	/*
- 	 * ERR051624: The Controller Without Vaux Cannot Exit L23 Ready
- 	 * Through Beacon or PERST# De-assertion
-@@ -259,13 +262,12 @@ static int imx95_pcie_init_phy(struct imx_pcie *imx_pcie)
- 			IMX95_PCIE_PHY_CR_PARA_SEL,
- 			IMX95_PCIE_PHY_CR_PARA_SEL);
- 
--	regmap_update_bits(imx_pcie->iomuxc_gpr,
--			   IMX95_PCIE_PHY_GEN_CTRL,
--			   IMX95_PCIE_REF_USE_PAD, 0);
--	regmap_update_bits(imx_pcie->iomuxc_gpr,
--			   IMX95_PCIE_SS_RW_REG_0,
-+	regmap_update_bits(imx_pcie->iomuxc_gpr, IMX95_PCIE_PHY_GEN_CTRL,
-+			   ext ? IMX95_PCIE_REF_USE_PAD : 0,
-+			   IMX95_PCIE_REF_USE_PAD);
-+	regmap_update_bits(imx_pcie->iomuxc_gpr, IMX95_PCIE_SS_RW_REG_0,
- 			   IMX95_PCIE_REF_CLKEN,
--			   IMX95_PCIE_REF_CLKEN);
-+			   ext ? 0 : IMX95_PCIE_REF_CLKEN);
- 
- 	return 0;
- }
-@@ -1600,7 +1602,7 @@ static int imx_pcie_probe(struct platform_device *pdev)
- 	struct imx_pcie *imx_pcie;
- 	struct device_node *np;
- 	struct device_node *node = dev->of_node;
--	int ret, domain;
-+	int i, ret, domain;
- 	u16 val;
- 
- 	imx_pcie = devm_kzalloc(dev, sizeof(*imx_pcie), GFP_KERNEL);
-@@ -1651,6 +1653,10 @@ static int imx_pcie_probe(struct platform_device *pdev)
- 	if (imx_pcie->num_clks < 0)
- 		return dev_err_probe(dev, imx_pcie->num_clks,
- 				     "failed to get clocks\n");
-+	imx_pcie->enable_ext_refclk = true;
-+	for (i = 0; i < imx_pcie->num_clks; i++)
-+		if (strncmp(imx_pcie->clks[i].id, "ref", 3) == 0)
-+			imx_pcie->enable_ext_refclk = false;
- 
- 	if (imx_check_flag(imx_pcie, IMX_PCIE_FLAG_HAS_PHYDRV)) {
- 		imx_pcie->phy = devm_phy_get(dev, "pcie-phy");
--- 
-2.37.1
+On Wed, 25 Jun 2025, D Scott Phillips wrote:
 
+> Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> writes:
+>=20
+> > On Wed, 18 Jun 2025, D Scott Phillips wrote:
+> >
+> >> Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> writes:
+> >>=20
+> >> > Resetting resource is problematic as it prevent attempting to alloca=
+te
+> >> > the resource later, unless something in between restores the resourc=
+e.
+> >> > Similarly, if fail_head does not contain all resources that were res=
+et,
+> >> > those resource cannot be restored later.
+> >> >
+> >> > The entire reset/restore cycle adds complexity and leaving resources
+> >> > into reseted state causes issues to other code such as for checks do=
+ne
+> >> > in pci_enable_resources(). Take a small step towards not resetting
+> >> > resources by delaying reset until the end of resource assignment and
+> >> > build failure list (fail_head) in sync with the reset to avoid leavi=
+ng
+> >> > behind resources that cannot be restored (for the case where the cal=
+ler
+> >> > provides fail_head in the first place to allow restore somewhere in =
+the
+> >> > callchain, as is not all callers pass non-NULL fail_head).
+> >> >
+> >> > The Expansion ROM check is temporarily left in place while building =
+the
+> >> > failure list until the upcoming change which reworks optional resour=
+ce
+> >> > handling.
+> >> >
+> >> > Ideally, whole resource reset could be removed but doing that in a b=
+ig
+> >> > step would make the impact non-tractable due to complexity of all
+> >> > related code.
+> >> >
+> >> > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> >>=20
+> >> Hi Ilpo, I'm seeing a crash on arm64 at boot that I bisected to this
+> >> change. I don't think it's the same as the other issues reported. I've
+> >> confirmed the crash is still there after your follow up patches.  The
+> >> crash itself is below[1].
+> >>=20
+> >> It looks like the problem begins when:
+> >>=20
+> >> amdgpu_device_resize_fb_bar()
+> >>  pci_resize_resource()
+> >>   pci_reassign_bridge_resources()
+> >>    __pci_bus_size_bridges()
+> >>=20
+> >> adds pci_hotplug_io_size to `realloc_head`. The io resource allocation
+> >> has failed earlier because the root port doesn't have an io window[2].
+> >>=20
+> >> Then with this patch, pci_reassign_bridge_resources()'s call to
+> >> __pci_bridge_assign_resources() now returns the io added space for
+> >> hotplug in the `failed` list where the old code dropped it and did not=
+=2E
+> >>=20
+> >> That sends pci_reassign_bridge_resources() into the `cleanup:` path,
+> >> where I think the cleanup code doesn't properly release the resources
+> >> that were assigned by __pci_bridge_assign_resources() and there's a
+> >> conflict reported in pci_claim_resource() where a restored resource is
+> >> found as conflicting with itself:
+> >>=20
+> >> > pcieport 000d:00:01.0: bridge window [mem 0x340000000000-0x340017fff=
+fff 64bit pref]: can't claim; address conflict with PCI Bus 000d:01 [mem 0x=
+340000000000-0x340017ffffff 64bit pref]
+> >>=20
+> >> Setting `pci=3Dhpiosize=3D0` avoids this crash, as does this change:
+> >>=20
+> >> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> >> index 16d5d390599a..59ece11702da 100644
+> >> --- a/drivers/pci/setup-bus.c
+> >> +++ b/drivers/pci/setup-bus.c
+> >> @@ -2442,7 +2442,7 @@ int pci_reassign_bridge_resources(struct pci_dev=
+ *bridge, unsigned long type)
+> >>  =09LIST_HEAD(saved);
+> >>  =09LIST_HEAD(added);
+> >>  =09LIST_HEAD(failed);
+> >> -=09unsigned int i;
+> >> +=09unsigned int i, relevant_fails;
+> >>  =09int ret;
+> >> =20
+> >>  =09down_read(&pci_bus_sem);
+> >> @@ -2490,7 +2490,16 @@ int pci_reassign_bridge_resources(struct pci_de=
+v *bridge, unsigned long type)
+> >>  =09__pci_bridge_assign_resources(bridge, &added, &failed);
+> >>  =09BUG_ON(!list_empty(&added));
+> >> =20
+> >> -=09if (!list_empty(&failed)) {
+> >> +=09relevant_fails =3D 0;
+> >> +=09list_for_each_entry(dev_res, &failed, list) {
+> >> +=09=09restore_dev_resource(dev_res);
+> >> +=09=09if (((dev_res->res->flags ^ type) & PCI_RES_TYPE_MASK) =3D=3D 0=
+)
+> >> +=09=09=09relevant_fails++;
+> >> +=09}
+> >> +=09free_list(&failed);
+> >> +
+> >> +=09/* Cleanup if we had failures in resources of interest */
+> >> +=09if (relevant_fails !=3D 0) {
+> >>  =09=09ret =3D -ENOSPC;
+> >>  =09=09goto cleanup;
+> >>  =09}
+> >> @@ -2509,11 +2518,6 @@ int pci_reassign_bridge_resources(struct pci_de=
+v *bridge, unsigned long type)
+> >>  =09return 0;
+> >> =20
+> >>  cleanup:
+> >> -=09/* Restore size and flags */
+> >> -=09list_for_each_entry(dev_res, &failed, list)
+> >> -=09=09restore_dev_resource(dev_res);
+> >> -=09free_list(&failed);
+> >> -
+> >>  =09/* Revert to the old configuration */
+> >>  =09list_for_each_entry(dev_res, &saved, list) {
+> >>  =09=09struct resource *res =3D dev_res->res;
+> >>=20
+> >> I don't know this code well enough to know if that changes is complete=
+ly
+> >> bonkers or what.
+> >
+> > Hi again,
+> >
+> > Thanks for all the details what you think went wrong, it was really=20
+> > useful. I think you have it towards the right direction but a more=20
+> > targetted seems enough to address this (this needs to be confirmed, ple=
+ase
+> > test the patch below).
+> >
+> > The most correct solution would be to make all the resource fitting cod=
+e=20
+> > to focus on the resources that match the type filter. However, that loo=
+ks=20
+> > way too scary change at the moment to implement, and especially, let it=
+=20
+> > end up into stable (to fix this issue). So it looks this somewhat band-=
+aid=20
+> > solution similar to your attempt might be better as a fix for now.
+> >
+> > In medium term, I'd want to avoid using type as a filter and base all=
+=20
+> > such decisions on matching the bridge window resource the dev resource=
+=20
+> > belongs to. I've some work towards that direction already which removes=
+=20
+> > lots of complexity in which bridge window is going to be selected as=20
+> > there will be a single place to make always the same decision. That cha=
+nge=20
+> > is also going to simplify the internal interfaces between functions ver=
+y=20
+> > noticably (but the change require more testing before I've enough=20
+> > confidence to submit it). That work doesn't cover this resize side yet =
+but=20
+> > it should be extended there as well.
+> >
+> > So please test this somewhat band-aid patch:
+> >
+> > From 971686ed85e341e7234f8fe8b666140187f63ad1 Mon Sep 17 00:00:00 2001
+> > From: =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D <ilpo.jarvinen@linux.i=
+ntel.com>
+> > Date: Wed, 25 Jun 2025 20:30:43 +0300
+> > Subject: [PATCH 1/1] PCI: Fix failure detectiong during resource resize
+>=20
+> detection
+>=20
+> > MIME-Version: 1.0
+> > Content-Type: text/plain; charset=3DUTF-8
+> > Content-Transfer-Encoding: 8bit
+> >
+> > Since the commit 96336ec70264 ("PCI: Perform reset_resource() and build
+> > fail list in sync") the failed list is always built and returned to let
+> > the caller decide if what to do with the failures. The caller may want
+> > to retry resource fitting and assignment and before that can happen,
+> > the resources should be restored to their original state (a reset
+> > effectively clears the struct resource), which requires returning them
+> > on the failed list so that the original state remains stored in the
+> > associated struct pci_dev_resource.
+> >
+> > Resource resizing is different from the ordinary resource fitting and
+> > assignment in that it only considers part of the resources. This means
+> > failures for other resource types are not relevant at all and should be
+> > ignored. As resize doesn't unassign such unrelated resources, those
+> > resource ending up into the failed list implies assignment of that
+> > resource must have failed before resize too. The check in
+> > pci_reassign_bridge_resources() to decide if the whole assignment is
+> > successful, however, is based on list emptiness which may cause false
+> > negatives when the failed list resources with unrelated type.
+> >
+> > If the failed list is not empty, call pci_required_resource_failed()
+> > and extend it to be able to filter on specific resource types too (if
+> > provided).
+> >
+> > Calling pci_required_resource_failed() at this point is slightly
+> > problematic because the resource itself is reset when the failed list
+> > is constructed in __assign_resources_sorted(). As a result,
+> > pci_resource_is_optional() does not have access to the original
+> > resource flags. This could be worked around by restoring and
+> > re-reseting the resource around the call to pci_resource_is_optional(),
+> > however, it shouldn't cause issue as resource resizing is meant for
+> > 64-bit prefetchable resources according to Christian K=C3=B6nig (see th=
+e
+> > Link which unfortunately doesn't point directly to Christian's reply
+> > because lore didn't store that email at all).
+> >
+> > Link: https://lore.kernel.org/all/c5d1b5d8-8669-5572-75a7-0b480f581ac1@=
+linux.intel.com/
+> > Reported-by: D Scott Phillips <scott@os.amperecomputing.com>
+> > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
+> > ---
+> >  drivers/pci/setup-bus.c | 26 ++++++++++++++++++--------
+> >  1 file changed, 18 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> > index 07c3d021a47e..8284bbdc44b4 100644
+> > --- a/drivers/pci/setup-bus.c
+> > +++ b/drivers/pci/setup-bus.c
+> > @@ -28,6 +28,10 @@
+> >  #include <linux/acpi.h>
+> >  #include "pci.h"
+> > =20
+> > +#define PCI_RES_TYPE_MASK \
+> > +=09(IORESOURCE_IO | IORESOURCE_MEM | IORESOURCE_PREFETCH |\
+> > +=09 IORESOURCE_MEM_64)
+> > +
+> >  unsigned int pci_flags;
+> >  EXPORT_SYMBOL_GPL(pci_flags);
+> > =20
+> > @@ -384,13 +388,19 @@ static bool pci_need_to_release(unsigned long mas=
+k, struct resource *res)
+> >  }
+> > =20
+> >  /* Return: @true if assignment of a required resource failed. */
+> > -static bool pci_required_resource_failed(struct list_head *fail_head)
+> > +static bool pci_required_resource_failed(struct list_head *fail_head,
+> > +=09=09=09=09=09 unsigned long type)
+> >  {
+> >  =09struct pci_dev_resource *fail_res;
+> > =20
+> > +=09type &=3D ~PCI_RES_TYPE_MASK;
+>=20
+> Is this meant to be `type &=3D PCI_RES_TYPE_MASK`? If not, then I think
+> the new `if` check below is effectively just `if (type)`.
+
+Yes, it should have been without that ~. Can you test the change with=20
+that changed? I'm sorry about the extra trouble.
+
+> FWIW, the patch in the current state is fixing the problem that I've
+> been hitting.
+>=20
+> > +
+> >  =09list_for_each_entry(fail_res, fail_head, list) {
+> >  =09=09int idx =3D pci_resource_num(fail_res->dev, fail_res->res);
+> > =20
+> > +=09=09if (type && (fail_res->flags & PCI_RES_TYPE_MASK) !=3D type)
+> > +=09=09=09continue;
+> > +
+> >  =09=09if (!pci_resource_is_optional(fail_res->dev, idx))
+> >  =09=09=09return true;
+> >  =09}
+> > @@ -504,7 +514,7 @@ static void __assign_resources_sorted(struct list_h=
+ead *head,
+> >  =09}
+> > =20
+> >  =09/* Without realloc_head and only optional fails, nothing more to do=
+=2E */
+> > -=09if (!pci_required_resource_failed(&local_fail_head) &&
+> > +=09if (!pci_required_resource_failed(&local_fail_head, 0) &&
+> >  =09    list_empty(realloc_head)) {
+> >  =09=09list_for_each_entry(save_res, &save_head, list) {
+> >  =09=09=09struct resource *res =3D save_res->res;
+> > @@ -1704,10 +1714,6 @@ static void __pci_bridge_assign_resources(const =
+struct pci_dev *bridge,
+> >  =09}
+> >  }
+> > =20
+> > -#define PCI_RES_TYPE_MASK \
+> > -=09(IORESOURCE_IO | IORESOURCE_MEM | IORESOURCE_PREFETCH |\
+> > -=09 IORESOURCE_MEM_64)
+> > -
+> >  static void pci_bridge_release_resources(struct pci_bus *bus,
+> >  =09=09=09=09=09 unsigned long type)
+> >  {
+> > @@ -2445,8 +2451,12 @@ int pci_reassign_bridge_resources(struct pci_dev=
+ *bridge, unsigned long type)
+> >  =09=09free_list(&added);
+> > =20
+> >  =09if (!list_empty(&failed)) {
+> > -=09=09ret =3D -ENOSPC;
+> > -=09=09goto cleanup;
+> > +=09=09if (pci_required_resource_failed(&failed, type)) {
+> > +=09=09=09ret =3D -ENOSPC;
+> > +=09=09=09goto cleanup;
+> > +=09=09}
+> > +=09=09/* Only resources with unrelated types failed (again) */
+> > +=09=09free_list(&failed);
+> >  =09}
+> > =20
+> >  =09list_for_each_entry(dev_res, &saved, list) {
+> >
+> > base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> > --=20
+> > 2.39.5
+>=20
+
+--=20
+ i.
+
+--8323328-120266576-1750929763=:930--
 
