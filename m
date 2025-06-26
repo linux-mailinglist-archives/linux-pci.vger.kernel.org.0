@@ -1,85 +1,85 @@
-Return-Path: <linux-pci+bounces-30700-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30701-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51F12AE9ADC
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 12:10:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31760AE9AE3
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 12:11:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 678F7162DBC
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 10:10:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C3AE3A37B5
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 10:10:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D27121CA02;
-	Thu, 26 Jun 2025 10:10:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DC1C220F41;
+	Thu, 26 Jun 2025 10:11:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xNhqTy26"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jKz8j8yZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4C621CC4B
-	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 10:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD05F21CA02
+	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 10:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750932647; cv=none; b=p12X1GbFGYh4okR3N7YHb27qOeSNrgYDCUNppl7WXxDsF3HSe+lVGvhys61yaW+qFw6q2WiYXC7qgb+MI2Y9XIP+lrUBpmN7SMa+7d7eItjjxBmcv4i5xWfPaXLBoy+EXJ7PU9mWyfltgt+0A9Xf6Y7QWm4zjuzH4dLBfqifcdc=
+	t=1750932672; cv=none; b=T6Gk+rh/zZ1U+WgncNCEj7sORipEyXbdJ4K1pamJO0nqvuNffYUs00ycUI0UWeN6YNgCHfy8QwEjqNfnAeydu5/+kIX6twWoULcc4qTbVtaM11IljaagqKMGgwsXWf/eJ3Nw3u0m8KfKm/+pDgFhDJ7hvMjfstc2DVoazRQGGyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750932647; c=relaxed/simple;
-	bh=B8L42uYW7SBVGI49Vdor/dHyRQyBsuPa0eVEeRQde+0=;
+	s=arc-20240116; t=1750932672; c=relaxed/simple;
+	bh=6/CYJDnKQKVbQcwXiQ2rMzs2H9ssDvR6KIpjsUQ6QdI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cWOkC3UJTjqEf19kd7PPfEOzHS76yb9Fyb0ysIntLuno6M5LRpWimDumRlmCb8HlgUlDBG4qNEQ96+iMmHe/8iPPXj8vXOnfUdpjttZDtWawID2mGncWzoziN0vA2ouHbxsMunRE7jTYGMDCdtmAvKQ0W3x6GTdFAwBgg7NDN2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xNhqTy26; arc=none smtp.client-ip=209.85.219.173
+	 To:Cc:Content-Type; b=i8V3th0dsAfqOjn6nZMWohp24YcFuYB4VEceUjyYX+en8TwCyu+X9n8H3iXJNMb0fDVwtBnY91ZNsnFJEYEiNAvIuOVVAaCoR5/QRQqL38M949JTC4O6sYZih+Mem38L7xIpgqI/185xD/+JEXSR9xN8Bkr1KhXH9yvaMstVbSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jKz8j8yZ; arc=none smtp.client-ip=209.85.219.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e82314f9a51so582948276.0
-        for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 03:10:45 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e733e25bfc7so652222276.3
+        for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 03:11:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750932644; x=1751537444; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750932668; x=1751537468; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RGpPhbuPUiSKZV2cLRZKatSz/MduhYBSX2W+AJmzppM=;
-        b=xNhqTy26NqMOtI0l/BaqO+24iM5Y/HMAyoiTybTwe/cquVyjO9sHaB2tLwwNCJdtZJ
-         kDr+VSDWYX+EHhyUlXvt9C/4G3emIDBIPaqDLFQzIZ3eIWlnPDMyEgsSvJ5lNcfdJk7o
-         f6Z7Mt3HvokUk74v/gg8NVURwq/pApa3iMcIpBAJUSVKInMjNxo6WvbIhyNrTRjGsuu1
-         W6T/9ljDPEm6TXthjCUuOyxo8Fv74qbgfo/Bb6PaZn6Erxyz3XqyvpsORDRLrV7iUmRb
-         3dJVsa0CgRgutrMloxPmWRNF7VsPvIo9EU3qSQu/alyh5YMSoifbnguFMvmVMoE0Zrmi
-         QxTA==
+        bh=9Q9r85ztpEpS9CYbZbkPRdk5F829Mu+gn5m9UjJJ67w=;
+        b=jKz8j8yZKBOa7biATTQpt47NE380p0arVVW2TvzqXbvq5RyIZnCMi7nhD/HhMXYxG9
+         14ETF+3PzaHQPT51FU9gAiJNWVJT85d/s62Z/nGx47ZAS3XiL9bxnMyzzcoNRbkZaOLu
+         Bkd578TgrI4eXkwPYweFBrsvKq4O9eYvRqwGWeN5V7lULHQgK5mVRsFHG16Azj4t/2SK
+         Lft3M3XvrCJQaDOO7S6P7H8OEktGZLHitpS5Y04PLE12f5xCteSaouVLNrkEWLL7i7d2
+         mMDby3gOo1GYd2hSAYRcTizT47AXZTWEDaRBRASJzsGv8l5L/L5Nh2agqwAlL8SrnNUn
+         x/dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750932644; x=1751537444;
+        d=1e100.net; s=20230601; t=1750932668; x=1751537468;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=RGpPhbuPUiSKZV2cLRZKatSz/MduhYBSX2W+AJmzppM=;
-        b=qdEx6nLbw/6F49bpGIGcqDeEK+umfSmiwXkO7X9Z7j4gZ1iGtISMBJzGgPHRw7mubU
-         SvXJiRtE6NJi4oUeES5mcyR8uL0SpDUxxwSmlNWAI1/mZtIG2+NFj0nd8UTFRjFSri9M
-         jJzVpI1QybzKzESL/5QUaRUzA24KYB6QabBYF1GfQ0koPB3x/Qre2V3pBwRGnztCOIp9
-         lJCcHbAPU6WL5sBjgbaOOcUYQZ1HIlP5gjo0+42mkctmWdcvHk3P3b6l/2WtbRpfhCcp
-         2WdcuQzi2wdlc5ivm9fB8OwG6xMICKE6Ugio65lwfAYj4iL6cLHL/QhnQ3jCYrHnP5J3
-         bs5w==
-X-Forwarded-Encrypted: i=1; AJvYcCV8DXb7Aq2mKl+qAVkMWSVYTdD48sGjfoPTM37C5ogE6PBt3/iX7ItTw7MJuOUPB5lBF5kBxh0hMf0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyknf+/EMD/G0THbJGNaOmDrGLRsTE1OP5lXW6w0zZU56rcKq0f
-	4Zwju3BNiSLvE/LVJmhP0JI+P2phsf2SbHFUyPqSZq0pyCSwFxU7RmI5xdHoEj/md15z0p2UkcK
-	KLunT/bJb4rn/fbqDPPYfWx/zWspws8dowtfK8HJwPw==
-X-Gm-Gg: ASbGncslAAr8625TNXJ2asnPEfkB4Lqpii0ilypt3ig0+faBa2Y4AucC8e5MWYASX3/
-	wg5Efg206BD/edMagFJtd0JoP+mTgbP8mstSMsLRYNfEn0HU8jDwjTpbbUkz0JHt8WJVOR+PtVz
-	KcJ4khTjD1q53MG2zGNDBavH/09aWYdAf756771dsPGEJ0
-X-Google-Smtp-Source: AGHT+IH7V0BHGImGWUq2RO4C48YNB3kmbkrWJ44nvQyWOyJ0pUkhrpvVs4zkHxSn5wG/qh/yfZkJEJHOsJHa3ZprjII=
-X-Received: by 2002:a05:6902:2e0f:b0:e84:1dd0:45a2 with SMTP id
- 3f1490d57ef6-e860177f40fmr7990971276.40.1750932644320; Thu, 26 Jun 2025
- 03:10:44 -0700 (PDT)
+        bh=9Q9r85ztpEpS9CYbZbkPRdk5F829Mu+gn5m9UjJJ67w=;
+        b=Mm7x82Ga7JPU1o+rsFR/uHLIa1kvYg43O1s8tNWaxhxVTRAYb96sif3ZjD1ZOJ2azy
+         v4K4olD7gnZ0GLS/shb9PPhW6pkUofrhgBZmSY2waNHdfyjZ3rhgrnxXX7DO/XpIbzMQ
+         oBLIz/M3ZxlgdH5lBhs2rAhhEOrycpIaLf912jFjiqrJ56fGN8stUna35Iyze6EARzkY
+         fk9z3TORJPhrS3bAUrNa11wDxvB+LUf7hiu5C3Yu0QbF5jxCzB5iF1nrUV0KmjRVZ6OA
+         yFBvU4YvIRe0pmpTugNSaJ14OjdF70fv5oyc8xQMA4Xq5f+YBH7iQe/iYNzUlGwiraCn
+         DNvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXGjgaYXGZH4P9RxudqGF93SaxeS8qqIuHuYq6fB4CljtppJYRfpC7kyZ5eGledjO1YYDqCHVWHwQk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWHWbB/vOobmUIWqWzO0SAiLDHLzbcImVdKj2iVsYTIQWIoZRt
+	2h4WU6sKStNuOd/RPmPhph0QfzFnQDNWqMvxtVk1ai+BmMu/5eRbJ2ZszQnBEpcbfAt3stR4vjY
+	pNRD5ub2b1uffCd3fBz+U6caCz2eeKMMMTZFsiYmcdw==
+X-Gm-Gg: ASbGncucIUskZG/MfiEej7mTiGfQ8StZjjvIZ+SfvFRG1pQ2ft+Aum0S2EHRNPBA9Hu
+	d3rH78fry89HGU8fdYwGbD+JlLB+gsCFYTOQJdVD37WuzZffwOMqR9Hy5dN6WWOJmFx2q2bDGaW
+	tEqtK3CtBlH1PfJZOmEYgrjKK/Ci3hvFJ8VCbpTjUkO8g4
+X-Google-Smtp-Source: AGHT+IFTNjmMODL7y1EvHVTNC82M3od38DyxrG8NO+F9c5mpyvxWXa3dqoy9a/B0A36TiqGlH0TnxzyON/TB5m34CYM=
+X-Received: by 2002:a05:6902:210e:b0:e81:9581:4caa with SMTP id
+ 3f1490d57ef6-e860178bba2mr7662593276.34.1750932668573; Thu, 26 Jun 2025
+ 03:11:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <22759968.EfDdHjke4D@rjwysocki.net> <3306233.5fSG56mABF@rjwysocki.net>
-In-Reply-To: <3306233.5fSG56mABF@rjwysocki.net>
+References: <22759968.EfDdHjke4D@rjwysocki.net> <3903497.kQq0lBPeGt@rjwysocki.net>
+In-Reply-To: <3903497.kQq0lBPeGt@rjwysocki.net>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 26 Jun 2025 12:10:08 +0200
-X-Gm-Features: Ac12FXwF7Q7jxkXkEaRsyFNpxSklkmW_lcm577wfPtPxTWlGaikqzxB0LYBa_fQ
-Message-ID: <CAPDyKForsegoD+J6rumvnhHna7W+DVdb5zdKGiRB-TFv27sy7A@mail.gmail.com>
-Subject: Re: [PATCH v1 0/9] PM: Check power.needs_force_resume in pm_runtime_force_suspend()
+Date: Thu, 26 Jun 2025 12:10:31 +0200
+X-Gm-Features: Ac12FXzz6qmhiLsuzk245wnHwdyyM19B97SD0ZUjObz7zXjCLdLDg9DQbgqL-iI
+Message-ID: <CAPDyKFqXvNDqZjePwvF+mgs7bba47uoeH-7XvJkqZ2K4-bmXgg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/9] PM: Use true/false as power.needs_force_resume values
 To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
 	Linux ACPI <linux-acpi@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
@@ -90,84 +90,51 @@ On Wed, 25 Jun 2025 at 21:25, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 >
 > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 >
-> Add a power.needs_force_resume check to pm_runtime_force_suspend() so
-> it need not rely on the runtime PM status of the device when deciding
-> whether or not to return early.
->
-> With the new check in place, pm_runtime_force_suspend() will also skip
-> devices with the runtime PM status equal to RPM_ACTIVE if they have
-> power.needs_force_resume set, so it won't need to change the RPM
-> status of the device to RPM_SUSPENDED in addition to setting
-> power.needs_force_resume in the case when pm_runtime_need_not_resume()
-> return false.
->
-> This allows the runtime PM status update to be removed from
-> pm_runtime_force_resume(), so the runtime PM status remains unchanged
-> between the pm_runtime_force_suspend() and pm_runtime_force_resume()
-> calls.
+> Since power.needs_force_resume is a bool field, use true/false
+> as its values instead of 1/0, respectively.
 >
 > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/base/power/runtime.c |   21 ++++++++-------------
->  1 file changed, 8 insertions(+), 13 deletions(-)
->
-> --- a/drivers/base/power/runtime.c
-> +++ b/drivers/base/power/runtime.c
-> @@ -1975,7 +1975,7 @@
->         int ret;
->
->         pm_runtime_disable(dev);
-> -       if (pm_runtime_status_suspended(dev))
-> +       if (pm_runtime_status_suspended(dev) || dev->power.needs_force_resume)
->                 return 0;
->
->         callback = RPM_GET_CALLBACK(dev, runtime_suspend);
-> @@ -1990,15 +1990,16 @@
->         /*
->          * If the device can stay in suspend after the system-wide transition
->          * to the working state that will follow, drop the children counter of
-> -        * its parent, but set its status to RPM_SUSPENDED anyway in case this
-> -        * function will be called again for it in the meantime.
-> +        * its parent and the usage counters of its suppliers.  Otherwise, set
-> +        * power.needs_force_resume to let pm_runtime_force_resume() know that
-> +        * the device needs to be taken care of and to prevent this function
-> +        * from handling the device again in case the device is passed to it
-> +        * once more subsequently.
->          */
-> -       if (pm_runtime_need_not_resume(dev)) {
-> +       if (pm_runtime_need_not_resume(dev))
->                 pm_runtime_set_suspended(dev);
-> -       } else {
-> -               __update_runtime_status(dev, RPM_SUSPENDED);
-> +       else
->                 dev->power.needs_force_resume = true;
-> -       }
->
->         return 0;
->
-> @@ -2029,12 +2030,6 @@
->         if (!dev->power.needs_force_resume)
->                 goto out;
->
-> -       /*
-> -        * The value of the parent's children counter is correct already, so
-> -        * just update the status of the device.
-> -        */
-> -       __update_runtime_status(dev, RPM_ACTIVE);
-> -
->         callback = RPM_GET_CALLBACK(dev, runtime_resume);
->
->         dev_pm_disable_wake_irq_check(dev, false);
->
 
-As I mentioned for patch4, pm_runtime_force_suspend() is being used
-from driver's ->remove() callback too.
-
-If such a driver/device gets probed again, we need a fresh start. It
-seems like we need to clear the needs_force_resume flag in
-pm_runtime_reinit(). In fact, that looks like an existing bug, even
-before $subject patch, right?
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
 Kind regards
 Uffe
+
+
+> ---
+>  drivers/base/power/runtime.c |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> --- a/drivers/base/power/runtime.c
+> +++ b/drivers/base/power/runtime.c
+> @@ -1827,7 +1827,7 @@
+>         dev->power.request_pending = false;
+>         dev->power.request = RPM_REQ_NONE;
+>         dev->power.deferred_resume = false;
+> -       dev->power.needs_force_resume = 0;
+> +       dev->power.needs_force_resume = false;
+>         INIT_WORK(&dev->power.work, pm_runtime_work);
+>
+>         dev->power.timer_expires = 0;
+> @@ -1997,7 +1997,7 @@
+>                 pm_runtime_set_suspended(dev);
+>         } else {
+>                 __update_runtime_status(dev, RPM_SUSPENDED);
+> -               dev->power.needs_force_resume = 1;
+> +               dev->power.needs_force_resume = true;
+>         }
+>
+>         return 0;
+> @@ -2047,7 +2047,7 @@
+>
+>         pm_runtime_mark_last_busy(dev);
+>  out:
+> -       dev->power.needs_force_resume = 0;
+> +       dev->power.needs_force_resume = false;
+>         pm_runtime_enable(dev);
+>         return ret;
+>  }
+>
+>
+>
 
