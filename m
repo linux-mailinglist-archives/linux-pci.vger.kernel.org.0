@@ -1,117 +1,158 @@
-Return-Path: <linux-pci+bounces-30760-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30761-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0864AEA128
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 16:48:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78D1FAEA16F
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 16:55:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 266955A52DE
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 14:42:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B73C81C43D38
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 14:49:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 457D52E7F25;
-	Thu, 26 Jun 2025 14:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDE242EB5B9;
+	Thu, 26 Jun 2025 14:48:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F2kAUTRm"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gaz8seox";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2Fd2QlwC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F04218858;
-	Thu, 26 Jun 2025 14:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34364289E2D;
+	Thu, 26 Jun 2025 14:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750948921; cv=none; b=aROavpeOFlYwkz4WLXRQpBkFJ9JukRM0ICj0njKXzxDLbJYBv5x9owa2FwbmQbrHncJDvdUghNC7YUoAYXyq2HOBX271INLPEw+xTZMVX4Fsrcl3Us7BwmI7B2tDNDt5z4V0KvG/9ekTR/0mOAQnJDs8TjLJQMNdefEqriSRboM=
+	t=1750949319; cv=none; b=ZRO/i497b0OQw8Yqyv8Sqi7yfmEfuscA+YcIO2wedEFaRTfDgebJ8S3FEm0GUybhgG2KPmLst1XP2Az06zJwph3u04HG8+dna7lQMoaTxcZG2fDYlDFSxWYaAXY56DUlHXbgjv8cpkrVTIJTbfjDyZ+MA7Zjk/U3adWmhE5NUNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750948921; c=relaxed/simple;
-	bh=42OjuS98WxGG89iYw29vlodU1GzD56kRmxMHKIDo8Ao=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=DELwbyFsoglM9bVPVgNJvF9IfxwwCXiw1lBTY86kUbRUJFBqQtIZjwJSVaepQuG8NySCvHXk082ks7RNBprWpjG9RIsDfIeToX49Adu24r6ELdL7eEOqbdt0FKhVfuJgE8rbCdAJn8kGxomRkRy3F4NfLGZd/gh+8sL02Vu31dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F2kAUTRm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26455C4CEEB;
-	Thu, 26 Jun 2025 14:41:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750948920;
-	bh=42OjuS98WxGG89iYw29vlodU1GzD56kRmxMHKIDo8Ao=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=F2kAUTRmhh2r5WO93+pK/HVDynCmy/G5fdUgNn6aGkfu4+HaoBuU5QGoRvNQeZOa7
-	 cUygQT6QTn7ATW8GkraAtLkiCgK/jHG72B1GEB++fEhZHiOkaay11eoGgGHFe7d56Z
-	 l2u8v3F7fFn48HfEALXXMcgnsnDjmRW19qx1PzSyrbwNqamJubXcQJWN1TmTHMZNGF
-	 LB6gtaTdVWeFqPUWYVJ3ok31gBbDjBnLeIup9lGfiHn5ZoutzvsHYNZao65naIz6tS
-	 w6zJjdslGbxYDOuNwzdXoTT2TQyKfXY6Dv8FPDb587vqTxwCN7woYt3M/OBHp9jKGG
-	 8gRmwsvvsgOhw==
+	s=arc-20240116; t=1750949319; c=relaxed/simple;
+	bh=Q6UqfwCyC3mZxxR1Ap+fUonqEOHiafoq86ph9bdqlzY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dSJjbzpEVvMMQPx9mrn3v9ZIm3SAH+yNLCEGeGiRoiRTorCjw981Fd3kgjbrtYyQ0UFu6T2U+1r2MGkijLWH/6LRrdXbgAg/5aVWclg1Nhh4Hrk3vZegtXUO4QGo8Uyca88JlfKMNEpAsZT2MaPSc31KSY41Vn6nPmg5tRrynIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gaz8seox; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2Fd2QlwC; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750949315;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rjC7u1O4n6Y4m8ek4mHKb90DC8/HUd+eWzj/alvKcAs=;
+	b=gaz8seoxSEVBxG9MHSd/AdwK73Yt7mu+jsV0LollTAaxssib7A4849xAQcipwOrC0G9Uo6
+	tfcpM3NA0RSjqxu0umLrggdwkuZprE9ZwTlt2NmwRBzYiIZCm08nVH+UnkZ0EnbA6P62GY
+	EMXRpjYh17PCc/lq+dgoXu5/F1jNr1dlYdgHPUeTsmGcnf9w4zD+DE7HpX4cEjGptshy/p
+	w4PI4JWiylFe9B7TBc5EvKJT8Mtcd9gghG+JfYB2lLP/7I3Z8AFNN3FHXBd1vOClFpd9Jf
+	R/pJjIJu3RZtZRM+rgdUOc/gAlcAwUivOqN82fssj7UtXrwKa2IhcAQj3EH/0A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750949315;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rjC7u1O4n6Y4m8ek4mHKb90DC8/HUd+eWzj/alvKcAs=;
+	b=2Fd2QlwCInXViIVIZOCcuzIq4mcR7BYBUaVg4a+xf1NiSgmL30ly5tfX4sxMHPRjXMMy7w
+	sdMGjflSZJvHVtAQ==
+To: Marc Zyngier <maz@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Joyce Ooi <joyce.ooi@intel.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hyperv@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: [PATCH 00/16] PCI: MSI parent domain conversion
+Date: Thu, 26 Jun 2025 16:47:50 +0200
+Message-Id: <cover.1750858083.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 26 Jun 2025 16:41:55 +0200
-Message-Id: <DAWJL7B9577H.3HY4CULLAHGCU@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>
-Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
- <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
- <bjorn3_gh@protonmail.com>, <a.hindborg@kernel.org>,
- <aliceryhl@google.com>, <tmgross@umich.edu>, <david.m.ertman@intel.com>,
- <ira.weiny@intel.com>, <leon@kernel.org>, <kwilczynski@kernel.org>,
- <bhelgaas@google.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 4/4] rust: devres: implement register_release()
-From: "Benno Lossin" <lossin@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250624215600.221167-1-dakr@kernel.org>
- <20250624215600.221167-5-dakr@kernel.org>
- <DAWED7BIC32G.338MXRHK4NSJG@kernel.org> <aF0rzzlKgwopOVHV@pollux>
- <aF1TEuotIIwcKODM@cassiopeiae>
-In-Reply-To: <aF1TEuotIIwcKODM@cassiopeiae>
 
-On Thu Jun 26, 2025 at 4:02 PM CEST, Danilo Krummrich wrote:
-> On Thu, Jun 26, 2025 at 01:15:34PM +0200, Danilo Krummrich wrote:
->> On Thu, Jun 26, 2025 at 12:36:23PM +0200, Benno Lossin wrote:
->> > Or, we could change `Release` to be:
->> >=20
->> >     pub trait Release {
->> >         type Ptr: ForeignOwnable;
->> >=20
->> >         fn release(this: Self::Ptr);
->> >     }
->> >=20
->> > and then `register_release` is:
->> >=20
->> >     pub fn register_release<T: Release>(dev: &Device<Bound>, data: T::=
-Ptr) -> Result
->> >=20
->> > This way, one can store a `Box<T>` and get access to the `T` at the en=
-d.
->>=20
->> I think this was also the case before? Well, it was P::Borrowed instead.
->>=20
->> > Or if they store the value in an `Arc<T>`, they have the option to clo=
-ne
->> > it and give it to somewhere else.
->>=20
->> Anyways, I really like this proposal of implementing the Release trait.
->
-> One downside seems to be that the compiler cannot infer T anymore with th=
-is
-> function signature.
+The initial implementation of PCI/MSI interrupt domains in the hierarchical
+interrupt domain model used a shortcut by providing a global PCI/MSI
+domain.
 
-Yeah... That's a bit annoying.
+This works because the PCI/MSI[X] hardware is standardized and uniform, but
+it violates the basic design principle of hierarchical interrupt domains:
+Each hardware block involved in the interrupt delivery chain should have a
+separate interrupt domain.
 
-We might be able to add an associated type to `ForeignOwnable` like
-`Target` or `Inner` or whatever.
+For PCI/MSI[X], the interrupt controller is per PCI device and not a global
+made-up entity.
 
-Then we could do:
+Unsurprisingly, the shortcut turned out to have downsides as it does not
+allow dynamic allocation of interrupt vectors after initialization and it
+prevents supporting IMS on PCI. For further details, see:
 
-    pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
-    where
-        P: ForeignOwnable,
-        P::Inner: Release<Ptr =3D P>,
+https://lore.kernel.org/lkml/20221111120501.026511281@linutronix.de/
 
----
-Cheers,
-Benno
+The solution is implementing per device MSI domains, this means the
+entities which provide global PCI/MSI domain so far have to implement MSI
+parent domain functionality instead.
+
+This series converts the PCI controller drivers to implement MSI parent
+domain.
+
+ drivers/pci/Kconfig                           |   1 +
+ drivers/pci/controller/Kconfig                |  11 +
+ drivers/pci/controller/dwc/Kconfig            |   1 +
+ .../pci/controller/dwc/pcie-designware-host.c |  68 ++----
+ drivers/pci/controller/dwc/pcie-designware.h  |   1 -
+ drivers/pci/controller/mobiveil/Kconfig       |   1 +
+ .../controller/mobiveil/pcie-mobiveil-host.c  |  42 ++--
+ .../pci/controller/mobiveil/pcie-mobiveil.h   |   1 -
+ drivers/pci/controller/pci-aardvark.c         |  59 ++---
+ drivers/pci/controller/pci-hyperv.c           |  98 ++++++--
+ drivers/pci/controller/pcie-altera-msi.c      |  44 ++--
+ drivers/pci/controller/pcie-brcmstb.c         |  44 ++--
+ drivers/pci/controller/pcie-iproc-msi.c       |  45 ++--
+ drivers/pci/controller/pcie-mediatek-gen3.c   |  67 ++---
+ drivers/pci/controller/pcie-mediatek.c        |  46 ++--
+ drivers/pci/controller/pcie-rcar-host.c       |  69 ++----
+ drivers/pci/controller/pcie-xilinx-dma-pl.c   |  48 ++--
+ drivers/pci/controller/pcie-xilinx-nwl.c      |  45 ++--
+ drivers/pci/controller/pcie-xilinx.c          |  55 +++--
+ drivers/pci/controller/plda/Kconfig           |   1 +
+ drivers/pci/controller/plda/pcie-plda-host.c  |  44 ++--
+ drivers/pci/controller/plda/pcie-plda.h       |   1 -
+ drivers/pci/controller/vmd.c                  | 229 +++++++++---------
+ 23 files changed, 504 insertions(+), 517 deletions(-)
+
+--=20
+2.39.5
+
 
