@@ -1,128 +1,170 @@
-Return-Path: <linux-pci+bounces-30819-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30820-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83363AEA76B
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 21:54:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C298AEA79A
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 22:01:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 629D97A60E7
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 19:52:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E012177B44
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 20:01:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1E4E2F0047;
-	Thu, 26 Jun 2025 19:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB72A215191;
+	Thu, 26 Jun 2025 20:01:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UoQ8oRIO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WFkD0Ozu"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFBC2EFD96;
-	Thu, 26 Jun 2025 19:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1A9203706;
+	Thu, 26 Jun 2025 20:01:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750967609; cv=none; b=jC63GSvtRFUBxABIs5ittsY8vJHMdGvBnfOfceF3VbunBHooc5m4OkV0NqrGsFMc2BbVby/4wVzAeq4S7Hva1t+5gw4B+VfduLd8s2b5da3JDsh0PIYIDBa+oGOJvIpyn56PKGKxSvY5l9JhzkjfzbvCeyFUOd7eHkJlYxP4dZc=
+	t=1750968061; cv=none; b=kebGkfBDPhqyiX2AkomfMx4DL37n2Dy40VQq65aIlGXEg+od3vF8QAAlSm4b+p1lxkwfoM6eZIdpdgSMuwQUCIHx+mvS02LrcXzfy6CdBAmHzBn30lm2jKlxLwC0clDh76Gukx3IFHxXuy4PP/G8aBUaJPfP4teIUViXACMYoOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750967609; c=relaxed/simple;
-	bh=zd6vb4QxveFon7B3CZSViiKsMHSBmEmxGp/d12jKjGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MStTwTafcuokTgPOAu2CGKVY7PNedaQmte4afd1IJL6SieHN7JUkQ0K6Uup0FuH9veZMrkD89Es0gGHV44ZGWgPNPfn9m2L/rvJVHBHBmVUcMWJQyfECGhzPh0whj6tp0U4tQX1e0tpkTs4Puf6c47Y63gauTf7jxL+staIPcVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UoQ8oRIO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43B05C4CEEB;
-	Thu, 26 Jun 2025 19:53:29 +0000 (UTC)
+	s=arc-20240116; t=1750968061; c=relaxed/simple;
+	bh=NOy9Y3ciqqS6T9tSszDCtRx8iD4avruD6fPvrBwcEnU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LtM9mP0wYgeylT2SSh/aaK2rxotmkTNZZ1PLDYunINSOKdKBjWXZmpQLdwjSIAWC24kwH6RGcuMYyUeQwn1uOu77HKI9a6woe9bVw3JhYqEaMKdI3uWszHY3N2FtEa/PvDiq2jy2DtO9GJ3xY3UMuWrcmxqenqUxYBUjNEtMsnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WFkD0Ozu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2FDEC4CEEB;
+	Thu, 26 Jun 2025 20:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750967609;
-	bh=zd6vb4QxveFon7B3CZSViiKsMHSBmEmxGp/d12jKjGM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=UoQ8oRIOtm6VaeYcXpyBVvBFlGAN+pwKhCsQgDUiDuggZCagscyw39521OUr7Pux2
-	 ffn7FEqnSGLuCkb+V1BtIlowfA85y+EeXz9duCkBwsqMrjT7yHse4yb96qyOfEC/E0
-	 d96M3QND/xmtaEb8HcKmhWr0snojdcaOm0j6UweHemT0gLt57DuqjupNreSGwVMHhP
-	 7yROL7dmPzSE5x55MEWpDvg+XdeM7gj/caaKPdSr6jPfekhRoGadnE5MnyOEqs4+y6
-	 VaUz3llWeCuQqdB0WqCcZO82WSzD+4ZTyPFhAvoR+QleoaDBOKKt9UUjCfH5500pKt
-	 mgO6APepzwp/A==
-Date: Thu, 26 Jun 2025 14:53:27 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: liu.xuemei1@zte.com.cn, devel@lists.libvirt.org
-Cc: mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, liu.song13@zte.com.cn
-Subject: Re: [PATCH] remote/stream-event: Fix a memory leak in??
- remoteStreamCallbackFree()
-Message-ID: <20250626195327.GA1634935@bhelgaas>
+	s=k20201202; t=1750968061;
+	bh=NOy9Y3ciqqS6T9tSszDCtRx8iD4avruD6fPvrBwcEnU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WFkD0OzuYSAfTGms9/4M1NA73AYVCJ5kNW5mY+WslIXIceiLMwcMwq+DDcJeutZ9X
+	 XAI+Xrpe3yM5ycaoW6WadEBNfONuTuOMbd3Ropiq+tBRsybSOjWhy6yK7pUWr+Em99
+	 b8MyDbuUwHkTjnvBtI5w4AUxbcL43CLU87vos8DSOKZ8GavfILc+gKzuxvAtCFyFYn
+	 DS1mfi1tuP20c/S1t56WsBhxelSPUL4xYOWjHD2H+Zfoo57J2nrqm7e/OyGD8ulREW
+	 2SDlJkKZ7gJ4BIwaFwT5ysBz/AR1Aa0ltl0s+I07afvtn5CrWzXpf3XWyZ1Mn2psqu
+	 4Ei7Wt/SIEWMA==
+From: Danilo Krummrich <dakr@kernel.org>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	david.m.ertman@intel.com,
+	ira.weiny@intel.com,
+	leon@kernel.org,
+	kwilczynski@kernel.org,
+	bhelgaas@google.com
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH v4 0/5] Improvements for Devres
+Date: Thu, 26 Jun 2025 22:00:38 +0200
+Message-ID: <20250626200054.243480-1-dakr@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626141038445ZnnRRHX3QpBjC7RGFRlrw@zte.com.cn>
+Content-Transfer-Encoding: 8bit
 
-[+to libvirt development list, since this looks like a libvirt patch,
-not a Linux kernel patch]
+This patch series provides some optimizations for Devres:
 
-On Thu, Jun 26, 2025 at 02:10:38PM +0800, liu.xuemei1@zte.com.cn wrote:
-> From: Liu Song <liu.song13@zte.com.cn>
-> 
-> The ff callback is never called in remoteStreamCallbackFree() because
-> cbdata->cb can not be NULL. This causes a leak of 'cbdata->opaque'.
-> 
-> The leak can be reproduced by attaching and detaching to the console of
-> an VM using `virsh console`.
-> 
-> ASAN reports the leak stack as:
-> Direct leak of 288 byte(s) in 1 object(s) allocated from:
->     #0 0x7f6edf6ba0c7 in calloc (/lib64/libasan.so.8+0xba0c7)
->     #1 0x7f6edf5175b0 in g_malloc0 (/lib64/libglib-2.0.so.0+0x615b0)
->     #2 0x7f6ede6d0be3 in g_type_create_instance (/lib64/libgobject-2.0.so.0+0x3cbe3)
->     #3 0x7f6ede6b82cf in g_object_new_internal (/lib64/libgobject-2.0.so.0+0x242cf)
->     #4 0x7f6ede6b9877 in g_object_new_with_properties (/lib64/libgobject-2.0.so.0+0x25877)
->     #5 0x7f6ede6ba620 in g_object_new (/lib64/libgobject-2.0.so.0+0x26620)
->     #6 0x7f6edeb78138 in virObjectNew ../src/util/virobject.c:252
->     #7 0x7f6edeb7a78b in virObjectLockableNew ../src/util/virobject.c:274
->     #8 0x558251e427e1 in virConsoleNew ../tools/virsh-console.c:369
->     #9 0x558251e427e1 in virshRunConsole ../tools/virsh-console.c:427
-> 
-> Signed-off-by: Liu Song <liu.song13@zte.com.cn>
-> ---
->  src/remote/remote_daemon_stream.c | 2 +-
->  src/remote/remote_driver.c        | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/src/remote/remote_daemon_stream.c b/src/remote/remote_daemon_stream.c
-> index 453728a66b..a5032f9a43 100644
-> --- a/src/remote/remote_daemon_stream.c
-> +++ b/src/remote/remote_daemon_stream.c
-> @@ -437,13 +437,13 @@ int daemonAddClientStream(virNetServerClient *client,
->          return -1;
->      }
-> 
-> +    virObjectRef(client);
->      if (virStreamEventAddCallback(stream->st, 0,
->                                    daemonStreamEvent, client,
->                                    virObjectUnref) < 0)
->          return -1;
-> 
->      virObjectRef(client);
-> -
->      if ((stream->filterID = virNetServerClientAddFilter(client,
->                                                          daemonStreamFilter,
->                                                          stream)) < 0) {
-> diff --git a/src/remote/remote_driver.c b/src/remote/remote_driver.c
-> index 2690c05267..9ac13469e9 100644
-> --- a/src/remote/remote_driver.c
-> +++ b/src/remote/remote_driver.c
-> @@ -5336,7 +5336,7 @@ static void remoteStreamCallbackFree(void *opaque)
->  {
->      struct remoteStreamCallbackData *cbdata = opaque;
-> 
-> -    if (!cbdata->cb && cbdata->ff)
-> +    if (cbdata->ff)
->          (cbdata->ff)(cbdata->opaque);
-> 
->      virObjectUnref(cbdata->st);
-> -- 
-> 2.27.0
+  1) Provide a more lightweight replacement for Devres::new_foreign_owned().
+
+  2) Get rid of Devres' inner Arc and instead consume and provide an
+     impl PinInit instead.
+
+     Additionally, having the resulting explicit synchronization in
+     Devres::drop() prevents potential subtle undesired side effects of the
+     devres callback dropping the final Arc reference asynchronously within
+     the devres callback.
+
+  3) An optimization for when we never need to access the resource or release
+     it manually.
+
+Thanks to Alice and Benno for some great offline discussions on this topic.
+
+This patch series depends on the Opaque patch in [1] and the pin-init patch in
+[2], which Benno will provide a signed tag for. A branch containing the patches
+can be found in [3].
+
+[1] https://lore.kernel.org/lkml/20250610-b4-rust_miscdevice_registrationdata-v6-1-b03f5dfce998@gmail.com/
+[2] https://lore.kernel.org/rust-for-linux/20250529081027.297648-2-lossin@kernel.org/
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/devres
+
+Changes in v4:
+  - devres::register:
+    - require T: Send and ForeignOwnable: Send
+  - Devres:
+    - require T: Send
+    - document possible changes when switching from Opaque to UnsafePinned, once
+      possible
+  - devres::register_release():
+    - rework to Benno's proposal of Release::Ptr
+    - require P::Target: Send
+  - add a patch adding ForeignOwnable::Target, i.e. the type of the payload data
+    (required for devres::register_release())
+
+Changes in v3:
+  - devres::register:
+    - add 'static bound for ForeignOwnable
+    - use drop() instead of `let _ =`
+  - Devres:
+    - use ptr::from_ref() instead of Inner::as_ptr()
+    - use &raw mut instead of addr_of_mut!()
+    - use SAFETY comment proposal from Benno
+    - add invariant for `Devres::inner`
+    - use ScopeGuard in devres_callback()
+  - devres::register_release():
+    - add impl<T: Release> Release for &T
+    - add 'static bound for ForeignOwnable
+    - use drop() instead of `let _ =`
+
+Changes in v2:
+  - Revocable:
+    - remove Error: From<E> bound
+  - devres::register:
+    - rename devres::register_foreign_boxed() to just devres::register()
+    - move T: 'static bound to the function rather than the impl block
+  - Devres:
+    - Fix aliasing issue by using an Opaque<Inner>; should be
+      UnsafePinned<Inner> once available.
+    - Add doc-comments for a couple of private fields.
+    - Link Revocable on 'revoke' in Devres::new().
+  - devres::register_release():
+    - expand documentation of Release
+    - rename devres::register_foreign_release() for devres::register_release()
+
+Danilo Krummrich (5):
+  rust: revocable: support fallible PinInit types
+  rust: devres: replace Devres::new_foreign_owned()
+  rust: devres: get rid of Devres' inner Arc
+  rust: types: ForeignOwnable: Add type Target
+  rust: devres: implement register_release()
+
+ drivers/gpu/nova-core/driver.rs |   7 +-
+ drivers/gpu/nova-core/gpu.rs    |   6 +-
+ rust/helpers/device.c           |   7 +
+ rust/kernel/alloc/kbox.rs       |   2 +
+ rust/kernel/cpufreq.rs          |  11 +-
+ rust/kernel/devres.rs           | 361 +++++++++++++++++++++++---------
+ rust/kernel/drm/driver.rs       |  14 +-
+ rust/kernel/pci.rs              |  20 +-
+ rust/kernel/revocable.rs        |   6 +-
+ rust/kernel/sync/arc.rs         |   1 +
+ rust/kernel/types.rs            |   4 +
+ samples/rust/rust_driver_pci.rs |  19 +-
+ 12 files changed, 323 insertions(+), 135 deletions(-)
+
+
+base-commit: 7be11f5d927a548254be5c07291b32a6aa50917f
+-- 
+2.49.0
+
 
