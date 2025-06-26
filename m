@@ -1,177 +1,327 @@
-Return-Path: <linux-pci+bounces-30845-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30846-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A6EBAEA979
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 00:17:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30E3FAEA9B3
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 00:33:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D365556091E
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 22:17:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0614256439B
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 22:33:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 855312153D3;
-	Thu, 26 Jun 2025 22:17:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E14E121ADB9;
+	Thu, 26 Jun 2025 22:33:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HGOXiSZb"
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="kaFsil4C"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01AAC213E74
-	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 22:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C44921A440
+	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 22:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750976272; cv=none; b=MIom34Vc41MWwztOjGpaXj2GzBFeTAySclgL8daP08tT980MGpYRb2q3npCEHC0jXnvH1P6fTKvFzK3nRN9mhO2e60cn4r7q78ozdY9uoAdlBxl1ZuDc15S+4bXFHpqmh/y2uFPMC3NpdPYYgJqoA/sBDPTjvxO5SrH4kwpUUyk=
+	t=1750977206; cv=none; b=DbNx5MVJGNE7YaPyBpsiLleSLCjcTCgZf5GZ+4K9fGynBE6xFbT/2c2Q/fqx2jpGd26lbgLa9yDc/JkQ6IrsgmJYqbGk1yYggQfDvzazlnnybA18B1ezsfqijvNsA7huAb4maC710xqi2xEgqIhvP2lsOmLXhWeUVPbGGnijd38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750976272; c=relaxed/simple;
-	bh=MYtDdVYd0y1Ci0JlvX7groRfhkR30Cjj8br4lYV6ZGM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PoE4MXYFnarPupXPnySLsMTSYgXQ6ErSFjUNYRsWZdy7xWYvXjuoEXmXIID0RvaBsmvy6bsCGxErFz7fj3dyjylz3H27anK9twtvQuJAcrv056htuIZjySuW5K2VH9ZFUd0TkbjN7EmxQTWulQWk7ZzCOHGUze1AtstcLa9cyOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HGOXiSZb; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7394772635dso1076680b3a.0
-        for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 15:17:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750976270; x=1751581070; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8zJT2nyBD/ZES/bgHq4ennx8G+2QIzbohvYjrsQZiSA=;
-        b=HGOXiSZb+p1uUk2bsN/GeXzyvWY5xc79lNt5+ggSgEE1LO/TBHi4qEpzag9IDp/yr6
-         0VZSoJSNVnYsK6MT2B7uwXM8nbLp+jxC4EFoXcgiXN2c6Vev7zHUHZ5m+C28JKvwBnsW
-         zxG5BEVzLffsdmf+8cViQJHK7T9bvjh3bksG+2a1fXo6l7IDJK8Gat0wPkLhpREyqfOw
-         1savsADuZOUmdzDWeHjnxv9iq1knPwvytLt90jIPKxyX6fjxKZHDmVJu68wGItulQoLT
-         7uPBCkH3SliBCmUGO+a9Q0KnWUlhug5Kmol0RTuv3vf68YPDxOBg+pbJ/g7w/yLrD8wQ
-         hWgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750976270; x=1751581070;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8zJT2nyBD/ZES/bgHq4ennx8G+2QIzbohvYjrsQZiSA=;
-        b=eoB40MznH9IjFzrTKSWzo9mQUmiweypr5ahqv7x3NF2eJwLZsR6o6tpdqiySs19vjN
-         oMZB4COEYgO69EL76yT8R0y0pYVpOowAsDlxYFO1oc6azP0oz91TUzDFjJBMjpYWe/Gi
-         WUGfwf76Ov+pqqOnioPD/O4CZUf6rr64/zXSOamyv3nLgHEBFk1kx97bbkrei92kMZuR
-         pP78AL9Ylx4CYf5oEaf6R0S3p0S7WbUWJ+nSYQsXekSbetr4hPj20/0uKvVPBVh+sZWs
-         UDePwlL2qXlXPIhBs07qyh3duCUH0UZi63uc0G4p7NOYiaUpOlIT9Lbg8JNaFlVSwoIr
-         eutQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5KbLQN2uoSs80v6ZjqkVXASdNGlD4XxCIOY3nJtiSgncEhKl7nWZGYDfD+k1HcwzAx2PpikkDw90=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoyRNdyBmb6s2FTjO0msoDkfI9fU9+U7TDcioYQ6NnYP1sRuYa
-	Ct23n6zEGEgFGE86sPPuxc40rKXILw6Kxm1un7U16C4RLxA/6CvJodmeGFzM7piV3P9Xgy4I+AK
-	zC/aTCg==
-X-Google-Smtp-Source: AGHT+IHY/EPT/zmKG1i7jacrdolpL1ToMgnL7IztE9rUDP/sr/QX/ddMHlpECos0ZSbpr8h5AgefkNdMO+4=
-X-Received: from pgg8.prod.google.com ([2002:a05:6a02:4d88:b0:b2f:5d02:68e9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6da8:b0:21f:568c:712c
- with SMTP id adf61e73a8af0-220a12e39c1mr960899637.14.1750976270374; Thu, 26
- Jun 2025 15:17:50 -0700 (PDT)
-Date: Thu, 26 Jun 2025 15:17:48 -0700
-In-Reply-To: <20250625230313.GA1593493@bhelgaas>
+	s=arc-20240116; t=1750977206; c=relaxed/simple;
+	bh=Vq9qzlrhxPvDIiFof/pt5BVM/gC/1NURBaZT2wLedo0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=spTh8W1wc4Gv9vaeCiagOc4YGHYvIYLepAQDAvju/Xi5n+Uw4IxeOiwiS8vDl+GjtuAglmBr2fZB4DjEFVcj3lleuszKxgAFvqbzNV9A4b8BWQH0YYoQN/cjgAoXYltlDqrLG6onAsvS8guPPxReuXRBh6gkxTzgp0MWGFAlBDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=kaFsil4C; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1750977196; x=1751236396;
+	bh=Vq9qzlrhxPvDIiFof/pt5BVM/gC/1NURBaZT2wLedo0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=kaFsil4CV6No784rlhmXdY85lvlCRlwEBAUDTqucMNvoJksfufoiHiIDlfyrDskxU
+	 baYSMEJCfiE3gA8amUJ8XV2BeepRk6q5es1ITe2EoSpAy9bnRDR4rwJroMAV1+UTfs
+	 7/CorYeMnJ60al5xiMl3FFLkZhh/S1IdLABbMtPR2supCnv5f+31XCZBZ0cFAsoPH9
+	 VsCA1klxZWmkr+eER/CfpD5HUf4VvGh3L1puHCe0AHlsSfKyppiMIvYfpo8rXRs4s4
+	 sT0QBxR25o1mil/0OQITzpp/8naed3XQF9Tq7on8D8z2Sg69tdDVWbs8PhGbrjuFOI
+	 yZP20ofV+eg1w==
+Date: Thu, 26 Jun 2025 22:33:13 +0000
+To: Bjorn Helgaas <helgaas@kernel.org>
+From: andreasx0 <andreasx0@protonmail.com>
+Cc: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, "Maciej W. Rozycki" <macro@orcam.me.uk>, Matthew W Carlis <mattc@purestorage.com>, linux-pci@vger.kernel.org, Jiwei Sun <sunjw10@lenovo.com>, Adrian Huang12 <ahuang12@lenovo.com>
+Subject: Re: [PATCH] PCI: Fix link speed calculation on retrain failure
+Message-ID: <-iazzzuIfhAVFE-lEWHGlqmsvIaM8ExGLqRrXA5eghr0s6pTzi4xevmAdUgxiT4L88eHDAdxYQ4TFsGtcnDZ8dmo9uJsPxxpNDSuVilefKY=@protonmail.com>
+In-Reply-To: <20250625174652.GA1578845@bhelgaas>
+References: <20250625174652.GA1578845@bhelgaas>
+Feedback-ID: 4793980:user:proton
+X-Pm-Message-ID: 5ebe5c72cc6383df686cc4cd6449b40f5aa3fd4e
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250624171637.485616-1-seanjc@google.com> <20250625230313.GA1593493@bhelgaas>
-Message-ID: <aF3HDIzpe3vnpBdj@google.com>
-Subject: Re: [RFC PATCH] PCI: Support Immediate Readiness on devices without
- PM capabilities
-From: Sean Christopherson <seanjc@google.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>, 
-	Vipin Sharma <vipinsh@google.com>, Aaron Lewis <aaronlewis@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha512; boundary="------cbc5330ca62e96ccb965966526f86f1a06e8bff077618e6313517280a0b4d4a8"; charset=utf-8
 
-On Wed, Jun 25, 2025, Bjorn Helgaas wrote:
-> On Tue, Jun 24, 2025 at 10:16:37AM -0700, Sean Christopherson wrote:
-> > +void pci_pm_init(struct pci_dev *dev)
-> > +{
-> > +	u16 status;
-> > +
-> > +	device_enable_async_suspend(&dev->dev);
-> > +	dev->wakeup_prepared = false;
-> > +
-> > +	dev->pm_cap = 0;
-> > +	dev->pme_support = 0;
-> > +
-> > +	/*
-> > +	 * Note, support for the PCI PM spec is optional for legacy PCI devices
-> > +	 * and for VFs.  Continue on even if no PM capabilities are supported.
-> > +	 */
-> > +	__pci_pm_init(dev);
-> >  
-> >  	pci_read_config_word(dev, PCI_STATUS, &status);
-> >  	if (status & PCI_STATUS_IMM_READY)
-> >  		dev->imm_ready = 1;
-> 
-> I would rather just move this PCI_STATUS read to somewhere else.  I
-> don't think there's a great place to put it.  We could put it in
-> set_pcie_port_type(), which is sort of a grab bag of PCIe-related
-> things.
-> 
-> I don't know if it's necessarily even a PCIe-specific thing, but it
-> would be unexpected if somebody made a conventional PCI device that
-> set it, since the bit was reserved (and should be zero) in PCI r3.0
-> and defined in PCIe r4.0.
-> 
-> Maybe we should put it in pci_setup_device() close to where we call
-> pci_intx_mask_broken()?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------cbc5330ca62e96ccb965966526f86f1a06e8bff077618e6313517280a0b4d4a8
+Content-Type: multipart/mixed;boundary=---------------------fe7bab295f5641feab62dde617cf3fdc
 
-Any reason not to throw it in pci_init_capabilities()?  That has the advantage
-of minimizing the travel distance, e.g. to avoid introducing a goof similar to
-what happened with 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when initializing").
+-----------------------fe7bab295f5641feab62dde617cf3fdc
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;charset=utf-8
 
-E.g. something silly like this?  Or maybe pci_misc_init() or so?
+Tested and passed.
+But what i mean is why try to retrain the line of the connected bios disab=
+led discrete GPU? Is the normal of disabled to drop it to 2.5?
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 9e42090fb108..4a1ba5c017cd 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3205,7 +3205,6 @@ void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev)
- void pci_pm_init(struct pci_dev *dev)
- {
-        int pm;
--       u16 status;
-        u16 pmc;
- 
-        device_enable_async_suspend(&dev->dev);
-@@ -3266,9 +3265,6 @@ void pci_pm_init(struct pci_dev *dev)
-                pci_pme_active(dev, false);
-        }
- 
--       pci_read_config_word(dev, PCI_STATUS, &status);
--       if (status & PCI_STATUS_IMM_READY)
--               dev->imm_ready = 1;
- poweron:
-        pci_pm_power_up_and_verify_state(dev);
-        pm_runtime_forbid(&dev->dev);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 4b8693ec9e4c..d33b8af37247 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2595,6 +2595,15 @@ void pcie_report_downtraining(struct pci_dev *dev)
-        __pcie_print_link_status(dev, false);
- }
- 
-+static void pci_imm_ready_init(struct pci_dev *dev)
-+{
-+       u16 status;
-+
-+       pci_read_config_word(dev, PCI_STATUS, &status);
-+       if (status & PCI_STATUS_IMM_READY)
-+               dev->imm_ready = 1;
-+}
-+
- static void pci_init_capabilities(struct pci_dev *dev)
- {
-        pci_ea_init(dev);               /* Enhanced Allocation */
-@@ -2604,6 +2613,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
-        /* Buffers for saving PCIe and PCI-X capabilities */
-        pci_allocate_cap_save_buffers(dev);
- 
-+       pci_imm_ready_init(dev);        /* Immediate Ready */
-        pci_pm_init(dev);               /* Power Management */
-        pci_vpd_init(dev);              /* Vital Product Data */
-        pci_configure_ari(dev);         /* Alternative Routing-ID Forwarding */
+
+On Wednesday, June 25th, 2025 at 20:46, Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
+
+> On Wed, Jun 25, 2025 at 04:06:58PM +0000, andreasx0 wrote:
+> =
+
+
+> > Again. As said the patch from Lucas fixed the warning that was
+> > caused because the discrete nvidia gpu was disabled by bios.
+> =
+
+
+> =
+
+
+> The series I applied is at
+> https://lore.kernel.org/all/20250123055155.22648-1-sjiwei@163.com/.
+> The patches currently queued are at
+> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=3Denu=
+meration
+> =
+
+
+> I cc'd you on my response to that series, so if you think the commit
+> log needs a change, feel free to suggest something in that thread.
+> It's a generic problem, not anything specific to the GPU, so I just
+> included the log messages a user would see when the problem happens.
+> =
+
+
+> I added your Reported-by because I think the first patch [2] should
+> fix the problem you saw. If it doesn't, please let me know. If you
+> test it and it does fix the problem, I'd be happy to add your
+> Tested-by as well.
+> =
+
+
+> Thanks very much for reporting this issue and giving it a nudge to get
+> it fixed!
+> =
+
+
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?=
+id=3D9989e0ca7462
+> =
+
+
+> > On Tuesday, June 24th, 2025 at 21:13, Sathyanarayanan Kuppuswamy sathy=
+anarayanan.kuppuswamy@linux.intel.com wrote:
+> > =
+
+
+> > > On 6/24/25 9:48 AM, Bjorn Helgaas wrote:
+> > =
+
+
+> > > > [+cc Sathy, Jiwei, Adrian]
+> > =
+
+
+> > > > On Mon, Jun 23, 2025 at 03:22:14PM +0200, Lukas Wunner wrote:
+> > =
+
+
+> > > > > When pcie_failed_link_retrain() fails to retrain, it tries to re=
+vert to
+> > > > > the previous link speed. However it calculates that speed from t=
+he Link
+> > > > > Control 2 register without masking out non-speed bits first.
+> > =
+
+
+> > > > > PCIE_LNKCTL2_TLS2SPEED() converts such incorrect values to
+> > > > > PCI_SPEED_UNKNOWN, which in turn causes a WARN splat in
+> > > > > pcie_set_target_speed():
+> > =
+
+
+> > > > > pci 0000:00:01.1: [1022:14ed] type 01 class 0x060400 PCIe Root P=
+ort
+> > > > > pci 0000:00:01.1: broken device, retraining non-functional downs=
+tream link at 2.5GT/s
+> > > > > pci 0000:00:01.1: retraining failed
+> > > > > WARNING: CPU: 1 PID: 1 at drivers/pci/pcie/bwctrl.c:168 pcie_set=
+_target_speed
+> > > > > RDX: 0000000000000001 RSI: 00000000000000ff RDI: ffff9acd82efa00=
+0
+> > > > > pcie_failed_link_retrain
+> > > > > pci_device_add
+> > > > > pci_scan_single_device
+> > > > > pci_scan_slot
+> > > > > pci_scan_child_bus_extend
+> > > > > acpi_pci_root_create
+> > > > > pci_acpi_scan_root
+> > > > > acpi_pci_root_add
+> > > > > acpi_bus_attach
+> > > > > device_for_each_child
+> > > > > acpi_dev_for_each_child
+> > > > > acpi_bus_attach
+> > > > > device_for_each_child
+> > > > > acpi_dev_for_each_child
+> > > > > acpi_bus_attach
+> > > > > acpi_bus_scan
+> > > > > acpi_scan_init
+> > > > > acpi_init
+> > =
+
+
+> > > > > Per the calling convention of the System V AMD64 ABI, the argume=
+nts to
+> > > > > pcie_set_target_speed(struct pci_dev *, enum pci_bus_speed, bool=
+) are
+> > > > > stored in RDI, RSI, RDX. As visible above, RSI contains 0xff, i.=
+e.
+> > > > > PCI_SPEED_UNKNOWN.
+> > =
+
+
+> > > > > Fixes: f68dea13405c ("PCI: Revert to the original speed after PC=
+Ie failed link retraining")
+> > > > > Reported-by: Andrew andreasx0@protonmail.com
+> > > > > Closes: https://lore.kernel.org/r/7iNzXbCGpf8yUMJZBQjLdbjPcXrEJq=
+Bxy5-bHfppz0ek-h4_-G93b1KUrm106r2VNF2FV_sSq0nENv4RsRIUGnlYZMlQr2ZD2NyB5sdj=
+5aU=3D@protonmail.com/
+> > > > > Signed-off-by: Lukas Wunner lukas@wunner.de
+> > > > > Cc: stable@vger.kernel.org # v6.12+
+> > > > > I like the brevity of this patch, but I do worry that if we ever=
+ have
+> > > > > other users of PCIE_LNKCTL2_TLS2SPEED(), we might have the same
+> > > > > problem again.
+> > =
+
+
+> > > > Also, it looks like PCIE_LNKCAP_SLS2SPEED() has the same problem.
+> > =
+
+
+> > > > f68dea13405c predates PCIE_LNKCTL2_TLS2SPEED(), and I don't think =
+this
+> > > > problem existed as of f68dea13405c. I think the Fixes: tag should =
+be
+> > > > for de9a6c8d5dbf ("PCI/bwctrl: Add pcie_set_target_speed() to set =
+PCIe
+> > > > Link Speed"), which added PCIE_LNKCTL2_TLS2SPEED() and
+> > > > PCIE_LNKCAP_SLS2SPEED() without masking out the other bits.
+> > =
+
+
+> > > > I think I'll take Jiwei's patch [1], which fixes
+> > > > PCIE_LNKCTL2_TLS2SPEED() and PCIE_LNKCAP_SLS2SPEED() without requi=
+ring
+> > > > changes in the users. I'll add the details of Andrew's report to t=
+he
+> > > > commit log.
+> > =
+
+
+> > > Agree. It is better to fix it in the macro.
+> > =
+
+
+> > > > [1] https://lore.kernel.org/all/20250123055155.22648-2-sjiwei@163.=
+com/
+> > =
+
+
+> > > > > ---
+> > > > > drivers/pci/quirks.c | 2 +-
+> > > > > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > =
+
+
+> > > > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > > > index d7f4ee6..deaaf4f 100644
+> > > > > --- a/drivers/pci/quirks.c
+> > > > > +++ b/drivers/pci/quirks.c
+> > > > > @@ -108,7 +108,7 @@ int pcie_failed_link_retrain(struct pci_dev =
+*dev)
+> > > > > pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
+> > > > > pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+> > > > > if (!(lnksta & PCI_EXP_LNKSTA_DLLLA) && pcie_lbms_seen(dev, lnks=
+ta)) {
+> > > > > - u16 oldlnkctl2 =3D lnkctl2;
+> > > > > + u16 oldlnkctl2 =3D lnkctl2 & PCI_EXP_LNKCTL2_TLS;
+> > =
+
+
+> > > > > pci_info(dev, "broken device, retraining non-functional downstre=
+am link at 2.5GT/s\n");
+> > =
+
+
+> > > > > --
+> > > > > 2.47.2
+> > =
+
+
+> > > --
+> > > Sathyanarayanan Kuppuswamy
+> > > Linux Kernel Developer
+> =
+
+
+> =
+
+
+> =
+
+
+> =
+
+
+-----------------------fe7bab295f5641feab62dde617cf3fdc
+Content-Type: application/pgp-keys; filename="publickey - andreasx0@protonmail.com - 0xF61BB148.asc"; name="publickey - andreasx0@protonmail.com - 0xF61BB148.asc"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="publickey - andreasx0@protonmail.com - 0xF61BB148.asc"; name="publickey - andreasx0@protonmail.com - 0xF61BB148.asc"
+
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4ak1FWkk3bTN4WUpLd1lCQkFI
+YVJ3OEJBUWRBN1NSTmw4bVlHN2lIZUY5QytpNWdzbXBZdUJpeXQzYjYKM0FlNGN4d1c3cUxOTTJG
+dVpISmxZWE40TUVCd2NtOTBiMjV0WVdsc0xtTnZiU0E4WVc1a2NtVmhjM2d3ClFIQnliM1J2Ym0x
+aGFXd3VZMjl0UHNLTUJCQVdDZ0ErQllKa2p1YmZCQXNKQndnSmtMWm8xSzhrbmExUQpBeFVJQ2dR
+V0FBSUJBaGtCQXBzREFoNEJGaUVFOWh1eFNGUmFIWUNLNWdMOHRtalVyeVNkclZBQUFLOWsKQVFD
+ODlZS20rT3YvdDl3OVo3WS95Z2x1anl2dFBPZkcrenpDVDNtcmpVTU52QUQvYTE0eENQZGVTSXFk
+CnFRM1dhcktycXpnczVlSzBSNHVTU1h0MU42b0dUZy9PT0FSa2p1YmZFZ29yQmdFRUFaZFZBUVVC
+QVFkQQpYUUE5aGdVcjRYazRXemU1TVhOTUIwOEMvcEtBR0lrcWNvd2w2MmpjV1cwREFRZ0h3bmdF
+R0JZSUFDb0YKZ21TTzV0OEprTFpvMUs4a25hMVFBcHNNRmlFRTlodXhTRlJhSFlDSzVnTDh0bWpV
+cnlTZHJWQUFBR2ZICkFRRDZkUmxnZmtKZWFyaHdLWHFtbWlHTVlmU1c0V3hhMVFvSm9JbHdzQXQz
+YndEL1hTWmo4ZUFibStpMQpxaDRhbWh0eTFHYitTMGV3MVNicnRrSjREWmNNdUFRPQo9dGZYVQot
+LS0tLUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
+-----------------------fe7bab295f5641feab62dde617cf3fdc--
+
+--------cbc5330ca62e96ccb965966526f86f1a06e8bff077618e6313517280a0b4d4a8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+
+wrsEARYKAG0FgmhdyqAJkLZo1K8kna1QRRQAAAAAABwAIHNhbHRAbm90YXRp
+b25zLm9wZW5wZ3Bqcy5vcmdfD2sFTDaccMzVdYghBVtgLebfOiMmHAr6WEyY
+y7lYKhYhBPYbsUhUWh2AiuYC/LZo1K8kna1QAACsGgD/X8Liwvo6s3TNN92o
+aO4zPbjX71IplZWeBvm+JVT93PYA/iOaWery48DOg43i1whUbh0rPaOelL98
+BAE210FmJ0ED
+=2BAF
+-----END PGP SIGNATURE-----
+
+
+--------cbc5330ca62e96ccb965966526f86f1a06e8bff077618e6313517280a0b4d4a8--
+
 
