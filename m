@@ -1,122 +1,189 @@
-Return-Path: <linux-pci+bounces-30837-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30838-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5537AEA888
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 22:59:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EE40AEA895
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 23:12:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8AB31752B7
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 20:59:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7739B562EF0
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 21:12:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B012E25D1F1;
-	Thu, 26 Jun 2025 20:59:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7027C24503B;
+	Thu, 26 Jun 2025 21:12:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GjPX1Qxx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NdEtFuxl"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF762586DA;
-	Thu, 26 Jun 2025 20:59:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E7E1D7984;
+	Thu, 26 Jun 2025 21:12:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750971565; cv=none; b=JD5gT5r285xq2V3wpPt3OaWSLnWmt8R8NY2/tG1SRyYa4qdtRV7It0m+NFPsgWiLCn+haj1hU0nQXf3lU5py8Ox+J/L6ylqoUS0spiDA7NuCBVrkZ5CccD7bvlCrO6ss6ouZWp34HBho5Tx9MR84NbOAtHbUsL4VNgLoLCHEfes=
+	t=1750972345; cv=none; b=N06qdniNT2jKBIra+4M2PPthSkVJ0cRYYqAHkT4ADSRuyoOHXTG++7iD+fkPEKCp4Ty1Rfs3L5DxWljKNmmCHon7dSpA67eFTPdiIY1d9k9kUiAiZdCzBtbZ87GqZqMFDe0X7gWhlQZhQLSDf73IkSPPD2jRDNOYNW7CPT0XqRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750971565; c=relaxed/simple;
-	bh=+fhwZx4Tl0v+9+QtFE1+0FAdLLXXVavCkvZMXIFh6xc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Dug73MAJF30JIYj+NZcjUkk0rr1O0sQwiVISGXX1wRLbH8fbxQUDXIpbgubo6tSzFt8YnJmnVfgf5PhI3nKtDwSaKMEcuqw8EkPL2NSpqYGgBtKh8KgTPnXSsxlWVkfdxR7GbPiy5qCLVa7r4vpfT3mzSHfziWUK2U4jQS4NDzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GjPX1Qxx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05925C4CEEB;
-	Thu, 26 Jun 2025 20:59:24 +0000 (UTC)
+	s=arc-20240116; t=1750972345; c=relaxed/simple;
+	bh=1HGJ3l6ikdw5NCSll50pAw9X5BjsMp1eQTlXjZQSkac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=utohfPTG4d3AhTs/LEVwcbjvkRCxgTYqqos8tVE2Y6iw7jBczDKwam9opmlFt5c6NdfkVX6jfPIcnoAot7WWR/rnFW/unEG85ykl2tlSLUv2o7BBFb1UuRYQInAaDcz/sF+hd2MdURT9dQK5QH6AMpwDtJM9JMhzs185mscmWFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NdEtFuxl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 432F4C4CEEB;
+	Thu, 26 Jun 2025 21:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750971565;
-	bh=+fhwZx4Tl0v+9+QtFE1+0FAdLLXXVavCkvZMXIFh6xc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=GjPX1Qxxe9/hzEwK1CQ/VICiboIg1WQvkueWoTz2a7wMbJpN12KB2vhY2zFy+0sPI
-	 5VTsEfR31ymBZaIF8BzA6pbsEEDDOLacMdnAcQzB9HMuw68pkFShVoAZg0XAn3HYup
-	 23+Qn1bC38EK83cUKmvvS74W65K7P6knlmS8MqY4rFgnIZyywyQS0cDn1sN/cD5UeQ
-	 vHbcRtcwXgCgi6WxSYq3IhMJDZcUGPjlYWpIxkl3Dycx6uFbNbfqGLIgYcT669MnZk
-	 YZkAgI/JeCTcbjHCoeumjjALXEdZgzWLDuo1VWl7QioUV1r9WkcMiwQFKYjqhlkNhR
-	 913TCbfWgL5QA==
-Date: Thu, 26 Jun 2025 15:59:23 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux PM <linux-pm@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux ACPI <linux-acpi@vger.kernel.org>,
-	Linux PCI <linux-pci@vger.kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2 9/9] PCI: PM: Set power.strict_midlayer in
- pci_pm_init()
-Message-ID: <20250626205923.GA1639790@bhelgaas>
+	s=k20201202; t=1750972344;
+	bh=1HGJ3l6ikdw5NCSll50pAw9X5BjsMp1eQTlXjZQSkac=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NdEtFuxltw0oevgdXEQ5cl0fDHM2QHdYqsqqW3HNosUK/GcSDLIPpUaM5kKYBHCV5
+	 b7tRWS/EqxZHvlaO6XqF5zSrPTtNLxEIWaJh+oAyZNgT8or6xhUmXL2Omj456tIZ1u
+	 71RnxnZ22zI0pGFx8RfNJWfrVuB60YkTbsiIxVXaJcj8U1QgUkql01/UNMQJtlH+vk
+	 8A5sKrunL/G9C0wPJJ8FZxO4MKWXS9tQ2VG3UgHcglHz6MN+WHFIs8yGB9a076ccY4
+	 79wJ9jH8bHDWhhzFflge/EV30PGMgQPDHu2TQlVLKMU8xTUQG1ZAaGB8NN8/jn6pus
+	 ynlk/bA0OHrMA==
+Message-ID: <58625a35-4a3e-4c91-939d-9f0d6635f8c0@kernel.org>
+Date: Thu, 26 Jun 2025 16:12:21 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1952931.CQOukoFCf9@rjwysocki.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 9/9] PCI: Add a new 'boot_display' attribute
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Lukas Wunner <lukas@wunner.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+ "open list:SOUND" <linux-sound@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250626204508.GA1639269@bhelgaas>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250626204508.GA1639269@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 26, 2025 at 08:15:05PM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 6/26/2025 3:45 PM, Bjorn Helgaas wrote:
+> On Tue, Jun 24, 2025 at 03:30:42PM -0500, Mario Limonciello wrote:
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> On systems with multiple GPUs there can be uncertainty which GPU is the
+>> primary one used to drive the display at bootup. In order to disambiguate
+>> this add a new sysfs attribute 'boot_display' that uses the output of
+>> video_is_primary_device() to populate whether a PCI device was used for
+>> driving the display.
+>>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> The PCI bus type does not expect its runtime PM callbacks,
-> pci_pm_runtime_suspend() and pci_pm_runtime_resume(), to be invoked at
-> any point during system-wide suspend and resume, so make it express
-> that expectation by setting power.strict_midlayer for all PCI devices
-> in pci_pm_prepare() and clear it in pci_pm_complete().
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Question below.
+> 
+>> ---
+>> v4:
+>>   * new patch
+>> ---
+>>   Documentation/ABI/testing/sysfs-bus-pci |  9 +++++++++
+>>   drivers/pci/pci-sysfs.c                 | 14 ++++++++++++++
+>>   2 files changed, 23 insertions(+)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+>> index 69f952fffec72..897cfc1b0de0f 100644
+>> --- a/Documentation/ABI/testing/sysfs-bus-pci
+>> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+>> @@ -612,3 +612,12 @@ Description:
+>>   
+>>   		  # ls doe_features
+>>   		  0001:01        0001:02        doe_discovery
+>> +
+>> +What:		/sys/bus/pci/devices/.../boot_display
+>> +Date:		October 2025
+>> +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
+>> +Description:
+>> +		This file indicates whether the device was used as a boot
+>> +		display. If the device was used as the boot display, the file
+>> +		will contain "1". If the device is a display device but wasn't
+>> +		used as a boot display, the file will contain "0".
+> 
+> Is there a reason to expose this file if it wasn't a boot display
+> device?  Maybe it doesn't need to exist at all unless it contains "1"?
 
-Previous PM-related patches in drivers/pci/ use a subject line like:
+I was mostly thinking that it's a handy way for userspace to know 
+whether the kernel even supports this feature.  If userspace sees that 
+file on any GPU as it walks a list then it knows it can use that for a hint.
 
-  PCI/PM: ...
+But if you would rather it only shows up for the boot display yes it's 
+possible to do I think.  It's just more complexity to the visibility 
+lookup to also call video_is_primary_device().
 
-Would be cool if there were hints about what
-dev_pm_set_strict_midlayer() means.  Maybe the comment in
-get_callback() is enough, but it takes a little work to find it.
+LMK which way you want to go and I'll respin the series with your tags 
+and the robot fix.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+>> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+>> index 268c69daa4d57..5bbf79b1b953d 100644
+>> --- a/drivers/pci/pci-sysfs.c
+>> +++ b/drivers/pci/pci-sysfs.c
+>> @@ -30,6 +30,7 @@
+>>   #include <linux/msi.h>
+>>   #include <linux/of.h>
+>>   #include <linux/aperture.h>
+>> +#include <asm/video.h>
+>>   #include "pci.h"
+>>   
+>>   #ifndef ARCH_PCI_DEV_GROUPS
+>> @@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
+>>   	NULL,
+>>   };
+>>   
+>> +static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
+>> +				 char *buf)
+>> +{
+>> +	return sysfs_emit(buf, "%u\n", video_is_primary_device(dev));
+>> +}
+>> +static DEVICE_ATTR_RO(boot_display);
+>> +
+>>   static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
+>>   			     char *buf)
+>>   {
+>> @@ -1698,6 +1706,7 @@ late_initcall(pci_sysfs_init);
+>>   
+>>   static struct attribute *pci_dev_dev_attrs[] = {
+>>   	&dev_attr_boot_vga.attr,
+>> +	&dev_attr_boot_display.attr,
+>>   	NULL,
+>>   };
+>>   
+>> @@ -1710,6 +1719,11 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
+>>   	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
+>>   		return a->mode;
+>>   
+>> +#ifdef CONFIG_VIDEO
+>> +	if (a == &dev_attr_boot_display.attr && pci_is_display(pdev))
+>> +		return a->mode;
+>> +#endif
+>> +
+>>   	return 0;
+>>   }
+>>   
+>> -- 
+>> 2.43.0
+>>
 
-> ---
-> 
-> v1 -> v2:
->    * Set and clear the new flag in "prepare" and "complete" to allow
->      pm_runtime_force_suspend() invoked from driver remove callbacks to
->      work.
->    * Update subject and changelog.
-> 
-> ---
->  drivers/pci/pci-driver.c |    4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -708,6 +708,8 @@
->  	struct pci_dev *pci_dev = to_pci_dev(dev);
->  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
->  
-> +	dev_pm_set_strict_midlayer(dev, true);
-> +
->  	if (pm && pm->prepare) {
->  		int error = pm->prepare(dev);
->  		if (error < 0)
-> @@ -749,6 +751,8 @@
->  		if (pci_dev->current_state < pre_sleep_state)
->  			pm_request_resume(dev);
->  	}
-> +
-> +	dev_pm_set_strict_midlayer(dev, false);
->  }
->  
->  #else /* !CONFIG_PM_SLEEP */
-> 
-> 
-> 
 
