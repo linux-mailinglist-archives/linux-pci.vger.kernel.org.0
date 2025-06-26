@@ -1,183 +1,136 @@
-Return-Path: <linux-pci+bounces-30696-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30697-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E6DDAE9A56
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 11:41:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0012AE9A63
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 11:47:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C204E3AC0D4
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 09:41:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F0C91C2155C
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 09:47:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B383C29E115;
-	Thu, 26 Jun 2025 09:41:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39F71215F5C;
+	Thu, 26 Jun 2025 09:47:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScBbOi07"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k+xAJWcw"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B6415539A;
-	Thu, 26 Jun 2025 09:41:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E8D2153ED
+	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 09:47:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750930887; cv=none; b=mUiTUONG+Hu3SZhEGIYCo99jLkjHuWjZT/sujJuSA2PV0Xn1ybhXu22RiW1BHEQuyxsWzAN01V6Ygw81aDxrMu2PAdo0hSUxvL63cb3IAK36V3yYfuBrt9Q2xSIhsYHAFL+u2g0FMsaTsZiLpwpgYijm/A5M9O2CCcZgOAv4sKg=
+	t=1750931241; cv=none; b=HSVc97SPNV481Zw4MDyM0wsWE9goDdJQT7Lks1rmnokYC4j/2/5GURKzK7SWk9UQ1dsDVoeJlpcxBCYUmVe2RAOZyAn488w++nLsBq5G75UOkuV2XpM+gusS5TTULlSpGe8bfZzuoZG5VfsJKD/rt88TnlHYO3F7oesPyXivFUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750930887; c=relaxed/simple;
-	bh=kXlWtFJHYGZXpfxU2XTeWX5St19iKLmVxqcz6yj4hsI=;
+	s=arc-20240116; t=1750931241; c=relaxed/simple;
+	bh=S1OdVDiNdscAC1sB5SJOm+0v48HtXVFOr+uVL9/btPM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eB4qGHjMVmBhMXrQhYOMASgxPVI7wL1Lu6r//cIc1s8nbQDbGx7bq1T85y7nreTfbpkIZQ/izwtuxIzFLb9/Q8y/OpKO1DFl8ZWkPDDXNTNr43Ef/sRjzsKDONViDF+iLBNmMax1+/0NfCPGKKcE2GiLLrbCWATQIRujfDqbaT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScBbOi07; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B32AC4CEF4;
-	Thu, 26 Jun 2025 09:41:27 +0000 (UTC)
+	 To:Cc:Content-Type; b=ty/HlswyjZlFgMiKHlxsQzBZyeOWb5KrFXXwSS/JKPrjyQOYsG4QCQWp1XMMPco79c/U8skCYpaYeWc4vYKdrQHOb8gFKdi/+f2rgYkD2kUqajE9q5WhZlj2BYzSx2yAp+U1eR/hOWm9OAOYZoO9p0ndDrtGvpZ9NttNgqlq0WQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k+xAJWcw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 809C3C4CEEF
+	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 09:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750930887;
-	bh=kXlWtFJHYGZXpfxU2XTeWX5St19iKLmVxqcz6yj4hsI=;
+	s=k20201202; t=1750931240;
+	bh=S1OdVDiNdscAC1sB5SJOm+0v48HtXVFOr+uVL9/btPM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ScBbOi07yuPICS41cWr23Z8x2Dj6pCzsY3pt4nv7xT5ANvkI/acXnHtiY+7hQGpXy
-	 DOBY0yVLXK7EIyR+Nl2j4tFeG/azHDbmgSDDSxqjctSEh3TQjTO4ix81yX4SSAFmR8
-	 YqaEejf66EIH2my6g0Hg5n23aGExiRYHLE9Fq4udNfCuR7RKI+vrnyaI5vugjrdg81
-	 NbctxnOxn97CxC1xPM3VIbGkknseMAVMTq/xKhyTfFv4rSMIY/yixJUSkCTTYr2QZe
-	 CZI5kh6vFcWDRO2sO2iz7vTkGBnBgWsESpZVMVNJBBBJiHqbCHHFPMX9ajqzwRmkFg
-	 QI/jxC941Nmsg==
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-611998766c0so441024eaf.1;
-        Thu, 26 Jun 2025 02:41:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU0aVubtXBluevkUkXfhG/FCNHWmBpY9UhQKoQrA0XvGD+O9dOvEmBfWjZ9UmWE8zGviY2K19yQsJHZ@vger.kernel.org, AJvYcCUbC4Z2E/6qJCJReW2ZqKgqj22qSQVp6K/sk7A2ziKHN6Nw/ops524+zR4Awn7UiGcfR0NP3/35uxk=@vger.kernel.org, AJvYcCVFSl/W1OOcfjbzb35OQIXCHqlWMWTL/U3FO9jri/PF73CG2dQwnUT1XV5WDEcovU2Zo+gnEHDXI13nXENI@vger.kernel.org, AJvYcCWeGMsPTEPZpLtlkRBHHwdt+TY2XqYnuSuUXmvuDTpobaw8vj+4cpUjDgnGvtobKn9IZuW787Xmk88t@vger.kernel.org
-X-Gm-Message-State: AOJu0YyST7/uH6ZVsazOhAOfyMoZa+YtaJvaC89+DRWFqTNVwPUKbSq0
-	peiP9p/xSk4CwrOzJM1l7yCGAzn2ibnk20+nWeH3eC9BON38/S+ob0VKoH3ALgVl/VE3TImaNzH
-	1eYm/r54ub62V8Vf6AxAwPff28dm4eMI=
-X-Google-Smtp-Source: AGHT+IFFwcMnbazn9ld0BJf02w2SGzFl4BsPLD6/WVI+cKUPMvArB0HpKkLKr9h1POnuYo1bzegPrS6Er7Okr8detwA=
-X-Received: by 2002:a05:6820:907:b0:611:b1b0:2adf with SMTP id
- 006d021491bc7-611b1b02e35mr448886eaf.1.1750930886224; Thu, 26 Jun 2025
- 02:41:26 -0700 (PDT)
+	b=k+xAJWcwHjEtn6fXh7k3pG29zHcjJiAHstYFbESOVQXO+flbsWLNt3q4zOmbxBAuh
+	 QVWxt24jtgYF/q2m0OX72BbAOD29VVau9jbi0n/yRJwvUH8uPpTGZDa3PFfalNtW4r
+	 9Da/EBf/ve5Cxm67mlC9a0c7Mkox5PrKo9GBHlPGAdbQ3v99FJnGuoyxK4Wl/su06i
+	 7+6QfcyapvbtTLrXldRORH10ulc3MovDMuS337pOG8nmMlIk39MaYJWUKZmKuIsAEw
+	 Ui2oMv+1ymngvLztKCObo/wzcRiRL0ZFmWZh2N8Ha/by2Yuxru+HZPsvZmBFkE0HKi
+	 /XndfTjq930/w==
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-611a7c617a7so177808eaf.1
+        for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 02:47:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXXYovy66CZwEc2biyKxIbbn3qKSknT5xnrn7dnwlSbC9mmtn3NszN9PgAOuIYhfiFKQtPMeGScqEc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxzx4JM9ez27C6cHOBVztsNXL5l4HhT/SbvBo2gmeyNaF5SQKH0
+	8rMLeWtUZnJc2pru9V8yyNDFzcN+wxnpUlQOwDYGneLnE+SA9YSlS+iRNzDv1jFdTZzSJc3XKIB
+	mtmMeNgoZubc/DYWos4+hnI1mgwS5H7A=
+X-Google-Smtp-Source: AGHT+IGMw83F2/tWS7EHRQUk2nS1K/x7b0tzp1bA6dF1oYpUZFzDWw5vimClQ1m54F5WnE0mZFTNU0h6YRwvo/zuSsg=
+X-Received: by 2002:a05:6870:219c:b0:2c2:5c26:2d8e with SMTP id
+ 586e51a60fabf-2efb26d1fe8mr4324406fac.16.1750931239831; Thu, 26 Jun 2025
+ 02:47:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <22759968.EfDdHjke4D@rjwysocki.net> <2045419.usQuhbGJ8B@rjwysocki.net>
- <CAPDyKFq8ea+YogkAExUOBc2TEqi1z9WZswqgP29bLbursFUApg@mail.gmail.com>
-In-Reply-To: <CAPDyKFq8ea+YogkAExUOBc2TEqi1z9WZswqgP29bLbursFUApg@mail.gmail.com>
+References: <86c3bd52bda4552d63ffb48f8a30343167e85271.1750698221.git.lukas@wunner.de>
+ <20250624142407.GA1473261@bhelgaas> <aFzbALxN4jliWtmb@wunner.de>
+In-Reply-To: <aFzbALxN4jliWtmb@wunner.de>
 From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 26 Jun 2025 11:41:14 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h-9UnvhrQ7YaaYPG5CktwV-i+ZeqAri8OhJQb4TVp82w@mail.gmail.com>
-X-Gm-Features: Ac12FXx4t9s1OQAcDGkW25YSbl2lqTUdJSGgwNxO3wpv-ubVObtrt96eUGaNFYE
-Message-ID: <CAJZ5v0h-9UnvhrQ7YaaYPG5CktwV-i+ZeqAri8OhJQb4TVp82w@mail.gmail.com>
-Subject: Re: [PATCH v1 4/9] PM: Move pm_runtime_force_suspend/resume() under CONFIG_PM_SLEEP
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
-	Linux PCI <linux-pci@vger.kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>
+Date: Thu, 26 Jun 2025 11:47:07 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0h-3VpAp1G8AsP3EMaBsVAQRF5TRyr4Se95Wheaz67G3g@mail.gmail.com>
+X-Gm-Features: Ac12FXwV_eUre2flVs9jw9Wub6aSZXDmSwtpKMoLJ6FK1jFRoOnyiAbs9Dy-dqM
+Message-ID: <CAJZ5v0h-3VpAp1G8AsP3EMaBsVAQRF5TRyr4Se95Wheaz67G3g@mail.gmail.com>
+Subject: Re: [PATCH] PCI/ACPI: Fix runtime PM ref imbalance on hot-plug
+ capable ports
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Laurent Bigonville <bigon@bigon.be>, 
+	Mario Limonciello <mario.limonciello@amd.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Mika Westerberg <westeri@kernel.org>, linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 11:38=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.or=
-g> wrote:
+On Thu, Jun 26, 2025 at 7:30=E2=80=AFAM Lukas Wunner <lukas@wunner.de> wrot=
+e:
 >
-> On Wed, 25 Jun 2025 at 21:25, Rafael J. Wysocki <rjw@rjwysocki.net> wrote=
-:
+> On Tue, Jun 24, 2025 at 09:24:07AM -0500, Bjorn Helgaas wrote:
+> > On Mon, Jun 23, 2025 at 07:08:20PM +0200, Lukas Wunner wrote:
+> > > pcie_portdrv_probe() and pcie_portdrv_remove() both call
+> > > pci_bridge_d3_possible() to determine whether to use runtime power
+> > > management.  The underlying assumption is that pci_bridge_d3_possible=
+()
+> > > always returns the same value because otherwise a runtime PM referenc=
+e
+> > > imbalance occurs.
+> > >
+> > > That assumption falls apart if the device is inaccessible on ->remove=
+()
+> > > due to hot-unplug:  pci_bridge_d3_possible() calls pciehp_is_native()=
+,
+> > > which accesses Config Space to determine whether the device is Hot-Pl=
+ug
+> > > Capable.   An inaccessible device returns "all ones", which is conver=
+ted
+> > > to "all zeroes" by pcie_capability_read_dword().  Hence the device no
+> > > longer seems Hot-Plug Capable on ->remove() even though it was on
+> > > ->probe().
 > >
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > This is pretty subtle; thanks for chasing it down.
 > >
-> > Since pm_runtime_force_suspend/resume() and pm_runtime_need_not_resume(=
-)
-> > are only used during system-wide PM transitions, there is no reason to
-> > compile them in if CONFIG_PM_SLEEP is unset.
+> > It doesn't look like anything in pci_bridge_d3_possible() should
+> > change over the life of the device, although acpi_pci_bridge_d3() is
+> > non-trivial.
 > >
-> > Accordingly, move them all under CONFIG_PM_SLEEP and make the static
-> > inline stubs for pm_runtime_force_suspend/resume() return an error
-> > to indicate that they should not be used outside CONFIG_PM_SLEEP.
+> > Should we consider calling pci_bridge_d3_possible() only once and
+> > caching the result?  We already call it in pci_pm_init() and save the
+> > result in dev->bridge_d3.  That member can be changed by
+> > pci_bridge_d3_update(), but we could add another copy that we never
+> > update after pci_pm_init().
 > >
+> > I worry a little that the fix is equally subtle and we could easily
+> > reintroduce this issue with future code reorganization.
 >
-> Just realized that there seems to be some drivers that actually make
-> use of pm_runtime_force_suspend() from their ->remove() callbacks.
+> I think this fix makes sense regardless of whether or not
+> the return value of pci_bridge_d3_possible() is cached:
 >
-> To not break them, we probably need to leave this code to stay under CONF=
-IG_PM.
+> Right now pciehp_is_native() reads the Hot-Plug Capable bit from
+> the register even though the bit is cached in pci_dev->is_hotplug_bridge
+> and pci_bridge_d3_possible() only calls pciehp_is_native() if that flag
+> is set.  In other words, pciehp_is_native() is re-checking the condition
+> under which it was called.  That's just nonsensical and superfluous.
 
-OK, pm_runtime_force_suspend() need not be under CONFIG_PM_SLEEP.
-That's not the case for the other two functions though AFAICS.
+Agreed.
 
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  drivers/base/power/runtime.c |    4 ++++
-> >  include/linux/pm_runtime.h   |   20 ++++++++++++++------
-> >  2 files changed, 18 insertions(+), 6 deletions(-)
-> >
-> > --- a/drivers/base/power/runtime.c
-> > +++ b/drivers/base/power/runtime.c
-> > @@ -1941,6 +1941,8 @@
-> >         pm_request_idle(link->supplier);
-> >  }
-> >
-> > +#ifdef CONFIG_PM_SLEEP
-> > +
-> >  bool pm_runtime_need_not_resume(struct device *dev)
-> >  {
-> >         return atomic_read(&dev->power.usage_count) <=3D 1 &&
-> > @@ -2063,3 +2065,5 @@
-> >         return ret;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pm_runtime_force_resume);
-> > +
-> > +#endif /* CONFIG_PM_SLEEP */
-> > --- a/include/linux/pm_runtime.h
-> > +++ b/include/linux/pm_runtime.h
-> > @@ -66,9 +66,6 @@
-> >
-> >  extern int pm_generic_runtime_suspend(struct device *dev);
-> >  extern int pm_generic_runtime_resume(struct device *dev);
-> > -extern bool pm_runtime_need_not_resume(struct device *dev);
-> > -extern int pm_runtime_force_suspend(struct device *dev);
-> > -extern int pm_runtime_force_resume(struct device *dev);
-> >
-> >  extern int __pm_runtime_idle(struct device *dev, int rpmflags);
-> >  extern int __pm_runtime_suspend(struct device *dev, int rpmflags);
-> > @@ -257,9 +254,6 @@
-> >
-> >  static inline int pm_generic_runtime_suspend(struct device *dev) { ret=
-urn 0; }
-> >  static inline int pm_generic_runtime_resume(struct device *dev) { retu=
-rn 0; }
-> > -static inline bool pm_runtime_need_not_resume(struct device *dev) {ret=
-urn true; }
-> > -static inline int pm_runtime_force_suspend(struct device *dev) { retur=
-n 0; }
-> > -static inline int pm_runtime_force_resume(struct device *dev) { return=
- 0; }
-> >
-> >  static inline int __pm_runtime_idle(struct device *dev, int rpmflags)
-> >  {
-> > @@ -330,6 +324,20 @@
-> >
-> >  #endif /* !CONFIG_PM */
-> >
-> > +#ifdef CONFIG_PM_SLEEP
-> > +
-> > +extern bool pm_runtime_need_not_resume(struct device *dev);
-> > +extern int pm_runtime_force_suspend(struct device *dev);
-> > +extern int pm_runtime_force_resume(struct device *dev);
-> > +
-> > +#else /* !CONFIG_PM_SLEEP */
-> > +
-> > +static inline bool pm_runtime_need_not_resume(struct device *dev) {ret=
-urn true; }
-> > +static inline int pm_runtime_force_suspend(struct device *dev) { retur=
-n -ENXIO; }
-> > +static inline int pm_runtime_force_resume(struct device *dev) { return=
- -ENXIO; }
-> > +
-> > +#endif /* CONFIG_PM_SLEEP */
-> > +
-> >  /**
-> >   * pm_runtime_idle - Conditionally set up autosuspend of a device or s=
-uspend it.
-> >   * @dev: Target device.
-> >
-> >
-> >
+> There's only one other caller of pciehp_is_native() and that's
+> hotplug_is_native().  Only that other caller needs the register read,
+> so it should be moved there.
 >
+> So I think the question of whether the pci_bridge_d3_possible() return
+> value should be cached is orthogonal to this patch.
+
++1
 
