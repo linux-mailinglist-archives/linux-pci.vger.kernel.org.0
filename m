@@ -1,130 +1,72 @@
-Return-Path: <linux-pci+bounces-30842-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30843-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C79E0AEA8AF
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 23:21:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8D20AEA901
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 23:47:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E07B316479F
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 21:21:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 559331C27338
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 21:47:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9329925D52D;
-	Thu, 26 Jun 2025 21:21:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5547218AB0;
+	Thu, 26 Jun 2025 21:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hFrgfrL6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UgXmVwi2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B30325CC61;
-	Thu, 26 Jun 2025 21:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D01A1DF980;
+	Thu, 26 Jun 2025 21:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750972892; cv=none; b=WzvCBk1FPcsmYCYtL1v6T4Qup8mQuKoRfVcX27tzkGzvc0p72UH66c/ulU6FaJZzF618rAos2zgBAVS1fcGgEWIF3nq3AinlcdGz0S1TsgZhQNiqpYagaGShibWeJq4dWt+TBDCkmV3d/PbrPLfEa0boTTwqylyXpaoQ5BImWaU=
+	t=1750974443; cv=none; b=f1BDn3b+XdWWLZTBBD2IhwTs+FjCDElAXhtGw0+Eyomb0GAEH1W9XDFHK+DjfP/uTBi82sB+RdJfmYfwnOW92qrMNq+5VeSDW73OG4nJdFnd+h20K2Z+OCAaqsKBiq4nQLl0VRmhxQcGEoGqFxjncfXtgCYeYXJlPH3P3DtmWYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750972892; c=relaxed/simple;
-	bh=dOG0HrfS6DLkGrpCJWNTcYMGI5WZCspSAJp1y6wzDXA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eAeqbOsfGkR+GYcMURu8rFUQkcZf0RsXNIRcFfUt4ggUk1+fMcuCvv7QoviOyEjCz9Bd4m3DcLdZXvitjVioSIo0Q05BdxOrhwQaZVe26rgHhWuCpFxrkVvCQVGONL1B/vd3KPwbUIAA8zPMf3N/VfmRgUjRPrGo2MdIO+wjCDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hFrgfrL6; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4a7f61ea32aso19379371cf.3;
-        Thu, 26 Jun 2025 14:21:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750972890; x=1751577690; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ySd8m1U2l00Ktu9oTVtaSrbIW1X40w/4HuGETmgFpJA=;
-        b=hFrgfrL6Qd4MA1oN5wnZcRM5E2Bi0NcO+zNzS/R+cfnn3ts9lnmlUStPC+LBPJWlhT
-         BNQWZaeXj5ETQduN5uqp8quq7vaiQx7nFkZVBEkSN8vwzqTIHh+JTpJ3WtjH+zmRLuzT
-         thY1TUoVRi7nz0sk60FTzQdMAyPqN5tdOcoIUFoxHUh6kyFW3x6I12L/I1w58C6FIkMc
-         DvC/fmJLyEzACk19Vdb3prknJUJj4Yau7vE3D8KDZ4qDzd3oNrjeoTeFVi3bYjgEVBEA
-         Ss0K7JQcznY4Gs0lxmBHtUiR0HfjOzsM4+iZ7RAEsv+74BzO0yTVbyLWp/zEueehSBFs
-         vQqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750972890; x=1751577690;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ySd8m1U2l00Ktu9oTVtaSrbIW1X40w/4HuGETmgFpJA=;
-        b=fgNvrC6dJWzQkB5rb4NfiwnLwqqu4BpX+FkNepx9WQnkxZa6AR1BJiixK02wZFQaav
-         GuPulnvbDjqv52MSVGNKCNx4d3YgcZMdtJpEyYgUinqDZhO6nJDC9M0KvWRU2PyCSr/x
-         9YUalBOEqoa4cqyx5IFWMZO27fLQEbJZDw0piJc3OyRqkxxnefBvcqX09SH8J/2Km5Qy
-         F/7w98PQvnvWNDeTRwr9gpG0BBXGSEbW4Dw1hQ+s5n+CpC5aLtdfrLMAIFS/v5laIiye
-         3k/YlDn/EMsbjgHVktlHOi5sExCNdfnfGts+zcKkvCHf47gMgW2rECK2uM8a6tX25WZn
-         DqhA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2gOXko2Ce96uaqbx48oHPfd8BtH3wqBQ3K1EnlXCHrpE6Or4VCxwQ25BKLUcXblzT88mBOyDtGuqw@vger.kernel.org, AJvYcCVAFY4qL4ICJp7z1IsxfkvZUfFnSyM1Vdi3LUTQcndOW6eCkrRa4+KrT+S7+8qa83mz7lVZmfbP9mICN7U=@vger.kernel.org, AJvYcCXh77DW+CtBn282nB/065Oiq35ry7oUU4X2Qg7z8rVB5VrgypJ8HM9gChrww9Nf8jAnhskeVH4Bqt9DqHOi0Xw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkIQwKnkIIJD1+pDYmRk3wHzQLtvQkMeuSPaYpOPLYw4kpRIJh
-	MhKuzCviIbM7PWx8c/FhFVd9AhHOPHAq/UQc84pH6xBykxl4Q/Jksb3x
-X-Gm-Gg: ASbGnctjg2y3bwkoBizpwHFthfnQTFQStvcPWSYBpddpPKozsfSMwv0iD8Fs0/PCZHE
-	n0nJZAE7gy780ghi5qV5J3cd4ChwXQyi2gEJrexAqgRfR/pa5cleGAi8oiNaQB+kY2HErgSyRVM
-	S+vR6p5+wAhXz08kLFEV7YWaXdpJCPsnbCJ4jtnJ4c3IW/lHff2tiUkydD19WXQzq5EM+Gq0FJN
-	cVktV7IsiX7m2hKAD9IM7N3TrDzn00XdQz2N3Z9FTdqxazsCzpMyrgTqPfnzi1HiKxw2rr7FZFm
-	wSZjQQCVbJDqBM6NEMNL48uJW/6Z75hGzxrvmWcUO5GN9cIkR5ANzn9XnflvAL+XVdu7152egMs
-	6EnOO92TYB7AHpgfG8jUbijr3dILQjiqezfw72aGiv0z4vXxOng7r
-X-Google-Smtp-Source: AGHT+IGkKKTGlCgJRpYlxgg3mHb0Yh1EhRUTKyOzTCqZHwO3lsojOz6XIk5JJgyYpQcND7S+KKvJqA==
-X-Received: by 2002:a05:6214:27e5:b0:6fb:35fa:7802 with SMTP id 6a1803df08f44-700029189d5mr22921116d6.36.1750972889739;
-        Thu, 26 Jun 2025 14:21:29 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44317cc43sm46743485a.46.2025.06.26.14.21.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 14:21:29 -0700 (PDT)
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id CCD3CF40068;
-	Thu, 26 Jun 2025 17:21:28 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Thu, 26 Jun 2025 17:21:28 -0400
-X-ME-Sender: <xms:2LldaPFarsFKCaMS8_xMIQo6eK8fYgxmTeeYbP0T4fYRLz00K_Kxmw>
-    <xme:2LldaMVaEzk8wbuItzAf_RA1XZWbm0Uzj2bOsWyn9s2xPJjq6w62Gbth_4AwFHlLi
-    V4pKamJa8AEK9BUBQ>
-X-ME-Received: <xmr:2LldaBL8xivlY3Q7OSKLZaNEwJcD6OewSD_HyF3_ka8q9OfSJZqSBJ0d7LRJWQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduvdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
-    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
-    hnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueevieduffeivden
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
-    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
-    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
-    hnrghmvgdpnhgspghrtghpthhtohepvddtpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlih
-    hnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtph
-    htthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgr
-    rhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhroh
-    htohhnmhgrihhlrdgtohhmpdhrtghpthhtoheplhhoshhsihhnsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:2LldaNHrrKsVhgJpQQ-W6UjlzP-aLcfcdYnz1ySavB-XmCPC9hCGsw>
-    <xmx:2LldaFXybVPS0XG-by_4D7SmYKA-UHGBWFQevqinHSDjH91m6qwTfQ>
-    <xmx:2LldaIMoy-qD8vr-ejuzpwKfhT-tx83rlD0EhSDVYm8f50RLcQPL6Q>
-    <xmx:2LldaE2DR-RAwfmYA-HLR2YwTOHp_2i78lYjlkNxnmZ0fdumCZ0CXQ>
-    <xmx:2LldaKXiFkx-VB3sxkvNm0ZzZ3eOL9OgMbImGrdgabN9NH6ATwPVz9s3>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 26 Jun 2025 17:21:28 -0400 (EDT)
-Date: Thu, 26 Jun 2025 14:21:27 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
-	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] rust: devres: implement register_release()
-Message-ID: <aF2514i-7To0NDEK@tardis.local>
-References: <20250626200054.243480-1-dakr@kernel.org>
- <20250626200054.243480-6-dakr@kernel.org>
- <aF2vgthQlNA3BsCD@tardis.local>
- <aF2yA9TbeIrTg-XG@cassiopeiae>
- <aF24vbtHgP-kYuBg@tardis.local>
- <411adfbb-1110-434f-a22d-d60914be6968@kernel.org>
+	s=arc-20240116; t=1750974443; c=relaxed/simple;
+	bh=hxQVzBMNwyC88HTo8GzVCXXrinORweyOG/ceTNc1kGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=vABZW1PEqBJwo8pbdEzIQXuxNat1PhMRB+YTWpNonAflQvV/Di1wfzi6SG13S4lnKU80A+fgbXi79ZZpW8WW2AdgvA32wP/8Fl9ay2ud6VWcbzAuhvYLsK2ec7SBExzpNe5yoUathTCBBWCXATlaA7QJNn608FN7zgEYtDt/NvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UgXmVwi2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB0A8C4CEEB;
+	Thu, 26 Jun 2025 21:47:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750974443;
+	bh=hxQVzBMNwyC88HTo8GzVCXXrinORweyOG/ceTNc1kGM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=UgXmVwi2rCspNSmYuTGBVBB5eZtbt0N8aMBn19wXnNbJDBpzVoKGeEI8qzxdZLWqu
+	 1Ynn3B8WPGbXQbmkMpuWmrRzpEElcnoGHQv5OXP6j66CtEr6Szwb0G6kWjDE4+0Evp
+	 SmfOa6ipBqiY8TMUW12WOhwBER/p7n3saqwFiWmdHO2ALllJtX+QP5pMHySRCHR3tp
+	 H4oLzTFK4nmOUf5SnEGTBdjkW2Dt+Xcp+K4Q+NqVYSq3VRAzx4piP5uFPMlrHovCye
+	 uZ7KbYkkIQJeAit/jV3So7jOqhyet5n5U6Gaxdth/dF0Qy0yGwwqF8o/ZYJuUeUUUX
+	 3at8xacc2T1Zw==
+Date: Thu, 26 Jun 2025 16:47:21 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+	"open list:SOUND" <linux-sound@vger.kernel.org>,
+	Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v5 9/9] PCI: Add a new 'boot_display' attribute
+Message-ID: <20250626214721.GA1642412@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -133,24 +75,107 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <411adfbb-1110-434f-a22d-d60914be6968@kernel.org>
+In-Reply-To: <58625a35-4a3e-4c91-939d-9f0d6635f8c0@kernel.org>
 
-On Thu, Jun 26, 2025 at 11:20:21PM +0200, Danilo Krummrich wrote:
-[...]
-> > > +pub trait Release<Ptr: ForeignOwnable> {
+On Thu, Jun 26, 2025 at 04:12:21PM -0500, Mario Limonciello wrote:
+> On 6/26/2025 3:45 PM, Bjorn Helgaas wrote:
+> > On Tue, Jun 24, 2025 at 03:30:42PM -0500, Mario Limonciello wrote:
+> > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > > 
+> > > On systems with multiple GPUs there can be uncertainty which GPU is the
+> > > primary one used to drive the display at bootup. In order to disambiguate
+> > > this add a new sysfs attribute 'boot_display' that uses the output of
+> > > video_is_primary_device() to populate whether a PCI device was used for
+> > > driving the display.
+> > > 
+> > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 > > 
-> > My bad, is it possible to do
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 > > 
-> > 	pub trait Release<Ptr: ForeignOwnable<Target=Self>> {
+> > Question below.
 > > 
-> > ? that's better IMO.
+> > > ---
+> > > v4:
+> > >   * new patch
+> > > ---
+> > >   Documentation/ABI/testing/sysfs-bus-pci |  9 +++++++++
+> > >   drivers/pci/pci-sysfs.c                 | 14 ++++++++++++++
+> > >   2 files changed, 23 insertions(+)
+> > > 
+> > > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> > > index 69f952fffec72..897cfc1b0de0f 100644
+> > > --- a/Documentation/ABI/testing/sysfs-bus-pci
+> > > +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> > > @@ -612,3 +612,12 @@ Description:
+> > >   		  # ls doe_features
+> > >   		  0001:01        0001:02        doe_discovery
+> > > +
+> > > +What:		/sys/bus/pci/devices/.../boot_display
+> > > +Date:		October 2025
+> > > +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
+> > > +Description:
+> > > +		This file indicates whether the device was used as a boot
+> > > +		display. If the device was used as the boot display, the file
+> > > +		will contain "1". If the device is a display device but wasn't
+> > > +		used as a boot display, the file will contain "0".
+> > 
+> > Is there a reason to expose this file if it wasn't a boot display
+> > device?  Maybe it doesn't need to exist at all unless it contains "1"?
 > 
-> Sure, that works.
+> I was mostly thinking that it's a handy way for userspace to know whether
+> the kernel even supports this feature.  If userspace sees that file on any
+> GPU as it walks a list then it knows it can use that for a hint.
+> 
+> But if you would rather it only shows up for the boot display yes it's
+> possible to do I think.  It's just more complexity to the visibility lookup
+> to also call video_is_primary_device().
 
-Thanks! With that feel free to add:
+I think for a singleton situation like this it makes more sense to
+only expose the file for one device, not several files where only one
+of them contains "1".
 
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-
-Regards,
-Boqun
+> > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > > index 268c69daa4d57..5bbf79b1b953d 100644
+> > > --- a/drivers/pci/pci-sysfs.c
+> > > +++ b/drivers/pci/pci-sysfs.c
+> > > @@ -30,6 +30,7 @@
+> > >   #include <linux/msi.h>
+> > >   #include <linux/of.h>
+> > >   #include <linux/aperture.h>
+> > > +#include <asm/video.h>
+> > >   #include "pci.h"
+> > >   #ifndef ARCH_PCI_DEV_GROUPS
+> > > @@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
+> > >   	NULL,
+> > >   };
+> > > +static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
+> > > +				 char *buf)
+> > > +{
+> > > +	return sysfs_emit(buf, "%u\n", video_is_primary_device(dev));
+> > > +}
+> > > +static DEVICE_ATTR_RO(boot_display);
+> > > +
+> > >   static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
+> > >   			     char *buf)
+> > >   {
+> > > @@ -1698,6 +1706,7 @@ late_initcall(pci_sysfs_init);
+> > >   static struct attribute *pci_dev_dev_attrs[] = {
+> > >   	&dev_attr_boot_vga.attr,
+> > > +	&dev_attr_boot_display.attr,
+> > >   	NULL,
+> > >   };
+> > > @@ -1710,6 +1719,11 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
+> > >   	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
+> > >   		return a->mode;
+> > > +#ifdef CONFIG_VIDEO
+> > > +	if (a == &dev_attr_boot_display.attr && pci_is_display(pdev))
+> > > +		return a->mode;
+> > > +#endif
+> > > +
+> > >   	return 0;
+> > >   }
+> > > -- 
+> > > 2.43.0
+> > > 
+> 
 
