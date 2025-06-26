@@ -1,460 +1,187 @@
-Return-Path: <linux-pci+bounces-30878-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30879-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0DC8AEAAC7
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 01:42:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E17F7AEAACD
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 01:45:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A388B1C4160D
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 23:42:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5522716D1F0
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 23:45:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A7952264A4;
-	Thu, 26 Jun 2025 23:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F7011F8724;
+	Thu, 26 Jun 2025 23:45:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NTSAqt2R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1b+IqCi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECD321B185;
-	Thu, 26 Jun 2025 23:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D211459FA;
+	Thu, 26 Jun 2025 23:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750981334; cv=none; b=iCjFsL0oL2Y7W0rfi03SXAFTR3+/rxdrpFulYc+e4L5vdqft0xWo8SyjGMwi5LuvALtUiWmtcHNdU7dUOUfZsa+cApofX0ZWlv4/AJViSI5teIKh4gD1YpW5eaaPcFtoGOYwg0vLXvgFjjw715MSG3CnC7NPSf7nQqqZNPgkMs4=
+	t=1750981541; cv=none; b=YXL+A9ONfc8N8jjmGg6+0Q3t9K1ZJRW0MmPCrJUfB9n1tvDjQL6V5SN+Ss6YAbOQg2t1XCZ8cES3YuP6JnrABKJIfpxvpq+kX2P8s4hcdBCl06T7o0Gs8JCzEn+j6xVf7aHsrcvahMwpcTXl9zgjpMfQnbRCzIckfSbLqxQSJlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750981334; c=relaxed/simple;
-	bh=20ENUKKaDhBTcuSnX7PmINtzXdNnRUJdtMRJtu470JM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D1VJvPF8BJR+nSzcvUK7VHKo3JmxR1R/F9jcKeu5nCVTkPa2a2zU0peGNqXnc2lHsmhaYAY+4XVR2IqTmIrGcPELr9u19DAb2KFPwTwnkvxDegjzmB8epd9Xv2wg9Cysz4h8tBFENENxxhD1ZBlNWr3od3TDYPS75efNeJ1OCc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NTSAqt2R; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750981333; x=1782517333;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=20ENUKKaDhBTcuSnX7PmINtzXdNnRUJdtMRJtu470JM=;
-  b=NTSAqt2RPMNKaNiQrb+aW9olh4f/slux+COl7ixwMGvRFkm6OqrqdiKI
-   +u71ETl6Bol3L8lpOFP47ZBnk8Px4P5RkHOaW65T1qNjnjMMMaxb4h9WG
-   JMUIk3vLFVudwpQPVFP+LdVH9RKvMTuj5ydFSYPx/fm4G2xeJf8JcWIgS
-   tQagVKmavZHALBbB2oR2XvCDP8V3pbCwEapX83NUXLEYMNteqtooOa6Bl
-   qvO8eeQUxEljvIeBY3oWHzOu/g0/5xnudg7AsykADsmwSp3OoX+FSLCJc
-   WXAK7g3yg3uezjppLugH9/32cCdjAymor20+uMYV9QIf15+kesBQM4IuC
-   A==;
-X-CSE-ConnectionGUID: joLh5jZiR0q2glvKjv80hw==
-X-CSE-MsgGUID: ck0LQyFFR9K6bAruwQdHmg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53257953"
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="53257953"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 16:42:12 -0700
-X-CSE-ConnectionGUID: twthP8X7RPemcSyZIMFBSA==
-X-CSE-MsgGUID: buXNv0jRRn2jGOY36Dm6dQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="153368384"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 16:42:10 -0700
-Received: from [10.124.220.215] (unknown [10.124.220.215])
-	by linux.intel.com (Postfix) with ESMTP id 7106420B5736;
-	Thu, 26 Jun 2025 16:42:09 -0700 (PDT)
-Message-ID: <214c9b73-6e62-40c0-a805-56127269941a@linux.intel.com>
-Date: Thu, 26 Jun 2025 16:42:09 -0700
+	s=arc-20240116; t=1750981541; c=relaxed/simple;
+	bh=HjNHxuUtVtqJ+E+XFMhXbJFRRAtTO4J1wmzly/ahXZE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=HHc3fAdbqvGcXW5o7rh4qTnGMHpmoIKr0AL3SFFWEUqKb0sp62ik5npQ9xlgJcef6rpShPeqz9LvZDO0yXVA8BuigQ90FZVJMnOjsw7ioEFC8o23fkfVRlo7rp6zRlit8M33VuWGRTarlGNWqptvW5oI/H5jZLrusAC3qkULCEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E1b+IqCi; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d0a2220fb0so184359785a.3;
+        Thu, 26 Jun 2025 16:45:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750981537; x=1751586337; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:references:in-reply-to:message-id
+         :cc:to:from:date:mime-version:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+RlRZzJJo69Hb7oEfyDdPzBBhlLTwP8vir0dHoRyHIE=;
+        b=E1b+IqCi1SCM+kRphDbDXo3ecZa3/1ivfc9lkGapfc8RbW35jW9vqcz18NS7tF+0sG
+         zV6ElIUxYlQ3xKs/j3vu4hSeDFC4sebN1mEhsM3WIq/iKoifHS5N8Wt3ZOvNSJBXgWi6
+         ZoSOr31yVfzkAp53ta4Hk/gEWibeuTzTjaDqH62ySXAxralK0io+7actLkfOhpiH9n/i
+         AVSlpjfP9KLDHigKSOaA8+P7XYPVBJm8jBKKqMN+UHxWSvZ2fPD0lJN5FlU3rgsXNF+Z
+         XPEPSCk94yo5/HpaIcVyp76bUkWhdKW5GjVSOGMx1ri5n1p/SNhddOFcuk1mST41i33r
+         wkug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750981537; x=1751586337;
+        h=content-transfer-encoding:subject:references:in-reply-to:message-id
+         :cc:to:from:date:mime-version:feedback-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+RlRZzJJo69Hb7oEfyDdPzBBhlLTwP8vir0dHoRyHIE=;
+        b=tkm/dpSo8UUjBrNeORygx3ZYInmzQT6fFMQ1ukmVkxv9dmLdtkU7ISZyQfgoNdhRYh
+         KBL+0JnGUE+sfTTEsRzgyc8S3CR+cEhGoqv8NrVqW16BZqE4PExISjNP3ZfcyB5wLmKi
+         yqLA2YJ/57cDMNMs7Qu58yPZRhi6A+MXbNSIga010v3z0iTAxjSTH2+bfoishhTnufo8
+         FDfCVactTw5vwb1dzqx9gwFItyTaei3oouhH/L9fhTxfeD/YhtjOx4wRFT2wFnjoTKQq
+         ANUrZ4fI9t+KlnUDjGKdkXvOJipfb607w6X22QuvLus3yTumyl3wGLWPDARUFXngOPtA
+         pm/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUgu90UmSilBYUvz3JxQf+InWUtiLmAu75iPV9wtzNffa5FOAAIs9HqlC0E4H5Tzg3cwP2TdGKk42Rp@vger.kernel.org, AJvYcCWLJ5+NHjyaQLnZFbUjLQEocY+MWpaNDnrwUSywRyUZyt8fmHVpSr0ndRX97OD9jM7gyYmAsIz+WjaMlphrYAI=@vger.kernel.org, AJvYcCXlf4lM2ZIogmY5z+P0rzSFCOgJFrTaRdnQUHFhnao7tTKILIWX4qUnSeTwKR0CXzUzUVWDnxW9J4hZv/4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVF+ivxIqz5u3hS6ZB6hhVfb6C98E4kbLHxrcXZdqN0TDnX6Dr
+	o7zO9vOnwvQ9rK9fmwSfsM3CFJ9/6fj9Ggq+2Jia+HWDEgs4oTEFGmI58X72GA==
+X-Gm-Gg: ASbGncvXoXBL837CqKn65lc8FkQ7+lQfDpfn2qwfWJMHAispeteHlys/zjrXnGN2ajQ
+	tHE/TPLi8MP5SpU1dWM+X6Z1KqrikT1b+oKxu9AeYk/k7U0I0Ieba8oRU0MSGMcQv+od57K5z0N
+	ayakvDuwP6qXHxAmTY827tixviDUbK1xDx7JLtoRIcSFNwTOSJvDIIDnVQIu5saZDVPo2ZxEklE
+	0k+ALUxfBKBGNthvnlOSp2r7PvqsHvlo5NVu04kKJHiC6Z0vEA700qIBhUjxxHaCIbLfSOy/cdi
+	J/B0sJQdbaGl2rOMyqhKGF3Jo12rXwnbomi1TAqY7Y/+G8BEwMC3IIAC/3ETEj+bdOOOFTmGkSY
+	Qx7QcHYFQIXGzdOD+E2JahMPbiA5e2xwTZcP4f1Zxsyl5RNPkreKD
+X-Google-Smtp-Source: AGHT+IEo+hlZvbxkNeRGx3kYoxJtFh++ApszonB41Wh2Hvqi74i+5EjVggdjDomEooqVMDhisQDJkQ==
+X-Received: by 2002:a05:620a:4487:b0:7d4:4004:307a with SMTP id af79cd13be357-7d4439505f4mr196626385a.29.1750981537366;
+        Thu, 26 Jun 2025 16:45:37 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44313695dsm56555385a.1.2025.06.26.16.45.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 16:45:37 -0700 (PDT)
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 91367F40066;
+	Thu, 26 Jun 2025 19:45:36 -0400 (EDT)
+Received: from phl-imap-16 ([10.202.2.88])
+  by phl-compute-01.internal (MEProxy); Thu, 26 Jun 2025 19:45:36 -0400
+X-ME-Sender: <xms:oNtdaG9QMKqXLvt4edhTWTnE6IeCv3pSOBzmcadQuB8TGMymlk4uyg>
+    <xme:oNtdaGsVII8PhvoQO6jFD9d0z_f3lzhGOFKwpee9EYDJMmHD-qE97PkcdrjWoMGCy
+    bIN96Q4MS5PCnbJCQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduheefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfuehoqhhunhcu
+    hfgvnhhgfdcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
+    htvghrnhepieelueeiffefffeigfelheeggfeuuedtvdejvdejteevudffteeffffgkedt
+    uedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsg
+    hoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieeg
+    qddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigi
+    hmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhr
+    tghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoheprghlvgigrd
+    hgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopegrlhhitggvrhihhhhlsehg
+    ohhoghhlvgdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtoh
+    hmpdhrtghpthhtohepuggrvhhiugdrmhdrvghrthhmrghnsehinhhtvghlrdgtohhmpdhr
+    tghpthhtohepihhrrgdrfigvihhnhiesihhnthgvlhdrtghomhdprhgtphhtthhopegrrd
+    hhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopehkfihilhgtiiihnhhskhhisehkvghrnhgvlhdroh
+    hrgh
+X-ME-Proxy: <xmx:oNtdaMCY60Pu_sE1pTGglxVl_nEUCW9riLTy5RpSU25_iZ0XxB-yrg>
+    <xmx:oNtdaOf1byy9xHqilTNyrGeBOhEK93kz9mBDt8L3mRUORIc3il9lxg>
+    <xmx:oNtdaLMB0cHU50PFNA81yKySj5wP3ccq3WYRh0UiL9wEowikrdqi6Q>
+    <xmx:oNtdaIknb5kQNkIMQ6uQV5hO5wCqvIX8J8tHa5vOZAoKVcTOjXbPew>
+    <xmx:oNtdaNt8wuTHMpMoMizAClssb3ClQdu_KS1fxhMyDrQ7wdRg-sAYyDDC>
+Feedback-ID: iad51458e:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 69B2A2CC0081; Thu, 26 Jun 2025 19:45:36 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 04/17] CXL/AER: Introduce CXL specific AER driver file
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
- shiju.jose@huawei.com, ming.li@zohomail.com,
- Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
- dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
- lukas@wunner.de, Benjamin.Cheatham@amd.com, linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
- <20250626224252.1415009-5-terry.bowman@amd.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250626224252.1415009-5-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-ThreadId: T383afef5f8ca9bad
+Date: Thu, 26 Jun 2025 16:45:15 -0700
+From: "Boqun Feng" <boqun.feng@gmail.com>
+To: "Benno Lossin" <lossin@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, rafael@kernel.org,
+ "Miguel Ojeda" <ojeda@kernel.org>, alex.gaynor@gmail.com,
+ "Gary Guo" <gary@garyguo.net>, bjorn3_gh@protonmail.com,
+ "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ david.m.ertman@intel.com, ira.weiny@intel.com, leon@kernel.org,
+ kwilczynski@kernel.org, bhelgaas@google.com, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Message-Id: <8922f6f0-241a-4659-b382-fb8c62b77e8f@app.fastmail.com>
+In-Reply-To: <DAWUY4YH6XP9.TWAP6N95L5BR@kernel.org>
+References: <20250626200054.243480-1-dakr@kernel.org>
+ <20250626200054.243480-5-dakr@kernel.org> <aF2rpzSccqgoVvn0@tardis.local>
+ <DAWUKB7PAZG1.2K2W9VCATZ3O0@kernel.org>
+ <45a2bd65-ec77-4ce7-bd8e-553880d85bdf@app.fastmail.com>
+ <DAWUY4YH6XP9.TWAP6N95L5BR@kernel.org>
+Subject: Re: [PATCH v4 4/5] rust: types: ForeignOwnable: Add type Target
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
-On 6/26/25 3:42 PM, Terry Bowman wrote:
-> The CXL AER error handling logic currently resides in the AER driver file,
-> drivers/pci/pcie/aer.c. CXL specific changes are conditionally compiled
-> using #ifdefs.
+
+On Thu, Jun 26, 2025, at 4:36 PM, Benno Lossin wrote:
+> On Fri Jun 27, 2025 at 1:21 AM CEST, Boqun Feng wrote:
+>> On Thu, Jun 26, 2025, at 4:17 PM, Benno Lossin wrote:
+>>> On Thu Jun 26, 2025 at 10:20 PM CEST, Boqun Feng wrote:
+>>>> On Thu, Jun 26, 2025 at 10:00:42PM +0200, Danilo Krummrich wrote:
+>>>>> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+>>>>> index 3958a5f44d56..74c787b352a9 100644
+>>>>> --- a/rust/kernel/types.rs
+>>>>> +++ b/rust/kernel/types.rs
+>>>>> @@ -27,6 +27,9 @@
+>>>>>  /// [`into_foreign`]: Self::into_foreign
+>>>>>  /// [`PointedTo`]: Self::PointedTo
+>>>>>  pub unsafe trait ForeignOwnable: Sized {
+>>>>> +    /// The payload type of the foreign-owned value.
+>>>>> +    type Target;
+>>>>
+>>>> I think `ForeignOwnable` also implies a `T` maybe get dropped via a
+>>>> pointer from `into_foreign()`. Not sure it's worth mentioning thoug=
+h.
+>>>
+>>> What? How would that happen?
+>>
+>> The owner of the pointer can do from_foreign() and eventually drop
+>> the ForeignOwnable, hence dropping T.
 >
-> Improve the AER driver maintainability by separating the CXL specific logic
-> from the AER driver's core functionality and removing the #ifdefs.
-> Introduce drivers/pci/pcie/cxl_aer.c and move the CXL AER logic into the
-> new file.
+> I'm confused, you said `into_foreign` above. I don't think any sensible
+> ForeignOwnable implementation will drop a T in any of its functions.
 >
-> Update the makefile to conditionally compile the CXL file using the
-> existing CONFIG_PCIEAER_CXL Kconfig.
->
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+
+A KBox<T> would drop T when it gets dropped, no?
+A Arc<T> would drop T when it gets dropped if it=E2=80=99s the last refc=
+ount.
+
+I was trying to say =E2=80=9CForeignOwnable::drop() may implies Target::=
+drop()=E2=80=9D,
+that=E2=80=99s what a =E2=80=9Cpayload=E2=80=9D means. Maybe that I used=
+ =E2=80=9CT=E2=80=9D instead of =E2=80=9CTarget=E2=80=9D
+in the original message caused confusion?
+
+Regards,
+Boqun
+
 > ---
-
-After moving the code , you seem to have updated it with your own
-changes. May be you split it into two patches.
-
->   drivers/pci/pci.h          |   8 +++
->   drivers/pci/pcie/Makefile  |   1 +
->   drivers/pci/pcie/aer.c     | 138 -------------------------------------
->   drivers/pci/pcie/cxl_aer.c | 138 +++++++++++++++++++++++++++++++++++++
->   include/linux/pci_ids.h    |   2 +
->   5 files changed, 149 insertions(+), 138 deletions(-)
->   create mode 100644 drivers/pci/pcie/cxl_aer.c
->
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index a0d1e59b5666..91b583cf18eb 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -1029,6 +1029,14 @@ static inline void pci_save_aer_state(struct pci_dev *dev) { }
->   static inline void pci_restore_aer_state(struct pci_dev *dev) { }
->   #endif
->   
-> +#ifdef CONFIG_PCIEAER_CXL
-> +void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info);
-> +void cxl_rch_enable_rcec(struct pci_dev *rcec);
-> +#else
-> +static inline void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info) { }
-> +static inline void cxl_rch_enable_rcec(struct pci_dev *rcec) { }
-> +#endif
-> +
->   #ifdef CONFIG_ACPI
->   bool pci_acpi_preserve_config(struct pci_host_bridge *bridge);
->   int pci_acpi_program_hp_params(struct pci_dev *dev);
-> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-> index 173829aa02e6..cd2cb925dbd5 100644
-> --- a/drivers/pci/pcie/Makefile
-> +++ b/drivers/pci/pcie/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o bwctrl.o
->   
->   obj-y				+= aspm.o
->   obj-$(CONFIG_PCIEAER)		+= aer.o err.o tlp.o
-> +obj-$(CONFIG_PCIEAER_CXL)	+= cxl_aer.o
->   obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
->   obj-$(CONFIG_PCIE_PME)		+= pme.o
->   obj-$(CONFIG_PCIE_DPC)		+= dpc.o
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index a2df9456595a..0b4d721980ef 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1094,144 +1094,6 @@ static bool find_source_device(struct pci_dev *parent,
->   	return true;
->   }
->   
-> -#ifdef CONFIG_PCIEAER_CXL
-> -
-> -/**
-> - * pci_aer_unmask_internal_errors - unmask internal errors
-> - * @dev: pointer to the pci_dev data structure
-> - *
-> - * Unmask internal errors in the Uncorrectable and Correctable Error
-> - * Mask registers.
-> - *
-> - * Note: AER must be enabled and supported by the device which must be
-> - * checked in advance, e.g. with pcie_aer_is_native().
-> - */
-> -static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
-> -{
-> -	int aer = dev->aer_cap;
-> -	u32 mask;
-> -
-> -	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
-> -	mask &= ~PCI_ERR_UNC_INTN;
-> -	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
-> -
-> -	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
-> -	mask &= ~PCI_ERR_COR_INTERNAL;
-> -	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
-> -}
-> -
-> -static bool is_cxl_mem_dev(struct pci_dev *dev)
-> -{
-> -	/*
-> -	 * The capability, status, and control fields in Device 0,
-> -	 * Function 0 DVSEC control the CXL functionality of the
-> -	 * entire device (CXL 3.0, 8.1.3).
-> -	 */
-> -	if (dev->devfn != PCI_DEVFN(0, 0))
-> -		return false;
-> -
-> -	/*
-> -	 * CXL Memory Devices must have the 502h class code set (CXL
-> -	 * 3.0, 8.1.12.1).
-> -	 */
-> -	if ((dev->class >> 8) != PCI_CLASS_MEMORY_CXL)
-> -		return false;
-> -
-> -	return true;
-> -}
-> -
-> -static bool cxl_error_is_native(struct pci_dev *dev)
-> -{
-> -	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> -
-> -	return (pcie_ports_native || host->native_aer);
-> -}
-> -
-> -static bool is_internal_error(struct aer_err_info *info)
-> -{
-> -	if (info->severity == AER_CORRECTABLE)
-> -		return info->status & PCI_ERR_COR_INTERNAL;
-> -
-> -	return info->status & PCI_ERR_UNC_INTN;
-> -}
-> -
-> -static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
-> -{
-> -	struct aer_err_info *info = (struct aer_err_info *)data;
-> -	const struct pci_error_handlers *err_handler;
-> -
-> -	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
-> -		return 0;
-> -
-> -	/* Protect dev->driver */
-> -	device_lock(&dev->dev);
-> -
-> -	err_handler = dev->driver ? dev->driver->err_handler : NULL;
-> -	if (!err_handler)
-> -		goto out;
-> -
-> -	if (info->severity == AER_CORRECTABLE) {
-> -		if (err_handler->cor_error_detected)
-> -			err_handler->cor_error_detected(dev);
-> -	} else if (err_handler->error_detected) {
-> -		if (info->severity == AER_NONFATAL)
-> -			err_handler->error_detected(dev, pci_channel_io_normal);
-> -		else if (info->severity == AER_FATAL)
-> -			err_handler->error_detected(dev, pci_channel_io_frozen);
-> -	}
-> -out:
-> -	device_unlock(&dev->dev);
-> -	return 0;
-> -}
-> -
-> -static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
-> -{
-> -	/*
-> -	 * Internal errors of an RCEC indicate an AER error in an
-> -	 * RCH's downstream port. Check and handle them in the CXL.mem
-> -	 * device driver.
-> -	 */
-> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
-> -	    is_internal_error(info))
-> -		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
-> -}
-> -
-> -static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
-> -{
-> -	bool *handles_cxl = data;
-> -
-> -	if (!*handles_cxl)
-> -		*handles_cxl = is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
-> -
-> -	/* Non-zero terminates iteration */
-> -	return *handles_cxl;
-> -}
-> -
-> -static bool handles_cxl_errors(struct pci_dev *rcec)
-> -{
-> -	bool handles_cxl = false;
-> -
-> -	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
-> -	    pcie_aer_is_native(rcec))
-> -		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
-> -
-> -	return handles_cxl;
-> -}
-> -
-> -static void cxl_rch_enable_rcec(struct pci_dev *rcec)
-> -{
-> -	if (!handles_cxl_errors(rcec))
-> -		return;
-> -
-> -	pci_aer_unmask_internal_errors(rcec);
-> -	pci_info(rcec, "CXL: Internal errors unmasked");
-> -}
-> -
-> -#else
-> -static inline void cxl_rch_enable_rcec(struct pci_dev *dev) { }
-> -static inline void cxl_rch_handle_error(struct pci_dev *dev,
-> -					struct aer_err_info *info) { }
-> -#endif
->   
->   /**
->    * pci_aer_handle_error - handle logging error into an event log
-> diff --git a/drivers/pci/pcie/cxl_aer.c b/drivers/pci/pcie/cxl_aer.c
-> new file mode 100644
-> index 000000000000..b2ea14f70055
-> --- /dev/null
-> +++ b/drivers/pci/pcie/cxl_aer.c
-> @@ -0,0 +1,138 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2025 AMD Corporation. All rights reserved. */
-> +
-> +#include <linux/pci.h>
-> +#include <linux/aer.h>
-> +#include "../pci.h"
-> +
-> +/**
-> + * pci_aer_unmask_internal_errors - unmask internal errors
-> + * @dev: pointer to the pci_dev data structure
-> + *
-> + * Unmask internal errors in the Uncorrectable and Correctable Error
-> + * Mask registers.
-> + *
-> + * Note: AER must be enabled and supported by the device which must be
-> + * checked in advance, e.g. with pcie_aer_is_native().
-> + */
-> +static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
-> +{
-> +	int aer = dev->aer_cap;
-> +	u32 mask;
-> +
-> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
-> +	mask &= ~PCI_ERR_UNC_INTN;
-> +	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
-> +
-> +	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
-> +	mask &= ~PCI_ERR_COR_INTERNAL;
-> +	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
-> +}
-> +
-> +static bool is_cxl_mem_dev(struct pci_dev *dev)
-> +{
-> +	/*
-> +	 * The capability, status, and control fields in Device 0,
-> +	 * Function 0 DVSEC control the CXL functionality of the
-> +	 * entire device (CXL 3.2, 8.1.3).
-> +	 */
-> +	if (dev->devfn != PCI_DEVFN(0, 0))
-> +		return false;
-> +
-> +	/*
-> +	 * CXL Memory Devices must have the 502h class code set (CXL
-> +	 * 3.2, 8.1.12.1).
-> +	 */
-> +	if (FIELD_GET(PCI_CLASS_CODE_MASK, dev->class) != PCI_CLASS_MEMORY_CXL)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static bool cxl_error_is_native(struct pci_dev *dev)
-> +{
-> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> +
-> +	return (pcie_ports_native || host->native_aer);
-> +}
-> +
-> +static bool is_internal_error(struct aer_err_info *info)
-> +{
-> +	if (info->severity == AER_CORRECTABLE)
-> +		return info->status & PCI_ERR_COR_INTERNAL;
-> +
-> +	return info->status & PCI_ERR_UNC_INTN;
-> +}
-> +
-> +static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
-> +{
-> +	struct aer_err_info *info = (struct aer_err_info *)data;
-> +	const struct pci_error_handlers *err_handler;
-> +
-> +	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
-> +		return 0;
-> +
-> +	/* Protect dev->driver */
-> +	device_lock(&dev->dev);
-> +
-> +	err_handler = dev->driver ? dev->driver->err_handler : NULL;
-> +	if (!err_handler)
-> +		goto out;
-> +
-> +	if (info->severity == AER_CORRECTABLE) {
-> +		if (err_handler->cor_error_detected)
-> +			err_handler->cor_error_detected(dev);
-> +	} else if (err_handler->error_detected) {
-> +		if (info->severity == AER_NONFATAL)
-> +			err_handler->error_detected(dev, pci_channel_io_normal);
-> +		else if (info->severity == AER_FATAL)
-> +			err_handler->error_detected(dev, pci_channel_io_frozen);
-> +	}
-> +out:
-> +	device_unlock(&dev->dev);
-> +	return 0;
-> +}
-> +
-> +void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
-> +{
-> +	/*
-> +	 * Internal errors of an RCEC indicate an AER error in an
-> +	 * RCH's downstream port. Check and handle them in the CXL.mem
-> +	 * device driver.
-> +	 */
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
-> +	    is_internal_error(info))
-> +		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
-> +}
-> +
-> +static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
-> +{
-> +	bool *handles_cxl = data;
-> +
-> +	if (!*handles_cxl)
-> +		*handles_cxl = is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
-> +
-> +	/* Non-zero terminates iteration */
-> +	return *handles_cxl;
-> +}
-> +
-> +static bool handles_cxl_errors(struct pci_dev *rcec)
-> +{
-> +	bool handles_cxl = false;
-> +
-> +	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
-> +	    pcie_aer_is_native(rcec))
-> +		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
-> +
-> +	return handles_cxl;
-> +}
-> +
-> +void cxl_rch_enable_rcec(struct pci_dev *rcec)
-> +{
-> +	if (!handles_cxl_errors(rcec))
-> +		return;
-> +
-> +	pci_aer_unmask_internal_errors(rcec);
-> +	pci_info(rcec, "CXL: Internal errors unmasked");
-> +}
-> +
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index e2d71b6fdd84..31b3935bf189 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -12,6 +12,8 @@
->   
->   /* Device classes and subclasses */
->   
-> +#define PCI_CLASS_CODE_MASK             0xFFFF00
-> +
->   #define PCI_CLASS_NOT_DEFINED		0x0000
->   #define PCI_CLASS_NOT_DEFINED_VGA	0x0001
->   
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+> Cheers,
+> Benno
 
