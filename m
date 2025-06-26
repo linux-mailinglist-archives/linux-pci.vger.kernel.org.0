@@ -1,43 +1,43 @@
-Return-Path: <linux-pci+bounces-30785-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30786-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1600AEA1F1
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 17:07:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A25CAEA1F3
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 17:08:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D6306A40DC
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 15:00:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 983AE6A40C1
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 15:00:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EEF62FE322;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39C062FE32A;
 	Thu, 26 Jun 2025 14:52:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TmhjWitk"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bCb83wv3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84B1B2FD892;
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80B972FD891;
 	Thu, 26 Jun 2025 14:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750949546; cv=none; b=aZlEFa3V+CAV9NLcA7kqie1EMLqkGy1x+fflKmGmdPUSHYj0b+fRRaT/HlcIGtnWL90CEWPPUbQH13l0A90nyyY7XBeplgeWcdq4i2reie4rRTG/ZnLg1BBmz16fZKN3/0qxpRY1FprTVANcjBtDMwLl+ZMmM+v7p1EVcDUQ0MA=
+	t=1750949547; cv=none; b=t5eDhkA9vZMxekld2DGhtLOZOrm8hzcp2tOA2tz49xshTHSZ01wO6FIAVdmF3WXcdRZ2VLgbSElMXMKMl4Yupu09dk8C40qRoQ4yhDZjNA1LItyUuFbYTCz64D1rNT709X7GY0b0pb8RnNDkzOFfFjCeJ6sSGISqoBXDZrNMDAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750949546; c=relaxed/simple;
-	bh=05XlbY/UQu42xpAJ30ZAd5vgZ/sIRKkwHCnOZ7Imj1U=;
+	s=arc-20240116; t=1750949547; c=relaxed/simple;
+	bh=AyIyci4j3t9tsor39WcVZgT1McAoZZhyUuqVb5im41U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nZBa2VoFs0l2Tsjzu+Bo+2Q97Aqqksf93H6Wzj6cr1ES8ywv33ICtgUFou9nIYudbIooReYjl6qEzxGo90o7uR1NAKCns786kgiiz9hqV/74e8NH9T6HIk5PmNGsV1nlepmYiiF+F89J2vucxdspbyJtPu9Jg4YG/qvtRjlGCaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TmhjWitk; arc=none smtp.client-ip=117.135.210.3
+	 MIME-Version; b=CKa25KPmAyIvvBJuV2UmR8KX2bbuwn7w8UN5pOaTPRFUdbAWTLYNyWNHc6HymlZhCu8urWSNbxdyhfqW4AuMnBHbqp9cpKAxw7GCCkljVlNSqvXAijMi2XCkcIF/H+ZdNyQvs8KtDQGPyl2kIpXTBDfKyFkqu/h9+Sb7B4O6x2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bCb83wv3; arc=none smtp.client-ip=220.197.31.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=hb
-	y962xhyP4Qgrj7aPF+nhZQMZCQ5u6zcns9wRaSiWI=; b=TmhjWitknqaFKyRHAt
-	fJ+fAf/xKeB1HxmvdfHawiGdm6q1Ln3oi5TlmiNDvTuuSVubpYhVr6Zu/RxoU1KC
-	0AQE1tjhN0haU0Ow0yY3qc45jtnDqjFmd83IB/22vfZYaP8DKuefx0SuTihTf+9z
-	DhsTcfv90YSjFKWgVbmAhI9AA=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Mf
+	cah2+ycb2ydogLnZ0AlJX/f7/lygCdHxTFUi3RV7I=; b=bCb83wv3vjK9OpIPoH
+	9IxenhiVnGuSrgxZQnsWRRa/oSlwxp2TgHcXmZB/YWORym1YkOUArDLJ0VAiy1qB
+	OZkKEyEHGs+XDixi10aQ9nA7AglK1D7w4OOdz3XEfBdOM+b7lBDCjJjZVrA8oF5T
+	nQdkU25NYUVbYdZbQDKgt4oaY=
 Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wB3nPiWXl1o6RnqAg--.56622S2;
-	Thu, 26 Jun 2025 22:52:07 +0800 (CST)
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wB3nPiWXl1o6RnqAg--.56622S3;
+	Thu, 26 Jun 2025 22:52:08 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: lpieralisi@kernel.org,
 	bhelgaas@google.com,
@@ -48,9 +48,9 @@ Cc: robh@kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v3 05/13] PCI: meson: Refactor code by using dw_pcie_clear_and_set_dword()
-Date: Thu, 26 Jun 2025 22:50:32 +0800
-Message-Id: <20250626145040.14180-6-18255117159@163.com>
+Subject: [PATCH v3 06/13] PCI: armada8k: Refactor code by using dw_pcie_clear_and_set_dword()
+Date: Thu, 26 Jun 2025 22:50:33 +0800
+Message-Id: <20250626145040.14180-7-18255117159@163.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250626145040.14180-1-18255117159@163.com>
 References: <20250626145040.14180-1-18255117159@163.com>
@@ -61,80 +61,128 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wB3nPiWXl1o6RnqAg--.56622S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXFyDXFW7tr48XFyxJw1xAFb_yoW5CFWkpr
-	ZxuF4FyF47Jr45uw4qva95uay3Jas3Cw17JFnxG34S9Fy2yr9rta4aya45uayxGrW0g34j
-	9r98trW8Z3W5tF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piHGQsUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxp4o2hdWY1vkgAHsB
+X-CM-TRANSID:_____wB3nPiWXl1o6RnqAg--.56622S3
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZFyrKFykJF1xKF1kCw48JFb_yoW7Jw1Dp3
+	45AFyYyF1UJw40v3ykCa97XF13AFZxZFnxCan3Wrs2q3ZrCrZrW3yFvFySgr1SgFZFqrWa
+	9w4rtrW7Cr1rG3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zE5rcXUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgR4o2hdWexpZgAAsq
 
-Meson PCIe driver implements payload size configuration through manual
-register manipulation. The current code reads device control registers,
-modifies specific bitfields for maximum payload and read request sizes,
-then writes back the updated values. This pattern repeats twice with
-similar logic but different bit masks.
+Armada8k PCIe driver uses explicit bitwise operations for global control
+register configuration. The driver manually handles bit masking and
+shifting for multiple fields including device type, domain attributes,
+and interrupt masking. This approach requires repetitive read-modify-write
+sequences and temporary variables.
 
-Replace explicit bit manipulation with dw_pcie_clear_and_set_dword() for
-payload and read request size configuration. The helper consolidates
-read-clear-set-write operations into a single call, eliminating redundant
-register read operations and local variable usage.
+Refactor global control setup, domain attribute configuration, and
+interrupt masking using dw_pcie_clear_and_set_dword(). The helper replaces
+manual bit manipulation with declarative bit masks, directly specifying
+which bits to clear and set. This eliminates intermediate variables and
+reduces code complexity.
 
-This refactoring reduces code duplication in size configuration logic
-and improves maintainability. By using the DesignWare helper, the driver
-aligns with standard PCIe controller programming patterns and simplifies
-future updates to device capability settings.
+Standardizing on the helper improves code clarity in initialization paths
+and ensures consistent handling of control register bits. The change also
+centralizes bit manipulation logic, reducing the risk of errors in future
+modifications to device configuration.
 
 Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
- drivers/pci/controller/dwc/pci-meson.c | 22 ++++++++--------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
+ drivers/pci/controller/dwc/pcie-armada8k.c | 48 ++++++++--------------
+ 1 file changed, 18 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index 787469d1b396..cd6280a8e619 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -264,33 +264,27 @@ static int meson_size_to_payload(struct meson_pcie *mp, int size)
- static void meson_set_max_payload(struct meson_pcie *mp, int size)
+diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
+index c2650fd0d458..67348307aa28 100644
+--- a/drivers/pci/controller/dwc/pcie-armada8k.c
++++ b/drivers/pci/controller/dwc/pcie-armada8k.c
+@@ -155,54 +155,44 @@ static bool armada8k_pcie_link_up(struct dw_pcie *pci)
+ 
+ static int armada8k_pcie_start_link(struct dw_pcie *pci)
  {
- 	struct dw_pcie *pci = &mp->pci;
--	u32 val;
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	int max_payload_size = meson_size_to_payload(mp, size);
+-	u32 reg;
+-
+ 	/* Start LTSSM */
+-	reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_CONTROL_REG);
+-	reg |= PCIE_APP_LTSSM_EN;
+-	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_CONTROL_REG, reg);
++	dw_pcie_clear_and_set_dword(pci, PCIE_GLOBAL_CONTROL_REG,
++				    0, PCIE_APP_LTSSM_EN);
  
--	val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
--	val &= ~PCI_EXP_DEVCTL_PAYLOAD;
--	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, val);
-+	dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_DEVCTL,
-+				    PCI_EXP_DEVCTL_PAYLOAD, 0);
- 
--	val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
--	val |= PCIE_CAP_MAX_PAYLOAD_SIZE(max_payload_size);
--	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, val);
-+	dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_DEVCTL, 0,
-+				    PCIE_CAP_MAX_PAYLOAD_SIZE(max_payload_size));
+ 	return 0;
  }
  
- static void meson_set_max_rd_req_size(struct meson_pcie *mp, int size)
+ static int armada8k_pcie_host_init(struct dw_pcie_rp *pp)
  {
- 	struct dw_pcie *pci = &mp->pci;
--	u32 val;
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	int max_rd_req_size = meson_size_to_payload(mp, size);
+-	u32 reg;
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
  
--	val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
--	val &= ~PCI_EXP_DEVCTL_READRQ;
--	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, val);
-+	dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_DEVCTL,
-+				    PCI_EXP_DEVCTL_READRQ, 0);
+-	if (!dw_pcie_link_up(pci)) {
++	if (!dw_pcie_link_up(pci))
+ 		/* Disable LTSSM state machine to enable configuration */
+-		reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_CONTROL_REG);
+-		reg &= ~(PCIE_APP_LTSSM_EN);
+-		dw_pcie_writel_dbi(pci, PCIE_GLOBAL_CONTROL_REG, reg);
+-	}
++		dw_pcie_clear_and_set_dword(pci, PCIE_GLOBAL_CONTROL_REG,
++					    PCIE_APP_LTSSM_EN, 0);
  
--	val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
--	val |= PCIE_CAP_MAX_READ_REQ_SIZE(max_rd_req_size);
--	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, val);
-+	dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_DEVCTL, 0,
-+				    PCIE_CAP_MAX_READ_REQ_SIZE(max_rd_req_size));
+ 	/* Set the device to root complex mode */
+-	reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_CONTROL_REG);
+-	reg &= ~(PCIE_DEVICE_TYPE_MASK << PCIE_DEVICE_TYPE_SHIFT);
+-	reg |= PCIE_DEVICE_TYPE_RC << PCIE_DEVICE_TYPE_SHIFT;
+-	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_CONTROL_REG, reg);
++	dw_pcie_clear_and_set_dword(pci, PCIE_GLOBAL_CONTROL_REG,
++				    PCIE_DEVICE_TYPE_MASK << PCIE_DEVICE_TYPE_SHIFT,
++				    PCIE_DEVICE_TYPE_RC << PCIE_DEVICE_TYPE_SHIFT);
+ 
+ 	/* Set the PCIe master AxCache attributes */
+ 	dw_pcie_writel_dbi(pci, PCIE_ARCACHE_TRC_REG, ARCACHE_DEFAULT_VALUE);
+ 	dw_pcie_writel_dbi(pci, PCIE_AWCACHE_TRC_REG, AWCACHE_DEFAULT_VALUE);
+ 
+ 	/* Set the PCIe master AxDomain attributes */
+-	reg = dw_pcie_readl_dbi(pci, PCIE_ARUSER_REG);
+-	reg &= ~(AX_USER_DOMAIN_MASK << AX_USER_DOMAIN_SHIFT);
+-	reg |= DOMAIN_OUTER_SHAREABLE << AX_USER_DOMAIN_SHIFT;
+-	dw_pcie_writel_dbi(pci, PCIE_ARUSER_REG, reg);
++	dw_pcie_clear_and_set_dword(pci, PCIE_ARUSER_REG,
++				    AX_USER_DOMAIN_MASK << AX_USER_DOMAIN_SHIFT,
++				    DOMAIN_OUTER_SHAREABLE << AX_USER_DOMAIN_SHIFT);
+ 
+-	reg = dw_pcie_readl_dbi(pci, PCIE_AWUSER_REG);
+-	reg &= ~(AX_USER_DOMAIN_MASK << AX_USER_DOMAIN_SHIFT);
+-	reg |= DOMAIN_OUTER_SHAREABLE << AX_USER_DOMAIN_SHIFT;
+-	dw_pcie_writel_dbi(pci, PCIE_AWUSER_REG, reg);
++	dw_pcie_clear_and_set_dword(pci, PCIE_AWUSER_REG,
++				    AX_USER_DOMAIN_MASK << AX_USER_DOMAIN_SHIFT,
++				    DOMAIN_OUTER_SHAREABLE << AX_USER_DOMAIN_SHIFT);
+ 
+ 	/* Enable INT A-D interrupts */
+-	reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_MASK1_REG);
+-	reg |= PCIE_INT_A_ASSERT_MASK | PCIE_INT_B_ASSERT_MASK |
+-	       PCIE_INT_C_ASSERT_MASK | PCIE_INT_D_ASSERT_MASK;
+-	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK1_REG, reg);
++	dw_pcie_clear_and_set_dword(pci, PCIE_GLOBAL_INT_MASK1_REG, 0,
++				    PCIE_INT_A_ASSERT_MASK | PCIE_INT_B_ASSERT_MASK |
++				    PCIE_INT_C_ASSERT_MASK | PCIE_INT_D_ASSERT_MASK);
+ 
+ 	return 0;
  }
+@@ -211,15 +201,13 @@ static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
+ {
+ 	struct armada8k_pcie *pcie = arg;
+ 	struct dw_pcie *pci = pcie->pci;
+-	u32 val;
  
- static int meson_pcie_start_link(struct dw_pcie *pci)
+ 	/*
+ 	 * Interrupts are directly handled by the device driver of the
+ 	 * PCI device. However, they are also latched into the PCIe
+ 	 * controller, so we simply discard them.
+ 	 */
+-	val = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_CAUSE1_REG);
+-	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_CAUSE1_REG, val);
++	dw_pcie_clear_and_set_dword(pci, PCIE_GLOBAL_INT_CAUSE1_REG, 0, 0);
+ 
+ 	return IRQ_HANDLED;
+ }
 -- 
 2.25.1
 
