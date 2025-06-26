@@ -1,136 +1,103 @@
-Return-Path: <linux-pci+bounces-30697-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30698-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0012AE9A63
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 11:47:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08BD9AE9AA4
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 12:03:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F0C91C2155C
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 09:47:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 63B814E084C
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 10:02:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39F71215F5C;
-	Thu, 26 Jun 2025 09:47:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42DCD21A440;
+	Thu, 26 Jun 2025 10:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k+xAJWcw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G10n5isK"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E8D2153ED
-	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 09:47:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AB621858A;
+	Thu, 26 Jun 2025 10:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750931241; cv=none; b=HSVc97SPNV481Zw4MDyM0wsWE9goDdJQT7Lks1rmnokYC4j/2/5GURKzK7SWk9UQ1dsDVoeJlpcxBCYUmVe2RAOZyAn488w++nLsBq5G75UOkuV2XpM+gusS5TTULlSpGe8bfZzuoZG5VfsJKD/rt88TnlHYO3F7oesPyXivFUs=
+	t=1750932112; cv=none; b=ReoGOuBAsMBgKSvznye/6nW7YKKILMZHrbmFh9lpE5SNnKERvnwe03cGhxbDw7J3CG/t1BQr14FMIEYHWL9CGUjiFi/FK0+aUkw2t0TPQeWyKmFd9IK9BA3hgDSOfMjawEKxuW4LdnIWVzHJQGdzfugaT4UvVrcYUa3MdjxSQ6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750931241; c=relaxed/simple;
-	bh=S1OdVDiNdscAC1sB5SJOm+0v48HtXVFOr+uVL9/btPM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ty/HlswyjZlFgMiKHlxsQzBZyeOWb5KrFXXwSS/JKPrjyQOYsG4QCQWp1XMMPco79c/U8skCYpaYeWc4vYKdrQHOb8gFKdi/+f2rgYkD2kUqajE9q5WhZlj2BYzSx2yAp+U1eR/hOWm9OAOYZoO9p0ndDrtGvpZ9NttNgqlq0WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k+xAJWcw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 809C3C4CEEF
-	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 09:47:20 +0000 (UTC)
+	s=arc-20240116; t=1750932112; c=relaxed/simple;
+	bh=celi5Quy8J2eAxPMvubiJIyTHstasenQDNv4zGeqqlM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OpBBuxTr+Uc6hltugPuw6UJ4y8p7HILHmwN9S3Ex9WVn8dldLYTSi62mSkR/72ZKZYtP5lk06IkBUJQHe7J2hi8OMeAn3F9sMKG8RICj3HxUNQO4OkH7biXC+jx+gQEnv+rbJskl0eg9Uyr7OakzzUbJLDtnfEfGxVejgAnc1vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G10n5isK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1C91C4CEEB;
+	Thu, 26 Jun 2025 10:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750931240;
-	bh=S1OdVDiNdscAC1sB5SJOm+0v48HtXVFOr+uVL9/btPM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=k+xAJWcwHjEtn6fXh7k3pG29zHcjJiAHstYFbESOVQXO+flbsWLNt3q4zOmbxBAuh
-	 QVWxt24jtgYF/q2m0OX72BbAOD29VVau9jbi0n/yRJwvUH8uPpTGZDa3PFfalNtW4r
-	 9Da/EBf/ve5Cxm67mlC9a0c7Mkox5PrKo9GBHlPGAdbQ3v99FJnGuoyxK4Wl/su06i
-	 7+6QfcyapvbtTLrXldRORH10ulc3MovDMuS337pOG8nmMlIk39MaYJWUKZmKuIsAEw
-	 Ui2oMv+1ymngvLztKCObo/wzcRiRL0ZFmWZh2N8Ha/by2Yuxru+HZPsvZmBFkE0HKi
-	 /XndfTjq930/w==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-611a7c617a7so177808eaf.1
-        for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 02:47:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXXYovy66CZwEc2biyKxIbbn3qKSknT5xnrn7dnwlSbC9mmtn3NszN9PgAOuIYhfiFKQtPMeGScqEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxzx4JM9ez27C6cHOBVztsNXL5l4HhT/SbvBo2gmeyNaF5SQKH0
-	8rMLeWtUZnJc2pru9V8yyNDFzcN+wxnpUlQOwDYGneLnE+SA9YSlS+iRNzDv1jFdTZzSJc3XKIB
-	mtmMeNgoZubc/DYWos4+hnI1mgwS5H7A=
-X-Google-Smtp-Source: AGHT+IGMw83F2/tWS7EHRQUk2nS1K/x7b0tzp1bA6dF1oYpUZFzDWw5vimClQ1m54F5WnE0mZFTNU0h6YRwvo/zuSsg=
-X-Received: by 2002:a05:6870:219c:b0:2c2:5c26:2d8e with SMTP id
- 586e51a60fabf-2efb26d1fe8mr4324406fac.16.1750931239831; Thu, 26 Jun 2025
- 02:47:19 -0700 (PDT)
+	s=k20201202; t=1750932111;
+	bh=celi5Quy8J2eAxPMvubiJIyTHstasenQDNv4zGeqqlM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G10n5isK4W0bH3XYMDpsJN8M8qCOpelQH8JUJtnaJbJZ8BmZJP5GjqfOYABkwLStP
+	 m4I/Sulaerg6ilQnwkR/HplEt86l9Vu3zQwmis4d4h5jkBlQYwr5a1oyxdhDczYaa5
+	 UNcOiKE3yz57xUjkexR3pstmX8WRlFsK4/axblcsgww264/lRgwm4O18OBgN0wB9/8
+	 s4k4MXO2kdSo7MChLn0f1RHTUW8Sgdfa1cuwRYSGsBaKdbLwpOQ4Shc+oMBcB+hkER
+	 Yv8a3O3G7rK00cWJloDVyMjxbFxOCtg4m4mE+GCDKK2A5aN/412UQRVXelNrBfNQ8d
+	 Wi4ut9WxXx1YA==
+Date: Thu, 26 Jun 2025 12:01:44 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] rust: devres: get rid of Devres' inner Arc
+Message-ID: <aF0aiHhCuHjLFIij@pollux>
+References: <20250624215600.221167-1-dakr@kernel.org>
+ <20250624215600.221167-4-dakr@kernel.org>
+ <aFzI5L__OcB9hqdG@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <86c3bd52bda4552d63ffb48f8a30343167e85271.1750698221.git.lukas@wunner.de>
- <20250624142407.GA1473261@bhelgaas> <aFzbALxN4jliWtmb@wunner.de>
-In-Reply-To: <aFzbALxN4jliWtmb@wunner.de>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 26 Jun 2025 11:47:07 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h-3VpAp1G8AsP3EMaBsVAQRF5TRyr4Se95Wheaz67G3g@mail.gmail.com>
-X-Gm-Features: Ac12FXwV_eUre2flVs9jw9Wub6aSZXDmSwtpKMoLJ6FK1jFRoOnyiAbs9Dy-dqM
-Message-ID: <CAJZ5v0h-3VpAp1G8AsP3EMaBsVAQRF5TRyr4Se95Wheaz67G3g@mail.gmail.com>
-Subject: Re: [PATCH] PCI/ACPI: Fix runtime PM ref imbalance on hot-plug
- capable ports
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Laurent Bigonville <bigon@bigon.be>, 
-	Mario Limonciello <mario.limonciello@amd.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Mika Westerberg <westeri@kernel.org>, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFzI5L__OcB9hqdG@Mac.home>
 
-On Thu, Jun 26, 2025 at 7:30=E2=80=AFAM Lukas Wunner <lukas@wunner.de> wrot=
-e:
->
-> On Tue, Jun 24, 2025 at 09:24:07AM -0500, Bjorn Helgaas wrote:
-> > On Mon, Jun 23, 2025 at 07:08:20PM +0200, Lukas Wunner wrote:
-> > > pcie_portdrv_probe() and pcie_portdrv_remove() both call
-> > > pci_bridge_d3_possible() to determine whether to use runtime power
-> > > management.  The underlying assumption is that pci_bridge_d3_possible=
-()
-> > > always returns the same value because otherwise a runtime PM referenc=
-e
-> > > imbalance occurs.
-> > >
-> > > That assumption falls apart if the device is inaccessible on ->remove=
-()
-> > > due to hot-unplug:  pci_bridge_d3_possible() calls pciehp_is_native()=
-,
-> > > which accesses Config Space to determine whether the device is Hot-Pl=
-ug
-> > > Capable.   An inaccessible device returns "all ones", which is conver=
-ted
-> > > to "all zeroes" by pcie_capability_read_dword().  Hence the device no
-> > > longer seems Hot-Plug Capable on ->remove() even though it was on
-> > > ->probe().
-> >
-> > This is pretty subtle; thanks for chasing it down.
-> >
-> > It doesn't look like anything in pci_bridge_d3_possible() should
-> > change over the life of the device, although acpi_pci_bridge_d3() is
-> > non-trivial.
-> >
-> > Should we consider calling pci_bridge_d3_possible() only once and
-> > caching the result?  We already call it in pci_pm_init() and save the
-> > result in dev->bridge_d3.  That member can be changed by
-> > pci_bridge_d3_update(), but we could add another copy that we never
-> > update after pci_pm_init().
-> >
-> > I worry a little that the fix is equally subtle and we could easily
-> > reintroduce this issue with future code reorganization.
->
-> I think this fix makes sense regardless of whether or not
-> the return value of pci_bridge_d3_possible() is cached:
->
-> Right now pciehp_is_native() reads the Hot-Plug Capable bit from
-> the register even though the bit is cached in pci_dev->is_hotplug_bridge
-> and pci_bridge_d3_possible() only calls pciehp_is_native() if that flag
-> is set.  In other words, pciehp_is_native() is re-checking the condition
-> under which it was called.  That's just nonsensical and superfluous.
+On Wed, Jun 25, 2025 at 09:13:24PM -0700, Boqun Feng wrote:
+> On Tue, Jun 24, 2025 at 11:54:01PM +0200, Danilo Krummrich wrote:
+> [...]
+> > +#[pin_data(PinnedDrop)]
+> > +pub struct Devres<T> {
+> 
+> It makes me realize: I think we need to make `T` being `Send`? Because
+> the devm callback can happen on a different thread other than
+> `Devres::new()` and the callback may drop `T` because of revoke(), so we
+> are essientially sending `T`. Alternatively we can make `Devres::new()`
+> and its friend require `T` being `Send`.
+> 
+> If it's true, we need a separate patch that "Fixes" this.
 
-Agreed.
+Indeed, that needs a fix.
 
-> There's only one other caller of pciehp_is_native() and that's
-> hotplug_is_native().  Only that other caller needs the register read,
-> so it should be moved there.
->
-> So I think the question of whether the pci_bridge_d3_possible() return
-> value should be cached is orthogonal to this patch.
+> (Imagine a Devres<MutexGuard>)
+> 
+> > +    dev: ARef<Device>,
+> > +    /// Pointer to [`Self::devres_callback`].
+> > +    ///
+> > +    /// Has to be stored, since Rust does not guarantee to always return the same address for a
+> > +    /// function. However, the C API uses the address as a key.
+> > +    callback: unsafe extern "C" fn(*mut c_void),
+> > +    /// Contains all the fields shared with [`Self::callback`].
+> > +    // TODO: Replace with `UnsafePinned`, once available.
+> 
+> nit: Maybe also reference the `drop_in_place()` in Devres::drop() as
+> well, because once we use `UnsafePinned`, we don't need that
+> `drop_in_place()`. But not a big deal, just trying to help the people
+> who would handle that "TODO" ;-)
 
-+1
+Makes sense, the same is true for the Send and Sync impls, I think. AFAIK,
+UnsafePinned should cover them automatically.
 
