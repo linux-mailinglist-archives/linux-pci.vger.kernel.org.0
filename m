@@ -1,115 +1,216 @@
-Return-Path: <linux-pci+bounces-30747-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30748-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60AA7AE9CB6
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 13:41:04 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B534EAE9D1A
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 14:04:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 565897ACC02
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 11:39:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AC2247A26CE
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 12:01:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE833276026;
-	Thu, 26 Jun 2025 11:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAD861CFBA;
+	Thu, 26 Jun 2025 11:59:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/yoG0oj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aZsGyhV+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3035275115;
-	Thu, 26 Jun 2025 11:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26864277C96
+	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 11:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750938030; cv=none; b=doH6R6t0FPAe1bB0JyoSwT8J4yPoIKK3H1AmS6cmY95nr9NwEeZ+VXGYvs/LIouVElPp9BAFqiscsr2pVCWf70jh4ZcA8EPo4Y86PQFWSdzkVhCbqEKenkod3HdzBjbiJoVb13a3Vso6xqXR0sdzhKYeJ6iSXKpHjlleedgkgiw=
+	t=1750939157; cv=none; b=qHT0KLTwVRVDU5JQjorMIJQuAs54hScBsRCDe8EANrpVPHsdGHhuey8h3YWU9svgfprPUvEiam8RbC+1Kho9xnixUUVHDLhdHyz8cIju5p3rJoaOT0bzaP1OOXcPMhZLwjcQKm+XBVuGu2rwoPYTUWVXCGW1u02aqQ0LOmnDimo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750938030; c=relaxed/simple;
-	bh=vpkGbqYUMukz6V9t3VsChBVMYanG+RJ4SeL/y9Rrtjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fsEQC9h6Xgbmli1f5wiu9e2JwUnms4ulRqrgT5h6MGKINVUW/ESVSk22dR5IoU6/YEJotw9Do2sHWar5ktu6nHZsAWQSSack+8YKtTtguqBsio/RqdYHFaXPnh6cKq/iHz07XHtDR+YHcG5DJWCaBaI6N9q/0dXeL4uOwDdkFtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/yoG0oj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B645C4CEEB;
-	Thu, 26 Jun 2025 11:40:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750938030;
-	bh=vpkGbqYUMukz6V9t3VsChBVMYanG+RJ4SeL/y9Rrtjc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p/yoG0ojiYgvEaGMNpNsb81K5Qz7AtbdguTR/DY2uPDtibazqksDcGmDtscTLuP4G
-	 RpPicBuoMjJkSjkYf5kJfRJULHQbZp1gskeV8rc2JQniEmSIXPMPdyYINVsGMQYWcm
-	 1XHvS1QwlhB3i3aAnucJSkwP4nZGhOxNh76lqEYDkI5SGKGXCtYtBm0qyUMxwGOJSS
-	 g/4mBZpHKGdsk/4pvxhGEqShUIHT6AJvAwDAJSlcxV9gOKL7GbYIt4wCSeXbBaN3Bt
-	 ZGNtOYjZmOCwgkSwL3KemD9H65PuC9q66VglZp/eGQnYqtLGyyc36YVYfQAWiVnTDt
-	 n3GWOlX0MB98w==
-Date: Thu, 26 Jun 2025 13:40:23 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, gregkh@linuxfoundation.org,
-	rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
-	aliceryhl@google.com, tmgross@umich.edu, david.m.ertman@intel.com,
-	ira.weiny@intel.com, leon@kernel.org, kwilczynski@kernel.org,
-	bhelgaas@google.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] rust: devres: get rid of Devres' inner Arc
-Message-ID: <aF0xp4ZKP_a7cJsc@pollux>
-References: <20250624215600.221167-1-dakr@kernel.org>
- <20250624215600.221167-4-dakr@kernel.org>
- <aFzI5L__OcB9hqdG@Mac.home>
- <aF0aiHhCuHjLFIij@pollux>
- <DAWE690DWP9A.10I5FIJSZDSR6@kernel.org>
- <aF0p5vIcL_4PBJCG@pollux>
+	s=arc-20240116; t=1750939157; c=relaxed/simple;
+	bh=WlLK/1M7deDK9+SoWalG07eIYKYtUdhHrUU9wQpGM7g=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=DzqaJoRFufin2O8T2j01VXYEO1nGfoPdJKuY+lwNJwC+1Yo0Eij8aqBQ/TFqMkmZFvj8g+OfGT0E8iSR+zXcUxrmM5fi0fSTaJWzy4s0wLUYTk/e/IG00lUwEjkmMkneC0pc0U/Iwb5/vT65z3OQ9jHnYL6ZiSKxW/ofuyv97gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aZsGyhV+; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750939156; x=1782475156;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=WlLK/1M7deDK9+SoWalG07eIYKYtUdhHrUU9wQpGM7g=;
+  b=aZsGyhV+AgxzgubIXI8HDZAN/5NbxAuz0jOHXgzrfnpNVpGDPZAFIz2v
+   TBYQKhSp2RwERPRZsSrVC3nH8tOApbtYA2wRN0jAiyK8kcerBTOF1B5xI
+   X2zxzthFVkXnvruDo2LLkR1cApYAhG+D/xoh5Do+RCVyeavOcdI5t0jz9
+   bkJEsWeUAaWqM4oSe+ClG8Iaz6zPwzgfYdRpI17O6ib58ZqNPOUPeJ59N
+   jdpWwfqKSqEZhOr8CUx2sNxyvUUcoFUK0w8o90mZy67ZGBfnrwChbER+s
+   xo4MyT9DUOP1j92S2Q9SWzdv6RFeJGjGU5yCOIPDjinUDOziRDGGh6Eqk
+   w==;
+X-CSE-ConnectionGUID: 0vkr6MxnRHave+E4+8kq1Q==
+X-CSE-MsgGUID: gYgG/PdxT86xdDtJQCp60w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53375016"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="53375016"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 04:59:15 -0700
+X-CSE-ConnectionGUID: /2B2vIbyRC699lZuuS9K8g==
+X-CSE-MsgGUID: 6Kh8o3MwS4e1EIy/IB8pDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="156775882"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 04:59:12 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 26 Jun 2025 14:59:08 +0300 (EEST)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Bjorn Helgaas <helgaas@kernel.org>, Laurent Bigonville <bigon@bigon.be>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, 
+    Mika Westerberg <westeri@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/ACPI: Fix runtime PM ref imbalance on hot-plug
+ capable ports
+In-Reply-To: <86c3bd52bda4552d63ffb48f8a30343167e85271.1750698221.git.lukas@wunner.de>
+Message-ID: <15cd2ea9-3ab9-04ae-2881-9459ec85c18d@linux.intel.com>
+References: <86c3bd52bda4552d63ffb48f8a30343167e85271.1750698221.git.lukas@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aF0p5vIcL_4PBJCG@pollux>
+Content-Type: multipart/mixed; BOUNDARY="8323328-2083449483-1750938816=:930"
+Content-ID: <66119a1b-d384-d559-99a3-8742dd40478c@linux.intel.com>
 
-On Thu, Jun 26, 2025 at 01:07:25PM +0200, Danilo Krummrich wrote:
-> On Thu, Jun 26, 2025 at 12:27:18PM +0200, Benno Lossin wrote:
-> > On Thu Jun 26, 2025 at 12:01 PM CEST, Danilo Krummrich wrote:
-> > > On Wed, Jun 25, 2025 at 09:13:24PM -0700, Boqun Feng wrote:
-> > >> On Tue, Jun 24, 2025 at 11:54:01PM +0200, Danilo Krummrich wrote:
-> > >> [...]
-> > >> > +#[pin_data(PinnedDrop)]
-> > >> > +pub struct Devres<T> {
-> > >> 
-> > >> It makes me realize: I think we need to make `T` being `Send`? Because
-> > >> the devm callback can happen on a different thread other than
-> > >> `Devres::new()` and the callback may drop `T` because of revoke(), so we
-> > >> are essientially sending `T`. Alternatively we can make `Devres::new()`
-> > >> and its friend require `T` being `Send`.
-> > >> 
-> > >> If it's true, we need a separate patch that "Fixes" this.
-> > >
-> > > Indeed, that needs a fix.
-> > 
-> > Oh and we have no `'static` bound on `T` either... We should require
-> > that as well.
-> 
-> I don't think we actually need that, The Devres instance can't out-live a &T
-> passed into it. And the &T can't out-live the &Device<Bound>, hence we're
-> guaranteed that devres_callback() is never called because Devres::drop() will be
-> able successfully unregister the callback given that we're still in the
-> &Device<Bound> scope.
-> 
-> The only thing that could technically out-live the &Device<Bound> would be
-> &'static T, but that would obviously be fine.
-> 
-> Do I miss anything?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thinking a bit more about it, a similar argumentation is true for not needing
-T: Send. The only way to leave the &Device<Bound> scope and hence the thread
-would be to stuff the Devres into a ForeignOwnable container, no?
+--8323328-2083449483-1750938816=:930
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <68c820c1-b4a5-8242-887d-cd8a2350d689@linux.intel.com>
 
-Analogous to Benno asking for ForeignOwnable: 'static, should we also require
-ForeignOwnable: Send + Sync?
+On Mon, 23 Jun 2025, Lukas Wunner wrote:
 
-Alternatively, the safety requirements of ForeignOwnable:::from_foreign() and
-ForeignOwnable::borrow() would need to cover this, which they currently they
-are not.
+> pcie_portdrv_probe() and pcie_portdrv_remove() both call
+> pci_bridge_d3_possible() to determine whether to use runtime power
+> management.  The underlying assumption is that pci_bridge_d3_possible()
+> always returns the same value because otherwise a runtime PM reference
+> imbalance occurs.
+>=20
+> That assumption falls apart if the device is inaccessible on ->remove()
+> due to hot-unplug:  pci_bridge_d3_possible() calls pciehp_is_native(),
+> which accesses Config Space to determine whether the device is Hot-Plug
+> Capable.   An inaccessible device returns "all ones", which is converted
+> to "all zeroes" by pcie_capability_read_dword().  Hence the device no
+> longer seems Hot-Plug Capable on ->remove() even though it was on
+> ->probe().
+>=20
+> The resulting runtime PM ref imbalance causes errors such as:
+>=20
+>   pcieport 0000:02:04.0: Runtime PM usage count underflow!
+>=20
+> The Hot-Plug Capable bit is cached in pci_dev->is_hotplug_bridge.
+> pci_bridge_d3_possible() only calls pciehp_is_native() if that flag is
+> set.  Re-checking the bit in pciehp_is_native() is thus unnecessary.
+>=20
+> However pciehp_is_native() is also called from hotplug_is_native().  Move
+> the Config Space access to that function.  The function is only invoked
+> from acpiphp_glue.c, so move it there instead of keeping it in a publicly
+> visible header.
+>=20
+> Fixes: 5352a44a561d ("PCI: pciehp: Make pciehp_is_native() stricter")
+> Reported-by: Laurent Bigonville <bigon@bigon.be>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220216
+> Reported-by: Mario Limonciello <mario.limonciello@amd.com>
+> Closes: https://lore.kernel.org/r/20250609020223.269407-3-superm1@kernel.=
+org/
+> Link: https://lore.kernel.org/all/20250620025535.3425049-3-superm1@kernel=
+=2Eorg/T/#u
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Cc: stable@vger.kernel.org # v4.18+
+
+Hmm, I suspect this fixes the root cause for TB unplug while suspended=20
+which did have these RPM underflows. I saw them in logs while we were=20
+looking into LBMS interactions with the Target Speed quirk (that most=20
+visibly caused extra 60s delay, which was solved).
+
+Back then, I briefly tried find solution to the underflow problem too but=
+=20
+couldn't come up anything useful and as it looked relatively harmless I=20
+ended up postponing looking deeper into it.
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+> ---
+>  drivers/pci/hotplug/acpiphp_glue.c | 15 +++++++++++++++
+>  drivers/pci/pci-acpi.c             |  5 -----
+>  include/linux/pci_hotplug.h        |  4 ----
+>  3 files changed, 15 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acp=
+iphp_glue.c
+> index 5b1f271c6034..ae2bb8970f63 100644
+> --- a/drivers/pci/hotplug/acpiphp_glue.c
+> +++ b/drivers/pci/hotplug/acpiphp_glue.c
+> @@ -50,6 +50,21 @@ static void acpiphp_sanitize_bus(struct pci_bus *bus);
+>  static void hotplug_event(u32 type, struct acpiphp_context *context);
+>  static void free_bridge(struct kref *kref);
+> =20
+> +static bool hotplug_is_native(struct pci_dev *bridge)
+> +{
+> +=09u32 slot_cap;
+> +
+> +=09pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
+> +
+> +=09if (slot_cap & PCI_EXP_SLTCAP_HPC && pciehp_is_native(bridge))
+> +=09=09return true;
+> +
+> +=09if (shpchp_is_native(bridge))
+> +=09=09return true;
+> +
+> +=09return false;
+> +}
+> +
+>  /**
+>   * acpiphp_init_context - Create hotplug context and grab a reference to=
+ it.
+>   * @adev: ACPI device object to create the context for.
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index b78e0e417324..57bce9cc8a38 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -816,15 +816,10 @@ int pci_acpi_program_hp_params(struct pci_dev *dev)
+>  bool pciehp_is_native(struct pci_dev *bridge)
+>  {
+>  =09const struct pci_host_bridge *host;
+> -=09u32 slot_cap;
+> =20
+>  =09if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+>  =09=09return false;
+> =20
+> -=09pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
+> -=09if (!(slot_cap & PCI_EXP_SLTCAP_HPC))
+> -=09=09return false;
+> -
+>  =09if (pcie_ports_native)
+>  =09=09return true;
+> =20
+> diff --git a/include/linux/pci_hotplug.h b/include/linux/pci_hotplug.h
+> index ec77ccf1fc4d..02efeea62b25 100644
+> --- a/include/linux/pci_hotplug.h
+> +++ b/include/linux/pci_hotplug.h
+> @@ -102,8 +102,4 @@ static inline bool pciehp_is_native(struct pci_dev *b=
+ridge) { return true; }
+>  static inline bool shpchp_is_native(struct pci_dev *bridge) { return tru=
+e; }
+>  #endif
+> =20
+> -static inline bool hotplug_is_native(struct pci_dev *bridge)
+> -{
+> -=09return pciehp_is_native(bridge) || shpchp_is_native(bridge);
+> -}
+>  #endif
+>=20
+--8323328-2083449483-1750938816=:930--
 
