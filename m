@@ -1,73 +1,56 @@
-Return-Path: <linux-pci+bounces-30743-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30744-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D684AE9BD0
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 12:51:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49A05AE9C09
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 12:59:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C7E157B0E56
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 10:40:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 124B63A55FD
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 10:59:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8A4521CC74;
-	Thu, 26 Jun 2025 10:41:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C8E5272814;
+	Thu, 26 Jun 2025 10:59:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LfiOy7XV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rO3ISG0o"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DD221771B
-	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 10:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490472727FE;
+	Thu, 26 Jun 2025 10:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750934509; cv=none; b=ftt3aLfIX8jQtZg71Q6fHJNXDkRqanuMlGQ6zoTo9B+h8sU96MtSmtaL5wNmCcb3oyICZm+Zq4Z9ru8umewXDexd08UOTfpEaclPICZByf2KGtFAB5D0tq9ET9X+g4adktqU/EQLF56bHy1fEnWyaEfOt1Ujq2Gncd+e8tE1yQ0=
+	t=1750935577; cv=none; b=JcQ2pMVo6D67YYIfauzGBbNMXggHy4RSMDa9MvL7nTIJLEZJkhzvO8Ckvg7q22tite7AkERDKj6UHzEj+zden/AZLOS9wwzFMVGlD83u57FXWMT1zOApWEvOoheJgCMP5C/f0Tij6NM0k2sZk8WQfKEhsNK36VcAhID4uIp1XhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750934509; c=relaxed/simple;
-	bh=nMga8Hlx1d8YQZxYJQUUac9Ug2xf3AsX8cJdwsg9p94=;
+	s=arc-20240116; t=1750935577; c=relaxed/simple;
+	bh=+dnfNjkqjX5KLN7SnWD0Dst7Xn0aAkIyOGApXAie9OY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ldCvSvA9qurVvBZgasDAo2XuVe2UuK55HhdqLAEDSrJIxLuv+q+Es9B7I43LFNSD4D50cP/dgm9Hz3oTu+pOGdc6Fei35WnxrHghroe7Ey5jzOmjCNQ0hCO3L1qbkriX/bPOsmbxpeNilUxxz4ViXCNhr/07doOp9AoznID44qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LfiOy7XV; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e81877c1ed6so1880512276.0
-        for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 03:41:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750934507; x=1751539307; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6smS0W1Hv8ri7J2+gsifIwuwqRILJtZpojLMB8JtnBs=;
-        b=LfiOy7XVCmWcTaJlHS0w5LwsI5UBxOkMXgpkK06HXte0uj+hX0bRsYnLhLzhTWsbjt
-         oOHLsNWw35cqRdKLIZNDHyS1iPF/sj9ltxfTTRsaHynCz4xjyBdn3Rq8GhfM/rpc5DDp
-         lFDCDJv9N8a9kaj07XPnmGkD0W/uV9plIjYLrKlfKHg7jh4Kdx2qREaFbCErR5qdeKCI
-         /htZoScJmRMjvRnnjnreuQVs+qLtBp+8JgeBM8FXO0DI5aoNIx8UcRjpAx2m4U9dB/mQ
-         gnC2Ac/PZ0gM1PsolHYNP08fsAr5d/VSlDbWJYWr2Vecj+QDMEDHxcX4tzfjULz8Olgf
-         FDyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750934507; x=1751539307;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6smS0W1Hv8ri7J2+gsifIwuwqRILJtZpojLMB8JtnBs=;
-        b=ONE+xW9wRUZrPoPjLbxqPIVuN0FjtBWDGWft1bt/+HArNfeQk4p2Vks0kG2TA0gnLf
-         lG2p/ztdNk1KbDbqxlKerqUFEqfU3usz15tAmQuZNcmQ6l728uxJjztOYeP6TfYhGijz
-         MFGEZEFbzUBaoylLyn0NvNUNEwY/RV+VY6nE4dhdSdwWtKXJMDT/glbT4+0Hu7B5Yqx7
-         0Va1+gOo+2sizX/iCpjZeBh0DJR/kFmC42qd4mGfUSXURRJXCBcgE4L7KTmlQDj+gFCk
-         Fp+e7sP2WiCRpmc2qwnWjmNOl9lXrMdUTgud5nKLMmZPLfKKNzhxJ55Wr9bKZ+b0k1Py
-         jkFg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2Z1oLvoFonxsvzg11yIxO1uikJ+h17U0F6hO6Sz1DK/lBVGkZqbaUdSbu3zf3dXY3GgpPRiNyA1s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5svSDnvgkxKuRBgrjYGehrJP17c6lxUnoQntKy4SuS3wCznWD
-	Wv+Ty+hONwrbX+tPN96GbBwyNW89Mgw9av4b2E7eGzmdt/NG6DqRNFhVL3eYG5XLKX9opYHRQtn
-	fa4Dj7d4IBLARBnQILFnI6fkNrOjOCNy6ZfTm3I/wFrzcowC7L7RC
-X-Gm-Gg: ASbGncvNVlLkFwZEL3ZtjJ5JsygOhYCsoUeVddZY2BesoMeF5CrqfOce2auyb9KpGTr
-	w05iVxnksORA4ZPfaRozZ9T44y+W0oqRGuYRzlu6so+KrVqRdt94jebxEk5aJqus3h+htz1bEPB
-	a+DGWuZwKK5cXtiQJhzWenKW1NyDrOnskPnoZufdi889zb
-X-Google-Smtp-Source: AGHT+IHlcCR9Jque2M5f7A2Se7ACxnVKmY2chOHS36SADEkUcKjizS/3bQ31EnnCoHr4T6PMwYyajw8366/m4yuUyAY=
-X-Received: by 2002:a05:6902:1893:b0:e87:a1f2:5ccb with SMTP id
- 3f1490d57ef6-e87a1f25e37mr1038329276.19.1750934506681; Thu, 26 Jun 2025
- 03:41:46 -0700 (PDT)
+	 To:Cc:Content-Type; b=KsOQqchaKKKBaKSGaVP1+N1CW+s/8BXRkk8fuTYk9BS/tvOkC1tTAbp8Rjk49fJSZUa3mQA5hH3q/tRq0r9HMvkTu6KzyH7FU/eVRyUeGYoDSS/GemxaVC9JILEVq/hN46AenQqrpEQQ54+bT/oXAVqBHJ/zG+csLE3SMYnID8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rO3ISG0o; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1976C4CEEE;
+	Thu, 26 Jun 2025 10:59:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750935576;
+	bh=+dnfNjkqjX5KLN7SnWD0Dst7Xn0aAkIyOGApXAie9OY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rO3ISG0ofqV5TlQR3rZYDgcoTr2D+SCneBfkiURALzk9ixerSy6WZSHgkd/nwvozp
+	 leotQl/rSx5I7ZzvCaxg2UBpDcy4d5/0YWgWz9oZObB2K45XZA+AG5YSf2LxGXNhCg
+	 J3nc18lXBNBwE+Az8t29w6BgDfGu0PKjJ+NymeGnejkwOJYyqFqjbfgPtoX65hjTmc
+	 S43EBevSDlJqdkwKCpZPmeG+b13z54ab1Q6ncY1FF8AP1DtDgFkYezR6Q0gZexGlVA
+	 5qz+YZYwkvyNe39I4JRpcUo+UkWVQCU6b/drPZPcmD3I3KXvoXBuC3wiySuLEijJ4O
+	 25oNYChpDmpKg==
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-60bd30dd387so434356eaf.3;
+        Thu, 26 Jun 2025 03:59:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUJo1hR+bUdc3/KwvI0GxWNBY4LkgyLYXYjnclcVfLiZ15woZK/ZUz5OIv22Oewxo6j7y4Y+eorO4/l@vger.kernel.org, AJvYcCWCqHgDDcQSu0Y0chmZg0K44iG3lklJw1gHDOTFUC1OnyuEC4wzAWou6eZKCijDgTIEffeqdMogeWQ=@vger.kernel.org, AJvYcCWV9hr52pldXRMD56zfKPdxILihNgW8sBg9mHlSDzBbT5Wy4FdV1zxMbvHfJ+rj31049IMakicEt0fk/gY7@vger.kernel.org, AJvYcCWwoA01QirdIepucLeo+e7TX9F64ps9m349yJE1pHwZiNXT5pRhiWUJ9gdf7IiqCet1Y0pClAnxqEBX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy53ASr5HYfSAa4h3CoN7/SIV57X9dEfxcR3EAn9Ol6569oFBCv
+	Oq2zLMOa0gXdM2pz6z7a6tzyZYL3gLTsMAIGT4hxxmdSamUs2bJUJjfY7/dABHN0tp5w1FUL/uh
+	smtIGjwjhDL4KslruK42eW2n7wGdaCrM=
+X-Google-Smtp-Source: AGHT+IFlHK0qqu+LJQSDSOqsz2M0dO3rmVztJx4oRIo33VonBpawvIFL8ydYaYNmO/FgSVPMw29dHyBQ2yKsGcxIF9c=
+X-Received: by 2002:a05:6820:4b95:b0:611:a799:cb65 with SMTP id
+ 006d021491bc7-611a799cd7amr2629973eaf.2.1750935576092; Thu, 26 Jun 2025
+ 03:59:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,98 +58,108 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <22759968.EfDdHjke4D@rjwysocki.net> <CAPDyKFpZVdf2EnZE_u1xDKB7=Nd98a_ajYimQhLBu6jYwJhJFA@mail.gmail.com>
- <CAJZ5v0irk8n0MzRm=u8k=+Mtq84r7JsazS10DsvHO4ktgW=AMQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0irk8n0MzRm=u8k=+Mtq84r7JsazS10DsvHO4ktgW=AMQ@mail.gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 26 Jun 2025 12:41:10 +0200
-X-Gm-Features: Ac12FXylM7_NHVK9qHL5zh8NJNZgaIJfq0i5vr57JOQ0VZWL8G55_18t0MWABxQ
-Message-ID: <CAPDyKFq7gydO0uioA53LqXk-N+Bjp4bwkaRRzMeWv+F=zpy2Jw@mail.gmail.com>
+ <CAJZ5v0irk8n0MzRm=u8k=+Mtq84r7JsazS10DsvHO4ktgW=AMQ@mail.gmail.com> <CAPDyKFq7gydO0uioA53LqXk-N+Bjp4bwkaRRzMeWv+F=zpy2Jw@mail.gmail.com>
+In-Reply-To: <CAPDyKFq7gydO0uioA53LqXk-N+Bjp4bwkaRRzMeWv+F=zpy2Jw@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 26 Jun 2025 12:59:25 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g4Q+cqMKNnBDaFsnj4zSH_iKV+EDz9BnfF23cATkczYA@mail.gmail.com>
+X-Gm-Features: Ac12FXy7ca52AM2RImFpx6abJFvTiPZiAAJMqD4JzF_OcnCrx84Phr2euW0aKIA
+Message-ID: <CAJZ5v0g4Q+cqMKNnBDaFsnj4zSH_iKV+EDz9BnfF23cATkczYA@mail.gmail.com>
 Subject: Re: [PATCH v1 0/9] PM: Reconcile different driver options for runtime
  PM integration with system sleep
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
-	Linux PCI <linux-pci@vger.kernel.org>, 
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux ACPI <linux-acpi@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
 	Mika Westerberg <mika.westerberg@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 26 Jun 2025 at 12:34, Rafael J. Wysocki <rafael@kernel.org> wrote:
+On Thu, Jun 26, 2025 at 12:41=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.or=
+g> wrote:
 >
-> On Thu, Jun 26, 2025 at 12:31=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.=
-org> wrote:
+> On Thu, 26 Jun 2025 at 12:34, Rafael J. Wysocki <rafael@kernel.org> wrote=
+:
 > >
-> > On Wed, 25 Jun 2025 at 21:25, Rafael J. Wysocki <rjw@rjwysocki.net> wro=
-te:
+> > On Thu, Jun 26, 2025 at 12:31=E2=80=AFPM Ulf Hansson <ulf.hansson@linar=
+o.org> wrote:
 > > >
-> > > Hi Everyone,
+> > > On Wed, 25 Jun 2025 at 21:25, Rafael J. Wysocki <rjw@rjwysocki.net> w=
+rote:
+> > > >
+> > > > Hi Everyone,
+> > > >
+> > > > This series addresses a couple of issues related to the integration=
+ of runtime
+> > > > PM with system sleep I was talking about at the OSMP-summit 2025:
+> > > >
+> > > > https://lwn.net/Articles/1021332/
+> > > >
+> > > > Most importantly, DPM_FLAG_SMART_SUSPEND cannot be used along with
+> > > > pm_runtime_force_suspend/resume() due to some conflicting expectati=
+ons
+> > > > about the handling of device runtime PM status between these functi=
+ons
+> > > > and the PM core.
+> > > >
+> > > > Also pm_runtime_force_suspend/resume() currently cannot be used in =
+PCI
+> > > > drivers and in drivers that collaborate with the general ACPI PM do=
+main
+> > > > because they both don't expect their mid-layer runtime PM callbacks=
+ to
+> > > > be invoked during system-wide suspend and resume.
+> > > >
+> > > > Patch [1/9] is a preparatory cleanup changing the code to use 'true=
+' and
+> > > > 'false' as needs_force_resume flag values for consistency.
+> > > >
+> > > > Patch [2/9] makes pm_runtime_force_suspend() check needs_force_resu=
+me along
+> > > > with the device's runtime PM status upfront, and bail out if it is =
+set,
+> > > > which allows runtime PM status updates to be eliminated from both t=
+hat function
+> > > > and pm_runtime_force_resume().
+> > > >
+> > > > Patch [3/9] causes the smart_suspend flag to be taken into account =
+by
+> > > > pm_runtime_force_resume() which allows it to resume devices with sm=
+art_suspend
+> > > > set whose runtime PM status has been changed to RPM_ACTIVE by the P=
+M core at
+> > > > the beginning of system resume.  After this patch, drivers that use
+> > > > pm_runtime_force_suspend/resume() can also set DPM_FLAG_SMART_SUSPE=
+ND which
+> > > > may be useful, for example, if devices handled by them are involved=
+ in
+> > > > dependency chains with other devices setting DPM_FLAG_SMART_SUSPEND=
+.
+> > > >
+> > > > The next two patches, [4-5/9], put pm_runtime_force_suspend/resume(=
+)
+> > > > and needs_force_resume under CONFIG_PM_SLEEP for consistency and al=
+so
+> > > > because using them outside system-wide PM transitions really doesn'=
+t make
+> > > > sense.
+> > > >
+> > > > Patch [6/9] makes the code for getting a runtime PM callback for a =
+device
+> > > > a bit more straightforward in preparation for the subsequent change=
+s.
 > > >
-> > > This series addresses a couple of issues related to the integration o=
-f runtime
-> > > PM with system sleep I was talking about at the OSMP-summit 2025:
+> > > I can't find this one. Seems like you did not submit it.
 > > >
-> > > https://lwn.net/Articles/1021332/
-> > >
-> > > Most importantly, DPM_FLAG_SMART_SUSPEND cannot be used along with
-> > > pm_runtime_force_suspend/resume() due to some conflicting expectation=
-s
-> > > about the handling of device runtime PM status between these function=
-s
-> > > and the PM core.
-> > >
-> > > Also pm_runtime_force_suspend/resume() currently cannot be used in PC=
-I
-> > > drivers and in drivers that collaborate with the general ACPI PM doma=
-in
-> > > because they both don't expect their mid-layer runtime PM callbacks t=
-o
-> > > be invoked during system-wide suspend and resume.
-> > >
-> > > Patch [1/9] is a preparatory cleanup changing the code to use 'true' =
-and
-> > > 'false' as needs_force_resume flag values for consistency.
-> > >
-> > > Patch [2/9] makes pm_runtime_force_suspend() check needs_force_resume=
- along
-> > > with the device's runtime PM status upfront, and bail out if it is se=
-t,
-> > > which allows runtime PM status updates to be eliminated from both tha=
-t function
-> > > and pm_runtime_force_resume().
-> > >
-> > > Patch [3/9] causes the smart_suspend flag to be taken into account by
-> > > pm_runtime_force_resume() which allows it to resume devices with smar=
-t_suspend
-> > > set whose runtime PM status has been changed to RPM_ACTIVE by the PM =
-core at
-> > > the beginning of system resume.  After this patch, drivers that use
-> > > pm_runtime_force_suspend/resume() can also set DPM_FLAG_SMART_SUSPEND=
- which
-> > > may be useful, for example, if devices handled by them are involved i=
-n
-> > > dependency chains with other devices setting DPM_FLAG_SMART_SUSPEND.
-> > >
-> > > The next two patches, [4-5/9], put pm_runtime_force_suspend/resume()
-> > > and needs_force_resume under CONFIG_PM_SLEEP for consistency and also
-> > > because using them outside system-wide PM transitions really doesn't =
-make
-> > > sense.
-> > >
-> > > Patch [6/9] makes the code for getting a runtime PM callback for a de=
-vice
-> > > a bit more straightforward in preparation for the subsequent changes.
+> > > Perhaps make a resend and fixup the patch-numbering too?
 > >
-> > I can't find this one. Seems like you did not submit it.
+> > I'm going to send a v2, but the patch in question is here (wrong number=
+):
 > >
-> > Perhaps make a resend and fixup the patch-numbering too?
+> > https://lore.kernel.org/linux-acpi/3306233.5fSG56mABF@rjwysocki.net/
 >
-> I'm going to send a v2, but the patch in question is here (wrong number):
->
-> https://lore.kernel.org/linux-acpi/3306233.5fSG56mABF@rjwysocki.net/
+> No, that's patch2 (which was named pacth0). :-) Nevermind, I think we
+> made some progress so I am awaiting a v2 before continuing my reviews.
 
-No, that's patch2 (which was named pacth0). :-) Nevermind, I think we
-made some progress so I am awaiting a v2 before continuing my reviews.
-
-Kind regards
-Uffe
+OK
 
