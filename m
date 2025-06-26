@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-30824-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30825-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F884AEA7A1
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 22:02:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A453AEA7A7
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 22:03:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D55481C45297
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 20:02:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 141F2561C90
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 20:02:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBA3B2F271C;
-	Thu, 26 Jun 2025 20:01:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54B0C2F0E53;
+	Thu, 26 Jun 2025 20:01:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rv1356gN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ko6VVeNj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5E62F0E32;
-	Thu, 26 Jun 2025 20:01:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5912F0E4D;
+	Thu, 26 Jun 2025 20:01:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750968079; cv=none; b=m3YP6JRQ4gFx/e7AuyPz5AtNZsqeZKCA3QsyP2+w0AzzPsDH5x40X9+kCY62KZQDMi+oA1Wgw2dLeCH5Fbt50jXsttEM7j6MiEDdzSVuV5voVmKQ+yubIS010WgVSOL3747CxiJ4BsLnIYxPxKvPXg/x3Qz+KJnWqoMEI0SeGDE=
+	t=1750968084; cv=none; b=T8QD6UDq2JCsJs7buvSvIQENv7/LQLleecFBe6YRqe7eaQBqErAaMUKOJsJRbsj1w8eIWDl9RzHBffZmiSHkgQgFd0CurcQ2bhhz0IHD/n8h1U90nHvie2kHtXZJq44pmZpmLwTFBFb383gdKcNpU3D2qTDxE+uXcwaJ009Yt6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750968079; c=relaxed/simple;
-	bh=IwBkUuZuKXf37LiSFQBM34dVIoN+RIBZCvqe+2DZasM=;
+	s=arc-20240116; t=1750968084; c=relaxed/simple;
+	bh=4TQ9IPTgKMt3xedIjC4FAr1Kkj8BMJZaabqz8iQUEgs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l8t1QDLfkJ/ACYJhaOzCfjmWwSwbLCIsaEpIPrfO6pgG9oV+3kR0/x7yLB7L91QaHeCu9UFAwhOvEosOSXD3GYHz6IPdLR3To8Mn4pa4+46MqvURsV8lrphj2ReiTVmFSbLW0vEqakl50o1xSNUEBKUPwIM1sNr9GXlltOYdms8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rv1356gN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AFA3C4CEF1;
-	Thu, 26 Jun 2025 20:01:15 +0000 (UTC)
+	 MIME-Version; b=OTvzWe1Cl3UuUxwmBiX5iR9C01onTBx9zk0usXx8DHtUR9gEhCZ6FtlrO5Ue8JORuorBNO1wg9t5Lg5j1rpW9r7vScvyd2AffX9CI+xbhsqbklskUOuOj7uYvS5fz2crXVGljrl7UQ5qMGQvZcM8IZCyBVZXzxNezJMnMmVn2HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ko6VVeNj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4973C4CEEB;
+	Thu, 26 Jun 2025 20:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750968079;
-	bh=IwBkUuZuKXf37LiSFQBM34dVIoN+RIBZCvqe+2DZasM=;
+	s=k20201202; t=1750968083;
+	bh=4TQ9IPTgKMt3xedIjC4FAr1Kkj8BMJZaabqz8iQUEgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Rv1356gND7vpbgjlLg24OkT1wrnzKTeomeh3ymunNL2eqqUGZXbD7k7aKWi1URiSf
-	 5F9cmAWwanzvQ73RC539FM2QwstBkUgWgvB+6cD36U+g3t7wUcZUE7gpjrCKyRcX73
-	 rbqJ8Y3iyiG8IryrEo6cARiH762Qa3tvzaQwBai1TiGiTnD0/bAfRRslzflvD4n28U
-	 gDd7ij2A+61NbfAO5S0EHL7SNM6sTew02r6oKpWMUIpmTaSjcRLSyrqKOLHARFlW8n
-	 TYsknfDFK71jp9I8aVu9408R/1997RXjco8vIMkvNezyjdYZG/W9TrH2U5+5rX6NnT
-	 +t1QrxWdABXSg==
+	b=Ko6VVeNjjltedZWWEr9JHf3QkUmh01r1yUn9E3XF+Li18su0PKFM+PqTpgghPLqpz
+	 CxhzeRJwLv3AEpk8nZKwLOl/rVw0YWvqrJ/sy9IUb/P2TfWuB0Rd+we08iX7EZQvCI
+	 BNEjsZ+VSwIYdPK8K+ndN+CgdwCxsFeisHTm9AATI1svKMl+Bs1lw7Z5qNIlxZp17e
+	 sLl/YrZRGw9mlhOzFAFFYqEosQrVr4BgP/RUYquAbeygkuoDxfcrK3RD4Dw3tQxeBS
+	 swjl1S4UDvZx5w07eeF01ICNsr6qVfd1mQSmuflP3CChBlXIVFQnt/fybWZV2RvkdV
+	 srfxv/LtrmdRA==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -62,9 +62,9 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v4 4/5] rust: types: ForeignOwnable: Add type Target
-Date: Thu, 26 Jun 2025 22:00:42 +0200
-Message-ID: <20250626200054.243480-5-dakr@kernel.org>
+Subject: [PATCH v4 5/5] rust: devres: implement register_release()
+Date: Thu, 26 Jun 2025 22:00:43 +0200
+Message-ID: <20250626200054.243480-6-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250626200054.243480-1-dakr@kernel.org>
 References: <20250626200054.243480-1-dakr@kernel.org>
@@ -76,80 +76,110 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ForeignOwnable::Target defines the payload data of a ForeignOwnable. For
-Arc<T> for instance, ForeignOwnable::Target would just be T.
+register_release() is useful when a device resource has associated data,
+but does not require the capability of accessing it or manually releasing
+it.
 
-This is useful for cases where a trait bound is required on the target
-type of the ForeignOwnable. For instance:
+If we would want to be able to access the device resource and release the
+device resource manually before the device is unbound, but still keep
+access to the associated data, we could implement it as follows.
 
-	fn example<P>(data: P)
-	   where
-	      P: ForeignOwnable,
-	      P::Target: MyTrait,
-	{}
+	struct Registration<T> {
+	   inner: Devres<RegistrationInner>,
+	   data: T,
+	}
 
-Suggested-by: Benno Lossin <lossin@kernel.org>
+However, if we never need to access the resource or release it manually,
+register_release() is great optimization for the above, since it does not
+require the synchronization of the Devres type.
+
+Suggested-by: Alice Ryhl <aliceryhl@google.com>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/alloc/kbox.rs | 2 ++
- rust/kernel/sync/arc.rs   | 1 +
- rust/kernel/types.rs      | 4 ++++
- 3 files changed, 7 insertions(+)
+ rust/kernel/devres.rs | 73 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
 
-diff --git a/rust/kernel/alloc/kbox.rs b/rust/kernel/alloc/kbox.rs
-index c386ff771d50..66fad9777567 100644
---- a/rust/kernel/alloc/kbox.rs
-+++ b/rust/kernel/alloc/kbox.rs
-@@ -403,6 +403,7 @@ unsafe impl<T: 'static, A> ForeignOwnable for Box<T, A>
- where
-     A: Allocator,
- {
-+    type Target = T;
-     type PointedTo = T;
-     type Borrowed<'a> = &'a T;
-     type BorrowedMut<'a> = &'a mut T;
-@@ -435,6 +436,7 @@ unsafe impl<T: 'static, A> ForeignOwnable for Pin<Box<T, A>>
- where
-     A: Allocator,
- {
-+    type Target = T;
-     type PointedTo = T;
-     type Borrowed<'a> = Pin<&'a T>;
-     type BorrowedMut<'a> = Pin<&'a mut T>;
-diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
-index c7af0aa48a0a..24fb63597d35 100644
---- a/rust/kernel/sync/arc.rs
-+++ b/rust/kernel/sync/arc.rs
-@@ -374,6 +374,7 @@ pub fn into_unique_or_drop(self) -> Option<Pin<UniqueArc<T>>> {
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+index 3ce8d6161778..92aca78874ff 100644
+--- a/rust/kernel/devres.rs
++++ b/rust/kernel/devres.rs
+@@ -353,3 +353,76 @@ pub fn register<T, E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flag
  
- // SAFETY: The `into_foreign` function returns a pointer that is well-aligned.
- unsafe impl<T: 'static> ForeignOwnable for Arc<T> {
-+    type Target = T;
-     type PointedTo = ArcInner<T>;
-     type Borrowed<'a> = ArcBorrow<'a, T>;
-     type BorrowedMut<'a> = Self::Borrowed<'a>;
-diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-index 3958a5f44d56..74c787b352a9 100644
---- a/rust/kernel/types.rs
-+++ b/rust/kernel/types.rs
-@@ -27,6 +27,9 @@
- /// [`into_foreign`]: Self::into_foreign
- /// [`PointedTo`]: Self::PointedTo
- pub unsafe trait ForeignOwnable: Sized {
-+    /// The payload type of the foreign-owned value.
-+    type Target;
+     register_foreign(dev, data)
+ }
 +
-     /// Type used when the value is foreign-owned. In practical terms only defines the alignment of
-     /// the pointer.
-     type PointedTo;
-@@ -128,6 +131,7 @@ unsafe fn try_from_foreign(ptr: *mut Self::PointedTo) -> Option<Self> {
- 
- // SAFETY: The `into_foreign` function returns a pointer that is dangling, but well-aligned.
- unsafe impl ForeignOwnable for () {
-+    type Target = ();
-     type PointedTo = ();
-     type Borrowed<'a> = ();
-     type BorrowedMut<'a> = ();
++/// [`Devres`]-releaseable resource.
++///
++/// Register an object implementing this trait with [`register_release`]. Its `release`
++/// function will be called once the device is being unbound.
++pub trait Release {
++    /// The [`ForeignOwnable`] pointer type consumed by [`register_release`].
++    type Ptr: ForeignOwnable;
++
++    /// Called once the [`Device`] given to [`register_release`] is unbound.
++    fn release(this: Self::Ptr);
++}
++
++/// Consume the `data`, [`Release::release`] and [`Drop::drop`] `data` once `dev` is unbound.
++///
++/// # Examples
++///
++/// ```no_run
++/// use kernel::{device::{Bound, Device}, devres, devres::Release, sync::Arc};
++///
++/// /// Registration of e.g. a class device, IRQ, etc.
++/// struct Registration;
++///
++/// impl Registration {
++///     fn new() -> Result<Arc<Self>> {
++///         // register
++///
++///         Ok(Arc::new(Self, GFP_KERNEL)?)
++///     }
++/// }
++///
++/// impl Release for Registration {
++///     type Ptr = Arc<Self>;
++///
++///     fn release(this: Arc<Self>) {
++///        // unregister
++///     }
++/// }
++///
++/// fn from_bound_context(dev: &Device<Bound>) -> Result {
++///     let reg = Registration::new()?;
++///
++///     devres::register_release(dev, reg.clone())
++/// }
++/// ```
++pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
++where
++    P: ForeignOwnable,
++    P::Target: Release<Ptr = P> + Send,
++{
++    let ptr = data.into_foreign();
++
++    #[allow(clippy::missing_safety_doc)]
++    unsafe extern "C" fn callback<P>(ptr: *mut kernel::ffi::c_void)
++    where
++        P: ForeignOwnable,
++        P::Target: Release<Ptr = P>,
++    {
++        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked above and hence valid.
++        let data = unsafe { P::from_foreign(ptr.cast()) };
++
++        P::Target::release(data);
++    }
++
++    // SAFETY:
++    // - `dev.as_raw()` is a pointer to a valid and bound device.
++    // - `ptr` is a valid pointer the `ForeignOwnable` devres takes ownership of.
++    to_result(unsafe {
++        // `devm_add_action_or_reset()` also calls `callback` on failure, such that the
++        // `ForeignOwnable` is released eventually.
++        bindings::devm_add_action_or_reset(dev.as_raw(), Some(callback::<P>), ptr.cast())
++    })
++}
 -- 
 2.49.0
 
