@@ -1,58 +1,65 @@
-Return-Path: <linux-pci+bounces-30796-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30797-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6EFDAEA2E1
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 17:42:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12DA7AEA2F6
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 17:49:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A6993B3128
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 15:41:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E615A1C43D80
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jun 2025 15:50:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CE172EA15B;
-	Thu, 26 Jun 2025 15:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 700632EA15B;
+	Thu, 26 Jun 2025 15:49:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QrJ1HCKG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C674oxU8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089997081E
-	for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 15:42:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6E5239E79;
+	Thu, 26 Jun 2025 15:49:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750952521; cv=none; b=O9/TBKHU9PQ54COdzDplvUSmvbqG1chr1YILfJYD01DqDKNzSS0lJZ7tZEdNtkafSKokdVH2TKSnnGejin7CR2xbV6mYqDrPtAys8mgOZ1DhZDHY1WP25S4evrtXWQVYFGOn0+1EzepPzyKnE8LxD/AIFU9MfIzz4neo++QAQ+4=
+	t=1750952985; cv=none; b=HXDm5hcbS1coWuPwPOSMKWAg1dCaIoK/aWOWXDIC529GoWOlmoKrMQMwg2UEoSKD8vGGEBp3uD2s6W15Wb1Uaqe+1tNNpBf8EjquFfY5AzIfustcB0J4fYk2MS/8ql3nA7gP27fwy1hR0RNrYezxyYM5q8onzwMQy1VZASUaqT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750952521; c=relaxed/simple;
-	bh=6CdwFCxXo2kN7RDIzZgvCSNe441wFFhUIkA4OlmkGw8=;
+	s=arc-20240116; t=1750952985; c=relaxed/simple;
+	bh=wUoxo5fF103mDusSsZddTzXvkhswDVmVoqAhVlekVxY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R2Dwldkgjjkfcsy86u369Wi1aKpEMo+LsVQmSGfwoB214BhAL+7pFg2yNUTE+P4dxFb3oZyeLr0HH8DxvR1rV21WyZktCbmMrrt5AADRMwHBA9G6s9QtvwnruE8GKZJr8fqgDOLDyBM3Nvn0YZa02hCRZLiCMrGwZ0FwkhE2+Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QrJ1HCKG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65A99C4CEEB;
-	Thu, 26 Jun 2025 15:42:00 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=G3H4m4GH2eyMi0hQIsJCerWXZ2RMmKIYKFQqmzpkdY60QfvWaSRQCXcyht05H9Nw3yuGYDaJsJ+H+7KXInJnTgd85D9JPJ1Yo30Khtl7HmnY1VtrNSqO13S+6otXl3rAXLvlKbYPlEyQG+bzYv7lKL8K2JN9+LrEUZW01uWihBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C674oxU8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E87EEC4CEEB;
+	Thu, 26 Jun 2025 15:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750952520;
-	bh=6CdwFCxXo2kN7RDIzZgvCSNe441wFFhUIkA4OlmkGw8=;
+	s=k20201202; t=1750952984;
+	bh=wUoxo5fF103mDusSsZddTzXvkhswDVmVoqAhVlekVxY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QrJ1HCKG/1ZWc2UJQCAG3a1Dibphb+SZeGrn9rA/+sKbMTvVtz8Xm+0NJUijtdSPI
-	 Af7UbCBzTiBsI8barOse8wnQhooJrIdOKF+OSBuDhaPwSv0mN15v+9Dheh/xeC37H1
-	 ygH4cLgI/Lt91yjUlzT4RqIwIouCZVw34w5/etFksQ6caaDw7rdcFbpgDq8AyCDhWy
-	 44PS8PqLteMY2NlEunqDu/sjC18wXRA+PsG5Wh8pdKU+EGzuGkL65qGImtA5Ae3fPv
-	 R8Y4cMz0LS94AnQwNOGQ9qZyV669oOWf6Q5AC3YlG8iNdqE+A/YIVqn2jkankWk7uS
-	 Zm5RBQLbsOivg==
-Date: Thu, 26 Jun 2025 09:41:58 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: "Jozef Matejcik (Nokia)" <jozef.matejcik@nokia.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: pci_probe called concurrently in machine with 2 identical PCI
- devices causing race condition
-Message-ID: <aF1qRv0XlT4EDN-Y@kbusch-mbp>
-References: <AS4PR07MB85085806C2BF5CC518D52808937AA@AS4PR07MB8508.eurprd07.prod.outlook.com>
- <aF04PxJ5WqIA7Je0@wunner.de>
- <AS4PR07MB8508CA1516E932B243AC5139937AA@AS4PR07MB8508.eurprd07.prod.outlook.com>
- <aF08kFNy8qrI8LvD@wunner.de>
+	b=C674oxU81gzaEQ7Q9DbJlCIPeEVFqscjKGsNq603qP/2wpJ68jIiyAPqFqOs5mw4a
+	 XYn9S9/TAGYFnPouO49k8OWF6XJNxhCE7cL2B7qBGe/f8II3QymJY+IuNYBRVboq9M
+	 nlfd1/KPDaBVOY26vE7qOWAPeqjk7n8wxHyrTl9hyTjL0APKoXs8PZQiSckEEsCr4W
+	 /WGJ8CQkvIyvCYcEQljCJKG82pObP0y9Os412QJTCR8IfMv0fW6K04CdQCGRhp+sKD
+	 NeFQ1YJmSKbcesZxXpKI8FPiZ4Ne0JhaSMIuDPqGW3h3t4RDrwhDiVhKpHNMvJVhv5
+	 Vg9RFq8E/+cRg==
+Date: Thu, 26 Jun 2025 17:49:38 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
+	aliceryhl@google.com, tmgross@umich.edu, david.m.ertman@intel.com,
+	ira.weiny@intel.com, leon@kernel.org, kwilczynski@kernel.org,
+	bhelgaas@google.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] rust: devres: implement register_release()
+Message-ID: <aF1sEnxdJaVeBZ3x@cassiopeiae>
+References: <20250624215600.221167-1-dakr@kernel.org>
+ <20250624215600.221167-5-dakr@kernel.org>
+ <DAWED7BIC32G.338MXRHK4NSJG@kernel.org>
+ <aF0rzzlKgwopOVHV@pollux>
+ <aF1TEuotIIwcKODM@cassiopeiae>
+ <DAWJL7B9577H.3HY4CULLAHGCU@kernel.org>
+ <aF1oA8jYZGjTs9U4@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,18 +68,59 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aF08kFNy8qrI8LvD@wunner.de>
+In-Reply-To: <aF1oA8jYZGjTs9U4@cassiopeiae>
 
-On Thu, Jun 26, 2025 at 02:26:56PM +0200, Lukas Wunner wrote:
-> On Thu, Jun 26, 2025 at 12:20:48PM +0000, Jozef Matejcik (Nokia) wrote:
-> > However, I think this can happen in any machine with 2 identical
-> > PCI devices, because as far as I know, existing PCI drivers usually
-> > do not assume that probe function can be called from multiple threads.
+On Thu, Jun 26, 2025 at 05:32:25PM +0200, Danilo Krummrich wrote:
+> On Thu, Jun 26, 2025 at 04:41:55PM +0200, Benno Lossin wrote:
+> > On Thu Jun 26, 2025 at 4:02 PM CEST, Danilo Krummrich wrote:
+> > > On Thu, Jun 26, 2025 at 01:15:34PM +0200, Danilo Krummrich wrote:
+> > >> On Thu, Jun 26, 2025 at 12:36:23PM +0200, Benno Lossin wrote:
+> > >> > Or, we could change `Release` to be:
+> > >> > 
+> > >> >     pub trait Release {
+> > >> >         type Ptr: ForeignOwnable;
+> > >> > 
+> > >> >         fn release(this: Self::Ptr);
+> > >> >     }
+> > >> > 
+> > >> > and then `register_release` is:
+> > >> > 
+> > >> >     pub fn register_release<T: Release>(dev: &Device<Bound>, data: T::Ptr) -> Result
+> > >> > 
+> > >> > This way, one can store a `Box<T>` and get access to the `T` at the end.
+> > >> 
+> > >> I think this was also the case before? Well, it was P::Borrowed instead.
+> > >> 
+> > >> > Or if they store the value in an `Arc<T>`, they have the option to clone
+> > >> > it and give it to somewhere else.
+> > >> 
+> > >> Anyways, I really like this proposal of implementing the Release trait.
+> > >
+> > > One downside seems to be that the compiler cannot infer T anymore with this
+> > > function signature.
+> > 
+> > Yeah... That's a bit annoying.
+> > 
+> > We might be able to add an associated type to `ForeignOwnable` like
+> > `Target` or `Inner` or whatever.
 > 
-> That can happen all the time and it would be a bug in the driver
-> if it caused issues.
+> I think we already have `PointedTo` [1]? But I remember that I've seen a patch
+> to remove it again [2].
 
-Wait, is that true? I thought that would only happen if the driver
-indicated probe_type PROBE_PREFER_ASYNCHRONOUS. The default appears to
-still be the same as PROBE_FORCE_SYNCHRONOUS.
+Well, not exactly, I think. Arc, for instance, defines PointedTo as ArcInner<T>.
+So, I think we indeed want something different.
+
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/rust/kernel/types.rs#n32
+> [2] https://lore.kernel.org/all/20250612-pointed-to-v3-1-b009006d86a1@kernel.org/
+> 
+> > Then we could do:
+> > 
+> >     pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
+> >     where
+> >         P: ForeignOwnable,
+> >         P::Inner: Release<Ptr = P>,
+> > 
+> > ---
+> > Cheers,
+> > Benno
 
