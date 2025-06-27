@@ -1,133 +1,137 @@
-Return-Path: <linux-pci+bounces-30927-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30928-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C14A5AEB999
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 16:18:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 929F2AEB9A8
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 16:20:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 870A01C486EC
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 14:19:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A72F644B4A
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 14:20:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5392C2E2664;
-	Fri, 27 Jun 2025 14:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5E9A2E266F;
+	Fri, 27 Jun 2025 14:20:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMFvBsxh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wj5HvjzU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059372E2652;
-	Fri, 27 Jun 2025 14:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B172E2EF4
+	for <linux-pci@vger.kernel.org>; Fri, 27 Jun 2025 14:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751033928; cv=none; b=GefjOijEj2Ek8NvH9Vpn2M+N+li3JpaCu0uDaGiQ/XXEOI71ZtithJDEUxkorb5mkUmCxPoRUhS2nTNxUgfE14QdFQfj+EO01QP+5/fKFSb/L/xUNHu9lteiPaOShq+11QTMTA0q6cnCql+zPeTE/pGO5a48jqMF5EpyDBuTHEY=
+	t=1751034016; cv=none; b=O44RNVUb6NQVGOAwlPFy3/dcuXQaeRPCr3CO5YIH0pAS1mS/fL5lj+FHxaefhNexnxd2nmC2ePwzhfC4EyuxVo0sT8eoWj9w6XSdEXkGaDgbQGxyXXgdFX7xRCGWguHDXzGqdp/Ww6DF9otQ2wuE1XhR3ymrSvL1ZzuhPU7FY7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751033928; c=relaxed/simple;
-	bh=TaiQW3c+noRyzXQvsLousUbpwR3hV32c+YniAy5VZUU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uFNbUlpVuEtVIuomElPS/dw9NID2yPJPxjq14B6Nr8hJRMbxl/RBDabziUP2hc8oZrCdB+BSaP2l5e0owXMHlQhwDkj4GrR2xF3/Ty9Upf/aS2d8pgtLA3PhF0PP5bEdItn2T5YsxaU7MEqz5+rAsL+92jBgLIt49yYMlDxOj24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMFvBsxh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA384C4CEE3;
-	Fri, 27 Jun 2025 14:18:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751033927;
-	bh=TaiQW3c+noRyzXQvsLousUbpwR3hV32c+YniAy5VZUU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JMFvBsxh25QJ2POJpnOoSHcIiORn+haen7v9wCSZAqbRWEWR8rp168/xP5JajxRet
-	 ABSMKTjuxgMOqYpqxHoeQAIY1ZO/1qnNPS1mZwEAmC6ZGJ+7oPy6aIr9chIwI3mMzx
-	 1LwQNtcBxXDKjAqya0P7p7/blBNf1PY42VO6WrZJIuY+dkKjUMVR2n25EtXJNAYBR9
-	 AXfHsrTv4FYdFOr/WwX1bKOOoWsBgt46qpWbERDFD3NLDjmQReTG1ZBzJlC2KUu2aT
-	 lgwUVSvQu451wB1EMcCCl1itmRUz/iFxcC0/eMTNQtR8zSTF1A1AGP4bgUwFaT/d6Y
-	 QSo2Oo2lIP7sA==
-Date: Fri, 27 Jun 2025 09:18:46 -0500
-From: Rob Herring <robh@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 02/28] driver core: Rename get_dev_from_fwnode()
- wrapper to get_device_from_fwnode()
-Message-ID: <20250627141846.GA3234475-robh@kernel.org>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-3-herve.codina@bootlin.com>
+	s=arc-20240116; t=1751034016; c=relaxed/simple;
+	bh=jcgyQ/Wb57DmrTUIgukktQYvJFH3Ks7NSRCZ88mZKhA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mqlNWaEGbYnRLSxrv/TkRWNhJc/cBqcOOP7E4lk04LGUYe3x36F6byws0roQRNCYV5e3es+90qcMyA/dwbSI4youYJAx7A/HFrbcrYChazBGbgWP4Cu23wAyvlIYBHzpkJyC6dMANWYNatzMNNOnDA+cif8Y5v4fZRM3lr34qSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wj5HvjzU; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4536b8c183cso13745765e9.0
+        for <linux-pci@vger.kernel.org>; Fri, 27 Jun 2025 07:20:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751034013; x=1751638813; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ewNn7TbsI9nptiuY+MPrd3pQGAHs48Wda8epNcT5ov8=;
+        b=Wj5HvjzUmphSjCjlc0YseYt6jUPSbqWIMrqtwWUI/5HIotpAQ5pt21iGxJbOMFyqVT
+         G3Xh3aXYpGAGNiYbyFrUvGwjsHw+7EK3zpGnhpEH1/bR3rQWspqs8Ln8mGIRKoBETcWZ
+         5XasAQg/R9cYqnGnuUTyCjVvtrPHjHXHDkQdV3SbsrsihDv6LLcmrzNj8hRktupShbrw
+         YnM3om895qAQLG6KU4/mS+6JglDdw3cyWr12PTVLVMj3AE+Q1/+qkxMc0m0LarI2PQRa
+         sKhuYMW2JqxqFOMAd+R09BNqS2hD6U/40WVJnCuFgqC4MJ0EqrPuX0N6ZhsMtP8pLEru
+         ofiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751034013; x=1751638813;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ewNn7TbsI9nptiuY+MPrd3pQGAHs48Wda8epNcT5ov8=;
+        b=ciFuIf74xYYIlJnqhRlTAkCe+TkHr6a/gfXYMo15MYab/XjTuXUwpRAu0Jq1MgEmrW
+         38EKRBGFcggJ20c4qqScNJzYXZkk+9C6Yxf3Z3iyqTfltxcJ9uH4d9GUfxZISeNMMA9Y
+         oHgEDRsrDYBE4CoY/8RDFT6gAzWToMWpUb1/8tznFxr2fqrJ28v578IOF02tS5bJ84rv
+         D/N7b1VULbJ9s4qh+bNrnBXIlkQx4eLL17h9M10xLc6vBlEzrVNKmdC0C6PNMQ/tpppW
+         mEg5e3fE/diIREWn/u86o5HxgqVBObhTP0uyNDlUUi12+M+L+8WRW+V316Y8lempsypV
+         uehQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTb1094PJWjL6PraT/C1v7RFmdtre1QzwYrQhAwJVh9r8TlibfYFdyWKa09s7PF5bVIgz28VThXfs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAZMPBLKuN2cddHcwGXlWMQalMH+p/J4dcZaq4h+sbU+ajWEA2
+	OUThKeiwsRWbc/BMnQUXsKxPbZ6hxVPKGUcOmXkmo4F8l3i+g2Q9JzngJK+Vl/WhalyfIlOnf+h
+	vKKvPwPxTcOnrNav0ghRoIrVLnPtzCHKaXpX5d9ip
+X-Gm-Gg: ASbGnctItrWarwqnoXynkykMuDEYmhIi0oe5thrPC5xfdgS5eI7wbzzBnqM+j1CFhdm
+	XSZfZBh6t1CH95CetUzY/prDJPJ+4oRhVLJ59SB9jJAVrvV0bm0Y1PPb0z6wm6yWqwFCpjMGBuV
+	QiemiaOAMAQrhi4pcfl4PQVtM7YPxE1fHU7rhuguov0NV+
+X-Google-Smtp-Source: AGHT+IGGHWkxWyyUt6W5NvWAowE9TgOpr1q1dTjlOVA298j2/3hVnCN4kkLIkapxhylrsGEkNu9XQ0BMWNlolyX/fns=
+X-Received: by 2002:a05:600c:8b35:b0:453:79e8:e92d with SMTP id
+ 5b1f17b1804b1-4538897ac42mr78218735e9.5.1751034013197; Fri, 27 Jun 2025
+ 07:20:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613134817.681832-3-herve.codina@bootlin.com>
+References: <20250612-pointed-to-v3-0-b009006d86a1@kernel.org>
+In-Reply-To: <20250612-pointed-to-v3-0-b009006d86a1@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 27 Jun 2025 16:20:00 +0200
+X-Gm-Features: Ac12FXyulcsSB1OX5HOWOJW9F1TKemz6x-0C4Ue0kt788UFAeHm37sy4APARLhw
+Message-ID: <CAH5fLghdgP7aBBv3aMrvWP3sfRjM_cc72Wsp=CZczh9dfem3Ow@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] rust: improve `ForeignOwnable`
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 03:47:42PM +0200, Herve Codina wrote:
-> get_dev_from_fwnode() calls get_device() and so it acquires a reference
-> on the device returned.
-> 
-> In order to be more obvious that this wrapper is a get_device() variant,
-> rename it to get_device_from_fwnode().
-> 
-> Suggested-by: Mark Brown <broonie@kernel.org>
-> Link: https://lore.kernel.org/lkml/CAGETcx97QjnjVR8Z5g0ndLHpK96hLd4aYSV=iEkKPNbNOccYmA@mail.gmail.com/
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Saravana Kannan <saravanak@google.com>
-> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+On Thu, Jun 12, 2025 at 3:11=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
+>
+> This series improves `ForeignOwnable` by:
+>
+>  - changing the way we assert pointer allignment,
+>  - improving the safety requirements of the trait.
+>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 > ---
->  drivers/base/core.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index cbc0099d8ef2..36ccee91ba9a 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -1881,7 +1881,7 @@ static void fw_devlink_unblock_consumers(struct device *dev)
->  	device_links_write_unlock();
->  }
->  
-> -#define get_dev_from_fwnode(fwnode)	get_device((fwnode)->dev)
-> +#define get_device_from_fwnode(fwnode)	get_device((fwnode)->dev)
+> Changes in v3:
+> - Remove more instances of absolute paths to `ffi` types.
+> - Reword safety requirements in terms of function guarantees.
+> - Add a patch to restrict use of null pointers with `ForeignOwnable`.
+> - Link to v2: https://lore.kernel.org/r/20250610-pointed-to-v2-1-fad8f92c=
+f1e5@kernel.org
+>
+> Changes in v2:
+> - Replace qualified path with `use` for `crate::ffi::c_void`.
+> - Fix a typo and rephrase docs for `ForeignOwnable`.
+> - Reorganize docs for `ForeignOwnable::into_foreign`.
+> - Link to v1: https://lore.kernel.org/r/20250605-pointed-to-v1-1-ee1e2629=
+12cc@kernel.org
+>
+> ---
+> Andreas Hindborg (2):
+>       rust: types: add FOREIGN_ALIGN to ForeignOwnable
+>       rust: types: require `ForeignOwnable::into_foreign` return non-null
+>
+>  rust/kernel/alloc/kbox.rs | 41 +++++++++++++++++++++++------------------
+>  rust/kernel/miscdevice.rs | 10 +++++-----
+>  rust/kernel/pci.rs        |  2 +-
+>  rust/kernel/platform.rs   |  2 +-
+>  rust/kernel/sync/arc.rs   | 24 +++++++++++++-----------
+>  rust/kernel/types.rs      | 46 +++++++++++++++++++++++------------------=
+-----
+>  rust/kernel/xarray.rs     |  9 +++++----
+>  7 files changed, 71 insertions(+), 63 deletions(-)
 
-In patch 3, you add the same define. Is there some reason to not move it 
-to a header?
-
-Rob
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
