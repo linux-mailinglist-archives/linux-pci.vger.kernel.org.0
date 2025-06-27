@@ -1,236 +1,161 @@
-Return-Path: <linux-pci+bounces-30934-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30935-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3646AEBC15
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 17:37:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E4381AEBC6C
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 17:51:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 930D016EEB7
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 15:37:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E40F170CB2
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 15:51:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E142F2E9EBA;
-	Fri, 27 Jun 2025 15:37:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7641F2E8E05;
+	Fri, 27 Jun 2025 15:51:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sa8K2E/e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pXr6Ef0E"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4C72E9EA1;
-	Fri, 27 Jun 2025 15:37:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB4B171C9;
+	Fri, 27 Jun 2025 15:51:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751038647; cv=none; b=e5F122OolxuDqFUFT1ZBANUm0OowKA5LU68Tgt2wtnyHNIDVpiR7rOkND/PW2rKPaclzYOXLhKSWSZJ/687KkQDFa6Y6zSE4tiOwgdxQy7YaP38NJdcJc2tRZzqbdO6eiC6HXJnCjo++2om4Q8z9J7sjLU8z7P9Ge9XTzeLDsk8=
+	t=1751039497; cv=none; b=Fq272AjbPnM1HRVNB94YEWpboSRkXqo9pNh8HqZ1/bz2g5Ay2RVIcM6uXH+b+ooEyd7cJJfQHphM9lpuAbzI5oDeJN3qoVlSq+1LYcSdzQJpWseIFX45pXbumfxmrnNumECzi/cMNAyLqIlgW9LCLr9RHwPSh6KpiuNi9V7EvQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751038647; c=relaxed/simple;
-	bh=7b0S+xBwIa7igq8QUYqdr4evJcTqCm38nHadXrYRYbE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IYcrcv3tvt4w8apimGRr4nWELhzDpW/Diiy3zZulyLdcAeGrnVMBdclGTxD5AlLLzCmWadbnzCkgd9ja8/SLkohgEMNIqTWwcMHj7iP0jhRZRziUUO29gOmpi/iKoqWJ36yTb+ah8dUEV5Jap707XYYyulcf/LJO6tTVvfNrK74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sa8K2E/e; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F1FC4CEF1;
-	Fri, 27 Jun 2025 15:37:24 +0000 (UTC)
+	s=arc-20240116; t=1751039497; c=relaxed/simple;
+	bh=dBajdsA/Qa7LcDIvcw0Z/OjuZVFOCfMxd181T0knkJw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=juTybjNySEK72Xj8z/QY5EeUlrV/S+qmEqcEN/36ILPiIG+qjc+c19nNKxN2iWp/ONw943tqlXjJg2rQ/+eijHU1lia+nkst2Gz+FIoZXWEWSEvTaAgv7DcTEwGdCcBGKC3wBlVKOqvd/KdEvdCWLOLiv0t8EOvlA8uxCVpezBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pXr6Ef0E; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BE7AC4CEE3;
+	Fri, 27 Jun 2025 15:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751038647;
-	bh=7b0S+xBwIa7igq8QUYqdr4evJcTqCm38nHadXrYRYbE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sa8K2E/eVZkHmeMbCBPct2ZYkNYa/FxqwSXyfxCbFDtUP9fiZRsmnY0oukRkr/mDs
-	 9jEK7RqmntSL73on8iHlfh92MC3dbU2zdMRonHV2mOEkwJqx2NdBpv1ZdTJ67xqbBT
-	 sDxqTRWI0JoSV2gQYnPZYQ3AC3MC9jqMrGGqUqk7BNjHvQfpcbMBD3cQ0J7y/zXNVe
-	 fBzKvHzfLOg/D46POIB9nLSVWDVv0bXawp5qcRnJIAmLpHg12C2nh6+68hYVcgKhJC
-	 JoOvDwpZ3yRFeLQFcPYac8ll95aOuHm/fKwF1HfyH3Cg85bH3dxwV6csRlPS4h/rj2
-	 gq7XxgrCDSGbw==
-Message-ID: <8878af70-3eb8-495b-b8df-43a10285c4f5@kernel.org>
-Date: Fri, 27 Jun 2025 10:37:23 -0500
+	s=k20201202; t=1751039494;
+	bh=dBajdsA/Qa7LcDIvcw0Z/OjuZVFOCfMxd181T0knkJw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=pXr6Ef0EoBPkb7OSCBb6uvRYd2ndTtPg6blj9ZW/5UbkhETOBkece8YO9NEo+FVhP
+	 h3pPQDW+LsSQfM4lhv3NWX73Yv0d1eLm9A5lBVxbg7Tw3c96Uvqlg7BdEMLqpuJUUY
+	 mJBtZYLO4mLCH93sLrZeEsI/W3whKfvavaASMNRAArVdNS4/5KfMd4RRoIXrQVNpvC
+	 JyOo1Gl18U1TOfK/autsMTGmkfsgVuyegZN/QGfwg250sep15aNPU9EguWIHnJVtAO
+	 FpFGKci0ruSM68jeVVZ16VJZAQUfe59YwMrRePs93we3I7RMwuW9jq+e6Yq7mTEaNV
+	 EF1NlnJrJw0bQ==
+Date: Fri, 27 Jun 2025 10:51:33 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
+	Vipin Sharma <vipinsh@google.com>,
+	Aaron Lewis <aaronlewis@google.com>
+Subject: Re: [RFC PATCH] PCI: Support Immediate Readiness on devices without
+ PM capabilities
+Message-ID: <20250627155133.GA1669946@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 9/9] PCI: Add a new 'boot_display' attribute
-To: Thomas Zimmermann <tzimmermann@suse.de>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Lukas Wunner <lukas@wunner.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
- Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
- "open list:SOUND" <linux-sound@vger.kernel.org>,
- Daniel Dadap <ddadap@nvidia.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250627043108.3141206-1-superm1@kernel.org>
- <20250627043108.3141206-10-superm1@kernel.org>
- <41587824-4a05-4ead-b24c-4729007cd663@suse.de>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <41587824-4a05-4ead-b24c-4729007cd663@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aF3HDIzpe3vnpBdj@google.com>
 
-On 6/27/2025 2:07 AM, Thomas Zimmermann wrote:
-> Hi
+On Thu, Jun 26, 2025 at 03:17:48PM -0700, Sean Christopherson wrote:
+> On Wed, Jun 25, 2025, Bjorn Helgaas wrote:
+> > On Tue, Jun 24, 2025 at 10:16:37AM -0700, Sean Christopherson wrote:
+> > > +void pci_pm_init(struct pci_dev *dev)
+> > > +{
+> > > +	u16 status;
+> > > +
+> > > +	device_enable_async_suspend(&dev->dev);
+> > > +	dev->wakeup_prepared = false;
+> > > +
+> > > +	dev->pm_cap = 0;
+> > > +	dev->pme_support = 0;
+> > > +
+> > > +	/*
+> > > +	 * Note, support for the PCI PM spec is optional for legacy PCI devices
+> > > +	 * and for VFs.  Continue on even if no PM capabilities are supported.
+> > > +	 */
+> > > +	__pci_pm_init(dev);
+> > >  
+> > >  	pci_read_config_word(dev, PCI_STATUS, &status);
+> > >  	if (status & PCI_STATUS_IMM_READY)
+> > >  		dev->imm_ready = 1;
+> > 
+> > I would rather just move this PCI_STATUS read to somewhere else.  I
+> > don't think there's a great place to put it.  We could put it in
+> > set_pcie_port_type(), which is sort of a grab bag of PCIe-related
+> > things.
+> > 
+> > I don't know if it's necessarily even a PCIe-specific thing, but it
+> > would be unexpected if somebody made a conventional PCI device that
+> > set it, since the bit was reserved (and should be zero) in PCI r3.0
+> > and defined in PCIe r4.0.
+> > 
+> > Maybe we should put it in pci_setup_device() close to where we call
+> > pci_intx_mask_broken()?
 > 
-> Am 27.06.25 um 06:31 schrieb Mario Limonciello:
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> On systems with multiple GPUs there can be uncertainty which GPU is the
->> primary one used to drive the display at bootup. In order to disambiguate
->> this add a new sysfs attribute 'boot_display' that uses the output of
->> video_is_primary_device() to populate whether a PCI device was used for
->> driving the display.
->>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->> v6:
->>   * Only show for the device that is boot display
->>   * Only create after PCI device sysfs files are initialized to ensure
->>     that resources are ready.
->> v4:
->>   * new patch
->> ---
->>   Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
->>   drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++++++
+> Any reason not to throw it in pci_init_capabilities()?  That has the
+> advantage of minimizing the travel distance, e.g. to avoid
+> introducing a goof similar to what happened with 4d4c10f763d7 ("PCI:
+> Explicitly put devices into D0 when initializing").
+
+The only reason I suggested doing it earlier was to enable a potential
+pci_find_capability() optimization.  But this could easily be moved
+if/when that happens, so I think the patch below would be fine.
+
+> E.g. something silly like this?  Or maybe pci_misc_init() or so?
 > 
-> The code looks good. Just one more question: could this be added 
-> independently from the PCI bus (at a reasonable cost)? There are other 
-> busses that can host the boot display. Alternatively, we'd add this 
-> attribute per bus as needed.
-
-It depends upon the underlying hardware implementation.  On x86 it's 
-always PCI and so I realized there is a requirement that PCI resources 
-are setup before screen_info event works.
-
-That is the v5 version of this patch would have had a potential race 
-condition with userspace where boot_display didn't always show '1' if 
-userspace read it too quickly.
-
-Other architecture's hardware implementation might have similar problem.
-
-So in summary I think it would be better to do it per-bus.  If we 
-realize there is indeed code duplication we can always move this to a 
-common helper at that point.
-
-> 
-> Best regards
-> Thomas
-> 
->>   2 files changed, 54 insertions(+)
->>
->> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ 
->> ABI/testing/sysfs-bus-pci
->> index 69f952fffec72..8b455b1a58852 100644
->> --- a/Documentation/ABI/testing/sysfs-bus-pci
->> +++ b/Documentation/ABI/testing/sysfs-bus-pci
->> @@ -612,3 +612,11 @@ Description:
->>             # ls doe_features
->>             0001:01        0001:02        doe_discovery
->> +
->> +What:        /sys/bus/pci/devices/.../boot_display
->> +Date:        October 2025
->> +Contact:    Linux PCI developers <linux-pci@vger.kernel.org>
->> +Description:
->> +        This file indicates the device was used as a boot
->> +        display. If the device was used as the boot display, the file
->> +        will be present and contain "1".
->> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
->> index 268c69daa4d57..cc766461de1da 100644
->> --- a/drivers/pci/pci-sysfs.c
->> +++ b/drivers/pci/pci-sysfs.c
->> @@ -30,6 +30,7 @@
->>   #include <linux/msi.h>
->>   #include <linux/of.h>
->>   #include <linux/aperture.h>
->> +#include <asm/video.h>
->>   #include "pci.h"
->>   #ifndef ARCH_PCI_DEV_GROUPS
->> @@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
->>       NULL,
->>   };
->> +static ssize_t boot_display_show(struct device *dev, struct 
->> device_attribute *attr,
->> +                 char *buf)
->> +{
->> +    return sysfs_emit(buf, "1\n");
->> +}
->> +static DEVICE_ATTR_RO(boot_display);
->> +
->>   static ssize_t boot_vga_show(struct device *dev, struct 
->> device_attribute *attr,
->>                    char *buf)
->>   {
->> @@ -1246,6 +1254,37 @@ static int pci_create_attr(struct pci_dev 
->> *pdev, int num, int write_combine)
->>       return 0;
->>   }
->> +/**
->> + * pci_create_boot_display_file - create a file in sysfs for @dev
->> + * @pdev: dev in question
->> + *
->> + * Creates a file `boot_display` in sysfs for the PCI device @pdev
->> + * if it is the boot display device.
->> + */
->> +static int pci_create_boot_display_file(struct pci_dev *pdev)
->> +{
->> +#ifdef CONFIG_VIDEO
->> +    if (video_is_primary_device(&pdev->dev))
->> +        return sysfs_create_file(&pdev->dev.kobj, 
->> &dev_attr_boot_display.attr);
->> +#endif
->> +    return 0;
->> +}
->> +
->> +/**
->> + * pci_remove_boot_display_file - remove the boot display file for @dev
->> + * @pdev: dev in question
->> + *
->> + * Removes the file `boot_display` in sysfs for the PCI device @pdev
->> + * if it is the boot display device.
->> + */
->> +static void pci_remove_boot_display_file(struct pci_dev *pdev)
->> +{
->> +#ifdef CONFIG_VIDEO
->> +    if (video_is_primary_device(&pdev->dev))
->> +        sysfs_remove_file(&pdev->dev.kobj, &dev_attr_boot_display.attr);
->> +#endif
->> +}
->> +
->>   /**
->>    * pci_create_resource_files - create resource files in sysfs for @dev
->>    * @pdev: dev in question
->> @@ -1654,9 +1693,15 @@ static const struct attribute_group 
->> pci_dev_resource_resize_group = {
->>   int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
->>   {
->> +    int retval;
->> +
->>       if (!sysfs_initialized)
->>           return -EACCES;
->> +    retval = pci_create_boot_display_file(pdev);
->> +    if (retval)
->> +        return retval;
->> +
->>       return pci_create_resource_files(pdev);
->>   }
->> @@ -1671,6 +1716,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev 
->> *pdev)
->>       if (!sysfs_initialized)
->>           return;
->> +    pci_remove_boot_display_file(pdev);
->>       pci_remove_resource_files(pdev);
->>   }
-> 
-
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 9e42090fb108..4a1ba5c017cd 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3205,7 +3205,6 @@ void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev)
+>  void pci_pm_init(struct pci_dev *dev)
+>  {
+>         int pm;
+> -       u16 status;
+>         u16 pmc;
+>  
+>         device_enable_async_suspend(&dev->dev);
+> @@ -3266,9 +3265,6 @@ void pci_pm_init(struct pci_dev *dev)
+>                 pci_pme_active(dev, false);
+>         }
+>  
+> -       pci_read_config_word(dev, PCI_STATUS, &status);
+> -       if (status & PCI_STATUS_IMM_READY)
+> -               dev->imm_ready = 1;
+>  poweron:
+>         pci_pm_power_up_and_verify_state(dev);
+>         pm_runtime_forbid(&dev->dev);
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 4b8693ec9e4c..d33b8af37247 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2595,6 +2595,15 @@ void pcie_report_downtraining(struct pci_dev *dev)
+>         __pcie_print_link_status(dev, false);
+>  }
+>  
+> +static void pci_imm_ready_init(struct pci_dev *dev)
+> +{
+> +       u16 status;
+> +
+> +       pci_read_config_word(dev, PCI_STATUS, &status);
+> +       if (status & PCI_STATUS_IMM_READY)
+> +               dev->imm_ready = 1;
+> +}
+> +
+>  static void pci_init_capabilities(struct pci_dev *dev)
+>  {
+>         pci_ea_init(dev);               /* Enhanced Allocation */
+> @@ -2604,6 +2613,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
+>         /* Buffers for saving PCIe and PCI-X capabilities */
+>         pci_allocate_cap_save_buffers(dev);
+>  
+> +       pci_imm_ready_init(dev);        /* Immediate Ready */
+>         pci_pm_init(dev);               /* Power Management */
+>         pci_vpd_init(dev);              /* Vital Product Data */
+>         pci_configure_ari(dev);         /* Alternative Routing-ID Forwarding */
 
