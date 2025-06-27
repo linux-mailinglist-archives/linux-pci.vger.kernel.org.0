@@ -1,77 +1,79 @@
-Return-Path: <linux-pci+bounces-30883-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30884-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 508E2AEABBE
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 02:27:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0706AEABBF
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 02:27:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA2E3565941
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 00:26:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A5657564AFA
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 00:26:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DA24442C;
-	Fri, 27 Jun 2025 00:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E3A82F30;
+	Fri, 27 Jun 2025 00:27:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="dh5+9akt"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="cVlqaiR2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854732746C
-	for <linux-pci@vger.kernel.org>; Fri, 27 Jun 2025 00:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D33417BA5
+	for <linux-pci@vger.kernel.org>; Fri, 27 Jun 2025 00:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750984019; cv=none; b=LDubCa/5Al+x/Kj9IocNqrAVxLubG52h5QRZriemWd0kbgjjWM/xpoHkGVv8xyH0O5y1tMPr2X1xGa6v+4JBTg3cIgijkwS0rkcfBQSCkrlM3Sn9z/VU6xXch9OBn8sAlQi8/zzlutKtjn2KcySxDEBHmJ0zIVWmHED6Cp8rRLY=
+	t=1750984036; cv=none; b=O5Dt1aCscy6nTEYR4qD7m5oyaKvIQFE36w+3+H1/EUx6QykVIp35GF6aUmlcK/0Rn8bryy7Rhc9cqcdEQznCwhCNWq5gK76wT9MVP2zdPsdxNhxOR9e09+Az5bho3YpCEyh+7xZXl+FAfUXqZF9Xiv5VS0lzFqaavlBGmvhPj8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750984019; c=relaxed/simple;
-	bh=bW8XuuubY2X/a2mZn/cnwAi66RjpQYAzwcrrLQK7lBo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Vc21W++9OTV/pVLnXwbQTGAEfWN++m92RQWOT65xCH/KaP6QP3zC08nQGHsAEk7Au/6vyNnib1/OzkgNqi3Dy+ZuvvNfR9EGxd0q9RGUGhRTrQDMDDB7VmNxjm6mfSpN/FdCTpu1pHaKOoQH+m42aRcTc5TciRurocEzhBAs9UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=dh5+9akt; arc=none smtp.client-ip=209.85.210.175
+	s=arc-20240116; t=1750984036; c=relaxed/simple;
+	bh=LhoaiHA2QPBXXNrvl0cjxOzOIIr+jW/62VuMs62fhSU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TOQwNR1RDVet2/AqrY43kn10xrhb+0SRb0SXB5lCwCfP8HnYnV1PqGtk1kyxmxTZekZ0Hy+d5bHs4tPCeINN87aWYd2TwQXOPTTfwsSUGQECbOdNSdSEAFUkC+75NQf5MD8qXmen0C4egUrfOoq5mpsGvOhUkVdCrkzRHM6Cm6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=cVlqaiR2; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-748feca4a61so1062326b3a.3
-        for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 17:26:56 -0700 (PDT)
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-748feca4a61so1062391b3a.3
+        for <linux-pci@vger.kernel.org>; Thu, 26 Jun 2025 17:27:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1750984015; x=1751588815; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ldkpAT86jtPb4TzzI2O6HymTZgO4IclizBfQ3p2zUcE=;
-        b=dh5+9aktZ/W5+ILvRmwezmRZgEb2UrOrdK5ugn46MxIFIPZkXwhzy59mQmfDHEvSRJ
-         NAFFer5huZIVqbBvEjI1veKrBU6xOKVIdDa8VEOmIEVgLHVnxVXL9GslOlq53sw0kv4z
-         dOWRvVdHtCPFFqEHmDsUT3YvaLXIiQadA3/cAlSSetP3gAJs0IQ/yKVcACsD9fxu7MTS
-         J59oAc3RXHb9HmJ5mqCQrTTHlrTRQDqt/2y/te/HdURpfrzmBQtJFL2RQrGbyg6J2VMS
-         dbw1FlRKo6b0wTtHqGbmTGX+942uOrhbQbA5vzAfoZyPJbafBLnvHjLZ6aw8efsSMv2w
-         ts8w==
+        d=purestorage.com; s=google2022; t=1750984034; x=1751588834; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+L9ybrzvDULso9rMlfXfjb9fFb8snBfGBy7jz7olxIs=;
+        b=cVlqaiR2Ow6KsP25X3RjImu1kO3flIO+Tac92u7nv1uVQG1DSuV0fxu7PL/L8VFukz
+         4LX35Eti1eBq+RNspkmNe043HrtDGY2vEPYOCiXhf+JEBzkroFfqg4rrzlK8x6jvDp4q
+         +z6iSdg+bwKoj0CjRK5GzqkmhPYGLDIp6s0PTMQrw1lTkP8qyKdxhAxkuaktr+BxdnCX
+         6FoL3qzphmAXgN+X0ydm5RWJ+Dajzpmm21tk9j6UQviiHds72x4ggyrXQi6npbvWv65O
+         /18J8E3E+Vlw0cNK6sE78LGd2lJCulJwZHYCI4ONGJCO+ts68GQ+LrqF3/AropUCjHDV
+         sTew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750984015; x=1751588815;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ldkpAT86jtPb4TzzI2O6HymTZgO4IclizBfQ3p2zUcE=;
-        b=D+shf/D5gMzy/Sre4mb2e9RygS9umcaqLrZviFwnlPr0cqkGGlpRIdofSAx/Qo0Gvt
-         wtu2YYDS/zC7fcJAI+CJwb0f/BFNlHBHnJjttxCoouVGQ1nOugdO4nGzXtyRB5Pxjo6N
-         pnNe432/+HtOSivAZOxQExTSQ+McEJbQ7j2Yl0ln4iQYUHtTNyK1+JwOmyJ1Dj/5+nd0
-         CSrwcROKQoLJ8fmriJXBwetcWvsIp+eGC4oVtb4pr1gLXd6bx2wf+0bmFvLFo4cXoQyA
-         30UYdT4+6BcKvNiWoUFeCncjHX0/F5WedLZJMe7ot83cpMVwj88mTBAFr3l03BRZB05R
-         8OXg==
-X-Gm-Message-State: AOJu0YzNfxV6Ga16yZ3+blrrqnE/ozuqixls34OJCAK+nVN6EbhCfPCE
-	43XQ6px6Q9JlM9h/JbNx0PTbiT+anGxcKLm2i4X5SgfoJxdOoqN7JOhbWV6pOgqeY+99PoxedZr
-	aTweKE4wxy+v6mqnVAsmPIhKRUBhSwvs24NCYHHPbJt/R0E8xWYFD4KlD2QaE8XztfQuZSf2LcR
-	K9kT3lhROcDSlMPQkuB88hu0Y6A04fus56aGgCYj9OHRTi7w==
-X-Gm-Gg: ASbGncvuO8/LPZmNeBiiXy7Bjl2CJ8btjcCM7wpmo+zdf2pPLAELFcslXWE6PMk+ptX
-	RqpDcHMLWHnkazI8+CYDckyi9o9yy81WFQVX3OsOWkdvxru25rYFLkFZDSjuCy01rr3fKhsLD45
-	w91I2uUqkOIy0tYa0deHIftmexRgoU60H9yKERiP2qyMLaQ2AdQBzC47rSDVwPMtTV7Y3gXeoND
-	qGcRZP2rOWjzAhJSLowIeJwUB9Qj+yETQTuaOIo/0ISz9M/I6y5EIlK6v3rNFyDHQ/UH8QPGbvC
-	DI2Gf00sh76BZRZEzcrJ+0GtxUfX3XtIBTZU5R3QFDmEm5TWthFzYZZkeLzvE/qQhSM2jRpTRAC
-	/sMCR1RWpbXd3
-X-Google-Smtp-Source: AGHT+IHi9BsFgbDCnFPOmp7D+xy8IrWGTxXHVY3gwUpA0YlLlvtbwvq2kCqGuzWIZ/2c1exO54zWvg==
-X-Received: by 2002:a05:6a21:32a7:b0:1f5:6e00:14db with SMTP id adf61e73a8af0-220a12ab5b0mr1500358637.14.1750984015315;
-        Thu, 26 Jun 2025 17:26:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750984034; x=1751588834;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+L9ybrzvDULso9rMlfXfjb9fFb8snBfGBy7jz7olxIs=;
+        b=V8W/S9NzIRCsqTrx6saRa6EVTUnIAKkJITz4rw9KtJGDFkuvappty00xa87I9UT7we
+         EexyyTkmnpMheVXNLtEIFZIagfY6PjrdYRyVqXD32Mfsi5UF7trJ3b06DVzHdQJ6AKn2
+         Gpj4U0I2qG5EVhnGxYCTBahd82iI8tr6WG2xiK0Z8nb51JW4MQ+HqnTyzyplMVY7dy6B
+         t1AW39pMs0JfHidjXBDrNr9g5W3HkpYuxsKD62cPlbkM2Fyvts4Uo8SG4TFi0MPJhwTa
+         xMifjau+Oxl5G2JnQkf1fdPI2RhfgfXxQn2PIZ50EuXPwiAuNnIDT0NRNf0FlhCbFU6d
+         lBAQ==
+X-Gm-Message-State: AOJu0YwSvF8DiuVd9YouXofe4sXuxsWedzYKkEQGURWXlaxYoYS9Phwf
+	0JfUwkSAm5OLWOeOExzbRZQbrl+4dWELIjZSf/rmBaYjzLd5kkV/9lZK/LjTRmhvc+h3Ytb9i9s
+	7AdBOLvyNZ85OANNi+FlilCVziwP8lbxZjTvloqw8LCQTkZDZaqPn+snoMotfpjtisbw+3al3Gi
+	Ue2/W6D32CrflU+SVByaJhv8zu8/JUiSxHzLJ9NZlT5m/BGg==
+X-Gm-Gg: ASbGncsoSPXfpQLSvJLBuDpsfE+RnP52skjTlMektz8RN8J0EaEznJ8LOCGy+8Ku8N5
+	8+Sik/wkB1vvOfWIaMriQP1j99q1ELTaUAM455O0PiHlCa9xUuSikBEF0ltOns+Z8606gHRVW6Q
+	QjpAwW0duSG52HBxYPGgw8Ah8dfM7Ruolevu15UlEtauFCK0HWlfWcSzFAryl/GdyF4JbYMDOF0
+	Q9gFGBBhCSUruLncJSbj4LArlrtzNzUyWSoMds75RvlTVXIdZKJmZqt6KUAugw18elnsdrIUvL7
+	GZNKL7tEVhfYlJsLZGCyDUm1hNXMjPVdx9EnxRnd7NlrpgZ/cHsrilluQATomSrz8gulsEX2eUL
+	ngY1gQgt24/p9
+X-Google-Smtp-Source: AGHT+IGAOpkiF6fZLeeKyRvLRShXnirVeewyMyJja19yxBEe0SFzTXRtF8dzSPuJEJjocawy/XcXmA==
+X-Received: by 2002:a05:6a00:a07:b0:73e:10ea:b1e9 with SMTP id d2e1a72fcca58-74af6ebae86mr1484166b3a.6.1750984033483;
+        Thu, 26 Jun 2025 17:27:13 -0700 (PDT)
 Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-74af56ce9f3sm769330b3a.122.2025.06.26.17.26.54
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-74af56ce9f3sm769330b3a.122.2025.06.26.17.27.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 17:26:54 -0700 (PDT)
+        Thu, 26 Jun 2025 17:27:13 -0700 (PDT)
 From: Matthew W Carlis <mattc@purestorage.com>
 To: linux-pci@vger.kernel.org
 Cc: bhelgaas@google.com,
@@ -80,10 +82,12 @@ Cc: bhelgaas@google.com,
 	msaggi@purestorage.com,
 	sconnor@purestorage.com,
 	Matthew W Carlis <mattc@purestorage.com>
-Subject: [PATCH 0/1] PCI: pcie_failed_link_retrain() return if dev is not ASM2824
-Date: Thu, 26 Jun 2025 18:26:50 -0600
-Message-ID: <20250627002652.22920-1-mattc@purestorage.com>
+Subject: [PATCH 1/1] PCI: pcie_failed_link_retrain() return if dev is not ASM2824
+Date: Thu, 26 Jun 2025 18:26:51 -0600
+Message-ID: <20250627002652.22920-2-mattc@purestorage.com>
 X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250627002652.22920-1-mattc@purestorage.com>
+References: <20250627002652.22920-1-mattc@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,94 +97,62 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-  I have reached out several times about issues caused by the
-pcie_failed_link_retrain() quirk. Initially there were some additional changes
-that we made to try and reduce the occurrences, but I have continued to
-observe issues where hot-plug slots end up at Gen1 speed when they should not
-have been or the quirk invoked when the link is not actually training at all.
-Realistically speaking this quirk is a large regression to hot-plug
-functionality in the kernel & therefore I am submitting this patch to restrict
-the quirk to the ASMedia device where the LTSSM problem was actually observed
-in the first place.
-  The comment above the quirk states that the bad behavior was observed when the
-Asmedia ASM2824 switch was upstream of some other device. Then further asserts
-that the issue could in theory happen if the ASM2824 was downstream &
-therefore I believe this is why it was concluded that the quirk should be
-invoked on any device. i.e If the ASM2824 is the downstream device then we
-could not use its device ID to trigger the quirk action.
-  This is flawed in the sense that it was not actually observed and may not even
-be an actual configuration anywhere in any device. It very well may not be the
-case that ASM2824 could have this issue when it is the downstream device
-because the issue was never root caused as far as I can tell & there is no
-analyzer trace. The author had a noble goal, but it seems quite difficult to
-capture the correct trigger & sequence of actions for every device considering
-we're trying to address an issue beyond compliance with the spec afaik.
+  The pcie_failed_link_retrain() was added due to a behavior observed with
+a very specific set of circumstances which are in a comment above the
+function. The "quirk" is supposed to force the link down to Gen1 in the
+case where LTSSM is stuck in a loop or failing to train etc. The problem
+is that this "quirk" is applied to any bridge & it can often write the
+Gen1 TLS (Target Link Speed) when it should not. Leaving the port in
+a state that will result in a device linking up at Gen1 when it should not.
+  Incorrect action by pcie_failed_link_retrain() has been observed with a
+variety of different NVMe drives using U.2 connectors & in multiple different
+hardware designs. Directly attached to the root port, downstream of a
+PCIe switch (Microchip/Broadcom) with different generations of Intel CPU.
+All of these systems were configured without power controller capability.
+They were also all in compliance with the Async Hot-Plug Reference model in
+PCI Express® Base Specification Revision 6.0 Appendix I. for OS controlled
+DPC Hot-Plug.
+  The issue appears to be more likely to hit to be applied when using
+OOB PD (out-of band presence detect), but has also been observed without
+OOB PD support ('DLL State Changed' or 'In-Band PD').
+  Powering off or power cycling the slot via an out-of-band power control
+mechanism with OOB PD is extremely likely to hit since the kernel would
+see that slot presence is true. Physical Hot-insertion is also extremly
+likely to hit this issue with OOB PD with U.2 drives due to timing
+between presence assertion and the actual power-on/link-up of the NVMe
+drive itself. When the device eventually does power-up the TLS would
+have been left forced to Gen1. This is similarly true to the case of
+power cycling or powering off the slot.
+  Exact circumstances for when this issue has been hit in a system without
+OOB PD due hasn't been fully understood to due having less reproductions
+as well as having reverted this patch for this configurations.
 
-  In my testing I have encountered alarming rates of the quirk being invoked
-when it should not be invoked & frequently degrading a link that would have
-otherwise trained to full speed/width. The impact to hot-plug reliability is
-observed to be extreme & therefore we believe cannot be justified to be
-broadly applied. In the case of hot-insert the rate of being incorrectly forced
-to Gen1 has been observed to be as high as 15% with some U.2 NVMe drives.
-  It has been observed in several different system configurations with several
-different U.2 NVMe drives from different vendors. All of the systems that we
-have reproduced this issue on comply with PCI Express® Base Specification
-Revision 6.0 Appendix I. Async Hot-Plug Reference Model for OS controlled DPC
-or are very near to it. None of the systems I have tested implement Power
-Controller capability.
-  The largest occurrence of this issue has been observed on systems with OOB PD
-(out-of-band presence detect), but it has also been observed in systems that
-do not have OOB PD (Using Inband-PD or DLL State Changed).
-  Actions likely to trigger the condition where the quirk forces the link to
-Gen1 include physical hot-insert, slot power cycle, slot power on, toggle of
-fundamental reset. By observation I believe there are several timing hazards
-with DPC especially when using EDR. The expectation by DPC that the link should
-recover before returning from DPC handling work is additionally a questionable
-expectation in the case of a port being Hot Plug capable. Further, it appears
-that the quirk can be invoked two times by the DPC driver. In the case of not
-using HotPlug- with DPC it appears even more likely for invocation of the quirk
-due to different handling around SDES (Surprise down error). In my mind this
-makes a very complicated set of interactions even more complicated...
+Signed-off-by: Matthew W Carlis <mattc@purestorage.com>
 
-  In the case of hot-insert it appears that the power-up sequencing of drives &
-their boot times directly contribute to the invocation of the quirk & the link
-being forced to Gen1. For example, presence interrupt comes quickly
-(first-to-mate in U.2) however the power pins are last-to-mate (ground pins
-second to mate). Therefore presence can be seen even before power-up
-sequencing in the drive is complete. If the drive powers-up, boots and the
-link becomes active just after the quirk has written TLS (target link speed)
-to Gen1 then your drive is forced to Gen1. If the sequence takes even longer
-then you would see in the log "broken device" & "retraining failed", but
-then later DLLSC would initiate the pciehp device add sequence again which
-creates extreme confusion for most readers.
-  In the case of power cycling the slot (without power controller capability)
-then there are differences between OOB-PD enabled systems vs systems using DLL
-State Change interrupts. In the case of OOB-PD the kernel will declare "Link
-Down", set the ctrl state to OFF_STATE, remove the device, but then
-immediately declare "Card present" & run down the pciehp_enable_slot() path,
-but would run into the quirk since the slot power be off & it not see the link
-train before timing out. Disabling OOB-PD & using recently deprecated
-Inband-PD avoids the trap more often since presence is synthesized by LTSSM &
-only asserted when the link is active however link degradation was still
-observed in pcie resilience torture testing. Unfortunately I don't have a
-meaningful characterization of the Inband-PD reproductions.
-  With & without HotPlug capability the quirk becomes harder to hit after
-pulling in the pci/pcie/bwctrl.c changes, but is still observable in several
-circumstances. Those being observed around the handling of DPC with and with
-EDR. The bottom line from my perspective is that even with bwctrl.c we still
-observe a significant regression in hot-plug reliability in terms of arriving
-at the correct speed. In my experience the link issue observed by the author
-of the quirk is most likely an incompatibility between specific devices
-as opposed to being something that could result from degraded link integrity or
-device again & therefore should be restricted to the particular device where
-observed.
-
-Matthew W Carlis (1):
-  PCI: pcie_failed_link_retrain() return if dev is not ASM2824
-
- drivers/pci/quirks.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
+ 100.0% drivers/pci/
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index d7f4ee634263..497e4acc52c8 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -100,6 +100,8 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
+ 	};
+ 	u16 lnksta, lnkctl2;
+ 	int ret = -ENOTTY;
++	if (!pci_match_id(ids, dev)
++		return ret;
+ 
+ 	if (!pci_is_pcie(dev) || !pcie_downstream_port(dev) ||
+ 	    !pcie_cap_has_lnkctl2(dev) || !dev->link_active_reporting)
+@@ -124,8 +126,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
+ 	}
+ 
+ 	if ((lnksta & PCI_EXP_LNKSTA_DLLLA) &&
+-	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT &&
+-	    pci_match_id(ids, dev)) {
++	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT) {
+ 		u32 lnkcap;
+ 
+ 		pci_info(dev, "removing 2.5GT/s downstream link speed restriction\n");
 -- 
 2.46.0
 
