@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-30967-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30968-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 164ECAEBFF9
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 21:33:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35625AEC007
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 21:35:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F06EB1C46875
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 19:33:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 930C93A98FC
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 19:34:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4B092EAB6C;
-	Fri, 27 Jun 2025 19:31:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB0D7205E3E;
+	Fri, 27 Jun 2025 19:35:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJ6JYnBz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aykXgHCH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885532E9743;
-	Fri, 27 Jun 2025 19:31:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C015F20A5C4;
+	Fri, 27 Jun 2025 19:35:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751052701; cv=none; b=ZKccxwItlZpQ9qXdAaFBCt9Plyutr4rpgJOg4Tdx72cXFYx6ABdOgRquMFcnM1eACpSEJqdq7Bs7pSLgC/kS8vsyA0X+eRAv6IFxVcxs563DfKrIluFUkiGDu/r4XLdxOl6NboJ1PhRGknQo0GyzhyzGV8HX/FEUv5yaKPtAo2M=
+	t=1751052911; cv=none; b=mgvK8T/mZW8RpON6I+rrVnfqq/SPZ72GZw8ja9ntsuuL+ZTlG5lYNZDVExpUbXr0r0lX97hO28paVNf4DpbK9WGoAayUfhPWllLkOj4GvJdq6Wm9JyjW8ypuJF/oPdAz2SRBivs57R3PAYnNfYEZMr2z6DEgtb5ysRPx4Q98Bd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751052701; c=relaxed/simple;
-	bh=7qJt+JZrMa7ENp/lVXjk8y8PZgvTiFRz9BX8bJrZ4Dc=;
+	s=arc-20240116; t=1751052911; c=relaxed/simple;
+	bh=KaGGXelm7CxuRTdflOr0Te0HdQDqVfIaKK0kiCSCgFg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D8qLpa4EhRMnXv4cafPCFiw2y+2FVoo1EFh3ivVEn/QtVIIhmJij+OL0iM25joh2HcwlhIaZ0+HoUuiItU6ZcZtxTs3xcrDZ7ZhwdZc3PewVcSng/zQ9LbhAhtzj9Y34PMYOKjnbZRpETIWU50edVIaorVUPjfYxbQE+YE7G7nI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJ6JYnBz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7577BC4CEE3;
-	Fri, 27 Jun 2025 19:31:37 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=V2foMYpu83xGh00uE1WGt2Me7H3jYl8v48pKcuAMz8AiO54QpqeGcM1lpBWdVN9OcAtWe1J899in+LMW2roRZ3W7jJZck6wO0YoJ9DRewJdhq1N31zJFCB/t9j9U0J1RN2EC+/bWltYsnEQr/Go532+NS2QCra43w7ECNkG8oWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aykXgHCH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BD9C4CEE3;
+	Fri, 27 Jun 2025 19:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751052701;
-	bh=7qJt+JZrMa7ENp/lVXjk8y8PZgvTiFRz9BX8bJrZ4Dc=;
+	s=k20201202; t=1751052911;
+	bh=KaGGXelm7CxuRTdflOr0Te0HdQDqVfIaKK0kiCSCgFg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EJ6JYnBzP5xDUEux438qdxDuNACuYgYIF9OmRH+NiuVhMLI7YKevewJLF+PpswSm7
-	 ahkXL8PRgfHqvyh7pWw3PgZ9P+xllqrO/igMdCveW88bSkHX3lT2ys3octO9ciq0ZV
-	 fE/agIWxep8+U7OpcT3Jbv1XbHAv/LtRejpGoQUu8pLfwBBaGP8pqLGCH64RfuYbgU
-	 MPPtbtnGjYjtyEDGdwLb0PC5st5P0yj50KlbgC8gBnIA/c/UpvBt6IBSYVWZf/lu8x
-	 JBoq3in10UIQnqwFrOwWtHAZmjVDe+PC820xkAizjSVGGtNNp0Vs7pBdgaHIhVIHQN
-	 YyESVguNxO8RA==
-Date: Fri, 27 Jun 2025 21:31:34 +0200
+	b=aykXgHCHt6ckjvgTXd4MUO0oQ989jBketGAkoTdyFQcRaXXtvEMQt93B4iAKEGrC/
+	 sadxFkEXW6frjvhCfOPM2FxYDuesYEz70VnPmTP6pSX8Q9XHepSubm1a3FbVcrV+ku
+	 N3Xd1pQ6Y1gBDtFb7aIbncDD0UIjPHw7YO1e8pWUQcnRvE6YBEV2j3ltwpuX+a/KTa
+	 7Hb1b/0fAUehSe1vAJ74sIWuS/9k9viYbrWApMj6lOivJ/GtSW5xTbfL4JzUhZh2Hy
+	 bCk4T1oxsCmTdmGhOgR1mRSY7QPrLOR1sZDvpZPM08+r6DI8R9/B1Wv+CPg5OdESSo
+	 HzRUfnEs8MwSQ==
+Date: Fri, 27 Jun 2025 21:35:04 +0200
 From: Danilo Krummrich <dakr@kernel.org>
 To: Daniel Almeida <daniel.almeida@collabora.com>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
@@ -57,11 +57,11 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 4/6] rust: irq: add support for threaded IRQs and
+Subject: Re: [PATCH v5 3/6] rust: irq: add support for non-threaded IRQs and
  handlers
-Message-ID: <aF7xlhJeb-t_blHf@pollux>
+Message-ID: <aF7yaGPIxTDhAtlj@pollux>
 References: <20250627-topics-tyr-request_irq-v5-0-0545ee4dadf6@collabora.com>
- <20250627-topics-tyr-request_irq-v5-4-0545ee4dadf6@collabora.com>
+ <20250627-topics-tyr-request_irq-v5-3-0545ee4dadf6@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,34 +70,25 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250627-topics-tyr-request_irq-v5-4-0545ee4dadf6@collabora.com>
+In-Reply-To: <20250627-topics-tyr-request_irq-v5-3-0545ee4dadf6@collabora.com>
 
-On Fri, Jun 27, 2025 at 01:21:06PM -0300, Daniel Almeida wrote:
-> +/// Callbacks for a threaded IRQ handler.
-> +pub trait ThreadedHandler: Sync {
+On Fri, Jun 27, 2025 at 01:21:05PM -0300, Daniel Almeida wrote:
+> +/// Callbacks for an IRQ handler.
+> +pub trait Handler: Sync {
 > +    /// The actual handler function. As usual, sleeps are not allowed in IRQ
 > +    /// context.
 
-I'd rather say:
+What about:
 
 	/// The hard IRQ handler.
 	///
 	/// This is executed in interrupt context, hence all corresponding
-	/// limitations do apply. All work that does not necessarily need to be
-	/// executed from interrupt context, should be deferred to the threaded
-	/// handler, i.e. [`ThreadedHandler::handle_on_thread`].
-
-> +    fn handle(&self) -> ThreadedIrqReturn;
-> +
-> +    /// The threaded handler function. This function is called from the irq
-> +    /// handler thread, which is automatically created by the system.
-
-	/// The threaded IRQ handler.
+	/// limitations do apply.
 	///
-	/// This is executed in process context. The kernel creates a dedicated
-	/// kthread for this purpose.
+	/// All work that does not necessarily need to be executed from
+	/// interrupt context, should be deferred to a threaded handler.
+	/// See also [`ThreadedRegistration`].
 
-> +    fn handle_on_thread(&self) -> IrqReturn;
-
-Personally, I'd prefer `handle_threaded()`.
+> +    fn handle(&self) -> IrqReturn;
+> +}
 
