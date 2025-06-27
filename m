@@ -1,178 +1,139 @@
-Return-Path: <linux-pci+bounces-30947-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30949-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C40ADAEBD20
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 18:24:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F5B1AEBD72
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 18:32:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 154F9642576
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 16:24:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 564C5567F7F
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 16:30:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2209F2E9759;
-	Fri, 27 Jun 2025 16:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2C231D5CDE;
+	Fri, 27 Jun 2025 16:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9+kRI24"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="K18JUEzi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F5E2D3EE8;
-	Fri, 27 Jun 2025 16:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751041367; cv=none; b=nv++dJlmLK3Z/+crg1Ye0k0wCz9mkR6xgN43sRYRipplAdMGnVkNV2oNRNQZTf99gxwzeSTZUdtU+kA+5eP7PsPux+6f4ygU4VIJNecIlETRZsoNIcjjksqRUJis+DZL+qKjnNhUpkblJWAro8TSUH7phmOHJ5Nl+xMgfSQdZvE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751041367; c=relaxed/simple;
-	bh=S4rQXSxYy7l30Jex5dOyQNVkfrqjgNBFJChd03NJJd4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nt/A/6TCDTZSTUeRThDAgS5pkheb6/eeWrJCEyzTxOqTRqNJYNrdvnmgIWSDXq0prj9YF/sL3kmUIZwoht9JKDgrIISvK07oi8AQhqirwSVbw7eE8YF6nNzZoHTJd1i/9CK1h1odOEJQP1uMqVPWS4V2iW6rxfjjyD8ORB7swlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9+kRI24; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D3C2C4CEE3;
-	Fri, 27 Jun 2025 16:22:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751041366;
-	bh=S4rQXSxYy7l30Jex5dOyQNVkfrqjgNBFJChd03NJJd4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q9+kRI24E/sv8i/YQJ0N921DtCB+0kcRk3H1pQUMNQtT02K02PjfsySme4B8GniwI
-	 9dRRJgnIYjYIcYjcs5Tb6obHmqh8Twkaf0TCIOBrTfj53TmQdFrvAxOP+wruzM3Ril
-	 JCTW0cM7wsH4IW+Zw3XsSKRN7zxXgWdw8fzZVfaBSHnAOFcYr4+qCebHHiZca51pkr
-	 3BUYtnmUuDrHiFYPlicYhuFNogDvoLoyaU3CKheMqkHeHJarNuPc7Ks6Whuzf7UE8A
-	 TZW+lJ9Gtdsw5sd9/k4NKCLKh0F893QUDS6oOqMbIefzWUsXHa7lfFZkbD8l+/snV+
-	 iZPTmjg/hmAvQ==
-Date: Fri, 27 Jun 2025 11:22:45 -0500
-From: Rob Herring <robh@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 18/28] of: property: Allow fw_devlink device-tree on
- x86 when PCI device-tree node creation is enabled
-Message-ID: <20250627162245.GA3513535-robh@kernel.org>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-19-herve.codina@bootlin.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163E01C1741;
+	Fri, 27 Jun 2025 16:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751041812; cv=pass; b=RPdLTP83DXtKmKysIRy5kbhrmNghqIsR+6nXu4DqTb7+XrfqNUdVjmB0MdcxPhVDo7C1jjaD8CfAy4Vyj4lBTMCKQydZS+7JxIrCidJlJirJrD7EBgiZUNLlKW6b9e+YUh1eAfbQSm2pXwVUlL9IEj4rAkbwxIyh3ebuGOPbm68=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751041812; c=relaxed/simple;
+	bh=uZOpiqDnsPeN80lkYsgZGsg3XngV1n4ZEp+gMiBSaLo=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=i/GhkyYEba4XXVGz6CqA+3fE/hDxlsT0xouHS3453uMLfA4BYNkbye8b4wxPge3apV9ky7vYrePkGJMgPuplwXJX3IvYrnatJp4iOss4xxlbYHniF4sEqgQBl4LbfN15LGzyEQ0XZraw+h2DVKe5hDsKvwVRPzBXFmWD0uROoRo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=K18JUEzi; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1751041789; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=kybPJYkwMmG8BMGNFyE8OOoidf5kSHfCd7oOzb00Z5/iXMZGfd3WAHFvoMaD2oWKkcT/5ionolbmCph4fETBIAKkCtPEwpHLj5OW9QMwE6YJildn1NKHXktHXdIcAZNSoL/8Pf0hdibHVEWtcsxz9XREjvFuuMLVv3T4ozN3ZBI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751041789; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=1UYgOu06ruRDAYOcp4JfazG4HIO4Q2KaS4cnFmSM66M=; 
+	b=aCruIxIdxItIKw2gwoarURCrKaR/IQQsnwRvLgMagk0Kl2dT/0pos3tfL6UkuqcKTXXE3ZRx678tRATyyQVhDrAtufRzQB2NXa6DK6bLqw6p9tFkMuLLV6BXczLBLlmSC1qgjpYPTy1OGvVVtTH0XXwuUu9DT81nvP0f74M6yJ0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751041789;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=1UYgOu06ruRDAYOcp4JfazG4HIO4Q2KaS4cnFmSM66M=;
+	b=K18JUEziMCfx3B/fRsaqyjFHGgBMBxOzzmRMWCtx65njiyUlkxEtfa0kRFBXmIOk
+	L9LQ71GMnfOin7/wmUXxKJyyCmmmRe8lzC9VcqSlAJs4GBSSrdsKtXl9nMBqhhY55Kn
+	ejY41ZOUux89RkVtxTXrD0b3/NcvvvN8uzYcvynk=
+Received: by mx.zohomail.com with SMTPS id 1751041787930194.57928858422827;
+	Fri, 27 Jun 2025 09:29:47 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613134817.681832-19-herve.codina@bootlin.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v5 0/6] rust: add support for request_irq
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250627-topics-tyr-request_irq-v5-0-0545ee4dadf6@collabora.com>
+Date: Fri, 27 Jun 2025 13:29:31 -0300
+Cc: linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6FF34F9D-4FA6-4463-8922-3894E088CDD2@collabora.com>
+References: <20250627-topics-tyr-request_irq-v5-0-0545ee4dadf6@collabora.com>
+To: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Benno Lossin <lossin@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-On Fri, Jun 13, 2025 at 03:47:58PM +0200, Herve Codina wrote:
-> PCI drivers can use a device-tree overlay to describe the hardware
-> available on the PCI board. This is the case, for instance, of the
-> LAN966x PCI device driver.
-> 
-> Adding some more nodes in the device-tree overlay adds some more
-> consumer/supplier relationship between devices instantiated from this
-> overlay.
-> 
-> Those fw_node consumer/supplier relationships are handled by fw_devlink
-> and are created based on the device-tree parsing done by the
-> of_fwnode_add_links() function.
-> 
-> Those consumer/supplier links are needed in order to ensure a correct PM
-> runtime management and a correct removal order between devices.
-> 
-> For instance, without those links a supplier can be removed before its
-> consumers is removed leading to all kind of issue if this consumer still
-> want the use the already removed supplier.
-> 
-> The support for the usage of an overlay from a PCI driver has been added
-> on x86 systems in commit 1f340724419ed ("PCI: of: Create device tree PCI
-> host bridge node").
-> 
-> In the past, support for fw_devlink on x86 had been tried but this
-> support has been removed in commit 4a48b66b3f52 ("of: property: Disable
-> fw_devlink DT support for X86"). Indeed, this support was breaking some
-> x86 systems such as OLPC system and the regression was reported in [0].
-> 
-> Instead of disabling this support for all x86 system, a first approach
-> would be to use a finer grain and disable this support only for the
-> possible problematic subset of x86 systems (at least OLPC and CE4100).
-> 
-> This first approach could still leads to issues. Indeed, the list of
-> possible problematic system and the way to identify them using Kconfig
-> symbols is not well defined and so some system can be missed leading to
-> kernel regressions on those missing systems.
-> 
-> Use an other way and enable the support on x86 system only when this
-> support is needed by some specific feature. The usage of a device-tree
-> overlay by a PCI driver and thus the creation of PCI device-tree nodes
-> is a feature that needs it.
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> Link: https://lore.kernel.org/lkml/3c1f2473-92ad-bfc4-258e-a5a08ad73dd0@web.de/ [0]
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+
+> On 27 Jun 2025, at 13:21, Daniel Almeida =
+<daniel.almeida@collabora.com> wrote:
+>=20
+>=20
 > ---
->  drivers/of/property.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index c1feb631e383..8b5cfee696e2 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1605,7 +1605,7 @@ static int of_fwnode_add_links(struct fwnode_handle *fwnode)
->  	const struct property *p;
->  	struct device_node *con_np = to_of_node(fwnode);
->  
-> -	if (IS_ENABLED(CONFIG_X86))
-> +	if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES))
+> Changes in v5:
+>=20
+> Thanks, Danilo {
+>  - Removed extra scope in the examples.
+>  - Renamed Registration::register() to Registration::new(),
+>  - Switched to try_pin_init! in Registration::new() (thanks for the
+>    code and the help, Boqun and Benno)
+>  - Renamed the trait functions to handle() and handle_on_thread().
+>  - Introduced IrqRequest with an unsafe pub(crate) constructor
+>  - Made both register() and the accessors that return IrqRequest =
+public
+>    the idea is to allow both of these to work:
+> // `irq` is an `irq::Registration`
+> let irq =3D pdev.threaded_irq_by_name()?
+>  and
+> // `req` is an `IrqRequest`.
+> let req =3D pdev.irq_by_name()?;
+> // `irq` is an `irq::Registration`
+> let irq =3D irq::ThreadedRegistration::new(req)?;
+>=20
+>  - Added another name in the byname variants. There's now one for the
+>    request part and the other one to register()
+>  - Reworked the examples in request.rs
+>  - Implemented the irq accessors in place for pci.rs
+>  - Split the platform accessor macros into two
+> }
+>=20
+> - Added a rust helper for pci_irq_vectors if !CONFIG_PCI_MSI (thanks,
+> Intel 0day bot)
+> - Link to v4: =
+https://lore.kernel.org/r/20250608-topics-tyr-request_irq-v4-0-81cb81fb807=
+3@collabora.com
+>=20
 
-I really want CONFIG_PCI_DYNAMIC_OF_NODES to go away at some point, not 
-add more users. 
+Sorry, I forgot to mention that this now depends on the new Devres =
+series at [0].
 
-I think this should instead check for specific platforms not with 
-kconfig symbols but DT properties. For ce4100, you can just check the 
-root compatible string. For OLPC, there isn't a root compatible (in the 
-DT I have). You could check for /architecture == OLPC instead. There's 
-some virtualization guests using DT now too. I would think their DT's 
-are simple enough to avoid any fw_devlink issues. 
+[0]  =
+https://git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=3Dru=
+st/devres
 
-Alternatively, we could perhaps make x86 fw_devlink default off and then 
-enable it only when you create nodes. Maybe it has to be restricted a 
-sub tree of the DT to avoid any later interactions if devices are 
-unbound and rebound. Not a fully fleshed out idea...
 
-Rob
 
