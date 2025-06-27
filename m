@@ -1,192 +1,132 @@
-Return-Path: <linux-pci+bounces-30886-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30887-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73A98AEAD0B
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 04:56:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65283AEADD4
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 06:31:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC84F4A6C6C
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 02:56:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEDAB3A82D6
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 04:30:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74D4A192B75;
-	Fri, 27 Jun 2025 02:56:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E33B41A8F;
+	Fri, 27 Jun 2025 04:31:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VMV0fDiC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HwNMc6br"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F407219E8
-	for <linux-pci@vger.kernel.org>; Fri, 27 Jun 2025 02:56:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96B32F1FE2;
+	Fri, 27 Jun 2025 04:31:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750992972; cv=none; b=q61zpaphsgpTkwUmqZ+FRP7/MI2QWqILKDHihKvMPJY6jQiOKRi56GwZ2Vb4zQnVJwdO2Zg6aKpEuy/jK8wB9HiPjyA7nde6uoTJJkXTwaB8d0LY/fvd+NeF1SaYC1tVzezMX29tILXdMTIdd6Zf0vYWVFmtWDi8jLUgSI2Is58=
+	t=1750998675; cv=none; b=InII+qAfocEQZwtJVpc6dZXA1A9ZuzZa313XMsGSB0d3fPIrhse/c1yL8EwclMY/XLiVLt5y96lZ8nrWaQs4mkUayE7o+C26MJPM6iG33PiSJ7Qw0ASCXUXEY86bcqmc1fNwW2xbZPBz92B0GMQia0TDB4SWL6djfq7/mTElOnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750992972; c=relaxed/simple;
-	bh=I3+sn9Von/renyoy0E6aK+jfLDzCxMn32xR0ZdIUU4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=s9bTMvZRJ2gCflyzSIpgmmunQZlsrByoyZGby/CzYmwSHm/6TkWD5ucXIOPJiRbfzNx0pOVSL99REqma33RqUMwB+m5A6Ya+EAJuR91GoECBwYxExhJ9Os8wE/u/qUR9owzrGsUD1sNn2PfjW/LS4Qd/rQoN6ikxKKcZ86s6/B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VMV0fDiC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3988C4CEEB;
-	Fri, 27 Jun 2025 02:56:10 +0000 (UTC)
+	s=arc-20240116; t=1750998675; c=relaxed/simple;
+	bh=0M8ENBUgJpYWdqDPptXBiIAcVDOQpN779919of1Ylao=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bWrf/WRsD+qcttGiuJHxfnc7G1judx+Jweu6Y6MiFwDjo20txTqo/JE7ogcRBV7ItR7GKaYIMlM9LA6S5kLaYj8Qalc4NFoWg+ZRhG2eZNBdB12XIZIj16zdJkMFjdjDJcHD/0FMDZSkluwAqHQI78yPleizdIqM8m5t3RkXzCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HwNMc6br; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A804C4CEE3;
+	Fri, 27 Jun 2025 04:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750992970;
-	bh=I3+sn9Von/renyoy0E6aK+jfLDzCxMn32xR0ZdIUU4Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VMV0fDiCaP+rrZKBUqKhMi0yKgach5kDfFO7UErQzGUHLjIe2MCCRwSTrxdfRaiYH
-	 BtxzD3ZuI46VOFA1Q4PlTX1bjtpMSaR9spGmhXiWqy2DTFYTTJP87MY8slYBGJmDYG
-	 /eOM0qt/uCsMpy3cKaS31xAKtTs7qYu7vzJ19+P4R46Lnq/FluanZfuGU4eIyyMWdL
-	 iJHanwBw7mBFxhMjHG/rtynyeZAB7YvkRRbb3CDcnPniJW/oHfmUMQa+AB3GMDwBOM
-	 1mTTX1xhejL334vQ24gm7c+KSbNI6yJX/47GAQYrhfMt36/fAcXrzBAc/JoWd29UbY
-	 vOGXC6kde2FKQ==
-Date: Thu, 26 Jun 2025 21:56:07 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Laurent Bigonville <bigon@bigon.be>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <westeri@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/ACPI: Fix runtime PM ref imbalance on hot-plug
- capable ports
-Message-ID: <20250627025607.GA1650254@bhelgaas>
+	s=k20201202; t=1750998675;
+	bh=0M8ENBUgJpYWdqDPptXBiIAcVDOQpN779919of1Ylao=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HwNMc6br/86SWTAf2Al9i/DC7sIhdMgBlr/piYuh5A7ga2cP+v2QumzvTssRb8ZJN
+	 o0woLJRiKrqiM+dXvzwt/+gfXV4ku2aXwAzfLvY62rxlWrjCuJ2lH+FJeWkne3rpHn
+	 H7JveObRMVtBrdcP/NbYAE15jX0kO0/PBcnzf6v69O0zSi2x1ozaObNMgcdWTAHyHD
+	 6+Es8DoRDoqWzQk7lcSIVHTIrCV7wyz4slJR1ZeslyFbsBeMaihJUbYVeIj/AVA1BP
+	 Tz2Uiz/wEzjjs4q7V/uBCbOpZgsUtCl3/Ik/kcf/pfRhPXGvzE1kCn9mR47gIwz70o
+	 87JfFd+kufeKQ==
+From: Mario Limonciello <superm1@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+	linux-kernel@vger.kernel.org (open list),
+	iommu@lists.linux.dev (open list:INTEL IOMMU (VT-d)),
+	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+	kvm@vger.kernel.org (open list:VFIO DRIVER),
+	linux-sound@vger.kernel.org (open list:SOUND),
+	Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v6 0/9] Adjust fbcon console device detection
+Date: Thu, 26 Jun 2025 23:30:59 -0500
+Message-ID: <20250627043108.3141206-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86c3bd52bda4552d63ffb48f8a30343167e85271.1750698221.git.lukas@wunner.de>
+Content-Transfer-Encoding: 8bit
 
-[+cc Ilpo]
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-On Mon, Jun 23, 2025 at 07:08:20PM +0200, Lukas Wunner wrote:
-> pcie_portdrv_probe() and pcie_portdrv_remove() both call
-> pci_bridge_d3_possible() to determine whether to use runtime power
-> management.  The underlying assumption is that pci_bridge_d3_possible()
-> always returns the same value because otherwise a runtime PM reference
-> imbalance occurs.
-> 
-> That assumption falls apart if the device is inaccessible on ->remove()
-> due to hot-unplug:  pci_bridge_d3_possible() calls pciehp_is_native(),
-> which accesses Config Space to determine whether the device is Hot-Plug
-> Capable.   An inaccessible device returns "all ones", which is converted
-> to "all zeroes" by pcie_capability_read_dword().  Hence the device no
-> longer seems Hot-Plug Capable on ->remove() even though it was on
-> ->probe().
-> 
-> The resulting runtime PM ref imbalance causes errors such as:
-> 
->   pcieport 0000:02:04.0: Runtime PM usage count underflow!
-> 
-> The Hot-Plug Capable bit is cached in pci_dev->is_hotplug_bridge.
+This series started out as changes to VGA arbiter to try to handle a case
+of a system with 2 GPUs that are not VGA devices [1].  This was discussed
+but decided not to overload the VGA arbiter for non VGA devices.
 
-pci_dev->is_hotplug_bridge is not just a cache of PCI_EXP_SLTCAP_HPC;
-it can also be set in two other cases.  Example below.
+Instead move the x86 specific detection of framebuffer resources into x86
+specific code that the fbcon can use to properly identify the primary
+device. This code is still called from the VGA arbiter, and the logic does
+not change there. To avoid regression default to VGA arbiter and only fall
+back to looking up with x86 specific detection method.
 
-> pci_bridge_d3_possible() only calls pciehp_is_native() if that flag is
-> set.  Re-checking the bit in pciehp_is_native() is thus unnecessary.
-> 
-> However pciehp_is_native() is also called from hotplug_is_native().  Move
-> the Config Space access to that function.  The function is only invoked
-> from acpiphp_glue.c, so move it there instead of keeping it in a publicly
-> visible header.
-> 
-> Fixes: 5352a44a561d ("PCI: pciehp: Make pciehp_is_native() stricter")
-> Reported-by: Laurent Bigonville <bigon@bigon.be>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220216
-> Reported-by: Mario Limonciello <mario.limonciello@amd.com>
-> Closes: https://lore.kernel.org/r/20250609020223.269407-3-superm1@kernel.org/
-> Link: https://lore.kernel.org/all/20250620025535.3425049-3-superm1@kernel.org/T/#u
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: stable@vger.kernel.org # v4.18+
-> ---
->  drivers/pci/hotplug/acpiphp_glue.c | 15 +++++++++++++++
->  drivers/pci/pci-acpi.c             |  5 -----
->  include/linux/pci_hotplug.h        |  4 ----
->  3 files changed, 15 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
-> index 5b1f271c6034..ae2bb8970f63 100644
-> --- a/drivers/pci/hotplug/acpiphp_glue.c
-> +++ b/drivers/pci/hotplug/acpiphp_glue.c
-> @@ -50,6 +50,21 @@ static void acpiphp_sanitize_bus(struct pci_bus *bus);
->  static void hotplug_event(u32 type, struct acpiphp_context *context);
->  static void free_bridge(struct kref *kref);
->  
-> +static bool hotplug_is_native(struct pci_dev *bridge)
-> +{
-> +	u32 slot_cap;
-> +
-> +	pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
-> +
-> +	if (slot_cap & PCI_EXP_SLTCAP_HPC && pciehp_is_native(bridge))
-> +		return true;
-> +
-> +	if (shpchp_is_native(bridge))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  /**
->   * acpiphp_init_context - Create hotplug context and grab a reference to it.
->   * @adev: ACPI device object to create the context for.
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index b78e0e417324..57bce9cc8a38 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -816,15 +816,10 @@ int pci_acpi_program_hp_params(struct pci_dev *dev)
->  bool pciehp_is_native(struct pci_dev *bridge)
->  {
->  	const struct pci_host_bridge *host;
-> -	u32 slot_cap;
->  
->  	if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
->  		return false;
->  
-> -	pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
-> -	if (!(slot_cap & PCI_EXP_SLTCAP_HPC))
-> -		return false;
+In order for userspace to also be able to discover which device was the
+primary video display device create a new sysfs file 'boot_display'.
 
-If we have a bridge where bridge->is_hotplug_bridge=1 from the acpiphp
-check_hotplug_bridge() or quirk_hotplug_bridge(), and the bridge has
-no Slot or a Slot with PCI_EXP_SLTCAP_HPC=0, we previously returned
-false here but may now return true.  That seems like a problem, but
-maybe I'm missing the reason why it is not an issue.  
+A matching userspace implementation for this file is available here:
+https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/39
+https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/2038
 
-Previously pciehp_is_native() depended on the bridge, but now it will
-only depend on the negotiation with the platform for native PCIe
-hotplug control, so it definitely changes the semantics.
+It is suggested that this series merge entirely through the PCI tree.
 
-If the new semantics are what we want, that would be great because I
-think we could probably set host->native_pcie_hotplug up front based
-on CONFIG_HOTPLUG_PCI_PCIE and pcie_ports_native, and
-pciehp_is_native() would collapse to just an accessor for
-host->native_pcie_hotplug.
+Mario Limonciello (9):
+  PCI: Add helper for checking if a PCI device is a display controller
+  vfio/pci: Use pci_is_display()
+  vga_switcheroo: Use pci_is_display()
+  iommu/vt-d: Use pci_is_display()
+  ALSA: hda: Use pci_is_display()
+  Fix access to video_is_primary_device() when compiled without
+    CONFIG_VIDEO
+  PCI/VGA: Replace vga_is_firmware_default() with a screen info check
+  fbcon: Use screen info to find primary device
+  PCI: Add a new 'boot_display' attribute
 
->  	if (pcie_ports_native)
->  		return true;
->  
-> diff --git a/include/linux/pci_hotplug.h b/include/linux/pci_hotplug.h
-> index ec77ccf1fc4d..02efeea62b25 100644
-> --- a/include/linux/pci_hotplug.h
-> +++ b/include/linux/pci_hotplug.h
-> @@ -102,8 +102,4 @@ static inline bool pciehp_is_native(struct pci_dev *bridge) { return true; }
->  static inline bool shpchp_is_native(struct pci_dev *bridge) { return true; }
->  #endif
->  
-> -static inline bool hotplug_is_native(struct pci_dev *bridge)
-> -{
-> -	return pciehp_is_native(bridge) || shpchp_is_native(bridge);
-> -}
->  #endif
-> -- 
-> 2.47.2
-> 
+ Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
+ arch/parisc/include/asm/video.h         |  2 +-
+ arch/sparc/include/asm/video.h          |  2 ++
+ arch/x86/include/asm/video.h            |  2 ++
+ arch/x86/video/video-common.c           | 13 ++++++-
+ drivers/gpu/vga/vga_switcheroo.c        |  2 +-
+ drivers/iommu/intel/iommu.c             |  2 +-
+ drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++++++
+ drivers/pci/vgaarb.c                    | 31 +++--------------
+ drivers/vfio/pci/vfio_pci_igd.c         |  3 +-
+ include/linux/pci.h                     | 15 ++++++++
+ sound/hda/hdac_i915.c                   |  2 +-
+ sound/pci/hda/hda_intel.c               |  4 +--
+ 13 files changed, 97 insertions(+), 35 deletions(-)
+
+-- 
+2.43.0
+
 
