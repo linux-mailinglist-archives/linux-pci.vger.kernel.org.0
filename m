@@ -1,179 +1,178 @@
-Return-Path: <linux-pci+bounces-30943-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30947-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49D17AEBD14
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 18:23:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C40ADAEBD20
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 18:24:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A84B83BC159
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 16:22:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 154F9642576
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 16:24:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B2362EACF9;
-	Fri, 27 Jun 2025 16:22:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2209F2E9759;
+	Fri, 27 Jun 2025 16:22:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="YwGaNcv2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9+kRI24"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9B92EAB80;
-	Fri, 27 Jun 2025 16:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751041337; cv=pass; b=iRpruJo/8Yy9fZm02VBO2Xry3Hy/bvK3B4mmQkMGPGGrSoxS4NgW8oVQ5UF5BOyStkaw1A6Um3Mmg0tEnXvhdkGvI2EfW0qfqUZnqw8x3pELwC73i1Ovt4q+Rm4uQQpVjBJ8ZRr1Bna8PeURKpOqr+v280LzrLL8ajTLqeZTDcA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751041337; c=relaxed/simple;
-	bh=9QVLNmpFlJxco9Io8+xRWl3/tkfvBnkJ5v4p1lVDt5M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VcL4qnHCI+8iNlECYrwKpMZ7Eizn49YtaKRQ6wiJL//t7GUSU2pa/gILw2a5ZNUzofaRcxuAzq2KsuTwa1sCT7TVur9bs7V8CFB8amkDP7A/XU7vG2WUVhndKg7olALq1+/UPjQtG2b2mxweOQNCva31yUtcOlPBm1zz4TEFFhY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=YwGaNcv2; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1751041317; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=A5+fBBw1v95twjhxnyHpCGxc12/Aas6YeGTGuPC6frODMdjnjnbHLAHvkPhlSzRIcefhoHKW5PTkSvioMV5ZyvGmywZ6IF7d0TZd6p0wZdMAkQoYPjhJX9jYZ5ywgIcr9IqB1Lqc6wUCzsFr2FL+bT3Tck455Q17bXEWKOih5P0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751041317; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=8KUHteAG14bnq4zqajKJEsvYdoQ2vrt6l/2WIKsu2Dc=; 
-	b=AP/WW/g/PvwTBliseLvB5kTJw+EzDWvkcmSyULAXDH1jG4pz8CALaLYF/cDb5MMo/5BfJhTIn0jAKhhFeT3X8TyYx97267gDXzONHTZdnhJqRTZB7uJp8j8vhgAqUiqtGEw4UQxB/lfahGLSx/qRAeOtir9KaUBrHq7BnOV01DI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751041317;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=8KUHteAG14bnq4zqajKJEsvYdoQ2vrt6l/2WIKsu2Dc=;
-	b=YwGaNcv2htqWgrIfh4UYa4O0olbuAvBjf4Awqpyg8JRZqBzWR9QSrqP42K1K2x6I
-	XV8xF+UBKcKzCNwjK3rP1AS2fPmSe8QFnKDQbXfZl3s7u8SqZ70HrCr9j+RfuQnnbWu
-	V1c2ozJODWN4SZavR158W8X3mTeImmADT7By9Gdc=
-Received: by mx.zohomail.com with SMTPS id 1751041315119984.016417825778;
-	Fri, 27 Jun 2025 09:21:55 -0700 (PDT)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-Date: Fri, 27 Jun 2025 13:21:08 -0300
-Subject: [PATCH v5 6/6] rust: pci: add irq accessors
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F5E2D3EE8;
+	Fri, 27 Jun 2025 16:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751041367; cv=none; b=nv++dJlmLK3Z/+crg1Ye0k0wCz9mkR6xgN43sRYRipplAdMGnVkNV2oNRNQZTf99gxwzeSTZUdtU+kA+5eP7PsPux+6f4ygU4VIJNecIlETRZsoNIcjjksqRUJis+DZL+qKjnNhUpkblJWAro8TSUH7phmOHJ5Nl+xMgfSQdZvE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751041367; c=relaxed/simple;
+	bh=S4rQXSxYy7l30Jex5dOyQNVkfrqjgNBFJChd03NJJd4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nt/A/6TCDTZSTUeRThDAgS5pkheb6/eeWrJCEyzTxOqTRqNJYNrdvnmgIWSDXq0prj9YF/sL3kmUIZwoht9JKDgrIISvK07oi8AQhqirwSVbw7eE8YF6nNzZoHTJd1i/9CK1h1odOEJQP1uMqVPWS4V2iW6rxfjjyD8ORB7swlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9+kRI24; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D3C2C4CEE3;
+	Fri, 27 Jun 2025 16:22:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751041366;
+	bh=S4rQXSxYy7l30Jex5dOyQNVkfrqjgNBFJChd03NJJd4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q9+kRI24E/sv8i/YQJ0N921DtCB+0kcRk3H1pQUMNQtT02K02PjfsySme4B8GniwI
+	 9dRRJgnIYjYIcYjcs5Tb6obHmqh8Twkaf0TCIOBrTfj53TmQdFrvAxOP+wruzM3Ril
+	 JCTW0cM7wsH4IW+Zw3XsSKRN7zxXgWdw8fzZVfaBSHnAOFcYr4+qCebHHiZca51pkr
+	 3BUYtnmUuDrHiFYPlicYhuFNogDvoLoyaU3CKheMqkHeHJarNuPc7Ks6Whuzf7UE8A
+	 TZW+lJ9Gtdsw5sd9/k4NKCLKh0F893QUDS6oOqMbIefzWUsXHa7lfFZkbD8l+/snV+
+	 iZPTmjg/hmAvQ==
+Date: Fri, 27 Jun 2025 11:22:45 -0500
+From: Rob Herring <robh@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 18/28] of: property: Allow fw_devlink device-tree on
+ x86 when PCI device-tree node creation is enabled
+Message-ID: <20250627162245.GA3513535-robh@kernel.org>
+References: <20250613134817.681832-1-herve.codina@bootlin.com>
+ <20250613134817.681832-19-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250627-topics-tyr-request_irq-v5-6-0545ee4dadf6@collabora.com>
-References: <20250627-topics-tyr-request_irq-v5-0-0545ee4dadf6@collabora.com>
-In-Reply-To: <20250627-topics-tyr-request_irq-v5-0-0545ee4dadf6@collabora.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Benno Lossin <lossin@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- linux-pci@vger.kernel.org, Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: b4 0.14.2
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613134817.681832-19-herve.codina@bootlin.com>
 
-These accessors can be used to retrieve a irq::Registration or a
-irq::ThreadedRegistration from a pci device. Alternatively, drivers can
-retrieve an IrqRequest from a bound PCI device for later use.
+On Fri, Jun 13, 2025 at 03:47:58PM +0200, Herve Codina wrote:
+> PCI drivers can use a device-tree overlay to describe the hardware
+> available on the PCI board. This is the case, for instance, of the
+> LAN966x PCI device driver.
+> 
+> Adding some more nodes in the device-tree overlay adds some more
+> consumer/supplier relationship between devices instantiated from this
+> overlay.
+> 
+> Those fw_node consumer/supplier relationships are handled by fw_devlink
+> and are created based on the device-tree parsing done by the
+> of_fwnode_add_links() function.
+> 
+> Those consumer/supplier links are needed in order to ensure a correct PM
+> runtime management and a correct removal order between devices.
+> 
+> For instance, without those links a supplier can be removed before its
+> consumers is removed leading to all kind of issue if this consumer still
+> want the use the already removed supplier.
+> 
+> The support for the usage of an overlay from a PCI driver has been added
+> on x86 systems in commit 1f340724419ed ("PCI: of: Create device tree PCI
+> host bridge node").
+> 
+> In the past, support for fw_devlink on x86 had been tried but this
+> support has been removed in commit 4a48b66b3f52 ("of: property: Disable
+> fw_devlink DT support for X86"). Indeed, this support was breaking some
+> x86 systems such as OLPC system and the regression was reported in [0].
+> 
+> Instead of disabling this support for all x86 system, a first approach
+> would be to use a finer grain and disable this support only for the
+> possible problematic subset of x86 systems (at least OLPC and CE4100).
+> 
+> This first approach could still leads to issues. Indeed, the list of
+> possible problematic system and the way to identify them using Kconfig
+> symbols is not well defined and so some system can be missed leading to
+> kernel regressions on those missing systems.
+> 
+> Use an other way and enable the support on x86 system only when this
+> support is needed by some specific feature. The usage of a device-tree
+> overlay by a PCI driver and thus the creation of PCI device-tree nodes
+> is a feature that needs it.
+> 
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Link: https://lore.kernel.org/lkml/3c1f2473-92ad-bfc4-258e-a5a08ad73dd0@web.de/ [0]
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/of/property.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index c1feb631e383..8b5cfee696e2 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -1605,7 +1605,7 @@ static int of_fwnode_add_links(struct fwnode_handle *fwnode)
+>  	const struct property *p;
+>  	struct device_node *con_np = to_of_node(fwnode);
+>  
+> -	if (IS_ENABLED(CONFIG_X86))
+> +	if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES))
 
-These accessors ensure that only valid IRQ lines can ever be registered.
+I really want CONFIG_PCI_DYNAMIC_OF_NODES to go away at some point, not 
+add more users. 
 
-Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
----
- rust/helpers/pci.c |  8 ++++++++
- rust/kernel/pci.rs | 45 +++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 51 insertions(+), 2 deletions(-)
+I think this should instead check for specific platforms not with 
+kconfig symbols but DT properties. For ce4100, you can just check the 
+root compatible string. For OLPC, there isn't a root compatible (in the 
+DT I have). You could check for /architecture == OLPC instead. There's 
+some virtualization guests using DT now too. I would think their DT's 
+are simple enough to avoid any fw_devlink issues. 
 
-diff --git a/rust/helpers/pci.c b/rust/helpers/pci.c
-index cd0e6bf2cc4d9b37db3a717e7a8422b054f348ec..f372a32e8fd19730563ab51500e8c8764854ae47 100644
---- a/rust/helpers/pci.c
-+++ b/rust/helpers/pci.c
-@@ -21,3 +21,11 @@ bool rust_helper_dev_is_pci(const struct device *dev)
- {
- 	return dev_is_pci(dev);
- }
-+
-+#ifndef CONFIG_PCI_MSI
-+int rust_helper_pci_irq_vector(struct pci_dev *pdev, unsigned int nvec)
-+{
-+	return pci_irq_vector(pdev, nvec);
-+}
-+
-+#endif
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index db0eb7eaf9b10c5316366ef16fe722a03044a517..60d37d6459518c79136535ce03c73a5a3097eda8 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -10,8 +10,8 @@
-     devres::Devres,
-     driver,
-     error::{to_result, Result},
--    io::Io,
--    io::IoRaw,
-+    io::{Io, IoRaw},
-+    irq::{self, request::IrqRequest},
-     str::CStr,
-     types::{ARef, ForeignOwnable, Opaque},
-     ThisModule,
-@@ -413,6 +413,47 @@ pub fn iomap_region<'a>(
-     ) -> impl PinInit<Devres<Bar>, Error> + 'a {
-         self.iomap_region_sized::<0>(bar, name)
-     }
-+
-+    /// Returns an [`IrqRequest`] for the IRQ vector at the given index, if any.
-+    pub fn request_irq_by_index(&self, index: u32) -> Result<IrqRequest<'_>> {
-+        // SAFETY: `self.as_raw` returns a valid pointer to a `struct pci_dev`.
-+        let irq = unsafe { crate::bindings::pci_irq_vector(self.as_raw(), index) };
-+        if irq < 0 {
-+            return Err(crate::error::Error::from_errno(irq));
-+        }
-+        // SAFETY: `irq` is guaranteed to be a valid IRQ number for `&self`.
-+        Ok(unsafe { IrqRequest::new(self.as_ref(), irq as u32) })
-+    }
-+
-+    /// Returns a [`kernel::irq::Registration`] for the IRQ vector at the given
-+    /// index.
-+    pub fn irq_by_index<T: crate::irq::Handler + 'static>(
-+        &self,
-+        index: u32,
-+        flags: irq::flags::Flags,
-+        name: &'static CStr,
-+        handler: T,
-+    ) -> Result<impl PinInit<irq::Registration<T>, Error> + '_> {
-+        let request = self.request_irq_by_index(index)?;
-+
-+        Ok(irq::Registration::<T>::new(request, flags, name, handler))
-+    }
-+
-+    /// Returns a [`kernel::irq::ThreadedRegistration`] for the IRQ vector at
-+    /// the given index.
-+    pub fn threaded_irq_by_index<T: crate::irq::ThreadedHandler + 'static>(
-+        &self,
-+        index: u32,
-+        flags: irq::flags::Flags,
-+        name: &'static CStr,
-+        handler: T,
-+    ) -> Result<impl PinInit<irq::ThreadedRegistration<T>, Error> + '_> {
-+        let request = self.request_irq_by_index(index)?;
-+
-+        Ok(irq::ThreadedRegistration::<T>::new(
-+            request, flags, name, handler,
-+        ))
-+    }
- }
- 
- impl Device<device::Core> {
+Alternatively, we could perhaps make x86 fw_devlink default off and then 
+enable it only when you create nodes. Maybe it has to be restricted a 
+sub tree of the DT to avoid any later interactions if devices are 
+unbound and rebound. Not a fully fleshed out idea...
 
--- 
-2.50.0
-
+Rob
 
