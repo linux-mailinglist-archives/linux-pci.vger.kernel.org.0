@@ -1,153 +1,186 @@
-Return-Path: <linux-pci+bounces-30932-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30933-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A6FBAEBADF
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 17:00:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9679BAEBBFB
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 17:35:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0E19E7A56A0
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 14:58:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A5C36167058
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 15:35:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F86E2E88A9;
-	Fri, 27 Jun 2025 14:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 270F62E92C4;
+	Fri, 27 Jun 2025 15:34:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AZZxZg1s"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UgJXL9R3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6479C29DB6B;
-	Fri, 27 Jun 2025 14:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 506C02E92C8;
+	Fri, 27 Jun 2025 15:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751036382; cv=none; b=BtbMBsi2X0oQfPe3oTZ694CiizSVa+trKPxr4Y21BR++kbDeijB2C3UPF308joSsQiTz3BlRrgyLzBhB+ZEazzy42C18P2Pv0Zkrnx4FuvhRLpE+xDef1B9PUjyP5fy5ngAu40Dn2jU0/SBGbSSNhOY6VDuc1cTz1XefXEbq284=
+	t=1751038443; cv=none; b=G90Bc4SbdaU+T5AiDfWCOzz7jnzbOomFSYeI8Jw+nFAPANO9HuHiUZ13f53JNZ2pcjDOweWJIHigvhTwtN9Co4aw7jl5baOeHeTkP/Jy3EvaOYvgsLowXYwMULfl3iK/v31keD6sZdVc7GOIlZjKaSw+5lV3vJIAKnn9TSx4M54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751036382; c=relaxed/simple;
-	bh=Q624Qj2i25nnhuv7Bqn+nxJwHsYhIYSd8aBORWKkTDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GUxZ3siR29RkQQ3hzSfsF44cAPFhjlhJ6OB2O3hSA4TH4oGbLanc5cOK52bK4uIWzSJk+A7IUTKYhUMkX5DhGcX5zjFA2sNGueFn266b/SfmpFXanXICW3iE52T9S5uAsM3KYyLCWvTKRZ//U1L+IIKjmxmT0GPEeSj248SfJYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AZZxZg1s; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B280243914;
-	Fri, 27 Jun 2025 14:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751036376;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ThiterbTvL+mYGXh+idmEWQ5hcYVOVl2geFkwk5TYJc=;
-	b=AZZxZg1sYkT9vHUrIb2/97+6gfdNO4TtsAae3Q97XVRt49b0/Vi8ATyjffit62MZ37kfFL
-	ymp82e/YrnESaBvIOQpjbOf2NByT+aIPb77AUb4LL4j2gswmjCDrkd8q8JlI9EKD/dTAGv
-	ehdRnIQrsEL+gjpbp5/HZ3gDsDO5/1suKp3xnM2E14rmnSJF/7NfSxhMn203GJECVD9In9
-	m8CXZqLY8ct1ish67IsDUCaBumDTG5qcx7dEbGr9De+dkZwMfiwoTHf5QNh6Zrf48SviUx
-	IemOqFS+LYffkXWwV86Y/xGnsTH8VmnMH3qqowHZYUhXdCZGAKaDau1hHDHE3g==
-Date: Fri, 27 Jun 2025 16:59:30 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Saravana Kannan <saravanak@google.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown
- <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>, Heikki Krogerus
- <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso
- <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 06/28] driver core: fw_devlink: Introduce
- fw_devlink_set_device()
-Message-ID: <20250627165930.344b429c@bootlin.com>
-In-Reply-To: <20250616090406.32f62ca4@bootlin.com>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
-	<20250613134817.681832-7-herve.codina@bootlin.com>
-	<CAGETcx9u-7TJ6_J5HdmDT=7A6Z08P-rUC0n+qnBoBi+ejRc2SQ@mail.gmail.com>
-	<20250616090406.32f62ca4@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1751038443; c=relaxed/simple;
+	bh=LgdvqBTRB61bdlKxwir8i1HbLL9fRJZEYQrJo9z9NSI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SUSgLPbSky7Um4XFmBAJZB5rBgLLPcgbSt5bhAJ1BtWN0gWdYhqZan9ozaGbKZljaWTkTEHrPIRmPBp3/bRBBlW5vNdzys1ZQqGnQ7qszAdas6DONhagSEK6drsrvxo75opYySvLk+OT9/T6XVbQZi6gZ9Ah1GeZ3r9EwuM4tvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UgJXL9R3; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=y5QkQnnSrcoyz3W4bWPHzK9WuTb9VBE36yVoQb6GpKY=;
+	b=UgJXL9R3RyB/lWpMZBiVFD7Lp7reJ5J2XFU30O8Mzi5F7kYW3+5s8lEX2GgjMu
+	L/P8Qymi6+pmY+bHFwHq90Z5zusEROqKt1LUZL7xuEQz8769EqDLZuRM8F0NP7XU
+	A5WPD/kgN2N299Tlwhc3JYvWHEax0TZHQ0BpWQEJSznI8=
+Received: from [IPV6:240e:b8f:919b:3100:5951:e2f3:d3e5:8d13] (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgCHFBbAuV5oafePAQ--.54065S2;
+	Fri, 27 Jun 2025 23:33:22 +0800 (CST)
+Message-ID: <f24aac22-d53e-4751-8bc5-db86a6d12598@163.com>
+Date: Fri, 27 Jun 2025 23:33:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdeffeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegkedprhgtphhtthhopehsrghrrghvrghnrghksehgohhoghhlvgdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnv
- ghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvg
-X-GND-Sasl: herve.codina@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 04/13] PCI: imx6: Refactor code by using
+ dw_pcie_clear_and_set_dword()
+To: Frank Li <Frank.li@nxp.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, mani@kernel.org,
+ kwilczynski@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250626145040.14180-1-18255117159@163.com>
+ <20250626145040.14180-5-18255117159@163.com>
+ <aF1/DzLRRhtgFVsH@lizhi-Precision-Tower-5810>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <aF1/DzLRRhtgFVsH@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PCgvCgCHFBbAuV5oafePAQ--.54065S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAF1fAF1UXFyrJr47KF4DJwb_yoWrZw4rpa
+	y2v3WSkF48JF4ruan2ya95ZF1aqas3Cr1DG3ZrK34FqFy2yr9rKa10y3y3trn7Cr47tryj
+	kw1UJw43Ga1YyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UoBTrUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQxJ4o2hdXLQ8tQACsc
 
-Hi Saravana,
 
-On Mon, 16 Jun 2025 09:04:06 +0200
-Herve Codina <herve.codina@bootlin.com> wrote:
 
-> Hi Saravana,
+On 2025/6/27 01:10, Frank Li wrote:
+> On Thu, Jun 26, 2025 at 10:50:31PM +0800, Hans Zhang wrote:
+>> i.MX6 PCIe driver contains multiple read-modify-write sequences for
+>> link training and speed configuration. These operations manually handle
+>> bit masking and shifting to update specific fields in control registers,
+>> particularly for link capabilities and speed change initiation.
+>>
+>> Refactor link capability configuration and speed change handling using
+>> dw_pcie_clear_and_set_dword(). The helper simplifies LNKCAP modification
+>> by encapsulating bit clear/set operations and eliminates intermediate
+>> variables. For speed change control, replace explicit bit manipulation
+>> with direct register updates through the helper.
+>>
+>> Adopting the standard interface reduces code complexity in link training
+>> paths and ensures consistent handling of speed-related bits. The change
+>> also prepares the driver for future enhancements to Gen3 link training
+>> by centralizing bit manipulation logic.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
 > 
-> On Fri, 13 Jun 2025 14:13:49 -0700
-> Saravana Kannan <saravanak@google.com> wrote:
+> missed my review tag, you need collect all review tags when respin patches.
 > 
-> > On Fri, Jun 13, 2025 at 6:49 AM Herve Codina <herve.codina@bootlin.com> wrote:  
-> > >
-> > > Setting fwnode->dev is specific to fw_devlink.
-> > >
-> > > In order to avoid having a direct 'fwnode->dev = dev;' in several
-> > > place in the kernel, introduce fw_devlink_set_device() helper to perform
-> > > this operation.
-> > >    
-> > 
-> > This should not be set anywhere outside the driver core files. I'll
-> > get to reviewing the series, but until then, NACK to this.
-> > 
-> > Is there a specific patch that explain why we need to set this outside
-> > driver core?  
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
 > 
-> We need to set it in case of creating device-tree node for PCI.
-> 
-> Usually, fwnode are created (based on DT or ACPI) and then, dev are
-> created.
-> 
-> In the PCI DT node creation case, device are already created and then, based
-> on information already computed by the kernel, DT node are created.
-> 
-> You can see that on patch 11 (dev setting was already upstream and it is
-> replace by a call to the helper for PCI host bridge) and on patch 13 (PCI
-> device).
-> 
-> Other patches (8, 9 and 10) replace the existing direct setting of the dev
-> member by a call to the helper.
+> https://lore.kernel.org/linux-pci/aFQp4MYpRaEUXNQy@lizhi-Precision-Tower-5810/
 > 
 
-Have you got time to look at the series, patches I pointed out and the reply
-from Andy?
+Dear Frank,
 
-Are modifications still nacked on your side?
-If so, what kind of modification would you like to see in order to move
-forward?
+Sorry. Next time I will check the corresponding tag.
 
 Best regards,
-Hervé
+Hans
+
+> 
+>> ---
+>>   drivers/pci/controller/dwc/pci-imx6.c | 26 ++++++++++----------------
+>>   1 file changed, 10 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+>> index 5a38cfaf989b..3004e432f013 100644
+>> --- a/drivers/pci/controller/dwc/pci-imx6.c
+>> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+>> @@ -941,7 +941,6 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+>>   	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
+>>   	struct device *dev = pci->dev;
+>>   	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>> -	u32 tmp;
+>>   	int ret;
+>>
+>>   	if (!(imx_pcie->drvdata->flags &
+>> @@ -956,10 +955,9 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+>>   	 * bus will not be detected at all.  This happens with PCIe switches.
+>>   	 */
+>>   	dw_pcie_dbi_ro_wr_en(pci);
+>> -	tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+>> -	tmp &= ~PCI_EXP_LNKCAP_SLS;
+>> -	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
+>> -	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
+>> +	dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
+>> +				    PCI_EXP_LNKCAP_SLS,
+>> +				    PCI_EXP_LNKCAP_SLS_2_5GB);
+>>   	dw_pcie_dbi_ro_wr_dis(pci);
+>>
+>>   	/* Start LTSSM. */
+>> @@ -972,18 +970,16 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+>>
+>>   		/* Allow faster modes after the link is up */
+>>   		dw_pcie_dbi_ro_wr_en(pci);
+>> -		tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+>> -		tmp &= ~PCI_EXP_LNKCAP_SLS;
+>> -		tmp |= pci->max_link_speed;
+>> -		dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
+>> +		dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
+>> +					    PCI_EXP_LNKCAP_SLS,
+>> +					    pci->max_link_speed);
+>>
+>>   		/*
+>>   		 * Start Directed Speed Change so the best possible
+>>   		 * speed both link partners support can be negotiated.
+>>   		 */
+>> -		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+>> -		tmp |= PORT_LOGIC_SPEED_CHANGE;
+>> -		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
+>> +		dw_pcie_clear_and_set_dword(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
+>> +					    0, PORT_LOGIC_SPEED_CHANGE);
+>>   		dw_pcie_dbi_ro_wr_dis(pci);
+>>
+>>   		ret = imx_pcie_wait_for_speed_change(imx_pcie);
+>> @@ -1295,7 +1291,6 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
+>>   {
+>>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>   	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
+>> -	u32 val;
+>>
+>>   	if (imx_pcie->drvdata->flags & IMX_PCIE_FLAG_8GT_ECN_ERR051586) {
+>>   		/*
+>> @@ -1310,9 +1305,8 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
+>>   		 * to 0.
+>>   		 */
+>>   		dw_pcie_dbi_ro_wr_en(pci);
+>> -		val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+>> -		val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
+>> -		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
+>> +		dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
+>> +					    GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL, 0);
+>>   		dw_pcie_dbi_ro_wr_dis(pci);
+>>   	}
+>>   }
+>> --
+>> 2.25.1
+>>
+
 
