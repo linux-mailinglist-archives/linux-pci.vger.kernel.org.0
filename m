@@ -1,129 +1,224 @@
-Return-Path: <linux-pci+bounces-30956-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30966-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90616AEBFCA
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 21:29:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E704AEBFF3
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 21:32:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7799F1C4689C
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 19:30:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BCE0E566072
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 19:32:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 003D8211460;
-	Fri, 27 Jun 2025 19:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 728851C5496;
+	Fri, 27 Jun 2025 19:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="chxIXNcN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPazJm95"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4F220C03E;
-	Fri, 27 Jun 2025 19:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D85190477;
+	Fri, 27 Jun 2025 19:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751052583; cv=none; b=bh5FCqSww+sihfc+gUQgAUpGpwLHjSL/9YQ3thPBQK0ogylUcVBgkWWPumDZs/v64vV+11M2NM8nMQg3WExIyPGmI5qp571LsWMncXk/wQteqa/Dm5ZqbMBWCP1RTBHeX04oAg2KRpURCowA85LvmHpkfbp6jGlXHuW3f5TQy8M=
+	t=1751052648; cv=none; b=Tvx8k/FAejSwBLWx1W9DHKBudFZunNk7fkLH33cPqwfD7CJUdWzq8IQ/2RDbWqpvOMVUGLI4XfQx8DOJKrn70K7LGE2mffhgCz8dlWZ8GPtKgjCP1B6+CCNEZZ5OVvRNeBRkbROhB91OAqThoDm7qLIdt1kEaF0loKGgVMDFENI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751052583; c=relaxed/simple;
-	bh=kY9pRbBGXyFt52NNCZFJytbQXz3mokYgEYHz3UNvujM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mAcq8KCUHi/Yft9qqpdu41sy/F/KI/DgVGvcARwjI1rCLmhJDdk0xtndOr69Vp2OAZq1oFBKPX4f7JJmvSa6wilq3A8j8iPNiLWdhAjrlfRgx+IfeEIZoYC51SlMCnz5NWvOLTkt77LahrrNbHE2HTzZlxVcNq/q0JL1QrSEi/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=chxIXNcN; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
-Received: from kreacher.localnet (unknown [5.63.189.50])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 2E32866DE29;
-	Fri, 27 Jun 2025 21:29:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1751052573;
-	bh=kY9pRbBGXyFt52NNCZFJytbQXz3mokYgEYHz3UNvujM=;
-	h=From:Subject:Date;
-	b=chxIXNcNZweVjZDYMbATeSQQTOp1C6QSshPZptPOHzlZGHjAzY1XSkiQEBFM4jBos
-	 WMIB42fmWiYWKEdiUnqjTlFp6vWCN6/PGWkER0kxElUSF6IvDXxVdCTh0dqTyksPel
-	 9f7JGBZgy8xSCLFnKyGZRqIk6U8A28K7y0+I0rDih0q7ZYZxYPR9MJJObxJUh+sD7U
-	 oEUWk7YgzjkfHQCwkUVcwdsdSzOQUos5dzPDtXbZBpP6VGSMUqwHiVVF85yDpXT775
-	 59U2Es4hoaVyAupPRyHLOAe6bz3fEa1L4rvhTTueBYOI8QDl8NA8FCu/ooi/08scp9
-	 Jf1LLtdYYJyFw==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux ACPI <linux-acpi@vger.kernel.org>,
- Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH v3 9/9] PCI/PM: Set power.strict_midlayer in pci_pm_init()
-Date: Fri, 27 Jun 2025 21:29:16 +0200
-Message-ID: <1925097.atdPhlSkOF@rjwysocki.net>
-In-Reply-To: <5018768.GXAFRqVoOG@rjwysocki.net>
-References: <5018768.GXAFRqVoOG@rjwysocki.net>
+	s=arc-20240116; t=1751052648; c=relaxed/simple;
+	bh=Ewt6x+TyLrnKWB9bcFNXn39ClBlBLwSs9oVDUkhN+5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=dEekOgAIrpjqnCL1+bbHybWARL7xqIXSaE1TR1XRBy8IGcF9o5fdKd5kXGnZhf1uPjxuwR2URAMxXWmNK/EjJstYerNd6q8Zakw9sYMT8Wu1Vj4zU8igcOh8Mzp0puCT3KRu2+qXjjm1eioRg6Ui/uzu/7fc0MlvcDk4f3ixPqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPazJm95; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A284EC4CEE3;
+	Fri, 27 Jun 2025 19:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751052647;
+	bh=Ewt6x+TyLrnKWB9bcFNXn39ClBlBLwSs9oVDUkhN+5s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=RPazJm95MCXTQsAh4h8EI9hYme1woTQj/7GHQ1aNwZf1LH+YtE91kNPlux6ZUBXs3
+	 tmn7wLtMkotusbLg+Ipj1PXvDzK+Ih5zJaBq89DdFZX2y+yNquxaS3TzCfVg+rKSE3
+	 cMh1XG5uXx3I+902Br+hvx+hOoBs5W1oSuav0bvOYvWquAGXVszjNqV0DMxIEZ9lXi
+	 SQQ7PRmO6QpvO9Ghk+62IjRV130WaRg+4TzLphnxY5Me5G6m0eD5LpBqLnRjcjUarm
+	 7YwJrjnxNeExgej4gvKNBhNgFbCi1cSRqguatqAJKpKOcGCFTA+mrrk3dp/kpQtqS6
+	 i5SNPirztErfA==
+Date: Fri, 27 Jun 2025 14:30:46 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-fsd@tesla.com,
+	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	jingoohan1@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	alim.akhtar@samsung.com, vkoul@kernel.org, kishon@kernel.org,
+	arnd@arndb.de, m.szyprowski@samsung.com, jh80.chung@samsung.com,
+	pankaj.dubey@samsung.com
+Subject: Re: [PATCH v2 09/10] PCI: exynos: Add support for Tesla FSD SoC
+Message-ID: <20250627193046.GA1673824@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 5.63.189.50
-X-CLIENT-HOSTNAME: 5.63.189.50
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: dmFkZTGRmHXmKxezHgHnenmfNBRxuxS5icg2UpqKuDHPuOJctsue4XUZZKRq+I3k43I7hGGWSVpCO2RMCqeSIExCba3+jEV4RHupFvblFZsJZEOU7KXO+apCLF7BrBbkfQgmVa3qfzu3l1CWWL3sTxIklFfy+SfQ3LU6S7g6b40rVIMKuT9PeVQ7vN73+o7FRm9i7DCswR8ZH2qLd5FKGiCRHAdTIZCJcdKbCzlNjgCJP7j9sC140zaF4s84pWcODIanBShuw8pSTZor6gJPE1mce69YOKvKUPMQL94xAmz+P6IQ2jB2WOr72U/SFpTenbJ1S72cePd03wWASkAhj+PgKNE/kKaG855T+EyLZWoLbf4OYEM2kSOJ7GiNom/yotNU5itFRBu9ztylBE6t5JhKLjiXKijes9NEspnrfifqNeEp1Iti6cizTPhSednvuVLBvTgy22/fO5Hdwix0ZC67F4Is0PRCrSBuuF7KbGU4LIhBJv8/XKtYrzsYSiRbLVUBf0HTlsKeaxYAbcVoxU997JTOkabLjeefj/4PDUXPX7gfPxWiQoKCdoQ2q3YeD5r9SIpwTX4Q1yW1rAk3Ubk30v+V+PvNb2Z1gR5NzsHGaG4RHE0g6QLLpAkF++EbO6hrRRakssNrfSdFb0IgXU7vRUp7COxhzJFOT/Q8mdjKYmP8ow
-X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625165229.3458-10-shradha.t@samsung.com>
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Wed, Jun 25, 2025 at 10:22:28PM +0530, Shradha Todi wrote:
+> Add host and endpoint controller driver support for FSD SoC.
 
-The PCI bus type does not expect its runtime PM suspend callback
-function, pci_pm_runtime_suspend(), to be invoked at all during system-
-wide suspend and resume, and it does not expect its runtime resume
-callback function, pci_pm_runtime_resume(), to be invoked at any point
-when runtime PM is disabled for the given device during system-wide
-suspend and resume, so make it express that expectation by setting
-power.strict_midlayer for all PCI devices in pci_pm_prepare() and
-clear it in pci_pm_complete().
+> +++ b/drivers/pci/controller/dwc/pci-exynos.c
+> @@ -20,6 +20,8 @@
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
+The trend is to sort these alphabetically.  The last couple additions
+didn't observe this, but maybe these new ones could go a little
+farther up and make it more sorted rather than less?
 
-v2 -> v3:
-   * Update subject prefix (Bjorn).
-   * Update the changelog to be more precise.
-   * Add Acked-by from Bjorn.
+> +#define FSD_PCIE_CXPL_DEBUG_00_31		0x2C8
 
-v1 -> v2:
-   * Set and clear the new flag in "prepare" and "complete" to allow
-     pm_runtime_force_suspend() invoked from driver remove callbacks to
-     work.
-   * Update subject and changelog.
+Existing #defines use lower-case hex; please follow suit.
 
----
- drivers/pci/pci-driver.c |    4 ++++
- 1 file changed, 4 insertions(+)
+> +/* to store different SoC variants of Samsung */
+> +enum samsung_pcie_variants {
+> +	FSD,
+> +	EXYNOS_5433,
+> +};
 
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -708,6 +708,8 @@
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
- 
-+	dev_pm_set_strict_midlayer(dev, true);
-+
- 	if (pm && pm->prepare) {
- 		int error = pm->prepare(dev);
- 		if (error < 0)
-@@ -749,6 +751,8 @@
- 		if (pci_dev->current_state < pre_sleep_state)
- 			pm_request_resume(dev);
- 	}
-+
-+	dev_pm_set_strict_midlayer(dev, false);
- }
- 
- #else /* !CONFIG_PM_SLEEP */
+>  struct samsung_pcie_pdata {
+>  	struct pci_ops				*pci_ops;
+>  	const struct dw_pcie_ops		*dwc_ops;
+>  	const struct dw_pcie_host_ops		*host_ops;
+> +	const struct dw_pcie_ep_ops		*ep_ops;
+>  	const struct samsung_res_ops		*res_ops;
+> +	unsigned int				soc_variant;
+> +	enum dw_pcie_device_mode		device_mode;
+>  };
 
+> +static u32 fsd_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
+> +				u32 reg, size_t size)
+> +{
+> +	void __iomem *addr;
+> +	u32 val;
+> +
+> +	addr = fsd_atu_setting(pci, base);
+> +
+> +	dw_pcie_read(addr + reg, size, &val);
+> +
+> +	return val;
 
+Remove blank lines to match style of fsd_pcie_write_dbi2().
 
+> +}
+> +
+> +static void fsd_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base,
+> +				u32 reg, size_t size, u32 val)
+> +{
+> +	void __iomem *addr;
+> +
+> +	addr = fsd_atu_setting(pci, base);
+> +
+> +	dw_pcie_write(addr + reg, size, val);
+
+Ditto.
+
+> +}
+> +
+> +static void fsd_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base,
+> +				u32 reg, size_t size, u32 val)
+> +{
+> +	struct exynos_pcie *ep = to_exynos_pcie(pci);
+> +
+> +	fsd_atu_setting(pci, base);
+> +	dw_pcie_write(pci->dbi_base + reg, size, val);
+> +	regmap_write(ep->sysreg, ep->sysreg_offset, ADDR_TYPE_DBI);
+> +}
+
+> +static int fsd_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> +				 unsigned int type, u16 interrupt_num)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +
+> +	switch (type) {
+> +	case PCI_IRQ_INTX:
+> +		return dw_pcie_ep_raise_intx_irq(ep, func_no);
+> +	case PCI_IRQ_MSIX:
+> +		dev_err(pci->dev, "EP does not support MSIX\n");
+
+s/MSIX/MSI-X/ to match spec usage.
+
+> @@ -373,13 +617,43 @@ static int exynos_pcie_probe(struct platform_device *pdev)
+>  		return ret;
+>  
+>  	platform_set_drvdata(pdev, ep);
+> -	ret = samsung_irq_init(ep, pdev);
+> -	if (ret)
+> -		goto fail_regulator;
+> -	ep->pci.pp.ops = pdata->host_ops;
+> -	ret = dw_pcie_host_init(&ep->pci.pp);
+> -	if (ret < 0)
+> +
+> +	if (pdata->res_ops->set_device_mode)
+> +		pdata->res_ops->set_device_mode(ep);
+> +
+> +	switch (ep->pdata->device_mode) {
+> +	case DW_PCIE_RC_TYPE:
+> +		ret = samsung_irq_init(ep, pdev);
+> +		if (ret)
+> +			goto fail_regulator;
+> +
+> +		ep->pci.pp.ops = pdata->host_ops;
+> +
+> +		ret = dw_pcie_host_init(&ep->pci.pp);
+> +		if (ret < 0)
+> +			goto fail_phy_init;
+> +
+> +		break;
+> +	case DW_PCIE_EP_TYPE:
+> +		phy_init(ep->phy);
+> +
+> +		ep->pci.ep.ops = pdata->ep_ops;
+> +
+> +		ret = dw_pcie_ep_init(&ep->pci.ep);
+> +		if (ret < 0)
+> +			goto fail_phy_init;
+> +
+> +		ret = dw_pcie_ep_init_registers(&ep->pci.ep);
+> +		if (ret)
+> +			goto fail_phy_init;
+> +
+> +		pci_epc_init_notify(ep->pci.ep.epc);
+> +
+> +		break;
+> +	default:
+> +		dev_err(dev, "invalid device type\n");
+>  		goto fail_phy_init;
+> +	}
+
+This would be a little nicer if you added soc_variant and device_mode
+and the code that sets and tests them for exynos_5433 first in a
+separate patch.  Then it would be more obvious that the new FSD parts
+don't affect exynos_5433 since this patch would only be *adding*
+FSD-specific things.
+
+>  static const struct samsung_pcie_pdata exynos_5433_pcie_rc_pdata = {
+>  	.dwc_ops		= &exynos_dw_pcie_ops,
+>  	.pci_ops		= &exynos_pci_ops,
+>  	.host_ops		= &exynos_pcie_host_ops,
+>  	.res_ops		= &exynos_res_ops_data,
+> +	.soc_variant		= EXYNOS_5433,
+> +	.device_mode		= DW_PCIE_RC_TYPE,
+>  };
+
+>  static const struct of_device_id exynos_pcie_of_match[] = {
+> @@ -449,6 +756,14 @@ static const struct of_device_id exynos_pcie_of_match[] = {
+>  		.compatible = "samsung,exynos5433-pcie",
+>  		.data = (void *) &exynos_5433_pcie_rc_pdata,
+>  	},
 
