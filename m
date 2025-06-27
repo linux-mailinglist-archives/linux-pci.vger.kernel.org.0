@@ -1,215 +1,162 @@
-Return-Path: <linux-pci+bounces-30912-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30913-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8B8AAEB48B
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 12:27:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65F04AEB4F2
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 12:34:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C68418908B8
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 10:27:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30BA1564AE9
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 10:32:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1AB22949F5;
-	Fri, 27 Jun 2025 10:24:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 456A8298CB0;
+	Fri, 27 Jun 2025 10:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xV8XKsjm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3BC296145;
-	Fri, 27 Jun 2025 10:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF01260580
+	for <linux-pci@vger.kernel.org>; Fri, 27 Jun 2025 10:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751019883; cv=none; b=Q8nrweB2IgrMHUflY1PHKC8Biio+6J8tjx7VuG2MDRlyEYQg6pxji0Kjn+LurDq/ycV+5Z91gO1SsHNbcrN5mixkkxJF7FlXZUPYhynl3EfhYHvp+GKr1D4J+au67WCqsOatiTGbgNZxwWE1JLX7bHUXTNQAAWjpQHg+UBM1Zmw=
+	t=1751020200; cv=none; b=bww0vXGVFwZ96Owq4Fd24opmsC22RM4Z+7Ks5t3Uc05A+H9fm9UVUgyUYuYZN3met3+T2mHj8FzmDZlSHLwjJjj1oEAprZ4xMAnVhLelu4Jan3x/FYMkm/VYRByWsCnA2kpnLa+mxWeim5oveBAAxFL6yRRDCUiZ65ilryl7T0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751019883; c=relaxed/simple;
-	bh=BCbatr1KZPFWU9OTfqGjZ/24IBVjG/LV+9y/pRxtkMM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ubJpDTpkqgiO19sPpbQCVnmEutOEJaTuqBO7G2XLv6G2bLjk99R0DaB8uxKk5Kvlci2KYgG5+D9DYnxTOq1zCa0a+ZJ+HgJqcDz0mjh/zB/uN2WPsjDZftFp1P9c7hTvRCLNFJNJSBj0EuX+g5NegvI/YedpUZO4eT6P6JxgQOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bTBVx1RGyz6L50b;
-	Fri, 27 Jun 2025 18:24:25 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 77F431402EC;
-	Fri, 27 Jun 2025 18:24:34 +0800 (CST)
-Received: from localhost (10.48.153.213) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 27 Jun
- 2025 12:24:33 +0200
-Date: Fri, 27 Jun 2025 11:24:29 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v10 05/17] CXL/AER: Introduce kfifo for forwarding CXL
- errors
-Message-ID: <20250627112429.00007155@huawei.com>
-In-Reply-To: <20250626224252.1415009-6-terry.bowman@amd.com>
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
-	<20250626224252.1415009-6-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751020200; c=relaxed/simple;
+	bh=2EOkAnNBvBCKn2GplUgHqTmWB4d9ijjHq7lRv7TbOdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hjLgazogvs/kn+NHC4J0MjTL2ns1Cnq6W9npd+flZ1I3ZbIficBV9WAKEEbPCs061O6GPrpsRAQgrvxj0G2D/ii5m1p0pKiJpIPAj/6gzEltBJchyN82+bGRPMDVdIdyDLqg/t1ZjJGVCSwC/x/qfCJmIycfYMYsg4T8vLoa8uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xV8XKsjm; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a6d77b43c9so1821205f8f.3
+        for <linux-pci@vger.kernel.org>; Fri, 27 Jun 2025 03:29:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751020195; x=1751624995; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=X6MFVfJiP7rHh32OSgQoFMHZ8o6ooG+IvLMko8nULpU=;
+        b=xV8XKsjmJFr5xN9Avyn5hXenpeFdftqJww30zDZs34BPUmwtW2OpEtpY3LFyOZL2o8
+         owi60uYg2rdoHUxG6EMp4rJQtKtcaWi2FLaruxGCFhLAYBYUITtloXbcl8iRDW818pnc
+         dFiqR6uAdevSfciBNt2MXaQRzYs0rL/6yGNjLO5M46mlAGpFQB3KPtIkcccRreDnW9Il
+         AewIxkqcOD+7NYlUYSHLkDIkJutsPJKBlthwaH50o8bUP8HcpoI9h79YGAEC+72hiI4Y
+         7dBMmY4charzTiElUbvQAWW3dRm4s9hvkFbQbqXdy9X58oF1lUlYyCXeiIB9tEzyMRC8
+         8q+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751020195; x=1751624995;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X6MFVfJiP7rHh32OSgQoFMHZ8o6ooG+IvLMko8nULpU=;
+        b=G2C3nM4EP9+fEePgFY8hgeLwlBXhgVNnGKwJdXHTZMDAaXqsfNAfVIBG75/051cTqv
+         IOixPCnM5dIUlfqnz1SPY7MowfPRO8SoNA7cL6qTeOSZILtEJJC3oI3RoazaxKHENoq+
+         6dk3PAKkZ6+hUbaPnZmgm+M0wHvC4pjhl6WlQU3wGHoTPI4WwKbUV6NKUX2cbW4slyB5
+         n1XtnkhrPE++qUfPHKyozdWzBMPl19YDovo4IRyAxoPkVMkTT3L7DI+6gzc42vtdVPiG
+         8/AAGnl1r5d34fFcpsgQnBy0c/Gz9lEjQkaytnokfKQZhgN9Xqxvkegg33OLRHU09k37
+         HAmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWP7NiGQcmg1Emq8JfZTkNQQIgA/2KGzLaaaQ48rRahmDAGLcSZCghgUnF5Ec2GDq7AsVyVRDDvRzw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCAr9nb/dc0TOC9HNEXpM0Ynlr5a6Nb1RQJe/foryxQUX+EQTE
+	FpokKFUu4UCiYWdAP/skj5nl/fYrQPkXKs5i27zhglSh5KSI7Uq342/tv2kWIvRZNac=
+X-Gm-Gg: ASbGnctSKWjQkWVdsXQygQde0l6stcyaxb/kgd+dbEiOinlnbeSY0QDLYJWhS5oMglQ
+	oCGJo+KKQNeFbjbnjaZD2SCGYL6NPu7cp6LQGX8pJ+8qfMnhe2i/L129i8Ggud0kLD20s2SNuz3
+	2FEkNI0Z02CkayFIkPOC90EF+o0xHcb1J32yx4tw9ldultxmmqlNPWY0TXpeYPayFIfosu7XGtQ
+	JOFn+kxKFc2gYExpFKl4MLiCh9a51aRAD6ojBDdLGmrUm1mFWYr2qQUhapzT5IjV9Py8w3cRnd7
+	I12VlO78tsuL7QIDMpjA0fkjDq+j3GVdPd1vqmML6EQM+9na8Mgm4KYhmNJA9J6BUog0oWG1Mnb
+	7rBkcNrvVeSbiGb0Pj+YrstOn8yZA
+X-Google-Smtp-Source: AGHT+IFgsX9FSlNszRWNMnA4oqFZpX3uvqJeMPddf44g+s+uUo53j7YUDYVDdrbJmC3jytJM9+cesw==
+X-Received: by 2002:a5d:64e3:0:b0:3a4:f52f:d4a3 with SMTP id ffacd0b85a97d-3a8fed705ffmr2820183f8f.28.1751020194947;
+        Fri, 27 Jun 2025 03:29:54 -0700 (PDT)
+Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4538a406879sm47136915e9.28.2025.06.27.03.29.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 03:29:54 -0700 (PDT)
+Date: Fri, 27 Jun 2025 12:29:53 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: last.ocean8435@goose.ws, 1107142@bugs.debian.org
+Cc: lord2y <lord2y@pm.me>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: Bug#1107142: linux-image-6.12.27-amd64: mpt3sas LSI SAS2008
+ [1000:0072] probe failure - BAR 1 reservation error
+Message-ID: <sfjmooeo4rjqwbf4equggtn3st5tyzgup5vjmnmulqwomkfhlb@tqzt52d7r5gp>
+References: <174884821929.71574.3484777873234546045.reportbug@localhost>
+ <_1E4lJd3zEeJlb1Xg_eKu3N4-sF4g_2MxFAo7lA5RfWU8N4UtEyidG7se5UdSRWaK-1bN9n6_sXEpoLrRIVlvpfpRnYpgyBTYM84xS5xYuk=@pm.me>
+ <174884821929.71574.3484777873234546045.reportbug@localhost>
+ <3cd95113-69e0-44c5-9c1c-8b65269d11fe@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- frapeml500008.china.huawei.com (7.182.85.71)
-
-On Thu, 26 Jun 2025 17:42:40 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> CXL error handling will soon be moved from the AER driver into the CXL
-> driver. This requires a notification mechanism for the AER driver to share
-> the AER interrupt with the CXL driver. The notification will be used
-> as an indication for the CXL drivers to handle and log the CXL RAS errors.
-> 
-> First, introduce cxl/core/native_ras.c to contain changes for the CXL
-> driver's RAS native handling. This as an alternative to dropping the
-> changes into existing cxl/core/ras.c file with purpose to avoid #ifdefs.
-> Introduce CXL Kconfig CXL_NATIVE_RAS, dependent on PCIEAER_CXL, to
-> conditionally compile the new file.
-> 
-> Add a kfifo work queue to be used by the AER driver and CXL driver. The AER
-> driver will be the sole kfifo producer adding work and the cxl_core will be
-> the sole kfifo consumer removing work. Add the boilerplate kfifo support.
-> 
-> Add CXL work queue handler registration functions in the AER driver. Export
-> the functions allowing CXL driver to access. Implement registration
-> functions for the CXL driver to assign or clear the work handler function.
-> 
-> Introduce 'struct cxl_proto_err_info' to serve as the kfifo work data. This
-> will contain the erring device's PCI SBDF details used to rediscover the
-> device after the CXL driver dequeues the kfifo work. The device rediscovery
-> will be introduced along with the CXL handling in future patches.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Hi Terry,
-
-Whilst it obviously makes patch preparation a bit more time consuming
-for series like this with many patches it can be useful to add a brief
-change log to the individual patches as well as the cover letter.
-That helps reviewers figure out where they need to look again.
-
-A few trivial things inline.
-
-With those fixed up
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
-Jonathan
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jafp56i2trqcgquc"
+Content-Disposition: inline
+In-Reply-To: <3cd95113-69e0-44c5-9c1c-8b65269d11fe@app.fastmail.com>
 
 
-> ---
->  drivers/cxl/Kconfig           | 14 ++++++++
->  drivers/cxl/core/Makefile     |  1 +
->  drivers/cxl/core/core.h       |  8 +++++
->  drivers/cxl/core/native_ras.c | 26 +++++++++++++++
->  drivers/cxl/core/port.c       |  2 ++
->  drivers/cxl/core/ras.c        |  1 +
->  drivers/cxl/cxlpci.h          |  1 +
->  drivers/pci/pci.h             |  4 +++
->  drivers/pci/pcie/aer.c        |  7 ++--
->  drivers/pci/pcie/cxl_aer.c    | 60 +++++++++++++++++++++++++++++++++++
->  include/linux/aer.h           | 31 ++++++++++++++++++
->  11 files changed, 153 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/cxl/core/native_ras.c
+--jafp56i2trqcgquc
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: Bug#1107142: linux-image-6.12.27-amd64: mpt3sas LSI SAS2008
+ [1000:0072] probe failure - BAR 1 reservation error
+MIME-Version: 1.0
 
+Control: forwarded -1 https://lore.kernel.org/linux-pci/sfjmooeo4rjqwbf4equ=
+ggtn3st5tyzgup5vjmnmulqwomkfhlb@tqzt52d7r5gp
+Control: tag -1 + moreinfo
 
->  static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 54e219b0049e..6f1396ef7b77 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -4,6 +4,7 @@
->  #define __CXL_PCI_H__
->  #include <linux/pci.h>
->  #include "cxl.h"
-> +#include "linux/aer.h"
+Hello,
 
-Why?  There are no changes in this header other than the include and the changes
-to linux/aer.h are new stuff so I can't see how it becomes necessary if it
-wasn't before.
+[expanding the audience to include upstream and mark the bug as
+forwarded accordingly]
 
-Might well have always been missing and should have been here. If so separate
-patch to tidy that up.
+On Sat, Jun 21, 2025 at 01:13:48PM -0400, last.ocean8435@goose.ws wrote:
+> Sorry for the late reply, I've been out of the country and just returned =
+home.
+>=20
+> > Can you try booting 6.12.27-amd64 passing the kernel boot option pci=3D=
+realloc=3Doff?
+>=20
+> Upon returning home, I found a newer kernel available, 6.12.32-amd64. I i=
+nstalled that and rebooted with kernel boot options:
+>=20
+> GRUB_CMDLINE_LINUX_DEFAULT=3D"quiet splash"
+>=20
+> The bug was still present on kernel 6.12.32-amd64, none of my SAS drives =
+attached via my LSI card were coming up. I edited the boot options to:
+>=20
+> GRUB_CMDLINE_LINUX_DEFAULT=3D"quiet splash pci=3Drealloc=3Doff"
+>=20
+> And that appears to have fixed it. My SAS drives are now showing up and I=
+ can interact with them as normal.
 
->  
->  #define CXL_MEMORY_PROGIF	0x10
->  
+Can you please additionally add
 
+	dyndbg=3D"file drivers/pci/* +p"
 
-> diff --git a/drivers/pci/pcie/cxl_aer.c b/drivers/pci/pcie/cxl_aer.c
-> index b2ea14f70055..846ab55d747c 100644
-> --- a/drivers/pci/pcie/cxl_aer.c
-> +++ b/drivers/pci/pcie/cxl_aer.c
+to the cmdline and provide the complete output of `dmesg` with and
+without passing pci=3Drealloc=3Doff?
 
->  static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
->  {
->  	struct aer_err_info *info = (struct aer_err_info *)data;
-> @@ -136,3 +152,47 @@ void cxl_rch_enable_rcec(struct pci_dev *rcec)
->  	pci_info(rcec, "CXL: Internal errors unmasked");
->  }
->  
-> +static DEFINE_KFIFO(cxl_proto_err_fifo, struct cxl_proto_err_work_data,
-> +		    CXL_ERROR_SOURCES_MAX);
-> +static DEFINE_SPINLOCK(cxl_proto_err_fifo_lock);
-> +struct work_struct *cxl_proto_err_work;
+Thanks
+Uwe
 
-I'm not seeing a declaration for this in the headers, so can it be static?
+--jafp56i2trqcgquc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This is made a little more confusing as in this patch we have both
-a structure called cxl_proto_err_work and a pointer to it with exactly the
-same name.  Maybe rename this so it's subtly different.  cxl_protocol_err_work
-or something silly like that just to make reviewers life a tiny bit easier!
+-----BEGIN PGP SIGNATURE-----
 
-> +
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhecpwACgkQj4D7WH0S
+/k5AMwf/ZrRso0QuO2i8euxBl6ix+UtnVLgknpb0L4AAlJ7iBxb00PnC3EwPtfJ4
+pX6PNawscM76ooxrmiXwCP22AUX71FzCimfGrkV2G/IZDhipohJJzcbRPH2XJCX/
+cjWSN0iTRqW+Tpk6D4gwaYuy909zV5UkfO+lOnG82oFEHxuq97gwZV1fUQDeh4Zi
+kFDZqjjG0/n+O9oj/dzI+DPPzrCr8y2VBXWvjfoWNSmWZ6SKqGNQ2hbBTGd6+dJ5
+YFYzci3cyix9Rf8CoH4rDDUucHUknGf/CGBLHKVmOPpgDwMnQxd0vXj7TRtTn+ug
+JvV0SKPLReqK1e1Goa1nedk0Y1aL3w==
+=ufF3
+-----END PGP SIGNATURE-----
 
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 02940be66324..24c3d9e18ad5 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -10,6 +10,7 @@
->  
->  #include <linux/errno.h>
->  #include <linux/types.h>
-> +#include <linux/workqueue_types.h>
->  
->  #define AER_NONFATAL			0
->  #define AER_FATAL			1
-> @@ -53,6 +54,26 @@ struct aer_capability_regs {
->  	u16 uncor_err_source;
->  };
->  
-> +/**
-> + * struct cxl_proto_err_info - Error information used in CXL error handling
-> + * @severity: AER severity
-> + * @function: Device's PCI function
-
-Run kernel-doc over the files and fix errors / warning.
-Missed updating this to devfn which it would have shouted about.
-
-> + * @device: Device's PCI device
-> + * @bus: Device's PCI bus
-> + * @segment: Device's PCI segment
-> + */
-> +struct cxl_proto_error_info {
-> +	int severity;
-> +
-> +	u8 devfn;
-> +	u8 bus;
-> +	u16 segment;
-> +};
-
+--jafp56i2trqcgquc--
 
