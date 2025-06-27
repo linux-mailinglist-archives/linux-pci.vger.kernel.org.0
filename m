@@ -1,56 +1,93 @@
-Return-Path: <linux-pci+bounces-30935-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30936-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4381AEBC6C
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 17:51:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C9E3AEBC7A
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 17:53:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E40F170CB2
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 15:51:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4CBC31694C4
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 15:53:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7641F2E8E05;
-	Fri, 27 Jun 2025 15:51:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 754CA2EA161;
+	Fri, 27 Jun 2025 15:52:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pXr6Ef0E"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pyPdnJ7Q"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB4B171C9;
-	Fri, 27 Jun 2025 15:51:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5152EA14C;
+	Fri, 27 Jun 2025 15:52:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751039497; cv=none; b=Fq272AjbPnM1HRVNB94YEWpboSRkXqo9pNh8HqZ1/bz2g5Ay2RVIcM6uXH+b+ooEyd7cJJfQHphM9lpuAbzI5oDeJN3qoVlSq+1LYcSdzQJpWseIFX45pXbumfxmrnNumECzi/cMNAyLqIlgW9LCLr9RHwPSh6KpiuNi9V7EvQg=
+	t=1751039522; cv=none; b=LEw7Nl1HIzJZGatY7RH84Lx86NIdHR+BQFd18S2OJq5IxqiIl2XFYmEfHGHDJachz8frR5dS2JqLNvVPtp27gSQcY16fvWPp+71ZQNPdms5jOGKiXPrhIfcDjl+NVThwjlmRhEgY2NsFB4KCfmtaZlpBByKmE75wGgD3ZFJJV7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751039497; c=relaxed/simple;
-	bh=dBajdsA/Qa7LcDIvcw0Z/OjuZVFOCfMxd181T0knkJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=juTybjNySEK72Xj8z/QY5EeUlrV/S+qmEqcEN/36ILPiIG+qjc+c19nNKxN2iWp/ONw943tqlXjJg2rQ/+eijHU1lia+nkst2Gz+FIoZXWEWSEvTaAgv7DcTEwGdCcBGKC3wBlVKOqvd/KdEvdCWLOLiv0t8EOvlA8uxCVpezBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pXr6Ef0E; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BE7AC4CEE3;
-	Fri, 27 Jun 2025 15:51:34 +0000 (UTC)
+	s=arc-20240116; t=1751039522; c=relaxed/simple;
+	bh=f0UYA/EuZoGSHsVhZD3Fus+HSK9WipcpF5RxkV+BP5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TGV7y1jQ45g4SXi1xJX7Ki495PudN3emL0VPxvAyvWaOzY5/KK5XiUr++9Ccp4AHluPh7dUAN9kA0ie1Q5HkWuzKi+sBhguyJQxwBK5DIkBlkyUL/ol5BI6D79XMNwvJbGOD4C2meXk3Zp1nM+FkGYN2IWi6WvehwGexpsRQTA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pyPdnJ7Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B088C4CEED;
+	Fri, 27 Jun 2025 15:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751039494;
-	bh=dBajdsA/Qa7LcDIvcw0Z/OjuZVFOCfMxd181T0knkJw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=pXr6Ef0EoBPkb7OSCBb6uvRYd2ndTtPg6blj9ZW/5UbkhETOBkece8YO9NEo+FVhP
-	 h3pPQDW+LsSQfM4lhv3NWX73Yv0d1eLm9A5lBVxbg7Tw3c96Uvqlg7BdEMLqpuJUUY
-	 mJBtZYLO4mLCH93sLrZeEsI/W3whKfvavaASMNRAArVdNS4/5KfMd4RRoIXrQVNpvC
-	 JyOo1Gl18U1TOfK/autsMTGmkfsgVuyegZN/QGfwg250sep15aNPU9EguWIHnJVtAO
-	 FpFGKci0ruSM68jeVVZ16VJZAQUfe59YwMrRePs93we3I7RMwuW9jq+e6Yq7mTEaNV
-	 EF1NlnJrJw0bQ==
-Date: Fri, 27 Jun 2025 10:51:33 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
-	Vipin Sharma <vipinsh@google.com>,
-	Aaron Lewis <aaronlewis@google.com>
-Subject: Re: [RFC PATCH] PCI: Support Immediate Readiness on devices without
- PM capabilities
-Message-ID: <20250627155133.GA1669946@bhelgaas>
+	s=k20201202; t=1751039521;
+	bh=f0UYA/EuZoGSHsVhZD3Fus+HSK9WipcpF5RxkV+BP5o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pyPdnJ7Q7HuuIiKgrWaMDcrBwxGTZiscgxJc6vl+XrICm0G79l/w04xJOgIgSsiT4
+	 nyJKeqIT4LG/SdOrP9BThyVFe+sK/VvM3jidhmIf4FL5wNqqTU5vXGLNIqJcAXv1fB
+	 qKTpyLWg6gUYFK9zYNPKm3MeePbH4VzwGEN7jkKanOyl7pqQcVspMU/YR0KWDgEe+y
+	 Zv5XPVN4hnsL9/6Codf3WfenmJLS/Wop+OvwNF2usYFuIMsbN5lfU8nIT0Fa6ZEQ9G
+	 1eaaz5yVdyekzbuVGyJ58FdAsHP1VfbszTS+QL47CPNvx+4zmaedL/KBAtCkPkCxRv
+	 NsSgI1XvWhPIA==
+Date: Fri, 27 Jun 2025 10:52:00 -0500
+From: Rob Herring <robh@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 05/28] bus: simple-pm-bus: Populate child nodes at
+ probe
+Message-ID: <20250627155200.GB3234475-robh@kernel.org>
+References: <20250613134817.681832-1-herve.codina@bootlin.com>
+ <20250613134817.681832-6-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,103 +96,46 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aF3HDIzpe3vnpBdj@google.com>
+In-Reply-To: <20250613134817.681832-6-herve.codina@bootlin.com>
 
-On Thu, Jun 26, 2025 at 03:17:48PM -0700, Sean Christopherson wrote:
-> On Wed, Jun 25, 2025, Bjorn Helgaas wrote:
-> > On Tue, Jun 24, 2025 at 10:16:37AM -0700, Sean Christopherson wrote:
-> > > +void pci_pm_init(struct pci_dev *dev)
-> > > +{
-> > > +	u16 status;
-> > > +
-> > > +	device_enable_async_suspend(&dev->dev);
-> > > +	dev->wakeup_prepared = false;
-> > > +
-> > > +	dev->pm_cap = 0;
-> > > +	dev->pme_support = 0;
-> > > +
-> > > +	/*
-> > > +	 * Note, support for the PCI PM spec is optional for legacy PCI devices
-> > > +	 * and for VFs.  Continue on even if no PM capabilities are supported.
-> > > +	 */
-> > > +	__pci_pm_init(dev);
-> > >  
-> > >  	pci_read_config_word(dev, PCI_STATUS, &status);
-> > >  	if (status & PCI_STATUS_IMM_READY)
-> > >  		dev->imm_ready = 1;
-> > 
-> > I would rather just move this PCI_STATUS read to somewhere else.  I
-> > don't think there's a great place to put it.  We could put it in
-> > set_pcie_port_type(), which is sort of a grab bag of PCIe-related
-> > things.
-> > 
-> > I don't know if it's necessarily even a PCIe-specific thing, but it
-> > would be unexpected if somebody made a conventional PCI device that
-> > set it, since the bit was reserved (and should be zero) in PCI r3.0
-> > and defined in PCIe r4.0.
-> > 
-> > Maybe we should put it in pci_setup_device() close to where we call
-> > pci_intx_mask_broken()?
+On Fri, Jun 13, 2025 at 03:47:45PM +0200, Herve Codina wrote:
+> The simple-pm-bus driver handles several simple busses. When it is used
+> with busses other than a compatible "simple-pm-bus", it doesn't populate
+> its child devices during its probe.
 > 
-> Any reason not to throw it in pci_init_capabilities()?  That has the
-> advantage of minimizing the travel distance, e.g. to avoid
-> introducing a goof similar to what happened with 4d4c10f763d7 ("PCI:
-> Explicitly put devices into D0 when initializing").
-
-The only reason I suggested doing it earlier was to enable a potential
-pci_find_capability() optimization.  But this could easily be moved
-if/when that happens, so I think the patch below would be fine.
-
-> E.g. something silly like this?  Or maybe pci_misc_init() or so?
+> This confuses fw_devlink and results in wrong or missing devlinks.
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 9e42090fb108..4a1ba5c017cd 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3205,7 +3205,6 @@ void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev)
->  void pci_pm_init(struct pci_dev *dev)
->  {
->         int pm;
-> -       u16 status;
->         u16 pmc;
->  
->         device_enable_async_suspend(&dev->dev);
-> @@ -3266,9 +3265,6 @@ void pci_pm_init(struct pci_dev *dev)
->                 pci_pme_active(dev, false);
->         }
->  
-> -       pci_read_config_word(dev, PCI_STATUS, &status);
-> -       if (status & PCI_STATUS_IMM_READY)
-> -               dev->imm_ready = 1;
->  poweron:
->         pci_pm_power_up_and_verify_state(dev);
->         pm_runtime_forbid(&dev->dev);
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 4b8693ec9e4c..d33b8af37247 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2595,6 +2595,15 @@ void pcie_report_downtraining(struct pci_dev *dev)
->         __pcie_print_link_status(dev, false);
->  }
->  
-> +static void pci_imm_ready_init(struct pci_dev *dev)
-> +{
-> +       u16 status;
-> +
-> +       pci_read_config_word(dev, PCI_STATUS, &status);
-> +       if (status & PCI_STATUS_IMM_READY)
-> +               dev->imm_ready = 1;
-> +}
-> +
->  static void pci_init_capabilities(struct pci_dev *dev)
->  {
->         pci_ea_init(dev);               /* Enhanced Allocation */
-> @@ -2604,6 +2613,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
->         /* Buffers for saving PCIe and PCI-X capabilities */
->         pci_allocate_cap_save_buffers(dev);
->  
-> +       pci_imm_ready_init(dev);        /* Immediate Ready */
->         pci_pm_init(dev);               /* Power Management */
->         pci_vpd_init(dev);              /* Vital Product Data */
->         pci_configure_ari(dev);         /* Alternative Routing-ID Forwarding */
+> Once a driver is bound to a device and the probe() has been called,
+> device_links_driver_bound() is called.
+> 
+> This function performs operation based on the following assumption:
+>     If a child firmware node of the bound device is not added as a
+>     device, it will never be added.
+> 
+> Among operations done on fw_devlinks of those "never be added" devices,
+> device_links_driver_bound() changes their supplier.
+> 
+> With devices attached to a simple-bus compatible device, this change
+> leads to wrong devlinks where supplier of devices points to the device
+> parent (i.e. simple-bus compatible device) instead of the device itself
+> (i.e. simple-bus child).
+> 
+> When the device attached to the simple-bus is removed, because devlinks
+> are not correct, its consumers are not removed first.
+> 
+> In order to have correct devlinks created, make the simple-pm-bus driver
+> compliant with the devlink assumption and create its child devices
+> during its probe.
+
+IIRC, skipping child nodes was because there were problems with 
+letting the driver handle 'simple-bus'. How does this avoid that now?
+
+The root of_platform_populate() that created the simple-bus device that 
+gets us to the probe here will continue descending into child nodes. 
+Meanwhile, the probe here is also descending into those same child 
+nodes. Best case, that's just redundant. Worst case, won't you still 
+have the same problem if the first of_platform_populate() creates the 
+devices first?
+
+Rob
 
