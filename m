@@ -1,125 +1,203 @@
-Return-Path: <linux-pci+bounces-30917-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30918-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90786AEB60B
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 13:12:30 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 775B2AEB612
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 13:15:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E8D71884F9D
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 11:12:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 272867A41E3
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jun 2025 11:13:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3EE8280CF6;
-	Fri, 27 Jun 2025 11:12:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F35229ACFC;
+	Fri, 27 Jun 2025 11:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTn3TdKn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3D626B77D;
-	Fri, 27 Jun 2025 11:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B457280CF6;
+	Fri, 27 Jun 2025 11:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751022746; cv=none; b=MQIVec06Xobz9c4z+HYBqHz5zIi6/0iO3mIVb84tZ0h3ehFwH662dboGUuZ333bC5q1G2TpTbGlF6MVi/k3ewtaQfgR649z/Av0k6wl18uGshZGNT5Nl5hDRfk7t/Mep00rpE7jfTu7iGKy+msJMNGHShAc4eYptgSCSAnDtjaY=
+	t=1751022893; cv=none; b=YwnrF+lJpIphD5TX8JvI6JLunWbjNH9fKB2kEWjjZrw2U5v4PpZRtVRbXvkBmiWa8bTq52xiNbAnp1RYb2Axl7dYYb+zi7Q2nYHhCK8s5U1fYte/HRIO5fAD5YVuflshKUZsbY796eyUbeLxZywMIGDp6w4lM5E4e+oKQOr8i5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751022746; c=relaxed/simple;
-	bh=LPvj6lgt5p03KqH9T4eWKI+qTbEPZgCvTOfVOzdyN6w=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pXsD0+kvtsDPkxDlJPI5aGng7w8zafeGzbKGoKxCtMiY6Ru8D6Z0UfFefiOkfZb07amIfbJmff9cBdA5+PSzJjvOK2kBDRs/b3EvbL3KjIze9OQMLekGpPFZNJvDaA4AAJONfqfleqa4Q4f2bUryxSoeX5Uvev8WZ7OrlCFbMfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bTCYK205mz6M4VJ;
-	Fri, 27 Jun 2025 19:11:33 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id CFE4D14011D;
-	Fri, 27 Jun 2025 19:12:21 +0800 (CST)
-Received: from localhost (10.48.153.213) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 27 Jun
- 2025 13:12:20 +0200
-Date: Fri, 27 Jun 2025 12:12:19 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v10 08/17] cxl/pci: Move RAS initialization to cxl_port
- driver
-Message-ID: <20250627121219.00005068@huawei.com>
-In-Reply-To: <20250626224252.1415009-9-terry.bowman@amd.com>
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
-	<20250626224252.1415009-9-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751022893; c=relaxed/simple;
+	bh=LlNXjuxd1lLlCWM3y57Dwt1ibKE5jXZxaa8JZNOTkUA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dLFD37TSsPgse8gUbqfNytjVV4yCql4JicoRxDlUAn8BuJ/GYvpyB1G12hy0WRZYwlYY7eMya/4911f3zxDnAn8a4Q91HJ2pFt1M1Eo8IXdJ6rOugt9sPHd+MLNlcJ+vwzyP2cUlgHO/DYk3dCXWJFh85G47cRjGohOkajeYG4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTn3TdKn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D23C5C4CEE3;
+	Fri, 27 Jun 2025 11:14:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751022892;
+	bh=LlNXjuxd1lLlCWM3y57Dwt1ibKE5jXZxaa8JZNOTkUA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nTn3TdKnMGd7f0uDS9+uSuOk0qitc5hQft4SstpYXZBragL13VQesT5i+Uxd1Nmi4
+	 /eD5fhpqkSMqHc0bcG7KxtKCLsuWU53SdixMEPzx5K/cdHOyqRlVV6mvFLNEyQzlTk
+	 4gBeF5RRzNmIZYy7CpNzHZvOTMp55+sox/pN3AqmvdwSphzUGFF86FNWukX3KiVRAF
+	 Aih/7RxcBD83zyGAkf6kYLz4G8sUyLRnTBgiB/xdhUFLkjYqDPDReXIOXdGSWOqRyt
+	 Bm1jPk5RaC2n9gHQuf8YuIWcw7vacVqXWzqfose/mJ+W9l0wBriZbmcojdrT/dH9cG
+	 /Js/QzYmdALiw==
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-60efc773b5fso1032530eaf.3;
+        Fri, 27 Jun 2025 04:14:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVgwA29g+q4dOIk2iuUw6vU+fLeKdfE6LTE0qtOGlvCk9n6SKWkiMKXGK2VhdnZyhyJmBGYqb38Vjcy@vger.kernel.org, AJvYcCXwg9uBf+cMEIHfO/2qCVRSkbdXHvzsPbcuXPneEz/G6jkCnIiyh17yS2HcpSj8XFqkdF3joEeuT0Lg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhY862FuKCMeZRaq1uTAG+ARd/bLLabc+43sybV0OMAjxMPOca
+	MgtvzftStwOchzicOI0+lta6KbKSBdsoCyK7scIj5vtHdKU9yC+67Xd80aUE+8wEC2/X+PBiuL+
+	C5Zh7Y+/yFXwQN5O3jeQ/KvZuESayqtU=
+X-Google-Smtp-Source: AGHT+IFQVxX4WH/Cb65IXJpVCKwU7owSN3U3ENrl3vl2gB3cUZovGm8T4mZsyKFPeotBV4rWHfsHm+od3VTYBzpCPms=
+X-Received: by 2002:a05:6820:180c:b0:611:b85f:b159 with SMTP id
+ 006d021491bc7-611b9015d61mr1942787eaf.1.1751022892079; Fri, 27 Jun 2025
+ 04:14:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <5015172.GXAFRqVoOG@rjwysocki.net> <2336655.iZASKD2KPV@rjwysocki.net>
+ <CAJZ5v0h4AMFfyBugjBwQOV=xY-Hq5kL_vB7Gwrj06N8vo6GQtg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0h4AMFfyBugjBwQOV=xY-Hq5kL_vB7Gwrj06N8vo6GQtg@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 27 Jun 2025 13:14:40 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0h1F-N3-Ue5OqUPoORDtR=qwknX-yDNuqxbogEjidxooQ@mail.gmail.com>
+X-Gm-Features: Ac12FXya15hOE4Ngrfdl2VtlXT84PHm_94erZvkil5gb3JYjBEpALp5Mz78nYbs
+Message-ID: <CAJZ5v0h1F-N3-Ue5OqUPoORDtR=qwknX-yDNuqxbogEjidxooQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/9] PM: Check power.needs_force_resume in pm_runtime_force_suspend()
+To: Linux PM <linux-pm@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 26 Jun 2025 17:42:43 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
+On Fri, Jun 27, 2025 at 12:52=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.o=
+rg> wrote:
+>
+> On Thu, Jun 26, 2025 at 8:15=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.=
+net> wrote:
+> >
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Add a power.needs_force_resume check to pm_runtime_force_suspend() so
+> > it need not rely on the runtime PM status of the device when deciding
+> > whether or not to return early.
+> >
+> > With the new check in place, pm_runtime_force_suspend() will also skip
+> > devices with the runtime PM status equal to RPM_ACTIVE if they have
+> > power.needs_force_resume set, so it won't need to change the RPM
+> > status of the device to RPM_SUSPENDED in addition to setting
+> > power.needs_force_resume in the case when pm_runtime_need_not_resume()
+> > return false.
+> >
+> > This allows the runtime PM status update to be removed from
+> > pm_runtime_force_resume(), so the runtime PM status remains unchanged
+> > between the pm_runtime_force_suspend() and pm_runtime_force_resume()
+> > calls.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > v1 -> v2: Corresponds to patch [2/9] (that was posted as [0/9] by mista=
+ke) in v1.
+> >
+> > ---
+> >  drivers/base/power/runtime.c |   21 ++++++++-------------
+> >  1 file changed, 8 insertions(+), 13 deletions(-)
+> >
+> > --- a/drivers/base/power/runtime.c
+> > +++ b/drivers/base/power/runtime.c
+> > @@ -1973,7 +1973,7 @@
+> >         int ret;
+> >
+> >         pm_runtime_disable(dev);
+> > -       if (pm_runtime_status_suspended(dev))
+> > +       if (pm_runtime_status_suspended(dev) || dev->power.needs_force_=
+resume)
+> >                 return 0;
+> >
+> >         callback =3D RPM_GET_CALLBACK(dev, runtime_suspend);
+> > @@ -1988,15 +1988,16 @@
+> >         /*
+> >          * If the device can stay in suspend after the system-wide tran=
+sition
+> >          * to the working state that will follow, drop the children cou=
+nter of
+> > -        * its parent, but set its status to RPM_SUSPENDED anyway in ca=
+se this
+> > -        * function will be called again for it in the meantime.
+> > +        * its parent and the usage counters of its suppliers.  Otherwi=
+se, set
+> > +        * power.needs_force_resume to let pm_runtime_force_resume() kn=
+ow that
+> > +        * the device needs to be taken care of and to prevent this fun=
+ction
+> > +        * from handling the device again in case the device is passed =
+to it
+> > +        * once more subsequently.
+> >          */
+> > -       if (pm_runtime_need_not_resume(dev)) {
+> > +       if (pm_runtime_need_not_resume(dev))
+> >                 pm_runtime_set_suspended(dev);
+> > -       } else {
+> > -               __update_runtime_status(dev, RPM_SUSPENDED);
+> > +       else
+> >                 dev->power.needs_force_resume =3D true;
+> > -       }
+>
+> I kind of see that this change may confuse other things looking at the
+> PM runtime status to determine whether or not the device needs to be
+> suspended that possibly run after pm_runtime_force_suspend().
+>
+> I'm also not quite sure why I thought that this patch would be
+> necessary in this series because the [5/9] should just work without
+> it.
+>
+> Please disregard it unless you see why it is needed here.
 
-> The cxl_port driver is intended to manage CXL Endpoint Ports and CXL Switch
-> Ports. Move existing RAS initialization to the cxl_port driver.
-> 
-> Restricted CXL Host (RCH) Downstream Port RAS initialization currently
-> resides in cxl/core/pci.c. The PCI source file is not otherwise associated
-> with CXL Port management.
-> 
-> Additional CXL Port RAS initialization will be added in future patches to
-> support a CXL Port device's CXL errors.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-One small thing inline.
+Well, not quite.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+It is needed, but not at this point.  That is,patch [5/9] will work
+without it, but then it is needed for the PCI and ACPI PM to work with
+pm_runtime_force_suspend().
 
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index fe4b593331da..021f35145c65 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -6,6 +6,7 @@
+Namely, say DPM_FLAG_SMART_SUSPEND is set and
+pm_runtime_force_suspend() is used as a driver callback in the
+"suspend" phase.  The PCI PM sets strict_midlayer, so
+pm_runtime_force_suspend() runs the driver runtime PM callback
+directly, but power still needs to be removed from the device.
+However, pci_pm_suspend_noirq() checks dev_pm_skip_suspend() and it
+will bail out if the device is RPM_SUSPENDED.
 
-> +
-> +static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
-> +{
-> +	void __iomem *aer_base = dport->regs.dport_aer;
-> +	u32 aer_cmd_mask, aer_cmd;
-> +
-> +	if (!aer_base)
-> +		return;
-> +
-> +	/*
-> +	 * Disable RCH root port command interrupts.
-> +	 * CXL 3.2 12.2.1.1 - RCH Downstream Port-detected Errors
-Don't update spec versions in a code move patch.  That's a separate change
-appropriate for doing in a separate patch.
+I guess I should reorder the patches and add the above bit of
+explanation to the changelog of the $subject one.
 
-For this we just want to see code moved with zero changes at all.
-> +	 *
-> +	 * This sequence may not be necessary. CXL spec states disabling
-> +	 * the root cmd register's interrupts is required. But, PCI spec
-> +	 * shows these are disabled by default on reset.
-> +	 */
-> +	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
-> +			PCI_ERR_ROOT_CMD_NONFATAL_EN |
-> +			PCI_ERR_ROOT_CMD_FATAL_EN);
-> +	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
-> +	aer_cmd &= ~aer_cmd_mask;
-> +	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
-> +}
-> +
+If you can review patches [2-3/9] from this series, I'll be able to go
+ahead with the first half of it and the rest can be resent separately.
 
+Sorry for the confusion!
+
+> >
+> >         return 0;
+> >
+> > @@ -2029,12 +2030,6 @@
+> >         if (!dev->power.needs_force_resume)
+> >                 goto out;
+> >
+> > -       /*
+> > -        * The value of the parent's children counter is correct alread=
+y, so
+> > -        * just update the status of the device.
+> > -        */
+> > -       __update_runtime_status(dev, RPM_ACTIVE);
+> > -
+> >         callback =3D RPM_GET_CALLBACK(dev, runtime_resume);
+> >
+> >         dev_pm_disable_wake_irq_check(dev, false);
+> >
+> >
+> >
+> >
 
