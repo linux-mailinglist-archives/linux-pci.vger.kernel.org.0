@@ -1,182 +1,139 @@
-Return-Path: <linux-pci+bounces-30984-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-30985-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9B2FAEC52F
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 07:28:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA31CAEC545
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 08:07:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 979B91C22129
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 05:28:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B3913B23EC
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 06:06:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84C34FBF6;
-	Sat, 28 Jun 2025 05:28:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A7E321A434;
+	Sat, 28 Jun 2025 06:06:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WA5PDo7w"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fExvWjv8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718CC21C184;
-	Sat, 28 Jun 2025 05:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDBA199E9D;
+	Sat, 28 Jun 2025 06:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751088513; cv=none; b=rs8JLDdkTPPRWJcS/0hy3GiF+PkUrHmZRK120P8VDIeMIqFRcU1wTnJzGOo5fdUl/hww9WRbB3wEo9fh6GMNdemNdoWaK+JUeIs8Pvaq3z9oxBRoqiSvXQh0rCY0bi+l5SIlKJw30AFRt93FtQVXyKIVhOmIE9/PVI99hvFiU4k=
+	t=1751090817; cv=none; b=e2+wV7r/RxzTnnDsz0ckZNpbv/ShX2GYw3r0K+qeQA8+Da8m6qwbFkxTLdOYd4Mg4kHdO6+S/Tik2Cmr8VMgZTyGRjpuc5QkdlildXC1EHCYPJhVVbFMqacNmbwqp9RUQzfFJrdD3YA0niCZ1h94JCY8juWUEcMr8cFEQi4qy1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751088513; c=relaxed/simple;
-	bh=/PouR7nev/ceIZ/BO1Yk6lP2sUsqB6YlSfWvYBhCwKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jxUndVXAYT6nYSDcIRM1S/d61ECAOVfEo2ymcvDclDOKzE4jHboNKhOE04CwP7ma5Y48ZpNfPrCWA5xKCla5zvvavvMMKxptUAYphgDyuiyHqiMFBAEOpvjioRORax4duYDMwEN4reC8cr8dnqNFIo/1jFpS38b2L9KLu8+M8nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WA5PDo7w; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751088512; x=1782624512;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/PouR7nev/ceIZ/BO1Yk6lP2sUsqB6YlSfWvYBhCwKg=;
-  b=WA5PDo7wUCqXytIgvUEsvaE+K68/5WPxwBqK3R6xaWdSpk9M7oU6S5wC
-   J0jKtuznVGkkyFT8hpxksA/wtz4CFyvVuRHxFqRul6Zgk03+MPZNNWeu2
-   tE5Xf7F+vjqH+IKZkw0IYRKi4zb9fDWJp2UDg74r0eHvgucHI//YmG4xa
-   psvCy49b70sTVI7f2mPz4+LZDBRBYKwLW5Bhm5U2fp49agjOZs+a60axo
-   xe+ZCGEcKFmFUjcs/f/lLsvHb4IvTQH1wKeL9AF3szJPQKZ1TbcxwyLwu
-   x8fJXos5ZTHoGGacoIFHxzOnj6w+CFE/eZUJWhnR6BHGGiyUKHhy8ja4Y
-   A==;
-X-CSE-ConnectionGUID: 6AdLmHXDQNGH+M/q73yrFQ==
-X-CSE-MsgGUID: 48fuWyC+RFiGA9f1tPqNxw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53119934"
-X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
-   d="scan'208";a="53119934"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 22:28:31 -0700
-X-CSE-ConnectionGUID: rDEavM7eScyJIozOfi5Adg==
-X-CSE-MsgGUID: aGbsD7QwQ4C31I2aKNUKmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
-   d="scan'208";a="184012419"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 27 Jun 2025 22:28:25 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVO6w-000WpC-1w;
-	Sat, 28 Jun 2025 05:28:22 +0000
-Date: Sat, 28 Jun 2025 13:28:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mario Limonciello <superm1@kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Lukas Wunner <lukas@wunner.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	"(open list:INTEL IOMMU (VT-d))" <iommu@lists.linux.dev>,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-	linux-sound@vger.kernel.org, Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v6 9/9] PCI: Add a new 'boot_display' attribute
-Message-ID: <202506281332.JQb144bv-lkp@intel.com>
-References: <20250627043108.3141206-10-superm1@kernel.org>
+	s=arc-20240116; t=1751090817; c=relaxed/simple;
+	bh=Buards44X/HUpjs0dh2wtqcXeyk5PePTU+S46Uqp6NU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=sZC3GG8PalZM32KCAfSMu81R/BfjuNA02QujncypatLAXNtDZokW7HHS/yeAif2dcLbwdWaP7r1cKgnQn+i91vdBtgfjpjF0p+oq249RkkZbwR+TSxaIedJCj+R/7IUA1YIoOyzo4lzorY2o0briYnmx346WyT1d/pPlfpWabTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fExvWjv8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCBF2C4CEEA;
+	Sat, 28 Jun 2025 06:06:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751090817;
+	bh=Buards44X/HUpjs0dh2wtqcXeyk5PePTU+S46Uqp6NU=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=fExvWjv831PoWwhZph592qqIEKqleCNVIB01Cb3QEQ/wriEWbq/0iy4jPI4cCjAKg
+	 t86vbh0nOtl5r5TgIcrqmt634s27/ATTiu010qRSaku1f8BMsRR9vSaCtN5OgNb6X4
+	 Ed4PizLnpXuonzO4J+uz7ZBvHpYrSmR8AnVxUP1931XUY9cBxQyh3ByBmRGiHfcr1q
+	 fyslPgMIamGpdWAVVEfsw16e3RKq1AR6NmRBD4p97Z4yM0QXIrzzCPQTUNEZ9R+pS2
+	 EeLYkwEQ1ugUP+IH9TT09Oq/Qz3zyiPuM5OJtF+t72qzaF9tCQlws0WgyCNmclV+Ep
+	 /m8y8eYD4h00A==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627043108.3141206-10-superm1@kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 28 Jun 2025 08:06:52 +0200
+Message-Id: <DAXXVXNTRLYH.1B8O2LKBF4EW1@kernel.org>
+Cc: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <a.hindborg@kernel.org>,
+ <aliceryhl@google.com>, <tmgross@umich.edu>, <david.m.ertman@intel.com>,
+ <ira.weiny@intel.com>, <leon@kernel.org>, <kwilczynski@kernel.org>,
+ <bhelgaas@google.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v4 5/5] rust: devres: implement register_release()
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250626200054.243480-1-dakr@kernel.org>
+ <20250626200054.243480-6-dakr@kernel.org> <aF2vgthQlNA3BsCD@tardis.local>
+ <aF2yA9TbeIrTg-XG@cassiopeiae> <DAWULS8SIOXS.1O4PLL2WCLX74@kernel.org>
+ <aF8V8hqUzjdZMZNe@tardis.local>
+In-Reply-To: <aF8V8hqUzjdZMZNe@tardis.local>
 
-Hi Mario,
+On Sat Jun 28, 2025 at 12:06 AM CEST, Boqun Feng wrote:
+> On Fri, Jun 27, 2025 at 01:19:53AM +0200, Benno Lossin wrote:
+>> On Thu Jun 26, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
+>> > On Thu, Jun 26, 2025 at 01:37:22PM -0700, Boqun Feng wrote:
+>> >> On Thu, Jun 26, 2025 at 10:00:43PM +0200, Danilo Krummrich wrote:
+>> >> > +/// [`Devres`]-releaseable resource.
+>> >> > +///
+>> >> > +/// Register an object implementing this trait with [`register_rel=
+ease`]. Its `release`
+>> >> > +/// function will be called once the device is being unbound.
+>> >> > +pub trait Release {
+>> >> > +    /// The [`ForeignOwnable`] pointer type consumed by [`register=
+_release`].
+>> >> > +    type Ptr: ForeignOwnable;
+>> >> > +
+>> >> > +    /// Called once the [`Device`] given to [`register_release`] i=
+s unbound.
+>> >> > +    fn release(this: Self::Ptr);
+>> >> > +}
+>> >> > +
+>> >>=20
+>> >> I would like to point out the limitation of this design, say you have=
+ a
+>> >> `Foo` that can ipml `Release`, with this, I think you could only supp=
+ort
+>> >> either `Arc<Foo>` or `KBox<Foo>`. You cannot support both as the inpu=
+t
+>> >> for `register_release()`. Maybe we want:
+>> >>=20
+>> >>     pub trait Release<Ptr: ForeignOwnable> {
+>> >>         fn release(this: Ptr);
+>> >>     }
+>> >
+>> > Good catch! I think this wasn't possible without ForeignOwnable::Targe=
+t.
+>>=20
+>> Hmm do we really need that? Normally you either store a type in a shared
+>
+> I think it might be quite common, for example, `Foo` may be a general
+> watchdog for a subsystem, for one driver, there might be multiple
+> devices that could feed the dog, for another driver, there might be only
+> one. For the first case we need Arc<Watchdog> or the second we can do
+> Box<Watchdog>.
 
-kernel test robot noticed the following build errors:
+I guess then the original `&self` design is better? Not sure...
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus tiwai-sound/for-next tiwai-sound/for-linus tip/x86/core linus/master v6.16-rc3 next-20250627]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> What's the downside?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/PCI-Add-helper-for-checking-if-a-PCI-device-is-a-display-controller/20250627-123349
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250627043108.3141206-10-superm1%40kernel.org
-patch subject: [PATCH v6 9/9] PCI: Add a new 'boot_display' attribute
-config: arc-randconfig-001-20250628 (https://download.01.org/0day-ci/archive/20250628/202506281332.JQb144bv-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250628/202506281332.JQb144bv-lkp@intel.com/reproduce)
+You'll need to implement `Release` twice:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506281332.JQb144bv-lkp@intel.com/
+    impl Release<Box<Self>> for Foo {
+        fn release(this: Box<Self>) {
+            /* ... */
+        }
+    }
 
-All error/warnings (new ones prefixed by >>):
+    impl Release<Arc<Self>> for Foo {
+        fn release(this: Arc<Self>) {
+            /* ... */
+        }
+    }
 
-   drivers/pci/pci-sysfs.c: In function 'pci_create_sysfs_dev_files':
->> drivers/pci/pci-sysfs.c:1701:11: error: implicit declaration of function 'pci_create_boot_display_file'; did you mean 'pci_create_sysfs_dev_files'? [-Werror=implicit-function-declaration]
-     retval = pci_create_boot_display_file(pdev);
-              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-              pci_create_sysfs_dev_files
-   drivers/pci/pci-sysfs.c: In function 'pci_remove_sysfs_dev_files':
->> drivers/pci/pci-sysfs.c:1719:2: error: implicit declaration of function 'pci_remove_boot_display_file'; did you mean 'pci_remove_sysfs_dev_files'? [-Werror=implicit-function-declaration]
-     pci_remove_boot_display_file(pdev);
-     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     pci_remove_sysfs_dev_files
-   In file included from include/linux/pci.h:37,
-                    from drivers/pci/pci-sysfs.c:19:
-   At top level:
->> include/linux/device.h:199:26: warning: 'dev_attr_boot_display' defined but not used [-Wunused-variable]
-     struct device_attribute dev_attr_##_name = __ATTR_RO(_name)
-                             ^~~~~~~~~
-   drivers/pci/pci-sysfs.c:688:8: note: in expansion of macro 'DEVICE_ATTR_RO'
-    static DEVICE_ATTR_RO(boot_display);
-           ^~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
+This also means that you can have different behavior for `Box` and
+`Arc`...
 
-
-vim +1701 drivers/pci/pci-sysfs.c
-
-  1693	
-  1694	int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
-  1695	{
-  1696		int retval;
-  1697	
-  1698		if (!sysfs_initialized)
-  1699			return -EACCES;
-  1700	
-> 1701		retval = pci_create_boot_display_file(pdev);
-  1702		if (retval)
-  1703			return retval;
-  1704	
-  1705		return pci_create_resource_files(pdev);
-  1706	}
-  1707	
-  1708	/**
-  1709	 * pci_remove_sysfs_dev_files - cleanup PCI specific sysfs files
-  1710	 * @pdev: device whose entries we should free
-  1711	 *
-  1712	 * Cleanup when @pdev is removed from sysfs.
-  1713	 */
-  1714	void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
-  1715	{
-  1716		if (!sysfs_initialized)
-  1717			return;
-  1718	
-> 1719		pci_remove_boot_display_file(pdev);
-  1720		pci_remove_resource_files(pdev);
-  1721	}
-  1722	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+---
+Cheers,
+Benno
 
