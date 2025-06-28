@@ -1,271 +1,169 @@
-Return-Path: <linux-pci+bounces-31017-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31018-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAA22AEC974
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 19:31:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C7D7AEC9CD
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 20:59:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6BAF8189C274
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 17:31:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 57D1517D72E
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 18:59:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D045A288502;
-	Sat, 28 Jun 2025 17:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2A1D24A063;
+	Sat, 28 Jun 2025 18:58:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnKHCbCw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AV+6rp6S"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A333D2882D3;
-	Sat, 28 Jun 2025 17:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23734220689
+	for <linux-pci@vger.kernel.org>; Sat, 28 Jun 2025 18:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751131830; cv=none; b=nkAaolRmq65/QrQL6Xqdb1U1EAgRua73ux49zdcCEA0tKyWWtiIC9lzDpalW6/8aZ5nAimfPr51ZsQf/mVEEe1TdgGcIdaZs7Kj7fQKvcYobzKlaalMKMkZyj5a1dfCqeX1x7g67tBzoLR9cG03eMBcDQmyG3uJ3kphnf6knf1g=
+	t=1751137139; cv=none; b=jljYNpdNJLKQwRMwmIqo6YbPpA2BkEQwTdpMZvySpjbSUp5fJ0zoP9NCu73MHsX0ZqBgSNx4hSIRxXnMYYKMk/jUx/mM8yOv8+urjIqGHiNuG+Fsb0THrBwn8qLZFe/uyGEkxAd7+lNQmpQC7ANQ1j6um6jMzYKlwmDurHh7Wjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751131830; c=relaxed/simple;
-	bh=jcOz3x1eGlNJpjfPJye0zmL0BeEqCXJWFfQN+XE02XU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JxqJUbQ4Gky4seKkqwVEYa08YnSh5q34itKYGaiDplmdSrT+4Yqhy8pRmDpt0wyhScOB74owvFG+pGON34gXhDd2H8bFibbECFQ2mhUtFSOzl0UxZGk0TEsONt9g4+aB0lFwTX6IQxaOJ+P1Con8C+Fbn3Pe1RN6Z1+TK1dNX9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnKHCbCw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84042C4CEEF;
-	Sat, 28 Jun 2025 17:30:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751131830;
-	bh=jcOz3x1eGlNJpjfPJye0zmL0BeEqCXJWFfQN+XE02XU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mnKHCbCwtx3uTyrPjXJq80QwKbtrL4UBVIwHDOlOzCEalNs2fcMN/zjKeGHyukzkH
-	 6GK/UycXynXKtjBy9cGYk/woCl3twg+6q0kGXyY+2eQ9K2tDKmBdG5ZE3oNZhDmdJ4
-	 cYWKYL5QJwryutN3CoKVFWBMxGWFBD2tW3oFr0P8MCcoNIJbeZ8k2FTXnQgUtvmEKK
-	 OTd6QOKcNQ0X5vyH4lDEHTNN4iCexOemRzuFjEe34x/Uy9/Jx1Wpgk+Pi74FG9uT9d
-	 7H6HImnXD7Ub+c7XjwRQIlr/NHXl5LCPaLs0BpeZWdvAqyz3gwyJJRr8zJJVJmcedU
-	 O9asPCiBVxPiA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uVZNk-00AqZC-Lh;
-	Sat, 28 Jun 2025 18:30:28 +0100
-From: Marc Zyngier <maz@kernel.org>
-To: linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Toan Le <toan@os.amperecomputing.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 12/12] PCI: xgene-msi: Restructure handler setup/teardown
-Date: Sat, 28 Jun 2025 18:30:05 +0100
-Message-Id: <20250628173005.445013-13-maz@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250628173005.445013-1-maz@kernel.org>
-References: <20250628173005.445013-1-maz@kernel.org>
+	s=arc-20240116; t=1751137139; c=relaxed/simple;
+	bh=ztg5EsMbdjxvKumjrsUF9Vbhn9ZJVkNBuY302Z6WDro=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=aD0YlX5yEC+fChTu27uo3IpqEsOzgYgKZGE4D9cAjqquWsUMODiTVbKuQ+KTB+5fXE09N3mDbKlKcrXmjCFv/sYd95mX0arc631N1RdFKK2Cqw/oi4vBDUBM1edpyjwNWxO59U1ogvy8q4KmJdw0WHs4P6Fhk7LIKw0CrFb6zw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AV+6rp6S; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751137137;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=D2jr+MLExuQlTYBzZJpvrbRyvQXC+JLX+EMkY/N8xKM=;
+	b=AV+6rp6S3nQUAVvA4t7v4lW6Cmc2GiL8sZ3vrFAReFNw5TQA10F/VADvBnnSPaBZslpL40
+	/N4hIBOzk0lHcNTN5oQi+R1hDpSZpgfeVyRohy4gkrhNlQw/K0i8HELz51ncpGFdTMAQtp
+	KRdUjCzYS7P9b5p7tJucfqg1Ii2zuKM=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-526-jWrqc9TfP7a15bHVJEmkWQ-1; Sat, 28 Jun 2025 14:58:53 -0400
+X-MC-Unique: jWrqc9TfP7a15bHVJEmkWQ-1
+X-Mimecast-MFC-AGG-ID: jWrqc9TfP7a15bHVJEmkWQ_1751137132
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a503f28b09so1610248f8f.0
+        for <linux-pci@vger.kernel.org>; Sat, 28 Jun 2025 11:58:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751137132; x=1751741932;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=D2jr+MLExuQlTYBzZJpvrbRyvQXC+JLX+EMkY/N8xKM=;
+        b=t6WVfm2Y0cu7JokKaDz0v98Xy1xnf4uQMwNNICbrnUSAm2QfClBLQwvcINYcha0Ie6
+         kDMC0sQdHGtkLIigpjRmC1J6BD2j8QDi+9cM9Ss1dSpzhai7aS7K2QOiE4XeKdvqvlP3
+         9yK/jbam8xofEOLj+AwVB0lEJsbB0L9MdYgHcUL7AP9bFRi/d/zjhr4NiN6jckeT6B+a
+         jQeK0GEsTLqE2CBEqLRv0KFnzOPyoEk0T5QJ+p+apDHrSXa/GmM0ZDpty+VkUjE2un1j
+         BRyVhsHFkGZ92mKZ5ehSEsLLx+HvdXTsyWzgF7ApNRw07bUHKoA/mtaaHZLayaTW0qsm
+         XZeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYRbSoJDyk67/xVxwPXolSCK/KWs8n/FBOYRW+ALbB/qjdvGy62FFfrQPCMSX6i8t0N3pm9Ja7v6A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzpf1dzECKFcl2CRUA1ZINPetMmQ+vUDlZB0kvdfDHH3Ex/KgJ1
+	rj26ZudWcYjl2O99WClFh+MsDtcyOtujSccmrEe2EJShcAMHREenykmDuYHOEV8io12rwoGCgF1
+	7Z2iEygO8MjOGhlgjmH5VZYocW0g8CN/X4b0glWnkNrESDprjvDzyC/cAyvR3ag==
+X-Gm-Gg: ASbGncvJd/j/OhadqGSY14GWVzLxWKrUg7PK8YyPRd9mrFSxFd0jh0HGvzmLojGmav+
+	sZ82hn9n5ALMT+hqdn3dMishipKZYiYLKJ6clEUYjCzTT4YIH1rAWRJA695X2sXYNE1CtjXt/hW
+	rkl6RLGcglK3YaWHWy03hXzUp7DjKt7MUrXKlBdI/p3rjXD0oYk/A8lBjCderPIKFHgOqWSsucu
+	sH2mswsy+GkAd4twoOVj4da8Wtz0pU37rDzU+qoS3pwP+a4fOHbnKkrkavKwkFN2cVUUJuU25na
+	CP7sjLHYdJlT3x2J
+X-Received: by 2002:a05:6000:2d82:b0:3a4:eb7a:2ccb with SMTP id ffacd0b85a97d-3a6f312dca2mr7141641f8f.16.1751137132103;
+        Sat, 28 Jun 2025 11:58:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFBJMUvsuhSV4mrdNlnlvt4UgUb//QS8f+KlaM7+aGDdwZ8OM/DCTqh3V0G1zt1cycebQnDQg==
+X-Received: by 2002:a05:6000:2d82:b0:3a4:eb7a:2ccb with SMTP id ffacd0b85a97d-3a6f312dca2mr7141634f8f.16.1751137131628;
+        Sat, 28 Jun 2025 11:58:51 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823b6e9esm118646395e9.28.2025.06.28.11.58.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Jun 2025 11:58:51 -0700 (PDT)
+Date: Sat, 28 Jun 2025 14:58:49 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Parav Pandit <parav@nvidia.com>, virtualization@lists.linux.dev,
+	stefanha@redhat.com, alok.a.tiwari@oracle.com
+Subject: [PATCH RFC] pci: report surprise removal events
+Message-ID: <11cfcb55b5302999b0e58b94018f92a379196698.1751136072.git.mst@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, toan@os.amperecomputing.com, lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, bhelgaas@google.com, tglx@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
+X-Mutt-Fcc: =sent
 
-Another utterly pointless aspect of the xgene-msi driver is that
-it is built around CPU hotplug. Which is quite amusing since this
-is one of the few arm64 platforms that, by construction, cannot
-do CPU hotplug in a supported way (no EL3, no PSCI, no luck).
+At the moment, in case of a surprise removal, the regular
+remove callback is invoked, exclusively.
+This works well, because mostly, the cleanup would be the same.
 
-Drop the CPU hotplug nonsense and just setup the IRQs and handlers
-in a less overdesigned way, grouping things more logically in the
-process.
+However, there's a race: imagine device removal was initiated by a user
+action, such as driver unbind, and it in turn initiated some cleanup and
+is now waiting for an interrupt from the device. If the device is now
+surprise-removed, that never arrives and the remove callback hangs
+forever.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Drivers can artificially add timeouts to handle that, but it can be
+flaky.
+
+Instead, let's add a way for the driver to be notified about the
+disconnect. It can then do any necessary cleanup, knowing that the
+device is inactive.
+
+Given this is by design kind of asynchronous with normal probe/remove
+callbacks, I added it in the pci_error_handlers callback.
+
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/pci/controller/pci-xgene-msi.c | 109 +++++++++----------------
- 1 file changed, 37 insertions(+), 72 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-xgene-msi.c b/drivers/pci/controller/pci-xgene-msi.c
-index a22a6df7808c7..9f05c2a12da94 100644
---- a/drivers/pci/controller/pci-xgene-msi.c
-+++ b/drivers/pci/controller/pci-xgene-msi.c
-@@ -216,12 +216,6 @@ static int xgene_allocate_domains(struct device_node *node,
- 	return msi->inner_domain ? 0 : -ENOMEM;
- }
+Warning: build-tested only at this point.
+
+Posting for early flames/feedback.
+
+Cc a bunch of people who discussed this problem specifically in the
+virtio blk driver.
+
+ drivers/pci/pci.h   | 9 +++++++++
+ include/linux/pci.h | 3 +++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index b81e99cd4b62..78b064be10d5 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -549,6 +549,15 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+ 	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
+ 	pci_doe_disconnected(dev);
  
--static void xgene_free_domains(struct xgene_msi *msi)
--{
--	if (msi->inner_domain)
--		irq_domain_remove(msi->inner_domain);
--}
--
- static int xgene_msi_init_allocator(struct device *dev)
- {
- 	xgene_msi_ctrl->bitmap = devm_bitmap_zalloc(dev, NR_MSI_VEC, GFP_KERNEL);
-@@ -271,26 +265,48 @@ static void xgene_msi_isr(struct irq_desc *desc)
- 	chained_irq_exit(chip, desc);
- }
- 
--static enum cpuhp_state pci_xgene_online;
--
- static void xgene_msi_remove(struct platform_device *pdev)
- {
--	struct xgene_msi *msi = platform_get_drvdata(pdev);
--
--	if (pci_xgene_online)
--		cpuhp_remove_state(pci_xgene_online);
--	cpuhp_remove_state(CPUHP_PCI_XGENE_DEAD);
-+	for (int i = 0; i < NR_HW_IRQS; i++) {
-+		unsigned int irq = xgene_msi_ctrl->gic_irq[i];
-+		if (!irq)
-+			continue;
-+		irq_set_chained_handler_and_data(irq, NULL, NULL);
-+	}
- 
--	xgene_free_domains(msi);
-+	if (xgene_msi_ctrl->inner_domain)
-+		irq_domain_remove(xgene_msi_ctrl->inner_domain);
- }
- 
--static int xgene_msi_hwirq_alloc(unsigned int cpu)
-+static int xgene_msi_handler_setup(struct platform_device *pdev)
- {
-+	struct xgene_msi *xgene_msi = xgene_msi_ctrl;
- 	int i;
--	int err;
- 
--	for (i = cpu; i < NR_HW_IRQS; i += num_possible_cpus()) {
--		unsigned int irq = xgene_msi_ctrl->gic_irq[i];
-+	for (i = 0; i < NR_HW_IRQS; i++) {
-+		u32 msi_val;
-+		int irq, err;
++	/* Notify driver of surprise removal */
++	device_lock(&dev->dev);
 +
-+		/*
-+		 * MSInIRx registers are read-to-clear; before registering
-+		 * interrupt handlers, read all of them to clear spurious
-+		 * interrupts that may occur before the driver is probed.
-+		 */
-+		for (int msi_idx = 0; msi_idx < IDX_PER_GROUP; msi_idx++)
-+			xgene_msi_ir_read(xgene_msi, i, msi_idx);
++	if (dev->driver && dev->driver->err_handler &&
++	    dev->driver->err_handler->disconnect)
++		dev->driver->err_handler->disconnect(dev);
 +
-+		/* Read MSIINTn to confirm */
-+		msi_val = xgene_msi_int_read(xgene_msi, i);
-+		if (msi_val) {
-+			dev_err(&pdev->dev, "Failed to clear spurious IRQ\n");
-+			return EINVAL;
-+		}
++	device_unlock(&dev->dev);
 +
-+		irq = platform_get_irq(pdev, i);
-+		if (irq < 0)
-+			return irq;
-+
-+		xgene_msi->gic_irq[i] = irq;
- 
- 		/*
- 		 * Statically allocate MSI GIC IRQs to each CPU core.
-@@ -298,7 +314,7 @@ static int xgene_msi_hwirq_alloc(unsigned int cpu)
- 		 * to each core.
- 		 */
- 		irq_set_status_flags(irq, IRQ_NO_BALANCING);
--		err = irq_set_affinity(irq, cpumask_of(cpu));
-+		err = irq_set_affinity(irq, cpumask_of(i % num_possible_cpus()));
- 		if (err) {
- 			pr_err("failed to set affinity for GIC IRQ");
- 			return err;
-@@ -311,19 +327,6 @@ static int xgene_msi_hwirq_alloc(unsigned int cpu)
  	return 0;
  }
  
--static int xgene_msi_hwirq_free(unsigned int cpu)
--{
--	struct xgene_msi *msi = xgene_msi_ctrl;
--	int i;
--
--	for (i = cpu; i < NR_HW_IRQS; i += num_possible_cpus()) {
--		if (!msi->gic_irq[i])
--			continue;
--		irq_set_chained_handler_and_data(msi->gic_irq[i], NULL, NULL);
--	}
--	return 0;
--}
--
- static const struct of_device_id xgene_msi_match_table[] = {
- 	{.compatible = "apm,xgene1-msi"},
- 	{},
-@@ -333,7 +336,6 @@ static int xgene_msi_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
- 	struct xgene_msi *xgene_msi;
--	u32 msi_val, msi_idx;
- 	int rc;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 51e2bd6405cd..30a8c7ee09f6 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -878,6 +878,9 @@ struct pci_error_handlers {
+ 	/* PCI slot has been reset */
+ 	pci_ers_result_t (*slot_reset)(struct pci_dev *dev);
  
- 	xgene_msi_ctrl = devm_kzalloc(&pdev->dev, sizeof(*xgene_msi_ctrl),
-@@ -343,8 +345,6 @@ static int xgene_msi_probe(struct platform_device *pdev)
- 
- 	xgene_msi = xgene_msi_ctrl;
- 
--	platform_set_drvdata(pdev, xgene_msi);
--
- 	xgene_msi->msi_regs = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 	if (IS_ERR(xgene_msi->msi_regs)) {
- 		rc = PTR_ERR(xgene_msi->msi_regs);
-@@ -364,48 +364,13 @@ static int xgene_msi_probe(struct platform_device *pdev)
- 		goto error;
- 	}
- 
--	for (int irq_index = 0; irq_index < NR_HW_IRQS; irq_index++) {
--		rc = platform_get_irq(pdev, irq_index);
--		if (rc < 0)
--			goto error;
--
--		xgene_msi->gic_irq[irq_index] = rc;
--	}
--
--	/*
--	 * MSInIRx registers are read-to-clear; before registering
--	 * interrupt handlers, read all of them to clear spurious
--	 * interrupts that may occur before the driver is probed.
--	 */
--	for (int irq_index = 0; irq_index < NR_HW_IRQS; irq_index++) {
--		for (msi_idx = 0; msi_idx < IDX_PER_GROUP; msi_idx++)
--			xgene_msi_ir_read(xgene_msi, irq_index, msi_idx);
--
--		/* Read MSIINTn to confirm */
--		msi_val = xgene_msi_int_read(xgene_msi, irq_index);
--		if (msi_val) {
--			dev_err(&pdev->dev, "Failed to clear spurious IRQ\n");
--			rc = -EINVAL;
--			goto error;
--		}
--	}
--
--	rc = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "pci/xgene:online",
--			       xgene_msi_hwirq_alloc, NULL);
--	if (rc < 0)
--		goto err_cpuhp;
--	pci_xgene_online = rc;
--	rc = cpuhp_setup_state(CPUHP_PCI_XGENE_DEAD, "pci/xgene:dead", NULL,
--			       xgene_msi_hwirq_free);
-+	rc = xgene_msi_handler_setup(pdev);
- 	if (rc)
--		goto err_cpuhp;
-+		goto error;
- 
- 	dev_info(&pdev->dev, "APM X-Gene PCIe MSI driver loaded\n");
- 
- 	return 0;
--
--err_cpuhp:
--	dev_err(&pdev->dev, "failed to add CPU MSI notifier\n");
- error:
- 	xgene_msi_remove(pdev);
- 	return rc;
++	/* PCI slot has been disconnected */
++        void (*disconnect)(struct pci_dev *dev);
++
+ 	/* PCI function reset prepare or completed */
+ 	void (*reset_prepare)(struct pci_dev *dev);
+ 	void (*reset_done)(struct pci_dev *dev);
 -- 
-2.39.2
+MST
 
 
