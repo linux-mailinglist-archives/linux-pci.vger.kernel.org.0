@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-31010-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60D60AEC969
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 19:30:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A77BAEC967
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 19:30:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D03A3BEA71
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 17:30:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B934C7AB5DB
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 17:29:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DBB4287268;
-	Sat, 28 Jun 2025 17:30:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D887126C3BE;
+	Sat, 28 Jun 2025 17:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lo7vjY6h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/5rNor2"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0080527FB0D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6CF2BCFB;
 	Sat, 28 Jun 2025 17:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751131829; cv=none; b=ivh0E8K3ySrZbVC8iYuP7aerNjw2ZA4LrUc+uBJRtpmtxPKFuwAEHCMDoi4y4Auhc1uop6qgapJL6F4Ij/xC0Y1qW5wmPbbzq2pOcqKbYnMRVHb5+IozKB/vHHKGr68BH2DcgPZ83PM4WLZHK10AareGux8Bb82HkPP3HqQs/O4=
+	t=1751131828; cv=none; b=SAkhAyRYSBPcvbGKysXKP/acQIsD3g1cfGLRTscnCLsU9xqVJS+kvqahsacYL+yoj1z2lR7y1FvMybB90RoihW2c3tf2R17abwOiFM9B3dqAMMHdm0TPVYFYD5goqUIuYZkzmUHT9ZUQSiV1c0MFwrmx5Qs6GWCc04tY1gtBmks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751131829; c=relaxed/simple;
-	bh=XyHVZgTEEU9jeG0R0aHxp6hZU2S5LzzIaxTXL9QhFBI=;
+	s=arc-20240116; t=1751131828; c=relaxed/simple;
+	bh=zWAmwKnV6f1cwbtaUPgrJ1lIE+Rc2XJQ33KR+f1+GBg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AF1TlwVA8Ya2UhgRWnabskVlsf+JKfo/h8bUUBGO90U98ckOjZrPCr80A99sCbJdhZVG/9arnmEASVeCv5DoaKE62BYXXg/o0iaPwXI8mRFBDr95m7vGEhSh3d0f93YYFFE5NMmMWoYOnL3v1Ow7Ek3Ha82mQsM0vLb5yJdNO0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lo7vjY6h; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E8DDC4CEF2;
+	 MIME-Version; b=GaGXza3prxWZk7EdYm9ynyo5M9BvXE6YoZ4bQ4JViGB0MnVDVxXpziJPWRX5DVRLas2QEBtX68KYZPvi+0VfdzBHKW2staG7MU6B+6UoUv/Zlvn2cKAH6AnHx/YMltMiCRP9XfkUT7q6K3nrMiJ36/C1ibPUfpcH1z1yMTGCaeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l/5rNor2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CA90C4CEEA;
 	Sat, 28 Jun 2025 17:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751131828;
-	bh=XyHVZgTEEU9jeG0R0aHxp6hZU2S5LzzIaxTXL9QhFBI=;
+	bh=zWAmwKnV6f1cwbtaUPgrJ1lIE+Rc2XJQ33KR+f1+GBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Lo7vjY6he4xWIMh1pX/S8sSy8sa2VSOPIMc9V5Ayn8nWMgHmsFhuJ7XMXSxjJ52Ri
-	 g1u7MJqMzIS5gAbrvtsirGBRVzU+J+tQDrOtmrWX+FeoveZEOg51x/E2EqwwhX+ToQ
-	 vh8AoAK8zs8raM2LEI0Q7yXxgLkG4qXp9OZ0hhdZZDXz38OgGB0bufrYuR5+3ho5Iu
-	 L0y0IIkVBue7vuZrkOS7kYJps0fNDG04KEvIlnwF3LMQ4eebPbaMdDqhHHcI6xh8tE
-	 1AKc1Qn9Akab5x7+8aEuRWHTRmh7NQxKpFXfFvSPoxMBdeux4CfGwBKaZ6ucUCgH97
-	 I1WYQBAnKIa/g==
+	b=l/5rNor2Px+Cl03/jN1HOWynCV9eo9DeSLJ6bO8UiztHyxYNqMuyqqhnzMpSnt9TH
+	 3kRNDIs83QmyR1QPNeG7WCWI59VZYaYbtT3Z4uHHSfsVP357KbSIMqAzl2Q/nRTYEx
+	 oL63w2UYzn9/d/mr3Ns+0EL9e7sCXCVWM6oQj0pJKOGAuPh/9Gu2jB2bVawB7D5qxe
+	 2pwPMr0neIm6Fv06BYVWNU26Frt54kD1MzdyyUugfZvBPxEkIGqf5NkJL9DUg0P1rS
+	 ZZIFOxvccdpe4/0TJL6k94CwGN+DGQFO6jwdMb1sn6kDdRXlaVjJusfA+20YePCd3L
+	 BJM2bK8IJ+3/w==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1uVZNi-00AqZC-8D;
+	id 1uVZNi-00AqZC-Fv;
 	Sat, 28 Jun 2025 18:30:26 +0100
 From: Marc Zyngier <maz@kernel.org>
 To: linux-pci@vger.kernel.org,
@@ -58,9 +58,9 @@ Cc: Toan Le <toan@os.amperecomputing.com>,
 	Rob Herring <robh@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 03/12] PCI: xgene: Drop useless conditional compilation
-Date: Sat, 28 Jun 2025 18:29:56 +0100
-Message-Id: <20250628173005.445013-4-maz@kernel.org>
+Subject: [PATCH 04/12] PCI: xgene: Drop XGENE_PCIE_IP_VER_UNKN
+Date: Sat, 28 Jun 2025 18:29:57 +0100
+Message-Id: <20250628173005.445013-5-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250628173005.445013-1-maz@kernel.org>
 References: <20250628173005.445013-1-maz@kernel.org>
@@ -76,48 +76,45 @@ X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.o
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-pci-xgene.c only gets compiled if CONFIG_PCI_XGENE is selected.
-It is therefore pointless to check for CONFIG_PCI_XGENE inside
-the driver.
+XGENE_PCIE_IP_VER_UNKN is only refered to when probing for the
+original XGene PCIe implementation, and get immediately overridden
+if the device has the "apm,xgene-pcie" compatible string.
+
+Given that the only way to get there is by finding this very string in
+the DT, it is obvious that we will always ovwrite the version with
+XGENE_PCIE_IP_VER_1.
+
+Drop the whole thing.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/pci/controller/pci-xgene.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/pci/controller/pci-xgene.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
-index f26cb58f814ec..a848f98203ae4 100644
+index a848f98203ae4..b95afa35201d0 100644
 --- a/drivers/pci/controller/pci-xgene.c
 +++ b/drivers/pci/controller/pci-xgene.c
-@@ -58,7 +58,6 @@
+@@ -54,7 +54,6 @@
+ #define XGENE_V1_PCI_EXP_CAP		0x40
+ 
+ /* PCIe IP version */
+-#define XGENE_PCIE_IP_VER_UNKN		0
  #define XGENE_PCIE_IP_VER_1		1
  #define XGENE_PCIE_IP_VER_2		2
  
--#if defined(CONFIG_PCI_XGENE) || (defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS))
- struct xgene_pcie {
- 	struct device_node	*node;
- 	struct device		*dev;
-@@ -189,7 +188,6 @@ static int xgene_pcie_config_read32(struct pci_bus *bus, unsigned int devfn,
+@@ -630,10 +629,7 @@ static int xgene_pcie_probe(struct platform_device *pdev)
  
- 	return PCIBIOS_SUCCESSFUL;
- }
--#endif
+ 	port->node = of_node_get(dn);
+ 	port->dev = dev;
+-
+-	port->version = XGENE_PCIE_IP_VER_UNKN;
+-	if (of_device_is_compatible(port->node, "apm,xgene-pcie"))
+-		port->version = XGENE_PCIE_IP_VER_1;
++	port->version = XGENE_PCIE_IP_VER_1;
  
- #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
- static int xgene_get_csr_resource(struct acpi_device *adev,
-@@ -280,7 +278,6 @@ const struct pci_ecam_ops xgene_v2_pcie_ecam_ops = {
- };
- #endif
- 
--#if defined(CONFIG_PCI_XGENE)
- static u64 xgene_pcie_set_ib_mask(struct xgene_pcie *port, u32 addr,
- 				  u32 flags, u64 size)
- {
-@@ -670,4 +667,3 @@ static struct platform_driver xgene_pcie_driver = {
- 	.probe = xgene_pcie_probe,
- };
- builtin_platform_driver(xgene_pcie_driver);
--#endif
+ 	ret = xgene_pcie_map_reg(port, pdev);
+ 	if (ret)
 -- 
 2.39.2
 
