@@ -1,132 +1,116 @@
-Return-Path: <linux-pci+bounces-31004-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31006-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37CC2AEC85F
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 17:45:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E2CAAEC964
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 19:30:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D2103B1139
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 15:44:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7199D1716E9
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Jun 2025 17:30:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B963E219A81;
-	Sat, 28 Jun 2025 15:45:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75F0F220F4F;
+	Sat, 28 Jun 2025 17:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Ct0AqLFT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQVeRKAn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94B6A214A94;
-	Sat, 28 Jun 2025 15:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE58201004;
+	Sat, 28 Jun 2025 17:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751125513; cv=none; b=UgoY0l4mdFFAtlQ+/WvJFb9VRavcpi6WQ578M9NkGUXc7ACvdw+RPSj75CfYx/gZmlmjGJeVj5pT8HVDH31lRTokNSOZh4ymbxJ9FvlLRRjJ40/ig9S/MiR4Y6Ve+QOGGXOrD376i+eC5ezClJo8DmZHPliLv1EpVV0oeMBxsjQ=
+	t=1751131828; cv=none; b=PAPS4XvFrWj7pMEgdKwd+hXXZJWaooL+gekjjt40KXqkCzMB+Od+7VV6WC2Yr1wmkMVahvGALjMhWWufeXfyloXurIx8DhNrtVsGj2QajGoF8QOY0sLLh5j7bnO5727K7l0IuVxTufeIYAitAuBCR5rTXknj6vkcjbZDPMrUk2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751125513; c=relaxed/simple;
-	bh=LXcxF/56bkPDAHY9INU5Rtiyk4foNQDRc3RCGj3eVp0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uZmm2wCzIESvOhtvM15t+pha9eo+A4PLpaUoZ30h0nL00xfgOApsrSh/7dUxS7OegFJ0Kb5vynRbL9U84e90NtIiLGLMZXWeJqQ6DKkO9jSMIrC3BXRRtbz7jm/9ZEP0jjSHwvdwQ9n/Ajbv8+pixo9M0E4MFXCmZHDuV0Abp5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Ct0AqLFT; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=coLrn4K3E/R95z5bSzACGaQDmXOiBNgAB+edWrJyIBI=;
-	b=Ct0AqLFT3jt85V7GU6qqtCYDztqD7zjEbBNrHDP1ZYbkE4GvUavMj2KCBTopX9
-	gOU9Zl5e0+TPn4YITDkQFeLHR6rJS3ro+c76T2Q5oU8yFj2SgS6WucIizWtP/tUx
-	Xu//adK24Fs2AZmIEK398Vgme19qdwzp7ucmdbvXlyyqQ=
-Received: from [IPV6:240e:b8f:919b:3100:5951:e2f3:d3e5:8d13] (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgD3V5viDWBok6B_AQ--.53326S2;
-	Sat, 28 Jun 2025 23:44:35 +0800 (CST)
-Message-ID: <23f8b2b3-0232-449f-85d5-20ed5e575111@163.com>
-Date: Sat, 28 Jun 2025 23:44:35 +0800
+	s=arc-20240116; t=1751131828; c=relaxed/simple;
+	bh=7Tfu+k4kIYM3+mGdV3aDYku43jcInJ/3Gr78P/OtksU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QFjasE3q2chchwgidftFfbZ6XdjzqD3KjBM2WBfHnDF77SxPtTvTHqGU3lWkj0qZ0TjM1PK+l9sL4q2d25eAjdeLjTrD91szM+uxeAOgX015bE/+AxQw5mvXfGjW1WpBeNX8Bq6AeYFZ5nZtHPkmXEa8dXacFZ7H9fnd+yKhmgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQVeRKAn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCD10C4CEEF;
+	Sat, 28 Jun 2025 17:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751131827;
+	bh=7Tfu+k4kIYM3+mGdV3aDYku43jcInJ/3Gr78P/OtksU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GQVeRKAngXUahmHWE9Xnnvma9G05vv5+5TTjXXAHH62wBldayNswjO3l7MxkXUzqD
+	 5rMkcnV2sPgyDNHZmRBGeSkZMDRT4smYyqAwzM4Sz1JtldMQCqF1jhi+QZcAPvzDF4
+	 dAV19Cr9LUj1Rs3iOrP6GFf4X5hUes3jggleQ4H26iFMNMIRxsnqsx1ql+zBHrW+Q+
+	 ynTlqQG0SN1NK1u9tfSGJv2GrI0kILeSAkiS3NGB0sjTfB8+H4eAqrugKRZitmTjTT
+	 kyKonglJ0n0Mvk7Nf8H9lqHdSdwAFr3pJXOhRTOX7khAGJVLQqHOXRKiPmqpqJYu7+
+	 MN9dW0YwLC7iw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uVZNh-00AqZC-En;
+	Sat, 28 Jun 2025 18:30:25 +0100
+From: Marc Zyngier <maz@kernel.org>
+To: linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Toan Le <toan@os.amperecomputing.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 00/12] PCI: xgene: Fix and simplify the MSI driver
+Date: Sat, 28 Jun 2025 18:29:53 +0100
+Message-Id: <20250628173005.445013-1-maz@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: dwc: Refactor code by using
- dw_pcie_clear_and_set_dword()
-To: kernel test robot <lkp@intel.com>, lpieralisi@kernel.org,
- bhelgaas@google.com, mani@kernel.org, kwilczynski@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, robh@kernel.org, jingoohan1@gmail.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250626145040.14180-3-18255117159@163.com>
- <202506280542.6ttkdrur-lkp@intel.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <202506280542.6ttkdrur-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:QCgvCgD3V5viDWBok6B_AQ--.53326S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAr17tF17KrW3Cr13try3XFb_yoW5GFW3pa
-	yUAr4avFW8Jr4Fga1kJa92vF1aqan8J3y3C3WxGw429F47ZFyDtaySkry5Kr9rKF40gryF
-	kr13uasYgrn8AF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UOTmDUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQwx6o2hgB4l31QAAsy
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, toan@os.amperecomputing.com, lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, bhelgaas@google.com, tglx@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
+Having recently dipped into the xgene-msi driver to bring it to use
+the MSI-parent concept, I have realised that some of it was slightly
+sub-par (read: downright broken).
 
+The driver is playing horrible tricks behind the core code, missing
+proper affinity management, is terribly over-designed for no good
+reason, and despite what MAINTAINERS says, completely unmaintained.
 
-On 2025/6/28 06:20, kernel test robot wrote:
-> Hi Hans,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on pci/next]
-> [also build test ERROR on pci/for-linus linus/master v6.16-rc3 next-20250627]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-dwc-Refactor-code-by-using-dw_pcie_clear_and_set_dword/20250627-031223
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-> patch link:    https://lore.kernel.org/r/20250626145040.14180-3-18255117159%40163.com
-> patch subject: [PATCH v3] PCI: dwc: Refactor code by using dw_pcie_clear_and_set_dword()
-> config: arc-randconfig-001-20250628 (https://download.01.org/0day-ci/archive/20250628/202506280542.6ttkdrur-lkp@intel.com/config)
-> compiler: arc-linux-gcc (GCC) 8.5.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250628/202506280542.6ttkdrur-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202506280542.6ttkdrur-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->     In file included from drivers/pci/controller/dwc/pcie-amd-mdb.c:21:
->     drivers/pci/controller/dwc/pcie-designware.h: In function 'dw_pcie_dbi_ro_wr_en':
->>> drivers/pci/controller/dwc/pcie-designware.h:712:2: error: implicit declaration of function 'dw_pcie_clear_and_set_dword'; did you mean 'pcie_capability_set_dword'? [-Werror=implicit-function-declaration]
->       dw_pcie_clear_and_set_dword(pci, PCIE_MISC_CONTROL_1_OFF,
->       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->       pcie_capability_set_dword
->     cc1: some warnings being treated as errors
-> 
-> 
+This series is an attempt to fix most of the issues, and effectively
+results more or less in a full rewrite of the driver, removing a lot
+of cruft and fixing the interactions with the PCI host driver in the
+process (there really isn't any reason to rely on initcall ordering
+anymore).
 
-Dear Mani,
+I've stopped short of repainting the MAINTAINERS file, but given how
+reactive Toan Le has been, maybe that's on the cards. Patches on top
+of -rc3, tested on a Mustang board.
 
-This compilation error can be ignored.
+Marc Zyngier (12):
+  genirq: Teach handle_simple_irq() to resend an in-progress interrupt
+  PCI: xgene: Defer probing if the MSI widget driver hasn't probed yet
+  PCI: xgene: Drop useless conditional compilation
+  PCI: xgene: Drop XGENE_PCIE_IP_VER_UNKN
+  PCI: xgene-msi: Make per-CPU interrupt setup robust
+  PCI: xgene-msi: Drop superfluous fields from xgene_msi structure
+  PCI: xgene-msi: Use device-managed memory allocations
+  PCI: xgene-msi: Get rid of intermediate tracking structure
+  PCI: xgene-msi: Sanitise MSI allocation and affinity setting
+  PCI: xgene-msi: Resend an MSI racing with itself on a different CPU
+  PCI: xgene-msi: Probe as a standard platform driver
+  PCI: xgene-msi: Restructure handler setup/teardown
 
-Since the Subject of this patch is wrong, it should be:
+ drivers/pci/controller/pci-xgene-msi.c | 418 +++++++++----------------
+ drivers/pci/controller/pci-xgene.c     |  33 +-
+ kernel/irq/chip.c                      |   8 +-
+ 3 files changed, 176 insertions(+), 283 deletions(-)
 
-Subject:  s/PATCH v3/PATCH v3 02/13/
-
-Do I still need to resubmit the version?
-
-Best regards,
-Hans
-
-> vim +712 drivers/pci/controller/dwc/pcie-designware.h
-> 
->     709	
->     710	static inline void dw_pcie_dbi_ro_wr_en(struct dw_pcie *pci)
->     711	{
->   > 712		dw_pcie_clear_and_set_dword(pci, PCIE_MISC_CONTROL_1_OFF,
->     713					    0, PCIE_DBI_RO_WR_EN);
->     714	}
->     715	
-> 
+-- 
+2.39.2
 
 
