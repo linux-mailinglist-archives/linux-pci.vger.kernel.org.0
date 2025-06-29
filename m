@@ -1,55 +1,92 @@
-Return-Path: <linux-pci+bounces-31031-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31032-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9C26AECFC9
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 21:02:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F9DBAED129
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 22:58:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCCDD189396D
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 19:02:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 790E13AC411
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 20:58:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAB9E233158;
-	Sun, 29 Jun 2025 19:02:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00A43220680;
+	Sun, 29 Jun 2025 20:58:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNOhTrRs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4u9sp6b"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F85BE4A;
-	Sun, 29 Jun 2025 19:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6088E33985;
+	Sun, 29 Jun 2025 20:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751223741; cv=none; b=mn8rXH9n14V0WIA9EN6xAFSjdXYKE/7e/y59+zg/BJjByITspQtEL4SbJa7tJqTq0QCqtx+CapFYsEqOPNum8K4HKYPVip0IdN74YlY25C5cRXTk+5xZpSLNVqIUmrTWP3o3rdVwvApeZzzfmQXM7FWVAC20qJbjcrlkdc0IZdc=
+	t=1751230726; cv=none; b=LFLouDcmKk/q1V3P8yxdUvou66ESt89Vk4UxzhSicrzRqZI8f+KZWifYPz2gCwo07xpCrARMUxMc1k6YRLlykAfsdgtJenN1vyhZAPK3PgQ3uvrrXh7NSLYeV2Xm3QT1YOKdgJ3+kluc0m+7yiu2vMae25KBW0VVMyL38MqD/AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751223741; c=relaxed/simple;
-	bh=BKcKihhtowYCzyyiIXSJEIIzyxAqJMQrIKiBu6x3eXE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=TShCy8kpJyveXclnA2kXwWoszqogvX8nPj1aJr6YuN1PRhiwY5njmAyYy5tQbxBDnw5FZ3b4J3r/LkdU8lebUGb+cmoKGk/oN+bUWxh8fxUNIZCkqloxaWQb0emoIglDF2VoD0PfrwuGT/Zz9Id3e+ErYkT428tZ9aOvcZPWO88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNOhTrRs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D5B3C4CEEB;
-	Sun, 29 Jun 2025 19:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751223741;
-	bh=BKcKihhtowYCzyyiIXSJEIIzyxAqJMQrIKiBu6x3eXE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fNOhTrRszSYEfCM0gNBzEz+pQ+d9+vQcr/fB16JtjXSEi2gkZGfivSpw9UcVAcj8B
-	 1UwL0h3Ig7KBUdiT7BnVMId+4VstNLIBeKouIPcx2f7Jpoy9o4GH6LbL9WvrqBQueO
-	 v3SXr/LIeZQQX7oGm8AggSqyQxzhMfz9z9EVugwouj06PTYdFUZs74UKkvRSstyqOF
-	 Z9Y57r05LnVJ3gaA7l2CI4SkDK4fY9bTrh7B0HGXAFrc1z6xZyEeo8Z53ArwN410Yf
-	 LxLpRzOoiHvrPcWHzfC2Ls5HvqdtpuunmsuElP6aWLTaK7p4Mgrb7adVX97hnVYlzv
-	 +87R1YjFXD0Tg==
-Date: Sun, 29 Jun 2025 14:02:19 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: bhelgaas@google.com, brgl@bgdev.pl, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lukas@wunner.de,
-	Jim Quinlan <james.quinlan@broadcom.com>
-Subject: Re: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device()
- definition to drivers/pci/pwrctrl/
-Message-ID: <20250629190219.GA1717534@bhelgaas>
+	s=arc-20240116; t=1751230726; c=relaxed/simple;
+	bh=ICTpLVM2M7G18zzAFC+A0bTSgAg31tSJVTdM/HqBFLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XZLAfuVN0ubBjysYotqRsizrJMZyosRp2aDHFlpBg7v7kNIw5HhTP+34TY6dsFbvfg62G9RKz3FI9ju7SOneBDJH4XDWwzmRbnio0u92qMaXT6qU3prV2VmyXqIrr+Wm3+tz18P+rzIdnbc6/yl+NY/l5DMhYOSr1bXkoED83oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P4u9sp6b; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6fd0a91ae98so8988856d6.1;
+        Sun, 29 Jun 2025 13:58:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751230724; x=1751835524; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yie4J6/XsAs1Q8lv5qOjqiXHg7FYWZHizYmDgi4UuNs=;
+        b=P4u9sp6bZKHA60nOlmRck8CjvWeIHe8SsPVt49NuhnvrM8KouMam8u49vLs1SKfshx
+         PXQcYtJSl5VKJ4tci9vmxWbCMbecq2R/ZSt5ApsD2HChYwiuqQiKFdu8gX0MpuphvUZe
+         BuTh6Kysyk14Bdib74lGqQiwYNKF/zV2fudVaQhHRXEEcqaGALptzAQkYcL1+Q47HjIU
+         beyv+Pz9KdZwYxv4yWyz+Xc0PB1FqxuFDyUmPRASQ9HHqfND/tymjFiEFnIrVoObcI6Y
+         0PMt9+uNL/YmJNfY2h3kFL7iH3fbthq2ZqcBxfXZjru2vRP8SdQQ5VyTDD8ngyIvZnYN
+         RexQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751230724; x=1751835524;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yie4J6/XsAs1Q8lv5qOjqiXHg7FYWZHizYmDgi4UuNs=;
+        b=dltEHn0Zi2oCaZZo0/OwfutDS02c3i3kgyZLkAcqHCwgRIR+k6GhSHc5USPs1imRM+
+         QNDHA4Sx/3sYQkgdTDpoEShOxpM4y3PMgSknvBnJqTsFryQcTLdfCU5wS+YuGHsn0siZ
+         ORVQPpS/KmNy5MASCXLOIIdIwriBKvr2GucSlgRgcLkZijWLLwL3BNODDhvmzpDRioNZ
+         5sPb4/8ySWxN59r1hHquwNeoMvjxlz+jdR2xHHwi2J/4LjPVtRo7LZ+aubGC/5cn2Gzc
+         DOkbpZzHOox+Nqb0fCDkQyXCtqfVoKpshiD5qxGByay3NcT2TA5CfI8pP3CtdE4IlNKY
+         8MYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2oDVQzMASG4YfOAK95Rg6QQYa3v807KuNzpaDhHZY3iA91uVCKHXRVC6hGiAMUKxWwjz0XSuvqoDW@vger.kernel.org, AJvYcCXi7AvYbJglKUvGSAzbUsVZvRg05YQ7zN0ILxJWtjHDJMgqSM5L5+ANYEHs4pGEzzwaOAVHTHAq2+JLXxc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvDjE8fYvFU7w+53J1pF/i7KK5FLlAMnD/hOx2UVfrPS8MAEWE
+	qvn/9astsLd0opfi0D69TgiUFC8GonhGdIZ3+pY17qHbPk2Nfe/uXDTYfv6i7Z3q1BCUZQ==
+X-Gm-Gg: ASbGnctrXUnN4GRnvDzLVyDXpkz81IpLj94t4yrwv6Lt6lJuq++OFi7BabLZ1wb3zOC
+	uDM4rVV3W4UHyfgrfbMFij7B2uy06jiGeN/z0SyvvPoK8Y9StzPKpLPBULzstArsLLq8B723WFh
+	z2/1aDESiUmJd3adUWtimmPnt6ntMbNxjnDzNbaOhiM8vUHuJDoFgTjwjFp+aUqmly4nL8+uv6L
+	C1Blif0QHytmQn546zdQaxLgchZFiKmFZP0/ifGEO3rn0gt7PKoaiZjnRl66c9lG43R587MftXL
+	bkQIkqQCRGf1mhgV12ZYiiPjCFeWegJ7ku5g15J27unZBKy71g==
+X-Google-Smtp-Source: AGHT+IHV9zmUEfgqMrmNKPmx2kRTuxTdY/cY3aGuTYatCyaiuxMqaEx69QeCSt7OKPnppAGC83yv0w==
+X-Received: by 2002:a05:6214:6201:b0:700:c7ef:ad26 with SMTP id 6a1803df08f44-700c7efaf90mr50674366d6.29.1751230724134;
+        Sun, 29 Jun 2025 13:58:44 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:24f4::dead:c001])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443231da6sm484599585a.101.2025.06.29.13.58.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 13:58:43 -0700 (PDT)
+Date: Sun, 29 Jun 2025 17:58:30 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: linux-rockchip@lists.infradead.org
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rick wertenbroek <rick.wertenbroek@gmail.com>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 3/4] phy: rockchip-pcie: Enable all four lanes if required
+Message-ID: <b203b067e369411b029039f96cfeae300874b4c7.1751200382.git.geraldogabriel@gmail.com>
+References: <cover.1751200382.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,75 +95,48 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <qy2nfwiu2g7pbzbk37wseapvsen7mx4fgqdkdwjbclsj5dltu5@7o2xtj3qhedm>
+In-Reply-To: <cover.1751200382.git.geraldogabriel@gmail.com>
 
-On Sat, Jun 28, 2025 at 04:57:26AM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Jun 27, 2025 at 05:45:02PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Jun 16, 2025 at 11:02:09AM +0530, Manivannan Sadhasivam wrote:
-> > > pci_pwrctrl_create_device() is a PWRCTRL framework API. So it should be
-> > > built only when CONFIG_PWRCTRL is enabled. Currently, it is built
-> > > independently of CONFIG_PWRCTRL. This creates enumeration failure on
-> > > platforms like brcmstb using out-of-tree devicetree that describes the
-> > > power supplies for endpoints in the PCIe child node, but doesn't use
-> > > PWRCTRL framework to manage the supplies. The controller driver itself
-> > > manages the supplies.
-> > > 
-> > > But in any case, the API should be built only when CONFIG_PWRCTRL is
-> > > enabled. So move its definition to drivers/pci/pwrctrl/core.c and provide
-> > > a stub in drivers/pci/pci.h when CONFIG_PWRCTRL is not enabled. This also
-> > > fixes the enumeration issues on the affected platforms.
-> > 
-> > Finally circling back to this since I think brcmstb is broken since
-> > v6.15 and we should fix it for v6.16 final.
-> 
-> Yes! Sorry for the delay. The fact that I switched the job and had
-> to attend OSS NA prevented me from reworking this patch.
-> 
-> > IIUC, v3 is the current patch and needs at least a fix for the build
-> > issue [1], and I guess the options are:
-> > 
-> >   1) Make CONFIG_PCI_PWRCTRL bool.  On my x86-64 system
-> >      pci-pwrctrl-core.o is 8880 bytes, which seems like kind of a lot
-> >      when only a few systems need it.
-> > 
-> >   2) Leave pci_pwrctrl_create_device() in probe.c.  It gets optimized
-> >      away if CONFIG_OF=n because of_pci_find_child_device() returns
-> >      NULL, but still a little ugly for readers.
-> > 
-> >   3) Put pci_pwrctrl_create_device() in a separate
-> >      drivers/pci/pwrctrl/ file that is always compiled even if PWRCTRL
-> >      itself is a module.  Ugly because then we sort of have two "core"
-> >      files (core.c and whatever new file is always compiled).
-> 
-> I guess, we could go with option 3 if you prefer. We could rename
-> the existing pwrctrl/core.c to pwrctrl/pwrctrl.c and move the
-> definition of pci_pwrctrl_create_device() to new pwrctrl/core.c. The
-> new file will depend on HAVE_PWRCTRL, which is bool.
+Current code enables only Lane 0 because pwr_cnt will be incremented on
+first call to the function. Let's reorder the enablement code to enable
+all 4 lanes through GRF.
 
-I think I forgot to mention that option 2 still requires a patch to
-wrap pci_pwrctrl_create_device() with some sort of #ifdef for
-CONFIG_PCI_PWRCTRL, right?  Seems like we need that regardless of the
-brcmstb situation so that we don't create pwrctrl devices when
-CONFIG_OF=y and CONFIG_PCI_PWRCTRL=n.
+Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
+---
+ drivers/phy/rockchip/phy-rockchip-pcie.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-That seems like a straightforward solution and the #ifdef would
-address my readability concern even though the code stays in probe.c.
+diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
+index bd44af36c67a..f22ffb41cdc2 100644
+--- a/drivers/phy/rockchip/phy-rockchip-pcie.c
++++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
+@@ -160,6 +160,12 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+ 
+ 	guard(mutex)(&rk_phy->pcie_mutex);
+ 
++	regmap_write(rk_phy->reg_base,
++		     rk_phy->phy_data->pcie_laneoff,
++		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
++				   PHY_LANE_IDLE_MASK,
++				   PHY_LANE_IDLE_A_SHIFT + inst->index));
++
+ 	if (rk_phy->pwr_cnt++) {
+ 		return 0;
+ 	}
+@@ -176,12 +182,6 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+ 				   PHY_CFG_ADDR_MASK,
+ 				   PHY_CFG_ADDR_SHIFT));
+ 
+-	regmap_write(rk_phy->reg_base,
+-		     rk_phy->phy_data->pcie_laneoff,
+-		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
+-				   PHY_LANE_IDLE_MASK,
+-				   PHY_LANE_IDLE_A_SHIFT + inst->index));
+-
+ 	/*
+ 	 * No documented timeout value for phy operation below,
+ 	 * so we make it large enough here. And we use loop-break
+-- 
+2.49.0
 
-> > And I guess all of these options still depend on CONFIG_PCI_PWRCTRL
-> > not being enabled in a kernel that has brcmstb enabled?  If so, that
-> > seems ugly to me.  We should be able to enable both PWRCTRL and
-> > brcmstb at the same time, e.g., for a single kernel image that works
-> > both on a brcmstb system and a system that needs pwrctrl.
-> 
-> Right, that would be the end goal. As I explained in the reply to
-> the bug report [1], this patch will serve as an interim workaround.
-> Once my pwrctrl rework (which I didn't submit yet) is merged, I will
-> move this driver to use the pwrctrl framework.
-
-OK, so for now, Jim would still need to ensure CONFIG_PCI_PWRCTRL=n
-when brcmstb is enabled, but we do have a plan to adapt brcmstb work
-with pwrctrl.
-
-> [1]
-> https://lore.kernel.org/all/vazxuov2hdk5sezrk7a5qfuclv2s3wo5sxhfwuo3o4uedsdlqv@po55ny24ctne/
 
