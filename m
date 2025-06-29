@@ -1,59 +1,94 @@
-Return-Path: <linux-pci+bounces-31029-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31030-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90318AECE47
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 17:11:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2100AAECF34
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 19:28:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8353C18925DD
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 15:11:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB888170EB0
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 17:28:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C0DB230D2B;
-	Sun, 29 Jun 2025 15:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEB4B2376EC;
+	Sun, 29 Jun 2025 17:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q5A31hZV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R+Bv1vDT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DA84437A;
-	Sun, 29 Jun 2025 15:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D143221277
+	for <linux-pci@vger.kernel.org>; Sun, 29 Jun 2025 17:28:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751209875; cv=none; b=JapIxc52D7u4DqA13+s72FAq0gTmUbFrKddkIIB/QksrTsv/6cBdMPv0B2ED+5txGY7N1/fmLRHMX1ZJr9n5Bsy4KSx6O1AwBoyaNVwqXXYdn0KHRLee6YxhzT9JKH7k5MFN2R3MlcaL7OcbzVDwSlpwJNKHDIpjwpjFFHVoBHE=
+	t=1751218099; cv=none; b=XiRZDxTw4BoLurtYq20IR7RfahRhVhIyRAYAOKXBba2L0i8rZp1P/zUjwl6Trru5RGxNnYXNpmws+PY5Le7aw9A/0IR3hqGi/ThrG5FAFgc9q3958tkH5JXVUd97RewmnylgvyA1qdH1EfZydAZoKyGngRtIUCa5yAw3OzjNysg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751209875; c=relaxed/simple;
-	bh=coy5HGnBbVP/fxiCj/IPdXRm3aSQd6Eh72plsuhblG0=;
+	s=arc-20240116; t=1751218099; c=relaxed/simple;
+	bh=J9YDXD4duvC3Wk7QUO6r6W8l64XMHZU2uOpTsU+NisY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ds5UTtt3hntiAWL6lRqeuShXkbfSZu3uy1JhyJkZ0LIULOkPkmxgyYRytAsKcTbecAmzcy+aSF1dShbPnVbJd9nuN0tV8fvxRw52ixH/qZ2HtaoZGn5IEreee374rnF+Ic8NBX5kgnzP4O+7eVo02/mkZneyx+Ocx8Tyi91Ex88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q5A31hZV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A9BEC4CEEB;
-	Sun, 29 Jun 2025 15:11:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751209874;
-	bh=coy5HGnBbVP/fxiCj/IPdXRm3aSQd6Eh72plsuhblG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q5A31hZV9wiLrv/TCeohJa7rgZzLJxNU1Ce+p9QVpAZ2dg4IP1TUb5F1QnN9u4pW6
-	 AEVlp4mY/PeKNRjEuDcpkJ9znUju+rqpbNRepkttpmVD3fg2W7tsXGaLVDY9m0BOF/
-	 7reo8c6oheSx03mzqdAcw3VqAYvRRFKCZ2sXP2S+fmJBbsK9OLKRIE4F22Nyc1Ya+h
-	 qAT2HwzgLwzWOdfisY0KSfJC0Nms4igT6D+eE4+xLBxjysINXCPUj/RvRcGHunaMxC
-	 9RfsFJPgdqGTEorMI7HvT79giF0PSNzbQtKejOD24EERDt9KxnzdEC7rw4y7zySIXO
-	 bBnFH8kbTtfEQ==
-Date: Sun, 29 Jun 2025 17:11:08 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
-	aliceryhl@google.com, tmgross@umich.edu, david.m.ertman@intel.com,
-	ira.weiny@intel.com, leon@kernel.org, kwilczynski@kernel.org,
-	bhelgaas@google.com
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] Improvements for Devres
-Message-ID: <aGFXjMy4-niXM4WA@pollux>
-References: <20250626200054.243480-1-dakr@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gEK6ErK07zh+r5APFpOWQ5W1Ngsx4+C/7BjAS1+CNFm1GT8g3QEStM3Lkqe5tjS1keXcNd2Ir4wIsKvyVpriP0UydTPgVPvJR4x6U7yEh4ZppSB3lJhHs9hep061W5mWxe4mTeQe2OiKZ3ucLipULqnC497x4IbbvFW+sxDSDDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R+Bv1vDT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751218095;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uGHkUjNmjIIMPgTkRg7VREABnqYi+wWbJyf4AWH8+h8=;
+	b=R+Bv1vDT+AUEJpcGcfqk+fS/E5i1npJihQoy0USLkBM/6uKWC69SDk1poRYSAX1B1BNGys
+	tRj4bQDx0Cpcs+RV5AL5NZJQFMkrikPqbHKYSHiXicLIZpUtmPogxcAUa2p16Tu64lrDp7
+	igwDSSQTSE5/57Lonc42jwplefjerCc=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-595-neej10M0MaiZctezW_MGUQ-1; Sun, 29 Jun 2025 13:28:13 -0400
+X-MC-Unique: neej10M0MaiZctezW_MGUQ-1
+X-Mimecast-MFC-AGG-ID: neej10M0MaiZctezW_MGUQ_1751218093
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-450d64026baso18145755e9.1
+        for <linux-pci@vger.kernel.org>; Sun, 29 Jun 2025 10:28:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751218093; x=1751822893;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uGHkUjNmjIIMPgTkRg7VREABnqYi+wWbJyf4AWH8+h8=;
+        b=UsyVYIIgAjEP4mIUWT4XNRd+U8upUc5o8tRWW4gH/t2sCnp8mPkwY4mJ/jH9Al5w1/
+         JeMlK2i7MkoTyPxbtthlUggZCajzcD4dV1EsO+sulUtVbxNgLaH2E5mojsJ4nCr8pp4Z
+         1De0d6IqrbUpyIQz0+p1a/WfgHn0zprJcZ4vJl9X4Y/76QtNeqhKDKrfAXDDS0k3PPzY
+         nS8g/eRqmzKPz5SCi39Uizqphm31cZsmXEpSLJKM53IsQMVFXBTl+PbbzFldz9GhEf7/
+         ijvMo+O5C/bO3ev3qyFq8USiUOlYyIgC2NN2InWdpcjPBHCfRrPY5seF9WvY5u1GQ3Sw
+         NcIg==
+X-Forwarded-Encrypted: i=1; AJvYcCXE01TkrnF/eqnn+AHF14GESFQnNb0uCozzMQKIVk4k5KtiS3qYh9XgMxWaRIjIVYqb99LUpLJkVTE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyphg4eA43jzyP3B/Irm2ndVLj9y2llF2OTzAV0D1Oz30lPqF3N
+	ioKgn3axgCqYHjVWIV3Pot2U6uBAHRmyXPSAcZSMHg4IYurz9sxEVbo2Wn74GsBasqgIap1kz9g
+	gRRNkgL6rG4X+ISZr+quem6541+hbEFWrBqASFwlLY2lAjMku31q8m2CG4aJnJg==
+X-Gm-Gg: ASbGnctrmTSF0SYDx5jut1wqLhoTGUheW34ojD1bzfnN6FkxHumwzO4aveQi8RW3rLn
+	d8MZ5fQa99vF/vsvF8sIxskH0HsrKR9/czEpeG4rWl9q31HbiA8CRMXuDKDd33lyC7r8Z+agqB+
+	8dyflF4jJuyRbJT+R7Fmot0fZcnyUa3AY7MfyKB5WZZDKLGNTf+cJ38GGQdnSp5c7ejgq8nTvT0
+	D50COwoESXAzammqk0UBMg9x/mRD/kCOnwVBxmGMxcILb/wFcAzsC2UcJaQEzhyZ19SEi18qNgO
+	WTs2I57tqDsQSwcw
+X-Received: by 2002:a05:600c:6095:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-4538ee504demr102969605e9.7.1751218092521;
+        Sun, 29 Jun 2025 10:28:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE9HJ2OfndwPMREYIRxXW8JXGourHIYbXzVyfj8L8gZMgZLg5HRsqQ4PckajVtmi25Hd1plTA==
+X-Received: by 2002:a05:600c:6095:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-4538ee504demr102969455e9.7.1751218092114;
+        Sun, 29 Jun 2025 10:28:12 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e59736sm8185715f8f.74.2025.06.29.10.28.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 10:28:11 -0700 (PDT)
+Date: Sun, 29 Jun 2025 13:28:08 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, Parav Pandit <parav@nvidia.com>,
+	virtualization@lists.linux.dev, stefanha@redhat.com,
+	alok.a.tiwari@oracle.com
+Subject: Re: [PATCH RFC] pci: report surprise removal events
+Message-ID: <20250629132113-mutt-send-email-mst@kernel.org>
+References: <11cfcb55b5302999b0e58b94018f92a379196698.1751136072.git.mst@redhat.com>
+ <aGFBW7wet9V4WENC@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,17 +97,89 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250626200054.243480-1-dakr@kernel.org>
+In-Reply-To: <aGFBW7wet9V4WENC@wunner.de>
 
-On Thu, Jun 26, 2025 at 10:00:38PM +0200, Danilo Krummrich wrote:
->   rust: revocable: support fallible PinInit types
->   rust: devres: replace Devres::new_foreign_owned()
->   rust: devres: get rid of Devres' inner Arc
+On Sun, Jun 29, 2025 at 03:36:27PM +0200, Lukas Wunner wrote:
+> On Sat, Jun 28, 2025 at 02:58:49PM -0400, Michael S. Tsirkin wrote:
+> > At the moment, in case of a surprise removal, the regular
+> > remove callback is invoked, exclusively.
+> > This works well, because mostly, the cleanup would be the same.
+> > 
+> > However, there's a race: imagine device removal was initiated by a user
+> > action, such as driver unbind, and it in turn initiated some cleanup and
+> > is now waiting for an interrupt from the device. If the device is now
+> > surprise-removed, that never arrives and the remove callback hangs
+> > forever.
+> > 
+> > Drivers can artificially add timeouts to handle that, but it can be
+> > flaky.
+> > 
+> > Instead, let's add a way for the driver to be notified about the
+> > disconnect. It can then do any necessary cleanup, knowing that the
+> > device is inactive.
+> [...]
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -549,6 +549,15 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+> >  	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
+> >  	pci_doe_disconnected(dev);
+> >  
+> > +	/* Notify driver of surprise removal */
+> > +	device_lock(&dev->dev);
+> > +
+> > +	if (dev->driver && dev->driver->err_handler &&
+> > +	    dev->driver->err_handler->disconnect)
+> > +		dev->driver->err_handler->disconnect(dev);
+> > +
+> > +	device_unlock(&dev->dev);
+> > +
+> >  	return 0;
+> >  }
 
-Applied to driver-core-testing, thanks!
+thanks for the feedback. Would appreciate a couple more hints:
 
->   rust: types: ForeignOwnable: Add type Target
->   rust: devres: implement register_release()
+> No, that's not good:
+> 
+> 1/ The device_lock() will reintroduce the issues solved by 74ff8864cc84.
 
-Dropped those two for now.
+I see. What other way is there to prevent dev->driver from going away,
+though? I guess I can add a new spinlock and take it both here and when
+dev->driver changes? Acceptable?
+
+> 2/ pci_dev_set_disconnected() needs to be fast so that devices are marked
+>    unplugged as quickly as possible.  We want to minimize the time window
+>    where MMIO and Config Space reads already return "all ones" and writes
+>    go to nirvana, but pci_dev_is_disconnected() still returns false.
+>    Hence invoking some driver callback which may take arbitrarily long or
+>    even sleeps is not an option.
+
+Well, there's no plan to do that there - just to wake up some wq so
+things can be completed. I can add code comments.
+
+> The driver is already notified of removal through invocation of the
+> ->remove() callback.  The use case you're describing is arguably
+> a corner case.  I do think that a timeout is a better approach
+> than the one proposed here.  How long does it take for the interrupt
+> to arrive?
+
+It's a virtual device - kind of unpredictable.
+
+>  If it's not just a few msec, consider polling the device
+> and breaking out of the pool loop as soon as pci_dev_is_disconnected()
+> returns true (or the MMIO read returns PCI_POSSIBLE_ERROR()).
+
+Yes but with no callback, we don't know when to do it.
+The config reads in pci_dev_is_disconnected are also expensive
+on VMs...
+
+> If/when respinning, please explain the use case in more detail,
+> i.e. which driver, which device, pointers to code...
+> 
+> Thanks!
+> 
+> Lukas
+
+
+It's virtio-blk. 
+
 
