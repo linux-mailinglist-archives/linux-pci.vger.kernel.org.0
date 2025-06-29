@@ -1,94 +1,55 @@
-Return-Path: <linux-pci+bounces-31030-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31031-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2100AAECF34
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 19:28:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9C26AECFC9
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 21:02:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB888170EB0
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 17:28:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCCDD189396D
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 19:02:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEB4B2376EC;
-	Sun, 29 Jun 2025 17:28:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAB9E233158;
+	Sun, 29 Jun 2025 19:02:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R+Bv1vDT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNOhTrRs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D143221277
-	for <linux-pci@vger.kernel.org>; Sun, 29 Jun 2025 17:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F85BE4A;
+	Sun, 29 Jun 2025 19:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751218099; cv=none; b=XiRZDxTw4BoLurtYq20IR7RfahRhVhIyRAYAOKXBba2L0i8rZp1P/zUjwl6Trru5RGxNnYXNpmws+PY5Le7aw9A/0IR3hqGi/ThrG5FAFgc9q3958tkH5JXVUd97RewmnylgvyA1qdH1EfZydAZoKyGngRtIUCa5yAw3OzjNysg=
+	t=1751223741; cv=none; b=mn8rXH9n14V0WIA9EN6xAFSjdXYKE/7e/y59+zg/BJjByITspQtEL4SbJa7tJqTq0QCqtx+CapFYsEqOPNum8K4HKYPVip0IdN74YlY25C5cRXTk+5xZpSLNVqIUmrTWP3o3rdVwvApeZzzfmQXM7FWVAC20qJbjcrlkdc0IZdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751218099; c=relaxed/simple;
-	bh=J9YDXD4duvC3Wk7QUO6r6W8l64XMHZU2uOpTsU+NisY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gEK6ErK07zh+r5APFpOWQ5W1Ngsx4+C/7BjAS1+CNFm1GT8g3QEStM3Lkqe5tjS1keXcNd2Ir4wIsKvyVpriP0UydTPgVPvJR4x6U7yEh4ZppSB3lJhHs9hep061W5mWxe4mTeQe2OiKZ3ucLipULqnC497x4IbbvFW+sxDSDDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R+Bv1vDT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751218095;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uGHkUjNmjIIMPgTkRg7VREABnqYi+wWbJyf4AWH8+h8=;
-	b=R+Bv1vDT+AUEJpcGcfqk+fS/E5i1npJihQoy0USLkBM/6uKWC69SDk1poRYSAX1B1BNGys
-	tRj4bQDx0Cpcs+RV5AL5NZJQFMkrikPqbHKYSHiXicLIZpUtmPogxcAUa2p16Tu64lrDp7
-	igwDSSQTSE5/57Lonc42jwplefjerCc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-595-neej10M0MaiZctezW_MGUQ-1; Sun, 29 Jun 2025 13:28:13 -0400
-X-MC-Unique: neej10M0MaiZctezW_MGUQ-1
-X-Mimecast-MFC-AGG-ID: neej10M0MaiZctezW_MGUQ_1751218093
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-450d64026baso18145755e9.1
-        for <linux-pci@vger.kernel.org>; Sun, 29 Jun 2025 10:28:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751218093; x=1751822893;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uGHkUjNmjIIMPgTkRg7VREABnqYi+wWbJyf4AWH8+h8=;
-        b=UsyVYIIgAjEP4mIUWT4XNRd+U8upUc5o8tRWW4gH/t2sCnp8mPkwY4mJ/jH9Al5w1/
-         JeMlK2i7MkoTyPxbtthlUggZCajzcD4dV1EsO+sulUtVbxNgLaH2E5mojsJ4nCr8pp4Z
-         1De0d6IqrbUpyIQz0+p1a/WfgHn0zprJcZ4vJl9X4Y/76QtNeqhKDKrfAXDDS0k3PPzY
-         nS8g/eRqmzKPz5SCi39Uizqphm31cZsmXEpSLJKM53IsQMVFXBTl+PbbzFldz9GhEf7/
-         ijvMo+O5C/bO3ev3qyFq8USiUOlYyIgC2NN2InWdpcjPBHCfRrPY5seF9WvY5u1GQ3Sw
-         NcIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXE01TkrnF/eqnn+AHF14GESFQnNb0uCozzMQKIVk4k5KtiS3qYh9XgMxWaRIjIVYqb99LUpLJkVTE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyphg4eA43jzyP3B/Irm2ndVLj9y2llF2OTzAV0D1Oz30lPqF3N
-	ioKgn3axgCqYHjVWIV3Pot2U6uBAHRmyXPSAcZSMHg4IYurz9sxEVbo2Wn74GsBasqgIap1kz9g
-	gRRNkgL6rG4X+ISZr+quem6541+hbEFWrBqASFwlLY2lAjMku31q8m2CG4aJnJg==
-X-Gm-Gg: ASbGnctrmTSF0SYDx5jut1wqLhoTGUheW34ojD1bzfnN6FkxHumwzO4aveQi8RW3rLn
-	d8MZ5fQa99vF/vsvF8sIxskH0HsrKR9/czEpeG4rWl9q31HbiA8CRMXuDKDd33lyC7r8Z+agqB+
-	8dyflF4jJuyRbJT+R7Fmot0fZcnyUa3AY7MfyKB5WZZDKLGNTf+cJ38GGQdnSp5c7ejgq8nTvT0
-	D50COwoESXAzammqk0UBMg9x/mRD/kCOnwVBxmGMxcILb/wFcAzsC2UcJaQEzhyZ19SEi18qNgO
-	WTs2I57tqDsQSwcw
-X-Received: by 2002:a05:600c:6095:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-4538ee504demr102969605e9.7.1751218092521;
-        Sun, 29 Jun 2025 10:28:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE9HJ2OfndwPMREYIRxXW8JXGourHIYbXzVyfj8L8gZMgZLg5HRsqQ4PckajVtmi25Hd1plTA==
-X-Received: by 2002:a05:600c:6095:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-4538ee504demr102969455e9.7.1751218092114;
-        Sun, 29 Jun 2025 10:28:12 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e59736sm8185715f8f.74.2025.06.29.10.28.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 10:28:11 -0700 (PDT)
-Date: Sun, 29 Jun 2025 13:28:08 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, Parav Pandit <parav@nvidia.com>,
-	virtualization@lists.linux.dev, stefanha@redhat.com,
-	alok.a.tiwari@oracle.com
-Subject: Re: [PATCH RFC] pci: report surprise removal events
-Message-ID: <20250629132113-mutt-send-email-mst@kernel.org>
-References: <11cfcb55b5302999b0e58b94018f92a379196698.1751136072.git.mst@redhat.com>
- <aGFBW7wet9V4WENC@wunner.de>
+	s=arc-20240116; t=1751223741; c=relaxed/simple;
+	bh=BKcKihhtowYCzyyiIXSJEIIzyxAqJMQrIKiBu6x3eXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=TShCy8kpJyveXclnA2kXwWoszqogvX8nPj1aJr6YuN1PRhiwY5njmAyYy5tQbxBDnw5FZ3b4J3r/LkdU8lebUGb+cmoKGk/oN+bUWxh8fxUNIZCkqloxaWQb0emoIglDF2VoD0PfrwuGT/Zz9Id3e+ErYkT428tZ9aOvcZPWO88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNOhTrRs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D5B3C4CEEB;
+	Sun, 29 Jun 2025 19:02:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751223741;
+	bh=BKcKihhtowYCzyyiIXSJEIIzyxAqJMQrIKiBu6x3eXE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=fNOhTrRszSYEfCM0gNBzEz+pQ+d9+vQcr/fB16JtjXSEi2gkZGfivSpw9UcVAcj8B
+	 1UwL0h3Ig7KBUdiT7BnVMId+4VstNLIBeKouIPcx2f7Jpoy9o4GH6LbL9WvrqBQueO
+	 v3SXr/LIeZQQX7oGm8AggSqyQxzhMfz9z9EVugwouj06PTYdFUZs74UKkvRSstyqOF
+	 Z9Y57r05LnVJ3gaA7l2CI4SkDK4fY9bTrh7B0HGXAFrc1z6xZyEeo8Z53ArwN410Yf
+	 LxLpRzOoiHvrPcWHzfC2Ls5HvqdtpuunmsuElP6aWLTaK7p4Mgrb7adVX97hnVYlzv
+	 +87R1YjFXD0Tg==
+Date: Sun, 29 Jun 2025 14:02:19 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: bhelgaas@google.com, brgl@bgdev.pl, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lukas@wunner.de,
+	Jim Quinlan <james.quinlan@broadcom.com>
+Subject: Re: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device()
+ definition to drivers/pci/pwrctrl/
+Message-ID: <20250629190219.GA1717534@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,89 +58,75 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aGFBW7wet9V4WENC@wunner.de>
+In-Reply-To: <qy2nfwiu2g7pbzbk37wseapvsen7mx4fgqdkdwjbclsj5dltu5@7o2xtj3qhedm>
 
-On Sun, Jun 29, 2025 at 03:36:27PM +0200, Lukas Wunner wrote:
-> On Sat, Jun 28, 2025 at 02:58:49PM -0400, Michael S. Tsirkin wrote:
-> > At the moment, in case of a surprise removal, the regular
-> > remove callback is invoked, exclusively.
-> > This works well, because mostly, the cleanup would be the same.
+On Sat, Jun 28, 2025 at 04:57:26AM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Jun 27, 2025 at 05:45:02PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Jun 16, 2025 at 11:02:09AM +0530, Manivannan Sadhasivam wrote:
+> > > pci_pwrctrl_create_device() is a PWRCTRL framework API. So it should be
+> > > built only when CONFIG_PWRCTRL is enabled. Currently, it is built
+> > > independently of CONFIG_PWRCTRL. This creates enumeration failure on
+> > > platforms like brcmstb using out-of-tree devicetree that describes the
+> > > power supplies for endpoints in the PCIe child node, but doesn't use
+> > > PWRCTRL framework to manage the supplies. The controller driver itself
+> > > manages the supplies.
+> > > 
+> > > But in any case, the API should be built only when CONFIG_PWRCTRL is
+> > > enabled. So move its definition to drivers/pci/pwrctrl/core.c and provide
+> > > a stub in drivers/pci/pci.h when CONFIG_PWRCTRL is not enabled. This also
+> > > fixes the enumeration issues on the affected platforms.
 > > 
-> > However, there's a race: imagine device removal was initiated by a user
-> > action, such as driver unbind, and it in turn initiated some cleanup and
-> > is now waiting for an interrupt from the device. If the device is now
-> > surprise-removed, that never arrives and the remove callback hangs
-> > forever.
+> > Finally circling back to this since I think brcmstb is broken since
+> > v6.15 and we should fix it for v6.16 final.
+> 
+> Yes! Sorry for the delay. The fact that I switched the job and had
+> to attend OSS NA prevented me from reworking this patch.
+> 
+> > IIUC, v3 is the current patch and needs at least a fix for the build
+> > issue [1], and I guess the options are:
 > > 
-> > Drivers can artificially add timeouts to handle that, but it can be
-> > flaky.
+> >   1) Make CONFIG_PCI_PWRCTRL bool.  On my x86-64 system
+> >      pci-pwrctrl-core.o is 8880 bytes, which seems like kind of a lot
+> >      when only a few systems need it.
 > > 
-> > Instead, let's add a way for the driver to be notified about the
-> > disconnect. It can then do any necessary cleanup, knowing that the
-> > device is inactive.
-> [...]
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -549,6 +549,15 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
-> >  	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
-> >  	pci_doe_disconnected(dev);
-> >  
-> > +	/* Notify driver of surprise removal */
-> > +	device_lock(&dev->dev);
-> > +
-> > +	if (dev->driver && dev->driver->err_handler &&
-> > +	    dev->driver->err_handler->disconnect)
-> > +		dev->driver->err_handler->disconnect(dev);
-> > +
-> > +	device_unlock(&dev->dev);
-> > +
-> >  	return 0;
-> >  }
-
-thanks for the feedback. Would appreciate a couple more hints:
-
-> No, that's not good:
+> >   2) Leave pci_pwrctrl_create_device() in probe.c.  It gets optimized
+> >      away if CONFIG_OF=n because of_pci_find_child_device() returns
+> >      NULL, but still a little ugly for readers.
+> > 
+> >   3) Put pci_pwrctrl_create_device() in a separate
+> >      drivers/pci/pwrctrl/ file that is always compiled even if PWRCTRL
+> >      itself is a module.  Ugly because then we sort of have two "core"
+> >      files (core.c and whatever new file is always compiled).
 > 
-> 1/ The device_lock() will reintroduce the issues solved by 74ff8864cc84.
+> I guess, we could go with option 3 if you prefer. We could rename
+> the existing pwrctrl/core.c to pwrctrl/pwrctrl.c and move the
+> definition of pci_pwrctrl_create_device() to new pwrctrl/core.c. The
+> new file will depend on HAVE_PWRCTRL, which is bool.
 
-I see. What other way is there to prevent dev->driver from going away,
-though? I guess I can add a new spinlock and take it both here and when
-dev->driver changes? Acceptable?
+I think I forgot to mention that option 2 still requires a patch to
+wrap pci_pwrctrl_create_device() with some sort of #ifdef for
+CONFIG_PCI_PWRCTRL, right?  Seems like we need that regardless of the
+brcmstb situation so that we don't create pwrctrl devices when
+CONFIG_OF=y and CONFIG_PCI_PWRCTRL=n.
 
-> 2/ pci_dev_set_disconnected() needs to be fast so that devices are marked
->    unplugged as quickly as possible.  We want to minimize the time window
->    where MMIO and Config Space reads already return "all ones" and writes
->    go to nirvana, but pci_dev_is_disconnected() still returns false.
->    Hence invoking some driver callback which may take arbitrarily long or
->    even sleeps is not an option.
+That seems like a straightforward solution and the #ifdef would
+address my readability concern even though the code stays in probe.c.
 
-Well, there's no plan to do that there - just to wake up some wq so
-things can be completed. I can add code comments.
-
-> The driver is already notified of removal through invocation of the
-> ->remove() callback.  The use case you're describing is arguably
-> a corner case.  I do think that a timeout is a better approach
-> than the one proposed here.  How long does it take for the interrupt
-> to arrive?
-
-It's a virtual device - kind of unpredictable.
-
->  If it's not just a few msec, consider polling the device
-> and breaking out of the pool loop as soon as pci_dev_is_disconnected()
-> returns true (or the MMIO read returns PCI_POSSIBLE_ERROR()).
-
-Yes but with no callback, we don't know when to do it.
-The config reads in pci_dev_is_disconnected are also expensive
-on VMs...
-
-> If/when respinning, please explain the use case in more detail,
-> i.e. which driver, which device, pointers to code...
+> > And I guess all of these options still depend on CONFIG_PCI_PWRCTRL
+> > not being enabled in a kernel that has brcmstb enabled?  If so, that
+> > seems ugly to me.  We should be able to enable both PWRCTRL and
+> > brcmstb at the same time, e.g., for a single kernel image that works
+> > both on a brcmstb system and a system that needs pwrctrl.
 > 
-> Thanks!
-> 
-> Lukas
+> Right, that would be the end goal. As I explained in the reply to
+> the bug report [1], this patch will serve as an interim workaround.
+> Once my pwrctrl rework (which I didn't submit yet) is merged, I will
+> move this driver to use the pwrctrl framework.
 
+OK, so for now, Jim would still need to ensure CONFIG_PCI_PWRCTRL=n
+when brcmstb is enabled, but we do have a plan to adapt brcmstb work
+with pwrctrl.
 
-It's virtio-blk. 
-
+> [1]
+> https://lore.kernel.org/all/vazxuov2hdk5sezrk7a5qfuclv2s3wo5sxhfwuo3o4uedsdlqv@po55ny24ctne/
 
