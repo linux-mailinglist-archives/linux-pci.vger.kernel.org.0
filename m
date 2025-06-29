@@ -1,92 +1,58 @@
-Return-Path: <linux-pci+bounces-31032-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31033-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F9DBAED129
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 22:58:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BFD8AED1D6
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 01:40:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 790E13AC411
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 20:58:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C952A171F8A
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Jun 2025 23:40:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00A43220680;
-	Sun, 29 Jun 2025 20:58:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B3962405E5;
+	Sun, 29 Jun 2025 23:40:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4u9sp6b"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kw2qXohZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6088E33985;
-	Sun, 29 Jun 2025 20:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA74023B616;
+	Sun, 29 Jun 2025 23:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751230726; cv=none; b=LFLouDcmKk/q1V3P8yxdUvou66ESt89Vk4UxzhSicrzRqZI8f+KZWifYPz2gCwo07xpCrARMUxMc1k6YRLlykAfsdgtJenN1vyhZAPK3PgQ3uvrrXh7NSLYeV2Xm3QT1YOKdgJ3+kluc0m+7yiu2vMae25KBW0VVMyL38MqD/AE=
+	t=1751240401; cv=none; b=cxO3R0ABubmMBdz3mqLIfSOiytu7fLD+ZZ7ZTnqz/9limg1Tw6n3qSEdEy7mmyNcfubm+ArgzxdiQNdVOdw5C51/bgYS66ww9mLfmFlpLGcYSDZS9zxygo4cYeJL0yelLKpkPdj9Afg5wZ5V9/fSASPRTNBjtC0A8xF0gPBg8i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751230726; c=relaxed/simple;
-	bh=ICTpLVM2M7G18zzAFC+A0bTSgAg31tSJVTdM/HqBFLc=;
+	s=arc-20240116; t=1751240401; c=relaxed/simple;
+	bh=U1zW1PVhP7sSFlq2I8MUfOfkpegnKm+RK54dVAc6EyA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XZLAfuVN0ubBjysYotqRsizrJMZyosRp2aDHFlpBg7v7kNIw5HhTP+34TY6dsFbvfg62G9RKz3FI9ju7SOneBDJH4XDWwzmRbnio0u92qMaXT6qU3prV2VmyXqIrr+Wm3+tz18P+rzIdnbc6/yl+NY/l5DMhYOSr1bXkoED83oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P4u9sp6b; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6fd0a91ae98so8988856d6.1;
-        Sun, 29 Jun 2025 13:58:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751230724; x=1751835524; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yie4J6/XsAs1Q8lv5qOjqiXHg7FYWZHizYmDgi4UuNs=;
-        b=P4u9sp6bZKHA60nOlmRck8CjvWeIHe8SsPVt49NuhnvrM8KouMam8u49vLs1SKfshx
-         PXQcYtJSl5VKJ4tci9vmxWbCMbecq2R/ZSt5ApsD2HChYwiuqQiKFdu8gX0MpuphvUZe
-         BuTh6Kysyk14Bdib74lGqQiwYNKF/zV2fudVaQhHRXEEcqaGALptzAQkYcL1+Q47HjIU
-         beyv+Pz9KdZwYxv4yWyz+Xc0PB1FqxuFDyUmPRASQ9HHqfND/tymjFiEFnIrVoObcI6Y
-         0PMt9+uNL/YmJNfY2h3kFL7iH3fbthq2ZqcBxfXZjru2vRP8SdQQ5VyTDD8ngyIvZnYN
-         RexQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751230724; x=1751835524;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yie4J6/XsAs1Q8lv5qOjqiXHg7FYWZHizYmDgi4UuNs=;
-        b=dltEHn0Zi2oCaZZo0/OwfutDS02c3i3kgyZLkAcqHCwgRIR+k6GhSHc5USPs1imRM+
-         QNDHA4Sx/3sYQkgdTDpoEShOxpM4y3PMgSknvBnJqTsFryQcTLdfCU5wS+YuGHsn0siZ
-         ORVQPpS/KmNy5MASCXLOIIdIwriBKvr2GucSlgRgcLkZijWLLwL3BNODDhvmzpDRioNZ
-         5sPb4/8ySWxN59r1hHquwNeoMvjxlz+jdR2xHHwi2J/4LjPVtRo7LZ+aubGC/5cn2Gzc
-         DOkbpZzHOox+Nqb0fCDkQyXCtqfVoKpshiD5qxGByay3NcT2TA5CfI8pP3CtdE4IlNKY
-         8MYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2oDVQzMASG4YfOAK95Rg6QQYa3v807KuNzpaDhHZY3iA91uVCKHXRVC6hGiAMUKxWwjz0XSuvqoDW@vger.kernel.org, AJvYcCXi7AvYbJglKUvGSAzbUsVZvRg05YQ7zN0ILxJWtjHDJMgqSM5L5+ANYEHs4pGEzzwaOAVHTHAq2+JLXxc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvDjE8fYvFU7w+53J1pF/i7KK5FLlAMnD/hOx2UVfrPS8MAEWE
-	qvn/9astsLd0opfi0D69TgiUFC8GonhGdIZ3+pY17qHbPk2Nfe/uXDTYfv6i7Z3q1BCUZQ==
-X-Gm-Gg: ASbGnctrXUnN4GRnvDzLVyDXpkz81IpLj94t4yrwv6Lt6lJuq++OFi7BabLZ1wb3zOC
-	uDM4rVV3W4UHyfgrfbMFij7B2uy06jiGeN/z0SyvvPoK8Y9StzPKpLPBULzstArsLLq8B723WFh
-	z2/1aDESiUmJd3adUWtimmPnt6ntMbNxjnDzNbaOhiM8vUHuJDoFgTjwjFp+aUqmly4nL8+uv6L
-	C1Blif0QHytmQn546zdQaxLgchZFiKmFZP0/ifGEO3rn0gt7PKoaiZjnRl66c9lG43R587MftXL
-	bkQIkqQCRGf1mhgV12ZYiiPjCFeWegJ7ku5g15J27unZBKy71g==
-X-Google-Smtp-Source: AGHT+IHV9zmUEfgqMrmNKPmx2kRTuxTdY/cY3aGuTYatCyaiuxMqaEx69QeCSt7OKPnppAGC83yv0w==
-X-Received: by 2002:a05:6214:6201:b0:700:c7ef:ad26 with SMTP id 6a1803df08f44-700c7efaf90mr50674366d6.29.1751230724134;
-        Sun, 29 Jun 2025 13:58:44 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:24f4::dead:c001])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443231da6sm484599585a.101.2025.06.29.13.58.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 13:58:43 -0700 (PDT)
-Date: Sun, 29 Jun 2025 17:58:30 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rick wertenbroek <rick.wertenbroek@gmail.com>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 3/4] phy: rockchip-pcie: Enable all four lanes if required
-Message-ID: <b203b067e369411b029039f96cfeae300874b4c7.1751200382.git.geraldogabriel@gmail.com>
-References: <cover.1751200382.git.geraldogabriel@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MGUeS9Hw12LKGpFTkL3/LpoK8MVI0rHLIjxilh/iNgUQf70R+O8EQgYkU3Mwc3uMDEhomvU2Pl91zcdI62otLFTfuVWMhmhHdovbSTRiwoLzcwPu2sWQqUNj4Z+a31LiIbC7aJ4EMaklr/RvzUvzStYM5KgJCBjuFBJ3W6xJ72w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kw2qXohZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DC89C4CEEB;
+	Sun, 29 Jun 2025 23:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751240400;
+	bh=U1zW1PVhP7sSFlq2I8MUfOfkpegnKm+RK54dVAc6EyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kw2qXohZ/UaAyov8poE/JSioA0Ufkposx/VDOGrTbUJNTKaSg/FxpvHE5/u4iDlHm
+	 kAztCPztsN1c7wUaaAWtEa9NUzuTA6m2O3HmZPMmifAsZsfkdPl8f8Rwk15B10n9bx
+	 pVtUVqn8wBFsqjvRN0VMVz8fixjbXoxH1IIfeVEwU9MP1HebiQVKA2wKrsYSUaQxp5
+	 CPClcGKGiMAn7aoqvI05ZZKzdqATBMpVX5scHKvUhxzi5PPxsSbhDFwYLkhclA6jgU
+	 t4QQNuJIm4ZgWI15XhZrlyYKTKA556ERGztsqzSng9+XDDamfhNi8vVYoTK8yCjQQ1
+	 E5h7Ef4d93W8w==
+Date: Sun, 29 Jun 2025 17:39:58 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Parav Pandit <parav@nvidia.com>, virtualization@lists.linux.dev,
+	stefanha@redhat.com, alok.a.tiwari@oracle.com
+Subject: Re: [PATCH RFC] pci: report surprise removal events
+Message-ID: <aGHOzj3_MQ3x7hAD@kbusch-mbp>
+References: <11cfcb55b5302999b0e58b94018f92a379196698.1751136072.git.mst@redhat.com>
+ <aGFBW7wet9V4WENC@wunner.de>
+ <20250629132113-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -95,48 +61,27 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1751200382.git.geraldogabriel@gmail.com>
+In-Reply-To: <20250629132113-mutt-send-email-mst@kernel.org>
 
-Current code enables only Lane 0 because pwr_cnt will be incremented on
-first call to the function. Let's reorder the enablement code to enable
-all 4 lanes through GRF.
+On Sun, Jun 29, 2025 at 01:28:08PM -0400, Michael S. Tsirkin wrote:
+> On Sun, Jun 29, 2025 at 03:36:27PM +0200, Lukas Wunner wrote:
+> > On Sat, Jun 28, 2025 at 02:58:49PM -0400, Michael S. Tsirkin wrote:
+> > 
+> > 1/ The device_lock() will reintroduce the issues solved by 74ff8864cc84.
+> 
+> I see. What other way is there to prevent dev->driver from going away,
+> though? I guess I can add a new spinlock and take it both here and when
+> dev->driver changes? Acceptable?
 
-Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
----
- drivers/phy/rockchip/phy-rockchip-pcie.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+You're already holding the pci_bus_sem here, so the final device 'put'
+can't have been called yet, so the device is valid and thread safe in
+this context. I think maintaining the desired lifetime of the
+instantiated driver is just a matter of reference counting within your
+driver.
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
-index bd44af36c67a..f22ffb41cdc2 100644
---- a/drivers/phy/rockchip/phy-rockchip-pcie.c
-+++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-@@ -160,6 +160,12 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
- 
- 	guard(mutex)(&rk_phy->pcie_mutex);
- 
-+	regmap_write(rk_phy->reg_base,
-+		     rk_phy->phy_data->pcie_laneoff,
-+		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
-+				   PHY_LANE_IDLE_MASK,
-+				   PHY_LANE_IDLE_A_SHIFT + inst->index));
-+
- 	if (rk_phy->pwr_cnt++) {
- 		return 0;
- 	}
-@@ -176,12 +182,6 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
- 				   PHY_CFG_ADDR_MASK,
- 				   PHY_CFG_ADDR_SHIFT));
- 
--	regmap_write(rk_phy->reg_base,
--		     rk_phy->phy_data->pcie_laneoff,
--		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
--				   PHY_LANE_IDLE_MASK,
--				   PHY_LANE_IDLE_A_SHIFT + inst->index));
--
- 	/*
- 	 * No documented timeout value for phy operation below,
- 	 * so we make it large enough here. And we use loop-break
--- 
-2.49.0
-
+Just a thought on your patch, instead of introducing a new callback, you
+could call the existing '->error_detected()' callback with the
+previously set 'pci_channel_io_perm_failure' status. That would totally
+work for nvme to kick its cleanup much quicker than the blk_mq timeout
+handling we currently rely on for this scenario.
 
