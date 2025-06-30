@@ -1,209 +1,299 @@
-Return-Path: <linux-pci+bounces-31034-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31038-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEDA4AED32E
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 06:08:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD84DAED345
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 06:16:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6AF3B3AFFB2
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 04:07:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D69357A4430
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 04:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CD1418B464;
-	Mon, 30 Jun 2025 04:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="WH7OABv7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9B7E1C6FF4;
+	Mon, 30 Jun 2025 04:16:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2062.outbound.protection.outlook.com [40.107.223.62])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022138.outbound.protection.outlook.com [52.101.126.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751134C6C;
-	Mon, 30 Jun 2025 04:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53AE19CC29;
+	Mon, 30 Jun 2025 04:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.138
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751256481; cv=fail; b=bQ5cb49kax4m7jdXf870VpUrFoDAhuu17Hl27vbLVpoDpT9A1wayC7n+zmo6CrAErRjD/neWSJYwyMDaV+86Oyz0iN+8Gj7cXi6AmTfYMeScIorToqfG4CoRqpvhBqUB4iKFMuNvL8dAQZa8xEw8Jq0bglDxUFtJOs0CEj2CSnQ=
+	t=1751256976; cv=fail; b=TxzgGPBXOl4SX1fTSTt3S4knRDkxGLq3Td6hFz3YwgPlHQQs7JHSt+BGkOjT8kDbiiy5doV1dNle5WUQ+m5e8sejMLG9qNSd/ioC6+/2ke0H55uBlEPigmjL7Y1eMmmSM0wL3jzp79HxBjRMAQRcLCXH8dQZT9jEdNNAYJaQHJc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751256481; c=relaxed/simple;
-	bh=O5KyMlgkqUnjRbNXN1xnaPsvJnKeNP22d0FOfVubU5Y=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZmxvVUBAEF8qezEiwDKZ6nchI+jja63nram6RGn7IR0nfNxagFJYontTN85Vgeb7fGtAfk0iKNZnw7oO4+WimekFuUxHcmcyeM7y8ASGoOvXkCbmM0QoE3qTefTg1AbxvjMbR1iyr/EGVeJwXg8XkQtKqnQA4iozhgPRLJfKRcg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=WH7OABv7; arc=fail smtp.client-ip=40.107.223.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1751256976; c=relaxed/simple;
+	bh=rgrXjeZBySBDvWbcMnAZyly0qlkF+jFU1U/cNbFBQes=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KGZSVIP3W/RAuGG1sFExxNEwd3SrGVASVbxcMkzLNyffPetP0nrM/WieUl/JzqojodqhDilEgFcGwommlYma6A47vWmvEOhWs4o0/wPAqnWCmXGlMGgGQgsN1gj2+S8MnjejnbAf3x8tkVtxR6Va6t5KpxbQ6GNWdWKUESFxmeE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.126.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YTbGe2aZuTpbdqnHRKm4n8Cxe3c8/Uygnh1T4ipOrnsfYoWfbea693j4X3pwNSsepd3xvodVkkIkhQcip/okzmcnyZKVQu9a2tt3NULvGYNgwOMIJ2sV7hOdUNgfVnTcjrS1zoS10lFqn3RyKpAWoh3Iv7tgeU6hCYVp6lyRVwOO//HhH0d1rqWtmfQJ59ZGOjtma7ZfL53UNEdz9QpB64XgkkaARJxr4MYnyrzJVxHYqmHGtUeuMFo2KvCX9LjElZoYDgsS4LU2J1HKgToAqD9m8Fnf+gyq/QVWbNscugiUw7iQ7dQiD4OhvCTsQVbKgVXukJPxle7FUABMVO/u2Q==
+ b=OfwuNgjayI6sMwZtW6naPTCZS5JKujKj96hTYwktQLailVGMx+qg3agXpwmyobxcvfO/liw7BJRR4Nznjd9JQaFTxDfw+fXZSaVgbx2q0Zwa+ecCo94BnggyPD4RFrWgEoaztNmZAvPFjNIS4Fsu+xvVMpCI6rKhGzKj+gcp3NhEohCqchsATRq8ToCX0blYG7n1Pt7PB1LjIUli4Fc0IgVD1ZzIDvXwXqsFxywTm6rnh/yKV1E09GbMO4yPz9QfJarHW0Xs2TAjaiJolNVztr0Nipb9nkAkN4p6D1ZqdUswwciPN1sh7es3fdgr/XBznBT/5ikqZarIZgSFrm6iHw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O5KyMlgkqUnjRbNXN1xnaPsvJnKeNP22d0FOfVubU5Y=;
- b=RCZG8lKCTnOtez7Wyprp1c1QXK+j2aH6PiRqVzF22nwm3nYNUJIzhcEyAH06LKjxqSwG6yHw/tf5DIuFT/2kb+Z8FLSzCGzdOeUJERHMxO99Y8JCyi4ZyUrEBerZgNQHno7NUqFDESTre+EMxG8U5mQknK0w/N2zJphCs03TvGfN+1KxqOXPzDpDvy/5ATg2fJeyXlxN381hXmES5B+Jqfdo0PRjyTNOlIetzDyHEg/LgQIY9dMOuIn6Tn6X2uQSNY7dIXGF5dLr/cfhaR0ynsOOMwtbJtT+oqzBgYcTqaqKTCLlODrTqWA/oEk49HZ4qKwWaBixbqfcfA3ovm/0RA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O5KyMlgkqUnjRbNXN1xnaPsvJnKeNP22d0FOfVubU5Y=;
- b=WH7OABv747FHvC195FWOns7/b7veLj+U8AOGC0HAyx4DI7nVInRyDkkripmisuX2FfdkoYqvqMYhkZjTHnQ3hkm7oP76jV/2Q0H9meg0aBNrqhIn0Ll1Wqqad6o0IZy8QJ63z7AMt+BzB0fk4EOwaPW65/vfimo/xY88f0d4ffG59y3cu+AXZ7Acupf1afcotACg1C9ZWsIlHele8vwdbSFBtuUzxpwustojj5fIsBVqhy8E1ebgUR8x0TezRbvnPw9LzHq+Uz+7bsbfIkfeDFXyzfN9OStCW1ZqDIW0lGYUmqxJra6vDGBqeY5jVpp9ZJEWdPze3u5XRtnkvGdRig==
-Received: from CY8PR12MB7195.namprd12.prod.outlook.com (2603:10b6:930:59::11)
- by SA3PR12MB8810.namprd12.prod.outlook.com (2603:10b6:806:31f::22) with
+ bh=YhLHdan/jCGLJQtm/Sp5km8sIgO8H7ViFS49X2PSs4M=;
+ b=vNPgipBsY4C2bJJSh//D8iogF9ucNMoVPzkORYNsYtDhPfL7BmzZdUMk1Wgt9Txm3qxGV8RkMAKZZYpkqaj8ivX20OV2AGwwoct/E6bpTdF/mY3luiil5rIOJvjLhgqIEYeZFxO4xlx07L/WtdkjbM8AJOPBxua8htg4MzbxsK7gb54e2lIiZ/cUOGiJI06Y1YUMZR6vsImKLP31FQcerlWu4JbsYfCEWbjKGMJUSyNIC2KQXJ7NIGNiDGD/cxNgC+KLoUxIgAsjFVjfGn1Kti8w6pz0A11fe45UH0r1clHMEw+IFd3UrnWa37F5E97CZBMMJFrGrSkdn2X49sbXpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from TYCPR01CA0127.jpnprd01.prod.outlook.com (2603:1096:400:26d::12)
+ by JH0PR06MB6939.apcprd06.prod.outlook.com (2603:1096:990:66::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.26; Mon, 30 Jun
- 2025 04:07:55 +0000
-Received: from CY8PR12MB7195.namprd12.prod.outlook.com
- ([fe80::e571:5f76:2b46:e0f8]) by CY8PR12MB7195.namprd12.prod.outlook.com
- ([fe80::e571:5f76:2b46:e0f8%4]) with mapi id 15.20.8857.022; Mon, 30 Jun 2025
- 04:07:55 +0000
-From: Parav Pandit <parav@nvidia.com>
-To: Keith Busch <kbusch@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>
-CC: Lukas Wunner <lukas@wunner.de>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
-	"stefanha@redhat.com" <stefanha@redhat.com>, "alok.a.tiwari@oracle.com"
-	<alok.a.tiwari@oracle.com>
-Subject: RE: [PATCH RFC] pci: report surprise removal events
-Thread-Topic: [PATCH RFC] pci: report surprise removal events
-Thread-Index: AQHb6F617i3JOnV0fEygiRap3Duq4bQaJOKAgABAvACAAGfjAIAASb6w
-Date: Mon, 30 Jun 2025 04:07:55 +0000
-Message-ID:
- <CY8PR12MB7195F2F2900BAEA69F5431E9DC46A@CY8PR12MB7195.namprd12.prod.outlook.com>
-References:
- <11cfcb55b5302999b0e58b94018f92a379196698.1751136072.git.mst@redhat.com>
- <aGFBW7wet9V4WENC@wunner.de> <20250629132113-mutt-send-email-mst@kernel.org>
- <aGHOzj3_MQ3x7hAD@kbusch-mbp>
-In-Reply-To: <aGHOzj3_MQ3x7hAD@kbusch-mbp>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CY8PR12MB7195:EE_|SA3PR12MB8810:EE_
-x-ms-office365-filtering-correlation-id: 87c71089-b304-4768-acad-08ddb78bb110
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|376014|10070799003|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?osnjggwWv273ADSmQtKwQa1lfPiGoji7bCM+bce6mJVhPmsMl5iQlR4Hx5zL?=
- =?us-ascii?Q?Da2y+EY1LUNjRKwZzZ5j8ZsMK4iNwUxdbGlNlX8jhG9wf61cqHPyUjoLXy3s?=
- =?us-ascii?Q?AZq7EKORCG455S4ykv9sNk3CmJgievfNFOwk61atxfwah1t9cWjhlAfQ97LK?=
- =?us-ascii?Q?GbYDVBQ1C5negeTPFWKNb7KO6rKDD7laxgkGsVnTR8hAxGfOb1VamUszD++h?=
- =?us-ascii?Q?L6Vxl1E/rWNwsMEn9YQ4wiw4pj465UyER5sXdSj587gsy+dXjmjfzau7iWz9?=
- =?us-ascii?Q?Alq/sJxd64kT6bhwBBjyEFsMTM2Q3EJT7o4OloD1q11axzOIVCFmOBgvg5br?=
- =?us-ascii?Q?3+ZlYwkZ6s/cGIG7xqqc6AYPwSbi41nFTDCEzv0Z9czAvoQP6ClDvrAHv/Xp?=
- =?us-ascii?Q?lmroopLSm+orpGYX/AOiYIPHL1e7m3OFmUbmEOFPf9RkgLLWRzXgSeG8ZZkq?=
- =?us-ascii?Q?DfKALH7sOXAF99rNpyZ1KgNhYmJiIcOwlbw3qH+SfE7ZWUXbnl6UoWubrPJ0?=
- =?us-ascii?Q?UkIWGG854a+3HQd97meCRgAfK9Q2yN61swBomjR7QA1RTj6G/Ogt28Az17AA?=
- =?us-ascii?Q?Def+qlE++Z2BthbQAKTXYYMf+e7wWKYG8Ip6nDdm6MrkUlKbdbEKm6wedckj?=
- =?us-ascii?Q?YuqFlXyEoFjtLdxFKdgtD4/zGAwEIxUXEjc+nkDppsvEPz+1GUQL+x+WcbAh?=
- =?us-ascii?Q?b7wz76KryO4nPQayiYSOHw24HoHT95SuArtD2VKPX73B7X2FxdFFjbtQjZne?=
- =?us-ascii?Q?eN5SCpXz6G8eiWQaHZNnLm3ZoZS+gogXOHjknpBjfJmBKsen7srQRzanuZri?=
- =?us-ascii?Q?4HJNfgivI4yUxVhQBnoAiOlyKY3XnbZMhiRlHv5ceKZ2wEJfLLk4FZFQEpRe?=
- =?us-ascii?Q?KQBNVgP2aDT/qqiTowfi8cSPjQx2+OCjjq+tbBoexmv/EUVVE/EfbfYwuDXz?=
- =?us-ascii?Q?aK+uostkALoKIjOLwOj3jn4gBfXXPbf3FKNY7D/YpxcH2ZkxfNwPdM3EHGTG?=
- =?us-ascii?Q?Tpb8Ko+MNshWMEhSjwDDG9EUlH/6Eep4Cj3nxFdcfas76jB00De3CfoLdFoa?=
- =?us-ascii?Q?YnF94hULfCUwJYa0ohc59ADgMu8CBWpMINAcnxDHJkrYfmgGaGQ7cHXmVhcn?=
- =?us-ascii?Q?RKImk6XAP/Oq4pnd5ERqwMVngAF4ADupUaTzNCll5YqCAgHKcDHxTOZ+z3EM?=
- =?us-ascii?Q?vMOrYnXuRaxThVVy/tS5P0NKFG92O6kyY2t82F8bd1CmN/mhmhjYn/klhRW4?=
- =?us-ascii?Q?Qc3xyzAVk/1JQPskzESQqY2azdtJaL1l2oy+N9z5vJSdgG+r8hnh9yEvk0jV?=
- =?us-ascii?Q?5a6GYfUTjQok0P5DwrCICPveWw6oJZqeTYJ4wlULDcPX688xJKvP+5C3mUKy?=
- =?us-ascii?Q?OeMvxgKanX11UHdT+fHTpoWIIOmWaufHOiCx4GbtBYjY6zfCsPv0ey5My+Pc?=
- =?us-ascii?Q?ckxcjGsnHPUBERrm0OKp5wKkCts2E9b7I3vJyMkG0SO+Jcw6Vdf0F4hlt3j3?=
- =?us-ascii?Q?YUnc9vwx4dc+BRg=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR12MB7195.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(10070799003)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?pwswwuKzCLmaHRv0CJUCa5In1mLaBaIdy/1OCRN7eYe3aWcVqmsb9fVhwGej?=
- =?us-ascii?Q?n/ccHkB4FXPwYU+NRFuJoUQ06Fwfrp4TCl+h11fHyljJpdP8kVv0/ClPPOhO?=
- =?us-ascii?Q?pYcPkIFMPOR1P5Qz0H1Kz+3y2swyy8INTz1HSA+A2F3l6bU92MNAYTLcQHlh?=
- =?us-ascii?Q?d4mxelkOu1GPiPC6nXTKpD2Hb0mRvhS5BGJFerJNtHBLNO/9zvu9OUSyT18B?=
- =?us-ascii?Q?ZXiisYa4vPmy8DbGmLnhH5FQ+WYxT83x4ps1KMWaGBd/65khfmQZp6jHnhVb?=
- =?us-ascii?Q?U31pzDnsTJ3OV78kTxiXLbxMmTpmnBc8MhmrjIHtiL47GxZWEQU2u4EnZyEY?=
- =?us-ascii?Q?kJbApheApW1WPqTlsA8wVXdOcc5MVzs4qFBsN74QpfGDM0VThLrG4na2s6iC?=
- =?us-ascii?Q?keNx/q4tiT0ubKbqmpDk1je/1OGoQ5cjAvs+BGmiJK02LHUTTbh+I29110PZ?=
- =?us-ascii?Q?QNm6cZ/Z08D8qFEPlX4uayW+mUMAW/+sgXYX9aFk+h4pv94l3NebU+8yOK+r?=
- =?us-ascii?Q?fZ13o9KDJ9V9y17ucWWkhT0x1Gcl2p0ZJrjYUsxl2kZcYYDv/j3ygTrhso3J?=
- =?us-ascii?Q?iBpDX+IlYV8x/F9V3Q+L3lkCWz6PnRYtL7cUxmuTs1IXYl3gwgq/MW1sX2T/?=
- =?us-ascii?Q?zCRIxLDVtABgVfZFAU8UF/3+C4O+nNQoSXOdJFnX0KqFBVBtsu6AHbFDjVFa?=
- =?us-ascii?Q?krKoH99EaFbQvwNKiks7aHfq0e2t0CdjFty8QBhRG8SpFztl3FhrcTHF515G?=
- =?us-ascii?Q?7WCkG9A2t07utcu/bMluk+WgDuUUfZc+TUAZ21f8T0ZRIkEWFcaOYnD016ph?=
- =?us-ascii?Q?RB6bYEk4cGIPZRAKNaNsQgi/Wo7zqWRqzckdt7YDa5BFh/2Vbp552Wypdip8?=
- =?us-ascii?Q?Re9b2B72tiGUFbPbAKTs+fhHdwYvRGsCSjLv7HGGlq650mo+f1u1kQGs3zBC?=
- =?us-ascii?Q?WkaIkLEdwd3jpVNsvrpp+DSrsoIVr3GdGQxQevlD+B+03YOJv01jJY+AR6mZ?=
- =?us-ascii?Q?mHAxZNJlHQZXnxfy87wovCQAePoOYe4auOtiGuKFEi39H+ysNT+Dc/LPWcQM?=
- =?us-ascii?Q?E2Qd5aZN5n7w/9pS/SwynZA73kLCblX+JpJesVohu2XCycoYSEBWDsUlelM4?=
- =?us-ascii?Q?WyTJeNl9qSd57SaCxF/WYahqJkUHNlYcU3vrlm7nWM9w9Vv+C+zj5eL+4bbB?=
- =?us-ascii?Q?0lKAfhVXpuv/weTZMzdA9aAt6EGrYP26RD6nH0YAxiH0A2XPIUyfxdG/ZZ7u?=
- =?us-ascii?Q?zBAMIi9MNhgim0jEYpPoJ0zSxGJ0sQI+GsjOrKM1jMbSYvBda+X9lS5L9kws?=
- =?us-ascii?Q?l+CigtINP/XT6BdLB0q1E1OTU+67J5PwFUHt8aiJhH8svj1OsEoHsYFNp/hW?=
- =?us-ascii?Q?u0q2Hd1rDSPLNkZXluF2EW/ROsFow1Jq4JAnU0N9k6f5mOnDdFZPnag4bDw/?=
- =?us-ascii?Q?5cCCbuEYlKjuenUCr6Oe81QIlQCTOr9PtS8v9Qj0ElcDlSPftCHbD3YLLMNS?=
- =?us-ascii?Q?IhSLdDecxYJ3gF1y9dJH5GqEyaH2mgh5DbQc5ocwymW6YkL6ql5VEbRkEezM?=
- =?us-ascii?Q?uCxdUnajmFGKrBQEz+Jqzvfza8d8KnQKKO/A70R8BDldyqwz6Swjq2oLfj8+?=
- =?us-ascii?Q?/v0pniYKqH5x8r/wo7UFjTHjtKDiFIeax/8pvreWb3Nv?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.30; Mon, 30 Jun
+ 2025 04:16:09 +0000
+Received: from TY2PEPF0000AB8A.apcprd03.prod.outlook.com
+ (2603:1096:400:26d:cafe::ac) by TYCPR01CA0127.outlook.office365.com
+ (2603:1096:400:26d::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.30 via Frontend Transport; Mon,
+ 30 Jun 2025 04:16:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ TY2PEPF0000AB8A.mail.protection.outlook.com (10.167.253.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.15 via Frontend Transport; Mon, 30 Jun 2025 04:16:07 +0000
+Received: from hans.. (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 61AC440A5A31;
+	Mon, 30 Jun 2025 12:16:06 +0800 (CST)
+From: hans.zhang@cixtech.com
+To: bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	mani@kernel.org,
+	robh@kernel.org,
+	kwilczynski@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: mpillai@cadence.com,
+	fugang.duan@cixtech.com,
+	guoyin.chen@cixtech.com,
+	peter.chen@cixtech.com,
+	cix-kernel-upstream@cixtech.com,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <hans.zhang@cixtech.com>
+Subject: [PATCH v5 00/14] Enhance the PCIe controller driver
+Date: Mon, 30 Jun 2025 12:15:47 +0800
+Message-ID: <20250630041601.399921-1-hans.zhang@cixtech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY8PR12MB7195.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87c71089-b304-4768-acad-08ddb78bb110
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2025 04:07:55.5207
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB8A:EE_|JH0PR06MB6939:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: b0a6879b-4897-4737-91c5-08ddb78cd633
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?X10xtcO7nkpjBHy9yK07f6ltu9pYZG6Lmly7IQfLDeBWBdhSqbkYZypsdTOT?=
+ =?us-ascii?Q?V1nFAirp2wiNeFBnMI/W+np5wnWDe0IjwX4Y5fPEv2OVM7cFr0sKrZq022vz?=
+ =?us-ascii?Q?VBxxp4jA7MDjnvpXTPpkMh2iu8c2+E7gz7f2fCp7nLpLJx05+EuCn+gmryIq?=
+ =?us-ascii?Q?UWI6G4QYczcOG3ri4Vs1GJCycHTF8LQ2TkZneF3NbANUFcAi8v6Q5PxYCVxy?=
+ =?us-ascii?Q?Rmws+u+jD6leWSFs+3Nw3442maYgPQtnSvq8qgItTTw9X2GSYgb3sasBFPRR?=
+ =?us-ascii?Q?3PK72YuGwHm6nApxRqR3aopC4R9PUkXDHa3xRWM1yzd0Df50Oo01fEF5MB2q?=
+ =?us-ascii?Q?GdOyG7AGo8kiq2f3BrmVNmG/yiF5d4loFKqG3tlGlMfI6GYJKNA2741zfztq?=
+ =?us-ascii?Q?r3Zw6m49rxUaTmku0WSQ9jNtCZ/UQS65Gx+l7TlfK74SN9Y76ikPhk1DIrPd?=
+ =?us-ascii?Q?56W+ErLpv6LxJytqCoWT3/dajdxrvmw96eNHt+SuoAt8dUPiMpoP/8ls6I9Q?=
+ =?us-ascii?Q?RP6J3Qtrz/qHo4G4Qgdnc8pC/PTwwFCYTHl/I37/QAjAovVJLf20ju8Bwg1x?=
+ =?us-ascii?Q?oVXwsLIs8/usdHrLvUC1jhWvlirBcD/9kCi//Ts1qRr54Vcj2Bim/uv3tnaa?=
+ =?us-ascii?Q?mcDkHkgZwW914na9FDB1bBn5D45R1fc0Mbm4x9fefyo+l84cqqcvz5iIPOE+?=
+ =?us-ascii?Q?4tgufK/9Cw2Gd/kP/HTTCVJhpfn+PlK1/y/mA7Ogq88VRxHYwefxldaK5ZGi?=
+ =?us-ascii?Q?5wuqsM11J8zP8XxNs/7mkrreRVjic4OYkBLP//lgDa0l/KfNJNAu7hlvGb9W?=
+ =?us-ascii?Q?8NYjnoycpVjx8GDgDvGQuYE6Dcd7v+Wb2kOrbrx8v7ALKuJsmJMHFZLJd5/6?=
+ =?us-ascii?Q?KSTZEa8cVTAQD5gWQHzmnm5ZDr6O3xS/e29HLrE6cXJwJUYBuUQb4/CZiwZJ?=
+ =?us-ascii?Q?HcW7Cer6Kf7ePzdrRsIbSrMetHda7GQeLufgvHQCx1iOlqxK34cdjB1Lesm7?=
+ =?us-ascii?Q?Zua1o5LSa6ggkd2/D/OyNo9Yu7m3BbASBORnAkpj8CcIy9C+vQfCPMNwoeG0?=
+ =?us-ascii?Q?WTNoBsLW/ceLCu3NYDuMGMX4BMD9Bvq76tIH37GDyMgr9YzlOdqiDNoFQ3FJ?=
+ =?us-ascii?Q?RAbe60sFLX5Yj9hgsS9OBdvNIYw2twdV0TnIidpTPiy2tHEkTRwQVE2sTkDz?=
+ =?us-ascii?Q?q9YnXWykdM/mJOG6ee01kR1VE2L7qj8iS6XtCxjGdC0vQRb6k7xrf0tzFyfx?=
+ =?us-ascii?Q?kHCSshNhvzXUZ3SLZcYbh0G9MyxsnGoNHWr3vSSzksx/oWSPwW/T8/oZmxxp?=
+ =?us-ascii?Q?n5jyCG+GMvCiOeGGAYNS9G6mFwBfiroTaO0limtSRrsjgTBxCVCjeHzoPuLI?=
+ =?us-ascii?Q?IS/hx36yg7Ao0CVlf4gfrICahdEwHjehzBd9fjt+vWKAJ3+Z2rAxh+YRJjvf?=
+ =?us-ascii?Q?Ak28XebKzZmFlv5FIRtxANparVSi++MI/nHfncQKa++0/cZG1UsHjm7bpM+q?=
+ =?us-ascii?Q?eaE51qsJI7t1yF0KXzmcWiwsulqu4K31aKhvGZw/kt9iuF7rj5z/bmJhBA?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 04:16:07.1470
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HS99VQ78JoqWIa7ge9V7H2hdE9srXhm1iVGl8QdzQ232fdrkCmyhWvYDlq/rWmrKlw0XhNFmTDqe+ugkggHaUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8810
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0a6879b-4897-4737-91c5-08ddb78cd633
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	TY2PEPF0000AB8A.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB6939
+
+From: Hans Zhang <hans.zhang@cixtech.com>
+
+---
+Dear Maintainers,
+
+This series is Cadence's HPA PCIe IP and the Root Port driver of our
+CIX sky1. Please help review. Thank you very much.
+---
+
+Enhances the exiting Cadence PCIe controller drivers to support
+HPA (High Performance Architecture) Cadence PCIe controllers.
+
+The patch set enhances the Cadence PCIe driver for HPA support.
+The header files are separated out for legacy and high performance
+register maps, register address and bit definitions. The driver
+read register and write register functions for HPA take the
+updated offset stored from the platform driver to access the registers.
+As part of refactoring of the code, few new files are added to the
+driver by splitting the existing files.
+This helps SoC vendor who change the address map within PCIe controller
+in their designs. Setting the menuconfig appropriately will allow
+selection between RP and/or EP PCIe controller support. The support
+will include Legacy and HPA for the selected configuration.
+
+The TI SoC continues to be supported with the changes incorporated.
+
+The changes address the review comments in the previous patches where
+the need to move away from "ops" pointers used in current implementation
+and separate out the Legacy and HPA driver implementation was stressed.
+
+The scripts/checkpatch.pl has been run on the patches with and without
+--strict. With the --strict option, 4 checks are generated on 2 patch
+(PATCH v5 2/6 and PATCH v5 3/6 of the series), which can be ignored.
+There are no code fixes required for these checks. All other checks
+generated by ./scripts/checkpatch.pl --strict can also be ignored.
+
+The ./scripts/kernel-doc --none have been run on the changed files.
+
+The changes are tested on TI platforms. The legacy controller changes are
+tested on an TI J7200 EVM. HPA changes are planned to be tested on an FPGA
+platform available within Cadence.
+
+---
+Changes for v5
+        - Header and code files separated for library functions(common
+          functions used by both architectures) and Legacy and HPA.
+        - Few new files added as part of refactoring
+        - No checks for "is_hpa" as the functions have been separated
+          out
+        - Review comments from previous patches have been addressed
+        - Add region 0 for ECAM and region 1 for message.
+        - Add CIX sky1 PCIe drivers. Submissions based on the following v9 patches:
+        https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250609031627.1605851-1-peter.chen@cixtech.com/
+
+        Cix Sky1 base dts review link to show its review status:
+        https://lore.kernel.org/all/20250609031627.1605851-9-peter.chen@cixtech.com/
+
+        The test log on the Orion O6 board is as follows:
+        root@cix-localhost:~# lspci
+        0000:c0:00.0 PCI bridge: Device 1f6c:0001
+        0000:c1:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
+        0001:90:00.0 PCI bridge: Device 1f6c:0001
+        0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller PM9A1/PM9A3/980PRO
+        0002:60:00.0 PCI bridge: Device 1f6c:0001
+        0002:61:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11ax Wireless Network Controller
+        0003:00:00.0 PCI bridge: Device 1f6c:0001
+        0003:01:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
+        0004:30:00.0 PCI bridge: Device 1f6c:0001
+        0004:31:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
+        root@cix-localhost:~# uname -a
+        Linux cix-localhost 6.16.0-rc1-00023-gbaa962a95a28 #138 SMP PREEMPT Fri Jun 27 16:43:41 CST 2025 aarch64 GNU/Linux
+        root@cix-localhost:~# cat /etc/issue
+        Debian GNU/Linux 12 \n \l
+ 
+Changes for v4
+        - Add header file bitfield.h to pcie-cadence.h
+        - Addressed the following review comments
+                Merged the TI patch as it
+                Removed initialization of struct variables to '0'
+
+Changes for v3
+        - Patch version v3 added to the subject
+        - Use HPA tag for architecture descriptions
+        - Remove bug related changes to be submitted later as a separate
+          patch
+        - Two patches merged from the last series to ensure readability to
+          address the review comments
+        - Fix several description related issues, coding style issues and
+          some misleading comments
+        - Remove cpu_addr_fixup() functions
+
+Hans Zhang (5):
+  dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex bindings
+  PCI: sky1: Add PCIe host support for CIX Sky1
+  MAINTAINERS: add entry for CIX Sky1 PCIe driver
+  arm64: dts: cix: Add PCIe Root Complex on sky1
+  arm64: dts: cix: Enable PCIe on the Orion O6 board
+
+Manikandan K Pillai (9):
+  dt-bindings: pci: cadence: Extend compatible for new RP configuration
+  dt-bindings: pci: cadence: Extend compatible for new EP configuration
+  PCI: cadence: Split PCIe controller header file
+  PCI: cadence: Add register definitions for HPA(High Perf Architecture)
+  PCI: cadence: Split PCIe EP support into common and specific functions
+  PCI: cadence: Split PCIe RP support into common and specific functions
+  PCI: cadence: Split the common functions for PCIE controller support
+  PCI: cadence: Add support for High Performance Arch(HPA) controller
+  PCI: cadence: Add support for PCIe HPA controller platform
+
+ .../bindings/pci/cdns,cdns-pcie-ep.yaml       |   6 +-
+ .../bindings/pci/cdns,cdns-pcie-host.yaml     |   6 +-
+ .../bindings/pci/cix,sky1-pcie-host.yaml      | 133 ++++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/boot/dts/cix/sky1-orion-o6.dts     |  20 +
+ arch/arm64/boot/dts/cix/sky1.dtsi             | 150 +++++
+ drivers/pci/controller/cadence/Kconfig        |  29 +
+ drivers/pci/controller/cadence/Makefile       |  10 +-
+ drivers/pci/controller/cadence/pci-sky1.c     | 435 +++++++++++++
+ .../controller/cadence/pcie-cadence-common.c  | 134 ++++
+ .../cadence/pcie-cadence-ep-common.c          | 240 +++++++
+ .../cadence/pcie-cadence-ep-common.h          |  36 ++
+ .../controller/cadence/pcie-cadence-ep-hpa.c  | 523 ++++++++++++++++
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 243 +-------
+ .../cadence/pcie-cadence-host-common.c        | 169 +++++
+ .../cadence/pcie-cadence-host-common.h        |  25 +
+ .../cadence/pcie-cadence-host-hpa.c           | 584 ++++++++++++++++++
+ .../controller/cadence/pcie-cadence-host.c    | 156 +----
+ .../cadence/pcie-cadence-hpa-regs.h           | 212 +++++++
+ .../pci/controller/cadence/pcie-cadence-hpa.c | 199 ++++++
+ .../cadence/pcie-cadence-lga-regs.h           | 228 +++++++
+ .../cadence/pcie-cadence-plat-hpa.c           | 183 ++++++
+ .../controller/cadence/pcie-cadence-plat.c    |  23 +-
+ drivers/pci/controller/cadence/pcie-cadence.c | 138 +----
+ drivers/pci/controller/cadence/pcie-cadence.h | 416 ++++++-------
+ 25 files changed, 3524 insertions(+), 781 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
+ create mode 100644 drivers/pci/controller/cadence/pci-sky1.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-common.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-ep-common.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-ep-common.h
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-ep-hpa.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-host-common.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-host-common.h
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-host-hpa.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-hpa-regs.h
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-hpa.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-lga-regs.h
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-plat-hpa.c
 
 
-> From: Keith Busch <kbusch@kernel.org>
-> Sent: 30 June 2025 05:10 AM
->=20
-> On Sun, Jun 29, 2025 at 01:28:08PM -0400, Michael S. Tsirkin wrote:
-> > On Sun, Jun 29, 2025 at 03:36:27PM +0200, Lukas Wunner wrote:
-> > > On Sat, Jun 28, 2025 at 02:58:49PM -0400, Michael S. Tsirkin wrote:
-> > >
-> > > 1/ The device_lock() will reintroduce the issues solved by 74ff8864cc=
-84.
-> >
-> > I see. What other way is there to prevent dev->driver from going away,
-> > though? I guess I can add a new spinlock and take it both here and
-> > when
-> > dev->driver changes? Acceptable?
->=20
-> You're already holding the pci_bus_sem here, so the final device 'put'
-> can't have been called yet, so the device is valid and thread safe in thi=
-s
-> context. I think maintaining the desired lifetime of the instantiated dri=
-ver is
-> just a matter of reference counting within your driver.
->=20
-> Just a thought on your patch, instead of introducing a new callback, you =
-could
-> call the existing '->error_detected()' callback with the previously set
-> 'pci_channel_io_perm_failure' status. That would totally work for nvme to
-> kick its cleanup much quicker than the blk_mq timeout handling we current=
-ly
-> rely on for this scenario.
+base-commit: 5da173292645ab241a9ccc95044a0b56c2efc214
+-- 
+2.49.0
 
-error_detected() callback is also called while holding the device_lock() by=
- report_error_detected().
-So when remove() callback is ongoing for graceful removal and driver is wai=
-ting for the request completions,
-
-If the error_detected() will be stuck on device lock.
-
-We likely need async notification from driver kernel core without holding t=
-he device lock, so driver can initiate cleanup in this corner case.
 
