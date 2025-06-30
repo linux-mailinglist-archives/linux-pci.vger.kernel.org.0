@@ -1,61 +1,96 @@
-Return-Path: <linux-pci+bounces-31096-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31097-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC2D8AEE5EA
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 19:34:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F7E0AEE625
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 19:55:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BFE0B7AC959
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 17:33:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58D7E189A211
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 17:55:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51EB128F95F;
-	Mon, 30 Jun 2025 17:34:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A47928CF50;
+	Mon, 30 Jun 2025 17:55:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rJLQgmbt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikdGqFVC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A08B2701CA;
-	Mon, 30 Jun 2025 17:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0025235055;
+	Mon, 30 Jun 2025 17:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751304860; cv=none; b=heP5NEKp/HclbIlhM3DwUGgYbx84vBEYcKSFRWfYBX1wEQfiCF8qm9Ur2a9MpVzB0Tv7in3tPuCTu1E2VXyqms0rW42MAkRnHG3SX/2f0OmIsr2wGMXv2tWZNlwtj31wGv38+Mx2O2Gg2o4+MfMt89xA9OauWHebWm7sr80uJA0=
+	t=1751306115; cv=none; b=YYwbeSFDwF0P5EFLA79neR7QAV8fddFayXpoOyy8WwTK26wcdaWeyZYZBWO3A+WKjDYbMBz6IF9v8LCN+YSj+PJ2g1/URUDlZ1WKOXefEX7OMK/DDEwgravfAxWjaw82gjfQmg5qyGJdQpKgIP5ztqU6wRjHidol0hitE5bdqV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751304860; c=relaxed/simple;
-	bh=TaK2FH9yiJmwJGSGOTvljnkUt8CYe3d5qFJFNNZcc/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=hUiw4j7FOjMn0RLveV5STm5Pk0gkZadt6dkPO8E3X1eescLryXOAeDvukBHYsmfBBi3NhPU+X9nSyiIbF1Lesg9MbfmnBonL6KS/7FQRWLHx4N0Labh+EegsGwq6foVeYfbnvL1j2jUdjW2yqYFhz1P00xuJpXXJ+9jWyehI09M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rJLQgmbt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AE78C4CEEF;
-	Mon, 30 Jun 2025 17:34:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751304857;
-	bh=TaK2FH9yiJmwJGSGOTvljnkUt8CYe3d5qFJFNNZcc/8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rJLQgmbt/DWmf4OmbJ0sQ8HOx5dQ42qQd0nK3vrJk8SDsdQq9pFGyR0MDLhz/FgQ4
-	 8MdSqlyR+6NtxNLev58EJYpKPdaXTvvwRqT1Jjn3yvuX8Ig8MsZ+lUDpKZ5qERn851
-	 d8o46yAD1RVx7OqwjKTAtG2cMRSLAG9vtFP7YX4w0/Y9+3++tSww8L9ENtdRmJzYYe
-	 2tuL8S1OAKjPuaD733BRP/dvSN3vaxcrZHetDiYKI5ZJa2hPCyz3044QAx1/dSMr0b
-	 SM9K525UNRUruJM5XR/Dd0LDH9N57GzTGODhjUSLjluIyi0KTOUws0oLwNN2F/7BHQ
-	 F/2Ll3fpXF+TQ==
-Date: Mon, 30 Jun 2025 12:34:15 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
+	s=arc-20240116; t=1751306115; c=relaxed/simple;
+	bh=xCP0lSFxIcMApdmiCN1IO19eX/+PljO+U2Ru8kuP1/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AcqwN14HEYg92VvRJ0dAty3rYr7HxDiOWI3deNjFOWu+WByhYm7+M1teaSiCu4u6bVTv7NQIYjs1VenfMuj+ECE6iio59d3Ic9kY3UkJtRZMlz4z+BUaMZmDlrZBpu6qmBOqid3UGUH8QdN3MPkXsbYu8z8SCek9EScOIiSZSgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ikdGqFVC; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7d3f5796755so448099385a.1;
+        Mon, 30 Jun 2025 10:55:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751306113; x=1751910913; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TkbKDizxju3W+51KZwQ3Fxa7XNUAV9NHwEQ1ocZXOb4=;
+        b=ikdGqFVCvD45KJtz/I1mNsWLKvaiRJVKLbo2/74k3g5EBsemP6nmOnFapjIGQIWz5I
+         TXHoGtdNY7sA6qc4aL7PHpOog9qRHXIO1NxOjlMKWvSO8gls5DQGIz3pzOzcvznctpkP
+         SZ5dYkp/cs+CWO+S2c4wFsfLtRio7g9dUxLNv4pQd5YLnEj4RpFQJzr6wwng0AzLh+Qp
+         ddwjYn9niA8Pwh6WRmUSoIK9q01w4h3hRvig1APBB5n7oTYWsg86gURg91wOt2nXroYm
+         fio5LTyUVqs+6jKDjK/txXYfp2plqZivgr//KThc+F1nGU/YqWnBXbt/iLNVrvN5XIkQ
+         PFMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751306113; x=1751910913;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TkbKDizxju3W+51KZwQ3Fxa7XNUAV9NHwEQ1ocZXOb4=;
+        b=SW++OdUJoNG0VV0j30oG08Pr7C12nlyYH5FwM/K4c/ANsfncj7HnlRPwlvbM+6p1U/
+         a5rS654EYcexTxF4IFMHMJO3eeHuqgsUcx2cH+UyesR8lq15M765jgcoHpk6GWogWx8H
+         KqpQilYDcgP+rxNNYuKy+LXZO05Npc7ultJE/Zco9iReJXwLdRcCmZmNKqsDocEBNyx+
+         uA+h4Jb9ilTGgExBit4vE3u132qFVZSvcpvGKArKN0X38UAOVbq2Fm2iiRIJXg/e0pNN
+         A4uh6Mv2MzsrIeOVEN0KGFLX82LnOVL88mWGxYgs9unFDx/N9Y0Pzux6ANozzQNR60Vf
+         NttA==
+X-Forwarded-Encrypted: i=1; AJvYcCWIR6x8aa86DUCxNf9uzTdT8CYgMSN0tNB62wkkh9MA7wjRMQODLX0cfzWuNcAf9/3fccXTGfsViY1C@vger.kernel.org, AJvYcCXuCoRYTTmENLlNAD/LYXE8hjp4qnpUtoa4+2liHtBqqkqO0FQpuCvCKHCQLSbDFZjXoeUIAzG3rJ8mJvM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz40dIoW/OvhLfZOoWhDef6AedOo1lFCaKnkze5t3ocxtnfd/6L
+	/ij6mH8L6ReJ5W2icBP/vKVPY/Q6rx6KjLREGOFZPm8FqU1R/earpJLf
+X-Gm-Gg: ASbGncsIrOHJ6f7w427T72Lzx6pJu/zgAGI5OY8BUCT2cPKx9zkmatr/c1Ulm5IxckU
+	siyx1FUE8CnlxTA+8vncL6AwEAlhlM0Vd6Ab8nf3FkQ8J/3rpZtHUGj1nfoq8gb60o1PmbNeE2S
+	zQ9QDzFXPZdQQ2pDqdKwQJVfyapmQ97qtVB1J0Po9LnyBHRAd/sTyj7qrLvOrUtXjOMRQgJgTZ3
+	Lln5T9DYoNXixn1X/hCwuIN/b6aeK8MGMlDyUk3484b388BKHwlKhPd9YZedMT08vwSKNh35AD4
+	f0u8QAai6/H+DOiYV3gjFAeKwdCX5i2Yhrs/Mb5AVXfxCr5UtQ==
+X-Google-Smtp-Source: AGHT+IEAoLv3ZFdFWjd7lAICC4bbFV6sU3+PxQlEK6DUAJNkCBCFRSmZ508WVU4rao0shvvKBCho+w==
+X-Received: by 2002:a05:620a:1993:b0:7d4:4d55:98f9 with SMTP id af79cd13be357-7d44d55b1f9mr1237496485a.28.1751306112549;
+        Mon, 30 Jun 2025 10:55:12 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:4851::dead:c001])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443203279sm636637885a.54.2025.06.30.10.55.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 10:55:12 -0700 (PDT)
+Date: Mon, 30 Jun 2025 14:55:05 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Janne Grunau <j@jannau.net>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] PCI: host-generic: Fix driver_data overwriting bugs
-Message-ID: <20250630173415.GA1787642@bhelgaas>
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rick wertenbroek <rick.wertenbroek@gmail.com>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 3/4] phy: rockchip-pcie: Enable all four lanes if
+ required
+Message-ID: <aGLPeZn9ZSw3FurH@geday>
+References: <cover.1751200382.git.geraldogabriel@gmail.com>
+ <b203b067e369411b029039f96cfeae300874b4c7.1751200382.git.geraldogabriel@gmail.com>
+ <2affed16-f3c4-47d3-9ca6-e4f48e875367@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,44 +99,40 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <86ikkdb0uj.wl-maz@kernel.org>
+In-Reply-To: <2affed16-f3c4-47d3-9ca6-e4f48e875367@arm.com>
 
-On Mon, Jun 30, 2025 at 06:23:00PM +0100, Marc Zyngier wrote:
-> On Mon, 30 Jun 2025 18:06:01 +0100,
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > 
-> > On Wed, Jun 25, 2025 at 12:18:03PM +0100, Marc Zyngier wrote:
-> > > Geert reports that some drivers do rely on the device driver_data
-> > > field containing a pointer to the bridge structure at the point of
-> > > initialising the root port, while this has been recently changed to
-> > > contain some other data for the benefit of the Apple PCIe driver.
-> > > 
-> > > This small series builds on top of Geert previously posted (and
-> > > included as a prefix for reference) fix for the Microchip driver,
-> > > which breaks the Apple driver. This is basically swapping a regression
-> > > for another, which isn't a massive deal at this stage, as the
-> > > follow-up patch fixes things for the Apple driver by adding extra
-> > > tracking.
-> > 
-> > Is there a bisection hole between patches 1 and 2?
-> > 
-> >   1: PCI: host-generic: Set driver_data before calling gen_pci_init()
-> >   2: PCI: apple: Add tracking of probed root ports
-> > 
-> > If so, would it be practical to avoid the hole by reordering those
-> > patches?
+On Mon, Jun 30, 2025 at 02:48:25PM +0100, Robin Murphy wrote:
+> On 29/06/2025 9:58 pm, Geraldo Nascimento wrote:
+> > Current code enables only Lane 0 because pwr_cnt will be incremented on
+> > first call to the function. Let's reorder the enablement code to enable
+> > all 4 lanes through GRF.
 > 
-> Sure, but you said you already had queued patch #1, and what is in
-> -rc1 already breaks Geert's box. So no matter the order, we break
-> something at some point.
+> As usual the TRM isn't very clear, but the way it describes the 
+> GRF_SOC_CON_5_PCIE bits does suggest they're driving external input 
+> signals of the phy block, so it seems reasonable that it could be OK to 
+> update the register itself without worrying about releasing the phy from 
+> reset first. In that case I'd agree this seems the cleanest fix, and if 
+> it works empirically then I think I'm now sufficiently convinced too;
+> 
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-I did, but when I saw your problem report and subsequent updates, I
-put Geert's patch on hold.
+Hi Robin and Neil,
 
-> If you want to only break one thing, then yes, swapping these two
-> patches is the correct thing to do.
+Thank you both for the positive reviews and the effort.
 
-I swapped them and put them back on pci/for-linus for v6.16:
+I must admit however that it looks like this patch was lifted verbatim
+from Armbian and I'm missing the Signed-off-by from the original author.
 
-  https://git.kernel.org/cgit/linux/kernel/git/pci/pci.git/log/?h=for-linus&id=ba74278c638d
+As Robin may attest, I initially started by blindingly enabling all
+lanes which, of course, is no good. I tried a suggestion by Robin which
+did not work, and eventually settled on this Armbian solution, which at
+least has got some battle-testing.
+
+I already contacted Valmintas Paliksa, the original author of the patch,
+and asked permission to use his Signed-off-by. I'm aware I could probably
+use the Signed-off-by without strict permission, but it does not feel
+right to me.
+
+Thanks,
+Geraldo Nascimento
 
