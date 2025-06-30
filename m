@@ -1,48 +1,69 @@
-Return-Path: <linux-pci+bounces-31068-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31069-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EA85AED73C
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 10:26:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61D7AAED74A
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 10:29:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 274AC188BB36
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 08:26:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 61B657A1DE5
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 08:28:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E0DB238C0A;
-	Mon, 30 Jun 2025 08:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H6DWQF+T"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A3471E5702;
+	Mon, 30 Jun 2025 08:29:31 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022075.outbound.protection.outlook.com [40.107.75.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17ED31E2858;
-	Mon, 30 Jun 2025 08:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751271955; cv=none; b=j4qSwkOcRt9pvCXSKA3aRgMIxhAheghegth9OJqyP7nf1P22/WKqxEYZVHaS8K/40B2KfQYA9T9hw5RPNU2f30AuQmJjVMjGqr0AX0IafI+Wpi1Wyx2uSCKWdVt+mVNOrBvki2yH6Q1HxM7qxauEYHuj1X/v2V+SkFUQUuz8/XY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751271955; c=relaxed/simple;
-	bh=z0myKlXPfbFRymUmSLOvc/7wdeydzOpDX+kckyTt+DU=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306B4634EC;
+	Mon, 30 Jun 2025 08:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751272170; cv=fail; b=jmdnNZws1Mt+56M2kbzsR9HkZFAWItA3lpd1aByPjoTx7vWhIzjMJq29kvB5QICha54gzKuyvoD04YB9cW9sE23Zp4qiC6qchEpu47hogVdocTLdTdbAxv7kxGgjaFkm9eb9ZHRblU3ehavBVLyJoZSDuqcyc6w0FCnJnt4kIWc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751272170; c=relaxed/simple;
+	bh=oLKVBhaW+sXJbr45ws9E9tdXcwGQsKn0yVLcqdni8Tg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TtrfumqPj62HV9tA6fv/Iss7BCuHyLYA3EBVKu30i9rqf+xbQfixa6jMxwCpV6sCWW8Uf6USHXUyAwx45JEDEowjxVbRLgzZg8LyROLraxuZxb9ff6vRRfKTuFVrQ/IPrrQjqDr8IflpgPXXy6XudQbnhWr7D/akLDaNsNSmTd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H6DWQF+T; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CA29C4CEE3;
-	Mon, 30 Jun 2025 08:25:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751271954;
-	bh=z0myKlXPfbFRymUmSLOvc/7wdeydzOpDX+kckyTt+DU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H6DWQF+TK/2PdqRJ0ssZolMe6dG9ZvpfffQngfJfx8Gf1b62TytLTPAzXSyYRVAFV
-	 4jGSfJ158J/K35wRR3J2J//j0zU8G7H0zxVPMA2iZ6qk/++nm6hHhEh7LsaWLg3To4
-	 Di9y5uLOdsQ3JEfP2M9bFSc4yBUjmKvWhvX1oKg+S/iQtU1lS/Y9eEEi2Y/3Lky9/w
-	 KfiFIPry17J35amVx4bj/G2ym5EGLN5eRH+5/2Sq2DtW7pqkjpPRm7Vnu0UeHUXTwj
-	 CyX0Yr8tCzvjRPEDaL8NJaCm5io3d1PIGNE14Gl2C+tspLHvglRlS6PW9Ho1mOGooz
-	 5ZHp6OzQnzaJg==
-Message-ID: <98b00dd1-3b83-4beb-ad06-f3e0442df8c7@kernel.org>
-Date: Mon, 30 Jun 2025 10:25:43 +0200
+	 In-Reply-To:Content-Type; b=r22dxwuqmiJvN4g17VXML9iTL7dttecGNb/eCTFvk41QiH2mLtvNr625+9slJfjz7ckQSJqz9FYW3RNBVj4YhZkTI3EGBAUR5CdTwyEHp0HLBIml86O88Tnn0WEwqfAUCICfmsFsCsb+s4x/xi1x8BvZQ8leC1T7AqQxafWBBUo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=H412sXX7v2bQq2lppOtXyKyULGI4OY8t1CG0meIlV7P8y7arotztdcLBXyL2rKr+wKhuTEslCV6mD09Zfo+RxXq4/FJw+dxiniq/Zs0419zmov9Jr62fHFQhrCDCZn5GMvaQjFZ1KZpoHB5X14l9GVmFRvhz6ROmy9mDVdkbcB/S/glo/JrK2r/vpQVHjN2r8fxxRjF/peD2RPvIpILp+AHQfzg8FEVkR+kLFSH0yRfbTx8AQ5lKVFsRx/VO+fXdbqkDbsE5wG+o7atu4E2xqOkhyz4jL6uFS4UM8Bn0G5AL5FfZYFCvbP3asKOc0oB5SXJ//o/4nDmZki+cY56gIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8bi98fsaaV09RiwOkQ4KCDxYweHwHXmnhOJpttXiPUk=;
+ b=GHWcdKV+XN3A8nQu+kJeAlY+b4rZeB+a+IaH1ag+JQhw0LFRtWaDucVT4bHgXWXdgVW+fdjPXVxwTiv6YSAvixY4B/6Ch4Z1cV+FGWSPGY0yTVDLlBqs1McMLn/PwOJYZJh/ReYfQrIK/eKr7sJVBbi500QiNje9xsNhX2noAvwBFi/DyXJXQT9VxZGKgAc4m4Pm2lOcwZzdL0xQay33/HvjZD6+lVMH70DHYiptAue+3IC/dyaVSSogVmkkinAZyWEO5rPXY2PQAsgiMuBH8s7Z2ShfEEVocFSn7Re1rtGx5uzrJBCwTiMnG5b+i66xp13mBYhLn7C37nG2aU12sA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from SI1PR02CA0044.apcprd02.prod.outlook.com (2603:1096:4:1f6::6) by
+ PUZPR06MB5520.apcprd06.prod.outlook.com (2603:1096:301:fb::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8880.28; Mon, 30 Jun 2025 08:29:19 +0000
+Received: from SG2PEPF000B66CA.apcprd03.prod.outlook.com
+ (2603:1096:4:1f6:cafe::82) by SI1PR02CA0044.outlook.office365.com
+ (2603:1096:4:1f6::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.30 via Frontend Transport; Mon,
+ 30 Jun 2025 08:29:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG2PEPF000B66CA.mail.protection.outlook.com (10.167.240.22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.15 via Frontend Transport; Mon, 30 Jun 2025 08:29:15 +0000
+Received: from [172.16.64.208] (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id AA1B244C3CA1;
+	Mon, 30 Jun 2025 16:29:14 +0800 (CST)
+Message-ID: <bb4889ca-ec99-4677-9ddc-28905b6fcc14@cixtech.com>
+Date: Mon, 30 Jun 2025 16:29:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,163 +71,283 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: dwc: Add one more reference
- clock
-To: Frank Li <Frank.li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, l.stach@pengutronix.de,
- lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
- kernel@pengutronix.de, festevam@gmail.com, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250626073804.3113757-1-hongxing.zhu@nxp.com>
- <20250626073804.3113757-2-hongxing.zhu@nxp.com>
- <20250627-sensible-pigeon-of-reading-b021a3@krzk-bin>
- <aF76jeV+8us82APv@lizhi-Precision-Tower-5810>
- <20250628-vigorous-benevolent-crayfish-bcbae5@krzk-bin>
- <aGALNS0yyBR27tz4@lizhi-Precision-Tower-5810>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v5 10/14] dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex
+ bindings
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, mpillai@cadence.com,
+ fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
+ cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250630041601.399921-1-hans.zhang@cixtech.com>
+ <20250630041601.399921-11-hans.zhang@cixtech.com>
+ <20250630-graceful-horse-of-science-eecc53@krzk-bin>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <aGALNS0yyBR27tz4@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8
+From: Hans Zhang <hans.zhang@cixtech.com>
+In-Reply-To: <20250630-graceful-horse-of-science-eecc53@krzk-bin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CA:EE_|PUZPR06MB5520:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7ba43878-2565-41c0-037d-08ddb7b032ff
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dVg2MnBqL2dPWlNBZ3FNZGl6MjM1amdGODRUakdZSE4vN1pPZ3BKTlV0WWNu?=
+ =?utf-8?B?V3VkMERtT0JNOHRPUXpOa3RCaUZhaFpEajd5UUNjQTBxcDlhK0taVVFIZnhL?=
+ =?utf-8?B?SVprNHZxK0tGTUF5ZlE4UU9ldTJaVnQyWlJmWVNsYzEreTFxblgxT0RJUGVj?=
+ =?utf-8?B?QTE5TGV6a0c2WHdhRzdxd2l0Mm1iU3VIblNmNWhaTnlkWm9qS1ZZZXhHQ2ND?=
+ =?utf-8?B?cjRWK3JmRVNySFdVczg2dWNzaEI5YnBBMEluemM3ZlUrV0EyR1kxMi9naXY1?=
+ =?utf-8?B?OW9wcWR2UEh5bXdhSEhGVlZTUjdneURZdGx5OGI1eGh4KzQyVVJiMXVEcFp1?=
+ =?utf-8?B?cWc3NG9Ebytsb1pHMmZ5TFhZME5FMk5XemJkTEJnUWE1VnplQXdsa3VHOGlH?=
+ =?utf-8?B?ZFNlT3JaejFHN0dUNHpYYkFYSlB2UDBFZXJyQ3lUNFRubkFBdzJVc3o4RlRT?=
+ =?utf-8?B?cWpBeHRucTV4MXJYeVFySUVwWjhDdE9Ka0VldVR1Z1lkZndBMVIwSGh2Q3VT?=
+ =?utf-8?B?NHVCQ29mVWg3T3lnYlgrWVpKVk1NZmR0L0VxbDZ2c3NaZStWNURoemR3dmFo?=
+ =?utf-8?B?N1NUL2J4RXNrNVJEQXlqWkQzK21MUVkrd05SYUxvZWo1VHVrZUErS2xHMys4?=
+ =?utf-8?B?NFordUpyNTFsTXhvNVRneldFOG9FajgxdUJHa3g5dzhRWFF0aFhyUXhYckFK?=
+ =?utf-8?B?Y1F3WC9TelVPUTloc2N1L1JuRUZWZzhqSno5bWRWYlllNEViN1JRY0NoRDMr?=
+ =?utf-8?B?UjZBU1grRnBRNmRRN3oySVBLL214OUJ2bkVYWDhkV1hwZGM2S3lMMmVOY0tB?=
+ =?utf-8?B?eGV3TDBTTlg2bHlmdTVpVFJraHNnSVluRVZkZFlnREdxalRUY2txUHA4aWhC?=
+ =?utf-8?B?TVdYVTdUKzJHaHNyZCtQdFJ4RUs4V3IyWEMybjE4MHFnbG9xVkVubUZOK3Jh?=
+ =?utf-8?B?RTFTYTBReUx2SXhBQ3ZTLzlJVlVsaUJTZllJRTVVb1liSHU1SXVSTk9WVDly?=
+ =?utf-8?B?SkZ5TkVGMDVRMExCNVBKRy92VW51NkdvN1pyQk5KTWxJU3JXdGV0blovTkQz?=
+ =?utf-8?B?L0ZsNFRrQ2M3T3lkQzcvU0haMll5NzJmeEl6K1piR0tWeFlwV1c3ODNwN01J?=
+ =?utf-8?B?YUlCemYyTHBBUkpPb1MvUnZNQ0MyN1hBVTRkeEZJSlhWQ0tFL2E2NFNxSEhL?=
+ =?utf-8?B?M0VodlgzeHdzbDg5eXk4bnVoYjIrUE1xaXBJMXlTWVMrSjg1SXFrbWdyMXJi?=
+ =?utf-8?B?YUZMSHhjODlRdHcxdGVVemRkc01mblhlUCtwVGpzbjdKKzlyL2ViRUNQWlVh?=
+ =?utf-8?B?d0IwSE51VkVZVzFvb2t4NGRHbjg5WHMzeTlSclNnY3ozWURseWRPMTVzWjV3?=
+ =?utf-8?B?UVFtb3BGSlBOMDVNUjVrTzJyZlNLbm1uUnB0VkN4Tlo0YjNRa1RKTUpuRU1h?=
+ =?utf-8?B?NUFQSkZxbjhacWtUa0tJSHJ1ZW5zQWdyVVZpVm4rUkNUWktXNDdibTFwUkZY?=
+ =?utf-8?B?ZjhNdGthNmhCbTNienllZmluQ0JzbUo0czdzVHhmT01Tamx5cThGQllOOVhG?=
+ =?utf-8?B?UUIwbHRGUTZURHA1cDhDKzR5V0RhcUdMdzU0UDhNVmhTUE80WGljTDhUZGZU?=
+ =?utf-8?B?eldFVDlrSkdzWU5paDFaa01ORmFtdEE4T3VTekE5WUh2dnhSUklzV3d6bkN3?=
+ =?utf-8?B?cVNPcWFmVEdIeEduVUdBWTYwdTVhdUV1UE91YmRTdGIwUWlsZlplREZvUENH?=
+ =?utf-8?B?K2ZtMWxhYmlmbDV1cVRvajBZam5aN01JeFl3Z0lDZXNHS3R1WkxVMnpaV0R6?=
+ =?utf-8?B?R3d1Zk9zVEJDY1BMZFVxWkU1WXY1aW5GZ296SlVsdk5EUmlJQXV3WVZDdE9T?=
+ =?utf-8?B?T1EwQmdPOTY1YVdmd2pkWTEvTGNsR3l4REhRWDBZNVdscnArUngrRWxYemlz?=
+ =?utf-8?B?VFU5K1RzTDVQekZOSXNXOVRJUDdmcmdGQzBicGJMa3B2TE1xK01BUFdlSU5r?=
+ =?utf-8?Q?yc3tthlH+xShQRci2Nf7YPYXOrAtMc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024)(7053199007);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 08:29:15.2442
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ba43878-2565-41c0-037d-08ddb7b032ff
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG2PEPF000B66CA.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB5520
 
-On 28/06/2025 17:33, Frank Li wrote:
-> On Sat, Jun 28, 2025 at 02:34:12PM +0200, Krzysztof Kozlowski wrote:
->> On Fri, Jun 27, 2025 at 04:09:49PM -0400, Frank Li wrote:
->>> On Fri, Jun 27, 2025 at 08:54:46AM +0200, Krzysztof Kozlowski wrote:
->>>> On Thu, Jun 26, 2025 at 03:38:02PM +0800, Richard Zhu wrote:
->>>>> Add one more reference clock "extref" to be onhalf the reference clock
->>>>> that comes from external crystal oscillator.
->>>>>
->>>>> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
->>>>> ---
->>>>>  .../devicetree/bindings/pci/snps,dw-pcie-common.yaml        | 6 ++++++
->>>>>  1 file changed, 6 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
->>>>> index 34594972d8db..ee09e0d3bbab 100644
->>>>> --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
->>>>> +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
->>>>> @@ -105,6 +105,12 @@ properties:
->>>>>              define it with this name (for instance pipe, core and aux can
->>>>>              be connected to a single source of the periodic signal).
->>>>>            const: ref
->>>>> +        - description:
->>>>> +            Some dwc wrappers (like i.MX95 PCIes) have two reference clock
->>>>> +            inputs, one from internal PLL, the other from off chip crystal
->>>>> +            oscillator. Use extref clock name to be onhalf of the reference
->>>>> +            clock comes form external crystal oscillator.
->>>>
->>>> How internal PLL can be represented as 'ref' clock? Internal means it is
->>>> not outside, so impossible to represent.
->>>
->>> Internal means in side SoC, but outside PCIe controller.
->>
->> So external... It does not matter for PCIe controller whether clock is
->> coming from SoC or from some crystal.  It is still input pin. Same input
->> pin.
-> 
-> It is NOT the same pin. It is TWO pins, there are mux inside in PCI
-> controller.
-> 
-> There are similar cases in s32 rtc, there are 4 input source[0,1,2,3]
-> https://lore.kernel.org/imx/20241127144322.GA3454134-robh@kernel.org/
-> Only one provide.
-> 
->>
->>>
->>>>
->>>> Where is the DTS so we can look at big picture?
->>>
->>> imx94 pci's upstream is still on going, which quite similar with imx95.
->>> Just board design choose external crystal.
->>>
->>> pcie_ref_clk: clock-pcie-ref {
->>>                 compatible = "gpio-gate-clock";
->>>                 clocks = <&xtal25m>;
->>>                 #clock-cells = <0>;
->>>                 enable-gpios = <&pca9670_i2c3 7 GPIO_ACTIVE_LOW>;
->>> };
->>>
->>> &pcie0 {
->>>         pinctrl-0 = <&pinctrl_pcie0>;
->>>         pinctrl-names = "default";
->>>         clocks = <&scmi_clk IMX94_CLK_HSIO>,
->>>                  <&scmi_clk IMX94_CLK_HSIOPLL>,
->>>                  <&scmi_clk IMX94_CLK_HSIOPLL_VCO>,
->>>                  <&scmi_clk IMX94_CLK_HSIOPCIEAUX>,
->>>                  <&pcie_ref_clk>;
->>>         clock-names = "pcie", "pcie_bus", "pcie_phy", "pcie_aux", "ext-ref";
->>
->> So this is totally faked hardware property.
->>
->> No, it is the same clock signal, not different. You write bindings from
->> this device point of view, not for your board.
-> 
-> No the same clock signal. There are two sources, "ext-ref" or "ref".
-> PCI controller need know which one provide clocks.
 
-OK, this should be clearly expressed not some vague play of the words
-what is internal and external...
+
+On 2025/6/30 15:26, Krzysztof Kozlowski wrote:
+> EXTERNAL EMAIL
+> 
+> On Mon, Jun 30, 2025 at 12:15:57PM +0800, hans.zhang@cixtech.com wrote:
+>> From: Hans Zhang <hans.zhang@cixtech.com>
+>>
+>> Document the bindings for CIX Sky1 PCIe Controller configured in
+>> root complex mode with five root port.
+>>
+>> Supports 4 INTx, MSI and MSI-x interrupts from the ARM GICv3 controller.
+>>
+>> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+>> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
+>> Reviewed-by: Manikandan K Pillai <mpillai@cadence.com>
+>> ---
+>>   .../bindings/pci/cix,sky1-pcie-host.yaml      | 133 ++++++++++++++++++
+>>   1 file changed, 133 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
+>> new file mode 100644
+>> index 000000000000..b4395bc06f2f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
+>> @@ -0,0 +1,133 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pci/cix,sky1-pcie-host.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: CIX Sky1 PCIe Root Complex
+>> +
+>> +maintainers:
+>> +  - Hans Zhang <hans.zhang@cixtech.com>
+>> +
+>> +description:
+>> +  PCIe root complex controller based on the Cadence PCIe core.
+>> +
+>> +allOf:
+>> +  - $ref: /schemas/pci/pci-host-bridge.yaml#
+>> +  - $ref: /schemas/pci/cdns-pcie.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+>> +      - const: cix,sky1-pcie-host
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: PCIe controller registers.
+>> +      - description: Remote CIX System Unit registers.
+>> +      - description: ECAM registers.
+>> +      - description: Region for sending messages registers.
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: reg
+>> +      - const: rcsu
+>> +      - const: cfg
+> 
+> cfg is the second, look at cdns bindings.
+> 
+
+Dear Krzysztof,
+
+Thank you very much for your reply. Will delete it.
+
+>> +      - const: msg
+>> +
+>> +  "#interrupt-cells":
+>> +    const: 1
+>> +
+>> +  interrupt-map-mask:
+>> +    items:
+>> +      - const: 0
+>> +      - const: 0
+>> +      - const: 0
+>> +      - const: 7
+>> +
+>> +  interrupt-map:
+>> +    maxItems: 4
+>> +
+>> +  max-link-speed:
+>> +    maximum: 4
+> 
+> Why are you redefining core properties?
+I see. Just add it in "required". Will delete.
 
 > 
-> There are mux inside PCI controller, DT need provide information which on
-> provide.
+>> +
+>> +  num-lanes:
+>> +    maximum: 8
+>> +
+>> +  ranges:
+>> +    maxItems: 3
+>> +
+>> +  msi-map:
+>> +    maxItems: 1
+>> +
+>> +  vendor-id:
+>> +    const: 0x1f6c
 > 
-> Maybe my example dts miss-lead you. Altherate descript is
->   clock-names = "pcie", "pcie_bus", "pcie_phy", "pcie_aux", "ref", "ext-ref";
-> 
->   But we thinks if ext-ref provide, "ref" is not neccesary need be turn on.
->   So remove it from the list.
+> Why? This is implied by compatible.
 
-If the ref clock is actually wired it should be there. You describe here
-hardware, not what is necessary.
+Because when we designed the SOC RTL, it was not set to the vendor id 
+and device id of our company. We are members of PCI-SIG. So we need to 
+set the vendor id and device id in the Root Port driver. Otherwise, the 
+output of lspci will be displayed incorrectly.
+
+> 
+>> +
+>> +  device-id:
+>> +    enum:
+>> +      - 0x0001
+> 
+> Why? This is implied by compatible.
+
+The reason is the same as above.
+
+> 
+>> +
+>> +  cdns,no-inbound-bar:
+> 
+> That's not a cdns binding, so wrong prefix.
+
+It will be added to Cadence's Doc. I will add a separate patch. What do 
+you think?
+
+> 
+>> +    description: |
+> 
+> Do not need '|' unless you need to preserve formatting.
+
+Will delete '|'.
+
+> 
+>> +      Indicates the PCIe controller does not require an inbound BAR region.
+> 
+> And anyway this is implied by compatible, drop.
+> 
+
+Because Cadence core driver has this judgment, the latest code of the 
+current linux master all has this process. As follows:
+int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
+     cdns_pcie_host_init_address_translation(rc);
+	cdns_pcie_host_map_dma_ranges(rc);
+	   cdns_pcie_host_bar_ib_config
+
+So this attribute has been added here, or is there a better way?
+
+>> +    type: boolean
+>> +
+>> +  sky1,pcie-ctrl-id:
+>> +    description: |
+>> +      Specifies the PCIe controller instance identifier (0-4).
+> 
+> No, you don't get an instance ID. Drop the property and look how other
+> bindings encoded it (not sure about the purpose and you did not explain
+> it, so cannot advise).
+> 
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    minimum: 0
+>> +    maximum: 4
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - reg-names
+>> +  - "#interrupt-cells"
+>> +  - interrupt-map-mask
+>> +  - interrupt-map
+>> +  - max-link-speed
+>> +  - num-lanes
+>> +  - bus-range
+>> +  - device_type
+>> +  - ranges
+>> +  - msi-map
+>> +  - vendor-id
+>> +  - device-id
+>> +  - cdns,no-inbound-bar
+>> +  - sky1,pcie-ctrl-id
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +
+>> +    pcie_x8_rc: pcie@a010000 {
+> 
+> Drop unused label.
+
+Will delete pcie_x8_rc.
 
 Best regards,
-Krzysztof
+Hans
+
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
 
