@@ -1,123 +1,150 @@
-Return-Path: <linux-pci+bounces-31061-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31062-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3CB6AED5BB
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 09:33:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66AD8AED66B
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 10:00:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C67093B79F1
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 07:33:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 12EC217400C
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 08:00:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD6822185A8;
-	Mon, 30 Jun 2025 07:33:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D183324677F;
+	Mon, 30 Jun 2025 07:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hx8ADqTK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UpZelXZ/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0878190072;
-	Mon, 30 Jun 2025 07:33:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A013F239E98;
+	Mon, 30 Jun 2025 07:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268800; cv=none; b=kp9ezXpIZ8CWKA42EhMQlOe47dL20MKsW4JdpJLPUO75PUwvGn6j+lhX0GJq+mDaiAhnW++peunjl/1JbEWDn40HbEiduPvIbTSbxHh8Gxig+/cVErTtOxJauiPin+3bQJennLz9E5Ptgbm6Nu41ngNZzyk/B75aF4j4BHBiItQ=
+	t=1751270316; cv=none; b=cVPHyiH5TaLDGdBLrz9Dqsqdu+rDZk/j9ybPJ2jlj1Vbw5WwNbFHDC8o+FPN02zzPZKf67De0wIJsMxnw3CvDiJvZyJgVhLuMYG4qDIH9V7+UsAPSHvZyD8VYm72sJx58UDMHIQxnUhrlRIGRxMf170KL4oBkzuGfnegmOs0Inc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268800; c=relaxed/simple;
-	bh=sGA8pj8z6/OPVGb0FWOogVxSnD1pMIT0m8Q8IQAiG/A=;
+	s=arc-20240116; t=1751270316; c=relaxed/simple;
+	bh=x2faBQFCPbJgkBeeErZ1FyYIo0+DBd/41+qTcGQaV/c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JmRCNRsfsMxQgiQlnzZ/tqXaaOtYChS5muCDPzKHTRipAvd2uW9FZK8uUYIUWs6HcQHLY5kTBQ9YUQcKGqtv6u3DqBaBnZ7/ScXDboCPdEJqKlaz/Ts0/NLI0jeu05BOeljkWWSP9AmSyzcVZY0dAZr8vEJVrY9AEwhT3dNNjo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hx8ADqTK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39F06C4CEE3;
-	Mon, 30 Jun 2025 07:33:18 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=HX6XeW7coJDt8iqL2EwGygMc4DwLrUDGmaNysa498TPWE59B7Zm94p8T2tTk3uQyd4oW4LccpoGQ28WRCxGj+XkwxJOUWQQWkHLnTusTnlSn966dbnySFfJFn6dRIl1fwlPiTp9+tWgUqRqO+E2NSQ61xyM4jIXvqzwDT9g8Pi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UpZelXZ/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E8C1C4CEE3;
+	Mon, 30 Jun 2025 07:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751268799;
-	bh=sGA8pj8z6/OPVGb0FWOogVxSnD1pMIT0m8Q8IQAiG/A=;
+	s=k20201202; t=1751270316;
+	bh=x2faBQFCPbJgkBeeErZ1FyYIo0+DBd/41+qTcGQaV/c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hx8ADqTKumOLneEmz4Q/GhcyoTL6n4dzKFJZxUUcLKyxsb4Lk32BOya9g30efS7XT
-	 F2dxgILtZxke2gZtlPSdWeBGQ4TAuqKvS/Oa7LRPuZIlbP0VfpxU4nxX7OKPBenibj
-	 Z3NVJg0Bft+JNDnTwLoGhSem9iCMlohbUH8e5sHQNP2i5LpzFRcLWicg3fPGFgcbRZ
-	 lizZmhFQAwDA4kN1WZyvxsLHJiWmhpea0kbtmlNaLxkDbtbxwMwSiEMxTaGv7JTLY7
-	 hanMqHOS722IOvcAfGwD9fp2fvAiLRf7ShkxXTml9cqsH5CXj/yos3YNiN6FyiYOhO
-	 e1gR4nonOW/7w==
-Date: Mon, 30 Jun 2025 09:33:15 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: hans.zhang@cixtech.com
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
-	mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, mpillai@cadence.com, fugang.duan@cixtech.com, 
-	guoyin.chen@cixtech.com, peter.chen@cixtech.com, cix-kernel-upstream@cixtech.com, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 13/14] arm64: dts: cix: Add PCIe Root Complex on sky1
-Message-ID: <20250630-proficient-fearless-rottweiler-efde37@krzk-bin>
-References: <20250630041601.399921-1-hans.zhang@cixtech.com>
- <20250630041601.399921-14-hans.zhang@cixtech.com>
+	b=UpZelXZ/xs/xYeF1gZ0fhMdMjGIAVXlRd3Icg1uLbmZRVVpGsmrrlelKHPQ62zRaS
+	 W2EviIEd6qX9ID6TBl7rmy6lswzNJlmQrQlShpH31kyWGWHLu1WvNkJcBTS54pALsE
+	 T7jgfnyR1/osdhPJsSJXcs43aqveX2OCgha1Ju2zEoEK5q6CBkfY/deAxU9a4sKr8k
+	 NSMHVeeCNFzUnC8N6nvVkOb73/IiFOwrd3LlNU6k0GgPjQWHEDeAX0OzOA8yYHyBs8
+	 NTB0xTSKtNin1GsOSRZ1juMpiScu1740DT28shdr/+1QPCzbIbHi6CTFpsgivzv+o/
+	 YOpWw5klv/XuA==
+Date: Mon, 30 Jun 2025 09:58:28 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 24/31] of/irq: Add of_msi_xlate() helper function
+Message-ID: <aGJDpBBY6tnvmLup@lpieralisi>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+ <20250626-gicv5-host-v6-24-48e046af4642@kernel.org>
+ <20250627213241.GA168190-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250630041601.399921-14-hans.zhang@cixtech.com>
+In-Reply-To: <20250627213241.GA168190-robh@kernel.org>
 
-On Mon, Jun 30, 2025 at 12:16:00PM +0800, hans.zhang@cixtech.com wrote:
-> From: Hans Zhang <hans.zhang@cixtech.com>
+On Fri, Jun 27, 2025 at 04:32:41PM -0500, Rob Herring wrote:
+> On Thu, Jun 26, 2025 at 12:26:15PM +0200, Lorenzo Pieralisi wrote:
+> > Add an of_msi_xlate() helper that maps a device ID and returns
+> > the device node of the MSI controller the device ID is mapped to.
+> > 
+> > Required by core functions that need an MSI controller device node
+> > pointer at the same time as a mapped device ID, of_msi_map_id() is not
+> > sufficient for that purpose.
+> > 
+> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > Cc: Rob Herring <robh@kernel.org>
+> > Cc: Marc Zyngier <maz@kernel.org>
+> > ---
+> >  drivers/of/irq.c       | 22 +++++++++++++++++-----
+> >  include/linux/of_irq.h |  5 +++++
+> >  2 files changed, 22 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> > index f8ad79b9b1c9..74aaea61de13 100644
+> > --- a/drivers/of/irq.c
+> > +++ b/drivers/of/irq.c
+> > @@ -670,8 +670,20 @@ void __init of_irq_init(const struct of_device_id *matches)
+> >  	}
+> >  }
+> >  
+> > -static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
+> > -			    u32 id_in)
+> > +/**
+> > + * of_msi_xlate - map a MSI ID and find relevant MSI controller node
+> > + * @dev: device for which the mapping is to be done.
+> > + * @msi_np: Pointer to store the MSI controller node
+> > + * @id_in: Device ID.
+> > + *
+> > + * Walk up the device hierarchy looking for devices with a "msi-map"
+> > + * property. If found, apply the mapping to @id_in. @msi_np pointed
+> > + * value must be NULL on entry, if an MSI controller is found @msi_np is
+> > + * initialized to the MSI controller node with a reference held.
+> > + *
+> > + * Returns: The mapped MSI id.
+> > + */
+> > +u32 of_msi_xlate(struct device *dev, struct device_node **msi_np, u32 id_in)
+> >  {
+> >  	struct device *parent_dev;
+> >  	u32 id_out = id_in;
+> > @@ -682,7 +694,7 @@ static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
+> >  	 */
+> >  	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent)
+> >  		if (!of_map_id(parent_dev->of_node, id_in, "msi-map",
+> > -				"msi-map-mask", np, &id_out))
+> > +				"msi-map-mask", msi_np, &id_out))
+> >  			break;
+> >  	return id_out;
+> >  }
+> > @@ -700,7 +712,7 @@ static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
+> >   */
+> >  u32 of_msi_map_id(struct device *dev, struct device_node *msi_np, u32 id_in)
 > 
-> Add pcie_x*_rc node to support Sky1 PCIe driver based on the
-> Cadence PCIe core.
-> 
-> Supports Gen1/Gen2/Gen3/Gen4, 1/2/4/8 lane, MSI/MSI-x interrupts
-> using the ARM GICv3.
-> 
-> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
-> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
-> Reviewed-by: Manikandan K Pillai <mpillai@cadence.com>
+> Can we replace the 2 callers of of_msi_map_id() with of_msi_xlate()? 
 
-Where?
+Yes we could - with a separate patch, it is a clean-up (current
+of_msi_map_id() users call it with a specific of_node target, I did not
+convert it in *this* patch to prevent adding issues - I will also add
+relevant kdoc info related to the of_node parameter in of_msi_xlate()
+that will need to be changed).
 
-> ---
->  arch/arm64/boot/dts/cix/sky1.dtsi | 150 ++++++++++++++++++++++++++++++
->  1 file changed, 150 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/cix/sky1.dtsi b/arch/arm64/boot/dts/cix/sky1.dtsi
-> index 9c723917d8ca..1dac0e8d5fc1 100644
-> --- a/arch/arm64/boot/dts/cix/sky1.dtsi
-> +++ b/arch/arm64/boot/dts/cix/sky1.dtsi
-> @@ -289,6 +289,156 @@ mbox_ap2sfh: mailbox@80a0000 {
->  			cix,mbox-dir = "tx";
->  		};
->  
-> +		pcie_x8_rc: pcie@a010000 { /* X8 */
-> +			compatible = "cix,sky1-pcie-host";
-> +			reg = <0x00 0x0a010000 0x00 0x10000>,
-> +			      <0x00 0x0a000000 0x00 0x10000>,
-> +			      <0x00 0x2c000000 0x00 0x4000000>,
-> +			      <0x00 0x60000000 0x00 0x00100000>;
-> +			reg-names = "reg", "rcsu", "cfg", "msg";
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0x7>;
-> +			interrupt-map = <0 0 0 1 &gic 0 0 GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH 0>,
-> +					<0 0 0 2 &gic 0 0 GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH 0>,
-> +					<0 0 0 3 &gic 0 0 GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH 0>,
-> +					<0 0 0 4 &gic 0 0 GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH 0>;
-> +			max-link-speed = <4>;
-> +			num-lanes = <8>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			bus-range = <0xc0 0xff>;
-> +			device_type = "pci";
-> +			ranges = <0x01000000 0x0 0x60100000 0x0 0x60100000 0x0 0x00100000>,
-> +				 <0x02000000 0x0 0x60200000 0x0 0x60200000 0x0 0x1fe00000>,
-> +				 <0x43000000 0x18 0x00000000 0x18 0x00000000 0x04 0x00000000>;
+> The series is already big enough, so that can be a follow-up or do it 
+> for 6.17 if the series isn't going to make it.
 
-And none of the two reviewers asked you to follow DTS coding style? If
-reviewer knows not much about DTS, don't review. Add an ack or
-something, dunno, or actually perform proper review.
+I will put together a patch - I don't think it belongs in this series
+but depending on whether I need to do a v7 I will see what's best.
 
-Best regards,
-Krzysztof
-
+Thanks,
+Lorenzo
 
