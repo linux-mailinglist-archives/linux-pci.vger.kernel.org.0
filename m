@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-31075-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31076-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D350AEDA87
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 13:11:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D888AEDA94
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 13:14:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A1AA73A3AF4
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 11:11:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F14D31891321
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 11:15:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F22D25A640;
-	Mon, 30 Jun 2025 11:11:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B273A25B687;
+	Mon, 30 Jun 2025 11:14:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OqTiS3S9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YzDivf+l"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2048E248865;
-	Mon, 30 Jun 2025 11:11:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8617D25B305;
+	Mon, 30 Jun 2025 11:14:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751281883; cv=none; b=dFTuTKW1YsZT96DCORaWeFHbdJRplQom/srzY8yMJ8uZneJSLb7Z8MnHGebzYeRDHYjRfqjLDkvLnKbcA4y3A40TZ8tkzvogBvS9Egg8lh/XSUI6VEPr4C021d2KgB0i4SOeZla1b6QBj4tslCVjNrZSI+ojQU7wA1ni8Gt0Fsw=
+	t=1751282081; cv=none; b=t6tPn/PrPKioGjL7ShOJD8lTrqXNjk9Ek4sNViaSIyP3cbsomF3KxtlaJ9dhyTGfs7TvEPMvlr1XLbz7c79+nqfK4BOFilcFmG08c1btL7o9BCnHw0vFEHDfZDjPvE2kdCRpKs0DC9G9EHz8KpSTfJtZmb5O6dNiiajt0RbMV88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751281883; c=relaxed/simple;
-	bh=OybGLyCO6EfCZ/xTwqrIeBuFpkzCWVNaO/F4j45AdAY=;
+	s=arc-20240116; t=1751282081; c=relaxed/simple;
+	bh=d8d+PHnXNs9aUA37p1cQ/7Z1umzh2vITcAo3PMP077s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gcytqUBrvaFqcv8OPQvITWugabVGc8wAZEESA7I4h0rYm2rAKwlJ+Z93+DqJ92tw9gMjEFflbKGESkmj9Uq44vda/YnMgIcTwbtfUUGQSc1QBfJpyn0dC1HgTwvhGRDxcsNTOfBnbQJAKdu0Tp+raYK4OTh/fnIMI3YuSXQ1N4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OqTiS3S9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3893FC4CEE3;
-	Mon, 30 Jun 2025 11:11:13 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=b330WxNDvbwuTPxgMiPm853CR3JWhVFPme1sevWeDyMUOv5Lmn4Z0AbOIWJYfKTlgCyx04cr/zXNJSxzbhceMLqPaofL5PIL45gT210M9i/fpPxWYuROYPEZT4KFfiCW+VsrGlo8UNzPPFW4EJkn5I6ItlNabBgLB/oxJNnTMzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YzDivf+l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BDFBC4CEEB;
+	Mon, 30 Jun 2025 11:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751281882;
-	bh=OybGLyCO6EfCZ/xTwqrIeBuFpkzCWVNaO/F4j45AdAY=;
+	s=k20201202; t=1751282081;
+	bh=d8d+PHnXNs9aUA37p1cQ/7Z1umzh2vITcAo3PMP077s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OqTiS3S9cTb4XEETk2nCa0Pwd0p9/TnezTOgam963XLBtoX29QXX2XrKXtUsot4Ic
-	 fIFG86IRXZ3kOllqoF7lQetQBkklWAj7wW3JqdJpz7pLBVBAhU3g6ZV/+Q0PAS1d25
-	 zgPn3E7a75Hzu4weS9zSkkMOmFRsnD6Ghu6L9DX539652g6GxBy9L2G3T0CaVVvDY7
-	 6MhJPwessLOXw2K7GMoxCXhRDy5g/mNfx1bxhmJ2F4xWzcfEDtk1ZgkjpbWOwf1zs9
-	 UnJyD4aBniquvMSfu3PNZGdm9lISBGEwWpKUbEGamVU0qeYEUdFXx7SVry+kFu4vGy
-	 7n74gnqdTS+3w==
-Message-ID: <31415739-88cd-4350-9fd4-04b99b29be89@kernel.org>
-Date: Mon, 30 Jun 2025 13:11:11 +0200
+	b=YzDivf+lbYw5SY5Z/giScv3Nlf1PDdfIkGkK/DTmfKG3/BpJa9YjuFTP2IbJBMkbD
+	 kyoQ1aMxqKb1jFOvFByYz05ymPmE3LOQsSy+QLLg9NQiP0qgztA3DifXs182cnbcqM
+	 tuor9j/lrLxdU0n8zOb1Z3DBv6wyvoDrb4+FEnutJxo4dtVMzQGD3EsuYg/WJRgV3T
+	 E964Jp5dY5V+cNATRr7UKg167mOJDI3kPYDkCZZKUO3T2EIs7Vhp6SXeiJUnjW4r0x
+	 hAP86VApZNAPKZTfaoUiSUoSVQsib/KjMD8ZBYEePJS5ARrEcGB+oixfBOAzNeWo3s
+	 MtU9wwlxwtBuQ==
+Message-ID: <5b182268-d64c-424c-9ada-0c3f120d2817@kernel.org>
+Date: Mon, 30 Jun 2025 13:14:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,29 +50,19 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 01/14] dt-bindings: pci: cadence: Extend compatible for
- new RP configuration
-To: Manikandan Karunakaran Pillai <mpillai@cadence.com>,
- Hans Zhang <hans.zhang@cixtech.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>, "mani@kernel.org" <mani@kernel.org>,
- "robh@kernel.org" <robh@kernel.org>,
- "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "fugang.duan@cixtech.com" <fugang.duan@cixtech.com>,
- "guoyin.chen@cixtech.com" <guoyin.chen@cixtech.com>,
- "peter.chen@cixtech.com" <peter.chen@cixtech.com>,
- "cix-kernel-upstream@cixtech.com" <cix-kernel-upstream@cixtech.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 10/14] dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex
+ bindings
+To: Hans Zhang <hans.zhang@cixtech.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, mpillai@cadence.com,
+ fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
+ cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250630041601.399921-1-hans.zhang@cixtech.com>
- <20250630041601.399921-2-hans.zhang@cixtech.com>
- <20250630-heretic-space-bullfrog-d6b212@krzk-bin>
- <afeda0c7-1959-4501-b85b-5685698dc432@cixtech.com>
- <CH2PPF4D26F8E1CC95F84FFBB099955A065A246A@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <20250630041601.399921-11-hans.zhang@cixtech.com>
+ <20250630-graceful-horse-of-science-eecc53@krzk-bin>
+ <bb4889ca-ec99-4677-9ddc-28905b6fcc14@cixtech.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -118,49 +108,91 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <CH2PPF4D26F8E1CC95F84FFBB099955A065A246A@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+In-Reply-To: <bb4889ca-ec99-4677-9ddc-28905b6fcc14@cixtech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 30/06/2025 10:06, Manikandan Karunakaran Pillai wrote:
-> 
-> 
->> EXTERNAL MAIL
+On 30/06/2025 10:29, Hans Zhang wrote:
+>>> +
+>>> +  num-lanes:
+>>> +    maximum: 8
+>>> +
+>>> +  ranges:
+>>> +    maxItems: 3
+>>> +
+>>> +  msi-map:
+>>> +    maxItems: 1
+>>> +
+>>> +  vendor-id:
+>>> +    const: 0x1f6c
 >>
->>
->>
->>
->> On 2025/6/30 15:30, Krzysztof Kozlowski wrote:
->>> EXTERNAL EMAIL
->>>
->>> On Mon, Jun 30, 2025 at 12:15:48PM +0800, hans.zhang@cixtech.com wrote:
->>>> From: Manikandan K Pillai <mpillai@cadence.com>
->>>>
->>>> Document the compatible property for HPA (High Performance
->> Architecture)
->>>> PCIe controller RP configuration.
->>>
->>> I don't see Conor's comment addressed:
->>>
->>> https://urldefense.com/v3/__https://lore.kernel.org/linux-
->> devicetree/20250424-elm-magma-
->> b791798477ab@spud/__;!!EHscmS1ygiU1lA!Bo-
->> ayMVqCWXSbSgFpsBZzgk1ADft8pqRQbuOeAhIuAjz0zI015s4dmzxgaWKycqKMn
->> 1cejS8kKZvjF5xDAse$
->>>
->>> You cannot just send someone's work and bypassing the review feedback.
+>> Why? This is implied by compatible.
 > 
-> I thought the comment was implicitly addressed when the device drivers were separated out based on other review comments in this patch.
-> To make it more clear, in the next patch I will add the following description for the dt-binding patch
-> 
-> "The High performance architecture is different from legacy architecture controller in design of register banks, 
-> register definitions, hardware sequences of initialization and is considered as a different device due to the 
-> large number of changes required in the device driver and hence adding a new compatible."
-That's still vague. Anyway this does not address other concern that the
-generic compatible is discouraged and we expect specific compatibles. We
-already said that and what? You send the same patch.
+> Because when we designed the SOC RTL, it was not set to the vendor id 
+> and device id of our company. We are members of PCI-SIG. So we need to 
+> set the vendor id and device id in the Root Port driver. Otherwise, the 
+> output of lspci will be displayed incorrectly.
 
-So no, don't send the same patch.
+Please read carefully. Previous discussions were also pointlessly
+ping-ponging on irrelevant arguments. Did I suggest you do not have to
+set it in root port driver? No. If this is const here, this is implied
+by compatible and completely redundant, because your driver knows this
+value already. It already has all the information to deduce this value
+from the compatible.
+
+
+
+
+> 
+>>
+>>> +
+>>> +  device-id:
+>>> +    enum:
+>>> +      - 0x0001
+>>
+>> Why? This is implied by compatible.
+> 
+> The reason is the same as above.
+> 
+>>
+>>> +
+>>> +  cdns,no-inbound-bar:
+>>
+>> That's not a cdns binding, so wrong prefix.
+> 
+> It will be added to Cadence's Doc. I will add a separate patch. What do 
+> you think?
+> 
+>>
+>>> +    description: |
+>>
+>> Do not need '|' unless you need to preserve formatting.
+> 
+> Will delete '|'.
+> 
+>>
+>>> +      Indicates the PCIe controller does not require an inbound BAR region.
+>>
+>> And anyway this is implied by compatible, drop.
+>>
+> 
+> Because Cadence core driver has this judgment, the latest code of the 
+> current linux master all has this process. As follows:
+> int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
+>      cdns_pcie_host_init_address_translation(rc);
+> 	cdns_pcie_host_map_dma_ranges(rc);
+> 	   cdns_pcie_host_bar_ib_config
+
+And you cannot fix or change drivers? How does it matter for discussion
+here?
+
+> 
+> So this attribute has been added here, or is there a better way?
+
+Of course, like every other driver in Linux kernel. This is FIXED for
+your platform, so set it in your CIX driver.
+
+
 
 Best regards,
 Krzysztof
