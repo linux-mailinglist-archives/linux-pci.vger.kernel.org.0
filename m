@@ -1,48 +1,87 @@
-Return-Path: <linux-pci+bounces-31076-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31077-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D888AEDA94
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 13:14:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 339C9AEDCC8
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 14:30:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F14D31891321
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 11:15:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 41BAC7A4E23
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 12:29:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B273A25B687;
-	Mon, 30 Jun 2025 11:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09637286404;
+	Mon, 30 Jun 2025 12:30:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YzDivf+l"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BNrukPs/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8617D25B305;
-	Mon, 30 Jun 2025 11:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DCE20E716
+	for <linux-pci@vger.kernel.org>; Mon, 30 Jun 2025 12:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751282081; cv=none; b=t6tPn/PrPKioGjL7ShOJD8lTrqXNjk9Ek4sNViaSIyP3cbsomF3KxtlaJ9dhyTGfs7TvEPMvlr1XLbz7c79+nqfK4BOFilcFmG08c1btL7o9BCnHw0vFEHDfZDjPvE2kdCRpKs0DC9G9EHz8KpSTfJtZmb5O6dNiiajt0RbMV88=
+	t=1751286624; cv=none; b=V0n0ui2yVqNmHYC4w2SLgG+8mhS0r8J5frm+DB4nKYEuNjnZTt4ZJfQcOaJjLSXbx4fM5YadcMBnyYIMHMquYuROEkeJb2izPM8/Mmj3yDbS5Zeh7MN9mmAjGmeV2Pe6OI06r5Gn7lIwvmprFfcOxLjmysn3nFUMIwr7Tb1vIxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751282081; c=relaxed/simple;
-	bh=d8d+PHnXNs9aUA37p1cQ/7Z1umzh2vITcAo3PMP077s=;
+	s=arc-20240116; t=1751286624; c=relaxed/simple;
+	bh=3f1Py/orZHfiSTe0C6MP8gxhoceXINqIBaCHjb7/zSk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b330WxNDvbwuTPxgMiPm853CR3JWhVFPme1sevWeDyMUOv5Lmn4Z0AbOIWJYfKTlgCyx04cr/zXNJSxzbhceMLqPaofL5PIL45gT210M9i/fpPxWYuROYPEZT4KFfiCW+VsrGlo8UNzPPFW4EJkn5I6ItlNabBgLB/oxJNnTMzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YzDivf+l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BDFBC4CEEB;
-	Mon, 30 Jun 2025 11:14:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751282081;
-	bh=d8d+PHnXNs9aUA37p1cQ/7Z1umzh2vITcAo3PMP077s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YzDivf+lbYw5SY5Z/giScv3Nlf1PDdfIkGkK/DTmfKG3/BpJa9YjuFTP2IbJBMkbD
-	 kyoQ1aMxqKb1jFOvFByYz05ymPmE3LOQsSy+QLLg9NQiP0qgztA3DifXs182cnbcqM
-	 tuor9j/lrLxdU0n8zOb1Z3DBv6wyvoDrb4+FEnutJxo4dtVMzQGD3EsuYg/WJRgV3T
-	 E964Jp5dY5V+cNATRr7UKg167mOJDI3kPYDkCZZKUO3T2EIs7Vhp6SXeiJUnjW4r0x
-	 hAP86VApZNAPKZTfaoUiSUoSVQsib/KjMD8ZBYEePJS5ARrEcGB+oixfBOAzNeWo3s
-	 MtU9wwlxwtBuQ==
-Message-ID: <5b182268-d64c-424c-9ada-0c3f120d2817@kernel.org>
-Date: Mon, 30 Jun 2025 13:14:27 +0200
+	 In-Reply-To:Content-Type; b=byrk9T1KBisn8AuhSVp5wvhafn9jymVYk7CDtXj6gEHA0KFdKbdmWjlSMmUdfrKvJm67yreZGwRZgfNo+hqsCs44MVnAlaitjmDMErGCLj5dQo5l13b20ZacROUbEKNq7YyAiPvXLfmp718lZkPUPRz3imE2KjNDiTbZ7aqxuxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BNrukPs/; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8DblC001184
+	for <linux-pci@vger.kernel.org>; Mon, 30 Jun 2025 12:30:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	2dWxWYq2K7GOUCuWuG1yENQqxzaE0+54jEHV+QMm2Os=; b=BNrukPs/nNJ0qaHS
+	LWTu6LjgvbZFBSLNC+oAhIPnl4Us9Elul9jdAnKMZFFftOO8B1obXtZVxfvO7MWt
+	shjEpSEADQTPkOSUhhPFsDln/dstCoJv+fn/SCyOWkk+mqZRZPfUxaduo6El6Onp
+	PujuZ5mZtOb3wgl6JOnwoMg3F20KBzIzIvOKEU31qhTzUpXpkuXnn0mo+JSk3uo2
+	+optlSS+dEXRhNKnoLnzfmU/XAMOkGRgk4JKMcyIbBRMPUzxegd7TNDi0wRzIbWM
+	Cu73+s1G02hJSxfvTxdoaPFITrFBdp3D2lN8HLg+N/zSQ2yfYWbQIlJ8EQMwnv1Z
+	LouDFQ==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7qm4qe1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 30 Jun 2025 12:30:22 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-7489ac848f3so3749514b3a.1
+        for <linux-pci@vger.kernel.org>; Mon, 30 Jun 2025 05:30:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751286621; x=1751891421;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2dWxWYq2K7GOUCuWuG1yENQqxzaE0+54jEHV+QMm2Os=;
+        b=KG8slCXwpFaxROzLH1/Z4vyIf4yGlDjEhhRp4jOO397K2pzpubh6i7kBB6f5wsZ1In
+         fZcdjA8Xj8/8eRN4yO/AIs3T4p3UtGm+A2g95LmbSEvf/B1cdKo6CzBForx0/9KSGcKQ
+         aBYmtLovn2sLO327We9VV5OZuXsLjWgLVj+zfV5xqOHcyxr2Xz9BgLmGetYrxoKElDTe
+         1xftfH8AqoVX5E1/VMHxM8zw+qc5lHJhKUfj0PaQFHqHS+tnvvwhKfzMdgUQAaeq/8je
+         d0wBYf1WYGQfyUxlQbSJ92YK7FpdD4wE4GSiNhm/rzlbMh3QloFFrvX/GdEz50hHTduT
+         tLOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXU/r5G4ei7HeWOjnT46LgHsUYcSnx5ytz0c8DhKE7yzhxshGt1kx8133DHKePtu1CD+WdHdEIhX38=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCeTwb3pt1NM2Gd6htIgWGNluwoRa50IPYMCYAitMpsPAaeScj
+	QWa+mfwyFGb/qaMLK8ylwAm8Ky70Im0hrC8z0GV1h0kWlSRmqc5PCt3fy3lAVKFFHMb/AeAk27U
+	f6j4jq9/ra6O1a0tVG6ljT+ZzOqfEqcvxOl+rKwyCBotQFhT0QZD6ixU2s6B++/A=
+X-Gm-Gg: ASbGncvFx31VBSO/wRTQEIqLlglRC7Rz9xgNUQ5/+jv41QoVxY5LFna624SpNSlYS9l
+	lMv+PeQKrBOcuuQJxropYdmqG+DHe+HdPd5hqUanIXE33+R0y/wd6/JGXb5rQe1bTyy7fCa9YlH
+	yc0FMF3L4NmF+dmNK+m4yD4VT/wUvuWCvwzAcm5WSqZ0vHbz8njFwJBcngMGwwBqZFZsAOXv+t8
+	WjRKLaEw7o0/IJrskyA+PCasRK01NcgfAHwSk4pdxpBr9bO+aQAssDQQoqVXdusrcf6Tb3D1cvY
+	CGBGkJwK+H9wREttU8A5gdEYka+nexi4tdhTCZ3aqU7kBQCSMmjh
+X-Received: by 2002:a05:6a00:1988:b0:748:f365:bedd with SMTP id d2e1a72fcca58-74af6f4d4bcmr17197283b3a.17.1751286620560;
+        Mon, 30 Jun 2025 05:30:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGkaFNPxqWvP2slDuEpYtj3r5EnhD15Tr2DIQp6ChiI+aHrargB99nmYkj5G7fm4yQY9LxhLg==
+X-Received: by 2002:a05:6a00:1988:b0:748:f365:bedd with SMTP id d2e1a72fcca58-74af6f4d4bcmr17197201b3a.17.1751286619834;
+        Mon, 30 Jun 2025 05:30:19 -0700 (PDT)
+Received: from [10.92.200.128] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af55c6a3asm8487704b3a.118.2025.06.30.05.30.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 05:30:19 -0700 (PDT)
+Message-ID: <4bae822e-e7bd-461f-99cc-866771c0b954@oss.qualcomm.com>
+Date: Mon, 30 Jun 2025 18:00:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,150 +89,137 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 10/14] dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex
- bindings
-To: Hans Zhang <hans.zhang@cixtech.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, mpillai@cadence.com,
- fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
- cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250630041601.399921-1-hans.zhang@cixtech.com>
- <20250630041601.399921-11-hans.zhang@cixtech.com>
- <20250630-graceful-horse-of-science-eecc53@krzk-bin>
- <bb4889ca-ec99-4677-9ddc-28905b6fcc14@cixtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v4 0/2] PCI: qcom: Move PERST# GPIO & phy retrieval from
+ controller to PCIe bridge node
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski
+ <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+References: <20250605-perst-v4-0-efe8a0905c27@oss.qualcomm.com>
+ <y3umoz5yuofaoloseapugjbebcgkefanqzggdjd5svq5dkchnb@rkbjfpiiveng>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <bb4889ca-ec99-4677-9ddc-28905b6fcc14@cixtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 30/06/2025 10:29, Hans Zhang wrote:
->>> +
->>> +  num-lanes:
->>> +    maximum: 8
->>> +
->>> +  ranges:
->>> +    maxItems: 3
->>> +
->>> +  msi-map:
->>> +    maxItems: 1
->>> +
->>> +  vendor-id:
->>> +    const: 0x1f6c
->>
->> Why? This is implied by compatible.
-> 
-> Because when we designed the SOC RTL, it was not set to the vendor id 
-> and device id of our company. We are members of PCI-SIG. So we need to 
-> set the vendor id and device id in the Root Port driver. Otherwise, the 
-> output of lspci will be displayed incorrectly.
-
-Please read carefully. Previous discussions were also pointlessly
-ping-ponging on irrelevant arguments. Did I suggest you do not have to
-set it in root port driver? No. If this is const here, this is implied
-by compatible and completely redundant, because your driver knows this
-value already. It already has all the information to deduce this value
-from the compatible.
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <y3umoz5yuofaoloseapugjbebcgkefanqzggdjd5svq5dkchnb@rkbjfpiiveng>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=C4TpyRP+ c=1 sm=1 tr=0 ts=6862835e cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=qGq9QQooCmLM_m6diiQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=OpyuDcXvxspvyRM73sMx:22
+X-Proofpoint-ORIG-GUID: PBEqL2Jiy3sI0NjmH12dGIfzeH2t4BwL
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDEwMiBTYWx0ZWRfX/8PD9zZLAdel
+ gZ57XfuVrLHl99bM3m6E1AW0DQbC8tL6CkrdS1+LXbQ50AxSkrViDd5LvlKSD4eU76553rhAqh/
+ Zu7uPyvuVGvWxYifBX+QJQCSoT/hBV1SswtcbIYvVkrm8J0NZNVEcvPIHpwEohHAsqK3SZZaTOb
+ vwSVphsFSzregT+nzPtXI5lAvanS3zLaDtGwUOTdSgoUuX4ENWcFQ4C9RRpxyDc97GjLtTKjacc
+ UY1Z1QqulRRCXy83vZkTecQz+NRkmyq88D8QfzXE3RGKzz4O9KtgDbE/cGFPa/jhw0A9/RkiYI8
+ TYN//NwsMgV1ICEbXYQsEPqLKft5A5xrJE2qUnOEy/H+94vXA/OcoSPAbbKbpnw6ELhKX90YO2X
+ PgckmV5rl2gHh8UiCM6CCJUAlNWJfAUrmcXNezkrvd5g/8AkHv4GLgJcskNIP8veloiHdaSf
+X-Proofpoint-GUID: PBEqL2Jiy3sI0NjmH12dGIfzeH2t4BwL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_03,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
+ clxscore=1015 priorityscore=1501 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506300102
 
 
 
-
-> 
+On 6/23/2025 4:37 PM, Manivannan Sadhasivam wrote:
+> On Thu, Jun 05, 2025 at 02:00:36PM +0530, Krishna Chaitanya Chundru wrote:
+>> The main intention of this series is to move wake# to the root port node.
+>> After this series we will come up with a patch which registers for wake IRQ
+>> from the pcieport driver. The wake IRQ is needed for the endpoint to wakeup
+>> the host from D3cold. The driver change for wake IRQ is posted here[1].
 >>
->>> +
->>> +  device-id:
->>> +    enum:
->>> +      - 0x0001
+>> There are many places we agreed to move the wake and perst gpio's
+>> and phy etc to the pcie root port node instead of bridge node[2] as the
+>> these properties are root port specific and does not belongs to
+>> bridge node.
 >>
->> Why? This is implied by compatible.
-> 
-> The reason is the same as above.
-> 
+>> So move the phy, phy-names, wake-gpio's in the root port.
+>> There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
+>> start using that property instead of perst-gpio.
 >>
->>> +
->>> +  cdns,no-inbound-bar:
+>> For backward compatibility, don't remove any existing properties in the
+>> bridge node.
 >>
->> That's not a cdns binding, so wrong prefix.
-> 
-> It will be added to Cadence's Doc. I will add a separate patch. What do 
-> you think?
-> 
+>> There are some other properties like num-lanes, max-link-speed which
+>> needs to be moved to the root port nodes, but in this series we are
+>> excluding them for now as this requires more changes in dwc layer and
+>> can complicate the things.
 >>
->>> +    description: |
+>> Once this series gets merged all other platforms also will be updated
+>> to use this new way.
 >>
->> Do not need '|' unless you need to preserve formatting.
-> 
-> Will delete '|'.
-> 
->>
->>> +      Indicates the PCIe controller does not require an inbound BAR region.
->>
->> And anyway this is implied by compatible, drop.
+>> Note:- The driver change needs to be merged first before dts changes.
+>> Krzysztof Wilczyński or Mani can you provide the immutable branch with
+>> these PCIe changes.
 >>
 > 
-> Because Cadence core driver has this judgment, the latest code of the 
-> current linux master all has this process. As follows:
-> int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
->      cdns_pcie_host_init_address_translation(rc);
-> 	cdns_pcie_host_map_dma_ranges(rc);
-> 	   cdns_pcie_host_bar_ib_config
-
-And you cannot fix or change drivers? How does it matter for discussion
-here?
-
+> You've dropped the DTS changes in this revision. So the above comment is stale.
 > 
-> So this attribute has been added here, or is there a better way?
+>> [1] https://lore.kernel.org/all/20250401-wake_irq_support-v1-0-d2e22f4a0efd@oss.qualcomm.com/
+>> [2] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
+>>
+> 
+> I don't have a device to test this series right now. So could you please test
+> this series with the legacy binding and make sure it is not breaking?
+> 
+> Once you confirm, I'll merge this series.
+> 
+I have verified with legacy binding with this change and it is working fine.
 
-Of course, like every other driver in Linux kernel. This is FIXED for
-your platform, so set it in your CIX driver.
-
-
-
-Best regards,
-Krzysztof
+- Krishna Chaitanya.
+> - Mani
+> 
+>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>> ---
+>> Changes in v4:
+>> - Removed dts patch as Mani suggested to merge driver and dt-binding
+>>    patch in this release and have dts changes in the next release.
+>> - Remove wake property from as this will be addressed in
+>>    pci-bus-common.yaml (Mani)
+>> - Did couple of nits in the comments, function names code etc (Mani).
+>> - Link to v3: https://lore.kernel.org/r/20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com
+>>
+>> Changes in v3:
+>> - Make old properties as deprecated, update commit message (Dmitry)
+>> - Add helper functions wherever both multiport and legacy methods are used. (Mani)
+>> - Link to v2: https://lore.kernel.org/r/20250414-perst-v2-0-89247746d755@oss.qualcomm.com
+>>
+>> Changes in v2:
+>> - Remove phy-names property and change the driver, dtsi accordingly (Rob)
+>> - Link to v1: https://lore.kernel.org/r/20250322-perst-v1-0-e5e4da74a204@oss.qualcomm.com
+>>
+>> ---
+>> Krishna Chaitanya Chundru (2):
+>>        dt-bindings: PCI: qcom: Move phy & reset gpio's to root port
+>>        PCI: qcom: Add support for multi-root port
+>>
+>>   .../devicetree/bindings/pci/qcom,pcie-common.yaml  |  32 +++-
+>>   .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  |  16 +-
+>>   drivers/pci/controller/dwc/pcie-qcom.c             | 177 +++++++++++++++++----
+>>   3 files changed, 192 insertions(+), 33 deletions(-)
+>> ---
+>> base-commit: ec7714e4947909190ffb3041a03311a975350fe0
+>> change-id: 20250101-perst-cb885b5a6129
+>>
+>> Best regards,
+>> -- 
+>> krishnachaitanya-linux <krishna.chundru@oss.qualcomm.com>
+>>
+> 
 
