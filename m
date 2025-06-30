@@ -1,88 +1,48 @@
-Return-Path: <linux-pci+bounces-31074-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31075-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1DFCAEDA82
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 13:10:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D350AEDA87
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 13:11:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D04E918965F1
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 11:10:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A1AA73A3AF4
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 11:11:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B1AD258CCB;
-	Mon, 30 Jun 2025 11:10:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F22D25A640;
+	Mon, 30 Jun 2025 11:11:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HdtRR1b5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OqTiS3S9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85682459D7
-	for <linux-pci@vger.kernel.org>; Mon, 30 Jun 2025 11:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2048E248865;
+	Mon, 30 Jun 2025 11:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751281831; cv=none; b=i5v+YKYpNR105Erc2dy1+aUO535rJVlAvFapEDtTj1WBDg0flYGaMd2D0s6vNWmdVGSuhjek0eX42wpnj4W6VsZB+IWLrQly3CvtNQiGj0fT9ECnYCsrM/ewueqRq4WofSUQUmErwjNYFh7ORnJ+/vKWNJblA3uctUxSeLqubpo=
+	t=1751281883; cv=none; b=dFTuTKW1YsZT96DCORaWeFHbdJRplQom/srzY8yMJ8uZneJSLb7Z8MnHGebzYeRDHYjRfqjLDkvLnKbcA4y3A40TZ8tkzvogBvS9Egg8lh/XSUI6VEPr4C021d2KgB0i4SOeZla1b6QBj4tslCVjNrZSI+ojQU7wA1ni8Gt0Fsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751281831; c=relaxed/simple;
-	bh=+BOYa1bEo5ZDlypfuZvzBaBPPnAqniD/s4YGygPYyxQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=inNYANDMTat06GaZ00T7JazJsURi/wJM8pqaq71Klun1kFCXF2/xUkFv1CJneNLb0W5wZK78DBJjaaZiZPqLCSiF+fpp/XQUFpZb4mVv1XgKZbPUYxG1HcU+lm2rWpUbsSBMvUJTN0PbVL0+P5I5CIk//eeBsJNAXin26x4TvLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HdtRR1b5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751281828;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M51SNgRSdkBVqofCljCWPGL6IaM6V48QvSeJNOH04Cs=;
-	b=HdtRR1b5YgkTjd7Z2gkHxm2Seqr6ZL7UVWjVj2koR3G1EHZ+nnCT8bY3xIIpmpuOr1Af23
-	1upGzvs2ilA/3XDrjI2Jd/2Ab70jX4HYpjJ+F1LT2QQDnIl3zb54UJzoLmQ4kNnAr2P7ub
-	gijFZTFh2UQUghA82J4CFQPDP6l7MtI=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-176-QYH3VOGfO4-EwImFYfuMPw-1; Mon, 30 Jun 2025 07:10:27 -0400
-X-MC-Unique: QYH3VOGfO4-EwImFYfuMPw-1
-X-Mimecast-MFC-AGG-ID: QYH3VOGfO4-EwImFYfuMPw_1751281826
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-60c6d568550so1800021a12.2
-        for <linux-pci@vger.kernel.org>; Mon, 30 Jun 2025 04:10:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751281826; x=1751886626;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M51SNgRSdkBVqofCljCWPGL6IaM6V48QvSeJNOH04Cs=;
-        b=l+Xva0Z9NCDToaBPHQoyUZcg4Etk84PB2t1UKpKbjJV1Wtzk3qAqPW6oWf9IyGT4aN
-         tMnsEBC4+gNvak2XBDY8u7T5F5fx1GME75NB3lPyP0jxu87eyASThPUTpNVuaG+mxPgf
-         QBxUbKQAojG45zdsocKH3LAL8+/yLgr04xr5duQy5DZdbwFyEMZOH1S3HqWfKkhkKtnL
-         +/ltJeiAGaAGB5juK9ENvLfKHYCnfmZuZp4Urmo5KNr2/BxApyJeGo0b+pAm+XPxyVpW
-         xqUErx7x/GRGG47YR/YjWD7vkFrDVCyMx8ka51i7AduI186bk2qlgEC5JgXxw+GmOAwM
-         gNqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHOWvo9oXsxOidf8GJQSXzJzAvd676JYZOAgi0DS8QDN+r/ILGQQ2p9nUTl4oQXvk4pbbvfiIK1wQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1LkUHbmaGQdZCdEGAVC7dJeBAc4CrS0UJ68Rfz7DRpoRpg5uN
-	dnGTBPgoo3iKt+R6BSzy1ToULAoJ0LPDu1a03Uh6pgiL+SFiBKQVtNIOQy8+FHwyYMHcuuYq6N0
-	ibxHacZYZ5wj2Msfh9FSAV+dMSrV42brvYwtAJ3iQuJcLqwi9eaeLtRkT0PpQdw==
-X-Gm-Gg: ASbGnctKsn2C/We1oYjqi04FavQ2gvyxAQjkuncgJd45YV1YkjtZ/TvDKguB7e2/oRV
-	c8OZyL2dDt9nsRLrI0pNNaX0o4B4PaW5PtRgh8lP0EZT8ZnuNT7ptbpz6a1T/DELMw2yYh2FLlf
-	Fn7jblf1lc6c8PWVb5O0qg3Vh+HzjyRCtb5Q/ln0KjFu3wY/+cUq19z5WNz7FuANukctiY2t/pS
-	XNkVJJCVRSzbmErw5UttpiivVuXH/j1csQiPNvJ/xM8UUlBdVRNwin/o97xGYXW+qc4SHPj/yEO
-	LjorrevKo7xiAGGadDPl09QOn3UP2FfFBvHPUqyxkp0l2qD9+B+covHbB3by/JxisagZSQRMkAC
-	dlJgmnMtgJC9D6FH6JRUqRLvkyHNlHVgpziYVYMf4PCSytXmFdsYlHhywCa0Ba4nCC5SzFLuJ3w
-	==
-X-Received: by 2002:a05:6402:2550:b0:60c:4220:5d89 with SMTP id 4fb4d7f45d1cf-60c88e049ffmr10654097a12.23.1751281826063;
-        Mon, 30 Jun 2025 04:10:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFq6/wmQdRyWuusd+TrsspGtgm4nht0FD4qB/wN9wyan/H6VbfFrLbQcWsRb+AImUtwr0ZQ5A==
-X-Received: by 2002:a05:6402:2550:b0:60c:4220:5d89 with SMTP id 4fb4d7f45d1cf-60c88e049ffmr10654051a12.23.1751281825601;
-        Mon, 30 Jun 2025 04:10:25 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c831cb724sm5730480a12.53.2025.06.30.04.10.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 04:10:25 -0700 (PDT)
-Message-ID: <e0bcd0a8-dbb5-4272-a549-1029f4dd0e41@redhat.com>
-Date: Mon, 30 Jun 2025 13:10:24 +0200
+	s=arc-20240116; t=1751281883; c=relaxed/simple;
+	bh=OybGLyCO6EfCZ/xTwqrIeBuFpkzCWVNaO/F4j45AdAY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gcytqUBrvaFqcv8OPQvITWugabVGc8wAZEESA7I4h0rYm2rAKwlJ+Z93+DqJ92tw9gMjEFflbKGESkmj9Uq44vda/YnMgIcTwbtfUUGQSc1QBfJpyn0dC1HgTwvhGRDxcsNTOfBnbQJAKdu0Tp+raYK4OTh/fnIMI3YuSXQ1N4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OqTiS3S9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3893FC4CEE3;
+	Mon, 30 Jun 2025 11:11:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751281882;
+	bh=OybGLyCO6EfCZ/xTwqrIeBuFpkzCWVNaO/F4j45AdAY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OqTiS3S9cTb4XEETk2nCa0Pwd0p9/TnezTOgam963XLBtoX29QXX2XrKXtUsot4Ic
+	 fIFG86IRXZ3kOllqoF7lQetQBkklWAj7wW3JqdJpz7pLBVBAhU3g6ZV/+Q0PAS1d25
+	 zgPn3E7a75Hzu4weS9zSkkMOmFRsnD6Ghu6L9DX539652g6GxBy9L2G3T0CaVVvDY7
+	 6MhJPwessLOXw2K7GMoxCXhRDy5g/mNfx1bxhmJ2F4xWzcfEDtk1ZgkjpbWOwf1zs9
+	 UnJyD4aBniquvMSfu3PNZGdm9lISBGEwWpKUbEGamVU0qeYEUdFXx7SVry+kFu4vGy
+	 7n74gnqdTS+3w==
+Message-ID: <31415739-88cd-4350-9fd4-04b99b29be89@kernel.org>
+Date: Mon, 30 Jun 2025 13:11:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,93 +50,118 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] agp/amd64: Bind to unsupported devices only if AGP is
- present
-From: Hans de Goede <hdegoede@redhat.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Ben Hutchings <ben@decadent.org.uk>, David Airlie <airlied@redhat.com>,
- Bjorn Helgaas <helgaas@kernel.org>, Joerg Roedel <joro@8bytes.org>,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Andi Kleen <ak@linux.intel.com>, Ahmed Salem <x0rw3ll@gmail.com>,
- Borislav Petkov <bp@alien8.de>, dri-devel@lists.freedesktop.org,
- iommu@lists.linux.dev, linux-pci@vger.kernel.org
-References: <f8ff40f35a9a5836d1371f60e85c09c5735e3c5e.1750497201.git.lukas@wunner.de>
- <b73fbb3e3f03d842f36e6ba2e6a8ad0bb4b904fd.camel@decadent.org.uk>
- <aFalrV1500saBto5@wunner.de>
- <279f63810875f2168c591aab0f30f8284d12fe02.camel@decadent.org.uk>
- <aFa8JJaRP-FUyy6Y@wunner.de>
- <9077aab5304e1839786df9adb33c334d10c69397.camel@decadent.org.uk>
- <98012c55-1e0d-4c1b-b650-5bb189d78009@redhat.com>
- <aFwIu0QveVuJZNoU@wunner.de>
- <eb98477c-2d5c-4980-ab21-6aed8f0451c9@redhat.com>
-Content-Language: en-US, nl
-In-Reply-To: <eb98477c-2d5c-4980-ab21-6aed8f0451c9@redhat.com>
+Subject: Re: [PATCH v5 01/14] dt-bindings: pci: cadence: Extend compatible for
+ new RP configuration
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>,
+ Hans Zhang <hans.zhang@cixtech.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>, "mani@kernel.org" <mani@kernel.org>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "fugang.duan@cixtech.com" <fugang.duan@cixtech.com>,
+ "guoyin.chen@cixtech.com" <guoyin.chen@cixtech.com>,
+ "peter.chen@cixtech.com" <peter.chen@cixtech.com>,
+ "cix-kernel-upstream@cixtech.com" <cix-kernel-upstream@cixtech.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250630041601.399921-1-hans.zhang@cixtech.com>
+ <20250630041601.399921-2-hans.zhang@cixtech.com>
+ <20250630-heretic-space-bullfrog-d6b212@krzk-bin>
+ <afeda0c7-1959-4501-b85b-5685698dc432@cixtech.com>
+ <CH2PPF4D26F8E1CC95F84FFBB099955A065A246A@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CH2PPF4D26F8E1CC95F84FFBB099955A065A246A@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On 25-Jun-25 8:43 PM, Hans de Goede wrote:
-> Hi,
+On 30/06/2025 10:06, Manikandan Karunakaran Pillai wrote:
 > 
-> On 25-Jun-25 4:33 PM, Lukas Wunner wrote:
->> On Wed, Jun 25, 2025 at 04:08:38PM +0200, Hans de Goede wrote:
->>> Lukas made me aware of this attempt to fix the KERN_CRIT msg, because
->>> I wrote a slightly different patch to fix this:
->>>
->>> https://lore.kernel.org/dri-devel/20250625112411.4123-1-hansg@kernel.org/
->>>
->>> This seems like a cleaner fix to me and something which would be good
->>> to have regardless since currently the driver_attach() call is doing
->>> too much work because the promisc table catches an unnecessary wide
->>> net / match matching many PCI devices which cannot be AGP capable
->>> at all.
+> 
+>> EXTERNAL MAIL
 >>
->> So how do you know that all of these unsupported devices have
->> PCI_CLASS_BRIDGE_HOST?
-> 
-> The top of the driver says
-> 
->  * This is a GART driver for the AMD Opteron/Athlon64 on-CPU northbridge.
->  * It also includes support for the AMD 8151 AGP bridge
-> 
-> Note this only talks about north bridges.
-> 
-> Also given the age of AGP, I would expect the agp_amd64_pci_table[]
-> to be pretty much complete and the need for probing for unknown AGP
-> capable bridges is likely a relic which can be disabled by default.
-> 
-> Actually the amd64-agp code is weird in that has support for
-> unknown AGP bridges enabled by default in the first place.
-> 
-> The global probe unknown AGP bridges bool which is called
-> agp_try_unsupported_boot is false by default.
-> 
-> As discussed in the thread with my patch, we should probably
-> just change the AMD specific agp_try_unsupported to default
-> to false too.
-> 
->> The only thing we know is that an AGP
->> Capability must be present.
 >>
->> In particular, AGP 3.0 sec 2.5 explicitly allows PCI-to-PCI bridges
->> in addition to Host-to-PCI bridges.
+>>
+>>
+>> On 2025/6/30 15:30, Krzysztof Kozlowski wrote:
+>>> EXTERNAL EMAIL
+>>>
+>>> On Mon, Jun 30, 2025 at 12:15:48PM +0800, hans.zhang@cixtech.com wrote:
+>>>> From: Manikandan K Pillai <mpillai@cadence.com>
+>>>>
+>>>> Document the compatible property for HPA (High Performance
+>> Architecture)
+>>>> PCIe controller RP configuration.
+>>>
+>>> I don't see Conor's comment addressed:
+>>>
+>>> https://urldefense.com/v3/__https://lore.kernel.org/linux-
+>> devicetree/20250424-elm-magma-
+>> b791798477ab@spud/__;!!EHscmS1ygiU1lA!Bo-
+>> ayMVqCWXSbSgFpsBZzgk1ADft8pqRQbuOeAhIuAjz0zI015s4dmzxgaWKycqKMn
+>> 1cejS8kKZvjF5xDAse$
+>>>
+>>> You cannot just send someone's work and bypassing the review feedback.
 > 
-> Ok, so we can add a second entry to the agp_amd64_pci_promisc_table[]
-> to match PCI to PCI bridges just to be sure, that still feels
-> cleaner to me.
+> I thought the comment was implicitly addressed when the device drivers were separated out based on other review comments in this patch.
+> To make it more clear, in the next patch I will add the following description for the dt-binding patch
+> 
+> "The High performance architecture is different from legacy architecture controller in design of register banks, 
+> register definitions, hardware sequences of initialization and is considered as a different device due to the 
+> large number of changes required in the device driver and hence adding a new compatible."
+That's still vague. Anyway this does not address other concern that the
+generic compatible is discouraged and we expect specific compatibles. We
+already said that and what? You send the same patch.
 
-ping? It would be good to get some consensus on how to
-fix this and move forward with a fix. Either the patch from
-this thread; or my patch:
+So no, don't send the same patch.
 
-https://lore.kernel.org/dri-devel/20250625112411.4123-1-hansg@kernel.org/
-
-Works for me, the most important thing here is to get this
-regression fixed.
-
-Regards,
-
-Hans
-
+Best regards,
+Krzysztof
 
