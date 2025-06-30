@@ -1,150 +1,264 @@
-Return-Path: <linux-pci+bounces-31103-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31104-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 604BAAEE6C7
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 20:32:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18378AEE6E3
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 20:38:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C7E41BC15F1
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 18:32:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A4A917DA03
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 18:38:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4CE428C2C7;
-	Mon, 30 Jun 2025 18:32:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BDAA28DEEE;
+	Mon, 30 Jun 2025 18:37:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIn8dNDW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cN0BY4IO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0911672613;
-	Mon, 30 Jun 2025 18:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539ED1C5D57;
+	Mon, 30 Jun 2025 18:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751308322; cv=none; b=KM4x5qvEAUC5eFWMn3irez6Vld0DKgo5ueINEeb6t5oM992q9fVeRGOKTvK1foVfc41XLJ2d6vGvhIKm4TkfrS0tYRSwMm719NVbr10utWsCZwj7q0Z0jQt8nboRZCI6iW8RsF7vKgs9COcE2eiplWI1tTmu5bi6YzY4iGST0Y8=
+	t=1751308627; cv=none; b=VagqheQpqhmNFawEU0R2xox5q1dAeRuQ6mOmUb2oYR0LOfgHquLSbNMt9E4j4ruvpStUD7EYUInJ0lYWVFyphBQsCtDXqjA/zJ2SfMaVcm52pjDjCIkHZeWjmif/laKftCB8vvL3FcCP8lcrglkPUpjg5PCSyj9dfZjeY0hanuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751308322; c=relaxed/simple;
-	bh=cg5QB42byw5/eyDVnJ7rJQrWcmUM7VDs7F+Ui6B2qiA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jxrFq9cUNgKQhj0aEx2RvZylPiloOhkVLtCvl9VyeLQ8r/80F8wG1dsSe8DhLuPtOtfuGRrTrNxs89biomMDi8xAZC0JwEhZTQOvtrirooA5mmZb4aTWyXz91wS8hRICfuAx98kCizM6qGadLlJGVdO1RCKwPftQFyYvUyE7QfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PIn8dNDW; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32ca160b4bcso48333691fa.3;
-        Mon, 30 Jun 2025 11:32:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751308319; x=1751913119; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ai6tAv34puQfBTGh9QvYgWi5UihLDDoPAxs87G2TzgY=;
-        b=PIn8dNDW/d9jv1JQmH4PZS552mEzVRW3DTjOzAexv6QWmOuE/U+DBr3S4ZAtxAweqz
-         dSGIgap+ioS56T2JTfC7urH2DP0mh0JTf5d+2g25NbdS1XXcluCRYND3FXfwpQeRTAUC
-         hXb8s8LWr954l9UJc/R7aGD13oMmvLMFUNyMV1nBMmgofSmn0cvbDUCOsTzPpgAyrFpS
-         qU+M4HPAIPLIM24dwXPP1rzSHXRSo2DXwx/JJBA/stlnt+rC4CLpoI4YxOr7o+AweAfk
-         u0HZTqXt8oY3HMFpYwOHezRgoZXvxRrbX+zv2GKZqfA7vTRM+NRamIQF9zVP5r/yGGbL
-         BMEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751308319; x=1751913119;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ai6tAv34puQfBTGh9QvYgWi5UihLDDoPAxs87G2TzgY=;
-        b=YJCsEXJgXUbLuwGAW7LtBDzdwCVrcDIXR8dLv6+H3NhYBmbiyiu3n5B3NEnoqEYT5w
-         rdTwUQFCxDIJpd/G3UmpXW/sEvk8RMtTdEYNkIITlX/Kq7rLFnc+RCs6xHxYoyW7CoWu
-         uPdEdQ9Germ4dH5556HGsV2urab8njVsD2idm4XpM90sjQaPPMOaJ5abJftEb8WERIb8
-         IgoKSK12ZCpRSkPK+UOk1i+ndynRlJi9V2Av7hIyOS1VtKRPwuj1geM7g0+HK2V4RJhY
-         2d4p0WHeaeUwcQu/TPRY3A1orPcVg19axfsU8s+izKtbwMmPCAptO9EEDUTkob1Cent0
-         FQFA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4qxkKUTiWszud5upcoO6BoHz7oIUDWTPGVcnDjK26iuiABA6O8foFD6ILTqyi/w7pp1n0xsPOCHNB@vger.kernel.org, AJvYcCUCpZflwYH2qm49UlF26yeWizucelDvfy/cSNX/yeN8YxEKKdymGX42AAttk8ydUOC3L1gIuLkTuvGI/PM=@vger.kernel.org, AJvYcCV0KZXAFkww8yhOy9kFeGnDV+GoadYqOcJkFvzkxnym1/r8CnxHd6mzCXmTXTplr/0o0XXHWoi7Akc=@vger.kernel.org, AJvYcCWgrO0v89lfLOyHYp3LrRJx+4Pk/LnmB3HrnF6s5vGvdoCAPm4PWMxyPWZQTvz5m7TiqqlGSYiANN0DQRI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHPjMKAhOmG2+m2z/touqSDn90gCZv+hqbJHEKh3cMjJKm9QiU
-	LKWJE2HkQgpvnS49BhR7iGjQh/RzxjH4l55mWCY10skO4qOGCmkYnbq+qi0VqNkSLbdKs+QL0yM
-	jeqjKhBL/wa4Ctv0D3A4wyJ2Qd03tvzwO+5l6xWE=
-X-Gm-Gg: ASbGncsuPhilzNOfF43XQqQt3kk8U4hY39HK0OgHag5t18PvMcGtwAfFgxmWSW/l+6b
-	Lv5uuXsglx5dM++wi7ET453oaaE/NBRGHMt9o+y+BDzT2Qfq96vkr9Uc2yZXMYJ0tqZ2bQbsea+
-	REUdL0JCzBAv5sAF0Tx4kfVlU2p9MpyYm8JnUZ+SoEyNk=
-X-Google-Smtp-Source: AGHT+IFFlmIm+enc9TVfwVEzI5i5UrpTUkxdFArCLPINzmek/bvv2i80hFOIl+yU0HrPhUHbgUTt5az/k7cjhYRZ5tg=
-X-Received: by 2002:a2e:8e74:0:b0:32a:7826:4d42 with SMTP id
- 38308e7fff4ca-32cdc50d72amr34297321fa.31.1751308318788; Mon, 30 Jun 2025
- 11:31:58 -0700 (PDT)
+	s=arc-20240116; t=1751308627; c=relaxed/simple;
+	bh=c9uAtQKv4NYSwOH3r6TmzxlDwchzoTPDdAumVK3QfAE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j9ljZb2ZkYUtDnBjYW+h4OcgimPKR0kThJqQ1T3bBE953/h1Og7Utq6JIWlipkN4dp6Lrn8JZ67VS2GM40ACvhY/BrhKveg450F98aYK+Qbj94ahfhjNaFqn+9MnCtwganSuEIE2cSsXU58OFBDBAaFW3hGB+kP5j+itMHvvngo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cN0BY4IO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30071C4CEE3;
+	Mon, 30 Jun 2025 18:37:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751308626;
+	bh=c9uAtQKv4NYSwOH3r6TmzxlDwchzoTPDdAumVK3QfAE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cN0BY4IOJa5X2g2U3gCon69bn9LJ3stx8QA5hrzXp/BuSkQlIBXr9owVFkfIQTC+i
+	 gbevZsHJPC1WyYnYvdPYEL91IJ2/N6DoxveR04QbFyx6sA2nWsmVNYb+lJgXF96SeX
+	 fTjZxs0DpCyyGxjUuaRuWOYr6/l9sIVsSazrq5LY2WB2f0ldsBh5FxaOJ/LUm5hb/G
+	 f+VS55iyLyYAY0W6MI5CHOqOhkPU+GCAeYMEAit1eh6ZOWaRVokC0AYuKghiH9ePAu
+	 1USlB1R/WPC6UZHa4PM5WQsndNqeQ7z2FC8TedHUsWzGl4QbBpdCr6Ld4RD2WKYpPy
+	 9JTJKfTYMm60g==
+Message-ID: <8f9efe23-c774-477d-97ad-8e22532ad6b2@kernel.org>
+Date: Mon, 30 Jun 2025 14:37:06 -0400
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507-pci-tegra-module-v6-0-5fe363eaa302@gmail.com> <nz76wk5yqytag255jijxlyuodzpo3fm6d5coxutqrd7tgomzxm@pwzvpv4frjxu>
-In-Reply-To: <nz76wk5yqytag255jijxlyuodzpo3fm6d5coxutqrd7tgomzxm@pwzvpv4frjxu>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Mon, 30 Jun 2025 13:31:46 -0500
-X-Gm-Features: Ac12FXy1RvVgqtIu_YbU3P5gESjgnNVHKx_yI5vyivJxu6NSFHgJgYSIdjaX3dw
-Message-ID: <CALHNRZ9WYJef8+QyCfpkxLhUj_KRY=kZisEwq=arrTxXXfCknA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/3] PCI: tegra: Allow building as a module
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 9/9] PCI: Add a new 'boot_display' attribute
+To: Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
+ Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+ "open list:SOUND" <linux-sound@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+References: <20250627043108.3141206-1-superm1@kernel.org>
+ <20250627043108.3141206-10-superm1@kernel.org>
+ <41587824-4a05-4ead-b24c-4729007cd663@suse.de>
+ <8878af70-3eb8-495b-b8df-43a10285c4f5@kernel.org>
+ <732aeb75-71e7-49e7-a5f2-2080ee94a273@suse.de>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <732aeb75-71e7-49e7-a5f2-2080ee94a273@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025 at 1:17=E2=80=AFAM Manivannan Sadhasivam <mani@kernel.=
-org> wrote:
->
-> On Wed, May 07, 2025 at 10:25:51PM -0500, Aaron Kling via B4 Relay wrote:
->
-> You should always add the context of the series in the cover letter.
->
-> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > ---
-> > Changes in v6:
-> > - Remove unused debugfs cleanup function, as caught by kernel ci
-> > - Link to v5: https://lore.kernel.org/r/20250505-pci-tegra-module-v5-0-=
-827aaac998ba@gmail.com
-> >
-> > Changes in v5:
-> > - Copy commit message exactly word for word on patch 1, as required by =
-reviewer
-> > - Delete remove callback in patch 3, per request
-> > - Don't clean up debugfs, per request, which drops patch 4 entirely
-> > - Link to v4: https://lore.kernel.org/r/20250505-pci-tegra-module-v4-0-=
-088b552c4b1a@gmail.com
-> >
-> > Changes in v4:
-> > - Updated commit messages for patches 1 and 2, per review
-> > - Link to v3: https://lore.kernel.org/r/20250502-pci-tegra-module-v3-0-=
-556a49732d70@gmail.com
-> >
-> > Changes in v3:
-> > - Add patch to drop remove callback, per request
-> > - Link to v2: https://lore.kernel.org/r/20250428-pci-tegra-module-v2-0-=
-c11a4b912446@gmail.com
-> >
-> > Changes in v2:
-> > - Add patch to export tegra_cpuidle_pcie_irqs_in_use as required when
-> >   building pci-tegra as a module for arm
-> > - Drop module exit to prevent module unloading, as requested
-> > - Link to v1: https://lore.kernel.org/r/20250420-pci-tegra-module-v1-0-=
-c0a1f831354a@gmail.com
-> >
-> > ---
-> > Aaron Kling (3):
-> >       irqdomain: Export irq_domain_free_irqs
-> >       cpuidle: tegra: Export tegra_cpuidle_pcie_irqs_in_use
->
-> I need an ACK from the cpuidle maintainers to take these 3 patches throug=
-h PCI
-> tree.
+On 6/30/2025 2:24 AM, Thomas Zimmermann wrote:
+> Hi
+> 
+> Am 27.06.25 um 17:37 schrieb Mario Limonciello:
+>> On 6/27/2025 2:07 AM, Thomas Zimmermann wrote:
+>>> Hi
+>>>
+>>> Am 27.06.25 um 06:31 schrieb Mario Limonciello:
+>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>
+>>>> On systems with multiple GPUs there can be uncertainty which GPU is the
+>>>> primary one used to drive the display at bootup. In order to 
+>>>> disambiguate
+>>>> this add a new sysfs attribute 'boot_display' that uses the output of
+>>>> video_is_primary_device() to populate whether a PCI device was used for
+>>>> driving the display.
+>>>>
+>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>> ---
+>>>> v6:
+>>>>   * Only show for the device that is boot display
+>>>>   * Only create after PCI device sysfs files are initialized to ensure
+>>>>     that resources are ready.
+>>>> v4:
+>>>>   * new patch
+>>>> ---
+>>>>   Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
+>>>>   drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++ 
+>>>> ++++
+>>>
+>>> The code looks good. Just one more question: could this be added 
+>>> independently from the PCI bus (at a reasonable cost)? There are 
+>>> other busses that can host the boot display. Alternatively, we'd add 
+>>> this attribute per bus as needed.
+>>
+>> It depends upon the underlying hardware implementation.  On x86 it's 
+>> always PCI and so I realized there is a requirement that PCI resources 
+>> are setup before screen_info event works.
+>>
+>> That is the v5 version of this patch would have had a potential race 
+>> condition with userspace where boot_display didn't always show '1' if 
+>> userspace read it too quickly.
+>>
+>> Other architecture's hardware implementation might have similar problem.
+>>
+>> So in summary I think it would be better to do it per-bus.  If we 
+>> realize there is indeed code duplication we can always move this to a 
+>> common helper at that point.
+> 
+> Ok, makes sense. With the kernel test robot's issues fixed:
+> 
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
 
-Reminder about this series. I'm normally interacting with the tegra
-maintainers, but I don't particularly care which tree it goes through
-as long as something that works gets merged. So, can one of the
-cpuidle maintainers take a quick look through this, please?
+Thanks, I've got a fix locally for it.
+> 
+> I guess that interface also needs some sort of OK from user-space devs?
+> 
 
-Aaron
+Who needs to OK it?  I do have MR's for matching userspace 
+implementations mentioned in the cover letter already.
+
+> Best regards
+> Thomas
+> 
+>>
+>>>
+>>> Best regards
+>>> Thomas
+>>>
+>>>>   2 files changed, 54 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/ 
+>>>> Documentation/ ABI/testing/sysfs-bus-pci
+>>>> index 69f952fffec72..8b455b1a58852 100644
+>>>> --- a/Documentation/ABI/testing/sysfs-bus-pci
+>>>> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+>>>> @@ -612,3 +612,11 @@ Description:
+>>>>             # ls doe_features
+>>>>             0001:01        0001:02        doe_discovery
+>>>> +
+>>>> +What:        /sys/bus/pci/devices/.../boot_display
+>>>> +Date:        October 2025
+>>>> +Contact:    Linux PCI developers <linux-pci@vger.kernel.org>
+>>>> +Description:
+>>>> +        This file indicates the device was used as a boot
+>>>> +        display. If the device was used as the boot display, the file
+>>>> +        will be present and contain "1".
+>>>> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+>>>> index 268c69daa4d57..cc766461de1da 100644
+>>>> --- a/drivers/pci/pci-sysfs.c
+>>>> +++ b/drivers/pci/pci-sysfs.c
+>>>> @@ -30,6 +30,7 @@
+>>>>   #include <linux/msi.h>
+>>>>   #include <linux/of.h>
+>>>>   #include <linux/aperture.h>
+>>>> +#include <asm/video.h>
+>>>>   #include "pci.h"
+>>>>   #ifndef ARCH_PCI_DEV_GROUPS
+>>>> @@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
+>>>>       NULL,
+>>>>   };
+>>>> +static ssize_t boot_display_show(struct device *dev, struct 
+>>>> device_attribute *attr,
+>>>> +                 char *buf)
+>>>> +{
+>>>> +    return sysfs_emit(buf, "1\n");
+>>>> +}
+>>>> +static DEVICE_ATTR_RO(boot_display);
+>>>> +
+>>>>   static ssize_t boot_vga_show(struct device *dev, struct 
+>>>> device_attribute *attr,
+>>>>                    char *buf)
+>>>>   {
+>>>> @@ -1246,6 +1254,37 @@ static int pci_create_attr(struct pci_dev 
+>>>> *pdev, int num, int write_combine)
+>>>>       return 0;
+>>>>   }
+>>>> +/**
+>>>> + * pci_create_boot_display_file - create a file in sysfs for @dev
+>>>> + * @pdev: dev in question
+>>>> + *
+>>>> + * Creates a file `boot_display` in sysfs for the PCI device @pdev
+>>>> + * if it is the boot display device.
+>>>> + */
+>>>> +static int pci_create_boot_display_file(struct pci_dev *pdev)
+>>>> +{
+>>>> +#ifdef CONFIG_VIDEO
+>>>> +    if (video_is_primary_device(&pdev->dev))
+>>>> +        return sysfs_create_file(&pdev->dev.kobj, 
+>>>> &dev_attr_boot_display.attr);
+>>>> +#endif
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +/**
+>>>> + * pci_remove_boot_display_file - remove the boot display file for 
+>>>> @dev
+>>>> + * @pdev: dev in question
+>>>> + *
+>>>> + * Removes the file `boot_display` in sysfs for the PCI device @pdev
+>>>> + * if it is the boot display device.
+>>>> + */
+>>>> +static void pci_remove_boot_display_file(struct pci_dev *pdev)
+>>>> +{
+>>>> +#ifdef CONFIG_VIDEO
+>>>> +    if (video_is_primary_device(&pdev->dev))
+>>>> +        sysfs_remove_file(&pdev->dev.kobj, 
+>>>> &dev_attr_boot_display.attr);
+>>>> +#endif
+>>>> +}
+>>>> +
+>>>>   /**
+>>>>    * pci_create_resource_files - create resource files in sysfs for 
+>>>> @dev
+>>>>    * @pdev: dev in question
+>>>> @@ -1654,9 +1693,15 @@ static const struct attribute_group 
+>>>> pci_dev_resource_resize_group = {
+>>>>   int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
+>>>>   {
+>>>> +    int retval;
+>>>> +
+>>>>       if (!sysfs_initialized)
+>>>>           return -EACCES;
+>>>> +    retval = pci_create_boot_display_file(pdev);
+>>>> +    if (retval)
+>>>> +        return retval;
+>>>> +
+>>>>       return pci_create_resource_files(pdev);
+>>>>   }
+>>>> @@ -1671,6 +1716,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev 
+>>>> *pdev)
+>>>>       if (!sysfs_initialized)
+>>>>           return;
+>>>> +    pci_remove_boot_display_file(pdev);
+>>>>       pci_remove_resource_files(pdev);
+>>>>   }
+>>>
+>>
+> 
+
 
