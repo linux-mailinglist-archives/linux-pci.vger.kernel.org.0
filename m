@@ -1,300 +1,295 @@
-Return-Path: <linux-pci+bounces-31054-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31055-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F776AED569
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 09:19:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31103AED56B
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 09:20:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4551F1897B02
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 07:19:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2BA4C3A858E
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 07:20:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FEBC1FDD;
-	Mon, 30 Jun 2025 07:19:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E8E91DF75D;
+	Mon, 30 Jun 2025 07:20:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="l+eLlrqN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJt6Mp4x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90714190072;
-	Mon, 30 Jun 2025 07:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687C91FDD;
+	Mon, 30 Jun 2025 07:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751267973; cv=none; b=BUbhL7cfMs083mdGlUZd9MYCpCoI7Pl8tXGtA4nUrvBeaj+GZFYc4/3Ve9cpFvYHl3LXMwfcltX9XM9Sefs2chXAgWh8xH6apq0FS9t97fqLFPiybw2GBQAVFSPUm8Uxe413U9Z4BEu85Bh053Oc144d7AGDLuuQBGN8tTwNTNU=
+	t=1751268037; cv=none; b=h7quAbLtCLL7H7weCkXiLL1wD9BAQuPhxoJ+W6vjPsnA4+9/28IqchoCfobvcgJK3IXbNUakj7a0QMKSrpGhX3NjaOHjpYH058HIW7IMLYfEmqlK2LUZdVKnG4KtL4DfNOkdpqMBYsVC1EqB8FpzBWl+xA6gjBKlqILk82mggfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751267973; c=relaxed/simple;
-	bh=ToPQLK8RrAyEB6SvkYVTw/FQSTlaE0A5rAz6vEKN9RQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=BySWRgxT+/vgJxQWVR28mS4ZrTXexP2PatACMq6LmDfIiEPimtblf9KxycEH7gs2ons5GtvkTOQAEd60HWzaT7CWUBdPaGDbCvmB/WiryDYZs65iXA2Ob9QOq2SrC+ggLM2fcxmu/dd0a5SSy/IcgNaHKCwujnTOLFOZs5dakQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=l+eLlrqN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U6GGHU002504;
-	Mon, 30 Jun 2025 07:19:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BXT9LfuhHHaK3D0qfEOCg3V3HkEMCSsGXlJJRBerDYw=; b=l+eLlrqNKIuhiNyT
-	AVddxClx1G1EpwHPddm8HYW3Rxou9ZjUYR6ErGUQMzng1lHkcrsTqqE7atldAgpB
-	dlH0WB2WzZUJxcihwCebX9zwK249q7MfN6Y738g+7v1DMuXULGdBUyMUhwvL1+T3
-	3lws9UDNfprM+6vyxTA9yimMy4GIAdbbOuIAjzHt8oF79yunJ8iUZpyVp97RV9FS
-	8VHAUUosdoXs/QdkDgORNQDC8kElinVgNatOT6IkhL07QfnGIgGzSDs6Wylj7zHQ
-	dFMqSG+ByGamK1GUfCBiK6sb56yJJ2/tDIxbGc2JNdDhuTPbM/Q+t9VlpTvYd1BQ
-	MahcpQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kn5j8549-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 07:19:21 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55U7JKCI032309
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 07:19:20 GMT
-Received: from [10.253.38.22] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Mon, 30 Jun
- 2025 00:19:14 -0700
-Message-ID: <8ccd3731-8dbc-4972-a79a-ba78e90ec4a8@quicinc.com>
-Date: Mon, 30 Jun 2025 15:19:12 +0800
+	s=arc-20240116; t=1751268037; c=relaxed/simple;
+	bh=j8gArzniIGkkAWG+ouaYATMEvt6mFEDaFB28LnAOnic=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UcH+KS8BghfuexZ4PSaHhATgV0RGIpGBh5nYP2yaCtklXiVsudLf2Enrmz6njtJW0Stt+PhZp+wwkpYdbJ2gU44Swfe7hXcTUIHB1Huvo75m1lvyKz3SQgoMc+scYWGOUSRS6oJG/4K38QegUWni76JtGg4Sirs6GzFiiRRJ3Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dJt6Mp4x; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-af51596da56so1809497a12.0;
+        Mon, 30 Jun 2025 00:20:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751268034; x=1751872834; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4DttZca4H6CBXm/X6mCOIuNHic7ttctct+0OCFubo14=;
+        b=dJt6Mp4xRQcjAJ63mSG5OIVmeK2yAen95vCjH5T18w4JJvFZvf2pbAsg3mZC0hMRiL
+         Mk6tkjOt8X+3z9uj7lvZrVdBMC6kfppjMZynRacX6RVYzSCMriPo0xKfSpTeyLLHBTrM
+         fjDGmTIZEqvFUtSH7J8Kz3y7CX1ezk36fa3pdVEX7jumJFnerUJvFp1fLhXBN/T3yp9z
+         fEzsU6rM2wq5nr64Xzg7d35ZAMuqkwECi/imh/HGeWMR+olcsXVtRT0XmVmUxNuJWC6a
+         bN6Fj3PQgnY2QspQkcX/xh94HgYuQ09nyT3slwS9VfgSIYeUcKRu2FJ+hyArzXoFLvPG
+         FJKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751268034; x=1751872834;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4DttZca4H6CBXm/X6mCOIuNHic7ttctct+0OCFubo14=;
+        b=gifVlcsNRCvOxE3BJ5Ai5tixWfUtRKtV5p+QGdoTejaUSfGav5kuuSKr9n0z6qewPH
+         2i5rR2aXzYH44FFuvcdNV/5C1hjLXzQWkre8Gp4KRMmK64Awoo12FDAIsibsjel1Y/Mw
+         vSJFeTuE+Acmc0fuaiIdFxsJfIpzOfb462YZSz8ziK/0EKkgVCZw90JK+SAbaPn953yW
+         AfKzMSqPoASPTBtGVVVo/gVvpit+9d3syM1v9e6QAwVWE/qGxXnaUaVhCmooxNqWCIcI
+         DHKRG6b464VrsVJUdzZiL2wM1kOMZdWLcQOqxIdui2Z/Wl5fguXhOOXg+5IEyTUVQ+gn
+         6Hyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbYNUofrKSEcFHJl+Z26NpIjBzuQkNuFj/paOrGH9YTh59pcW1CWJZpNBQmmrCJ79hDiKR2nX3EE6uvoYh@vger.kernel.org, AJvYcCXVQzBnMHWfnrEXxRjdXqjRn1QdI6hq7D21buFwQdQ8zzmMDjT22cwYo59tMJEvSbhYt9p84WrvpeIF@vger.kernel.org, AJvYcCXynW3M36jq/pJxZss67WLDARiietHJwHEerMCy1UPmUH8J9q44DWSZuOmBxXX9yoVk+Hpv8kClNDsl@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaVKhSegSRiLyNfjSLpYvzvCnhm0p7v235r7jq5gKgOMohXVM1
+	QzbX/OcAWiYoYzLQSqlcP1hQ6FOJHflbifUY7kD/N4l5en1tnzsOZfj5Qrbqa20L4z0=
+X-Gm-Gg: ASbGncvfSd3MzPaMRZxDt/gBGqli5JHKXqByDh+P0KeJhm0RS+9qjBd0QathMUEEFrM
+	U4KLcW93jlbSwMhbaALuiOjARrIAE5KvYdHwMMyLsDN5NGv6TN49lJlJeRV+KXZMcAO7xSwozBM
+	MY4oIZNaHABeiaxwVVieRKE8UE/lH7Fej3qIPsD8IHuimF8JymCHqCBca5BeqskFGRBhqpKJLQF
+	ZL4NF2RdvP/Xqux2Qehfcytyy+SLEJ9PrWjouWqs65YVCYwGlX+PsYOpQYH3r+tIpneSVXVCr6a
+	BBuvhgnzW43ZU16hKoQZZaX+kXaSa+aiEeF9ayaJvZ0tk65jw9cFYkxsM7H+1NVo
+X-Google-Smtp-Source: AGHT+IFNfnhS4SJNhSiO7/WTxOgwWl5cz4as13ze1C+5b8UztDamYXc5EtE3RqspmnNrOz2GzvGyGw==
+X-Received: by 2002:a05:6a21:15cf:b0:1fd:f4df:96ed with SMTP id adf61e73a8af0-220a1696177mr16134092637.26.1751268034529;
+        Mon, 30 Jun 2025 00:20:34 -0700 (PDT)
+Received: from localhost.localdomain ([103.149.27.191])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e3029858sm6864109a12.31.2025.06.30.00.20.31
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 30 Jun 2025 00:20:34 -0700 (PDT)
+From: fuqiang wang <fuqiang.wng@gmail.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: wangfuqiang49 <wangfuqiang49@jd.com>,
+	yaozhenguo <yaozhenguo@jd.com>,
+	fuqiang wang <fuqiang.wng@gmail.com>
+Subject: [RFC PATCH] pci hotplug: fix hotplug bug during kernel boot
+Date: Mon, 30 Jun 2025 15:20:28 +0800
+Message-ID: <20250630072028.35178-1-fuqiang.wng@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] PCI: qcom: Add equalization settings for 8.0 GT/s
-To: Manivannan Sadhasivam <mani@kernel.org>
-CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <jingoohan1@gmail.com>,
-        <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
-        <bhelgaas@google.com>, <johan+linaro@kernel.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <neil.armstrong@linaro.org>,
-        <abel.vesa@linaro.org>, <kw@linux.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <qiang.yu@oss.qualcomm.com>,
-        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>
-References: <20250625085801.526669-1-quic_ziyuzhan@quicinc.com>
- <20250625085801.526669-2-quic_ziyuzhan@quicinc.com>
- <uakd5br4e5l24xmb6rxqs2drlt3fcmemfjilxo7ozph6vysjzs@ag3wjtic3qfm>
-From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-In-Reply-To: <uakd5br4e5l24xmb6rxqs2drlt3fcmemfjilxo7ozph6vysjzs@ag3wjtic3qfm>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=KtJN2XWN c=1 sm=1 tr=0 ts=68623a79 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
- a=COk6AnOGAAAA:8 a=FO1-HDWkAmQojB1LmXIA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: bBhI4LbnApoQljt5ywTwSiH7_TmMtlTR
-X-Proofpoint-GUID: bBhI4LbnApoQljt5ywTwSiH7_TmMtlTR
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA1OSBTYWx0ZWRfX1AWcsk9kD/kC
- 1knmlO6pUltJ/qUCIujK1vv+vz4XmQa1gKTT1dp23N6eupwXKD9ESBtS26dS97uaxA0SPy+zHQa
- hPQv8e7VnMFxKvtqWpdtuLjhWamYQ13d3gKlLY2X1vIWAINF8DS3bn78ihslS2Bq+FJ6Aq1Ry9H
- wYZcenxTLkH8aJKmAQi7RxvPaRwf2N9uWbJo59rHJe4xxqJyQm71N38ggESkUDqeTjkM33QV0QH
- SgqRjqKrl80I3/wLTwJHGVZWrhME/8tV02/negbCLh2W0fL2/ChkJwuASFnmNi8/VCJqWNw0QVr
- cGiHX2UlZ2l3TNtLIeuIeAvCDZRt/t4ybNLGUH+WBHYlm04naKncjJ2N8hsEKxZEPFvdwFtr8eN
- /VLGllymQzoFCul0hVlR0Syb7EaC6l+vqgHqELNXvZk8bZMY9lXUQQ2pqxupTFQC9Ox/4Du0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- mlxscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
- clxscore=1015 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506300059
+Content-Transfer-Encoding: 8bit
 
+Performing hotplug operations when the virtual machine is just started
+may cause the virtual machine kernel to trigger a bug_on in x86
+architecture, with the bug_on dmesg as follows:
 
-On 6/25/2025 11:58 PM, Manivannan Sadhasivam wrote:
-> On Wed, Jun 25, 2025 at 04:57:59PM +0800, Ziyue Zhang wrote:
->> Add lane equalization setting for 8.0 GT/s to enhance link stability and
->> aviod AER Correctable Errors reported on some platforms (eg. SA8775P).
->>
->> 8.0 GT/s and 16.0 GT/s require the same equalization setting. This
->> setting is programmed into a group of shadow registers, which can be
->> switched to configure equalization for different speeds by writing 00b,
->> 01b to `RATE_SHADOW_SEL`.
->>
->> Hence program equalization registers in a loop using link speed as index,
->> so that equalization setting can be programmed for both 8.0 GT/s and
->> 16.0 GT/s.
->>
->> Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
->> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
->> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-designware.h  |  1 -
->>   drivers/pci/controller/dwc/pcie-qcom-common.c | 55 +++++++++++--------
->>   drivers/pci/controller/dwc/pcie-qcom-common.h |  2 +-
->>   drivers/pci/controller/dwc/pcie-qcom-ep.c     |  6 +-
->>   drivers/pci/controller/dwc/pcie-qcom.c        |  6 +-
->>   5 files changed, 38 insertions(+), 32 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index ce9e18554e42..388306991467 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -127,7 +127,6 @@
->>   #define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
->>   #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
->>   #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
->> -#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT	0x1
->>   
->>   #define GEN3_EQ_CONTROL_OFF			0x8A8
->>   #define GEN3_EQ_CONTROL_OFF_FB_MODE		GENMASK(3, 0)
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
->> index 3aad19b56da8..ed466496f077 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom-common.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
->> @@ -8,9 +8,11 @@
->>   #include "pcie-designware.h"
->>   #include "pcie-qcom-common.h"
->>   
->> -void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
->> +void qcom_pcie_common_set_equalization(struct dw_pcie *pci)
->>   {
->>   	u32 reg;
->> +	u16 speed, max_speed = PCIE_SPEED_16_0GT;
->> +	struct device *dev = pci->dev;
->>   
->>   	/*
->>   	 * GEN3_RELATED_OFF register is repurposed to apply equalization
->> @@ -19,32 +21,37 @@ void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
->>   	 * determines the data rate for which these equalization settings are
->>   	 * applied.
->>   	 */
->> -	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
->> -	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
->> -	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
->> -	reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
->> -			  GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT);
->> -	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
->> +	if (pcie_link_speed[pci->max_link_speed] < PCIE_SPEED_32_0GT)
->> +		max_speed = pcie_link_speed[pci->max_link_speed];
-> So the logic here is that you want to limit the max_speed to < 32 GT/s because
-> you are not sure if 32 GT/s or more would require the same settings?
->
-> If so, why can't you just simply bail out early if the link speed > 16 GT/s and
-> just use pci->max_link_speed directly? Right now, 32 GT/s or more would be
-> skipped implicitly because you have initialized max_speed to PCIE_SPEED_16_0GT.
->
-> - Mani
+  ------------[ cut here ]------------
+  kernel BUG at kernel/resource.c:792!
+  Oops: invalid opcode: 0000 [#1] PREEMPT SMP PTI
+  CPU: 1 UID: 0 PID: 215 Comm: kworker/u128:5 Not tainted 6.14.0-rc1+ #17
+  Hardware name: JD JCloud Iaas Jvirt, BIOS unknown 2/2/2022
+  Workqueue: kacpi_hotplug acpi_hotplug_work_fn
 
-Hi Mani
+  RIP: 0010:reallocate_resource+0x197/0x1d0
+  Code: 20 48 8b 44 24 28 48 89 43 28 48 8b 44 24 30 48 89 43 30 48 8b 44 24 38 48 89 43 38 e8 12 db ff ff 48 85 c0 0f 84 5d ff ff ff <0f> 0b 48 8b 74 24 08 48 3b 73 08 0f 82 1c ff ff ff 48 89 0b 48 89
+  RSP: 0000:ffffc900008479b0 EFLAGS: 00010282
+  RAX: ffff8881020c73b0 RBX: ffff8881021813b0 RCX: 000000000000343f
+  RDX: 0000000000003400 RSI: ffff8881021813b0 RDI: ffff8881020c73b0
+  RBP: 0000000000000000 R08: ffff8881021863e0 R09: 0000000000000040
+  R10: 0000000000000000 R11: 000000000000343f R12: ffff88810020d6f0
+  R13: ffffc90000847a20 R14: ffff88810020d6f0 R15: ffffffff82edb970
+  FS:  0000000000000000(0000) GS:ffff88842ee80000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000000 CR3: 0000000003036001 CR4: 0000000000170ef0
+  Call Trace:
+   <TASK>
+   ? die+0x32/0x80
+   ? do_trap+0xd9/0x100
+   ? reallocate_resource+0x197/0x1d0
+   ? do_error_trap+0x65/0x80
+   ? reallocate_resource+0x197/0x1d0
+   ? exc_invalid_op+0x4c/0x60
+   ? reallocate_resource+0x197/0x1d0
+   ? asm_exc_invalid_op+0x16/0x20
+   ? reallocate_resource+0x197/0x1d0
+   allocate_resource+0x57/0xd0
+   ? __pfx_pcibios_align_resource+0x10/0x10
+   pci_bus_alloc_from_region+0x1df/0x240
+   ? __pfx_pcibios_align_resource+0x10/0x10
+   ? __pfx_pcibios_align_resource+0x10/0x10
+   ? __pfx_pcibios_align_resource+0x10/0x10
+   pci_bus_alloc_resource+0x86/0xb0
+   ? __pfx_pcibios_align_resource+0x10/0x10
+   _pci_assign_resource+0x9e/0x120
+   ? __pfx_pcibios_align_resource+0x10/0x10
+   pci_assign_resource+0xae/0x290
+   assign_requested_resources_sorted+0x4a/0xb0
+   __assign_resources_sorted+0x491/0x4d0
+   ? __dev_sort_resources+0x9b/0x2a0
+   __pci_bus_assign_resources+0x6f/0x1f0
+   enable_slot+0x25e/0x440
+   ? pci_device_is_present+0x49/0x70
+   acpiphp_check_bridge.part.0+0x117/0x150
+   hotplug_event+0x13d/0x220
+   ? __pfx_acpiphp_hotplug_notify+0x10/0x10
+   acpiphp_hotplug_notify+0x20/0x60
+   acpi_device_hotplug+0xae/0x240
+   acpi_hotplug_work_fn+0x1a/0x30
+   process_one_work+0x184/0x3a0
+   worker_thread+0x24d/0x360
+   ? __pfx_worker_thread+0x10/0x10
+   kthread+0xed/0x220
+   ? finish_task_switch.isra.0+0x88/0x2b0
+   ? __pfx_kthread+0x10/0x10
+   ret_from_fork+0x30/0x50
+   ? __pfx_kthread+0x10/0x10
+   ret_from_fork_asm+0x1a/0x30
+   </TASK>
+  Modules linked in:
 
-I'll update the code according to your feedback in my next submission.
+The cause of the issue is that the enable_slot process in hotplug
+conflicts with the pcibios_init process during kernel initialization.
+This leads to the situation where, in the enable_slot process,
+__dev_sort_resources first links all the resources of the devices
+downstream of the bridge into the head (since there is no parent).
+Subsequently, in the pcibios_init process, pci_claim_resource allocates
+the BIOS-assigned ranges for these devices.
 
-BRs
+  hotplug CPU                              kernel init CPU
+  enable_slot
+  ...
+   __dev_sort_resources
 
-Ziyue
+   //link all resources behind the bus
+   //into head
+                                           pci_bios_init
+                                           ...
+                                             pcibios_allocate_bus_resources
+                                           //alloc resource for all bus
+   //resources linked into head have
+   //sibling and parent
 
->>   
->> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
->> -	reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
->> -		GEN3_EQ_FMDC_N_EVALS |
->> -		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
->> -		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
->> -	reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
->> -		FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
->> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
->> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
->> -	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
->> +	for (speed = PCIE_SPEED_8_0GT; speed <= max_speed; ++speed) {
->> +		reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
->> +		reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
->> +		reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
->> +		reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
->> +			  speed - PCIE_SPEED_8_0GT);
->> +		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
->>   
->> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
->> -	reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
->> -		GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
->> -		GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
->> -		GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
->> -	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
->> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
->> +		reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
->> +			GEN3_EQ_FMDC_N_EVALS |
->> +			GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
->> +			GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
->> +		reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
->> +			FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
->> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
->> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
->> +		dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
->> +
->> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
->> +		reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
->> +			GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
->> +			GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
->> +			GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
->> +		dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
->> +	}
->>   }
->> -EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_equalization);
->> +EXPORT_SYMBOL_GPL(qcom_pcie_common_set_equalization);
->>   
->>   void qcom_pcie_common_set_16gt_lane_margining(struct dw_pcie *pci)
->>   {
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.h b/drivers/pci/controller/dwc/pcie-qcom-common.h
->> index 7d88d29e4766..7f5ca2fd9a72 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom-common.h
->> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.h
->> @@ -8,7 +8,7 @@
->>   
->>   struct dw_pcie;
->>   
->> -void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci);
->> +void qcom_pcie_common_set_equalization(struct dw_pcie *pci);
->>   void qcom_pcie_common_set_16gt_lane_margining(struct dw_pcie *pci);
->>   
->>   #endif
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> index bf7c6ac0f3e3..aaf060bf39d4 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> @@ -511,10 +511,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
->>   		goto err_disable_resources;
->>   	}
->>   
->> -	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT) {
->> -		qcom_pcie_common_set_16gt_equalization(pci);
->> +	qcom_pcie_common_set_equalization(pci);
->> +
->> +	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT)
->>   		qcom_pcie_common_set_16gt_lane_margining(pci);
->> -	}
->>   
->>   	/*
->>   	 * The physical address of the MMIO region which is exposed as the BAR
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->> index c789e3f85655..0fcb17ffd2e9 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->> @@ -298,10 +298,10 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
->>   {
->>   	struct qcom_pcie *pcie = to_qcom_pcie(pci);
->>   
->> -	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT) {
->> -		qcom_pcie_common_set_16gt_equalization(pci);
->> +	qcom_pcie_common_set_equalization(pci);
->> +
->> +	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT)
->>   		qcom_pcie_common_set_16gt_lane_margining(pci);
->> -	}
->>   
->>   	/* Enable Link Training state machine */
->>   	if (pcie->cfg->ops->ltssm_enable)
->> -- 
->> 2.34.1
->>
+However, in the subsequent steps of enable_slot, certain resources may
+be reallocated due to the x86 alignment rule -- "0x00, 0xff region
+modulo 0x400" (see pcibios_align_resource). During this reallocation,
+alignment can cause gaps, leading to allocation failures and resulting
+in the resource reset. Additionally, since this resource has already
+been linked into bus->resource[]->child during the kernel initialization
+process, a strange resource range [0, 0] appears in this chain. This
+causes subsequent devices to be allocated ranges that conflict with
+other resources. For a detailed analysis, see [1]:
+
+This patch will make the hotplug process wait for the pcibios_init
+process in kernel initialization to complete. (However, I am not sure if
+this modification is appropriate, so I would appreciate your advice.)
+
+[1]: https://github.com/cai-fuqiang/md/blob/master/case/guestkernel_hotplug_BUG_ON/kernel_panic.md
+
+Signed-off-by: fuqiang wang <fuqiang.wng@gmail.com>
+---
+ arch/x86/pci/common.c | 16 ++++++++++++++++
+ drivers/acpi/scan.c   |  6 ++++++
+ include/linux/pci.h   |  1 +
+ 3 files changed, 23 insertions(+)
+
+diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+index ddb798603201..06ff04ab2a26 100644
+--- a/arch/x86/pci/common.c
++++ b/arch/x86/pci/common.c
+@@ -37,6 +37,8 @@ unsigned long pirq_table_addr;
+ const struct pci_raw_ops *__read_mostly raw_pci_ops;
+ const struct pci_raw_ops *__read_mostly raw_pci_ext_ops;
+ 
++DECLARE_COMPLETION(pcibios_init_completion);
++
+ int raw_pci_read(unsigned int domain, unsigned int bus, unsigned int devfn,
+ 						int reg, int len, u32 *val)
+ {
+@@ -498,6 +500,17 @@ void __init pcibios_set_cache_line_size(void)
+ 	}
+ }
+ 
++static DEFINE_STATIC_KEY_FALSE(pcibios_init_done);
++
++void arch_wait_pcibios_init_complete(void)
++{
++	if (static_branch_likely(&pcibios_init_done))
++		return;
++
++	wait_for_completion(&pcibios_init_completion);
++	static_branch_enable(&pcibios_init_done);
++}
++
+ int __init pcibios_init(void)
+ {
+ 	if (!raw_pci_ops && !raw_pci_ext_ops) {
+@@ -510,6 +523,9 @@ int __init pcibios_init(void)
+ 
+ 	if (pci_bf_sort >= pci_force_bf)
+ 		pci_sort_breadthfirst();
++
++	complete(&pcibios_init_completion);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 9f4efa8f75a6..a66fbc262fb8 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -21,6 +21,7 @@
+ #include <linux/pgtable.h>
+ #include <linux/crc32.h>
+ #include <linux/dma-direct.h>
++#include <linux/pci.h>
+ 
+ #include "internal.h"
+ #include "sleep.h"
+@@ -435,12 +436,17 @@ static int acpi_generic_hotplug_event(struct acpi_device *adev, u32 type)
+ 	return -EINVAL;
+ }
+ 
++void __weak arch_wait_pcibios_init_complete(void) {}
++
+ void acpi_device_hotplug(struct acpi_device *adev, u32 src)
+ {
+ 	u32 ost_code = ACPI_OST_SC_NON_SPECIFIC_FAILURE;
+ 	int error = -ENODEV;
+ 
+ 	lock_device_hotplug();
++
++	arch_wait_pcibios_init_complete();
++
+ 	mutex_lock(&acpi_scan_lock);
+ 
+ 	/*
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 47b31ad724fa..8078b68a9b0f 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2356,6 +2356,7 @@ static inline void pcibios_penalize_isa_irq(int irq, int active) {}
+ int pcibios_alloc_irq(struct pci_dev *dev);
+ void pcibios_free_irq(struct pci_dev *dev);
+ resource_size_t pcibios_default_alignment(void);
++void arch_wait_pcibios_init_complete(void);
+ 
+ #if !defined(HAVE_PCI_MMAP) && !defined(ARCH_GENERIC_PCI_MMAP_RESOURCE)
+ extern int pci_create_resource_files(struct pci_dev *dev);
+-- 
+2.47.0
+
 
