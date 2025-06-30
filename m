@@ -1,182 +1,168 @@
-Return-Path: <linux-pci+bounces-31088-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31089-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E9DEAEE316
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 17:54:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7BEBAEE485
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 18:28:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9602E3BD216
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 15:54:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 048E27AE691
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 16:25:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7FFC28DF20;
-	Mon, 30 Jun 2025 15:54:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ED2928FFC2;
+	Mon, 30 Jun 2025 16:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OFO0IwV0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023118.outbound.protection.outlook.com [52.101.127.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B612128C2D7;
-	Mon, 30 Jun 2025 15:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.118
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751298891; cv=fail; b=jwuKyBrisMXCo6zGQNlNJVA9uTg5sNjJ3FA80ZutF4jpJgU7/zgCEArlef5H9hcbF7A2LdOkr1e49lYHlYPgjVta3ZIpb4Wl57VNOzzk5sUu5JOgnAeAeHU4U1ceIUumBN2G4jaj8bs1Gm4HN+s9TyPyO4ddAHZKDcQsj5Ixnl0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751298891; c=relaxed/simple;
-	bh=ZI6/tsoFGVkVfH0WAidO7Ep+CZXzygUVi7NDhwH9Sm0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oVXp+6iYIUA5gQJNdzT+U4fml8D61P7JxqgeA6MPH8oqNk6i8OE+AzH/I2saagzzaeDos1ShQqUCRBXEOp9AL7m1GA+P/DgS2CQeNIUqOhGXxqf08oM4F0e9/FXPAkK8hxU+607duWuYStr3NFWpOhgvVoMFfnzJXdmZUcHkiOg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.127.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pW/VrxmIZRjf9jcAr906Nqm7bGKohnDCEe5Xe3q6AEp803/6uvtq/6cBxbi+wAQlrD/VhJWYEvCUIbYbWtuMMQH2nh4VPVUjlOMyqLG4+3cA+ps/c5IWCH5p5714ZAokpbyv25VQ7+nTyL1RnabbxnhAOsxEIIviKMV82Jb/9rPTJN6Gkz+dKg7/CrT1jn0bCpLygj041Ir7KTbaPEp+72q5WSM99jssnj2z9M2sI84HSDjGtxTD7EjLWnxzOFkZw415OC5OpPY+u6lnQ1bvOqt2yVg37Wmc/Raedt5+aqzreXYfef6ZL06Cf7WTEGpMMc7DBiq1vYjbUhz5ltRN2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BDGAi7XZGYsNzuf5B7qihPiTDTHY0yH5qHd4OXjQ+QE=;
- b=pFxCqmMS1N+0iPXQoSmJSKg5aOqPwIjlc9IfdvHyVNVkSE+a7HecGcLDkD0UE0Y21u5Tp9363xutXjJbKWdgePzN/igoR+h7pdTorxFCmG4Ine9hZV6TtMQzOytSefj3ey3/Hz7OL/5p62GpKulk9vsFZncgYTX48BCJAcneYWOXXPdwOcymv27TXBK+/pO0+FjkltTcBgITvCxjt9YSSq1+FCIzFfj5DQRcM/y84e8CLjXrK1bLiDVz83BXh+lMEs7fZLAMTh4Wy+BqmgaZ5oaW2GMocbrHH6PHgvnJgUX5giSXCMMgTpY0yoizSP+1BNqV73WBIc05U7+uhFmZfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SG2PR02CA0121.apcprd02.prod.outlook.com (2603:1096:4:188::21)
- by SEYPR06MB6755.apcprd06.prod.outlook.com (2603:1096:101:165::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.28; Mon, 30 Jun
- 2025 15:54:44 +0000
-Received: from SG1PEPF000082E6.apcprd02.prod.outlook.com
- (2603:1096:4:188:cafe::5a) by SG2PR02CA0121.outlook.office365.com
- (2603:1096:4:188::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.31 via Frontend Transport; Mon,
- 30 Jun 2025 15:54:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG1PEPF000082E6.mail.protection.outlook.com (10.167.240.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8901.15 via Frontend Transport; Mon, 30 Jun 2025 15:54:41 +0000
-Received: from [172.16.64.208] (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id F0CBF44C3CB6;
-	Mon, 30 Jun 2025 23:54:40 +0800 (CST)
-Message-ID: <5e9ddbe4-c94c-4087-8b34-0407ea278888@cixtech.com>
-Date: Mon, 30 Jun 2025 23:54:33 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF75C28DEFC
+	for <linux-pci@vger.kernel.org>; Mon, 30 Jun 2025 16:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751300801; cv=none; b=QyfhY55/KRSGRgmae57xRIvbOjyKUMla9FOCJFGCd2brI/ZIjb+iJhV6wakB1n1nkRPUg/AmEycfO+im/HuRQ+c56lNrPgvF1HGw2wLN9XGFxXCT/P56PPBCICI42HKF3T9YzZYqrTuLeDtStmd3vab+hF6EIcKRdHDn6NUboBQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751300801; c=relaxed/simple;
+	bh=ZYMR7z5T+7I0DbIT2AphsLI9oq3i24aPeQXV7iyq+7M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=IY36v3kirFPhCZYhCfbA9pmf6hme28yEvDPfL4kgJaBVVr165zDUs9/hVB2UADFXdkYcn5Q19KMovHVpDG7h7aeWuWonWbrPmGzYwJAT5dcZT9UMTAdztuk/GoffEywa4n+yokjRWPNytosKc4JAoLFPEYza01NAIjRtRHwR4qI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OFO0IwV0; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60bfcada295so4201823a12.1
+        for <linux-pci@vger.kernel.org>; Mon, 30 Jun 2025 09:26:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751300797; x=1751905597; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=535W8k9pU5sUVdNwdQXzTxnf8TouFsbPOMvqYlYzbaQ=;
+        b=OFO0IwV0VDUks6qHfeiGp1/dKfJCKWcgO6RWOtzyf71T9imsy/Hm5ed1RYAH24S/Ua
+         36PyhOXMeqqgmJ1UDvTm2nLjBqt/X9bux4SwYum705Mi/TpWCcx1hTP+L430TxsnOX/x
+         YOVEwWqQBzg1+7kAyTrKv4M3BX+nvwLHkMnFQZlUxHxqQ/Hk/NyGOsWLtcaY+3WIH4N6
+         Hy+c4A/cErKg0i2kRQnxa73hhiXbVI/iqRLBx7SdsXHXAYXgphVe6c8kTPBqXNm2Z5/A
+         tgicq+SED/IdcMFLq4rAe1y6EpWNjeagJ6u63YiNVFBOPhOS4y7bLjrcTYyaHs+B4PYK
+         e76Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751300797; x=1751905597;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=535W8k9pU5sUVdNwdQXzTxnf8TouFsbPOMvqYlYzbaQ=;
+        b=Rph9vRXgyqfXrn5ck409hSCPzHfYASAAMtKW1L/iTjiWoCgCzr07AYZyP6xA/Y2XzD
+         iZ0EQQSK6sjL3EkAWfdUktnUffge9H1Cu5+zvJrjluiix5K60AU3VwrciJZScpwltumx
+         a7XC3FpQDEcGBzl3834VDyAB0ZnACjAhoKTWIPL86ka3tmZoYgFZHxTy7NcfG39ux5MG
+         nCwmq7IOq1+gQwlNMif83bIgTbC2xcVvBcy3N+/5urFUVwam0cqR2FqaUHAr+CQw0qCQ
+         UbRac9x1aoVoKBrqaYBrMJZi2Wz+lVS01oFzBw0msI6eXu/z3zxBLGJirt0PV+sAh5g2
+         D0ag==
+X-Forwarded-Encrypted: i=1; AJvYcCXwMVst7eQVn/Ne9kw7uXZRaCosqyv3N4HQNnOnFVf22ZdtewJ8q8nL+i7qLF9SyUy640E+k0Y4IU4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7akOmvXFrOfKQMgZVp6zNlk3M3qmrVzD493QNWfeVjMiGDXLY
+	IS17H9yKzY6myquYKVW82RUDjfUdLnBdnNfZDSjHa9DlEvMjW1wC7O5Y3qyRBtl4Ob4=
+X-Gm-Gg: ASbGnctVXi201mKAM1SHtlDHekWm73dE2+hFUFojpJ1/XbKnrte7TfBkqIBi2lIdflv
+	rGzXAn8YiIRWJ4NhOowPxQL0kZI3hwl/NkA80/iYEBI8XH8QaA2K3xpu3SUgW/D00SH8Q1H2Cof
+	1wJ6criUoMeY2MtMraV0I01tBFQdMF/CjujJXN85t/nLoi+BAfbdKFoIjvRi6DfJplntsQOHELe
+	yxZ044JFuJgcNfs4HOwUYPCmkUc+lxEMk3T8R7G1HX3fmfvTHvTRN3Eoc4hoNZey/5HRBj2Dr/l
+	dtpWfuMVW37IYaz9DtZN1N3HElL6AIweXqBsynsAVVb1TeKTCiJCD7PlkBwfH92yMrY/YHfYo2x
+	BOuM=
+X-Google-Smtp-Source: AGHT+IEZUFYK3OlqCsPYEUjbY6KleNynpLo18SzDo4cGFtE9VgvfMNqI4nas16gqs6EKpGcliuTGQg==
+X-Received: by 2002:a17:907:94cc:b0:ad8:8719:f6f3 with SMTP id a640c23a62f3a-ae34fdbbadfmr1268647466b.22.1751300797043;
+        Mon, 30 Jun 2025 09:26:37 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:fb67:363d:328:e253])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35776d0ebsm685350066b.155.2025.06.30.09.26.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 09:26:36 -0700 (PDT)
+Date: Mon, 30 Jun 2025 19:26:34 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Shradha Todi <shradha.t@samsung.com>,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-fsd@tesla.com
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	jingoohan1@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	alim.akhtar@samsung.com, vkoul@kernel.org, kishon@kernel.org,
+	arnd@arndb.de, m.szyprowski@samsung.com, jh80.chung@samsung.com,
+	pankaj.dubey@samsung.com, Shradha Todi <shradha.t@samsung.com>
+Subject: Re: [PATCH v2 09/10] PCI: exynos: Add support for Tesla FSD SoC
+Message-ID: <5ed352de-8319-4e3f-8cce-43a4bb332e66@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 10/14] dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex
- bindings
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, mpillai@cadence.com,
- fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
- cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250630041601.399921-1-hans.zhang@cixtech.com>
- <20250630041601.399921-11-hans.zhang@cixtech.com>
- <20250630-graceful-horse-of-science-eecc53@krzk-bin>
-Content-Language: en-US
-From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <20250630-graceful-horse-of-science-eecc53@krzk-bin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG1PEPF000082E6:EE_|SEYPR06MB6755:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2a6264cf-f941-4044-fbdb-08ddb7ee6d7b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?S3hPenN2YzlVeGR6eSt6eU5JMjNsYUN4M3RaOFhTcVE0UENFZTF5Qm1EdFE5?=
- =?utf-8?B?OGtOeDJLaDJUU01uZ1FzNmpKY2hBNU1namRUSHpTOE9vMmV5VEU1eTBoWGl0?=
- =?utf-8?B?ZWhOTXJjMUUyL1NWd2lWTjBGditNdm9sdFlNT2dBdjBRR3YyZHR1N01pSVdu?=
- =?utf-8?B?RlhYS2N1SzFJai9iTUxlSDl4aHZuYUpDTnVJY012RXRUSytUdDNNYXcwYUlR?=
- =?utf-8?B?WHJhTlpoRU1VdmsydnRObnRMS2Y5UGNsMnZFR0VTVEM2b2xzckRkd2liQk1t?=
- =?utf-8?B?S3dsdDMwRUpVeGF4d3hiaXF5NnlEUCtVWitFVGZ0RCs4WG1kODRsZVE2eUEz?=
- =?utf-8?B?L2N4UnYrL25JdVVqRWVjTWV1R09ydEdNUHV1M2MzRXoyRDdLQU51UkRLcHJG?=
- =?utf-8?B?TExKSTFLS05qYkxNZGNkTERBcFdBSWhYZ1pvcUV6YW55ajVXUlRsWkVMenM1?=
- =?utf-8?B?UTZNdi9oQVp1cEdjY3pja1pzWm1qV0xzM3lJTC9pV2RhQ3lYdGF1MWNYb05M?=
- =?utf-8?B?TStWY2hTaStkVVV3MlhnSUpNOEJnZHlVSExHWDVFTzBGZDZmQ0d3bzRBMnY3?=
- =?utf-8?B?VVlQYzZHbkNTZ3RLZHZobGtWZWlSWWxJaERKak9relFwSDFUcWt5cThvZW8x?=
- =?utf-8?B?NGNkZlpFTmM1WWpUTFBiZm8rdWJGdnF0K2g1OFRSUGQ3OWJYWC8zRHRiK1RX?=
- =?utf-8?B?VWpHTmRCbmtVY0ZtQmRJK3pNalZsT3hnUjRoLzlPdmRBVkc4WnJtMGxQUHFI?=
- =?utf-8?B?emtTa1hKVXVEN2w4NzFGVW81VzNCS1h2YlFLc005bEZtbVp4akowWmY2SVBq?=
- =?utf-8?B?RktQQmFHdjMzNEMzRmJpai9xejJINXFDZ29nejZuTXNSUmtIUmtlTGpzdDJB?=
- =?utf-8?B?WlV4eHVVMXB6eDZvUytXaVd2RGk3NXB4elprdkdWYThQdEloRUVackh3Qmt4?=
- =?utf-8?B?QmR3SWtoNjN4UWhKdnNlY3VyM25vcCtudDFJdGJ0SERLV1g2aU1VRFZyWjVy?=
- =?utf-8?B?ckEvaTdGYlgzNW54N1dVRHRTaTBVSVE1aElKRDl2UEtvU29VOWsvbVBzeVNv?=
- =?utf-8?B?M3dJR0hld0wrNThDQzd0WWtCQnFqa3dXbGdhSEwvbUhoK2hwbUxrK3ZIUkdK?=
- =?utf-8?B?UDczL2N2bEQyQ0FqZDBjM0ZLSDh0MXp6NnU4ZFdxNW1yT0hzY2ZTanNNWCtF?=
- =?utf-8?B?M2laaCtTbHREdllxNGhzdVRhcFg3QUIxcGVmM2RBSUZiR0xKZmxOYlFmZGw5?=
- =?utf-8?B?ckNLaTFnenR6Wkx5ZXkyTk9FV25pTGFCTWt3UFdZVXdSQTBTeVArMkZhdFVj?=
- =?utf-8?B?VFdlSCtzQnoxTTRCYi90ejV6T25zTFJSaXFMYjV2azNmVFZQS0NGRUdXR3RU?=
- =?utf-8?B?TURZT3pJdVZWWHdRSkg5c3IwMUEvSm85S2pQMWEvSW9ZK3R6YjRTNExMUW1E?=
- =?utf-8?B?emFkWnhma2RkekJOamEzTVU3WGg0eDFja1ROcVlHc29HcWlPeHZWREJoOE53?=
- =?utf-8?B?UGdmUzBWQ3d3NHdpTWxTL3ZqZnZLS3VDOVl2WkdRb0ozdVY2Q3locnFyU2ZY?=
- =?utf-8?B?eXZ2bjZ5RHpXOStYL1lsNkJpYjJSb3FmNWk0OHY1UVJrcmtWMkFiTVU4YjBJ?=
- =?utf-8?B?MTNhT1dITGxTdVJqTXUySStMQUlFN3pZclg5Z3dLMW9GL1hpVjczQ3hRaHVP?=
- =?utf-8?B?Vm1lYS9hdVQ3azI0YUtzL3VtMDdrZTJiMHNaQko1Tm1mQ2tlcVFqc2VGVUhj?=
- =?utf-8?B?dGZVcWtPQ3pkQ09iOFhBTy83VkNRTkIzVEp5c2JZOWJqU01peHl0bGROQWhj?=
- =?utf-8?B?b3NCZkFmeTVNaThnZjh1VVR1S3g4cnZseS91OHRTUVBVR1NjaUFnVkk2azJG?=
- =?utf-8?B?UVAyV1BUdnZjY2Z6cFlOSk9JRHZBeXN3V1VkS2huUHdwbno4bmpYTW1PZkdD?=
- =?utf-8?B?U0FlVDVlS2Q2YlVPZXM4NDhDcTZzZmxpanF5VDcrUjY1YmRicHh1K2pwb3Fq?=
- =?utf-8?B?RGgyTWRBTVNVRlI4eWoyZ2J6SDkvckVMa3FLc3R2VHFnQm11MUM3OTRtbDI0?=
- =?utf-8?Q?TQH7q0?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(7416014)(376014);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 15:54:41.9543
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a6264cf-f941-4044-fbdb-08ddb7ee6d7b
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG1PEPF000082E6.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6755
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625165229.3458-10-shradha.t@samsung.com>
 
+Hi Shradha,
 
+kernel test robot noticed the following build warnings:
 
-On 2025/6/30 15:26, Krzysztof Kozlowski wrote:
->> +  sky1,pcie-ctrl-id:
->> +    description: |
->> +      Specifies the PCIe controller instance identifier (0-4).
-> No, you don't get an instance ID. Drop the property and look how other
-> bindings encoded it (not sure about the purpose and you did not explain
-> it, so cannot advise).
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Shradha-Todi/PCI-exynos-Remove-unused-MACROs-in-exynos-PCI-file/20250626-104154
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250625165229.3458-10-shradha.t%40samsung.com
+patch subject: [PATCH v2 09/10] PCI: exynos: Add support for Tesla FSD SoC
+config: um-randconfig-r071-20250630 (https://download.01.org/0day-ci/archive/20250630/202506301329.VWoiH0yn-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
 
-Dear Krzysztof,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202506301329.VWoiH0yn-lkp@intel.com/
 
-Sorry, I missed your reply to this in the previous email.
+smatch warnings:
+drivers/pci/controller/dwc/pci-exynos.c:621 exynos_pcie_probe() error: we previously assumed 'pdata->res_ops' could be null (see line 609)
+drivers/pci/controller/dwc/pci-exynos.c:655 exynos_pcie_probe() warn: missing error code 'ret'
 
-Because our Root Port driver needs to support 5 PCIe ports, and the 
-register configuration and offset of each port are different, it is 
-necessary to know which port it is currently. Perhaps I can use the 
-following method and then delete this attribute.
+vim +621 drivers/pci/controller/dwc/pci-exynos.c
 
-aliases {
-		......
-		pcie_rc0 = &pcie_x8_rc;
-		pcie_rc1 = &pcie_x4_rc;
-		pcie_rc2 = &pcie_x2_rc;
-		pcie_rc3 = &pcie_x1_0_rc;
-		pcie_rc4 = &pcie_x1_1_rc;
-		
-id = of_alias_get_id(dev->of_node, "pcie_rc");
+b9388ee21b4e79 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25  595  			dev_err(dev, "couldn't get the register offset for syscon!\n");
+b9388ee21b4e79 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25  596  			return ret;
+b9388ee21b4e79 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25  597  		}
+b9388ee21b4e79 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25  598  	}
+b9388ee21b4e79 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25  599  
+778f7c194b1dac drivers/pci/controller/dwc/pci-exynos.c Jaehoon Chung      2020-11-13  600  	/* External Local Bus interface (ELBI) registers */
+778f7c194b1dac drivers/pci/controller/dwc/pci-exynos.c Jaehoon Chung      2020-11-13  601  	ep->elbi_base = devm_platform_ioremap_resource_byname(pdev, "elbi");
+778f7c194b1dac drivers/pci/controller/dwc/pci-exynos.c Jaehoon Chung      2020-11-13  602  	if (IS_ERR(ep->elbi_base))
+778f7c194b1dac drivers/pci/controller/dwc/pci-exynos.c Jaehoon Chung      2020-11-13  603  		return PTR_ERR(ep->elbi_base);
+778f7c194b1dac drivers/pci/controller/dwc/pci-exynos.c Jaehoon Chung      2020-11-13  604  
+10106d5c1f9cee drivers/pci/controller/dwc/pci-exynos.c Cristian Ciocaltea 2024-12-17  605  	ret = devm_clk_bulk_get_all_enabled(dev, &ep->clks);
+6b11143f9344dd dripdata->res_opsvers/pci/controller/dwc/pci-exynos.c Shradha Todi       2024-02-20  606  	if (ret < 0)
+6b11143f9344dd drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2024-02-20  607  		return ret;
+4b1ced841b2e31 drivers/pci/host/pci-exynos.c           Jingoo Han         2013-07-31  608  
+ed1b6ec2c47ce8 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25 @609  	if (pdata->res_ops && pdata->res_ops->init_regulator) {
+                                                                                                    ^^^^^^^^^^^^^^
+This code assumes pdata->res_ops can be NULL
 
-Best regards,
-Hans
+ed1b6ec2c47ce8 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25  610  		ret = ep->pdata->res_ops->init_regulator(ep);
+4b1ced841b2e31 drivers/pci/host/pci-exynos.c           Jingoo Han         2013-07-31  611  		if (ret)
+4b1ced841b2e31 drivers/pci/host/pci-exynos.c           Jingoo Han         2013-07-31  612  			return ret;
+ed1b6ec2c47ce8 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25  613  	}
+4b1ced841b2e31 drivers/pci/host/pci-exynos.c           Jingoo Han         2013-07-31  614  
+ed1b6ec2c47ce8 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25  615  	ret = samsung_regulator_enable(ep);
+3278478084747c drivers/pci/host/pci-exynos.c           Niyas Ahmed S T    2017-02-01  616  	if (ret)
+3278478084747c drivers/pci/host/pci-exynos.c           Niyas Ahmed S T    2017-02-01  617  		return ret;
+4b1ced841b2e31 drivers/pci/host/pci-exynos.c           Jingoo Han         2013-07-31  618  
+b2e6d3055d5545 drivers/pci/dwc/pci-exynos.c            Bjorn Helgaas      2017-02-21  619  	platform_set_drvdata(pdev, ep);
+b9388ee21b4e79 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25  620  
+b9388ee21b4e79 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25 @621  	if (pdata->res_ops->set_device_mode)
+                                                                                                    ^^^^^^^^^^^^^^
+But this dereferences it without checking.  Most likely the
+NULL check should be removed?
+
+b9388ee21b4e79 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25  622  		pdata->res_ops->set_device_mode(ep);
+b9388ee21b4e79 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25  623  
+b9388ee21b4e79 drivers/pci/controller/dwc/pci-exynos.c Shradha Todi       2025-06-25  624  	switch (ep->pdata->device_mode) {
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
 
