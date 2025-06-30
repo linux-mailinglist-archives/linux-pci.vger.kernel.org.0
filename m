@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-31110-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31111-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FC16AEE8B8
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 22:59:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E8FCAEE8E6
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 23:00:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 141BA18803F3
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 20:59:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0658C1BC2911
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 21:00:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FC7128CF5D;
-	Mon, 30 Jun 2025 20:58:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FC9325C6E2;
+	Mon, 30 Jun 2025 20:59:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t/p92sSr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qsrT9QP4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E383E25B2E1;
-	Mon, 30 Jun 2025 20:58:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4313721FF54;
+	Mon, 30 Jun 2025 20:59:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751317122; cv=none; b=kymes5BI6DQYVEC1uBDTPh3zEwuLkCxmDJJS4IR+0cpmzWfrI+6kCaU/egx7yWXdlXEH7gtltzmMTnF6VQGlSLn9JmrgmxfzgFtFoxKgUM7PMpuoEBORKtbEbrlGI7yW+cW6AqUzCyAsFkWay0Acaf/CX3DVMbOGI3yhb0zS5pI=
+	t=1751317188; cv=none; b=lZ4W85osCM3hjHeHBpiF90noJjJWuwTgcp+HeOsg1mWymT3YFVjJfpjr8l84Vt8/wsZzC+TBjMzstn5mYJPTdIYli5wwgPRn/y4NAKiqLAg9qYApc/YrUlDYmGb3NfZznU9vjqQ2PydmG3te85inaheHt7AnMv7YySzEItu76r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751317122; c=relaxed/simple;
+	s=arc-20240116; t=1751317188; c=relaxed/simple;
 	bh=ketVR18fpnW4xkFERzMsiFpAF9jtuIK0RiDKnTgJDp8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pAf7ejcfWWgDZPcKGMgK4X+JAmMmZMN/CX/0wJ1+euVuknaVeuyEnkbVc06oZssgio0cKG7qDiEUupaFc+nG2mh5bqdJFcjKE3hzZW6IFkxnQcIlTZQZfmMywIuxNA0oslLxOTP7dQod+On8ZjCiSCYtyUytZChP+m5f31hgXrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t/p92sSr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07A8BC4CEEF;
-	Mon, 30 Jun 2025 20:58:39 +0000 (UTC)
+	 MIME-Version; b=L94ru+I5lN8AS6YAZU7mLv2E2sTNMBZ7MC5dMnz3EYghOwuDyTN2hDczIlfhIXHFEXe1oRfnYkdPyWIsUlj1SOivadcdS5CAuG8s5+Dw+EW3bShNSE78LzRLkNo2/s3r4T2nBpYnTzAJbClHMf1X5Wv4rvpGeK6hRZScZePXvN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qsrT9QP4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58A8EC4CEE3;
+	Mon, 30 Jun 2025 20:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751317121;
+	s=k20201202; t=1751317187;
 	bh=ketVR18fpnW4xkFERzMsiFpAF9jtuIK0RiDKnTgJDp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t/p92sSr9VA53atRBd9cx/zouvjFTcsKjHrlZbWgEVR0zWNMBNis4/GnOccgedGq4
-	 2tSC8gKs09uaUeiq4lcrHOeQO5MUMaZKtXd2B77yJwkJsckD1uedC9jeZw6u1z0RLl
-	 Fg2M2n3BBKLumQVdtar6u2oV5yjvtO121LJVaExd1LzWjfi0SSPR+ArUB0LCeYCg6L
-	 sWI/TjbZHwEDGtBs7H6nTj4k/Wt+9YKDPy4pUZmHJzqARjgSjp19AEwUJJfktKx+bW
-	 DVQnl0vow2inpXI5oQ0r7Q5key+SrQA57NvjrVGbghFOADly97xfSzcmnsnUI/uLes
-	 vugYY9PM3NXNw==
+	b=qsrT9QP4hpSZ7+iQwvQyzaAvp1GqENjmzjxVMW5CHElpIZsdveY7ZfISw4/MalZ9A
+	 PqUoJ8gH9qZzLjLKSyPVA3YqogUJo6yhFJgU59TEfxOPN+5lcvAVvfwux14jbKFKkg
+	 /ucNlT5O1LOvmNEdkYTk9kzUoVjE5F3Gp9Bl/uDHNe3Rq34ceTbi81B3gLyJ1wI+Yo
+	 lx0mpYFm+frK9fu90qugSwLtCducq1khGFWxcgWKLVNdsPA0Jn7iUiNM13c4CZkl4E
+	 SlRsJiKJwbqX+cPyapCm+Du8rVMHHzC2RU7AJ/i5h/ATOzS0p0G2F/pma5pdXdgwjX
+	 WUmgCGNEWVDeA==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -52,12 +52,12 @@ Cc: Zhe Qiao <qiaozhe@iscas.ac.cn>,
 	bhelgaas@google.com,
 	linux-acpi@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.15 06/23] Revert "PCI/ACPI: Fix allocated memory release on error in pci_acpi_scan_root()"
-Date: Mon, 30 Jun 2025 16:44:11 -0400
-Message-Id: <20250630204429.1357695-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 05/21] Revert "PCI/ACPI: Fix allocated memory release on error in pci_acpi_scan_root()"
+Date: Mon, 30 Jun 2025 16:45:20 -0400
+Message-Id: <20250630204536.1358327-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250630204429.1357695-1-sashal@kernel.org>
-References: <20250630204429.1357695-1-sashal@kernel.org>
+In-Reply-To: <20250630204536.1358327-1-sashal@kernel.org>
+References: <20250630204536.1358327-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,7 +66,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.15.4
+X-stable-base: Linux 6.12.35
 Content-Transfer-Encoding: 8bit
 
 From: Zhe Qiao <qiaozhe@iscas.ac.cn>
