@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-31056-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31057-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0970DAED57C
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 09:26:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 038FFAED58C
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 09:28:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6DE3616B8FF
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 07:26:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E564E3A65D1
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 07:27:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E01DD21A452;
-	Mon, 30 Jun 2025 07:26:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA2C321CC4F;
+	Mon, 30 Jun 2025 07:27:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FK0xHS5y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEJYe4x9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D1419A2A3;
-	Mon, 30 Jun 2025 07:26:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC85A21A452;
+	Mon, 30 Jun 2025 07:27:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268367; cv=none; b=eTzu8XBWCnIOEI80qF6Z0eehYwbZJH0uvbagqba2eYOt2oize6GKRXMakLrjV0c2SRgMSAx8EUvpG5lZq+oa1j1eAm9IHgjHVfPQvI0F/w0uUJbuIu6hynIy7QC4c1Nrp4psFMwdQFk8hkVUzH8szDu9iU0NmpUx6ab8v1EEN+I=
+	t=1751268430; cv=none; b=sT0HJK8R/qOuy35V0v2gxCdeEEZ/kaIhS1Vlz9vJrMUvKjPihOYJZIyeJBJFuyxXhlmpsy1NNHPKHeLGfFQn7jSfd0N6R6yn14wzQU13/cqnhTFA6pnU6QIevinbV4cJ3FP9lwS9HQDrcQUarxHWzB/Yj1UORKfVMt6lmJ30Zm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268367; c=relaxed/simple;
-	bh=N63MVrwXeESZ4gdhfhs/nJSmcaNTprtwSWNzBFpzojA=;
+	s=arc-20240116; t=1751268430; c=relaxed/simple;
+	bh=FWrl2p3qQeCBwBc+iddcMGfISqzr9IL2sZSnnO0P3zs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mvCaX61/FDMMQLH/XacWbDyBOQDmRuDxusD2drWaEb1Ch78ALmRQjQp7rm8Vm6CnonHwzVOYutpsgFTWYPA//91rEF7zWVUgojZ1MRsesyPXcZxcoFuU248Fy/pYDmdTNFAbrwANWSjXneGCHeQEOW7z47Nwv6F4qoeLvMI//OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FK0xHS5y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AD54C4CEE3;
-	Mon, 30 Jun 2025 07:26:06 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=HYDsr5n6yTwc5xzHzK1327gubAPpA16FQxX0unZaB1gt1IQiZq0XyeMTwVGmkaRkCBcPfT7y0UWat1ta7inn0QJcCFRdxp7tbF0yyFQlOlUy7z2LMjgdBNqdZ5wR2/fvDLPx5Zcc1sMIQmqkecmMjaczxxqCJLoglY2GEUfDOVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEJYe4x9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2601C4CEEB;
+	Mon, 30 Jun 2025 07:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751268367;
-	bh=N63MVrwXeESZ4gdhfhs/nJSmcaNTprtwSWNzBFpzojA=;
+	s=k20201202; t=1751268430;
+	bh=FWrl2p3qQeCBwBc+iddcMGfISqzr9IL2sZSnnO0P3zs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FK0xHS5yiaHjPn3OXM/rCBwtkD+DqBQnjE4kT8a6iBeeF6lqM2QSKIO6skrDcFT09
-	 aH7pbIzR1Y7JsJpgg+HibtZkWAE/2KF2VbJl+S8wu5/i2IsT0XZAIUWBMU3wGKdj10
-	 FQrNaw3PO28qjPXD2xiI7dbj1ZqWvRq0IZP9L3rigEnsKzJnMZJnl7uZOXLxgMFIvy
-	 QMMBVii0vN/m9BdYl0ZlquM65WGZ0m+jH8VGfN+EfJFpnhlQUdr9hcsGm1iU9apScw
-	 GJo3yKvO4pmPLyuB7MHsEqkbXpZ4GAu+kColxE2tbosgUhGiVCdJ7AW9i8A5ULJpND
-	 xBNd/ieJGpcdw==
-Date: Mon, 30 Jun 2025 09:26:03 +0200
+	b=oEJYe4x9/sFWmnbjhQynE5TdQU1WA1dlhsPNY+Cz/9RvKGhTvvmcj+/4MQSkyjlau
+	 mGPXQDK/+5NbfO75xXrLB6lzSaOCsRMTt2ThsbcYlrVw1e0lButaaPMjWApUyT4YHT
+	 boQ8B1FU8M1wAD+W6FdvDjJcCsPGXyZispul0gE2+klcobIJ0c8w4h9IRMmJwttZ5G
+	 sQh/aCNx/CxyxiDgXE9N4UiUUxKQ5yBJJOtESnw23DwvANnUU8ed75SJ9xhrlsIJ0i
+	 4jq5nRqsr3UG/U6Saup3/VD6SowuGyJOXRQP2DBvvTzbCNZIMlSnzIp4ZBhCNFSP5y
+	 eXTkHqpaoS5Kw==
+Date: Mon, 30 Jun 2025 09:27:07 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: hans.zhang@cixtech.com
 Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
@@ -49,11 +49,11 @@ Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
 	conor+dt@kernel.org, mpillai@cadence.com, fugang.duan@cixtech.com, 
 	guoyin.chen@cixtech.com, peter.chen@cixtech.com, cix-kernel-upstream@cixtech.com, 
 	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 10/14] dt-bindings: PCI: Add CIX Sky1 PCIe Root
- Complex bindings
-Message-ID: <20250630-graceful-horse-of-science-eecc53@krzk-bin>
+Subject: Re: [PATCH v5 02/14] dt-bindings: pci: cadence: Extend compatible
+ for new EP configuration
+Message-ID: <20250630-antique-therapeutic-swift-dec350@krzk-bin>
 References: <20250630041601.399921-1-hans.zhang@cixtech.com>
- <20250630041601.399921-11-hans.zhang@cixtech.com>
+ <20250630041601.399921-3-hans.zhang@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,165 +62,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250630041601.399921-11-hans.zhang@cixtech.com>
+In-Reply-To: <20250630041601.399921-3-hans.zhang@cixtech.com>
 
-On Mon, Jun 30, 2025 at 12:15:57PM +0800, hans.zhang@cixtech.com wrote:
-> From: Hans Zhang <hans.zhang@cixtech.com>
+On Mon, Jun 30, 2025 at 12:15:49PM +0800, hans.zhang@cixtech.com wrote:
+> From: Manikandan K Pillai <mpillai@cadence.com>
 > 
-> Document the bindings for CIX Sky1 PCIe Controller configured in
-> root complex mode with five root port.
+> Document the compatible property for HPA (High Performance Architecture)
+> PCIe controller EP configuration.
 > 
-> Supports 4 INTx, MSI and MSI-x interrupts from the ARM GICv3 controller.
-> 
-> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
-> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
-> Reviewed-by: Manikandan K Pillai <mpillai@cadence.com>
-> ---
->  .../bindings/pci/cix,sky1-pcie-host.yaml      | 133 ++++++++++++++++++
->  1 file changed, 133 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
-> new file mode 100644
-> index 000000000000..b4395bc06f2f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
-> @@ -0,0 +1,133 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/cix,sky1-pcie-host.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: CIX Sky1 PCIe Root Complex
-> +
-> +maintainers:
-> +  - Hans Zhang <hans.zhang@cixtech.com>
-> +
-> +description:
-> +  PCIe root complex controller based on the Cadence PCIe core.
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-host-bridge.yaml#
-> +  - $ref: /schemas/pci/cdns-pcie.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: cix,sky1-pcie-host
-> +
-> +  reg:
-> +    items:
-> +      - description: PCIe controller registers.
-> +      - description: Remote CIX System Unit registers.
-> +      - description: ECAM registers.
-> +      - description: Region for sending messages registers.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: reg
-> +      - const: rcsu
-> +      - const: cfg
+> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
 
-cfg is the second, look at cdns bindings.
+Missing SoB.
 
-> +      - const: msg
-> +
-> +  "#interrupt-cells":
-> +    const: 1
-> +
-> +  interrupt-map-mask:
-> +    items:
-> +      - const: 0
-> +      - const: 0
-> +      - const: 0
-> +      - const: 7
-> +
-> +  interrupt-map:
-> +    maxItems: 4
-> +
-> +  max-link-speed:
-> +    maximum: 4
+Why are you sending someone else's patches? This just duplicates the
+review and creates confusion.
 
-Why are you redefining core properties?
-
-> +
-> +  num-lanes:
-> +    maximum: 8
-> +
-> +  ranges:
-> +    maxItems: 3
-> +
-> +  msi-map:
-> +    maxItems: 1
-> +
-> +  vendor-id:
-> +    const: 0x1f6c
-
-Why? This is implied by compatible.
-
-> +
-> +  device-id:
-> +    enum:
-> +      - 0x0001
-
-Why? This is implied by compatible.
-
-> +
-> +  cdns,no-inbound-bar:
-
-That's not a cdns binding, so wrong prefix.
-
-> +    description: |
-
-Do not need '|' unless you need to preserve formatting.
-
-> +      Indicates the PCIe controller does not require an inbound BAR region.
-
-And anyway this is implied by compatible, drop.
-
-> +    type: boolean
-> +
-> +  sky1,pcie-ctrl-id:
-> +    description: |
-> +      Specifies the PCIe controller instance identifier (0-4).
-
-No, you don't get an instance ID. Drop the property and look how other
-bindings encoded it (not sure about the purpose and you did not explain
-it, so cannot advise).
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 4
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - "#interrupt-cells"
-> +  - interrupt-map-mask
-> +  - interrupt-map
-> +  - max-link-speed
-> +  - num-lanes
-> +  - bus-range
-> +  - device_type
-> +  - ranges
-> +  - msi-map
-> +  - vendor-id
-> +  - device-id
-> +  - cdns,no-inbound-bar
-> +  - sky1,pcie-ctrl-id
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    pcie_x8_rc: pcie@a010000 {
-
-Drop unused label.
-
+Did you address ENTIRE previous review when you resent this?
 
 Best regards,
 Krzysztof
