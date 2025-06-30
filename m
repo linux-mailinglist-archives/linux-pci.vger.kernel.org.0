@@ -1,360 +1,140 @@
-Return-Path: <linux-pci+bounces-31052-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31053-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8555AAED473
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 08:24:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E935AAED566
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 09:17:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CAFB01892CF0
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 06:24:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B67EB1897A08
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 07:17:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D241F4E59;
-	Mon, 30 Jun 2025 06:24:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B135A21ABDD;
+	Mon, 30 Jun 2025 07:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JekC85cB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GGwRzyBi";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JekC85cB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GGwRzyBi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1WBFclB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F0F1F03C7
-	for <linux-pci@vger.kernel.org>; Mon, 30 Jun 2025 06:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71BE1F237A
+	for <linux-pci@vger.kernel.org>; Mon, 30 Jun 2025 07:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751264668; cv=none; b=U3G9/XaVY6XZhH8K0SSpSWtzTYaEraPKfYj8/LACblzh/k17X2Abo7ZmMO57I4ZXiwSnNssIyUu/nPniCgN6n8UqJZd3peSkRfiEzfDb4Q43UUXPIHJ8SWRJiMsYJm+XsdQRoghM1HKEK4SthXD+6/9lq+/KpAjd2QIU3/fCBlQ=
+	t=1751267853; cv=none; b=ax5ZBmrzzexnDa3ADDibq2UDC8W+VDgivqrF7+pZojql1MojHfN/H2ofymYWEjRbAd8TJQwrS2o7AujyNY6/D9wq3QcTM+j9bUBlsZosJerwrzqSEjhV6xOBoOMVkxlfWLQhEMR4MgBbK7t65skmrKUDKEMiw6ou19cF6+RmtBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751264668; c=relaxed/simple;
-	bh=oIU0nlGeVkImkEVtE9FV85Qh8TUxliMwVa0aurlyVic=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lq4ey0GR6JXAeoezX1JIkpR76vFsywU/60ZFE4OvBG38kht9nfRCGryJlYYWEpfClJOq/nrjBQWz2ltDeaZnfIgJTpU3RKHxUMd9seoLNe1NMu5QldY4D8ChFbB3LwSaXY09gyA5l5J0IxdFGtDIBHgi5pFecUORU2icwlFuDgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JekC85cB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GGwRzyBi; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JekC85cB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GGwRzyBi; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 43F2B1F38C;
-	Mon, 30 Jun 2025 06:24:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751264663; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PJyKYbqfUL2wuHqkoQTXa/2DpfteGgypmUTFXMIUHEE=;
-	b=JekC85cBCcHb3DEaAnCwMMACuYvXv0XARsQOlldGFLIsFkXSclY3qWwtQqnB6XYQEAYbfD
-	j7V4NqbWPRF6E+FErOimaVZt27sMaF5Uy8dQuyokPkO/qxm0t2CzY3ezdk/3sKwywVzj7F
-	gMOYpGve7HcD7sr8H2hkOtgyb6psutQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751264663;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PJyKYbqfUL2wuHqkoQTXa/2DpfteGgypmUTFXMIUHEE=;
-	b=GGwRzyBir+mjkzaB6HZuN97WHsuDsbZHQboPp33uC56cilryUX3S8vfROKa8qTRlmD9cJI
-	wbPyOQqIB6DDOtCw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751264663; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PJyKYbqfUL2wuHqkoQTXa/2DpfteGgypmUTFXMIUHEE=;
-	b=JekC85cBCcHb3DEaAnCwMMACuYvXv0XARsQOlldGFLIsFkXSclY3qWwtQqnB6XYQEAYbfD
-	j7V4NqbWPRF6E+FErOimaVZt27sMaF5Uy8dQuyokPkO/qxm0t2CzY3ezdk/3sKwywVzj7F
-	gMOYpGve7HcD7sr8H2hkOtgyb6psutQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751264663;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PJyKYbqfUL2wuHqkoQTXa/2DpfteGgypmUTFXMIUHEE=;
-	b=GGwRzyBir+mjkzaB6HZuN97WHsuDsbZHQboPp33uC56cilryUX3S8vfROKa8qTRlmD9cJI
-	wbPyOQqIB6DDOtCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A55F813983;
-	Mon, 30 Jun 2025 06:24:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id lSErJ5YtYmiLVgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 30 Jun 2025 06:24:22 +0000
-Message-ID: <732aeb75-71e7-49e7-a5f2-2080ee94a273@suse.de>
-Date: Mon, 30 Jun 2025 08:24:22 +0200
+	s=arc-20240116; t=1751267853; c=relaxed/simple;
+	bh=Tn6aoQKc3aa7Te5ssMfmlg1TIGUDpo7hBrg6GnUEEI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XwHM+J1EZHEtXbEw5SRru7fZsOZ4499r/71FFYvCsSKn8aIVjum4GO03P8ENWCZ8TSQ/9UPdaD9Ny28RNBjL6P7D6+ysefK3w6ifT540JZpZnnrz/C65SxDggL8GQuau1u8uB8pLvhjzwL3H0pVcqNYhePld/i/aozMkc4uN/HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f1WBFclB; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751267845;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OXgKDsO9IF1jvtOwtc1YPzsL5+C5UReXJZt+iIzw2Mo=;
+	b=f1WBFclBkfu9cnuOoGsNd1JTRYYxzrqQM39GYIn+/Upw6eyUFi56ydxT1UTRgVjYmPGb37
+	JBzFM3nYSnZoM6rT2vdfa1fCj0RAyXKG9iR3CyvHIb8uJMu+E9QaFZ7YTJPFr9J8zTs1yO
+	GuokNUQHSPM64QTze+CqB6Ofwu1ph9Q=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-671-h1VDzelWPJe12qdoecAKcA-1; Mon, 30 Jun 2025 03:17:22 -0400
+X-MC-Unique: h1VDzelWPJe12qdoecAKcA-1
+X-Mimecast-MFC-AGG-ID: h1VDzelWPJe12qdoecAKcA_1751267841
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-6085b0265c5so3389474a12.2
+        for <linux-pci@vger.kernel.org>; Mon, 30 Jun 2025 00:17:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751267841; x=1751872641;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OXgKDsO9IF1jvtOwtc1YPzsL5+C5UReXJZt+iIzw2Mo=;
+        b=HrZQWZRn6mSBcAACbIAv0I6ONBW97B71B82EjxrsMAqMNzJkK+N9wotITUwT6Z9KmO
+         U6DExsVxNxmuQk1PwmiD9KnFM253Y1EnPzoo63DgYtRjtpW39H5OmZBVs80Q5+0APO/d
+         yKKCiDrjbiK3erSjrceaMPXCW7QtLbK+Kt4yyoEOkyREfLFliwQn/00jDeiib0kShWpu
+         rFxh6baxN7/DYVFMPYO56ezp6znUyPNRupqULm5UPSjnuFHKx7wKkg8kRQ+8ihSCGnn6
+         0nYQMARj0uCX3nh0I5Q8gZTV4xr5/06au87j9o1mG8Rrv5dbq0NOmgHnLSYMEUrSGI8J
+         UswQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqNzkJ4xkPkfTKZJQrlwfmWuTVsR8GimocnGbfNKgu7VTjLh8BrG0Oun64yq8IXgyCYCoWLkptbh4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1jGZ+/Mry1OBGAxMf7JZ5ku6e70SYavjGisiSJzQa0d9oB+rh
+	Iu+PSLNHwv8uZiOHuf12EFqOPQV6UfuB6zjpfUVcJ2eaDOm6Hdew1IZGMsv85ptZgNm5zrP6sGE
+	t4kqtvuMqGpGOIIW61T1GyBbWCg6vrxMZ18Z4iqh+DOyzf8A20CFMQMDUCe1fxQ==
+X-Gm-Gg: ASbGnctZhvdC/UDbYlJlq09oEIkDV/3CoFBBEbkLCWZP9E0aMtuT9495CRkV2UGtfhC
+	dftO5zUA0XB+ax3VBAdhGZ3R4zOQEd0dBXyCf9cX8tMfQ/JJzgsuoyO9p8iyFh8yQMjKnRtTdv5
+	CWfmBEuyZh0F5WMvtzrs7UkYEbTkfh3yhsDTgjqq5wkuSG/MaGvn1Ph7zw1RDi1Nd9uVhKmDXie
+	w1pPvOsepdwQdUXQq55W2x4y7EAlJGTnRB5Unlbuua4eKajwPX7FCDmsHXKsTQnXgTZO37tmFNk
+	wGhdb0ivVzM=
+X-Received: by 2002:a17:907:7b89:b0:ae0:e88c:581b with SMTP id a640c23a62f3a-ae3501a1ae4mr1165186266b.53.1751267841031;
+        Mon, 30 Jun 2025 00:17:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHKxfKBywT4IQk61EMh763CcXX3O2d6CwAncqtW/koAuBxomT/ER0VDAIzBM2QUWavfZMolHw==
+X-Received: by 2002:a17:907:7b89:b0:ae0:e88c:581b with SMTP id a640c23a62f3a-ae3501a1ae4mr1165183566b.53.1751267840551;
+        Mon, 30 Jun 2025 00:17:20 -0700 (PDT)
+Received: from redhat.com ([31.187.78.84])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae360e6ce54sm567534666b.37.2025.06.30.00.17.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 00:17:20 -0700 (PDT)
+Date: Mon, 30 Jun 2025 03:17:17 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Parav Pandit <parav@nvidia.com>, virtualization@lists.linux.dev,
+	stefanha@redhat.com, alok.a.tiwari@oracle.com
+Subject: Re: [PATCH RFC] pci: report surprise removal events
+Message-ID: <20250630031347-mutt-send-email-mst@kernel.org>
+References: <11cfcb55b5302999b0e58b94018f92a379196698.1751136072.git.mst@redhat.com>
+ <aGFBW7wet9V4WENC@wunner.de>
+ <20250629132113-mutt-send-email-mst@kernel.org>
+ <aGHOzj3_MQ3x7hAD@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 9/9] PCI: Add a new 'boot_display' attribute
-To: Mario Limonciello <superm1@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Lukas Wunner <lukas@wunner.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
- Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
- "open list:SOUND" <linux-sound@vger.kernel.org>,
- Daniel Dadap <ddadap@nvidia.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250627043108.3141206-1-superm1@kernel.org>
- <20250627043108.3141206-10-superm1@kernel.org>
- <41587824-4a05-4ead-b24c-4729007cd663@suse.de>
- <8878af70-3eb8-495b-b8df-43a10285c4f5@kernel.org>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <8878af70-3eb8-495b-b8df-43a10285c4f5@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[amd.com,gmail.com,ffwll.ch,wunner.de,linux.intel.com,kernel.org,infradead.org,8bytes.org,arm.com,redhat.com,perex.cz,suse.com,lists.freedesktop.org,vger.kernel.org,lists.linux.dev,nvidia.com];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGHOzj3_MQ3x7hAD@kbusch-mbp>
 
-Hi
+On Sun, Jun 29, 2025 at 05:39:58PM -0600, Keith Busch wrote:
+> On Sun, Jun 29, 2025 at 01:28:08PM -0400, Michael S. Tsirkin wrote:
+> > On Sun, Jun 29, 2025 at 03:36:27PM +0200, Lukas Wunner wrote:
+> > > On Sat, Jun 28, 2025 at 02:58:49PM -0400, Michael S. Tsirkin wrote:
+> > > 
+> > > 1/ The device_lock() will reintroduce the issues solved by 74ff8864cc84.
+> > 
+> > I see. What other way is there to prevent dev->driver from going away,
+> > though? I guess I can add a new spinlock and take it both here and when
+> > dev->driver changes? Acceptable?
+> 
+> You're already holding the pci_bus_sem here, so the final device 'put'
+> can't have been called yet, so the device is valid and thread safe in
+> this context. I think maintaining the desired lifetime of the
+> instantiated driver is just a matter of reference counting within your
+> driver.
+> 
+> Just a thought on your patch, instead of introducing a new callback, you
+> could call the existing '->error_detected()' callback with the
+> previously set 'pci_channel_io_perm_failure' status. That would totally
+> work for nvme to kick its cleanup much quicker than the blk_mq timeout
+> handling we currently rely on for this scenario.
 
-Am 27.06.25 um 17:37 schrieb Mario Limonciello:
-> On 6/27/2025 2:07 AM, Thomas Zimmermann wrote:
->> Hi
->>
->> Am 27.06.25 um 06:31 schrieb Mario Limonciello:
->>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>
->>> On systems with multiple GPUs there can be uncertainty which GPU is the
->>> primary one used to drive the display at bootup. In order to 
->>> disambiguate
->>> this add a new sysfs attribute 'boot_display' that uses the output of
->>> video_is_primary_device() to populate whether a PCI device was used for
->>> driving the display.
->>>
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>> ---
->>> v6:
->>>   * Only show for the device that is boot display
->>>   * Only create after PCI device sysfs files are initialized to ensure
->>>     that resources are ready.
->>> v4:
->>>   * new patch
->>> ---
->>>   Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
->>>   drivers/pci/pci-sysfs.c                 | 46 
->>> +++++++++++++++++++++++++
->>
->> The code looks good. Just one more question: could this be added 
->> independently from the PCI bus (at a reasonable cost)? There are 
->> other busses that can host the boot display. Alternatively, we'd add 
->> this attribute per bus as needed.
->
-> It depends upon the underlying hardware implementation.  On x86 it's 
-> always PCI and so I realized there is a requirement that PCI resources 
-> are setup before screen_info event works.
->
-> That is the v5 version of this patch would have had a potential race 
-> condition with userspace where boot_display didn't always show '1' if 
-> userspace read it too quickly.
->
-> Other architecture's hardware implementation might have similar problem.
->
-> So in summary I think it would be better to do it per-bus.  If we 
-> realize there is indeed code duplication we can always move this to a 
-> common helper at that point.
+That's even easier, sure. However, Lukas raised the issue that
+pci_dev_set_disconnected must be fast, and drivers might do silly things
+in their callbacks. So, I was working on adding ability to schedule work
+on such an event, so prevent such misuse.
 
-Ok, makes sense. With the kernel test robot's issues fixed:
+At the same time, it's somewhat hard to abstract it all away in
+a driver independent manner, a callback is certainly easier.
 
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-I guess that interface also needs some sort of OK from user-space devs?
-
-Best regards
-Thomas
-
->
->>
->> Best regards
->> Thomas
->>
->>>   2 files changed, 54 insertions(+)
->>>
->>> diff --git a/Documentation/ABI/testing/sysfs-bus-pci 
->>> b/Documentation/ ABI/testing/sysfs-bus-pci
->>> index 69f952fffec72..8b455b1a58852 100644
->>> --- a/Documentation/ABI/testing/sysfs-bus-pci
->>> +++ b/Documentation/ABI/testing/sysfs-bus-pci
->>> @@ -612,3 +612,11 @@ Description:
->>>             # ls doe_features
->>>             0001:01        0001:02        doe_discovery
->>> +
->>> +What:        /sys/bus/pci/devices/.../boot_display
->>> +Date:        October 2025
->>> +Contact:    Linux PCI developers <linux-pci@vger.kernel.org>
->>> +Description:
->>> +        This file indicates the device was used as a boot
->>> +        display. If the device was used as the boot display, the file
->>> +        will be present and contain "1".
->>> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
->>> index 268c69daa4d57..cc766461de1da 100644
->>> --- a/drivers/pci/pci-sysfs.c
->>> +++ b/drivers/pci/pci-sysfs.c
->>> @@ -30,6 +30,7 @@
->>>   #include <linux/msi.h>
->>>   #include <linux/of.h>
->>>   #include <linux/aperture.h>
->>> +#include <asm/video.h>
->>>   #include "pci.h"
->>>   #ifndef ARCH_PCI_DEV_GROUPS
->>> @@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
->>>       NULL,
->>>   };
->>> +static ssize_t boot_display_show(struct device *dev, struct 
->>> device_attribute *attr,
->>> +                 char *buf)
->>> +{
->>> +    return sysfs_emit(buf, "1\n");
->>> +}
->>> +static DEVICE_ATTR_RO(boot_display);
->>> +
->>>   static ssize_t boot_vga_show(struct device *dev, struct 
->>> device_attribute *attr,
->>>                    char *buf)
->>>   {
->>> @@ -1246,6 +1254,37 @@ static int pci_create_attr(struct pci_dev 
->>> *pdev, int num, int write_combine)
->>>       return 0;
->>>   }
->>> +/**
->>> + * pci_create_boot_display_file - create a file in sysfs for @dev
->>> + * @pdev: dev in question
->>> + *
->>> + * Creates a file `boot_display` in sysfs for the PCI device @pdev
->>> + * if it is the boot display device.
->>> + */
->>> +static int pci_create_boot_display_file(struct pci_dev *pdev)
->>> +{
->>> +#ifdef CONFIG_VIDEO
->>> +    if (video_is_primary_device(&pdev->dev))
->>> +        return sysfs_create_file(&pdev->dev.kobj, 
->>> &dev_attr_boot_display.attr);
->>> +#endif
->>> +    return 0;
->>> +}
->>> +
->>> +/**
->>> + * pci_remove_boot_display_file - remove the boot display file for 
->>> @dev
->>> + * @pdev: dev in question
->>> + *
->>> + * Removes the file `boot_display` in sysfs for the PCI device @pdev
->>> + * if it is the boot display device.
->>> + */
->>> +static void pci_remove_boot_display_file(struct pci_dev *pdev)
->>> +{
->>> +#ifdef CONFIG_VIDEO
->>> +    if (video_is_primary_device(&pdev->dev))
->>> +        sysfs_remove_file(&pdev->dev.kobj, 
->>> &dev_attr_boot_display.attr);
->>> +#endif
->>> +}
->>> +
->>>   /**
->>>    * pci_create_resource_files - create resource files in sysfs for 
->>> @dev
->>>    * @pdev: dev in question
->>> @@ -1654,9 +1693,15 @@ static const struct attribute_group 
->>> pci_dev_resource_resize_group = {
->>>   int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
->>>   {
->>> +    int retval;
->>> +
->>>       if (!sysfs_initialized)
->>>           return -EACCES;
->>> +    retval = pci_create_boot_display_file(pdev);
->>> +    if (retval)
->>> +        return retval;
->>> +
->>>       return pci_create_resource_files(pdev);
->>>   }
->>> @@ -1671,6 +1716,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev 
->>> *pdev)
->>>       if (!sysfs_initialized)
->>>           return;
->>> +    pci_remove_boot_display_file(pdev);
->>>       pci_remove_resource_files(pdev);
->>>   }
->>
->
+WDYT?
 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+MST
 
 
