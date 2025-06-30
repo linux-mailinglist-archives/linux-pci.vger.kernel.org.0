@@ -1,273 +1,265 @@
-Return-Path: <linux-pci+bounces-31086-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31087-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A73D2AEE1FA
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 17:09:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D7978AEE27C
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 17:31:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 812813B0EA6
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 15:08:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 01D693B976C
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 15:30:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEF4C28D822;
-	Mon, 30 Jun 2025 15:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="UmMlaD7L"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9566628A1D4;
+	Mon, 30 Jun 2025 15:31:11 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012014.outbound.protection.outlook.com [52.101.71.14])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023087.outbound.protection.outlook.com [52.101.127.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1ED28DB5D;
-	Mon, 30 Jun 2025 15:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0E6289833;
+	Mon, 30 Jun 2025 15:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.87
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751296143; cv=fail; b=NbajS54QZYOfq9YzEd4jphkmdEzv1xAMDIdaS2hYGRMBWouZsGzlbiF4P7K/uBRXne12IvOuYOfzWlDx8/Xz/BxXM8RMSLbKMNLixVQ3nKnlGrRGNX7wg2eLPdVIzHNojnMDfWyzGBEofwZh9kZxRFtGbj5Mq1K8xKPzAE9DI3k=
+	t=1751297471; cv=fail; b=TG/CIHimhx/bzy1qY2Tsh5yveZk4SYZYKAmuxOOJ4tEhioGq7LFOceGRMWSpuepxdxC2Ut43QdNSryG4DZr/Q7encKHAo+iVe4kXzYs2wWr726V/mlk0J+W5eLlvwE96GfXD5sVnWDGFTQxx+m5arAfVfVhYayQ2ab9er1d2piU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751296143; c=relaxed/simple;
-	bh=67uDl+9X+ALV8xFqansQ2pfOecWITiCs4xWXfTFDSXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=n0kOdJk+hmQKSihoNm+psXxYdP7ajBcZTKBO3cAJN0ufAJ/ck2MaHNv+lm681hBBr+xaLzHQ2MpLo75K4PAUEAYn7UX+QgcTY3zjq9wXhveUkFeycFYVPCpqMquS2vpIuWj0SKZP+tT0PaSSfHVUsXMWGxcUT/abgc1DcB+B1a0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=UmMlaD7L; arc=fail smtp.client-ip=52.101.71.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1751297471; c=relaxed/simple;
+	bh=yX8x003vyIsNbCO6RlCObrlKI+RcF4FV0ym9gI/o1PU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ScPPRLVQeBtsQpau3dBM9wc7eRVmCx9yYnXylMX3D+nvo4x6Fz9F/kg6vMhvfHdSFkUkV385Sgk65CxhVmtmVqwX2DARPzggplxgRhfy/MbXyffby1mj+4FNyLxMPTyNWtmtSfSJCL+UAIKfFYNci2YivmYzHp+3y/oIfsYR17s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.127.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MOBcbCajNDwVj4EEUL8huBAQCDGdpP9+BS2AiSU10O3kXFe7oH8IWppgaF/r8rKsP5rT/5R31fFt5dpge4SPihffzcQ6F6Yz7J66WRqOlf4Vqj8cwZFXlkwEp6haQssRbJvBgFaOFssg0Gjm5ll7tyykeebLhXIW0DYZ5kbiKUJrXlDGv65AfaMDks3Azcgu2V2KcFrh/5L2GklBdQKRp2wWSQ2bF1VQXxqGa6RWmdmYjgliFavo+Z+4HKdIOTwo2Xe8Y7zOPoiOSbJczxXiI8AHc1QSMjqd0J9bItXWEoEKtHOivbVrnw6nayeA5Ny3IxKawhzLgdT/f4gjVwUMFg==
+ b=hL+s2OohcJ/u8TUMfh3vVTf5+gS3ucHH4xHOkoutZuvjc/2Zq+MRyTgNuqXGN/tjds0FRLkWYnSkbvMWVWa6z6Hn4R6Tq71+56z9MBKW+yAi46vYBIKxUH8YFN1IftmumobXQG0GX56XXXzQ8XJAx5zMdzCH/ANmnnJom+pu7LnT11PH0iabwYa9r+is5umbqeL3ZdJ2xkBtGA9mgB3HJc4DXDaiDdcUy7ArHKOG4mHc1iwE58O4MzH034uNX14WiD06Zs7FsH+PqAJ6DdVqGtsEQHJoZ80Xk/zj7odDnlUfhzvzKaJTwsD5rf/bp1RUxHlwjqElEEUA2hKIxmA3nA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hrlJzNPkETLfDU4xaBsTzDX7WOoqp0fHbpvwLjjjHPc=;
- b=VvGLxinefQHygcNhys7Kz2uO0ApR9N1Jq55NSSS5Q5s+NhhVonwgge8S+1q9lSwNErZeYHNJRedSTY3EU5rAqOIjScwtKUYkVap/dDzIInA2SGoLuJxFwAQx/rt0SriGl9NCSRXA+jW3Nunb1DARo19UCWVZX1zQT5EQKCpnBOxmzH2hC1uJFUKeo3jBqcNsl7fysGWakZ8cF5umPrj2oA4CRvVtQA0ROeaoqw5BE3npSmp83ylsmmCR86proMp3+QNczCEdaEaoOGiOtRM3yLJdPUVLcfB4dYccyvs8OaIzYXn3Sx31AqXLDDqp6hC8BBDu9s/zUzH3n7/neWeLGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hrlJzNPkETLfDU4xaBsTzDX7WOoqp0fHbpvwLjjjHPc=;
- b=UmMlaD7LWRy20xE709irnQT7nPsoJxk4Up4A6O09uazYcXRHrwGywIhBc6fP5uhVUc0AUF0fthOrz1Lbrbo2am97kEk5w/0WfTsKZcmn8EyPyPnQG7VbuMtzQZve0ApEetxpfSJGvx/7QtjZ9BReIKrc2RbhS0N+LgHOZmr6oTroSaq70iIHTOSD5bg3G4POkUFbzt6i8NJ2wSI6UmtdT1byV6CpUqcGzA6AfLFVLY5cR9NyxNTgihkdHnI2jgkj85V8aw6Z8x8t14UW+TTVxUPS4RLiKy/hOhADvpl2WBFE2sUZKhs8AkP6E34Kzd2aH/yJmRCF30zc/ZVqftKXoQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by PAXPR04MB8392.eurprd04.prod.outlook.com (2603:10a6:102:1c5::9) with
+ bh=poJ7pVu9ML5fjnDj9uQOulq3KTWzwJ1V/gML+eu9qM4=;
+ b=tBz1CIY14GRIJVUS8fEes6L0+35n1FcA40dZM+Z6Q8k0QYmtGyPJ1Cj6DSQdLpwsnhMbeCLl53+s+BNa9983yzxIgo1m4gEE/3dNKJrHhH0dTtVodHw3vUbvawRmdFNueX8IKWUZOT81+4Le1JPHMiOyPtMAl9/evCfAe5maG1Nqk6vBxv9byGPTwIEAGuWg9MQSUT1t6hD9DaAwyd40GmT+G/hvVAD+PXPPzG8K+8BrOEfy0MnDRju53wMnjvPM9eG0cd0H7+UpZglpE8Rc1JyJqZwCmSN001pjtqIy5UOHVOxZneeIJJjl4aLrKMPkSCetKyiXKMjI41YOGbSD4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from PS2PR03CA0024.apcprd03.prod.outlook.com (2603:1096:300:5b::36)
+ by KL1PR06MB7009.apcprd06.prod.outlook.com (2603:1096:820:11a::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.29; Mon, 30 Jun
- 2025 15:08:57 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.8880.027; Mon, 30 Jun 2025
- 15:08:57 +0000
-Date: Mon, 30 Jun 2025 11:08:50 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, l.stach@pengutronix.de,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: dwc: Add one more reference
- clock
-Message-ID: <aGKm41I/FsrWN8jN@lizhi-Precision-Tower-5810>
-References: <20250626073804.3113757-1-hongxing.zhu@nxp.com>
- <20250626073804.3113757-2-hongxing.zhu@nxp.com>
- <20250627-sensible-pigeon-of-reading-b021a3@krzk-bin>
- <aF76jeV+8us82APv@lizhi-Precision-Tower-5810>
- <20250628-vigorous-benevolent-crayfish-bcbae5@krzk-bin>
- <aGALNS0yyBR27tz4@lizhi-Precision-Tower-5810>
- <98b00dd1-3b83-4beb-ad06-f3e0442df8c7@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <98b00dd1-3b83-4beb-ad06-f3e0442df8c7@kernel.org>
-X-ClientProxiedBy: AM4PR07CA0036.eurprd07.prod.outlook.com
- (2603:10a6:205:1::49) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.27; Mon, 30 Jun
+ 2025 15:31:02 +0000
+Received: from OSA0EPF000000C7.apcprd02.prod.outlook.com
+ (2603:1096:300:5b:cafe::8d) by PS2PR03CA0024.outlook.office365.com
+ (2603:1096:300:5b::36) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.17 via Frontend Transport; Mon,
+ 30 Jun 2025 15:31:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ OSA0EPF000000C7.mail.protection.outlook.com (10.167.240.53) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.15 via Frontend Transport; Mon, 30 Jun 2025 15:31:00 +0000
+Received: from [172.16.64.208] (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 92DD144C3CAA;
+	Mon, 30 Jun 2025 23:30:59 +0800 (CST)
+Message-ID: <2b608302-c4a6-404d-9cc5-d1ab9a6712bd@cixtech.com>
+Date: Mon, 30 Jun 2025 23:30:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 10/14] dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex
+ bindings
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, mpillai@cadence.com,
+ fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
+ cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250630041601.399921-1-hans.zhang@cixtech.com>
+ <20250630041601.399921-11-hans.zhang@cixtech.com>
+ <20250630-graceful-horse-of-science-eecc53@krzk-bin>
+ <bb4889ca-ec99-4677-9ddc-28905b6fcc14@cixtech.com>
+ <5b182268-d64c-424c-9ada-0c3f120d2817@kernel.org>
+Content-Language: en-US
+From: Hans Zhang <hans.zhang@cixtech.com>
+In-Reply-To: <5b182268-d64c-424c-9ada-0c3f120d2817@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|PAXPR04MB8392:EE_
-X-MS-Office365-Filtering-Correlation-Id: 69f5d9d0-7a9a-4278-d66f-08ddb7e80943
+X-MS-TrafficTypeDiagnostic: OSA0EPF000000C7:EE_|KL1PR06MB7009:EE_
+X-MS-Office365-Filtering-Correlation-Id: d46002c7-f4fb-4e64-8979-08ddb7eb1e32
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|52116014|376014|19092799006|38350700014;
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Oeb8VrG8GaRKTD+1AJiXivM55+8y7hC+wIRw3hQDDhltjjf9fjzdChCHPjMn?=
- =?us-ascii?Q?S+jTqjYTkb0rsr2OhNFN/D14PK1jgpqEhzXEwQOjEgfuDFgC9V2z0Pat4Pju?=
- =?us-ascii?Q?teLJRlqLvWLGfhip3wJjPOJ8mm4kBCJ2Ej0MEgFJLlXmBr0lHgmbO1UC0GCM?=
- =?us-ascii?Q?Mkl6gEE2Kt5/lHbVq5GEyo2DVn5GXLV12KQD5IwYr4CrvKPyIRjBTEYUC9As?=
- =?us-ascii?Q?7JThxXfB7bMuulC61C/PNVH9/gBRC/YuLzRxN9EuJFXf/EkBik88M1OCKkyG?=
- =?us-ascii?Q?4xcmlkXw+RMaTHQl9sgYSZfEkYSNt9ycrMIVplfDnSbkAS9/wyR5XDjSiwp7?=
- =?us-ascii?Q?AAtQ7ItQyWpVffzEYgK+LbaFb+C98PiF8xM2bvWGRPznBXlmSzb5RkXFFcFT?=
- =?us-ascii?Q?oQE6o5G0gtcJ5Em9qJxR8pqzcZVxETjMZiB2wmhg0FLGP4ghr+PRLd6to0cW?=
- =?us-ascii?Q?psvPpNdV982q6uGnJW0H7NhdxTegiH1dgQ/YTbxM2t1gzOZ9sGMot16W1L3g?=
- =?us-ascii?Q?lb07ebgUddUgRNrRYADsPpYzc5c0i1Ddd5RpOAFekhCw1LeM7tzYEt+RaCVa?=
- =?us-ascii?Q?zc0g0paDNtf07l/c2GCE2ejJN00RRZNFXRRvoP9Hs/Ff6MxApy3PdQCaet7h?=
- =?us-ascii?Q?B6FQmXHcnkW4cUVcSgfWzTNIV28WLGOZXimzEfXeshxsDjj5VDx+Jab+6qPY?=
- =?us-ascii?Q?/iRX/3MQM5Xn8Pf8e6ow6liQGly7iViytWd0QCCfkcq9BNImEEuiwvKiRYvl?=
- =?us-ascii?Q?EPe/O9eAeCSTZ6lCGXk4EC44nL5hLIEqJ6d2y8itdYgIIVkVjkdFIlRSmacN?=
- =?us-ascii?Q?KbXRWX+QWzs6vHPVYCl67/aIiWalP7lkbToC3ekZ6Iu1A2DcE1haGtof8sfJ?=
- =?us-ascii?Q?XCGp0WFGf5gl1eJqDDh/m8VerVsmXOQqKLon3POCOg0UTMDxeEN0qrsvO6nC?=
- =?us-ascii?Q?VXvbU/7CO2lsNMtggE2MptH2ktj9UwIsR/A0C8UZLlKN3lUlLTEboKIeIXcZ?=
- =?us-ascii?Q?X1hQnAwsfLomoqc8NRTEo+x5pquPq9bnb1yBhpNtQvHcP67oN8LDP9PtE9PP?=
- =?us-ascii?Q?rgfqhYtjLRZ12T6PrlH521i7F8BmKGK9/ic65IkfZo9Z+I26+JOY7iGtUGBh?=
- =?us-ascii?Q?nN6j4DzTkEoHEzBPG1mCCIzaYdpc+4uRk+g19/x8uHRrl+j/4ZAQusevF3Jy?=
- =?us-ascii?Q?hlHwulfCBmS2DVXipWYONYUCTZNerCIl3OBcBrGIKZUHZr+pvu9DvZ/jGa3e?=
- =?us-ascii?Q?tksN3oCI19e09XaaQp5HIN/51JYItBiHJbR0OapB2o+MFurt74DN1ocA6Cj9?=
- =?us-ascii?Q?3AAw9uDNlIv2npLMsBNYN/c/rPK3as6NdetdRauynVVU6J0DJ5j/X9Rt1Mpq?=
- =?us-ascii?Q?YCbJuXPG9i9+q+//SbZr2lKs8zBMVf9ksl8sA8IigeW/uTg7uI8pNpJc7n5D?=
- =?us-ascii?Q?L/nmvd/FMr23zKCqn1gDWh9cy9kBOISQB6jkjVhH8xXKhLC+AxM1ivtMKNuM?=
- =?us-ascii?Q?soKi1WY4qQYk2No=3D?=
+	=?utf-8?B?VlFQbzlQTGwrYms0OHAzOXgxcU95L2dvcmUvb3J0QnNHbC90Z1J6VTA5M0Js?=
+ =?utf-8?B?RDFFQ3Z0SkJyZ1hxZ3hua3ZydFIwOFgzcjQxZi9iQTBIODVlbTVra3NINmZZ?=
+ =?utf-8?B?cXNJY1l1KzdncENkR2dOalZ3T1BrSEpPZmxvd0RvbHQ1YWJaeFZTT2w5ZFRw?=
+ =?utf-8?B?QVE2K29haUFhaCsvL2EvV2tWNW9LVUl2Yk5JbnRyd3IwZk1NZFYzNWorUFlW?=
+ =?utf-8?B?WkRXMnNyVjZOUUlPU3dSYnhTdGc0WHRlK2ZFdUdMY2JOVDRibnpGNlYvZE5l?=
+ =?utf-8?B?amY1Rko4MDgwS3gwRnhkVHZtUHMxY29adWR3UVphT1gvYyswSDgwT1FlVFFL?=
+ =?utf-8?B?MzMzSkVHYzBiZHBVUTFXOUhVOFJ6T3VIVFhYaG5qSktkbk1TbG9Hb2xCUjI2?=
+ =?utf-8?B?YlF6dmpVZ1ZvTmI1WGYyck5HdkJCVDBKQ1duZ3UxR25mcHZnYlBOTGM4VExM?=
+ =?utf-8?B?TFZQak5QWGxtQW80aEoyc1k1QkN3NUJHaTNhR0ZmMUI3WjhHTXN2TFQ4azRL?=
+ =?utf-8?B?TzVWdHZ1dHNCWWxuSTFHQ1I4eGxDdjhoU1FGZEd3aVlmTC9yWDZGVGxhTWc3?=
+ =?utf-8?B?SHQwbGVVRENGTGVUYW54YnFRUkdSdW1EVGFBU0Fsem04c1NEVzdSWmExdDM4?=
+ =?utf-8?B?OHdjVzRVZEQrdTNMVGVQcFdMZUp2QTYzd2lvbGl5ZmhXUmtBK3pBcEdBOTNh?=
+ =?utf-8?B?bko4TTlQS2xSL0FkcG9XNmV2VExEL3FieXhtbkFmWndVRHdmcy9FNmg0SlhR?=
+ =?utf-8?B?NlRUQ2doaTB2MmpvUDVhZXRYdS9lSm1Paml3bkdDaWdFblpQY2FkN3d4WStI?=
+ =?utf-8?B?Y09Lb2h2U1YybnJWZ0loTCtnT2N2YnR5Vy8xcFlMRzRMYVFwMnhhTW1tK1M2?=
+ =?utf-8?B?NEtqTml3N29jcVBPbnNLZTEvcU5Td0JFUTV6MDEyUGVXdHV6dmUxK01zd3l1?=
+ =?utf-8?B?ekN3dzBYTUFUUHhEa3gzL3JBeUhsRnRGYUVZL2ttYlhQQ3VvR1JId21pTDRZ?=
+ =?utf-8?B?VDA5R21MbFg1cEtLVkdBczdJcEdxMElPelJYMEEzYk5pOGdQUlh4Q0xQcXdo?=
+ =?utf-8?B?d2lPL3hVdEF4bDNKUWxKRkhhUUhzODZJY1N3bVNvalBVdS9pTi9DSGI5ay8y?=
+ =?utf-8?B?ZEE3SC9HVE5nYmtnY2krZ0tZS0l6UGdVMXgreEpGRW41K1V6ZFNyOTJLN0RL?=
+ =?utf-8?B?NFQ2dy9VUFNUckl6NEVOMS9VVXFZczJwdVp1SVh4VHg2WEJ5NDRtZzJWYmRj?=
+ =?utf-8?B?S2pVeHpDeDhhclorNksyQzZRcW1QNlRqa2Q0cjBGV2Z6alBXbHY0cWFFVjcy?=
+ =?utf-8?B?UmdYTlhtWUlwVkdhZ29yNW1aLzdkNDY3UlVOb056WDlkcUM0aDFBczBiaGp1?=
+ =?utf-8?B?aE1XbXVtcjYrOW5HbVZmSXVOMTZVdmJDbjVwRi9PL0dKQ2JGUm9na0FyQzdv?=
+ =?utf-8?B?TVlVdlk1cWE1UmtXZnlSQ3VFeDZ3YmVmQ1dVTEZ6MytoLytzTzVTeGsxendY?=
+ =?utf-8?B?cGtTM01oR2NnS3EyUTJyakxtNTZvMzV0VDcxUDc0cUIvSGlkVU80QTg3S2pT?=
+ =?utf-8?B?VEN3NjVNaFZ5dml5TEVjL2tpaDZXdnBVQUVoNGlUeHFTaWJoSVZGRUdMemtL?=
+ =?utf-8?B?T3VjeFZOTW93dWw5aStSWnhGOEtjVVd2OVh4ckQ1Wi8zaTVhVW1QV1VTS051?=
+ =?utf-8?B?U0VKWFBKdnZjZzMrTDJCSldDYnV4U0xsKytQS2QwNWljQ1h6d21QdnJXWStN?=
+ =?utf-8?B?S3paMUNlZzAzU242OXNaRnJ0Ym42bkphVTBWZWJGTndwRVI0NVc2bm93LzVI?=
+ =?utf-8?B?bDNDczNSSlEvUnc4dFZlRi96eFdqdFdSaksycUY1SG1Xc1JUWlNjQW91S000?=
+ =?utf-8?B?a2JDWjcxbVVnRys1YTVkcmpyNzhZZWdKK0ZTWnoyV2hnUUplRjdGT1JKdE83?=
+ =?utf-8?B?RDVuWFNiSGVidWJlWnlGSUJrS3VMTDFaRGlJSDhOOUFqZTMySnJyaW1ZT204?=
+ =?utf-8?B?RWw3TC9iUjBYeERtUkFUQldlTlBSUDNKYWFrMk14Y2lPOUNqS3NhVVNneUpa?=
+ =?utf-8?Q?FXSMLc?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(52116014)(376014)(19092799006)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?y1E7t4Bx47zpBdr02QB3wC1+mDuvldu1ObastdR5ao5szcmuclAoNtGyoMx8?=
- =?us-ascii?Q?+mt6tJbiYPDnSe/x7JU/eSuS11pZw88Ycij9HSC77S7lrY0YSlzs2lJFEb1n?=
- =?us-ascii?Q?8djdI7SCCOMk/0zyupFcgh9UrnAC1qt+ZgAQOnDYCPQRwEFvtku8QOHXxh3A?=
- =?us-ascii?Q?a8rB8FZjdNGoayMXAuMUw4KTS1YgVINf1J9WPI4PdESnk4i2AES7qOCmvibT?=
- =?us-ascii?Q?JNOMrnwnmYHQFk8wmU7VW56o2ORqFdd9xxMCRgVgMKuQTzk9fggq4WI84ahS?=
- =?us-ascii?Q?wK2D+RtVxdwzloQXz+eeKzTR1qypETe2ENlz/utZQUIscgl0TrKkW63ruF35?=
- =?us-ascii?Q?kYu9xu1aSdnIPHJTpag7p9PnVmmpqfDSPx36HB0U7fIABfxGddrurA6cRKZn?=
- =?us-ascii?Q?wpSVj2DNaNy6qaZdPgGW4fCWDRVjdjYjOaZhmRC9GY2cnOtZW6IHZGzA4U+0?=
- =?us-ascii?Q?UUGH1gbaW3mPHgd+9N+/SPr6bLWuyxracagZMg30SBLOFinzk94uC9anUozb?=
- =?us-ascii?Q?zPuQJN5XqSFKvkAO0qBmTW6Ygi1FNRvLuro6zCmS2mt1mp2g5fsZJpMrJNbL?=
- =?us-ascii?Q?qYRyPkYj6/SL8JZWiZF1JMqlAAcqXTBjwaOEnf+c/cAaU1QHFRuOgdaxVFg0?=
- =?us-ascii?Q?7CSFm2AKNGZutS3IvGhk8xquGmCREQudjEXEgqp0r1A6ftGYnAKLEToh7NBu?=
- =?us-ascii?Q?Etwd1pLO5600UpmoP5Wgf4TszE6bzz7OSXHQUCdUiiiVWewfwXygZzkC9ahe?=
- =?us-ascii?Q?BjWmZG8oZbMb4fJ6sFc2eIB6i7wYG9Wg+uS1gfOpItatNRQySXewgLgoI3Ur?=
- =?us-ascii?Q?1OGkqRWih6fLqdAUztmcylqhagrYrCKuMfLzOWT/xUr483g/IKN09qy41w3x?=
- =?us-ascii?Q?wr34PT+oVNvPqspfs/Ad7sPqqSupQ4nAGNROKIB62pDlLjzJGNtw3u61zU/j?=
- =?us-ascii?Q?W6Wv/6/ftzXKdzNbFJDR7/ykNmcTn93teK4v1TP44cc8INDG4t1IH4dCOiSA?=
- =?us-ascii?Q?63j8pwyuTRp1HkQp6oMkOQKuq3PFcAsnHJM4dNaPtyAiSrscZFrUan3OhwsX?=
- =?us-ascii?Q?lLNSwKIg/47997iJzHyqi+6V321oAeO1WGGfScJBs7BgY/ygfeDc0WQ6nBhz?=
- =?us-ascii?Q?qMqK+PEv1vL4FCZSKt9LC2tDoKtjefl03y7ogQhdwOFHYft5HdTYwYpj613j?=
- =?us-ascii?Q?H9YDsOzvu5PLM+gfMQ6wAwLP+a0okscK8x1ewDBG3U7YPtBkwrWNVaJasE51?=
- =?us-ascii?Q?a+r8VaHjU/TNC2Ms3bSGqSSxNLoNUif8ef43JHzsO01UMj68oUl0Rnnq4m0x?=
- =?us-ascii?Q?/jyzD2y0I1ImjSF7ZFP8cV2WV14yv17kx8ejbbRTlftz+J+J99CoI5f/TdBY?=
- =?us-ascii?Q?gvEaqkLa3HPq9xyGCTCOe7Wnu2vAoFJzKq/iqoOJDBjlZqgKeJ6GIw3IiOQe?=
- =?us-ascii?Q?vLoT9LjBo2qDbGQL4zx4z7NiYluY9vXurgKrA8UQ+sexWO4hf7cdjZQd09ly?=
- =?us-ascii?Q?Jzgtcyni6YMHL2Z4opu/g+R/Wo0MX11v9A5sVDC/p6DxIyUMUkyMhcYrlT6Z?=
- =?us-ascii?Q?xFscGkO67U15JIX2FVc=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69f5d9d0-7a9a-4278-d66f-08ddb7e80943
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 15:08:57.5383
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 15:31:00.5865
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zs23o7lSiCNu661y/zjGDHa4Y75h5amlKTQkakL3VeawXBRdJoPkRXS0TSlRqVj5/eL0+V+DVBmayHFC4/IRLQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8392
+X-MS-Exchange-CrossTenant-Network-Message-Id: d46002c7-f4fb-4e64-8979-08ddb7eb1e32
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	OSA0EPF000000C7.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB7009
 
-On Mon, Jun 30, 2025 at 10:25:43AM +0200, Krzysztof Kozlowski wrote:
-> On 28/06/2025 17:33, Frank Li wrote:
-> > On Sat, Jun 28, 2025 at 02:34:12PM +0200, Krzysztof Kozlowski wrote:
-> >> On Fri, Jun 27, 2025 at 04:09:49PM -0400, Frank Li wrote:
-> >>> On Fri, Jun 27, 2025 at 08:54:46AM +0200, Krzysztof Kozlowski wrote:
-> >>>> On Thu, Jun 26, 2025 at 03:38:02PM +0800, Richard Zhu wrote:
-> >>>>> Add one more reference clock "extref" to be onhalf the reference clock
-> >>>>> that comes from external crystal oscillator.
-> >>>>>
-> >>>>> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> >>>>> ---
-> >>>>>  .../devicetree/bindings/pci/snps,dw-pcie-common.yaml        | 6 ++++++
-> >>>>>  1 file changed, 6 insertions(+)
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-> >>>>> index 34594972d8db..ee09e0d3bbab 100644
-> >>>>> --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-> >>>>> +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-> >>>>> @@ -105,6 +105,12 @@ properties:
-> >>>>>              define it with this name (for instance pipe, core and aux can
-> >>>>>              be connected to a single source of the periodic signal).
-> >>>>>            const: ref
-> >>>>> +        - description:
-> >>>>> +            Some dwc wrappers (like i.MX95 PCIes) have two reference clock
-> >>>>> +            inputs, one from internal PLL, the other from off chip crystal
-> >>>>> +            oscillator. Use extref clock name to be onhalf of the reference
-> >>>>> +            clock comes form external crystal oscillator.
-> >>>>
-> >>>> How internal PLL can be represented as 'ref' clock? Internal means it is
-> >>>> not outside, so impossible to represent.
-> >>>
-> >>> Internal means in side SoC, but outside PCIe controller.
-> >>
-> >> So external... It does not matter for PCIe controller whether clock is
-> >> coming from SoC or from some crystal.  It is still input pin. Same input
-> >> pin.
-> >
-> > It is NOT the same pin. It is TWO pins, there are mux inside in PCI
-> > controller.
-> >
-> > There are similar cases in s32 rtc, there are 4 input source[0,1,2,3]
-> > https://lore.kernel.org/imx/20241127144322.GA3454134-robh@kernel.org/
-> > Only one provide.
-> >
-> >>
-> >>>
-> >>>>
-> >>>> Where is the DTS so we can look at big picture?
-> >>>
-> >>> imx94 pci's upstream is still on going, which quite similar with imx95.
-> >>> Just board design choose external crystal.
-> >>>
-> >>> pcie_ref_clk: clock-pcie-ref {
-> >>>                 compatible = "gpio-gate-clock";
-> >>>                 clocks = <&xtal25m>;
-> >>>                 #clock-cells = <0>;
-> >>>                 enable-gpios = <&pca9670_i2c3 7 GPIO_ACTIVE_LOW>;
-> >>> };
-> >>>
-> >>> &pcie0 {
-> >>>         pinctrl-0 = <&pinctrl_pcie0>;
-> >>>         pinctrl-names = "default";
-> >>>         clocks = <&scmi_clk IMX94_CLK_HSIO>,
-> >>>                  <&scmi_clk IMX94_CLK_HSIOPLL>,
-> >>>                  <&scmi_clk IMX94_CLK_HSIOPLL_VCO>,
-> >>>                  <&scmi_clk IMX94_CLK_HSIOPCIEAUX>,
-> >>>                  <&pcie_ref_clk>;
-> >>>         clock-names = "pcie", "pcie_bus", "pcie_phy", "pcie_aux", "ext-ref";
-> >>
-> >> So this is totally faked hardware property.
-> >>
-> >> No, it is the same clock signal, not different. You write bindings from
-> >> this device point of view, not for your board.
-> >
-> > No the same clock signal. There are two sources, "ext-ref" or "ref".
-> > PCI controller need know which one provide clocks.
->
-> OK, this should be clearly expressed not some vague play of the words
-> what is internal and external...
 
-Does bjorn's suggest description is clear enough?
 
-  "Some dwc wrappers (like i.MX95 PCIes) have two reference clock
-  inputs, one from an internal PLL, the other from an off-chip crystal
-  oscillator. If present, 'extref' refers to a reference clock from
-  an external oscillator."
+On 2025/6/30 19:14, Krzysztof Kozlowski wrote:
+> EXTERNAL EMAIL
+> 
+> On 30/06/2025 10:29, Hans Zhang wrote:
+>>>> +
+>>>> +  num-lanes:
+>>>> +    maximum: 8
+>>>> +
+>>>> +  ranges:
+>>>> +    maxItems: 3
+>>>> +
+>>>> +  msi-map:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  vendor-id:
+>>>> +    const: 0x1f6c
+>>>
+>>> Why? This is implied by compatible.
+>>
+>> Because when we designed the SOC RTL, it was not set to the vendor id
+>> and device id of our company. We are members of PCI-SIG. So we need to
+>> set the vendor id and device id in the Root Port driver. Otherwise, the
+>> output of lspci will be displayed incorrectly.
+> 
+> Please read carefully. Previous discussions were also pointlessly
+> ping-ponging on irrelevant arguments. Did I suggest you do not have to
+> set it in root port driver? No. If this is const here, this is implied
+> by compatible and completely redundant, because your driver knows this
+> value already. It already has all the information to deduce this value
+> from the compatible.
+> 
+> 
+Dear Krzysztof,
 
-Frank
->
-> >
-> > There are mux inside PCI controller, DT need provide information which on
-> > provide.
-> >
-> > Maybe my example dts miss-lead you. Altherate descript is
-> >   clock-names = "pcie", "pcie_bus", "pcie_phy", "pcie_aux", "ref", "ext-ref";
-> >
-> >   But we thinks if ext-ref provide, "ref" is not neccesary need be turn on.
-> >   So remove it from the list.
->
-> If the ref clock is actually wired it should be there. You describe here
-> hardware, not what is necessary.
->
+Thank you very much for your reply.
+
+These two attributes are also in the following document. Is this place 
+out of date?
+Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+
+
+We initially used the logic of Cadence common driver as follows:
+drivers/pci/controller/cadence/pcie-cadence-host.c
+of_property_read_u32(np, "vendor-id", &rc->vendor_id);
+
+of_property_read_u32(np, "device-id", &rc->device_id);
+
+So, can the code in Cadence be deleted?
+
+
+I see. It will be removed in the next version. The vendor id and device 
+id are directly assigned by the Root Port driver based on compatible.
+
+Best regards,
+Hans
+
+> 
+> 
+>>
+>>>
+>>>> +
+>>>> +  device-id:
+>>>> +    enum:
+>>>> +      - 0x0001
+>>>
+>>> Why? This is implied by compatible.
+>>
+>> The reason is the same as above.
+>>
+>>>
+>>>> +
+>>>> +  cdns,no-inbound-bar:
+>>>
+>>> That's not a cdns binding, so wrong prefix.
+>>
+>> It will be added to Cadence's Doc. I will add a separate patch. What do
+>> you think?
+>>
+>>>
+>>>> +    description: |
+>>>
+>>> Do not need '|' unless you need to preserve formatting.
+>>
+>> Will delete '|'.
+>>
+>>>
+>>>> +      Indicates the PCIe controller does not require an inbound BAR region.
+>>>
+>>> And anyway this is implied by compatible, drop.
+>>>
+>>
+>> Because Cadence core driver has this judgment, the latest code of the
+>> current linux master all has this process. As follows:
+>> int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
+>>       cdns_pcie_host_init_address_translation(rc);
+>>        cdns_pcie_host_map_dma_ranges(rc);
+>>           cdns_pcie_host_bar_ib_config
+> 
+> And you cannot fix or change drivers? How does it matter for discussion
+> here?
+> 
+>>
+>> So this attribute has been added here, or is there a better way?
+> 
+> Of course, like every other driver in Linux kernel. This is FIXED for
+> your platform, so set it in your CIX driver.
+> 
+> 
+> 
 > Best regards,
 > Krzysztof
 
