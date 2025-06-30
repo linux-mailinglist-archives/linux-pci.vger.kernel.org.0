@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-31059-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31060-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33085AED5A4
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 09:30:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD516AED5B4
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 09:32:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 53BF43A51AE
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 07:30:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E58D47AA04B
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 07:31:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4475521B9F5;
-	Mon, 30 Jun 2025 07:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A406822FF39;
+	Mon, 30 Jun 2025 07:32:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAC1e2gL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZY6B9QZo"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183372192E5;
-	Mon, 30 Jun 2025 07:30:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB35221FC0;
+	Mon, 30 Jun 2025 07:32:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268630; cv=none; b=qzyHaG/SCUgXQ9OcshFODUrEPf3SbnBli2K0rC5EWuLY16HihyQXNq5TjjtpOlwJmq+LN1387ZAsZCgkgUW+OWL4F9Q/D6+wrE5gJCJB9zlCdHNJbryarR3TNhoCSFNuPgKnooKl618nzVL6kJ1a+bdT9ERmq+VWWvLr2YQtCK4=
+	t=1751268729; cv=none; b=HlAYRteuu0TylRRJ7gbdUSi5i6H4wBnRAYo8QDcGI1ObqBk2K31F/ChiNHi9W9aRO5FD+AC4WblFo+2jsZQkeNPNDEGBzp452HF3IC8Ntzr9k/j/8gFwelJr5MAUHlfKUVsm6JoeJku1PuRfbwObbfhCPIBNA2kHLzfrJXTkT7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268630; c=relaxed/simple;
-	bh=+W++RPlYJEyAeuhS3hRC53KAjTd0o4yYfaYBlxSa/zw=;
+	s=arc-20240116; t=1751268729; c=relaxed/simple;
+	bh=LjtmnEynmF1tjotg53OHblcoKybFNNuF9mQaAiduAWY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JAHoqRRA/M+mkGVeXV4E0tYkTvLUKl7e/fPXpnc7KkeCaiD81kaEo0jWFZUQVI/Ilt9meUq6qncKmzx5cVm/B7H9uwyHZvlXnuI9uIUQ7fbreb735XP0dyQbrRXg4rW48s6RGXlWL+1C4Lcrqh97h/IrZ86tnfKBM26qZ2srNlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAC1e2gL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E810AC4CEF2;
-	Mon, 30 Jun 2025 07:30:28 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=UK1HSLTX7d9IxSkq4BN5yrrTgp3D8RSmt94JwQAlrMbHf5tYOCT3+n9VuKA90Q3l8bV3kuQwvlZgcAPmxu9CcsVzxfPTIRKUZ8ofPiAMrFSzEIWqCjWq1zzr0o73Qg4pjmi0gnRZFj/FKQrU6CzfRu44ZIkWu7aaxfuHTUn6z2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZY6B9QZo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AEC3C4CEE3;
+	Mon, 30 Jun 2025 07:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751268629;
-	bh=+W++RPlYJEyAeuhS3hRC53KAjTd0o4yYfaYBlxSa/zw=;
+	s=k20201202; t=1751268729;
+	bh=LjtmnEynmF1tjotg53OHblcoKybFNNuF9mQaAiduAWY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GAC1e2gLG7Df7mfRBYmNwG6e6iHLGCh+oVWTpyAYbdn3N/WC0KEt1U8m4VzEJeqT3
-	 O13ZFjZLLcPCegp0S15d0IvwXJ3s/pCOQ+3YPEa7DNsuFoSPBNctHpuwSlQLAHnFsl
-	 zG3W50+2cLWtxIbJlGz4Ko51w6S1w/acU67vl02gmVm7/29t/75UhfnscOME4WsasH
-	 kSutFgDcoVS+Um4UQ43LHcL9sN7VDjcMIkk3SC0c8XEsFGh6HamnTpw2d787yLfuGT
-	 1o44BUSbuTQLrbV5XFSurXgj4Z+VI6VgCNglgLVSkqE3tlrP9PUUNeslXBQQSiN1Nw
-	 CX/thVImS8hnw==
-Date: Mon, 30 Jun 2025 09:30:26 +0200
+	b=ZY6B9QZoJ/pjUbWvL9hI2CkMDM/HTrSNFxLhyenWw4Vl33x59KjgK6NdiNlseVTLh
+	 YZGtF9cZhqj5d8Q780GYpZGEx7+R/TNvTnkrY7DTVebYGbSETUg6/0r1ncEDvx5WCh
+	 k3ltu27su7eECsVpeo3MMTwFZGLtxvSnLEW2dUsLnXLfe+HsLa6JJmLWnC5T679H/a
+	 Y964s/c4jftvRCvzh1qVnC2YWmiXfSrJXxzRehmxBYahhsNQpfHzZ1zZnAw9J8Kz2B
+	 H9kW1PpOfoxSVwCvBr8W6G5tY/kTqgpoOo5zReNG5A/dJs7Co5awcA27W9y47G8ke+
+	 7Vc3ToaBCONhw==
+Date: Mon, 30 Jun 2025 09:32:05 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: hans.zhang@cixtech.com
 Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
@@ -49,11 +49,11 @@ Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
 	conor+dt@kernel.org, mpillai@cadence.com, fugang.duan@cixtech.com, 
 	guoyin.chen@cixtech.com, peter.chen@cixtech.com, cix-kernel-upstream@cixtech.com, 
 	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 01/14] dt-bindings: pci: cadence: Extend compatible
- for new RP configuration
-Message-ID: <20250630-heretic-space-bullfrog-d6b212@krzk-bin>
+Subject: Re: [PATCH v5 14/14] arm64: dts: cix: Enable PCIe on the Orion O6
+ board
+Message-ID: <20250630-stylish-pretty-stoat-bde7f3@krzk-bin>
 References: <20250630041601.399921-1-hans.zhang@cixtech.com>
- <20250630041601.399921-2-hans.zhang@cixtech.com>
+ <20250630041601.399921-15-hans.zhang@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,24 +62,40 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250630041601.399921-2-hans.zhang@cixtech.com>
+In-Reply-To: <20250630041601.399921-15-hans.zhang@cixtech.com>
 
-On Mon, Jun 30, 2025 at 12:15:48PM +0800, hans.zhang@cixtech.com wrote:
-> From: Manikandan K Pillai <mpillai@cadence.com>
+On Mon, Jun 30, 2025 at 12:16:01PM +0800, hans.zhang@cixtech.com wrote:
+> From: Hans Zhang <hans.zhang@cixtech.com>
 > 
-> Document the compatible property for HPA (High Performance Architecture)
-> PCIe controller RP configuration.
-
-I don't see Conor's comment addressed:
-
-https://lore.kernel.org/linux-devicetree/20250424-elm-magma-b791798477ab@spud/
-
-You cannot just send someone's work and bypassing the review feedback.
-
+> Add PCIe RC support on Orion O6 board.
 > 
-> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
+> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
+> Reviewed-by: Manikandan K Pillai <mpillai@cadence.com>
 
-SoB.
+Where? Please provide lore links. The happened AFTER the SoB, so they
+must have been made public, right?
+
+> ---
+>  arch/arm64/boot/dts/cix/sky1-orion-o6.dts | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/cix/sky1-orion-o6.dts b/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
+> index d74964d53c3b..44710d54ddad 100644
+> --- a/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
+> +++ b/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
+> @@ -37,3 +37,23 @@ linux,cma {
+>  &uart2 {
+>  	status = "okay";
+>  };
+> +
+> +&pcie_x8_rc {
+> +	status = "okay";
+
+And really two people reviewed this trivial changes? Really?
+
+Plus what their review actually checked? This is obviously wrong - not
+following DTS coding style, so what such review meant? What did it
 
 Best regards,
 Krzysztof
