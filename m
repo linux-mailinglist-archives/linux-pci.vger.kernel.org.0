@@ -1,76 +1,77 @@
-Return-Path: <linux-pci+bounces-31098-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31099-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7B8EAEE6AD
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 20:21:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15844AEE6B1
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 20:22:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 385633A5159
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 18:21:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED0E03ACBC6
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 18:21:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A99201D63DD;
-	Mon, 30 Jun 2025 18:21:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FED81D7E41;
+	Mon, 30 Jun 2025 18:21:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k1mx/nIG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="haeEScmh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B221C5D57;
-	Mon, 30 Jun 2025 18:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC4F72613;
+	Mon, 30 Jun 2025 18:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751307685; cv=none; b=SqclY4oRRaUWI4PvotGPLVWtB2kXeKWL4ZBIDg2T5NLRBHxqvnq9fr7AyNOz07dfZrNB6fYEyxY0SvsleYOKly4LxUgDEGdeld7WDuILz4IT/2U2JBgdJpEZVA/A1NmNmcCXnZDjbz5xn8ylI7j2UQuCWD/++gPylY++E8VLFaY=
+	t=1751307700; cv=none; b=pdbIg2h/Vb51lZ8erN74jW2J4KxATm1Jv1Iom7q8rBs3kezhzKHdflVgm5SYYbEaTsbQtOUUMJKK0/lAuKS73XBT+/O5MwAIFCwEjOpFKYsuDugxIigHXUDdpBkm/z7nHb3XoY8N/Pms18oc0ppa6njaMZZqLemBVUMQQiL9gH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751307685; c=relaxed/simple;
-	bh=mqH/ZCrrChVkEmGXwBE5I5Gq6wow1NmIP0rQxaIGL6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=F7KBaE/x42wImaR94FbA4Doc6vdp1xPrHlT1/fmO8Ex+ucGarbQEzuogucY2X+mDH6jo3qWCjso1yciW/ExOj90/HPJevVsoZp2HEPqVLaQe2ntNrhOCLFCVpzPxZfT+OoJl1jHSlTC4RfAj9s1pNZN05DL3Q1N/Jp9U1uFM01E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k1mx/nIG; arc=none smtp.client-ip=209.85.160.172
+	s=arc-20240116; t=1751307700; c=relaxed/simple;
+	bh=tpbE2FvztANs2/izJnOECYoMP2X5oOScRQHxOIydI1k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N/Ta5DgVLaSt4dCNTFwN4clmXKKt1RRRSrQ8WmZWJVyw6E14vZL7uW3LL7UaAg/Tqlg6o/IZlOB9aJXGGxpsF1I7bxH2Oc1ZpAD+ITdgoi2jjJh7LPbaDV1hvLOq+N82mBArN+2XKjrp0veNO1mDH3BwdJQ2jRBRGKU7lF9spq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=haeEScmh; arc=none smtp.client-ip=209.85.219.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a58f79d6e9so65579871cf.2;
-        Mon, 30 Jun 2025 11:21:23 -0700 (PDT)
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6f8aa9e6ffdso55627516d6.3;
+        Mon, 30 Jun 2025 11:21:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751307683; x=1751912483; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=j5oPe7NuWEBlVMssFfuoeeybtC7f7CEpTOJiXlRikAU=;
-        b=k1mx/nIGT9QqlTls6S09v3qblAUgKA+0hhS+WN3dQ3DAKCbxtDZZRilIBCCMp76WLC
-         5bn41Ex24WJMzqXX+7D8n1LiGdMapksxesIkl6bO585wnfrA3e5mr+4G8AA1/LX+SzU7
-         akGelKyAbJCD1dV3X/sRdP/2Un7VHoVer/Y+mlzUNHtb2eSEZeivi8fQEl1k4kddHk44
-         ZJD2U/OVWVu+Ogo4lwTkwCW5793NlmUZi5h43mCEb1azUplzfwAz7nybFOhmvyx7mxd3
-         fPKj7NctrOOxaLUeeDtjMeMY7jmwpbHlh5Y6kKLyc3UvGBcsJ96a7orR/O2ZtTqf2BjA
-         VgVg==
+        d=gmail.com; s=20230601; t=1751307697; x=1751912497; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mt5O7/7JEumjsAyKxjvlFipcH+4/5yB2S8im+OQhNPo=;
+        b=haeEScmhx3fr373xFvjSOJeOmxFhG3ZDl9mo5+fQVCBOl/b7Amj1nboZZfx26dq0S2
+         6Y4WOxQkT5fRyL4l1uk8AsHk0jpZoFhglXStKAtlIanJ5b+bvksaiTfCArx1D+uHGSq+
+         X1ADfz/wr6O4QLQM+sJDWyIzx0AiN2nJVvnEFWfl1mIQdcAZM+oH/ZwUIxWEhng0ksSU
+         /hZp6xC9OFM220vdnpP9JwiyYPbawVMqRLbyEsvJADYG/T+sNwKVptO9KXTmnKqTZxsg
+         81DoRsnJ4YmPYh4JHqrh7eCGof325kNIyuyUPjmcTWblVD/aEP6XhVT36MA7BFode9Bz
+         +0TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751307683; x=1751912483;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j5oPe7NuWEBlVMssFfuoeeybtC7f7CEpTOJiXlRikAU=;
-        b=i5Z5gMOBuZVqlA53GmOa/+4mvjIcta4N3YNVEG6cdqbnZ/e3mQKkvKToQpQ4F/ioZE
-         GkBl5J8HMzPKQ8uRYwMqZ/1A8mf6+u083gG8JSBakEIlgIlWPEyn3QCJGLaYKbah0dyg
-         SVTOVZ8iK+/MzbNTYCYfqc7tkGeOYHHzz7g5QHuKAzCSZGIKbxbDtgsPYYEWUGN2UzDV
-         MziVS+RTCEe/GE6VfLm3bqeb2kJikOMtM2sF6gmOeFkLscC6W7trRqsspsA66KytF/dp
-         MqX/UT8wRIuFY9G+yyamwns5fZc+FacsUqVbA32Dj7Yh1aayuu+nispRKSBJMuSQHdhi
-         TJKw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+AKfRrUTGrH3CO/PPhraQpsamKFz2XF6P/5LA11KYkMlGBHy2zCqGobiMwTFu3nCu2ONNmREjwpS1Q1g=@vger.kernel.org, AJvYcCWTHU6KC1Rlc4B4BTFyD4duCdexH2zlb2K19IqSoRfhoTDaTujTTGSbJCgGlT3GmhLi4SIoJynf9hsY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0EvvY7YV6U6TJszCuKiCA8Ivy/NvLrfc1jbQU/kaBbPtXWpiE
-	k/TGcDEigwTn7qj60in7yHvKsxL8VxelrjOo4TOkvgA6oLHaEqzHpIfX
-X-Gm-Gg: ASbGncuJeFcSJ/SiPBZlsDB3fMdvzS87O60FHaY8SEnvmXT8MQ2Ej0TGBQRGau/DqWr
-	KsYQxUxET0ZvAbwMovZ4cjg7wBb0CuTP8la3k3PJzaHOabukJhtstJMd1GMrlVW7sAQtj//mJJM
-	NHKUcVaQVh7l/BZZ/j3sHxvzHVWYSpnPxHCCrok5JsXe7lUuxTeJ/OPWaXJOj3X32i89ixkr5yZ
-	A+Uv/NiiYi6KZK2tqSJZvkKfDq0wR8hvLTMTFKru1U9J1IyEeYno3hJkOm3guMNE6pvbOutxQ50
-	CUoECf9LPL5iaEiZ1vgoVKVjd3gpTG34EwIWlN1MLOlEIFNMuQ==
-X-Google-Smtp-Source: AGHT+IFsXJjoVwUXm0fcOFhLVNqsYO/moCefhcFNV46+xG5upfucPDlS2Uf2IOjWztKAdTp7b2Jfhg==
-X-Received: by 2002:a05:622a:1355:b0:4a4:4af2:5cff with SMTP id d75a77b69052e-4a7fc9d4f7amr238186611cf.3.1751307682697;
-        Mon, 30 Jun 2025 11:21:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751307697; x=1751912497;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mt5O7/7JEumjsAyKxjvlFipcH+4/5yB2S8im+OQhNPo=;
+        b=dXP1/VT+E3msBOajRz7hs9gCSoJHK8zb6ECdUzo0m2ZjEqLCJlNKetFtBBqyOrzdht
+         x2DyNPQdAOyw+f0ebroDxcu4beS6OTcHn6ymSaG5NxBzqYkXrR5gyrW1V9pHJR7ndqsU
+         Q3kk+yt48DO7nDLCOr/ExhRWl3uNNUgjOQvv8s9qJqZmswXD2oW8qiCidzInWPmj8Xjt
+         6sPc8rTfaEXcyZsksrih8hhNx9IE1HchtDVqxqNzAcBdcIbgXT3fIcDrRc6sXyS2vS8z
+         kVp0NDI59Mg2uMxGiy5UEOc7ehh9FQKw/yGyieL6dTvVc2sb+/eVsXlHgnlxQKFbHqUO
+         YJ7w==
+X-Forwarded-Encrypted: i=1; AJvYcCV47NsyRoqLe0tgMhbGFSJtB1HhH4AL95HmemZazw3tVCnO8IUB4PeDAIQNQJASHUNJWbrNTGrd4TxcJrM=@vger.kernel.org, AJvYcCW7g9V3Yldrhxi+wJMXI5RC7OG5cEs33dJsHjNLZ/R+p0BVvczngYKlW+hvP71/YhIZm2yhxsniJkY1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt2wpK9zCpFZLMBQb2YrCWhtRKqcP+swHRaARPWC12XRDdoWl8
+	isFGHyeaeI5HFeB9iw4xOKEnAdj8unG5+NB4q1ZqhUk0KOZZkivDeFTy
+X-Gm-Gg: ASbGncsKQM1Xs+iiRV0iTRBD6i9UYT6UM2unPvuLHi36kpVc93EEHW2LpHpQJ4d51Ro
+	BmCYnOpkbHrYdYw8ItuxPbhOSZsfvlVNl20xseuGAokul9oejiQgKKSJ+5VN/nZ47GEhmCbUHqc
+	R1+Kwix+/DX/42Br8JnZoy/XYT8uxKb/dfaDJTavQYXky0hvbr5eX2k0TLszeqodp2zQVAt5Tej
+	ZJAJAXH7lf1cjcmlw2dNgO5qU4oO0+xCVtlpx94b/1gCE5CQGxyaJP6u+LoAvyazxntVXmvbjn+
+	8issEcvEEaKIWuYDFXz5Mjq72pgmid9OulX24weN89zSGcs5RsHezXkK4XAV
+X-Google-Smtp-Source: AGHT+IFqsmBLHnSOIjXduuu6Gtg+JRUwYRfr6dqhcQB+Kjp/XASyizyvYC3WINP5R9Ajnd7huyBUVA==
+X-Received: by 2002:a0c:f093:0:b0:700:bc46:5355 with SMTP id 6a1803df08f44-700bc46546cmr135954696d6.28.1751307697397;
+        Mon, 30 Jun 2025 11:21:37 -0700 (PDT)
 Received: from geday ([2804:7f2:800b:4851::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc5cd906sm62801131cf.79.2025.06.30.11.21.18
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772ff09csm71481116d6.95.2025.06.30.11.21.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 11:21:22 -0700 (PDT)
-Date: Mon, 30 Jun 2025 15:21:06 -0300
+        Mon, 30 Jun 2025 11:21:36 -0700 (PDT)
+Date: Mon, 30 Jun 2025 15:21:30 -0300
 From: Geraldo Nascimento <geraldogabriel@gmail.com>
 To: linux-rockchip@lists.infradead.org
 Cc: Shawn Lin <shawn.lin@rock-chips.com>,
@@ -85,8 +86,9 @@ Cc: Shawn Lin <shawn.lin@rock-chips.com>,
 	Valmantas Paliksa <walmis@gmail.com>, linux-phy@lists.infradead.org,
 	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v8 0/4] PCI: rockchip: Improve driver quality
-Message-ID: <cover.1751307390.git.geraldogabriel@gmail.com>
+Subject: [PATCH v8 1/4] PCI: rockchip: Use standard PCIe defines
+Message-ID: <e81700ef4b49f584bc8834bfb07b6d8995fc1f42.1751307390.git.geraldogabriel@gmail.com>
+References: <cover.1751307390.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -95,47 +97,165 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1751307390.git.geraldogabriel@gmail.com>
 
-During a 30-day debugging-run fighting quirky PCIe devices on RK3399
-some quality improvements began to take form and after feedback from
-community they reached more polished state.
+Current code uses custom-defined register offsets and bitfields for
+standard PCIe registers. Change to using standard PCIe defines. Since
+we are now using standard PCIe defines, drop unused custom-defined ones,
+which are now referenced from offset at added Capabilities Register.
 
-This will ensure maximum chance of retraining to 5.0GT/s, on all four
-lanes and fix async strobe TEST_WRITE disablement. On top of this,
-standard PCIe defines are now used to reference registers from offset
-at Capabilities Register.
-
-Unfortunately, it seems Rockchip-IP PCIe is unable to handle 16-bit
-register writes and there's risk of corrupting state of RW1C registers,
-an issue raised by Bjorn Helgaas. There's little I could do to fix that,
-so on this issue the situation remains the same.
-
+Suggested-By: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
 ---
-V7 -> V8: add Valmantas Paliksa Signed-off-by to third patch
-V6 -> V7: drop RFC tag as per Heiko Stuebner's reminder, update cover
-letter
-V5 -> V6: reflow to 75 cols, use 5.0GTs instead of Gen2 nomenclature,
-clarify strobe write adjustment and remove PHY_CFG_RD_MASK
-V4 -> V5: fix build failure, reflow commit messages and also convert
-registers for EP operation, all suggested by Ilpo
-V3 -> V4: fix setting-up of TLS in Link Control and Status Register 2,
-also adjust commit titles
-V2 -> V3: correctly clean-up with standard PCIe defines as per Bjorn's
-suggestion
-V1 -> V2: use standard PCIe defines as suggested by Bjorn
-
-Geraldo Nascimento (4):
-  PCI: rockchip: Use standard PCIe defines
-  PCI: rockchip: Set Target Link Speed before retraining
-  phy: rockchip-pcie: Enable all four lanes if required
-  phy: rockchip-pcie: Properly disable TEST_WRITE strobe signal
-
  drivers/pci/controller/pcie-rockchip-ep.c   |  4 +-
- drivers/pci/controller/pcie-rockchip-host.c | 48 +++++++++++----------
+ drivers/pci/controller/pcie-rockchip-host.c | 44 ++++++++++-----------
  drivers/pci/controller/pcie-rockchip.h      | 12 +-----
- drivers/phy/rockchip/phy-rockchip-pcie.c    | 15 +++----
- 4 files changed, 36 insertions(+), 43 deletions(-)
+ 3 files changed, 25 insertions(+), 35 deletions(-)
 
+diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+index 55416b8311dd..300cd85fa035 100644
+--- a/drivers/pci/controller/pcie-rockchip-ep.c
++++ b/drivers/pci/controller/pcie-rockchip-ep.c
+@@ -518,9 +518,9 @@ static void rockchip_pcie_ep_retrain_link(struct rockchip_pcie *rockchip)
+ {
+ 	u32 status;
+ 
+-	status = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_LCS);
++	status = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE + PCI_EXP_LNKCTL);
+ 	status |= PCI_EXP_LNKCTL_RL;
+-	rockchip_pcie_write(rockchip, status, PCIE_EP_CONFIG_LCS);
++	rockchip_pcie_write(rockchip, status, PCIE_EP_CONFIG_BASE + PCI_EXP_LNKCTL);
+ }
+ 
+ static bool rockchip_pcie_ep_link_up(struct rockchip_pcie *rockchip)
+diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+index b9e7a8710cf0..65653218b9ab 100644
+--- a/drivers/pci/controller/pcie-rockchip-host.c
++++ b/drivers/pci/controller/pcie-rockchip-host.c
+@@ -40,18 +40,18 @@ static void rockchip_pcie_enable_bw_int(struct rockchip_pcie *rockchip)
+ {
+ 	u32 status;
+ 
+-	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
++	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
+ 	status |= (PCI_EXP_LNKCTL_LBMIE | PCI_EXP_LNKCTL_LABIE);
+-	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
++	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
+ }
+ 
+ static void rockchip_pcie_clr_bw_int(struct rockchip_pcie *rockchip)
+ {
+ 	u32 status;
+ 
+-	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
++	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
+ 	status |= (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_LABS) << 16;
+-	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
++	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
+ }
+ 
+ static void rockchip_pcie_update_txcredit_mui(struct rockchip_pcie *rockchip)
+@@ -269,7 +269,7 @@ static void rockchip_pcie_set_power_limit(struct rockchip_pcie *rockchip)
+ 	scale = 3; /* 0.001x */
+ 	curr = curr / 1000; /* convert to mA */
+ 	power = (curr * 3300) / 1000; /* milliwatt */
+-	while (power > PCIE_RC_CONFIG_DCR_CSPL_LIMIT) {
++	while (power > FIELD_MAX(PCI_EXP_DEVCAP_PWR_VAL)) {
+ 		if (!scale) {
+ 			dev_warn(rockchip->dev, "invalid power supply\n");
+ 			return;
+@@ -278,10 +278,10 @@ static void rockchip_pcie_set_power_limit(struct rockchip_pcie *rockchip)
+ 		power = power / 10;
+ 	}
+ 
+-	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_DCR);
+-	status |= (power << PCIE_RC_CONFIG_DCR_CSPL_SHIFT) |
+-		  (scale << PCIE_RC_CONFIG_DCR_CPLS_SHIFT);
+-	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_DCR);
++	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCAP);
++	status |= FIELD_PREP(PCI_EXP_DEVCAP_PWR_VAL, power);
++	status |= FIELD_PREP(PCI_EXP_DEVCAP_PWR_SCL, scale);
++	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCAP);
+ }
+ 
+ /**
+@@ -309,14 +309,14 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+ 	rockchip_pcie_set_power_limit(rockchip);
+ 
+ 	/* Set RC's clock architecture as common clock */
+-	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
++	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
+ 	status |= PCI_EXP_LNKSTA_SLC << 16;
+-	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
++	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
+ 
+ 	/* Set RC's RCB to 128 */
+-	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
++	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
+ 	status |= PCI_EXP_LNKCTL_RCB;
+-	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
++	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
+ 
+ 	/* Enable Gen1 training */
+ 	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
+@@ -341,9 +341,9 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+ 		 * Enable retrain for gen2. This should be configured only after
+ 		 * gen1 finished.
+ 		 */
+-		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
++		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
+ 		status |= PCI_EXP_LNKCTL_RL;
+-		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
++		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
+ 
+ 		err = readl_poll_timeout(rockchip->apb_base + PCIE_CORE_CTRL,
+ 					 status, PCIE_LINK_IS_GEN2(status), 20,
+@@ -380,15 +380,15 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+ 
+ 	/* Clear L0s from RC's link cap */
+ 	if (of_property_read_bool(dev->of_node, "aspm-no-l0s")) {
+-		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LINK_CAP);
+-		status &= ~PCIE_RC_CONFIG_LINK_CAP_L0S;
+-		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LINK_CAP);
++		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCAP);
++		status &= ~PCI_EXP_LNKCAP_ASPM_L0S;
++		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCAP);
+ 	}
+ 
+-	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_DCSR);
+-	status &= ~PCIE_RC_CONFIG_DCSR_MPS_MASK;
+-	status |= PCIE_RC_CONFIG_DCSR_MPS_256;
+-	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_DCSR);
++	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCTL);
++	status &= ~PCI_EXP_DEVCTL_PAYLOAD;
++	status |= PCI_EXP_DEVCTL_PAYLOAD_256B;
++	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCTL);
+ 
+ 	return 0;
+ err_power_off_phy:
+diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+index 5864a20323f2..f5cbf3c9d2d9 100644
+--- a/drivers/pci/controller/pcie-rockchip.h
++++ b/drivers/pci/controller/pcie-rockchip.h
+@@ -155,17 +155,7 @@
+ #define PCIE_EP_CONFIG_DID_VID		(PCIE_EP_CONFIG_BASE + 0x00)
+ #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
+ #define PCIE_RC_CONFIG_RID_CCR		(PCIE_RC_CONFIG_BASE + 0x08)
+-#define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_BASE + 0xc4)
+-#define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
+-#define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
+-#define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
+-#define PCIE_RC_CONFIG_DCSR		(PCIE_RC_CONFIG_BASE + 0xc8)
+-#define   PCIE_RC_CONFIG_DCSR_MPS_MASK		GENMASK(7, 5)
+-#define   PCIE_RC_CONFIG_DCSR_MPS_256		(0x1 << 5)
+-#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE + 0xcc)
+-#define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
+-#define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
+-#define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
++#define PCIE_RC_CONFIG_CR		(PCIE_RC_CONFIG_BASE + 0xc0)
+ #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
+ #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
+ #define   PCIE_RC_CONFIG_THP_CAP_NEXT_MASK	GENMASK(31, 20)
 -- 
 2.49.0
 
