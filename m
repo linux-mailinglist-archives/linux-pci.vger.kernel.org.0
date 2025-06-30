@@ -1,112 +1,125 @@
-Return-Path: <linux-pci+bounces-31091-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31092-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93DBCAEE53F
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 19:06:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 394EDAEE574
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 19:17:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 780467A7516
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 17:04:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 72B5D179EBF
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jun 2025 17:17:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B1D82EAE3;
-	Mon, 30 Jun 2025 17:06:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A14C241CB7;
+	Mon, 30 Jun 2025 17:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hV9AGgVd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gK7PLjxP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B48CA4E;
-	Mon, 30 Jun 2025 17:06:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586202900BA;
+	Mon, 30 Jun 2025 17:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751303163; cv=none; b=ToJpx9qtQFCEQ50xDmB647JozNATpjq2WPsJ6NCcraILDQU7tjMGruqX3e5k4ncjAm18VZJrCXvLTvztRIYhOahKayyCQRUfN4PbOycoB4Ry8BYI9mNrU94GIBwHbXTgng1kUq+kM2SBRk2tXXC5tgcjCXnBBkuXlEKyAodoXiA=
+	t=1751303826; cv=none; b=upU0zfj+diI8gnzkFmMQV0oKssaI62hKlPfIXXxH9NpK8JlbZkusp1aW+6v1hphFVjrSUFqWDahI945CBye8iFP+/OSh7TsE6fSeh2RxgxAe12zuXQHb/fgtjzSgo7r7b4tURNRJE9QODGIiL/ZZ0Of7rsZzyHHIsrJ4bZtf89E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751303163; c=relaxed/simple;
-	bh=YS1h67nHopU5jEDVPXIholPcSs4LOSkc7OQ/xawugyw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=n6YRhX2uJ7iPYt9siBz3FkAIvunESXWTpR8DOTGSCnf6nETS19AtmHuKbqiOfttDMuyWoleyksuB+IDkTBp2jy0+rnzhIEuPO6bvrB6U4/uM9YYj7sYfViZbT++c5eJdNmjnFgWNDSG7JI/E5fAdhzfb+2bsCxF1Svfy7DAc+Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hV9AGgVd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 809A9C4CEE3;
-	Mon, 30 Jun 2025 17:06:02 +0000 (UTC)
+	s=arc-20240116; t=1751303826; c=relaxed/simple;
+	bh=RxENiAIxryG/e9PnDRmuJ2qoeNevxHN+jSL1+CqMpqw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fHDN7ifSfRRY6Brj/5st0MCjspk5TK8OKf6ScFYYxaS/iMb7IoUrLblkKfCXEVPXHblIZwiCUT5ZwuH110+sHhpzuZyU/VjSv9dtNaZ4MqZ3SK+6BjPvYjvXp7pUZ3ckJiKKfnvZC/kqp1sCPA+DmsgvQdgTpTQ9zgMQbJC1PDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gK7PLjxP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE5D1C4CEE3;
+	Mon, 30 Jun 2025 17:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751303162;
-	bh=YS1h67nHopU5jEDVPXIholPcSs4LOSkc7OQ/xawugyw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=hV9AGgVdssVMQd1wnnDfmJ0GOhvJ+r/NtVR9vxunWsbWGlijCdQnQw1Z3LMXp3Ord
-	 tOMaOM6uC0Gp1V9N5x+SfFkqYP0PTcshgQ4gsFokjlEqTQi43h7iXhvIHaQsEmkIkE
-	 nhxr1yMj7FMimmZvTFk+Z31JuUN8RHKfUwqoY/uR1Zo+o4N0QqpoWQnLe59E82OoeY
-	 SBnNXOrBdaE5MO+3csoUYVUZKSvbEm4THrxRTvgLL9lqSGkvFT/LR53/hPoh6s0Cd5
-	 e50UN0lWjypg109AU0g1KPpzav8hadhQ4dnbZG7l69POuCPcie6p71hvo/AVEtRkJ6
-	 SRPj4laswAyfQ==
-Date: Mon, 30 Jun 2025 12:06:01 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	s=k20201202; t=1751303825;
+	bh=RxENiAIxryG/e9PnDRmuJ2qoeNevxHN+jSL1+CqMpqw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gK7PLjxPWHRqv8leFMCxzAZgWK02KxZqRotqN8kQWL4Io69FgUlJ0Fo2ZgCYWBJlY
+	 CeCre45jA8BT+VMmEktD6EtSMdfkCjYyWxky07IUb4TgRoihvNGYCfGgHwN/OYSeif
+	 9W7RDwjwepqgEJxMt/owvKqHaszwHtqfAaYrVyn+HOQrPRB1YiVjl2As0HL0IQExd1
+	 Jv7zwgafCJbW98b7kjfQCCT4wE/cjPlopOmSyPb1pDVQLsBcTB0Kaekf+LAHdHsgfa
+	 vT0o7Yat4+natNFdPbKo49LdEHjQFKvQK+qt0Mx+usj4BSXqBwbItRTTQvMvp2YPRG
+	 Qh4Clax4BIHiA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uWI7r-00BJye-1d;
+	Mon, 30 Jun 2025 18:17:03 +0100
+Date: Mon, 30 Jun 2025 18:17:02 +0100
+Message-ID: <86jz4tb14h.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Janne Grunau <j@jannau.net>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] PCI: host-generic: Fix driver_data overwriting bugs
-Message-ID: <20250630170601.GA1785925@bhelgaas>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 00/31] Arm GICv5: Host driver implementation
+In-Reply-To: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625111806.4153773-1-maz@kernel.org>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, Jonathan.Cameron@huawei.com, timothy.hayes@arm.com, bhelgaas@google.com, Liam.Howlett@oracle.com, peter.maydell@linaro.org, mark.rutland@arm.com, jirislaby@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Jun 25, 2025 at 12:18:03PM +0100, Marc Zyngier wrote:
-> Geert reports that some drivers do rely on the device driver_data
-> field containing a pointer to the bridge structure at the point of
-> initialising the root port, while this has been recently changed to
-> contain some other data for the benefit of the Apple PCIe driver.
+On Thu, 26 Jun 2025 11:25:51 +0100,
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> This small series builds on top of Geert previously posted (and
-> included as a prefix for reference) fix for the Microchip driver,
-> which breaks the Apple driver. This is basically swapping a regression
-> for another, which isn't a massive deal at this stage, as the
-> follow-up patch fixes things for the Apple driver by adding extra
-> tracking.
+> Implement the irqchip kernel driver for the Arm GICv5 architecture,
+> as described in the GICv5 beta0 specification, available at:
+> 
+> https://developer.arm.com/documentation/aes0070
+> 
+> The GICv5 architecture is composed of multiple components:
+> 
+> - one or more IRS (Interrupt Routing Service)
+> - zero or more ITS (Interrupt Translation Service)
+> - zero or more IWB (Interrupt Wire Bridge)
 
-Is there a bisection hole between patches 1 and 2?
+[...]
 
-  1: PCI: host-generic: Set driver_data before calling gen_pci_init()
-  2: PCI: apple: Add tracking of probed root ports
+I think what is here is pretty solid, and definitely in a better shape
+than the equivalent GICv3 support patches at a similar point in the
+lifetime of the architecture.
 
-If so, would it be practical to avoid the hole by reordering those
-patches?
+For patches in this series except patch 18:
 
-> Finally, we can revert a one-liner that glued the whole thing
-> together, and that isn't needed anymore.
-> 
-> All of this is candidate for 6.16, as we have regressed the Microchip
-> driver in -rc1, and that fixing it breaks the Apple driver.
-> 
-> Geert Uytterhoeven (1):
->   PCI: host-generic: Set driver_data before calling gen_pci_init()
-> 
-> Marc Zyngier (2):
->   PCI: apple: Add tracking of probed root ports
->   Revert "PCI: ecam: Allow cfg->priv to be pre-populated from the root
->     port device"
-> 
->  drivers/pci/controller/pci-host-common.c |  4 +-
->  drivers/pci/controller/pcie-apple.c      | 53 ++++++++++++++++++++++--
->  drivers/pci/ecam.c                       |  2 -
->  3 files changed, 51 insertions(+), 8 deletions(-)
-> 
-> -- 
-> 2.39.2
-> 
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+
+If this goes into 6.17 (which I hope), it'd be good to have this
+series on a stable branch so that we can take the corresponding KVM
+patches[1] independently if they are deemed in a good enough state.
+
+	M.
+
+[1] https://lore.kernel.org/r/20250627100847.1022515-1-sascha.bischoff@arm.com
+
+-- 
+Without deviation from the norm, progress is not possible.
 
