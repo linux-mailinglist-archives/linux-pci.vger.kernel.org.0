@@ -1,131 +1,129 @@
-Return-Path: <linux-pci+bounces-31153-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31154-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBE41AEF564
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 12:44:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 354FEAEF5A7
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 12:54:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F16D7A3872
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 10:43:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36F05165F06
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 10:54:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF00827057C;
-	Tue,  1 Jul 2025 10:44:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3D6F242D8C;
+	Tue,  1 Jul 2025 10:54:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yAXGl2UE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQTwJ004"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3B72701A3
-	for <linux-pci@vger.kernel.org>; Tue,  1 Jul 2025 10:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C934470810;
+	Tue,  1 Jul 2025 10:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751366655; cv=none; b=H9YP8Lp/QwpTw4izqbtKOQBFSmHOwFf/98PpnitBzHMLpdm57dXwFA/m/2fvlKEZwNHHTcmgDSnRdYIahOnRxn3nYq6TQQFB7RpDz94IAtCi+61eQhX6xMQqfWCzl9NJE7BvZVJih+1NbCRLPkTS8SHS+lOXQa691rXW+Kgen0s=
+	t=1751367253; cv=none; b=fuljt/5QN3BUBMGOEmLhk6rwpN/n8bGKDGg9pUQQJq1UJRYiPvjTvxhX1W68qje3sNXvC4RPpcnvyLcYfapoIFbGETgAFikZqDXkoZa9nboVc67yRh9meym3XZlQk141nQ8pDgLrsFLkrnNUtreXRAcyMx4itZg6HXreSItr17U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751366655; c=relaxed/simple;
-	bh=FjNNJQuNFHz/e6yt6+QF01AIHDz6pY4OvsUX2LurgSk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hLvlMJZW263sCPYgCtVJVUoR1sugUqc+sfxVJBUDgL1yH30VwjnUtgnySH/y5IYcn8IDwZytt10ZgJRxzFh3EIzZSJ+VOcyjc4ikwUfTWws/ZA7DJGLiS7P0sC6XihwCK12IQtryEZKgyCE1F7uFkrauBi4zQWqoPx7jZjISGsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yAXGl2UE; arc=none smtp.client-ip=209.85.208.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-60c6d568550so2833935a12.2
-        for <linux-pci@vger.kernel.org>; Tue, 01 Jul 2025 03:44:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751366652; x=1751971452; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KkP3Q/mrHcTXpi5jFAQSRZZTttwkOM8RfBay5zssxDs=;
-        b=yAXGl2UE0qGFLEXo8I/Q2Me+hvVbD7mps4Qv0pBulP64GzRp969FW+u0lywERoqpQ1
-         ZjN7Z+eLDoqa7yoDrhFaRojz57rhL6Rir/zpwzCWKuPEEyGre87w/lCKpfuIR13kFpKf
-         yCy6wzZ6QgkBK/ptREQ02Xm5pvimoCLIT3982qRqrBRkaoOSTgjddPD2/M0krisx/I70
-         x0/3GmhDt3zFn+6ov2RP3FHOBkSbhkVi2tlA2nKgBkQh2lw7FMQ85VQvaFylCsDlB98p
-         buq6+GFlh7eDHsEvqV3s+Q8LCNNNGNncnj2SKXdG6kY62ZswTAKQnbbWL2vwc+JqJ/ZV
-         lw0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751366652; x=1751971452;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KkP3Q/mrHcTXpi5jFAQSRZZTttwkOM8RfBay5zssxDs=;
-        b=vyvtxqHeU7dAmNnVA/Nq8y9Tn7TjnSVKoV5IiRl/oyEN6nSAKChDMqK/070yCzae9c
-         A9v7qdHofe+CWR7E2DYTBiZ+o//sI2jfLMYr4Kvha60vhKm8nAqUsWNvXdFdSQxkkVeI
-         8QAFqQ4Izm2lRELMd0+0BihvTYUM/GmxtnTCRPkP6tryGLcasdXnKq0D3WepIVM/WvhE
-         RNlZImBv4sAmyYYGaqPB8uYLTFNSOLvvviLc8YOGklrKT7lHMnRnp5GbEfSBOKFQT31z
-         MPE+HGKOTN4F3ARiYIUSVH3rBLhH0PsLiFERiqV9cBCQfTHHRWz8apsv2TF5N39qhiye
-         ospw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUrH4BVhheT7brIGfFfFGHcVLxCpdL/K93fkttIPexBmDnR8OMVQIyxd2CPpgJCatUrNgFh24kskc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyU1IwD1fokn3dB6wjHs/mfQmS1rJ+WCDs+n1szQlwu5zEodVnx
-	TBPk36aiJC+kPLJNZrtvUyhHffyZo2URAlobnES9rQ2nFBlP+UWRrd+mRmC5/GQtiyGf9COWej+
-	LFkP0j/8+Fi82UIonBQ==
-X-Google-Smtp-Source: AGHT+IFVVYwcwXIW2+rs+LXCKTLno19A5yuxBI/UefmvL0JcGML1UYLUePmSmcmNLPYFZsBsDSZ4dtmzcyM66Ug=
-X-Received: from edwf17.prod.google.com ([2002:a05:6402:1511:b0:60c:3b8e:c3eb])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:26d4:b0:607:f431:33fb with SMTP id 4fb4d7f45d1cf-60c88b26b30mr16470283a12.3.1751366650570;
- Tue, 01 Jul 2025 03:44:10 -0700 (PDT)
-Date: Tue, 1 Jul 2025 10:44:09 +0000
-In-Reply-To: <20250619-cstr-core-v12-0-80c9c7b45900@gmail.com>
+	s=arc-20240116; t=1751367253; c=relaxed/simple;
+	bh=pmrJ52f7KLRWP+Kzra4zThVHSaWjAGKLunXQ+85Io84=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J7CyIc1L/XMKSLbmBVdO7ApZwSv3C6Qpax5uW/B6h4xc+sRbpi0Iz8ks3mY9nqefC3QBNNpsSRM23EMKhsG/c9nKVgHRQmVeToEsg7Qe8OONyGZqYndKlKYE8Hv2oVpz7xK52LRbytDGy0Zw20I7AVndBWowGxIXm2jtaTrsA38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQTwJ004; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 437E3C4CEEB;
+	Tue,  1 Jul 2025 10:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751367253;
+	bh=pmrJ52f7KLRWP+Kzra4zThVHSaWjAGKLunXQ+85Io84=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pQTwJ0045Ii+RA2IgfwYQBiGhTcE5N41waq6Icbsi90XxoGctw76d4BC1V4aRszpJ
+	 Oap+MWQkrRszzrvRCdvVCIQlh82yA8mhGnn1MnT3ZJETh2TEE9MYSvKN41u6sjQmds
+	 p0dbqlFGLT6UIDdUfnV3qs+EbMzHLfJmqn7T8K5ABtSW8aLBwIuEB2QlqkfYzEDq9+
+	 MTtLsPTBacD+P0o4DrQKrqDyn8Xr3gK/yW+DKNTBTN7WXtPKxUZDBKERTNu2iaByRr
+	 01gZCj7LLx0J0cQxwM97iqi/y4upQp2wMQqcsEa4molLGg4bMDxqLKr20Ghk3lKYVS
+	 4F7dSxj7eCBgA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uWYct-00BWpQ-1P;
+	Tue, 01 Jul 2025 11:54:11 +0100
+Date: Tue, 01 Jul 2025 11:54:10 +0100
+Message-ID: <86frfgb2r1.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,	Alyssa Rosenzweig
+ <alyssa@rosenzweig.io>,	Rob Herring <robh@kernel.org>,	Manivannan
+ Sadhasivam <mani@kernel.org>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kwilczynski@kernel.org>,	Janne
+ Grunau <j@jannau.net>,	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-pci@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org,	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] PCI: host-generic: Fix driver_data overwriting bugs
+In-Reply-To: <20250630173415.GA1787642@bhelgaas>
+References: <86ikkdb0uj.wl-maz@kernel.org>
+	<20250630173415.GA1787642@bhelgaas>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250619-cstr-core-v12-0-80c9c7b45900@gmail.com>
-Message-ID: <aGO7-SQUUgg6kSVU@google.com>
-Subject: Re: [PATCH v12 0/5] rust: replace kernel::str::CStr w/ core::ffi::CStr
-From: Alice Ryhl <aliceryhl@google.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>, 
-	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, Dave Ertman <david.m.ertman@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>, Breno Leitao <leitao@debian.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-pci@vger.kernel.org, nouveau@lists.freedesktop.org, 
-	linux-block@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: helgaas@kernel.org, bhelgaas@google.com, alyssa@rosenzweig.io, robh@kernel.org, mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org, j@jannau.net, geert+renesas@glider.be, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, Jun 19, 2025 at 11:06:24AM -0400, Tamir Duberstein wrote:
-> This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
-> have omitted Co-authored tags, as the end result is quite different.
+On Mon, 30 Jun 2025 18:34:15 +0100,
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 > 
-> Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-vadorovsky@protonmail.com/t/#u [0]
-> Closes: https://github.com/Rust-for-Linux/linux/issues/1075
+> On Mon, Jun 30, 2025 at 06:23:00PM +0100, Marc Zyngier wrote:
+> > On Mon, 30 Jun 2025 18:06:01 +0100,
+> > Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > 
+> > > On Wed, Jun 25, 2025 at 12:18:03PM +0100, Marc Zyngier wrote:
+> > > > Geert reports that some drivers do rely on the device driver_data
+> > > > field containing a pointer to the bridge structure at the point of
+> > > > initialising the root port, while this has been recently changed to
+> > > > contain some other data for the benefit of the Apple PCIe driver.
+> > > > 
+> > > > This small series builds on top of Geert previously posted (and
+> > > > included as a prefix for reference) fix for the Microchip driver,
+> > > > which breaks the Apple driver. This is basically swapping a regression
+> > > > for another, which isn't a massive deal at this stage, as the
+> > > > follow-up patch fixes things for the Apple driver by adding extra
+> > > > tracking.
+> > > 
+> > > Is there a bisection hole between patches 1 and 2?
+> > > 
+> > >   1: PCI: host-generic: Set driver_data before calling gen_pci_init()
+> > >   2: PCI: apple: Add tracking of probed root ports
+> > > 
+> > > If so, would it be practical to avoid the hole by reordering those
+> > > patches?
+> > 
+> > Sure, but you said you already had queued patch #1, and what is in
+> > -rc1 already breaks Geert's box. So no matter the order, we break
+> > something at some point.
 > 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> I did, but when I saw your problem report and subsequent updates, I
+> put Geert's patch on hold.
+> 
+> > If you want to only break one thing, then yes, swapping these two
+> > patches is the correct thing to do.
+> 
+> I swapped them and put them back on pci/for-linus for v6.16:
+> 
+>   https://git.kernel.org/cgit/linux/kernel/git/pci/pci.git/log/?h=for-linus&id=ba74278c638d
+> 
 
-Overall LGTM. Only question is whether we should re-export
-core::ffi::CStr from kernel::ffi. Reason being that right now we are
-telling people to never use core::ffi as the integer types are wrong,
-and I think it would be nice if we can continue to tell people "never
-use core::ffi".
+LGTM, thanks for picking these up!
 
-Either way, for the whole series:
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+	M.
 
-Alice
+-- 
+Without deviation from the norm, progress is not possible.
 
