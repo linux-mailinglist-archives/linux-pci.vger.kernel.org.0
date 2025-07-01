@@ -1,163 +1,118 @@
-Return-Path: <linux-pci+bounces-31161-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31162-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC4E4AEF6CC
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 13:41:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F6AAAEF771
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 13:56:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE185446BB3
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 11:40:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 951DD188EE34
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 11:55:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A107F273D98;
-	Tue,  1 Jul 2025 11:40:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8729127A448;
+	Tue,  1 Jul 2025 11:50:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KY7JO1Is"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0JUONJrG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4490F2737F0
-	for <linux-pci@vger.kernel.org>; Tue,  1 Jul 2025 11:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDB527A46E
+	for <linux-pci@vger.kernel.org>; Tue,  1 Jul 2025 11:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751370028; cv=none; b=FQyq+2Hyk2UXAiw62d2a4RyegOApPUUeymXn2DyT7kqjULwhP57NX5z+SneRxKMlMfInKmNVv0lr6UEYQQ9dp+jW/m6Prn7LAVX3dFghikarkKndQttWAAbw9uT7SQdeYLqshUBl1epW2JWAoBBPSRRZZmUqVkhu33V5cwlOa6k=
+	t=1751370601; cv=none; b=VIz56uLri2TCyz2dJNkgekI9Su8zLf/upoQkaWjv92cmJICskza5akTkr6tgjdr9rB864g1GO3IAM+sIWY4j1+KolkSCmPiLL1qyQH0yqH0U3Amb/tZDYdaR0VJ7kCMI8e8rj/qy5t73QxlFuWjoKhbql3XFHocWPl6MRmR7dXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751370028; c=relaxed/simple;
-	bh=OZ49jYUUZOmMK6H9Nv/dyyRZN30Ctk78bX0kjHtFUtE=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=S77BF7vwdHan9WGGD1D9/uVkhmxKVw8Ur/L5pADZHJgQEKxlkmZMJusoQV7BhnAkkoICiOlQkUom5yCpGSVoegQr/3rvpXlTzr+7JVBV98TzPgZvHkxxMN2gcqUbyaPKcTUZUg4DtopqDTlJFZYS4V+zuet84OUhE7GxN8X40CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=KY7JO1Is; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250701114024epoutp04cfccb6f99db85e8238f9f17e6c1f449d~OHcIXR68I0990309903epoutp04E
-	for <linux-pci@vger.kernel.org>; Tue,  1 Jul 2025 11:40:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250701114024epoutp04cfccb6f99db85e8238f9f17e6c1f449d~OHcIXR68I0990309903epoutp04E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751370024;
-	bh=2Nli5jAMu0NC9zLKjZfj4lZI1r3k1lL6PZil61CiwoQ=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=KY7JO1IsHlfA9MJX/INx8OUB847GygezOpPrB/oKVBqWR2MCcGbK12Jt072bSnoBJ
-	 zI0/WThqCBwwTO3oKM9pVqvvpST/SigLVMAIRRB0OV3jRQh9C0Kiti219ZeHzcOB/N
-	 89AT5YOTsEUDcOR3qPlJQMDXwMWgDHnNnCFAxM9Y=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250701114023epcas5p33dd4f6f24af1c80abcf7c49a1993ea12~OHcHvVz-72271022710epcas5p3o;
-	Tue,  1 Jul 2025 11:40:23 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.180]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4bWh0j3BTSz6B9m7; Tue,  1 Jul
-	2025 11:40:21 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250701113336epcas5p1cfa1a369fad337b9a2211c7588cd7561~OHWMK6rHg2219722197epcas5p1d;
-	Tue,  1 Jul 2025 11:33:36 +0000 (GMT)
-Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250701113333epsmtip106136eafe25d00b19c1917b7fa970e20~OHWJXty0k3251632516epsmtip1u;
-	Tue,  1 Jul 2025 11:33:33 +0000 (GMT)
-From: "Shradha Todi" <shradha.t@samsung.com>
-To: "'Bjorn Helgaas'" <helgaas@kernel.org>
-Cc: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-	<linux-fsd@tesla.com>, <mani@kernel.org>, <lpieralisi@kernel.org>,
-	<kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-	<jingoohan1@gmail.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<alim.akhtar@samsung.com>, <vkoul@kernel.org>, <kishon@kernel.org>,
-	<arnd@arndb.de>, <m.szyprowski@samsung.com>, <jh80.chung@samsung.com>,
-	<pankaj.dubey@samsung.com>
-In-Reply-To: <20250627162943.GA1672296@bhelgaas>
-Subject: RE: [PATCH v2 06/10] dt-bindings: PCI: Add bindings support for
- Tesla FSD SoC
-Date: Tue, 1 Jul 2025 17:03:31 +0530
-Message-ID: <02b201dbea7b$fbaf5390$f30dfab0$@samsung.com>
+	s=arc-20240116; t=1751370601; c=relaxed/simple;
+	bh=R+rwOhIowzKwTY9h4u5eqn86gDd48p2rdXWg3ykB4X0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lYCy0SnMmd/2pd8Ba0tyIIqoYNupnQ7+s9O+M5Vc2YoGPXSyWGNlTPns94tl3HAw956lMi4iEheR1ZM7jyr7o9QEtTDfoe1DckgC5ykNCkEEx/RpGVO0Bd+bfw6pmnFvxbkVxxjcxgRHiVl/taxrQt/hQTn0wycB0Ti384/Iy3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0JUONJrG; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so4011972f8f.2
+        for <linux-pci@vger.kernel.org>; Tue, 01 Jul 2025 04:49:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751370598; x=1751975398; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0KGSBavzhT3TpQui0uI73A+Z+3UDA0xLLxmDbt54UW0=;
+        b=0JUONJrGzkaw1i/zUiw+03ML/aAkfY8AGX628MberDpxPEpBMbOcvlBo2B37+WvDjE
+         KdmyhJruSd1D+AMUAahBFaAcxNFpYddVLdNYsz9zqcbF5HQx8hzudHvVAwOrVZnn44Vr
+         1vmmX7WWsiTNf35fnB9i4tmZezAuKiC6Ryepj/79CeQk5HetymnC7+rHM3ZXAzfOW2jd
+         svPMSuF84qClbkXmj3fwCLAdmCa5zA9HRvWVCyjCMTTvGTosPu+83DpVXFcLCd8TsJpq
+         JAUr5u4dpiiKRfHT/r36SG1d7jrKtfVxzIm/SHQSc+NM8xsrHo/nrH7WXRZQI0k7Ml43
+         Fphg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751370598; x=1751975398;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0KGSBavzhT3TpQui0uI73A+Z+3UDA0xLLxmDbt54UW0=;
+        b=ihqKQ58XkrhxueLkZsO7WWXB0OFYm3H3JXx+Xr3+qALXH0j2TbRlRQQb8qJnWOHB/t
+         opYOujpp6US6ZXlphqDtOcUr5o3V//c3J2XIBg/sNzRj5cVAv3rY5NOBbPz9jyk0FmwV
+         2FklpzgGGq7LHBIB1Gj98p3KbqZsWD8RdexGJPBXSelDnaCxbmiYbjqDbDFtBKZFMB22
+         FC33PDmXJZnK+fKg+yQIs6WI6K1Nd/h8M0bjshCO5wrhHCHgwoTqoJ3na1XYOoUL2jpL
+         S8hn8dj45JS7KHibK2CVCUskLmfzHGmXJP56IP4kNnjsYzlo9Qh4QnBY8ErQdW5pXdMd
+         QbjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXyu4TZF0yJvzfA4obrqhhRzpK2w5PyqlX3FzTC1yIpCsVtGIwsN+IuiGrtWGPBwRdUjsYiLAOmBuk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZV5KCKZU37kWIkCVV+kGag2M6ril3GmYL8s9UefxtjyhtqtQK
+	WauzmjmJwwwUJGnj8NFrvh/iCXHw9UqVHpyvjWzWIGmcPTr73WZMTKE3eF/Sf+LTV7TbRyooNBW
+	QVDE3qNRkwDQLT3bZunSMY2jTZFIjaGyIaXznZS+U
+X-Gm-Gg: ASbGnctrXMjv4aeqRKqstZV3ycrfisRnRbnk//+FTpIpqln/8Wz8MF/hu2XPftZVUfc
+	NRIYlQMhoG5FqUCHMsXtw4aCoOvCdIMdagwvefEcCms4l/bigr+4I6rFMwFx8kyVd7rB803ucFg
+	Yrg9UILJLGWYjvnIrUUT3hJR8ncRq6pdP5J+cfy5dss5Fz
+X-Google-Smtp-Source: AGHT+IGZXsC8mGRscscDusoREbjL9I6GGdeiYS8C2b53bnLNCJ1i8gfIkCUFcIsBDQNQAE78Y338ALuI+8cM8titd0w=
+X-Received: by 2002:adf:c084:0:b0:3a4:f9e7:2796 with SMTP id
+ ffacd0b85a97d-3a9176038c6mr11687442f8f.35.1751370597647; Tue, 01 Jul 2025
+ 04:49:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQLemVNzYEMOy/tIwP8yQfjCLghe+gHQOY9Ysgk/TyA=
-Content-Language: en-in
-X-CMS-MailID: 20250701113336epcas5p1cfa1a369fad337b9a2211c7588cd7561
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-541,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250627162949epcas5p1fc5eebd0036116ce2913cdcbabdab1fd
-References: <CGME20250627162949epcas5p1fc5eebd0036116ce2913cdcbabdab1fd@epcas5p1.samsung.com>
-	<20250627162943.GA1672296@bhelgaas>
+References: <20250626200054.243480-1-dakr@kernel.org> <20250626200054.243480-5-dakr@kernel.org>
+In-Reply-To: <20250626200054.243480-5-dakr@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 1 Jul 2025 13:49:45 +0200
+X-Gm-Features: Ac12FXwadsx85yoxejxv-zSg2WaTwJMeTKN6Q-FEKtOdJN3NxG-K0L-aW-nbazs
+Message-ID: <CAH5fLghrF84T2V_0yckusmpBEdPgS2YPRDLw9iww9rAY3_qqCg@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] rust: types: ForeignOwnable: Add type Target
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org, 
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com, 
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jun 26, 2025 at 10:01=E2=80=AFPM Danilo Krummrich <dakr@kernel.org>=
+ wrote:
+>
+> ForeignOwnable::Target defines the payload data of a ForeignOwnable. For
+> Arc<T> for instance, ForeignOwnable::Target would just be T.
+>
+> This is useful for cases where a trait bound is required on the target
+> type of the ForeignOwnable. For instance:
+>
+>         fn example<P>(data: P)
+>            where
+>               P: ForeignOwnable,
+>               P::Target: MyTrait,
+>         {}
+>
+> Suggested-by: Benno Lossin <lossin@kernel.org>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
+I am skeptical about this patch. I think that most of the time, you
+should just place the trait bound on `P` instead of having a Target
+type like this.
 
-> -----Original Message-----
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Sent: 27 June 2025 22:00
-> To: Shradha Todi <shradha.t@samsung.com>
-> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-linux-
-> samsung-soc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-phy@lists.infradead.org; linux-
-> fsd@tesla.com; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org; kw@linux.com;
-> robh@kernel.org; bhelgaas@google.com; jingoohan1@gmail.com; krzk+dt@kernel.org;
-> conor+dt@kernel.org; alim.akhtar@samsung.com; vkoul@kernel.org; kishon@kernel.org;
-> arnd@arndb.de; m.szyprowski@samsung.com; jh80.chung@samsung.com; pankaj.dubey@samsung.com
-> Subject: Re: [PATCH v2 06/10] dt-bindings: PCI: Add bindings support for Tesla FSD SoC
-> 
-> On Wed, Jun 25, 2025 at 10:22:25PM +0530, Shradha Todi wrote:
-> > Document the PCIe controller device tree bindings for Tesla FSD
-> > SoC for both RC and EP.
-> 
-> > +++ b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-> 
-> > -  clocks:
-> > -    items:
-> > -      - description: PCIe bridge clock
-> > -      - description: PCIe bus clock
-> 
-> > -  vdd10-supply:
-> > -    description:
-> > -      Phandle to a regulator that provides 1.0V power to the PCIe block.
-> > -
-> > -  vdd18-supply:
-> > -    description:
-> > -      Phandle to a regulator that provides 1.8V power to the PCIe block.
-> 
-> > +            - description: pcie bridge clock
-> > +            - description: pcie bus clock
-> 
-> Gratuitous "PCIe" capitalization changes here and in supplies below.
-> This is just plain English text so we can use English conventions.
-> 
-> > +        vdd10-supply:
-> > +          description:
-> > +            phandle to a regulator that provides 1.0v power to the pcie block.
-> > +
-> > +        vdd18-supply:
-> > +          description:
-> > +            phandle to a regulator that provides 1.8v power to the pcie block.
-> 
-> I *would* be OK if you dropped the periods at the end of these, which
-> would make them match the other descriptions in this binding.
-> 
-> > +++ b/Documentation/devicetree/bindings/pci/tesla,fsd-pcie-ep.yaml
-> 
-> I'm not sure about the "tesla,fsd-pcie-ep.yaml" filename.  I see that
-> it currently only describes a tesla endpoint, but it seems like maybe
-> this should be parallel to the "samsung,exynos-pcie.yaml" host
-> controller binding.
-> 
-> Bjorn
-
-Actually there is no support for Exynos5433 in EP mode. Initially I named
-the binding file "samsung,exynos-pcie-ep.yaml" to make it parallel to the host
-controller bindings. But I received a comment that file names should match
-the compatible strings which makes sense so I changed it to this.
-
-
+Alice
 
