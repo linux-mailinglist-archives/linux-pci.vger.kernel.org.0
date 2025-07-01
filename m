@@ -1,46 +1,49 @@
-Return-Path: <linux-pci+bounces-31150-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31151-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04C6CAEF367
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 11:31:20 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8431BAEF548
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 12:40:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 50BF07AFA83
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 09:29:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 439137A730D
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 10:38:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B97F26E15D;
-	Tue,  1 Jul 2025 09:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8BD826D4D4;
+	Tue,  1 Jul 2025 10:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jrd5r3pp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WFTovyDT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FB026D4CA;
-	Tue,  1 Jul 2025 09:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8B8239E6A;
+	Tue,  1 Jul 2025 10:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751362214; cv=none; b=MCaJzDeSWtiw/qd+zQ1jU+bBvmkvUUvfITqNXStRvLiVmV2D5fgHQwqOMicUIsiq8fJbqVP8tRvjEZBXDZFOzQX7yZ0A9av3CMBQDMEVZxfAC3qTZYO+ShLGKS56EgxY9gx++zX9EG+RNpHGmPqVjjuf0rb/vDbJCVKG+UBpNms=
+	t=1751366411; cv=none; b=HiN8+/bR96J78EJhwTJloE3u/6trinwLn4NE+vC4otCitxeiZI/tiYifdpajA+E7C9tnbpB9GR+gjMA7/IoebrXQ5Q9ixkCRvyR899Pb2LeAGuLnqsvBc/6+m7GUw+AFvaLk5ssRuqI/Z8nhlCo5gRUJVptHgaXwWT0xabQVbPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751362214; c=relaxed/simple;
-	bh=unCvwSHCZ9bTTw5zoAQ4qelo85nP20ruT74PbSMjF8M=;
+	s=arc-20240116; t=1751366411; c=relaxed/simple;
+	bh=4q5eEKQGOug08pTmwxuaY7C2xv4i14LRs5CG9K+y0G8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=igs3wbzE7WC67BEFHGMsDyvlZ/z+7D4oln6uRvyxfEL2uIxqMWFn7Rcw4FVqZvuWzDwJ73QOEJ4hXLdBewsNqln/OcYxkvIJRkUyyb+uuQawBGQ4o5+vJHDhHlogJi4kftlKPuNmMnc15KXUyxsfhcoEyl0eHC8rUhVZCLPdAR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jrd5r3pp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BD23C4CEEB;
-	Tue,  1 Jul 2025 09:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751362214;
-	bh=unCvwSHCZ9bTTw5zoAQ4qelo85nP20ruT74PbSMjF8M=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=TdqV9FVweF1+n6SIR5Lk7WHZounHGtAKcuHt3rftEBj9sEYoHWt0AK/guD0Hk9DeJZz6uUmhXh4m8nCKKUailfTHQY72dtex7nVCTs0sARCUw+9OLg5ndqY8pAIT5TVNysc40DH0uYK/GoegVEiDmi+YluRfRwxraKuvwg5BtVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WFTovyDT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55BE0C4CEEB;
+	Tue,  1 Jul 2025 10:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751366411;
+	bh=4q5eEKQGOug08pTmwxuaY7C2xv4i14LRs5CG9K+y0G8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jrd5r3ppONphEHNx5Q2dIIXU6MFC13Ypmcqh7qCZiQlk29yCNRgrgsqRrAXRAGhgi
-	 7nW99krx9AGPtEQ/Jmiox9wAEz4cCMf1EDIXz6Z47K/KOhMfRsX0S/sUhZzFIsydT6
-	 oQdAILH98o8EgLZzBup+kuoeo4y2u0mIPxfq8k5A=
-Date: Tue, 1 Jul 2025 11:30:11 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
+	b=WFTovyDTaAKvJDx/A2lxFYmJRzlAKblZsTueQ6e/os0Y3FO0JdpTM0hWqUu3oGYFO
+	 Cp4x2bSHKxvCrnR0+oukwjNl6akJhjhUJBj/WO2lUlP6PPjtEzSEg1xxXrLscvkBm2
+	 TK5s0kckgLcPJzMV1PXOWIgfYf0M1nK8B+D1b5AO/c+neBBsWq1/eGiHgQOJXb/knO
+	 bDC2QV9qmb9xgjcnD8xR8ILXVqGUqt52iKdLbc3GkfYjd8o1V52O27qatIK4NyvhGl
+	 kRqdIYsYUL4V3LcNRTe605PUfF/cvDRv8RO6I3hQe2v7mFeDAcmhy3gbySuufBeire
+	 13rq4mkgCFrRw==
+Date: Tue, 1 Jul 2025 12:40:04 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
 Cc: rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
 	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
 	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
@@ -48,10 +51,11 @@ Cc: rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
 	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
 	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 4/8] rust: pci: use generic device drvdata accessors
-Message-ID: <2025070142-scrambler-ramp-cd7e@gregkh>
+Subject: Re: [PATCH 0/8] Device: generic accessors for drvdata +
+ Driver::unbind()
+Message-ID: <aGO7BP1t-A_CQ700@pollux>
 References: <20250621195118.124245-1-dakr@kernel.org>
- <20250621195118.124245-5-dakr@kernel.org>
+ <2025070142-difficult-lucid-d949@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,116 +64,146 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250621195118.124245-5-dakr@kernel.org>
+In-Reply-To: <2025070142-difficult-lucid-d949@gregkh>
 
-On Sat, Jun 21, 2025 at 09:43:30PM +0200, Danilo Krummrich wrote:
-> Take advantage of the generic drvdata accessors of the generic Device
-> type.
+On Tue, Jul 01, 2025 at 11:25:41AM +0200, Greg KH wrote:
+> On Sat, Jun 21, 2025 at 09:43:26PM +0200, Danilo Krummrich wrote:
+> > This patch series consists of the following three parts.
+> > 
+> >   1. Introduce the 'Internal' device context (semantically identical to the
+> >      'Core' device context), but only accessible for bus abstractions.
+> > 
+> >   2. Introduce generic accessors for a device's driver_data  pointer. Those are
+> >      implemented for the 'Internal' device context only, in order to only enable
+> >      bus abstractions to mess with the driver_data pointer of struct device.
+> > 
+> >   3. Implement the Driver::unbind() callback (details below).
+> > 
+> > Driver::unbind()
+> > ----------------
+> > 
+> > Currently, there's really only one core callback for drivers, which is
+> > probe().
+> > 
+> > Now, this isn't entirely true, since there is also the drop() callback of
+> > the driver type (serving as the driver's private data), which is returned
+> > by probe() and is dropped in remove().
+> > 
+> > On the C side remove() mainly serves two purposes:
+> > 
+> >   (1) Tear down the device that is operated by the driver, e.g. call bus
+> >       specific functions, write I/O memory to reset the device, etc.
+> > 
+> >   (2) Release the resources that have been allocated by a driver for a
+> >       specific device.
+> > 
+> > The drop() callback mentioned above is intended to cover (2) as the Rust
+> > idiomatic way.
+> > 
+> > However, it is partially insufficient and inefficient to cover (1)
+> > properly, since drop() can't be called with additional arguments, such as
+> > the reference to the corresponding device that has the correct device
+> > context, i.e. the Core device context.
 > 
-> While at it, use from_result() instead of match.
-> 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  rust/helpers/pci.c | 10 ----------
->  rust/kernel/pci.rs | 31 ++++++++++++++-----------------
->  2 files changed, 14 insertions(+), 27 deletions(-)
-> 
-> diff --git a/rust/helpers/pci.c b/rust/helpers/pci.c
-> index cd0e6bf2cc4d..ef9cb38c81a6 100644
-> --- a/rust/helpers/pci.c
-> +++ b/rust/helpers/pci.c
-> @@ -2,16 +2,6 @@
->  
->  #include <linux/pci.h>
->  
-> -void rust_helper_pci_set_drvdata(struct pci_dev *pdev, void *data)
-> -{
-> -	pci_set_drvdata(pdev, data);
-> -}
-> -
-> -void *rust_helper_pci_get_drvdata(struct pci_dev *pdev)
-> -{
-> -	return pci_get_drvdata(pdev);
-> -}
-> -
->  resource_size_t rust_helper_pci_resource_len(struct pci_dev *pdev, int bar)
->  {
->  	return pci_resource_len(pdev, bar);
-> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> index 8435f8132e38..064e74a90904 100644
-> --- a/rust/kernel/pci.rs
-> +++ b/rust/kernel/pci.rs
-> @@ -10,11 +10,11 @@
->      device_id::RawDeviceId,
->      devres::Devres,
->      driver,
-> -    error::{to_result, Result},
-> +    error::{from_result, to_result, Result},
->      io::Io,
->      io::IoRaw,
->      str::CStr,
-> -    types::{ARef, ForeignOwnable, Opaque},
-> +    types::{ARef, Opaque},
->      ThisModule,
->  };
->  use core::{
-> @@ -66,35 +66,32 @@ extern "C" fn probe_callback(
->          // `struct pci_dev`.
->          //
->          // INVARIANT: `pdev` is valid for the duration of `probe_callback()`.
-> -        let pdev = unsafe { &*pdev.cast::<Device<device::Core>>() };
-> +        let pdev = unsafe { &*pdev.cast::<Device<device::Internal>>() };
->  
->          // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct pci_device_id` and
->          // does not add additional invariants, so it's safe to transmute.
->          let id = unsafe { &*id.cast::<DeviceId>() };
->          let info = T::ID_TABLE.info(id.index());
->  
-> -        match T::probe(pdev, info) {
-> -            Ok(data) => {
-> -                // Let the `struct pci_dev` own a reference of the driver's private data.
-> -                // SAFETY: By the type invariant `pdev.as_raw` returns a valid pointer to a
-> -                // `struct pci_dev`.
-> -                unsafe { bindings::pci_set_drvdata(pdev.as_raw(), data.into_foreign() as _) };
-> -            }
-> -            Err(err) => return Error::to_errno(err),
-> -        }
-> +        from_result(|| {
-> +            let data = T::probe(pdev, info)?;
->  
-> -        0
-> +            pdev.as_ref().set_drvdata(data);
-> +            Ok(0)
-> +        })
->      }
->  
->      extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
->          // SAFETY: The PCI bus only ever calls the remove callback with a valid pointer to a
->          // `struct pci_dev`.
-> -        let ptr = unsafe { bindings::pci_get_drvdata(pdev) }.cast();
-> +        //
-> +        // INVARIANT: `pdev` is valid for the duration of `remove_callback()`.
-> +        let pdev = unsafe { &*pdev.cast::<Device<device::Internal>>() };
->  
->          // SAFETY: `remove_callback` is only ever called after a successful call to
-> -        // `probe_callback`, hence it's guaranteed that `ptr` points to a valid and initialized
-> -        // `KBox<T>` pointer created through `KBox::into_foreign`.
-> -        let _ = unsafe { KBox::<T>::from_foreign(ptr) };
-> +        // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
-> +        // and stored a `Pin<KBox<T>>`.
-> +        let _ = unsafe { pdev.as_ref().drvdata_obtain::<Pin<KBox<T>>>() };
->      }
->  }
->  
-> -- 
-> 2.49.0
-> 
-> 
+> I'm missing something, why doesn't drop() have access to the device
+> itself, which has the Core device context?  It's the same "object",
+> right?
 
-Overall, I like this, same for the other bus types.  But again, can't it
-be part of Core?
+Not exactly, the thing in drop() is the driver's private data, which has the
+exact lifetime of a driver being bound to a device, which makes drop() pretty
+much identical to remove() in this aspect.
 
-thanks,
+	// This is the private data of the driver.
+	struct MyDriver {
+	   bar: Devres<pci::Bar>,
+	   ...
+	}
 
-greg k-h
+	impl pci::Driver for MyDriver {
+	   fn probe(
+	      pdev: &pci::Device<Core>,
+	      info: &Self::IdInfo
+	   ) -> Result<Pin<KBox<Self>>> {
+	      let bar = ...;
+	      pdev.enable_device()?;
+
+	      KBox::pin_init(Self { bar }, GFP_KERNEL)
+	   }
+
+	   fn unbind(&self, pdev: &Device<Core>) {
+	      // Can only be called with a `&Device<Core>`.
+	      pdev.disable_device();
+	   }
+	}
+
+	impl Drop for MyDriver {
+	   fn drop(&mut self) {
+	      // We don't need to do anything here, the destructor of `self.bar`
+	      // is called automatically, which is where the PCI BAR is unmapped
+	      // and the resource region is released. In fact, this impl block
+	      // is optional and can be omitted.
+	   }
+	}
+
+The probe() method's return value is the driver's private data, which, due to
+being a ForeignOwnable, is stored in dev->driver_data by the bus abstraction.
+
+The lifetime goes until remove(), which is where the bus abstraction does not
+borrow dev->driver_data, but instead re-creates the original driver data object,
+which subsequently in the bus abstraction's remove() function goes out of scope
+and hence is dropped.
+
+From the bus abstraction side of things it conceptually looks like this:
+
+	 extern "C" fn probe_callback(pdev, ...) {
+	    let data = T::probe();
+
+	    pdev.as_ref().set_drvdata(data);
+	 }
+
+	extern "C" fn remove_callback(pdev) {
+	   let data = unsafe { pdev.as_ref().drvdata_obtain::<Pin<KBox<T>>>() }
+
+	   T::unbind(pdev, data.as_ref());
+	} // data.drop() is called here, since data goes out of scope.
+
+> > This makes it inefficient (but not impossible) to access device
+> > resources, e.g. to write device registers, and impossible to call device
+> > methods, which are only accessible under the Core device context.
+> > 
+> > In order to solve this, add an additional callback for (1), which we
+> > call unbind().
+> > 
+> > The reason for calling it unbind() is that, unlike remove(), it is *only*
+> > meant to be used to perform teardown operations on the device (1), but
+> > *not* to release resources (2).
+> 
+> Ick.  I get the idea, but unbind() is going to get confusing fast.
+> Determining what is, and is not, a "resource" is going to be hard over
+> time.  In fact, how would you define it?  :)
+
+I think the definition is simple: All teardown operations a driver needs a
+&Device<Core> for go into unbind().
+
+Whereas drop() really only is the destructor of the driver's private data.
+
+> Is "teardown" only allowed to write to resources, but not free them?
+
+"Teardown" is everything that involves interaction with the device when the
+driver is unbound.
+
+However, we can't free things there, that happens in the automatically when the
+destructor of the driver's private data is called, i.e. in drop().
+
+> If so, why can't that happen in drop() as the resources are available there.
+
+For instance, some functions can only be implemented for a &Device<Core>, such
+as pci_disable_device(), which hence we can't call from drop().
+
+> I'm loath to have a 2-step destroy system here for rust only, and not
+> for C, as maintaining this over time is going to be rough.
+
+Why do you think so? To me it seems pretty clean to separate the "unbind()
+teardown sequence" from the destructor of the driver's private data, even if
+there wouldn't be a technical reason to do so.
 
