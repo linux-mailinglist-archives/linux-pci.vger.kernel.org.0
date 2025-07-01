@@ -1,84 +1,115 @@
-Return-Path: <linux-pci+bounces-31145-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31146-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DB70AEF274
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 11:07:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 47078AEF2FE
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 11:17:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32A213BEECB
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 09:04:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C45B48024C
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 09:15:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B80DF25B2FA;
-	Tue,  1 Jul 2025 09:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56F2D26CE1C;
+	Tue,  1 Jul 2025 09:16:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yskdiSO8"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Tu05Qvcx"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804BB22259D;
-	Tue,  1 Jul 2025 09:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D7C26A0B3;
+	Tue,  1 Jul 2025 09:16:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751360679; cv=none; b=Lh4jZ5ybB60M+ZV0Lw1ux78Mi1aPQXY0V0vAXMNj51jjM2je8WG0QYdxRXRx81PY4yBxragT9YqDuBwPwS9gZ33hSctx2BZsklKe6DwWpBVlHW67bKPlyp6BAuMvRPNFbBurdGhGj4h+Vwz3dvZI25FJHKBb9Z8Nqzi8xZ98PHo=
+	t=1751361375; cv=none; b=lSbTFpXcZw9Cw9m8QLYOJsUNtIyqq9yRQxs8i3JbDY1mNiGwwcyeGXSzoTTY6RM7VScgPJxUrq9fAS5q0M12BYITwWYCOUnQYR6+SEJwT/qbtmas+BJfVkMtoT+cf6hy8jP+ucHFKLMaxHluAncWUXlNR1JhB5R7oluLkuv/BCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751360679; c=relaxed/simple;
-	bh=Cm8dQ0str3Y8uvQypv77L9VD2Tc5Zq1hjX5dkLtqbjU=;
+	s=arc-20240116; t=1751361375; c=relaxed/simple;
+	bh=ur4i4yzLkviKWu6sBni8onG/o9Yhcc21MCL8Xl7R2bE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c/WHalUr/a54z4wbMbxAQZvMcCZmF969xiA1LV0opXI6SJfiguc1YcC8BGG4vBWMi8xsc2ikPYtkAenR3zjZweu8fnFNtFkzImnBXK30o4s4oGTpRKVoJOBVOji91xZk2IHc3I7cCRlkfbJ/UIgXNW9e1QmkbFbjkz9gtIhU87E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yskdiSO8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A47F2C4CEEB;
-	Tue,  1 Jul 2025 09:04:38 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=c4iAmr5MpuRPUgw3pUoO036XGKLDLr5zn2JTVQWUr8qJ/4zkGA/gEW5hZrZVFAThRuJIEVfsszr+jxIZRM38qSANBEsGCnfsPBICI5tbxV1h66IjI9yaWUL4rNBBsCPZmgmeKEEch+V0gf9FDxGtwbcTfhJ29NcW84a1hoBt68s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Tu05Qvcx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41CC6C4CEEB;
+	Tue,  1 Jul 2025 09:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751360679;
-	bh=Cm8dQ0str3Y8uvQypv77L9VD2Tc5Zq1hjX5dkLtqbjU=;
+	s=korg; t=1751361374;
+	bh=ur4i4yzLkviKWu6sBni8onG/o9Yhcc21MCL8Xl7R2bE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=yskdiSO8mSuCQUPGWXBuRtXf5ft+toHSAr2+xtrIRblukTub0y5qUFe5fVxZvRtMD
-	 /njX/e+8uSwJOMYBeJsbgOlEcOQSZuEMbZQGm3j8WZsJU1zGxwvoTo2Lneycn1p5cq
-	 yF+mXdq8BzwlthYmYo1ciSTWCMqpCCtrJe7XbJ40=
-Date: Tue, 1 Jul 2025 11:04:36 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, alex.gaynor@gmail.com,
-	dakr@kernel.org, ojeda@kernel.org, rafael@kernel.org,
-	robh@kernel.org, saravanak@google.com, a.hindborg@kernel.org,
-	aliceryhl@google.com, bhelgaas@google.com, bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com, devicetree@vger.kernel.org, gary@garyguo.net,
-	kwilczynski@kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, lossin@kernel.org,
-	rust-for-linux@vger.kernel.org, tmgross@umich.edu
-Subject: Re: [PATCH v1] rust: fix typo in #[repr(transparent)] comments
-Message-ID: <2025070126-dreamboat-striking-c698@gregkh>
-References: <20250623225846.169805-1-fujita.tomonori@gmail.com>
- <CANiq72kR=yFrMUtvOVp__QSNT574f+HwwbpVAvw7D8LeBs1pmw@mail.gmail.com>
+	b=Tu05QvcxTTryu1orfNafIVyr6I4lmoos32qmVZHcsOqY/nYUfrJ4sPOMm8sUI2o8p
+	 9NWWkvV6adHPBOBlJloHS7DmtmB6GYiis9n70ZimT9DrwMMjCVqh5tDMYtOUyHZwwk
+	 Yo021tkT5ABHUMteNtDEgI3HJhP5nQ+W9MqJdt7o=
+Date: Tue, 1 Jul 2025 11:16:11 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Michal Rostecki <vadorovsky@protonmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
+	Breno Leitao <leitao@debian.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	llvm@lists.linux.dev, linux-pci@vger.kernel.org,
+	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v12 0/5] rust: replace kernel::str::CStr w/
+ core::ffi::CStr
+Message-ID: <2025070102-pantry-siamese-905f@gregkh>
+References: <20250619-cstr-core-v12-0-80c9c7b45900@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72kR=yFrMUtvOVp__QSNT574f+HwwbpVAvw7D8LeBs1pmw@mail.gmail.com>
+In-Reply-To: <20250619-cstr-core-v12-0-80c9c7b45900@gmail.com>
 
-On Tue, Jun 24, 2025 at 01:15:18AM +0200, Miguel Ojeda wrote:
-> On Tue, Jun 24, 2025 at 12:59 AM FUJITA Tomonori
-> <fujita.tomonori@gmail.com> wrote:
-> >
-> > Fix a typo in several comments where `#[repr(transparent)]` was
-> > mistakenly written as `#[repr(transparent)` (missing closing
-> > bracket).
-> >
-> > Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+On Thu, Jun 19, 2025 at 11:06:24AM -0400, Tamir Duberstein wrote:
+> This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
+> have omitted Co-authored tags, as the end result is quite different.
 > 
-> Thanks for fixing the typo!
+> Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-vadorovsky@protonmail.com/t/#u [0]
+> Closes: https://github.com/Rust-for-Linux/linux/issues/1075
 > 
-> Looks fine to me.
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Thanks, I'll take this through the driver-core tree.
-
-greg k-h
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
