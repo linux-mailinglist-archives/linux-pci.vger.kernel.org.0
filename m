@@ -1,97 +1,145 @@
-Return-Path: <linux-pci+bounces-31175-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31176-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E03EFAEFB23
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 15:49:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51DC8AEFBCC
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 16:15:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DBD823BF3E2
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 13:48:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C1004A7629
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 14:14:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62028275B09;
-	Tue,  1 Jul 2025 13:49:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EA4527602D;
+	Tue,  1 Jul 2025 14:14:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6osAEVz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bBljitUU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306611DFD84;
-	Tue,  1 Jul 2025 13:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA48C13C3F2;
+	Tue,  1 Jul 2025 14:14:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751377740; cv=none; b=aIRc/wgSdLU9dVt/rH7Mf+7csM7D5XYeQe4dvgL1Zr/4VZY9ZzyRH9OvaggZbZt1nqBsPB0EhBC256PGiphT2qutZbWCrxlxhRDv9iLSQbpJR8/1FRjisg255VLJQ+llM8UBW7GeYVo0T4IgAF8KhXMhlsr4z6iryYD/jvM5f3I=
+	t=1751379265; cv=none; b=aj/tjaVf4DRXWO6ajl90L+MN6gv7UWaUWN7J2gWG2/7z7STk/PA01umqiB3WheVlsDdFS6cZjRU8qTVDc1eyEtbM4SJI9gLv+kBDB731j2O1moSKmzRFuiXHMVWPjwl3jLAbTAu4ygZMjP9erwEVauYsDhuVuMZo9Qynj7p54Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751377740; c=relaxed/simple;
-	bh=vFTK1oxgqsdO+2h7SzDJQ8yWLt6+O2FcznPSuZUqwgY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=pHDrBe41sUBTspcPlRlYl159J8oFFjL7044jIhTwyEXWM64Awvjnn9x9VMf3t1SEb8TSvJa5fsI21/PyzeQmWVRMuJksajbMvnR4F0NDwBJpdoyXBsNDDVaO2cn7xaRdVtSrU/oyOHVBNhp2IMkZslhszwxgwQXLBYaJU+BDInM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6osAEVz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B83C4CEEF;
-	Tue,  1 Jul 2025 13:48:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751377739;
-	bh=vFTK1oxgqsdO+2h7SzDJQ8yWLt6+O2FcznPSuZUqwgY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=S6osAEVzWABx4z9if+DseWM9EOJS4Pn4c0Lq5ODsWWcCbOOfd6RGKPL6N4FLT8y2H
-	 VB1Ld4mmUJoBqp7zDtsYnsCThsXtlusA5nvTOWW7PyOUSt3lbS+ApysjxGGFYnZmau
-	 S6jS8yrg3B22HhD0QRLDV3GFYAYbhQJc5Dsx0DVCOZyGtb7aMbdbFZtdQwxvvqWOYZ
-	 V86KYy1QA6Wm4PDAgoQ6onPOFsHPwLWWf7kYzaF4/zIG6/3AsaXS8ZhlViBjrwqC6K
-	 m+map4A8YGL+N3xPtTYZMzLGNfq6eu+xP/xIBEoVXrsueM+iIrUSt6gTUitp/qd7YX
-	 RdTzsmfeC/3EQ==
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: linux-pci@vger.kernel.org, will@kernel.org, lpieralisi@kernel.org, 
- robh@kernel.org, bhelgaas@google.com, andersson@kernel.org, 
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
- devicetree@vger.kernel.org, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Mayank Rana <mayank.rana@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, quic_ramkri@quicinc.com, 
- quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com, 
- quic_nitegupt@quicinc.com
-In-Reply-To: <20250616224259.3549811-1-mayank.rana@oss.qualcomm.com>
-References: <20250616224259.3549811-1-mayank.rana@oss.qualcomm.com>
-Subject: Re: [PATCH v5 0/4] Add Qualcomm SA8255p based firmware managed
- PCIe root complex
-Message-Id: <175137773442.25265.15621888836513361848.b4-ty@kernel.org>
-Date: Tue, 01 Jul 2025 19:18:54 +0530
+	s=arc-20240116; t=1751379265; c=relaxed/simple;
+	bh=8ETo8H9n7F/2G/4Ja2z58kxRn+BOSZ78QHcn7HYjt/w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aio0nGO3IDuMpogn258l1KrkmgBg0W1viBBsCXFTDZ7NLSUGhA871YRCYrav4Csfr5TlPMzZQJSA1/Lnr7NPjzaxXdPH+KLrcS5TT4UWljH3z5fPUFE9RWu6zfF3BBRxIV2Wal8zxuL5Ilh4VutQRRNmxYJ7LmBJHEeaeR9ibsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bBljitUU; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2349f096605so37727835ad.3;
+        Tue, 01 Jul 2025 07:14:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751379263; x=1751984063; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cGOa1cF1iUH0+69hZgkZqAynW/NiPDvEYRmh1fAZi7Q=;
+        b=bBljitUUNW9QxfrqIbp0/K2vrVyjm7hfegAdSK9c95RKC07e9zLBoWef5ZR6U0FSJO
+         AJUY6L5bPxPmMmR61/6PZMjaNttOPs/9iY1qJV+e25Aryl4bz/bR/lMe4mJenF8DbHaQ
+         fmAR8OlK0aqosQXFepkDViY9z9kQE5PpcxTkwkRhinnCzQ8tLnb9Pzqj++1olKlfqZ6p
+         v1r+0CJcs2bsAPlie/Dn3P0MsxvFi25StK5HTzfpn4sZ5BYtQRDquxLjKWMMCHd/Rdzj
+         gtg11o7ulIQ9FtBuyB8+qogWnBlIyDUHmNzTTn8sfrEuy2cooDvqIA/on3EKWTOGw/DJ
+         HMjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751379263; x=1751984063;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cGOa1cF1iUH0+69hZgkZqAynW/NiPDvEYRmh1fAZi7Q=;
+        b=wkNDtWn281Nz9OC0R4ACekyYszz+WnGbnQPNGgQXyZNjBMS7gvTfUpTIqMUnEfK1f8
+         9DE7SybkGIKm3mV0OEEnVGyRHjz22W3arMV7sPw/coSHS5WNSbIPek/kTYMCxvxVptSP
+         l09MiBJ/5J6Hhk9AZ/fx8lfxt2bsjVYxSpi88cl7t10ZmL+PufbODUyJ1XCPZLseUjKg
+         BRywkq64i+DmEWijt9JehH5tk6mY9j7GHi3jyw4TISxfDORVPftQOt/siz+jYei/LMMt
+         xnAEW9DBEZvlEvfZsavgjJywPLHdGBLo9U/WXicHuGQJtpRoWud06deBcCZQpfLqm3Nd
+         CV4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUakNZowJRVlcO9UBhQAz824LkVWPWI+taBTe/CAh8/RB7vLf1tdCRh2fjeckTRY4UDjwJd6t8XSvuzoYh4Op8=@vger.kernel.org, AJvYcCV3YGcG2K2X6YAawWprr1rsS+dObrh4HZoyKF0H8adP6u6l5Y1+l2R2gsTfWC9T4SW0SUX9jQy2njL5@vger.kernel.org, AJvYcCVKItcc5uqSqVuvLh2HshrDTEdfQUBBbYF0olgQuD/86UmrF/X/2tLITcrRN94S+OIL63J5cuVc@vger.kernel.org, AJvYcCX3H022YrHGxBmev1O/FyXVqht4TOOQrrcOTCBdqqPsQeb3tCzCKZAv7lM7QSBmYPGpiK3NwP44iyGr@vger.kernel.org, AJvYcCXayJOiZVE/ty65gk7g0pxf3V6yjLue20zo4Ls6IGQLPXU3G/H2sW//bDrmDKOzwz5sZS/y4Rek8d4NVoHS@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy49vakbKpNQI8HroSKSp4ZKG5KjeR+ierLZJLzIc4jf+SqGgLZ
+	cZrKvku3sKyeZmnOz5fliJ1lL/W+KcT1FaLCLYRFw83/oYs9Y/MEMZuZ
+X-Gm-Gg: ASbGncti3wNzPa6ZIJWcShJUnpPRS/TcmowU5fz5JAosZ4MYVeu1GksyslK7cPu1zyR
+	CkwnottBltBRYStrzcGB9vYo6ai0PKcmRQJihJlPeTuui2HiqrqMAgHJDiVwgDEWjBMA/dGm2PZ
+	pWO/3Yij7c7msdMQdyrBvwweakKt5LiZpDuXenhiBb5qt6N349TTFyk39ddPYqF6oYzyzCwuEL+
+	m1uAprj9kZMhfoA6tuqvk4rutNBjCVN8cFZoi18XTgCQlv9GWMtym78uQNPQC0FHB6VcvRpndcZ
+	zjrQUkysLrHRw7zPSQsqf9crMKFgh7uU6bF9fl0uYw7urEkpNwZap0+7dEdw7XVdnXszyg7emDr
+	DJuT1a5UWaHpky7QhY/1rmiw8gjSFrZfDd8Y=
+X-Google-Smtp-Source: AGHT+IGXEWlJgT1GJH4Lu3G7lkA9vOpM3RPD4pkXk4Jh5ip6sI+bOgT/C1FpaAIQB/cVKubhZC0uDw==
+X-Received: by 2002:a17:902:d4c5:b0:234:e655:a632 with SMTP id d9443c01a7336-23ac4883265mr257175855ad.51.1751379262756;
+        Tue, 01 Jul 2025 07:14:22 -0700 (PDT)
+Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3b8324sm107240885ad.178.2025.07.01.07.14.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 07:14:22 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: alex.gaynor@gmail.com,
+	dakr@kernel.org,
+	gregkh@linuxfoundation.org,
+	ojeda@kernel.org,
+	rafael@kernel.org,
+	robh@kernel.org,
+	saravanak@google.com
+Cc: a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	bhelgaas@google.com,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	david.m.ertman@intel.com,
+	devicetree@vger.kernel.org,
+	gary@garyguo.net,
+	ira.weiny@intel.com,
+	kwilczynski@kernel.org,
+	leon@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lossin@kernel.org,
+	netdev@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	tmgross@umich.edu
+Subject: [PATCH v2 0/3] rust: Build PHY device tables by using module_device_table macro
+Date: Tue,  1 Jul 2025 23:12:49 +0900
+Message-ID: <20250701141252.600113-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+
+Build PHY device tables by using module_device_table macro.
+
+The PHY abstractions have been generating their own device tables
+manually instead of using the module_device_table macro provided by
+the device_id crate. However, the format of device tables occasionally
+changes [1] [2], requiring updates to both the device_id crate and the custom
+format used by the PHY abstractions, which is cumbersome to maintain.
+
+[1]: https://lore.kernel.org/lkml/20241119235705.1576946-14-masahiroy@kernel.org/
+[2]: https://lore.kernel.org/lkml/6e2f70b07a710e761eb68d089d96cee7b27bb2d5.1750511018.git.legion@kernel.org/
+
+v2:
+- Split off index-related parts of RawDeviceId into RawDeviceIdIndex
+v1: https://lore.kernel.org/lkml/20250623060951.118564-1-fujita.tomonori@gmail.com/
+
+FUJITA Tomonori (3):
+  rust: device_id: split out index support into a separate trait
+  rust: net::phy represent DeviceId as transparent wrapper over
+    mdio_device_id
+  rust: net::phy Change module_phy_driver macro to use
+    module_device_table macro
+
+ rust/kernel/auxiliary.rs |   7 ++-
+ rust/kernel/device_id.rs |  80 +++++++++++++++++++++++-------
+ rust/kernel/net/phy.rs   | 104 +++++++++++++++++++--------------------
+ rust/kernel/of.rs        |  11 ++++-
+ rust/kernel/pci.rs       |   7 ++-
+ 5 files changed, 132 insertions(+), 77 deletions(-)
 
 
-On Mon, 16 Jun 2025 15:42:55 -0700, Mayank Rana wrote:
-> Based on received feedback, this patch series adds support with existing
-> Linux qcom-pcie.c driver to get PCIe host root complex functionality on
-> Qualcomm SA8255P auto platform.
-> 
-> 1. Interface to allow requesting firmware to manage system resources and
-> performing PCIe Link up (devicetree binding in terms of power domain and
-> runtime PM APIs is used in driver)
-> 
-> [...]
-
-Applied, thanks!
-
-[1/4] PCI: dwc: Export dwc MSI controller related APIs
-      (no commit info)
-[2/4] PCI: host-generic: Rename and export gen_pci_init() to allow ECAM creation
-      (no commit info)
-[3/4] dt-bindings: PCI: qcom,pcie-sa8255p: Document ECAM compliant PCIe root complex
-      commit: f1cf5ea8e91b4d66b3f9f89b09edf509cc9da077
-[4/4] PCI: qcom: Add support for Qualcomm SA8255p based PCIe root complex
-      (no commit info)
-
-Best regards,
+base-commit: 769e324b66b0d92d04f315d0c45a0f72737c7494
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
+2.43.0
 
 
