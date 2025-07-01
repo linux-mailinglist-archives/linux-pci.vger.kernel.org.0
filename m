@@ -1,196 +1,130 @@
-Return-Path: <linux-pci+bounces-31163-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31164-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 633E2AEF7A1
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 14:01:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16662AEF7B1
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 14:04:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 970607ABD69
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 11:59:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38B2B1885360
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 12:02:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CECAD2749E5;
-	Tue,  1 Jul 2025 11:55:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAE9827511A;
+	Tue,  1 Jul 2025 11:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YCvpBbTw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IFqTf1yY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28CB2749CF
-	for <linux-pci@vger.kernel.org>; Tue,  1 Jul 2025 11:55:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBA6275112;
+	Tue,  1 Jul 2025 11:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751370949; cv=none; b=WDs9RKftz/Ko/Lt0WDXRHXu8cLGCgFjMITnHTowLT7gpXTrD9lFTg3508XjzZkp1lYiDBcF8zrkJ0GxLBUfnqRpwrcdxcBq/lh79+ZTK9CRxZYeV/I+rHQY3/dK8GAs3dZ7yuUHXlqdIeTertaNbJUcblWls52jGBcjA0we0W5Y=
+	t=1751371060; cv=none; b=jY9P10gzHzxvszybhA9YptJgARBRcQydcFG6NWA1rVuKbgh32P686K2z66l//XXq5JplzNcDDiTLg3qsc11e+dKBdFhsXrB7Ywd1DVwOl2NBMlyNKSS7sjdy2EcI/jCtBEGoamlIkIgM5G3Z8xxwbaEMIVa/LM5+tjo6PRQaRV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751370949; c=relaxed/simple;
-	bh=GtXCufAOk5EVbCLVPR1JO3Sa8rQreS6SSV95Qk73oNg=;
+	s=arc-20240116; t=1751371060; c=relaxed/simple;
+	bh=VwRW6iX/Igy0SBU1tuHE4cuDIm18Y4pVZANCC4AQf9M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ik0BpZa+XwvwL1Ws9cQZKQW1KHmJMuV71EyylyYumnfCqXEXqCIl1n9Bns+EzU5MfpqdAzDYMuEVM2MSY+7JMLcN1aOuLt7HGWfVXgQaaS7g4+tGdrZwE+R4SsjYbT+bWQ9lbOUd7YARtzqx0XJj7+B/amZbWJ7pK4mAPbeQQVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YCvpBbTw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E4D0C4CEEB;
-	Tue,  1 Jul 2025 11:55:46 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=vC7AmClBYHQIwfx446mkjhhoeeolqqFWHJW6SXEeh0EbDF41cqE2ElWFgvjwsZP7mVF7P0edditeFiRI/8ncnyIL2Xpwt6D/IPVtXggc0vicERLJO2kcrcP5WdEPH97UWRqxQmVDUhwH9J95b59wkFRNVFHpg6QhIkh6BX/all0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IFqTf1yY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8643C4CEEB;
+	Tue,  1 Jul 2025 11:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751370949;
-	bh=GtXCufAOk5EVbCLVPR1JO3Sa8rQreS6SSV95Qk73oNg=;
+	s=k20201202; t=1751371060;
+	bh=VwRW6iX/Igy0SBU1tuHE4cuDIm18Y4pVZANCC4AQf9M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YCvpBbTwZVQzu4LM0GMhxCrCIOutdpNNURyWhp38d4audOVK6XxiZJOv6WNZCfEZ5
-	 UDF/pI2pUrNFLMNqIkrxuwpVlVUmcGLtr04Yx+mHmgzJBETHkG2yGlqwHhWLWox07j
-	 xByGlnKo9gKeNhoWan1KF0akjL+pOzmlCy6RCmK3g6GWh1QojOsrh6cjCg+k8MtZNw
-	 xGUbBvDYPQeomT4EctVDwBTotY9dOCk3F2HnJQHUWq99XJB2NRWAKHgp1X8CKJ0b6G
-	 CxUSi5KcROIHrLU03rdSQyiBy+ilwWQJtJIwP0WwV8oEpVVDGEfamG1sQiSkPVT+I8
-	 R/vFFrUyJ/vNA==
-Date: Tue, 1 Jul 2025 13:55:43 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Laszlo Fiat <laszlo.fiat@proton.me>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 5/7] PCI: dwc: Ensure that dw_pcie_wait_for_link()
- waits 100 ms after link up
-Message-ID: <aGPMv8ny9+2wm7pY@x1-carbon>
-References: <20250625102347.1205584-14-cassel@kernel.org>
- <20250630201902.GA1798294@bhelgaas>
+	b=IFqTf1yYmp7A9KHA0f3w4oB5yY4QmKC7ykrvXpG3u/okaLZARyB7R8lwtSpKbayyS
+	 QdcB1x0XHjp2pTF+E0bFSwZhRmHLV2z8Wz8edBrWRX2uVWo8WA6Sciiq+PjZnbvOkR
+	 1k02W/Eiq2QqP/c3/SM/dQrB9oLVei4BYx+tgeMDzrlnjXkGSCULvwAd/kp7lUj+P1
+	 ILV2Wb/wcKHJwf9Qhfg6ZfsL/4dyXwozQwRzh72xM8l3dH1iL/mRnETviOeMxChxzc
+	 gAOnyoyBkLNaVOmZrQl2qf5JJr6aH7beIqtnmLTAGcpKV5FrTbj9LbKdzCCkisdpY4
+	 oSFyDQ8ceGipw==
+Date: Tue, 1 Jul 2025 17:27:27 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org, Jim Quinlan <james.quinlan@broadcom.com>
+Subject: Re: [PATCH v2] PCI/pwrctrl: Skip creating pwrctrl device unless
+ CONFIG_PCI_PWRCTRL is enabled
+Message-ID: <n23tedrmgzfo7bxe4mbde2rrsayalcz4jya5yopoeahlll3qaw@mpz4oemtyern>
+References: <20250701064731.52901-1-manivannan.sadhasivam@linaro.org>
+ <aGOHkmG1jnDistgh@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250630201902.GA1798294@bhelgaas>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aGOHkmG1jnDistgh@wunner.de>
 
-Hello Bjorn, Mani,
-
-On Mon, Jun 30, 2025 at 03:19:02PM -0500, Bjorn Helgaas wrote:
-> On Wed, Jun 25, 2025 at 12:23:51PM +0200, Niklas Cassel wrote:
-> > As per PCIe r6.0, sec 6.6.1, a Downstream Port that supports Link speeds
-> > greater than 5.0 GT/s, software must wait a minimum of 100 ms after Link
-> > training completes before sending a Configuration Request.
-> > 
-> > Add this delay in dw_pcie_wait_for_link(), after the link is reported as
-> > up. The delay will only be performed in the success case where the link
-> > came up.
-> > 
-> > DWC glue drivers that have a link up IRQ (drivers that set
-> > use_linkup_irq = true) do not call dw_pcie_wait_for_link(), instead they
-> > perform this delay in their threaded link up IRQ handler.
-> > 
-> > Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-> > Reviewed-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-> > Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > index 4d794964fa0f..053e9c540439 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > @@ -714,6 +714,14 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
-> >  		return -ETIMEDOUT;
-> >  	}
+On Tue, Jul 01, 2025 at 09:00:34AM GMT, Lukas Wunner wrote:
+> On Tue, Jul 01, 2025 at 12:17:31PM +0530, Manivannan Sadhasivam wrote:
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -2508,6 +2508,7 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
+> >  }
+> >  EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
 > >  
-> > +	/*
-> > +	 * As per PCIe r6.0, sec 6.6.1, a Downstream Port that supports Link
-> > +	 * speeds greater than 5.0 GT/s, software must wait a minimum of 100 ms
-> > +	 * after Link training completes before sending a Configuration Request.
-> > +	 */
-> > +	if (pci->max_link_speed > 2)
-> > +		msleep(PCIE_RESET_CONFIG_WAIT_MS);
+> > +#if IS_ENABLED(CONFIG_PCI_PWRCTRL)
+> >  static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
+> >  {
 > 
-> Sec 6.6.1 also requires "100 ms following exit from a Conventional
-> Reset before sending a Configuration Request to the device immediately
-> below that Port" for Downstream Ports that do *not* support Link
-> speeds greater than 5.0 GT/s.
+> Hm, why does pci_pwrctrl_create_device() return a pointer, even though the
+> sole caller doesn't make any use of it?  Why not return a negative errno?
 > 
-> Where does that delay happen?
+> Then you could just do this:
+> 
+> 	if (!IS_ENABLED(CONFIG_PCI_PWRCTRL))
+> 		return 0;
+> 
+> ... at the top of the function and you don't need the extra LoC for the
+> empty inline stub.
+> 
 
-Argh...
+This is what I initially submitted [1] though that returned NULL, but the idea
+was the same. But Bjorn didn't like that.
 
-In version 3 of this series, the wait was unconditional, so it handled both
-cases:
-https://lore.kernel.org/linux-pci/20250613124839.2197945-13-cassel@kernel.org/
+> Another option is to set "struct pci_dev *pdev = NULL;" and #ifdef the body
+> of the function, save for the "return pdev;" at the bottom.
+> 
 
-But I got a review comment from Mani:
-https://lore.kernel.org/linux-pci/hmkx6vjoqshthk5rqakcyzneredcg6q45tqhnaoqvmvs36zmsk@tzd7f44qkydq/
+This is similar to what Bjorn submitted [2], but you were in favor of providing
+a stub instead [3]. It also looked better to my eyes.
 
-That I should only care about the greater than 5.0 GT/s case.
+> Of course you could also do:
+> 
+> 	if (!IS_ENABLED(CONFIG_PCI_PWRCTRL))
+> 		return NULL;
+> 
+> ... at the top of the function, but again, the caller doesn't make any
+> use of the returned pointer.
+> 
 
-Perhaps the confusion came about since the comment only mentioned one of the
-two the cases specified by PCIe r6.0, sec 6.6.1.
+Right. I could make it to return a errno, but that's not the scope of this
+patch. Bjorn wanted to have the #ifdef to be guarded to make the compiled out
+part more visible [4], so I ended up with this version.
 
-So I think the best thing is either (on top of pci/next):
+But whatever the style is, we should make sure that the patch lands in 6.16-rcS.
+It is taking more time than needed.
 
-1) Make the wait unconditional and mention both cases in the comment:
+- Mani
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 89aad5a08928..c30b1d8d833c 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -718,9 +718,15 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
- 	* As per PCIe r6.0, sec 6.6.1, a Downstream Port that supports Link
- 	* speeds greater than 5.0 GT/s, software must wait a minimum of 100 ms
- 	* after Link training completes before sending a Configuration Request.
-+	*
-+	* As per PCIe r6.0, sec 6.6.1, a Downstream Port that does not support
-+	* Link speeds greater than 5.0 GT/s, software must wait a minimum of
-+	* 100 ms following exit from a Conventional Reset before sending a
-+	* Configuration Request to the device immediately below that Port.
-+	*
-+	* For either case, perform the wait here.
- 	*/
--	if (pci->max_link_speed > 2)
--		msleep(PCIE_RESET_CONFIG_WAIT_MS);
-+	msleep(PCIE_RESET_CONFIG_WAIT_MS);
- 
- 	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
+[1] https://lore.kernel.org/all/20250522140326.93869-1-manivannan.sadhasivam@linaro.org/
+[2] https://lore.kernel.org/linux-pci/20250523201935.1586198-1-helgaas@kernel.org/
+[3] https://lore.kernel.org/linux-pci/aDFnWhFa9ZGqr67T@wunner.de/
+[4] https://lore.kernel.org/linux-pci/20250629190219.GA1717534@bhelgaas/
 
+> Thanks,
+> 
+> Lukas
+> 
 
-Or:
-
-1) Make the wait unconditional and mention none of the cases in the comment:
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 89aad5a08928..ce3b5b319550 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -714,13 +714,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
- 		return -ETIMEDOUT;
- 	}
- 
--	/*
--	* As per PCIe r6.0, sec 6.6.1, a Downstream Port that supports Link
--	* speeds greater than 5.0 GT/s, software must wait a minimum of 100 ms
--	* after Link training completes before sending a Configuration Request.
--	*/
--	if (pci->max_link_speed > 2)
--		msleep(PCIE_RESET_CONFIG_WAIT_MS);
-+	msleep(PCIE_RESET_CONFIG_WAIT_MS);
- 
- 	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
-
-
-Please tell me what you prefer and I can send a patch on top of pci/next.
-
-
-
-Also note that some drivers already do an explicit wait after PERST# has been
-deasserted (in addition to the wait while PERST# is asserted), e.g.:
-https://github.com/torvalds/linux/blob/v6.16-rc4/drivers/pci/controller/dwc/pci-imx6.c#L885
-https://github.com/torvalds/linux/blob/v6.16-rc4/drivers/pci/controller/dwc/pcie-qcom.c#L294
-https://github.com/torvalds/linux/blob/v6.16-rc4/drivers/pci/controller/dwc/pcie-keembay.c#L89
-
-
-Kind regards,
-Niklas
+-- 
+மணிவண்ணன் சதாசிவம்
 
