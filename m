@@ -1,190 +1,182 @@
-Return-Path: <linux-pci+bounces-31201-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31202-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6935DAF03C5
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 21:29:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77D43AF04B4
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 22:21:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 966C44A5746
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 19:29:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 65E141C07537
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 20:21:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E269A283137;
-	Tue,  1 Jul 2025 19:29:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A61B2ED86E;
+	Tue,  1 Jul 2025 20:21:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LN/qjXx7"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PVj8XoI0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E30628312D
-	for <linux-pci@vger.kernel.org>; Tue,  1 Jul 2025 19:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E79D2EE5EB
+	for <linux-pci@vger.kernel.org>; Tue,  1 Jul 2025 20:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751398153; cv=none; b=Ag71WDm2Vr2tmWhfEh8N6UDm1+YVDddQ5M1RGDGXMctl77YDpn/jKWa3X/TzWklG3IBqkfgK0OwOCMBv/lfLWjkbZTIeZt+bR9iJbfy5UBYxRv2dLi8DRbVF4/KWNVoZ/hn3fhjMrhgVPgjJ5oyYcS7LD5y/eW3WWPfXF3KT0e8=
+	t=1751401295; cv=none; b=CGJskbPV/nGMgYEjJZUNagwrTMa4d1IbWlhzdYspJK1JM2EzW5/vKEXdZPlRBxYUNgxkBfwPATcD7JnKhSxkV8LhAuYVZvcmwGkTxchIqNh/7V5ZkV08g+3rTLY94nAnyywFsg9Exu/gvAwHYdx9bfojqqqBkFL6lmlJVyKWK3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751398153; c=relaxed/simple;
-	bh=Der6lHkCC98no1Vn4NQll5rTYBWXTKnaq2KSJ3XTARI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eTfYe2N4eNafgOIywa6oYVszSpHD2OvL8OTGPkpWhVf3P0xRhhkEWYDbb0/5ZsWMs5vDEGE2q/XAw9Vv4tfQgRpr5+eGEZ9wyh9XE8MibtqrDCJ1guJwDoANc3Imrplt4my9sgSONi8SpMVxNXv3kYn+isOUlmisgaYPaNi/5zE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LN/qjXx7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751398151;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mjTFqfwrz80T+KU/Vvx3G5r4It+9k632M4DI6S0TxZ8=;
-	b=LN/qjXx7ejcFaIcbG0dsKU5WcOT+LAR5IhXrbBBY9uGp3sQoV87IwdxgKvmx2bt5dqp14B
-	NP5/1QtbcepJ/o3/boMm9HtQDX2a4I3fT9lAdamTZqBoOi8o5OwxngiXSxqad80TFdBsfO
-	IMMy4pjaLz+0UUl2xAB8W/o5a8DlK5Y=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-644-mz-sdWjcN6m3H3G6aERYtw-1; Tue, 01 Jul 2025 15:29:10 -0400
-X-MC-Unique: mz-sdWjcN6m3H3G6aERYtw-1
-X-Mimecast-MFC-AGG-ID: mz-sdWjcN6m3H3G6aERYtw_1751398149
-Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-739f2a86cc2so171887a34.2
-        for <linux-pci@vger.kernel.org>; Tue, 01 Jul 2025 12:29:10 -0700 (PDT)
+	s=arc-20240116; t=1751401295; c=relaxed/simple;
+	bh=ezE2n18Omi/MOjX73Sr3/tMK4T9hA/BPKdf80o00DBM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PE6Ofjr9anDUElKqLDc8WVJSIIahnsw58GGAtBfANJJ0VJF2Qj12LtgGy86AYBLZihCAxVWEqTBIHNFrON1xDwrUoFkzNaAQGyU+2W63+ODKW0jH4n7vuHXljwckcZbkyJxuTE05+p/NxEit3uTBSMQ0NUr2866bII0CjNEN3c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PVj8XoI0; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 561F27qr022671
+	for <linux-pci@vger.kernel.org>; Tue, 1 Jul 2025 20:21:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hUrytFkRXZ1kyGSNxdZDA+tX90rrT6JMS9+T22SMUsA=; b=PVj8XoI0Q3y0tW87
+	zA5GLcA1bosb3F1naOB2mSl0UkwnoWIOAH7oWo0b5ZWFYIGH9fFhRbF4coGGhrYj
+	TBSEIL/vR08M/xu5zEHP+KsCYHeCYEUkyq6uPvMM76SEcYDH9PZVOCxthegb+qEl
+	sYHDi31K3jfsRvmc1Os4H+9O4EW6BKJOZ2/cKlr5G99nyW6r9bZOrmMgg0j1MRyB
+	kNDh94BaD/jXg1qymIaTPuShELus0ZjdIeabw56bIFTJlvb07n0Ju0aKL9LyiXZU
+	RjvyBlud113UDjsCzqn0pWbArd4lB0lCyx6tl0xHqntF6e9TWKeGZvzBpjWAHNQ/
+	mtmVWA==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mhxn0uux-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 01 Jul 2025 20:21:33 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-236725af87fso73401195ad.3
+        for <linux-pci@vger.kernel.org>; Tue, 01 Jul 2025 13:21:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751398149; x=1752002949;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mjTFqfwrz80T+KU/Vvx3G5r4It+9k632M4DI6S0TxZ8=;
-        b=cUqW7M0naUn2g9vKm0WL2nJN+76x4LprY20A7l1UaHJ+EjwyrOS67MUUyzio6FtLea
-         bq5pCf/Dicf1jgwrt1szmG6FVuSTMZ/dP9bnv73Gk/FTO292LZZWl+PjLPqsBTqYRnNt
-         ao52eRcO/qVgWjz/z4RDEGjBJaa39GKi/8r/2uwGxkW4m7DW4vJMHFkDEbOJp6shtToe
-         BmAqQOnHVSezox/q2/GzIBSNPGnASmKkogu75cYzPAf3xW8Hb9XQ489RBCj/R3x/TgV7
-         xPA3cbDG5r0cBJxbHHY3aAX07LKpzNZRotjYlgK/4XPZflOjvG4g5eqYW5a3NV+86oZ/
-         nDCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTzIbjrYGxAxaW86s9TzfkqQ8ysY/2h/jpKnVTx8vQQOlpluqRVAhir2/kc9covoMhKQi8Xbfypz8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5XsguKsXnjK2x8abXZFvhK/AwYWSuhuw8P6hzqOr5kcR+Qo7z
-	e8X5Xi4tRVzT4MtZGMMkDSaTnaUP9DqJnsoRRnG1zd4Pn3P0FVe2kezrG06v3twG1+s/ikjCUPp
-	MGDRISlXqALnCaHBEIxYqJZKtnXlDmHucYp5FwRdupb8cXe6ZpAGOh9g0zQAKUQ==
-X-Gm-Gg: ASbGncvCtORmEPB7qfzuGb33Co/1Vnx6Kt+WtmXQGTi4YUIMOnvaAXANbgt9scZKNlC
-	RgMdFVNO8xfBJIZJQNs0SU+kkC8cey3pWA5j0Qf/RF/7uCjdultIAVuwPfcMTFUT4x4L5E80e/7
-	xKiyH32/xyAQ4ELWqDVLhBM2xps51aRAs+1p97q0kf5TShSbL2rsFhWz7zAXGEoSFS3ehF9qeLO
-	LPvIC6yJF3jQ9o71cOMMbLZJBAfibOr6kcO2aGGdKg0subB9YYiOff8eEIOGlaajdy5EfnapWvS
-	SMSDVX9w6y76lysRKHHVSz+5Wg==
-X-Received: by 2002:a05:6808:2217:b0:401:f524:a97d with SMTP id 5614622812f47-40b7b0a8707mr1196642b6e.4.1751398149414;
-        Tue, 01 Jul 2025 12:29:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFAidfeboIYE5QUTm/6yW8HPYX8OflJWQclvBEIzO4DlJkq5XCLurirKOmJEIcC02wo+DFNcg==
-X-Received: by 2002:a05:6808:2217:b0:401:f524:a97d with SMTP id 5614622812f47-40b7b0a8707mr1196629b6e.4.1751398149030;
-        Tue, 01 Jul 2025 12:29:09 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b322c1e25sm2242252b6e.20.2025.07.01.12.29.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 12:29:07 -0700 (PDT)
-Date: Tue, 1 Jul 2025 13:29:05 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev, Joerg Roedel
- <joro@8bytes.org>, linux-pci@vger.kernel.org, Robin Murphy
- <robin.murphy@arm.com>, Will Deacon <will@kernel.org>, Lu Baolu
- <baolu.lu@linux.intel.com>, galshalom@nvidia.com, Joerg Roedel
- <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org,
- maorg@nvidia.com, patches@lists.linux.dev, tdave@nvidia.com, Tony Zhu
- <tony.zhu@intel.com>
-Subject: Re: [PATCH 03/11] iommu: Compute iommu_groups properly for PCIe
- switches
-Message-ID: <20250701132905.67d29191.alex.williamson@redhat.com>
-In-Reply-To: <3-v1-74184c5043c6+195-pcie_switch_groups_jgg@nvidia.com>
-References: <0-v1-74184c5043c6+195-pcie_switch_groups_jgg@nvidia.com>
-	<3-v1-74184c5043c6+195-pcie_switch_groups_jgg@nvidia.com>
-Organization: Red Hat
+        d=1e100.net; s=20230601; t=1751401292; x=1752006092;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hUrytFkRXZ1kyGSNxdZDA+tX90rrT6JMS9+T22SMUsA=;
+        b=aTyQ59YhNbQ6ZoUVR/ND2mOTsagaZa8FIftZJcWFNRZgh7J1EWC80e3euqJyhB472L
+         7NfJCN6KDDDIU7EfLzzh2u62V6J/oseqyUpEiBpVjkMcKdvbi31mYKM1xVKKVNqe82Lq
+         fcAql7ehHlU87apqc7jl3wMubmMCHw6oDZ0mrAWR8XsOQz/CbQVoF9lJIkjGa6jXFYGJ
+         qddQWlaE8FXqX4NnoU0+gGdbUZtIMjdiaXEcm1bgvtz0BaYufs/ANnWhshN8jLUCIIgI
+         SbbeIMOmXUsKiHYLx5kORP74RpyBS09wbX1me7jwGOOGN6rwY9GWP4WtADBwxDc/M2tb
+         U9zQ==
+X-Gm-Message-State: AOJu0YyvsXL/tJdSF3ZwJlfMmd420EjDhtukt9fRweSQCfU7pG0WiXnB
+	oll/rrLlpPlG77aBUdrX6gVWW51vc0X8rLqk4cj06otj5qrzASDC5ttn2iLI9TuBniOXBsklGGw
+	k3cCWn4aEY1pg2+jr2tOHkxQn/RgIsDti+qzkahlg28CdbNHmcXZBZjLyJe4l1Xs=
+X-Gm-Gg: ASbGncsOgARLvDUaCq+iUMOmJU44r1gxdvAV6hI2oc4AfXT1+XgF1Gv2G9qwwyskakz
+	wrcPi1lZIUIUvv40w8GChf9aGblgVtG6Zig8a8EWbCzSEUIDb7nXJvvWltmXSB8HKSIx3FqKPN7
+	gZFvIDoJ29swStnXHkPnjrOLm8/DOC4F/FxLpufwIgBwAs4RUUF4BGuL6KbUN5zuplhVGDqPMlV
+	w2G8tOX0EnAAP0B+c/IhlP47BWizTOhoodZW7UCUwoTV3nQjTXHToru/FkDFa5pj3zdeHsd/4mS
+	EswKAy2avh7S8Q8Nf6nFMVPhSDzRdBH1/MVsOGpa9iltyNCRMsXPh3YsTkuCs/wO
+X-Received: by 2002:a17:902:ea0e:b0:236:363e:55d with SMTP id d9443c01a7336-23c6e591826mr752555ad.28.1751401291823;
+        Tue, 01 Jul 2025 13:21:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFq2/qAA6kM0CeuXpCcxP+BXUf/kabRYb4GipX6TGcMwNAVDXbJ8LpM3G58LJeO9rQYMHePRA==
+X-Received: by 2002:a17:902:ea0e:b0:236:363e:55d with SMTP id d9443c01a7336-23c6e591826mr752165ad.28.1751401291387;
+        Tue, 01 Jul 2025 13:21:31 -0700 (PDT)
+Received: from [10.73.112.69] (pat_11.qualcomm.com. [192.35.156.11])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2f39bdsm118879695ad.80.2025.07.01.13.21.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 13:21:30 -0700 (PDT)
+Message-ID: <89ded76a-8bd7-43b5-932d-f139f4154320@oss.qualcomm.com>
+Date: Tue, 1 Jul 2025 13:21:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/4] dt-bindings: PCI: qcom,pcie-sa8255p: Document ECAM
+ compliant PCIe root complex
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, will@kernel.org, lpieralisi@kernel.org,
+        kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+        andersson@kernel.org, mani@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        quic_ramkri@quicinc.com, quic_shazhuss@quicinc.com,
+        quic_msarkar@quicinc.com, quic_nitegupt@quicinc.com
+References: <20250701165257.GA1839070@bhelgaas>
+Content-Language: en-US
+From: Mayank Rana <mayank.rana@oss.qualcomm.com>
+In-Reply-To: <20250701165257.GA1839070@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDE0MiBTYWx0ZWRfX0pqI56qfDwrz
+ QJRP9iiruzXPGt6t5tBo7qsXIwDBrYINWw2v6U06mJROKffj2EBkxe85DoUGYDWDfM8pJHp8+v7
+ 1CFBIgZgGfEiKI0aPuP2m+CefWOcZPcz4CmCGCWAG74GD8obOA8/gvHZEvg6YLKmSOHrmVmeq03
+ Oe5dPjSmrqS2k9F/44qoGw/R+5s4Mc7VQ1z+Hej8hMI1Oa6R9jOVmYBbGvjiFkL1oB+250pwmdt
+ rsqG7m4CyFQIX30q9GdwpvTCf1j2t7qwcOm2ukavBcJdcLFHAqzUaOHNA8qUxEzvctwMldUD6yJ
+ nPJ5U1RADBR8O3NSAWux1me2wrDx6ggSo6yhEfBK5v771S7Yz6aATkH72vKUDX65hp0pt4vdXUf
+ TwO+AM5fmNgv5yQE7je0+pQlUpYzBKHXOpmm6+fRdCodOZcplsk9Q9OpN7x8Eh5pUbvTT0Rq
+X-Authority-Analysis: v=2.4 cv=EbvIQOmC c=1 sm=1 tr=0 ts=6864434d cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ZdW6uxA9NKXbfdqeeS2OGA==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8
+ a=99n8J7Ytk5hhnKoTW6cA:9 a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: nKp8FBSuGekATGoNVCo1MQdFDnTXRexR
+X-Proofpoint-GUID: nKp8FBSuGekATGoNVCo1MQdFDnTXRexR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
+ malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0 impostorscore=0
+ spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507010142
 
-On Mon, 30 Jun 2025 19:28:33 -0300
-Jason Gunthorpe <jgg@nvidia.com> wrote:
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index d265de874b14b6..f4584ffacbc03d 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -65,8 +65,16 @@ struct iommu_group {
->  	struct list_head entry;
->  	unsigned int owner_cnt;
->  	void *owner;
-> +
-> +	/* Used by the device_group() callbacks */
-> +	u32 bus_data;
->  };
->  
-> +/*
-> + * Everything downstream of this group should share it.
-> + */
-> +#define BUS_DATA_PCI_UNISOLATED BIT(0)
+Hi Bjorn
 
-NON_ISOLATED for consistency w/ enum from the previous patch?
+On 7/1/2025 9:52 AM, Bjorn Helgaas wrote:
+> On Mon, Jun 16, 2025 at 03:42:58PM -0700, Mayank Rana wrote:
+>> Document the required configuration to enable the PCIe root complex on
+>> SA8255p, which is managed by firmware using power-domain based handling
+>> and configured as ECAM compliant.
+> 
+>> +    soc {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        pci@1c00000 {
+>> +           compatible = "qcom,pcie-sa8255p";
+>> +           reg = <0x4 0x00000000 0 0x10000000>;
+>> +           device_type = "pci";
+>> +           #address-cells = <3>;
+>> +           #size-cells = <2>;
+>> +           ranges = <0x02000000 0x0 0x40100000 0x0 0x40100000 0x0 0x1ff00000>,
+>> +                    <0x43000000 0x4 0x10100000 0x4 0x10100000 0x0 0x40000000>;
+>> +           bus-range = <0x00 0xff>;
+>> +           dma-coherent;
+>> +           linux,pci-domain = <0>;
+>> ...
+> 
+>> +           pcie@0 {
+>> +                   device_type = "pci";
+>> +                   reg = <0x0 0x0 0x0 0x0 0x0>;
+>> +                   bus-range = <0x01 0xff>;
+> 
+> This is a Root Port, right?  Why do we need bus-range here?  I assume
+> that even without this, the PCI core can detect and manage the bus
+> range using PCI_SECONDARY_BUS and PCI_SUBORDINATE_BUS.
+On Qualcomm SOCs, root complex based root host bridge is connected to 
+single PCIe bridge
+with single root port. I have added bus-range based on discussion on 
+this thread https://lore.kernel.org/all/20240321-pcie-qcom-bridge-dts-
+2-0-1eb790c53e43@linaro.org/
+ >> +                   #address-cells = <3>;>> + 
+#size-cells = <2>;
+>> +                   ranges;
+>> +            };
+>> +        };
+>> +    };
+>> -- 
+>> 2.25.1
+>>
+Regards,
+Mayank
 
-...
-> +struct iommu_group *pci_device_group(struct device *dev)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	struct iommu_group *group;
-> +	struct pci_dev *real_pdev;
-> +
-> +	if (WARN_ON(!dev_is_pci(dev)))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	/*
-> +	 * Arches can supply a completely different PCI device that actually
-> +	 * does DMA.
-> +	 */
-> +	real_pdev = pci_real_dma_dev(pdev);
-> +	if (real_pdev != pdev) {
-> +		group = iommu_group_get(&real_pdev->dev);
-> +		if (!group) {
-> +			/*
-> +			 * The real_pdev has not had an iommu probed to it. We
-> +			 * can't create a new group here because there is no way
-> +			 * for pci_device_group(real_pdev) to pick it up.
-> +			 */
-> +			dev_err(dev,
-> +				"PCI device is probing out of order, real device of %s is not probed yet\n",
-> +				pci_name(real_pdev));
-> +			return ERR_PTR(-EPROBE_DEFER);
-> +		}
-> +		return group;
-> +	}
-> +
-> +	if (pdev->dev_flags & PCI_DEV_FLAGS_BRIDGE_XLATE_ROOT)
-> +		return iommu_group_alloc();
-> +
-> +	/* Anything upstream of this enforcing non-isolated? */
-> +	group = pci_hierarchy_group(pdev);
->  	if (group)
->  		return group;
->  
-> -	/* No shared group found, allocate new */
-> -	return iommu_group_alloc();
-> +	switch (pci_bus_isolated(pdev->bus)) {
-> +	case PCIE_ISOLATED:
-> +		/* Check multi-function groups and same-bus devfn aliases */
-> +		group = pci_get_alias_group(pdev);
-> +		if (group)
-> +			return group;
-> +
-> +		/* No shared group found, allocate new */
-> +		return iommu_group_alloc();
-
-I'm not following how we'd handle a multi-function root port w/o
-consistent ACS isolation here.  How/where does the resulting group get
-the UNISOLATED flag set?
-
-I think that's necessary for the look-back in pci_hierarchy_group(),
-right?  Thanks,
-
-Alex
 
 
