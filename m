@@ -1,111 +1,97 @@
-Return-Path: <linux-pci+bounces-31138-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31139-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0005AEEF33
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 08:48:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61B72AEEF50
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 09:00:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B74E17E129
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 06:47:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 56C3D7A9C8A
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 06:59:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6432238C05;
-	Tue,  1 Jul 2025 06:47:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 747841CBEAA;
+	Tue,  1 Jul 2025 07:00:48 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8289E21323C;
-	Tue,  1 Jul 2025 06:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E92D158DAC;
+	Tue,  1 Jul 2025 07:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751352465; cv=none; b=E3bjQBUqovBvPI/QPkmyhV660DHzEtRyHdmoOADJ/vZO/Fn2rLt0ct6YwhnAHF7Nxbm5gRFw7Fx5/RA6HlqS57nZ+zO8kVXS6EjBWxw7PHSCZXktMgKZTr2OscGg63dFQMysh4dXXf6pWiy8OgmmCwmRDF+RFk5QENmbX0UJkqw=
+	t=1751353248; cv=none; b=s1BbpRf3l9k9gvOXMJdmP7Sj/ASLfn1dDxr/UZ4kdT2s5UwtfO7HNBFuefn7ilQeCODaZ0xDiDFtcAXKCUG6AhLo9N+Q2sNvGKv9DYxj5X2YtfeMnvT1kF/E3PixxA9OPBL9oQ63mjU4dLftK5gkNVMKOUtN9maWUXP1dRvWYCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751352465; c=relaxed/simple;
-	bh=q8s+GpT4npG0EyYJoiXndD35PXvldamsaZRW/maQ/+c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OnDDWULRZtz6GlyOS6VEzqGv0dtco3I7A10cdrLVIon3j4rpC+83IQ08BzDWTM9PDG5Oq9iaL/sd4aLexOG9s8kX9h9dm8oXusm4QDySobqc526e6eWZ/TFKD8fquturxvmUP1m4R5tjTIChOhXXpcIZ/UP9EdHR6h+mXpTCEic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67754C4CEEB;
-	Tue,  1 Jul 2025 06:47:42 +0000 (UTC)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: bhelgaas@google.com
-Cc: lukas@wunner.de,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	stable@vger.kernel.org,
+	s=arc-20240116; t=1751353248; c=relaxed/simple;
+	bh=GBKpsxJ1frf7WrGf4FbqRv4hljWob214NmfNQEvM6Lk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GQ/kG/J+pWrKRTDbhDFQAH1DK0zXPB1jekvArZbj+f2xsLWFOCjEiqaV9/w+NCDBIPdjP5IvO6lmO+ZFuKW57qdYH0XCY0s8/2ZaDN/golgUS6TAkk4Uz1LD2tLQmpi6L7/8+X1b9lXTYndgVeA4Sq6bDHtjq5/yavirfN7vxLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id CE16E2C00E9B;
+	Tue,  1 Jul 2025 09:00:34 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id BB1033D6A42; Tue,  1 Jul 2025 09:00:34 +0200 (CEST)
+Date: Tue, 1 Jul 2025 09:00:34 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
 	Jim Quinlan <james.quinlan@broadcom.com>
-Subject: [PATCH v2] PCI/pwrctrl: Skip creating pwrctrl device unless CONFIG_PCI_PWRCTRL is enabled
-Date: Tue,  1 Jul 2025 12:17:31 +0530
-Message-ID: <20250701064731.52901-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.43.0
+Subject: Re: [PATCH v2] PCI/pwrctrl: Skip creating pwrctrl device unless
+ CONFIG_PCI_PWRCTRL is enabled
+Message-ID: <aGOHkmG1jnDistgh@wunner.de>
+References: <20250701064731.52901-1-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701064731.52901-1-manivannan.sadhasivam@linaro.org>
 
-If devicetree describes power supplies related to a PCI device, we
-previously created a pwrctrl device even if CONFIG_PCI_PWRCTL was
-not enabled.
+On Tue, Jul 01, 2025 at 12:17:31PM +0530, Manivannan Sadhasivam wrote:
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2508,6 +2508,7 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
+>  }
+>  EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
+>  
+> +#if IS_ENABLED(CONFIG_PCI_PWRCTRL)
+>  static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
+>  {
 
-When pci_pwrctrl_create_device() creates and returns a pwrctrl device,
-pci_scan_device() doesn't enumerate the PCI device. It assumes the pwrctrl
-core will rescan the bus after turning on the power. However, if
-CONFIG_PCI_PWRCTL is not enabled, the rescan never happens.
+Hm, why does pci_pwrctrl_create_device() return a pointer, even though the
+sole caller doesn't make any use of it?  Why not return a negative errno?
 
-This may break PCI enumeration on any system that describes power supplies
-in devicetree but does not use pwrctrl. Jim reported that some brcmstb
-platforms break this way.
+Then you could just do this:
 
-While the actual fix would be to convert all the platforms to use pwrctrl
-framework, we also need to skip creating the pwrctrl device if
-CONFIG_PCI_PWRCTL is not enabled and let the PCI core scan the device
-normally (assuming it is already powered on or by the controller driver).
+	if (!IS_ENABLED(CONFIG_PCI_PWRCTRL))
+		return 0;
 
-Cc: stable@vger.kernel.org # 6.15
-Fixes: 957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
-Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
-Closes: https://lore.kernel.org/r/CA+-6iNwgaByXEYD3j=-+H_PKAxXRU78svPMRHDKKci8AGXAUPg@mail.gmail.com
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
+... at the top of the function and you don't need the extra LoC for the
+empty inline stub.
 
-Changes in v2:
+Another option is to set "struct pci_dev *pdev = NULL;" and #ifdef the body
+of the function, save for the "return pdev;" at the bottom.
 
-* Used the stub instead of returning NULL inside the function
+Of course you could also do:
 
- drivers/pci/probe.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+	if (!IS_ENABLED(CONFIG_PCI_PWRCTRL))
+		return NULL;
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 4b8693ec9e4c..e6a34db77826 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2508,6 +2508,7 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
- }
- EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
- 
-+#if IS_ENABLED(CONFIG_PCI_PWRCTRL)
- static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
- {
- 	struct pci_host_bridge *host = pci_find_host_bridge(bus);
-@@ -2537,6 +2538,12 @@ static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, in
- 
- 	return pdev;
- }
-+#else
-+static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
-+{
-+	return NULL;
-+}
-+#endif
- 
- /*
-  * Read the config data for a PCI device, sanity-check it,
--- 
-2.43.0
+... at the top of the function, but again, the caller doesn't make any
+use of the returned pointer.
 
+Thanks,
+
+Lukas
 
