@@ -1,129 +1,161 @@
-Return-Path: <linux-pci+bounces-31154-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31155-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 354FEAEF5A7
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 12:54:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77C6CAEF5C9
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 12:58:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36F05165F06
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 10:54:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A68F1C01710
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Jul 2025 10:58:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3D6F242D8C;
-	Tue,  1 Jul 2025 10:54:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1305926FDBF;
+	Tue,  1 Jul 2025 10:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQTwJ004"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MUzxtVUf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C934470810;
-	Tue,  1 Jul 2025 10:54:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6A226FD84;
+	Tue,  1 Jul 2025 10:58:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751367253; cv=none; b=fuljt/5QN3BUBMGOEmLhk6rwpN/n8bGKDGg9pUQQJq1UJRYiPvjTvxhX1W68qje3sNXvC4RPpcnvyLcYfapoIFbGETgAFikZqDXkoZa9nboVc67yRh9meym3XZlQk141nQ8pDgLrsFLkrnNUtreXRAcyMx4itZg6HXreSItr17U=
+	t=1751367505; cv=none; b=fd3m2LdAXRYS3NChl3WiRbPnwOBz8uQ19jEOnEayWQ6ipUMP8BghLKfaad2A/9JxKTYSV/Ua8J0OGMbb5qOJGUMq+cf/vQvN4TiQTf+EWNGmbphxl44paKSyqGVD89JruOjAQ5Ze38DfVlylCfKS5sDJl5LjV7ONb5CWfKi4vlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751367253; c=relaxed/simple;
-	bh=pmrJ52f7KLRWP+Kzra4zThVHSaWjAGKLunXQ+85Io84=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J7CyIc1L/XMKSLbmBVdO7ApZwSv3C6Qpax5uW/B6h4xc+sRbpi0Iz8ks3mY9nqefC3QBNNpsSRM23EMKhsG/c9nKVgHRQmVeToEsg7Qe8OONyGZqYndKlKYE8Hv2oVpz7xK52LRbytDGy0Zw20I7AVndBWowGxIXm2jtaTrsA38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQTwJ004; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 437E3C4CEEB;
-	Tue,  1 Jul 2025 10:54:13 +0000 (UTC)
+	s=arc-20240116; t=1751367505; c=relaxed/simple;
+	bh=rkk9UXLbZVSCdjtp0NqI8G1ocVmjPZNAkzoBEd4QeOw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rSWk3vjDwjBnfIOHwNKwT0Ls41/0Y5mqLZDdZM/Fqh00KxrwU88u4rkdXTcMA00LMc/Bvy1Kx0sLD0YPun+E9p1glLgRbtN8hX4N82jl4NcEHNxPs+PUiGvOUlKinyX8/TTke0NErjxkae9ZjnG3APCw0M19wuYzN9ygLu/T1Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MUzxtVUf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC4DAC4CEF2;
+	Tue,  1 Jul 2025 10:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751367253;
-	bh=pmrJ52f7KLRWP+Kzra4zThVHSaWjAGKLunXQ+85Io84=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pQTwJ0045Ii+RA2IgfwYQBiGhTcE5N41waq6Icbsi90XxoGctw76d4BC1V4aRszpJ
-	 Oap+MWQkrRszzrvRCdvVCIQlh82yA8mhGnn1MnT3ZJETh2TEE9MYSvKN41u6sjQmds
-	 p0dbqlFGLT6UIDdUfnV3qs+EbMzHLfJmqn7T8K5ABtSW8aLBwIuEB2QlqkfYzEDq9+
-	 MTtLsPTBacD+P0o4DrQKrqDyn8Xr3gK/yW+DKNTBTN7WXtPKxUZDBKERTNu2iaByRr
-	 01gZCj7LLx0J0cQxwM97iqi/y4upQp2wMQqcsEa4molLGg4bMDxqLKr20Ghk3lKYVS
-	 4F7dSxj7eCBgA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uWYct-00BWpQ-1P;
-	Tue, 01 Jul 2025 11:54:11 +0100
-Date: Tue, 01 Jul 2025 11:54:10 +0100
-Message-ID: <86frfgb2r1.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,	Alyssa Rosenzweig
- <alyssa@rosenzweig.io>,	Rob Herring <robh@kernel.org>,	Manivannan
- Sadhasivam <mani@kernel.org>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kwilczynski@kernel.org>,	Janne
- Grunau <j@jannau.net>,	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-pci@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org,	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] PCI: host-generic: Fix driver_data overwriting bugs
-In-Reply-To: <20250630173415.GA1787642@bhelgaas>
-References: <86ikkdb0uj.wl-maz@kernel.org>
-	<20250630173415.GA1787642@bhelgaas>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1751367504;
+	bh=rkk9UXLbZVSCdjtp0NqI8G1ocVmjPZNAkzoBEd4QeOw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MUzxtVUfD+FrdmJ4uxcXRjHlmlp2bY+JUoTNEReVPbJZGHiSZZI9q6rLqHcHT0cg8
+	 fReLHXJHPb7dOmIb9xkRccCpQlfgPeH9Rb0kyjUrekLeGkQ27twK+dN6xcVBZq7CiS
+	 RtINx2Q5gNubSCw3xUCGMJnpkEVm2Kr9uX5EdA2BD550F8TLssLt6RNlUSAIsmcKLe
+	 I+05mSRTsPhteQ1V/Sz/5f0Xf3nSGV39EG/SRGiDaiZHdssO38GAxtfwOfw6P8FFYT
+	 9AduqGDx+AOvI6bp5jI6WeRgFv1x0U/WNfrNAGKYl2inFZ6sAGHIhcNlzOqrbh3YDt
+	 9UMzA7B53hYuw==
+Date: Tue, 1 Jul 2025 12:58:17 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/8] rust: device: add drvdata accessors
+Message-ID: <aGO_SS20fttVZM6D@pollux>
+References: <20250621195118.124245-1-dakr@kernel.org>
+ <20250621195118.124245-3-dakr@kernel.org>
+ <2025070159-perkiness-bullion-da76@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: helgaas@kernel.org, bhelgaas@google.com, alyssa@rosenzweig.io, robh@kernel.org, mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org, j@jannau.net, geert+renesas@glider.be, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025070159-perkiness-bullion-da76@gregkh>
 
-On Mon, 30 Jun 2025 18:34:15 +0100,
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> On Mon, Jun 30, 2025 at 06:23:00PM +0100, Marc Zyngier wrote:
-> > On Mon, 30 Jun 2025 18:06:01 +0100,
-> > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > 
-> > > On Wed, Jun 25, 2025 at 12:18:03PM +0100, Marc Zyngier wrote:
-> > > > Geert reports that some drivers do rely on the device driver_data
-> > > > field containing a pointer to the bridge structure at the point of
-> > > > initialising the root port, while this has been recently changed to
-> > > > contain some other data for the benefit of the Apple PCIe driver.
-> > > > 
-> > > > This small series builds on top of Geert previously posted (and
-> > > > included as a prefix for reference) fix for the Microchip driver,
-> > > > which breaks the Apple driver. This is basically swapping a regression
-> > > > for another, which isn't a massive deal at this stage, as the
-> > > > follow-up patch fixes things for the Apple driver by adding extra
-> > > > tracking.
-> > > 
-> > > Is there a bisection hole between patches 1 and 2?
-> > > 
-> > >   1: PCI: host-generic: Set driver_data before calling gen_pci_init()
-> > >   2: PCI: apple: Add tracking of probed root ports
-> > > 
-> > > If so, would it be practical to avoid the hole by reordering those
-> > > patches?
-> > 
-> > Sure, but you said you already had queued patch #1, and what is in
-> > -rc1 already breaks Geert's box. So no matter the order, we break
-> > something at some point.
-> 
-> I did, but when I saw your problem report and subsequent updates, I
-> put Geert's patch on hold.
-> 
-> > If you want to only break one thing, then yes, swapping these two
-> > patches is the correct thing to do.
-> 
-> I swapped them and put them back on pci/for-linus for v6.16:
-> 
->   https://git.kernel.org/cgit/linux/kernel/git/pci/pci.git/log/?h=for-linus&id=ba74278c638d
-> 
+On Tue, Jul 01, 2025 at 11:27:54AM +0200, Greg KH wrote:
+> On Sat, Jun 21, 2025 at 09:43:28PM +0200, Danilo Krummrich wrote:
 
-LGTM, thanks for picking these up!
+> > +impl Device<Internal> {
+> > +    /// Store a pointer to the bound driver's private data.
+> > +    pub fn set_drvdata(&self, data: impl ForeignOwnable) {
+> > +        // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+> > +        unsafe { bindings::dev_set_drvdata(self.as_raw(), data.into_foreign().cast()) }
+> > +    }
+> 
+> Ah, but a driver's private data in the device is NOT a bus-specific
+> thing, it's a driver-specific thing, so your previous patch about
+> Internal being there for busses feels odd.
 
-	M.
+It's because we only want to allow the bus abstraction to call
+Device::set_drvdata().
 
--- 
-Without deviation from the norm, progress is not possible.
+The reason is the lifecycle of the driver's private data:
+
+It starts when the driver returns the private data object in probe(). In the bus
+abstraction's probe() function, we're calling set_drvdata().
+
+At this point the ownership of the object technically goes to the device. And it
+is our responsibility to extract the object from dev->driver_data at some point
+again through drvdata_obtain(). With calling drvdata_obtain() we take back
+ownership of the object.
+
+Obviously, we do this in the bus abstraction's remove() callback, where we then
+let the object go out of scope, such that it's destructor gets called.
+
+In contrast, drvdata_borrow() does what its name implies, it only borrows the
+object from dev->driver_data, such that we can provide it for the driver to use.
+
+In the bus abstraction's remove() callback, drvdata_obtain() must be able to
+proof that the object we extract from dev->driver_data is the exact object that
+we set when calling set_drvdata() from probe().
+
+If we'd allow the driver to call set_drvdata() itself (which is unnecessary
+anyways), drivers could:
+
+  1) Call set_drvdata() multiple times, where every previous call would leak the
+     object, since the pointer would be overwritten.
+
+  2) We'd loose any guarantee about the type we extract from dev->driver_data
+     in the bus abstraction's remove() callback wioth drvdata_obtain().
+
+> > +
+> > +    /// Take ownership of the private data stored in this [`Device`].
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// - Must only be called once after a preceding call to [`Device::set_drvdata`].
+> > +    /// - The type `T` must match the type of the `ForeignOwnable` previously stored by
+> > +    ///   [`Device::set_drvdata`].
+> > +    pub unsafe fn drvdata_obtain<T: ForeignOwnable>(&self) -> T {
+> > +        // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+> > +        let ptr = unsafe { bindings::dev_get_drvdata(self.as_raw()) };
+> > +
+> > +        // SAFETY: By the safety requirements of this function, `ptr` comes from a previous call to
+> > +        // `into_foreign()`.
+> > +        unsafe { T::from_foreign(ptr.cast()) }
+> > +    }
+> > +
+> > +    /// Borrow the driver's private data bound to this [`Device`].
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// - Must only be called after a preceding call to [`Device::set_drvdata`] and before
+> > +    ///   [`Device::drvdata_obtain`].
+> > +    /// - The type `T` must match the type of the `ForeignOwnable` previously stored by
+> > +    ///   [`Device::set_drvdata`].
+> > +    pub unsafe fn drvdata_borrow<T: ForeignOwnable>(&self) -> T::Borrowed<'_> {
+> > +        // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+> > +        let ptr = unsafe { bindings::dev_get_drvdata(self.as_raw()) };
+> > +
+> > +        // SAFETY: By the safety requirements of this function, `ptr` comes from a previous call to
+> > +        // `into_foreign()`.
+> > +        unsafe { T::borrow(ptr.cast()) }
+> > +    }
+> > +}
+> 
+> Why can't this be part of Core?
+
+Device::drvdata_borrow() itself can indeed be part of Core. It has to remain
+unsafe though, because the type T has to match the type that the driver returned
+from probe().
+
+Instead, we should provide a reference of the driver's private data in every bus
+callback, such that drivers don't need unsafe code.
+
+In order to not tempt drivers to use the unsafe method drvdata_borrow()
+directly, I went for hiding it behind the BusInternal device context.
 
