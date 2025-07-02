@@ -1,134 +1,167 @@
-Return-Path: <linux-pci+bounces-31305-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31306-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA91EAF61D2
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 20:51:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C340AF62E0
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 21:54:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F103E4E752E
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 18:51:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DF9367A5EC8
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 19:53:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF2461F4295;
-	Wed,  2 Jul 2025 18:51:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 482D22F5C2F;
+	Wed,  2 Jul 2025 19:54:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+yHVcuv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a6L0xqg+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EC02F7CE1;
-	Wed,  2 Jul 2025 18:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B1D2D9496
+	for <linux-pci@vger.kernel.org>; Wed,  2 Jul 2025 19:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751482304; cv=none; b=SUJXwvf/pg5B0/fqdBJtthLhBHmepFudPYW14J1q0a7M12oxdjKJvB1RIajyGISRRsWGuiY3q41vlWFCcnoc0+dFaVlRTJds2bJ5b/P2YnfpzAk3Q60MAkL98ax+hqKlpI2SFRlZTnwJrHt1gzcsTRURvX4konuLyr1dftnPaok=
+	t=1751486078; cv=none; b=rFTXQwIYAgneAoTTxf8ZQYNX7zdLUL4ud4qJvxbVdL5wq0U9rRvgl1b6OmGnlM+9fwxZNN9uhJa49x4BktCICvFzfDwRSGBjqJnl5qbwCx+q5HqzYAcpW/sr15ZSUeqrP85G4jDEZeHj5rMEOY2ZxOW+x0RLARFndwpmHBAt6qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751482304; c=relaxed/simple;
-	bh=sqoKSQgNKzhlKYTNHTQq13ghy76tijVc8KUVW4KAgik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kesletTTzEbpWD4w+pscI9gjA4reIOo4PRp1baNOP6oiCt5+czKKgN6bxKiE+LgVusPSxFIhznQV3e2iyhhWmHI5CasjhFqlrQVsamEz2eHgfYAaLJjLwMdmqB2NRMc0dmBvF6wvHkC/P+UeG6/IytneFS9/SuwrQXwtAvV/hIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+yHVcuv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6149EC4CEE7;
-	Wed,  2 Jul 2025 18:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751482304;
-	bh=sqoKSQgNKzhlKYTNHTQq13ghy76tijVc8KUVW4KAgik=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S+yHVcuvWoA3Y5hiMksVslUu/0J6tIA/5AyUFptJNDG+NcBxNkBhYk7fPUgaQ7hbO
-	 vrGzcDVWzQQGwIrTuzsI+veg4AcUP5Nlhf0xZZvMFwsUuslWodtewAuZWY4bAe0k4G
-	 bk3OjcQ/SlzLgRABRG6slWx7F7N37jHWmC1hTMmgCYIrPV6uskA5QfhFzaem4HnMOj
-	 lFyo+X3puFm5TBem9Ms8LAoCT+P3Lt45UART7hLjbcBKGgoQXIMnBiYqeoeFCnOoZA
-	 w84MqFP9RmNXa8HNiArAWSbGM7MjhGSLho9w1oELVQ7lTlDKINLjO4FbKo50USWx8Y
-	 +KYGOOHefl8Fw==
-Message-ID: <da8ada90-499f-41dc-808b-260d7a9229d3@kernel.org>
-Date: Wed, 2 Jul 2025 20:51:33 +0200
+	s=arc-20240116; t=1751486078; c=relaxed/simple;
+	bh=WKSnMSttL8oH8Oe5vAQfNUn0TlrCgh4B+Anf0JHHdZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gJYMi7iHTs4iFMspuRSVLWiEbn6SfOdAKMuYJx2uzx0Ny1qBfO1/WsJiy84XAGpuEAjLALdy2QLP0Qoe1iwY40XLGpzgyxYiTyZSR1/JMclFLQQok+TIsmjCwujtx6qK9bdmCZbdUTcOwePBGhvPkia3MXry8x2k5s+04SERJsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a6L0xqg+; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-610cbca60cdso2997322eaf.0
+        for <linux-pci@vger.kernel.org>; Wed, 02 Jul 2025 12:54:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751486074; x=1752090874; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=giyunrX2+D6X+A6e6UeKZhe7Cg6ipMHEWvo2VSb9DY0=;
+        b=a6L0xqg+Fj+4LSnhDzSC9IEEBI76Mhy1BCiNVMD1oqt+CHAbPhXXne5zOBLGBCIjwg
+         cwKDIh7RWrBuArlNvAEL7CtaWoxucNgPlAwGk3oH9E9IfG+uNOIA+JGqnFRduYNnZlkV
+         mz8MYcjChXvESizfEsolqhSPyiA4qcNDFC0wkTxVZ0qc7CsIbeoRSsLyqgIl6hO+plKu
+         DZLKPcOuaclSVODlh7xZVjuakHPIn5UvKPbV0EWG0xI8EuYEztgO1A/XkOuQGJN+1win
+         zEv/YDfPCMLwadPwwgnRzXC/z7G50xi/cPTXwX/Fq0JuJyKpqV2EnLJDea69blV6xMk4
+         FwMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751486074; x=1752090874;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=giyunrX2+D6X+A6e6UeKZhe7Cg6ipMHEWvo2VSb9DY0=;
+        b=Ya5dPc/AiycyjtfHnvT0xMoikhtXxwi4z9GuLeQKXbtLlBtjy6/R5aQkLYWhamUxru
+         +l1vbd0UKnnFiAAukf+GpRwnItY61qFqyODPDy/fmqCj71wHMPv6gmiznjhFbxKXYGOj
+         +VT7gNHgH8yMa2SBIhETfaP+IHav2ktHnDpqOjms7D31SmyHWyQ8tL66mTNlv7/4ysfQ
+         6nn5flJ4IA2M2pXujw5ywxb1N1g/ZbrEzLONjF4I6k+VDXtFU2akJLTzR/VY/UrtHPek
+         EEyGCp+ND+XmBUOT3c+VYKAMYF0mfErulMr81bALxxUacdM1w3zByW+bQYZK8iPvTE3Z
+         TPsw==
+X-Forwarded-Encrypted: i=1; AJvYcCXahihHLjjDTfbTABiKA9Ea804cbAVAXkiSKmhd+6jfv47Wxnu/ExoPVosS7c6VGk8KvGvcP5rmZy4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBcpyIhDsGRvIwZD3CpV8lLEr+JbALLzBCGs48Ah7fsRsSVNEV
+	yUBwnuQuZPFmzd66DoZqx87ueYSemmsnzR/2V7ygU08nFjy9jtYFYCN9B3zMnZ/GSSY=
+X-Gm-Gg: ASbGncvxqayx1mTy+Ym6QIYYn04bHtPwNrc6XHrlxNgpWLcWwqNoFPHtOub4isa8K3b
+	gScLGizzAag0ebf8t4zMnvWljajvDyeVJCJAv7XaoRRxaXUlB6V1zqTAWvjhkx6l7r4BsG1ZtsI
+	DIAQOWW8KzgLwNMjVwo4zHKODKIvzws9m8vRQGzCh3Cc1AsuttR3s62uyvhpIyA6cHTyQOcgif1
+	JGWGmGgiiVBXhdu6vfYbIpa30iyN+iCyLP3KzTjP2X1Kv7qXnltweNbFzbkU7HJtCAvcJPjBNe1
+	7FG9TWXe9bugOGKLnVRgVkanMinMU7+JGw25udNldchbOrVaWZLLtIcgtz+4uKFZSm80qA==
+X-Google-Smtp-Source: AGHT+IFfXZBSnWI+uH/87ZyqSk3q7Ci+q/p9P0dxU0KgN0/eFw5XVndfUZwPsNbWV/HmbRCS/xowMQ==
+X-Received: by 2002:a05:6820:3093:b0:611:bbad:7ce1 with SMTP id 006d021491bc7-612011c000bmr3140143eaf.4.1751486074430;
+        Wed, 02 Jul 2025 12:54:34 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:7056:ddb5:3445:864f])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-611b848d77fsm1793343eaf.14.2025.07.02.12.54.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 12:54:33 -0700 (PDT)
+Date: Wed, 2 Jul 2025 22:54:32 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, dave@stgolabs.net,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	dan.j.williams@intel.com, bhelgaas@google.com,
+	shiju.jose@huawei.com, ming.li@zohomail.com,
+	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+	PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+	Benjamin.Cheatham@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v10 05/17] CXL/AER: Introduce kfifo for forwarding CXL
+ errors
+Message-ID: <c5dce0c6-ef8c-44fe-a0cf-aa8fcb856745@suswa.mountain>
+References: <20250626224252.1415009-1-terry.bowman@amd.com>
+ <20250626224252.1415009-6-terry.bowman@amd.com>
+ <20250627112429.00007155@huawei.com>
+ <a76be312-9f27-491a-99d2-79815ed98d3e@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/28] driver core: Rename get_dev_from_fwnode()
- wrapper to get_device_from_fwnode()
-To: Rob Herring <robh@kernel.org>
-Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Peter Rosin <peda@axentia.se>, Derek Kiernan <derek.kiernan@amd.com>,
- Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,
- Steen Hegelund <steen.hegelund@microchip.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-3-herve.codina@bootlin.com>
- <20250627141846.GA3234475-robh@kernel.org>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250627141846.GA3234475-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a76be312-9f27-491a-99d2-79815ed98d3e@amd.com>
 
-On 6/27/25 4:18 PM, Rob Herring wrote:
-> On Fri, Jun 13, 2025 at 03:47:42PM +0200, Herve Codina wrote:
->> get_dev_from_fwnode() calls get_device() and so it acquires a reference
->> on the device returned.
->>
->> In order to be more obvious that this wrapper is a get_device() variant,
->> rename it to get_device_from_fwnode().
->>
->> Suggested-by: Mark Brown <broonie@kernel.org>
->> Link: https://lore.kernel.org/lkml/CAGETcx97QjnjVR8Z5g0ndLHpK96hLd4aYSV=iEkKPNbNOccYmA@mail.gmail.com/
->> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
->> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->> Reviewed-by: Saravana Kannan <saravanak@google.com>
->> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
->> ---
->>   drivers/base/core.c | 14 +++++++-------
->>   1 file changed, 7 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/base/core.c b/drivers/base/core.c
->> index cbc0099d8ef2..36ccee91ba9a 100644
->> --- a/drivers/base/core.c
->> +++ b/drivers/base/core.c
->> @@ -1881,7 +1881,7 @@ static void fw_devlink_unblock_consumers(struct device *dev)
->>   	device_links_write_unlock();
->>   }
->>   
->> -#define get_dev_from_fwnode(fwnode)	get_device((fwnode)->dev)
->> +#define get_device_from_fwnode(fwnode)	get_device((fwnode)->dev)
+On Wed, Jul 02, 2025 at 11:21:20AM -0500, Bowman, Terry wrote:
 > 
-> In patch 3, you add the same define. Is there some reason to not move it
-> to a header?
+> 
+> On 6/27/2025 5:24 AM, Jonathan Cameron wrote:
+> > On Thu, 26 Jun 2025 17:42:40 -0500
+> > Terry Bowman <terry.bowman@amd.com> wrote:
+> >
+> >> CXL error handling will soon be moved from the AER driver into the CXL
+> >> driver. This requires a notification mechanism for the AER driver to share
+> >> the AER interrupt with the CXL driver. The notification will be used
+> >> as an indication for the CXL drivers to handle and log the CXL RAS errors.
+> >>
+> >> First, introduce cxl/core/native_ras.c to contain changes for the CXL
+> >> driver's RAS native handling. This as an alternative to dropping the
+> >> changes into existing cxl/core/ras.c file with purpose to avoid #ifdefs.
+> >> Introduce CXL Kconfig CXL_NATIVE_RAS, dependent on PCIEAER_CXL, to
+> >> conditionally compile the new file.
+> >>
+> >> Add a kfifo work queue to be used by the AER driver and CXL driver. The AER
+> >> driver will be the sole kfifo producer adding work and the cxl_core will be
+> >> the sole kfifo consumer removing work. Add the boilerplate kfifo support.
+> >>
+> >> Add CXL work queue handler registration functions in the AER driver. Export
+> >> the functions allowing CXL driver to access. Implement registration
+> >> functions for the CXL driver to assign or clear the work handler function.
+> >>
+> >> Introduce 'struct cxl_proto_err_info' to serve as the kfifo work data. This
+> >> will contain the erring device's PCI SBDF details used to rediscover the
+> >> device after the CXL driver dequeues the kfifo work. The device rediscovery
+> >> will be introduced along with the CXL handling in future patches.
+> >>
+> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> > Hi Terry,
+> >
+> > Whilst it obviously makes patch preparation a bit more time consuming
+> > for series like this with many patches it can be useful to add a brief
+> > change log to the individual patches as well as the cover letter.
+> > That helps reviewers figure out where they need to look again.
+> >
+> > A few trivial things inline.
+> >
+> > With those fixed up
+> > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> >
+> > Jonathan
+> 
+> Hi Jonathan,
+> 
+> Do you have an example you can point me to with a change log in the
+> individual patch? I want to make certain I change correctly.
+> 
 
-AFAIK, the struct device pointer in struct fwnode_handle is not backed by a
-reference count, which means that it's the callers responsibility to ensure that
-it's guaranteed that the pointer in struct fwnode_handle is still valid.
+https://staticthinking.wordpress.com/2022/07/27/how-to-send-a-v2-patch/
 
-Besides some driver-core internals the pointer shouldn't be used, and hence this
-helper shouldn't be available through a public header.
+Just put a:
+---
+v2: white space changes
+
+or whatever.
+
+regards,
+dan carpenter
+
 
