@@ -1,194 +1,100 @@
-Return-Path: <linux-pci+bounces-31236-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31239-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DDD2AF120C
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 12:37:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CBE1AF1249
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 12:48:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8686B1C40094
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 10:37:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A07DA1636A6
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 10:48:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD9BD25FA00;
-	Wed,  2 Jul 2025 10:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PC8AzE/T"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C73825B2E4;
+	Wed,  2 Jul 2025 10:47:54 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B3D25DD12;
-	Wed,  2 Jul 2025 10:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C4A19AD89
+	for <linux-pci@vger.kernel.org>; Wed,  2 Jul 2025 10:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751452582; cv=none; b=SnA9vjjWurIqWGDGcLsqKqWhs461NyaKLBzRz0QoQkKouDCY8vzWe+vfkjJnjYriqa8u3e5xHbdKUioSbcZCWt3cmfsBv9p7CNOngT4Dq2v3AhAWoE6MjC/SjGRFz7JFN2+gluDp2dNKn7rf3kqj7Cdh1b+epPNYA1CXM2hd8Pw=
+	t=1751453274; cv=none; b=BEXYAV/dC9ZOurYck8VpGCX0ZEX7J22p5m4SVRh01gjD7yB4S8EBP1P/SiH2+OZDplKOMFPODbrcd0XTzdwV69NACztF/yyyecvws5zE0bw9tmBQDVzyA9Fc1lpQik+IZWHEe00Ke7Mbql/nBjauTKVtY3QnAibj3hiAEpRf6dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751452582; c=relaxed/simple;
-	bh=XK9k3Mh6uQMbWe9PXpjQuuqE3KxexxUEdn6IH4a+Wug=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DboFzIsAS8ekLE5At8OfVOcWBT1taoLwp9RWcQ2cagCcSaSvhc9R8eDESfESLtzlyK9PtNmwhxWjLv/QREwVw2r6HzqCWi+ZmucTKoC2FIsgS0tp1G+uFlSID9uQKwBQVyvQf9xYFFXaABn7NzPuAn0eQUHkDvs946r8BuiPI6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PC8AzE/T; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5627Egim032396;
-	Wed, 2 Jul 2025 10:36:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=sq85Q/vJxoA
-	eidtGD92wyNYWRLccThyg6rGim2z8SQw=; b=PC8AzE/TBEuVbfRsNoDMiGYs3kW
-	1jILZjkGZAv5ZkEW81lWD1L80+t9iVMeQNw9kzROEm6r8Z6S/P7styLaTXlapIc4
-	5ytpSv0GJfk0sOApWYoz6zDyjDlbhUEIqwlsz9d+lNKLXSx8CdEAw9hoYmi7vhQs
-	dDBVAg9xZY0lwL+0jKvfPjCaGR8m71Bb7MQHcGIlUBU2wRmrt209SP1TJ3mqNyAm
-	OPVsrSQ6yIv7QjNDm2pNmpRfVhMB0E1mxUWmfbeMFVZREDlekSynwXLKAqEw+fkD
-	BiYR0Cw+yJz7pLjWq9nCLEDHWe4hrOmuuWukxwx84+QnVWoXJoiq/FSLArg==
-Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j63kcbvc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 10:36:08 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 562Aa6Ke012330;
-	Wed, 2 Jul 2025 10:36:06 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 47j9fmbe7m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 10:36:06 +0000
-Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 562Aa5u5012319;
-	Wed, 2 Jul 2025 10:36:05 GMT
-Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 562Aa4sm012313
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 10:36:05 +0000
-Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
-	id C36CE3921; Wed,  2 Jul 2025 18:36:03 +0800 (CST)
-From: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
-        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
-        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
-        kw@linux.com
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-Subject: [PATCH v7 3/3] arm64: dts: qcom: qcs615-ride: Enable PCIe interface
-Date: Wed,  2 Jul 2025 18:35:49 +0800
-Message-Id: <20250702103549.712039-4-ziyue.zhang@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250702103549.712039-1-ziyue.zhang@oss.qualcomm.com>
-References: <20250702103549.712039-1-ziyue.zhang@oss.qualcomm.com>
+	s=arc-20240116; t=1751453274; c=relaxed/simple;
+	bh=mueIBmRkHOw7+zKo9vy7t8XK9F21CpXo9FP5gI3LfZI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C5vDNb5h65nzBRrPzztPYXsXgIjk6RfJOFPHFo0dWccOHM4P7/N/ZX8FVYYquRXPw5RuUDKLX8Z1K4MXWj4YH3R0b2HUOpxTys4sEHW0joHS6AsrFEjJbDP2q/n5HG1DQf8hOYm2fsFI1Dm8BjN2VaD1CXeD0lqiKPsJ4OKFF3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 4DFB22006F45;
+	Wed,  2 Jul 2025 12:47:49 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 47A3C3D6A4C; Wed,  2 Jul 2025 12:47:49 +0200 (CEST)
+Date: Wed, 2 Jul 2025 12:47:49 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ben Hutchings <ben@decadent.org.uk>, David Airlie <airlied@redhat.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Andi Kleen <ak@linux.intel.com>, Ahmed Salem <x0rw3ll@gmail.com>,
+	Borislav Petkov <bp@alien8.de>, dri-devel@lists.freedesktop.org,
+	iommu@lists.linux.dev, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] agp/amd64: Bind to unsupported devices only if AGP is
+ present
+Message-ID: <aGUOVbmH1bObAF1r@wunner.de>
+References: <f8ff40f35a9a5836d1371f60e85c09c5735e3c5e.1750497201.git.lukas@wunner.de>
+ <b73fbb3e3f03d842f36e6ba2e6a8ad0bb4b904fd.camel@decadent.org.uk>
+ <aFalrV1500saBto5@wunner.de>
+ <279f63810875f2168c591aab0f30f8284d12fe02.camel@decadent.org.uk>
+ <aFa8JJaRP-FUyy6Y@wunner.de>
+ <9077aab5304e1839786df9adb33c334d10c69397.camel@decadent.org.uk>
+ <98012c55-1e0d-4c1b-b650-5bb189d78009@redhat.com>
+ <aFwIu0QveVuJZNoU@wunner.de>
+ <eb98477c-2d5c-4980-ab21-6aed8f0451c9@redhat.com>
+ <e0bcd0a8-dbb5-4272-a549-1029f4dd0e41@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=ZKfXmW7b c=1 sm=1 tr=0 ts=68650b98 cx=c_pps
- a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=3zbVK_edIv7hY8gRkFcA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA4NSBTYWx0ZWRfX5gP0jVyw5WmV
- qIoB1ce43OiP2iRNr1iPqj8+ub5hmZL7vFBfI1gaD8zqPw04UPedPHOL1NHzOt2PM+Q1s6jMeF1
- 9RrGq0KV71JD09QXMB/xWNT4iKvvhoW5Pc4jzGSCXqF+DsVmN/SvYY2RkIFIIHsq4aXFacT2EMf
- 2YyTg6KQNdAnkMZwYk4h0KF4LyIeJnwZdEWhUHULUEIrbXEvxEzlKBHOv7FfsVf00+PeQw7z4dI
- eaZISpnbsliHENusQ7hXjJuWDIdD835KcYHcWRacOirDuNncdxaGz/DOhQc4fpMcqe+tNSrykLC
- waR4TklANnyPU5Owcutj6DHpQubI6uvvMYYwWilNxy4YwDpWe8H8Kz+qWKdcgPYi/9S7kSpDWAq
- F7TMwZnhVmhcUgLiZ2znmnxV1x+wlG1Y5JEornUknVXymSsTfzRloQiEPqO+GB1K0R1SAtCf
-X-Proofpoint-ORIG-GUID: KpGtbZB3FqYwxc-2XnjX6OWJfBwzZGcM
-X-Proofpoint-GUID: KpGtbZB3FqYwxc-2XnjX6OWJfBwzZGcM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
- impostorscore=0 malwarescore=0 clxscore=1011 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507020085
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e0bcd0a8-dbb5-4272-a549-1029f4dd0e41@redhat.com>
 
-From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+On Mon, Jun 30, 2025 at 01:10:24PM +0200, Hans de Goede wrote:
+> ping? It would be good to get some consensus on how to
+> fix this and move forward with a fix. Either the patch from
+> this thread; or my patch:
+> 
+> https://lore.kernel.org/dri-devel/20250625112411.4123-1-hansg@kernel.org/
+> 
+> Works for me, the most important thing here is to get this
+> regression fixed.
 
-Add platform configurations in devicetree for PCIe, board related
-gpios, PMIC regulators, etc.
+You seem to have a machine where you can trigger the
+"Resources present before probing" message.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
----
- arch/arm64/boot/dts/qcom/qcs615-ride.dts | 42 ++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Would you mind enabling CONFIG_DEBUG_DEVRES=y and adding
+"log_devres=1" to the kernel command line so that we
+can understand what kind of resource is attached to
+the AMD IOMMU, and where that happens.
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-index a6652e4817d1..011f8ae077c2 100644
---- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-@@ -217,6 +217,23 @@ &gcc {
- 		 <&sleep_clk>;
- };
- 
-+&pcie {
-+	perst-gpios = <&tlmm 101 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 100 GPIO_ACTIVE_HIGH>;
-+
-+	pinctrl-0 = <&pcie_default_state>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-+
-+&pcie_phy {
-+	vdda-phy-supply = <&vreg_l5a>;
-+	vdda-pll-supply = <&vreg_l12a>;
-+
-+	status = "okay";
-+};
-+
- &pm8150_gpios {
- 	usb2_en: usb2-en-state {
- 		pins = "gpio10";
-@@ -256,6 +273,31 @@ &rpmhcc {
- 	clocks = <&xo_board_clk>;
- };
- 
-+&tlmm {
-+	pcie_default_state: pcie-default-state {
-+		clkreq-pins {
-+			pins = "gpio90";
-+			function = "pcie_clk_req";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+
-+		perst-pins {
-+			pins = "gpio101";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+
-+		wake-pins {
-+			pins = "gpio100";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+	};
-+};
-+
- &sdhc_1 {
- 	pinctrl-0 = <&sdc1_state_on>;
- 	pinctrl-1 = <&sdc1_state_off>;
--- 
-2.34.1
+I don't see invocations of devm_*() in arch/x86/ or
+drivers/iommu/amd/ that would explain the error message.
 
+Just so that we get a full understanding of the issue,
+independently of the AGP driver probing everything.
+
+Thanks!
+
+Lukas
 
