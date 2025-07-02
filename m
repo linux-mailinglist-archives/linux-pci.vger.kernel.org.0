@@ -1,273 +1,215 @@
-Return-Path: <linux-pci+bounces-31241-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31242-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C488CAF1352
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 13:09:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 315A0AF1359
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 13:11:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3E4E83B0D51
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 11:08:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AAED64A49F6
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 11:10:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F53D253B7E;
-	Wed,  2 Jul 2025 11:08:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F21F9244EA0;
+	Wed,  2 Jul 2025 11:11:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ks6SUZYB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpvQVZkG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E60236A9F;
-	Wed,  2 Jul 2025 11:08:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81E3219A86;
+	Wed,  2 Jul 2025 11:11:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751454501; cv=none; b=lUkYIAy+lXbeYuV4C2FSDFaxpmdgJY6AzdZ32R2c1++HpA5E7chjIOOyCq1zox2stJKx9ICEI9lPtB6Pq+zrdLamPeI/ssciK/AyDCUPxH/0qLbgOmHY6/qQHmr/qVWLAOloAHAH5cGc35OuIDVPL3Q95+ksXsgnSsqZwwpzwt8=
+	t=1751454673; cv=none; b=KvfV9S8nhoaNGdzZLiHw7svggKPJOFbBfTBROAodL0b7jgDK/wYBoFaj8q80i3iVEj4QEhxq4jGj1CJtBoOv/l2lIkszODasFa4W7HxQcVFTx1MBEFEmBcXhZiamcgvv8ForqSRi/Z7zlxnP/VfI2OfeVKn9evXJJKyIf3YaCOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751454501; c=relaxed/simple;
-	bh=pGAsTwO4nedv4ZptOpPXY0xiBm1d9gCL8IfkcvWQVIM=;
+	s=arc-20240116; t=1751454673; c=relaxed/simple;
+	bh=bsMtw3zK5TNgNeh1WODeeWPJyyYiNq3OYiYUWQ3xQbY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XEa/2KHhe/spEzPNqMG0IN9lT8gvl0sWQX+9WewQBgtYtyRfwszqhM4uO8X7nr1wZK+SKo7CxMGXpoGp1ymnzhjT8MdfSY2NO6oEvXIj/pru8t7hYvsJOUfTiUNbu6jytLLq3zxphMUjUcGKgEl6/qWvfelVN0m9YaGrLV6AHns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ks6SUZYB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC785C4CEF0;
-	Wed,  2 Jul 2025 11:08:20 +0000 (UTC)
+	 To:Cc:Content-Type; b=dThUFdqnW2scouTxTB3z97Nug7rLPbWywO53QPSRF+nqEcwi9OUvOpT2xQrDhEBg1Xko2vvdaxzyryexHrV1FAgBoJUH+XaWFug2okzNVp+aw1mSck+DgajBKHx8vxyr1u5rQeHD9OSM6OA9g8W3WLuU9uE4mZnk7es5N/nzzOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpvQVZkG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C0DAC4CEF3;
+	Wed,  2 Jul 2025 11:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751454501;
-	bh=pGAsTwO4nedv4ZptOpPXY0xiBm1d9gCL8IfkcvWQVIM=;
+	s=k20201202; t=1751454673;
+	bh=bsMtw3zK5TNgNeh1WODeeWPJyyYiNq3OYiYUWQ3xQbY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ks6SUZYBQhwE27ILoyNKcU94ZusLykB6qbwxZtjuinKo8gIxJi7VBzDXzv+DTcr4v
-	 L4o8S46mr4M68cT8nI0t7N8AXCDMZD2SzV4f/K04P769URLWERtg3l93vwvlJMeGnJ
-	 CUDrP2S6mU8IgrS01gnNvBRS7lJmxBKQ8QNFU9ThnRAsc4QqIc/6oEuPLTwutakM0D
-	 7ltx0V9vBftux18n8G6ifb8zWwhOAWocXws/sxwE8dk25QT+qgNKrVpyUufq4MreU2
-	 MBAkri1KWjjK1Rt5MsDSQ9A8fxdGhy3ys7yK0n9qMAqIKQiWw6bfPblGssWN9ehmzI
-	 Ln11vTxi+LOyA==
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-6120049f09fso423382eaf.2;
-        Wed, 02 Jul 2025 04:08:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWl33DqUASuwUwP8nwAJngblD9efWqgqpUMbr2JKM8kP6kc2pQjcu2cSBXTrcNg7FNb1F3qL+nHNnT4@vger.kernel.org, AJvYcCXIz5ofl6xaoreYqTElnLOlVjT+BQgNcrf2/DohPy6RyHR7u07va0riFXWDpuNiaKTzrTGkr5FKic6Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YzB5ngJ+IbaJiFx8GaLOHP8Hvxr9fYgGtbSfIE1OEKa+0c6n+MM
-	T0lGoY8oI1XVorxv0uVnOGiuNbZFZXn93uIXMlfZrKxzxQRqKLHjkL4f6Afu9XDpw4RbDQGf+iW
-	MFUPj0rsj9cMsasex0W+6aJd1uSOVDDk=
-X-Google-Smtp-Source: AGHT+IHkIVCnmJgkGAu7G1qnWZGAGZtxEA3UbZ+srtYNJgnEnqT01JZaI/4hnS1PgFDjZXHE0guv+7GKe7AGEeeYKPY=
-X-Received: by 2002:a05:6820:150f:b0:611:e31c:5d23 with SMTP id
- 006d021491bc7-612010c1539mr1515499eaf.4.1751454500115; Wed, 02 Jul 2025
- 04:08:20 -0700 (PDT)
+	b=QpvQVZkG0pyX2a0OZ64i1/52ZJhFl3rNDlcAJTxfuBTXaZkIQF9goRzZMDtYimn7k
+	 nTajuMNPsrukIX/7m388eGyIvRSsrIKHalXWmLW0QSAxkrWPFsL+mfV30Km+PUJdLl
+	 oExmDXcw3/z5ghwVQgFgxP1GF6KAKTBJ7R5PgEiaa59TJw1RlSo1xv7Qw3XNSuS+YO
+	 UHr0oPfEFNdwd704Xne0tOYTRwOri2y8vNCHoC8p/gV2KJRkiTPBfVYH27IW70Rnu6
+	 /REMrP/lQSNn0crYTBF2vFO/gDyGGY1UbYN7QJ7XeqkJpIR9Z6MJ4Rtl2p/gWnMESF
+	 AVIyLlmDJNEfw==
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7382a999970so3471047a34.3;
+        Wed, 02 Jul 2025 04:11:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVrMS4HkLK7uZIFtQTk8v+lUONNjdEKkuvCZyu6J4vsr+yr5Js5gZSL/3c7bPg9fqN2KS7fFZnMOTmR@vger.kernel.org, AJvYcCWxZEV7micPLtb0XjZ9DodPENFvF7KNc1KinqTdxlgilX3w0V85Q+CWB88OP1jqxVkq/spcIvYt60kX@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYFjtJM4TBoLHuKBqFwT1oFsvb2tCMO5ubbbrxVY05DKjrU6TO
+	4KYlE6YpHy3OkuHFPpPK8JXXMTy//NFQVB6T2kAK59j8BaizctP7hbRdHGeR5FAQREm+zDl2pcN
+	vsD33Jg2sxoDU9NZQ8G0MgZZflJtjmJQ=
+X-Google-Smtp-Source: AGHT+IGa+Rw/cMy590FiJwiEGqqKmliVcDaetHV3zVOfMk+IIxdLD+NepjMz9wUxEqwLMlQYU2nk4eUA7h0vZMq6H+M=
+X-Received: by 2002:a05:6830:6484:b0:72c:320b:fc8c with SMTP id
+ 46e09a7af769-73b4d1a87fbmr1893227a34.21.1751454672486; Wed, 02 Jul 2025
+ 04:11:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529111654.3140766-1-badal.nilawar@intel.com> <20250529111654.3140766-2-badal.nilawar@intel.com>
-In-Reply-To: <20250529111654.3140766-2-badal.nilawar@intel.com>
+References: <20250529111654.3140766-1-badal.nilawar@intel.com>
+ <20250529111654.3140766-3-badal.nilawar@intel.com> <98fc8402-0bda-4333-8407-75c7a6472375@linux.intel.com>
+In-Reply-To: <98fc8402-0bda-4333-8407-75c7a6472375@linux.intel.com>
 From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Jul 2025 13:08:08 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h7BENMDCOHVD6ZdF7o1OwE=RAOzkC0+r+G=-3qpjfn0Q@mail.gmail.com>
-X-Gm-Features: Ac12FXxPFu3QcdhDxeEnqZD1NVDJtj98rI7oLIBr9DAoZ9EA3vlsdPhbwF6SqU8
-Message-ID: <CAJZ5v0h7BENMDCOHVD6ZdF7o1OwE=RAOzkC0+r+G=-3qpjfn0Q@mail.gmail.com>
-Subject: Re: [PATCH v4 01/11] PCI/ACPI: Add D3cold Aux Power Limit_DSM method
-To: Badal Nilawar <badal.nilawar@intel.com>
-Cc: intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org, 
-	linux-pci@vger.kernel.org, anshuman.gupta@intel.com, rafael@kernel.org, 
-	lenb@kernel.org, bhelgaas@google.com, ilpo.jarvinen@linux.intel.com, 
-	lucas.demarchi@intel.com, rodrigo.vivi@intel.com, varun.gupta@intel.com, 
-	ville.syrjala@linux.intel.com, uma.shankar@intel.com
+Date: Wed, 2 Jul 2025 13:11:00 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hm_UyEEXz+1LYGwGXNi908vYgKw0CD3C=wmBvT=vAh0Q@mail.gmail.com>
+X-Gm-Features: Ac12FXxIAduxIODCi3wN-S2nsn3sMmozW1G3nApQ8LgR_4RlnSXYlEMp9tZ3RUs
+Message-ID: <CAJZ5v0hm_UyEEXz+1LYGwGXNi908vYgKw0CD3C=wmBvT=vAh0Q@mail.gmail.com>
+Subject: Re: [PATCH v4 02/11] PCI/ACPI: Per root port allow one Aux power
+ limit request
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Badal Nilawar <badal.nilawar@intel.com>, intel-xe@lists.freedesktop.org, 
+	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org, 
+	anshuman.gupta@intel.com, rafael@kernel.org, lenb@kernel.org, 
+	bhelgaas@google.com, ilpo.jarvinen@linux.intel.com, lucas.demarchi@intel.com, 
+	rodrigo.vivi@intel.com, varun.gupta@intel.com, ville.syrjala@linux.intel.com, 
+	uma.shankar@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 29, 2025 at 1:14=E2=80=AFPM Badal Nilawar <badal.nilawar@intel.=
-com> wrote:
+On Thu, May 29, 2025 at 11:41=E2=80=AFPM Sathyanarayanan Kuppuswamy
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
 >
-> From: Anshuman Gupta <anshuman.gupta@intel.com>
 >
-> Implement _DSM method 0Ah according to PCI firmware specifications,
-> section 4.6.10 Rev 3.3., to request auxilary power needed for the
-> device when in D3Cold.
->
-> Note that this implementation assumes only a single device below the
-> Downstream Port will request for Aux Power Limit under a given
-> Root Port because it does not track and aggregate requests
-> from all child devices below the Downstream Port as required
-> by Section 4.6.10 Rev 3.3.
->
-> One possible mitigation would be only allowing only first PCIe
-> Non-Bridge Endpoint Function 0 driver to call_DSM method 0Ah.
->
-> Signed-off-by: Varun Gupta <varun.gupta@intel.com>
-
-What's this S-o-b for?
-
-> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-> Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
-> ---
-> V2(Bjorn/Rafael):
->   - Call acpi_dsm_check() to find method 0Ah supported
->   - Return retry interval to caller
-> V3(Kuppuswamy)
->   - Add NULL check for retry interval
-> ---
->  drivers/pci/pci-acpi.c   | 87 ++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci-acpi.h |  8 ++++
->  2 files changed, 95 insertions(+)
->
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index af370628e583..87f30910a5f1 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -1421,6 +1421,93 @@ static void pci_acpi_optimize_delay(struct pci_dev=
- *pdev,
->         ACPI_FREE(obj);
->  }
->
-> +/**
-> + * pci_acpi_request_d3cold_aux_power - Request aux power while device is=
- in D3Cold
-> + * @dev: PCI device instance
-> + * @requested_power: Requested auxiliary power in milliwatts
-> + * @retry_interval: Retry interval returned by platform to retry auxilia=
-ry
-> + *                  power request
-> + *
-> + * This function sends a request to the host BIOS via root port ACPI _DS=
-M Function 0Ah
-> + * for the auxiliary power needed by the PCI device when it is in D3Cold=
-.
-> + * It checks and evaluates the _DSM (Device Specific Method) to request =
-the auxiliary
-> + * power and handles the response accordingly.
-> + *
-> + * This function shall be only called by 1st non-bridge Endpoint driver
-> + * on Function 0. For a Multi-Function Device, the driver for Function 0=
- is
-> + * required to report an aggregate power requirement covering all
-> + * functions contained within the device.
-> + *
-> + * Return: Returns 0 on success and errno on failure.
-> + */
-> +int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested=
-_power,
-> +                                     u32 *retry_interval)
-> +{
-> +       union acpi_object in_obj =3D {
-> +               .integer.type =3D ACPI_TYPE_INTEGER,
-> +               .integer.value =3D requested_power,
-> +       };
-> +
-> +       union acpi_object *out_obj;
-> +       acpi_handle handle;
-> +       int result, ret =3D -EINVAL;
-> +
-> +       if (!dev || !retry_interval)
-> +               return -EINVAL;
-> +
-> +       handle =3D ACPI_HANDLE(&dev->dev);
-> +       if (!handle)
-> +               return -EINVAL;
-> +
-> +       if (!acpi_check_dsm(handle, &pci_acpi_dsm_guid, 4, 1 << DSM_PCI_D=
-3COLD_AUX_POWER_LIMIT)) {
-> +               pci_dbg(dev, "ACPI _DSM 0%Xh not supported\n", DSM_PCI_D3=
-COLD_AUX_POWER_LIMIT);
-> +               return -ENODEV;
-> +       }
-> +
-> +       out_obj =3D acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4=
+> On 5/29/25 4:16 AM, Badal Nilawar wrote:
+> > For given root port allow one Aux power limit request.
+> >
+> > Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > Cc: Anshuman Gupta <anshuman.gupta@intel.com>
+> > Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+> > ---
+> >   drivers/acpi/scan.c     |  1 +
+> >   drivers/pci/pci-acpi.c  | 25 ++++++++++++++++++++++++-
+> >   include/acpi/acpi_bus.h |  2 ++
+> >   3 files changed, 27 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> > index fb1fe9f3b1a3..9ae7be9db01a 100644
+> > --- a/drivers/acpi/scan.c
+> > +++ b/drivers/acpi/scan.c
+> > @@ -745,6 +745,7 @@ int acpi_device_add(struct acpi_device *device)
+> >       INIT_LIST_HEAD(&device->physical_node_list);
+> >       INIT_LIST_HEAD(&device->del_list);
+> >       mutex_init(&device->physical_node_lock);
+> > +     mutex_init(&device->power.aux_pwr_lock);
+> >
+> >       mutex_lock(&acpi_device_lock);
+> >
+> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> > index 87f30910a5f1..d33efba4ca94 100644
+> > --- a/drivers/pci/pci-acpi.c
+> > +++ b/drivers/pci/pci-acpi.c
+> > @@ -1451,6 +1451,7 @@ int pci_acpi_request_d3cold_aux_power(struct pci_=
+dev *dev, u32 requested_power,
+> >       union acpi_object *out_obj;
+> >       acpi_handle handle;
+> >       int result, ret =3D -EINVAL;
+> > +     struct acpi_device *adev;
+> >
+> >       if (!dev || !retry_interval)
+> >               return -EINVAL;
+> > @@ -1464,11 +1465,27 @@ int pci_acpi_request_d3cold_aux_power(struct pc=
+i_dev *dev, u32 requested_power,
+> >               return -ENODEV;
+> >       }
+> >
+> > +     adev =3D ACPI_COMPANION(&dev->dev);
+> > +     if (!adev)
+> > +             return -EINVAL;
+> > +
+> > +     mutex_lock(&adev->power.aux_pwr_lock);
+> > +
+> > +     /* Check if aux power already granted */
+> > +     if (adev->power.aux_power_limit) {
+> > +             pci_info(dev, "D3cold Aux Power request already granted: =
+%u mW\n",
+> > +                      adev->power.aux_power_limit);
+> > +             mutex_unlock(&adev->power.aux_pwr_lock);
+> > +             return -EPERM;
+> > +     }
+> > +
+> >       out_obj =3D acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4=
 ,
-> +                                         DSM_PCI_D3COLD_AUX_POWER_LIMIT,
-> +                                         &in_obj, ACPI_TYPE_INTEGER);
-> +       if (!out_obj)
-> +               return -EINVAL;
-> +
-> +       result =3D out_obj->integer.value;
-> +       if (retry_interval)
-> +               *retry_interval =3D 0;
-> +
-> +       switch (result) {
-> +       case 0x0:
-
-It would be better to use an enum for the possible return values.
-
-> +               pci_dbg(dev, "D3cold Aux Power %u mW request denied\n",
-> +                       requested_power);
-> +               break;
-> +       case 0x1:
-> +               pci_info(dev, "D3cold Aux Power request granted: %u mW\n"=
+> >                                         DSM_PCI_D3COLD_AUX_POWER_LIMIT,
+> >                                         &in_obj, ACPI_TYPE_INTEGER);
+> > -     if (!out_obj)
+> > +     if (!out_obj) {
+> > +             mutex_unlock(&adev->power.aux_pwr_lock);
+> >               return -EINVAL;
+> > +     }
+> >
+> >       result =3D out_obj->integer.value;
+> >       if (retry_interval)
+> > @@ -1478,14 +1495,17 @@ int pci_acpi_request_d3cold_aux_power(struct pc=
+i_dev *dev, u32 requested_power,
+> >       case 0x0:
+> >               pci_dbg(dev, "D3cold Aux Power %u mW request denied\n",
+> >                       requested_power);
+> > +             adev->power.aux_power_limit =3D 0;
+> >               break;
+> >       case 0x1:
+> >               pci_info(dev, "D3cold Aux Power request granted: %u mW\n"=
 ,
-> +                        requested_power);
-> +               ret =3D 0;
-> +               break;
-> +       case 0x2:
-> +               pci_info(dev, "D3cold Aux Power: Main power won't be remo=
+> >                        requested_power);
+> > +             adev->power.aux_power_limit =3D requested_power;
+> >               ret =3D 0;
+> >               break;
+> >       case 0x2:
+> >               pci_info(dev, "D3cold Aux Power: Main power won't be remo=
 ved\n");
-> +               ret =3D -EBUSY;
-> +               break;
-> +       default:
-> +               if (result >=3D 0x11 && result <=3D 0x1F) {
-
-if (!(result & ~0x1F))
-
-I think, and it would be better to use a symbol for this mask (and below to=
-o).
-
-> +                       if (retry_interval) {
-
-This has been checked already and is guaranteed to be nonzero at this point=
-.
-
-> +                               *retry_interval =3D result & 0xF;
-> +                               pci_warn(dev, "D3cold Aux Power request n=
-eeds retry interval: %u seconds\n",
-> +                                        *retry_interval);
-> +                               ret =3D -EAGAIN;
-> +                       }
-> +               } else {
-> +                       pci_err(dev, "D3cold Aux Power: Reserved or unsup=
+> > +             adev->power.aux_power_limit =3D 0;
+> >               ret =3D -EBUSY;
+> >               break;
+> >       default:
+> > @@ -1500,9 +1520,12 @@ int pci_acpi_request_d3cold_aux_power(struct pci=
+_dev *dev, u32 requested_power,
+> >                       pci_err(dev, "D3cold Aux Power: Reserved or unsup=
 ported response: 0x%x\n",
-> +                               result);
-> +               }
-> +               break;
-> +       }
-> +
-> +       ACPI_FREE(out_obj);
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_acpi_request_d3cold_aux_power);
-> +
->  static void pci_acpi_set_external_facing(struct pci_dev *dev)
->  {
->         u8 val;
-> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-> index 078225b514d4..6079306ad754 100644
-> --- a/include/linux/pci-acpi.h
-> +++ b/include/linux/pci-acpi.h
-> @@ -121,6 +121,7 @@ extern const guid_t pci_acpi_dsm_guid;
->  #define DSM_PCI_DEVICE_NAME                    0x07
->  #define DSM_PCI_POWER_ON_RESET_DELAY           0x08
->  #define DSM_PCI_DEVICE_READINESS_DURATIONS     0x09
-> +#define DSM_PCI_D3COLD_AUX_POWER_LIMIT         0x0A
+> >                               result);
+> >               }
+> > +             adev->power.aux_power_limit =3D 0;
+> >               break;
+> >       }
+> >
+> > +     mutex_unlock(&adev->power.aux_pwr_lock);
+> > +
+> >       ACPI_FREE(out_obj);
+> >       return ret;
+> >   }
+> > diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> > index aad1a95e6863..c4ce3d84be00 100644
+> > --- a/include/acpi/acpi_bus.h
+> > +++ b/include/acpi/acpi_bus.h
+> > @@ -294,6 +294,8 @@ struct acpi_device_power {
+> >       struct acpi_device_power_flags flags;
+> >       struct acpi_device_power_state states[ACPI_D_STATE_COUNT];      /=
+* Power states (D0-D3Cold) */
+> >       u8 state_for_enumeration; /* Deepest power state for enumeration =
+*/
+> > +     u32 aux_power_limit;            /* aux power limit granted by bio=
+s */
+> > +     struct mutex aux_pwr_lock;      /* prevent concurrent aux power l=
+imit requests */
 >
->  #ifdef CONFIG_PCIE_EDR
->  void pci_acpi_add_edr_notifier(struct pci_dev *pdev);
-> @@ -132,10 +133,17 @@ static inline void pci_acpi_remove_edr_notifier(str=
-uct pci_dev *pdev) { }
 >
->  int pci_acpi_set_companion_lookup_hook(struct acpi_device *(*func)(struc=
-t pci_dev *));
->  void pci_acpi_clear_companion_lookup_hook(void);
-> +int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested=
-_power,
-> +                                     u32 *retry_interval);
->
->  #else  /* CONFIG_ACPI */
->  static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
->  static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
-> +static inline int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev,=
- u32 requested_power,
-> +                                                   u32 *retry_interval)
-> +{
-> +       return -EOPNOTSUPP;
-> +}
->  #endif /* CONFIG_ACPI */
->
->  #endif /* _PCI_ACPI_H_ */
-> --
+> Do you need a new lock ?
+
+Yes.
+
+> Is it possible to reuse existing mutex like device_lock()?
+
+No.
+
+Doing such things results in code where nobody knows what the given
+lock scope is.
 
