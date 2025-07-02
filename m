@@ -1,188 +1,244 @@
-Return-Path: <linux-pci+bounces-31253-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31254-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E35FAF15AF
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 14:31:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6420AAF1602
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 14:46:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 94465189A3E5
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 12:31:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55077445822
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 12:45:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CEDE23D29A;
-	Wed,  2 Jul 2025 12:31:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D29DC25E824;
+	Wed,  2 Jul 2025 12:46:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQIOuCNM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNR7wl67"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB44E1E487;
-	Wed,  2 Jul 2025 12:31:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F532367D3;
+	Wed,  2 Jul 2025 12:46:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751459497; cv=none; b=HzC1YWoVKuQX58Ek303/twf6hS3wWguYKR6lndw/vtdGQjqQONMK5qXfSeEP2wbfD9Lcu1RdMauulx4Ps/6zzAe+1PQ2kh9dpU5iqD5PxsjL6OQNeg601zB5St11+VNGNJ2SqegvageS9Uhp/0szEUACEqoWcy2R/ctics6Sl1k=
+	t=1751460378; cv=none; b=HP7TNq5NPEyjGP3tz3eYn/ExBR3o8PW9sLOTN8EB9o0iqnKyF8qgWCxfNr8+VAe+ySjJ4LVstdzAd3FJA7QQiBQSAtP46LR3kKmS8iAfH43QtsRNv08/M5IuJUptJOqGGzTV1l4+PY+zv7b4AH1zmm2Wr9raIIn/iWPXVg2Z7xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751459497; c=relaxed/simple;
-	bh=HyLomZoUIsBZI28vt4NzRZMuAo9iSJ1mkcus3zmJ/uI=;
+	s=arc-20240116; t=1751460378; c=relaxed/simple;
+	bh=xNQPpZ20lOA6x5uCrJooB3aWOdhA2rmyyeDbQ7gnXko=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EggvUCg+KTQmLANeH4Px+lj+sbk9GMj2UzgZ5CYgxi77/lA4d9I/07rjKzSl+u0zAYmjIMZNFodJXC0esL5XmVNht+uyASLehNnFbIWeFMmIGuOg/aYgUgR/IojQ96WXABQYNO7xS8GmBH8NunfaO5k2n+jmK07CIp3KUYDaisU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQIOuCNM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0877C4CEED;
-	Wed,  2 Jul 2025 12:31:27 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=blwlP4BGLp0cIIyMey+2cO23hZxkNoZJhrB648rSA6gQCGl7OMC71uW6ksxLxDynrfGJR5zhptzfdvTZn7v9WSE9vEXTUIdShWP1YmtmWR8BuSwJwMZHLw9tDkKH4+xdVPRh1tHgudqJfFT+vo81F4srIAZ7V3VDWPcvFtaziu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNR7wl67; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59500C4CEED;
+	Wed,  2 Jul 2025 12:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751459497;
-	bh=HyLomZoUIsBZI28vt4NzRZMuAo9iSJ1mkcus3zmJ/uI=;
+	s=k20201202; t=1751460378;
+	bh=xNQPpZ20lOA6x5uCrJooB3aWOdhA2rmyyeDbQ7gnXko=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZQIOuCNMICguAzeBgxu+HHL77MCyaObg/26HSEUCrXWPkUd23kVGSO+krBqrgQDjE
-	 mqpEtRaeIZTNVpMnC7ZSpNLLvoKTfdwSnMAVI6e+ddliSNa4hjOxsmEmAimZUFx9Lt
-	 XjHN+M2S7/rCFQ+9QG1fl2Akq4wqY2suSIJr9x3bxPv3Ge3YAhOIvKQpq+YvdJ8Alr
-	 5FGix2e4Cql3/KPuymrOlR3aEWS3ik5beTXLqXMe1PPIjuw+DmAbw+2FLOWnRdAHhd
-	 Pr6Dw818Pd5W32CmctWaoz/Q8YfP+nMAAw9KII2KckiGPrFrt1HPC9IXKuGhBg7o4+
-	 RUy6Keg7shOYA==
-Date: Wed, 2 Jul 2025 18:01:18 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>, 
-	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org
-Subject: Re: [PATCH v19 04/10] PCI: endpoint: Add
- pci_epf_align_inbound_addr() helper for address alignment
-Message-ID: <n6wdkexskwjd7k5zwaaqeb36zdsxzcshsm7f5czv44rmocswex@pzbpehep2teu>
-References: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
- <20250609-ep-msi-v19-4-77362eaa48fa@nxp.com>
+	b=mNR7wl67fUJ2fLWJnrx1eA6CYJm6IV4JftZYI+XEmFVsz7lMGCEwGdCC5HQJKSL+P
+	 WbmtKE5A2VC1USq0Zsu02x7JgMEDqI3gACbYL4GUNmkzSQNkm5l7OettVTB8PxH4jg
+	 j1YwlRsQiXVoIOgLo/OtOkw1wX8jRCEMXx6p9WelxYiMLV42sQIdcs8glj9kFFvMVI
+	 pqRPtMWSLgSw3hdmoOxX3X5LUSuHyDDW/0aBNru7JFTLVe7mTzPYNj4vyBOXlR4TI7
+	 GObGd74Oiz8VsftLMHHvCOJqdJSHHn8DOzxIFepQJmodlbIv0Q7gdZkSD544yKhGl/
+	 DnCgvewI3yFFQ==
+Date: Wed, 2 Jul 2025 14:46:10 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Will Deacon <will@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 20/31] irqchip/gic-v5: Add GICv5 PPI support
+Message-ID: <aGUqEkascwGFD9x+@lpieralisi>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+ <20250626-gicv5-host-v6-20-48e046af4642@kernel.org>
+ <20250702124019.00006b01@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250609-ep-msi-v19-4-77362eaa48fa@nxp.com>
+In-Reply-To: <20250702124019.00006b01@huawei.com>
 
-On Mon, Jun 09, 2025 at 12:34:16PM GMT, Frank Li wrote:
-> Introduce the helper function pci_epf_align_inbound_addr() to adjust
-> addresses according to PCI BAR alignment requirements, converting addresses
-> into base and offset values.
+On Wed, Jul 02, 2025 at 12:40:19PM +0100, Jonathan Cameron wrote:
+> On Thu, 26 Jun 2025 12:26:11 +0200
+> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> Change from v15 to v16
-> - none
+> > The GICv5 CPU interface implements support for PE-Private Peripheral
+> > Interrupts (PPI), that are handled (enabled/prioritized/delivered)
+> > entirely within the CPU interface hardware.
 > 
-> Change from v14 to v15
-> - change out address type to dma_addr_t to fix below build issue
+> I can't remember where I got to last time so if I repeat stuff that
+> you already responded to, feel free to just ignore me this time ;)
 > 
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202502082311.G1hWGggF-lkp@intel.com/
+> All superficial stuff. Feel free to completely ignore if you like.
+
+We are at v6.16-rc4, series has been on the lists for 3 months, it has
+been reviewed and we would like to get it into v6.17 if possible and
+deemed reasonable, I am asking you folks please, what should I do ?
+
+I can send a v7 with the changes requested below (no bug fixes there)
+- it is fine by me - but I need to know please asap if we have a
+plan to get this upstream this cycle.
+
+Thanks,
+Lorenzo
+
+> > diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+> > new file mode 100644
+> > index 000000000000..a08daa562d21
+> > --- /dev/null
+> > +++ b/drivers/irqchip/irq-gic-v5.c
+> > @@ -0,0 +1,461 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright (C) 2024-2025 ARM Limited, All Rights Reserved.
+> > + */
+> > +
+> > +#define pr_fmt(fmt)	"GICv5: " fmt
+> > +
+> > +#include <linux/irqdomain.h>
+> > +#include <linux/wordpart.h>
+> > +
+> > +#include <linux/irqchip.h>
+> > +#include <linux/irqchip/arm-gic-v5.h>
+> > +
+> > +#include <asm/cpufeature.h>
+> > +#include <asm/exception.h>
+> > +
+> > +static u8 pri_bits __ro_after_init = 5;
+> > +
+> > +#define GICV5_IRQ_PRI_MASK	0x1f
+> > +#define GICV5_IRQ_PRI_MI	(GICV5_IRQ_PRI_MASK & GENMASK(4, 5 - pri_bits))
+> > +
+> > +#define PPI_NR	128
+> > +
+> > +static bool gicv5_cpuif_has_gcie(void)
+> > +{
+> > +	return this_cpu_has_cap(ARM64_HAS_GICV5_CPUIF);
+> > +}
+> > +
+> > +struct gicv5_chip_data {
+> > +	struct fwnode_handle	*fwnode;
+> > +	struct irq_domain	*ppi_domain;
+> > +};
+> > +
+> > +static struct gicv5_chip_data gicv5_global_data __read_mostly;
 > 
-> All errors (new ones prefixed by >>):
+> > +static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
+> > +{
+> > +	u64 cddi = hwirq_id | FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
 > 
->    drivers/pci/endpoint/functions/pci-epf-test.c: In function 'pci_epf_test_enable_doorbell':
-> >> drivers/pci/endpoint/functions/pci-epf-test.c:726:42: error: passing argument 4 of 'pci_epf_align_inbound_addr' from incompatible pointer type [-Werror=incompatible-pointer-types]
->      726 |                                          &epf_test->db_bar.phys_addr, &offset);
->          |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->          |                                          |
->          |                                          dma_addr_t * {aka unsigned int *}
->    In file included from include/linux/pci-epc.h:12,
-> 
-> Change form v9 to v14
-> - none
-> 
-> change from v8 to v9
-> - pci_epf_align_inbound_addr(), base and off must be not NULL
-> - rm pci_epf_align_inbound_addr_lo_hi()
-> 
-> change from v7 to v8
-> - change name to pci_epf_align_inbound_addr()
-> - update comment said only need for memory, which not allocated by
-> pci_epf_alloc_space().
-> 
-> change from v6 to v7
-> - new patch
-> ---
->  drivers/pci/endpoint/pci-epf-core.c | 44 +++++++++++++++++++++++++++++++++++++
->  include/linux/pci-epf.h             |  3 +++
->  2 files changed, 47 insertions(+)
-> 
-> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-> index 95fb3d7c1d45e..33e14a6b1549a 100644
-> --- a/drivers/pci/endpoint/pci-epf-core.c
-> +++ b/drivers/pci/endpoint/pci-epf-core.c
-> @@ -481,6 +481,50 @@ struct pci_epf *pci_epf_create(const char *name)
->  }
->  EXPORT_SYMBOL_GPL(pci_epf_create);
+> Slight preference for not needing to care where hwirq_id goes in CDDI or how big
+> it is (other than when I checked the header defines).
 >  
-> +/**
-> + * pci_epf_align_inbound_addr() - Get base address and offset that match BAR's
-> + *			  alignment requirement
-
-'Align the given address based on the BAR alignment requirement'
-
-> + * @epf: the EPF device
-> + * @addr: the address of the memory
-
-'inbound address to be aligned'
-
-> + * @bar: the BAR number corresponding to map addr
-
-s/map addr/the given addr
-
-> + * @base: return base address, which match BAR's alignment requirement.
-
-'base address matching the @bar alignment requirement'
-
-> + * @off: return offset.
-
-'offset to be added to the @base address'
-
-> + *
-> + * Helper function to convert input 'addr' to base and offset, which match
-
-s/convert/align
-
-> + * BAR's alignment requirement.
-> + *
-> + * The pci_epf_alloc_space() function already accounts for alignment. This is
-> + * primarily intended for use with other memory regions not allocated by
-> + * pci_epf_alloc_space(), such as peripheral register spaces or the trigger
-> + * address for a platform MSI controller.
-> + */
-> +int pci_epf_align_inbound_addr(struct pci_epf *epf, enum pci_barno bar,
-> +			       u64 addr, dma_addr_t *base, size_t *off)
-> +{
-> +	const struct pci_epc_features *epc_features;
-> +	u64 align;
-> +
-> +	if (!base || !off)
-> +		return -EINVAL;
-> +
-> +	epc_features = pci_epc_get_features(epf->epc, epf->func_no, epf->vfunc_no);
-> +	if (!epc_features) {
-> +		dev_err(&epf->dev, "epc_features not implemented\n");
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	align = epc_features->align;
-> +	align = align ? align : 128;
-
-From where this 128 byte alignment comes from?
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+> 	u64 cddi = FIELD_PREP(GICV5_GIC_CDDI_ID_MASK, hwirq_id) |
+>         	   FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
+> 
+> 
+> > +
+> > +	gic_insn(cddi, CDDI);
+> > +
+> > +	gic_insn(0, CDEOI);
+> > +}
+> 
+> > +static int gicv5_ppi_irq_get_irqchip_state(struct irq_data *d,
+> > +					   enum irqchip_irq_state which,
+> > +					   bool *state)
+> > +{
+> > +	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
+> > +
+> > +	switch (which) {
+> > +	case IRQCHIP_STATE_PENDING:
+> > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_PENDING) & hwirq_id_bit);
+> 
+> Technically don't need the !! but if you really like it I don't mind that much.
+> 
+> > +		return 0;
+> > +	case IRQCHIP_STATE_ACTIVE:
+> > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_ACTIVE) & hwirq_id_bit);
+> > +		return 0;
+> > +	default:
+> > +		pr_debug("Unexpected PPI irqchip state\n");
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> 
+> 
+> > +static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
+> > +					  struct irq_fwspec *fwspec,
+> > +					  irq_hw_number_t *hwirq,
+> > +					  unsigned int *type)
+> > +{
+> > +	if (!is_of_node(fwspec->fwnode))
+> > +		return -EINVAL;
+> > +
+> > +	if (fwspec->param_count < 3)
+> 
+> I don't care that much, but could relax this seeing as fwspec->param[2]
+> isn't used anyway? Maybe a tiny comment on why it matters?
+> 
+> > +		return -EINVAL;
+> > +
+> > +	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
+> > +		return -EINVAL;
+> > +
+> > +	*hwirq = fwspec->param[1];
+> > +
+> > +	/*
+> > +	 * Handling mode is hardcoded for PPIs, set the type using
+> > +	 * HW reported value.
+> > +	 */
+> > +	*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_EDGE_RISING;
+> > +
+> > +	return 0;
+> 
+> 
+> > +static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
+> > +{
+> > +	int ret = gicv5_init_domains(of_fwnode_handle(node));
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	gicv5_set_cpuif_pribits();
+> > +
+> > +	ret = gicv5_starting_cpu(smp_processor_id());
+> > +	if (ret)
+> > +		goto out_dom;
+> > +
+> > +	ret = set_handle_irq(gicv5_handle_irq);
+> > +	if (ret)
+> > +		goto out_int;
+> > +
+> > +	return 0;
+> > +
+> > +out_int:
+> > +	gicv5_cpu_disable_interrupts();
+> > +out_dom:
+> > +	gicv5_free_domains();
+> 
+> Naming is always tricky but I'd not really expect gicv5_free_domains() as the
+> pair of gicv5_init_domains() (which is doing creation rather than just initializing).
+> 
+> Ah well, names are never prefect and I don't really mind.
+> 
+> > +
+> > +	return ret;
+> > +}
+> > +IRQCHIP_DECLARE(gic_v5, "arm,gic-v5", gicv5_of_init);
+> 
 
