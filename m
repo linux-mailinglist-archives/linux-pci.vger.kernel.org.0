@@ -1,127 +1,397 @@
-Return-Path: <linux-pci+bounces-31224-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31225-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0C08AF0CBA
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 09:38:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 054D9AF0D20
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 09:49:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A7671BC72AB
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 07:38:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E8AE16A0FD
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 07:49:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75C8B225A31;
-	Wed,  2 Jul 2025 07:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45CAB22D7B0;
+	Wed,  2 Jul 2025 07:49:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kbbSCo0m"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oz3WEWgg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="c6+OnuAK";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oz3WEWgg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="c6+OnuAK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430322236E8;
-	Wed,  2 Jul 2025 07:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1424A1E47AE
+	for <linux-pci@vger.kernel.org>; Wed,  2 Jul 2025 07:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751441908; cv=none; b=DlCCVEn5a2VTrEI5rz37EKatZXiyXx5oLx+x/PN5lWKru66dNkQaIOlu1YhkNF7eq6NRy3T309Nkvbu87B2qVL58YMNv2DJxZsqHtUDVqgKOKeM9C/UnTCEI0oYNo5QOZuMqcWJVUkxA0NKT/77msHPFFitZXoWopd1/UP4ypY0=
+	t=1751442581; cv=none; b=ZYwJPSH2FydQN0rk0uA3UGw4Zrk3S72K5Bl7oWwzDwAz5q15BinnCeWY0wD/iRqYBoiOZR/S4n/QVIKqS3Rd8+K5r3QWFuiAYZjyL/okskqWtptfQ+B8baUJjuxBCwMXOF1hhqKUu+qoKmKYb3REXIHVM3CsxrmgHjXmS1oXxoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751441908; c=relaxed/simple;
-	bh=9zW3adiPjXrJwmbHyG9ny09W8n4e+4UMLMC+L3yaw0w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N9V0qZQHpLggW9VoY2NDov2UAP4muRE0XNWd4lLcp3OFgWlDsyiMw1LZm1RB9L9+PN+o6CrqBEvu/lsUjT+Kt5lR/XZaxu/0gYZedOgAzxKNmY8LlrnifdH3xYChz7SbeL8VdAwy0CVceqLY6MAMLUM8L6Ov3yzX5zwGfK/fdfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kbbSCo0m; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1F66C4CEED;
-	Wed,  2 Jul 2025 07:38:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751441907;
-	bh=9zW3adiPjXrJwmbHyG9ny09W8n4e+4UMLMC+L3yaw0w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kbbSCo0mH+SSG6OaXN+gS5ByUrKWpaEy+tVm/aJ1lHpKRbxvjVlFdXj5SCoVYz6Ek
-	 rkuLDfKH4z1TelMx1fksi7ECu8ZfGZjg+TnmeZvs34BKV5G7kaWCKfgflGI0GJKfre
-	 ANkypHa1v7Z6GKaWuHm2WFe5+8k2LwMQp5pAjVQpg5ENpDtekGANo5gJ9mFEm3yrt1
-	 xRk9zPXU8vz+KkypkwimTPq9q9hnuO75I6a1SJOtO94l7q3zIiunwl/k4kahNPqpmt
-	 eD9f6g2nYlCEckiTRLi+ygvUJRthJpd3y6hXR1/vSkxj7x/1GR958UroPrhA+07PnZ
-	 XgkfshNrep/Yg==
-Date: Wed, 2 Jul 2025 13:08:00 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
-Subject: Re: [PATCH v4 0/2] PCI: qcom: Move PERST# GPIO & phy retrieval from
- controller to PCIe bridge node
-Message-ID: <ktccsjikeez6w6fkmqxkywd357m4cvzdywixnkgdito67sngzo@4p3tu7oxufta>
-References: <20250605-perst-v4-0-efe8a0905c27@oss.qualcomm.com>
- <y3umoz5yuofaoloseapugjbebcgkefanqzggdjd5svq5dkchnb@rkbjfpiiveng>
- <4bae822e-e7bd-461f-99cc-866771c0b954@oss.qualcomm.com>
+	s=arc-20240116; t=1751442581; c=relaxed/simple;
+	bh=90eOtoDZR87XEjTT5OSrKcgQ+qlNMG8Uc+U/vnDdH1w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CwwL8muaSjZaa1cZzxqA6xxLSncavHuvs1Fp8yi9aMDRRaxAN9/m7oaw/T36ed9dayiW3QQZazM0oJKg1YoyXaZraNgcCLxvdpx2p+GiieIKo7JovuxbdMbbzPCQxITR/eXdkdwxp5hXj4QIQtWY20er0xEd1FxNjsfELGYdBZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oz3WEWgg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=c6+OnuAK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oz3WEWgg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=c6+OnuAK; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 31CD62111F;
+	Wed,  2 Jul 2025 07:49:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751442577; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5qgNZZo+UhrOw0qZY5yzCbxyS0sZdhvhyBwDFlNZPn0=;
+	b=oz3WEWggc4R2HbV+0+aBPK1Y4RXZcIi7eBbXCZ3EUjcEJYUISWyZOfEEQKRlJzF2QYtVtm
+	ZTzk4NmRlRThEsLY2ImfBhTn7L9aGgH6w0ndqs1uKk+QtPrRToWYrRK0yN8VZJlQuSeif6
+	YgR6+CZfcXqmuC5EkymSxi0yMWnlxEY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751442577;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5qgNZZo+UhrOw0qZY5yzCbxyS0sZdhvhyBwDFlNZPn0=;
+	b=c6+OnuAKYY9awBdfeywvmh/5Gc+JIqt5Hl6RyTduPv+ZgHTefqJqPsT5+irWeoLvJHFmYs
+	U82NN1d5cKdzJ3Dg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=oz3WEWgg;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=c6+OnuAK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751442577; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5qgNZZo+UhrOw0qZY5yzCbxyS0sZdhvhyBwDFlNZPn0=;
+	b=oz3WEWggc4R2HbV+0+aBPK1Y4RXZcIi7eBbXCZ3EUjcEJYUISWyZOfEEQKRlJzF2QYtVtm
+	ZTzk4NmRlRThEsLY2ImfBhTn7L9aGgH6w0ndqs1uKk+QtPrRToWYrRK0yN8VZJlQuSeif6
+	YgR6+CZfcXqmuC5EkymSxi0yMWnlxEY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751442577;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5qgNZZo+UhrOw0qZY5yzCbxyS0sZdhvhyBwDFlNZPn0=;
+	b=c6+OnuAKYY9awBdfeywvmh/5Gc+JIqt5Hl6RyTduPv+ZgHTefqJqPsT5+irWeoLvJHFmYs
+	U82NN1d5cKdzJ3Dg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 956D213A24;
+	Wed,  2 Jul 2025 07:49:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id s2TeIpDkZGjoQQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 02 Jul 2025 07:49:36 +0000
+Message-ID: <ef053350-975b-4685-8e09-0493d526801d@suse.de>
+Date: Wed, 2 Jul 2025 09:49:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 9/9] PCI: Add a new 'boot_display' attribute
+To: Mario Limonciello <superm1@kernel.org>, David Airlie <airlied@gmail.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
+ Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+ "open list:SOUND" <linux-sound@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+References: <20250627043108.3141206-1-superm1@kernel.org>
+ <20250627043108.3141206-10-superm1@kernel.org>
+ <41587824-4a05-4ead-b24c-4729007cd663@suse.de>
+ <8878af70-3eb8-495b-b8df-43a10285c4f5@kernel.org>
+ <732aeb75-71e7-49e7-a5f2-2080ee94a273@suse.de>
+ <8f9efe23-c774-477d-97ad-8e22532ad6b2@kernel.org>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <8f9efe23-c774-477d-97ad-8e22532ad6b2@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4bae822e-e7bd-461f-99cc-866771c0b954@oss.qualcomm.com>
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	TO_DN_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 31CD62111F
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.51
 
-On Mon, Jun 30, 2025 at 06:00:12PM +0530, Krishna Chaitanya Chundru wrote:
-> 
-> 
-> On 6/23/2025 4:37 PM, Manivannan Sadhasivam wrote:
-> > On Thu, Jun 05, 2025 at 02:00:36PM +0530, Krishna Chaitanya Chundru wrote:
-> > > The main intention of this series is to move wake# to the root port node.
-> > > After this series we will come up with a patch which registers for wake IRQ
-> > > from the pcieport driver. The wake IRQ is needed for the endpoint to wakeup
-> > > the host from D3cold. The driver change for wake IRQ is posted here[1].
-> > > 
-> > > There are many places we agreed to move the wake and perst gpio's
-> > > and phy etc to the pcie root port node instead of bridge node[2] as the
-> > > these properties are root port specific and does not belongs to
-> > > bridge node.
-> > > 
-> > > So move the phy, phy-names, wake-gpio's in the root port.
-> > > There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
-> > > start using that property instead of perst-gpio.
-> > > 
-> > > For backward compatibility, don't remove any existing properties in the
-> > > bridge node.
-> > > 
-> > > There are some other properties like num-lanes, max-link-speed which
-> > > needs to be moved to the root port nodes, but in this series we are
-> > > excluding them for now as this requires more changes in dwc layer and
-> > > can complicate the things.
-> > > 
-> > > Once this series gets merged all other platforms also will be updated
-> > > to use this new way.
-> > > 
-> > > Note:- The driver change needs to be merged first before dts changes.
-> > > Krzysztof Wilczyński or Mani can you provide the immutable branch with
-> > > these PCIe changes.
-> > > 
-> > 
-> > You've dropped the DTS changes in this revision. So the above comment is stale.
-> > 
-> > > [1] https://lore.kernel.org/all/20250401-wake_irq_support-v1-0-d2e22f4a0efd@oss.qualcomm.com/
-> > > [2] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
-> > > 
-> > 
-> > I don't have a device to test this series right now. So could you please test
-> > this series with the legacy binding and make sure it is not breaking?
-> > 
-> > Once you confirm, I'll merge this series.
-> > 
-> I have verified with legacy binding with this change and it is working fine.
-> 
+Hi
 
-Thanks! Could you please rebase this series on top of pci/controller/qcom and
-resend?
+Am 30.06.25 um 20:37 schrieb Mario Limonciello:
+> On 6/30/2025 2:24 AM, Thomas Zimmermann wrote:
+>> Hi
+>>
+>> Am 27.06.25 um 17:37 schrieb Mario Limonciello:
+>>> On 6/27/2025 2:07 AM, Thomas Zimmermann wrote:
+>>>> Hi
+>>>>
+>>>> Am 27.06.25 um 06:31 schrieb Mario Limonciello:
+>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>>
+>>>>> On systems with multiple GPUs there can be uncertainty which GPU 
+>>>>> is the
+>>>>> primary one used to drive the display at bootup. In order to 
+>>>>> disambiguate
+>>>>> this add a new sysfs attribute 'boot_display' that uses the output of
+>>>>> video_is_primary_device() to populate whether a PCI device was 
+>>>>> used for
+>>>>> driving the display.
+>>>>>
+>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>>> ---
+>>>>> v6:
+>>>>>   * Only show for the device that is boot display
+>>>>>   * Only create after PCI device sysfs files are initialized to 
+>>>>> ensure
+>>>>>     that resources are ready.
+>>>>> v4:
+>>>>>   * new patch
+>>>>> ---
+>>>>>   Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
+>>>>>   drivers/pci/pci-sysfs.c                 | 46 
+>>>>> +++++++++++++++++++++ ++++
+>>>>
+>>>> The code looks good. Just one more question: could this be added 
+>>>> independently from the PCI bus (at a reasonable cost)? There are 
+>>>> other busses that can host the boot display. Alternatively, we'd 
+>>>> add this attribute per bus as needed.
+>>>
+>>> It depends upon the underlying hardware implementation.  On x86 it's 
+>>> always PCI and so I realized there is a requirement that PCI 
+>>> resources are setup before screen_info event works.
+>>>
+>>> That is the v5 version of this patch would have had a potential race 
+>>> condition with userspace where boot_display didn't always show '1' 
+>>> if userspace read it too quickly.
+>>>
+>>> Other architecture's hardware implementation might have similar 
+>>> problem.
+>>>
+>>> So in summary I think it would be better to do it per-bus.  If we 
+>>> realize there is indeed code duplication we can always move this to 
+>>> a common helper at that point.
+>>
+>> Ok, makes sense. With the kernel test robot's issues fixed:
+>>
+>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+>
+> Thanks, I've got a fix locally for it.
+>>
+>> I guess that interface also needs some sort of OK from user-space devs?
+>>
+>
+> Who needs to OK it?  I do have MR's for matching userspace 
+> implementations mentioned in the cover letter already.
 
-- Mani
+The MRs are the right place. Maybe ask Dave Airlie for a comment. He was 
+most outspoken against the original approach.
+
+Best regards
+Thomas
+
+>
+>> Best regards
+>> Thomas
+>>
+>>>
+>>>>
+>>>> Best regards
+>>>> Thomas
+>>>>
+>>>>>   2 files changed, 54 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/ 
+>>>>> Documentation/ ABI/testing/sysfs-bus-pci
+>>>>> index 69f952fffec72..8b455b1a58852 100644
+>>>>> --- a/Documentation/ABI/testing/sysfs-bus-pci
+>>>>> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+>>>>> @@ -612,3 +612,11 @@ Description:
+>>>>>             # ls doe_features
+>>>>>             0001:01        0001:02        doe_discovery
+>>>>> +
+>>>>> +What:        /sys/bus/pci/devices/.../boot_display
+>>>>> +Date:        October 2025
+>>>>> +Contact:    Linux PCI developers <linux-pci@vger.kernel.org>
+>>>>> +Description:
+>>>>> +        This file indicates the device was used as a boot
+>>>>> +        display. If the device was used as the boot display, the 
+>>>>> file
+>>>>> +        will be present and contain "1".
+>>>>> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+>>>>> index 268c69daa4d57..cc766461de1da 100644
+>>>>> --- a/drivers/pci/pci-sysfs.c
+>>>>> +++ b/drivers/pci/pci-sysfs.c
+>>>>> @@ -30,6 +30,7 @@
+>>>>>   #include <linux/msi.h>
+>>>>>   #include <linux/of.h>
+>>>>>   #include <linux/aperture.h>
+>>>>> +#include <asm/video.h>
+>>>>>   #include "pci.h"
+>>>>>   #ifndef ARCH_PCI_DEV_GROUPS
+>>>>> @@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] 
+>>>>> = {
+>>>>>       NULL,
+>>>>>   };
+>>>>> +static ssize_t boot_display_show(struct device *dev, struct 
+>>>>> device_attribute *attr,
+>>>>> +                 char *buf)
+>>>>> +{
+>>>>> +    return sysfs_emit(buf, "1\n");
+>>>>> +}
+>>>>> +static DEVICE_ATTR_RO(boot_display);
+>>>>> +
+>>>>>   static ssize_t boot_vga_show(struct device *dev, struct 
+>>>>> device_attribute *attr,
+>>>>>                    char *buf)
+>>>>>   {
+>>>>> @@ -1246,6 +1254,37 @@ static int pci_create_attr(struct pci_dev 
+>>>>> *pdev, int num, int write_combine)
+>>>>>       return 0;
+>>>>>   }
+>>>>> +/**
+>>>>> + * pci_create_boot_display_file - create a file in sysfs for @dev
+>>>>> + * @pdev: dev in question
+>>>>> + *
+>>>>> + * Creates a file `boot_display` in sysfs for the PCI device @pdev
+>>>>> + * if it is the boot display device.
+>>>>> + */
+>>>>> +static int pci_create_boot_display_file(struct pci_dev *pdev)
+>>>>> +{
+>>>>> +#ifdef CONFIG_VIDEO
+>>>>> +    if (video_is_primary_device(&pdev->dev))
+>>>>> +        return sysfs_create_file(&pdev->dev.kobj, 
+>>>>> &dev_attr_boot_display.attr);
+>>>>> +#endif
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>> +/**
+>>>>> + * pci_remove_boot_display_file - remove the boot display file 
+>>>>> for @dev
+>>>>> + * @pdev: dev in question
+>>>>> + *
+>>>>> + * Removes the file `boot_display` in sysfs for the PCI device @pdev
+>>>>> + * if it is the boot display device.
+>>>>> + */
+>>>>> +static void pci_remove_boot_display_file(struct pci_dev *pdev)
+>>>>> +{
+>>>>> +#ifdef CONFIG_VIDEO
+>>>>> +    if (video_is_primary_device(&pdev->dev))
+>>>>> +        sysfs_remove_file(&pdev->dev.kobj, 
+>>>>> &dev_attr_boot_display.attr);
+>>>>> +#endif
+>>>>> +}
+>>>>> +
+>>>>>   /**
+>>>>>    * pci_create_resource_files - create resource files in sysfs 
+>>>>> for @dev
+>>>>>    * @pdev: dev in question
+>>>>> @@ -1654,9 +1693,15 @@ static const struct attribute_group 
+>>>>> pci_dev_resource_resize_group = {
+>>>>>   int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
+>>>>>   {
+>>>>> +    int retval;
+>>>>> +
+>>>>>       if (!sysfs_initialized)
+>>>>>           return -EACCES;
+>>>>> +    retval = pci_create_boot_display_file(pdev);
+>>>>> +    if (retval)
+>>>>> +        return retval;
+>>>>> +
+>>>>>       return pci_create_resource_files(pdev);
+>>>>>   }
+>>>>> @@ -1671,6 +1716,7 @@ void pci_remove_sysfs_dev_files(struct 
+>>>>> pci_dev *pdev)
+>>>>>       if (!sysfs_initialized)
+>>>>>           return;
+>>>>> +    pci_remove_boot_display_file(pdev);
+>>>>>       pci_remove_resource_files(pdev);
+>>>>>   }
+>>>>
+>>>
+>>
+>
 
 -- 
-மணிவண்ணன் சதாசிவம்
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
 
