@@ -1,158 +1,114 @@
-Return-Path: <linux-pci+bounces-31298-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31299-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF35DAF606A
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 19:53:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 163E4AF6084
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 19:56:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D5C701754F8
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 17:53:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F2301C46132
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 17:56:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 350E8309A71;
-	Wed,  2 Jul 2025 17:53:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59E0A309DB2;
+	Wed,  2 Jul 2025 17:56:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZr9U1kt"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="vlP/RCKa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD6C2F50B7;
-	Wed,  2 Jul 2025 17:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B194923184F;
+	Wed,  2 Jul 2025 17:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751478789; cv=none; b=PIyTBqkmXOC95ypLxlDuIvNmgVuSniwIiPd+WItQRzzN2qni8wJS0W47wig3zuvKGrO1LifbjG6ZdvXLe8CF4+iGaLfELu1rUnEgB4vsHwCYbwAEcBNQq6dwFIvnUxVZU8jvDLutJuJs5IOWrElPNOKcz3biY5zol76q4m5TQhw=
+	t=1751478976; cv=none; b=qSUwwFITKsxBRkQCo/z9kpZWM1OXvesTfw+kr2PNbrHBd052xFLijDBhl37EPlJvWlnxEZ3uvvEjz4Rz+LImfLEAUbUF8T2fwo3i3UtGHRth4ma924SxWIaUhBrkV3Zv/s7YK8eRcKxqcwrI62F33Tubg8pXDss2Fi7rgd5YBl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751478789; c=relaxed/simple;
-	bh=7s8fD9aiiXQ1A+aTfaJo538HFe4NxvZ8L1nKHQOXX54=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=oIxDF9+KJ3oSlS0lETm9bPwvaU71Q2+bazBqXwJrq8YvRw+5T2RIkEKDyD9zpkJDAt/woWTy+uFPTg66NAJKO8sEwFsuvEW7LPYEXuA5RxqaC6RbpS7KFz8Wfn1K1KgvPSaoLZ2kz8xxnrHwMUPM/RNCYgxVg9EngNB8t3SPbhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZr9U1kt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEED1C4CEE7;
-	Wed,  2 Jul 2025 17:53:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751478788;
-	bh=7s8fD9aiiXQ1A+aTfaJo538HFe4NxvZ8L1nKHQOXX54=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=oZr9U1ktTKVcqr3ZrC67+dfmJIMX0LAoxMaQ+QzhgevkBU+EdsCTDD0jgVMmZNUbJ
-	 EM30hjPCjSC28g+uEQ7UsGhfto0VlL397f/R0q8DqK5L37WlXgKsJMKfbZ3SEWnbRa
-	 pxEf6sSnCmERhoOkyRAr5kQ9X0So9wP+ttWaeAs2JvlR+7lsct+xJuzvuVuEOnhuLt
-	 wIlNOEHin2nq+xeuFM7v/4ZOcBJaIiR2VBvOqLSwiP8byuitIg7ezIQ8vPdKvbxcph
-	 05Y1owVmxLHPnZjFMzZxKr1l20WIwH11KAAHS2oxppqmDrkXejfQQh7eyvOdTOWZiU
-	 MUXKRdlPS7JRg==
-Date: Wed, 2 Jul 2025 12:53:07 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	bhelgaas@google.com, lukas@wunner.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Jim Quinlan <james.quinlan@broadcom.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2] PCI/pwrctrl: Skip creating pwrctrl device unless
- CONFIG_PCI_PWRCTRL is enabled
-Message-ID: <20250702175307.GA1891739@bhelgaas>
+	s=arc-20240116; t=1751478976; c=relaxed/simple;
+	bh=idRVhjus5RHxJ1cfqPop3MVWxlrpPqGjnUf2c1q4gNI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AFPxt4f7Qrr2MVEuzskYTAO36EpcCofFDq1AGeUspRFIcuVPLhiAcjzxY2PROtGkJxNXM8euSRb1p5XPoOnplfiAX33Ovax05QhPxRroh8qRThvkrJovacGVIeWjHxyjluMGUMGeeJw9S7u9i5xbhFoWK3LLL+Bi9owHy5S0XBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=vlP/RCKa; arc=none smtp.client-ip=192.19.144.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 398D3C002831;
+	Wed,  2 Jul 2025 10:56:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 398D3C002831
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1751478973;
+	bh=idRVhjus5RHxJ1cfqPop3MVWxlrpPqGjnUf2c1q4gNI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=vlP/RCKauNo2HlvRTluT440wQD2gajDOL7AOZq3C4GxxXHlb/+r+MMUWBA2yUXocy
+	 eJHSwP4i5RtFvlId7VRArpxbJSnRoEHDEXtgvtUP81LuWNzB4+XUpEuntHDsrZDgui
+	 OTwZHQeFqqk9A2szqKC5rv3Fb15WgZPecM8u1qSY=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 8826618000A5E;
+	Wed,  2 Jul 2025 10:56:12 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: bcm-kernel-feedback-list@broadcom.com,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com,
+	Matthias Brugger <mbrugger@suse.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 stblinux/next 1/2] dt-bindings: clock: rp1: Add missing MIPI DSI defines
+Date: Wed,  2 Jul 2025 10:56:11 -0700
+Message-ID: <20250702175611.1714655-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <c20066500908db854aa4816b40e956296bab526a.1750714412.git.andrea.porta@suse.com>
+References: <c20066500908db854aa4816b40e956296bab526a.1750714412.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <myhg3xn3subujf3buarctgexipvjhale6zyqkhfpnm6qwitlg6@27kjexp337aj>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 02, 2025 at 12:17:00PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Jul 01, 2025 at 03:35:26PM -0500, Bjorn Helgaas wrote:
-> > [+cc Bart]
-> > 
-> > On Tue, Jul 01, 2025 at 12:17:31PM +0530, Manivannan Sadhasivam wrote:
-> > > If devicetree describes power supplies related to a PCI device, we
-> > > previously created a pwrctrl device even if CONFIG_PCI_PWRCTL was
-> > > not enabled.
-> > > 
-> > > When pci_pwrctrl_create_device() creates and returns a pwrctrl device,
-> > > pci_scan_device() doesn't enumerate the PCI device. It assumes the pwrctrl
-> > > core will rescan the bus after turning on the power. However, if
-> > > CONFIG_PCI_PWRCTL is not enabled, the rescan never happens.
-> > 
-> > Separate from this patch, can we refine the comment in
-> > pci_scan_device() to explain *why* we should skip scanning if a
-> > pwrctrl device was created?  The current comment leaves me with two
-> > questions:
-> > 
-> >   1) How do we know the pwrctrl device is currently off?  If it is
-> >      already on, why should we defer enumerating the device?
+From: Florian Fainelli <f.fainelli@gmail.com>
+
+On Mon, 23 Jun 2025 23:46:27 +0200, Andrea della Porta <andrea.porta@suse.com> wrote:
+> Declare the positional index for the RP1 MIPI clocks.
 > 
-> I believe you meant to ask "how do we know the PCI device is
-> currently off". If the pwrctrl device is created, then we for sure
-> know that the pwrctrl driver will power on the PCI device at some
-> point (depending on when the driver gets loaded). Even if the device
-> was already powered on, we do not want to probe the client driver
-> because, we have seen race between pwrctrl driver and PCI client
-> driver probing in parallel. So I had imposed a devlink dependency
-> (see b458ff7e8176) that makes sure that the PCI client driver
-> wouldn't get probed until the pwrctrl driver (if the pwrctrl device
-> was created) is probed. This will ensure that the PCI device state
-> is reset and initialized by the pwrctrl driver before the client
-> driver probes.
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> ---
 
-I'm confused about this.  Assume there is a pwrctrl device and the
-related PCI device is already powered on when Linux boots.  Apparently
-we do NOT want to enumerate the PCI device?  We want to wait for the
-pwrctrl driver to claim the pwrctrl device and do a rescan?  Even
-though the pwrctrl driver may be a loadable module and may not even be
-available at all?
-
-It seems to me that a PCI device that is already powered on should be
-enumerated and made available.  If there's a pwrctrl device for it,
-and we decide to load pwrctrl, then we also get the ability to turn
-the PCI device off and on again as needed.  But if we *don't* load
-pwrctrl, it seems like we should still be able to use a PCI device
-that's already powered on.
-
-> >   2) If the pwrctrl device is currently off, won't the Vendor ID read
-> >      just fail like it does for every other non-existent device?  If
-> >      so, why can't we just let that happen?
-> 
-> Again, it is not the pwrctrl device that is off, it is the PCI
-> device. If it is not turned on, yes VID read will fail, but why do
-> we need to read the VID in the first place if we know that the PCI
-> device requires pwrctrl and the pwrctrl driver is going to be probed
-> later.
-
-I was assuming pwrctrl is only required if we want to turn the PCI
-device power on or off.  Maybe that's not true?
-
-> > This behavior is from 2489eeb777af ("PCI/pwrctrl: Skip scanning for
-> > the device further if pwrctrl device is created"), which just says
-> > "there's no need to continue scanning."  Prior to 2489eeb777af, it
-> > looks like we *did* what try to enumerate the device even if a pwrctrl
-> > device was created, and 2489eeb777af doesn't mention a bug fix, so I
-> > assume it's just an optimization.
-> 
-> Yes, it is indeed an optimization.
-> 
-> To summarize, we have imposed a dependency between the PCI client
-> driver and pwrctrl driver to make sure that the PCI device state is
-> fully reset and initialized before the client driver probes.
-
-If the PCI device is already powered on, what more should we do to
-fully reset and initialize it?  If it needed more initialization, I
-assume the platform should have left it powered off.
-
-> So irrespective of whether the PCI device is already powered on or
-> not, it is guaranteed by devlink that the PCI client driver will
-> only get probed *after* the pwrctrl driver (if the device requires
-> it). So we skip scanning the device further if the pwrctrl device is
-> created (which means, the device depends on pwrctrl driver to power
-> manage it).
-
-I'm just as confused as I was before.  I'm assuming pwrctrl basically
-gives us a way to control the main power rails to the PCI device, and 
-the device only depends on pwrctrl in the sense that pwrctrl can
-remove main power and put the device in D3cold, and then restore main
-power so the device can return to D0uninitialized.
-
-Bjorn
+Applied to https://github.com/Broadcom/stblinux/commits/drivers/next, thanks!
+--
+Florian
 
