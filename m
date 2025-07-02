@@ -1,122 +1,223 @@
-Return-Path: <linux-pci+bounces-31233-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31234-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0013AF1063
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 11:46:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39895AF1068
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 11:47:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8248C1891439
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 09:45:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5739B521BDF
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 09:45:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6D8D254AF4;
-	Wed,  2 Jul 2025 09:43:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1FBD24A066;
+	Wed,  2 Jul 2025 09:44:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DbUyKpea"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="aA8FqKUS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922D9253F30
-	for <linux-pci@vger.kernel.org>; Wed,  2 Jul 2025 09:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C7F248894
+	for <linux-pci@vger.kernel.org>; Wed,  2 Jul 2025 09:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751449398; cv=none; b=HG8+sjCz5SUhzoAahp6Na7BVkElr2qHMiDZMhrmzCqcRGEbk7891HM51KgzcIj7Ma+0Y3cjJaHwTRnibLQIqwVRBbWDOVWshTTiZqUUrCi62LeXkp0ET/gcYlNu6TdLVGnEWco7N/9rhYpWC8vLjA6u4dgYfNWOg8t/aTBJQqzA=
+	t=1751449467; cv=none; b=h0eyTucuvquFSHNCEWWVdI69E5JDsR56GexjXGd83zda60r6lQtvQ3gZGVq2fSkCVSwhGZMlT57/ADzz6vt5YooUJ+gcwpKYt07hTSdX2y7Z1tlkBvRn6J0E/B0fWN2OvKWwrhth0+/RoRYPGPKXIGU6vYxAAbfryVRGERt9Pt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751449398; c=relaxed/simple;
-	bh=FfU8UyZIqVtwRXpjwrqKk4UczlJR9TMeUtOPhhfHZt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QjsGgXQXGNRxtrP5mNyy3aIm1C1sCxREOoZlqyQcQTODm426ZcYA4B/MZHb+YSTYOrv0YpDvWljV8adII4ttIfJdIJiwAFd8OjWVzhwHfn1k83G35jfr9rBv7vZrodEX2Ee22rdkncWoBiOofra+Vgr6fAchOetPwjlbLKl09KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DbUyKpea; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D03DEC4CEED;
-	Wed,  2 Jul 2025 09:43:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751449396;
-	bh=FfU8UyZIqVtwRXpjwrqKk4UczlJR9TMeUtOPhhfHZt0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DbUyKpeaExUOp4PLcUGvmBO5LSMS59EEqGtLR44uulLrH/yQWC8sKonsf5+qnh8aJ
-	 wcr/P3tiSKTn2RtPJdWgLItEx3lOPtgdAcs4BBT6FZz4veTSVYWoKFdBff3ewgMCuK
-	 esWwI3OTcr6FmokupVB4BC+B/8t3qqA6CAhDBQ/8t6MSpBboVrKhuC+YBGmLJvby+f
-	 84y+AuJl/pa6EGvSKLCk9JiFQWrRzLmYMyRX7IaEAPN9zSK8CYT+sskH+3SdNDJAXm
-	 j0L29z5B28/I4ngmtZAtq1dMOaglcIZwbuMmXZMFWsxI0x5lAMeh4TSj9u6PhMCEOu
-	 A9Dc+zLlE6iRg==
-Date: Wed, 2 Jul 2025 11:43:11 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Laszlo Fiat <laszlo.fiat@proton.me>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 5/7] PCI: dwc: Ensure that dw_pcie_wait_for_link()
- waits 100 ms after link up
-Message-ID: <aGT_L_hglVBP6yzB@ryzen>
-References: <hcjcvo4sokncindwqhhmsx5g25ovj5n5zghemeujw7f4kqiaia@hbefzblsrhqx>
- <20250701163844.GA1836602@bhelgaas>
+	s=arc-20240116; t=1751449467; c=relaxed/simple;
+	bh=izXeqBWJreZrGbZ23Z5+1favDNA2YVc9qT43FUNfPuM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XgzmhyQnAURRQreWsis+tT7t/g/hzLls/sDOec2PzUhEp40hY1XGnbyHN/CDLc7yJr3o1Ms+67X0vsGL9xjJOZiaJ6osXlcHaEj8qQXlFBBiV7xowrtBwrQ9eS9h+wXT1R68oYwNgcsIk9+b4FZGR6mzRoj1JCEpeUVsT0T67JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=aA8FqKUS; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from [10.172.195.16] (1.general.hwang4.uk.vpn [10.172.195.16])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 898963F702;
+	Wed,  2 Jul 2025 09:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1751449456;
+	bh=SmpTqt0VQnUcXJEfM6K6r7Fzscg49AL9rrHWakjR7U0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=aA8FqKUSaRBH4FFwCH/lv1e8E5Y9W0eSktv1AtiRGVutquJmMwVocc1y89zEkT/RP
+	 mb4Tl5ve6oU1klq3CLsM5QaZOVWoPF6pNOnMzs8nwGwSspAIdVyxQZtvH/Ik8p1lCK
+	 8PicpCo4WSMJHF+VqZPw45SlAbzhm5CsUYRl+ZtAfsuj3WXHmYuM1rqrfYPeb0Cmor
+	 E63B5zMTaqnEFBUhIT5RhJfjn9JbQeP7knq/+i6Kg1rT0LwEoUsRIYMnQGBNRS1HVL
+	 AuXi4Vx42mHJq7GaOl54Stne1eYy5kPfLcUOSlFWba8Dn+YFQAj0pM/YNUwYGPzIiT
+	 CFazge5LXHOKg==
+Message-ID: <13f6c7df-9fd8-4ef4-b900-9a5173c5967f@canonical.com>
+Date: Wed, 2 Jul 2025 17:43:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701163844.GA1836602@bhelgaas>
-
-On Tue, Jul 01, 2025 at 11:38:44AM -0500, Bjorn Helgaas wrote:
-> > 
-> > No. The PERST# delay should be handled by the glue drivers since
-> > they are the ones controlling the PERST# line. Doing an
-> > unconditional wait for both the cases in DWC core, seems wrong to
-> > me.
-> 
-> It ends up being a little bit weird that the delay is in the DWC core
-> (dw_pcie_wait_for_link()) for ports that support fast links, and in
-> the glue drivers otherwise.  It would be easier to verify and maintain
-> if the delay were always in the DWC core.
-> 
-> If we had a dw_pcie_host_ops callback for PERST# deassertion, the
-> delay could be in the DWC core, but I don't know if there's enough
-> consistency across drivers for that to be practical.
-
-Currently, there is not much consistency between the glue drivers, so
-adding a DWC core API to assert/deassert PERST# sounds like a good idea
-to me. The callback could even be supplied a struct gpio_desc pointer.
-
-Like I mentioned in my previous email:
-https://github.com/torvalds/linux/blob/v6.16-rc4/drivers/pci/controller/dwc/pci-imx6.c#L885
-https://github.com/torvalds/linux/blob/v6.16-rc4/drivers/pci/controller/dwc/pcie-qcom.c#L294
-https://github.com/torvalds/linux/blob/v6.16-rc4/drivers/pci/controller/dwc/pcie-keembay.c#L89
-
-these drivers seem to have a 100 ms delay after PERST# has been deasserted,
-but there are of course more glue drivers, so a lot of them will not have a
-100 ms wait _after_ PERST# is deasserted. (All glue drivers seem to have a
-delay between asserting and deasserting PERST#.)
-
-Right now, e.g. qcom will have a 100 ms delay both after deasserting PERST#
-and after link up. (However, based on the supported link speed, only one of
-the delays should be needed.)
-
-However, my main concern is not that qcom waits twice, it is those drivers
-that do not have a 100 ms delay after PERST# has been deasserted, because
-before commit 470f10f18b48 ("PCI: Reduce PCIE_LINK_WAIT_SLEEP_MS"), those
-drivers might have been "saved" by the ridiculously long
-PCIE_LINK_WAIT_SLEEP_MS.
-
-However, now when we sleep less in each iteration when polling for link up,
-those drivers that do not have a 100 ms delay after PERST# has been
-deasserted might actually see regressions, because (the now reduced)
-PCIE_LINK_WAIT_SLEEP_MS time is no longer "saving" them.
-
-If we don't want to make the PCIE_RESET_CONFIG_WAIT_MS wait unconditional
-(not care about the supported link speed), then perhaps we should drop
-470f10f18b48 ("PCI: Reduce PCIE_LINK_WAIT_SLEEP_MS") from pci/next ?
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: Disable RRS polling for Intel SSDPE2KX020T8 nvme
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
+ raphael.norwitz@nutanix.com, alay.shah@nutanix.com,
+ suresh.gumpula@nutanix.com, ilpo.jarvinen@linux.intel.com,
+ Nirmal Patel <nirmal.patel@linux.intel.com>,
+ Jonathan Derrick <jonathan.derrick@linux.dev>,
+ Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
+ =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+References: <20250701232341.GA1859056@bhelgaas>
+Content-Language: en-US
+From: Hui Wang <hui.wang@canonical.com>
+In-Reply-To: <20250701232341.GA1859056@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-Kind regards,
-Niklas
+On 7/2/25 07:23, Bjorn Helgaas wrote:
+> On Tue, Jun 24, 2025 at 08:58:57AM +0800, Hui Wang wrote:
+>> Sorry for late response, I was OOO the past week.
+>>
+>> This is the log after applied your patch:
+>> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/comments/61
+>>
+>> Looks like the "retry" makes the nvme work.
+> Thank you!  It seems like we get 0xffffffff (probably PCIe error) for
+> a long time after we think the device should be able to respond with
+> RRS.
+>
+> I always thought the spec required that after the delays, a device
+> should respond with RRS if it's not ready, but now I guess I'm not
+> 100% sure.  Maybe it's allowed to just do nothing, which would lead to
+> the Root Port timing out and logging an Unsupported Request error.
+>
+> Can I trouble you to try the patch below?  I think we might have to
+> start explicitly checking for that error.  That probably would require
+> some setup to enable the error, check for it, and clear it.  I hacked
+> in some of that here, but ultimately some of it should go elsewhere.
+
+OK, built a testing kernel, wait for bug reporter to test it and collect 
+the log.
+
+
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e9448d55113b..c276d0a2b522 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1264,10 +1264,13 @@ void pci_resume_bus(struct pci_bus *bus)
+>   
+>   static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>   {
+> -	int delay = 1;
+> +	int delay = 10;
+>   	bool retrain = false;
+>   	struct pci_dev *root, *bridge;
+> +	u16 devctl, devsta;
+>   
+> +	pci_info(dev, "%s: VF%c %s timeout %d\n", __func__,
+> +		 dev->is_virtfn ? '+' : '-', reset_type, timeout);
+>   	root = pcie_find_root_port(dev);
+>   
+>   	if (pci_is_pcie(dev)) {
+> @@ -1276,6 +1279,19 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>   			retrain = true;
+>   	}
+>   
+> +	if (root) {
+> +		pcie_capability_read_word(root, PCI_EXP_DEVCTL, &devctl);
+> +		if (!(devctl & PCI_EXP_DEVCTL_URRE))
+> +			pcie_capability_write_word(root, PCI_EXP_DEVCTL,
+> +					    devctl | PCI_EXP_DEVCTL_URRE);
+> +		pcie_capability_read_word(root, PCI_EXP_DEVSTA, &devsta);
+> +		if (devsta & PCI_EXP_DEVSTA_URD)
+> +			pcie_capability_write_word(root, PCI_EXP_DEVSTA,
+> +						   PCI_EXP_DEVSTA_URD);
+> +		pci_info(root, "%s: DEVCTL %#06x DEVSTA %#06x\n", __func__,
+> +			 devctl, devsta);
+> +	}
+> +
+>   	/*
+>   	 * The caller has already waited long enough after a reset that the
+>   	 * device should respond to config requests, but it may respond
+> @@ -1305,14 +1321,33 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>   
+>   		if (root && root->config_rrs_sv) {
+>   			pci_read_config_dword(dev, PCI_VENDOR_ID, &id);
+> -			if (!pci_bus_rrs_vendor_id(id))
+> -				break;
+> +
+> +			if (pci_bus_rrs_vendor_id(id)) {
+> +				pci_info(dev, "%s: read %#06x (RRS)\n",
+> +					 __func__, id);
+> +				goto retry;
+> +			}
+> +
+> +			if (PCI_POSSIBLE_ERROR(id)) {
+> +				pcie_capability_read_word(root, PCI_EXP_DEVSTA,
+> +							  &devsta);
+> +				if (devsta & PCI_EXP_DEVSTA_URD)
+> +					pcie_capability_write_word(root,
+> +							    PCI_EXP_DEVSTA,
+> +							    PCI_EXP_DEVSTA_URD);
+> +				pci_info(root, "%s: read %#06x DEVSTA %#06x\n",
+> +					 __func__, id, devsta);
+> +				goto retry;
+> +			}
+> +
+> +			break;
+>   		} else {
+>   			pci_read_config_dword(dev, PCI_COMMAND, &id);
+>   			if (!PCI_POSSIBLE_ERROR(id))
+>   				break;
+>   		}
+>   
+> +retry:
+>   		if (delay > timeout) {
+>   			pci_warn(dev, "not ready %dms after %s; giving up\n",
+>   				 delay - 1, reset_type);
+> @@ -1332,7 +1367,6 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>   		}
+>   
+>   		msleep(delay);
+> -		delay *= 2;
+>   	}
+>   
+>   	if (delay > PCI_RESET_WAIT)
+> @@ -4670,8 +4704,10 @@ static int pcie_wait_for_link_status(struct pci_dev *pdev,
+>   	end_jiffies = jiffies + msecs_to_jiffies(PCIE_LINK_RETRAIN_TIMEOUT_MS);
+>   	do {
+>   		pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnksta);
+> -		if ((lnksta & lnksta_mask) == lnksta_match)
+> +		if ((lnksta & lnksta_mask) == lnksta_match) {
+> +			pci_info(pdev, "%s: LNKSTA %#06x\n", __func__, lnksta);
+>   			return 0;
+> +		}
+>   		msleep(1);
+>   	} while (time_before(jiffies, end_jiffies));
+>   
+> @@ -4760,6 +4796,8 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
+>   	 * Some controllers might not implement link active reporting. In this
+>   	 * case, we wait for 1000 ms + any delay requested by the caller.
+>   	 */
+> +	pci_info(pdev, "%s: active %d delay %d link_active_reporting %d\n",
+> +		 __func__, active, delay, pdev->link_active_reporting);
+>   	if (!pdev->link_active_reporting) {
+>   		msleep(PCIE_LINK_RETRAIN_TIMEOUT_MS + delay);
+>   		return true;
+> @@ -4784,6 +4822,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
+>   			return false;
+>   
+>   		msleep(delay);
+> +		pci_info(pdev, "%s: waited %dms\n", __func__, delay);
+>   		return true;
+>   	}
+>   
+> @@ -4960,6 +4999,7 @@ void pci_reset_secondary_bus(struct pci_dev *dev)
+>   
+>   	ctrl &= ~PCI_BRIDGE_CTL_BUS_RESET;
+>   	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
+> +	pci_info(dev, "%s: PCI_BRIDGE_CTL_BUS_RESET deasserted\n", __func__);
+>   }
+>   
+>   void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
 
