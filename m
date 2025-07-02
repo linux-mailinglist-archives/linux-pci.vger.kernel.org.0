@@ -1,126 +1,82 @@
-Return-Path: <linux-pci+bounces-31214-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31215-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 210D7AF07D7
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 03:19:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B4DDAF0822
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 03:47:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6BE164E19EF
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 01:19:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 817E51BC655C
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 01:48:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D6C828E3F;
-	Wed,  2 Jul 2025 01:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A5F51474DA;
+	Wed,  2 Jul 2025 01:47:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fB+zhqsp"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="W1NfwnPi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2080.outbound.protection.outlook.com [40.107.237.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3729F6F073;
-	Wed,  2 Jul 2025 01:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215548F77;
+	Wed,  2 Jul 2025 01:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.80
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751419133; cv=fail; b=AoMqc0PrOu2vLPDtJcoxe0hZjSuxFpkctsKRrjBGMnOjF4DvyhKe9xhXwCF2B0xB9NnxIMtfi+ZRuFEzIGxM70EazfGuE0MxlwWdXZh/+CX1LPC+TgDwC6IEjfAQ3USK1rIpNuSpMlcNdY1O82hNYEtCxXsO1g8Y4kNmbIobvF4=
+	t=1751420864; cv=fail; b=U4jMbSH0yTcg25tBoCIFpUWbeffP8dxY4CDHtKAvBWK+Rcu1XtQ7mn8EGH/4Tw4AkQzMgEta32k/Wm0RSabRPLlxgJLgpLGyIne3eBjQN5rh82RkoT19vJFMsdlfvSGVpBQXR2dka9DtxZ6OSRb9+fLXh/T/xF6UtTEgJxhVvlU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751419133; c=relaxed/simple;
-	bh=w3b9S55I6Td4c3ClcD0/6oNSk4c7A9RWoJU5LF/9F9g=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=TZEDz96r4eRU5a+7MsEUTrfCWngLT8Qlf3n7WGsQAHJuoOry+1eygOpgFFT6N4CsnNMrTmP3pIxMwej7/OoIdCPE0O/s2EfJdm8MshQvK4+UHJ1Ortm8ns/m6ul0G5azqJ+rgkANvMbuamC8EWvCe8txH6zjufnbeHTrsSpMnw4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fB+zhqsp; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751419132; x=1782955132;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=w3b9S55I6Td4c3ClcD0/6oNSk4c7A9RWoJU5LF/9F9g=;
-  b=fB+zhqsp8Q/DrOiPLCCs13dseW1I/5PpNxP7xEm3RKamAaj7lapiBxX4
-   GMtIs8u+ChkLSH07MvFFUVrOk3Qot/MNk5yHEFlF/e1SWiMvQ97V3dbxp
-   FaIkWXRf02ARg/4z+iXsPhDA0A2vbRFPZrlPtIfdNUMiambihsxjrXmAd
-   UsWDDfFZ4SkEg0L0a30/F+WkSo6Dm/yrpD3B4L2EHGz71WsM28jBf66LK
-   fFbyK4yGdtPLbq1wLoH3V6sTCEm/er/Jv3kmgxVc0GflfPEFLtBjWx0xU
-   pnqxFs0nj+XEb2/fI7a8uPkRRotOrLbSC2iBjHiy9yYlsSs4k2Vugd04u
-   Q==;
-X-CSE-ConnectionGUID: z+miN4hCQIuE4m4ov/EVeg==
-X-CSE-MsgGUID: AstslGUMRc2BGXbiVBSD9w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="57479571"
-X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
-   d="scan'208";a="57479571"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 18:18:51 -0700
-X-CSE-ConnectionGUID: Iu80pLBaTeCqP0biKy8Kqw==
-X-CSE-MsgGUID: ARe4zUMKRHmOdE9s2MPPbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
-   d="scan'208";a="159444038"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 18:18:45 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 1 Jul 2025 18:18:44 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Tue, 1 Jul 2025 18:18:44 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (40.107.102.87)
- by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 1 Jul 2025 18:18:44 -0700
+	s=arc-20240116; t=1751420864; c=relaxed/simple;
+	bh=Hvvyj1NOx3zkWlxiGwmUpFkjeOssOa9OAznxUP6HpAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=jAdXc/2HrlXWOq8aL54s/p/gnoJATlDF9y+5GBXP21Vef7NuE58LTuNDMxzMwHIP4Kv2Q+MrXtRha62OtihVxJA5Pa0ZJIM5KDxUF1IUAWCHUbrv8CWQt156WQYWBrkCP82KSWShPvzQvYm12+MJI4r6R3X6yYL5EKNHHJYNaTk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=W1NfwnPi; arc=fail smtp.client-ip=40.107.237.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TflaJpNPT2MVPs/m6XCWecPZ/hY9P/a4FRYZk8Ld2fyeFUk1H4BNgEcNzUrte7qHDF5YDQ2sK0pbiTg1BfWMflaLkLeo4/jkAhJHToerCVmXXi0ZxJrty+Qi2taVSHHkKZ4qrH2MP8mF1v7VWaGhXZaTJXJL70/kk7Wcewxy1HGdr7+W+8Ustgy2/tza/h8gFHRwCeSYvG8f2WLLg/EuYuQbJwW+8fKUVxAIL0jjWNFt+RFp8PLiUgnOjz9H+wafdO4sEkBIIA7eEZljnDaMaTUpWM6oRHfq7CHRD8DZ16lHuYOO47hrGxtMZtJ+4DPE27zjPJhQRmB8AAMJuB5u8w==
+ b=dPDnPFuH9YUGdOZpkj1z2oTtPz+L7ENxPU52rPnMfjnqehMJV1BF7/p421b6GjJmowXr6GehzWi/MpUVIE1nDHA7/sbouG1ZUdOlc5x3wSOBrzshTqTeo+/gMR4hxBx+GqEaxqlv3PfP4hqDtGikkDZYnu8+CAUmjKz3wcci/J1dBrc9HpNMLgi7ygAQHhsqVrDY5JmpezK9RBCY/25FdPfonpjM06bIhSzW+e11tXJv2XldNvZvdP+6cuv6C1k1KraJTCW4lwWNPeEoU2QNRO8X2LrQVksVcLlaR9dFycqNHECqs30f06D1aw+VHC6cHkzfDp70o26sh4d3xSuX1Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aogXx64OScUd0h/vObkWp3VOMqx2J3wohfKZejMcuRs=;
- b=tLOEhutnTVfhzir8uUwio3imh9rOik7HNGZ3BA9qhWR7AzJvMZola10xgCKHMCqT47WBFRpdCbf4OOWfmE8D6dRDNT+z8mQnAEu/p91358Li05PTAtontx0tTTbOMvxPz7yO5sliUy8NPYfyGsjNtlnY6ZBUPFjHpwTGuqP5W/JqzcO7XJ461LZZ7r3Cn0u1ih+vjZigXb9mIU1PgBPi1XTK3wcohk7U5BPoyDVPAxrTez+tOZCAEBmcLgvpMFGg/BrhRNDq+aF58+Vf/WwbZ2ppd59l4b0SmkQ7hX/rwYk6trKdYWp5n27elOkexKJ+4ZQ3UOY/cR4XnOf8cbFVAA==
+ bh=bjNyhojoWlWqHWO3yP4bIelc3QmpxupmuKu0OFE073Y=;
+ b=qiFfKX+5Pzr3dZcK7yKFDJt8k4d8rJI374cxw0zoIj5kEhFfoaFgknJutdc8bD+b35mYufOpUk2x0oGe7izbFWuSZDH5l7WbPpYyqjvRi53lFjwCH+4jdZOsV8Dpw8JcienhU3ANdq/4DeckprD6vA7sd4UluxOjHpicaK6oQgd9WVu0bhnssZLFwKGSZXYUdrguOY+q6Gjru/BTgnIyqtJftXudVEThXxrsuzA8tINwob52gPE9NLpdK+tVnpw45QDGPdP6F66BuO6nLIl//h4If4dLqHBiZeFKzCgNITTB+OsabRR3JqIAwjhn7v4Iaeii8P6afXBAW+dMfRzAuQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bjNyhojoWlWqHWO3yP4bIelc3QmpxupmuKu0OFE073Y=;
+ b=W1NfwnPipW2r1tngkbKyaKQ8lSnvUnShaNML8zSJCofUxe34FA2GCqw1zJDQl/N3PEw0CV9SZ9z7X9R04hRgF2rJw/4CEAsH+bfRTvemQOx4UZNvHUufv4E22rJg1trd9zFwj+P1bbxI3flpGlKTPCG+aKfgJ/kIdLNqIY8jc8YPXyBsx/StMuAmok4yZweFBID0tDSPR87gKbItqej/TGPMpfwZCdIzQQ4GTsq7ZQJcWMxYLmvijAI3nTmIB/r8ZHkSnAxbl3VQJkX0pdOuoZM25hipDrIflgZ2Y4dUdhqwocRVu8vxHdNvYGOwUGWvkNXaRwCfb6Mtybh3sr7lUw==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by DS0PR11MB8668.namprd11.prod.outlook.com (2603:10b6:8:1b6::16) with
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Wed, 2 Jul
- 2025 01:18:43 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::8254:d7be:8a06:6efb]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::8254:d7be:8a06:6efb%7]) with mapi id 15.20.8769.022; Wed, 2 Jul 2025
- 01:18:43 +0000
-Date: Tue, 1 Jul 2025 18:18:38 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Shiju Jose <shiju.jose@huawei.com>
-CC: Terry Bowman <terry.bowman@amd.com>, "dave@stgolabs.net"
-	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
-	"ming.li@zohomail.com" <ming.li@zohomail.com>,
-	"Smita.KoralahalliChannabasappa@amd.com"
-	<Smita.KoralahalliChannabasappa@amd.com>, "rrichter@amd.com"
-	<rrichter@amd.com>, "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
-	"PradeepVineshReddy.Kodamati@amd.com" <PradeepVineshReddy.Kodamati@amd.com>,
-	"lukas@wunner.de" <lukas@wunner.de>, "Benjamin.Cheatham@amd.com"
-	<Benjamin.Cheatham@amd.com>, "sathyanarayanan.kuppuswamy@linux.intel.com"
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v10 12/17] cxl/pci: Unify CXL trace logging for CXL
- Endpoints and CXL Ports
-Message-ID: <aGSI7oXthPW-AY6D@aschofie-mobl2.lan>
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
- <20250626224252.1415009-13-terry.bowman@amd.com>
- <6b8b65df7c334043863b1464e04957db@huawei.com>
-Content-Type: text/plain; charset="us-ascii"
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.30; Wed, 2 Jul
+ 2025 01:47:35 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8880.030; Wed, 2 Jul 2025
+ 01:47:35 +0000
+Date: Tue, 1 Jul 2025 22:47:33 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
+	Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
+	Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, galshalom@nvidia.com,
+	Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
+	kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
+	tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+Subject: Re: [PATCH 00/11] Fix incorrect iommu_groups with PCIe switches
+Message-ID: <20250702014733.GC1051729@nvidia.com>
+References: <0-v1-74184c5043c6+195-pcie_switch_groups_jgg@nvidia.com>
+ <20250701154826.75a7aba6.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6b8b65df7c334043863b1464e04957db@huawei.com>
-X-ClientProxiedBy: BYAPR07CA0054.namprd07.prod.outlook.com
- (2603:10b6:a03:60::31) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+In-Reply-To: <20250701154826.75a7aba6.alex.williamson@redhat.com>
+X-ClientProxiedBy: BL1PR13CA0104.namprd13.prod.outlook.com
+ (2603:10b6:208:2b9::19) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -128,160 +84,290 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS0PR11MB8668:EE_
-X-MS-Office365-Filtering-Correlation-Id: e50d3185-32fe-4b52-b5bc-08ddb9066252
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CY5PR12MB6429:EE_
+X-MS-Office365-Filtering-Correlation-Id: e8ab0ce3-172c-4a06-7794-08ddb90a6a76
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?s/FvT+xcHeuqBT3JX0T9Rsgkd16mXGuC52z3nlMWHsx6x6C37/6mHmpN6Og2?=
- =?us-ascii?Q?6FNuOAFPh7b5IzFcJFNA7rau99qvwWsXZAwzPe7In1zoeSP2EzBHUqb1UZmS?=
- =?us-ascii?Q?0xDfgVt4EzRUouE5uHZ8o7bGCC1wMieadjCk8IjdafBjK1uNOZmBh8liYxwF?=
- =?us-ascii?Q?8k0aSbMBRMqWg5lCfCoR5p7MVUEL9zsQl154JhDMIr/aNaK9f4xaH3NyeHzW?=
- =?us-ascii?Q?vzZVzqML/Kf+di67QgmRATL6IAhB8XDLpTOxK+LsMiom4aH0crwUKcS+v+Pf?=
- =?us-ascii?Q?iB/zVQ/acQ/+sae3kuezis9F0AA79Z7Bz3F8dq0qi9CHPoYpesbdnfo0p/Od?=
- =?us-ascii?Q?pxrA6fSYRbnBUZVI1bOvQH4YHF30T4+YOn5soGswVrIpQRAND06aYyodvXdL?=
- =?us-ascii?Q?Vk+XJ5ztW6cmFiwOuMHnr+t8gxx2eHDYZT2AF+KrL5yTn2kVe+m9xkXH80SE?=
- =?us-ascii?Q?ZW3vZYm9wuIZ2CaX/HAfVKmrt68QMzwTZr6yfYTrh3AbFKBdeW1tn2Eq42d4?=
- =?us-ascii?Q?F+p2seM2VXLzzcAPppwBb+V/J1XHKz2iGaxPakrFPGty9z4W7pap+b9sQ4LE?=
- =?us-ascii?Q?5vmOHTYZfOxnepfuUnK/rZHI+BOrmnsPGNs/Dd+q8M3JztD55q5mdGXdGp/m?=
- =?us-ascii?Q?kG62h2vIT895zpwLDFYCyrdxMTP1VUvCDklPUZogCRkp06rXwkTxNS2jfTfr?=
- =?us-ascii?Q?p3lK79t2ZLL7mHJbLEQbS+ZmepuCMGsof+Qz38cRCuqZCXX+gOPgMVPwI5un?=
- =?us-ascii?Q?bF2amoTM5Wn7+VGNf4mcm1/RNdKcXklinOrhxE/yvfZy7+FIbR803mVS3RB7?=
- =?us-ascii?Q?dd+xMj8aOSgZLpaIqn5e1Eq9OBr7IQWVUAaL2DZQqofTeV5iBgdqLt7SW0sw?=
- =?us-ascii?Q?wy5zQ/oCGWhdy6DVcjCZzojtJ7/Ky+XpHGTnpAUEL8s4PGYGpXwcRTzu8QGf?=
- =?us-ascii?Q?ZQs4X/Vx1e/kmQKXDeIrNKwkjkeE1LpvB+1fzwLtYP3D27EuTLReq/uLglgO?=
- =?us-ascii?Q?j3CdBwx9yxNzn6IWgHu+rIIey66Ja+kKYT0DxSYutnUWPlEU4nvJYs8ChqLi?=
- =?us-ascii?Q?PgaPoHGO20/9mpdhhJH6fTwpBzZa91jNoNrBsDySluUW4CsVprXfOn06yr3H?=
- =?us-ascii?Q?llKHc2z6lTcH06vcSKbyCqDekFczPi93zTUOrXwc1JHW7bcOaEyorep0ROqP?=
- =?us-ascii?Q?cJt5inhlb3MY2FG36C4LL3reonxXNY6JBOtiXcAsuISLgJGyl8x30M/e6wgo?=
- =?us-ascii?Q?M0NUEyEDY250Qb3MdX9Gj9w0znjv69mF53YYR1eIqDzfH3bcwivk/uulqKsF?=
- =?us-ascii?Q?5Cd8Ku0rqBX1Ix+OgtJGgGCaCc/CPFjokkFiJcDnisKojvCPbokCCWDUd68i?=
- =?us-ascii?Q?PEV3Q3kJf6Aqg9t0fGeJn8HI7BDr/2BNPLwN/5sB8+2w7eIhJd2+OVXNHV2F?=
- =?us-ascii?Q?RhAqweQTV0M=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?503RnlUrxDjSsu4ETWKsdaOw6Ciw8+GIPDgYjzmR3nbs9YVRSx7ursGfKZGG?=
+ =?us-ascii?Q?ZLeDefkbGb8Va6pjpB3X3YnM+BPG9toLZM8SlbR5CmOsZ2gqLWdiEtLdUd6c?=
+ =?us-ascii?Q?BRSVkssK1ii1tLRxfkB0Km0AU5sdYOk26cwMwt13+yNTfr6oxf3449lZ64nD?=
+ =?us-ascii?Q?WSuLbuNU5d+EQ/jzuQfdejb5TEVqICpne/frmLi5WD393uQ6H8AtHsiuAXTT?=
+ =?us-ascii?Q?akTn5QjlfEKW5WN0dZPNhP3PAFtbC5PKH6vdUI6++nqyWo1L4E30B9dpWOuC?=
+ =?us-ascii?Q?aBXM53aKq4ePIQTX55fRgelBgg9rpPXNB/pDZJLFW0rhmxdpJXWWfZvDKezG?=
+ =?us-ascii?Q?s0jFMrk9I1ALrhFJt/fcio3QirmMcWR7AoWlGcVE0B/yRcs7JNn+0whAtENS?=
+ =?us-ascii?Q?EmLz8+7VDSZIw5HQTFyIWX/Mame/WaWUm6SJ5hZTqIklN8K1+jLlzTDd4jE+?=
+ =?us-ascii?Q?PCkUC2ZDeaZTfrmB6XLSl0GJ9ImjTNoaBdWQTWLWBhM6BFtic9Q2VjPiww3B?=
+ =?us-ascii?Q?V3E5KElcySN3n7YderfTBab1l5TAH0at0IYZuzqqLKk7IhwsAKuY7+7zHJB3?=
+ =?us-ascii?Q?nSptABLH9IKic5t6GQKcY8lBefPm2Czs7oNHkbhlQWLNDUwrHj0oN9x9JFvK?=
+ =?us-ascii?Q?5K0kwmaVTA/RT5PmvvJ26FhoZ30XAH2aQadTg6gEpSBr4WR6BljQnRNei4e1?=
+ =?us-ascii?Q?o+w9zd38zaDLtwS7ojgqneH1WY/TRHBPYJfHyLahHObOzEs2ezD9+lhaN803?=
+ =?us-ascii?Q?prDXEqGmvCkOxt36+LAdrOIL8QpiL4UxHlnuvbEq3n300vn92rdHA5WrHP2K?=
+ =?us-ascii?Q?5T9G4bPJBbzcxOi6drkp9Jnv4FOHmC0wJOgNvJbdjdwrH6YqaxQiCo3Uhtsx?=
+ =?us-ascii?Q?LpRYX6vNt5GPgRjCN88bjZYEgirFhbqE+0GZk/rcXd2k8ow/YKH8xBGQu/3V?=
+ =?us-ascii?Q?kApeA19B6NMrDRLLLb+YlkMiDJEYCFiDpxLJW/Hw5dg5lIJmjRYKFs9Fv7HV?=
+ =?us-ascii?Q?yc6u0NRepeAX3+JypxCqNZ0VH1CQhq9LMHo+N8P0Wu8HbLtJy8+QsUQ85KEr?=
+ =?us-ascii?Q?G5YFkdVfVe4K5HVYC6B0t/wK8nySY0lEWXLJpf9hrhwSTlhBjIYSCfTRneon?=
+ =?us-ascii?Q?fXzJ+YtBfTgLvxpHyTZBzLQy8j1iCNsPTI+gO2cfYS7+j4F6zAmm7jKhsE8o?=
+ =?us-ascii?Q?IaqWJbOTGm0tuK+Uc37ie4u8UIcmYq4mdNEOyquQ81oy7TzgCNOC2sHBPMM+?=
+ =?us-ascii?Q?YLZ+S+rwWBsDclju7WC556VnYJG9AIr/wEhp6MpqJobViACM2HNbZQeXUq6S?=
+ =?us-ascii?Q?RSnOb8QvbQSLMfyxwkZHH2q6B15ZTJrQhl6t/7D7I6rIWhPWSzYkK+fRDkfe?=
+ =?us-ascii?Q?oN1wb8eC9gWB1123TytWCClu71+9vbdA/K3QDsd4IePbeOsBiQT4f+BzQSZI?=
+ =?us-ascii?Q?+lBx8b7zL6Y=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ROuFpocBKzJghlpjt7WkYWg4nobo/xKsYb5N/Q+jStKf36zTc/TKLhQ48ys9?=
- =?us-ascii?Q?awyafdm7k/MhYVWmvIZjQBrw7z7FW+p6vzDQT3I5utIvKAMzAOOjiO6ZBSmn?=
- =?us-ascii?Q?o9Vch3A2R9PwOB60dk8SXeJT40s+KoZvACIyNOkZleYPbMjTFgpT2na7/os9?=
- =?us-ascii?Q?jnRxjIhxsff1jArB8IW6tmCZhWhb0m+JfwUp/lyXeAocegfCDinmp+E98Bwr?=
- =?us-ascii?Q?7iKUThQMiPzyEIh2xTojPrscq6a+dOAPbR4qZWK61KWpaHw5WDzBCjksrvCs?=
- =?us-ascii?Q?ZaXURl4fW6ZyPKcci5K63QqZCT/cGb6ZQlw/Klz5BQ+uPyYoi1kLHEMFwpuQ?=
- =?us-ascii?Q?m6qraQvGZvva3sWL87i7OzvAuL6yJfa9ybM3PJcBjiAPj0co2MGEI2nkg1JW?=
- =?us-ascii?Q?9NI9oBVOHo0bO5lp+N4gRBEFtPDgWWynov+LE1AVwUmewp1ouGavxNBzw2TA?=
- =?us-ascii?Q?zm4jPygT/xaoJV12/fHrbnsbkuKzEk0FJRLr5KMDZPK4twcqDODXGBZcmBJx?=
- =?us-ascii?Q?S0kc5bweyocqVec+jDkvpwvmP5MCC9rpjMm7kAB1n+8wi/hDLiEImJm3fR0S?=
- =?us-ascii?Q?4E7eqRKPFF6Q2Ea9ethNFGdedb8n+Kogx2hT5zZuoVA269/fD1h8lAdmdf5Y?=
- =?us-ascii?Q?O6jLTxH0FvGd4VVWJH5vRWfbwpSRPFtG/eHv92v4TNNcW0rRlAxMy8VDkM7z?=
- =?us-ascii?Q?ap2Y3xG7z5Z5V0Du9SZZMplCUUL8X8jvApq3xUKpSDMP+JEdPeqTkhMxYK+g?=
- =?us-ascii?Q?xJx4ok1AZjXHHjmPJcS6CuI3xO1E2k8BIwmt4HDaaNhci478QQ7WRWg9wd49?=
- =?us-ascii?Q?05Nw+vaq+Z/fmtCT8SqMo3EIYo8ivObdEtQhLCl6Y7oPs8x8VvW4OnSOw9c2?=
- =?us-ascii?Q?J9d23TereIIvN4NGlWuFXzJRKE1jLsf5HbQBvpMjhqRkYlrNImNxlKHWu+oI?=
- =?us-ascii?Q?QOiabDWC4rtXLkP2CrbHPCh7CVUy28Ew8UshGFA44Y+HXmsl+K9FpnfyMjy5?=
- =?us-ascii?Q?GWE9AaMT+TYX3BrH9wdpBXNRgXidaApZQTes9eXe3n6U4HE544ONbJ4PB+6O?=
- =?us-ascii?Q?whiZE3NV6wVLt/RhtlJGV5RasIeAbt3DTQTQ3FaA5qyqEp8SSjjiGWbROk6k?=
- =?us-ascii?Q?01tgn8or2sIlQiRlS8De+NrKTNPg6OkkWtMNvQOOz2sSlQ+D9IadeQ8Fjd6O?=
- =?us-ascii?Q?bY4KzAGuwGD57tnRACwF8CCs4L1C7ClDA2pwsHmcFVM+CBTATxzLC9Uf6AqE?=
- =?us-ascii?Q?Ah+a4jtAHLtcN1fp8MDUJ1GiOPUAiUtqU4h5sS4H1M0NNGfSDyG8rNzXnvn5?=
- =?us-ascii?Q?FygBa4LOkkAm4bhYT62kPPsn8WJKKAouOxfGc2Zfeg4vW2HeAKztRee2H2qj?=
- =?us-ascii?Q?pMh0qqyrKsB41wPb2enRefzD69BHhxQGmzgIH8/1Z38osSLL42GWvgSYfwhY?=
- =?us-ascii?Q?GmhYK3nlO6dF22GvfmCxFkufQQHsDSdHBXmEa96ji4+IRP2Il94OCP0bc4l7?=
- =?us-ascii?Q?8WjRlGsgD8WPXLVeggyu2IA3m7bFSDweZonlPK+gemwGqHbpDyj2hoe26skN?=
- =?us-ascii?Q?YMfyALoeoAo8wlPwRmezmE7iZuRoDv+lE4EZJPaxPY9saBHtC/djIRq5/mas?=
- =?us-ascii?Q?Fw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e50d3185-32fe-4b52-b5bc-08ddb9066252
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Yuqhw9Roh+Lin3wVLQEo3pO01gDcqGOFBJjncVwvNcXXU3Cm1LFhvQ1upENS?=
+ =?us-ascii?Q?qtj0T4PcmhvhyiWJ7Nu7j4m5oiS6kewcw9zsYu6Ch4kzEyZqshM/Ht8CCDh+?=
+ =?us-ascii?Q?oGtLNvDiP4M2d9boE68Fu8bGh+D68DOmIuUw37tGCYSwmwu9FmbPIo8IKol0?=
+ =?us-ascii?Q?NARGbzU2RV9jxC7gKNu6LXs5dfA5XMI9YmNnNyeiSulMkAK7ta38Eqdcf9K4?=
+ =?us-ascii?Q?ZVmVPEpugYo1QfYugv40cNEQYNu+8bRcWzj2ztiMYKge3rmTwjqt5tR6af1s?=
+ =?us-ascii?Q?0evgmOYSjmz7FtjMbiAT9FKBVD71lpxmrZWmYZ6mCT1nhgdSMhOeIsO6xTDU?=
+ =?us-ascii?Q?l8SYKUqdvwAltYedKfqnrHSNMKzAhOzN8GyoGWiOap0MdUhu46TxtS7GHDSE?=
+ =?us-ascii?Q?u4bKvB1+s/VusrmiLhm6kR8M15+5YKBqgs6E43z/72Bo/vvCSYHDugwvTX8f?=
+ =?us-ascii?Q?tqJIBBTF3dAymUOiXxs4bAZQD2nahnWQySx/u9e/9aH87+zvIPv0CdPqYuuZ?=
+ =?us-ascii?Q?ObzNDY9eP6EwmyKLHhjbSvktDQsHeI5t7H2Us6riLnd0BKQOGYKmox3oLP1R?=
+ =?us-ascii?Q?kmv3nNYoylEIVkL7dt5CYITYXh9ORAi5mBjZXDoH67FOqygr9OPG1yW5pz98?=
+ =?us-ascii?Q?Ic8aeSR2n256/owVarW55V0Cuhps1j5psZrUOuRNCVb9gmQ37/LwRi3dk6xT?=
+ =?us-ascii?Q?QWStcHTRdn2WwuqM0VNe0ohO2Itzr+DuDNjIC2qvuvQhubQg+jKYKL8seFGP?=
+ =?us-ascii?Q?re7+LqTZRduQwT88fBuZ8KoWswycWV7EBn7f4wSt5JNgIPpQtTHTmiRVcFJL?=
+ =?us-ascii?Q?oxDpi0dKz8p3EfHkKk6bMALExT6vRYDimtcInCbmENmqqB1Dj7N5Y8rkMsz/?=
+ =?us-ascii?Q?xwV3yUuH3ykPv8Bdi3+4B5xKArhZiwlVBfRpwc7HFHPyuAC2OkcwEjKon9o5?=
+ =?us-ascii?Q?xOkjzC0l2ZxPC9Yj0Ub9hRjeGfsf8fZ+ctMKoyozgw7CYRPyoUYBJbVKeMa3?=
+ =?us-ascii?Q?msUh8PQVniiKFuH9yBIMtxi7KSn/teifU1JVTSF7bfFd+Ldda9JB8qleWW/7?=
+ =?us-ascii?Q?MAovz/cjRFntuuJ42QcpWnTWjXOvR4GrXYQOALYlTrYRrJKeKld9BC1lXafE?=
+ =?us-ascii?Q?XFsbPieZpaDlEikV7QkzjFSLOJ3K0F8Glfh6Ks+9psLzaqD7MYq2nmif2vEt?=
+ =?us-ascii?Q?iryUvzaTelmbz+VKpk3do+1JftzXxKznNSLl+yy+rjZCwRlc+utjXPvN1DQ2?=
+ =?us-ascii?Q?0/FaXYaB/cc9vavtX3Wab1vuOaPdYIvt6OTd2rdmRcGZ9utxbldL+SxRiKtF?=
+ =?us-ascii?Q?HZMkOPbpdGdWm+CVlXlMXHrFvNCFbrn8d0u1GB6Rda9bIfs/cBGyoSlSOnt5?=
+ =?us-ascii?Q?H3Amhu+q5IhNRhoF+JXkv2nzk0u85c5bUWmnJ2ITFhghY0Bk46/zlWBSrhKa?=
+ =?us-ascii?Q?Ahl7zrkqu0yV2rZW5Vh5UNHaUDk3XGNaoxdeqntjk622h8eZyxcxckwKCpcz?=
+ =?us-ascii?Q?AlWHTJ+7rEb8gNK5jQX1Kjss2vl2cXtpMJPXAtATWHzxrBxnX7AHfKmq+eyp?=
+ =?us-ascii?Q?dtV41yfpM4ufsaUJ1+/DsxPZu0FxUTIL+ZsZAYUm?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8ab0ce3-172c-4a06-7794-08ddb90a6a76
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 01:18:43.1005
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 01:47:34.9667
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JKO+0fjenjXOpJOEPETxuHz6cokB8sjLOBwzbB1diwWUf+VbqfpMgXIyzpxBhbIKLJPo7SWbmKCezvm3P0RycU/gbJz3BRe8+MF8jx0vnjc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8668
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: DLIAheqJjBXj0mt3e7+dACuh8AOWZZIqMD9XmC+JbLiL5SJC5gTulI0oI5lK1BnY
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6429
 
-On Fri, Jun 27, 2025 at 12:22:39PM +0000, Shiju Jose wrote:
-> >-----Original Message-----
-> >From: Terry Bowman <terry.bowman@amd.com>
-> >Sent: 26 June 2025 23:43
-> >To: dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
-> >dave.jiang@intel.com; alison.schofield@intel.com; dan.j.williams@intel.com;
-> >bhelgaas@google.com; Shiju Jose <shiju.jose@huawei.com>;
-> >ming.li@zohomail.com; Smita.KoralahalliChannabasappa@amd.com;
-> >rrichter@amd.com; dan.carpenter@linaro.org;
-> >PradeepVineshReddy.Kodamati@amd.com; lukas@wunner.de;
-> >Benjamin.Cheatham@amd.com;
-> >sathyanarayanan.kuppuswamy@linux.intel.com; terry.bowman@amd.com;
-> >linux-cxl@vger.kernel.org
-> >Cc: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org
-> >Subject: [PATCH v10 12/17] cxl/pci: Unify CXL trace logging for CXL Endpoints
-> >and CXL Ports
-> >
-
-big snip -
-
-> >-);
-> >-
-> > TRACE_EVENT(cxl_aer_uncorrectable_error,
-> >-	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status, u32 fe, u32
-> >*hl),
-> >-	TP_ARGS(cxlmd, status, fe, hl),
-> >+	TP_PROTO(struct device *dev, u64 serial, u32 status, u32 fe,
-> >+		 u32 *hl),
-> >+	TP_ARGS(dev, serial, status, fe, hl),
-> > 	TP_STRUCT__entry(
-> >-		__string(memdev, dev_name(&cxlmd->dev))
-> >-		__string(host, dev_name(cxlmd->dev.parent))
-> >+		__string(name, dev_name(dev))
-> >+		__string(parent, dev_name(dev->parent))
+On Tue, Jul 01, 2025 at 03:48:26PM -0600, Alex Williamson wrote:
+> Testing on some systems here...
 > 
-> Hi Terry,
+> I have an AMD system:
+
+I have to admit I don't really like lspci -t, mostly because the man
+page doesn't describe the notation '-[0000:00]- +-01.1-[01-03]' means
+(I guess it is the subordinate bus range), and it drops any lableing
+of the interior switch devices.
+
+I've found lspci -PP to be alot easier to follow for this work:
+
+ 00:06.0 PCI bridge: Intel Corporation 12th Gen Core Processor PCI Express x4 Controller #0 (rev 02)
+ 00:06.0/02:00.0 Non-Volatile memory controller: SK hynix Platinum P41/PC801 NVMe Solid State Drive
+
+However it is curious that doesn't include in the path
+
+ 00:00.0 Host bridge: Intel Corporation 12th Gen Core Processor Host Bridge/DRAM Registers (rev 02)
+
+but lspci -t does..
+
+> # lspci -tv
+> -[0000:00]-+-00.0  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Root Complex
+>            +-00.2  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge IOMMU
+>            +-01.0  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Dummy Host Bridge
+>            +-01.1-[01-03]----00.0-[02-03]----00.0-[03]--+-00.0  Advanced Micro Devices, Inc. [AMD/ATI] Navi 10 [Radeon Pro W5700]
+>            |                                            +-00.1  Advanced Micro Devices, Inc. [AMD/ATI] Navi 10 HDMI Audio
+>            |                                            +-00.2  Advanced Micro Devices, Inc. [AMD/ATI] Device 7316
+>            |                                            \-00.3  Advanced Micro Devices, Inc. [AMD/ATI] Navi 10 USB
+>            +-01.2-[04]----00.0  Samsung Electronics Co Ltd NVMe SSD Controller SM981/PM981/PM983
+>            +-02.0  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Dummy Host Bridge
+>            +-02.1-[05]----00.0  Samsung Electronics Co Ltd NVMe SSD Controller PM9C1a (DRAM-less)
+>            +-02.2-[06-0b]----00.0-[07-0b]--+-01.0-[08]--+-00.0  MosChip Semiconductor Technology Ltd. MCS9922 PCIe Multi-I/O Controller
+>            |                               |            \-00.1  MosChip Semiconductor Technology Ltd. MCS9922 PCIe Multi-I/O Controller
+>            |                               +-02.0-[09-0a]--+-00.0  Intel Corporation 82576 Gigabit Network Connection
+>            |                               |               \-00.1  Intel Corporation 82576 Gigabit Network Connection
+>            |                               \-03.0-[0b]----00.0  Fresco Logic FL1100 USB 3.0 Host Controller
+>            +-03.0  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Dummy Host Bridge
+>            +-03.1-[0c]----00.0  JMicron Technology Corp. JMB58x AHCI SATA controller
+>            +-03.2-[0d]----00.0  Realtek Semiconductor Co., Ltd. RTL8125 2.5GbE Controller
+>            +-04.0  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Dummy Host Bridge
+>            +-08.0  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Dummy Host Bridge
+>            +-08.1-[0e]--+-00.0  Advanced Micro Devices, Inc. [AMD/ATI] Raphael
+>            |            +-00.1  Advanced Micro Devices, Inc. [AMD/ATI] Radeon High Definition Audio Controller [Rembrandt/Strix]
+>            |            +-00.2  Advanced Micro Devices, Inc. [AMD] Family 19h PSP/CCP
+>            |            +-00.3  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge USB 3.1 xHCI
+>            |            +-00.4  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge USB 3.1 xHCI
+>            |            \-00.6  Advanced Micro Devices, Inc. [AMD] Family 17h/19h/1ah HD Audio Controller
+>            +-08.3-[0f]----00.0  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge USB 2.0 xHCI
+>            +-14.0  Advanced Micro Devices, Inc. [AMD] FCH SMBus Controller
+>            +-14.3  Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge
+>            +-18.0  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Data Fabric; Function 0
+>            +-18.1  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Data Fabric; Function 1
+>            +-18.2  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Data Fabric; Function 2
+>            +-18.3  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Data Fabric; Function 3
+>            +-18.4  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Data Fabric; Function 4
+>            +-18.5  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Data Fabric; Function 5
+>            +-18.6  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Data Fabric; Function 6
+>            \-18.7  Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Data Fabric; Function 7
 > 
-> Thanks for considering the feedback given in v9 regarding the compatibility issue
-> with the rasdaemon.
-> https://lore.kernel.org/all/959acc682e6e4b52ac0283b37ee21026@huawei.com/
+> Notably, each case where there's a dummy host bridge followed by some
+> number of additional functions (ie. 01.0, 02.0, 03.0, 08.0), that dummy
+> host bridge is tainting the function isolation and merging the group.
+> For instance each of these were previously a separate group and are now
+> combined into one group.
+
+Okay.. So what is this topology trying to represent and what should we
+be doing in Linux here for groups?
+
+I note that the spec left ACS flags for root ports as implementation
+specific.. So I have no idea what this actually is trying to tell the
+OS :\
+
+> # lspci -vvvs 00:01. [manually edited]
+> 00:01.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge Dummy Host Bridge
 > 
-> Probably some confusion w.r.t the feedback.
-> Unfortunately  TP_printk(...) is not an ABI that we need to keep stable, 
-> it's this structure, TP_STRUCT__entry(..) , that matters to the rasdaemon.
+> 00:01.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge GPP Bridge (prog-if 00 [Normal decode])
+> 	Capabilities: [58] Express (v2) Root Port (Slot+), IntMsgNum 0
+> 	Capabilities: [2a0 v1] Access Control Services
+> 		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans+
+> 		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
 > 
+> 00:01.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Raphael/Granite Ridge GPP Bridge (prog-if 00 [Normal decode])
+> 	Capabilities: [58] Express (v2) Root Port (Slot+), IntMsgNum 0
+> 	Capabilities: [2a0 v1] Access Control Services
+> 		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans+
+> 		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
+> 
+> The endpoints result in equivalent grouping, but this is a case where I
+> don't understand how we have non-isolated functions yet isolated
+> subordinate buses.
 
-I'm not so sure you should be letting him off the hook for TP_printk ;)
-It seems TP_printk should be kept aligned w TP_STRUCT_entry(). As a
-user who often looks at TP_printk output, I'd say keep them all in
-sync, and consider them ABI - ie. add to but don't modify.
+Sorry, I'm not sure I followed exactly, let me repeat what I think:
 
+The new code is putting 00:01.0, 00:01.1, 00:01.2 in a group because
+it is a MFD and not all functions in the MFD have ACS? This sounds
+does sound correct? I would have expected the original code to do this
+also? Why does it avoid it?
 
+But then you mean 04:00.0 "Samsung Electronics Co Ltd NVMe SSD Controller SM981/PM981/PM983"
+gets its own group?
 
-> > 		__field(u64, serial)
-> > 		__field(u32, status)
-> > 		__field(u32, first_error)
-> > 		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
-> > 	),
-> > 	TP_fast_assign(
-> >-		__assign_str(memdev);
-> >-		__assign_str(host);
-> >-		__entry->serial = cxlmd->cxlds->serial;
-> >+		__assign_str(name);
-> >+		__assign_str(parent);
-> >+		__entry->serial = serial;
-> > 		__entry->status = status;
-> > 		__entry->first_error = fe;
-> > 		/*
-> >@@ -99,8 +72,8 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
-> > 		 */
-> > 		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
-> > 	),
-> >-	TP_printk("memdev=%s host=%s serial=%lld: status: '%s' first_error:
-> >'%s'",
-> >-		  __get_str(memdev), __get_str(host), __entry->serial,
-> >+	TP_printk("memdev=%s host=%s serial=%lld status='%s'
-> >first_error='%s'",
-> >+		  __get_str(name), __get_str(parent), __entry->serial,
-> > 		  show_uc_errs(__entry->status),
-> > 		  show_uc_errs(__entry->first_error)
-> > 	)
+I think this happens because the MFD code in pci_get_alias_group()
+joins all functions together but does not set BUS_DATA_PCI_UNISOLATED
+within the group. So the downstreams of the bridge remain isolated,
+and the bus 00 was never NON_ISOLATED.
 
-snip
+This does not seem right. Probably pci_get_alias_group() should be
+setting BUS_DATA_PCI_UNISOLATED if the ACS is not isolated in the
+function. I did not even slightly think about how a bridge USP on a
+MFD would even work :\
 
+> An Alder Lake system shows something similar:
+> 
+> # lspci -tv
+> -[0000:00]-+-00.0  Intel Corporation 12th Gen Core Processor Host Bridge
+>            +-01.0-[01-02]----00.0-[02]--
+>            +-02.0  Intel Corporation Alder Lake-S GT1 [UHD Graphics 770]
+>            +-04.0  Intel Corporation Alder Lake Innovation Platform Framework Processor Participant
+>            +-06.0-[03]----00.0  Sandisk Corp SanDisk Ultra 3D / WD PC SN530, IX SN530, Blue SN550 NVMe SSD (DRAM-less)
+>            +-08.0  Intel Corporation 12th Gen Core Processor Gaussian & Neural Accelerator
+>            +-14.0  Intel Corporation Raptor Lake USB 3.2 Gen 2x2 (20 Gb/s) XHCI Host Controller
+>            +-14.2  Intel Corporation Raptor Lake-S PCH Shared SRAM
+>            +-15.0  Intel Corporation Raptor Lake Serial IO I2C Host Controller #0
+>            +-15.1  Intel Corporation Raptor Lake Serial IO I2C Host Controller #1
+>            +-15.2  Intel Corporation Raptor Lake Serial IO I2C Host Controller #2
+>            +-15.3  Intel Corporation Device 7a4f
+>            +-16.0  Intel Corporation Raptor Lake CSME HECI #1
+>            +-17.0  Intel Corporation Raptor Lake SATA AHCI Controller
+>            +-19.0  Intel Corporation Device 7a7c
+>            +-19.1  Intel Corporation Device 7a7d
+>            +-1a.0-[04]----00.0  Sandisk Corp SanDisk Ultra 3D / WD PC SN530, IX SN530, Blue SN550 NVMe SSD (DRAM-less)
+>            +-1c.0-[05]--
+>            +-1c.1-[06]----00.0  Fresco Logic FL1100 USB 3.0 Host Controller
+>            +-1c.2-[07]----00.0  Realtek Semiconductor Co., Ltd. RTL8125 2.5GbE Controller
+>            +-1c.3-[08-0c]----00.0-[09-0c]--+-01.0-[0a]----00.0  Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller
+>            |                               +-02.0-[0b]--
+>            |                               \-03.0-[0c]----00.0  Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller
+>            +-1f.0  Intel Corporation Device 7a06
+>            +-1f.3  Intel Corporation Raptor Lake High Definition Audio Controller
+>            +-1f.4  Intel Corporation Raptor Lake-S PCH SMBus Controller
+>            \-1f.5  Intel Corporation Raptor Lake SPI (flash) Controller
+> 
+> 00:1c. are all grouped together.  Here 1c.0 does not report ACS, but
+> the other root ports do:
+> 
+> # lspci -vvvs 1c. | grep -e ^0 -e "Access Control Services"
+> 00:1c.0 PCI bridge: Intel Corporation Raptor Lake PCI Express Root Port #1 (rev 11) (prog-if 00 [Normal decode])
+
+So this is a PCI bridge not a host brdige like AMD.. 
+What are the PCI types for this? Is it a root port?
+
+> 00:1c.1 PCI bridge: Intel Corporation Device 7a39 (rev 11) (prog-if 00 [Normal decode])
+> 	Capabilities: [220 v1] Access Control Services
+> 00:1c.2 PCI bridge: Intel Corporation Raptor Point-S PCH - PCI Express Root Port 3 (rev 11) (prog-if 00 [Normal decode])
+> 	Capabilities: [220 v1] Access Control Services
+> 00:1c.3 PCI bridge: Intel Corporation Raptor Lake PCI Express Root Port #4 (rev 11) (prog-if 00 [Normal decode])
+> 	Capabilities: [220 v1] Access Control Services
+
+Same question, are these all root ports?
+
+My desktop has:
+
+00:06.0 PCI bridge: Intel Corporation 12th Gen Core Processor PCI Express x4 Controller #0 (rev 02) (prog-if 00 [Normal decode])
+        Capabilities: [40] Express (v2) Root Port (Slot+), MSI 00
+
+So maybe yes?
+
+> So again the group is tainted by a device that cannot generate DMA, the
+> endpoint grouping remains equivalent, but isolated buses downstream of
+> this non-isolated group doesn't seem to make sense.
+> 
+> I'll try to generate further interesting configs.  Thanks,
+
+Thanks a lot, this is very different from my ARM systems here.
+
+I really am at a bit of a loss what Linux should do here.. Your point
+about a "device that cannot generate DMA" makes alot of sense. I've
+thought the same way about the DSPs too.
+
+Another thought - should we draw a line across the root ports and
+assume that if a TLP reaches a root port/bridge that it goes the
+IOMMU? Essentially we don't let the BUS_DATA_PCI_UNISOLATED of the
+bus->self propogate if bus->self is a root port?
+
+This would allow fixing the bridge MFD miss and still generate the
+groupings you see here in a deliberate way.
+
+Alternatively, should we try to identify these "no DMA" devices and
+then improve the various ACS calculations? A device with no MMIO, no
+IO, and no downstream can reasonably be considered to have no
+DMA. Will that describe the two cases you saw that "spolied" the group?
+We can detect that and enhance the ACS function to report they have ACS
+RR/etc enabled.
+
+I was thinking about this already in terms of the DSPs not really
+needed to be group'd with their downstreams if they don't have MMIO
+and can't initiate DMA.
+
+To summarize:
+ 1) We are getting acceptable groupings for the downstream devices. So
+    a lot is working well
+ 2) The root complex integrated devices, upstream of root ports, are
+    not working the same way
+ 3) There is a miss of MFD ACS propogation on bridge/switch USPs
+
+Also, I updated the github with an extra patch that has the debugging
+I've been using. It may be helpful. It shows bus by bus what the
+isolation is and various other decision points.
+
+Thanks,
+Jason
 
