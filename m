@@ -1,547 +1,194 @@
-Return-Path: <linux-pci+bounces-31301-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31302-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD7E2AF608D
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 19:56:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF095AF60F6
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 20:17:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 46F5B7B4198
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 17:55:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC21417B426
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 18:17:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61C2B30B98F;
-	Wed,  2 Jul 2025 17:56:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AFF72D77F7;
+	Wed,  2 Jul 2025 18:17:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YUu0oKcQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbEdL3RA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2070.outbound.protection.outlook.com [40.107.92.70])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F1C30E821;
-	Wed,  2 Jul 2025 17:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751478997; cv=fail; b=uPidyBslqXS0+1XO4A7JO1l23Asli8KL55kK+e0NO2pTGGUdObw6lsdaGhEiNoewlY1Cla8RvrnH9W1tYxlrCDvE+bmy2YJUaBK5rl3NvAOScsDrvjgzQD14KKOgdyg7Yo9W6pVFNTPPZm9/QL0SXdBNMHRLq5NXS/+FgUPNYy8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751478997; c=relaxed/simple;
-	bh=QNDONezPW9cWBasElgHbF8uAe2vIlfkjfRlMuw8YtC8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=eYPQdbelJjd5SD22yKt6ctrJp7lllmvIo1ku/I15lKWVR8D98DjLgV53wPr3eu0/xBdlVJuxMZEqG80LvL+EOlsms2TfhFK4JmSVTCLEMN+19hWcOOZBOc2fGQN+XhdamcLRY3DDADUbd/kRiWB/LaBWfgzvfVZiU8OIlFG+Wjo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YUu0oKcQ; arc=fail smtp.client-ip=40.107.92.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BHFFxw2qC87Ci0J15aMh9til0ubKW01boiHJ757yxFA0ghYghfTO81qLSPtb5n4q/Oks6MuZJGoleUSIIXaNeln7E5OzkiytdIIb1eBrwmnJFSHnYSQ5Py5iZv/9RZeahmHUlnGGWBEfg4gaOF2lUniQKZtRBsY/+x94GrCOFJwRX/Srem+Aa7yqeaPxpfS1n728QhUy3D4tMRKQGnq2r8tZbbbNZ8eMVOa0+C37fM99GqNFo/ULb+i+MovUS20xNBQp227o9ivA3u8VIt92Me8w+Ev/59zRBc2UT0Fl3p7caPPuPM/62tA3bqDClATssbyn6Luel0TfEYb/HNqd+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AykFkzh5/H/+OMCpcMqKIKfJAiu2deyZzZ7G7r6uzFU=;
- b=B3iRcxbWcsJUdmJrT+H5DM+JhddQBRv8IrayTScoQSQmgzbXwKfEr5RYbYI8lsxzxV7sJeIOy6lq2GVEt5qlYlFFNheXlxIlzrbVgZtpA0v6Vl9F+LGr/Zehudly57/vWXq642vBnUprFwWo/OC+AIQ9VdFBph896fMKfmNIDyabqMXvE8s5/jP1fLEb6hLi29YbImOiQAjbu/eqsClv4QRDbQ33iy7kiHz3rhsBbanP0C4qQ2Zp+pe5uHhjUso70auO9Xc74o4TLhYoPdESZgiNzhOPt+nfxpYmWpMZ8ZvebXLR/nwRqXu4+3snP0A15/uc4PaKhXtGvoKayTk+Zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AykFkzh5/H/+OMCpcMqKIKfJAiu2deyZzZ7G7r6uzFU=;
- b=YUu0oKcQ60MMteFN6AL9rE5NUJeWICC7hnVyYWHhOdS1r4dsuHilCBtGQWmlcsAzIHm2TTm4OoG8y5l2z8xn/id4ywJijRQjXZPeklqsOj3LeWwYxEaCh5S9kVujCjxavJeE6xCQ5AXYTg//4nDezpB3eGQ1oF63MycLNOzjFyQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- MN0PR12MB6224.namprd12.prod.outlook.com (2603:10b6:208:3c0::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.20; Wed, 2 Jul
- 2025 17:56:32 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8880.027; Wed, 2 Jul 2025
- 17:56:32 +0000
-Message-ID: <0f0d74ca-a4f5-4cf0-850b-bb00126cf71b@amd.com>
-Date: Wed, 2 Jul 2025 12:56:29 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 06/17] PCI/AER: Dequeue forwarded CXL error
-To: Dave Jiang <dave.jiang@intel.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
- ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
- rrichter@amd.com, dan.carpenter@linaro.org,
- PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
- Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
- <20250626224252.1415009-7-terry.bowman@amd.com>
- <8d0949db-fa5d-4e8a-a904-61cb78ccb176@intel.com>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <8d0949db-fa5d-4e8a-a904-61cb78ccb176@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0008.namprd04.prod.outlook.com
- (2603:10b6:806:f2::13) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF95A1E9B3D;
+	Wed,  2 Jul 2025 18:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751480247; cv=none; b=j3xr5z/QmiEvmS5ldL270SdI3/DBQ/la9WFXV5STY9PEDqsgZmwlvPXepeK6I3swnC256RTq5OvJXPu0y11Es4P/IZIW07JTlWa0Pls+EF9wMVcHFljrpXk2N5m8WHtG5M35A7CTV2Pi8zYpVzMZ+raM2Ao4Z+jSnXlqnAT5ng8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751480247; c=relaxed/simple;
+	bh=VOX4noNm5hdr9//VV8fJuTw8qZlpN0KBl19xUJwzM0g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GOxcUHQ/pjJCze69ylXdvplj0DN58D4zIrAibM3iwEURRXxET9J3UArCFldFzmcJ41Z+0OkpzV9FR5GVdYsVVCaONlZ9MZIiR/CmA3wsQZLZ/iRD+KeSgmH4BKhLyudF4oWQHfFe57EPrWS8b2xXrZOi9K1bSLF5NqAABKPGDCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WbEdL3RA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54794C4CEFC;
+	Wed,  2 Jul 2025 18:17:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751480247;
+	bh=VOX4noNm5hdr9//VV8fJuTw8qZlpN0KBl19xUJwzM0g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WbEdL3RAX7oh0LBqkU3I3xP9rxn+OnYM54L831FAt+pVpseWAnxG9do6M0hFrTw6V
+	 JzhR5pI+UY5MbjHtc84RUu8yHKAJpECxGX6va3IKYIH9a1q1mwa1q02Vlfe6zP4Eyc
+	 ZzcgLvQlzIW9LnRbQuE1v5pOnJknFded/cQTn/r9/hXtS0sBrH7BNZzjGiHYZJwMmz
+	 FRev7V7GBEpBFphCi9Oa0z1+Y8tLKN53iH/iqz18S90j8xm4UZj3NGYVkVYRAO6BfD
+	 6GxrzN9gjLGGChImowxx6JhrruR0uBxUHLLEb8FSoGwAiLoFd89GPoSmXzfsRGa8VW
+	 DHbOiS6ok/W4A==
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-73afbe1494fso2712294a34.0;
+        Wed, 02 Jul 2025 11:17:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU8cojmHQtKYVnGibw2wbd+zKyhkdgtOwNXkQ4zueQwsqgRdlTetb7O96oXLMwtTak3N5aRghZn8XJbvpDp@vger.kernel.org, AJvYcCUff5TJOBlDsnPrDfrG2MramNzrrkpeCk2+hAWXq3zCMAlXrb3h+CneSRytd57+W+i0+yAYcGdSbkvq2A==@vger.kernel.org, AJvYcCVzLI93VPeTOt5LI0tMX+Tett4faXvifi5iSzegm/YaA6/7g6T2FZPfTEHkJOmSpv9Phill9/X3Gaj+@vger.kernel.org, AJvYcCWiXyG4CVLTT7RqAsmcqpr7G1w0KXkM95/5M1uOPoQHE1GATMkh8HyVn1lfegfcL+48Vj038DshtOGX@vger.kernel.org, AJvYcCWrjdBTAWWXIyIX7UN5lOHVsZ3UzT0+6VbFbZvqCBxXH5ynU49UBOIrTAb4NQ7UpsIXLlmPqIPIqBB/@vger.kernel.org, AJvYcCXQko8St8L8Gtevx/azqg8f1pEPHgqmYgJA3ENgacvSNjGrLvSrcf8IqLeIh2UDdyeqymTZmzpojJ3w@vger.kernel.org, AJvYcCXYp76o/YxtnM+W9EnnE8188ZV0h8l9HGIBFAkEhFeHNe4AGnMGtmk8TUO7Rk089YOw86BVx6++fUs0@vger.kernel.org, AJvYcCXZFEjV3zGn3ya/s7vslVFDj+wnbLiDZTGThBiWUnOOajG6X7ADEoEhaTKtALr39mJXfjVZsIY8Tk1/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzFJWn/KFgl8H2vF8eV7BqqdMk6ZKVzK4FztGJacVc8tSrZrpZ
+	f2FppIuKvYRrB1avl6Dto2zTchOG1lPkE3llXzO4Rvlvh/kayXVRhId7l829SDty2huPIpmhsWc
+	9Wj5v6RiTRVXT0mXIq8OUMun0cElU5+Y=
+X-Google-Smtp-Source: AGHT+IFE15rcuOH+m5poFA5DuefTIa1FPtQnOGtl5tYQRl/dPKV6mXQEiFHJyvorY6w4piWgIZxb7JHJlha8CbYbuSQ=
+X-Received: by 2002:a05:6830:8008:b0:72b:ae42:3530 with SMTP id
+ 46e09a7af769-73b4d10411fmr2321774a34.15.1751480246377; Wed, 02 Jul 2025
+ 11:17:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|MN0PR12MB6224:EE_
-X-MS-Office365-Filtering-Correlation-Id: a2815f5c-0efa-47c2-7222-08ddb991c74a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SkU1a3dUMHpwd0szOXVIS0txdS9scDFTU044VnVkSE9lYUo4bTM3a01DSjRo?=
- =?utf-8?B?cmZvWVFyelBmQ1BWckdHU0VBM1F6anhvNDc4eHpRZStZMFlybG9IdStGM2lu?=
- =?utf-8?B?bTVIRnFoOXMyWCs3Z3Bib0NQSmkxclZVRVFUWkQ3L0l6eGlLYUVqTDBHa0F2?=
- =?utf-8?B?NURXSlJ3eXVKWWJ1M2p4Z05jRkh2eGVPeEh5dEhkeERTcTdzQWcvbDdNcE5j?=
- =?utf-8?B?c0tNY1FJZzllRU9IZkNLdlBiaE0wM2hBaHExNnNqdDFzRmRHNUZNMnZzVWU2?=
- =?utf-8?B?V0Nod215OEJBVUNFc1MxU09hb01SeGRnMlVwQzh6eWVXa1VwM3VNMTY3cFhZ?=
- =?utf-8?B?dk1FNktjUGNwOENDTGlERWpYK3dkK1ZlMS9lSHNxak9Fc2Q2WXNaMkxmWkJq?=
- =?utf-8?B?c2l5bDRkSTlwaGdTUFVWanBtclFGYjIyNXJQdjhZOW1zcEw0WHA5R2hqWUxK?=
- =?utf-8?B?RkdTNE41eGlJK0J1MzBIT3lmWXdlRWh4WjNWQVFwTDlNL216RG5OVS9xOEZ4?=
- =?utf-8?B?dEFOKzQ3Q1lVTUhBVXBlQk5nRDlrUXZOYXByeFh1R1BXOEtYUStpblBzeTky?=
- =?utf-8?B?cXY2elYvUm5BSkttOXFrZGhRa1FFTnZSOVA0cStSN09NSng2N2JFYUxvdDhL?=
- =?utf-8?B?aHVneTRab2lrS1U1eUMxZVBWZ3RFQlY4VGNnNHdPODZRYlhlNnRuMlBmMWFU?=
- =?utf-8?B?d1pPVjdpem5iVVhqNGkyNjRKVmlpdC8wb1RFRkhIZjBHUzNKRXZkcExkNUs1?=
- =?utf-8?B?S0NucGNDL0I1bGVpOXo4TStEdFRreWNsWTFOb2RqenZNaCtrcTlDeGhtT0Zu?=
- =?utf-8?B?dm03RkhBcXZWSTFiN1NtUVNkcmtyV09XNVlESk8za2dtcjkwendwQXpVZ1VI?=
- =?utf-8?B?a0lCK3dqSlFFbWxvMDAyYmxObEpONjIrVnpIZFBXWXB3aitBNjE1d1lyK1ZV?=
- =?utf-8?B?cEhyT28yVUJDNWFIVG83RWtEdGE2bVB1MnJMaWJBQWhXb2tqRnliTTJubXBQ?=
- =?utf-8?B?VHA2VDRBcm5lQTF2ZmpuZzdKdS9vTXBsQ0NRZHNSK2pFc3VhSXFNNDRweXNI?=
- =?utf-8?B?YzFwWi91cFNleXRYYWhXOU1lOUZkb0U5Y0hnRXl5TFpPNS9DNEl0N3djc1Zm?=
- =?utf-8?B?d0JRZStMcm1JdGY3OFBkYTNvS2dmR0NaYWY4UlhlcHR4YUd2WEl4d1FSQzht?=
- =?utf-8?B?eEowVjNYZDZWY3VwSFd1a3EzN1B6YUpmRFpNam9qUGhOWjhDam0zejh5clFS?=
- =?utf-8?B?dE1VWlByLzk3QVhhbWM1dExjYmtKbE4wN1AvVzdUUFNrYkRaamIwcVdSR0xz?=
- =?utf-8?B?WDNRSG12dEZKbUtJQW90Q3FjY2FLOW1PYkhLTUJzcVJZRGpLZVcraktLZUNr?=
- =?utf-8?B?OXFGbzcyRWFoTkRCUW5QWUZzcVg3TFVYbDVFaXgxN2tNWHlMSWY4VlM4ZmJp?=
- =?utf-8?B?dFRzZ3dlVUJ4SHMzd3FPbGswRy9YVThQME5DSjB6NklRSnppZGZvM2lTbGFK?=
- =?utf-8?B?Y3dxSnplYXlCTzNMek9PNXRBUXFaWVdJSTJHVVZ2WUlhb3R0Yk1aeGtLUXR0?=
- =?utf-8?B?V0oydG5OOXZmTVpnaWxHQ1JjVjFidFY3cVkwL3Ywc3RJQUdYL0JiSWhiR1Jm?=
- =?utf-8?B?blJOOU1nQXhWTzdSclpFZ0NDZTJVN2xJanVtRDlZMlJmK3pWbGlGV04rY0di?=
- =?utf-8?B?QXh3K2M5aDhzMXhCZEZRRlE0VXhCSjRYSzhPNHd0SmJDaDFYS09hT2pvV0Z2?=
- =?utf-8?B?amVrWTJUSEVYam1CbUxUMk9aVTZFcisvdzB4Mm9qR1ltc3lBV0dkZ3NnWEpy?=
- =?utf-8?B?T1cwNlBxN2FnakZ0dWhpbGNzNDN6V3FYVjk0Wm40U0NUMHVwQlBzOWJQQTd6?=
- =?utf-8?B?WS9kZVNQcDNLMVZvV1Rhblg5TWgwOUw1cXV5NDloOVVib0hYSmtEVUFtdEdR?=
- =?utf-8?B?K1pyd3IrbFVQbDNaQis5MUVGNW4wTi9iUEV5Ti9qOGdPNitETzYvY2FpbGN2?=
- =?utf-8?B?UEFkRHpzQTN3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?M0VCTjJhRHhYakV0bThUeFRvVVQvbDgvbkJBUUxUdEVDaGRTY0F1M1BMWS9P?=
- =?utf-8?B?dDJTaVcwbHhteER2b3J0Z1FGbTVHNTg4Q29vQnJqbURuNnUwNWNXeUNlT0Rm?=
- =?utf-8?B?M2Z1THVkZmkwRXVDbk0wdFpLVUNCTE1yTVFBZ0RTUVdXN00reCtTQ2gxekFm?=
- =?utf-8?B?cTBscTNrYVVMZFYzQWpsTlVjUTl3RzdFUGt1cXlzK2JHL2xCUkhaQ215YzZP?=
- =?utf-8?B?R0loWm12TVdwVW5LV0piWEpoeWU2d1VpajV5ZDgxRG5POWtTUUhaVFBYVzll?=
- =?utf-8?B?SkhCTzgzc204WXNXVWc4YkwxRUdmQ3RkUlF6TW5pbVhMYnREUlhGZmN5VjJB?=
- =?utf-8?B?cEZXK0tkSHp6dUlYcWZrTWFoaHdpeTlWVjFVSG5RSTdSMUN1QjFuWExzaUxW?=
- =?utf-8?B?Qk5JQ0x2cHNua0R2bWFERGVFaXU2b2dkeloxajYzbkpKd1JrbVR2R21scXJm?=
- =?utf-8?B?Vk45MGFWY005TlRqYXh0WW1XRWFKbFE4N1RrRDJDSVlUZ1dSUHRyWjBYQlcz?=
- =?utf-8?B?Y2g3Q0ZqYUtVSTJ1NGU5Z0xjWGx5bHRoL2VvT09ZVXRPdnM5REd6K0djSS82?=
- =?utf-8?B?TWVUcFYrQTdBK3ZaaWVZSi85ZGZpMVFqbmppQnNqbmJES0pFOEtPa0oxN2pI?=
- =?utf-8?B?b2NOZXlFejRZTlZNREVqK2Z2VE12ekdVbzFpQ1RmeWZNSU5rOXFKbUZSd0VS?=
- =?utf-8?B?T1BqSlAzN3VYU2c4VzF2WGwxNWpsUnZKWm9lR28rekFuaFVkMlNSM1NmUnlG?=
- =?utf-8?B?S01iSGRzcm53SHlQclVlVHgxM3pwY1ZRUFBvRjNxODI1NFpBbDBLbTNqQ3R6?=
- =?utf-8?B?bmdveVY3OEdaVkRDTUc4ZkRKa01tU2VCZEpHZnQyZ2hxMGE4WFlub0MxaDZ1?=
- =?utf-8?B?a1J2OGhMdTVRRWczSWdvNkNPSHpHaHhMVlEvc0FFQzY5SHFiTC9KdjFPeitC?=
- =?utf-8?B?Sll3Uk9Xa3gvT3hkZjVQdTNYOThtSmxtYVMxN3dKQ1N2TkltOEEzdHRrNk1x?=
- =?utf-8?B?Q3BpSU5nM2d1dDNXL01aMTRpclhLSjc2L1JsdWhkSExxT1RTaVhIY05iQ3pN?=
- =?utf-8?B?alZWc2Rpb1dMcU5qSlVjZENuUm9leTBYaUp1bEJHSlNRM2xMcmVZZWk5OXRE?=
- =?utf-8?B?YUJoa3hyUGE4SEpFZFhlSlAyUVdwS1I0TnoxVHEzYXByY0YrNEg5MDJVc0xl?=
- =?utf-8?B?MXhJa1JIL21VRFNyaldwbC8yTWRjQmJ6UGFiQlljQ1AxaXU3a1pnVjY4MGJJ?=
- =?utf-8?B?dFlaNmZQWU9OTDFkWHdSYlRQVlR6aU81TDVHWk5ndU1qVFQzNDYvSDh1b3hR?=
- =?utf-8?B?NWdCaWNERXEzWW5hSi9QazEzZy9jaW1uTzJqOTlmMGQrU0w3cWZFNXFuZ1V1?=
- =?utf-8?B?MWh6TWx2UnhneWZqUmFpUkV2RTkxNlRoQ0VDd1dSWFRKUzNCMnErUjl4aXVZ?=
- =?utf-8?B?WDVkMWhDWmdPQksyakt0WmttN29EaGRuK3FiYTZCcEZla0ExWnB0QjUzL0Ey?=
- =?utf-8?B?N0V1Rm5qWGhBWHZFMnp1RW1zb2QvWDFaNmVIT3poRU1sUmZrZi9IMjE2NGFu?=
- =?utf-8?B?d3pvdDB0L0E2cFI3QjNYdldIUjlyMzZiU2w5d3U0Z1FqZk1Bc3BDOGZHZU85?=
- =?utf-8?B?YkhvbFZDM2Rhb0hZT3ZIZ3NHNkRqOXRDdGtNRk1sWVYxSWU5V3hwY3lTOUg4?=
- =?utf-8?B?TEtndmVWTVNURUVvNE9PVFlWbFJGb1JJOXIzZEdTZUo2Vm1DVnV3R2R0OVZr?=
- =?utf-8?B?c2VHZjVLbG95SHpzOGgrdHB2YW1PbDFBY3BRcnVNMHBrOE1wbWs3eGpPeFlB?=
- =?utf-8?B?S3JVUG02OHZMdkRMVUxpYm1XODZTa2hSS2pJUFFxaEZBMmV2SkEvc3FLZnQr?=
- =?utf-8?B?R3M3elhJUlM4RTVRWW4zWXFvRDdnTklUakZvdmg5UlQ3WU1jZmhQejViZHly?=
- =?utf-8?B?dW5sb0dsVmZuc09vRTVLbkhMUS9vemFCbjhIWXR3YkU2ZkpvU3BhdmV4REE1?=
- =?utf-8?B?T2g3a0J6dnZOU2ZrUThtdVNKNDRIekUvcmlldklveHNtOUpzdnhLYXU4WE8x?=
- =?utf-8?B?ZW9XbU9POFB6WHJlYkNTWXpTMTRWajVJVjdEbEd1azF3cGJUS3krQ0lDbXZp?=
- =?utf-8?Q?yOuDx4mujNYu1gLB7oR185uY+?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a2815f5c-0efa-47c2-7222-08ddb991c74a
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 17:56:32.4294
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SwX/aJ6DxAvFEB2trNsm8Zx4eLdiE9wMH+UE/BVfddew6ZVIVHYjKO61rSjg/1yMqrKnqsGsehWIwLHr3FkEVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6224
+References: <20250613134817.681832-1-herve.codina@bootlin.com> <20250613134817.681832-3-herve.codina@bootlin.com>
+In-Reply-To: <20250613134817.681832-3-herve.codina@bootlin.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Jul 2025 20:17:15 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iaqT5VY3=UCkTGQKjE7thEPmsSqsrEw9ntWEpZ6bNR3A@mail.gmail.com>
+X-Gm-Features: Ac12FXwDgJ7Vxx3Bq6Wnh6b7GRhQ7F_SCrOgcKmm9L_ptDl7NqzS0VvNcXasFf0
+Message-ID: <CAJZ5v0iaqT5VY3=UCkTGQKjE7thEPmsSqsrEw9ntWEpZ6bNR3A@mail.gmail.com>
+Subject: Re: [PATCH v3 02/28] driver core: Rename get_dev_from_fwnode()
+ wrapper to get_device_from_fwnode()
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 7/1/2025 6:04 PM, Dave Jiang wrote:
+On Fri, Jun 13, 2025 at 3:48=E2=80=AFPM Herve Codina <herve.codina@bootlin.=
+com> wrote:
 >
-> On 6/26/25 3:42 PM, Terry Bowman wrote:
->> The AER driver is now designed to forward CXL protocol errors to the CXL
->> driver. Update the CXL driver with functionality to dequeue the forwarded
->> CXL error from the kfifo. Also, update the CXL driver to begin the protocol
->> error handling processing using the work received from the FIFO.
->>
->> Introduce function cxl_proto_err_work_fn() to dequeue work forwarded by the
->> AER service driver. This will begin the CXL protocol error processing with
->> a call to cxl_handle_proto_error().
->>
->> Update cxl/core/native_ras.c by adding cxl_rch_handle_error_iter() that was
->> previously in the AER driver. Add check that Endpoint is bound to a CXL
->> driver.
->>
->> Introduce logic to take the SBDF values from 'struct cxl_proto_error_info'
->> and use in discovering the erring PCI device. The call to pci_get_domain_bus_and_slot()
->> will return a reference counted 'struct pci_dev *'. This will serve as
->> reference count to prevent releasing the CXL Endpoint's mapped RAS while
->> handling the error. Use scope base __free() to put the reference count.
->> This will change when adding support for CXL port devices in the future.
->>
->> Implement cxl_handle_proto_error() to differentiate between Restricted CXL
->> Host (RCH) protocol errors and CXL virtual host (VH) protocol errors. RCH
->> errors will be processed with a call to walk the associated Root Complex
->> Event Collector's (RCEC) secondary bus looking for the Root Complex
->> Integrated Endpoint (RCiEP) to handle the RCH error. Export pcie_walk_rcec()
->> so the CXL driver can walk the RCEC's downstream bus, searching for the
->> RCiEP.
->>
->> VH correctable error (CE) processing will call the CXL CE handler. VH
->> uncorrectable errors (UCE) will call cxl_do_recovery(), implemented as a
->> stub for now and to be updated in future patch. Export pci_aer_clean_fatal_status()
->> and pci_clean_device_status() used to clean up AER status after handling.
->>
->> Maintain the locking logic found in the original AER driver. Replace the
->> existing device_lock() in cxl_rch_handle_error_iter() to use guard(device)
->> lock for maintainability. CE errors did not include locking in previous driver
->> implementation. Leave the updated CE handling path as-is.
->>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Couple minor comments below. Otherwise
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Thanks Dave.
->> ---
->>  drivers/cxl/core/native_ras.c | 87 +++++++++++++++++++++++++++++++++++
->>  drivers/cxl/cxlpci.h          |  1 +
->>  drivers/cxl/pci.c             |  6 +++
->>  drivers/pci/pci.c             |  1 +
->>  drivers/pci/pci.h             |  7 ---
->>  drivers/pci/pcie/aer.c        |  1 +
->>  drivers/pci/pcie/cxl_aer.c    | 41 -----------------
->>  drivers/pci/pcie/rcec.c       |  1 +
->>  include/linux/aer.h           |  2 +
->>  include/linux/pci.h           | 10 ++++
->>  10 files changed, 109 insertions(+), 48 deletions(-)
->>
->> diff --git a/drivers/cxl/core/native_ras.c b/drivers/cxl/core/native_ras.c
->> index 011815ddaae3..5bd79d5019e7 100644
->> --- a/drivers/cxl/core/native_ras.c
->> +++ b/drivers/cxl/core/native_ras.c
->> @@ -6,9 +6,96 @@
->>  #include <cxl/event.h>
->>  #include <cxlmem.h>
->>  #include <core/core.h>
->> +#include <cxlpci.h>
->> +
->> +static void cxl_do_recovery(struct pci_dev *pdev)
->> +{
->> +}
->> +
->> +static bool is_cxl_rcd(struct pci_dev *pdev)
->> +{
->> +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)
->> +		return false;
->> +
->> +	/*
->> +	 * The capability, status, and control fields in Device 0,
->> +	 * Function 0 DVSEC control the CXL functionality of the
->> +	 * entire device (CXL 3.2, 8.1.3).
->> +	 */
->> +	if (pdev->devfn != PCI_DEVFN(0, 0))
->> +		return false;
->> +
->> +	/*
->> +	 * CXL Memory Devices must have the 502h class code set (CXL
->> +	 * 3.2, 8.1.12.1).
->> +	 */
->> +	if (FIELD_GET(PCI_CLASS_CODE_MASK, pdev->class) != PCI_CLASS_MEMORY_CXL)
->> +		return false;
->> +
->> +	return true;
-> return FIELD_GET(PCI_CLASS_CODE_MASK, pdev->class) == PCI_CLASS_MEMORY_CXL;
-Ok.
->> +}
->> +
->> +static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
->> +{
->> +	struct cxl_proto_error_info *err_info = data;
->> +
->> +	guard(device)(&pdev->dev);
->> +
->> +	if (!is_cxl_rcd(pdev) || !cxl_pci_drv_bound(pdev))
->> +		return 0;
->> +
->> +	if (err_info->severity == AER_CORRECTABLE)
->> +		cxl_cor_error_detected(pdev);
->> +	else
->> +		cxl_error_detected(pdev, pci_channel_io_frozen);
->> +
->> +	return 1;
->> +}
->> +
->> +static void cxl_handle_proto_error(struct cxl_proto_error_info *err_info)
->> +{
->> +	struct pci_dev *pdev __free(pci_dev_put) =
->> +		pci_get_domain_bus_and_slot(err_info->segment,
->> +					    err_info->bus,
->> +					    err_info->devfn);
->> +
->> +	if (!pdev) {
->> +		pr_err("Failed to find the CXL device (SBDF=%x:%x:%x:%x)\n",
->> +		       err_info->segment, err_info->bus, PCI_SLOT(err_info->devfn),
->> +		       PCI_FUNC(err_info->devfn));
->> +		return;
->> +	}
->> +
->> +	/*
->> +	 * Internal errors of an RCEC indicate an AER error in an
->> +	 * RCH's downstream port. Check and handle them in the CXL.mem
->> +	 * device driver.
->> +	 */
->> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_EC)
->> +		return pcie_walk_rcec(pdev, cxl_rch_handle_error_iter, err_info);
->> +
->> +	if (err_info->severity == AER_CORRECTABLE) {
->> +		int aer = pdev->aer_cap;
->> +
->> +		if (aer)
->> +			pci_clear_and_set_config_dword(pdev,
->> +						       aer + PCI_ERR_COR_STATUS,
->> +						       0, PCI_ERR_COR_INTERNAL);
->> +
->> +		cxl_cor_error_detected(pdev);
->> +
->> +		pcie_clear_device_status(pdev);
->> +	} else {
->> +		cxl_do_recovery(pdev);
->> +	}
->> +}
->>  
->>  static void cxl_proto_err_work_fn(struct work_struct *work)
->>  {
->> +	struct cxl_proto_err_work_data wd;
->> +
->> +	while (cxl_proto_err_kfifo_get(&wd))
->> +		cxl_handle_proto_error(&wd.err_info);
->>  }
->>  
->>  static struct work_struct cxl_proto_err_work;
->> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
->> index 6f1396ef7b77..ed3c9701b79f 100644
->> --- a/drivers/cxl/cxlpci.h
->> +++ b/drivers/cxl/cxlpci.h
->> @@ -136,4 +136,5 @@ void read_cdat_data(struct cxl_port *port);
->>  void cxl_cor_error_detected(struct pci_dev *pdev);
->>  pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
->>  				    pci_channel_state_t state);
->> +bool cxl_pci_drv_bound(struct pci_dev *pdev);
->>  #endif /* __CXL_PCI_H__ */
->> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
->> index bd100ac31672..cae049f9ae3e 100644
->> --- a/drivers/cxl/pci.c
->> +++ b/drivers/cxl/pci.c
->> @@ -1131,6 +1131,12 @@ static struct pci_driver cxl_pci_driver = {
->>  	},
->>  };
->>  
->> +bool cxl_pci_drv_bound(struct pci_dev *pdev)
->> +{
->> +	return (pdev->driver == &cxl_pci_driver);
-> Maybe () not needed?
+> get_dev_from_fwnode() calls get_device() and so it acquires a reference
+> on the device returned.
 >
-> DJ
-Ok.
+> In order to be more obvious that this wrapper is a get_device() variant,
+> rename it to get_device_from_fwnode().
+>
+> Suggested-by: Mark Brown <broonie@kernel.org>
+> Link: https://lore.kernel.org/lkml/CAGETcx97QjnjVR8Z5g0ndLHpK96hLd4aYSV=
+=3DiEkKPNbNOccYmA@mail.gmail.com/
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Saravana Kannan <saravanak@google.com>
+> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> ---
+>  drivers/base/core.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index cbc0099d8ef2..36ccee91ba9a 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -1881,7 +1881,7 @@ static void fw_devlink_unblock_consumers(struct dev=
+ice *dev)
+>         device_links_write_unlock();
+>  }
+>
+> -#define get_dev_from_fwnode(fwnode)    get_device((fwnode)->dev)
+> +#define get_device_from_fwnode(fwnode) get_device((fwnode)->dev)
+>
+>  static bool fwnode_init_without_drv(struct fwnode_handle *fwnode)
+>  {
+> @@ -1891,7 +1891,7 @@ static bool fwnode_init_without_drv(struct fwnode_h=
+andle *fwnode)
+>         if (!(fwnode->flags & FWNODE_FLAG_INITIALIZED))
+>                 return false;
+>
+> -       dev =3D get_dev_from_fwnode(fwnode);
+> +       dev =3D get_device_from_fwnode(fwnode);
+>         ret =3D !dev || dev->links.status =3D=3D DL_DEV_NO_DRIVER;
+>         put_device(dev);
+>
+> @@ -1960,7 +1960,7 @@ static struct device *fwnode_get_next_parent_dev(co=
+nst struct fwnode_handle *fwn
+>         struct device *dev;
+>
+>         fwnode_for_each_parent_node(fwnode, parent) {
+> -               dev =3D get_dev_from_fwnode(parent);
+> +               dev =3D get_device_from_fwnode(parent);
+>                 if (dev) {
+>                         fwnode_handle_put(parent);
+>                         return dev;
+> @@ -2016,8 +2016,8 @@ static bool __fw_devlink_relax_cycles(struct fwnode=
+_handle *con_handle,
+>                 goto out;
+>         }
+>
+> -       sup_dev =3D get_dev_from_fwnode(sup_handle);
+> -       con_dev =3D get_dev_from_fwnode(con_handle);
+> +       sup_dev =3D get_device_from_fwnode(sup_handle);
+> +       con_dev =3D get_device_from_fwnode(con_handle);
+>         /*
+>          * If sup_dev is bound to a driver and @con hasn't started bindin=
+g to a
+>          * driver, sup_dev can't be a consumer of @con. So, no need to ch=
+eck
+> @@ -2156,7 +2156,7 @@ static int fw_devlink_create_devlink(struct device =
+*con,
+>         if (sup_handle->flags & FWNODE_FLAG_NOT_DEVICE)
+>                 sup_dev =3D fwnode_get_next_parent_dev(sup_handle);
+>         else
+> -               sup_dev =3D get_dev_from_fwnode(sup_handle);
+> +               sup_dev =3D get_device_from_fwnode(sup_handle);
+>
+>         if (sup_dev) {
+>                 /*
+> @@ -2225,7 +2225,7 @@ static void __fw_devlink_link_to_consumers(struct d=
+evice *dev)
+>                 bool own_link =3D true;
+>                 int ret;
+>
+> -               con_dev =3D get_dev_from_fwnode(link->consumer);
+> +               con_dev =3D get_device_from_fwnode(link->consumer);
+>                 /*
+>                  * If consumer device is not available yet, make a "proxy=
+"
+>                  * SYNC_STATE_ONLY link from the consumer's parent device=
+ to
+> --
 
--Terry
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_pci_drv_bound, "CXL");
->> +
->>  #define CXL_EVENT_HDR_FLAGS_REC_SEVERITY GENMASK(1, 0)
->>  static void cxl_handle_cper_event(enum cxl_event_type ev_type,
->>  				  struct cxl_cper_event_rec *rec)
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index e9448d55113b..8d78d882bf78 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -2328,6 +2328,7 @@ void pcie_clear_device_status(struct pci_dev *dev)
->>  	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &sta);
->>  	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
->>  }
->> +EXPORT_SYMBOL_NS_GPL(pcie_clear_device_status, "CXL");
->>  #endif
->>  
->>  /**
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index 29c11c7136d3..c7fc86d93bea 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -671,16 +671,10 @@ static inline bool pci_dpc_recovered(struct pci_dev *pdev) { return false; }
->>  void pci_rcec_init(struct pci_dev *dev);
->>  void pci_rcec_exit(struct pci_dev *dev);
->>  void pcie_link_rcec(struct pci_dev *rcec);
->> -void pcie_walk_rcec(struct pci_dev *rcec,
->> -		    int (*cb)(struct pci_dev *, void *),
->> -		    void *userdata);
->>  #else
->>  static inline void pci_rcec_init(struct pci_dev *dev) { }
->>  static inline void pci_rcec_exit(struct pci_dev *dev) { }
->>  static inline void pcie_link_rcec(struct pci_dev *rcec) { }
->> -static inline void pcie_walk_rcec(struct pci_dev *rcec,
->> -				  int (*cb)(struct pci_dev *, void *),
->> -				  void *userdata) { }
->>  #endif
->>  
->>  #ifdef CONFIG_PCI_ATS
->> @@ -1022,7 +1016,6 @@ void pci_restore_aer_state(struct pci_dev *dev);
->>  static inline void pci_no_aer(void) { }
->>  static inline void pci_aer_init(struct pci_dev *d) { }
->>  static inline void pci_aer_exit(struct pci_dev *d) { }
->> -static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
->>  static inline int pci_aer_clear_status(struct pci_dev *dev) { return -EINVAL; }
->>  static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
->>  static inline void pci_save_aer_state(struct pci_dev *dev) { }
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index 8417a49c71f2..5999d90dfdcb 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -287,6 +287,7 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
->>  	if (status)
->>  		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
->>  }
->> +EXPORT_SYMBOL_GPL(pci_aer_clear_fatal_status);
->>  
->>  /**
->>   * pci_aer_raw_clear_status - Clear AER error registers.
->> diff --git a/drivers/pci/pcie/cxl_aer.c b/drivers/pci/pcie/cxl_aer.c
->> index 846ab55d747c..939438a7161a 100644
->> --- a/drivers/pci/pcie/cxl_aer.c
->> +++ b/drivers/pci/pcie/cxl_aer.c
->> @@ -80,47 +80,6 @@ bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info)
->>  	return is_internal_error(info);
->>  }
->>  
->> -static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
->> -{
->> -	struct aer_err_info *info = (struct aer_err_info *)data;
->> -	const struct pci_error_handlers *err_handler;
->> -
->> -	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
->> -		return 0;
->> -
->> -	/* Protect dev->driver */
->> -	device_lock(&dev->dev);
->> -
->> -	err_handler = dev->driver ? dev->driver->err_handler : NULL;
->> -	if (!err_handler)
->> -		goto out;
->> -
->> -	if (info->severity == AER_CORRECTABLE) {
->> -		if (err_handler->cor_error_detected)
->> -			err_handler->cor_error_detected(dev);
->> -	} else if (err_handler->error_detected) {
->> -		if (info->severity == AER_NONFATAL)
->> -			err_handler->error_detected(dev, pci_channel_io_normal);
->> -		else if (info->severity == AER_FATAL)
->> -			err_handler->error_detected(dev, pci_channel_io_frozen);
->> -	}
->> -out:
->> -	device_unlock(&dev->dev);
->> -	return 0;
->> -}
->> -
->> -void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->> -{
->> -	/*
->> -	 * Internal errors of an RCEC indicate an AER error in an
->> -	 * RCH's downstream port. Check and handle them in the CXL.mem
->> -	 * device driver.
->> -	 */
->> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
->> -	    is_internal_error(info))
->> -		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
->> -}
->> -
->>  static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
->>  {
->>  	bool *handles_cxl = data;
->> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
->> index d0bcd141ac9c..fb6cf6449a1d 100644
->> --- a/drivers/pci/pcie/rcec.c
->> +++ b/drivers/pci/pcie/rcec.c
->> @@ -145,6 +145,7 @@ void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
->>  
->>  	walk_rcec(walk_rcec_helper, &rcec_data);
->>  }
->> +EXPORT_SYMBOL_NS_GPL(pcie_walk_rcec, "CXL");
->>  
->>  void pci_rcec_init(struct pci_dev *dev)
->>  {
->> diff --git a/include/linux/aer.h b/include/linux/aer.h
->> index 24c3d9e18ad5..0aafcc678e45 100644
->> --- a/include/linux/aer.h
->> +++ b/include/linux/aer.h
->> @@ -76,12 +76,14 @@ struct cxl_proto_err_work_data {
->>  
->>  #if defined(CONFIG_PCIEAER)
->>  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->> +void pci_aer_clear_fatal_status(struct pci_dev *dev);
->>  int pcie_aer_is_native(struct pci_dev *dev);
->>  #else
->>  static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->>  {
->>  	return -EINVAL;
->>  }
->> +static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
->>  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->>  #endif
->>  
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 79878243b681..79326358f641 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -1801,6 +1801,9 @@ extern bool pcie_ports_native;
->>  
->>  int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
->>  			  bool use_lt);
->> +void pcie_walk_rcec(struct pci_dev *rcec,
->> +		    int (*cb)(struct pci_dev *, void *),
->> +		    void *userdata);
->>  #else
->>  #define pcie_ports_disabled	true
->>  #define pcie_ports_native	false
->> @@ -1811,8 +1814,15 @@ static inline int pcie_set_target_speed(struct pci_dev *port,
->>  {
->>  	return -EOPNOTSUPP;
->>  }
->> +
->> +static inline void pcie_walk_rcec(struct pci_dev *rcec,
->> +				  int (*cb)(struct pci_dev *, void *),
->> +				  void *userdata) { }
->> +
->>  #endif
->>  
->> +void pcie_clear_device_status(struct pci_dev *dev);
->> +
->>  #define PCIE_LINK_STATE_L0S		(BIT(0) | BIT(1)) /* Upstr/dwnstr L0s */
->>  #define PCIE_LINK_STATE_L1		BIT(2)	/* L1 state */
->>  #define PCIE_LINK_STATE_L1_1		BIT(3)	/* ASPM L1.1 state */
+There are patches in flight that add new users of get_dev_from_fwnode(), se=
+e
 
+https://lore.kernel.org/linux-pm/20250701114733.636510-1-ulf.hansson@linaro=
+.org/T/#mc45a73769821cc520c35d8eb92d4bac75412bb7c
 
