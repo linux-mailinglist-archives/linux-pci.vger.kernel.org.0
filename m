@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-31310-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31311-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D12F3AF6337
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 22:21:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92B70AF6341
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 22:23:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2A2917FA69
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 20:21:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 59DF03BB3C5
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 20:23:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 294592DE6FC;
-	Wed,  2 Jul 2025 20:20:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CA412DE71D;
+	Wed,  2 Jul 2025 20:23:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VSWjnN8h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+HnANWX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20A22DE6EC;
-	Wed,  2 Jul 2025 20:20:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE832DE718;
+	Wed,  2 Jul 2025 20:23:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751487659; cv=none; b=l9lysCYJoeeInY0zhVU2tbPN4hCzZfg2lozmDPVs74pv7zPkTSPwpcegguGUzAjV4r92rP+u+TRIFTvVUnjaVlqS9wDZD6SWyRDSuecjhgRenvsXidQwHBjPCoi+r8wFqq05VnA0nEqOBJMflSzK5uAHKu7Ap+IXiXs1CRDw3F4=
+	t=1751487802; cv=none; b=b1xCwUyJRBzoPifTaVJaeu+icmhCVoDOuP+yRKWTC1kE2v+PUDoZiNlvBDEMw2xT8z7AphK8E8BSJtdgCLZVeKofbe8ptOnqRPNaILNs/TR2VkfXV4UFBNrWd6eM/v9JftqwwnGwPHg8jPzjvkDVY9zmMQgxGTldasCezaKRpdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751487659; c=relaxed/simple;
-	bh=p8+ho/iuGtz7wYytGhE0ZMgKY2Ai4EwQDlMxghb5mJA=;
+	s=arc-20240116; t=1751487802; c=relaxed/simple;
+	bh=37+L+KXB/fqqD8NlLzAobvFG0gsJ0NX6A2DY+kfh0vU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fbGctu0DpxLYgD16fPIrSu4oxQJsHb5pSGK6yOXzQmtbiBlLs0HO9ToNSqxt6541GJuagVG4a+3p1tZyVAbnXVcNhr9d7cjIbzEm7Dx0amuFvgu36tok5rKXnRzavuFMiII92EMpFLvzf9QSvT5CVWmlsFAfsAgJdUEsYrLIJSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VSWjnN8h; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8267C4CEEE;
-	Wed,  2 Jul 2025 20:20:54 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=VpVeApMIfKEV4Z4fs4vzMINa+Y20Co0s5+5KGfUTtEmk7qxow82abAUqVvLEh/cAHj2mcW/aRq7CnUr3FOobRNZ0dKenyeKne3FbX3qfDozQAs63faoIO9tdMgc7R6lgRsdVE6L8nYIM/6B1ZNHmoIeKpWW3dKA6lr/na6v0L9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+HnANWX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29168C4CEE7;
+	Wed,  2 Jul 2025 20:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751487658;
-	bh=p8+ho/iuGtz7wYytGhE0ZMgKY2Ai4EwQDlMxghb5mJA=;
+	s=k20201202; t=1751487801;
+	bh=37+L+KXB/fqqD8NlLzAobvFG0gsJ0NX6A2DY+kfh0vU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VSWjnN8hFnQgSxHvrY4Kl9FDdgNVfBrYF2vTmQYgFP27/GifPlh40IuTsuFRxOFEL
-	 O0OiBwC6Y12aeUWmtRTR8qgAr4INzSNziJQkfHMK4CMGzIDWOLwcqESDmORW2GmgNN
-	 +XQt8l2R0xr4czrWKu8ZO7+y1WZN5BjhLDRCHk6OcDl7PCYwNc16QFKzGmsB43rIbf
-	 uR+PwE6RmhWuF55Bl90uZZX1UiUpithVQqMzMOu6khkS8RPNdzELYVukTP6Z2gKx8D
-	 syaC/xN3psfmGnqsjtn0HceZOYaPaXeJaAQ1sJtbMWjVsCkOw2UfVh4Lh9pRW1S/uj
-	 xDpv2cAAcfZZw==
-Message-ID: <225ea9f2-dce7-498c-a2a4-5b40471b8e2a@kernel.org>
-Date: Wed, 2 Jul 2025 22:20:52 +0200
+	b=F+HnANWXELHIN8Jf57EERHNANcyNRQbyonqP5ibIqlnuh5SqNeIZ4LIn3AfThT77j
+	 lQPdGen3yCHdlZSmczMKqY8tC4bIAj3RFPt5c1qpwZBaNa5WPJ0rBxfX0J2bxHaT87
+	 TboWXho81+cPm/2WhximyGPzWShcsHyFX1xuMzGEtuh6NnHV1BPlkj9D259aSVSkc/
+	 ugLWGFjglMkfgrfiV5hIRzf+xwzIsIVTlH3vMwFzTmn8Zj7YGxgEhyTw9ML+wbK87V
+	 Y0gH0QQ3cuKdMakHBaDuetiYPE9EQ5RuCpPu6FvPRGiSwQTeMjb84f5o76Ge8CUbvV
+	 tPl3QzWRjcEcg==
+Message-ID: <a7aac65e-848b-4bb3-bd52-963766410698@kernel.org>
+Date: Wed, 2 Jul 2025 22:23:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,31 +50,21 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 01/14] dt-bindings: pci: cadence: Extend compatible for
- new RP configuration
-To: Manikandan Karunakaran Pillai <mpillai@cadence.com>,
- Hans Zhang <hans.zhang@cixtech.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>, "mani@kernel.org" <mani@kernel.org>,
- "robh@kernel.org" <robh@kernel.org>,
- "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "fugang.duan@cixtech.com" <fugang.duan@cixtech.com>,
- "guoyin.chen@cixtech.com" <guoyin.chen@cixtech.com>,
- "peter.chen@cixtech.com" <peter.chen@cixtech.com>,
- "cix-kernel-upstream@cixtech.com" <cix-kernel-upstream@cixtech.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 10/14] dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex
+ bindings
+To: Hans Zhang <hans.zhang@cixtech.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, mpillai@cadence.com,
+ fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
+ cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250630041601.399921-1-hans.zhang@cixtech.com>
- <20250630041601.399921-2-hans.zhang@cixtech.com>
- <20250630-heretic-space-bullfrog-d6b212@krzk-bin>
- <afeda0c7-1959-4501-b85b-5685698dc432@cixtech.com>
- <CH2PPF4D26F8E1CC95F84FFBB099955A065A246A@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
- <31415739-88cd-4350-9fd4-04b99b29be89@kernel.org>
- <CH2PPF4D26F8E1C590A00940496AAC9ED75A241A@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <20250630041601.399921-11-hans.zhang@cixtech.com>
+ <20250630-graceful-horse-of-science-eecc53@krzk-bin>
+ <bb4889ca-ec99-4677-9ddc-28905b6fcc14@cixtech.com>
+ <5b182268-d64c-424c-9ada-0c3f120d2817@kernel.org>
+ <2b608302-c4a6-404d-9cc5-d1ab9a6712bd@cixtech.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -120,65 +110,69 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <CH2PPF4D26F8E1C590A00940496AAC9ED75A241A@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+In-Reply-To: <2b608302-c4a6-404d-9cc5-d1ab9a6712bd@cixtech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 01/07/2025 13:56, Manikandan Karunakaran Pillai wrote:
+On 30/06/2025 17:30, Hans Zhang wrote:
 > 
->>>> On 2025/6/30 15:30, Krzysztof Kozlowski wrote:
->>>>> EXTERNAL EMAIL
->>>>>
->>>>> On Mon, Jun 30, 2025 at 12:15:48PM +0800, hans.zhang@cixtech.com
->> wrote:
->>>>>> From: Manikandan K Pillai <mpillai@cadence.com>
->>>>>>
->>>>>> Document the compatible property for HPA (High Performance
->>>> Architecture)
->>>>>> PCIe controller RP configuration.
->>>>>
->>>>> I don't see Conor's comment addressed:
->>>>>
->>>>> https://urldefense.com/v3/__https://lore.kernel.org/linux-
->>>> devicetree/20250424-elm-magma-
->>>> b791798477ab@spud/__;!!EHscmS1ygiU1lA!Bo-
->>>>
->> ayMVqCWXSbSgFpsBZzgk1ADft8pqRQbuOeAhIuAjz0zI015s4dmzxgaWKycqKMn
->>>> 1cejS8kKZvjF5xDAse$
->>>>>
->>>>> You cannot just send someone's work and bypassing the review feedback.
->>>
->>> I thought the comment was implicitly addressed when the device drivers
->> were separated out based on other review comments in this patch.
->>> To make it more clear, in the next patch I will add the following description
->> for the dt-binding patch
->>>
->>> "The High performance architecture is different from legacy architecture
->> controller in design of register banks,
->>> register definitions, hardware sequences of initialization and is considered as
->> a different device due to the
->>> large number of changes required in the device driver and hence adding a
->> new compatible."
->> That's still vague. Anyway this does not address other concern that the
->> generic compatible is discouraged and we expect specific compatibles. We
->> already said that and what? You send the same patch.
+> 
+> On 2025/6/30 19:14, Krzysztof Kozlowski wrote:
+>> EXTERNAL EMAIL
 >>
->> So no, don't send the same patch.
+>> On 30/06/2025 10:29, Hans Zhang wrote:
+>>>>> +
+>>>>> +  num-lanes:
+>>>>> +    maximum: 8
+>>>>> +
+>>>>> +  ranges:
+>>>>> +    maxItems: 3
+>>>>> +
+>>>>> +  msi-map:
+>>>>> +    maxItems: 1
+>>>>> +
+>>>>> +  vendor-id:
+>>>>> +    const: 0x1f6c
+>>>>
+>>>> Why? This is implied by compatible.
+>>>
+>>> Because when we designed the SOC RTL, it was not set to the vendor id
+>>> and device id of our company. We are members of PCI-SIG. So we need to
+>>> set the vendor id and device id in the Root Port driver. Otherwise, the
+>>> output of lspci will be displayed incorrectly.
+>>
+>> Please read carefully. Previous discussions were also pointlessly
+>> ping-ponging on irrelevant arguments. Did I suggest you do not have to
+>> set it in root port driver? No. If this is const here, this is implied
+>> by compatible and completely redundant, because your driver knows this
+>> value already. It already has all the information to deduce this value
+>> from the compatible.
+>>
+>>
+> Dear Krzysztof,
 > 
+> Thank you very much for your reply.
 > 
-> Hi Kryzsztof,
-> 
-> Are you suggesting to create new file for both RC and EP for HPA host like:
-> cdns,cdns-pcie-hpa-host.yaml
-> cdns,cdns-pcie-hpa-ep.yaml
-> And during the commit log, explain why you need to create a new file for HPA, and not use the legacy one.
+> These two attributes are also in the following document. Is this place 
+> out of date?
+> Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
 
-No, there was no such suggestions in any previous or current
-discussions. IIRC, this was simply rejected previously. I consider this
-rejected still, with the same arguments: you should use specific SoC
-compatibles. The generic compatible alone is rather legacy approach and
-we have been commenting on this sooooo many times.
+I would need to spend time to investigate that and I choose to do other
+things instead. I am recently very grumpy on arguments "I found this
+somewhere else". I found bugs somewhere else, so am I okay to introduce
+them?
 
+> 
+> 
+> We initially used the logic of Cadence common driver as follows:
+> drivers/pci/controller/cadence/pcie-cadence-host.c
+> of_property_read_u32(np, "vendor-id", &rc->vendor_id);
+> 
+> of_property_read_u32(np, "device-id", &rc->device_id);
+> 
+> So, can the code in Cadence be deleted?
+
+Don't know. If this is ABI, then not.
 
 
 Best regards,
