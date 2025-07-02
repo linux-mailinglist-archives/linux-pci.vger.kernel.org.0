@@ -1,215 +1,211 @@
-Return-Path: <linux-pci+bounces-31242-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31243-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 315A0AF1359
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 13:11:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8979AF1391
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 13:21:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AAED64A49F6
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 11:10:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2E97188B881
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 11:21:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F21F9244EA0;
-	Wed,  2 Jul 2025 11:11:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73677253F1A;
+	Wed,  2 Jul 2025 11:21:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpvQVZkG"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MBLzMQ5m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81E3219A86;
-	Wed,  2 Jul 2025 11:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDEC25A2A2
+	for <linux-pci@vger.kernel.org>; Wed,  2 Jul 2025 11:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751454673; cv=none; b=KvfV9S8nhoaNGdzZLiHw7svggKPJOFbBfTBROAodL0b7jgDK/wYBoFaj8q80i3iVEj4QEhxq4jGj1CJtBoOv/l2lIkszODasFa4W7HxQcVFTx1MBEFEmBcXhZiamcgvv8ForqSRi/Z7zlxnP/VfI2OfeVKn9evXJJKyIf3YaCOc=
+	t=1751455263; cv=none; b=Kc7ylT1GOpdhm2XfNvI8H3GWUyp1AiFPL0chrQ7OlfUVMzYpuuhVKNtjVC7vr5L4vsiUpzAHG9pTbKCx3jZUo+7sEtvVrCde+rq3Qr97UF1X2VOftdNDWh2CfWvBPtsH1jn2A20Xo+QnXegrbGeP4y2fmPL9rInsp/Ge2w+0w9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751454673; c=relaxed/simple;
-	bh=bsMtw3zK5TNgNeh1WODeeWPJyyYiNq3OYiYUWQ3xQbY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dThUFdqnW2scouTxTB3z97Nug7rLPbWywO53QPSRF+nqEcwi9OUvOpT2xQrDhEBg1Xko2vvdaxzyryexHrV1FAgBoJUH+XaWFug2okzNVp+aw1mSck+DgajBKHx8vxyr1u5rQeHD9OSM6OA9g8W3WLuU9uE4mZnk7es5N/nzzOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpvQVZkG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C0DAC4CEF3;
-	Wed,  2 Jul 2025 11:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751454673;
-	bh=bsMtw3zK5TNgNeh1WODeeWPJyyYiNq3OYiYUWQ3xQbY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QpvQVZkG0pyX2a0OZ64i1/52ZJhFl3rNDlcAJTxfuBTXaZkIQF9goRzZMDtYimn7k
-	 nTajuMNPsrukIX/7m388eGyIvRSsrIKHalXWmLW0QSAxkrWPFsL+mfV30Km+PUJdLl
-	 oExmDXcw3/z5ghwVQgFgxP1GF6KAKTBJ7R5PgEiaa59TJw1RlSo1xv7Qw3XNSuS+YO
-	 UHr0oPfEFNdwd704Xne0tOYTRwOri2y8vNCHoC8p/gV2KJRkiTPBfVYH27IW70Rnu6
-	 /REMrP/lQSNn0crYTBF2vFO/gDyGGY1UbYN7QJ7XeqkJpIR9Z6MJ4Rtl2p/gWnMESF
-	 AVIyLlmDJNEfw==
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7382a999970so3471047a34.3;
-        Wed, 02 Jul 2025 04:11:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVrMS4HkLK7uZIFtQTk8v+lUONNjdEKkuvCZyu6J4vsr+yr5Js5gZSL/3c7bPg9fqN2KS7fFZnMOTmR@vger.kernel.org, AJvYcCWxZEV7micPLtb0XjZ9DodPENFvF7KNc1KinqTdxlgilX3w0V85Q+CWB88OP1jqxVkq/spcIvYt60kX@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYFjtJM4TBoLHuKBqFwT1oFsvb2tCMO5ubbbrxVY05DKjrU6TO
-	4KYlE6YpHy3OkuHFPpPK8JXXMTy//NFQVB6T2kAK59j8BaizctP7hbRdHGeR5FAQREm+zDl2pcN
-	vsD33Jg2sxoDU9NZQ8G0MgZZflJtjmJQ=
-X-Google-Smtp-Source: AGHT+IGa+Rw/cMy590FiJwiEGqqKmliVcDaetHV3zVOfMk+IIxdLD+NepjMz9wUxEqwLMlQYU2nk4eUA7h0vZMq6H+M=
-X-Received: by 2002:a05:6830:6484:b0:72c:320b:fc8c with SMTP id
- 46e09a7af769-73b4d1a87fbmr1893227a34.21.1751454672486; Wed, 02 Jul 2025
- 04:11:12 -0700 (PDT)
+	s=arc-20240116; t=1751455263; c=relaxed/simple;
+	bh=WK7UQCNXLhDU0vyO0sEV1vG45WiJKmQMWd40Yeto5n8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lZbf9zNQxlZB4wJhrBdaCkAq5s6Souf/751D29nd8WUJt8RMdTydClQp6z8eD12iX94dQ3cvbDWdQyt8X+1q85DOt6XS03/SIcBtHBOYZGrIZWpR8R0C5o+9mMXB+Eiex4SrEM5cdO0679PzX6L2EJ29Gg3aGWJZCp3Kn3tB6sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MBLzMQ5m; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56260L0a018912
+	for <linux-pci@vger.kernel.org>; Wed, 2 Jul 2025 11:20:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=LoOyg8E+dTwOvRlxXE0k3S
+	wJHIfP+Cgz6iuEBbKvP3M=; b=MBLzMQ5mhi84p1gk1I2aNOpsVMSZR2IRDorJlf
+	DsEV/RqUlLOsj+CLXjJx0p+6A5MEOpL60MH8zwiLMF2fO2vcJ+jVjpcHwUwd5fy3
+	wigJjT2DNFNZWWBOKWr73INBq6DW3i0r/KQkYM9mmt662i1vguMbMx5Oi95ZD/ao
+	1PEWM+Y6Tv4LCmdP9RQMEmMFkcIAp3Q5cBJCN7Xt6o6hEeimSqtc+LR2EVxN1b/5
+	QuA8gr0a6Zq8tg0TZA6gscIWeo8q//IXhDJvmr+vU4MRa9vPUfmmMZn1vyn+XF++
+	fT2SAXZdVP9hY/AxQMDGBne8a4heWr/bMwtRV6Bdk5i6hJlQ==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8fxmg69-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Wed, 02 Jul 2025 11:20:59 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-234a102faa3so49841035ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 02 Jul 2025 04:20:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751455258; x=1752060058;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LoOyg8E+dTwOvRlxXE0k3SwJHIfP+Cgz6iuEBbKvP3M=;
+        b=lEfCafsyVRYxrnws992NQ5dKKJQoS6tCg32nAZQDundm3V0Q4g1M6MV1NStFR8sgco
+         gtbJbI1XIFe1K4+LVqrKStZgkDKiv8os1tk7Atocy9pSXJHiYLW79tLYD6Vu570X79WA
+         o9P+akT2ivd/chzwx8fV01x1KLq4YrNPKDuZR5NWmGvbdEptHTXNgzQklO6C23UydB3j
+         uiktduZFFV1Lyz2ZJjVgYUVAhmgqmj1AEouJJ3sU/4be3S1t+p0lkgfwMn6ZJFpt1+f5
+         dDClrldPYM9Xvw0bTomUOnjwOtgGwrWucHlO0wSgC5iHYBlKLAZi0FYDO9zaHJzT585d
+         1Icw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5uxGlu3AiOUeWhm88OywpXmQeYa+wlg1SeCA0mKLk20o5bVQB0NN6J4BdQFVFpJXNiSIRUc8lfF0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFZeVfnxgnsSem+RyALOVmx4fFf461MJX7M9rV1wgRGqgaYMfF
+	amu8Hy1+FCdKNekfP2G4YS9zev3mY+mK0awwYv4G0hsU7WQBkziJfqV4XuqF06OECEENBK+kGrF
+	Vf8c0nC5pA8mEhdu++Jj5ZAss7j5Iz6GwVBMSH4ph9tKo6PuhNiNe7TZ4ObNoFdg=
+X-Gm-Gg: ASbGncsX6zdgT+3goBu1C7AXSIliqD8hqhI+oen6XrQBSiGpcKZy2/4sg6q1pBqedL7
+	LM29jaAXnSCdivmlOb3GBMT6TTe5lVy9dBHI3PdZOA7f8PFIeJaHOKn7Icn52BG2KYMd97MsgS0
+	EvXA0DlIINFIC366w/WE1vTsArNf1KVw3j7bq6kcWEaSPV8sE8tlF6myQDh9gDXT9EBgj9xZe1V
+	tzKlHfoaM/Tx6LYJ3pyt4ZsLAYJwWfBdPYZ+OvROlFyoHXI36V6HCFrzi9aSREUnq34O8Yunkjv
+	y45BHRGYqpzlntJJfh28WKl/OkgLXJc+e5V8KyrllxodJURwR9O2UhXA6A==
+X-Received: by 2002:a17:902:ce8f:b0:235:779:ede0 with SMTP id d9443c01a7336-23c6e5b5acamr38280875ad.35.1751455258210;
+        Wed, 02 Jul 2025 04:20:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE2p2g9Ug4p5+yOGJWRDZMtRBE5V+yLNk34tAjxPENbi7BZoPwW/UcuDD5kEK66geRwefVDaA==
+X-Received: by 2002:a17:902:ce8f:b0:235:779:ede0 with SMTP id d9443c01a7336-23c6e5b5acamr38280455ad.35.1751455257714;
+        Wed, 02 Jul 2025 04:20:57 -0700 (PDT)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23b0b3bc0f1sm83926955ad.171.2025.07.02.04.20.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 04:20:57 -0700 (PDT)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: [PATCH v5 0/2] PCI: qcom: Move PERST# GPIO & phy retrieval from
+ controller to PCIe bridge node
+Date: Wed, 02 Jul 2025 16:50:40 +0530
+Message-Id: <20250702-perst-v5-0-920b3d1f6ee1@qti.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529111654.3140766-1-badal.nilawar@intel.com>
- <20250529111654.3140766-3-badal.nilawar@intel.com> <98fc8402-0bda-4333-8407-75c7a6472375@linux.intel.com>
-In-Reply-To: <98fc8402-0bda-4333-8407-75c7a6472375@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Jul 2025 13:11:00 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hm_UyEEXz+1LYGwGXNi908vYgKw0CD3C=wmBvT=vAh0Q@mail.gmail.com>
-X-Gm-Features: Ac12FXxIAduxIODCi3wN-S2nsn3sMmozW1G3nApQ8LgR_4RlnSXYlEMp9tZ3RUs
-Message-ID: <CAJZ5v0hm_UyEEXz+1LYGwGXNi908vYgKw0CD3C=wmBvT=vAh0Q@mail.gmail.com>
-Subject: Re: [PATCH v4 02/11] PCI/ACPI: Per root port allow one Aux power
- limit request
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Badal Nilawar <badal.nilawar@intel.com>, intel-xe@lists.freedesktop.org, 
-	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org, 
-	anshuman.gupta@intel.com, rafael@kernel.org, lenb@kernel.org, 
-	bhelgaas@google.com, ilpo.jarvinen@linux.intel.com, lucas.demarchi@intel.com, 
-	rodrigo.vivi@intel.com, varun.gupta@intel.com, ville.syrjala@linux.intel.com, 
-	uma.shankar@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAgWZWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyTHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDcwMj3YLUouISXUtzY0Mjy+S0ZMuURCWg2oKi1LTMCrA50bG1tQDAK7u
+ LVwAAAA==
+X-Change-ID: 20250702-perst-973129cfc9da
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751455253; l=3048;
+ i=krichai@qti.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=WK7UQCNXLhDU0vyO0sEV1vG45WiJKmQMWd40Yeto5n8=;
+ b=WMne7DLRCpHtX+CAZBvqMbzA6IYvOj+pa6L17yq7hsQ7tABQFjlG8dwKYnt7n4OXYBBT7KQ1j
+ /yHZsyKqgUwCA820sxC8dpk/HOsjelNK9U3vkiCHg0ybtctM/iMzGfh
+X-Developer-Key: i=krichai@qti.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA5MiBTYWx0ZWRfX+DtG4f8rbvCR
+ 6CpA+0HEYVXpUmA9kNvyATTO7rkkm1swIdbfOUn6ifpCD+4XJh/bplqlsJa6vEDSzbw8FTIBki6
+ +rihUXpPTAEdVDqxrgALak4VfibDbreVeMU1K4gFzWgcIM8XK0StVkFCr0GrVj4rhxTEjzdMeQM
+ rosHbE/2mzbp1aU/F1V+l9jjWjvTnKwSrMjgC/MlhoM7qDdTX+7osVAi5PJ9G4kzhj5PnO43aAO
+ KPUqMhanmYpBK1/KEh/YXcwsbi2YDRCcNtL2OspO0ZLAUaJm2MGaDyg3aV45wQfdZbkCUNbc3BG
+ Q6o4fdqXrmihO36ZCpyOVmh7DWwKPP8fMXL4ylALl+EtSHYeI1enXsF0TEDM5K+RTt55Ei6auJD
+ 91Zm96Os9N6RAU7IJN1+DmfCLaLwN2TtdndZYRAXcIIDlrNiNiiCewtLfnhKsmiXHsQBK3+k
+X-Proofpoint-GUID: Dsu0e010M3y3BE2m-We_DH17I79X4Koz
+X-Proofpoint-ORIG-GUID: Dsu0e010M3y3BE2m-We_DH17I79X4Koz
+X-Authority-Analysis: v=2.4 cv=TqPmhCXh c=1 sm=1 tr=0 ts=6865161b cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=DNAdngzMxNmsW-howNoA:9 a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 bulkscore=0 mlxlogscore=999 suspectscore=0 adultscore=0
+ phishscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0
+ impostorscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507020092
 
-On Thu, May 29, 2025 at 11:41=E2=80=AFPM Sathyanarayanan Kuppuswamy
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->
->
-> On 5/29/25 4:16 AM, Badal Nilawar wrote:
-> > For given root port allow one Aux power limit request.
-> >
-> > Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Cc: Anshuman Gupta <anshuman.gupta@intel.com>
-> > Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-> > ---
-> >   drivers/acpi/scan.c     |  1 +
-> >   drivers/pci/pci-acpi.c  | 25 ++++++++++++++++++++++++-
-> >   include/acpi/acpi_bus.h |  2 ++
-> >   3 files changed, 27 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> > index fb1fe9f3b1a3..9ae7be9db01a 100644
-> > --- a/drivers/acpi/scan.c
-> > +++ b/drivers/acpi/scan.c
-> > @@ -745,6 +745,7 @@ int acpi_device_add(struct acpi_device *device)
-> >       INIT_LIST_HEAD(&device->physical_node_list);
-> >       INIT_LIST_HEAD(&device->del_list);
-> >       mutex_init(&device->physical_node_lock);
-> > +     mutex_init(&device->power.aux_pwr_lock);
-> >
-> >       mutex_lock(&acpi_device_lock);
-> >
-> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > index 87f30910a5f1..d33efba4ca94 100644
-> > --- a/drivers/pci/pci-acpi.c
-> > +++ b/drivers/pci/pci-acpi.c
-> > @@ -1451,6 +1451,7 @@ int pci_acpi_request_d3cold_aux_power(struct pci_=
-dev *dev, u32 requested_power,
-> >       union acpi_object *out_obj;
-> >       acpi_handle handle;
-> >       int result, ret =3D -EINVAL;
-> > +     struct acpi_device *adev;
-> >
-> >       if (!dev || !retry_interval)
-> >               return -EINVAL;
-> > @@ -1464,11 +1465,27 @@ int pci_acpi_request_d3cold_aux_power(struct pc=
-i_dev *dev, u32 requested_power,
-> >               return -ENODEV;
-> >       }
-> >
-> > +     adev =3D ACPI_COMPANION(&dev->dev);
-> > +     if (!adev)
-> > +             return -EINVAL;
-> > +
-> > +     mutex_lock(&adev->power.aux_pwr_lock);
-> > +
-> > +     /* Check if aux power already granted */
-> > +     if (adev->power.aux_power_limit) {
-> > +             pci_info(dev, "D3cold Aux Power request already granted: =
-%u mW\n",
-> > +                      adev->power.aux_power_limit);
-> > +             mutex_unlock(&adev->power.aux_pwr_lock);
-> > +             return -EPERM;
-> > +     }
-> > +
-> >       out_obj =3D acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4=
-,
-> >                                         DSM_PCI_D3COLD_AUX_POWER_LIMIT,
-> >                                         &in_obj, ACPI_TYPE_INTEGER);
-> > -     if (!out_obj)
-> > +     if (!out_obj) {
-> > +             mutex_unlock(&adev->power.aux_pwr_lock);
-> >               return -EINVAL;
-> > +     }
-> >
-> >       result =3D out_obj->integer.value;
-> >       if (retry_interval)
-> > @@ -1478,14 +1495,17 @@ int pci_acpi_request_d3cold_aux_power(struct pc=
-i_dev *dev, u32 requested_power,
-> >       case 0x0:
-> >               pci_dbg(dev, "D3cold Aux Power %u mW request denied\n",
-> >                       requested_power);
-> > +             adev->power.aux_power_limit =3D 0;
-> >               break;
-> >       case 0x1:
-> >               pci_info(dev, "D3cold Aux Power request granted: %u mW\n"=
-,
-> >                        requested_power);
-> > +             adev->power.aux_power_limit =3D requested_power;
-> >               ret =3D 0;
-> >               break;
-> >       case 0x2:
-> >               pci_info(dev, "D3cold Aux Power: Main power won't be remo=
-ved\n");
-> > +             adev->power.aux_power_limit =3D 0;
-> >               ret =3D -EBUSY;
-> >               break;
-> >       default:
-> > @@ -1500,9 +1520,12 @@ int pci_acpi_request_d3cold_aux_power(struct pci=
-_dev *dev, u32 requested_power,
-> >                       pci_err(dev, "D3cold Aux Power: Reserved or unsup=
-ported response: 0x%x\n",
-> >                               result);
-> >               }
-> > +             adev->power.aux_power_limit =3D 0;
-> >               break;
-> >       }
-> >
-> > +     mutex_unlock(&adev->power.aux_pwr_lock);
-> > +
-> >       ACPI_FREE(out_obj);
-> >       return ret;
-> >   }
-> > diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> > index aad1a95e6863..c4ce3d84be00 100644
-> > --- a/include/acpi/acpi_bus.h
-> > +++ b/include/acpi/acpi_bus.h
-> > @@ -294,6 +294,8 @@ struct acpi_device_power {
-> >       struct acpi_device_power_flags flags;
-> >       struct acpi_device_power_state states[ACPI_D_STATE_COUNT];      /=
-* Power states (D0-D3Cold) */
-> >       u8 state_for_enumeration; /* Deepest power state for enumeration =
-*/
-> > +     u32 aux_power_limit;            /* aux power limit granted by bio=
-s */
-> > +     struct mutex aux_pwr_lock;      /* prevent concurrent aux power l=
-imit requests */
->
->
-> Do you need a new lock ?
+The main intention of this series is to move wake# to the root port node.
+After this series we will come up with a patch which registers for wake IRQ
+from the pcieport driver. The wake IRQ is needed for the endpoint to wakeup
+the host from D3cold. The driver change for wake IRQ is posted here[1].
 
-Yes.
+There are many places we agreed to move the wake and perst gpio's
+and phy etc to the pcie root port node instead of bridge node[2] as the
+these properties are root port specific and does not belongs to
+bridge node.
 
-> Is it possible to reuse existing mutex like device_lock()?
+So move the phy, phy-names, wake-gpio's in the root port.
+There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
+start using that property instead of perst-gpio.
 
-No.
+For backward compatibility, don't remove any existing properties in the
+bridge node.
 
-Doing such things results in code where nobody knows what the given
-lock scope is.
+There are some other properties like num-lanes, max-link-speed which
+needs to be moved to the root port nodes, but in this series we are
+excluding them for now as this requires more changes in dwc layer and
+can complicate the things.
+
+Once this series gets merged all other platforms also will be updated
+to use this new way.
+
+[1] https://lore.kernel.org/all/20250401-wake_irq_support-v1-0-d2e22f4a0efd@oss.qualcomm.com/
+[2] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
+
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+---
+Changes in v5:
+- Rebased with pci controller/qcom.
+- As part of rebase handled one err condition by adding goto err_port_del
+- Link to v4: https://lore.kernel.org/r/20250605-perst-v4-0-efe8a0905c27@oss.qualcomm.com
+
+Changes in v4:
+- Removed dts patch as Mani suggested to merge driver and dt-binding
+  patch in this release and have dts changes in the next release.
+- Remove wake property from as this will be addressed in
+  pci-bus-common.yaml (Mani)
+- Did couple of nits in the comments, function names code etc (Mani).
+- Link to v3: https://lore.kernel.org/r/20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com
+
+Changes in v3:
+- Make old properties as deprecated, update commit message (Dmitry)
+- Add helper functions wherever both multiport and legacy methods are used. (Mani)
+- Link to v2: https://lore.kernel.org/r/20250414-perst-v2-0-89247746d755@oss.qualcomm.com
+
+Changes in v2:
+- Remove phy-names property and change the driver, dtsi accordingly (Rob)
+- Link to v1: https://lore.kernel.org/r/20250322-perst-v1-0-e5e4da74a204@oss.qualcomm.com
+
+---
+Krishna Chaitanya Chundru (2):
+      dt-bindings: PCI: qcom: Move phy & reset gpio's to root port
+      PCI: qcom: Add support for multi-root port
+
+ .../devicetree/bindings/pci/qcom,pcie-common.yaml  |  32 +++-
+ .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  |  16 +-
+ drivers/pci/controller/dwc/pcie-qcom.c             | 178 +++++++++++++++++----
+ 3 files changed, 193 insertions(+), 33 deletions(-)
+---
+base-commit: 7c184aa42a3dc9b2630010fbcb06c701c440f8e3
+change-id: 20250702-perst-973129cfc9da
+
+Best regards,
+-- 
+krishnachaitanya-linux <krichai@qti.qualcomm.com>
+
 
