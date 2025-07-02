@@ -1,129 +1,220 @@
-Return-Path: <linux-pci+bounces-31267-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31268-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F80DAF596A
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 15:37:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DD07AF5A72
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 16:04:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 092841891200
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 13:36:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 446D2485022
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 14:03:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E6142857D7;
-	Wed,  2 Jul 2025 13:29:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3445275AFF;
+	Wed,  2 Jul 2025 14:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nDIzrr6W"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1A82857CA
-	for <linux-pci@vger.kernel.org>; Wed,  2 Jul 2025 13:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD089275AE8;
+	Wed,  2 Jul 2025 14:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751462999; cv=none; b=jvVC8KAi0bNqYdA4cR74cgfQwqiyUf0QjGvSHNU6oU6+c2rDWCb5N6ZMDvgAhKUCLwDRZzTVtk4u2oBZpa7ETPufgDtHmyDmhZMV4vUCAmi+jIsYyhrNe9LGlEaNyDPAayWfAsW+nk2lvP3UcqZREpqb8X3lO5NjI8XB0X0UI9Y=
+	t=1751465045; cv=none; b=MVEULCZZW3sTSEgiI7h0t//ZwsTpvvL5QuKnFCFGZDmjh9uDfUJbeyEVqYN9kx6zDlPx0BPZD/4HfgzL1k8hFOMNN57GxWaiGUCe/3rErR+ml+kVy7ptFBIzaYLFCC9E0sVowQljlsqlIZh0DiRhFis4RLUc8pzpF/Qto14kolo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751462999; c=relaxed/simple;
-	bh=CWd2WKm0oM/5FeHrFr3gmO0oEPsXtMk0+Zip/vYuZ7o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LIrG8ufFN9bYRiyoEI1btDDtffito9k9FyNAITYhWuBdH+pn0qpfhdqQd4vfZitNjLgoI5w7jSJdYE0eGLlRlHEatAzyUKv3DaEgvYGrX4hdoLymfK2W0Nlvg0kfTvWNRySg9xXWkkvj83LuPuYdm4DHbbICq4vNJwwgh8ndbRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1C0102C06E2D;
-	Wed,  2 Jul 2025 15:29:49 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 05510402D89; Wed,  2 Jul 2025 15:29:49 +0200 (CEST)
-Date: Wed, 2 Jul 2025 15:29:48 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Ben Hutchings <ben@decadent.org.uk>, David Airlie <airlied@redhat.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Andi Kleen <ak@linux.intel.com>, Ahmed Salem <x0rw3ll@gmail.com>,
-	Borislav Petkov <bp@alien8.de>, dri-devel@lists.freedesktop.org,
-	iommu@lists.linux.dev, linux-pci@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] agp/amd64: Bind to unsupported devices only if AGP is
- present
-Message-ID: <aGU0TL7t9IRbqqpa@wunner.de>
-References: <b73fbb3e3f03d842f36e6ba2e6a8ad0bb4b904fd.camel@decadent.org.uk>
- <aFalrV1500saBto5@wunner.de>
- <279f63810875f2168c591aab0f30f8284d12fe02.camel@decadent.org.uk>
- <aFa8JJaRP-FUyy6Y@wunner.de>
- <9077aab5304e1839786df9adb33c334d10c69397.camel@decadent.org.uk>
- <98012c55-1e0d-4c1b-b650-5bb189d78009@redhat.com>
- <aFwIu0QveVuJZNoU@wunner.de>
- <eb98477c-2d5c-4980-ab21-6aed8f0451c9@redhat.com>
- <e0bcd0a8-dbb5-4272-a549-1029f4dd0e41@redhat.com>
- <aGUOVbmH1bObAF1r@wunner.de>
+	s=arc-20240116; t=1751465045; c=relaxed/simple;
+	bh=0MhlDQpiMGUkq4C8swXflDQe3D138a9T5O+UEquFdkM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EvVC4F8sjvcL2Q8C61l8N6l/QZI1dcX3Nbq61p/EC6xzGosyXDz0h5JsPaH7yEbknH934J0ch8OuVpye2VMgo6FbdqJ7/QVxUazAmGUwZZpj3YsojAkddXEJnQUg9E7G4MNsVQdIC6KLKC+6pT9xS6l6m0EapOPj+T3hIbGoOrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nDIzrr6W; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751465044; x=1783001044;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0MhlDQpiMGUkq4C8swXflDQe3D138a9T5O+UEquFdkM=;
+  b=nDIzrr6WZ3yNs8YSjJD27PBeIwo/OTbVW2EjltVGR9c+abfrU+A6GgDc
+   ryOZW7TOS9UBFK+upk2PLG1POb5iW8RNYpG71mDPEvHVAf/NLy2atFiAr
+   8+Ahas6eddAfFDXQ7SUu2+CeoaJc4BeRnH31Pq3LdzSmyKZjNFB+rCwNj
+   t0I4Ql806qtm2RZJGbgnQf2PgDLVBn4bgt/inQJVTZ2EiG5t15yX/sDai
+   iF++aorK6SVESwqXauNGBt0mn9v0ZsAU9AA5N6STZKl9SUEfZVHpRl3Os
+   nq4Faw+B4AmA0urlkjv8gsKSJrgeIvqrEIfkooQnSXo+7DThhUhoAkUSQ
+   w==;
+X-CSE-ConnectionGUID: 7EjI6esURQiEE4e5/zaxXw==
+X-CSE-MsgGUID: jnW5S1bDSDOlNvhTC8TSWw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="64007800"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="64007800"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 07:04:01 -0700
+X-CSE-ConnectionGUID: RIKC5saoTcWylZFYvMd+Sw==
+X-CSE-MsgGUID: 2OiPCNNORn+h4W0DRD7rSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="154430767"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 07:04:00 -0700
+Received: from [10.124.222.214] (unknown [10.124.222.214])
+	by linux.intel.com (Postfix) with ESMTP id EE48920B58A2;
+	Wed,  2 Jul 2025 07:03:58 -0700 (PDT)
+Message-ID: <83851fe3-58e4-41a0-b7cd-daee2d8d69aa@linux.intel.com>
+Date: Wed, 2 Jul 2025 07:03:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGUOVbmH1bObAF1r@wunner.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 02/11] PCI/ACPI: Per root port allow one Aux power
+ limit request
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Badal Nilawar <badal.nilawar@intel.com>, intel-xe@lists.freedesktop.org,
+ linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+ anshuman.gupta@intel.com, lenb@kernel.org, bhelgaas@google.com,
+ ilpo.jarvinen@linux.intel.com, lucas.demarchi@intel.com,
+ rodrigo.vivi@intel.com, varun.gupta@intel.com,
+ ville.syrjala@linux.intel.com, uma.shankar@intel.com
+References: <20250529111654.3140766-1-badal.nilawar@intel.com>
+ <20250529111654.3140766-3-badal.nilawar@intel.com>
+ <98fc8402-0bda-4333-8407-75c7a6472375@linux.intel.com>
+ <CAJZ5v0hm_UyEEXz+1LYGwGXNi908vYgKw0CD3C=wmBvT=vAh0Q@mail.gmail.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <CAJZ5v0hm_UyEEXz+1LYGwGXNi908vYgKw0CD3C=wmBvT=vAh0Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-[cc += tglx, start of thread:
-https://lore.kernel.org/r/f8ff40f35a9a5836d1371f60e85c09c5735e3c5e.1750497201.git.lukas@wunner.de/
-]
 
-On Wed, Jul 02, 2025 at 12:47:49PM +0200, Lukas Wunner wrote:
-> On Mon, Jun 30, 2025 at 01:10:24PM +0200, Hans de Goede wrote:
-> > ping? It would be good to get some consensus on how to
-> > fix this and move forward with a fix. Either the patch from
-> > this thread; or my patch:
-> > 
-> > https://lore.kernel.org/dri-devel/20250625112411.4123-1-hansg@kernel.org/
-> > 
-> > Works for me, the most important thing here is to get this
-> > regression fixed.
-> 
-> You seem to have a machine where you can trigger the
-> "Resources present before probing" message.
-> 
-> Would you mind enabling CONFIG_DEBUG_DEVRES=y and adding
-> "log_devres=1" to the kernel command line so that we
-> can understand what kind of resource is attached to
-> the AMD IOMMU, and where that happens.
-> 
-> I don't see invocations of devm_*() in arch/x86/ or
-> drivers/iommu/amd/ that would explain the error message.
+On 7/2/25 4:11 AM, Rafael J. Wysocki wrote:
+> On Thu, May 29, 2025 at 11:41 PM Sathyanarayanan Kuppuswamy
+> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>>
+>> On 5/29/25 4:16 AM, Badal Nilawar wrote:
+>>> For given root port allow one Aux power limit request.
+>>>
+>>> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>> Cc: Anshuman Gupta <anshuman.gupta@intel.com>
+>>> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+>>> ---
+>>>    drivers/acpi/scan.c     |  1 +
+>>>    drivers/pci/pci-acpi.c  | 25 ++++++++++++++++++++++++-
+>>>    include/acpi/acpi_bus.h |  2 ++
+>>>    3 files changed, 27 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+>>> index fb1fe9f3b1a3..9ae7be9db01a 100644
+>>> --- a/drivers/acpi/scan.c
+>>> +++ b/drivers/acpi/scan.c
+>>> @@ -745,6 +745,7 @@ int acpi_device_add(struct acpi_device *device)
+>>>        INIT_LIST_HEAD(&device->physical_node_list);
+>>>        INIT_LIST_HEAD(&device->del_list);
+>>>        mutex_init(&device->physical_node_lock);
+>>> +     mutex_init(&device->power.aux_pwr_lock);
+>>>
+>>>        mutex_lock(&acpi_device_lock);
+>>>
+>>> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+>>> index 87f30910a5f1..d33efba4ca94 100644
+>>> --- a/drivers/pci/pci-acpi.c
+>>> +++ b/drivers/pci/pci-acpi.c
+>>> @@ -1451,6 +1451,7 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>>>        union acpi_object *out_obj;
+>>>        acpi_handle handle;
+>>>        int result, ret = -EINVAL;
+>>> +     struct acpi_device *adev;
+>>>
+>>>        if (!dev || !retry_interval)
+>>>                return -EINVAL;
+>>> @@ -1464,11 +1465,27 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>>>                return -ENODEV;
+>>>        }
+>>>
+>>> +     adev = ACPI_COMPANION(&dev->dev);
+>>> +     if (!adev)
+>>> +             return -EINVAL;
+>>> +
+>>> +     mutex_lock(&adev->power.aux_pwr_lock);
+>>> +
+>>> +     /* Check if aux power already granted */
+>>> +     if (adev->power.aux_power_limit) {
+>>> +             pci_info(dev, "D3cold Aux Power request already granted: %u mW\n",
+>>> +                      adev->power.aux_power_limit);
+>>> +             mutex_unlock(&adev->power.aux_pwr_lock);
+>>> +             return -EPERM;
+>>> +     }
+>>> +
+>>>        out_obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4,
+>>>                                          DSM_PCI_D3COLD_AUX_POWER_LIMIT,
+>>>                                          &in_obj, ACPI_TYPE_INTEGER);
+>>> -     if (!out_obj)
+>>> +     if (!out_obj) {
+>>> +             mutex_unlock(&adev->power.aux_pwr_lock);
+>>>                return -EINVAL;
+>>> +     }
+>>>
+>>>        result = out_obj->integer.value;
+>>>        if (retry_interval)
+>>> @@ -1478,14 +1495,17 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>>>        case 0x0:
+>>>                pci_dbg(dev, "D3cold Aux Power %u mW request denied\n",
+>>>                        requested_power);
+>>> +             adev->power.aux_power_limit = 0;
+>>>                break;
+>>>        case 0x1:
+>>>                pci_info(dev, "D3cold Aux Power request granted: %u mW\n",
+>>>                         requested_power);
+>>> +             adev->power.aux_power_limit = requested_power;
+>>>                ret = 0;
+>>>                break;
+>>>        case 0x2:
+>>>                pci_info(dev, "D3cold Aux Power: Main power won't be removed\n");
+>>> +             adev->power.aux_power_limit = 0;
+>>>                ret = -EBUSY;
+>>>                break;
+>>>        default:
+>>> @@ -1500,9 +1520,12 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>>>                        pci_err(dev, "D3cold Aux Power: Reserved or unsupported response: 0x%x\n",
+>>>                                result);
+>>>                }
+>>> +             adev->power.aux_power_limit = 0;
+>>>                break;
+>>>        }
+>>>
+>>> +     mutex_unlock(&adev->power.aux_pwr_lock);
+>>> +
+>>>        ACPI_FREE(out_obj);
+>>>        return ret;
+>>>    }
+>>> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+>>> index aad1a95e6863..c4ce3d84be00 100644
+>>> --- a/include/acpi/acpi_bus.h
+>>> +++ b/include/acpi/acpi_bus.h
+>>> @@ -294,6 +294,8 @@ struct acpi_device_power {
+>>>        struct acpi_device_power_flags flags;
+>>>        struct acpi_device_power_state states[ACPI_D_STATE_COUNT];      /* Power states (D0-D3Cold) */
+>>>        u8 state_for_enumeration; /* Deepest power state for enumeration */
+>>> +     u32 aux_power_limit;            /* aux power limit granted by bios */
+>>> +     struct mutex aux_pwr_lock;      /* prevent concurrent aux power limit requests */
+>>
+>> Do you need a new lock ?
+> Yes.
+>
+>> Is it possible to reuse existing mutex like device_lock()?
+> No.
+>
+> Doing such things results in code where nobody knows what the given
+> lock scope is.
 
-I just remembered that an MSI is set up for the AMD IOMMU.
-And sure enough:
+Got it. Thanks for the clarification.
 
-amd_iommu_enable_interrupts()
-  iommu_init_irq()
-    iommu_setup_msi()
-      pci_enable_msi()
-        __pci_enable_msi_range()
-	  pci_setup_msi_device_domain()
-            pci_create_device_domain()
-              msi_create_device_irq_domain()
-                msi_setup_device_data()
-                  msi_sysfs_create_group()
-		    devm_device_add_group()
 
-... introduced by bf5e758f02fc ("genirq/msi: Simplify sysfs handling").
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-Not sure if this is the only one or if there are other resources
-added anywhere else for the driver-less AMD IOMMU.
-
-We'd have to rework MSI handling to not use devm_*(), so that MSIs
-can be requested for a device without it being bound to a driver.
-But I suspect tglx may have deliberately designed it to not
-support that, in which case what the AMD IOMMU driver does
-is somewhat dodgy...
-
-Thanks,
-
-Lukas
 
