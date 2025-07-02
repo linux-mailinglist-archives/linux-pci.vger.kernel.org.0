@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-31311-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31312-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92B70AF6341
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 22:23:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E514AF634F
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 22:28:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 59DF03BB3C5
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 20:23:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3D454A5D4C
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 20:28:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CA412DE71D;
-	Wed,  2 Jul 2025 20:23:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F29B71C1F12;
+	Wed,  2 Jul 2025 20:28:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+HnANWX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QgVHoA18"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE832DE718;
-	Wed,  2 Jul 2025 20:23:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B662DE6F9;
+	Wed,  2 Jul 2025 20:28:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751487802; cv=none; b=b1xCwUyJRBzoPifTaVJaeu+icmhCVoDOuP+yRKWTC1kE2v+PUDoZiNlvBDEMw2xT8z7AphK8E8BSJtdgCLZVeKofbe8ptOnqRPNaILNs/TR2VkfXV4UFBNrWd6eM/v9JftqwwnGwPHg8jPzjvkDVY9zmMQgxGTldasCezaKRpdM=
+	t=1751488116; cv=none; b=bRKwNklsGrHtmwDEd6dio/tKr9w3qoyBeoUfbQfBQQpuZmOtJaW23uRFgpRySarM52mX8prf98VFIBi2eiJDNYu1HwYK4bvc1jx9yam30qMS13mMWqORoi6u6PR/M/11teuN50kTR84MhaoAVzs6J/XXoTaXSbdUyl3Z8yIEVQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751487802; c=relaxed/simple;
-	bh=37+L+KXB/fqqD8NlLzAobvFG0gsJ0NX6A2DY+kfh0vU=;
+	s=arc-20240116; t=1751488116; c=relaxed/simple;
+	bh=EcR4+ln9wMqpjyQvSKoH8VVU7uAGxeRP9WlpelVUD6Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VpVeApMIfKEV4Z4fs4vzMINa+Y20Co0s5+5KGfUTtEmk7qxow82abAUqVvLEh/cAHj2mcW/aRq7CnUr3FOobRNZ0dKenyeKne3FbX3qfDozQAs63faoIO9tdMgc7R6lgRsdVE6L8nYIM/6B1ZNHmoIeKpWW3dKA6lr/na6v0L9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+HnANWX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29168C4CEE7;
-	Wed,  2 Jul 2025 20:23:17 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=VldCBJ4rpThYp8XWbk9hyUemPd+Z4g/Wm7TRjLqnwkD08LIMSVAy5wHWr0sDwQ5KbDMXGOLlv/GSvxg3QgKXesMkgiYCs/0QFU4sfpNDc3j8+6o6QGImjf88SNX6NmC4Cf7ORJZqhSomAGWh/Lrf7/mpt18HtA5fHqkOgaFbj74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QgVHoA18; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB1FC4CEE7;
+	Wed,  2 Jul 2025 20:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751487801;
-	bh=37+L+KXB/fqqD8NlLzAobvFG0gsJ0NX6A2DY+kfh0vU=;
+	s=k20201202; t=1751488115;
+	bh=EcR4+ln9wMqpjyQvSKoH8VVU7uAGxeRP9WlpelVUD6Q=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=F+HnANWXELHIN8Jf57EERHNANcyNRQbyonqP5ibIqlnuh5SqNeIZ4LIn3AfThT77j
-	 lQPdGen3yCHdlZSmczMKqY8tC4bIAj3RFPt5c1qpwZBaNa5WPJ0rBxfX0J2bxHaT87
-	 TboWXho81+cPm/2WhximyGPzWShcsHyFX1xuMzGEtuh6NnHV1BPlkj9D259aSVSkc/
-	 ugLWGFjglMkfgrfiV5hIRzf+xwzIsIVTlH3vMwFzTmn8Zj7YGxgEhyTw9ML+wbK87V
-	 Y0gH0QQ3cuKdMakHBaDuetiYPE9EQ5RuCpPu6FvPRGiSwQTeMjb84f5o76Ge8CUbvV
-	 tPl3QzWRjcEcg==
-Message-ID: <a7aac65e-848b-4bb3-bd52-963766410698@kernel.org>
-Date: Wed, 2 Jul 2025 22:23:16 +0200
+	b=QgVHoA185ko+hM3joHPYDcRNSPDDHaq7aNPl+L/GHdUDM4Pwpqa3qsS6u12Xa3k0H
+	 O/2gGTCxZM+MltSvcIlR/FQA60FFz/vzNntyKqklBUhc7JpCatdlRjeuo56o/mZ1Xk
+	 ZmPEsWPSO5FpkJquGa/kfWwXK7OftY21SR2/K88hnkvJfdld+z1y0sMRp2Elue3wLx
+	 9x4V/GtDCqoxjr++0eIkN2rVe74Dg7yMpFP1jsGF+uqKMzMVtEPdGclX2KEeoMRzXN
+	 XmpyAO0ZbjUvcy6fqtzDtIxi0qDcgm5n8YinQWGxLmoGFu+LlOrxSC7DEs529kTf7X
+	 2XRAo9yqaNZBw==
+Message-ID: <913b3a01-5610-4709-87c1-4e225df466d5@kernel.org>
+Date: Wed, 2 Jul 2025 22:28:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,9 +62,7 @@ Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
 References: <20250630041601.399921-1-hans.zhang@cixtech.com>
  <20250630041601.399921-11-hans.zhang@cixtech.com>
  <20250630-graceful-horse-of-science-eecc53@krzk-bin>
- <bb4889ca-ec99-4677-9ddc-28905b6fcc14@cixtech.com>
- <5b182268-d64c-424c-9ada-0c3f120d2817@kernel.org>
- <2b608302-c4a6-404d-9cc5-d1ab9a6712bd@cixtech.com>
+ <5e9ddbe4-c94c-4087-8b34-0407ea278888@cixtech.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -110,70 +108,53 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <2b608302-c4a6-404d-9cc5-d1ab9a6712bd@cixtech.com>
+In-Reply-To: <5e9ddbe4-c94c-4087-8b34-0407ea278888@cixtech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 30/06/2025 17:30, Hans Zhang wrote:
+On 30/06/2025 17:54, Hans Zhang wrote:
 > 
 > 
-> On 2025/6/30 19:14, Krzysztof Kozlowski wrote:
->> EXTERNAL EMAIL
->>
->> On 30/06/2025 10:29, Hans Zhang wrote:
->>>>> +
->>>>> +  num-lanes:
->>>>> +    maximum: 8
->>>>> +
->>>>> +  ranges:
->>>>> +    maxItems: 3
->>>>> +
->>>>> +  msi-map:
->>>>> +    maxItems: 1
->>>>> +
->>>>> +  vendor-id:
->>>>> +    const: 0x1f6c
->>>>
->>>> Why? This is implied by compatible.
->>>
->>> Because when we designed the SOC RTL, it was not set to the vendor id
->>> and device id of our company. We are members of PCI-SIG. So we need to
->>> set the vendor id and device id in the Root Port driver. Otherwise, the
->>> output of lspci will be displayed incorrectly.
->>
->> Please read carefully. Previous discussions were also pointlessly
->> ping-ponging on irrelevant arguments. Did I suggest you do not have to
->> set it in root port driver? No. If this is const here, this is implied
->> by compatible and completely redundant, because your driver knows this
->> value already. It already has all the information to deduce this value
->> from the compatible.
->>
->>
+> On 2025/6/30 15:26, Krzysztof Kozlowski wrote:
+>>> +  sky1,pcie-ctrl-id:
+>>> +    description: |
+>>> +      Specifies the PCIe controller instance identifier (0-4).
+>> No, you don't get an instance ID. Drop the property and look how other
+>> bindings encoded it (not sure about the purpose and you did not explain
+>> it, so cannot advise).
+> 
+> 
 > Dear Krzysztof,
 > 
-> Thank you very much for your reply.
+> Sorry, I missed your reply to this in the previous email.
 > 
-> These two attributes are also in the following document. Is this place 
-> out of date?
-> Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> Because our Root Port driver needs to support 5 PCIe ports, and the 
+> register configuration and offset of each port are different, it is 
+> necessary to know which port it is currently. Perhaps I can use the 
+> following method and then delete this attribute.
+> 
+> aliases {
+> 		......
+> 		pcie_rc0 = &pcie_x8_rc;
+> 		pcie_rc1 = &pcie_x4_rc;
+> 		pcie_rc2 = &pcie_x2_rc;
+> 		pcie_rc3 = &pcie_x1_0_rc;
+> 		pcie_rc4 = &pcie_x1_1_rc;
+> 		
+> id = of_alias_get_id(dev->of_node, "pcie_rc");
+I think Rob commented pretty strongly about aliases in this thread... or
+was it other one? Maybe it was about Tesla FSD PCI PHY... huh, same pattern.
 
-I would need to spend time to investigate that and I choose to do other
-things instead. I am recently very grumpy on arguments "I found this
-somewhere else". I found bugs somewhere else, so am I okay to introduce
-them?
+So no, you do not get your own aliases.
 
-> 
-> 
-> We initially used the logic of Cadence common driver as follows:
-> drivers/pci/controller/cadence/pcie-cadence-host.c
-> of_property_read_u32(np, "vendor-id", &rc->vendor_id);
-> 
-> of_property_read_u32(np, "device-id", &rc->device_id);
-> 
-> So, can the code in Cadence be deleted?
-
-Don't know. If this is ABI, then not.
-
+Explain the differences in the hardware. If the hardware is different,
+then it warrants different compatibles or other properties. But you need
+to explain these differences. What is there? Different number of lanes?
+Different phy? We have properties for that, use these. Different speed?
+All of them have their own properties already, so use them. Maybe
+something else... Do the homework and look at schemas and dtschema (yes,
+I know that I said other poor solutions are not excuse to copy them, but
+look for good solutions).
 
 Best regards,
 Krzysztof
