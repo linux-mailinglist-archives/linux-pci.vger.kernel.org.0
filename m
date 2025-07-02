@@ -1,167 +1,198 @@
-Return-Path: <linux-pci+bounces-31284-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31281-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E44E5AF5CDB
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 17:26:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90503AF5C87
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 17:16:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 16FB016BD91
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 15:25:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CB51B1885C59
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 15:16:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D59EC2D46BB;
-	Wed,  2 Jul 2025 15:25:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DCF22D3741;
+	Wed,  2 Jul 2025 15:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cRaDn7H4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [176.9.242.54])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9752D94B7
-	for <linux-pci@vger.kernel.org>; Wed,  2 Jul 2025 15:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9082D3735
+	for <linux-pci@vger.kernel.org>; Wed,  2 Jul 2025 15:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751469911; cv=none; b=Zbf18K1Wk0iLANPNOnLnrCvRY0oT/i+F8bcXpWg2PIAbzHUaa/ambmAEa0gqe/vQZq6g3IS/NAOqKHpJdvyifX74nUGDqiSuEtXhKgtpstLIAIp2sZn2KuKtsXPvUZebrjTsEqsOHtlScLa8QgHlDJwWHq+tGXcEn396rZg0nc4=
+	t=1751469394; cv=none; b=qGXY1CochSXcwwD87VIS7wrNiX3csuEUUKYX6Nh8jNRas2/FYoRiuyDmkTX+J4NxdCj2fHR6wc5f4eyEXP8wPFaAvZiXR42SMAqTLiUKmA3TfzIEtaOse5ByT6y9gI0PC8EK7HaK60/BHdoYLZNCJUUwvDLgvbKhOLyxUEhH7pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751469911; c=relaxed/simple;
-	bh=h2ukEMsYMEfcOGW8DvmR58gHGk8vdeaTlECjogs0Hag=;
-	h=Message-ID:From:Date:Subject:To:Cc; b=uZLwuP+1wBdiFSXCS/TADcoZpW5vrTacuZJgJptC3zUu/MoXd8m6h5COpW/cSPY7ZpDRM6yBnxO60QexWEW/xPbU5vKstc7lq0QJrsGtfbKd4rUxTqubjKnao4W1n3xd4ENsyYb6+bLRGhh0mX8Wz6hMui5DpKXjpQ55s+/k5ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=176.9.242.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by mailout3.hostsharing.net (Postfix) with UTF8SMTPS id 62BAE3006AD5;
-	Wed,  2 Jul 2025 17:15:09 +0200 (CEST)
-Received: from localhost (unknown [89.246.108.87])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by h08.hostsharing.net (Postfix) with UTF8SMTPSA id 15F9C619FB4D;
-	Wed,  2 Jul 2025 17:15:09 +0200 (CEST)
-X-Mailbox-Line: From b29e7fbfc6d146f947603d0ebaef44cbd2f0d754 Mon Sep 17 00:00:00 2001
-Message-ID: <b29e7fbfc6d146f947603d0ebaef44cbd2f0d754.1751468802.git.lukas@wunner.de>
-From: Lukas Wunner <lukas@wunner.de>
-Date: Wed, 2 Jul 2025 17:15:15 +0200
-Subject: [PATCH v2] agp/amd64: Check AGP Capability before binding to
- unsupported devices
-To: David Airlie <airlied@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ben Hutchings <ben@decadent.org.uk>, Joerg Roedel <joro@8bytes.org>, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Andi Kleen <ak@linux.intel.com>, Ahmed Salem <x0rw3ll@gmail.com>, Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, linux-pci@vger.kernel.org
+	s=arc-20240116; t=1751469394; c=relaxed/simple;
+	bh=DNldVKZ2/2U6fio48J9+i8QqKU9ETqb9Wai0q4AA8S0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=T91SBx9f93YOBzRo1QcrJCdX/IsbRzb1CxLuUW2Uw3b6Z/MiI0eC6jpn7G/SnqaHXrNqDVzXJFUULRs9UuSFnf3Ixoooq7MZLu6XgWBIcnxVg6DkaqKcso+ufyZFTqNE6grCKofE5y6sqI4A3EE3HqpYx270IOuIIXoaU2HG+1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cRaDn7H4; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751469393; x=1783005393;
+  h=date:from:to:cc:subject:message-id;
+  bh=DNldVKZ2/2U6fio48J9+i8QqKU9ETqb9Wai0q4AA8S0=;
+  b=cRaDn7H4wv8CqLMs4uR5cjY6B9dcZjdeq08oI33+ZtID/GIavzylMZbX
+   W/bgEmhOdoxAE253ABM6/Wr7FxHVZjyrawy8zHF2mYBdlxlK0HkOPKbKH
+   2r/1PugWzhBlS9G9rSfpER12lCG9/ZoN4TxwlAmf+TXAw8P8HP+MILYsx
+   zxrpVYbIJtySXln9to9XzrOqIwHEeULa0pCizV7VByHoWiu6HVE1YpM1N
+   UsXMArlEz5H5fem1GQs+tdzDB1IsY2pseLMrfAorbqbtMkJ7wFvHxgW9h
+   Bi0p1/9cK+fm33yss8w1X+A3YIUY+RNHCOuT9lTh6Z8yTf9eZRXXD9yHA
+   g==;
+X-CSE-ConnectionGUID: q7eQ02FMQeGAIQQ3L5aBUA==
+X-CSE-MsgGUID: mEnJH5S5SMWCMBVbGhAr+g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="57582969"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="57582969"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:16:31 -0700
+X-CSE-ConnectionGUID: ZaUPPIbkQTe7nFof6tVTAw==
+X-CSE-MsgGUID: XpXHB8i/T0uNPb1JkgXfMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="177783073"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 02 Jul 2025 08:16:29 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uWzCE-0000mh-1n;
+	Wed, 02 Jul 2025 15:16:26 +0000
+Date: Wed, 02 Jul 2025 23:16:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/rockchip] BUILD SUCCESS
+ 5d89ab04bb0bcae2f1c1660b5f6f78e0fc990206
+Message-ID: <202507022303.XCJ9mHEw-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-Since commit 172efbb40333 ("AGP: Try unsupported AGP chipsets on x86-64
-by default"), the AGP driver for AMD Opteron/Athlon64 CPUs has attempted
-to bind to any PCI device possessing an AGP Capability.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rockchip
+branch HEAD: 5d89ab04bb0bcae2f1c1660b5f6f78e0fc990206  PCI: rockchip: Set Target Link Speed to 5.0 GT/s before retraining
 
-Commit 6fd024893911 ("amd64-agp: Probe unknown AGP devices the right
-way") subsequently reworked the driver to perform a bind attempt to
-any PCI device (regardless of AGP Capability) and reject a device in
-the driver's ->probe() hook if it lacks the AGP Capability.
+elapsed time: 1449m
 
-On modern CPUs exposing an AMD IOMMU, this subtle change results in an
-annoying message with KERN_CRIT severity:
+configs tested: 105
+configs skipped: 4
 
-  pci 0000:00:00.2: Resources present before probing
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-The message is emitted by the driver core prior to invoking a driver's
-->probe() hook.  The check for an AGP Capability in the ->probe() hook
-happens too late to prevent the message.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                   randconfig-001-20250702    gcc-10.5.0
+arc                   randconfig-002-20250702    gcc-14.3.0
+arc                        vdk_hs38_defconfig    gcc-15.1.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                          gemini_defconfig    clang-20
+arm                   randconfig-001-20250702    clang-17
+arm                   randconfig-002-20250702    clang-19
+arm                   randconfig-003-20250702    clang-21
+arm                   randconfig-004-20250702    clang-17
+arm                           u8500_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250702    clang-21
+arm64                 randconfig-002-20250702    clang-21
+arm64                 randconfig-003-20250702    clang-21
+arm64                 randconfig-004-20250702    clang-21
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250702    gcc-15.1.0
+csky                  randconfig-002-20250702    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250702    clang-21
+hexagon               randconfig-002-20250702    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch             randconfig-001-20250702    gcc-15.1.0
+loongarch             randconfig-002-20250702    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                           ip32_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250702    gcc-14.2.0
+nios2                 randconfig-002-20250702    gcc-14.2.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                randconfig-001-20250702    gcc-12.4.0
+parisc                randconfig-002-20250702    gcc-9.3.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                      chrp32_defconfig    clang-19
+powerpc               randconfig-001-20250702    gcc-11.5.0
+powerpc               randconfig-002-20250702    gcc-11.5.0
+powerpc               randconfig-003-20250702    clang-21
+powerpc64             randconfig-001-20250702    clang-21
+powerpc64             randconfig-002-20250702    clang-19
+powerpc64             randconfig-003-20250702    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                 randconfig-001-20250701    gcc-14.3.0
+riscv                 randconfig-002-20250701    gcc-10.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                  randconfig-001-20250701    gcc-9.3.0
+s390                  randconfig-002-20250701    clang-17
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                    randconfig-001-20250701    gcc-15.1.0
+sh                    randconfig-002-20250701    gcc-13.3.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250701    gcc-10.3.0
+sparc                 randconfig-002-20250701    gcc-15.1.0
+sparc64               randconfig-001-20250701    gcc-8.5.0
+sparc64               randconfig-002-20250701    gcc-12.4.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250701    gcc-12
+um                    randconfig-002-20250701    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250702    gcc-12
+x86_64      buildonly-randconfig-002-20250702    gcc-11
+x86_64      buildonly-randconfig-003-20250702    clang-20
+x86_64      buildonly-randconfig-004-20250702    clang-20
+x86_64      buildonly-randconfig-005-20250702    clang-20
+x86_64      buildonly-randconfig-006-20250702    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250701    gcc-15.1.0
+xtensa                randconfig-002-20250701    gcc-13.3.0
 
-The message has appeared only recently with commit 3be5fa236649 (Revert
-"iommu/amd: Prevent binding other PCI drivers to IOMMU PCI devices").
-Prior to the commit, no driver could bind to AMD IOMMUs.
-
-The reason for the message is that an MSI is requested early on for the
-AMD IOMMU, which results in a call from msi_sysfs_create_group() to
-devm_device_add_group().  A devres resource is thus attached to the
-driver-less AMD IOMMU, which is normally not allowed, but presumably
-cannot be avoided because requesting the MSI from a regular PCI driver
-might be too late.
-
-Avoid the message by once again checking for an AGP Capability *before*
-binding to an unsupported device.  Achieve that by way of the PCI core's
-dynid functionality.
-
-pci_add_dynid() can fail only with -ENOMEM (on allocation failure) or
--EINVAL (on bus_to_subsys() failure).  It doesn't seem worth the extra
-code to propagate those error codes out of the for_each_pci_dev() loop,
-so simply error out with -ENODEV if there was no successful bind attempt.
-In the -ENOMEM case, a splat is emitted anyway, and the -EINVAL case can
-never happen because it requires failure of bus_register(&pci_bus_type),
-in which case there's no driver probing of PCI devices.
-
-Hans has voiced a preference to no longer probe unsupported devices by
-default (i.e. set agp_try_unsupported = 0).  In fact, the help text for
-CONFIG_AGP_AMD64 pretends this to be the default.  Alternatively, he
-proposes probing only devices with PCI_CLASS_BRIDGE_HOST.  However these
-approaches risk regressing users who depend on the existing behavior.
-
-Fixes: 3be5fa236649 (Revert "iommu/amd: Prevent binding other PCI drivers to IOMMU PCI devices")
-Reported-by: Fedor Pchelkin <pchelkin@ispras.ru>
-Closes: https://lore.kernel.org/r/wpoivftgshz5b5aovxbkxl6ivvquinukqfvb5z6yi4mv7d25ew@edtzr2p74ckg/
-Reported-by: Hans de Goede <hansg@kernel.org>
-Closes: https://lore.kernel.org/r/20250625112411.4123-1-hansg@kernel.org/
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
-Changes v1 -> v2:
- * Use pci_add_dynid() to bind only to devices with AGP Capability
-   (based on a suggestion from Ben).
- * Rephrase commit message to hopefully explain the history more accurately.
-   Explain why resources are attached to the driver-less AMD IOMMU
-   (requested by Ben).
- * Acknowledge Hans as reporter.
-
- drivers/char/agp/amd64-agp.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/char/agp/amd64-agp.c b/drivers/char/agp/amd64-agp.c
-index bf490967241a..2505df1f4e69 100644
---- a/drivers/char/agp/amd64-agp.c
-+++ b/drivers/char/agp/amd64-agp.c
-@@ -720,11 +720,6 @@ static const struct pci_device_id agp_amd64_pci_table[] = {
- 
- MODULE_DEVICE_TABLE(pci, agp_amd64_pci_table);
- 
--static const struct pci_device_id agp_amd64_pci_promisc_table[] = {
--	{ PCI_DEVICE_CLASS(0, 0) },
--	{ }
--};
--
- static DEFINE_SIMPLE_DEV_PM_OPS(agp_amd64_pm_ops, NULL, agp_amd64_resume);
- 
- static struct pci_driver agp_amd64_pci_driver = {
-@@ -739,6 +734,7 @@ static struct pci_driver agp_amd64_pci_driver = {
- /* Not static due to IOMMU code calling it early. */
- int __init agp_amd64_init(void)
- {
-+	struct pci_dev *pdev = NULL;
- 	int err = 0;
- 
- 	if (agp_off)
-@@ -767,9 +763,13 @@ int __init agp_amd64_init(void)
- 		}
- 
- 		/* Look for any AGP bridge */
--		agp_amd64_pci_driver.id_table = agp_amd64_pci_promisc_table;
--		err = driver_attach(&agp_amd64_pci_driver.driver);
--		if (err == 0 && agp_bridges_found == 0) {
-+		for_each_pci_dev(pdev)
-+			if (pci_find_capability(pdev, PCI_CAP_ID_AGP))
-+				pci_add_dynid(&agp_amd64_pci_driver,
-+					      pdev->vendor, pdev->device,
-+					      pdev->subsystem_vendor,
-+					      pdev->subsystem_device, 0, 0, 0);
-+		if (agp_bridges_found == 0) {
- 			pci_unregister_driver(&agp_amd64_pci_driver);
- 			err = -ENODEV;
- 		}
--- 
-2.47.2
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
