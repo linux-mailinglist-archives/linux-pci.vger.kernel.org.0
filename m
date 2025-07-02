@@ -1,239 +1,204 @@
-Return-Path: <linux-pci+bounces-31248-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31249-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65FCFAF13CB
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 13:25:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18B6EAF13DC
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 13:29:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 854831730E5
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 11:25:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A28C2444A5C
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 11:28:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39D4425D219;
-	Wed,  2 Jul 2025 11:25:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 482FD264A65;
+	Wed,  2 Jul 2025 11:29:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wr33vVt5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VdjtxUyP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1248825A2A2;
-	Wed,  2 Jul 2025 11:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0E92620FA;
+	Wed,  2 Jul 2025 11:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751455515; cv=none; b=nck5H5pS2GMJXhxJaqGqzgLZIITzLVMU4FoUdAjH3FA/Ub8YQrGun/nQtRDpZC783e/H/9TEvSZ5JnG4LuwZX5vbL7uRr9PajPh9ua0L13TtK5uKv04SfZADmLvpg0r2IMsemK/jIaeilHf1N2NriKmr2bjCj+PlZ7Vp/AnFgGI=
+	t=1751455750; cv=none; b=X4IoGLO4ceBaYzTz5pF9qysJaoV55gtYSjT1PNR17FLg3lDXQawpp2NjO7WNJY0mFCErJx4Z3aLc+y3wnU5HlyTHbj92txJzx7zG6dtysnKGsUtO3cH38pWR7QR88hxQp5syNV+uvHa4LU5sQlpUGFXCPff+bpgZ7JjRd1PBBSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751455515; c=relaxed/simple;
-	bh=8dTzzH6XD0LnYay4bzUgFc2z0nXsE2kke2FZGdNx4nM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eh17WRyklxovVrfzVKCaWV2tWlCTz8qYHMKrVIC3DO8AEnWOogMCEcJ11kCKq2KKzg2efdTT3QNg+lnSPSfWYE1a0kdzSqzzt2//0HTBiQ4crvYJyIgeEf78ONlrY0S9iJ1d56l0LzUBIomr6R1Ef6/gRgBxVg7pEykF9YQhFno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wr33vVt5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96E93C4CEF1;
-	Wed,  2 Jul 2025 11:25:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751455514;
-	bh=8dTzzH6XD0LnYay4bzUgFc2z0nXsE2kke2FZGdNx4nM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Wr33vVt5VR19BjqT3F3Sr7rgI3+y6ZUOV3qIBfdxC16QkgjFGmP4n1DtdnIcyMMhu
-	 AAxQIvxp3Yk/PaAvhdlu9/ubcfcFMoKQr8usHC44Ofto2lIM+Mh8YwYoxP/s5qkAkk
-	 RCDunzKhcY0FKMNWGGWBuC+BoQMuSUaxWdy8vmkAUY2M3u7zlRUVA8VByyUKFYbhUt
-	 nojNT9xM1Uy0uWdPIjUlHP0rbUjqyl4o/bwcNpgQuqX0Gh4CQnPchqxOaV6oAevwnp
-	 zKMkqhODz6AwOf/qiMlkMLneDx9kbvsApK924rnAXRToyC31GlQ8kN78GiKSFG96qK
-	 Lfvwf7YQ1Hssw==
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-6119b103132so4068305eaf.1;
-        Wed, 02 Jul 2025 04:25:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVNl4UnDVqJQsH9GE9rSEBO/XC1vbnbMB/NCDiwG/QTIAq16mqN/0r0myRihtjVfvB6yUOw8MQ66wwj@vger.kernel.org, AJvYcCWI2X7ORdNWWKO6Ec7T4CIKw0XnwBIgsdUJDkj80Qwv53oa4YGyVAflZS+EbkRD2peLuz7nWCDiyAwE@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRT/r8FgcIKT+0LujSGVj1pRWTaI/zt1nV7l7Jlbbzs9/mGcQB
-	np7ks3Ng0BBOzkVKJbsS0zg2Wlk2nYcDZ/4FiM/TrLBk3p9zsZkI0e7bEUHY9mYi9/S/Wxj8eiK
-	vBJH6rs7LuhxqbYR6aksmT0iEwAeCAGg=
-X-Google-Smtp-Source: AGHT+IFcqryTGk2cqRSJP4XnYZ/PNgYLdq3uf9O8wXIGNDre0aUGcDqxLCVTdgRa6tDYI3HSGKzv8ZyDRb9kkLSzmkc=
-X-Received: by 2002:a05:6820:206:b0:611:3e54:8d0a with SMTP id
- 006d021491bc7-61201765b68mr1615739eaf.1.1751455513424; Wed, 02 Jul 2025
- 04:25:13 -0700 (PDT)
+	s=arc-20240116; t=1751455750; c=relaxed/simple;
+	bh=ye5X6obKoSEg1H58wS5paYr733c6PnCpeelFGlRpih0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=gik18cLeH/n713jqRwZRKYXfc32Npj5dMYlzEbW0LNry0oggbYKqWQiEBgHXkuWCGvyY/WcokHkLbZ4uCxFyjwg1SIiunZT76WzrwDArp8Gm8Inmd9EnmxYBx7MlaqSoLo+6u8DZECejdO/g9fD3Co2rQi2cxMGkCUcW0wlOk1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VdjtxUyP; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751455749; x=1782991749;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ye5X6obKoSEg1H58wS5paYr733c6PnCpeelFGlRpih0=;
+  b=VdjtxUyPlgqQ9o/9kFQdDzpnAdaTbAFzwsCHxFrrPw/Up+Mgnu4prBj7
+   kMItUz8jayDydEIE04AbXgoti1v2kQYUN1Yrym+P0LVEYtfJNeDydUdba
+   jISk1AxeqBfX950ahZ9dyhqVcz3twcWKwkMFJZE+JUbl3IeWJO3XAse7V
+   ZnDsYyDdo4NtwRXhPCyQPezpsKksBN9YD9gNcsnCcFputcQbgKLQ19Q4V
+   W2Z6AWcJikv6QtFD86hy+2ceB4TfPWvZGhoGezZgU0WLlfmzO6zES0zjd
+   aXmN8HBpWVZ2EangxeF89N57txCa3ljIbKhaWzMgQjZJlsxKylB3c3K1o
+   w==;
+X-CSE-ConnectionGUID: HnHT6DM5TPmisifccTaGdg==
+X-CSE-MsgGUID: l26l8053TACx4A2RQdyEGA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="71312956"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="71312956"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:29:07 -0700
+X-CSE-ConnectionGUID: 6LQ9sz59SMmbijbCNfm0/Q==
+X-CSE-MsgGUID: 8wdgoqVFRg63/w0PtLAeew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="153820832"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.228])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:29:02 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 2 Jul 2025 14:28:59 +0300 (EEST)
+To: Badal Nilawar <badal.nilawar@intel.com>
+cc: intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org, 
+    linux-pci@vger.kernel.org, anshuman.gupta@intel.com, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, lenb@kernel.org, 
+    bhelgaas@google.com, lucas.demarchi@intel.com, rodrigo.vivi@intel.com, 
+    varun.gupta@intel.com, ville.syrjala@linux.intel.com, 
+    uma.shankar@intel.com
+Subject: Re: [PATCH v4 02/11] PCI/ACPI: Per root port allow one Aux power
+ limit request
+In-Reply-To: <20250529111654.3140766-3-badal.nilawar@intel.com>
+Message-ID: <ec3bd3a0-98d3-3b55-198e-a27a2c1dfe8a@linux.intel.com>
+References: <20250529111654.3140766-1-badal.nilawar@intel.com> <20250529111654.3140766-3-badal.nilawar@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529111654.3140766-1-badal.nilawar@intel.com>
- <20250529111654.3140766-4-badal.nilawar@intel.com> <7bf8430d-fbb5-4e6f-9b09-11f6bc1ff67e@linux.intel.com>
-In-Reply-To: <7bf8430d-fbb5-4e6f-9b09-11f6bc1ff67e@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Jul 2025 13:25:02 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jHbGZAePFPopDOWE86j6Ao+_rJ3FRHKyb1asmxgfLYJA@mail.gmail.com>
-X-Gm-Features: Ac12FXyl2MeTXS_1Bc8jq9qtu2kQsHl5o51-8kl61hFF0HmIw9CXBlHu_iIJyEI
-Message-ID: <CAJZ5v0jHbGZAePFPopDOWE86j6Ao+_rJ3FRHKyb1asmxgfLYJA@mail.gmail.com>
-Subject: Re: [PATCH v4 03/11] PCI/ACPI: Add PERST# Assertion Delay _DSM method
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-	Badal Nilawar <badal.nilawar@intel.com>
-Cc: intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org, 
-	linux-pci@vger.kernel.org, anshuman.gupta@intel.com, rafael@kernel.org, 
-	lenb@kernel.org, bhelgaas@google.com, ilpo.jarvinen@linux.intel.com, 
-	lucas.demarchi@intel.com, rodrigo.vivi@intel.com, varun.gupta@intel.com, 
-	ville.syrjala@linux.intel.com, uma.shankar@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, May 29, 2025 at 11:57=E2=80=AFPM Sathyanarayanan Kuppuswamy
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->
->
-> On 5/29/25 4:16 AM, Badal Nilawar wrote:
-> > From: Anshuman Gupta <anshuman.gupta@intel.com>
-> >
-> > Implement _DSM Method 0Bh as per PCI firmware specs
-> > section 4.6.11 Rev 3.3.
-> >
-> > Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
-> > Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-> > ---
-> >   drivers/pci/pci-acpi.c   | 57 +++++++++++++++++++++++++++++++++++++++=
-+
-> >   include/linux/pci-acpi.h |  8 +++++-
-> >   2 files changed, 64 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > index d33efba4ca94..88044491feaa 100644
-> > --- a/drivers/pci/pci-acpi.c
-> > +++ b/drivers/pci/pci-acpi.c
-> > @@ -1531,6 +1531,63 @@ int pci_acpi_request_d3cold_aux_power(struct pci=
-_dev *dev, u32 requested_power,
-> >   }
-> >   EXPORT_SYMBOL_GPL(pci_acpi_request_d3cold_aux_power);
-> >
-> > +/**
-> > + * pci_acpi_add_perst_assertion_delay - Request PERST# delay via ACPI =
-DSM
-> > + * @dev: PCI device instance
-> > + * @delay_us: Requested delay_us
-> > + *
-> > + * This function sends a request to the host BIOS via ACPI _DSM to gra=
-nt the
-> > + * required PERST# delay for the specified PCI device. It evaluates th=
-e _DSM
-> > + * to request the PERST# delay and handles the response accordingly.
-> > + *
-> > + * Return: returns 0 on success and errno on failure.
-> > + */
-> > +int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_=
-us)
-> > +{
-> > +     union acpi_object in_obj =3D {
-> > +             .integer.type =3D ACPI_TYPE_INTEGER,
-> > +             .integer.value =3D delay_us,
-> > +     };
-> > +
-> > +     union acpi_object *out_obj;
-> > +     acpi_handle handle;
-> > +     int result, ret =3D -EINVAL;
-> > +
-> > +     if (!dev)
-> > +             return -EINVAL;
-> > +
-> > +     handle =3D ACPI_HANDLE(&dev->dev);
-> > +     if (!handle)
-> > +             return -EINVAL;
-> > +
-> > +     if (!acpi_check_dsm(handle, &pci_acpi_dsm_guid, 4, 1 << DSM_PCI_P=
-ERST_ASSERTION_DELAY)) {
-> > +             pci_dbg(dev, "ACPI _DSM 0%Xh not supported\n", DSM_PCI_PE=
-RST_ASSERTION_DELAY);
-> > +             return -ENODEV;
-> > +     }
-> > +
-> > +     out_obj =3D acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4=
-,
-> > +                                       DSM_PCI_PERST_ASSERTION_DELAY,
-> > +                                       &in_obj, ACPI_TYPE_INTEGER);
-> > +     if (!out_obj)
-> > +             return -EINVAL;
-> > +
-> > +     result =3D out_obj->integer.value;
-> > +
-> > +     if (result =3D=3D delay_us) {
-> > +             pci_info(dev, "PERST# Assertion Delay set to %u microseco=
-nds\n", delay_us);
-> > +             ret =3D 0;
->
-> I think above is a debug message. If it is set properly, why would you wa=
-nt to know
-> the details?
->
-> > +     } else if (result =3D=3D 0) {
-> > +             pci_warn(dev, "PERST# Assertion Delay request failed, no =
-previous valid request\n");
-> > +     } else {
-> > +             pci_warn(dev, "PERST# Assertion Delay request failed, Pre=
-vious valid delay: %u microseconds\n",
-> > +                      result);
-> > +     }
->
-> May be you don't need to elaborate the error details. Will following work=
-?
->
-> pci_warn(dev, "PERST# Assertion Delay request failed, result:%u micro sec=
-onds\n", result);
+On Thu, 29 May 2025, Badal Nilawar wrote:
 
-Or even
+> For given root port allow one Aux power limit request.
+> 
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Cc: Anshuman Gupta <anshuman.gupta@intel.com>
+> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+> ---
+>  drivers/acpi/scan.c     |  1 +
+>  drivers/pci/pci-acpi.c  | 25 ++++++++++++++++++++++++-
+>  include/acpi/acpi_bus.h |  2 ++
+>  3 files changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index fb1fe9f3b1a3..9ae7be9db01a 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -745,6 +745,7 @@ int acpi_device_add(struct acpi_device *device)
+>  	INIT_LIST_HEAD(&device->physical_node_list);
+>  	INIT_LIST_HEAD(&device->del_list);
+>  	mutex_init(&device->physical_node_lock);
+> +	mutex_init(&device->power.aux_pwr_lock);
 
-pci_info(dev, "PERST# Assertion Delay request failed, using %u ms
-delay\n", result);
+Hi,
 
-And it doesn't really need to be pci_warn().
+mutex_destroy() also exists but I don't find any added by this patch?
+I think the pre-existing mutex might also have this same problem.
 
->
-> > +
-> > +     ACPI_FREE(out_obj);
-> > +     return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(pci_acpi_add_perst_assertion_delay);
-> > +
-> >   static void pci_acpi_set_external_facing(struct pci_dev *dev)
-> >   {
-> >       u8 val;
-> > diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-> > index 6079306ad754..e53d4893cf56 100644
-> > --- a/include/linux/pci-acpi.h
-> > +++ b/include/linux/pci-acpi.h
-> > @@ -122,6 +122,7 @@ extern const guid_t pci_acpi_dsm_guid;
-> >   #define DSM_PCI_POWER_ON_RESET_DELAY                0x08
-> >   #define DSM_PCI_DEVICE_READINESS_DURATIONS  0x09
-> >   #define DSM_PCI_D3COLD_AUX_POWER_LIMIT              0x0A
-> > +#define DSM_PCI_PERST_ASSERTION_DELAY                0x0B
-> >
-> >   #ifdef CONFIG_PCIE_EDR
-> >   void pci_acpi_add_edr_notifier(struct pci_dev *pdev);
-> > @@ -135,7 +136,7 @@ int pci_acpi_set_companion_lookup_hook(struct acpi_=
-device *(*func)(struct pci_de
-> >   void pci_acpi_clear_companion_lookup_hook(void);
-> >   int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 reques=
-ted_power,
-> >                                     u32 *retry_interval);
-> > -
-> > +int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_=
-us);
-> >   #else       /* CONFIG_ACPI */
-> >   static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
-> >   static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
-> > @@ -144,6 +145,11 @@ static inline int pci_acpi_request_d3cold_aux_powe=
-r(struct pci_dev *dev, u32 req
-> >   {
-> >       return -EOPNOTSUPP;
-> >   }
-> > +
-> > +static inline int pci_acpi_add_perst_assertion_delay(struct pci_dev *d=
-ev, u32 delay_us)
-> > +{
-> > +     return -EOPNOTSUPP;
-> > +}
-> >   #endif      /* CONFIG_ACPI */
-> >
-> >   #endif      /* _PCI_ACPI_H_ */
->
-> --
-> Sathyanarayanan Kuppuswamy
-> Linux Kernel Developer
->
+>  
+>  	mutex_lock(&acpi_device_lock);
+>  
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 87f30910a5f1..d33efba4ca94 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -1451,6 +1451,7 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>  	union acpi_object *out_obj;
+>  	acpi_handle handle;
+>  	int result, ret = -EINVAL;
+> +	struct acpi_device *adev;
+>  
+>  	if (!dev || !retry_interval)
+>  		return -EINVAL;
+> @@ -1464,11 +1465,27 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>  		return -ENODEV;
+>  	}
+>  
+> +	adev = ACPI_COMPANION(&dev->dev);
+> +	if (!adev)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&adev->power.aux_pwr_lock);
+> +
+> +	/* Check if aux power already granted */
+> +	if (adev->power.aux_power_limit) {
+> +		pci_info(dev, "D3cold Aux Power request already granted: %u mW\n",
+> +			 adev->power.aux_power_limit);
+> +		mutex_unlock(&adev->power.aux_pwr_lock);
+> +		return -EPERM;
+> +	}
+> +
+>  	out_obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4,
+>  					  DSM_PCI_D3COLD_AUX_POWER_LIMIT,
+>  					  &in_obj, ACPI_TYPE_INTEGER);
+> -	if (!out_obj)
+> +	if (!out_obj) {
+> +		mutex_unlock(&adev->power.aux_pwr_lock);
+>  		return -EINVAL;
+> +	}
+>  
+>  	result = out_obj->integer.value;
+>  	if (retry_interval)
+> @@ -1478,14 +1495,17 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>  	case 0x0:
+>  		pci_dbg(dev, "D3cold Aux Power %u mW request denied\n",
+>  			requested_power);
+> +		adev->power.aux_power_limit = 0;
+>  		break;
+>  	case 0x1:
+>  		pci_info(dev, "D3cold Aux Power request granted: %u mW\n",
+>  			 requested_power);
+> +		adev->power.aux_power_limit = requested_power;
+>  		ret = 0;
+>  		break;
+>  	case 0x2:
+>  		pci_info(dev, "D3cold Aux Power: Main power won't be removed\n");
+> +		adev->power.aux_power_limit = 0;
+>  		ret = -EBUSY;
+>  		break;
+>  	default:
+> @@ -1500,9 +1520,12 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>  			pci_err(dev, "D3cold Aux Power: Reserved or unsupported response: 0x%x\n",
+>  				result);
+>  		}
+> +		adev->power.aux_power_limit = 0;
+>  		break;
+>  	}
+>  
+> +	mutex_unlock(&adev->power.aux_pwr_lock);
+> +
+>  	ACPI_FREE(out_obj);
+>  	return ret;
+>  }
+> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> index aad1a95e6863..c4ce3d84be00 100644
+> --- a/include/acpi/acpi_bus.h
+> +++ b/include/acpi/acpi_bus.h
+> @@ -294,6 +294,8 @@ struct acpi_device_power {
+>  	struct acpi_device_power_flags flags;
+>  	struct acpi_device_power_state states[ACPI_D_STATE_COUNT];	/* Power states (D0-D3Cold) */
+>  	u8 state_for_enumeration; /* Deepest power state for enumeration */
+> +	u32 aux_power_limit;		/* aux power limit granted by bios */
+> +	struct mutex aux_pwr_lock;	/* prevent concurrent aux power limit requests */
+>  };
+>  
+>  struct acpi_dep_data {
+> 
+
+-- 
+ i.
+
 
