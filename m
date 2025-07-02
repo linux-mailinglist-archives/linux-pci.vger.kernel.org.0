@@ -1,297 +1,140 @@
-Return-Path: <linux-pci+bounces-31279-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31280-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3510CAF5C01
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 17:00:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BDE7AF5C0F
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 17:03:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5185D5235A9
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 14:59:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7256F522F7B
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 15:01:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 452AD30E84F;
-	Wed,  2 Jul 2025 14:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 735FF18132A;
+	Wed,  2 Jul 2025 15:01:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a/dCBG63"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFPz1ekK"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA0430E82B;
-	Wed,  2 Jul 2025 14:59:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCF72D0C61;
+	Wed,  2 Jul 2025 15:01:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468348; cv=none; b=CaqkqBvLLeAq9VIiimvRd/JP0JRSjiELNEdA3vmLr7JVAEiksoRf81xj5ZhrmhA2gTa6qcwOsrhF7sdHSm/rV76RR3wnpy/IYmjmq8nu7wQwDPFaDrjyivxTar98hHRoA62cJGS0z3oQ4c5tL/z64n/EOeuy4m0KsAoqByEUvyw=
+	t=1751468504; cv=none; b=K5tTxEw6fO+XgTQYcRcfVpi+S+x28oQbIfmAriuooZF9gYoByZECwqladuOwv6bHijJFE3ZFBVLbY60CHjcLh1cGHusjsQYUD6W3I5Aq4wJVv9WX5ZNFPO2WA0phKVw4TrhsjYu6g83UyJozNTWzvxfoe6q2Qqose1r9g57t50A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751468348; c=relaxed/simple;
-	bh=7U1RIaJFYuXTcTnJPh2nsOAauQAM414gMJSuOXL4gkg=;
+	s=arc-20240116; t=1751468504; c=relaxed/simple;
+	bh=SaHDZ4wIBsKxb9s+1iRJfvfGTvCsTriRDi+uhUgl3qs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YnJo+PTqahpLiop5vTlo7kWfMzsyTI8VOtWhHwdOSwEX6ue2Ab6Q0zqK0hVfS9R9DwLC2olzZxWkOXDq0MvKoPwoOn3yEDHmEnpswb/5XiQEFfdCO+diSjbj+ax9qGl1qRNOefYIjnC4ZkNVpkPsQI4ENgwATbb9Og5V4ODrC+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a/dCBG63; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D82D1C4CEED;
-	Wed,  2 Jul 2025 14:59:02 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=IeEN72xbTZF9XQarSUSZGsOt1E+ZAKaTLbWdgRCaZ8nYAkM7ZzK6RCcD8r/FfWIzYGUtC6zuMozOneWegmGcmhMRGxNap8yGDJXF5ANIR11y2lDHp0+vajB+WVVNWQORP1/RUkCuNZ7PIWe1SXgG7s8TgHjA6pmcAr55/4XFsAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFPz1ekK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D895C4CEE7;
+	Wed,  2 Jul 2025 15:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751468347;
-	bh=7U1RIaJFYuXTcTnJPh2nsOAauQAM414gMJSuOXL4gkg=;
+	s=k20201202; t=1751468503;
+	bh=SaHDZ4wIBsKxb9s+1iRJfvfGTvCsTriRDi+uhUgl3qs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a/dCBG63u9V3vqZHxS2BfmOlb7HvqThyXavXbFg4U9Y/vPyLDJcy5lWR+DBAO8rcF
-	 VHvi2iuG1ujcCNaO3aWCwRAeOpyeb/VNtMqOYn8trzTsVPyH9Mnq8jPedWT9C/A3aG
-	 fcGwLEOyQvgybl+bfFGMXIyHiGfe0pqJcxwrmKAv4bl63lh4PFvSGB2OJV8LyonP8W
-	 ElokT3XaYGBgLk8pE2Nxo+QZLBrWBUP33EbnGvpirmPoDWXRseCcDwJ2MZwY0Touyn
-	 xSiulqoF1KO4yHbOnhVcwzhWdCTv/IuBUgbGFtiTd987QQppoN7PxVyjSkCu/NnNA0
-	 IHvdu9ivVZUWw==
-Date: Wed, 2 Jul 2025 16:59:00 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 20/31] irqchip/gic-v5: Add GICv5 PPI support
-Message-ID: <aGVJNHiD44DH1sLn@lpieralisi>
-References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
- <20250626-gicv5-host-v6-20-48e046af4642@kernel.org>
- <20250702124019.00006b01@huawei.com>
- <aGUqEkascwGFD9x+@lpieralisi>
- <20250702140022.00001c65@huawei.com>
- <aGUycEuLadcG+IfV@lpieralisi>
- <20250702150907.000060d8@huawei.com>
+	b=mFPz1ekKdZbVNAz4rJGd5xyY5sZ4nqGJ+5hipsT580I38dRu8oiRtgERhYUGL17Dw
+	 OLLSrukOiRKQqk1QszwYYUfSyffBrcBmdkpPPNk722l6XE4DDnPXgt9jnW+IsfOyWg
+	 6nk2yLMejqVFloDl7E6PNxNapikx72jx4TufUVvI/x/j6wsdr9dRdnfmkOQmQH5XC5
+	 9Rcyq+yh2Q9iNexx2zcOy7LZXMM6pb5OQoWn+Bq4f6vfz1n8To/nIOmhdfdvQ+DrGT
+	 egmcTbxiUt3JJ413o+IYnU53CQrO2X3C1AeROg3WY7ywthUO4zhjGX8Z9udVC3wkXp
+	 Kr8PhJFJNpprQ==
+Date: Wed, 2 Jul 2025 20:31:25 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>, 
+	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org
+Subject: Re: [PATCH v19 03/10] PCI: endpoint: pci-ep-msi: Add MSI
+ address/data pair mutable check
+Message-ID: <tkamojjbdfrwhvgyufcncikl6fkndedfyzm5ebo7qof66s4gmu@mjsgrcfdkms5>
+References: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
+ <20250609-ep-msi-v19-3-77362eaa48fa@nxp.com>
+ <5axgxbtyqbwwncimjiiedvkm3ap7at553vgj72bht4kynke5cd@xfghwfmp6cy7>
+ <aGVFWgnAIwWOnLjK@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250702150907.000060d8@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aGVFWgnAIwWOnLjK@lizhi-Precision-Tower-5810>
 
-On Wed, Jul 02, 2025 at 03:09:07PM +0100, Jonathan Cameron wrote:
-> On Wed, 2 Jul 2025 15:21:52 +0200
-> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Wed, Jul 02, 2025 at 10:42:43AM GMT, Frank Li wrote:
+> On Wed, Jul 02, 2025 at 05:00:23PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Jun 09, 2025 at 12:34:15PM GMT, Frank Li wrote:
+> > > Some MSI controller change address/data pair when irq_set_affinity().
+> > > Current PCI endpoint can't support this type MSI controller. Call
+> > > irq_domain_is_msi_immutable() check if address/data pair immutable.
+> > >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > > change in v18
+> > > - update commit message. remove 'include/linux/msi.h' part.
+> > >
+> > > change from v14 to v17
+> > > - none
+> > >
+> > > change from  v13 to v14
+> > > - bring v10 back
+> > >
+> > > Change from v9 to v10
+> > > - new patch
+> > > ---
+> > >  drivers/pci/endpoint/pci-ep-msi.c | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/endpoint/pci-ep-msi.c b/drivers/pci/endpoint/pci-ep-msi.c
+> > > index 549b55b864d0e..c0e2d806ee658 100644
+> > > --- a/drivers/pci/endpoint/pci-ep-msi.c
+> > > +++ b/drivers/pci/endpoint/pci-ep-msi.c
+> > > @@ -44,6 +44,14 @@ int pci_epf_alloc_doorbell(struct pci_epf *epf, u16 num_db)
+> > >
+> > >  	dev_set_msi_domain(dev, dom);
+> > >
+> > > +	if (!irq_domain_is_msi_parent(dom))
+> > > +		return -EINVAL;
+> >
+> > This check is not justified in commit message.
+> >
+> > > +
+> > > +	if (!irq_domain_is_msi_immutable(dom)) {
+> > > +		dev_err(dev, "Can't support mutable address/data pair MSI controller\n");
+> > > +		return -EINVAL;
+> >
+> > GICv3 ITS is an immutable MSI controller. From the earlier patches, I could see
+> > that you have tested this series with ITS. How did that happen if it errors out
+> > here?
 > 
-> > On Wed, Jul 02, 2025 at 02:00:22PM +0100, Jonathan Cameron wrote:
-> > > On Wed, 2 Jul 2025 14:46:10 +0200
-> > > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> > >   
-> > > > On Wed, Jul 02, 2025 at 12:40:19PM +0100, Jonathan Cameron wrote:  
-> > > > > On Thu, 26 Jun 2025 12:26:11 +0200
-> > > > > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> > > > >     
-> > > > > > The GICv5 CPU interface implements support for PE-Private Peripheral
-> > > > > > Interrupts (PPI), that are handled (enabled/prioritized/delivered)
-> > > > > > entirely within the CPU interface hardware.    
-> > > > > 
-> > > > > I can't remember where I got to last time so if I repeat stuff that
-> > > > > you already responded to, feel free to just ignore me this time ;)
-> > > > > 
-> > > > > All superficial stuff. Feel free to completely ignore if you like.    
-> > > > 
-> > > > We are at v6.16-rc4, series has been on the lists for 3 months, it has
-> > > > been reviewed and we would like to get it into v6.17 if possible and
-> > > > deemed reasonable, I am asking you folks please, what should I do ?
-> > > > 
-> > > > I can send a v7 with the changes requested below (no bug fixes there)
-> > > > - it is fine by me - but I need to know please asap if we have a
-> > > > plan to get this upstream this cycle.  
-> > > 
-> > > I'm absolutely fine with leaving these be.  The mask stuff I would like
-> > > to clean up as it applies quite widely in the series but that
-> > > can be a follow up as no bugs (so far!).   
-> > 
-> > I am certain that at a given state in the development I used the
-> > FIELD_PREP() on the hwirq_id and then was asked to remove it because
-> > it does not serve any purpose - this, for the records.
+> I removed IMMUTASBLE flags in ITS driver to check if go to this error branch.
 > 
-> Fair enough.  Though on that front the code is inconsistent as
-> there are places where it is masked.  Anyhow, no problem either
-> way. The bit of feedback I gave on patch 22 might be more useful
-> to address (comments not matching code).
 
-Yes it is. It is not strictly speaking a bug but the logic should
-be changed for SZ_64K PAGE_SIZE (try first 4K, then fallback to 16K).
+Sorry, I misread the check and got confused by the error message. Presence of
+IMMUTABLE flag is required by this driver, which is fine. Please reword the
+error message to,
 
-Well spotted, apologies but again, it is not even a bug, I missed
-it.
+	"MSI controller not supported\n"
 
-I think I can do a v7 tomorrow morning for that and include the
-other comments as well - definitely not something that should stop
-this series from being considered for v6.17 please.
+If one bothers to check why, the !irq_domain_is_msi_immutable() check is self
+explanatory.
 
-Lorenzo
+- Mani
 
-> 
-> 
-> Jonathan
-> 
-> > 
-> > Thanks,
-> > Lorenzo
-> > 
-> > > As Marc said, these are in a good state.
-> > > 
-> > > Jonathan
-> > >   
-> > > > 
-> > > > Thanks,
-> > > > Lorenzo
-> > > >   
-> > > > > > diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..a08daa562d21
-> > > > > > --- /dev/null
-> > > > > > +++ b/drivers/irqchip/irq-gic-v5.c
-> > > > > > @@ -0,0 +1,461 @@
-> > > > > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > > > > +/*
-> > > > > > + * Copyright (C) 2024-2025 ARM Limited, All Rights Reserved.
-> > > > > > + */
-> > > > > > +
-> > > > > > +#define pr_fmt(fmt)	"GICv5: " fmt
-> > > > > > +
-> > > > > > +#include <linux/irqdomain.h>
-> > > > > > +#include <linux/wordpart.h>
-> > > > > > +
-> > > > > > +#include <linux/irqchip.h>
-> > > > > > +#include <linux/irqchip/arm-gic-v5.h>
-> > > > > > +
-> > > > > > +#include <asm/cpufeature.h>
-> > > > > > +#include <asm/exception.h>
-> > > > > > +
-> > > > > > +static u8 pri_bits __ro_after_init = 5;
-> > > > > > +
-> > > > > > +#define GICV5_IRQ_PRI_MASK	0x1f
-> > > > > > +#define GICV5_IRQ_PRI_MI	(GICV5_IRQ_PRI_MASK & GENMASK(4, 5 - pri_bits))
-> > > > > > +
-> > > > > > +#define PPI_NR	128
-> > > > > > +
-> > > > > > +static bool gicv5_cpuif_has_gcie(void)
-> > > > > > +{
-> > > > > > +	return this_cpu_has_cap(ARM64_HAS_GICV5_CPUIF);
-> > > > > > +}
-> > > > > > +
-> > > > > > +struct gicv5_chip_data {
-> > > > > > +	struct fwnode_handle	*fwnode;
-> > > > > > +	struct irq_domain	*ppi_domain;
-> > > > > > +};
-> > > > > > +
-> > > > > > +static struct gicv5_chip_data gicv5_global_data __read_mostly;    
-> > > > >     
-> > > > > > +static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
-> > > > > > +{
-> > > > > > +	u64 cddi = hwirq_id | FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);    
-> > > > > 
-> > > > > Slight preference for not needing to care where hwirq_id goes in CDDI or how big
-> > > > > it is (other than when I checked the header defines).
-> > > > >  
-> > > > > 	u64 cddi = FIELD_PREP(GICV5_GIC_CDDI_ID_MASK, hwirq_id) |
-> > > > >         	   FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
-> > > > > 
-> > > > >     
-> > > > > > +
-> > > > > > +	gic_insn(cddi, CDDI);
-> > > > > > +
-> > > > > > +	gic_insn(0, CDEOI);
-> > > > > > +}    
-> > > > >     
-> > > > > > +static int gicv5_ppi_irq_get_irqchip_state(struct irq_data *d,
-> > > > > > +					   enum irqchip_irq_state which,
-> > > > > > +					   bool *state)
-> > > > > > +{
-> > > > > > +	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
-> > > > > > +
-> > > > > > +	switch (which) {
-> > > > > > +	case IRQCHIP_STATE_PENDING:
-> > > > > > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_PENDING) & hwirq_id_bit);    
-> > > > > 
-> > > > > Technically don't need the !! but if you really like it I don't mind that much.
-> > > > >     
-> > > > > > +		return 0;
-> > > > > > +	case IRQCHIP_STATE_ACTIVE:
-> > > > > > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_ACTIVE) & hwirq_id_bit);
-> > > > > > +		return 0;
-> > > > > > +	default:
-> > > > > > +		pr_debug("Unexpected PPI irqchip state\n");
-> > > > > > +		return -EINVAL;
-> > > > > > +	}
-> > > > > > +}    
-> > > > > 
-> > > > >     
-> > > > > > +static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
-> > > > > > +					  struct irq_fwspec *fwspec,
-> > > > > > +					  irq_hw_number_t *hwirq,
-> > > > > > +					  unsigned int *type)
-> > > > > > +{
-> > > > > > +	if (!is_of_node(fwspec->fwnode))
-> > > > > > +		return -EINVAL;
-> > > > > > +
-> > > > > > +	if (fwspec->param_count < 3)    
-> > > > > 
-> > > > > I don't care that much, but could relax this seeing as fwspec->param[2]
-> > > > > isn't used anyway? Maybe a tiny comment on why it matters?
-> > > > >     
-> > > > > > +		return -EINVAL;
-> > > > > > +
-> > > > > > +	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
-> > > > > > +		return -EINVAL;
-> > > > > > +
-> > > > > > +	*hwirq = fwspec->param[1];
-> > > > > > +
-> > > > > > +	/*
-> > > > > > +	 * Handling mode is hardcoded for PPIs, set the type using
-> > > > > > +	 * HW reported value.
-> > > > > > +	 */
-> > > > > > +	*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_EDGE_RISING;
-> > > > > > +
-> > > > > > +	return 0;    
-> > > > > 
-> > > > >     
-> > > > > > +static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
-> > > > > > +{
-> > > > > > +	int ret = gicv5_init_domains(of_fwnode_handle(node));
-> > > > > > +	if (ret)
-> > > > > > +		return ret;
-> > > > > > +
-> > > > > > +	gicv5_set_cpuif_pribits();
-> > > > > > +
-> > > > > > +	ret = gicv5_starting_cpu(smp_processor_id());
-> > > > > > +	if (ret)
-> > > > > > +		goto out_dom;
-> > > > > > +
-> > > > > > +	ret = set_handle_irq(gicv5_handle_irq);
-> > > > > > +	if (ret)
-> > > > > > +		goto out_int;
-> > > > > > +
-> > > > > > +	return 0;
-> > > > > > +
-> > > > > > +out_int:
-> > > > > > +	gicv5_cpu_disable_interrupts();
-> > > > > > +out_dom:
-> > > > > > +	gicv5_free_domains();    
-> > > > > 
-> > > > > Naming is always tricky but I'd not really expect gicv5_free_domains() as the
-> > > > > pair of gicv5_init_domains() (which is doing creation rather than just initializing).
-> > > > > 
-> > > > > Ah well, names are never prefect and I don't really mind.
-> > > > >     
-> > > > > > +
-> > > > > > +	return ret;
-> > > > > > +}
-> > > > > > +IRQCHIP_DECLARE(gic_v5, "arm,gic-v5", gicv5_of_init);    
-> > > > >     
-> > > >   
-> > >   
-> 
+-- 
+மணிவண்ணன் சதாசிவம்
 
