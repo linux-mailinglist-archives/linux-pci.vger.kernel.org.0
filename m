@@ -1,278 +1,196 @@
-Return-Path: <linux-pci+bounces-31270-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31271-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 905A8AF5A9E
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 16:10:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9B32AF5AAD
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 16:12:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B2F30189C0DF
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 14:09:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADA2B188FED3
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 14:12:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66BD28640B;
-	Wed,  2 Jul 2025 14:09:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33C372BDC04;
+	Wed,  2 Jul 2025 14:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JzVfcQmI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A22275846;
-	Wed,  2 Jul 2025 14:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2734F2BD5B5
+	for <linux-pci@vger.kernel.org>; Wed,  2 Jul 2025 14:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465354; cv=none; b=dnGpZu1bmM8Viv2TkwLN/TZck5fTUCj7TyHKmSq8VeeTaik/2G2l7KpqT5/MO6s8gF5SJ8sE6/PecVzXe70RV06thWMP5GYpB1NZLdTqb0q1bNxAWcscPv1oteiWWs3W3QYyYB+Nq5zqVBsyxD4j41pbmoVmv7oTB+MOSIf8ZpI=
+	t=1751465529; cv=none; b=CH3LMY6L8iWu0i7ANk8pjKMo4dszqZkQGufLQC9O7kXm/x0V05dLpZXDaWR3/L7t5b+dQkyYIJwVoaWdR7KJPte4cH+bB2CywUs1LxwYfCA/w6yg0iaE8Qii+PN5FGQay2jTu4VBHgJFX30vlpcari908S6Rp4J2j/OM69j34OI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465354; c=relaxed/simple;
-	bh=KrByScEse9zQAz1mFpAbnHuiASOxgUN38QwBq7EKRwY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bHxzEPZC7eDPjgeSc6/nAqQw/+m0Me9Onkl0kEoWPU7frGOShvPeGYDwv2zdf4kgWZ4DF7m875mjzKWPMsag5D65ubf2r4P4D7SRyZCkGLSe2T3HMvS0j3yIiSC3Wa8PaxB0QjaLcwx7FPW4I/uxHeU4V6/oSSwLLxn+O6cKLww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXMDt2j8gz6M4dR;
-	Wed,  2 Jul 2025 22:08:14 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 155B41402EA;
-	Wed,  2 Jul 2025 22:09:10 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
- 2025 16:09:09 +0200
-Date: Wed, 2 Jul 2025 15:09:07 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: Thomas Gleixner <tglx@linutronix.de>, Catalin Marinas
-	<catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Will Deacon <will@kernel.org>, Arnd Bergmann
-	<arnd@arndb.de>, Sascha Bischoff <sascha.bischoff@arm.com>, Timothy Hayes
-	<timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v6 20/31] irqchip/gic-v5: Add GICv5 PPI support
-Message-ID: <20250702150907.000060d8@huawei.com>
-In-Reply-To: <aGUycEuLadcG+IfV@lpieralisi>
-References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
-	<20250626-gicv5-host-v6-20-48e046af4642@kernel.org>
-	<20250702124019.00006b01@huawei.com>
-	<aGUqEkascwGFD9x+@lpieralisi>
-	<20250702140022.00001c65@huawei.com>
-	<aGUycEuLadcG+IfV@lpieralisi>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751465529; c=relaxed/simple;
+	bh=JRJPH4m3gHOL8iOAGjaKdf0GbC0HHnVxh4Krznoo3KI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RBD/C1SFejNDBrpLOLkCFrxuRSpxoiJcl+VMrfJZqc70FuHMtPPzhDvaeOrOdc9FPrWulQGAG1yeOGGt5pkA3mj2BOlHkG1pzhZ3nC3XIQyoMoID9VRQAVfiuoe/y99ZQJ1RaFzIv7EMK5ogJxkQsipQSQiL4b3sbK83C1a0GHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JzVfcQmI; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e8259b783f6so3831301276.3
+        for <linux-pci@vger.kernel.org>; Wed, 02 Jul 2025 07:12:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751465526; x=1752070326; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1mPoU1UCDxjl6IWc+jKm50U28f8v3ln7LdhgS9xFHd8=;
+        b=JzVfcQmIhRCBHkY7YMzvyyFHMH69W22USFiAIMlmWmJViWurdbP3UXDxOUX/ZB56DH
+         hriNNwFVMwhrsnyiXPsNHLdpwjXlAG2x+RN9Q44qwoBOFBbdXt1KEqsvlGpS550s0Xk9
+         wCrC1VKfTa4IMjvM3dLfwA/PYLwedmkAUXB+xPSJBbLsBAfjM9n+qNtzysq6H1G/qPix
+         +OruNqP2iKwIQPLiWDoDjNFmDj7wxRhmOqn/8b4FqR27y7826azVnBmT4XnY/JcXfYrM
+         sN08NyOhntVoojALkTFFZERbXodeU2OqZN9wWLhfwJOHfzn43EZRRv+nTDnxxxKdzA+N
+         tNVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751465526; x=1752070326;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1mPoU1UCDxjl6IWc+jKm50U28f8v3ln7LdhgS9xFHd8=;
+        b=oBbIXU/c42GkuBfcIHc9vMVjOx9mIlzP5VxN0dBGmNwvjIxUMniIQVrBR3KqFJGogz
+         7LH5yDagk1nGUeq7+j/slDtfPEx2TEM4NpAZMuuL2MSvnYJ+PvYKTcvG86kCh87RH615
+         tKmn4LzDm0Dmps8laV1w0UFpE7NQ1AhhG/NCrrsjTFzM56JwWRKLUN9RIgBlRoiaVuUL
+         aoLHLkKqnlMxca+Xl2Z/QjUR8OxAWx4Rk6U44uZhpvkllfTY9BByCd4rCr2rNleB+phg
+         6O7NqH4JqS9bR8PNFYcYvOx+Ac5liJ9J1NswjAGDvDEjZr66Htgn7g2MQCb90Zsj4Al5
+         koAg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgG8dngUb1wDtmm+v626uEEOoylWBzJq/+F6f/rLsmkrP0eBM3OyEWJDo+7xx+SLfS1wYIg2Sfpfg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxczcNEizNi47THRaIWhDWYJAynez4WG4uCwJuAebiFs23E7PsW
+	k2tkCPAqKOtdBWMYrj+MqJlOo8sKsPp9UUMjs/S82g3NG1/6/eXA/i973pYS0jfE6KYEBSwmPK1
+	VipSaxqbB51iAo6lhArprNqjioTU2YOi+dqjkSZu4Tg==
+X-Gm-Gg: ASbGncvpf++gRRfutZFjOscaYizvr+TruSV+nKo4/JvKHMgNOj/aCNL21O1upCqY+TX
+	yQENi9fsAf4Op3AyC+4cgnDcJ1YTH/jOWoHIqc4s93KyOWbqSNegdt+g94fhlwrSJSOfO33EX37
+	soDH4su6swhEMZJQgsL5LAaKaxhmuo1zdtGBpqxiRpPTCM
+X-Google-Smtp-Source: AGHT+IHPaXrxmHFVKX7Eql3EMD5x4On0T3oI0issqDZiJ0MoiOv4sD7i0/jMP72156cYMAUC8axQa4qkX4Dj4M+kpkU=
+X-Received: by 2002:a05:690c:6213:b0:70e:7882:ea91 with SMTP id
+ 00721157ae682-7164d4b88d2mr41815867b3.35.1751465525819; Wed, 02 Jul 2025
+ 07:12:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <5018768.GXAFRqVoOG@rjwysocki.net>
+In-Reply-To: <5018768.GXAFRqVoOG@rjwysocki.net>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 2 Jul 2025 16:11:30 +0200
+X-Gm-Features: Ac12FXynITunG4rG5UQO1EB1vzYUCxa7rAXh-RE6XqfZ0CLPy3V92JuMPVtw6hI
+Message-ID: <CAPDyKFp35SjpQmEQ02u7ZbsaFftaett_rBBf-7hbsBpGWH08hw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/9] PM: Reconcile different driver options for runtime
+ PM integration with system sleep
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux ACPI <linux-acpi@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2 Jul 2025 15:21:52 +0200
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Fri, 27 Jun 2025 at 21:29, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> Hi Everyone,
+>
+> This is an update of the series the v2 of which was posted yesterday:
+>
+> https://lore.kernel.org/linux-pm/5015172.GXAFRqVoOG@rjwysocki.net/
+>
+> and the v1 is here:
+>
+> https://lore.kernel.org/linux-pm/22759968.EfDdHjke4D@rjwysocki.net/
+>
+> This update reorders the patches (again), updates the changelogs of some of
+> them and changes the subject of one patch slightly.  It also adds a kerneldoc
+> comment to a new function in patch [5/9].
+>
+> This part of the cover letter still applies:
+>
+> "This series addresses a couple of issues related to the integration of runtime
+> PM with system sleep I was talking about at the OSMP-summit 2025:
+>
+> https://lwn.net/Articles/1021332/
+>
+> Most importantly, DPM_FLAG_SMART_SUSPEND cannot be used along with
+> pm_runtime_force_suspend/resume() due to some conflicting expectations
+> about the handling of device runtime PM status between these functions
+> and the PM core.
+>
+> Also pm_runtime_force_suspend/resume() currently cannot be used in PCI
+> drivers and in drivers that collaborate with the general ACPI PM domain
+> because they both don't expect their mid-layer runtime PM callbacks to
+> be invoked during system-wide suspend and resume.
+>
+> Patch [1/9] is a preparatory cleanup changing the code to use 'true' and
+> 'false' as needs_force_resume flag values for consistency."
+>
+> Patch [2/9] (which was [3/9] in v2) puts pm_runtime_force_resume() and one
+> other function that is only used during system sleep transitions under
+> CONFIG_PM_SLEEP.
+>
+> Patch [3/9] (which was [5/9] in v2) causes the smart_suspend flag to be taken
+> into account by pm_runtime_force_resume() which allows it to resume devices
+> with smart_suspend set whose runtime PM status has been changed to RPM_ACTIVE
+> by the PM core at the beginning of system resume.  After this patch, drivers
+> that use pm_runtime_force_suspend/resume() can also set DPM_FLAG_SMART_SUSPEND
+> which may be useful, for example, if devices handled by them are involved in
+> dependency chains with other devices setting DPM_FLAG_SMART_SUSPEND.
+>
+> Since patches [1,3/9] have been reviewed already and patch [2/9] should not
+> be particularly controversial, I think that patches [1-3/9] are good to go.
+>
+> Patch [4/9] (which was [2/9] in v2), makes pm_runtime_reinit() clear
+> needs_force_resume in case it was set during driver remove.
+>
+> Patch [5/9] (which was [4/9] in v2) makes pm_runtime_force_suspend() check
+> needs_force_resume along with the device's runtime PM status upfront, and bail
+> out if it is set, which allows runtime PM status updates to be eliminated from
+> both that function and pm_runtime_force_resume().  I recalled too late that
+> it was actually necessary for the PCI PM and ACPI PM to work with
+> pm_runtime_force_suspend() correctly after the subsequent changes and that
+> patch [3/9] did not depend on it.  I have also realized that patch [5/9]
+> potentially unbreaks drivers that call pm_runtime_force_suspend() from their
+> "remove" callbacks (see the patch changelog for a bit of an explanation).
+>
+> Patch [6/9] (which has not been changed since v2) makes the code for getting a
+> runtime PM callback for a device a bit more straightforward, in preparation for
+> the subsequent changes.
+>
+> Patch [7/9] introduces a new device PM flag called strict_midlayer that
+> can be set by middle layer code which doesn't want its runtime PM
+> callbacks to be used during system-wide PM transitions, like the PCI bus
+> type and the ACPI PM domain, and updates pm_runtime_force_suspend/resume()
+> to take that flag into account.  Its changelog has been updated since v2 and
+> there is a new kerneldoc comment for dev_pm_set_strict_midlayer().
+>
+> Patch [8/9] modifies the ACPI PM "prepare" and "complete" callback functions,
+> used by the general ACPI PM domain and by the ACPI LPSS PM domain, to set and
+> clear strict_midlayer, respectively, which allows drivers collaborating with it
+> to use pm_runtime_force_suspend/resume().  The changelog of this patch has been
+> made a bit more precise since v2.
+>
+> That may be useful if such a driver wants to be able to work with different
+> PM domains on different systems.  It may want to work with the general ACPI PM
+> domain on systems using ACPI, or with another PM domain (or even multiple PM
+> domains at the same time) on systems without ACPI, and it may want to use
+> pm_runtime_force_suspend/resume() as its system-wide PM callbacks.
+>
+> Patch [9/9] updates the PCI bus type to set and clear, respectively, strict_midlayer
+> for all PCI devices in its "prepare" and "complete" PM callbacks, in case some
+> PCI drivers want to use pm_runtime_force_suspend/resume() in the future.  They
+> will still need to set DPM_FLAG_SMART_SUSPEND to avoid resuming their devices during
+> system suspend, but now they may also use pm_runtime_force_suspend/resume() as
+> suspend callbacks for the "regular suspend" phase of device suspend (or invoke
+> these functions from their suspend callbacks).  The changelog of this patch has
+> been made a bit more precise since v2, like the changelog of patch [8/9].
+>
+> As usual, please refer to individual patch changelogs for more details.
+>
+> Thanks!
+>
 
-> On Wed, Jul 02, 2025 at 02:00:22PM +0100, Jonathan Cameron wrote:
-> > On Wed, 2 Jul 2025 14:46:10 +0200
-> > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> >   
-> > > On Wed, Jul 02, 2025 at 12:40:19PM +0100, Jonathan Cameron wrote:  
-> > > > On Thu, 26 Jun 2025 12:26:11 +0200
-> > > > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> > > >     
-> > > > > The GICv5 CPU interface implements support for PE-Private Peripheral
-> > > > > Interrupts (PPI), that are handled (enabled/prioritized/delivered)
-> > > > > entirely within the CPU interface hardware.    
-> > > > 
-> > > > I can't remember where I got to last time so if I repeat stuff that
-> > > > you already responded to, feel free to just ignore me this time ;)
-> > > > 
-> > > > All superficial stuff. Feel free to completely ignore if you like.    
-> > > 
-> > > We are at v6.16-rc4, series has been on the lists for 3 months, it has
-> > > been reviewed and we would like to get it into v6.17 if possible and
-> > > deemed reasonable, I am asking you folks please, what should I do ?
-> > > 
-> > > I can send a v7 with the changes requested below (no bug fixes there)
-> > > - it is fine by me - but I need to know please asap if we have a
-> > > plan to get this upstream this cycle.  
-> > 
-> > I'm absolutely fine with leaving these be.  The mask stuff I would like
-> > to clean up as it applies quite widely in the series but that
-> > can be a follow up as no bugs (so far!).   
-> 
-> I am certain that at a given state in the development I used the
-> FIELD_PREP() on the hwirq_id and then was asked to remove it because
-> it does not serve any purpose - this, for the records.
+For the v3 series, please add:
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Fair enough.  Though on that front the code is inconsistent as
-there are places where it is masked.  Anyhow, no problem either
-way. The bit of feedback I gave on patch 22 might be more useful
-to address (comments not matching code).
-
-
-Jonathan
-
-> 
-> Thanks,
-> Lorenzo
-> 
-> > As Marc said, these are in a good state.
-> > 
-> > Jonathan
-> >   
-> > > 
-> > > Thanks,
-> > > Lorenzo
-> > >   
-> > > > > diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-> > > > > new file mode 100644
-> > > > > index 000000000000..a08daa562d21
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/irqchip/irq-gic-v5.c
-> > > > > @@ -0,0 +1,461 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > > > +/*
-> > > > > + * Copyright (C) 2024-2025 ARM Limited, All Rights Reserved.
-> > > > > + */
-> > > > > +
-> > > > > +#define pr_fmt(fmt)	"GICv5: " fmt
-> > > > > +
-> > > > > +#include <linux/irqdomain.h>
-> > > > > +#include <linux/wordpart.h>
-> > > > > +
-> > > > > +#include <linux/irqchip.h>
-> > > > > +#include <linux/irqchip/arm-gic-v5.h>
-> > > > > +
-> > > > > +#include <asm/cpufeature.h>
-> > > > > +#include <asm/exception.h>
-> > > > > +
-> > > > > +static u8 pri_bits __ro_after_init = 5;
-> > > > > +
-> > > > > +#define GICV5_IRQ_PRI_MASK	0x1f
-> > > > > +#define GICV5_IRQ_PRI_MI	(GICV5_IRQ_PRI_MASK & GENMASK(4, 5 - pri_bits))
-> > > > > +
-> > > > > +#define PPI_NR	128
-> > > > > +
-> > > > > +static bool gicv5_cpuif_has_gcie(void)
-> > > > > +{
-> > > > > +	return this_cpu_has_cap(ARM64_HAS_GICV5_CPUIF);
-> > > > > +}
-> > > > > +
-> > > > > +struct gicv5_chip_data {
-> > > > > +	struct fwnode_handle	*fwnode;
-> > > > > +	struct irq_domain	*ppi_domain;
-> > > > > +};
-> > > > > +
-> > > > > +static struct gicv5_chip_data gicv5_global_data __read_mostly;    
-> > > >     
-> > > > > +static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
-> > > > > +{
-> > > > > +	u64 cddi = hwirq_id | FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);    
-> > > > 
-> > > > Slight preference for not needing to care where hwirq_id goes in CDDI or how big
-> > > > it is (other than when I checked the header defines).
-> > > >  
-> > > > 	u64 cddi = FIELD_PREP(GICV5_GIC_CDDI_ID_MASK, hwirq_id) |
-> > > >         	   FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
-> > > > 
-> > > >     
-> > > > > +
-> > > > > +	gic_insn(cddi, CDDI);
-> > > > > +
-> > > > > +	gic_insn(0, CDEOI);
-> > > > > +}    
-> > > >     
-> > > > > +static int gicv5_ppi_irq_get_irqchip_state(struct irq_data *d,
-> > > > > +					   enum irqchip_irq_state which,
-> > > > > +					   bool *state)
-> > > > > +{
-> > > > > +	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
-> > > > > +
-> > > > > +	switch (which) {
-> > > > > +	case IRQCHIP_STATE_PENDING:
-> > > > > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_PENDING) & hwirq_id_bit);    
-> > > > 
-> > > > Technically don't need the !! but if you really like it I don't mind that much.
-> > > >     
-> > > > > +		return 0;
-> > > > > +	case IRQCHIP_STATE_ACTIVE:
-> > > > > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_ACTIVE) & hwirq_id_bit);
-> > > > > +		return 0;
-> > > > > +	default:
-> > > > > +		pr_debug("Unexpected PPI irqchip state\n");
-> > > > > +		return -EINVAL;
-> > > > > +	}
-> > > > > +}    
-> > > > 
-> > > >     
-> > > > > +static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
-> > > > > +					  struct irq_fwspec *fwspec,
-> > > > > +					  irq_hw_number_t *hwirq,
-> > > > > +					  unsigned int *type)
-> > > > > +{
-> > > > > +	if (!is_of_node(fwspec->fwnode))
-> > > > > +		return -EINVAL;
-> > > > > +
-> > > > > +	if (fwspec->param_count < 3)    
-> > > > 
-> > > > I don't care that much, but could relax this seeing as fwspec->param[2]
-> > > > isn't used anyway? Maybe a tiny comment on why it matters?
-> > > >     
-> > > > > +		return -EINVAL;
-> > > > > +
-> > > > > +	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
-> > > > > +		return -EINVAL;
-> > > > > +
-> > > > > +	*hwirq = fwspec->param[1];
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * Handling mode is hardcoded for PPIs, set the type using
-> > > > > +	 * HW reported value.
-> > > > > +	 */
-> > > > > +	*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_EDGE_RISING;
-> > > > > +
-> > > > > +	return 0;    
-> > > > 
-> > > >     
-> > > > > +static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
-> > > > > +{
-> > > > > +	int ret = gicv5_init_domains(of_fwnode_handle(node));
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +
-> > > > > +	gicv5_set_cpuif_pribits();
-> > > > > +
-> > > > > +	ret = gicv5_starting_cpu(smp_processor_id());
-> > > > > +	if (ret)
-> > > > > +		goto out_dom;
-> > > > > +
-> > > > > +	ret = set_handle_irq(gicv5_handle_irq);
-> > > > > +	if (ret)
-> > > > > +		goto out_int;
-> > > > > +
-> > > > > +	return 0;
-> > > > > +
-> > > > > +out_int:
-> > > > > +	gicv5_cpu_disable_interrupts();
-> > > > > +out_dom:
-> > > > > +	gicv5_free_domains();    
-> > > > 
-> > > > Naming is always tricky but I'd not really expect gicv5_free_domains() as the
-> > > > pair of gicv5_init_domains() (which is doing creation rather than just initializing).
-> > > > 
-> > > > Ah well, names are never prefect and I don't really mind.
-> > > >     
-> > > > > +
-> > > > > +	return ret;
-> > > > > +}
-> > > > > +IRQCHIP_DECLARE(gic_v5, "arm,gic-v5", gicv5_of_init);    
-> > > >     
-> > >   
-> >   
-
+Kind regards
+Uffe
 
