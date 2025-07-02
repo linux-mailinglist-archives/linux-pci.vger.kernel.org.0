@@ -1,140 +1,167 @@
-Return-Path: <linux-pci+bounces-31280-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31284-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BDE7AF5C0F
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 17:03:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E44E5AF5CDB
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 17:26:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7256F522F7B
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 15:01:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 16FB016BD91
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Jul 2025 15:25:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 735FF18132A;
-	Wed,  2 Jul 2025 15:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFPz1ekK"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D59EC2D46BB;
+	Wed,  2 Jul 2025 15:25:11 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [176.9.242.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCF72D0C61;
-	Wed,  2 Jul 2025 15:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9752D94B7
+	for <linux-pci@vger.kernel.org>; Wed,  2 Jul 2025 15:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468504; cv=none; b=K5tTxEw6fO+XgTQYcRcfVpi+S+x28oQbIfmAriuooZF9gYoByZECwqladuOwv6bHijJFE3ZFBVLbY60CHjcLh1cGHusjsQYUD6W3I5Aq4wJVv9WX5ZNFPO2WA0phKVw4TrhsjYu6g83UyJozNTWzvxfoe6q2Qqose1r9g57t50A=
+	t=1751469911; cv=none; b=Zbf18K1Wk0iLANPNOnLnrCvRY0oT/i+F8bcXpWg2PIAbzHUaa/ambmAEa0gqe/vQZq6g3IS/NAOqKHpJdvyifX74nUGDqiSuEtXhKgtpstLIAIp2sZn2KuKtsXPvUZebrjTsEqsOHtlScLa8QgHlDJwWHq+tGXcEn396rZg0nc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751468504; c=relaxed/simple;
-	bh=SaHDZ4wIBsKxb9s+1iRJfvfGTvCsTriRDi+uhUgl3qs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IeEN72xbTZF9XQarSUSZGsOt1E+ZAKaTLbWdgRCaZ8nYAkM7ZzK6RCcD8r/FfWIzYGUtC6zuMozOneWegmGcmhMRGxNap8yGDJXF5ANIR11y2lDHp0+vajB+WVVNWQORP1/RUkCuNZ7PIWe1SXgG7s8TgHjA6pmcAr55/4XFsAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFPz1ekK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D895C4CEE7;
-	Wed,  2 Jul 2025 15:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751468503;
-	bh=SaHDZ4wIBsKxb9s+1iRJfvfGTvCsTriRDi+uhUgl3qs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mFPz1ekKdZbVNAz4rJGd5xyY5sZ4nqGJ+5hipsT580I38dRu8oiRtgERhYUGL17Dw
-	 OLLSrukOiRKQqk1QszwYYUfSyffBrcBmdkpPPNk722l6XE4DDnPXgt9jnW+IsfOyWg
-	 6nk2yLMejqVFloDl7E6PNxNapikx72jx4TufUVvI/x/j6wsdr9dRdnfmkOQmQH5XC5
-	 9Rcyq+yh2Q9iNexx2zcOy7LZXMM6pb5OQoWn+Bq4f6vfz1n8To/nIOmhdfdvQ+DrGT
-	 egmcTbxiUt3JJ413o+IYnU53CQrO2X3C1AeROg3WY7ywthUO4zhjGX8Z9udVC3wkXp
-	 Kr8PhJFJNpprQ==
-Date: Wed, 2 Jul 2025 20:31:25 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>, 
-	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org
-Subject: Re: [PATCH v19 03/10] PCI: endpoint: pci-ep-msi: Add MSI
- address/data pair mutable check
-Message-ID: <tkamojjbdfrwhvgyufcncikl6fkndedfyzm5ebo7qof66s4gmu@mjsgrcfdkms5>
-References: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
- <20250609-ep-msi-v19-3-77362eaa48fa@nxp.com>
- <5axgxbtyqbwwncimjiiedvkm3ap7at553vgj72bht4kynke5cd@xfghwfmp6cy7>
- <aGVFWgnAIwWOnLjK@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1751469911; c=relaxed/simple;
+	bh=h2ukEMsYMEfcOGW8DvmR58gHGk8vdeaTlECjogs0Hag=;
+	h=Message-ID:From:Date:Subject:To:Cc; b=uZLwuP+1wBdiFSXCS/TADcoZpW5vrTacuZJgJptC3zUu/MoXd8m6h5COpW/cSPY7ZpDRM6yBnxO60QexWEW/xPbU5vKstc7lq0QJrsGtfbKd4rUxTqubjKnao4W1n3xd4ENsyYb6+bLRGhh0mX8Wz6hMui5DpKXjpQ55s+/k5ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=176.9.242.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by mailout3.hostsharing.net (Postfix) with UTF8SMTPS id 62BAE3006AD5;
+	Wed,  2 Jul 2025 17:15:09 +0200 (CEST)
+Received: from localhost (unknown [89.246.108.87])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by h08.hostsharing.net (Postfix) with UTF8SMTPSA id 15F9C619FB4D;
+	Wed,  2 Jul 2025 17:15:09 +0200 (CEST)
+X-Mailbox-Line: From b29e7fbfc6d146f947603d0ebaef44cbd2f0d754 Mon Sep 17 00:00:00 2001
+Message-ID: <b29e7fbfc6d146f947603d0ebaef44cbd2f0d754.1751468802.git.lukas@wunner.de>
+From: Lukas Wunner <lukas@wunner.de>
+Date: Wed, 2 Jul 2025 17:15:15 +0200
+Subject: [PATCH v2] agp/amd64: Check AGP Capability before binding to
+ unsupported devices
+To: David Airlie <airlied@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: Ben Hutchings <ben@decadent.org.uk>, Joerg Roedel <joro@8bytes.org>, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Andi Kleen <ak@linux.intel.com>, Ahmed Salem <x0rw3ll@gmail.com>, Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, linux-pci@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aGVFWgnAIwWOnLjK@lizhi-Precision-Tower-5810>
 
-On Wed, Jul 02, 2025 at 10:42:43AM GMT, Frank Li wrote:
-> On Wed, Jul 02, 2025 at 05:00:23PM +0530, Manivannan Sadhasivam wrote:
-> > On Mon, Jun 09, 2025 at 12:34:15PM GMT, Frank Li wrote:
-> > > Some MSI controller change address/data pair when irq_set_affinity().
-> > > Current PCI endpoint can't support this type MSI controller. Call
-> > > irq_domain_is_msi_immutable() check if address/data pair immutable.
-> > >
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > > change in v18
-> > > - update commit message. remove 'include/linux/msi.h' part.
-> > >
-> > > change from v14 to v17
-> > > - none
-> > >
-> > > change from  v13 to v14
-> > > - bring v10 back
-> > >
-> > > Change from v9 to v10
-> > > - new patch
-> > > ---
-> > >  drivers/pci/endpoint/pci-ep-msi.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/endpoint/pci-ep-msi.c b/drivers/pci/endpoint/pci-ep-msi.c
-> > > index 549b55b864d0e..c0e2d806ee658 100644
-> > > --- a/drivers/pci/endpoint/pci-ep-msi.c
-> > > +++ b/drivers/pci/endpoint/pci-ep-msi.c
-> > > @@ -44,6 +44,14 @@ int pci_epf_alloc_doorbell(struct pci_epf *epf, u16 num_db)
-> > >
-> > >  	dev_set_msi_domain(dev, dom);
-> > >
-> > > +	if (!irq_domain_is_msi_parent(dom))
-> > > +		return -EINVAL;
-> >
-> > This check is not justified in commit message.
-> >
-> > > +
-> > > +	if (!irq_domain_is_msi_immutable(dom)) {
-> > > +		dev_err(dev, "Can't support mutable address/data pair MSI controller\n");
-> > > +		return -EINVAL;
-> >
-> > GICv3 ITS is an immutable MSI controller. From the earlier patches, I could see
-> > that you have tested this series with ITS. How did that happen if it errors out
-> > here?
-> 
-> I removed IMMUTASBLE flags in ITS driver to check if go to this error branch.
-> 
+Since commit 172efbb40333 ("AGP: Try unsupported AGP chipsets on x86-64
+by default"), the AGP driver for AMD Opteron/Athlon64 CPUs has attempted
+to bind to any PCI device possessing an AGP Capability.
 
-Sorry, I misread the check and got confused by the error message. Presence of
-IMMUTABLE flag is required by this driver, which is fine. Please reword the
-error message to,
+Commit 6fd024893911 ("amd64-agp: Probe unknown AGP devices the right
+way") subsequently reworked the driver to perform a bind attempt to
+any PCI device (regardless of AGP Capability) and reject a device in
+the driver's ->probe() hook if it lacks the AGP Capability.
 
-	"MSI controller not supported\n"
+On modern CPUs exposing an AMD IOMMU, this subtle change results in an
+annoying message with KERN_CRIT severity:
 
-If one bothers to check why, the !irq_domain_is_msi_immutable() check is self
-explanatory.
+  pci 0000:00:00.2: Resources present before probing
 
-- Mani
+The message is emitted by the driver core prior to invoking a driver's
+->probe() hook.  The check for an AGP Capability in the ->probe() hook
+happens too late to prevent the message.
 
+The message has appeared only recently with commit 3be5fa236649 (Revert
+"iommu/amd: Prevent binding other PCI drivers to IOMMU PCI devices").
+Prior to the commit, no driver could bind to AMD IOMMUs.
+
+The reason for the message is that an MSI is requested early on for the
+AMD IOMMU, which results in a call from msi_sysfs_create_group() to
+devm_device_add_group().  A devres resource is thus attached to the
+driver-less AMD IOMMU, which is normally not allowed, but presumably
+cannot be avoided because requesting the MSI from a regular PCI driver
+might be too late.
+
+Avoid the message by once again checking for an AGP Capability *before*
+binding to an unsupported device.  Achieve that by way of the PCI core's
+dynid functionality.
+
+pci_add_dynid() can fail only with -ENOMEM (on allocation failure) or
+-EINVAL (on bus_to_subsys() failure).  It doesn't seem worth the extra
+code to propagate those error codes out of the for_each_pci_dev() loop,
+so simply error out with -ENODEV if there was no successful bind attempt.
+In the -ENOMEM case, a splat is emitted anyway, and the -EINVAL case can
+never happen because it requires failure of bus_register(&pci_bus_type),
+in which case there's no driver probing of PCI devices.
+
+Hans has voiced a preference to no longer probe unsupported devices by
+default (i.e. set agp_try_unsupported = 0).  In fact, the help text for
+CONFIG_AGP_AMD64 pretends this to be the default.  Alternatively, he
+proposes probing only devices with PCI_CLASS_BRIDGE_HOST.  However these
+approaches risk regressing users who depend on the existing behavior.
+
+Fixes: 3be5fa236649 (Revert "iommu/amd: Prevent binding other PCI drivers to IOMMU PCI devices")
+Reported-by: Fedor Pchelkin <pchelkin@ispras.ru>
+Closes: https://lore.kernel.org/r/wpoivftgshz5b5aovxbkxl6ivvquinukqfvb5z6yi4mv7d25ew@edtzr2p74ckg/
+Reported-by: Hans de Goede <hansg@kernel.org>
+Closes: https://lore.kernel.org/r/20250625112411.4123-1-hansg@kernel.org/
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+Changes v1 -> v2:
+ * Use pci_add_dynid() to bind only to devices with AGP Capability
+   (based on a suggestion from Ben).
+ * Rephrase commit message to hopefully explain the history more accurately.
+   Explain why resources are attached to the driver-less AMD IOMMU
+   (requested by Ben).
+ * Acknowledge Hans as reporter.
+
+ drivers/char/agp/amd64-agp.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/char/agp/amd64-agp.c b/drivers/char/agp/amd64-agp.c
+index bf490967241a..2505df1f4e69 100644
+--- a/drivers/char/agp/amd64-agp.c
++++ b/drivers/char/agp/amd64-agp.c
+@@ -720,11 +720,6 @@ static const struct pci_device_id agp_amd64_pci_table[] = {
+ 
+ MODULE_DEVICE_TABLE(pci, agp_amd64_pci_table);
+ 
+-static const struct pci_device_id agp_amd64_pci_promisc_table[] = {
+-	{ PCI_DEVICE_CLASS(0, 0) },
+-	{ }
+-};
+-
+ static DEFINE_SIMPLE_DEV_PM_OPS(agp_amd64_pm_ops, NULL, agp_amd64_resume);
+ 
+ static struct pci_driver agp_amd64_pci_driver = {
+@@ -739,6 +734,7 @@ static struct pci_driver agp_amd64_pci_driver = {
+ /* Not static due to IOMMU code calling it early. */
+ int __init agp_amd64_init(void)
+ {
++	struct pci_dev *pdev = NULL;
+ 	int err = 0;
+ 
+ 	if (agp_off)
+@@ -767,9 +763,13 @@ int __init agp_amd64_init(void)
+ 		}
+ 
+ 		/* Look for any AGP bridge */
+-		agp_amd64_pci_driver.id_table = agp_amd64_pci_promisc_table;
+-		err = driver_attach(&agp_amd64_pci_driver.driver);
+-		if (err == 0 && agp_bridges_found == 0) {
++		for_each_pci_dev(pdev)
++			if (pci_find_capability(pdev, PCI_CAP_ID_AGP))
++				pci_add_dynid(&agp_amd64_pci_driver,
++					      pdev->vendor, pdev->device,
++					      pdev->subsystem_vendor,
++					      pdev->subsystem_device, 0, 0, 0);
++		if (agp_bridges_found == 0) {
+ 			pci_unregister_driver(&agp_amd64_pci_driver);
+ 			err = -ENODEV;
+ 		}
 -- 
-மணிவண்ணன் சதாசிவம்
+2.47.2
+
 
