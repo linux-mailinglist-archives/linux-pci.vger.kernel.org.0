@@ -1,35 +1,35 @@
-Return-Path: <linux-pci+bounces-31428-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31429-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A71E1AF7D32
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 18:05:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADADDAF7D88
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 18:14:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E00F7AB2A8
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 16:03:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3174D1C863DD
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 16:05:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71EFD239096;
-	Thu,  3 Jul 2025 16:03:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB8E12EFD99;
+	Thu,  3 Jul 2025 16:03:50 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5260C1BD4F7;
-	Thu,  3 Jul 2025 16:03:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5321BD4F7;
+	Thu,  3 Jul 2025 16:03:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751558608; cv=none; b=nLF3REQlD5/4QhwN96LM4JTlrsE3X15dogJgJvh0Z6fU4QPVm9ZnhwFb9ZGxE1KsTa/4ogD6VyVhlEgYoW0noVOjG8cx30mMe4nI19UdvjKFBuNXgJZZwiS8NYTfsDwRJumjwWIvEjtCz9K3mYJCsIjTLYWVn/8VH2n7+8hpT8o=
+	t=1751558630; cv=none; b=K0JkifbkDwTHa+p72q56lB1Dg7IkQgaMZzDdyKzN9lFj8MsAAE7LrIpBwGM+ZMcnJP7mEWQo6eS0izxD0zxyZO+u0wXS+Isg/y4Twnw0LKZIog8+LddyWuQuiQ//Z9HwPe8mxRHd7Sgk+rX2GAdWwckya8A4ldQ7h9OH9VMkwys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751558608; c=relaxed/simple;
-	bh=UuMhKsPsA5TT4OVwbmIA7kbIQ25Ilw+Q6NtT8dG7+eI=;
+	s=arc-20240116; t=1751558630; c=relaxed/simple;
+	bh=XiThgsLVHyPbWCf27l9EbbGu7qy3k/OlkanRRNo/RS4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sr8zU/RFNYhKC36bLpNgccaZWc1g6YaQRXTmUkYxTGhx6IRhjER2zoa+Q68ae54ceQzXHroKfnQJJkk9KeQiKAjkLhLaTOr/dipSsl5zLxsrtD4gPkpkjWt7EFG9gNfAzTKG9jDURdhyH+LRZdOrpImg1WSoW247Ut2Yh6i/Skc=
+	 Content-Type:Content-Disposition:In-Reply-To; b=ThhNphaf2zXwHAcigjGlRR1mnvyubrbdDNCD5tygCDLjxROT5ERlB6I18sWeLxhDEChKtX9a9IUxmfRLGdi9zTqmUXQLAmdps9DpQVTrHmKedziDVcWGkXx7fT5U0iNjmz7p9p5Tp3tCMbMmQmKVGV2KXADVyGlwhxK6kGx1iXE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E39CC4CEE3;
-	Thu,  3 Jul 2025 16:03:24 +0000 (UTC)
-Date: Thu, 3 Jul 2025 17:03:22 +0100
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D8FAC4CEED;
+	Thu,  3 Jul 2025 16:03:46 +0000 (UTC)
+Date: Thu, 3 Jul 2025 17:03:45 +0100
 From: Catalin Marinas <catalin.marinas@arm.com>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>
 Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
@@ -47,11 +47,11 @@ Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
 	Jiri Slaby <jirislaby@kernel.org>,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v7 15/31] arm64: Disable GICv5 read/write/instruction
- traps
-Message-ID: <aGapyvHsFP_xreOj@arm.com>
+Subject: Re: [PATCH v7 16/31] arm64: cpucaps: Rename GICv3 CPU interface
+ capability
+Message-ID: <aGap4RilZskz-L7F@arm.com>
 References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
- <20250703-gicv5-host-v7-15-12e71f1b3528@kernel.org>
+ <20250703-gicv5-host-v7-16-12e71f1b3528@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,15 +60,15 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250703-gicv5-host-v7-15-12e71f1b3528@kernel.org>
+In-Reply-To: <20250703-gicv5-host-v7-16-12e71f1b3528@kernel.org>
 
-On Thu, Jul 03, 2025 at 12:25:05PM +0200, Lorenzo Pieralisi wrote:
-> GICv5 trap configuration registers value is UNKNOWN at reset.
+On Thu, Jul 03, 2025 at 12:25:06PM +0200, Lorenzo Pieralisi wrote:
+> In preparation for adding a GICv5 CPU interface capability,
+> rework the existing GICv3 CPUIF capability - change its name and
+> description so that the subsequent GICv5 CPUIF capability
+> can be added with a more consistent naming on top.
 > 
-> Initialize GICv5 EL2 trap configuration registers to prevent
-> trapping GICv5 instruction/register access upon entering the
-> kernel.
-> 
+> Suggested-by: Mark Rutland <mark.rutland@arm.com>
 > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 > Reviewed-by: Marc Zyngier <maz@kernel.org>
 > Cc: Will Deacon <will@kernel.org>
