@@ -1,195 +1,210 @@
-Return-Path: <linux-pci+bounces-31339-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31340-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16633AF6D59
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:46:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F653AF6D61
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:47:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E0CA1C80281
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 08:46:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 770641897C6E
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 08:47:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8B3E28D8E8;
-	Thu,  3 Jul 2025 08:46:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E5332D29B1;
+	Thu,  3 Jul 2025 08:46:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NG5UNXMh"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LrYxjxAT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7CB2AD25;
-	Thu,  3 Jul 2025 08:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A4C1D63F0;
+	Thu,  3 Jul 2025 08:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751532378; cv=none; b=W2KdGPbhDXUluTIHFteB0+4vVDQ/pnZSPgI0Hc5NdcTnApuqfyemToq39yWlFIS09VZOPoqml7GLU4ZJinOk3sblFT67WVKiGJlT/ZhLRi3Yp3ACMXP6m7lKGSqqF87kBJrhHl35MbtDfGfnv8QCTu3I+XSo63TUA5vPx2oeUwQ=
+	t=1751532405; cv=none; b=CIxJWtj9Vs/yVZrVWh30fR6FoTcsc/vN6DABadz6Zlm8dkT9WgWIN7eGAQmLujLyGEbKFEbJwOTSh6pmr10+zp0cVqMAJxYhGFyGjD6N8f4aeFFOP3UKa+rAeEVt3QY68gwdgKhswjjj3dyE3ZxVt46XUEkCwRKdefAuYJclRDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751532378; c=relaxed/simple;
-	bh=O9usTxhDHfLcTpuq8xPp2WlePI7M1F+dg5efcZC39oY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I9ZHloIdbnIOvCzJ3X8GacFopRjghwljbk/jqXdvvvpbPL0e3lHC1b/c+8Ek5cf36Ql2tDQgZMn++Drjc3VhE2rsDeKKLWPzKn9j9YPaA1azDW0gP/cUUN/5ut5/s9AABZ537IfRIJV12evk5MmaCiZP8A51hjJdcK8OZxzOEAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NG5UNXMh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83553C4CEE3;
-	Thu,  3 Jul 2025 08:46:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751532377;
-	bh=O9usTxhDHfLcTpuq8xPp2WlePI7M1F+dg5efcZC39oY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NG5UNXMhWC6eZ5jBGL0/+BOWH6EGU5YtD0bIhJRutPXvUnrBUObK+G3X0+1q3+Nm4
-	 scgX62QHjUzqME6mZjzb4U4WH1wNbIIao5a5tSRr/rvRqDpwOoG3/M1gCQfGgZgKg7
-	 B1UDHrAxTeqmmXGccDLQL0PVcVSXLFpsnHFfuy+RCDnmQhA4wYQawO+kSDGzwAgAxH
-	 lEd+qxQdUaU+GnKIFecjxr2HXDXApiSUFqqIos19/zBR2iCqoU35YDwDw+7e5mrMq3
-	 C4OQtZpGHoONucvQqs0xzX1AewQUjjDm9UxjXv8/ykUsuCOCO9OHFO6tyth9oQL7ML
-	 PcTigfGkrWFzg==
-Message-ID: <81db2fce-34db-46e7-8c68-bc4cb1a03d25@kernel.org>
-Date: Thu, 3 Jul 2025 10:46:12 +0200
+	s=arc-20240116; t=1751532405; c=relaxed/simple;
+	bh=oGnwNU54b6KjKEBNmnldSK7G2EHT2bg7bXi44Ajxx2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mGgnbG4emSswKOmOaqjQ+ux4ph16qD3PTorXTNW8O3j5peN42QuonMuObOdRk27z4GWAtc/tBo2pVRwhcoPA03jH5np7hEGMU0u5tkMr6X4nNef+KpOc5kOzcYl4L1vTHtUBmQFK6+wJHrn3EgHFCtL68zQV7Q4O//DxK6dUU7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LrYxjxAT; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7AD90432F4;
+	Thu,  3 Jul 2025 08:46:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751532400;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/cYj0q/giLszIR3kilyQWrZxMIeIjICge0MHLXkjJFo=;
+	b=LrYxjxAThrFQpeyWKPo7KHXblOcrN7BiWBU1ybIgmr/F8jlZn3oMMuFSHLRpDBJCmRCA1w
+	MsFwFPjimMNCZQBEGw0AUhUDK+RAMDTtWJ2veBlFxBS70NDSyClS2oazJsm9GXuSSiABnA
+	oV403Rb+nr5PpxxEXLcxSLdmT4WfVx+scbhDaUmQmv71EzmVWmfh952msl/4kd5FhS3UgG
+	H6v5SK89osI7/Zr7u5WkZX5kRsBq/netzt1snf3UAWVuxgU+g1X7fWrnla9+ir1xgj8s0A
+	kz1ZlldSa5AVR+gsrbQOELucUNukpblb0eV9CI8FzxxdgnsPKwKF60r3zk4j5Q==
+Date: Thu, 3 Jul 2025 10:46:36 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Rob Herring <robh@kernel.org>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>
+Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
+ Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
+ Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len
+ Brown <lenb@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso
+ <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+ <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
+ Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 00/28] lan966x pci device: Add support for SFPs
+Message-ID: <20250703104636.5012907d@bootlin.com>
+In-Reply-To: <20250627155837.GC3234475-robh@kernel.org>
+References: <20250613134817.681832-1-herve.codina@bootlin.com>
+	<20250627155837.GC3234475-robh@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] agp/amd64: Check AGP Capability before binding to
- unsupported devices
-To: Lukas Wunner <lukas@wunner.de>, David Airlie <airlied@redhat.com>,
- Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ben Hutchings <ben@decadent.org.uk>, Joerg Roedel <joro@8bytes.org>,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Andi Kleen <ak@linux.intel.com>, Ahmed Salem <x0rw3ll@gmail.com>,
- Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
- dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
- linux-pci@vger.kernel.org
-References: <b29e7fbfc6d146f947603d0ebaef44cbd2f0d754.1751468802.git.lukas@wunner.de>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <b29e7fbfc6d146f947603d0ebaef44cbd2f0d754.1751468802.git.lukas@wunner.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduleekgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepvdgrtddumegvtdgrmedvkeehmegsleektdemvgegtdgtmeeitgegfeemsgehsggsmegrgedvkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdekheemsgelkedtmegvgedttgemiegtgeefmegshegssgemrgegvdekpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgeekpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgp
+ dhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvg
+X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Lukas,
+Hi Rob,
 
-On 2-Jul-25 5:15 PM, Lukas Wunner wrote:
-> Since commit 172efbb40333 ("AGP: Try unsupported AGP chipsets on x86-64
-> by default"), the AGP driver for AMD Opteron/Athlon64 CPUs has attempted
-> to bind to any PCI device possessing an AGP Capability.
+On Fri, 27 Jun 2025 10:58:37 -0500
+Rob Herring <robh@kernel.org> wrote:
+
+> On Fri, Jun 13, 2025 at 03:47:40PM +0200, Herve Codina wrote:
+> > Hi,
+> > 
+> > This series add support for SFPs ports available on the LAN966x PCI
+> > device. In order to have the SFPs supported, additional devices are
+> > needed such as clock controller and I2C.
+> > 
+> > As a reminder, the LAN966x PCI device driver use a device-tree overlay
+> > to describe devices available on the PCI board. Adding support for SFPs
+> > ports consists in adding more devices in the already existing
+> > device-tree overlay.
+> > 
+> > With those devices added, the device-tree overlay is more complex and
+> > some consumer/supplier relationship are needed in order to remove
+> > devices in correct order when the LAN966x PCI driver is removed.
+> > 
+> > Those links are typically provided by fw_devlink and we faced some
+> > issues with fw_devlink and overlays.
+> > 
+> > This series gives the big picture related to the SFPs support from
+> > fixing issues to adding new devices. Of course, it can be split if
+> > needed.
+> > 
+> > The first part of the series (patch 1, 2 and 3) fixes fw_devlink when it
+> > is used with overlay. Patches 1 and 3 were previously sent by Saravana
+> > [0]. I just rebased them on top of v6.15-rc1 and added patch 2 in order
+> > to take into account feedback received on the series sent by Saravana.
+> > 
+> > Those modification were not sufficient in our case and so, on top of
+> > that, patch 4 and 5 fix some more issues related to fw_devlink.
+> > 
+> > Patches 6 to 12 introduce and use fw_devlink_set_device() in already
+> > existing code.
+> > 
+> > Patches 13 and 14 are related also to fw_devlink but specific to PCI and
+> > the device-tree nodes created during enumeration.
+> > 
+> > Patches 15, 15 and 17 are related fw_devlink too but specific to I2C
+> > muxes. Patches purpose is to correctly set a link between an adapter
+> > supplier and its consumer. Indeed, an i2c mux adapter's parent is not
+> > the i2c mux supplier but the adapter the i2c mux is connected to. Adding
+> > a new link between the adapter supplier involved when i2c muxes are used
+> > avoid a freeze observed during device removal.
+> > 
+> > Patch 18 adds support for fw_delink on x86. fw_devlink is needed to have
+> > the consumer/supplier relationship between devices in order to ensure a
+> > correct device removal order. Adding fw_devlink support for x86 has been
+> > tried in the past but was reverted [1] because it broke some systems.
+> > Instead of enabling fw_devlink on *all* x86 system or on *all* x86
+> > system except on those where it leads to issue, enable it only on system
+> > where it is needed.
+> > 
+> > Patches 19 and 20 allow to build clock and i2c controller used by the
+> > LAN966x PCI device when the LAN966x PCI device is enabled.
+> > 
+> > Patches 21 to 25 are specific to the LAN966x. They touch the current
+> > dtso, split it in dtsi/dtso files, rename the dtso and improve the
+> > driver to allow easier support for other boards.
+> > 
+> > The next patch (patch 26) update the LAN966x device-tree overlay itself
+> > to have the SPF ports and devices they depends on described.
+> > 
+> > The last two patches (patches 27 and 28) sort the existing drivers in
+> > the needed driver list available in the Kconfig help and add new drivers
+> > in this list keep the list up to date with the devices described in the
+> > device-tree overlay.
+> > 
+> > Once again, this series gives the big picture and can be split if
+> > needed. Let me know.  
 > 
-> Commit 6fd024893911 ("amd64-agp: Probe unknown AGP devices the right
-> way") subsequently reworked the driver to perform a bind attempt to
-> any PCI device (regardless of AGP Capability) and reject a device in
-> the driver's ->probe() hook if it lacks the AGP Capability.
+> Please suggest how you think this should get merged? There's 8 
+> maintainer trees involved here. Some parts can be merged independently? 
+> We need to spread over 2 cycles? Greg just takes it all?
 > 
-> On modern CPUs exposing an AMD IOMMU, this subtle change results in an
-> annoying message with KERN_CRIT severity:
-> 
->   pci 0000:00:00.2: Resources present before probing
-> 
-> The message is emitted by the driver core prior to invoking a driver's
-> ->probe() hook.  The check for an AGP Capability in the ->probe() hook
-> happens too late to prevent the message.
-> 
-> The message has appeared only recently with commit 3be5fa236649 (Revert
-> "iommu/amd: Prevent binding other PCI drivers to IOMMU PCI devices").
-> Prior to the commit, no driver could bind to AMD IOMMUs.
-> 
-> The reason for the message is that an MSI is requested early on for the
-> AMD IOMMU, which results in a call from msi_sysfs_create_group() to
-> devm_device_add_group().  A devres resource is thus attached to the
-> driver-less AMD IOMMU, which is normally not allowed, but presumably
-> cannot be avoided because requesting the MSI from a regular PCI driver
-> might be too late.
-> 
-> Avoid the message by once again checking for an AGP Capability *before*
-> binding to an unsupported device.  Achieve that by way of the PCI core's
-> dynid functionality.
-> 
-> pci_add_dynid() can fail only with -ENOMEM (on allocation failure) or
-> -EINVAL (on bus_to_subsys() failure).  It doesn't seem worth the extra
-> code to propagate those error codes out of the for_each_pci_dev() loop,
-> so simply error out with -ENODEV if there was no successful bind attempt.
-> In the -ENOMEM case, a splat is emitted anyway, and the -EINVAL case can
-> never happen because it requires failure of bus_register(&pci_bus_type),
-> in which case there's no driver probing of PCI devices.
-> 
-> Hans has voiced a preference to no longer probe unsupported devices by
-> default (i.e. set agp_try_unsupported = 0).  In fact, the help text for
-> CONFIG_AGP_AMD64 pretends this to be the default.  Alternatively, he
-> proposes probing only devices with PCI_CLASS_BRIDGE_HOST.  However these
-> approaches risk regressing users who depend on the existing behavior.
-> 
-> Fixes: 3be5fa236649 (Revert "iommu/amd: Prevent binding other PCI drivers to IOMMU PCI devices")
-> Reported-by: Fedor Pchelkin <pchelkin@ispras.ru>
-> Closes: https://lore.kernel.org/r/wpoivftgshz5b5aovxbkxl6ivvquinukqfvb5z6yi4mv7d25ew@edtzr2p74ckg/
-> Reported-by: Hans de Goede <hansg@kernel.org>
-> Closes: https://lore.kernel.org/r/20250625112411.4123-1-hansg@kernel.org/
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> ---
-> Changes v1 -> v2:
->  * Use pci_add_dynid() to bind only to devices with AGP Capability
->    (based on a suggestion from Ben).
->  * Rephrase commit message to hopefully explain the history more accurately.
->    Explain why resources are attached to the driver-less AMD IOMMU
->    (requested by Ben).
->  * Acknowledge Hans as reporter.
+> Rob
 
-Thank you for the new version.
+I will add this information in the next iteration.
 
-I can confirm that this fixes the issue for me and the code also looks
-good to me:
+I think, the merge strategy could be the following:
+ - patches 1 to 14 could be merged by driver core maintainers in cycle N
 
-Tested-by: Hans de Goede <hansg@kernel.org>
-Reviewed-by: Hans de Goede <hansg@kernel.org>
+ - patches 15 to 17 and 20 could be merged by I2C maintainers in cycle N
+   without any dependency issues against other patches.
 
-Regards,
+ - patch 18 could be merged by OF maintainers in cycle N without any
+   dependency issues
 
-Hans
+ - patch 19 could be merged by clock maintainers in cycle N without any
+   dependency issues.
 
+ - patch 21 to 25 could be merged by misc maintainers in cycle N without any
+   dependency issues.
 
+ - patch 26 to 28, even if there is no compilation dependencies with other
+   patches, they need the other patches applied to have a working system and
+   so they could be merged in cycle N+1.
 
+Also, as the big picture and the goal of this series has been shown, I can
+extract patches from this series and send them alone depending on maintainers
+preferences.
 
->  drivers/char/agp/amd64-agp.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/char/agp/amd64-agp.c b/drivers/char/agp/amd64-agp.c
-> index bf490967241a..2505df1f4e69 100644
-> --- a/drivers/char/agp/amd64-agp.c
-> +++ b/drivers/char/agp/amd64-agp.c
-> @@ -720,11 +720,6 @@ static const struct pci_device_id agp_amd64_pci_table[] = {
->  
->  MODULE_DEVICE_TABLE(pci, agp_amd64_pci_table);
->  
-> -static const struct pci_device_id agp_amd64_pci_promisc_table[] = {
-> -	{ PCI_DEVICE_CLASS(0, 0) },
-> -	{ }
-> -};
-> -
->  static DEFINE_SIMPLE_DEV_PM_OPS(agp_amd64_pm_ops, NULL, agp_amd64_resume);
->  
->  static struct pci_driver agp_amd64_pci_driver = {
-> @@ -739,6 +734,7 @@ static struct pci_driver agp_amd64_pci_driver = {
->  /* Not static due to IOMMU code calling it early. */
->  int __init agp_amd64_init(void)
->  {
-> +	struct pci_dev *pdev = NULL;
->  	int err = 0;
->  
->  	if (agp_off)
-> @@ -767,9 +763,13 @@ int __init agp_amd64_init(void)
->  		}
->  
->  		/* Look for any AGP bridge */
-> -		agp_amd64_pci_driver.id_table = agp_amd64_pci_promisc_table;
-> -		err = driver_attach(&agp_amd64_pci_driver.driver);
-> -		if (err == 0 && agp_bridges_found == 0) {
-> +		for_each_pci_dev(pdev)
-> +			if (pci_find_capability(pdev, PCI_CAP_ID_AGP))
-> +				pci_add_dynid(&agp_amd64_pci_driver,
-> +					      pdev->vendor, pdev->device,
-> +					      pdev->subsystem_vendor,
-> +					      pdev->subsystem_device, 0, 0, 0);
-> +		if (agp_bridges_found == 0) {
->  			pci_unregister_driver(&agp_amd64_pci_driver);
->  			err = -ENODEV;
->  		}
+Maintainers, just tell me.
 
+Best regards,
+Hervé
 
