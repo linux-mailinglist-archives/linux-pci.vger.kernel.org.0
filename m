@@ -1,153 +1,101 @@
-Return-Path: <linux-pci+bounces-31408-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31409-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 191A9AF779A
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 16:33:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B49CDAF7912
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 16:57:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CF3817BE091
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 14:28:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2E58D1887025
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 14:54:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 778502EAB6A;
-	Thu,  3 Jul 2025 14:29:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD9452F0044;
+	Thu,  3 Jul 2025 14:53:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EUtQUVaT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1w5cXib"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C022EA46B;
-	Thu,  3 Jul 2025 14:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF312F0034;
+	Thu,  3 Jul 2025 14:53:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751552999; cv=none; b=npNgCoDP15zhF2pTy5ZJPez5SDQycnojO8GfDTYKwaP/2iSeJR06p9OfK1+a6dO+4QV5PnFYs+9WHNY8SeewsgCURExfQjJO5atYZ3LBc3q6psEEWeWxXVJ26fQOtS9WxnjyqCGYPog7V8BfpVcuY5Z/UFRbeKiLNOtv0vcOZgk=
+	t=1751554393; cv=none; b=FbraUHKhtScz5AYiyaIHzBdzkfRTF+VBCjSebZ2CAOaKHVuuFtiurL1K/B4vEFKDRZ77jN7XYfs4ERwBcyX//u5A3u5L4FbLl/6CsgE/3MbZLpi0W/jOiBH0m7eg/0QhgpXLZK0wwqmUVMxq1GWzOcePwPEVp+51MCnT1LKXvZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751552999; c=relaxed/simple;
-	bh=Fm3qk2Sxt9oTRrrfhvZcED03yYICrUHHIb3sCtzNWN4=;
+	s=arc-20240116; t=1751554393; c=relaxed/simple;
+	bh=DYtPFjKsBRMKz/l5D/t4ZCOdW4ZlU0pbxZxDlephea8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f71O/7tWZaI3KhAj3P6qGjqXBrR+gFILRs7Zd72VSFGluHfTIYJPNX4Zo3BJTcURyIsc49NtI/wxQVw9mTgPmqxVnY7QgUwhIVxVRQC1PJm7rQOuq/4Y/XphfEMDkj95v+6bvDfVXO5b0ObwoU+nmWxjD06vMfasVoSz8piY8bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EUtQUVaT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2C47C4AF0B;
-	Thu,  3 Jul 2025 14:29:58 +0000 (UTC)
+	 To:Cc:Content-Type; b=R86Ib6jacqHGZXRRvjM91OqEm8MjbYa69BPC+dPHhnyQLCQIG/IbNF8y6ACWkoKUxKZoOfaot0vF9QzwhqmDCaZeDbTMmjfm4pDqCCspro24kSI0ihNJ5ldzuKlmH7m+YKkxhOYSuDfv1LdFrBeKnt19uBLdIadDi5XN3KqoiC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p1w5cXib; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 547FFC4CEF6;
+	Thu,  3 Jul 2025 14:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751552998;
-	bh=Fm3qk2Sxt9oTRrrfhvZcED03yYICrUHHIb3sCtzNWN4=;
+	s=k20201202; t=1751554393;
+	bh=DYtPFjKsBRMKz/l5D/t4ZCOdW4ZlU0pbxZxDlephea8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EUtQUVaTKURBSPBDtNxwsZsLLGU/xuEHfm0PM0K5AWLaAr0lx8/+TnwYPfB+kyugp
-	 o5d1bOfi4bMzMx2v5TNIDepiHs+lhKKtjX3PEHUE1FABzscTZA81BEJuCo0M0+oFZE
-	 dOrF4zbUAof8uuDe+iZKSFilPr/iDnGR0fZS146Rn1y2CwpF2gGr8tGklAwmWHwLd/
-	 H8Hc4TXVr72JEd4ApQIUdwamFnhZZ9yo02YLAo86ZBHy6BnhWR2tguDc4rTB9wd0PV
-	 4ddhT8qjZhuaiqWLp/lCL2F70yOJqRDWT/21+N7ylRkXCOvzQfNM3ccrTj/VKiWXAz
-	 zCMqHWcqpGzCA==
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-610d87553b6so3239901eaf.2;
-        Thu, 03 Jul 2025 07:29:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUGLNMn8xDXP/CdB+o+Odk4XOQAOV46qm0PqJS1QbplrnnfPrmBgEFdzHHbCkTls49lLE0olSRye9qn@vger.kernel.org, AJvYcCUHqUnwnjQcTWDKxYupZMEjwptdst7KXenxVJ6/dnVFCxiucqEGkB0rRDbtbIVnzUqGR6Ziz5sgV0Ou@vger.kernel.org, AJvYcCVyNZTU15TfF5FdZZqqWPfPv5UgNrxCng4xnRgIqT3bAJ9ox9P2FzoOKSam10x6HjjcElPMSchQgI8=@vger.kernel.org, AJvYcCX7ZX3/1EVzejOdGOeUyBz176L8EvQqGV+Xkq2MPxsJSw+F2rWb8H121B5TpD5yM3KTwImtrahC1iEK6io=@vger.kernel.org, AJvYcCXpikidFen+InVaqwdbKQ03ZBrFROJFDXIPx6jola4LQQvUlUB7DjSWzWJibLG76uWLxbxnY0O084ZUqQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkVMhyJoCmyMy2tLcPji2GPZ/GtOf1FbXQGeXcf9gN7QNFu3Ud
-	F/Q6qhlWDjKWMhMdRLKF3YTeLaTQdbjSzK60eReGB+y3+IT2KOdgVbrR4KalAAcz6xjXSUKOjOY
-	QsUXW0yiZLNTGVQZjCAWxOsTEA0KFfFk=
-X-Google-Smtp-Source: AGHT+IGKqgRrtyx19Ohp3Z1EI2LoOc/W9BuT9DA7/iSo9WQpIWa8l502nswOSx3IuDHZQjfc+w2NIPaPXuTzX8u35dk=
-X-Received: by 2002:a05:6820:2713:b0:611:bbad:7b62 with SMTP id
- 006d021491bc7-6120112a218mr4957769eaf.3.1751552997991; Thu, 03 Jul 2025
- 07:29:57 -0700 (PDT)
+	b=p1w5cXibIDAhNVjtLQmdEwa2Ytv9ciyjyG1naJxm3QJ9haNeaXPF7TgVrOk9MK8PZ
+	 q8NABLCgkGxo/K+NlGfxmpv+PAF8mh6VlgHOSY6brq4yfZieF3zhxW6GTZY0nKboHq
+	 3Z9CBTYcStEFUTnvgyOEBxfisunhbBwfqSYo5golA9ibkFTyyd5K4ka0kgK9AeN73J
+	 eb4TRQ+dyo57/jRPhs9GTDJucL67RmINNHy3O+xptglXyNF7JGHkOFX+t5rxidYFCh
+	 kgAz3h7AjtPqsriWHCsFnFdnOE7X5i7NvuYnxupi701uvWOeYgmLhuNCJaSmxW5vPC
+	 edAgFNQhHGBnA==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6070293103cso9747175a12.0;
+        Thu, 03 Jul 2025 07:53:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV/FQVEYwM9J7RfS3PoPeD7k0dyjqhwWI+P5DVEM30cV4Xc4aFmqnLWsz1GreDzWJRtqIQ4pyVnBt76@vger.kernel.org, AJvYcCW0sTV2I63IO8SVWox0VV8nX3eUJ5cIcs3kTLLJ3IobUj5U6U+sBBTo/pLN0Oe5jGDoZ40f2gus/U+Z@vger.kernel.org, AJvYcCWUb7SomjKhWVAh7UjlaeZ9Z4/sF5n+sRKXtBJD1kx2G+QBDAW/mkz44TRz+oWT6ogE/HHUICyRJ7Uskd60@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBm+C/VdExb1eQaT6SVHJCkt2IYsRX56J6/OMHtWtAeyHVWrmm
+	G4oudOrkS7DRhgawryL09c1XxYG66uVScfOMiQUOUQkJuBMhNjEI9sgD6IS2Ma8cyxk5keJl/Gr
+	i78g8gyqstumKgfdhckv2M8IrRutEow==
+X-Google-Smtp-Source: AGHT+IF6/W7R/MdVdKSm57lSvwfhmuwesnrXaz+1Ouf3Kgia+HRQDsPWXxDpsPtXTQ0Z1Gxc9bSEIcQnIrE3MFEps0E=
+X-Received: by 2002:a17:907:3e24:b0:ae3:aa8c:e8f with SMTP id
+ a640c23a62f3a-ae3d8337789mr318025466b.2.1751554391802; Thu, 03 Jul 2025
+ 07:53:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616175019.3471583-1-superm1@kernel.org>
-In-Reply-To: <20250616175019.3471583-1-superm1@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 3 Jul 2025 16:29:46 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jc-tjs_a+RCzu6bvrbfhv5QHqsWx-zKjH0wpisiJciKA@mail.gmail.com>
-X-Gm-Features: Ac12FXyr5oPvb2c3yNjkDygXC9l6Pt_56oLkJ04HxD0-cR-THCDtscKWWn70wDY
-Message-ID: <CAJZ5v0jc-tjs_a+RCzu6bvrbfhv5QHqsWx-zKjH0wpisiJciKA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] Improvements to S5 power consumption
-To: Mario Limonciello <superm1@kernel.org>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Alex Deucher <alexander.deucher@amd.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>, 
-	"open list:HIBERNATION (aka Software Suspend, aka swsusp)" <linux-pm@vger.kernel.org>, 
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K . Petersen" <martin.petersen@oracle.com>, 
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, 
-	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>, 
-	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org> <20250703-gicv5-host-v7-24-12e71f1b3528@kernel.org>
+In-Reply-To: <20250703-gicv5-host-v7-24-12e71f1b3528@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 3 Jul 2025 09:52:59 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKejEoHhFNfybJVpimXwCGyc4_hqM4w8F54fFnEdMFb0Q@mail.gmail.com>
+X-Gm-Features: Ac12FXxFUu74snwLufqalaVhV3WIbBJAXXqbS-UUZMip9gA7bEBFm5gd5gAC7P8
+Message-ID: <CAL_JsqKejEoHhFNfybJVpimXwCGyc4_hqM4w8F54fFnEdMFb0Q@mail.gmail.com>
+Subject: Re: [PATCH v7 24/31] of/irq: Add of_msi_xlate() helper function
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Sascha Bischoff <sascha.bischoff@arm.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Timothy Hayes <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 16, 2025 at 7:50=E2=80=AFPM Mario Limonciello <superm1@kernel.o=
-rg> wrote:
+On Thu, Jul 3, 2025 at 5:27=E2=80=AFAM Lorenzo Pieralisi <lpieralisi@kernel=
+.org> wrote:
 >
-> From: Mario Limonciello <mario.limonciello@amd.com>
+> Add an of_msi_xlate() helper that maps a device ID and returns
+> the device node of the MSI controller the device ID is mapped to.
 >
-> A variety of issues both in function and in power consumption have been
-> raised as a result of devices not being put into a low power state when
-> the system is powered off.
+> Required by core functions that need an MSI controller device node
+> pointer at the same time as a mapped device ID, of_msi_map_id() is not
+> sufficient for that purpose.
 >
-> There have been some localized changes[1] to PCI core to help these issue=
-s,
-> but they have had various downsides.
->
-> This series instead tries to use the S4 flow when the system is being
-> powered off.  This lines up the behavior with what other operating system=
-s
-> do as well.  If for some reason that fails or is not supported, unwind an=
-d
-> do the previous S5 flow that will wake all devices and run their shutdown=
-()
-> callbacks.
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Reviewed-by: Marc Zyngier <maz@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/of/irq.c       | 22 +++++++++++++++++-----
+>  include/linux/of_irq.h |  5 +++++
+>  2 files changed, 22 insertions(+), 5 deletions(-)
 
-I actually like this approach, but I think that it is risky.
-
-It also requires more work/review from other people.
-
-I'll be sending some comments on the individual patches going forward,
-but I think the earliest it can go in is after 6.17-rc1 (given it is
-reviewed properly till then).
-
-Thanks!
-
-> v3->v4:
->  * Fix LKP robot failure
->  * Rebase on v6.16-rc2
->
-> Previous submissions [1]:
-> Link: https://lore.kernel.org/linux-pm/CAJZ5v0hrKEJa8Ad7iiAvQ3d_0ysVhzZcX=
-SYc5kkL=3D6vtseF+bg@mail.gmail.com/T/#m91e4eae868a7405ae579e89b135085f49062=
-25d2
-> Link: https://lore.kernel.org/linux-pci/20250506041934.1409302-1-superm1@=
-kernel.org/
-> Link: https://lore.kernel.org/linux-pci/20231213182656.6165-1-mario.limon=
-ciello@amd.com/ (v1)
-> Link: https://lore.kernel.org/linux-pm/20250514193406.3998101-1-superm1@k=
-ernel.org/ (v2)
-> Link: https://lore.kernel.org/linux-pm/20250609024619.407257-1-superm1@ke=
-rnel.org/ (v3)
->
-> Mario Limonciello (5):
->   PM: Use hibernate flows for system power off
->   PCI: Put PCIe ports with downstream devices into D3 at hibernate
->   drm/amd: Avoid evicting resources at S5
->   scsi: Add PM_EVENT_POWEROFF into suspend callbacks
->   usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
->
->  drivers/base/power/main.c                  |  7 ++
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  4 +
->  drivers/pci/pci-driver.c                   | 94 ++++++++++++++--------
->  drivers/scsi/mesh.c                        |  1 +
->  drivers/scsi/stex.c                        |  1 +
->  drivers/usb/host/sl811-hcd.c               |  1 +
->  include/linux/pm.h                         |  3 +
->  include/trace/events/power.h               |  3 +-
->  kernel/reboot.c                            |  6 ++
->  9 files changed, 86 insertions(+), 34 deletions(-)
->
-> --
-> 2.43.0
->
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
