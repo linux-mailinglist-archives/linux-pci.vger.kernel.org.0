@@ -1,210 +1,229 @@
-Return-Path: <linux-pci+bounces-31340-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31341-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F653AF6D61
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:47:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5958FAF6E92
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 11:26:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 770641897C6E
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 08:47:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 776861898F41
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 09:27:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E5332D29B1;
-	Thu,  3 Jul 2025 08:46:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C75A2D7807;
+	Thu,  3 Jul 2025 09:26:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LrYxjxAT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IYmvmR1q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A4C1D63F0;
-	Thu,  3 Jul 2025 08:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3842D77E8
+	for <linux-pci@vger.kernel.org>; Thu,  3 Jul 2025 09:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751532405; cv=none; b=CIxJWtj9Vs/yVZrVWh30fR6FoTcsc/vN6DABadz6Zlm8dkT9WgWIN7eGAQmLujLyGEbKFEbJwOTSh6pmr10+zp0cVqMAJxYhGFyGjD6N8f4aeFFOP3UKa+rAeEVt3QY68gwdgKhswjjj3dyE3ZxVt46XUEkCwRKdefAuYJclRDs=
+	t=1751534795; cv=none; b=ANvY+uuHQPfSLLV3K60XKLzmwE+AmJTytqCLvPzO02DcPxW9VHoFcs8BcctNgUzkiqiWaAauQnmPl9kz2KRt+NrIzXzHhTKxSG6TvQ90tplFPurB/HZruLbhuaYXO1UWRrJyZgYieEhNebp0tKUgniSpH7isb3xo4rme3d0xqp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751532405; c=relaxed/simple;
-	bh=oGnwNU54b6KjKEBNmnldSK7G2EHT2bg7bXi44Ajxx2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mGgnbG4emSswKOmOaqjQ+ux4ph16qD3PTorXTNW8O3j5peN42QuonMuObOdRk27z4GWAtc/tBo2pVRwhcoPA03jH5np7hEGMU0u5tkMr6X4nNef+KpOc5kOzcYl4L1vTHtUBmQFK6+wJHrn3EgHFCtL68zQV7Q4O//DxK6dUU7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LrYxjxAT; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7AD90432F4;
-	Thu,  3 Jul 2025 08:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751532400;
+	s=arc-20240116; t=1751534795; c=relaxed/simple;
+	bh=iltIWFybhY5jS6gtEpq39rDX9ZwmJ62wzSNTjBqR7K4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gn6z/CcgA+7VBeW/n2YVOXqJM3o/v7IN1hAJKMUMhGWtwJ0ES6ZkjNxdyI+JPosQnZ2ouvAUVZz8pJQuolPCbOauaduWSmiAbYYyVAFo5WiXXGqA/1uoDw9xcoVhinFMSGT+cT8wlt5M8WJKOZct5NShDqPHa+mw9vJk+zc78fY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IYmvmR1q; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751534792;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/cYj0q/giLszIR3kilyQWrZxMIeIjICge0MHLXkjJFo=;
-	b=LrYxjxAThrFQpeyWKPo7KHXblOcrN7BiWBU1ybIgmr/F8jlZn3oMMuFSHLRpDBJCmRCA1w
-	MsFwFPjimMNCZQBEGw0AUhUDK+RAMDTtWJ2veBlFxBS70NDSyClS2oazJsm9GXuSSiABnA
-	oV403Rb+nr5PpxxEXLcxSLdmT4WfVx+scbhDaUmQmv71EzmVWmfh952msl/4kd5FhS3UgG
-	H6v5SK89osI7/Zr7u5WkZX5kRsBq/netzt1snf3UAWVuxgU+g1X7fWrnla9+ir1xgj8s0A
-	kz1ZlldSa5AVR+gsrbQOELucUNukpblb0eV9CI8FzxxdgnsPKwKF60r3zk4j5Q==
-Date: Thu, 3 Jul 2025 10:46:36 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>, Pengutronix Kernel Team
- <kernel@pengutronix.de>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len
- Brown <lenb@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso
- <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 00/28] lan966x pci device: Add support for SFPs
-Message-ID: <20250703104636.5012907d@bootlin.com>
-In-Reply-To: <20250627155837.GC3234475-robh@kernel.org>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
-	<20250627155837.GC3234475-robh@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	bh=gmPV116twb9Z/nZT/xaKI7fsE44yiiTxfBwVEer8aB8=;
+	b=IYmvmR1q3WyuFEoR0iYPSkAG9fvniwZKxBCVOIWHghjbVSqHk+kL6cVpHBGJvOK9aS52hX
+	q0zFxk2WY0Sth37ZdJnUB9/uK0xMArtdrNIBzJQZGIpzVpsUEVTAUxJH/8pJDhANz2qnxr
+	8ePljYDlo00f50K2Eq/VYdQ22z0EDzY=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-362-LApI2YkYOEWWqo62v_XzUQ-1; Thu, 03 Jul 2025 05:26:31 -0400
+X-MC-Unique: LApI2YkYOEWWqo62v_XzUQ-1
+X-Mimecast-MFC-AGG-ID: LApI2YkYOEWWqo62v_XzUQ_1751534790
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4eb6fcd88so3920760f8f.1
+        for <linux-pci@vger.kernel.org>; Thu, 03 Jul 2025 02:26:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751534790; x=1752139590;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gmPV116twb9Z/nZT/xaKI7fsE44yiiTxfBwVEer8aB8=;
+        b=XVy9OFGellGJ7eVdIuSY65/CDIAP2Tr2m8u+oh3QbZItc6f4JNO0fMHdydyvPX5c6z
+         TGhQdQxAmDXrMsIMerJ1BzUwtxlC57cyTnw+89TIVOc8VuyPOCyx1iwsuKtlACfO9Vvv
+         2N7aTcYaGsfxV6nWDteuqZ6SbOwbLdyVwuX/HMWWBhf/6NaMeEQaiXxpwv9dxnSVsZNf
+         dhV3ZhmKCC3VIrvYUck9Fw9mTntT3CJlz6yl1BOfunb4i9uRUKRHb7OGvzsWSmRCjQV9
+         voTzGU3UhE6ngawpSA4ZhWZf0EW0PEzQ/ORD54q1ncYxlNjTsoWlAvUDqQuWgKMrJj33
+         ++4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXd5N44G+0IcOdpMO2yAuB/tNF6gA53yjOLUvS06t6zyejeXsiiaqjQV0ve6zX9q/+0cRIawKuzdro=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwaJWZFIR7DVJcCaxDqMqduuB7B9gQvqODoV6Js4WdSmMy2BwV
+	fG49/1pX0pTl3rhc/VSFmfrQ/E4clThaiD7J+4VuP9Z5UDYw3UrE3oeGeUDJgoVo4qOpzPC8A1t
+	aaclnpsSQu7x07KD3+U0ZZIODDy/gfvRmjj/DbJrM4V079SRF90MGmQJtfOnA27AsMYpeDA==
+X-Gm-Gg: ASbGncsMQlX0uLlP7yNQY8ihv/HwKz+O2Q1Cn1G/UydPk5tnwPtYxaeoJ4KByg31II9
+	484BgcJE2ra29p4UCELHpYLh/LBG6an97+zLytyUB2HTP5/5vuZ6bJslOLftz2D1uScuZUw8gKX
+	mE6X00txwMbxz6Xdm8wbUilXzKq3nsD3xfgTYKgyJ3JurhOSMRvl4ZkYIBbI6OUUWio2CujU0os
+	O81PUM+eE/bjE7stwMWvWDe1Qz6U7Kxli2cfxEuKtTRBOiLNlSCV7XEgLPUhUiObls54ak3t1G7
+	xHRWLmYfK5LUc8YZ
+X-Received: by 2002:a05:6000:2f85:b0:3a6:d5fd:4687 with SMTP id ffacd0b85a97d-3b1fe6b72c6mr5556994f8f.18.1751534789654;
+        Thu, 03 Jul 2025 02:26:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHMW+7SNj2wAPKclz3m66/sgSUats1gZ/kW9YtYL5R1Qqdu66ZwcRX5icVo4fMXovRSJLS0VA==
+X-Received: by 2002:a05:6000:2f85:b0:3a6:d5fd:4687 with SMTP id ffacd0b85a97d-3b1fe6b72c6mr5556975f8f.18.1751534789159;
+        Thu, 03 Jul 2025 02:26:29 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f8b6sm18462327f8f.91.2025.07.03.02.26.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 02:26:28 -0700 (PDT)
+Date: Thu, 3 Jul 2025 05:26:26 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Lukas Wunner <lukas@wunner.de>, Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Parav Pandit <parav@nvidia.com>, virtualization@lists.linux.dev,
+	stefanha@redhat.com, alok.a.tiwari@oracle.com,
+	linux-pci@vger.kernel.org
+Subject: [PATCH RFC v4 1/5] pci: report surprise removal event
+Message-ID: <9a2fc64af1d7187c55bfdc710cb3d585cd38cd11.1751534711.git.mst@redhat.com>
+References: <cover.1751534711.git.mst@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduleekgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepvdgrtddumegvtdgrmedvkeehmegsleektdemvgegtdgtmeeitgegfeemsgehsggsmegrgedvkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdekheemsgelkedtmegvgedttgemiegtgeefmegshegssgemrgegvdekpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgeekpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgp
- dhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvg
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1751534711.git.mst@redhat.com>
+X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
+X-Mutt-Fcc: =sent
 
-Hi Rob,
+At the moment, in case of a surprise removal, the regular remove
+callback is invoked, exclusively.  This works well, because mostly, the
+cleanup would be the same.
 
-On Fri, 27 Jun 2025 10:58:37 -0500
-Rob Herring <robh@kernel.org> wrote:
+However, there's a race: imagine device removal was initiated by a user
+action, such as driver unbind, and it in turn initiated some cleanup and
+is now waiting for an interrupt from the device. If the device is now
+surprise-removed, that never arrives and the remove callback hangs
+forever.
 
-> On Fri, Jun 13, 2025 at 03:47:40PM +0200, Herve Codina wrote:
-> > Hi,
-> > 
-> > This series add support for SFPs ports available on the LAN966x PCI
-> > device. In order to have the SFPs supported, additional devices are
-> > needed such as clock controller and I2C.
-> > 
-> > As a reminder, the LAN966x PCI device driver use a device-tree overlay
-> > to describe devices available on the PCI board. Adding support for SFPs
-> > ports consists in adding more devices in the already existing
-> > device-tree overlay.
-> > 
-> > With those devices added, the device-tree overlay is more complex and
-> > some consumer/supplier relationship are needed in order to remove
-> > devices in correct order when the LAN966x PCI driver is removed.
-> > 
-> > Those links are typically provided by fw_devlink and we faced some
-> > issues with fw_devlink and overlays.
-> > 
-> > This series gives the big picture related to the SFPs support from
-> > fixing issues to adding new devices. Of course, it can be split if
-> > needed.
-> > 
-> > The first part of the series (patch 1, 2 and 3) fixes fw_devlink when it
-> > is used with overlay. Patches 1 and 3 were previously sent by Saravana
-> > [0]. I just rebased them on top of v6.15-rc1 and added patch 2 in order
-> > to take into account feedback received on the series sent by Saravana.
-> > 
-> > Those modification were not sufficient in our case and so, on top of
-> > that, patch 4 and 5 fix some more issues related to fw_devlink.
-> > 
-> > Patches 6 to 12 introduce and use fw_devlink_set_device() in already
-> > existing code.
-> > 
-> > Patches 13 and 14 are related also to fw_devlink but specific to PCI and
-> > the device-tree nodes created during enumeration.
-> > 
-> > Patches 15, 15 and 17 are related fw_devlink too but specific to I2C
-> > muxes. Patches purpose is to correctly set a link between an adapter
-> > supplier and its consumer. Indeed, an i2c mux adapter's parent is not
-> > the i2c mux supplier but the adapter the i2c mux is connected to. Adding
-> > a new link between the adapter supplier involved when i2c muxes are used
-> > avoid a freeze observed during device removal.
-> > 
-> > Patch 18 adds support for fw_delink on x86. fw_devlink is needed to have
-> > the consumer/supplier relationship between devices in order to ensure a
-> > correct device removal order. Adding fw_devlink support for x86 has been
-> > tried in the past but was reverted [1] because it broke some systems.
-> > Instead of enabling fw_devlink on *all* x86 system or on *all* x86
-> > system except on those where it leads to issue, enable it only on system
-> > where it is needed.
-> > 
-> > Patches 19 and 20 allow to build clock and i2c controller used by the
-> > LAN966x PCI device when the LAN966x PCI device is enabled.
-> > 
-> > Patches 21 to 25 are specific to the LAN966x. They touch the current
-> > dtso, split it in dtsi/dtso files, rename the dtso and improve the
-> > driver to allow easier support for other boards.
-> > 
-> > The next patch (patch 26) update the LAN966x device-tree overlay itself
-> > to have the SPF ports and devices they depends on described.
-> > 
-> > The last two patches (patches 27 and 28) sort the existing drivers in
-> > the needed driver list available in the Kconfig help and add new drivers
-> > in this list keep the list up to date with the devices described in the
-> > device-tree overlay.
-> > 
-> > Once again, this series gives the big picture and can be split if
-> > needed. Let me know.  
-> 
-> Please suggest how you think this should get merged? There's 8 
-> maintainer trees involved here. Some parts can be merged independently? 
-> We need to spread over 2 cycles? Greg just takes it all?
-> 
-> Rob
+For example, this was reported for virtio-blk:
 
-I will add this information in the next iteration.
+	1. the graceful removal is ongoing in the remove() callback, where disk
+	   deletion del_gendisk() is ongoing, which waits for the requests +to
+	   complete,
 
-I think, the merge strategy could be the following:
- - patches 1 to 14 could be merged by driver core maintainers in cycle N
+	2. Now few requests are yet to complete, and surprise removal started.
 
- - patches 15 to 17 and 20 could be merged by I2C maintainers in cycle N
-   without any dependency issues against other patches.
+	At this point, virtio block driver will not get notified by the driver
+	core layer, because it is likely serializing remove() happening by
+	+user/driver unload and PCI hotplug driver-initiated device removal.  So
+	vblk driver doesn't know that device is removed, block layer is waiting
+	for requests completions to arrive which it never gets.  So
+	del_gendisk() gets stuck.
 
- - patch 18 could be merged by OF maintainers in cycle N without any
-   dependency issues
+Drivers can artificially add timeouts to handle that, but it can be
+flaky.
 
- - patch 19 could be merged by clock maintainers in cycle N without any
-   dependency issues.
+Instead, let's add a way for the driver to be notified about the
+disconnect. It can then do any necessary cleanup, knowing that the
+device is inactive.
 
- - patch 21 to 25 could be merged by misc maintainers in cycle N without any
-   dependency issues.
+Since cleanups can take a long time, this takes an approach
+of a work struct that the driver initiates and enables
+on probe, and tears down on remove.
 
- - patch 26 to 28, even if there is no compilation dependencies with other
-   patches, they need the other patches applied to have a working system and
-   so they could be merged in cycle N+1.
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ drivers/pci/pci.h   |  6 ++++++
+ include/linux/pci.h | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+)
 
-Also, as the big picture and the goal of this series has been shown, I can
-extract patches from this series and send them alone depending on maintainers
-preferences.
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index b81e99cd4b62..208b4cab534b 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -549,6 +549,12 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+ 	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
+ 	pci_doe_disconnected(dev);
+ 
++	if (READ_ONCE(dev->disconnect_work_enable)) {
++		/* Make sure work is up to date. */
++		smp_rmb();
++		schedule_work(&dev->disconnect_work);
++	}
++
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 51e2bd6405cd..7fbc377de08a 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -550,6 +550,10 @@ struct pci_dev {
+ 	/* These methods index pci_reset_fn_methods[] */
+ 	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
+ 
++	/* Report disconnect events. 0x0 - disable, 0x1 - enable */
++	u8 disconnect_work_enable;
++	struct work_struct disconnect_work;
++
+ #ifdef CONFIG_PCIE_TPH
+ 	u16		tph_cap;	/* TPH capability offset */
+ 	u8		tph_mode;	/* TPH mode */
+@@ -2657,6 +2661,47 @@ static inline bool pci_is_dev_assigned(struct pci_dev *pdev)
+ 	return (pdev->dev_flags & PCI_DEV_FLAGS_ASSIGNED) == PCI_DEV_FLAGS_ASSIGNED;
+ }
+ 
++/*
++ * Run this first thing after getting a disconnect work, to prevent it from
++ * running multiple times.
++ * Returns: true if disconnect was enabled, proceed. false if disabled, abort.
++ */
++static inline bool pci_test_and_clear_disconnect_enable(struct pci_dev *pdev)
++{
++	u8 enable = 0x1;
++	u8 disable = 0x0;
++	return try_cmpxchg(&pdev->disconnect_work_enable, &enable, disable);
++}
++
++/*
++ * Caller must initialize @pdev->disconnect_work before invoking this.
++ * The work function must run and check pci_test_and_clear_disconnect_enable.
++ * Note that device can go away right after this call.
++ */
++static inline void pci_set_disconnect_work(struct pci_dev *pdev)
++{
++	/* Make sure WQ has been initialized already */
++	smp_wmb();
++
++	WRITE_ONCE(pdev->disconnect_work_enable, 0x1);
++
++	/* check the device did not go away meanwhile. */
++	mb();
++
++	if (!pci_device_is_present(pdev))
++		schedule_work(&pdev->disconnect_work);
++}
++
++static inline void pci_clear_disconnect_work(struct pci_dev *pdev)
++{
++	WRITE_ONCE(pdev->disconnect_work_enable, 0x0);
++
++	/* Make sure to stop using work from now on. */
++	smp_wmb();
++
++	cancel_work_sync(&pdev->disconnect_work);
++}
++
+ /**
+  * pci_ari_enabled - query ARI forwarding status
+  * @bus: the PCI bus
+-- 
+MST
 
-Maintainers, just tell me.
-
-Best regards,
-Hervé
 
