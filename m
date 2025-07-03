@@ -1,49 +1,50 @@
-Return-Path: <linux-pci+bounces-31375-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31376-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D99CAAF704F
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 12:32:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77CF1AF7052
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 12:32:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A3FA1897DC9
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:31:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 099491BC1C4B
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:32:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2C7A2EA728;
-	Thu,  3 Jul 2025 10:27:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C0272E54B7;
+	Thu,  3 Jul 2025 10:27:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJiSWJHb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LDiIwa/A"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A642E54A3;
-	Thu,  3 Jul 2025 10:27:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2248B2E3AE9;
+	Thu,  3 Jul 2025 10:27:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751538447; cv=none; b=ZbpMzcmynzOtPxLlrXNjTdHIZyt1R3Q+3xLPDwhAHhfn4M1jtGBhgyslBLcKngzMtc6nJ9zehQNhpWRImTL+j3cyjZ1VV+FpgRzGEFYLajs8KCHimgZDSl+f1UedI0fZ8Up1/b3dSVOpcgwLQYifY1UzNvHkNzs5gO2uOx+UVCs=
+	t=1751538453; cv=none; b=l9Yc3lcfwwbUVxtsDNVmAN2lMo8OrrEseEwqzzY12uzgcBa6PvVK8bjUPCXYNqhrHCkM0+cRxqxlWQnTh0JB+oWt/JFM4p8peFQjQwnFV3FPW8gD05aM+LJjf9dkgpyB2Z5rUM562es3XVOAzCWXmbguZbHV5Xcd//J8opnD7R8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751538447; c=relaxed/simple;
-	bh=DChQwWXvs3tE8B+jpm3p7q+cSXi9YVq9StAkRX8XLr8=;
+	s=arc-20240116; t=1751538453; c=relaxed/simple;
+	bh=kcQzsER7QdASrb9daMHpXtsDHIwhK/zyXrrP1v57pPY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FiD3jXqEod94sIqrudgDlgoC8WOV4w3MmbbglbGV6ILrI8Sc6HgOzFw2tKFre0v8NLKzx4PlbsmLfhlws3SgdF1srVbKoQjpOMMGng+vzU+6Y+54NmYxHdcAn/5MEGNpywp2hyw1KIPM1Xprkyd1ZAFlxeiHRekWGAPprjWeXEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJiSWJHb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85B21C4CEE3;
-	Thu,  3 Jul 2025 10:27:22 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=Kcd+alE8WDbyCZ9wVf+4U6vhkToNhrZor2C+YmMg0GY6kI5bkUOikvUDDMAv8a98KDZkOF0jhcMNj+PjwgZrOYfKNpR2UYhh86/VBNSxjTUS5GCTkOOnXD6M+p1rMzLQg7Vwkz4SsYUWjmzDQFK8/8a4VtsdEmj15ChQwtnKdG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LDiIwa/A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0268C4CEE3;
+	Thu,  3 Jul 2025 10:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751538447;
-	bh=DChQwWXvs3tE8B+jpm3p7q+cSXi9YVq9StAkRX8XLr8=;
+	s=k20201202; t=1751538452;
+	bh=kcQzsER7QdASrb9daMHpXtsDHIwhK/zyXrrP1v57pPY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=mJiSWJHbV0OO0RGsSqGg8xwEU7oc30gH/MunHTuNLIT2ezbdIi4/y9UnFvOUpijKm
-	 9XnhyhhdtUub0PitHfrLibSPJAQqKJVvsCZZXcmxtk5CZl2oIIAjKt1osi8dVHYpVf
-	 g9PRlwpO3+U8nD/3E2C8YpCzYZtO6h2o/mPwSr19idZynLNJXsnj9BZnLoiPVA2Oib
-	 YfH1rXbp0MsotBDTRJyBHkZI3Q+qwyOJPhmFOBdnWGWCPzbMbYj+aeNpHm9e3WyDG6
-	 MlDt28xttTeY5I1sjEh+ArAweZgBJYl+AOZMQfNIFwLjobmVP89sKhVPbB8CudI6X3
-	 meMA7p9anJBHg==
+	b=LDiIwa/ApQJbdkfprm22n+4WcQLTw0PmULQUgVooIItke6uzDx6Ah/iZdwqiZ7nr1
+	 Wjs7LgJ1ApCZT01xDU8lBh/DmFdM2BixPYAHNw31pDkBsX9C7ESIktnM7Po37jbZ4/
+	 B+gEFmuepvcllGOF5Wuhjh96QGwWJsXeLj9sBvEWm1YqN9zIqy4+KBrLBSiHo3nBEC
+	 Q/oJauRvHzdIrWigLwPbIMRqiuoNSEdcBosNKfioan6MDwsFkerl2GVkSgIpFw9/r6
+	 7S0xiV4sP/xT7t/p0dlEDUZr15MhQqwF5vfJPlgN6tb2ckGhNLpVoT06++MzI4Y2kV
+	 sdqBVjBZk26+w==
 From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Thu, 03 Jul 2025 12:25:14 +0200
-Subject: [PATCH v7 24/31] of/irq: Add of_msi_xlate() helper function
+Date: Thu, 03 Jul 2025 12:25:15 +0200
+Subject: [PATCH v7 25/31] PCI/MSI: Add pci_msi_map_rid_ctlr_node() helper
+ function
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250703-gicv5-host-v7-24-12e71f1b3528@kernel.org>
+Message-Id: <20250703-gicv5-host-v7-25-12e71f1b3528@kernel.org>
 References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
 In-Reply-To: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
 To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -71,99 +72,66 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>
 X-Mailer: b4 0.15-dev-6f78e
 
-Add an of_msi_xlate() helper that maps a device ID and returns
-the device node of the MSI controller the device ID is mapped to.
+IRQchip drivers need a PCI/MSI function to map a RID to a MSI
+controller deviceID namespace and at the same time retrieve the
+struct device_node pointer of the MSI controller the RID is mapped
+to.
 
-Required by core functions that need an MSI controller device node
-pointer at the same time as a mapped device ID, of_msi_map_id() is not
-sufficient for that purpose.
+Add pci_msi_map_rid_ctlr_node() to achieve this purpose.
 
 Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 Reviewed-by: Marc Zyngier <maz@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc  Bjorn Helgaas <bhelgaas@google.com>
 Cc: Marc Zyngier <maz@kernel.org>
 ---
- drivers/of/irq.c       | 22 +++++++++++++++++-----
- include/linux/of_irq.h |  5 +++++
- 2 files changed, 22 insertions(+), 5 deletions(-)
+ drivers/pci/msi/irqdomain.c | 20 ++++++++++++++++++++
+ include/linux/msi.h         |  1 +
+ 2 files changed, 21 insertions(+)
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index f8ad79b9b1c9..74aaea61de13 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -670,8 +670,20 @@ void __init of_irq_init(const struct of_device_id *matches)
- 	}
+diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+index c05152733993..8a6e80d3963a 100644
+--- a/drivers/pci/msi/irqdomain.c
++++ b/drivers/pci/msi/irqdomain.c
+@@ -427,6 +427,26 @@ u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev)
+ 	return rid;
  }
  
--static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
--			    u32 id_in)
 +/**
-+ * of_msi_xlate - map a MSI ID and find relevant MSI controller node
-+ * @dev: device for which the mapping is to be done.
-+ * @msi_np: Pointer to store the MSI controller node
-+ * @id_in: Device ID.
++ * pci_msi_map_rid_ctlr_node - Get the MSI controller node and MSI requester id (RID)
++ * @pdev:	The PCI device
++ * @node:	Pointer to store the MSI controller device node
 + *
-+ * Walk up the device hierarchy looking for devices with a "msi-map"
-+ * property. If found, apply the mapping to @id_in. @msi_np pointed
-+ * value must be NULL on entry, if an MSI controller is found @msi_np is
-+ * initialized to the MSI controller node with a reference held.
++ * Use the firmware data to find the MSI controller node for @pdev.
++ * If found map the RID and initialize @node with it. @node value must
++ * be set to NULL on entry.
 + *
-+ * Returns: The mapped MSI id.
++ * Returns: The RID.
 + */
-+u32 of_msi_xlate(struct device *dev, struct device_node **msi_np, u32 id_in)
- {
- 	struct device *parent_dev;
- 	u32 id_out = id_in;
-@@ -682,7 +694,7 @@ static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
- 	 */
- 	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent)
- 		if (!of_map_id(parent_dev->of_node, id_in, "msi-map",
--				"msi-map-mask", np, &id_out))
-+				"msi-map-mask", msi_np, &id_out))
- 			break;
- 	return id_out;
- }
-@@ -700,7 +712,7 @@ static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
-  */
- u32 of_msi_map_id(struct device *dev, struct device_node *msi_np, u32 id_in)
- {
--	return __of_msi_map_id(dev, &msi_np, id_in);
-+	return of_msi_xlate(dev, &msi_np, id_in);
- }
- 
- /**
-@@ -719,7 +731,7 @@ struct irq_domain *of_msi_map_get_device_domain(struct device *dev, u32 id,
- {
- 	struct device_node *np = NULL;
- 
--	__of_msi_map_id(dev, &np, id);
-+	of_msi_xlate(dev, &np, id);
- 	return irq_find_matching_host(np, bus_token);
- }
- 
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 6337ad4e5fe8..a480063c9cb1 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -54,6 +54,7 @@ extern struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
- 							u32 id,
- 							u32 bus_token);
- extern void of_msi_configure(struct device *dev, const struct device_node *np);
-+extern u32 of_msi_xlate(struct device *dev, struct device_node **msi_np, u32 id_in);
- u32 of_msi_map_id(struct device *dev, struct device_node *msi_np, u32 id_in);
- #else
- static inline void of_irq_init(const struct of_device_id *matches)
-@@ -100,6 +101,10 @@ static inline struct irq_domain *of_msi_map_get_device_domain(struct device *dev
- static inline void of_msi_configure(struct device *dev, struct device_node *np)
- {
- }
-+static inline u32 of_msi_xlate(struct device *dev, struct device_node **msi_np, u32 id_in)
++u32 pci_msi_map_rid_ctlr_node(struct pci_dev *pdev, struct device_node **node)
 +{
-+	return id_in;
++	u32 rid = pci_dev_id(pdev);
++
++	pci_for_each_dma_alias(pdev, get_msi_id_cb, &rid);
++
++	return of_msi_xlate(&pdev->dev, node, rid);
 +}
- static inline u32 of_msi_map_id(struct device *dev,
- 				 struct device_node *msi_np, u32 id_in)
- {
++
+ /**
+  * pci_msi_get_device_domain - Get the MSI domain for a given PCI device
+  * @pdev:	The PCI device
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index 6863540f4b71..a418e2695b05 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -705,6 +705,7 @@ struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
+ 					     struct msi_domain_info *info,
+ 					     struct irq_domain *parent);
+ u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
++u32 pci_msi_map_rid_ctlr_node(struct pci_dev *pdev, struct device_node **node);
+ struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
+ #else /* CONFIG_PCI_MSI */
+ static inline struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
 
 -- 
 2.48.0
