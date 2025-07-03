@@ -1,50 +1,49 @@
-Return-Path: <linux-pci+bounces-31376-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31377-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77CF1AF7052
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 12:32:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96B2FAF704C
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 12:32:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 099491BC1C4B
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:32:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A759617A2E7
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:32:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C0272E54B7;
-	Thu,  3 Jul 2025 10:27:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53A6F2E5428;
+	Thu,  3 Jul 2025 10:27:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LDiIwa/A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJY58TqS"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2248B2E3AE9;
-	Thu,  3 Jul 2025 10:27:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2966A2E54BF;
+	Thu,  3 Jul 2025 10:27:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751538453; cv=none; b=l9Yc3lcfwwbUVxtsDNVmAN2lMo8OrrEseEwqzzY12uzgcBa6PvVK8bjUPCXYNqhrHCkM0+cRxqxlWQnTh0JB+oWt/JFM4p8peFQjQwnFV3FPW8gD05aM+LJjf9dkgpyB2Z5rUM562es3XVOAzCWXmbguZbHV5Xcd//J8opnD7R8=
+	t=1751538458; cv=none; b=G+UbbO3cEySl+0YNBjEiiA70RydSfBfdzqk5B2MeoqJYME2xODwmETQ4XDmo+YR97h3IelqR8LFp8YzhkXrCWlk8wfqjimuU868bLv1ePKsaValS+ZQJ2zVw6p8dNzGYUd3IjpOU0/wf0p9M5eUiAHHW8qhpki/mg9UvZmQtxIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751538453; c=relaxed/simple;
-	bh=kcQzsER7QdASrb9daMHpXtsDHIwhK/zyXrrP1v57pPY=;
+	s=arc-20240116; t=1751538458; c=relaxed/simple;
+	bh=tkMcRUIDNj0nEgyr++8PL3P4fcZsx1AILTo8bVztxoU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Kcd+alE8WDbyCZ9wVf+4U6vhkToNhrZor2C+YmMg0GY6kI5bkUOikvUDDMAv8a98KDZkOF0jhcMNj+PjwgZrOYfKNpR2UYhh86/VBNSxjTUS5GCTkOOnXD6M+p1rMzLQg7Vwkz4SsYUWjmzDQFK8/8a4VtsdEmj15ChQwtnKdG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LDiIwa/A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0268C4CEE3;
-	Thu,  3 Jul 2025 10:27:27 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=dFnh0PI283B1CvzRe4Bp/D9I8giVxAkzp5fNx8YnlbWbO9r870Dnr5aI0fIxZCweNR+UM9AKF80aTSt2rlsnV6kgtXSm0XAauY5DhFSCYzh9bZwPsbemH6u0RcEOgTkNoUCFS4RM8i8OXt05xtPRmVyYAlW6YIn1VIjyxS2gQ88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FJY58TqS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C40C4CEEB;
+	Thu,  3 Jul 2025 10:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751538452;
-	bh=kcQzsER7QdASrb9daMHpXtsDHIwhK/zyXrrP1v57pPY=;
+	s=k20201202; t=1751538458;
+	bh=tkMcRUIDNj0nEgyr++8PL3P4fcZsx1AILTo8bVztxoU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=LDiIwa/ApQJbdkfprm22n+4WcQLTw0PmULQUgVooIItke6uzDx6Ah/iZdwqiZ7nr1
-	 Wjs7LgJ1ApCZT01xDU8lBh/DmFdM2BixPYAHNw31pDkBsX9C7ESIktnM7Po37jbZ4/
-	 B+gEFmuepvcllGOF5Wuhjh96QGwWJsXeLj9sBvEWm1YqN9zIqy4+KBrLBSiHo3nBEC
-	 Q/oJauRvHzdIrWigLwPbIMRqiuoNSEdcBosNKfioan6MDwsFkerl2GVkSgIpFw9/r6
-	 7S0xiV4sP/xT7t/p0dlEDUZr15MhQqwF5vfJPlgN6tb2ckGhNLpVoT06++MzI4Y2kV
-	 sdqBVjBZk26+w==
+	b=FJY58TqSjZ5RRmmELp8KPS8NJo5Eqo77tru+p+AiS+hrM0+iKUvlK+MB4VE5pGBfJ
+	 ORBd5DEVacHRzeHpGKiQlrNSvVbFpuReNJIV34jYwUmKR6ezzMs300HhRGNDXGoORK
+	 SJhi1a/tNGIBf02hSyE/4AebSCcmr5wqA3xxq3DGFpcJ0b/hNJHtIjkOVf5Cks/IuF
+	 4zn6Rn9CjmwKgHjqKrNyj+ITl3FwyBx0EP8/OkOhvze5OS2LgScuYkIJupyNELjRXl
+	 T4mOekeBCtqcYYTD2X4/mniulBVbAoaiwQHLSwXEHt2bB2h+vbYBOWw13XUz8KjMv1
+	 4MgkwH/z01EzA==
 From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Thu, 03 Jul 2025 12:25:15 +0200
-Subject: [PATCH v7 25/31] PCI/MSI: Add pci_msi_map_rid_ctlr_node() helper
- function
+Date: Thu, 03 Jul 2025 12:25:16 +0200
+Subject: [PATCH v7 26/31] irqchip/gic-v3: Rename GICv3 ITS MSI parent
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250703-gicv5-host-v7-25-12e71f1b3528@kernel.org>
+Message-Id: <20250703-gicv5-host-v7-26-12e71f1b3528@kernel.org>
 References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
 In-Reply-To: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
 To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -72,66 +71,117 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>
 X-Mailer: b4 0.15-dev-6f78e
 
-IRQchip drivers need a PCI/MSI function to map a RID to a MSI
-controller deviceID namespace and at the same time retrieve the
-struct device_node pointer of the MSI controller the RID is mapped
-to.
+The GICv5 ITS will reuse some GICv3 ITS MSI parent functions therefore
+it makes sense to keep the code functionality in a compilation unit
+shared by the two drivers.
 
-Add pci_msi_map_rid_ctlr_node() to achieve this purpose.
+Rename the GICv3 ITS MSI parent file and update the related
+Kconfig/Makefile entries to pave the way for code sharing.
 
 Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 Reviewed-by: Marc Zyngier <maz@kernel.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc  Bjorn Helgaas <bhelgaas@google.com>
 Cc: Marc Zyngier <maz@kernel.org>
 ---
- drivers/pci/msi/irqdomain.c | 20 ++++++++++++++++++++
- include/linux/msi.h         |  1 +
- 2 files changed, 21 insertions(+)
+ drivers/irqchip/Kconfig                                       |  4 ++++
+ drivers/irqchip/Makefile                                      |  3 ++-
+ drivers/irqchip/irq-gic-common.h                              |  2 --
+ .../{irq-gic-v3-its-msi-parent.c => irq-gic-its-msi-parent.c} |  2 +-
+ drivers/irqchip/irq-gic-its-msi-parent.h                      | 11 +++++++++++
+ drivers/irqchip/irq-gic-v3-its.c                              |  1 +
+ 6 files changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
-index c05152733993..8a6e80d3963a 100644
---- a/drivers/pci/msi/irqdomain.c
-+++ b/drivers/pci/msi/irqdomain.c
-@@ -427,6 +427,26 @@ u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev)
- 	return rid;
- }
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 3e4fb08b7a4d..f9eae1a645c9 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -41,10 +41,14 @@ config ARM_GIC_V3
+ 	select HAVE_ARM_SMCCC_DISCOVERY
+ 	select IRQ_MSI_IOMMU
  
-+/**
-+ * pci_msi_map_rid_ctlr_node - Get the MSI controller node and MSI requester id (RID)
-+ * @pdev:	The PCI device
-+ * @node:	Pointer to store the MSI controller device node
-+ *
-+ * Use the firmware data to find the MSI controller node for @pdev.
-+ * If found map the RID and initialize @node with it. @node value must
-+ * be set to NULL on entry.
-+ *
-+ * Returns: The RID.
++config ARM_GIC_ITS_PARENT
++	bool
++
+ config ARM_GIC_V3_ITS
+ 	bool
+ 	select GENERIC_MSI_IRQ
+ 	select IRQ_MSI_LIB
++	select ARM_GIC_ITS_PARENT
+ 	default ARM_GIC_V3
+ 	select IRQ_MSI_IOMMU
+ 
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 7a0e6cee09e1..3ce6ea9a371b 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -33,7 +33,8 @@ obj-$(CONFIG_ARCH_REALVIEW)		+= irq-gic-realview.o
+ obj-$(CONFIG_IRQ_MSI_LIB)		+= irq-msi-lib.o
+ obj-$(CONFIG_ARM_GIC_V2M)		+= irq-gic-v2m.o
+ obj-$(CONFIG_ARM_GIC_V3)		+= irq-gic-v3.o irq-gic-v3-mbi.o irq-gic-common.o
+-obj-$(CONFIG_ARM_GIC_V3_ITS)		+= irq-gic-v3-its.o irq-gic-v4.o irq-gic-v3-its-msi-parent.o
++obj-$(CONFIG_ARM_GIC_ITS_PARENT)	+= irq-gic-its-msi-parent.o
++obj-$(CONFIG_ARM_GIC_V3_ITS)		+= irq-gic-v3-its.o irq-gic-v4.o
+ obj-$(CONFIG_ARM_GIC_V3_ITS_FSL_MC)	+= irq-gic-v3-its-fsl-mc-msi.o
+ obj-$(CONFIG_PARTITION_PERCPU)		+= irq-partition-percpu.o
+ obj-$(CONFIG_ARM_GIC_V5)		+= irq-gic-v5.o irq-gic-v5-irs.o
+diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
+index 020ecdf16901..710cab61d919 100644
+--- a/drivers/irqchip/irq-gic-common.h
++++ b/drivers/irqchip/irq-gic-common.h
+@@ -29,8 +29,6 @@ void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
+ void gic_enable_of_quirks(const struct device_node *np,
+ 			  const struct gic_quirk *quirks, void *data);
+ 
+-extern const struct msi_parent_ops gic_v3_its_msi_parent_ops;
+-
+ #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING    (1 << 0)
+ #define RDIST_FLAGS_RD_TABLES_PREALLOCATED     (1 << 1)
+ #define RDIST_FLAGS_FORCE_NON_SHAREABLE        (1 << 2)
+diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-its-msi-parent.c
+similarity index 99%
+rename from drivers/irqchip/irq-gic-v3-its-msi-parent.c
+rename to drivers/irqchip/irq-gic-its-msi-parent.c
+index a5e110ffdd88..8beecfed2b84 100644
+--- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
++++ b/drivers/irqchip/irq-gic-its-msi-parent.c
+@@ -7,7 +7,7 @@
+ #include <linux/acpi_iort.h>
+ #include <linux/pci.h>
+ 
+-#include "irq-gic-common.h"
++#include "irq-gic-its-msi-parent.h"
+ #include <linux/irqchip/irq-msi-lib.h>
+ 
+ #define ITS_MSI_FLAGS_REQUIRED  (MSI_FLAG_USE_DEF_DOM_OPS |	\
+diff --git a/drivers/irqchip/irq-gic-its-msi-parent.h b/drivers/irqchip/irq-gic-its-msi-parent.h
+new file mode 100644
+index 000000000000..75e223e673ce
+--- /dev/null
++++ b/drivers/irqchip/irq-gic-its-msi-parent.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2024 ARM Limited, All Rights Reserved.
 + */
-+u32 pci_msi_map_rid_ctlr_node(struct pci_dev *pdev, struct device_node **node)
-+{
-+	u32 rid = pci_dev_id(pdev);
 +
-+	pci_for_each_dma_alias(pdev, get_msi_id_cb, &rid);
++#ifndef _IRQ_GIC_ITS_MSI_PARENT_H
++#define _IRQ_GIC_ITS_MSI_PARENT_H
 +
-+	return of_msi_xlate(&pdev->dev, node, rid);
-+}
++extern const struct msi_parent_ops gic_v3_its_msi_parent_ops;
 +
- /**
-  * pci_msi_get_device_domain - Get the MSI domain for a given PCI device
-  * @pdev:	The PCI device
-diff --git a/include/linux/msi.h b/include/linux/msi.h
-index 6863540f4b71..a418e2695b05 100644
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -705,6 +705,7 @@ struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
- 					     struct msi_domain_info *info,
- 					     struct irq_domain *parent);
- u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
-+u32 pci_msi_map_rid_ctlr_node(struct pci_dev *pdev, struct device_node **node);
- struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
- #else /* CONFIG_PCI_MSI */
- static inline struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
++#endif /* _IRQ_GIC_ITS_MSI_PARENT_H */
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index d54fa0638dc4..467cb78435a9 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -41,6 +41,7 @@
+ #include <asm/exception.h>
+ 
+ #include "irq-gic-common.h"
++#include "irq-gic-its-msi-parent.h"
+ #include <linux/irqchip/irq-msi-lib.h>
+ 
+ #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
 
 -- 
 2.48.0
