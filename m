@@ -1,122 +1,161 @@
-Return-Path: <linux-pci+bounces-31331-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31332-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF876AF6A67
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 08:36:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7AE4AF6A73
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 08:38:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C82248108E
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 06:35:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 49F9D16F81C
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 06:38:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3682018B47C;
-	Thu,  3 Jul 2025 06:36:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00D7A291C25;
+	Thu,  3 Jul 2025 06:38:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="aaoehm5M"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PwapMf4A"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63157462
-	for <linux-pci@vger.kernel.org>; Thu,  3 Jul 2025 06:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6870D228CB0;
+	Thu,  3 Jul 2025 06:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751524562; cv=none; b=bcBayye2+u41H9EGBKwDW04jsPqIx8VSc+pcL3a/qbJt80CqiT7uHKECei0hZ2vGiVkS/hhgXwyNz7W37H9g2+ci7fD1xoz49A5QVafU/EiGjcHhjCgRcEZlQhsWfEIKiBiwBbavOFEqQoekBllZIgDOleS19yDDyWr6ClrmLkE=
+	t=1751524684; cv=none; b=WYQqkfMWlGqUVdSnw4pVN0aYjX1GlGKEUOWLEXOYjnQrcdGF96BIre0iTkTvBS2atoPDT4+MKHRPn55g6L4iUE4kjr39XXJn5u+77rVuRr9oUEKNDJ3laGykS+0aTEUT13OZUBSWDg1piVMrtyrZaBFwMTOcZ/jRX7VxquKTDvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751524562; c=relaxed/simple;
-	bh=YTVVnVJ6PdWC/AKl489gZ/2Sl6Au8Ca1tG/ODoK6oOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YHI/L48pPjZlz/bgX/TgYsDUupsQyhmMHOf+sbiZ+2Ba23Ti35D9H1xg2GALD4nw8icB0b/1CphBNe5KusqTeycND+DAcra0YtzWRfMPY+S63sBt/D8ldEh5QAb01DZXgsBSfS6Ig/8aBcIL6Mxgyyd3EyNUrOX+uAecNXq5hZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=aaoehm5M; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22c33677183so66904965ad.2
-        for <linux-pci@vger.kernel.org>; Wed, 02 Jul 2025 23:36:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1751524560; x=1752129360; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QIKd4XyqKz0WFU05jsmNNatyFr3GWpnfNcV6WEt42xQ=;
-        b=aaoehm5MJbBnlpjv9TaIa4TtSQnEdpiCcbI9jpOm/5BZQdWSofSDMXiURwceOFu3bl
-         SqcbOPXY55pqqA6akly7udwdEjsVf+o5oFKcxs7QWjNIxeEFl2wCFjiPg9F/b/gIA9BQ
-         5otTV4xzaUaNeCR6bqZntfnPn4Muxg7WgV2uGn0iS1JklOvSxmuYZqBpNSNLH5QmI7mX
-         itnq4R0nBW3TTv58Zh8uEgoCRg263PTXXGk2lIFDrRGCWZo7qsfVH74MwmeqXKNTyElU
-         0BnQiDXWVOLMpLAEHQrFJHAogCh2sAOvOX2kXl5/9esgUTpjEsEZm27vqodouyMVusVS
-         b8NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751524560; x=1752129360;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QIKd4XyqKz0WFU05jsmNNatyFr3GWpnfNcV6WEt42xQ=;
-        b=WDw25JKyjiAfsKziY10L4NMWsZ1uR1QcK4w8hegSc+pILd+n2D6M2xCBv11OJnm1uK
-         dppPypH2EBDu5nKVf1XIhDiW37Z9308ctrdGqsMrzOXzjt8abLe0SXdIkk6VpiBfvZKu
-         SpzJTONtyKH529jzWeBddwt9G/ZaMF56LFFLSe/Og12iSOibEfI4M/mFx8S5fVxlBL3u
-         GYgOvs5tBixlB5xOBHoC6j1P9t6lrkcbnNvajADbxctiXzcxIjDsIiG7OI2b6W92Rbir
-         m5YsgcmCdO1skD2mDSlk5DCa20vLIVthjwa4ducga6rFkNBJpOE7EfrvilwenM1oLSbd
-         wPZA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0BMiGCr5b8WI9lUY6FYQQd7JuJpZ3hZtm/YkhWiRFlPQUtU2sLObqmtCDuWqfQ17z7x9kkv0vVGU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlvteXe9f30xGyFe6BW857ysSLF95x7sNoKQ8OvWMayg/6UYl6
-	/VejGkxdEtmtir9BPt189FYCWxoyEFamF4PN8NgHc1936WQRdsXorCfMa+f8784MoD1SQ06F9gB
-	Q8H4hDLo=
-X-Gm-Gg: ASbGncu25/H7UmrmYosDa4U1ljNTFBwa/wSDaO91xtrGBfI5kvVwKIAigS1cgGtuslh
-	salbEKkdj+oYlXyhgtM8IvkS3bIm3tRBg5H3g996SFGkNBkGFHUMIC+qMMYseipEwGnPSckIdnr
-	rWha/aIkpkR8UvGIOuKOJYneipzslf2PGu+L3gKv/KhTTxZ3OE2jci+owpGMiwLa8ZfwG0tyKEa
-	oW9juOGbpD3ygq4lS+FH84Vpi79xy9LHIqlAInxGEWxe70rdK5V3RjSc9dhJwbXC0q9CMJryx24
-	Rgrq96BT9FbGCJyBvH1LHzTQk71tiBdIDvA72Wlp0d2ojHCZuqn10FR5IPKeUYEioWxhuA==
-X-Google-Smtp-Source: AGHT+IFVznHzewXkRwXl+jlpU+/jlWH9G3uXJOnEyYhJffoLUHYr+wecCaP0uvRb31laWEgyZwnmrw==
-X-Received: by 2002:a17:902:da91:b0:234:bfcb:5c21 with SMTP id d9443c01a7336-23c797b28efmr33182915ad.19.1751524559978;
-        Wed, 02 Jul 2025 23:35:59 -0700 (PDT)
-Received: from sunil-laptop ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3ba5bdsm139341455ad.186.2025.07.02.23.35.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 23:35:59 -0700 (PDT)
-Date: Thu, 3 Jul 2025 12:05:51 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: Shuan He <heshuan@bytedance.com>
-Cc: bhelgaas@google.com, cuiyunhui@bytedance.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC 0/1] PCI: Fix pci devices double register WARNING in the
- kernel starting process
-Message-ID: <aGYkx4a4eJUJorYp@sunil-laptop>
-References: <20250702155112.40124-1-heshuan@bytedance.com>
+	s=arc-20240116; t=1751524684; c=relaxed/simple;
+	bh=ycFo1nLp5/0QWcqp2qZGxrXVZQq/5D3iTncGtW7GLO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hhRnV1CSMqGL+4N2Qcljk4uqYmyCDYjyUReeDAwIRn6oS2plNDuGYwL3KH/w6PvaBfEgxFLdeRR4xua4soCcJrDuX28/3o7obAT6EjXtsIJdY4/LsLvfLO0Qitsd1+ZNf/zMo+hC8Ktg/Lq5jwg+l81aSqcYM01ADDXVb6/L9RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PwapMf4A; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 598C041B5F;
+	Thu,  3 Jul 2025 06:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751524679;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4+WaR4VhxZXal3ni8c5FuKUZQzKkcDX9MLohXTPfTgg=;
+	b=PwapMf4AOf1u09JZyAvuq3MEs5Q4wJkpokCf2i9YxktO3oxlAqxu3Kuva4qlUMVWrZe6Ch
+	VsiHnhZuSck3prB2PK5yzQ3fhCQSCMLnythuh+f1I7Xp/uqgW095xyV41I1sLuK+fb2Rt4
+	34LwUAwFXNTWwxNYB2VkvYdynIt2L6NXbtpqKiJNhf9VRJHwM5lSz6I4HCFqw9fpinlL/Q
+	6J9qijxfXxGDsGK9I7GWGydnMqWvaV6jJyPnc6KvT53yUQPq+TtCmIIR/doowMzDlFQfuL
+	lyDTf+GBFBaRwnczT067UcPIVZgQ9a5tk0e34+6QyDx5/zD9/kxezacCrcPHxA==
+Date: Thu, 3 Jul 2025 08:37:55 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Lunn
+ <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael
+ J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn
+ Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
+ <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen
+ Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
+ Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len
+ Brown <lenb@kernel.org>, Daniel Scally <djrscally@gmail.com>, Heikki
+ Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso
+ <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+ <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
+ Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 18/28] of: property: Allow fw_devlink device-tree on
+ x86 when PCI device-tree node creation is enabled
+Message-ID: <20250703083755.2fee7e7c@bootlin.com>
+In-Reply-To: <CAL_JsqJCuevzu69bx3yWm3ZR9wZ+UsWuNXscig5KMm2WH4WxOw@mail.gmail.com>
+References: <20250613134817.681832-1-herve.codina@bootlin.com>
+	<20250613134817.681832-19-herve.codina@bootlin.com>
+	<20250627162245.GA3513535-robh@kernel.org>
+	<aF7H4-toeb7Ouz3d@smile.fi.intel.com>
+	<CAL_JsqJCuevzu69bx3yWm3ZR9wZ+UsWuNXscig5KMm2WH4WxOw@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702155112.40124-1-heshuan@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduleehkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvhfeljedtfedtjeevffegtddutdeghfettdduhfeuhfdttdffieeuiefgvdfhvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemvgdtrgemvdekheemsgelkedtmegvgedttgemiegtgeefmegshegssgemrgegvdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvkeehmegsleektdemvgegtdgtmeeitgegfeemsgehsggsmegrgedvkedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegkedprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgth
+ hdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggv
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Wed, Jul 02, 2025 at 11:51:11PM +0800, Shuan He wrote:
-> Hi All.
-> I encountered a WARNING printed out during the kernel starting process
-> on my developing environment.
-> (with RISC-V arch, 6.12 kernel, and Debian 13 OS).
+Hi Rob, Andy,
+
+On Fri, 27 Jun 2025 12:49:36 -0500
+Rob Herring <robh@kernel.org> wrote:
+
+> On Fri, Jun 27, 2025 at 11:33 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Fri, Jun 27, 2025 at 11:22:45AM -0500, Rob Herring wrote:  
+> > > On Fri, Jun 13, 2025 at 03:47:58PM +0200, Herve Codina wrote:  
+> >
+> > ...
+> >  
+> > > > -   if (IS_ENABLED(CONFIG_X86))
+> > > > +   if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES))  
+> > >
+> > > I really want CONFIG_PCI_DYNAMIC_OF_NODES to go away at some point, not
+> > > add more users.
+> > >
+> > > I think this should instead check for specific platforms not with
+> > > kconfig symbols but DT properties. For ce4100, you can just check the
+> > > root compatible string. For OLPC, there isn't a root compatible (in the
+> > > DT I have). You could check for /architecture == OLPC instead. There's
+> > > some virtualization guests using DT now too. I would think their DT's
+> > > are simple enough to avoid any fw_devlink issues.  
+> >
+> > I don't think this is good approach. The above check is more reliable in my
+> > opinion.  
 > 
-> WARN Trace:
-> [    0.518993] proc_dir_entry '000c:00/00.0' already registered
-> [    0.519187] WARNING: CPU: 2 PID: 179 at fs/proc/generic.c:375 proc_register+0xf6/0x180
-> [    0.519214] [<ffffffff804055a6>] proc_register+0xf6/0x180
-> [    0.519217] [<ffffffff80405a9e>] proc_create_data+0x3e/0x60
-> [    0.519220] [<ffffffff80616e44>] pci_proc_attach_device+0x74/0x130
-> [    0.509991] [<ffffffff805f1af2>] pci_bus_add_device+0x42/0x100
-> [    0.509997] [<ffffffff805f1c76>] pci_bus_add_devices+0xc6/0x110
-> [    0.519230] [<ffffffff8066763c>] acpi_pci_root_add+0x54c/0x810
-> [    0.519233] [<ffffffff8065d206>] acpi_bus_attach+0x196/0x2f0
-> [    0.519234] [<ffffffff8065d390>] acpi_scan_clear_dep_fn+0x30/0x70
-> [    0.519236] [<ffffffff800468fa>] process_one_work+0x19a/0x390
-> [    0.519239] [<ffffffff80047a6e>] worker_thread+0x2be/0x420
-> [    0.519241] [<ffffffff80050dc4>] kthread+0xc4/0xf0
-> [    0.519243] [<ffffffff80ad6ad2>] ret_from_fork+0xe/0x1c
+> I'm fine with any solution that doesn't add a
+> CONFIG_PCI_DYNAMIC_OF_NODES which we can't remove. Adding it was a
+> kick the can down the road to merge the support worry the mixed
+> usecase (on ACPI systems) later. It's now later.
 > 
-This should not happen. I suspect some issue in ACPI namespace/_PRT. Can
-you reproduce this on qemu virt machine?
+> > > Alternatively, we could perhaps make x86 fw_devlink default off  
+> >
+> > For my (little) knowledge I believe this is not feasible anymore.
+> > Some x86 code (drivers) relies on fw_devlink nowadays. But take
+> > this with grain of salt, I may be way mistaken.  
+> 
+> Doesn't the CONFIG_X86 check disable it?
+> 
+> Rob
 
-Regards
-Sunil
+Filtering out by Kconfig seems a no-go:
+  - Check for CONFIG_OLPC of CONFIG_X86_INTEL_CE as proposed in v1
+    (https://lore.kernel.org/lkml/20250407145546.270683-12-herve.codina@bootlin.com/)
+    was a no-go from Andy
 
+  - Check for CONFIG_PCI_DYNAMIC_OF_NODES as proposed here is a no-go from
+    Rob
+
+I will follow Rob's suggestion based on DT properties. With a DT property
+list, it would be easier to add more x86 fw_delink broken system in the list
+of the system to exclude.
+
+Best regards,
+Hervé
 
