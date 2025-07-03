@@ -1,316 +1,412 @@
-Return-Path: <linux-pci+bounces-31350-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31351-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3BB6AF6FDC
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 12:20:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FF5EAF6FF4
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 12:25:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D96EC1BC5F71
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:21:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 88A107A14AD
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:23:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3FC42E040A;
-	Thu,  3 Jul 2025 10:20:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F8A82E2EE3;
+	Thu,  3 Jul 2025 10:25:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AQLk0DJ8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYtvgWeg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCA21B95B
-	for <linux-pci@vger.kernel.org>; Thu,  3 Jul 2025 10:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5102E1737;
+	Thu,  3 Jul 2025 10:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751538048; cv=none; b=lbYo9pnZhpwPc9dD5eaK+DS7acEncTuiJ5ieXfo1r8xRTUjT1/DeFwrV9ILrbqlWIoqIlbmtcI18zb2loJz02zREhLAVhnoUeGdvWUg2zL/TFvEyfzoiJBBfCVDPpBKysf69c9XNoR3JomofBiflIS1szXSpGVS3eRe46i5OnJs=
+	t=1751538313; cv=none; b=E9WrOXPkZHa0HPcxDwellu2Qt7u9TY11QAs8ZwzUWsFxzsFEWHsOQ1mG7Pt/gHmpd/jzb4Y9wSQAE1QIwX0ORKq81144J68fPoBN83bPHdQMJRlOkfse31NEfxs+ZnPKZGZmrnx1idMF2Iafk4us8kHuTIPbBzdtpIDoAawHsZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751538048; c=relaxed/simple;
-	bh=hWnj2JttZfQLVmU/kXS57bJGdhpWzPRLJtR52pCv/1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tllKpySP254y8EaYUjqeJcm3IbJ4HZ48bpCRzdWH4AsGX4lk1fDB7PSA42PyFqqrHOI4RRrzDM6l1TmyyfeH7BBLs7D24N9uSYG9oTuVeExW6jgMDeFwuXq6vf67UgAOX8/khCsgzEq4V48Z63x1/pKNW0Hi+cO4NFt6/y9nkq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AQLk0DJ8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751538045;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xbJvbfJA285FAzgUHDoYgxUWhabHJqvbcxotjo66HGg=;
-	b=AQLk0DJ8wNnyxCR16XRJzL9Ufw8QcPP1c2wAnPGvlbbsKyfv5cYUspunyFfqJK3Qft2D9d
-	Uw7kDH0VXFoC0DY9zibOu52c9VrG5avDdQnEMjXwaxHy/rQa9SDwH7CAIYdETAcF2FkAAq
-	UT8hTVstd3Hp9PfYuvSczyWz6z4lBWA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-319-DDIZ8pLUPAqLdh3jE5tWRA-1; Thu, 03 Jul 2025 06:20:44 -0400
-X-MC-Unique: DDIZ8pLUPAqLdh3jE5tWRA-1
-X-Mimecast-MFC-AGG-ID: DDIZ8pLUPAqLdh3jE5tWRA_1751538043
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3b39cb4ca2eso254653f8f.3
-        for <linux-pci@vger.kernel.org>; Thu, 03 Jul 2025 03:20:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751538043; x=1752142843;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xbJvbfJA285FAzgUHDoYgxUWhabHJqvbcxotjo66HGg=;
-        b=GlBAFNmlx/EgeRVleGgp1uaAfK8sAMd7LpOvun1azcX3HhI+c+DxwvxhbgeFVBA/3K
-         eA5Jhph1ZphQWH4yIuOKzpR0tSuasGBvhoowG4/ZoMPyazGwWHSgeZ8RNsxHJipytqWA
-         GzImMp3uF+ZGlrGmdrfRxdnLVBYyk9ZpY4IShtEzcm9imOLEiuJ0BSq1R9B66ukDO1em
-         6jLHVcaiiHPDQwRhF8UyOVFF3TiN8S7p8bI7aNI9etp4npjSk2ozvMINj7HMQ8wUylnt
-         KS5Hk/RSGKTp8Rndfsa+NqZEjUB7eIsf+NP4VRp7KdQBubAtQ3NF4U7/gk3sLu8+eLg5
-         0jBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDVPCsN+9KUvS5mB8R9Z6ghMCfJ3dn/O1nx0Rl/zCB7b4qEhe3myIDCk5gix9lr/v87GbMAp9FkMo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSfqN2RcsCoixwycJCUyvTk6IYNfpEi24TQDzWnX9RyzLw9lYp
-	2XK2reKP6kcOtNYtaQIrmT/DBXTEbzF0xdbrT62vG7PkLGQGGHGSMCEcrkrpsZtWrwYeWIgpQeY
-	HruZzg8sfy+ZgdyKv4ETKpBHbscYjUVqXkwIN7kslgtrI4+62Pkl5BZesfmSjHQ==
-X-Gm-Gg: ASbGncsXpN2XKW1Mu9LdEOq21skKwR18o3cNX4xYDLFqTGRj6mJnnddNjnglgMAQE0H
-	O4oZYYylYY7LxfnWtCuBB/EPdQZTFHogUqP1mEjkDCCgbugtuT1f+2Pipf9hxrI+1vawg0LW4cK
-	X3dELCtlKADKrATnWwRnfFO1pd7cXduCtz47qBBwfWnOUrDCMAy8Ih0yRh5gWtKzUzZnH5kawQA
-	AWBC+6nWlDK5fZXq02uHXkWMlFYBfMsxsumU5vU5mvCC0NRdGEJsCvy4jxwTE7XjJjyY/SYp9sd
-	TQ1LPcY8+x1K1Quk
-X-Received: by 2002:a05:6000:2485:b0:3b3:bd27:f2b0 with SMTP id ffacd0b85a97d-3b3bd27f7d4mr1023064f8f.43.1751538042631;
-        Thu, 03 Jul 2025 03:20:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF/ZKDudPPhVPxOALtVbYFsiYPTxCVhE4LkBmemxP9beQpBH2tiZarCm0SxJb/9KB6b2t9B6Q==
-X-Received: by 2002:a05:6000:2485:b0:3b3:bd27:f2b0 with SMTP id ffacd0b85a97d-3b3bd27f7d4mr1023042f8f.43.1751538042134;
-        Thu, 03 Jul 2025 03:20:42 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e61f48sm18527944f8f.93.2025.07.03.03.20.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 03:20:41 -0700 (PDT)
-Date: Thu, 3 Jul 2025 06:20:39 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Parav Pandit <parav@nvidia.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"stefanha@redhat.com" <stefanha@redhat.com>,
-	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>,
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
-Subject: Re: [PATCH RFC v3] pci: report surprise removal event
-Message-ID: <20250703061813-mutt-send-email-mst@kernel.org>
-References: <1eac13450ade12cc98b15c5864e5bcd57f9e9882.1751440755.git.mst@redhat.com>
- <20250702132314-mutt-send-email-mst@kernel.org>
- <CY8PR12MB719502AAF4847610CD9C7286DC43A@CY8PR12MB7195.namprd12.prod.outlook.com>
- <20250703022224-mutt-send-email-mst@kernel.org>
- <CY8PR12MB719536EDBEDCEA5866F37037DC43A@CY8PR12MB7195.namprd12.prod.outlook.com>
+	s=arc-20240116; t=1751538313; c=relaxed/simple;
+	bh=MJlhjkmXDYyiSt6enP5P9DMUTBp3PzU/u6P5SRisubs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZA6jNfgRMWb3HbDo0ZNIlJ+pvVMv8KYlVddeofpLf/oOrOFW/HbZjbgL/zH7l5FHe1WVrJYsg81+AvgOnuYIJX22/xHUlYMfWJRE0WZWF0IdfjXDXO/2TWJZvFvj1EAZ7iPX2R0cGFnwRqUbeowkbvwjHQnpJbzq7Y//Dmvb1VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYtvgWeg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD860C4CEE3;
+	Thu,  3 Jul 2025 10:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751538313;
+	bh=MJlhjkmXDYyiSt6enP5P9DMUTBp3PzU/u6P5SRisubs=;
+	h=From:Subject:Date:To:Cc:From;
+	b=QYtvgWegb2puDSg/+wWNFKO3BKOTeYuV/HCYM0b53fCYsNxPnBSPDxjfjFRvfJKrn
+	 YinCpLjRi4StE6F/4svlKlc215qqb3G7BxW8iEOGhfS7xACwcLaH6SYiBAQG5z2cUe
+	 EC/jXcMXCkBXIpk/1FcM85wERDl22Ijmdrbp+qBDOeugkLnbtpxii8FVkCaCPMHT9K
+	 C6Xbq0TNErGrF+C2yib8E8N2vJjRgZLgR1dEKvAfZrxneM59F8G0g7z57EBGvnOjxp
+	 d1srRaWRq5lTNBn6BSTgeYKZmtygIRW68oyzYXM4PUp5z+6AtdpiSsw6CQULtAm+xM
+	 0YZYTM2yzT7Ow==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: [PATCH v7 00/31] Arm GICv5: Host driver implementation
+Date: Thu, 03 Jul 2025 12:24:50 +0200
+Message-Id: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY8PR12MB719536EDBEDCEA5866F37037DC43A@CY8PR12MB7195.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHJaZmgC/23RwU7DMAwG4FeZciYocWyv5cR7IA5p47QRaB1pq
+ UBT351sIK1VOTrS9yfxf1Gj5CSjejpcVJY5jWk4leH4cFBt70+d6BTKrMAAGTSV7lI7k+6HcdJ
+ HrKOz7KNUqAo4Z4np6xb28lrmPo3TkL9v2bO9nv4bM1tttI3AoUGmWIXnN8kneX8ccqeuOTOsL
+ ODGQrGEJKH10VhodtbdLRneWFcsSwjka4jB1DuLK2vdxmKxjWOpG0ueW7ezdLdst/+lYkMtDOB
+ bIre/l1cWtm/mYrESg2XtyAgbu/yWkOXjsxQ5/TWxLD9gnfWH5gEAAA==
+X-Change-ID: 20250408-gicv5-host-749f316afe84
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Sascha Bischoff <sascha.bischoff@arm.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Timothy Hayes <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Peter Maydell <peter.maydell@linaro.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>
+X-Mailer: b4 0.15-dev-6f78e
 
-On Thu, Jul 03, 2025 at 09:51:57AM +0000, Parav Pandit wrote:
-> 
-> > From: Michael S. Tsirkin <mst@redhat.com>
-> > Sent: 03 July 2025 11:54 AM
-> > 
-> > On Thu, Jul 03, 2025 at 05:02:13AM +0000, Parav Pandit wrote:
-> > >
-> > > > From: Michael S. Tsirkin <mst@redhat.com>
-> > > > Sent: 02 July 2025 10:54 PM
-> > > >
-> > > > On Wed, Jul 02, 2025 at 03:20:52AM -0400, Michael S. Tsirkin wrote:
-> > > > > At the moment, in case of a surprise removal, the regular remove
-> > > > > callback is invoked, exclusively.  This works well, because
-> > > > > mostly, the cleanup would be the same.
-> > > > >
-> > > > > However, there's a race: imagine device removal was initiated by a
-> > > > > user action, such as driver unbind, and it in turn initiated some
-> > > > > cleanup and is now waiting for an interrupt from the device. If
-> > > > > the device is now surprise-removed, that never arrives and the
-> > > > > remove callback hangs forever.
-> > > > >
-> > > > > For example, this was reported for virtio-blk:
-> > > > >
-> > > > > 	1. the graceful removal is ongoing in the remove() callback, where
-> > disk
-> > > > > 	   deletion del_gendisk() is ongoing, which waits for the requests +to
-> > > > > 	   complete,
-> > > > >
-> > > > > 	2. Now few requests are yet to complete, and surprise removal
-> > started.
-> > > > >
-> > > > > 	At this point, virtio block driver will not get notified by the driver
-> > > > > 	core layer, because it is likely serializing remove() happening by
-> > > > > 	+user/driver unload and PCI hotplug driver-initiated device removal.
-> > > > So
-> > > > > 	vblk driver doesn't know that device is removed, block layer is waiting
-> > > > > 	for requests completions to arrive which it never gets.  So
-> > > > > 	del_gendisk() gets stuck.
-> > > > >
-> > > > > Drivers can artificially add timeouts to handle that, but it can
-> > > > > be flaky.
-> > > > >
-> > > > > Instead, let's add a way for the driver to be notified about the
-> > > > > disconnect. It can then do any necessary cleanup, knowing that the
-> > > > > device is inactive.
-> > > > >
-> > > > > Since cleanups can take a long time, this takes an approach of a
-> > > > > work struct that the driver initiates and enables on probe, and
-> > > > > tears down on remove.
-> > > > >
-> > > > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > > > > ---
-> > > > >
-> > > >
-> > > > Parav what do you think of this patch?
-> > > The async notification part without holding the device lock is good part of
-> > this patch.
-> > >
-> > > However, large part of the systems and use cases does not involve pci hot
-> > plug removal.
-> > > An average system that I came across using has 150+ pci devices, and none
-> > of them uses hotplug.
-> > >
-> > > So increasing pci dev struct for rare hot unplug, that too for the race
-> > condition does not look the best option.
-> > >
-> > > I believe the intent of async notification without device lock can be achieved
-> > by adding a non-blocking async notifier callback.
-> > > This can go in the pci ops struct.
-> > >
-> > > Such callback scale far better being part of the ops struct instead of pci_dev
-> > struct.
-> > 
-> > Sorry, I don't see a way to achieve that, as the driver can go away while
-> > hotunplug happens.
-> > 
-> Well without device lock, driver can go away anyway.
-> In other words when schedule_work() is called by the core in this patch, what prevents driver to not get unloaded?
-> May be driver refcount can be taken conditionally before invoking the callback?
+Implement the irqchip kernel driver for the Arm GICv5 architecture,
+as described in the GICv5 beta0 specification, available at:
 
-The work is flushed on driver unload.
-Check out v4 for how it's used.
+https://developer.arm.com/documentation/aes0070
 
-> 
-> > You would be welcome to try but you mentioned you have no plans to do so.
-> > 
-> As I explained you can see that the support is needed at multiple modules.
+The GICv5 architecture is composed of multiple components:
 
-Right. Check out v4: I did all the core work: pci, virtio and
-virtio-pci, so what's left is just virtio blk.  For which I'm not the
-best person, I think you are more familiar with that.
+- one or more IRS (Interrupt Routing Service)
+- zero or more ITS (Interrupt Translation Service)
+- zero or more IWB (Interrupt Wire Bridge)
 
+The GICv5 host kernel driver is organized into units corresponding
+to GICv5 components.
 
-> Presently I couldn't spend cycles on this corner case race condition.
-> IMHO, if we want to fix, first fix should be for the most common case condition, for which the proposed fix exists.
-> 
-> Followed by that your second patch of device reset should also be done.
-> 
-> Next should be corner case fix that possibly nvme can benefit too. 
-> 
-> But if you have better ideas, should be fine too.
-> 
-> > 
-> > > > This you can try using this in virtio blk to address the hang you
-> > > > reported?
-> > > >
-> > > The hang I reported was not the race condition between remove() and
-> > hotunplug during remove.
-> > > It was the simple remove() as hot-unplug issue due to commit
-> > 43bb40c5b926.
-> > >
-> > > The race condition hang is hard to reproduce as_is.
-> > > I can try to reproduce by adding extra sleep() etc code in remove() with v4
-> > of this version with ops callback.
-> > >
-> > > However, that requires lot more code to be developed on top of current
-> > proposed fix [1].
-> > >
-> > > [1] https://lore.kernel.org/linux-block/20250624185622.GB5519@fedora/
-> > >
-> > > I need to re-arrange the hardware with hotplug resources. Will try to
-> > arrange on v4.
-> > >
-> > > > > Compile tested only.
-> > > > >
-> > > > > Note: this minimizes core code. I considered a more elaborate API
-> > > > > that would be easier to use, but decided to be conservative until
-> > > > > there are multiple users.
-> > > > >
-> > > > > changes from v2
-> > > > > 	v2 was corrupted, fat fingers :(
-> > > > >
-> > > > > changes from v1:
-> > > > >         switched to a WQ, with APIs to enable/disable
-> > > > >         added motivation
-> > > > >
-> > > > >
-> > > > >  drivers/pci/pci.h   |  6 ++++++
-> > > > >  include/linux/pci.h | 27 +++++++++++++++++++++++++++
-> > > > >  2 files changed, 33 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h index
-> > > > > b81e99cd4b62..208b4cab534b 100644
-> > > > > --- a/drivers/pci/pci.h
-> > > > > +++ b/drivers/pci/pci.h
-> > > > > @@ -549,6 +549,12 @@ static inline int
-> > > > > pci_dev_set_disconnected(struct
-> > > > pci_dev *dev, void *unused)
-> > > > >  	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
-> > > > >  	pci_doe_disconnected(dev);
-> > > > >
-> > > > > +	if (READ_ONCE(dev->disconnect_work_enable)) {
-> > > > > +		/* Make sure work is up to date. */
-> > > > > +		smp_rmb();
-> > > > > +		schedule_work(&dev->disconnect_work);
-> > > > > +	}
-> > > > > +
-> > > > >  	return 0;
-> > > > >  }
-> > > > >
-> > > > > diff --git a/include/linux/pci.h b/include/linux/pci.h index
-> > > > > 51e2bd6405cd..b2168c5d0679 100644
-> > > > > --- a/include/linux/pci.h
-> > > > > +++ b/include/linux/pci.h
-> > > > > @@ -550,6 +550,10 @@ struct pci_dev {
-> > > > >  	/* These methods index pci_reset_fn_methods[] */
-> > > > >  	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order
-> > */
-> > > > >
-> > > > > +	/* Report disconnect events */
-> > > > > +	u8 disconnect_work_enable;
-> > > > > +	struct work_struct disconnect_work;
-> > > > > +
-> > >
-> > > > >  #ifdef CONFIG_PCIE_TPH
-> > > > >  	u16		tph_cap;	/* TPH capability offset */
-> > > > >  	u8		tph_mode;	/* TPH mode */
-> > > > > @@ -2657,6 +2661,29 @@ static inline bool
-> > > > > pci_is_dev_assigned(struct
-> > > > pci_dev *pdev)
-> > > > >  	return (pdev->dev_flags & PCI_DEV_FLAGS_ASSIGNED) ==
-> > > > > PCI_DEV_FLAGS_ASSIGNED;  }
-> > > > >
-> > > > > +/*
-> > > > > + * Caller must initialize @pdev->disconnect_work before invoking this.
-> > > > > + * Caller also must check pci_device_is_present afterwards, since
-> > > > > + * if device is already gone when this is called, work will not run.
-> > > > > + */
-> > > > > +static inline void pci_set_disconnect_work(struct pci_dev *pdev) {
-> > > > > +	/* Make sure WQ has been initialized already */
-> > > > > +	smp_wmb();
-> > > > > +
-> > > > > +	WRITE_ONCE(pdev->disconnect_work_enable, 0x1); }
-> > > > > +
-> > > > > +static inline void pci_clear_disconnect_work(struct pci_dev *pdev) {
-> > > > > +	WRITE_ONCE(pdev->disconnect_work_enable, 0x0);
-> > > > > +
-> > > > > +	/* Make sure to stop using work from now on. */
-> > > > > +	smp_wmb();
-> > > > > +
-> > > > > +	cancel_work_sync(&pdev->disconnect_work);
-> > > > > +}
-> > > > > +
-> > > > >  /**
-> > > > >   * pci_ari_enabled - query ARI forwarding status
-> > > > >   * @bus: the PCI bus
-> > > > > --
-> > > > > MST
+The GICv5 architecture defines the following interrupt types:
+
+- PPI (PE-Private Peripheral Interrupt)
+- SPI (Shared Peripheral Interrupt)
+- LPI (Logical Peripheral Interrupt)
+
+This series adds sysreg entries required to automatically generate
+GICv5 registers handling code, one patch per-register.
+
+This patch series is split into patches matching *logical* entities,
+to make the review easier.
+
+Logical entities:
+
+- PPI
+- IRS/SPI
+- LPI/IPI
+- SMP enablement
+- ITS
+
+The salient points of the driver are summarized below.
+
+=============
+1. Testing
+=============
+
+Patchset tested with an architecturally compliant FVP model with
+the following setup:
+
+- 1 IRS
+- 1 and 2 ITSes
+- 1 and 2 IWBs
+
+configured with different parameters that vary the IRS(IST) and
+ITS(DT/ITT) table levels and INTID/DEVICEID/EVENTID bits.
+
+Trusted-Firmware (TF-A) was used for device tree bindings and component
+initializations.
+
+Guidelines to set-up the FVP model, kernel and TF-A in order to
+bootstrap the GICv5 software stack are outlined in this wikipage,
+it will be kept up-to-date with the latest developments:
+
+https://linaro.atlassian.net/wiki/x/CQAF-wY
+
+================
+2. Driver design
+================
+
+=====================
+2.1 GICv5 DT bindings
+=====================
+
+The DT bindings attempt to map directly to the GICv5 component
+hierarchy, with a top level node corresponding to the GICv5 "system",
+having IRS child nodes, that have in turn ITS child nodes.
+
+The IWB is defined in a separate schema; its relationship with the ITS
+is explicit through the msi-parent property required to define the IWB
+deviceID.
+
+===================
+2.2 GICv5 top level
+===================
+
+The top-level GICv5 irqchip driver implements separate IRQ
+domains - one for each interrupt type, PPI (PE-Private Peripheral
+Interrupt), SPI (Shared Peripheral Interrupt) and LPI (Logical
+Peripheral Interrupt).
+
+The top-level exception handler routes the IRQ to the relevant IRQ
+domain for handling according to the interrupt type detected when the
+IRQ is acknowledged.
+
+All IRQs are set to the same priority value.
+
+The driver assumes that the GICv5 components implement enough
+physical address bits to address the full system RAM, as required
+by the architecture; it does not check whether the physical address
+ranges of memory allocated for IRS/ITS tables are within the GICv5
+physical address range.
+
+Components are probed by relying on the early DT irqchip probing
+scheme. The probing is carried out hierarchically, starting from
+the top level.
+
+The IWB driver has been reworked to match an MBIgen like interface.
+
+Power management and Kexec are not yet supported at this stage.
+
+=============
+2.3 GICv5 IRS
+=============
+
+The GICv5 IRS driver probes and manages SPI interrupts by detecting their
+presence and by providing the top-level driver the information required
+to set up the SPI interrupt domain.
+
+The GICv5 IRS driver also parses from firmware Interrupt AFFinity ID
+(IAFFID) IDs identifying cores and sets up IRS IRQ routing.
+
+The GICv5 IRS driver allocates memory to handle the IRS tables.
+
+The IRS LPI interrupts state is kept in an Interrupt State Table (IST)
+and it is managed through CPU instructions.
+
+The IRS driver allocates the IST table that, depending on available HW
+features can be either 1- or 2-level.
+
+If the IST is 2-level, memory for the level-2 table entries
+is allocated on demand (ie when LPIs are requested), using an IRS
+mechanism to make level-1 entry valid on demand after the IST
+has already been enabled.
+
+Chunks of memory allocated for IST entries can be smaller or larger than
+PAGE_SIZE and are required to be physically contiguous within an IST level
+(i.e. a linear IST is a single memory block, a 2-level IST is made up of a
+block of memory for the L1 table, whose entries point at different L2 tables
+that are in turn allocated as memory chunks).
+
+LPI INTIDs are allocated in software using an IDA. IDA does not support
+allocating ranges, which is a bit cumbersome because this forces us
+to allocate IDs one by one where the LPIs could actually be allocated
+in chunks.
+
+An IDA was chosen because basically it is a dynamic bitmap, which
+carries out memory allocation automatically.
+
+Other drivers/subsystems made different choices to allocate ranges,
+an IDA was chosen since it is part of the core kernel and an IDA
+range API is in the making.
+
+IPIs are implemented using LPIs and a hierarchical domain is created
+specifically for IPIs using the LPI domain as a parent.
+
+arm64 IPI management core code is augmented with a new API to handle
+IPIs that are not per-cpu interrupts and force the affinity of the LPI
+backing an IPI to a specific and immutable value.
+
+=============
+2.4 GICv5 ITS
+=============
+
+The ITS driver partially reuses the existing GICv3/v4 MSI-parent
+infrastructure and on top builds an IRQ domain needed to enable message
+based IRQs.
+
+ITS tables - DT (device table) and ITT (Interrupt Translation Table) are
+allocated according to the number of required deviceIDs and eventIDs on
+a per device basis. The ITS driver relies on the kmalloc() interface
+because memory pages must be physically contiguous within a table level
+and can be < or > than PAGE_SIZE.
+
+=============
+2.5 GICv5 IWB
+=============
+
+The IWB driver has been reworked to match an MBIgen like interface.
+
+A new MSI flag (MSI_ALLOC_FLAGS_FIXED_MSG_DATA) had to be added for MSI
+allocation in that the IWB has a fixed eventID per-wire and the ITS driver
+code is not allowed to allocate eventIDs dynamically for events backing IWB
+wires.
+
+===================
+3. Acknowledgements
+===================
+
+The patchset was co-developed with T.Hayes and S.Bischoff from
+Arm - thank you so much for your help.
+
+A big thank you to M.Zyngier for his fundamental help/advice.
+
+If you have some time to help us review this series and get it into
+shape, thank you very much.
+
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+---
+Changes in v7:
+- Added CDDI/CDDIS/CDEN FIELD_PREP(hwirqid) for instruction preparation
+- Fixed IST/DT/ITT L2 size selection logic for 64K PAGE_SIZE
+- Reordered some ITS error paths according to review
+- Link to v6: https://lore.kernel.org/r/20250626-gicv5-host-v6-0-48e046af4642@kernel.org
+
+Changes in v6:
+- Reworked arm64 IPIs on non-SGI systems code according to review
+- Fixed msi-map management, added helper function to map ID and retrieve
+  controller node pointer at the same time
+- Added IRQ domain flag for IRQdomain selection on GICv5
+- Split ITS patch according to review - smaller helper/clean-up first
+- Added review tag
+- Tidied-up error labels return code
+- Link to v5: https://lore.kernel.org/r/20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org
+
+Changes in v5:
+- Added support for ITS multiple translate frame registers
+- Added DT/PCI support function to retrieve msi controller from
+  msi-parent and msi-map properties
+- Updated DT bindings to add interrupt-domains
+- Fixed request_irq() IPI parameter sparse error
+- Forced __always_inline to fix gcc build error on patch 20
+- Fixed trivial sysreg typo
+- Applied review tags
+- Added arm64 gic-v5 booting requirements patch
+- Rebased on v6.16-rc2
+- Link to v4: https://lore.kernel.org/r/20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org
+
+Changes in v4:
+- Added IWB new driver version based on MBIgen interface
+- Added MSI alloc flag
+- Rebased against git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/msi-prepare-teardown
+- Made more coding style updates to comply with tip-maintainer
+  guidelines
+- Updated PPI type handling
+- Updated devicetree bindings
+- Fixed includecheck warning
+- Link to v3: https://lore.kernel.org/r/20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org
+
+Changes in v3:
+- Reintroduced v1 patch split to simplify review
+- Reworked IRS/ITS iopoll loop, split in atomic/non-atomic
+- Cleaned-up IRS/ITS code with macros addressing review comments
+- Dropped IWB driver waiting for IRQ core code to be fixed for DOMAIN_BUS_WIRED_TO_MSI
+  https://lore.kernel.org/lkml/87tt6310hu.wl-maz@kernel.org/
+- Moved headers to arch/arm64 and include/linux/irqchip
+- Reworked GSB barriers definition
+- Added extensive GSB/ISB barriers comments
+- Limited error checking on IRS/ITS code - introduced couple of fatal
+  BUG_ON checks
+- Link to v2: https://lore.kernel.org/r/20250424-gicv5-host-v2-0-545edcaf012b@kernel.org
+
+Changes in v2:
+- Squashed patches [18-21] into a single logical entity
+- Replaced maple tree with IDA for LPI IDs allocation
+- Changed coding style to tip-maintainer guidelines
+- Tried to consolidate poll wait mechanism into fewer functions
+- Added comments related to _relaxed accessors, barriers and kmalloc
+  limitations
+- Removed IPI affinity check hotplug callback
+- Applied DT schema changes requested, moved IWB into a separate schema
+- Fixed DT examples
+- Fixed guard() usage
+- Link to v1: https://lore.kernel.org/r/20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org
+
+---
+Lorenzo Pieralisi (30):
+      dt-bindings: interrupt-controller: Add Arm GICv5
+      arm64/sysreg: Add GCIE field to ID_AA64PFR2_EL1
+      arm64/sysreg: Add ICC_PPI_PRIORITY<n>_EL1
+      arm64/sysreg: Add ICC_ICSR_EL1
+      arm64/sysreg: Add ICC_PPI_HMR<n>_EL1
+      arm64/sysreg: Add ICC_PPI_ENABLER<n>_EL1
+      arm64/sysreg: Add ICC_PPI_{C/S}ACTIVER<n>_EL1
+      arm64/sysreg: Add ICC_PPI_{C/S}PENDR<n>_EL1
+      arm64/sysreg: Add ICC_CR0_EL1
+      arm64/sysreg: Add ICC_PCR_EL1
+      arm64/sysreg: Add ICC_IDR0_EL1
+      arm64/sysreg: Add ICH_HFGRTR_EL2
+      arm64/sysreg: Add ICH_HFGWTR_EL2
+      arm64/sysreg: Add ICH_HFGITR_EL2
+      arm64: Disable GICv5 read/write/instruction traps
+      arm64: cpucaps: Rename GICv3 CPU interface capability
+      arm64: cpucaps: Add GICv5 CPU interface (GCIE) capability
+      arm64: Add support for GICv5 GSB barriers
+      irqchip/gic-v5: Add GICv5 PPI support
+      irqchip/gic-v5: Add GICv5 IRS/SPI support
+      irqchip/gic-v5: Add GICv5 LPI/IPI support
+      irqchip/gic-v5: Enable GICv5 SMP booting
+      of/irq: Add of_msi_xlate() helper function
+      PCI/MSI: Add pci_msi_map_rid_ctlr_node() helper function
+      irqchip/gic-v3: Rename GICv3 ITS MSI parent
+      irqchip/msi-lib: Add IRQ_DOMAIN_FLAG_FWNODE_PARENT handling
+      irqchip/gic-v5: Add GICv5 ITS support
+      irqchip/gic-v5: Add GICv5 IWB support
+      docs: arm64: gic-v5: Document booting requirements for GICv5
+      arm64: Kconfig: Enable GICv5
+
+Marc Zyngier (1):
+      arm64: smp: Support non-SGIs for IPIs
+
+ Documentation/arch/arm64/booting.rst               |   41 +
+ .../interrupt-controller/arm,gic-v5-iwb.yaml       |   78 ++
+ .../bindings/interrupt-controller/arm,gic-v5.yaml  |  267 +++++
+ MAINTAINERS                                        |   10 +
+ arch/arm64/Kconfig                                 |    1 +
+ arch/arm64/include/asm/barrier.h                   |    3 +
+ arch/arm64/include/asm/el2_setup.h                 |   45 +
+ arch/arm64/include/asm/smp.h                       |   24 +-
+ arch/arm64/include/asm/sysreg.h                    |   71 +-
+ arch/arm64/kernel/cpufeature.c                     |   17 +-
+ arch/arm64/kernel/smp.c                            |  144 ++-
+ arch/arm64/tools/cpucaps                           |    3 +-
+ arch/arm64/tools/sysreg                            |  495 +++++++-
+ drivers/irqchip/Kconfig                            |   12 +
+ drivers/irqchip/Makefile                           |    5 +-
+ drivers/irqchip/irq-gic-common.h                   |    2 -
+ ...3-its-msi-parent.c => irq-gic-its-msi-parent.c} |  168 ++-
+ drivers/irqchip/irq-gic-its-msi-parent.h           |   12 +
+ drivers/irqchip/irq-gic-v3-its.c                   |    1 +
+ drivers/irqchip/irq-gic-v5-irs.c                   |  822 +++++++++++++
+ drivers/irqchip/irq-gic-v5-its.c                   | 1228 ++++++++++++++++++++
+ drivers/irqchip/irq-gic-v5-iwb.c                   |  284 +++++
+ drivers/irqchip/irq-gic-v5.c                       | 1087 +++++++++++++++++
+ drivers/irqchip/irq-gic.c                          |    2 +-
+ drivers/irqchip/irq-msi-lib.c                      |    5 +-
+ drivers/of/irq.c                                   |   22 +-
+ drivers/pci/msi/irqdomain.c                        |   20 +
+ include/asm-generic/msi.h                          |    1 +
+ include/linux/irqchip/arm-gic-v5.h                 |  394 +++++++
+ include/linux/irqdomain.h                          |    3 +
+ include/linux/msi.h                                |    1 +
+ include/linux/of_irq.h                             |    5 +
+ 32 files changed, 5200 insertions(+), 73 deletions(-)
+---
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+change-id: 20250408-gicv5-host-749f316afe84
+
+Best regards,
+-- 
+Lorenzo Pieralisi <lpieralisi@kernel.org>
 
 
