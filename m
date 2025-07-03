@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-31360-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31361-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87AE9AF7012
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 12:27:32 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36657AF701B
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 12:28:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D34EA1C48178
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:27:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E6E937ADF97
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:26:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 080CD2E3AE5;
-	Thu,  3 Jul 2025 10:26:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF6B82E3AEE;
+	Thu,  3 Jul 2025 10:26:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPSdufoo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fXW/2FpV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFEB92E3AE1;
-	Thu,  3 Jul 2025 10:26:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929C82E2EF2;
+	Thu,  3 Jul 2025 10:26:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751538362; cv=none; b=NUXwIm7gN9SORmKUlOvcavahtX7WTrnC/RZAeUI4xUO9us/QH7zrkHbol40mp5/dPd2nWhrR9d+aepkaFQBd3Q9nblDV9aVW2PpYoP1qBhM+Zl3Sy9VJDydwG3bYy9txCwkIdq17vv9TnEfpduPp3xpUPcnegMVnNfdGjLL0B9c=
+	t=1751538368; cv=none; b=mhM9Wt1reK06X5gk+ffreMOQE6CQq6N3b4F3q/D0blauIiV1F8X/s3FlVm2jtlGGtJJ19L5B4t4lc6RuFTO2a5yMKyGAQ2RVdTi/TSkyDy+aB0+lCW5FWSWuo7bi6jysFzoxoL09QzEbSAdEYo0thcDyAdmkSvcv5Bqei1Q2unI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751538362; c=relaxed/simple;
-	bh=snToJzWBwiqETy97af5AraNsbwKzWEb8CWlj1NZAE/Q=;
+	s=arc-20240116; t=1751538368; c=relaxed/simple;
+	bh=CIcuhWndkg/N6GP+iqDrY1EvwebsVCnM40vCoSLVIvw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=g/9aQM5MzfK+20hVki/wTuHuwy6JIpWoYOxIjJbUGpy/h1HkcFHC5vPO7kWDP0o7FFi0qBq+b/mutZ/Iwco8ZYpRFalZIGc9qZpaGY+6PnW1yLI01WDaLbu4qte0jXnHStY+Jl5+p7fTvT96w92QGB1QYB2CyHXIbmhvImQyIys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPSdufoo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B51BC4CEE3;
-	Thu,  3 Jul 2025 10:25:56 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=Bu5gSf1fG+cC8hoCbdcLH+XiWhllLxx8s+7MIAL38N95NQCuFoqA+gLjx8ovE7yZ7/ZZTct7hottpndseAgKFycOdInTGiHNpN0krDfKeiZSw0HrtIhkJuPDWxm5nIQK3bfbgVHXmUMUcB+N7r0/7sc2Y3NT36J315ibzZJhMdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fXW/2FpV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ECAAC4CEEB;
+	Thu,  3 Jul 2025 10:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751538362;
-	bh=snToJzWBwiqETy97af5AraNsbwKzWEb8CWlj1NZAE/Q=;
+	s=k20201202; t=1751538368;
+	bh=CIcuhWndkg/N6GP+iqDrY1EvwebsVCnM40vCoSLVIvw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=CPSdufooijXPxj+sZpjO1Uil8oQYybqMJbePojr2rdcDe4QCrcNTQCtadUI8kw563
-	 wCL7QxFtuV+1+YNbspnIrunssDUZcdFH4kfDd0srBLPoOTyjStaUzhwkqE5bzrc9GQ
-	 iHjc4jUuCk0C2zUClMqmtW5grZZE2I+T+6zh7s+F39CIEpaX59L59vu0DoxPAkyyUO
-	 0pFEYMCzwDbAXTisLNTxwR/1a598AlaulURXrs7HTcg2QSFVJh4m0ietkgcVW7hmFe
-	 crSXB4XU4fUQhOw/mqVtbP9c/hTxADuIdwhwZCJXYiaCIqND/zdomjtlv30Wr5hE1W
-	 SMTi1JtGmBQ6g==
+	b=fXW/2FpVlzK1JWbOg2223uqHGL9joO0Qus9O8hSnu2GRmcbn7E/L13Qy9ly1MYKYh
+	 h/+9LZ0TXzcRWqyAp36U8Vg4E8QYNUIArqHqH/dtJ3kksmDjRenpl93TTaXTLieOZy
+	 gcGlZrVaypUOEDV3bGHZzrLYtl9lsXSHZNT5q3i96mJC1/IGHVkAGosPFaVQvSySXg
+	 UjFqTTUBAavH8EgpHZbZvXfy2JwfMOr/QvQisn7XkNEw71sYbFPo9kX0Z82hYeXADU
+	 Jvs75tYfbiUTn+EmjjVxmpql3Vxlr/6sCnHowqvzBQDyUtYNlEo51SoWgv2q1a+8AS
+	 cSpd2tz0MNNqw==
 From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Thu, 03 Jul 2025 12:24:59 +0200
-Subject: [PATCH v7 09/31] arm64/sysreg: Add ICC_CR0_EL1
+Date: Thu, 03 Jul 2025 12:25:00 +0200
+Subject: [PATCH v7 10/31] arm64/sysreg: Add ICC_PCR_EL1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250703-gicv5-host-v7-9-12e71f1b3528@kernel.org>
+Message-Id: <20250703-gicv5-host-v7-10-12e71f1b3528@kernel.org>
 References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
 In-Reply-To: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
 To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -71,7 +71,7 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>
 X-Mailer: b4 0.15-dev-6f78e
 
-Add ICC_CR0_EL1 register description.
+Add ICC_PCR_EL1 register description.
 
 Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
@@ -80,23 +80,20 @@ Cc: Will Deacon <will@kernel.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Marc Zyngier <maz@kernel.org>
 ---
- arch/arm64/tools/sysreg | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/tools/sysreg | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-index 78a51fbf3a99..ebbb22ed2301 100644
+index ebbb22ed2301..5e15d69093d1 100644
 --- a/arch/arm64/tools/sysreg
 +++ b/arch/arm64/tools/sysreg
-@@ -3519,6 +3519,14 @@ Res0	14:12
- Field	11:0	AFFINITY
+@@ -3527,6 +3527,11 @@ Res0	31:1
+ Field	0	EN
  EndSysreg
  
-+Sysreg	ICC_CR0_EL1	3	1	12	0	1
-+Res0	63:39
-+Field	38	PID
-+Field	37:32	IPPT
-+Res0	31:1
-+Field	0	EN
++Sysreg	ICC_PCR_EL1	3	1	12	0	2
++Res0	63:5
++Field	4:0	PRIORITY
 +EndSysreg
 +
  Sysreg	CSSELR_EL1	3	2	0	0	0
