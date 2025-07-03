@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-31367-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31368-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 693CBAF702F
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 12:29:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6438EAF703C
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 12:30:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5145D522FFA
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:29:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9B8EC7B16AD
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:27:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EA752E7631;
-	Thu,  3 Jul 2025 10:26:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 859922E7BB1;
+	Thu,  3 Jul 2025 10:26:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZvE2DrNq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfnkMMKr"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C672E7627;
-	Thu,  3 Jul 2025 10:26:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7622E7BA8;
+	Thu,  3 Jul 2025 10:26:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751538402; cv=none; b=tQvkT0a1eRpqsgUMrbxIsVesk6TLqrIEuHTMxYGSAgQhFNDe6XaUvhn/im4ifV4p8gxpj1fh9C6Ub/4RcUcANmWThAa1MYXWejEc9US/hv/M8ranookP++7S9D9ggeDF9Cz/AVQJJVVZGwF+tUJnpH8c99fUr/f82XfvPimePY4=
+	t=1751538407; cv=none; b=FSBbEAlkHFlUCeKqH+iWkrYw2of+65+GzTM5w1zIjjg8bmuOKAxh/IPusgJF8a1HE0NbAu1DWg1hQMvnUGq20MSkSzuarwcaM3q0eEOdIHjJPIi1wmq43CD1h6wovI/vGBOavuHXFSOJCiBi5oBXoNcBd82x/SzXVm2voAIP5rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751538402; c=relaxed/simple;
-	bh=D1A2VCqeW16Gr2UxgYnNuc/Q40Vq2MeocinVOfXGjww=;
+	s=arc-20240116; t=1751538407; c=relaxed/simple;
+	bh=Z8Ojm3tu2K7fLVQhABMYAuAVcs0eLame5+RGMEmHY/A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tRSGTVgpoV30IQ0NMlAIOK2qaXnTacJu2W74+LFrsF7e5aOmHEnTafqWXgTbvErGlJdS6R8kWU7kFBbmWqGOhbcAlne2qeuwpUQIgBlfNI9+9Ueyw8cvwDfZV/EUQEM1qTuqn6eMvkO8Lcaf2NNFaFMQyH1dMkvtBb0GMVcPjk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZvE2DrNq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73500C4CEE3;
-	Thu,  3 Jul 2025 10:26:36 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=DBswa485JuiA9+YyVbhvjJViRHH1+8LKFmtbs9Wq56KuyDCBDbJ6e38XxsjepETNfJOSyMEGCJsMCINAQqyQAYYboQyrtNdwe6kgLDoVjXHtv3m2enstqRk380/ebA9DYS64YPnwIKZImNhLMHItQXGaa+af/8C/BfKXT0zkdGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MfnkMMKr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28B09C4CEEB;
+	Thu,  3 Jul 2025 10:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751538401;
-	bh=D1A2VCqeW16Gr2UxgYnNuc/Q40Vq2MeocinVOfXGjww=;
+	s=k20201202; t=1751538407;
+	bh=Z8Ojm3tu2K7fLVQhABMYAuAVcs0eLame5+RGMEmHY/A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ZvE2DrNqzzc6vAxbV4B1wR6IWPWw9dBOXLLgZNfm5Uq8ES2nTGdmDN/o75YkXe86r
-	 a8w3cX0rne91u+cVxSpAx8mjHBqlhRB+xC52+D7HAYR7kULWOQOaVO++mKvv2XjiVy
-	 gCqm+EQ5fxQN6gVMwl2T4UyCfqglXh9kHIWPswFfzAQQtEp8q0hsXXupMiE4n4/fED
-	 6eGq5EoyOfdy2/rkQN7nWymWD8VmHiJTkI+g3Xh2EXwF3l+1WzweOJpR2/OSixyLBf
-	 sqlG03W+foJmLeSBlNje0XYKgQYp08gxh4U3tLLeZZJ//Rpvlm5TQD3Y1/nST7zDOv
-	 uxbbHjXVDqqgA==
+	b=MfnkMMKrenQurkIeFvn7yhMz17v3mJo2uhcTlhb48vr0QZ4vDkfH/WYcPYat2b5d7
+	 1DD4OgEd9WIQf9NiVCuh6G2UROdmiJOwDj9SKk87THYksxXlssInNkAIlRQy9feIc9
+	 zFfhvYc3poEtHswA+LscW2L3y/SEn0sZtkEOoyu+7KwDNIP635/mSYe+lgGtbjMino
+	 LcDU0OO4FIPDX2GA4nVYuLwRimWEwXPsocJaTZqYBqsXTQIJ2am5GjcNCYnlIZPeKv
+	 J9IzZvMVau27h6lOQYvyTpIWwO5vsc16U13/w/twAFxSWw5fqPqXQN827fbLKvByV5
+	 47yl8SPH99P+Q==
 From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Thu, 03 Jul 2025 12:25:06 +0200
-Subject: [PATCH v7 16/31] arm64: cpucaps: Rename GICv3 CPU interface
+Date: Thu, 03 Jul 2025 12:25:07 +0200
+Subject: [PATCH v7 17/31] arm64: cpucaps: Add GICv5 CPU interface (GCIE)
  capability
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250703-gicv5-host-v7-16-12e71f1b3528@kernel.org>
+Message-Id: <20250703-gicv5-host-v7-17-12e71f1b3528@kernel.org>
 References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
 In-Reply-To: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
 To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -72,79 +72,52 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>
 X-Mailer: b4 0.15-dev-6f78e
 
-In preparation for adding a GICv5 CPU interface capability,
-rework the existing GICv3 CPUIF capability - change its name and
-description so that the subsequent GICv5 CPUIF capability
-can be added with a more consistent naming on top.
+Implement the GCIE capability as a strict boot cpu capability to
+detect whether architectural GICv5 support is available in HW.
 
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Plug it in with a naming consistent with the existing GICv3
+CPU interface capability.
+
 Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 Reviewed-by: Marc Zyngier <maz@kernel.org>
 Cc: Will Deacon <will@kernel.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Marc Zyngier <maz@kernel.org>
 ---
- arch/arm64/kernel/cpufeature.c | 10 +++++-----
- arch/arm64/tools/cpucaps       |  2 +-
- drivers/irqchip/irq-gic.c      |  2 +-
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ arch/arm64/kernel/cpufeature.c | 7 +++++++
+ arch/arm64/tools/cpucaps       | 1 +
+ 2 files changed, 8 insertions(+)
 
 diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index b34044e20128..42ba76b6c8cd 100644
+index 42ba76b6c8cd..2fa26129762c 100644
 --- a/arch/arm64/kernel/cpufeature.c
 +++ b/arch/arm64/kernel/cpufeature.c
-@@ -2296,11 +2296,11 @@ static bool can_use_gic_priorities(const struct arm64_cpu_capabilities *entry,
- 				   int scope)
- {
- 	/*
--	 * ARM64_HAS_GIC_CPUIF_SYSREGS has a lower index, and is a boot CPU
-+	 * ARM64_HAS_GICV3_CPUIF has a lower index, and is a boot CPU
- 	 * feature, so will be detected earlier.
- 	 */
--	BUILD_BUG_ON(ARM64_HAS_GIC_PRIO_MASKING <= ARM64_HAS_GIC_CPUIF_SYSREGS);
--	if (!cpus_have_cap(ARM64_HAS_GIC_CPUIF_SYSREGS))
-+	BUILD_BUG_ON(ARM64_HAS_GIC_PRIO_MASKING <= ARM64_HAS_GICV3_CPUIF);
-+	if (!cpus_have_cap(ARM64_HAS_GICV3_CPUIF))
- 		return false;
- 
- 	return enable_pseudo_nmi;
-@@ -2496,8 +2496,8 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 		.matches = has_always,
+@@ -3061,6 +3061,13 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.matches = has_pmuv3,
  	},
- 	{
--		.desc = "GIC system register CPU interface",
--		.capability = ARM64_HAS_GIC_CPUIF_SYSREGS,
-+		.desc = "GICv3 CPU interface",
-+		.capability = ARM64_HAS_GICV3_CPUIF,
- 		.type = ARM64_CPUCAP_STRICT_BOOT_CPU_FEATURE,
- 		.matches = has_useable_gicv3_cpuif,
- 		ARM64_CPUID_FIELDS(ID_AA64PFR0_EL1, GIC, IMP)
+ #endif
++	{
++		.desc = "GICv5 CPU interface",
++		.type = ARM64_CPUCAP_STRICT_BOOT_CPU_FEATURE,
++		.capability = ARM64_HAS_GICV5_CPUIF,
++		.matches = has_cpuid_feature,
++		ARM64_CPUID_FIELDS(ID_AA64PFR2_EL1, GCIE, IMP)
++	},
+ 	{},
+ };
+ 
 diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
-index 10effd4cff6b..a7a4d9e6e12e 100644
+index a7a4d9e6e12e..8665e4cfbeab 100644
 --- a/arch/arm64/tools/cpucaps
 +++ b/arch/arm64/tools/cpucaps
-@@ -35,7 +35,7 @@ HAS_GENERIC_AUTH
- HAS_GENERIC_AUTH_ARCH_QARMA3
+@@ -36,6 +36,7 @@ HAS_GENERIC_AUTH_ARCH_QARMA3
  HAS_GENERIC_AUTH_ARCH_QARMA5
  HAS_GENERIC_AUTH_IMP_DEF
--HAS_GIC_CPUIF_SYSREGS
-+HAS_GICV3_CPUIF
+ HAS_GICV3_CPUIF
++HAS_GICV5_CPUIF
  HAS_GIC_PRIO_MASKING
  HAS_GIC_PRIO_RELAXED_SYNC
  HAS_HCR_NV1
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 6503573557fd..1269ab8eb726 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -54,7 +54,7 @@
- 
- static void gic_check_cpu_features(void)
- {
--	WARN_TAINT_ONCE(this_cpu_has_cap(ARM64_HAS_GIC_CPUIF_SYSREGS),
-+	WARN_TAINT_ONCE(this_cpu_has_cap(ARM64_HAS_GICV3_CPUIF),
- 			TAINT_CPU_OUT_OF_SPEC,
- 			"GICv3 system registers enabled, broken firmware!\n");
- }
 
 -- 
 2.48.0
