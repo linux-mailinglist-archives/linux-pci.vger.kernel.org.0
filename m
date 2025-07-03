@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-31374-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31375-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA9ADAF7049
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 12:31:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D99CAAF704F
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 12:32:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 365371BC2CFF
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:31:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A3FA1897DC9
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Jul 2025 10:31:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0F732EA17D;
-	Thu,  3 Jul 2025 10:27:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2C7A2EA728;
+	Thu,  3 Jul 2025 10:27:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uxmPvPSp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJiSWJHb"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870222EA176;
-	Thu,  3 Jul 2025 10:27:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A642E54A3;
+	Thu,  3 Jul 2025 10:27:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751538442; cv=none; b=dTeHH/2yvLfREC7VRG4AtY4EyO5PbAdTCEK/FUOj70k9UMJyZVQfmch93yby+En8fba+zQpSS8Dh48RK1wlLXDaffS699fhf/ixecyVlD7rBJDmogilke6G04YxxtoroGCUO19xm/lhcZzw4+cmR3viFGv96thbwGqY211nMpm8=
+	t=1751538447; cv=none; b=ZbpMzcmynzOtPxLlrXNjTdHIZyt1R3Q+3xLPDwhAHhfn4M1jtGBhgyslBLcKngzMtc6nJ9zehQNhpWRImTL+j3cyjZ1VV+FpgRzGEFYLajs8KCHimgZDSl+f1UedI0fZ8Up1/b3dSVOpcgwLQYifY1UzNvHkNzs5gO2uOx+UVCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751538442; c=relaxed/simple;
-	bh=xP1ZSDvdEMNzLFTksEUUUoXYt9M+SQ6BRBD+ihLwiLw=;
+	s=arc-20240116; t=1751538447; c=relaxed/simple;
+	bh=DChQwWXvs3tE8B+jpm3p7q+cSXi9YVq9StAkRX8XLr8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Mup/6CeKa8CkixC3/wXTlWb9R0xOUqcPENmU6g5OkAGCudsMRfueIf6r0RhUp5T5JeAKY+O0x6r5Hi/t2EPKUACXtW79TpP8LRZsfsw8oyTEKnErENhcjphYbgLK60MpeJuBBFAcoxT/rwtR5Tmzc0RHR2gJhZqSiQhgV22KRDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uxmPvPSp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BADBC4CEFA;
-	Thu,  3 Jul 2025 10:27:17 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=FiD3jXqEod94sIqrudgDlgoC8WOV4w3MmbbglbGV6ILrI8Sc6HgOzFw2tKFre0v8NLKzx4PlbsmLfhlws3SgdF1srVbKoQjpOMMGng+vzU+6Y+54NmYxHdcAn/5MEGNpywp2hyw1KIPM1Xprkyd1ZAFlxeiHRekWGAPprjWeXEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJiSWJHb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85B21C4CEE3;
+	Thu,  3 Jul 2025 10:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751538442;
-	bh=xP1ZSDvdEMNzLFTksEUUUoXYt9M+SQ6BRBD+ihLwiLw=;
+	s=k20201202; t=1751538447;
+	bh=DChQwWXvs3tE8B+jpm3p7q+cSXi9YVq9StAkRX8XLr8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=uxmPvPSpq33kyeY4be5Z2tqaZ5bDx4d3LlGrIKmUr5634blz9o5VEZeSLXUrMS1nZ
-	 mhH11KUbpxOkDlCQlJs2yiKoECjGL8Pzm7npRb+rjy/A3SUxXXyp2oHqRLV74lKMMv
-	 g8fY+nOfY3FFnsfER/ALJ2DQtFemxK5Uzf+kITaq/WHIZ7oEsFRXkqrsAJi/fxBgua
-	 wEC9e/S5elECcAptXiOMht8j6MuwPWcF37gdyiv/b0JkyTJ1HEvjcryVM8pCgGxAUO
-	 JBPlUGzstqUI795XYxO5g1usxHGR5qmD5MoA488hPKCIt24HkB5C2hjZnrfPader6g
-	 T+2kfttwTkpIg==
+	b=mJiSWJHbV0OO0RGsSqGg8xwEU7oc30gH/MunHTuNLIT2ezbdIi4/y9UnFvOUpijKm
+	 9XnhyhhdtUub0PitHfrLibSPJAQqKJVvsCZZXcmxtk5CZl2oIIAjKt1osi8dVHYpVf
+	 g9PRlwpO3+U8nD/3E2C8YpCzYZtO6h2o/mPwSr19idZynLNJXsnj9BZnLoiPVA2Oib
+	 YfH1rXbp0MsotBDTRJyBHkZI3Q+qwyOJPhmFOBdnWGWCPzbMbYj+aeNpHm9e3WyDG6
+	 MlDt28xttTeY5I1sjEh+ArAweZgBJYl+AOZMQfNIFwLjobmVP89sKhVPbB8CudI6X3
+	 meMA7p9anJBHg==
 From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Thu, 03 Jul 2025 12:25:13 +0200
-Subject: [PATCH v7 23/31] irqchip/gic-v5: Enable GICv5 SMP booting
+Date: Thu, 03 Jul 2025 12:25:14 +0200
+Subject: [PATCH v7 24/31] of/irq: Add of_msi_xlate() helper function
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250703-gicv5-host-v7-23-12e71f1b3528@kernel.org>
+Message-Id: <20250703-gicv5-host-v7-24-12e71f1b3528@kernel.org>
 References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
 In-Reply-To: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
 To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -71,78 +71,99 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>
 X-Mailer: b4 0.15-dev-6f78e
 
-Set up IPIs by allocating IPI IRQs for all cpus and call into
-arm64 core code to initialise IPIs IRQ descriptors and
-request the related IRQ.
+Add an of_msi_xlate() helper that maps a device ID and returns
+the device node of the MSI controller the device ID is mapped to.
 
-Implement hotplug callback to enable interrupts on a cpu
-and register the cpu with an IRS.
+Required by core functions that need an MSI controller device node
+pointer at the same time as a mapped device ID, of_msi_map_id() is not
+sufficient for that purpose.
 
-Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
-Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
-Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
-Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
 Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 Reviewed-by: Marc Zyngier <maz@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Rob Herring <robh@kernel.org>
 Cc: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v5.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/of/irq.c       | 22 +++++++++++++++++-----
+ include/linux/of_irq.h |  5 +++++
+ 2 files changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-index 84ed13c4f2b1..97ff935d79bd 100644
---- a/drivers/irqchip/irq-gic-v5.c
-+++ b/drivers/irqchip/irq-gic-v5.c
-@@ -5,6 +5,7 @@
- 
- #define pr_fmt(fmt)	"GICv5: " fmt
- 
-+#include <linux/cpuhotplug.h>
- #include <linux/idr.h>
- #include <linux/irqdomain.h>
- #include <linux/slab.h>
-@@ -918,6 +919,8 @@ static void gicv5_cpu_enable_interrupts(void)
- 	write_sysreg_s(cr0, SYS_ICC_CR0_EL1);
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index f8ad79b9b1c9..74aaea61de13 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -670,8 +670,20 @@ void __init of_irq_init(const struct of_device_id *matches)
+ 	}
  }
  
-+static int base_ipi_virq;
-+
- static int gicv5_starting_cpu(unsigned int cpu)
+-static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
+-			    u32 id_in)
++/**
++ * of_msi_xlate - map a MSI ID and find relevant MSI controller node
++ * @dev: device for which the mapping is to be done.
++ * @msi_np: Pointer to store the MSI controller node
++ * @id_in: Device ID.
++ *
++ * Walk up the device hierarchy looking for devices with a "msi-map"
++ * property. If found, apply the mapping to @id_in. @msi_np pointed
++ * value must be NULL on entry, if an MSI controller is found @msi_np is
++ * initialized to the MSI controller node with a reference held.
++ *
++ * Returns: The mapped MSI id.
++ */
++u32 of_msi_xlate(struct device *dev, struct device_node **msi_np, u32 id_in)
  {
- 	if (WARN(!gicv5_cpuif_has_gcie(),
-@@ -929,6 +932,22 @@ static int gicv5_starting_cpu(unsigned int cpu)
- 	return gicv5_irs_register_cpu(cpu);
+ 	struct device *parent_dev;
+ 	u32 id_out = id_in;
+@@ -682,7 +694,7 @@ static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
+ 	 */
+ 	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent)
+ 		if (!of_map_id(parent_dev->of_node, id_in, "msi-map",
+-				"msi-map-mask", np, &id_out))
++				"msi-map-mask", msi_np, &id_out))
+ 			break;
+ 	return id_out;
+ }
+@@ -700,7 +712,7 @@ static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
+  */
+ u32 of_msi_map_id(struct device *dev, struct device_node *msi_np, u32 id_in)
+ {
+-	return __of_msi_map_id(dev, &msi_np, id_in);
++	return of_msi_xlate(dev, &msi_np, id_in);
  }
  
-+static void __init gicv5_smp_init(void)
+ /**
+@@ -719,7 +731,7 @@ struct irq_domain *of_msi_map_get_device_domain(struct device *dev, u32 id,
+ {
+ 	struct device_node *np = NULL;
+ 
+-	__of_msi_map_id(dev, &np, id);
++	of_msi_xlate(dev, &np, id);
+ 	return irq_find_matching_host(np, bus_token);
+ }
+ 
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index 6337ad4e5fe8..a480063c9cb1 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -54,6 +54,7 @@ extern struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
+ 							u32 id,
+ 							u32 bus_token);
+ extern void of_msi_configure(struct device *dev, const struct device_node *np);
++extern u32 of_msi_xlate(struct device *dev, struct device_node **msi_np, u32 id_in);
+ u32 of_msi_map_id(struct device *dev, struct device_node *msi_np, u32 id_in);
+ #else
+ static inline void of_irq_init(const struct of_device_id *matches)
+@@ -100,6 +101,10 @@ static inline struct irq_domain *of_msi_map_get_device_domain(struct device *dev
+ static inline void of_msi_configure(struct device *dev, struct device_node *np)
+ {
+ }
++static inline u32 of_msi_xlate(struct device *dev, struct device_node **msi_np, u32 id_in)
 +{
-+	unsigned int num_ipis = GICV5_IPIS_PER_CPU * nr_cpu_ids;
-+
-+	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
-+				  "irqchip/arm/gicv5:starting",
-+				  gicv5_starting_cpu, NULL);
-+
-+	base_ipi_virq = irq_domain_alloc_irqs(gicv5_global_data.ipi_domain,
-+					      num_ipis, NUMA_NO_NODE, NULL);
-+	if (WARN(base_ipi_virq <= 0, "IPI IRQ allocation was not successful"))
-+		return;
-+
-+	set_smp_ipi_range_percpu(base_ipi_virq, GICV5_IPIS_PER_CPU, nr_cpu_ids);
++	return id_in;
 +}
-+
- static void __init gicv5_free_domains(void)
+ static inline u32 of_msi_map_id(struct device *dev,
+ 				 struct device_node *msi_np, u32 id_in)
  {
- 	if (gicv5_global_data.ppi_domain)
-@@ -1050,6 +1069,8 @@ static int __init gicv5_of_init(struct device_node *node, struct device_node *pa
- 	if (ret)
- 		goto out_int;
- 
-+	gicv5_smp_init();
-+
- 	return 0;
- 
- out_int:
 
 -- 
 2.48.0
