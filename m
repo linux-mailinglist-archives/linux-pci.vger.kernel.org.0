@@ -1,98 +1,82 @@
-Return-Path: <linux-pci+bounces-31507-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31508-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3DFBAF89CB
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 09:43:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D8BEAF89CE
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 09:44:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E733B540CCB
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 07:43:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AFCA43B2F67
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 07:43:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 282C7283FC8;
-	Fri,  4 Jul 2025 07:43:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B7F9281366;
+	Fri,  4 Jul 2025 07:44:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QqKkNXTR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JENtlCLl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF7A27FD4B
-	for <linux-pci@vger.kernel.org>; Fri,  4 Jul 2025 07:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF27C1DCB09;
+	Fri,  4 Jul 2025 07:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751614998; cv=none; b=FR3yj7HlT9VMWDfgW6a2t85DJPFAgJTWlkkR75NKpvQltGq0DrGMmbov+f1vCX/axIO1hK7oaBYO+8ojzQPEC9Z+koLcOyyn4pogBLeovEUBaMhY36AyeW75V9oTaHm2pnwUDimm+rIOqIh6+UrpBMiZRXNw4Cs5EAlyOwtDGn4=
+	t=1751615060; cv=none; b=L5eaLtEQVNWW2h9bc1ghGVqNES7vso3pi+qmZTD9nB9diPWmb0+oS7xrJBEQeMdoHbA5GBGn5jjpv4lcF6RiPNSqH0ExhtdUESW8Jtm37fJ/V8IteJQMC0tS4Vo533hIlDqgk9/UHjAlQLMP8RuvnOabs13kfCJS0/iQH6Nagyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751614998; c=relaxed/simple;
-	bh=1BRiW96rUpghvx6qICZQHHMHu/XS/upL65W6e5iOCgs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RUcv3ckVuSrFxYxTGaLkvFSGbnV0KLq6X+uD1musiMNQZ1DHXkn6DHQhyOqAVR9P1h9Kuyyh6qyAMPCG7ls6i9KS7VzCKYJOPPzOzQAT/S8Ue1gGtN9uiWVUxEx87vAzKuSs8Gy5yn3/ka6QQIJPAqD8DbOAmiZxpS0JAQnZ7rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QqKkNXTR; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-451d30992bcso4252605e9.2
-        for <linux-pci@vger.kernel.org>; Fri, 04 Jul 2025 00:43:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751614995; x=1752219795; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Trbkf5L2/nBS7LLO18/vGBZSMaVa1rVVnPz6wCKHNqA=;
-        b=QqKkNXTRMqATY85UkFun18dUHYYJbcWiFyHsrStPz6Y5pD7VOHxgNj+99hy2ujjks8
-         tx7x54lb6DtGpNNFznkk8EI2WpxiCmELOiRsBj4DraGhI63Tslyo/G9smTuQLlm2kivl
-         WHjKGw5cL+Dm8d2uUjhIgWjZrR0BGm+qP+GbVF+U+V4DmxJjwp6wBPP/OxUvRCrgp5tb
-         eL+S+rTMNWo0kQPs5YDHfKpuv3+HnazHTBSZXaGet0+QYEFBpsHD6cGhMlfO7eJwKzb1
-         +BEtfpmRTH8b82O1g4oVkIqTDcd5iPr3lInrHeZyrsFfTCnzgZfaLhslwpUjiId4X8J5
-         EqhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751614995; x=1752219795;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Trbkf5L2/nBS7LLO18/vGBZSMaVa1rVVnPz6wCKHNqA=;
-        b=Oz+j9LsNJrNIyKVJ/Cl5Ph7emsXpsu2Envxx07cOF7c60iCz069AZxK8FAFU/tQmPI
-         JAeydhdIDUZhW5wHERtz2r9Okq24TGjYPt3ugR9rNjkBAbsjOuh1JV8jSv7lQBYq+ZwT
-         /oeJ9sIv/Rky+/tIj1I0P4eGQvKuIpB0Ic46pKHMB+qcteIIYA9qx6fuVK4AokT/vO9N
-         ipNiTyStcB8wqBTEFHtiT8mWbOYJYXUdW7YXDAq6JMpWdXpYPIUypekhD9IvMgHZjrAV
-         leYIDt46eB9tOtKxU8zXGKmJqC2UAkmSVAOqS+Kht9Jc+0I3W9ACtcfW6TLhXNUmcorr
-         f/9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWeRt2JdyPuJ92lwyXM8lMpNIxZRnXc71TEdhOlnMUWZwEFwcFEKG1rXjZoe3mXgE7kWUJg4or1yHU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq9rGnO+gM8UiRhrgwpmbVARjqmAoEjgGKLgTpfjDSqZwVKcZV
-	mKRmwIThb65WHPM/xrYFiwwIWoyiyrmgD37YDX4npT1/zOJ8edO4xd58qoRwtPhZ1jQOtAq7Mrk
-	fn5mpPKv+5nIUSBDUOg==
-X-Google-Smtp-Source: AGHT+IGvb0vLGZH3H8NELYBKZnOLf+QcL2G3KHfh+CH2+bafytEWalGS+i6LYIUc1+KQFnyWHN2Tzjq3rWi21Gw=
-X-Received: from wmbeq7.prod.google.com ([2002:a05:600c:8487:b0:450:dcfd:1870])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:45cf:b0:441:d2d8:bd8b with SMTP id 5b1f17b1804b1-454b4e779camr8985075e9.8.1751614995067;
- Fri, 04 Jul 2025 00:43:15 -0700 (PDT)
-Date: Fri, 4 Jul 2025 07:43:14 +0000
-In-Reply-To: <20250703-topics-tyr-request_irq-v6-1-74103bdc7c52@collabora.com>
+	s=arc-20240116; t=1751615060; c=relaxed/simple;
+	bh=3py9atRl0Vxy/Um+TpKfDROUTNTZjoIU1e1Qplz+cOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B1pRSSBoe0O45fGRnwAvNZoA2B0nXEhUIZ9mVmhu7+WisfTLnjYKpjghTzfkQ5WXY6+R52PteQ5QGcutcbe/pOGusVLE/e2lw1wvDitzxKBRJ3v+O80dF29413LL9uMBHZ6LasoozqnUPUlLNw8ay3cuHgCbSqy3qAHgGlRSJBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JENtlCLl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6CBEC4CEE3;
+	Fri,  4 Jul 2025 07:44:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751615059;
+	bh=3py9atRl0Vxy/Um+TpKfDROUTNTZjoIU1e1Qplz+cOY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JENtlCLllPsXY9pgenywFH7k4WZgKcwe0zR9F1smsUoqcuXkcf4zBaXTQePWwev3p
+	 d/ORjmX1B41ZyvPm7ibHZ43fGWUBAoT0pJUHOwOe8ZdP2XLtTpMhtyXwP2mE0wBHtK
+	 bDWojGIrLQWroWdNHOVbsS6jybVELM+91vl2AE1Y6G5Ttgiki5FueqFNA8/azZMje3
+	 PUjowvSHLFfrpC2ae9CItQb0e8yu+Tj9sT2F4qiD3DvgmvS26n+l1oqtmUycIiHneu
+	 m2dGWfvqvkMOC7bFsSim/3dd6fPara90LedtTefjSf7udAnZrcmzP44ND3U2rot0oh
+	 Uof1KrA/Fe0kg==
+Date: Fri, 4 Jul 2025 09:44:16 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com, mani@kernel.org, 
+	lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, 
+	johan+linaro@kernel.org, vkoul@kernel.org, kishon@kernel.org, neil.armstrong@linaro.org, 
+	abel.vesa@linaro.org, kw@linux.com, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com, 
+	quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v8 1/3] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
+ Update pcie phy bindings for QCS615
+Message-ID: <20250704-encouraging-pink-firefly-570be6@krzk-bin>
+References: <20250703095630.669044-1-ziyue.zhang@oss.qualcomm.com>
+ <20250703095630.669044-2-ziyue.zhang@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com> <20250703-topics-tyr-request_irq-v6-1-74103bdc7c52@collabora.com>
-Message-ID: <aGeGEth0mmVNLWwg@google.com>
-Subject: Re: [PATCH v6 1/6] rust: irq: add irq module
-From: Alice Ryhl <aliceryhl@google.com>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250703095630.669044-2-ziyue.zhang@oss.qualcomm.com>
 
-On Thu, Jul 03, 2025 at 04:29:59PM -0300, Daniel Almeida wrote:
-> Add the IRQ module. Future patches will then introduce support for IRQ
-> registrations and handlers.
+On Thu, Jul 03, 2025 at 02:56:28AM -0700, Ziyue Zhang wrote:
+> QCS615 pcie phy only use 5 clocks, which are aux, cfg_ahb, ref,
+> ref_gen, pipe. So move "qcom,qcs615-qmp-gen3x1-pcie-phy" compatible
+> from 6 clocks' list to 5 clocks' list.
 > 
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Fixes: 1e889f2bd837 ("dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the QCS615 QMP PCIe PHY Gen3 x1")
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
 
