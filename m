@@ -1,202 +1,345 @@
-Return-Path: <linux-pci+bounces-31519-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31523-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21E10AF8D64
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 11:04:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C0A0AF8F82
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 12:09:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 153D81C881AA
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 09:04:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 382233AEB65
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 10:09:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 605042F50AD;
-	Fri,  4 Jul 2025 08:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IsFNgvOI"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A08D2BEC23;
+	Fri,  4 Jul 2025 10:09:37 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from 12.mo534.mail-out.ovh.net (12.mo534.mail-out.ovh.net [46.105.38.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7BC2F50B2;
-	Fri,  4 Jul 2025 08:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D282BEC20
+	for <linux-pci@vger.kernel.org>; Fri,  4 Jul 2025 10:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.38.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751619464; cv=none; b=f6movLKyJRvpjRiGsMj4mDQi0IS9UatXPem/F8Stpdrrfgu7C6Kxw/CgIkRPHG1vmfgm7w902VTlrELKkks9MfxAFvJIyizu7PcMET/BgSF6I6GLr6MqbGQV9E2HVZmoMTb7vrOkniJncMwMwoGCZMuTZo27rhmJcyUoShCnq2M=
+	t=1751623777; cv=none; b=F3NmzPudctvAZQRRMqzF1xiXowrtbrGBe4RoR3WbeZmXdaAgEqeuvwvjAWOT2afp66S6z7yXzU8hC4v5+lK9BPyuAwkHAXEVgGkFaJEdJ2Onnbcmiaw/2j6dwb0n0ifR5h+qtDDb/qOhD33WTKtYS2IGhmi/9k0Wk9nosxfV9L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751619464; c=relaxed/simple;
-	bh=Hq3evHZffKrfDtkoD9VkUHgds86PykelMMQhzlru9Hs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X/nxzsRwd1Tup1uKouZYYhidsPZFBNiij+ludw6SL+J2MW3YOEMJBtDI57LOteWkvJC+5CxVBHT6kU1k+EbltUZNIZhqAiHXNouGFHcjWdrW2GP/oN1SptdFmQDnY2lKPyi9jjfbigMWDmPihBfB6AfigX+wJw7aQ1mPzV47Jg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IsFNgvOI; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8E24143AEE;
-	Fri,  4 Jul 2025 08:57:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751619453;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z/ao/2kml8jJZFHPFKKmBePrXHDwomfciEfTApf1ng0=;
-	b=IsFNgvOIXVOwfZalpbJl3HeOSXGJ/b0Br9jNwmVj8c8XWQeGRJ8yNf3TykuiXP9YVWVNg9
-	WswEtsNyDmTb6lPYtNo8jxAwOyYHr7+xBhPVcBIgta1Gmw8VnOWUw/IIgLl0UbPh+PxatT
-	QEnGVRZSbWRjlpWe41sTUlxkGP/Yq4rgQ07Ce2ffpGvDVrPXEuUvzR/vQ7m9UpYt7tin2Y
-	sLZZm9ZYReoWxyEcrLAoB6ePBBOxMVsZYJxN9iYmAivhvHar9hS8v4H3i9GFkWozo5fSTm
-	tDdAojqJukJpigemHSwc8gA9r4PchXfJlcnlZExGtC/OGPUfoanwJMSTvEwmSg==
-Date: Fri, 4 Jul 2025 10:57:25 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len
- Brown <lenb@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso
- <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 05/28] bus: simple-pm-bus: Populate child nodes at
- probe
-Message-ID: <20250704105725.50cb72b9@bootlin.com>
-In-Reply-To: <20250703093302.4f7743ea@bootlin.com>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
-	<20250613134817.681832-6-herve.codina@bootlin.com>
-	<20250627155200.GB3234475-robh@kernel.org>
-	<20250703093302.4f7743ea@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1751623777; c=relaxed/simple;
+	bh=HPKYWTiVYesJXR39s7M1azWUtubAecQ9gg6i9VpyD7g=;
+	h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type; b=K3NcEUAXDRMLEsXRS0escdFMteSgep0GZ/utawrY69yoLltAi6crYBh0hQItXHiotPpYsHX2WTR7nToNHiFa0lsdmc6SbTzihtt09sVWgObjSVrg4XUC0YfRhpdukAsinzkM/0P8uSICpCmzeudQ4DdAlR3uJyNW9ryHac+oQGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; arc=none smtp.client-ip=46.105.38.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
+Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net [152.228.215.222])
+	by mo534.mail-out.ovh.net (Postfix) with ESMTPS id 4bYT0W07Ssz6JRW
+	for <linux-pci@vger.kernel.org>; Fri,  4 Jul 2025 09:31:22 +0000 (UTC)
+Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net. [127.0.0.1])
+        by director3.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
+        for <linux-pci@vger.kernel.org>; Fri,  4 Jul 2025 09:31:22 +0000 (UTC)
+Received: from mta2.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.113.158])
+	by director3.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4bYT0V3GQSz5wF5
+	for <linux-pci@vger.kernel.org>; Fri,  4 Jul 2025 09:31:22 +0000 (UTC)
+Received: from mailstore2.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.2.8.2])
+	by mta2.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTP id 42B7FBA4275
+	for <linux-pci@vger.kernel.org>; Fri,  4 Jul 2025 09:31:22 +0000 (UTC)
+Date: Fri, 4 Jul 2025 09:31:22 +0000 (UTC)
+From: Marcos Del Sol <marcos@orca.pet>
+To: linux-pci <linux-pci@vger.kernel.org>
+Message-ID: <472002156.44518617.1751621482142.JavaMail.zimbra@orca.pet>
+Subject: Broken PCI MSI on Vortex86DX3 and Vortex86EX2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvvdejfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgeekpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhor
- hhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvg
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Thread-Index: GGvBptz8aTb9UnYXoW7UmpCXcAbfvw==
+Thread-Topic: Broken PCI MSI on Vortex86DX3 and Vortex86EX2
+X-Ovh-Tracer-Id: 11486993799683790438
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvvdektdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhepfffhvffkufggtgfgihhtsehtjegttddttdejnecuhfhrohhmpeforghrtghoshcuffgvlhcuufholhcuoehmrghrtghoshesohhrtggrrdhpvghtqeenucggtffrrghtthgvrhhnpeduudfglefftefhkedvfeekledtieeghfdtleehkeelheevueffveehtdevjeelieenucfkphepuddvjedrtddrtddruddpjeelrdduudeirdegjedrudelheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhgrrhgtohhssehorhgtrgdrphgvthdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehfeegmgdpmhhouggvpehsmhhtphhouhht
 
-Hi Rob,
+Hello everyone.
 
-On Thu, 3 Jul 2025 09:33:02 +0200
-Herve Codina <herve.codina@bootlin.com> wrote:
+I recently acquired a Vortex86DX3-based mini PC from ICOP, a eBox-3352DX3-GL
+which has a Realtek RTL8168E-VL Gigabit Ethernet card connected via PCI-E.
 
-> Hi Rob,
-> 
-> On Fri, 27 Jun 2025 10:52:00 -0500
-> Rob Herring <robh@kernel.org> wrote:
-> 
-> > On Fri, Jun 13, 2025 at 03:47:45PM +0200, Herve Codina wrote:  
-> > > The simple-pm-bus driver handles several simple busses. When it is used
-> > > with busses other than a compatible "simple-pm-bus", it doesn't populate
-> > > its child devices during its probe.
-> > > 
-> > > This confuses fw_devlink and results in wrong or missing devlinks.
-> > > 
-> > > Once a driver is bound to a device and the probe() has been called,
-> > > device_links_driver_bound() is called.
-> > > 
-> > > This function performs operation based on the following assumption:
-> > >     If a child firmware node of the bound device is not added as a
-> > >     device, it will never be added.
-> > > 
-> > > Among operations done on fw_devlinks of those "never be added" devices,
-> > > device_links_driver_bound() changes their supplier.
-> > > 
-> > > With devices attached to a simple-bus compatible device, this change
-> > > leads to wrong devlinks where supplier of devices points to the device
-> > > parent (i.e. simple-bus compatible device) instead of the device itself
-> > > (i.e. simple-bus child).
-> > > 
-> > > When the device attached to the simple-bus is removed, because devlinks
-> > > are not correct, its consumers are not removed first.
-> > > 
-> > > In order to have correct devlinks created, make the simple-pm-bus driver
-> > > compliant with the devlink assumption and create its child devices
-> > > during its probe.    
-> > 
-> > IIRC, skipping child nodes was because there were problems with 
-> > letting the driver handle 'simple-bus'. How does this avoid that now?  
-> 
-> I don't know about the specific issues related to those problems. Do you
-> have some pointers about them?
-> 
-> > 
-> > The root of_platform_populate() that created the simple-bus device that 
-> > gets us to the probe here will continue descending into child nodes. 
-> > Meanwhile, the probe here is also descending into those same child 
-> > nodes. Best case, that's just redundant. Worst case, won't you still 
-> > have the same problem if the first of_platform_populate() creates the 
-> > devices first?
-> >   
-> 
-> Maybe we could simply avoid of_platform_populate() to be recursive when a
-> device populate by of_platform_populate() is one of devices handled by
-> the simple-bus driver and let the simple-bus driver do the job.
-> 
-> of_platform_populate will handle the first level. It will populate children
-> of the node given to of_platform_populate() and the children of those
-> children will be populate by the simple-bus driver.
-> 
-> I could try a modification in that way. Do you think it could be a correct
-> solution?
-> 
+I have discovered that, while it works okay under Windows 7 (the latest
+supported version for this machine), it will not under Linux. After some
+research I found out the reason is that it attempts to use MSI for
+interrupts, but they do not work properly. Thus interrupts will not fire and
+packets cannot be received, even though they can be sent via the interface.
+On Windows, it uses regular PCI interrupts.
 
-I have started to look at this solution and it's going to be more complex
-than than I thought.
+I have contacted DM&P (the company behind the Vortex processors) and they
+confirmed that it is a known issue on all machines using the PCI/PCI-X to
+PCI-E Bridge [17f3:1031] bridge, such as this one and others using the
+Vortex86EX2.
 
-Many MFD drivers uses a compatible of this kind (the same exist for bus
-driver with "simple-bus"):
-  compatible = "foo,bar", "simple-mfd";
+This is the output of lspci -nnvv (without pci=nomsi):
 
-Usually the last compatible string ("simple-mfd" here) is a last fallback
-and the first string is the more specific one.
+00:00.0 Host bridge [0600]: RDC Semiconductor, Inc. R6023 Host Bridge [17f3:6023] (rev 02)
+        Control: I/O- Mem+ BusMaster+ SpecCycle+ MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+        Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort+ >SERR- <PERR- INTx-
+        Latency: 0
 
-In the problematic case, "foo,bar" has a specific driver and the driver
-performs some operations at probe() but doesn't call of_platform_populate()
-and relies on the core to do the device creations (recursively) based on
-the "simple,mfd" string present in the compatible property.
+00:01.0 PCI bridge [0604]: RDC Semiconductor, Inc. PCI/PCI-X to PCI-E Bridge [17f3:1031] (rev 01) (prog-if 00 [Normal decode])
+        Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap+ 66MHz+ UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 64, Cache Line Size: 64 bytes
+        Interrupt: pin A routed to IRQ 16
+        Bus: primary=00, secondary=01, subordinate=01, sec-latency=64
+        I/O behind bridge: d000-dfff [size=4K] [16-bit]
+        Memory behind bridge: 7c000000-7c1fffff [size=2M] [32-bit]
+        Prefetchable memory behind bridge: f6900000-f69fffff [size=1M] [32-bit]
+        Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ <SERR- <PERR-
+        BridgeCtl: Parity+ SERR+ NoISA+ VGA- VGA16- MAbort- >Reset- FastB2B-
+                PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+        Capabilities: [40] Express (v1) PCI/PCI-X to PCI-Express Bridge (Slot+), MSI 00
+                DevCap: MaxPayload 128 bytes, PhantFunc 0
+                        ExtTag- RBE-
+                DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+                        RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
+                        MaxPayload 128 bytes, MaxReadReq 128 bytes
+                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
+                LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <2us, L1 <32us
+                        ClockPM- Surprise- LLActRep+ BwNot- ASPMOptComp-
+                LnkCtl: ASPM Disabled; Disabled- CommClk+
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                LnkSta: Speed 2.5GT/s, Width x1
+                        TrErr- Train- SlotClk+ DLActive+ BWMgmt- ABWMgmt-
+                SltCap: AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+
+                        Slot #0, PowerLimit 10W; Interlock- NoCompl-
+                SltCtl: Enable: AttnBtn- PwrFlt- MRL- PresDet- CmdCplt- HPIrq- LinkChg-
+                        Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
+                SltSta: Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet+ Interlock-
+                        Changed: MRL- PresDet+ LinkState+
+        Capabilities: [80] MSI: Enable- Count=1/1 Maskable- 64bit-
+                Address: 00000000  Data: 0000
+        Capabilities: [90] Power Management version 2
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
 
-Some other calls of_platform_populate() in they probe (which I think is
-correct) and in that case, the child device creation can be done at two
-location: specific driver probe() and core.
+00:02.0 PCI bridge [0604]: RDC Semiconductor, Inc. PCI/PCI-X to PCI-E Bridge [17f3:1031] (rev 01) (prog-if 00 [Normal decode])
+        Control: I/O- Mem- BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap+ 66MHz+ UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 64, Cache Line Size: 64 bytes
+        Interrupt: pin A routed to IRQ 11
+        Bus: primary=00, secondary=02, subordinate=02, sec-latency=64
+        I/O behind bridge: 1000-1fff [size=4K] [16-bit]
+        Memory behind bridge: 7c200000-7c3fffff [size=2M] [32-bit]
+        Prefetchable memory behind bridge: 7c400000-7c5fffff [size=2M] [32-bit]
+        Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+        BridgeCtl: Parity+ SERR+ NoISA+ VGA- VGA16- MAbort- >Reset- FastB2B-
+                PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+        Capabilities: [40] Express (v1) PCI/PCI-X to PCI-Express Bridge (Slot+), MSI 00
+                DevCap: MaxPayload 128 bytes, PhantFunc 0
+                        ExtTag- RBE-
+                DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+                        RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
+                        MaxPayload 128 bytes, MaxReadReq 128 bytes
+                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
+                LnkCap: Port #1, Speed 2.5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <2us, L1 <32us
+                        ClockPM- Surprise- LLActRep+ BwNot- ASPMOptComp-
+                LnkCtl: ASPM Disabled; Disabled- CommClk-
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                LnkSta: Speed 2.5GT/s, Width x1
+                        TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+                SltCap: AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+
+                        Slot #0, PowerLimit 10W; Interlock- NoCompl-
+                SltCtl: Enable: AttnBtn- PwrFlt- MRL- PresDet- CmdCplt- HPIrq- LinkChg-
+                        Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
+                SltSta: Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet- Interlock-
+                        Changed: MRL- PresDet- LinkState-
+        Capabilities: [80] MSI: Enable- Count=1/1 Maskable- 64bit-
+                Address: 00000000  Data: 0000
+        Capabilities: [90] Power Management version 2
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
 
-You pointed out that the core could create devices before the specific
-driver is probed. In that case, some of existing drivers calling
-of_platform_populate() are going to have issues.
+00:07.0 ISA bridge [0601]: RDC Semiconductor, Inc. R6035 ISA Bridge [17f3:6035] (rev 01)
+        Control: I/O+ Mem+ BusMaster+ SpecCycle+ MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+        Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=?? >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0
 
-I can try to modify existing MFD and bus drivers (compatible fallback to
-simple-mfd, simple-bus, ...) in order to have them call of_platform_populate()
-in they probe() and after all problematic drivers are converted, the
-recursive creation of devices done in the core could be removed.
+00:07.1 ISA bridge [0601]: RDC Semiconductor, Inc. R6035 ISA Bridge [17f3:6035] (rev 01)
+        Control: I/O+ Mem+ BusMaster+ SpecCycle+ MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+        Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=?? >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0
 
-Before starting in that way, can you confirm that this is the right
-direction?
+00:0a.0 USB controller [0c03]: RDC Semiconductor, Inc. R6060 USB 1.1 Controller [17f3:6060] (rev 14) (prog-if 10 [OHCI])        Subsystem: RDC Semiconductor, Inc. R6060 USB 1.1 Controller [17f3:6060]
+        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 64, Cache Line Size: 32 bytes
+        Interrupt: pin A routed to IRQ 18
+        Region 0: Memory at febdf000 (32-bit, non-prefetchable) [size=4K]
+        Kernel driver in use: ohci-pci
+        Kernel modules: ohci_pci
 
-Best regards,
-Hervé
+00:0a.1 USB controller [0c03]: RDC Semiconductor, Inc. R6061 USB 2.0 Controller [17f3:6061] (rev 08) (prog-if 20 [EHCI])        Subsystem: RDC Semiconductor, Inc. R6061 USB 2.0 Controller [17f3:6061]
+        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 64, Cache Line Size: 32 bytes
+        Interrupt: pin B routed to IRQ 21
+        Region 0: Memory at febdec00 (32-bit, non-prefetchable) [size=256]
+        Kernel driver in use: ehci-pci
+        Kernel modules: ehci_pci
+
+00:0c.0 IDE interface [0101]: RDC Semiconductor, Inc. R1012 IDE Controller [17f3:1012] (rev 02) (prog-if 8f [PCI native mode controller, supports both channels switched to ISA compatibility mode, supports bus mastering])
+        Subsystem: RDC Semiconductor, Inc. R1012 IDE Controller [17f3:1012]
+        Control: I/O+ Mem- BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 64, Cache Line Size: 32 bytes
+        Interrupt: pin A routed to IRQ 23
+        Region 0: I/O ports at e880 [size=8]
+        Region 1: I/O ports at e800 [size=4]
+        Region 2: I/O ports at e480 [size=8]
+        Region 3: I/O ports at e400 [size=4]
+        Region 4: I/O ports at e080 [size=16]
+        Kernel driver in use: pata_rdc
+        Kernel modules: pata_rdc, ata_generic
+
+00:0d.0 VGA compatible controller [0300]: RDC Semiconductor, Inc. RDC M2015 VGA-compatible graphics adapter [17f3:2015] (prog-if 00 [VGA controller])
+        Subsystem: RDC Semiconductor, Inc. RDC M2015 VGA-compatible graphics adapter [17f3:2015]
+        Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap+ 66MHz+ UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0
+        Interrupt: pin A routed to IRQ 5
+        Region 0: Memory at f8000000 (32-bit, non-prefetchable) [size=64M]
+        Region 1: Memory at febe0000 (32-bit, non-prefetchable) [size=128K]
+        Region 2: I/O ports at ec00 [size=128]
+        Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
+        Capabilities: [40] Power Management version 3
+                Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+
+00:0e.0 Audio device [0403]: RDC Semiconductor, Inc. R3010 HD Audio Controller [17f3:3010] (rev 01)
+        Subsystem: RDC Semiconductor, Inc. R3010 HD Audio Controller [17f3:3010]
+        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 64, Cache Line Size: 32 bytes
+        Interrupt: pin A routed to IRQ 18
+        Region 0: Memory at febd8000 (32-bit, non-prefetchable) [size=16K]
+        Kernel driver in use: snd_hda_intel
+        Kernel modules: snd_hda_intel
+
+01:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller [10ec:8168] (rev 07)
+        Subsystem: Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller [10ec:0123]
+        Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx+
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0, Cache Line Size: 64 bytes
+        Interrupt: pin A routed to IRQ 16
+        Region 0: I/O ports at d800 [size=256]
+        Region 2: Memory at f69ff000 (64-bit, prefetchable) [size=4K]
+        Region 4: Memory at f69f8000 (64-bit, prefetchable) [size=16K]
+        Capabilities: [40] Power Management version 3
+                Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
+                Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+        Capabilities: [50] MSI: Enable- Count=1/1 Maskable- 64bit+
+                Address: 0000000000000000  Data: 0000
+        Capabilities: [70] Express (v2) Endpoint, MSI 01
+                DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s <512ns, L1 <64us
+                        ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 10W
+                DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+                        RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
+                        MaxPayload 128 bytes, MaxReadReq 4096 bytes
+                DevSta: CorrErr+ NonFatalErr- FatalErr- UnsupReq+ AuxPwr+ TransPend-
+                LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s unlimited, L1 <64us
+                        ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp-
+                LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                LnkSta: Speed 2.5GT/s, Width x1
+                        TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+                DevCap2: Completion Timeout: Range ABCD, TimeoutDis+ NROPrPrP- LTR-
+                         10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
+                         EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+                         FRS- TPHComp- ExtTPHComp-
+                         AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+                DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- 10BitTagReq- OBFF Disabled,
+                         AtomicOpsCtl: ReqEn-
+                LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
+                         Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+                         Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
+                LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete- EqualizationPhase1-
+                         EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
+                         Retimer- 2Retimers- CrosslinkRes: unsupported
+        Capabilities: [b0] MSI-X: Enable+ Count=4 Masked-
+                Vector table: BAR=4 offset=00000000
+                PBA: BAR=4 offset=00000800
+        Capabilities: [d0] Vital Product Data
+                Unknown small resource type 05, will not decode more.
+        Kernel driver in use: r8169
+        Kernel modules: r8169
+
+This is /proc/interrupts without pci=nomsi:
+           CPU0       CPU1
+  0:         35          0   IO-APIC   2-edge      timer
+  1:          0          4   IO-APIC   1-edge      i8042
+  8:          0          0   IO-APIC   8-edge      rtc0
+  9:          0          0   IO-APIC   9-fasteoi   acpi
+ 12:          6          0   IO-APIC  12-edge      i8042
+ 18:        667          0   IO-APIC  18-fasteoi   ohci_hcd:usb2, snd_hda_intel:card0
+ 21:          0        330   IO-APIC  21-fasteoi   ehci_hcd:usb1
+ 23:          0       2248   IO-APIC  23-fasteoi   pata_rdc
+ 24:          0          0   PCI-MSI 524288-edge      enp1s0
+NMI:          0          0   Non-maskable interrupts
+LOC:      16110      15274   Local timer interrupts
+SPU:          0          0   Spurious interrupts
+PMI:          0          0   Performance monitoring interrupts
+IWI:          0          0   IRQ work interrupts
+RTR:          0          0   APIC ICR read retries
+RES:        119         58   Rescheduling interrupts
+CAL:       3032       2562   Function call interrupts
+TLB:          0          2   TLB shootdowns
+TRM:          0          0   Thermal event interrupts
+THR:          0          0   Threshold APIC interrupts
+DFR:          0          0   Deferred Error APIC interrupts
+MCE:          0          0   Machine check exceptions
+MCP:          0          0   Machine check polls
+ERR:          1
+MIS:          0
+PIN:          0          0   Posted-interrupt notification event
+NPI:          0          0   Nested posted-interrupt event
+PIW:          0          0   Posted-interrupt wakeup event
+
+This is /proc/interrupts with pci=nomsi:
+           CPU0       CPU1
+  0:         34          0   IO-APIC   2-edge      timer
+  1:          0          4   IO-APIC   1-edge      i8042
+  8:          0          0   IO-APIC   8-edge      rtc0
+  9:          0          0   IO-APIC   9-fasteoi   acpi
+ 12:          6          0   IO-APIC  12-edge      i8042
+ 16:        996          0   IO-APIC  16-fasteoi   enp1s0
+ 18:          0        667   IO-APIC  18-fasteoi   ohci_hcd:usb2, snd_hda_intel:card0
+ 21:         28          0   IO-APIC  21-fasteoi   ehci_hcd:usb1
+ 23:          0       2572   IO-APIC  23-fasteoi   pata_rdc
+NMI:          0          0   Non-maskable interrupts
+LOC:      62636      61759   Local timer interrupts
+SPU:          0          0   Spurious interrupts
+PMI:          0          0   Performance monitoring interrupts
+IWI:          0          0   IRQ work interrupts
+RTR:          0          0   APIC ICR read retries
+RES:        119         60   Rescheduling interrupts
+CAL:       3572       2267   Function call interrupts
+TLB:          1          2   TLB shootdowns
+TRM:          0          0   Thermal event interrupts
+THR:          0          0   Threshold APIC interrupts
+DFR:          0          0   Deferred Error APIC interrupts
+MCE:          0          0   Machine check exceptions
+MCP:          0          0   Machine check polls
+ERR:          1
+MIS:          0
+PIN:          0          0   Posted-interrupt notification event
+NPI:          0          0   Nested posted-interrupt event
+PIW:          0          0   Posted-interrupt wakeup event
+
+Note how there are no fired interrupts when PCI MSI is enabled for enp1s0,
+despite being on a home network with plenty of broadcast and multicast
+traffic.
+
+If you need any more information, please let me know.
+
+Thanks,
+Marcos
 
