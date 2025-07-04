@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-31528-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31529-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18319AF9382
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 15:04:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 75EEBAF938A
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 15:04:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E22B1CC0E60
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 13:03:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 48A281CA28F4
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 13:03:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBB6C302059;
-	Fri,  4 Jul 2025 13:00:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8C432F85D9;
+	Fri,  4 Jul 2025 13:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mi+LrZHj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTZQCGwh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854A230115E;
-	Fri,  4 Jul 2025 13:00:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B3D2F50B0;
+	Fri,  4 Jul 2025 13:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751634040; cv=none; b=SKe0fAGSOx1JFqKAcC7jmbgGSKazfi17EXF98nTfCmeLnq5yV7JyZniqn3sNm6fGwQLfnaIfSZLVUC+FbTQn4OP/RgdcfInNo+4CMKE5qavggoSjnODOt4nhk3dqf3bDU2yp8zT4MMt9x24YnXYwbL4otgL1SIEvJhq/e6tLIH8=
+	t=1751634099; cv=none; b=eaIvkhRVA6PAJJOGJnZApRdCxDy1nTl90Kob8hxCXJBoFAG1jhXVh1sSu3mpwyC81r8exZyxEi1I2vUBoThqZIcfTI7e2Tvij1NnHWXs6JagY+NxCgweWH0hoIKidNsm0jy58fO1/uvszHTJAnWkDSdQEVnISAKbM9TDkvk7IUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751634040; c=relaxed/simple;
-	bh=PQ+uuvbgXKFc5vIr220QI1Lf8oYUGvsoSa+Kga5uCxI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=CyR8vl9fWmINm7RKWId4dKPyemJ+9FqSebnWLZfFSs+UEEcvziTdvmE78TALAjSnNGurITdNjyS+SEu8DCBS807qDW6WL/bDrnQZx5dCJuxYJE94bbP6/KZGu2OL2Hm6q/X0mtxxoz1z+F233S/Li37GmVT0W4joNTzs5rGAUGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mi+LrZHj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F840C4CEE3;
-	Fri,  4 Jul 2025 13:00:26 +0000 (UTC)
+	s=arc-20240116; t=1751634099; c=relaxed/simple;
+	bh=1SFIg86ScSSNsm00r4z39bxOC+QdfD7ofZFsNo39Gyw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=QuDmR68sXHJu1VdwvmOy/8TKkuR13xrJO6c5cZ2Dm/63RUAXWFJo+uSeEfuIuoyWIfr+OSEYH50qX3xum/A/sAZZ72tqBtllDepreXqcg7TkhEkoSAQX7YcMVMYNoQfVX3DGY/+ZHLIamqaMI/wFSizpV1u5LYGB1BhBXd1C95s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTZQCGwh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CA72C4CEE3;
+	Fri,  4 Jul 2025 13:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751634040;
-	bh=PQ+uuvbgXKFc5vIr220QI1Lf8oYUGvsoSa+Kga5uCxI=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=mi+LrZHjF+yRfLmrMqCm45+w6sUTBWLIFLln4t06TCRfNNID72odMCaUkq6P7uCUX
-	 6UUsEVXl8dcAwtsGpEQ4be8tzBNVlVqFR/dHUws6kyBu1YvtpkQhwwKUxloNwWR9R/
-	 IGSdHN0MxrYLaSCkpAV78+BdMxg3sCNdQTC9sRmKmYWFLMqIw4rrFCZRyV7KRJtd2E
-	 0j73lXtusTnleqcS0NxrPxjaCD0MHAoeWaeskbB4i7ET3pELASmMynDmabvpgju8s5
-	 lM5kWnUgAXLXzxzcI7AEuaVKCn3OYtKdR4/uhCwyRJ5lqmW3Ng5o+Qj0VkMX0rxdf6
-	 342H5Q7Nz/erA==
+	s=k20201202; t=1751634099;
+	bh=1SFIg86ScSSNsm00r4z39bxOC+QdfD7ofZFsNo39Gyw=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=VTZQCGwhAN+TexmrabJGl6LSW4Xumo1b3iyodJcqKKb2S+NtuyH0wgV0XP9jPivaQ
+	 QuIqn8AtkfhK0+gKQ1ejE0AWPSMFd9C0sa8nLfuIly2BzdyUP8Px0ho4oMaC2LnN3l
+	 4lB1zV53g1wSLGMaKO1dWQLG5r1vqzj/k5z4JY4BdlXr5S/IsxRkvkdm+tgkf2VgOx
+	 fZqh+B/8T9b4HB0rnSrjSrFm90CAihtJ2cuZ6KUhRJXNxo5H/Hqv9zo/6d3q3R8XPw
+	 gK1OTk3fERiW0Prtx9CO8/vhuUS5bARcvhok3yE2TSbAXA89qvtD+iuArw73v2kZOz
+	 bKOGfZaX9sCWQ==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -49,9 +49,16 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 04 Jul 2025 15:00:24 +0200
-Message-Id: <DB3AFTUC22W1.39C4DMWSENZGB@kernel.org>
-Subject: Re: [PATCH v13 3/5] rust: replace `CStr` with `core::ffi::CStr`
+Date: Fri, 04 Jul 2025 15:01:23 +0200
+Message-Id: <DB3AGL1QO4M4.2HANWHX9TF9WN@kernel.org>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
+ <dri-devel@lists.freedesktop.org>, <netdev@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <llvm@lists.linux.dev>,
+ <linux-pci@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <linux-block@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+ <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH v13 4/5] rust: replace `kernel::c_str!` with C-Strings
 From: "Benno Lossin" <lossin@kernel.org>
 To: "Tamir Duberstein" <tamird@gmail.com>, "Michal Rostecki"
  <vadorovsky@protonmail.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
@@ -84,69 +91,56 @@ To: "Tamir Duberstein" <tamird@gmail.com>, "Michal Rostecki"
  Leitao" <leitao@debian.org>, "Viresh Kumar" <viresh.kumar@linaro.org>,
  "Michael Turquette" <mturquette@baylibre.com>, "Stephen Boyd"
  <sboyd@kernel.org>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
- <dri-devel@lists.freedesktop.org>, <netdev@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <llvm@lists.linux.dev>,
- <linux-pci@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <linux-block@vger.kernel.org>, <linux-pm@vger.kernel.org>,
- <linux-clk@vger.kernel.org>
 X-Mailer: aerc 0.20.1
 References: <20250701-cstr-core-v13-0-29f7d3eb97a6@gmail.com>
- <20250701-cstr-core-v13-3-29f7d3eb97a6@gmail.com>
-In-Reply-To: <20250701-cstr-core-v13-3-29f7d3eb97a6@gmail.com>
+ <20250701-cstr-core-v13-4-29f7d3eb97a6@gmail.com>
+In-Reply-To: <20250701-cstr-core-v13-4-29f7d3eb97a6@gmail.com>
 
 On Tue Jul 1, 2025 at 6:49 PM CEST, Tamir Duberstein wrote:
-> `kernel::ffi::CStr` was introduced in commit d126d2380131 ("rust: str:
-> add `CStr` type") in November 2022 as an upstreaming of earlier work
-> that was done in May 2021[0]. That earlier work, having predated the
-> inclusion of `CStr` in `core`, largely duplicated the implementation of
-> `std::ffi::CStr`.
->
-> `std::ffi::CStr` was moved to `core::ffi::CStr` in Rust 1.64 in
-> September 2022. Hence replace `kernel::str::CStr` with `core::ffi::CStr`
-> to reduce our custom code footprint, and retain needed custom
-> functionality through an extension trait.
->
-> C-String literals were added in Rust 1.77, while our MSRV is 1.78. Thus
-> opportunistically replace instances of `kernel::c_str!` with C-String
-> literals where other code changes were already necessary or where
-> existing code triggered clippy lints; the rest will be done in a later
-> commit.
->
-> Link: https://github.com/Rust-for-Linux/linux/commit/faa3cbcca03d0dec8f8e=
-43f1d8d5c0860d98a23f [0]
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
->  drivers/gpu/drm/drm_panic_qr.rs |   2 +-
->  rust/kernel/auxiliary.rs        |   4 +-
->  rust/kernel/configfs.rs         |   4 +-
->  rust/kernel/cpufreq.rs          |   2 +-
->  rust/kernel/device.rs           |   4 +-
->  rust/kernel/drm/device.rs       |   4 +-
->  rust/kernel/error.rs            |   4 +-
->  rust/kernel/firmware.rs         |  11 +-
->  rust/kernel/kunit.rs            |   6 +-
->  rust/kernel/miscdevice.rs       |   2 +-
->  rust/kernel/net/phy.rs          |   2 +-
->  rust/kernel/of.rs               |   2 +-
->  rust/kernel/prelude.rs          |   5 +-
->  rust/kernel/seq_file.rs         |   4 +-
->  rust/kernel/str.rs              | 394 +++++++++++-----------------------=
-------
->  rust/kernel/sync/condvar.rs     |   2 +-
->  rust/kernel/sync/lock.rs        |   2 +-
->  rust/kernel/sync/lock/global.rs |   2 +-
->  samples/rust/rust_configfs.rs   |   2 +-
->  19 files changed, 140 insertions(+), 318 deletions(-)
+> C-String literals were added in Rust 1.77. Replace instances of
+> `kernel::c_str!` with C-String literals where possible and rename
+> `kernel::c_str!` to `str_to_cstr!` to clarify its intended use.
 
-Is it also possible to split this? First rename the existing functions
-on our CStr to match upstream & then you don't need to do the rename &
-removal of our CStr in the same patch?
+These two things can also be split? And it should also be possible to do
+this by-subsystem, right?
 
 ---
 Cheers,
 Benno
+
+> Closes: https://github.com/Rust-for-Linux/linux/issues/1075
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  drivers/block/rnull.rs                |  2 +-
+>  drivers/cpufreq/rcpufreq_dt.rs        |  5 ++---
+>  drivers/gpu/drm/nova/driver.rs        | 10 +++++-----
+>  drivers/gpu/nova-core/driver.rs       |  6 +++---
+>  drivers/net/phy/ax88796b_rust.rs      |  7 +++----
+>  drivers/net/phy/qt2025.rs             |  5 ++---
+>  rust/kernel/clk.rs                    |  6 ++----
+>  rust/kernel/configfs.rs               |  9 +++++----
+>  rust/kernel/cpufreq.rs                |  3 +--
+>  rust/kernel/devres.rs                 |  2 +-
+>  rust/kernel/drm/ioctl.rs              |  2 +-
+>  rust/kernel/firmware.rs               |  6 +++---
+>  rust/kernel/kunit.rs                  | 14 ++++++--------
+>  rust/kernel/net/phy.rs                |  6 ++----
+>  rust/kernel/platform.rs               |  4 ++--
+>  rust/kernel/str.rs                    | 24 ++++++++++++++++--------
+>  rust/kernel/sync.rs                   |  7 +++----
+>  rust/kernel/sync/completion.rs        |  2 +-
+>  rust/kernel/sync/lock/global.rs       |  3 ++-
+>  rust/kernel/workqueue.rs              |  8 ++++----
+>  rust/macros/kunit.rs                  | 10 +++++-----
+>  rust/macros/module.rs                 |  2 +-
+>  samples/rust/rust_configfs.rs         |  5 ++---
+>  samples/rust/rust_driver_auxiliary.rs |  4 ++--
+>  samples/rust/rust_driver_faux.rs      |  4 ++--
+>  samples/rust/rust_driver_pci.rs       |  4 ++--
+>  samples/rust/rust_driver_platform.rs  |  4 ++--
+>  samples/rust/rust_misc_device.rs      |  3 +--
+>  scripts/rustdoc_test_gen.rs           |  4 ++--
+>  29 files changed, 84 insertions(+), 87 deletions(-)
 
