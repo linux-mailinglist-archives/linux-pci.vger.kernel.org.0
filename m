@@ -1,74 +1,73 @@
-Return-Path: <linux-pci+bounces-31526-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31527-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DD43AF91F6
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 13:59:15 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6407BAF9250
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 14:15:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5BB64A24F9
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 11:59:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6EB5F7B670A
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 12:14:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CE502D5C70;
-	Fri,  4 Jul 2025 11:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF8B22D5C8E;
+	Fri,  4 Jul 2025 12:15:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J8Q8TmlB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FkL/oiQn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0657F2D46B7;
-	Fri,  4 Jul 2025 11:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA1B2857EE;
+	Fri,  4 Jul 2025 12:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751630347; cv=none; b=TYSykJYeVJWIWVSk99WEGlSOGaOMfL+s8TPxMgKRaQ7FRpz4SyJJ1OJ6vykP2qjYOcS+KnEyIO590mXJLeASOYSf3qamT+i68PKHVKq6I6rzFbuGKgMRQsqNSkwbhlg7eeAKxS5z1yMbZZzOLUrQ1Z9qqi927X6OVE1ZQMOhAdI=
+	t=1751631342; cv=none; b=lXo6/qjiySAJMz0aXg5PwvL0m0/hVxcNfT8Gg44o8pEnP0STrHHGBWMonpbF038zfvG8NPLXSPO1+gc9qTK/nD5Lp88c/y+wGgdG6aTNc4mIu8QwUAH8Z6IW95SNiY3rFnrIcgke7jGFaazYMmHhCikxm/PYWXWy/1FzSegXkyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751630347; c=relaxed/simple;
-	bh=mKUAfa6GAdUfi2Bvssbgn4xEiZsMisIFcKKgtP5vijk=;
+	s=arc-20240116; t=1751631342; c=relaxed/simple;
+	bh=JTF27XEasyApS1nP/vyqUwBctBYmx+jAOL8SGdjCGlg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P+6pSwIttWZtlm/vyngKdt/aKt0MwvdJ2Wcg53iWJLfa2XFkvt8lO6HpkgJ3CNnBXqID5w3NqVkUhHer8cajBPioozc/FlfH0XBnMT6OD/rIxjEpsLSauWYw1/gUvDRDPAiASKmUCNcZmXug18AWPOsTMKacFXHWihwD1bh0x5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J8Q8TmlB; arc=none smtp.client-ip=209.85.167.54
+	 To:Cc:Content-Type; b=NL7l+yFVRQb1BgGZMsHp3uVnwSiD5n9SrHdGay1ZhpI/CgRdgbMBBHlE8HlLHPviBx8Dptf+UfJ9Yz67PCzQtAAFqzusmrnZ/e3/RvI/moigWE8pvyO5IpnO5GtzYpNs3ldhQ9OzYHkstpxdvtHnOQ5aI8J9A83zcOZ5TCivKDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FkL/oiQn; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553d771435fso789019e87.3;
-        Fri, 04 Jul 2025 04:59:05 -0700 (PDT)
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-31384c8ba66so182827a91.1;
+        Fri, 04 Jul 2025 05:15:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751630344; x=1752235144; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751631340; x=1752236140; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AX2ezheHMTwCnwKIKFQeSSolcoT52guQ9m4zT7OdyqQ=;
-        b=J8Q8TmlBsCAnNvuLXd+nap/CgBFWqpDBEP+BQFK8kfJVt/SG7pq54DDshk6MoHesgU
-         rS9VfbAkXbDt2N7xXhU38UoN7BO0ZBek9f7XZUIGzwuYf5Di2jNfuHSDAAnT4TfWIhcs
-         2gWA1XrcA/6r7UB9qmojI2uJnr9j9R90j3PxqWshV7utJVFDgpMQuyJ6amiTfPYxun3D
-         Pe1XP3CbCC63EVN5mBL1/fCOVJY8hKcRrbWBz4upM3yPtwO9KVt+8AhnshRN2CfHrxvs
-         Lbt5CX0sOKU7CedjMBu2KTqXc3F0cz8RdqYzFrzaKGd5+OcOiLSzMCAJAl4AZwkGll63
-         lrPg==
+        bh=JTF27XEasyApS1nP/vyqUwBctBYmx+jAOL8SGdjCGlg=;
+        b=FkL/oiQn8+kDzCgydhCMh5sbMGoAsteUYk0dlyafVM7AHP9G9qtvyNA+b5ZmYPhuYG
+         btN0M8+zOmqF9cPCrU9a1ac3jvrmlw6EFNAb3eyT3r2dyEV2Vjy2wAOOmvIJ6GT2aSUE
+         HUH0gxOZ6Gf6qt8/PbMPZec5hIaLtPEmW1Asz77y1GlguvaoCO7LQfqdi8vIDv9i49W9
+         6tS2tB8y658AYEyL2hD+AMIKmnGT+hHua06VDa1CCaIJjL2V1iB9pcTVm0ENqZem1YSt
+         AiD4AYqdEtmXEjEiPI0gpIjaPKoBSx7y/UOYwAr702Z9eIQfEw413Eh5y5ix5DQcTF48
+         YXpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751630344; x=1752235144;
+        d=1e100.net; s=20230601; t=1751631340; x=1752236140;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AX2ezheHMTwCnwKIKFQeSSolcoT52guQ9m4zT7OdyqQ=;
-        b=GrJOHzdRUuwodT5uwbxzJvv5XmFBA/HZVmjpxEDOnCMLqq9KVYs5HbXkXsSTeAPQSs
-         qDugqM2DVtrQikleNpJSiMah825CoBpbdeRd5y+FziesbMa4isQmbUSpm8CDqn5qJPlJ
-         fS/ng2Bw0jP9iNlatvreupVKCOVgX0LfJ+1lDHfi5BMGNNF9MeuqllpZgGXZnuKR2w4c
-         YYKaWU4GPTi7RVuqWjnZEjhPdloNMPazIA9IPktAw9ni2LQE56vMXBAdJicTV1OBq3lf
-         QwS6XyTyK/E4f4yP+Lq1+cURwhrGgCgRyRQ4hlI7M75XyZKrJUs0bOzRFwsHYegWwirg
-         EiYg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/xd6Mz7mx8bF8/3Cqqb+nKuh57hu3c9Hf23AfawPmfSH525LGqIBNffzCDkPCPlwvUHvJbfMXvF5a4L9QHrrz@vger.kernel.org, AJvYcCU3tdV2S/RiI759OTqYBhQdPn/oHXoqB7iYzCsVpVLLza9cYkiGRSHTStFNyD7thhwJTwtQ4M+p@vger.kernel.org, AJvYcCUUsCf88rrXXnKhvyymItrsyROOl65AZr9g3+freHphQDkR4Hb45h5EeI/8NFkQIFZUiV4zr+aJ2ahazovR@vger.kernel.org, AJvYcCW3Uc2/96AgEBtZYlgBj/bFFhpclOB/1jMIgMJlUDt1NrMTW+HzVwtWPohbyYygUbH+HVAArHyge8QQ@vger.kernel.org, AJvYcCWGzo5Io1lAy2bZ0A4l1hzEMkQkC80kB7n3Oorrsq5kEzu5w5J1H8TmGHCK88CFluxZfDUdhVU2bF5l@vger.kernel.org, AJvYcCX4h36/cAOeUvtqEGw7G5upkRJF13s70pmQgbinL7T0dyTLrMFCzC0c2aBfTrQkXgoD4sCEoQEf6kS7@vger.kernel.org, AJvYcCXC/vZdZJTQRJz3DQl3LDcAeJ7pI5grAtBxFuxEcKlv0eCynBvi+jX9E7c2MaRBpy0jTfqQCwcZ/1I=@vger.kernel.org, AJvYcCXYz+s26BOgYVlQis0ehY0FFS9hJ7LhdFueciGkGH7Pl76HGlMwZOXfm5zVfNDMwbRMGsMZwhHxEFdTOM11uL8=@vger.kernel.org, AJvYcCXcdmdE8a7w/Q6NGLNH5phgPPn7iviKvvfA+ss/LXbBIGeZMyjVXhSai2AmirG0i8O2xAbhm3lA7FawWnM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBaT7HMo3b2Zg56BiRTlg8Fbx6vpMkv5BTlDXnH2C5X6Jn3M2x
-	dmm248BcHVItzCWnDz6eHyWCIG6I5fdQpo8Q8Eluh0Q01ROco7fQ8FSDx5A5HWpztCZCO4tqrkB
-	zVC+OhCTna7HHdYJam4DBK0cwl+XP5+w=
-X-Gm-Gg: ASbGnctTj8nlyefRwWrRTsIgz3JYgQlXaXHk46wVBVv3NFAFwox9JrMC5eQTDi7s6nt
-	8jWCcTUwyrlevDFa+YiUgTRkSRlyU+JgDgIQzIGpMITLpkwa+6QsTjSC/wF/m4FNo6BGw4d2Xyp
-	qlLpgvnqy30G+2Nv67ZNogi7BGASEHkcCKNpM/oN5mX+4a2LN88YCdh3DAaSGGQvQKurG/J9msX
-	IQwfA==
-X-Google-Smtp-Source: AGHT+IFprJqElpi5vcjeJ23fLLN3WMzZLZ0CrkVny13pfXY112X2yXfPm/SOjbYZcibT+i59JoBTBmJ65qELc434iFo=
-X-Received: by 2002:a05:6512:2528:b0:553:2868:635c with SMTP id
- 2adb3069b0e04-556e60879d0mr712367e87.48.1751630343665; Fri, 04 Jul 2025
- 04:59:03 -0700 (PDT)
+        bh=JTF27XEasyApS1nP/vyqUwBctBYmx+jAOL8SGdjCGlg=;
+        b=YWUqONY+M4kOA+9r50ACx58YgRTlRinicAHf8X0f4KGsQjIDIgvk7tKVfRq+/PcOdH
+         pt44pNcWGu97lpEJkrfup6ix1kq+Qf7eWn91kVf2RMwB0mg1SbzC6HlmrMYGpvdvi7oh
+         x+1l7UJp6uxkAy/5LhLYSO7rHWF35CswHIVhSigVx2POm1SlNM9B5StyQVAvUuP8kkza
+         Oab5FVwwvLAY7jbRLc7Ce5MuovN29zX1CFxpVvVdHkjsTQPcpPqjc4NCYPuEeWBZEE05
+         lhr3HI96paYXAos6IZcSI+O7FLtdcWPho0z1yD7+Qc9k0kyYST78NQPkOcpxci6pkN6k
+         G28Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUA5w0bp25swTMAFZAqa/uWiBK2n3SG+SMfu9a9EEXAW3vFUkuJEBxTAcO9Z+sxmRzW4gkJe4F1PakCfveUu/t4@vger.kernel.org, AJvYcCULTCGDRt/g9EJpzcCocZSpwrVzr2qyjAaIORtvq2aJfDqVHWPkiSr6ev9Oe1u4q3D7UEqcnTIndblR@vger.kernel.org, AJvYcCUVYUxGDzu3pydous8AWgd/Yz7tUWbLovRP5yIlxGacscbuEXM5i2Kc+1NFetlYPyhFjYNz+NKzWxTtPnhmDLU=@vger.kernel.org, AJvYcCV5rfhRSK+7tZ5uEa7GllVDRRNqMpwBhUq5QpX+tG/cOb5fDFUhL0hdJktGfZ7xRfPP3Vwe8BluBZJPg5/z@vger.kernel.org, AJvYcCVVX7SksVdlWxNBWf8Pe2Xedp4gX4Jm1yHfE7yT9Akkv+LsF4ArtrOvVUAVjGzBXrwiylLKWdVgte0lWuE=@vger.kernel.org, AJvYcCVm0PakMMXiIEh0J/5cCkr2UBGCA+oKRIFkYtWeoQGliwWNTsdWYD2qDfHwc2UfRbcOffXD4Rhp0Hrn@vger.kernel.org, AJvYcCWBkTTxzoWvSb0mcTIQWCKtMEmUPy8bEWv6tmSHpQZ6za0ZPGyqCWbBIeaxYGwWcahJ+lNJHAVt@vger.kernel.org, AJvYcCWDZIZPVYMRSfwTd1+BBCJ9dVrORSOAoBSUqr6kM6wRf7fseXVtn4kd+o1+KRQZZHDzoKUOxY6LozDB@vger.kernel.org, AJvYcCXU9tsEYqJf49QNExAc1cixFf7Jl4Gv+viM3YGx2xHIw6nwBGzXOSbQ3vTSjVrsmocu1VLlH/hcasw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx3zZNgIxKQeRJhPDlbzog2V22j+I9G3ITwE9Z97eeIjLbYleB
+	3v7qgSHH9mMA57X4vWQTmQqEf6TYPUwzKSfo54m+IeUfE41o9Y9mAu1WM/CsvfTjBz1Bp+8UIHt
+	H+KZ32lTGsguApOsZnLbkZHmPxSLhuqA=
+X-Gm-Gg: ASbGnctWCCOJRA/sRvPxlzm1wtu+hxwSfqBtOSJsSIIygEYHpKQVJnzFaBvi41c3a+3
+	yKi/+EozAhwOGcsc3/EJD+1BF21hi0l/O4g5IVFiJdutgcSjgebo+f/lkO4ZX+kuMX3EnOqx+CA
+	yh9ynqZdAYg6iGNhALsoZTkbVq1oDqZmCp4v5ftwKpiaY=
+X-Google-Smtp-Source: AGHT+IGMzjCKsb3QoFjzETIEVKGlrEiZLPHE+Z9w68l6rNpjdGz0kB0KwvlouvJt/ly+yLKAz3cW4FDCb2lbzAAjjzI=
+X-Received: by 2002:a17:90b:3fc3:b0:311:a314:c2c9 with SMTP id
+ 98e67ed59e1d1-31aac44a149mr1478613a91.1.1751631340480; Fri, 04 Jul 2025
+ 05:15:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,17 +79,19 @@ References: <20250701-cstr-core-v13-0-29f7d3eb97a6@gmail.com>
  <CAJ-ks9nC=AyBPXRY3nJ0NuZvjFskzMcOkVNrBEfXD2hZ5uRntQ@mail.gmail.com>
  <DB2IJ9HBIM0W.3N0JVGKX558QI@kernel.org> <CAJ-ks9nF5+m+_bn0Pzi9yU0pw0TyN7Fs4x--mQ4ygyHz4A6hzg@mail.gmail.com>
  <DB2PIGAQHCJR.3BF8ZHECYH3KB@kernel.org> <CAJ-ks9=WmuXLJ6KkMEOP2jTvM_YBJO10SNsq0DU2J+_d4jp7qw@mail.gmail.com>
- <CAJ-ks9kNiOgPO7FF3cAbaSNtTWs0_PzQ4k4W0AxjHNFuMJnDcQ@mail.gmail.com> <DB36T5JWBL10.2F56EDJ1XKAD0@kernel.org>
-In-Reply-To: <DB36T5JWBL10.2F56EDJ1XKAD0@kernel.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 4 Jul 2025 07:58:27 -0400
-X-Gm-Features: Ac12FXwwR0QTbVNjts9p85kYh4knK1uvCt11R29enEo0nBiKI492OfZj839T-II
-Message-ID: <CAJ-ks9=Jutg+UAwCVER_X91BGxWzmVq=OdStDgLZjTyMQSEX6Q@mail.gmail.com>
+ <CAJ-ks9kNiOgPO7FF3cAbaSNtTWs0_PzQ4k4W0AxjHNFuMJnDcQ@mail.gmail.com>
+ <DB36T5JWBL10.2F56EDJ1XKAD0@kernel.org> <CAJ-ks9=Jutg+UAwCVER_X91BGxWzmVq=OdStDgLZjTyMQSEX6Q@mail.gmail.com>
+In-Reply-To: <CAJ-ks9=Jutg+UAwCVER_X91BGxWzmVq=OdStDgLZjTyMQSEX6Q@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 4 Jul 2025 14:15:26 +0200
+X-Gm-Features: Ac12FXzPtonKP26H72mazeNQheIxGcJYasTsJs3cNwtUf90Sdk9qUBYY8YzvhN4
+Message-ID: <CANiq72nZhgpbWOD4Evy-qw2J=G=RY4Hsoq9_rj6HGWMQW=2kTw@mail.gmail.com>
 Subject: Re: [PATCH v13 2/5] rust: support formatting of foreign types
-To: Benno Lossin <lossin@kernel.org>
-Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Benno Lossin <lossin@kernel.org>, Michal Rostecki <vadorovsky@protonmail.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
 	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
 	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
 	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
@@ -122,65 +123,15 @@ Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 4, 2025 at 6:09=E2=80=AFAM Benno Lossin <lossin@kernel.org> wro=
-te:
+On Fri, Jul 4, 2025 at 1:59=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
+wrote:
 >
-> On Fri Jul 4, 2025 at 1:23 AM CEST, Tamir Duberstein wrote:
-> > On Thu, Jul 3, 2025 at 6:41=E2=80=AFPM Tamir Duberstein <tamird@gmail.c=
-om> wrote:
-> >> On Thu, Jul 3, 2025 at 4:36=E2=80=AFPM Benno Lossin <lossin@kernel.org=
-> wrote:
-> >> >
-> >> > I don't understand, can't you just do:
-> >> >
-> >> > * add `rust/kernel/fmt.rs`,
-> >> > * add `rust/macros/fmt.rs`,
-> >> > * change all occurrences of `core::fmt` to `kernel::fmt` and
-> >> >   `format_args!` to `fmt!`.
-> >>
-> >> Yes, such a split could be done - I will do so in the next spin
-> >>
-> >>
-> >> > The last one could be split by subsystem, no? Some subsystems might
-> >> > interact and thus need simultaneous splitting, but there should be s=
-ome
-> >> > independent ones.
-> >>
-> >> Yes, it probably can. As you say, some subsystems might interact - the
-> >> claimed benefit of doing this subsystem-by-subsystem split is that it
-> >> avoids conflicts with ongoing work that will conflict with a large
-> >> patch, but this is also the downside; if ongoing work changes the set
-> >> of interactions between subsystems then a maintainer may find
-> >> themselves unable to emit the log message they want (because one
-> >> subsystem is using kernel::fmt while another is still on core::fmt).
-> >
-> > I gave this a try. I ran into the problem that `format_args!` (and,
-> > after this patch, `fmt!`) is at the center of `print_macro!`, which
-> > itself underpins various other formatting macros. This means we'd have
-> > to bifurcate the formatting infrastructure to support an incremental
-> > migration. That's quite a bit of code, and likely quite a mess in the
-> > resulting git history -- and that's setting aside the toil required to
-> > figure out the correct combinations of subsystems that must migrate
-> > together.
->
-> So here is what we can do without duplicating the logic, though it
-> requires multiple cycles:
->
-> 1. We merge the two `fmt.rs` files & each subsystem merges an
->    implementation of `kernel::fmt::Display` for their types, but keeps
->    the `core::fmt::Display` impl around.
-> 2. After all subsystems have merged the previous step, we change the
->    implementations of `print_macro!` to use `fmt!` instead of
->    `format_args!`.
-> 3. We remove all occurrences of `core::fmt` (& replace them with
->    `kernel::fmt`), removing the `core::fmt::Display` impls.
+> That would probably work. We will probably see regressions because we
+> can't just replace `core::fmt` imports with `kernel::fmt`, so new code
+> may appear that uses the former.
 
-That would probably work. We will probably see regressions because we
-can't just replace `core::fmt` imports with `kernel::fmt`, so new code
-may appear that uses the former.
+That is fine -- it happens all the time with this sort of approach.
 
-I think this discussion would be productive on the next spin. The
-changes in other subsystems are now almost entirely changing of import
-paths -- perhaps that would be sufficiently uncontroversial for folks
-to give their Acked-bys.
+Cheers,
+Miguel
 
