@@ -1,210 +1,207 @@
-Return-Path: <linux-pci+bounces-31498-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31499-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22310AF8644
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 06:12:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 402A0AF8649
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 06:12:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C3E0F7BA940
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 04:10:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 87BDE566B09
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 04:12:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9220A1FE474;
-	Fri,  4 Jul 2025 04:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABA661F099C;
+	Fri,  4 Jul 2025 04:11:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QaHmfEhh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PVToCK/F"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FDB1FDE39;
-	Fri,  4 Jul 2025 04:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9561F09B3
+	for <linux-pci@vger.kernel.org>; Fri,  4 Jul 2025 04:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751602256; cv=none; b=SgnZwyVcU8XigBUI0m8tPzpYJzDofEK4xFOPtCfQ7MkRbb1zsp5m7bfplYABE7HI6z8KX5/vgv1N1UiaTdqbG9HsSbn9Cy1rkGNxroqk77VMY6CXJuJsFpkjNjvNmS5Abbe1a8MwXWmYSkqBw1inFItQw9j4/yL/BfNcl63FZf8=
+	t=1751602266; cv=none; b=lhg8r+6Udw20QGN0aI9VclFUjXg+H21suzpxeqD6CWPRaabnwyuG5ikGuvlHExPMsRwv2w9dryAT1m0I9b6yxwuotv2XdO0d3dxoFaUvdRp1/R2oU5PRAwwho2K+aqDU66cYljnejsbgWE5Fvj8Q8oR1WUdlbzNZlYPTP23RLsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751602256; c=relaxed/simple;
-	bh=FtCvNYjLrE6/jIO6wT2KtwY4Dg2KTonsKpTSVZl93iE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ppCoFatoKQ/DLL8sGPd53wEwODWuB4oFV7Hd68MQ0hXZFTXuovd2WbCvLGmWTq1I2myR9rYU1JW06ZOk7X3hwiYCadCw+oBjXesrHLhK+UJc6GAp63nczIXc/9baDmXspNzJmbJ1MCGgDGQLzcGtuIvqCOP2DOm2YfMglrIEMjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QaHmfEhh; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b170c99aa49so378779a12.1;
-        Thu, 03 Jul 2025 21:10:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751602254; x=1752207054; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8YC19N8gX3c+UCcVBsZb/0sncBuBKOFkHCNQT4MJHZw=;
-        b=QaHmfEhhe7u1O0BlIi4qDFK7I2JgXwJ8pV9oIkEIJ3eje8fuyPLCtfWkUZEkOMjJ2a
-         tX+XHhvalhu7fWSJTDIG+oJ7bMArSOdJ+hqqNai0KQAgD/g18QA/Vk+OURtcZ67LN3hB
-         dSZW1bXxiKEtdPEQYyahbXSuxw3YMxJ77OMzcNe9jRCq7cr/RRhaWoh1xYPbye9iaweo
-         eNo6ab5WN4ic/BTS9/mpGWiAu9j2swWCx5uNrF0N5Fsx2vIlCLpyMFq3gXHk6Yd2kHvi
-         EHQXCbTQbxdM/6+fG8rdgyukig2qxu/ygYLYu/0gK/YYEoHlJN9HZHylEQw7z+diRj7R
-         YQ3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751602254; x=1752207054;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8YC19N8gX3c+UCcVBsZb/0sncBuBKOFkHCNQT4MJHZw=;
-        b=C05ffqgHm+u+8xRL3KhjFe/W0OKggHWI3tfP9rIve5StJ07AXbmAzXf9eyL0OXf0gv
-         DPvUeJvg9MTgBHNWvn2RW+J6uCdd1Lu6s0pbH3jwbT2ZqHnwTaLwK3vzZku0noWmlCu/
-         yDJSnTpQDPCVupO0tM3KOjNtF6SbEFcYUQ5U1bzz4A0jX+K1E6lF2f41UFZM6Z4Z3sIo
-         C3E1geISr+PzfeA02xWFWV+aU8FIKqyz0IBy2Tb9Q/TyMl2vXSLyESbPmHDk6ku7O3HC
-         cE0GnT2McEMcVpb7nQBY3Nbp9G0Vx+LLR911zIVJyp4svWlJxW3PT1yKCHP3J178pl1M
-         EWbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUE7sy3xD150QFEHyYlgOBG4ECfesMnpFpTcWah0AMwruMkwVJeG7CoFv+4PJ/jwfTMnZbu1/W3O5QJk02MA/Q=@vger.kernel.org, AJvYcCVEs+nk4ZKnsNLrm2UaiPIqq65FHD8tk710RXHY7NzyBKrQiAPVosqEQ3vZviRnVXc0mx7DukDujE0bAG8L@vger.kernel.org, AJvYcCVI+UPvvBVff4ZUtH5kAhneS7lF6RydNL6HMlijJMeYfUB3dIqbo7Pb5UWrYPmOudOozXKskYyflztH@vger.kernel.org, AJvYcCVgBSlsybNRPZX3XBwlLS7uuAQeWlBmgijUFjCyebpMmtFjCNTfd9KCaJczT5LZ40gGoA+rrRRt@vger.kernel.org, AJvYcCXvBAYm2G3bCKATXCYxJ0Z3PhM4sc7iY7M2w06hdrMHDUjfWPc/2s2zL1VuJmE6+rk55qTFQCIT4mrm@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywtt8VtfTykkaEkUiE0NS4PuSABOpS/KHp9xsB9Moly4P9jBi3d
-	uN6bx/eCMCAN+H/GVtEdUEM9OXVOag/xW+JHwyHdQ4+PaGn/eQUodiOc
-X-Gm-Gg: ASbGncsKVvUgo92xXQzQNEaOJ7+4nTOhNeV/ExiIuDVrYtOZ5jc8dPko38f9R2C5cqH
-	Yucb8BXh3SdPRlQePRbG/4URtl4VmYectmlqy5tfYkG6hYOPwCpFMeNB+9L9YbFlw6W0eruTWpt
-	x+ao46rXmlpuyl9qmh+u1N7QoG4KIjjkY9M6ijYN7VE9+3rtpAwszgqF/bhOgBBES6VU9ilIzBj
-	SCqCmi9CNSVF5dRxDWDaqSjUx0vSeKLrNm/V42QQkBDFjhE6RAiluu/5VWztyINJHHXpIYBZ1np
-	8gayne3Hupjug+5Wr3DPsmmNWSBeXNYkthfHjKNIrn46p4QDPanVjZ128hXOas/he9CuV1usLVv
-	h0lLMBAoRgClxIo5PyPtXNlAWYsXEgVp/XkJxcciba+nnHQ==
-X-Google-Smtp-Source: AGHT+IE9LQuB7/Ap+rO08DMf7bb/ZRItBTKRcsr4ZNEKUs8oyTf5BtUNy7POz2MF7hdmGjfi5+UDdA==
-X-Received: by 2002:a05:6a20:7352:b0:21f:50d9:dde with SMTP id adf61e73a8af0-225be6e38d2mr1817202637.5.1751602254128;
-        Thu, 03 Jul 2025 21:10:54 -0700 (PDT)
-Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce35ccb9esm1055290b3a.50.2025.07.03.21.10.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 21:10:53 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: alex.gaynor@gmail.com,
-	dakr@kernel.org,
-	gregkh@linuxfoundation.org,
-	ojeda@kernel.org,
-	rafael@kernel.org,
-	robh@kernel.org,
-	saravanak@google.com
-Cc: a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	bhelgaas@google.com,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	david.m.ertman@intel.com,
-	devicetree@vger.kernel.org,
-	gary@garyguo.net,
-	ira.weiny@intel.com,
-	kwilczynski@kernel.org,
-	leon@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lossin@kernel.org,
-	netdev@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu
-Subject: [PATCH v3 3/3] rust: net::phy Change module_phy_driver macro to use module_device_table macro
-Date: Fri,  4 Jul 2025 13:10:03 +0900
-Message-ID: <20250704041003.734033-4-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250704041003.734033-1-fujita.tomonori@gmail.com>
-References: <20250704041003.734033-1-fujita.tomonori@gmail.com>
+	s=arc-20240116; t=1751602266; c=relaxed/simple;
+	bh=8VDbFwMJqJtKrLvK76WlGVYTuI1un+ocu9HseLnAWYM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=nQooS4WHRYUJf+EjGZ7vercs+ZAxl1TGTB2NXmRK7NbKELAIG6N0dv3m6Y+1jmg+q418UGrEhgnvqYucFBFGz/RzkFBO+w7kaPHC6pfxfCWBMHl189Ccyw/x5Dc7ohnLzRVVHLtJlhEp1EEA0sJNGzeOMx2d8/gitzSux6yoFIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PVToCK/F; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751602265; x=1783138265;
+  h=date:from:to:cc:subject:message-id;
+  bh=8VDbFwMJqJtKrLvK76WlGVYTuI1un+ocu9HseLnAWYM=;
+  b=PVToCK/FjKzn/k4ZS0WplTieD7M5patgpigeY/v9KtbiTb0CHYirArqQ
+   ZZvKp9Q1cJDM5QBl75jVe/MWoIuKAVITjNnXv9bW9/3rJTNPm0TIswj9A
+   4uFUNgzzOdKWwrYBYD+655X7j9a69IvDkIWVWK27fAvi7HcgU69dpghXu
+   SkOn8AFM0GJYsohsYwAQ5+bRpILNW3Rywcgu1pur2jinErxSE0jWNm9Ex
+   3fL8LmJt7ReajLlk9PMRD/iFGgss4yRNfxfBJl8m7QChpvk3emaWjpQLJ
+   rPFJ7t77lgNRKdJBLmbvLjnPnHp5RWkGPehsilk748Si4HSirRXcDGYQ4
+   Q==;
+X-CSE-ConnectionGUID: wWL9FATHTfasbGVvz8fCiQ==
+X-CSE-MsgGUID: ebRp5DrPRIiKhQBkdsyX1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="57709380"
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="57709380"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 21:11:05 -0700
+X-CSE-ConnectionGUID: AoRbpc4LTUmg9/oS+4jEVw==
+X-CSE-MsgGUID: wZUu36S8TbeeyMV5VCrEHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
+   d="scan'208";a="159099884"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 03 Jul 2025 21:11:03 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXXlN-0003Ju-19;
+	Fri, 04 Jul 2025 04:11:01 +0000
+Date: Fri, 04 Jul 2025 12:10:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/qcom] BUILD SUCCESS
+ 9e09ecef33e6f1019be921732cc2d7bd945202d8
+Message-ID: <202507041211.DhFupIb3-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Change module_phy_driver macro to build device tables which are
-exported to userspace by using module_device_table macro.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom
+branch HEAD: 9e09ecef33e6f1019be921732cc2d7bd945202d8  PCI: qcom: Add support for parsing the new Root Port binding
 
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
- rust/kernel/net/phy.rs | 51 ++++++++++++++++++++----------------------
- 1 file changed, 24 insertions(+), 27 deletions(-)
+elapsed time: 1169m
 
-diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-index 940972ffadae..338451a067fa 100644
---- a/rust/kernel/net/phy.rs
-+++ b/rust/kernel/net/phy.rs
-@@ -6,7 +6,7 @@
- //!
- //! C headers: [`include/linux/phy.h`](srctree/include/linux/phy.h).
- 
--use crate::{error::*, prelude::*, types::Opaque};
-+use crate::{device_id::RawDeviceId, error::*, prelude::*, types::Opaque};
- use core::{marker::PhantomData, ptr::addr_of_mut};
- 
- pub mod reg;
-@@ -750,6 +750,12 @@ pub const fn mdio_device_id(&self) -> bindings::mdio_device_id {
-     }
- }
- 
-+// SAFETY: `DeviceId` is a `#[repr(transparent)]` wrapper of `struct mdio_device_id`
-+// and does not add additional invariants, so it's safe to transmute to `RawType`.
-+unsafe impl RawDeviceId for DeviceId {
-+    type RawType = bindings::mdio_device_id;
-+}
-+
- enum DeviceMask {
-     Exact,
-     Model,
-@@ -850,19 +856,18 @@ const fn as_int(&self) -> u32 {
- ///     }
- /// };
- ///
--/// const _DEVICE_TABLE: [::kernel::bindings::mdio_device_id; 2] = [
--///     ::kernel::bindings::mdio_device_id {
--///         phy_id: 0x00000001,
--///         phy_id_mask: 0xffffffff,
--///     },
--///     ::kernel::bindings::mdio_device_id {
--///         phy_id: 0,
--///         phy_id_mask: 0,
--///     },
--/// ];
--/// #[cfg(MODULE)]
--/// #[no_mangle]
--/// static __mod_device_table__mdio__phydev: [::kernel::bindings::mdio_device_id; 2] = _DEVICE_TABLE;
-+/// const N: usize = 1;
-+///
-+/// const TABLE: ::kernel::device_id::IdArray<::kernel::net::phy::DeviceId, (), N> =
-+///     ::kernel::device_id::IdArray::new_without_index([
-+///         ::kernel::net::phy::DeviceId(
-+///             ::kernel::bindings::mdio_device_id {
-+///                 phy_id: 0x00000001,
-+///                 phy_id_mask: 0xffffffff,
-+///             }),
-+///     ]);
-+///
-+/// ::kernel::module_device_table!("mdio", phydev, TABLE);
- /// ```
- #[macro_export]
- macro_rules! module_phy_driver {
-@@ -873,20 +878,12 @@ macro_rules! module_phy_driver {
-     };
- 
-     (@device_table [$($dev:expr),+]) => {
--        // SAFETY: C will not read off the end of this constant since the last element is zero.
--        const _DEVICE_TABLE: [$crate::bindings::mdio_device_id;
--            $crate::module_phy_driver!(@count_devices $($dev),+) + 1] = [
--            $($dev.mdio_device_id()),+,
--            $crate::bindings::mdio_device_id {
--                phy_id: 0,
--                phy_id_mask: 0
--            }
--        ];
-+        const N: usize = $crate::module_phy_driver!(@count_devices $($dev),+);
-+
-+        const TABLE: $crate::device_id::IdArray<$crate::net::phy::DeviceId, (), N> =
-+            $crate::device_id::IdArray::new_without_index([ $(($dev,())),+, ]);
- 
--        #[cfg(MODULE)]
--        #[no_mangle]
--        static __mod_device_table__mdio__phydev: [$crate::bindings::mdio_device_id;
--            $crate::module_phy_driver!(@count_devices $($dev),+) + 1] = _DEVICE_TABLE;
-+        $crate::module_device_table!("mdio", phydev, TABLE);
-     };
- 
-     (drivers: [$($driver:ident),+ $(,)?], device_table: [$($dev:expr),+ $(,)?], $($f:tt)*) => {
--- 
-2.43.0
+configs tested: 114
+configs skipped: 12
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                   randconfig-001-20250703    gcc-11.5.0
+arc                   randconfig-002-20250703    gcc-12.4.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-15.1.0
+arm                   randconfig-001-20250703    clang-21
+arm                   randconfig-002-20250703    gcc-8.5.0
+arm                   randconfig-003-20250703    clang-17
+arm                   randconfig-004-20250703    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250703    clang-21
+arm64                 randconfig-002-20250703    gcc-14.3.0
+arm64                 randconfig-003-20250703    clang-21
+arm64                 randconfig-004-20250703    gcc-8.5.0
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250703    gcc-14.3.0
+csky                  randconfig-002-20250703    gcc-12.4.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250703    clang-21
+hexagon               randconfig-002-20250703    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250703    clang-20
+i386        buildonly-randconfig-002-20250703    gcc-12
+i386        buildonly-randconfig-003-20250703    gcc-12
+i386        buildonly-randconfig-004-20250703    clang-20
+i386        buildonly-randconfig-005-20250703    gcc-12
+i386        buildonly-randconfig-006-20250703    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-21
+loongarch             randconfig-001-20250703    clang-18
+loongarch             randconfig-002-20250703    clang-18
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250703    gcc-8.5.0
+nios2                 randconfig-002-20250703    gcc-8.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250703    gcc-8.5.0
+parisc                randconfig-002-20250703    gcc-8.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc               randconfig-001-20250703    gcc-10.5.0
+powerpc               randconfig-002-20250703    clang-21
+powerpc               randconfig-003-20250703    gcc-8.5.0
+powerpc64             randconfig-001-20250703    clang-18
+powerpc64             randconfig-002-20250703    clang-21
+powerpc64             randconfig-003-20250703    gcc-14.3.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250703    gcc-13.4.0
+riscv                 randconfig-002-20250703    gcc-14.3.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250703    gcc-12.4.0
+s390                  randconfig-002-20250703    clang-21
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                    randconfig-001-20250703    gcc-9.3.0
+sh                    randconfig-002-20250703    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250703    gcc-8.5.0
+sparc                 randconfig-002-20250703    gcc-13.4.0
+sparc64               randconfig-001-20250703    gcc-8.5.0
+sparc64               randconfig-002-20250703    clang-20
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250703    gcc-12
+um                    randconfig-002-20250703    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250703    gcc-11
+x86_64      buildonly-randconfig-002-20250703    gcc-12
+x86_64      buildonly-randconfig-003-20250703    clang-20
+x86_64      buildonly-randconfig-004-20250703    clang-20
+x86_64      buildonly-randconfig-005-20250703    gcc-12
+x86_64      buildonly-randconfig-006-20250703    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250703    gcc-14.3.0
+xtensa                randconfig-002-20250703    gcc-8.5.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
