@@ -1,78 +1,87 @@
-Return-Path: <linux-pci+bounces-31530-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31531-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29A61AF93B8
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 15:09:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6609FAF947F
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 15:44:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B35958553A
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 13:09:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6BE241CA7E66
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 13:44:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11A772F9494;
-	Fri,  4 Jul 2025 13:09:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 845243074B2;
+	Fri,  4 Jul 2025 13:43:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tGy7O1TW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y9yeLqe6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92FF2F7D1A
-	for <linux-pci@vger.kernel.org>; Fri,  4 Jul 2025 13:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44C9307489;
+	Fri,  4 Jul 2025 13:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751634564; cv=none; b=KLp+ZdWRYBdaz9KPveVnaQx/KIWd+CyNDVkU8yqUZN6F8j+CYFmdn7yf21+5lj/8RAVjv0M1U+PcIUJdBvf2sKzL8YvV3QxmGl6ffJ39bf8MI1A61e/FsKXwd041lTkZeWOO1Xlc2+PQ9n8GmvuSCdIatwUYO/Iqss3LVaM2UBM=
+	t=1751636636; cv=none; b=aJG7rfO3IBXMu7upV0MHIRlVYZIaIn8ncRkUjmg9QdmEMW6fNcYYhqq7zsMco9vK1DSNwufI0U2BTuJ6soQPEbkAu2meB7uZaqZaC7LN+9jhcmlg5LveThtzWtlFy+TFswSB6coWAdnU5EHbBLur4iH/wBTuEvi5BWleDEVHW80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751634564; c=relaxed/simple;
-	bh=7ZXkeb6eFkBOPADQFZ6Ugr+b8t74NHRMQP7v0mRURjs=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=ZGSLu6K+RQtSjF15TgB84YAzCWtSMW+q5nWVZtddHwW0nRTDHj4ixT35sXvpLdKvRUkoR8+T53fcvksWSdNDYuomcJzWp2PZjn6Zb5VrQwRZ1DzQxm5sadU/Wnw9OUQ8wEEqz9SEJuoYmXJpbfNbPqpCHdNR/h2TVVGKK2S2Iq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tGy7O1TW; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250704130920epoutp0123b58c8fd2d7b9739cfe39be26966ffd~PDlo70Fu12413724137epoutp01V
-	for <linux-pci@vger.kernel.org>; Fri,  4 Jul 2025 13:09:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250704130920epoutp0123b58c8fd2d7b9739cfe39be26966ffd~PDlo70Fu12413724137epoutp01V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751634560;
-	bh=7ZXkeb6eFkBOPADQFZ6Ugr+b8t74NHRMQP7v0mRURjs=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=tGy7O1TWZRAGFzE9c5zCBfJ0EWJB9ZW168DlwGplfHmJMdkgUweVwdg8Ma0qOU969
-	 owlFoU46WtVhNOXjrual6QCRz/QaeuITxMMQwP4EEnKVB6rxrE9Z3bslWmSbEaCWxw
-	 FgEOg93qp+uo6zw0nVsaku9VYF6FtZbxTtgieNXE=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250704130919epcas5p19ebf1ad617b18e718d49ca531405bd15~PDlna0mq20316103161epcas5p13;
-	Fri,  4 Jul 2025 13:09:19 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.182]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4bYYqx3J2Dz2SSKX; Fri,  4 Jul
-	2025 13:09:17 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250704130916epcas5p2ccff0f947268712a35e5e80977bf5806~PDllQx00_1901719017epcas5p21;
-	Fri,  4 Jul 2025 13:09:16 +0000 (GMT)
-Received: from INBRO001561 (unknown [107.122.12.6]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250704130913epsmtip1efc9beeb49ba18d5c56da5d5c629e5c4~PDligOFVO0201502015epsmtip1b;
-	Fri,  4 Jul 2025 13:09:13 +0000 (GMT)
-From: "Pankaj Dubey" <pankaj.dubey@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, "'Shradha Todi'"
-	<shradha.t@samsung.com>, "'Rob Herring'" <robh@kernel.org>
-Cc: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-	<linux-fsd@tesla.com>, <mani@kernel.org>, <lpieralisi@kernel.org>,
-	<kw@linux.com>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <alim.akhtar@samsung.com>,
-	<vkoul@kernel.org>, <kishon@kernel.org>, <arnd@arndb.de>,
-	<m.szyprowski@samsung.com>, <jh80.chung@samsung.com>
-In-Reply-To: <5ea33054-8a08-4bb3-81e7-d832c53979dc@kernel.org>
-Subject: RE: [PATCH v2 07/10] dt-bindings: phy: Add PHY bindings support for
- FSD SoC
-Date: Fri, 4 Jul 2025 18:39:12 +0530
-Message-ID: <000101dbece4$d8694d80$893be880$@samsung.com>
+	s=arc-20240116; t=1751636636; c=relaxed/simple;
+	bh=KmpX5zxlGsQARhawRN1W4dV47zBrJ2MU4Gpq1Itt2mE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MpGS2wI7ZFfOBwoc+5PY4qp3RBOoZw9lY2NUrN9bpUPx7YKZvbcbJxs4UCMg8Dj1lFw3x8sKFIh8+T1Xl0LK8BQNEjpD4w2KZATT6QvGwPZc5aMni+VjtAyhySVviKAr6Mfhl8QlVQMHOalCb3WeXF85j+hFTEwk2conUmJn7Q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y9yeLqe6; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751636635; x=1783172635;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=KmpX5zxlGsQARhawRN1W4dV47zBrJ2MU4Gpq1Itt2mE=;
+  b=Y9yeLqe6MVlKuwK9w2KkuyWgmqljXZIO8JIQCjtHar6A93uGzi4q1xwd
+   jYIdtzbG5yWxL6fX5GZqdhr4NTk1WbdCEv8cYBYma1XU0DOU8sMX7cTjk
+   NIE4nGumlBGlYmVoA3YBrXZ6/864Hl2UPleC0hS2kxuOgiTI6pJ13/+wr
+   RVP3yeVECMqnOhKw2urlNwJEcCpl4k/tExJukkSHSQDpAH05K4RLLr1Rj
+   BjOYgBmQRcy4DAhioehuyrZBSrUUoK4GUIfyDJNJyNvB8lRr1yK9HP3VY
+   rBsSrZPRzHBADq7bwcL1SDhwDnk9+xC2agr1EWdpdQDi6W+wM5F+9bRsX
+   g==;
+X-CSE-ConnectionGUID: j/z16jrERcqXnCm9ncKNdg==
+X-CSE-MsgGUID: qn7oUZ5MQQ+uZV1HRfZTnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="57745979"
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="57745979"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 06:43:53 -0700
+X-CSE-ConnectionGUID: Xlct5SpASzGOsWnvRo5+Cg==
+X-CSE-MsgGUID: al4pzX24RQSY0KYIv3BFLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="155408398"
+Received: from hrotuna-mobl2.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.112])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 06:43:46 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+ linux-edac@vger.kernel.org,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject:
+ Re: [PATCH 3/3 v4] ACPI: extlog: Trace CPER CXL Protocol Error Section
+Date: Fri, 04 Jul 2025 15:43:43 +0200
+Message-ID: <2114182.IDvDuAF1LB@fdefranc-mobl3>
+In-Reply-To: <20250701140503.00006a48@huawei.com>
+References:
+ <20250623145453.1046660-1-fabio.m.de.francesco@linux.intel.com>
+ <20250623145453.1046660-4-fabio.m.de.francesco@linux.intel.com>
+ <20250701140503.00006a48@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,124 +89,104 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFUClgbainc6hQuKSBO0V8ttZVgkwGg1JXJAfs/ltABn1f9rAD4JQ8bAeFf3fQB1zUu0wGsyVLstNTsxXA=
-Content-Language: en-us
-X-CMS-MailID: 20250704130916epcas5p2ccff0f947268712a35e5e80977bf5806
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-541,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250625165319epcas5p3721c19f6e6b482438c62dd1ef784de03
-References: <20250625165229.3458-1-shradha.t@samsung.com>
-	<CGME20250625165319epcas5p3721c19f6e6b482438c62dd1ef784de03@epcas5p3.samsung.com>
-	<20250625165229.3458-8-shradha.t@samsung.com>
-	<20250627211721.GA153863-robh@kernel.org>
-	<02af01dbea78$24f01310$6ed03930$@samsung.com>
-	<f877b3d7-d770-4424-9813-da748775f456@kernel.org>
-	<02bf01dbea8c$fc835cb0$f58a1610$@samsung.com>
-	<5ea33054-8a08-4bb3-81e7-d832c53979dc@kernel.org>
 
-
-
-> -----Original Message-----
-> From: Krzysztof Kozlowski <krzk=40kernel.org>
-> Sent: Thursday, July 3, 2025 1:48 AM
-> To: Shradha Todi <shradha.t=40samsung.com>; 'Rob Herring'
-> <robh=40kernel.org>
-> Cc: linux-pci=40vger.kernel.org; devicetree=40vger.kernel.org; linux-arm-
-> kernel=40lists.infradead.org; linux-samsung-soc=40vger.kernel.org; linux-
-> kernel=40vger.kernel.org; linux-phy=40lists.infradead.org; linux-fsd=40te=
-sla.com;
-> mani=40kernel.org; lpieralisi=40kernel.org; kw=40linux.com;
-> bhelgaas=40google.com; jingoohan1=40gmail.com; krzk+dt=40kernel.org;
-> conor+dt=40kernel.org; alim.akhtar=40samsung.com; vkoul=40kernel.org;
-> kishon=40kernel.org; arnd=40arndb.de; m.szyprowski=40samsung.com;
-> jh80.chung=40samsung.com; pankaj.dubey=40samsung.com
-> Subject: Re: =5BPATCH v2 07/10=5D dt-bindings: phy: Add PHY bindings supp=
-ort for
-> FSD SoC
+On Tuesday, July 1, 2025 3:05:03=E2=80=AFPM Central European Summer Time Jo=
+nathan Cameron wrote:
+> On Mon, 23 Jun 2025 16:54:20 +0200
+> "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com> wrote:
 >=20
-> On 01/07/2025 15:35, Shradha Todi wrote:
-> >>> does not support auto adaptation so we need to tune the PHYs
-> >>> according to the use case (considering channel loss, etc). This is
-> >>> why we
-> >>
-> >> So not same? Decide. Either it is same or not, cannot be both.
-> >>
-> >> If you mean that some wiring is different on the board, then how does
-> >> it differ in soc thus how it is per-soc property? If these are
-> >> use-cases, then how is even suitable for DT?
-> >>
-> >> I use your Tesla FSD differently and then I exchange DTSI and compatib=
-les?
-> >>
-> >> You are no describing real problem and both binding and your
-> >> explanations are vague and imprecise. Binding tells nothing about it,
-> >> so it is example of skipping important decisions.
-> >>
-> >>> have 2 different SW PHY initialization sequence depending on the
-> >>> instance number. Do you think having different compatible (something
-> >>> like
-> >>> tesla,fsd-pcie-phy0 and tesla,fsd-pcie-phy1) and having phy ID as
-> >>> platform data is okay in this case? I actually took reference from fi=
-les like:
-> >>
-> >> And in different use case on same soc you are going to reverse
-> >> compatibles or instance IDs?
-> >>
-> >
-> > Even though both the PHYs are exactly identical in terms of hardware,
-> > they need to be programmed/initialized/configured differently.
-> >
-> > Sorry for my misuse of the word =22use-case=22. To clarify, these
-> > configurations will always remain the same for FSD SoC even if you use =
-it
-> differently.
-> >
-> > I will use different compatibles for them as I understand that it is
-> > the best option.
+> > When Firmware First is enabled, BIOS handles errors first and then it m=
+akes
+> > them available to the kernel via the Common Platform Error Record (CPER)
+> > sections (UEFI 2.10 Appendix N). Linux parses the CPER sections via one=
+ of
+> > two similar paths, either ELOG or GHES. The errors managed by ELOG are
+> > signaled to the BIOS by the I/O Machine Check Architecture (I/O MCA).
+> >=20
+> > Currently, ELOG and GHES show some inconsistencies in how they report to
+> > userspace via trace events.
+> >=20
+> > Therefore, make the two mentioned paths act similarly by tracing the CP=
+ER
+> > CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13).
+> >=20
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@lin=
+ux.intel.com>
+> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
+com>
+> > ---
+> >  drivers/acpi/acpi_extlog.c | 62 ++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/core/ras.c     |  6 ++++
+> >  include/cxl/event.h        |  2 ++
+> >  3 files changed, 70 insertions(+)
+> >=20
+> > diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+> > index cefe8d2d8affc..9a37b08aacfea 100644
+> > --- a/drivers/acpi/acpi_extlog.c
+> > +++ b/drivers/acpi/acpi_extlog.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/ratelimit.h>
+> >  #include <linux/edac.h>
+> >  #include <linux/ras.h>
+> > +#include <cxl/event.h>
+> >  #include <acpi/ghes.h>
+> >  #include <asm/cpu.h>
+> >  #include <asm/mce.h>
+> > @@ -160,6 +161,60 @@ static void extlog_print_pcie(struct cper_sec_pcie=
+ *pcie_err,
+> >  	pci_dev_put(pdev);
+> >  }
+> > =20
+> > +static void
+> > +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
+> > +				int severity)
+> > +{
+> > +	struct cxl_cper_prot_err_work_data wd;
+> > +	u8 *dvsec_start, *cap_start;
 >=20
-> I still do not see the difference in hardware explained.
 >=20
-
-Hi Krzysztof=20
-
-Let me add more details and see if that makes sense to understand the inten=
-tion
-behind the current design of the PHY driver.
-
-In FSD SoC, the two PHY instances, although having identical hardware desig=
-n and
-register maps, are placed in different locations (Placement and routing) in=
-side the
-SoC and have distinct PHY-to-Controller topologies.=20
-
-One instance is connected to two PCIe controllers, while the other is conne=
-cted to
-only one. As a result, they experience different analog environments, inclu=
-ding
-varying channel losses and noise profiles.
-
-Since these PHYs lack internal adaptation mechanisms and f/w based tuning,
-manual register programming is required for analog tuning, such as equaliza=
-tion,
-de-emphasis, and gain. To ensure optimal signal integrity, it is essential =
-to use different
-register values for each PHY instance, despite their identical hardware des=
-ign.
-This is because the same register values may not be suitable for both insta=
-nces due to
-their differing environments and topologies.
-
-Do let us know if this explains the intention behind separate programming s=
-equence
-for both instance of the PHY?
+> A bunch of this is identical to cxl_cper_post_prot_err()
+> Can we factor that stuff out for common use?
+>=20
+> > +
+> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
+> > +		pr_warn_ratelimited("CXL CPER invalid agent type\n");
+> > +		return;
+> > +	}
+> > +
+> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
+> > +		pr_warn_ratelimited("CXL CPER invalid protocol error log\n");
+> > +		return;
+> > +	}
+> > +
+> > +	if (prot_err->err_len !=3D sizeof(struct cxl_ras_capability_regs)) {
+> > +		pr_warn_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
+> > +				    prot_err->err_len);
+> > +		return;
+> > +	}
+> > +
+> > +	if ((prot_err->agent_type =3D=3D RCD || prot_err->agent_type =3D=3D D=
+EVICE ||
+> > +	     prot_err->agent_type =3D=3D LD || prot_err->agent_type =3D=3D FM=
+LD) &&
+> > +	    !(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
+> > +		pr_warn_ratelimited(FW_WARN
+> > +				    "CXL CPER no device serial number\n");
+>=20
+> Whilst some of this check isn't present in cxl_cper_post_prot_err(), it s=
+hould
+> be harmless.
+>
+Maybe all these checks should go to a static helper in cxl/core/ras.c which
+cxl_cper_handle_prot_err can call? But I'm not entirely sure yet it would=20
+really be worth. Anyway, I'll look into it.
 
 Thanks,
-Pankaj Dubey
-> Best regards,
-> Krzysztof
+
+=46abio
+
+
 
 
