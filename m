@@ -1,297 +1,154 @@
-Return-Path: <linux-pci+bounces-31490-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31491-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98710AF8595
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 04:27:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9467AF859E
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 04:38:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29E261C203C7
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 02:27:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7A871C46CE3
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 02:38:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D9A1DE4D2;
-	Fri,  4 Jul 2025 02:27:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85EAA1A4E9E;
+	Fri,  4 Jul 2025 02:38:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="mVv8QM/E"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="UP0WgrQ4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12olkn2069.outbound.protection.outlook.com [40.92.21.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715F31DB924;
-	Fri,  4 Jul 2025 02:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.21.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751596027; cv=fail; b=uU51TsHy85rSf+IqI4aBINYny3cYdCmnezlTnuO2bCsJZ43il00eggZ8Sw0nIUjWDbA3vJ4ORjEoiqZdX4DVM6QWYuqEZVAxgb4hQ8QLy7TSa3TmfPKJW93/bf5sZhI7qxZpNxqVmiuDGz2QyKaRPIn/RaOE8chtZP28QTYwrWo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751596027; c=relaxed/simple;
-	bh=PnSj0CTeLDN78q3mGMjHQ5LpSovbUii36RtZJYBppDc=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Vbxj1OgDeS6CDxd98/tDp5SYmuCwk6J8QQavExTdVDA4mqxfwy1Jyx6Czz065U6nfl5g7FMK8njyVmnE6ucrZCFxvTZYhkojilndhsRC7VCXkS2G9xzJvt9ptjYlTT4iMK2eXTudhC5ORBhY/CRfWynKAeBYKi1W3PPJm0YGtTU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=mVv8QM/E; arc=fail smtp.client-ip=40.92.21.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=T5Up7riwTdA2EnHrKpYIYufq15OW2fr2FUit8mT4poLoCKr1YkMd/TsqzdrbM25oOuTcyUSD8je4TblQF1Ap4K9e8/P3tEnpiYbjYfqg0MaR6K2+Y3hvacxFb7GcsMWO0VdWTGQ/x6fxLs5XrPBC0lMMrAiezKx3B916qVKVgFft5Te4vmROGEhPaODP6ZgufbJEep0QsI+hY/NfsJt/XoGMpDeN5Zvi9MpDe6QGBy82GW61WWC/jUgHKKG0h8WlgAglBUqCIi5f+jRiKYEFY7CL+vCRZPUrSO5V6zpjPBKZIK+xnf7m5vtDsabJHpdHLuUdD6qejVM2iZjnzYdQfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tEAchNnHTjfJZz7xmqGKQ14ehV27FmxNPNcExLuDz58=;
- b=qgvOb41I7ifBmtVbBU9MsFbz+P5Pi6Mjh8MYnqWbCw54OtjWkG/wKGbUjL2qb5ot8GzvVHloDUKzxgNspQIkI/9RXYLs0ImD4laHFJbxMTHtEadEJLZMdzAauO0lmKIPlJeDb04bCSRsoq+nV+i8JGdzB9b3IKFzD8Xnw/8UzPJc2SIkIIKQjTv7CzQPJTNNW0dRauHr5v0THEbFO1oEA1XDNLC6guscwXFNNMV028Bujb5nWz/SF6ACWRTkRe8S3/4O32w9CqKtCfmlPkjq7iRcCCKCzmFfPbkZ3ImSU+rKtioNYt8Tigdgu6WN3pkAHFwHnWtxqbrHXcwYsgzQAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tEAchNnHTjfJZz7xmqGKQ14ehV27FmxNPNcExLuDz58=;
- b=mVv8QM/EavOit/pH/X19SwFU5wU4MJirwhMoheNTFL/wgVFcz6Dd+45+6/IIzjpYJJm4/xITEoXhZ6kxk+r8QwLKykasllJnG2jmwdt+aF3qG/ir0eZKy9AVv8x9M5dT75SLep/IJnZluYPl1PMH85IajRZpaw/6Kx6ovgyGMxrS8WzKiV59eDKQJ4Z0dQjD7YoTf9B2OnBzKL0RqyZQ+f60UrW+Zbgr8HMGbTCryG008MFx26FesDwE7c17XOe0IXnme/O0WaioTpo6qeEAGBG50PPLBMQT2uHRAMi2ZjxTeRpmUrbwK5R5pXF9/ah5qoSg4hZedpbmmxHzn4SuOg==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by DM6PR02MB6700.namprd02.prod.outlook.com (2603:10b6:5:218::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Fri, 4 Jul
- 2025 02:27:02 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8901.018; Fri, 4 Jul 2025
- 02:27:01 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Nam Cao <namcao@linutronix.de>, Marc
- Zyngier <maz@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, Manivannan
- Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Karthikeyan Mitran
-	<m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>, =?iso-8859-2?Q?Pali_Roh=E1r?=
-	<pali@kernel.org>, "K . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang
-	<haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
-	<decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan
-	<jim2101024@gmail.com>, Nicolas Saenz Julienne <nsaenz@kernel.org>, Florian
- Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel review
- list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>, Marek Vasut
-	<marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda
-	<yoshihiro.shimoda.uh@renesas.com>, Michal Simek <michal.simek@amd.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>, Nirmal Patel
-	<nirmal.patel@linux.intel.com>, Jonathan Derrick
-	<jonathan.derrick@linux.dev>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org"
-	<linux-rpi-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org"
-	<linux-mediatek@lists.infradead.org>, "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH 14/16] PCI: hv: Switch to msi_create_parent_irq_domain()
-Thread-Topic: [PATCH 14/16] PCI: hv: Switch to msi_create_parent_irq_domain()
-Thread-Index: AQHb5qqGWI9T0Ene10yNxUr1s0p/CbQgsvtAgAAprgCAAAJH0IAAFK4AgABQraA=
-Date: Fri, 4 Jul 2025 02:27:01 +0000
-Message-ID:
- <SN6PR02MB41573141969F6B3028099C65D442A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <cover.1750858083.git.namcao@linutronix.de>
- <024f0122314198fe0a42fef01af53e8953a687ec.1750858083.git.namcao@linutronix.de>
- <SN6PR02MB4157A6F9B2ABD3C69CE5B521D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <87cyaht595.ffs@tglx>
- <SN6PR02MB41576745C28D8F49081B8E77D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <87zfdlrmvr.ffs@tglx>
-In-Reply-To: <87zfdlrmvr.ffs@tglx>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DM6PR02MB6700:EE_
-x-ms-office365-filtering-correlation-id: 255da9f1-fb15-4ee6-92e9-08ddbaa24272
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799009|15080799009|8062599006|19110799006|461199028|3412199025|440099028|4302099013|40105399003|10035399007|102099032|1602099012;
-x-microsoft-antispam-message-info:
- =?iso-8859-2?Q?X/f6hURZNm29sHa1SfUnxxSG8tB6T/1X8f42BRrOrAjHAciaNG/UvKSia9?=
- =?iso-8859-2?Q?tj3PTSmhMZslzPan5VKHZl2qXI/IIJF/fXSIkHVwLuCacQfHiNolG6LVVy?=
- =?iso-8859-2?Q?C5DnpHGJQVnToLEpf+KckwXQ1B2aDQhn1BltfB12u8V40S2YyY5EEWNhYw?=
- =?iso-8859-2?Q?QWgo9bCacOOyen/oh2l0VDTk9/l4Ucv5l/RLGPbBY3z2jf5edIp2+yxanc?=
- =?iso-8859-2?Q?f4M6TSDFh904IV5nwg4wQ2LW9WPyrymWglSjzNRYpFV7FVvHUHBy+zCY8t?=
- =?iso-8859-2?Q?CRlRl6wt+UgnphHi7WJmB4vAzT+UErDqToVlF9QHP3BKaK++7QHjUjNS9U?=
- =?iso-8859-2?Q?z72wJxFvHvRGLIxv4LDl9cPF9LwzbOqY0fX5j8dmqElVq/CjMHyOtXy1is?=
- =?iso-8859-2?Q?dp63mlw7LIyjxbJE83rLE0dQMXzcH2IogEGz1MA2zxM/nAGJq5HWQEwnh9?=
- =?iso-8859-2?Q?gGOuPWVMItlDnUNiG8Ej0XRnbXESNmboMRcmZpXYwQHM2KVthCPMHusNX1?=
- =?iso-8859-2?Q?62NdBfiJZmIWFbxYe8iO/pdI7BX4kp08TiAuo0cqyUZn/zDnrOaMqYIScT?=
- =?iso-8859-2?Q?/K+H4MbW2b8ggmtNZ3jWM+iMzkVHmhEQLeRoZKl+JjHkR1qHaMN5Y6WuVj?=
- =?iso-8859-2?Q?TA9Jjwbn6hVrFSuNtUALYqD2N+FINd7igtCDKS92e/utH0QAJZO5ikXn7y?=
- =?iso-8859-2?Q?OA6k9NcNBPuBJLNqp1BZw15vNKJJTNsogOdexH1GysqEG63bilrE7uCgWz?=
- =?iso-8859-2?Q?F+T6pHtDUg3jP+gSBktCxazpH/P05NuWXPNYTYx2MVqwOsXENZfAg2WUrm?=
- =?iso-8859-2?Q?4jJbN/gwL5auWdSavEVPIF+cOZf04u9OVMe17bj7SkluitaUzt3wvR4BrW?=
- =?iso-8859-2?Q?/nr3goKXI5ZSsJcGEI6lo++QdMMhN6c621KDRmnCc2dBfMzLHMWdluSFQm?=
- =?iso-8859-2?Q?4MPJEqahNDFzqZ5xeD63Lm8jrurkfEGJ+CXTT35Hw9/IJ3rDTJmgqzaTt/?=
- =?iso-8859-2?Q?lqscNpTQr1R8kNHJAazjjsWHOg0CDHwzKRqFkVGwt5b6DB+u4Uid5zO8xv?=
- =?iso-8859-2?Q?PYCDkG4mG3CrIAnLA6fgE3dAZ4kS9oJfV63IlQfqq/caQfloN5m9Gavn0/?=
- =?iso-8859-2?Q?aryOOQHufALq6yxqhzuoPUPafVDOHH0u55YTJA2YlCZ+H37NF0eaC7IKNa?=
- =?iso-8859-2?Q?xpeHTU77VKx3twOsxpesDX9EFVtrCH6GLC3uJx/OI5wdP874SOYpWJzyIv?=
- =?iso-8859-2?Q?Zg0tBFVweLY+9AbqScTkPWZ1bvaKHrSlcHlMv4WS+JRAEARMtnKBgkm1av?=
- =?iso-8859-2?Q?+9sX?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?WkNcNhLA6SsJiLTlpwLgF9SAOFKK9MLqcyTB5M4NhhtxnBmJl07YSSk8un?=
- =?iso-8859-2?Q?UVCzv2I6RFID7NeNP5gU4YY2q06F51q6NsK+aTb5XnUtk+2Q4G7rZNwHg4?=
- =?iso-8859-2?Q?Vl96l9S0GMPTaSJS6/62jULhRnIPB7wbvibgAD+hSzXeD0bkze1M/NOMRU?=
- =?iso-8859-2?Q?USLULAk6V1fP8uBHLds1Ord4cjVNNJLjzZ2Yb3tEt2Mc5ud0itCuz3Q0jl?=
- =?iso-8859-2?Q?AzQMXhMl0RfNwGXcNZIWS5EpMt+nqX12O7RLUlAKlpb52LrikeNRsBAxx/?=
- =?iso-8859-2?Q?h/C/5GVP3W5fUA/53RwZIa2VSbP1/vFn5goNKIHYohKmxK+GnI0vLGgOd8?=
- =?iso-8859-2?Q?NjNJNedknuLma1pYGm+h1DrzdQkZBmn5JscCZMsQiT2xmzfJ0YdED+a0Jp?=
- =?iso-8859-2?Q?Ge/uUe4csaxxAbGwFVlv4RuuX7m80FTOZCKlUF/KaxyveH5tobm2IAvuqQ?=
- =?iso-8859-2?Q?Av6P47Bcm3ANinOJnzAHDmb/OEMFHEskVZCUO/tQp+seCUsfqLr4BZj/y6?=
- =?iso-8859-2?Q?ouVSHIpsX6IWKP3+H+GasJyJVKCX/XplT/H9DqvP/ivO5ylp8vj0rNBbw/?=
- =?iso-8859-2?Q?88SXggdaD1xw6yWqMD5g0dl68p8XVOSWNySYN3yb7fr1CtDkb2syIX3jxQ?=
- =?iso-8859-2?Q?hibY4nSc+1loTthTl+r4OtjgP7lPrCC/N4MVphkNsyjAkFBDQp/tD3We2q?=
- =?iso-8859-2?Q?vO8VkIgFV0Rq9eMRvztMj48kPS0pL2dCykv2rs1FWdnmGSCA7oN1tZ9zUp?=
- =?iso-8859-2?Q?AAiO5nwx7BJLub8Lq/KfGfVGZRmo6g23Kdp8ed1aETf5rws/9uKqsuunUx?=
- =?iso-8859-2?Q?U+I2tyUYcj2Cst6rQ+lgYn33b9S62sY1oQ0hKx1H/EjgOgEghnO1Z3+D80?=
- =?iso-8859-2?Q?hpZ6RdgekzJLHhPrc+M208DN1k7SWO2PFx67M8hcuLIm1CtPaWaBiU1UgU?=
- =?iso-8859-2?Q?nCRoVZTyKmAazaEjIVs3nZlj8ZmKuSVFcCNO64pvIreI+LBCC8tU6a94FO?=
- =?iso-8859-2?Q?3+D8UxO/6366/L+waR2XfKfOvK4QgJU7zlIxxlxZjTl8LZiC+IRUwhseeT?=
- =?iso-8859-2?Q?/iTvaBzZ49FmnLUAPnHaZFid7qe8LOFNrkrm7m9o/8MrRYt7bAeKHULP3L?=
- =?iso-8859-2?Q?BDmx3APcrqW7nzW0GlXSLc7f/Sxj8NLX0aokCp5WbrUuqWGCVHLVMjYZuQ?=
- =?iso-8859-2?Q?5iyPRHdRfBzdKK+PI+KzSLiUdqWdkJ30PQewPuurWE4Woif4GT6zBxumOG?=
- =?iso-8859-2?Q?o82LM1CaT0kfTP5M1N3uQDIs80nljfzcL7uoPidHk=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1E978F54
+	for <linux-pci@vger.kernel.org>; Fri,  4 Jul 2025 02:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751596712; cv=none; b=WZCC43d6v5wvkIJx+zU8bxbwbnez/EtXw2wAi234oEx5NbA6FlyASnohwDYIglqHVf5pgqf3LTxvhbBEcWgphIHQ8aDmLzTKBr5tFkVTV0o1+RS4tU6569fFyF1OiMrKF7L3VDgwsJMeFOVQBv9RIwsl1NjbMgbk2oJl9m/j06Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751596712; c=relaxed/simple;
+	bh=Vab/LD5zzpsdPtSzyL3f5bz48Sj6WuCxzyj08MvJ1ew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KaUIT6NUex4AWwgMu3KX35K15cLXE/XqZ9Kzu/inRZFGhHa0nwMiK7FhcHDh1K512Eg0WV7FVyic++TBOctKtwDluS4xAsizxrbgvV8S4kadpJrKlvXhzVMAaJAOYTJdEcmxkCMmnThhTHpaGhnxPQF87J1qwA7l9TrynkGxzjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=UP0WgrQ4; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-313910f392dso525870a91.2
+        for <linux-pci@vger.kernel.org>; Thu, 03 Jul 2025 19:38:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1751596710; x=1752201510; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=5q4W9N7qK+Wuy6yg62v5/iQ4NUV7tbbrVCXiTiMRs7Q=;
+        b=UP0WgrQ4AkNMjMl2PGh+TwaPD/8y8PA8LOjJMCfCBFeyiex0ojKps91cTgmB8V5WeU
+         THcmjG0AwYmX9PK5deDu9jey72Tr76OHuRSnpDuMJPPla5JCfw0C987RKkmU8S7ccBj+
+         opwc075DphAC1/nWKJPjVsLmRIckiSHkTgnA4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751596710; x=1752201510;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5q4W9N7qK+Wuy6yg62v5/iQ4NUV7tbbrVCXiTiMRs7Q=;
+        b=S+n5L81z06Msg3LCwDdyw4aumhyeva3z/QIWivlIbA0BU5qOEz59MapzQf16sGmOeL
+         j/mWD9Cx525tl20LFQBXxb7cBHJx+RpgGRDSV4Du/jKp7VlpQFLZfs13bEDqwgKap0Nz
+         ENWE6jD41QG6k+coD+ksZdeX4xVdB/aTWxhsny4sI2uBsnGnnqimTW8T6FktsRncrGV9
+         0lYxGFYwj2FbyhkK0Kg0oT3Z8yCBPTagxYqJTEYgJTOa0bG7K5Q07kYUAsJRLACbJfgK
+         +hYOjLUQf1/1SDJtPkI9L/F5eB/kuG11KXn1k8hmsicye/jyG2BomT1M7K0eIkEt19fz
+         SOeA==
+X-Forwarded-Encrypted: i=1; AJvYcCWD+7DZpGpJFFBInFvQXi++hece/ULZH0+HX/jhLkHHoMtyCBywxj/iF39A39V1OozsfFV8zMd3mig=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPVRvdYJGCWvWYVxLcdTZLHB75nCsiLz5wU2HG5pBvdqjhe3Wx
+	/rliU1Dg9xYwZyle7uvvY54QPJl/wPPESee1ptp5vTYpuOnZMHoQ+OovhbTk0UAXCQ==
+X-Gm-Gg: ASbGncvnUSPkUYxe+8q/0g9JBgoDQhe0aY/RQFj7ekIB3C27kfaFYx9cxY0/jtejTGZ
+	bqH3HGk9kQzR4kNKamUNoWgASkb9YzSt83DVd3+NKlWJqgRfzw2siiJkcWhn+mdDkrGqBwgl3f5
+	YgOtCDpiEZhqMp7piW5dw6QR221bzQidVAQmk8ig5k0a+kPnRU4mSGx529FZ66XMbUeI49DigpB
+	fY6zZ1yzJ6ir9nmKdbeydlsd+N/40Ue3NURoGDEcFqulmUNGMhjgn1K9tE06odmd4EAUMyY0FZU
+	zBIV+KH0yEhGTRHiUnq2s7M+lRK75u1fbTiwmhenZh2C7ssbZdg/SuHrhw9eHpaWxN2kdneej8b
+	b47Kz/mnhcgBTO/6YeLlgrfBTMX+Y9L4hvW/3eYPg
+X-Google-Smtp-Source: AGHT+IFP2Imb1D5Oqqdh7ad00SyRc+ove3xbG3fR465FpmV+kHbhkPwjj7ne8HRgVGhPkEwVcQd/Wg==
+X-Received: by 2002:a17:90b:3b90:b0:311:ea13:2e63 with SMTP id 98e67ed59e1d1-31aadd27f55mr601908a91.13.1751596710304;
+        Thu, 03 Jul 2025 19:38:30 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8431e2c5sm8054455ad.39.2025.07.03.19.38.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 19:38:29 -0700 (PDT)
+Message-ID: <215c9cf4-9062-4546-8237-8d02fcb5b6f9@broadcom.com>
+Date: Thu, 3 Jul 2025 19:38:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 255da9f1-fb15-4ee6-92e9-08ddbaa24272
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2025 02:27:01.8674
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: brcm,stb-pcie: Add 74110 SoC
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, bcm-kernel-feedback-list@broadcom.com,
+ jim2101024@gmail.com
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+References: <20250703215314.3971473-1-james.quinlan@broadcom.com>
+ <20250703215314.3971473-2-james.quinlan@broadcom.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250703215314.3971473-2-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Thomas Gleixner <tglx@linutronix.de> Sent: Thursday, July 3, 2025 2:2=
-2 PM
->=20
-> On Thu, Jul 03 2025 at 20:15, Michael Kelley wrote:
-> > From: Thomas Gleixner <tglx@linutronix.de> Sent: Thursday, July 3, 2025=
- 1:00 PM
-> >> Does it conflict against the PCI tree?
-> >
-> > There's no conflict in the "next" or "for-linus" tags in
-> > https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/
-> >
-> > The conflict is with Patch 2 of this series:
-> >
-> > https://lore.kernel.org/linux-hyperv/1749650984-9193-1-git-send-email-s=
-hradhagupta@linux.microsoft.com/
-> >
-> > which is in netdev/net-next.
->=20
-> That's a trivial one. There are two ways to handle it:
->=20
->   1) Take it through the PCI tree and provide a conflict resolution for
->      linux-next and later for Linus as reference.
->=20
->   2) Route it through the net-next tree with an updated patch.
->=20
-> As there are no further dependencies (aside of the missing export which
-> is needed anyway) it's obvious to pick #2 as it creates the least
-> headaches. Assumed that the PCI folks have no objections.
->=20
-> Michael, as you have resolved the conflict already, can you please
-> either take care of it yourself or provide the resolution here as
-> reference for Nam?
 
-I haven't resolved the conflict. As a shortcut for testing I just
-removed the conflicting patch since it is for a Microsoft custom NIC
-("MANA") that's not in the configuration I'm testing with. I'll have to
-look more closely to figure out the resolution.
 
-Separately, this patch (the switch to misc_create_parent_irq_domain)
-isn't working for Linux VMs on Hyper-V on ARM64. The initial symptom
-is that interrupts from the NVMe controller aren't getting handled
-and everything hangs. Here's the dmesg output:
+On 7/3/2025 2:53 PM, Jim Quinlan wrote:
+> Adds BCM74110, a Broadcom SetTop box ARM64 based SoC.  Its
+> inbound window may be set to any size, unlike previous STB
+> SoCs whose inbound window size must be a power of two.
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 
-[   84.463419] hv_vmbus: registering driver hv_pci
-[   84.463875] hv_pci abee639e-0b9d-49b7-9a07-c54ba8cd5734: PCI VMBus probi=
-ng: Using version 0x10004
-[   84.464518] hv_pci abee639e-0b9d-49b7-9a07-c54ba8cd5734: PCI host bridge=
- to bus 0b9d:00
-[   84.464529] pci_bus 0b9d:00: root bus resource [mem 0xfc0000000-0xfc00ff=
-fff window]
-[   84.464531] pci_bus 0b9d:00: No busn resource found for root bus, will u=
-se [bus 00-ff]
-[   84.465211] pci 0b9d:00:00.0: [1414:b111] type 00 class 0x010802 PCIe En=
-dpoint
-[   84.466657] pci 0b9d:00:00.0: BAR 0 [mem 0xfc0000000-0xfc00fffff 64bit]
-[   84.481923] pci_bus 0b9d:00: busn_res: [bus 00-ff] end is updated to 00
-[   84.481936] pci 0b9d:00:00.0: BAR 0 [mem 0xfc0000000-0xfc00fffff 64bit]:=
- assigned
-[   84.482413] nvme nvme0: pci function 0b9d:00:00.0
-[   84.482513] nvme 0b9d:00:00.0: enabling device (0000 -> 0002)
-[   84.556871] irq 17, desc: 00000000e8529819, depth: 0, count: 0, unhandle=
-d: 0
-[   84.556883] ->handle_irq():  0000000062fa78bc, handle_bad_irq+0x0/0x270
-[   84.556892] ->irq_data.chip(): 00000000ba07832f, 0xffff00011469dc30
-[   84.556895] ->action(): 0000000069f160b3
-[   84.556896] ->action->handler(): 00000000e15d8191, nvme_irq+0x0/0x3e8
-[  172.307920] watchdog: BUG: soft lockup - CPU#6 stuck for 26s! [kworker/6=
-:1H:195]
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
-Everything looks normal up to the "irq 17" line.  Meanwhile, the device pro=
-be path
-is waiting with this stack trace, which I suspect is the first Interaction =
-with the NVMe
-controller:
-
-[<0>] blk_execute_rq+0x1ec/0x348
-[<0>] nvme_execute_rq+0x20/0x68
-[<0>] __nvme_submit_sync_cmd+0xc8/0x170
-[<0>] nvme_identify_ctrl.isra.0+0x90/0xf0
-[<0>] nvme_init_identify+0x44/0xee0
-[<0>] nvme_init_ctrl_finish+0x84/0x370
-[<0>] nvme_probe+0x668/0x7d8
-[<0>] local_pci_probe+0x48/0xd0
-[<0>] pci_device_probe+0xd0/0x248
-[<0>] really_probe+0xd4/0x388
-[<0>] __driver_probe_device+0x90/0x1a8
-[<0>] driver_probe_device+0x48/0x150
-[<0>] __device_attach_driver+0xe0/0x1b8
-[<0>] bus_for_each_drv+0x8c/0xf8
-[<0>] __device_attach+0x104/0x1e8
-[<0>] device_attach+0x1c/0x30
-[<0>] pci_bus_add_device+0xe0/0x188
-[<0>] pci_bus_add_devices+0x40/0x98
-[<0>] hv_pci_probe+0x4b0/0x690 [pci_hyperv]
-[<0>] vmbus_probe+0x4c/0xb0 [hv_vmbus]
-[<0>] really_probe+0xd4/0x388
-[<0>] __driver_probe_device+0x90/0x1a8
-[<0>] driver_probe_device+0x48/0x150
-[<0>] __driver_attach+0xe8/0x1c8
-[<0>] bus_for_each_dev+0x80/0xf0
-[<0>] driver_attach+0x2c/0x40
-[<0>] bus_add_driver+0x118/0x260
-[<0>] driver_register+0x68/0x138
-[<0>] __vmbus_driver_register+0x70/0x98 [hv_vmbus]
-[<0>] init_hv_pci_drv+0x1b8/0xfff8 [pci_hyperv]
-[<0>] do_one_initcall+0x4c/0x2c8
-[<0>] do_init_module+0x60/0x280
-[<0>] load_module+0x2318/0x2448
-[<0>] init_module_from_file+0x94/0xe0
-[<0>] __arm64_sys_finit_module+0x228/0x3e8
-[<0>] invoke_syscall+0x6c/0xf8
-[<0>] el0_svc_common.constprop.0+0xc8/0xf0
-[<0>] do_el0_svc+0x24/0x38
-[<0>] el0_svc+0x40/0x1a0
-[<0>] el0t_64_sync_handler+0xd0/0xe8
-[<0>] el0t_64_sync+0x1b0/0x1b8
-
-I'll try to figure out what's going wrong.
-
-Michael
 
