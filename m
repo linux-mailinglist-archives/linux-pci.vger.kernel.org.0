@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-31496-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31497-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C811AF863C
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 06:11:09 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86CF6AF8641
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 06:11:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF1C45667EF
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 04:11:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F1E837B41AC
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 04:10:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C33A11F30AD;
-	Fri,  4 Jul 2025 04:10:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B2EB1F75A6;
+	Fri,  4 Jul 2025 04:10:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TgRWf10Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RYx4o7Sp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D919A27735;
-	Fri,  4 Jul 2025 04:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD261F4CBE;
+	Fri,  4 Jul 2025 04:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751602246; cv=none; b=p1hH7h63p2jYahyw+/mTtIzKDHmYCUH+sYZ+y+HwIRmQjBovKQTaWlBBjVbYdDTglodRXQyIxNLY80XZmgDW1aFd0Vy5fXEXA0J0ozSNyZivvQPlMA2MbKLUNGWIUov5gbc3yb2JiUh72Stc4MWYGaROZ5lOMwRAU+Xr3uPdkvw=
+	t=1751602251; cv=none; b=XTfOVHFS5hHNP6lIwvEok+SXmTyhpMCoMLilCaBWZsT0X8WGEwsvyNcr4P2vmfHiuXdkK2JwfgZF+8sZd2sAsHaLYmZmjURxm7OFa/bq5zj7d4BN8Ff71kPRvNrDqgwKG4c/3yurSR3cHt4KlTkQsm4gEmyKAhPUYyff3NgbBDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751602246; c=relaxed/simple;
-	bh=eNbksy8AOjNuAyIZhrJCd/5+MipiS6qBpV2tUg3eZjY=;
+	s=arc-20240116; t=1751602251; c=relaxed/simple;
+	bh=Rb82lXwhfTwYPKu8Q8XF7KI5JIB8d/RCndqm2TyQhxc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kzCdKRVjSxFw+WgEcwAUQzjD1GvhYdMp+KfqFggm14JqTOoz3eSOBYUxe+4aCmeIjJUDmqKZ31I4sEflNxXFcL9+c95FDXHqqR16IxXV6i1Y5VSYIr5y3C6CgFasCx59atnCBQaazfnUCp67NSx2gTsdcGzJw6yGBXv1ij0xwY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TgRWf10Z; arc=none smtp.client-ip=209.85.215.174
+	 MIME-Version; b=tglfVbpShLSWnU2y6/5LMTZ9HRkPMEMCDlxMkb9CMPlOZSUWxL642JS8cMNNZeHg4OoFMU6qg4EutlZ96eZQogzVS7qV+xv0fxbnvEXq9jYvGtdAiwYeKiUrmn5GGun+fHVWn8MMvgcS1v+EmXg7bWAIhP0YX8zMLFkPbUMa1AI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RYx4o7Sp; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b31e0ead80eso429385a12.0;
-        Thu, 03 Jul 2025 21:10:44 -0700 (PDT)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-747c2cc3419so570846b3a.2;
+        Thu, 03 Jul 2025 21:10:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751602244; x=1752207044; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751602249; x=1752207049; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mLlW3cPUYyFonekL6aq/AJFh/MLlfDz3CJwgfxqEOeU=;
-        b=TgRWf10Z5F+xYUle1GlauQNrjgjHbv1JTnLCO4Ohd8EuLpnx9vvncdc/PErq2rCXer
-         hM5DlINoVVR4c+S2g1MMvclK3BCfDvQ5VF5Gw2etq2YemE14/7kTl+IJEqQvOiAYB9h/
-         mJ+5iHHY1XeJom3W+lbMEqFyO5aLq1HtbTtO27BufPcW/6f6rAnMnsriOWFMajQEhOxz
-         LGz3n/i5Niqmu9vv8k/Bx10JFe0IixcPUSHZ3L+lFwdGDro4hSu+F7Hvn3C/e17/6xzg
-         f2wXduuzncIuylex3jgvzGa5EKRjcvnjJRDg7/H6MUzF4Y0jFKOc2nuzXcvrq7bDOXi9
-         tfLg==
+        bh=jN4iAGbjA8Ktlzd5eLTpLdmfO5ssDEZ/FUSkzLKEQtA=;
+        b=RYx4o7SpHmmqtwiTf3POwRuY4jFw0L+ezKHmQruVyDEx68JkEw4EEW3jrM5v9F2aKO
+         sSx/pj9+o1zRfD/URzUY0zWswnW92zVwEnVtVXsQvx9Hqb0dlWFwBuQmhyB+/SVIn5mo
+         /HKDTfsPv8P1k1Hp99N0YKvp9t/WTUaDbh51Zby/ttm/uUCm3LKD8wsKGe0HW0Gzrp40
+         sIFkH0mZTTbzR8mWEUjU1eIPwUm6la6U0d8YAXLO1mDmDdCVIvDsogIfT/Q5emgFd0wb
+         JiLkJFHAK/w2kZGghb8me2A54qZ5mfrUSZNssXZOTu25d4tcvQXqvB2lYm1k8ziIXR13
+         pFcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751602244; x=1752207044;
+        d=1e100.net; s=20230601; t=1751602249; x=1752207049;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mLlW3cPUYyFonekL6aq/AJFh/MLlfDz3CJwgfxqEOeU=;
-        b=XXd1fmeZQ5obntM1H2au6UDIaH/JjIsMGQroK3bLSEkBlZORD3sBnbMa/+WR1NW69v
-         m+mloqmAKCBK/UWO7wt1j/+ZnlFV7+oZxbF0QYxE3m+cyM8g7FtM85oMbPcy+YEvDM5v
-         r0EkNapd/8lCn1n24mv4g9ojxEGxqUp+3uQYAJ7pPjQzsECoVcaSLJOecAQbD0atncgb
-         UGuMurebrOcfUah/hUMFXEdeXuun4Qt4mPHC7+vejqt2ROcA9AZ2D+woEDcVSu0nO4Ae
-         Kel2+Wp1VqRs6n/c6TRg13dcJMYMXHq3/ybIpHnsNAErqAHbwgnVvAA2XJLaEmMqs3uJ
-         nlcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdtmQBEm+JjEXIiANezW/utviDVwVXYQtlmh1pd+90xR8b5HCvwAg51yIruGbVN7LvWSNZuvrl@vger.kernel.org, AJvYcCV7AcBKyH+4xlow5LB6NDY2g6k7Z4l549AiKU+XrWUlacqrqpQsd1i0jFC4FKrfStqvVIF9s1inDFZ0fi9c@vger.kernel.org, AJvYcCWPOCppkjr3NPtCkowrTTlkafKLh4oTAZ8Seh5Y1b5bYBLt/MFKZa+h4IaJEwOHn8HThLSsP10MBPti@vger.kernel.org, AJvYcCWuxn3oNk84FB5ROsUaJXrNyZRMrctNJR1I6Eeguwc4sGuYO5lXexdvL9KCnRJIYB09euMNnUW/8bwm@vger.kernel.org, AJvYcCXzz6A5FpAqZAy+QHTz2bByMYCAr/THvjqmnXOvuhgqXpaDlvg/0/VHuEySQb91NkaGnykPDJIT+/CRjAqWh+s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq94oxhbTRjZ3fBRdmxVuLhrRrGfd+sgngwo78G8B60pT/FUXZ
-	sXDkSfa/T7RLLI9FNXUyMnc4RjkAlIq6u0Cv8Pof8lTUBndJZdkYZhCy
-X-Gm-Gg: ASbGnct5iGlbx3Hhaidv6oxS73kDEJpjTQkK9/6BvPZheGMq6uk6HayVgkwRtovfBe9
-	TPLNUlat1pO/5Uv4oYThR7P7E0RWdVHBAhmjDJw00yqk/irjQEWnZpttWCjwor2vi4qrgctOOio
-	0EZ5FxDIIm+x2nOWEiOgUPYY3B182rLXwmDWZR6DNQPHfCKqhIuPlo/dMonRxOh+Y8TQp69o8Ox
-	Ur+06Q3D/TxDROkR+cxpv5FKSsAGJw3W57p/ogndih9/hpUhpHT45Jty2BQrWHF4D9f+K+FtM/I
-	TzhL+1EnxHwGaKzKK3sQhLTUWaVsng0V026ml6mvlQrMyJJkXOKmuCV5tsUylYu0z+sAPcI2SoG
-	SxNaTTmzw6cazU9bWQfdYy8648e6Ajm4Co7utMPPKEnIGvw==
-X-Google-Smtp-Source: AGHT+IHB5benb40weVsS/om26EMWrjUvnSEItDPkOuKwEXM1nyxNNczxCzTygFKqVoraa01oZ59IxA==
-X-Received: by 2002:a05:6a21:6185:b0:1f5:619a:7f4c with SMTP id adf61e73a8af0-225c0de0c35mr2051539637.29.1751602243963;
-        Thu, 03 Jul 2025 21:10:43 -0700 (PDT)
+        bh=jN4iAGbjA8Ktlzd5eLTpLdmfO5ssDEZ/FUSkzLKEQtA=;
+        b=wEdM320ae3t3syy8xdx5Y/oVs8cd6SBDIPbGPzx+GSP/plUHecE2nDotbECg20rwdL
+         rXOxyEy9TryGFL5hHYouzvtQHr/l06sda1txckvbP9iyQoe8VivE2VyCA4fH9uFtXsXE
+         uumBxKDwPtT066NAQGFq9JM6AvGhVvKeGGc5E1bZi1bpBcLzxG2FJfQOIwxuDcOz6lUx
+         4Fx9YMKJTAUypfFlnTBi4vAvtxSBaqtS5Tp1cY2efel+u6c9gTv61WfWd+5MV4P37yPK
+         Uhn47MWhB9Y2Prt/HEpR2UeMAs2is1i00jNTrK4AEJVBvnTIgM0hbER18at2jUuPm8no
+         Yf+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVPXwwoDJQDWDjfEc/yorZp74dybddBWoHxMzqwUD4BNNQ48EVRN2+GPyahvlEvFZzWLUSda7JtTdQw@vger.kernel.org, AJvYcCVbSdAq5IFGlw/+288HWKWakyFn2kfAbYU3pdSBBZhqkwMl6vgDb7md9wmW6J3LfJmjCf+yDacA7YSTBLfv@vger.kernel.org, AJvYcCWUPiQzAqv5ngV/pYE5cnINuUgnxPxUUDX8JqB3HWsjWpOaOam2L159GtTzDX7mnXA77wRftBANXMa0bMqRX4k=@vger.kernel.org, AJvYcCWyrdfYC9yKWwHwaruN19/+mMa1d/Es15KmmbvJ3RAf8b76YZemzSIzv9ALMeu4m6ItOMFllNWRQpYF@vger.kernel.org, AJvYcCX+uLyzoNWE2d9gAx+9TXlx5x5O/6DW6+XuXw+XduyPkAN1giYDJLC+Qp/CTkgwtYSsr6Axt3LS@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEkoMZY8Zo69mlE1p7GbNNmyevfB1e+unE4iDSrkyCt7seL6nx
+	/Pa78URX4QMGZM3zC/O9kXPVFxvRs9M35S7ORqeVzJisIulwOkShsgd8
+X-Gm-Gg: ASbGnctBYih2ku3R84xbf77Otj7LCGapTUARW608vjlv9BJmAEL+cXUA0iMDrh4z7L6
+	PLxQxpZ4xG5iS4BVLaPIGnDNAnREZYE8ongpCgl2Rwzw1GS3NlQrB12Ldvv3OwtltewxBzVCgvp
+	zy1yItParh4nFf8/JqRL2YnVR3TT5XAhby94uPyJHMWpsGTI4mujwmUo7P3Lftz9pxIWf28N7HP
+	ZBdvdWJKLEl+ikJ35+836lX4ie7fUM/WB8j/OEXrgeSg2E9Zpuoqk8PbWhGMk+KPp3FaqjQK+6i
+	TjMzKnPUsZwe86fAEOAbU9/GhGRU9vkMmz5q2vOV57Z3zamw64fKIImMcb8XQ+MVEVg+cKUZbaN
+	oORSZIeCqPIbRhsnVMeQZ4XgTUnB3GQsFD7E=
+X-Google-Smtp-Source: AGHT+IHhq5Bx1kO3+4YSfT0X1Ne9s//Wk3I3d5kDIcUv7WpkVSrvF4k6d+nPAHN6bJBebdeqNlFqLA==
+X-Received: by 2002:aa7:8889:0:b0:749:bc7:1577 with SMTP id d2e1a72fcca58-74ce6ab631dmr1421521b3a.9.1751602249047;
+        Thu, 03 Jul 2025 21:10:49 -0700 (PDT)
 Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce35ccb9esm1055290b3a.50.2025.07.03.21.10.39
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce35ccb9esm1055290b3a.50.2025.07.03.21.10.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 21:10:43 -0700 (PDT)
+        Thu, 03 Jul 2025 21:10:48 -0700 (PDT)
 From: FUJITA Tomonori <fujita.tomonori@gmail.com>
 To: alex.gaynor@gmail.com,
 	dakr@kernel.org,
@@ -98,9 +98,9 @@ Cc: a.hindborg@kernel.org,
 	netdev@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	tmgross@umich.edu
-Subject: [PATCH v3 1/3] rust: device_id: split out index support into a separate trait
-Date: Fri,  4 Jul 2025 13:10:01 +0900
-Message-ID: <20250704041003.734033-2-fujita.tomonori@gmail.com>
+Subject: [PATCH v3 2/3] rust: net::phy represent DeviceId as transparent wrapper over mdio_device_id
+Date: Fri,  4 Jul 2025 13:10:02 +0900
+Message-ID: <20250704041003.734033-3-fujita.tomonori@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250704041003.734033-1-fujita.tomonori@gmail.com>
 References: <20250704041003.734033-1-fujita.tomonori@gmail.com>
@@ -112,278 +112,118 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce a new trait `RawDeviceIdIndex`, which extends `RawDeviceId`
-to provide support for device ID types that include an index or
-context field (e.g., `driver_data`). This separates the concerns of
-layout compatibility and index-based data embedding, and allows
-`RawDeviceId` to be implemented for types that do not contain a
-`driver_data` field. Several such structures are defined in
-include/linux/mod_devicetable.h.
-
-Refactor `IdArray::new()` into a generic `build()` function, which
-takes an optional offset. Based on the presence of `RawDeviceIdIndex`,
-index writing is conditionally enabled. A new `new_without_index()`
-constructor is also provided for use cases where no index should be
-written.
+Refactor the DeviceId struct to be a #[repr(transparent)] wrapper
+around the C struct bindings::mdio_device_id.
 
 This refactoring is a preparation for enabling the PHY abstractions to
 use device_id trait.
 
-Acked-by: Danilo Krummrich <dakr@kernel.org>
 Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 ---
- rust/kernel/auxiliary.rs | 11 ++---
- rust/kernel/device_id.rs | 91 ++++++++++++++++++++++++++++------------
- rust/kernel/of.rs        | 15 ++++---
- rust/kernel/pci.rs       | 11 ++---
- 4 files changed, 87 insertions(+), 41 deletions(-)
+ rust/kernel/net/phy.rs | 53 +++++++++++++++++++++---------------------
+ 1 file changed, 27 insertions(+), 26 deletions(-)
 
-diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
-index d2cfe1eeefb6..526cb6dcad52 100644
---- a/rust/kernel/auxiliary.rs
-+++ b/rust/kernel/auxiliary.rs
-@@ -6,7 +6,7 @@
- 
- use crate::{
-     bindings, container_of, device,
--    device_id::RawDeviceId,
-+    device_id::{RawDeviceId, RawDeviceIdIndex},
-     driver,
-     error::{to_result, Result},
-     prelude::*,
-@@ -140,13 +140,14 @@ pub const fn new(modname: &'static CStr, name: &'static CStr) -> Self {
-     }
- }
- 
--// SAFETY:
--// * `DeviceId` is a `#[repr(transparent)`] wrapper of `auxiliary_device_id` and does not add
--//   additional invariants, so it's safe to transmute to `RawType`.
--// * `DRIVER_DATA_OFFSET` is the offset to the `driver_data` field.
-+// SAFETY: `DeviceId` is a `#[repr(transparent)]` wrapper of `auxiliary_device_id` and does not add
-+// additional invariants, so it's safe to transmute to `RawType`.
- unsafe impl RawDeviceId for DeviceId {
-     type RawType = bindings::auxiliary_device_id;
-+}
- 
-+// SAFETY: `DRIVER_DATA_OFFSET` is the offset to the `driver_data` field.
-+unsafe impl RawDeviceIdIndex for DeviceId {
-     const DRIVER_DATA_OFFSET: usize =
-         core::mem::offset_of!(bindings::auxiliary_device_id, driver_data);
- 
-diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
-index 3dc72ca8cfc2..242666c2409c 100644
---- a/rust/kernel/device_id.rs
-+++ b/rust/kernel/device_id.rs
-@@ -14,32 +14,41 @@
+diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
+index 65ac4d59ad77..940972ffadae 100644
+--- a/rust/kernel/net/phy.rs
++++ b/rust/kernel/net/phy.rs
+@@ -507,7 +507,7 @@ pub const fn create_phy_driver<T: Driver>() -> DriverVTable {
+     DriverVTable(Opaque::new(bindings::phy_driver {
+         name: T::NAME.as_char_ptr().cast_mut(),
+         flags: T::FLAGS,
+-        phy_id: T::PHY_DEVICE_ID.id,
++        phy_id: T::PHY_DEVICE_ID.id(),
+         phy_id_mask: T::PHY_DEVICE_ID.mask_as_int(),
+         soft_reset: if T::HAS_SOFT_RESET {
+             Some(Adapter::<T>::soft_reset_callback)
+@@ -691,42 +691,41 @@ fn drop(&mut self) {
  ///
- /// # Safety
- ///
--/// Implementers must ensure that:
--///   - `Self` is layout-compatible with [`RawDeviceId::RawType`]; i.e. it's safe to transmute to
--///     `RawDeviceId`.
-+/// Implementers must ensure that `Self` is layout-compatible with [`RawDeviceId::RawType`];
-+/// i.e. it's safe to transmute to `RawDeviceId`.
- ///
--///     This requirement is needed so `IdArray::new` can convert `Self` to `RawType` when building
--///     the ID table.
-+/// This requirement is needed so `IdArray::new` can convert `Self` to `RawType` when building
-+/// the ID table.
- ///
--///     Ideally, this should be achieved using a const function that does conversion instead of
--///     transmute; however, const trait functions relies on `const_trait_impl` unstable feature,
--///     which is broken/gone in Rust 1.73.
--///
--///   - `DRIVER_DATA_OFFSET` is the offset of context/data field of the device ID (usually named
--///     `driver_data`) of the device ID, the field is suitable sized to write a `usize` value.
--///
--///     Similar to the previous requirement, the data should ideally be added during `Self` to
--///     `RawType` conversion, but there's currently no way to do it when using traits in const.
-+/// Ideally, this should be achieved using a const function that does conversion instead of
-+/// transmute; however, const trait functions relies on `const_trait_impl` unstable feature,
-+/// which is broken/gone in Rust 1.73.
- pub unsafe trait RawDeviceId {
-     /// The raw type that holds the device id.
-     ///
-     /// Id tables created from [`Self`] are going to hold this type in its zero-terminated array.
-     type RawType: Copy;
-+}
+ /// Represents the kernel's `struct mdio_device_id`. This is used to find an appropriate
+ /// PHY driver.
+-pub struct DeviceId {
+-    id: u32,
+-    mask: DeviceMask,
+-}
++#[repr(transparent)]
++#[derive(Clone, Copy)]
++pub struct DeviceId(bindings::mdio_device_id);
  
--    /// The offset to the context/data field.
-+/// Extension trait for [`RawDeviceId`] for devices that embed an index or context value.
-+///
-+/// This is typically used when the device ID struct includes a field like `driver_data`
-+/// that is used to store a pointer-sized value (e.g., an index or context pointer).
-+///
-+/// # Safety
-+///
-+/// Implementers must ensure that `DRIVER_DATA_OFFSET` is the correct offset (in bytes) to
-+/// the context/data field (e.g., the `driver_data` field) within the raw device ID structure.
-+/// This field must be correctly sized to hold a `usize`.
-+///
-+/// Ideally, the data should be added during `Self` to `RawType` conversion,
-+/// but there's currently no way to do it when using traits in const.
-+pub unsafe trait RawDeviceIdIndex: RawDeviceId {
-+    /// The offset (in bytes) to the context/data field in the raw device ID.
-     const DRIVER_DATA_OFFSET: usize;
- 
--    /// The index stored at `DRIVER_DATA_OFFSET` of the implementor of the [`RawDeviceId`] trait.
-+    /// The index stored at `DRIVER_DATA_OFFSET` of the implementor of the [`RawDeviceIdIndex`]
-+    /// trait.
-     fn index(&self) -> usize;
- }
- 
-@@ -68,7 +77,14 @@ impl<T: RawDeviceId, U, const N: usize> IdArray<T, U, N> {
-     /// Creates a new instance of the array.
-     ///
-     /// The contents are derived from the given identifiers and context information.
--    pub const fn new(ids: [(T, U); N]) -> Self {
-+    ///
-+    /// # Safety
-+    ///
-+    /// If `offset` is `Some(offset)`, then:
-+    /// - `offset` must be the correct offset (in bytes) to the context/data field
-+    ///   (e.g., the `driver_data` field) within the raw device ID structure.
-+    /// - The field at `offset` must be correctly sized to hold a `usize`.
-+    const unsafe fn build(ids: [(T, U); N], offset: Option<usize>) -> Self {
-         let mut raw_ids = [const { MaybeUninit::<T::RawType>::uninit() }; N];
-         let mut infos = [const { MaybeUninit::uninit() }; N];
- 
-@@ -77,14 +93,17 @@ impl<T: RawDeviceId, U, const N: usize> IdArray<T, U, N> {
-             // SAFETY: by the safety requirement of `RawDeviceId`, we're guaranteed that `T` is
-             // layout-wise compatible with `RawType`.
-             raw_ids[i] = unsafe { core::mem::transmute_copy(&ids[i].0) };
--            // SAFETY: by the safety requirement of `RawDeviceId`, this would be effectively
--            // `raw_ids[i].driver_data = i;`.
--            unsafe {
--                raw_ids[i]
--                    .as_mut_ptr()
--                    .byte_add(T::DRIVER_DATA_OFFSET)
--                    .cast::<usize>()
--                    .write(i);
-+
-+            if let Some(offset) = offset {
-+                // SAFETY: by the safety requirement of this function, this would be effectively
-+                // `raw_ids[i].driver_data = i;`.
-+                unsafe {
-+                    raw_ids[i]
-+                        .as_mut_ptr()
-+                        .byte_add(offset)
-+                        .cast::<usize>()
-+                        .write(i);
-+                }
-             }
- 
-             // SAFETY: this is effectively a move: `infos[i] = ids[i].1`. We make a copy here but
-@@ -92,7 +111,6 @@ impl<T: RawDeviceId, U, const N: usize> IdArray<T, U, N> {
-             infos[i] = MaybeUninit::new(unsafe { core::ptr::read(&ids[i].1) });
-             i += 1;
-         }
--
-         core::mem::forget(ids);
- 
-         Self {
-@@ -109,12 +127,33 @@ impl<T: RawDeviceId, U, const N: usize> IdArray<T, U, N> {
-         }
+ impl DeviceId {
+     /// Creates a new instance with the exact match mask.
+     pub const fn new_with_exact_mask(id: u32) -> Self {
+-        DeviceId {
+-            id,
+-            mask: DeviceMask::Exact,
+-        }
++        Self(bindings::mdio_device_id {
++            phy_id: id,
++            phy_id_mask: DeviceMask::Exact.as_int(),
++        })
      }
  
-+    /// Creates a new instance of the array without writing index values.
-+    ///
-+    /// The contents are derived from the given identifiers and context information.
-+    pub const fn new_without_index(ids: [(T, U); N]) -> Self {
-+        // SAFETY: Calling `Self::build` with `offset = None` is always safe,
-+        // because no raw memory writes are performed in this case.
-+        unsafe { Self::build(ids, None) }
+     /// Creates a new instance with the model match mask.
+     pub const fn new_with_model_mask(id: u32) -> Self {
+-        DeviceId {
+-            id,
+-            mask: DeviceMask::Model,
+-        }
++        Self(bindings::mdio_device_id {
++            phy_id: id,
++            phy_id_mask: DeviceMask::Model.as_int(),
++        })
+     }
+ 
+     /// Creates a new instance with the vendor match mask.
+     pub const fn new_with_vendor_mask(id: u32) -> Self {
+-        DeviceId {
+-            id,
+-            mask: DeviceMask::Vendor,
+-        }
++        Self(bindings::mdio_device_id {
++            phy_id: id,
++            phy_id_mask: DeviceMask::Vendor.as_int(),
++        })
+     }
+ 
+     /// Creates a new instance with a custom match mask.
+     pub const fn new_with_custom_mask(id: u32, mask: u32) -> Self {
+-        DeviceId {
+-            id,
+-            mask: DeviceMask::Custom(mask),
+-        }
++        Self(bindings::mdio_device_id {
++            phy_id: id,
++            phy_id_mask: DeviceMask::Custom(mask).as_int(),
++        })
+     }
+ 
+     /// Creates a new instance from [`Driver`].
+@@ -734,18 +733,20 @@ pub const fn new_with_driver<T: Driver>() -> Self {
+         T::PHY_DEVICE_ID
+     }
+ 
++    /// Get a `phy_id` as u32.
++    pub const fn id(&self) -> u32 {
++        self.0.phy_id
 +    }
 +
-     /// Reference to the contained [`RawIdArray`].
-     pub const fn raw_ids(&self) -> &RawIdArray<T, N> {
-         &self.raw_ids
+     /// Get a `mask` as u32.
+     pub const fn mask_as_int(&self) -> u32 {
+-        self.mask.as_int()
++        self.0.phy_id_mask
+     }
+ 
+     // macro use only
+     #[doc(hidden)]
+     pub const fn mdio_device_id(&self) -> bindings::mdio_device_id {
+-        bindings::mdio_device_id {
+-            phy_id: self.id,
+-            phy_id_mask: self.mask.as_int(),
+-        }
++        self.0
      }
  }
  
-+impl<T: RawDeviceId + RawDeviceIdIndex, U, const N: usize> IdArray<T, U, N> {
-+    /// Creates a new instance of the array.
-+    ///
-+    /// The contents are derived from the given identifiers and context information.
-+    pub const fn new(ids: [(T, U); N]) -> Self {
-+        // SAFETY: by the safety requirement of `RawDeviceIdIndex`,
-+        // `T::DRIVER_DATA_OFFSET` is guaranteed to be the correct offset (in bytes) to
-+        // a field within `T::RawType`.
-+        unsafe { Self::build(ids, Some(T::DRIVER_DATA_OFFSET)) }
-+    }
-+}
-+
- /// A device id table.
- ///
- /// This trait is only implemented by `IdArray`.
-diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
-index 40d1bd13682c..0c799a06371d 100644
---- a/rust/kernel/of.rs
-+++ b/rust/kernel/of.rs
-@@ -2,7 +2,11 @@
- 
- //! Device Tree / Open Firmware abstractions.
- 
--use crate::{bindings, device_id::RawDeviceId, prelude::*};
-+use crate::{
-+    bindings,
-+    device_id::{RawDeviceId, RawDeviceIdIndex},
-+    prelude::*,
-+};
- 
- /// IdTable type for OF drivers.
- pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<DeviceId, T>;
-@@ -12,13 +16,14 @@
- #[derive(Clone, Copy)]
- pub struct DeviceId(bindings::of_device_id);
- 
--// SAFETY:
--// * `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and does not add
--//   additional invariants, so it's safe to transmute to `RawType`.
--// * `DRIVER_DATA_OFFSET` is the offset to the `data` field.
-+// SAFETY: `DeviceId` is a `#[repr(transparent)]` wrapper of `struct of_device_id` and does not add
-+// additional invariants, so it's safe to transmute to `RawType`.
- unsafe impl RawDeviceId for DeviceId {
-     type RawType = bindings::of_device_id;
-+}
- 
-+// SAFETY: `DRIVER_DATA_OFFSET` is the offset to the `data` field.
-+unsafe impl RawDeviceIdIndex for DeviceId {
-     const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::of_device_id, data);
- 
-     fn index(&self) -> usize {
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 6b94fd7a3ce9..8012bfad3150 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -7,7 +7,7 @@
- use crate::{
-     alloc::flags::*,
-     bindings, container_of, device,
--    device_id::RawDeviceId,
-+    device_id::{RawDeviceId, RawDeviceIdIndex},
-     devres::Devres,
-     driver,
-     error::{to_result, Result},
-@@ -161,13 +161,14 @@ pub const fn from_class(class: u32, class_mask: u32) -> Self {
-     }
- }
- 
--// SAFETY:
--// * `DeviceId` is a `#[repr(transparent)` wrapper of `pci_device_id` and does not add
--//   additional invariants, so it's safe to transmute to `RawType`.
--// * `DRIVER_DATA_OFFSET` is the offset to the `driver_data` field.
-+// SAFETY: `DeviceId` is a `#[repr(transparent)]` wrapper of `pci_device_id` and does not add
-+// additional invariants, so it's safe to transmute to `RawType`.
- unsafe impl RawDeviceId for DeviceId {
-     type RawType = bindings::pci_device_id;
-+}
- 
-+// SAFETY: `DRIVER_DATA_OFFSET` is the offset to the `driver_data` field.
-+unsafe impl RawDeviceIdIndex for DeviceId {
-     const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::pci_device_id, driver_data);
- 
-     fn index(&self) -> usize {
 -- 
 2.43.0
 
