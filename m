@@ -1,192 +1,182 @@
-Return-Path: <linux-pci+bounces-31531-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31532-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6609FAF947F
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 15:44:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82D21AF96A9
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 17:23:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6BE241CA7E66
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 13:44:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 23F835420DE
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 15:22:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 845243074B2;
-	Fri,  4 Jul 2025 13:43:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F7391E8331;
+	Fri,  4 Jul 2025 15:23:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y9yeLqe6"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RqrAiW1+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2058.outbound.protection.outlook.com [40.107.102.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44C9307489;
-	Fri,  4 Jul 2025 13:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751636636; cv=none; b=aJG7rfO3IBXMu7upV0MHIRlVYZIaIn8ncRkUjmg9QdmEMW6fNcYYhqq7zsMco9vK1DSNwufI0U2BTuJ6soQPEbkAu2meB7uZaqZaC7LN+9jhcmlg5LveThtzWtlFy+TFswSB6coWAdnU5EHbBLur4iH/wBTuEvi5BWleDEVHW80=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751636636; c=relaxed/simple;
-	bh=KmpX5zxlGsQARhawRN1W4dV47zBrJ2MU4Gpq1Itt2mE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MpGS2wI7ZFfOBwoc+5PY4qp3RBOoZw9lY2NUrN9bpUPx7YKZvbcbJxs4UCMg8Dj1lFw3x8sKFIh8+T1Xl0LK8BQNEjpD4w2KZATT6QvGwPZc5aMni+VjtAyhySVviKAr6Mfhl8QlVQMHOalCb3WeXF85j+hFTEwk2conUmJn7Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y9yeLqe6; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751636635; x=1783172635;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KmpX5zxlGsQARhawRN1W4dV47zBrJ2MU4Gpq1Itt2mE=;
-  b=Y9yeLqe6MVlKuwK9w2KkuyWgmqljXZIO8JIQCjtHar6A93uGzi4q1xwd
-   jYIdtzbG5yWxL6fX5GZqdhr4NTk1WbdCEv8cYBYma1XU0DOU8sMX7cTjk
-   NIE4nGumlBGlYmVoA3YBrXZ6/864Hl2UPleC0hS2kxuOgiTI6pJ13/+wr
-   RVP3yeVECMqnOhKw2urlNwJEcCpl4k/tExJukkSHSQDpAH05K4RLLr1Rj
-   BjOYgBmQRcy4DAhioehuyrZBSrUUoK4GUIfyDJNJyNvB8lRr1yK9HP3VY
-   rBsSrZPRzHBADq7bwcL1SDhwDnk9+xC2agr1EWdpdQDi6W+wM5F+9bRsX
-   g==;
-X-CSE-ConnectionGUID: j/z16jrERcqXnCm9ncKNdg==
-X-CSE-MsgGUID: qn7oUZ5MQQ+uZV1HRfZTnQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="57745979"
-X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="57745979"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 06:43:53 -0700
-X-CSE-ConnectionGUID: Xlct5SpASzGOsWnvRo5+Cg==
-X-CSE-MsgGUID: al4pzX24RQSY0KYIv3BFLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="155408398"
-Received: from hrotuna-mobl2.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.112])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 06:43:46 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
- linux-edac@vger.kernel.org,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject:
- Re: [PATCH 3/3 v4] ACPI: extlog: Trace CPER CXL Protocol Error Section
-Date: Fri, 04 Jul 2025 15:43:43 +0200
-Message-ID: <2114182.IDvDuAF1LB@fdefranc-mobl3>
-In-Reply-To: <20250701140503.00006a48@huawei.com>
-References:
- <20250623145453.1046660-1-fabio.m.de.francesco@linux.intel.com>
- <20250623145453.1046660-4-fabio.m.de.francesco@linux.intel.com>
- <20250701140503.00006a48@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8EA14D29B;
+	Fri,  4 Jul 2025 15:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751642586; cv=fail; b=dQz/iLhlx8apxDhVFKk3UwSm2Ud7mWmRF4O2/YBMdaxnZmZ0XhExChqw/nfkgJPWVySmtFGJe+Pr5PF9ZmoysZCKiBzT7ZWRipUY6tXGYZkfC//ZEf3q44ZGgpb8G2bglCSqtOWqjxSuXBPRVRaPKv6uxcJrt+RM2Ahf9pRLTqE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751642586; c=relaxed/simple;
+	bh=NCRRWjO3IHXJHPCKYrODqfPyrlAGRNQTPrLdL0GCE9g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=QBgrzhqFSG3KQ4EOVQGAMpZmY3vPYPq/jjC71ABjHjLKv4BSlzkrRGhHYZkBdFDS4QWv6eJnFFA4elqiV5IrxQrUW9DWb4uUxrhl8uIOhoUYgt+TTQQnMb//dhvmOaCV3vetiFuztcENPvP5XfTAT2epLki1VJAGt1di98FMmt0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RqrAiW1+; arc=fail smtp.client-ip=40.107.102.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oSDy/ur3Zuuy4A6JVRcCIqnfi68sAQOs62yJoCClHmFc91QgVfEY1iJA5/dYofDTO3KvlOsq4c6azoo08XdWxyDH3XtJcn7nzTBj7/Kb6sVZmCUqFbLJRw2+jF+TwKmTHEPeFiUTHLksVbcAvHSFCHp8H0SUXDyvjWS0QNPa/aX/W8DwqRmv4dd5jziJBGfRijZJzremyq5H4oWuuxLSW1JQgj8pDhCFtMPH3fXv/AcXEMsFdqjF5OOevvtRDi0m9z4A6tSXcDUleDsPbLCQGzv6XcMZrLEo6eIe38HZMN9UArSbN2oRueK5ktLNxLVTlYE5woM+tu11PO0kCdZymg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a/fQF3Ci6MdXVZJDBN/RPTt016Ze13Q8gzg2AR1DV8k=;
+ b=ebZpzd3c5sFbY4UsmFICiWmshLIYUWBeLqTjHZbeFoCDdlxRUvkaMt7vxjsVcNNW5sZDQZNohDFGGa4GfwQVrNlpVeF+x2r2wyA2S+vatkIkrENaZd2NC3VUuBV86l5sth05H/nwOroVRoPyUwd623Tdtf2cCMomoK/s77Vqk6ip5zV8pCdE+RT8/43QMPVofpJG7imZ5x2V1Ajgbb+a2vqjcifKESaZsvwOj8OUxZWQoFS6R0Ihk8QAxDHzr5vbIq1autp6R/XGgaq8mg6EyyG8zIZ6LvWzOZr8JGOAaRbyd/IPhyJQ4xm12wovM8QXhlQk9Ru2WJ8fJDTfFAsa/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a/fQF3Ci6MdXVZJDBN/RPTt016Ze13Q8gzg2AR1DV8k=;
+ b=RqrAiW1+PD/SPwdvAIGS4kjKZc843uoEpCckxE6cy3NyxcOjOUIkzWiY2eMWMg5yfNEYfwWJYBVXZgPW1scjYDzSk9LD3cIxb8zwgBnIFJqEavJpAWhO6iX/1QNR/uVYcRkRMqOk8l5cDs9P8HXdYKHxeh0dWbVIrQioWWwsgZM/kQKZXVZhY4p/QsvG/uND4LZ0Fy6TuWmHp3qU2MiYCwT3u4hAKMMNJ8z/00O/u83wrXeoZ748EE1Yuptp/HSiOvZQRIYeNEv5tThwTsq6F6uuQeEVeaq02JT9QiTu5/WolhKlocS0x/ZneC8Frq3hjCxwiHqW0YHNWf1mdvUJpA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by PH8PR12MB7205.namprd12.prod.outlook.com (2603:10b6:510:227::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.26; Fri, 4 Jul
+ 2025 15:23:01 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8880.030; Fri, 4 Jul 2025
+ 15:23:01 +0000
+Date: Fri, 4 Jul 2025 12:22:58 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+	rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+	patches@lists.linux.dev, pjaroszynski@nvidia.com, vsethi@nvidia.com,
+	helgaas@kernel.org, baolu.lu@linux.intel.com
+Subject: Re: [PATCH RFC v2 1/4] iommu: Lock group->mutex in
+ iommu_deferred_attach
+Message-ID: <20250704152258.GL1410929@nvidia.com>
+References: <cover.1751096303.git.nicolinc@nvidia.com>
+ <98fc799d0cad52d6886ed1136e84a654b0065820.1751096303.git.nicolinc@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <98fc799d0cad52d6886ed1136e84a654b0065820.1751096303.git.nicolinc@nvidia.com>
+X-ClientProxiedBy: MN2PR11CA0016.namprd11.prod.outlook.com
+ (2603:10b6:208:23b::21) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|PH8PR12MB7205:EE_
+X-MS-Office365-Filtering-Correlation-Id: e5d25fc2-08d5-4720-0118-08ddbb0ea9df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?OhUP0ixSJOcY/9gj4Rw6mzSxKaWAh7ZsAXnk4IP07GcTcgEqj0jAhxoR7Ks0?=
+ =?us-ascii?Q?e9pJtuBbZZPuIo1UkePakGiI5Es+DKp8yM4bRFKa5LOifLxhsGqom/q7qF+H?=
+ =?us-ascii?Q?NnHHlMIaCryrBXqkNukHrv5f7q/JjvYvoUSYRyat6W0umvTzhjNoZWzK+hEy?=
+ =?us-ascii?Q?IMqqNkH43ARFtxOKCQ+Ix0L942PadvkUvwXfgSxQb7Jf9p+nLXm22bxwbzjk?=
+ =?us-ascii?Q?VR+NJC0Iztgq/62L2pda9SGpCPo34bKc67Fw13zhn1zuk7uitZbqqiEiPQIB?=
+ =?us-ascii?Q?vXMIXPxGDALf68h3gzY2AAN1B4DREP6U1nLR0mFoQ8Xb7sPFCyQ6a2Ew6wDh?=
+ =?us-ascii?Q?vh6lQgr/yEDaynHh5yfk+ubdS4NXexMbMFjKnqiFNYrYDVZGj4Onu7Gf3t3D?=
+ =?us-ascii?Q?GN9d1VK8rR94VjVC75lSn+nWxI/Uorei9QZd6LlH5elr6YUeJHqqa/J1bVuT?=
+ =?us-ascii?Q?MNVawbUzeHsd2sT3SPVuY6PYTEYB7jaYKsgOoqeNyGkei1Q9XLCUEwx1N9PZ?=
+ =?us-ascii?Q?xFiw1CMdKHTy5mmAhEQaWPkfF+cNpy+rmG7w0zf2CyD4d0IAQuLgi5PXnn2D?=
+ =?us-ascii?Q?1HoJJfozAMdCSYNEeo5Pi37y5Z1T6Qfu9frpe4QD0kdE5tispqenhqvkOJjf?=
+ =?us-ascii?Q?sprNoI26OWZQf6CK7qqOOOF7z2smIBlmUvr/gofF/7NnGeWW4TGyEKzXof00?=
+ =?us-ascii?Q?h+x3vj5yM5wEfwWYSNPf/5G9xAhrGUM/UY+oGGVCzZPxDpsK2JMeS/GVd4Df?=
+ =?us-ascii?Q?t1t0o3b9L5c99p8Qo+P8wQMDDEsOK5wAIfNeSNTxRVGB9jIdiZ5K2wtdg86Q?=
+ =?us-ascii?Q?RFMYkHBIE9x1QnknwfPteiIU4iOoPfkLON0GAwIRg96BRPkB0FnY+9riw9Zb?=
+ =?us-ascii?Q?WAYsvVe402+auif9V6OqhmksBxSnU6aBuGBM01Hxxld1Mhh8CJrhWbA192G7?=
+ =?us-ascii?Q?IgPN0n0A78PazYx2kmzp4WYLwbkF4An3hRfY03kAyFVaiiiYOzWOEQwPIvxN?=
+ =?us-ascii?Q?sidUDPCIPL8uRrkiDic0k2wEmIzg13Py8nLPDRimlIii6gM+PkCgQ3mCVntf?=
+ =?us-ascii?Q?aCuEufU2Tqa7Om0fIsWr3K99mKVf4j7DM+DJ7HqxClYsJDfq1X/GFOYOjd3g?=
+ =?us-ascii?Q?bJ8HHl6Y00isR0BB0pdXdOfB8Rwqa9I5l/0jJaCRPWRa4AwTMFSrJqWZKOlP?=
+ =?us-ascii?Q?/HClvSa2GCGAkR+vjL8DOGZhGr+FCp07bjzHM4SGJ4Zirw/NpaqRNgk77i9o?=
+ =?us-ascii?Q?eBswqzJME/6SYOo98mxk+tMBvnF1eJ5egxGfhMKT+cCDhW99JHVdjerqXAxn?=
+ =?us-ascii?Q?yZwKCJH+hWDka8GsRQblswPXwwepQ0edTshoxnnnv6vVyugyPHFtU6K4QDUG?=
+ =?us-ascii?Q?Qcf8hrxducb35qRjOnuHd+H0PzmmV9TGzhtSfxIWx8iTMCGuuTMpqsmE95wI?=
+ =?us-ascii?Q?hcfaPUvKsEo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?k+uxt2wlhPZ8UGXS5yYVGqAM0DvFgbQnIdv2QfISc7dCKEQxlBRdg3XzFW+r?=
+ =?us-ascii?Q?MaeOS8So2V7hEW3oBpKBNyn20PmX5F5AjLSbF3xN4mY5znkbdATiyZxJEklw?=
+ =?us-ascii?Q?jWeLB5LdTF9l8M8l21s60n2896AMRbpQ1Zzr25vi7dyXJbaXVtVp1M03rKaR?=
+ =?us-ascii?Q?OPu9vqoO64R7f1OVH+d4NKILn3Ns7QQ5+H8sXPVpb9RYUZYk8J6DFdv5UC7K?=
+ =?us-ascii?Q?cIWV4uzTnzowOFHemIQVf3TMRmORpD57LMTBi0NnQfErvb0dxfDohpcovC4Q?=
+ =?us-ascii?Q?skZpcfBtWUa0Qtk+GdYmfevvtKVUPoyxo/N5dcZnhNMs+e2YTC5db7qa9sAg?=
+ =?us-ascii?Q?4wYPqs2C/ycGSJYBSoLKN2mT8DT/xFBJ/ifyMfWkZhWcTrk8gVe5xvK/VQxM?=
+ =?us-ascii?Q?8c1mrVs4V4i+JHWyMoj0KW7FWm2/G6K2DibmZbewphhEYz6TbGgTlJwVgHaq?=
+ =?us-ascii?Q?G9i5ebe4j3STMXU5uiKMDH9J/1EDNn9V+SNA/3Re39Bx3lzHi2tC9EFEqdNf?=
+ =?us-ascii?Q?+IxLmSrbaCbGxaMMEMB8BMUtBwcrwmtvI3iDPAb47qdXGvokzCDWOQxYZrBi?=
+ =?us-ascii?Q?3YEqcJeSd4Eb0nxXMusBUom6/CMrMQ72uk0l33dhw/NTe8Iq/ubkY4O1+kJo?=
+ =?us-ascii?Q?gPwi2GgnO7/M12efwhtDyqolsyBRrXtk2P2msw7lUbfD/uVweksxNrG6yqGn?=
+ =?us-ascii?Q?qBC6/PSuZd0SHpmh1plWoE0qVE0s3L9StALNUSG6qMNUQAz1VnLdbFalteoz?=
+ =?us-ascii?Q?MmqCPl+iAcw4X03UosxBZiSlQJRmX5VRe9uiTGfJEfoIHZ9LfkFssojh0NjT?=
+ =?us-ascii?Q?kAr1g7IsL+n1yjTCHTrGiFdy7i3CajTvGPL8tFF+81WWq/Zi4hhHv+hbW0iZ?=
+ =?us-ascii?Q?InTr7u3vEDvQSkSq3RLHIHVe4Bk7u+nTBXzRlO5SFsdRHBUsZTx9TGbqw+9k?=
+ =?us-ascii?Q?PotuE5d0iK2InZOU2ODFlbNoPh6UJUzBAH3yVtYaWaSh0M4EhZi9+QMq4S9h?=
+ =?us-ascii?Q?3wTmOaXl5T3SDWlUrhz8CnXqbRWu4uhuA7S9xBBhN8/6lqOv8rYzsdp7gTyE?=
+ =?us-ascii?Q?8o866lDjHSGtoQA8jOhQhnO8ztunowMN9fuG6V2fALtLacw+2jhxmyeawCbz?=
+ =?us-ascii?Q?t+c3EHTVLiXBfyQ/wv1D4Yx35QlGMhdG2xDZaYcyx4A4QT/KuJyCgKW7MuY0?=
+ =?us-ascii?Q?ZI+p1cIOZVkRfM2/xZkyYobdA6utld8nCD9Qdpb4ZK+h36clRBXKPVdYJVr/?=
+ =?us-ascii?Q?r1ByLUGZ9sL4crire3yWSL6Tj5i1kRQPeq8m9D0X2FrieFvdCCsZKpL5wkEL?=
+ =?us-ascii?Q?q52MbZWmsogf8oYGGViQqEluBWw3nvonCCYqQ4uS21K5CaMAGoMi9CRvioNC?=
+ =?us-ascii?Q?9UV7zJkzKkW3rKUuQTa3OJfwMaUjLgM80SkyHmg7kFh89vynl5B6yxuzwPLY?=
+ =?us-ascii?Q?9BJNUvVQcun+hAalRfOEtqvvQnq0gHXZftRmmoDuzujRz//Wwh9jfywHob7t?=
+ =?us-ascii?Q?yzab78XiqGUGP6qm6JOxh9gFpfr8aDv6USLs0A4ZAgpCcMOa8eaxy4pecx0/?=
+ =?us-ascii?Q?gNz5dQHj1hImhmB5MbFbZOSvhHEFuDBJA/ojRJXL?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5d25fc2-08d5-4720-0118-08ddbb0ea9df
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 15:23:01.4600
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zqbg3/FRZ9ZmBbYKboK4duTH2F/xp8tP2ftl/ev+mcjKnylSonMJl06g+FJnQxj/
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7205
 
-On Tuesday, July 1, 2025 3:05:03=E2=80=AFPM Central European Summer Time Jo=
-nathan Cameron wrote:
-> On Mon, 23 Jun 2025 16:54:20 +0200
-> "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com> wrote:
->=20
-> > When Firmware First is enabled, BIOS handles errors first and then it m=
-akes
-> > them available to the kernel via the Common Platform Error Record (CPER)
-> > sections (UEFI 2.10 Appendix N). Linux parses the CPER sections via one=
- of
-> > two similar paths, either ELOG or GHES. The errors managed by ELOG are
-> > signaled to the BIOS by the I/O Machine Check Architecture (I/O MCA).
-> >=20
-> > Currently, ELOG and GHES show some inconsistencies in how they report to
-> > userspace via trace events.
-> >=20
-> > Therefore, make the two mentioned paths act similarly by tracing the CP=
-ER
-> > CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13).
-> >=20
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@lin=
-ux.intel.com>
-> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
-com>
-> > ---
-> >  drivers/acpi/acpi_extlog.c | 62 ++++++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/core/ras.c     |  6 ++++
-> >  include/cxl/event.h        |  2 ++
-> >  3 files changed, 70 insertions(+)
-> >=20
-> > diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> > index cefe8d2d8affc..9a37b08aacfea 100644
-> > --- a/drivers/acpi/acpi_extlog.c
-> > +++ b/drivers/acpi/acpi_extlog.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/ratelimit.h>
-> >  #include <linux/edac.h>
-> >  #include <linux/ras.h>
-> > +#include <cxl/event.h>
-> >  #include <acpi/ghes.h>
-> >  #include <asm/cpu.h>
-> >  #include <asm/mce.h>
-> > @@ -160,6 +161,60 @@ static void extlog_print_pcie(struct cper_sec_pcie=
- *pcie_err,
-> >  	pci_dev_put(pdev);
-> >  }
-> > =20
-> > +static void
-> > +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> > +				int severity)
-> > +{
-> > +	struct cxl_cper_prot_err_work_data wd;
-> > +	u8 *dvsec_start, *cap_start;
->=20
->=20
-> A bunch of this is identical to cxl_cper_post_prot_err()
-> Can we factor that stuff out for common use?
->=20
-> > +
-> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
-> > +		pr_warn_ratelimited("CXL CPER invalid agent type\n");
-> > +		return;
-> > +	}
-> > +
-> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
-> > +		pr_warn_ratelimited("CXL CPER invalid protocol error log\n");
-> > +		return;
-> > +	}
-> > +
-> > +	if (prot_err->err_len !=3D sizeof(struct cxl_ras_capability_regs)) {
-> > +		pr_warn_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
-> > +				    prot_err->err_len);
-> > +		return;
-> > +	}
-> > +
-> > +	if ((prot_err->agent_type =3D=3D RCD || prot_err->agent_type =3D=3D D=
-EVICE ||
-> > +	     prot_err->agent_type =3D=3D LD || prot_err->agent_type =3D=3D FM=
-LD) &&
-> > +	    !(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
-> > +		pr_warn_ratelimited(FW_WARN
-> > +				    "CXL CPER no device serial number\n");
->=20
-> Whilst some of this check isn't present in cxl_cper_post_prot_err(), it s=
-hould
-> be harmless.
->
-Maybe all these checks should go to a static helper in cxl/core/ras.c which
-cxl_cper_handle_prot_err can call? But I'm not entirely sure yet it would=20
-really be worth. Anyway, I'll look into it.
+On Sat, Jun 28, 2025 at 12:42:39AM -0700, Nicolin Chen wrote:
+> The iommu_deferred_attach() is a runtime asynchronous function called by
+> iommu-dma function, which will race against other attach functions if it
+> accesses something in the dev->iommu_group.
+> 
+> Grab the lock to protect it like others who call __iommu_attach_device()
+> as it will need to access dev->iommu_group.
+> 
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  drivers/iommu/iommu.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 
-Thanks,
+I vaugely recall seeing something like this before.
 
-=46abio
+IIRC it can't actually race but there is no harm in taking the lock so
+lockdep works reliably. It isn't fast path.
 
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-
+Jason
 
