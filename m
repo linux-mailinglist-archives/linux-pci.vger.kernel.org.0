@@ -1,106 +1,148 @@
-Return-Path: <linux-pci+bounces-31521-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31522-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BD78AF8F5A
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 12:01:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAC30AF8F66
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 12:05:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 044E31C42F4F
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 10:01:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24ECA586CC8
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 10:05:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBD712EACE9;
-	Fri,  4 Jul 2025 10:01:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1919F2EE974;
+	Fri,  4 Jul 2025 10:05:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ON3aeeq0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIFzhyDo"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0234288C1C;
-	Fri,  4 Jul 2025 10:01:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA112877C7;
+	Fri,  4 Jul 2025 10:05:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751623270; cv=none; b=Ls76LAYS5IuWtLkCjhpQmA6hoYE1X+pzhc8JE8rj8KohNVkCRa0p369RjaTiEi9cclKp3UV3FKiK4T5dO0hyqfF4nU0xy7h7dhwP/Zf56yH+S7UZZo04PrHaI8JAxN2mcCwg3dfmAjsVBc6o94enqKpD4+GpoNnNwF63xi5Qy84=
+	t=1751623541; cv=none; b=SKmhhTy2nycJPZ7nFszWAZiFJarf70YCmeXcN+pOwvxH0vMKuoioFTDbQRpC5ncpfCRj0/NZ+ibd4qG5YbqrNp5A4GiBAgK1b67lOmx4IDpcils/5qwgN7+/hkeevOFroRt2y9WGXz5+na1gEz6BOAlcucpBD604As8EWtrVJD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751623270; c=relaxed/simple;
-	bh=Cjcwlr07oXFOeUDkk0S4U3uYMwLzNl+Ks+4KvR9bZSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fS9u1WIrQjF2cWSp/bAXfnwowzWFiayynjwQmD25D9l7EvzBq9vHvME3mWn3QZchyCTuEQ5oMjCq4H+ZR1RWBQburf7dmclHw3NkdSlOT22wbJ/8d39z1sljByxfmackpVCKWqMEMRKDuzezD+eoMBGm9MIAjBoCn2y/xkdMhh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ON3aeeq0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6080BC4CEF0;
-	Fri,  4 Jul 2025 10:01:05 +0000 (UTC)
+	s=arc-20240116; t=1751623541; c=relaxed/simple;
+	bh=3zMvBpnjYhXNk119LId6VxXRlohR+SMqHtEt+DjGgOs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Lw1FLW99xPWNr/qjic2EsDUo68wNQjAZq6pA+jWDO/bLp/oGaGiEwKpHmervEXwOmSI4KesNrU3KuCjHnH3rtFVwl+YwLRdS4sIEo/9ktlLjPuMm+uSD+pB0OPoQWRgaLgqLJuqRppZOdsWCZY+PyNzDLrwW1+rP5VarwAIpKwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIFzhyDo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8AFC4CEE3;
+	Fri,  4 Jul 2025 10:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751623270;
-	bh=Cjcwlr07oXFOeUDkk0S4U3uYMwLzNl+Ks+4KvR9bZSA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ON3aeeq0xJcW4IWX1NUx5rgTfwRr31J1wY4T2+o8Z5Dc0jzzojoTNr16Iedf2wPJd
-	 5Fn8sUjJ7We9Twz1fDKPbVfPSHWCFaOId9SKVtzIS+8WdMONWg1r3da8USzBPi8aWX
-	 4SeUKBhZT0X6dOuRc9jXRw8zZ1ppD3zRt/qKqoXR0sqJdzqoFPq44/FLSlnFKKfd/F
-	 wJu6C6h08fKwKBWyE3h/kPUO6bM8WIiaSCGjefThb8CFjjJfCXdbIcc0T1Z8YIOmCS
-	 q7RYflnZPGBQomUFkGSlVfIjcXIp35zu44gMz6XLLJHHBI+e0NVxhHbpAmKSZQSi18
-	 p6EiKjaZ0bR5w==
-Date: Fri, 4 Jul 2025 12:01:02 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v7 00/31] Arm GICv5: Host driver implementation
-Message-ID: <aGemXoMHE2Y7msSk@lpieralisi>
-References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
- <20250703164743.00004f3e@huawei.com>
+	s=k20201202; t=1751623540;
+	bh=3zMvBpnjYhXNk119LId6VxXRlohR+SMqHtEt+DjGgOs=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=dIFzhyDoOtTAbxDe4ng7ZMrO/97heBHHA2tlOt/nH+8zNG51bHrYZPY5Otop9wkEE
+	 GOrKb3MaWAOEqB12OvaklthhMEb5eZrWI0BPDhSMueKmloWwIpmrdhA574pgwdyDVL
+	 5lRojgAt+uopNziY+Nbq2Vyar7Ow/l0OqQ3ieJWWl/vzootQhnKntCRzNGjWwagrXs
+	 ZQVT86x9TMFgy9J6Lt1mMum6Y6ipYwyQeTLs74SvWohAan1nxvN+IidtlqAZw2lilc
+	 nqy6gMPSSrHzKKMC7HAuqqW0Qh3uEfCRekMqt+80F1Dobu3rSHA5697iSIX1wfMM87
+	 5aWiEaLuho2cA==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703164743.00004f3e@huawei.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 04 Jul 2025 12:05:26 +0200
+Message-Id: <DB36PVASJ5G9.2TMRXNIXYI9UO@kernel.org>
+Cc: "Michal Rostecki" <vadorovsky@protonmail.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Brendan Higgins"
+ <brendan.higgins@linux.dev>, "David Gow" <davidgow@google.com>, "Rae Moar"
+ <rmoar@google.com>, "Danilo Krummrich" <dakr@kernel.org>, "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
+ <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "David
+ Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>, "Russ Weight"
+ <russ.weight@linux.dev>, "FUJITA Tomonori" <fujita.tomonori@gmail.com>,
+ "Rob Herring" <robh@kernel.org>, "Saravana Kannan" <saravanak@google.com>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>,
+ "Will Deacon" <will@kernel.org>, "Waiman Long" <longman@redhat.com>,
+ "Nathan Chancellor" <nathan@kernel.org>, "Nick Desaulniers"
+ <nick.desaulniers+lkml@gmail.com>, "Bill Wendling" <morbo@google.com>,
+ "Justin Stitt" <justinstitt@google.com>, "Andrew Lunn" <andrew@lunn.ch>,
+ "Heiner Kallweit" <hkallweit1@gmail.com>, "Russell King"
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo
+ Abeni" <pabeni@redhat.com>, "Bjorn Helgaas" <bhelgaas@google.com>, "Arnd
+ Bergmann" <arnd@arndb.de>, "Jens Axboe" <axboe@kernel.dk>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Dave
+ Ertman" <david.m.ertman@intel.com>, "Ira Weiny" <ira.weiny@intel.com>,
+ "Leon Romanovsky" <leon@kernel.org>, "Breno Leitao" <leitao@debian.org>,
+ "Viresh Kumar" <viresh.kumar@linaro.org>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
+ <dri-devel@lists.freedesktop.org>, <netdev@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <llvm@lists.linux.dev>,
+ <linux-pci@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <linux-block@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+ <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH v13 2/5] rust: support formatting of foreign types
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Tamir Duberstein" <tamird@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250701-cstr-core-v13-0-29f7d3eb97a6@gmail.com>
+ <20250701-cstr-core-v13-2-29f7d3eb97a6@gmail.com>
+ <DB2BDSN1JH51.14ZZPETJORBC6@kernel.org>
+ <CAJ-ks9nC=AyBPXRY3nJ0NuZvjFskzMcOkVNrBEfXD2hZ5uRntQ@mail.gmail.com>
+ <DB2IJ9HBIM0W.3N0JVGKX558QI@kernel.org>
+ <CAJ-ks9nF5+m+_bn0Pzi9yU0pw0TyN7Fs4x--mQ4ygyHz4A6hzg@mail.gmail.com>
+ <DB2PIGAQHCJR.3BF8ZHECYH3KB@kernel.org>
+ <CAJ-ks9=WmuXLJ6KkMEOP2jTvM_YBJO10SNsq0DU2J+_d4jp7qw@mail.gmail.com>
+In-Reply-To: <CAJ-ks9=WmuXLJ6KkMEOP2jTvM_YBJO10SNsq0DU2J+_d4jp7qw@mail.gmail.com>
 
-On Thu, Jul 03, 2025 at 04:47:43PM +0100, Jonathan Cameron wrote:
-> 
-> > ---
-> > Changes in v7:
-> > - Added CDDI/CDDIS/CDEN FIELD_PREP(hwirqid) for instruction preparation
-> > - Fixed IST/DT/ITT L2 size selection logic for 64K PAGE_SIZE
-> 
-> Hi Lorenzo,
-> 
-> I took another look, particularly focused on this aspect and it all looks good to
-> me.  Thanks for making these last minute changes.
+On Fri Jul 4, 2025 at 12:41 AM CEST, Tamir Duberstein wrote:
+> On Thu, Jul 3, 2025 at 4:36=E2=80=AFPM Benno Lossin <lossin@kernel.org> w=
+rote:
+>> On Thu Jul 3, 2025 at 8:55 PM CEST, Tamir Duberstein wrote:
+>> > On Thu, Jul 3, 2025 at 11:08=E2=80=AFAM Benno Lossin <lossin@kernel.or=
+g> wrote:
+>> >> On Thu Jul 3, 2025 at 3:55 PM CEST, Tamir Duberstein wrote:
+>> >> > On Thu, Jul 3, 2025 at 5:32=E2=80=AFAM Benno Lossin <lossin@kernel.=
+org> wrote:
+>> >> >> On Tue Jul 1, 2025 at 6:49 PM CEST, Tamir Duberstein wrote:
+>> >> >> > +impl<T: ?Sized + Display> fmt::Display for Adapter<&T> {
+>> >> >> > +    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+>> >> >> > +        let Self(t) =3D self;
+>> >> >> > +        Display::fmt(t, f)
+>> >> >>
+>> >> >> Why not `Display::fmt(&self.0, f)`?
+>> >> >
+>> >> > I like destructuring because it shows me that there's only one fiel=
+d.
+>> >> > With `self.0` I don't see that.
+>> >>
+>> >> And what is the benefit here?
+>> >
+>> > In general the benefit is that the method does not ignore some portion
+>> > of `Self`. A method that uses `self.0` would not provoke a compiler
+>> > error in case another field is added, while this form would.
+>>
+>> Yeah, but why would that change happen here? And even if it got another
+>> field, why would that invalidate the impl of `fn fmt`?
+>
+> I don't know, but I would rather force a person to make that decision
+> when they add another field rather than assume that such an addition
+> wouldn't require changes here.
 
-Thank you for pointing them out - it is good we managed to make them.
+I don't think so. If this were in another file, then destructuring
+might make sense if the struct could conceivably get more fields in the
+future **and** it if the other file relied on there only being one
+field (or if it *had* to be changed when there was a field added). This
+isn't the case here so it's just unnecessary noise.
 
-> No more RBs from me but that is just down to my lack of confidence that I know my way
-> around the spec well enough. It's not anything to do with the content of your series!
-
-I am grateful you took some time to go through the series - you helped
-me fix some issues, that's was very useful !
-
-Thanks,
-Lorenzo
-
-> Thanks
-> 
-> Jonathan
-> 
-> 
-> > - Reordered some ITS error paths according to review
-> > - Link to v6: https://lore.kernel.org/r/20250626-gicv5-host-v6-0-48e046af4642@kernel.org
+---
+Cheers,
+Benno
 
