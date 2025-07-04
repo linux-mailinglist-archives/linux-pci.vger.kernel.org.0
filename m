@@ -1,102 +1,138 @@
-Return-Path: <linux-pci+bounces-31515-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31516-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8125AF8B0F
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 10:19:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8878FAF8B07
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 10:19:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4473D80414F
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 08:15:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6BB7A1CA428E
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 08:17:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 536BE3249D8;
-	Fri,  4 Jul 2025 07:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6419326A63;
+	Fri,  4 Jul 2025 07:57:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zt3UpnoC"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jTK77Tij"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B7A3249C6
-	for <linux-pci@vger.kernel.org>; Fri,  4 Jul 2025 07:56:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8894326A58;
+	Fri,  4 Jul 2025 07:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615820; cv=none; b=bcSbXfbfitbvED69wQMHLpUqSHbeTJbn3OGVNSLr10R7wrADS4b7LVrZ0Elnv17WnDzopcgnVMdnnd4U2DtU/qfE6O65zGUOzbqjrMJteAOdPED0GbPxqemF2NTNXcFuu5WSTRSReqcK2WSyDc42dphvqg8/KcrOPoHtuUAkz9A=
+	t=1751615865; cv=none; b=cDaMhBwWbO1DNHBi08PTmAI5q1r0TrfsEVn1pJge7w+07gJmfg5AdS54ZBvDCgfAE+cVBROpQNKXvbSPLJooufNB78vOB4ShfaMpZfPYw9Yh5JLvGJjuaVsznCRLAIbCMjQ1hwRu1opQ971XplUT5a1GBuqOAO6Gcv5n1Hkspbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615820; c=relaxed/simple;
-	bh=179YXc8mtwTm8NT1M6bNKZhG6xJYF/YK1toqXrlXQ88=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=r1hokbntKhrEOAjdlNTG79DcBxUIQDr3ly3Di79rk48PTOGkyoRN7WTXNeLOZw62eH61Ao/YzHxXRrvUvk5kKSOZM4TqawxIwsKjwVgGr/VIB05bNcou9iJngpl27Rr1elXho8b+vR6wPBKuFBjlW2tk9xMc+nY2X/Vxr1oKHPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zt3UpnoC; arc=none smtp.client-ip=209.85.208.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-607206f0d57so609432a12.2
-        for <linux-pci@vger.kernel.org>; Fri, 04 Jul 2025 00:56:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751615817; x=1752220617; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ALgZHWa9pYUqmbNq0h7cIZ3SkH5GeLmbxoaZlCxVUj4=;
-        b=Zt3UpnoCMn+yI74CTi9UH8tJpy72TaUrsD7DtF5aN+ruUNqNB3WRmVfykugnFVmFr6
-         3YfOc9mEecGajZ8anIVRsW2jQpbIIxHT1rqCeQlN5+go5OUHXEyPEv1oBP6lSsyvb59C
-         Lfcw4ts9j+Qcw7TTUipBvEnxg8aGLyZLwfmFJBHwbcnqr7j8M4T1HnEIoClTZTtAdfKM
-         QfjA0eUKymVh+aiQKeGr5TeDpZ9l81dN3CDIlz5zBLQhYp7ZfE5RZkeKXwdWsxjj5bGu
-         tB4zrQrsUsvkbM0lwiLwKDKQH7aPTx0ZaANDlhBsX9wQxO34iJ7o6rSi/8YII7UXQpif
-         S8DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751615817; x=1752220617;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ALgZHWa9pYUqmbNq0h7cIZ3SkH5GeLmbxoaZlCxVUj4=;
-        b=dQHRsYuKoH4d0Ad9IAdo0XAnU7/5IRJNrXyW19uj+JQxeSFED2QZDQggNLy6ZnivH3
-         /VdJ5VVJZpG+0CbiTalHDcO9WHGJJYpLl9afQul2HTO1HP/3eip7Orb0/nOjWw5nxWP3
-         FRb26uTRJLaVqA57VaDLtUlRo8iphlr7T73FZSXDeS/uPcAI5XPAg6uT6I9Tk1k6CqB0
-         QskCRHAyX7CHS4eUkk3gY4KGapWdcQYHInp//g7HJXyUaPndfevsU25VRALKQ5IwlQ7M
-         71WpXqkOjBXf/4w3PiPUI2OYhe2kvTfKo+6gd0ZbYNAwq/liRK62cPZTmquaVCnE9mf7
-         rlKg==
-X-Forwarded-Encrypted: i=1; AJvYcCW7a+7IxlxNrky1fQZLLuP/BcjSDLuzHyh2ChQXclvuUG9lB732ecavfjybZkmgdGo33VrOvlVm9n4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxM8IgT4OXZuj6LFWF6yAtivmGADKhjhWG5i6rQz/NUMZP0/0xe
-	G3666MLCfLwgA2GO9HxWeYsSStFEC8sFIAftfmGPhcZu9Sl4iLoA7OyBQlIF74RldYKw3Bi0m9P
-	WozjdwPvAIaR5pWl4eQ==
-X-Google-Smtp-Source: AGHT+IFktxIwyvZwcQd0biV2vBnce6PsUlb2ZC1baiUOba9veiiFknWjdWLdFK+HwGIdc6aVeEoOzA3Bt94BqBw=
-X-Received: from edj3.prod.google.com ([2002:a05:6402:3243:b0:609:adbf:eb1a])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:34d5:b0:608:6501:6a1f with SMTP id 4fb4d7f45d1cf-60fd2f854e6mr1088579a12.1.1751615817119;
- Fri, 04 Jul 2025 00:56:57 -0700 (PDT)
-Date: Fri, 4 Jul 2025 07:56:56 +0000
-In-Reply-To: <20250703-topics-tyr-request_irq-v6-6-74103bdc7c52@collabora.com>
+	s=arc-20240116; t=1751615865; c=relaxed/simple;
+	bh=bPS2JYksrIppycfYjPG2JSlEWAOe/ZXoQROBn/MlDBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q+n42N1qAmQGfEgKQU7fEUxmTehC3RfmxKXaQl2hQ4PhipArRBasdEAUpdP+S1MVIZLYvViSi+GrQIh5qMQS8FtqOTI2DWKNeB6+ERR8KEj5jT+velnKS0+92nmktO5vRACuY3wMTqAuEbF8RiqfQcNmmehFeByDHPQQrOm+K3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=jTK77Tij; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=5qrkD9bX+jI4ab6c+XtoSydd7j+KnW2OaBzeTTEC/QE=; b=jTK77Tij9gZIa4yFat5vka5xRz
+	zxo2K3t3N98K2N9r3t0x1GzxeIxrNCnwCWaXoIAcYUClezLp6LYgcNldRMWVG6g9Wl76TbfZVdEJo
+	8webAKr8ryhcY5PYw6AJiDWHNqoMr5QS+4SvlL1Zc3qnZ4gKNAd4lQYtfsMSWHxyzqpY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uXbIH-000BBm-4J; Fri, 04 Jul 2025 09:57:13 +0200
+Date: Fri, 4 Jul 2025 09:57:13 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Benno Lossin <lossin@kernel.org>,
+	Michal Rostecki <vadorovsky@protonmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Jens Axboe <axboe@kernel.dk>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
+	Breno Leitao <leitao@debian.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	llvm@lists.linux.dev, linux-pci@vger.kernel.org,
+	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v13 2/5] rust: support formatting of foreign types
+Message-ID: <efe97ed7-dd60-4f1c-ac5c-b700300f0390@lunn.ch>
+References: <20250701-cstr-core-v13-0-29f7d3eb97a6@gmail.com>
+ <20250701-cstr-core-v13-2-29f7d3eb97a6@gmail.com>
+ <DB2BDSN1JH51.14ZZPETJORBC6@kernel.org>
+ <CAJ-ks9nC=AyBPXRY3nJ0NuZvjFskzMcOkVNrBEfXD2hZ5uRntQ@mail.gmail.com>
+ <DB2IJ9HBIM0W.3N0JVGKX558QI@kernel.org>
+ <CAJ-ks9nF5+m+_bn0Pzi9yU0pw0TyN7Fs4x--mQ4ygyHz4A6hzg@mail.gmail.com>
+ <DB2PIGAQHCJR.3BF8ZHECYH3KB@kernel.org>
+ <CAJ-ks9=WmuXLJ6KkMEOP2jTvM_YBJO10SNsq0DU2J+_d4jp7qw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com> <20250703-topics-tyr-request_irq-v6-6-74103bdc7c52@collabora.com>
-Message-ID: <aGeJSElRKa5sNGbc@google.com>
-Subject: Re: [PATCH v6 6/6] rust: pci: add irq accessors
-From: Alice Ryhl <aliceryhl@google.com>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJ-ks9=WmuXLJ6KkMEOP2jTvM_YBJO10SNsq0DU2J+_d4jp7qw@mail.gmail.com>
 
-On Thu, Jul 03, 2025 at 04:30:04PM -0300, Daniel Almeida wrote:
-> These accessors can be used to retrieve a irq::Registration or a
-> irq::ThreadedRegistration from a pci device. Alternatively, drivers can
-> retrieve an IrqRequest from a bound PCI device for later use.
-> 
-> These accessors ensure that only valid IRQ lines can ever be registered.
-> 
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Yes, it probably can. As you say, some subsystems might interact - the
+> claimed benefit of doing this subsystem-by-subsystem split is that it
+> avoids conflicts with ongoing work that will conflict with a large
+> patch, but this is also the downside; if ongoing work changes the set
+> of interactions between subsystems then a maintainer may find
+> themselves unable to emit the log message they want (because one
+> subsystem is using kernel::fmt while another is still on core::fmt).
 
-Same question as patch 5. With that answered:
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+This sounds like an abstraction problem. As a developer, i just want
+an API to print stuff. I don't care about what happens underneath.
+
+Could you add an implementation of the API which uses core:fmt
+underneath. Get that merged. You can then convert each subsystem one
+by one to use the new API. Since all you are changing is the API, not
+the implementation, there is no compatibility issues. Then, once all
+users are converted to the API, you can have one patch which flips the
+implementation from core:fmt to kernel:fmt. It might take you three
+kernel cycles to get this done, but that is relatively fast for a tree
+wide change, which sometimes takes years.
+
+	Andrew
 
