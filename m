@@ -1,133 +1,118 @@
-Return-Path: <linux-pci+bounces-31510-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31505-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D86DAF89F5
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 09:49:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0A75AF89C1
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 09:42:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92E3D1681E5
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 07:49:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31F455883A9
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Jul 2025 07:42:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C68E428504B;
-	Fri,  4 Jul 2025 07:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9780827CB04;
+	Fri,  4 Jul 2025 07:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="PTeay4dG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE65284B33
-	for <linux-pci@vger.kernel.org>; Fri,  4 Jul 2025 07:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D483E27A101
+	for <linux-pci@vger.kernel.org>; Fri,  4 Jul 2025 07:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615346; cv=none; b=Bk8KhAan8OOcC+Az/oh6uyaWiJ4f9KP1Grj+THhLzqPDomcl/lR3ilCmCWanKs7ZDOeQZX47q8UoRPLIG0txYVk3tsp6B863G9ZXrXx4y7fxtuWWUhd5cAMIqSaW/md89RR4fs7KrEqPQV/aCwxDrr2iZHhlJoYpFZeC3rCsKks=
+	t=1751614921; cv=none; b=hnKmk913kEBrQRo1eMq4jBvpO+4yiCuQ4r8wJJ9V7yg5hI1awcBTBP8lNV8YDwzTmqKA/U8InFJXb5Obl6tbPr0uv1MzJS17Qm41iP+REcp3x1kC4DK3QFHkBLQhDOzHjykYneWMo1Xg1bkh9jxIQ0OxkQaa1RGBMRmanjs0ye8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615346; c=relaxed/simple;
-	bh=d+xlcVC8qM2JhvOfg7gIEkYGcdbcCX/dUslbPbSSM04=;
-	h=Message-ID:From:Date:Subject:To:Cc; b=Dvf8vFdCS0LH24U90kGSEvQr2/F8xxYpgj07IjM2jNtU7j8PxopAUDXj2h2gph1USzVP8T+yqbcEBeBy2UedKCAg9FRN5NP/fVAzxr3H9g9tbEtdFG0h6ArZtqt4rVgxVCkmHR2hJAjhXqxV2ILp4xf8ZwtZDQAsCyQQOZSgZIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by mailout2.hostsharing.net (Postfix) with UTF8SMTPS id 0AA322C1E4C8;
-	Fri,  4 Jul 2025 09:38:50 +0200 (CEST)
-Received: from localhost (unknown [89.246.108.87])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by h08.hostsharing.net (Postfix) with UTF8SMTPSA id C81BD61AD92E;
-	Fri,  4 Jul 2025 09:38:49 +0200 (CEST)
-X-Mailbox-Line: From 53abe6f5ac7c631f95f5d061aa748b192eda0379 Mon Sep 17 00:00:00 2001
-Message-ID: <53abe6f5ac7c631f95f5d061aa748b192eda0379.1751614426.git.lukas@wunner.de>
-From: Lukas Wunner <lukas@wunner.de>
-Date: Fri, 4 Jul 2025 09:38:33 +0200
-Subject: [PATCH] PCI: Allow drivers to opt in to async probing
-To: Bjorn Helgaas <helgaas@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-pci@vger.kernel.org
-Cc: Yaron Avizrat <yaron.avizrat@intel.com>, Koby Elbaz <koby.elbaz@intel.com>, Konstantin Sinyuk <konstantin.sinyuk@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, Even Xu <even.xu@intel.com>, Xinpeng Sun <xinpeng.sun@intel.com>, Jean Delvare <jdelvare@suse.com>, Alexander Usyskin <alexander.usyskin@intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Alan Stern <stern@rowland.harvard.edu>, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Stuart Hayes <stuart.w.hayes@gmail.com>, David Jeffery <djeffery@redhat.com>, Jeremy
-  Allison <jallison@ciq.com>
+	s=arc-20240116; t=1751614921; c=relaxed/simple;
+	bh=ZU/GI74q8CYc+4uxPZ3famiEgwCI2Cd/zxvHpn0VDXA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EgeXMrrtBIeF/Yk4YYE0tncs2WIxwnZA7cOykDiHTPkNfY950jJnx9s+TdqGNQ3krhhEV9mAX/J/ZXtI2O9fHAUjmus2FNkpVnNPY4TBzLVSkdV12zVgU/y8LedCEYshm1UuHhUz9LiaV5ul0aM5A9lEldAaNDZvto6NBaLlDNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=PTeay4dG; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32b6da713f2so1075751fa.3
+        for <linux-pci@vger.kernel.org>; Fri, 04 Jul 2025 00:41:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1751614918; x=1752219718; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZU/GI74q8CYc+4uxPZ3famiEgwCI2Cd/zxvHpn0VDXA=;
+        b=PTeay4dGQd0jMrkNDiea68A0zMriShzP3dR5rRDIFwfR0oUtJOrhZgzKhBni17Ffc2
+         Fli0mdU9dZQJcPyjoCT1Amo9doUGd2Z9v2h/R76wRoEOkvG3w8ey/4fVfHCHO7plsyUq
+         swwgO4L63wrksTLbwQZR6Y4Ti/tf2xEWCEeFdAf1EMCte39nkKzAwG74SrCeYHYWYpZd
+         UR5sJxZMRvfGK5WPDWHinJjz4QuGFfgLRJFPKxXzZ+pbCpVwcjFnA4wvEDk3dRgXIbrE
+         4z+cTorJhAX9mqDCgo2E0k7IiWBXAkaTcdMTo58YqcNDRPffex6BdJHoyvf9XSgcKhxr
+         m9nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751614918; x=1752219718;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZU/GI74q8CYc+4uxPZ3famiEgwCI2Cd/zxvHpn0VDXA=;
+        b=WquHUzmAMGYtPoXbs+UPrIl8BD5p2Ay25F6ifenA0xgIz1jOQjd1lIuGej0ogWySbT
+         y7gHe25DNaRRzBlZ8M0s5A7PCMQTPtx7ehzOoXr/HoYgvESri11n2RuC2Ky/t386fbOI
+         ESWFSqGrHXo/9EvYeQG3r155JnlKScV9OrAcSUcoXhFglbJaArXC3Kc/W7QCoFn72QS2
+         +heV3Rg2QvDCSytXdEZFZukmRLEB062HmJdOEthMsH166TgBP2dvRclXe5XMvbil1GAR
+         OlybnOhCG6juGJbrYO3g0+i9RbUdePcxJ/lkxj505cz3vKEuuTATQcFk1+n7aUDKZkS7
+         qapA==
+X-Forwarded-Encrypted: i=1; AJvYcCXwbxd8siLchUDF3vGQNnhc3OXX5mhxevBOS5YRBwhT4JxH0NpdiWmnf4Xz5LuzJ5Gn6U3L44qVloY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT/EXczT/wLSg4xme6tx8Xn7cGv9Z5rsHaQQGQW+Fek3UF0HFh
+	p7qWTQS+r1CeNM4cdFbKuDa08/YUZtBNYA0MAvfn2h/N9SDaqHfIaaIDHhfmREg7o2dBScvDxwt
+	NmFVyKxcbrCy+sWykkcDWAVAoqwXwHPPvdGZt16G+zg==
+X-Gm-Gg: ASbGncv9aTSeZUhhc0VFLG5CXT7YMSEoUPBCFa8anraEvXLysTXy/rqxwlGRfI2H6gd
+	Tc/PjlRqbwi/JAg0U1y2C+rUho/ApB/C6uEI+T3l2GvFf0QEI4hHfLHw6EXxRWuTSNvYam9nShF
+	BYjzpsG0DykdaCuWJWQ27UpRWAKOPkRdK+q2MoOj/qHXwu3jo1OFdd58F93f4A
+X-Google-Smtp-Source: AGHT+IE3uywphxdB/hgrGdClLGMEDafSpYMGMbgzUpKHzptOOdooBFzvpx420YP2PAZqld8Hm+pbqS2RYe1dK7NZ3eg=
+X-Received: by 2002:a2e:a99f:0:b0:30b:d156:9ea2 with SMTP id
+ 38308e7fff4ca-32e962d5136mr1478751fa.0.1751614917893; Fri, 04 Jul 2025
+ 00:41:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250702155112.40124-1-heshuan@bytedance.com> <aGYkx4a4eJUJorYp@sunil-laptop>
+ <CAKmKDKksSTrT=wMBpnqGupe4WRnHosYZLunw0FdVbhW_dyym+A@mail.gmail.com> <r7fgb5xrn6ocstq6ctq4q7r4o2esgh4rqr44c3u234kcep6thk@bge2vzl33ptb>
+In-Reply-To: <r7fgb5xrn6ocstq6ctq4q7r4o2esgh4rqr44c3u234kcep6thk@bge2vzl33ptb>
+From: He Shuan <heshuan@bytedance.com>
+Date: Fri, 4 Jul 2025 15:41:46 +0800
+X-Gm-Features: Ac12FXyDQukuHY5FB-0tXjb3qsjlMtbnAerUDAyQxsD0jYsZK2sVM1WeS67ZI-U
+Message-ID: <CAKmKDKm_5TXKafWVVMoRdj8Zp=up7YXQ=-CMO=VDHg6KLw-dTQ@mail.gmail.com>
+Subject: Re: [External] Re: [RFC 0/1] PCI: Fix pci devices double register
+ WARNING in the kernel starting process
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Sunil V L <sunilvl@ventanamicro.com>, bhelgaas@google.com, cuiyunhui@bytedance.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The PCI core has historically not allowed drivers to opt in to async
-probing:  Even though drivers may set "PROBE_PREFER_ASYNCHRONOUS", initial
-probing always happens synchronously.  That's because the PCI core uses
-device_attach() instead of device_initial_probe().
+Hi Mani,
 
-Should a driver return -EPROBE_DEFER on initial probe, reprobing later on
-does honor the PROBE_PREFER_ASYNCHRONOUS setting, which is inconsistent.
+Thanks for your comments.
 
-The choice of device_attach() is likely not deliberate:  It was introduced
-in 2013 with commit 58d9a38f6fac ("PCI: Skip attaching driver in
-device_add()"), but asynchronous probing was added two years later with
-commit 765230b5f084 ("driver-core: add asynchronous probing support for
-drivers").
+>But in your case, looks like the PCI device is available somehow before
+>pci_proc_init() gets executed. Now, it is not very clear to me how the device
+>becomes available at this point. It might be due to some other issue. But in
+>anycase, I think we need to get rid of calling pci_proc_attach_device() from
+>pci_proc_init() as I don't see a reason to call this function from two
+>different places. pci_bus_add_device() should be the one calling this function
+>as it is the one adding the PCI device.
+Got it. I need to figure out why the PCI device is available already before
+pci_proc_init() is executed. (Actually I didn't change too much source code yet,
+basically running my test based on the upstream code).
 
-According to the kernel-doc of "enum probe_type", "the end goal is to
-switch the kernel to use asynchronous probing by default".  To this end,
-use device_initial_probe() to allow asynchronous probing.  The function
-returns void, making the return value check unnecessary.
+>Ironically, I do see a similar pattern for sysfs also. Maybe there is (or was) a
+>reason to create these files from two different places?
+Yes, I see the sysfs register confusion (pci_create_sysfs_dev_files) from
+pci_sysfs_init() and pci_bus_add_device() as well. There do have concurrence
+protection through pci_bus_add_device() paths, so I agree that function
+pci_proc_attach_device and pci_create_sysfs_dev_files should be called
+from pci_bus_add_devices().
 
-Initial PCI probing often takes on the order of seconds even on laptops,
-so this may speed up booting significantly.
+Anyway, it appears there is a great deal of work/effort needed before
+making this part clear. :(
 
-Curiously, a small number of PCI drivers already opt in to asynchronous
-probing.  Their maintainters (who are all cc'ed) should watch out for
-issues, now that asynchronous probing is not just allowed for deferred
-probing, but also initial probing:
-
-hl_pci_driver        drivers/accel/habanalabs/common/habanalabs_drv.c
-cxl_pci_driver       drivers/cxl/pci.c
-quicki2c_driver      drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c
-quickspi_driver      drivers/hid/intel-thc-hid/intel-quickspi/pci-quickspi.c
-i801_driver          drivers/i2c/busses/i2c-i801.c
-mei_me_driver        drivers/misc/mei/pci-me.c
-mei_vsc_drv          drivers/misc/mei/platform-vsc.c
-sdhci_driver         drivers/mmc/host/sdhci-pci-core.c
-nvme_driver          drivers/nvme/host/pci.c
-ehci_pci_driver      drivers/usb/host/ehci-pci.c
-hvfb_pci_stub_driver drivers/video/fbdev/hyperv_fb.c
-
-All other driver maintainers may test asynchronous probing by specifying
-the command line parameter "driver_async_probe=drv_name1,drv_name2,...",
-and on success setting "probe_type = PROBE_PREFER_ASYNCHRONOUS" in the
-pci_driver struct.
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
- drivers/pci/bus.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 69048869ef1c..b77fd30bbfd9 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -341,7 +341,6 @@ void pci_bus_add_device(struct pci_dev *dev)
- {
- 	struct device_node *dn = dev->dev.of_node;
- 	struct platform_device *pdev;
--	int retval;
- 
- 	/*
- 	 * Can not put in pci_device_add yet because resources
-@@ -372,9 +371,7 @@ void pci_bus_add_device(struct pci_dev *dev)
- 	if (!dn || of_device_is_available(dn))
- 		pci_dev_allow_binding(dev);
- 
--	retval = device_attach(&dev->dev);
--	if (retval < 0 && retval != -EPROBE_DEFER)
--		pci_warn(dev, "device attach failed (%d)\n", retval);
-+	device_initial_probe(&dev->dev);
- 
- 	pci_dev_assign_added(dev);
- }
--- 
-2.47.2
-
+Bests,
+Shuan
 
