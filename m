@@ -1,150 +1,117 @@
-Return-Path: <linux-pci+bounces-31568-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31569-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75E88AFA097
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Jul 2025 17:01:04 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B1DEAFA0A2
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Jul 2025 17:06:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B9161C21FF0
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Jul 2025 15:01:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F19B7AE4B9
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Jul 2025 15:04:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94798136349;
-	Sat,  5 Jul 2025 15:01:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFF2E17A5BE;
+	Sat,  5 Jul 2025 15:06:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwwnuMcm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLcAqjQk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f196.google.com (mail-yw1-f196.google.com [209.85.128.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020DE2CA9;
-	Sat,  5 Jul 2025 15:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EF42CA9;
+	Sat,  5 Jul 2025 15:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751727660; cv=none; b=DHwa8tazWReL0aOKy3LcQoNaJkx/hbitjrZWRkhjZtEQdLgP5eV5XV2IHCXQf7FbSh57xO9SSJMUz5xTYFU6UhWzj77ys4vDr9+fq7MuNNLXjDL29gIm0umvN/0DD+/WxYzhUmX6E7z5CEuirXvTWcCvxomTWWLFy5LJvH5eTzI=
+	t=1751727975; cv=none; b=BY20yDectHuDWc1HzMumTUPvZeY7LhajUVNq3iNG2B+/uMLL19auM6t0WGGiqpgBTABlWZx2qSnndsXVjxDFNTj9oaQ3AJP0stsLXYLRGIoAPbWpCL+zipGB2xJ/GzsgbDPIG5vmf/nt4x38eU3uCsIq+4imZp3lVkzuF6fRsWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751727660; c=relaxed/simple;
-	bh=bmyz+ArMe/pYFA0OKFDVTvv8JlB0sqSRRAFjNg1EWUc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X8msmEmK6LTH6IjbA5UhylWuvjq8i9BeUn7MGfhv+QGOI1xzeeI6DVQkyVljosADqFUsb2F9yCdSpxiDKRJYS097/x34YJnlQxVmrEmp1uzgtsCmSZWj7FFTz6veMmlSPZB2SpmDNPDwV3x0Yd4QVEIZ29r17zadC65QFSmMJ/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NwwnuMcm; arc=none smtp.client-ip=209.85.128.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f196.google.com with SMTP id 00721157ae682-70e3c6b88dbso11314277b3.0;
-        Sat, 05 Jul 2025 08:00:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751727658; x=1752332458; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cSoy42jE8oSTsRV8nhC5XWMdIM4lCHhuTojjQ5lYN7Q=;
-        b=NwwnuMcmPkQsv7zyqmiZDDcrQ22vSekexNGo2osGjWxaoez2aPX6od527FJ/vfxWff
-         e5x+E7KFUsn/5rrjkUUrt1rdrIGLtsmnpazMU0dt94zfK8uNSOo7pRKR7sovffJNYws/
-         lMCnEKe8coBbXiqQWxnf8XK0OWqUtqEjeQfrCubqc4KQmz0f7VNOHxbC/s7gV673+IKu
-         TPDrkkhXhv55wJqOC7Ze5FayQXHZd7rFD/gdMTl6ZiicuO8gt9dXySaWiAB4kG8Qy33T
-         oa4NZdQ3L3Sf9iC8IXgG9+xYkbJPUk9cWyOCajeLc0mWB+z4bR+gSLtkOVy6ef/Y+X0i
-         LT9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751727658; x=1752332458;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cSoy42jE8oSTsRV8nhC5XWMdIM4lCHhuTojjQ5lYN7Q=;
-        b=tWF9/t6uxkpiUpbtDkWwfv8fq+f00dXmdnFHQtlZTUZYOxIC9njPBTr5EtczhDkNR/
-         MNngC3VIfsank37SoXA6HB6DYSIN/KGOEbd+NeqJASP535iWl1PF2ooBlcslMPH0CjL/
-         Bi0Ql3tPanJr0VwOB9cLd4OrGTHXoclUOBh3ndxeiJvimm51AOPCJNlfQiL7+7V4hz2r
-         rbQV+HCj7NVyJf2eYir0JV1n3UKbp5b4a+JjvWEbq6nuxi/SfnxdqUyNl+1h0NhMfSRa
-         YRNvxQpg4yJ64ftMAvyCAnc87wX+gAlGZGpZwX6erK2XCEdusvmYW3VWWl+XXfOhQDI4
-         wPbA==
-X-Forwarded-Encrypted: i=1; AJvYcCVRcclsV9vlNdzSSKr3WBLbGNRPsV+/Ol7qJUVJb6buaKB6YM9qsUinF6nMNmgC74WphCsWwXhjcY2a@vger.kernel.org, AJvYcCXBPB4TdDAdKxZWPw2LdW2eCAem0qM3cajmy/Jfd+5oRagNXfOmWLREdWxHig6dsUUBMjhQlUoA@vger.kernel.org, AJvYcCXYa8gKEiIJSrHaXnGr3E1kRWliLgQHeuLJxL0atG6Erp8NAoQA9O3x4+/LszIWsP5EIJt6HOSOmM3X@vger.kernel.org, AJvYcCXbfbwmhd4RBeHVdhkDj6KxLLa4H0KTEc0vhUzltdLSd1YxdN57WXKo12kFzB073n1xBoiBUC121wECqNzYf7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxM48yvy8I/4613IJv+l5ZQxNAZP4RidRXlwBy2XFeW3CRUswaX
-	160fPOx6T2HdNwH8SqgufTviUFCVViV7e/i6p0cn8qikeCLyz1IRDTKmYVk1oxOExWpdQsWnuuD
-	qMT7Ac0R+4axHxC5k0fmuhHGs3uvl4+E=
-X-Gm-Gg: ASbGncsRRqibVFe+aDxMPgNWhWrNSCJYn5cubMx1mPhz6qLtyvuSV0EYELbZsmVL20G
-	hnVC8rT9cH44a2T23pouT6onQkSZcdehg+LiloOsX0MjT2OAiKabw11yvanmPRae+bQ+Twzjrjl
-	hdfVP2VQzBU0eSbddKf6w4l5wwJ7mdLyhl1GPM8IMetKdYTw==
-X-Google-Smtp-Source: AGHT+IHwNGLhGtdbfnWLVGJVusTre3vOxTxJKxjsn9yuE6owvpAXDFW41hV64HRaaDHx5FjdBgIq01PfFHw8A7cM/R4=
-X-Received: by 2002:a05:690c:4a05:b0:711:406f:7735 with SMTP id
- 00721157ae682-7176c9f94c5mr31300827b3.13.1751727657667; Sat, 05 Jul 2025
- 08:00:57 -0700 (PDT)
+	s=arc-20240116; t=1751727975; c=relaxed/simple;
+	bh=0RAT1QzWcZIXw2i/MINS/triAT6nnVcva9zpNrI0LLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iwLcXnlIb1wzn+3k9wx04DfLabDY1veFOagEcbLW0lww26EmDcBCWNQuvhsBR6bn0NKyklw1CA2mH2NppQGQe3ErfbiB/ZCgVduTZ81hqP6Bf0PoTRI9Pqf9y2Mcgoc2cPxZvRo+0DK7v2FOGQ3uqRZpshAK6EokPoI2GcyOuvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLcAqjQk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14241C4CEE7;
+	Sat,  5 Jul 2025 15:06:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751727975;
+	bh=0RAT1QzWcZIXw2i/MINS/triAT6nnVcva9zpNrI0LLU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cLcAqjQkbE5VH+oStc615DdfriNe9c6q+qG+6fXcpOAwGEl5rjzUbsy4FwGmikAVM
+	 MLHY/egV/Sqoijv6+RWZ8HiE2IJFqskiZpcJ4TNbbYoR+doxy4M5sGIEb/LJKYfw8X
+	 PDPi+9J7IGf+Zp34umbVD6EyZKKsh37qeDGNMlZa79Pr/nV/64rybeLxf861FVWvfx
+	 NXNEpqjj5U3sNrD5Q2kIGVp1/2mqHMDBuJxlf6G86wFmZrydGNVu9j0mlPusVxYXx2
+	 s7bT3YObs1o0j5QIgAXtJv3c4qAB5AWcSk6yDNp4frVHcVWj9lcvKMNEyUpIAF3ipP
+	 S5iTxB0C10AMA==
+Date: Sat, 5 Jul 2025 17:06:08 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	david.m.ertman@intel.com, ira.weiny@intel.com, leon@kernel.org,
+	kwilczynski@kernel.org, bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/8] rust: device: add drvdata accessors
+Message-ID: <aGk_YBCGqrO-A6bG@cassiopeiae>
+References: <20250621195118.124245-1-dakr@kernel.org>
+ <20250621195118.124245-3-dakr@kernel.org>
+ <DB42TQY2E57U.1PKC16LW38MH9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <B0A6D9B4-086F-4D58-8284-485B9FF4B31A@gmail.com> <20250705135020.GA2006390@bhelgaas>
-In-Reply-To: <20250705135020.GA2006390@bhelgaas>
-From: Bandhan Pramanik <bandhanpramanik06.foss@gmail.com>
-Date: Sat, 5 Jul 2025 20:30:46 +0530
-X-Gm-Features: Ac12FXxu3GajXzRL8jbJqYv42LXNHTyi6qR_NX0yFSQpcNrZEs4Tg0ZYynZacQA
-Message-ID: <CAEmM+QjHnU0h3HtWH8AXP05k2dTYozu81eRxn45HVEUSRG8jLw@mail.gmail.com>
-Subject: Re: Instability in ALL stable and LTS distro kernels (IRQ #16 being
- disabled, PCIe bus errors, ath10k_pci) in Dell Inspiron 5567
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, ath10k@lists.infradead.org, 
-	linux-wireless@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB42TQY2E57U.1PKC16LW38MH9@kernel.org>
 
-Hello,
+On Sat, Jul 05, 2025 at 01:15:06PM +0200, Benno Lossin wrote:
+> On Sat Jun 21, 2025 at 9:43 PM CEST, Danilo Krummrich wrote:
+> > +impl Device<Internal> {
+> > +    /// Store a pointer to the bound driver's private data.
+> > +    pub fn set_drvdata(&self, data: impl ForeignOwnable) {
+> > +        // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+> > +        unsafe { bindings::dev_set_drvdata(self.as_raw(), data.into_foreign().cast()) }
+> > +    }
+> > +
+> > +    /// Take ownership of the private data stored in this [`Device`].
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// - Must only be called once after a preceding call to [`Device::set_drvdata`].
+> > +    /// - The type `T` must match the type of the `ForeignOwnable` previously stored by
+> > +    ///   [`Device::set_drvdata`].
+> > +    pub unsafe fn drvdata_obtain<T: ForeignOwnable>(&self) -> T {
+> > +        // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+> > +        let ptr = unsafe { bindings::dev_get_drvdata(self.as_raw()) };
+> > +
+> > +        // SAFETY: By the safety requirements of this function, `ptr` comes from a previous call to
+> > +        // `into_foreign()`.
+> 
+> Well, you're also relying on `dev_get_drvdata` to return the same
+> pointer that was given to `dev_set_drvdata`.
+> 
+> Otherwise the safety docs look fine.
 
-The dmesg log (the older one) is present here:
-https://gist.githubusercontent.com/BandhanPramanik/ddb0cb23eca03ca2ea43a1d8=
-32a16180/raw/78460e6931a055b6776afe756a95d467913d5ebd/dmesg.log
+Great! What do you think about:
 
-The newer dmesg log includes the first line and is not overwritten by
-the ring buffer (used pci=3Dnoaer in this case):
-https://gist.githubusercontent.com/BandhanPramanik/ddb0cb23eca03ca2ea43a1d8=
-32a16180/raw/78460e6931a055b6776afe756a95d467913d5ebd/updated-dmesg
- (The newer one doesn't have the error recorded).
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index 146eba147d2f..b01cb8e8dab3 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -80,8 +80,11 @@ pub unsafe fn drvdata_obtain<T: ForeignOwnable>(&self) -> T {
+         // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+         let ptr = unsafe { bindings::dev_get_drvdata(self.as_raw()) };
 
-You should check out the older dmesg, the quoted line was taken from
-there verbatim, including any additional details.
-
-Bandhan
-
-On Sat, Jul 5, 2025 at 7:20=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
-rote:
->
-> On Sat, Jul 05, 2025 at 01:00:23AM +0530, Bandhan Pramanik wrote:
-> > Hi everyone,
-> >
-> > Here after a week. I did my research.
-> >
-> > I talked to some folks on IRC and the glaring issue was basically this:
-> >
-> > > [ 1146.810055] pcieport 0000:00:1c.0: AER: Uncorrectable (Fatal) erro=
-r message received from 0000:01:00.0
->
-> Where is the complete dmesg log from which this is extracted?
->
-> > This basically means that the root port (that 1c thing written with
-> > colons) of PCIe is the main problem here.
-> >
-> > One particular note: this issue can be reproduced on the models of
-> > this same laptop. Therefore, this happens in most if not all of the
-> > laptops of the same model.
-> >
-> > For starters, the root port basically manages the communication
-> > between the CPU and the device. Now, this root port itself is
-> > reporting fatal errors.
-> >
-> > This is not a Wi-Fi error, but something deeper.
->
-> Devices that support AER have extra log registers to capture details
-> about an error.  A device that detects an error sends a PCIe Error
-> Message upstream to a Root Port.  The Root Port generates an
-> interrupt, which is handled by the aer driver.  In this case, the
-> 01:00.0 device detected an error and sent an ERR_FATAL message
-> upstream, and the 00:1c.0 Root Port received it and generated an
-> interrupt.  The ERR_FATAL message doesn't contain any details about
-> the error itself, so the aer driver looks for the AER registers in the
-> 01:00.0 device and logs those details to the dmesg log.  Normally
-> there would be a few lines after the one you quoted that would include
-> those details.
->
-> Bjorn
+-        // SAFETY: By the safety requirements of this function, `ptr` comes from a previous call to
+-        // `into_foreign()`.
++        // SAFETY:
++        // - By the safety requirements of this function, `ptr` comes from a previous call to
++        //   `into_foreign()`.
++        // - `dev_get_drvdata()` guarantees to return the same pointer given to `dev_set_drvdata()`
++        //   in `into_foreign()`.
+         unsafe { T::from_foreign(ptr.cast()) }
+     }
 
