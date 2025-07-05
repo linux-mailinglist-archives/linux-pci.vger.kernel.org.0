@@ -1,141 +1,94 @@
-Return-Path: <linux-pci+bounces-31571-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31572-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 878AEAFA204
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Jul 2025 23:38:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9477AFA259
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Jul 2025 01:49:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BFF177B17D2
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Jul 2025 21:36:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1EC7F4A3F71
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Jul 2025 23:49:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 983B32080C1;
-	Sat,  5 Jul 2025 21:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QRp+9aKX"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7ADD238C36;
+	Sat,  5 Jul 2025 23:49:19 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout7.mo534.mail-out.ovh.net (smtpout7.mo534.mail-out.ovh.net [54.36.140.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6930717CA1B;
-	Sat,  5 Jul 2025 21:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21821200112
+	for <linux-pci@vger.kernel.org>; Sat,  5 Jul 2025 23:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.36.140.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751751492; cv=none; b=R+IjKP6X7ZZ26rO0hdVGeAPANLms+UJuI5FTWDs/zgakiE6X5pod6MeOhGQJc2JwhPI0L7+kNbag/6sSFzenvGMHj0Dtjwo4vBnuPvhE1LCshV/axaJ8a352O079vPam+cuI2m5wXA54mgLZa8dKenMR2oi48UAXy4F2QuDZlps=
+	t=1751759359; cv=none; b=gsD8FbM+Xn2jjXAdQyGH3F3r9I89tn1+OGzGp97gLij+JFu5S95RTT8wgCbFq69xbjCSuaaf870jISPaiYeSgtMRbaIejFbaG0+l2sCD3t6y6SRUoOVljggReNCsHvQC9BPoyusD64cbofbF5p6TT9rl5m7xRYFdE0SsMfnuKJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751751492; c=relaxed/simple;
-	bh=ZllOyk54xQwbxPRWURsJ81GR0mKn/E3sFfg4xPWg/AU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Ja72bki8eGa0OFYn49kqMOIJUwfJ7vjtMxVKymV5uLASaMBCGg9r1AFTjovpRVcv8yKaS20ZvrMqJjtDd6fljyvMS88tcBm1R69pe6Jw4r+vbUkFUaCF+knw0zDjVC93a5wzoTUM04FKg+GQJaff/lctQNLYkmJVKQTPK+ljn80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QRp+9aKX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E13C0C4CEE7;
-	Sat,  5 Jul 2025 21:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751751491;
-	bh=ZllOyk54xQwbxPRWURsJ81GR0mKn/E3sFfg4xPWg/AU=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=QRp+9aKX8Y3fYFQN7dSJ5gJleTsdU9k4tS2WEJsxHB/SYj7uKVOrJOgWcbZvWknQ0
-	 809zLPFbO21scBaiaUcsQ17zKKbhsvs/rycCJykKMfmS7QDqnGXMS1RkDL0KDp1jrp
-	 WJljGA1jDILPqOdFmBCPaIlPnbXAx7A847VLp9jbLAfXOu8DuqDiPsG6SZtk9f1EpG
-	 SxH85oz9Ciiit6d1nSbjH8YwyJXc7VCuvtCm8gw7XX8dpahHHQoysOryGNf23z7k7u
-	 Bp4xlOlRCeX0NU4HdWol1tHDQIjgig1ppi6wo9y0w5DUyQW64Yp5CFA+O/pm56Tub+
-	 p3WLcnVSGbncg==
+	s=arc-20240116; t=1751759359; c=relaxed/simple;
+	bh=mOs+XewepzXvG+nOgkKT9IVP0KnAjus+b4UwbPplEhE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y/HhkLvgf2eXBLzeF9ma1P3FD/c18+YdVqlbld8xkfzeMpYkmgSMvkV9ItZDpCIXKF+cuNoQnkGrzvro9qifFNDfab4sfTglV0xHGdcwrl28ieP6T1paOnIH+cXYNkkzPQmkHCVn0BImyutAskj6hK2vJSDAHLBnbNQhjQKN1UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; arc=none smtp.client-ip=54.36.140.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
+Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net [152.228.215.222])
+	by mo534.mail-out.ovh.net (Postfix) with ESMTPS id 4bZRcp57x5z6CM3;
+	Sat,  5 Jul 2025 23:32:42 +0000 (UTC)
+Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net. [127.0.0.1])
+        by director3.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
+        for <bhelgaas@google.com>; Sat,  5 Jul 2025 23:32:42 +0000 (UTC)
+Received: from mta10.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.188.134])
+	by director3.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4bZRcp3r0Tz5wFR;
+	Sat,  5 Jul 2025 23:32:42 +0000 (UTC)
+Received: from orca.pet (unknown [10.1.6.6])
+	by mta10.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id 04055DA3D52;
+	Sat,  5 Jul 2025 23:32:41 +0000 (UTC)
+Authentication-Results:garm.ovh; auth=pass (GARM-102R004e742e852-2cb6-4def-8a10-6135a02faf00,
+                    6309C3B5282082938C1B0D62F70632481A582291) smtp.auth=marcos@orca.pet
+X-OVh-ClientIp:147.156.42.5
+From: Marcos Del Sol Vives <marcos@orca.pet>
+To: linux-kernel@vger.kernel.org
+Cc: marcos@orca.pet,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] pci: disable MSI on RDC PCI to PCI-E bridges
+Date: Sun,  6 Jul 2025 01:32:08 +0200
+Message-Id: <20250705233209.721507-1-marcos@orca.pet>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 05 Jul 2025 23:38:04 +0200
-Message-Id: <DB4G2QJ8LA5W.384ECLNXUM0CY@kernel.org>
-Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
- <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
- <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
- <kwilczynski@kernel.org>, <bhelgaas@google.com>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 2/8] rust: device: add drvdata accessors
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250621195118.124245-1-dakr@kernel.org>
- <20250621195118.124245-3-dakr@kernel.org>
- <DB42TQY2E57U.1PKC16LW38MH9@kernel.org> <aGk_YBCGqrO-A6bG@cassiopeiae>
-In-Reply-To: <aGk_YBCGqrO-A6bG@cassiopeiae>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 13121800464492353126
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvjeefjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforghrtghoshcuffgvlhcuufholhcugghivhgvshcuoehmrghrtghoshesohhrtggrrdhpvghtqeenucggtffrrghtthgvrhhnpefghffgfeevgffhteevvefghfelffejvdejkeeijeegieduvdffteeijeejjefggeenucfkphepuddvjedrtddrtddruddpudegjedrudehiedrgedvrdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehmrghrtghoshesohhrtggrrdhpvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehmrghrtghoshesohhrtggrrdhpvghtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheefgegmpdhmohguvgepshhmthhpohhuth
 
-On Sat Jul 5, 2025 at 5:06 PM CEST, Danilo Krummrich wrote:
-> On Sat, Jul 05, 2025 at 01:15:06PM +0200, Benno Lossin wrote:
->> On Sat Jun 21, 2025 at 9:43 PM CEST, Danilo Krummrich wrote:
->> > +impl Device<Internal> {
->> > +    /// Store a pointer to the bound driver's private data.
->> > +    pub fn set_drvdata(&self, data: impl ForeignOwnable) {
->> > +        // SAFETY: By the type invariants, `self.as_raw()` is a valid=
- pointer to a `struct device`.
->> > +        unsafe { bindings::dev_set_drvdata(self.as_raw(), data.into_f=
-oreign().cast()) }
->> > +    }
->> > +
->> > +    /// Take ownership of the private data stored in this [`Device`].
->> > +    ///
->> > +    /// # Safety
->> > +    ///
->> > +    /// - Must only be called once after a preceding call to [`Device=
-::set_drvdata`].
->> > +    /// - The type `T` must match the type of the `ForeignOwnable` pr=
-eviously stored by
->> > +    ///   [`Device::set_drvdata`].
->> > +    pub unsafe fn drvdata_obtain<T: ForeignOwnable>(&self) -> T {
->> > +        // SAFETY: By the type invariants, `self.as_raw()` is a valid=
- pointer to a `struct device`.
->> > +        let ptr =3D unsafe { bindings::dev_get_drvdata(self.as_raw())=
- };
->> > +
->> > +        // SAFETY: By the safety requirements of this function, `ptr`=
- comes from a previous call to
->> > +        // `into_foreign()`.
->>=20
->> Well, you're also relying on `dev_get_drvdata` to return the same
->> pointer that was given to `dev_set_drvdata`.
->>=20
->> Otherwise the safety docs look fine.
->
-> Great! What do you think about:
->
-> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-> index 146eba147d2f..b01cb8e8dab3 100644
-> --- a/rust/kernel/device.rs
-> +++ b/rust/kernel/device.rs
-> @@ -80,8 +80,11 @@ pub unsafe fn drvdata_obtain<T: ForeignOwnable>(&self)=
- -> T {
->          // SAFETY: By the type invariants, `self.as_raw()` is a valid po=
-inter to a `struct device`.
->          let ptr =3D unsafe { bindings::dev_get_drvdata(self.as_raw()) };
->
-> -        // SAFETY: By the safety requirements of this function, `ptr` co=
-mes from a previous call to
-> -        // `into_foreign()`.
-> +        // SAFETY:
-> +        // - By the safety requirements of this function, `ptr` comes fr=
-om a previous call to
-> +        //   `into_foreign()`.
-> +        // - `dev_get_drvdata()` guarantees to return the same pointer g=
-iven to `dev_set_drvdata()`
-> +        //   in `into_foreign()`.
+These bridges, present on Vortex86DX3 and Vortex86EX2 SoCs, do not
+support MSIs. If enabled, interrupts generated by PCI-E devices never
+reach the processor.
 
-Looks good, though I haven't done a full review, but you can have my:
+I have contacted the manufacturer (DM&P) and they confirmed that PCI MSIs
+need to be disabled for them.
 
-Acked-by: Benno Lossin <lossin@kernel.org>
-
+Signed-off-by: Marcos Del Sol Vives <marcos@orca.pet>
 ---
-Cheers,
-Benno
+ drivers/pci/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
->          unsafe { T::from_foreign(ptr.cast()) }
->      }
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index d7f4ee634263..f610ea45ca9e 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2715,6 +2715,7 @@ static void quirk_disable_msi(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_8131_BRIDGE, quirk_disable_msi);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_VIA, 0xa238, quirk_disable_msi);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x5a3f, quirk_disable_msi);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_RDC, 0x1031, quirk_disable_msi);
+ 
+ /*
+  * The APC bridge device in AMD 780 family northbridges has some random
+-- 
+2.34.1
 
 
