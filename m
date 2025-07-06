@@ -1,216 +1,187 @@
-Return-Path: <linux-pci+bounces-31585-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31586-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00D2AAFA5F3
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Jul 2025 16:41:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAA9AAFA761
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Jul 2025 20:50:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 005447A3969
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Jul 2025 14:39:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7FBD01885177
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Jul 2025 18:50:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A59528C5C5;
-	Sun,  6 Jul 2025 14:36:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39175199934;
+	Sun,  6 Jul 2025 18:48:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYVYeC+6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kwH9AZ/7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE7128C2DC;
-	Sun,  6 Jul 2025 14:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9921459FA;
+	Sun,  6 Jul 2025 18:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751812607; cv=none; b=kFNLa8c0KMm4fDcvPES1CozCYZuwtwRfM3RlI01J4FH4e0em82wFoLtGdo3EdSGNbww7Mn6BLUsweLCFD6Ym/oappIDeceegKrzoBRf3lxAUhX9Bo//NF05OKquhpkhxa0jm7IRmZKa+hM4Vd+AF+xt5S6f2jblPBM7SvYkd5SU=
+	t=1751827714; cv=none; b=nYqH4fWTDSGLSKj88yEOgnwVbweU/mPcu3QucJRCaZoxhv2bYueX/hUNPzLEVGhef7U9rVYhiI3U1IvbeMOiciEAKi/F5Cee05Qj+/+9D4ywM9ACTOU+EmshpbO6dEXF+DlEyywKQvSPWZslPIhl2h8VPmi/AnJPbiuuSSi+zc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751812607; c=relaxed/simple;
-	bh=mA7SFMfHy8OinIxgtmu9yWbldbYt6k6q8NSeQegNnJA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rjwmW3d+zmb44h1qe9P7JWlotp93BpNvVkho1kl7iXDCgP5ksNWONugjnP2XiV73FO86YxyIqBQJhkNWNsx2vgFNCOagQMN4aUMkaqFDtQqIdcHHiaYRaO7UvwE5imtn54z8FbIcWEhyzLX84y8RcEWkUCyXD8rfkRYtV4Q4Z8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYVYeC+6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BA94C4CEF4;
-	Sun,  6 Jul 2025 14:36:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751812606;
-	bh=mA7SFMfHy8OinIxgtmu9yWbldbYt6k6q8NSeQegNnJA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sYVYeC+6e5OzGIchOu7GvaySxrAMZ+Bls0YeuisZup4XCUIRLsoBGtO+yoGMLuEbz
-	 BWzz0dfPhCzA6rCFKmi8QdDoeOhV3mmLqLskqGGhMFiVKHcEBvAvYWfBgNlI8N+fdI
-	 lpPH3flaG6PJJbHwr5ae62YYTCuxr5XkC2nLmfi0BP+InVH4+f3b9ETwE4p91f5LtX
-	 NXL01QEjUR0etWMbpJqif9KssgNkjfwwUywJYxEd6XRvZKTeMewbJbFfifB9L2wE1a
-	 IxlMW4hX3ZO+lWVzAAsGmTojyQt4cE9AOSC39/BlHNEPVXvwresJ6XINXMYLST9anZ
-	 6cS53xc8Tkymg==
-From: Mario Limonciello <superm1@kernel.org>
-To: David Airlie <airlied@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Lukas Wunner <lukas@wunner.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-kernel@vger.kernel.org (open list),
-	iommu@lists.linux.dev (open list:INTEL IOMMU (VT-d)),
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	kvm@vger.kernel.org (open list:VFIO DRIVER),
-	linux-sound@vger.kernel.org (open list:SOUND),
-	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v7 9/9] PCI: Add a new 'boot_display' attribute
-Date: Sun,  6 Jul 2025 09:36:13 -0500
-Message-ID: <20250706143613.1972252-10-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250706143613.1972252-1-superm1@kernel.org>
-References: <20250706143613.1972252-1-superm1@kernel.org>
+	s=arc-20240116; t=1751827714; c=relaxed/simple;
+	bh=zIhBh4WZGJW3yEF46zQEWDQzXqoWuf8bFmd5PCgWvJY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rq0NQWLEpMDgTHDcUpQm83991j8CpwfufjiFJ5/TzrWFLCjP2V9+UWoyG/Rkdtba5nzUgQ7HQVgzT0+udrCiRNwwcMDcPNS5Fq3oXFM7g93ceWWIYK66PNQNMglsDuqYLICtwbj6P+nZeG3ouLfav4ZUtZcVdNc1P6Sp2ckbLgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kwH9AZ/7; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b321bd36a41so1903639a12.2;
+        Sun, 06 Jul 2025 11:48:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751827712; x=1752432512; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iX3pf+UqD3qOSyaJ9rlwwRl/aKN0viYUHi2BzUPJC0s=;
+        b=kwH9AZ/738u6vnT5txS0vwS+r9jU0OznPnnCW6FGFiveNKom5N2tbDJVM+1CCMoJtK
+         ghiO+w4BowCrzM9I7x+HDXKo4pUqlcQEIY0gekD4VzJf11E+crsN7u/v34JgU9H7BtM+
+         4dw0ND+sjYdiA0u+NHZy11Iwg6bRT0TUkkXeh2oKaiG5J4TXos/qvruRnshVO45FEOQB
+         uZApDyuhviuXLnBS52N7xjQ+sDHwQ9diwHkQf/I/AAoRDfJCzfO50ZiwzPbNMo0uberU
+         EIlAFgAVfx0Uxxr9Dfxjy5myuHyNqAdQcQeyf5xp4ybN/UT46h6etUPLy3sicAYrMobm
+         LhWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751827712; x=1752432512;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iX3pf+UqD3qOSyaJ9rlwwRl/aKN0viYUHi2BzUPJC0s=;
+        b=Hj9qt5HlsaojIFnlXBSgBd/UippOSuDY3qkn1xssGC7uomcxxiRAe8m/z7XTZN/iJY
+         4g9W8e2bBseA+zoaPBgphlvAG+kkS5oOTYw6j6HbUzcjT4w981frmS/WDjlc9Y2IRMS3
+         tPjA5VVyVtb7pFrfyUHklNxGvKSTfAPbH/QEhCphgyBf3dkE9cesD9riDoy8oAuDQUsY
+         fxt1bsVUNhpErlEoWVfvl9+/wn2/2oNi9pkzpXpGaXGJT5B3MFJUm0+Wb0Hi3H7duVGU
+         Mn/0VYnNYDgcIp16YJESXS2MDWsU50lEsU/veD4x//Twztx5ngguYQxd5NUIS3dV4AV/
+         7P1w==
+X-Forwarded-Encrypted: i=1; AJvYcCV/U3WmZ2e5bwHcjJ9keBPtMKuqmvk2ojgeTCURbhNfm7CUgFqyAim4CjzpeDskw42SHRNW56iOmxMO@vger.kernel.org, AJvYcCXhb8gISkN4FHFe05u5eTexEAHgoqmyhkHgAu8XMLsNbfe4phNvu1QL9cjiY7U8Jx6+XdgXmXZ3K6Dnsj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpLJUhILeZOVpF6mZ8t3nUILN6397692FmW66j3tiZi6DOJYG4
+	IJQdO0xhLla+uak1Fjk6H/IM3gOYJ9F1uAKEcn2AevyGpJa0Sj/ENmYlVL/yTQNWO6yjqbl+V1j
+	R29m54YriTSSEspsGVxtDiM+e/HKyBi0=
+X-Gm-Gg: ASbGnct57FKoZmTRX8sP1VO0dxtQH8h3WqGpWcszD8U1NRRviacvU5g17qWwoP609MP
+	0HgKN6WqsFXScTGIQGvppV+qO1Wq0DhmxH/yb2/6oLo3Y5WH63TJoxqnT3xNQaGE4hDMxWbHZh0
+	F9iY0wCwe4hY4IxKSLyMA6bBArXrtD3iQcu4P+xsM8ZTo=
+X-Google-Smtp-Source: AGHT+IFMv6RNPbwrTyvUe0q0TmFZFulwvLGaN4n4uaZD/M+IAPp64PI4j3dqCcW1r6Ly7j/Bf6xM6iTEjUTmw4xYL5s=
+X-Received: by 2002:a17:90b:4cc8:b0:311:9c1f:8524 with SMTP id
+ 98e67ed59e1d1-31aadd243afmr14155019a91.15.1751827711702; Sun, 06 Jul 2025
+ 11:48:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAEzXK1qwHf5no6B2eCX1U7NGe-BoJYFLTHPkbM=_XpgrMAE2dw@mail.gmail.com>
+ <20250311162407.GA630741@bhelgaas> <CAEzXK1o52evH1RhQpe3CuD=MoHiMk0gC32Gxw7RpSMMGWzyH8Q@mail.gmail.com>
+In-Reply-To: <CAEzXK1o52evH1RhQpe3CuD=MoHiMk0gC32Gxw7RpSMMGWzyH8Q@mail.gmail.com>
+From: =?UTF-8?B?THXDrXMgTWVuZGVz?= <luis.p.mendes@gmail.com>
+Date: Sun, 6 Jul 2025 19:48:20 +0100
+X-Gm-Features: Ac12FXw9dhR_OpsRZ5iPh8dqbJXGQuhCAVOR0GygrVcl9O_S3XKHLu2N3LaMK-4
+Message-ID: <CAEzXK1oDh1fswcijN1xc-EnJmqRckgcAts_jb64HHSTYmSFoYg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: mvebu: Use devm_request_irq() for registering
+ interrupt handler
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+Hi,
 
-On systems with multiple GPUs there can be uncertainty which GPU is the
-primary one used to drive the display at bootup. In order to disambiguate
-this add a new sysfs attribute 'boot_display' that uses the output of
-video_is_primary_device() to populate whether a PCI device was used for
-driving the display.
+Is the data that i sent enough? Do you need more info?
 
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v7:
- * fix lkp failure
- * Add tag
-v6:
- * Only show for the device that is boot display
- * Only create after PCI device sysfs files are initialized to ensure
-   that resources are ready.
-v4:
- * new patch
----
- Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
- drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
+Best regards,
+Luis
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 69f952fffec72..8b455b1a58852 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -612,3 +612,11 @@ Description:
- 
- 		  # ls doe_features
- 		  0001:01        0001:02        doe_discovery
-+
-+What:		/sys/bus/pci/devices/.../boot_display
-+Date:		October 2025
-+Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
-+Description:
-+		This file indicates the device was used as a boot
-+		display. If the device was used as the boot display, the file
-+		will be present and contain "1".
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 268c69daa4d57..6b1a0ae254d3a 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -30,6 +30,7 @@
- #include <linux/msi.h>
- #include <linux/of.h>
- #include <linux/aperture.h>
-+#include <asm/video.h>
- #include "pci.h"
- 
- #ifndef ARCH_PCI_DEV_GROUPS
-@@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
- 	NULL,
- };
- 
-+static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
-+				 char *buf)
-+{
-+	return sysfs_emit(buf, "1\n");
-+}
-+static DEVICE_ATTR_RO(boot_display);
-+
- static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf)
- {
-@@ -1051,6 +1059,37 @@ void pci_remove_legacy_files(struct pci_bus *b)
- }
- #endif /* HAVE_PCI_LEGACY */
- 
-+/**
-+ * pci_create_boot_display_file - create a file in sysfs for @dev
-+ * @pdev: dev in question
-+ *
-+ * Creates a file `boot_display` in sysfs for the PCI device @pdev
-+ * if it is the boot display device.
-+ */
-+static int pci_create_boot_display_file(struct pci_dev *pdev)
-+{
-+#ifdef CONFIG_VIDEO
-+	if (video_is_primary_device(&pdev->dev))
-+		return sysfs_create_file(&pdev->dev.kobj, &dev_attr_boot_display.attr);
-+#endif
-+	return 0;
-+}
-+
-+/**
-+ * pci_remove_boot_display_file - remove the boot display file for @dev
-+ * @pdev: dev in question
-+ *
-+ * Removes the file `boot_display` in sysfs for the PCI device @pdev
-+ * if it is the boot display device.
-+ */
-+static void pci_remove_boot_display_file(struct pci_dev *pdev)
-+{
-+#ifdef CONFIG_VIDEO
-+	if (video_is_primary_device(&pdev->dev))
-+		sysfs_remove_file(&pdev->dev.kobj, &dev_attr_boot_display.attr);
-+#endif
-+}
-+
- #if defined(HAVE_PCI_MMAP) || defined(ARCH_GENERIC_PCI_MMAP_RESOURCE)
- /**
-  * pci_mmap_resource - map a PCI resource into user memory space
-@@ -1654,9 +1693,15 @@ static const struct attribute_group pci_dev_resource_resize_group = {
- 
- int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
- {
-+	int retval;
-+
- 	if (!sysfs_initialized)
- 		return -EACCES;
- 
-+	retval = pci_create_boot_display_file(pdev);
-+	if (retval)
-+		return retval;
-+
- 	return pci_create_resource_files(pdev);
- }
- 
-@@ -1671,6 +1716,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
- 	if (!sysfs_initialized)
- 		return;
- 
-+	pci_remove_boot_display_file(pdev);
- 	pci_remove_resource_files(pdev);
- }
- 
--- 
-2.43.0
-
+On Wed, Mar 12, 2025 at 4:25=E2=80=AFPM Lu=C3=ADs Mendes <luis.p.mendes@gma=
+il.com> wrote:
+>
+> Hi Bjron,
+>
+> Yes, I had trouble finding PCIe cards to test with Solidrun Clearfog
+> Base mPCIe slot and indeed the Coral Edge TPU card does not have an
+> open-source driver and the proprietary one that exists does not work
+> in 32-bit architectures. So, yes it had no driver.
+>
+> I have now connected a mPCIe to PCIe extender and installed a Marvell
+> 4-port SATA controller card and I will also include my Armada Duo
+> system which is based on a Solidrun A388 SoM anyway and the Clearfog
+> Base logs hope this  information further helps with the analysis,
+>
+> So for Solidrun Clearfog Base with Kernel 6.14-rc5 we have:
+> dmesg output: https://pastebin.com/aw0X9Fb5
+> lspci -vv: https://pastebin.com/5mDHJZ2C
+> cat /proc/interrupts: https://pastebin.com/ASHN8cx7
+> grep -r . /proc/irq: https://pastebin.com/mskASwYL
+> decompiled armada-388-clearfog-base.dtb: https://pastebin.com/KuNFDmYP
+>
+> ------------------------------------------------------
+> For PowerInno ArmadaDuo (2-slots PCIe) with Kernel 6.8.9 we have:
+> dmesg output: https://pastebin.com/54HHrPVP
+> lspci -vv: https://pastebin.com/KpE6Hc0r
+> cat /proc/interrupts: https://pastebin.com/6L64ztse
+> grep -r . /proc/irq: https://pastebin.com/raPkRBVk
+>
+> Best Regards,
+> Lu=C3=ADs
+>
+> On Tue, Mar 11, 2025 at 4:24=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org=
+> wrote:
+> >
+> > On Sun, Mar 09, 2025 at 11:10:58PM +0000, Lu=C3=ADs Mendes wrote:
+> > > All logs presented were obtained from a SolidRun A388 ClearFog Base,
+> > > if more detailed PCI logs are needed I have the other machine, the
+> > > Armada Duo that has 2 PCIe slots and handles an AMD RX 550 GPU. Just
+> > > let me know.
+> > >
+> > > - Complete dmesg log, booted with "pci=3Dnomsi"  is available here:
+> > > https://pastebin.com/wDj0NGFN
+> > > - Complete output of "sudo lspci -vv" is available here:
+> > > https://pastebin.com/f4yHRhLr
+> > > - Contents of /proc/interrupts is available here: https://pastebin.co=
+m/ejDUuhbJ
+> > > - Output of "grep -r . /proc/irq/" is available here:
+> > > https://pastebin.com/4jvFBBhy
+> >
+> > Thank you very much for these.
+> >
+> > It looks like the only PCI device is 01:00.0: [1ac1:089a], a Coral
+> > Edge TPU, and I don't see any evidence of a driver for it or any IRQ
+> > usage.  Do you have any other PCI device you could try there?
+> > Something with a driver that uses interrupts?
+> >
+> > Not critical right now, but I'm puzzled by this part of the dmesg log:
+> >
+> >   mvebu-pcie soc:pcie: host bridge /soc/pcie ranges:
+> >   mvebu-pcie soc:pcie:      MEM 0x00f1080000..0x00f1081fff -> 0x0000080=
+000
+> >   mvebu-pcie soc:pcie:      MEM 0x00f1040000..0x00f1041fff -> 0x0000040=
+000
+> >   mvebu-pcie soc:pcie:      MEM 0x00f1044000..0x00f1045fff -> 0x0000044=
+000
+> >   mvebu-pcie soc:pcie:      MEM 0x00f1048000..0x00f1049fff -> 0x0000048=
+000
+> >   pci_bus 0000:00: root bus resource [mem 0xf1080000-0xf1081fff] (bus a=
+ddress [0x00080000-0x00081fff])
+> >   pci_bus 0000:00: root bus resource [mem 0xf1040000-0xf1041fff] (bus a=
+ddress [0x00040000-0x00041fff])
+> >   pci_bus 0000:00: root bus resource [mem 0xf1044000-0xf1045fff] (bus a=
+ddress [0x00044000-0x00045fff])
+> >   pci_bus 0000:00: root bus resource [mem 0xf1048000-0xf1049fff] (bus a=
+ddress [0x00048000-0x00049fff])
+> >   pci_bus 0000:00: root bus resource [mem 0xe0000000-0xe7ffffff]
+> >
+> > The first four mvebu-pcie lines make good sense and match the
+> > first four pci_bus lines.  But I don't know where the
+> > [mem 0xe0000000-0xe7ffffff] aperture came from.  It should be
+> > described in the devicetree, but I don't see it mentioned in the
+> > /soc/pcie ranges.
+> >
+> > Can you include the devicetree as well?
 
