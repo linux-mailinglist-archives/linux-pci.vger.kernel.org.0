@@ -1,88 +1,145 @@
-Return-Path: <linux-pci+bounces-31575-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31576-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66E82AFA2E9
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Jul 2025 06:03:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE631AFA5CE
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Jul 2025 16:36:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1ADFE1898161
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Jul 2025 04:03:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2422317AD0D
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Jul 2025 14:36:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0084157A55;
-	Sun,  6 Jul 2025 04:02:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDA5C1ACECE;
+	Sun,  6 Jul 2025 14:36:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="Xh6af3Gm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ll4o4Sol"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-10630.protonmail.ch (mail-10630.protonmail.ch [79.135.106.30])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D82714F9FB
-	for <linux-pci@vger.kernel.org>; Sun,  6 Jul 2025 04:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960C5249E5;
+	Sun,  6 Jul 2025 14:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751774577; cv=none; b=Mg9cEkYeztsasxCbo6H79s9gMt8Tz6REgpPVp77slEXa7LTHc6niz5eBfH3aw87fyqSgUJ9f0im2sBDf0a9UbjdGlM52jv4Iatq7mgOJZoOT/uDvbUOoreFeEqu3k0gqSoAixGKy/WAtbzr5z1NnTKl1bASi8tXKVUPpRldQiGo=
+	t=1751812585; cv=none; b=Mj34goKXISx7z0kcLc2y3EvVytTGSiNie6XrYMtOsxzLf+f4YQ+vqGhoRfbJX05a3EA0BJXbBMpsL87RGbvWfBZGF6R0tTRKyTa7vR1ng1pMHAeDz3oXC3BlYIHJmwlYaoWiaKB12TwjZPn/FfwpmTpQGLQvi7HbxRYKRl4rWFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751774577; c=relaxed/simple;
-	bh=XUcla0D10S+FckZ5tz4NRtTk78TPjbZ56REYXBR5dfE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BzEZj9tt3bC6dNp88InB6YiULgC+pcsB3iERZz9VG/Ld216k/NpVEXaMPD5JZ+wmujgRwYzzUvgq13rDplkIyB6fjWVNy8zlqvQSWE5Ox8Kx+Rlz++xoq+kTMmPkzN0vm7KPGBu+bsCKXMlFygjBDNKKmEp9oA4Rl18JC9lPKN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=Xh6af3Gm; arc=none smtp.client-ip=79.135.106.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1751774567; x=1752033767;
-	bh=XUcla0D10S+FckZ5tz4NRtTk78TPjbZ56REYXBR5dfE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=Xh6af3GmW36yM4lBbp46Kezb5/LM8ouSJjQ3u4MGb5E7AddAIMnG0Uf6f9/sCvxFy
-	 SGDonGKjugDI/gTpbzhpcThcJfprXhKaI45twJhUVLFU5ohoDDEDk+zElZoIKw1w1w
-	 n8P6pcg35i+WAD8cpxCHSkTp67a4Bnx1oasAz5+LyYwG9Hua0POEnhuY/K3SLIB5c8
-	 vhUaI5rP6+EdUnx/8AhYCU/llFjBPTJttdHp2pyoY0GOWh+WMekX2QNIbeXRszHuwF
-	 rzigVazRpTtQv5W+2ltmy1tzE8O7vGFix50NbZKbJeJFpZMgAlNG/ufnXoRrjoyqSy
-	 73umzYYEk5/kA==
-Date: Sun, 06 Jul 2025 04:02:41 +0000
-To: Danilo Krummrich <dakr@kernel.org>
-From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
-Cc: linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>
-Subject: Re: [PATCH] rust: pci: fix documentation related to Device instances
-Message-ID: <87seja7yqs.fsf@protonmail.com>
-In-Reply-To: <aGkJCix2VPaawyP-@pollux>
-References: <20250629055729.94204-2-sergeantsagara@protonmail.com> <aGkJCix2VPaawyP-@pollux>
-Feedback-ID: 26003777:user:proton
-X-Pm-Message-ID: eb9a5b0037f81516df17176bb2cf4c90669c86e5
+	s=arc-20240116; t=1751812585; c=relaxed/simple;
+	bh=ekByHfhCU5YFqk89HOWrsMr+RRd71IlBqB2XanDxxo0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tFSyDmMP3anZt1pHytH9Yf4Mqzn5KKPMQOq90zrv8o9QQkx/4cza9jEB/gzKYO7zv9MvsHOYNxl/KlsLIH6wYcr5ChMdtchciH2k5v6WOdcwx5WahNF1HLcOIz4weMKuX9GmcUiCWDNOrNB4K47PBGBpQr6ilKxclDrQeOWfzVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ll4o4Sol; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF6AFC4CEED;
+	Sun,  6 Jul 2025 14:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751812585;
+	bh=ekByHfhCU5YFqk89HOWrsMr+RRd71IlBqB2XanDxxo0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ll4o4Sol1xB9CHvaGKW/406YEBaUdZrTWq6lLV1dFJM2KaUURPnzXKOKi4uTgdkBT
+	 1ARmrnpLtOY7KMVDB1gDHAyrmr+XQkK70EWXKhVUZTeRpMdo/Te6dPK1XIjfMDqk2F
+	 JNs1d4BtRaLfWKAppA6dwapoZGigjAsBXAI15chD5JjzbpP/CbfnqPMJBmp90fFLDj
+	 EHmkjyr7KRKy+owRH85kLyWUqRUpvY0QS8x+4o2UU6BdcNMgrQEf7O3k+wuUb6uyo7
+	 mitoySK8mt5KCmY4x8lFrjn65/4yysdrxaisXKCB964z8BXN/NQ+lJ6TdguYwgTZoQ
+	 TtD7bp2k/QZEQ==
+From: Mario Limonciello <superm1@kernel.org>
+To: David Airlie <airlied@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+	linux-kernel@vger.kernel.org (open list),
+	iommu@lists.linux.dev (open list:INTEL IOMMU (VT-d)),
+	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+	kvm@vger.kernel.org (open list:VFIO DRIVER),
+	linux-sound@vger.kernel.org (open list:SOUND),
+	Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v7 0/9] Adjust fbcon console device detection
+Date: Sun,  6 Jul 2025 09:36:04 -0500
+Message-ID: <20250706143613.1972252-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, 05 Jul, 2025 13:14:18 +0200 "Danilo Krummrich" <dakr@kernel.org> wr=
-ote:
-> On Sun, Jun 29, 2025 at 05:57:56AM +0000, Rahul Rameshbabu wrote:
->> Device instances in the pci crate represent a valid struct pci_dev, not =
-a struct
->> device.
->>
->> Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
->
-> This commit has two checkpatch warnings, can you please fix them, add a '=
-Fixes:'
-> tag and send a v2?
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-Sorry about that. I was traveling with a new laptop when I drafted this
-patch, so my setup was not correct. Should have run checkpatch either
-way before sending this out.
+This series started out as changes to VGA arbiter to try to handle a case
+of a system with 2 GPUs that are not VGA devices.  This was discussed
+but decided not to overload the VGA arbiter for non VGA devices.
 
-v2: https://lore.kernel.org/rust-for-linux/20250706035944.18442-3-sergeants=
-agara@protonmail.com/
+Instead move the x86 specific detection of framebuffer resources into x86
+specific code that the fbcon can use to properly identify the primary
+device. This code is still called from the VGA arbiter, and the logic does
+not change there. To avoid regression default to VGA arbiter and only fall
+back to looking up with x86 specific detection method.
 
-Thanks,
-Rahul Rameshbabu
+In order for userspace to also be able to discover which device was the
+primary video display device create a new sysfs file 'boot_display'.
+
+A matching userspace implementation for this file is available here:
+Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/39
+Link: https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/2038
+
+Dave Airlie has been pinged for a comment on this approach.
+Dave had suggested in the past [1]:
+
+"
+ But yes if that doesn't work, then maybe we need to make the boot_vga
+ flag mean boot_display_gpu, and fix it in the kernel
+"
+
+This was one of the approached tried in earlier revisions and it was
+rejected in favor of creating a new sysfs file (which is what this
+version does).
+
+It is suggested that this series merge entirely through the PCI tree.
+
+Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/37#note_2938602 [1]
+Mario Limonciello (9):
+  PCI: Add helper for checking if a PCI device is a display controller
+  vfio/pci: Use pci_is_display()
+  vga_switcheroo: Use pci_is_display()
+  iommu/vt-d: Use pci_is_display()
+  ALSA: hda: Use pci_is_display()
+  Fix access to video_is_primary_device() when compiled without
+    CONFIG_VIDEO
+  PCI/VGA: Replace vga_is_firmware_default() with a screen info check
+  fbcon: Use screen info to find primary device
+  PCI: Add a new 'boot_display' attribute
+
+ Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
+ arch/parisc/include/asm/video.h         |  2 +-
+ arch/sparc/include/asm/video.h          |  2 ++
+ arch/x86/include/asm/video.h            |  2 ++
+ arch/x86/video/video-common.c           | 13 ++++++-
+ drivers/gpu/vga/vga_switcheroo.c        |  2 +-
+ drivers/iommu/intel/iommu.c             |  2 +-
+ drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++++++
+ drivers/pci/vgaarb.c                    | 31 +++--------------
+ drivers/vfio/pci/vfio_pci_igd.c         |  3 +-
+ include/linux/pci.h                     | 15 ++++++++
+ sound/hda/hdac_i915.c                   |  2 +-
+ sound/pci/hda/hda_intel.c               |  4 +--
+ 13 files changed, 97 insertions(+), 35 deletions(-)
+
+-- 
+2.43.0
 
 
