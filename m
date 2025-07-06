@@ -1,54 +1,58 @@
-Return-Path: <linux-pci+bounces-31574-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31575-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE6E1AFA2E8
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Jul 2025 06:00:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66E82AFA2E9
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Jul 2025 06:03:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 981F018980AB
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Jul 2025 04:01:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1ADFE1898161
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Jul 2025 04:03:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C2AD1CF96;
-	Sun,  6 Jul 2025 04:00:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0084157A55;
+	Sun,  6 Jul 2025 04:02:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="r6Dmio5j"
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="Xh6af3Gm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
+Received: from mail-10630.protonmail.ch (mail-10630.protonmail.ch [79.135.106.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233CE1362
-	for <linux-pci@vger.kernel.org>; Sun,  6 Jul 2025 04:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D82714F9FB
+	for <linux-pci@vger.kernel.org>; Sun,  6 Jul 2025 04:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751774447; cv=none; b=OKdDmTysEwUV+0w1tMD3kxntX8mRMTyBvqu8F/7WVUGJ2CzBCQhI+Fg5SDvYRnPnwSfrnttfUePDu41PgdokgAek3txKYPTXWZmHLaG9QHfMQ5Q0h9gemLbv77M+nqiNVvvYUWHyJW0W5+oDhqGhBFS2GOM7FRQYFUKaFutuv3U=
+	t=1751774577; cv=none; b=Mg9cEkYeztsasxCbo6H79s9gMt8Tz6REgpPVp77slEXa7LTHc6niz5eBfH3aw87fyqSgUJ9f0im2sBDf0a9UbjdGlM52jv4Iatq7mgOJZoOT/uDvbUOoreFeEqu3k0gqSoAixGKy/WAtbzr5z1NnTKl1bASi8tXKVUPpRldQiGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751774447; c=relaxed/simple;
-	bh=rI/kI0oAHIyuWvj9cLhxLiqFjgAQNmnf7gDVSGfxKsI=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=VdPiiwoaxhwg7ZEL9Qx2ge+oZI4p2dQi0Fkkhy3aj6rNTkX2PlAcg2Z7plNPN/5HchoHaJZRAts73jzuT25mlrJabHFgsVFfPHBzd5Zmcd99qtDa/5JHIKjl91sL64HJea1grED9a7CkHTShgZ4JIo9CFyEwDUJE3ChSojaG2II=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=r6Dmio5j; arc=none smtp.client-ip=79.135.106.29
+	s=arc-20240116; t=1751774577; c=relaxed/simple;
+	bh=XUcla0D10S+FckZ5tz4NRtTk78TPjbZ56REYXBR5dfE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BzEZj9tt3bC6dNp88InB6YiULgC+pcsB3iERZz9VG/Ld216k/NpVEXaMPD5JZ+wmujgRwYzzUvgq13rDplkIyB6fjWVNy8zlqvQSWE5Ox8Kx+Rlz++xoq+kTMmPkzN0vm7KPGBu+bsCKXMlFygjBDNKKmEp9oA4Rl18JC9lPKN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=Xh6af3Gm; arc=none smtp.client-ip=79.135.106.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1751774439; x=1752033639;
-	bh=gpd/usl0o6RHpKBvVUocgfEZk9/4I4i5Mm7Q5TNKVm0=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=r6Dmio5jwAzk2lrH7eODpHW/s/eMvEwKsCKWKMc0MsVTpDLH7wZnagu0XLdJQwVk6
-	 4AY5/hFqYIersJo8N5szBg3CXV8t9nOwDVHGbgKi77FoREqHroP+zaGygmOdXvBcoy
-	 X76AIJcXYAq9xGzZpH/EfyRWXmfbp8VzJvO1+llLOmHVJWfyAIgCK9tCqX+gqT+y1J
-	 5CuHqGGhDTRJoDLPTJ2dCVaeNqbGpk8JYPWqGqlxKo9mAETjWeoHyYsWLJt7V50n5L
-	 PnYBtsGtdrolbx8NQ7EJt8npvhYemo4R4mceahKMTltc8NWIuFcU321lqik3oY4NlJ
-	 h3h5AuqodvMOw==
-Date: Sun, 06 Jul 2025 04:00:32 +0000
-To: rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
+	s=protonmail3; t=1751774567; x=1752033767;
+	bh=XUcla0D10S+FckZ5tz4NRtTk78TPjbZ56REYXBR5dfE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=Xh6af3GmW36yM4lBbp46Kezb5/LM8ouSJjQ3u4MGb5E7AddAIMnG0Uf6f9/sCvxFy
+	 SGDonGKjugDI/gTpbzhpcThcJfprXhKaI45twJhUVLFU5ohoDDEDk+zElZoIKw1w1w
+	 n8P6pcg35i+WAD8cpxCHSkTp67a4Bnx1oasAz5+LyYwG9Hua0POEnhuY/K3SLIB5c8
+	 vhUaI5rP6+EdUnx/8AhYCU/llFjBPTJttdHp2pyoY0GOWh+WMekX2QNIbeXRszHuwF
+	 rzigVazRpTtQv5W+2ltmy1tzE8O7vGFix50NbZKbJeJFpZMgAlNG/ufnXoRrjoyqSy
+	 73umzYYEk5/kA==
+Date: Sun, 06 Jul 2025 04:02:41 +0000
+To: Danilo Krummrich <dakr@kernel.org>
 From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
-Cc: dakr@kernel.org, alex.gaynor@gmail.com, bhelgaas@google.com, kwilczynski@kernel.org, ojeda@kernel.org, wt@penguintechs.org, Rahul Rameshbabu <sergeantsagara@protonmail.com>
-Subject: [PATCH v2] rust: pci: fix documentation related to Device instances
-Message-ID: <20250706035944.18442-3-sergeantsagara@protonmail.com>
+Cc: linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>
+Subject: Re: [PATCH] rust: pci: fix documentation related to Device instances
+Message-ID: <87seja7yqs.fsf@protonmail.com>
+In-Reply-To: <aGkJCix2VPaawyP-@pollux>
+References: <20250629055729.94204-2-sergeantsagara@protonmail.com> <aGkJCix2VPaawyP-@pollux>
 Feedback-ID: 26003777:user:proton
-X-Pm-Message-ID: 3aa994d710a1d3aae738648b2fb2df6668803f52
+X-Pm-Message-ID: eb9a5b0037f81516df17176bb2cf4c90669c86e5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,43 +62,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Device instances in the pci crate represent a valid struct pci_dev, not a
-struct device.
+On Sat, 05 Jul, 2025 13:14:18 +0200 "Danilo Krummrich" <dakr@kernel.org> wr=
+ote:
+> On Sun, Jun 29, 2025 at 05:57:56AM +0000, Rahul Rameshbabu wrote:
+>> Device instances in the pci crate represent a valid struct pci_dev, not =
+a struct
+>> device.
+>>
+>> Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+>
+> This commit has two checkpatch warnings, can you please fix them, add a '=
+Fixes:'
+> tag and send a v2?
 
-Fixes: 7b948a2af6b5 ("rust: pci: fix unrestricted &mut pci::Device")
-Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
----
+Sorry about that. I was traveling with a new laptop when I drafted this
+patch, so my setup was not correct. Should have run checkpatch either
+way before sending this out.
 
-Notes:
-    Changes:
-   =20
-      v1->v2:
-        * Added Fixes: git trailer
-        * Fixed warnings from ./scripts/checkpatch.pl
+v2: https://lore.kernel.org/rust-for-linux/20250706035944.18442-3-sergeants=
+agara@protonmail.com/
 
- rust/kernel/pci.rs | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 6b94fd7a3ce9..b991fb440882 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -254,7 +254,8 @@ pub trait Driver: Send {
- ///
- /// # Invariants
- ///
--/// A [`Device`] instance represents a valid `struct device` created by th=
-e C portion of the kernel.
-+/// A [`Device`] instance represents a valid `struct pci_dev` created by t=
-he C portion of the
-+/// kernel.
- #[repr(transparent)]
- pub struct Device<Ctx: device::DeviceContext =3D device::Normal>(
-     Opaque<bindings::pci_dev>,
-
-base-commit: 2009a2d5696944d85c34d75e691a6f3884e787c0
---=20
-2.47.2
-
+Thanks,
+Rahul Rameshbabu
 
 
