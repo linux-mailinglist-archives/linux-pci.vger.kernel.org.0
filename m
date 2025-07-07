@@ -1,57 +1,54 @@
-Return-Path: <linux-pci+bounces-31638-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31639-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C73EAFBBC2
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 21:34:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11794AFBBD3
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 21:40:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 721DC3B9E5C
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 19:33:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 030CF1AA7861
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 19:41:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 264B926462B;
-	Mon,  7 Jul 2025 19:34:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B91526560C;
+	Mon,  7 Jul 2025 19:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="olvyWCrK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tx242jD+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDFB01D6187;
-	Mon,  7 Jul 2025 19:34:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE26194094
+	for <linux-pci@vger.kernel.org>; Mon,  7 Jul 2025 19:40:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751916859; cv=none; b=kaJWLYcqj6cjc7Pyk+0ng5TbOJcAha43mONcC39IW41iQbW0ifTMpIVuPrE1sbqSFDz+yEmaRFzgOP/cfT93FOvDC2uD2yhyKXQ6suG1/H3WAvGhhiAgWzqsGEzwh1jHyYqj+t0f0qz7eYLHXsdz2fW7xjB3WQniIOIviysVBqk=
+	t=1751917252; cv=none; b=OUC/6h9tj8cVVp9qZtkarIfWN3wu1jfeNmujZKiv72YkbQAUNblwmyDgTbjTpjm59jgIESkxsV6WesIXS+h/x6Z+ivnYjkM3y+OZI4hv1ahvPnGaouSW0Z3uqD1ggEIaXBvsPzIXWF6MStMbQRWOxR23Prl1vMjj/X3rQQGLUd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751916859; c=relaxed/simple;
-	bh=q4Un9UMyAO/m5V5UCHaW8IYs1wCaLRO9F9XqUTWH3xE=;
+	s=arc-20240116; t=1751917252; c=relaxed/simple;
+	bh=j9UsQGYMM7Ss1VVL7GGS59w8Rq8uJILdYRZjMSoWHno=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=iSaquByRJ/1cpConJZtVqBIGYuoCydkq6j6oHv+X3hjeAc9hgmeC6f24BFtjnI8uCM7BVYkMwcUZqrV/ujlaqVNPNHFqor63GbF8Dim/ITxB4hHTv/WjX/KScJ68Jgp4cS9eVMC4aUR7Q5v0x0nxmyksTA7puJNPqOCNnh5Lqp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=olvyWCrK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CF8EC4CEE3;
-	Mon,  7 Jul 2025 19:34:17 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=XdLe0NSP0u+d7dimMgRyyCnSdbAUV+ktVmVHV2I4b08OtryQQdPF8pdyESAfxkQ9GkmpLtQ1+E8hdsAIEPvdliKFVWq3Lsu/v2RO/WbKPcTblpJMNgMv8dV2w0J8G5Jl+QcaqWc69b+HNb0nx9u3YouPLcvDf5+1OvxG7LdbH/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tx242jD+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54692C4CEE3;
+	Mon,  7 Jul 2025 19:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751916857;
-	bh=q4Un9UMyAO/m5V5UCHaW8IYs1wCaLRO9F9XqUTWH3xE=;
+	s=k20201202; t=1751917251;
+	bh=j9UsQGYMM7Ss1VVL7GGS59w8Rq8uJILdYRZjMSoWHno=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=olvyWCrKA61vFemOq86pVptJUU70apmXkO1jxlJM/MIPixuIzFTpCaEOnxAvPAIN+
-	 XPZ+T0AMf1zFyP5Ax8dCgixUzT+l4ErYyinB5XaNIvo2oUvj3bj3OHQV0Hu8v4Aacd
-	 rki8Y/zvnAsFt9rAzExc2W8ZCKotFSsp4ETOJGnaffLAN8NtX/c6AIgv9mTT4xnU1i
-	 fbWMeRaoNbYy2H5JcYaIngnm7EwkZGqU9HoRjwOPsXehuh4GHnfb2t7srYQkNzxpn7
-	 sTneFKW+7gU2MCU33a6o5cMT3X8OQezYF97b0Mtf0xYjRDj2PwGuR/oHxuopGppRxw
-	 /Tbcb0SDmJ7dw==
-Date: Mon, 7 Jul 2025 14:34:15 -0500
+	b=Tx242jD+jurrmxNUPCJMFZO7vWTZTWe3m61oSu47mUHlzOSO9bL3x6j13DAjmqNye
+	 bOWx4NSrCZs6vRaPOFFXqAdWTrsryiGrDJWET4Lh5V6KLUbtC98GlAk+5nOlJCRib0
+	 CuRGZ6437JdYmDjgqvwY0AzK9ElVasnHY1SvgV+gfCbbjtJG4voZTEyn7YDRm6T0n3
+	 IKh3pIxVRgQxmJm/aaVfNPHlKVBfY9h0oPAK5pN7sl18J8c5GnYmlOHkAzvfnIuEYv
+	 Rd6lUIBAjcTgLr0qWtYqlhwWX1dKb9FOErqU5XCOeN4kOuYAHKaA5b9xHq1B2caLFp
+	 uxal6tQigWmUQ==
+Date: Mon, 7 Jul 2025 14:40:49 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
-	bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: imx6: Correct the epc_features of i.MX8M chips
-Message-ID: <20250707193415.GA2095765@bhelgaas>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH rdma-next 1/8] pci/tph: Expose
+ pcie_tph_get_st_table_size()
+Message-ID: <20250707194049.GA2096181@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,60 +57,95 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250617073441.3228400-1-hongxing.zhu@nxp.com>
+In-Reply-To: <bb2b18f612dc99bb46c9f5c2690013aeddeacca8.1751907231.git.leon@kernel.org>
 
-On Tue, Jun 17, 2025 at 03:34:41PM +0800, Richard Zhu wrote:
-> i.MX8MQ PCIes have three 64-bit BAR0/2/4 capable and programmable BARs.
-> But i.MX8MM and i.MX8MP PCIes only have BAR0/BAR2 64bit programmable
-> BARs, and one 256 bytes size fixed BAR4.
+On Mon, Jul 07, 2025 at 08:03:01PM +0300, Leon Romanovsky wrote:
+> From: Yishai Hadas <yishaih@nvidia.com>
 > 
-> Correct the epc_features for i.MX8MM and i.MX8MP PCIes here. i.MX8MQ is
-> the same as i.MX8QXP, so set i.MX8MQ's epc_features to
-> imx8q_pcie_epc_features.
-> 
-> Fixes: 75c2f26da03f ("PCI: imx6: Add i.MX PCIe EP mode support")
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> Expose pcie_tph_get_st_table_size() to be used by drivers as will be
+> done in the next patch from the series.
 
-"Correct the epc_features" doesn't include any specific information,
-and it's hard to extract the changes for a device from the commit log.
+This series doesn't actually use pcie_tph_get_st_table_size().
 
-This is really two fixes that should be separated so the commit logs
-can be specific:
+Subject line convention would be "PCI/TPH: Expose ..."
 
-  - For IMX8MQ_EP, use imx8q_pcie_epc_features (64-bit BARs 0, 2, 4)
-    instead of imx8m_pcie_epc_features (64-bit BARs 0, 2).
-
-  - For IMX8MM_EP and IMX8MP_EP, add fixed 256-byte BAR 4 in
-    imx8m_pcie_epc_features.
-
+> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 > ---
->  drivers/pci/controller/dwc/pci-imx6.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  drivers/pci/tph.c       | 11 ++++++-----
+>  include/linux/pci-tph.h |  1 +
+>  2 files changed, 7 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 5a38cfaf989b..9754cc6e09b9 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -1385,6 +1385,8 @@ static const struct pci_epc_features imx8m_pcie_epc_features = {
->  	.msix_capable = false,
->  	.bar[BAR_1] = { .type = BAR_RESERVED, },
->  	.bar[BAR_3] = { .type = BAR_RESERVED, },
-> +	.bar[BAR_4] = { .type = BAR_FIXED, .fixed_size = SZ_256, },
-> +	.bar[BAR_5] = { .type = BAR_RESERVED, },
->  	.align = SZ_64K,
->  };
+> diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
+> index 77fce5e1b830..cc64f93709a4 100644
+> --- a/drivers/pci/tph.c
+> +++ b/drivers/pci/tph.c
+> @@ -168,7 +168,7 @@ static u32 get_st_table_loc(struct pci_dev *pdev)
+>   * Return the size of ST table. If ST table is not in TPH Requester Extended
+>   * Capability space, return 0. Otherwise return the ST Table Size + 1.
+>   */
+> -static u16 get_st_table_size(struct pci_dev *pdev)
+> +u16 pcie_tph_get_st_table_size(struct pci_dev *pdev)
+>  {
+>  	u32 reg;
+>  	u32 loc;
+> @@ -185,6 +185,7 @@ static u16 get_st_table_size(struct pci_dev *pdev)
 >  
-> @@ -1912,7 +1914,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
->  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
->  		.mode_off[1] = IOMUXC_GPR12,
->  		.mode_mask[1] = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
-> -		.epc_features = &imx8m_pcie_epc_features,
-> +		.epc_features = &imx8q_pcie_epc_features,
->  		.init_phy = imx8mq_pcie_init_phy,
->  		.enable_ref_clk = imx8mm_pcie_enable_ref_clk,
->  	},
+>  	return FIELD_GET(PCI_TPH_CAP_ST_MASK, reg) + 1;
+>  }
+> +EXPORT_SYMBOL(pcie_tph_get_st_table_size);
+>  
+>  /* Return device's Root Port completer capability */
+>  static u8 get_rp_completer_type(struct pci_dev *pdev)
+> @@ -211,7 +212,7 @@ static int write_tag_to_st_table(struct pci_dev *pdev, int index, u16 tag)
+>  	int offset;
+>  
+>  	/* Check if index is out of bound */
+> -	st_table_size = get_st_table_size(pdev);
+> +	st_table_size = pcie_tph_get_st_table_size(pdev);
+>  	if (index >= st_table_size)
+>  		return -ENXIO;
+>  
+> @@ -443,7 +444,7 @@ void pci_restore_tph_state(struct pci_dev *pdev)
+>  	pci_write_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, *cap++);
+>  	st_entry = (u16 *)cap;
+>  	offset = PCI_TPH_BASE_SIZEOF;
+> -	num_entries = get_st_table_size(pdev);
+> +	num_entries = pcie_tph_get_st_table_size(pdev);
+>  	for (i = 0; i < num_entries; i++) {
+>  		pci_write_config_word(pdev, pdev->tph_cap + offset,
+>  				      *st_entry++);
+> @@ -475,7 +476,7 @@ void pci_save_tph_state(struct pci_dev *pdev)
+>  	/* Save all ST entries in extended capability structure */
+>  	st_entry = (u16 *)cap;
+>  	offset = PCI_TPH_BASE_SIZEOF;
+> -	num_entries = get_st_table_size(pdev);
+> +	num_entries = pcie_tph_get_st_table_size(pdev);
+>  	for (i = 0; i < num_entries; i++) {
+>  		pci_read_config_word(pdev, pdev->tph_cap + offset,
+>  				     st_entry++);
+> @@ -499,7 +500,7 @@ void pci_tph_init(struct pci_dev *pdev)
+>  	if (!pdev->tph_cap)
+>  		return;
+>  
+> -	num_entries = get_st_table_size(pdev);
+> +	num_entries = pcie_tph_get_st_table_size(pdev);
+>  	save_size = sizeof(u32) + num_entries * sizeof(u16);
+>  	pci_add_ext_cap_save_buffer(pdev, PCI_EXT_CAP_ID_TPH, save_size);
+>  }
+> diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
+> index c3e806c13d64..9e4e331b1603 100644
+> --- a/include/linux/pci-tph.h
+> +++ b/include/linux/pci-tph.h
+> @@ -28,6 +28,7 @@ int pcie_tph_get_cpu_st(struct pci_dev *dev,
+>  			unsigned int cpu_uid, u16 *tag);
+>  void pcie_disable_tph(struct pci_dev *pdev);
+>  int pcie_enable_tph(struct pci_dev *pdev, int mode);
+> +u16 pcie_tph_get_st_table_size(struct pci_dev *pdev);
+>  #else
+>  static inline int pcie_tph_set_st_entry(struct pci_dev *pdev,
+>  					unsigned int index, u16 tag)
 > -- 
-> 2.37.1
+> 2.50.0
 > 
 
