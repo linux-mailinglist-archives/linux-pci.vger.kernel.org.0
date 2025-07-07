@@ -1,293 +1,258 @@
-Return-Path: <linux-pci+bounces-31627-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31628-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 540B0AFB8D1
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 18:41:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9761FAFB966
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 19:04:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 14C877ACDEA
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 16:40:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5B5A47A1F91
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 17:02:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F1822258E;
-	Mon,  7 Jul 2025 16:41:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ECD3253B58;
+	Mon,  7 Jul 2025 17:04:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="XSInk9hu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SN0yqhSr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011060.outbound.protection.outlook.com [40.107.130.60])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5A4221F1F;
-	Mon,  7 Jul 2025 16:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751906495; cv=fail; b=dz8pknovegRafAwzOwvVEYzqJf9qn0JIZNdKSoHWHSdioq8YJZumq8ct+G4Yk09fyJ5Hu/0VWrjNNXzA0PwXn6YlYo5GpJgBN+Fjs9410GsuI+JgROYDnLvADGau+rZASYEBOTW3S+jnKtcT0iUbL8xXBWKbirlJgfEOIlrDURQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751906495; c=relaxed/simple;
-	bh=IFy0BGuhFSMjxPg7zfFSeTZb3KkfDevG7mHL4VS9cKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kX6N+FK0shvwE0Fvn3UZuwg5AKq+e7dfYmCZq3ykMfgdEhx/RR1OIneoLbEs8Tpia0NqJ+CmD9q6daWP4ZD2XCu6dwg/MFNaxiDhTwDJJDgr7edbKQzIHILsbPlZ2nmwZpTL9RHRvColgYsUzen53iwIlzdf+eTGmKFUoaxXdY4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=XSInk9hu; arc=fail smtp.client-ip=40.107.130.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vFANmV1w+bCRxbtg+8z+nDJy2VBs0KZAQC+5kb5lzbJTJBXACTMm+M+y1GbDX6kQjsvkZKv962FceTavgruGWxCpsX6wGmUIuK0s5lWTbKuBn3x38d1E+5wwkNrL5qSLxe0z8vvkpGRQSlWFZIH0uJ1cwDEFmC8ujPxE3ZWpXVRXfwIe+ka8sDxYlRidPRd9E2tnVoeGyN6A4cRwazhzYq8+QKHHkNuG0zs+YtEKYYUpdmV3oblsHVj/BgejCL3HxWDwJUHndbXgKQcSUsa1IB/GUPaTjpukBwdqx/G06TeHD5jsrIbjt8z5qdPcvFw89R3tUe0V2Zjk3Ls70fMpdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4+roztu8jbiFxmZWqoJW4QDZIVjA8JXdPNfEFhBwxhs=;
- b=YHPfZbQ357dwzOw6QBTFGh7ObqchMrdv4UAi15xZvJZQb/lcqx+1ax8UfPL7oiOXVcwWV2kTr5MAKRweNckV+7IAdh6frlkkJ5szMlddaqnWZrZWek5UARPzEJnfW01yxT8YvPLDFXrGWJgrithuyg6k0AGN/2Aic9RbvpRf1Wy7vfbPpnb7+HbTNVY53UPy+HPQkvDDdF2f8FqZVpOmpfSJQRAGzLfg6yJeGPbZIlM/lnHPD/JUH+d0pqsh3NtYtxBK9W8fKUT3/Cfj1R+7YbjqrHQARG13yEWHSW91iwnfSH3YU5Dt3SQx7RzacA12p1aB4gue0HiPHIbt709D9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4+roztu8jbiFxmZWqoJW4QDZIVjA8JXdPNfEFhBwxhs=;
- b=XSInk9huMHf8sc1pSVzJfe1t64dzz74/XJKmyRZ9VUXKg8XfX/lOizMWNfGEzZQbuBResOB09b/TXeDKOQucCXkU2zJrJEkw4alVkku45/28DLz1MDRA7NwFfG90+odSbdnky39lqm6DuWa1kKUEKfm1eXeMGhwEWgJx+kfDe4204qHWBenjKZohDx6Qui/aIVr+2/OGz+ngoBrMP9MB5XWSUBX+cUz5eNxJP37PgjKmRNrK0zgNwCnP5GZlwPBfF/0kG/Cvrz7I6pqd/oiwxKr5eBhbYr1uzVopOXRPyx70k3GsDq8G0ErsGezb9kUwfG66fOFbvD9852KaDTuCRA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB7526.eurprd04.prod.outlook.com (2603:10a6:20b:299::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.26; Mon, 7 Jul
- 2025 16:41:29 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8901.023; Mon, 7 Jul 2025
- 16:41:29 +0000
-Date: Mon, 7 Jul 2025 12:41:22 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Shuah Khan <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org,
-	jdmason@kudzu.us, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, imx@lists.linux.dev,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v19 01/10] PCI: endpoint: Set ID and of_node for function
- driver
-Message-ID: <aGv4slE8/kmxHvlU@lizhi-Precision-Tower-5810>
-References: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
- <20250609-ep-msi-v19-1-77362eaa48fa@nxp.com>
- <ne5yrjtdevmndqds4uwo2ppq6gay2wuwjouyf33lqr5g3nfkwr@lkwqlwqjqbmx>
- <aGVE6veZm3bL0mVJ@lizhi-Precision-Tower-5810>
- <75opnvi46fbmsnmykjwn3gmir7r3uqhzp7tfoua42cado6aopu@dmos2v2qd3jn>
- <aGVN/5yoLumfmlDv@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aGVN/5yoLumfmlDv@lizhi-Precision-Tower-5810>
-X-ClientProxiedBy: AM0PR10CA0043.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:150::23) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2127C22DF9E;
+	Mon,  7 Jul 2025 17:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751907845; cv=none; b=HMAHBR2LawWUW4LZYMz2hCwsOsbRPrIbxQStLk9YWWKUGMGU/litwKKUFV5NZg9UUoVHtej6vKy0VfANQ7B2S1chnxohnOS0Rdg7oqyfFYVZC2BIDTN3HgsIlAX6aXpTmCcToi/fBVeKi0gCBFNpw39+XGNINfawRkQu/a0NdlI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751907845; c=relaxed/simple;
+	bh=fXVvzF15bpWsezX3Z1LLweb0HAZMkiYNVmMTks27JOA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BFPsiMaON6H/uPkVBXMcwg2uwG/JcfthCout1+ZBekGlHozkU2WGd3wIUikv8qXh/JxALO99cqi4HqGvuV8+FoGs3IJe90PeKyRSjF0+pdEXEylNE6GPhRovEBtsmk0LrQKdLQ1DWAwV2T84NIAFDIuuHGiyIlX/pk94ykxN+XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SN0yqhSr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0B4DC4CEF4;
+	Mon,  7 Jul 2025 17:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751907844;
+	bh=fXVvzF15bpWsezX3Z1LLweb0HAZMkiYNVmMTks27JOA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SN0yqhSrz2l8O207ABkdKZPGwlSQ14EjGxfB2RhwB7V0asUw3kRPHe0tjKtdmtQIA
+	 T3TRdJ6L58m/3ld/A0Hn5bt/oOICnvalzoLbdzrS8anRnYG1uxhRtrsbam8XAecPSj
+	 4Xeru1/kl4xM9pEjjnvSs1PZVSeKvSVexHBPMFuGBGwUUiFPr+D6RQoHpXkpaJqKKR
+	 TeYu1WSTX+/tXdYvrI7JA0HlBHJn4Wfs6cq0+uj2EfokV+595mr8R9L03JoViqGgmY
+	 bLry+n5A+gdHRaTznSPSZop3ygbR7pfwcpgc3G/efE/PZFBp5v0Kk4lttHQWGql/8a
+	 7LV5s82MarlFQ==
+From: Leon Romanovsky <leon@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	Bernard Metzler <bmt@zurich.ibm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Chengchang Tang <tangchengchang@huawei.com>,
+	Cheng Xu <chengyou@linux.alibaba.com>,
+	Christian Benvenuti <benve@cisco.com>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Edward Srouji <edwards@nvidia.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Junxian Huang <huangjunxian6@hisilicon.com>,
+	Kai Shen <kaishen@linux.alibaba.com>,
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	linux-pci@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	Long Li <longli@microsoft.com>,
+	Michael Margolin <mrgolin@amazon.com>,
+	Michal Kalderon <mkalderon@marvell.com>,
+	Moshe Shemesh <moshe@nvidia.com>,
+	Mustafa Ismail <mustafa.ismail@intel.com>,
+	Nelson Escobar <neescoba@cisco.com>,
+	netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>,
+	Potnuri Bharat Teja <bharat@chelsio.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Selvin Xavier <selvin.xavier@broadcom.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>
+Subject: [PATCH rdma-next 0/8] RDMA support for DMA handle
+Date: Mon,  7 Jul 2025 20:03:00 +0300
+Message-ID: <cover.1751907231.git.leon@kernel.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7526:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8126c07f-50c3-4958-c945-08ddbd751f89
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|52116014|19092799006|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Zi84eVd0b3Nub2Q2R0QvbUoxN1F5by9pcC9aeHNGTHZvZlpUcVZQUXVxaTZD?=
- =?utf-8?B?cWVCaWVYazlGSThRWmFQZGF1dmZCM2ZMOEg4bGppNzJ5M0d5a3FiQU43T3BM?=
- =?utf-8?B?YVduMTF1TE1YZ3lrdGVlNjRROWtXb0FBdUIzd1B4SFpOdFhzQUZIbkh6WHBG?=
- =?utf-8?B?K1Bobkc2SHBNd1BjZ3loZ3NmaGxLNXYzTDRoSHlzczZSTTVwMDJTMFFnYTlt?=
- =?utf-8?B?TSs3NTRwR0dDc3RHUDFlcjJBeTIyR2RnWlVKR2dwR1lYdWlZRmNJZ0h5Rlg5?=
- =?utf-8?B?Y2ZoZ3ZwUzZzMFFKR3BNTXRUNGN0T3JmMlZpeGRSYzJ6T2RwQVJwT1EvZE9n?=
- =?utf-8?B?YjY2a0htVEVPTldYa1lYdmRQSCtFR296UDl4MkJpZXhCbzZVRUZVMkMyMCtp?=
- =?utf-8?B?OS9oaHhBcndpSHdvUHJrQUNjbXoxbk9JUmJUZmFKUFliVmdvaHl3YjNoV3di?=
- =?utf-8?B?cmcyUVhGTWRmNEJFZHVQbi9CNVQ4RHN2bFNDM0NqSUFNNTVKSzIwWTRwb240?=
- =?utf-8?B?K0dPVU80bjJSTEtILzhhMW1nckVaa2lpUExqYWFXU3VacGkxQ3FaUm1jNHpv?=
- =?utf-8?B?M3ZEZ2pDQmpKdlF4UFg5a00rV0ZnbVdBV3g3dStFcWUrZGgxbmpNbGhDZzJz?=
- =?utf-8?B?OXlnTnNwWTBScGI0UTlCdnRKY0FkYS9kYkN4bitMckJQbW1abmJoc1dGNFNr?=
- =?utf-8?B?QjNWVDJ4K3kxeGtSNWJqdTViVi9CaUNnZEdEd2RuZmZGR3NrRHNOQk1lTElY?=
- =?utf-8?B?NFZFU3ZiM2hZWXBIY1p1VW10STNmUlJVc21lK2ZGbmErNi82b2NiUThrbXlt?=
- =?utf-8?B?amUxc3FoelR1Z2t1SUQ4dWcrT0xoTU9jemZNTHlYZ2hGQUdzWk1uT091UmpM?=
- =?utf-8?B?czlJVjBvRm1IbkFaQ0t4SE93UnNNbGFOWlVTd2RyajVJaVJpQzBRdGpsdUQ3?=
- =?utf-8?B?b3pIR3I1VGJxS0MwK2dLUW5TTmFQaXBYRWZGbG1lZXgxY2xEVjhmOFhkM1k3?=
- =?utf-8?B?RVdyS01Vd2orY25iUkovNjNKcmNoRzBCWE0xWE5wZW5VZnhDbXhyazZnWGtX?=
- =?utf-8?B?N1dBcjh1V3FyMzV0QTVYS3loblZUOWNXcW9qUG95SDhjc2ZoU0wrUTU0RVdl?=
- =?utf-8?B?NmF0ZnhtMjhWcGtsazRKK2ZBZS8xejBSRktqRHlYUmU0Tlp0OUlGUjhUOVlJ?=
- =?utf-8?B?QkpMRFlyNlp0OTJ6dFN3ZVRXM21seXJJVjU4U0hPaDJpaXRvMWNMK0U3WlVt?=
- =?utf-8?B?ZkkxNEFQYmdzSjJpSEVsc1VpQWMvcWlWV25oV3FvOElVTlJrMkQ5REpOTEg1?=
- =?utf-8?B?ZWZzNEZaQ0lPZzVtTW9lNVlSUjU5cm9iRjRGUGliaTBhUXlCTWFleXFWbFdL?=
- =?utf-8?B?TW1wekFua3Yzc05UNlVqTTBYRWN0REhvUGRLWFBucHBlNm1FblNpMkNlM09N?=
- =?utf-8?B?S1VUQTAwL2NKeFhTNDFIYWhLcXpFZjhoWkE0dm8vNFVFdFpUUnJBZDlIYXNx?=
- =?utf-8?B?L0lRSmJyVEFDOTRReFQrUDJTR0c0OXhYZ3NadnlScmJWUitONUNJZU02RmZr?=
- =?utf-8?B?VWgvQUpqQUJhcTNFSitIQTZGaEZmTlhuWS81ekRhQlNYSHdZbXRwcFZVbFdP?=
- =?utf-8?B?aDZCZFA2QzhVTnVPcEVVUmxqbUNhUENQK3JVSFZCM0ZGS1loeTRuZnV3OUZF?=
- =?utf-8?B?SXVIZUNMd2tKQUZqNHpwZ29YRC94K1RiSmFmTjBVaHMxNUdkWXF6Zk81WldW?=
- =?utf-8?B?OUJPZnJmR0o4QUNUS0tsV2s2ZkhZY005YkNrc0IxL3ZDZE9nS1pqM2l4MnBX?=
- =?utf-8?B?QU01NHc0ZjhsSzhta09Pc3NZSjZGclYwTm5QL3BqVWdlUGV0eGVoTmVjUVF3?=
- =?utf-8?B?cFZ4RExtbTFXZjdCQ000Z1lHSXBlQ2VrSkRDMHN5U0FJckRrRFhSQjNkYWtK?=
- =?utf-8?B?STBNa0hWVXBLbEgzaktPT0lveEx1YTE1cElHL0dlN2JVWkR2VXI4K3BTWHRK?=
- =?utf-8?B?Z3daOEQyN3VRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(52116014)(19092799006)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aXd5b25kUEh5ZlRGSEg0WFdaMVBabzZQMkw1RnQzenBGeEU5bHRKMEY3dWdz?=
- =?utf-8?B?dGxDV3I5NDJ0WjRVOUNibFJ2TFFyYUNINDg2a29SM0czWDg4eDZVODBuNHhm?=
- =?utf-8?B?SGhNd284MFBtRTVVYTlvU25CYmt4UnJFcUNOa0piYzRxdmtKdjVrcDFVVnZa?=
- =?utf-8?B?L3d1VnZTODIyZlZDbjRtYjU2eTNCajVIYWFpNk9lTWI0UlZ6bW1mR1l6dHhY?=
- =?utf-8?B?V29DS29KMTI5NjNQckRpT3YyVlIydGdpTWpjaVdXMGpGQzQ1RSsyTVVFOWU4?=
- =?utf-8?B?Ym9iNUhLYytmeWZjcHlUM1lGTXNRakxraEdmaHNxNE1aNUVnK0tpa2VMbzlw?=
- =?utf-8?B?R1FISEtqSW5mYUQ3dnRrNXNpbVIvS1kzRTV6cDhoWFFyeXN2cHZsaWJzdnB2?=
- =?utf-8?B?aGxkNnJGd1pjdjBURFRBYVlWUW9oYTZrbVNjRTlKanJzS1pZTTZjOXk2ZHc4?=
- =?utf-8?B?R0wyM1ArVEVVYjFUVC9XUTRwb3lnb1BPYVhXenNNd2ExYVJLbk9WaHFLVlJq?=
- =?utf-8?B?WU5aVE1DQkFhc0ZWZ2tYdDRpR05rU2xPVXczVXh6TWRlUHRZY3VWL21GSjc1?=
- =?utf-8?B?MkQ2RS9FTjRzTVhsbmNMQ2F1d0JvYUlkdmdBUTJKODZ0d3RKcUxEb3BRZVp3?=
- =?utf-8?B?THVheHczU0FPQ0ZSWjNPRDdiTEFPTnh5aTg3blZmZ2NlYmgvbUgrckpXY3JP?=
- =?utf-8?B?U0JaRW1CbU0vbHlvVS94d0l0cXZEMzcxVmdFbFBmbUsySlhkbHUwbWtoZ1d5?=
- =?utf-8?B?UDJoZGdkU1FoVmYva2grUEVQMHRLYjdhMHNyY2JOOTB0ajkreFBGbWNqV3NO?=
- =?utf-8?B?OFp5RjdDSlpvY0t1Rmp4TkpxR0ovR29qWndhRDR0OXJzd3hmZ3VRRUd3WVJE?=
- =?utf-8?B?V0N0K2R5K0wyTkR4RFRadlNha1kzTnhHZ0NFVFZzYlpHRlQrZXR2a1pQQ09s?=
- =?utf-8?B?ay9NUEw0MWJvVEFFUWZSMzVjdzN0ZEc3Mld0UDlwV3dHcjA3ME1KZWZRWmkx?=
- =?utf-8?B?a3ZzY0NPTVdLQmJlWTZLTURVQ2RQRDhZelVkTW5xa3dQcVBFVkkzRmFsV1N5?=
- =?utf-8?B?U3Z0bVBhRGNHSCsrbzY0SmlidTdGaklhbVBoaWZKSEtaZ3JYUTNtRi9INUtC?=
- =?utf-8?B?ZmdHMUpKWmpLRjduenZJRFJoSkgrOFhleCtIek1DZkdMbVdJQ3RLK2VOb0hN?=
- =?utf-8?B?YlBlSU5seDJmMk1teStETFBnY3JWL0ZOdFZGOG1HWDVEUkxSeDJxUWxxbDJo?=
- =?utf-8?B?d1hsaHlaVkppK29TYjNxZ3lna2JZRk1hLzlMNW00M2NFaUgvbzIwVm5kSitQ?=
- =?utf-8?B?dmR1cURCN1AzcllqTGw4YmJpYVY0bDhPczI5WVBzMUZ5eWlJMmcrVnJ0a3RM?=
- =?utf-8?B?cU9XZzlHcGpsZHYzcU1tU1p4ZlplaXNvRXZyZlNaQTRYR0pGUks3dmpkZEcr?=
- =?utf-8?B?c2xZeWlYRThlZHZjV2FNVDVTYTY2SkJaY3orT2Z5ZGpXZGRpNC9qM1FIM1Vh?=
- =?utf-8?B?MjAyY01zRk9vRW1aVmZEMGpuUytXSkdoZ3p0ak5LMnhwWWJSQ2RUdUJNQ2lv?=
- =?utf-8?B?QUhQRzA5NkFybTd6YS9xTERQOUVFVTJrS0lzVkNEdWtCRFlCU0JQOFQ1QUk0?=
- =?utf-8?B?dGxnTUVwaFNjbm90eTRXWmFzM2ZqMmdBNHlBRFZoK3lHL3BOYW5lRmFZcjlL?=
- =?utf-8?B?RzRzczcrL0loUW14bHFEWmFaWWJ1ZEJIODVUTlRVOEJrVTcvMkdlbDE3anZY?=
- =?utf-8?B?emhMaTI0NHB2U05iTnEvd2hzajRreGp0SlFQdWl5eHQ2YStGSjU5MjBZZFhD?=
- =?utf-8?B?MlNuWFRjRG8zbFYyQi85SXhDbGZxWEJjVWNjMC91YW9Wait5V09hUmdsc1J6?=
- =?utf-8?B?WS9YdFhWaTY3VHFERGRDeVNSa1NwRjdXK1NVWWVRcmRmMnpZR3NDTHAxazJl?=
- =?utf-8?B?cFpSWUd0Tmp4a1lWeSsyV1NRckdkU3dra0xmNjlibjB3OElEN2lZcUVMdmg4?=
- =?utf-8?B?RTg5Z0VLN2srRWdjSXplNmt6WUt4ZzR2TU1uWWxrdEhFZ2FiV1FKcnZRTjhn?=
- =?utf-8?B?b3Bsam1TYzZoTHdOVXlXOWkyaDA2UUZlb29teFR6R3VyNmpRcHQ2eW5jZWsz?=
- =?utf-8?Q?9CbA=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8126c07f-50c3-4958-c945-08ddbd751f89
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 16:41:29.5507
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QkZyXp1H6TKh20WNAtGTiaBTco6hW7nu8OvDcorUmZWuDGGCnnlfxBKQXnAV4AkhbbP2aS1MUkBFDL+wcsH+IA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7526
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 02, 2025 at 11:19:36AM -0400, Frank Li wrote:
-> On Wed, Jul 02, 2025 at 08:25:17PM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Jul 02, 2025 at 10:40:53AM GMT, Frank Li wrote:
-> > > On Wed, Jul 02, 2025 at 04:30:48PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Mon, Jun 09, 2025 at 12:34:13PM GMT, Frank Li wrote:
-> > > > > Set device ID as 'vfunc_no << 3 | func_no' and use
-> > > > > 'device_set_of_node_from_dev()' to set 'of_node' the same as the EPC parent
-> > > > > device.
-> > > > >
-> > > > > Currently, EPF 'of_node' is NULL, but many functions depend on 'of_node'
-> > > > > settings, such as DMA, IOMMU, and MSI. At present, all DMA allocation
-> > > > > functions use the EPC's device node, but they should use the EPF one.
-> > > > > For multiple function drivers, IOMMU/MSI should be different for each
-> > > > > function driver.
-> > > > >
-> > > >
-> > > > We don't define OF node for any function, so device_set_of_node_from_dev() also
-> > > > ends up reusing the EPC node. So how can you make use of it in multi EPF setup?
-> > >
-> > > In mfd devices, children devices reuse parent's of_node
-> > > drivers/gpio/gpio-adp5585.c
-> > > drivers/input/keyboard/adp5589-keys.c
-> > > drivers/pwm/pwm-adp5585.c
-> > >
-> > > multi EPF should be similar to create multi children devices of mfd.
-> > >
-> >
-> > No, they are not similar. MFD are real physical devices, but EPFs are (so far)
-> > software based entities.
-> >
-> > > > I don't understand.
-> > >
-> > > >
-> > > > > If multiple function devices share the same EPC device, there will be
-> > > > > no isolation between them. Setting the ID and 'of_node' prepares for
-> > > > > proper support.
-> > >
-> > > Only share the same of_node.
-> > >
-> > > Actually pci host bridge have similar situation, all pci ep devices reuse
-> > > bridge's of node. framework use rid to distringuish it. EPF can use device::id
-> > > to do similar things.
-> > >
-> > > Actually iommu face the similar problem. So far, there are not EP device enable
-> > > iommu yet, because it needs special mapping.
-> > >
-> > > Prevously, I consider create dymatic of_node for each EPF and copy iommu/msi
-> > > information to each children. But when I see adp5585 case, I think direct
-> > > use parent's of_node should be simple and good enough.
-> > >
-> > > In future, I suggest add children dt binding for it. For example: EPF provide
-> > > a mailbox interface. how other dts node to refer to this mailbox's phandle?
-> > >
-> >
-> > As I said above, EPFs are not real devices. There is currently only one
-> > exception, MHI, which is backed by a hardware entity. So we cannot add
-> > devicetree nodes for EPF, unless each EPF is a hardware entity.
->
-> But how resolve this problem, if a DT device need phandle to a EPF? anyway
-> this is off topic. let go back this doorbell.
->
-> It needs an of_node for EPF device, I tried many method before.
->
-> Create dymatic of_node for it? MSI framework still go through to parent
-> of_node to get such information. not big differnece as my view.
+From Yishai,
 
-Actually, DMA have simular issues, just 'workaround' it now.
+This patch series introduces a new DMA Handle (DMAH) object, along with
+corresponding APIs for its allocation and deallocation.
 
-pci_epf_test_read() {
-	...
-	struct device *dma_dev = epf->epc->dev.parent;
-	...
-	dst_phys_addr = dma_map_single(dma_dev, buf, map_size,
-                                                       DMA_FROM_DEVICE);
-					^^^ [1]
-	...
-}
+The DMAH object encapsulates attributes relevant for DMA transactions.
 
-[1] here direct use epc->dev.parent's of node implicy. If IOMMU enable,
-two EPF will share one IOMMU space without isolation. If add of_node(may
-dyamatic create one). we should resolve this problem by use epf device
-here. Difference EPF will use difference IOMMU space like MSI.
+While initially intended to support TLP Processing Hints (TPH) [1], the
+design is extensible to accommodate future features such as PCI
+multipath for DMA, PCI UIO configurations, traffic class selection, and
+more.
 
-Frank
+Additionally, we introduce a new ioctl method on the MR object:
+UVERBS_METHOD_REG_MR.
 
->
-> Frank
->
-> >
-> > - Mani
-> >
-> > --
-> > மணிவண்ணன் சதாசிவம்
+This method consolidates multiple reg_mr variants under a single
+user-space ioctl interface, supporting: ibv_reg_mr(), ibv_reg_mr_iova(),
+ibv_reg_mr_iova2() and ibv_reg_dmabuf_mr(). It also enables passing a
+DMA handle as part of the registration process.
+
+Throughout the patch series, the following DMAH-related stuff can also
+be observed in the IB layer:
+
+- Association with a CPU ID and its memory type, for use with Steering
+  Tags [2].
+
+- Inclusion of Processing Hints (PH) data for TPH functionality [3].
+
+- Enforces security by ensuring that only tasks allowed to run on a
+  given CPU may request a DMA handle for it.
+
+- Reference counting for DMAH life cycle management and safe usage
+  across memory regions.
+
+mlx5 driver implementation:
+--------------------------
+The series includes implementation of the above functionality in the
+mlx5 driver.
+
+In mlx5_core:
+- Enables TPH over PCIe when both firmware and OS support it.
+
+- Manages Steering Tags and corresponding indices by writing tag values
+  to the PCI configuration space.
+
+- Exposes APIs to upper layers (e.g., mlx5_ib) to enable the PCIe TPH
+  functionality.
+
+In mlx5_ib:
+- Adds full support for DMAH operations.
+
+- Utilizes mlx5_core's Steering Tag APIs to derive tag indices from input.
+
+- Stores the resulting index in a mlx5_dmah structure for use during
+  MKEY creation with a DMA handle.
+
+- Adds support for allowing MKEYs to be created in conjunction with DMA
+  handles.
+
+Additional details are provided in the commit messages.
+
+[1] Background, from PCIe specification 6.2.
+TLP Processing Hints (TPH)
+--------------------------
+TLP Processing Hints is an optional feature that provides hints in
+Request TLP headers to facilitate optimized processing of Requests that
+target Memory Space.  These Processing Hints enable the system hardware
+(e.g., the Root Complex and/ or Endpoints) to optimize platform
+resources such as system and memory interconnect on a per TLP basis.
+Steering Tags are system-specific values used to identify a processing
+resource that a Requester explicitly targets. System software discovers
+and identifies TPH capabilities to determine the Steering Tag allocation
+for each Function that supports TPH
+
+[2] Steering Tags
+Functions that intend to target a TLP towards a specific processing
+resource such as a host processor or system cache hierarchy require
+topological information of the target cache (e.g., which host cache).
+Steering Tags are system-specific values that provide information about
+the host or cache structure in the system cache hierarchy. These values
+are used to associate processing elements within the platform with the
+processing of Requests.
+
+[3] Processing Hints
+The Requester provides hints to the Root Complex or other targets about
+the intended use of data and data structures by the host and/or device.
+The hints are provided by the Requester, which has knowledge of upcoming
+Request patterns, and which the Completer would not be able to deduce
+autonomously (with good accuracy)
+
+Yishai
+    
+Yishai Hadas (8):
+  pci/tph: Expose pcie_tph_get_st_table_size()
+  net/mlx5: Expose IFC bits for TPH
+  net/mlx5: Add support for device steering tag
+  IB/core: Add UVERBS_METHOD_REG_MR on the MR object
+  RDMA/core: Introduce a DMAH object and its alloc/free APIs
+  RDMA/mlx5: Add DMAH object support
+  IB: Extend UVERBS_METHOD_REG_MR to get DMAH
+  RDMA/mlx5: Add DMAH support for reg_user_mr/reg_user_dmabuf_mr
+
+ drivers/infiniband/core/Makefile              |   1 +
+ drivers/infiniband/core/device.c              |   3 +
+ drivers/infiniband/core/rdma_core.h           |   1 +
+ drivers/infiniband/core/restrack.c            |   2 +
+ drivers/infiniband/core/uverbs_cmd.c          |   2 +-
+ .../infiniband/core/uverbs_std_types_dmah.c   | 151 ++++++++++++++++
+ drivers/infiniband/core/uverbs_std_types_mr.c | 170 +++++++++++++++++-
+ drivers/infiniband/core/uverbs_uapi.c         |   1 +
+ drivers/infiniband/core/verbs.c               |   5 +-
+ drivers/infiniband/hw/bnxt_re/ib_verbs.c      |   8 +
+ drivers/infiniband/hw/bnxt_re/ib_verbs.h      |   2 +
+ drivers/infiniband/hw/cxgb4/iw_cxgb4.h        |   1 +
+ drivers/infiniband/hw/cxgb4/mem.c             |   6 +-
+ drivers/infiniband/hw/efa/efa.h               |   2 +
+ drivers/infiniband/hw/efa/efa_verbs.c         |   8 +
+ drivers/infiniband/hw/erdma/erdma_verbs.c     |   6 +-
+ drivers/infiniband/hw/erdma/erdma_verbs.h     |   3 +-
+ drivers/infiniband/hw/hns/hns_roce_device.h   |   1 +
+ drivers/infiniband/hw/hns/hns_roce_mr.c       |   4 +
+ drivers/infiniband/hw/irdma/verbs.c           |   9 +
+ drivers/infiniband/hw/mana/mana_ib.h          |   2 +
+ drivers/infiniband/hw/mana/mr.c               |   8 +
+ drivers/infiniband/hw/mlx4/mlx4_ib.h          |   1 +
+ drivers/infiniband/hw/mlx4/mr.c               |   4 +
+ drivers/infiniband/hw/mlx5/Makefile           |   1 +
+ drivers/infiniband/hw/mlx5/devx.c             |   4 +
+ drivers/infiniband/hw/mlx5/dmah.c             |  54 ++++++
+ drivers/infiniband/hw/mlx5/dmah.h             |  23 +++
+ drivers/infiniband/hw/mlx5/main.c             |   5 +
+ drivers/infiniband/hw/mlx5/mlx5_ib.h          |   7 +
+ drivers/infiniband/hw/mlx5/mr.c               | 103 +++++++++--
+ drivers/infiniband/hw/mlx5/odp.c              |   1 +
+ drivers/infiniband/hw/mthca/mthca_provider.c  |   6 +-
+ drivers/infiniband/hw/ocrdma/ocrdma_verbs.c   |   6 +-
+ drivers/infiniband/hw/ocrdma/ocrdma_verbs.h   |   3 +-
+ drivers/infiniband/hw/qedr/verbs.c            |   6 +-
+ drivers/infiniband/hw/qedr/verbs.h            |   3 +-
+ drivers/infiniband/hw/usnic/usnic_ib_verbs.c  |   4 +
+ drivers/infiniband/hw/usnic/usnic_ib_verbs.h  |   1 +
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_mr.c  |   5 +
+ .../infiniband/hw/vmw_pvrdma/pvrdma_verbs.h   |   1 +
+ drivers/infiniband/sw/rdmavt/mr.c             |   5 +
+ drivers/infiniband/sw/rdmavt/mr.h             |   1 +
+ drivers/infiniband/sw/rxe/rxe_verbs.c         |   4 +
+ drivers/infiniband/sw/siw/siw_verbs.c         |   7 +-
+ drivers/infiniband/sw/siw/siw_verbs.h         |   3 +-
+ .../net/ethernet/mellanox/mlx5/core/Makefile  |   5 +
+ .../net/ethernet/mellanox/mlx5/core/lib/st.c  | 162 +++++++++++++++++
+ .../net/ethernet/mellanox/mlx5/core/main.c    |   2 +
+ .../ethernet/mellanox/mlx5/core/mlx5_core.h   |   9 +
+ drivers/pci/tph.c                             |  11 +-
+ include/linux/mlx5/driver.h                   |  20 +++
+ include/linux/mlx5/mlx5_ifc.h                 |  14 +-
+ include/linux/pci-tph.h                       |   1 +
+ include/rdma/ib_verbs.h                       |  31 ++++
+ include/rdma/restrack.h                       |   4 +
+ include/uapi/rdma/ib_user_ioctl_cmds.h        |  32 ++++
+ 57 files changed, 905 insertions(+), 40 deletions(-)
+ create mode 100644 drivers/infiniband/core/uverbs_std_types_dmah.c
+ create mode 100644 drivers/infiniband/hw/mlx5/dmah.c
+ create mode 100644 drivers/infiniband/hw/mlx5/dmah.h
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/st.c
+
+-- 
+2.50.0
+
 
