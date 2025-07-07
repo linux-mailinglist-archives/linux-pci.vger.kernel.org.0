@@ -1,102 +1,301 @@
-Return-Path: <linux-pci+bounces-31604-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31605-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 085B3AFADC4
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 09:55:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6B81AFADEA
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 10:01:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 539614202D6
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 07:54:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A3071884D85
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 08:01:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB21221FF30;
-	Mon,  7 Jul 2025 07:55:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83D77275867;
+	Mon,  7 Jul 2025 08:01:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p67LGEFw"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cuz3otFy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9811F3BA9;
-	Mon,  7 Jul 2025 07:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E14800;
+	Mon,  7 Jul 2025 08:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751874917; cv=none; b=B6sn+WbVFfGo3x0FNjaw6N8HTCy4P4cjnrwolKSSt7v9toU72Ztf8I1pcs/mH/MRRF9R+UaYJ5vQeaKEYknZvmgNSxAzucHGivYSUrj0Vz8+h0xoDgQyW9NA70lS1RUnmzrJHyfxx38a14x/mhmTY74GqiGC/yf/9v7+DSS3nf8=
+	t=1751875294; cv=none; b=cIZ75KFapyNEvr24/XnIC614V0CHRHQoEez/lBfBbilemag3pfwFAjdc1gVbTxTbSnev43AGfyFQP9qI7SYBX2WrFKVD5aB7SEXORRSB0XYSw6htEiPtqbGyGRD31/TvWA0CMVoXtjfb9qjW/Mo7eY3Id/9VxmDpVHZ1jLk/B7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751874917; c=relaxed/simple;
-	bh=cKHCdC+8OOd0fD7Q6fM3+v+3PV/zmLtX9TiNQ2cQZ/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IS/ULC1VXg+KCLXT7MwP4onLeTmcAJJBJZW5y+NODdH+iXTQoZJBAss/ZgNxj/uzchDFbPyGEIO7QgZOZWz6tQJ1hFisR0CKF6agF75yQcHijofdKW9ooYTTooGV5fxJ/+RLYQIjR7gz7kT0GnJfim05LAcXUlkBXMmNJ6gn1DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p67LGEFw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 394A6C4CEE3;
-	Mon,  7 Jul 2025 07:55:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751874915;
-	bh=cKHCdC+8OOd0fD7Q6fM3+v+3PV/zmLtX9TiNQ2cQZ/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p67LGEFw8Y8mR0UwD7IgYaIE104jXSK26SQNEAKmF/tbFaBjbdD9k1V3mPmbvWMba
-	 0q/RfJWn3Vk1fOfPQcOBuTDSrKRRc8ldahaIxYuE7dmBJkRlgkqG9krKI/cPY/EzSH
-	 u0+4Amlb3z5ekyEP0iBSisQfRv9N2xjNf6R4BRV+aF/d77kKvl2vthodKZWp9uNrCU
-	 YRub/z7IcWu2aRAye2UUw9SlnznGiFlbOm0inxa49qRWeIatIL/3leLgwgwUtoDqeB
-	 mH8I8orXFbSnD2Fq6q2wrku+HR/ht9u6VKpCUsgbENXiSZQw7ng056oxSICGJoOLyo
-	 xzPlPDJrrinwQ==
-Date: Mon, 7 Jul 2025 13:25:07 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: lpieralisi@kernel.org, jingoohan1@gmail.com, kwilczynski@kernel.org, 
-	bhelgaas@google.com
-Cc: robh@kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] PCI: dwc: Make dw_pcie_ptm_ops static
-Message-ID: <wlaa7mvvlyo5v3yfwnpsmyd4xa2z5nbo3rl47va4nodilsghlg@afuurqynurnz>
-References: <20250701120856.15839-1-mani@kernel.org>
+	s=arc-20240116; t=1751875294; c=relaxed/simple;
+	bh=RpImpVG9EIF2g3n4yXnQRz3qgswHwTKFgQQuR9EpX6c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Tw8+Z1SGUjh5NIHmTOYdHx8r5Hdjt8c/3whUYSWqXK3dUTGy/MdaSbbmQ81pozJ/ETDZrIDnJKIeS1io10FEAn34rR0Py2cAqFSCF7cLKvhN5NmWmk80iZsJQA75k8I19PJ6a5Gn/dTys6mt1EaJ+1pBhvN5eSkyFCqZuIHRbdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cuz3otFy; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 566HlJVH012718;
+	Mon, 7 Jul 2025 08:01:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=EzRUp7
+	3z34SHGEivuSu2RUhOIhbeJLqoOp+hOwWfx6w=; b=cuz3otFyYXKh/nJgcaxlEJ
+	Bh53Y3HHJrIjVyDStRb70r1ARVriATavMBbRVwIAVJe1VkjYcJCh6Fb6rvtay1AN
+	Vi/Fk/ubc6g7FMb/LItb5N/qq6ZDBLJpNWOqARmQlQDrgPQXPdLDW2IJX3la6u72
+	OeuMc5wa7RNj4u2U9gMBsuTV67Gtdl3yTz4TJXUvP7evXm1k0Y9PWmOpliXx2vy4
+	lBHKbNB2yhU3qX3uhPUdnTaiHU9GkLoE8LmjF8AIC2jmgajpVLOIYjIn6FccK4JM
+	hXMnwbXXHyJ96+THOz2sQFQ7uCicfUmtnf+wXp9BsOonTGhf8IGkr/XdiPOUAT7g
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47pur6r7xd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Jul 2025 08:01:08 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5677wdD6029682;
+	Mon, 7 Jul 2025 08:01:07 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47pur6r7x9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Jul 2025 08:01:07 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5673raGg010841;
+	Mon, 7 Jul 2025 08:01:06 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47qeryw7yd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Jul 2025 08:01:06 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 567814KE14418336
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Jul 2025 08:01:04 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 389EA2004D;
+	Mon,  7 Jul 2025 08:01:04 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 83BA420040;
+	Mon,  7 Jul 2025 08:01:01 +0000 (GMT)
+Received: from [9.39.28.208] (unknown [9.39.28.208])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  7 Jul 2025 08:01:01 +0000 (GMT)
+Message-ID: <3ebe82c1-d9ae-419e-9e49-61fcb71abe34@linux.ibm.com>
+Date: Mon, 7 Jul 2025 13:31:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention
+ indicator
+To: Bjorn Helgaas <helgaas@kernel.org>,
+        Timothy Pearson <tpearson@raptorengineering.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        christophe leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Anastasio <sanastasio@raptorengineering.com>,
+        Lukas Wunner <lukas@wunner.de>
+References: <20250624223413.GA1550003@bhelgaas>
+Content-Language: en-US
+From: Krishna Kumar <krishnak@linux.ibm.com>
+In-Reply-To: <20250624223413.GA1550003@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250701120856.15839-1-mani@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA0NCBTYWx0ZWRfX0W8hzeI9bZbu cxoWJIicovCuuPNDDNI+BRVmo5XKqPeu4leTUAv3AjdTGlTwxo3p4fSm+6lxImbfDMOpo1ZQS8m FJzJfzcETxUvim1ToyrVTcdbQW88RENvAVcBjUJ3Poox/dTJyiW9xmP65PsPEKsUrLo9Idhm8tr
+ b8Gl/7tezemDQpXXFYZgmf3HK1RdLPi0O/2JvwMr/bMHxwPm0qh6Oev1XTeKJS0m6FyMqmwpHRv pqBuv0I9A5u8SkvTpMIQOay2C6B+ox4S7Sv3hSz8qcOymzxBwKlmNBEYoj4foWPUXddUD2WgBBl GhSNWn4wBtrNYUrXLGNT4fJVp5aFYoY5N5zK7OIaz5L2gCjVfKVQT3uw6H3Zr6eji/bf0Eij2K+
+ 3S3kzfahcR0tdFaMpoI/gaV6pammmMBbJtoswNrYrLe/ahxkJ16cfuaLPG55aWQCkGh9W9R2
+X-Proofpoint-GUID: Ecs3JysoJt8mU_lQtglqJi1hLvMtE8Eu
+X-Proofpoint-ORIG-GUID: _wfs4VuPJ9FbReg9dPwfaWA4mI87GAsQ
+X-Authority-Analysis: v=2.4 cv=W/M4VQWk c=1 sm=1 tr=0 ts=686b7ec4 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=_AprYWD3AAAA:8 a=voM4FWlXAAAA:8 a=VnNF1IyMAAAA:8 a=1UX6Do5GAAAA:8
+ a=1XWaLZrsAAAA:8 a=hNuwOlM9Oy3Jar5w7j4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=fKH2wJO7VO9AkD4yHysb:22 a=IC2XNlieTeVoXbcui8wp:22 a=Et2XPkok5AAZYJIKzHr1:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-07_01,2025-07-07_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ mlxscore=0 priorityscore=1501 adultscore=0 clxscore=1011 suspectscore=0
+ spamscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507070044
 
-On Tue, Jul 01, 2025 at 05:38:56PM GMT, Manivannan Sadhasivam wrote:
-> dw_pcie_ptm_ops is not used outside of this file, so make it static. This
-> also fixes the sparse warning:
-> 
->   drivers/pci/controller/dwc/pcie-designware-debugfs.c:868:27: warning: symbol 'dw_pcie_ptm_ops' was not declared. Should it be static?
-> 
-> Fixes: 852a1fdd34a8 ("PCI: dwc: Add debugfs support for PTM context")
-> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-> Closes: https://lore.kernel.org/linux-pci/20250617231210.GA1172093@bhelgaas
-> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+Thanks all for the review and Thanks a bunch to Timothy for fixing the PE Freeze issue. The hotplug issues are like you fix N issue and N+1 th issue will come with new HW.
 
-Applied to pci/controller/dwc!
+We had a meeting of around 1.5 -2.0 hr with demo, code review and log review and we decided to let these fixes go ahead. I am consolidating what we discussed -
 
-- Mani
 
-> ---
->  drivers/pci/controller/dwc/pcie-designware-debugfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> index c67601096c48..7356b0f6a2ad 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> @@ -865,7 +865,7 @@ static bool dw_pcie_ptm_t4_visible(void *drvdata)
->  	return (pci->mode == DW_PCIE_EP_TYPE) ? true : false;
->  }
->  
-> -const struct pcie_ptm_ops dw_pcie_ptm_ops = {
-> +static const struct pcie_ptm_ops dw_pcie_ptm_ops = {
->  	.check_capability = dw_pcie_ptm_check_capability,
->  	.context_update_write = dw_pcie_ptm_context_update_write,
->  	.context_update_read = dw_pcie_ptm_context_update_read,
-> -- 
-> 2.45.2
-> 
+1. Let these fixes go ahead as it solves wider and much needed customer issue and its urgently needed for time being. We have verified in live demo that nothing is broken from legacy flow and 
 
--- 
-மணிவண்ணன் சதாசிவம்
+PE/PHB freeze, race condition, hung, oops etc has been solved correctly. Basically it fixes below issues -
+
+root-port(phb) -> switch(having4 port)--> 2 nvme devices
+
+1st case - only removal of EP-nvme device (surprise hotplug disables msi at root port), soft removal may work
+2nd case  - If we remove switch itself (surprise hotplug disable msi at root port) .
+
+
+Some explanation of problem -
+
+PHB Freeze (Interrupt is not reaching there) - Fence - Need to reset ||
+EP device on removal generated msi - goes to cpu (via root port and then apic mmio region to cpu ),
+PHB/root port itself got freeze and cpu never get interrupt - No wq/event going to work - driver is noit working
+
+
+One area what I thought to fix it with OPAL call is below piece of code-
+
+ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
++    if (ret) {
++        SLOT_WARN(php_slot, "PCI slot activation failed with error code %d, possible frozen PHB", ret);
++        SLOT_WARN(php_slot, "Attempting complete PHB reset before retrying slot activation\n");
++        for (i = 0; i < 3; i++) {
++            /* Slot activation failed, PHB may be fenced from a prior device failure
++             * Use the OPAL fundamental reset call to both try a device reset and clear
++             * any potentially active PHB fence / freeze
++             */
++            SLOT_WARN(php_slot, "Try %d...\n", i + 1);
++            pci_set_pcie_reset_state(php_slot->pdev, pcie_warm_reset);
++            msleep(250);
++            pci_set_pcie_reset_state(php_slot->pdev, pcie_deassert_reset);
++
++            ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
++            if (!ret)
++                break;
++        }
+
+
+I would like to see this fix in skiboot, the opal call should reset it and it should work. Normally opal call is responsible for  link training and reset, so ideally it should  happens from there. As if now, Timothy has some explanation for it, so its fine for now. He can add his points for record.
+
+
+2. In future we have decided to work on items like - removal of Work-queue with threaded irq, addition of dpc support in this driver.
+
+3. We have also discussed if we want to move pciehpc.c driver in future, we have to keep below things in mind, Timothy can add some more points for record.
+
+Device Node (DTB) & its relationship with slot, Can we decouple it and will pciehpc.c going to work correctly for this ?
+Driver binding and unbinding based on hotplug event and its relationship with slot. Role of DTB in this. Our driver  also depends on OPAL call for link reset etc, can we decouple from it ? If we add some PPC specific code in pciehpc.c, how will it gets handled (by VFT/Function-Pointer or #ifdef or by seperate files ?)
+
+
+Lukas has some points for above and I am somewhat aligned with below points, but it needs to be tested to see conceptually it fixes above issues, I am consolidating his points and he can add more  if needed-
+
+Only the host bridge
+has to be enumerated in the devicetree or DSDT.
+
+pnv_php.c seems to search the devicetree for hotplug slots and
+instantiates them.
+
+We've traditionally dealt with such issues by inserting pcibios_*()
+hooks in generic code, with a __weak implementation (which is usually
+an empty stub) and a custom implementation in arch/powerpc/.
+
+The linker then chooses the custom implementation over the __weak one.
+
+You can find the existing hooks with:
+
+git grep "__weak .*pcibios" -- drivers/pci
+git grep pcibios -- arch/powerpc
+
+An alternative method is to add a callback to struct pci_host_bridge.
+
+pciehp is used on all kinds of arches, it's just an implementation of the PCIe Base Spec.
+
+
+
+Best Regards,
+
+Krishna
+
+
+
+
+On 6/25/25 4:04 AM, Bjorn Helgaas wrote:
+> On Wed, Jun 18, 2025 at 07:37:54PM -0500, Timothy Pearson wrote:
+>> ----- Original Message -----
+>>> From: "Bjorn Helgaas" <helgaas@kernel.org>
+>>> To: "Timothy Pearson" <tpearson@raptorengineering.com>
+>>> Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-pci"
+>>> <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>,
+>>> "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>, "Bjorn Helgaas"
+>>> <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>
+>>> Sent: Wednesday, June 18, 2025 2:01:46 PM
+>>> Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention indicator
+>>> On Wed, Jun 18, 2025 at 11:58:59AM -0500, Timothy Pearson wrote:
+>>>>  state
+>>> Weird wrapping of last word of subject to here.
+>> I'll need to see what's up with my git format-patch setup. Apologies
+>> for that across the multiple series.
+> No worries.  If you can figure out how to make your mailer use the
+> normal "On xxx, somebody wrote:" attribution instead of duplicating
+> all those headers, that would be far more useful :)
+>
+>>>> +static int pnv_php_get_raw_indicator_status(struct hotplug_slot *slot, u8
+>>>> *state)
+>>>> +{
+>>>> +	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
+>>>> +	struct pci_dev *bridge = php_slot->pdev;
+>>>> +	u16 status;
+>>>> +
+>>>> +	pcie_capability_read_word(bridge, PCI_EXP_SLTCTL, &status);
+>>>> +	*state = (status & (PCI_EXP_SLTCTL_AIC | PCI_EXP_SLTCTL_PIC)) >> 6;
+>>> Should be able to do this with FIELD_GET().
+>> I used the same overall structure as the pciehp_hpc driver here.  Do
+>> you want me to also fix up that driver with FIELD_GET()?
+> Nope, I think it's fine to keep this looking like pciehp for now.
+> If somebody wants to use FIELD_GET() in pciehp, I'd probably be OK
+> with that, but no need for you to open that can of worms.
+>
+>>> Is the PCI_EXP_SLTCTL_PIC part needed?  It wasn't there before, commit
+>>> log doesn't mention it, and as far as I can tell, this would be the
+>>> only driver to do that.  Most expose only the attention status (0=off,
+>>> 1=on, 2=identify/blink).
+>>>
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +
+>>>>  static int pnv_php_get_attention_state(struct hotplug_slot *slot, u8 *state)
+>>>>  {
+>>>>  	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
+>>>>  
+>>>> +	pnv_php_get_raw_indicator_status(slot, &php_slot->attention_state);
+>>> This is a change worth noting.  Previously we didn't read the AIC
+>>> state from PCI_EXP_SLTCTL at all; we used php_slot->attention_state to
+>>> keep track of whatever had been previously set via
+>>> pnv_php_set_attention_state().
+>>>
+>>> Now we read the current state from PCI_EXP_SLTCTL.  It's not clear
+>>> that php_slot->attention_state is still needed at all.
+>> It probably isn't.  It's unclear why IBM took this path at all,
+>> given pciehp's attention handlers predate pnv-php's by many years.
+>>
+>>> Previously, the user could write any value at all to the sysfs
+>>> "attention" file and then read that same value back.  After this
+>>> patch, the user can still write anything, but reads will only return
+>>> values with PCI_EXP_SLTCTL_AIC and PCI_EXP_SLTCTL_PIC.
+>>>
+>>>>  	*state = php_slot->attention_state;
+>>>>  	return 0;
+>>>>  }
+>>>> @@ -461,7 +474,7 @@ static int pnv_php_set_attention_state(struct hotplug_slot
+>>>> *slot, u8 state)
+>>>>  	mask = PCI_EXP_SLTCTL_AIC;
+>>>>  
+>>>>  	if (state)
+>>>> -		new = PCI_EXP_SLTCTL_ATTN_IND_ON;
+>>>> +		new = FIELD_PREP(PCI_EXP_SLTCTL_AIC, state);
+>>> This changes the behavior in some cases:
+>>>
+>>>  write 0: previously turned indicator off, now writes reserved value
+>>>  write 2: previously turned indicator on, now sets to blink
+>>>  write 3: previously turned indicator on, now turns it off
+>> If we're looking at normalizing with pciehp with an eye toward
+>> eventually deprecating / removing pnv-php, I can't think of a better
+>> time to change this behavior.  I suspect we're the only major user
+>> of this code path at the moment, with most software expecting to see
+>> pciehp-style handling.  Thoughts?
+> I'm OK with changing this, but I do think it would be worth calling
+> out the different behavior in the commit log.
+>
+> Bjorn
+>
 
