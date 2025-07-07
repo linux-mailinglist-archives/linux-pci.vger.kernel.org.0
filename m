@@ -1,82 +1,79 @@
-Return-Path: <linux-pci+bounces-31605-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31606-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6B81AFADEA
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 10:01:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4B88AFAE3B
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 10:09:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A3071884D85
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 08:01:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F6A71AA333F
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 08:08:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83D77275867;
-	Mon,  7 Jul 2025 08:01:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72CF528C2D1;
+	Mon,  7 Jul 2025 08:05:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cuz3otFy"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Tg6+KlkY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E14800;
-	Mon,  7 Jul 2025 08:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2451B28A704
+	for <linux-pci@vger.kernel.org>; Mon,  7 Jul 2025 08:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751875294; cv=none; b=cIZ75KFapyNEvr24/XnIC614V0CHRHQoEez/lBfBbilemag3pfwFAjdc1gVbTxTbSnev43AGfyFQP9qI7SYBX2WrFKVD5aB7SEXORRSB0XYSw6htEiPtqbGyGRD31/TvWA0CMVoXtjfb9qjW/Mo7eY3Id/9VxmDpVHZ1jLk/B7s=
+	t=1751875537; cv=none; b=rO1Q+NB+t/zqtiRXrO3i1XvhyRaTZlinKRwS4z/GYcHdu4O0k7fvrXZR24E/Ccwsj8/EAgWhotxk2poZekTInywHQRFJClpzKD24w9WOL9XBItL610MqbftUgGHRGc+X4qwqbGQig1C3ey298CT3402Z+HXgDcCZw5XLGdE3IyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751875294; c=relaxed/simple;
-	bh=RpImpVG9EIF2g3n4yXnQRz3qgswHwTKFgQQuR9EpX6c=;
+	s=arc-20240116; t=1751875537; c=relaxed/simple;
+	bh=1TjqDgVep254QfrcOu3FK5y0aX/fhgV/uA6wQt9g1B0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tw8+Z1SGUjh5NIHmTOYdHx8r5Hdjt8c/3whUYSWqXK3dUTGy/MdaSbbmQ81pozJ/ETDZrIDnJKIeS1io10FEAn34rR0Py2cAqFSCF7cLKvhN5NmWmk80iZsJQA75k8I19PJ6a5Gn/dTys6mt1EaJ+1pBhvN5eSkyFCqZuIHRbdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cuz3otFy; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 566HlJVH012718;
-	Mon, 7 Jul 2025 08:01:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=EzRUp7
-	3z34SHGEivuSu2RUhOIhbeJLqoOp+hOwWfx6w=; b=cuz3otFyYXKh/nJgcaxlEJ
-	Bh53Y3HHJrIjVyDStRb70r1ARVriATavMBbRVwIAVJe1VkjYcJCh6Fb6rvtay1AN
-	Vi/Fk/ubc6g7FMb/LItb5N/qq6ZDBLJpNWOqARmQlQDrgPQXPdLDW2IJX3la6u72
-	OeuMc5wa7RNj4u2U9gMBsuTV67Gtdl3yTz4TJXUvP7evXm1k0Y9PWmOpliXx2vy4
-	lBHKbNB2yhU3qX3uhPUdnTaiHU9GkLoE8LmjF8AIC2jmgajpVLOIYjIn6FccK4JM
-	hXMnwbXXHyJ96+THOz2sQFQ7uCicfUmtnf+wXp9BsOonTGhf8IGkr/XdiPOUAT7g
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47pur6r7xd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 08:01:08 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5677wdD6029682;
-	Mon, 7 Jul 2025 08:01:07 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47pur6r7x9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 08:01:07 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5673raGg010841;
-	Mon, 7 Jul 2025 08:01:06 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47qeryw7yd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 08:01:06 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 567814KE14418336
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Jul 2025 08:01:04 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 389EA2004D;
-	Mon,  7 Jul 2025 08:01:04 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 83BA420040;
-	Mon,  7 Jul 2025 08:01:01 +0000 (GMT)
-Received: from [9.39.28.208] (unknown [9.39.28.208])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  7 Jul 2025 08:01:01 +0000 (GMT)
-Message-ID: <3ebe82c1-d9ae-419e-9e49-61fcb71abe34@linux.ibm.com>
-Date: Mon, 7 Jul 2025 13:31:00 +0530
+	 In-Reply-To:Content-Type; b=r9g0/FsayIfyyRtO8Gotav1XCuQ5Ysu/MmeWIVBfaJky7MBjLLKnF/l0E03uunxKT/6QwMJTssZQQrbAiaARrcSBSaFE2YqFTAkfH+6DHMufVWEQWgqQaRzWukeCthKSsANUhxx6mhHlOuIiyp/rGNROCk1HdeWEXDn6gYkqPhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Tg6+KlkY; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-60768f080d8so5209125a12.1
+        for <linux-pci@vger.kernel.org>; Mon, 07 Jul 2025 01:05:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1751875532; x=1752480332; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cfSK4wZ0IXAaLuWeqeSbn2/BZJH/6gHhbVTHrVcpn3U=;
+        b=Tg6+KlkYIkFXgXxkf76IBjDYPoDHlDpa5+R9sQ9E0yxapxiDg1ZE3k2CpQNYBwvcJo
+         i+6CMi17RguMUp7i2E4Mjkyt/uOxokXr6F1rGWafqb1mSf9Ss/MMvhyGaR1OE2k6d+M1
+         V1lOeSCHbtVSOVWlUgia7cx96PPZwlvfwW7ZERFC5QkExixZ5Di+EkRKDx1KmvY0IQ31
+         jM6bkw3i1maYUBjsTjAZXvB7aPbVBLsRjo3oZJ9cXRjrlCyzv5/PBI7LI2VKVTHEvd4D
+         dVidOtE42tu+55CuhFyvk0Szo4uv9WxS0/XP9QV+pFwk6MBCd8bhQ8B74bpfUfwxFG5e
+         bUrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751875532; x=1752480332;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cfSK4wZ0IXAaLuWeqeSbn2/BZJH/6gHhbVTHrVcpn3U=;
+        b=k9/S6zE2ZKDnD2md5hTU27vOJn1pOOXR5wR0Fh1Q0HEj8Cuy9B7G53OlkxC8daK9tX
+         q9WpgwSGKdm+9vduWehgppxxNSmKxk/FEQnYm9g/lScne7brABpjx5i+S5xMm38D05F3
+         Zf/MZIEP76LpCO0vaEBSHYJs6qGUxlN3lk2MeXy5VzqHpaYqubFPzvRZqW5j3QJWVkPD
+         hdcqXADLqXYoATDvGIBw+vzg8k8mppV62cLjbRX+wgbAI2XXFPE2xv53p1gMcNOrwcyK
+         84oxnyGQaCZ+dLpW3XC4KBcz+qsYovbXvXOSD1ZwCS/RMeoMePoIRatiJ9r2tH9TdEUI
+         EcCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnmQeJhueA3AKXib9ezibunPTciijmyGxWjVg8NlJxNt0VwEdp/9OAw+TBPdyEsGnhYNz5yLyUpSI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwmfBYN1zRzmIIHZkGsyK5UtG4thlW5nMXlzSd3WyLMXQmRxrz
+	bt8mq1XfVKsruad70VHMcHSpXd55aY0/AASjmR8fiS3HBhce2Xfobu7JEuLM1YxOWtM=
+X-Gm-Gg: ASbGnctkm1PO+zU9dDcVLRgk5BwqoFwTCXnqWWvCeL8dX+mGRIdqONX1C79k9HwDJlz
+	P/g8wM6vsr4sNVDso+7cfQj5K6bsk9Q5UrCVpT/aXuTDPgXOYbfhsD93lAETUtYvNQ5BhZE9ZiF
+	3Al5SXj5lp1PmNPddrKMfiMaNmhyuX+RiR7O1I6sxvUUrYmaq84OPjgzZz6/ugNmcA7d5Ej23++
+	1f/ks8qKCy6WF866K5tjIZGR32GcqChDxrOlV8qzzIloo0976v1pJiWCV6hjYIBJVz/J3t0h1If
+	otpsrdkemFCleJqDrqVk0uTRl6NtLT9W8QUMUbH0aAqKrOhg7dX8KcF2zQ5JrhxOg69jDg==
+X-Google-Smtp-Source: AGHT+IE0L5DPGdmdGEN0u5OQ9V+2BW3fc6+QE6pzmfgPPJld1q+jXk9TxJBBsXR1qKPnO0Xzg35V4Q==
+X-Received: by 2002:a17:906:c14e:b0:ad8:914b:7d15 with SMTP id a640c23a62f3a-ae3fbc899b6mr1217341966b.7.1751875532226;
+        Mon, 07 Jul 2025 01:05:32 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.30])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66e8c26sm650083566b.25.2025.07.07.01.05.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jul 2025 01:05:31 -0700 (PDT)
+Message-ID: <96af5f63-dbaf-4177-95e2-a6cc24019dc0@tuxon.dev>
+Date: Mon, 7 Jul 2025 11:05:30 +0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,218 +81,39 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention
- indicator
-To: Bjorn Helgaas <helgaas@kernel.org>,
-        Timothy Pearson <tpearson@raptorengineering.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        christophe leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Anastasio <sanastasio@raptorengineering.com>,
-        Lukas Wunner <lukas@wunner.de>
-References: <20250624223413.GA1550003@bhelgaas>
+Subject: Re: [PATCH v3 0/9] PCI: rzg3s-host: Add PCIe driver for Renesas
+ RZ/G3S SoC
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+ mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ geert+renesas@glider.be, magnus.damm@gmail.com, catalin.marinas@arm.com,
+ will@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+ p.zabel@pengutronix.de, lizhi.hou@amd.com, linux-pci@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
+ <aGtsM22QYqekuiQA@shikoro>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 Content-Language: en-US
-From: Krishna Kumar <krishnak@linux.ibm.com>
-In-Reply-To: <20250624223413.GA1550003@bhelgaas>
+In-Reply-To: <aGtsM22QYqekuiQA@shikoro>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA0NCBTYWx0ZWRfX0W8hzeI9bZbu cxoWJIicovCuuPNDDNI+BRVmo5XKqPeu4leTUAv3AjdTGlTwxo3p4fSm+6lxImbfDMOpo1ZQS8m FJzJfzcETxUvim1ToyrVTcdbQW88RENvAVcBjUJ3Poox/dTJyiW9xmP65PsPEKsUrLo9Idhm8tr
- b8Gl/7tezemDQpXXFYZgmf3HK1RdLPi0O/2JvwMr/bMHxwPm0qh6Oev1XTeKJS0m6FyMqmwpHRv pqBuv0I9A5u8SkvTpMIQOay2C6B+ox4S7Sv3hSz8qcOymzxBwKlmNBEYoj4foWPUXddUD2WgBBl GhSNWn4wBtrNYUrXLGNT4fJVp5aFYoY5N5zK7OIaz5L2gCjVfKVQT3uw6H3Zr6eji/bf0Eij2K+
- 3S3kzfahcR0tdFaMpoI/gaV6pammmMBbJtoswNrYrLe/ahxkJ16cfuaLPG55aWQCkGh9W9R2
-X-Proofpoint-GUID: Ecs3JysoJt8mU_lQtglqJi1hLvMtE8Eu
-X-Proofpoint-ORIG-GUID: _wfs4VuPJ9FbReg9dPwfaWA4mI87GAsQ
-X-Authority-Analysis: v=2.4 cv=W/M4VQWk c=1 sm=1 tr=0 ts=686b7ec4 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=_AprYWD3AAAA:8 a=voM4FWlXAAAA:8 a=VnNF1IyMAAAA:8 a=1UX6Do5GAAAA:8
- a=1XWaLZrsAAAA:8 a=hNuwOlM9Oy3Jar5w7j4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=fKH2wJO7VO9AkD4yHysb:22 a=IC2XNlieTeVoXbcui8wp:22 a=Et2XPkok5AAZYJIKzHr1:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-07_01,2025-07-07_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- mlxscore=0 priorityscore=1501 adultscore=0 clxscore=1011 suspectscore=0
- spamscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507070044
+Content-Transfer-Encoding: 7bit
 
-Thanks all for the review and Thanks a bunch to Timothy for fixing the PE Freeze issue. The hotplug issues are like you fix N issue and N+1 th issue will come with new HW.
+Hi, Wolfram,
 
-We had a meeting of around 1.5 -2.0 hr with demo, code review and log review and we decided to let these fixes go ahead. I am consolidating what we discussed -
+On 07.07.2025 09:41, Wolfram Sang wrote:
+> 
+>> Please provide your feedback.
+> 
+> What is this based on? I tried v6.16-rc4 and renesas-driver/master. Or
+> is there a branch I could pull?
+> 
+
+This is based on next-20250703. I pushed it here, as well:
+https://github.com/claudiubeznea/linux/commits/claudiu/rzg3s/pcie-v3/
 
 
-1. Let these fixes go ahead as it solves wider and much needed customer issue and its urgently needed for time being. We have verified in live demo that nothing is broken from legacy flow and 
-
-PE/PHB freeze, race condition, hung, oops etc has been solved correctly. Basically it fixes below issues -
-
-root-port(phb) -> switch(having4 port)--> 2 nvme devices
-
-1st case - only removal of EP-nvme device (surprise hotplug disables msi at root port), soft removal may work
-2nd case  - If we remove switch itself (surprise hotplug disable msi at root port) .
-
-
-Some explanation of problem -
-
-PHB Freeze (Interrupt is not reaching there) - Fence - Need to reset ||
-EP device on removal generated msi - goes to cpu (via root port and then apic mmio region to cpu ),
-PHB/root port itself got freeze and cpu never get interrupt - No wq/event going to work - driver is noit working
-
-
-One area what I thought to fix it with OPAL call is below piece of code-
-
-ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
-+    if (ret) {
-+        SLOT_WARN(php_slot, "PCI slot activation failed with error code %d, possible frozen PHB", ret);
-+        SLOT_WARN(php_slot, "Attempting complete PHB reset before retrying slot activation\n");
-+        for (i = 0; i < 3; i++) {
-+            /* Slot activation failed, PHB may be fenced from a prior device failure
-+             * Use the OPAL fundamental reset call to both try a device reset and clear
-+             * any potentially active PHB fence / freeze
-+             */
-+            SLOT_WARN(php_slot, "Try %d...\n", i + 1);
-+            pci_set_pcie_reset_state(php_slot->pdev, pcie_warm_reset);
-+            msleep(250);
-+            pci_set_pcie_reset_state(php_slot->pdev, pcie_deassert_reset);
-+
-+            ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
-+            if (!ret)
-+                break;
-+        }
-
-
-I would like to see this fix in skiboot, the opal call should reset it and it should work. Normally opal call is responsible for  link training and reset, so ideally it should  happens from there. As if now, Timothy has some explanation for it, so its fine for now. He can add his points for record.
-
-
-2. In future we have decided to work on items like - removal of Work-queue with threaded irq, addition of dpc support in this driver.
-
-3. We have also discussed if we want to move pciehpc.c driver in future, we have to keep below things in mind, Timothy can add some more points for record.
-
-Device Node (DTB) & its relationship with slot, Can we decouple it and will pciehpc.c going to work correctly for this ?
-Driver binding and unbinding based on hotplug event and its relationship with slot. Role of DTB in this. Our driver  also depends on OPAL call for link reset etc, can we decouple from it ? If we add some PPC specific code in pciehpc.c, how will it gets handled (by VFT/Function-Pointer or #ifdef or by seperate files ?)
-
-
-Lukas has some points for above and I am somewhat aligned with below points, but it needs to be tested to see conceptually it fixes above issues, I am consolidating his points and he can add more  if needed-
-
-Only the host bridge
-has to be enumerated in the devicetree or DSDT.
-
-pnv_php.c seems to search the devicetree for hotplug slots and
-instantiates them.
-
-We've traditionally dealt with such issues by inserting pcibios_*()
-hooks in generic code, with a __weak implementation (which is usually
-an empty stub) and a custom implementation in arch/powerpc/.
-
-The linker then chooses the custom implementation over the __weak one.
-
-You can find the existing hooks with:
-
-git grep "__weak .*pcibios" -- drivers/pci
-git grep pcibios -- arch/powerpc
-
-An alternative method is to add a callback to struct pci_host_bridge.
-
-pciehp is used on all kinds of arches, it's just an implementation of the PCIe Base Spec.
-
-
-
-Best Regards,
-
-Krishna
-
-
-
-
-On 6/25/25 4:04 AM, Bjorn Helgaas wrote:
-> On Wed, Jun 18, 2025 at 07:37:54PM -0500, Timothy Pearson wrote:
->> ----- Original Message -----
->>> From: "Bjorn Helgaas" <helgaas@kernel.org>
->>> To: "Timothy Pearson" <tpearson@raptorengineering.com>
->>> Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-pci"
->>> <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>,
->>> "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>, "Bjorn Helgaas"
->>> <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>
->>> Sent: Wednesday, June 18, 2025 2:01:46 PM
->>> Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention indicator
->>> On Wed, Jun 18, 2025 at 11:58:59AM -0500, Timothy Pearson wrote:
->>>>  state
->>> Weird wrapping of last word of subject to here.
->> I'll need to see what's up with my git format-patch setup. Apologies
->> for that across the multiple series.
-> No worries.  If you can figure out how to make your mailer use the
-> normal "On xxx, somebody wrote:" attribution instead of duplicating
-> all those headers, that would be far more useful :)
->
->>>> +static int pnv_php_get_raw_indicator_status(struct hotplug_slot *slot, u8
->>>> *state)
->>>> +{
->>>> +	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
->>>> +	struct pci_dev *bridge = php_slot->pdev;
->>>> +	u16 status;
->>>> +
->>>> +	pcie_capability_read_word(bridge, PCI_EXP_SLTCTL, &status);
->>>> +	*state = (status & (PCI_EXP_SLTCTL_AIC | PCI_EXP_SLTCTL_PIC)) >> 6;
->>> Should be able to do this with FIELD_GET().
->> I used the same overall structure as the pciehp_hpc driver here.  Do
->> you want me to also fix up that driver with FIELD_GET()?
-> Nope, I think it's fine to keep this looking like pciehp for now.
-> If somebody wants to use FIELD_GET() in pciehp, I'd probably be OK
-> with that, but no need for you to open that can of worms.
->
->>> Is the PCI_EXP_SLTCTL_PIC part needed?  It wasn't there before, commit
->>> log doesn't mention it, and as far as I can tell, this would be the
->>> only driver to do that.  Most expose only the attention status (0=off,
->>> 1=on, 2=identify/blink).
->>>
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +
->>>>  static int pnv_php_get_attention_state(struct hotplug_slot *slot, u8 *state)
->>>>  {
->>>>  	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
->>>>  
->>>> +	pnv_php_get_raw_indicator_status(slot, &php_slot->attention_state);
->>> This is a change worth noting.  Previously we didn't read the AIC
->>> state from PCI_EXP_SLTCTL at all; we used php_slot->attention_state to
->>> keep track of whatever had been previously set via
->>> pnv_php_set_attention_state().
->>>
->>> Now we read the current state from PCI_EXP_SLTCTL.  It's not clear
->>> that php_slot->attention_state is still needed at all.
->> It probably isn't.  It's unclear why IBM took this path at all,
->> given pciehp's attention handlers predate pnv-php's by many years.
->>
->>> Previously, the user could write any value at all to the sysfs
->>> "attention" file and then read that same value back.  After this
->>> patch, the user can still write anything, but reads will only return
->>> values with PCI_EXP_SLTCTL_AIC and PCI_EXP_SLTCTL_PIC.
->>>
->>>>  	*state = php_slot->attention_state;
->>>>  	return 0;
->>>>  }
->>>> @@ -461,7 +474,7 @@ static int pnv_php_set_attention_state(struct hotplug_slot
->>>> *slot, u8 state)
->>>>  	mask = PCI_EXP_SLTCTL_AIC;
->>>>  
->>>>  	if (state)
->>>> -		new = PCI_EXP_SLTCTL_ATTN_IND_ON;
->>>> +		new = FIELD_PREP(PCI_EXP_SLTCTL_AIC, state);
->>> This changes the behavior in some cases:
->>>
->>>  write 0: previously turned indicator off, now writes reserved value
->>>  write 2: previously turned indicator on, now sets to blink
->>>  write 3: previously turned indicator on, now turns it off
->> If we're looking at normalizing with pciehp with an eye toward
->> eventually deprecating / removing pnv-php, I can't think of a better
->> time to change this behavior.  I suspect we're the only major user
->> of this code path at the moment, with most software expecting to see
->> pciehp-style handling.  Thoughts?
-> I'm OK with changing this, but I do think it would be worth calling
-> out the different behavior in the commit log.
->
-> Bjorn
->
+Thank you for looking into this,
+Claudiu
 
