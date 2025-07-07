@@ -1,97 +1,94 @@
-Return-Path: <linux-pci+bounces-31618-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31619-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7AFDAFB3A4
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 14:53:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4521DAFB57C
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 15:58:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EF60A17919C
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 12:53:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 152751882F9A
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 13:59:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E71E629B224;
-	Mon,  7 Jul 2025 12:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HIF0cr7H"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3B692BD01E;
+	Mon,  7 Jul 2025 13:58:41 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C6929B20D;
-	Mon,  7 Jul 2025 12:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4CE1F4CAE
+	for <linux-pci@vger.kernel.org>; Mon,  7 Jul 2025 13:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751892819; cv=none; b=O+7OWA9bxhlfdFEWjtwrOx3SO9kTctEz1rJrE9aWJhfIWsKiF+CJasL+Lu0gkcEZOxMAVjjijtLgwY/v5ROeOmZK3+xKhgCB7treGFOWwv7FRmqXzsAv1tGdf/Mekuq2OtP/PMob3uYCsNoyACNtAPXLNSvpguNDn2AwjOrDNQ8=
+	t=1751896721; cv=none; b=HOrJCdZ2BBvT1bs4R3rD4+90Niqc1mHBdSB6qdW+/z0MTOmOSVFVHgFDSe4817X5lKnxvs0nzuhe4IanV5z1ppfvNOOX+XBTE9SMIxDtbHq7SxDafepoasV/aWyQh3QRvn1uiR7rudk3qg56dz0RUdIkeLge/JJic6HUxoSrutE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751892819; c=relaxed/simple;
-	bh=0zsqKpFLkYF347gg9OTLh6+35fp5gqeJ2+m+BHifrMQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=trcg2UxSqk2H6Z6FoKqOgxyjhWP9ADspcYssZ5Hv+Bh8JynRkaz81voKDNxRLsUNihtRuGLBYukxnGCP8vO1WHVfapgL981btwMTTj12Ct7Y0sK2pgkTcWPT87MI9l5wHIi+9z1aT8rALY59KR2+rf9ksnywxtxs2XqtEtHzko4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HIF0cr7H; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40CB1C4CEE3;
-	Mon,  7 Jul 2025 12:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751892817;
-	bh=0zsqKpFLkYF347gg9OTLh6+35fp5gqeJ2+m+BHifrMQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HIF0cr7HzgvyPWG+D8fDA1gPhCAnxkqTfy4qJPVPcrOKTNs9DIvtfeHsCWT19Gyzs
-	 eW1O1nTjYUS6rC5OArn1Z3OVAPqaE5GfKiWFsCknewCCCeMNMyvZGdvkahHpbp28Il
-	 xvY//YUpRNKRZGxtw4Y/x/qV2t+dqE6XVq/V+WDZ4iNTZI0VjpCc2E35vbXlLsvhiK
-	 +zXvpferAZle6lYYrBPRRFh3L639hm+MhLT7edA3nwjB+VmQwiiw72rmZw3YdzjIbX
-	 A5J/EpNprXRvKAeuhtOEfJUiROsU2bScq5YMnmsTPyklIhg/KpWtMczFAwyWreAKxW
-	 osGkmuWcUFrDA==
-Message-ID: <4ef523a2-48b3-45e9-94da-7811e1bfae76@kernel.org>
-Date: Mon, 7 Jul 2025 14:53:32 +0200
+	s=arc-20240116; t=1751896721; c=relaxed/simple;
+	bh=wkniiIbVVMt7AJg5Ojd6J8vayPVPSFRZdAycRjCeEJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PYmpl/561s5WJePZoUoOHVLE41EjaydfDJwm1E5yxChuV0P1e8TXZIu3x6+dk7slKTKQkoXXduZRzq3G9KgA0T2IVsMVcR4G0wqnsoeHx8mcteldm5JPL70F07t6wDWLhXshuKA6YfVdlldNx358kqNH/D8/9HhUFIXNEJbkr00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 330E42009184;
+	Mon,  7 Jul 2025 15:58:30 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 268BA4D174; Mon,  7 Jul 2025 15:58:30 +0200 (CEST)
+Date: Mon, 7 Jul 2025 15:58:30 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>, David Airlie <airlied@redhat.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Ben Hutchings <ben@decadent.org.uk>, Joerg Roedel <joro@8bytes.org>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Ahmed Salem <x0rw3ll@gmail.com>, Borislav Petkov <bp@alien8.de>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] agp/amd64: Check AGP Capability before binding to
+ unsupported devices
+Message-ID: <aGvShrJJTj2ERdZr@wunner.de>
+References: <b29e7fbfc6d146f947603d0ebaef44cbd2f0d754.1751468802.git.lukas@wunner.de>
+ <aGbaNd3qCK3WvAe-@tassilo>
+ <4ef523a2-48b3-45e9-94da-7811e1bfae76@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] agp/amd64: Check AGP Capability before binding to
- unsupported devices
-To: Andi Kleen <ak@linux.intel.com>, Lukas Wunner <lukas@wunner.de>
-Cc: David Airlie <airlied@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>,
- Ben Hutchings <ben@decadent.org.uk>, Joerg Roedel <joro@8bytes.org>,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Ahmed Salem <x0rw3ll@gmail.com>, Borislav Petkov <bp@alien8.de>,
- Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
- dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
- linux-pci@vger.kernel.org
-References: <b29e7fbfc6d146f947603d0ebaef44cbd2f0d754.1751468802.git.lukas@wunner.de>
- <aGbaNd3qCK3WvAe-@tassilo>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <aGbaNd3qCK3WvAe-@tassilo>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4ef523a2-48b3-45e9-94da-7811e1bfae76@kernel.org>
 
-Hi Andi,
+On Mon, Jul 07, 2025 at 02:53:32PM +0200, Hans de Goede wrote:
+> So I think we should move forward with Lukas' fix dor 6.16 and then
+> my patch to disable probing of unsupported devices by default can
+> be merged into linux-next .
 
-On 3-Jul-25 21:29, Andi Kleen wrote:
-> 
-> I suspect these days it would be also reasonable to drop it this old
-> hack.
-> 
-> If any of these old chipsets are still missing I would rather adds its
-> PCI-ID.
-> 
-> There will be certainly not any new unknown ones for these old CPUs.
+Sounds good to me.
 
-Right, I plan to submit a patch to disable the probing of unsupported
-devices by default. I'll likely even do so today.
+Dave is out all week and has not commented on this matter at all so far:
 
-But that is not entirely without a risk of regressions and atm this
-is causing a regression (breaks flicker free boot) in 6.16-rc# .
+https://lore.kernel.org/r/CAPM=9tzrmRS9++MP_Y4ab95W71UxjFLzTd176Mok7akwdT2q+w@mail.gmail.com/
 
-So I think we should move forward with Lukas' fix dor 6.16 and then
-my patch to disable probing of unsupported devices by default can
-be merged into linux-next .
+I assume Bjorn may not be comfortable applying my patch without an ack
+from Dave.  I am technically able to apply my own patch through drm-misc
+and I believe Hans' Reviewed-by is sufficient to allow me to do that.
 
-Regards,
+I'd feel more comfortable having additional acks or Reviewed-by's though.
+I'm contemplating applying the patch to drm-misc by Wednesday evening,
+that would allow it to land in Linus' tree before v6.16-rc6.
 
-Hans
+If anyone has objections, needs more time to review or wants to apply
+the patch, please let me know.
 
+Thanks,
+
+Lukas
 
