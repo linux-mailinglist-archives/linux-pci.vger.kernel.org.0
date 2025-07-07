@@ -1,142 +1,230 @@
-Return-Path: <linux-pci+bounces-31646-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31647-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31237AFBE7E
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 01:05:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63BE3AFBED1
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 01:58:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E02D07A5869
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 23:03:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12C747A16CB
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 23:57:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86CC821D3CA;
-	Mon,  7 Jul 2025 23:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7EF71E231E;
+	Mon,  7 Jul 2025 23:58:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eOggz5a0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DzJDUjxv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6071373;
-	Mon,  7 Jul 2025 23:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE4E27713
+	for <linux-pci@vger.kernel.org>; Mon,  7 Jul 2025 23:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751929500; cv=none; b=kGCfz0mpr0AhlwOhL0mbVMi/jzRNQjiibzH9Gnz8SVZyedrZLwxPj4jtqufwtFV9+eqWESEYgFO1NBR6nJlsxom0/VDpj4fdhP/PuDdpVCO33P5bxfLj5MbRBY667Bz++YqaxHVnu7mTsQ3X+2AfGZe7vxz+VsgxOKsEiFhrlQ4=
+	t=1751932728; cv=none; b=pFCgu8wB5tOido2+X2lw7PMXfXfrAS18FqsR+onNIQnktDhi571lyt+qq63d3UEB5Fzp3O/itbEDCklv0uHJYaQKk77jQeF7SL3xGq/FEnw5RAIJ+ESF0GWOgcUEprdaF6eRJsW+XClPqNoTnfLXk/JQ+/OwP5PwKKN0kowfHpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751929500; c=relaxed/simple;
-	bh=2HWDfffSof63G+DuZ3lzxxmk0RyHBGuL6LI7jyOBbik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pa7cd+LYXaddivbh9ejRXFwN5PEHb4r9ZpZhWk2CRvpwxVV5Cj102IocF8rRd4gmuH3/4FxERnHItVzqH0hEuQAQL7rYkelixVeUXXyV2XNVXtqGFOULK1C+Lvyz0iWWJJW7HMoVnhVvt5p85R6pDltSNp9ghE4XBxlWBEPOaqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eOggz5a0; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4a43d2d5569so44189291cf.0;
-        Mon, 07 Jul 2025 16:04:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751929498; x=1752534298; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AgefRmwWFnLKksEjR/mE3fDGyeNnfCLVBN4aw7Do+mU=;
-        b=eOggz5a0/mMoqScpjgbY2dapPUKd/0tCQWHkAaxCt6rzQHxlwJxuwNk89oWwYvxgEi
-         X4dm8MPmIhvG/SY1EhCYvbvqeHcJfDl21hfkrQngG4DLwuD7OtNRNTceoorR1XJU+HBW
-         nU/jP3ZK1teoqNW2RVisfuCIv9IRR1O1G99yn+udvIpVU5Hi5K5yc1yjcKpJoi5+wvYP
-         2S0E/Ori1J3SDxId7WF4rswwvpkpO/reyg8Bib6YuuB8DnJDPdKINROnrelAKkAOEEXw
-         fpl6Ws2b9w82GGfkLeVIJl01u8KnhZzeABb8Yb5IIDE1pTXm+GITZminyKzEoC0Ih1tP
-         tq7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751929498; x=1752534298;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AgefRmwWFnLKksEjR/mE3fDGyeNnfCLVBN4aw7Do+mU=;
-        b=IWEydWEQp2uYmlVbpQSFXpb8ixpmn74MfE/6LSuc0Pvg0LsqG5sOUOZAVxBFALmKMk
-         Jiw/iTGbEYCwyNTbDZLS4UiZ7AWAwlrPzA3aTsCvdbam2l3+qndHAVlB8XOS3qBioNRG
-         EIzYNRkecvobH97Mc1HhZYEzt0rN2iAw1yXtfqGVHg4thhMDOhQTjDo1YfsQnTA3dfZ+
-         RcNMIw3FHcfAll1Mj/JJn8Z/yczdls4K0EqIElxqt+YTTkv+kLk5x0cjGgm5X6G2ZFv4
-         Pj9HXmcuclweY0ZN/vCHlag/zVldCllMdIB7JahyXL7qZrTgV4GyL82IFG/IsOmqqKZy
-         +45A==
-X-Forwarded-Encrypted: i=1; AJvYcCUwoRqXImFnl6jRPvs4pz/tdrKfjo5v7y6Sibb+B815tGPok1du6HrrRH0VWd8v3kPYGYe+yHq1LM9K@vger.kernel.org, AJvYcCXD424JCccKcoakU9Clh8HOlWnCBpzwkgp+rQgFebncHpAYJgr8aGM7OY9AWM78TKETf6lxZKTkqXCA0V4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0N1DGepUzZLzaCvpfKlt6gM2TKztoFZ72Sao74zXYB98g6VOx
-	cvs39A8nWTMd4XCBgavoWduOyLRUHUV8HOrRCoxJblaVxvEzvz6saOegR3c0/xbYu0h7Fc3r
-X-Gm-Gg: ASbGncvvFgZNTBxku00qs+QUVgEmqwoGViJ2XFYeDFcfn6A45XOTuFR+FGVZrbBmoK0
-	kjxE4PKDoxbsj0LsQEVH9gTcnRBoLyDR9a12QGaxpMlm83OOFZD0gk1APZjvpyFtCef29PRkDup
-	EBW34waIiUGMYV9uDYx7nniBqXEVK1lCB6C+oaw0fGZ4DiplVEAtm6fnkMnwbnlsz+U88BNyI89
-	FJeOCvlO2ddgehkWI6dIGB5AzHrcE1iW7y1C1q7NvNifricG3u7qe+FMcuJl6FH7Q50XTug6KI1
-	qRQmKjoW91k1oB2ElxPpW2u/q27Hub+Z1oz+/hrOEOrG1YdOSCUIvpgJr1ij
-X-Google-Smtp-Source: AGHT+IEt38/qMtWKaR5SjIM0klOgkEeJMtKfunHHkkfEhSFc7UanZ5qQT5SVRGp91gGzCD3coMx+HA==
-X-Received: by 2002:a05:622a:255:b0:4a5:8387:8b9f with SMTP id d75a77b69052e-4a99647dcebmr219861971cf.15.1751929497497;
-        Mon, 07 Jul 2025 16:04:57 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:a5e6::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a9949fbe79sm71274421cf.31.2025.07.07.16.04.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 16:04:56 -0700 (PDT)
-Date: Mon, 7 Jul 2025 20:04:45 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rick wertenbroek <rick.wertenbroek@gmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Valmantas Paliksa <walmis@gmail.com>, linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v9 1/4] PCI: rockchip: Use standard PCIe defines
-Message-ID: <aGxSjb17kz2--_Sf@geday>
-References: <e81700ef4b49f584bc8834bfb07b6d8995fc1f42.1751322015.git.geraldogabriel@gmail.com>
- <20250707222210.GA2114615@bhelgaas>
+	s=arc-20240116; t=1751932728; c=relaxed/simple;
+	bh=hat836QU9AQ3CYSHDdLtVtDLROVUlWXIkBQuX4drSS8=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=E0o/lAt6kMTppJe9caIuv+81S8UGjxJCdw+SkERoi2dj4O2ePbjN/lASIRtwvSugtCajY3UrODBMXhltsA7QtVFDq+BA1CF806N33xjsdCfol63EJ2R1cI+RnmZx/DNgXgbtcWvwIu8ssPs6PSJaa2Xz9amfmGrw8Us0AXEYyrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DzJDUjxv; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751932727; x=1783468727;
+  h=date:from:to:cc:subject:message-id;
+  bh=hat836QU9AQ3CYSHDdLtVtDLROVUlWXIkBQuX4drSS8=;
+  b=DzJDUjxvwy2hyHC488qrbvxL1SjiOKBRzjsFIzxr2pYKKqBwgUyZsYTX
+   0NhVojKrqfstU7ZUSJTmDJwvTmvXjq4a8zxSZdrwtyVltWX9vqkmj8L+5
+   3MrJFP1vcIKm+fIP5uY9L+HUjgFVNeMqL3gSSvHtfiHlOj/5Ajsz6IKJd
+   Tj9g6u3yIkvlkCEv8Q6P3HmShOpT0rH1G74Vz5VqOLibNXo3eezERVEnA
+   3v/BDymabkiWAu+YKgHSZ+nVyBP7vOPiGrD9QPu86bfB6nZOGOjf5F11e
+   vkwruYO4pcXANNLdS/2aEIOuchTJyz+je8cWXmktjJhbOi4iUt0n0HYRy
+   g==;
+X-CSE-ConnectionGUID: ma/Xn/F3ScaIvqwvbEsomA==
+X-CSE-MsgGUID: r/IrsSczTkiNk/DC+kZ2sg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11487"; a="57932192"
+X-IronPort-AV: E=Sophos;i="6.16,295,1744095600"; 
+   d="scan'208";a="57932192"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 16:58:46 -0700
+X-CSE-ConnectionGUID: zt96hhnTSsy0UYM+bCCRBA==
+X-CSE-MsgGUID: tjkyKymjSMKDaO/JoSrGFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,295,1744095600"; 
+   d="scan'208";a="154750529"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 07 Jul 2025 16:58:45 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uYvjP-0000pf-0i;
+	Mon, 07 Jul 2025 23:58:43 +0000
+Date: Tue, 08 Jul 2025 07:57:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/msi-parent] BUILD SUCCESS WITH WARNING
+ 8c0c598f3f217961103ab782da53a7b980fd68b3
+Message-ID: <202507080733.ctDmG4pO-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250707222210.GA2114615@bhelgaas>
 
-On Mon, Jul 07, 2025 at 05:22:10PM -0500, Bjorn Helgaas wrote:
-> On Mon, Jun 30, 2025 at 07:24:41PM -0300, Geraldo Nascimento wrote:
-> > Current code uses custom-defined register offsets and bitfields for
-> > standard PCIe registers. Change to using standard PCIe defines. Since
-> > we are now using standard PCIe defines, drop unused custom-defined ones,
-> > which are now referenced from offset at added Capabilities Register.
-> 
-> > @@ -278,10 +278,10 @@ static void rockchip_pcie_set_power_limit(struct rockchip_pcie *rockchip)
-> >  		power = power / 10;
-> >  	}
-> >  
-> > -	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_DCR);
-> > -	status |= (power << PCIE_RC_CONFIG_DCR_CSPL_SHIFT) |
-> > -		  (scale << PCIE_RC_CONFIG_DCR_CPLS_SHIFT);
-> > -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_DCR);
-> > +	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCAP);
-> > +	status |= FIELD_PREP(PCI_EXP_DEVCAP_PWR_VAL, power);
-> > +	status |= FIELD_PREP(PCI_EXP_DEVCAP_PWR_SCL, scale);
-> 
-> Added #include <linux/bitfield.h> for this:
-> 
->   CC      drivers/pci/controller/pcie-rockchip-host.o
-> drivers/pci/controller/pcie-rockchip-host.c: In function ‘rockchip_pcie_set_power_limit’:
-> drivers/pci/controller/pcie-rockchip-host.c:272:24: error: implicit declaration of function ‘FIELD_MAX’ [-Werror=implicit-function-declaration]
->   272 |         while (power > FIELD_MAX(PCI_EXP_DEVCAP_PWR_VAL)) {
->       |                        ^~~~~~~~~
-> drivers/pci/controller/pcie-rockchip-host.c:282:19: error: implicit declaration of function ‘FIELD_PREP’ [-Werror=implicit-function-declaration]
->   282 |         status |= FIELD_PREP(PCI_EXP_DEVCAP_PWR_VAL, power);
->       |                   ^~~~~~~~~~
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/msi-parent
+branch HEAD: 8c0c598f3f217961103ab782da53a7b980fd68b3  PCI: vmd: Switch to msi_create_parent_irq_domain()
 
-Hi Bjorn,
+Warning (recently discovered and may have been fixed):
 
-Ugh, what a miss! Thank you for taking care of this!
+    https://lore.kernel.org/oe-kbuild-all/202507080437.HQuYK7x8-lkp@intel.com
 
-Geraldo Nascimento
+    Warning: drivers/pci/controller/pcie-iproc-msi.c:109 Excess struct member 'msi_domain' description in 'iproc_msi'
+
+Warning ids grouped by kconfigs:
+
+recent_errors
+|-- arm-allmodconfig
+|   `-- Warning:drivers-pci-controller-pcie-iproc-msi.c-Excess-struct-member-msi_domain-description-in-iproc_msi
+`-- arm64-allmodconfig
+    `-- Warning:drivers-pci-controller-pcie-iproc-msi.c-Excess-struct-member-msi_domain-description-in-iproc_msi
+
+elapsed time: 917m
+
+configs tested: 126
+configs skipped: 5
+
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                   randconfig-001-20250707    gcc-15.1.0
+arc                   randconfig-002-20250707    gcc-8.5.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-15.1.0
+arm                           imxrt_defconfig    clang-21
+arm                        neponset_defconfig    gcc-15.1.0
+arm                   randconfig-001-20250707    gcc-10.5.0
+arm                   randconfig-002-20250707    gcc-11.5.0
+arm                   randconfig-003-20250707    clang-21
+arm                   randconfig-004-20250707    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250707    gcc-8.5.0
+arm64                 randconfig-002-20250707    gcc-11.5.0
+arm64                 randconfig-003-20250707    gcc-12.3.0
+arm64                 randconfig-004-20250707    gcc-14.3.0
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250707    gcc-15.1.0
+csky                  randconfig-002-20250707    gcc-12.4.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250707    clang-21
+hexagon               randconfig-002-20250707    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250707    gcc-12
+i386        buildonly-randconfig-002-20250707    clang-20
+i386        buildonly-randconfig-003-20250707    gcc-12
+i386        buildonly-randconfig-004-20250707    gcc-12
+i386        buildonly-randconfig-005-20250707    gcc-12
+i386        buildonly-randconfig-006-20250707    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-21
+loongarch             randconfig-001-20250707    clang-21
+loongarch             randconfig-002-20250707    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                        maltaup_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250707    gcc-10.5.0
+nios2                 randconfig-002-20250707    gcc-12.4.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250707    gcc-8.5.0
+parisc                randconfig-002-20250707    gcc-15.1.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                  mpc866_ads_defconfig    clang-21
+powerpc               randconfig-001-20250707    gcc-8.5.0
+powerpc               randconfig-002-20250707    clang-21
+powerpc               randconfig-003-20250707    gcc-8.5.0
+powerpc64             randconfig-001-20250707    gcc-8.5.0
+powerpc64             randconfig-002-20250707    gcc-10.5.0
+powerpc64             randconfig-003-20250707    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250707    clang-21
+riscv                 randconfig-002-20250707    clang-21
+s390                             alldefconfig    gcc-15.1.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250707    clang-21
+s390                  randconfig-002-20250707    gcc-11.5.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                    randconfig-001-20250707    gcc-15.1.0
+sh                    randconfig-002-20250707    gcc-15.1.0
+sh                   sh7724_generic_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250707    gcc-12.4.0
+sparc                 randconfig-002-20250707    gcc-8.5.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20250707    clang-20
+sparc64               randconfig-002-20250707    gcc-15.1.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250707    gcc-12
+um                    randconfig-002-20250707    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250707    gcc-12
+x86_64      buildonly-randconfig-002-20250707    gcc-12
+x86_64      buildonly-randconfig-003-20250707    gcc-12
+x86_64      buildonly-randconfig-004-20250707    clang-20
+x86_64      buildonly-randconfig-005-20250707    gcc-12
+x86_64      buildonly-randconfig-006-20250707    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250707    gcc-12.4.0
+xtensa                randconfig-002-20250707    gcc-8.5.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
