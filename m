@@ -1,213 +1,200 @@
-Return-Path: <linux-pci+bounces-31634-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31635-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1604AFBA88
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 20:19:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26E04AFBA91
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 20:20:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F3B5425A49
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 18:19:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1DE411AA7C2A
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 18:20:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E13D8264624;
-	Mon,  7 Jul 2025 18:19:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25AF9262FF0;
+	Mon,  7 Jul 2025 18:19:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJx/f1Br"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CpyYx8G/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E1F263F5D;
-	Mon,  7 Jul 2025 18:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94523202F7C;
+	Mon,  7 Jul 2025 18:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751912343; cv=none; b=BvbFBCLwdHzLqSqk8ZahH8cJuh+rNmcsd6lruswaxamUzqWRajZcTOgGS6xwZ3P09za7LNjN1C1n1mMMZkECkGvyRgNMn7+pHCkIKCgd0Fe97xc/4iuKZBpwyilCBVS03/o7k8Ft0FXyAVTFne9+/PTT+cKHkL3s1M4XJIEQPtE=
+	t=1751912360; cv=none; b=RyrdB8Lp8Iv9AjYgoeurTr18IJKs4KAhFiYPV36FDSUFzvYkONkCu2zEDaEYOqa4ZCxx6sYpiK+34x3TG6BdJONXI9Ja6V7QpLi69b/johLko+DYjIO8dsrSmHI/eNGfSjn4BeSJXaSDRDv/n9IS/mtCeB7T2y7MmBEZM4WwG1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751912343; c=relaxed/simple;
-	bh=ZAX3axLXmsGPid8QjIJzF6CkgWt90mjjqRk1vUpOLFc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WHpC8kDYZbm0+bihZdlMCuVLEwT4pTvEHvOunS3nXXE0T/oBcKNWn0lQsptlIYb4FhpKTijsXaqtoaaUj0CFCY/wesvMtf5CHSfrCZb50J12VzRKMjcyMS2++j1q81Vh/0R2Xl1nApbOfYm3+UZX8CxD7wgjCFJDCx1ZlNWlfxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJx/f1Br; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8263CC4CEE3;
-	Mon,  7 Jul 2025 18:18:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751912343;
-	bh=ZAX3axLXmsGPid8QjIJzF6CkgWt90mjjqRk1vUpOLFc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=tJx/f1BrTDDKUauZ/7vqBZMmuARouJyZ1DqduhDtmpCE+ZGn68uYIrl5CH+rLYY76
-	 euC7a7UCwMnzCswEvSDgn9t8bHqlz1uMR20U77LOieSJ5GfgL04P16b1pRhTJ5CsJe
-	 PvXHz8hHQ+c7Dlrcb+1r5IaBPRLerEx/tcaSXtQoShFMkfC6FYu91x3N9DqEm5n9AT
-	 sYhgj2Npv7a1K9+0GSh/S2UauUUlS6NrLBj+F0wVbFi/GjyAdnYqNcjNCBFDox4m4l
-	 mMm4fSQUey0o3ZwhyC3sJFg3zsQzGqKYX/kVgbDBWYvuj18gY/6XLqpL/B2txUo6g2
-	 EX0mtFBDu5qrw==
-From: Manivannan Sadhasivam <mani@kernel.org>
-Date: Mon, 07 Jul 2025 23:48:40 +0530
-Subject: [PATCH RFC 3/3] PCI: qcom: Allow pwrctrl framework to control
- PERST#
+	s=arc-20240116; t=1751912360; c=relaxed/simple;
+	bh=AlyWUUk45lzlF6FtNE/K0HgamLakRdcRf91Z+Ag8wig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JFoYKawn8TxE76grDQE2RIBokUT80BihbkAh1gWveQXhrcAD83mGt96Z0Wai6htUwOayvWLyD6sV6oNuj2hXTEZpNSrPDks65+WP5S5opVLT40AW3LLGRf/v0+a60C3jK7blJnWW2bLGp4w/EO6V8Ptd/w1V7rwLbynFV/OeEX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CpyYx8G/; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.65.225.228] (unknown [20.236.10.163])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9A63D201B1B2;
+	Mon,  7 Jul 2025 11:19:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9A63D201B1B2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1751912358;
+	bh=Q/ovB6qLqPcbU35wCDWCKviOzlbLO2oERbjs1l8pv6M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CpyYx8G/9r/8bn4VodiaCI2P12/6dv11eleUchaoxBXdjDQ01msSZaylE/Bo6gGzz
+	 6VeCoKMY9PpTKKgnOMalPuXtYyHSPzr0sYbhdR9bNt+aze5B+LdVt+3QsZxU67WTk+
+	 MYhKF3msWtcsyCOQlunmo7uie2NVGJBdGfCKVaas=
+Message-ID: <32b541e0-bc5f-485a-bfe4-190519b4c150@linux.microsoft.com>
+Date: Mon, 7 Jul 2025 11:19:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/6] Drivers: hv: Use nested hypercall for post message
+ and signal event
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "romank@linux.microsoft.com" <romank@linux.microsoft.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+ "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
+ "x86@kernel.org" <x86@kernel.org>
+References: <1751582677-30930-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1751582677-30930-3-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB41576CBCA98ECA4C77BCC2D7D44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41576CBCA98ECA4C77BCC2D7D44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250707-pci-pwrctrl-perst-v1-3-c3c7e513e312@kernel.org>
-References: <20250707-pci-pwrctrl-perst-v1-0-c3c7e513e312@kernel.org>
-In-Reply-To: <20250707-pci-pwrctrl-perst-v1-0-c3c7e513e312@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, 
- Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Rob Herring <robh@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, 
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
- Brian Norris <briannorris@chromium.org>, 
- Manivannan Sadhasivam <mani@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4796; i=mani@kernel.org;
- h=from:subject:message-id; bh=ZAX3axLXmsGPid8QjIJzF6CkgWt90mjjqRk1vUpOLFc=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBobA+F4h5OF+pb4InqjarCEBdTUTr/zXS9VM7Lp
- 8OYXc9vfk6JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaGwPhQAKCRBVnxHm/pHO
- 9bgSCACZaTFJPy6WqUDGC0az5EHyD2Q4KbUCvklcaKwbZXpuz0pGxpsuHG0vcq3Ml5wlNOQp8xV
- ktiYR3J78sFHK+K1LWKPMBOx05LSY/wcjvQWj2ODAgUaotRuPekeCKsvUkX5htVjBSclKWjgFuX
- obY/z0kZ29le8ogG1XbfTxupq3tVqsXvxB0ykgzcc14b9acUHvLFdPlqI4ILXwJ+B0NQSJf6yqT
- XY7fT5nj69SyoSKRryV5C951rBlXajRtS976NYJth6abnbcUF7VPgRDRp9sjPpNBvOg/kxtTIbD
- rg9iigMwpDdqE3R30anVgx4vnvdui2Q0c/wQwtSm67V6XTy7
-X-Developer-Key: i=mani@kernel.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-Since the Qcom platforms rely on pwrctrl framework to control the power
-supplies, allow it to control PERST# also. PERST# should be toggled during
-the power-on and power-off scenarios.
+On 7/6/2025 8:13 PM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Thursday, July 3, 2025 3:45 PM
+>>
+>> When running nested, these hypercalls must be sent to the L0 hypervisor
+>> or VMBus will fail.
+>>
+>> Remove hv_do_nested_hypercall() and hv_do_fast_nested_hypercall8()
+>> altogether and open-code these cases, since there are only 2 and all
+>> they do is add the nested bit.
+>>
+>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+>> ---
+>>  arch/x86/include/asm/mshyperv.h | 20 --------------------
+>>  drivers/hv/connection.c         |  7 +++++--
+>>  drivers/hv/hv.c                 |  6 ++++--
+>>  3 files changed, 9 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+>> index 5ec92e3e2e37..e00a8431ef8e 100644
+>> --- a/arch/x86/include/asm/mshyperv.h
+>> +++ b/arch/x86/include/asm/mshyperv.h
+>> @@ -111,12 +111,6 @@ static inline u64 hv_do_hypercall(u64 control, void *input,
+>> void *output)
+>>  	return hv_status;
+>>  }
+>>
+>> -/* Hypercall to the L0 hypervisor */
+>> -static inline u64 hv_do_nested_hypercall(u64 control, void *input, void *output)
+>> -{
+>> -	return hv_do_hypercall(control | HV_HYPERCALL_NESTED, input, output);
+>> -}
+>> -
+>>  /* Fast hypercall with 8 bytes of input and no output */
+>>  static inline u64 _hv_do_fast_hypercall8(u64 control, u64 input1)
+>>  {
+>> @@ -164,13 +158,6 @@ static inline u64 hv_do_fast_hypercall8(u16 code, u64 input1)
+>>  	return _hv_do_fast_hypercall8(control, input1);
+>>  }
+>>
+>> -static inline u64 hv_do_fast_nested_hypercall8(u16 code, u64 input1)
+>> -{
+>> -	u64 control = (u64)code | HV_HYPERCALL_FAST_BIT | HV_HYPERCALL_NESTED;
+>> -
+>> -	return _hv_do_fast_hypercall8(control, input1);
+>> -}
+>> -
+>>  /* Fast hypercall with 16 bytes of input */
+>>  static inline u64 _hv_do_fast_hypercall16(u64 control, u64 input1, u64 input2)
+>>  {
+>> @@ -222,13 +209,6 @@ static inline u64 hv_do_fast_hypercall16(u16 code, u64 input1, u64 input2)
+>>  	return _hv_do_fast_hypercall16(control, input1, input2);
+>>  }
+>>
+>> -static inline u64 hv_do_fast_nested_hypercall16(u16 code, u64 input1, u64 input2)
+>> -{
+>> -	u64 control = (u64)code | HV_HYPERCALL_FAST_BIT | HV_HYPERCALL_NESTED;
+>> -
+>> -	return _hv_do_fast_hypercall16(control, input1, input2);
+>> -}
+>> -
+>>  extern struct hv_vp_assist_page **hv_vp_assist_page;
+>>
+>>  static inline struct hv_vp_assist_page *hv_get_vp_assist_page(unsigned int cpu)
+>> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+>> index be490c598785..47c93cee1ef6 100644
+>> --- a/drivers/hv/connection.c
+>> +++ b/drivers/hv/connection.c
+>> @@ -518,8 +518,11 @@ void vmbus_set_event(struct vmbus_channel *channel)
+>>  					 channel->sig_event, 0);
+>>  		else
+>>  			WARN_ON_ONCE(1);
+>> -	} else {
+>> -		hv_do_fast_hypercall8(HVCALL_SIGNAL_EVENT, channel->sig_event);
+>> +	} else if (hv_nested) {
+> 
+> As coded, this won't make any hypercall for the non-nested case.
+> The "else if (hv_nested)" should be just "else".
 
-But the controller driver still need to assert PERST# during the controller
-initialization. So only skip the deassert if pwrctrl usage is detected. The
-pwrctrl framework will deassert PERST# after turning on the supplies.
+Ah, forgot to change this line. Thank you for catching it
 
-The usage of pwrctrl framework is detected based on the new DT binding
-i.e., with the presence of PERST# and PHY properties in the Root Port node
-instead of the host bridge node.
+Nuno
 
-When the legacy binding is used, PERST# is only controlled by the
-controller driver since it is not reliable to detect whether pwrctrl is
-used or not. So the legacy platforms are untouched by this commit.
-
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
----
- drivers/pci/controller/dwc/pcie-designware-host.c |  1 +
- drivers/pci/controller/dwc/pcie-designware.h      |  1 +
- drivers/pci/controller/dwc/pcie-qcom.c            | 26 ++++++++++++++++++++++-
- 3 files changed, 27 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index af6c91ec7312bab6c6e5ad35b051d0f452fe7b8d..e45f53bb135a75963318666a479eb6d9582f30eb 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -492,6 +492,7 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
- 		return -ENOMEM;
- 
- 	pp->bridge = bridge;
-+	bridge->perst = pp->perst;
- 
- 	ret = dw_pcie_host_get_resources(pp);
- 	if (ret)
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 4165c49a0a5059cab92dee3c47f8024af9d840bd..7b28f76ebf6a2de8781746eba43a8e3ad9a5cbb2 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -430,6 +430,7 @@ struct dw_pcie_rp {
- 	struct resource		*msg_res;
- 	bool			use_linkup_irq;
- 	struct pci_eq_presets	presets;
-+	struct gpio_desc	**perst;
- };
- 
- struct dw_pcie_ep_ops {
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 620ac7cf09472b84c37e83ee3ce40e94a1d9d878..61e1d0d6469030c549328ab4d8c65d5377d525e3 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -313,6 +313,11 @@ static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
- 
- static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
- {
-+	struct dw_pcie_rp *pp = &pcie->pci->pp;
-+
-+	if (pp->perst)
-+		return;
-+
- 	/* Ensure that PERST has been asserted for at least 100 ms */
- 	msleep(PCIE_T_PVPERL_MS);
- 	qcom_perst_assert(pcie, false);
-@@ -1701,11 +1706,12 @@ static const struct pci_ecam_ops pci_qcom_ecam_ops = {
- 
- static int qcom_pcie_parse_port(struct qcom_pcie *pcie, struct device_node *node)
- {
-+	struct dw_pcie_rp *pp = &pcie->pci->pp;
- 	struct device *dev = pcie->pci->dev;
- 	struct qcom_pcie_port *port;
- 	struct gpio_desc *reset;
- 	struct phy *phy;
--	int ret;
-+	int ret, devfn;
- 
- 	reset = devm_fwnode_gpiod_get(dev, of_fwnode_handle(node),
- 				      "reset", GPIOD_OUT_HIGH, "PERST#");
-@@ -1724,6 +1730,12 @@ static int qcom_pcie_parse_port(struct qcom_pcie *pcie, struct device_node *node
- 	if (ret)
- 		return ret;
- 
-+	devfn = of_pci_get_devfn(node);
-+	if (devfn < 0)
-+		return -ENOENT;
-+
-+	pp->perst[PCI_SLOT(devfn)] = reset;
-+
- 	port->reset = reset;
- 	port->phy = phy;
- 	INIT_LIST_HEAD(&port->list);
-@@ -1734,10 +1746,20 @@ static int qcom_pcie_parse_port(struct qcom_pcie *pcie, struct device_node *node
- 
- static int qcom_pcie_parse_ports(struct qcom_pcie *pcie)
- {
-+	struct dw_pcie_rp *pp = &pcie->pci->pp;
- 	struct device *dev = pcie->pci->dev;
- 	struct qcom_pcie_port *port, *tmp;
-+	int child_cnt;
- 	int ret = -ENOENT;
- 
-+	child_cnt = of_get_available_child_count(dev->of_node);
-+	if (!child_cnt)
-+		return ret;
-+
-+	pp->perst = kcalloc(child_cnt, sizeof(struct gpio_desc *), GFP_KERNEL);
-+	if (!pp->perst)
-+		return -ENOMEM;
-+
- 	for_each_available_child_of_node_scoped(dev->of_node, of_port) {
- 		ret = qcom_pcie_parse_port(pcie, of_port);
- 		if (ret)
-@@ -1747,6 +1769,7 @@ static int qcom_pcie_parse_ports(struct qcom_pcie *pcie)
- 	return ret;
- 
- err_port_del:
-+	kfree(pp->perst);
- 	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
- 		list_del(&port->list);
- 
-@@ -1984,6 +2007,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	dw_pcie_host_deinit(pp);
- err_phy_exit:
- 	qcom_pcie_phy_exit(pcie);
-+	kfree(pp->perst);
- 	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
- 		list_del(&port->list);
- err_pm_runtime_put:
-
--- 
-2.45.2
+> 
+> Michael
+> 
+>> +		u64 control = HVCALL_SIGNAL_EVENT;
+>> +
+>> +		control |= hv_nested ? HV_HYPERCALL_NESTED : 0;
+>> +		hv_do_fast_hypercall8(control, channel->sig_event);
+>>  	}
+>>  }
+>>  EXPORT_SYMBOL_GPL(vmbus_set_event);
+>> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+>> index 308c8f279df8..b14c5f9e0ef2 100644
+>> --- a/drivers/hv/hv.c
+>> +++ b/drivers/hv/hv.c
+>> @@ -85,8 +85,10 @@ int hv_post_message(union hv_connection_id connection_id,
+>>  		else
+>>  			status = HV_STATUS_INVALID_PARAMETER;
+>>  	} else {
+>> -		status = hv_do_hypercall(HVCALL_POST_MESSAGE,
+>> -					 aligned_msg, NULL);
+>> +		u64 control = HVCALL_POST_MESSAGE;
+>> +
+>> +		control |= hv_nested ? HV_HYPERCALL_NESTED : 0;
+>> +		status = hv_do_hypercall(control, aligned_msg, NULL);
+>>  	}
+>>
+>>  	local_irq_restore(flags);
+>> --
+>> 2.34.1
 
 
