@@ -1,102 +1,78 @@
-Return-Path: <linux-pci+bounces-31643-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31644-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DCDDAFBE37
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 00:22:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6855EAFBE55
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 00:47:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E3091BC15B7
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 22:22:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 743503AE0FC
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 22:46:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65BF522B8CB;
-	Mon,  7 Jul 2025 22:22:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CB621BCA0E;
+	Mon,  7 Jul 2025 22:46:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfKa/VY/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZVTWftW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390161CAA6C;
-	Mon,  7 Jul 2025 22:22:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482814A06
+	for <linux-pci@vger.kernel.org>; Mon,  7 Jul 2025 22:46:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751926933; cv=none; b=iEfFnIwY8K9BK1r8FcoKJSxv/w3yuyr2U5crlIuC+Wn+XyokdI2FDxygApZI7nVdmsMeEeywkg0HmBWiG6ffrNSHzeAbkvk+/5+JtAU/q5QpCcB4QsO+tRXv5ekYzrwmblP9vhotjm2FNm5cvBr9o4n3TYbhlhyY96oXTIEv7ZI=
+	t=1751928416; cv=none; b=kUuM4BcObpDx8r2cx5tDlQ53IxTYYoIL6f7BKoCNNjMcH6Un68HfHCdOREdx/Uy+o/Yhhl/a6xu6RWMoPDigk9wLrhZvMUuA2j8w9cbMAyjpEqrU+Z0zG18D7vvFS9XiVy5L9dEx0tsOYTTtZxxnQSE6p+Y9IkrciKbgPIe4Mxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751926933; c=relaxed/simple;
-	bh=VKmtbfxhoTD48D/ekjwLMwNv+Dp8aDndHjI4BucvUmw=;
+	s=arc-20240116; t=1751928416; c=relaxed/simple;
+	bh=E8roPP4V9Fba7YYDXx/ryQChlv0B27/BLnTywQz6s1I=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ZiKjDWwhCm6MbJU3D827mo2Xf00iY029CNacF17nCbVpaz1XF9ZfryVWqercTXl2TCPVm/0qwycIsk6e4Fka2cFaLvvjBwnyPbdQVb4s87zPvrOAm9r3xUS3xbIKN1HF4//lw1oAkH5YAkHOXYqjFSioBbXT9m4oNlySyhTPsaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MfKa/VY/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 690CEC4CEE3;
-	Mon,  7 Jul 2025 22:22:12 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=fv70bx+AVgUWHksJ7DLQDHEWDv+FRoqk3I/vhX3MDeu2lB9eUmy3uDCMPWPJuuTAF4UFd4IT4SIoTxLWIyqBEAjp7Y1TKFABqrZo6wk1qRKZTPCHyMNoz9L7hvBq7vETjR78tcfAUotvg+NKtA3D7ZrT9REXuDd0T36nrli+qKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZVTWftW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0549C4CEE3;
+	Mon,  7 Jul 2025 22:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751926932;
-	bh=VKmtbfxhoTD48D/ekjwLMwNv+Dp8aDndHjI4BucvUmw=;
+	s=k20201202; t=1751928415;
+	bh=E8roPP4V9Fba7YYDXx/ryQChlv0B27/BLnTywQz6s1I=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=MfKa/VY/D8o8WU7cbff2usg9a9qVjvAGjstrw4JfKOUNiEmnK9naUFS4mixRLJPk1
-	 jJ2V7GtmTRQ3z95LkSEx6PD8pJAAcx4qR8ZhIMV1HFBPkGP/b1MEqj9rlfp7YHZ1go
-	 6s6D8X/Im9CgH+leQZTYV+lNEyL1w0QCOBu7n3Q57j6qrpdNPviZpzpFwRtaJRZzWO
-	 wEm0LUHD4zVPrPrnc1B+Zs5qHC73U5SR19nj3EGKXpRLurHN7xTlvB4T7xcLT6kHUr
-	 KxemPjXfbUU7B6+tUQRp49II+xFWg0p5Zhs8v/PjK57RzlYWvDbxivuRx8EETx3jLh
-	 rb+BuzBG+NS3A==
-Date: Mon, 7 Jul 2025 17:22:10 -0500
+	b=fZVTWftWyFd/1SRIChJWuo/Q58zuaHjJ5wulfz+tEaPo7wTq6wYVTcvbZJRMQ4+Dn
+	 JBpfiA8Ne4kbe2MVAcjXPdHF5csLWACbH8vqizumj/4ob0Lx0h89QENRxARHwthi7f
+	 UUFLQ0saI0lhpirOl17zSgRzWgHIAt6poqGyl9vsgU2XaCys990IFYqQlK+YT1UNZu
+	 QcIcE7/VfVcZ5M28a9Vpt/E57XsxZJR3mEHRJdIVzK9EM7oW3pLuyHf2OUYS5nMNAN
+	 uu66w3/aCpQI3Te0S7kRN0zoe4T7ULlL7gS1zGMSJbb1Q4hdwd7+XtEb1OetCBiYlB
+	 7hYLmo0Muxq0g==
+Date: Mon, 7 Jul 2025 17:46:54 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Geraldo Nascimento <geraldogabriel@gmail.com>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rick wertenbroek <rick.wertenbroek@gmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Valmantas Paliksa <walmis@gmail.com>, linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v9 1/4] PCI: rockchip: Use standard PCIe defines
-Message-ID: <20250707222210.GA2114615@bhelgaas>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH rdma-next 1/8] pci/tph: Expose
+ pcie_tph_get_st_table_size()
+Message-ID: <20250707224654.GA2121477@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e81700ef4b49f584bc8834bfb07b6d8995fc1f42.1751322015.git.geraldogabriel@gmail.com>
+In-Reply-To: <20250707195903.GB592765@unreal>
 
-On Mon, Jun 30, 2025 at 07:24:41PM -0300, Geraldo Nascimento wrote:
-> Current code uses custom-defined register offsets and bitfields for
-> standard PCIe registers. Change to using standard PCIe defines. Since
-> we are now using standard PCIe defines, drop unused custom-defined ones,
-> which are now referenced from offset at added Capabilities Register.
+On Mon, Jul 07, 2025 at 10:59:03PM +0300, Leon Romanovsky wrote:
+> On Mon, Jul 07, 2025 at 02:40:49PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Jul 07, 2025 at 08:03:01PM +0300, Leon Romanovsky wrote:
+> > > From: Yishai Hadas <yishaih@nvidia.com>
+> > > 
+> > > Expose pcie_tph_get_st_table_size() to be used by drivers as will be
+> > > done in the next patch from the series.
+> > 
+> > This series doesn't actually use pcie_tph_get_st_table_size().
+> 
+> It is in use in patch [PATCH mlx5-next 3/8] net/mlx5: Add support for device steering tag
+> https://lore.kernel.org/all/dc4c7f6ba34e6beaf95a3c4f9c2e122925be97c9.1751907231.git.leon@kernel.org/
 
-> @@ -278,10 +278,10 @@ static void rockchip_pcie_set_power_limit(struct rockchip_pcie *rockchip)
->  		power = power / 10;
->  	}
->  
-> -	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_DCR);
-> -	status |= (power << PCIE_RC_CONFIG_DCR_CSPL_SHIFT) |
-> -		  (scale << PCIE_RC_CONFIG_DCR_CPLS_SHIFT);
-> -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_DCR);
-> +	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCAP);
-> +	status |= FIELD_PREP(PCI_EXP_DEVCAP_PWR_VAL, power);
-> +	status |= FIELD_PREP(PCI_EXP_DEVCAP_PWR_SCL, scale);
+Oops, sorry, dunno how I missed that.
 
-Added #include <linux/bitfield.h> for this:
-
-  CC      drivers/pci/controller/pcie-rockchip-host.o
-drivers/pci/controller/pcie-rockchip-host.c: In function ‘rockchip_pcie_set_power_limit’:
-drivers/pci/controller/pcie-rockchip-host.c:272:24: error: implicit declaration of function ‘FIELD_MAX’ [-Werror=implicit-function-declaration]
-  272 |         while (power > FIELD_MAX(PCI_EXP_DEVCAP_PWR_VAL)) {
-      |                        ^~~~~~~~~
-drivers/pci/controller/pcie-rockchip-host.c:282:19: error: implicit declaration of function ‘FIELD_PREP’ [-Werror=implicit-function-declaration]
-  282 |         status |= FIELD_PREP(PCI_EXP_DEVCAP_PWR_VAL, power);
-      |                   ^~~~~~~~~~
-
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
