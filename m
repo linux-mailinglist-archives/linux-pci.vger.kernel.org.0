@@ -1,140 +1,107 @@
-Return-Path: <linux-pci+bounces-31622-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31623-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50932AFB818
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 17:58:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 302BEAFB840
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 18:05:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A036616E897
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 15:58:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E18771883F5E
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Jul 2025 16:05:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00A6421D3C9;
-	Mon,  7 Jul 2025 15:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 004791A5B96;
+	Mon,  7 Jul 2025 16:04:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rp+rdsGq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxwnLMu8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB27E1E2312;
-	Mon,  7 Jul 2025 15:58:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C962513EFE3;
+	Mon,  7 Jul 2025 16:04:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751903912; cv=none; b=R49vpK5DH6g4CWn73fBltSJhd386Jwt7SGFluLLMkm5m95HSX0B5Q1RzYLnNSRBmL860dj2Og/5EmESKCaYkDu0nVdlthwSYI58641sU8JZyI8By42WZnZwac6YfkUu0hdjoXPFfvGX5Tze1hhjK8awQqtZ7cn89AIepbLVcV8w=
+	t=1751904298; cv=none; b=S7pJ0eYhosneUuPM0kFCUu/etjJ026yKfJXzlnuFlgtd6hrcxWrhMaoYff0+sHVMcc9PR4Fdb+7EQCYSi1Kzp5+75F9oVWbh3CrvL8UgqRzGz9FseQ2Ej6LXC0vc1zjaxd1E86g6X6vPuP/lUk0x7kfuQNlI1lkjlOB/t2rP+tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751903912; c=relaxed/simple;
-	bh=P4irvB71K+2W4L3UZ4XfcIYhsGHoRRAgpPJO3up2rls=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AIpmttsEDML9+lnQ8Q8oh7o1U10vjzYBRSAGDwuImi/I9t5mbBrxTby1PplzAKznEjHBLtolqrStC7zG/MxTPcOL5ABucW9ZmsXtQckXBZuSRD1WYrXbCLIw1azr21O+ZsnQB/v7UadVq6eAYCZXZ+S0VgWAc86DjZ6Yu0/ClPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rp+rdsGq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42707C4CEE3;
-	Mon,  7 Jul 2025 15:58:32 +0000 (UTC)
+	s=arc-20240116; t=1751904298; c=relaxed/simple;
+	bh=PZguKu1gWtvJhhVgX3umyBR/niONdHTl+p+DO/QP/Sw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=mCA2gG8lZ+4Ra4mIpTcWNPwXRa5C6KY5r7L/omjQomZp2pz6LGFtuepxzrSf8IXfY4vJRoCXLJYEklH9YMgw6fV0FF4PZnrDEcJi+BNGKn4yxMw7WR3rjgi2jNhXrkWkN8na9P47GSwGrhkoaGjR0p0HZkN5DEiZzdcRNVCgABk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OxwnLMu8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D29BC4CEE3;
+	Mon,  7 Jul 2025 16:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751903912;
-	bh=P4irvB71K+2W4L3UZ4XfcIYhsGHoRRAgpPJO3up2rls=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Rp+rdsGq/vMHLR9KSjygQYEnG6ZRxsoK+IGpmqfu42uwLxUD+Jvhbub/p4S9wwsXD
-	 GqDOc3Xp7OejMwTqYQAWHTTtrF8DcmUrDgeT7ZJRw0Z1DQdT3Hd3cWaPx8hEZLFIra
-	 5bITNkQs3UybNuLapWcVRJAlLQOG4J506gIkKrLHWY8VixVeZeBDWVQ7RgtkpL+kRD
-	 iS+/+14qF+Efwo9fDql6v3y+yo6MWi2pQnW6IV7va2/Rr9nzfQE2o6AKmkZqOpRN/T
-	 NyAhOy39hs+n4Y6R5+fdAcHonIr00GfFcomCotVWmBiiOIi4UIqAERM1xmJeW2/p9Q
-	 mo55NETWfR/jw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uYoEg-00DSeu-3k;
-	Mon, 07 Jul 2025 16:58:30 +0100
-Date: Mon, 07 Jul 2025 16:58:29 +0100
-Message-ID: <86v7o49emy.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: linux-pci@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,	Toan Le <toan@os.amperecomputing.com>,
-	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kwilczynski@kernel.org>,	Manivannan
- Sadhasivam <mani@kernel.org>,	Rob Herring <robh@kernel.org>,	Bjorn Helgaas
- <bhelgaas@google.com>,	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 12/12] PCI: xgene-msi: Restructure handler setup/teardown
-In-Reply-To: <aGusAeAYqneyp9t3@lpieralisi>
-References: <20250628173005.445013-1-maz@kernel.org>
-	<20250628173005.445013-13-maz@kernel.org>
-	<aGusAeAYqneyp9t3@lpieralisi>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1751904298;
+	bh=PZguKu1gWtvJhhVgX3umyBR/niONdHTl+p+DO/QP/Sw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=OxwnLMu8FrXZcRkLG0kH45/ZQD56qNSbv9rildxJXMX0TpWG6e6VXaBatZcRSEWMq
+	 twtzFouCMYadDU3K3e+6Up6OIxPQxjWlW843LkTFPek5fAbs3nhO/TIbdkT75pH0fW
+	 BE5Gu5ZG+5hkEKOSuH690HTUXEmHTp6+cj6yjjBHcjNfLxJmQ4pDnvCBqop4tNFn7G
+	 ZATDDDEDCVqWpZNeVUoYFi1wDO6CG6/aV+g8FpRg/BnPizfz7Len7pzlN4EJOaaJFS
+	 L+nXq0rYBAWXykXtfNYXHLil55+buG5n0UX9w7IuCsGJc/W/xhR0gDJYtDF3fpRWAn
+	 wS2MzeC5KzP5A==
+Date: Mon, 7 Jul 2025 11:04:56 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	mhklinux@outlook.com, tglx@linutronix.de, bhelgaas@google.com,
+	romank@linux.microsoft.com, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	catalin.marinas@arm.com, will@kernel.org, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	jinankjain@linux.microsoft.com, skinsburskii@linux.microsoft.com,
+	mrathor@linux.microsoft.com, x86@kernel.org
+Subject: Re: [PATCH v2 1/6] PCI: hv: Don't load the driver for baremetal root
+ partition
+Message-ID: <20250707160456.GA2086564@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, toan@os.amperecomputing.com, kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, bhelgaas@google.com, tglx@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1751582677-30930-2-git-send-email-nunodasneves@linux.microsoft.com>
 
-On Mon, 07 Jul 2025 12:14:09 +0100,
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Thu, Jul 03, 2025 at 03:44:32PM -0700, Nuno Das Neves wrote:
+> From: Mukesh Rathor <mrathor@linux.microsoft.com>
 > 
-> On Sat, Jun 28, 2025 at 06:30:05PM +0100, Marc Zyngier wrote:
-> > Another utterly pointless aspect of the xgene-msi driver is that
-> > it is built around CPU hotplug. Which is quite amusing since this
-> > is one of the few arm64 platforms that, by construction, cannot
-> > do CPU hotplug in a supported way (no EL3, no PSCI, no luck).
-> > 
-> > Drop the CPU hotplug nonsense and just setup the IRQs and handlers
-> > in a less overdesigned way, grouping things more logically in the
-> > process.
-> > 
-> > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > ---
-> >  drivers/pci/controller/pci-xgene-msi.c | 109 +++++++++----------------
-> >  1 file changed, 37 insertions(+), 72 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-xgene-msi.c b/drivers/pci/controller/pci-xgene-msi.c
-> > index a22a6df7808c7..9f05c2a12da94 100644
-> > --- a/drivers/pci/controller/pci-xgene-msi.c
-> > +++ b/drivers/pci/controller/pci-xgene-msi.c
-> > @@ -216,12 +216,6 @@ static int xgene_allocate_domains(struct device_node *node,
-> >  	return msi->inner_domain ? 0 : -ENOMEM;
-> >  }
-> >  
-> > -static void xgene_free_domains(struct xgene_msi *msi)
-> > -{
-> > -	if (msi->inner_domain)
-> > -		irq_domain_remove(msi->inner_domain);
-> > -}
-> > -
-> >  static int xgene_msi_init_allocator(struct device *dev)
-> >  {
-> >  	xgene_msi_ctrl->bitmap = devm_bitmap_zalloc(dev, NR_MSI_VEC, GFP_KERNEL);
-> > @@ -271,26 +265,48 @@ static void xgene_msi_isr(struct irq_desc *desc)
-> >  	chained_irq_exit(chip, desc);
-> >  }
-> >  
-> > -static enum cpuhp_state pci_xgene_online;
-> > -
-> >  static void xgene_msi_remove(struct platform_device *pdev)
-> >  {
-> > -	struct xgene_msi *msi = platform_get_drvdata(pdev);
-> > -
-> > -	if (pci_xgene_online)
-> > -		cpuhp_remove_state(pci_xgene_online);
-> > -	cpuhp_remove_state(CPUHP_PCI_XGENE_DEAD);
+> The root partition only uses VMBus when running nested.
 > 
-> No question on the patch - just noticed we could remove
-> CPUHP_PCI_XGENE_DEAD from cpuhp_state since it would become
-> unused AFAICS.
+> When running on baremetal the Hyper-V PCI driver is not needed,
+> so do not initialize it.
+> 
+> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
 
-Good point. I'll add that to the queue.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Thanks,
+I assume this series will be merged elsewhere.
 
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index b4f29ee75848..4d25754dfe2f 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -4150,6 +4150,9 @@ static int __init init_hv_pci_drv(void)
+>  	if (!hv_is_hyperv_initialized())
+>  		return -ENODEV;
+>  
+> +	if (hv_root_partition() && !hv_nested)
+> +		return -ENODEV;
+> +
+>  	ret = hv_pci_irqchip_init();
+>  	if (ret)
+>  		return ret;
+> -- 
+> 2.34.1
+> 
 
