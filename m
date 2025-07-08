@@ -1,54 +1,54 @@
-Return-Path: <linux-pci+bounces-31687-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31688-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A643BAFCDF9
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 16:41:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DC07AFCE1F
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 16:47:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B93A4A46DB
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 14:41:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AAB643A94CB
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 14:46:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10EE72DF3DA;
-	Tue,  8 Jul 2025 14:41:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43B7122259B;
+	Tue,  8 Jul 2025 14:46:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HA6JFNMO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eBexEpwp"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8862DE6F1;
-	Tue,  8 Jul 2025 14:41:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B50E21C190;
+	Tue,  8 Jul 2025 14:46:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751985665; cv=none; b=J6GcFgE1bDsvjXp1KENuAlbN0IYMFbgpReP4mBtlUtGVKuYX4KqSQjDtdGpgXRWmqat6bJjVTdXzYsgyWtovPPGpHhxuj2hnrqqcCnTvxMrcOl1gUxYXOSdipIY9O834EKBUS8cEAFtLaj9D1g9GcuLSTN2V61iPr+5AzgkzONY=
+	t=1751986014; cv=none; b=WgifF9RnASWV8iRBJRRjtVCF/LfzrcAyOsDwbz+DGkvDFLzFW4lbOstHQb1kG4IX3unyGOuuoAN5CHqouBf4+kpOoDdckV84kZoXcilo/brvuA7em7NgFcMnl9djYB+NX4hhmw7NDyJ+QN3HeHCaXUMfuTkZCd8eJeu1cDEqx1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751985665; c=relaxed/simple;
-	bh=o+9yZP3hCqGsyFTdJeQZPiXoMBkX1jh2XVuQmFEjmBI=;
+	s=arc-20240116; t=1751986014; c=relaxed/simple;
+	bh=8VDA1hhdNP0DvXhtKa1xQX/6//M/u2gJCpKHUwbE8rE=;
 	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nUpj7byENKVfemiKPluBByUBTJRMt+tTU+hOdfojTNPwqmZQ/X/RS392reQ+o/sz4pmHRaineGeVMWL8cjQiWduXNARkXVlRJOxapUjLLJE5uvERRLYf/T8NihvBLwxq66Xssu5YrBA1WeOrbDBks1ZjJzW0oUHn84HwTvDhugo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HA6JFNMO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F1B7C4CEED;
-	Tue,  8 Jul 2025 14:41:04 +0000 (UTC)
+	 MIME-Version:Content-Type; b=M2wUy/H2hV/kPM+KDM0AX1pLy5D6iQo3HKFkSmuYnnlxTo/ODaBV05bEDHhQeLbTid2vmd5vJd05RWnWYYbrPBVjVtYhU26DRTZ1TV84rzV4Hh/xwIn1p6OwyM4lgBRt4AN5Y0L9Z/upOE54SM9h2Q2iRN8bXHBio/ZrQz+6lfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eBexEpwp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 998FCC4CEED;
+	Tue,  8 Jul 2025 14:46:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751985664;
-	bh=o+9yZP3hCqGsyFTdJeQZPiXoMBkX1jh2XVuQmFEjmBI=;
+	s=k20201202; t=1751986013;
+	bh=8VDA1hhdNP0DvXhtKa1xQX/6//M/u2gJCpKHUwbE8rE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HA6JFNMOMFSvn2pwCigUy0Hy8cnFK32vInmMDrgIIzlhCd4zadfHcN6+Jcm7X/kvw
-	 8S+sBSDS8BV3X1rOegvUktfHECu8ZK1skJMC/+4rblRv1M1pABfs/uPAnF2h5RtcT5
-	 j/79hXxWJjvioOtJkwD2voNruTz9xO94Ta15VpxCylYQZsLwyWBwSrUrNoqVh01u5H
-	 2FWo51N4iUt08dHwHSLkR/p0T1YVaHL1VrpfGtGjprJYphd/6nnZ0mrfRKYBK/NX5c
-	 JRq2PUOPuhZqplXmik4V372bk5ioHztN3OuQxOomD/ku3/HBX0nSu4UWznA9p+i5qN
-	 E7+lTqimx1UyA==
+	b=eBexEpwpcZoo15tmiOa+fHLZtIIup6t7ZstZvno914Fm8b9WDRcTOHfgVLTOGNhaY
+	 Cd03QHHSu0iJ+WkK1uJee2fjYr03DqRjwsWIfSXe3uziHv0jZ/0B18ide3lfYj8pHQ
+	 rrTryzT15LP86d1TUMZh0TABx4DOIX5Z6EwfO2ASIyQEXHAG4ai4RsRU9AUNQBMHoI
+	 2NHcanp3vnarWx3HczXOS6YsLDBlcPPXfApYQ22yfcM7F2ROyyre91pVMbP0f1HigR
+	 Mz8/S8XBctflYVDxlkKvbLR95p3ijVopVHdiXt0Jo+UFh/cPfyoHillOgJON6/9vQm
+	 clHZl90jdsaQA==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1uZ9VG-00DnGo-3G;
-	Tue, 08 Jul 2025 15:41:02 +0100
-Date: Tue, 08 Jul 2025 15:41:01 +0100
-Message-ID: <86qzyqagoy.wl-maz@kernel.org>
+	id 1uZ9at-00DnQF-D8;
+	Tue, 08 Jul 2025 15:46:51 +0100
+Date: Tue, 08 Jul 2025 15:46:51 +0100
+Message-ID: <86pleaagf8.wl-maz@kernel.org>
 From: Marc Zyngier <maz@kernel.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>
 Cc: linux-pci@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
@@ -56,11 +56,11 @@ Cc: linux-pci@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
 	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kwilczynski@kernel.org>,	Manivannan
  Sadhasivam <mani@kernel.org>,	Rob Herring <robh@kernel.org>,	Bjorn Helgaas
  <bhelgaas@google.com>,	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 09/12] PCI: xgene-msi: Sanitise MSI allocation and affinity setting
-In-Reply-To: <aGvga+1Q6SOsTScK@lpieralisi>
+Subject: Re: [PATCH 08/12] PCI: xgene-msi: Get rid of intermediate tracking structure
+In-Reply-To: <aGvmQ0fjM6HWq6Qv@lpieralisi>
 References: <20250628173005.445013-1-maz@kernel.org>
-	<20250628173005.445013-10-maz@kernel.org>
-	<aGvga+1Q6SOsTScK@lpieralisi>
+	<20250628173005.445013-9-maz@kernel.org>
+	<aGvmQ0fjM6HWq6Qv@lpieralisi>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
  (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -76,28 +76,161 @@ X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, linux-pci@vger.kernel.org, linux-arm-k
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Mon, 07 Jul 2025 15:57:47 +0100,
+On Mon, 07 Jul 2025 16:22:43 +0100,
 Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> On Sat, Jun 28, 2025 at 06:30:02PM +0100, Marc Zyngier wrote:
-
-[...]
-
-> > + * Effectively, this amounts to:
-> > + * - hwirq[7]::cpu[2:0] is the target frame number
-> > + * - hwirq[6:4] is the register index in any given frame
-> > + * - hwirq[3:0] is the MSI data
+> On Sat, Jun 28, 2025 at 06:30:01PM +0100, Marc Zyngier wrote:
+> > The xgene-msi driver uses an odd construct in the form of an
+> > intermediate tracking structure, evidently designed to deal with
+> > multiple instances of the MSI widget. However, the existing HW
+> > only has one set, and it is obvious that there won't be new HW
+> > coming down that particular line.
+> > 
+> > Simplify the driver by using a bit of pointer arithmetic instead,
+> > directly tracking the interrupt and avoiding extra memory allocation.
 > 
-> I think that adding macros to define these subfields shifts would simplify
-> reading and reviewing the code - while reviewing xgene_msi_isr() I
-> realized it is hard to understand where the shifts to pack/unpack hwirq come
-> from. I'd understand you don't want to use FIELD_PREP/GET on hwirq, it
-> is not a HW field but rather a SW encoding you created but at least defining
-> the shifts and using them throughout would help.
+> A couple of nits, nothing else.
+> 
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > ---
+> >  drivers/pci/controller/pci-xgene-msi.c | 58 ++++++++------------------
+> >  1 file changed, 17 insertions(+), 41 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-xgene-msi.c b/drivers/pci/controller/pci-xgene-msi.c
+> > index b3ac0125b3b40..4be79b9ff80df 100644
+> > --- a/drivers/pci/controller/pci-xgene-msi.c
+> > +++ b/drivers/pci/controller/pci-xgene-msi.c
+> > @@ -24,19 +24,13 @@
+> >  #define NR_HW_IRQS		16
+> >  #define NR_MSI_VEC		(IDX_PER_GROUP * IRQS_PER_IDX * NR_HW_IRQS)
+> >  
+> > -struct xgene_msi_group {
+> > -	struct xgene_msi	*msi;
+> > -	int			gic_irq;
+> > -	u32			msi_grp;
+> > -};
+> > -
+> >  struct xgene_msi {
+> >  	struct irq_domain	*inner_domain;
+> >  	u64			msi_addr;
+> >  	void __iomem		*msi_regs;
+> >  	unsigned long		*bitmap;
+> >  	struct mutex		bitmap_lock;
+> > -	struct xgene_msi_group	*msi_groups;
+> > +	unsigned int		gic_irq[NR_HW_IRQS];
+> >  };
+> >  
+> >  /* Global data */
+> > @@ -261,27 +255,20 @@ static int xgene_msi_init_allocator(struct device *dev)
+> >  
+> >  	mutex_init(&xgene_msi_ctrl->bitmap_lock);
+> >  
+> > -	xgene_msi_ctrl->msi_groups = devm_kcalloc(dev, NR_HW_IRQS,
+> > -						  sizeof(struct xgene_msi_group),
+> > -						  GFP_KERNEL);
+> > -	if (!xgene_msi_ctrl->msi_groups)
+> > -		return -ENOMEM;
+> > -
+> >  	return 0;
+> >  }
+> >  
+> >  static void xgene_msi_isr(struct irq_desc *desc)
+> >  {
+> > +	unsigned int *irqp = irq_desc_get_handler_data(desc);
+> >  	struct irq_chip *chip = irq_desc_get_chip(desc);
+> >  	struct xgene_msi *xgene_msi = xgene_msi_ctrl;
+> > -	struct xgene_msi_group *msi_groups;
+> >  	int msir_index, msir_val, hw_irq, ret;
+> >  	u32 intr_index, grp_select, msi_grp;
+> >  
+> >  	chained_irq_enter(chip, desc);
+> >  
+> > -	msi_groups = irq_desc_get_handler_data(desc);
+> > -	msi_grp = msi_groups->msi_grp;
+> > +	msi_grp = irqp - xgene_msi->gic_irq;
+> >  
+> >  	/*
+> >  	 * MSIINTn (n is 0..F) indicates if there is a pending MSI interrupt
+> > @@ -341,35 +328,31 @@ static void xgene_msi_remove(struct platform_device *pdev)
+> >  		cpuhp_remove_state(pci_xgene_online);
+> >  	cpuhp_remove_state(CPUHP_PCI_XGENE_DEAD);
+> >  
+> > -	kfree(msi->msi_groups);
+> > -
+> >  	xgene_free_domains(msi);
+> >  }
+> >  
+> >  static int xgene_msi_hwirq_alloc(unsigned int cpu)
+> >  {
+> > -	struct xgene_msi *msi = xgene_msi_ctrl;
+> > -	struct xgene_msi_group *msi_group;
+> >  	int i;
+> >  	int err;
+> >  
+> >  	for (i = cpu; i < NR_HW_IRQS; i += num_possible_cpus()) {
+> > -		msi_group = &msi->msi_groups[i];
+> > +		unsigned int irq = xgene_msi_ctrl->gic_irq[i];
+> >  
+> >  		/*
+> >  		 * Statically allocate MSI GIC IRQs to each CPU core.
+> >  		 * With 8-core X-Gene v1, 2 MSI GIC IRQs are allocated
+> >  		 * to each core.
+> >  		 */
+> > -		irq_set_status_flags(msi_group->gic_irq, IRQ_NO_BALANCING);
+> > -		err = irq_set_affinity(msi_group->gic_irq, cpumask_of(cpu));
+> > +		irq_set_status_flags(irq, IRQ_NO_BALANCING);
+> > +		err = irq_set_affinity(irq, cpumask_of(cpu));
+> >  		if (err) {
+> >  			pr_err("failed to set affinity for GIC IRQ");
+> >  			return err;
+> >  		}
+> >  
+> > -		irq_set_chained_handler_and_data(msi_group->gic_irq,
+> > -			xgene_msi_isr, msi_group);
+> > +		irq_set_chained_handler_and_data(irq, xgene_msi_isr,
+> > +						 &xgene_msi_ctrl->gic_irq[i]);
+> >  	}
+> >  
+> >  	return 0;
+> > @@ -378,15 +361,12 @@ static int xgene_msi_hwirq_alloc(unsigned int cpu)
+> >  static int xgene_msi_hwirq_free(unsigned int cpu)
+> >  {
+> >  	struct xgene_msi *msi = xgene_msi_ctrl;
+> > -	struct xgene_msi_group *msi_group;
+> >  	int i;
+> >  
+> >  	for (i = cpu; i < NR_HW_IRQS; i += num_possible_cpus()) {
+> > -		msi_group = &msi->msi_groups[i];
+> > -		if (!msi_group->gic_irq)
+> > +		if (!msi->gic_irq[i])
+> 
+> In patch 5 we removed this check in xgene_msi_hwirq_alloc(), if it
+> superfluous there it should be here too.
 
-I have no problem using FIELD_*() for that. I've now reworked this to
-make it clearer as well as added a bit more documentation on the
-behaviour of the MSInRx registers (they are quite funky).
+Hmmm, good point. I'll get rid of that one too.
+
+> 
+> >  			continue;
+> > -		irq_set_chained_handler_and_data(msi_group->gic_irq, NULL,
+> > -						 NULL);
+> > +		irq_set_chained_handler_and_data(msi->gic_irq[i], NULL, NULL);
+> >  	}
+> >  	return 0;
+> >  }
+> > @@ -399,10 +379,9 @@ static const struct of_device_id xgene_msi_match_table[] = {
+> >  static int xgene_msi_probe(struct platform_device *pdev)
+> >  {
+> >  	struct resource *res;
+> > -	int rc, irq_index;
+> 
+> Just noticed, insignificant nit: don't see why moving irq_index to a
+> local loop variable is required in this patch - fine to leave the
+> code in the patch as-is - reporting it to make sure I have not
+> missed anything.
+
+Not required, just my own obsession with scope reduction of local
+variables. I thought that given the magnitude of the changes, I might
+as well give myself some artistic license! ;-)
 
 Thanks,
 
