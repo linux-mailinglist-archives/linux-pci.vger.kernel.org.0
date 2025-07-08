@@ -1,61 +1,59 @@
-Return-Path: <linux-pci+bounces-31692-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31693-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD1FFAFD00D
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 18:06:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C5A9AFD028
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 18:08:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2D2A3A7AEF
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 16:05:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E80147A801B
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 16:07:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A81492E3B1B;
-	Tue,  8 Jul 2025 16:06:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FBCD2E5406;
+	Tue,  8 Jul 2025 16:08:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bm+GezH7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6xpfxxH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7E92E0929;
-	Tue,  8 Jul 2025 16:06:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052472E540B;
+	Tue,  8 Jul 2025 16:08:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751990762; cv=none; b=j/nZU22Y7Mij/vjH7E+EBufdmNPaI0f9AhCLoYgDniDC+NPCPbwFJ7lMFmO5s9mKsLoPGcIBV6x1QvT5cV+9d6Otd6JvFXSteYJLOTDj3rt08BZVluP8toJqqUS0unkV0jUzWsJR96e3N/Uoge3acUL1LXxUct4c/k2oRFkUyFs=
+	t=1751990899; cv=none; b=UCZ+bZCoE56YtTj+HpzDT0aNv1waGJDJXbkhb3ecI/IJzpMZvMu95SF3EL6cmIRYoS7naZ69JQiaSl/v9sSvSlxTz1tILdnA6kfB0k9uuNZVOlbxzZ6m/34+PtiTx1o3YCl0c3oPeoSiu3ciPOIKO3kAExs0Axplahli0j+/qAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751990762; c=relaxed/simple;
-	bh=VoqXC5vS3jsIa1yFv0oPoDMiBok2AlhMwtNJQb0+QVM=;
+	s=arc-20240116; t=1751990899; c=relaxed/simple;
+	bh=7S1pgMXKj33TaIWn1KrVdoTD3pD9CWUGWtyQcBDqO/U=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tUQTxZErs+pFfc2T8USy3kPHPMuPHOCSdjWDgOXVm+BfCm7Wm9yEDwyYWLOAw6d4l0Mrl7RmhgiEbPrnZzUu1BeuJXVPY+sfqwBq6aza1qI9Lv94w4HgEQXZ//0zSh3WmtLuatoIsQqj6Md54dRnsgeIlWvwC2msaCzoKwJSk3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bm+GezH7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13BD1C4CEED;
-	Tue,  8 Jul 2025 16:06:01 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=TrTm4qZKWqLC9Scn7uaGjJSxAnVM5g6/I1P9V+p/VAsIqxlO5pV87emQneA9KoCgDTgSVU2Wf0YyEbfygYVZUxRabAAZXM5kFxjzuT3rQfysGRlGM0UWWYmskEITuJdm6iwQJHzqN6KOd7v/w0PvCTGaziMq1GSHMGEVBfWJuDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6xpfxxH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77911C4CEEF;
+	Tue,  8 Jul 2025 16:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751990762;
-	bh=VoqXC5vS3jsIa1yFv0oPoDMiBok2AlhMwtNJQb0+QVM=;
+	s=k20201202; t=1751990898;
+	bh=7S1pgMXKj33TaIWn1KrVdoTD3pD9CWUGWtyQcBDqO/U=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=bm+GezH77xN1w6ikSayOdd/DgOLYB3Egij8qvNsjOVoHaI+xqsL38XPX4H3K1GeeU
-	 FPQBVwShbzDpkvzmguPQjDdXexsaK8s4BJnm94pW9mnE3fn2wPJqnXOuB2/5B/tn0w
-	 UhkNqdX4QZ3TmmwfssxJ8Z7wuovZdo/ZNtcOZ+TFV9+elpQuavsytBj6CUSsYVf4t0
-	 T/1dh+Iy/RBAOsn6D67oTMk8AtB74jmoz+eNUfonfWh67pOro6KgVz/sHIOK1+lGPC
-	 DiYO6KgVPtso/VoB+hN9vxmgQkm7bU7EFWMmyVmYeI+1rAWZ1HgI3+/+8sO/ZORU0t
-	 HAzplkVeGB74g==
-Date: Tue, 8 Jul 2025 11:06:00 -0500
+	b=k6xpfxxHLdqU6QC9FhEZ8RDOo9q5dvKZcFVsZKRkFVM7rEiWvMnU3f5HolWtZ8y8m
+	 pwCej/MZeYpx64S7HDOfEMbZD1eakPkcB0iIPIOU0T/B8WETiWpaCgfFhalx4svBi/
+	 w0o1z8YZfQpWu4+LEc5erqDKO6ufkMkh02+ExBrOQnYkSDzsDKDr2F+3t5nkwsMjHk
+	 9E/On/OuqKqeTNFnOjuy+d/IuiZqBvOfg2CnbNnQ1nTTNG367hJy/q7LCV+qTX8zPP
+	 25skyYykuIc25iXJvV2QRqCcIvxdIpGD/cFnx36bovN//Q+mxH7tcQKcAfAzvkwi5u
+	 KSajehN0JRB5w==
+Date: Tue, 8 Jul 2025 11:08:17 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] PCI: iproc: Remove description of 'msi_domain' in struct
- iproc_msi
-Message-ID: <20250708160600.GA2147978@bhelgaas>
+	Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	Roman Kisel <romank@linux.microsoft.com>
+Subject: Re: [PATCH] PCI/MSI: Initialize the prepare descriptor by default
+Message-ID: <20250708160817.GA2148355@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,38 +62,53 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250708053825.1803409-1-namcao@linutronix.de>
+In-Reply-To: <e589da81-ed8d-4fbd-8a29-687eb271d1fe@linux.microsoft.com>
 
-On Tue, Jul 08, 2025 at 07:38:25AM +0200, Nam Cao wrote:
-> The member msi_domain of struct iproc_msi has been removed, but its
-> description was left behind. Remove the description.
+On Tue, Jul 08, 2025 at 03:45:05PM +0530, Naman Jain wrote:
+> On 7/8/2025 3:32 PM, Shradha Gupta wrote:
+> > On Tue, Jul 08, 2025 at 10:48:48AM +0530, Naman Jain wrote:
+> > > Plug the default MSI-X prepare descriptor for non-implemented ops by
+> > > default to workaround the inability of Hyper-V vPCI module to setup
+> > > the MSI-X descriptors properly; especially for dynamically allocated
+> > > MSI-X.
+> > > 
+> > > Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+> > > ---
+> > >   drivers/pci/msi/irqdomain.c | 2 ++
+> > >   1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+> > > index 765312c92d9b..655e99b9c8cc 100644
+> > > --- a/drivers/pci/msi/irqdomain.c
+> > > +++ b/drivers/pci/msi/irqdomain.c
+> > > @@ -84,6 +84,8 @@ static void pci_msi_domain_update_dom_ops(struct msi_domain_info *info)
+> > >   	} else {
+> > >   		if (ops->set_desc == NULL)
+> > >   			ops->set_desc = pci_msi_domain_set_desc;
+> > > +		if (ops->prepare_desc == NULL)
+> > > +			ops->prepare_desc = pci_msix_prepare_desc;
+> > >   	}
+> > >   }
+> > > 
+> > > base-commit: 26ffb3d6f02cd0935fb9fa3db897767beee1cb2a
+> > > -- 
+> > > 2.34.1
+> > > 
+> > 
+> > Hey Naman,
+> > 
+> > can you please try your tests with this patch:
+> > https://lore.kernel.org/all/1749651015-9668-1-git-send-email-shradhagupta@linux.microsoft.com/
+> > I think this should help your use case
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202507080437.HQuYK7x8-lkp@intel.com/
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Hey,
+> Thanks for sharing this, this works for me.
+> 
+> Closing this thread.
 
-Thanks for squashing this into the ("PCI: iproc: Switch to
-msi_create_parent_irq_domain()") patch that removed the msi_domain
-member, Mani.  No point in cluttering the history with extra commits
-that clean up things we haven't merged upstream yet.
+I guess this means we should ignore this patch?  If it turns out that
+we do need this patch, I'd like to add some details in the commit log
+about what this problem looks like to users.
 
-> ---
->  drivers/pci/controller/pcie-iproc-msi.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
-> index d0c7f004217f..9ba242ab9596 100644
-> --- a/drivers/pci/controller/pcie-iproc-msi.c
-> +++ b/drivers/pci/controller/pcie-iproc-msi.c
-> @@ -82,7 +82,6 @@ struct iproc_msi_grp {
->   * @bitmap_lock: lock to protect access to the MSI bitmap
->   * @nr_msi_vecs: total number of MSI vectors
->   * @inner_domain: inner IRQ domain
-> - * @msi_domain: MSI IRQ domain
->   * @nr_eq_region: required number of 4K aligned memory region for MSI event
->   * queues
->   * @nr_msi_region: required number of 4K aligned address region for MSI posted
-> -- 
-> 2.39.5
-> 
+Bjorn
 
