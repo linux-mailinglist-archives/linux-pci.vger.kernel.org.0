@@ -1,182 +1,169 @@
-Return-Path: <linux-pci+bounces-31694-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31695-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A65EAFD0A3
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 18:25:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA6B9AFD172
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 18:36:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E210482FF8
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 16:25:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04D195416BE
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 16:33:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1854C2DC34C;
-	Tue,  8 Jul 2025 16:25:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D2ED2E5418;
+	Tue,  8 Jul 2025 16:34:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fwzkQmWY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azMXPSKl"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92DF2D9790;
-	Tue,  8 Jul 2025 16:25:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300022E2F0D;
+	Tue,  8 Jul 2025 16:34:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751991945; cv=none; b=Rnkm8hJ3MkKODaJzZ4nhZoFn6m3azt6B9/Nk629UTHQXLXgMvfAWtNalh81zkHjriYbOwtKbgwnGToY35Vm1/H/4ZamiTkAJSc6kM5h3/RaV2rkQphOb5GttUncPm5qsqk5sMmKceJysvHNalssbC09bsnJ9jTyfFAWyl7e8yto=
+	t=1751992449; cv=none; b=WITI7ja0GhLZTXr70sVXX2x++zJkbDKHYTczpkubvuO/nEVPCsr6T0dNcfM7/Y76cvGbaA3LdR/5Rt+kqq/CB5u7lPIRYvJkrK4CXpr0uhbIrXVMXAI3NltQZmJd9/O8QKYlUuJt/MRgP85Nr6yUnNM3/B1nV1AbE3N9P5ftknQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751991945; c=relaxed/simple;
-	bh=QmoHd8cC81xmIDIbZJg1nKxwCyWUf9E8OERsbTNGp54=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QScfuie6OdSLqrL7Imr2kydSzrL0r1MuVc7ygR7LeczM0G0pL4W0GSJ7KKpskZwssjT6zIu+h8VVBW/mTEl319G3nQb3ayBqsHHotqbQCNHotG+jjHH3Abpz1XlKvKkT0DNDs8oyRfheVXic/U3GmdyRl4vnGz/iJh3WJjfXGFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fwzkQmWY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDBE8C4CEED;
-	Tue,  8 Jul 2025 16:25:37 +0000 (UTC)
+	s=arc-20240116; t=1751992449; c=relaxed/simple;
+	bh=SgfdUXzh2Nml5Z3bb/5kyq3mdQdgb9FfXFfA9SvpmDQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=VAEI9xrEo3Ly5VZrCVn5cK43yRvVjbVFGd48J4Zg17zpR7my3wBn+Bc6ngeR/h6TIvU/wRPpfCXu86gysQioSLjkzbPCqwuwDw0K3DN0CARJA2JEPZ3Xupj/joe/bi3nq9Re/Y28if/OSOBaeNGjDjfLutJg6ZAS8BWM1f6btDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azMXPSKl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6D4FC4CEF6;
+	Tue,  8 Jul 2025 16:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751991944;
-	bh=QmoHd8cC81xmIDIbZJg1nKxwCyWUf9E8OERsbTNGp54=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fwzkQmWYtKwmnrBgCnqdCq4I0KvH45mkaufs0g2zpZphsVw0UrX4WEkPeny+dVWaw
-	 M6AZK2sUINh5mh2Ry+BOP31dYkOZ+/mdz31oE6MwgCU8/kx+NLU4b9QF9QSwKguRYI
-	 FIl2/JTGLBdDbv+oquP1D1XzoJcXFefS6Zp0J/u0AA2TIyur4qjm2nIG7PdYsVGKs6
-	 reWPwpXw9y0Y/x/T4lVcbnYE/kfos1SMLIZmrqeWPEehNk5niV0pPeKHk7cAZwdgxb
-	 zBjpN9lr4h7umBdF0vmo+B/aP8G47E+Db71104HEEjjkmtNoTrlcJ1ZODG8HXjfNVQ
-	 NI2rF/+EjfqEQ==
-Date: Tue, 8 Jul 2025 21:55:33 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Jeff Johnson <jjohnson@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, linux-wireless@vger.kernel.org, 
-	ath11k@lists.infradead.org, qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com, 
-	quic_vpernami@quicinc.com, quic_mrana@quicinc.com, 
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Subject: Re: [PATCH v4 02/11] PCI/bwctrl: Add support to scale bandwidth
- before & after link re-training
-Message-ID: <fhi7q5mbe75xbfmff6k4qe5pe6xveya5dsfqkm6bqpz7rcn3vr@jyn4uxl2exp7>
-References: <20250609-mhi_bw_up-v4-0-3faa8fe92b05@qti.qualcomm.com>
- <20250609-mhi_bw_up-v4-2-3faa8fe92b05@qti.qualcomm.com>
+	s=k20201202; t=1751992449;
+	bh=SgfdUXzh2Nml5Z3bb/5kyq3mdQdgb9FfXFfA9SvpmDQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=azMXPSKl/cKhJH/ynvyluDOzxcpZwYDm4K+ao5thzQed3wrQRNk0B1kWpuK5JNyfM
+	 AtMyy7PP7q2t5/9TFMMeck2emNZwxvwqiJhAVafZNIe/h8+dnZCoWL0NxxvWckE2mt
+	 Jth6t+YijRDPahsaE9FnJ8odSlCtQNXxs97jPn1+8p/GIBxNIzskwbMTLO02bG/wvn
+	 EytWUL6LWW1YiGiEsf5g2w7F+EIA7ud5u40x8r64WU9EG2ptzsw3IbLSKLL/XQUmNk
+	 NkORhxTHhw8QrigiyoXt6UPm6n1eBH5aWKtPpctk+Hj+4VfpvJ2f3EYIhe1WxdduJp
+	 A0UfauJ4tl4Nw==
+Date: Tue, 8 Jul 2025 11:34:07 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
+	catalin.marinas@arm.com, will@kernel.org, mturquette@baylibre.com,
+	sboyd@kernel.org, p.zabel@pengutronix.de, lizhi.hou@amd.com,
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v3 4/9] dt-bindings: PCI: renesas,r9a08g045s33-pcie: Add
+ documentation for the PCIe IP on Renesas RZ/G3S
+Message-ID: <20250708163407.GA2149616@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250609-mhi_bw_up-v4-2-3faa8fe92b05@qti.qualcomm.com>
+In-Reply-To: <20250704161410.3931884-5-claudiu.beznea.uj@bp.renesas.com>
 
-On Mon, Jun 09, 2025 at 04:21:23PM GMT, Krishna Chaitanya Chundru wrote:
-> If the driver wants to move to higher data rate/speed than the current data
-
-s/driver/PCI client driver
-
-> rate then the controller driver may need to change certain votes so that
-> link may come up at requested data rate/speed like QCOM PCIe controllers
-> need to change their RPMh (Resource Power Manager-hardened) state. Once
-> link retraining is done controller drivers needs to adjust their votes
-> based on the final data rate.
+On Fri, Jul 04, 2025 at 07:14:04PM +0300, Claudiu wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > 
-> Some controllers also may need to update their bandwidth voting like
-> ICC BW votings etc.
-> 
-> So, add pre_link_speed_change() & post_link_speed_change() op to call
-> before & after the link re-train. There is no explicit locking mechanisms
-> as these are called by a single client Endpoint driver.
-> 
+> The PCIe IP available on the Renesas RZ/G3S complies with the PCI Express
+> Base Specification 4.0. It is designed for root complex applications and
+> features a single-lane (x1) implementation. Add documentation for it.
 
-What if client drivers of multiple endpoints connected to different RP of the
-same Host Bridge call this API? Won't you need locking?
+> +++ b/Documentation/devicetree/bindings/pci/renesas,r9a08g045s33-pcie.yaml
 
-- Mani
+The "r9a08g045s33" in the filename seems oddly specific.  Does it
+leave room for descendants of the current chip that will inevitably be
+added in the future?  Most bindings are named with a fairly generic
+family name, e.g., "fsl,layerscape", "hisilicon,kirin", "intel,
+keembay", "samsung,exynos", etc.
 
-> In case of PCIe switch, if there is a request to change target speed for a
-> downstream port then no need to call these function ops as these are
-> outside the scope of the controller drivers.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  drivers/pci/pcie/bwctrl.c | 15 +++++++++++++++
->  include/linux/pci.h       | 18 ++++++++++++++++++
->  2 files changed, 33 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-> index 36f939f23d34e8a3b25a2d1b9059e015f298ca94..dafb8d4f1cfba987e1ff08edfc7caba527f0c76b 100644
-> --- a/drivers/pci/pcie/bwctrl.c
-> +++ b/drivers/pci/pcie/bwctrl.c
-> @@ -140,6 +140,8 @@ static int pcie_bwctrl_change_speed(struct pci_dev *port, u16 target_speed, bool
->  int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
->  			  bool use_lt)
->  {
-> +	struct pci_host_bridge *host = pci_find_host_bridge(port->bus);
-> +	bool is_rootbus = pci_is_root_bus(port->bus);
->  	struct pci_bus *bus = port->subordinate;
->  	u16 target_speed;
->  	int ret;
-> @@ -152,6 +154,16 @@ int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
->  
->  	target_speed = pcie_bwctrl_select_speed(port, speed_req);
->  
-> +	/*
-> +	 * The host bridge driver may need to be scaled for targeted speed
-> +	 * otherwise link might not come up at requested speed.
-> +	 */
-> +	if (is_rootbus && host->pre_link_speed_change) {
-> +		ret = host->pre_link_speed_change(host, port, target_speed);
-> +		if (ret)
-> +			return ret;
-> +	}
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r9a08g045-cpg.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
 > +
->  	scoped_guard(rwsem_read, &pcie_bwctrl_setspeed_rwsem) {
->  		struct pcie_bwctrl_data *data = port->link_bwctrl;
->  
-> @@ -176,6 +188,9 @@ int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
->  	    !list_empty(&bus->devices))
->  		ret = -EAGAIN;
->  
-> +	if (bus && is_rootbus && host->post_link_speed_change)
-> +		host->post_link_speed_change(host, port, pci_bus_speed2lnkctl2(bus->cur_bus_speed));
+> +    bus {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
 > +
->  	return ret;
->  }
->  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 05e68f35f39238f8b9ce08df97b384d1c1e89bbe..1740bab514b0a9a61c027463a1fb154843312a22 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -599,6 +599,24 @@ struct pci_host_bridge {
->  	void (*release_fn)(struct pci_host_bridge *);
->  	int (*enable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
->  	void (*disable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
-> +	/*
-> +	 * Callback to the host bridge drivers to update ICC BW votes, clock
-> +	 * frequencies etc.. for the link re-train to come up in targeted speed.
-> +	 * These are intended to be called by devices directly attached to the
-> +	 * Root Port. These are called by a single client Endpoint driver, so
-> +	 * there is no need for explicit locking mechanisms.
-> +	 */
-> +	int (*pre_link_speed_change)(struct pci_host_bridge *bridge,
-> +				     struct pci_dev *dev, int speed);
-> +	/*
-> +	 * Callback to the host bridge drivers to adjust ICC BW votes, clock
-> +	 * frequencies etc.. to the updated speed after link re-train. These
-> +	 * are intended to be called by devices directly attached to the
-> +	 * Root Port. These are called by a single client Endpoint driver,
-> +	 * so there is no need for explicit locking mechanisms.
-> +	 */
-> +	void (*post_link_speed_change)(struct pci_host_bridge *bridge,
-> +				       struct pci_dev *dev, int speed);
->  	void		*release_data;
->  	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
->  	unsigned int	no_ext_tags:1;		/* No Extended Tags */
-> 
-> -- 
-> 2.34.1
-> 
+> +        pcie@11e40000 {
+> +            compatible = "renesas,r9a08g045s33-pcie";
+> +            reg = <0 0x11e40000 0 0x10000>;
+> +            ranges = <0x02000000 0 0x30000000 0 0x30000000 0 0x8000000>;
+> +            dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0 0x38000000>;
+> +            bus-range = <0x0 0xff>;
+> +            clocks = <&cpg CPG_MOD R9A08G045_PCI_ACLK>,
+> +                     <&cpg CPG_MOD R9A08G045_PCI_CLKL1PM>;
+> +            clock-names = "aclk", "pm";
+> +            resets = <&cpg R9A08G045_PCI_ARESETN>,
+> +                     <&cpg R9A08G045_PCI_RST_B>,
+> +                     <&cpg R9A08G045_PCI_RST_GP_B>,
+> +                     <&cpg R9A08G045_PCI_RST_PS_B>,
+> +                     <&cpg R9A08G045_PCI_RST_RSM_B>,
+> +                     <&cpg R9A08G045_PCI_RST_CFG_B>,
+> +                     <&cpg R9A08G045_PCI_RST_LOAD_B>;
+> +            reset-names = "aresetn", "rst_b", "rst_gp_b", "rst_ps_b",
+> +                          "rst_rsm_b", "rst_cfg_b", "rst_load_b";
+> +            interrupts = <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>;
+> +            interrupt-names = "serr", "serr_cor", "serr_nonfatal",
+> +                              "serr_fatal", "axi_err", "inta",
+> +                              "intb", "intc", "intd", "msi",
+> +                              "link_bandwidth", "pm_pme", "dma",
+> +                              "pcie_evt", "msg", "all";
+> +            #interrupt-cells = <1>;
+> +            interrupt-controller;
+> +            interrupt-map-mask = <0 0 0 7>;
+> +            interrupt-map = <0 0 0 1 &pcie 0 0 0 0>, /* INT A */
+> +                            <0 0 0 2 &pcie 0 0 0 1>, /* INT B */
+> +                            <0 0 0 3 &pcie 0 0 0 2>, /* INT C */
+> +                            <0 0 0 4 &pcie 0 0 0 3>; /* INT D */
 
--- 
-மணிவண்ணன் சதாசிவம்
+The spec styles these closed up: "INTA", "INTB", etc.
+
+> +            device_type = "pci";
+> +            num-lanes = <1>;
+> +            #address-cells = <3>;
+> +            #size-cells = <2>;
+> +            power-domains = <&cpg>;
+> +            vendor-id = <0x1912>;
+> +            device-id = <0x0033>;
+
+Some of this is specific to a Root Port, not to the Root Complex as a
+whole.  E.g., device-type = "pci", num-lanes, vendor-id, device-id,
+are Root Port properties.  Some of the resets, clocks, and interrupts
+might be as well.
+
+I really want to separate those out because even though this
+particular version of this PCIe controller only supports a single Root
+Port, there are other controllers (and possibly future iterations of
+this controller) that support multiple Root Ports, and it makes
+maintenance easier if the DT bindings and the driver structures are
+similar.
+
+This email includes pointers to sample DT bindings and driver code
+that is structured to allow multiple Root Ports:
+
+  https://lore.kernel.org/linux-pci/20250625221653.GA1590146@bhelgaas/
+
+Bjorn
 
