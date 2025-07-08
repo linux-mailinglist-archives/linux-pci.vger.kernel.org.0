@@ -1,59 +1,64 @@
-Return-Path: <linux-pci+bounces-31661-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31662-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67404AFC47B
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 09:48:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 058D4AFC482
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 09:50:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71CBA164A09
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 07:48:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B553A1AA22BB
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 07:50:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF9E3298CB5;
-	Tue,  8 Jul 2025 07:48:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5354629ACD4;
+	Tue,  8 Jul 2025 07:49:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mSb46+oP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oFYFjEBY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F3429824E;
-	Tue,  8 Jul 2025 07:48:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E33829824E
+	for <linux-pci@vger.kernel.org>; Tue,  8 Jul 2025 07:49:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751960883; cv=none; b=diRwiIUyH5YVfs9IZcaXu58gYP9HsK2E6YTxk6xaMAAFWTKGyGporECTjxHnSIHMyuorSnB4vk4WQCFikpuraxYFiM9t5zaOkFHpYrvvH1iQxKQvWkiA2kJfcBfxIc3PQ0pfKX3XQ4BEQREExeOhAG7mzOlVuARaaHr7NYtbVJM=
+	t=1751960992; cv=none; b=rh/wZOc3kmZDOsiTPYtT1upaVwALK5swBhnDDCGrtnba2XYTHgD1by2PvBL+Ay+7K8pWKMQvvA3O0ZvvASaREWE680Hb+IH/qLUNiMk700e3k3KqBZSDNfjEKKRhm8mx4Rd1x6rqlfEKArA74enyCMSp9CoJ/2bCM+KjFbN96l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751960883; c=relaxed/simple;
-	bh=9Q5CXN9O5qwDOk34kVlNTKgsb2m3mLtmtiu6Wi3LFeU=;
+	s=arc-20240116; t=1751960992; c=relaxed/simple;
+	bh=Gx583/Hn9z2ixmCwusPCuFGzvWYHBFOn2rxjOHfBXwk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jtyl5sHcfr5TzX4vICeiG/WOR49h2EuqG9oJo5HD78i75CTgHn1K6wo32+qB0XvtoUZGJ4ME99F4Vk3MdIUUW5u1lqfDPXX9tXuxCkAeZH/bEWOR5un+rbT6yUqKvxdP4ZOSN6iu4q9G3ozsyGjseeTUBi3Ogawssfa36FHuCPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mSb46+oP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF64FC4CEED;
-	Tue,  8 Jul 2025 07:47:57 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=sEFd/0UOQjUjCEyMUA3gz90mnzVX8C3LzYw+ZAUO7lbumNIpiTNEf1QwDbYt/WrJfcMtZ5shED6EgRewbuimOrCDx0fKCOujVjXito/2YTjES3X4IwsaeMTVdrQXV0mCno27bgvDxpGfZh3RjHlk9ioxV+RrhqXs9GBEr/b24hY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oFYFjEBY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99619C4CEF5;
+	Tue,  8 Jul 2025 07:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751960883;
-	bh=9Q5CXN9O5qwDOk34kVlNTKgsb2m3mLtmtiu6Wi3LFeU=;
+	s=k20201202; t=1751960991;
+	bh=Gx583/Hn9z2ixmCwusPCuFGzvWYHBFOn2rxjOHfBXwk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mSb46+oPCqcoSm83lDKYIiFXtSEU5ju6qkNzXxvK0zNaFIV3c3yK6gHdmp/goOiyB
-	 UdhV32c8l3Zbf3fIlRqKhPBVlLCjFfPd6NQ6IVAhC8BE0+aR00NsNuVC2E8kpro/YD
-	 0rFM96z9LxDLKKubisu4JMuwNZXcCRET+BaMpo3t7gqhk0yoWtskBOZuCuhCJWVjow
-	 tEWs0iUp25u9cD2oxo28HpSxeJdqty7BFS0XDBCGU/bm5/fJPtI8JZZY0yUt+WRNX7
-	 W4hXStNtBIWd5yj0LGeQuWXBLbChJhGTnRRrU4LUAiJU3kfi+dqa8iKD0GKwG/5XMd
-	 eIvryi7xptaag==
-Date: Tue, 8 Jul 2025 13:17:53 +0530
+	b=oFYFjEBYMzELSHD5R8i4F9FbiiR9NwkAxNpW4ChobPFh43zU+jxPejpz4j3CWARjD
+	 6giMTpw8rwT2uzoVC+DIVRLPhJmJ22ZZJ5qGSGjB7LFeAEnG7GQcYqpIRTAWy1+pG+
+	 0FG2bD4ATvyGFqiLO3aWcbjUVu8ijwHFyMwnkqE71nu55AYdHP1UXvvIEioTLTmjPv
+	 53FyngblrMf29oW94/w/bY88eoMS05EdS+dDktew7ZWT9sZdcAxP0ufP9g7NAji0ui
+	 03HhjN4DLbro9DUcYhBkotPNKwXlMOWTN0pBfDl6UIh2c/l+8XL1JPQ11KpxwVxei1
+	 ljSKtAObh7zuQ==
+Date: Tue, 8 Jul 2025 13:19:43 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, shawnguo@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] PCI: imx6: Align EP link start behavior with
- documentation
-Message-ID: <klduv5ytcsxzs6nugiorajwxq4mwqfpmhkifl5wtjy6jiq4mha@mf4732u2xrtw>
-References: <20250616085742.2684742-1-hongxing.zhu@nxp.com>
- <20250616085742.2684742-3-hongxing.zhu@nxp.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Laszlo Fiat <laszlo.fiat@proton.me>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 5/7] PCI: dwc: Ensure that dw_pcie_wait_for_link()
+ waits 100 ms after link up
+Message-ID: <vb6nkb6rym3j6vj7ypozhtjo27oo6qgfke2mo2f7xl72am5ifi@ybfy5sacrmsy>
+References: <hcjcvo4sokncindwqhhmsx5g25ovj5n5zghemeujw7f4kqiaia@hbefzblsrhqx>
+ <20250701163844.GA1836602@bhelgaas>
+ <aGT_L_hglVBP6yzB@ryzen>
+ <hhyxhxvohmeqzjdu3amabcpf3e4ufi4ps5xd2uia4ea6i2u5oj@sxyjavqyqc7m>
+ <aGVbpTZZmYyKIffk@ryzen>
+ <2ahvqexaof3cx6fjk3aesav5ptzqwnyicyq6w2gcaqlqaucmg5@6iovzdssfp2r>
+ <aGu1--DfiBI6DnEK@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,43 +68,32 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250616085742.2684742-3-hongxing.zhu@nxp.com>
+In-Reply-To: <aGu1--DfiBI6DnEK@ryzen>
 
-On Mon, Jun 16, 2025 at 04:57:42PM GMT, Richard Zhu wrote:
-> According to PCI/endpoint/pci-endpoint-cfs.rst, the endpoint (EP) should
-> only link up after `echo 1 > start` is executed.
+On Mon, Jul 07, 2025 at 01:56:43PM GMT, Niklas Cassel wrote:
+> Hello Mani,
 > 
-> To match the documented behavior, do not start the link automatically
-> when adding the EP controller.
+> On Mon, Jul 07, 2025 at 01:18:49PM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, Jul 02, 2025 at 06:17:41PM GMT, Niklas Cassel wrote:
+> > 
+> > Sounds fair! I've now dropped 470f10f18b48 from controller/linkup-fix branch.
+> > 
+> > Do you have cycles for consolidating PERST# handling?
 > 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> While I think that consolidating PERST# handling is a great idea, I already
+> have 3-4 things with higher priority on my TODO list (and some things have
+> been there for quite a while).
+> 
+> So unless something has rather high priority, I currently don't know when
+> I will have some spare cycles.
+> 
+> I really hope that someone will have some spare cycles to work on this,
+> because the PERST# handling in the controller drivers really is a mess.
+> 
 
-Fixes tag?
+Yeah, I agree. Then I'll add it to my long list of TODO items :)
 
 - Mani
-
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index f5f2ac638f4b..fda03512944d 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -1468,9 +1468,6 @@ static int imx_add_pcie_ep(struct imx_pcie *imx_pcie,
->  
->  	pci_epc_init_notify(ep->epc);
->  
-> -	/* Start LTSSM. */
-> -	imx_pcie_ltssm_enable(dev);
-> -
->  	return 0;
->  }
->  
-> -- 
-> 2.37.1
-> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
