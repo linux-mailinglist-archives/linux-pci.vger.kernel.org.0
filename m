@@ -1,60 +1,62 @@
-Return-Path: <linux-pci+bounces-31658-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31659-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3E1CAFC43B
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 09:38:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3C00AFC462
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 09:42:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AF2F42704D
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 07:38:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 00B40179077
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 07:42:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A6D329AAEA;
-	Tue,  8 Jul 2025 07:38:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21CBC29993D;
+	Tue,  8 Jul 2025 07:42:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q1a0U0PS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QiizzGcu"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0313C21A428;
-	Tue,  8 Jul 2025 07:38:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5A71FFC41;
+	Tue,  8 Jul 2025 07:42:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751960298; cv=none; b=RSM+zEE07d5eg6ohvUihquz9HR+AU7o/UIYxwftoIM82Yc5psZxKsViiPCLyWGagYP4y05iwq2DR8Aesh5zDqdK8iVctzcBlHfVMwiZSz/3wIf6xWSgeXlePrgzz+u4hHX1CV943qBTxeS5CfLiCZThdglzGJyIgHk4k9PGJeKI=
+	t=1751960530; cv=none; b=bcsBG9tZ+uVrWBNhBfRUDQgkkFTrgCcRMshSaqWyf28KvJTCP50f8W22nAij6VrXXAUf39xrcOA6gktt8z7ildGUrGC4FY/algYsaDU7yKzA2JRSA7qbV3GMPpEWhRzqnA0j7+F2KytGbRoadz/+sz8ZBtFex7aqRcQZ4zUIJEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751960298; c=relaxed/simple;
-	bh=BgLBeWI7Kkq8y/M+805ggWOqf/BrfPkUfyqfLs3mFsY=;
+	s=arc-20240116; t=1751960530; c=relaxed/simple;
+	bh=cu8tPtnIUR3fiQLsu8sRQhSmqshZhYdBxyLo1WB3PBU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q3ruwku13N5cWAth5PWLwY66Mooiy/kEkxppwRX+ABU90DfhWz8vbpx0ccF7s35Mqhq9CVlhi1j/FE0O/QNfJmSzYWp8x9T8urRQO7RlCcfPmTjBbK2BcBXqPjziKnI9uEIj1zJqP67UFOYJ99qEOtQv4P3O/KoDqV5P0FVO17c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q1a0U0PS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF6BAC4CEF0;
-	Tue,  8 Jul 2025 07:38:12 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=e4CuN88dj3Q/7dP3dOyM0OCtDNA7nf48U6F7ngTtA6bslJUcTzWIOTfRUGbGTPvXMCRYc5wyZ3ZWkieaGQuS2RHltbpYwR6Z4ROQPeT5F7vur1/7Qk3HLwwtJehg8zy+cdpYIE/R/P/rA6Qnf2afT1TbxuXS8myf2zSoSyGmMbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QiizzGcu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27334C4CEED;
+	Tue,  8 Jul 2025 07:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751960297;
-	bh=BgLBeWI7Kkq8y/M+805ggWOqf/BrfPkUfyqfLs3mFsY=;
+	s=k20201202; t=1751960529;
+	bh=cu8tPtnIUR3fiQLsu8sRQhSmqshZhYdBxyLo1WB3PBU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q1a0U0PSMSGGupuyRgulbgUXZLdDpjfrJLhgSPS5WwxsrCa0J8ONrmoM+pqFuMxqR
-	 u2bONUFgKv6Rc4i2jrOzGaXJ1tDZR0MA1Qtke7UA/Xphqc4lc3mVRClNOxVJf/+4DB
-	 as+KG0t0bqn2rRz8jxesekB9xKfhNUYNt/+EU4veraaEDxPZZFtqmqMv35wyuBKfwb
-	 4VOjf6C61ruGEztM9CoiOtY5sHp5DXUFQjwM8zaX41ti7ZYQVfQT9zaCS/aB0A4agx
-	 IyopwV8r4YnNEjaK3jHKHOcMtClKGxLWju5QQ5oD0Folr82fDLjuE4Aohjv1nJmd4z
-	 7lSYEd/Mgf3XQ==
-Date: Tue, 8 Jul 2025 13:08:08 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] PCI: brcmstb: Enable Broadcom Cable Modem SoCs
-Message-ID: <jcrgjiaadle2vzeqxl556k773mz7bzzr3f26okwlhnal6dakxo@d7oio5p4kxkz>
-References: <20250609221710.10315-1-james.quinlan@broadcom.com>
- <20250609221710.10315-4-james.quinlan@broadcom.com>
+	b=QiizzGcu3oRSNRBv2aXILXXI1jg/Hc9yWXALIH5umhNyhCXU4T26Edl4g/GJM58CG
+	 ujpBuIVs0g4usaLKSn2uI8/JFIkS9F72TnBwAO4uzliU8HW7+Q+4D1s2rHMDXc1jov
+	 SP8z9v8nUn5uZY205/ZM2aSHwc/lkkqpepGaRNVyI7RJdbKlbMYR5W7+YbzndanibP
+	 i90De+r0ey0cfLKrt02T2SG6pjMujzQqnB128lrSkEVDiUrR6D0x3yEtPT3ooRh5Ml
+	 DJwJINdjIuIQ6syHiFKJMa7OKU8yMupCzT11l2q7f6CejvPGwW3gf5zxama9IeVNPu
+	 WC1wzom8PBMIA==
+Date: Tue, 8 Jul 2025 13:11:59 +0530
+From: "mani@kernel.org" <mani@kernel.org>
+To: Hongxing Zhu <hongxing.zhu@nxp.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Frank Li <frank.li@nxp.com>, 
+	"l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>, "robh@kernel.org" <robh@kernel.org>, 
+	"bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, 
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
+	"festevam@gmail.com" <festevam@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: imx6: Correct the epc_features of i.MX8M chips
+Message-ID: <pxxwlm6su6ugfo4m7borpgvvlczfrhdarzcy45fipqwvxaxban@u223udsukdwc>
+References: <20250617073441.3228400-1-hongxing.zhu@nxp.com>
+ <20250707193415.GA2095765@bhelgaas>
+ <AS8PR04MB8676B8D14A5C54E8C32025BD8C4EA@AS8PR04MB8676.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,102 +66,96 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250609221710.10315-4-james.quinlan@broadcom.com>
+In-Reply-To: <AS8PR04MB8676B8D14A5C54E8C32025BD8C4EA@AS8PR04MB8676.eurprd04.prod.outlook.com>
 
-On Mon, Jun 09, 2025 at 06:17:06PM GMT, Jim Quinlan wrote:
-> Broadcom's Cable Modem (CM) group also uses this PCIe driver
-> as it shares the PCIe HW core with the STB group.
+On Tue, Jul 08, 2025 at 07:34:57AM GMT, Hongxing Zhu wrote:
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: 2025年7月8日 3:34
+> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
+> > lpieralisi@kernel.org; kwilczynski@kernel.org; mani@kernel.org;
+> > robh@kernel.org; bhelgaas@google.com; shawnguo@kernel.org;
+> > s.hauer@pengutronix.de; kernel@pengutronix.de; festevam@gmail.com;
+> > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > imx@lists.linux.dev; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH v2] PCI: imx6: Correct the epc_features of i.MX8M chips
+> > 
+> > On Tue, Jun 17, 2025 at 03:34:41PM +0800, Richard Zhu wrote:
+> > > i.MX8MQ PCIes have three 64-bit BAR0/2/4 capable and programmable
+> > BARs.
+> > > But i.MX8MM and i.MX8MP PCIes only have BAR0/BAR2 64bit
+> > programmable
+> > > BARs, and one 256 bytes size fixed BAR4.
+> > >
+> > > Correct the epc_features for i.MX8MM and i.MX8MP PCIes here. i.MX8MQ
+> > > is the same as i.MX8QXP, so set i.MX8MQ's epc_features to
+> > > imx8q_pcie_epc_features.
+> > >
+> > > Fixes: 75c2f26da03f ("PCI: imx6: Add i.MX PCIe EP mode support")
+> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > > Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> > 
+> > "Correct the epc_features" doesn't include any specific information, and it's
+> > hard to extract the changes for a device from the commit log.
+> > 
+> > This is really two fixes that should be separated so the commit logs can be
+> > specific:
+> Yes, it's right.
+> Since it's just one line change for i.MX8MQ. So, I combine the changes into
+> this commit for i.MX8M chips.
 > 
-> Make the modifications to enable the CM SoCs.
+> Hi Mani:
+> Since it had been applied, I don't know how to proceed.
+> Should I separate this commit into two patches, and re-send them again?
+> Thanks.
 > 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 186 +++++++++++++++++++++-----
->  1 file changed, 152 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index db7872cda960..e25dbcdc56a7 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -51,6 +51,9 @@
->  #define PCIE_RC_CFG_PRIV1_ROOT_CAP			0x4f8
->  #define  PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK	0xf8
->  
-> +#define PCIE_RC_DL_PDL_CONTROL_4			0x1010
-> +#define  PCIE_RC_DL_PDL_CONTROL_4_NPH_FC_INIT_MASK	0xff000000
-> +
->  #define PCIE_RC_DL_MDIO_ADDR				0x1100
->  #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
->  #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
-> @@ -60,6 +63,7 @@
->  #define  PCIE_RC_PL_PHY_CTL_15_PM_CLK_PERIOD_MASK	0xff
->  
->  #define PCIE_MISC_MISC_CTRL				0x4008
-> +#define  PCIE_MISC_MISC_CTRL_PCIE_IN_CPL_RO_MASK	0x20
->  #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_64B_MODE_MASK	0x80
->  #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_MPS_MODE_MASK	0x400
->  #define  PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK		0x1000
-> @@ -170,6 +174,7 @@
->  /* MSI target addresses */
->  #define BRCM_MSI_TARGET_ADDR_LT_4GB	0x0fffffffcULL
->  #define BRCM_MSI_TARGET_ADDR_GT_4GB	0xffffffffcULL
-> +#define BRCM_MSI_TARGET_ADDR_FOR_CM	0xfffffffffcULL
->  
->  /* MDIO registers */
->  #define MDIO_PORT0			0x0
-> @@ -223,13 +228,23 @@ enum {
->  enum pcie_soc_base {
->  	GENERIC,
->  	BCM2711,
-> +	BCM3162,
-> +	BCM3392,
-> +	BCM3390,
->  	BCM4908,
->  	BCM7278,
->  	BCM7425,
->  	BCM7435,
->  	BCM7712,
-> +	BCM33940,
->  };
->  
-> +/*
-> + * BCM3390 CM chip actually conforms to STB design, so it
-> + * is not present in the macro below.
-> + */
-> +#define IS_CM_SOC(t) ((t) == BCM3162 || (t) == BCM33940 || (t) == BCM3392)
-> +
->  struct inbound_win {
->  	u64 size;
->  	u64 pci_offset;
-> @@ -757,6 +772,9 @@ static int brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie, u32 val)
->  	u32 shift = RGR1_SW_INIT_1_INIT_GENERIC_SHIFT;
->  	int ret = 0;
->  
-> +	if (IS_CM_SOC(pcie->cfg->soc_base))
-> +		return 0;
-> +
->  	if (pcie->bridge_reset) {
->  		if (val)
->  			ret = reset_control_assert(pcie->bridge_reset);
-> @@ -891,13 +909,13 @@ static int brcm_pcie_get_inbound_wins(struct brcm_pcie *pcie,
->  	struct inbound_win *b = b_begin;
->  
->  	/*
-> -	 * STB chips beside 7712 disable the first inbound window default.
-> -	 * Rather being mapped to system memory it is mapped to the
-> -	 * internal registers of the SoC.  This feature is deprecated, has
-> -	 * security considerations, and is not implemented in our modern
-> -	 * SoCs.
-> +	 * STB chips beside CM chips and 7712 disable the first inbound
-> +	 * window default.  Rather being mapped to system memory it is
-> +	 * mapped to the internal registers of the SoC.  This feature is
-> +	 * deprecated, has security considerations, and is not
-> +	 * implemented in our modern SoCs.
 
-May I know what is the purpose of allowing inbound access to these regions? TBH,
-I'm not sure what is the usecase of 'inbound memory' for PCIe host.
+I've now dropped the patch from controller/imx6. Please resend them. Also, CC
+the stable list with relevant Fixes tag.
 
 - Mani
+
+> Best Regards
+> Richard Zhu
+> > 
+> >   - For IMX8MQ_EP, use imx8q_pcie_epc_features (64-bit BARs 0, 2, 4)
+> >     instead of imx8m_pcie_epc_features (64-bit BARs 0, 2).
+> > 
+> >   - For IMX8MM_EP and IMX8MP_EP, add fixed 256-byte BAR 4 in
+> >     imx8m_pcie_epc_features.
+> > 
+> > > ---
+> > >  drivers/pci/controller/dwc/pci-imx6.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
+> > > b/drivers/pci/controller/dwc/pci-imx6.c
+> > > index 5a38cfaf989b..9754cc6e09b9 100644
+> > > --- a/drivers/pci/controller/dwc/pci-imx6.c
+> > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> > > @@ -1385,6 +1385,8 @@ static const struct pci_epc_features
+> > imx8m_pcie_epc_features = {
+> > >  	.msix_capable = false,
+> > >  	.bar[BAR_1] = { .type = BAR_RESERVED, },
+> > >  	.bar[BAR_3] = { .type = BAR_RESERVED, },
+> > > +	.bar[BAR_4] = { .type = BAR_FIXED, .fixed_size = SZ_256, },
+> > > +	.bar[BAR_5] = { .type = BAR_RESERVED, },
+> > >  	.align = SZ_64K,
+> > >  };
+> > >
+> > > @@ -1912,7 +1914,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+> > >  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+> > >  		.mode_off[1] = IOMUXC_GPR12,
+> > >  		.mode_mask[1] = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
+> > > -		.epc_features = &imx8m_pcie_epc_features,
+> > > +		.epc_features = &imx8q_pcie_epc_features,
+> > >  		.init_phy = imx8mq_pcie_init_phy,
+> > >  		.enable_ref_clk = imx8mm_pcie_enable_ref_clk,
+> > >  	},
+> > > --
+> > > 2.37.1
+> > >
 
 -- 
 மணிவண்ணன் சதாசிவம்
