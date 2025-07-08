@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-31669-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31670-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8C8AAFC71F
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 11:32:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B2180AFC760
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 11:48:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 17FB1161DD1
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 09:32:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F14C1165BB3
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 09:48:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9179235371;
-	Tue,  8 Jul 2025 09:32:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BBA42343BE;
+	Tue,  8 Jul 2025 09:48:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VEAo92Pp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3A7YfYI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB662343BE;
-	Tue,  8 Jul 2025 09:32:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF051FBEBE;
+	Tue,  8 Jul 2025 09:48:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751967149; cv=none; b=ReFerXvv5p0FmZm81BNQ0Q4+wGbS2jEkQ0Ji5W0BQ1AM+ilpIH48oNP2bMgqF0UKojtARSOP+9Db3jNpYD7lxSLGNy0Nys7IhV6Ep+xi6AYR8joQxH+fQaBxAJwS34gU51lx7NRx/5F3ktmQU+NWlOQ61Pxk0LCEHseDt+XBlio=
+	t=1751968123; cv=none; b=LMF3rnrJaHmcV8BGTL0zCjzAFVbO4awP7NPljy/gD2YeJCG6nV1Wr3qwb6QLU0dOQ5Yf3RYQIyVaxIKtp7OV51AHi8E6aymnZqYbVpmhf6fr84euqMqU5Z/H6vby0o6kB1UVyu/+stPR6N62+otWJr3+MqdZqoY2U6mIsddrR30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751967149; c=relaxed/simple;
-	bh=odbyXf59vUqn2dRPJ8DZVcQ9vXKtu52T3STTFkXU/NQ=;
+	s=arc-20240116; t=1751968123; c=relaxed/simple;
+	bh=nJZziPt5NASkQ4VYndMG5RDb3+l0adF6BWLpXEqDyZU=;
 	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=IOvVGCFW78DKdDIvRau/h5i6ouS6/7mPHciwF1uCD65UI8P7IT8sHTMbv89JbrCiTEyPMmvtJnJdb4Ag41KKcDPACQgDfJsUzkax7sf9S/ZCo3CU2F0PqFNJN9lJEZ/dLOxzo/xDyDGaS8AOvHObR86vOF+pnhnIePJNImBQbQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VEAo92Pp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 091C8C4CEED;
-	Tue,  8 Jul 2025 09:32:25 +0000 (UTC)
+	 References:In-Reply-To; b=c14SmepZu10GP9ahyo+XjDQUbkZSzKuel72e5ad1IJ5ag8dB/KDhYKqheILbNNsNC96sXkH4aHN/PV8xHtpZRiHSXIuXCkYpJRVsXThLe7ItUPeNcMt8YSKILc/88SCEEUS/vl97oJD7V4p3/ORoGzACo4AQLXpaA06Yuk7Zm7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3A7YfYI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EAF5C4CEED;
+	Tue,  8 Jul 2025 09:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751967149;
-	bh=odbyXf59vUqn2dRPJ8DZVcQ9vXKtu52T3STTFkXU/NQ=;
+	s=k20201202; t=1751968121;
+	bh=nJZziPt5NASkQ4VYndMG5RDb3+l0adF6BWLpXEqDyZU=;
 	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=VEAo92PpvHcMZFNUGnl8furso34hSu9liyrOEMeLsk0olY+K2/fLIaDLrVjpJIR2r
-	 2iAxb6fPds7ZzgiZyLfO1c/tMGOexgPlCNJHQ0Qh8ZW/NWMfTe7owW5wLVRQDCZPgh
-	 VSDvw2HfdbUwOb2jYlwgLad6Sy0kHpZi0IoMAlkN7hPqZWoWc0nyCPaYFgRRmDh3oQ
-	 0fYTufiKG+LtW+D6B9r4MJOtApGvLQRjQ2RxLqLbBcufLQPCjMV4um/lNftOAe3iK4
-	 sPbhls3wqZxRvi2N3FCfeRIg3cEa+ihXFz89+/aROjlTK1pN67WzrGwdUvumnrPxvA
-	 f0tgCnwlOpn5Q==
+	b=g3A7YfYIR1aOagAlboL6HhqaKSUdo2bf5X4jag77WB+jDmeVQEPk4JDkTaUvw7zlO
+	 pMGZaLeP3bnedwWmfyK/vlEq1jTRveKAvnd2EZSLCbLbaInkp6eqHTbPWpt7Vq+L9g
+	 YzFsapvWf3y6o55TK2kPvqx0z98UO+3cq8IHXJEd/EaoJqW7OQbwf1jqZR1m3f2sNn
+	 ag+eQKS2cdQf4vDnafUSdrfHc9OuUcpTP0NJ6uSQ6Hk1O73u/h+eGXt2D4dQNRjyMV
+	 Ndq+dVFK5ppz+TmRcfyOEIfj5fGbSzuQEOzUXhuf8cBfrh7BQD2YWunc0ESV9fwsfU
+	 +4XQ8u+tVjfuw==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -49,9 +49,10 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 08 Jul 2025 11:32:24 +0200
-Message-Id: <DB6KIR4X6GKM.3EJYQJXILGOGN@kernel.org>
-Subject: Re: [PATCH 2/2] rust: Add several miscellaneous PCI helpers
+Date: Tue, 08 Jul 2025 11:48:36 +0200
+Message-Id: <DB6KV5SVWIYG.2FAIFGZ90ZR2I@kernel.org>
+Subject: Re: [PATCH 1/2] rust: Add dma_set_mask() and
+ dma_set_coherent_mask() bindings
 Cc: <rust-for-linux@vger.kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>,
  =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Miguel
  Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
@@ -66,36 +67,55 @@ Cc: <rust-for-linux@vger.kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>,
 To: "Alistair Popple" <apopple@nvidia.com>
 From: "Danilo Krummrich" <dakr@kernel.org>
 References: <20250708060451.398323-1-apopple@nvidia.com>
- <20250708060451.398323-2-apopple@nvidia.com>
-In-Reply-To: <20250708060451.398323-2-apopple@nvidia.com>
+ <DB6JF2JLZEO8.4HZPDC26F3G8@kernel.org>
+In-Reply-To: <DB6JF2JLZEO8.4HZPDC26F3G8@kernel.org>
 
-On Tue Jul 8, 2025 at 8:04 AM CEST, Alistair Popple wrote:
-> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> index 7f640ba8f19c..f41fd9facb90 100644
-> --- a/rust/kernel/pci.rs
-> +++ b/rust/kernel/pci.rs
-> @@ -393,6 +393,42 @@ pub fn device_id(&self) -> u16 {
->          unsafe { (*self.as_raw()).device }
->      }
-> =20
-> +    /// Returns the PCI revision ID.
-> +    pub fn revision_id(&self) -> u8 {
+On Tue Jul 8, 2025 at 10:40 AM CEST, Danilo Krummrich wrote:
+> On Tue Jul 8, 2025 at 8:04 AM CEST, Alistair Popple wrote:
+>> Add bindings to allow setting the DMA masks for both a generic device
+>> and a PCI device.
+>
+> Nice coincidence, I was about to get back to this. I already implemented =
+this in
+> a previous patch [1], but didn't apply it yet.
+>
+> I think the approach below is thought a bit too simple:
+>
+>   (1) We want the DMA mask methods to be implemented by a trait in dma.rs=
+.
+>       Subsequently, the trait should only be implemented by bus devices w=
+here
+>       the bus actually supports DMA. Allowing to set the DMA mask on any =
+device
+>       doesn't make sense.
 
-We should add a compiler hint for those methods to be inlined.
+Forgot to mention, another reason for a trait is that we can also use it as=
+ a
+trait bound on dma::CoherentAllocation::new(), such that people can't pass
+arbitrary devices to dma::CoherentAllocation::new(), but only those that
+actually sit on a DMA capable bus.
 
-> +        // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev=
-`.
+>
+>   (2) We need to consider that with this we do no prevent
+>       dma_set_coherent_mask() to concurrently with dma_alloc_coherent() (=
+not
+>       even if we'd add a new `Probe` device context).
+>
+> (2) is the main reason why I didn't follow up yet. So far I haven't found=
+ a nice
+>     solution for a sound API that doesn't need unsafe.
+>
+> One thing I did consider was to have some kind of per device table (simil=
+ar to
+> the device ID table) for drivers to specify the DMA mask already at compi=
+le
+> time. However, I'm pretty sure there are cases where the DMA mask has to =
+derived
+> dynamically from probe().
+>
+> I think I have to think a bit more about it.
+>
+> [1] https://lore.kernel.org/all/20250317185345.2608976-7-abdiel.janulgue@=
+gmail.com/
 
-Let's refer to the type invariant for the validity of self.as_raw().
-
-> +        unsafe { (*self.as_raw()).revision }
-> +    }
-
-Both is also true for the existing methods vendor_id() and device_id(). Can=
- you
-please fix them up in a separate patch as well?
-
-Also, please add a brief note in the commit message where those will be use=
-d
-(even though I obviously know). :)
 
