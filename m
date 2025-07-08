@@ -1,62 +1,68 @@
-Return-Path: <linux-pci+bounces-31697-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31698-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E14AAFD394
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 18:58:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45465AFD4D0
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 19:10:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0EBA9170A19
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 16:55:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E96621893B31
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 17:07:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58C1F2E49AF;
-	Tue,  8 Jul 2025 16:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F1CA2E49AF;
+	Tue,  8 Jul 2025 17:06:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHpaHR0f"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZ63kEo0"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D1F1DB127;
-	Tue,  8 Jul 2025 16:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B942E0405;
+	Tue,  8 Jul 2025 17:06:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751993742; cv=none; b=XLHh0/bOcl3mGj8rU5bbe1nvB7Xdb+PorOy5gjEbhmS+FYk/TvtAkUzFPpLui1V9m59ytX/HN63MeW0DxO1U915lCA86aRtqJfPjaIVGfVQB1x74q2zqC4Fv84V77Yd8DFsRDbDmVbzoQ/idMv96SnEybD7Ow2yWHDoZ41PwCOw=
+	t=1751994417; cv=none; b=F91kucsr7hJB+aNZ8nL7Z9n17XF0eQwrXoprO7XSVsYlq6WhevT8+Nomy2j5sMV+8pHfOhSHdGYdATSgQG7TxEiFYwvtcJcr12/xjvAaB8WdmEhvX5SKvdDowRYfgdW4jeqCWpEPIkqfZt/g4pyCLjIJgN7rIXxMU4bnN28yoFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751993742; c=relaxed/simple;
-	bh=9SPb1rRg+3+y0YQTrg9m/lWRcSKvEJxMR3VbM/EFUUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Prx+5ljX6Nsuim3epN7Jz/2bfr7TQFefNlr1/KqSbaS/pGoAxzyUSdgyOlOhbGkHBw3vqghTCdoBPizpxynNY5ZvA6nJ25e6u8aU8d9KmWhL+L7O4KP5ph/hEUOwHjZrt7uZKkdUSq5jTqeyssyeyxD7f7kkIbti4oYcDLD5+x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHpaHR0f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB01BC4CEF0;
-	Tue,  8 Jul 2025 16:55:41 +0000 (UTC)
+	s=arc-20240116; t=1751994417; c=relaxed/simple;
+	bh=aN2zG4WBE2tdLsmAtJ1Di+Fs/pqbZFINDwPFccXvSjE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rMfTmd1XAUm0HmVeTY0ZKqiKmUspIas2a+HLcyAEXW9xJoMbkTGnfaKMs7EyxE2cIGICm2iMjErRmlwKa1hsIvhS/oIB61CkZsOK0QdJ1Ejazq9nu7iPvRI8aXq0Ry273wODpEQuy6aSc4tgHOstzNdu5fEMBZKZWZpt06EZwIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZ63kEo0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE6E6C4CEED;
+	Tue,  8 Jul 2025 17:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751993741;
-	bh=9SPb1rRg+3+y0YQTrg9m/lWRcSKvEJxMR3VbM/EFUUA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=EHpaHR0ffbOEJLvutnq6EJZxTb4B+wsgE0ku2vZ6OGZue52AHZyXy4ClSNQErDb1A
-	 e7wui51WfrOD1y6A/38rkoxGDfxsj3KGtcUIrWFw4rT54xVXMd0v6lBBxslKek1GyN
-	 erhDuARC7u3/perdrZ31s7mVo0aRRtDORWHdjZlz0WzMWQdzaGGBoEORy61nJZxM15
-	 H/hdHI+IikZEqweykpUhM393xWfSLHwKd/fLxdCxfEu6onms3cKXezc0x4pChK3OT0
-	 iPaMKXcN0jjSwn+w/lhOPOEWidhO26xgsz6AzqZ2pfBY8BYZrkjJMyOYQzbCrw2n4u
-	 36fkHlc7ThUQg==
-Date: Tue, 8 Jul 2025 11:55:40 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
-	catalin.marinas@arm.com, will@kernel.org, mturquette@baylibre.com,
-	sboyd@kernel.org, p.zabel@pengutronix.de, lizhi.hou@amd.com,
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: Re: [PATCH v3 7/9] arm64: dts: renesas: rzg3s-smarc-som: Update
- dma-ranges for PCIe
-Message-ID: <20250708165540.GA2148533@bhelgaas>
+	s=k20201202; t=1751994416;
+	bh=aN2zG4WBE2tdLsmAtJ1Di+Fs/pqbZFINDwPFccXvSjE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QZ63kEo0NHPfeLjS52LdMC+jgOkd0Df5w5RMkKTgq7i5MWxNREoySR9j1ru+KoQG5
+	 EUKZHH4HzzZcsNZtr8Y9qJKnOeqP1tBjg4IqCe+AFiVKvfGHYvHJTbYwhCqjVe2cz6
+	 QcXdqkehTu51WSl3j0ic5v+kB9grgRuDgLGOh6K8Zgm9ywYBEpMKASrUggYQAFM4b0
+	 2WOjtnesy1WSszA6aRPdjPHCTN0fOVxUO+au8spZ21w+U5arsyoN+ZR0w/SixORqML
+	 d+7OKDjQBd0DrXRIC9ZynsimrOvhR4pZiIQrppZ3tW3nWugy86haZSFb+NEi/mIA9v
+	 8JGKL4UFMjoEw==
+Date: Tue, 8 Jul 2025 12:06:55 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	Cyril Brulebois <kibi@debian.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	bcm-kernel-feedback-list@broadcom.com,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	jim2101024@gmail.com, Nicolas Saenz Julienne <nsaenz@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: brcm,stb-pcie: Add 74110 SoC
+Message-ID: <175199441442.637518.17583955334373827745.robh@kernel.org>
+References: <20250703215314.3971473-1-james.quinlan@broadcom.com>
+ <20250703215314.3971473-2-james.quinlan@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,47 +71,20 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250704161410.3931884-8-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250703215314.3971473-2-james.quinlan@broadcom.com>
 
-On Fri, Jul 04, 2025 at 07:14:07PM +0300, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+
+On Thu, 03 Jul 2025 17:53:11 -0400, Jim Quinlan wrote:
+> Adds BCM74110, a Broadcom SetTop box ARM64 based SoC.  Its
+> inbound window may be set to any size, unlike previous STB
+> SoCs whose inbound window size must be a power of two.
 > 
-> The first 128MB of memory is reserved on this board for secure area.
-> Update the PCIe dma-ranges property to reflect this.
-
-Can we include a sentence or two about what the "secure area" means?
-I don't know how to connect this with anything in the driver.
-
-> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 > ---
+>  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Changes in v3:
-> - collected tags
-> 
-> Changes in v2:
-> - none, this patch is new
-> 
->  arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
-> index 39845faec894..1b03820a6f02 100644
-> --- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
-> @@ -214,6 +214,11 @@ &sdhi2 {
->  };
->  #endif
->  
-> +&pcie {
-> +	/* First 128MB is reserved for secure area. */
-> +	dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0x0 0x38000000>;
-> +};
-> +
->  &pinctrl {
->  #if SW_CONFIG3 == SW_ON
->  	eth0-phy-irq-hog {
-> -- 
-> 2.43.0
-> 
+
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+
 
