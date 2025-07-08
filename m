@@ -1,114 +1,177 @@
-Return-Path: <linux-pci+bounces-31678-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31679-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 426C5AFC917
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 13:00:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88DC6AFC93E
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 13:12:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 66C4E7A92F1
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 10:58:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D12CD4A333D
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 11:12:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71F5F2C1596;
-	Tue,  8 Jul 2025 10:59:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E70802D8388;
+	Tue,  8 Jul 2025 11:12:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2OgfI9+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uMvJNSSX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1D9221D87;
-	Tue,  8 Jul 2025 10:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22BD1E9B2D;
+	Tue,  8 Jul 2025 11:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751972369; cv=none; b=ixKXE1dnWy/g62BSTGHNi2oqucKNyh3jor6Wnhuc9i7HBB+4O4oPVPZMI20hDivz2XazbrAyNikAz49L/jzChKsdkzsBPrlsFlRsa3wq3u5K/xk+MS2bm4CBuILq27SEUU3JwWAv/USAJrHzM2ZpAkdM/B2M3T6KU14wYg3UufA=
+	t=1751973131; cv=none; b=iCOE6GgJUueYc6UV6SmhgAsh93ABHI04CdjO0t6ln+ZV8yHjwdxTkaOAlp1ugB7veROSA5LUbna2dY9oVh00Pb7HQvzRda+c5/tdeLfHdCX0xvskW0Rw48ksohTL/CY3Eh2pQrebpu7q6t6o6q5McgIZ88dN3F1/ILjDTixnFCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751972369; c=relaxed/simple;
-	bh=0/UNW9wheUfOWipBWnE9bEKfNH0w9NzGiUbVbmxjEVo=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=hxyCV1L7x/4U1z7l/sEAW8WmcTtsSkU4tGS7MBdWadA+0nFaYAvc51fYNy9A337+z51EI70bFaBMMXERgZBk+MlsuAKfXim4qBomBD3zIfJviPgBRiq0T8njHZ6x4d8+7NBb3WEszNjHpDwwcTPSJZpyURXSkMQPJCx9bWuWS8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U2OgfI9+; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-23c8a5053c2so30215705ad.1;
-        Tue, 08 Jul 2025 03:59:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751972367; x=1752577167; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0/UNW9wheUfOWipBWnE9bEKfNH0w9NzGiUbVbmxjEVo=;
-        b=U2OgfI9+e7fisbhfc5nimWqu7bWqoIAr7/J1GD3RsFeOIYkdKRAJ1K+D5FcgvIvvOr
-         0BqZrWVYB2rmVipQ+0M0m+PK2mR3J62U59NBgVMtu3S9gRM0g/lzTIeL6Qtr2AUyrrbI
-         EL+O48DAOL1XL4SS6gLZmM6Eee6NsHinW7D2GfDmsVL5+f7eyEWTtV7bkl5425+jv/P3
-         SSlc4JSBA1tWceroTnUZy4saekVx3aMY2dlPU7KtXgD0Da+GTZpVyzoV8zd57mVBvkPE
-         x3S2f+vT8cA8mW5vIgJglmriNCaoep+QHNdKzJOQb+5ehQX29GXO/z9q4VXSj1l4Dzor
-         aOiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751972367; x=1752577167;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0/UNW9wheUfOWipBWnE9bEKfNH0w9NzGiUbVbmxjEVo=;
-        b=cKQfTMekZwCeLcP4Dv6luduAZHFCdd2fcxtqMf6GFM0QRK/dmZHqaYXcEO/uswcVA3
-         VdtSqDWnlK6qVW7MD6HX/z1WjXM8PEqaD537JQdbFLI/eEK35ZTQR3u+09M+0CWJLh6k
-         RQEEtAtcTL3vEYdFWbsaduR9kzbCUqaofkDx24BeZbgXOX/aAWNwg6XgF4tlpLGk8IYk
-         8Bb00/3eOOq3Lfrb/8CbemwFjc9aUr2SWb2LLZuM6M9fYvGi8BbbBwUjdt/mbT/B408m
-         yLuCu5p7Ybe4dA5HF9xBMW/4dYlslPnRBYxKAWCqv4LjgB1Aem0LqQcYxW7WaAFS7NCU
-         fbAA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFc0kb9pZwnMLarrxLJvulPiikhgd1Pp/NzMBCxvAZuo6BpYSRVJQD7AnCLf6SdxtKOjmJYNcBQDuh@vger.kernel.org, AJvYcCUoMVrIrxJSMRyKvwdRiwqfpLHHgUHWTOhQTBndlG/9bvtrjPM3JK6t+Kq59LM9JvJOLkSJmr10TRsN@vger.kernel.org, AJvYcCVhwzUf621Ze3/ngocIW3XBsk7z18Phg58r2uBy/x2sTDupLQQVdrVqjnjSSvanbLX7KbWLXFo1@vger.kernel.org, AJvYcCVk35H7CtCflfFVFfFGSxpOEtsrUe+eMeBIzwxJe1KNzFRq1roHKYwBCfPOTo4DePqjOuv9ck2eP9HqEeVG58k=@vger.kernel.org, AJvYcCWYSKy7Bnr3nVA/LRujmwUcfKFqMjZ8pCqAldRA4h10RaXwS20TIPwovbRol47CXhGIFBx6ehnoaU7T4iOQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzonG/KZXLvYg3RkHDQXuzd5E1bCu52TOitOt0G6SWJ35rM3c+b
-	dfJDuQz3PQsFLeErdw1Tvd5FjirJr35O3HPhdA0ji4mLa8hFhgbj1J7V
-X-Gm-Gg: ASbGncvG4/6eHF3iklPH4obJqUalz652hFUnPI/dZ4lvr9tqx1MdR7f4jJ2epVgSAL0
-	kpuXEo0W/3tkE9ZTlGoYbDGWomWCb9SkYOgnokfWi3qsmaDDz8Ej5Ay7FKoLO9l/FnAvNRdNcs0
-	tBXuReQaP0WrVPLM11M7TW2z1au0mGLF5C0A6QytlNwRRz1iaTAvUldnAdi0+eVQt8xN38nTG+B
-	BCHgkUTnAg9YhTTzUvxCSlfj6KCgD6iKmrPRfr2us6Lyjs+8u2MTP1Ixs+B3zaVTtuZXP5gnPwI
-	rHa4B/DYRAnEuqNFkVrAadLA09H5yQXIkHMBkh3EuLewo2YJ48J/kwXDHuD/Agjo8ULesaZsUvp
-	GvOiXd08a/DB8bCRA1yuanJMDLnZkXoXdbB3RB3pa
-X-Google-Smtp-Source: AGHT+IEjtoxx7Jmd2o3cc0PIJOXAP/15axQil3qlYOBXngZOSgGl0afSYQ0BfrpKWsYYD7pbrBr5HA==
-X-Received: by 2002:a17:903:1987:b0:231:ea68:4e2a with SMTP id d9443c01a7336-23dd1d47317mr36460885ad.34.1751972367127;
-        Tue, 08 Jul 2025 03:59:27 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8455d27asm116131995ad.129.2025.07.08.03.59.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jul 2025 03:59:25 -0700 (PDT)
-Date: Tue, 08 Jul 2025 19:59:08 +0900 (JST)
-Message-Id: <20250708.195908.2135845665984133268.fujita.tomonori@gmail.com>
-To: miguel.ojeda.sandonis@gmail.com
-Cc: kuba@kernel.org, gregkh@linuxfoundation.org, robh@kernel.org,
- saravanak@google.com, fujita.tomonori@gmail.com, alex.gaynor@gmail.com,
- dakr@kernel.org, ojeda@kernel.org, rafael@kernel.org,
- a.hindborg@kernel.org, aliceryhl@google.com, bhelgaas@google.com,
- bjorn3_gh@protonmail.com, boqun.feng@gmail.com, david.m.ertman@intel.com,
- devicetree@vger.kernel.org, gary@garyguo.net, ira.weiny@intel.com,
- kwilczynski@kernel.org, leon@kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, lossin@kernel.org, netdev@vger.kernel.org,
- rust-for-linux@vger.kernel.org, tmgross@umich.edu
-Subject: Re: [PATCH v3 0/3] rust: Build PHY device tables by using
- module_device_table macro
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <CANiq72=LUKSx6Sb4ks7Df6pyNMVQFnUY8Jn6TpoRQt-Eh5bt8w@mail.gmail.com>
-References: <20250704041003.734033-1-fujita.tomonori@gmail.com>
-	<20250707175350.1333bd59@kernel.org>
-	<CANiq72=LUKSx6Sb4ks7Df6pyNMVQFnUY8Jn6TpoRQt-Eh5bt8w@mail.gmail.com>
+	s=arc-20240116; t=1751973131; c=relaxed/simple;
+	bh=qYlJIQBZZw0QX7Jkhi3+cl9CFM1ZAaSQYY9DTNGZLoI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W3iP7VsSLRl8AidoIXyh1foWJdurSU4UomGIQXYMhJkgOQPJ9FaLxm6Zzm4E4i0BZi72WqUPuTpTOR8uo2mCrUJ4Ihh+wNSGR9I+Gc1Qjk18Xd+sc9LFjeJ3F8Yl6zh/WSjIJ961cmumboEvdN+/PjeOzO4BfFaBoIOzirRrUsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uMvJNSSX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4C9C4CEED;
+	Tue,  8 Jul 2025 11:12:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751973131;
+	bh=qYlJIQBZZw0QX7Jkhi3+cl9CFM1ZAaSQYY9DTNGZLoI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uMvJNSSXJZOQ97hxkJGqHTHq1gJrmB7LR5lJL3TkMi189Qmdm08zr3t2Efa3Koyby
+	 T5l+dbsvTuMBgRM79wxfqrpEvk5iZzWMRbEJ7xFmzqRjGouYk1x9GJUs5kfagP7f8m
+	 2I1d4YhhcJCJSOdXpuytA/B2zMnsucdBmWpUav9YjZRP2+i1GhJDB2pmTjQcQ/+7Bd
+	 owIDZ1wQWEviozdtHSW9OAsqYaYzL79b6dozKfFJu4y3aIrJnNJaYXn6nnI7lc3WCX
+	 +ISVSm3kghRa12AMF9Oz6wolGPTad+/YAOKXw34JI+rfaFhl+zXampKZ3etHS30PcP
+	 Vv7jEdahtlRvg==
+Date: Tue, 8 Jul 2025 13:12:02 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Frank Li <Frank.Li@nxp.com>, Kishon Vijay Abraham I <kishon@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Shuah Khan <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	dlemoal@kernel.org, jdmason@kudzu.us, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v19 00/10] PCI: EP: Add RC-to-EP doorbell with platform
+ MSI controller
+Message-ID: <aGz9ApsBD-gQ50pf@ryzen>
+References: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
+ <roskp2zsjohrgll464u4jtbulzjid523u3yvgciifwiuoygv5t@7f7cj4wfy2y7>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <roskp2zsjohrgll464u4jtbulzjid523u3yvgciifwiuoygv5t@7f7cj4wfy2y7>
 
-T24gVHVlLCA4IEp1bCAyMDI1IDEyOjQ1OjIwICswMjAwDQpNaWd1ZWwgT2plZGEgPG1pZ3VlbC5v
-amVkYS5zYW5kb25pc0BnbWFpbC5jb20+IHdyb3RlOg0KDQo+IE9uIFR1ZSwgSnVsIDgsIDIwMjUg
-YXQgMjo1M+KAr0FNIEpha3ViIEtpY2luc2tpIDxrdWJhQGtlcm5lbC5vcmc+IHdyb3RlOg0KPj4N
-Cj4+IERvZXMgbm90IGFwcGx5IHRvIG5ldHdvcmtpbmcgdHJlZXMgc28gSSBzdXNwZWN0IHNvbWVv
-bmUgZWxzZSB3aWxsIHRha2UNCj4+IHRoZXNlOg0KPj4NCj4+IEFja2VkLWJ5OiBKYWt1YiBLaWNp
-bnNraSA8a3ViYUBrZXJuZWwub3JnPg0KPiANCj4gVGhhbmtzISBIYXBweSB0byB0YWtlIGl0IHRo
-cm91Z2ggUnVzdCB0cmVlIGlmIHRoYXQgaXMgYmVzdC4NCg0KVGhpcyBpcyBiYXNlZCBvbiBSdXN0
-IHRyZWUuIElmIEkgcmVtZW1iZXIgY29ycmVjdGx5LCBpdCBjYW4ndCBiZQ0KYXBwbGllZCBjbGVh
-bmx5IHRvIG90aGVyIHRyZWVzIGJlY2F1c2Ugb2YgVGFtaXIncyBwYXRjaCBpbiBSdXN0IHRyZWUu
-DQoNCg0KVGhhbmtzIGV2ZXJ5b25lIQ0K
+On Wed, Jul 02, 2025 at 06:57:23PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Jun 09, 2025 at 12:34:12PM GMT, Frank Li wrote:
+> 
+> Frank, thanks for your persistence in pushing this series, really appreciated!
+> I've left some comments, but no real blocker.
+> 
+> Unfortunately, I don't have access to my endpoint setup right now. So I'll go
+> ahead with the Tested-by tag from Niklas once my comments are addressed.
+
+(snip)
+
+> > Changes in v6:
+> > - add Niklas's test by tag
+
+My Tested-by tag was added on v6, now it is v19 :)
+
+To be comfortable of still having my Tested-by tag here,
+I decided to test v19.
+
+However I got this:
+
+[ 3255.257047] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000040
+[ 3255.257824] Mem abort info:
+[ 3255.258069]   ESR = 0x0000000096000004
+[ 3255.258398]   EC = 0x25: DABT (current EL), IL = 32 bits
+[ 3255.258862]   SET = 0, FnV = 0
+[ 3255.259147]   EA = 0, S1PTW = 0
+[ 3255.259423]   FSC = 0x04: level 0 translation fault
+[ 3255.259849] Data abort info:
+[ 3255.260102]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[ 3255.260580]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[ 3255.261020]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[ 3255.261483] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000100a03000
+[ 3255.262045] [0000000000000040] pgd=0000000000000000, p4d=0000000000000000
+[ 3255.262639] Internal error: Oops: 0000000096000004 [#1]  SMP
+[ 3255.263132] Modules linked in: rk805_pwrkey hantro_vpu v4l2_jpeg v4l2_vp9 v4l2_h264 v4l2_mem2mem videobuf2_v4l2 videobuf2_dma_contig videobuf2_memops videobuf2_common vidf
+[ 3255.265357] CPU: 5 UID: 0 PID: 213 Comm: ln Not tainted 6.16.0-rc1+ #233 PREEMPT 
+[ 3255.266009] Hardware name: Radxa ROCK 5B (DT)
+[ 3255.266388] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[ 3255.266995] pc : pci_epf_bind+0x160/0x240
+[ 3255.267350] lr : pci_epf_bind+0x40/0x240
+[ 3255.267694] sp : ffff800081593c30
+[ 3255.267983] x29: ffff800081593c30 x28: ffff0001024b2300 x27: ffff000102fc2800
+[ 3255.268606] x26: ffff00010191e000 x25: ffff000100504098 x24: ffff000107b8ec80
+[ 3255.269228] x23: ffff000104cf3578 x22: 0000000000000000 x21: 0000000000000000
+[ 3255.269850] x20: ffff000104cf3000 x19: ffff000104cf3578 x18: 0000000000000000
+[ 3255.270472] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[ 3255.271093] x14: 0000000000000000 x13: ffff00010245c037 x12: ffff800081593b94
+[ 3255.271715] x11: 0000000528aa6179 x10: 0000000000000002 x9 : ffffa2593ce92b30
+[ 3255.272336] x8 : 00000031636e7566 x7 : 00000000ffffbe12 x6 : 0000000000000003
+[ 3255.272958] x5 : ffff000102413f78 x4 : ffff000102413f08 x3 : 0000000000000000
+[ 3255.273580] x2 : ffff0001024b2300 x1 : 0000000000000000 x0 : ffff000104cf3000
+[ 3255.274201] Call trace:
+[ 3255.274416]  pci_epf_bind+0x160/0x240 (P)
+[ 3255.274767]  pci_epc_epf_link+0x54/0xb0
+[ 3255.275104]  configfs_symlink+0x208/0x540
+[ 3255.275457]  vfs_symlink+0x158/0x1e0
+[ 3255.275770]  do_symlinkat+0x8c/0x138
+[ 3255.276083]  __arm64_sys_symlinkat+0x7c/0xc8
+[ 3255.276455]  invoke_syscall.constprop.0+0x48/0x100
+[ 3255.276874]  el0_svc_common.constprop.0+0x40/0xe8
+[ 3255.277285]  do_el0_svc+0x24/0x38
+[ 3255.277575]  el0_svc+0x34/0x100
+[ 3255.277852]  el0t_64_sync_handler+0x10c/0x140
+[ 3255.278233]  el0t_64_sync+0x198/0x1a0
+[ 3255.278554] Code: a9446bf9 394ff280 b902aa80 aa1403e0 (f94022a1) 
+[ 3255.279085] ---[ end trace 0000000000000000 ]---
+
+
+Seems to be from patch 1/10:
+
+(gdb) l *(pci_epf_bind+0x160)
+0xffff800080892c50 is in pci_epf_bind (drivers/pci/endpoint/pci-epf-core.c:132).
+127                             goto ret;
+128                     epf_vf->is_bound = true;
+129             }
+130
+131             epf->dev.id = PCI_EPF_DEVID(epf->func_no, 0);
+132             device_set_of_node_from_dev(&epf->dev, epc->dev.parent);
+133             ret = epf->driver->ops->bind(epf);
+134             if (ret)
+135                     goto ret;
+136             epf->is_bound = true;
+
+
+I can see that there is a lot of discussion on patch 1/10 already,
+but please drop my Tested-by tag until this has been fixed.
+
+Feel free to CC me on v20 of this series, if the problem is fixed,
+I will provide my Tested-by tag once again.
+
+
+Kind regards,
+Niklas
 
