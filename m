@@ -1,62 +1,66 @@
-Return-Path: <linux-pci+bounces-31659-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31660-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3C00AFC462
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 09:42:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E2B0AFC475
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 09:47:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 00B40179077
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 07:42:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C8D3018981A7
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 07:47:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21CBC29993D;
-	Tue,  8 Jul 2025 07:42:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66259221278;
+	Tue,  8 Jul 2025 07:47:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QiizzGcu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVkRS8VB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5A71FFC41;
-	Tue,  8 Jul 2025 07:42:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B4C3FC2;
+	Tue,  8 Jul 2025 07:47:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751960530; cv=none; b=bcsBG9tZ+uVrWBNhBfRUDQgkkFTrgCcRMshSaqWyf28KvJTCP50f8W22nAij6VrXXAUf39xrcOA6gktt8z7ildGUrGC4FY/algYsaDU7yKzA2JRSA7qbV3GMPpEWhRzqnA0j7+F2KytGbRoadz/+sz8ZBtFex7aqRcQZ4zUIJEU=
+	t=1751960846; cv=none; b=HVxV8R0Kq0dqsDQF/lVkxqC3qr8vvCFvv0A+9QnAk6dnfOf6UycYY3IvKHHavXQxI4NroSfppdeuy25iJogzzk9U/QGdubdv3Azdj0FPlwEYdBWfq86IUQ4AH68bAPrX0WKlrx8py4rHYQ8i4RJ98zGQci3360BChGYPNsaUeaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751960530; c=relaxed/simple;
-	bh=cu8tPtnIUR3fiQLsu8sRQhSmqshZhYdBxyLo1WB3PBU=;
+	s=arc-20240116; t=1751960846; c=relaxed/simple;
+	bh=jVUpAdZABGByW3BC0gUxQ8Gy88WyihYZ+pUcIVfwLQo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e4CuN88dj3Q/7dP3dOyM0OCtDNA7nf48U6F7ngTtA6bslJUcTzWIOTfRUGbGTPvXMCRYc5wyZ3ZWkieaGQuS2RHltbpYwR6Z4ROQPeT5F7vur1/7Qk3HLwwtJehg8zy+cdpYIE/R/P/rA6Qnf2afT1TbxuXS8myf2zSoSyGmMbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QiizzGcu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27334C4CEED;
-	Tue,  8 Jul 2025 07:42:03 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=UULiciRN8UZfaJDFOZDvsEwN8RODy9XE4AZNROrBts34eeQLGYob8mPBaKf0eByZ0MxHQIuljrd8ZlXnHWwE3RH9tFQmxq/leoEYiuwujr3USTRvom1hB8j3hjP7sfdZlAFda14fvumIH4o2Lh1Gon1FdsSfhVwGyFI1ECnZCB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVkRS8VB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10CE8C4CEED;
+	Tue,  8 Jul 2025 07:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751960529;
-	bh=cu8tPtnIUR3fiQLsu8sRQhSmqshZhYdBxyLo1WB3PBU=;
+	s=k20201202; t=1751960845;
+	bh=jVUpAdZABGByW3BC0gUxQ8Gy88WyihYZ+pUcIVfwLQo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QiizzGcu3oRSNRBv2aXILXXI1jg/Hc9yWXALIH5umhNyhCXU4T26Edl4g/GJM58CG
-	 ujpBuIVs0g4usaLKSn2uI8/JFIkS9F72TnBwAO4uzliU8HW7+Q+4D1s2rHMDXc1jov
-	 SP8z9v8nUn5uZY205/ZM2aSHwc/lkkqpepGaRNVyI7RJdbKlbMYR5W7+YbzndanibP
-	 i90De+r0ey0cfLKrt02T2SG6pjMujzQqnB128lrSkEVDiUrR6D0x3yEtPT3ooRh5Ml
-	 DJwJINdjIuIQ6syHiFKJMa7OKU8yMupCzT11l2q7f6CejvPGwW3gf5zxama9IeVNPu
-	 WC1wzom8PBMIA==
-Date: Tue, 8 Jul 2025 13:11:59 +0530
-From: "mani@kernel.org" <mani@kernel.org>
+	b=jVkRS8VBYxowV5hhTK7yaNDVcqGnPinoVsHNURk3RmxUwNbHyp5BrW+BP9sYAuRfM
+	 U87i2zE9OjaSrS6jIE0MwdRGAwx3cwEJsL4DPsbb9ktRm96Hliys51kEQO1ECd6CHk
+	 mn9FMbDOM7XDGntSbRc89ePBIznvU8T8Aln7rehpe5HPbgqM+06k13Ex3T/a1CxNj5
+	 wBPm5PnQNSA0CL0wtzF8uMW4xFwpLMCBlIfGhW5mF1h/oIWBBcj1ALT6H0Qz07JnLN
+	 ikBoMMUfSyYXHSPM7gUXrqirNShQdBGp7a2vDwvdwd7WtV4bYGZqLRUpqw68Shj0qX
+	 xHCfg52YvR/KQ==
+Date: Tue, 8 Jul 2025 13:17:15 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
 To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Frank Li <frank.li@nxp.com>, 
-	"l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>, "robh@kernel.org" <robh@kernel.org>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, 
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
-	"festevam@gmail.com" <festevam@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+Cc: "tharvey@gateworks.com" <tharvey@gateworks.com>, 
+	Frank Li <frank.li@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, 
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>, 
+	"robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, 
+	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, 
+	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
 	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: imx6: Correct the epc_features of i.MX8M chips
-Message-ID: <pxxwlm6su6ugfo4m7borpgvvlczfrhdarzcy45fipqwvxaxban@u223udsukdwc>
-References: <20250617073441.3228400-1-hongxing.zhu@nxp.com>
- <20250707193415.GA2095765@bhelgaas>
- <AS8PR04MB8676B8D14A5C54E8C32025BD8C4EA@AS8PR04MB8676.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH v3 1/2] PCI: imx6: Remove apps_reset toggle in
+ _core_reset functions
+Message-ID: <lavz3wv5vysmb7gle5s57tc2tj4a6euh2e4fdwdrezvsejxiip@2fa4sblpau6a>
+References: <20250616085742.2684742-1-hongxing.zhu@nxp.com>
+ <20250616085742.2684742-2-hongxing.zhu@nxp.com>
+ <kjsaipr2xq777dmiv2ac7qzrxw47nevc75j7ryma32vsnyr2le@mrwurn6rgnac>
+ <CAJ+vNU3mKiEE86SYFS0aEabkqRKADFDJN0giX73E0cA=GOyhjA@mail.gmail.com>
+ <AS8PR04MB867638BDCA5F47D478F597808C4EA@AS8PR04MB8676.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,96 +70,111 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB8676B8D14A5C54E8C32025BD8C4EA@AS8PR04MB8676.eurprd04.prod.outlook.com>
+In-Reply-To: <AS8PR04MB867638BDCA5F47D478F597808C4EA@AS8PR04MB8676.eurprd04.prod.outlook.com>
 
-On Tue, Jul 08, 2025 at 07:34:57AM GMT, Hongxing Zhu wrote:
+On Tue, Jul 08, 2025 at 02:37:00AM GMT, Hongxing Zhu wrote:
 > > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: 2025年7月8日 3:34
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > lpieralisi@kernel.org; kwilczynski@kernel.org; mani@kernel.org;
+> > From: Tim Harvey <tharvey@gateworks.com>
+> > Sent: 2025年6月24日 1:33
+> > To: Manivannan Sadhasivam <mani@kernel.org>
+> > Cc: Hongxing Zhu <hongxing.zhu@nxp.com>; Frank Li <frank.li@nxp.com>;
+> > l.stach@pengutronix.de; lpieralisi@kernel.org; kwilczynski@kernel.org;
 > > robh@kernel.org; bhelgaas@google.com; shawnguo@kernel.org;
 > > s.hauer@pengutronix.de; kernel@pengutronix.de; festevam@gmail.com;
 > > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
 > > imx@lists.linux.dev; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v2] PCI: imx6: Correct the epc_features of i.MX8M chips
+> > Subject: Re: [PATCH v3 1/2] PCI: imx6: Remove apps_reset toggle in
+> > _core_reset functions
 > > 
-> > On Tue, Jun 17, 2025 at 03:34:41PM +0800, Richard Zhu wrote:
-> > > i.MX8MQ PCIes have three 64-bit BAR0/2/4 capable and programmable
-> > BARs.
-> > > But i.MX8MM and i.MX8MP PCIes only have BAR0/BAR2 64bit
-> > programmable
-> > > BARs, and one 256 bytes size fixed BAR4.
+> > On Mon, Jun 23, 2025 at 4:42 AM Manivannan Sadhasivam <mani@kernel.org>
+> > wrote:
 > > >
-> > > Correct the epc_features for i.MX8MM and i.MX8MP PCIes here. i.MX8MQ
-> > > is the same as i.MX8QXP, so set i.MX8MQ's epc_features to
-> > > imx8q_pcie_epc_features.
+> > > On Mon, Jun 16, 2025 at 04:57:41PM +0800, Richard Zhu wrote:
+> > > > apps_reset is LTSSM_EN on i.MX7, i.MX8MQ, i.MX8MM and i.MX8MP
+> > platforms.
+> > > > Since the assertion/de-assertion of apps_reset(LTSSM_EN bit) had
+> > > > been wrappered in imx_pcie_ltssm_enable() and
+> > > > imx_pcie_ltssm_disable();
+> > > >
 > > >
-> > > Fixes: 75c2f26da03f ("PCI: imx6: Add i.MX PCIe EP mode support")
-> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > 
-> > "Correct the epc_features" doesn't include any specific information, and it's
-> > hard to extract the changes for a device from the commit log.
-> > 
-> > This is really two fixes that should be separated so the commit logs can be
-> > specific:
-> Yes, it's right.
-> Since it's just one line change for i.MX8MQ. So, I combine the changes into
-> this commit for i.MX8M chips.
+> > > What about other i.MX chipsets like 6Q and its cousins? Wouldn't this
+> > > change affect them since they treat 'apps_reset' differently?
+> > >
+> > > - Mani
 > 
 > Hi Mani:
-> Since it had been applied, I don't know how to proceed.
-> Should I separate this commit into two patches, and re-send them again?
-> Thanks.
+> Sorry to reply late.
+> Only i.MX7D, i.MX8MQ, i.MX8MM, and i.MX8MP have the apps_reset. No problems
+> are found with this change in my local tests on these four platforms.
+> With this change, the assertion/deassertion of ltssm_en bit are unified into
+>  imx_pcie_ltssm_enable() and imx_pcie_ltssm_disable() functions, aligned with
+> other i.MX platforms.
 > 
 
-I've now dropped the patch from controller/imx6. Please resend them. Also, CC
-the stable list with relevant Fixes tag.
+Okay, thanks for clarifying. Please include this information in the commit
+message as well and also CC stable list for backporting since it fixes a bug.
 
 - Mani
 
 > Best Regards
 > Richard Zhu
 > > 
-> >   - For IMX8MQ_EP, use imx8q_pcie_epc_features (64-bit BARs 0, 2, 4)
-> >     instead of imx8m_pcie_epc_features (64-bit BARs 0, 2).
+> > Hi Main,
 > > 
-> >   - For IMX8MM_EP and IMX8MP_EP, add fixed 256-byte BAR 4 in
-> >     imx8m_pcie_epc_features.
+> > This patch effectively brings back the behavior prior to commit
+> > ef61c7d8d032 ("PCI: imx6: Deassert apps_reset in
+> > imx_pcie_deassert_core_reset()") which caused the original regressions.
 > > 
-> > > ---
-> > >  drivers/pci/controller/dwc/pci-imx6.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
-> > > b/drivers/pci/controller/dwc/pci-imx6.c
-> > > index 5a38cfaf989b..9754cc6e09b9 100644
-> > > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > > @@ -1385,6 +1385,8 @@ static const struct pci_epc_features
-> > imx8m_pcie_epc_features = {
-> > >  	.msix_capable = false,
-> > >  	.bar[BAR_1] = { .type = BAR_RESERVED, },
-> > >  	.bar[BAR_3] = { .type = BAR_RESERVED, },
-> > > +	.bar[BAR_4] = { .type = BAR_FIXED, .fixed_size = SZ_256, },
-> > > +	.bar[BAR_5] = { .type = BAR_RESERVED, },
-> > >  	.align = SZ_64K,
-> > >  };
-> > >
-> > > @@ -1912,7 +1914,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
-> > >  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
-> > >  		.mode_off[1] = IOMUXC_GPR12,
-> > >  		.mode_mask[1] = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
-> > > -		.epc_features = &imx8m_pcie_epc_features,
-> > > +		.epc_features = &imx8q_pcie_epc_features,
-> > >  		.init_phy = imx8mq_pcie_init_phy,
-> > >  		.enable_ref_clk = imx8mm_pcie_enable_ref_clk,
-> > >  	},
-> > > --
-> > > 2.37.1
-> > >
+> > To ease your concerns I've tested this patch on top of v6.16-rc3 with the
+> > following IMX6 boards I have here with and without a PCI device
+> > attached:
+> > imx6q-gw51xx - no switch
+> > imx6q-gw54xx - switch
+> > 
+> > I only have imx6qdl/imx8mm/imx8mp boards to test with.
+> > 
+> > From what I can tell it doesn't look like the original patch that added the
+> > 'symmetric' apps_reset de-assert was necessarily well tested. It started out
+> > being added because as far as I can tell it 'looked' like the right thing to do [1].
+> > You requested changes to the commit log for wording [2],[3] but I'm unclear
+> > that anyone tested this.
+> >
+> Hi Tim: 
+> Thanks for your explains and tests.
+> 
+> Best Regards
+> Richard Zhu
+> 
+> > Best Regards,
+> > 
+> > Tim
+> > [1]
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatch
+> > work.kernel.org%2Fproject%2Flinux-pci%2Fpatch%2F1727148464-14341-6-gi
+> > t-send-email-hongxing.zhu%40nxp.com%2F&data=05%7C02%7Chongxing.zhu
+> > %40nxp.com%7Cdac60212c1c94cb24d7508ddb27c0f92%7C686ea1d3bc2b4c
+> > 6fa92cd99c5c301635%7C0%7C0%7C638862968081967795%7CUnknown%7
+> > CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJ
+> > XaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=8I
+> > 7qGI92BfsbAERknsVjZO6cI527Enxgiiw%2FVatI7h4%3D&reserved=0
+> > [2]
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatch
+> > work.kernel.org%2Fproject%2Flinux-pci%2Fpatch%2F1728981213-8771-6-git
+> > -send-email-hongxing.zhu%40nxp.com%2F&data=05%7C02%7Chongxing.zhu
+> > %40nxp.com%7Cdac60212c1c94cb24d7508ddb27c0f92%7C686ea1d3bc2b4c
+> > 6fa92cd99c5c301635%7C0%7C0%7C638862968081993466%7CUnknown%7
+> > CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJ
+> > XaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=lh
+> > ER8F9ApfpgQcVCyMOBYho%2BXvlp79re4jX5C5gj1XY%3D&reserved=0
+> > [3]
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatch
+> > work.kernel.org%2Fproject%2Flinux-pci%2Fpatch%2F20241101070610.1267
+> > 391-6-hongxing.zhu%40nxp.com%2F&data=05%7C02%7Chongxing.zhu%40nx
+> > p.com%7Cdac60212c1c94cb24d7508ddb27c0f92%7C686ea1d3bc2b4c6fa92c
+> > d99c5c301635%7C0%7C0%7C638862968082007982%7CUnknown%7CTWFp
+> > bGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4z
+> > MiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=kp4EqnV
+> > lfUsVq4k9UV33LSpiwn%2F2OJlPzu2PApAttNs%3D&reserved=0
 
 -- 
 மணிவண்ணன் சதாசிவம்
