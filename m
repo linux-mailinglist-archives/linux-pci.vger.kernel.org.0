@@ -1,136 +1,156 @@
-Return-Path: <linux-pci+bounces-31728-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31729-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1AA8AFDB4B
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 00:49:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AD8FAFDB5C
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 00:51:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51CC4171B04
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 22:49:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96FF73A8E06
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 22:51:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93132222594;
-	Tue,  8 Jul 2025 22:49:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E290E2264A7;
+	Tue,  8 Jul 2025 22:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="MYomEbTA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aa4QQGD5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79BB203710
-	for <linux-pci@vger.kernel.org>; Tue,  8 Jul 2025 22:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB73E22331C;
+	Tue,  8 Jul 2025 22:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752014968; cv=none; b=GZRfxfpuH8Sw71AdJ3YeMxuoZBlVWwAGcDQgmpEYEm7rfXO/ysGlwjaRp3Z7NnTYutUWMj4VAl5wYdurXsHihAgjZCxOoESTWAZGYQPLnhPShyc4SFQ9eKLtXJE8hTbowruMkrNL+bymGepqQ3fLFSdp0qgwRYYMotkMsSD51Bg=
+	t=1752015092; cv=none; b=p9hZv1Qay+MvR0BfZiQH9y/5p6ae1CxgC6Ijzoj0licrhT/9DFhASqEw4SdIGSl2iRsWMhrfef9F1CKr4wg93XheJp5stWsUBhEdO9UrpmSDtSoJsOChgc1zVGZsYWAaKRmHFzdY9tMVn1xmPN+p6X5QGltI72TpvtnDAeXyr7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752014968; c=relaxed/simple;
-	bh=1vLlUkcZupTCHv8xbW6oBYHy1pPQT9nPxiQ5gcngf6U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L2aEdqc2LJo9E5xgP8DWy/Tgst7YXfXPkgvjOt5k5FJ1jWyIJaSbVDkDHH9b2VNSms9rNuoUXfGFkaCT6dlfwpXzNtQRoNfJpxb/gaNrmPxbupQcWLU3Od5nuND15EUdyf0BVnvvbTCWPPTCSj+LEYHKshGkB743IOQXencG6EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=MYomEbTA; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-74ce477af25so2991363b3a.3
-        for <linux-pci@vger.kernel.org>; Tue, 08 Jul 2025 15:49:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1752014966; x=1752619766; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v4tr4T6NYv1QSYP58u879vVskZ55NGSJOyNu4EM8Uo0=;
-        b=MYomEbTAsV4aiaM66xDz1D4GWazYKX3987NacbdjGLDxjuGcYWKKGhIPqkqDUFBz7Z
-         wCENGUiKElzigOQFN7/aEoJ88cIvO1r+C2ceOeXXgekKyDUDGWx6OL5gK8eFlP4hq/+K
-         L0/xYzw44uLtTZQRrdtQOtMv4TFFA6PYT7lF1zSfrca1c/UPAXswMn+LnCiHMx5aGwUL
-         hHVTxe9Xm2RN/xgaaz0u6hOvaiCz5F2TNFa7lgB2TcjK0afrnhMF+8LbLUVsiSF1BIkk
-         yuDhGhHwBcoC4ggoeJN2zJTeYYmb95bWXDj0fZTZSB/wmuFX7V+EVmOVyXsVybo/UQ9H
-         rwkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752014966; x=1752619766;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v4tr4T6NYv1QSYP58u879vVskZ55NGSJOyNu4EM8Uo0=;
-        b=HcQubUDSophFouIrgd+pHQ3mKjxQgxgnRSlaWCHD5wz/Ze2COBAg8TahgqJC7dLHGg
-         lXAVwN6Wr4nI/qnt74KSTWKDLX33nDDtoUwOtfe5renyf2Lng9XCF2AIc6vdvNL51Bv9
-         AjMnYF/8JOML3OyN+XL6Dp1sDjnI3t5hfOLCTq37+JIB0e120gbaLi2ahjnd1nf8Emux
-         +MfiIohhLAx9CHbFjtYP0V/jUI0KtWJ/bdtwiRL+7gytqUnqa8QUwSxrNYZzYgEK5NkL
-         +pe4pHxoRXjN4p35JOIdS/41Joyy8HCmk8LpMv0U/a2LvQWz8FiSAbJPWchlRZPdXvSs
-         J87w==
-X-Forwarded-Encrypted: i=1; AJvYcCXa4aV+qpF0bpKiAuToUAlLf7mJQ+ZMaEyNUYjFta9zku3RzClui56zlGZK+nVJOrAVUgOZixRWCfA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxV8AIRMud3C/0uiVHi1eL56VkPYDTarpUhD2SiKRP9TIJ1nW0
-	85gHad69MVxLccfsiIy5+uwqoj6hfWq+NFIgyfxQfjt2GaTK42CbER1dgznOr7BOMOw=
-X-Gm-Gg: ASbGncvsXwwZ7P1pROunihwzz8zqN5faZv+OGKoJsU6fRUXNIZcN2+oE4pOQXezjdPQ
-	R8/x3T1FdafEuEJgw3hSlkdy+C3aVgJOgK/58nwLfhvd+e0vgGQcTkbbqlNJhREC8WksiYZifhr
-	B4qiLS7QjNb3wpv9qaEefV51DlNZNbGCyUDfg3E3JP+t94brYx7qvmmVsBKUySdVYE6jt2vS92d
-	MlVlIqxwjvLkQtgBw2CBuE5LqUm1W00Yw+TSTQs/xnj+CSVEs86fMMOsnh5vq9tJtrSOFd9liv4
-	7BBB0VIaHLMLQnnta+y9JuByTy7FgKWjekjtDCfreMh4lljjdKO0Xw/7DVg1vzfpNuYNG4o68eZ
-	xqqNtMzBna7cw
-X-Google-Smtp-Source: AGHT+IH5WD8XFrdbdkLuRPvVQGEdw4k1YXlsR+H+OuhKV9bUq8nn2N+Vq8Gu5teO8YcKzORiYqiusA==
-X-Received: by 2002:a05:6a00:3924:b0:748:e1e4:71e7 with SMTP id d2e1a72fcca58-74ea66a0ademr514794b3a.23.1752014965875;
-        Tue, 08 Jul 2025 15:49:25 -0700 (PDT)
-Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-74ce42cec44sm13177481b3a.155.2025.07.08.15.49.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jul 2025 15:49:25 -0700 (PDT)
-From: Matthew W Carlis <mattc@purestorage.com>
-To: ilpo.jarvinen@linux.intel.com
-Cc: ashishk@purestorage.com,
-	bhelgaas@google.com,
-	linux-pci@vger.kernel.org,
-	macro@orcam.me.uk,
-	mattc@purestorage.com,
-	msaggi@purestorage.com,
-	sconnor@purestorage.com
-Subject: [PATCH v2 0/1] PCI: pcie_failed_link_retrain() return if dev is not ASM2824
-Date: Tue,  8 Jul 2025 16:49:15 -0600
-Message-ID: <20250708224917.7386-1-mattc@purestorage.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <62c702a7-ce9b-21b8-c30e-a556771b987f@linux.intel.com>
-References: <62c702a7-ce9b-21b8-c30e-a556771b987f@linux.intel.com>
+	s=arc-20240116; t=1752015092; c=relaxed/simple;
+	bh=2BPqfUcttv0EZxTvpxu93KNE1aoct6tDcUZmdKu92Yg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OndTQE6R950Z2DGGEYxRNj/IJA0fbNtGBLn1FOhCaoSFce3a69T/qfUBZd+pmb35Z8P9P/waXf+tABrg4VwBjthAAow/nkBw8ALY+Ms5VYQw3Pv73W++G4uhId03i8Qktu6nGi+PW/tG1zJZhxg5qWmbmrgJzwfsqHkopYi1Ais=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aa4QQGD5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2987EC4CEED;
+	Tue,  8 Jul 2025 22:51:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752015092;
+	bh=2BPqfUcttv0EZxTvpxu93KNE1aoct6tDcUZmdKu92Yg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aa4QQGD54wYrbC2s7BDuFiJeKjRsM2Jbanil5tsAwkTfNRmM1zyCnZwjUEDPNoqBc
+	 5zgDUyuK9dWVp3U9lLa7cNqkMgp9Rf1s9vvsfNINshi/oJdnlAJacf3lLpsmTx8OS/
+	 hy80TeYUPmZgcyHcqT39+BHlDEp89SzU8wdkaDxQjXGSajMF5aNQmcNUCkszVD0rGj
+	 QC/ficGvoctYNHGOSPUDBNuqbMgIz3XEHmmyD024U1+WenPu+b+xkZMBUWaNwXCLNw
+	 1UN1iuPIAMAInnR5WclnKky8Cmf6sVLoZdEYFq/OOWWIOQm81JYrdmqiSuzj5XTYPo
+	 yKL1EbDiMECyQ==
+Date: Wed, 9 Jul 2025 00:51:24 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, kuba@kernel.org,
+	gregkh@linuxfoundation.org, robh@kernel.org, saravanak@google.com,
+	alex.gaynor@gmail.com, ojeda@kernel.org, rafael@kernel.org,
+	a.hindborg@kernel.org, aliceryhl@google.com, bhelgaas@google.com,
+	bjorn3_gh@protonmail.com, boqun.feng@gmail.com,
+	david.m.ertman@intel.com, devicetree@vger.kernel.org,
+	gary@garyguo.net, ira.weiny@intel.com, kwilczynski@kernel.org,
+	leon@kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, lossin@kernel.org,
+	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	tmgross@umich.edu
+Subject: Re: [PATCH v3 0/3] rust: Build PHY device tables by using
+ module_device_table macro
+Message-ID: <aG2g7HgDdvmFJpMz@pollux>
+References: <20250704041003.734033-1-fujita.tomonori@gmail.com>
+ <20250707175350.1333bd59@kernel.org>
+ <CANiq72=LUKSx6Sb4ks7Df6pyNMVQFnUY8Jn6TpoRQt-Eh5bt8w@mail.gmail.com>
+ <20250708.195908.2135845665984133268.fujita.tomonori@gmail.com>
+ <DB6OOFKHIXQB.3PYJZ49GXH8MF@kernel.org>
+ <CANiq72=Cbvrcwqt6PQHwwDVTx1vnVnQ7JBzzXk+K-7Va_OVHEQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72=Cbvrcwqt6PQHwwDVTx1vnVnQ7JBzzXk+K-7Va_OVHEQ@mail.gmail.com>
 
-On Fri, 4 Jul 2025, Ilpo Järvinen wrote:
-> The other question still stands though, why is LBMS is not reset? Perhaps 
-> DPC should clear LBMS in some places (that is, call pcie_reset_lbms()). 
-> Have you consider that?
+On Tue, Jul 08, 2025 at 08:47:13PM +0200, Miguel Ojeda wrote:
+> Thanks Danilo -- ditto. Even netdev could make sense as you said.
+> 
+> Since it touched several subsystems and it is based on rust-next, I am
+> happy to do so, but driver-core makes sense given that is the main
+> change after all.
+> 
+> So if I don't see you picking it, I will eventually do it.
 
-Initially we started to observe this when physically removing and
-reinserting devices in a kernel version with the quirk, but without the bandwidth
-controller driver. I think there is a problem with any place where the link
-would be expected to go down (dpc, hpc, etc) & then carrying forward LBMS
-into the next time the link comes up. Should it not matter how long ago LBMS
-was asserted before we invoke a TLS modification? It also looks like card
-presence is enough for the kernel to believe the link should train & enter
-the quirk function without ever having seen LNKSTA_DLLLA or LNKSTA_LT. I
-wonder if it shouldn't have to see some kind of actual link activity as a
-prereq to entering the quirk.
+Checked again and the driver-core tree makes most sense, since we also need to
+fix up the ACPI device ID code, which is queued up in driver-core-next.
 
-> (It sound to me you're having this occur in multiple scenarios and I've 
-> some trouble on figuring those out from your long descriptions what those 
-> exactly are so it's bit challenging for me to suggest where it should be 
-> done but I the surprise down certainly seems like case where LBMS 
-> information must have become stale so it should be reset which would 
-> prevent quirk from setting 2.5GT/s)
+I also caught a missing change in rust/kernel/driver.rs, which most likely
+slipped through by not building with CONFIG_OF. :)
 
-Something I found recently that was interesting - when I power off
-a slot (triggering DPC via SDES) the LBMS becomes set on Intel Root Ports,
-but in another server with a PCIe switch LBMS does not become set on the
-switch DSP if I perform the same action. I don't have any explanation for
-this difference other than "vendor specific" behavior.
+Here's the diff to fix up both, I already fixed it up on my end -- no need to
+send a new version.
 
-One thing that honestly doesn't make any sense to me is the ID list in the
-quirk. If the link comes up after forcing to Gen1 then it would only restore
-TLS if the device is the ASMedia switch, but also ignoring what device is
-detected downstream. If we allow ASMedia to restore the speed for any downstream
-device when we only saw the initial issue with the Pericom switch then why
-do we exclude Intel Root Ports or AMD Root Ports or any other bridge from the
-list which did not have any issues reported.
+--
+
+diff --git a/rust/kernel/acpi.rs b/rust/kernel/acpi.rs
+index 2af4d4f92924..7ae317368b00 100644
+--- a/rust/kernel/acpi.rs
++++ b/rust/kernel/acpi.rs
+@@ -2,7 +2,11 @@
+
+ //! Advanced Configuration and Power Interface abstractions.
+
+-use crate::{bindings, device_id::RawDeviceId, prelude::*};
++use crate::{
++    bindings,
++    device_id::{RawDeviceId, RawDeviceIdIndex},
++    prelude::*,
++};
+
+ /// IdTable type for ACPI drivers.
+ pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<DeviceId, T>;
+@@ -12,13 +16,14 @@
+ #[derive(Clone, Copy)]
+ pub struct DeviceId(bindings::acpi_device_id);
+
+-// SAFETY:
+-// * `DeviceId` is a `#[repr(transparent)` wrapper of `struct acpi_device_id` and does not add
+-//   additional invariants, so it's safe to transmute to `RawType`.
+-// * `DRIVER_DATA_OFFSET` is the offset to the `data` field.
++// SAFETY: `DeviceId` is a `#[repr(transparent)]` wrapper of `acpi_device_id` and does not add
++// additional invariants, so it's safe to transmute to `RawType`.
+ unsafe impl RawDeviceId for DeviceId {
+     type RawType = bindings::acpi_device_id;
++}
+
++// SAFETY: `DRIVER_DATA_OFFSET` is the offset to the `driver_data` field.
++unsafe impl RawDeviceIdIndex for DeviceId {
+     const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::acpi_device_id, driver_data);
+
+     fn index(&self) -> usize {
+diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
+index f8dd7593e8dc..573d516b2f06 100644
+--- a/rust/kernel/driver.rs
++++ b/rust/kernel/driver.rs
+@@ -170,7 +170,7 @@ fn acpi_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+                 // and does not add additional invariants, so it's safe to transmute.
+                 let id = unsafe { &*raw_id.cast::<acpi::DeviceId>() };
+
+-                Some(table.info(<acpi::DeviceId as crate::device_id::RawDeviceId>::index(id)))
++                Some(table.info(<acpi::DeviceId as crate::device_id::RawDeviceIdIndex>::index(id)))
+             }
+         }
+     }
+@@ -204,7 +204,7 @@ fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+                 // and does not add additional invariants, so it's safe to transmute.
+                 let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
+
+-                Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
++                Some(table.info(<of::DeviceId as crate::device_id::RawDeviceIdIndex>::index(id)))
+             }
+         }
+     }
+
 
