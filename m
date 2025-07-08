@@ -1,65 +1,61 @@
-Return-Path: <linux-pci+bounces-31691-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31692-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2E83AFCF9B
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 17:48:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD1FFAFD00D
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 18:06:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8EC6F1BC7E28
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 15:48:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2D2A3A7AEF
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Jul 2025 16:05:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FE972E1C78;
-	Tue,  8 Jul 2025 15:48:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A81492E3B1B;
+	Tue,  8 Jul 2025 16:06:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tqXXvbp0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bm+GezH7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFC72E175E;
-	Tue,  8 Jul 2025 15:48:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7E92E0929;
+	Tue,  8 Jul 2025 16:06:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751989692; cv=none; b=gvrugipCgxEAKlEzXbl7ic79rPC9PrlfaiPyfmN36EdFWh2OX4V6zuUUtoLRYHR51bW2NLfqOdxio1UbL/BRKNt7pJmJoGO5Mp4KuFCT/41oEBEJcHVyxcAjba8CSjvXxWvKoeinN68lGrjBRIFhaPPNB+3MTZcddPN1li4wQyg=
+	t=1751990762; cv=none; b=j/nZU22Y7Mij/vjH7E+EBufdmNPaI0f9AhCLoYgDniDC+NPCPbwFJ7lMFmO5s9mKsLoPGcIBV6x1QvT5cV+9d6Otd6JvFXSteYJLOTDj3rt08BZVluP8toJqqUS0unkV0jUzWsJR96e3N/Uoge3acUL1LXxUct4c/k2oRFkUyFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751989692; c=relaxed/simple;
-	bh=tWWxXLhF9k7Gu3NnvmZwkqT4bKHY1QLga2J8AkBZ/3w=;
+	s=arc-20240116; t=1751990762; c=relaxed/simple;
+	bh=VoqXC5vS3jsIa1yFv0oPoDMiBok2AlhMwtNJQb0+QVM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=RFM4xd2H04RSq8Z6HW9LOz9Bf/N4NslWG8yBvSbRBBU33xH7kEGwN+2UsZ67R8vxywOIcekQqTfzuhnJw1yPkB+E/N4OMWnKMQyasVeH5+PjGnxq4DHAHu6pQTBT+ZexkDb6CKopZYXEYEpudMo2wkQbPVgEYZcBL0Kdz+Np80Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tqXXvbp0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5E8CC4CEEF;
-	Tue,  8 Jul 2025 15:48:11 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=tUQTxZErs+pFfc2T8USy3kPHPMuPHOCSdjWDgOXVm+BfCm7Wm9yEDwyYWLOAw6d4l0Mrl7RmhgiEbPrnZzUu1BeuJXVPY+sfqwBq6aza1qI9Lv94w4HgEQXZ//0zSh3WmtLuatoIsQqj6Md54dRnsgeIlWvwC2msaCzoKwJSk3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bm+GezH7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13BD1C4CEED;
+	Tue,  8 Jul 2025 16:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751989692;
-	bh=tWWxXLhF9k7Gu3NnvmZwkqT4bKHY1QLga2J8AkBZ/3w=;
+	s=k20201202; t=1751990762;
+	bh=VoqXC5vS3jsIa1yFv0oPoDMiBok2AlhMwtNJQb0+QVM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=tqXXvbp0KH/w5rcpoNORi5g5+PyEHhFyUHHZP8tDIPYN1h9/SGeJ8I5Yaom8l/T2A
-	 y05ApmDsitoAxyNH4XqRnH2Bs/teWZbQBYhm4rCX2GJZhcvR0ZtRuC3N8dVsFH6COw
-	 vlpD9IvbSlg6YBD8FOcYEhBSEJtwknVxKDPoafk0Qj3OXy/8G87lTO3eofRHdtMKZH
-	 akMURjHkH0Nsiy4hzJ8pC93lHDT0HgI6IH/+vvGUL4d0GHTjYqP6JHANdsUXb9s2ly
-	 WVo0jLOC9Z9fRYLoh18Me/oKsQxk1Q7k5N7Q20as7CDTYas48NrGzB2Xos1ZkdzWyF
-	 +gIUGMSE1qMUA==
-Date: Tue, 8 Jul 2025 10:48:10 -0500
+	b=bm+GezH77xN1w6ikSayOdd/DgOLYB3Egij8qvNsjOVoHaI+xqsL38XPX4H3K1GeeU
+	 FPQBVwShbzDpkvzmguPQjDdXexsaK8s4BJnm94pW9mnE3fn2wPJqnXOuB2/5B/tn0w
+	 UhkNqdX4QZ3TmmwfssxJ8Z7wuovZdo/ZNtcOZ+TFV9+elpQuavsytBj6CUSsYVf4t0
+	 T/1dh+Iy/RBAOsn6D67oTMk8AtB74jmoz+eNUfonfWh67pOro6KgVz/sHIOK1+lGPC
+	 DiYO6KgVPtso/VoB+hN9vxmgQkm7bU7EFWMmyVmYeI+1rAWZ1HgI3+/+8sO/ZORU0t
+	 HAzplkVeGB74g==
+Date: Tue, 8 Jul 2025 11:06:00 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: "mani@kernel.org" <mani@kernel.org>, Frank Li <frank.li@nxp.com>,
-	"l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: imx6: Correct the epc_features of i.MX8M chips
-Message-ID: <20250708154810.GA2146917@bhelgaas>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] PCI: iproc: Remove description of 'msi_domain' in struct
+ iproc_msi
+Message-ID: <20250708160600.GA2147978@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,45 +64,38 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AS8PR04MB8676B8D14A5C54E8C32025BD8C4EA@AS8PR04MB8676.eurprd04.prod.outlook.com>
+In-Reply-To: <20250708053825.1803409-1-namcao@linutronix.de>
 
-On Tue, Jul 08, 2025 at 07:34:57AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> ...
-> > On Tue, Jun 17, 2025 at 03:34:41PM +0800, Richard Zhu wrote:
-> > > i.MX8MQ PCIes have three 64-bit BAR0/2/4 capable and
-> > > programmable BARs.  But i.MX8MM and i.MX8MP PCIes only have
-> > > BAR0/BAR2 64bit programmable BARs, and one 256 bytes size fixed
-> > > BAR4.
-> > >
-> > > Correct the epc_features for i.MX8MM and i.MX8MP PCIes here.
-> > > i.MX8MQ is the same as i.MX8QXP, so set i.MX8MQ's epc_features
-> > > to imx8q_pcie_epc_features.
-> > >
-> > > Fixes: 75c2f26da03f ("PCI: imx6: Add i.MX PCIe EP mode support")
-> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > 
-> > "Correct the epc_features" doesn't include any specific
-> > information, and it's hard to extract the changes for a device
-> > from the commit log.
-> > 
-> > This is really two fixes that should be separated so the commit
-> > logs can be specific:
->
-> Yes, it's right.
-> Since it's just one line change for i.MX8MQ. So, I combine the changes into
-> this commit for i.MX8M chips.
+On Tue, Jul 08, 2025 at 07:38:25AM +0200, Nam Cao wrote:
+> The member msi_domain of struct iproc_msi has been removed, but its
+> description was left behind. Remove the description.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202507080437.HQuYK7x8-lkp@intel.com/
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
 
-I want to split them to make it easy for users to understand which
-changes are relevant to them.  E.g., I have an i.MX8MQ system; do I
-need this change and what does it mean for me?  Is it going to fix a
-problem I've been seeing?
+Thanks for squashing this into the ("PCI: iproc: Switch to
+msi_create_parent_irq_domain()") patch that removed the msi_domain
+member, Mani.  No point in cluttering the history with extra commits
+that clean up things we haven't merged upstream yet.
 
-> >   - For IMX8MQ_EP, use imx8q_pcie_epc_features (64-bit BARs 0, 2, 4)
-> >     instead of imx8m_pcie_epc_features (64-bit BARs 0, 2).
-> > 
-> >   - For IMX8MM_EP and IMX8MP_EP, add fixed 256-byte BAR 4 in
-> >     imx8m_pcie_epc_features.
+> ---
+>  drivers/pci/controller/pcie-iproc-msi.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+> index d0c7f004217f..9ba242ab9596 100644
+> --- a/drivers/pci/controller/pcie-iproc-msi.c
+> +++ b/drivers/pci/controller/pcie-iproc-msi.c
+> @@ -82,7 +82,6 @@ struct iproc_msi_grp {
+>   * @bitmap_lock: lock to protect access to the MSI bitmap
+>   * @nr_msi_vecs: total number of MSI vectors
+>   * @inner_domain: inner IRQ domain
+> - * @msi_domain: MSI IRQ domain
+>   * @nr_eq_region: required number of 4K aligned memory region for MSI event
+>   * queues
+>   * @nr_msi_region: required number of 4K aligned address region for MSI posted
+> -- 
+> 2.39.5
+> 
 
