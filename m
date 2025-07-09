@@ -1,179 +1,192 @@
-Return-Path: <linux-pci+bounces-31759-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31760-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C85DAFE3C0
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 11:12:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EB09AFE480
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 11:45:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B6C337B6C8A
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 09:09:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6FFAE4A1139
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 09:45:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA56028468F;
-	Wed,  9 Jul 2025 09:11:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3913287274;
+	Wed,  9 Jul 2025 09:45:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VHZzAB8b"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Swbcd7oV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EDF78F36;
-	Wed,  9 Jul 2025 09:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A2F287244
+	for <linux-pci@vger.kernel.org>; Wed,  9 Jul 2025 09:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752052266; cv=none; b=McmROtQv9VghzIgJ3PXIjETJAHsY6a5CR91mCNIcD233b0pQdeFgX8UtWqvw5ad9VqJqCG7A2gmftyyqTVoGioOErrFG2jk1GaUeXK460U5LbqtFLjBiCjFcErgmC3f4EXl20Emq/cubQ2zFXTmMmoeQynziovHIsrzam/5gUpU=
+	t=1752054343; cv=none; b=EmM+FUyckKbmN7HOpnEIhexHWfpzL4zAnrcIu1otdL2CNlmXnpZ86G7wXvprKtOaFBn3NNS5KGS3LItYqY0OxfM5fKCfdAjDhT84jNyaZMxWtjx5hE16sEi0KyM16Y/WCOgsbb3U1xJRLyOYJZ6q1ZrQkHqRv9UMAeG2hPj232E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752052266; c=relaxed/simple;
-	bh=e+AlNfEIWLEOUZb0WGiJuKUfwZfi9mwK1UILrKSjqnk=;
+	s=arc-20240116; t=1752054343; c=relaxed/simple;
+	bh=o6/CupmZZi2gGUgqDKjUsX9/QWbH+USO+WojB4mLrkM=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=M7zQVWBtw8/slFSnBwYd7Muj0FMgMbGRPQxIzvM43d7QTjx/LO1w28wWGuBHGiFSf0VnVlVrr/zWJ5v83Vam2nzPe4sBzAucpdN8L8ychcERB+247D1mwRMF1nlD9Ie70eUxx5/virE37BaIswzWO2+uG8N+isIpawczLYCOfOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VHZzAB8b; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version:Content-Type; b=B0rZofnmmjKze28MeK1VQRQAJX/+wcj6sclhoHRNJ4YnYrYh3m8epa/C6De/Ybmdr9I96lzQZSvOHrK8QZz+71ORZCRG1KxE52OXxMP+l0WkFiZ8/42tuvp+FNQnt6A8ie/wOx0QBIltzY+HLiYTzbrcUUt27b5x7IhYPsbWxdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Swbcd7oV; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752052265; x=1783588265;
+  t=1752054342; x=1783590342;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=e+AlNfEIWLEOUZb0WGiJuKUfwZfi9mwK1UILrKSjqnk=;
-  b=VHZzAB8bXpVPESqBubuBtAnaqdRM2qP+WSjy0zrQQlHsgxceRt6CVRvi
-   casoELT49zdjxg8Lva5eHI0AABJZbHl3/nvXO+Xcfh8O0/QRnd0OrSsVA
-   M57GkwNHl9qqAppk3dyhSl0kf53QJabbZtRqGJh7yUQ19qd0670UjMouy
-   9ZCTNQZLMKPcc8NKDoTHrQ72PfYUwJAoAJ3X8UjPxG5mpd29a9A55GbRu
-   LDHTJqqF0uKZ4yz7zkZdNuzMC4SwZmfnJrxvRMgfWhfLyvKkyR/U2hiSW
-   BqtpjpzwIKHTQdRxa5cMH2p2479jesPxwO7N/VbvfRx97H+pUvMhRi7M5
+  bh=o6/CupmZZi2gGUgqDKjUsX9/QWbH+USO+WojB4mLrkM=;
+  b=Swbcd7oV/GDbxvciUV0IhyQ8utFqEj4aSIQTFFqZYdBo5RslfRAm0B5m
+   tr4MRWmI/j2YrJlWwaQE2HCn0y7dlX3JuJkhenaLNUCpm1j/A/wo+X3NG
+   unvwReshK2GQRBYq7fHBeCuzQahcD0q/ScF6QcvEztf1vdgVT3nl4pg4U
+   qG1RYJxVEj3nXyVhZBxOy3BuXRroDJbiUt/ShjmYi/r6uHiDKcGl4CPfg
+   N4JBITo4LPHRELT5yfhxDoyRg/JupFAdDL6RgH82u1T23InDCYgwjMqCB
+   +vUQXXYZnR4e2eYfXiS4UO0uZ3WDo1WhfpW8yTe5b4E1Otp4Vok7vipT/
    w==;
-X-CSE-ConnectionGUID: JZph60nNShWI1CkDwW7aiw==
-X-CSE-MsgGUID: Qiw2/TzASUq3qpwLoT2Zlg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11487"; a="54163409"
+X-CSE-ConnectionGUID: Kuu+Nd9cTH6+zlPN2ZhmRg==
+X-CSE-MsgGUID: 7mowzA6sSnm85svTmrAwmw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11487"; a="54452844"
 X-IronPort-AV: E=Sophos;i="6.16,298,1744095600"; 
-   d="scan'208";a="54163409"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2025 02:11:04 -0700
-X-CSE-ConnectionGUID: 2YofaDi1Rfa2S2hif6cl5Q==
-X-CSE-MsgGUID: uvbwgx//RiSED5u6g+R/jg==
+   d="scan'208";a="54452844"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2025 02:45:41 -0700
+X-CSE-ConnectionGUID: D47BdDJkQAiZrvKmO/LsgQ==
+X-CSE-MsgGUID: vU56ngHwTdC48aKNliWKCg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,298,1744095600"; 
-   d="scan'208";a="155458540"
+   d="scan'208";a="155367268"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.168])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2025 02:10:56 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2025 02:45:39 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 9 Jul 2025 12:10:52 +0300 (EEST)
-To: Manivannan Sadhasivam <mani@kernel.org>
-cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
-    Jeff Johnson <jjohnson@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, 
-    linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
-    qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com, 
-    quic_vpernami@quicinc.com, quic_mrana@quicinc.com, 
-    Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Subject: Re: [PATCH v4 06/11] PCI/ASPM: Clear aspm_disable as part of
- __pci_enable_link_state()
-In-Reply-To: <qo6mb3qlt3xpuvhepwcv6be4wd53neee2t6buzk4tdiy22xsub@vu7lykp3rnu2>
-Message-ID: <226bab3a-54e5-94ad-9d84-0b82f9dc4e2f@linux.intel.com>
-References: <20250609-mhi_bw_up-v4-0-3faa8fe92b05@qti.qualcomm.com> <20250609-mhi_bw_up-v4-6-3faa8fe92b05@qti.qualcomm.com> <qo6mb3qlt3xpuvhepwcv6be4wd53neee2t6buzk4tdiy22xsub@vu7lykp3rnu2>
+Date: Wed, 9 Jul 2025 12:45:35 +0300 (EEST)
+To: Matthew W Carlis <mattc@purestorage.com>
+cc: ashishk@purestorage.com, bhelgaas@google.com, linux-pci@vger.kernel.org, 
+    macro@orcam.me.uk, msaggi@purestorage.com, sconnor@purestorage.com
+Subject: Re: [PATCH v2 0/1] PCI: pcie_failed_link_retrain() return if dev is
+ not ASM2824
+In-Reply-To: <20250708224917.7386-1-mattc@purestorage.com>
+Message-ID: <2b72378d-a8c1-56b1-3dbb-142eb4c7f302@linux.intel.com>
+References: <62c702a7-ce9b-21b8-c30e-a556771b987f@linux.intel.com> <20250708224917.7386-1-mattc@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1812599662-1752054335=:1149"
 
-On Tue, 8 Jul 2025, Manivannan Sadhasivam wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> On Mon, Jun 09, 2025 at 04:21:27PM GMT, Krishna Chaitanya Chundru wrote:
-> > ASPM states are not being enabled back with pci_enable_link_state() when
-> > they are disabled by pci_disable_link_state(). This is because of the
-> > aspm_disable flag is not getting cleared in pci_enable_link_state(), this
-> > flag is being properly cleared when ASPM is controlled by sysfs.
-> > 
-> 
-> A comment in pcie_config_aspm_link() says:
-> 
->  /* Enable only the states that were not explicitly disabled */
-> 
-> But the function is called from both aspm_attr_store_common() and
-> __pci_enable_link_state(). So I don't know if this is behavior is intentional
-> or wrong. 
+--8323328-1812599662-1752054335=:1149
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hi,
+On Tue, 8 Jul 2025, Matthew W Carlis wrote:
 
-I think it's intentional. Whether the behavior is useful is another good 
-question but the current behavior aligns with the explanation in the 
-comment.
+> On Fri, 4 Jul 2025, Ilpo J=C3=A4rvinen wrote:
+> > The other question still stands though, why is LBMS is not reset? Perha=
+ps=20
+> > DPC should clear LBMS in some places (that is, call pcie_reset_lbms()).=
+=20
+> > Have you consider that?
+>=20
+> Initially we started to observe this when physically removing and
+> reinserting devices in a kernel version with the quirk, but without the b=
+andwidth
+> controller driver. I think there is a problem with any place where the li=
+nk
+> would be expected to go down (dpc, hpc, etc) & then carrying forward LBMS
+> into the next time the link comes up.
 
-My understanding of the situation is:
+Are you saying there's still a problem in hpc? Since the introduction of=20
+bwctrl, remove_board() in pciehp has had pcie_reset_lbms() (or it's=20
+equivalent).
 
-pci_disable_link_state() and pci_enable_link_state() are not symmetric 
-despite the names, never have been (this is one of those many quirks ASPM 
-driver has which should be eventually cleaned up, IMO).
+As I already mentioned, for DPC I agree, it likely should reset LBMS=20
+somewhere.
 
-It might be appropriate to rename pci_enable_link_state() to 
-pci_set_default_link_state() to match the name to its functionality (and 
-the function comment):
+We also clear LBMS after retraining to not retain that LBMS beyond the=20
+completion of the retraining.
 
- * pci_enable_link_state - Clear and set the default device link state
+What other things are included into that "etc"?
 
-Note: "the default ... link state".
+> Should it not matter how long ago LBMS
+> was asserted before we invoke a TLS modification?
 
+To some extent, yes, which is why we call pcie_reset_lbms() in a few=20
+places.
 
-I've already raised this concern earlier! As you see, my comment are 
-not getting addressed. I'd like to see the author does one of these:
+> It also looks like card
+> presence is enough for the kernel to believe the link should train & ente=
+r
+> the quirk function without ever having seen LNKSTA_DLLLA or LNKSTA_LT.
 
-1) Renames pci_enable_link_state() to pci_set_default_link_state()
+Without LBMS that won't do anything in the quirk (except try raise the=20
+Link Speed if it's the particular device on the whitelist).
 
-1b) If pci_enable_link_state() is still needed after that, a new function
-is added to symmetrically pair with pci_disable_link_state().
+> I wonder if it shouldn't have to see some kind of actual link activity=20
+> as a prereq to entering the quirk.
 
-or alternatively,
+How would you observe that "link activity"? Doesn't LBMS itself imply=20
+"link activity" occurred?
 
-2) Changelog justifies very clearly why this change is okay with the 
-existing callers. (And obviously the function comment should be altered to 
-match the functionality in that case too).
+Any good suggestions how to realize that check more precisely to=20
+differentiate if there was some link activity or not?
 
-If approach 2 is chosen, it should be very carefully reviewed when it 
-comes to the callers.
+> > (It sound to me you're having this occur in multiple scenarios and I've=
+=20
+> > some trouble on figuring those out from your long descriptions what tho=
+se=20
+> > exactly are so it's bit challenging for me to suggest where it should b=
+e=20
+> > done but I the surprise down certainly seems like case where LBMS=20
+> > information must have become stale so it should be reset which would=20
+> > prevent quirk from setting 2.5GT/s)
+>=20
+> Something I found recently that was interesting - when I power off
+> a slot (triggering DPC via SDES) the LBMS becomes set on Intel Root Ports=
+,
+> but in another server with a PCIe switch LBMS does not become set on the
+> switch DSP if I perform the same action. I don't have any explanation for
+> this difference other than "vendor specific" behavior.
 
+If you'd try this on different generations of Intel RP, you'd likely see=20
+variations there too, that's my experience when testing bwctrl.
 
-> > Clear the aspm_disable flag with the requested ASPM states requested by
-> > pci_enable_link_state().
-> > 
-> > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> 
-> Fixes tag?
-> 
-> - Mani
-> 
-> > ---
-> >  drivers/pci/pcie/aspm.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > index 94324fc0d3e650cd3ca2c0bb8c1895ca7e647b9d..0f858ef86111b43328bc7db01e6493ce67178458 100644
-> > --- a/drivers/pci/pcie/aspm.c
-> > +++ b/drivers/pci/pcie/aspm.c
-> > @@ -1453,6 +1453,7 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
-> >  		down_read(&pci_bus_sem);
-> >  	mutex_lock(&aspm_lock);
-> >  	link->aspm_default = pci_calc_aspm_enable_mask(state);
-> > +	link->aspm_disable &= ~state;
-> >  	pcie_config_aspm_link(link, policy_to_aspm_state(link));
-> >  
-> >  	link->clkpm_default = (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
-> > 
-> > -- 
-> > 2.34.1
-> > 
-> 
-> 
+E.g., on some platforms, I see LBMS asserted twice from single retraining=
+=20
+(after a TLS change). One when still having LT=3D1 and the other after LT=
+=3D0.
 
--- 
+(I don't have explanation to that behavior.)
+
+> One thing that honestly doesn't make any sense to me is the ID list in th=
+e
+> quirk. If the link comes up after forcing to Gen1 then it would only rest=
+ore
+> TLS if the device is the ASMedia switch, but also ignoring what device is
+> detected downstream. If we allow ASMedia to restore the speed for any dow=
+nstream
+> device when we only saw the initial issue with the Pericom switch then wh=
+y
+> do we exclude Intel Root Ports or AMD Root Ports or any other bridge from=
+ the
+> list which did not have any issues reported.
+
+I think it's because the restore has been tested on that device=20
+(whitelist).
+
+Your reasoning is based on assumption that TLS quirk setting Link Speed=20
+to 2.5GT/s is part of "normal" operation. My view is that those=20
+triggerings are caused by not clearing stale LBMS in the right places. If=
+=20
+LBMS is not wrongly kept, the quirk is no-op on all but that ID listed=20
+device.
+
+--=20
  i.
 
+--8323328-1812599662-1752054335=:1149--
 
