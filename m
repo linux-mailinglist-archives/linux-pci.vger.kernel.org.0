@@ -1,122 +1,115 @@
-Return-Path: <linux-pci+bounces-31796-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31797-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17253AFEE1A
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 17:52:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30EE8AFEFDD
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 19:30:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 441417A52E6
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 15:50:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8A7EF581572
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 17:30:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14AA02E9EA7;
-	Wed,  9 Jul 2025 15:52:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA5A91EF1D;
+	Wed,  9 Jul 2025 17:30:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GN9XGPMl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RXhKqJrq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB4D31C861E;
-	Wed,  9 Jul 2025 15:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F792144CF;
+	Wed,  9 Jul 2025 17:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752076324; cv=none; b=ZozUvl/GZfBwlzFBDMFYyQy620NNir2nq0PWecpOJufIW6cyPdhE/4SFaj5FKv8s+1lWhr+6anekS159JGKFbOCAnGHz6CYxi4dMcI23tcf1eBCeCLbVaUP2jORbWeL4waLcFcUkP+gdpPBFipfWJKRMV6LtITnLEtZX42z+ovs=
+	t=1752082206; cv=none; b=FsJHiyfil5G4gmKPkM0GOAlSZ58x28f5c2zg8dmdm1OiU98ABr5c2I9FqatK5O9Vq3faBC3kG6R2tzbV5FLuiEFOYiA6oskBEluFPnRjRUnE/Z4gySkzqwTRRMRjr8XrS/XOwC9dLrfx1IAhLicPm8zTFIrXPPOdj4VCqidBO5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752076324; c=relaxed/simple;
-	bh=pCIxYMdBBrl1dmFV60K7YSMml3hH20Vl3V0jZiGHrTk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jl3xmxtpLxUM5JMzTHBmSVyqe6LT9pdjyeBVcuCtv+rUIa6+UOflPHDLou+LcyzeRO6U1dDlHrO3rum7X99UFYVcL0iMNb8URq/f1AYWWwa+nao00cBB2KRqgjmB0PiOZFPkZHrZF3KWpljS0G+mWs9xtpLl+4fTvTJC2eQCEbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=GN9XGPMl; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=IeZhxlCCLyHzeZG1ulClczmMNQYSscPiCNyYdpKIAB4=;
-	b=GN9XGPMl6WimNEvHpeuFkSNibLcYkkzX/QavC27QDXDoxwBia8VxOvtoqvUKdG
-	TlDiiL3Qwi/CjHrgNyUmpj7bSAGSm+kOM+6E0rtchib1+YYUZ7WAzZ1mjKts8qli
-	TzqVtso4Cgn6EV02E9P98mINOqaUBI7Rx86IsH1suUA1U=
-Received: from [IPV6:240e:b8f:919b:3100:7981:39b4:a847:709a] (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wBnN0bbj25o6MZnDg--.7031S2;
-	Wed, 09 Jul 2025 23:50:53 +0800 (CST)
-Message-ID: <1429abd2-d9c8-46b9-8886-ee81feaf5602@163.com>
-Date: Wed, 9 Jul 2025 23:50:51 +0800
+	s=arc-20240116; t=1752082206; c=relaxed/simple;
+	bh=EOj2lMga9i8OFABYK+OrsxlcZW0fasgfoQmLIBdlGY8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=cE5ppIto5PrpWbCady/T0dTMSvCu6J8m57DfwaXejd5SJtm0rr1438+EiyvdnkCz0amtCzM543FXlU/bSoDpHlIrRJ9C51zGbnv81wkVnEVXakBDLZLjNqQ3u2ZKGQAyO59JtzKbmJIHtfSle3dV6yim6pAX2ylDqSWnlKzydmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RXhKqJrq; arc=none smtp.client-ip=209.85.210.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-7490cb9a892so117581b3a.0;
+        Wed, 09 Jul 2025 10:30:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752082204; x=1752687004; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EOj2lMga9i8OFABYK+OrsxlcZW0fasgfoQmLIBdlGY8=;
+        b=RXhKqJrquwJ1EwRbXIFveBdUSzLxwREkOUkoDYY4nv+oYo3rDH3mLBq4eVwW7ZrSQH
+         h5jf2aDwtvf0BUMTZKvj9BOh5YcZVZgGV7g0w0N0wIzOtPsvUpm9Q6QipJg/UQrIpO3b
+         ZEPauRLWJwpgVVP7uCauGPg/0zPJcR03z+LWeorv2aq8jgRFnqvRU8ojgOCtD/SgiugL
+         n5YOEHg/LtT8s1rW6mlkyu1wA+PuP9JcBAc43IJSesjhfrAB4ZXLYjbq2qkGTh3H0MzS
+         V7BLPPGHTydcZiU2qHhavtiNgXfO8nY/cL4CSmhkOync7Wv8pfGg4ObNP39cD36Fkt9z
+         to8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752082204; x=1752687004;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EOj2lMga9i8OFABYK+OrsxlcZW0fasgfoQmLIBdlGY8=;
+        b=hH2PLSluVUf72JJIeIkawBjBOjBMKZ2ywOm68HMlqbnd4fOGzrnh6BwnEwJuyxQn5y
+         261Ic9ZOffuZ6+G9x9fJZ9d9GAKFQWIX/L2/pCFCIZalI/aWuqh2hFVARW2C+5qhpZ8b
+         2ywDab9wGD4Idw7QpA5SA6JnbOGpMzIGUnxyW7Hj9uk+pUn6SO0TR7zN6NCBqExGi8N3
+         21tDGHCDWshjV2GkyOM/U5P2+2gzlrsaGzmvrzbAje/ohX1dWij3D2o/bEw3SUqNxDiZ
+         AuKYm1XBp2f9VI7ObaN9pOYtus025eIH3CwhoFaNPP63mhxRqADPcKrocwikJBMTfXkX
+         /5aA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHv55rMqDtwe5mjO93zmdjj3uz69p/txgdFnLlKpGIdAhL1XL6NOiq5987NGIJIMB5g3qRzvA0npzI@vger.kernel.org, AJvYcCWBNviX7E5M5qb9v7jYCHGEZbEkdcQqQs45V7QzFE8silwdpGbbmP84qBZjaUxEFoQ542Hne42eCvkGw0wdow4=@vger.kernel.org, AJvYcCWYuQbbPY5zR5H08Yk+0Xgm63HJ+6h2vhpqJLUbtclQSSH0S+R1/mw007hIVlDiJOyQRoPytDO58aGF@vger.kernel.org, AJvYcCWnDWQDg+QfeeXG0nADY5jI9IOyeDzKAZwTsoKbM6XonIcoFaEnBhx0ZRdV9YwvmO+0wmJvnh9J@vger.kernel.org
+X-Gm-Message-State: AOJu0YynZkpenkyceDtZsa9g710DsxpeSFtEd7K3oNJPKlxMk1DCwaAe
+	b4/TyMzMgSjhDIrIFHU75YjD2HmoaonZABFEPFkact6JlAJ3HClIMbP96CbxeHZTgH4=
+X-Gm-Gg: ASbGncvAT/tJJi+zEhCjkgGLLzosnoEz5XziVkFcJYxU6lo4GaT/gTaLVbp1m3tW0NR
+	VLPJj/fzuwgT0PiTR0whwuasq4UMR+g5ndrh1eiW5hldRyDtow7FjhJNy7pKhrvN9uvEClz8XZ5
+	kTVYB90wtf8mkz/5x0HyvTWEj4WfloIcrkNafro2jNjVAMxYpmMKFc6HROZTHuSwhm2FL9KWxRR
+	0cVOuSZrMNRJr4OG02UltcD4ql1yDNVCcpdFuHQI07TO65Jh82u6cHITZR6klGDyrlQMuHTFomV
+	9WhA0nMRtQRUnLqAs7MUpYJLQNk//7lvIMsBLYsqH9BP936GdsvxgVlLTDgWLFoMgk8N0sggo/C
+	Pvn8=
+X-Google-Smtp-Source: AGHT+IEoFN970f2Vz3fFerySBIi17puKzAo07Z7Kh48d+A/W1u5hYXGzjL22Gwcfkwgr1/kvAHijhg==
+X-Received: by 2002:a05:6a20:d8a:b0:220:3024:3d05 with SMTP id adf61e73a8af0-22fb444fe14mr912911637.16.1752082204448;
+        Wed, 09 Jul 2025 10:30:04 -0700 (PDT)
+Received: from [127.0.0.1] ([116.206.223.154])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b39c64f4e51sm3548305a12.36.2025.07.09.10.30.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Jul 2025 10:30:04 -0700 (PDT)
+Date: Wed, 09 Jul 2025 23:00:00 +0530
+From: Bandhan Pramanik <bandhanpramanik06.foss@gmail.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+CC: Bjorn Helgaas <helgaas@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+ linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+ ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_Instability_in_ALL_stable_an?=
+ =?US-ASCII?Q?d_LTS_distro_kernels_=28IRQ_=2316_be?=
+ =?US-ASCII?Q?ing_disabled=2C_PCIe_bus_errors=2C_a?=
+ =?US-ASCII?Q?th10k=5Fpci=29_in_Dell_Inspiron_5567?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <2cq6jeywii5fscozazz2epugh6zflcpfbo4ffhjt2lyk76cq4m@vg2jcsmlhtho>
+References: <20250705195846.GA2011829@bhelgaas> <9D9D9375-1BD0-46EA-9E85-47A2D8325F98@gmail.com> <2cq6jeywii5fscozazz2epugh6zflcpfbo4ffhjt2lyk76cq4m@vg2jcsmlhtho>
+Message-ID: <FB89ECA8-93E2-4015-8DCF-6D362A53D825@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/11] bus: mhi: host: Add support to read MHI
- capabilities
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>,
- Jeff Johnson <jjohnson@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
- linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
- qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com,
- quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-References: <20250609-mhi_bw_up-v4-0-3faa8fe92b05@qti.qualcomm.com>
- <20250609-mhi_bw_up-v4-3-3faa8fe92b05@qti.qualcomm.com>
- <ttjbjmixxbzatcfthaucuy3j4hosu4azpizes6ptxjnkzsawa5@5axodfdyjff2>
- <5625ffa1-f952-4646-a17a-fbbfffcdba2a@oss.qualcomm.com>
- <4c68074e-5809-bc4c-185a-88ddcb81f31b@linux.intel.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <4c68074e-5809-bc4c-185a-88ddcb81f31b@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBnN0bbj25o6MZnDg--.7031S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZry5try3tw1rtF15Cw4rXwb_yoWDWFb_uw
-	4xZ3srGFyUXF47Crn3Kwn5uanxtF42kF45Xw10v343Xwn2yF42vrs7Jr9aqa1xJFyxAF13
-	Kr1F9ayfW3yUZjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1TKZtUUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQw+Fo2hujnwdFQAAsW
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Hello,=20
 
+I was actually a bit distracted by the things caused by the Automatic Part=
+itioning of Fedora=2E I'll inform that in Fedora Bugzilla=2E=2E=2E anyway=
+=2E
 
-On 2025/7/9 20:20, Ilpo Järvinen wrote:
->>>> +	do {
->>>> +		if (*offset >= mhi_cntrl->reg_len)
->>>> +			return -ENXIO;
->>>> +
->>>> +		ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->regs, *offset, &val);
->>>> +		if (ret)
->>>> +			return ret;
->>>> +
->>>> +		val = (__force u32)le32_to_cpu(val);
->>>> +		cur_cap = FIELD_GET(CAP_CAPID_MASK, val);
->>>> +		next_offset = FIELD_GET(CAP_NEXT_CAP_MASK, val);
->>>> +		if (cur_cap >= MHI_CAP_ID_MAX)
->>>> +			return -ENXIO;
->>>> +
->>>> +		if (cur_cap == capability)
->>>> +			return 0;
->>>> +
->>>> +		*offset = next_offset;
->>>> +	} while (next_offset);
->>>> +
->>>> +	return -ENXIO;
->>>> +}
-> 
-> There's a generalization of capability search in Hans Zhang's series,
-> can it be used here too?
+I realised that making the modules will take 8-9 hours, I didn't even have=
+ much of a success (because all the modules didn't properly load, particula=
+rly the firmware-N=2Ebin files couldn't be found)=2E=20
 
-Dear Ilpo,
+But I'll try to recompile the kernel, I'll just have to give it overnight =
+time=2E
 
-Could you help add your review tag to my series of patches? Mani has 
-added the Acked-by tag. If you add the review tag, I believe Bjorn will 
-merge it in. At the same time, others can use the patches of my series. 
-Thank you very much for your previous suggestions and time.
-
-Best regards,
-Hans
-
-
+Bandhan
 
