@@ -1,191 +1,156 @@
-Return-Path: <linux-pci+bounces-31799-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31800-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4E86AFF12E
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 20:53:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27831AFF1DC
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 21:31:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5FF6567C97
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 18:53:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B1323B5E96
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 19:30:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8842023771C;
-	Wed,  9 Jul 2025 18:53:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B906221F31;
+	Wed,  9 Jul 2025 19:31:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="XLa/sIxH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGJwVVYt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED7A17578
-	for <linux-pci@vger.kernel.org>; Wed,  9 Jul 2025 18:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E868479;
+	Wed,  9 Jul 2025 19:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752087196; cv=none; b=Rd2M3f2veZrcUapPC7FcGd+dCRUtF5OPXUilZspWg163igfUy4nBwepjU2cH2fXlBWkMjMru49/9wBFgEzyfDr6Xn10M8Gb4YnfxQ+V7SJAs5qfQXD105OdJCPeaZuiE3mCV1iDgOv0KBwOoNsH7vjlH74C3dAcyMmpZD1v57dY=
+	t=1752089478; cv=none; b=FU8JTVial1U0bob2b24E2gjv74KVeTqUB7dXOghQusWxA52fWIM1s0bq4e5WkAUUoHshq2htblSA3hUo46+1Hara0tNNoTB+8jVGk0pzngfSp9EYzr4uWcPKhyekmcHyT8zrb9yG9sTliaJOtE5fa/atuPKnpY6d5JuYzS+uicg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752087196; c=relaxed/simple;
-	bh=4K78Yf9TlUlLc78YfT8HBWZby4r0fBDjmthx5+5R0R8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T3udNMWW+fCjNkWyfYv79XXhB+USS32ahdPmUx+7AEXuWZTfb87/3H1JSbi+iMadj8cJt5cdDtywYTDGQagULYybUBdBbMY6RcO0TdG6l8bOvUYxZMQxugDbHWZ4EcrOyEw2INcPhzhcmCQ02CDMAlf6XoXAqvPG65JcNBcbCHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=XLa/sIxH; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7490702fc7cso148103b3a.1
-        for <linux-pci@vger.kernel.org>; Wed, 09 Jul 2025 11:53:14 -0700 (PDT)
+	s=arc-20240116; t=1752089478; c=relaxed/simple;
+	bh=QHOQuys68Eep3AdeqAw3nBv5Wp0vgE8ohEfQSBCs10M=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hCntvvvjsylcdkDZM3MBHSV98oEhVQVJeyQDobCmdcFffsDQVWx8k7EopWUXbhtRe+VLJ+Tjfwx5pM86Sq9IqK9cNTaEALPFVVXgvp5/O4kwgjrHk058AvheZp9vKVBshnZKrkVibRVxLqLbG8uGbrNs4Gwuvdl7v5NDin2/SYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UGJwVVYt; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6fae04a3795so2801396d6.3;
+        Wed, 09 Jul 2025 12:31:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1752087194; x=1752691994; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QaekIFKi6/CRdiasGzRjYYlHitvLGnjcU5Xct2vrPvs=;
-        b=XLa/sIxHS4hj17lvArMStOOzk/PPMEINd711iIo2cBPWmJBBAstU2jE4BSkgWgBab1
-         dWMfaH179WJE7QFz3EmX8tZnMYlUTjmwVMrIwF6WePkOB7lbAEE2W8F58DahCe8urXpA
-         kOTgbMOa4+mXZPbQwbiXm86lxjz6LXaoumg9LRHkyTuLMX9puxSnPL18gMZdiyxlUtH7
-         uUtoDSPgc+unXKMKeVoA6uZhSiZkqsBMki0fW26fAiKeeAjYIPee6j7kVcfi9GA79jD+
-         VlobZ/J8YgvGFfjeb1ChHGl1uBvuNAWaFw1/mSVfkLjQuxTYCZMwBoErREBVj2xt5ysN
-         F0Aw==
+        d=gmail.com; s=20230601; t=1752089476; x=1752694276; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Al5PXuIPn1m6Jc4vWyJYQqbVbsA6WUY9JeCKf9JiRnA=;
+        b=UGJwVVYtP/im5iYno3an9DlhVDau2YmnkanhnHFkpdP9Iq1+uNEmlwVDOBxpHUj3ec
+         PDgSbyPBHOdBFmc1bQY6vbo+wmFXirC8//K4zYsr8SiqmQqNlDcAuP07qsjB5rsl7pN+
+         W6jMjt5r1keOKqADJ0hEy3Fq/o4wkxyeLrJfwThh6XaLK5xa8/zbYeps1siMrLwq9mQT
+         ghb1S9qbWQIS7fHfjYQHkJa6VOCZ9drh2KL1JsY/GhvEmNM42dvJF12crIoh8t3oEyTQ
+         zO/HWuQo5Prrj4aSJ191s67xUiQqkPOrBOvZZGsb1pT+Tkh0SF6Fd0/2qTg34mah+Fv+
+         hwog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752087194; x=1752691994;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QaekIFKi6/CRdiasGzRjYYlHitvLGnjcU5Xct2vrPvs=;
-        b=Rv2lw39h9II+y1Snjir0GwNRfYrKEpkWJXiuCBycKwa4hTvHiS91VWAFe4TMycYg3/
-         QsafQr86b+jxScq4kx1+NP+il5zixmxkdZ4uVJapiSLPfOFAXNSP+IPb9LVDOacJuTCE
-         AXB+3edxBGyXGO6YMrzpRgTftSfJ9BT3WPwFfb3gdD1RWVA6ciJEYzkd6j5Dr8njJb8q
-         UqQH0DADpUOWbpMqfUuUY9GknRm1+7Tbi5tsdYcp1ONgqi4XW/gQQkMCZWAAwRnERM6f
-         kLT55+hy9/nFPj16YTgOJg982QIf/GS0Jwzzr3WNK5efWe7E8za58LP+X8blp6Jzk5Aq
-         h9Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCWx7XV7Dbz8XKtUpC3T29bbLwRaJKe6qcZKVxp+euDuBIWNiARzQB3ojzBOVr+HxtFMTbfV1x9oRck=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7TJkB4p9PhAZY2ybcJMuDtbxVlfGAzbmVSZE0yTMsD0DWadn7
-	FsdEFiJPr03WcvutYTtoG9W6mMSs3PEyWg3F0fT/69r0EFFGj3OVoG5kFPqcxDIJd9M=
-X-Gm-Gg: ASbGnctW8xPiVFLacblD327QXRiusQT5yUzNXisMOz3lfHcFRJKOvLeneqAol0y03et
-	gLOhu4YZzlXHcZNyv5vf6hnpOyDT9oUb1weBilL+Hm/ixHRxX5WBL/22oLKYD57FnnzP+he4Y/K
-	wGxPSutWk4oZiVXF7JoykFChVWOSVJfl+zkdxbhWjoDRtc/s/opADBGrdf5UYDfV5ocPE2AKPAS
-	54EOjKUP7aAFVkl+hDV0N/0G+hQE549PXjGDlaNfECkMEMCC8bbwgSfB/IYBSjYRpJ4I9IPJwDR
-	FM16TVlSmD8eou/iZ3+9qExVImt8JLf1dy4ZDZa/IXy3ngo/d8SterDqgLyB54gEUiltFJa5glm
-	KY0wmFt777jlS
-X-Google-Smtp-Source: AGHT+IHOp0ILsfTwDd3ylE0VG8sKKK/bVLxzLJEoAqpo8yw7Aixye6sW9UUZVdOvG/utOvRK7NcJVw==
-X-Received: by 2002:a05:6a20:2444:b0:226:492:3f82 with SMTP id adf61e73a8af0-22cd757d7c9mr6267390637.22.1752087193858;
-        Wed, 09 Jul 2025 11:53:13 -0700 (PDT)
-Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-74ce359ead0sm15748828b3a.8.2025.07.09.11.53.12
+        d=1e100.net; s=20230601; t=1752089476; x=1752694276;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Al5PXuIPn1m6Jc4vWyJYQqbVbsA6WUY9JeCKf9JiRnA=;
+        b=Xvod3YANjk6kd4QCntTK3h0azNdC59jwxR2apZLuF0nHiIeRgzct8VQB7Ld9S7p7W5
+         0aro3qNjQ6ye6DDmAMUQSZLS6E5P1eQ7UTM4MZoL7mAbEs2PBHYQlVddp1oYuAnIJB5y
+         IkkG5Hz08R7hyd+06UYPSYhRYvvygZuGfH1QLGY7ChMslllmBel7Ix5n/9IZS1UkxcbU
+         hwZ6L1P95ZeNWUeBwpXnapeEXTHhuQok8GccAQFHrBdlOHe1yocy7UEDYfoseTRE2zXP
+         Eor4adZj/+EbgnYLnAcJvZ3hkO4az49uElNfggfUXPAgfumn05MvQ2eXhQsPUMp6eOox
+         a6Mw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjBGSTw58+TOcfXCHFzMvVvpAptcu4od9EbiKGwSwLtl7+nnJlxeyX1jGJHPsUU2qLQVDRpxWArglg@vger.kernel.org, AJvYcCXz2lRn/aruY2kL4HZOeU6rXhLnhue25qIBuOKvq8MXhaozGXWUlxReIQLCaUmdXp34fpY2v9w2k1dTFLo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyImVRxRHnqpbqjvqiyI8xzi6m7Jf8arA+lDbnR6PKUDJ3EWLAm
+	Fwx3JTjqBGqlftV/BXI0WCMO3fdY4fRd6SFzVxLWrD+33HyXPKHNAtmV
+X-Gm-Gg: ASbGnctMBekHtb+JpqVbYGZbAE8um5FZ7dxpHQUlTw3s0mOpEqMa1PrdCuVBjlKrl3u
+	8CcVLp/7r0Ajrbvo+8HJQGWAyLEvC6SV7NqXKh5g8zYR80thR6tvKc3hMtxb1NSBAZZMIzfESD1
+	rSXLAlWq3KgIgyoiwK7aV8M9zd/6j9S+kLLVtOAK0wGXXAKpcDrx5fiEI2HTdRplOl9RCt0fMJW
+	petRNl5haqCwJp/3YxG3hpIQEkW8dbhvphS18EPPjj0r0MWOs0YF15XiqKNd697C1t6OzQkgXpn
+	mUw/cKeOMjJ8PUkXGxzZizbKk9yP8wAuvJEAJNo8aKxvfHQtGFL3fSgVNFvVOdEklAicQnuCgVi
+	KMf+rzfcdU0eqTZe9HkkPoFKY3rfF6DByS2XTyveg2Wc0RmlIvC4vAU81uA==
+X-Google-Smtp-Source: AGHT+IFCWLF0gtsaJKl7aGm1cX2g2lLFrsQGcWZoDcjs0UaV6Zq7tpi6v8XOXULZ7eLFd0aFmZWB0g==
+X-Received: by 2002:a05:6214:21e3:b0:6fa:d956:243b with SMTP id 6a1803df08f44-7048ba5e7f0mr62551856d6.37.1752089475535;
+        Wed, 09 Jul 2025 12:31:15 -0700 (PDT)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([148.76.185.197])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d5dbd94242sm991741285a.9.2025.07.09.12.31.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Jul 2025 11:53:13 -0700 (PDT)
-From: Matthew W Carlis <mattc@purestorage.com>
-To: ilpo.jarvinen@linux.intel.com
-Cc: ashishk@purestorage.com,
-	bhelgaas@google.com,
-	linux-pci@vger.kernel.org,
-	macro@orcam.me.uk,
-	mattc@purestorage.com,
-	msaggi@purestorage.com,
-	sconnor@purestorage.com
-Subject: [PATCH v2 0/1] PCI: pcie_failed_link_retrain() return if dev is not ASM2824
-Date: Wed,  9 Jul 2025 12:52:57 -0600
-Message-ID: <20250709185309.29900-1-mattc@purestorage.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <2b72378d-a8c1-56b1-3dbb-142eb4c7f302@linux.intel.com>
-References: <2b72378d-a8c1-56b1-3dbb-142eb4c7f302@linux.intel.com>
+        Wed, 09 Jul 2025 12:31:15 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v4 0/6] rust: list: remove HasListLinks::OFFSET
+Date: Wed, 09 Jul 2025 15:31:10 -0400
+Message-Id: <20250709-list-no-offset-v4-0-a429e75840a9@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAH7DbmgC/3XQTQrCMBAF4KtI1kbiJFXjynuIi/xMbEAbTWpQS
+ u9uWgWL4vIN8z2Y6UjC6DGR7awjEbNPPjQliPmMmFo1R6TelkyAQcU4CHryqaVNoMG5hC2VK3S
+ rymhQsiIFXSI6fx8L94eS67Ie4mPsz8th+rcqLymjylnQa2eEALU7npU/LUw4k6Eqw4cLJn84F
+ M600mvkRjq7+eZ8woH/cF64tMyA3kguGE55/7os4vVWPtS+z+v7J3M9mNM/AQAA
+X-Change-ID: 20250324-list-no-offset-96ef65cb2a95
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>, 
+ Christian Schrefl <chrisi.schrefl@gmail.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openssh-sha256; t=1752089473; l=1539;
+ i=tamird@gmail.com; h=from:subject:message-id;
+ bh=QHOQuys68Eep3AdeqAw3nBv5Wp0vgE8ohEfQSBCs10M=;
+ b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgtYz36g7iDMSkY5K7Ab51ksGX7hJgs
+ MRt+XVZTrIzMVIAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
+ QHbNgebLh8aNEeKSD8syh8a/K9KkWIrNEA4x6sXT2eSyntPn6ytoNBA4Wx4vl2f0VJldwkiDOHs
+ LlhF+oD5P4Qw=
+X-Developer-Key: i=tamird@gmail.com; a=openssh;
+ fpr=SHA256:264rPmnnrb+ERkS7DDS3tuwqcJss/zevJRzoylqMsbc
 
-On Wed, 9 Jul 2025, Ilpo Järvinen wrote:
-> Are you saying there's still a problem in hpc? Since the introduction of 
-> bwctrl, remove_board() in pciehp has had pcie_reset_lbms() (or it's 
-> equivalent).
-I think my concern with hpc or the current mechanism in general is that the
-condition is basically binary. Across a large fleet I expect to see momentary
-issues. For example a device might start to link up, have an issue & then
-try to link up again and from there be working correctly. However if that
-were to trigger an LBMS it might result in the quirk forcing the link to Gen1.
+The bulk of this change occurs in the last commit, please see its commit
+messages for details.
 
-For example if the quirk first guided the link to Gen1 & then if the device
-linked up at Gen1 it tried to guide it to Gen2 & then if it linked up at Gen2
-it continued towards the maximum speed falling back down when it found the
-device not able to achieve a certain higher speed that would be more ideal.
-Or perhaps starting at the second highest speed & working its way down.
-Its quite a large fall in performance for a device to go from Gen4/5 to Gen1
-whereas the ASMedia/Pericom combination was only capable of Gen2 as a pair.
-If the SI is marginal for Gen4/5 I would tend to think the device has a fairly
-high chance of being able to run at the next lower speed for example.
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Changes in v4:
+- Pick up Alice's Reviewed-by.
+- Rebase on rust-next (minor merge conflicts).
+- Link to v3: https://lore.kernel.org/r/20250423-list-no-offset-v3-0-9d0c2b89340e@gmail.com
 
-Actually I also wonder in the case of the ASMedia & Pericom combination
-would we just see a LBMS interrupt every time the device loop between
-speeds? Maybe the quirk should have been invoked by bwctrl.c when a certain
-rate of LBMS assertions is detected instead? Is it better to give a device
-a few chances or to catch it right away on the first issue? (some value
-judgements here)
+Changes in v3:
+- Add a patch to improve macro hygiene.
+- Add a patch to include examples for all macros.
+- Make it build properly!
+- Link to v2: https://lore.kernel.org/r/20250409-list-no-offset-v2-0-0bab7e3c9fd8@gmail.com
 
-> As I already mentioned, for DPC I agree, it likely should reset LBMS 
-> somewhere.
-...
-> If you'd try this on different generations of Intel RP, you'd likely see 
-> variations there too, that's my experience when testing bwctrl.
+Changes in v2:
+- Change type parameter delimiter to `{}` for consistency. (Boqun Feng)
+- Rebase on v6.15-rc1.
+- Extract first commit to its own series as it is shared with other
+  series.
+- Link to v1: https://lore.kernel.org/r/20250324-list-no-offset-v1-0-afd2b7fc442a@gmail.com
 
-Yes agree about DPC especially given that there is likely vendor/device specific
-variations in assertions of the bit. There is another patch that came into the
-DPC driver which suppresses surprise down error reporting which I would like to
-challenge/remove. My feeling is that the DPC driver should clear LBMS in all cases
-before clearing DPC status.
+---
+Tamir Duberstein (6):
+      rust: list: simplify macro capture
+      rust: list: use consistent type parameter style
+      rust: list: use consistent self parameter name
+      rust: list: use fully qualified path
+      rust: list: add `impl_list_item!` examples
+      rust: list: remove OFFSET constants
 
->> Should it not matter how long ago LBMS
->> was asserted before we invoke a TLS modification?
->
-> To some extent, yes, which is why we call pcie_reset_lbms() in a few 
-> places.
+ rust/kernel/list.rs                    |  23 ++--
+ rust/kernel/list/impl_list_item_mod.rs | 233 ++++++++++++++++++++++-----------
+ 2 files changed, 166 insertions(+), 90 deletions(-)
+---
+base-commit: 2009a2d5696944d85c34d75e691a6f3884e787c0
+change-id: 20250324-list-no-offset-96ef65cb2a95
 
-Maybe there should even be a config or sysfs file to disable the quirk because
-it kind of takes control away from users in some ways. i.e - doesn't obviously
-interact well with callers of setpci etc.
+Best regards,
+--  
+Tamir Duberstein <tamird@gmail.com>
 
->> I wonder if it shouldn't have to see some kind of actual link activity 
->> as a prereq to entering the quirk.
->
-> How would you observe that "link activity"? Doesn't LBMS itself imply 
-> "link activity" occurred?
-
-I was thinking literally not entering the quirk function unless the kernel
-had witnessed LNKSTA_DLLLA or LNKSTA_LT in the last second.
-
-Does this preclude us from declaring a device as "broken" as done by the quirk
-without having seen DLLA within 1s after DLLSC Event?
-* PCI Express Base Revision - 6.7.3.3 Data Link Layer State Changed Events
-"Software must allow 1 second after the Data Link Layer Link Active bit reads 1b
-before it is permitted to determine that a hot plugged device which fails to return
-a Successful Completion for a Valid Configuration Request is a broken device."
-
-> > One thing that honestly doesn't make any sense to me is the ID list in the
-> > quirk. If the link comes up after forcing to Gen1 then it would only restore
-> > TLS if the device is the ASMedia switch, but also ignoring what device is
-> > detected downstream. If we allow ASMedia to restore the speed for any downstream
-> > device when we only saw the initial issue with the Pericom switch then why
-> > do we exclude Intel Root Ports or AMD Root Ports or any other bridge from the
-> > list which did not have any issues reported.
-> 
-> I think it's because the restore has been tested on that device 
-> (whitelist).
-> 
-> Your reasoning is based on assumption that TLS quirk setting Link Speed 
-> to 2.5GT/s is part of "normal" operation. My view is that those 
-> triggerings are caused by not clearing stale LBMS in the right places. If 
-> LBMS is not wrongly kept, the quirk is no-op on all but that ID listed 
-> device.
-
-I'm making a slightly different assumption which is "something is working
-until proven otherwise". We only know that the restore works on the ASMedia
-when the downstream device is the Pericom switch. In fact we only know
-it works for very specific layout & configuration of these two devices.
-It seems wrong in my mind to be more restrictive on devices that don't have
-a reported issue from, but then be less restrictive on the devices that had an
-out of spec interaction in the first place. Until reported we don't know
-how many devices might see LBMS get set during the course of linking up, but
-then still arrive at the maximum speed.
 
