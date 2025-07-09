@@ -1,94 +1,126 @@
-Return-Path: <linux-pci+bounces-31749-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31750-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32AE9AFDE92
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 05:49:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6AF5AFDED7
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 06:42:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29AAD3BC245
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 03:48:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C74D21C22921
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 04:42:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 457E318DB03;
-	Wed,  9 Jul 2025 03:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80E351A23A5;
+	Wed,  9 Jul 2025 04:42:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="c2WhWLj2"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TYlwDQDr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from epicurean-pwyll.relay-egress.a.mail.umich.edu (relay-egress-host.us-east-2.a.mail.umich.edu [18.217.159.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF77AD517;
-	Wed,  9 Jul 2025 03:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.217.159.240
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E554113A3F2;
+	Wed,  9 Jul 2025 04:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752032946; cv=none; b=dSiCw6THFSyQp3IABuL7Cwr0v1rZegfJzi4qLA0sNcePBiLxKz8YkN+cMYGsX0KRnVAc9NNXIWZVC4t4+OvgmbAeMcNTk363fRFrWgkEP/J0NAJVscuh7rfN+wS0wn+BntszsWsGCKMlJ5maWokFLMktUrXr1Wp4RYTxdP6S46M=
+	t=1752036137; cv=none; b=eTlKakylPlejzXQ15McUBMLfBs3cVpcDnJlWJOoHpMU08/9rHZy5C/ffPpi9pdUyCNJR2jaUmwmrfSMTVoZdZ49Y9QJDLZJv488rbxmD6fm5nJ2FT16SiPm9PgZ96EuCwZmtq44umquhjG4MgH88QpTpsnG8klDPFGuATa0NKGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752032946; c=relaxed/simple;
-	bh=zjvjUcwS5qfI9jHWRzf+0fkXmbuLjmAbMYytraR6Tao=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=NhJZS7D6Anq9ooTwUr3B1njh/XUOEYgoG9N5sClGWlKjNDn0THsfA065UOyaXBG3vyryPdYY1OP0K0+TUM7OqQLAgkIYlgnQSGi7J3C6T7mkRQOYDm3Becp8jhOqXSh1HEqh0viS1Aw5vslbN1jbIPCh4jDgGdl9DwOtlqJNJe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=c2WhWLj2; arc=none smtp.client-ip=18.217.159.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
-Received: from advisable-myrddin.jail.a.mail.umich.edu (ip-10-0-73-63.us-east-2.compute.internal [10.0.73.63])
-	by epicurean-pwyll.relay-egress.a.mail.umich.edu with ESMTPS
-	id 686DE6AD.359AA137.4E5FB9A4.222246;
-	Tue, 08 Jul 2025 23:49:01 -0400
-Received: from inspiring-wechuge.authn-relay.a.mail.umich.edu (ip-10-0-74-32.us-east-2.compute.internal [10.0.74.32])
-	by advisable-myrddin.jail.a.mail.umich.edu with ESMTPS
-	id 686DE47B.1ED842D5.6149EC18.933264;
-	Tue, 08 Jul 2025 23:39:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=umich.edu;
-	s=relay-1; t=1752032375;
-	bh=zjvjUcwS5qfI9jHWRzf+0fkXmbuLjmAbMYytraR6Tao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=c2WhWLj2RRdNo3XYLXv5lxWvlmKbu/Bul0xOA1Tw6gXVdnZCqwEgoUPCMH5W86YMm
-	 ffM1Toa2+jAj+9FeLpxlKQlZvXt761mFqXIehtfh2rRY/UiNk4t16hiw1fJCCAJ3YO
-	 axsAaSDygz4JOXhtGagWeCgl8yJbecaMrwjNVPva3HAbvNA6wJcTSqVXHp6uOhTx1m
-	 accbNpYlhCvMkura/1cobgjggz44qOLJPIPEcrAR1GBTGqr92oLODzXAKf6inK8MJ0
-	 H9xzrATJuaOOEene4+oFC5TzJC3HxaiVqTsMHEwi7xPnwT3YbkEK8WjmNIlr3SXmgJ
-	 nSjjJvQeEwa8w==
-Authentication-Results: inspiring-wechuge.authn-relay.a.mail.umich.edu; 
-	iprev=pass policy.iprev=185.104.139.75 (ip-185-104-139-75.ptr.icomera.net);
-	auth=pass smtp.auth=tmgross
-Received: from localhost (ip-185-104-139-75.ptr.icomera.net [185.104.139.75])
-	by inspiring-wechuge.authn-relay.a.mail.umich.edu with ESMTPSA
-	id 686DE474.2AFF1CF8.852C2E6.1056699;
-	Tue, 08 Jul 2025 23:39:35 -0400
+	s=arc-20240116; t=1752036137; c=relaxed/simple;
+	bh=Fn21aLk8KOVq18tlx6uiN1yIKZDUgjxrdNQzKFjWHZo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rS7xKIxJRmnVt/LB08BmhUV8IBwQW1KALIF8JFGCHsHrr/j6kjNziW8G73cO3wm0bQTwtadrklXcT+ZK8TlbJNRcVh+Py0HSwZ9HAMhXStJ+HLKRcnsunPR5urm68zeteJnhoRhEQJ0/gL81T+VQIFWxiTVEZt70EW71ZodlY/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TYlwDQDr; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.79.218.70] (unknown [4.194.122.136])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 629D9201B1AE;
+	Tue,  8 Jul 2025 21:42:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 629D9201B1AE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1752036135;
+	bh=0OdFxV7TyZBPInyMjkfna2ntk1j8yOVcJaUIxoV+hLA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TYlwDQDrC8u9N4j5ib7rMwBKMQWHAH2JmrCB/O9SG/ozV8WYCCPcTYW2yisUWq84l
+	 HNRPHeZJDrc67ktZFfz+KITRkkDmsgHZworX0yo2yCnCTAgmv2dFtyEBVMLGlkvyQM
+	 W1DDF1b91bUnfc7NZ7lUH7Tu7U/fBvv+ZVXHLPPk=
+Message-ID: <34d1f7e4-0729-4faf-95b7-e2fce6c3be2e@linux.microsoft.com>
+Date: Wed, 9 Jul 2025 10:12:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 08 Jul 2025 23:39:30 -0400
-Message-Id: <DB77N3PDLA0W.26YMMAHG8LIVF@umich.edu>
-From: "Trevor Gross" <tmgross@umich.edu>
-To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>, <alex.gaynor@gmail.com>,
- <dakr@kernel.org>, <gregkh@linuxfoundation.org>, <ojeda@kernel.org>,
- <rafael@kernel.org>, <robh@kernel.org>, <saravanak@google.com>
-Cc: <a.hindborg@kernel.org>, <aliceryhl@google.com>, <bhelgaas@google.com>,
- <bjorn3_gh@protonmail.com>, <boqun.feng@gmail.com>,
- <david.m.ertman@intel.com>, <devicetree@vger.kernel.org>,
- <gary@garyguo.net>, <ira.weiny@intel.com>, <kwilczynski@kernel.org>,
- <leon@kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <lossin@kernel.org>, <netdev@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v3 3/3] rust: net::phy Change module_phy_driver macro to
- use module_device_table macro
-X-Mailer: aerc 0.20.1
-References: <20250704041003.734033-1-fujita.tomonori@gmail.com>
- <20250704041003.734033-4-fujita.tomonori@gmail.com>
-In-Reply-To: <20250704041003.734033-4-fujita.tomonori@gmail.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI/MSI: Initialize the prepare descriptor by default
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Marc Zyngier <maz@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, Roman Kisel <romank@linux.microsoft.com>
+References: <20250708160817.GA2148355@bhelgaas>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <20250708160817.GA2148355@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri Jul 4, 2025 at 12:10 AM EDT, FUJITA Tomonori wrote:
-> Change module_phy_driver macro to build device tables which are
-> exported to userspace by using module_device_table macro.
->
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 
-Reviewed-by: Trevor Gross <tmgross@umich.edu>
+
+On 7/8/2025 9:38 PM, Bjorn Helgaas wrote:
+> On Tue, Jul 08, 2025 at 03:45:05PM +0530, Naman Jain wrote:
+>> On 7/8/2025 3:32 PM, Shradha Gupta wrote:
+>>> On Tue, Jul 08, 2025 at 10:48:48AM +0530, Naman Jain wrote:
+>>>> Plug the default MSI-X prepare descriptor for non-implemented ops by
+>>>> default to workaround the inability of Hyper-V vPCI module to setup
+>>>> the MSI-X descriptors properly; especially for dynamically allocated
+>>>> MSI-X.
+>>>>
+>>>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+>>>> ---
+>>>>    drivers/pci/msi/irqdomain.c | 2 ++
+>>>>    1 file changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+>>>> index 765312c92d9b..655e99b9c8cc 100644
+>>>> --- a/drivers/pci/msi/irqdomain.c
+>>>> +++ b/drivers/pci/msi/irqdomain.c
+>>>> @@ -84,6 +84,8 @@ static void pci_msi_domain_update_dom_ops(struct msi_domain_info *info)
+>>>>    	} else {
+>>>>    		if (ops->set_desc == NULL)
+>>>>    			ops->set_desc = pci_msi_domain_set_desc;
+>>>> +		if (ops->prepare_desc == NULL)
+>>>> +			ops->prepare_desc = pci_msix_prepare_desc;
+>>>>    	}
+>>>>    }
+>>>>
+>>>> base-commit: 26ffb3d6f02cd0935fb9fa3db897767beee1cb2a
+>>>> -- 
+>>>> 2.34.1
+>>>>
+>>>
+>>> Hey Naman,
+>>>
+>>> can you please try your tests with this patch:
+>>> https://lore.kernel.org/all/1749651015-9668-1-git-send-email-shradhagupta@linux.microsoft.com/
+>>> I think this should help your use case
+>>
+>> Hey,
+>> Thanks for sharing this, this works for me.
+>>
+>> Closing this thread.
+> 
+> I guess this means we should ignore this patch?  If it turns out that
+> we do need this patch, I'd like to add some details in the commit log
+> about what this problem looks like to users.
+> 
+> Bjorn
+
+Yes, my patch is no longer required, since it was doing the same thing
+that Shradha's patch (1-2) were doing, but in a different way. Shradha's
+patch is better and would suffice for the use case. Please ignore this
+patch.
+
+Thanks.
+Regards,
+Naman
 
