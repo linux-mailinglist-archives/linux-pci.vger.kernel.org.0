@@ -1,210 +1,151 @@
-Return-Path: <linux-pci+bounces-31755-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31756-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF338AFE1EE
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 10:07:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17386AFE243
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 10:17:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C72A1C4152C
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 08:07:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64892581EC0
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 08:17:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBFAB233159;
-	Wed,  9 Jul 2025 08:05:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC476238159;
+	Wed,  9 Jul 2025 08:16:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8JuAV/6"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GqtyRqWh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79535625;
-	Wed,  9 Jul 2025 08:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28988239597
+	for <linux-pci@vger.kernel.org>; Wed,  9 Jul 2025 08:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752048318; cv=none; b=peC5zzC97lpH1aK9O5sJERK94OT3ZYO4sDqLt9DL2p73BwBvk+kljt/Ls8B6inGyXXuHFC5QoFjqpMLJF84KoOkgfVyX3asX5rPlSNJfSZBbcVXVui2qiBYGC5ADgqjBarzTWO1mvI4SQH/sRFGP435nJQS50mL3/LqPz/hk37M=
+	t=1752048999; cv=none; b=Jl8B5zVNEBAXg9utexUEY9fZUdxqPM4lXWXgnLLhbYCvzT42N2yyf4QQ3bmcB7xlWUjAZLzYJ4E3cu0B3hibk+EsX9axZJIIeCq+SbSeOEjAKzuvVysUYyOmRsyVJEwY1LMcl86KKqvBjz6AGz9OKozPemQN5cgYRr5kwhZafc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752048318; c=relaxed/simple;
-	bh=PHFvslbn1dHlskTevgGPTlrGpDxkF+3vYBfYx9dm7QA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KkYdoRs9fvnAC8Dvky8coZPZiDVbrxTLExtlCjUZb2pXh+CyLGDOAOF/K1/a7cN+Keq+hdrfLTCCXqK2N1NGLQMVu/EvPtIeQQhR8GOe4X6AqZSsJsY5lrYphn4INPrI5pV2Q3KmZsVDR9XRJMWoDAFzXf+36qEi3cLU6GlkqVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8JuAV/6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABAACC4CEEF;
-	Wed,  9 Jul 2025 08:05:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752048318;
-	bh=PHFvslbn1dHlskTevgGPTlrGpDxkF+3vYBfYx9dm7QA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u8JuAV/6EPqKfTmJvV9BtrmecFukxAnweZODl2FBKCQLsZhyBuAGQ1tDQppgHAi6e
-	 aT2wVmgLftJUA1ljZHnkKVvKZGkseDj87HRl5SjKH87WplbCuhVqW7SLZkPKJpxUjP
-	 Ax+oq4uyaa09YQ6cRR4cReFdX2AE7ir7kut9R6gr54S/N+XMpMkDT4tvhoFwzja0ek
-	 wdN+HcM775i7vYwGZYwXdsH1NB7iLsb0UGuA4tAFILcGMnEHUJkdE2DALlcBtIlSsF
-	 aJEUkfZYNXsRAsFzgcj0SjUd3ZKc9sNwzo6oQX+mxQrdSbku3LXsx6xF7NonQ6oxI8
-	 JiPntU/199ASA==
-Date: Wed, 9 Jul 2025 13:35:08 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: Re: [PATCH RFC 2/3] PCI/pwrctrl: Allow pwrctrl core to control
- PERST# GPIO if available
-Message-ID: <kl5rsst6p2lgnepopxij5o6vyca4abrjlktsirfac3v7cnm33l@svrcm7v4gasr>
-References: <20250707-pci-pwrctrl-perst-v1-0-c3c7e513e312@kernel.org>
- <20250707-pci-pwrctrl-perst-v1-2-c3c7e513e312@kernel.org>
- <aG3e26yjO4I1WSnG@google.com>
+	s=arc-20240116; t=1752048999; c=relaxed/simple;
+	bh=ESjLO9Zhed1cl1ztCJTIT/ZnAfHW/V/nC+V20hNxkao=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mPmmfjposHl74ZZqbzOOnejNjzCLokrLWzX0vENrEGgq5sY6h13HTVRq0Qk0aMy3wUws4MpQlBKZzFDM0d21EXX+UX2eyryBH7uU/Gzo8zKNnrFoD5spgfWXVP/gqqN10IpuupcShMaYD9pvCVR/z5C4B3XcMvlhlFRz8sPL5J0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GqtyRqWh; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a5123c1533so2544121f8f.2
+        for <linux-pci@vger.kernel.org>; Wed, 09 Jul 2025 01:16:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1752048995; x=1752653795; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GqD2PBdEEtL61TcBWPiwuwUSzaM44PpR+jAvOgLtSbk=;
+        b=GqtyRqWhhEdFa2TZNipm+xOu85FUWYoazJ0KENkvNCOcwC3i9hmDYzna/6qF5C1UYO
+         /WqBXibza4+EAgUda9xggV7CofzT9EzIReXwK0Ey+McKv/G8Ip9P/jX3dudWS/XmoK6/
+         QLO2moXxRVq+uUAPyeefKHSuyL0MHhklXobjAgr2Bb4BPRjBefhhgYexaBdHalhYNsYf
+         AbebZSVP5Pvwl4aFi/TW7UIK2JqYKx+glFDIjRNqUJfTeY5iVWvE8fZgxi85awPy2GAT
+         6+KgOAU8A/F4JwUTq5b8R1RQakmEsmtiPV9dBPjix0gTH9vm4AUIOlUWXcDxkmhpUd5q
+         f1wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752048995; x=1752653795;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GqD2PBdEEtL61TcBWPiwuwUSzaM44PpR+jAvOgLtSbk=;
+        b=O2UiD5D91BElqdDoF8Otr6t3pyUfhRWJ1rbQYU+e3vAYeogEsk9vmmMr71QsmeHTg7
+         /udtp2NMjDpQirts3dVGmvYvcFw7xg4N/pZbLOHGoCLuC+HV/P2TGv01Cdr7CmVVRju0
+         X3c1/gPwdLmVt+oyiDEB4/bPkY//89t4FvskgdGAtYFOXtdxEZjZfM36PvPLlZqATnyV
+         SR1QyeDbHmUhup7oSCyuJ0yT7Z1lLqo8tCOPbeEqVpJtVNneFnbCEMJuiwOK3FhXw03w
+         LMNlyFIzBMOgwyNVQfJYCkttse96sWYLetXjyFNEUb+d+6EPMqsTfk7j7EBJ+9osv871
+         getg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCeZdQw1c0uKEWFy3LCX2D0UJ2V2eeQaOtCSzfiPCIKpKBBfN4pfPGWvmCxq2XE3ZXOtO8QRR7fMc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxBS3HB4jsMW9z76uRgGt0OPCdXZlBBmPW71jZ5NkxQhruLQ8a
+	lUIMLyEkNDf2YATAHnSmRyCo+SBjZeczj1XnmnUGH4AUGoNWeYcDyA8Y2M0QQvr36ao=
+X-Gm-Gg: ASbGncth2rC3uV3A3+MO3hJbQey/wRpOYOGRPeE9N4vb4otNbr2Kjwqow4UBe54Um31
+	NPJD7Pww1gLoEtLGjy//i+ACcpHlrPJzr0Ta5Pu8TIU5jmus00upzf1CUNlJLtLTuhihfQyIwh4
+	QoMFuxLdi31DqW8i6hc16JCBA2o2lWvpLuhhyKNqaUNG4HURWUIYf21kVMtTx76EGwD3Oz5LD1P
+	d7lvTwPLwyAa86hfZ0e+mfxTR/6G0mMTJPS3R7h7+/yo3TPCEMMbzh/AyHO+Okhkd/7lQonO94H
+	rSaty3FUx36I4k7XImK/sbQ7YOAtCmW3Wmu0t1sqV4cSZaFu5lrVVbAZbAEOVQ==
+X-Google-Smtp-Source: AGHT+IFDWgOyd6TctRhGyDf/BFXl84n44wynt3pzJXN6haPyohv/Z6jjdLJP43b8OIYqGclCOkgE7A==
+X-Received: by 2002:a05:6000:2313:b0:3b3:9cb4:43f9 with SMTP id ffacd0b85a97d-3b5e4528344mr1167851f8f.16.1752048995397;
+        Wed, 09 Jul 2025 01:16:35 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:6015:b265:edf6:227e])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3b472259842sm15150123f8f.72.2025.07.09.01.16.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Jul 2025 01:16:35 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Jon Mason <jdmason@kudzu.us>,  Dave Jiang <dave.jiang@intel.com>,  Allen
+ Hubbe <allenbh@gmail.com>,  Manivannan Sadhasivam <mani@kernel.org>,
+  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,  Kishon
+ Vijay Abraham I
+ <kishon@kernel.org>,  Bjorn Helgaas <bhelgaas@google.com>,
+  ntb@lists.linux.dev,  linux-pci@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: pci-epf-vntb: fix MW2 configfs id
+In-Reply-To: <aG1a2iy1/2RWd2FX@lizhi-Precision-Tower-5810> (Frank Li's message
+	of "Tue, 8 Jul 2025 13:52:26 -0400")
+References: <20250708-vntb-mw-fixup-v1-1-22da511247ed@baylibre.com>
+	<aG1a2iy1/2RWd2FX@lizhi-Precision-Tower-5810>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Wed, 09 Jul 2025 10:16:34 +0200
+Message-ID: <1jh5zlrd7h.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aG3e26yjO4I1WSnG@google.com>
+Content-Type: text/plain
 
-On Tue, Jul 08, 2025 at 08:15:39PM GMT, Brian Norris wrote:
-> Hi Manivannan,
-> 
-> On Mon, Jul 07, 2025 at 11:48:39PM +0530, Manivannan Sadhasivam wrote:
-> > PERST# is an (optional) auxiliary signal provided by the PCIe host to
-> > components for signalling 'Fundamental Reset' as per the PCIe spec r6.0,
-> > sec 6.6.1.
-> > 
-> > If PERST# is available, it's state will be toggled during the component
-> > power-up and power-down scenarios as per the PCI Express Card
-> > Electromechanical Spec v4.0, sec 2.2.
-> > 
-> > Historically, the PCIe controller drivers were directly controlling the
-> > PERST# signal together with the power supplies. But with the advent of the
-> > pwrctrl framework, the power supply control is now moved to the pwrctrl,
-> > but controller drivers still ended up toggling the PERST# signal.
-> 
-> [reflowed:]
-> > This only happens on Qcom platforms where pwrctrl framework is being
-> > used.
-> 
-> What do you mean by this sentence? That this problem only occurs on Qcom
-> platforms? (I believe that's false.) Or that the problem doesn't occur
-> if the platform is not using pwrctrl? (i.e., it maintained power in some
-> other way, before the controller driver gets involved. I believe this
-> variation is correct.)
-> 
+On Tue 08 Jul 2025 at 13:52, Frank Li <Frank.li@nxp.com> wrote:
 
-The latter one. I will rephrase this sentence in next version.
+> On Tue, Jul 08, 2025 at 04:49:57PM +0200, Jerome Brunet wrote:
+>> The id associated with MW2 configfs entry is wrong.
+>> Trying to use MW2 will overwrite the existing BAR setup associated with
+>> MW1.
+>
+> :%s/id/ID
+>
+> need new line between two paragraph.
+>
 
-> > But
-> > nevertheseless, it is wrong to toggle PERST# (especially deassert) without
-> > controlling the power supplies.
-> > 
-> > So allow the pwrctrl core to control the PERST# GPIO is available. The
-> 
-> s/is/if/
-> 
-> ?
-> 
-> > controller drivers still need to parse them and populate the
-> > 'host_bridge->perst' GPIO descriptor array based on the available slots.
-> > Unfortunately, we cannot just move the PERST# handling from controller
-> > drivers as most of the controller drivers need to assert PERST# during the
-> > controller initialization.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-> > ---
-> >  drivers/pci/pwrctrl/core.c  | 39 +++++++++++++++++++++++++++++++++++++++
-> >  include/linux/pci-pwrctrl.h |  2 ++
-> >  include/linux/pci.h         |  2 ++
-> >  3 files changed, 43 insertions(+)
-> > 
-> > diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
-> > index 6bdbfed584d6d79ce28ba9e384a596b065ca69a4..abdb46399a96c8281916f971329d5460fcff3f6e 100644
-> > --- a/drivers/pci/pwrctrl/core.c
-> > +++ b/drivers/pci/pwrctrl/core.c
-> 
-> >  static int pci_pwrctrl_notify(struct notifier_block *nb, unsigned long action,
-> >  			      void *data)
-> >  {
-> > @@ -56,11 +61,42 @@ static void rescan_work_func(struct work_struct *work)
-> >   */
-> >  void pci_pwrctrl_init(struct pci_pwrctrl *pwrctrl, struct device *dev)
-> >  {
-> > +	struct pci_host_bridge *host_bridge = to_pci_host_bridge(dev->parent);
-> > +	int devfn;
-> > +
-> >  	pwrctrl->dev = dev;
-> >  	INIT_WORK(&pwrctrl->work, rescan_work_func);
-> > +
-> > +	if (!host_bridge->perst)
-> > +		return;
-> > +
-> > +	devfn = of_pci_get_devfn(dev_of_node(dev));
-> > +	if (devfn >= 0 && host_bridge->perst[PCI_SLOT(devfn)])
-> > +		pwrctrl->perst = host_bridge->perst[PCI_SLOT(devfn)];
-> 
-> It seems a little suspect that we trust the device tree slot
-> specification to not overflow the perst[] array. I think we can
-> reasonably mitigate that in the controller driver (so, patch 3 in this
-> series), but I want to call that out, in case there's something we can
-> do here too.
-> 
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_pwrctrl_init);
-> >  
-> > +static void pci_pwrctrl_perst_deassert(struct pci_pwrctrl *pwrctrl)
-> > +{
-> > +	/* Bail out early to avoid the delay if PERST# is not available */
-> > +	if (!pwrctrl->perst)
-> > +		return;
-> > +
-> > +	msleep(PCIE_T_PVPERL_MS);
-> > +	gpiod_set_value_cansleep(pwrctrl->perst, 0);
-> 
-> What if PERST# was already deasserted? On one hand, we're wasting time
-> here if so. On the other, you're not accomplishing your spec-compliance
-> goal if it was.
-> 
+I'll do the v2 to speed things up but the description looks fine as it is.
+The comment looks rather like a personal preference.
 
-If controller drivers populate 'pci_host_bridge::perst', then they should not
-deassert PERST# as they don't control the supplies. I've mentioned it in the
-cover letter, but I will mention it in commit message also.
-
-> > +	/*
-> > +	 * FIXME: The following delay is only required for downstream ports not
-> > +	 * supporting link speed greater than 5.0 GT/s.
-> > +	 */
-> > +	msleep(PCIE_RESET_CONFIG_DEVICE_WAIT_MS);
-> 
-> Should this be PCIE_RESET_CONFIG_DEVICE_WAIT_MS or PCIE_T_RRS_READY_MS?
-> Or are those describing the same thing? It seems like they were added
-> within a month or two of each other, so maybe they're just duplicates.
-> 
-
-You are right. This is already taken care in:
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/linkup-fix&id=bbc6a829ad3f054181d24a56944f944002e68898
-
-I will rebase the next version on top of pci/next to make use of it.
-
-> BTW, I see you have a FIXME here, but anyway, I wonder if both of the
-> msleep() delays in this function will need some kind of override (e.g.,
-> via Device Tree), since there's room for implementation or form factor
-> differences, if I'm reading the spec correctly. Maybe that's a question
-> for another time, with actual proof / use case.
-> 
-
-First delay cannot be skipped as both PCIe CEM and M.2 FF, mandates this delay.
-Though, M.2 mandates only a min delay of 50ms, and leaves the value to be
-defined by the vendor. So a common 100ms would be on the safe side.
-
-For the second delay, it comes from the PCIe spec itself. Refer r6.0, sec
-6.6.1. So we cannot skip that, though we should only need it if the link is
-operating at <= 5.0 GT/s. Right now, I haven't implemented the logic to detect
-the link speed, hence the TODO.
-
-- Mani
+> Frank
+>>
+>> Just put the correct id for MW2 to fix the situation
+>>
+>> Fixes: 4eacb24f6fa3 ("PCI: endpoint: pci-epf-vntb: Allow BAR assignment via configfs")
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+>> index 41b297b16574558e7ab99fb047204ac29f6f3391..ac83a6dc6116be190f955adc46a30d065d3724fd 100644
+>> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+>> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+>> @@ -993,8 +993,8 @@ EPF_NTB_BAR_R(db_bar, BAR_DB)
+>>  EPF_NTB_BAR_W(db_bar, BAR_DB)
+>>  EPF_NTB_BAR_R(mw1_bar, BAR_MW1)
+>>  EPF_NTB_BAR_W(mw1_bar, BAR_MW1)
+>> -EPF_NTB_BAR_R(mw2_bar, BAR_MW1)
+>> -EPF_NTB_BAR_W(mw2_bar, BAR_MW1)
+>> +EPF_NTB_BAR_R(mw2_bar, BAR_MW2)
+>> +EPF_NTB_BAR_W(mw2_bar, BAR_MW2)
+>>  EPF_NTB_BAR_R(mw3_bar, BAR_MW3)
+>>  EPF_NTB_BAR_W(mw3_bar, BAR_MW3)
+>>  EPF_NTB_BAR_R(mw4_bar, BAR_MW4)
+>>
+>> ---
+>> base-commit: 38be2ac97d2df0c248b57e19b9a35b30d1388852
+>> change-id: 20250708-vntb-mw-fixup-bc30a3e29061
+>>
+>> Best regards,
+>> --
+>> Jerome
+>>
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Jerome
 
