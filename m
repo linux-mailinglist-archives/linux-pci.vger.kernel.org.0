@@ -1,214 +1,352 @@
-Return-Path: <linux-pci+bounces-31822-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31823-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 058FBAFF56D
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 01:38:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C09B3AFF572
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 01:44:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CDA221C48544
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 23:38:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 79E267A5B5B
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Jul 2025 23:43:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EA562641F8;
-	Wed,  9 Jul 2025 23:38:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A565D21FF39;
+	Wed,  9 Jul 2025 23:44:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XLH+iYGl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GFx05kvo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523F521D001;
-	Wed,  9 Jul 2025 23:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18BA21E0BA
+	for <linux-pci@vger.kernel.org>; Wed,  9 Jul 2025 23:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752104302; cv=none; b=BpJjt4LIER3yam0kXm4cuapCq4r7wUiEpDRdDSpRImCqMoly4WeAissQOZkaeQM8yrVXOcvLqVICCSKsKkzDwGIRSdn/l/2aZ+k/OFDQ5dGEk3b8Eq9H9NJZ6rPebz0MZC609G47YGd96ncYN1tm7gScAI+29lcjS3BOOX0cSX8=
+	t=1752104680; cv=none; b=etJxvjHqmaB3UVmCuo6llhMEOsTARZHaZ3EbaoER9KXEL44wpr38i5sQZhdisjBOF0y7a6C5TGsgxwvUQj5YqfW5HiKg1yrpqkUA0CgCC89dOyahLDxeLtJUXwYva7jXtRx6u9KBlxa72ie0E2tjnRHRrPX71Ip0co40hK4kBKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752104302; c=relaxed/simple;
-	bh=+saq+jsUrUpBT+5osqmmx0pEvV9D8xuRp7bJmqNCkdU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=NlgTzA/AfW3xNVBy9qT2gLjxzM/Yhunnjo8tlewy90JrzUqMymP8Jt2RzMxqqVthLayg5DmXzybThmkk89zpJgDXbxev1OSBpRR2Ajij2v0X9tUD+1yLfhoqVZD/GFaRDWErcPff4oPDYlaSa1ttNi5T8MBn5BwmNU5GxqUv3c8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XLH+iYGl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BA26C4CEEF;
-	Wed,  9 Jul 2025 23:38:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752104301;
-	bh=+saq+jsUrUpBT+5osqmmx0pEvV9D8xuRp7bJmqNCkdU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=XLH+iYGlSou+fshL81YHTKEnxmlfMB6lVH85uc/p0EZX1I1zxgzeaVyZGQA91E6xT
-	 kx1i1Xy7R/9kAwl9S7BhzVsQflbYiJ119OPziCYFCSsZJgjQWECEqwD109ONcrA5vW
-	 SpxdjzjpbsbqMt4gvRcaRz8tMhVjkYZBsUJpXmO35uJQAsAqtOTj3uOL+u6VF4Bxrv
-	 CY6BCcEBZ58Ow3bRCR8E/SJVmJ5END48v6ecEfesE9G0qPcl6TygvhcYfnPHb2wL1D
-	 4yK56gFhx1qLwb9ZTrOTDSM9lf9cjd7VX1XYONI4Q8B3vj4nOPoe4rx/ajVBh+azkK
-	 XfeGs4jqOTyJw==
-Date: Wed, 9 Jul 2025 18:38:20 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Parav Pandit <parav@nvidia.com>, virtualization@lists.linux.dev,
-	stefanha@redhat.com, alok.a.tiwari@oracle.com,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH RFC v5 1/5] pci: report surprise removal event
-Message-ID: <20250709233820.GA2212185@bhelgaas>
+	s=arc-20240116; t=1752104680; c=relaxed/simple;
+	bh=oR9vlIoz3z1bWTs0oe4CHRgE8zGYtJ4gjDlRndmXoXU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=rp6CLN6DOvwfpndykUq2R8Pv83mYIh+5ThxrU7ukAEJ/PQv06vCyp//DjgEqOzG7SSlrzMWGxzrlskmT585Hdz2BoGXVp8quUuXjpZV+ODdfbo+Cj0XnQ8Zp3pEpiDBtd9PzXZUHHAz3SLy74XoDzlPVzIqRLJc9zPoxnDQuNh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GFx05kvo; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752104679; x=1783640679;
+  h=date:from:to:cc:subject:message-id;
+  bh=oR9vlIoz3z1bWTs0oe4CHRgE8zGYtJ4gjDlRndmXoXU=;
+  b=GFx05kvo3eCcs4OVd1635QZlZ0t94IVMaBUKNuoolyMBE8cYZhGNYWxS
+   R1GZkL0QK64niHe0ktu5u6iwn5tNFsKAOADmwK7iHgvuaReNhocl2PVYk
+   OiISw+9SLfeQDlhObS2dzgjsOyKDg4fDU43Oc4le3E1mWr9irloZPgxum
+   4fMZtWuzNAs3QfQRx+0JIQTXLB5dK9fciMqK1dQ5PnenpRga3A3bBYt1Q
+   PNurSTlEui6vGvApb5QHI/L9hnHorFmDUjDYdYCWc+h/u5vJwWhEDM8/j
+   43lBzsYjLXOCUNQRU4XTCfn65kjugBhfOCWuFaZTe6kuoRl8vDakfTmSN
+   w==;
+X-CSE-ConnectionGUID: SZCFXB0QSx6Jh0zXQLgTLw==
+X-CSE-MsgGUID: WlSJbBqnQcupvrob3nje4Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11489"; a="54229850"
+X-IronPort-AV: E=Sophos;i="6.16,299,1744095600"; 
+   d="scan'208";a="54229850"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2025 16:44:39 -0700
+X-CSE-ConnectionGUID: W0SsI80fRTCmxLfSxg0MdQ==
+X-CSE-MsgGUID: sJfD7k+fReefpMjfo6G1zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,299,1744095600"; 
+   d="scan'208";a="160249513"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 09 Jul 2025 16:44:37 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uZeSo-0004DP-2a;
+	Wed, 09 Jul 2025 23:44:34 +0000
+Date: Thu, 10 Jul 2025 07:44:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:enumeration] BUILD SUCCESS
+ 83571b4f691c5414b848622c9ae9541c5d8b247f
+Message-ID: <202507100701.JQpNiPVn-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fba3d235e38c1c6fcef2a30ed083ad9e25b20fa3.1752094439.git.mst@redhat.com>
 
-Housekeeping: Note subject line convention. Indent with spaces in
-commit log.  Remove spurious plus signs.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
+branch HEAD: 83571b4f691c5414b848622c9ae9541c5d8b247f  PCI: Allow drivers to opt in to async probing
 
-On Wed, Jul 09, 2025 at 04:55:26PM -0400, Michael S. Tsirkin wrote:
-> At the moment, in case of a surprise removal, the regular remove
-> callback is invoked, exclusively.  This works well, because mostly, the
-> cleanup would be the same.
-> 
-> However, there's a race: imagine device removal was initiated by a user
-> action, such as driver unbind, and it in turn initiated some cleanup and
-> is now waiting for an interrupt from the device. If the device is now
-> surprise-removed, that never arrives and the remove callback hangs
-> forever.
-> 
-> For example, this was reported for virtio-blk:
-> 
-> 	1. the graceful removal is ongoing in the remove() callback, where disk
-> 	   deletion del_gendisk() is ongoing, which waits for the requests +to
-> 	   complete,
-> 
-> 	2. Now few requests are yet to complete, and surprise removal started.
-> 
-> 	At this point, virtio block driver will not get notified by the driver
-> 	core layer, because it is likely serializing remove() happening by
-> 	+user/driver unload and PCI hotplug driver-initiated device removal.  So
-> 	vblk driver doesn't know that device is removed, block layer is waiting
-> 	for requests completions to arrive which it never gets.  So
-> 	del_gendisk() gets stuck.
-> 
-> Drivers can artificially add timeouts to handle that, but it can be
-> flaky.
-> 
-> Instead, let's add a way for the driver to be notified about the
-> disconnect. It can then do any necessary cleanup, knowing that the
-> device is inactive.
+elapsed time: 1454m
 
-This relies on somebody (typically pciehp, I guess) calling
-pci_dev_set_disconnected() when a surprise remove happens.
+configs tested: 259
+configs skipped: 4
 
-Do you think it would be practical for the driver's .remove() method
-to recognize that the device may stop responding at any point, even if
-no hotplug driver is present to call pci_dev_set_disconnected()?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Waiting forever for an interrupt seems kind of vulnerable in general.
-Maybe "artificially adding timeouts" is alluding to *not* waiting
-forever for interrupts?  That doesn't seem artificial to me because
-it's just a fact of life that devices can disappear at arbitrary
-times.
+tested configs:
+alpha                            alldefconfig    gcc-15.1.0
+alpha                             allnoconfig    clang-21
+alpha                            allyesconfig    clang-19
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    clang-19
+arc                              allmodconfig    clang-19
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    clang-21
+arc                              allyesconfig    clang-19
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    clang-19
+arc                 nsimosci_hs_smp_defconfig    gcc-15.1.0
+arc                   randconfig-001-20250709    gcc-10.5.0
+arc                   randconfig-001-20250709    gcc-8.5.0
+arc                   randconfig-001-20250710    clang-21
+arc                   randconfig-002-20250709    gcc-10.5.0
+arc                   randconfig-002-20250709    gcc-11.5.0
+arc                   randconfig-002-20250710    clang-21
+arc                    vdk_hs38_smp_defconfig    gcc-15.1.0
+arm                              allmodconfig    clang-19
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    clang-19
+arm                                 defconfig    clang-19
+arm                   randconfig-001-20250709    gcc-10.5.0
+arm                   randconfig-001-20250709    gcc-12.4.0
+arm                   randconfig-001-20250710    clang-21
+arm                   randconfig-002-20250709    gcc-10.5.0
+arm                   randconfig-002-20250710    clang-21
+arm                   randconfig-003-20250709    clang-21
+arm                   randconfig-003-20250709    gcc-10.5.0
+arm                   randconfig-003-20250710    clang-21
+arm                   randconfig-004-20250709    clang-21
+arm                   randconfig-004-20250709    gcc-10.5.0
+arm                   randconfig-004-20250710    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    clang-21
+arm64                               defconfig    clang-19
+arm64                 randconfig-001-20250709    clang-21
+arm64                 randconfig-001-20250709    gcc-10.5.0
+arm64                 randconfig-001-20250710    clang-21
+arm64                 randconfig-002-20250709    gcc-10.5.0
+arm64                 randconfig-002-20250709    gcc-15.1.0
+arm64                 randconfig-002-20250710    clang-21
+arm64                 randconfig-003-20250709    clang-21
+arm64                 randconfig-003-20250709    gcc-10.5.0
+arm64                 randconfig-003-20250710    clang-21
+arm64                 randconfig-004-20250709    gcc-10.5.0
+arm64                 randconfig-004-20250710    clang-21
+csky                              allnoconfig    clang-21
+csky                                defconfig    clang-19
+csky                  randconfig-001-20250709    gcc-14.2.0
+csky                  randconfig-001-20250709    gcc-15.1.0
+csky                  randconfig-002-20250709    gcc-14.2.0
+csky                  randconfig-002-20250709    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-19
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-19
+hexagon               randconfig-001-20250709    clang-19
+hexagon               randconfig-001-20250709    gcc-14.2.0
+hexagon               randconfig-002-20250709    clang-21
+hexagon               randconfig-002-20250709    gcc-14.2.0
+i386                             allmodconfig    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250709    clang-20
+i386        buildonly-randconfig-001-20250709    gcc-12
+i386        buildonly-randconfig-001-20250710    clang-20
+i386        buildonly-randconfig-002-20250709    clang-20
+i386        buildonly-randconfig-002-20250710    clang-20
+i386        buildonly-randconfig-003-20250709    clang-20
+i386        buildonly-randconfig-003-20250710    clang-20
+i386        buildonly-randconfig-004-20250709    clang-20
+i386        buildonly-randconfig-004-20250710    clang-20
+i386        buildonly-randconfig-005-20250709    clang-20
+i386        buildonly-randconfig-005-20250709    gcc-12
+i386        buildonly-randconfig-005-20250710    clang-20
+i386        buildonly-randconfig-006-20250709    clang-20
+i386        buildonly-randconfig-006-20250710    clang-20
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250709    clang-20
+i386                  randconfig-001-20250710    gcc-12
+i386                  randconfig-002-20250709    clang-20
+i386                  randconfig-002-20250710    gcc-12
+i386                  randconfig-003-20250709    clang-20
+i386                  randconfig-003-20250710    gcc-12
+i386                  randconfig-004-20250709    clang-20
+i386                  randconfig-004-20250710    gcc-12
+i386                  randconfig-005-20250709    clang-20
+i386                  randconfig-005-20250710    gcc-12
+i386                  randconfig-006-20250709    clang-20
+i386                  randconfig-006-20250710    gcc-12
+i386                  randconfig-007-20250709    clang-20
+i386                  randconfig-007-20250710    gcc-12
+i386                  randconfig-011-20250709    clang-20
+i386                  randconfig-011-20250710    clang-20
+i386                  randconfig-012-20250709    clang-20
+i386                  randconfig-012-20250710    clang-20
+i386                  randconfig-013-20250709    clang-20
+i386                  randconfig-013-20250710    clang-20
+i386                  randconfig-014-20250709    clang-20
+i386                  randconfig-014-20250710    clang-20
+i386                  randconfig-015-20250709    clang-20
+i386                  randconfig-015-20250710    clang-20
+i386                  randconfig-016-20250709    clang-20
+i386                  randconfig-016-20250710    clang-20
+i386                  randconfig-017-20250709    clang-20
+i386                  randconfig-017-20250710    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-21
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20250709    gcc-14.2.0
+loongarch             randconfig-001-20250709    gcc-15.1.0
+loongarch             randconfig-002-20250709    gcc-12.4.0
+loongarch             randconfig-002-20250709    gcc-14.2.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                          atari_defconfig    gcc-15.1.0
+m68k                                defconfig    clang-19
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                         10m50_defconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-15.1.0
+nios2                               defconfig    gcc-15.1.0
+nios2                 randconfig-001-20250709    gcc-14.2.0
+nios2                 randconfig-002-20250709    gcc-14.2.0
+openrisc                          allnoconfig    clang-21
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    clang-21
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250709    gcc-14.2.0
+parisc                randconfig-001-20250709    gcc-15.1.0
+parisc                randconfig-002-20250709    gcc-14.2.0
+parisc                randconfig-002-20250709    gcc-14.3.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    clang-21
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    gcc-15.1.0
+powerpc               randconfig-001-20250709    gcc-14.2.0
+powerpc               randconfig-001-20250709    gcc-8.5.0
+powerpc               randconfig-002-20250709    clang-21
+powerpc               randconfig-002-20250709    gcc-14.2.0
+powerpc               randconfig-003-20250709    clang-21
+powerpc               randconfig-003-20250709    gcc-14.2.0
+powerpc                     tqm5200_defconfig    gcc-15.1.0
+powerpc                     tqm8540_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20250709    gcc-10.5.0
+powerpc64             randconfig-001-20250709    gcc-14.2.0
+powerpc64             randconfig-002-20250709    gcc-10.5.0
+powerpc64             randconfig-002-20250709    gcc-14.2.0
+powerpc64             randconfig-003-20250709    clang-21
+powerpc64             randconfig-003-20250709    gcc-14.2.0
+riscv                            allmodconfig    gcc-15.1.0
+riscv                             allnoconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    gcc-15.1.0
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250709    gcc-10.5.0
+riscv                 randconfig-001-20250709    gcc-12
+riscv                 randconfig-002-20250709    clang-21
+riscv                 randconfig-002-20250709    gcc-12
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250709    clang-17
+s390                  randconfig-001-20250709    gcc-12
+s390                  randconfig-002-20250709    clang-21
+s390                  randconfig-002-20250709    gcc-12
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-12
+sh                          polaris_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250709    gcc-10.5.0
+sh                    randconfig-001-20250709    gcc-12
+sh                    randconfig-002-20250709    gcc-12
+sh                    randconfig-002-20250709    gcc-14.3.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250709    gcc-12
+sparc                 randconfig-001-20250709    gcc-15.1.0
+sparc                 randconfig-002-20250709    gcc-10.3.0
+sparc                 randconfig-002-20250709    gcc-12
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250709    clang-21
+sparc64               randconfig-001-20250709    gcc-12
+sparc64               randconfig-002-20250709    clang-21
+sparc64               randconfig-002-20250709    gcc-12
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-19
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250709    clang-17
+um                    randconfig-001-20250709    gcc-12
+um                    randconfig-002-20250709    gcc-12
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250709    clang-20
+x86_64      buildonly-randconfig-001-20250709    gcc-12
+x86_64      buildonly-randconfig-002-20250709    clang-20
+x86_64      buildonly-randconfig-003-20250709    clang-20
+x86_64      buildonly-randconfig-003-20250709    gcc-12
+x86_64      buildonly-randconfig-004-20250709    clang-20
+x86_64      buildonly-randconfig-004-20250709    gcc-12
+x86_64      buildonly-randconfig-005-20250709    clang-20
+x86_64      buildonly-randconfig-006-20250709    clang-20
+x86_64      buildonly-randconfig-006-20250709    gcc-12
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250709    clang-20
+x86_64                randconfig-002-20250709    clang-20
+x86_64                randconfig-003-20250709    clang-20
+x86_64                randconfig-004-20250709    clang-20
+x86_64                randconfig-005-20250709    clang-20
+x86_64                randconfig-006-20250709    clang-20
+x86_64                randconfig-007-20250709    clang-20
+x86_64                randconfig-008-20250709    clang-20
+x86_64                randconfig-071-20250709    gcc-12
+x86_64                randconfig-072-20250709    gcc-12
+x86_64                randconfig-073-20250709    gcc-12
+x86_64                randconfig-074-20250709    gcc-12
+x86_64                randconfig-075-20250709    gcc-12
+x86_64                randconfig-076-20250709    gcc-12
+x86_64                randconfig-077-20250709    gcc-12
+x86_64                randconfig-078-20250709    gcc-12
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250709    gcc-12
+xtensa                randconfig-001-20250709    gcc-8.5.0
+xtensa                randconfig-002-20250709    gcc-11.5.0
+xtensa                randconfig-002-20250709    gcc-12
 
-It seems a little fragile to me to depend on some other part of the
-system to notice the surprise removal and tell you about it or
-schedule your work function.  I think it would be more robust for the
-driver to check directly, i.e., assume writes to the device may be
-lost, check for PCI_POSSIBLE_ERROR() after reads from the device, and
-never wait for an interrupt without a timeout.
-
-> Since cleanups can take a long time, this takes an approach
-> of a work struct that the driver initiates and enables
-> on probe, and tears down on remove.
-> 
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  drivers/pci/pci.h   |  6 ++++++
->  include/linux/pci.h | 45 +++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 51 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 12215ee72afb..3ca4ebfd46be 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -553,6 +553,12 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
->  	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
->  	pci_doe_disconnected(dev);
->  
-> +	if (READ_ONCE(dev->disconnect_work_enable)) {
-> +		/* Make sure work is up to date. */
-> +		smp_rmb();
-> +		schedule_work(&dev->disconnect_work);
-> +	}
-> +
->  	return 0;
->  }
->  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 05e68f35f392..723b17145b62 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -548,6 +548,10 @@ struct pci_dev {
->  	/* These methods index pci_reset_fn_methods[] */
->  	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
->  
-> +	/* Report disconnect events. 0x0 - disable, 0x1 - enable */
-> +	u8 disconnect_work_enable;
-> +	struct work_struct disconnect_work;
-> +
->  #ifdef CONFIG_PCIE_TPH
->  	u16		tph_cap;	/* TPH capability offset */
->  	u8		tph_mode;	/* TPH mode */
-> @@ -1993,6 +1997,47 @@ pci_release_mem_regions(struct pci_dev *pdev)
->  			    pci_select_bars(pdev, IORESOURCE_MEM));
->  }
->  
-> +/*
-> + * Run this first thing after getting a disconnect work, to prevent it from
-> + * running multiple times.
-> + * Returns: true if disconnect was enabled, proceed. false if disabled, abort.
-> + */
-> +static inline bool pci_test_and_clear_disconnect_enable(struct pci_dev *pdev)
-> +{
-> +	u8 enable = 0x1;
-> +	u8 disable = 0x0;
-> +	return try_cmpxchg(&pdev->disconnect_work_enable, &enable, disable);
-> +}
-> +
-> +/*
-> + * Caller must initialize @pdev->disconnect_work before invoking this.
-> + * The work function must run and check pci_test_and_clear_disconnect_enable.
-> + * Note that device can go away right after this call.
-> + */
-> +static inline void pci_set_disconnect_work(struct pci_dev *pdev)
-> +{
-> +	/* Make sure WQ has been initialized already */
-> +	smp_wmb();
-> +
-> +	WRITE_ONCE(pdev->disconnect_work_enable, 0x1);
-> +
-> +	/* check the device did not go away meanwhile. */
-> +	mb();
-> +
-> +	if (!pci_device_is_present(pdev))
-> +		schedule_work(&pdev->disconnect_work);
-> +}
-> +
-> +static inline void pci_clear_disconnect_work(struct pci_dev *pdev)
-> +{
-> +	WRITE_ONCE(pdev->disconnect_work_enable, 0x0);
-> +
-> +	/* Make sure to stop using work from now on. */
-> +	smp_wmb();
-> +
-> +	cancel_work_sync(&pdev->disconnect_work);
-> +}
-> +
->  #else /* CONFIG_PCI is not enabled */
->  
->  static inline void pci_set_flags(int flags) { }
-> -- 
-> MST
-> 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
