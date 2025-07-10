@@ -1,238 +1,216 @@
-Return-Path: <linux-pci+bounces-31859-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31860-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EE3FB00747
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 17:42:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8928BB0078F
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 17:50:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E80D48053C
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 15:38:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF75F3A44D6
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 15:49:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F9002EA759;
-	Thu, 10 Jul 2025 15:32:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1EAC27510A;
+	Thu, 10 Jul 2025 15:49:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2tHOLqW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TsARUbBS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACA32EA73C;
-	Thu, 10 Jul 2025 15:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E91274FE4;
+	Thu, 10 Jul 2025 15:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752161532; cv=none; b=hg/CxVwN8CgRCoaqv7ZzdhrDyWoOls7UMbBvy/8sT2pI87Rypes2KGruDfU4YC38chCbCk8r6WzaJn4iRbq/bChrjz07/odyT4qroSGnq4Dz1LZNdGG3D8rM1hqCGNCC/0TurE8HUTYcKnq/uH7knO28Lv+tNFoYlehqLQpTMe0=
+	t=1752162568; cv=none; b=TsWjQMnp10n+3nDSfYFobIl6XwTDtTNiwwtovfwRTxSCnuy8RUOfJ0GFWLFCMoWx7ccuApuy8bq/KLJEaw22WwEYVk5VfhV6SmD1o8KmvwrM1mUeTxAbrKCFLYcBYya5cSpeWeKxJmYuxUspCuvirWXugi8fOLP3A/BWf8dCpqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752161532; c=relaxed/simple;
-	bh=lLdnM+NUEuXkQdsCZ2Zc/ZWA5W8wgiORDQ2a6677Zzo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IQhSe7SYC7glGeEpmnVeCfn4FWCWUqx3Yv2sJxYkJOSdkobLMzJhe+NEoIkXgM2Rba59OIdEr4gyFBYhDmQLOspEDkRVWwiEDKew0U9DkPwKeZYWnZ7Zz0AQ54KVn6Iv7racMZvONi73/dpA0Sjq/TT6yJKsgEwhkcFnT+azL0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H2tHOLqW; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6face367320so10040656d6.3;
-        Thu, 10 Jul 2025 08:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752161529; x=1752766329; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qg9MyoLzW2O/wZTFQuwcCSu9JeslcLq4bzCQcPCtBGw=;
-        b=H2tHOLqWsA/F9mJv+GKxy7Wvb1tP/3gMKiJipylhtMWB3Xqq8PxJ4hL5ey7LIOn2rS
-         LwLlqcKTBLprwN9jkhBH2yKlB3yxII02DuVw6bibBBrMHDB3OnmLFOBtEhiEBmpRXne0
-         wxOMxtlA9KZBz2ScGpgBOpZClHFw2sYPkdt+Eu5e1DXflitGMLbD6jl+BEIZNGiJB1IS
-         7u1vRqNs8czVBj7iapBCuicCpf8dg5BpUlDYAMV86ywh4Ity2rWt+YuqAufOdbXr4iJL
-         E7SgBUgnPuGxbB1EVvGN4e75lcQQjUknD1IgDZI7jTmiWl71YHKEBkxmuOeFkS96xpQt
-         5Lnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752161529; x=1752766329;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qg9MyoLzW2O/wZTFQuwcCSu9JeslcLq4bzCQcPCtBGw=;
-        b=fr8BAfjZfC823xSNDi8T+Njkm375b2w4Yva6zyHJchOZsVud82oJRP9qwx2iOODXWF
-         W+dFPW3mtIZudYfM4STNk9Vw+ovh7mJQyi76LapSSfahSHbpfC6kqpQjOH8xxiTVQHO0
-         lLMIGDjdCu0h1PYkLAywIppikmhES5s7fHhs9FRKQxxeeBwKMVTYmsyQ4XCMS259iIym
-         GQjjHEhvGC1g17lBw4bUaW4OYgJhL5OhIlcyJZ1O/E28WxmMyOkqFtEuVdDieVsEkTFm
-         Wf8nRaYKRULjwtBhpDjHYgzCHIDgyx2Kz0DUrvd0PW5e4b31JC2vyNrja2wh11SDzx09
-         2wcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNPo8ztHMvstNB5uOIJ5Ht95+ugQDreiZ0q4H5eW4SeDo85yE6ahJHIdxEr/jRPtW3GED2eUAs1Iq3G4Hv8IA=@vger.kernel.org, AJvYcCUVIJKbeldAT1iOs81ce2UO6ZA4QtIYUxe2SA/GJvtjltHH/sX4uFqJgAQqyhXSOh4MS4QarbDD/YABFQ==@vger.kernel.org, AJvYcCUYqb8yhy2JVggzvJ8BG7N39Cn8tpazPGeMrTJZ50sBsMo/doKUYrGthYZyiK1CrAyqiwfdgykq@vger.kernel.org, AJvYcCVJcOXJ0VvfepV6A1ASFgVpRWY4pSdghv5LpNkezmRBrb17undJhUhY+ZkuDTQnnlnNUMlCK4rioB6S@vger.kernel.org, AJvYcCVo5m1rlrV8/2s3ssP1sSYQq+z83Ee9JfQt1VXwsshzH287y/g//SUvJEeRD1S1MZxEooGtTjYRqOV+Dm26DV2U@vger.kernel.org, AJvYcCXJtWOrpYSwS+qHacLTnykXyQHwaFH847PmVyCd6qSOfpdmFtgAV8vPWdXRaFkY0/HUibYssOjlrx+M@vger.kernel.org, AJvYcCXkQup6nqO+6OKlAxo9aFjSDMeE8dK15n0QIZ9eisOrd8NrGoQ63mcjiX65YFH7osOzS8CqyqB5HfFM3GpJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCBP0y17bK2oCxc570hYMuD8Ho55sJBGysQ/UGoGn5RkfNXSuB
-	uDUJBi3ReOnuGl3QOt4HgohW8+xeDA507WW2SrxtLY/IQDnxLxYkAgG2
-X-Gm-Gg: ASbGncu2qj5CiaSAdaRxvftywAFpJPu0kIHttrFdZDNHVETnhHaMcnU9ywtvZYDdcrr
-	XyuAxZoYQOXgTP/3gKIBts/HmA2WvyX8WXmUGpIXqCU6UbYI9e7tCflxz77AydFevm0LjWwZO4R
-	xOiOVgppdXsKCwR22yJXOjLEyXRLnWxnKMoaLAi5u2TPDmIy/X92Z12DUWlaONFQNbk9JQD2jZL
-	L+XiVZbEipp7Wl/bZTmjfW33mdl944IA4dKC36B/oRmQNcmwc1MtHHKCfe786SZIXrFaICKpvRr
-	cIiHeBXWsKgapkJHivQGNYmi43w2fHTaDU94D3ReKU0O6uvmCJsYVJ0sjGZqr/0rmzrBTFdJcvW
-	LSFdvhc1T1n5rgkK/RbW/4YzNYR4dKlq5o7qTPs6pTk8cxFgOW5cD3aDjjw==
-X-Google-Smtp-Source: AGHT+IGR2RRZQW2bcini0bMXKS9fKRmwAOf5eVXkkfrEVuuKui6PaVOKJy0ulnbPEP69BzEKMolKgw==
-X-Received: by 2002:a05:6214:328e:b0:6fa:bb26:1459 with SMTP id 6a1803df08f44-70494eeb96cmr79324366d6.7.1752161529395;
-        Thu, 10 Jul 2025 08:32:09 -0700 (PDT)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([148.76.185.197])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-704979dbc3asm9449496d6.38.2025.07.10.08.32.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Jul 2025 08:32:08 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 10 Jul 2025 11:31:20 -0400
-Subject: [PATCH 17/17] rust: sync: replace `kernel::c_str!` with C-Strings
+	s=arc-20240116; t=1752162568; c=relaxed/simple;
+	bh=foG9f9cdzF4VjUfn2UjSlnSdvbnX8/uWCSS01L4+zeY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ePJ49MMmJSw7DuPvYGR3E2GWR7TLzgYL5BBUlFdlnAqJD6SJuV/ea18MtLlpFPxw7zroSZmi/edWmhbo/REUsCDDJyd/SL5/czZBL2G47cMazcETAt21biCbAuKPJSRiJ6n/ZzZK3lfytT1NaaK9ATCppXRck3Z1fhS/I60e/88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TsARUbBS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 212F1C4CEE3;
+	Thu, 10 Jul 2025 15:49:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752162568;
+	bh=foG9f9cdzF4VjUfn2UjSlnSdvbnX8/uWCSS01L4+zeY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=TsARUbBSF0wAe3pbM5uyEMmR9Ln5cuZ3udIlyzm4MYZwV/Y2RWpc1nDqSSRTHkE98
+	 ZuIzkvCMq63HnwyQC2tC9y6CaOWHFqPKE0COCNrM7BEXbxAd/vMIm1DumdxgJBkbEJ
+	 upZVauqkPcJFek8GCxKOKjT5heqjge5H3ZHFqHdWBzoic/Ct5MzDw+1te9HELqoURE
+	 hHOMkS0ocyix2d6kY19sg8zCwQYrbzlfnJ7cWpRkxWWn6TChNGka2+67GRvnzpn03W
+	 9ZfyzT3zingvYk2OMz5UKWM5ZCGzzReiCGVfhc9SPSeW28I9GGjyO5K9TRGoSBGpgX
+	 dOcPsVrfk999Q==
+Date: Thu, 10 Jul 2025 10:49:26 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alex Huang <huangalex409@gmail.com>
+Cc: Kenneth Feng <kenneth.feng@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: BUG: ASPM issues with Radeon Pro WX3100
+Message-ID: <20250710154926.GA2250118@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250710-core-cstr-cstrings-v1-17-027420ea799e@gmail.com>
-References: <20250710-core-cstr-cstrings-v1-0-027420ea799e@gmail.com>
-In-Reply-To: <20250710-core-cstr-cstrings-v1-0-027420ea799e@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- FUJITA Tomonori <fujita.tomonori@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Breno Leitao <leitao@debian.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
- Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Arnd Bergmann <arnd@arndb.de>, Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
- Jens Axboe <axboe@kernel.dk>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
- dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
- linux-clk@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
- linux-block@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openssh-sha256; t=1752161491; l=3792;
- i=tamird@gmail.com; h=from:subject:message-id;
- bh=lLdnM+NUEuXkQdsCZ2Zc/ZWA5W8wgiORDQ2a6677Zzo=;
- b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgtYz36g7iDMSkY5K7Ab51ksGX7hJgs
- MRt+XVZTrIzMVIAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
- QEQCLdocV7E4OivASyLh0mReapGH3HAqrlKw6p+xfkfcFh+9TajU5mVNbgdK6iJLvlwtkJLY9Sp
- YR4gNbcIrDgs=
-X-Developer-Key: i=tamird@gmail.com; a=openssh;
- fpr=SHA256:264rPmnnrb+ERkS7DDS3tuwqcJss/zevJRzoylqMsbc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8640445b-a868-4c1f-a32b-449bbffa2553@gmail.com>
 
-C-String literals were added in Rust 1.77. Replace instances of
-`kernel::c_str!` with C-String literals where possible.
+On Wed, Jul 09, 2025 at 09:02:17PM -0400, Alex Huang wrote:
+> On 2025-07-08 19:07, Bjorn Helgaas wrote:
+> > On Thu, Jul 03, 2025 at 12:09:20AM -0400, Alex Huang wrote:
+> >> Recently, I dug up a Radeon Pro WX3100 and when booting, got a black screen
+> >> with some complaints of No EDID read and then a `Fatal error during GPU
+> >> init`. With windows booting fine and an MSI Kombustor run turning out just
+> >> fine, I would say hardware failure highly unlikely. The logs seem unrelated
+> >> (although I have attached them anyways), lspci -vvxxx output for the device
+> >> is also at the end of the email. Also here is lspci -vvxxx for the upstream
+> >> PCI bridge attached to the GPU.
+> >>
+> >> A bisect reveals the offending commit is 0064b0ce85bb ("drm/amd/pm: enable
+> >> ASPM by default"). The simple fix appears to be setting `amdgpu.aspm=0` in
+> >> kernel boot parameters. This seemingly is a case of something in the Lenovo
+> >> ideacentre (specifically the ideacentre 510A-15ARR I found this bug on)
+> >> incorrectly reporting ASPM availability. I'd think this is a PCI driver
+> >> issue, but I am by no means an expert here. If this ends up on the wrong
+> >> mailing list, please do let me know.
+> > 
+> > The messages below show that you're running v5.12.0-rc7+, but
+> > 0064b0ce85bb didn't appear until v5.14.  Obviously it was reproducible
+> > if you could bisect it, but I'm confused about where you observed the
+> > problem.
+> 
+> Prior to v5.14, it's possible to replicate the bug with
+> amdgpu.aspm=1, basically replicating what the change itself did.
+> > 
+> > The newer log you posted at
+> > https://lore.kernel.org/r/e03b119d-4a27-45a0-8058-3ac7fbee23c7@gmail.com
+> > is from v6.16.0-rc4+, which is great because it's a current kernel,
+> > but the issue there looks much different (an oops in
+> > drm_gem_object_handle_put_unlocked()) and doesn't seem like a PCI
+> > issue at all.
+> 
+> Sorry, I had assumed you wanted the output from the PCI debug patch,
+> which is why I had set amdgpu.aspm=0 to have easier access to logs.
+> I've attached a log where the bug can be seen, although it's just
+> amdgpu complaining and then falling over.
+> 
+> > If you can reproduce a PCI issue in v6.16, I'd love to look at it, but
+> > right now I don't see anything I can help with.
+> 
+> Annoyingly, PCI doesn't complain at all about this issue, PCI just
+> quietly reports ASPM is available (even when that is not the case)
+> and amdgpu uses that to attempt to configure ASPM for the graphics
+> card.
+>
+> Peeking at the return value for amdgpu_device_should_use_aspm shows
+> pcie_aspm_enabled returns true even though ASPM is explicitly set to
+> the "disable" mode in the BIOS.
+>
+> Leading me to believe this is a case of ASPM being incorrectly
+> detected as enabled.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- drivers/block/rnull.rs         | 2 +-
- rust/kernel/sync.rs            | 5 ++---
- rust/kernel/sync/completion.rs | 2 +-
- rust/kernel/workqueue.rs       | 8 ++++----
- 4 files changed, 8 insertions(+), 9 deletions(-)
+ASPM is designed to be a feature that the PCI core can discover and
+configure independent of the driver.  Devices advertise ASPM support
+via their Link Capabilities register, e.g., this one claims to support
+L1 as well as the L1.1 and L1.2 substates:
 
-diff --git a/drivers/block/rnull.rs b/drivers/block/rnull.rs
-index 6366da12c5a5..9aa79b862b63 100644
---- a/drivers/block/rnull.rs
-+++ b/drivers/block/rnull.rs
-@@ -55,7 +55,7 @@ fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
-         })();
- 
-         try_pin_init!(Self {
--            _disk <- new_mutex!(disk?, "nullb:disk"),
-+            _disk <- new_mutex!(disk?, c"nullb:disk"),
-         })
-     }
- }
-diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
-index 63c99e015ad6..9a6d2753937d 100644
---- a/rust/kernel/sync.rs
-+++ b/rust/kernel/sync.rs
-@@ -43,7 +43,6 @@ impl LockClassKey {
-     ///
-     /// # Examples
-     /// ```
--    /// # use kernel::c_str;
-     /// # use kernel::alloc::KBox;
-     /// # use kernel::types::ForeignOwnable;
-     /// # use kernel::sync::{LockClassKey, SpinLock};
-@@ -55,7 +54,7 @@ impl LockClassKey {
-     /// {
-     ///     stack_pin_init!(let num: SpinLock<u32> = SpinLock::new(
-     ///         0,
--    ///         c_str!("my_spinlock"),
-+    ///         c"my_spinlock",
-     ///         // SAFETY: `key_ptr` is returned by the above `into_foreign()`, whose
-     ///         // `from_foreign()` has not yet been called.
-     ///         unsafe { <Pin<KBox<LockClassKey>> as ForeignOwnable>::borrow(key_ptr) }
-@@ -111,6 +110,6 @@ macro_rules! optional_name {
-         $crate::c_str!(::core::concat!(::core::file!(), ":", ::core::line!()))
-     };
-     ($name:literal) => {
--        $crate::c_str!($name)
-+        $name
-     };
- }
-diff --git a/rust/kernel/sync/completion.rs b/rust/kernel/sync/completion.rs
-index c50012a940a3..97d39c248793 100644
---- a/rust/kernel/sync/completion.rs
-+++ b/rust/kernel/sync/completion.rs
-@@ -34,7 +34,7 @@
- /// impl MyTask {
- ///     fn new() -> Result<Arc<Self>> {
- ///         let this = Arc::pin_init(pin_init!(MyTask {
--///             work <- new_work!("MyTask::work"),
-+///             work <- new_work!(c"MyTask::work"),
- ///             done <- Completion::new(),
- ///         }), GFP_KERNEL)?;
- ///
-diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
-index cce23684af24..432624c69c72 100644
---- a/rust/kernel/workqueue.rs
-+++ b/rust/kernel/workqueue.rs
-@@ -51,7 +51,7 @@
- //!     fn new(value: i32) -> Result<Arc<Self>> {
- //!         Arc::pin_init(pin_init!(MyStruct {
- //!             value,
--//!             work <- new_work!("MyStruct::work"),
-+//!             work <- new_work!(c"MyStruct::work"),
- //!         }), GFP_KERNEL)
- //!     }
- //! }
-@@ -98,8 +98,8 @@
- //!         Arc::pin_init(pin_init!(MyStruct {
- //!             value_1,
- //!             value_2,
--//!             work_1 <- new_work!("MyStruct::work_1"),
--//!             work_2 <- new_work!("MyStruct::work_2"),
-+//!             work_1 <- new_work!(c"MyStruct::work_1"),
-+//!             work_2 <- new_work!(c"MyStruct::work_2"),
- //!         }), GFP_KERNEL)
- //!     }
- //! }
-@@ -215,7 +215,7 @@ pub fn try_spawn<T: 'static + Send + FnOnce()>(
-         func: T,
-     ) -> Result<(), AllocError> {
-         let init = pin_init!(ClosureWork {
--            work <- new_work!("Queue::try_spawn"),
-+            work <- new_work!(c"Queue::try_spawn"),
-             func: Some(func),
-         });
- 
+  01:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Lexa XT [Radeon PRO WX 3100] (prog-if 00 [VGA controller])
+    Capabilities: [58] Express (v2) Legacy Endpoint, MSI 00
+      LnkCap: Port #0, Speed 8GT/s, Width x8, ASPM L1, Exit Latency L1 <1us
+	      ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
+    Capabilities: [370 v1] L1 PM Substates
+      L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+		PortCommonModeRestoreTime=0us PortTPowerOnTime=170us
 
--- 
-2.50.0
+I don't know what your BIOS "disable" switch does.  It's possible it
+just keeps BIOS from configuring ASPM, while leaving it advertised as
+"supported" in config space, and Linux would configure ASPM in that
+case.  There is also a bit in the ACPI FADT that says "OSPM must not
+enable OSPM ASPM control on this platform," and maybe the BIOS
+"disable" switch would set that.  If set, this would be mentioned in
+the dmesg log.
 
+I don't have any insight into why amdgpu inserts itself in the middle
+of ASPM configuration.  There might be hardware defects it works
+around, or it could be working around old or current ASPM defects in
+the PCI core.
+
+> My reasons for my conclusion can basically be summarized like this:
+> - pcie_aspm_enabled returns true even if ASPM is disabled in BIOS.
+
+The BIOS switch could (a) prevent BIOS from enabling ASPM itself
+(could figure this out by booting with "pci=earlydump" and looking at
+Link Control), (b) set the ACPI FADT bit (would be shown in dmesg), or
+(c) change what's advertised in Link Capabilities (very unlikely since
+it would require AMDGPU-specific support in BIOS; also, Linux can't
+change Link Capabilities, and lspci showed L1 supported).  There's no
+other BIOS-OS handshake I'm aware of.
+
+> - amdgpu crashes with a non obvious issue and a lot of warnings as
+>   long as it tries to configure ASPM.
+
+ASPM configuration should only affect power consumption.  AFAIK, even
+if it's configured incorrectly, we should not see any functional
+issues.
+
+> - putting the WX3100 into another machine caused it to boot just
+>   fine, and did in fact correctly configure ASPM.
+
+I mentioned my suspicion of L1.2 because that does depend on some
+platform electrical properties that we don't know how to discover.
+But even so, we shouldn't see a functional issue.
+
+> - https://lore.kernel.org/lkml/CADnq5_PmxGxrJG5uZkkFXQ1YbJbDZTvAqb2oYqdCE=NtqBojqw@mail.gmail.com/
+>   mentions "It's more of an issue with whether the underlying
+>   platform supports ASPM or not"
+> 
+> It's possible I'm barking up the wrong tree here, I'm not familiar
+> with this part of the kernel, if this turns out to actually be an
+> amdgpu problem, please let me know.
+
+> >> I also did try enabling/disabling ASPM on the BIOS side to no avail.
+> >>
+> >> The bug appears to be systematically existent for many other cards I ended
+> >> up plugging into the device (thus conclusion as PCI driver issue). 
+
+This sounds interesting.  More details here?  I guess you also see
+issues with different cards plugged into the same slot?  And there
+appears to be some ASPM connection there, too?
+
+> ...
+> kernel: amdgpu 0000:01:00.0: amdgpu: [drm] Display Core v3.2.334 initialized on DCE 11.2
+> kernel: amdgpu 0000:01:00.0: [drm] *ERROR* No EDID read.
+> kernel: amdgpu 0000:01:00.0: [drm] *ERROR* No EDID read.
+> kernel: amdgpu 0000:01:00.0: [drm] *ERROR* No EDID read.
+> kernel: amdgpu 0000:01:00.0: amdgpu:
+>         last message was failed ret is 65535
+
+This is in smu7_send_msg_to_smc() and it looks like we might have
+gotten ~0 when reading a register.  Possibly a PCIe error, since the
+Root Complex typically synthesizes ~0 data returns when a read fails
+on PCIe.
+
+> kernel: ------------[ cut here ]------------
+> kernel: WARNING: CPU: 1 PID: 154 at drivers/gpu/drm/amd/amdgpu/uvd_v6_0.c:1111 uvd_v6_0_ring_insert_nop+0xb5/0xc0 [amdgpu]
+
+This is:
+
+  WARN_ON(ring->wptr % 2 || count % 2);
+
+so apparently ring->wptr or count are expected to be even, but at
+least one was odd.  Makes me wonder if wptr was set from a PCIe read
+that returned ~0.
+
+Both are a little odd since I don't see any AER errors mentioned in
+the dmesg or the lspci output.  But worth looking into to see if there
+are errors that we could catch earlier or handle better.  Also of
+course odd if an error like this were related to ASPM.
+
+Bjorn
 
