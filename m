@@ -1,123 +1,124 @@
-Return-Path: <linux-pci+bounces-31871-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31872-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8392FB00B12
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 20:09:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71148B00BD0
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 21:06:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51C723B8611
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 18:08:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 74E461C885D1
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 19:06:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 801C52FCFDA;
-	Thu, 10 Jul 2025 18:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6BFA2FCFE0;
+	Thu, 10 Jul 2025 19:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+sWyJeV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UpRhusBm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f196.google.com (mail-yb1-f196.google.com [209.85.219.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562932FCFD2;
-	Thu, 10 Jul 2025 18:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555E825760;
+	Thu, 10 Jul 2025 19:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752170926; cv=none; b=ROWlV2+GtvI5RSt4CO8wbOlgHhCYBV14p0wVOVR4EvjCiuvK1QFhOWVekoXYf+j4SYa8uw1769MJeV9z3zs5063i6j0Ru1LnTN+20zTF+7TAWBYSF1+q8+cMYp1KGCS8YgiICUlj/JCeRW4w0ymsKka5BMfPy9vbxJNlKN7XWtA=
+	t=1752174386; cv=none; b=OtlT8FZU0j/oaHMqcDo2AhwNeAWH+h9gw50aqBdDZkTX8pIVR31LJ2APfW7FyDt24r+YU4kueEj2Uk+J8C9ZPGr9MxHhspQMRHtakDSsMir2EkYOkBIUrtljujFuFfZzwudgJwa15RYSsIA/OX1AE0havERPQJhdAuyUMrVO6+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752170926; c=relaxed/simple;
-	bh=z5MOk3teoc8lNLs6Z8f7WVOw99mPUlh3R4x5QRcNJq8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P7HuM3+xUl6zOpgYpk5f8YGvh7J2n49z6XEaeHnCYMY3R5aJXzuJXnT5eDklF//QJxwcQF/8TxhgER5/dOJy5xIVnzHhnTNgBS47TGuP5PWSQzI5x3ufJ1LeIGPayTdR8N3kSZ0yyp30db3D86octrWK0K+uOeTQ3GsqAi9y7zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+sWyJeV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14347C4CEE3;
-	Thu, 10 Jul 2025 18:08:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752170926;
-	bh=z5MOk3teoc8lNLs6Z8f7WVOw99mPUlh3R4x5QRcNJq8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=s+sWyJeVMeLFP/o0Wk0Q+tGrzcGjVpCPMlhfnuThskFD9FrwKdL2wGgDtMyGlRJa3
-	 YyZBnrwXqG7VJgYUiJts6hLKioBTzSXx6lTPxdQIV4iom8X0um4z9KvVLg5RdDAkhe
-	 +0Xe4CJuegmAZ4UpI3rmtTbbx9RhbdYF9s09OuFkaGcsYzDQIrD9hL7Y3dOS0TnLCW
-	 NnyFMfNz7p+FrzzhIm6QNtPRLKdOx5LBhu3oXRcecxDeQv1u+bI7a19C/rC0KEZPEp
-	 Oe2pWPjKjLbwIHtS/kldzaSFBsHEdTdG59cONwChEll72BveMmsURcqW1JXwhXA9L+
-	 8qMWRrmKtbVPg==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: PCI: Remove 83xx-512x-pci.txt
-Date: Thu, 10 Jul 2025 13:08:42 -0500
-Message-ID: <20250710180843.2971667-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1752174386; c=relaxed/simple;
+	bh=N/CJm8Q37Va3Ls9gDwlRWmfbEFB9jggb2Srg/9czkzM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ltQQxTeaPUbT0senE+bhsGcQjqRty4xCOH7WRCKOUvzVp2jWZp7H3J6fFX6g2MPA2pfazPI5E4KG1UJNj/oXalCYadPHIGEVtqvFfA+m/k1FeT2DMVfryE7b1tdqQk+D2jEB55EMh6S5iIcya9meXenxslFgNIJxPcPm/FC5V50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UpRhusBm; arc=none smtp.client-ip=209.85.219.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f196.google.com with SMTP id 3f1490d57ef6-e740a09eb00so1118468276.0;
+        Thu, 10 Jul 2025 12:06:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752174384; x=1752779184; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N/CJm8Q37Va3Ls9gDwlRWmfbEFB9jggb2Srg/9czkzM=;
+        b=UpRhusBmbRMkNWCdz3woBPXAs74oY5IzhGZX9TuU7pf8mFPbdgxQKpMhYA0mmyESLb
+         1d87f/56msl6YeDbn81vX1+SCskbrjAl5ovDKCWkpZNZajSWulgN/at4BfsxYt80jBsb
+         X1Q8ySgxMoKHnT9/asDNgMDq91yWP41Mj+2xTMUcBOom0IO9cq0fTFJH7W2/zJsoy/QB
+         pdqqlgRt/u4OPYyVTkNduC4u2Tci0soMrxE5D9mpPu/35QdjEt4kNJNEWxyatUT5f0GL
+         SqFSyLtmcR3hKaYXZV4gh+Iifg1qOocXDgZjTy2qmSny9JTAL/HffffI0K42SjdJ0MfA
+         W9Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752174384; x=1752779184;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N/CJm8Q37Va3Ls9gDwlRWmfbEFB9jggb2Srg/9czkzM=;
+        b=bbintGz1+IctgzZZ/8EgokB5jI/XYzjW3Nk2F9QUvJpFAE8bZM18wg7Tshz7PZ5WqQ
+         YDmmH6/g9at0PGVkN0UK/g/TUXT4nMjk29RHFS0hAz3czhLVSbEp4yXlZ0v5SFVQfhjo
+         LocVJ5mFGbWvQ2BECF0j1gDIqain/VeCYDImUyZ5GSKjl2Uykr3NSL9wji+BA2TAPVOu
+         XTI44X75kD2i14nAXZcA9J1dxXkVQBpcWo+6bTDvnaHUpybvJy34B8bYLkHi7Z5sMnTg
+         xON69JfHVOp3Am4szJ/A+41Nr2GZYz3xOM+ui8LdvWxnMjj/qW9aqyMo4cyt6kawVy7F
+         8LOA==
+X-Forwarded-Encrypted: i=1; AJvYcCWmIze9SwF7lFMK9CyVRKNwGcJBNNI9Q9Jp4nQNrHrsX3nDnq2l38CjwJtCcxkQXFrhLPoFhQMn@vger.kernel.org, AJvYcCWsqa1usEKhwpQNnQ010ivoMTlh02Qo+RBxxMPKrVby8F7RKR5ZcAzeL5z9X+2RB/jlVtUT8kBdYaV8@vger.kernel.org, AJvYcCX4/gTRcndxQqBpp1b/wMzq3h7gB73qc/Ku75lhZd3vMa+6jTRWfo/MxS/Op0QVi8HUr3Wlfq1AmY9vPRibWX8=@vger.kernel.org, AJvYcCXATu3aphJ4KoK4JVOqAdBLY0KN5fcfp196N+OgaB0/nL15NfDHRS/kC99ezcc+WPwYTerfYZkZUKnf@vger.kernel.org
+X-Gm-Message-State: AOJu0YylktxNmSuL5JMTka/uTbrl0mwPCIkeWnaHTgePz2lvhscwK1mh
+	mnNljbThNofTyi1fVsAvlb/euuKd+kZObsxUEnab3j4q6WB9p0i6Asy1+Rya1eF83mhh4HIi7s7
+	TlD6aTxWNG1fH2UoBh2wvGHzDci/Q1lzW5YGJswltBg==
+X-Gm-Gg: ASbGnct0ajdDqemJpyfWx/EX2hcURBDIYui2xpLz4pd2pNLL7eFtPHt5kwcHP9OjGjI
+	KcG4iysQcUPo3GFGkxI/o0fETBwtsQZFplSfr57Q4AUchaNYs4zAvTbqOrGdubU8hBNjAvjJTA4
+	EhpKoKUcs4PEgY38IHOKV3tBumkjWjOaQCHTQLb52xoxbQlA==
+X-Google-Smtp-Source: AGHT+IH/La36AZil68VOGEY6oXvInjSrZkyqxX4Csk+T+jPPRq31W1rogvQyxXSOBTCvOC1EsXl5hSyqgohVEvW5L04=
+X-Received: by 2002:a05:690c:38b:b0:710:f39f:4d66 with SMTP id
+ 00721157ae682-717d78b6564mr4126457b3.13.1752174384216; Thu, 10 Jul 2025
+ 12:06:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250705195846.GA2011829@bhelgaas> <9D9D9375-1BD0-46EA-9E85-47A2D8325F98@gmail.com>
+ <2cq6jeywii5fscozazz2epugh6zflcpfbo4ffhjt2lyk76cq4m@vg2jcsmlhtho> <FB89ECA8-93E2-4015-8DCF-6D362A53D825@gmail.com>
+In-Reply-To: <FB89ECA8-93E2-4015-8DCF-6D362A53D825@gmail.com>
+From: Bandhan Pramanik <bandhanpramanik06.foss@gmail.com>
+Date: Fri, 11 Jul 2025 00:36:12 +0530
+X-Gm-Features: Ac12FXyPTlLwATY_CErqME9P_iG-GcCgUwb6H3kdzCI5TuYyYXv0SfmzVne8uYY
+Message-ID: <CAEmM+Qj=TA=WtQAXQZx6wCUpdsOQ4j66Kpyze3KNZHC79KfyRA@mail.gmail.com>
+Subject: Re: Instability in ALL stable and LTS distro kernels (IRQ #16 being
+ disabled, PCIe bus errors, ath10k_pci) in Dell Inspiron 5567
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, ath10k@lists.infradead.org, 
+	linux-wireless@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This binding is already covered by fsl,mpc8xxx-pci.yaml schema. While
-the MPC512x is mentioned here, its compatible strings aren't actually
-documented and remain that way.
+Ok, we did it. Could reproduce the errors properly.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../devicetree/bindings/pci/83xx-512x-pci.txt | 39 -------------------
- 1 file changed, 39 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/83xx-512x-pci.txt
+Here are the journalctl logs:
 
-diff --git a/Documentation/devicetree/bindings/pci/83xx-512x-pci.txt b/Documentation/devicetree/bindings/pci/83xx-512x-pci.txt
-deleted file mode 100644
-index 3abeecf4983f..000000000000
---- a/Documentation/devicetree/bindings/pci/83xx-512x-pci.txt
-+++ /dev/null
-@@ -1,39 +0,0 @@
--* Freescale 83xx and 512x PCI bridges
--
--Freescale 83xx and 512x SOCs include the same PCI bridge core.
--
--83xx/512x specific notes:
--- reg: should contain two address length tuples
--    The first is for the internal PCI bridge registers
--    The second is for the PCI config space access registers
--
--Example (MPC8313ERDB)
--	pci0: pci@e0008500 {
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
--		interrupt-map = <
--				/* IDSEL 0x0E -mini PCI */
--				 0x7000 0x0 0x0 0x1 &ipic 18 0x8
--				 0x7000 0x0 0x0 0x2 &ipic 18 0x8
--				 0x7000 0x0 0x0 0x3 &ipic 18 0x8
--				 0x7000 0x0 0x0 0x4 &ipic 18 0x8
--
--				/* IDSEL 0x0F - PCI slot */
--				 0x7800 0x0 0x0 0x1 &ipic 17 0x8
--				 0x7800 0x0 0x0 0x2 &ipic 18 0x8
--				 0x7800 0x0 0x0 0x3 &ipic 17 0x8
--				 0x7800 0x0 0x0 0x4 &ipic 18 0x8>;
--		interrupt-parent = <&ipic>;
--		interrupts = <66 0x8>;
--		bus-range = <0x0 0x0>;
--		ranges = <0x02000000 0x0 0x90000000 0x90000000 0x0 0x10000000
--			  0x42000000 0x0 0x80000000 0x80000000 0x0 0x10000000
--			  0x01000000 0x0 0x00000000 0xe2000000 0x0 0x00100000>;
--		clock-frequency = <66666666>;
--		#interrupt-cells = <1>;
--		#size-cells = <2>;
--		#address-cells = <3>;
--		reg = <0xe0008500 0x100		/* internal registers */
--		       0xe0008300 0x8>;		/* config space access registers */
--		compatible = "fsl,mpc8349-pci";
--		device_type = "pci";
--	};
--- 
-2.47.2
+Kernel level: https://gist.githubusercontent.com/BandhanPramanik/ddb0cb23ec=
+a03ca2ea43a1d832a16180/raw/a9e93c4ba41fb0b3d7602e6bfddce9aa5f3a19b2/KERNEL%=
+2520journalctl%2520v6.16-rc4
+User level: https://gist.githubusercontent.com/BandhanPramanik/ddb0cb23eca0=
+3ca2ea43a1d832a16180/raw/a9e93c4ba41fb0b3d7602e6bfddce9aa5f3a19b2/NON-KERNE=
+L%2520journalctl%2520v6.16-rc4
 
+Just so you know, I have used v6.16-rc4.
+
+Bandhan.
+
+On Wed, Jul 9, 2025 at 11:00=E2=80=AFPM Bandhan Pramanik
+<bandhanpramanik06.foss@gmail.com> wrote:
+>
+> Hello,
+>
+> I was actually a bit distracted by the things caused by the Automatic Par=
+titioning of Fedora. I'll inform that in Fedora Bugzilla... anyway.
+>
+> I realised that making the modules will take 8-9 hours, I didn't even hav=
+e much of a success (because all the modules didn't properly load, particul=
+arly the firmware-N.bin files couldn't be found).
+>
+> But I'll try to recompile the kernel, I'll just have to give it overnight=
+ time.
+>
+> Bandhan
 
