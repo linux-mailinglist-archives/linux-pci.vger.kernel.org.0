@@ -1,234 +1,188 @@
-Return-Path: <linux-pci+bounces-31838-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31839-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B31BBB000B3
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 13:40:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25D66B00300
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 15:12:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 91C093A595D
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 11:40:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 55E1B1C421E9
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 13:12:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E0B7240611;
-	Thu, 10 Jul 2025 11:40:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05FCE2D9EE2;
+	Thu, 10 Jul 2025 13:12:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZwbafXNw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mgWA2PR/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336961A841A;
-	Thu, 10 Jul 2025 11:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443D62D97A6
+	for <linux-pci@vger.kernel.org>; Thu, 10 Jul 2025 13:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752147634; cv=none; b=d62n12+GsyjaoOpyLatAxy9zHxdcfZoVJxOmg6349A4wNs9SFoKBHP2qH9+wiFwvbvdrKmc4XMCwmXZes5Lj1CvD/oTNXH/0301bHpY1v//bBSmJLrKepBQA2tgh17SRrLXlTZ31CJlU6Sj4dqRhZV11IQ7Nmk49lp1XAH4ujtE=
+	t=1752153130; cv=none; b=BHc8oPBphEjenbhKPc+lqiWywE4SCc70ltqT7weCRnbUp+2W1hEUEAtwox/yYOhVhDfNirTdO4lFZIU99l56g++dD94htsUy5BTlfPqj79pODn/C+M7scZdGmnub5VdyfPSDMpaM6ZvII8Y64qJh7+o/NCVkyMxJW/TS+E+chac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752147634; c=relaxed/simple;
-	bh=1RsuIHRRAuqcGHCQF+P/OS8tKhDFc+7jVpMSz2Nnvvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LVUucYLg3frz5TsGRUdQqFgvddySbx3PY2cQaNVRFBs3ZrSmAKI5QTrkf/0bK0cWL16BGQJyBNLZtg6K+z0Niat77NWAcpNdQBONRqijJ5uYFCyTI/gSXumQQCn5TgGtFVa1ejLSftxCjhEUF8VXuihxuRMCZClthmK+5VKeYCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZwbafXNw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF30BC4CEE3;
-	Thu, 10 Jul 2025 11:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752147633;
-	bh=1RsuIHRRAuqcGHCQF+P/OS8tKhDFc+7jVpMSz2Nnvvg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZwbafXNwxIffsI5cFE+wVdo3GwQzgD9et58i9iA2Vhcrd3NamfBHDIsmyd8vhOn3/
-	 OKbc+3lMPdFOQz0+WHd3/rGT0eVDw1o6yAf0POqKsQq3WU78mY3N/3/PLEoIUpeHo5
-	 gIgReOW9YRwWW/beO4KmTdcOwixMvtzRsdfdtsu4mocg7q0eniBRLs0VsZAiYvo40A
-	 vHoP8yYegdn0seT9UVUMTV8IMTOMwAwmgRcE9vVT9D7v2OV+nW70R2D1OeUX9q2w9N
-	 v6ceJ8uA1clmxy+gXhMW2NuYJk48/l8YXAXBSzOFKC7B9per0ONphmupfawihauGOz
-	 AJ1j7GFoXCyWA==
-Date: Thu, 10 Jul 2025 13:40:25 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Frank.Li@nxp.com
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Shuah Khan <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	dlemoal@kernel.org, jdmason@kudzu.us, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, imx@lists.linux.dev,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v20 0/9] PCI: EP: Add RC-to-EP doorbell with platform MSI
- controller
-Message-ID: <aG-mqWtUu9-CD43U@ryzen>
-References: <20250709-ep-msi-v20-0-43d56f9bd54a@nxp.com>
+	s=arc-20240116; t=1752153130; c=relaxed/simple;
+	bh=LHJCixrmM/OWY3fx6U0Fd2ylCBI0y/E7KNBv17zNwsg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=t1PWjCBcR2pFo0P1vDm//37tegm3+dIyjqv7MblYZNiLRTFTGKiz0NocR3eA5Go2iufC8+972smB7tQ6wtGd+dD7n/xBkwUQQ1MjGMrU3cCXD8K/7aNdvdnzq1e4hW4Rb66ZHJ6YAm4cTp7Z7YE861nqtHOCn4hxuv5/zmNwU3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mgWA2PR/; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752153129; x=1783689129;
+  h=date:from:to:cc:subject:message-id;
+  bh=LHJCixrmM/OWY3fx6U0Fd2ylCBI0y/E7KNBv17zNwsg=;
+  b=mgWA2PR/xamnfDK/NQm901C7noJaqmz09tRoK3UvaIDjxX8MEUbBwrvq
+   EY5Rc/vKj49Mvyv8NZqQqecazAMlqeG1EGeMoCbeyimg7yBBx97N/auJb
+   lskNnCNuNbzmw7OIFfxCryu7jonlgpXZ4yg4qgcL2BBr+wmnYXBmqukxO
+   IXjU6AP5TVVLaBuM4/UW4xrWJ1eCEJeN7//uHBtNDSvxn6eOvuR4mV9zh
+   AVDSqPVVL2NCjsrN3sE3eKK3P41uF405WSx4B95Yo6EUaWsSS55V0Tb7M
+   bocdOSyk7uphfDvFBoHQiAj3tgCpt/IY7BmAk8yRYu75ssvUyK/TcrXyi
+   Q==;
+X-CSE-ConnectionGUID: fcsfnc+FQ6qbeOGBtoqvow==
+X-CSE-MsgGUID: DUmg0a8tQ7KlTdX7aUIYNA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11490"; a="65013216"
+X-IronPort-AV: E=Sophos;i="6.16,300,1744095600"; 
+   d="scan'208";a="65013216"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2025 06:12:09 -0700
+X-CSE-ConnectionGUID: /x/5v3DGRmuCAD67DOxe2A==
+X-CSE-MsgGUID: Dhrb8ht1T5e/HwA1luCclA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,300,1744095600"; 
+   d="scan'208";a="161747972"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 10 Jul 2025 06:12:07 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uZr4H-00053X-0K;
+	Thu, 10 Jul 2025 13:12:05 +0000
+Date: Thu, 10 Jul 2025 21:11:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:endpoint/epf-vntb] BUILD SUCCESS
+ e7cd58d2fdf8b3d2cb8c1d7a6d8eac2c67e5e18b
+Message-ID: <202507102155.xGTRfGiq-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250709-ep-msi-v20-0-43d56f9bd54a@nxp.com>
 
-Hello Frank,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint/epf-vntb
+branch HEAD: e7cd58d2fdf8b3d2cb8c1d7a6d8eac2c67e5e18b  PCI: endpoint: pci-epf-vntb: Allow BAR assignment via configfs
 
-I tested v20 of your series, but unfortunately, it still doesn't work.
+elapsed time: 1445m
 
-When enabling the doorbell, the programming of the inbound iATU fails:
+configs tested: 95
+configs skipped: 3
 
-## pci_epf_test_enable_doorbell()
-## keeps the BAR size, and BAR type of a BAR that has already been configured,
-## but changes the address translation for this BAR to redirect to the GIC ITS
-## rather than to the memory allocated by pci_epf_alloc_space()
-## (does not free the memory allocated by pci_epf_alloc_space())
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-[   39.347502] pci_epf_test_enable_doorbell: msg hi: 0x0 msg low: 0xfe670040
-[   39.348103] pci_epf_test_enable_doorbell: base: 0xfe670000 off: 0x40
-[   39.348658] dw_pcie_ep_inbound_atu index: 1 parent_bus_addr: 0xfe670000 bar: 1 size: 0x100000
-[   39.349403] dw_pcie_prog_ep_inbound_atu parent_bus_addr: 0xfe670000 pci->region_align: 0x10000 IS_ALIGNED: 1
-[   39.350260] dw_pcie_prog_ep_inbound_atu parent_bus_addr: 0xfe670000 size: 0x100000 IS_ALIGNED: 0
-[   39.351028] rockchip-dw-pcie a40000000.pcie-ep: Failed to program IB window
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                   randconfig-001-20250709    gcc-8.5.0
+arc                   randconfig-002-20250709    gcc-11.5.0
+arm                               allnoconfig    clang-21
+arm                   randconfig-001-20250709    gcc-12.4.0
+arm                   randconfig-002-20250709    gcc-10.5.0
+arm                   randconfig-003-20250709    clang-21
+arm                   randconfig-004-20250709    clang-21
+arm64                 randconfig-001-20250709    clang-21
+arm64                 randconfig-002-20250709    gcc-15.1.0
+arm64                 randconfig-003-20250709    clang-21
+arm64                 randconfig-004-20250709    gcc-10.5.0
+csky                  randconfig-001-20250709    gcc-15.1.0
+csky                  randconfig-002-20250709    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250709    clang-19
+hexagon               randconfig-002-20250709    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386        buildonly-randconfig-001-20250709    gcc-12
+i386        buildonly-randconfig-002-20250709    clang-20
+i386        buildonly-randconfig-003-20250709    clang-20
+i386        buildonly-randconfig-004-20250709    clang-20
+i386        buildonly-randconfig-005-20250709    gcc-12
+i386        buildonly-randconfig-006-20250709    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch             randconfig-001-20250709    gcc-15.1.0
+loongarch             randconfig-002-20250709    gcc-12.4.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250709    gcc-14.2.0
+nios2                 randconfig-002-20250709    gcc-14.2.0
+openrisc                          allnoconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250709    gcc-15.1.0
+parisc                randconfig-002-20250709    gcc-14.3.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc               randconfig-001-20250709    gcc-8.5.0
+powerpc               randconfig-002-20250709    clang-21
+powerpc               randconfig-003-20250709    clang-21
+powerpc64             randconfig-001-20250709    gcc-10.5.0
+powerpc64             randconfig-002-20250709    gcc-10.5.0
+powerpc64             randconfig-003-20250709    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                 randconfig-001-20250709    gcc-10.5.0
+riscv                 randconfig-002-20250709    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                  randconfig-001-20250709    clang-17
+s390                  randconfig-002-20250709    clang-21
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                    randconfig-001-20250709    gcc-10.5.0
+sh                    randconfig-002-20250709    gcc-14.3.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250709    gcc-15.1.0
+sparc                 randconfig-002-20250709    gcc-10.3.0
+sparc64               randconfig-001-20250709    clang-21
+sparc64               randconfig-002-20250709    clang-21
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250709    clang-17
+um                    randconfig-002-20250709    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250709    gcc-12
+x86_64      buildonly-randconfig-002-20250709    clang-20
+x86_64      buildonly-randconfig-003-20250709    gcc-12
+x86_64      buildonly-randconfig-004-20250709    gcc-12
+x86_64      buildonly-randconfig-005-20250709    clang-20
+x86_64      buildonly-randconfig-006-20250709    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250709    gcc-8.5.0
+xtensa                randconfig-002-20250709    gcc-11.5.0
 
-## pci_epf_test_disable_doorbell()
-## changes the address translation for this BAR to redirect to the memory
-## allocated by pci_epf_alloc_space() (which was never freed when enabling the
-## doorbell)
-
-[   39.351656] dw_pcie_ep_inbound_atu index: 1 parent_bus_addr: 0xa2e00000 bar: 1 size: 0x100000
-[   39.352401] dw_pcie_prog_ep_inbound_atu parent_bus_addr: 0xa2e00000 pci->region_align: 0x10000 IS_ALIGNED: 1
-[   39.353257] dw_pcie_prog_ep_inbound_atu parent_bus_addr: 0xa2e00000 size: 0x100000 IS_ALIGNED: 1
-
-
-The reason why pci_epf_test_enable_doorbell() fails is because of this check:
-https://github.com/torvalds/linux/blob/v6.16-rc5/drivers/pci/controller/dwc/pcie-designware.c#L663
-
-If you want to understand why this very important check is there, it is
-because the DWC controller requires that the physical address programmed in
-the iATU is aligned to the size of the BAR (BAR_MASK+1), see this commit:
-https://github.com/torvalds/linux/commit/129f6af747b2
-
-
-Applying the following patch on top of your v20 series makes things work as
-intended and makes the pcie_ep_doorbell.DOORBELL_TEST selftest pass for me:
-
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index dfdd25cfc003..7d356b0201ae 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -738,9 +738,9 @@ static void pci_epf_test_enable_doorbell(struct pci_epf_test *epf_test,
- 	reg->doorbell_bar = cpu_to_le32(bar);
- 
- 	msg = &epf->db_msg[0].msg;
--	ret = pci_epf_align_inbound_addr(epf, bar, ((u64)msg->address_hi << 32) | msg->address_lo,
-+	ret = pci_epf_align_inbound_addr(epf, epf->bar[bar].size,
-+					((u64)msg->address_hi << 32) | msg->address_lo,
- 					&epf_test->db_bar.phys_addr, &offset);
--
- 	if (ret)
- 		goto err_doorbell;
- 
-diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-index c21d8e786eb3..b3d4117182e2 100644
---- a/drivers/pci/endpoint/pci-epf-core.c
-+++ b/drivers/pci/endpoint/pci-epf-core.c
-@@ -478,44 +478,36 @@ struct pci_epf *pci_epf_create(const char *name)
- EXPORT_SYMBOL_GPL(pci_epf_create);
- 
- /**
-- * pci_epf_align_inbound_addr() - Align the given address based on the BAR
-- *				 alignment requirement
-+ * pci_epf_align_inbound_addr() - Align the given address based on the BAR size
-+ *
-  * @epf: the EPF device
-+ * @bar_size: the current BAR size
-  * @addr: inbound address to be aligned
-- * @bar: the BAR number corresponding to the given addr
-- * @base: base address matching the @bar alignment requirement.
-+ * @base: base address matching the @bar_size alignment requirement.
-  * @off: offset to be added to the @base address.
-  *
-- * Helper function to align input 'addr' to base and offset, which match
-- * BAR's alignment requirement.
-+ * Helper function to align input 'addr' to base and offset, when dynamically
-+ * changing a BAR.
-  *
-  * The pci_epf_alloc_space() function already accounts for alignment. This is
-  * primarily intended for use with other memory regions not allocated by
-  * pci_epf_alloc_space(), such as peripheral register spaces or the trigger
-  * address for a platform MSI controller.
-+ *
-+ * Since this function is only used when dynamically changing a BAR (i.e. when
-+ * calling set_bar() twice, without ever calling clear_bar(), as calling
-+ * clear_bar() would clear the BAR's PCI address assigned by the host), this
-+ * function must align to the current BAR size, since we are not clearing the
-+ * BAR configuration.
-  */
--int pci_epf_align_inbound_addr(struct pci_epf *epf, enum pci_barno bar,
--			      u64 addr, dma_addr_t *base, size_t *off)
-+int pci_epf_align_inbound_addr(struct pci_epf *epf, size_t bar_size, u64 addr,
-+			      dma_addr_t *base, size_t *off)
- {
--	const struct pci_epc_features *epc_features;
--	u64 align;
--
--	if (!base || !off)
-+	if (!base || !off || !bar_size)
- 		return -EINVAL;
- 
--	epc_features = pci_epc_get_features(epf->epc, epf->func_no, epf->vfunc_no);
--	if (!epc_features) {
--		dev_err(&epf->dev, "epc_features not implemented\n");
--		return -EOPNOTSUPP;
--	}
--
--	align = epc_features->align;
--	align = align ? align : 128;
--	if (epc_features->bar[bar].type == BAR_FIXED)
--		align = max(epc_features->bar[bar].fixed_size, align);
--
--	*base = round_down(addr, align);
--	*off = addr & (align - 1);
-+	*base = round_down(addr, bar_size);
-+	*off = addr & (bar_size - 1);
- 
- 	return 0;
- }
-diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-index 0ca08f0d05d7..bcc8184325d2 100644
---- a/include/linux/pci-epf.h
-+++ b/include/linux/pci-epf.h
-@@ -242,8 +242,8 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
- void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
- 			enum pci_epc_interface_type type);
- 
--int pci_epf_align_inbound_addr(struct pci_epf *epf, enum pci_barno bar,
--			      u64 addr, dma_addr_t *base, size_t *off);
-+int pci_epf_align_inbound_addr(struct pci_epf *epf, size_t bar_size, u64 addr,
-+			      dma_addr_t *base, size_t *off);
- int pci_epf_bind(struct pci_epf *epf);
- void pci_epf_unbind(struct pci_epf *epf);
- int pci_epf_add_vepf(struct pci_epf *epf_pf, struct pci_epf *epf_vf);
-
-
-
-
-However, the more I think about it, considering that this alignment requirement
-is inherent to the DWC controller (other controllers might not have this
-requirement), perhaps pci_epf_align_inbound_addr() should not be a function in
-pci-epf-core.c, perhaps this function would be better suited to live in
-drivers/pci/controller/dwc/pcie-designware-ep.c ?
-
-
-Kind regards,
-Niklas
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
