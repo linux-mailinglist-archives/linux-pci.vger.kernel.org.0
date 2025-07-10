@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-31869-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31870-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB6F6B00B0C
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 20:08:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80926B00B11
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 20:09:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D25081C4826A
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 18:09:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF08218902A5
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 18:09:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B06782FCE0D;
-	Thu, 10 Jul 2025 18:08:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43A0F2FCE08;
+	Thu, 10 Jul 2025 18:08:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5pbQ6/J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a3i5M28W"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3C12FCE08;
-	Thu, 10 Jul 2025 18:08:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194DB2FC3C9;
+	Thu, 10 Jul 2025 18:08:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752170900; cv=none; b=uYCnMTrpVEvWgDXziYTHET4vwhECUrOU643OysPQ04yNQh3UGKw3N1Cx5i2pvvd3dyIomc5POPrSaoNI15IA1/9MxIC2a0JF2aSkBWD0fcj/aJZM38iL1GQRwICxMwmvc6INeajzJIdMkb63fKz0d5r6mzXKtyoR+VSrWTR6wVw=
+	t=1752170920; cv=none; b=hsURn3gjdqmwtkx5kSE4PTRR8nF98En3kwTrzEvM/ZRufzTEDpWvBx9OdsUEEzWt3ztYPidI50RsxHmryuEzWGBpvR6kNvK8Qx2v9i2gq7EReUnhMslKwl6FubVpCqGFNjVoK+QmxdHTKtKcjJzAoHGQU/eDisOV6hfV7qky9jM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752170900; c=relaxed/simple;
-	bh=cKM3Kh+GvHkT7+ZlTY8HbJCtloLxrCnmh7IUUyiFmp8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XGI8GZFhGRTfYhrcasTWV+RlUUAarROa6EIztL2BHqJzxGEgngpTQr9A3/q4GXYn6UOLfwPEiyqMLBmJZbMg1YciflKRdmoN/sJuRxDlQORAsecEM0jCWcsUgznXa5sBWnBAWMd52sNfg0JleJ0BWoXjlgCBVxs7TitUKXwv8bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5pbQ6/J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C110CC4CEE3;
-	Thu, 10 Jul 2025 18:08:19 +0000 (UTC)
+	s=arc-20240116; t=1752170920; c=relaxed/simple;
+	bh=1hd1i9kV4lNTqb908Co0JvC+qqj2MI2yuG0ZybZcSPg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u+M3W+iiaxObGqv6uMhWea4dl6UBsZdPCV9bULj4NIcnwhUaPVPJQlHYGQHVWfQNEMq9l/XxfE8yoeIQNEjKsTHk6sVRx4gGSTb79b+IJIhBcgKxESbmZUc43qoSg+5a/agMLycXZTjZ4xeR+rBfKnsjGE0K3e5uH8sJwmyJoCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a3i5M28W; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FB8C4CEF1;
+	Thu, 10 Jul 2025 18:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752170900;
-	bh=cKM3Kh+GvHkT7+ZlTY8HbJCtloLxrCnmh7IUUyiFmp8=;
+	s=k20201202; t=1752170920;
+	bh=1hd1i9kV4lNTqb908Co0JvC+qqj2MI2yuG0ZybZcSPg=;
 	h=From:To:Cc:Subject:Date:From;
-	b=P5pbQ6/J95RQ8zl0OMq8O/niDp1gE6S5edj+fGCpl2hAnxQiGZmJhSaumqaMvI9Mg
-	 W4pu062XTdUmzy/QGxMZpni8uxvYYNvgy6UWIfaXSwi6+c2hkaBofstLyr702LHajQ
-	 W0z5TVDsJbWkd3TVRjBxTT0oNzEbQ81gsgkoycKoYLH78hlxT43/kc81KkEJoh9WGx
-	 0gSDLYlcTYBpRvUlVii5E2tMwIb27EfIhx/D9ZfpW0D3UCZ+OJ3pyEoIlqW8vNnndB
-	 EI0vk9ZqhdKuwQslpqkxt+DgjJLuVPQ1iubiVU+tq0PXLtEE6Lqpl4gzcV53F2StwH
-	 35CTOOP3kwEoA==
+	b=a3i5M28W9FR+Zpl2UNCaMv9paEbRXy9sa+SswdquJfvC7taBy+Lp69NctSrRQ/g3M
+	 j1/9R6GRNG9eEYwyAtNsWcjkbnU1a3FoSHifHhXolT3os3PCwo5ea1JYeBf4T1Kc3Z
+	 s5s4VFEJ3L/gmcK9mKQKGMTH+4OLNZEsDAzdjCPlGQ28JaMZRIAS2S1BPulHDxQQJu
+	 Z8kJOuoTvKdWxVhEB2kyLXr7m81/oyKXhd/wp1VOJounX45qAONZNM+7K2DmkWCqaV
+	 SYzTyjZnIu0BTTkfZPX6OiDQt4bzcuf7RjCKtAenmSkJfCrv8wv+6ceURbsl1wgQsm
+	 Exc5/NOBFAnqQ==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
+To: Jonathan Chocron <jonnyc@amazon.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Cc: linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] dt-bindings: PCI: Convert marvell,armada-3700-pcie to DT schema
-Date: Thu, 10 Jul 2025 13:08:05 -0500
-Message-ID: <20250710180811.2970846-1-robh@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: PCI: Convert amazon,al-alpine-v[23]-pcie to DT schema
+Date: Thu, 10 Jul 2025 13:08:23 -0500
+Message-ID: <20250710180825.2971248-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -63,205 +63,176 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Convert the Marvell Armada 3700 PCIe binding to DT schema format.
-
-The 'clocks' property was missing and has been added.
+Convert the Amazon Alpine PCIe binding to DT schema format. It's a
+straight forward conversion.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../devicetree/bindings/pci/aardvark-pci.txt  | 59 -----------
- .../pci/marvell,armada-3700-pcie.yaml         | 99 +++++++++++++++++++
+ .../pci/amazon,al-alpine-v3-pcie.yaml         | 71 +++++++++++++++++++
+ .../devicetree/bindings/pci/pcie-al.txt       | 46 ------------
+ .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
  MAINTAINERS                                   |  2 +-
- 3 files changed, 100 insertions(+), 60 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/aardvark-pci.txt
- create mode 100644 Documentation/devicetree/bindings/pci/marvell,armada-3700-pcie.yaml
+ 4 files changed, 73 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/amazon,al-alpine-v3-pcie.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
 
-diff --git a/Documentation/devicetree/bindings/pci/aardvark-pci.txt b/Documentation/devicetree/bindings/pci/aardvark-pci.txt
-deleted file mode 100644
-index 2b8ca920a7fa..000000000000
---- a/Documentation/devicetree/bindings/pci/aardvark-pci.txt
-+++ /dev/null
-@@ -1,59 +0,0 @@
--Aardvark PCIe controller
--
--This PCIe controller is used on the Marvell Armada 3700 ARM64 SoC.
--
--The Device Tree node describing an Aardvark PCIe controller must
--contain the following properties:
--
-- - compatible: Should be "marvell,armada-3700-pcie"
-- - reg: range of registers for the PCIe controller
-- - interrupts: the interrupt line of the PCIe controller
-- - #address-cells: set to <3>
-- - #size-cells: set to <2>
-- - device_type: set to "pci"
-- - ranges: ranges for the PCI memory and I/O regions
-- - #interrupt-cells: set to <1>
-- - msi-controller: indicates that the PCIe controller can itself
--   handle MSI interrupts
-- - msi-parent: pointer to the MSI controller to be used
-- - interrupt-map-mask and interrupt-map: standard PCI properties to
--   define the mapping of the PCIe interface to interrupt numbers.
-- - bus-range: PCI bus numbers covered
-- - phys: the PCIe PHY handle
-- - max-link-speed: see pci.txt
-- - reset-gpios: see pci.txt
--
--In addition, the Device Tree describing an Aardvark PCIe controller
--must include a sub-node that describes the legacy interrupt controller
--built into the PCIe controller. This sub-node must have the following
--properties:
--
-- - interrupt-controller
-- - #interrupt-cells: set to <1>
--
--Example:
--
--	pcie0: pcie@d0070000 {
--		compatible = "marvell,armada-3700-pcie";
--		device_type = "pci";
--		reg = <0 0xd0070000 0 0x20000>;
--		#address-cells = <3>;
--		#size-cells = <2>;
--		bus-range = <0x00 0xff>;
--		interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
--		#interrupt-cells = <1>;
--		msi-controller;
--		msi-parent = <&pcie0>;
--		ranges = <0x82000000 0 0xe8000000   0 0xe8000000 0 0x1000000 /* Port 0 MEM */
--			  0x81000000 0 0xe9000000   0 0xe9000000 0 0x10000>; /* Port 0 IO*/
--		interrupt-map-mask = <0 0 0 7>;
--		interrupt-map = <0 0 0 1 &pcie_intc 0>,
--				<0 0 0 2 &pcie_intc 1>,
--				<0 0 0 3 &pcie_intc 2>,
--				<0 0 0 4 &pcie_intc 3>;
--		phys = <&comphy1 0>;
--		pcie_intc: interrupt-controller {
--			interrupt-controller;
--			#interrupt-cells = <1>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/pci/marvell,armada-3700-pcie.yaml b/Documentation/devicetree/bindings/pci/marvell,armada-3700-pcie.yaml
+diff --git a/Documentation/devicetree/bindings/pci/amazon,al-alpine-v3-pcie.yaml b/Documentation/devicetree/bindings/pci/amazon,al-alpine-v3-pcie.yaml
 new file mode 100644
-index 000000000000..68090b3ca419
+index 000000000000..45244cad5f30
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/marvell,armada-3700-pcie.yaml
-@@ -0,0 +1,99 @@
++++ b/Documentation/devicetree/bindings/pci/amazon,al-alpine-v3-pcie.yaml
+@@ -0,0 +1,71 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pci/marvell,armada-3700-pcie.yaml#
++$id: http://devicetree.org/schemas/pci/amazon,al-alpine-v3-pcie.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Marvell Armada 3700 (Aardvark) PCIe Controller
++title: Amazon Annapurna Labs Alpine v3 PCIe Host Bridge
 +
 +maintainers:
-+  - Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-+  - Pali Rohár <pali@kernel.org>
++  - Jonathan Chocron <jonnyc@amazon.com>
++
++description:
++  Amazon's Annapurna Labs PCIe Host Controller is based on the Synopsys
++  DesignWare PCI controller.
 +
 +allOf:
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
++  - $ref: snps,dw-pcie.yaml#
 +
 +properties:
 +  compatible:
-+    const: marvell,armada-3700-pcie
++    enum:
++      - amazon,al-alpine-v2-pcie
++      - amazon,al-alpine-v3-pcie
 +
 +  reg:
-+    maxItems: 1
++    items:
++      - description: PCIe ECAM space
++      - description: AL proprietary registers
++      - description: Designware PCIe registers
 +
-+  clocks:
-+    maxItems: 1
++  reg-names:
++    items:
++      - const: config
++      - const: controller
++      - const: dbi
 +
 +  interrupts:
 +    maxItems: 1
 +
-+  msi-controller: true
-+
-+  msi-parent:
-+    maxItems: 1
-+
-+  phys:
-+    maxItems: 1
-+
-+  reset-gpios:
-+    description: PCIe reset GPIO signals.
-+
-+  interrupt-controller:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      interrupt-controller: true
-+
-+      '#interrupt-cells':
-+        const: 1
-+
-+    required:
-+      - interrupt-controller
-+      - '#interrupt-cells'
++unevaluatedProperties: false
 +
 +required:
 +  - compatible
 +  - reg
-+  - interrupts
-+  - '#interrupt-cells'
-+
-+unevaluatedProperties: false
++  - reg-names
 +
 +examples:
 +  - |
 +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/gpio/gpio.h>
 +
 +    bus {
 +        #address-cells = <2>;
 +        #size-cells = <2>;
 +
-+        pcie@d0070000 {
-+            compatible = "marvell,armada-3700-pcie";
++        pcie@fb600000 {
++            compatible = "amazon,al-alpine-v3-pcie";
++            reg = <0x0 0xfb600000 0x0 0x00100000
++                  0x0 0xfd800000 0x0 0x00010000
++                  0x0 0xfd810000 0x0 0x00001000>;
++            reg-names = "config", "controller", "dbi";
++            bus-range = <0 255>;
 +            device_type = "pci";
-+            reg = <0 0xd0070000 0 0x20000>;
 +            #address-cells = <3>;
 +            #size-cells = <2>;
-+            bus-range = <0x00 0xff>;
-+            interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-+            msi-controller;
-+            msi-parent = <&pcie0>;
-+            ranges = <0x82000000 0 0xe8000000 0 0xe8000000 0 0x1000000>,
-+                    <0x81000000 0 0xe9000000 0 0xe9000000 0 0x10000>;
-+
 +            #interrupt-cells = <1>;
-+            interrupt-map-mask = <0 0 0 7>;
-+            interrupt-map = <0 0 0 1 &pcie_intc 0>,
-+                            <0 0 0 2 &pcie_intc 1>,
-+                            <0 0 0 3 &pcie_intc 2>,
-+                            <0 0 0 4 &pcie_intc 3>;
-+            phys = <&comphy1 0>;
-+            max-link-speed = <2>;
-+            reset-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
-+
-+            pcie_intc: interrupt-controller {
-+                interrupt-controller;
-+                #interrupt-cells = <1>;
-+            };
++            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-map-mask = <0x00 0 0 7>;
++            interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>; /* INTa */
++            ranges = <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
 +        };
 +    };
+diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentation/devicetree/bindings/pci/pcie-al.txt
+deleted file mode 100644
+index 2ad1fe466eab..000000000000
+--- a/Documentation/devicetree/bindings/pci/pcie-al.txt
++++ /dev/null
+@@ -1,46 +0,0 @@
+-* Amazon Annapurna Labs PCIe host bridge
+-
+-Amazon's Annapurna Labs PCIe Host Controller is based on the Synopsys DesignWare
+-PCI core. It inherits common properties defined in
+-Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
+-
+-Properties of the host controller node that differ from it are:
+-
+-- compatible:
+-	Usage: required
+-	Value type: <stringlist>
+-	Definition: Value should contain
+-			- "amazon,al-alpine-v2-pcie" for alpine_v2
+-			- "amazon,al-alpine-v3-pcie" for alpine_v3
+-
+-- reg:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: Register ranges as listed in the reg-names property
+-
+-- reg-names:
+-	Usage: required
+-	Value type: <stringlist>
+-	Definition: Must include the following entries
+-			- "config"	PCIe ECAM space
+-			- "controller"	AL proprietary registers
+-			- "dbi"		Designware PCIe registers
+-
+-Example:
+-
+-	pcie-external0: pcie@fb600000 {
+-		compatible = "amazon,al-alpine-v3-pcie";
+-		reg = <0x0 0xfb600000 0x0 0x00100000
+-		       0x0 0xfd800000 0x0 0x00010000
+-		       0x0 0xfd810000 0x0 0x00001000>;
+-		reg-names = "config", "controller", "dbi";
+-		bus-range = <0 255>;
+-		device_type = "pci";
+-		#address-cells = <3>;
+-		#size-cells = <2>;
+-		#interrupt-cells = <1>;
+-		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-map-mask = <0x00 0 0 7>;
+-		interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>; /* INTa */
+-		ranges = <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
+-	};
+diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+index 69e82f438f58..b3216141881c 100644
+--- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+@@ -108,7 +108,7 @@ properties:
+             - description: See native 'dbi' CSR region for details.
+               enum: [ ctrl ]
+             - description: See native 'elbi/app' CSR region for details.
+-              enum: [ apb, mgmt, link, ulreg, appl ]
++              enum: [ apb, mgmt, link, ulreg, appl, controller ]
+             - description: See native 'atu' CSR region for details.
+               enum: [ atu_dma ]
+             - description: Syscon-related CSR regions.
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 17085b8a393f..d0df1130d5ff 100644
+index a92290fffa16..17085b8a393f 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -18898,7 +18898,7 @@ M:	Pali Rohár <pali@kernel.org>
+@@ -19232,7 +19232,7 @@ PCIE DRIVER FOR AMAZON ANNAPURNA LABS
+ M:	Jonathan Chocron <jonnyc@amazon.com>
  L:	linux-pci@vger.kernel.org
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
  S:	Maintained
--F:	Documentation/devicetree/bindings/pci/aardvark-pci.txt
-+F:	Documentation/devicetree/bindings/pci/marvell,armada-3700-pcie.yaml
- F:	drivers/pci/controller/pci-aardvark.c
+-F:	Documentation/devicetree/bindings/pci/pcie-al.txt
++F:	Documentation/devicetree/bindings/pci/amazon,al-alpine-v3-pcie.yaml
+ F:	drivers/pci/controller/dwc/pcie-al.c
  
- PCI DRIVER FOR ALTERA PCIE IP
+ PCIE DRIVER FOR AMLOGIC MESON
 -- 
 2.47.2
 
