@@ -1,118 +1,269 @@
-Return-Path: <linux-pci+bounces-31841-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31842-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA5E8B005F3
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 17:07:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52F52B006D6
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 17:33:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD58E188E230
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 15:07:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC9BD3AE613
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Jul 2025 15:31:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4327F271450;
-	Thu, 10 Jul 2025 15:07:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67C5F2750FD;
+	Thu, 10 Jul 2025 15:31:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b="SegZ+jEG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8Bed7YR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4D9154BF5;
-	Thu, 10 Jul 2025 15:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752160050; cv=pass; b=EP1B4NqLph3N6u/vdDKG+SqQyvCfSP4KXYwpoaKRNr2FwNqHLGeVzLix8VRcbJf44WQiGMtE3vgvvy9Jx1+ZI0s4XDl35euBbZH6q5c0dc0QBLjAIdLWNeHZvUU/G8luoBW7e+RWaddWmBhc3MUVtqbP6EHCUXZ95Sb+t7j+k4g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752160050; c=relaxed/simple;
-	bh=te+QesjkfZV1lnlFSbAdZUz3r0Wrt/PT7jvFYDjXsLY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nIXKKIyPYnINmPYmwInfxalN2g5OJEJD8qx1R/Ui0uuEwd/+xtENLLJ15/CAoCyhQx+R/TCAlkcMgdn/y+XRR+GfRQqojQv8xoloJ51PEUnMuEwo6RiGb7wvPxx4L5sdxw2mX1VqLPt48VPtkdi8+09lkvNzhH14u2Y3TLCn6bg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b=SegZ+jEG; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1752160019; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=S/0iPgFLijaC9J1SwO3PwYiSYcnmJnoh7LyfCLclhEGFat2r5o5h6hkRZ00xs9jvgJaBzrx/wfGKwW7Tsid1TQkup170oc4FkoFvrgOa913I1ISVb7Y4m/6lHeXsmnixUXzcnKYpE4XGGKevJHW3rIdFaSZcy0lobv5wNKiRDU8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1752160019; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=te+QesjkfZV1lnlFSbAdZUz3r0Wrt/PT7jvFYDjXsLY=; 
-	b=SvUMtILhxfUcBl3kHOzXxrAxM7XL90wIGK2L8XhjrBPGOR+6xDkO++k3BOj7Erh+D/RX0eE7XaLIjwNAweN1NmukV9Vq61B5zKYRYSSkhYff7w9DTuvCh0Gj1hfQMRTIzzEucpU5eFN0OLAG8Agj0S1POaBKNUQUjE4htGp89so=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nfraprado@collabora.com;
-	dmarc=pass header.from=<nfraprado@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752160019;
-	s=zohomail; d=collabora.com; i=nfraprado@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=te+QesjkfZV1lnlFSbAdZUz3r0Wrt/PT7jvFYDjXsLY=;
-	b=SegZ+jEGaeYh2x8qxxp/zI4F2eiDdyq2us7x+BjvoH2y6Dz0plBcsy3m+2cIxu9j
-	EEA7n7Rz5+CxCensMoTLJ0kSBbXrNetIJMIx9pUrOA4Kmc5x6KpVFWqV2Lze3cDwqDu
-	sqNKoqNAM21T8ewgtKmqzfgfusFVA6+fdOVsStRg=
-Received: by mx.zohomail.com with SMTPS id 1752160017391654.4434834354436;
-	Thu, 10 Jul 2025 08:06:57 -0700 (PDT)
-Message-ID: <6c132018714402d0a46fb8b59c862fb7f96a77f8.camel@collabora.com>
-Subject: Re: [PATCH] PCI: mediatek-gen3: Assert MAC Reset only for a delay
- during PM suspend sequence
-From: =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado" <nfraprado@collabora.com>
-To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>, Ryder Lee	
- <ryder.lee@mediatek.com>, Jianjun Wang <jianjun.wang@mediatek.com>, Lorenzo
- Pieralisi <lpieralisi@kernel.org>, Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>,  Manivannan Sadhasivam	 <mani@kernel.org>, Rob
- Herring <robh@kernel.org>, Bjorn Helgaas	 <bhelgaas@google.com>, Philipp
- Zabel <p.zabel@pengutronix.de>, Matthias Brugger	 <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno	 <angelogioacchino.delregno@collabora.com>
-Cc: kernel@collabora.com, linux-pci@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Date: Thu, 10 Jul 2025 11:06:54 -0400
-In-Reply-To: <20250709-mtk8395-fix-pcie-suspend-v1-1-0c7d6416f1a3@collabora.com>
-References: 
-	<20250709-mtk8395-fix-pcie-suspend-v1-1-0c7d6416f1a3@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E8351022;
+	Thu, 10 Jul 2025 15:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752161496; cv=none; b=EZGqONB2ODUx4PxQbqIQ8FEGELAghSp9zb56Cz+zymUxPiZTOADMit/BYPTQ1I8i2JmOq8Ni/rnjdESs3eexP+HHd1BdGFgskpKb76fD0q6258Dp/jO+vfG/VIRc/terHqAWbBHy1C0WeKhvOraWDpcFG9XHCJvPhaI7EQgrWmo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752161496; c=relaxed/simple;
+	bh=oyZ3TjBihPmmlJWbh0JEEf0NjNrm6tMD+c+onpK8gzY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gNtvz4brSyTs3CeFHMrI4h8mEx06xFFIFbuQSuseRbrEYL4pOwRb/1HgztS0xaw6/Ar8pIdI3yeYNoT7GHZiorOMTislB1Owo+RF7W5S9oFYqDB72RdTgo5SwCALSygkxUmFBoZ1GnpgYuhnOl+UnpdUlaYsUyJgKnA0OcJqKO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c8Bed7YR; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6fac7147cb8so16006456d6.1;
+        Thu, 10 Jul 2025 08:31:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752161493; x=1752766293; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PJ81a17HeamyghbNr/oH4jUhMsYMdKxNULZ/jmmnBoI=;
+        b=c8Bed7YRQrUuOW7I/HhzMV5pp5zoEPcVkYTT4PCu9E6XLE0amg5mLbA60OUdNEAbqh
+         u17PO/VWuoB8fyM3tG5/3sqlrPifNePe4wt/eFbL6IuxDlU/R/gGk3K5kYdo86XRtbt5
+         xU0dYYO9VLqguGywCEKyxE02854wzvTlMdOoMz/SO5xIW/pS8bIDdlvqV+z40LBA2uee
+         V0hhojxv1YXzqgFqLAKHQo/Mz2WdKwp2kHqSJmUtNJcQWM8LPIsPmgVBUdWxbrRNbNTS
+         37hFqUgfab/h+hUZp33327kmHrWQPBnr5z92J7NO2CicGBHla1co3RRVa1Pol80kxxRu
+         OPjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752161493; x=1752766293;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PJ81a17HeamyghbNr/oH4jUhMsYMdKxNULZ/jmmnBoI=;
+        b=RbsXJPkRf9tPbzTa2TdF9QTdXMvzjbe1j8CVI70/tItdJoi5snr6UofKe8hfnDHeva
+         iFGv4NTKXecpglVv7nH4S1+vSBwlOhy4Mfhj5fKaE4ou9WQF4aE4bePW/a9TqcVY/MDm
+         15rAEzNhr5SYyZao6hJVIRn2rglZrrhwVrbtvTK4YWMcW/ghbqD3FSXVenQjiMcchtci
+         3Kps/6SgLrPIhJGDz0Y1Frw3xEBU0VCevexYfJdB607Be801lJQz3xPUG5y8D+HjuFT7
+         Wa/1gnMGSJjNyoQgxrCkjvItuWh6grOl5RMwTdf80NRALMi0lYKC8wS7TubjrrfB46x7
+         xQdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAxwDa+2B3ClbtkAY7mSZudHnNPvuH7xDj8vmHIuU6Da7utI08BQw0P17kDMrP+s7+r/ZDQYf8p8MU3kjKiV0X@vger.kernel.org, AJvYcCVOSDrAiMOw6KFgk1hTqpYnIUn9ztheO4sW/lz0jWGBLnYv4UDbMqzBQZ698KBsO+FOJXTbLLb28bM0yb8eI48=@vger.kernel.org, AJvYcCVk29kqni07cddmYCgCJBs1p1GQvyAHuToWnJtBOPN0Rbp5WAm9cwxeE8VDymdCxRN0N9bv9Bq8@vger.kernel.org, AJvYcCVmnvseKyvC5cQi0WX5MZdFag7C/90GWs5UFGwoTkgiRcBxE1Ru6EsjQOv71Z7s8ysAfhrCeJU29pCTqZrl@vger.kernel.org, AJvYcCW07V0NDpuXGMxrPGhQBaL2q4Ez7kQmrr+BcO7W2GCziielGMKrCJ9x+vYNxeACQiDT/m1iCSQwQgxW@vger.kernel.org, AJvYcCWkyzM3wCONnRpXSAmBcXnc/WZa3SCnejF0sSbAMrQPJomwda2PxwvUTjAXIq1GyVWMYAcEDrpexesP@vger.kernel.org, AJvYcCXfsz16ec3cBOD5imsXdIWS4/EzqLCqkq0ubBKT9g7K23wfaNhCPm+HVo/dkLw6oWjMDi/d829OLX3nQg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoEn6jHQ/yBvo8ADvmWuPRN/aQcBr2Db2mJhXJm0O6cmpHiuKi
+	bT2eNqulId7tk76fuN/reWpqv4lxQ4hvXSyWYeWFo11p4l2SegC5iGZc
+X-Gm-Gg: ASbGncsRW2J9yZtc2UaPnB08RXf5dCtCqgYUvkZCoqPhcFZKgidNwcaKApLGwTOIZje
+	4zFVwLj3EYoB8jGxqwpiAH6TGjhTYJMi5hWSTYx3U1w8DgvgQHZQcYLi5ycx4+dSDRJS4DxPgnt
+	1hndDY38MhiDR0U1mx087eSyhB6kKwY+c9jALe3Dd1409d+C1g5C+byopObGsvcXiVzGzoU4gRO
+	fx7NPxZrA3wpHCo0Xvs1ySzvZTzeqAIe9qcfHW+pRC77X5jVvy/+6Y1j5euOaGzxDFJREdkObrT
+	/xHoS+FHLTp86i+9rylp87K1asjsL4F/wf0b5Va19++rnRx7SLgggTiWj0HxtpX7/twJ0iqXWyv
+	Ji5jPQunR5X6pUoQOBv2o48wEj4uUAtPyBesFvfmkpnrjo/kORtzJxCX72w==
+X-Google-Smtp-Source: AGHT+IHyhWblIBlv3QU/fCCn2aGmY0JX2AC5lyib4/uFkdOS58IL7A+a9caFr6DSlEQJ2HFZdmHhrA==
+X-Received: by 2002:a05:6214:19e9:b0:6ff:1542:6593 with SMTP id 6a1803df08f44-70494e96f38mr76558186d6.17.1752161493050;
+        Thu, 10 Jul 2025 08:31:33 -0700 (PDT)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([148.76.185.197])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-704979dbc3asm9449496d6.38.2025.07.10.08.31.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Jul 2025 08:31:32 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH 00/17] rust: replace `kernel::c_str!` with C-Strings
+Date: Thu, 10 Jul 2025 11:31:03 -0400
+Message-Id: <20250710-core-cstr-cstrings-v1-0-027420ea799e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALncb2gC/5WQy27DIBBFf8ViXarhYTBe9T+qLAYYUqTYTowdR
+ Yry78VJF0mlLrpBukjncC9XVmjOVFjfXNlM51zyNNYg3hoWvnDcE8+xZiZBtmAF8DDNxENZ5vu
+ Rx33hIiGiUTJBiqyCx5lSvtyln7tHnum0VvfyuGQeS5VMw5CXvrHGkZLaG+MhOhlBJyXaCEG3C
+ MlKq2yw2mn23KlvHo1APzWqDx2xBucdGbQ+tpb6s9jAgUrBV9I9kQnHaV244GfBgRutoCMrQaX
+ wsR8wH95r2X9rUrROeUVth/JV83uGBPHzp5sqau+8cUJCSLX+38M3Io/hsEbiuF647bR1xlkjs
+ dt27263bwmFx3/hAQAA
+X-Change-ID: 20250710-core-cstr-cstrings-1faaa632f0fd
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich <dakr@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ FUJITA Tomonori <fujita.tomonori@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Breno Leitao <leitao@debian.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+ Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Arnd Bergmann <arnd@arndb.de>, Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Jens Axboe <axboe@kernel.dk>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
+ dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+ linux-clk@vger.kernel.org, linux-pci@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ linux-block@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openssh-sha256; t=1752161488; l=7591;
+ i=tamird@gmail.com; h=from:subject:message-id;
+ bh=oyZ3TjBihPmmlJWbh0JEEf0NjNrm6tMD+c+onpK8gzY=;
+ b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgtYz36g7iDMSkY5K7Ab51ksGX7hJgs
+ MRt+XVZTrIzMVIAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
+ QC/jkPLw8NNa0QjnV0hKL8LX4u30qhhAlzKBY9/gcAzZCxTR55S/KwdVIQtVHZtEvaJP5IcQafq
+ IZbuF8rmx2AQ=
+X-Developer-Key: i=tamird@gmail.com; a=openssh;
+ fpr=SHA256:264rPmnnrb+ERkS7DDS3tuwqcJss/zevJRzoylqMsbc
 
-On Wed, 2025-07-09 at 17:42 +0200, Louis-Alexis Eyraud wrote:
-> In the pcie-mediatek-gen3 driver, the PM suspend callback function
-> powers down the PCIE link to stop the clocks and PHY and also assert
-> the MAC and PHY resets.
->=20
-> On MT8195 SoC, asserting the MAC reset for PCIe port 0 during suspend
-> sequence and letting it asserted leads the system to hang during
-> resume
-> sequence because the PCIE link remains down after powering it up:
-> ```
-> mtk-pcie-gen3 112f0000.pcie: PCIe link down, current LTSSM state:
-> =C2=A0 detect.quiet (0x0)
-> mtk-pcie-gen3 112f0000.pcie: PM: dpm_run_callback():
-> genpd_resume_noirq
-> =C2=A0 returns -110
-> mtk-pcie-gen3 112f0000.pcie: PM: failed to resume noirq: error -110
-> ```
-> Deasserting it before suspend sequence is completed, allows the
-> system
-> to resume properly.
->=20
-> So, add in the mtk_pcie_power_down function a flag parameter to say
-> if the
-> device is being suspended and in this case, make the MAC reset be
-> deasserted after PCIE_MTK_RESET_TIME_US (=3D10us) delay.
->=20
-> Fixes: d537dc125f07 ("PCI: mediatek-gen3: Add system PM support")
-> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+This series depends on step 3[0] which depends on steps 2a[1] and 2b[2]
+which both depend on step 1[3].
 
-Reviewed-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
+This series also has a minor merge conflict with a small change[4] that
+was taken through driver-core-testing. This series is marked as
+depending on that change; as such it contains the post-conflict patch.
 
---=20
-Thanks,
+Subsystem maintainers: I would appreciate your `Acked-by`s so that this
+can be taken through Miguel's tree (where the previous series must go).
 
-N=C3=ADcolas
+Link  https://lore.kernel.org/all/20250710-cstr-core-v14-0-ca7e0ca82c82@gmail.com/ [0]
+Link: https://lore.kernel.org/all/20250709-core-cstr-fanout-1-v1-0-64308e7203fc@gmail.com/ [1]
+Link: https://lore.kernel.org/all/20250709-core-cstr-fanout-1-v1-0-fd793b3e58a2@gmail.com/ [2]
+Link: https://lore.kernel.org/all/20250704-core-cstr-prepare-v1-0-a91524037783@gmail.com/ [3]
+Link: https://lore.kernel.org/all/20250704-cstr-include-aux-v1-1-e1a404ae92ac@gmail.com/ [4]
+
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Tamir Duberstein (17):
+      drivers: net: replace `kernel::c_str!` with C-Strings
+      gpu: nova-core: replace `kernel::c_str!` with C-Strings
+      rust: auxiliary: replace `kernel::c_str!` with C-Strings
+      rust: clk: replace `kernel::c_str!` with C-Strings
+      rust: configfs: replace `kernel::c_str!` with C-Strings
+      rust: cpufreq: replace `kernel::c_str!` with C-Strings
+      rust: device: replace `kernel::c_str!` with C-Strings
+      rust: firmware: replace `kernel::c_str!` with C-Strings
+      rust: kunit: replace `kernel::c_str!` with C-Strings
+      rust: macros: replace `kernel::c_str!` with C-Strings
+      rust: miscdevice: replace `kernel::c_str!` with C-Strings
+      rust: net: replace `kernel::c_str!` with C-Strings
+      rust: pci: replace `kernel::c_str!` with C-Strings
+      rust: platform: replace `kernel::c_str!` with C-Strings
+      rust: seq_file: replace `kernel::c_str!` with C-Strings
+      rust: str: replace `kernel::c_str!` with C-Strings
+      rust: sync: replace `kernel::c_str!` with C-Strings
+
+ drivers/block/rnull.rs                |  2 +-
+ drivers/cpufreq/rcpufreq_dt.rs        |  5 ++---
+ drivers/gpu/drm/nova/driver.rs        | 10 +++++-----
+ drivers/gpu/nova-core/driver.rs       |  6 +++---
+ drivers/net/phy/ax88796b_rust.rs      |  7 +++----
+ drivers/net/phy/qt2025.rs             |  5 ++---
+ rust/kernel/clk.rs                    |  6 ++----
+ rust/kernel/configfs.rs               |  5 ++---
+ rust/kernel/cpufreq.rs                |  3 +--
+ rust/kernel/device.rs                 |  4 +---
+ rust/kernel/firmware.rs               |  6 +++---
+ rust/kernel/kunit.rs                  | 11 ++++-------
+ rust/kernel/net/phy.rs                |  6 ++----
+ rust/kernel/platform.rs               |  4 ++--
+ rust/kernel/seq_file.rs               |  4 ++--
+ rust/kernel/str.rs                    |  5 ++---
+ rust/kernel/sync.rs                   |  5 ++---
+ rust/kernel/sync/completion.rs        |  2 +-
+ rust/kernel/workqueue.rs              |  8 ++++----
+ rust/macros/kunit.rs                  | 10 +++++-----
+ rust/macros/module.rs                 |  2 +-
+ samples/rust/rust_configfs.rs         |  5 ++---
+ samples/rust/rust_driver_auxiliary.rs |  4 ++--
+ samples/rust/rust_driver_faux.rs      |  4 ++--
+ samples/rust/rust_driver_pci.rs       |  4 ++--
+ samples/rust/rust_driver_platform.rs  |  4 ++--
+ samples/rust/rust_misc_device.rs      |  3 +--
+ scripts/rustdoc_test_gen.rs           |  4 ++--
+ 28 files changed, 63 insertions(+), 81 deletions(-)
+---
+base-commit: 769e324b66b0d92d04f315d0c45a0f72737c7494
+change-id: 20250710-core-cstr-cstrings-1faaa632f0fd
+prerequisite-change-id: 20250704-core-cstr-prepare-9b9e6a7bd57e:v1
+prerequisite-patch-id: 83b1239d1805f206711a5a936bbb61c83227d573
+prerequisite-patch-id: a0355dd0efcc945b0565dc4e5a0f42b5a3d29c7e
+prerequisite-patch-id: 8585bf441cfab705181f5606c63483c2e88d25aa
+prerequisite-patch-id: 04ec344c0bc23f90dbeac10afe26df1a86ce53ec
+prerequisite-patch-id: a2fc6cd05fce6d6da8d401e9f8a905bb5c0b2f27
+prerequisite-patch-id: f14c099c87562069f25fb7aea6d9aae4086c49a8
+prerequisite-message-id: 20250709-core-cstr-fanout-1-v1-0-64308e7203fc@gmail.com
+prerequisite-patch-id: fa79c5d8fd2762b5e488ba017e13a5774d933f81
+prerequisite-patch-id: c338aa49e1319e9e802de2ad8bb0fa688bce9d9c
+prerequisite-patch-id: 589a352ba7f7c9aefefd84dfd3b6b20e290b0d14
+prerequisite-patch-id: 29fc25261295349f6747d1bb409cf18130e9aa69
+prerequisite-patch-id: 3d89601bba1fb01d190b0ba415b28ad9cbf1e209
+prerequisite-patch-id: 10923aebf24011b727f60496c0f9e0ad57e0a967
+prerequisite-patch-id: 56583fd829951fb4fac843c6b1874c643b726de0
+prerequisite-patch-id: 9a7e8ba460358985147efd347658be31fbc78ba2
+prerequisite-patch-id: 5821a23334e317cd0351b8e4404b9e3b36b72d67
+prerequisite-message-id: 20250709-core-cstr-fanout-1-v1-0-fd793b3e58a2@gmail.com
+prerequisite-patch-id: 0ccc3545ff9bf22a67b79a944705cef2fb9c2bbf
+prerequisite-patch-id: b1866166714606d5c11a4d7506abe4c2f86dac8d
+prerequisite-patch-id: 163b8ff1edaf8e48976fd5de3f64e68fc38c7277
+prerequisite-patch-id: 8fee5e2daf0749362331dad4fc63d907a01b14e9
+prerequisite-patch-id: 366ef1f93fb40b1d039768f2041ff79995e7e228
+prerequisite-patch-id: 1d350291f9292f910081856d8f7d5e4d9545cfd1
+prerequisite-patch-id: 9a6a60bd2b209126de64c16a77a3a1d229dd898c
+prerequisite-patch-id: 08ae5855768ec3b4c68272b86d2a0e0667c9aa47
+prerequisite-patch-id: f15b54927660a03b52ffb34fb7943ac3228b7803
+prerequisite-patch-id: f0dbf0a55a27fe8e199e242d1f79ea800d1ddb66
+prerequisite-change-id: 20250201-cstr-core-d4b9b69120cf:v14
+prerequisite-patch-id: 83b1239d1805f206711a5a936bbb61c83227d573
+prerequisite-patch-id: a0355dd0efcc945b0565dc4e5a0f42b5a3d29c7e
+prerequisite-patch-id: 8585bf441cfab705181f5606c63483c2e88d25aa
+prerequisite-patch-id: 04ec344c0bc23f90dbeac10afe26df1a86ce53ec
+prerequisite-patch-id: a2fc6cd05fce6d6da8d401e9f8a905bb5c0b2f27
+prerequisite-patch-id: f14c099c87562069f25fb7aea6d9aae4086c49a8
+prerequisite-patch-id: 0ccc3545ff9bf22a67b79a944705cef2fb9c2bbf
+prerequisite-patch-id: b1866166714606d5c11a4d7506abe4c2f86dac8d
+prerequisite-patch-id: 163b8ff1edaf8e48976fd5de3f64e68fc38c7277
+prerequisite-patch-id: 8fee5e2daf0749362331dad4fc63d907a01b14e9
+prerequisite-patch-id: 366ef1f93fb40b1d039768f2041ff79995e7e228
+prerequisite-patch-id: 1d350291f9292f910081856d8f7d5e4d9545cfd1
+prerequisite-patch-id: 9a6a60bd2b209126de64c16a77a3a1d229dd898c
+prerequisite-patch-id: 08ae5855768ec3b4c68272b86d2a0e0667c9aa47
+prerequisite-patch-id: f15b54927660a03b52ffb34fb7943ac3228b7803
+prerequisite-patch-id: f0dbf0a55a27fe8e199e242d1f79ea800d1ddb66
+prerequisite-patch-id: fa79c5d8fd2762b5e488ba017e13a5774d933f81
+prerequisite-patch-id: c338aa49e1319e9e802de2ad8bb0fa688bce9d9c
+prerequisite-patch-id: 589a352ba7f7c9aefefd84dfd3b6b20e290b0d14
+prerequisite-patch-id: 29fc25261295349f6747d1bb409cf18130e9aa69
+prerequisite-patch-id: 3d89601bba1fb01d190b0ba415b28ad9cbf1e209
+prerequisite-patch-id: 10923aebf24011b727f60496c0f9e0ad57e0a967
+prerequisite-patch-id: 56583fd829951fb4fac843c6b1874c643b726de0
+prerequisite-patch-id: 9a7e8ba460358985147efd347658be31fbc78ba2
+prerequisite-patch-id: 5821a23334e317cd0351b8e4404b9e3b36b72d67
+prerequisite-patch-id: 9c0a6624ed7b7e1d0373985c5c084a844e7c49ce
+prerequisite-patch-id: 6d8dbdf864f79fc0c2820e702a7cb87753649ca0
+prerequisite-patch-id: 2bc4afce0104c13c0dd4d50923b0db2f5cd11129
+prerequisite-change-id: 20250704-cstr-include-aux-7847969762a8:v1
+prerequisite-patch-id: 1f79f64dd9b8a092ff039e6c7fad1430afb8ea25
+
+Best regards,
+--  
+Tamir Duberstein <tamird@gmail.com>
+
 
