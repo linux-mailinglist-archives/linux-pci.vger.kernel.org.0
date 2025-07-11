@@ -1,507 +1,488 @@
-Return-Path: <linux-pci+bounces-31929-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31930-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99351B01DED
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 15:40:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BDC0B01E26
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 15:46:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 98BEB1895AD7
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 13:40:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C4F61CA6145
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 13:46:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A537D2DEA84;
-	Fri, 11 Jul 2025 13:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC9A61FBEA6;
+	Fri, 11 Jul 2025 13:46:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kw0X7rFH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fYtUWUjC"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBC82BD5B5;
-	Fri, 11 Jul 2025 13:38:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55672D3EC8
+	for <linux-pci@vger.kernel.org>; Fri, 11 Jul 2025 13:46:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752241142; cv=none; b=jo5bsZY0JEKDvmyWZ3tDAEL6RlSvMJI3/NGNRe/zFkd97/PX2nU1ijAB4yzqhJeOpfaRwEUit8hybfQXWkwNeZnjPRQF26b6/zkop5aAXQTowluAQWyh5EbqvFIEoAdL97nHW2D166QXIgf70X2wG8o+AJo6/pIPsm9UYA061qU=
+	t=1752241576; cv=none; b=WWjXWVyfeZBfwldPP12qTK16A6zGehWNIb0G9s51MzJFBSxUfqjq83zUPgHBJyHu48bYBxO4xa7Oa80YFy6h9iRU0HXFG0a/iQq+hpI07C1xDsa6Lg9whPl8EAeP9yrdfy7E7buQQQtxOs/c9fp5/KIPimu6xpJwmL58+J9SWqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752241142; c=relaxed/simple;
-	bh=lYJgvJ05d4qwWBd4JnXaRahOMLQwQmq+vbr22Ubl708=;
+	s=arc-20240116; t=1752241576; c=relaxed/simple;
+	bh=fGG4qtyOaP2TQYqoaUZipLhPfi9nMTbP0t851LEAIco=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=dqPcoBgxXNdZunsdp/Y5h7C+QjyouTywXBxByCWwmAPXzv3vPCTxUqOWc1cdEGl2lRAPGFwF0Tg+5KEaZzduUNZDNUdimpmpuDx+g3lwJ5SZW0tjNJCMW4BXHZMcJ24QQeRkn14mCLvmTZCDjKbTgLe1NnOj8f+VJINeWgrTZD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kw0X7rFH; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version:Content-Type; b=QYSD5bbrj0oRuUJrBDW2FptWgFUewstOvhtAMHfispyIIpBe/scdxEPbQ6OwQghU6qoXycNLGaq0cA+Z9VEUAtk3rRPMyBghJQHCRnolxSMgAXtQPFE1+NHBB4cUkdMR85NOysEn/ihPFRZD1fAXVMs1ORLObaa67RImkn7n+Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fYtUWUjC; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752241140; x=1783777140;
+  t=1752241575; x=1783777575;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=lYJgvJ05d4qwWBd4JnXaRahOMLQwQmq+vbr22Ubl708=;
-  b=Kw0X7rFHs7D1NI3RFMsYqlaXEvJue6ak6gvSDfdfW88zcBzq9uQisyho
-   7IHmktLLC9sZsRCoYzw2A7It+ALcGLgkNo8KVNiZNGdcTqMtyr40zGnrJ
-   n3lp77N/n6eSUvUSNLcllkVr9nYGlwQp0gWjIQ3i2Ox37v/JtuHSAmcIq
-   fGyAf7wb0DeR8eRBtjYekbaoYG9WXt/b0Q1qWmAYz6bYBcuin58A0lcsc
-   PpoUqF/HppBLR5gJcYOxOBAt5xiemruV70X9E49ODrg8X/g0/q4NlWIZi
-   YEJiq9N+LnYl7IO41EScE3svgke1QySmF5dECBpvwujORjViUNih34ssQ
-   Q==;
-X-CSE-ConnectionGUID: NvjAcQ8QQHejSfdOPJSfkg==
-X-CSE-MsgGUID: 7Oj07lQzRS23TyAkjVjO1A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="54394412"
+   references:mime-version:content-id;
+  bh=fGG4qtyOaP2TQYqoaUZipLhPfi9nMTbP0t851LEAIco=;
+  b=fYtUWUjCx14V4HuDuEKhQFTrBLmnasHqlCUV4GD+Hip+orlp7/erX7Dq
+   +srXzfNZsCp4CYRMfbv49TMe19th3V0lJ5taBCYxiZDihe7SXmBMAS8Lr
+   C6URIMqjg22ib2xmVN3ZxaEAqfzg3JY8FczvU44tkOVEYHagTbgW7Zv0B
+   kZFGXgnWyMte3ptL96VQmEqL4N+O+8aA+3Px0czML/a5em+RNqx9CKLgs
+   f0RuE1N1IP1WKkw+s++L5SQVYze7HrEf+KFxwaRaWRv8MIxiarei6IS6K
+   BghSmfOjxZbFMwASUiD9tqVPa9Pqs3aet3Ejgen16jgApg/lY71WaFncf
+   g==;
+X-CSE-ConnectionGUID: Mzdn4HegSDiOehIWsf9ESw==
+X-CSE-MsgGUID: hsrWh/sMQziM06Q19fh2jw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="54394927"
 X-IronPort-AV: E=Sophos;i="6.16,303,1744095600"; 
-   d="scan'208,223";a="54394412"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 06:38:59 -0700
-X-CSE-ConnectionGUID: wXtiAlHOQzaAECh5We+vWA==
-X-CSE-MsgGUID: mqHl2X8qSnmrhPJ16DUQxg==
+   d="scan'208";a="54394927"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 06:46:15 -0700
+X-CSE-ConnectionGUID: aLJlQyJ6SP6l6Oj3AXClQA==
+X-CSE-MsgGUID: 51AVVeCrThaL86c99naJsA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,303,1744095600"; 
-   d="scan'208,223";a="156465118"
+   d="scan'208";a="160394117"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.249])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 06:38:52 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 06:46:11 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 11 Jul 2025 16:38:48 +0300 (EEST)
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-cc: Manivannan Sadhasivam <mani@kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
-    Jeff Johnson <jjohnson@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, 
-    linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
-    qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com, 
-    quic_vpernami@quicinc.com, quic_mrana@quicinc.com, 
-    Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Subject: Re: [PATCH v4 06/11] PCI/ASPM: Clear aspm_disable as part of
- __pci_enable_link_state()
-In-Reply-To: <35f057fd-9aa0-4de1-a6cc-0d17ffb99e23@oss.qualcomm.com>
-Message-ID: <604ffae3-1bfc-0922-b001-f3338880eb21@linux.intel.com>
-References: <20250609-mhi_bw_up-v4-0-3faa8fe92b05@qti.qualcomm.com> <20250609-mhi_bw_up-v4-6-3faa8fe92b05@qti.qualcomm.com> <qo6mb3qlt3xpuvhepwcv6be4wd53neee2t6buzk4tdiy22xsub@vu7lykp3rnu2> <226bab3a-54e5-94ad-9d84-0b82f9dc4e2f@linux.intel.com>
- <2a18cf9e-1dd2-4e09-81f4-eb1d07324c8e@oss.qualcomm.com> <irnkdlrmlozp7joydgnawfuivl2nnuxsb2t4osgxzbtyrfzd3n@7dhzjcd42aiw> <c7d4288d-4d0e-a3c2-83d2-c3f1b282d4ac@linux.intel.com> <35f057fd-9aa0-4de1-a6cc-0d17ffb99e23@oss.qualcomm.com>
+Date: Fri, 11 Jul 2025 16:46:08 +0300 (EEST)
+To: Matthew W Carlis <mattc@purestorage.com>
+cc: ashishk@purestorage.com, bhelgaas@google.com, linux-pci@vger.kernel.org, 
+    macro@orcam.me.uk, msaggi@purestorage.com, sconnor@purestorage.com
+Subject: Re: [PATCH v2 0/1] PCI: pcie_failed_link_retrain() return if dev is
+ not ASM2824
+In-Reply-To: <20250709185309.29900-1-mattc@purestorage.com>
+Message-ID: <7c289bba-3133-0989-6333-41fc41fe3504@linux.intel.com>
+References: <2b72378d-a8c1-56b1-3dbb-142eb4c7f302@linux.intel.com> <20250709185309.29900-1-mattc@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1745244526-1752241128=:933"
+Content-Type: multipart/mixed; BOUNDARY="8323328-1596385370-1752228768=:933"
+Content-ID: <156722b0-2254-e32b-dd47-5e1e439f1d78@linux.intel.com>
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1745244526-1752241128=:933
-Content-Type: text/plain; charset=UTF-8
+--8323328-1596385370-1752228768=:933
+Content-Type: text/plain; CHARSET=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <a4531dfe-24b8-0d7c-813e-399a7724948c@linux.intel.com>
 
-On Fri, 11 Jul 2025, Krishna Chaitanya Chundru wrote:
-> On 7/11/2025 2:51 PM, Ilpo J=C3=A4rvinen wrote:
-> > On Fri, 11 Jul 2025, Manivannan Sadhasivam wrote:
-> > > On Wed, Jul 09, 2025 at 06:01:22PM GMT, Krishna Chaitanya Chundru wro=
-te:
-> > > > On 7/9/2025 2:40 PM, Ilpo J=C3=A4rvinen wrote:
+On Wed, 9 Jul 2025, Matthew W Carlis wrote:
 
-> > > > > 1) Renames pci_enable_link_state() to pci_set_default_link_state(=
-)
-> > > > >=20
-> > > > > 1b) If pci_enable_link_state() is still needed after that, a new
-> > > > > function
-> > > > > is added to symmetrically pair with pci_disable_link_state().
-> > > > >=20
-> > > > > or alternatively,
-> > > > >=20
-> > > > > 2) Changelog justifies very clearly why this change is okay with =
-the
-> > > > > existing callers. (And obviously the function comment should be
-> > > > > altered to
-> > > > > match the functionality in that case too).
-> > > > >=20
-> > > > > If approach 2 is chosen, it should be very carefully reviewed whe=
-n it
-> > > > > comes to the callers.
-> > > > >=20
-> > > > I am in favor of approach 2 which you suggested, but lets wait for =
-other
-> > > > reviewers feedback on this. Based up on the response i will make
-> > > > necessary changes in v5.
-> > > >=20
-> > >=20
-> > > I would go for (1). It is always going to be a problem to change a le=
-gacy
-> > > API
-> > > like this. We might end up causing regressions. So it is safe to rena=
-me to
-> > > reflect the purpose and try to come up with a new API that does what =
-you
-> > > want.
-> > > If callers want to migrate to the new API, they can also do it in the
-> > > future.
-> >=20
-> > That's my recommendation as well.
-> I will take this as learning, we will go with approach (1) as both of
-> you are having valid points.
+> On Wed, 9 Jul 2025, Ilpo J=E4rvinen wrote:
+> > Are you saying there's still a problem in hpc? Since the introduction o=
+f=20
+> > bwctrl, remove_board() in pciehp has had pcie_reset_lbms() (or it's=20
+> > equivalent).
+>
+> I think my concern with hpc or the current mechanism in general is that t=
+he
+> condition is basically binary. Across a large fleet I expect to see momen=
+tary
+> issues. For example a device might start to link up, have an issue & then
+> try to link up again and from there be working correctly. However if that
+> were to trigger an LBMS it might result in the quirk forcing the link to =
+Gen1.
 >=20
-> llpo,
-> In the previous patch you said you have some patches on can you send me
-> those or shall I proceed with patches from myside.
+> For example if the quirk first guided the link to Gen1 & then if the devi=
+ce
+> linked up at Gen1 it tried to guide it to Gen2 & then if it linked up at =
+Gen2
+> it continued towards the maximum speed falling back down when it found th=
+e
+> device not able to achieve a certain higher speed that would be more idea=
+l.
+> Or perhaps starting at the second highest speed & working its way down.
+> Its quite a large fall in performance for a device to go from Gen4/5 to G=
+en1
+> whereas the ASMedia/Pericom combination was only capable of Gen2 as a pai=
+r.
+> If the SI is marginal for Gen4/5 I would tend to think the device has a f=
+airly
+> high chance of being able to run at the next lower speed for example.
 
-Sure, attached 3 patches.
+This is possible but it also come at a non-trivial latency cost, Link=20
+Retraining is not very cheap.
 
-Those were based on 6.11 and I've booted them along with my ASPM rework=20
-series (refactoring custom ASPM code in drivers to use the ASPM driver=20
-instaed). I quickly checked aspm.c fixes after that point and nothing=20
-seemed to require adaptations AFAICT.
+In here, you seem to suggesting the TLS quirk might be useful for other=20
+devices too besides the one on the ID list. Is that the case? (I'm asking=
+=20
+this because it contradicts with the patch you're submitting.)
 
+I don't know if other speeds are generally useful, intuition tells they=20
+might be. However, I've no way to gather numbers as I don't have to luxury=
+=20
+of large fleet of machines with PCIe devices to observe/measure. Perhaps=20
+you have some insight to this beyond just hypothetizing?
+
+> Actually I also wonder in the case of the ASMedia & Pericom combination
+> would we just see a LBMS interrupt every time the device loop between
+> speeds? Maybe the quirk should have been invoked by bwctrl.c when a certa=
+in
+> rate of LBMS assertions is detected instead? Is it better to give a devic=
+e
+> a few chances or to catch it right away on the first issue? (some value
+> judgements here)
+
+I investigated this as it came up while bwctrl was under review and found=
+=20
+various issues and challenges related to the quirk. The main problem=20
+is that bwctrl being a portdrv service means it probes quite late so it's=
+=20
+not available very early and quirk runs mainly during that time.
+
+It might be possible to delay bringing up of a failty device to=20
+workaround that, however, it's not the end of challenges.
+
+One would need to build a state machine to make such decisions as we don't=
+=20
+want to keep repeating it if the link is just broken. I lacked a way to=20
+test this in a meaningful way so I just gave up and left it as future work.
+
+But yes, it might be workable solution nobody has just written yet. If you=
+=20
+want to implement this, I'm certainly not against it. (I might even=20
+consider writing one myself but that certainly isn't going to be a high=20
+priority item for me and the current level details are not concrete enough=
+=20
+to be realized on the code level.)
+
+> > As I already mentioned, for DPC I agree, it likely should reset LBMS=20
+> > somewhere.
+> ...
+> > If you'd try this on different generations of Intel RP, you'd likely se=
+e=20
+> > variations there too, that's my experience when testing bwctrl.
+>=20
+> Yes agree about DPC especially given that there is likely vendor/device s=
+pecific
+> variations in assertions of the bit. There is another patch that came int=
+o the
+> DPC driver which suppresses surprise down error reporting which I would l=
+ike to
+> challenge/remove. My feeling is that the DPC driver should clear LBMS in =
+all cases
+> before clearing DPC status.
+
+I suggest you make a patch to that effect.
+
+> >> Should it not matter how long ago LBMS
+> >> was asserted before we invoke a TLS modification?
+> >
+> > To some extent, yes, which is why we call pcie_reset_lbms() in a few=20
+> > places.
+>=20
+> Maybe there should even be a config or sysfs file to disable the quirk be=
+cause
+> it kind of takes control away from users in some ways. i.e - doesn't obvi=
+ously
+> interact well with callers of setpci etc.
+
+There's PCI_QUIRKS but that's probably not fine-grained enough to be=20
+useful in practice at it takes away all quirks.
+
+> >> I wonder if it shouldn't have to see some kind of actual link activity=
+=20
+> >> as a prereq to entering the quirk.
+> >
+> > How would you observe that "link activity"? Doesn't LBMS itself imply=
+=20
+> > "link activity" occurred?
+>=20
+> I was thinking literally not entering the quirk function unless the kerne=
+l
+> had witnessed LNKSTA_DLLLA or LNKSTA_LT in the last second.
+
+How can we track that condition? There's nothing that tracks DLLLA nor LT,=
+=20
+and we can't get interrupt out of them either (AFAIK). So while it is=20
+perhaps nice on conceptual level, it would require polling those bits=20
+which doesn't look reasonable from implementation point-of-view.
+
+Also, I'm not convinced it would help your cases where you have=20
+short-term, intermitted failures during bring up.
+
+> Does this preclude us from declaring a device as "broken" as done by the =
+quirk
+> without having seen DLLA within 1s after DLLSC Event?
+> * PCI Express Base Revision - 6.7.3.3 Data Link Layer State Changed Event=
+s
+> "Software must allow 1 second after the Data Link Layer Link Active bit r=
+eads 1b
+> before it is permitted to determine that a hot plugged device which fails=
+ to return
+> a Successful Completion for a Valid Configuration Request is a broken dev=
+ice."
+
+If you think there is problem related to spec compliance here (there=20
+well might be), patches are definitely welcome. I'm not sure from where=20
+the quirk is called in this scenario and where/how the quirk logic=20
+invocation can be delayed (unfortunately won't have time to look at it any=
+=20
+time soon either).
+=20
+> > > One thing that honestly doesn't make any sense to me is the ID list i=
+n the
+> > > quirk. If the link comes up after forcing to Gen1 then it would only =
+restore
+> > > TLS if the device is the ASMedia switch, but also ignoring what devic=
+e is
+> > > detected downstream. If we allow ASMedia to restore the speed for any=
+ downstream
+> > > device when we only saw the initial issue with the Pericom switch the=
+n why
+> > > do we exclude Intel Root Ports or AMD Root Ports or any other bridge =
+from the
+> > > list which did not have any issues reported.
+> >=20
+> > I think it's because the restore has been tested on that device=20
+> > (whitelist).
+> >=20
+> > Your reasoning is based on assumption that TLS quirk setting Link Speed=
+=20
+> > to 2.5GT/s is part of "normal" operation. My view is that those=20
+> > triggerings are caused by not clearing stale LBMS in the right places. =
+If=20
+> > LBMS is not wrongly kept, the quirk is no-op on all but that ID listed=
+=20
+> > device.
+>=20
+> I'm making a slightly different assumption which is "something is working
+> until proven otherwise". We only know that the restore works on the ASMed=
+ia
+> when the downstream device is the Pericom switch. In fact we only know
+> it works for very specific layout & configuration of these two devices.
+> It seems wrong in my mind to be more restrictive on devices that don't ha=
+ve
+> a reported issue from, but then be less restrictive on the devices that h=
+ad an
+> out of spec interaction in the first place. Until reported we don't know
+> how many devices might see LBMS get set during the course of linking up, =
+but
+> then still arrive at the maximum speed.
+
+I wonder, if you could give my bwctrl tracing patch (below) a spin in some=
+=20
+case where such a problem shows up as it could show what DLLLA/LT are=20
+while LNKSTA register is read from bwctrl's irq handler. I'm planning to=20
+submit it eventually but placement of the tracing code has not been=20
+agreed yet with the other person submitting hotplug tracing.
+
+--
+From=20e5d7bc850028a82823c2cbb822c3ba5edaa623c1 Mon Sep 17 00:00:00 2001
+From: =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D <ilpo.jarvinen@linux.intel=
+=2Ecom>
+Date: Mon, 9 Jun 2025 20:29:29 +0300
+Subject: [PATCH 1/1] PCI/bwctrl: Add trace event to BW notifications
+MIME-Version: 1.0
+Content-Type: text/plain; charset=3DUTF-8
+Content-Transfer-Encoding: 8bit
+
+Frequent changes in the Link Speed or Width may indicate a PCIe
+link-layer problem. PCIe BW controller listen BW notifications, i.e.,
+whenever LBMS (Link Bandwidth Management Status) and/or LABS (Link
+Autonomous Bandwidth Status) is asserted to indicate the Link Speed
+and/or Width was changed (PCIe spec. r6.2, sec. 7.5.3.7 & 7.5.3.8).
+
+To help troubleshooting link related problems, add trace event for LBMS
+and LABS assertions.
+
+I was (privately) asked to expose LBMS count for this purpose while
+bwctrl was under review. Lukas Wunner suggested, however, to use
+traceevent instead to expose finer-grained details of the LBMS
+assertions (namely, the timing of the assertions and link status
+details).
+
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/Makefile       |  3 ++-
+ drivers/pci/pci-trace.c    |  9 +++++++
+ drivers/pci/pci.h          |  1 -
+ drivers/pci/pcie/bwctrl.c  | 13 ++++++++++
+ include/linux/pci.h        |  1 +
+ include/trace/events/pci.h | 49 ++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 74 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/pci/pci-trace.c
+ create mode 100644 include/trace/events/pci.h
+
+diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+index 67647f1880fb..49bd51b995cd 100644
+--- a/drivers/pci/Makefile
++++ b/drivers/pci/Makefile
+@@ -5,7 +5,8 @@
+ obj-$(CONFIG_PCI)=09=09+=3D access.o bus.o probe.o host-bridge.o \
+ =09=09=09=09   remove.o pci.o pci-driver.o search.o \
+ =09=09=09=09   rom.o setup-res.o irq.o vpd.o \
+-=09=09=09=09   setup-bus.o vc.o mmap.o devres.o
++=09=09=09=09   setup-bus.o vc.o mmap.o devres.o \
++=09=09=09=09   pci-trace.o
+=20
+ obj-$(CONFIG_PCI)=09=09+=3D msi/
+ obj-$(CONFIG_PCI)=09=09+=3D pcie/
+diff --git a/drivers/pci/pci-trace.c b/drivers/pci/pci-trace.c
+new file mode 100644
+index 000000000000..99af6466447f
+--- /dev/null
++++ b/drivers/pci/pci-trace.c
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * PCI trace functions
++ *
++ * Copyright (C) 2025 Intel Corporation
++ */
++
++#define CREATE_TRACE_POINTS
++#include <trace/events/pci.h>
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 12215ee72afb..8f1fffcda364 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -452,7 +452,6 @@ static inline int pcie_dev_speed_mbps(enum pci_bus_spee=
+d speed)
+ }
+=20
+ u8 pcie_get_supported_speeds(struct pci_dev *dev);
+-const char *pci_speed_string(enum pci_bus_speed speed);
+ void __pcie_print_link_status(struct pci_dev *dev, bool verbose);
+ void pcie_report_downtraining(struct pci_dev *dev);
+=20
+diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+index 36f939f23d34..7fb4e00f1e7a 100644
+--- a/drivers/pci/pcie/bwctrl.c
++++ b/drivers/pci/pcie/bwctrl.c
+@@ -20,6 +20,7 @@
+ #define dev_fmt(fmt) "bwctrl: " fmt
+=20
+ #include <linux/atomic.h>
++#include <linux/bitfield.h>
+ #include <linux/bitops.h>
+ #include <linux/bits.h>
+ #include <linux/cleanup.h>
+@@ -32,6 +33,8 @@
+ #include <linux/slab.h>
+ #include <linux/types.h>
+=20
++#include <trace/events/pci.h>
++
+ #include "../pci.h"
+ #include "portdrv.h"
+=20
+@@ -208,6 +211,11 @@ static void pcie_bwnotif_disable(struct pci_dev *port)
+ =09=09=09=09   PCI_EXP_LNKCTL_LBMIE | PCI_EXP_LNKCTL_LABIE);
+ }
+=20
++#define PCI_EXP_LNKSTA_LINK_STATUS_MASK (PCI_EXP_LNKSTA_LBMS | \
++=09=09=09=09=09 PCI_EXP_LNKSTA_LABS | \
++=09=09=09=09=09 PCI_EXP_LNKSTA_LT | \
++=09=09=09=09=09 PCI_EXP_LNKSTA_DLLLA)
++
+ static irqreturn_t pcie_bwnotif_irq(int irq, void *context)
+ {
+ =09struct pcie_device *srv =3D context;
+@@ -236,6 +244,11 @@ static irqreturn_t pcie_bwnotif_irq(int irq, void *con=
+text)
+ =09 */
+ =09pcie_update_link_speed(port->subordinate);
+=20
++=09trace_pci_link_event(port,
++=09=09=09     link_status & PCI_EXP_LNKSTA_LINK_STATUS_MASK,
++=09=09=09     pcie_link_speed[link_status & PCI_EXP_LNKSTA_CLS],
++=09=09=09     FIELD_GET(PCI_EXP_LNKSTA_NLW, link_status));
++
+ =09return IRQ_HANDLED;
+ }
+=20
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 05e68f35f392..8346121c035d 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -305,6 +305,7 @@ enum pci_bus_speed {
+ =09PCI_SPEED_UNKNOWN=09=09=3D 0xff,
+ };
+=20
++const char *pci_speed_string(enum pci_bus_speed speed);
+ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
+ enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
+=20
+diff --git a/include/trace/events/pci.h b/include/trace/events/pci.h
+new file mode 100644
+index 000000000000..c7187022cba5
+--- /dev/null
++++ b/include/trace/events/pci.h
+@@ -0,0 +1,49 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2025 Intel Corporation
++ */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM pci
++
++#if !defined(_TRACE_PCI_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_PCI_H
++
++#include <linux/pci.h>
++#include <linux/tracepoint.h>
++
++#define LNKSTA_FLAGS=09=09=09=09=09\
++=09{ PCI_EXP_LNKSTA_LT,=09"LT"},=09=09=09\
++=09{ PCI_EXP_LNKSTA_DLLLA,=09"DLLLA"},=09=09\
++=09{ PCI_EXP_LNKSTA_LBMS,=09"LBMS"},=09=09\
++=09{ PCI_EXP_LNKSTA_LABS,=09"LABS"}
++
++TRACE_EVENT(pci_link_event,
++=09TP_PROTO(struct pci_dev *dev, u16 link_status,
++=09=09 enum pci_bus_speed link_speed, u8 link_width),
++=09TP_ARGS(dev, link_status, link_speed, link_width),
++
++=09TP_STRUCT__entry(
++=09=09__string(=09name,=09=09=09pci_name(dev))
++=09=09__field(=09u16,=09=09=09link_status)
++=09=09__field(=09enum pci_bus_speed,=09link_speed)
++=09=09__field(=09u8,=09=09=09link_width)
++=09),
++
++=09TP_fast_assign(
++=09=09__assign_str(name);
++=09=09__entry->link_status=09=3D link_status;
++=09=09__entry->link_speed=09=3D link_speed;
++=09=09__entry->link_width=09=3D link_width;
++=09),
++
++=09TP_printk("%s %s x%u st=3D%s",
++=09=09  __get_str(name), pci_speed_string(__entry->link_speed),
++=09=09  __entry->link_width,
++=09=09  __print_flags((unsigned long)__entry->link_status, "|",
++=09=09=09=09LNKSTA_FLAGS))
++);
++
++#endif /* _TRACE_PCI_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
 --=20
- i.
+2.39.5
 
---8323328-1745244526-1752241128=:933
-Content-Type: text/x-diff; name=0001-PCI-ASPM-Rename-pci_enable_link_state-to-pci_set_def.patch
-Content-Transfer-Encoding: BASE64
-Content-ID: <3511aa67-b4a2-5713-2c97-c656cfdcf3f6@linux.intel.com>
-Content-Description: 
-Content-Disposition: attachment; filename=0001-PCI-ASPM-Rename-pci_enable_link_state-to-pci_set_def.patch
-
-RnJvbSAyODg1ZDRkMzc2NGU5NjRiMTVhZGRhMDFmNjZjNTE2Y2U1ZmYyMDc5
-IE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAwMQ0KRnJvbTogPT9VVEYtOD9xP0ls
-cG89MjBKPUMzPUE0cnZpbmVuPz0gPGlscG8uamFydmluZW5AbGludXguaW50
-ZWwuY29tPg0KRGF0ZTogRnJpLCAxMSBKdWwgMjAyNSAxNjoyODoyNCArMDMw
-MA0KU3ViamVjdDogW1BBVENIIDEvM10gUENJL0FTUE06IFJlbmFtZSBwY2lf
-ZW5hYmxlX2xpbmtfc3RhdGUoKSB0bw0KIHBjaV9zZXRfZGVmYXVsdF9saW5r
-X3N0YXRlKCkNCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRl
-eHQvcGxhaW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5j
-b2Rpbmc6IDhiaXQNCg0KcGNpX2VuYWJsZV9saW5rX3N0YXRlKCkgYW5kIHBj
-aV9kaXNhYmxlX2xpbmtfc3RhdGUoKSBhcmUgbm90IHBhaXJlZA0Kc3ltbWV0
-cmljYWxseSBkZXNwaXRlIHRoZWlyIG5hbWVzIHN1Z2dlc3Rpbmcgb3RoZXJ3
-aXNlLg0KcGNpX2VuYWJsZV9saW5rX3N0YXRlKCkgdHdlYWtzIGxpbmsgc3Rh
-dGUgd2hlbiB0aGUgImRlZmF1bHQiIHBvbGljeSBpcw0KaW4gdXNlIHJhdGhl
-ciB0aGFuIGV4YWN0bHkgImVuYWJsaW5nIiBzb21lIGxpbmsgc3RhdGVzLiBP
-YnZpb3VzbHksIHdoZW4NCnRoZSBkZWZhdWx0IHBvbGljeSBpcyBpbiB1c2Ug
-YW5kIHRoZSBkZWZhdWx0IGxpbmsgc3RhdGUgaXMgY2hhbmdlZCwNCnNvbWUg
-bGluayBzdGF0ZXMgbWF5IGdldCBlbmFibGVkIGJ1dCB0aGF0IGlzIGEgc2Vj
-b25kYXJ5IGVmZmVjdC4NCg0KVGh1cywgcmVuYW1lIHBjaV9lbmFibGVfbGlu
-a19zdGF0ZSgpIHRvIHBjaV9zZXRfZGVmYXVsdF9saW5rX3N0YXRlKCkgdG8N
-CmJldHRlciBtYXRjaCB3aGF0IGl0IGRvZXMuIFRoZSByZW5hbWUgYWxzbyBm
-cmVlcw0KcGNpX2VuYWJsZV9saW5rX3N0YXRlKCkgbmFtZSBzbyB0aGF0IGEg
-ZnVuY3Rpb24gdGhhdCBwYWlycw0Kc3ltbWV0cmljYWxseSB3aXRoIHBjaV9k
-aXNhYmxlX2xpbmtfc3RhdGUoKSBjYW4gYmUgYWRkZWQgbGF0ZXIuDQoNClRo
-ZXJlJ3MgYWxzbyBwY2lfZW5hYmxlX2xpbmtfc3RhdGVfbG9ja2VkKCkgdmFy
-aWFudCB3aGljaCBpcyBzaW1pbGFybHkNCnJlbmFtZWQgdG8gcGNpX3NldF9k
-ZWZhdWx0X2xpbmtfc3RhdGVfbG9ja2VkKCkuDQoNClNpZ25lZC1vZmYtYnk6
-IElscG8gSsOkcnZpbmVuIDxpbHBvLmphcnZpbmVuQGxpbnV4LmludGVsLmNv
-bT4NCi0tLQ0KIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtcWNv
-bS5jIHwgIDIgKy0NCiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jICAg
-ICAgICAgICB8ICAyICstDQogZHJpdmVycy9wY2kvcGNpZS9hc3BtLmMgICAg
-ICAgICAgICAgICAgfCAyOSArKysrKysrKysrKysrLS0tLS0tLS0tLS0tLQ0K
-IGluY2x1ZGUvbGludXgvcGNpLmggICAgICAgICAgICAgICAgICAgIHwgIDgg
-KysrLS0tLQ0KIDQgZmlsZXMgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwg
-MjAgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9j
-b250cm9sbGVyL2R3Yy9wY2llLXFjb20uYyBiL2RyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvZHdjL3BjaWUtcWNvbS5jDQppbmRleCBjNzg5ZTNmODU2NTUuLjM3
-ZWYzYmEwYzIwYiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xs
-ZXIvZHdjL3BjaWUtcWNvbS5jDQorKysgYi9kcml2ZXJzL3BjaS9jb250cm9s
-bGVyL2R3Yy9wY2llLXFjb20uYw0KQEAgLTEwMjMsNyArMTAyMyw3IEBAIHN0
-YXRpYyBpbnQgcWNvbV9wY2llX2VuYWJsZV9hc3BtKHN0cnVjdCBwY2lfZGV2
-ICpwZGV2LCB2b2lkICp1c2VyZGF0YSkNCiAJICogc3Vic3RhdGVzLg0KIAkg
-Ki8NCiAJcGNpX3NldF9wb3dlcl9zdGF0ZV9sb2NrZWQocGRldiwgUENJX0Qw
-KTsNCi0JcGNpX2VuYWJsZV9saW5rX3N0YXRlX2xvY2tlZChwZGV2LCBQQ0lF
-X0xJTktfU1RBVEVfQUxMKTsNCisJcGNpX3NldF9kZWZhdWx0X2xpbmtfc3Rh
-dGVfbG9ja2VkKHBkZXYsIFBDSUVfTElOS19TVEFURV9BTEwpOw0KIA0KIAly
-ZXR1cm4gMDsNCiB9DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJv
-bGxlci92bWQuYyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMNCmlu
-ZGV4IDhkZjA2NGI2MmEyZi4uZjQ1ZTllMzljNDE1IDEwMDY0NA0KLS0tIGEv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYw0KKysrIGIvZHJpdmVycy9w
-Y2kvY29udHJvbGxlci92bWQuYw0KQEAgLTc3MCw3ICs3NzAsNyBAQCBzdGF0
-aWMgaW50IHZtZF9wbV9lbmFibGVfcXVpcmsoc3RydWN0IHBjaV9kZXYgKnBk
-ZXYsIHZvaWQgKnVzZXJkYXRhKQ0KIAkgKiBQQ0llIHI2LjAsIHNlYyA1LjUu
-NC4NCiAJICovDQogCXBjaV9zZXRfcG93ZXJfc3RhdGVfbG9ja2VkKHBkZXYs
-IFBDSV9EMCk7DQotCXBjaV9lbmFibGVfbGlua19zdGF0ZV9sb2NrZWQocGRl
-diwgUENJRV9MSU5LX1NUQVRFX0FMTCk7DQorCXBjaV9zZXRfZGVmYXVsdF9s
-aW5rX3N0YXRlX2xvY2tlZChwZGV2LCBQQ0lFX0xJTktfU1RBVEVfQUxMKTsN
-CiAJcmV0dXJuIDA7DQogfQ0KIA0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNp
-L3BjaWUvYXNwbS5jIGIvZHJpdmVycy9wY2kvcGNpZS9hc3BtLmMNCmluZGV4
-IDI5ZmNiMDY4OWE5MS4uMzNlOTg4NWMwMjEwIDEwMDY0NA0KLS0tIGEvZHJp
-dmVycy9wY2kvcGNpZS9hc3BtLmMNCisrKyBiL2RyaXZlcnMvcGNpL3BjaWUv
-YXNwbS5jDQpAQCAtMTQzMiw3ICsxNDMyLDcgQEAgaW50IHBjaV9kaXNhYmxl
-X2xpbmtfc3RhdGUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGludCBzdGF0ZSkN
-CiB9DQogRVhQT1JUX1NZTUJPTChwY2lfZGlzYWJsZV9saW5rX3N0YXRlKTsN
-CiANCi1zdGF0aWMgaW50IF9fcGNpX2VuYWJsZV9saW5rX3N0YXRlKHN0cnVj
-dCBwY2lfZGV2ICpwZGV2LCBpbnQgc3RhdGUsIGJvb2wgbG9ja2VkKQ0KK3N0
-YXRpYyBpbnQgX19wY2lfc2V0X2RlZmF1bHRfbGlua19zdGF0ZShzdHJ1Y3Qg
-cGNpX2RldiAqcGRldiwgaW50IHN0YXRlLCBib29sIGxvY2tlZCkNCiB7DQog
-CXN0cnVjdCBwY2llX2xpbmtfc3RhdGUgKmxpbmsgPSBwY2llX2FzcG1fZ2V0
-X2xpbmsocGRldik7DQogDQpAQCAtMTQ2NSw4ICsxNDY1LDggQEAgc3RhdGlj
-IGludCBfX3BjaV9lbmFibGVfbGlua19zdGF0ZShzdHJ1Y3QgcGNpX2RldiAq
-cGRldiwgaW50IHN0YXRlLCBib29sIGxvY2tlZCkNCiB9DQogDQogLyoqDQot
-ICogcGNpX2VuYWJsZV9saW5rX3N0YXRlIC0gQ2xlYXIgYW5kIHNldCB0aGUg
-ZGVmYXVsdCBkZXZpY2UgbGluayBzdGF0ZSBzbyB0aGF0DQotICogdGhlIGxp
-bmsgbWF5IGJlIGFsbG93ZWQgdG8gZW50ZXIgdGhlIHNwZWNpZmllZCBzdGF0
-ZXMuIE5vdGUgdGhhdCBpZiB0aGUNCisgKiBwY2lfc2V0X2RlZmF1bHRfbGlu
-a19zdGF0ZSAtIENsZWFyIGFuZCBzZXQgdGhlIGRlZmF1bHQgZGV2aWNlIGxp
-bmsgc3RhdGUgc28NCisgKiB0aGF0IHRoZSBsaW5rIG1heSBiZSBhbGxvd2Vk
-IHRvIGVudGVyIHRoZSBzcGVjaWZpZWQgc3RhdGVzLiBOb3RlIHRoYXQgaWYg
-dGhlDQogICogQklPUyBkaWRuJ3QgZ3JhbnQgQVNQTSBjb250cm9sIHRvIHRo
-ZSBPUywgdGhpcyBkb2VzIG5vdGhpbmcgYmVjYXVzZSB3ZSBjYW4ndA0KICAq
-IHRvdWNoIHRoZSBMTktDVEwgcmVnaXN0ZXIuIEFsc28gbm90ZSB0aGF0IHRo
-aXMgZG9lcyBub3QgZW5hYmxlIHN0YXRlcw0KICAqIGRpc2FibGVkIGJ5IHBj
-aV9kaXNhYmxlX2xpbmtfc3RhdGUoKS4gUmV0dXJuIDAgb3IgYSBuZWdhdGl2
-ZSBlcnJuby4NCkBAIC0xNDc3LDE4ICsxNDc3LDE5IEBAIHN0YXRpYyBpbnQg
-X19wY2lfZW5hYmxlX2xpbmtfc3RhdGUoc3RydWN0IHBjaV9kZXYgKnBkZXYs
-IGludCBzdGF0ZSwgYm9vbCBsb2NrZWQpDQogICogQHBkZXY6IFBDSSBkZXZp
-Y2UNCiAgKiBAc3RhdGU6IE1hc2sgb2YgQVNQTSBsaW5rIHN0YXRlcyB0byBl
-bmFibGUNCiAgKi8NCi1pbnQgcGNpX2VuYWJsZV9saW5rX3N0YXRlKHN0cnVj
-dCBwY2lfZGV2ICpwZGV2LCBpbnQgc3RhdGUpDQoraW50IHBjaV9zZXRfZGVm
-YXVsdF9saW5rX3N0YXRlKHN0cnVjdCBwY2lfZGV2ICpwZGV2LCBpbnQgc3Rh
-dGUpDQogew0KLQlyZXR1cm4gX19wY2lfZW5hYmxlX2xpbmtfc3RhdGUocGRl
-diwgc3RhdGUsIGZhbHNlKTsNCisJcmV0dXJuIF9fcGNpX3NldF9kZWZhdWx0
-X2xpbmtfc3RhdGUocGRldiwgc3RhdGUsIGZhbHNlKTsNCiB9DQotRVhQT1JU
-X1NZTUJPTChwY2lfZW5hYmxlX2xpbmtfc3RhdGUpOw0KK0VYUE9SVF9TWU1C
-T0wocGNpX3NldF9kZWZhdWx0X2xpbmtfc3RhdGUpOw0KIA0KIC8qKg0KLSAq
-IHBjaV9lbmFibGVfbGlua19zdGF0ZV9sb2NrZWQgLSBDbGVhciBhbmQgc2V0
-IHRoZSBkZWZhdWx0IGRldmljZSBsaW5rIHN0YXRlDQotICogc28gdGhhdCB0
-aGUgbGluayBtYXkgYmUgYWxsb3dlZCB0byBlbnRlciB0aGUgc3BlY2lmaWVk
-IHN0YXRlcy4gTm90ZSB0aGF0IGlmDQotICogdGhlIEJJT1MgZGlkbid0IGdy
-YW50IEFTUE0gY29udHJvbCB0byB0aGUgT1MsIHRoaXMgZG9lcyBub3RoaW5n
-IGJlY2F1c2Ugd2UNCi0gKiBjYW4ndCB0b3VjaCB0aGUgTE5LQ1RMIHJlZ2lz
-dGVyLiBBbHNvIG5vdGUgdGhhdCB0aGlzIGRvZXMgbm90IGVuYWJsZSBzdGF0
-ZXMNCi0gKiBkaXNhYmxlZCBieSBwY2lfZGlzYWJsZV9saW5rX3N0YXRlKCku
-IFJldHVybiAwIG9yIGEgbmVnYXRpdmUgZXJybm8uDQorICogcGNpX3NldF9k
-ZWZhdWx0X2xpbmtfc3RhdGVfbG9ja2VkIC0gQ2xlYXIgYW5kIHNldCB0aGUg
-ZGVmYXVsdCBkZXZpY2UgbGluaw0KKyAqIHN0YXRlIHNvIHRoYXQgdGhlIGxp
-bmsgbWF5IGJlIGFsbG93ZWQgdG8gZW50ZXIgdGhlIHNwZWNpZmllZCBzdGF0
-ZXMuIE5vdGUNCisgKiB0aGF0IGlmIHRoZSBCSU9TIGRpZG4ndCBncmFudCBB
-U1BNIGNvbnRyb2wgdG8gdGhlIE9TLCB0aGlzIGRvZXMgbm90aGluZw0KKyAq
-IGJlY2F1c2Ugd2UgY2FuJ3QgdG91Y2ggdGhlIExOS0NUTCByZWdpc3Rlci4g
-QWxzbyBub3RlIHRoYXQgdGhpcyBkb2VzIG5vdA0KKyAqIGVuYWJsZSBzdGF0
-ZXMgZGlzYWJsZWQgYnkgcGNpX2Rpc2FibGVfbGlua19zdGF0ZSgpLiBSZXR1
-cm4gMCBvciBhIG5lZ2F0aXZlDQorICogZXJybm8uDQogICoNCiAgKiBOb3Rl
-OiBFbnN1cmUgZGV2aWNlcyBhcmUgaW4gRDAgYmVmb3JlIGVuYWJsaW5nIFBD
-SS1QTSBMMSBQTSBTdWJzdGF0ZXMsIHBlcg0KICAqIFBDSWUgcjYuMCwgc2Vj
-IDUuNS40Lg0KQEAgLTE0OTgsMTMgKzE0OTksMTMgQEAgRVhQT1JUX1NZTUJP
-TChwY2lfZW5hYmxlX2xpbmtfc3RhdGUpOw0KICAqDQogICogQ29udGV4dDog
-Q2FsbGVyIGhvbGRzIHBjaV9idXNfc2VtIHJlYWQgbG9jay4NCiAgKi8NCi1p
-bnQgcGNpX2VuYWJsZV9saW5rX3N0YXRlX2xvY2tlZChzdHJ1Y3QgcGNpX2Rl
-diAqcGRldiwgaW50IHN0YXRlKQ0KK2ludCBwY2lfc2V0X2RlZmF1bHRfbGlu
-a19zdGF0ZV9sb2NrZWQoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGludCBzdGF0
-ZSkNCiB7DQogCWxvY2tkZXBfYXNzZXJ0X2hlbGRfcmVhZCgmcGNpX2J1c19z
-ZW0pOw0KIA0KLQlyZXR1cm4gX19wY2lfZW5hYmxlX2xpbmtfc3RhdGUocGRl
-diwgc3RhdGUsIHRydWUpOw0KKwlyZXR1cm4gX19wY2lfc2V0X2RlZmF1bHRf
-bGlua19zdGF0ZShwZGV2LCBzdGF0ZSwgdHJ1ZSk7DQogfQ0KLUVYUE9SVF9T
-WU1CT0wocGNpX2VuYWJsZV9saW5rX3N0YXRlX2xvY2tlZCk7DQorRVhQT1JU
-X1NZTUJPTChwY2lfc2V0X2RlZmF1bHRfbGlua19zdGF0ZV9sb2NrZWQpOw0K
-IA0KIHN0YXRpYyBpbnQgcGNpZV9hc3BtX3NldF9wb2xpY3koY29uc3QgY2hh
-ciAqdmFsLA0KIAkJCQljb25zdCBzdHJ1Y3Qga2VybmVsX3BhcmFtICprcCkN
-CmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3BjaS5oIGIvaW5jbHVkZS9s
-aW51eC9wY2kuaA0KaW5kZXggMDVlNjhmMzVmMzkyLi5iOGY2MDg2NGVmODEg
-MTAwNjQ0DQotLS0gYS9pbmNsdWRlL2xpbnV4L3BjaS5oDQorKysgYi9pbmNs
-dWRlL2xpbnV4L3BjaS5oDQpAQCAtMTgyNiw4ICsxODI2LDggQEAgc3RhdGlj
-IGlubGluZSBpbnQgcGNpZV9zZXRfdGFyZ2V0X3NwZWVkKHN0cnVjdCBwY2lf
-ZGV2ICpwb3J0LA0KICNpZmRlZiBDT05GSUdfUENJRUFTUE0NCiBpbnQgcGNp
-X2Rpc2FibGVfbGlua19zdGF0ZShzdHJ1Y3QgcGNpX2RldiAqcGRldiwgaW50
-IHN0YXRlKTsNCiBpbnQgcGNpX2Rpc2FibGVfbGlua19zdGF0ZV9sb2NrZWQo
-c3RydWN0IHBjaV9kZXYgKnBkZXYsIGludCBzdGF0ZSk7DQotaW50IHBjaV9l
-bmFibGVfbGlua19zdGF0ZShzdHJ1Y3QgcGNpX2RldiAqcGRldiwgaW50IHN0
-YXRlKTsNCi1pbnQgcGNpX2VuYWJsZV9saW5rX3N0YXRlX2xvY2tlZChzdHJ1
-Y3QgcGNpX2RldiAqcGRldiwgaW50IHN0YXRlKTsNCitpbnQgcGNpX3NldF9k
-ZWZhdWx0X2xpbmtfc3RhdGUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGludCBz
-dGF0ZSk7DQoraW50IHBjaV9zZXRfZGVmYXVsdF9saW5rX3N0YXRlX2xvY2tl
-ZChzdHJ1Y3QgcGNpX2RldiAqcGRldiwgaW50IHN0YXRlKTsNCiB2b2lkIHBj
-aWVfbm9fYXNwbSh2b2lkKTsNCiBib29sIHBjaWVfYXNwbV9zdXBwb3J0X2Vu
-YWJsZWQodm9pZCk7DQogYm9vbCBwY2llX2FzcG1fZW5hYmxlZChzdHJ1Y3Qg
-cGNpX2RldiAqcGRldik7DQpAQCAtMTgzNiw5ICsxODM2LDkgQEAgc3RhdGlj
-IGlubGluZSBpbnQgcGNpX2Rpc2FibGVfbGlua19zdGF0ZShzdHJ1Y3QgcGNp
-X2RldiAqcGRldiwgaW50IHN0YXRlKQ0KIHsgcmV0dXJuIDA7IH0NCiBzdGF0
-aWMgaW5saW5lIGludCBwY2lfZGlzYWJsZV9saW5rX3N0YXRlX2xvY2tlZChz
-dHJ1Y3QgcGNpX2RldiAqcGRldiwgaW50IHN0YXRlKQ0KIHsgcmV0dXJuIDA7
-IH0NCi1zdGF0aWMgaW5saW5lIGludCBwY2lfZW5hYmxlX2xpbmtfc3RhdGUo
-c3RydWN0IHBjaV9kZXYgKnBkZXYsIGludCBzdGF0ZSkNCitzdGF0aWMgaW5s
-aW5lIGludCBwY2lfc2V0X2RlZmF1bHRfbGlua19zdGF0ZShzdHJ1Y3QgcGNp
-X2RldiAqcGRldiwgaW50IHN0YXRlKQ0KIHsgcmV0dXJuIDA7IH0NCi1zdGF0
-aWMgaW5saW5lIGludCBwY2lfZW5hYmxlX2xpbmtfc3RhdGVfbG9ja2VkKHN0
-cnVjdCBwY2lfZGV2ICpwZGV2LCBpbnQgc3RhdGUpDQorc3RhdGljIGlubGlu
-ZSBpbnQgcGNpX3NldF9kZWZhdWx0X2xpbmtfc3RhdGVfbG9ja2VkKHN0cnVj
-dCBwY2lfZGV2ICpwZGV2LCBpbnQgc3RhdGUpDQogeyByZXR1cm4gMDsgfQ0K
-IHN0YXRpYyBpbmxpbmUgdm9pZCBwY2llX25vX2FzcG0odm9pZCkgeyB9DQog
-c3RhdGljIGlubGluZSBib29sIHBjaWVfYXNwbV9zdXBwb3J0X2VuYWJsZWQo
-dm9pZCkgeyByZXR1cm4gZmFsc2U7IH0NCg0KYmFzZS1jb21taXQ6IDE5Mjcy
-YjM3YWE0ZjgzY2E1MmJkZjljMTZkNWQ4MWJkZDEzNTQ0OTQNCi0tIA0KMi4z
-OS41DQoNCg==
-
---8323328-1745244526-1752241128=:933
-Content-Type: text/x-diff; name=0002-PCI-ASPM-Improve-pci_set_default_link_state-_locked-.patch
-Content-Transfer-Encoding: BASE64
-Content-ID: <7d107b79-83cc-0225-07b4-f8d082878db8@linux.intel.com>
-Content-Description: 
-Content-Disposition: attachment; filename=0002-PCI-ASPM-Improve-pci_set_default_link_state-_locked-.patch
-
-RnJvbSA2OGJmMzcyMjJlMTc2MjAxZjQ3OGNiYWUxMmJhNGEyZTJkNjMyOWFm
-IE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAwMQ0KRnJvbTogPT9VVEYtOD9xP0ls
-cG89MjBKPUMzPUE0cnZpbmVuPz0gPGlscG8uamFydmluZW5AbGludXguaW50
-ZWwuY29tPg0KRGF0ZTogRnJpLCAxMSBKdWwgMjAyNSAxNjoyODoyNSArMDMw
-MA0KU3ViamVjdDogW1BBVENIIDIvM10gUENJL0FTUE06IEltcHJvdmUgcGNp
-X3NldF9kZWZhdWx0X2xpbmtfc3RhdGV7LF9sb2NrZWR9KCkNCiBrZXJuZWxk
-b2MNCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVR5cGU6IHRleHQvcGxh
-aW47IGNoYXJzZXQ9VVRGLTgNCkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6
-IDhiaXQNCg0KSW1wcm92ZSBwY2lfc2V0X2RlZmF1bHRfbGlua19zdGF0ZXss
-X2xvY2tlZH0oKSBkb2N1bWVudGF0aW9uOg0KDQotIE5vdGUgdGhlIGxpbmsg
-c3RhdGUgbWF5IGdldCBjaGFuZ2VkIGlmIHRoZSBkZWZhdWx0IHBvbGljeSBp
-cyBpbiB1c2UNCi0gQmV0dGVyIGZvbGxvdyBrZXJuZWxkb2MgZm9ybWF0dGlu
-ZyBndWlkZWxpbmVzIChzZXBhcmF0ZSBkZXNjcmlwdGlvbg0KICBibG9jayBh
-bmQgcmV0dXJuIGVudHJpZXMpDQoNClNpZ25lZC1vZmYtYnk6IElscG8gSsOk
-cnZpbmVuIDxpbHBvLmphcnZpbmVuQGxpbnV4LmludGVsLmNvbT4NCi0tLQ0K
-IGRyaXZlcnMvcGNpL3BjaWUvYXNwbS5jIHwgMzcgKysrKysrKysrKysrKysr
-KysrKysrKy0tLS0tLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyMiBp
-bnNlcnRpb25zKCspLCAxNSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvcGNpL3BjaWUvYXNwbS5jIGIvZHJpdmVycy9wY2kvcGNpZS9h
-c3BtLmMNCmluZGV4IDMzZTk4ODVjMDIxMC4uNTcyMWViZmRlYTcxIDEwMDY0
-NA0KLS0tIGEvZHJpdmVycy9wY2kvcGNpZS9hc3BtLmMNCisrKyBiL2RyaXZl
-cnMvcGNpL3BjaWUvYXNwbS5jDQpAQCAtMTQ2NSwxNyArMTQ2NSwyMSBAQCBz
-dGF0aWMgaW50IF9fcGNpX3NldF9kZWZhdWx0X2xpbmtfc3RhdGUoc3RydWN0
-IHBjaV9kZXYgKnBkZXYsIGludCBzdGF0ZSwgYm9vbCBsbw0KIH0NCiANCiAv
-KioNCi0gKiBwY2lfc2V0X2RlZmF1bHRfbGlua19zdGF0ZSAtIENsZWFyIGFu
-ZCBzZXQgdGhlIGRlZmF1bHQgZGV2aWNlIGxpbmsgc3RhdGUgc28NCi0gKiB0
-aGF0IHRoZSBsaW5rIG1heSBiZSBhbGxvd2VkIHRvIGVudGVyIHRoZSBzcGVj
-aWZpZWQgc3RhdGVzLiBOb3RlIHRoYXQgaWYgdGhlDQotICogQklPUyBkaWRu
-J3QgZ3JhbnQgQVNQTSBjb250cm9sIHRvIHRoZSBPUywgdGhpcyBkb2VzIG5v
-dGhpbmcgYmVjYXVzZSB3ZSBjYW4ndA0KLSAqIHRvdWNoIHRoZSBMTktDVEwg
-cmVnaXN0ZXIuIEFsc28gbm90ZSB0aGF0IHRoaXMgZG9lcyBub3QgZW5hYmxl
-IHN0YXRlcw0KLSAqIGRpc2FibGVkIGJ5IHBjaV9kaXNhYmxlX2xpbmtfc3Rh
-dGUoKS4gUmV0dXJuIDAgb3IgYSBuZWdhdGl2ZSBlcnJuby4NCisgKiBwY2lf
-c2V0X2RlZmF1bHRfbGlua19zdGF0ZSAtIFNldCB0aGUgZGVmYXVsdCBkZXZp
-Y2UgbGluayBzdGF0ZQ0KKyAqIEBwZGV2OiBQQ0kgZGV2aWNlDQorICogQHN0
-YXRlOiBNYXNrIG9mIEFTUE0gbGluayBzdGF0ZXMgdG8gZW5hYmxlDQorICoN
-CisgKiBTZXQgdGhlIGRlZmF1bHQgZGV2aWNlIGxpbmsgc3RhdGUgc28gdGhh
-dCB0aGUgbGluayBtYXkgYmUgYWxsb3dlZCB0bw0KKyAqIGVudGVyIHRoZSBz
-cGVjaWZpZWQgc3RhdGVzLiBJZiB0aGUgZGVmYXVsdCBwb2xpY3kgaXMgaW4g
-dXNlLCB0aGUgbGluaw0KKyAqIHN0YXRlIG1heSBhbHNvIGJlIHVwZGF0ZWQg
-dG8gcmVmbGVjdCB0aGUgbmV3IGRlZmF1bHQgbGluayBzdGF0ZS4gTm90ZQ0K
-KyAqIHRoYXQgaWYgdGhlIEJJT1MgZGlkbid0IGdyYW50IEFTUE0gY29udHJv
-bCB0byB0aGUgT1MsIHRoaXMgZG9lcyBub3RoaW5nDQorICogYmVjYXVzZSB3
-ZSBjYW4ndCB0b3VjaCB0aGUgTE5LQ1RMIHJlZ2lzdGVyLiBBbHNvIG5vdGUg
-dGhhdCB0aGlzIGRvZXMgbm90DQorICogZW5hYmxlIHN0YXRlcyBkaXNhYmxl
-ZCBieSBwY2lfZGlzYWJsZV9saW5rX3N0YXRlKCkuDQogICoNCiAgKiBOb3Rl
-OiBFbnN1cmUgZGV2aWNlcyBhcmUgaW4gRDAgYmVmb3JlIGVuYWJsaW5nIFBD
-SS1QTSBMMSBQTSBTdWJzdGF0ZXMsIHBlcg0KICAqIFBDSWUgcjYuMCwgc2Vj
-IDUuNS40Lg0KICAqDQotICogQHBkZXY6IFBDSSBkZXZpY2UNCi0gKiBAc3Rh
-dGU6IE1hc2sgb2YgQVNQTSBsaW5rIHN0YXRlcyB0byBlbmFibGUNCisgKiBS
-ZXR1cm46IDAgb3IgYSBuZWdhdGl2ZSBlcnJuby4NCiAgKi8NCiBpbnQgcGNp
-X3NldF9kZWZhdWx0X2xpbmtfc3RhdGUoc3RydWN0IHBjaV9kZXYgKnBkZXYs
-IGludCBzdGF0ZSkNCiB7DQpAQCAtMTQ4NCwyMCArMTQ4OCwyMyBAQCBpbnQg
-cGNpX3NldF9kZWZhdWx0X2xpbmtfc3RhdGUoc3RydWN0IHBjaV9kZXYgKnBk
-ZXYsIGludCBzdGF0ZSkNCiBFWFBPUlRfU1lNQk9MKHBjaV9zZXRfZGVmYXVs
-dF9saW5rX3N0YXRlKTsNCiANCiAvKioNCi0gKiBwY2lfc2V0X2RlZmF1bHRf
-bGlua19zdGF0ZV9sb2NrZWQgLSBDbGVhciBhbmQgc2V0IHRoZSBkZWZhdWx0
-IGRldmljZSBsaW5rDQotICogc3RhdGUgc28gdGhhdCB0aGUgbGluayBtYXkg
-YmUgYWxsb3dlZCB0byBlbnRlciB0aGUgc3BlY2lmaWVkIHN0YXRlcy4gTm90
-ZQ0KKyAqIHBjaV9zZXRfZGVmYXVsdF9saW5rX3N0YXRlX2xvY2tlZCAtIFNl
-dCB0aGUgZGVmYXVsdCBkZXZpY2UgbGluayBzdGF0ZQ0KKyAqIEBwZGV2OiBQ
-Q0kgZGV2aWNlDQorICogQHN0YXRlOiBNYXNrIG9mIEFTUE0gbGluayBzdGF0
-ZXMgdG8gZW5hYmxlDQorICoNCisgKiBTZXQgdGhlIGRlZmF1bHQgZGV2aWNl
-IGxpbmsgc3RhdGUgc28gdGhhdCB0aGUgbGluayBtYXkgYmUgYWxsb3dlZCB0
-bw0KKyAqIGVudGVyIHRoZSBzcGVjaWZpZWQgc3RhdGVzLiBJZiB0aGUgZGVm
-YXVsdCBwb2xpY3kgaXMgaW4gdXNlLCB0aGUgbGluaw0KKyAqIHN0YXRlIG1h
-eSBhbHNvIGJlIHVwZGF0ZWQgdG8gcmVmbGVjdCB0aGUgbmV3IGRlZmF1bHQg
-bGluayBzdGF0ZS4gTm90ZQ0KICAqIHRoYXQgaWYgdGhlIEJJT1MgZGlkbid0
-IGdyYW50IEFTUE0gY29udHJvbCB0byB0aGUgT1MsIHRoaXMgZG9lcyBub3Ro
-aW5nDQogICogYmVjYXVzZSB3ZSBjYW4ndCB0b3VjaCB0aGUgTE5LQ1RMIHJl
-Z2lzdGVyLiBBbHNvIG5vdGUgdGhhdCB0aGlzIGRvZXMgbm90DQotICogZW5h
-YmxlIHN0YXRlcyBkaXNhYmxlZCBieSBwY2lfZGlzYWJsZV9saW5rX3N0YXRl
-KCkuIFJldHVybiAwIG9yIGEgbmVnYXRpdmUNCi0gKiBlcnJuby4NCisgKiBl
-bmFibGUgc3RhdGVzIGRpc2FibGVkIGJ5IHBjaV9kaXNhYmxlX2xpbmtfc3Rh
-dGUoKS4NCisgKg0KKyAqIENvbnRleHQ6IENhbGxlciBob2xkcyBwY2lfYnVz
-X3NlbSByZWFkIGxvY2suDQogICoNCiAgKiBOb3RlOiBFbnN1cmUgZGV2aWNl
-cyBhcmUgaW4gRDAgYmVmb3JlIGVuYWJsaW5nIFBDSS1QTSBMMSBQTSBTdWJz
-dGF0ZXMsIHBlcg0KICAqIFBDSWUgcjYuMCwgc2VjIDUuNS40Lg0KICAqDQot
-ICogQHBkZXY6IFBDSSBkZXZpY2UNCi0gKiBAc3RhdGU6IE1hc2sgb2YgQVNQ
-TSBsaW5rIHN0YXRlcyB0byBlbmFibGUNCi0gKg0KLSAqIENvbnRleHQ6IENh
-bGxlciBob2xkcyBwY2lfYnVzX3NlbSByZWFkIGxvY2suDQorICogUmV0dXJu
-OiAwIG9yIGEgbmVnYXRpdmUgZXJybm8uDQogICovDQogaW50IHBjaV9zZXRf
-ZGVmYXVsdF9saW5rX3N0YXRlX2xvY2tlZChzdHJ1Y3QgcGNpX2RldiAqcGRl
-diwgaW50IHN0YXRlKQ0KIHsNCi0tIA0KMi4zOS41DQoNCg==
-
---8323328-1745244526-1752241128=:933
-Content-Type: text/x-diff; name=0003-PCI-ASPM-Add-pci_enable_link_state.patch
-Content-Transfer-Encoding: BASE64
-Content-ID: <99381f4d-da76-6006-0e26-5cdd0350d380@linux.intel.com>
-Content-Description: 
-Content-Disposition: attachment; filename=0003-PCI-ASPM-Add-pci_enable_link_state.patch
-
-RnJvbSBkNWVmOGNmOTUxZGQxMzVlNzZkZWIzMmQxYzMxNWZlOTVkMWY0Yzkx
-IE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAwMQ0KRnJvbTogPT9VVEYtOD9xP0ls
-cG89MjBKPUMzPUE0cnZpbmVuPz0gPGlscG8uamFydmluZW5AbGludXguaW50
-ZWwuY29tPg0KRGF0ZTogRnJpLCAxMSBKdWwgMjAyNSAxNjoyODoyNiArMDMw
-MA0KU3ViamVjdDogW1BBVENIIDMvM10gUENJL0FTUE06IEFkZCBwY2lfZW5h
-YmxlX2xpbmtfc3RhdGUoKQ0KTUlNRS1WZXJzaW9uOiAxLjANCkNvbnRlbnQt
-VHlwZTogdGV4dC9wbGFpbjsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFu
-c2Zlci1FbmNvZGluZzogOGJpdA0KDQpwY2lfZGlzYWJsZV9saW5rX3N0YXRl
-KCkgbGFja3MgYSBzeW1tZXRyaWMgcGFpci4gU29tZSBkcml2ZXJzIHdhbnQg
-dG8NCmRpc2FibGUgQVNQTSBkdXJpbmcgY2VydGFpbiBwaGFzZXMgb2YgdGhl
-aXIgb3BlcmF0aW9uIGJ1dCB0aGVuDQpyZS1lbmFibGUgaXQgbGF0ZXIgb24u
-IElmIHBjaV9kaXNhYmxlX2xpbmtfc3RhdGUoKSBpcyBtYWRlIGZvciB0aGUN
-CmRldmljZSwgdGhlcmUgaXMgY3VycmVudGx5IG5vIHdheSB0byByZS1lbmFi
-bGUgdGhlIHN0YXRlcyB0aGF0IHdlcmUNCmRpc2FibGVkLg0KDQpBZGQgcGNp
-X2VuYWJsZV9saW5rX3N0YXRlKCkgdG8gcmVtb3ZlIEFTUE0gc3RhdGVzIGZy
-b20gdGhlIHN0YXRlDQpkaXNhYmxlIG1hc2suDQoNClNpZ25lZC1vZmYtYnk6
-IElscG8gSsOkcnZpbmVuIDxpbHBvLmphcnZpbmVuQGxpbnV4LmludGVsLmNv
-bT4NCi0tLQ0KIGRyaXZlcnMvcGNpL3BjaWUvYXNwbS5jIHwgNDMgKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCiBpbmNsdWRl
-L2xpbnV4L3BjaS5oICAgICB8ICAxICsNCiAyIGZpbGVzIGNoYW5nZWQsIDQ0
-IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3Bj
-aWUvYXNwbS5jIGIvZHJpdmVycy9wY2kvcGNpZS9hc3BtLmMNCmluZGV4IDU3
-MjFlYmZkZWE3MS4uMzQ4YmQ3OWYwNDlmIDEwMDY0NA0KLS0tIGEvZHJpdmVy
-cy9wY2kvcGNpZS9hc3BtLmMNCisrKyBiL2RyaXZlcnMvcGNpL3BjaWUvYXNw
-bS5jDQpAQCAtMTQzMiw2ICsxNDMyLDQ5IEBAIGludCBwY2lfZGlzYWJsZV9s
-aW5rX3N0YXRlKHN0cnVjdCBwY2lfZGV2ICpwZGV2LCBpbnQgc3RhdGUpDQog
-fQ0KIEVYUE9SVF9TWU1CT0wocGNpX2Rpc2FibGVfbGlua19zdGF0ZSk7DQog
-DQorLyoqDQorICogcGNpX2VuYWJsZV9saW5rX3N0YXRlIC0gUmUtZW5hYmxl
-IGRldmljZSdzIGxpbmsgc3RhdGUNCisgKiBAcGRldjogUENJIGRldmljZQ0K
-KyAqIEBzdGF0ZTogQVNQTSBsaW5rIHN0YXRlcyB0byByZS1lbmFibGUNCisg
-Kg0KKyAqIEVuYWJsZSBkZXZpY2UncyBsaW5rIHN0YXRlIHRoYXQgd2VyZSBw
-cmV2aW91c2x5IGRpc2FibGUgc28gdGhlIGxpbmsgaXMNCisgKiBhbGxvd2Vk
-IHRvIGVudGVyIHRoZSBzcGVjaWZpYyBzdGF0ZXMuIE5vdGUgdGhhdCBpZiB0
-aGUgQklPUyBkaWRuJ3QgZ3JhbnQNCisgKiBBU1BNIGNvbnRyb2wgdG8gdGhl
-IE9TLCB0aGlzIGRvZXMgbm90aGluZyBiZWNhdXNlIHdlIGNhbid0IHRvdWNo
-IHRoZQ0KKyAqIExOS0NUTCByZWdpc3Rlci4NCisgKg0KKyAqIFJldHVybjog
-MCBvciBhIG5lZ2F0aXZlIGVycm5vLg0KKyAqLw0KK2ludCBwY2lfZW5hYmxl
-X2xpbmtfc3RhdGUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGludCBzdGF0ZSkN
-Cit7DQorCXN0cnVjdCBwY2llX2xpbmtfc3RhdGUgKmxpbmsgPSBwY2llX2Fz
-cG1fZ2V0X2xpbmsocGRldik7DQorDQorCWlmICghbGluaykNCisJCXJldHVy
-biAtRUlOVkFMOw0KKwkvKg0KKwkgKiBBIGRyaXZlciByZXF1ZXN0ZWQgdGhh
-dCBBU1BNIGJlIGVuYWJsZWQgb24gdGhpcyBkZXZpY2UsIGJ1dA0KKwkgKiBp
-ZiB3ZSBkb24ndCBoYXZlIHBlcm1pc3Npb24gdG8gbWFuYWdlIEFTUE0gKGUu
-Zy4sIG9uIEFDUEkNCisJICogc3lzdGVtcyB3ZSBoYXZlIHRvIG9ic2VydmUg
-dGhlIEZBRFQgQUNQSV9GQURUX05PX0FTUE0gYml0IGFuZA0KKwkgKiB0aGUg
-X09TQyBtZXRob2QpLCB3ZSBjYW4ndCBob25vciB0aGF0IHJlcXVlc3QuDQor
-CSAqLw0KKwlpZiAoYXNwbV9kaXNhYmxlZCkgew0KKwkJcGNpX3dhcm4ocGRl
-diwgImNhbid0IGVuYWJsZSBBU1BNOyBPUyBkb2Vzbid0IGhhdmUgQVNQTSBj
-b250cm9sXG4iKTsNCisJCXJldHVybiAtRVBFUk07DQorCX0NCisNCisJbXV0
-ZXhfbG9jaygmYXNwbV9sb2NrKTsNCisJLyogVXNlIHRoZSBkaXNhYmxlIG1h
-c2sgdmFyaWFudCBiZWNhdXNlIGl0IHJlbGF0ZXMgdG8gYXNwbV9kaXNhYmxl
-ICovDQorCWxpbmstPmFzcG1fZGlzYWJsZSAmPSB+cGNpX2NhbGNfYXNwbV9k
-aXNhYmxlX21hc2soc3RhdGUpOw0KKwlwY2llX2NvbmZpZ19hc3BtX2xpbmso
-bGluaywgcG9saWN5X3RvX2FzcG1fc3RhdGUobGluaykpOw0KKw0KKwlpZiAo
-c3RhdGUgJiBQQ0lFX0xJTktfU1RBVEVfQ0xLUE0pDQorCQlsaW5rLT5jbGtw
-bV9kaXNhYmxlID0gMDsNCisJcGNpZV9zZXRfY2xrcG0obGluaywgcG9saWN5
-X3RvX2Nsa3BtX3N0YXRlKGxpbmspKTsNCisJbXV0ZXhfdW5sb2NrKCZhc3Bt
-X2xvY2spOw0KKw0KKwlyZXR1cm4gMDsNCit9DQorRVhQT1JUX1NZTUJPTChw
-Y2lfZW5hYmxlX2xpbmtfc3RhdGUpOw0KKw0KIHN0YXRpYyBpbnQgX19wY2lf
-c2V0X2RlZmF1bHRfbGlua19zdGF0ZShzdHJ1Y3QgcGNpX2RldiAqcGRldiwg
-aW50IHN0YXRlLCBib29sIGxvY2tlZCkNCiB7DQogCXN0cnVjdCBwY2llX2xp
-bmtfc3RhdGUgKmxpbmsgPSBwY2llX2FzcG1fZ2V0X2xpbmsocGRldik7DQpk
-aWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9wY2kuaCBiL2luY2x1ZGUvbGlu
-dXgvcGNpLmgNCmluZGV4IGI4ZjYwODY0ZWY4MS4uZDU2NmQ4NmU2MzY4IDEw
-MDY0NA0KLS0tIGEvaW5jbHVkZS9saW51eC9wY2kuaA0KKysrIGIvaW5jbHVk
-ZS9saW51eC9wY2kuaA0KQEAgLTE4MjYsNiArMTgyNiw3IEBAIHN0YXRpYyBp
-bmxpbmUgaW50IHBjaWVfc2V0X3RhcmdldF9zcGVlZChzdHJ1Y3QgcGNpX2Rl
-diAqcG9ydCwNCiAjaWZkZWYgQ09ORklHX1BDSUVBU1BNDQogaW50IHBjaV9k
-aXNhYmxlX2xpbmtfc3RhdGUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGludCBz
-dGF0ZSk7DQogaW50IHBjaV9kaXNhYmxlX2xpbmtfc3RhdGVfbG9ja2VkKHN0
-cnVjdCBwY2lfZGV2ICpwZGV2LCBpbnQgc3RhdGUpOw0KK2ludCBwY2lfZW5h
-YmxlX2xpbmtfc3RhdGUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGludCBzdGF0
-ZSk7DQogaW50IHBjaV9zZXRfZGVmYXVsdF9saW5rX3N0YXRlKHN0cnVjdCBw
-Y2lfZGV2ICpwZGV2LCBpbnQgc3RhdGUpOw0KIGludCBwY2lfc2V0X2RlZmF1
-bHRfbGlua19zdGF0ZV9sb2NrZWQoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGlu
-dCBzdGF0ZSk7DQogdm9pZCBwY2llX25vX2FzcG0odm9pZCk7DQotLSANCjIu
-MzkuNQ0KDQo=
-
---8323328-1745244526-1752241128=:933--
+--8323328-1596385370-1752228768=:933--
 
