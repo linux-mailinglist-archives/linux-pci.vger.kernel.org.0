@@ -1,94 +1,170 @@
-Return-Path: <linux-pci+bounces-31926-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31927-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24E5DB01BCD
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 14:17:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17426B01C47
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 14:44:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5009C1CA7CD8
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 12:16:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EAA591C26180
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 12:44:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F38E29A32A;
-	Fri, 11 Jul 2025 12:15:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76D2D2BF3DB;
+	Fri, 11 Jul 2025 12:44:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilwu63lF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IJDmPs2c"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4C4299AA9;
-	Fri, 11 Jul 2025 12:15:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326653209;
+	Fri, 11 Jul 2025 12:44:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752236140; cv=none; b=JoKzE+j/HUOuWcUUesNMMBfS3I+qC2bVDD9hjEf/ldCFy3ERQYr31fc2dl3lsimMd/jRpSLCW+Woqtvv+xq1WSUh1ZpmgjXBvD2nuYK80Zfcg5ts6ac9OtYqt8KnQenKO4vdvYyVMRWsPgBBLzBSPPMiBNAu1JIdjw9fG4jf3dY=
+	t=1752237861; cv=none; b=fFjwmTz/952O8NvuXl177kLxm2V5Q26DHniGBmW5lBHi6ynZ8Su4Xnp/7/ny8UPjDarp5KO+SUrZ0kKNfZrY5oy0f1JgMe3CBnUX7f0kIfpSw4m17pMc4ErfyIB2b6Glcti5S1pArXQYLXcQtbRQayoqK1BafNAemGrbWHfWcEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752236140; c=relaxed/simple;
-	bh=n82RM4cgT4El7yNKeOkJ1+B9gFq+IBgDJwiJGDyoQKw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=W+Wzf/pNgiWd5kuupp6VkllRIZDR3DkGH+1pSrtmxxssCXPFHeIPyBPLfMgavS4C0VzEuxpYjDNPhyVXBxqEvChxJlp2Z9VtsOz3360t3MrJE26PsFYjVAoGVSqpP3uiuREFwj8wSAviLrs8FCjsmPHJvFahI568qjTdjair4/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilwu63lF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC62C4CEED;
-	Fri, 11 Jul 2025 12:15:38 +0000 (UTC)
+	s=arc-20240116; t=1752237861; c=relaxed/simple;
+	bh=teZJaqxYI5b4Zi5Q3t/5mosyvGb3FX+DYiKRW0d6N6s=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=boeNj87B25QnNn94n0ufDiJHOZ5laYoBd+TLCRqnLoasFuVNdOdFmYv/BDybyucAL0huboW6HmfJ7HtrDRNk60kMCevbm0yjOQyM2F8NzQFsfDcneOl3u3UkFHDYomKDBMWYSAvAq2fQ9qKckSdYeqV6adDRKHQObx6Y64eSH+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IJDmPs2c; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 244B9C4CEED;
+	Fri, 11 Jul 2025 12:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752236138;
-	bh=n82RM4cgT4El7yNKeOkJ1+B9gFq+IBgDJwiJGDyoQKw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ilwu63lFCyYgGCXpzoljE+Ssp/LjbyGVktjqkhe+S5vf8WIYt7R/1iHH6nC9IYpeA
-	 EdfwpsLFcWOrzMG5Juf5bLwjvC/feIl6gtjDVaA2TLTFL+wtS7riYM33x722uYj6Vx
-	 F9yOIimLMfCqg27rzoHqdggfrY/JFn3HUFWQCcN4GUIYYkfeQUqosBqEyMRVpKEBAi
-	 smbmkHQXo+rpfwcXwSUHjQ9ZCODE7C2pE0XJdB3EYNh0II9jPPSxwguXeUgDHSnBVP
-	 dlBsXWSjJg11MpoMcum2NRMu9SWjdJqHk/8htJFweRk0lp3dYqXTNIyaokJyzPjeCb
-	 kj5Gb/1ABU+xw==
-Date: Fri, 11 Jul 2025 07:15:37 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Bandhan Pramanik <bandhanpramanik06.foss@gmail.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, ath10k@lists.infradead.org,
-	linux-wireless@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: Instability in ALL stable and LTS distro kernels (IRQ #16 being
- disabled, PCIe bus errors, ath10k_pci) in Dell Inspiron 5567
-Message-ID: <20250711121537.GA2289649@bhelgaas>
+	s=k20201202; t=1752237860;
+	bh=teZJaqxYI5b4Zi5Q3t/5mosyvGb3FX+DYiKRW0d6N6s=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=IJDmPs2c3NbqO3wxva11UXJLk9zZYU+B2fZtvtfwnFwoEOyxy64podMGkXpF4Srr3
+	 3GctEfA87rhazleam3+lU8Q7ILT1r5aaQAIGUeaQMKwml83rX69qG61ch5ThQyXrfr
+	 gPjD9Nb7q3B3sHaOfG16wjiXJpZwHmHh4BnSbqysc8Xl91V0iLPjwhf5mZ4Ii3AJr3
+	 ALKh/mpgnKqGHTLc+6he887VpV6qrxjkJe0D57+XI880GRuTPANwid4VbJbkUPpjyl
+	 umhId6gP+TabFKBnQ2H8FvO2WONWNIJtxCD87joyUgyy0ukGUP/qAUsGwkTBOM2wb6
+	 qUYmv0wyaRYhQ==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEmM+Qj=TA=WtQAXQZx6wCUpdsOQ4j66Kpyze3KNZHC79KfyRA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 11 Jul 2025 14:44:09 +0200
+Message-Id: <DB98H7EGG96J.2FC3ZWDENYWW5@kernel.org>
+Cc: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>, <netdev@vger.kernel.org>,
+ <linux-clk@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
+ <linux-block@vger.kernel.org>
+Subject: Re: [PATCH 00/17] rust: replace `kernel::c_str!` with C-Strings
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Tamir Duberstein" <tamird@gmail.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Viresh Kumar" <viresh.kumar@linaro.org>, "Miguel
+ Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
+ Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
+ <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "David
+ Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "FUJITA
+ Tomonori" <fujita.tomonori@gmail.com>, "Andrew Lunn" <andrew@lunn.ch>,
+ "Heiner Kallweit" <hkallweit1@gmail.com>, "Russell King"
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo
+ Abeni" <pabeni@redhat.com>, "Michael Turquette" <mturquette@baylibre.com>,
+ "Stephen Boyd" <sboyd@kernel.org>, "Breno Leitao" <leitao@debian.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Luis Chamberlain"
+ <mcgrof@kernel.org>, "Russ Weight" <russ.weight@linux.dev>, "Dave Ertman"
+ <david.m.ertman@intel.com>, "Ira Weiny" <ira.weiny@intel.com>, "Leon
+ Romanovsky" <leon@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Arnd
+ Bergmann" <arnd@arndb.de>, "Brendan Higgins" <brendan.higgins@linux.dev>,
+ "David Gow" <davidgow@google.com>, "Rae Moar" <rmoar@google.com>, "Jens
+ Axboe" <axboe@kernel.dk>
+X-Mailer: aerc 0.20.1
+References: <20250710-core-cstr-cstrings-v1-0-027420ea799e@gmail.com>
+In-Reply-To: <20250710-core-cstr-cstrings-v1-0-027420ea799e@gmail.com>
 
-On Fri, Jul 11, 2025 at 12:36:12AM +0530, Bandhan Pramanik wrote:
-> Ok, we did it. Could reproduce the errors properly.
-> 
-> Here are the journalctl logs:
-> 
-> Kernel level: https://gist.githubusercontent.com/BandhanPramanik/ddb0cb23eca03ca2ea43a1d832a16180/raw/a9e93c4ba41fb0b3d7602e6bfddce9aa5f3a19b2/KERNEL%2520journalctl%2520v6.16-rc4
-> User level: https://gist.githubusercontent.com/BandhanPramanik/ddb0cb23eca03ca2ea43a1d832a16180/raw/a9e93c4ba41fb0b3d7602e6bfddce9aa5f3a19b2/NON-KERNEL%2520journalctl%2520v6.16-rc4
+On Thu Jul 10, 2025 at 5:31 PM CEST, Tamir Duberstein wrote:
+> This series depends on step 3[0] which depends on steps 2a[1] and 2b[2]
+> which both depend on step 1[3].
+>
+> This series also has a minor merge conflict with a small change[4] that
+> was taken through driver-core-testing. This series is marked as
+> depending on that change; as such it contains the post-conflict patch.
+>
+> Subsystem maintainers: I would appreciate your `Acked-by`s so that this
+> can be taken through Miguel's tree (where the previous series must go).
+>
+> Link  https://lore.kernel.org/all/20250710-cstr-core-v14-0-ca7e0ca82c82@g=
+mail.com/ [0]
+> Link: https://lore.kernel.org/all/20250709-core-cstr-fanout-1-v1-0-64308e=
+7203fc@gmail.com/ [1]
+> Link: https://lore.kernel.org/all/20250709-core-cstr-fanout-1-v1-0-fd793b=
+3e58a2@gmail.com/ [2]
+> Link: https://lore.kernel.org/all/20250704-core-cstr-prepare-v1-0-a915240=
+37783@gmail.com/ [3]
+> Link: https://lore.kernel.org/all/20250704-cstr-include-aux-v1-1-e1a404ae=
+92ac@gmail.com/ [4]
+>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+> Tamir Duberstein (17):
+>       drivers: net: replace `kernel::c_str!` with C-Strings
+>       gpu: nova-core: replace `kernel::c_str!` with C-Strings
+>       rust: auxiliary: replace `kernel::c_str!` with C-Strings
+>       rust: clk: replace `kernel::c_str!` with C-Strings
+>       rust: configfs: replace `kernel::c_str!` with C-Strings
+>       rust: cpufreq: replace `kernel::c_str!` with C-Strings
+>       rust: device: replace `kernel::c_str!` with C-Strings
+>       rust: firmware: replace `kernel::c_str!` with C-Strings
+>       rust: kunit: replace `kernel::c_str!` with C-Strings
+>       rust: macros: replace `kernel::c_str!` with C-Strings
+>       rust: miscdevice: replace `kernel::c_str!` with C-Strings
+>       rust: net: replace `kernel::c_str!` with C-Strings
+>       rust: pci: replace `kernel::c_str!` with C-Strings
+>       rust: platform: replace `kernel::c_str!` with C-Strings
+>       rust: seq_file: replace `kernel::c_str!` with C-Strings
+>       rust: str: replace `kernel::c_str!` with C-Strings
+>       rust: sync: replace `kernel::c_str!` with C-Strings
+>
+>  drivers/block/rnull.rs                |  2 +-
+>  drivers/cpufreq/rcpufreq_dt.rs        |  5 ++---
+>  drivers/gpu/drm/nova/driver.rs        | 10 +++++-----
+>  drivers/gpu/nova-core/driver.rs       |  6 +++---
+>  drivers/net/phy/ax88796b_rust.rs      |  7 +++----
+>  drivers/net/phy/qt2025.rs             |  5 ++---
+>  rust/kernel/clk.rs                    |  6 ++----
+>  rust/kernel/configfs.rs               |  5 ++---
+>  rust/kernel/cpufreq.rs                |  3 +--
+>  rust/kernel/device.rs                 |  4 +---
+>  rust/kernel/firmware.rs               |  6 +++---
+>  rust/kernel/kunit.rs                  | 11 ++++-------
+>  rust/kernel/net/phy.rs                |  6 ++----
+>  rust/kernel/platform.rs               |  4 ++--
+>  rust/kernel/seq_file.rs               |  4 ++--
+>  rust/kernel/str.rs                    |  5 ++---
+>  rust/kernel/sync.rs                   |  5 ++---
+>  rust/kernel/sync/completion.rs        |  2 +-
+>  rust/kernel/workqueue.rs              |  8 ++++----
+>  rust/macros/kunit.rs                  | 10 +++++-----
+>  rust/macros/module.rs                 |  2 +-
+>  samples/rust/rust_configfs.rs         |  5 ++---
+>  samples/rust/rust_driver_auxiliary.rs |  4 ++--
+>  samples/rust/rust_driver_faux.rs      |  4 ++--
+>  samples/rust/rust_driver_pci.rs       |  4 ++--
+>  samples/rust/rust_driver_platform.rs  |  4 ++--
+>  samples/rust/rust_misc_device.rs      |  3 +--
+>  scripts/rustdoc_test_gen.rs           |  4 ++--
+>  28 files changed, 63 insertions(+), 81 deletions(-)
 
-Thanks.  These logs look like the kernel doesn't include the patch I
-sent at https://lore.kernel.org/r/20250705195846.GA2011829@bhelgaas
+For the entire series:
 
-Can you please try with that patch?
+Reviewed-by: Benno Lossin <lossin@kernel.org>
 
-> Just so you know, I have used v6.16-rc4.
-> 
-> Bandhan.
-> 
-> On Wed, Jul 9, 2025 at 11:00 PM Bandhan Pramanik
-> <bandhanpramanik06.foss@gmail.com> wrote:
-> >
-> > Hello,
-> >
-> > I was actually a bit distracted by the things caused by the Automatic Partitioning of Fedora. I'll inform that in Fedora Bugzilla... anyway.
-> >
-> > I realised that making the modules will take 8-9 hours, I didn't even have much of a success (because all the modules didn't properly load, particularly the firmware-N.bin files couldn't be found).
-> >
-> > But I'll try to recompile the kernel, I'll just have to give it overnight time.
-> >
-> > Bandhan
+---
+Cheers,
+Benno
 
