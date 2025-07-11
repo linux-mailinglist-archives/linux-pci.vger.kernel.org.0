@@ -1,168 +1,143 @@
-Return-Path: <linux-pci+bounces-31913-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31914-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3944CB015B9
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 10:22:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9ADDB015F4
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 10:27:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4655B1C84F9E
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 08:22:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30FA65A5099
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 08:27:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05D2A202F79;
-	Fri, 11 Jul 2025 08:11:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02D2221127D;
+	Fri, 11 Jul 2025 08:26:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTTboOzr"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TbTHVDSl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A7E1FE470;
-	Fri, 11 Jul 2025 08:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458DC201033;
+	Fri, 11 Jul 2025 08:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752221498; cv=none; b=lx2+sHbGrSxWFax204Di1PWdTd4Et3G2LPTkX+YSbOZYmSbi+GNtyStTTaz2WUdjcwwqeAp5FAbNsxKQkCHVj/skU0Q+FYf6MdyT3irRYioP5c8FbDfa3FGyFzSxRnFj8yYtEPf9Zz9M3bSS3Vg9GS863IFtw3dRjbq7BGrTCxw=
+	t=1752222395; cv=none; b=DhGU2GTutGR+TWitOoSrqMdWM6utgNyc8K8EFHq9uskBWHB6pJYZUqllT9Wq1j/uExy1hi82j9LW1OYKj4XENfGbfYYuoGdJywzjwREstfvYA+C876eZODB6SmNZg7x+CKaMnN4sD9nVgWQeLKNxLftoDho+xKQXLJx2aaQvWUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752221498; c=relaxed/simple;
-	bh=NYMZKphf96SaACDAe3JOHuWxhHs54wMKot7UA1Cf+W4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=sjEIvLNMQ51BfbXeH1ZmIX+wDNZW6MjLS+aYd3tUJuH+NvPyQf3ynUqSXw5uTOEDFv1oF2bCFeLRyKhissJ/agVn9BjvAz7G5Tl1xvrOinrOADPqzZ2WeQVEFEcg1ASaQk1f8+K7xR7FQ5kFVUOmttk4p3jwkfe2Z4vBWWrp/o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTTboOzr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E026CC4CEED;
-	Fri, 11 Jul 2025 08:11:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752221498;
-	bh=NYMZKphf96SaACDAe3JOHuWxhHs54wMKot7UA1Cf+W4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KTTboOzrT3xIHW5CFqTcS3I3Y8Xc9QzbyfTOEl4EvtSCpkHjNr9HlgNA892bGsKaP
-	 n3t+tF++oeVpoTnNrOgzJuB9MZNF8EfMKQbF2bIVqUJcuQ1vDqYOYMAQh/PgPzQNG4
-	 WT17cS1K8u718+Lq83ypLsod06qp2yflWGZxwgJMF77NIa/RSnBss44o+mYvOK7mTA
-	 r3ykAd4trXpDRbsJccxrWBtTi3Ftwds2MMzZ50WGqfP0lfxlmQ5X3pDSsku6XVK11S
-	 vJOPe0C/RmNAvTTHONMvOOkCV1Z5LBFz3O97DMmoc92LKpmqHmuRtSMIWjI9ROBrH8
-	 up0C6d1SYFXFw==
+	s=arc-20240116; t=1752222395; c=relaxed/simple;
+	bh=kxzoflC2PyKGhcEfEIOuEh5rgftPwliDdjfw5NgFuU4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JuerB3jquLGUI1f3Wh1aPCautEx2znOIXLPGKqO3uAk6m/9WTCpcyTFu3UG6EEEJi+ZFrrdywW5RlwTNWGKXyEXsldmvT9lTfZ1qA1hNsIUBTrOxsdD56iKcrgUmkmT3Mw8O3ddoGeN7W4mLsh9JTqsHt5Cka8SIwkpoONIE104=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TbTHVDSl; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56B1XMje030881;
+	Fri, 11 Jul 2025 08:26:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	kxzoflC2PyKGhcEfEIOuEh5rgftPwliDdjfw5NgFuU4=; b=TbTHVDSlVIdL0pOS
+	A1tajtm+R98duCnbPURH8uGzs0Pdylf8dGmzrCMxjFOQzH71IzKhEY/Pv5bRLgMq
+	bceHEsRdAj10hgLelKdc6Aaj8itTfuFn3ePvBcOLFudR+fFJkBr0OUAO6kJFrl8G
+	4DHzfHxfq4GcpgVzeJdvDt9J+bQUTHojYnBeSJPD1ibLvlHBS7v8Sf9jqlwFfnXk
+	IxcwrZ6xui0y7bt0Uyf2HvZlMoy1KjRmc52O3UkQXWeY/YoB4xpOHGyK7/CEpR/8
+	bJHzQ2ZbF3bim/t+gS1hV5WXuEZMZc7KIOCWg7QFHreJHSvmm8frxAuhX0Ja6yPo
+	39vHig==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47smbeqwh1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Jul 2025 08:26:25 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 56B8QOIR030866
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Jul 2025 08:26:24 GMT
+Received: from [10.253.32.112] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Fri, 11 Jul
+ 2025 01:26:17 -0700
+Message-ID: <ff2fb737-a833-474d-b402-120d4ed68d39@quicinc.com>
+Date: Fri, 11 Jul 2025 16:26:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 11 Jul 2025 10:11:33 +0200
-Message-Id: <DB92OHEUBB06.2VTHW9KQVV52X@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alistair Popple" <apopple@nvidia.com>
-Cc: <rust-for-linux@vger.kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Miguel
- Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
- Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "John Hubbard" <jhubbard@nvidia.com>, "Alexandre Courbot"
- <acourbot@nvidia.com>, <linux-pci@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] rust: Update PCI binding safety comments and add
- inline compiler hint
-X-Mailer: aerc 0.20.1
-References: <20250710022415.923972-1-apopple@nvidia.com>
- <DB87TX9Y5018.N1WDM8XRN74K@kernel.org>
- <cgh5cj42vkxc66f2utpa3eznvqaqtdo3gszahfhempujj3kxdc@zaor2sx4cosp>
-In-Reply-To: <cgh5cj42vkxc66f2utpa3eznvqaqtdo3gszahfhempujj3kxdc@zaor2sx4cosp>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/4] dt-bindings: PCI: qcom,pcie-sa8775p: document
+ link_down reset
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <jingoohan1@gmail.com>,
+        <mani@kernel.org>, <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
+        <bhelgaas@google.com>, <johan+linaro@kernel.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <neil.armstrong@linaro.org>,
+        <abel.vesa@linaro.org>, <kw@linux.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <qiang.yu@oss.qualcomm.com>,
+        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>
+References: <20250625090048.624399-1-quic_ziyuzhan@quicinc.com>
+ <20250625090048.624399-3-quic_ziyuzhan@quicinc.com>
+ <20250627-flashy-flounder-of-hurricane-d4c8d8@krzk-bin>
+From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+In-Reply-To: <20250627-flashy-flounder-of-hurricane-d4c8d8@krzk-bin>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzExMDA1OCBTYWx0ZWRfX+z+r8++6epTR
+ gw99rxcdGSc64xZ+vTz1TjkJ8/bMBlMR8RtYJV9glCN8JaGMcFNpxYiRE/cGXzSuNOYL271vkr9
+ 6l32XhIM2SZrS1i1cDEjrs8LPgTOOdQrEY6NfxOHC7n6MNBKNiguGzSr+Uy7jY68YgQAQDoNaAu
+ UL+qOZIdqZ3joE9rh2T28dJlGE2Hzoid0MVomtBPikdH4GY1U/vQG9qwdvKP0XKIuGbBtGwpBPw
+ 5hCCvrJjgOiuWgNzsWK8HiT1UDbZY5fhmdREzp/9EEzBeYWx6pbUfBsv1UG9z4oeEkfr3r9brTV
+ JQrkA7ZzssGzP8saM47QMJD3/OscFocDJdThKDu58UHSzH5la3CFWhvuxW44kWrHsbkrqsjaUNE
+ JxF0CQpIT1ZIQJbN0jTnyBqXUNgCIky3ZNHV3PzWQ6jUQOcEmEE3ZYMZf4KGdj8FUnPQqhjo
+X-Proofpoint-GUID: SSkEo2SFQtZoMRhJ0ZK5FHDxqCxz770l
+X-Proofpoint-ORIG-GUID: SSkEo2SFQtZoMRhJ0ZK5FHDxqCxz770l
+X-Authority-Analysis: v=2.4 cv=VpQjA/2n c=1 sm=1 tr=0 ts=6870cab1 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10
+ a=u5fknsGAV_5u-2U6WwMA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-11_02,2025-07-09_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 malwarescore=0 suspectscore=0 clxscore=1015 impostorscore=0
+ phishscore=0 mlxlogscore=678 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 bulkscore=0 spamscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507110058
 
-On Fri Jul 11, 2025 at 1:22 AM CEST, Alistair Popple wrote:
-> On Thu, Jul 10, 2025 at 10:01:05AM +0200, Benno Lossin wrote:
->> On Thu Jul 10, 2025 at 4:24 AM CEST, Alistair Popple wrote:
->> > diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
->> > index 8435f8132e38..5c35a66a5251 100644
->> > --- a/rust/kernel/pci.rs
->> > +++ b/rust/kernel/pci.rs
->> > @@ -371,14 +371,18 @@ fn as_raw(&self) -> *mut bindings::pci_dev {
->> > =20
->> >  impl Device {
->> >      /// Returns the PCI vendor ID.
->> > +    #[inline]
->> >      pub fn vendor_id(&self) -> u16 {
->> > -        // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_=
-dev`.
->> > +        // SAFETY: by its type invariant `self.as_raw` is always a va=
-lid pointer to a
->>=20
->> s/by its type invariant/by the type invariants of `Self`,/
->> s/always//
->>=20
->> Also, which invariant does this refer to? The only one that I can see
->> is:
->>=20
->>     /// A [`Device`] instance represents a valid `struct device` created=
- by the C portion of the kernel.
+
+On 6/27/2025 3:08 PM, Krzysztof Kozlowski wrote:
+> On Wed, Jun 25, 2025 at 05:00:46PM +0800, Ziyue Zhang wrote:
+>> Each PCIe controller on sa8775p includes 'link_down'reset on hardware,
+>> document it.
+> This is an ABI break, so you need to clearly express it and explain the
+> impact. Following previous Qualcomm feedback we cannot give review to
+> imperfect commits, because this would be precedent to accept such
+> imperfectness in the future.
 >
-> Actually isn't that wrong? Shouldn't that read for "a valid `struct pci_d=
-ev`"?
-
-Yeah it should probably be changed, I'm not sure what exactly is
-required here, but this already would be an improvement:
-
-    /// `self.0` is a valid `struct pci_dev`.
-
->> And this doesn't say anything about the validity of `self.as_raw()`...
+> Therefore follow all standard rules about ABI.
 >
-> Isn't it up to whatever created this pci::Device to ensure the underlying=
- struct
-> pci_dev remains valid for at least the lifetime of `Self`?
+> Best regards,
+> Krzysztof
 
-Well yes and no. It is up to the creator of this specific `pci::Device`
-to ensure that it is valid, but that is true for all creators of
-`pci::Device`. In other words this property doesn't change while the
-`pci::Device` is alive so we call it an "invariant".
+Hi Krzysztof
 
-When creating a `pci::Device`, you have to ensure all invariants are met
-and then anyone using it can rely on them being true.
 
-Now in this particular instance the `as_raw` function is just calling
-`self.0.get()`. I'm not sure that's worth it, since it isn't even
-shorter and it makes the safety docs a bit worse. So my suggestion would
-be to remove it.
+This does not break the ABI. In the Qualcomm PCIe driver, we use the APIs
+devm_reset_control_array_get_exclusive, reset_control_assert, and
+reset_control_deassert to handle the resets defined in the device tree.
+Regardless of how many resets are provided in the DTS, these three APIs
+treat them as an array and operate on all of them collectively.
+Therefore, adding a new reset does not affect the existing ABI behavior.
 
-> Sorry I'm quite new to Rust (and especially Rust in the kernel), so
-> not sure what the best way to express that in a SAFETY style comment
-> would be. Are you saying the list of invariants for pci::Device also
-> needs expanding?
-
-No worries, safety documentation is pretty hard :)
-
----
-Cheers,
-Benno
-
->
-> Thanks.
->
->> > +        // `struct pci_dev`.
->> >          unsafe { (*self.as_raw()).vendor }
->> >      }
->> > =20
->> >      /// Returns the PCI device ID.
->> > +    #[inline]
->> >      pub fn device_id(&self) -> u16 {
->> > -        // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_=
-dev`.
->> > +        // SAFETY: by its type invariant `self.as_raw` is always a va=
-lid pointer to a
->> > +        // `struct pci_dev`.
->>=20
->> Ditto here.
->>=20
->> ---
->> Cheers,
->> Benno
->>=20
->> >          unsafe { (*self.as_raw()).device }
->> >      }
->> > =20
->>=20
+BRs
+Ziyue
 
 
