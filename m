@@ -1,148 +1,111 @@
-Return-Path: <linux-pci+bounces-31915-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31916-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3297FB016AA
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 10:44:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8875EB01752
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 11:11:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3FBBEB44C57
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 08:43:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 702027B004F
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 09:10:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D88E20D500;
-	Fri, 11 Jul 2025 08:44:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89104261574;
+	Fri, 11 Jul 2025 09:11:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O46v/df6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tzNNTJ5Y"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1052198A11;
-	Fri, 11 Jul 2025 08:44:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578832609D9;
+	Fri, 11 Jul 2025 09:11:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752223467; cv=none; b=tAvxNFT7/CoA9Ffp6dqTOY6cFJOBg8WBkv+uE1MkLDR4xShnu4rl3lQprZAg1WsgFeIHivVEumkKW5j5IH3JDvoNGIt7CZY3OJChSyd3Q/MACd4hu9FkBENhtwW8w1tzowOaP++6Soc41LvFvhlQpjmV1W5XEE70UyhvJdDfvxk=
+	t=1752225078; cv=none; b=IJS5B+gToeyk935Ko7K2joalfepztxawxaYkVBLsQjT7ZZGuiXZyi7p1EHq6qjz3C8QHeq/nKfjhuC+hPL/Zos0hb+H5GHGsGutZ65rcg9F8fo98cYl3IwRra2lm80jw8sWStJOOdKFXAKha6LD23Yn3cc/Iqeg/gIQku7tAgQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752223467; c=relaxed/simple;
-	bh=5u0xj9NoUVsjv0Gy6s3BT/+6Ahjt0e6gF5rqU2CiDrw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IFCFO5tpVA3KhFt3gh2fvJDPBo1Oc6oXtRC5/kmYFXEIBdYn28kjroRypRleqrcUn/bSIEyDfMP3bQCbLmZVnelbVUOpb501afEQobLSJD46eJsI6hIzFGJ+knFhD9klKve7D/23jOjcX/fyzGFBFxkHWfgk7+GnF7FpRHc1LNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O46v/df6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B9FDC4CEED;
-	Fri, 11 Jul 2025 08:44:14 +0000 (UTC)
+	s=arc-20240116; t=1752225078; c=relaxed/simple;
+	bh=0nbohhXXJ5N3VvNtfOJEvo9EoQefvFRhKbjpAeYezH4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ANuR3Dc3X82exnrzgkTOIlbwwsUg5O0Zw8yfzQLGyUo8yZoegirLDRWAP/iXNUDcx9VUOYHmSFEgDSAJBj/TaZbHra+iPpbv0qOsBZflJOER71FkDl71e2INHmDjsWKA8uBwNjRPbGv3SRmifOaFg0aM9Kjq2qnSxaRz3WK+Ixk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tzNNTJ5Y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D423EC4CEED;
+	Fri, 11 Jul 2025 09:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752223466;
-	bh=5u0xj9NoUVsjv0Gy6s3BT/+6Ahjt0e6gF5rqU2CiDrw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=O46v/df6c2XPGTJKd946K0NJ/vsmd7HWlMvN6x+FIjeY17v+fXAD9qNpQw2hTh4Fb
-	 N2IzoxLR7QPNf7FWNquvQsAqKx42Wo1EWsessKwwzwRfX6hpcRAElOmEtWhDDKZda5
-	 ghnNOvFZPjFseLUiijjSZSnC7a+NCyAajwZOj6TA/ljqCnCYG5yxpTWlahvC4tSLE0
-	 aKXBc1JKy5UcGEDCvuVYXXHZCnFFQO+mQFGuqFmJT9Tb+Wmlwk3X8/SWulW1RQ+GBh
-	 wXlAM/hcOaBQv0NVbAufHT22P+rRR/uEXyS+UJVjnz5NdjWw4tgSd+4cLavC7xw++e
-	 +Up+5UohaPmpg==
-Message-ID: <1606591b-5707-48bf-8f60-44063ecf8f1a@kernel.org>
-Date: Fri, 11 Jul 2025 10:44:11 +0200
+	s=k20201202; t=1752225075;
+	bh=0nbohhXXJ5N3VvNtfOJEvo9EoQefvFRhKbjpAeYezH4=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=tzNNTJ5Y6XPI6v0D/HYxdnyjHHMcK4iE4HM0rsI3BsOC+YB5C40zGOLsmQ4cRjsLk
+	 pLtDcB7d0VsC1BGDxkeoKg/3f5XME8HXl66unVghLyFVan/90rhptQbURPN3EGTljB
+	 Cigp8TjQ1x9d3mIyVFhdfNHXxVv/qXXFNnihyzSgPmNXMBH0DXoiI+b4CAYuxiG3VX
+	 Z313gAOeeRL5rKCcUcYAuY7NWyECSn9sV4YWgZcB47j3nTL4Ia9sXY2PCVxsiAheRz
+	 kqJgC+Mxqa5OgVoq3UDK96M6bcF76NUeSDkK9s3nkzowv5ayABRJuybkq9HcenQh6y
+	 tP0AgCDwEIpdA==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] dt-bindings: PCI: qcom,pcie-sa8775p: document
- link_down reset
-To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
- mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
- bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
- kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
- kw@linux.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
- quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
-References: <20250625090048.624399-1-quic_ziyuzhan@quicinc.com>
- <20250625090048.624399-3-quic_ziyuzhan@quicinc.com>
- <20250627-flashy-flounder-of-hurricane-d4c8d8@krzk-bin>
- <ff2fb737-a833-474d-b402-120d4ed68d39@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <ff2fb737-a833-474d-b402-120d4ed68d39@quicinc.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Fri, 11 Jul 2025 11:11:09 +0200
+Message-Id: <DB93Y46GKRRM.P22144H9APXG@kernel.org>
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Dave Ertman"
+ <david.m.ertman@intel.com>, "Ira Weiny" <ira.weiny@intel.com>, "Leon
+ Romanovsky" <leon@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Boqun
+ Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Trevor Gross" <tmgross@umich.edu>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Peter Zijlstra"
+ <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "David
+ Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
+ <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "FUJITA
+ Tomonori" <fujita.tomonori@gmail.com>, "Bjorn Helgaas"
+ <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+ <netdev@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] device: rust: rename Device::as_ref() to
+ Device::from_raw()
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>, "Danilo Krummrich"
+ <dakr@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250711-device-as-ref-v2-0-1b16ab6402d7@google.com>
+ <20250711-device-as-ref-v2-1-1b16ab6402d7@google.com>
+In-Reply-To: <20250711-device-as-ref-v2-1-1b16ab6402d7@google.com>
 
-On 11/07/2025 10:26, Ziyue Zhang wrote:
-> 
-> On 6/27/2025 3:08 PM, Krzysztof Kozlowski wrote:
->> On Wed, Jun 25, 2025 at 05:00:46PM +0800, Ziyue Zhang wrote:
->>> Each PCIe controller on sa8775p includes 'link_down'reset on hardware,
->>> document it.
->> This is an ABI break, so you need to clearly express it and explain the
->> impact. Following previous Qualcomm feedback we cannot give review to
->> imperfect commits, because this would be precedent to accept such
->> imperfectness in the future.
->>
->> Therefore follow all standard rules about ABI.
->>
->> Best regards,
->> Krzysztof
-> 
-> Hi Krzysztof
-> 
-> 
-> This does not break the ABI. In the Qualcomm PCIe driver, we use the APIs
-> devm_reset_control_array_get_exclusive, reset_control_assert, and
+On Fri Jul 11, 2025 at 10:04 AM CEST, Alice Ryhl wrote:
+> The prefix as_* should not be used for a constructor. Constructors
+> usually use the prefix from_* instead.
+>
+> Some prior art in the stdlib: Box::from_raw, CString::from_raw,
+> Rc::from_raw, Arc::from_raw, Waker::from_raw, File::from_raw_fd.
+>
+> There is also prior art in the kernel crate: cpufreq::Policy::from_raw,
+> fs::File::from_raw_file, Kuid::from_raw, ARef::from_raw,
+> SeqFile::from_raw, VmaNew::from_raw, Io::from_raw.
+>
+> Link: https://lore.kernel.org/r/aCd8D5IA0RXZvtcv@pollux
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-I see in the binding requirement of 1 reset before and after your patch:
-requirement of two reset lines.
+Reviewed-by: Benno Lossin <lossin@kernel.org>
 
-This is an ABI change. My entire comment stays valid, so don't just
-deflect it but resolve it.
+---
+Cheers,
+Benno
 
-Best regards,
-Krzysztof
+> ---
+>  rust/kernel/auxiliary.rs  | 2 +-
+>  rust/kernel/cpu.rs        | 2 +-
+>  rust/kernel/device.rs     | 6 +++---
+>  rust/kernel/drm/device.rs | 2 +-
+>  rust/kernel/faux.rs       | 2 +-
+>  rust/kernel/miscdevice.rs | 2 +-
+>  rust/kernel/net/phy.rs    | 2 +-
+>  rust/kernel/pci.rs        | 2 +-
+>  rust/kernel/platform.rs   | 2 +-
+>  9 files changed, 11 insertions(+), 11 deletions(-)
 
