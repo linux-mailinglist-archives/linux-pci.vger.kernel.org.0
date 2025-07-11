@@ -1,104 +1,73 @@
-Return-Path: <linux-pci+bounces-31963-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31965-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04B88B026E8
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 00:23:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 001F9B0273D
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 00:54:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 183E01CC0628
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 22:24:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 60C3E7A0567
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 22:53:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BFB9221281;
-	Fri, 11 Jul 2025 22:23:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F32AD20D4F9;
+	Fri, 11 Jul 2025 22:54:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kRPBfk/Y"
+	dkim=pass (2048-bit key) header.d=tethera.net header.i=@tethera.net header.b="FDH6Y9Oh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from phubs.tethera.net (phubs.tethera.net [192.99.9.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E311EEF9;
-	Fri, 11 Jul 2025 22:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836B16BFCE;
+	Fri, 11 Jul 2025 22:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.99.9.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752272618; cv=none; b=nzrtdvkf8EOm16pCkA7K0QBouSK6Qi7cYmXvaO7j0YH2wLXUdd+YZYcPk4SbKj2ko7tbbRmZGJNDz+qh1ytEFF/mTL+p3XUkzQBp3puJHbC6BDZXwhQOXYH/sWa1a73vQv2RJhmMecftYxXluHYycfjLqxtUzxNeZ6wHlHuA9Og=
+	t=1752274468; cv=none; b=K92Piz2JJscy/c2OLjFPVqYJuK3CRF39qd5b8x1Gn1HAe50rGiiuvDBtoLuCs4PawV1toaJR6GV7w9fN8UktaaHFeaGFK1QHTjZ1wWe50jvtVCHSksvLY3g83VqxMSebIMn1CON+nKFuXoxUCOn6nIpDTeAsuIJDKpZHleHNPqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752272618; c=relaxed/simple;
-	bh=skBlVZohMnUnYt5aoT76+cuAKlWXY74hu4CgtyUg+HY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T6pWLkOqRcnj2Kxamxd6ordtqqxnjS4MZPP7enkQsV2PCBCjBhpgDWfJpLNuKkyrG0gPh3fPxnqolCiUQ5Krj7+pA4JsPoNlpUp5qlEYbwWs5ayH7vAdSmrv5qfyrw7PdoBQOXuWFi1m2Isxd9aZ8kY7JYBrHnrbPoEhAMqRNuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kRPBfk/Y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC8D7C4CEED;
-	Fri, 11 Jul 2025 22:23:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752272617;
-	bh=skBlVZohMnUnYt5aoT76+cuAKlWXY74hu4CgtyUg+HY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kRPBfk/YmqYW5jC6GAV66AvEVpfeOmi2XaS0Xc6Gv9HtuHD6rsUye0/AO1cBSr1aB
-	 3T6vSo92K7l0qIY83X7Wy0FDZj0WMv8rp+dE1wksXS8BWL2o9FvdSEHkur15/ODl0e
-	 z3ZwJ7HkZMOpdjkioAn1C/KtCXceeuu7Uidovcs2MKETTqob2pygUuBQVZ9gsaUW+t
-	 LKAawVgcAjvevxWwoq3jmPCBgAuRY0ZdfdexRSD+OPq40Kb11n/2rFbuadKV6Ea/na
-	 0w3Nlyq26U/hKsMQ4ZFG9FXwcKk4gIsWY99D++uYcaQKHJKGv231iuIIUXh56u2u/d
-	 u24qIkA30Q9rg==
-Message-ID: <a138b3ef-eee9-42bc-b861-e5037f96940e@kernel.org>
-Date: Sat, 12 Jul 2025 00:23:31 +0200
+	s=arc-20240116; t=1752274468; c=relaxed/simple;
+	bh=zEL+d6XlXqEpa9OVBskMukB3A3gQTghEOyqrGTQsvC8=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
+	 Content-Type; b=fRXY5sNpusYBa43/mHbLGJjbJjJhA3v/zW8MsSA67SOsaEd7dJMKO2nEZjErZCGJmGIJHlQd3t4bxQrpEqZSCPL/YNf2qi2KZCcTlOY5VN7goZXvjH3EyjhNxxET3+Kx/1Aug1N75oLsoHpxYFclpFiDJvfR4D3jgyRGLv6juss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tethera.net; spf=pass smtp.mailfrom=tethera.net; dkim=pass (2048-bit key) header.d=tethera.net header.i=@tethera.net header.b=FDH6Y9Oh; arc=none smtp.client-ip=192.99.9.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tethera.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tethera.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tethera.net;
+ i=@tethera.net; q=dns/txt; s=2024; t=1752274112; h=from : to : cc :
+ subject : in-reply-to : date : message-id : mime-version :
+ content-type : from; bh=zEL+d6XlXqEpa9OVBskMukB3A3gQTghEOyqrGTQsvC8=;
+ b=FDH6Y9OhJ/oMZ74hq3OD/Q2WnQ6E+FFQrNVmbRncYQtSVN08ThXiP4TnGgfLl8YlWCqAI
+ csO+/ITQ7aaRoYFlwx++63/H5SnVVglEh4t2im+WxDyWbvX3VOTApD2lEVyt344JlL5I11P
+ SlwDrTsFMZaqY8c8IpBS8i8Idi8/eLOWM5WpTC+FMfU+gkkA3zAMXxINgfKR2xGEGNZUCzR
+ TQZ5Mq71NXKwNy4wFXIx8I2dbedeRv2/N3UFoapIh3WZ9KdmALfKvZDHw1ZjVj+/Arc/39D
+ FTt1Lt4LKDItiUoGAKYSIHM/W94u+S41PugrZgis8+kUuL+4ArmqgyHbS4jQ==
+Received: from tethera.net (fctnnbsc51w-159-2-211-58.dhcp-dynamic.fibreop.nb.bellaliant.net [159.2.211.58])
+	by phubs.tethera.net (Postfix) with ESMTPS id 820DD18006D;
+	Fri, 11 Jul 2025 19:48:32 -0300 (ADT)
+Received: (nullmailer pid 155084 invoked by uid 1000);
+	Fri, 11 Jul 2025 22:48:32 -0000
+From: David Bremner <david@tethera.net>
+To: wilfred.opensource@gmail.com
+Cc: alistair@alistair23.me, bhelgaas@google.com, cassel@kernel.org, dlemoal@kernel.org, heiko@sntech.de, kw@linux.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, p.zabel@pengutronix.de, robh@kernel.org, wilfred.mallawa@wdc.com
+Subject: Re: [PATCH v3] PCI: dw-rockchip: Add support for slot reset on link
+ down event
+In-Reply-To: <20250509-b4-pci_dwc_reset_support-v3-1-37e96b4692e7@wdc.com>
+Date: Fri, 11 Jul 2025 19:48:31 -0300
+Message-ID: <87cya6wdhc.fsf@tethera.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] rust: device_id: split out index support into a
- separate trait
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: alex.gaynor@gmail.com, gregkh@linuxfoundation.org, ojeda@kernel.org,
- rafael@kernel.org, robh@kernel.org, saravanak@google.com, tmgross@umich.edu,
- a.hindborg@kernel.org, aliceryhl@google.com, bhelgaas@google.com,
- bjorn3_gh@protonmail.com, boqun.feng@gmail.com, david.m.ertman@intel.com,
- devicetree@vger.kernel.org, gary@garyguo.net, ira.weiny@intel.com,
- kwilczynski@kernel.org, lenb@kernel.org, leon@kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, lossin@kernel.org, netdev@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-References: <20250711040947.1252162-1-fujita.tomonori@gmail.com>
- <20250711040947.1252162-2-fujita.tomonori@gmail.com>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250711040947.1252162-2-fujita.tomonori@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 7/11/25 6:09 AM, FUJITA Tomonori wrote:
-> diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-> index f8dd7593e8dc..a8f2675ba7a7 100644
-> --- a/rust/kernel/driver.rs
-> +++ b/rust/kernel/driver.rs
-> @@ -170,7 +170,7 @@ fn acpi_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
->                   // and does not add additional invariants, so it's safe to transmute.
->                   let id = unsafe { &*raw_id.cast::<acpi::DeviceId>() };
->   
-> -                Some(table.info(<acpi::DeviceId as crate::device_id::RawDeviceId>::index(id)))
-> +                Some(table.info(<acpi::DeviceId as crate::device_id::RawDeviceIdIndex>::index(id)))
->               }
->           }
->       }
-> @@ -204,7 +204,11 @@ fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
->                   // and does not add additional invariants, so it's safe to transmute.
->                   let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
->   
-> -                Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
-> +                Some(
-> +                    table.info(<of::DeviceId as crate::device_id::RawDeviceIdIndex>::index(
-> +                        id,
-> +                    )),
-> +                )
 
-Just in case someone wonders why this is weirdly formatted, while the acpi one
-above is a single line, this seems to be a bug in rustfmt.
+What is the current status of this patch (and the pre-requisites) with
+respect to mainline linux?
 
->               }
->           }
->       }
+I'm wondering if it might be relevent to the problems [1] I've been
+having with rk3588 resume, but it isn't clear to me what I need to apply
+to e.g. v6.16~rc1 to test it.
+
+[1]: https://www.cs.unb.ca/~bremner/blog/posts/hibernate-pocket-4/
 
