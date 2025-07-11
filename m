@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-31960-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31961-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A421B02671
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 23:36:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A9F7B0267F
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 23:46:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EA091CA4FCE
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 21:36:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50B4A16FD26
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 21:46:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 282121D432D;
-	Fri, 11 Jul 2025 21:36:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DEB41F03F3;
+	Fri, 11 Jul 2025 21:46:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxanN+Z4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kkO5tjFT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B9118D;
-	Fri, 11 Jul 2025 21:36:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B81D155389;
+	Fri, 11 Jul 2025 21:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752269765; cv=none; b=uGEanzEBGKzRd8hn9TUcfMPfSSEbp6W18ip2fq9Y7Z00ufdiAzHT84sf1mjqKR8J18/TV2+2ib/QBD+MWgljYvFnpf4I6ohPWqEjyoi8DM6/GHlGH60gbuHpQ1/nyiRzrfUruSANoJDdw4JrOlTYna2zsLZjGRG4ydqqrDU5YIg=
+	t=1752270360; cv=none; b=OIliXpQW3X6NGnKvJohViCu+Ct2FFnbgE0irpoZ2klIRpZThbm2gR7xgpcWB2mUiMXufBwpIGadfYb9f9/tqBqFY+/xWA1RqDi3b7rAQX9hg95ZLQ8cnoXhiiSFvFvpqiUuot90+TQknj/xLsPLjM6JnoOadVa0DGKjkV0e7oSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752269765; c=relaxed/simple;
-	bh=6vFUYFx/VhN3Xm63hxLlS9XvwMe/jnHsYahek8vfgTI=;
+	s=arc-20240116; t=1752270360; c=relaxed/simple;
+	bh=SVPARDXoIYbIvHPwhZO/owhQLfsvXzF2C36T9ofsUMM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=h4fgcJI3JnVoqy5GYtPCU1NJyDiO17JSLHKrRDRz2nvKHnmobUaZc6WE8u4K67Tqap+A0v8hRHnGJdmuhZ7fsYwXq8SfeqlznsqXZRwxHdeB8RKTb3XDtMYZ1H2yp16FJ8Fw+HiEKx0wWrsp7a1IW3n/itvXAY4unCwso/lWveg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OxanN+Z4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49C7DC4CEED;
-	Fri, 11 Jul 2025 21:36:04 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=CxBxgpvcvVcJzeaOxbYH5VCkJpe9RwL7vJu14NuHoz3bufWwQVjmYHWw8z/B/K+ZxV4zy/K04Ln9TAIQXZ1aJFlN8twe2miaCBSpo4ZNS3hGGUVqCHWaaT6pq9gXtgNOReC3mY3No6tfdD3kQGZiRqBRTwcLq0P8B/eAXrQaSzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kkO5tjFT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88FC7C4CEED;
+	Fri, 11 Jul 2025 21:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752269764;
-	bh=6vFUYFx/VhN3Xm63hxLlS9XvwMe/jnHsYahek8vfgTI=;
+	s=k20201202; t=1752270359;
+	bh=SVPARDXoIYbIvHPwhZO/owhQLfsvXzF2C36T9ofsUMM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=OxanN+Z43huYfALidhi0ROpjH9PpXq7t9mMZrUH4TSYanrqRwi8nkqjE56+aGjBy+
-	 YFZZgvzoI+OeDWdipSfxD1AuW+Xd8OGrquYI9BJdPH4yLhyqWrEkrmqBohkwDray5f
-	 f6qdjzW9zngI7xFlClSOgDRnRZIKFj9PF4TMCl6n1iRsHeuOEBnGOA7oFIPcxBafbj
-	 stBDdIPaAlrO7MlH0yFZp5aiczKaXnSIb5fg3ys2AySgREE4orAbFhG9jPW4h6RGc8
-	 2t+QBZO6AR9bY4CrZTFKZmUpffq3MSa9aWWqj1t6BeHtHu6IBCpHZqJvbAHUGvFmnE
-	 bTHQlrHT1SmYA==
-Date: Fri, 11 Jul 2025 16:36:02 -0500
+	b=kkO5tjFTvYlRwsFVXavHXqv3/cX/fbjkQ5ZD0abSuCtvKz67RF0Y6voaYSgfGqYdV
+	 nzW5jMO+XCzTjdQ/E/NVK0yxirB5G0HASdC/urQwijjw9WBAV7g3rBOaDHsoxgsW+n
+	 1n4ZMT5UUKGVBp0m6j5aTKF2/KN/XnEytrJZgbeAGYeAQx56xVIjkwgUeGavQLZWqf
+	 mBkDLD5BRXqxSssAOP84oYzI+/USVZgGwUKvJCjtEdK12phsUnqBufQ4y7SbB+wBBC
+	 ZAZ0nAwDKshYiSS//mHTSFr55FHZQ4IT7dVvkmWsmTHDLcWwq+dXPx1eSGhHee8K6E
+	 eBWen7SHORZig==
+Date: Fri, 11 Jul 2025 16:45:58 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>,
@@ -58,9 +58,9 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com,
 	quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
 	Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Subject: Re: [PATCH v4 02/11] PCI/bwctrl: Add support to scale bandwidth
- before & after link re-training
-Message-ID: <20250711213602.GA2307197@bhelgaas>
+Subject: Re: [PATCH v4 10/11] PCI: Add function to convert lnkctl2speed to
+ pci_bus_speed
+Message-ID: <20250711214558.GA2308483@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,56 +69,48 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250609-mhi_bw_up-v4-2-3faa8fe92b05@qti.qualcomm.com>
+In-Reply-To: <20250609-mhi_bw_up-v4-10-3faa8fe92b05@qti.qualcomm.com>
 
-On Mon, Jun 09, 2025 at 04:21:23PM +0530, Krishna Chaitanya Chundru wrote:
-> If the driver wants to move to higher data rate/speed than the current data
-> rate then the controller driver may need to change certain votes so that
-> link may come up at requested data rate/speed like QCOM PCIe controllers
-> need to change their RPMh (Resource Power Manager-hardened) state. Once
-> link retraining is done controller drivers needs to adjust their votes
-> based on the final data rate.
+On Mon, Jun 09, 2025 at 04:21:31PM +0530, Krishna Chaitanya Chundru wrote:
+> Add a exported function to convert lnkctl2speed to enum pci_bus_speed,
+> so that other kernel drivers can use it.
+
+Name the function explicitly in subject and commit log.
+
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  drivers/pci/pci.c   | 12 ++++++++++++
+>  include/linux/pci.h |  1 +
+>  2 files changed, 13 insertions(+)
 > 
-> Some controllers also may need to update their bandwidth voting like
-> ICC BW votings etc.
-> 
-> So, add pre_link_speed_change() & post_link_speed_change() op to call
-> before & after the link re-train. There is no explicit locking mechanisms
-> as these are called by a single client Endpoint driver.
-> 
-> In case of PCIe switch, if there is a request to change target speed for a
-> downstream port then no need to call these function ops as these are
-> outside the scope of the controller drivers.
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e9448d55113bdfd2263d8e2f6b3ec802f56b712e..8950e88826e27accfe699e31fba8f4077c26296f 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6018,6 +6018,18 @@ int pcie_link_speed_mbps(struct pci_dev *pdev)
+>  }
+>  EXPORT_SYMBOL(pcie_link_speed_mbps);
+>  
+> +/**
+> + * pci_lnkctl2_bus_speed - convert lnkctl2 speed to pci_bus_speed
+> + * @speed: LNKCAP2 SLS value
+> + *
+> + * Return: pci_bus_speed
+> + */
+> +enum pci_bus_speed pci_lnkctl2_bus_speed(int speed)
+> +{
+> +	return pcie_link_speed[speed];
+> +}
+> +EXPORT_SYMBOL(pci_lnkctl2_bus_speed);
 
-> +++ b/include/linux/pci.h
-> @@ -599,6 +599,24 @@ struct pci_host_bridge {
->  	void (*release_fn)(struct pci_host_bridge *);
->  	int (*enable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
->  	void (*disable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
-> +	/*
-> +	 * Callback to the host bridge drivers to update ICC BW votes, clock
-> +	 * frequencies etc.. for the link re-train to come up in targeted speed.
-> +	 * These are intended to be called by devices directly attached to the
-> +	 * Root Port. These are called by a single client Endpoint driver, so
-> +	 * there is no need for explicit locking mechanisms.
-> +	 */
-> +	int (*pre_link_speed_change)(struct pci_host_bridge *bridge,
-> +				     struct pci_dev *dev, int speed);
-> +	/*
-> +	 * Callback to the host bridge drivers to adjust ICC BW votes, clock
-> +	 * frequencies etc.. to the updated speed after link re-train. These
-> +	 * are intended to be called by devices directly attached to the
-> +	 * Root Port. These are called by a single client Endpoint driver,
-> +	 * so there is no need for explicit locking mechanisms.
+You mention both "lnkctl2" and "LNKCAP2" and I don't know whether you
+mean Link Capabilities 2 or Link Control 2, and I don't know what the
+bits passed in are.
 
-No need to repeat the entire comment.  s/.././
+I expect something like FIELD_GET(PCI_EXP_LNKCAP2_SLS, value) here
+that tells us clearly where it came from, so the caller isn't
+responsible for extracting it.  And it takes some kind of unsigned
+value, probably a u32 if it came from Link Capabilities 2.
 
-These pointers feel awfully specific for being in struct
-pci_host_bridge, since we only need them for a questionable QCOM
-controller.  I think this needs to be pushed down into qcom somehow as
-some kind of quirk.
-
-> +	 */
-> +	void (*post_link_speed_change)(struct pci_host_bridge *bridge,
-> +				       struct pci_dev *dev, int speed);
+Bjorn
 
