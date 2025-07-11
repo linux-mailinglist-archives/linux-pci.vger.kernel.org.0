@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-31959-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31960-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72516B02664
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 23:29:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A421B02671
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 23:36:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 205064E37C7
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 21:29:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EA091CA4FCE
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 21:36:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 000C922D7AA;
-	Fri, 11 Jul 2025 21:29:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 282121D432D;
+	Fri, 11 Jul 2025 21:36:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IggaAPoQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxanN+Z4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED232288E3;
-	Fri, 11 Jul 2025 21:29:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B9118D;
+	Fri, 11 Jul 2025 21:36:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752269393; cv=none; b=qsnL+RDg+Sr0LDG7IA4PD6BEEj6QKZZ3FOTlMhG185V1MgqLgLr3J9WRGeScOt/p1xLVc8jzLGmzfDjBafe7dC7roIdTJPmTxCpcqb59vtbldP6a2OMtD4NFl7kIieaXP2nxjIol3LMSJ8LBBKZnjVM2KgsqwYYxvaP0XJrOPpo=
+	t=1752269765; cv=none; b=uGEanzEBGKzRd8hn9TUcfMPfSSEbp6W18ip2fq9Y7Z00ufdiAzHT84sf1mjqKR8J18/TV2+2ib/QBD+MWgljYvFnpf4I6ohPWqEjyoi8DM6/GHlGH60gbuHpQ1/nyiRzrfUruSANoJDdw4JrOlTYna2zsLZjGRG4ydqqrDU5YIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752269393; c=relaxed/simple;
-	bh=ibAPHTfDkkiDBSvj4LMehyyAm2RUtgYdLgLWKQky8rg=;
+	s=arc-20240116; t=1752269765; c=relaxed/simple;
+	bh=6vFUYFx/VhN3Xm63hxLlS9XvwMe/jnHsYahek8vfgTI=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=iRX9wbeD9/zrGx511MuZUO9emGDdEhREqZKiV66/NW1Vhpc8JCeEHZEv4iJ36OBs1URXx1EMqlZEs+PXPTVTM2IayEt0t00MUC9rXMlx0V7Zh0eDS0E8HpxHlNbQ7uYf5l0jCS7pcYjG0Dtzcl3YeqHMZNlBxkWO5votWpGEh9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IggaAPoQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ED08C4CEED;
-	Fri, 11 Jul 2025 21:29:53 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=h4fgcJI3JnVoqy5GYtPCU1NJyDiO17JSLHKrRDRz2nvKHnmobUaZc6WE8u4K67Tqap+A0v8hRHnGJdmuhZ7fsYwXq8SfeqlznsqXZRwxHdeB8RKTb3XDtMYZ1H2yp16FJ8Fw+HiEKx0wWrsp7a1IW3n/itvXAY4unCwso/lWveg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OxanN+Z4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49C7DC4CEED;
+	Fri, 11 Jul 2025 21:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752269393;
-	bh=ibAPHTfDkkiDBSvj4LMehyyAm2RUtgYdLgLWKQky8rg=;
+	s=k20201202; t=1752269764;
+	bh=6vFUYFx/VhN3Xm63hxLlS9XvwMe/jnHsYahek8vfgTI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=IggaAPoQMRlwpsh8jIo0AYU3XJwQulFIQJEQ3ZpCaBuf2mhN01Ksj6WVs1FFYvoG3
-	 LCP4gUN3zot5vMpLo0eDtiAp3SFvkZDVoOpH20Dqj03eGwHVGdNoSI6zYLuk+G8hOj
-	 eiv6dtO/gFSyswt+lssP5mZyDWHNm9zIMSTum5chnBQELGVGyuxX3nJXDOfMLi7tl9
-	 XvuEtFLIss0frhi/0rv8O4EYr4NXbsMPYceY1gEytWYciXqHSQgM6/ANIE1wc912XU
-	 mI34+NepD6PGUtB4Ch0quEyTTdgD2er6N5ey2J6p/DPHoSQTsjdztW5Gd/EzAAumvk
-	 58UFmRQfSKPvQ==
-Date: Fri, 11 Jul 2025 16:29:52 -0500
+	b=OxanN+Z43huYfALidhi0ROpjH9PpXq7t9mMZrUH4TSYanrqRwi8nkqjE56+aGjBy+
+	 YFZZgvzoI+OeDWdipSfxD1AuW+Xd8OGrquYI9BJdPH4yLhyqWrEkrmqBohkwDray5f
+	 f6qdjzW9zngI7xFlClSOgDRnRZIKFj9PF4TMCl6n1iRsHeuOEBnGOA7oFIPcxBafbj
+	 stBDdIPaAlrO7MlH0yFZp5aiczKaXnSIb5fg3ys2AySgREE4orAbFhG9jPW4h6RGc8
+	 2t+QBZO6AR9bY4CrZTFKZmUpffq3MSa9aWWqj1t6BeHtHu6IBCpHZqJvbAHUGvFmnE
+	 bTHQlrHT1SmYA==
+Date: Fri, 11 Jul 2025 16:36:02 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>,
@@ -58,9 +58,9 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com,
 	quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
 	Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Subject: Re: [PATCH v4 08/11] PCI: qcom: Add support for PCIe
- pre/post_link_speed_change()
-Message-ID: <20250711212952.GA2308100@bhelgaas>
+Subject: Re: [PATCH v4 02/11] PCI/bwctrl: Add support to scale bandwidth
+ before & after link re-training
+Message-ID: <20250711213602.GA2307197@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,24 +69,56 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250609-mhi_bw_up-v4-8-3faa8fe92b05@qti.qualcomm.com>
+In-Reply-To: <20250609-mhi_bw_up-v4-2-3faa8fe92b05@qti.qualcomm.com>
 
-On Mon, Jun 09, 2025 at 04:21:29PM +0530, Krishna Chaitanya Chundru wrote:
-> QCOM PCIe controllers need to disable ASPM before initiating link
-> re-train. So as part of pre_link_speed_change() disable ASPM and as
-> part of post_link_speed_change() enable ASPM back.
+On Mon, Jun 09, 2025 at 04:21:23PM +0530, Krishna Chaitanya Chundru wrote:
+> If the driver wants to move to higher data rate/speed than the current data
+> rate then the controller driver may need to change certain votes so that
+> link may come up at requested data rate/speed like QCOM PCIe controllers
+> need to change their RPMh (Resource Power Manager-hardened) state. Once
+> link retraining is done controller drivers needs to adjust their votes
+> based on the final data rate.
+> 
+> Some controllers also may need to update their bandwidth voting like
+> ICC BW votings etc.
+> 
+> So, add pre_link_speed_change() & post_link_speed_change() op to call
+> before & after the link re-train. There is no explicit locking mechanisms
+> as these are called by a single client Endpoint driver.
+> 
+> In case of PCIe switch, if there is a request to change target speed for a
+> downstream port then no need to call these function ops as these are
+> outside the scope of the controller drivers.
 
-Is this a QCOM defect?  Or is there something in the PCIe spec about
-needing to disable ASPM during retrain?  What about
-pcie_retrain_link()?  Does that work on QCOM?
+> +++ b/include/linux/pci.h
+> @@ -599,6 +599,24 @@ struct pci_host_bridge {
+>  	void (*release_fn)(struct pci_host_bridge *);
+>  	int (*enable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
+>  	void (*disable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
+> +	/*
+> +	 * Callback to the host bridge drivers to update ICC BW votes, clock
+> +	 * frequencies etc.. for the link re-train to come up in targeted speed.
+> +	 * These are intended to be called by devices directly attached to the
+> +	 * Root Port. These are called by a single client Endpoint driver, so
+> +	 * there is no need for explicit locking mechanisms.
+> +	 */
+> +	int (*pre_link_speed_change)(struct pci_host_bridge *bridge,
+> +				     struct pci_dev *dev, int speed);
+> +	/*
+> +	 * Callback to the host bridge drivers to adjust ICC BW votes, clock
+> +	 * frequencies etc.. to the updated speed after link re-train. These
+> +	 * are intended to be called by devices directly attached to the
+> +	 * Root Port. These are called by a single client Endpoint driver,
+> +	 * so there is no need for explicit locking mechanisms.
 
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -276,10 +276,16 @@ struct qcom_pcie {
->  	struct dentry *debugfs;
->  	bool suspended;
->  	bool use_pm_opp;
-> +	int aspm_state; /* Store ASPM state used in pre & post link speed change */
+No need to repeat the entire comment.  s/.././
 
-Whatever this is, it's definitely not an int.  Some kind of unsigned
-thing of specified size, at least.
+These pointers feel awfully specific for being in struct
+pci_host_bridge, since we only need them for a questionable QCOM
+controller.  I think this needs to be pushed down into qcom somehow as
+some kind of quirk.
+
+> +	 */
+> +	void (*post_link_speed_change)(struct pci_host_bridge *bridge,
+> +				       struct pci_dev *dev, int speed);
 
