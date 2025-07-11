@@ -1,116 +1,157 @@
-Return-Path: <linux-pci+bounces-31901-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31902-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2F63B0120B
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 06:13:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EAD9B01224
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 06:28:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADA931C26EF4
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 04:13:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4F0D5177BD0
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 04:28:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 429F81ADC90;
-	Fri, 11 Jul 2025 04:13:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5298EA933;
+	Fri, 11 Jul 2025 04:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EM9K4lNx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982D8179A7;
-	Fri, 11 Jul 2025 04:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BE91865EB;
+	Fri, 11 Jul 2025 04:28:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752207194; cv=none; b=nI7tJKwg1+IjyfXfEY42+6BsXK+IdBp9y+9/iqQJuaLSynrP/2UEJU9WPWP02zuebBsQMSMaXhdoqPGEHqhRQESsJtglAONu4P/eKuJxZF6ifTHl8nJWdARSgOk8ll2q9rrEIpyCI/Ebao4wbvYyCmbWGy7Z4+knX0ld/Ygr1P8=
+	t=1752208099; cv=none; b=jcw5MU9AjlKIAoGXyqz4VnOGM66evX6xD1u8fBjf2idG5xkM6ppB95Y9Lz92b+MQesXRnSAVrFQGXAc3OquMDhTG+8RXkiufLIMZG9v1VT+cW9EkED8KnHQXOdt3qCY2t2dqXlm+CN2RD2iBWo9/h/krRFkcX21DKVvKjqR0yVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752207194; c=relaxed/simple;
-	bh=ksyuVyqwNXYpFBRt5bG5z9VRMwMuXpfYOXJ+fsiKDtA=;
+	s=arc-20240116; t=1752208099; c=relaxed/simple;
+	bh=0C/vTM5o8IziGLnZ32LREb0cwoermYkw/D2NJ31Q1Kw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EompsWmRMrzjVdK+3kHo80Cq8QaMBzS7w2pmrWzVttG96erQXrgEqZcqL+halmLNRm3C/oFeeRPZz4zvKvpeGxKRA7e8lBvZ9cklDCj4PRBYF/4dX2Q1b1D0dAFQ3v2Y7ns6JAEcTTbvBB7CiqIhXNy7HsBahz0txK17QLU8WDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 69729200B1E3;
-	Fri, 11 Jul 2025 06:13:01 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 585484D436; Fri, 11 Jul 2025 06:13:01 +0200 (CEST)
-Date: Fri, 11 Jul 2025 06:13:01 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Hongbo Yao <andy.xu@hj-micro.com>
-Cc: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	bhelgaas@google.com, mahesh@linux.ibm.com, oohall@gmail.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jemma.zhang@hj-micro.com, peter.du@hj-micro.com
-Subject: Re: [PATCH] PCI/DPC: Extend DPC recovery timeout
-Message-ID: <aHCPTU03s-SkAsPs@wunner.de>
-References: <20250707103014.1279262-1-andy.xu@hj-micro.com>
- <24dfe8e2-e4b3-40e9-b9ac-026e057abd30@linux.intel.com>
- <b9b64b4f-dcec-4ab1-b796-54d66ec91fc5@hj-micro.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gPJE4nzPNS4wXeMpVFjgNGxahsrPzCQpYQisfdDZmMz+pedMRKIth4PXDo0XKylTCMgGoHa2H/RGU5eJMx4av5DRlN14UR2eQvIeeDkJIywx4EpIg24P0+3LF3wFrEMwzCfSJuGanbi3UGs2Mu8mzqY+hNQaTL4fRXMwN8a0qjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EM9K4lNx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F05D6C4CEF0;
+	Fri, 11 Jul 2025 04:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752208096;
+	bh=0C/vTM5o8IziGLnZ32LREb0cwoermYkw/D2NJ31Q1Kw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EM9K4lNx63NPSpJcWku7gT+TNpc/STC2mPEwXLxkY6CNZFu3oHUeQpQJTPJ7yh/BG
+	 vVfKwUW1YnCt9l2SWBhwIDcq+fOWLtf/jz4y6wBiYzK84HKnNGG5tZbLMQZsNM+0d4
+	 +CC4CQnXB2QZK6cvSWydVEhZVdXu1X3ZAcxvZO9UKHOhNPtyvjfgfQv7JMO1PSXsH5
+	 RpPiUuRMM898YgxNMagM1cykHlL+9D64GaMlIpKxmst2VCpRURptimLoFJQDj7L+I8
+	 3HuxEKFFuqgwiynVx34jdQCS+x6kY/OUwMnhPreAFRpj6BjIbIacn0k+eputxVO9cW
+	 OwmD1qzHwTpRw==
+Date: Fri, 11 Jul 2025 09:58:05 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Jeff Johnson <jjohnson@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, linux-wireless@vger.kernel.org, 
+	ath11k@lists.infradead.org, qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com, 
+	quic_vpernami@quicinc.com, quic_mrana@quicinc.com, 
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Subject: Re: [PATCH v4 06/11] PCI/ASPM: Clear aspm_disable as part of
+ __pci_enable_link_state()
+Message-ID: <irnkdlrmlozp7joydgnawfuivl2nnuxsb2t4osgxzbtyrfzd3n@7dhzjcd42aiw>
+References: <20250609-mhi_bw_up-v4-0-3faa8fe92b05@qti.qualcomm.com>
+ <20250609-mhi_bw_up-v4-6-3faa8fe92b05@qti.qualcomm.com>
+ <qo6mb3qlt3xpuvhepwcv6be4wd53neee2t6buzk4tdiy22xsub@vu7lykp3rnu2>
+ <226bab3a-54e5-94ad-9d84-0b82f9dc4e2f@linux.intel.com>
+ <2a18cf9e-1dd2-4e09-81f4-eb1d07324c8e@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <b9b64b4f-dcec-4ab1-b796-54d66ec91fc5@hj-micro.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2a18cf9e-1dd2-4e09-81f4-eb1d07324c8e@oss.qualcomm.com>
 
-On Fri, Jul 11, 2025 at 11:20:15AM +0800, Hongbo Yao wrote:
-> 2025/7/8 1:04, Sathyanarayanan Kuppuswamy:
-> > On 7/7/25 3:30 AM, Andy Xu wrote:
-> > > Setting timeout to 7s covers both devices with safety margin.
+On Wed, Jul 09, 2025 at 06:01:22PM GMT, Krishna Chaitanya Chundru wrote:
+> 
+> 
+> On 7/9/2025 2:40 PM, Ilpo Järvinen wrote:
+> > On Tue, 8 Jul 2025, Manivannan Sadhasivam wrote:
 > > 
-> > Instead of updating the recovery time, can you check why your device
-> > recovery takes
-> > such a long time and how to fix it from the device end?
+> > > On Mon, Jun 09, 2025 at 04:21:27PM GMT, Krishna Chaitanya Chundru wrote:
+> > > > ASPM states are not being enabled back with pci_enable_link_state() when
+> > > > they are disabled by pci_disable_link_state(). This is because of the
+> > > > aspm_disable flag is not getting cleared in pci_enable_link_state(), this
+> > > > flag is being properly cleared when ASPM is controlled by sysfs.
+> > > > 
+> > > 
+> > > A comment in pcie_config_aspm_link() says:
+> > > 
+> > >   /* Enable only the states that were not explicitly disabled */
+> > > 
+> > > But the function is called from both aspm_attr_store_common() and
+> > > __pci_enable_link_state(). So I don't know if this is behavior is intentional
+> > > or wrong.
+> > 
+> > Hi,
+> > 
+> > I think it's intentional. Whether the behavior is useful is another good
+> > question but the current behavior aligns with the explanation in the
+> > comment.
+> > 
+> > My understanding of the situation is:
+> > 
+> > pci_disable_link_state() and pci_enable_link_state() are not symmetric
+> > despite the names, never have been (this is one of those many quirks ASPM
+> > driver has which should be eventually cleaned up, IMO).
+> > 
+> > It might be appropriate to rename pci_enable_link_state() to
+> > pci_set_default_link_state() to match the name to its functionality (and
+> > the function comment):
+> > 
+> >   * pci_enable_link_state - Clear and set the default device link state
+> > 
+> > Note: "the default ... link state".
+> > 
+> > 
+> > I've already raised this concern earlier! As you see, my comment are
+> > not getting addressed. I'd like to see the author does one of these:
+> > 
+> Hi llpo,
 > 
-> I fully agree that ideally the root cause should be addressed on the
-> device side to reduce the DPC recovery latency, and that waiting longer
-> in the kernel is not a perfect solution.
+> I replied to your comment on v3 patch[1], and I feel instead of having
+> new function() we can use same API to our purpose.
+
+You replied to Ilpo, but never got an agreement. Please try to close the
+discussions before posting next rev. If reviewers forgot to reply to your query,
+feel free to ping them in the same thread itself.
+
+> > 1) Renames pci_enable_link_state() to pci_set_default_link_state()
+> > 
+> > 1b) If pci_enable_link_state() is still needed after that, a new function
+> > is added to symmetrically pair with pci_disable_link_state().
+> > 
+> > or alternatively,
+> > 
+> > 2) Changelog justifies very clearly why this change is okay with the
+> > existing callers. (And obviously the function comment should be altered to
+> > match the functionality in that case too).
+> > 
+> > If approach 2 is chosen, it should be very carefully reviewed when it
+> > comes to the callers.
+> > 
+> I am in favor of approach 2 which you suggested, but lets wait for other
+> reviewers feedback on this. Based up on the response i will make
+> necessary changes in v5.
 > 
-> However, the current 4 seconds timeout in pci_dpc_recovered() is indeed
-> an empirical value rather than a hard requirement from the PCIe
-> specification. In real-world scenarios, like with Mellanox ConnectX-5/7
-> adapters, we've observed that full DPC recovery can take more than 5-6
-> seconds, which leads to premature hotplug processing and device removal.
 
-I think Sathya's point was:  Have you made an effort to talk to the
-vendor and ask them to root-cause and fix the issue e.g. with a firmware
-update.
+I would go for (1). It is always going to be a problem to change a legacy API
+like this. We might end up causing regressions. So it is safe to rename to
+reflect the purpose and try to come up with a new API that does what you want.
+If callers want to migrate to the new API, they can also do it in the future.
 
-> To improve robustness and maintain flexibility, I???m considering
-> introducing a module parameter to allow tuning the DPC recovery timeout
-> dynamically. Would you like me to prepare and submit such a patch for
-> review?
+- Mani
 
-We try to avoid adding new module parameters.  Things should just work
-out of the box without the user having to adjust the kernel command
-line for their system.
-
-So the solution is indeed to either adjust the delay for everyone
-(as you've done) or introduce an unsigned int to struct pci_dev
-which can be assigned the delay after reset for the device to be
-responsive.
-
-For comparison, we're allowing up to 60 sec for devices to become
-available after a Fundamental Reset or Conventional Reset
-(PCIE_RESET_READY_POLL_MS).  That's how long we're waiting in
-dpc_reset_link() -> pci_bridge_wait_for_secondary_bus() and
-we're not consistent with that when we wait only 4 sec in
-pci_dpc_recovered().
-
-I think the reason is that we weren't really sure whether this approach
-to synchronize hotplug with DPC works well and how to choose delays.
-But we've had this for a few years now and it seems to have worked nicely
-for people.  I think this is the first report where it's not been
-working out of the box.
-
-Thanks,
-
-Lukas
+-- 
+மணிவண்ணன் சதாசிவம்
 
