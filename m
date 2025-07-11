@@ -1,54 +1,54 @@
-Return-Path: <linux-pci+bounces-31923-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31924-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 450B6B019F5
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 12:50:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA239B019F9
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 12:51:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8759D5A2E4B
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 10:50:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E084E1CA4D62
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 10:52:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 948D9287510;
-	Fri, 11 Jul 2025 10:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0643286D6F;
+	Fri, 11 Jul 2025 10:51:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/2w+G9J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8hj78Nk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0252853F7;
-	Fri, 11 Jul 2025 10:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88392853F7;
+	Fri, 11 Jul 2025 10:51:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752231040; cv=none; b=TYR23rmXpa98w3DH6U6JEVzpIY8eYIwr+oqphkgzIB+JDBdXIS+CuN4Xbf6i6dwezSi54K8DSo4EA+7nqm8zwurZ85JJL3mdqa0/DoQlX7Z+dfN/CfHRpIjWUq+PatTu/YbtqyU26doYPJ/a5x43K8D7Z85/U/mtE77Khmjyi+A=
+	t=1752231102; cv=none; b=IWyG7lpX2pmGEqR2UvLI18gVnpSNMxURs2nhMvxV5xvAyKIM/2zVjLi+QUXXzUlgkA7bAmJYZ18aybj1y8CUf/F4C7xY2FMFPghMnCAPUNJzgP17Q5qAZGDWr2e4G+QyajR9ui6wFiSF6Oc3klR5K56sbsger+n7Yw/lt4sN6lE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752231040; c=relaxed/simple;
-	bh=dD8GS8ul7phy4LdinMkrKS1K1DjQK6F/gbzcXGnRx0w=;
+	s=arc-20240116; t=1752231102; c=relaxed/simple;
+	bh=84BMvuy9Pk8YrU/GpAF8QkVxJqmSioEdul6p6Hjaas8=;
 	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A8SJy0Gd488u67v0igxIXZ51khUd6aV+Ug+0IeVeU/Sk0beiXC2y6fEYNURvYlME6WCENSexhhtnUVl4F5cj3GR+lD4B18LEejRl0XedPUjDY9ixT4XwJWoBajCYym6/gdSkQdRwVASTLJHIa9pYUfQfz4zNgiMiWidclPUBIE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/2w+G9J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFC15C4CEF5;
-	Fri, 11 Jul 2025 10:50:39 +0000 (UTC)
+	 MIME-Version:Content-Type; b=aFbVxDugEqRWXFtxjrkjV4fH9PXEv+UzF9YISCSyZT6KvTwTCIGRH62EUo00a/8MgyuQmzfr0/7VN4n1BxKF/Cm3OyjLt6pjC7OTWOhbLVrYvAFl8zYhqzZi8y44nrVIDx5CY5pI4WE9eMCfi5nD0KoC/edsiwD1k9dehjB4Jhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j8hj78Nk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49E6DC4CEF4;
+	Fri, 11 Jul 2025 10:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752231039;
-	bh=dD8GS8ul7phy4LdinMkrKS1K1DjQK6F/gbzcXGnRx0w=;
+	s=k20201202; t=1752231101;
+	bh=84BMvuy9Pk8YrU/GpAF8QkVxJqmSioEdul6p6Hjaas8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=W/2w+G9JMQnc4kkJpJyoCK5jU06t5x1vF8oxlB86Hcyo4bRcllrdGg6GVAn+NQH9w
-	 uqATVRfXV1ELh91RJTJk3cwGqu/iAHX8OAL7HN2Evn+/sCoedgolL4qskzt7m15hXq
-	 N7qd3U7s4Cm2Q5FoxHtgN9AljbZN5JS4NAcoO4/brkevISzLNGo/fRamN0CbI+B0NE
-	 lUI8wRqFHwk0j33Rm1xaiPLdTrhtEdhpjKYipJHawkZb6hBl3nvHRdNmDM5M5vPaGQ
-	 wdpk90I7QOxycAVjOdhT4DCNPUM2Gz5bRiorA1VEQNG/d0MlgxubK5RcZ7NOMpDW6j
-	 Cyzx46LzrNURg==
+	b=j8hj78NkD71YdFzBqvHsQJbSBSgu9I4hzkRnOEj/kjR36IMWi68LRMOzqoUQPn2x5
+	 6pIzQK5S+UYCJVZxQ1NFAmQ0FCdQsPdKxtf0vG8wCudjXLSmchmTL+aDsmkXyTRpvl
+	 MhYKPu7xnvwdeWPlJ5DZ5OqvpqQkVmezKz6SFoFnihU9MwLhx/momFAOxAEGwdIwwG
+	 LwaFbPNIe/nIceApqIht/C5MEZjbkyztuCcQL2UIgC8nIeeTs26ae6QLLZSBn2iomN
+	 RAXxnD81+Nvirs2ZQpTz3D5TCPKYc24jH1xlp32xHmUh5HM49fzaTadIg9mViuIkwA
+	 myZTLQaGFiZgw==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1uaBKv-00EqV9-Qe;
-	Fri, 11 Jul 2025 11:50:38 +0100
-Date: Fri, 11 Jul 2025 11:50:37 +0100
-Message-ID: <86ecun9f2a.wl-maz@kernel.org>
+	id 1uaBLv-00EqW3-79;
+	Fri, 11 Jul 2025 11:51:39 +0100
+Date: Fri, 11 Jul 2025 11:51:38 +0100
+Message-ID: <86cya79f0l.wl-maz@kernel.org>
 From: Marc Zyngier <maz@kernel.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>
 Cc: linux-pci@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
@@ -57,10 +57,11 @@ Cc: linux-pci@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
  Sadhasivam <mani@kernel.org>,	Rob Herring <robh@kernel.org>,	Bjorn Helgaas
  <bhelgaas@google.com>,	Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [PATCH v2 09/13] PCI: xgene-msi: Sanitise MSI allocation and affinity setting
-In-Reply-To: <aHDfhVRa1lhu7qPg@lpieralisi>
+In-Reply-To: <aHDjNr59aMzVQ5iA@lpieralisi>
 References: <20250708173404.1278635-1-maz@kernel.org>
 	<20250708173404.1278635-10-maz@kernel.org>
 	<aHDfhVRa1lhu7qPg@lpieralisi>
+	<aHDjNr59aMzVQ5iA@lpieralisi>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
  (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -76,102 +77,31 @@ X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, linux-pci@vger.kernel.org, linux-arm-k
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Fri, 11 Jul 2025 10:55:17 +0100,
+On Fri, 11 Jul 2025 11:11:02 +0100,
 Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> On Tue, Jul 08, 2025 at 06:34:00PM +0100, Marc Zyngier wrote:
-> >  static void xgene_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-> >  {
-> >  	struct xgene_msi *msi = irq_data_get_irq_chip_data(data);
-> > -	u32 reg_set = hwirq_to_reg_set(data->hwirq);
-> > -	u32 group = hwirq_to_group(data->hwirq);
-> > -	u64 target_addr = msi->msi_addr + (((8 * group) + reg_set) << 16);
-> > +	u64 target_addr;
-> > +	u32 frame, msir;
-> > +	int cpu;
-> >  
-> > -	msg->address_hi = upper_32_bits(target_addr);
-> > -	msg->address_lo = lower_32_bits(target_addr);
-> > -	msg->data = hwirq_to_msi_data(data->hwirq);
-> > -}
-> > +	cpu	= cpumask_first(irq_data_get_effective_affinity_mask(data));
-> > +	msir	= FIELD_GET(GENMASK(6, 4), data->hwirq);
+> On Fri, Jul 11, 2025 at 11:55:17AM +0200, Lorenzo Pieralisi wrote:
+> > On Tue, Jul 08, 2025 at 06:34:00PM +0100, Marc Zyngier wrote:
 > 
-> We could use MSInRx_HWIRQ_MASK, I can update it.
-
-Yes, I appear to have missed that one. It'd be good if you could fix
-it up.
-
-> More importantly, what code would set data->hwirq[6:4] (and
-> data->hwirq[7:7] below) ?
-
-That's obviously driven by the hwirq allocation, which is guaranteed
-to happen in the 0:255 range.
-
-[...]
-
-> > @@ -173,23 +167,20 @@ static int xgene_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> >  				  unsigned int nr_irqs, void *args)
-> >  {
-> >  	struct xgene_msi *msi = domain->host_data;
-> > -	int msi_irq;
-> > +	irq_hw_number_t hwirq;
-> >  
-> >  	mutex_lock(&msi->bitmap_lock);
-> >  
-> > -	msi_irq = bitmap_find_next_zero_area(msi->bitmap, NR_MSI_VEC, 0,
-> > -					     num_possible_cpus(), 0);
-> > -	if (msi_irq < NR_MSI_VEC)
-> > -		bitmap_set(msi->bitmap, msi_irq, num_possible_cpus());
-> > -	else
-> > -		msi_irq = -ENOSPC;
-> > +	hwirq = find_first_zero_bit(msi->bitmap, NR_MSI_VEC);
-> > +	if (hwirq < NR_MSI_VEC)
-> > +		set_bit(hwirq, msi->bitmap);
-> >  
-> >  	mutex_unlock(&msi->bitmap_lock);
-> >  
-> > -	if (msi_irq < 0)
-> > -		return msi_irq;
-> > +	if (hwirq >= NR_MSI_VEC)
-> > +		return -ENOSPC;
-> >  
-> > -	irq_domain_set_info(domain, virq, msi_irq,
-> > +	irq_domain_set_info(domain, virq, hwirq,
-> >  			    &xgene_msi_bottom_irq_chip, domain->host_data,
-> >  			    handle_simple_irq, NULL, NULL);
+> [...]
 > 
-> This is something I don't get. We alloc an MSI, set a bit in the bitmap
-> and the hwirq to that value, when we handle the IRQ below in
+> > We could use MSInRx_HWIRQ_MASK, I can update it.
+> > 
+> > More importantly, what code would set data->hwirq[6:4] (and
+> > data->hwirq[7:7] below) ?
 > 
-> xgene_msi_isr()
+> Forget it. It is the hwirq allocation itself that sets those bits,
+> 256 HWIRQs you use the effective cpu affinity to steer the frame,
+> it makes sense now.
+
+Exactly.
+
 > 
-> hwirq = compute_hwirq(msi_grp, msir_idx, intr_idx);
-> ret = generic_handle_domain_irq(xgene_msi->inner_domain, hwirq);
+> I can update the code to use the mask above and merge it.
 > 
-> imagining that we changed the affinity for the IRQ so that the computed
-> HWIRQ does not have zeros in bits[7:4], how would the domain HWIRQ
-> matching work ?
+> Sorry for the noise,
 
-No. The whole point of this series is that hwirq is now *constant*, no
-matter what the affinity says.
-
-> Actually, how would an IRQ fire causing the hwirq[7:4] bits to be != 0
-> in the first place ?
-
-hwirq[7:4] is a function of what IRQ fired (giving you a register
-frame), and what register was accessed. That 's what allows you to
-*rebuild* hwirq as the HW doesn't give it you on a plate (only the
-bottom 4 bits are more or less given as a bitmap).
-
-> Forgive me if I am missing something obvious, the *current* MSI handling
-> is very hard to grok, it is certain I misunderstood it entirely.
-
-Ignore the current code, it does things that are completely forbidden
-by law in any civilised country (although I find it difficult to name
-a single civilised country these days).
-
-Thanks,
+No worries, and thanks for looking at it!
 
 	M.
 
