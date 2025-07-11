@@ -1,396 +1,223 @@
-Return-Path: <linux-pci+bounces-31939-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31940-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15B94B02136
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 18:07:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F49BB0213C
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 18:08:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED228A416F7
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 16:06:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64E071CC1881
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 16:08:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86A082EF291;
-	Fri, 11 Jul 2025 16:06:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 733B42EE26D;
+	Fri, 11 Jul 2025 16:08:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U8g3zL/I"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="f8DkaZxk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2049.outbound.protection.outlook.com [40.107.94.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEF02ED157;
-	Fri, 11 Jul 2025 16:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752249992; cv=none; b=TxJAt9OuMDIFuiWonq3lkrAyQfeRusy3Bw/KwkRY5vFIIZPy+ageQI0q3FmTdwCbja7feWTUZohceu2JnJoFzWwaF03XLj9RqQ5gKgELAdMkrN/QfxKktRGH8AoT0E24t/mYb4P6RCLLLzCEwFQ1Vm9POyKbWTxrvLXDqKMX70k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752249992; c=relaxed/simple;
-	bh=gyygkwnlqgj+Ov8y4CqMkvfV3CoErDvnIRS3g++BM68=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=siMIoWwgo+A2/Tjd2XjF3hFEsB6CeNnSyrEpIRBz9NIZboAWtNU0Xkj+59F4a7J7SV75xiSeuPG01SGn7gaf5CamN/deEoezMlbCGJ+PqRatbbfKtI0s56Qdunr0/9N9us1MDW6KsrOTPrv7AKdcwdHsADRXZrimBFZJjHlhPPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U8g3zL/I; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752249990; x=1783785990;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=gyygkwnlqgj+Ov8y4CqMkvfV3CoErDvnIRS3g++BM68=;
-  b=U8g3zL/Iq20r2ZIb8xb/Y+N03biTV+tgamc5S278hc2+8D0M/Uju2zYh
-   WJ4G6QivnxOrsciRQiffA/pm92x7OyAAmZmcaR2Z4IcaKvSOVrmJuv5mI
-   tbgp9UNG+NNyUcI8U0Rn0jeZL2BGkGL5k5jGQmJZ3tGpkVryYt3R1scK+
-   0JLT702zdoPD6OICAogg+gTwKyQoHkKMA2fl7rY/I0/hN0Pv4eWSHvXVB
-   /WzL7DEk8247Nj5jGNHEVSkl1QuPJauCoW2TyQXPSbMJYIJ0oJVp6eOkC
-   LP/LItj595Lg1i2FciCngaPki0xXHF/qx6emeQVDeVrX3LIJY+sYTUIDx
-   A==;
-X-CSE-ConnectionGUID: R5X8koboTZ6br5Fyfi9BPQ==
-X-CSE-MsgGUID: 5r+htBMhRR2RhPCBHc0Klw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="65901893"
-X-IronPort-AV: E=Sophos;i="6.16,304,1744095600"; 
-   d="scan'208";a="65901893"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 09:06:30 -0700
-X-CSE-ConnectionGUID: BkDcskpFSfSCWmPPvvE3Jg==
-X-CSE-MsgGUID: YuCwvXE6S1aMokbQ2GVYeA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,304,1744095600"; 
-   d="scan'208";a="156492160"
-Received: from mgerlach-mobl1.amr.corp.intel.com (HELO localhost) ([10.124.222.101])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 09:06:29 -0700
-Date: Fri, 11 Jul 2025 09:06:27 -0700
-From: David Box <david.e.box@linux.intel.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	bhelgaas@google.com
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, vicamo.yang@canonical.com, 
-	kenny@panix.com, nirmal.patel@linux.intel.com, linux-pm@vger.kernel.org, 
-	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI/ASPM: Allow ASPM enablement for devices behind Intel
- VMD
-Message-ID: <ohil4of5wkoowdwouawjwlrmmmpeim2miscynn35v4ddg7zaoh@rebfuhcozirz>
-References: <20250710011647.990046-1-david.e.box@linux.intel.com>
- <CAJZ5v0iWAaj5_hBC_1pZcA-cQ0Yz6hvQjbsv3Gmv6jN_utt4OQ@mail.gmail.com>
- <yqtsfh4pmbnogt67m6tk6pqpdcbz3kx3xx4lpinbgfvq4yi5wn@leoipmcnqsgs>
- <19452e8c-4e29-4703-afc9-3257a2d1183d@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AE217A2EB;
+	Fri, 11 Jul 2025 16:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752250103; cv=fail; b=uXA7NW1gh6Dv9cMHD7vduBG9jlnQ5RDC2Nilk+J349ozQZ/ZJWSeZzSmC5Eko92jaAx4OoVt5sjV0wl4yC3DojV/t/mfGrTqeVPCHmZ0FAVbV3hvlI3H/24UeD5OaCLXzgBIhF6rBX2zzYfPyAd1zhNWhcWl9s5SYSuc5w4RMTI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752250103; c=relaxed/simple;
+	bh=e+xpQ8ZtIf6hjTVsYGKxuBOVx3GJE/LcBCU/NXseTuU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=X1tEhH85yUZNnnlEHRVPtfRVV6J7KrtEcGA5IqYFdvwEseMWufeVDw2yEOkCWA5AAHwMlnlxoXEAbDSoQkGb/1oaOjvV2C2ueB4YCI58La3SmetPk9SqGJ2NHJEEXZPP0GXhPrXhq0xHszxwXI+oDoNfvpvgVnj7Tgns7zazyv4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=f8DkaZxk; arc=fail smtp.client-ip=40.107.94.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CujuQefVXbwOwZy4mRjGx4aH67r70LljNpaLBgX+/TSNJxjC+ZchpuNkhPIYbduF7SKdutOeoLg+przm7aRda/Cy/ZZtSniDwo80fYaHA/w/jr3ZNRxEusubQd9HkW/A2hty4F7x4owIeAGDQwy9UEELdvhv8hZqUInTpCiBwpD102eVu70QLQwb/LTXhsm50DWK/77JQ8lAKIACjf2pr07aMUbVQVA0tOmMfmAo76YwlZ/jkWB9XzfX+lVmbg1OGiaskkGVRwW03CD5EMRUQdag6ceTiEcSOH4xlZaVZNobJ0AUPNYPT9q6tLXRIH/QhF8SYpJ+12MgbWkk6OAF0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tkb3Td3tyA6ST4F1YURkfxhxp9wv2JrVQfseOElTygg=;
+ b=t85NonlL7LhGViO2oVSCejnCM+DGgNQuG/UhUnz2a+iCy3wBmu9ELWJPIgj2oXPlCmDFV0RUlw+E1YGXZIOD8UNAEwQ4kSmj4PakedLIM1B4S570spJ9XkoHw2jutiShJzqmL9sxX/fZ8pPLyHIfXakHej8i/QlomTfc26eGrtvEYcVFk7hdGuhOJ1c++X+z84IPq2/NMOqEle9leOu6ffFwXaAKK/ZdsPY9WhwBj9hyhMmvE6fJRDFKD5Hfo4VWulZuiwK6ijmjXIngcbDn14HpLDzcW5C6S/5e3+nMF5w4E0XRSkl8CsR17Kguj6qbQzoE76745cG3vJXBXch5JA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tkb3Td3tyA6ST4F1YURkfxhxp9wv2JrVQfseOElTygg=;
+ b=f8DkaZxkPwJR7t4a89HcOzIpalJr5KjPpGPfRGhgEezuJD3ASv+LoC8JFvgzuQQAgy0+omTjTnYDLhy0Cv9FwU9P9hY16WnGSnm6bE8m2VZuX+sG9nNeO5z4RV+WAb0sR/MnDNzTYN/kk6n2+3plT+tOswFU8Q0K0UEVZUumucGnH2mMBUstxajvUy2rhz51RG+GoLfWJaHa9RL2GOmWIq8zLG9wIPl9bMmAZ5CVtThPVl8YDdmrKpGQ8hlIoN8drUmrOr/Mnn8/I9xw1BvE0XCaMB6DV96GlDC85YYhmjAjwcxe9dKPs4PUgOBlp8YBrn8IMzYVIbkbW7ccQfdv6Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by CH3PR12MB8658.namprd12.prod.outlook.com (2603:10b6:610:175::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.27; Fri, 11 Jul
+ 2025 16:08:19 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8901.024; Fri, 11 Jul 2025
+ 16:08:19 +0000
+Date: Fri, 11 Jul 2025 13:08:17 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
+	Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
+	Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, galshalom@nvidia.com,
+	Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
+	kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
+	tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+Subject: Re: [PATCH 00/11] Fix incorrect iommu_groups with PCIe switches
+Message-ID: <20250711160817.GC1951027@nvidia.com>
+References: <0-v1-74184c5043c6+195-pcie_switch_groups_jgg@nvidia.com>
+ <20250701154826.75a7aba6.alex.williamson@redhat.com>
+ <20250704003709.GJ1209783@nvidia.com>
+ <20250711085504.71e82a16.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250711085504.71e82a16.alex.williamson@redhat.com>
+X-ClientProxiedBy: MN0PR02CA0019.namprd02.prod.outlook.com
+ (2603:10b6:208:530::34) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <19452e8c-4e29-4703-afc9-3257a2d1183d@linux.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CH3PR12MB8658:EE_
+X-MS-Office365-Filtering-Correlation-Id: a7e351cc-25fb-4e78-a5da-08ddc09526cd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?arxSIYf55kElEV1r79oNXElpBqbyGiTJnKiWAJlQfeyasdaN7AuQm4i3hGrc?=
+ =?us-ascii?Q?89UOm3vXkDjjehH4ZLikMwcwZajjGQEff05USrIT/TCfdzE1zYMR0/fUnROx?=
+ =?us-ascii?Q?sc1k7W4h9w8wa9rg8/6u8hlnMmYwgdI/ABUhTJkc1MNCAX6LUXC1Si1KAOkz?=
+ =?us-ascii?Q?WfxtZPYXya5Sy3K2j+WbOlzKecuOpVxv/BkJSpQ0gZV6w1LKolt22s+4AXfC?=
+ =?us-ascii?Q?y++fWpjMYmqxThOwVJSfP+H561z5efigxD14oCj8MdN1SEZrVLkVfNkrg6rE?=
+ =?us-ascii?Q?+6ssGXxS2ktazJqXqC6svZcUWdbnEzPBiWo1QKu/W+nRje+769Om6zswXe1G?=
+ =?us-ascii?Q?ijNWnqKddMxi5qRu/fL2F4hwXwhH/oV2upAVL/Y5mkuNIPpTrZNlAJCVf1wj?=
+ =?us-ascii?Q?oc3CU3rV0YEFZzI0FNtW0S1x2qeFaQ+BHKt7caO/O7h366IatsjnijRqShSH?=
+ =?us-ascii?Q?aXs2gYNopsXnQFDX7Z3Sw9ZFw1owcILwf4j7dgTZYnJsf6ZNRLJ2E6nPiBcV?=
+ =?us-ascii?Q?NUoL2/LxUh9jRcnWVgPjPP8L1AaFu2u8fRGG3KFKnbduMDp7kZ7u9IjHd44O?=
+ =?us-ascii?Q?vzfDec7UYSdNfj9KVcPul6iCuqIOGZ77bcldj00SNkiYMS1NkQaafY0B6HPj?=
+ =?us-ascii?Q?iXlUznPhRw2v+MCvODZZjpfDFjrnITeCaiMXZVPCDeruIfacrwCoQuftNU5n?=
+ =?us-ascii?Q?PN/SKLcGpToM1OqStRONu7DELA0ycsAyXgW9ism/A/z7G+qfTWgR/XDQFpvn?=
+ =?us-ascii?Q?gtvCaIMS7ZhmghRZN3pNN4tusOZrKVmQ8bhsN/dJTk45Rhw2fAMsBzEg121U?=
+ =?us-ascii?Q?A4A+hu4PXqgXiKsXaK9tpCmd7zkHYeq1y0bt4En8J5CimE42xoIT4A3EG+d4?=
+ =?us-ascii?Q?bIdvHzw0TzT80+AyamJysPtjUE6Kp96R0afp3/fwtU/MEpdIrjHzb0mblTsf?=
+ =?us-ascii?Q?FE0Sa/+eBiMVExEQiyympmOpKbZf6D06bURZLfBHBSi1+ZWFH9MHmYCAxBza?=
+ =?us-ascii?Q?Opw4KoDwhv9s6lTbRrNGNr6PcocOnN402x17z8wWdTbNQ3tRD5SACo0tTQ4w?=
+ =?us-ascii?Q?yY8BoLJyIglId/JktCJTVQ16pibAqso/S1PgolavmW8NYk4tT4KU+tz4MSef?=
+ =?us-ascii?Q?xlBRMkVQvlGtb8fzkiYcwr6WoCTtRkLx3fi7mKHG2T40aDpMlVWq2yVArv8f?=
+ =?us-ascii?Q?u/VXGtlymmNqrlYDmLB6ZLgzP3eDWkoeB25Z4x433eaEu1iK4b2j6LzDuEgp?=
+ =?us-ascii?Q?zBaYG9/aJopa+PnakNad4jHE/ez8nxc6YUP9WgcVwGdO/MppdhaJAxrwNc+1?=
+ =?us-ascii?Q?XetWIeO097V41z7cdNlgtnVY/rOGa2TB5JMXHJgTlTyCzL066v4ERH5jib/d?=
+ =?us-ascii?Q?HwCpyb55mZvn7tVLPETUW8UfgHK+ODKcboqvHgl9YElyoxKdJLHuVx8/U7iY?=
+ =?us-ascii?Q?zpuQyX+mZLQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?yuKtc+KxVBVObbp59lL2cCJjRcep5NMiSExXAl2+6K3uKcXziwoyE+rfMi1V?=
+ =?us-ascii?Q?8Q0FE20jqHM6TJRvIKOY6H/ngmfKQU3v7QPprTI7sFPAdd5WVD6AYDjIQxZv?=
+ =?us-ascii?Q?yoQAsA263YK168KaVb7IsNmuZZSvIyMdVEkQ5hpvpVcFDzXnpPRFLE1vqDjQ?=
+ =?us-ascii?Q?bJakujnFYfjOhLxudPSP0jMRAsqTgp/sJWZVHJmUY05sAYMV42OTe136I4SG?=
+ =?us-ascii?Q?530GzFdiPALkK0UMgmDIFCxMmuwRmThlxXxZHcZW2w1p1WqjXTenoHlH6P1F?=
+ =?us-ascii?Q?LA52TYzdyaHzW9AyGQsnD1jg1O5SriCpTIp7dxFOyGTrwEDSNu2Qc6OFcQrU?=
+ =?us-ascii?Q?uKaFm+tKzWjarEEge8ZnZWR3d4J9oEWy1Ki4ygS0Pz/JQzrFoE3azx53FTfO?=
+ =?us-ascii?Q?w7DIfLUg648DuCo8XxULPS+b4qs8gcOS1jAfh3vzDDnj0wK25ZtHtjYEA4yV?=
+ =?us-ascii?Q?psq/ktqdXW+oQPp0iSea/CaTrg5W/CHyBUbBs5JyXh44lrXLpN5cNyUv2eOC?=
+ =?us-ascii?Q?vXGeW93wSzIvvlnB47YlNITFsAIwAal2sngAedQWjxSIzTnSJpV3R4WHB7xJ?=
+ =?us-ascii?Q?UrkMJC6XAAhQmA2j3dKvuO2AAYKIsnumm6iq6Kx/ojqUAAe/VIqO5aER5jp6?=
+ =?us-ascii?Q?vr1OL2dRVQzFfgq9hCO3n9e5Y9bvawRldgfILnmN3R5fU5Sld7S/emdX0r/4?=
+ =?us-ascii?Q?zvuXoJhR42tKeJFzG9hsqgSQ/lo5xaAFqzXKkSPIxhR70b4ZB7mbC3GRl5O3?=
+ =?us-ascii?Q?VeSGpQApoA8ShCA4YMJMBjzDZBZJRy/d2gHVbNOfpWqTERzvfSgKf4Zg2mKk?=
+ =?us-ascii?Q?Qya5b2Le7IkVKheMZK54p4aZdmzdvcEO7AUydZuT9BjOvcDByfAdWFz0Pf7K?=
+ =?us-ascii?Q?GK9wfN8n7dapA8cL+isda7iVTiOesTce+m6DkAQekGq3apHNFBEZlRbbQYK6?=
+ =?us-ascii?Q?+Hg72cHASxDjEqAr8HhJnKynCqyS07K765ctcNrHRMhEJoQ0m7i1nEsF3eQi?=
+ =?us-ascii?Q?KTgoPHtj/3UC8BS+XCmtT5WdBP7OIXoBtaTRJCfHwVGvta2MekuwY5pHLmhp?=
+ =?us-ascii?Q?TQ9SQ2UeJwopUGPtcZF9sdS7bvLIGk0N5o+H8+o7J0en4qqYG7ehfc2vmBng?=
+ =?us-ascii?Q?ReXlxORBRjy/O+XvBA0sVLT6/+xPazyLwV+sqglOsnoNMcx7fX5hrhqyl3Za?=
+ =?us-ascii?Q?GDHOBT4OoguY7N2kpaEofMEaANEeLVbngeyrFVf9+eqDh5haIqFwyjbCCi1X?=
+ =?us-ascii?Q?G83sM/iI/P2l+TsdxweSRh9u+0pVxre1GCQajghJZFtfzvNDKG0GOxNU+6vx?=
+ =?us-ascii?Q?/maG9DWIRK/+meBvfkyVq+vJv53r+MVejVYfSs+aw88aiuinl+8Gqpa6ikh/?=
+ =?us-ascii?Q?glErXaoPJPsOH+TjYjzFz84Stl1yB2gX/yPakRX93nGArQVIpM0I9VccpBdt?=
+ =?us-ascii?Q?wzNelVSd3qHMft0Ir74r2xpe7q5Y+LpcEPQ7Z5Lfv25mcDOS6UXv1xIyGcWi?=
+ =?us-ascii?Q?En5pLmkYSnKy8z3xmiF/v2+7OGAXRyL0R5e1YlVRwuM8akDDO6WXGZ+mBiKJ?=
+ =?us-ascii?Q?Z9sNMDrn5dcE8aRj459GHmNWF4SS/Y5kXrABk4cm?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7e351cc-25fb-4e78-a5da-08ddc09526cd
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2025 16:08:19.2097
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: i2pgVCpiXUDtf6XTbg16mZb7Zu6uW7w6scqAerL+6JhgsbIym/tyHXqs+w9oGmBW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8658
 
-On Fri, Jul 11, 2025 at 05:49:03PM +0300, Ilpo Järvinen wrote:
-> On Fri, 11 Jul 2025, David Box wrote:
-> 
-> > Hey Rafael,
-> > 
-> > On Thu, Jul 10, 2025 at 09:53:18PM +0200, Rafael J. Wysocki wrote:
-> > > On Thu, Jul 10, 2025 at 3:16 AM David E. Box
-> > > <david.e.box@linux.intel.com> wrote:
-> > > >
-> > > > Devices behind Intel's Volume Management Device (VMD) controller reside on
-> > > > a synthetic PCI hierarchy that is intentionally hidden from ACPI and
-> > > > firmware. As such, BIOS does not configure ASPM for these devices, and the
-> > > > responsibility for link power management, including ASPM and LTR, falls
-> > > > entirely to the VMD driver.
-> > > >
-> > > > However, the current PCIe ASPM code prevents ASPM configuration when the
-> > > > ACPI_FADT_NO_ASPM flag is set, disallowing OS management. This leaves ASPM
-> > > > permanently disabled for these devices, contrary to the platform's design
-> > > > intent.
-> > > >
-> > > > Introduce a callback mechanism that allows the VMD driver to enable ASPM
-> > > > for its domain, bypassing the global ACPI_FADT_NO_ASPM restriction that is
-> > > > not applicable in this context. This ensures that devices behind VMD can
-> > > > benefit from ASPM savings as originally intended.
-> > > >
-> > > > Link: https://lore.kernel.org/linux-pm/0b166ece-eeec-ba5d-2212-50d995611cef@panix.com
-> > > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > > 
-> > > First of all, thanks for doing this work, much appreciated!
-> > > 
-> > > > ---
-> > > >  drivers/pci/controller/vmd.c | 28 ++++++++++++++++++++++++++--
-> > > >  drivers/pci/pci.h            |  8 ++++++++
-> > > >  drivers/pci/pcie/aspm.c      | 36 +++++++++++++++++++++++++++++++++++-
-> > > >  3 files changed, 69 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> > > > index 8df064b62a2f..e685586dc18b 100644
-> > > > --- a/drivers/pci/controller/vmd.c
-> > > > +++ b/drivers/pci/controller/vmd.c
-> > > > @@ -21,6 +21,8 @@
-> > > >
-> > > >  #include <asm/irqdomain.h>
-> > > >
-> > > > +#include "../pci.h"
-> > > > +
-> > > >  #define VMD_CFGBAR     0
-> > > >  #define VMD_MEMBAR1    2
-> > > >  #define VMD_MEMBAR2    4
-> > > > @@ -730,7 +732,7 @@ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
-> > > >  }
-> > > >
-> > > >  /*
-> > > > - * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
-> > > > + * Enable LTR settings on devices that aren't configured by BIOS.
-> > > >   */
-> > > >  static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
-> > > >  {
-> > > > @@ -770,10 +772,27 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
-> > > >          * PCIe r6.0, sec 5.5.4.
-> > > >          */
-> > > >         pci_set_power_state_locked(pdev, PCI_D0);
-> > > > -       pci_enable_link_state_locked(pdev, PCIE_LINK_STATE_ALL);
-> > > 
-> > > Do I think correctly that this doesn't work because of the
-> > > aspm_disabled check in __pci_enable_link_state()?
-> > 
-> > Yes.
-> > 
-> > > 
-> > > >         return 0;
-> > > >  }
-> > > >
-> > > > +static long vmd_get_link_state(struct pci_dev *pdev, void *data)
-> > > > +{
-> > > > +       struct pci_bus *vmd_bus = data;
-> > > > +       struct pci_bus *bus = pdev->bus;
-> > > > +
-> > > > +       while (bus) {
-> > > > +               if (bus == vmd_bus)
-> > > > +                       return PCIE_LINK_STATE_ALL;
-> > > > +
-> > > > +               if (!bus->self)
-> > > > +                       break;
-> > > > +
-> > > > +               bus = bus->self->bus;
-> > > > +       }
-> > > 
-> > > If I'm not mistaken, it would be sufficient to do a check like
-> > > 
-> > >     if (pci_dev->bus->ops == &vmd_ops)
-> > >             return PCIE_LINK_STATE_ALL;
-> > > 
-> > > instead of the above, or if not then why not?
-> > 
-> > As a replacement in the loop, that does look sufficient. I'm not sure if
-> > you're also suggesting replacing the loop itself.
-> > 
-> > > 
-> > > > +
-> > > > +       return -ENODEV;
-> > > > +}
-> > > > +
-> > > >  static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
-> > > >  {
-> > > >         struct pci_sysdata *sd = &vmd->sysdata;
-> > > > @@ -785,6 +804,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
-> > > >         resource_size_t membar2_offset = 0x2000;
-> > > >         struct pci_bus *child;
-> > > >         struct pci_dev *dev;
-> > > > +       struct pcie_aspm_vmd_link_state vmd_link_state;
-> > > >         int ret;
-> > > >
-> > > >         /*
-> > > > @@ -911,6 +931,10 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
-> > > >                 return -ENODEV;
-> > > >         }
-> > > >
-> > > > +       vmd_link_state.cb = vmd_get_link_state;
-> > > > +       vmd_link_state.data = vmd->bus;
-> > > > +       pci_register_vmd_link_state_cb(&vmd_link_state);
-> > > > +
-> > > >         vmd_copy_host_bridge_flags(pci_find_host_bridge(vmd->dev->bus),
-> > > >                                    to_pci_host_bridge(vmd->bus->bridge));
-> > > >
-> > > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > > > index 12215ee72afb..dcf7d39c660f 100644
-> > > > --- a/drivers/pci/pci.h
-> > > > +++ b/drivers/pci/pci.h
-> > > > @@ -821,6 +821,12 @@ void pci_configure_aspm_l1ss(struct pci_dev *dev);
-> > > >  void pci_save_aspm_l1ss_state(struct pci_dev *dev);
-> > > >  void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
-> > > >
-> > > > +
-> > > > +struct pcie_aspm_vmd_link_state {
-> > > > +       long (*cb)(struct pci_dev *pdev, void *data);
-> > > > +       void *data;
-> > > > +};
-> > > > +
-> > > >  #ifdef CONFIG_PCIEASPM
-> > > >  void pcie_aspm_init_link_state(struct pci_dev *pdev);
-> > > >  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
-> > > > @@ -828,6 +834,7 @@ void pcie_aspm_pm_state_change(struct pci_dev *pdev, bool locked);
-> > > >  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
-> > > >  void pci_configure_ltr(struct pci_dev *pdev);
-> > > >  void pci_bridge_reconfigure_ltr(struct pci_dev *pdev);
-> > > > +void pci_register_vmd_link_state_cb(struct pcie_aspm_vmd_link_state *state);
-> > > >  #else
-> > > >  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
-> > > >  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
-> > > > @@ -835,6 +842,7 @@ static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev, bool locked)
-> > > >  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
-> > > >  static inline void pci_configure_ltr(struct pci_dev *pdev) { }
-> > > >  static inline void pci_bridge_reconfigure_ltr(struct pci_dev *pdev) { }
-> > > > +void pci_register_vmd_link_state_cb(struct pcie_aspm_vmd_link_state *state) { }
-> > > >  #endif
-> > > >
-> > > >  #ifdef CONFIG_PCIE_ECRC
-> > > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > > > index 29fcb0689a91..c609d3c309be 100644
-> > > > --- a/drivers/pci/pcie/aspm.c
-> > > > +++ b/drivers/pci/pcie/aspm.c
-> > > > @@ -320,6 +320,27 @@ static int policy_to_clkpm_state(struct pcie_link_state *link)
-> > > >         return 0;
-> > > >  }
-> > > >
-> > > > +static struct pcie_aspm_vmd_link_state vmd_state;
-> > > > +
-> > > > +void pci_register_vmd_link_state_cb(struct pcie_aspm_vmd_link_state *state)
-> > > > +{
-> > > > +       mutex_lock(&aspm_lock);
-> > > > +       vmd_state.cb = state->cb;
-> > > > +       vmd_state.data = state->data;
-> > > > +       mutex_unlock(&aspm_lock);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(pci_register_vmd_link_state_cb);
-> > > > +
-> > > > +static long pci_get_vmd_link_state(struct pci_dev *pdev)
-> > > > +{
-> > > > +       int state = -ENODEV;
-> > > > +
-> > > > +       if (vmd_state.cb)
-> > > > +               state = vmd_state.cb(pdev, vmd_state.data);
-> > > > +
-> > > > +       return state;
-> > > > +}
-> > > > +
-> > > >  static void pci_update_aspm_saved_state(struct pci_dev *dev)
-> > > >  {
-> > > >         struct pci_cap_saved_state *save_state;
-> > > > @@ -794,6 +815,7 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
-> > > >         u32 parent_lnkcap, child_lnkcap;
-> > > >         u16 parent_lnkctl, child_lnkctl;
-> > > >         struct pci_bus *linkbus = parent->subordinate;
-> > > > +       int vmd_aspm_default;
-> > > >
-> > > >         if (blacklist) {
-> > > >                 /* Set enabled/disable so that we will disable ASPM later */
-> > > > @@ -865,8 +887,20 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
-> > > >                 pcie_capability_write_word(child, PCI_EXP_LNKCTL, child_lnkctl);
-> > > >         }
-> > > >
-> > > > +       /*
-> > > > +        * Devices behind Intel VMD operate on a synthetic PCI bus that BIOS
-> > > > +        * and ACPI do not enumerate or configure. ASPM for these devices must
-> > > > +        * be managed by the VMD driver itself, independent of global ACPI ASPM
-> > > > +        * constraints. This callback mechanism allows selective ASPM
-> > > > +        * enablement for such domains.
-> > > > +        */
-> > > > +       vmd_aspm_default = pci_get_vmd_link_state(parent);
-> > > > +
-> > > >         /* Save default state */
-> > > > -       link->aspm_default = link->aspm_enabled;
-> > > > +       if (vmd_aspm_default < 0)
-> > > > +               link->aspm_default = link->aspm_enabled;
-> > > > +       else
-> > > > +               link->aspm_default = vmd_aspm_default;
-> > > 
-> > > Well, this is not nice.
-> > > 
-> > > First off, it adds VMD-specific stuff to otherwise generic ASPM code.
-> > > Second, it doesn't actually do anything about the aspm_disabled checks
-> > > all over the place, so they will still trigger even though ASPM will
-> > > be effectively enabled for devices on the VMD bus.
-> > 
-> > I agree that it's not nice to be mixing VMD specific code here. It's a
-> > working bad solution to come up with a working good solution :)
-> > 
-> > The reason this patch works is that the aspm_disabled checks only gate
-> > OS-controlled ASPM configuration. They don't affect the BIOS default
-> > values, which are what we're setting in link->aspm_default. The ASPM
-> > code uses link->aspm_default as the fallback when ASPM is globally
-> > disabled, which is exactly what we want for devices behind VMD where the
-> > driver, not BIOS, effectively is the platform provider of the defaults.
-> 
-> Oh, this was a big news to me.
-> 
-> So what you're saying is that if aspm_disabled is set, ->aspm_disable 
-> cannot be set and thus pcie_config_aspm_link() that is not gated by 
-> aspm_disabled can alter ASPM state despite OS not having ASPM control???
+On Fri, Jul 11, 2025 at 08:55:04AM -0600, Alex Williamson wrote:
+> Sorry, you hit me right before holiday and PTO here.  I agree that
+> we're currently looking at isolation primarily from an egress
+> perspective.  Unfortunately it's not always symmetric.  In your case
+> above, I think we'd consider it safe to assign 1f.6 to a userspace
+> driver because 1f.6 cannot generate DMA out of its isolation domain.
+> On the other hand, 1f.4 can theoretically DMA into 1f.6, so it would be
+> unwise to attach 1f.4 to a userspace driver.  In practice there's not
+> much utility in assigning 1f.4 to a userspace driver, it's generally
+> bound to a "trusted" kernel driver, so all is well.
 
-Yes, that’s correct. Bjorn can confirm, but I believe this is by design. The
-aspm_disabled flag is really a bit of a misnomer. It probably should have been
-called something like os_aspm_disabled. The intent as I understand it is that,
-when disallowed, the OS cannot select or manage the active ASPM policy,
-but it can still configure the link to match the BIOS provided policy.
+That is not how we've defined groups as a security object though. If
+you flip the direction and say 1f.4 is used by VFIO and 1f.6 is in a
+kernel driver this would not be acceptable.
 
-In other words, ASPM isn’t fully disabled. It’s just not under OS control. The
-BIOS values, reflected in link->aspm_default, remain valid and
-pcie_config_aspm_link() can apply them regardless of the aspm_disabled setting.
+While I like the idea, I think if we keep the current group system we
+can't really make arguments like this.
 
-David
+FWIW, my v2 does seem to solve this problem class well enough.
 
-> 
-> ...That's really odd logic which the ASPM driver seems to be full of.
-> 
-> -- 
->  i.
-> 
-> > I put it here using a callback value because this where the BIOS
-> > defaults are saved for each device.
-> > 
-> > > 
-> > > >
-> > > >         /* Setup initial capable state. Will be updated later */
-> > > >         link->aspm_capable = link->aspm_support;
-> > > >
-> > > > base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
-> > > > --
-> > > 
-> > > It appears to me that the underlying problem is that aspm_disabled is
-> > > global and it is set during PCI root bus creation in
-> > > acpi_pci_root_add().  Thus it affects all of the PCI buses even though
-> > > the BIOS says that it wants to control ASPM for this particular PCIe
-> > > hierarchy. If there were another PCI root enumerated by ACPI where
-> > > the OS would be allowed to control ASPM, it would not work just like
-> > > the VMD case.
-> > 
-> > It would work in the non-VMD case because it has the BIOS default to
-> > use. VMD does not.
-> > 
-> > > 
-> > > To me, this suggests an approach based on moving the "ASPM disabled
-> > > because the BIOS wants to control it" setting to pci_bus_flags_t and
-> > > setting it on a per-hierarchy basis.  Since the VMD bus is a separate
-> > > PCIe hierarchy from the kernel perspective, it will not have this flag
-> > > set and the OS should be able to configure ASPM for devices on that
-> > > bus.
-> > > 
-> > > Do I think correctly or am I overlooking something here?
-> > 
-> > It’s definitely along those lines. The issue is really caused by two
-> > things:
-> > 
-> >     1. aspm_disabled global prevents OS control of ASPM
-> >     2. For VMD, there’s no BIOS provided link->aspm_default
-> > 
-> > The solution I proposed addresses the problem by having a mechanism for
-> > the VMD driver to supply its own defaults in place of the missing BIOS
-> > configuration.
-> > 
-> > Using pci_bus_flags_t could work as well, but would rather just say that
-> > aspm_disabled doesn't apply to the bus hierarchy, allowing the current
-> > pci_enable_link_state_locked() solution to work all the time. Either
-> > way, I'm definitely looking for a cleaner solution. The above hopefully
-> > clarifies the situation.
-> > 
-> > David
-> > 
+> If we say that 1f.4 taints the group, including 1f.6, I think we're
+> going to see a bunch of functional regressions for not much actual gain
+> in security.
 
+I have been thinking if we should have an isolation=relaxed/strict
+boot option and relaxed has assumptions that are closer to what the
+current kernel does in practice while strict would basically require
+ACS everywhere to get smaller grouping.
+
+For this problem relaxed could assume that a MFD function with no ACS
+also has no internal loopback at all. Realistically this is probably
+true in most cases.
+
+What concerns me is the enterprise market that does have a strong need
+for security here but does not have the resources of a CSP to properly
+self-audit their systems. I think if the enterprise world could be
+happy in a strict mode where quirks and ACS caps are mandatory which
+would force their vendors to audit.
+
+Consumer/etc doesn't really have the same security need and could be
+use with relaxed if they have any problems.
+
+> Maybe we need some extension to the concept of groups to
+> represent the asymmetry.  Thanks,
+
+Do you have any ideas? 
+
+Arguably the right answer is for groups to only be about DMA aliases
+and a separate 'P2P security graph' of what devices are allowed to P2P
+to other devices is used to enforce the VFIO opening rules. I can
+imagine how to make most of that work in iommufd, but not how to fully
+retain the VFIO group uAPI. It would be alot of work.
+
+But my main concern right now is the switch ACS which is the first
+three patches only. If we remove the MFD loopback downstream
+propagation from pci_get_alias_group() I think it will behave quite
+like today unless switches are present. Would you be comfortable going
+that far as a first step?
+
+Jason
 
