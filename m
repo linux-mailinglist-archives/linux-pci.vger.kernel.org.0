@@ -1,162 +1,159 @@
-Return-Path: <linux-pci+bounces-31896-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31897-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E592B011A8
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 05:38:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 065D6B011F3
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 06:10:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 284AE1CA4D07
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 03:38:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8F943B3646
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 04:10:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 541A119DF4D;
-	Fri, 11 Jul 2025 03:38:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 310C91A2632;
+	Fri, 11 Jul 2025 04:10:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h7ktKKn6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yr5IYiYj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F7216F265;
-	Fri, 11 Jul 2025 03:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BE73D6D;
+	Fri, 11 Jul 2025 04:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752205104; cv=none; b=lVg/8Lv0rWCfeYk2EAT6Gp/0dqIiAVLLLIqK0w5kJlryni2Pi50sTEUhdWK/GgGp7dW2ens1lW5mphPEf4k9dnQzRipHUoVkx53O/lprAF8eLPFaXu8u2v6l4j/Kwyka122vOX+/ZQoo28BsOORtX7PJ+ubX6aG9wWUx3aGkK2s=
+	t=1752207025; cv=none; b=GcMmgdkFyv8BklO8SDvLNy/PcQ1RE40+6xpVt6xZ/G9A4W2vXIAAp3DXjOjYF7Egzv/C6c/kBgE99UuRdxZ6YLSINV9LKF2yR5VLUfVr9FrTAKCMNhD21pPhHnbkZah7Co+Of2qGsqXct91xh6AxVjBPxz2E6jlAMBeoF0Gsu/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752205104; c=relaxed/simple;
-	bh=H0Hm8kyQZ6n/N/KRsdcxE9qHNEhDDCeTojZ8XUtvPZc=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=BMGltRBT+QqTbON4oEo4Mrt0ZYGxpJ5Kw7G1UtyX4JWFV4Wuw4EorrNhQIlnWSqXok5g5QxvM6qw7s7aoDPrY07qjiVDEw3uHLSInOrFNUHFI3AODUZ2K+ig5CqHyh7hHgm3vj3S8ra43eG0u/IkzKzwqDZJvIeabsJ42H+Axl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h7ktKKn6; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1752207025; c=relaxed/simple;
+	bh=sizDRPCJWGICcHP4/doFZ3qsK7Xiy8SySxy/WurYvy8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FMgZ9RpJP4GxSJDyviHyZoakEsSYQ5Af/9SMetlyY6rTvrjk5H/Fzxxf9xK4O/rINaVYkz1L/MP2vbQf2hnPZibRqurVHcyvDWLfC1ajAZHd2fiffPEDzVJY23Iv3TlXDOK+B5tr7NogV21ONBnEPr9zMRyYXh3VvWmROqwrN6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yr5IYiYj; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2349f096605so21517815ad.3;
-        Thu, 10 Jul 2025 20:38:22 -0700 (PDT)
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3137c2021a0so1384965a91.3;
+        Thu, 10 Jul 2025 21:10:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752205102; x=1752809902; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q/Qj70+Qw1ZA0kyE48WMaDv1mNZmCeBb3mdlEQxC1dk=;
-        b=h7ktKKn6yo5z7tz1eZ773Oq5HAjS/gAyGJnQi7QOml8Sa3vuWQi8iHsK+ueRcQe5x/
-         aeJjSdzgGIBf/wassO+Vhh0y7r5BR/2mFSBIVuJ9cX8Iv4NgHrQ8erpbYKayedp749ph
-         ZKsdaUAYtGl+3k7ulfGarIIGzUHWwr4B58jeq7cT1oNJYEcXA77T851SL7c8ssI8/glC
-         /xLrjff88jF6KJCzoz1iFdTLytthGinGonLjE7PC8LRC5IgW3hAgHFXYBwJWNU/GzlhU
-         SANmzSJHVA1GJ24BHX0G/MvHgnPc/crmSI5PZmWEIdi1Fu6eyqlgGrSCwcQcfiiWmonG
-         J5ng==
+        d=gmail.com; s=20230601; t=1752207023; x=1752811823; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q9uNjF8oTtQxPk0+hEJW3L80kLHxLWNl8NSdzEDPj7U=;
+        b=Yr5IYiYjCZxNOxPtVbt6284Ojm+uvlbulGAcFWBaUPNXWkAQFmGKAVp2NcDra9IW1R
+         8Rvxr9gUHoEf0bK1FtxMAddu0NzDlOm5lp+nnkN5vRWWLytV2n1KDlAvcSHuNak+AULu
+         iM6X4z73iDdGv4smWprDjF/JFN8IvgnoE5ZTn5Nh6IZc1T9C/VJ09AD6mETuaO9ITv/i
+         BSSSQdAAuBRHDs67hqZAS0+esqiaT0XW4NKc6B2aj1hjTfEScszAtvGUfr27pxZw8VqM
+         KV6J0syk+xJUH9BSdeRUdqN3PciOpogpRhnuveyYUWvxsDbSQYF1RN2NcG4ZmXhj5TPG
+         ratg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752205102; x=1752809902;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Q/Qj70+Qw1ZA0kyE48WMaDv1mNZmCeBb3mdlEQxC1dk=;
-        b=Q1eh68n4gUIvOxvOPg2VBJEEcbyMFrw+oJxoaq7qPHs4lDE0Z8371iEmlkkwcy7iGv
-         3YRpERHmCSYHH2JrHG4xUSEzUYu+vSJ8GkuYzxTwB4i/aFc2jwpLKp9jI1cKB32H69Dc
-         3grepaOpYQCSfXDfrkBR+eGwb4gX506dFvOTyQ/TpfnrxjvEqkAcB8eIcgUeubtl4dgb
-         6uqsTEZsHBK7Xnjt4YChmlT2vYRv3cpH0PYwNc192KW49mQd2WkN9bUKvVYmGeJBeQf2
-         x9KH2IU1d79/HCqeXTdwDf+5seQ7KZ86n5kyMpiMvi5RUdubcJtcGvXVhMxyQTq0dRWp
-         Wnxw==
-X-Forwarded-Encrypted: i=1; AJvYcCURFaw0LwptBj4NL2nXFgxThFZ5oBdiBFMWyUhnRWXJ0durIKvYb/ica22DcpYzSNgHX8Sj2sCw1yge1Iy4@vger.kernel.org, AJvYcCVbcWH8OYh06npX/bp00MB8YOsKB7+/lBPNeW7SRDNLzoarvfUy4awRwWuQnENODk9OUE5jf8YI@vger.kernel.org, AJvYcCWXE0rJ2TMS6E56moHRx6j2JDR4XKOGeOeyjXIAML2taFAUlc1SetGZGvWjiwmrYWm1QEnXIDMZyBik@vger.kernel.org, AJvYcCXrayQ/KLgpKfIN8FBuR7Go4Qrq9dFVJWEW7zQ1n1gNnFIZyNuHS8+hUvGnY9Oig5LBH0rTDPVT5VAYjsqYoTw=@vger.kernel.org, AJvYcCXvSfl2fRbcWQBiNfzsvz/NLU9wrQP/8Ph9a+WlLnHG3n1oMm/y8dxcOfOR2DJ9+1+IXuj8oGX1zIwf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy232ZctqxEcDoAcvoJzz2fHsKh1yGr3U3T8BU1FSUc45qtWlnI
-	rCnnMEBkTwE6abfVXv/AwktO6m17nfbVlMhOoKSjjXw/6Ln72C9HQn52
-X-Gm-Gg: ASbGnctZ9GcnRo5SJUhEd5zoHUcEB/AyiMR/koRKP/TSTEEPqqXPZiBKJe7cYZDJuhs
-	TGpnCCSex85HA27Ci431U3blPTDYQlYHHrUR4+ZCijLtmfvkfD+N9wRH1P6sFowYltwGuUH4It+
-	DvcLj7FaeAQWLoCkKSAlicAUOPGuSx1DCzgDtAbtRNA7wbwfVQVyYQbmOuK+1vzGTg1oyTHw91q
-	56LGR9jfgihEhzu/+dqAdWfmH1AhgXwTK3Uq8wcB/Wg+ETv6vZHRmJtktNVkjefnWbtvAdqBovy
-	JOImHybjOFmI69c1RPCF55w2OdA2Q/k9P1/FhUVCfdgZdzNno1eyVhN2Yfwj40ogIyKJBknI7bN
-	ymh3lPH/tAOSf3vdre2xJ/MMYY2bFQ+vPwdg530ln6g5ViPjn5iUnAVvlp1Kal3ehy8+ydj7zAe
-	5qfImOH8MkvKc=
-X-Google-Smtp-Source: AGHT+IFbi/G/K3dsTgG+PrTxboWCsavDU00apeau7wJJn4YJz0wFVUIjBVHaMM+adNeGlqGczuEsEQ==
-X-Received: by 2002:a17:902:ce06:b0:234:e7aa:5d9b with SMTP id d9443c01a7336-23dee1ae93amr18370575ad.23.1752205101907;
-        Thu, 10 Jul 2025 20:38:21 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23de43318e5sm41033895ad.147.2025.07.10.20.38.16
+        d=1e100.net; s=20230601; t=1752207023; x=1752811823;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q9uNjF8oTtQxPk0+hEJW3L80kLHxLWNl8NSdzEDPj7U=;
+        b=fn+lTdZn3kM0Enp9rxIrxpN/vk3Umr/NVDxrGDinG4AMbNt1ijMbjBowCGY0IDOVzm
+         vT3nyewhHC0S7x3vPm+KMLCiwtmyHEgKnK28QbPU6d+DR1KjkyesPVUfQ8Uz4t1O81A7
+         1V/ibjdMSWVP7LiEkoV5BGyf5HeI41GwXjwVJdyAZLuiY5ztOFNjanq/Iq1s+pUwXN2P
+         CVGOinVSa+brETMARzP9SiiTIJOnVP0vipNIS7mIeL0fUZ0beLRmQYLcD93YzFLQoUmB
+         FzyAKVgpk0IMHAE3NO8WJnHeLw9nkLm7VB1flHGL6S48+sbr6S9INM+JyE6q5z+KVmKl
+         W21g==
+X-Forwarded-Encrypted: i=1; AJvYcCUJlW6M0iavS//Xi+CBYT/U6q/MezrVxE+/MSnnn4gneXpSeYk2PD9bnMYHgueFftZvy5AkZ7Qdwymg@vger.kernel.org, AJvYcCVcmPiZbwzKOF8ERwj3nD3coUKwl4EzUBApxgCf2nk1Y6Tm++c3PdhFdb+4x6r6RINq2ljtBQZt@vger.kernel.org, AJvYcCW6B7Fu4bnfykRuqn/ivouAatnC81H2JzDWtvurktSYk1UlH6OxdJtegWyj50HNTHGdwmDlMVb3e+IkEQ7Z@vger.kernel.org, AJvYcCWSEjQ6jKDz1P29bc73xhomzXmx2gnPzg4yD6BFuiqIWG1r6kHnHjPYpgbRhprCMjDfeAupLsAOegKyIc4fwYU=@vger.kernel.org, AJvYcCWt49ei4lxRUQKzp/pfAWdrPlyhnZc5u2On0tS8dAhmvIVC4wsTRKwhsfXdtfsr16JpQ6cSJuSmzQAmzg==@vger.kernel.org, AJvYcCXmBp81SaD1jq10g2kqoty57RwoLhOzfstxjCDqCjeYmla99Pc7ari0v6dwzlutQkYxDg3aVfx9/Ely@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfJoNBcB9hd1e9HYsBllUmy2oyfGvx1mZHfJ84as/LuVcgF8e8
+	LHpvu6jZYd2/jyidqxLPWgtOAqHoWzXVFI4YjAsbzGCdljoZcQMoOcpL
+X-Gm-Gg: ASbGncsdd7frMh6fk541bNHyXPLQxYlNMoKm/tQPOyOXIK+dIdU3rmfPRk69grivpWI
+	3lPyaQVhIi4fz5Mk9tnE3QHzalckPVguGRiniL9WyfDkgXgfzzpSM0fTa3mW4ZDNUYV0gcStVy+
+	uYb5GtBvekiYPYwFlpb1ZQnNun3jXS5jHZMvhEdGufZpjUycYi+pkpbRiYFpIEVNwv9rGH/fQhD
+	PUQ30vZMtIxccT+WGTSevK8V2yU8j4AtMdlRU/l8t9hK6D/lbVPNVYE9THuGDzX707+56q256BR
+	LoNxfVQp3p0hwE5Y7CWMtLNJelxY6OvXD0OO3vFDMzW7JHFnufXp0nJrI+XQValvHxMkIaWP5h/
+	eDFjuGekwj2VaHQ/DrC/Ov9Vrdr2lFMZPHXSQNuhct6UQcAnuDHZKifIDbud2+23zTYoepIc=
+X-Google-Smtp-Source: AGHT+IE1i7+doG0MB1VIutKCSwuGpp0+Wo3W3hUMtDdGs3TyfkwZmYkfICSEt4EID2JBsb8hwrtIGw==
+X-Received: by 2002:a17:90b:1f92:b0:312:daf3:bac9 with SMTP id 98e67ed59e1d1-31c4cdb9612mr2039246a91.34.1752207022787;
+        Thu, 10 Jul 2025 21:10:22 -0700 (PDT)
+Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b3bbe6f4fc8sm3902095a12.51.2025.07.10.21.10.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Jul 2025 20:38:21 -0700 (PDT)
-Date: Fri, 11 Jul 2025 12:38:05 +0900 (JST)
-Message-Id: <20250711.123805.1564352128148532368.fujita.tomonori@gmail.com>
-To: tmgross@umich.edu
-Cc: fujita.tomonori@gmail.com, alex.gaynor@gmail.com, dakr@kernel.org,
- gregkh@linuxfoundation.org, ojeda@kernel.org, rafael@kernel.org,
- robh@kernel.org, saravanak@google.com, a.hindborg@kernel.org,
- aliceryhl@google.com, bhelgaas@google.com, bjorn3_gh@protonmail.com,
- boqun.feng@gmail.com, david.m.ertman@intel.com,
- devicetree@vger.kernel.org, gary@garyguo.net, ira.weiny@intel.com,
- kwilczynski@kernel.org, leon@kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, lossin@kernel.org, netdev@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] rust: net::phy represent DeviceId as
- transparent wrapper over mdio_device_id
+        Thu, 10 Jul 2025 21:10:22 -0700 (PDT)
 From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <DB77AQ53YOFK.VBSAP1H7FFB9@umich.edu>
-References: <20250704041003.734033-1-fujita.tomonori@gmail.com>
-	<20250704041003.734033-3-fujita.tomonori@gmail.com>
-	<DB77AQ53YOFK.VBSAP1H7FFB9@umich.edu>
+To: alex.gaynor@gmail.com,
+	dakr@kernel.org,
+	gregkh@linuxfoundation.org,
+	ojeda@kernel.org,
+	rafael@kernel.org,
+	robh@kernel.org,
+	saravanak@google.com,
+	tmgross@umich.edu
+Cc: a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	bhelgaas@google.com,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	david.m.ertman@intel.com,
+	devicetree@vger.kernel.org,
+	gary@garyguo.net,
+	ira.weiny@intel.com,
+	kwilczynski@kernel.org,
+	lenb@kernel.org,
+	leon@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lossin@kernel.org,
+	netdev@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH v4 0/3] rust: Build PHY device tables by using module_device_table macro
+Date: Fri, 11 Jul 2025 13:09:44 +0900
+Message-ID: <20250711040947.1252162-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 08 Jul 2025 23:23:20 -0400
-"Trevor Gross" <tmgross@umich.edu> wrote:
+Build PHY device tables by using module_device_table macro.
 
-> On Fri Jul 4, 2025 at 12:10 AM EDT, FUJITA Tomonori wrote:
->> Refactor the DeviceId struct to be a #[repr(transparent)] wrapper
->> around the C struct bindings::mdio_device_id.
->>
->> This refactoring is a preparation for enabling the PHY abstractions to
->> use device_id trait.
-> 
-> Should this say "the `DeviceId` trait" (different case)?
+The PHY abstractions have been generating their own device tables
+manually instead of using the module_device_table macro provided by
+the device_id crate. However, the format of device tables occasionally
+changes [1] [2], requiring updates to both the device_id crate and the custom
+format used by the PHY abstractions, which is cumbersome to maintain.
 
-Ah, I changed it to the RawDeviceId trait.
+[1]: https://lore.kernel.org/lkml/20241119235705.1576946-14-masahiroy@kernel.org/
+[2]: https://lore.kernel.org/lkml/6e2f70b07a710e761eb68d089d96cee7b27bb2d5.1750511018.git.legion@kernel.org/
 
->> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
->> ---
->>  rust/kernel/net/phy.rs | 53 +++++++++++++++++++++---------------------
->>  1 file changed, 27 insertions(+), 26 deletions(-)
->>
->> diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
->> index 65ac4d59ad77..940972ffadae 100644
->> --- a/rust/kernel/net/phy.rs
->> +++ b/rust/kernel/net/phy.rs
->> [...]
->> @@ -734,18 +733,20 @@ pub const fn new_with_driver<T: Driver>() -> Self {
->>          T::PHY_DEVICE_ID
->>      }
->>  
->> +    /// Get a `phy_id` as u32.
->> +    pub const fn id(&self) -> u32 {
->> +        self.0.phy_id
->> +    }
-> 
-> For the docs maybe just:
-> 
->     /// Get the MDIO device's phy ID.
-> 
-> Since `as u32` is slightly redundant (it's in the return type, and that
-> is how it is stored anyway).
+Danilo, I incorporated your fixes into the first patch and mentioned
+them in the commit message. Let me know if you'd rather take a
+different approach.
 
-Yeah, fixed. I used "PHY" for consistency with other comments.
+v4:
+- Rebased on driver-core-next
+- Improve docs based on Trevor's comments
+v3: https://lore.kernel.org/lkml/20250704041003.734033-1-fujita.tomonori@gmail.com/
+- Fix Safety comments and typo
+v2: https://lore.kernel.org/lkml/20250701141252.600113-1-fujita.tomonori@gmail.com/
+- Split off index-related parts of RawDeviceId into RawDeviceIdIndex
+v1: https://lore.kernel.org/lkml/20250623060951.118564-1-fujita.tomonori@gmail.com/
 
->>      /// Get a `mask` as u32.
->>      pub const fn mask_as_int(&self) -> u32 {
->> -        self.mask.as_int()
->> +        self.0.phy_id_mask
->>      }
 
-I also updated the above comment
+FUJITA Tomonori (3):
+  rust: device_id: split out index support into a separate trait
+  rust: net::phy represent DeviceId as transparent wrapper over
+    mdio_device_id
+  rust: net::phy Change module_phy_driver macro to use
+    module_device_table macro
 
-/// Get the MDIO device's match mask.
+ rust/kernel/acpi.rs      |  15 ++++--
+ rust/kernel/auxiliary.rs |  11 ++--
+ rust/kernel/device_id.rs |  91 ++++++++++++++++++++++++---------
+ rust/kernel/driver.rs    |   8 ++-
+ rust/kernel/net/phy.rs   | 106 +++++++++++++++++++--------------------
+ rust/kernel/of.rs        |  15 ++++--
+ rust/kernel/pci.rs       |  11 ++--
+ 7 files changed, 156 insertions(+), 101 deletions(-)
 
-> One optional nit then:
-> 
-> Reviewed-by: Trevor Gross <tmgross@umich.edu>
 
-Thanks!
+base-commit: 3964d07dd821efe9680e90c51c86661a98e60a0f
+-- 
+2.43.0
+
 
