@@ -1,66 +1,64 @@
-Return-Path: <linux-pci+bounces-31902-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31903-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EAD9B01224
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 06:28:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EF60B0124E
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 06:35:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4F0D5177BD0
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 04:28:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A152D16BDEB
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 04:35:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5298EA933;
-	Fri, 11 Jul 2025 04:28:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DB301C5F06;
+	Fri, 11 Jul 2025 04:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EM9K4lNx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPMc6wqM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BE91865EB;
-	Fri, 11 Jul 2025 04:28:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130641C4A20;
+	Fri, 11 Jul 2025 04:33:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752208099; cv=none; b=jcw5MU9AjlKIAoGXyqz4VnOGM66evX6xD1u8fBjf2idG5xkM6ppB95Y9Lz92b+MQesXRnSAVrFQGXAc3OquMDhTG+8RXkiufLIMZG9v1VT+cW9EkED8KnHQXOdt3qCY2t2dqXlm+CN2RD2iBWo9/h/krRFkcX21DKVvKjqR0yVA=
+	t=1752208401; cv=none; b=TmmALwdcxlZScuuETaDyJFcgu5BDM1flpG244tiS95XZpyBSiVYZUJydVQI+ae/SRTbRL3+Gjfhf8bQnSwOXG1Sqz4CEW8J2+KmKb/AQLlxvbtIB3ThOcIL7WDDdN0njvHQYb6IEXwoWIIBTo8AiUCCBAnX4rW3nCPcHBpcTqrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752208099; c=relaxed/simple;
-	bh=0C/vTM5o8IziGLnZ32LREb0cwoermYkw/D2NJ31Q1Kw=;
+	s=arc-20240116; t=1752208401; c=relaxed/simple;
+	bh=ADUlxN5vRAMoH+bUBIPnCkxN+wm8oydTF3zMTV6RCPE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gPJE4nzPNS4wXeMpVFjgNGxahsrPzCQpYQisfdDZmMz+pedMRKIth4PXDo0XKylTCMgGoHa2H/RGU5eJMx4av5DRlN14UR2eQvIeeDkJIywx4EpIg24P0+3LF3wFrEMwzCfSJuGanbi3UGs2Mu8mzqY+hNQaTL4fRXMwN8a0qjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EM9K4lNx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F05D6C4CEF0;
-	Fri, 11 Jul 2025 04:28:09 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=mgElQpdl3O+JDLZnyoo5W+CQ0mq07eCsDDCgWL/mHIlQpqOVeT2gs47HpIBriAvMONSZbZzOWLC9+xaHBvQLJVHuPQI/urP87ZPbKToY2EG3TmvG3NsVGTJPASggu82ONGlQwtTtHDd/695/520rGfWAkHf8hKIv9MUtcDm7Iro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPMc6wqM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC6A1C4CEEF;
+	Fri, 11 Jul 2025 04:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752208096;
-	bh=0C/vTM5o8IziGLnZ32LREb0cwoermYkw/D2NJ31Q1Kw=;
+	s=k20201202; t=1752208400;
+	bh=ADUlxN5vRAMoH+bUBIPnCkxN+wm8oydTF3zMTV6RCPE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EM9K4lNx63NPSpJcWku7gT+TNpc/STC2mPEwXLxkY6CNZFu3oHUeQpQJTPJ7yh/BG
-	 vVfKwUW1YnCt9l2SWBhwIDcq+fOWLtf/jz4y6wBiYzK84HKnNGG5tZbLMQZsNM+0d4
-	 +CC4CQnXB2QZK6cvSWydVEhZVdXu1X3ZAcxvZO9UKHOhNPtyvjfgfQv7JMO1PSXsH5
-	 RpPiUuRMM898YgxNMagM1cykHlL+9D64GaMlIpKxmst2VCpRURptimLoFJQDj7L+I8
-	 3HuxEKFFuqgwiynVx34jdQCS+x6kY/OUwMnhPreAFRpj6BjIbIacn0k+eputxVO9cW
-	 OwmD1qzHwTpRw==
-Date: Fri, 11 Jul 2025 09:58:05 +0530
+	b=nPMc6wqMegydFdHC/efGONuSfXTyZbe5tsXbIroa82StpgKDbEvJPuj48tapBwPyf
+	 EtVHrya8nElzNy0urWzuc6uc3+P/BhYhyllSsJwAlWh7lYs5nCg3PCVMoSGtmE4eHa
+	 IMX942N7HcpHaEDvKk/pcHyxWkS1lUIozmVu6pPPyubGupM4QuWOeg3fVzOPXb5Z4h
+	 SrGb9KgLIy6SLPmYDVt0CEvM6cQ1M97xX5zkwXVewuH3ePmqmSFbhBCz4+5V2E/5j0
+	 ZGDphlx7xrl9wUIVzNALWHUi/AasvWNt1O4R7Oz1o3rxk3Gy07+Zd4C10f5VgqL7ur
+	 LWVdCR8rbYDhQ==
+Date: Fri, 11 Jul 2025 10:03:08 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+Cc: Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
+	Jeff Johnson <jjohnson@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Jingoo Han <jingoohan1@gmail.com>, 
 	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Jeff Johnson <jjohnson@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, linux-wireless@vger.kernel.org, 
-	ath11k@lists.infradead.org, qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com, 
-	quic_vpernami@quicinc.com, quic_mrana@quicinc.com, 
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Subject: Re: [PATCH v4 06/11] PCI/ASPM: Clear aspm_disable as part of
- __pci_enable_link_state()
-Message-ID: <irnkdlrmlozp7joydgnawfuivl2nnuxsb2t4osgxzbtyrfzd3n@7dhzjcd42aiw>
+	Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	mhi@lists.linux.dev, linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
+	qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com, quic_vpernami@quicinc.com, 
+	quic_mrana@quicinc.com
+Subject: Re: [PATCH v4 04/11] bus: mhi: host: Add support for Bandwidth scale
+Message-ID: <eg2v3kctnztxcaulffu7tvysljimmyhnramyjj5gpa4vrv3yxu@g3pgwpwx37iq>
 References: <20250609-mhi_bw_up-v4-0-3faa8fe92b05@qti.qualcomm.com>
- <20250609-mhi_bw_up-v4-6-3faa8fe92b05@qti.qualcomm.com>
- <qo6mb3qlt3xpuvhepwcv6be4wd53neee2t6buzk4tdiy22xsub@vu7lykp3rnu2>
- <226bab3a-54e5-94ad-9d84-0b82f9dc4e2f@linux.intel.com>
- <2a18cf9e-1dd2-4e09-81f4-eb1d07324c8e@oss.qualcomm.com>
+ <20250609-mhi_bw_up-v4-4-3faa8fe92b05@qti.qualcomm.com>
+ <j24c2ii33yivc7rb3vwbwljxwvhdpqwbfgt3gid2njma6t47i4@uhykehw23h2q>
+ <31c192f7-cd69-46ad-9443-5d57ae2aa86e@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,85 +68,209 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2a18cf9e-1dd2-4e09-81f4-eb1d07324c8e@oss.qualcomm.com>
+In-Reply-To: <31c192f7-cd69-46ad-9443-5d57ae2aa86e@oss.qualcomm.com>
 
-On Wed, Jul 09, 2025 at 06:01:22PM GMT, Krishna Chaitanya Chundru wrote:
+On Wed, Jul 09, 2025 at 05:51:34PM GMT, Krishna Chaitanya Chundru wrote:
 > 
 > 
-> On 7/9/2025 2:40 PM, Ilpo Järvinen wrote:
-> > On Tue, 8 Jul 2025, Manivannan Sadhasivam wrote:
-> > 
-> > > On Mon, Jun 09, 2025 at 04:21:27PM GMT, Krishna Chaitanya Chundru wrote:
-> > > > ASPM states are not being enabled back with pci_enable_link_state() when
-> > > > they are disabled by pci_disable_link_state(). This is because of the
-> > > > aspm_disable flag is not getting cleared in pci_enable_link_state(), this
-> > > > flag is being properly cleared when ASPM is controlled by sysfs.
-> > > > 
+> On 7/8/2025 10:36 PM, Manivannan Sadhasivam wrote:
+> > On Mon, Jun 09, 2025 at 04:21:25PM GMT, Krishna Chaitanya Chundru wrote:
+> > > As per MHI spec v1.2, sec 14, MHI supports bandwidth scaling to reduce
+> > > power consumption. MHI bandwidth scaling is advertised by devices that
+> > > contain the bandwidth scaling capability registers. If enabled, the device
+> > > aggregates bandwidth requirements and sends them to the host through
+> > > dedicated mhi event ring. After the host performs the bandwidth switch,
+> > > it sends an acknowledgment by ringing a doorbell.
 > > > 
-> > > A comment in pcie_config_aspm_link() says:
+> > > if the host supports bandwidth scaling events, then it must set
+> > > BW_CFG.ENABLED bit, set BW_CFG.DB_CHAN_ID to the channel ID to the
+> > > doorbell that will be used by the host to communicate the bandwidth
+> > > scaling status and BW_CFG.ER_INDEX to the index for the event ring
+> > > to which the device should send bandwidth scaling request in the
+> > > bandwidth scaling capability register.
 > > > 
-> > >   /* Enable only the states that were not explicitly disabled */
+> > > As part of mmio init check if the bw scale capability is present or not,
+> > > if present advertise host supports bw scale by setting all the required
+> > > fields.
 > > > 
-> > > But the function is called from both aspm_attr_store_common() and
-> > > __pci_enable_link_state(). So I don't know if this is behavior is intentional
-> > > or wrong.
+> > > MHI layer will only forward the bw scaling request to the controller
+> > > driver since MHI doesn't have any idea about transport layer used by
+> > > the controller, it is responsibility of the controller driver to do actual
+> > > bw scaling and then pass status to the MHI. MHI will response back to the
+> > > device based up on the status of the bw scale received.
+> > > 
+> > > Add a new get_misc_doorbell() to get doorbell for misc capabilities to
+> > > use the doorbell with mhi events like MHI BW scale etc.
+> > > 
+> > > Use workqueue & mutex for the bw scale events as the pci_set_target_speed()
+> > > which will called by the mhi controller driver can sleep.
+> > > 
+> > > Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> > > Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > > ---
+> > >   drivers/bus/mhi/common.h        | 13 ++++++
+> > >   drivers/bus/mhi/host/init.c     | 63 +++++++++++++++++++++++++-
+> > >   drivers/bus/mhi/host/internal.h |  7 ++-
+> > >   drivers/bus/mhi/host/main.c     | 98 ++++++++++++++++++++++++++++++++++++++++-
+> > >   drivers/bus/mhi/host/pm.c       | 10 ++++-
+> > >   include/linux/mhi.h             | 13 ++++++
+> > >   6 files changed, 198 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/drivers/bus/mhi/common.h b/drivers/bus/mhi/common.h
+> > > index 58f27c6ba63e3e6fa28ca48d6d1065684ed6e1dd..6e342519d80b7725e9ef5390a3eb2a06ac69ceac 100644
+> > > --- a/drivers/bus/mhi/common.h
+> > > +++ b/drivers/bus/mhi/common.h
+> > > @@ -217,6 +217,19 @@ enum mhi_capability_type {
+> > >   	MHI_CAP_ID_MAX,
+> > >   };
+> > > +/* MHI Bandwidth scaling offsets */
+> > > +#define MHI_BW_SCALE_CFG_OFFSET		0x4
+> > > +#define MHI_BW_SCALE_CAP_ID		(3)
+> > > +#define MHI_BW_SCALE_DB_CHAN_ID		GENMASK(31, 25)
+> > > +#define MHI_BW_SCALE_ENABLED		BIT(24)
+> > > +#define MHI_BW_SCALE_ER_INDEX		GENMASK(23, 19)
+> > > +
+> > > +#define MHI_TRE_GET_EV_BW_REQ_SEQ(tre)	FIELD_GET(GENMASK(15, 8), (MHI_TRE_GET_DWORD(tre, 0)))
+> > > +
+> > > +#define MHI_BW_SCALE_RESULT(status, seq)	cpu_to_le32(FIELD_PREP(GENMASK(11, 8), status) | \
+> > > +						FIELD_PREP(GENMASK(7, 0), seq))
+> > > +#define MHI_BW_SCALE_NACK			0xF
+> > > +
+> > >   enum mhi_pkt_type {
+> > >   	MHI_PKT_TYPE_INVALID = 0x0,
+> > >   	MHI_PKT_TYPE_NOOP_CMD = 0x1,
+> > > diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
+> > > index 9102ce13a2059f599b46d25ef631f643142642be..26703fea6272de7fd19c6ee76be067f0ff0fd309 100644
+> > > --- a/drivers/bus/mhi/host/init.c
+> > > +++ b/drivers/bus/mhi/host/init.c
+> > > @@ -501,10 +501,55 @@ static int mhi_find_capability(struct mhi_controller *mhi_cntrl, u32 capability,
+> > >   	return -ENXIO;
+> > >   }
+> > > +static int mhi_get_er_index(struct mhi_controller *mhi_cntrl,
+> > > +			    enum mhi_er_data_type type)
+> > > +{
+> > > +	struct mhi_event *mhi_event = mhi_cntrl->mhi_event;
+> > > +	int i;
+> > > +
+> > > +	/* Find event ring for requested type */
+> > > +	for (i = 0; i < mhi_cntrl->total_ev_rings; i++, mhi_event++) {
+> > > +		if (mhi_event->data_type == type)
+> > > +			return mhi_event->er_index;
+> > > +	}
+> > > +
+> > > +	return -ENOENT;
+> > > +}
+> > > +
+> > > +static int mhi_init_bw_scale(struct mhi_controller *mhi_cntrl,
+> > > +			     int bw_scale_db)
+> > > +{
+> > > +	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+> > > +	u32 bw_cfg_offset, val;
+> > > +	int ret, er_index;
+> > > +
+> > > +	ret = mhi_find_capability(mhi_cntrl, MHI_BW_SCALE_CAP_ID, &bw_cfg_offset);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	er_index = mhi_get_er_index(mhi_cntrl, MHI_ER_BW_SCALE);
+> > > +	if (er_index < 0)
+> > > +		return er_index;
+> > > +
+> > > +	bw_cfg_offset += MHI_BW_SCALE_CFG_OFFSET;
+> > > +
+> > > +	/* Advertise host support */
+> > > +	val = (__force u32)cpu_to_le32(FIELD_PREP(MHI_BW_SCALE_DB_CHAN_ID, bw_scale_db) |
+> > > +				       FIELD_PREP(MHI_BW_SCALE_ER_INDEX, er_index) |
+> > > +				       MHI_BW_SCALE_ENABLED);
+> > > +
 > > 
-> > Hi,
+> > It is wrong to store the value of cpu_to_le32() in a non-le32 variable.
+> > mhi_write_reg() accepts the 'val' in native endian. writel used in the
+> > controller drivers should take care of converting to LE before writing to the
+> > device.
 > > 
-> > I think it's intentional. Whether the behavior is useful is another good
-> > question but the current behavior aligns with the explanation in the
-> > comment.
-> > 
-> > My understanding of the situation is:
-> > 
-> > pci_disable_link_state() and pci_enable_link_state() are not symmetric
-> > despite the names, never have been (this is one of those many quirks ASPM
-> > driver has which should be eventually cleaned up, IMO).
-> > 
-> > It might be appropriate to rename pci_enable_link_state() to
-> > pci_set_default_link_state() to match the name to its functionality (and
-> > the function comment):
-> > 
-> >   * pci_enable_link_state - Clear and set the default device link state
-> > 
-> > Note: "the default ... link state".
-> > 
-> > 
-> > I've already raised this concern earlier! As you see, my comment are
-> > not getting addressed. I'd like to see the author does one of these:
-> > 
-> Hi llpo,
+> ok then I will revert to u32.
 > 
-> I replied to your comment on v3 patch[1], and I feel instead of having
-> new function() we can use same API to our purpose.
+> I think we need a patch in the controller drivers seperately to handle
+> this.
 
-You replied to Ilpo, but never got an agreement. Please try to close the
-discussions before posting next rev. If reviewers forgot to reply to your query,
-feel free to ping them in the same thread itself.
+Why?
 
-> > 1) Renames pci_enable_link_state() to pci_set_default_link_state()
+> > > +	mhi_write_reg(mhi_cntrl, mhi_cntrl->regs, bw_cfg_offset, val);
+> > > +
+> > > +	dev_dbg(dev, "Bandwidth scaling setup complete with event ring: %d\n",
+> > > +		er_index);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > >   int mhi_init_mmio(struct mhi_controller *mhi_cntrl)
+> > >   {
+> > >   	u32 val;
+> > > -	int i, ret;
+> > > +	int i, ret, doorbell = 0;
+> > >   	struct mhi_chan *mhi_chan;
+> > >   	struct mhi_event *mhi_event;
+> > >   	void __iomem *base = mhi_cntrl->regs;
+> > > @@ -638,6 +683,16 @@ int mhi_init_mmio(struct mhi_controller *mhi_cntrl)
+> > >   		return ret;
+> > >   	}
+> > > +	if (mhi_cntrl->get_misc_doorbell)
+> > > +		doorbell = mhi_cntrl->get_misc_doorbell(mhi_cntrl, MHI_ER_BW_SCALE);
+> > > +
+> > > +	if (doorbell > 0) {
+> > > +		ret = mhi_init_bw_scale(mhi_cntrl, doorbell);
+> > > +		if (!ret)
+> > > +			mhi_cntrl->bw_scale_db = base + val + (8 * doorbell);
+> > > +		else
+> > > +			dev_warn(dev, "Failed to setup bandwidth scaling: %d\n", ret);
 > > 
-> > 1b) If pci_enable_link_state() is still needed after that, a new function
-> > is added to symmetrically pair with pci_disable_link_state().
+> > That's it? And you would continue to setup doorbell setup later?
 > > 
-> > or alternatively,
+> event ring for BW scale and capability are exposed during bootup only,
+> if those are not present at bootup no need to retry later.
+
+I'm not asking you to retry. I was asking why would you continue to initialize
+bw_scale resources (like workqueue) even if mhi_init_bw_scale() fails.
+
+> > > +	}
 > > 
-> > 2) Changelog justifies very clearly why this change is okay with the
-> > existing callers. (And obviously the function comment should be altered to
-> > match the functionality in that case too).
+> > nit: newline
 > > 
-> > If approach 2 is chosen, it should be very carefully reviewed when it
-> > comes to the callers.
+> > >   	return 0;
+> > >   }
+
+[...]
+
+> > > +		goto exit_bw_scale;
+> > > +	}
+> > > +
+> > > +	link_info.target_link_speed = MHI_TRE_GET_EV_LINKSPEED(dev_rp);
+> > > +	link_info.target_link_width = MHI_TRE_GET_EV_LINKWIDTH(dev_rp);
+> > > +	link_info.sequence_num = MHI_TRE_GET_EV_BW_REQ_SEQ(dev_rp);
+> > > +
+> > > +	dev_dbg(dev, "Received BW_REQ with seq:%d link speed:0x%x width:0x%x\n",
+> > > +		link_info.sequence_num,
+> > > +		link_info.target_link_speed,
+> > > +		link_info.target_link_width);
+> > > +
+> > > +	/* Bring host and device out of suspended states */
+> > > +	ret = mhi_device_get_sync(mhi_cntrl->mhi_dev);
 > > 
-> I am in favor of approach 2 which you suggested, but lets wait for other
-> reviewers feedback on this. Based up on the response i will make
-> necessary changes in v5.
+> > Looks like mhi_device_get_sync() is going runtime_get()/runtime_put() inside
+> > mhi_trigger_resume(). I'm wondering why that is necessary.
+> > 
+> Before mhi_trigger_resume we are doing wake_get, which will make sure
+> device will not transition to the low power modes while servicing this
+> event. And also make sure mhi state is in M0 only.
+> 
+> As we are in workqueue this can be scheduled at some later time and by
+> that time mhi can go to m1 or m2 state.
 > 
 
-I would go for (1). It is always going to be a problem to change a legacy API
-like this. We might end up causing regressions. So it is safe to rename to
-reflect the purpose and try to come up with a new API that does what you want.
-If callers want to migrate to the new API, they can also do it in the future.
+My comment was more about the behavior of mhi_trigger_resume(). Why does it call
+get() and put()? Sorry if I was not clear.
 
 - Mani
 
