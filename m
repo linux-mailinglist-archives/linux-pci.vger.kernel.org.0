@@ -1,70 +1,70 @@
-Return-Path: <linux-pci+bounces-31911-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31912-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FDACB01565
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 10:05:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E0ADB01568
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 10:05:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2BF993A2E5F
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 08:04:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ADA215A4C9A
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 08:05:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EA5A20B21F;
-	Fri, 11 Jul 2025 08:04:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7053214A93;
+	Fri, 11 Jul 2025 08:04:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KTEcPqKS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d4EypiBA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37EFB1FC7D2
-	for <linux-pci@vger.kernel.org>; Fri, 11 Jul 2025 08:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61199201270
+	for <linux-pci@vger.kernel.org>; Fri, 11 Jul 2025 08:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752221088; cv=none; b=Olx3NHJWBr0Ir4F1PJZjS2OblTv/Xe6iW3Y06Oj3v6cxRjMvYcPfeEhcE60xawq0bndMTGoWk6CETR0u9MnVelMyfWTDPkviY6SmAgJy9cgIJLZwLN9WAO83BBHetvhAx57Ao6bPzWMD7u6o4837EFNrgLhoz8rwYGVPWBjcrVs=
+	t=1752221089; cv=none; b=R9C66fJIRlIA3fUzyqMeXGx5UNU7Q5e00+t/kalNIpZuFpFvHh1piz2mG74gLy+oMMEi9dnKcvFykXihGGnHaQhhMA0P48471XZV2XGuLCO54L34DUDCtw9a73UhXEKtVhSeEDxwNAQMYNBcNx0ZXZ1keQQvaewiOxXrJusKvDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752221088; c=relaxed/simple;
-	bh=/sM7c3ZlcrID5iVlFoygw6rsnxEGvSLgt7TAXbZimTI=;
+	s=arc-20240116; t=1752221089; c=relaxed/simple;
+	bh=t988JggshCl/htP4ob36mi+IVMMG0yo27e+JcGENNPM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PN/5VJIBlY9gw5DgRVUqn92hS0Ki+hT/Ct5NNpnqbmkS0gj4mRQkbNYFzlTic2cOOrhtoBZjPtwUSRP+ySGSlM7dIOYXrgOou5ZJLlkzI1W63DtDt/w3VOfXbPj4hCwTwdrvA9ae/+aec4KEUYj3GKtklyXHaHARKTz7QPGvzQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KTEcPqKS; arc=none smtp.client-ip=209.85.221.73
+	 To:Cc:Content-Type; b=qCqIVRQtHl2pG6JM6Hiy3SOb9KLBgVpK0zUs2qMDwqhVl/qOoBu85iYfsYVCI9enuodZVd34tKD2U3zdO/KgjxwH02u6wnEGJK2uoWPVMM2vTASbXJWuC9Lzw/UhmLlL3tMVQg5Jc9JWG3WU09MflwgJJLoltPGr6r+0dgvsQiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d4EypiBA; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a4e713e05bso948889f8f.3
-        for <linux-pci@vger.kernel.org>; Fri, 11 Jul 2025 01:04:45 -0700 (PDT)
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-455e918d690so1078455e9.1
+        for <linux-pci@vger.kernel.org>; Fri, 11 Jul 2025 01:04:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752221084; x=1752825884; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1752221086; x=1752825886; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YeddRl2ZjPZG1iB3VuE6BCvJf0DWRoDr9MXVmboPWFw=;
-        b=KTEcPqKSwYiUZM0WA6Km4pEKVYDxBE6r+XhHicQkL6wAqd2VF+p+appAOzlGVJ8/OJ
-         8vfQk7jMPwa/WFG26DNXf+egQK1+70Wz8qiCWSE2/YCknfrQ57C9by5dwtp9kqI4eyCd
-         V5SWX9WTgHP2D5f8ZvIF9dy0St2cX5ylzSSM9kDWCNsVVWNghnBJK22P36/lRpSg882E
-         QskJHbvUwHVqf28E49C8MB2eSJUkH/t/D87CR2ZrI8ABmHcb2DuDAMpCBD6uQv5QiHML
-         HEsXvlbDi4XflRBO5xSDvl7TDkdNmnP5LCyNqzAag/nc91xYNX1/tD5VlnxYS5jaKiM2
-         89mA==
+        bh=xZ/bfo6Xgsu6JxDs2/h3oFS+uiOoF0damWh//URaq6A=;
+        b=d4EypiBAe8wI8UggsO5oVueCwq4cbLUXfbKk3D8x9fGW/HDurSwqAjbUg1qly0oyyQ
+         iNHNyjJDUSJz7+rp+fyvCXm3T2nel1yDoae9nubJx989r7j1/QY63COvy5GQjaVYBbOi
+         je6ssrIk/bY4VZvFzBd70yUGEJK5GnFd95rzUa80vNpTEEPtM9BYmJdeQoChsekDajU9
+         wMrKp0osBo+iWEAsDBIsXpJSzq5pbiXfPt5m9Phm7F6nNPuI6Jbf+0hOUWLjnwSlcyiO
+         FfmQ605AOwcusFcg/S8x3bgH4NxsOWqBglZjkr2ZedaTXVAm3BKymegLTzOFV5Ciaz8x
+         6hYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752221084; x=1752825884;
+        d=1e100.net; s=20230601; t=1752221086; x=1752825886;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YeddRl2ZjPZG1iB3VuE6BCvJf0DWRoDr9MXVmboPWFw=;
-        b=PHI38isEXv+juO60H97DdnoncqcQHymsG7LIlYYOKM6byIOGiidBQpviLLialmEX6J
-         9EJbIBbU/5e5UWBsus9LkGKrmMUq6fknJkm84BqwQOP8ghUJ8atyVnNMmYhkvxVLJ5TY
-         fYOPTeVdfDdpu0CK0L+hOECN5CrzdoTQ97LRjvhgTGSCaA4Pk0wtW3doizotyO0ppWNL
-         ldFzmIOLvOmQ8IzC7/Sa78Ji5nuB73+q8YSqPFYyTpPSHcGVqWe3NIlLWkpjlPgwP6WE
-         SdMtmcIu5K7G3oT2zRd7gtJjZtmJIMfG3Fqz3BXlkELlcyEYb3R/3nsciAPjTC0VrOt1
-         hPfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXablUMAjiV22jQZ4MO/yNyIeJiMDPv4tk+JXJtheKMoy9hGgs9fISKNYj6CweCJ5sfeIvkhke13po=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOpXud7p+KL8RGL/09L8iO78whRtGHtkNyt7HoaRpKfVz2Ic4s
-	Uo8m2jYXN7Rr2g22PJiuAGUY99GsUGDeaBigP/I7m+P1BDoUmuc8ll/BriWHzPgy68tDNRQc6h9
-	UtMqNf4+o8yCZdkcAOQ==
-X-Google-Smtp-Source: AGHT+IG/XgF1fLGGyXshyCet6B/sQYLy7ohXFOqAGO6mIla8fi/6od2tPDsSefKFOrRxYDhDW/XtZherTVAYt0s=
-X-Received: from wrqh8.prod.google.com ([2002:a5d:4308:0:b0:3a6:dd7d:9cb8])
+        bh=xZ/bfo6Xgsu6JxDs2/h3oFS+uiOoF0damWh//URaq6A=;
+        b=BDgLRKvHuTHUj2uGPbFgYKEHSXmTfRpIgDVmHELHORVSXEpgxtixWY9Rf2X4U3bGd2
+         yd0NBmoFiMejV1Kw/Jz9mNh/5MzK0v1UmxYDXn4oTGsHcSf5hSILtfY5tsjpCBKqDMrM
+         +Aj3E3UeXJL87rsP379woHJNY6cA+g6wz89loSczRMZ7xhP+slT06RbjuqCOKxMm5IuH
+         uHl0QRRY/1iY3f8nkb49lbDJBktJLlD0SxzN1uViTUmpVlutk74mgCx9Yx1eMCXhVTfY
+         2YGqKPRHoHERBjtPKglrT4y4yHf6vXXvxv52uRfhQt6wRvpy3mYtegQs4ssCd/YlkNNu
+         Kncw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbzNIU5dlMn2yF6yivQ7UTBwjzEL7T7q66Cnvr+LWgccix9KhTJZU1AMa7HRslLeSNUve760mbxr0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXP/9YzzG7GDATP9nLpEqAdm+6czr2yGZ9eWacd5nIXlQ46eqh
+	yAvLeYJDsBOdTgtLdvMyenLUEYpTsXExLfavakZW/oXBPSnGCdFCDUPB6N0JPeij6pU3fBLtzDn
+	lpPPI/WnaJKtLgM6UQQ==
+X-Google-Smtp-Source: AGHT+IGK14uZ963XhzZQTY0uLN96HzDFpfZQooCEFcPT4rsCekbciiSkhX1zVvqJT+2G/2X6NyN1IcUUMNiYncA=
+X-Received: from wmbay9.prod.google.com ([2002:a05:600c:1e09:b0:450:cf3f:2a89])
  (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:4b11:b0:3a5:3b63:58f0 with SMTP id ffacd0b85a97d-3b5f2dc2cd1mr1247364f8f.18.1752221084546;
- Fri, 11 Jul 2025 01:04:44 -0700 (PDT)
-Date: Fri, 11 Jul 2025 08:04:37 +0000
+ 2002:a05:600c:8207:b0:43b:c857:e9d7 with SMTP id 5b1f17b1804b1-454e2addac7mr20698785e9.5.1752221085765;
+ Fri, 11 Jul 2025 01:04:45 -0700 (PDT)
+Date: Fri, 11 Jul 2025 08:04:38 +0000
 In-Reply-To: <20250711-device-as-ref-v2-0-1b16ab6402d7@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -74,22 +74,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250711-device-as-ref-v2-0-1b16ab6402d7@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7303; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=/sM7c3ZlcrID5iVlFoygw6rsnxEGvSLgt7TAXbZimTI=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBocMWaRIEy+we9THrmpSxj2hWR8Lw49HZvEH02W
- /KlLzxaMt6JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaHDFmgAKCRAEWL7uWMY5
- RqUnD/97xg55WZUfcoF6IkTgRF74u19GiaS/m4ptRtTjwEWsPlsSfXdZwVCl11AsH7Vka1TOWXF
- 9BIPig1/8MgviPmubeCSl0nsPSgCxtUoBLIJkJ6Nfz+1QazS6AqLULUPo0Dn+PBVZDfcU3wV4ge
- KR6uL3IxSa8moOXWU8i9z/IxeOpoHJOGXdcjPMT5FWGi8ZTJlVXj+h1D0Eaw5oAWWUZpylC8D5B
- Jnhscr0fdP6X7C4xgh/AmF7fWuhDJW1Q+TFPbrFUYi4vrLgR+AgKWYSDjZaMaN96N5ThDm6gnwr
- BU2EqI/CQHH5im0bChZWfcUTXoXaMFRQcEe51+GsRMFCwbau//ACU9HcGqKK/YxtRwM0Jd+IOHt
- npTx4ygolfDsNTGzcGRIEXU4O3ivlMIMisHc2joZ1X3MviFvCmKIvXQSFvHY8FzuRm86FX2Vtqr
- v91Vt5dBRpOQkLICTTMAxi0oeV11gWDWNhEKaD5+xoRjCZ7D6Mn0+HF2/CBqizEdgc6XxIBmUkh
- EaD5mhdr1vQv+lx7Rvj8WBfl6QnHAtPJpBWnG3wNhkB3FK3nQA+hHbLTfXV6UcxhGJaQgo0GANm
- lRJv1U81I9iu4wlqNBVBR7II1sjtVyQk1lg28BpLAspAGr+MjxkEbCgopXxbXhvc6PaG2aJW0a+ hqsp0UieNeVAvPw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8793; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=t988JggshCl/htP4ob36mi+IVMMG0yo27e+JcGENNPM=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBocMWa1bN3ivtpQ42zwCcYrtyT+6XzfA+T/vZ4r
+ JjpRjv7Q8aJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaHDFmgAKCRAEWL7uWMY5
+ RkRDD/4+syUqXHnMUJ62gdTHn/L5qK+pIKPUcTOSTRL2HV8TII2owxBmhgAM0tUsVA7P4O6jIRI
+ R5Vs0arcahHmjYcoCs4nNWzKmZ83JoSpEjAU1P5j+TvsjJBarENs7ocxR1aKmfcV/A9AOzjX3kR
+ DfI7+3nCs/I9eoxnt3kQBAQG7PN8Qd1gnwuGYoWmujMQqz4gplYZly6YxZ9FHSNpdcmcc1WPB5J
+ 2bu+SKoicYixfY0mYLu2rITpSgl8V8WzXNywOGl9zPkMdnUaxUlCRAZY52GdJ5DBUY37Yk8W9qj
+ NvRy4Sd4dW9tIh0Ih5iM50Zl5dT6idLtd64VcE2HHtB0WrtTBe4JDIRKkQdbCAhZ62T8Py+VrSC
+ qgDHZPsKhrgm93lpaQDGIA2vVj0ChooeFit/7Bcgv/coxuykfvB/KeeRtNAWRtyJHtD0XbRdfqG
+ E5A5n63B3C6erO5A25Xj5sEYJKZjSnHmBXPxx0OHjKzmoj60uFihNwvKeq57AxCxwjSfjku4AZ1
+ FNnvLhHmfxW5cN3kJ3ujW61KaNkp0dHSskufNSrVYeDEP0qTXzWO0ufxIthbyMIUclgyLfxLV0P
+ j8lzesAtWNcTjrTgtSO0W98YIMhXTpSKRsVafSAi+D7DMfjDrlXttBq8UlGNsb2Z8iywr+EiWF+ 3ey5Tnv7z17LMXA==
 X-Mailer: b4 0.14.2
-Message-ID: <20250711-device-as-ref-v2-1-1b16ab6402d7@google.com>
-Subject: [PATCH v2 1/2] device: rust: rename Device::as_ref() to Device::from_raw()
+Message-ID: <20250711-device-as-ref-v2-2-1b16ab6402d7@google.com>
+Subject: [PATCH v2 2/2] drm: rust: rename as_ref() to from_raw() for drm constructors
 From: Alice Ryhl <aliceryhl@google.com>
 To: Danilo Krummrich <dakr@kernel.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Ertman <david.m.ertman@intel.com>, 
@@ -121,150 +121,146 @@ SeqFile::from_raw, VmaNew::from_raw, Io::from_raw.
 Link: https://lore.kernel.org/r/aCd8D5IA0RXZvtcv@pollux
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- rust/kernel/auxiliary.rs  | 2 +-
- rust/kernel/cpu.rs        | 2 +-
- rust/kernel/device.rs     | 6 +++---
- rust/kernel/drm/device.rs | 2 +-
- rust/kernel/faux.rs       | 2 +-
- rust/kernel/miscdevice.rs | 2 +-
- rust/kernel/net/phy.rs    | 2 +-
- rust/kernel/pci.rs        | 2 +-
- rust/kernel/platform.rs   | 2 +-
- 9 files changed, 11 insertions(+), 11 deletions(-)
+ rust/kernel/drm/device.rs  |  2 +-
+ rust/kernel/drm/file.rs    |  8 ++++----
+ rust/kernel/drm/gem/mod.rs | 16 ++++++++--------
+ rust/kernel/drm/ioctl.rs   |  4 ++--
+ 4 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
-index d2cfe1eeefb6054a97fefd6e499772c3fc4c443e..a4ac00990a441f6f92ec6e6bdbd7699d2777da00 100644
---- a/rust/kernel/auxiliary.rs
-+++ b/rust/kernel/auxiliary.rs
-@@ -276,7 +276,7 @@ fn as_ref(&self) -> &device::Device<Ctx> {
-         let dev = unsafe { addr_of_mut!((*self.as_raw()).dev) };
- 
-         // SAFETY: `dev` points to a valid `struct device`.
--        unsafe { device::Device::as_ref(dev) }
-+        unsafe { device::Device::from_raw(dev) }
-     }
- }
- 
-diff --git a/rust/kernel/cpu.rs b/rust/kernel/cpu.rs
-index b75403b0eb5614e5652e6cad9341ae217edbe5bb..5de730c8d81722873ba2349a1c9c4d6c17701134 100644
---- a/rust/kernel/cpu.rs
-+++ b/rust/kernel/cpu.rs
-@@ -147,5 +147,5 @@ pub unsafe fn from_cpu(cpu: CpuId) -> Result<&'static Device> {
- 
-     // SAFETY: The pointer returned by `get_cpu_device()`, if not `NULL`, is a valid pointer to
-     // a `struct device` and is never freed by the C code.
--    Ok(unsafe { Device::as_ref(ptr) })
-+    Ok(unsafe { Device::from_raw(ptr) })
- }
-diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-index dea06b79ecb536cee4d2b90c21b74658658417c7..f70d768351204d7f49c6bebbf27ee26f4d11cdfa 100644
---- a/rust/kernel/device.rs
-+++ b/rust/kernel/device.rs
-@@ -57,7 +57,7 @@ impl Device {
-     /// While not officially documented, this should be the case for any `struct device`.
-     pub unsafe fn get_device(ptr: *mut bindings::device) -> ARef<Self> {
-         // SAFETY: By the safety requirements ptr is valid
--        unsafe { Self::as_ref(ptr) }.into()
-+        unsafe { Self::from_raw(ptr) }.into()
-     }
- }
- 
-@@ -82,7 +82,7 @@ pub(crate) fn parent(&self) -> Option<&Self> {
-             // - Since `parent` is not NULL, it must be a valid pointer to a `struct device`.
-             // - `parent` is valid for the lifetime of `self`, since a `struct device` holds a
-             //   reference count of its parent.
--            Some(unsafe { Self::as_ref(parent) })
-+            Some(unsafe { Self::from_raw(parent) })
-         }
-     }
- 
-@@ -94,7 +94,7 @@ pub(crate) fn parent(&self) -> Option<&Self> {
-     /// i.e. it must be ensured that the reference count of the C `struct device` `ptr` points to
-     /// can't drop to zero, for the duration of this function call and the entire duration when the
-     /// returned reference exists.
--    pub unsafe fn as_ref<'a>(ptr: *mut bindings::device) -> &'a Self {
-+    pub unsafe fn from_raw<'a>(ptr: *mut bindings::device) -> &'a Self {
-         // SAFETY: Guaranteed by the safety requirements of the function.
-         unsafe { &*ptr.cast() }
-     }
 diff --git a/rust/kernel/drm/device.rs b/rust/kernel/drm/device.rs
-index 624d7a4c83ead64b93325189f481d9b37c3c6eae..11ce1e7f2d52ae4ddfbd4e47dfb17e390653bc45 100644
+index 11ce1e7f2d52ae4ddfbd4e47dfb17e390653bc45..d4906675c8d59f838a15388d1dad6b2960696ebb 100644
 --- a/rust/kernel/drm/device.rs
 +++ b/rust/kernel/drm/device.rs
-@@ -190,7 +190,7 @@ impl<T: drm::Driver> AsRef<device::Device> for Device<T> {
-     fn as_ref(&self) -> &device::Device {
-         // SAFETY: `bindings::drm_device::dev` is valid as long as the DRM device itself is valid,
-         // which is guaranteed by the type invariant.
--        unsafe { device::Device::as_ref((*self.as_raw()).dev) }
-+        unsafe { device::Device::from_raw((*self.as_raw()).dev) }
+@@ -154,7 +154,7 @@ unsafe fn from_drm_device(ptr: *const bindings::drm_device) -> *mut Self {
+     /// Additionally, callers must ensure that the `struct device`, `ptr` is pointing to, is
+     /// embedded in `Self`.
+     #[doc(hidden)]
+-    pub unsafe fn as_ref<'a>(ptr: *const bindings::drm_device) -> &'a Self {
++    pub unsafe fn from_raw<'a>(ptr: *const bindings::drm_device) -> &'a Self {
+         // SAFETY: By the safety requirements of this function `ptr` is a valid pointer to a
+         // `struct drm_device` embedded in `Self`.
+         let ptr = unsafe { Self::from_drm_device(ptr) };
+diff --git a/rust/kernel/drm/file.rs b/rust/kernel/drm/file.rs
+index b9527705e5514f00ed5a9c459f3c4161daf5b61d..e8789c9110d654df2561a88a53bc6b1cfa709fdd 100644
+--- a/rust/kernel/drm/file.rs
++++ b/rust/kernel/drm/file.rs
+@@ -32,7 +32,7 @@ impl<T: DriverFile> File<T> {
+     /// # Safety
+     ///
+     /// `raw_file` must be a valid pointer to an open `struct drm_file`, opened through `T::open`.
+-    pub unsafe fn as_ref<'a>(ptr: *mut bindings::drm_file) -> &'a File<T> {
++    pub unsafe fn from_raw<'a>(ptr: *mut bindings::drm_file) -> &'a File<T> {
+         // SAFETY: `raw_file` is valid by the safety requirements of this function.
+         unsafe { &*ptr.cast() }
      }
+@@ -61,10 +61,10 @@ pub(crate) extern "C" fn open_callback(
+         // SAFETY: A callback from `struct drm_driver::open` guarantees that
+         // - `raw_dev` is valid pointer to a `struct drm_device`,
+         // - the corresponding `struct drm_device` has been registered.
+-        let drm = unsafe { drm::Device::as_ref(raw_dev) };
++        let drm = unsafe { drm::Device::from_raw(raw_dev) };
+ 
+         // SAFETY: `raw_file` is a valid pointer to a `struct drm_file`.
+-        let file = unsafe { File::<T>::as_ref(raw_file) };
++        let file = unsafe { File::<T>::from_raw(raw_file) };
+ 
+         let inner = match T::open(drm) {
+             Err(e) => {
+@@ -89,7 +89,7 @@ pub(crate) extern "C" fn postclose_callback(
+         raw_file: *mut bindings::drm_file,
+     ) {
+         // SAFETY: This reference won't escape this function
+-        let file = unsafe { File::<T>::as_ref(raw_file) };
++        let file = unsafe { File::<T>::from_raw(raw_file) };
+ 
+         // SAFETY: `file.driver_priv` has been created in `open_callback` through `KBox::into_raw`.
+         let _ = unsafe { KBox::from_raw(file.driver_priv()) };
+diff --git a/rust/kernel/drm/gem/mod.rs b/rust/kernel/drm/gem/mod.rs
+index 4cd69fa84318c3ff2cec57949e9bab05559a3c2f..a24c9a2fc201b69cc31b76282a68aec188aaac73 100644
+--- a/rust/kernel/drm/gem/mod.rs
++++ b/rust/kernel/drm/gem/mod.rs
+@@ -51,7 +51,7 @@ pub trait IntoGEMObject: Sized + super::private::Sealed + AlwaysRefCounted {
+     /// - `self_ptr` must be a valid pointer to `Self`.
+     /// - The caller promises that holding the immutable reference returned by this function does
+     ///   not violate rust's data aliasing rules and remains valid throughout the lifetime of `'a`.
+-    unsafe fn as_ref<'a>(self_ptr: *mut bindings::drm_gem_object) -> &'a Self;
++    unsafe fn from_raw<'a>(self_ptr: *mut bindings::drm_gem_object) -> &'a Self;
  }
  
-diff --git a/rust/kernel/faux.rs b/rust/kernel/faux.rs
-index 8a50fcd4c9bbba1f894a09080446ca3173571b03..7a906099993f1bf8c8caf6ab64f920faf81cafb4 100644
---- a/rust/kernel/faux.rs
-+++ b/rust/kernel/faux.rs
-@@ -54,7 +54,7 @@ impl AsRef<device::Device> for Registration {
-     fn as_ref(&self) -> &device::Device {
-         // SAFETY: The underlying `device` in `faux_device` is guaranteed by the C API to be
-         // a valid initialized `device`.
--        unsafe { device::Device::as_ref(addr_of_mut!((*self.as_raw()).dev)) }
-+        unsafe { device::Device::from_raw(addr_of_mut!((*self.as_raw()).dev)) }
+ // SAFETY: All gem objects are refcounted.
+@@ -86,12 +86,12 @@ extern "C" fn open_callback<T: BaseDriverObject<U>, U: BaseObject>(
+ ) -> core::ffi::c_int {
+     // SAFETY: `open_callback` is only ever called with a valid pointer to a `struct drm_file`.
+     let file = unsafe {
+-        drm::File::<<<U as IntoGEMObject>::Driver as drm::Driver>::File>::as_ref(raw_file)
++        drm::File::<<<U as IntoGEMObject>::Driver as drm::Driver>::File>::from_raw(raw_file)
+     };
+     // SAFETY: `open_callback` is specified in the AllocOps structure for `Object<T>`, ensuring that
+     // `raw_obj` is indeed contained within a `Object<T>`.
+     let obj = unsafe {
+-        <<<U as IntoGEMObject>::Driver as drm::Driver>::Object as IntoGEMObject>::as_ref(raw_obj)
++        <<<U as IntoGEMObject>::Driver as drm::Driver>::Object as IntoGEMObject>::from_raw(raw_obj)
+     };
+ 
+     match T::open(obj, file) {
+@@ -106,12 +106,12 @@ extern "C" fn close_callback<T: BaseDriverObject<U>, U: BaseObject>(
+ ) {
+     // SAFETY: `open_callback` is only ever called with a valid pointer to a `struct drm_file`.
+     let file = unsafe {
+-        drm::File::<<<U as IntoGEMObject>::Driver as drm::Driver>::File>::as_ref(raw_file)
++        drm::File::<<<U as IntoGEMObject>::Driver as drm::Driver>::File>::from_raw(raw_file)
+     };
+     // SAFETY: `close_callback` is specified in the AllocOps structure for `Object<T>`, ensuring
+     // that `raw_obj` is indeed contained within a `Object<T>`.
+     let obj = unsafe {
+-        <<<U as IntoGEMObject>::Driver as drm::Driver>::Object as IntoGEMObject>::as_ref(raw_obj)
++        <<<U as IntoGEMObject>::Driver as drm::Driver>::Object as IntoGEMObject>::from_raw(raw_obj)
+     };
+ 
+     T::close(obj, file);
+@@ -124,7 +124,7 @@ fn as_raw(&self) -> *mut bindings::drm_gem_object {
+         self.obj.get()
      }
- }
  
-diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
-index 939278bc7b03489a647b697012e09223871c90cd..a6dc11935ee3fe495640e06509d86f89bd201ca1 100644
---- a/rust/kernel/miscdevice.rs
-+++ b/rust/kernel/miscdevice.rs
-@@ -92,7 +92,7 @@ pub fn device(&self) -> &Device {
-         // function tells the borrow-checker that the `&Device` reference must not outlive the
-         // `&MiscDeviceRegistration<T>` used to obtain it, so the last use of the reference must be
-         // before the underlying `struct miscdevice` is destroyed.
--        unsafe { Device::as_ref((*self.as_raw()).this_device) }
-+        unsafe { Device::from_raw((*self.as_raw()).this_device) }
-     }
- }
+-    unsafe fn as_ref<'a>(self_ptr: *mut bindings::drm_gem_object) -> &'a Self {
++    unsafe fn from_raw<'a>(self_ptr: *mut bindings::drm_gem_object) -> &'a Self {
+         let self_ptr: *mut Opaque<bindings::drm_gem_object> = self_ptr.cast();
  
-diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-index 32ea43ece6465a7e09c9d2332ca83c4bc27b7104..bd43a726f7d398278dae2546fca702fa70c68cf0 100644
---- a/rust/kernel/net/phy.rs
-+++ b/rust/kernel/net/phy.rs
-@@ -285,7 +285,7 @@ impl AsRef<kernel::device::Device> for Device {
-     fn as_ref(&self) -> &kernel::device::Device {
-         let phydev = self.0.get();
-         // SAFETY: The struct invariant ensures that `mdio.dev` is valid.
--        unsafe { kernel::device::Device::as_ref(addr_of_mut!((*phydev).mdio.dev)) }
-+        unsafe { kernel::device::Device::from_raw(addr_of_mut!((*phydev).mdio.dev)) }
-     }
- }
+         // SAFETY: `obj` is guaranteed to be in an `Object<T>` via the safety contract of this
+@@ -170,9 +170,9 @@ fn lookup_handle(
+         // - A `drm::Driver` can only have a single `File` implementation.
+         // - `file` uses the same `drm::Driver` as `Self`.
+         // - Therefore, we're guaranteed that `ptr` must be a gem object embedded within `Self`.
+-        // - And we check if the pointer is null befoe calling as_ref(), ensuring that `ptr` is a
++        // - And we check if the pointer is null befoe calling from_raw(), ensuring that `ptr` is a
+         //   valid pointer to an initialized `Self`.
+-        let obj = unsafe { Self::as_ref(ptr) };
++        let obj = unsafe { Self::from_raw(ptr) };
  
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 8435f8132e38129ccc3495e7c4d3237fcaa97ad9..d620902219d78191d744df6a8970c0a99dbd47da 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -454,7 +454,7 @@ fn as_ref(&self) -> &device::Device<Ctx> {
-         let dev = unsafe { addr_of_mut!((*self.as_raw()).dev) };
+         // SAFETY:
+         // - We take ownership of the reference of `drm_gem_object_lookup()`.
+diff --git a/rust/kernel/drm/ioctl.rs b/rust/kernel/drm/ioctl.rs
+index 445639404fb7fe2cf3276890b1236f611ded9f3f..fdec01c371687c79d660457bd2bd6e09b2400d35 100644
+--- a/rust/kernel/drm/ioctl.rs
++++ b/rust/kernel/drm/ioctl.rs
+@@ -134,7 +134,7 @@ macro_rules! declare_drm_ioctls {
+                             // FIXME: Currently there is nothing enforcing that the types of the
+                             // dev/file match the current driver these ioctls are being declared
+                             // for, and it's not clear how to enforce this within the type system.
+-                            let dev = $crate::drm::device::Device::as_ref(raw_dev);
++                            let dev = $crate::drm::device::Device::from_raw(raw_dev);
+                             // SAFETY: The ioctl argument has size `_IOC_SIZE(cmd)`, which we
+                             // asserted above matches the size of this type, and all bit patterns of
+                             // UAPI structs must be valid.
+@@ -142,7 +142,7 @@ macro_rules! declare_drm_ioctls {
+                                 &*(raw_data as *const $crate::types::Opaque<$crate::uapi::$struct>)
+                             };
+                             // SAFETY: This is just the DRM file structure
+-                            let file = unsafe { $crate::drm::File::as_ref(raw_file) };
++                            let file = unsafe { $crate::drm::File::from_raw(raw_file) };
  
-         // SAFETY: `dev` points to a valid `struct device`.
--        unsafe { device::Device::as_ref(dev) }
-+        unsafe { device::Device::from_raw(dev) }
-     }
- }
- 
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index 5b21fa517e55348582622ec10471918919502959..76e09429cdc275354b3ce84da5e74f7b97660430 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -215,7 +215,7 @@ fn as_ref(&self) -> &device::Device<Ctx> {
-         let dev = unsafe { addr_of_mut!((*self.as_raw()).dev) };
- 
-         // SAFETY: `dev` points to a valid `struct device`.
--        unsafe { device::Device::as_ref(dev) }
-+        unsafe { device::Device::from_raw(dev) }
-     }
- }
- 
+                             match $func(dev, data, file) {
+                                 Err(e) => e.to_errno(),
 
 -- 
 2.50.0.727.gbf7dc18ff4-goog
