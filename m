@@ -1,164 +1,241 @@
-Return-Path: <linux-pci+bounces-31972-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31973-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3B6BB02785
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 01:12:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FB37B02792
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 01:18:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C0B787BFAAB
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 23:10:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6DADA1CA625F
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Jul 2025 23:18:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A5A92236E8;
-	Fri, 11 Jul 2025 23:12:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AAB522257E;
+	Fri, 11 Jul 2025 23:18:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AM69r9AB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWM+ug5T"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5E1222562
-	for <linux-pci@vger.kernel.org>; Fri, 11 Jul 2025 23:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC22221FA0;
+	Fri, 11 Jul 2025 23:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752275527; cv=none; b=P7Tj7haZV9XB6VxklKhb8HhHNmtDrejlKjY7aac3wAic8GhK5wIVhRvNsKhMHgkskZXwL/ChZcU/HFh1qDMoD0ebzx//BzQECswuxcop2CoOToVzv05AkZIIJvoB394nM1PUJEOBm9oJKA4oPyZHut6kKECfKLxsui5FUG/cjgE=
+	t=1752275912; cv=none; b=Uqj6X1YvyArd59uok0sEytmet+Ug5IrNcn7LT+5FvolLM1ArLRXW6aNd0wgzqLNqX9Lh2LaysTlH1DU+WyAyxPSj7Y5HIF0INu1dWwnmppG80feLU5jkqucpsKliBmwbqNqublJgulTESFBgmTh31NJEWG3jGQCcPiO85WDoAuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752275527; c=relaxed/simple;
-	bh=iOwLrKCkhVKAxQZXp38HLHfRncvgRuif6BiGmmhGRos=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YCWRxFKHpe4jbbSlBvdusHC7uHI3+TIvLJWwYnRqIGPUsMppsqG5a19ziCNFD7h0xBh63QowU83LKL0XXkgYaPiz8LCUohfhBfuVfBmdfcUl2BhMJ9nAO3a1fJnkL27CdzJYoYe/5M9Zlh4GyWYtdBA1U+kywaLqX0HAAy2q/kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AM69r9AB; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56BMcfUv031212
-	for <linux-pci@vger.kernel.org>; Fri, 11 Jul 2025 23:12:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0PpsrmMj0uiPokNCQ1Eqhmb2HaTUqbDl1MR+USJW6LE=; b=AM69r9ABrIKlQY4s
-	YxvXrJg3dr1YOkoMN/GSblbDv2QbivqBF22HGq+bXcKJEk7KLQiiAsbq/A1GWWhk
-	FE9fFuCzFLb/2jH3edDr0HjaNnP9vEuL+t8pmMQ1/3XfCihqy489xCSPoZ8eFQLG
-	7i7Wxj+jZclQEVZZmWKMomCFGMYLWiGOT3BYZKLLCsQQsRcjbD74DfRbzY40NMx+
-	F5ykAy+u/jXlpNkVH40wRQvxiZww30ViGur6KVDBjOMgTAm4rr1nR6ifu0v7QiOb
-	rs+VnAdMC3/wmL+hI27ytiJlyBOQ6tV8gQd5zK1K4h9u+sdLvCJY3z06XruS3MFm
-	taMmzw==
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47u15assxy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 11 Jul 2025 23:12:04 +0000 (GMT)
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-748efefedb5so2519724b3a.2
-        for <linux-pci@vger.kernel.org>; Fri, 11 Jul 2025 16:12:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752275523; x=1752880323;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0PpsrmMj0uiPokNCQ1Eqhmb2HaTUqbDl1MR+USJW6LE=;
-        b=Cu9CxBXutOSD0meodDwBmQyrPMDBYYT9KsGT/3/OO3JkF7bJaq3oSx+JDcHesyJ9Xe
-         eFpM/FSmmOsJ1ebex5TAEFgts8+mGSPxoS5NbUBR+O9k0ugve5mSL7qsE8df2FJzp1hS
-         UDp12zSL85RRlhI77msUDAaKSo0xjb6dHIaTTOn38jmV8vmS4OZ/H6jr8WbT4Vsu8UyH
-         OKPEiyIU6pkpjQJopXDm4O7p7dZotcXCT/AK18+4J7BdbeMoyzr7Leb1FVlro5YftKD0
-         Kg/3IcVF3gtpMb1Q6hH67odLeIwY5tWwyWXUCwIFL9DgAu0mC7fNbYkzb6TBrjQcrQNk
-         /mjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDUjB9qVKFH8RR9fDXkLt7WN2TrM0vxuZJ6tiMK3tmHYepxGrOhsJJc2j3sJMCwCeYtwzQcRj7NZA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRVRtoUhbeZhTDiz2bOnNdOlrQriSqDcsSxmwKlm/+ExrNU0dP
-	dtVioIIRzBvbv9VA3n2ZQnwU4Fq6QykAAizOYGvsH5TmzxBxN6lmPChdwyybEOC/Z/rusHM+V/Z
-	zs4aosvciHp0Fv5LkzYTevyaOOXl/955QbkjwlDadvDteDTJLwhNZcVP1BkE7/G0=
-X-Gm-Gg: ASbGncvIw/BjmAF914UbEZCt9xCOf7jPXxBxIqZWV6/qqA2yUbLpOmd/+BHCOmdy4Dl
-	MVH6/EFAExUn+/OseO1+JSREfmxyORm+3fbVjwfIX+Tjw66ddmNNRa+Xo/mIyr/lCA4lhldwoPM
-	cEJl3XHB+YZfnFnmY2FxEClXKARsVrRNbDruw5bPDZ7K0hjlX6ZvwHHU8x9LpUw3chKeSo8cfKi
-	zwYl1pSak/SDUNeJBU0+J3aXhZ7pnZba/4CJ6OnNIrjnLJwtovzIIrKqYHuJ5a2Dp7RclaBua8k
-	TLnC4ANxbgludOp+2nGy/BxRWw/1MrLrvO64OzJcRo2xb7R1NXEAfj6B4PfK67xShBsm
-X-Received: by 2002:a05:6a20:d43:b0:220:3252:bb7b with SMTP id adf61e73a8af0-2312080596dmr8768289637.31.1752275523095;
-        Fri, 11 Jul 2025 16:12:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGeK7rgvIuioPJc9Djm6BWHu8SfUaUakg+lxMCli0qXD/9xlsegC+9TSbITmlPNQmxFFiKNlw==
-X-Received: by 2002:a05:6a20:d43:b0:220:3252:bb7b with SMTP id adf61e73a8af0-2312080596dmr8768238637.31.1752275522626;
-        Fri, 11 Jul 2025 16:12:02 -0700 (PDT)
-Received: from [192.168.29.92] ([49.43.227.1])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74eb9dd59f1sm5742585b3a.3.2025.07.11.16.11.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Jul 2025 16:12:02 -0700 (PDT)
-Message-ID: <b9647055-a9f2-4016-a7b1-81c15a0d82c1@oss.qualcomm.com>
-Date: Sat, 12 Jul 2025 04:41:53 +0530
+	s=arc-20240116; t=1752275912; c=relaxed/simple;
+	bh=ITlyJPhXduNCEmMJVfEegU2LqFMs89I4bv7JmVMvknI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=MlgfBoKJX8Z4tomHjdXywRjW3RMu0Ki3NvuQAZA6zKTb8mO7J95ixShjU5MdvMfi+wbYRtmDuFjhZI7rsvHqRHZJx+r0ju316N//sUYQMw+lwNzXf3wtw3XojLJXmz0XVGnN20iRY9zqbgUE4a6aNhIi4VauazFe/+Ncld4V0oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWM+ug5T; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C7EDC4CEED;
+	Fri, 11 Jul 2025 23:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752275911;
+	bh=ITlyJPhXduNCEmMJVfEegU2LqFMs89I4bv7JmVMvknI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=YWM+ug5TWwreWSYWTO/dfBD5r9DyA6wc1aGXEQm1hVIqdVC3pg+SEmt3lDMKiLp6Q
+	 zD8zEEvLioEyhDvsyQVKDMLaSRWNmzm6fxOi4kQqtP2MvG0UwH5J+v5rjRBs4cIWJy
+	 DFmYQtLD16SqtwKxmTWfMojJT9uiUFaMwHbQNdEE6mlZOffvbO8hD6vwfJ4eISPg25
+	 jeIa1Oj6uTLgYkZPtdQLUh5KVRrvrRjjtCSHZDGfcOVTKYa6VgHxPXmNcOfsHdnlP5
+	 GMQMq+o7EdIDbgQNQnktFaj2JIowOH2tApznCFHBnCCTu0NlosrC2MrtCe5ig1HWXd
+	 hNSpHpojx9SCw==
+Date: Fri, 11 Jul 2025 18:18:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Sai Krishna Musham <sai.krishna.musham@amd.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, cassel@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
+	thippeswamy.havalige@amd.com
+Subject: Re: [PATCH v5 2/2] PCI: amd-mdb: Add support for PCIe RP PERST#
+ signal handling
+Message-ID: <20250711231830.GA2313060@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 08/11] PCI: qcom: Add support for PCIe
- pre/post_link_speed_change()
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi
- <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
-        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-        qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com,
-        quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-References: <20250711212952.GA2308100@bhelgaas>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <20250711212952.GA2308100@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 5dJX-ZgGw-ZWPlGYCqdyTqiFDGyOm4yT
-X-Proofpoint-ORIG-GUID: 5dJX-ZgGw-ZWPlGYCqdyTqiFDGyOm4yT
-X-Authority-Analysis: v=2.4 cv=RtzFLDmK c=1 sm=1 tr=0 ts=68719a44 cx=c_pps
- a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=4nqOr+EkFiuPl9GB/B4vcQ==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=40onBu3kYIFXMOwlT5wA:9
- a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10 a=OpyuDcXvxspvyRM73sMx:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzExMDE3NiBTYWx0ZWRfXw1Bgevn9iwv5
- 40XyIonZfXtrOUynLnIE8gNcyi8MM9TxDxuGF6pyb69aDV9cN+AJToLDDir2ExBureW4eQsHNa/
- E/3kexgTkF6dUVY9sH7IPxxtEZGPjDqjMmyelmXDb1IgoUc9gDgM2+iU9elJ21zfuBgHk++5IiC
- SNxfcoZ1NtiFJH98wsggHjz+reh5cgI4r5xAwp4kRIMvA+OBDU/hyyWC/UFeWFGew6PxiR0z/EW
- 8+nsYdKS7h/w94nry+SDz8ohF9aEMhGAm9Oy1Bc5i0nLSkcgoJyW6FgVrHLyt2vhQOvMTvvgNCe
- qFhNSMElSEtZnaHpqfqObv/gMzxeo5oX9in16KL1Fr3U+w80cwtExs3ZWvk6YvBJrzMXPhBdlqv
- uOh5nQDtw6O5uXSY4VScdd5Zd8oN6yWlYEdpQvKOCVheJxRbKm6orMC3AeeXrkLYWSFRgBrR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-11_07,2025-07-09_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 mlxlogscore=999 suspectscore=0 adultscore=0 bulkscore=0
- clxscore=1015 malwarescore=0 mlxscore=0 impostorscore=0 phishscore=0
- spamscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507110176
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250711052357.3859719-3-sai.krishna.musham@amd.com>
 
-
-
-On 7/12/2025 2:59 AM, Bjorn Helgaas wrote:
-> On Mon, Jun 09, 2025 at 04:21:29PM +0530, Krishna Chaitanya Chundru wrote:
->> QCOM PCIe controllers need to disable ASPM before initiating link
->> re-train. So as part of pre_link_speed_change() disable ASPM and as
->> part of post_link_speed_change() enable ASPM back.
+On Fri, Jul 11, 2025 at 10:53:57AM +0530, Sai Krishna Musham wrote:
+> Add support for handling the AMD Versal Gen 2 MDB PCIe Root Port PERST#
+> signal via a GPIO by parsing the new PCIe bridge node to acquire the
+> reset GPIO. If the bridge node is not found, fall back to acquiring it
+> from the PCIe node.
 > 
-> Is this a QCOM defect?  Or is there something in the PCIe spec about
-This is QCOM issue only.
-> needing to disable ASPM during retrain?  What about
-> pcie_retrain_link()?  Does that work on QCOM?
-After disabling ASPM will work pcie_retrain_link().
+> As part of this, update the interrupt controller node parsing to use
+> of_get_child_by_name() instead of of_get_next_child(), since the PCIe
+> node now has multiple children. This ensures the correct node is
+> selected during initialization.
+> 
+> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
+> ---
+> Changes in v5:
+> - Add fall back mechanism to acquire reset GPIO from PCIe node when PCIe Bridge
+> node is not present.
+> 
+> Changes in v4:
+> - Resolve kernel test robot warning.
+> https://lore.kernel.org/oe-kbuild-all/202506241020.rPD1a2Vr-lkp@intel.com/
+> - Update commit message.
+> 
+> Changes in v3:
+> - Implement amd_mdb_parse_pcie_port to parse bridge node for reset-gpios property.
+> 
+> Changes in v2:
+> - Change delay to PCIE_T_PVPERL_MS
+> 
+> v4 https://lore.kernel.org/all/20250626054906.3277029-1-sai.krishna.musham@amd.com/
+> v3 https://lore.kernel.org/r/20250618080931.2472366-1-sai.krishna.musham@amd.com/
+> v2 https://lore.kernel.org/r/20250429090046.1512000-1-sai.krishna.musham@amd.com/
+> v1 https://lore.kernel.org/r/20250326041507.98232-1-sai.krishna.musham@amd.com/
+> ---
+>  drivers/pci/controller/dwc/pcie-amd-mdb.c | 63 ++++++++++++++++++++++-
+>  1 file changed, 62 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-amd-mdb.c b/drivers/pci/controller/dwc/pcie-amd-mdb.c
+> index 9f7251a16d32..d633463dc9fe 100644
+> --- a/drivers/pci/controller/dwc/pcie-amd-mdb.c
+> +++ b/drivers/pci/controller/dwc/pcie-amd-mdb.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/resource.h>
+>  #include <linux/types.h>
+>  
+> +#include "../../pci.h"
+>  #include "pcie-designware.h"
+>  
+>  #define AMD_MDB_TLP_IR_STATUS_MISC		0x4C0
+> @@ -56,6 +57,7 @@
+>   * @slcr: MDB System Level Control and Status Register (SLCR) base
+>   * @intx_domain: INTx IRQ domain pointer
+>   * @mdb_domain: MDB IRQ domain pointer
+> + * @perst_gpio: GPIO descriptor for PERST# signal handling
+>   * @intx_irq: INTx IRQ interrupt number
+>   */
+>  struct amd_mdb_pcie {
+> @@ -63,6 +65,7 @@ struct amd_mdb_pcie {
+>  	void __iomem			*slcr;
+>  	struct irq_domain		*intx_domain;
+>  	struct irq_domain		*mdb_domain;
+> +	struct gpio_desc		*perst_gpio;
+>  	int				intx_irq;
+>  };
+>  
+> @@ -284,7 +287,7 @@ static int amd_mdb_pcie_init_irq_domains(struct amd_mdb_pcie *pcie,
+>  	struct device_node *pcie_intc_node;
+>  	int err;
+>  
+> -	pcie_intc_node = of_get_next_child(node, NULL);
+> +	pcie_intc_node = of_get_child_by_name(node, "interrupt-controller");
+>  	if (!pcie_intc_node) {
+>  		dev_err(dev, "No PCIe Intc node found\n");
+>  		return -ENODEV;
+> @@ -402,6 +405,34 @@ static int amd_mdb_setup_irq(struct amd_mdb_pcie *pcie,
+>  	return 0;
+>  }
+>  
+> +static int amd_mdb_parse_pcie_port(struct amd_mdb_pcie *pcie)
+> +{
+> +	struct device *dev = pcie->pci.dev;
+> +	struct device_node *pcie_port_node;
+> +
+> +	pcie_port_node = of_get_next_child_with_prefix(dev->of_node, NULL, "pcie");
+> +	if (!pcie_port_node) {
+> +		dev_err(dev, "No PCIe Bridge node found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	/* Request the GPIO for PCIe reset signal and assert */
+> +	pcie->perst_gpio = devm_fwnode_gpiod_get(dev, of_fwnode_handle(pcie_port_node),
+> +						 "reset", GPIOD_OUT_HIGH, NULL);
+> +	if (IS_ERR(pcie->perst_gpio)) {
+> +		if (PTR_ERR(pcie->perst_gpio) != -ENOENT) {
+> +			of_node_put(pcie_port_node);
+> +			return dev_err_probe(dev, PTR_ERR(pcie->perst_gpio),
+> +					     "Failed to request reset GPIO\n");
+> +		}
+> +		pcie->perst_gpio = NULL;
+> +	}
+> +
+> +	of_node_put(pcie_port_node);
+> +
+> +	return 0;
+> +}
+> +
+>  static int amd_mdb_add_pcie_port(struct amd_mdb_pcie *pcie,
+>  				 struct platform_device *pdev)
+>  {
+> @@ -426,6 +457,14 @@ static int amd_mdb_add_pcie_port(struct amd_mdb_pcie *pcie,
+>  
+>  	pp->ops = &amd_mdb_pcie_host_ops;
+>  
+> +	if (pcie->perst_gpio) {
+> +		mdelay(PCIE_T_PVPERL_MS);
+> +
+> +		/* Deassert the reset signal */
+> +		gpiod_set_value_cansleep(pcie->perst_gpio, 0);
+> +		mdelay(PCIE_T_RRS_READY_MS);
+> +	}
+> +
+>  	err = dw_pcie_host_init(pp);
+>  	if (err) {
+>  		dev_err(dev, "Failed to initialize host, err=%d\n", err);
+> @@ -444,6 +483,7 @@ static int amd_mdb_pcie_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct amd_mdb_pcie *pcie;
+>  	struct dw_pcie *pci;
+> +	int ret;
+>  
+>  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+>  	if (!pcie)
+> @@ -454,6 +494,27 @@ static int amd_mdb_pcie_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, pcie);
+>  
+> +	ret = amd_mdb_parse_pcie_port(pcie);
+> +
+> +	/*
+> +	 * If amd_mdb_parse_pcie_port returns -ENODEV, it indicates that the
+> +	 * PCIe Bridge node was not found in the device tree. This is not
+> +	 * considered a fatal error and will trigger a fallback where the
+> +	 * reset GPIO is acquired directly from the PCIe node.
+> +	 */
+> +	if (ret && ret != -ENODEV) {
+> +		return ret;
+> +	} else if (ret == -ENODEV) {
 
-- Krishna Chaitanya.
+The "ret" checking seems unnecessarily complicated.
+
+> +		dev_info(dev, "Falling back to acquire reset GPIO from PCIe node\n");
+
+I don't think this is worthy of a message.  If there are DTs in the
+field that were valid once, they continue to be valid forever, and
+there's no point in complaining about them.
+
+https://lore.kernel.org/all/20250702-perst-v5-2-920b3d1f6ee1@qti.qualcomm.com/
+has a good example of how to this fallback nicely.
+
+Otherwise looks good to me.
+
+> +
+> +		/* Request the GPIO for PCIe reset signal and assert */
+> +		pcie->perst_gpio = devm_gpiod_get_optional(dev, "reset",
+> +							   GPIOD_OUT_HIGH);
+> +		if (IS_ERR(pcie->perst_gpio))
+> +			return dev_err_probe(dev, PTR_ERR(pcie->perst_gpio),
+> +					     "Failed to request reset GPIO\n");
+> +	}
+> +
+>  	return amd_mdb_add_pcie_port(pcie, pdev);
+>  }
+>  
+> -- 
+> 2.44.1
 > 
->> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->> @@ -276,10 +276,16 @@ struct qcom_pcie {
->>   	struct dentry *debugfs;
->>   	bool suspended;
->>   	bool use_pm_opp;
->> +	int aspm_state; /* Store ASPM state used in pre & post link speed change */
-> 
-> Whatever this is, it's definitely not an int.  Some kind of unsigned
-> thing of specified size, at least.
 
