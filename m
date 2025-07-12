@@ -1,153 +1,131 @@
-Return-Path: <linux-pci+bounces-31994-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31995-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D579B02B9E
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 17:12:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C156FB02BCF
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 18:07:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0EA6AA463C3
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 15:12:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E0403A9BBB
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 16:06:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46AC428643F;
-	Sat, 12 Jul 2025 15:12:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 728AD273D7F;
+	Sat, 12 Jul 2025 16:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="S+j6qs76"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [65.21.191.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D81014286;
-	Sat, 12 Jul 2025 15:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.191.19
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3DC31F1906;
+	Sat, 12 Jul 2025 16:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752333170; cv=none; b=U3EUvtR9BmII6G1/o8yB21h88An6bZdDF9dD3GCJpAConU/dSuKZfem4BKilbqOlbK/XeukMLbpx8QUE36lWUKuaHiO8heH0KsqjN6HQZpo3YKeGJ+dIZPq9xLVw10txjsTpelcNpKUU2w1drn5mKqYcVT9t3Jb4KaHC3qc61YA=
+	t=1752336401; cv=none; b=FDJHd2cJAy6WfvXwt+azAy6qyFlStFjajXIMTPblbD6NzfD2aPMB8SJpHxDwwJqLvZEPKfJ6xUAlHpGsd6EYJMakJ7J0EmQymgaAR4fDjhUT4a8IS/yNjrcPrqyJQOHgapmNC5jCRCEqw4ykRSex0SCPdWo4UougPPxqI44Wn0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752333170; c=relaxed/simple;
-	bh=ilrqpBJ48BxReMjEg/7sgs7v0a9iPzBDrQJ0GNwV3B0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hiPiJpTzzvUOz18GyOKY71NAFuy0I3o//Ajm/WhBbvnljUCG5nLsF31fLtcjzbKkPiFAb6VuCBnAZulCBrEpF28ou8eM7Fny6lZRmIFaosFA+C/fkKZQFR7mrYW0dV9uiYeGDomPRWl+gN/CLYaZQgxfp+BFbY9hou7mBiEa2/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk; spf=pass smtp.mailfrom=decadent.org.uk; arc=none smtp.client-ip=65.21.191.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=decadent.org.uk
-Received: from [89.234.162.240] (helo=deadeye)
-	by maynard with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1uabtz-0059j5-2N;
-	Sat, 12 Jul 2025 15:12:35 +0000
-Received: from ben by deadeye with local (Exim 4.98.2)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1uabty-00000002Vec-2keS;
-	Sat, 12 Jul 2025 17:12:34 +0200
-Message-ID: <c40b5e6cb26654f698e51b131956065b952ad222.camel@decadent.org.uk>
-Subject: Re: Bug#1104670: linux-image-6.12.25-amd64: system does not shut
- down - GHES: Fatal hardware error
-From: Ben Hutchings <ben@decadent.org.uk>
-To: intel-wired-lan@lists.osuosl.org, linux-pci <linux-pci@vger.kernel.org>,
-  Pavan Chebbi <pavan.chebbi@broadcom.com>, Michael Chan <mchan@broadcom.com>
-Cc: Laurent Bonnaud <L.Bonnaud@laposte.net>, 1104670@bugs.debian.org, 
-	netdev@vger.kernel.org
-Date: Sat, 12 Jul 2025 17:12:30 +0200
-In-Reply-To: <8a232a97-5917-41d3-8e88-e68abdc83202@laposte.net>
-References: <89159d74-c343-480f-9509-b6457244d65d@laposte.net>
-	 <8a232a97-5917-41d3-8e88-e68abdc83202@laposte.net>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-EOHNBDwerU4Tq4Na6UmU"
-User-Agent: Evolution 3.56.1-1 
+	s=arc-20240116; t=1752336401; c=relaxed/simple;
+	bh=8QMnezUr6RcxdJ1mE8flllbSLTsIaWjyZOkrmVf3mMc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZNndaR2cidav9kuNPuCa2zsynIqtDEzI7xYzBVrUuldiF/ry9HuV7OXkbLdFd6iYzP72shTsaa2vZRdlgZtOYD7P3G4bqE4YXLPw97QWQcKP76uBElenxFvZD5FGXtNChhO+NAcTYADz1DsxPmloXSeg3iiBLKYGXRmueF4+Qns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=S+j6qs76; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=yFk0YyJvli1XN+U/jjkn0xB8ubUiOgd+hURsOqBNf9A=;
+	b=S+j6qs763V46bHzoyxwgydQT5N0u4ktlfIpn1OKSgRh5nwt7hFgfhQQleZ64pn
+	mdWlwlSBdXqDssSuyxqXbTVW/VBnwirbYVaOu1b+bgbFd0K7ZnRCeQZx0xesnmns
+	Fg1C8l2sQsnxjonA9XQ2BThELeyWA4v9Mpuq3YDgtN8ME=
+Received: from [IPV6:240e:b8f:919b:3100:7981:39b4:a847:709a] (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgCHkby7h3JoR4ilAA--.23899S2;
+	Sun, 13 Jul 2025 00:05:17 +0800 (CST)
+Message-ID: <470742a6-861e-498e-9da4-1fa213969c7e@163.com>
+Date: Sun, 13 Jul 2025 00:05:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 89.234.162.240
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 06/11] PCI/ASPM: Clear aspm_disable as part of
+ __pci_enable_link_state()
+To: Manivannan Sadhasivam <mani@kernel.org>,
+ Bjorn Helgaas <helgaas@kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>,
+ Jeff Johnson <jjohnson@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+ linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+ qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com,
+ quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+References: <604ffae3-1bfc-0922-b001-f3338880eb21@linux.intel.com>
+ <20250711230013.GA2309106@bhelgaas>
+ <qay63njqf7z7mchizt5sm66i67rvxxxicikxmfuvllmmxfy7ek@mulnjvde5q7w>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <qay63njqf7z7mchizt5sm66i67rvxxxicikxmfuvllmmxfy7ek@mulnjvde5q7w>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:QCgvCgCHkby7h3JoR4ilAA--.23899S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tw1ftFy5uw13Zr43KF1kuFg_yoW8uFW8pF
+	Wrtr9aka1kAF97Cw12yw1UJFyFyw4SyryYk348Xw1UAF45uasrGr4UtrWruF9xXrWxWw4Y
+	vr4jgF1Dua4q9a7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UiZ2-UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwuIo2hyg6ZSywAAsd
 
 
---=-EOHNBDwerU4Tq4Na6UmU
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 2025/7/12 17:35, Manivannan Sadhasivam wrote:
+>> We only have two callers of this (pcie-qcom.c and vmd.c, both in
+>> drivers/pci/), so it's not clear to me that it needs to be in
+>> include/linux/pci.h.
+>>
+>> I'm a little dubious about it in the first place since I don't think
+>> drivers should be enabling ASPM states on their own, but pcie-qcom.c
+>> and vmd.c are PCIe controller drivers, not PCI device drivers, so I
+>> guess we can live with them for now.
+>>
+>> IMO the "someday" goal should be that we get rid of aspm_policy and
+>> enable all the available power saving states by default.  We have
+>> sysfs knobs that administrators can use if necessary, and drivers or
+>> quirks can disable states if they need to work around hardware
+>> defects.
+>>
+> 
+> Yeah, I think the default should be powersave and let the users disable it for
+> performance if they want.
+> 
 
-On Sun, 2025-05-04 at 13:45 +0200, Laurent Bonnaud wrote:
-[...]
->   - Previously the kernel would output an error in /var/lib/systemd/pstor=
-e/ but would shutdown anyway.
->=20
->   - Now, with kernel 6.1.135-1, the shutdown is blocked as with 6.12.x ke=
-rnels (see below).
-> --
-> Laurent.
->=20
-> <30>[  961.098671] systemd-shutdown[1]: Rebooting.
-> <6>[  961.098743] kvm: exiting hardware virtualization
-> <6>[  961.361878] megaraid_sas 0000:17:00.0: megasas_disable_intr_fusion =
-is called outbound_intr_mask:0x40000009
-> <6>[  961.414526] ACPI: PM: Preparing to enter system sleep state S5
-> <0>[  963.828210] {1}[Hardware Error]: Hardware error from APEI Generic H=
-ardware Error Source: 5
-> <0>[  963.828213] {1}[Hardware Error]: event severity: fatal
-> <0>[  963.828214] {1}[Hardware Error]:  Error 0, type: fatal
-> <0>[  963.828216] {1}[Hardware Error]:   section_type: PCIe error
-> <0>[  963.828216] {1}[Hardware Error]:   port_type: 0, PCIe end point
-> <0>[  963.828217] {1}[Hardware Error]:   version: 3.0
-> <0>[  963.828218] {1}[Hardware Error]:   command: 0x0002, status: 0x0010
-> <0>[  963.828220] {1}[Hardware Error]:   device_id: 0000:01:00.1
-> <0>[  963.828221] {1}[Hardware Error]:   slot: 6
-> <0>[  963.828222] {1}[Hardware Error]:   secondary_bus: 0x00
-> <0>[  963.828223] {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x=
-1563
-> <0>[  963.828224] {1}[Hardware Error]:   class_code: 020000
-> <0>[  963.828225] {1}[Hardware Error]:   aer_uncor_status: 0x00100000, ae=
-r_uncor_mask: 0x00018000
-> <0>[  963.828226] {1}[Hardware Error]:   aer_uncor_severity: 0x000ef010
-> <0>[  963.828227] {1}[Hardware Error]:   TLP Header: 40000001 0000000f 90=
-028090 00000000
-[...]
+Dear Bjorn and Mani,
 
-It seems that this is a known bug in the BIOS of several Dell PowerEdge
-models including (in this case) the R540.
+Perhaps I don't think so. At present, our company's testing team has 
+tested quite a few NVMe SSDS. As far as I can remember, the SSDS from 
+two companies have encountered problems and will hang directly when 
+turned on. We have set CONFIG_PCIEASPM_POWERSAVE=y by default. When 
+encountering SSDS from these two companies, we had to add 
+"pcie_aspm.policy=default" in the cmdline, and then the boot worked 
+normally. Currently, we do not have a PCIe protocol analyzer to analyze 
+such issues. The current approach is to modify the cmdline. So I can't 
+prove whether it's a problem with the Root Port of our SOC or the SSD 
+device.
 
-A workaround was added to the tg3 driver
-<https://git.kernel.org/linus/e0efe83ed325277bb70f9435d4d9fc70bebdcca8>
-and a similar change was proposed (but not accepted) in the i40e driver
-<https://lore.kernel.org/all/20241227035459.90602-1-yue.zhao@shopee.com/>.
-On tihis system the erorr log points to a deivce handled by the ixgbe
-driver, and no workaround has been implemented for that.
+Here I agree with Bjorn's statement that sometimes the EP is not 
+necessarily very standard and there are no hardware issues. Personally, 
+I think the default is default or performance. When users need to save 
+power, they should then decide whether to configure it as powersave or 
+powersupersave. Sometimes, if the EP device connected by the customer is 
+perfect, they can turn it on to save power. But if the EP is not 
+perfect, at least they will immediately know what caused the problem.
 
-Since this issue seems to affect multiple different NIC vendors and
-drivers, would it make more sense to implement this workaround as a PCI
-quirk?
+I wonder if there are others who have encountered similar problems as 
+well. If I say anything wrong, please point it out. Thank you.
 
-Ben.
+Best regards,
+Hans
 
---=20
-Ben Hutchings
-Experience is directly proportional to the value of equipment destroyed
-                                                    - Carolyn Scheppner
-
---=-EOHNBDwerU4Tq4Na6UmU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmhye14ACgkQ57/I7JWG
-EQkCGRAArhhsaQfYReSLaDpResfBQgdhi852snU1Y27XpESTwii1AV8M71XxWPnw
-m4WnPVctGUQg2Qb6nrwGaiJUr7Rj/R+RzkKynuYmVsVthZGTZtyOx525S/HjJVmQ
-IFOdJA0Mw2czAUo6xB4rwBga9Leq5U7y2zkjvVb9qtMs3A7y5FaLYSv8WRArECXx
-HP2BoWtxv3ItxcU9Os4TYwkcVQga9zpKCUxUzrUvLOKOAIneduV3zqUeoy0YD958
-kkpXLN+PuqGzaxFLzr/r63d4wlBY+De2Vtd/yWKzSr+5n5ZeZ/yi6ZDxWjJXe42c
-B4IIIrh/EsZRXL0ThEwo6sjoaBFxCMwSLhdwIsIhTGXl702VXynS+CqRMT9G8x9T
-EUZj5F3PIKYSB5nb+r2t/XEosAL8z2a7bbZWkQUHruUXpycXCdDFa7rLJdqKBva0
-TFYgstWr9V7oHzPsocZfT3k/UbArzGAwuKk0sWXTAobYmN1vun//muNK03xmu5V8
-ib0t2CXjFiQLtoKPtfev2/BC5lYWb9lMUha7cukLZjPTNQr9dINvqKOc0OlcNd0d
-Lefcf8f13nzQDAr8U/kTWWzz0u1+fTR41jwrr+Qz0ohS7/JJis8hpZSW1ji2ImKj
-Q2YDgm36H28uGMpQzll638Q0SR7+A6CkCHeelMpKNmtulS9+z1w=
-=tyMx
------END PGP SIGNATURE-----
-
---=-EOHNBDwerU4Tq4Na6UmU--
 
