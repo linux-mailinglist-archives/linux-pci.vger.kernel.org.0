@@ -1,131 +1,138 @@
-Return-Path: <linux-pci+bounces-31995-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31996-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C156FB02BCF
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 18:07:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F888B02BE2
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 18:27:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E0403A9BBB
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 16:06:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 31876A45773
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 16:27:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 728AD273D7F;
-	Sat, 12 Jul 2025 16:06:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5AD9288CAF;
+	Sat, 12 Jul 2025 16:27:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="S+j6qs76"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="XZM72l+n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3DC31F1906;
-	Sat, 12 Jul 2025 16:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752336401; cv=none; b=FDJHd2cJAy6WfvXwt+azAy6qyFlStFjajXIMTPblbD6NzfD2aPMB8SJpHxDwwJqLvZEPKfJ6xUAlHpGsd6EYJMakJ7J0EmQymgaAR4fDjhUT4a8IS/yNjrcPrqyJQOHgapmNC5jCRCEqw4ykRSex0SCPdWo4UougPPxqI44Wn0M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752336401; c=relaxed/simple;
-	bh=8QMnezUr6RcxdJ1mE8flllbSLTsIaWjyZOkrmVf3mMc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZNndaR2cidav9kuNPuCa2zsynIqtDEzI7xYzBVrUuldiF/ry9HuV7OXkbLdFd6iYzP72shTsaa2vZRdlgZtOYD7P3G4bqE4YXLPw97QWQcKP76uBElenxFvZD5FGXtNChhO+NAcTYADz1DsxPmloXSeg3iiBLKYGXRmueF4+Qns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=S+j6qs76; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=yFk0YyJvli1XN+U/jjkn0xB8ubUiOgd+hURsOqBNf9A=;
-	b=S+j6qs763V46bHzoyxwgydQT5N0u4ktlfIpn1OKSgRh5nwt7hFgfhQQleZ64pn
-	mdWlwlSBdXqDssSuyxqXbTVW/VBnwirbYVaOu1b+bgbFd0K7ZnRCeQZx0xesnmns
-	Fg1C8l2sQsnxjonA9XQ2BThELeyWA4v9Mpuq3YDgtN8ME=
-Received: from [IPV6:240e:b8f:919b:3100:7981:39b4:a847:709a] (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgCHkby7h3JoR4ilAA--.23899S2;
-	Sun, 13 Jul 2025 00:05:17 +0800 (CST)
-Message-ID: <470742a6-861e-498e-9da4-1fa213969c7e@163.com>
-Date: Sun, 13 Jul 2025 00:05:18 +0800
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C746277C8D;
+	Sat, 12 Jul 2025 16:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752337659; cv=pass; b=qWsZ2gOcHjYfdtXONLB+yqEPnmeQ5maRj/xwFshe0+qhORIo19Ny3SkCHIrMl5xRxlMw7/b/EeyzKsYCE/OgU0pGaSPPFRcWw+2ad5wHvhbqg1OXmJ+Qow/OkthIG0WePiJG22DAc0+M00HBtFNRNtFX+8ZABpiJFCGbvPKQpko=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752337659; c=relaxed/simple;
+	bh=cmm53DOTdwyscPEqSRjwmv4mZIvw1nYR7Ua4IWjUbX0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=QlUPdmuI8webw8xtAP0YagwqDDC+sB1sfNCtMtsXjqdYXgQ/aakAmTPgTTW6Mig8QmLFNrn3NoGuCjXq0ak6FzGbIMCc+gLEWKOufPKwD1dz4WTgx14fdAQamHAZIEcOwsbm2/BT5XxFf3Fo9Hn5B3gTzmAGWW4FqbCV7wWpES0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=XZM72l+n; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1752337631; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=G0O3epiDjil38rQ87refqbx3KSoHb3qzU7/D0YexeNi+D7UzSRtHwGOlYpBI54RVOVuKvInssd+9aq0R2mORBHTgA1IsiMhSqS1dHZ/V+C8+RVtx7mNRCc8c6ao0+3SvrMubnhgB2FjaLfNoHV63Tkxx7mylq024caya+/241VY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1752337631; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ahPGOugGxG/E5vYH46Dw+PAn5bPxIFk9wceQiVsZgc4=; 
+	b=kkqMLDNmGZUv4ox2qs74gJpyuSyDCSlGCWpuiNoA7WjrIJj8LmwclPzYg+BpjCYoGIh5rXbZ9rpN/tO83BllSV/bDW6+rdkcdC5lOmEJ/3/WQp/72FZApFSOQeLvTZLtFwJiZdTfT06DqaXNiqH9bw9e5hdCAn5PZjBTFDoVZiE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752337631;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=ahPGOugGxG/E5vYH46Dw+PAn5bPxIFk9wceQiVsZgc4=;
+	b=XZM72l+nNx5bBBbL+sXSR4bgxUrW94995cQTUfht63oAcIBoNPuO/l2RdbZ8f+mo
+	kkj5ipG69OOVKLZhXmGy/pT3349PoTuh4xsNjJ0mVzKr3hnSqg6Kee1K77yzg543Emb
+	MmNRl15nw5QsY8GAfECra+xi0aXVkW/4WIssrwUo=
+Received: by mx.zohomail.com with SMTPS id 1752337628723425.6395233683338;
+	Sat, 12 Jul 2025 09:27:08 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/11] PCI/ASPM: Clear aspm_disable as part of
- __pci_enable_link_state()
-To: Manivannan Sadhasivam <mani@kernel.org>,
- Bjorn Helgaas <helgaas@kernel.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>,
- Jeff Johnson <jjohnson@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
- linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
- qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com,
- quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-References: <604ffae3-1bfc-0922-b001-f3338880eb21@linux.intel.com>
- <20250711230013.GA2309106@bhelgaas>
- <qay63njqf7z7mchizt5sm66i67rvxxxicikxmfuvllmmxfy7ek@mulnjvde5q7w>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <qay63njqf7z7mchizt5sm66i67rvxxxicikxmfuvllmmxfy7ek@mulnjvde5q7w>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:QCgvCgCHkby7h3JoR4ilAA--.23899S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tw1ftFy5uw13Zr43KF1kuFg_yoW8uFW8pF
-	Wrtr9aka1kAF97Cw12yw1UJFyFyw4SyryYk348Xw1UAF45uasrGr4UtrWruF9xXrWxWw4Y
-	vr4jgF1Dua4q9a7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UiZ2-UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwuIo2hyg6ZSywAAsd
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v6 2/6] rust: irq: add flags module
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <aGeF_W74OfhRbkoR@google.com>
+Date: Sat, 12 Jul 2025 13:26:52 -0300
+Cc: Daniel Sedlak <daniel@sedlak.dev>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Benno Lossin <lossin@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <49ABD63B-05C6-4FDC-B825-5AA2ED323F1C@collabora.com>
+References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com>
+ <20250703-topics-tyr-request_irq-v6-2-74103bdc7c52@collabora.com>
+ <fcdae3ca-104d-4e8b-8588-2452783ed09a@sedlak.dev>
+ <aGeF_W74OfhRbkoR@google.com>
+To: Alice Ryhl <aliceryhl@google.com>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
+
+Hi Alice,
+
+> On 4 Jul 2025, at 04:42, Alice Ryhl <aliceryhl@google.com> wrote:
+>=20
+> On Fri, Jul 04, 2025 at 08:14:11AM +0200, Daniel Sedlak wrote:
+>> Hi Daniel,
+>>=20
+>> On 7/3/25 9:30 PM, Daniel Almeida wrote:
+>>> +/// Flags to be used when registering IRQ handlers.
+>>> +///
+>>> +/// They can be combined with the operators `|`, `&`, and `!`.
+>>> +#[derive(Clone, Copy, PartialEq, Eq)]
+>>> +pub struct Flags(u64);
+>>=20
+>> Why not Flags(u32)? You may get rid of all unnecessary casts later, =
+plus
+>> save some extra bytes.
+>=20
+> It looks like the C methods take an `unsigned long`. In that case, I'd
+> probably write the code to match that.
+>=20
+> pub struct Flags(c_ulong);
+>=20
+> and git rid of the cast when calling bindings::request_irq.
+>=20
+> As for all the constants in this file, maybe it would be nice with a
+> private constructor that uses the same type as bindings to avoid the
+> casts?
+>=20
+> impl Flags {
+>    const fn new(value: u32) -> Flags {
+>     ...
+>    }
+> }
 
 
+Sure, but what goes here? This has to be "value as c_ulong=E2=80=9D =
+anyways so it
+doesn=E2=80=99t really reduce the number of casts.
 
-On 2025/7/12 17:35, Manivannan Sadhasivam wrote:
->> We only have two callers of this (pcie-qcom.c and vmd.c, both in
->> drivers/pci/), so it's not clear to me that it needs to be in
->> include/linux/pci.h.
->>
->> I'm a little dubious about it in the first place since I don't think
->> drivers should be enabling ASPM states on their own, but pcie-qcom.c
->> and vmd.c are PCIe controller drivers, not PCI device drivers, so I
->> guess we can live with them for now.
->>
->> IMO the "someday" goal should be that we get rid of aspm_policy and
->> enable all the available power saving states by default.  We have
->> sysfs knobs that administrators can use if necessary, and drivers or
->> quirks can disable states if they need to work around hardware
->> defects.
->>
-> 
-> Yeah, I think the default should be powersave and let the users disable it for
-> performance if they want.
-> 
+We should probably switch to Flags(u32) as Daniel Sedlak suggested. Then
+it=E2=80=99s a matter of casting once for bindings::request_irq().
 
-Dear Bjorn and Mani,
-
-Perhaps I don't think so. At present, our company's testing team has 
-tested quite a few NVMe SSDS. As far as I can remember, the SSDS from 
-two companies have encountered problems and will hang directly when 
-turned on. We have set CONFIG_PCIEASPM_POWERSAVE=y by default. When 
-encountering SSDS from these two companies, we had to add 
-"pcie_aspm.policy=default" in the cmdline, and then the boot worked 
-normally. Currently, we do not have a PCIe protocol analyzer to analyze 
-such issues. The current approach is to modify the cmdline. So I can't 
-prove whether it's a problem with the Root Port of our SOC or the SSD 
-device.
-
-Here I agree with Bjorn's statement that sometimes the EP is not 
-necessarily very standard and there are no hardware issues. Personally, 
-I think the default is default or performance. When users need to save 
-power, they should then decide whether to configure it as powersave or 
-powersupersave. Sometimes, if the EP device connected by the customer is 
-perfect, they can turn it on to save power. But if the EP is not 
-perfect, at least they will immediately know what caused the problem.
-
-I wonder if there are others who have encountered similar problems as 
-well. If I say anything wrong, please point it out. Thank you.
-
-Best regards,
-Hans
-
+=E2=80=94 Daniel=
 
