@@ -1,226 +1,124 @@
-Return-Path: <linux-pci+bounces-31989-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-31990-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CCBEB02991
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 08:21:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B8E0B0299A
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 08:48:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F1753B7B94
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 06:20:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 27DE57AD0C3
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 06:47:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69C5C1FBEA6;
-	Sat, 12 Jul 2025 06:20:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 658A719C55E;
+	Sat, 12 Jul 2025 06:48:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3A4sEcx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGOVlRn9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f193.google.com (mail-yw1-f193.google.com [209.85.128.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390DA1E5B72;
-	Sat, 12 Jul 2025 06:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1EC78C11;
+	Sat, 12 Jul 2025 06:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752301258; cv=none; b=fPDjkAPzfLwmURCxLYjL79r3wWKqxSxbqyl5xEv5Yp+1TNz3LPe0gdStfYfIE79GG2yfdwSTNa5MZ2HW6lfFF8aEGsPckwEJ6DrGwM651303invnaDuMvB4rP3MXwgncfcaJTAW240mGUazQ6iFRkz1x/bYdKxbtbbet55bHC+s=
+	t=1752302928; cv=none; b=gEXlogKg35m4x240NKfF5S+Xlat2L56IjwurhUMEXG/fA0XRSKhUyjtcvWCK5UAE3GJU6EAAUM/wsaGNfCHjMGTyovgOpU6Q24tNNDEr4biXPYwrCjTQE4WqVmof1toqO7pydcYFbvtRcXSZRiYycmNGjHqYKqpl/qHzJ5P+c5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752301258; c=relaxed/simple;
-	bh=QkNmhcbEazvrT9uEtFGrAFrqrlYwTmySxFHAtjav3gQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uhPVXtf2mG7Hyx/sbsoUcDdjtAVjUqNZ3USc/q/Dh0lU86J4iBU4h4wGgi8z96FKDkB6QndQNRt73lGDi65s5JggOFClM8CLjoGpg20wD9U2BRF4XvAu9RZIbpKf0Kkp8RLzSmE8q5IlJru/xm98ljKJTq0yr6/BaK7dPU4AVHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3A4sEcx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 088D0C4CEEF;
-	Sat, 12 Jul 2025 06:20:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752301258;
-	bh=QkNmhcbEazvrT9uEtFGrAFrqrlYwTmySxFHAtjav3gQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M3A4sEcxfppnWxOi4Fre6laQwk0WY+cdzc3eXYFxrEN33lW3nsWH3oT5GRJzfeSAk
-	 YtXE2V64avcKjQdVJtBKoM+fAEUUt7NyU54e+qf2LyyGplRjD6Yq8gjhxx2adse4Jd
-	 FG1/9Iaoy0M+H4h6aeNCDbdlHj1uum5G4wG3aCsYX/rJ1jryeysQS2kAoxcNjlTwL0
-	 t4ZzUPCje6uAO1ukAM7ayd2w9elkKgiOotXit0JoIzGP9r8DbMe18/t25KrIUEh+Iy
-	 E+53tgWpHrOKpth2XQoOQhKMO3WXd5KvlFi2qKUZZPXdVv7ZEVvZZ+xmz8lJR0Fbxh
-	 W3Jns+oCzBkhA==
-Date: Sat, 12 Jul 2025 11:50:43 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: Re: [PATCH RFC 3/3] PCI: qcom: Allow pwrctrl framework to control
- PERST#
-Message-ID: <qolpaorpkoyr5vzuowx3ml7uzwf4xc6atikrpilvbprc2ny5no@rcune7o57fuz>
-References: <20250707-pci-pwrctrl-perst-v1-0-c3c7e513e312@kernel.org>
- <20250707-pci-pwrctrl-perst-v1-3-c3c7e513e312@kernel.org>
- <aHGhd3LLg8Dwk1qn@google.com>
+	s=arc-20240116; t=1752302928; c=relaxed/simple;
+	bh=NoITU62SQUOqjJ60zYOKiXN09WwQKOHafQ7dw0yybjI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q/nZQ7t63o3691T9s0wpDJi20rD0TddlDOXZPm26YwnZu2NNA+/qk1zxsJaAzaGYiA3q3gkceXWfbFgG87FAdtITC6HXxC4flvdSP7XR/dNE+zW3hJuJbzIfTogA37agnp5oHjOA33IAh81JAZTL/976pMi9dzpWc/agR8RLCNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bGOVlRn9; arc=none smtp.client-ip=209.85.128.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f193.google.com with SMTP id 00721157ae682-714067ecea3so22390067b3.0;
+        Fri, 11 Jul 2025 23:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752302926; x=1752907726; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NoITU62SQUOqjJ60zYOKiXN09WwQKOHafQ7dw0yybjI=;
+        b=bGOVlRn9FSd+HE8mTEUpjtdWlQnv5ywwLgH56rasUjnlKGG9Q3hnv5Us0q7dEP5bBR
+         RG1ZuQeYP8ikJ8w/u0J+RT/Yl0rrxqxFgaJnv5vlo+Vo/QCeGnbg5k/z7PM+9lQom6wJ
+         Vo8t2/gj8vbvumg7OnxWbgdaaY7j8iTrS/ZpqrPn2cgAOib7UC/KJEUFwsrIRnsH0+YF
+         zKYpHNH6Trkavz4/PIJJlHDIhbfhTO5G8G/LUM1j9JeqaSkZsy7XNp69x/G6ljfZey1i
+         9o1KHfz3pl/hMH/A0jn6h4mkxbXBgyF7YH2fhAm9vn4oY0VQnNr6z9kl5yGih1ABAOFT
+         AAhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752302926; x=1752907726;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NoITU62SQUOqjJ60zYOKiXN09WwQKOHafQ7dw0yybjI=;
+        b=fGlDJ8tVCXVxCv7qxJXjwKcIG8GW7WymcI2DdAW/i5CAaPsIdzkf5K6ErNDiO8pNxe
+         aPP9rlV6jb3RjDFJR7NTRKZKTSXh4F+Qw2X35y+DiGR7xlxxhbRXpLmf/CnVr08YjYGY
+         bF8zAx+9377273qfx5n6bwvlu0PbfwPkTunN+NBoVjIRUVCfRKBwfMuyyftAHmfv3nbs
+         7MXYRoo5vfxgpxhjw3yHz08RPMIMlDjFfBMIzZWYQ3vqaCBFxP4RPiS8EQjblGgc1xBJ
+         dYgMWI9Wvs6y7643eaQUtov9Tk2sD8tAR2IC8SPe+TKxHy373TepzSahab+Zp4fUJMwj
+         Z1FA==
+X-Forwarded-Encrypted: i=1; AJvYcCUIphbC+R6xWohNHr66VvKmyoBqQ/Aunhnm30ultJkCJvCwQ2kqoH7iYZhUcrnnQ7eOA/YjfnOG@vger.kernel.org, AJvYcCVMMB+Bp7Ew1zBQItP1NF17U1/ZRJgnFAEG/87KQUxtq+yo3E5cejrP4H4RJQizNbUlkcchqdeoWR6a@vger.kernel.org, AJvYcCVkcfeHUYIELP6diSQETNDjypdieuX9K7Ckw3nXjvM9jPeEf2in/Sr70PZWQc4nNE2fN3eyGL6ndj8ENojeu4M=@vger.kernel.org, AJvYcCXQZ0m+suWufhf1B31gWzNlex0LiGXUFaY5CUauR1Hqt/mtuyK7KZupojByP8f6kd3XmdfsrJvLF2T1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4TY4Kqp64xLw2e6cYWFIfIz0SXNWPMZTlaGO0G9vXhv41mO9T
+	SavNHrGqo5zo47Hqf/j/M/bsNE7/WT8im29Tr3jxlNSOWvbptGWyiLr2fKKpYIMQ5RIVJ9koWmd
+	+Fd2pHwlwuDY8cPWtLLmLpVONQNOIfjI=
+X-Gm-Gg: ASbGncvusS6A9LGu3QLoxznAIsqfp60tRDR+fGx/aNPauxJomdQnvor5SpOAoIwn/a9
+	GSJ35BEkc0+22ztQAqTegnUk+PpxEx9BfHLMo6/8EaFky5fKVqasQl4+I1F0HG45Q3fDCHY1EOc
+	uN7qLJzWx+ensuR5Ng9ozIUCEmlGa5KfVXsQvx83YtG5BdFK8dotiku5zYCqJWv/3ttXruLiM9o
+	pwJilqA4w==
+X-Google-Smtp-Source: AGHT+IGk2GtuNzqxa+gKFQr9ayybypizulvCNPS3E5NzFiSXc5j1f3+dJAsXJ7xrNYFRci9jPv4ohCAmyQ/XVL4LRzk=
+X-Received: by 2002:a05:690c:fcc:b0:70e:29d2:fba1 with SMTP id
+ 00721157ae682-717d79eb927mr90617257b3.23.1752302925506; Fri, 11 Jul 2025
+ 23:48:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aHGhd3LLg8Dwk1qn@google.com>
+References: <FB546B0D-2209-4FA0-9DC9-A75C0BC9FA4F@gmail.com> <20250711163645.GA2294895@bhelgaas>
+In-Reply-To: <20250711163645.GA2294895@bhelgaas>
+From: Bandhan Pramanik <bandhanpramanik06.foss@gmail.com>
+Date: Sat, 12 Jul 2025 12:18:34 +0530
+X-Gm-Features: Ac12FXw_McJ9cVak4RJs7lYmIOUMmOI35Ioch1M3g7fMO3XpzdtWBzgGrKF48N4
+Message-ID: <CAEmM+QiSZBoJV2n6944tYU7fcrzKRTUgsKRdqwDEkKkZiPVCMw@mail.gmail.com>
+Subject: Re: Instability in ALL stable and LTS distro kernels (IRQ #16 being
+ disabled, PCIe bus errors, ath10k_pci) in Dell Inspiron 5567
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, ath10k@lists.infradead.org, 
+	linux-wireless@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 11, 2025 at 04:42:47PM GMT, Brian Norris wrote:
-> Hi,
-> 
-> On Mon, Jul 07, 2025 at 11:48:40PM +0530, Manivannan Sadhasivam wrote:
-> > Since the Qcom platforms rely on pwrctrl framework to control the power
-> > supplies, allow it to control PERST# also. PERST# should be toggled during
-> > the power-on and power-off scenarios.
-> > 
-> > But the controller driver still need to assert PERST# during the controller
-> > initialization. So only skip the deassert if pwrctrl usage is detected. The
-> > pwrctrl framework will deassert PERST# after turning on the supplies.
-> > 
-> > The usage of pwrctrl framework is detected based on the new DT binding
-> > i.e., with the presence of PERST# and PHY properties in the Root Port node
-> > instead of the host bridge node.
-> 
-> I just noticed what this paragraph means. IIUC, this implies that in
-> your new binding, one *must* describe one or more *-supply in the port
-> or endpoint device(s). Otherwise, no pwrctrl devices will be created,
-> and no one will deassert PERST# for you. My understanding is that
-> *-supply is optional, and so this is a poor requirement.
-> 
+Compiled the usual way: the bzImage compiled within 4-5 minutes
+(compared to 1 hour previously), and the modules compiled within 1
+hour (compared to 8 hours previously). Also, the congestion strangely
+didn't happen. It was instead silently followed by "No Internet".
 
-Your understanding is correct. But the problem is, you thought that pwrctrl
-would work across all platforms without any modifications, which unfortunately
-is not true and is the main source of confusion. And I never claim anywhere that
-pwrctrl is ready for all platforms. I just want platforms to start showing
-interest towards it and we will collectively solve the issues. Or I'll be happy
-to solve the issues if platform maintainers show interest towards it. This is
-what currently happening with brcmstb. I signed up for the transition to
-pwrctrl as their out-of-tree is breaking with pwrctrl.
+Didn't add the kernel-level journalctl because I'm sure that the
+normal journalctl includes the kernel-level stuff too:
+https://gist.githubusercontent.com/BandhanPramanik/ddb0cb23eca03ca2ea43a1d8=
+32a16180/raw/07b34aa3fa19da5afa4bb161454e3cb2081b9880/journalctl%2520v6.16-=
+rc4-PATCH1
 
-Right now, we indeed create pwrctrl device based on the presence of power
-supplies as that's how the sole user of pwrctrl (Qcom platforms) behave. But
-sure, for some other platforms we might have only 'reset-gpios'. When we have to
-support those platforms, we will extend the logic.
+Please let me know what you think of the logs.
 
-> And even if all QCOM device trees manage to have external regulators
-> described in their device trees, there are certainly other systems where
-> the driver might (optionally) use pwrctrl for some devices, but others
-> will establish power on their own (e.g., PCIe tied to some other system
-> power rail).
-> 
-> I think you either need the PCI core to tell you whether pwrctrl is in
-> use, or else you need to disconnect this PERST# support from pwrctrl.
-> 
+Bandhan
 
-It is not straightforward for the PCI core to tell whether pwrctrl is in use or
-not. pwrctrl has no devicetree representation as it is not a separate hardware
-entity. It just reuses the PCI device DT node. So I used the -supply properties
-to assume that the pwrctrl device will be used. And almost none of the upstream
-DTS has -supply properties in the PCI child node (only exception is brcmstb
-where they define -supply properties in the PCI child node, but only in the DT
-binding). So that added up.
-
-> > When the legacy binding is used, PERST# is only controlled by the
-> > controller driver since it is not reliable to detect whether pwrctrl is
-> > used or not. So the legacy platforms are untouched by this commit.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware-host.c |  1 +
-> >  drivers/pci/controller/dwc/pcie-designware.h      |  1 +
-> >  drivers/pci/controller/dwc/pcie-qcom.c            | 26 ++++++++++++++++++++++-
-> >  3 files changed, 27 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index af6c91ec7312bab6c6e5ad35b051d0f452fe7b8d..e45f53bb135a75963318666a479eb6d9582f30eb 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -492,6 +492,7 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
-> >  		return -ENOMEM;
-> >  
-> >  	pp->bridge = bridge;
-> > +	bridge->perst = pp->perst;
-> >  
-> >  	ret = dw_pcie_host_get_resources(pp);
-> >  	if (ret)
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > index 4165c49a0a5059cab92dee3c47f8024af9d840bd..7b28f76ebf6a2de8781746eba43a8e3ad9a5cbb2 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > @@ -430,6 +430,7 @@ struct dw_pcie_rp {
-> >  	struct resource		*msg_res;
-> >  	bool			use_linkup_irq;
-> >  	struct pci_eq_presets	presets;
-> > +	struct gpio_desc	**perst;
-> >  };
-> >  
-> >  struct dw_pcie_ep_ops {
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 620ac7cf09472b84c37e83ee3ce40e94a1d9d878..61e1d0d6469030c549328ab4d8c65d5377d525e3 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -313,6 +313,11 @@ static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
-> >  
-> >  static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
-> >  {
-> > +	struct dw_pcie_rp *pp = &pcie->pci->pp;
-> > +
-> > +	if (pp->perst)
-> 
-> You're doing a non-NULL check here, but you forgot to reinitialize it to
-> NULL in some cases below (qcom_pcie_parse_ports()).
-> 
-> This is also apparently where you assume |perst| implies pwrctrl. Per
-> above, I don't think that's a good assumption.
-> 
-
-Atleast this assumption holds true for now. Otherwise, I'd have to implement
-callbacks without any users.
-
-> > +		return;
-> > +
-> >  	/* Ensure that PERST has been asserted for at least 100 ms */
-> >  	msleep(PCIE_T_PVPERL_MS);
-> >  	qcom_perst_assert(pcie, false);
-> ...
-> >  static int qcom_pcie_parse_ports(struct qcom_pcie *pcie)
-> >  {
-> > +	struct dw_pcie_rp *pp = &pcie->pci->pp;
-> >  	struct device *dev = pcie->pci->dev;
-> >  	struct qcom_pcie_port *port, *tmp;
-> > +	int child_cnt;
-> >  	int ret = -ENOENT;
-> >  
-> > +	child_cnt = of_get_available_child_count(dev->of_node);
-> > +	if (!child_cnt)
-> > +		return ret;
-> > +
-> > +	pp->perst = kcalloc(child_cnt, sizeof(struct gpio_desc *), GFP_KERNEL);
-> > +	if (!pp->perst)
-> > +		return -ENOMEM;
-> > +
-> >  	for_each_available_child_of_node_scoped(dev->of_node, of_port) {
-> >  		ret = qcom_pcie_parse_port(pcie, of_port);
-> >  		if (ret)
-> > @@ -1747,6 +1769,7 @@ static int qcom_pcie_parse_ports(struct qcom_pcie *pcie)
-> >  	return ret;
-> >  
-> >  err_port_del:
-> > +	kfree(pp->perst);
-> 
-> You need this too:
-> 
-> 	pp->perst = NULL;
-> 
-> Otherwise, you leave a non-NULL (invalid) pointer for cases that
-> qcom_pcie_parse_legacy_binding() might handle.
-> 
-
-Right, thanks for spotting!
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+On Fri, Jul 11, 2025 at 10:06=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
+>
+> On Fri, Jul 11, 2025 at 09:34:43PM +0530, Bandhan Pramanik wrote:
+> > Hello,
+> >
+> > I really couldn't find on the internet how to compile a single file
+> > now that I have compiled the whole kernel.
+> >
+> > Any ways to do that?
+>
+> If you apply the patch (cd to the linux/ directory, then "patch -p1 <
+> email-file"), then run whatever "make" command you used before, it
+> should rebuild that file and relink the whole kernel.
+>
+> Bjorn
 
