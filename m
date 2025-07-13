@@ -1,141 +1,139 @@
-Return-Path: <linux-pci+bounces-32031-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32032-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9491CB031E6
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Jul 2025 17:54:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47EEBB031FE
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Jul 2025 18:05:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D47313B2032
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Jul 2025 15:53:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 75DEC1899126
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Jul 2025 16:05:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0B9728468C;
-	Sun, 13 Jul 2025 15:53:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D364B277CBF;
+	Sun, 13 Jul 2025 16:05:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="Sa6U5ae7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wq9iIA8Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f196.google.com (mail-yw1-f196.google.com [209.85.128.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DF827F003;
-	Sun, 13 Jul 2025 15:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752422031; cv=pass; b=tjvWHFKLyBmcn1DAV62LyFnHmzOPWi975Zm61yOLy2BBHRfxxPESXolnwhXayN0mKdP8bz35wdipUc5CvQGAawkr3wRZWTl6hU8LEwUJhxaIyGHIodqxfuVilI49Au+Ugjl3beJldveOJnGl3gZAyYgS1gT1mAJR4aeuVUC7AtU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752422031; c=relaxed/simple;
-	bh=22FzkDc/5FFEKJ4hKxiC5HFlOTtiICJIaNtii37WxzQ=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=A7IL/qfdwNz+VV68Q1HZ6yKxbOuNc2+w+Xe/Q/nQGEAP7lF32M+0CmKViEiEuwVppD33w9AcJrH/41BArPDcUDYurfDV0fP4eZXirHnFz5SeUIcSGeMBguKrGgLe1m3iazhFK+ESEAqq6bR0JKmxrtsNngZ283bjVlVccB8UFmM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Sa6U5ae7; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1752422005; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=T/LiBbeauDO1VQSA27N9NSBnoMAqhOUpZ+RlJ7zBT/3qaAGeeDsRll6r6P2TwNn7BCHDTFAeWoE7ucVGFmsbiy5RKJEKCP+Ng6A7yt37p2Q+ZgcEHzuyka9+7AIbSvxw8r8W9MgQpkFJqQnRXSN1RW1X16pHYuVw3s98xOJCm2U=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1752422005; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=FVGOZz6+i8auJ8frrno2oObXTdz7633Bu+4dk1ToQYM=; 
-	b=gYToCsa62Dsw+JfBGbYg+D++QxFvrLUQciXo6qLKBq9aACvixR7ugGEpqNKzPM2RxsVubbPVrc6PYTCeA6EHGDFgGgq6Ei+t0LJJrb2k1cYkx0/Hfj33J5tw//bJCIZb6TnPcTp5STzX+s8S7GSbEZ9WZuG0Wu5EMuTTvSgTn7c=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752422005;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=FVGOZz6+i8auJ8frrno2oObXTdz7633Bu+4dk1ToQYM=;
-	b=Sa6U5ae7+eAv/GxnEgox/d3jPMzKoqMDCZd8z7rqNvKaPYIRKxLTvYQr7NLp7mKr
-	EMXSw+JVbfKXdeZDV7i438rZq0+DyE1lWH8vairk5+SYlsZ4JYcLhlXjY5b/1Q6PzKx
-	vjYWLTzav3IMWF5B2Ld7fEbJP692YBOsryEWcqy0=
-Received: by mx.zohomail.com with SMTPS id 1752422002319162.3932624833626;
-	Sun, 13 Jul 2025 08:53:22 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426C41EEE0;
+	Sun, 13 Jul 2025 16:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.196
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752422704; cv=none; b=ZgF4QoIem/SIyZOL4dnQ1X2Jfz7dpeCgUfBYzFdEaeOYXOH2EX4tBqzXO0DBr1onF0BiDgn0YjF+h3A3r7MwoAYqwD0qCY9B5knHDb80OtAWrynW/+toW3U+k4iVFp0JUHCXclWtvagXO0pWlWN5HRR4mNt/6GcZ2tc5ZYK3T/M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752422704; c=relaxed/simple;
+	bh=kPm6hmZtyZVGLm7EBEQavSfpJGBySTBWSfZqd7uHKhI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J6YNhFSDmjfbv1YPvzogr6TRff0dr6bClSyxdZ0JUyOq67qs4crTCUXDJTLLfb6Ec20tqi6bszJJLotUzOVdAvNYVglky+yMuUSgvOYI9lZfhJRyLWlmS23aBwYxQ9rQIm36u/v95I0gMTKdLRdoTWUw2qKPBTaOMDUrce2IRKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wq9iIA8Q; arc=none smtp.client-ip=209.85.128.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f196.google.com with SMTP id 00721157ae682-70e3c6b88dbso24652187b3.0;
+        Sun, 13 Jul 2025 09:05:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752422702; x=1753027502; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+0l/VqiYxdBHMF99eNFwntJM2bY7LDqgmFNd0DnCAi4=;
+        b=Wq9iIA8Q5jl7odQAL0Z5c8s/e8CF9y23ezUW29/IFWBVYWx108RMf+hdzaPHz9yzyE
+         UtgvRw2KbTaoAq6lLX/LxnLjOwAQaWYf+sEc3vOp81nSSv2kUqXvcYFJa1swBIsaPS+c
+         3xc3MjJ0iIPh/4V+Ayp7hOpUg/vGX8k/XQcDrjcUebCX5bx11XGodnb4nsmBS3HDZsfL
+         xFNHWqrdNIM8NSmEhGU6ZbSmpuoC1TMEH8OSTMGtgChoWSjH3g5lQEWtPwqfY0BBPBqp
+         XZb6TvK3awahwC210pyA6pFudZx/0gnLi3VmYYKH7SyNK2J82zohKiBstdvP4Xbe01kJ
+         EG0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752422702; x=1753027502;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+0l/VqiYxdBHMF99eNFwntJM2bY7LDqgmFNd0DnCAi4=;
+        b=Fi5vITPm42BInijjS/WxfPW0EGgTc66WPpZG+g1vIME9ZdyzjEwUM6LRpZO4IZRu2I
+         gKcn5HhTfLXACJb9ThWoNbWElyJ93eOOWdRv8WUAgM+N382u279SUgAP3ljoK9zZozNx
+         Czpj3giUY24eq6aHFMNR7QrMDARKU4kva6ZHpu9rspJ/08NVXvPky4rh7BO/3EF3tKoF
+         NDk+xjJWJA+jscF0Ytr3+QUT4Xz6Q6KR/si7c8ayY/dAvVz6rs8cJx8Sd7+xw1xHDY2D
+         +n1XUyld1In94a1ek8CquzToFbaYpcKRzpndpJe0S2Ke0pYHnj+eui9b0sKD8GSFurcG
+         CQ7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVWWk1FC5hp0v2XXha8B23l5burngMtHvqdAeRNUozBSVIwMCJiLT/ESFKGIkHIKyrLXWrMuyQvkqFb@vger.kernel.org, AJvYcCVcRIbQPnySwzOq2puvIhuSzKq+Pf03z0xBhXEkUp9eZowX3j1KoCrAMzf0CKOmc9XmSNtPdkMjUnr7@vger.kernel.org, AJvYcCWbNtNdpiR9zqSgmmJhxaJUQ9Z33/8ED4egFm+mvcU6NgGk8LzqQe4IM0x8oVaK+xlBSo+gRewhqNVAvqsHGv8=@vger.kernel.org, AJvYcCXRQfdVW3WqbmrnqJwBxmEd9UHz6AaYB5jPVL0A8hR65N/aOsu5Nl+MlkWBvOQWKjOpMgBcYpIg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOtyl/CeB3Jy+CXUr7Zgv2k+KgW02pn9elSYaKk6jxOWDAwlvw
+	xmfQ1Uikjrtznk5De2oKyuzEocrBg6RmG3eBUuAZdHnLk7kK/VidjRhDlAfm9SlmjjiCTERv6QP
+	6cRCS1PEUkKkOMXXHNCUWqMwNysjGOKQ=
+X-Gm-Gg: ASbGncuw6ic8E/5CUtV67OMmud15QnnRK/1lY8X/zbd9S9q3aIH6/aferxrg3FWnp7A
+	vmvS+IeYZiUjnE1X+5Fp4sEz3gKIO1hjRt1bUNAmF1OJvHFOkFgdqx8jl60nfNROvK9PS6+zKCq
+	6zXhBx6Z4867Ha4Azwtv3VPiVcs9YFneA5ihCwEGQBIO+3AdN8FlB5a4VF5O4HpTLpbOC74mjYs
+	AvxCOyjVg==
+X-Google-Smtp-Source: AGHT+IH2LeIiglYC9Tun6YOS0JGqjbS6y7L8l2v4pYn+yw4nEo+noWt27UHB4T0XUvebiJpgOLMtt6+dbcW6ZN3bMKI=
+X-Received: by 2002:a05:690c:6713:b0:6fb:b1dd:a00d with SMTP id
+ 00721157ae682-717d5ee1ddbmr173765917b3.30.1752422702009; Sun, 13 Jul 2025
+ 09:05:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v6 3/6] rust: irq: add support for non-threaded IRQs and
- handlers
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <1F0227F0-8554-4DD2-BADE-0184D0824AF8@collabora.com>
-Date: Sun, 13 Jul 2025 12:32:27 -0300
-Cc: Danilo Krummrich <dakr@kernel.org>,
- Benno Lossin <lossin@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- linux-pci@vger.kernel.org
+MIME-Version: 1.0
+References: <CAEmM+Qi-Waxk5qcR+nfip-QGXaKk0-Kq7QSq890e9oYOPjW+bA@mail.gmail.com>
+ <20250712191805.5238-1-safinaskar@zohomail.com>
+In-Reply-To: <20250712191805.5238-1-safinaskar@zohomail.com>
+From: Bandhan Pramanik <bandhanpramanik06.foss@gmail.com>
+Date: Sun, 13 Jul 2025 21:34:50 +0530
+X-Gm-Features: Ac12FXxwluBZCmPP36mlKAZmIh6T5KqX9xngXXsjA_2HI0FsRYjIiDSQjP17RPs
+Message-ID: <CAEmM+Qij=SYXmt=Ea+gK3jMoeY=Sn=0QD17q9jn5YS0BupbXrA@mail.gmail.com>
+Subject: Re: Instability in ALL stable and LTS distro kernels (IRQ #16 being
+ disabled, PCIe bus errors, ath10k_pci) in Dell Inspiron 5567
+To: Askar Safin <safinaskar@zohomail.com>
+Cc: ath10k@lists.infradead.org, linux-acpi@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <AACC99CD-086A-45AB-929C-7F25AABF8B6E@collabora.com>
-References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com>
- <20250703-topics-tyr-request_irq-v6-3-74103bdc7c52@collabora.com>
- <DBAE5TCBT8F8.25XWHTO92R9V4@kernel.org>
- <DAD3292B-2DBF-442A-8B60-A999AE0F6511@collabora.com>
- <DBAURC9BEFI0.1LQCRIDT6ZBV9@kernel.org>
- <DBAVXQTMR38Z.2782EGR84L7OP@kernel.org>
- <DBAWQG1PX5TO.6I2ARFGLX88N@kernel.org> <DBAX59YKO0FV.ANLOWRHDDS92@kernel.org>
- <DBAXP68U809C.2G8DMB52M3UZ7@kernel.org>
- <C4A101A7-282D-4A67-A966-CF39850952EA@collabora.com>
- <DBAZRNHGIGL8.3L2NGPCVXLI25@kernel.org>
- <DBAZXDRPYWPC.14RI91KYE16RM@kernel.org>
- <18B23FD3-56E9-4531-A50C-F204616E7D17@collabora.com>
- <DBB0NXU86D6G.2M3WZMS2NUV10@kernel.org>
- <1F0227F0-8554-4DD2-BADE-0184D0824AF8@collabora.com>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
 
+Hello Askar,
 
+I appreciate your response. However, we're mainly trying to find out
+exactly 'why' this problem occurs. You might say that it's some kind
+of "Root Cause Analysis," so that this error goes away from the
+Inspiron laptops once and for all. If you keep on reading the messages
+in the other thread, you'll realise just how deep this error goes.
 
-> On 13 Jul 2025, at 12:28, Daniel Almeida =
-<daniel.almeida@collabora.com> wrote:
->=20
->=20
->=20
->>=20
->> (2) Owning a reference count of a device (i.e. ARef<Device>) does =
-*not*
->>     guarantee that the device is bound. You can own a reference count =
-to the
->>     device object way beyond it being bound. Instead, the guarantee =
-comes from
->>     the scope.
->>=20
->>     In this case, the scope is the IRQ callback, since the =
-irq::Registration
->>     guarantees to call and complete free_irq() before the underlying =
-bus
->>     device is unbound.
->>=20
->=20
->=20
-> Oh, I see. I guess this is where I started to get a bit confused =
-indeed.
->=20
-> =E2=80=94 Daniel
+But still, thanks a lot for the response.
 
-Fine, I guess I can submit a newer version and test that on Tyr.
+Bandhan
 
-Dirk, can you also test the next iteration on your driver? It will =
-possibly
-solve your use case as well.
-
-=E2=80=94 Daniel=
+On Sun, Jul 13, 2025 at 12:48=E2=80=AFAM Askar Safin <safinaskar@zohomail.c=
+om> wrote:
+>
+> I saw problems with Atheros on my Dell Inspiron, too.
+>
+> These instructions helped me to reset the device without reboot:
+>
+> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1730331/comments/40
+>
+> I used modified script based on the one above (run as root):
+>
+> set -e
+> rmmod ath10k_pci 2> /dev/null || :
+> rmmod ath10k_core 2> /dev/null || :
+> rmmod ath 2> /dev/null || :
+> { echo 1 > /sys/bus/pci/devices/0000\:03\:00.0/remove; } 2> /dev/null || =
+:
+> sleep 2
+> echo 1 > /sys/bus/pci/rescan
+>
+> Try both scripts, one of them should work.
+>
+> If still doesn't work, try to run original script, then do hibernate, if =
+still doesn't work, run script again.
+>
+> I finally was able to solve my problem by replacing Wi-Fi adapter. :) Her=
+e is my new Wi-Fi adapter:
+>
+> [    7.136347] iwlwifi 0000:03:00.0: Detected Intel(R) Dual Band Wireless=
+ AC 3160, REV=3D0x164
+>
+> --
+> Askar Safin
 
