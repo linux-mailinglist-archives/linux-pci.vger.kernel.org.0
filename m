@@ -1,136 +1,124 @@
-Return-Path: <linux-pci+bounces-32006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3E61B02E31
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Jul 2025 01:33:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AE99B02E54
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Jul 2025 03:17:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5F1E27B587F
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Jul 2025 23:31:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB8023AF49E
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Jul 2025 01:16:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9075E148827;
-	Sat, 12 Jul 2025 23:33:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CB6817C91;
+	Sun, 13 Jul 2025 01:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="RZnQl2yr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4A4AIKo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87120B660;
-	Sat, 12 Jul 2025 23:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752363198; cv=pass; b=Ek37A5pwXC2VUGcGMM680+4IhqOFPBFMXPHmAqC26SMXSJVPTPRTssLiIemD2giFCxD1tsJR1wjsp/qI8RncC1KEvf21GW7s/jD4oQ6GTya0OJiv/2rPno+YhoopIprn8SUgyN1WrG2KZtX/nvtqWC0yhayZC3nmdJ0QKBqW/PI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752363198; c=relaxed/simple;
-	bh=oX0KBa8QcSF1/VTlkNXaw2F1+7wL0jox5K2UeNYpLDU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=QDlDbK5t00YNDuz+2b/X7d/GtV05AlbSZ89egMwuclbcp2Tgql4hotYu6NX5+hbOwqIh1ueXqXBUSZpABRd7BqXX2OhfCpDhe5sISZGElbmRxOQrAlJzv/JN6FbnJvqpPvdHVTP9ATPc5crHoxSDPJVXbISTZwFbEMJAR2KzGow=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=RZnQl2yr; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1752363175; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=AwEVmKLriLGCswzTfx8op7QW3z9rypXaizpAYWm9g8n+kpbksoQzIJigGGcENqPBnNZWit0vcloD39Qhq7vYjMDj3OfRsjIMx3rCAs5e4+EGsoCXeZ99WLsF9fQAsSFILvsSFCGbcDLa6Bja4Ver1BOl+eQ13XuUOvrtrD9UYc8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1752363175; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=v1FIws8WLuejVcFHPk2kcrTklHDh2VjZnNxXoePuTq4=; 
-	b=cVUMxs3Jq7/1kUjo3kX1jhfdzlzkmwXeRa/XUyqXFXItP61qJWseQwbYdH2hQM6KtkwdJYLboJji/BvIyMckYKkMow+HI1ySEyUv6/b6XrU/lt8kZxSJ/ivFzCoYOZWVcRbg8RlUCVIcxJb6Hf2tcl5ByIQaBbCxiI108x6A96o=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752363175;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=v1FIws8WLuejVcFHPk2kcrTklHDh2VjZnNxXoePuTq4=;
-	b=RZnQl2yrl//lu6/so+NWHHGdLFR71QRZp/1+/Wq7wzd12CafWym1D+LtGvIUBKhc
-	h75w/HDEpD95YPFY6WohX7BiAmegbYGR0YvlXtXjHb3opy6RhbOEZgpZiNy2hemryNI
-	EqKhijuKJk5nEPX3RIv2dtAR9Q9Miyu8miNiGq/4=
-Received: by mx.zohomail.com with SMTPS id 1752363174056465.42889511897727;
-	Sat, 12 Jul 2025 16:32:54 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C12C17736;
+	Sun, 13 Jul 2025 01:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752369437; cv=none; b=TpIIln0OxIria6GxYe1FaZlR+ws4m41SawKURI2JPwH7IMrTeAnXkBMcLR49u+rfMzQ1WwhWU7IONrbKrqj/ap0e+Wm+lWqslDFuZbYu+uilJS55LAh9tmTHujYjVfTvrhZNZUeZ08m1/9TT3JAh6hVEY2A26fiKWWwC+6Ql5hQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752369437; c=relaxed/simple;
+	bh=9fcfBv5M7BSaYGZmCNIOoHulZXhBJp4H0UHH+xhhK7s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VxQhHWOpUoq0yRADGoaNUKrKmS0zDeeT/GksqfNoLM04gmRcKThB4AWKHaXhXDHzuPhmHR6YauqW2hA810r7seQSs7QdD8joGUA3/+wTRP3CmvRYWGbtdlal+IIebgsg1Xb++CVWWalaVaT/KfnAiI0j7+DUHHhLeXQSYAT13cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X4A4AIKo; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-235e1d710d8so41957295ad.1;
+        Sat, 12 Jul 2025 18:17:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752369435; x=1752974235; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mHdVN3AILq+UMnKWcjDlXOB6J65yX52trs7FSPfQTIY=;
+        b=X4A4AIKoSn8wZR1DouPUIKhiU3UJ4jXuyPZAAlHIi28OYL3CvchujxeG7oDKzD68io
+         HQSyqWDlbGmmEDMmKxnUyLv66ukgRANhLELrXPTQYSKIcUsnR70Q7K8XXoSsjtxegR7P
+         jxjMYhlnNShG8VGXj01CqFHBaTjqfXDlkb3eVbPZkXDSPcsoy4uRhYbw2/aztKQRyN9v
+         W102UPhW3Fy4jvJTLWl3+9w043ci/7KBuYoaCMMrrLDBz0JCsLJnTGhNcd4xEOGvBEnF
+         c3nsCWTLjPcn9i2cdUiTVIOIiwAdlPnlNgK7Y+UZReJQ7yqF3wcWq2a3nYc7GfHcy90x
+         0GMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752369435; x=1752974235;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mHdVN3AILq+UMnKWcjDlXOB6J65yX52trs7FSPfQTIY=;
+        b=rHje8cCzZCUN9smlYs0aTAH8P+DGwhWbcCpNe7ljUS6QIYEJwCMstKkxk2HVkIkaS4
+         4fT9LHfYsmGQQ1IrFo3k2vX/pE4TlNVeNGQYNr/LVRItTRVmwwMjqNYlh9Tk/K0PRtHk
+         IBpdTsnRcw6suAn1YheinJMTSSy2U+w40lezOKkJObKfUcar5C+MxvPMbJCQh9ci1idz
+         zzgmmBUOe9Jve8oiVLI3NpjvrfD/3CfLQYxXRL9SbTnvtJugJsbrqBfhZ1fD3gvmK0kn
+         eMvnO4EVhkY5wpsbvQMd+iBOBmpWxfk3IcxN3dTL+DCvi458wAiR+OenLyjBiWfh4MNT
+         WEkw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+L57/Ex3XGdLEq34qHoULpsS6sqNu+8ZM6aZx7Dgrfx0PUoLRR7AyqeQRCTqx5H81t8mt3Ad0chCWkqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeJBuabjJB0I7UZOu9HddpSoNWpSR9Wcpy+8E/7mkifxlSDIFx
+	2AWXj4D/J1L7inH06NcC4cJVSHtvOcuZlPlnK0wgQT6nZaNAPSvTTNys3Ddjjg==
+X-Gm-Gg: ASbGncvFbUVITGTjSyJs2V6SaTvehXgDJ0fAzd5iWlYj11N0M9ROuaFMRXyrtX1hij3
+	Osn4jJBhCM9e6erSuFTg8BiNWiQZQiJlOotweJSZ7KBiq2W5BHfOk2QtjRCMdG0N2PpXg/tNdke
+	+pOc4qHp5rMMPV0cf2O89a2zP491bK7VwN4C3rpreUf+BAd/Tz9hnwL2jS1WH0JU4Mr2CzeE9DD
+	sU/R5b9OPxMSv3aqAzZeP70ecl03hVM4BX7/fRoE1vRU9GsWSFjYos5GFGzgX4yStn4PCl7YN0V
+	XdsdoMxXCHsDI2FOZQZOqtVg8rq81mekg3VExGrc1+QCtjF6DOA9Hs1F0m8UEKS0w6VlEXAesw/
+	jfJtYRDhDlvkxeKDqDousApQ6RmlnakRWP+EL+8w=
+X-Google-Smtp-Source: AGHT+IG+bf788ONZ3xo2e7tyPz1n4iF4ASquBTq+qWbiyuJBnISThEYic2if6SSdUKskUE/NTu1M9Q==
+X-Received: by 2002:a17:902:d484:b0:235:866:9fac with SMTP id d9443c01a7336-23dede2cfd8mr124363935ad.2.1752369435323;
+        Sat, 12 Jul 2025 18:17:15 -0700 (PDT)
+Received: from localhost ([2600:1700:22f5:908f:1457:7499:d258:358f])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23de42ad268sm69594865ad.77.2025.07.12.18.17.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Jul 2025 18:17:14 -0700 (PDT)
+From: Matthew Wood <thepacketgeek@gmail.com>
+To: "Bjorn Helgaas" <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH pci-next v1 0/1] PCI/sysfs: Expose PCIe device serial number
+Date: Sat, 12 Jul 2025 18:17:12 -0700
+Message-ID: <20250713011714.384621-1-thepacketgeek@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v6 3/6] rust: irq: add support for non-threaded IRQs and
- handlers
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <DBAE5TCBT8F8.25XWHTO92R9V4@kernel.org>
-Date: Sat, 12 Jul 2025 20:32:37 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Benno Lossin <lossin@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- linux-pci@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DAD3292B-2DBF-442A-8B60-A999AE0F6511@collabora.com>
-References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com>
- <20250703-topics-tyr-request_irq-v6-3-74103bdc7c52@collabora.com>
- <DBAE5TCBT8F8.25XWHTO92R9V4@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+Add a single sysfs read-only interface for reading PCIe device serial
+numbers from userspace in a programmatic way. This device attribute
+uses the same 2-byte dashed formatting as lspci serial number capability
+output:
+
+    more /sys/devices/pci0000:c0/0000:c0:01.1/0000:c1:00.0/0000:c2:1f.0/0000:cc:00.0/device_serial_number
+    00-80-ee-00-00-00-41-80
+
+Accompanying lspci output:
+
+    sudo lspci -vvv -s cc:00.0
+        cc:00.0 Serial Attached SCSI controller: Broadcom / LSI PCIe Switch management endpoint (rev b0)
+            Subsystem: Broadcom / LSI Device 0144
+            ...
+            Capabilities: [100 v1] Device Serial Number 00-80-ee-00-00-00-41-80
+            ...
+
+If a device doesn't support the serial number capability, userspace will receive
+an empty read:
+
+    more /sys/devices/pci0000:00/0000:00:07.1/device_serial_number
+    echo $?
+    0
 
 
+Matthew Wood (1):
+  PCI/sysfs: Expose PCIe device serial number
 
-> On 12 Jul 2025, at 18:24, Danilo Krummrich <dakr@kernel.org> wrote:
->=20
-> On Thu Jul 3, 2025 at 9:30 PM CEST, Daniel Almeida wrote:
->> +/// Callbacks for an IRQ handler.
->> +pub trait Handler: Sync {
->> +    /// The hard IRQ handler.
->> +    ///
->> +    /// This is executed in interrupt context, hence all =
-corresponding
->> +    /// limitations do apply.
->> +    ///
->> +    /// All work that does not necessarily need to be executed from
->> +    /// interrupt context, should be deferred to a threaded handler.
->> +    /// See also [`ThreadedRegistration`].
->> +    fn handle(&self) -> IrqReturn;
->> +}
->=20
-> One thing I forgot, the IRQ handlers should have a &Device<Bound> =
-argument,
-> i.e.:
->=20
-> fn handle(&self, dev: &Device<Bound>) -> IrqReturn
->=20
-> IRQ registrations naturally give us this guarantee, so we should take =
-advantage
-> of that.
->=20
-> - Danilo
+ drivers/pci/pci-sysfs.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Hi Danilo,
+-- 
+2.50.0
 
-I do not immediately see a way to get a Device<Bound> from here:
-
-unsafe extern "C" fn handle_irq_callback<T: Handler>(_irq: i32, ptr: =
-*mut c_void) -> c_uint {
-
-Refall that we've established `ptr` to be the address of the handler. =
-This
-came after some back and forth and after the extensive discussion that =
-Benno
-and Boqun had w.r.t to pinning in request_irq().=
 
