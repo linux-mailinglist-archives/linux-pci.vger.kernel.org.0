@@ -1,138 +1,218 @@
-Return-Path: <linux-pci+bounces-32045-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32046-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CA64B03839
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 09:43:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56E99B0387F
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 09:57:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D225616F643
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 07:43:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ACF3F3BD72E
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 07:57:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 772472356C6;
-	Mon, 14 Jul 2025 07:43:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9857423717C;
+	Mon, 14 Jul 2025 07:57:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3vOMrMf"
+	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="V2uGom8V"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010044.outbound.protection.outlook.com [52.101.69.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A8B23506F;
-	Mon, 14 Jul 2025 07:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752478989; cv=none; b=jNUk2XtqbU+qkS89SBp+9S6Gb0GJDUoh7qS2BeOrHBKQwoyYsCarspQRlsG/9Cti19WCCqsuyf99P3EICZifZ427SSOD2DKavTIERsQ2zLuYFtkf9QHmlEmB32mPQUOPVcuOgw9WnKEjKR7BcU9noEO9aFuF9BCg+8XisvfSkJI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752478989; c=relaxed/simple;
-	bh=EOu3jVUX5UfJ6LGeyv6OWiKEfJL9OWFjXUKnfNVtLD8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SBSvjzsqsNwSm8ECNlUdw7HHLEQzQfWUJltt/ZBykEIcdTxEUE13alJ8IoD6fkT7Vg2q+nJOPWdqK/QwZYGFD5vCZ0qzSSpWxEqk2AfGwRC3Dd0eImOnwDaOoQgNWkBEB/Rgo5Z+3i/eMC4JjW+ESYxPP3VtJR76Byeh1IKl0DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3vOMrMf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6441BC4CEED;
-	Mon, 14 Jul 2025 07:43:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752478988;
-	bh=EOu3jVUX5UfJ6LGeyv6OWiKEfJL9OWFjXUKnfNVtLD8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y3vOMrMf6WF8gCKDh2mF+PVxngU2BGyf/KQH9qaTfenlTbzvYAFjwGqZkqoaKc2/+
-	 jKmWwOXuwXAiUYefd5SKoTbKZS0NpVGY+MBzw6S75tVnRBHm/Fs8mW4PoIZajEr+Sm
-	 VFmwYS6TUnSQuDZch4gKOFTrL3w+e2Dd1t9Au7hiDCoLNGcls5aTRDYb6+1E0ELEFL
-	 gMAGB91IP+7FP6+/X6wGuH7/qQCZ6GjMEcgcIZ4fRvClg0kfClv8/+Hj2xdpbNZHKj
-	 ZA9a5gh3rioVWUN/uwlniIwirQAHDakQE7GK2SAzrHMk0puXEgeoqfKqdPhrk4CdOz
-	 H3+/EyYDfQcHA==
-Message-ID: <e3f6da47-25bb-450c-8660-f1406ed590e6@kernel.org>
-Date: Mon, 14 Jul 2025 09:43:00 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB598238C04;
+	Mon, 14 Jul 2025 07:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752479858; cv=fail; b=slLly5VFkBP9PMzR7El49e7aLig46xCBP4Xv27uFDTIO8VtHFC4yVl54pRQ5HMDSzNmPqXcP9qdAi/iKC9d2AgnNdA5KxcFWhbcxKWitGqc5KEgsywzf8FH3jqHlCJTq3p2mE/elZvVE4I/cjevGQvFDzACdwG0gsHCUc6lnNhU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752479858; c=relaxed/simple;
+	bh=ayazKlwJVJCZINi4FD6e48x4j5eFArgKHK32Ch79yro=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DvvTq+6hOgzDsGWkkU6VWQwEUtqAko6C1Hn8ea1KRe8ZPd9oW68+WWom1qxf5uCZPtOk4uYuEm6mkGL2CWXifWHztCYlHKIVRCA1qsDQOvjKfR8i+aIZMxX96u8IFCwPN8S7DJtBQZMvWMU7ytEJ12cXkd0jyRph7TQ+KKq+3hw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=V2uGom8V; arc=fail smtp.client-ip=52.101.69.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Eh9kZu9AFIUwib269yBf0nsk/F116mwM2PUb9R7VJcc/zZvudU3cPAEbPItPfktgsqvxFJr+1PBYt71d7rGpCAWsKDKOqLEnC0vcSDICMz3LGOa4wLvNVRiGcxFcNkVphvvkkHWX49DK00eIEXhxgll7J3+Pju9ysfPqBgPt8CTg1wHLaCcIgeDjBso3dOVA3DTNNYbfNYXkK9tvMMLmvaHEZe0hgExYY20RLRtig9KnUz/0IBBLRH0zIrQITU/1YhbBol6S9cDK7hiJo+ERKcfXvTOEOsktHvQkueJbDYxV8MZj1pcVV6gjgtiU9oBJdPdxxYJ5Jx7nb+HyDCbH4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8LZd85MfwfLst7Ni2Tz//WPk8ZDMbDEWbkr7UpcD4Qc=;
+ b=QC6e/rEotJJm5z6wOoJlAk//tjS2vMfaqD59gzu8opZap3rpm3Zh4kMBCFIdGSEYZtN0cAMs2Cq/a/QEIV3D/sPXuRFDdUCQRyrOtnBwfviCsWiGAz0YGfhmkhnuyVWNZl7BwoIM+MzX88qgAWI6edablePKkmMnOJJ9jHBdVwkpWccV2KZWtlkSDIjSicNwNC9Y7VftkvHdt2vF+JBEbV2y+ioaYD8cV8p3y5fHnWq5qrCsW5Gt0bGS6f8OukEQfRZtDGhxzChTfqtGRCRpPMFHyxodkuVvmjfvTsvinq+zlE+Rs/o7KckDvZXQG0kKBEaSrrKhvt6G62WKZ4yeqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 139.15.153.206) smtp.rcpttodomain=kernel.org smtp.mailfrom=de.bosch.com;
+ dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8LZd85MfwfLst7Ni2Tz//WPk8ZDMbDEWbkr7UpcD4Qc=;
+ b=V2uGom8VDdMwSaQ0Wt1ugpEmQsqGYZdvK3Jy0Zr3xA1m1NHEsm6gKD2YKoberNsAHY03OjHwtKPAkGKGgsJ6HlK6bvOsvxOIdpzOf7lJp2VCxFVV1YPeVyz+UFO4Oc/k3vCvWLjOu5egHAoIlmPCkC49g4H/a/dpre93pxRMBkJJd0RHdgLDLDI55CF/prZYhUgmzUHv08rJPYL+m1beTryRwx6TEpHMMZsEJKjgSU8pxC8lSWPhklC5arpHYhbenfkGKLc6qzmwrU0g0Uio7K5xCNRaAcNcv8qbi1XnLsBQjASxIfVgqnJQmayzm/48HS41GclV891OkxOQQ45r0w==
+Received: from PR3P191CA0055.EURP191.PROD.OUTLOOK.COM (2603:10a6:102:55::30)
+ by AM0PR10MB3345.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:181::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8922.32; Mon, 14 Jul
+ 2025 07:57:31 +0000
+Received: from AM1PEPF000252DE.eurprd07.prod.outlook.com
+ (2603:10a6:102:55:cafe::91) by PR3P191CA0055.outlook.office365.com
+ (2603:10a6:102:55::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8922.30 via Frontend Transport; Mon,
+ 14 Jul 2025 07:57:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.206)
+ smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=de.bosch.com;
+Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
+ 139.15.153.206 as permitted sender) receiver=protection.outlook.com;
+ client-ip=139.15.153.206; helo=eop.bosch-org.com; pr=C
+Received: from eop.bosch-org.com (139.15.153.206) by
+ AM1PEPF000252DE.mail.protection.outlook.com (10.167.16.56) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8922.22 via Frontend Transport; Mon, 14 Jul 2025 07:57:31 +0000
+Received: from FE-EXCAS2001.de.bosch.com (10.139.217.200) by eop.bosch-org.com
+ (139.15.153.206) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.26; Mon, 14 Jul
+ 2025 09:57:20 +0200
+Received: from RNGMBX3002.de.bosch.com (10.124.11.207) by
+ FE-EXCAS2001.de.bosch.com (10.139.217.200) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.57; Mon, 14 Jul 2025 09:57:20 +0200
+Received: from [10.34.219.93] (10.34.219.93) by smtp.app.bosch.com
+ (10.124.11.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.26; Mon, 14 Jul
+ 2025 09:57:17 +0200
+Message-ID: <d6e62068-a05a-43cf-ace3-ff7a41e9a1d7@de.bosch.com>
+Date: Mon, 14 Jul 2025 09:57:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 10/14] dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex
- bindings
-To: Hans Zhang <hans.zhang@cixtech.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, mpillai@cadence.com,
- fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
- cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250630041601.399921-1-hans.zhang@cixtech.com>
- <20250630041601.399921-11-hans.zhang@cixtech.com>
- <20250630-graceful-horse-of-science-eecc53@krzk-bin>
- <bb4889ca-ec99-4677-9ddc-28905b6fcc14@cixtech.com>
- <5b182268-d64c-424c-9ada-0c3f120d2817@kernel.org>
- <2b608302-c4a6-404d-9cc5-d1ab9a6712bd@cixtech.com>
- <a7aac65e-848b-4bb3-bd52-963766410698@kernel.org>
- <50592fad-850c-4dab-92d8-a71cb89daf58@cixtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <50592fad-850c-4dab-92d8-a71cb89daf58@cixtech.com>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v6 3/6] rust: irq: add support for non-threaded IRQs and
+ handlers
+To: Danilo Krummrich <dakr@kernel.org>, Daniel Almeida
+	<daniel.almeida@collabora.com>
+CC: Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, "Alex
+ Gaynor" <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo
+	<gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+	<bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, "Alice
+ Ryhl" <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas
+	<bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+	<kwilczynski@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>
+References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com>
+ <20250703-topics-tyr-request_irq-v6-3-74103bdc7c52@collabora.com>
+ <DBAE5TCBT8F8.25XWHTO92R9V4@kernel.org>
+ <DAD3292B-2DBF-442A-8B60-A999AE0F6511@collabora.com>
+ <DBAURC9BEFI0.1LQCRIDT6ZBV9@kernel.org>
+ <DBAVXQTMR38Z.2782EGR84L7OP@kernel.org>
+ <DBAWQG1PX5TO.6I2ARFGLX88N@kernel.org> <DBAX59YKO0FV.ANLOWRHDDS92@kernel.org>
+ <DBAXP68U809C.2G8DMB52M3UZ7@kernel.org>
+ <C4A101A7-282D-4A67-A966-CF39850952EA@collabora.com>
+ <DBAZRNHGIGL8.3L2NGPCVXLI25@kernel.org>
+Content-Language: en-GB
+From: Dirk Behme <dirk.behme@de.bosch.com>
+In-Reply-To: <DBAZRNHGIGL8.3L2NGPCVXLI25@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM1PEPF000252DE:EE_|AM0PR10MB3345:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6e2e35ad-4776-4faf-2aa0-08ddc2ac15c7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|36860700013|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ekRROTRENnFIZ0pibXI4dXBMVnN2SlJlb2IrVXZrY3hlbnFlYVBHcEU1bkFr?=
+ =?utf-8?B?bWRUUmI5eWxod1hGdlM1MEhEQjNxazkwYVBWME5OcGE4Z0hhOGRMZXB1Rllu?=
+ =?utf-8?B?MDgwbUZkZUtHcWFXMjV5WGpNOHBVYjBZSDNhbEdXdGR1ZWQ0RDB5OER5Z2N5?=
+ =?utf-8?B?YXZDbFJ6Yk5WdlplUXduNy9qTlRwNzMxaWJBNVJObGcwL3YwMjN1RDBOV2NU?=
+ =?utf-8?B?dFhoeTVkd0ZTUytPUW5HcjBjeThxZ0c2aDVkVTJJZFRuamdlNDFZUWJaWmNL?=
+ =?utf-8?B?VUZ5TGI4MVdiOXloVW40Rmhoa1JpZFVUTU5SRVJsbExPQWxjYTczRWFreW8z?=
+ =?utf-8?B?aWp3Q2p4VVhUbWFRdVlEbVpPalNFOU5kcHhEODNaOEhHT1JjcTZiMEZEaUJT?=
+ =?utf-8?B?Zk56RElCdkZ0TFNmaFBxNGpCaVpKSHhDY21XSmI1b1RTWElSaUprOFAyVmU4?=
+ =?utf-8?B?MWFaWTV0L0JnRXd2cjJWR0gydXk1T1NXY3VtSGI1MFZNT1pmb2dGR20vWVBa?=
+ =?utf-8?B?TlFmenZwZVZHVWJqaHpHUURhdFh6RTRSU0V2WWxIbHJ0K2ZpMXY0UWlxSElB?=
+ =?utf-8?B?TFlzWTRlenUzelo3VEdjSCtNdzE0dHVBR0YvN01Cem8vMVZyRitSaTRna2ly?=
+ =?utf-8?B?MFNiZEc0OTY5QlQ1NFpFTzk4cXJFbkoraGYxbU5uNUpKMmVlYkxiL0FOaldp?=
+ =?utf-8?B?dnA4ei8wZjQ4ZG93ajVjQnAwajY3SUQwUW11YW1TVXFueThnT0YwMTdiZTF5?=
+ =?utf-8?B?bk83aVlPem1RdG15MWVpa3Q0ZDZsZ3cvR3ZkcHNscnJwVjlEbG5VVExva0ln?=
+ =?utf-8?B?UUJIMklFaGRiYjc3bFZMeExXdkk0d1ZpRzFhOUNEd2wyZDZPODdmNVB2a2c0?=
+ =?utf-8?B?alltb21mbklrM3R3TWRQSnJyTzllM2pNZDF4dXo1UFI1L3Fsb2VTeEtsZVNG?=
+ =?utf-8?B?cUdFUisvRTJDMEpEWVJVQzVoWFpKTnNETFEybFA0eGRtVkFvc3YyQmZjVDZh?=
+ =?utf-8?B?NmZyN3ljeHY2QnROSEQ5WEdsejVwNzhPWUZ2ZDFGYnJOTGZCVUc1SjZUcTli?=
+ =?utf-8?B?RGx4eEh0ZlJQdWhGdGNYOVFKUW9NcmZxOHNTK3VSRVRpcTUwV2hYNDZBMnZ0?=
+ =?utf-8?B?TE4rbXUyNzkvaFZsaEx5L0U3Qjd6VHQvTXcwdnlwYVZhdFdvQUJsNTcrbE5i?=
+ =?utf-8?B?MU1TeFh4a1lPdUJvNzhCTG1mbEdSWG5ONjdLUi9zeC93RmxKOUZxNGM2OUo0?=
+ =?utf-8?B?TG1tK2RpeUprWWxkLzJaYUpvMUFpREJ4VlY3cGpBSElnbUdmVHRCeE1yNWNL?=
+ =?utf-8?B?V0kwYVVlS0NtTDlWOGZ0WHV6azBtSDFYemcwU0Urdno4dEt5RDVHOHVIVTh4?=
+ =?utf-8?B?dTJraTdZVHBvVFpmcWxwVmQ0Q1hialZ2dXpEUlVBT1FCK1llY3YwMmt3Y0J5?=
+ =?utf-8?B?b3JrYkZhQkNPUzdDV3phUDl4cWRQVzBBVVZSNHkvZk5Rcy85d3Y1SGlTLzNH?=
+ =?utf-8?B?RkYvQmNabjdkOXZqcVFVdEVrK1hrb3MxZ1QvZ1NaSDN3ckR1bUc2MjhiL0wv?=
+ =?utf-8?B?R1BqcnhkQVlndmNramx6clk4U1d0UzAxME1LeDBTWnVNSkxhbi9XblBEWmp0?=
+ =?utf-8?B?SEZRK0w5eXkrTkhjdEEyZkZIYWtGUWptcXZNQ2hGMHhUajJOOU15OUtCNzd1?=
+ =?utf-8?B?VmpWT3pMZ3RYcjROdEZkZU93TnN6bnN1MEdmRGMra24xNkVRRll1Z3ovaS9C?=
+ =?utf-8?B?OGFhUS9rNFBCU21HNmgzT0JGdWVvUy9YNSsralRXNHFjYW1pdC9OdytHYUo5?=
+ =?utf-8?B?NExIc0lBaGRhWUR1WlZsTk81YTl6VThzQytUMWtHNTJUNUhYMy9SMkNNVUQx?=
+ =?utf-8?B?Mzc3Y3NVM1k1eDNSUzNHNGF3NE15eHpLaE8rMy9jU1AwMlAvRGdRVUxrTTVo?=
+ =?utf-8?B?a2lqUXBWQzJKMzg1d2VyYlozK2ZJeXprQWJ4dGpZaUsxWU81V1FIYnZFcnA5?=
+ =?utf-8?B?cmh6bGFkRmF5c0U3bVYyeHM3VjI1cC9LdHBqQkRhVFJ2NnBBdzUvMlZLdFNH?=
+ =?utf-8?Q?IwV3ld?=
+X-Forefront-Antispam-Report:
+	CIP:139.15.153.206;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: de.bosch.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2025 07:57:31.1318
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e2e35ad-4776-4faf-2aa0-08ddc2ac15c7
+X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.206];Helo=[eop.bosch-org.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM1PEPF000252DE.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB3345
 
-On 03/07/2025 03:47, Hans Zhang wrote:
->>>
->>> We initially used the logic of Cadence common driver as follows:
->>> drivers/pci/controller/cadence/pcie-cadence-host.c
->>> of_property_read_u32(np, "vendor-id", &rc->vendor_id);
->>>
->>> of_property_read_u32(np, "device-id", &rc->device_id);
->>>
->>> So, can the code in Cadence be deleted?
+On 13/07/2025 16:19, Danilo Krummrich wrote:
+> On Sun Jul 13, 2025 at 4:09 PM CEST, Daniel Almeida wrote:
+>> On a second look, I wonder how useful this will be.
 >>
->> Don't know. If this is ABI, then not.
+>>  fn handle(&self, dev: &Device<Bound>) -> IrqReturn
 >>
+>> Sorry for borrowing this terminology, but here we offer Device<Bound>, while I
+>> suspect that most drivers will be looking for the most derived Device type
+>> instead. So for drm drivers this will be drm::Device, for example, not the base
+>> dev::Device type. I assume that this pattern will hold for other subsystems as
+>> well.
+>>
+>> Which brings me to my second point: drivers can store an ARef<drm::Device> on
+>> the handler itself, and I assume that the same will be possible in other
+>> subsystems.
 > 
-> According to my understanding, this is not ABI.
+> Well, the whole point is that you can use a &Device<Bound> to directly access
+> device resources without any overhead, i.e.
+> 
+> 	fn handle(&self, dev: &Device<Bound>) -> IrqReturn {
+> 	   let io = self.iomem.access(dev);
+> 
+> 	   io.write32(...);
 
-Huh? Then what is ABI, by your understanding?
+As this is exactly the example I was discussing privately with Daniel
+(many thanks!), independent on the device discussion here, just for my
+understanding:
 
-Best regards,
-Krzysztof
+Is it ok to do a 'self.iomem.access(dev)' at each interrupt? Wouldn't it
+be cheaper/faster to pass 'io' instead of 'iomem' to the interrupt handler?
+
+fn handle(...) -> IrqReturn {
+
+    self.io.write32(...);
+
+?
+
+Thanks
+
+Dirk
 
