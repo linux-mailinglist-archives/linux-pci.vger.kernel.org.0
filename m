@@ -1,216 +1,172 @@
-Return-Path: <linux-pci+bounces-32099-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32100-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFE4BB04969
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 23:25:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E164B04BA3
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 01:09:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18C7A4A44B9
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 21:24:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86F327B46EC
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 23:06:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B0AC28982E;
-	Mon, 14 Jul 2025 21:22:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE3068248C;
+	Mon, 14 Jul 2025 23:00:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q60MisbD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cQMCHqqJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCF9288CB5;
-	Mon, 14 Jul 2025 21:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F8C1F3BAC
+	for <linux-pci@vger.kernel.org>; Mon, 14 Jul 2025 23:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752528143; cv=none; b=YSEVT8r8+JMaVyah6SE3x6hYipRNQFaFm4NvKSWP+5wv74LpQfAjijsH6v0KLEhiJGXfbVWHUOMlh7aJa1gwsNdlyhNbNEOGo/w03/1q5JviZk2PHjCE+2XJmM5+M16CuhYKtY4xsQLl8JIDnE4ClWro1vYYuIh+0sxAyMHRth4=
+	t=1752534009; cv=none; b=dLehPg88z1n26hlhpbcOc1s37IPZF698O1IOqKJp1IBftw/tfo4+68ApQ9CK1ow9fCUpAZB2OlHMPBMI5qfi++iAoNBdu3sD6Cp+MWF5FGjxhjnDMvwl2SH5QPlY4lrLs2Eij4gkgIUh5zz5FOG7WPpvGcCRm4NzoTYqP5LPVuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752528143; c=relaxed/simple;
-	bh=mA7SFMfHy8OinIxgtmu9yWbldbYt6k6q8NSeQegNnJA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OCSYecmlY8HzZxLqc4HQvwsIbgm9JmJgohj6c4s55AIhhEgXzowTahaUE6tYtzx5qdlD7VylCHrdhAk//UU5yjNrQ30UZd1SvONsueHynK6RnGL7xhpIs3TeJ+RAIAaQ0aAhOcZBHr6KknEhW6j/VwZ03QQM+ecRMfcLIK+qORY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q60MisbD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EECFC4CEF8;
-	Mon, 14 Jul 2025 21:22:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752528143;
-	bh=mA7SFMfHy8OinIxgtmu9yWbldbYt6k6q8NSeQegNnJA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q60MisbD95FOBih0G/23vPpGal83ekgZ28SJ47/I5DIL4UoRV88m/T9aZ8dmOHcei
-	 35usRcp9gpNMuI7D6ihW86QYi+XVSRPRYGdyxIwCtDFiQpKqHpKgltuHzKQ0uRoSmE
-	 z1l4hyF1P2U/5OXyyfn84zPyOOT3cNGZTvkejh/bj1N2eLoiXaqDMPeKw9OJTsoIh+
-	 Q8XuewUUT+SMBoeZZadI6UXPxPFzh1BYd6Ey1YZoRM5BfoD3jzblmHSzhRTwarIhRy
-	 wRecydRGnKsvGt9GLPXwt886zRekRUsGdU9KQ5iq4mjItwreKavGRZA0zx2QGnOdpD
-	 ajlVFOtxieMUQ==
-From: Mario Limonciello <superm1@kernel.org>
-To: David Airlie <airlied@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Lukas Wunner <lukas@wunner.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-kernel@vger.kernel.org (open list),
-	iommu@lists.linux.dev (open list:INTEL IOMMU (VT-d)),
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	kvm@vger.kernel.org (open list:VFIO DRIVER),
-	linux-sound@vger.kernel.org (open list:SOUND),
-	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v8 9/9] PCI: Add a new 'boot_display' attribute
-Date: Mon, 14 Jul 2025 16:21:46 -0500
-Message-ID: <20250714212147.2248039-10-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250714212147.2248039-1-superm1@kernel.org>
-References: <20250714212147.2248039-1-superm1@kernel.org>
+	s=arc-20240116; t=1752534009; c=relaxed/simple;
+	bh=vXneDlDeK56VVeo5rweumy4oJJMpJJ5K4H02OWVI+u0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pPxO2cv9BxhtNvqKfdXZQoakfO1+hz4kqP1tfGWYRR494o1UbMlnVJA1ydnlPRMAjTkqWfhHhvNDF/Vx5QQApySjGiFWqaRaMeAaEzQYtXcuLkld7k5n/XbVg9Xa/+T/JG5FIGZxhjWR2Oe2h99jARc8+FLcbDCCG11sdW28L2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cQMCHqqJ; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752534008; x=1784070008;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vXneDlDeK56VVeo5rweumy4oJJMpJJ5K4H02OWVI+u0=;
+  b=cQMCHqqJq0D+jXE/DFySMQZOgJtxvitRzsH8N1GmxHYjKuoZ1FMeAClk
+   tr0pOjsUKxjlcxlzlpi7wU7F3Vsur/b2v4TLRer6a1wvyDhL229osVTfs
+   iKWgiVkFcw//hvSvdbnt7qGHUCK9yrr+muZMISCO/of7LzfM9/yHVsAQ3
+   1LDGa2tLW7SUE/sDyfM2wIhcbjRmOD/3Xq05c3JdjyKerlJz4BjA8c1CC
+   gefhNWJ5m5sf9KEti8hDY+CURB2NaUUr16Xl0Qf39zLUs40kOgVpvED1a
+   dBPgDPcO1yNBFfmjMrJY6MWU812aFdZPnrffAL3g1zMSLaiGOoJI4y5EI
+   Q==;
+X-CSE-ConnectionGUID: XHr6DzMtR2O8Hrh3CpBkdw==
+X-CSE-MsgGUID: PtNBjVFVQ5SMWH9uTjcyAA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="72315991"
+X-IronPort-AV: E=Sophos;i="6.16,312,1744095600"; 
+   d="scan'208";a="72315991"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 16:00:07 -0700
+X-CSE-ConnectionGUID: alPrH+OeTuOrPSFl1lfJPg==
+X-CSE-MsgGUID: 1GoyWPTGRVO1FEC4jAX5Wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,312,1744095600"; 
+   d="scan'208";a="156863444"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 16:00:07 -0700
+Received: from [10.124.223.145] (unknown [10.124.223.145])
+	by linux.intel.com (Postfix) with ESMTP id 3DDF720B571C;
+	Mon, 14 Jul 2025 16:00:06 -0700 (PDT)
+Message-ID: <b6c11a92-454c-44db-b072-e2291b37272c@linux.intel.com>
+Date: Mon, 14 Jul 2025 16:00:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] PCI: Set native_pcie_hotplug up front based on
+ pcie_ports_native
+To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: Laurent Bigonville <bigon@bigon.be>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Mika Westerberg
+ <westeri@kernel.org>, Alan Borzeszkowski
+ <alan.borzeszkowski@linux.intel.com>, Gil Fine <gil.fine@linux.intel.com>,
+ Rene Sapiens <rene.sapiens@intel.com>, linux-pci@vger.kernel.org
+References: <cover.1752390101.git.lukas@wunner.de>
+ <5eae82776d695e589b89aad500d8208b980347e5.1752390102.git.lukas@wunner.de>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <5eae82776d695e589b89aad500d8208b980347e5.1752390102.git.lukas@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Mario Limonciello <mario.limonciello@amd.com>
 
-On systems with multiple GPUs there can be uncertainty which GPU is the
-primary one used to drive the display at bootup. In order to disambiguate
-this add a new sysfs attribute 'boot_display' that uses the output of
-video_is_primary_device() to populate whether a PCI device was used for
-driving the display.
+On 7/13/25 7:31 AM, Lukas Wunner wrote:
+> Bjorn suggests to "set host->native_pcie_hotplug up front based on
+> CONFIG_HOTPLUG_PCI_PCIE and pcie_ports_native, and pciehp_is_native()
+> would collapse to just an accessor for host->native_pcie_hotplug".
+>
+> Unfortunately only half of this is possible:
+>
+> The check for pcie_ports_native can indeed be moved out of
+> pciehp_is_native() and into acpi_pci_root_create().
+>
+> The check for CONFIG_HOTPLUG_PCI_PCIE however cannot be eliminated:
+>
+> get_port_device_capability() needs to know whether platform firmware has
+> granted PCIe Native Hot-Plug control to the operating system.  If it has
+> and CONFIG_HOTPLUG_PCI_PCIE is disabled, the function disables hotplug
+> interrupts in case BIOS left them enabled.
+>
+> If host->native_pcie_hotplug would be set up front based on
+> CONFIG_HOTPLUG_PCI_PCIE, it would later on be impossible for
+> get_port_device_capability() to tell whether it can safely disable hotplug
+> interrupts:  It wouldn't know whether Native Hot-Plug control was granted.
 
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v7:
- * fix lkp failure
- * Add tag
-v6:
- * Only show for the device that is boot display
- * Only create after PCI device sysfs files are initialized to ensure
-   that resources are ready.
-v4:
- * new patch
----
- Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
- drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
+Since pcie_ports_native is a PCI driver specific override option, I am not
+sure it is worth referring to this option in ACPI driver, just to reduce the
+number of pcie_ports_native checks from 2 to 1.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 69f952fffec72..8b455b1a58852 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -612,3 +612,11 @@ Description:
- 
- 		  # ls doe_features
- 		  0001:01        0001:02        doe_discovery
-+
-+What:		/sys/bus/pci/devices/.../boot_display
-+Date:		October 2025
-+Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
-+Description:
-+		This file indicates the device was used as a boot
-+		display. If the device was used as the boot display, the file
-+		will be present and contain "1".
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 268c69daa4d57..6b1a0ae254d3a 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -30,6 +30,7 @@
- #include <linux/msi.h>
- #include <linux/of.h>
- #include <linux/aperture.h>
-+#include <asm/video.h>
- #include "pci.h"
- 
- #ifndef ARCH_PCI_DEV_GROUPS
-@@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
- 	NULL,
- };
- 
-+static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
-+				 char *buf)
-+{
-+	return sysfs_emit(buf, "1\n");
-+}
-+static DEVICE_ATTR_RO(boot_display);
-+
- static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf)
- {
-@@ -1051,6 +1059,37 @@ void pci_remove_legacy_files(struct pci_bus *b)
- }
- #endif /* HAVE_PCI_LEGACY */
- 
-+/**
-+ * pci_create_boot_display_file - create a file in sysfs for @dev
-+ * @pdev: dev in question
-+ *
-+ * Creates a file `boot_display` in sysfs for the PCI device @pdev
-+ * if it is the boot display device.
-+ */
-+static int pci_create_boot_display_file(struct pci_dev *pdev)
-+{
-+#ifdef CONFIG_VIDEO
-+	if (video_is_primary_device(&pdev->dev))
-+		return sysfs_create_file(&pdev->dev.kobj, &dev_attr_boot_display.attr);
-+#endif
-+	return 0;
-+}
-+
-+/**
-+ * pci_remove_boot_display_file - remove the boot display file for @dev
-+ * @pdev: dev in question
-+ *
-+ * Removes the file `boot_display` in sysfs for the PCI device @pdev
-+ * if it is the boot display device.
-+ */
-+static void pci_remove_boot_display_file(struct pci_dev *pdev)
-+{
-+#ifdef CONFIG_VIDEO
-+	if (video_is_primary_device(&pdev->dev))
-+		sysfs_remove_file(&pdev->dev.kobj, &dev_attr_boot_display.attr);
-+#endif
-+}
-+
- #if defined(HAVE_PCI_MMAP) || defined(ARCH_GENERIC_PCI_MMAP_RESOURCE)
- /**
-  * pci_mmap_resource - map a PCI resource into user memory space
-@@ -1654,9 +1693,15 @@ static const struct attribute_group pci_dev_resource_resize_group = {
- 
- int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
- {
-+	int retval;
-+
- 	if (!sysfs_initialized)
- 		return -EACCES;
- 
-+	retval = pci_create_boot_display_file(pdev);
-+	if (retval)
-+		return retval;
-+
- 	return pci_create_resource_files(pdev);
- }
- 
-@@ -1671,6 +1716,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
- 	if (!sysfs_initialized)
- 		return;
- 
-+	pci_remove_boot_display_file(pdev);
- 	pci_remove_resource_files(pdev);
- }
- 
+> Link: https://lore.kernel.org/r/20250627025607.GA1650254@bhelgaas/
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> ---
+>   drivers/acpi/pci_root.c    | 3 ++-
+>   drivers/pci/pci-acpi.c     | 3 ---
+>   drivers/pci/pcie/portdrv.c | 2 +-
+>   3 files changed, 3 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index 74ade4160314..f3de0dc9c533 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -1028,7 +1028,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>   		goto out_release_info;
+>   
+>   	host_bridge = to_pci_host_bridge(bus->bridge);
+> -	if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
+> +	if (!pcie_ports_native &&
+> +	    !(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
+>   		host_bridge->native_pcie_hotplug = 0;
+>   	if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
+>   		host_bridge->native_shpc_hotplug = 0;
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index ed7ed66a595b..b513826ea293 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -820,9 +820,6 @@ bool pciehp_is_native(struct pci_dev *bridge)
+>   	if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+>   		return false;
+>   
+> -	if (pcie_ports_native)
+> -		return true;
+> -
+>   	host = pci_find_host_bridge(bridge->bus);
+>   	return host->native_pcie_hotplug;
+>   }
+> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+> index d1b68c18444f..fa83ebdcfecb 100644
+> --- a/drivers/pci/pcie/portdrv.c
+> +++ b/drivers/pci/pcie/portdrv.c
+> @@ -223,7 +223,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+>   	if (dev->is_pciehp &&
+>   	    (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+>   	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM) &&
+> -	    (pcie_ports_native || host->native_pcie_hotplug)) {
+> +	    host->native_pcie_hotplug) {
+>   		services |= PCIE_PORT_SERVICE_HP;
+>   
+>   		/*
+
 -- 
-2.43.0
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
 
