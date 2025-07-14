@@ -1,170 +1,134 @@
-Return-Path: <linux-pci+bounces-32038-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32039-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CC42B036A6
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 08:12:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A7DD9B036BF
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 08:17:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E9B59174B37
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 06:12:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11B5A166F30
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 06:17:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3891621882B;
-	Mon, 14 Jul 2025 06:12:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AD0D2E3707;
+	Mon, 14 Jul 2025 06:17:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKugY+EC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c3m9PEl5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4B6212B0A;
-	Mon, 14 Jul 2025 06:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABA82E3706
+	for <linux-pci@vger.kernel.org>; Mon, 14 Jul 2025 06:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752473552; cv=none; b=jvPGSBOYcQOCRuA7rMhwHDTa2c1mfKxrxrm1GtQawSDVzoFTVrtZAIM5X7bshYFilf9S78kzYGExzYyg4j/zTwF+ncANHs2n2Ti4W3j+Rb2WjVoJIokJmYXyozGHA1wIejF1+aH7kvOZVXKz+CYMgS6oAP3gnH5J8+Db58m8wzg=
+	t=1752473861; cv=none; b=ctX3GMTOrjpcr2Eccm798sK3KLFimpaZscfXguSTjJEcgb/sMPRvHueuWlejegtts4+cQgRQkfHGLcJvEc9krRXVcHsZGumNWOpcA1Bwt/NkcjScoP7hRMsuVMYJWrVCXr/kgi5qVUfSoLdHm/ar0pL9RAxol9k2E4B3lZYHQLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752473552; c=relaxed/simple;
-	bh=GCvuFIHfHnTY+lLbeieHAjb6PL9SdLYd5HNTQR33Wzg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VeoghloAyfWQE41SClqTJFHeB73yQpVIhmuxph+brYa8xWldjZPEsrhcMvrXCoRBTFz2UH/KdgiZqNHNAUdV3yFyrXukzgbGNJzBtO2BvvIjTYCpM/JRzp6Htz/LmzfpsDDc63H5WgkLv4EkUFO22KQkoUXqgRbbvmqUkfY3i1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nKugY+EC; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32f144d0db8so26256521fa.0;
-        Sun, 13 Jul 2025 23:12:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752473548; x=1753078348; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4HclH83NzlDxFp3WCu9k+tiTs4nj/yAfFDR01jNUC5M=;
-        b=nKugY+ECmULHuFBnZTezniRPGThSqsFexy1m1l8HZGSM/7PRbTvABsU3HYv6Lk52Uk
-         Ysk5W7KI6hQnrpVCxUdyo4r0kS+pdTMhIJXlNeio9dtA5WRSoOd1pZkxDQNLdAZor8eo
-         qwyKYmomhbD9QkAz01Gr92QTQdCRcHyeEVsDZsmpecqHrYJT5eiztrm/B6A5plJbIVXg
-         31duqjZWcHJhjozHL7oGLl6kr26cguPPSzp7EI4OvsCtP6jtDl37HABgdkDdkN4fOu2r
-         dP5umGnjP+LdgA7jf64BD9BgxBohFUMZ8IGeN8Vv1ORx8LEZN057dalkv9adGMPKjozy
-         mzKg==
+	s=arc-20240116; t=1752473861; c=relaxed/simple;
+	bh=VBy6PDnHPih2lBK2ZZwSq9hR6E2HRl5WrI7AEF/MP7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MUY0Gx2DMC0lSWAiUMpp0Y5czpffDP0WfWrnM5vG6EL7dk6ynp0p0Lc7mofbD/vkwGr37qRKrITPusfYY7ZUrF39F7lTb8VidbjbENVNDdZNC8K3oGUX5yS5XNOpIGfXzT9cgOzeQm0q1XX6HI+AHiILHgJbGBP2UWcsY9Y7Yjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c3m9PEl5; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1752473858;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kw7vr1HISEyMElnJL1/B0+9vBI9ECMEq3eIFOntmoI0=;
+	b=c3m9PEl5/H6hdiepI+PiE+00OgQa3uGpZbxi/eYyvA0I3JT73oY6ZVE6xS009gkiU+/7DL
+	YYYNK2FZxlW1Ml/HLqNXyQpaS95JxAZNKmAAI7X2vQtdyvZn/Jz5ettDMBnbl28Iuiy0gZ
+	ZhNqDstITyccn86EHrvkSrSIPUSxrY0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-440-htE5pk-hPamQJ2L_SJ0X8Q-1; Mon, 14 Jul 2025 02:17:36 -0400
+X-MC-Unique: htE5pk-hPamQJ2L_SJ0X8Q-1
+X-Mimecast-MFC-AGG-ID: htE5pk-hPamQJ2L_SJ0X8Q_1752473855
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-453817323afso25018945e9.1
+        for <linux-pci@vger.kernel.org>; Sun, 13 Jul 2025 23:17:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752473548; x=1753078348;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4HclH83NzlDxFp3WCu9k+tiTs4nj/yAfFDR01jNUC5M=;
-        b=WlTlYjJPhDeUwbmwLTecV/n36CAS0okYxau+f6UqQLV8lrxNp24OwC5KAezRkbCyWr
-         cq1EedDqCauYcuRHctwuXvDUrA0ycfuDa0TjLUK3oNkQmXuMgLRip9KCn/ppelbSCLpP
-         p3HvkFR40aZDZwhrsE6PdmlcNdrblnqFZ5z45a1cjQM+yjGwDILD7flWD4n5h3fycxVh
-         Spu5m4fl2YbNCVTf7vh4wrcfVdSq5qHDaTHmwD1jzKmsoWZHAHxZSl1C6QXBZPRb8Fli
-         FqORFjlT2Fb/VK6vnhI66uvr7vmYI/V9Me/EmcCYBvyzj7KhCMMMme1awnQKhZo1ZssT
-         ZVyw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBNbaPkEEE3Wo4jJjPgTp8P4TlC1IQAKkg20rJnuXU6N2IOgPMIuGY+raG/WHsqzSsio9H8bk0jY+hiX8=@vger.kernel.org, AJvYcCUqtvWcrRfpsGN17b41ean25RH+JiFZ7RHpnn7J9mkTeholc4Eob8t9jRIwL0UC9sWLrYWjkYp9V6ye@vger.kernel.org, AJvYcCWiF1suW3LLxNbgXGXwcx88/mpx0I9qHpstatMUqoSW3yE/Pj6bceS4vamSq2MgZ6vuF8t7mbgVYaM=@vger.kernel.org, AJvYcCXEJJZYBxxGGKBCutmfC0P1PCXSWmzq8ry7235T6xbw+kl4tuSSc5+4+9VwLlMVZ8+hMCXEDQXEDyPoQNM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0LFUl1J6XucQHa/SLe1l2i17z9JsrbptXMNzvyySq9EzVt98n
-	3eXnJeqbGBb2Bdv1mt6dI29eWUC7UAobBdsUmFwYLQDRbb6O4KZbu990lZmqOOE08NYbdB4fBCT
-	Re03XHpf9UR24uhh6rWvPgv7YZrORJwM=
-X-Gm-Gg: ASbGncuLW79G96YJMT3PiUyvQG5l/yAcM6ONfD9ni44/6iTn1Pxk7VF7APRyvB7Qk8W
-	jirMox6hIasBA1NQqxeUCZsAqQk2Hagr6ovWO9cDOcEpw6PrYOyXovcvGWC4l7auwaB2K4QAxum
-	1BwPMxwum/UdCBUkoYzJy/j7d2snsUP9Q88uUIPVteIdYJ8gtlEdul7ADswbmfT4tbW8g2sz/ue
-	iF4Fc0=
-X-Google-Smtp-Source: AGHT+IEEmZLhzLOHhcNX69E4EEM1Zr6whZ6ca7n1lHdYKFmEhiFtuzgKib+HMpneZvKeFl2cpxv/6S8jqM6l32aEim0=
-X-Received: by 2002:a2e:a902:0:b0:32b:a9a4:cd58 with SMTP id
- 38308e7fff4ca-33052279345mr39539821fa.15.1752473548356; Sun, 13 Jul 2025
- 23:12:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1752473855; x=1753078655;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kw7vr1HISEyMElnJL1/B0+9vBI9ECMEq3eIFOntmoI0=;
+        b=nAjOYKLkRMv0OeKE357otZ2KIk0VXvayl9CLzuy+zU0fw4i4Y3VCJQn4+ivcrqeUmK
+         UT7cGP1NJzSfj+gbqG+Dn/DVUBcXte9sMkV/X/1+GoXobZKnPAbmYsZN9P0A0QzxiM3e
+         23XfZL99/FVMxThUQzmO0KlIx5fBfwvlcagPbg6X14YHMIANBnuDEl45Lxbt72rnE8CP
+         OLkOhFls+fmY8hEszjtRGREShpnzupfh7/kppQqgljrukrJuGGQ5qWjOQtYaqqEPxbpQ
+         t8VqkHnrZo/ptdVBZEwyZjX+SMpb6NkvhM13C5HpY24GLVZGm2mVVc8VOsNXUHnnCZMC
+         YWiA==
+X-Forwarded-Encrypted: i=1; AJvYcCWbVpWt00+XKq0DJb+GPFOxhn8a6eEvXMr8Lw8/vtb9VX9XBtvszcGS/IrpH5G8uFcmRnGxkMXss2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8kB3gv5bZy61AMDw87so1fG8eOySyIF1bQ2zH66XKLvbdxL7m
+	pSiWH01eu3Ehd8Yn3Xv6F9iXS22B+yGl077qES+9/p4QAwsnVBodZ2VVVVPXpZkcssodmu+fjhQ
+	PWxVJpx0+IFKQq8+qUTjFUSL0oc9sDdB7Ai0dtiF5+Selu73mph3iK+oU4G73Og==
+X-Gm-Gg: ASbGnctcid+zVVO4XAglEwbQPluP38CwQpY4ZH8oGobB44Tj2A/IjEXjEgRFNy/rwC8
+	KLKF5L0Cw72Q5MPTLECRyBA9CPLbAuphsbw1Ka8Hn+c1fRxciEZOnDyAkQbaZoTcVpnPCp8qViE
+	gqvjG9hoBY4IKrqb3U/aOBJ1E7vBdSbQJsC3VhSuv7rw33cagAn3z30qy3vvJPeSbv1lIxLsxlA
+	zak15CRwCGIPoS7FFr9kHj/bzVXD3Rq2m0QCZ9xTK5wz7wy9TcZ3IHhLAl1rzXuuIAUea8XE5cN
+	jiTNbbOkqcHxe6JStnpISYtFEARVMzcK
+X-Received: by 2002:a05:600c:3513:b0:456:f85:469b with SMTP id 5b1f17b1804b1-4560f854858mr44020565e9.25.1752473854997;
+        Sun, 13 Jul 2025 23:17:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEQCJSWHskQAdK6/40s2GNLhe1adxKFpy3e1bkD6X5SdYIshLCkbO2SV3+P2shMcWDz9uD6pg==
+X-Received: by 2002:a05:600c:3513:b0:456:f85:469b with SMTP id 5b1f17b1804b1-4560f854858mr44020205e9.25.1752473854492;
+        Sun, 13 Jul 2025 23:17:34 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:150d:fc00:de3:4725:47c6:6809])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454d5032fcbsm162665575e9.6.2025.07.13.23.17.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Jul 2025 23:17:34 -0700 (PDT)
+Date: Mon, 14 Jul 2025 02:17:31 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org,
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	Parav Pandit <parav@nvidia.com>, virtualization@lists.linux.dev,
+	stefanha@redhat.com, alok.a.tiwari@oracle.com,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH RFC v5 1/5] pci: report surprise removal event
+Message-ID: <20250714021713-mutt-send-email-mst@kernel.org>
+References: <fba3d235e38c1c6fcef2a30ed083ad9e25b20fa3.1752094439.git.mst@redhat.com>
+ <20250709233820.GA2212185@bhelgaas>
+ <aG8BZcQZlbNsnrzt@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507-pci-tegra-module-v6-0-5fe363eaa302@gmail.com>
- <nz76wk5yqytag255jijxlyuodzpo3fm6d5coxutqrd7tgomzxm@pwzvpv4frjxu> <CALHNRZ9WYJef8+QyCfpkxLhUj_KRY=kZisEwq=arrTxXXfCknA@mail.gmail.com>
-In-Reply-To: <CALHNRZ9WYJef8+QyCfpkxLhUj_KRY=kZisEwq=arrTxXXfCknA@mail.gmail.com>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Mon, 14 Jul 2025 01:12:16 -0500
-X-Gm-Features: Ac12FXxzicaLORWlI4imvwogYPOLZV3Z9geQKHYOjwVJ4Ej31UmrR1MncJN4u1E
-Message-ID: <CALHNRZ84Xj=_HqrFWnYHdV-A9YM4yu2FhfYgHy4-sR65tsYbUA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/3] PCI: tegra: Allow building as a module
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aG8BZcQZlbNsnrzt@kbusch-mbp>
 
-On Mon, Jun 30, 2025 at 1:31=E2=80=AFPM Aaron Kling <webgeek1234@gmail.com>=
- wrote:
->
-> On Fri, Jun 13, 2025 at 1:17=E2=80=AFAM Manivannan Sadhasivam <mani@kerne=
-l.org> wrote:
-> >
-> > On Wed, May 07, 2025 at 10:25:51PM -0500, Aaron Kling via B4 Relay wrot=
-e:
-> >
-> > You should always add the context of the series in the cover letter.
-> >
-> > > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > > ---
-> > > Changes in v6:
-> > > - Remove unused debugfs cleanup function, as caught by kernel ci
-> > > - Link to v5: https://lore.kernel.org/r/20250505-pci-tegra-module-v5-=
-0-827aaac998ba@gmail.com
-> > >
-> > > Changes in v5:
-> > > - Copy commit message exactly word for word on patch 1, as required b=
-y reviewer
-> > > - Delete remove callback in patch 3, per request
-> > > - Don't clean up debugfs, per request, which drops patch 4 entirely
-> > > - Link to v4: https://lore.kernel.org/r/20250505-pci-tegra-module-v4-=
-0-088b552c4b1a@gmail.com
-> > >
-> > > Changes in v4:
-> > > - Updated commit messages for patches 1 and 2, per review
-> > > - Link to v3: https://lore.kernel.org/r/20250502-pci-tegra-module-v3-=
-0-556a49732d70@gmail.com
-> > >
-> > > Changes in v3:
-> > > - Add patch to drop remove callback, per request
-> > > - Link to v2: https://lore.kernel.org/r/20250428-pci-tegra-module-v2-=
-0-c11a4b912446@gmail.com
-> > >
-> > > Changes in v2:
-> > > - Add patch to export tegra_cpuidle_pcie_irqs_in_use as required when
-> > >   building pci-tegra as a module for arm
-> > > - Drop module exit to prevent module unloading, as requested
-> > > - Link to v1: https://lore.kernel.org/r/20250420-pci-tegra-module-v1-=
-0-c0a1f831354a@gmail.com
-> > >
-> > > ---
-> > > Aaron Kling (3):
-> > >       irqdomain: Export irq_domain_free_irqs
-> > >       cpuidle: tegra: Export tegra_cpuidle_pcie_irqs_in_use
-> >
-> > I need an ACK from the cpuidle maintainers to take these 3 patches thro=
-ugh PCI
-> > tree.
->
-> Reminder about this series. I'm normally interacting with the tegra
-> maintainers, but I don't particularly care which tree it goes through
-> as long as something that works gets merged. So, can one of the
-> cpuidle maintainers take a quick look through this, please?
->
-> Aaron
+On Wed, Jul 09, 2025 at 05:55:17PM -0600, Keith Busch wrote:
+> On Wed, Jul 09, 2025 at 06:38:20PM -0500, Bjorn Helgaas wrote:
+> > This relies on somebody (typically pciehp, I guess) calling
+> > pci_dev_set_disconnected() when a surprise remove happens.
+> > 
+> > Do you think it would be practical for the driver's .remove() method
+> > to recognize that the device may stop responding at any point, even if
+> > no hotplug driver is present to call pci_dev_set_disconnected()?
+> > 
+> > Waiting forever for an interrupt seems kind of vulnerable in general.
+> > Maybe "artificially adding timeouts" is alluding to *not* waiting
+> > forever for interrupts?  That doesn't seem artificial to me because
+> > it's just a fact of life that devices can disappear at arbitrary
+> > times.
+> 
+> I totally agree here. Every driver's .remove() should be able to
+> guarantee forward progress some way. I put some work in blk-mq and nvme
+> to ensure that happens for those devices at least.
+> 
+> That "forward progress" can come slow though, maybe minutes, so we do
+> have opprotunisitic short cuts sprinkled about the driver. There are
+> still gaps when waiting for interrupt driven IO that need the longer
+> timeouts to trigger. It'd be cool if there was a mechansim to kick in
+> quicker, but this is still an uncommon exceptional condition, right?
 
-There's been no responses here for a month. If no cpuidle maintainers
-wish to respond, then what?
+It's uncommon, yes.
 
-It makes more sense to me to take this through the tegra tree. But
-Thierry had concerns about removing functionality that was confirmed
-working. Manivannan, if this was to go through the tegra tree, would
-you still block this conversion if it didn't drop the unplug/unload
-functionality? There's many existing drivers, including one for newer
-tegra archs, that are unloadable modules that would be affected by the
-IRQ concern. I don't want to cause friction here, but I do want to get
-this merged before the next LTS, so I can use it for my projects.
+-- 
+MST
 
-Aaron
 
