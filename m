@@ -1,139 +1,317 @@
-Return-Path: <linux-pci+bounces-32060-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32061-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C591B03AED
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 11:36:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B0CEB03B05
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 11:40:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F7C33A5C96
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 09:36:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D0F73A8B0E
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 09:40:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C947224169D;
-	Mon, 14 Jul 2025 09:36:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3F6E242D9B;
+	Mon, 14 Jul 2025 09:40:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OEUGd856"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GbSoFSB1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9415723A9BF;
-	Mon, 14 Jul 2025 09:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752485795; cv=none; b=EhehirnqSWkaxZ+FteYIQbvA8hYBc1hsV/9oRZ2qED+7ejSoLn9HpOWVc3syVK7JUWKcyZaWgrvLP2hB4iZzi+mc2/7f+Hwnm4/kb29cjWjfd7ygzIk2/t7XeCnpUV2XhB9AnBsWXEzidwURFMWjfVRTdSZ7N+Lhbx8xbnuEfOM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752485795; c=relaxed/simple;
-	bh=Vzxq/edcrTJeXzQiDeTB7+LshkLJsBhp6E8UKnKvfSM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=aST13iuBOswOUxZZjucu20RVPqIgDxsy/qEmoULYqCR0GGpKJhI+ob+q5lKIa1j9ZPMvFy79JpHIn5X+jLe2uBJzt2lLXl4opls3mlMhs4y0z1zTaKk7QQ0lli0xx0iUZv9E3Y7TUc/YBMGi5QvA+HYUBOvnp+1QqhCpxjyWjfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OEUGd856; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 990D1C4CEED;
-	Mon, 14 Jul 2025 09:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752485795;
-	bh=Vzxq/edcrTJeXzQiDeTB7+LshkLJsBhp6E8UKnKvfSM=;
-	h=Date:Cc:To:From:Subject:References:In-Reply-To:From;
-	b=OEUGd856MPfzTVt06by6WFNAR4j7ZTfCOc3jSN3pFPIBGbLKkYeX4oz0TR/4rFjCz
-	 V091A06vmH7yuTIszh/AVdwo3exBgjAkqNFtdXsVcgLBSFxeN080BMH9NA3NPFnGdn
-	 xr3guGW5KVvlqss1gy609IiYHVyoE4IA1mBm4Nn5zHhhvl4/+ILB/UiOmVmYaiPVxJ
-	 bRv6gDACgIU3MHE7+5fv59w8i2PDkQjB9mhwrbUxngbI8eoOFicCcgffRZBXMNrwuz
-	 8LqZAtvy0vbLBvGOWWyX5UuWMATVp3kjbqNUEl8lSsq0fXkh616x2/A+27ItsJqwAu
-	 dSrkF/V6m+y9A==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4788242D67;
+	Mon, 14 Jul 2025 09:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752486028; cv=fail; b=P/lt9Klwd9mQCPptTU4A7ANGJ2+OzAz9UEu/A9pE5ErfoFTNylRVsL9BjzpxocCIFu0BDuSALWb8rJR3+Oxu85CYXo8YvgF2YiNXnQx9QjijTjEVRlUUzTUxq5ZYvJfGh1WrNeohpdM2lGYw63pS54C4AmF6HLe2BsWBfKjrIck=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752486028; c=relaxed/simple;
+	bh=y7LmAv9k9b8SseUCjaCzc4oMWwzRJUvQ4O7y4y4p51k=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Xg/zLe65rYbmWArcefFuhksSf06BT7VyQD5dULN/0yi088H92hMgwFTDDOD6K/2P+L41Y8YTNDeBW2cTVTclvWWXQNAE6zKofZumSM46NvVDF4J6s/jcd/C56vAyUy0xhwxcG41yGnkfhTEPlyEEJeIf+cwQ6eonsMf5ywkF7vk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GbSoFSB1; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752486027; x=1784022027;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=y7LmAv9k9b8SseUCjaCzc4oMWwzRJUvQ4O7y4y4p51k=;
+  b=GbSoFSB1uF5CY40NLvxUSV/DKe1JPSZHMpddsJtAs4lE355sOMVfcYoY
+   W+qt6X14fc3K5ZrAOHfU/VydmujuqLX2f3N8/u6v3s9DPVj5Glbl0xxh6
+   blaojREBk+8OVsOXeIE4c4tDzZLUiIDm/2L4dgo8NH+HzRjkyiQm0jYw3
+   im0ywM2dB2iWjr6AbUOW2McVrnGDoqzL5rZ2V4/V89s4rObzl8QG4msjC
+   zcELv3y5VNzcP5/23Nc6GhjtV5IcT9SdZS3gk6uhrGHsFulTSSqcZeMCa
+   Mn3P7tK7UB8lmxSOC4Y/4JOlrM7TrDpxOAhnl+jegIgFOBh3fT+yVSmbv
+   Q==;
+X-CSE-ConnectionGUID: r+oZkFHkS1K6X02z9qE5xw==
+X-CSE-MsgGUID: h77cs1dNSwaO+Ht1YvsauA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="66030730"
+X-IronPort-AV: E=Sophos;i="6.16,310,1744095600"; 
+   d="scan'208";a="66030730"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 02:40:26 -0700
+X-CSE-ConnectionGUID: WVLl7qHLS5Svj0uhAHWKgA==
+X-CSE-MsgGUID: dZk7S8QWTj2tp3IL4hcOug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,310,1744095600"; 
+   d="scan'208";a="161194356"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 02:40:25 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 14 Jul 2025 02:40:25 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 14 Jul 2025 02:40:25 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.46)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 14 Jul 2025 02:40:24 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CWRh2q4pP14G6ReGpdXjQZRUDF9W0nHPiSr+YqX2Ij51SbG94feXiQAbw2+QUmEJK+uKuSRoOeuODmdR4/4sWE1P3sC2Tvob92QWsu5GVDJsGsXL1wnyux4Z0AyliEayHxG3fSw8bHsPVSkbfSyvq1XFmBRPFdoalJZ9LFSsyDPxgtfgrIyph+OK0Bv/hnJwXhV6vWHaa57ELnSLRhc41LUxSi6taMRKt75g8r4qEsZ4hDOaldbdfpNLVmR4aXjKPfKOompA4QYhGWNemasHuzA6PQWIo7ceVRTtNwZ5CxzGTNRvP0fvFOVs+6BoYs53r0Rf+S6YZaUNQfki63oPEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7FhW/Q7O0QWBKGXGlM8KR6owU2RRthV8sogi/lLnO/M=;
+ b=F6A+UP3FK4Uihs/K/lUlMvOylTXJN/oIHQDtWGg+bSavgzYJ4zO0Ni+Z9NKEGeG90iOcBU2TUrUQIZ6mZ7EsXW55r+wgqMfuOiq6aHedATBEi5dXvcCG806YiXSNAaNOBxEyNGnjVjuj3nxqJtuknwc4MegqbXRYpSX6YK9C1cLY26Z8HyGEGycW5Xk6hxSr4OyhnoLJpZ41CPTzG6+YE1t5hklgheQAEpJzT6IOHjB2zaFnZycYKQvt13RpDQ/nPGYGWK+NWTvvqOobFzzS0RZFMS8GcpR5zsq3TZJRTcpB/SjXkQZL9VM8623hIZNER/eT1mnrQsndNakMPFreAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB5373.namprd11.prod.outlook.com (2603:10b6:5:394::7) by
+ DM4PR11MB6262.namprd11.prod.outlook.com (2603:10b6:8:a7::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.29; Mon, 14 Jul 2025 09:39:42 +0000
+Received: from DM4PR11MB5373.namprd11.prod.outlook.com
+ ([fe80::927a:9c08:26f7:5b39]) by DM4PR11MB5373.namprd11.prod.outlook.com
+ ([fe80::927a:9c08:26f7:5b39%6]) with mapi id 15.20.8922.028; Mon, 14 Jul 2025
+ 09:39:42 +0000
+Date: Mon, 14 Jul 2025 11:39:38 +0200
+From: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Krzysztof
+ =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?=
+	<ilpo.jarvinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Michal Wajdeczko <michal.wajdeczko@intel.com>, Lucas De Marchi
+	<lucas.demarchi@intel.com>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
+	<thomas.hellstrom@linux.intel.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
+Subject: Re: [PATCH v10 0/5] PCI: VF resizable BAR
+Message-ID: <elpe4ocut5y6otilll2mhf5dwhumstr4z4wt2enetpsbauvcyv@362bhrjmztkm>
+References: <20250702093522.518099-1-michal.winiarski@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250702093522.518099-1-michal.winiarski@intel.com>
+X-ClientProxiedBy: VI1PR06CA0141.eurprd06.prod.outlook.com
+ (2603:10a6:803:a0::34) To DM4PR11MB5373.namprd11.prod.outlook.com
+ (2603:10b6:5:394::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 14 Jul 2025 11:36:29 +0200
-Message-Id: <DBBOD5MK9FQ9.2ZOBX2ERFIE2S@kernel.org>
-Cc: "Daniel Almeida" <daniel.almeida@collabora.com>, "Benno Lossin"
- <lossin@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>, "Bjorn
- Helgaas" <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>
-To: "Dirk Behme" <dirk.behme@de.bosch.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH v6 3/6] rust: irq: add support for non-threaded IRQs and
- handlers
-References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com> <20250703-topics-tyr-request_irq-v6-3-74103bdc7c52@collabora.com> <DBAE5TCBT8F8.25XWHTO92R9V4@kernel.org> <DAD3292B-2DBF-442A-8B60-A999AE0F6511@collabora.com> <DBAURC9BEFI0.1LQCRIDT6ZBV9@kernel.org> <DBAVXQTMR38Z.2782EGR84L7OP@kernel.org> <DBAWQG1PX5TO.6I2ARFGLX88N@kernel.org> <DBAX59YKO0FV.ANLOWRHDDS92@kernel.org> <DBAXP68U809C.2G8DMB52M3UZ7@kernel.org> <C4A101A7-282D-4A67-A966-CF39850952EA@collabora.com> <DBAZRNHGIGL8.3L2NGPCVXLI25@kernel.org> <d6e62068-a05a-43cf-ace3-ff7a41e9a1d7@de.bosch.com>
-In-Reply-To: <d6e62068-a05a-43cf-ace3-ff7a41e9a1d7@de.bosch.com>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB5373:EE_|DM4PR11MB6262:EE_
+X-MS-Office365-Filtering-Correlation-Id: 972f9e87-8f31-47bd-6a4f-08ddc2ba5be6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?QUhzUmxRTkpzeXBqcmpTZUlqeW80VjRMZjZZemFRWTJuemtxOUZpL1k3blNJ?=
+ =?utf-8?B?MWN4eGRwc1N1ZXVGL1gzTW5FN3lBNnhlRzI4cjBFZWZ5Z2xKN2JZVytuTzdt?=
+ =?utf-8?B?WTZUVkxUazdGM2graXZTbDN2NUx5ZFkwLzRQODY5TkdwV0w1ck1kV3NwdEM5?=
+ =?utf-8?B?OXpjL01zVUpmRjgyYllvUXR1aGtDcjh4ZXl0RENTVHlSckx4QXQvS2MzUTcx?=
+ =?utf-8?B?U2dtMTFYRmNwZEZZRm0raFlpcWg3dmZsMWVXUllIbGlXeEl6YlBvTE9zMmtE?=
+ =?utf-8?B?L2dqTzM2S3VJNjkzL2xNRlNOR01OTUg1ZG0vM25Icjcxcko0dUdUNk9HNkFS?=
+ =?utf-8?B?L0J5Uy9ORWpxenZvMU9USzJBcWJEMktCL2s5eThvN05ydkJnUStzR3RMekxD?=
+ =?utf-8?B?YjhCSkgvRDR5NDFuS3hlM1NwSnNkL1N0emVJNU1FTnRTaGRad2ZpTThNUkJu?=
+ =?utf-8?B?d1NGNkZrK0w4UisydmVEbHZRYjllcG9KeEx3eitvaVVIVDZIQms3SHRQenlS?=
+ =?utf-8?B?YXBSUEhScjN4WGlDU1ZpS0NiTnAzalIveFJhbGJiUndOaTVNbVltUDd0a0VO?=
+ =?utf-8?B?TW1ad1o5akpFdEl1Nzg5K0lKc1hKUHVRTzZVb2JDSmhmZzlUREorSTdrQzhv?=
+ =?utf-8?B?UVVTRTFvbWhFaDBDdW1TVk1abHJ2V3JKOFlQUG1nOWM0T0c2cHBmWWVIaDhI?=
+ =?utf-8?B?eVp4WEtWWFJ3b3pXbC9YeWJoWm4ydWEwNTJ5ME5HZ2ExY083QVdTdkN4RUtJ?=
+ =?utf-8?B?VHVpcWZGYUxTc0dFZXhENTF1Ukp3N0xmdURIaXYvZEdsU3BheEtiYXVtMjlN?=
+ =?utf-8?B?dk5vUGxROHZkR1E3akJhb3lsdzZwU1doT1ZTRHBOeHdKNS9jdzJ0WXAzalBM?=
+ =?utf-8?B?b2ptR1pjV1RWUmdzS3dmZmEvNDZDRVZ2NGJjeEJwLytXcUpiN3VTUTNWNEZp?=
+ =?utf-8?B?OTdFMTJSWHR2MGZhcTB4NnJJTi9oVzBrYjJmYjhIK3RQNHVhSkliam0xWUxC?=
+ =?utf-8?B?VzVvc3UzZ1pHNFg0N2M1NnFVMXQxaDRLWDFpWnJUTGZGc2g4MWdUdXEwUUdQ?=
+ =?utf-8?B?Q280MjRNZVFDc09nbU1iWlNmdE1YZkFoRGpROFp5Mlk5OXNTbXV2aVFsRk1m?=
+ =?utf-8?B?SjFnK0graUU2K0lxc3F2YnV6ZnNsd1F0TUZVVlQrYnkyVWl6ak4rbU1kMVlB?=
+ =?utf-8?B?T01KSVJCa1E3alpKejhrMXNHdWlYTkgvd0N1SVViWGtJbUFxTzNmaUUxcUpY?=
+ =?utf-8?B?WCt2a1gwL0tCSCtDWXpleHFOSm1HWjJYd2lETTdBYXFsUmkyeUFOVENjbHRM?=
+ =?utf-8?B?T0NFT05PdDk4dDNKeWZJTzV4blZRNVZDNm9vQXVLWG8yN3NRMEFFS1RzVktR?=
+ =?utf-8?B?c0Z2dlhJRjdDdHgrZ1AxRkdHMGhQenQyYmJYMS9oaVFCelFPbWV5dEJoWVI4?=
+ =?utf-8?B?QzlkRW1xNXVYaytJTVFZZ042QlA5emp6M2dSN0pUWWFJNzlJa2NzZ0xOQ25l?=
+ =?utf-8?B?Zm1wMTVUaG9veUxUVzVWSEo1RWJhMk1RWXBiZkFOU3FGQjR1OXl2UVV0bUxk?=
+ =?utf-8?B?bGlmSVpIMzBmRTY0bGRlK3ZCMDloMVh3MVAxUGFTQjlIeHExMi9RSXc1NHI0?=
+ =?utf-8?B?cUx1Tk5SNkFkUEVNdE1OSzdSd2p1Mnh4QUxVVW9La3J5ZjFmbFRYNlVSd1ow?=
+ =?utf-8?B?RGh4TVVUZHgrb2xUalZGWXVrZTFuRGJnM1hJTFluWG5Cd0UzR1BnTjQ0VkpW?=
+ =?utf-8?B?R0o2azBQTll0aWRoVUV2QndYKy81VU1OZ3RpOGR1cW1Dczh5WlpwT2NQbS9F?=
+ =?utf-8?B?TFVOT1BxRkFkTUoxMWVMQXZlU2M4YUNxQ1lOZ0VMUklMT3FhdTY3MGJOaXJU?=
+ =?utf-8?B?T0dTSmdTeVlscUZ1cmhDZE5kUGNIVFA4WVBRMFhmbERYWHlTUXpIQTd2SSt2?=
+ =?utf-8?Q?62nhUY+ZYKg=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UXJ6YTVkRnVEUkFOU2NZU0x5ZzQ1UWsxZUxadGt6dWl0L2ZpRGU5YmliMTVi?=
+ =?utf-8?B?czNQZU5reTc0QThYbDh0ZjUwUnh4ZCs0OHJFVDFKNWo2dDRLKzcxODJoZkxj?=
+ =?utf-8?B?Y2lzSUJIZktFN01zakdPanpXV1J5dE9oNFJMSXJVa1VTMXREaVh1cm4vR2pP?=
+ =?utf-8?B?dzlZMnZFSmVEeklNR3Z6UDZMVjduV054UXFzckIrNTFqWUZoN1NOSVBkOU1T?=
+ =?utf-8?B?VEI2cFBISGEzRHdCdGE2YmMrMmF6YlRqR2hsSXRVY0VtWGZCS1E0VVh1ejBJ?=
+ =?utf-8?B?ZmZJVllhWmhVbEJjZzZSL0RZaDByeVljb2N2UVFHTVlJdElqMkNQSVE0QzNw?=
+ =?utf-8?B?ZGRiRE4wR3JzRG5pTlpIaUZONWZHaDNxWHhvV3RweW03SGhSazRyZWxvMmRp?=
+ =?utf-8?B?MDJMTDFVd3liWkJPRGpybmwzbk81WmRaeGFTZm1OY24vNi9jZWJuVTZ3M2tm?=
+ =?utf-8?B?dHJQd2UwQllJRTdYWnUzS0hpOVk1UjlTZ3kyUEo3aFE2K1FSa1RHTm1wOTc2?=
+ =?utf-8?B?NWFCMlo2cWFGbXRLQUdkZFdKQlZqWFIzM2dRK1MzSWxVOW9UQ2NzeDhwbWVj?=
+ =?utf-8?B?Q01FdG4yM1hDSnBYM1NQemlkV0VhWVZlamJVZzJ0Y2pDT1RSMGhWL2kvMVFV?=
+ =?utf-8?B?TGc0cm96bzQ0L1pnS0ZyUjNyOHJTdHcvWVZhUi9uQ1N3aE4rSEdYQXZLQ013?=
+ =?utf-8?B?d2FVMnRNRkZxV0czRDVEc083ajAwZHhvT1hNdGtUUGkyVENVZUVLZHRWNE40?=
+ =?utf-8?B?NmtxZkdEMWJmWDZKcTMwcExEem1IQnBMWGhURjNscUU4RnpJOFVhcVRGNm9Y?=
+ =?utf-8?B?SC84MTg1dFdyVXVrMGY1Y1VtQnd4bDhUVjZHbTFUS296bGpyQ0tpUzhWK2pR?=
+ =?utf-8?B?NnM5SDU2TnFnYWtsTnd0SVV6eXh5cFZjeDNzcklkcDY1K3IxcnJZOWQ2MFFK?=
+ =?utf-8?B?aWNDei8xemQxM0dUWURucHQ4NGNjTzViL1lxZEtDaTg4dE05eEJ3SUFKbEhY?=
+ =?utf-8?B?NUlFZVhqMm5uTko2S25KQ3UvbHBSbVR4b3ZrVFYwRXdCQ0ZrRWtWQVNjdXFC?=
+ =?utf-8?B?cWRDT2R3cWR6MmR5RTRnMkhWZG1HM1ZhVThBNG15RU8xdEx2TXBSSkorOU9S?=
+ =?utf-8?B?aEJZMzZSekNEbTJVclcrSzdmWXZPbFp0NktPeFhhMEppdVFRS2k1MnppZTVU?=
+ =?utf-8?B?ZnYvVGcySHlkclVlY08vRnA0c2VPQWFDRmJza3JmK05XZkt2YzdpQkRqTFVq?=
+ =?utf-8?B?SW12ckE2Nys2bFRjWnBLeVpZM0JDRkk3VjFtVXU1dEtCc3FESkNhWEpoZmgv?=
+ =?utf-8?B?YS8vS2taMWM0eGNxVWE1N2dPSXpzVG1YUktmcUsvUk0vVGJiNnZuenRVWDJX?=
+ =?utf-8?B?YjZTbUdvQ1ZEenZrNjlGaDRabTk1OU84NjdHOEtnQTBteXVDbDBGWHQvWHJV?=
+ =?utf-8?B?N2huUHltelM5OXdmQWwzY2Z2bE1weVR1Q1NsbWVJRXlzdFk5L1kxNE5ZMkVE?=
+ =?utf-8?B?SjFZZHc3bnEwWFRCZm5qSjRONEo3blZyN25tbnI4b0tiM3ZiOXplWTloMHpF?=
+ =?utf-8?B?UkpVakdyaDJaTVU4NUtMRmlmbVk3Vmh2SE1UWkVBSUZJSi9wMHpMdzYwK0ZV?=
+ =?utf-8?B?Y2FtZkI5V1dJSmZWTXhZREZwQ04ybkZLbkpxS3hGSlZIcXl4VFFWVUpDZkNX?=
+ =?utf-8?B?TXFqWEE3YjJMa2FlTUwvNkxEZkp0M0FQaXRzRGRTc2lNVWROZGFEditsTkRS?=
+ =?utf-8?B?WlNETHNMRG5oWUd0ODJqVnQ0dkNNWEYrSGh1ck1tSERsN1k5SS9USTd5MjR4?=
+ =?utf-8?B?U3NOenFYM0ZMVDlsS203a3NUakpZOHM2Q2JmZ3ozYlpWQWdlMExPOGdJenhs?=
+ =?utf-8?B?ZzcrTS80MUZWSUJhTkhEVDJWeTNoWWxOcTZqYzYzL2pncXJBZUJMK2F3VDZl?=
+ =?utf-8?B?V243Y21YV21TRUMvdkFZemRuS0k4R0dPR3d6MVNDNFpZTFNNR0k1R1FzcmxJ?=
+ =?utf-8?B?ZTJpTDdBWDdENFVoZjkwZURoSVR0QmF4Y243YTI2RkRsak5LQmVYL3V1a3VP?=
+ =?utf-8?B?NDVMYnB4VGZ5TDZKUXg1QmUrRStXQ0VSRTQ2cDNuRUUzR1ZSczZsVjNPb2Nr?=
+ =?utf-8?B?NGc1YlRuVk9OcWNNejFZMEthY0RkeksybTlndW5qOUd1ZVE0QW1XZSt6dmpM?=
+ =?utf-8?B?ZEE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 972f9e87-8f31-47bd-6a4f-08ddc2ba5be6
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5373.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2025 09:39:42.0366
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nM1DY0k3WphJvZyAYSk6Huww3ZwbBGsdvp5zl3Y9iXDZe4b9pZ+6VnWf+pHYs686P02kBsH1aqD5VNtxldBv3yhkoSnt0AiKZEmLYjz1jOk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6262
+X-OriginatorOrg: intel.com
 
-On Mon Jul 14, 2025 at 9:57 AM CEST, Dirk Behme wrote:
-> On 13/07/2025 16:19, Danilo Krummrich wrote:
->> On Sun Jul 13, 2025 at 4:09 PM CEST, Daniel Almeida wrote:
->>> On a second look, I wonder how useful this will be.
->>>
->>>  fn handle(&self, dev: &Device<Bound>) -> IrqReturn
->>>
->>> Sorry for borrowing this terminology, but here we offer Device<Bound>, =
-while I
->>> suspect that most drivers will be looking for the most derived Device t=
-ype
->>> instead. So for drm drivers this will be drm::Device, for example, not =
-the base
->>> dev::Device type. I assume that this pattern will hold for other subsys=
-tems as
->>> well.
->>>
->>> Which brings me to my second point: drivers can store an ARef<drm::Devi=
-ce> on
->>> the handler itself, and I assume that the same will be possible in othe=
-r
->>> subsystems.
->>=20
->> Well, the whole point is that you can use a &Device<Bound> to directly a=
-ccess
->> device resources without any overhead, i.e.
->>=20
->> 	fn handle(&self, dev: &Device<Bound>) -> IrqReturn {
->> 	   let io =3D self.iomem.access(dev);
->>=20
->> 	   io.write32(...);
->
-> As this is exactly the example I was discussing privately with Daniel
-> (many thanks!), independent on the device discussion here, just for my
-> understanding:
->
-> Is it ok to do a 'self.iomem.access(dev)' at each interrupt?
+On Wed, Jul 02, 2025 at 11:35:17AM +0200, Michał Winiarski wrote:
+> Hi,
+> 
+> The series is now reviewed, and it looks like there's no further
+> feedback.
+> To limit it to PCI subsystem, I removed the last patch in the series, as
+> it contained changes in drm/xe driver (it can still be found in v9 for
+> reference, and I expect that this single patch will go through DRM tree
+> anyways).
+> 
+> v9 can be found here:
+> https://lore.kernel.org/linux-pci/20250527120637.665506-1-michal.winiarski@intel.com/
+> 
+> For regular BAR, drivers can use pci_resize_resource to resize it to the
+> desired size provided that it is supported by the hardware, which the
+> driver can query using pci_rebar_get_possible_sizes.
+> This series expands the API to work with IOV BAR as well.
+> It also adds the additional API for drivers to change the VF BAR size
+> without resizing the entire underlying reservation (within the original
+> resource boundary).
 
-Absolutely, Devres::access() is a very cheap accessor, see also [1]. Compil=
-ed
-down, the only thing that Revocable::access() does is deriving a pointer fr=
-om
-another pointer by adding an offset.
 
-That's exactly why we want the &Device<Bound> cookie, to avoid more expensi=
-ve
-operations.
+Hi Bjorn,
 
-[1] https://rust.docs.kernel.org/src/kernel/revocable.rs.html#151
+Can you consider applying this series?
+Or do you still have some comments?
 
-> Wouldn't it
-> be cheaper/faster to pass 'io' instead of 'iomem' to the interrupt handle=
-r?
+Thanks,
+-Michał
 
-Well, consider the types of the example:
-
-	iomem: Devres<IoMem<SIZE>>
-	io: &IoMem<Size>
-
-You can't store a reference with a non-static lifetime in something with an
-open-ended lifetime, such as the Handler object.
-
-How would you ensure that the reference is still valid? The Devres<IoMem<SI=
-ZE>>
-object might have been dropped already, either by the user or by Devres rev=
-oking
-the inner object due to device unbind.
+> 
+> Thanks,
+> -Michał
+> 
+> v9 -> v10:
+> - Remove last patch with drm/xe changes
+> 
+> v8 -> v9:
+> - Use u64 as do_div() dividend (LKP)
+> - Introduce a helper to access cached vf_rebar_cap (LKP)
+> 
+> v7 -> v8:
+> - Update variable ordering and missing includes (Ilpo)
+> 
+> v6 -> v7:
+> - Eliminate the loop in pci_iov_vf_bar_get_sizes() (Ilpo)
+> - Use helper variable for indexes (Ilpo)
+> - Kerneldoc formatting (Ilpo)
+> - Refer to latest PCI spec (Ilpo)
+> - Commit message wording (Ilpo)
+> 
+> v5 -> v6:
+> - Rebased on latest pci/next
+> - Cache the VF resizable BAR capability position to avoid multiple
+>   lookups (Ilpo)
+> - Use pci_resource_n helper (Ilpo)
+> 
+> v4 -> v5:
+> - Rename pci_resource_to/from_iov helpers and add WARN if called without
+>   CONFIG_PCI_IOV (Ilpo)
+> - Reword kerneldoc for pci_iov_vf_bar_get_sizes (Bjorn)
+> - Reword commit message for VF BAR size check, extract the additional
+>   size check to separate conditional (Bjorn)
+> 
+> v3 -> v4:
+> - Change the approach to extending the BAR (Christian)
+> - Tidy the commit messages, use 80 line limit where necessary (Bjorn)
+> - Add kerneldocs to exported functions (Bjorn)
+> - Add pci_resource_to_iov() / pci_resource_from_iov() helpers (Ilpo)
+> - Use FIELD_GET(), tidy whitespace (Ilpo)
+> 
+> v2 -> v3:
+> - Extract introducing pci_resource_is_iov to separate commit and
+>   use it elsewhere in PCI subsystem (Christian)
+> - Extract restoring VF rebar state to separate commit (Christian)
+> - Reorganize memory decoding check (Christian)
+> - Don't use dev_WARN (Ilpo)
+> - Fix build without CONFIG_PCI_IOV (CI)
+> 
+> v1 -> v2:
+> - Add pci_iov_resource_extend() and usage in Xe driver
+> - Reduce the number of ifdefs (Christian)
+> - Drop patch 2/2 from v1 (Christian)
+> - Add a helper to avoid upsetting static analysis tools (Krzysztof)
+> 
+> Michał Winiarski (5):
+>   PCI/IOV: Restore VF resizable BAR state after reset
+>   PCI: Add a helper to convert between VF BAR number and IOV resource
+>   PCI: Allow IOV resources to be resized in pci_resize_resource()
+>   PCI/IOV: Check that VF BAR fits within the reservation
+>   PCI: Allow drivers to control VF BAR size
+> 
+>  drivers/pci/iov.c             | 153 +++++++++++++++++++++++++++++++---
+>  drivers/pci/pci.c             |   8 +-
+>  drivers/pci/pci.h             |  39 +++++++++
+>  drivers/pci/setup-bus.c       |   3 +-
+>  drivers/pci/setup-res.c       |  35 ++++++--
+>  include/linux/pci.h           |   6 ++
+>  include/uapi/linux/pci_regs.h |   9 ++
+>  7 files changed, 235 insertions(+), 18 deletions(-)
+> 
+> -- 
+> 2.49.0
+> 
 
