@@ -1,148 +1,158 @@
-Return-Path: <linux-pci+bounces-32073-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32074-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59A55B04343
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 17:17:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76DECB04348
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 17:18:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 373B216CB74
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 15:15:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 083AF4E223C
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 15:15:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB8B425BF13;
-	Mon, 14 Jul 2025 15:13:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DFB6262FC1;
+	Mon, 14 Jul 2025 15:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="JZjoEz6t"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H/FEVB8b"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006F2246BB6;
-	Mon, 14 Jul 2025 15:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752506015; cv=pass; b=IPz6loCuS8Ip+ikVeJOXQepNtHJ6sp+2sPSsGkOibRhH7EyF1fvBhyF1tmhlIjGYhA/5fKgBFLxWe8jQlrCutytRfpQJU3HZUpbPzumSZUc7L5ceHBprTad9dON0otmAebPKghEkSKoRX5xp5gkV0wpufRU7nzeomxbtCQNLIKQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752506015; c=relaxed/simple;
-	bh=nJiikquzfUrzFUhNIuX0ECRmGYdrZHV3lqYtqRvTxBs=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=mpZWrVGSTP/1YtKGI52r7UabIIhAwTzS3oIrAmiPcoKNBWS/ukree69PI6h86g7MGGSaZUDz1ZkjulSheqX+NOMKDg76PjBjj2+xT4a2ftfjRafzgjrKFY87fHzGHh9KFES4e8EekkqMa+CIe+upRqFUhjfn2gKBuM3DzmFlDYY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=JZjoEz6t; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1752505977; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=km5zAZoLfL/WUb967j5t6pTQLOqlE/hCyn4dfValQ33r2PPYF1clj4JizQQYVye64EJc9AaSBrz6mlDgJbILLGjJ6PpHTeNWPotaSD3VXu/wbIlGM9YBnKNIu9cC1iK9URk3uxOnsa359HKdD+v5flNBJaZGxbrSI8H4Q52+LQA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1752505977; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=yBrlm4HyOYxQkzzRxHxRaO+Keb2kNTFdYZHjEVJuhcQ=; 
-	b=Tr/UWc97z9Yzs8IwsT9Y0vxxHidUvmLru3XRHR1hcVlxME9MJTHIepbdOH6H6RGEsaqmYMYfP60GG+//I5Td8c4bZw4RLvfa7gRk9xVpuzgY4rff4enlfMZM9M5UdEX5kkMQ5vFTUXboArZMVT9vOsKUQLi9ssTKHfyXLV51zd8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752505977;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=yBrlm4HyOYxQkzzRxHxRaO+Keb2kNTFdYZHjEVJuhcQ=;
-	b=JZjoEz6tslhhAyRvEcXPkQQ0Q4J294ajkKGf//YP5vKaaV4+f0z246Jq7QFFfoYX
-	62Q76oL9uB2FHdoJ4ybI8bcs5KlzG1/XgNZi3R6BDkfqJ/xIFVPxjCgU/wuArvAFiK6
-	+LxfaTyABQztaoAL2h7EsDCc9gstcNnIuPc4fvzg=
-Received: by mx.zohomail.com with SMTPS id 1752505974334461.4752414079642;
-	Mon, 14 Jul 2025 08:12:54 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB1526059F;
+	Mon, 14 Jul 2025 15:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752506090; cv=none; b=WpiZUUHk1ZMdQ0pRg9PiMosVMyeP8bgjrot64xHPzgP+XrwdZ4ezn9VQY1yyazoVWcuw/2Q1KHKtejPcEExPV6iw9IcqqejbUYO5cy5T8GQNIgGYVW6bWRQQ4Kpio2BEJGPEVyc1SGdgyRBPpalFTA3757vCtliGR4A2utGWIfc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752506090; c=relaxed/simple;
+	bh=uhR4oTtyTLRPzkqDzPtiWEgon2j5NRv9mdaGjQ0k3OM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kIi42md/X1hQw9EVtsDkcwrX+I6+uUuLJEYaQdun0ivHZmZcHWKVvNpPc/ccXM9iCNeYpQVj9WTLzhhHnDHakg4Ew1VZ0WRV7Hil3wFHhQFu1Pr5/Gkd8WXcSUZm0kKQu63/j14HpVARPc+msc5wBNN5FrtCuzKART2NrJpmgv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H/FEVB8b; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752506089; x=1784042089;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uhR4oTtyTLRPzkqDzPtiWEgon2j5NRv9mdaGjQ0k3OM=;
+  b=H/FEVB8b9xRpa7Xc/WVPnq4+ZBj5QLgziPs1Qt6n3UXuQv77Zav+ybhv
+   LFmYXkI0BCutQGtdi6SyX4sBmFS3Zsa6vv+qqYwh5pEVkCOHYF4FJq879
+   5lN6UJv7Vsgt1UPX/tNX8xvv5kkT5OFPTsWfTDAL1Vs021v4LoJkclNxu
+   h8b58djYKF5S3L4VcDSiHHRYMJh46DhUsLjnk6REKvgReLgL8bGM3gar5
+   8FkyfX44Sji9oNd142R1swa2ov50MUN7ucn9Nd/1U2RJCQQ+H+ml/ZXVa
+   Kc+m67YUJ3qeMt6KC2ue1F1xhGda7jZO+qLopcivmIftbZLCBM4P4U5X6
+   A==;
+X-CSE-ConnectionGUID: 983ENTieT7iFwO6PgxQyyw==
+X-CSE-MsgGUID: nCNbLcm9TWKYmV6EoXX5lw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="66147844"
+X-IronPort-AV: E=Sophos;i="6.16,311,1744095600"; 
+   d="scan'208";a="66147844"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 08:13:30 -0700
+X-CSE-ConnectionGUID: QsmEd6zUTNqnT0GaVeEtLA==
+X-CSE-MsgGUID: 47IN3f/gR+WROpmruZ/DZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,311,1744095600"; 
+   d="scan'208";a="187943702"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 14 Jul 2025 08:13:23 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ubKro-00092V-1w;
+	Mon, 14 Jul 2025 15:13:20 +0000
+Date: Mon, 14 Jul 2025 23:12:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mario Limonciello <superm1@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	"(open list:INTEL IOMMU (VT-d))" <iommu@lists.linux.dev>,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+	linux-sound@vger.kernel.org, Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v7 8/9] fbcon: Use screen info to find primary device
+Message-ID: <202507142313.iWVTOSVB-lkp@intel.com>
+References: <20250706143613.1972252-9-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v6 3/6] rust: irq: add support for non-threaded IRQs and
- handlers
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <DBAXP68U809C.2G8DMB52M3UZ7@kernel.org>
-Date: Mon, 14 Jul 2025 12:12:37 -0300
-Cc: Benno Lossin <lossin@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- linux-pci@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C72C6915-3BB2-431F-89ED-7743D8A62B7E@collabora.com>
-References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com>
- <20250703-topics-tyr-request_irq-v6-3-74103bdc7c52@collabora.com>
- <DBAE5TCBT8F8.25XWHTO92R9V4@kernel.org>
- <DAD3292B-2DBF-442A-8B60-A999AE0F6511@collabora.com>
- <DBAURC9BEFI0.1LQCRIDT6ZBV9@kernel.org>
- <DBAVXQTMR38Z.2782EGR84L7OP@kernel.org>
- <DBAWQG1PX5TO.6I2ARFGLX88N@kernel.org> <DBAX59YKO0FV.ANLOWRHDDS92@kernel.org>
- <DBAXP68U809C.2G8DMB52M3UZ7@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250706143613.1972252-9-superm1@kernel.org>
 
-Hi,
+Hi Mario,
 
->=20
->>>=20
->>>  (2) It is guaranteed that the device pointer is valid because (1) =
-guarantees
->>>      it's even bound and because Devres<RegistrationInner> itself =
-has a
->>>      reference count.
->>=20
->> Yeah but I would find it much more natural (and also useful in other
->> circumstances) if `Devres<T>` would give you access to `Device` (at
->> least the `Normal` type state).
->=20
-> If we use container_of!() instead or just pass the address of Self =
-(i.e.
-> Registration) to request_irq() instead,
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus tiwai-sound/for-next tiwai-sound/for-linus tip/x86/core linus/master v6.16-rc6 next-20250714]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/PCI-Add-helper-for-checking-if-a-PCI-device-is-a-display-controller/20250706-223745
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250706143613.1972252-9-superm1%40kernel.org
+patch subject: [PATCH v7 8/9] fbcon: Use screen info to find primary device
+config: i386-randconfig-053-20250714 (https://download.01.org/0day-ci/archive/20250714/202507142313.iWVTOSVB-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250714/202507142313.iWVTOSVB-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507142313.iWVTOSVB-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   ld: arch/x86/video/video-common.o: in function `video_is_primary_device':
+>> arch/x86/video/video-common.c:45: undefined reference to `screen_info_pci_dev'
 
 
-Boqun, Benno, are you ok with passing the address of Registration<T> as =
-the cookie?
+vim +45 arch/x86/video/video-common.c
 
-Recall that this was a change requested in v4, so I am checking whether =
-we are
-all on the same page before going back to that.
+    28	
+    29	bool video_is_primary_device(struct device *dev)
+    30	{
+    31		struct screen_info *si = &screen_info;
+    32		struct pci_dev *pdev;
+    33	
+    34		if (!dev_is_pci(dev))
+    35			return false;
+    36	
+    37		pdev = to_pci_dev(dev);
+    38	
+    39		if (!pci_is_display(pdev))
+    40			return false;
+    41	
+    42		if (pdev == vga_default_device())
+    43			return true;
+    44	
+  > 45		if (pdev == screen_info_pci_dev(si))
+    46			return true;
+    47	
+    48		return false;
+    49	}
+    50	EXPORT_SYMBOL(video_is_primary_device);
+    51	
 
-See [0], i.e.:
-
-> > > >> Well yes and no, with the Devres changes, the `cookie` can just =
-be the
-> > > >> address of the `RegistrationInner` & we can do it this way :)
-> > > >>
-> > > >> ---
-> > > >> Cheers,
-> > > >> Benno
-> > > >
-> > > >
-> > > > No, we need this to be the address of the the whole thing (i.e.
-> > > > Registration<T>), otherwise you can=E2=80=99t access the handler =
-in the irq
-> > > > callback.
->=20
-> You only need the access of `handler` in the irq callback, right? I.e.
-> passing the address of `handler` would suffice (of course you need
-> to change the irq callback as well).
-
-
-=E2=80=94 Daniel
-
-[0] https://lore.kernel.org/all/aFq3P_4XgP0dUrAS@Mac.home/=
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
