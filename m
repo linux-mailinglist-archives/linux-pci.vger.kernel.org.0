@@ -1,158 +1,190 @@
-Return-Path: <linux-pci+bounces-32074-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32075-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76DECB04348
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 17:18:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCC61B043D8
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 17:29:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 083AF4E223C
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 15:15:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58A6317305F
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 15:27:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DFB6262FC1;
-	Mon, 14 Jul 2025 15:14:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E7012652BF;
+	Mon, 14 Jul 2025 15:24:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H/FEVB8b"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LK8SGKLr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB1526059F;
-	Mon, 14 Jul 2025 15:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A362265293;
+	Mon, 14 Jul 2025 15:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752506090; cv=none; b=WpiZUUHk1ZMdQ0pRg9PiMosVMyeP8bgjrot64xHPzgP+XrwdZ4ezn9VQY1yyazoVWcuw/2Q1KHKtejPcEExPV6iw9IcqqejbUYO5cy5T8GQNIgGYVW6bWRQQ4Kpio2BEJGPEVyc1SGdgyRBPpalFTA3757vCtliGR4A2utGWIfc=
+	t=1752506674; cv=none; b=NwpJpqEK7qVktSM6QwKuP8L+yeQmTNsc+8vfORxXtqYnTjR0kTu1avmJ/zzGeGqnilyinGXx6QOiI9P5zWslZFnjGu37Kiu4AW8XJCEtNN/ZYn2hOYHGeb/nm4zkNxTS78OavLloodtkCRlwHIlDyI6KqlmBdlngQrgHyc2fMtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752506090; c=relaxed/simple;
-	bh=uhR4oTtyTLRPzkqDzPtiWEgon2j5NRv9mdaGjQ0k3OM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kIi42md/X1hQw9EVtsDkcwrX+I6+uUuLJEYaQdun0ivHZmZcHWKVvNpPc/ccXM9iCNeYpQVj9WTLzhhHnDHakg4Ew1VZ0WRV7Hil3wFHhQFu1Pr5/Gkd8WXcSUZm0kKQu63/j14HpVARPc+msc5wBNN5FrtCuzKART2NrJpmgv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H/FEVB8b; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752506089; x=1784042089;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uhR4oTtyTLRPzkqDzPtiWEgon2j5NRv9mdaGjQ0k3OM=;
-  b=H/FEVB8b9xRpa7Xc/WVPnq4+ZBj5QLgziPs1Qt6n3UXuQv77Zav+ybhv
-   LFmYXkI0BCutQGtdi6SyX4sBmFS3Zsa6vv+qqYwh5pEVkCOHYF4FJq879
-   5lN6UJv7Vsgt1UPX/tNX8xvv5kkT5OFPTsWfTDAL1Vs021v4LoJkclNxu
-   h8b58djYKF5S3L4VcDSiHHRYMJh46DhUsLjnk6REKvgReLgL8bGM3gar5
-   8FkyfX44Sji9oNd142R1swa2ov50MUN7ucn9Nd/1U2RJCQQ+H+ml/ZXVa
-   Kc+m67YUJ3qeMt6KC2ue1F1xhGda7jZO+qLopcivmIftbZLCBM4P4U5X6
-   A==;
-X-CSE-ConnectionGUID: 983ENTieT7iFwO6PgxQyyw==
-X-CSE-MsgGUID: nCNbLcm9TWKYmV6EoXX5lw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="66147844"
-X-IronPort-AV: E=Sophos;i="6.16,311,1744095600"; 
-   d="scan'208";a="66147844"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 08:13:30 -0700
-X-CSE-ConnectionGUID: QsmEd6zUTNqnT0GaVeEtLA==
-X-CSE-MsgGUID: 47IN3f/gR+WROpmruZ/DZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,311,1744095600"; 
-   d="scan'208";a="187943702"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 14 Jul 2025 08:13:23 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ubKro-00092V-1w;
-	Mon, 14 Jul 2025 15:13:20 +0000
-Date: Mon, 14 Jul 2025 23:12:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mario Limonciello <superm1@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Bjorn Helgaas <helgaas@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	"(open list:INTEL IOMMU (VT-d))" <iommu@lists.linux.dev>,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-	linux-sound@vger.kernel.org, Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v7 8/9] fbcon: Use screen info to find primary device
-Message-ID: <202507142313.iWVTOSVB-lkp@intel.com>
-References: <20250706143613.1972252-9-superm1@kernel.org>
+	s=arc-20240116; t=1752506674; c=relaxed/simple;
+	bh=0cN73o2yYiCiXCp/p9M0zuVbz++37qgqTvQ6ZjDqtEY=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=bZBZv4dnIuxLq1RDBqERxHp7QOoVRZDycYTpjV7jfxulewz0cbHQOiPFxZ9O4je+Ws/6PEsWpb+IvVSO73d3doaEzFGIBU+cSr5e2DhaEBtxTTegq3L+Ai9NYb5FvIr/vC4b63f87xEjD3OME3UH3rbCQ5/0b5RdSPRAKp9DxSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LK8SGKLr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC20EC4CEF0;
+	Mon, 14 Jul 2025 15:24:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752506673;
+	bh=0cN73o2yYiCiXCp/p9M0zuVbz++37qgqTvQ6ZjDqtEY=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=LK8SGKLrKtSedVixTGKOrpesyxF/Rur6+7jCC5sJ+VQayZVxMRGVgZGMDc61XfpxU
+	 n8xpgFfxNMrUXXwc9VMh+zWtxhBusZcYtxC+nxka5WUluk87JLYpyYvsljxZlQ74MO
+	 6kulwGTS5eXbTST0sTGe26OriyP/AqJBrgnUspJn3P7xAcLtDV9tDlszE94+lKM6Hc
+	 UlnIATFpiY8Dw69pfRrzf0mABKoHTHbMxZLM0VPWjacZXe4/Ynajr37cQKfXipz3GQ
+	 IlWu+qnaraklF5X9Ol9lh+0luFw7xgRjj/iKQXM/N+vfzd2hyyMVXvVCHWJ/eyMuz7
+	 E6bOZu8miiQyQ==
+Date: Mon, 14 Jul 2025 10:24:32 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250706143613.1972252-9-superm1@kernel.org>
-
-Hi Mario,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus tiwai-sound/for-next tiwai-sound/for-linus tip/x86/core linus/master v6.16-rc6 next-20250714]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/PCI-Add-helper-for-checking-if-a-PCI-device-is-a-display-controller/20250706-223745
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250706143613.1972252-9-superm1%40kernel.org
-patch subject: [PATCH v7 8/9] fbcon: Use screen info to find primary device
-config: i386-randconfig-053-20250714 (https://download.01.org/0day-ci/archive/20250714/202507142313.iWVTOSVB-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250714/202507142313.iWVTOSVB-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507142313.iWVTOSVB-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   ld: arch/x86/video/video-common.o: in function `video_is_primary_device':
->> arch/x86/video/video-common.c:45: undefined reference to `screen_info_pci_dev'
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: jingoohan1@gmail.com, Ziyue Zhang <quic_ziyuzhan@quicinc.com>, 
+ quic_vbadigan@quicinc.com, abel.vesa@linaro.org, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, kw@linux.com, 
+ konradybcio@kernel.org, kwilczynski@kernel.org, linux-pci@vger.kernel.org, 
+ andersson@kernel.org, krzk+dt@kernel.org, kishon@kernel.org, 
+ linux-phy@lists.infradead.org, johan+linaro@kernel.org, bhelgaas@google.com, 
+ quic_krichai@quicinc.com, devicetree@vger.kernel.org, lpieralisi@kernel.org, 
+ mani@kernel.org, vkoul@kernel.org, qiang.yu@oss.qualcomm.com, 
+ neil.armstrong@linaro.org, conor+dt@kernel.org
+To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+In-Reply-To: <20250714081529.3847385-1-ziyue.zhang@oss.qualcomm.com>
+References: <20250714081529.3847385-1-ziyue.zhang@oss.qualcomm.com>
+Message-Id: <175250104197.2052778.9197055030236211122.robh@kernel.org>
+Subject: Re: [PATCH v8 0/5] pci: qcom: Add QCS8300 PCIe support
 
 
-vim +45 arch/x86/video/video-common.c
+On Mon, 14 Jul 2025 16:15:24 +0800, Ziyue Zhang wrote:
+> This series depend on the sa8775p gcc_aux_clock and link_down reset change
+> https://lore.kernel.org/all/20250529035416.4159963-1-quic_ziyuzhan@quicinc.com/
+> 
+> This series adds document, phy, configs support for PCIe in QCS8300.
+> It also adds 'link_down' reset for sa8775p.
+> 
+> Have follwing changes:
+> 	- Add dedicated schema for the PCIe controllers found on QCS8300.
+> 	- Add compatible for qcs8300 platform.
+> 	- Add configurations in devicetree for PCIe0, including registers, clocks, interrupts and phy setting sequence.
+> 	- Add configurations in devicetree for PCIe1, including registers, clocks, interrupts and phy setting sequence.
+> 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> ---
+> Changes in v8:
+> - rebase sc8280xp-qmp-pcie-phy change to solve conflicts.
+> - Add Fixes tag to phy change (Johan)
+> - Link to v7: https://lore.kernel.org/all/20250625092539.762075-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v7:
+> - rebase qcs8300-ride.dtsi change to solve conflicts.
+> - Link to v6: https://lore.kernel.org/all/20250529035635.4162149-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v6:
+> - move the qcs8300 and sa8775p phy compatibility entry into the list of PHYs that require six clocks
+> - Update QCS8300 and sa8775p phy dt, remove aux clock.
+> - Fixed compile error found by kernel test robot
+> - Link to v5: https://lore.kernel.org/all/20250507031019.4080541-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v5:
+> - Add QCOM PCIe controller version in commit msg (Mani)
+> - Modify platform dts change subject (Dmitry)
+> - Fixed compile error found by kernel test robot
+> - Link to v4: https://lore.kernel.org/linux-phy/20241220055239.2744024-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v4:
+> - Add received tag
+> - Fixed compile error found by kernel test robot
+> - Link to v3: https://lore.kernel.org/lkml/202412211301.bQO6vXpo-lkp@intel.com/T/#mdd63e5be39acbf879218aef91c87b12d4540e0f7
+> 
+> Changes in v3:
+> - Add received tag(Rob & Dmitry)
+> - Update pcie_phy in gcc node to soc dtsi(Dmitry & Konrad)
+> - remove pcieprot0 node(Konrad & Mani)
+> - Fix format comments(Konrad)
+> - Update base-commit to tag: next-20241213(Bjorn)
+> - Corrected of_device_id.data from 1.9.0 to 1.34.0.
+> - Link to v2: https://lore.kernel.org/all/20241128081056.1361739-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v2:
+> - Fix some format comments and match the style in x1e80100(Konrad)
+> - Add global interrupt for PCIe0 and PCIe1(Konrad)
+> - split the soc dtsi and the platform dts into two changes(Konrad)
+> - Link to v1: https://lore.kernel.org/all/20241114095409.2682558-1-quic_ziyuzhan@quicinc.com/
+> 
+> 
+> 
+> Ziyue Zhang (5):
+>   dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
+>     for qcs8300
+>   arm64: dts: qcom: qcs8300: enable pcie0
+>   arm64: dts: qcom: qcs8300-ride: enable pcie0 interface
+>   arm64: dts: qcom: qcs8300: enable pcie1
+>   arm64: dts: qcom: qcs8300-ride: enable pcie1 interface
+> 
+>  .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |   2 +-
+>  arch/arm64/boot/dts/qcom/qcs8300-ride.dts     |  80 +++++
+>  arch/arm64/boot/dts/qcom/qcs8300.dtsi         | 296 +++++++++++++++++-
+>  3 files changed, 375 insertions(+), 3 deletions(-)
+> 
+> 
+> base-commit: b551c4e2a98a177a06148cf16505643cd2108386
+> --
+> 2.34.1
+> 
+> 
+> 
 
-    28	
-    29	bool video_is_primary_device(struct device *dev)
-    30	{
-    31		struct screen_info *si = &screen_info;
-    32		struct pci_dev *pdev;
-    33	
-    34		if (!dev_is_pci(dev))
-    35			return false;
-    36	
-    37		pdev = to_pci_dev(dev);
-    38	
-    39		if (!pci_is_display(pdev))
-    40			return false;
-    41	
-    42		if (pdev == vga_default_device())
-    43			return true;
-    44	
-  > 45		if (pdev == screen_info_pci_dev(si))
-    46			return true;
-    47	
-    48		return false;
-    49	}
-    50	EXPORT_SYMBOL(video_is_primary_device);
-    51	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: using specified base-commit b551c4e2a98a177a06148cf16505643cd2108386
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250714081529.3847385-1-ziyue.zhang@oss.qualcomm.com:
+
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: pci@1c00000 (qcom,pcie-qcs8300): reset-names: ['pci', 'link_down'] is too long
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: pci@1c00000 (qcom,pcie-qcs8300): resets: [[50, 1], [50, 2]] is too long
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: pci@1c10000 (qcom,pcie-qcs8300): reset-names: ['pci', 'link_down'] is too long
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: pci@1c10000 (qcom,pcie-qcs8300): resets: [[50, 6], [50, 7]] is too long
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2'] is too short
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clocks: [[50, 70], [50, 68], [50, 80], [50, 72], [50, 74], [50, 77]] is too short
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+
+
+
+
+
 
