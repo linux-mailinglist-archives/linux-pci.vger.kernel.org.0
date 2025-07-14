@@ -1,51 +1,50 @@
-Return-Path: <linux-pci+bounces-32083-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32084-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDCB5B047EA
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 21:32:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69EE8B04805
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 21:42:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2590B1A619B8
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 19:32:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99BD53AEB4C
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 19:41:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DED5714658D;
-	Mon, 14 Jul 2025 19:32:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79A3F22A7E9;
+	Mon, 14 Jul 2025 19:42:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kt2Y25vt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ecMBadbj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FA3A41;
-	Mon, 14 Jul 2025 19:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0451662E7;
+	Mon, 14 Jul 2025 19:42:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752521537; cv=none; b=RAHzD3nIqw3zYjE3O3NyqX3yURnCTJV82IXShyAqMuAq5V/wHKFebxnvVc/RzcHb53BenPJgBTKGY5FN0rtYC8rXO/A5bys6gpKxwWMFwS2UyKi7a9jFjSjKAYxwsj7TmF/7ki4AJqxZo7Hp5XnPkV32NE5oCllmvtKIPNW1drs=
+	t=1752522132; cv=none; b=h6DOMiJq0Y1Gy+k1q+FE3lah+a6HH93qHpzNxhW89AHzuQDr4Na37Ivsn9dbJpzZ7VvXTAxvnrOH5r35cgmOzePhHYW3xh0P+r0Z3geLzaj1EiNT/JsNpuhUEX5l/yk9M9fEOTcvHtzJO1ig/VEe2o8xNJZTPyn9GAvwlym1XuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752521537; c=relaxed/simple;
-	bh=AQrxO9GMuQ9aYr3Jm8n6Ii4kIOHde1vJf8LTBljYPok=;
+	s=arc-20240116; t=1752522132; c=relaxed/simple;
+	bh=ZwfxCQTzGcagrhNN128iX8ZCx0f/OBRMMJHaiqxxpiM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=iWNGRSS9IY9mrscsR3ySmIY7wTV+nt0+e5NrBnyrKZZGRJJptZYTYHfBpyrIM7hvCElclGRAkxN8HIgJhycyypInLQ8p4vwJLqCtknb0ugoe1NZMbGItUcShvmtUr3UDd8pK77LHVx+ymzmtwxosThtvNYsyaAm9/sR6nHrkh0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kt2Y25vt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 199CBC4CEED;
-	Mon, 14 Jul 2025 19:32:16 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=YstFbFbITDcQ59+J2Y9XzrRJAFCHE0x/Bv+BlYHU8EmEDFXNj5xZTUvs0+mh90f7APvlZhgJ6Bl9zadBI6NswIs7EgvaVB1+lOgQZIunqHqk2qHyg8Ljl+EihihBysE6OxffcuKugvaiXzlV+eVaC6JGzUbNy8lwRPyGncEK9sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ecMBadbj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7978DC4CEED;
+	Mon, 14 Jul 2025 19:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752521536;
-	bh=AQrxO9GMuQ9aYr3Jm8n6Ii4kIOHde1vJf8LTBljYPok=;
+	s=k20201202; t=1752522130;
+	bh=ZwfxCQTzGcagrhNN128iX8ZCx0f/OBRMMJHaiqxxpiM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kt2Y25vtysozivPuujqnU8y4JyYjsGSn7HGHKaj5Wh8im8SJ1Xp4AhW8AGo2lP1+5
-	 zQEGTF+WevtHwlWsbyhKSwTxlET+cZv73pqoC8/5HHIVTIQ0twq6Iovw3U2pz4ue5j
-	 r8L0vuloLaWvG/U1xJ3+3sALLbE6AZNV6/R/aByiqKxQEYiDjLiGmQTMyxiaD2bPe3
-	 StjJOwSesK0gl0/B6TchmYHyagJ3VaUupNEVzqDfUZi8oDQe9ueKnLO4kpq221zmpT
-	 ptb5CayJ9iFz5OOBWHkbyYDrRZBjKpBGeRRsEDSCQFAN6fN40wGIzb7/Gh4DPuThtc
-	 mkMIBPsaLSQUQ==
-Date: Mon, 14 Jul 2025 14:32:14 -0500
+	b=ecMBadbjd7FZqxSx5x58d/jEVKcEidTJa/y2tEB91mpgRzILb/XNeffNmHfcve2at
+	 Bfu/oNAn0YGbWYgbGvB7St73SXCvXih8WZCa20Sfp4N5Slw/Jz1GVQn7FrHoJDX4w3
+	 DVmrHZso9y/CxNND/f7hplvFfiJbBTVs5nfv3lDnHta/jrKE8ACVOCef4lY1p20DRW
+	 iipvykN6PuX4S3ek4w1Iqk5wvRbAkDexurWSHWFpuyxLw/DgnwyMQ9nRQBpymbNQTL
+	 wp+2fshCBaFY6LY1sI1L8C/yLD1oVWjJ/qHQR//JYsEsQ1Xw5v+NLKUgeDRcoIoAH3
+	 G3ijQrgYbpjzg==
+Date: Mon, 14 Jul 2025 14:42:09 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
 	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Jingoo Han <jingoohan1@gmail.com>,
@@ -61,63 +60,87 @@ Cc: Manivannan Sadhasivam <mani@kernel.org>,
 	Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 Subject: Re: [PATCH v4 06/11] PCI/ASPM: Clear aspm_disable as part of
  __pci_enable_link_state()
-Message-ID: <20250714193214.GA2415073@bhelgaas>
+Message-ID: <20250714194209.GA2415586@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <470742a6-861e-498e-9da4-1fa213969c7e@163.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <gwpn5no4i2wwwk3qo4tcgp6z6floo6k2ymzfuucg3tbwtmccte@ydsupmrd2nqu>
 
-On Sun, Jul 13, 2025 at 12:05:18AM +0800, Hans Zhang wrote:
-> On 2025/7/12 17:35, Manivannan Sadhasivam wrote:
-> ...
-
-> > > IMO the "someday" goal should be that we get rid of aspm_policy
-> > > and enable all the available power saving states by default.  We
-> > > have sysfs knobs that administrators can use if necessary, and
-> > > drivers or quirks can disable states if they need to work around
-> > > hardware defects.
+On Mon, Jul 14, 2025 at 07:21:21PM +0530, Manivannan Sadhasivam wrote:
+> On Sun, Jul 13, 2025 at 07:27:57PM GMT, Ilpo Järvinen wrote:
+> > On Sat, 12 Jul 2025, Manivannan Sadhasivam wrote:
+> > > On Fri, Jul 11, 2025 at 06:00:13PM GMT, Bjorn Helgaas wrote:
+> > > > On Fri, Jul 11, 2025 at 04:38:48PM +0300, Ilpo Järvinen wrote:
+> > > > 
+> > > > > +++ b/include/linux/pci.h
+> > > > > @@ -1826,8 +1826,8 @@ static inline int pcie_set_target_speed(struct pci_dev *port,
+> > > > >  #ifdef CONFIG_PCIEASPM
+> > > > >  int pci_disable_link_state(struct pci_dev *pdev, int state);
+> > > > >  int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
+> > > > > -int pci_enable_link_state(struct pci_dev *pdev, int state);
+> > > > 
+> > > > AFAICT there's no caller of this at all.  Why do we keep it?
+> > > 
+> > > I'm just working on a series to convert the ath{10/11/12}k
+> > > drivers to use this API instead of modifying LNKCTL register
+> > > directly:
+> > > 
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/wireless/ath/ath12k/pci.c#n961
 > > 
-> > Yeah, I think the default should be powersave and let the users
-> > disable it for performance if they want.
+> > Great. I assume but "this API" you meant disable/enable link state
+> > that are real pair unlike the current pci_enable_link_state()?
 > 
-> Perhaps I don't think so. At present, our company's testing team has
-> tested quite a few NVMe SSDS. As far as I can remember, the SSDS
-> from two companies have encountered problems and will hang directly
-> when turned on. We have set CONFIG_PCIEASPM_POWERSAVE=y by default.
-> When encountering SSDS from these two companies, we had to add
-> "pcie_aspm.policy=default" in the cmdline, and then the boot worked
-> normally. Currently, we do not have a PCIe protocol analyzer to
-> analyze such issues. The current approach is to modify the cmdline.
-> So I can't prove whether it's a problem with the Root Port of our
-> SOC or the SSD device.
+> Yes. I actually based my series on top of this series, but I guess I
+> should just merge the API change patch to my series as it is
+> relatively small compared to this one (so it will get merged
+> quicker).
+> 
+> > Did ath1xk need to do some hw specific register updates when
+> > changing ASPM state?
+> 
+> Fortunately, no.
+> 
+> > I tried to do similar conversion in r8169 (and actually also
+> > ath1xk too) but it was a while ago already. If I understood the
+> > code correctly, r8169 seems to write some HW specific registers
+> > when changing ASPM state so I would have likely need to add some
+> > ops for it to play nice with state changes not originating from
+> > the driver itself but from the ASPM driver, which is where the
+> > work then stalled.
 
-Have you reported these?
+Pffft.  Device-specific configuration when changing ASPM state is a
+device defect in my book.  ASPM is clearly designed to be managed
+outside the driver.  What is the driver supposed to do about this if
+the platform retains control of ASPM?  There's no possibility of a
+driver hook for that.
 
-> Here I agree with Bjorn's statement that sometimes the EP is not
-> necessarily very standard and there are no hardware issues.
-> Personally, I think the default is default or performance. When
-> users need to save power, they should then decide whether to
-> configure it as powersave or powersupersave.  Sometimes, if the EP
-> device connected by the customer is perfect, they can turn it on to
-> save power. But if the EP is not perfect, at least they will
-> immediately know what caused the problem.
+> ath driver changes are straightforward, but I need to add an inline
+> function to convert lnkctl setting to aspm states:
+> 
+> static inline int ath_pci_aspm_state(u16 lnkctl)
+> {
+> 	int state = 0;
+> 
+> 	if (lnkctl & PCI_EXP_LNKCTL_ASPM_L0S)
+> 		state |= PCIE_LINK_STATE_L0S;
+> 	if (lnkctl & PCI_EXP_LNKCTL_ASPM_L1)
+> 		state |= PCIE_LINK_STATE_L1;
+> 
+> 	return state;
+> }
+> 
+> Currently, it is in ath/ath.h, but if you feel that we should move it to
+> include/linux/pci.h, let me know!
 
-We should discover device defects as early as possible so we can add
-quirks for them.  Defaulting to ASPM being partly disabled means it
-gets much less testing and users end up passing around "fixes" like
-booting with "pcie_aspm.policy=default" or similar.  I do not want
-users to trip over a device that doesn't work and have to look for
-workarounds on the web.
-
-I also think it's somewhat irresponsible of us to consume more power
-than necessary.  But as Mani said, this would be a big change and
-might have to be done with a BIOS date check or something to try to
-avoid regressions.
+I haven't looked at the implementation here, but I don't think drivers
+should check LNKCTL to decide this.  If the device doesn't work with
+L0s or L1 or whatever, that's what the driver should tell us.
 
 Bjorn
 
