@@ -1,221 +1,174 @@
-Return-Path: <linux-pci+bounces-32076-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32077-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06441B046CA
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 19:44:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FA58B04702
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 20:01:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3809717F1E8
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 17:44:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 93C5317EF88
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 18:01:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 987732676DA;
-	Mon, 14 Jul 2025 17:44:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EA49266B5D;
+	Mon, 14 Jul 2025 18:01:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f8E9Iw0l"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ljfRAkrH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CEC2673BB;
-	Mon, 14 Jul 2025 17:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A839E2E36FC
+	for <linux-pci@vger.kernel.org>; Mon, 14 Jul 2025 18:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752515076; cv=none; b=jWaCgKVFVGLas7bJjxWtRB492KdEECiEUy2fOXue5Mh9q2t85qRyYkkzo5fOoxHj2EMsIcyvAJMVyf5W7ohMfWZ5olUJJTpqcREEwb4BhvDRav7XwJKBDqfuzu4U+kl03IAH+engIYi08gka6AAoBvGZcTHLcknTX5ul+x1Qu04=
+	t=1752516084; cv=none; b=hn9ogeK3A6NrUaaaLBstvID40hjYaP7EFO8oaUJ0DcOUL8SCQ489gdK0tUNQO3N47lZJfkIDmfeFaDJCleBVaOxctU4CaydTA9gjqcWQR1KU79gnddwQYn+74g3DIOXcftFm/9nJa9bFRnn1PFDP0MdQGfHKdSjyPBdXnnak0bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752515076; c=relaxed/simple;
-	bh=FpIs8x3wOR4QDIl4rTH8WQCJsw8SVEQKjwt/hRvJVYg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KhDd+fZUabliKfGWJdeU3PMjNH5l0xT9gICLA8tSJDOwm5DpSUzzcPck8oFUbsXlIGvl4obSClegWwKyxjJfOYspky0u0IQehuBYo4CDKBQiirkhP2v2V8Kbx6ezwf4Ei6pCN+kHRexiS62Xs86eNhvlDp1C54w9AowHaAHa2yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f8E9Iw0l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6880C116B1;
-	Mon, 14 Jul 2025 17:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752515075;
-	bh=FpIs8x3wOR4QDIl4rTH8WQCJsw8SVEQKjwt/hRvJVYg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=f8E9Iw0l1s3u4GUjtdigSpqe/0ME79OcCpJcopd+wcAm9W0iNGsHck2mRJKvqniJU
-	 cHL/+J4GYfwo7kkhEyKN+v82iEB05WpiZGbxMJZe3upnKFvtJxg6ER+J2rZ8Ljro7b
-	 HtlpKYIYp9AWyrd/hfP9TVfKZWJYS5uxWNgZ1d8Kf7g/suwYj0nle35JgGzKXFYUtk
-	 Xlika5iSvll0Z7lJGVjJd1uo3U4nim87L9hE1vH3YfcYIJ9Hn5fYLployw/rK7mYgl
-	 U7mAeuxWv7hPy5CfhW0ewERIQB281YFPfoMx8oomGNXvqLpyNor3Loid2VwjgkU6SR
-	 JsnHYrciiFveA==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ae0dad3a179so778957466b.1;
-        Mon, 14 Jul 2025 10:44:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUa3zdscG65kalu/1IepT0ifG3g+OvDyPIRPlV87cK+j3r1RK1vxYeqxeF8OteUYjEqKWBG7pv5WWsA@vger.kernel.org, AJvYcCV62ys/0XXl/4oIpfBaojjnIlYfq4PiTp7Lp0cBD0zka4xmD5EtaaAlJH180cMsMJEoKs6EK/iArDoK@vger.kernel.org, AJvYcCVOs8qkJPs+Csq9JAzawHHq27z2pYWPf92w55NnLaEAxGJDgamUuK7vvli0roKQOzOiRTNVOKjqaxA7@vger.kernel.org, AJvYcCVz5sfqK59RjHFvAagb16SlWM+/YpxZS6deUeDJT812shl3dKA5dd7A91YKlvTwMe6ZsKjkoIfkLTBWCg==@vger.kernel.org, AJvYcCW1tOQLGA4Kf3Yde7kXlLjupNBkksqmi7csa1nADCaa89L48xyNic7aTKrLJTAqNFBzJHhbLXOcaNHU@vger.kernel.org, AJvYcCW9+lCpYnAnL3be6MVypP6KAD8+JOkIMZDUVSKZniRixy4/mC8aaBcGHfBQtVSKcm/ee/5v9Hd8VFIRsWht@vger.kernel.org, AJvYcCWPcPujx1gNqSgOgrv+w7Xll+DIHVFylcUp5OYHVz8MgnH5vaAnNFBu3gc6CKrhCmeNjSyPmU4aEK62@vger.kernel.org, AJvYcCWakOZcvcIc3q4LoYGfe+4xFq+78Ob7CQNyEPjI5XKCNYR2MFruK5lixE6+rigpvfG0rmPw2EWPI7wG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIYZJ1o28VZ3wrJOdmMD9aRFV9nfHsUP+/xzDIO4MbRZFNdryA
-	IL/qPE9BRN3wpbsQRuhB5qh6wZUNs2lN+jvYDDz9Yj9zKav7jmCNaBiVWWmqOUtKmXK3ASH3VaF
-	jU1GUVwW1EUI5frT5JrVdRHx2u2DMwQ==
-X-Google-Smtp-Source: AGHT+IEGQ7nHD+/xyba/tE0S2QjAjkVhfLJ9Pp8nFl2aw5w2DKZ8hhnS6UxFCO7dT9w+GWuozWbDzLrfoixjq31W73I=
-X-Received: by 2002:a17:907:3c8e:b0:ae3:a3f7:ad8e with SMTP id
- a640c23a62f3a-ae6fbdec31emr1398694666b.25.1752515074068; Mon, 14 Jul 2025
- 10:44:34 -0700 (PDT)
+	s=arc-20240116; t=1752516084; c=relaxed/simple;
+	bh=rK1mHRwfLofxCrHg/hy4DKXz7ak5yRST/iNSGy5d/GE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pHz2QAmfk2EDgvkSMvIl5LnrhHNzYKzzl4vw/jwr6Q163XACn0Jz9I+gR3462QcOa6spYIEHKAS9KGUdMb3xjRuH9OzIJ7S8njgGW/oypzeg/o0GLsDr7Gq/Z02UqyA/bQdThKHsqRljZxWTcbhAU+GJOAeVTz0IT1Cwyym4lto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ljfRAkrH; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56EGIJZ2007836
+	for <linux-pci@vger.kernel.org>; Mon, 14 Jul 2025 18:01:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=ohJyu1geVqwV23Bgi/9wQX
+	zmFnqB141Eg+tm/AJaoKM=; b=ljfRAkrHLsROSFC/Yo8QSj9RRtS86W0e1oaMaj
+	tMgPIgF+B+N1urCMmNg7Wr64UbCoSJpRvMClL6T01nFA3ZDv8qvUiXbTIZ76489J
+	YkEB28r1ppgyH4ohQ2o0ak1utKDGZgj/qf3qO0Fy58FRmXLVpTO7vIDfUOlCOBaT
+	U/Zsi4JZ1j/CMWfGzGthfGiU6wTnpZEJJeNXw9NTk+ICMGrYlMWQKGFdRYOj56Kn
+	JFi43RBtAFG4NGIA95hoNOLW0uLgOk0ehCwXJUo9/PbtODaZt5Kh1G6Eo/zBJAKA
+	iJSmGj+xysYZbx6AtO814Uz7KP1/a37HXgwU44Q3VPAGQdEw==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47w58yga0x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 14 Jul 2025 18:01:21 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4ab6d31e2dbso33312451cf.3
+        for <linux-pci@vger.kernel.org>; Mon, 14 Jul 2025 11:01:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752516080; x=1753120880;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ohJyu1geVqwV23Bgi/9wQXzmFnqB141Eg+tm/AJaoKM=;
+        b=CEc+VhfB1J8xhKsvPdvdZKRtYGxD1z/d0K4V9vofbFMhxQul1OeYYb3oApeWotWS9m
+         GBZP4ENDlhrdiZPl980RfozBLcnlbBsU8bMRG9w1vxNFni7em04Fupg8K+P4wUOlzqD4
+         lAGKyjoDRYD1R2gCdUKxrUIKPQdS4zDIHC6tJNuCzo4SZm1xL8beVLbaBHHFt6CvI+yV
+         uzOHEl5WpZIkD1QTfSGtrVDDLtIMZ9JTp5GawLTs6NizrEIP8nswNzGo+RV95H8T3Zwx
+         EnuzeDrZstqLV4lDJNwHYritUkUiY3Y0xnFUGas3FPqG835W+DyQqlAnTF/X36CfCWPm
+         LlQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhWOwguiQG1VlT9LwM7OcuzE6ltxSofC0L/Vs09ALI1m2KXZ1khIZEoeq/Cd40Lwp5+5HfKiWTzio=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfW5JmhBW4Wa7b5Nw899oLg+YVoy285NxDlOUoGdLpXEE4vCEA
+	ly8FuG7tTAWrWBQNMQYAlFOmRjVf/CEUYdtEpsQp/jPATSHUnXHsV4hwqcuWl+i2pv7WCj5dx8L
+	jj48rkg9erRSDQJicTmrPr7VZ9vU/OXjDAmEwJGFoYmnvhX3ObsJnE+qICDQ3XhQ=
+X-Gm-Gg: ASbGncuJXk1k/J0d9PTmIR03zyF+RGKoCA7gvsarL0rllRqD2HF0YlnRwHuDZf6KwCC
+	9YiTMKcVCRClJjCu3v1LgK9xCdJKzLr/NOuIdJnzjHVAhptxcniB/n4QSBAcvr3ccCRHrau8bqp
+	Aq5rBxNAkluP2F8HDCLaCVpCiZzeJ4JiehIWJrj+MfJ1qMQJj0ffWyTe66bQtMrSt+HGPjFQicH
+	9DNxitVTb7Q57ZUtEjY4+o73UTm9U0re0DMrbSwDCPOWJm0bMDPs1c/yRVxVUkRREH4XnLHr11M
+	q1++IfRzzBrjKw6WWCQIEvQV8D5+hSymnNFlf0nsIJGPRopp5BLqj/DHkpIX+V+WJKE=
+X-Received: by 2002:a05:622a:2308:b0:4a9:c9c6:ae8d with SMTP id d75a77b69052e-4a9fb9612d9mr215365741cf.35.1752516080604;
+        Mon, 14 Jul 2025 11:01:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH/6Pul50lfnYF7kucBGxB7MrwD9ARcmggCN/hiK8dl/0nzcXDqTO0GXrPd5FCOVdGXTFlOow==
+X-Received: by 2002:a05:622a:2308:b0:4a9:c9c6:ae8d with SMTP id d75a77b69052e-4a9fb9612d9mr215364991cf.35.1752516080005;
+        Mon, 14 Jul 2025 11:01:20 -0700 (PDT)
+Received: from [192.168.1.17] ([120.60.67.95])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ab659238a1sm16999381cf.17.2025.07.14.11.01.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Jul 2025 11:01:19 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Subject: [PATCH 0/2] PCI: qcom: Switch to bus notifier for enabling ASPM of
+ PCI devices
+Date: Mon, 14 Jul 2025 23:31:03 +0530
+Message-Id: <20250714-aspm_fix-v1-0-7d04b8c140c8@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-6-herve.codina@bootlin.com> <20250627155200.GB3234475-robh@kernel.org>
- <20250703093302.4f7743ea@bootlin.com> <20250704105725.50cb72b9@bootlin.com>
-In-Reply-To: <20250704105725.50cb72b9@bootlin.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 14 Jul 2025 12:44:22 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLnPxUKXo3+Qdv-C1kXa6zbL1zMKDQsg1--08EY4TwsKw@mail.gmail.com>
-X-Gm-Features: Ac12FXxDLTYP2NvcYJSixLW6cmzqJDujemRg676_boOWrjf2yfM7xtUL9oD9OWo
-Message-ID: <CAL_JsqLnPxUKXo3+Qdv-C1kXa6zbL1zMKDQsg1--08EY4TwsKw@mail.gmail.com>
-Subject: Re: [PATCH v3 05/28] bus: simple-pm-bus: Populate child nodes at probe
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
-	Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOBFdWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDc0MT3cTigtz4tMwK3dTUFGNLIzNjw2SLNCWg8oKiVKAw2Kjo2NpaAAZ
+ JW2ZaAAAA
+X-Change-ID: 20250714-aspm_fix-eed392631c8f
+To: Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+        stable@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1192;
+ i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
+ bh=rK1mHRwfLofxCrHg/hy4DKXz7ak5yRST/iNSGy5d/GE=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBodUXqUyWYINFENbIxjWYt3rEs1gx0E/tbUSEcz
+ SpppJ9KEpGJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaHVF6gAKCRBVnxHm/pHO
+ 9Up/B/9t5OmC953NndUYPqjfz4q/od5S20svRDDr+kRniUGMD7d6tqsfC62t8OXVGb5yRdFwyTc
+ it9owf5qfbPyvKAk2EldZ1pPQaypwqUGbN2Cz3wQIEOBOT2obnIeJNv3nOVtUzMxVZXsKEhjbRk
+ gsV2l/OF5CJQtgxEdfx4Dp/0hM7BwA/DQV6D2NsVjxIEmUAggQOl5zK/ICCIYrQUzdAiDFeA17A
+ 40cPcZSwZhLbLMrmSckpCLRt/tq6mqKut2pjIcq7vs3eG6xMOnS7L56Tfp6yw8gUpscOHIIW4Xe
+ oIuTKql+lue3GRVMHIdgvfJEycpEJoWWi+amwwj52tH/5DGK
+X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE0MDExNCBTYWx0ZWRfX7IGh39IvWecS
+ HpBHhDeif99pKOji/vfXfkJIStoRkZZUWmQ+cuk0MjRN5k/kf/6WyyVscmsnZB0rYVi8Nifaht0
+ n7K25ZqpfDK9yO0vh2QlNCjFaCmH4jCD89KjUwXpnC2E550v5yILH77jxm5elF89pyMO1bLSe8I
+ RlgtMcAYYMY+zy+no90o2Ryy8/Ux6tLFRZuK7dr8e/QtxiFlg0ah0w7FFiaGT+2miCbCHCh0ZUq
+ ANxX1G9st09udK4F69K3+fhFnKlOVKP8v8q5PXtO2r7uvwcwGSLBmBxcTF++2jNRPnOFRfxnm4S
+ AbY0DcmKU5WVxqiC1AZBBmPTn7qQjwtEZ9/aiNco2vghZxhPRANRNWBBwUmEiI7yDQ9js2QJ0bR
+ c8LA2Pxrh5Euvh8jwFWR3fMrqEcbXH8MOS7R1hMJEKTcp6pntrI6F+Pv/Sj8axhAMO6mwuyE
+X-Proofpoint-GUID: JcaialeScUI0J-CpE-jko2R8SsnxkIwE
+X-Proofpoint-ORIG-GUID: JcaialeScUI0J-CpE-jko2R8SsnxkIwE
+X-Authority-Analysis: v=2.4 cv=Or9Pyz/t c=1 sm=1 tr=0 ts=687545f1 cx=c_pps
+ a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=fXYZ39HhpiwvwaHYBd8ing==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=djgaaEycexjLLnWtpDoA:9
+ a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-14_02,2025-07-14_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 suspectscore=0 adultscore=0 spamscore=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxlogscore=912 bulkscore=0
+ impostorscore=0 malwarescore=0 clxscore=1011 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507140114
 
-On Fri, Jul 4, 2025 at 3:57=E2=80=AFAM Herve Codina <herve.codina@bootlin.c=
-om> wrote:
->
-> Hi Rob,
->
-> On Thu, 3 Jul 2025 09:33:02 +0200
-> Herve Codina <herve.codina@bootlin.com> wrote:
->
-> > Hi Rob,
-> >
-> > On Fri, 27 Jun 2025 10:52:00 -0500
-> > Rob Herring <robh@kernel.org> wrote:
-> >
-> > > On Fri, Jun 13, 2025 at 03:47:45PM +0200, Herve Codina wrote:
-> > > > The simple-pm-bus driver handles several simple busses. When it is =
-used
-> > > > with busses other than a compatible "simple-pm-bus", it doesn't pop=
-ulate
-> > > > its child devices during its probe.
-> > > >
-> > > > This confuses fw_devlink and results in wrong or missing devlinks.
-> > > >
-> > > > Once a driver is bound to a device and the probe() has been called,
-> > > > device_links_driver_bound() is called.
-> > > >
-> > > > This function performs operation based on the following assumption:
-> > > >     If a child firmware node of the bound device is not added as a
-> > > >     device, it will never be added.
-> > > >
-> > > > Among operations done on fw_devlinks of those "never be added" devi=
-ces,
-> > > > device_links_driver_bound() changes their supplier.
-> > > >
-> > > > With devices attached to a simple-bus compatible device, this chang=
-e
-> > > > leads to wrong devlinks where supplier of devices points to the dev=
-ice
-> > > > parent (i.e. simple-bus compatible device) instead of the device it=
-self
-> > > > (i.e. simple-bus child).
-> > > >
-> > > > When the device attached to the simple-bus is removed, because devl=
-inks
-> > > > are not correct, its consumers are not removed first.
-> > > >
-> > > > In order to have correct devlinks created, make the simple-pm-bus d=
-river
-> > > > compliant with the devlink assumption and create its child devices
-> > > > during its probe.
-> > >
-> > > IIRC, skipping child nodes was because there were problems with
-> > > letting the driver handle 'simple-bus'. How does this avoid that now?
-> >
-> > I don't know about the specific issues related to those problems. Do yo=
-u
-> > have some pointers about them?
-> >
-> > >
-> > > The root of_platform_populate() that created the simple-bus device th=
-at
-> > > gets us to the probe here will continue descending into child nodes.
-> > > Meanwhile, the probe here is also descending into those same child
-> > > nodes. Best case, that's just redundant. Worst case, won't you still
-> > > have the same problem if the first of_platform_populate() creates the
-> > > devices first?
-> > >
-> >
-> > Maybe we could simply avoid of_platform_populate() to be recursive when=
- a
-> > device populate by of_platform_populate() is one of devices handled by
-> > the simple-bus driver and let the simple-bus driver do the job.
-> >
-> > of_platform_populate will handle the first level. It will populate chil=
-dren
-> > of the node given to of_platform_populate() and the children of those
-> > children will be populate by the simple-bus driver.
-> >
-> > I could try a modification in that way. Do you think it could be a corr=
-ect
-> > solution?
-> >
->
-> I have started to look at this solution and it's going to be more complex
-> than than I thought.
->
-> Many MFD drivers uses a compatible of this kind (the same exist for bus
-> driver with "simple-bus"):
->   compatible =3D "foo,bar", "simple-mfd";
->
-> Usually the last compatible string ("simple-mfd" here) is a last fallback
-> and the first string is the more specific one.
->
-> In the problematic case, "foo,bar" has a specific driver and the driver
-> performs some operations at probe() but doesn't call of_platform_populate=
-()
-> and relies on the core to do the device creations (recursively) based on
-> the "simple,mfd" string present in the compatible property.
->
-> Some other calls of_platform_populate() in they probe (which I think is
-> correct) and in that case, the child device creation can be done at two
-> location: specific driver probe() and core.
->
-> You pointed out that the core could create devices before the specific
-> driver is probed. In that case, some of existing drivers calling
-> of_platform_populate() are going to have issues.
->
-> I can try to modify existing MFD and bus drivers (compatible fallback to
-> simple-mfd, simple-bus, ...) in order to have them call of_platform_popul=
-ate()
-> in they probe() and after all problematic drivers are converted, the
-> recursive creation of devices done in the core could be removed.
+Hi,
 
-The problem is how does a bus driver know if there is a specific MFD
-driver or not? It doesn't. The MFD driver could be a module and loaded
-any time later. We'd really need some sort of unbind the generic
-driver and re-bind to a more specific driver when and if that driver
-appears. We could perhaps have a list of devices with a driver because
-in theory that should be a short list as the (broken) promise of
-simple-mfd is the child nodes have no dependency on the parent node
-which implies the parent doesn't have a driver. The specific
-compatible is there in case that assumption turns out wrong.
+This series switches the Qcom PCIe controller driver to bus notifier for
+enabling ASPM (and updating OPP) for PCI devices. This series is intented
+to fix the ASPM regression reported (offlist) on the Qcom compute platforms
+running Linux. It turned out that the ASPM enablement logic in the Qcom
+controller driver had a flaw that got triggered by the recent changes to the
+pwrctrl framework (more details in patch 1/1).
 
-Rob
+Testing
+-------
+
+I've tested this series on Thinkpad T14s laptop and able to observe ASPM state
+changes (through controller debugfs entry and lspci) for the WLAN device.
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+---
+Manivannan Sadhasivam (2):
+      PCI: qcom: Switch to bus notifier for enabling ASPM of PCI devices
+      PCI: qcom: Move qcom_pcie_icc_opp_update() to notifier callback
+
+ drivers/pci/controller/dwc/pcie-qcom.c | 73 ++++++++++++++++++----------------
+ 1 file changed, 38 insertions(+), 35 deletions(-)
+---
+base-commit: 00f0defc332be94b7f1fdc56ce7dcb6528cdf002
+change-id: 20250714-aspm_fix-eed392631c8f
+
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+
 
