@@ -1,317 +1,162 @@
-Return-Path: <linux-pci+bounces-32061-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32062-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B0CEB03B05
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 11:40:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66F94B03BD5
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 12:26:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D0F73A8B0E
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 09:40:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8AE5817A1D4
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Jul 2025 10:26:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3F6E242D9B;
-	Mon, 14 Jul 2025 09:40:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 351CC244667;
+	Mon, 14 Jul 2025 10:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GbSoFSB1"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SV2NH9S3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4788242D67;
-	Mon, 14 Jul 2025 09:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752486028; cv=fail; b=P/lt9Klwd9mQCPptTU4A7ANGJ2+OzAz9UEu/A9pE5ErfoFTNylRVsL9BjzpxocCIFu0BDuSALWb8rJR3+Oxu85CYXo8YvgF2YiNXnQx9QjijTjEVRlUUzTUxq5ZYvJfGh1WrNeohpdM2lGYw63pS54C4AmF6HLe2BsWBfKjrIck=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752486028; c=relaxed/simple;
-	bh=y7LmAv9k9b8SseUCjaCzc4oMWwzRJUvQ4O7y4y4p51k=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Xg/zLe65rYbmWArcefFuhksSf06BT7VyQD5dULN/0yi088H92hMgwFTDDOD6K/2P+L41Y8YTNDeBW2cTVTclvWWXQNAE6zKofZumSM46NvVDF4J6s/jcd/C56vAyUy0xhwxcG41yGnkfhTEPlyEEJeIf+cwQ6eonsMf5ywkF7vk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GbSoFSB1; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752486027; x=1784022027;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=y7LmAv9k9b8SseUCjaCzc4oMWwzRJUvQ4O7y4y4p51k=;
-  b=GbSoFSB1uF5CY40NLvxUSV/DKe1JPSZHMpddsJtAs4lE355sOMVfcYoY
-   W+qt6X14fc3K5ZrAOHfU/VydmujuqLX2f3N8/u6v3s9DPVj5Glbl0xxh6
-   blaojREBk+8OVsOXeIE4c4tDzZLUiIDm/2L4dgo8NH+HzRjkyiQm0jYw3
-   im0ywM2dB2iWjr6AbUOW2McVrnGDoqzL5rZ2V4/V89s4rObzl8QG4msjC
-   zcELv3y5VNzcP5/23Nc6GhjtV5IcT9SdZS3gk6uhrGHsFulTSSqcZeMCa
-   Mn3P7tK7UB8lmxSOC4Y/4JOlrM7TrDpxOAhnl+jegIgFOBh3fT+yVSmbv
-   Q==;
-X-CSE-ConnectionGUID: r+oZkFHkS1K6X02z9qE5xw==
-X-CSE-MsgGUID: h77cs1dNSwaO+Ht1YvsauA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="66030730"
-X-IronPort-AV: E=Sophos;i="6.16,310,1744095600"; 
-   d="scan'208";a="66030730"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 02:40:26 -0700
-X-CSE-ConnectionGUID: WVLl7qHLS5Svj0uhAHWKgA==
-X-CSE-MsgGUID: dZk7S8QWTj2tp3IL4hcOug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,310,1744095600"; 
-   d="scan'208";a="161194356"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 02:40:25 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 14 Jul 2025 02:40:25 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 14 Jul 2025 02:40:25 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.46)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 14 Jul 2025 02:40:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CWRh2q4pP14G6ReGpdXjQZRUDF9W0nHPiSr+YqX2Ij51SbG94feXiQAbw2+QUmEJK+uKuSRoOeuODmdR4/4sWE1P3sC2Tvob92QWsu5GVDJsGsXL1wnyux4Z0AyliEayHxG3fSw8bHsPVSkbfSyvq1XFmBRPFdoalJZ9LFSsyDPxgtfgrIyph+OK0Bv/hnJwXhV6vWHaa57ELnSLRhc41LUxSi6taMRKt75g8r4qEsZ4hDOaldbdfpNLVmR4aXjKPfKOompA4QYhGWNemasHuzA6PQWIo7ceVRTtNwZ5CxzGTNRvP0fvFOVs+6BoYs53r0Rf+S6YZaUNQfki63oPEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7FhW/Q7O0QWBKGXGlM8KR6owU2RRthV8sogi/lLnO/M=;
- b=F6A+UP3FK4Uihs/K/lUlMvOylTXJN/oIHQDtWGg+bSavgzYJ4zO0Ni+Z9NKEGeG90iOcBU2TUrUQIZ6mZ7EsXW55r+wgqMfuOiq6aHedATBEi5dXvcCG806YiXSNAaNOBxEyNGnjVjuj3nxqJtuknwc4MegqbXRYpSX6YK9C1cLY26Z8HyGEGycW5Xk6hxSr4OyhnoLJpZ41CPTzG6+YE1t5hklgheQAEpJzT6IOHjB2zaFnZycYKQvt13RpDQ/nPGYGWK+NWTvvqOobFzzS0RZFMS8GcpR5zsq3TZJRTcpB/SjXkQZL9VM8623hIZNER/eT1mnrQsndNakMPFreAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com (2603:10b6:5:394::7) by
- DM4PR11MB6262.namprd11.prod.outlook.com (2603:10b6:8:a7::22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8901.29; Mon, 14 Jul 2025 09:39:42 +0000
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::927a:9c08:26f7:5b39]) by DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::927a:9c08:26f7:5b39%6]) with mapi id 15.20.8922.028; Mon, 14 Jul 2025
- 09:39:42 +0000
-Date: Mon, 14 Jul 2025 11:39:38 +0200
-From: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Krzysztof
- =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?=
-	<ilpo.jarvinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Michal Wajdeczko <michal.wajdeczko@intel.com>, Lucas De Marchi
-	<lucas.demarchi@intel.com>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
-	<thomas.hellstrom@linux.intel.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v10 0/5] PCI: VF resizable BAR
-Message-ID: <elpe4ocut5y6otilll2mhf5dwhumstr4z4wt2enetpsbauvcyv@362bhrjmztkm>
-References: <20250702093522.518099-1-michal.winiarski@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250702093522.518099-1-michal.winiarski@intel.com>
-X-ClientProxiedBy: VI1PR06CA0141.eurprd06.prod.outlook.com
- (2603:10a6:803:a0::34) To DM4PR11MB5373.namprd11.prod.outlook.com
- (2603:10b6:5:394::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C928241682
+	for <linux-pci@vger.kernel.org>; Mon, 14 Jul 2025 10:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752488793; cv=none; b=sUcHSFNXLrG96Wta5XcWE5xeOdjD7VW9CvQX5GBe7rKQE/yIYHiJpJDiVq9iu5qd8Sn1QrMAdJ5BnQN4QoS5F64tpR1xQCrrCaRKQob119lYvMdLFeV7jCKnaPNJdvw/S5jE6Lj4laoCkFYhIKzlc96ym8+n0LoGt2uioBY3ClQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752488793; c=relaxed/simple;
+	bh=3WgJKsJNXm6nkCQk25rfynsk5InHOlPiGe+VoI8VjoE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gPFuUjWMwVZaC1ZW85anwOcdV70AVzZPs2kgPyTegww9hqs8+dFdxwxayjHeVxbJEB0ax0KUzkZGAxClLFOM7H/UQLsaS9d2yFAOfqZ6ahgsGqdYJhraJJcT2mnbKdHPYnUXpdmPkj/VjEimW7uc0UrmVE3HiUFZzIusb9m1I1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SV2NH9S3; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56E9x95s011602
+	for <linux-pci@vger.kernel.org>; Mon, 14 Jul 2025 10:26:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	egAELupiCZx06w7wEK2KFv4UsZXmQJRYPb1g2z2YVqY=; b=SV2NH9S3KyTAlgcK
+	40EZ36lyqXFJ1HVoZwyB43XOXkIu/ldTZXodxZ6bC0y/XckneTlzgE+yFYlWffGf
+	udJcJT8CmQfddyxX+vsvS+Frevh0IqP93p8ajTOG+Ymk2dGVvWOIFNow3kCjZCGo
+	5jXDUahHQ+M66zDYi/f/vYf6V/bzDDaFKLEt20AVX36dQpUqcM1cuqA7qvXW2AG0
+	fF5Yg0ez6bVk7x9UbM2TYItKccB/dwFUtrXHQ4G1/GdnOZUM8vQ3+pfn9mHwBry8
+	fjPwD8Q0Tw6UbWr4HB1julg/Mqnt1dZYBhvGh/uSOCs2Xwv5ztg4+eh5LuBKGnij
+	LP5w1g==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ugfhc9kt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 14 Jul 2025 10:26:29 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4ab716c33cdso2766191cf.0
+        for <linux-pci@vger.kernel.org>; Mon, 14 Jul 2025 03:26:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752488788; x=1753093588;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=egAELupiCZx06w7wEK2KFv4UsZXmQJRYPb1g2z2YVqY=;
+        b=FkgQMJiZGtJMiYXnO4oi4MJxWy1h35fXRwLSCrRbTAWAz0GA4LTvqtthn5m6UZIrY4
+         Uh1RbuUtbiHecithADKhPXs1nft9bHwU/04Owa9DgaGBoeyy3WF0UfKTXCLCfBiULdU0
+         Fdd4uRyn5huwhQFOeXsMu6lyIKgxIYoFMWI1W3BQt+Ex9pMijXcqP4QrvjMwup0FmHPv
+         FEvOCv0f1m76NPWNbnwQ+TW2CAIrLz7eMPompnpviX7c5ijRFUjVWl418OrdAfkvpoIS
+         0llGMsy0iwKi9pbV6+sdtGnkv5lTLXa9/levR3KVw9unBFVbzoVhW4nnmXabKu+PTrq+
+         MnkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVaVB3dbUCautjK/TBM4pS61ebf52QsTjewL6kWl/qOLZsYy3b5i3Pdz5inpbmlORU1lCkzb/nCJhQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOq0e2aEX6fD2EhgEiZKeg4pIndyZRNqYpJcMov4S+cTl8+6np
+	jRmlHV6oyLqj8R8L3Ix8lgeGb7K0BrOxpVOrByukT7dh1VclYJhLBwz1KSy6RHwXlm4rGPI3Z8K
+	dRwUIdQq05pk14Wq5bcFQrY3f/AyyBXlibLE1vVUEkpe06T7GXoBcd3lQ4gOETt8=
+X-Gm-Gg: ASbGncsaKf8E4EXmE7CyunZOl85/1T8utomgg4RpjMj2oxmPo7sCSvO9yAzu49LgiFL
+	4Il+pHioe2FAt4yiTJLxrWa5p9UUL24C4kqu7ERDSQw51kJ6lhnf9asUv/PZhvcJpUqL7yly11O
+	4l8/DSEpeAMj8SXiFZvfIBLcrtGtwFwo0jPLBOcPD9tkfTLiLr5KnbrYKvLeLHwglTD8Lo3BgJh
+	LR7s4XwFDVOntvK+m7jRoDBM53gbhq8LvoNuQKxMkiZ2SCdEu6IB/BF4t47LVHpAgbCHoZgWHrw
+	6BlRwq4Y2e2VMYg/JMY/6wHwhzojxVYDOgAJ1OkMjQv0dvwcihoiBt3LmAB9eLWeQeUJSSOQWS2
+	TBZf/OR32v4OW/sAzed4i
+X-Received: by 2002:a05:620a:3194:b0:7c3:bae4:2339 with SMTP id af79cd13be357-7dea52c0555mr554053585a.11.1752488788014;
+        Mon, 14 Jul 2025 03:26:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFDL1NLrtu1vBkvJOxO8syOjdbhxl5epP7yC4DT9HmFC8zYh1BXgqTPIUl4qDv2CMgF8y+JcA==
+X-Received: by 2002:a05:620a:3194:b0:7c3:bae4:2339 with SMTP id af79cd13be357-7dea52c0555mr554051585a.11.1752488787599;
+        Mon, 14 Jul 2025 03:26:27 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae6e7f292d2sm801836866b.72.2025.07.14.03.26.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Jul 2025 03:26:27 -0700 (PDT)
+Message-ID: <e0e08139-6231-40c3-8153-5a1acebadf3c@oss.qualcomm.com>
+Date: Mon, 14 Jul 2025 12:26:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB5373:EE_|DM4PR11MB6262:EE_
-X-MS-Office365-Filtering-Correlation-Id: 972f9e87-8f31-47bd-6a4f-08ddc2ba5be6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?QUhzUmxRTkpzeXBqcmpTZUlqeW80VjRMZjZZemFRWTJuemtxOUZpL1k3blNJ?=
- =?utf-8?B?MWN4eGRwc1N1ZXVGL1gzTW5FN3lBNnhlRzI4cjBFZWZ5Z2xKN2JZVytuTzdt?=
- =?utf-8?B?WTZUVkxUazdGM2graXZTbDN2NUx5ZFkwLzRQODY5TkdwV0w1ck1kV3NwdEM5?=
- =?utf-8?B?OXpjL01zVUpmRjgyYllvUXR1aGtDcjh4ZXl0RENTVHlSckx4QXQvS2MzUTcx?=
- =?utf-8?B?U2dtMTFYRmNwZEZZRm0raFlpcWg3dmZsMWVXUllIbGlXeEl6YlBvTE9zMmtE?=
- =?utf-8?B?L2dqTzM2S3VJNjkzL2xNRlNOR01OTUg1ZG0vM25Icjcxcko0dUdUNk9HNkFS?=
- =?utf-8?B?L0J5Uy9ORWpxenZvMU9USzJBcWJEMktCL2s5eThvN05ydkJnUStzR3RMekxD?=
- =?utf-8?B?YjhCSkgvRDR5NDFuS3hlM1NwSnNkL1N0emVJNU1FTnRTaGRad2ZpTThNUkJu?=
- =?utf-8?B?d1NGNkZrK0w4UisydmVEbHZRYjllcG9KeEx3eitvaVVIVDZIQms3SHRQenlS?=
- =?utf-8?B?YXBSUEhScjN4WGlDU1ZpS0NiTnAzalIveFJhbGJiUndOaTVNbVltUDd0a0VO?=
- =?utf-8?B?TW1ad1o5akpFdEl1Nzg5K0lKc1hKUHVRTzZVb2JDSmhmZzlUREorSTdrQzhv?=
- =?utf-8?B?UVVTRTFvbWhFaDBDdW1TVk1abHJ2V3JKOFlQUG1nOWM0T0c2cHBmWWVIaDhI?=
- =?utf-8?B?eVp4WEtWWFJ3b3pXbC9YeWJoWm4ydWEwNTJ5ME5HZ2ExY083QVdTdkN4RUtJ?=
- =?utf-8?B?VHVpcWZGYUxTc0dFZXhENTF1Ukp3N0xmdURIaXYvZEdsU3BheEtiYXVtMjlN?=
- =?utf-8?B?dk5vUGxROHZkR1E3akJhb3lsdzZwU1doT1ZTRHBOeHdKNS9jdzJ0WXAzalBM?=
- =?utf-8?B?b2ptR1pjV1RWUmdzS3dmZmEvNDZDRVZ2NGJjeEJwLytXcUpiN3VTUTNWNEZp?=
- =?utf-8?B?OTdFMTJSWHR2MGZhcTB4NnJJTi9oVzBrYjJmYjhIK3RQNHVhSkliam0xWUxC?=
- =?utf-8?B?VzVvc3UzZ1pHNFg0N2M1NnFVMXQxaDRLWDFpWnJUTGZGc2g4MWdUdXEwUUdQ?=
- =?utf-8?B?Q280MjRNZVFDc09nbU1iWlNmdE1YZkFoRGpROFp5Mlk5OXNTbXV2aVFsRk1m?=
- =?utf-8?B?SjFnK0graUU2K0lxc3F2YnV6ZnNsd1F0TUZVVlQrYnkyVWl6ak4rbU1kMVlB?=
- =?utf-8?B?T01KSVJCa1E3alpKejhrMXNHdWlYTkgvd0N1SVViWGtJbUFxTzNmaUUxcUpY?=
- =?utf-8?B?WCt2a1gwL0tCSCtDWXpleHFOSm1HWjJYd2lETTdBYXFsUmkyeUFOVENjbHRM?=
- =?utf-8?B?T0NFT05PdDk4dDNKeWZJTzV4blZRNVZDNm9vQXVLWG8yN3NRMEFFS1RzVktR?=
- =?utf-8?B?c0Z2dlhJRjdDdHgrZ1AxRkdHMGhQenQyYmJYMS9oaVFCelFPbWV5dEJoWVI4?=
- =?utf-8?B?QzlkRW1xNXVYaytJTVFZZ042QlA5emp6M2dSN0pUWWFJNzlJa2NzZ0xOQ25l?=
- =?utf-8?B?Zm1wMTVUaG9veUxUVzVWSEo1RWJhMk1RWXBiZkFOU3FGQjR1OXl2UVV0bUxk?=
- =?utf-8?B?bGlmSVpIMzBmRTY0bGRlK3ZCMDloMVh3MVAxUGFTQjlIeHExMi9RSXc1NHI0?=
- =?utf-8?B?cUx1Tk5SNkFkUEVNdE1OSzdSd2p1Mnh4QUxVVW9La3J5ZjFmbFRYNlVSd1ow?=
- =?utf-8?B?RGh4TVVUZHgrb2xUalZGWXVrZTFuRGJnM1hJTFluWG5Cd0UzR1BnTjQ0VkpW?=
- =?utf-8?B?R0o2azBQTll0aWRoVUV2QndYKy81VU1OZ3RpOGR1cW1Dczh5WlpwT2NQbS9F?=
- =?utf-8?B?TFVOT1BxRkFkTUoxMWVMQXZlU2M4YUNxQ1lOZ0VMUklMT3FhdTY3MGJOaXJU?=
- =?utf-8?B?T0dTSmdTeVlscUZ1cmhDZE5kUGNIVFA4WVBRMFhmbERYWHlTUXpIQTd2SSt2?=
- =?utf-8?Q?62nhUY+ZYKg=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UXJ6YTVkRnVEUkFOU2NZU0x5ZzQ1UWsxZUxadGt6dWl0L2ZpRGU5YmliMTVi?=
- =?utf-8?B?czNQZU5reTc0QThYbDh0ZjUwUnh4ZCs0OHJFVDFKNWo2dDRLKzcxODJoZkxj?=
- =?utf-8?B?Y2lzSUJIZktFN01zakdPanpXV1J5dE9oNFJMSXJVa1VTMXREaVh1cm4vR2pP?=
- =?utf-8?B?dzlZMnZFSmVEeklNR3Z6UDZMVjduV054UXFzckIrNTFqWUZoN1NOSVBkOU1T?=
- =?utf-8?B?VEI2cFBISGEzRHdCdGE2YmMrMmF6YlRqR2hsSXRVY0VtWGZCS1E0VVh1ejBJ?=
- =?utf-8?B?ZmZJVllhWmhVbEJjZzZSL0RZaDByeVljb2N2UVFHTVlJdElqMkNQSVE0QzNw?=
- =?utf-8?B?ZGRiRE4wR3JzRG5pTlpIaUZONWZHaDNxWHhvV3RweW03SGhSazRyZWxvMmRp?=
- =?utf-8?B?MDJMTDFVd3liWkJPRGpybmwzbk81WmRaeGFTZm1OY24vNi9jZWJuVTZ3M2tm?=
- =?utf-8?B?dHJQd2UwQllJRTdYWnUzS0hpOVk1UjlTZ3kyUEo3aFE2K1FSa1RHTm1wOTc2?=
- =?utf-8?B?NWFCMlo2cWFGbXRLQUdkZFdKQlZqWFIzM2dRK1MzSWxVOW9UQ2NzeDhwbWVj?=
- =?utf-8?B?Q01FdG4yM1hDSnBYM1NQemlkV0VhWVZlamJVZzJ0Y2pDT1RSMGhWL2kvMVFV?=
- =?utf-8?B?TGc0cm96bzQ0L1pnS0ZyUjNyOHJTdHcvWVZhUi9uQ1N3aE4rSEdYQXZLQ013?=
- =?utf-8?B?d2FVMnRNRkZxV0czRDVEc083ajAwZHhvT1hNdGtUUGkyVENVZUVLZHRWNE40?=
- =?utf-8?B?NmtxZkdEMWJmWDZKcTMwcExEem1IQnBMWGhURjNscUU4RnpJOFVhcVRGNm9Y?=
- =?utf-8?B?SC84MTg1dFdyVXVrMGY1Y1VtQnd4bDhUVjZHbTFUS296bGpyQ0tpUzhWK2pR?=
- =?utf-8?B?NnM5SDU2TnFnYWtsTnd0SVV6eXh5cFZjeDNzcklkcDY1K3IxcnJZOWQ2MFFK?=
- =?utf-8?B?aWNDei8xemQxM0dUWURucHQ4NGNjTzViL1lxZEtDaTg4dE05eEJ3SUFKbEhY?=
- =?utf-8?B?NUlFZVhqMm5uTko2S25KQ3UvbHBSbVR4b3ZrVFYwRXdCQ0ZrRWtWQVNjdXFC?=
- =?utf-8?B?cWRDT2R3cWR6MmR5RTRnMkhWZG1HM1ZhVThBNG15RU8xdEx2TXBSSkorOU9S?=
- =?utf-8?B?aEJZMzZSekNEbTJVclcrSzdmWXZPbFp0NktPeFhhMEppdVFRS2k1MnppZTVU?=
- =?utf-8?B?ZnYvVGcySHlkclVlY08vRnA0c2VPQWFDRmJza3JmK05XZkt2YzdpQkRqTFVq?=
- =?utf-8?B?SW12ckE2Nys2bFRjWnBLeVpZM0JDRkk3VjFtVXU1dEtCc3FESkNhWEpoZmgv?=
- =?utf-8?B?YS8vS2taMWM0eGNxVWE1N2dPSXpzVG1YUktmcUsvUk0vVGJiNnZuenRVWDJX?=
- =?utf-8?B?YjZTbUdvQ1ZEenZrNjlGaDRabTk1OU84NjdHOEtnQTBteXVDbDBGWHQvWHJV?=
- =?utf-8?B?N2huUHltelM5OXdmQWwzY2Z2bE1weVR1Q1NsbWVJRXlzdFk5L1kxNE5ZMkVE?=
- =?utf-8?B?SjFZZHc3bnEwWFRCZm5qSjRONEo3blZyN25tbnI4b0tiM3ZiOXplWTloMHpF?=
- =?utf-8?B?UkpVakdyaDJaTVU4NUtMRmlmbVk3Vmh2SE1UWkVBSUZJSi9wMHpMdzYwK0ZV?=
- =?utf-8?B?Y2FtZkI5V1dJSmZWTXhZREZwQ04ybkZLbkpxS3hGSlZIcXl4VFFWVUpDZkNX?=
- =?utf-8?B?TXFqWEE3YjJMa2FlTUwvNkxEZkp0M0FQaXRzRGRTc2lNVWROZGFEditsTkRS?=
- =?utf-8?B?WlNETHNMRG5oWUd0ODJqVnQ0dkNNWEYrSGh1ck1tSERsN1k5SS9USTd5MjR4?=
- =?utf-8?B?U3NOenFYM0ZMVDlsS203a3NUakpZOHM2Q2JmZ3ozYlpWQWdlMExPOGdJenhs?=
- =?utf-8?B?ZzcrTS80MUZWSUJhTkhEVDJWeTNoWWxOcTZqYzYzL2pncXJBZUJMK2F3VDZl?=
- =?utf-8?B?V243Y21YV21TRUMvdkFZemRuS0k4R0dPR3d6MVNDNFpZTFNNR0k1R1FzcmxJ?=
- =?utf-8?B?ZTJpTDdBWDdENFVoZjkwZURoSVR0QmF4Y243YTI2RkRsak5LQmVYL3V1a3VP?=
- =?utf-8?B?NDVMYnB4VGZ5TDZKUXg1QmUrRStXQ0VSRTQ2cDNuRUUzR1ZSczZsVjNPb2Nr?=
- =?utf-8?B?NGc1YlRuVk9OcWNNejFZMEthY0RkeksybTlndW5qOUd1ZVE0QW1XZSt6dmpM?=
- =?utf-8?B?ZEE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 972f9e87-8f31-47bd-6a4f-08ddc2ba5be6
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5373.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2025 09:39:42.0366
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nM1DY0k3WphJvZyAYSk6Huww3ZwbBGsdvp5zl3Y9iXDZe4b9pZ+6VnWf+pHYs686P02kBsH1aqD5VNtxldBv3yhkoSnt0AiKZEmLYjz1jOk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6262
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/5] PCI: dwc: qcom: Switch to dwc ELBI resource
+ mapping
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        cros-qcom-dts-watchers@chromium.org,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
+        quic_vpernami@quicinc.com, mmareddy@quicinc.com
+References: <20250712-ecam_v4-v6-0-d820f912e354@qti.qualcomm.com>
+ <20250712-ecam_v4-v6-3-d820f912e354@qti.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250712-ecam_v4-v6-3-d820f912e354@qti.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: -0MEyI1QGY-EB30ep8OaiS1VPDbTasrc
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE0MDA2MSBTYWx0ZWRfX1r5TXMJIIKjp
+ mTelu6f8hnjRNyi29+yz3XPO4wh2MxQW7P2MNlDuW0Rs9nO6Ib9bhE11FN/hclzDgrqhYTaUEQ+
+ hpqcxZ5A+QYYCEWpHdm2ejKHfHXXL9ny8XTEflEaayz9YebldiHQi837qtALKELm48zZTzYM5/m
+ rrLlFQ4G7dqUU+n7zY1zFI/sSaCMpektVuybOx5IX3fxjeBS5kSgOe8SFsO5nfMEQbGnW4t9WAg
+ jSi5NFbP94gF0rqPSuUwmT5olXsunPB8IT2DTyVvQxRICaaF3WAPPX7Md3rjX/ZNRDaRieA56j3
+ OjCLlSTOHz8Q9ynA5ocYOhcwXPhwYEcwCkgKGi2eDGqdXw6JqcqoZ98VONiGeYP09PYrEEAPbe0
+ VdKh9W9bD6Tms+mGNjI61P2mZFJTtyJ3abKT5wPcVb02cvf9skMlsx3ba2wOSDohEjFh5uzY
+X-Proofpoint-GUID: -0MEyI1QGY-EB30ep8OaiS1VPDbTasrc
+X-Authority-Analysis: v=2.4 cv=HYkUTjE8 c=1 sm=1 tr=0 ts=6874db55 cx=c_pps
+ a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
+ a=6pHcnep46kEejBPVP2gA:9 a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-14_01,2025-07-14_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 adultscore=0 priorityscore=1501 bulkscore=0 clxscore=1015
+ mlxscore=0 mlxlogscore=828 malwarescore=0 impostorscore=0 spamscore=0
+ lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507140061
 
-On Wed, Jul 02, 2025 at 11:35:17AM +0200, Michał Winiarski wrote:
-> Hi,
+On 7/12/25 1:42 AM, Krishna Chaitanya Chundru wrote:
+> Instead of using qcom ELBI resources mapping let the DWC core map it
+> ELBI is DWC specific.
 > 
-> The series is now reviewed, and it looks like there's no further
-> feedback.
-> To limit it to PCI subsystem, I removed the last patch in the series, as
-> it contained changes in drm/xe driver (it can still be found in v9 for
-> reference, and I expect that this single patch will go through DRM tree
-> anyways).
-> 
-> v9 can be found here:
-> https://lore.kernel.org/linux-pci/20250527120637.665506-1-michal.winiarski@intel.com/
-> 
-> For regular BAR, drivers can use pci_resize_resource to resize it to the
-> desired size provided that it is supported by the hardware, which the
-> driver can query using pci_rebar_get_possible_sizes.
-> This series expands the API to work with IOV BAR as well.
-> It also adds the additional API for drivers to change the VF BAR size
-> without resizing the entire underlying reservation (within the original
-> resource boundary).
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
 
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Hi Bjorn,
+I see this can also improve:
 
-Can you consider applying this series?
-Or do you still have some comments?
+pci-exynos.c
+pcie-histb.c
+pci-meson.c
+pcie-qcom-ep.c
+pcie-kirin.c
 
-Thanks,
--Michał
+but this is ok to put in another series
 
-> 
-> Thanks,
-> -Michał
-> 
-> v9 -> v10:
-> - Remove last patch with drm/xe changes
-> 
-> v8 -> v9:
-> - Use u64 as do_div() dividend (LKP)
-> - Introduce a helper to access cached vf_rebar_cap (LKP)
-> 
-> v7 -> v8:
-> - Update variable ordering and missing includes (Ilpo)
-> 
-> v6 -> v7:
-> - Eliminate the loop in pci_iov_vf_bar_get_sizes() (Ilpo)
-> - Use helper variable for indexes (Ilpo)
-> - Kerneldoc formatting (Ilpo)
-> - Refer to latest PCI spec (Ilpo)
-> - Commit message wording (Ilpo)
-> 
-> v5 -> v6:
-> - Rebased on latest pci/next
-> - Cache the VF resizable BAR capability position to avoid multiple
->   lookups (Ilpo)
-> - Use pci_resource_n helper (Ilpo)
-> 
-> v4 -> v5:
-> - Rename pci_resource_to/from_iov helpers and add WARN if called without
->   CONFIG_PCI_IOV (Ilpo)
-> - Reword kerneldoc for pci_iov_vf_bar_get_sizes (Bjorn)
-> - Reword commit message for VF BAR size check, extract the additional
->   size check to separate conditional (Bjorn)
-> 
-> v3 -> v4:
-> - Change the approach to extending the BAR (Christian)
-> - Tidy the commit messages, use 80 line limit where necessary (Bjorn)
-> - Add kerneldocs to exported functions (Bjorn)
-> - Add pci_resource_to_iov() / pci_resource_from_iov() helpers (Ilpo)
-> - Use FIELD_GET(), tidy whitespace (Ilpo)
-> 
-> v2 -> v3:
-> - Extract introducing pci_resource_is_iov to separate commit and
->   use it elsewhere in PCI subsystem (Christian)
-> - Extract restoring VF rebar state to separate commit (Christian)
-> - Reorganize memory decoding check (Christian)
-> - Don't use dev_WARN (Ilpo)
-> - Fix build without CONFIG_PCI_IOV (CI)
-> 
-> v1 -> v2:
-> - Add pci_iov_resource_extend() and usage in Xe driver
-> - Reduce the number of ifdefs (Christian)
-> - Drop patch 2/2 from v1 (Christian)
-> - Add a helper to avoid upsetting static analysis tools (Krzysztof)
-> 
-> Michał Winiarski (5):
->   PCI/IOV: Restore VF resizable BAR state after reset
->   PCI: Add a helper to convert between VF BAR number and IOV resource
->   PCI: Allow IOV resources to be resized in pci_resize_resource()
->   PCI/IOV: Check that VF BAR fits within the reservation
->   PCI: Allow drivers to control VF BAR size
-> 
->  drivers/pci/iov.c             | 153 +++++++++++++++++++++++++++++++---
->  drivers/pci/pci.c             |   8 +-
->  drivers/pci/pci.h             |  39 +++++++++
->  drivers/pci/setup-bus.c       |   3 +-
->  drivers/pci/setup-res.c       |  35 ++++++--
->  include/linux/pci.h           |   6 ++
->  include/uapi/linux/pci_regs.h |   9 ++
->  7 files changed, 235 insertions(+), 18 deletions(-)
-> 
-> -- 
-> 2.49.0
-> 
+Konrad
 
