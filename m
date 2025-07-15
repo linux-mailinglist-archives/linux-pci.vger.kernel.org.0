@@ -1,162 +1,168 @@
-Return-Path: <linux-pci+bounces-32149-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32150-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24027B058C0
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 13:27:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15BB6B0591A
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 13:48:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FBFF1A659B4
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 11:27:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 55F5A4A1FEE
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 11:48:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FCC42D94AF;
-	Tue, 15 Jul 2025 11:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E4DA252906;
+	Tue, 15 Jul 2025 11:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J+WlqW+u"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hxeTaSLl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E784C2D46CB
-	for <linux-pci@vger.kernel.org>; Tue, 15 Jul 2025 11:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828E42D0C75
+	for <linux-pci@vger.kernel.org>; Tue, 15 Jul 2025 11:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752578832; cv=none; b=VpLA4q3BrXwQ+tR161/i0f5pswKobxMm7F8zGk3I9K3FH5L7iE0n63yUXhJgQgnpj6mCiEojng8xIlY+KLn1CWuCyW9n0NPCQdiaIlfEWSzVijclAfI8PTu0FNICs9SQIPt6RaT2Nn98IywC3B6o+dT/bO3uPyCSbbWvO1INd5c=
+	t=1752580065; cv=none; b=lwgBPbWGAjbtQ0oLMeJKYovTruU/fx9L4Tv0FfCnig3RLPeP700w8+C3k02iuHIiqBPj2nSUQD6WtVwvPCfU8kpXelPjqzEMm++DGMuQ9xiZb4XuAOubAPA4oaWdhPopepkBxdtDY6ygXlRtZEp5EC28gTOFn371m8HNAjKP09A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752578832; c=relaxed/simple;
-	bh=8GyYQty1c4kD0SAqerD56wWPksO2YDSVbq8ZQGGgau8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r/4wtJyZZxK4D5ja+iV+DCZjjAaWARm0ePkG5oyQJBxRg25VPLMK2okQ+Ly+nmcGloIMuVBz2EsmahvtFYhZeCsBYVgJ7WpGAyzM6N/HWO9zSm1zvO1ik5vPKBXp7VqUAb4xQXgWq+pBgm7VGvfwGMiSkpOBXlbERzcuseAugiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J+WlqW+u; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so4121375f8f.1
-        for <linux-pci@vger.kernel.org>; Tue, 15 Jul 2025 04:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1752578828; x=1753183628; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jRBkEKn77W7oaouJdcpr1rdaj69fH31GtcALoRiVZ0o=;
-        b=J+WlqW+usqYA9XgF+xS6yg8XSIG4KtCyF5zAyEsrdvcD1hb4E2IAr/sUdxNrWoQPXg
-         4f/IKeeM255PNYx5RHya/Keh0zWlC8qoGyvJ7FPAt7uHTbGqngvn8rGdTDowm/atcES0
-         j8Q+FPVP32clfvPD2niF8JmVZ5eO27ydjLm6kDX1DPnZ2ueE3J1E7XiSEejbCc/8gGsz
-         nJ/DhuF3k5QUT3bIu8e4VGPgYrlwnrG0k9q94eHr1tOYzCWnxreo5XMGTmY71WTaHu9s
-         bCwIWFRllXhp5GiMeN2k8IU/+/NkLm+JYWdjKW8HKvtHD8DjfZBc+lRwQ+j7RB6dmvUs
-         BGiA==
+	s=arc-20240116; t=1752580065; c=relaxed/simple;
+	bh=OGNOsMqNwzC6G/i9UwKvbTqXMfdKqOw4as/Q58XcGVw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mtU9Udz92rbTAlGD9IUr2sxuOhBgVKX1DFerBZfdVir4nYwJjJEKVpSf/hbC1yk/wAalH7AUM6lOjHnMkci6GXnvCEcAaFTFBzjuD/7IZsGKMbmJ8nJtFkpnP7fxRjY4+vSNXxn/VEDAV7RwejXjp3Tk48RbYeB9TaE5u0TSuyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hxeTaSLl; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56F4oOBi012384
+	for <linux-pci@vger.kernel.org>; Tue, 15 Jul 2025 11:47:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+iXLFGA6J5aFgF0rOG2NVhZA5bpjJjvu96bzK64t0fc=; b=hxeTaSLlbwM3IkY9
+	VOUWJ9zFL+zNuiklw2zu7Rk5K6+pYJeZylNTefM6ZedT7EIkJV61sPN6m3f21dJ2
+	tcOt5qZVjhE8BJr/nTCSb3KeQY9p9l4mm9tt+qQ/ADsnqcMVf2ywTxK7PJqVNOR2
+	Y3XJ1vCu7msHKb/uFl5cGVb2i0PiOFcxc8rT92emwI4LAqr99EuHYQmcRC501QT4
+	3XN8JumPnAvzB8uNWTs5JOD3MIyYFkoYc6iDlEPRr5rQiD34CCQXBWPFFdr4G/Pk
+	k2U83jvX+/07lR1dnL6YmJW7SwEPD747tE/YnMbo7o4Ei++gAvwDZ3eFDMYPtulI
+	V86oRw==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47w58yjx0u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 15 Jul 2025 11:47:42 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4ab7077ad49so4694821cf.1
+        for <linux-pci@vger.kernel.org>; Tue, 15 Jul 2025 04:47:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752578828; x=1753183628;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1752580061; x=1753184861;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jRBkEKn77W7oaouJdcpr1rdaj69fH31GtcALoRiVZ0o=;
-        b=kZo9uDkhalGimjP6fPuUsTFCwZ/4ssgM4vpl2ZwzEXzr+WHW2BqkEEei3egi8bw//x
-         dz1RYjFZy6Y1UiZOmVBI1H0TA46jW4+cywSrlnfn+gfXll8DjjxAFGPr5t3areNL573e
-         ItV9le03iug6m//KxenN1rx54UJ3CkLScv6/wezVAPiOxFlsJl0IQXDyJpdNfu/o74GZ
-         hl9t8pLaAbDxcbK9JmgVLLqjE+8I2ETr7t1at9Lgb2ebm7Y7cL3xViVN7DoDshMW3rmb
-         lv6OxV054osBvRlApg2EtaCvBUyR+YagWPrUpB7NXAXxXnjpTaSyjFTTP+VCvELAyUdj
-         CBvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjsHFXbPD5J0VrRJVfHgp25Gl2ZbqG1loMBABGP/LCU0rNE2pZXs4GpwhV9nXnFl5E3uq+M6YDgtM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPx41d3DWiNhawRZ8FF2Dfshs3+8wYQSNrKJbNdE8Vh/Hv+Bj1
-	SNRXdXaFIVsTpSApv5jbyKLilfQwsqcd1ITDZeDzS8X/yZwW+/Y1nGZy6ail0dIw+CY=
-X-Gm-Gg: ASbGncuDG2aA/tsI3/lwKL7ySvcczuaNe4SVLAz1treafFFO5PvPkNP7GjFrecM5eOI
-	FLe6afcoD1keS8WIK9Wsl3NY2yaxTgFTBXdQpJFOFm4Vt54qzSinwKgrrdnUqPovtay8o3cShPh
-	tJcglm0eJAUjEKHdyjNbIlGIeYcTjklou0oVbh6u9FYs6n1+1NWh/NRAfmh7tD01RkbLpcA3oWd
-	h+kaV8rHYNLzSN6iwhUFrgxKKrfwairnFMB1A1pK8M/xbhuoA007M2XjEjXZnc4+yLRhVmAH3JG
-	kTrn17In+4GStO+tO3iiq6sMoscOM0NfPGDsKveKyKvLgy0opN5SL9CrkZdUqyK5Bsp5rrFGl5i
-	vG2qUOIpQSH38fMnyq68WchSMNUXcQBil5rQ4GMH8CvWK0iyyF3XIKfvwbomR
-X-Google-Smtp-Source: AGHT+IHN+NlXgbEjZOyHhgFjTHMZ1I2MGPeH7berVKrfkCXW7+OC0PeJHvmOwpe6Pg5LCPNt2eEmZg==
-X-Received: by 2002:a05:6000:2307:b0:3a5:8934:4959 with SMTP id ffacd0b85a97d-3b609544322mr2365139f8f.27.1752578827815;
-        Tue, 15 Jul 2025 04:27:07 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8e0d4b5sm15115966f8f.53.2025.07.15.04.27.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Jul 2025 04:27:07 -0700 (PDT)
-Date: Tue, 15 Jul 2025 13:27:04 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Naman Jain <namjain@linux.microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>, Long Li <longli@microsoft.com>,
-	Shiraz Saleem <shirazsaleem@microsoft.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 4/6] clocksource: hyper-v: Fix warnings for missing
- export.h header inclusion
-Message-ID: <aHY7CKL--DDnWXT7@mai.linaro.org>
-References: <20250611100459.92900-1-namjain@linux.microsoft.com>
- <20250611100459.92900-5-namjain@linux.microsoft.com>
+        bh=+iXLFGA6J5aFgF0rOG2NVhZA5bpjJjvu96bzK64t0fc=;
+        b=Z80MJWkufqR6+jN2TSUIMWtPMeUcz1729ChzjOKIiicaJE8MqV1iUa3hxmDWmavDkb
+         kK9YTJSkQ4ijsaBH+2BtojK2xCA9qhONha4r0MeSpTZSvTVk/L1nBOrYTRxqjjh0F8HX
+         QS0wZuTt0FuZ1hWVINIhseaOZ1z39OOVyNFTItYakUJc7Ut5uNBjr5YaK0yjabBKNuuY
+         NL6hMgXsvJn7my5yjKntk2Zb7tgEEHOKd/CXfVYYQ6206rgOHmWxUvMSztnA333EhdUX
+         dsP53YdQ9CZuHjuFcbjhcRy1su364dM8NnWDY6orQJJF5IcN0vwyJ6qlWmsQGuFfLxvt
+         mxfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzdGosBPKIh3VvnjrwgCia7LTo95A/1gQCxusf0GUd31I/KgUNh4MAnrzVdP50HAmSRp5qzBaJv3U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFRRkF16jC6loqmPV2uDuPS8obzmAS+gCzjRs3gk8OZxJbG5GL
+	+WNZRUfL0uJODiHHx8D1NXY5r0nJt2BmvIaZUhKofYsdqQiAz4Pj0jZhJNVADrCV3d+MrUdos41
+	iUohIURDUHR/6BiowsqC2cwRImyKM/NHDUbwyEZ/ldeUbm3y1NDjXCk++lvcETh0=
+X-Gm-Gg: ASbGncv4y4vLhXxSg7UQI/RwEZX197CfQYaRLo4K+hk2egv+P3ubeKMkYySho1bVtx9
+	12LRoaFjFVmjuS8ejk2Z3RjAjHOOp2J1LYN4CeTmWQKYNxaN1XV+HRrP5cR1rGv2l7Bn1lVjCmv
+	xbuyoT+sMh4YGCvlBxBZFg16NXOPZbNKywkXFrTSU66SgMDZZ0zatrZ+a4OFs9l+GuVYDr6zc0F
+	BlCx3KzOwSGUVF7Z+DpkjkYQeF10BLXo7YRPLR4s72yuMSzxYMNMmDvRaFV78e+WnwkKFEx+rxQ
+	393j1abViuG870dpw2Qpba4TD+n07hs/ZC1SdNl3nbcEQ/7PVOvojtZgE0iwdx6tRNYOK9JA7GA
+	mdPGSuE66XEFh19p04K1Z
+X-Received: by 2002:ac8:5a93:0:b0:472:2122:5a37 with SMTP id d75a77b69052e-4ab86e22a8cmr7185521cf.4.1752580061438;
+        Tue, 15 Jul 2025 04:47:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE16WXzqfrkizeZwS9xDN1JalpfUl7uZPacEPMkaJASCCYgdE2C9z7E6fN8uPL5G0sXubPD7A==
+X-Received: by 2002:ac8:5a93:0:b0:472:2122:5a37 with SMTP id d75a77b69052e-4ab86e22a8cmr7185261cf.4.1752580060937;
+        Tue, 15 Jul 2025 04:47:40 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae6e7e90a07sm987503366b.6.2025.07.15.04.47.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Jul 2025 04:47:40 -0700 (PDT)
+Message-ID: <98088092-1987-41cc-ab70-c9a5d3fdbb41@oss.qualcomm.com>
+Date: Tue, 15 Jul 2025 13:47:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250611100459.92900-5-namjain@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] arm64: dts: qcom: sa8775p: remove aux clock from
+ pcie phy
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>, Johan Hovold <johan@kernel.org>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
+        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
+        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+        kw@linux.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com,
+        quic_vbadigan@quicinc.com
+References: <20250625090048.624399-1-quic_ziyuzhan@quicinc.com>
+ <20250625090048.624399-4-quic_ziyuzhan@quicinc.com>
+ <25ddb70a-7442-4d63-9eff-d4c3ac509bbb@oss.qualcomm.com>
+ <aG-LWxKE11Ah_GS0@hovoldconsulting.com>
+ <4f963fcc-2b92-4a01-93a4-f0ae942c1b6f@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <4f963fcc-2b92-4a01-93a4-f0ae942c1b6f@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE1MDEwNyBTYWx0ZWRfX9+JA7SVN6cFq
+ BgofLK7PibWMdJMn0jkjEZ1tu6eX47erX8ZhVJ83cUcRDAvrpYMQlshd6elpNGIFDPGZV6+Gg8y
+ IjEstaEobsbKNPgzE+BaeGkiw7Y81O3/LLcDJlBhkNffuTkW/O+6V9WYy3Ob5qmQutq+e8rHRmV
+ JvQeTXK/PJWyE7aK/wFlQ3Fg+zMLCvYjFsGptdnz6SZIYSqJ/O5WKdZzfsrAHOskkqAL9HFa7bm
+ T3cZ9Rj+ToM15AckMXNb+e9MDMXl16JVDGQZH1OqOR8doVMWicqmyKqZBa3ymVgEKPMq4j4O4jK
+ vXD0x1EVQYplyosStD/a4PKll/eHPhGmUC3tszkBvqtudcD2HYgU5oDnJkuj6v/s9VXSgtSCaKg
+ djQIhZUI7J9BUn1ivq+qGn30i8uwYPuVhvAWL5WrSfpmG6U6JHaip7mvLcUl8wOj/5He1An4
+X-Proofpoint-GUID: 4XRr34njcRogu8c9u1BlFRK0UfDeMmPM
+X-Proofpoint-ORIG-GUID: 4XRr34njcRogu8c9u1BlFRK0UfDeMmPM
+X-Authority-Analysis: v=2.4 cv=Or9Pyz/t c=1 sm=1 tr=0 ts=68763fde cx=c_pps
+ a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=dJGf4bKP5mfmDP1ZOs4A:9
+ a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-15_01,2025-07-14_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 suspectscore=0 adultscore=0 spamscore=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 malwarescore=0 clxscore=1015 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507150107
 
-On Wed, Jun 11, 2025 at 03:34:57PM +0530, Naman Jain wrote:
-> Fix below warning in Hyper-V clocksource driver that comes when kernel
-> is compiled with W=1 option. Include export.h in driver files to fix it.
-> * warning: EXPORT_SYMBOL() is used, but #include <linux/export.h>
-> is missing
+On 7/10/25 12:24 PM, Ziyue Zhang wrote:
 > 
-> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-> ---
->  drivers/clocksource/hyperv_timer.c | 1 +
->  1 file changed, 1 insertion(+)
+> On 7/10/2025 5:43 PM, Johan Hovold wrote:
+>> On Fri, Jun 27, 2025 at 04:50:57PM +0200, Konrad Dybcio wrote:
+>>> On 6/25/25 11:00 AM, Ziyue Zhang wrote:
+>>>> gcc_aux_clk is used in PCIe RC and it is not required in pcie phy, in
+>>>> pcie phy it should be gcc_phy_aux_clk, so remove gcc_aux_clk and
+>>>> replace it with gcc_phy_aux_clk.
+>>> GCC_PCIE_n_PHY_AUX_CLK is a downstream of the PHY's output..
+>>> are you sure the PHY should be **consuming** it too?
+>> Could we get a reply here, please?
+>>
+>> A bunch of Qualcomm SoCs in mainline do exactly this currently even
+>> though it may not be correct (and some downstream dts do not use these
+>> clocks).
+>>
+>> Johan
 > 
-> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-> index 09549451dd51..2edc13ca184e 100644
-> --- a/drivers/clocksource/hyperv_timer.c
-> +++ b/drivers/clocksource/hyperv_timer.c
-> @@ -22,6 +22,7 @@
->  #include <linux/irq.h>
->  #include <linux/acpi.h>
->  #include <linux/hyperv.h>
-> +#include <linux/export.h>
->  #include <clocksource/hyperv_timer.h>
->  #include <hyperv/hvhdk.h>
->  #include <asm/mshyperv.h>
-
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-
-> -- 
-> 2.34.1
+> Hi Johan
 > 
+> After reviewing the downstream platforms, it seems that GCC_PCIE_n_PHY_AUX_CLK
+> is generally needed. Would you mind letting us know if there are any platforms
+> where this clock is not required?
 
--- 
+Do you base this on "downstream has it", or did you check with the
+relevant folks internally? I'm still unconvinced by the clock looping back
+to the PHY.
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Konrad
 
