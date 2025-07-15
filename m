@@ -1,184 +1,164 @@
-Return-Path: <linux-pci+bounces-32200-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32201-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8194B068BA
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 23:41:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAFD4B068BE
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 23:42:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E9A79564444
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 21:41:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D1895644E7
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 21:42:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDF3E2BE64E;
-	Tue, 15 Jul 2025 21:41:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40DCE2C1585;
+	Tue, 15 Jul 2025 21:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="Q03P0n2o"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BEqwe/Kb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00941E501C;
-	Tue, 15 Jul 2025 21:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E50C2C1582;
+	Tue, 15 Jul 2025 21:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752615707; cv=none; b=XDQwXRbBBVfroHsDslLrsijjx4iNEbgpT+s+z0Q8B2XzYCvJQl4pGbV6OVNPOPKgWUD0Nu1b4ptVfKyqEqni9zQne5bJLo5hgQS0X7uIa3ZY/plCsoCc4QniiSzsmlC8xO+8UDw43mXopXYT5gDuaaKa638eeYhA3fmh8UCqna0=
+	t=1752615731; cv=none; b=Ylh96K6gth/VImi+GVcjkvhFTWo123lXT7KlvgGczHwbD2I8ibm3YnP4FvAFOJO/IhN+y3zfwEMBhBkbRPwPg+JM/FOPNdpRPai7sWcZeNfOinArwed2KsTimwd5gC1lNZ7WspaJ/KbeYWi/Oqte351wAK4JdqafuTRp5qcUEeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752615707; c=relaxed/simple;
-	bh=M5Ift1v+ZUimD/YMalh9viwpBYAb3l3h2WvSj2rorOI=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=qRztIMu9rfLp/6hSDEUGGKl+apuiPok9JKro1gx7PdXc8jhxfi78hDLAPH4H9Yfl3ajfIYKTKoFJ68C72Ole34Pd9tC5qtrhXNgSZ9ahFsey4O+L3EmgIHOb0d9NSh15b4OYHP81hQO2fYEFI7k9Dd89mrBFuWt+gzazP9fSdtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=Q03P0n2o; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 369908288591;
-	Tue, 15 Jul 2025 16:41:45 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id iqoSxx4Q6xhh; Tue, 15 Jul 2025 16:41:44 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 08C7F82889A8;
-	Tue, 15 Jul 2025 16:41:44 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 08C7F82889A8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1752615704; bh=BfPy7LRI1toF8ejOsOO47z8yCeMj4a1Fzqorz5zeow8=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=Q03P0n2o8VlU+cE/NLr9MAtxXw8C3RT6dnR3N9S6mgUcihbhkKHAEfyXgoeJrmo0Y
-	 wDTwAoMKOtbMpu8gUYTVNl/CLDTxO1g6qfnsEj23480vvOm8/D3I6CmBBM5l6R4avt
-	 3BzBCGVcYjZe7OqzbXE1jS0cB62vL00wi5HcEpSI=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id cY_b2tvbuzuc; Tue, 15 Jul 2025 16:41:43 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id AA4C68288591;
-	Tue, 15 Jul 2025 16:41:43 -0500 (CDT)
-Date: Tue, 15 Jul 2025 16:41:43 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Timothy Pearson <tpearson@raptorengineering.com>, 
-	Krishna Kumar <krishnak@linux.ibm.com>, 
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-pci <linux-pci@vger.kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	Shawn Anastasio <sanastasio@raptorengineering.com>, 
-	Lukas Wunner <lukas@wunner.de>
-Message-ID: <493196553.1359869.1752615703480.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <20250711210510.GA2306333@bhelgaas>
-References: <20250711210510.GA2306333@bhelgaas>
-Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention
- indicator
+	s=arc-20240116; t=1752615731; c=relaxed/simple;
+	bh=guZSpdsSKl3YawdSkJgYATxoiaL2pmIvs8uhCzKiB9I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T9NOHiPqLwZ/dH+X3T9NBjk/wi/KtAU8wNi9LkzdGNx8j1DMYPy7+wvr3VZ5GGKThWIOMAFgK627/lNPREVYTvU0JR2WVOD2e4mzLOF/WCUe5YEjRJXleSNvYsxMktIjhyPiycqllPMqRhr+BYO+db1q43J6sFUjn11SHKDH54c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BEqwe/Kb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F481C4CEF8;
+	Tue, 15 Jul 2025 21:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752615730;
+	bh=guZSpdsSKl3YawdSkJgYATxoiaL2pmIvs8uhCzKiB9I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BEqwe/Kb0DhRjZq2j0U1+DBC1cNdamwTtpGrrd7qT87GjSS8y2mhHiM4biu1qyQgp
+	 xJ3TNMT1j/pAJhLx2qv2IvBHSNgtb4M8LP/AXWaaj0k4B4QmHQ79rskGzY/Kd+XV4F
+	 Wva9ZPmW5B9EyOlEgSWNRejkfzeXF99Zw7mi7OrF9IC+zXQ2/vyuTLo0Mk75B7Tew/
+	 cdJwDhYr25xtyx46q4Cf0XvgfujttQGDsRVLNoJamb1PTWnyyQjYhiZw2T+w2xlaE5
+	 zTi8XsJhXkYvEICXotpzqcCK938wfoh41n5Pq/3q3vP1cvAG0t05Ex2ToYJ3tIVCLG
+	 N098WBs8yo4vg==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ae0dad3a179so997472666b.1;
+        Tue, 15 Jul 2025 14:42:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV71b5oIxckM3hq7sOvIJNMIO8SR084rjuSpkP1xN2G0AGlS0rSJ7rf/21Hc95n+5X9PE3Hcr8Y+kP87hOBZg==@vger.kernel.org, AJvYcCVkNEOKaFxz6juV7fq3WoSpM9X3z+0nAV2Tge4aTezxmHX5AGbIPRdNzUvulJCiszO56w8qeeTF1TmE@vger.kernel.org, AJvYcCWLbq9z0vUOCOZH007LIWPyl8tawWMT9KJw9QKyQfzm+yzIAqRVjpPw2ScxNM4QyIfQYM6vnZSS8Tfi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxztafTvzyx2KqaIg+qIuD7y0nWU9lsCgfN1QyQ2TNcT+AsfQWR
+	2xWtTMBpDC4bvqdosG+VaNCqYzm7ebvjttdzSOOddhOxr3wFbnp5+ood/Xkf+Smuy2TEhtVniVq
+	XGDaehUGa5+PA5W8J2nCRw7jRu0REiA==
+X-Google-Smtp-Source: AGHT+IHk6W6e8djWeHYzn+8CUV4LV8uGMUKpxPq6AVlHjkreAUXtga07mMI0HX3Pd4JvMQBc4nDKswFGqoJez+XxEQI=
+X-Received: by 2002:a17:907:c1e:b0:ae0:d201:a333 with SMTP id
+ a640c23a62f3a-ae9c9aed1fbmr105692066b.30.1752615729077; Tue, 15 Jul 2025
+ 14:42:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <89ded76a-8bd7-43b5-932d-f139f4154320@oss.qualcomm.com> <20250701212604.GA1850816@bhelgaas>
+In-Reply-To: <20250701212604.GA1850816@bhelgaas>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 15 Jul 2025 16:41:57 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+z+5_=YXiyCW1sbKDe0cjGNG7Qk=uRQ3efAFTd1J2ayQ@mail.gmail.com>
+X-Gm-Features: Ac12FXyuoicKuvNm6HvWPrbRH78YKSuEAn2LB-taGjeNjInaSIyRSsZYTEiDvxY
+Message-ID: <CAL_Jsq+z+5_=YXiyCW1sbKDe0cjGNG7Qk=uRQ3efAFTd1J2ayQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] dt-bindings: PCI: qcom,pcie-sa8255p: Document ECAM
+ compliant PCIe root complex
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Mayank Rana <mayank.rana@oss.qualcomm.com>, linux-pci@vger.kernel.org, 
+	will@kernel.org, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
+	andersson@kernel.org, mani@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	conor+dt@kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, quic_ramkri@quicinc.com, 
+	quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com, 
+	quic_nitegupt@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC138 (Linux)/8.5.0_GA_3042)
-Thread-Topic: pci/hotplug/pnv_php: Enable third attention indicator
-Thread-Index: 6SooTqQCeyH1hYIIUbItUL7oFqMqzA==
 
-Apologies for that, I had meant to send v3 in and apparently it got dropped=
-.  I believe I have addressed the comments in the v3 I just sent in.
+On Tue, Jul 1, 2025 at 4:26=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
+rote:
+>
+> [+cc Rob]
+>
+> On Tue, Jul 01, 2025 at 01:21:29PM -0700, Mayank Rana wrote:
+> > On 7/1/2025 9:52 AM, Bjorn Helgaas wrote:
+> > > On Mon, Jun 16, 2025 at 03:42:58PM -0700, Mayank Rana wrote:
+> > > > Document the required configuration to enable the PCIe root complex=
+ on
+> > > > SA8255p, which is managed by firmware using power-domain based hand=
+ling
+> > > > and configured as ECAM compliant.
+> > >
+> > > > +    soc {
+> > > > +        #address-cells =3D <2>;
+> > > > +        #size-cells =3D <2>;
+> > > > +
+> > > > +        pci@1c00000 {
+> > > > +           compatible =3D "qcom,pcie-sa8255p";
+> > > > +           reg =3D <0x4 0x00000000 0 0x10000000>;
+> > > > +           device_type =3D "pci";
+> > > > +           #address-cells =3D <3>;
+> > > > +           #size-cells =3D <2>;
+> > > > +           ranges =3D <0x02000000 0x0 0x40100000 0x0 0x40100000 0x=
+0 0x1ff00000>,
+> > > > +                    <0x43000000 0x4 0x10100000 0x4 0x10100000 0x0 =
+0x40000000>;
+> > > > +           bus-range =3D <0x00 0xff>;
+> > > > +           dma-coherent;
+> > > > +           linux,pci-domain =3D <0>;
+> > > > ...
+> > >
+> > > > +           pcie@0 {
+> > > > +                   device_type =3D "pci";
+> > > > +                   reg =3D <0x0 0x0 0x0 0x0 0x0>;
+> > > > +                   bus-range =3D <0x01 0xff>;
+> > >
+> > > This is a Root Port, right?  Why do we need bus-range here?  I assume
+> > > that even without this, the PCI core can detect and manage the bus
+> > > range using PCI_SECONDARY_BUS and PCI_SUBORDINATE_BUS.
+> >
+> > On Qualcomm SOCs, root complex based root host bridge is connected to s=
+ingle
+> > PCIe bridge
+> > with single root port. I have added bus-range based on discussion on th=
+is
+> > thread https://lore.kernel.org/all/20240321-pcie-qcom-bridge-dts-
+> > 2-0-1eb790c53e43@linaro.org/
+>
+> I think you mean
+> https://lore.kernel.org/all/20240321-pcie-qcom-bridge-dts-v2-0-1eb790c53e=
+43@linaro.org/
+> so I assume you're looking at the conversation at
+> https://lore.kernel.org/all/20250103210531.GA3252@bhelgaas/t/#u.
 
-Thank you!
+That's all misguided...
 
------ Original Message -----
-> From: "Bjorn Helgaas" <helgaas@kernel.org>
-> To: "Timothy Pearson" <tpearson@raptorengineering.com>
-> Cc: "Krishna Kumar" <krishnak@linux.ibm.com>, "linuxppc-dev" <linuxppc-de=
-v@lists.ozlabs.org>, "linux-kernel"
-> <linux-kernel@vger.kernel.org>, "linux-pci" <linux-pci@vger.kernel.org>, =
-"Madhavan Srinivasan" <maddy@linux.ibm.com>,
-> "Michael Ellerman" <mpe@ellerman.id.au>, "christophe leroy" <christophe.l=
-eroy@csgroup.eu>, "Naveen N Rao"
-> <naveen@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>, "Shawn Anasta=
-sio" <sanastasio@raptorengineering.com>,
-> "Lukas Wunner" <lukas@wunner.de>
-> Sent: Friday, July 11, 2025 4:05:10 PM
-> Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention i=
-ndicator
+> So I guess the answer to my question is basically "to shut up DTC
+> check":
 
-> On Fri, Jul 11, 2025 at 01:18:07PM -0500, Timothy Pearson wrote:
->> ----- Original Message -----
->> > From: "Krishna Kumar" <krishnak@linux.ibm.com>
->> > To: "Bjorn Helgaas" <helgaas@kernel.org>, "Timothy Pearson"
->> > <tpearson@raptorengineering.com>
->> > Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel"
->> > <linux-kernel@vger.kernel.org>, "linux-pci"
->> > <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.co=
-m>,
->> > "Michael Ellerman" <mpe@ellerman.id.au>,
->> > "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao"
->> > <naveen@kernel.org>, "Bjorn Helgaas"
->> > <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering=
-.com>,
->> > "Lukas Wunner" <lukas@wunner.de>
->> > Sent: Monday, July 7, 2025 3:01:00 AM
->> > Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attentio=
-n
->> > indicator
->>=20
->> > Thanks all for the review and Thanks a bunch to Timothy for fixing the=
- PE Freeze
->> > issue. The hotplug issues are like you fix N issue and N+1 th issue wi=
-ll come
->> > with new HW.
->> >=20
->> > We had a meeting of around 1.5 -2.0 hr with demo, code review and log =
-review and
->> > we decided to let these fixes go ahead. I am consolidating what we dis=
-cussed -
->> >=20
->> >=20
->> > 1. Let these fixes go ahead as it solves wider and much needed custome=
-r issue
->> > and its urgently needed for time being. We have verified in live demo =
-that
->> > nothing is broken from legacy flow and
->> >=20
->> > PE/PHB freeze, race condition, hung, oops etc has been solved correctl=
-y.
->> > Basically it fixes below issues -
->> >=20
->> > root-port(phb) -> switch(having4 port)--> 2 nvme devices
->> >=20
->> > 1st case - only removal of EP-nvme device (surprise hotplug disables m=
-si at root
->> > port), soft removal may work
->> > 2nd case=C2=A0 - If we remove switch itself (surprise hotplug disable =
-msi at root
->> > port) .
->>=20
->> Just a quick follow up to see if anything else is needed from my end
->> before this merge can occur?
->=20
-> I was waiting for a v3 to fix at least these:
->=20
->  - Subject line style matching history in drivers/pci/hotplug/ (use
->    "git log --oneline" to see it)
->=20
->  - Broken subject line wrapping into commit log
->=20
->  - Spelling fixes
->=20
->  - Comment reformat to match prevailing style
->=20
->  - Note attention indicator behavior changes in commit log
->=20
->  - Some minor refactoring
->=20
-> Basically everything mentioned in the responses to the original
-> posting.  Or was there a v3 that I missed?
->=20
-> Bjorn
+It's possible DTC checks are wrong, I wrote them.
+
+>   Some DT for qcom,pcie-sa8255p might describe an Endpoint below this
+>   Root Port, and the Endpoint's 'reg' property includes a bus number
+>   determined by the Root Port configuration.
+>
+>   DTC check validates the Endpoint's bus number by comparing it with
+>   the parent's 'bus-range', so it complains unless the Root Port
+>   includes a 'bus-range' property.
+
+The complication here is how flattened DT works compared to
+OpenFirmware. In OF, bus-range reflects how firmware assigned bus
+numbers. In FDT, bus-range should only be present if there are
+restrictions in bus numbers. So for most h/w, there should be no
+bus-range properties anywhere. This also means the addressing should
+just set the bus to 0 everywhere and only the devfn part is relevant.
+Also note that the unit-addresses don't have the bus number so that
+the device paths are consistent. The dtc check only says if the parent
+has 'bus-range', then the address (reg) should have a bus number
+within that range. There's never a warning that 'bus-range' is
+missing.
+
+Rob
 
