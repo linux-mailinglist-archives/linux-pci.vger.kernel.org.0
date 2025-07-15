@@ -1,118 +1,167 @@
-Return-Path: <linux-pci+bounces-32192-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32193-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A627B06893
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 23:32:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45625B06895
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 23:33:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28A2E4E2021
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 21:31:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 823DA563284
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 21:33:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C21026FA4C;
-	Tue, 15 Jul 2025 21:32:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC3F5270547;
+	Tue, 15 Jul 2025 21:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="Vg3Bzzfm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i88HuL74"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852CEDF76;
-	Tue, 15 Jul 2025 21:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C860F24DCEC
+	for <linux-pci@vger.kernel.org>; Tue, 15 Jul 2025 21:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752615125; cv=none; b=fRiLvu+tqtwXXfifLEDT65cHwG1J8WQMW6JAknM3LMTB2g+NgEw/or7+EonNkjUhexc6vGLTo0fCBy85Cb0YP/l5UD21yS5yCKGrki4rR1x+VYv8FD/1nvqCxXJWKsn0w+U+iCibSDg6791ya3w08svIFAIXupkQ6TxOY2S6TiM=
+	t=1752615183; cv=none; b=O7rnzeo73K4O5E1f8iDi2Z5Ik5tMwSsUIF/G9b9m1KvEucIC9VRT2sq6R9RoLs6+XYHFwTsiS9P/b+pLS6Im4VnKi9p+u9D+80EIQZ5SFBWvs7oTrvwM5hhsy9nRrp4iALfx/X+E0/9UT4BA6XPEI397tUgR60xNgOw8b9XmvsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752615125; c=relaxed/simple;
-	bh=RmW89GK9pnmFOIxELKgju/62ROmTX+YH6Rf+TJ9kdg4=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=ruv6VQKLPLcnQjqrr3DVMr7JgdxLwNEZrCWobqqjAcJpZkE3Nar82/6fhEa/igR2L2go4kGclVEuEm6tKKJpQtcWq+cvFBo44e7xROxL/ypRZT5N1Chfep1VqcQ7kWCVbV1SkzOu1A/eZDQUaUADgMjRpNAbxZRK22MQY/UM+EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=Vg3Bzzfm; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 431558287698;
-	Tue, 15 Jul 2025 16:31:54 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id HoGop4iZv_d7; Tue, 15 Jul 2025 16:31:53 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 79A28828832D;
-	Tue, 15 Jul 2025 16:31:53 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 79A28828832D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1752615113; bh=pCmOltlEYd6S50ZKZ9a1KSNaWOyP6XSx2ggNDbtS3qY=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=Vg3Bzzfm5Xh1QPI3DWetWQCB1+4tffLZ9HAlb5Dfyu/JuU172d23HcSwwIp3xtrq8
-	 eMGZ145VKXy2v62+pZ96KzelnKgbIOSvbmuzc3BkwOOAgAIgfQbIYmZXywI0fbMCcM
-	 d001tj2jbFpckzg2w7fSLFhZSctJMKoD4XS80jdI=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id svjTAW6EvY7k; Tue, 15 Jul 2025 16:31:53 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 2BC788287698;
-	Tue, 15 Jul 2025 16:31:53 -0500 (CDT)
-Date: Tue, 15 Jul 2025 16:31:49 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-pci <linux-pci@vger.kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	Shawn Anastasio <sanastasio@raptorengineering.com>
-Message-ID: <1268570622.1359844.1752615109932.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: [PATCH v3 0/6] PowerNV PCIe Hotplug Driver Fixes
+	s=arc-20240116; t=1752615183; c=relaxed/simple;
+	bh=XZrRORvDj60Twtrc9Jl2lgSJfsP2Z5cHCPdsCtLNv6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=fWdk+ThV41p+VP3K8Puttt6HzVu/2sbG1neiCzhBrTxqCfiEoMdjyccOqpM3EHiO8yDRI7fEhg9ixVE4F1zB/qTnxD/WOcc4hm2rcDBVH7oKGQYw7duuCQV7+ydpcOoVtVuPFcq5LewrtqlFGUUobTAQG08+SjvbcRYmBaHj78s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i88HuL74; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 244F5C4CEE3;
+	Tue, 15 Jul 2025 21:33:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752615183;
+	bh=XZrRORvDj60Twtrc9Jl2lgSJfsP2Z5cHCPdsCtLNv6U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=i88HuL74elNapRe3Bx+M+W6Ydtpab/Oren09cDUjG2/5FJ3MOY8RGTJV4cLsPdQGn
+	 3TzigcAKkcblYGMKphPWqUek68eAZKUHeXOIsjUs62drfiPRpgv0dRebM1N/s6TRLn
+	 2cNF54/hoW8QQZyQR/4A4amyaL+Y8bJBoXSDaLQKs5XmUrAYqfWtHX0fVVt7U45aaU
+	 xWCldCYisTB+yyoZ8J+fLyjrvpM5BDb/hOxK/S2FaYN3MaxqsZaZ1lnmmCGFB2i1Tb
+	 NuhsAc0ZlFZIhXEmTYg3ASsTkGYDe1DSlENbsV771tW7CG3NiEEPDdUmOnNCTIq4kz
+	 Zvrp7kpnHO/lQ==
+Date: Tue, 15 Jul 2025 16:33:01 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Wannes Bouwen (Nokia)" <wannes.bouwen@nokia.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+	Vidya Sagar <vidyas@nvidia.com>,
+	"lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [v4 PATCH 1/1] PCI: of: fix non-prefetchable region address
+ range check.
+Message-ID: <20250715213301.GA2500492@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC138 (Linux)/8.5.0_GA_3042)
-Thread-Index: XyF2OaMn/3q+H+nwsGaxXLVF4U4PFw==
-Thread-Topic: PowerNV PCIe Hotplug Driver Fixes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PA4PR07MB883887374D2E7B59E33A0861FD7CA@PA4PR07MB8838.eurprd07.prod.outlook.com>
 
-Hello all,
+In subject, capitalize "Fix" and drop period at end.
 
-This series includes several fixes for bugs in the PowerNV PCIe hotplug
-driver that were discovered in testing with a Microsemi Switchtec PM8533
-PFX 48xG3 PCIe switch on a PowerNV system, as well as one workaround for
-PCIe switches that don't correctly implement slot presence detection
-such as the aforementioned one. Without the workaround, the switch works
-and downstream devices can be hot-unplugged, but the devices never come
-back online after being plugged in again until the system is rebooted.
-Other hotplug drivers (like pciehp_hpc) use a similar workaround.
+On Fri, Jun 20, 2025 at 09:32:35AM +0000, Wannes Bouwen (Nokia) wrote:
+>  
+> [v4 PATCH 1/1] PCI: of: fix non-prefetchable region address range check.
 
-Also included are fixes for the EEH driver to make it hotplug safe,
-and a small patch to enable all three attention indicator states per
-the PCIe specification.
+Drop this.
 
-Thanks,
+> According to the PCIe spec (PCIe r6.3, sec 7.5.1.3.8), non-prefetchable
+> memory supports only 32-bit host bridge windows (both base address as
+> limit address).
 
-Shawn Anastasio (2):
-  PCI: pnv_php: Properly clean up allocated IRQs on unplug
-  PCI: pnv_php: Work around switches with broken presence detection
+7.5.1.3.8 is about PCI-to-PCI bridge windows, not host bridge windows.
 
-Timothy Pearson (4):
-  powerpc/eeh: Export eeh_unfreeze_pe()
-  powerpc/eeh: Make EEH driver device hotplug safe
-  PCI: pnv_php: Fix surprise plug detection and recovery
-  PCI: pnv_php: Enable third attention indicator state
+I'm confused about what's going on here.  The word "prefetch" doesn't
+even appear in PCIe r7.0, but historically, issue was that we have to
+be careful about putting a non-prefetchable BAR in a prefetchable
+window because a read (which might be a prefetch) in a
+non-prefetchable BAR is allowed to have side effects.
 
- arch/powerpc/kernel/eeh.c         |   1 +
- arch/powerpc/kernel/eeh_driver.c  |  48 ++++--
- arch/powerpc/kernel/eeh_pe.c      |  10 +-
- arch/powerpc/kernel/pci-hotplug.c |   3 +
- drivers/pci/hotplug/pnv_php.c     | 244 +++++++++++++++++++++++++++---
- 5 files changed, 263 insertions(+), 43 deletions(-)
+But if we put a prefetchable BAR in a non-prefetchable window, nothing
+bad happens other than performance might be bad.
 
--- 
-2.39.5
+Are we trying to warn about a potential performance problem?  Or is
+there some functional problem here?
+
+> In the kernel there is a check that prints a warning if a
+> non-prefetchable resource's size exceeds the 32-bit limit.
+> 
+> The check currently checks the size of the resource, while actually the
+> check should be done on the PCIe end address of the non-prefetchable
+> window.
+> 
+> Move the check to devm_of_pci_get_host_bridge_resources() where the PCIe
+> addresses are available and use the end address instead of the size of
+> the window.
+
+Are you seeing an issue here?  Can we include a dmesg snippet that
+illustrates it?
+
+> Fixes: fede8526cc48 (PCI: of: Warn if non-prefetchable memory aperture
+> size is > 32-bit)
+> Signed-off-by: Wannes Bouwen <wannes.bouwen@nokia.com>
+> ---
+> 
+> v4:
+>   - Update warning text
+> 
+> v3:
+>   - Update subject and description + add changelog
+> 
+> v2:
+>   - Use PCI address range instead of window size to check that window is
+>     within a 32bit boundary.
+> 
+> ---
+>  drivers/pci/of.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 3579265f1198..16405985a53a 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -400,6 +400,13 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+>  			*io_base = range.cpu_addr;
+>  		} else if (resource_type(res) == IORESOURCE_MEM) {
+>  			res->flags &= ~IORESOURCE_MEM_64;
+> +
+> +			if (!(res->flags & IORESOURCE_PREFETCH))
+> +				if (upper_32_bits(range.pci_addr + range.size - 1))
+> +					dev_warn(dev,
+> +						"host bridge non-prefetchable window: pci range end address exceeds 32 bit boundary %pR"
+> +						" (pci address range [%#012llx-%#012llx])\n",
+> +						res, range.pci_addr, range.pci_addr + range.size - 1);
+
+I gave you bad advice because I hadn't looked earlier in this
+function.  devm_of_pci_get_host_bridge_resources() printed this
+earlier:
+
+  MEM  %#012llx..%#012llx -> %#012llx
+
+where the first part is basically the %pR information in a different
+format and the last part is the bus address, and I think a warning
+here should look similar, e.g.,
+
+  dev_warn(dev, "Bus address %#012llx..%#012llx end is past 32-bit boundary\n",
+
+>  		}
+>  
+>  		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
+> @@ -622,10 +629,6 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
+>  		case IORESOURCE_MEM:
+>  			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+>  
+> -			if (!(res->flags & IORESOURCE_PREFETCH))
+> -				if (upper_32_bits(resource_size(res)))
+> -					dev_warn(dev, "Memory resource size exceeds max for 32 bits\n");
+> -
+>  			break;
+>  		}
+>  	}
+> -- 
+> 2.43.5
 
