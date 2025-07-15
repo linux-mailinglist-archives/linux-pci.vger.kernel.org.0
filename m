@@ -1,57 +1,56 @@
-Return-Path: <linux-pci+bounces-32170-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32171-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7001FB062B4
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 17:19:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1827B062C5
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 17:22:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C14D53A7261
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 15:17:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CFBE21894D03
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 15:18:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECA642528F3;
-	Tue, 15 Jul 2025 15:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC3D825A2C0;
+	Tue, 15 Jul 2025 15:17:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ZqyKb15J"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="iSy5VCDY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE12224E019;
-	Tue, 15 Jul 2025 15:17:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D664921B9E2;
+	Tue, 15 Jul 2025 15:17:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752592632; cv=none; b=G+PjovYtnDwx/ZWTuSASVOxZi7hhiixF/Z1s0KV+guaXMfj1K8EJ0HWJFmxhuKYvtPkecRXMJ515iZMiw1UlgND14tLniywicrs40oCgs0IZbcnTQypA6AUU2MUQvCoCE7VL0jXgoXCgz0XiMRwv0Jr2bU1HkIGmXGdOhYRZamg=
+	t=1752592635; cv=none; b=nYzHqDDAzS4UcBaoO6ylakBkiEqo6DYrWeVui1Uz1q0DPqU3gkCf6FraeFqeq3XLeVn5MXnlXPcv7rL6diYkEDbipzL0Abgd6ymseOmkb+q8vFqaRbI5c+7S5w8sqfpmAAQhxzm8XQaaxV9v8tzcrlM28v2UHjQJRx7Y7dcQVgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752592632; c=relaxed/simple;
-	bh=GaqTGAvm/SZ/WWXgNLPIL8I1p20P80a2MfUJbHC9h3k=;
+	s=arc-20240116; t=1752592635; c=relaxed/simple;
+	bh=hDBDz41qpLHB3oj7BUa1RgzJiVkl4PhvA5k8G6iWXYQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BNX5mY1rGPjstrr0kD7mZ9zUi3E2CRtpGYZ+OB+KAI2XQM4ZE8aiCfAExRSqO2VECaNNYXFpnwq9IiMevX8y6cV4EODRZmPdepcHKGa7iPuvlSl/uSauEHQsRw3AiBY1rBUJ3rmLKV0jUxDtOXcNrdLIFP5hoSz2384vJ7TcZEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ZqyKb15J; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:To:Cc; b=O6lqV4tB7n/6ewQWV1ra8Bf3UK07pkubUZ+XNj+v0IICNhMwSA6U+Jl4zsh5bqqwacJFC7mt/LiY1fx7xcuo8va7sbjoA7n046mSIeS7RfBpFHTj3IGMxEOs4XXS+j7HpzLuLzI0+YpLDkZGXZs5C0HS9iiJoWMgYmI1KVByxQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=iSy5VCDY; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1752592629;
-	bh=GaqTGAvm/SZ/WWXgNLPIL8I1p20P80a2MfUJbHC9h3k=;
+	s=mail; t=1752592632;
+	bh=hDBDz41qpLHB3oj7BUa1RgzJiVkl4PhvA5k8G6iWXYQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ZqyKb15JfttsACE4yi6CDpPWljpdwgd4XnV/UnUFWiAqScpDByQHg0ZGvImkI0uUS
-	 jmcPYnzXqYg/y9Gn8ZEy0wQCB+X8K3PLNO8w2zM4qX57qzpgoMK0QJDZZUSc/Ej8YI
-	 nIXifLOnpUGOnp2yBeIa4hqXvXLkHKf8+sl0pbe4OzmLqbQh37uktloSh5EdeWOgY6
-	 TB3m+4E6ZPHNZmsivu7x4WDEozf/I2tMmuGG8Hnt1fItvlDXKlWMJj0CtCr9FqYoXn
-	 NUKUFWgm0X8B1gypZd7TebG4AAtEizPCiw3TJbgv8cmXAckxzEQfNwJLOiyJs0cp9+
-	 4SSVvxpiIDV2g==
+	b=iSy5VCDYtR6JhPh0S18NACM1GdFqtkoIxhNo5fbN9tRJLTnXZvERKziXwboBAEw20
+	 vbKJsHJWab8vRhMB35Q/BOZ/zwu4NxnKLJA9hJ4RT9Rv5PF4MfsYjRUAbRMzhqS/Ab
+	 1oIHYKtfuPCKRjj6Ntm1OUgav8lR47EiHvMhvB+7S5ujnYu6vVRoW340X46BhqfpfL
+	 /rPDWYTa3u2SU/nXUmzNYsVUZgEqlBaKuUzdcsiBdt0qrB+dvnVc+s6U/qmH1Ad6We
+	 EXaeJGBwBWgm/Hv6z30ku84fYiENv0jsogl3aXO72fOKnMDkz2pB0a66Bb0QYrH9L9
+	 53mXvJYdxgEtw==
 Received: from [192.168.0.2] (unknown [IPv6:2804:14d:72b4:82f6:67c:16ff:fe57:b5a3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dwlsalmeida)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 40DCF17E1293;
-	Tue, 15 Jul 2025 17:17:06 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6296A17E1324;
+	Tue, 15 Jul 2025 17:17:09 +0200 (CEST)
 From: Daniel Almeida <daniel.almeida@collabora.com>
-Date: Tue, 15 Jul 2025 12:16:41 -0300
-Subject: [PATCH v7 4/6] rust: irq: add support for threaded IRQs and
- handlers
+Date: Tue, 15 Jul 2025 12:16:42 -0300
+Subject: [PATCH v7 5/6] rust: platform: add irq accessors
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,7 +59,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250715-topics-tyr-request_irq2-v7-4-d469c0f37c07@collabora.com>
+Message-Id: <20250715-topics-tyr-request_irq2-v7-5-d469c0f37c07@collabora.com>
 References: <20250715-topics-tyr-request_irq2-v7-0-d469c0f37c07@collabora.com>
 In-Reply-To: <20250715-topics-tyr-request_irq2-v7-0-d469c0f37c07@collabora.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -77,279 +76,184 @@ Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
  linux-pci@vger.kernel.org, Daniel Almeida <daniel.almeida@collabora.com>
 X-Mailer: b4 0.14.2
 
-This patch adds support for threaded IRQs and handlers through
-irq::ThreadedRegistration and the irq::ThreadedHandler trait.
+These accessors can be used to retrieve a irq::Registration and
+irq::ThreadedRegistration from a platform device by
+index or name. Alternatively, drivers can retrieve an IrqRequest from a
+bound platform device for later use.
 
-Threaded interrupts are more permissive in the sense that further
-processing is possible in a kthread. This means that said execution takes
-place outside of interrupt context, which is rather restrictive in many
-ways.
+These accessors ensure that only valid IRQ lines can ever be registered.
 
-Registering a threaded irq is dependent upon having an IrqRequest that
-was previously allocated by a given device. This will be introduced in
-subsequent patches.
-
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
 ---
- rust/kernel/irq.rs         |   5 +-
- rust/kernel/irq/request.rs | 227 ++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 229 insertions(+), 3 deletions(-)
+ rust/kernel/platform.rs | 146 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 145 insertions(+), 1 deletion(-)
 
-diff --git a/rust/kernel/irq.rs b/rust/kernel/irq.rs
-index 01bd08884b72c2a3a9460897bce751c732a19794..aaa40001bafca617c588c799bb41144921595cae 100644
---- a/rust/kernel/irq.rs
-+++ b/rust/kernel/irq.rs
-@@ -16,4 +16,7 @@
- /// IRQ allocation and handling.
- pub mod request;
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index ced43367d900bcb87c0ce1af3981f5e5af129840..ba334bfdaf1db4cb60a33ef275739958bc4c77d5 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -5,8 +5,11 @@
+ //! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
  
--pub use request::{Handler, IrqRequest, IrqReturn, Registration};
-+pub use request::{
-+    Handler, IrqRequest, IrqReturn, Registration, ThreadedHandler, ThreadedIrqReturn,
-+    ThreadedRegistration,
-+};
-diff --git a/rust/kernel/irq/request.rs b/rust/kernel/irq/request.rs
-index 2f4637d8bc4c9fda23cbc8307687035957b0042a..aa1b957fa18f927df2f14b18076393e1be2cf1d6 100644
---- a/rust/kernel/irq/request.rs
-+++ b/rust/kernel/irq/request.rs
-@@ -1,8 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
- // SPDX-FileCopyrightText: Copyright 2025 Collabora ltd.
- 
--//! This module provides types like [`Registration`] which allow users to
--//! register handlers for a given IRQ line.
-+//! This module provides types like [`Registration`] and
-+//! [`ThreadedRegistration`], which allow users to register handlers for a given
-+//! IRQ line.
- 
- use core::marker::PhantomPinned;
- 
-@@ -265,3 +266,225 @@ pub fn synchronize(&self, dev: &Device<Bound>) -> Result {
-     let handler = unsafe { &*(ptr as *const T) };
-     T::handle(handler) as c_uint
+ use crate::{
+-    acpi, bindings, container_of, device, driver,
++    acpi, bindings, container_of,
++    device::{self, Bound},
++    driver,
+     error::{from_result, to_result, Result},
++    irq::{self, IrqRequest},
+     of,
+     prelude::*,
+     types::Opaque,
+@@ -226,6 +229,147 @@ fn as_raw(&self) -> *mut bindings::platform_device {
+     }
  }
+ 
++macro_rules! define_irq_accessor_by_index {
++    ($(#[$meta:meta])* $fn_name:ident, $request_fn:ident, $reg_type:ident, $handler_trait:ident) => {
++        $(#[$meta])*
++        pub fn $fn_name<T: irq::$handler_trait + 'static>(
++            &self,
++            flags: irq::flags::Flags,
++            index: u32,
++            name: &'static CStr,
++            handler: T,
++        ) -> Result<impl PinInit<irq::$reg_type<T>, Error> + '_> {
++            let request = self.$request_fn(index)?;
 +
-+/// The value that can be returned from `ThreadedHandler::handle_irq`.
-+#[repr(u32)]
-+pub enum ThreadedIrqReturn {
-+    /// The interrupt was not from this device or was not handled.
-+    None = bindings::irqreturn_IRQ_NONE,
-+
-+    /// The interrupt was handled by this device.
-+    Handled = bindings::irqreturn_IRQ_HANDLED,
-+
-+    /// The handler wants the handler thread to wake up.
-+    WakeThread = bindings::irqreturn_IRQ_WAKE_THREAD,
++            Ok(irq::$reg_type::<T>::new(
++                request,
++                flags,
++                name,
++                handler,
++            ))
++        }
++    };
 +}
 +
-+/// Callbacks for a threaded IRQ handler.
-+pub trait ThreadedHandler: Sync {
-+    /// The hard IRQ handler.
-+    ///
-+    /// This is executed in interrupt context, hence all corresponding
-+    /// limitations do apply. All work that does not necessarily need to be
-+    /// executed from interrupt context, should be deferred to the threaded
-+    /// handler, i.e. [`ThreadedHandler::handle_threaded`].
-+    fn handle(&self) -> ThreadedIrqReturn;
++macro_rules! define_irq_accessor_by_name {
++    ($(#[$meta:meta])* $fn_name:ident, $request_fn:ident, $reg_type:ident, $handler_trait:ident) => {
++        $(#[$meta])*
++        pub fn $fn_name<T: irq::$handler_trait + 'static>(
++            &self,
++            flags: irq::flags::Flags,
++            irq_name: &CStr,
++            name: &'static CStr,
++            handler: T,
++        ) -> Result<impl PinInit<irq::$reg_type<T>, Error> + '_> {
++            let request = self.$request_fn(irq_name)?;
 +
-+    /// The threaded IRQ handler.
-+    ///
-+    /// This is executed in process context. The kernel creates a dedicated
-+    /// kthread for this purpose.
-+    fn handle_threaded(&self) -> IrqReturn;
++            Ok(irq::$reg_type::<T>::new(
++                request,
++                flags,
++                name,
++                handler,
++            ))
++        }
++    };
 +}
 +
-+impl<T: ?Sized + ThreadedHandler + Send> ThreadedHandler for Arc<T> {
-+    fn handle(&self) -> ThreadedIrqReturn {
-+        T::handle(self)
++impl Device<Bound> {
++    /// Returns an [`IrqRequest`] for the IRQ at the given index, if any.
++    pub fn irq_by_index(&self, index: u32) -> Result<IrqRequest<'_>> {
++        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
++        let irq = unsafe { bindings::platform_get_irq(self.as_raw(), index) };
++
++        if irq < 0 {
++            return Err(Error::from_errno(irq));
++        }
++
++        // SAFETY: `irq` is guaranteed to be a valid IRQ number for `&self`.
++        Ok(unsafe { IrqRequest::new(self.as_ref(), irq as u32) })
 +    }
 +
-+    fn handle_threaded(&self) -> IrqReturn {
-+        T::handle_threaded(self)
++    /// Returns an [`IrqRequest`] for the IRQ at the given index, but does not
++    /// print an error if the IRQ cannot be obtained.
++    pub fn optional_irq_by_index(&self, index: u32) -> Result<IrqRequest<'_>> {
++        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
++        let irq = unsafe { bindings::platform_get_irq_optional(self.as_raw(), index) };
++
++        if irq < 0 {
++            return Err(Error::from_errno(irq));
++        }
++
++        // SAFETY: `irq` is guaranteed to be a valid IRQ number for `&self`.
++        Ok(unsafe { IrqRequest::new(self.as_ref(), irq as u32) })
 +    }
++
++    /// Returns an [`IrqRequest`] for the IRQ with the given name, if any.
++    pub fn irq_by_name(&self, name: &CStr) -> Result<IrqRequest<'_>> {
++        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
++        let irq = unsafe { bindings::platform_get_irq_byname(self.as_raw(), name.as_char_ptr()) };
++
++        if irq < 0 {
++            return Err(Error::from_errno(irq));
++        }
++
++        // SAFETY: `irq` is guaranteed to be a valid IRQ number for `&self`.
++        Ok(unsafe { IrqRequest::new(self.as_ref(), irq as u32) })
++    }
++
++    /// Returns an [`IrqRequest`] for the IRQ with the given name, but does not
++    /// print an error if the IRQ cannot be obtained.
++    pub fn optional_irq_by_name(&self, name: &CStr) -> Result<IrqRequest<'_>> {
++        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
++        let irq = unsafe {
++            bindings::platform_get_irq_byname_optional(self.as_raw(), name.as_char_ptr())
++        };
++
++        if irq < 0 {
++            return Err(Error::from_errno(irq));
++        }
++
++        // SAFETY: `irq` is guaranteed to be a valid IRQ number for `&self`.
++        Ok(unsafe { IrqRequest::new(self.as_ref(), irq as u32) })
++    }
++
++    define_irq_accessor_by_index!(
++        /// Returns a [`irq::Registration`] for the IRQ at the given index.
++        request_irq_by_index, irq_by_index, Registration, Handler
++    );
++    define_irq_accessor_by_name!(
++        /// Returns a [`irq::Registration`] for the IRQ with the given name.
++        request_irq_by_name, irq_by_name, Registration, Handler
++    );
++    define_irq_accessor_by_index!(
++        /// Does the same as [`Self::request_irq_by_index`], except that it does
++        /// not print an error message if the IRQ cannot be obtained.
++        request_optional_irq_by_index, optional_irq_by_index, Registration, Handler
++    );
++    define_irq_accessor_by_name!(
++        /// Does the same as [`Self::request_irq_by_name`], except that it does
++        /// not print an error message if the IRQ cannot be obtained.
++        request_optional_irq_by_name, optional_irq_by_name, Registration, Handler
++    );
++
++    define_irq_accessor_by_index!(
++        /// Returns a [`irq::ThreadedRegistration`] for the IRQ at the given index.
++        request_threaded_irq_by_index, irq_by_index, ThreadedRegistration, ThreadedHandler
++    );
++    define_irq_accessor_by_name!(
++        /// Returns a [`irq::ThreadedRegistration`] for the IRQ with the given name.
++        request_threaded_irq_by_name, irq_by_name, ThreadedRegistration, ThreadedHandler
++    );
++    define_irq_accessor_by_index!(
++        /// Does the same as [`Self::request_threaded_irq_by_index`], except
++        /// that it does not print an error message if the IRQ cannot be
++        /// obtained.
++        request_optional_threaded_irq_by_index, optional_irq_by_index, ThreadedRegistration, ThreadedHandler
++    );
++    define_irq_accessor_by_name!(
++        /// Does the same as [`Self::request_threaded_irq_by_name`], except that
++        /// it does not print an error message if the IRQ cannot be obtained.
++        request_optional_threaded_irq_by_name, optional_irq_by_name, ThreadedRegistration, ThreadedHandler
++    );
 +}
 +
-+impl<T: ?Sized + ThreadedHandler, A: Allocator> ThreadedHandler for Box<T, A> {
-+    fn handle(&self) -> ThreadedIrqReturn {
-+        T::handle(self)
-+    }
-+
-+    fn handle_threaded(&self) -> IrqReturn {
-+        T::handle_threaded(self)
-+    }
-+}
-+
-+/// A registration of a threaded IRQ handler for a given IRQ line.
-+///
-+/// Two callbacks are required: one to handle the IRQ, and one to handle any
-+/// other work in a separate thread.
-+///
-+/// The thread handler is only called if the IRQ handler returns `WakeThread`.
-+///
-+/// # Examples
-+///
-+/// The following is an example of using `ThreadedRegistration`. It uses a
-+/// [`AtomicU32`](core::sync::AtomicU32) to provide the interior mutability.
-+///
-+/// ```
-+/// use core::sync::atomic::AtomicU32;
-+/// use core::sync::atomic::Ordering;
-+///
-+/// use kernel::prelude::*;
-+/// use kernel::device::Bound;
-+/// use kernel::irq::flags;
-+/// use kernel::irq::ThreadedIrqReturn;
-+/// use kernel::irq::ThreadedRegistration;
-+/// use kernel::irq::IrqRequest;
-+/// use kernel::irq::IrqReturn;
-+/// use kernel::sync::Arc;
-+/// use kernel::c_str;
-+/// use kernel::alloc::flags::GFP_KERNEL;
-+///
-+/// // Declare a struct that will be passed in when the interrupt fires. The u32
-+/// // merely serves as an example of some internal data.
-+/// struct Data(AtomicU32);
-+///
-+/// // [`kernel::irq::request::ThreadedHandler::handle`] takes `&self`. This example
-+/// // illustrates how interior mutability can be used when sharing the data
-+/// // between process context and IRQ context.
-+/// type Handler = Data;
-+///
-+/// impl kernel::irq::request::ThreadedHandler for Handler {
-+///     // This is executing in IRQ context in some CPU. Other CPUs can still
-+///     // try to access the data.
-+///     fn handle(&self) -> ThreadedIrqReturn {
-+///         self.0.fetch_add(1, Ordering::Relaxed);
-+///         // By returning `WakeThread`, we indicate to the system that the
-+///         // thread function should be called. Otherwise, return
-+///         // ThreadedIrqReturn::Handled.
-+///         ThreadedIrqReturn::WakeThread
-+///     }
-+///
-+///     // This will run (in a separate kthread) if and only if `handle`
-+///     // returns `WakeThread`.
-+///     fn handle_threaded(&self) -> IrqReturn {
-+///         self.0.fetch_add(1, Ordering::Relaxed);
-+///         IrqReturn::Handled
-+///     }
-+/// }
-+///
-+/// // Registers a threaded IRQ handler for the given IrqRequest.
-+/// //
-+/// // This is executing in process context and assumes that `request` was
-+/// // previously acquired from a device.
-+/// fn register_threaded_irq(handler: Handler, request: IrqRequest<'_>) -> Result<Arc<ThreadedRegistration<Handler>>> {
-+///     let registration = ThreadedRegistration::new(request, flags::SHARED, c_str!("my_device"), handler);
-+///
-+///     let registration = Arc::pin_init(registration, GFP_KERNEL)?;
-+///
-+///     // The data can be accessed from process context too.
-+///     registration.handler().0.fetch_add(1, Ordering::Relaxed);
-+///
-+///     Ok(registration)
-+/// }
-+/// # Ok::<(), Error>(())
-+/// ```
-+///
-+/// # Invariants
-+///
-+/// * We own an irq handler using `&T` as its private data.
-+///
-+#[pin_data]
-+pub struct ThreadedRegistration<T: ThreadedHandler + 'static> {
-+    #[pin]
-+    inner: Devres<RegistrationInner>,
-+
-+    #[pin]
-+    handler: T,
-+
-+    /// Pinned because we need address stability so that we can pass a pointer
-+    /// to the callback.
-+    #[pin]
-+    _pin: PhantomPinned,
-+}
-+
-+impl<T: ThreadedHandler + 'static> ThreadedRegistration<T> {
-+    /// Registers the IRQ handler with the system for the given IRQ number.
-+    pub fn new<'a>(
-+        request: IrqRequest<'a>,
-+        flags: Flags,
-+        name: &'static CStr,
-+        handler: T,
-+    ) -> impl PinInit<Self, Error> + 'a {
-+        try_pin_init!(&this in Self {
-+            handler,
-+            inner <- Devres::new(
-+                request.dev,
-+                try_pin_init!(RegistrationInner {
-+                    // SAFETY: `this` is a valid pointer to the `ThreadedRegistration` instance.
-+                    cookie: unsafe { &raw mut (*this.as_ptr()).handler }.cast(),
-+                    irq: {
-+                        // SAFETY:
-+                        // - The callbacks are valid for use with request_threaded_irq.
-+                        // - If this succeeds, the slot is guaranteed to be valid until the
-+                        // destructor of Self runs, which will deregister the callbacks
-+                        // before the memory location becomes invalid.
-+                        to_result(unsafe {
-+                            bindings::request_threaded_irq(
-+                                request.irq,
-+                                Some(handle_threaded_irq_callback::<T>),
-+                                Some(thread_fn_callback::<T>),
-+                                flags.into_inner() as usize,
-+                                name.as_char_ptr(),
-+                                (&raw mut (*this.as_ptr()).handler).cast(),
-+                            )
-+                        })?;
-+                        request.irq
-+                    }
-+                })
-+            ),
-+            _pin: PhantomPinned,
-+        })
-+    }
-+
-+    /// Returns a reference to the handler that was registered with the system.
-+    pub fn handler(&self) -> &T {
-+        &self.handler
-+    }
-+
-+    /// Wait for pending IRQ handlers on other CPUs.
-+    ///
-+    /// This will attempt to access the inner [`Devres`] container.
-+    pub fn try_synchronize(&self) -> Result {
-+        let inner = self.inner.try_access().ok_or(ENODEV)?;
-+        inner.synchronize();
-+        Ok(())
-+    }
-+
-+    /// Wait for pending IRQ handlers on other CPUs.
-+    pub fn synchronize(&self, dev: &Device<Bound>) -> Result {
-+        let inner = self.inner.access(dev)?;
-+        inner.synchronize();
-+        Ok(())
-+    }
-+}
-+
-+/// # Safety
-+///
-+/// This function should be only used as the callback in `request_threaded_irq`.
-+unsafe extern "C" fn handle_threaded_irq_callback<T: ThreadedHandler>(
-+    _irq: i32,
-+    ptr: *mut c_void,
-+) -> c_uint {
-+    // SAFETY: `ptr` is a pointer to T set in `ThreadedRegistration::new`
-+    let handler = unsafe { &*(ptr as *const T) };
-+    T::handle(handler) as c_uint
-+}
-+
-+/// # Safety
-+///
-+/// This function should be only used as the callback in `request_threaded_irq`.
-+unsafe extern "C" fn thread_fn_callback<T: ThreadedHandler>(_irq: i32, ptr: *mut c_void) -> c_uint {
-+    // SAFETY: `ptr` is a pointer to T set in `ThreadedRegistration::new`
-+    let handler = unsafe { &*(ptr as *const T) };
-+    T::handle_threaded(handler) as c_uint
-+}
+ // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
+ // argument.
+ kernel::impl_device_context_deref!(unsafe { Device });
 
 -- 
 2.50.0
