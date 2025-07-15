@@ -1,70 +1,62 @@
-Return-Path: <linux-pci+bounces-32162-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32163-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B17B2B061C3
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 16:48:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC29AB061EF
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 16:54:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9DA8565BF3
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 14:36:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7297F173318
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 14:46:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F13781F4617;
-	Tue, 15 Jul 2025 14:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C71401E1E16;
+	Tue, 15 Jul 2025 14:46:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUDcufFZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nhOI4oOc"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C260119EEC2;
-	Tue, 15 Jul 2025 14:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8378C17B425;
+	Tue, 15 Jul 2025 14:46:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752590072; cv=none; b=gW46zeD6YA/mw/Vo0yRhZREfFqKzwyNuLNN32PiMN5rxMyvvDVnVvLn0QdxZTbxPzvVJynXo8WXBBiI+f4TCeotEHWYmBDzq+bM2cGnaaL9h5u7r/l/suM7nF4KoVDGqPZNApHxl/IzqW7FPFkZdC7HkRvJyQCbwbzLsh/Cxb+Q=
+	t=1752590778; cv=none; b=oIsgVK+PkQp35W7/T6IOb+7tjntXPjtmQi+sZzw6hr4tagyaKS3SNjPN4Vbi+aJzg0YCvBVFLmfP9XLmAFvqmp5jChfIhiXSt5AlUanAx83252qFKUchiKVawJ9wqgDjxvEUXwxhDyhFHsagwQw4J05oBPnuGrOo6zyjU7ApN8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752590072; c=relaxed/simple;
-	bh=PYwhKe0GMvp7ihfIzBAq9SNNQepK3AlS2xPSvBMLHqU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ATRVo9CSLP3xM18mI+R8LCyDImLbmWbnm8TnV3uuZS3LTUKLirubg5Gqh8A6O7fDkcLs6IQM0h/OCuGrcNDQw9t1BTbdcd7jc3qeMGc1J1AY9SGWGGSlF3T2zMA/eOJI7uwEN6O+wcM7ue6byiVGBGtrqxYEK2AUks6EE4EJ9Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DUDcufFZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 240B7C4CEE3;
-	Tue, 15 Jul 2025 14:34:26 +0000 (UTC)
+	s=arc-20240116; t=1752590778; c=relaxed/simple;
+	bh=KZ1W7mzel2tzyENmIY/KyfG+sQOyLDK8atG59n7g34U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=g0c9EwCV6Sy199W37aG0IpkDavxAGlHDAIXgHJWTElUa7K6i5KqvhwIRSYz33hAm9fNHl+4aC988p/J6r+bH8m6DfD+8hw1yL9TWK2P3bb2QoufPEqtQTChFl2b3wiSNojuJLr9OmgpUxfR/d8YkeFIQqqELDnZH8OodCiUn3AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nhOI4oOc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3826DC4CEE3;
+	Tue, 15 Jul 2025 14:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752590072;
-	bh=PYwhKe0GMvp7ihfIzBAq9SNNQepK3AlS2xPSvBMLHqU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DUDcufFZ69Kj9Mg4obHeLJ1tqjVc4h81VF8IhZ0URP0Vsi6lLmBn8IYUPKptjuoAs
-	 urAIFYKgUEAFIKwEOmgeBlL3njUCYEZC9JjRn+41vFX0QUtiMcRmyLqd8xJ2JrppeG
-	 A3timXh4aoqwQetsAL3YoePXI0FLfw6X6LN2uDZ4pSHspKIFINZmg+UqFEDafkXveQ
-	 adt+smXAdoyYGIq6LR3QDWlgxQ7jcLBG+/4dAWpw39BDvENsW8hzAySzM4X35NxUCV
-	 7QYSunSoNxoCJKlhitjXAvMMhrqmeNYylYknPE8U+MYS/rTrrSBrmL2jr0g0Yq9xTP
-	 wWWE2fWP1DytA==
-Date: Tue, 15 Jul 2025 16:34:24 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v7 18/31] arm64: smp: Support non-SGIs for IPIs
-Message-ID: <aHZm8BsqV1ighJ+2@lpieralisi>
-References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
- <20250703-gicv5-host-v7-18-12e71f1b3528@kernel.org>
- <7mhnql75p3l4vaeaipge6m76bw4wivskkpvzy5vx3she3wogk4@k62f5hzgx5wr>
+	s=k20201202; t=1752590778;
+	bh=KZ1W7mzel2tzyENmIY/KyfG+sQOyLDK8atG59n7g34U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=nhOI4oOcjdEd81/BA+chqSa9l8uanzEnEhr+bgfqoi60EpD0cwakUJpbZX2fvZD9c
+	 h0r1Tl3SHdyGUqyNniLCPaRBLWnhR4Mw4wlI0b9cxK2s7FO/4PCh/z68CLf37uqsbN
+	 Ss57RFtoC1bv1VmoENClwao3WYlFrjJ6yC7SIvm9bi5akXlS/Oy+9OsgqHLoZsWQN+
+	 aOS+cqX7rXhgqW0olOrGTZRfSSAUFdUoXJJXA1aV5LA9A12qLH5D2M+l2ZRGSowLbs
+	 FUNKbLBEz/i0hS2tpLxxlwcQJOY2rIHFi2EcPvKl2lBHzOWGB1F27V57vVQ2nL9Xb7
+	 ZNVpaMdVZGo+Q==
+Date: Tue, 15 Jul 2025 09:46:16 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Claudiu <claudiu.beznea@tuxon.dev>,
+	Manivannan Sadhasivam <mani@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	geert+renesas@glider.be, magnus.damm@gmail.com,
+	mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	john.madieu.xa@bp.renesas.com,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v2 0/8] PCI: rzg3s-host: Add PCIe driver for Renesas
+ RZ/G3S SoC
+Message-ID: <20250715144616.GA2458869@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,64 +65,85 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7mhnql75p3l4vaeaipge6m76bw4wivskkpvzy5vx3she3wogk4@k62f5hzgx5wr>
+In-Reply-To: <20250530111917.1495023-1-claudiu.beznea.uj@bp.renesas.com>
 
-On Tue, Jul 15, 2025 at 07:10:29AM -0700, Breno Leitao wrote:
-> Hello Lorenzo, Marc,
+On Fri, May 30, 2025 at 02:19:09PM +0300, Claudiu wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > 
-> On Thu, Jul 03, 2025 at 12:25:08PM +0200, Lorenzo Pieralisi wrote:
-> > diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> > index 3b3f6b56e733..2c501e917d38 100644
+> Hi,
 > 
-> > @@ -1046,11 +1068,15 @@ static void ipi_setup(int cpu)
-> >  		return;
-> >  
-> >  	for (i = 0; i < nr_ipi; i++) {
-> > -		if (ipi_should_be_nmi(i)) {
-> > -			prepare_percpu_nmi(ipi_irq_base + i);
-> > -			enable_percpu_nmi(ipi_irq_base + i, 0);
-> > +		if (!percpu_ipi_descs) {
-> > +			if (ipi_should_be_nmi(i)) {
-> > +				prepare_percpu_nmi(ipi_irq_base + i);
+> Series adds a PCIe driver for the Renesas RZ/G3S SoC.
+> It is split as follows:
+> - patch 1/8:		updates the max register offset for RZ/G3S SYSC;
+> 			this is necessary as the PCIe need to setup the
+> 			SYSC for proper functioning
+> - patch 2/8:		adds clock, reset and power domain support for
+> 			the PCIe IP
+> - patches 3-4/8:	add PCIe support for the RZ/G3S SoC
+> - patches 5-8/8:	add device tree support and defconfig flag
 > 
-> I am testing linux-next on commit 0be23810e32e6d0 ("Add linux-next
-> specific files for 20250714") on a Grace (GiCv3), and I am getting
-> a bunch of those:
+> Please provide your feedback.
 > 
-> 	[    0.007992] WARNING: kernel/irq/manage.c:2599 at prepare_percpu_nmi+0x178/0x1b0, CPU#2: swapper/2/0
+> Merge strategy, if any:
+> - patches 1-2,5-8/8 can go through the Renesas tree
+> - patches 3-4/8 can go through the PCI tree
 > 
-> 	[    0.007996] pstate: 600003c9 (nZCv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> 	[    0.007997] pc : prepare_percpu_nmi (kernel/irq/manage.c:2599 (discriminator 1))
-> 	[    0.007998] lr : prepare_percpu_nmi (kernel/irq/manage.c:2599 (discriminator 1))
+> Thank you,
+> Claudiu Beznea
 > 
-> 	[    0.008011] Call trace:
-> 	[    0.008011] prepare_percpu_nmi (kernel/irq/manage.c:2599 (discriminator 1)) (P)
-> 	[    0.008012] ipi_setup (arch/arm64/kernel/smp.c:1057)
-> 	[    0.008014] secondary_start_kernel (arch/arm64/kernel/smp.c:245)
-> 	[    0.008016] __secondary_switched (arch/arm64/kernel/head.S:405)
+> Changes in v2:
+> - dropped "of/irq: Export of_irq_count()" as it is not needed anymore
+>   in this version
+> - added "arm64: dts: renesas: rzg3s-smarc-som: Update dma-ranges for PCIe"
+>   to reflect the board specific memory constraints
+> - addressed review comments
+> - updated patch "soc: renesas: rz-sysc: Add syscon/regmap support"
+> - per-patch changes are described in each individual patch
 > 
-> I haven't bissected the problem to this patch specifically, but
-> I decided to share in case this is a known issue, given you are touching
-> this code.
+> Claudiu Beznea (7):
+>   clk: renesas: r9a08g045: Add clocks, resets and power domain support
+>     for the PCIe
+>   dt-bindings: PCI: renesas,r9a08g045s33-pcie: Add documentation for the
+>     PCIe IP on Renesas RZ/G3S
+>   PCI: rzg3s-host: Add Initial PCIe Host Driver for Renesas RZ/G3S SoC
+>   arm64: dts: renesas: r9a08g045s33: Add PCIe node
+>   arm64: dts: renesas: rzg3s-smarc-som: Update dma-ranges for PCIe
+>   arm64: dts: renesas: rzg3s-smarc: Enable PCIe
+>   arm64: defconfig: Enable PCIe for the Renesas RZ/G3S SoC
 > 
-> I would be happy to bissect it, in case it doesn't ring a bell.
+> John Madieu (1):
+>   soc: renesas: rz-sysc: Add syscon/regmap support
+> 
+>  .../pci/renesas,r9a08g045s33-pcie.yaml        |  202 ++
+>  MAINTAINERS                                   |    8 +
+>  arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi |   60 +
+>  .../boot/dts/renesas/rzg3s-smarc-som.dtsi     |    5 +
+>  arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi  |   11 +
+>  arch/arm64/configs/defconfig                  |    1 +
+>  drivers/clk/renesas/r9a08g045-cpg.c           |   19 +
+>  drivers/pci/controller/Kconfig                |    7 +
+>  drivers/pci/controller/Makefile               |    1 +
+>  drivers/pci/controller/pcie-rzg3s-host.c      | 1686 +++++++++++++++++
+>  drivers/soc/renesas/Kconfig                   |    1 +
+>  drivers/soc/renesas/r9a08g045-sysc.c          |   10 +
+>  drivers/soc/renesas/r9a09g047-sys.c           |   10 +
+>  drivers/soc/renesas/r9a09g057-sys.c           |   10 +
+>  drivers/soc/renesas/rz-sysc.c                 |   17 +-
+>  drivers/soc/renesas/rz-sysc.h                 |    3 +
+>  16 files changed, 2050 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/renesas,r9a08g045s33-pcie.yaml
+>  create mode 100644 drivers/pci/controller/pcie-rzg3s-host.c
 
-Thank you for reporting it.
+Where are we at with this series?
 
-Does this patch below fix it ?
+I see
+https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/dwc-stm32&id=5a972a01e24b278f7302a834c6eaee5bdac12843,
+but also this kernel robot report at that commit:
+https://lore.kernel.org/all/202506270620.sf6EApJY-lkp@intel.com/
 
--- >8 --
-diff --git i/arch/arm64/kernel/smp.c w/arch/arm64/kernel/smp.c
-index 4797e2c70014..a900835a3adf 100644
---- i/arch/arm64/kernel/smp.c
-+++ w/arch/arm64/kernel/smp.c
-@@ -1093,7 +1093,7 @@ static void ipi_setup_sgi(int ipi)
- 
- 	irq = ipi_irq_base + ipi;
- 
--	if (ipi_should_be_nmi(irq)) {
-+	if (ipi_should_be_nmi(ipi)) {
- 		err = request_percpu_nmi(irq, ipi_handler, "IPI", &irq_stat);
- 		WARN(err, "Could not request IRQ %d as NMI, err=%d\n", irq, err);
- 	} else {
+I normally don't include branches in pci/next until we get a
+"BUILD SUCCESS" report from the robot, so this branch is in limbo at
+the moment.
+
+Bjorn
 
