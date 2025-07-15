@@ -1,95 +1,135 @@
-Return-Path: <linux-pci+bounces-32174-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32175-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6BC5B06307
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 17:33:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 971FDB06342
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 17:42:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 49A275657AB
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 15:33:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7BD9B1AA422B
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 15:42:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EA372512FF;
-	Tue, 15 Jul 2025 15:32:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61DFB246BA1;
+	Tue, 15 Jul 2025 15:41:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EdmZKQuO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="em5tJsih"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FA124E4C3;
-	Tue, 15 Jul 2025 15:32:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314B1221F34;
+	Tue, 15 Jul 2025 15:41:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752593576; cv=none; b=YrEGMptK3VppEiCsoiMXW10kI/dTjMIWeE/ucqHYZFlEB7edRxCOLoxR4Kb3NEAMOpMZz56SfUpZvEq/3XldUmfAa8kbcZJV+Xui8dFZAGxrdePfTYsDB0nGXfcSKW1Q4WoMse+e8p/iXYN40pzTvM8DMoF/RZ0PI62osxxgaZU=
+	t=1752594107; cv=none; b=TfEbG8VSLg0udzFWzcsLJk4BYwxRV216UjyJSa6CvrIlUAiNzetcArRX56WzF7DmQJoKTdHMctJkJie2TxFrxW9l05hKcA/avVuKDXUMEvEgEHDnRluegt8F1QdxUjwbDpoVz1fUTpFrwFi+xXjjSSXCTfHUJL1KW4c6TRRO4Go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752593576; c=relaxed/simple;
-	bh=32I7tnE+Uw3PWlSmbWar4pOlDB7Z9GNHzzfr9Z4D6Ss=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=iqEGK/mnh8Fv2nUtzail7kNTLtG2x104kwZDSdJh2ow868yOP3dEmuhGEAbN4UXaRXVfIcY7mPK0C7pGwhA7MomdLpMVRP9HhJvWsvWWtbFNVFlMTgZbmICxWXuzibzsOHYxk+3NKuTqrTxlOcA+dgOv6iBahlnqDUteRd9GIjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EdmZKQuO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B57ADC4CEE3;
-	Tue, 15 Jul 2025 15:32:52 +0000 (UTC)
+	s=arc-20240116; t=1752594107; c=relaxed/simple;
+	bh=5b56qrNXj/OfNJ271j1G/qJdm0poMtreLVVNIaR5qWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=gM48KaU2cpQqu8LmJ14BauhpXTcts9I5TMEFxIKA+U5lQtD9J7ow+gkWcc9xAnso9VlL+xTUeSHJlHPxJLOj998Ib9YsLx26RdSX8D8+GCSxfLTYR1491553tkaHDJJXPd2D6ajFbwpuwgSsy2tKJWWLju/skZ/Sc2f4GNJ2PlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=em5tJsih; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9445C4CEE3;
+	Tue, 15 Jul 2025 15:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752593576;
-	bh=32I7tnE+Uw3PWlSmbWar4pOlDB7Z9GNHzzfr9Z4D6Ss=;
-	h=Date:From:Subject:Cc:To:References:In-Reply-To:From;
-	b=EdmZKQuOpN7GjSENUy6Q+gNMKYOjP+LnWERg4OrDwl7PtJxHYkHhVhzkwo2uM8MF0
-	 NJaDccg0itWhn5ax+1A3DVYEv0EHUHMMblYEUqCdosrMb0vZZmdCMKaYfn+lgKo5gy
-	 N5V1nD7k8JEyeWgdVRZMfVeLZAMgQVkXh+EcHGKI7wj6GftMHfSNw743Qc/WvW3O7U
-	 iZan/9pJLMNxbFVKSKXPGznTWsG95sVaMbKnpZZ1l9dthrddB34Flcdd9UUkt8/CuJ
-	 vLXDVG9FoMCY3fXuZbW+TWZ5WfevDtdjmyqETo+Wj8MvhXbaxzNF7XZhVNdN3gk9ya
-	 0rDl+nWMrtdEA==
+	s=k20201202; t=1752594107;
+	bh=5b56qrNXj/OfNJ271j1G/qJdm0poMtreLVVNIaR5qWg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=em5tJsihWZBOan5zIsQ+cSPCgN/Rzp4PaCrte3ake8mi3AWxsjrrCK82IG5RHPyd3
+	 QNuI2jxfMyfWMgyviwYRD5CjVdfWzVtyF9fUoMjIPN4q8876pn6mtbVehydcJoUA4B
+	 WUwoUbvxn6ip1JsTZTzJce5dAE+IYh9+ZgOBl3XzUfOlprqkrzlFDRLdGyINL/cJX1
+	 KmGccngAWOPzR+MRfSAvKVgFTFM2L8FUVYtxkYAEds6vLp3H7gliyxIIQIfpYv8WY5
+	 J/mLGzM5se86kFo2Q8RqS4AxPDLGe37gOLscWUJNDFq1gzFiNI0OhvEEEohYvd6R73
+	 CSVVVH/eWhvNQ==
+Date: Tue, 15 Jul 2025 10:41:45 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
+	linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+	linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+	p.zabel@pengutronix.de, BMC-SW@aspeedtech.com
+Subject: Re: [PATCH v2 08/10] PCI: Add FMT and TYPE definition for TLP header
+Message-ID: <20250715154145.GA2461632@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 15 Jul 2025 17:32:50 +0200
-Message-Id: <DBCQKJIBVGGM.1R0QNKO3TE4N0@kernel.org>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH v7 0/6] rust: add support for request_irq
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Alex Gaynor" <alex.gaynor@gmail.com>,
- "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Benno
- Lossin" <lossin@kernel.org>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>
-To: "Thomas Gleixner" <tglx@linutronix.de>
-References: <20250715-topics-tyr-request_irq2-v7-0-d469c0f37c07@collabora.com>
-In-Reply-To: <20250715-topics-tyr-request_irq2-v7-0-d469c0f37c07@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250715034320.2553837-9-jacky_chou@aspeedtech.com>
 
-On Tue Jul 15, 2025 at 5:16 PM CEST, Daniel Almeida wrote:
-> Daniel Almeida (6):
->       rust: irq: add irq module
->       rust: irq: add flags module
->       rust: irq: add support for non-threaded IRQs and handlers
->       rust: irq: add support for threaded IRQs and handlers
->       rust: platform: add irq accessors
->       rust: pci: add irq accessors
+On Tue, Jul 15, 2025 at 11:43:18AM +0800, Jacky Chou wrote:
+> According to PCIe specification, add FMT and TYPE definition
+> for TLP header. And also add macro to combine FMT and TYPE to
+> 1 byte.
+> 
+> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+> ---
+>  include/uapi/linux/pci_regs.h | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
 
-(Mostly copy-paste from v6 [1].)
+I don't think these definitions are relevant to uapi users, so they
+could go in drivers/pci/pci.h, similar to the existing PCIE_MSG_*
+definitions.
 
-What's the intended merge path for this series? Should I take it through
-driver-core, in case we make it for the upcoming merge window? I'd assume s=
-o,
-given that, besides the series also containing platform and PCI patches, it
-depends on patches that are in driver-core-next.
+Please follow the style of PCIE_MSG_*, including the brief spec
+citations and /* */ comments.
 
-@Thomas: Is there any agreement on how the IRQ Rust code should be maintain=
-ed?
-What's your preference?
+Not sure we need *all* of these; it looks like you only use:
 
-- Danilo
+  PCI_TLP_TYPE_CFG0_RD
+  PCI_TLP_TYPE_CFG0_WR
+  PCI_TLP_TYPE_CFG1_RD
+  PCI_TLP_TYPE_CFG1_WR
+  PCI_TLP_FMT_3DW_NO_DATA
+  PCI_TLP_FMT_3DW_DATA
 
-[1] https://lore.kernel.org/lkml/aGbkfa57bDa1mzI7@pollux/
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index a3a3e942dedf..700b915e00f5 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1230,4 +1230,36 @@
+>  #define PCI_DVSEC_CXL_PORT_CTL				0x0c
+>  #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
+>  
+> +/* Fmt[2:0] encoding for TLP Header */
+> +#define PCI_TLP_FMT_3DW_NO_DATA		0x0  // 3DW header, no data
+> +#define PCI_TLP_FMT_4DW_NO_DATA		0x1  // 4DW header, no data
+> +#define PCI_TLP_FMT_3DW_DATA		0x2  // 3DW header, with data
+> +#define PCI_TLP_FMT_4DW_DATA		0x3  // 4DW header, with data
+> +#define PCI_TLP_FMT_PREFIX		0x4  // Prefix header
+> +
+> +/* Type[4:0] encoding for TLP Header */
+> +#define PCI_TLP_TYPE_MEM_RD		0x00 // Memory Read Request
+> +#define PCI_TLP_TYPE_MEM_RDLK		0x01 // Memory Read Lock Request
+> +#define PCI_TLP_TYPE_MEM_WR		0x00 // Memory Write Request (Fmt must be with data)
+> +#define PCI_TLP_TYPE_IO_RD		0x02 // IO Read Request
+> +#define PCI_TLP_TYPE_IO_WR		0x02 // IO Write Request (Fmt must be with data)
+> +#define PCI_TLP_TYPE_CFG0_RD		0x04 // Config Type 0 Read Request
+> +#define PCI_TLP_TYPE_CFG0_WR		0x04 // Config Type 0 Write Request (Fmt must be with data)
+> +#define PCI_TLP_TYPE_CFG1_RD		0x05 // Config Type 1 Read Request
+> +#define PCI_TLP_TYPE_CFG1_WR		0x05 // Config Type 1 Write Request (Fmt must be with data)
+> +#define PCI_TLP_TYPE_MSG		0x10 // Message Request (see routing field)
+> +#define PCI_TLP_TYPE_MSGD		0x11 // Message Request with Data (see routing field)
+> +#define PCI_TLP_TYPE_CPL		0x0A // Completion without Data
+> +#define PCI_TLP_TYPE_CPLD		0x0A // Completion with Data (Fmt must be with data)
+> +#define PCI_TLP_TYPE_CPLLCK		0x0B // Completion Locked
+> +#define PCI_TLP_TYPE_CPLDLCK		0x0B // Completion with Data Locked (Fmt must be with data)
+> +#define PCI_TLP_TYPE_FETCH_ADD		0x0C // Fetch and Add AtomicOp Request
+> +#define PCI_TLP_TYPE_SWAP		0x0D // Unconditional Swap AtomicOp Request
+> +#define PCI_TLP_TYPE_CMP_SWAP		0x0E // Compare and Swap AtomicOp Request
+> +#define PCI_TLP_TYPE_LOCAL_PREFIX	0x00 // Local TLP Prefix (Fmt = 0x4)
+> +#define PCI_TLP_TYPE_E2E_PREFIX		0x10 // End-to-End TLP Prefix (Fmt = 0x4)
+> +
+> +/* Macro to combine Fmt and Type into the 8-bit field */
+> +#define PCIE_TLP_FMT_TYPE(fmt, type)   (((fmt) << 5) | ((type) & 0x1F))
+
+This looks like it might be controller-specific and could go in
+pcie-aspeed.c.
 
