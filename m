@@ -1,120 +1,160 @@
-Return-Path: <linux-pci+bounces-32184-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32185-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E433AB065D9
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 20:16:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74E2FB06641
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 20:46:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA8063A75ED
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 18:16:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92A6C163F7E
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 18:46:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B34C2BDC03;
-	Tue, 15 Jul 2025 18:16:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77E062594BD;
+	Tue, 15 Jul 2025 18:46:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mqKSF38q"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="coooAKnf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1411DF98D;
-	Tue, 15 Jul 2025 18:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF5476026
+	for <linux-pci@vger.kernel.org>; Tue, 15 Jul 2025 18:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752603393; cv=none; b=WzmboHyEme49CQtNN2UL8m3TR+wFQPJAYswFtyCreFJIZuKNVcB/VopbghyDrL2c3n8vp3kS4Sr696iVQALCTFo0bTLrX6tNBSHljxHqsX+xWp9QhInvjt3LxCq0YpbtZH49o4ylqHCq692sWZ4lhE5m+aElUfP7/XYCpLFLhlM=
+	t=1752605200; cv=none; b=AoKyUtP19DANMwPJ3IodnCpHwjARkvL8shA1XZ6E0Hr1yWLC5lu4SUePOL1Ujs9+YGWxNNaziXQq8qTuIWp2GkHQ1Wv9L6oEKXsrHwWcUyNV5VHpCY9YOer+i1VFxSzjiWc8HNz8y1f9Od077H1WheMPv2xhXCjbqpO3BpSW2y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752603393; c=relaxed/simple;
-	bh=aJGQyg78LrEPF1FzUGLMRvHSKN3yLtb4Tw/DC2FLpaA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=R0NS1Qet1y4hndy6dIt0Gdw60UXUY33su2YGjucP80U7g/vh5MA28lz/CJ+1KF0W9oHOn1ELqzzXCutvNXr5GXicL4YBma20r5ldjbUSP/EPbMQF6gkXp29+4OAqnrm6pt37tAxv0Gj8ut/vBP7IrLO7KO1w/YrNWLj7XbjwxjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mqKSF38q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A185DC4CEE3;
-	Tue, 15 Jul 2025 18:16:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752603391;
-	bh=aJGQyg78LrEPF1FzUGLMRvHSKN3yLtb4Tw/DC2FLpaA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=mqKSF38qTlq+kAYfIHmzyvW/cU1dNDP8c3V/VWuPpa6I7JinMKNnPzCC7abZ1kx/U
-	 2eH/7u22VyuIFw62tj1rQ39ntaytbhwUwx+pf6fqvNY3tYamJFWixFHVGbKAwujqbN
-	 KGDm19kH4xSQIB6lQSugEBFvT1cIyAazu/Y3bOEKCKvPiAv2tlATRP7tfMhhNqsKkp
-	 41hnRd6uXURIdgPyBxBk2twUjT4ua+rpSqLMtZxDa8OMGharnobe3p/0kQqhLLppby
-	 UXmDuVa2+1crfFTqFS9SAUaf8kvR/4w3ti0RYT6V2g/bWXEOSg/KrIDUko9aq1SVyc
-	 F6TuTeFdZ0dtw==
-Date: Tue, 15 Jul 2025 13:16:30 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mayank Rana <mayank.rana@oss.qualcomm.com>
-Cc: linux-pci@vger.kernel.org, will@kernel.org, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	andersson@kernel.org, mani@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	quic_ramkri@quicinc.com, quic_shazhuss@quicinc.com,
-	quic_msarkar@quicinc.com, quic_nitegupt@quicinc.com
-Subject: Re: [PATCH v5 3/4] dt-bindings: PCI: qcom,pcie-sa8255p: Document
- ECAM compliant PCIe root complex
-Message-ID: <20250715181630.GA2469794@bhelgaas>
+	s=arc-20240116; t=1752605200; c=relaxed/simple;
+	bh=GOJACDJXUMisUR1fmp0MKPRTPk/DYcVVDYSoJX5CKXY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bZrRGPr6ywF+Ltv6TWj50JSgeEdi7ujlHjhcXPMtp26ws7n7q/KHCO9FR7P8K4UHlXvYgEm8BeDBxCLiQeoiwywpjXK+RFrHPBtVyN8NUk3+YzBurGax9zAuTX3SYhHq9e2vAHnXK1akz7qux9CBngmAX3Xx5+g0qkm2H6bBWHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=coooAKnf; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56FIbWcZ012351
+	for <linux-pci@vger.kernel.org>; Tue, 15 Jul 2025 11:46:37 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2025-q2; bh=KZjDm1wvJ23syPo4uo
+	j8WYyxyPTvBVBLLxkdCEZKbuU=; b=coooAKnf1GO/VeaczDmMFPv4n1NoIg6C57
+	de5wPPx1SlSreWGiNSRzSaAo2dY+7JKQCW+HtokF9Y2jMpug9T54JxIY+3/QGSa8
+	4oGi6puQEjBsDQ+/DUgSDzwJCucNotjK84AIonYkFOm8Te6P6L3Pz4x8KfpEzQB5
+	GQFwvpNtNZihffo4fDrRKCW3kej7BfR7cV+ryhRVB8ffpHoyOnod4tbD1vDhr2ro
+	41tT5gZXwXeQWV8QNT2sNdHPC0YoFaxez6LME2CTITItPLAydFh9vUn8JiyuDpZg
+	BPhDDVWdeciZe7ZsinpzZ1coSjQCaiMQLbslooOs2Ta1vHoCjdrA==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 47wk86mxrq-10
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 15 Jul 2025 11:46:37 -0700 (PDT)
+Received: from twshared78382.04.prn6.facebook.com (2620:10d:c0a8:fe::f072) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1748.24; Tue, 15 Jul 2025 18:46:35 +0000
+Received: by devbig1708.prn1.facebook.com (Postfix, from userid 544533)
+	id 9DA2714A4DE5; Tue, 15 Jul 2025 11:46:22 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <alex.williamson@redhat.com>, <kvm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+CC: <paulmck@kernel.org>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv2] vfio/type1: conditional rescheduling while pinning
+Date: Tue, 15 Jul 2025 11:46:22 -0700
+Message-ID: <20250715184622.3561598-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616224259.3549811-4-mayank.rana@oss.qualcomm.com>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: CWJwAsFJEZbch9flae7IDd_clbLWgXro
+X-Proofpoint-ORIG-GUID: CWJwAsFJEZbch9flae7IDd_clbLWgXro
+X-Authority-Analysis: v=2.4 cv=T5SMT+KQ c=1 sm=1 tr=0 ts=6876a20d cx=c_pps a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=De36-Z_BrdwR9qEJ7zUA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE1MDE3MyBTYWx0ZWRfX9AXAkYXx1BXx oTm20iP178dZlTYxksL461qVvnwcwLxkU6Uj2XoJM3xxGDBVg1u3/oJ8KZ74emlHBosBwwgAEt5 3Wfw33kPOLD2ce25hyx2UrUKA/5y8vaMmYSETykGBNmmA7JglJI8O80Qfz/dYFe0/rLNtFJiP01
+ 44f8jB3AM4/e9TFfWvyPEfWFkZGlGoFkP1HpsQ8RxeUKz6JBo8EZmUsv98E2uzgZzyd7ZAIvz/O ULZZtd9C2o0CgdFSRv/WPMcDJAG7o0JcmXb1FmqdB/Xk8jKliL/B9JYBpjxLvzKRMty0//4r+Tc zU2teqK42RWRv9x7PG4NciSc97F1XPrX60/rU1jqMXc4MBMicsM71O1ztcMeEi5TkI77rLK+AUR
+ m1Cu3VT3VHRRlSoSyGjksYeOvupfS3UbC5Stve+JHJcPTZSaNmBszL1Imhpg9qKN6FtdnR/M
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-15_04,2025-07-15_02,2025-03-28_01
 
-On Mon, Jun 16, 2025 at 03:42:58PM -0700, Mayank Rana wrote:
-> Document the required configuration to enable the PCIe root complex on
-> SA8255p, which is managed by firmware using power-domain based handling
-> and configured as ECAM compliant.
-> 
-> Signed-off-by: Mayank Rana <mayank.rana@oss.qualcomm.com>
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  .../bindings/pci/qcom,pcie-sa8255p.yaml       | 122 ++++++++++++++++++
->  1 file changed, 122 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.yaml
-> new file mode 100644
-> index 000000000000..88c8f012708c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.yaml
-> @@ -0,0 +1,122 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/qcom,pcie-sa8255p.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm SA8255p based firmware managed and ECAM compliant PCIe Root Complex
-> +
-> +maintainers:
-> +  - Bjorn Andersson <andersson@kernel.org>
-> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +
-> +description:
-> +  Qualcomm SA8255p SoC PCIe root complex controller is based on the Synopsys
-> +  DesignWare PCIe IP which is managed by firmware, and configured in ECAM mode.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,pcie-sa8255p
-> +
-> +  reg:
-> +    description:
-> +      The Configuration Space base address and size, as accessed from the parent
-> +      bus. The base address corresponds to the first bus in the "bus-range"
-> +      property. If no "bus-range" is specified, this will be bus 0 (the
-> +      default).
+From: Keith Busch <kbusch@kernel.org>
 
-Do you mind if I add "ECAM" to this description, e.g.,
+A large DMA mapping request can loop through dma address pinning for
+many pages. In cases where THP can not be used, the repeated vmf_insert_p=
+fn can
+be costly, so let the task reschedule as need to prevent CPU stalls. Fail=
+ure to
+do so has potential harmful side effects, like increased memory pressure
+as unrelated rcu tasks are unable to make their reclaim callbacks and
+result in OOM conditions.
 
-  The base address and size of the ECAM area for accessing PCI
-  Configuration Space, as accessed from the parent bus.
+ rcu: INFO: rcu_sched self-detected stall on CPU
+ rcu:   36-....: (20999 ticks this GP) idle=3Db01c/1/0x4000000000000000 s=
+oftirq=3D35839/35839 fqs=3D3538
+ rcu:            hardirqs   softirqs   csw/system
+ rcu:    number:        0        107            0
+ rcu:   cputime:       50          0        10446   =3D=3D> 10556(ms)
+ rcu:   (t=3D21075 jiffies g=3D377761 q=3D204059 ncpus=3D384)
+...
+  <TASK>
+  ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+  ? walk_system_ram_range+0x63/0x120
+  ? walk_system_ram_range+0x46/0x120
+  ? pgprot_writethrough+0x20/0x20
+  lookup_memtype+0x67/0xf0
+  track_pfn_insert+0x20/0x40
+  vmf_insert_pfn_prot+0x88/0x140
+  vfio_pci_mmap_huge_fault+0xf9/0x1b0 [vfio_pci_core]
+  __do_fault+0x28/0x1b0
+  handle_mm_fault+0xef1/0x2560
+  fixup_user_fault+0xf5/0x270
+  vaddr_get_pfns+0x169/0x2f0 [vfio_iommu_type1]
+  vfio_pin_pages_remote+0x162/0x8e0 [vfio_iommu_type1]
+  vfio_iommu_type1_ioctl+0x1121/0x1810 [vfio_iommu_type1]
+  ? futex_wake+0x1c1/0x260
+  x64_sys_call+0x234/0x17a0
+  do_syscall_64+0x63/0x130
+  ? exc_page_fault+0x63/0x130
+  entry_SYSCALL_64_after_hwframe+0x4b/0x53
 
-I think having the "ECAM" keyword would make this easier to grep for.
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+---
+v1->v2:
 
-Bjorn
+  Merged up to vfio/next
+
+  Moved the cond_resched() to a more appropriate place within the
+  loop, and added a comment about why it's there.
+
+  Update to change log describing one of the consequences of not doing
+  this.
+
+ drivers/vfio/vfio_iommu_type1.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_ty=
+pe1.c
+index 1136d7ac6b597..ad599b1601711 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -647,6 +647,13 @@ static long vfio_pin_pages_remote(struct vfio_dma *d=
+ma, unsigned long vaddr,
+=20
+ 	while (npage) {
+ 		if (!batch->size) {
++			/*
++			 * Large mappings may take a while to repeatedly refill
++			 * the batch, so conditionally relinquish the CPU when
++			 * needed to avoid stalls.
++			 */
++			cond_resched();
++
+ 			/* Empty batch, so refill it. */
+ 			ret =3D vaddr_get_pfns(mm, vaddr, npage, dma->prot,
+ 					     &pfn, batch);
+--=20
+2.47.1
+
 
