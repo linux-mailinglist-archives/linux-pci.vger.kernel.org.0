@@ -1,149 +1,143 @@
-Return-Path: <linux-pci+bounces-32163-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32164-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC29AB061EF
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 16:54:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF7FDB061FD
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 16:55:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7297F173318
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 14:46:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 81BD45068B2
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 14:49:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C71401E1E16;
-	Tue, 15 Jul 2025 14:46:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CE3913B5A9;
+	Tue, 15 Jul 2025 14:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nhOI4oOc"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DV3FuCcu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8378C17B425;
-	Tue, 15 Jul 2025 14:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 934B226281;
+	Tue, 15 Jul 2025 14:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752590778; cv=none; b=oIsgVK+PkQp35W7/T6IOb+7tjntXPjtmQi+sZzw6hr4tagyaKS3SNjPN4Vbi+aJzg0YCvBVFLmfP9XLmAFvqmp5jChfIhiXSt5AlUanAx83252qFKUchiKVawJ9wqgDjxvEUXwxhDyhFHsagwQw4J05oBPnuGrOo6zyjU7ApN8M=
+	t=1752591016; cv=none; b=aw/iAHP1H1BV0F09AQp9oo4Hsuqa/nhVEyJbj87EDNrMctfav92leBqTeQCvnOFxVH7TTRsMw+G3p9ajoBaN5SxYZ0beWAUBN1+GU+a05G8UNpBTYVskFvz6uBYQG0UkzdI+/qFQxMzdnf6yzjM/rjbyyXEPH90SH3b8NiqiDzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752590778; c=relaxed/simple;
-	bh=KZ1W7mzel2tzyENmIY/KyfG+sQOyLDK8atG59n7g34U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=g0c9EwCV6Sy199W37aG0IpkDavxAGlHDAIXgHJWTElUa7K6i5KqvhwIRSYz33hAm9fNHl+4aC988p/J6r+bH8m6DfD+8hw1yL9TWK2P3bb2QoufPEqtQTChFl2b3wiSNojuJLr9OmgpUxfR/d8YkeFIQqqELDnZH8OodCiUn3AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nhOI4oOc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3826DC4CEE3;
-	Tue, 15 Jul 2025 14:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752590778;
-	bh=KZ1W7mzel2tzyENmIY/KyfG+sQOyLDK8atG59n7g34U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=nhOI4oOcjdEd81/BA+chqSa9l8uanzEnEhr+bgfqoi60EpD0cwakUJpbZX2fvZD9c
-	 h0r1Tl3SHdyGUqyNniLCPaRBLWnhR4Mw4wlI0b9cxK2s7FO/4PCh/z68CLf37uqsbN
-	 Ss57RFtoC1bv1VmoENClwao3WYlFrjJ6yC7SIvm9bi5akXlS/Oy+9OsgqHLoZsWQN+
-	 aOS+cqX7rXhgqW0olOrGTZRfSSAUFdUoXJJXA1aV5LA9A12qLH5D2M+l2ZRGSowLbs
-	 FUNKbLBEz/i0hS2tpLxxlwcQJOY2rIHFi2EcPvKl2lBHzOWGB1F27V57vVQ2nL9Xb7
-	 ZNVpaMdVZGo+Q==
-Date: Tue, 15 Jul 2025 09:46:16 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Claudiu <claudiu.beznea@tuxon.dev>,
-	Manivannan Sadhasivam <mani@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	geert+renesas@glider.be, magnus.damm@gmail.com,
-	mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	john.madieu.xa@bp.renesas.com,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH v2 0/8] PCI: rzg3s-host: Add PCIe driver for Renesas
- RZ/G3S SoC
-Message-ID: <20250715144616.GA2458869@bhelgaas>
+	s=arc-20240116; t=1752591016; c=relaxed/simple;
+	bh=KwW3Ct+eYQAN7duoTjUPdigF52dVr0dEmIwj3cGLFWI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ol+1ug0scDXCAtjDsV80zQTkOU/ZJgY/mvMYAD+ZKlOA1f6+fxe7LiZ3qPGNLxqNmpYreKJd9fBhPrVyNLgnTNoJwoVGygUhK1GWb0zjm/YO7s12Wb1inNgkXA07IPNcKlIdHrO5u1dCChOux3IL0YEv3NkV45euklQykSmSItI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DV3FuCcu; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=y8FmBktC9WSRYxvxolkGYL5S4AI0gxd1QPXCyRbb+Bw=;
+	b=DV3FuCcum96CB6OJl3oa/EcvfiVGdVsWmvSySDMjIyTZCnpMC4bboVdDK+mD72
+	GtTSSKWuSnsg+whFjBRn8GL29NJh9i/eTQ4cD8j1VMxO6p5BvyrgKhq8LkBu0ksv
+	MNbGlbHEC2XQO11n4cIfhSj3hQLoS3vZBSMdzm35evdjk=
+Received: from [IPV6:240e:b8f:919b:3100:7981:39b4:a847:709a] (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAH7fhVanZoxSGjFA--.45568S2;
+	Tue, 15 Jul 2025 22:48:54 +0800 (CST)
+Message-ID: <7da900a6-04cd-41f7-afc8-5570eb7639e1@163.com>
+Date: Tue, 15 Jul 2025 22:48:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530111917.1495023-1-claudiu.beznea.uj@bp.renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 06/11] PCI/ASPM: Clear aspm_disable as part of
+ __pci_enable_link_state()
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>,
+ Jeff Johnson <jjohnson@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+ linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+ qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com,
+ quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+References: <20250714193214.GA2415073@bhelgaas>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250714193214.GA2415073@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wAH7fhVanZoxSGjFA--.45568S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJFW7tw18Gry7Cr1DXFW5ZFb_yoW5Xr1xpa
+	yrtasIkFZ5Jr97Gw12vw1jqF4SkwnYy345G3s5tryUJw45u39xGr4xtrZY9F93WrWxW3ya
+	vrZ8WwnrZFyq9a7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07URa0QUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQwWLo2h2Y3mQSAAAsy
 
-On Fri, May 30, 2025 at 02:19:09PM +0300, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> Hi,
-> 
-> Series adds a PCIe driver for the Renesas RZ/G3S SoC.
-> It is split as follows:
-> - patch 1/8:		updates the max register offset for RZ/G3S SYSC;
-> 			this is necessary as the PCIe need to setup the
-> 			SYSC for proper functioning
-> - patch 2/8:		adds clock, reset and power domain support for
-> 			the PCIe IP
-> - patches 3-4/8:	add PCIe support for the RZ/G3S SoC
-> - patches 5-8/8:	add device tree support and defconfig flag
-> 
-> Please provide your feedback.
-> 
-> Merge strategy, if any:
-> - patches 1-2,5-8/8 can go through the Renesas tree
-> - patches 3-4/8 can go through the PCI tree
-> 
-> Thank you,
-> Claudiu Beznea
-> 
-> Changes in v2:
-> - dropped "of/irq: Export of_irq_count()" as it is not needed anymore
->   in this version
-> - added "arm64: dts: renesas: rzg3s-smarc-som: Update dma-ranges for PCIe"
->   to reflect the board specific memory constraints
-> - addressed review comments
-> - updated patch "soc: renesas: rz-sysc: Add syscon/regmap support"
-> - per-patch changes are described in each individual patch
-> 
-> Claudiu Beznea (7):
->   clk: renesas: r9a08g045: Add clocks, resets and power domain support
->     for the PCIe
->   dt-bindings: PCI: renesas,r9a08g045s33-pcie: Add documentation for the
->     PCIe IP on Renesas RZ/G3S
->   PCI: rzg3s-host: Add Initial PCIe Host Driver for Renesas RZ/G3S SoC
->   arm64: dts: renesas: r9a08g045s33: Add PCIe node
->   arm64: dts: renesas: rzg3s-smarc-som: Update dma-ranges for PCIe
->   arm64: dts: renesas: rzg3s-smarc: Enable PCIe
->   arm64: defconfig: Enable PCIe for the Renesas RZ/G3S SoC
-> 
-> John Madieu (1):
->   soc: renesas: rz-sysc: Add syscon/regmap support
-> 
->  .../pci/renesas,r9a08g045s33-pcie.yaml        |  202 ++
->  MAINTAINERS                                   |    8 +
->  arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi |   60 +
->  .../boot/dts/renesas/rzg3s-smarc-som.dtsi     |    5 +
->  arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi  |   11 +
->  arch/arm64/configs/defconfig                  |    1 +
->  drivers/clk/renesas/r9a08g045-cpg.c           |   19 +
->  drivers/pci/controller/Kconfig                |    7 +
->  drivers/pci/controller/Makefile               |    1 +
->  drivers/pci/controller/pcie-rzg3s-host.c      | 1686 +++++++++++++++++
->  drivers/soc/renesas/Kconfig                   |    1 +
->  drivers/soc/renesas/r9a08g045-sysc.c          |   10 +
->  drivers/soc/renesas/r9a09g047-sys.c           |   10 +
->  drivers/soc/renesas/r9a09g057-sys.c           |   10 +
->  drivers/soc/renesas/rz-sysc.c                 |   17 +-
->  drivers/soc/renesas/rz-sysc.h                 |    3 +
->  16 files changed, 2050 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/renesas,r9a08g045s33-pcie.yaml
->  create mode 100644 drivers/pci/controller/pcie-rzg3s-host.c
 
-Where are we at with this series?
 
-I see
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/dwc-stm32&id=5a972a01e24b278f7302a834c6eaee5bdac12843,
-but also this kernel robot report at that commit:
-https://lore.kernel.org/all/202506270620.sf6EApJY-lkp@intel.com/
+On 2025/7/15 03:32, Bjorn Helgaas wrote:
+> On Sun, Jul 13, 2025 at 12:05:18AM +0800, Hans Zhang wrote:
+>> On 2025/7/12 17:35, Manivannan Sadhasivam wrote:
+>> ...
+> 
+>>>> IMO the "someday" goal should be that we get rid of aspm_policy
+>>>> and enable all the available power saving states by default.  We
+>>>> have sysfs knobs that administrators can use if necessary, and
+>>>> drivers or quirks can disable states if they need to work around
+>>>> hardware defects.
+>>>
+>>> Yeah, I think the default should be powersave and let the users
+>>> disable it for performance if they want.
+>>
+>> Perhaps I don't think so. At present, our company's testing team has
+>> tested quite a few NVMe SSDS. As far as I can remember, the SSDS
+>> from two companies have encountered problems and will hang directly
+>> when turned on. We have set CONFIG_PCIEASPM_POWERSAVE=y by default.
+>> When encountering SSDS from these two companies, we had to add
+>> "pcie_aspm.policy=default" in the cmdline, and then the boot worked
+>> normally. Currently, we do not have a PCIe protocol analyzer to
+>> analyze such issues. The current approach is to modify the cmdline.
+>> So I can't prove whether it's a problem with the Root Port of our
+>> SOC or the SSD device.
+> 
+> Have you reported these?
 
-I normally don't include branches in pci/next until we get a
-"BUILD SUCCESS" report from the robot, so this branch is in limbo at
-the moment.
+Dear Bjorn,
 
-Bjorn
+I haven't reported it. Because we don't have a PCIe protocol analyzer to 
+analyze this situation, it's not certain whether it's a problem with our 
+SOC Root Port or the NVMe SSD. If I have time later, I will conduct a 
+comparison test on the RK3588.
+
+> 
+>> Here I agree with Bjorn's statement that sometimes the EP is not
+>> necessarily very standard and there are no hardware issues.
+>> Personally, I think the default is default or performance. When
+>> users need to save power, they should then decide whether to
+>> configure it as powersave or powersupersave.  Sometimes, if the EP
+>> device connected by the customer is perfect, they can turn it on to
+>> save power. But if the EP is not perfect, at least they will
+>> immediately know what caused the problem.
+> 
+> We should discover device defects as early as possible so we can add
+> quirks for them.  Defaulting to ASPM being partly disabled means it
+> gets much less testing and users end up passing around "fixes" like
+> booting with "pcie_aspm.policy=default" or similar.  I do not want
+> users to trip over a device that doesn't work and have to look for
+> workarounds on the web.
+> 
+> I also think it's somewhat irresponsible of us to consume more power
+> than necessary.  But as Mani said, this would be a big change and
+> might have to be done with a BIOS date check or something to try to
+> avoid regressions.
+> 
+
+Ok. I understand your purpose now.
+
+Best regards,
+Hans
+
 
