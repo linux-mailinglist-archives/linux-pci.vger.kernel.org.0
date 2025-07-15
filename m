@@ -1,89 +1,82 @@
-Return-Path: <linux-pci+bounces-32203-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32204-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D272B06929
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 00:17:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACC45B06946
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 00:29:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A963216E161
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 22:17:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F369C17B8AB
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 22:29:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97FA47262D;
-	Tue, 15 Jul 2025 22:17:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 008BE2C3246;
+	Tue, 15 Jul 2025 22:28:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZzGvKgHl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MjntJWWi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7AB26E71A
-	for <linux-pci@vger.kernel.org>; Tue, 15 Jul 2025 22:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A29D27991C;
+	Tue, 15 Jul 2025 22:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752617825; cv=none; b=sEdV+3AV8VaairfoLx1lOxTiC9VTdXzCo62UXD6Qs6qzT+gjsG7MYzu6oY6sPWitLRFip6EeeMRhhMASPWY2jXNT4yzA7FZ9GPqb+kKJz/1UoVwhUCD9jwiBqwAKp6Lb+2qLG6J4AW3Ybi2E9U+7u6L3H2TR7QSla41gM9+PS2g=
+	t=1752618535; cv=none; b=XBe0ZaWuCBBh6OvqI8RTeDpjgLBm2DL0GgVTU9L++2THzqz+im3glcJkGBZs+JjgnzPbbHtwyHN1vIfErC8Nwl8XezmGBxV6DVddztsJ4Igk59nqxDgdT7LDLJMwcNlOwfVYSV8Y6EdS5ERyafkyKxungT5ijzgDvFh3Ep5MN8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752617825; c=relaxed/simple;
-	bh=tMdoZBivQy3B+NItaHwOMyR9RE2Vd3YaDfvRU31vZT4=;
+	s=arc-20240116; t=1752618535; c=relaxed/simple;
+	bh=G7+Ffs9WIWMcBynLHK1Sql++GiExP0QoYD+fUsrCxEU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tb2o1I8a1BFg+OF5wMvm1CVXLULooBoI5raTr0svrJQpROobR6SmfndU3nqkrbsKexTlUE/ZIfdcchQPaxEIuLINiI4ERfSScb8brVUBkvDLihSoEJ3RQWmvtnONL8d4/k31Tyb8vTdwp+GjK2gkt0QwlmUKRfv1oxbX/HNMIIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZzGvKgHl; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7490cb9a892so3634218b3a.0
-        for <linux-pci@vger.kernel.org>; Tue, 15 Jul 2025 15:17:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1752617823; x=1753222623; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=T/kIrHiKONJdy5Cuneuwy/QdepmnycAhgTTDDzUGMMs=;
-        b=ZzGvKgHlGQ4j6Ypks24jX0/Oxij9l80u6M4wue/UKs6usct+buj7OHQv7kx78ZkqIr
-         6zkjqWIKF3bwlDcvQV80gQ6biSabU5N8DDa19CzAyMvGVZWZwuz+WqUmRSUBC4JkhYJL
-         kNomn0j0Kec+TgWFIMYHKjejwzYeePZURJ8FY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752617823; x=1753222623;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T/kIrHiKONJdy5Cuneuwy/QdepmnycAhgTTDDzUGMMs=;
-        b=KhkWiTb08i/j71d7LUaXddh9PyKSxfLPqvvLPr90cjKv7FkA0xicy5UARF6ZK732Tc
-         UlSBHaHQVS8WAzT3c1Fg7CWcw8rI7UoV+cKw8zj34ecsr0WVbx5cdz3MkQdfKJEr2t8t
-         fLTOrjfDBaO5gvWTumt3G42GqxNa2DKQQxPsycmHH3xuvmmWDcgFCHPXnm2LvMU+VEL5
-         +emj3C1Xa+LNhq/aViSxttL71IjJP99hImHDt1NzZMwdJd16rUF0HH7fVAHcvbSaUgbd
-         CuS7SpvdkuzCUetJVPjqqZhZqaHual4+hEfvth8WS5Vu4Lwzm3QUgPHJf1Oe0RMesym2
-         483Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXkUdAAT9voE1BPnxiV3V51Hwv6WXNXkNyxRQpCaBJKHYDfLsPZV8kUSl2llpgYfyuOUVwqHQfa/+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLiTIFWJfXTBx5ZOOHL4wEWxbaIVl6xq3GvP10K+jInoWUTdS2
-	VJWN/dTY3PkyPgqLOXPKvBLNYissuOA10uLyJAvoZnwiar4hhh1Jbv1usSrCwVerqQ==
-X-Gm-Gg: ASbGncuih7OplDAlQzL6GMW5u4rsGy3GzqTTsgdF/pmYwaI/zDZer79svQ21z6+YP3+
-	RO+rEI7v2/7aUlbriLR5tmFCD7LtdoaOVCDRI7xSgYkZFrKUfjRN/YArAqAe2Oy0/wAuEiVc7ia
-	0Jvaa6gJm5HmLkLOU7ocToCmI9ZhaObsyucgPUk8eyRhG56ZKTgSWda1XifCpqzll+tnAduFSZM
-	xA1oQDBi48i2Fhvi6QiYijIHfcCCQ5/AzOSqnpzEGTXfOtPVHg2PcUPMQ/7b0qLwK08j/5nJOI8
-	j13WiqyJZTsYTapMlTUEocEnsb1f6mfT0gNmEEnNkJmwVy0Rabk2vY26NlBy19RcYdubxfUaW49
-	aqxDSRqcFi99VEAt/c421QyPhCNewhzOuNRHvgG1UuALE1NHs/JyiFoJP6ld+
-X-Google-Smtp-Source: AGHT+IEi35Q/9L2R45q9+Ckvy4VlsxjWRECWaXaVKZkJ79j9LtzQTdHiPF2AYMs8Ki3dyCacVtaadQ==
-X-Received: by 2002:a17:903:1c1:b0:23c:8f17:7f45 with SMTP id d9443c01a7336-23e24f70e34mr8439895ad.50.1752617823417;
-        Tue, 15 Jul 2025 15:17:03 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:3478:49c2:f75d:9f32])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23de43352b5sm114969135ad.165.2025.07.15.15.17.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Jul 2025 15:17:02 -0700 (PDT)
-Date: Tue, 15 Jul 2025 15:17:00 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-	Rob Herring <robh+dt@kernel.org>, imx@lists.linux.dev,
-	linux-pci@vger.kernel.org
-Subject: Re: Does dwc/pci-layerscape.c support AER?
-Message-ID: <aHbTXCYXbxLSQhgK@google.com>
-References: <20250702223841.GA1905230@bhelgaas>
- <aGW8NnHUlfv1NO3g@lizhi-Precision-Tower-5810>
- <aGXEcHTfT2k2ayAj@google.com>
- <aGc666o3EgtXQMGN@lizhi-Precision-Tower-5810>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aV61cocqtE0PFe/Ix6UYhpHoZMWCyKsFssi8Mn9GbrqjC5qWJM0Y+A4LXGBhiOnXkTh4J+c40mtND7odsYIqlHYamqNVA74VmDtZ+3ycdI6E1XWjxKGM+nlrZPXddvKueV+4AMkl8KPkV4VAL9cEp2oG7iX3UIaYEvZR2a+D3P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MjntJWWi; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752618534; x=1784154534;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=G7+Ffs9WIWMcBynLHK1Sql++GiExP0QoYD+fUsrCxEU=;
+  b=MjntJWWiFH68fbDelxxuKuqNH7ZrjP3Dn5jdJ5HUK3L5HvdzsGuVaGaH
+   6ghvybO0YMDh/yGFLtIrmuLYFMZVSXqZ3wUNByn8ngwwzg1RvdEzF8bo4
+   MmUqZAhdcrZrVe2Z7EZfQZ6uzos+qc1mRo2kEUjvFPc2SWCf02QSq1L2K
+   Hhm6L9CZNL1QCmLOzdsZKzOJbnwHTpZvwQOJxRAMxCHptblvL5Tddtidh
+   shDGQbUT8V8IPP6ZV96Bwt8H+Qamh4q/haJS/uwhCofIlIwVr/kVpgW1K
+   jDXQ8Q1dC5CQ+nVmfK07ovMV40ui6RQ8AOqQfdlxQ+xYMh5+hq64GfHuo
+   Q==;
+X-CSE-ConnectionGUID: a+AX4N2HTJW/QKd71Nl12w==
+X-CSE-MsgGUID: 3ZsPuTlSTNuJAnMYBmFxQQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="54562886"
+X-IronPort-AV: E=Sophos;i="6.16,314,1744095600"; 
+   d="scan'208";a="54562886"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2025 15:28:54 -0700
+X-CSE-ConnectionGUID: 43scBKa2Q+GlwkjRdyCeQg==
+X-CSE-MsgGUID: nj7Vi7qCQFKk7YaTE34tRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,314,1744095600"; 
+   d="scan'208";a="181023525"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 15 Jul 2025 15:28:49 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ubo8k-000Bbf-0v;
+	Tue, 15 Jul 2025 22:28:46 +0000
+Date: Wed, 16 Jul 2025 06:28:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	joel@jms.id.au, andrew@codeconstruct.com.au,
+	linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, openbmc@lists.ozlabs.org,
+	linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+	p.zabel@pengutronix.de, BMC-SW@aspeedtech.com
+Subject: Re: [PATCH v2 09/10] PCI: aspeed: Add ASPEED PCIe RC driver
+Message-ID: <202507160642.yzIrPY1i-lkp@intel.com>
+References: <20250715034320.2553837-10-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -92,33 +85,37 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aGc666o3EgtXQMGN@lizhi-Precision-Tower-5810>
+In-Reply-To: <20250715034320.2553837-10-jacky_chou@aspeedtech.com>
 
-Hi Frank,
+Hi Jacky,
 
-Thanks for the response.
+kernel test robot noticed the following build warnings:
 
-On Thu, Jul 03, 2025 at 10:22:35PM -0400, Frank Li wrote:
-> I saw AER and PME irq registed. But I have not seen irq increased. I am not
-> sure how to inject an error to test it.
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus robh/for-next linusw-pinctrl/devel linusw-pinctrl/for-next linus/master v6.16-rc6 next-20250715]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I've tested AER-like conditions via one of two ways:
+url:    https://github.com/intel-lab-lkp/linux/commits/Jacky-Chou/dt-bindings-soc-aspeed-Add-ASPEED-PCIe-Config-support/20250715-114814
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250715034320.2553837-10-jacky_chou%40aspeedtech.com
+patch subject: [PATCH v2 09/10] PCI: aspeed: Add ASPEED PCIe RC driver
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20250716/202507160642.yzIrPY1i-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 16534d19bf50bde879a83f0ae62875e2c5120e64)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250716/202507160642.yzIrPY1i-lkp@intel.com/reproduce)
 
-1. force asserting PERST#, and then try to read a config register. This
-   should generate Complection Timeouts at least, and possibly other
-   errors. This method may not necessarily yield AER logs, as it may
-   also reset the error reporting registers that the Linux AER driver
-   would expect to read. But it probably should still trigger an
-   interrupt.
-   This depends on having access to PERST#; many SoCs provide this as a
-   GPIO which you could potentially control, although I don't see this
-   in the layerscape driver at the moment.
-2. asserting HOT RESET in the DWC controller. This is especially
-   implementation specific, as it depends on how (if at all) the hot
-   reset signal is connected into your SoC.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507160642.yzIrPY1i-lkp@intel.com/
 
-Not sure if any of that helps you for testing. And maybe you want to
-wire up your platform IRQs anyway.
+All warnings (new ones prefixed by >>):
 
-Brian
+>> Warning: drivers/pci/controller/pcie-aspeed.c:179 struct member 'pciephy' not described in 'aspeed_pcie_port'
+   Warning: drivers/pci/controller/pcie-aspeed.c:179 Excess struct member 'phy' description in 'aspeed_pcie_port'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
