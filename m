@@ -1,41 +1,41 @@
-Return-Path: <linux-pci+bounces-32107-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32108-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3F36B04F4C
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 05:44:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 388A7B04F51
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 05:44:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8B8FC560C5B
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 03:43:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 18A05188962B
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 03:44:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9068454F81;
-	Tue, 15 Jul 2025 03:43:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B870B2D3734;
+	Tue, 15 Jul 2025 03:43:34 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7BF2D1F4E;
-	Tue, 15 Jul 2025 03:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46B12D3229;
+	Tue, 15 Jul 2025 03:43:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752551012; cv=none; b=opvtKtHjS8yq2ugagNNDlKOf0kQr3jA94b5EBOBG+Sr0CE160p8XgjbRNklDVuAwRgcvnmwoG27t+0rWIHoFJEQH3r3f6ZWcsczklkk5eOViCvK1zQHyLntb+k1rzwG2gIvFS+rRxVGo6nzGVyLjNrvvsJpWNtG2VRCIsQVbZJA=
+	t=1752551014; cv=none; b=cRSeIOW4bueA2guJhtkaHZ+pQN7lX3iDQxq2AjeIV/CiNvoi9WAfbvkJ7oB4HPJ+6GwzyP4lKHDmf0c9/rRBinU0+00LcG4jt8bS1oBXGvjLDRRFkPTOJ3aL0xvpwtOAnSVoR/vWr2m8WSkVmA5W3o6+7VCMg+GtExixBwHTClc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752551012; c=relaxed/simple;
-	bh=fdg1A0Kys3/8bLCqJkQ3l70v3ZlIvIrbrKlo1cOBH6U=;
+	s=arc-20240116; t=1752551014; c=relaxed/simple;
+	bh=o9A8tpjLNA+7hV3ddUrRPAxEjqJVFGyMhdNtQnuVihU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TKMxcOSAMV2CP88CM77eBXxWMNthRWywDMOQc3YCnvXCuZ4pw9PnTSpOzSXOffGSX4ggL6oC3wNiQYQxymUZ6jr2Zx1sGohxvNqECLCVh2Knr1KDkHywcZppoXWU7JgZQiJaZ4q9hC2/9dc3B64D26AR/jOM++6WIeOv6y2ETKE=
+	 MIME-Version:Content-Type; b=EdfdG8ySoQQC5fKG4ayF7CWiDxSgMTrZSd9kV7CrnY/j6ZPk4qEizyzmLsgwNDmSGGgk46LhbsROQRF7AUVotZ3NfZkIGkcNj5Evdx9Q9xVguSOu8noWNKr9CrKAOh7pO26cJ/aqfd9ZgY0yYPzBCjAv1j0ftXjc2sIoBfuoaw8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
 Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
  (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 15 Jul
- 2025 11:43:20 +0800
+ 2025 11:43:21 +0800
 Received: from mail.aspeedtech.com (192.168.10.13) by TWMBX01.aspeed.com
  (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Tue, 15 Jul 2025 11:43:20 +0800
+ Transport; Tue, 15 Jul 2025 11:43:21 +0800
 From: Jacky Chou <jacky_chou@aspeedtech.com>
 To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
 	<mani@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
@@ -45,9 +45,9 @@ To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
 	<linux-kernel@vger.kernel.org>
 CC: <openbmc@lists.ozlabs.org>, <linux-gpio@vger.kernel.org>,
 	<linus.walleij@linaro.org>, <p.zabel@pengutronix.de>, <BMC-SW@aspeedtech.com>
-Subject: [PATCH v2 02/10] dt-bindings: soc: aspeed: Add ASPEED PCIe PHY support
-Date: Tue, 15 Jul 2025 11:43:12 +0800
-Message-ID: <20250715034320.2553837-3-jacky_chou@aspeedtech.com>
+Subject: [PATCH v2 03/10] dt-bindings: PCI: Add ASPEED PCIe RC support
+Date: Tue, 15 Jul 2025 11:43:13 +0800
+Message-ID: <20250715034320.2553837-4-jacky_chou@aspeedtech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250715034320.2553837-1-jacky_chou@aspeedtech.com>
 References: <20250715034320.2553837-1-jacky_chou@aspeedtech.com>
@@ -60,68 +60,220 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-This PHY is used by many modules. In our design, our
-PCIe has RC and EP funcitons. On the different function,
-each driver will use configure and get some information
-from the PHY interface to do somting that it wants to.
-Getting link status, setting syscon credits and so on.
-Therefore, define it as syscon for all modules.
+This binding describes the required and optional properties for
+configuring the PCIe RC node, including support for syscon phandles,
+MSI, clocks, resets, and interrupt mapping. The schema enforces strict
+property validation and provides a comprehensive example for reference.
 
 Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
 ---
- .../bindings/soc/aspeed/aspeed,pcie-phy.yaml  | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/aspeed/aspeed,pcie-phy.yaml
+ .../bindings/pci/aspeed,ast2600-pcie.yaml     | 198 ++++++++++++++++++
+ 1 file changed, 198 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/aspeed,ast2600-pcie.yaml
 
-diff --git a/Documentation/devicetree/bindings/soc/aspeed/aspeed,pcie-phy.yaml b/Documentation/devicetree/bindings/soc/aspeed/aspeed,pcie-phy.yaml
+diff --git a/Documentation/devicetree/bindings/pci/aspeed,ast2600-pcie.yaml b/Documentation/devicetree/bindings/pci/aspeed,ast2600-pcie.yaml
 new file mode 100644
-index 000000000000..5fa585d63ca6
+index 000000000000..6fb6cf59c230
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/aspeed/aspeed,pcie-phy.yaml
-@@ -0,0 +1,44 @@
++++ b/Documentation/devicetree/bindings/pci/aspeed,ast2600-pcie.yaml
+@@ -0,0 +1,198 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/soc/aspeed/aspeed,pcie-phy.yaml#
++$id: http://devicetree.org/schemas/pci/aspeed,ast2600-pcie.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: ASPEED PCIe PHY
++title: ASPEED PCIe Root Complex Controller
 +
 +maintainers:
 +  - Jacky Chou <jacky_chou@aspeedtech.com>
 +
 +description:
-+  The ASPEED PCIe PHY provides the physical layer interface for PCIe
-+  controllers in the SoC. This node represents the register block for the PCIe
-+  PHY, which is typically accessed by PCIe Root Complex or Endpoint drivers
-+  via syscon. It is used to configure and get the status of the PCIe PHY
-+  hardware, including power management, link training, and other PHY-specific
-+  operations.
++  The ASPEED PCIe Root Complex controller provides PCI Express Root Complex
++  functionality for ASPEED SoCs, such as the AST2600 and AST2700.
++  This controller enables connectivity to PCIe endpoint devices, supporting
++  memory and I/O windows, MSI and legacy interrupts, and integration with
++  the SoC's clock, reset, and pinctrl subsystems.
 +
 +properties:
 +  compatible:
-+    items:
-+      - enum:
-+          - aspeed,pcie-phy
-+      - const: syscon
++    enum:
++      - aspeed,ast2600-pcie
++      - aspeed,ast2700-pcie
 +
 +  reg:
 +    maxItems: 1
 +
-+  "#phy-cells":
-+    const: 0
++  ranges:
++    minItems: 2
++    maxItems: 2
++
++  interrupts:
++    maxItems: 1
++    description: IntX and MSI interrupt
++
++  resets:
++    items:
++      - description: PCIe controller reset
++
++  reset-names:
++    items:
++      - const: h2x
++
++  msi-parent: true
++
++  aspeed,ahbc:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Phandle to the ASPEED AHB Controller (AHBC) syscon node.
++      This reference is used by the PCIe controller to access
++      system-level configuration registers related to the AHB bus.
++      To enable AHB access for the PCIe controller.
++
++  aspeed,pciecfg:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Phandle to the ASPEED PCIe configuration syscon node.
++      This reference allows the PCIe controller to access
++      SoC-specific PCIe configuration registers. There are the others
++      functions such PCIe RC and PCIe EP will use this common register
++      to configure the SoC interfaces.
++
++  aspeed,pciephy:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Phandle to the ASPEED PCIe PHY syscon node.
++      This property provides access to the PCIe PHY control
++      registers required for link initialization and management.
++      The other functions such PCIe RC and PCIe EP will use this
++      common register to configure the PHY interfaces and get some
++      information from the PHY.
++
++  interrupt-controller:
++    description: Interrupt controller node for handling legacy PCI interrupts.
++    type: object
++    properties:
++      '#address-cells':
++        const: 0
++      '#interrupt-cells':
++        const: 1
++      interrupt-controller: true
++
++    required:
++      - '#address-cells'
++      - '#interrupt-cells'
++      - interrupt-controller
++
++    additionalProperties: false
++
++allOf:
++  - $ref: /schemas/pci/pci-bus-common.yaml#
++  - $ref: /schemas/pci/pci-host-bridge.yaml#
++  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: aspeed,ast2600-pcie
++    then:
++      required:
++        - aspeed,ahbc
++    else:
++      properties:
++        aspeed,ahbc: false
 +
 +required:
-+  - compatible
 +  - reg
++  - interrupts
++  - bus-range
++  - ranges
++  - resets
++  - reset-names
++  - msi-parent
++  - msi-controller
++  - aspeed,pciecfg
++  - interrupt-map-mask
++  - interrupt-map
++  - interrupt-controller
 +
-+additionalProperties: false
++unevaluatedProperties: false
++
++patternProperties:
++  "^pcie@[0-9a-f,]+$":
++    type: object
++    properties:
++      resets:
++        items:
++          - description: PCIe PERST
++      reset-names:
++        items:
++          - const: perst
++      clocks:
++        maxItems: 1
++        description: PCIe BUS clock
++    required:
++      - resets
++      - reset-names
++      - clocks
++      - aspeed,pciephy
 +
 +examples:
 +  - |
-+    syscon@1e6ed200 {
-+      compatible = "aspeed,pcie-phy", "syscon";
-+      reg = <0x1e6ed200 0x100>;
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/ast2600-clock.h>
++
++    apb {
++      #address-cells = <1>;
++      #size-cells = <1>;
++
++      pcie0: pcie@1e7700c0 {
++        compatible = "aspeed,ast2600-pcie";
++        device_type = "pci";
++        reg = <0x1e7700c0 0x40>;
++        linux,pci-domain = <0>;
++        #address-cells = <3>;
++        #size-cells = <2>;
++        interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
++        bus-range = <0x80 0xff>;
++
++        ranges = <0x01000000 0x0 0x00018000 0x00018000 0x0 0x00008000
++                  0x02000000 0x0 0x70000000 0x70000000 0x0 0x10000000>;
++
++        resets = <&syscon ASPEED_RESET_H2X>;
++        reset-names = "h2x";
++
++        #interrupt-cells = <1>;
++        msi-parent = <&pcie0>;
++        msi-controller;
++
++        aspeed,ahbc = <&ahbc>;
++        aspeed,pciecfg = <&pcie_cfg>;
++
++        interrupt-map-mask = <0 0 0 7>;
++        interrupt-map = <0 0 0 1 &pcie_intc0 0>,
++                        <0 0 0 2 &pcie_intc0 1>,
++                        <0 0 0 3 &pcie_intc0 2>,
++                        <0 0 0 4 &pcie_intc0 3>;
++        pcie_intc0: interrupt-controller {
++          interrupt-controller;
++          #address-cells = <0>;
++          #interrupt-cells = <1>;
++        };
++
++        pcie@8,0 {
++          reg = <0x804000 0 0 0 0>;
++          #address-cells = <3>;
++          #size-cells = <2>;
++          device_type = "pci";
++          resets = <&syscon ASPEED_RESET_PCIE_RC_O>;
++          reset-names = "perst";
++          clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
++          pinctrl-names = "default";
++          pinctrl-0 = <&pinctrl_pcierc1_default>;
++          aspeed,pciephy = <&pcie_phy1>;
++          ranges;
++        };
++      };
 +    };
 -- 
 2.43.0
