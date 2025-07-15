@@ -1,83 +1,54 @@
-Return-Path: <linux-pci+bounces-32188-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32189-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BA36B0679A
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 22:14:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 681C3B067B5
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 22:28:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B28471888CAF
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 20:15:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB3425646B4
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 20:28:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 064A229B8FE;
-	Tue, 15 Jul 2025 20:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3A7E2727E5;
+	Tue, 15 Jul 2025 20:28:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dmBiP0Mi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/z7rxYX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5553C26E718;
-	Tue, 15 Jul 2025 20:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828B717BA1;
+	Tue, 15 Jul 2025 20:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752610480; cv=none; b=JfHIk/muB7qYHza+ZunajtNIs5Eo/90Rio00vqhphA/6JnOy8wdmHlQ3WchINcFZ0VOqIVV7eX6qDh9NQS+EzPxaAIKETgJs6zhHTa48PLvqBwERwLXHY2EnBVk9FT6iuYoCHMCqnYOlnMZE2VKELhNvt3/dsq4O6m5EVHAmVHo=
+	t=1752611316; cv=none; b=eYgrcCSsiI2K42IeEvDOmXpnkfsN9uL7dWjxLcnGjtzGXSYtvFBDF9OH2jlHuXMcCz/WSQzt4tUePRJTZkDed4y7Wq1d1vQk8d541cDCZcuYCuPUX5me63Z/GzlGYx3lDpSwuC6rvM10puongyPWhn9ej0WdGVtxZyERPIm6XDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752610480; c=relaxed/simple;
-	bh=eS6Mpdyp46gQ6nUgwPSL7+/IQm0H6qYJBJumRgSICho=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CksmdEBWe0+Nd7/DXb3gTwHCHmmYRFQIaMJ6UYr0jG4pfuU/5d5qnbsrpH3WTYtlNX70LiSUVm2mTcsNSyPvvaqmFis2gnBEZ39LGyawu0Aqe2wkieWnph+MD18d050jhH2gLgSYRap59UkuKw7eYMizTBMRp2OZ7F1dLzEUwZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dmBiP0Mi; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752610479; x=1784146479;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eS6Mpdyp46gQ6nUgwPSL7+/IQm0H6qYJBJumRgSICho=;
-  b=dmBiP0MiVnxoyxG7ejTolJiZyRfIWQ2WYlgBu6qlsKno6S5dxgbF/SvD
-   34LCbRmvhCHrnJm0ridK7pfq1LfIWvUzUj/fvh0ZD0nsgD1VTdgaI4TzP
-   jN9VtRKgbqXP+y/yplBfAqUVAa/RqOgvYQH+LqG1THbR9Kt3bwGBDfjC3
-   yqjc5Sz2k7VZ0P1qwWkRO36bXgzYPzuoEzrZV0KVnm0+muBcbCOkhogJf
-   hKhI0dwpcutFIVikhJiB2qqEQyDHXSI/Npvd9mpipPPt+ZO1nduBj2xJZ
-   J1XJkHs0OG39SpHYC7/Oxit958NLn1HZ8NEw+HGqLhvw3f4+oT0b1k8yB
-   A==;
-X-CSE-ConnectionGUID: hfmNCGSkQS+Wd9wxJOWG4w==
-X-CSE-MsgGUID: UP2wvDnzTZSf/yxQ43RFwg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="42473888"
-X-IronPort-AV: E=Sophos;i="6.16,314,1744095600"; 
-   d="scan'208";a="42473888"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2025 13:14:39 -0700
-X-CSE-ConnectionGUID: swZoM0+0REi7GGWqObo93g==
-X-CSE-MsgGUID: nZzgw5MpQzKGR4ifrqa3mg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,314,1744095600"; 
-   d="scan'208";a="161631582"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 15 Jul 2025 13:14:34 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ubm2p-000BVn-1r;
-	Tue, 15 Jul 2025 20:14:31 +0000
-Date: Wed, 16 Jul 2025 04:13:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jacky Chou <jacky_chou@aspeedtech.com>, bhelgaas@google.com,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	joel@jms.id.au, andrew@codeconstruct.com.au,
-	linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-	linus.walleij@linaro.org, p.zabel@pengutronix.de,
-	BMC-SW@aspeedtech.com
-Subject: Re: [PATCH v2 08/10] PCI: Add FMT and TYPE definition for TLP header
-Message-ID: <202507160314.e3odwyX7-lkp@intel.com>
-References: <20250715034320.2553837-9-jacky_chou@aspeedtech.com>
+	s=arc-20240116; t=1752611316; c=relaxed/simple;
+	bh=wfJw4ZawJHcyOeoZQw3I2gM6CAlT+SrszZtN/nJhL+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=NdLyVbAMKZySjvXONx+etD7jWnp0HR52Vv22Cj8DpzN1/D9eadteTay0rJRIatx7LcgbNRoQRl39LiobJ4HdzcPZJGjHZb0gyGREu0gIoqqR/yD67UnYGpq9hmFEgvRPF/b5Q4E6dBXZhQoZuFNoFwag9fYqEalQEXhLMhu7rVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/z7rxYX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA3DCC4CEE3;
+	Tue, 15 Jul 2025 20:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752611316;
+	bh=wfJw4ZawJHcyOeoZQw3I2gM6CAlT+SrszZtN/nJhL+w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=d/z7rxYXVHulxt/xJx7HKX+5wtc9sE4aJmGooG+0QkVhjlS/Z4Iy6xnWUnpngjBkw
+	 qXlryX38/mt39VC8HUOu30Bo2sjRPilczXGGHYFqC2Df328tdocdH0N7WCaWfSIEV2
+	 rA4R3C3W9+Vvm/oUi2m7Ttng3nM/w8Ss4r+5LUGivwW2Rr2qpyGKz+dtriv1bl7YIt
+	 35g46DlMmD5ydvnKxaVGJ85KtdP/MOXeM6QWtzzBxdEi0dt3BZ/tLiHRWdRfJygib/
+	 SsnKgbY8rvjiKwPt7mA0Z9v7ZbUA4pgWCjpa3orwoj8eaDtDiS36Kp4MrTzhe4rJwy
+	 e0DscbUsAzS8A==
+Date: Tue, 15 Jul 2025 15:28:34 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: joro@8bytes.org, will@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, Will McVicker <willmcvicker@google.com>
+Subject: Re: [PATCH] PCI: Fix driver_managed_dma check
+Message-ID: <20250715202834.GA2498403@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,47 +57,55 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250715034320.2553837-9-jacky_chou@aspeedtech.com>
+In-Reply-To: <20250425133929.646493-4-robin.murphy@arm.com>
 
-Hi Jacky,
+On Fri, Apr 25, 2025 at 02:39:29PM +0100, Robin Murphy wrote:
+> Since it's not currently safe to take device_lock() in the IOMMU probe
+> path, that can race against really_probe() setting dev->driver before
+> attempting to bind. The race itself isn't so bad, since we're only
+> concerned with dereferencing dev->driver itself anyway, but sadly my
+> attempt to implement the check with minimal churn leads to a kind of
+> TOCTOU issue, where dev->driver becomes valid after to_pci_driver(NULL)
+> is already computed, and thus the check fails to work as intended.
+> 
+> Will and I both hit this with the platform bus, but the pattern here is
+> the same, so fix it for correctness too.
+> 
+> Reported-by: Will McVicker <willmcvicker@google.com>
+> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 
-kernel test robot noticed the following build warnings:
+Applied to pci/iommu for v6.17, thanks!
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus robh/for-next linusw-pinctrl/devel linusw-pinctrl/for-next linus/master v6.16-rc6 next-20250715]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Jacky-Chou/dt-bindings-soc-aspeed-Add-ASPEED-PCIe-Config-support/20250715-114814
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250715034320.2553837-9-jacky_chou%40aspeedtech.com
-patch subject: [PATCH v2 08/10] PCI: Add FMT and TYPE definition for TLP header
-config: i386-buildonly-randconfig-004-20250715 (https://download.01.org/0day-ci/archive/20250716/202507160314.e3odwyX7-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250716/202507160314.e3odwyX7-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507160314.e3odwyX7-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from <built-in>:1:
-   In file included from ./usr/include/linux/pci.h:21:
->> usr/include/linux/pci_regs.h:1234:39: warning: // comments are not allowed in this language [-Wcomment]
-    1234 | #define PCI_TLP_FMT_3DW_NO_DATA         0x0  // 3DW header, no data
-         |                                              ^
-   1 warning generated.
---
-   In file included from <built-in>:1:
->> ./usr/include/linux/pci_regs.h:1234:39: warning: // comments are not allowed in this language [-Wcomment]
-    1234 | #define PCI_TLP_FMT_3DW_NO_DATA         0x0  // 3DW header, no data
-         |                                              ^
-   1 warning generated.
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  drivers/pci/pci-driver.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index c8bd71a739f7..66e3bea7dc1a 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -1634,7 +1634,7 @@ static int pci_bus_num_vf(struct device *dev)
+>   */
+>  static int pci_dma_configure(struct device *dev)
+>  {
+> -	struct pci_driver *driver = to_pci_driver(dev->driver);
+> +	const struct device_driver *drv = READ_ONCE(dev->driver);
+>  	struct device *bridge;
+>  	int ret = 0;
+>  
+> @@ -1651,8 +1651,8 @@ static int pci_dma_configure(struct device *dev)
+>  
+>  	pci_put_host_bridge_device(bridge);
+>  
+> -	/* @driver may not be valid when we're called from the IOMMU layer */
+> -	if (!ret && dev->driver && !driver->driver_managed_dma) {
+> +	/* @drv may not be valid when we're called from the IOMMU layer */
+> +	if (!ret && drv && !to_pci_driver(drv)->driver_managed_dma) {
+>  		ret = iommu_device_use_default_domain(dev);
+>  		if (ret)
+>  			arch_teardown_dma_ops(dev);
+> -- 
+> 2.39.2.101.g768bb238c484.dirty
+> 
 
