@@ -1,104 +1,209 @@
-Return-Path: <linux-pci+bounces-32135-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32136-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D65AB05603
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 11:14:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA8F5B0560F
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 11:16:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9BC9456257B
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 09:14:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 364547B5210
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 09:14:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06AAF2D5420;
-	Tue, 15 Jul 2025 09:13:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AC8F27700C;
+	Tue, 15 Jul 2025 09:16:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aOgvB81X"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dMuShdJZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF733277CB0;
-	Tue, 15 Jul 2025 09:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB3F2459D7;
+	Tue, 15 Jul 2025 09:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752570837; cv=none; b=hJUN3UaH4h8ukI1/4Eg5MxJpeDmO/qqsPOrTZPAGJxbVMsjN8s6dwvIWycxrb37stOdKBuB6wttmfUce4zMbCiykfWr+Q0N79Fnw5u+LIfp+wbPS2GHaXbTnlbW+GUtflVAe1NCL99jg4qjkzBv2cu49XKl64gYDLXTBwaUMbKs=
+	t=1752570969; cv=none; b=uRqTc/yzsDB6CvZfsIgpGyL7AQpGEjSO2cJVfbSuFcp+fLitVZNx5d+BbcFDU5UllwOZ+LUd4NgWHv2HZPTeGXpWl5xVtQHdWZiTq6fzxI5c7FmoFp5gxGtgw4P/y2W6V/Nny7Z80ThJ6YBiqGdNMCh+IeFOdgTRMtUGavAnpas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752570837; c=relaxed/simple;
-	bh=l/RGES8DH2ekgRfnlC6sXT+q0PRN/1KSbMb1r4knNYw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L1/TbnVp0qmL5M2FJaAaw8XR7kmgB0zl8UL+NwZlSGbLDdIRzSGhmFrEjSvnKU8VmITglEzzJq1cKspRr9aBeqsIaT/IBDoB3jmBizD6REdPOnqVye1Ztf4TbU8qNgDvZpc5a8Vs8xiRE6IX72gnvRE2aj2AzKcMvMJ8RvxJnuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aOgvB81X; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73666C4CEE3;
-	Tue, 15 Jul 2025 09:13:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752570837;
-	bh=l/RGES8DH2ekgRfnlC6sXT+q0PRN/1KSbMb1r4knNYw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aOgvB81X6Jde2+HwT/fcT7T/nuc63d/Pw6RVWTKk2CeseGr+70BE9fiDk4wL4MOF1
-	 ErFvboJavhDjunHVR/Bd+3dhUrWNKSiw5mi+8kUUcexHrjBGxMRlPVxkqnByzSQXja
-	 aARC2own7LhuZwsOI/FmdmUKly86e2F6nfD/pYSQf6ZSOD9wlDdkm9oN5QDin1XByE
-	 e2KzmxJzuYph66syHkdU+wrTowRli0f6ZtS7Wq7a7VReHedJL9iSOQzE49hhXbIYJq
-	 WOkWyT8yTlRay32Rx898BMWVfAxKH+ZX/LbuavAeJaQ0Wf7bXM0TBfZfPS+thNp95w
-	 gnh3y7yEfCg4g==
-Date: Tue, 15 Jul 2025 14:43:48 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: Re: [PATCH 2/2] PCI: qcom: Move qcom_pcie_icc_opp_update() to
- notifier callback
-Message-ID: <jkv4rbx324gzndmzfmjkkft7kmukz6eukjwg4rdgmfpmxj5cjn@ewhc3wfdcqx3>
-References: <20250714-aspm_fix-v1-0-7d04b8c140c8@oss.qualcomm.com>
- <20250714-aspm_fix-v1-2-7d04b8c140c8@oss.qualcomm.com>
- <aHYIjEbOhM4xvavJ@hovoldconsulting.com>
+	s=arc-20240116; t=1752570969; c=relaxed/simple;
+	bh=ykFCqJnDeRAU9E+3JG+mUliPAL/DkE9/PsXnNRRVb8M=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LzkEMxfBAZWN6mCbSKm3QvXln8h5xHoqKBb7HR2WH8HGIck9icSkOFypZ9ydi8ffjnZjZcGysw5NrvzM9dZIi7W+ivTUwZTbNmUrW+fMEG/HCdt2HqZR0dWeA0aVfsXGW8qolakx203Wiz6oLCAczlFhGiTdOUzIECwYD95X/Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dMuShdJZ; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 56F9FpvU2812962;
+	Tue, 15 Jul 2025 04:15:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1752570951;
+	bh=RgLXppGnaKhRmU6P1gSrKgnSIFK0acz5r/UyuFZ9QpA=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=dMuShdJZwTRdU3dH+CMk0jZkaIOWM0MQ2iR7UhN8l7ZOfwSO6xaJxJX4OLU6UYdFd
+	 L5NiG7Ff04/C43hEAN3V/BV6xpXRQJdNnV7d/nqMw9oo548nE7D4CEmYkyPJZkxQ74
+	 cQ8hnchQ61mdibwO9H/77om7O9ykXBsV9JtCk4yc=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 56F9Fptw1162032
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 15 Jul 2025 04:15:51 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 15
+ Jul 2025 04:15:50 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Tue, 15 Jul 2025 04:15:50 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.169])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 56F9Fnbd2621763;
+	Tue, 15 Jul 2025 04:15:50 -0500
+Date: Tue, 15 Jul 2025 14:45:48 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <huaqian.li@siemens.com>,
+        <helgaas@kernel.org>, <baocheng.su@siemens.com>, <bhelgaas@google.com>,
+        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <diogo.ivo@siemens.com>, <kristo@kernel.org>, <krzk+dt@kernel.org>,
+        <kw@linux.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <lpieralisi@kernel.org>, <nm@ti.com>, <robh@kernel.org>,
+        <ssantosh@kernel.org>, <vigneshr@ti.com>
+Subject: Re: [PATCH v8 4/7] PCI: keystone: Add support for PVU-based DMA
+ isolation on AM654
+Message-ID: <e21c6ead-2bcb-422b-a1b9-eb9dd63b7dc7@ti.com>
+References: <aa3c8d033480801250b3fb0be29adda4a2c31f9e.camel@siemens.com>
+ <20250422061406.112539-1-huaqian.li@siemens.com>
+ <20250422061406.112539-5-huaqian.li@siemens.com>
+ <7c8c29ee-2600-4eea-866f-8fe2d533418e@ti.com>
+ <e9716614-1849-4524-af4d-20587df365cf@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aHYIjEbOhM4xvavJ@hovoldconsulting.com>
+In-Reply-To: <e9716614-1849-4524-af4d-20587df365cf@siemens.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Jul 15, 2025 at 09:51:40AM GMT, Johan Hovold wrote:
-> On Mon, Jul 14, 2025 at 11:31:05PM +0530, Manivannan Sadhasivam wrote:
-> > It allows us to group all the settings that need to be done when a PCI
-> > device is attached to the bus in a single place.
-> 
-> This commit message should be amended so that it makes sense on its own
-> (e.g. without Subject).
-> 
-> > @@ -1616,8 +1616,6 @@ static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
-> >  		pci_lock_rescan_remove();
-> >  		pci_rescan_bus(pp->bridge->bus);
-> >  		pci_unlock_rescan_remove();
-> > -
-> > -		qcom_pcie_icc_opp_update(pcie);
-> >  	} else {
-> >  		dev_WARN_ONCE(dev, 1, "Received unknown event. INT_STATUS: 0x%08x\n",
-> >  			      status);
-> > @@ -1765,6 +1763,7 @@ static int pcie_qcom_notify(struct notifier_block *nb, unsigned long action,
-> >  	switch (action) {
-> >  	case BUS_NOTIFY_BIND_DRIVER:
-> >  		qcom_pcie_enable_aspm(pdev);
-> > +		qcom_pcie_icc_opp_update(pcie);
-> 
-> I guess you should also drop the now redundant
-> qcom_pcie_icc_opp_update() call from probe()?
-> 
+On Tue, Jul 15, 2025 at 10:55:19AM +0200, Jan Kiszka wrote:
 
-Oops. This got sneaked in. I removed it locally but eventually lost the change
-while rebasing. Will remove it in next version. This API just bails out if the
-link is not up. So no reason to call it here also now.
+Hello Jan,
 
-- Mani
+> On 25.04.25 18:48, Siddharth Vadapalli wrote:
+> > On Tue, Apr 22, 2025 at 02:14:03PM +0800, huaqian.li@siemens.com wrote:
+> >> From: Jan Kiszka <jan.kiszka@siemens.com>
+> >>
+> >> The AM654 lacks an IOMMU, thus does not support isolating DMA requests
+> >> from untrusted PCI devices to selected memory regions this way. Use
+> >> static PVU-based protection instead. The PVU, when enabled, will only
+> >> accept DMA requests that address previously configured regions.
+> >>
+> >> Use the availability of a restricted-dma-pool memory region as trigger
+> >> and register it as valid DMA target with the PVU. In addition, enable
+> >> the mapping of requester IDs to VirtIDs in the PCI RC. Use only a single
+> >> VirtID so far, catching all devices. This may be extended later on.
+> >>
+> >> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> >> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> >> Signed-off-by: Li Hua Qian <huaqian.li@siemens.com>
+> >> ---
+> >>  drivers/pci/controller/dwc/pci-keystone.c | 106 ++++++++++++++++++++++
+> >>  1 file changed, 106 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> >> index 76a37368ae4f..ea2d8768e333 100644
+> >> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> >> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> >> @@ -19,6 +19,7 @@
+> >>  #include <linux/mfd/syscon.h>
+> >>  #include <linux/msi.h>
+> >>  #include <linux/of.h>
+> >> +#include <linux/of_address.h>
+> >>  #include <linux/of_irq.h>
+> >>  #include <linux/of_pci.h>
+> >>  #include <linux/phy/phy.h>
+> >> @@ -26,6 +27,7 @@
+> >>  #include <linux/regmap.h>
+> >>  #include <linux/resource.h>
+> >>  #include <linux/signal.h>
+> >> +#include <linux/ti-pvu.h>
+> >>  
+> >>  #include "../../pci.h"
+> >>  #include "pcie-designware.h"
+> >> @@ -111,6 +113,16 @@
+> >>  
+> >>  #define PCI_DEVICE_ID_TI_AM654X		0xb00c
+> >>  
+> >> +#define KS_PCI_VIRTID			0
+> >> +
+> >> +#define PCIE_VMAP_xP_CTRL		0x0
+> >> +#define PCIE_VMAP_xP_REQID		0x4
+> >> +#define PCIE_VMAP_xP_VIRTID		0x8
+> >> +
+> >> +#define PCIE_VMAP_xP_CTRL_EN		BIT(0)
+> >> +
+> >> +#define PCIE_VMAP_xP_VIRTID_VID_MASK	0xfff
+> >> +
+> >>  struct ks_pcie_of_data {
+> >>  	enum dw_pcie_device_mode mode;
+> >>  	const struct dw_pcie_host_ops *host_ops;
+> >> @@ -1137,6 +1149,94 @@ static const struct of_device_id ks_pcie_of_match[] = {
+> >>  	{ },
+> >>  };
+> >>  
+> >> +static int ks_init_vmap(struct platform_device *pdev, const char *vmap_name)
+> >> +{
+> >> +	struct resource *res;
+> >> +	void __iomem *base;
+> >> +	u32 val;
+> >> +
+> >> +	if (!IS_ENABLED(CONFIG_TI_PVU))
+> >> +		return 0;
+> >> +
+> >> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, vmap_name);
+> >> +	base = devm_pci_remap_cfg_resource(&pdev->dev, res);
+> >> +	if (IS_ERR(base))
+> >> +		return PTR_ERR(base);
+> >> +
+> >> +	writel(0, base + PCIE_VMAP_xP_REQID);
+> >> +
+> >> +	val = readl(base + PCIE_VMAP_xP_VIRTID);
+> >> +	val &= ~PCIE_VMAP_xP_VIRTID_VID_MASK;
+> >> +	val |= KS_PCI_VIRTID;
+> > 
+> > While it has been stated that we are going to start off with a single
+> > VirtID for now and extend it later on, is there an example for how it may
+> > be extended? The only option I see is that of associating one VirtID for
+> > Low-Priority (LP) traffic and another for High-Priority (HP) traffic, in
+> > which case, it might be better to define them upfront and use them like:
+> > #define KS_PCI_LP_VIRTID	0
+> > #define KS_PCI_HP_VIRTID	1
+> 
+> Sorry for the late reply, was just reminded of this question:
+> 
+> When trying to design anything beyond the current use case, I would be
+> struggling right now with the how, simply because we would have no user
+> of extended APIs around to make sure that the result would be useful.
+> Can you envision such use cases? If not, I would rather suggest to
+> postpone any attempts to broaden the API until we have such users.
 
--- 
-மணிவண்ணன் சதாசிவம்
+I understand that it might not be possible to extend it (or at-least it
+doesn't seem to be straightforward), in which case, we could state the
+same in commit message. I had asked for an example of extending it
+because the commit message states:
+
+    ....Use only a single VirtID so far, catching all devices.
+    This may be extended later on.
+
+without explaining how it could be extended later on. To be precise, my
+question was aimed at whether or not the current implementation allows
+it to be extended in the future (maintaining backward compatibility). If
+that's not yet known, it might be better to state that in the commit
+message, or omit the portion which states that it may be extended later on.
+
+-----8<---rest of the email has been trimmed-----8<---------------------
+
+Regards,
+Siddharth.
 
