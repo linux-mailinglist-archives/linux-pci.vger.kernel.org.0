@@ -1,147 +1,152 @@
-Return-Path: <linux-pci+bounces-32245-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32246-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF595B0705E
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 10:23:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18AA4B07062
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 10:23:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D4AD41886829
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 08:23:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28E944E229B
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 08:23:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 076062EAB6B;
-	Wed, 16 Jul 2025 08:22:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 999702EAB7B;
+	Wed, 16 Jul 2025 08:23:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ju9r0yge"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OsuSqHmD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A462EAB82;
-	Wed, 16 Jul 2025 08:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696AC2EA727;
+	Wed, 16 Jul 2025 08:23:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752654150; cv=none; b=PyPUsYMqow+KZfdNQOsWdxtx3WKjxudlI6j8orbfBw3v9n4Eb72CTN71UP/JcQT4YoAyWV5nUf+OXaOoMcizHMyyb28PlwkDgjIfLPnoCayPZutso7aRPnTcJME21WgxNIUcLyR6xVVQAaoDezFVYqd7xoK3MPRPUpm7x1OXU1g=
+	t=1752654221; cv=none; b=k8V2HnJhGSOBMWc5GbczBC1UbV2aYp6lbdBH9JPYPJXV1SE88T/jpRtbi3gGh7+GB3DXe5uaG9JIJKrHzN8wwSW9582Fua1cSBx4zl6UCerOva0QxQE1iNAiYzX8TUQADtNDFU5RLZOCSUi2CBGTqJ/7qi5HMzjHUxPJVGJvUi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752654150; c=relaxed/simple;
-	bh=V4D522z6UUEGIW4Wg6YSnm8NKzfzikRtghcHIDH2hWc=;
+	s=arc-20240116; t=1752654221; c=relaxed/simple;
+	bh=cp2m1cQPpeNT2d53wsl0tGzY5ODL2sh/xGBe89ivRr4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QF994wi8pWN/2UI8sVYPhp326qGNHhCZql9NoN0jeXXYI0F28X0M0SJxvs2CmkQ5uGc/8r/3HmXzRsGhb1kUxcSyBLhVGAZZLAmJRXKnHywrdyRnrnS7UhqbdcKwnsxHLVJhI3aD9m5ZVN3IL4hjxf/0dciZ57udGGTAvPmAmaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ju9r0yge; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3AC8C4CEF9;
-	Wed, 16 Jul 2025 08:22:29 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=TDeWA8hOYse2zp7wBL9zaaPzxBG0CzsX/JfIzj8qk+0bTiQZ0siGG300jtotrVWWBH0jm3hNqJfPwLSRLIAo+ZfX+U7A9O9bHv9DFnQmTMOvq+LHoLEjneUTUIiwbszmLGgUGYMN7u+jBfkc2X7MfF2dZr3XKoFjmbhOPH0o1Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OsuSqHmD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A6F9C4CEF0;
+	Wed, 16 Jul 2025 08:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752654150;
-	bh=V4D522z6UUEGIW4Wg6YSnm8NKzfzikRtghcHIDH2hWc=;
+	s=k20201202; t=1752654218;
+	bh=cp2m1cQPpeNT2d53wsl0tGzY5ODL2sh/xGBe89ivRr4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ju9r0ygeIoehctwwAmdbT/gnfDwO9Wx9CcOiz8KdX+fbbUUW44D3fiXaJL6ORkQll
-	 NStAgkyukkjf0jmlnc+7NmUNmVnsxXJtXtjpIEZfICw+MgHB6EukkgT+gI0GlE0ymn
-	 0sB/lbzBlumLdjrsptDrl/3BbpnNY4NxBxXo79i7geNfD4Ip4W7E7vNPGo6MQ+HL3s
-	 XNk3X9dbyeUezh1dNqRL+ALj9ijiDE+UH1Ko4if/JVXnV6dkA0fqgeaxcUjfplQznk
-	 hmsDIryCvejDyEO1edOecCZ/ea1g5mxVBovVrHfR3gaLjaG7eJTDw3g71cPoAdDVUf
-	 HMZZxthoAuLpg==
-Date: Wed, 16 Jul 2025 10:22:27 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Alex Deucher <alexander.deucher@amd.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
-	Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Alex Williamson <alex.williamson@redhat.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>, "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
-	"open list:VFIO DRIVER" <kvm@vger.kernel.org>, "open list:SOUND" <linux-sound@vger.kernel.org>, 
-	Daniel Dadap <ddadap@nvidia.com>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v8 9/9] PCI: Add a new 'boot_display' attribute
-Message-ID: <20250716-upbeat-tody-of-psychology-93e2a2@houat>
-References: <20250714212147.2248039-1-superm1@kernel.org>
- <20250714212147.2248039-10-superm1@kernel.org>
+	b=OsuSqHmDg5QaUkjKR88pXkBRjXFiGTJmpqIR2xTr5Z9U1Ok9P/L5vM+a06yTG3toz
+	 at3wk0tkzeoEdt0BukhNBUIqcbPqs732/P+an+XUDciRV3hHnaPzyNPpyHmN8OXYWc
+	 BfRruYWHr+/kBdTkHGaGdfGb+meDtFsBpDNxR8r2f82JlPhK7gakGM2tsl+l0OjIcU
+	 sPZL6T47LdaQ43C70ikZe6EPoBxS36V78shXEYhmf5W5W03iRjAkjgrj8TRd3Atm+c
+	 WmPx1C5+9MA91F/pTTKGPiALFC+YTLSWiyrLEBh89IIL12Ks8wyLQ+BJCGLvU8rGQb
+	 MpkLR0taXi9CA==
+Date: Wed, 16 Jul 2025 10:23:36 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	joel@jms.id.au, andrew@codeconstruct.com.au, linux-aspeed@lists.ozlabs.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, p.zabel@pengutronix.de, BMC-SW@aspeedtech.com
+Subject: Re: [PATCH v2 02/10] dt-bindings: soc: aspeed: Add ASPEED PCIe PHY
+ support
+Message-ID: <20250716-innocent-satisfied-pug-9ecc15@krzk-bin>
+References: <20250715034320.2553837-1-jacky_chou@aspeedtech.com>
+ <20250715034320.2553837-3-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="k6j22jwrkd2tjfpl"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250714212147.2248039-10-superm1@kernel.org>
+In-Reply-To: <20250715034320.2553837-3-jacky_chou@aspeedtech.com>
 
-
---k6j22jwrkd2tjfpl
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v8 9/9] PCI: Add a new 'boot_display' attribute
-MIME-Version: 1.0
-
-Hi Mario,
-
-On Mon, Jul 14, 2025 at 04:21:46PM -0500, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
->=20
-> On systems with multiple GPUs there can be uncertainty which GPU is the
-> primary one used to drive the display at bootup. In order to disambiguate
-> this add a new sysfs attribute 'boot_display' that uses the output of
-> video_is_primary_device() to populate whether a PCI device was used for
-> driving the display.
->=20
-> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+On Tue, Jul 15, 2025 at 11:43:12AM +0800, Jacky Chou wrote:
+> This PHY is used by many modules. In our design, our
+> PCIe has RC and EP funcitons. On the different function,
+> each driver will use configure and get some information
+> from the PHY interface to do somting that it wants to.
+> Getting link status, setting syscon credits and so on.
+> Therefore, define it as syscon for all modules.
+> 
+> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
 > ---
-> v7:
->  * fix lkp failure
->  * Add tag
-> v6:
->  * Only show for the device that is boot display
->  * Only create after PCI device sysfs files are initialized to ensure
->    that resources are ready.
-> v4:
->  * new patch
-> ---
->  Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
->  drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++++++
->  2 files changed, 54 insertions(+)
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/=
-testing/sysfs-bus-pci
-> index 69f952fffec72..8b455b1a58852 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> @@ -612,3 +612,11 @@ Description:
-> =20
->  		  # ls doe_features
->  		  0001:01        0001:02        doe_discovery
+>  .../bindings/soc/aspeed/aspeed,pcie-phy.yaml  | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/aspeed/aspeed,pcie-phy.yaml
+
+Phys go to phy, not soc directory. Soc is not a dumping ground.
+
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/aspeed/aspeed,pcie-phy.yaml b/Documentation/devicetree/bindings/soc/aspeed/aspeed,pcie-phy.yaml
+> new file mode 100644
+> index 000000000000..5fa585d63ca6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/aspeed/aspeed,pcie-phy.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/aspeed/aspeed,pcie-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +What:		/sys/bus/pci/devices/.../boot_display
-> +Date:		October 2025
-> +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
-> +Description:
-> +		This file indicates the device was used as a boot
-> +		display. If the device was used as the boot display, the file
-> +		will be present and contain "1".
+> +title: ASPEED PCIe PHY
+> +
+> +maintainers:
+> +  - Jacky Chou <jacky_chou@aspeedtech.com>
+> +
+> +description:
+> +  The ASPEED PCIe PHY provides the physical layer interface for PCIe
+> +  controllers in the SoC. This node represents the register block for the PCIe
+> +  PHY, which is typically accessed by PCIe Root Complex or Endpoint drivers
+> +  via syscon. It is used to configure and get the status of the PCIe PHY
+> +  hardware, including power management, link training, and other PHY-specific
+> +  operations.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - aspeed,pcie-phy
 
-It would probably be a good idea to define what a "boot display" here
-is. I get what you mean, but it's pretty vague and could easily be
-misunderstood.
+No, see writing bindings.
 
-Maxime
+> +      - const: syscon
 
---k6j22jwrkd2tjfpl
-Content-Type: application/pgp-signature; name="signature.asc"
+It's not a syscon, but phy. I don't think you understood previous
+feedback. Go back to v1. You just send something to pass the review
+instead of reworking to make it correct.
 
------BEGIN PGP SIGNATURE-----
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    syscon@1e6ed200 {
 
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaHdhQwAKCRAnX84Zoj2+
-dmq9AYDxe/0Z5T43z0PYAkTEFn17IfyWd5PSFPwPt5sbAZu5sPFpkiTIYzsW8zQO
-FdVNAZgBgMbsfM0ASem/uZk2LHVlbNAmBeJms8JHF/ENscuRsyCN5ltCZOVlNZM0
-tOdrKjIKvw==
-=zc9C
------END PGP SIGNATURE-----
+wrong name, that's a phy
 
---k6j22jwrkd2tjfpl--
+> +      compatible = "aspeed,pcie-phy", "syscon";
+> +      reg = <0x1e6ed200 0x100>;
+
+Incomplete
+
+> +    };
+> -- 
+> 2.43.0
+> 
 
