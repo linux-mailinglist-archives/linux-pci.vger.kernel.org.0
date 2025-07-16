@@ -1,85 +1,89 @@
-Return-Path: <linux-pci+bounces-32211-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32212-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 201A6B06CD3
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 06:53:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06539B06CD5
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 06:53:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 845BD1AA6B5A
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 04:53:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5EB42172FCF
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 04:53:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C642B273807;
-	Wed, 16 Jul 2025 04:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E9DB27877F;
+	Wed, 16 Jul 2025 04:53:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VropvRfC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IU+KW7t9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC4326D4C1;
-	Wed, 16 Jul 2025 04:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFD42701DC;
+	Wed, 16 Jul 2025 04:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752641606; cv=none; b=s3VNjqxgkj6eZ4BAcJWd8ZniSKKb0jVxqj+kkflOZXp77lqjuK1ULZT1LDyLr/dGgdHUEN8SutSCiuFTDa6TDuZl6PKNQWXqol895pDFota7/BXDEAyp3yFI0EaHkeKkSUXrBGi0cSVz12/Ucwna5qrpCO1mvDeUVNAPKnFhwAc=
+	t=1752641608; cv=none; b=Bl/vo8rMktGn5EPQb0r/bSzx9FFK5npp0l+G2bJ435AQLgzbpxIlhdTLFJYMC3KYJzQDC7eKNcGuWrgVNNlW5DCysIqgwj6NvkuDWz0ReACYD30imaBrHEBYf1e9xFM3H7MaTa3oOsMuXlNbZqGrvGxumGZTvh1z0TQUBypBWoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752641606; c=relaxed/simple;
-	bh=VMslyOWiTODKoJBFs96zZygrYr6IRQjUODRmLYdMdVs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g+ThONaBVAV6y249hW1zorR6WyjULXFkjG5vjcqamw4nf6ewnDNG8S18uf7I+0liTIH6lyD1CJskT3wh2PJ775Cd6KcVVESS0xL3w4BXhph2R8psqD6HxCzDs1bvs3sF4x4tOduCrGlKLseRZk9beOXRJp6v1zvxP1RQUwC0k1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VropvRfC; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1752641608; c=relaxed/simple;
+	bh=VQdKlwiYXht4bWkhJfcb8jwnNBfdeiL5+qX+sWbgybY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nRFWncc2I6QUDfpKdGrgcCYjwGorngnvCWLvqbJPPhLxmVBOstfSPrRBXoObH4/zUIQegJ9QbkD/XLkPQ7QDHugSOOELmVh4ocSbURl70zQPI9ViMreZDG9zTF2nTeXt/+6xUvurnNcHzGVxRSb7X67qYkiVdKccLGDimHHzKk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IU+KW7t9; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234c5b57557so62616785ad.3;
-        Tue, 15 Jul 2025 21:53:24 -0700 (PDT)
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-75001b1bd76so2529375b3a.2;
+        Tue, 15 Jul 2025 21:53:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752641604; x=1753246404; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NaOzDu4g1GbDoNc/u72KzEqPJpRWAc6rUFpfBeaIIMo=;
-        b=VropvRfCZWEg8qXLm/+JkQkL+O41v5wllcSH51JYP+7HQxlOleiAYMKJJdDTItd+Ui
-         jc/X8fZhgiFfycQITmAh+Q53fArgk1Ky+2+RP/QiPk2d7YrucR/dXt2nK3Xd8OxmriaU
-         Lss70a2XlG7flzwxMaX2E9f0nYg41Z+0N/hRGMk74PUp0oxlI0TPQ4Oh0CYVM9JxwqIm
-         ZKYEF0YKxExkBEwcXubYW71b3IxzEO7Bf0j+aQRjfhrfMN6rLCYr86E4+tRqkwmEZcee
-         xYJfT4OXI4NiKiFx17kYLTyVlqdnH5WGIdQmBA+oe0QQuJro/acuBi/Eg2YcuQpgvoFb
-         AXPQ==
+        d=gmail.com; s=20230601; t=1752641606; x=1753246406; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xg7vtDw6PJWRrMAivmMSbqCib0l30VjCAuTpnZ+kki8=;
+        b=IU+KW7t9HKf0o3ol+gTY71kMqcp3LQcsdeSZQuhout0YYZ0Z+EKHKfkp5sxFm+QfjU
+         uQJadD/9XH74/fQqfshvg1tGrkSq6fTKIa9TZI5JswMAb4en45d7gRU2oop/pSioD2pu
+         FfNVVjiTZu0keD5OmswbVX/kHG+iL9GYyZGtpEgJ02U7ASCgyqBR1dSjEDSSgGz02Hd6
+         CAO1tPez2ysKmfU3fMlnI7zUBtfOtLZ9RXTa0N0UBXyoHtlkpcdpxbRsuCUDaR/EBYJO
+         G+aZ15wYGqUIi2lgeCTDF8wq3qKNuWSFXkguC0QgUOejtVwmRBz+6wd6phg2gtFCFAYF
+         UyfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752641604; x=1753246404;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NaOzDu4g1GbDoNc/u72KzEqPJpRWAc6rUFpfBeaIIMo=;
-        b=QNTobnDWYg6XwEjQTAwD+WGhjtKFQ0tc3TkzFavjiKIvNJ3QHmAGzLg2MMFqWY3BZv
-         YgFX8+syK9l0swqD5LW39CSqMRqzBTHSHx62k47yZv9NNxx/wHx+qpqg6AcXoCMY1vQc
-         vOj4KBIQJGbyNSq7JLjIJ5htty7V9DTEo4lAUYIr/q4eIwh0Bh5oj0W6U+6raypELqgQ
-         JWa4TKPMRkGxG3Jbj5QkcnLjcleSVB/WTJFOrnpxHJ4W4kAI1rRtUlNut5RvGDvBgNJe
-         GAj9ZE1+UQgwN8us6xF4lJy7g7fsuLYqe6ndcTswLoIUiZoBmXLS75a689HLok/Jdb66
-         DSHA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWgtsYTZ7XLAq8sSFin96oBjrSzrkcWFBXe07ydhSbTnncpR74e9k9O0plf8XodyeJUlyJwAm9KaxVQGQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxajw7Zw/Fb907TwZrRplhfJYQXfnsjAFCINEr7W2VLNJXs8w4f
-	4fJ1tP/WuBxUiNKqg+rBVaV3FxJbTuhMhC9DYq+Zg4G6IOVUJFH/BiFYEc2Bvw==
-X-Gm-Gg: ASbGncsMaMzaFx2qIVSD19pLLRR7BySvSNJsNfMgdwncmcgFVHRpKgy2Gi/NtfmQeY/
-	3hV+B5ul6+qmWqPTk0OhiEm25Z0mGkjY2T5qXdwO86pkDwcZ5vXO37gXR2ga3FSPQnScv3Az/XZ
-	DEBkI1a16qfevqvM0oTMuM0veFnkLmN/a2shBtsdZ/P4fj4T7o0HVngcRWAnA0qosN345j05On7
-	bqwYI5q/MlT0UxfhTdJQW7q08I1BqLiBqAN0y8dLZ+WYj7LuDEBJZmEf4NUdMg0MuRrA6XiNj9x
-	ab8J/kzL+Eiw0BwUizLF0Vn+QjiXxPZyMrU1H2BJHLZVgqtHYm7+KSC8J+/XeNUb/GtWOo7ZD1j
-	iMwGVom4VL3bHBGsSSWCl/1hJheIUXLoSpMcjKJ0=
-X-Google-Smtp-Source: AGHT+IEr1x0ne1cnrtZn6MWxi3MRSSTzb3wWLZKJz6ue12Q7frduNOFV3r6mBk3ulT0nwek3WLgTiQ==
-X-Received: by 2002:a17:902:ce81:b0:23c:7b9e:163e with SMTP id d9443c01a7336-23e25685233mr17130725ad.11.1752641604232;
-        Tue, 15 Jul 2025 21:53:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1752641606; x=1753246406;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xg7vtDw6PJWRrMAivmMSbqCib0l30VjCAuTpnZ+kki8=;
+        b=bLZZNrzlpLLAHzxGW5SomQSiGGTh4t9ruSt2fOPppRTQR016AAF6hI9C6HJLKZpi0I
+         7AY16qfAJPGUVLTIxIMjXCIdZQyUfQ+62VqxPdO1wl0sIE60mear13dQ4eryeiu9axbH
+         7PtG0HL85L/PLz0tJvh33SYoDuARQse5Te3ix9re5dggm7vg6pA5T/i/B+V/2HSLbrhZ
+         w69EYgOdwtGW7JFr/sJp9fEQjiKNUb1qF464hzCB/fkwpPcekE7KWpr66Qt+EaYDZFZN
+         kLvpi/aom22rB/zzFYGTli0hwSZ9FpyNNAhpG2nUFkRDBeHT2BnD6nP6FJLeoO2VJSxz
+         wSCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnaCEPbrOWL+7eCO+ZbApUwfjsKCrvSFKos2CNizHVeylrKRGOOGtWmV53Y8uuGJ30la8gO81Dl+TCjuA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7x1WUk41I/YfDktJ7pBiLhXCyimEFFrR6f6Aud5MoFq3sWOUV
+	Gb8VwO29VL0Xvy9O3xQ7XdQoQZPq8LFDIzwXa4xIGp570Sa1MNM5Y8lzSQQKZQ==
+X-Gm-Gg: ASbGncs0std3yDT3CnejDbXlqTBnYZaWGKGPkeegfB1P0bbza+apbgICqhb+YzsfCYv
+	WtcWV3bKJsrlYi7kmyx+zKYzEmX/ImH5CQfcPYhaPbiw4onvAx5wqZDXYpl+YdA89iN8QmAgD1j
+	Ngso211R89pHcv89vRzxaam1+Tee51XX07GtmtinZqKo2Am94xNDf+rk1DD/nRdwi2c4itgMguH
+	/dzUvIgwGEaH8JspJEtgeE4xloJ8M4O4ltTI5Moy0AkONs244YMIpRGMZAgUAquTEegqnf9++Nh
+	3L+gRMzU0b496m9nI412YyH8Me2V6M5iywXtMnhL2WsRlcX4tbZacGzI1GH5aE3hRLX5OY2n2hX
+	OLrWylLSKmn5sERaElp7Nvrk7dAZB
+X-Google-Smtp-Source: AGHT+IEg1AtMU9Bi41BePY6cGMS3w3F9XLtxUtiUfIk1jVTy3ZW4PChmtRXetyB0Z1LI95kFBEQydg==
+X-Received: by 2002:a05:6a00:2306:b0:74b:4dcc:a150 with SMTP id d2e1a72fcca58-75722b73091mr1799974b3a.6.1752641605713;
+        Tue, 15 Jul 2025 21:53:25 -0700 (PDT)
 Received: from localhost ([2600:1700:22f5:908f:1457:7499:d258:358f])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23de434c9cbsm122889375ad.202.2025.07.15.21.53.23
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74eb9e06b19sm13822043b3a.64.2025.07.15.21.53.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Jul 2025 21:53:23 -0700 (PDT)
+        Tue, 15 Jul 2025 21:53:25 -0700 (PDT)
 From: Matthew Wood <thepacketgeek@gmail.com>
-To: "Bjorn Helgaas" <bhelgaas@google.com>,
-	"Jonathan Cameron" <Jonathan.Cameron@huawei.com>
+To: "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
 Cc: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH pci-next v2 0/1] PCI/sysfs: Expose PCIe device serial number
-Date: Tue, 15 Jul 2025 21:53:21 -0700
-Message-ID: <20250716045323.456863-1-thepacketgeek@gmail.com>
+Subject: [PATCH pci-next v2 1/1] PCI/sysfs: Expose PCIe device serial number
+Date: Tue, 15 Jul 2025 21:53:22 -0700
+Message-ID: <20250716045323.456863-2-thepacketgeek@gmail.com>
 X-Mailer: git-send-email 2.50.0
+In-Reply-To: <20250716045323.456863-1-thepacketgeek@gmail.com>
+References: <20250716045323.456863-1-thepacketgeek@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -89,35 +93,65 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 Add a single sysfs read-only interface for reading PCIe device serial
-numbers from userspace, using the same hexadecimal 1-byte dashed
-formatting as lspci serial number capability output:
+numbers from userspace in a programmatic way. This device attribute
+uses the same hexadecimal 1-byte dashed formatting as lspci serial number
+capability output. If a device doesn't support the serial number
+capability, the device_serial_number sysfs attribute will not be visible.
 
-    more /sys/devices/pci0000:c0/0000:c0:01.1/0000:c1:00.0/0000:c2:1f.0/0000:cc:00.0/device_serial_number
-    00-80-ee-00-00-00-41-80
-
-If a device doesn't support the serial number capability, the
-device_serial_number sysfs attribute will not be visible.
-
-Comparing serial number format to lspci output:
-
-    sudo lspci -vvv -s cc:00.0
-        cc:00.0 Serial Attached SCSI controller: Broadcom / LSI PCIe Switch management endpoint (rev b0)
-            Subsystem: Broadcom / LSI Device 0144
-            ...
-            Capabilities: [100 v1] Device Serial Number 00-80-ee-00-00-00-41-80
-            ...
-
-This PCIe device sysfs attribute eliminates the need for parsing lspci
-output (e.g. regexp) for userspace applications that utilize serial
-numbers.
-
-
-Matthew Wood (1):
-  PCI/sysfs: Expose PCIe device serial number
-
+Signed-off-by: Matthew Wood <thepacketgeek@gmail.com>
+---
  drivers/pci/pci-sysfs.c | 23 ++++++++++++++++++++++-
  1 file changed, 22 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 268c69daa4d5..d59756bc91c9 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -239,6 +239,22 @@ static ssize_t current_link_width_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(current_link_width);
+ 
++static ssize_t device_serial_number_show(struct device *dev,
++				       struct device_attribute *attr, char *buf)
++{
++	struct pci_dev *pci_dev = to_pci_dev(dev);
++	u64 dsn;
++
++	dsn = pci_get_dsn(pci_dev);
++	if (!dsn)
++		return -EINVAL;
++
++	return sysfs_emit(buf, "%02llx-%02llx-%02llx-%02llx-%02llx-%02llx-%02llx-%02llx\n",
++		dsn >> 56, (dsn >> 48) & 0xff, (dsn >> 40) & 0xff, (dsn >> 32) & 0xff,
++		(dsn >> 24) & 0xff, (dsn >> 16) & 0xff, (dsn >> 8) & 0xff, dsn & 0xff);
++}
++static DEVICE_ATTR_RO(device_serial_number);
++
+ static ssize_t secondary_bus_number_show(struct device *dev,
+ 					 struct device_attribute *attr,
+ 					 char *buf)
+@@ -660,6 +676,7 @@ static struct attribute *pcie_dev_attrs[] = {
+ 	&dev_attr_current_link_width.attr,
+ 	&dev_attr_max_link_width.attr,
+ 	&dev_attr_max_link_speed.attr,
++	&dev_attr_device_serial_number.attr,
+ 	NULL,
+ };
+ 
+@@ -1749,8 +1766,12 @@ static umode_t pcie_dev_attrs_are_visible(struct kobject *kobj,
+ 	struct device *dev = kobj_to_dev(kobj);
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 
+-	if (pci_is_pcie(pdev))
++	if (pci_is_pcie(pdev)) {
++		if (strncmp(a->name, "device_serial_number", 20) == 0 &&
++			!pci_get_dsn(pdev))
++			return 0;
+ 		return a->mode;
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.50.0
 
