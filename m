@@ -1,91 +1,99 @@
-Return-Path: <linux-pci+bounces-32249-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32250-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2974DB0707D
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 10:28:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06571B0715F
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 11:15:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38F10503097
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 08:27:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5099517FA6C
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 09:15:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2FE62EAB7B;
-	Wed, 16 Jul 2025 08:27:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BC83253356;
+	Wed, 16 Jul 2025 09:15:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hAsqApLd"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nnUBjipM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E4F2EA470;
-	Wed, 16 Jul 2025 08:27:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69C7157493;
+	Wed, 16 Jul 2025 09:15:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752654479; cv=none; b=ILGuMJFrwcN5+uR2I2XEzdMYu6KG1hgiWilPbGNGxru8gIzN2uEeZafxYkbN+7x0Q7jzz2R4i+tLG+veWrTfCexM4saaZohvDZdOXGNSRJEFqSixWC3j5BJcYL4IaVcWlFyxh1m4k1aodU23t5o2rXncFg01L0VEvKweqOwb9t8=
+	t=1752657344; cv=none; b=cBTYHghUDzjW1qurX0lENqDzuDSRfoRHgCLbcJCur8OXYuEtYHzw5zzSWhuiXQSirOC47ILRh/sfJJ4KqcAGD+tl0wb/WLUz5fGPp55+R/waYTWhQ3DYacgKzAscB93JtSFnMWbLCh5dqWWSI06ObZmTUxlCHJAyBquaMuXpi+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752654479; c=relaxed/simple;
-	bh=AuNQsZ23rKXcpc01jPxb/MFPAjRIiFTOghWtUQwr16M=;
+	s=arc-20240116; t=1752657344; c=relaxed/simple;
+	bh=ONPNBASW2TlNyQh0oBZI7v9HNhfprjI2hTF1LVI4XTQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VTwwTa3R7c9VTHtb0rV/sZE44E4QnG0H/bGBxFWpsN2W6q8D1lQ7Mj/lZC+fpWR31yjeVj0odDS6EX9U8LnSuFGIfp21NNKN5MfyGf5yy4q3r4UTvX1KhJdyxFmO+DPXy4NTyKDugzJVUpNU+2LXSuMDiVwrnm/N1e0Gvag9u/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hAsqApLd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94C2CC4CEF6;
-	Wed, 16 Jul 2025 08:27:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752654479;
-	bh=AuNQsZ23rKXcpc01jPxb/MFPAjRIiFTOghWtUQwr16M=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=DnzLXLG2yUrZU3TkPlg24oHwwx4kfuf9BQHKPb89INkPxazbJs2YtdPMlPYWPx1g5ZCXffEYxyIVjc/XEboYWpamhNrRQgl+YVzvJC1O97UElVi4UmV7NHaptJPKYSd9f1onNc9O0koGuIVW1ADr4ixZ8mrVnIqyPu2QmposGJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nnUBjipM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4243C4CEF1;
+	Wed, 16 Jul 2025 09:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1752657342;
+	bh=ONPNBASW2TlNyQh0oBZI7v9HNhfprjI2hTF1LVI4XTQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hAsqApLd7YMtfpyh7q9HBWLtpv59a+BdExG5ZbkY1W4xOPV2fgVn9Nnwmnh4o7VCh
-	 wPurbQEYAmtPOoq/q0MzcifYKKUL4O7GC5HGXwSOrxAL66QQtsdM2iFdT2LB067sO3
-	 jXO5zitGSt+jlv9t61SLlmqTGIbjQGjBMYdkLRhiR77iHuawbsKrRIOyCB2h4HwtnJ
-	 C971yf7A03FuFngrET2q6LV/rG+uJ3AIBeoVsXtEgu73cdDexNVsl45vsyvY1cm1Cx
-	 1hOETZh0jp4qnoKgGPnhlDVHT0yKDI8YTB3aqvLXIe1ULwV8jeygwnLlEB3PRFLDg2
-	 adhk41lQTL0VQ==
-Date: Wed, 16 Jul 2025 10:27:56 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	joel@jms.id.au, andrew@codeconstruct.com.au, linux-aspeed@lists.ozlabs.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, 
-	linus.walleij@linaro.org, p.zabel@pengutronix.de, BMC-SW@aspeedtech.com
-Subject: Re: [PATCH v2 04/10] dt-bindings: pinctrl: aspeed,ast2600-pinctrl:
- Add PCIe RC PERST# group
-Message-ID: <20250716-provocative-worm-of-gallantry-3797f8@krzk-bin>
-References: <20250715034320.2553837-1-jacky_chou@aspeedtech.com>
- <20250715034320.2553837-5-jacky_chou@aspeedtech.com>
+	b=nnUBjipMfPB2BJS84RlGSNZsB9Ay7VhRRQ32xD2SjO7iD2mOCg4UVNkCWF60AO6tK
+	 P9PWMcw2UA1/H9AlpuU++Y3qv0I4DzrpkVQgheexwOv9KjL6KHd5OAdeuFzX4tHkbH
+	 JMfcp2EGdO4c44eIJoMmu3ucEsk0nCqK14gtRdVg=
+Date: Wed, 16 Jul 2025 11:15:39 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: abdiel.janulgue@gmail.com, daniel.almeida@collabora.com,
+	robin.murphy@arm.com, a.hindborg@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, lossin@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, bhelgaas@google.com, kwilczynski@kernel.org,
+	rafael@kernel.org, rust-for-linux@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] rust: dma: add DMA addressing capabilities
+Message-ID: <2025071627-outlet-slacker-9382@gregkh>
+References: <20250710194556.62605-1-dakr@kernel.org>
+ <20250710194556.62605-3-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250715034320.2553837-5-jacky_chou@aspeedtech.com>
+In-Reply-To: <20250710194556.62605-3-dakr@kernel.org>
 
-On Tue, Jul 15, 2025 at 11:43:14AM +0800, Jacky Chou wrote:
-> Add PCIe PERST# group to support for PCIe RC.
-> 
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
-> ---
->  .../devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml     | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-> index 80974c46f3ef..5d7fbb1c72b7 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-> @@ -254,6 +254,7 @@ additionalProperties:
->          - WDTRST2
->          - WDTRST3
->          - WDTRST4
-> +        - PCIERC1
+On Thu, Jul 10, 2025 at 09:45:44PM +0200, Danilo Krummrich wrote:
+> +/// Returns a bitmask with the lowest `n` bits set to `1`.
+> +///
+> +/// For `n` in `0..=64`, returns a mask with the lowest `n` bits set.
+> +/// For `n > 64`, returns `u64::MAX` (all bits set).
+> +///
+> +/// # Examples
+> +///
+> +/// ```
+> +/// use kernel::dma::dma_bit_mask;
+> +///
+> +/// assert_eq!(dma_bit_mask(0), 0);
+> +/// assert_eq!(dma_bit_mask(1), 0b1);
+> +/// assert_eq!(dma_bit_mask(64), u64::MAX);
+> +/// assert_eq!(dma_bit_mask(100), u64::MAX); // Saturates at all bits set.
+> +/// ```
+> +pub const fn dma_bit_mask(n: usize) -> u64 {
+> +    match n {
+> +        0 => 0,
+> +        1..=64 => u64::MAX >> (64 - n),
+> +        _ => u64::MAX,
+> +    }
+> +}
 
-What feedback Aspeed received about ordering lists? More than once?
+This is just the C macro DMA_BIT_MASK(), right?  If so, can that be said
+here somewhere?  Or, how about turning DMA_BIT_MASK() into an inline
+function which could then be just called by the rust code directly
+instead?
 
-Best regards,
-Krzysztof
+Just a minor thing, but it stood out to me here.
 
+thanks,
+
+greg k-h
 
