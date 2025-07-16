@@ -1,84 +1,57 @@
-Return-Path: <linux-pci+bounces-32329-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32330-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41CD3B07EF4
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 22:31:24 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79A25B07F11
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 22:42:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8A98416A636
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 20:31:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E065A7AC3C6
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 20:40:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86ED528FAA7;
-	Wed, 16 Jul 2025 20:31:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4E6F2C178E;
+	Wed, 16 Jul 2025 20:42:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="efF0hPcZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGCYj5/m"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56121273FD;
-	Wed, 16 Jul 2025 20:31:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92DF2C15B5;
+	Wed, 16 Jul 2025 20:42:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752697879; cv=none; b=mtQSJzT3I0ksx8kwcHSKJbFxpT7y+zyvUWh6DUO5r3l77Wo+h97jCVWAzdx50aXWN4G0dCtgnvYpePCGggeStgqCNb9qkfLCW32hw2aY5mjY0S+oFpvbIwgZPpe0no94tg9fR3yFpufJm4L8XAbHngPF8uLmP8mH8ELVbqfk5Ks=
+	t=1752698529; cv=none; b=bOAPFhFsL4U39/4J9ReOm+hpK0ZcUBHS60mbLOe2WJJzT62N1cCtb/ZT+uopekobgb72e0vDo2stV186K9e7DkYzhS9gXksb3t4+c27ZJGpOJc3hniRxvkaLpwZnrBsEj0cAsTpwHdmcIG2ZYxMO1xkdkqOYhzQLZvC+EbhCTm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752697879; c=relaxed/simple;
-	bh=kRiXunSKIWhECmgIaCZqujGPFLD5IyiabiwSwI/oAUw=;
+	s=arc-20240116; t=1752698529; c=relaxed/simple;
+	bh=bOjYuzw7/nV/QXztvKR/9wxevijYcmuDZGg6FJsuCdY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ejgfihwI7Ip4nEZmap0aPhpIjs8bOZE8FM2bn2AxFI8SvQ+iz7EnELHgJSnVoZ3LlYNVMLIoLwFOzLmsU7lK5n1SCtUeB3k+uU6byG8agn2JzkaxA3IdmYMBg3rFCvJS9XA/t/gJ2JyWqwJ3yYcWIUpjza0Rupo2dFqmfKfEc+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=efF0hPcZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B453BC4CEE7;
-	Wed, 16 Jul 2025 20:31:16 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Fjuth+KqV1OWVrLViCugPw5SjExUk6GO/DF3qHdL2Rl1Pb7NXDMBny55kTk7xyfZh4LmPFufppAHi4d41MjxFaefLR44AjMvfDpExVdHSfK0PY9AvPfNicasTN1YEo06lyR6TKdeNiC0z0SEpzc/kzAWmY9NZIY9WeHLxIsZtFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGCYj5/m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C73BC4CEF1;
+	Wed, 16 Jul 2025 20:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752697876;
-	bh=kRiXunSKIWhECmgIaCZqujGPFLD5IyiabiwSwI/oAUw=;
+	s=k20201202; t=1752698529;
+	bh=bOjYuzw7/nV/QXztvKR/9wxevijYcmuDZGg6FJsuCdY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=efF0hPcZqjnO64wo0iSK/h4ZKrebfuyFzwH7mVu+6WyNJq9lz4t6ieWUVVRTRmp1k
-	 ZyUQlnPJBXrf36cVsIwM+lr5rw4JmHHyPSnxIxc+sMTR5nc+fov+3HTPN8Zz+/It7N
-	 nFhVdmof/TLwUmuR5wv2Z5SYP1YMaekWd9SRe52KrMJtXOrqM7TWHLN/FIuuNQPx5Y
-	 IBpazzdB+v05g2NH6+eI5Egja4tj22kqB5+MXf7a0C48d9Z0SHsuEtTUrYuhEPtBT4
-	 DZmGj5yCLKi0JGd+KmWsm+B2IIr4Fk/I4kdlrhDnCNII0vLcGpI6DyGqXSw8zwSesI
-	 2ECRq60OVgk5g==
-Date: Wed, 16 Jul 2025 15:31:15 -0500
+	b=RGCYj5/m+8BGAP7nMkjg2jJ+YpnyXiPgaxbWv29MtsTmYhud95FUdhQNlOz6l1A3r
+	 m1XADHbovkwVcHNjocbsXSTs9shcPHmN6zxS2EokcyMl7NBCg/7J6aw3QWJXxjZo8Y
+	 e5wH4ODW8L9Bg39rIFcnPAIv6eQQaSsJxYRJkVVbO38BJ6IPSQHRFlg+v34h0IQWcE
+	 W183v4bZSuH+kTajqgSiZBHQj3ijmz3YOduuPyQIVL3X4ioY/jkwBXjVNkRrLpSCb1
+	 9Ze26cXgdTeUx/q4jHEjDPurI3PuG+lQ82q3rU4sS7TD21pPNOJK6/I0cnNlgL4HBD
+	 IH2jJiPafr6Ww==
+Date: Wed, 16 Jul 2025 15:42:07 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Antonio Quartulli <antonio@mandelbit.com>,
-	Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+To: Brian Norris <briannorris@chromium.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Frank Li <Frank.li@nxp.com>,
+	Minghuan Lian <minghuan.Lian@nxp.com>,
+	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
 	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-	"K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 16/16] PCI: vmd: Switch to msi_create_parent_irq_domain()
-Message-ID: <20250716203115.GA2553753@bhelgaas>
+	Rob Herring <robh+dt@kernel.org>, imx@lists.linux.dev,
+	linux-pci@vger.kernel.org
+Subject: Re: Does dwc/pci-layerscape.c support AER?
+Message-ID: <20250716204207.GA2554240@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,67 +60,47 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250716201216.TsY3Kn45@linutronix.de>
+In-Reply-To: <aHfgpWsC1GlQUIEm@google.com>
 
-On Wed, Jul 16, 2025 at 10:12:16PM +0200, Nam Cao wrote:
-> On Wed, Jul 16, 2025 at 09:52:05PM +0200, Antonio Quartulli wrote:
-> > Hi Nam,
-> Hi Antonio,
-> 
-> > On 26/06/2025 16:48, Nam Cao wrote:
-> > [...]
-> > > -static void vmd_msi_free(struct irq_domain *domain,
-> > > -			struct msi_domain_info *info, unsigned int virq)
-> > > +static void vmd_msi_free(struct irq_domain *domain, unsigned int virq, unsigned int nr_irqs)
-> > >   {
-> > >   	struct vmd_irq *vmdirq = irq_get_chip_data(virq);
-> > > -	synchronize_srcu(&vmdirq->irq->srcu);
-> > > +	for (int i = 0; i < nr_irqs; ++i) {
-> > > +		synchronize_srcu(&vmdirq->irq->srcu);
-> > > -	/* XXX: Potential optimization to rebalance */
-> > > -	scoped_guard(raw_spinlock_irq, &list_lock)
-> > > -		vmdirq->irq->count--;
-> > > +		/* XXX: Potential optimization to rebalance */
-> > > +		scoped_guard(raw_spinlock_irq, &list_lock)
-> > > +			vmdirq->irq->count--;
-> > > -	kfree(vmdirq);
-> > > +		kfree(vmdirq);
-> > > +	}
+On Wed, Jul 16, 2025 at 10:25:57AM -0700, Brian Norris wrote:
+> On Wed, Jul 16, 2025 at 09:35:38PM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, Jul 16, 2025 at 08:20:38AM GMT, Brian Norris wrote:
+> > > On Wed, Jul 16, 2025 at 12:47:10PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Wed, Jul 02, 2025 at 04:44:48PM GMT, Brian Norris wrote:
+> > > > > On Wed, Jul 02, 2025 at 07:09:42PM -0400, Frank Li wrote:
+> > > > > OTOH, I do also believe there are SoCs where DWC PCIe is
+> > > > > available, but there is no external MSI controller, and so
+> > > > > that same problem still may exist. I may even have such SoCs
+> > > > > available...
+> > > > 
+> > > > Yes, pretty much all Qcom SoCs without GIC-v3 ITS suffer from
+> > > > this limitation.  And the same should be true for other
+> > > > vendors also.
+> > > > 
+> > > > Interestingly, the Qcom SoCs route the AER/PME via 'global'
+> > > > SPI interrupt, which is only handled by the controller driver.
+> > > > This is similar to the 'aer' SPI interrupt in layerscape
+> > > > platforms.
+> > > 
+> > > Yeah, I have some SoCs like this as well. But I also believe
+> > > that I have INTx available, and that even when MSI doesn't work
+> > > for AER/PME, INTx might.
+> > > 
+> > > Do Qcom SoCs route INTx?
 > > 
-> > By introducing a for loop in this function, you are re-using vmdirq after
-> > free'ing it.
-> > 
-> > I can't send a patch because I am not faimliar with this API and I don't
-> > know how to fix it.
-> > 
-> > However, the issue was reported today by Coverity.
-> > 
-> > Any idea? :-)
-> 
-> Thanks for the report. That was indeed a mistake from my side.
-> 
-> I hope PCI maintainers don't mind squashing the below diff.
+> > Yes, they do. But currently, we can only use it by booting with
+> > pcie_pme=nomsi cmdline parameter.
 
-Squashed, thanks!  Updated commit:
+Ugh.  I think these controllers might be out of spec (or maybe we're
+not configuring MSI/MSI-X correctly for them).  Per PCIe r7.0, sec
+6.1.4.3:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?id=4246b7fccf26
+  While enabled for MSI or MSI-X operation, a Function is prohibited
+  from using INTx interrupts (if implemented) to request service (MSI,
+  MSI-X, and INTx are mutually exclusive).
 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 48a6096cbbc0..50f0c91d561c 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -280,9 +280,11 @@ static int vmd_msi_alloc(struct irq_domain *domain, unsigned int virq,
->  static void vmd_msi_free(struct irq_domain *domain, unsigned int virq,
->  			 unsigned int nr_irqs)
->  {
-> -	struct vmd_irq *vmdirq = irq_get_chip_data(virq);
-> +	struct vmd_irq *vmdirq;
->  
->  	for (int i = 0; i < nr_irqs; ++i) {
-> +		vmdirq = irq_get_chip_data(virq + i);
-> +
->  		synchronize_srcu(&vmdirq->irq->srcu);
->  
->  		/* XXX: Potential optimization to rebalance */
-> 
+If the controller advertises MSI or MSI-X, I think we will enable it
+and expect AER, PME, hotplug, etc. to use it.
+
+Bjorn
 
