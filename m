@@ -1,108 +1,105 @@
-Return-Path: <linux-pci+bounces-32241-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32242-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C8FCB06FC2
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 09:59:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7DF0B06FD3
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 10:04:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7CFE2189F0AA
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 08:00:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D94BC189F5D7
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 08:04:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2882928CF5E;
-	Wed, 16 Jul 2025 07:59:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7272289E3D;
+	Wed, 16 Jul 2025 08:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TbIJ5b9p";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u+0xHGWs"
+	dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b="E66Mh1Db"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37642877C8;
-	Wed, 16 Jul 2025 07:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B417C2857E2
+	for <linux-pci@vger.kernel.org>; Wed, 16 Jul 2025 08:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752652793; cv=none; b=p/llFgAYoC5Jue2/nx/j60QQ+Pwx0JeKqmkZO9lGi4J0+7wlrF8eASQKzOkpSuzeWcIjyQhR2UP+UC7RExCDbFRUAzQX1GV4/vS4bHxq2oNhoHw8hwev9Vp2wrUPLnPnnWLLL97m4I6YocdNDDVikPnM4AYZXcl5vVoZ+25Qntg=
+	t=1752653035; cv=none; b=FS+rsqgo6tzytUA5Z5E6XAXz28BdfWEv2HD+TsuubnrMg8xYz7ve6hHHYVMUL3PvpGoRdk7kgwHPu5oZ1dAd6IntJiZeY6Ve0sqOfqL4I3AYPufWwxneUEYm4jVMLb/tXUG1Cuoip9sVrLDEXyDO85yq1a/m29QECfMxWjUX6mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752652793; c=relaxed/simple;
-	bh=Ar0Xb/Uf8JcXVLRgVcSyG1l0VNAQj6K9qFOU9YD1KGQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CEl03w/Usa6MVWf1P/irrXbXETpwCG73v317fPBIS2MDqElXhSfNMaSLM3EBr9bKZwlyMjUOgMwF1gzPM+57J2IWiKIBt6WYOTY8HbCrgz4Ur4LlqI4Kakeo3NwLT8QrEd4cuNJsABJOhZk1Dsz+JYJ9V07PdC360z8iQECXGUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TbIJ5b9p; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u+0xHGWs; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Date: Wed, 16 Jul 2025 09:59:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1752652784;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NNqMoBx61d+HMyv4cP0TPSF1O81dNABhWxIpn3gpQyY=;
-	b=TbIJ5b9pDaeCsnZ8PUhEMT7Y3+Iga0EcCg09V0TNLdpWOGdr7x407Y8U6AE2pciN8pn+Tm
-	UjEEKtNC84cf9m5lSVTLU6ea55Lfe4lgUiJhaKCv5ac3KxPNxiaVV7TrgoXB1MxhUFSh3J
-	8f7yRDyP/3rVxtmLOy25GwjtfE4BW/14NziCxoqkpJXNQdpdQ9XLSb/e4bvwWhLhFBN2mU
-	+Xf8sm/fUJS1rNi0o846TLyPFhI+WlBUHqJeI+qzC9vIzYRSwhF9L9O4uzhvUnMu+izMLb
-	OV2CGcw+7YUUgSsxBdC9hz9/vJBOv+tBTnHidqNv34BWh3C/2gIg4MqviN9QOw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1752652784;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NNqMoBx61d+HMyv4cP0TPSF1O81dNABhWxIpn3gpQyY=;
-	b=u+0xHGWsSbGWdBLjEvD4tgttGTvUnfDq9Xeehwcp0Rjrwkhc07ykuhUFysc6gbxcDZn4j9
-	dL+pqY6yoTQ6abDQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	linux-kernel@vger.kernel.org, tglx@linutronix.de,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] pci/controller: Use dev_fwnode()
-Message-ID: <20250716075942.2aCLkdCs@linutronix.de>
-References: <20250611104348.192092-16-jirislaby@kernel.org>
- <20250715184917.GA2479996@bhelgaas>
+	s=arc-20240116; t=1752653035; c=relaxed/simple;
+	bh=PWyG0Hvg1POxl02CDV5NXpcMX19Ft9gYgcFyl5hDkns=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jf0o0+etbeK8MBOSPstFoPKukdsydEEnp/nD0GyRrRntHPzL6j4aT7ZwcpoeSaj7rru9nCHEEdrCW3eu3ii6PrBjoWedg3ndOZQ1QoIry1GsZLCFYiq1EkT9BIFIkbb+kmY5m5B6nPGogqQWrCY23So5x0/EgH2ET7ma6LVY0IQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com; spf=pass smtp.mailfrom=qtec.com; dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=E66Mh1Db; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtec.com
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5344894a85aso2763563e0c.2
+        for <linux-pci@vger.kernel.org>; Wed, 16 Jul 2025 01:03:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=qtec.com; s=google; t=1752653032; x=1753257832; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PWyG0Hvg1POxl02CDV5NXpcMX19Ft9gYgcFyl5hDkns=;
+        b=E66Mh1Db13FNw8d3pIhYvoT0UW6wSZPIUYAySSGh23CaSCg/1SmqaQdUABhT4eETms
+         jMAI2amU2J9JAvuV4qzlCRRRJZuIt+CQEZ6WeowH6YT1sn0qmvQOjwPyVDIMkCiZ3cmV
+         mH1g2vZy7G6+TVh+mDyYoDAcj3yp3/WLrELWeSJ2eqodTvFkUgXnxxvSvnmynb8dDi4C
+         RZUU6Wqgqr01JKKO3PDpiUOIFoyOtNITJERTXWYtawyKDmNOyl2bl1TbyxJgAeH0G3Cq
+         faB1YGlh75JII7Y+ft3MMo7waDZxBCSrL7rVwnWysb0ETeVJKhJLgrSCZoywLxXVPOC+
+         HUNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752653032; x=1753257832;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PWyG0Hvg1POxl02CDV5NXpcMX19Ft9gYgcFyl5hDkns=;
+        b=ePv3qeaTISfN3a3TeOpV1WHyVbc9nS+PMJsISMArKmHVDNnjzAb7oApUuXGLGTisd5
+         wAiTOdlB0NHVXkYBLgg55WmNcyPhJikpnUMyVRfBzTsKFpecInAG+sr1mA5ftx075MVM
+         8jK5fDfkq1SIwtQWu/OxWOJK9wkFAr33lYbjDle/Hs/CQnwjK/Q/aX0rrgYcICXNdo0V
+         RrM+ckhzwb1DflnLMmdDsqz9K1qTt91KA4YUNPvf2euBArp1FrCs0J4LvUu+Nbu+2pKg
+         ZwGfP5CRywlL+y65Aqlh0IwDvAR+zhoujJ0Cb7Pq+r8+boz6VjvSh7U5xWCj7p3NmC7M
+         cKPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLqN8eVeQIVCbbW0kze6j+DXyXvQtS+cfe/NJ3C+JBrTB2EPj860dgaES43Q4FaxIyIAqlxVodF94=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAkjiId51/J5QGrapZmwt4IFuYxlIeHsjpVJYShBcWcQ/rTHOy
+	zJHdkRnacsRkt58keF0hA5hs+KGAwPOtrpEeqsk5pgu2hCz6T2JV0zZPoO41poRT8j7mmRnJGZv
+	N7rLnSaDi/gGqQHCgu5SCAyaTQkfbTv6NnCeQLOrkoQ==
+X-Gm-Gg: ASbGncuWTATaEiGUiVkuTbAanasW3dtvbc9H7jG1yj7n29CBn1SbB3tNE4kLBAsQcDg
+	CA+l2FWmbu6rGoH4ODrJqhf2YB9WNhOG80AS4+Fk5BV3cTiuPQVUS5ely1n75jCvitPE99WqGW7
+	Eb7sJEP15tACloMyyvsSPOBEBzsRKgRTSlWCG86rJ2Q99RGtto4rbvD7EXfEHMOwfH3OJQNbsoF
+	352317hVOu0EbY0
+X-Google-Smtp-Source: AGHT+IHuTp8Oe9gp929kW6Hut2cz4zrvspJHOxYdcWVKQbc+cNKYd+ZvcRbFGDU68t4/pUeH0eIZfybUIGS9src9Xjs=
+X-Received: by 2002:a05:6122:2492:b0:535:aea0:7a0a with SMTP id
+ 71dfb90a1353d-5373e272f46mr1343232e0c.2.1752653032364; Wed, 16 Jul 2025
+ 01:03:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250715184917.GA2479996@bhelgaas>
+References: <CAJDH93s25fD+iaPJ1By=HFOs_M4Hc8LawPDy3n_-VFy04X4N5w@mail.gmail.com>
+ <20241219112125.GAZ2QBteug3I1Sb46q@fat_crate.local> <20241219164408.GA1454146@yaz-khff2.amd.com>
+ <CAJDH93vm0buJn5vZEz9k9GRC3Kr6H7=0MSJpFtdpy_dSsUMDCQ@mail.gmail.com>
+ <Z78uOaPESGXWN46M@gmail.com> <CAJDH93uE+foFfRAXVJ48-PYvEUsbpEu_-BVoG-5HsDG66yY7AQ@mail.gmail.com>
+ <20250621145015.v7vrlckn6jqtfnb3@pali> <CAJDH93vTBkk7a5D0nOgNfBEjGfMhKbFnUWaQ1r6NDLqm0j3kOA@mail.gmail.com>
+ <20250715170637.mtplp7s73zwdbjay@pali>
+In-Reply-To: <20250715170637.mtplp7s73zwdbjay@pali>
+From: Rostyslav Khudolii <ros@qtec.com>
+Date: Wed, 16 Jul 2025 10:03:40 +0200
+X-Gm-Features: Ac12FXz0TL7qGwSyQ1mpiWrm6IGZDPvVlKHX_1XmAYakRfQ93gQ8h2JQTcbg__o
+Message-ID: <CAJDH93uXuR8cWSnUgOWwi=JNuS543mHLPJb9UUac2g=K4bFMSQ@mail.gmail.com>
+Subject: Re: PCI IO ECS access is no longer possible for AMD family 17h
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Yazen Ghannam <yazen.ghannam@amd.com>, 
+	Borislav Petkov <bp@alien8.de>, =?UTF-8?B?RmlsaXAgxaB0xJtkcm9uc2vDvQ==?= <p@regnarg.cz>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jul 15, 2025 at 01:49:17PM -0500, Bjorn Helgaas wrote:
-> On Wed, Jun 11, 2025 at 12:43:44PM +0200, Jiri Slaby (SUSE) wrote:
-> > irq_domain_create_simple() takes fwnode as the first argument. It can be
-> > extracted from the struct device using dev_fwnode() helper instead of
-> > using of_node with of_fwnode_handle().
-> > 
-> > So use the dev_fwnode() helper.
-> > 
-> > Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: linux-pci@vger.kernel.org
-> > ---
-> >  drivers/pci/controller/mobiveil/pcie-mobiveil-host.c | 5 ++---
-> >  drivers/pci/controller/pcie-mediatek-gen3.c          | 3 +--
-> 
-> I think the pcie-mediatek-gen3.c part of this is no longer relevant
-> after Nam's series [1].
+> Hello, thank you for information.
+>
+> Just I would like to know, where did you find information that the
+> EnableCF8ExtCfg register was moved to D18F4x044? It is documented in
+> some AMD specification?
+>
+> I did not find anything regarding this change.
 
-fwnode is still needed after my patch. As part of
-struct irq_domain_info info = { ... }
-
-You could squash this one into my patch. I personally would leave it be.
-But fine to me either way.
-
-> This pcie-mediatek-gen3.c was the only thing on the
-> pci/controller/mediatek-gen3 branch, so I'm going to drop that for now.
-> 
-> The pcie-mobiveil-host.c part is still queued on
-> pci/controller/mobiveil for v6.17.
-> 
-> [1] https://patch.msgid.link/bfbd2e375269071b69e1aa85e629ee4b7c99518f.1750858083.git.namcao@linutronix.de
-
-Best regards,
-Nam
+I mentioned the exact specification in my first message. It's under
+NDA, unfortunately.
 
