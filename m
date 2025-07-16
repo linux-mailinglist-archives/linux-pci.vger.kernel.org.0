@@ -1,55 +1,71 @@
-Return-Path: <linux-pci+bounces-32342-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32343-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2D13B080D5
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 01:11:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 857B0B080E6
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 01:23:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 254F41C27031
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 23:11:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A90AC1AA63A8
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 23:23:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACE532ECD28;
-	Wed, 16 Jul 2025 23:11:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C904D2EF9AA;
+	Wed, 16 Jul 2025 23:23:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TT0rWzgx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PdRxKix7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D72E3FE7;
-	Wed, 16 Jul 2025 23:11:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FE62EF9A6;
+	Wed, 16 Jul 2025 23:23:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752707483; cv=none; b=WGlrbacT3XrMFc++113n5rcgaTXsWEGWwNIpiXlTGHlVAYpdkWFeMzggVccQmpVkeRgSAQCd6eJSY7gxqHuyZSUuvYngmC3Kz9oVRapbnF3OSoN6pQFY1Z6aViwRZaVwlTyuEqfp8x0GiVJfbx/1NYoyBnfRTyZBZp2sHgj5OEk=
+	t=1752708181; cv=none; b=HVE9bzKNJd+cjraCmH95dsAFEMCS52NaI/gsO0OzB28e1Qe/WjfQBONbAflqQ2TbgPUj2v2YwMfkiN1mvAp3SvaTxGlQUg69bqJJNLLzk3I8yJlCcYriM7/lbX+ItYgsuzWeUdFW6pJjhBtxzAa1KYd9NojYXKhyM5cRI/+tREU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752707483; c=relaxed/simple;
-	bh=/l4TyeEkX/0K3FTsq04WjRdyLLSoPhLq+387Eo/nNuo=;
+	s=arc-20240116; t=1752708181; c=relaxed/simple;
+	bh=kc48KClrflS3QKuEYBrw6FQdfI3+0RKI6uqfLZEJCJA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=S4mAsFl4eUU6k0xxkg+hHP9GjV70UETsM+uBS1wnS2/w1nYFI3Z8Io0SNMFwcnghKHJDFkz909lndfotUQ03t0rFNi+aYYO6j9AP3EjLX7V0x6KOiQFs0odCW6V0SvtTJBIcTi9RWU4/z8zCDLykR0O5Lj1PGdco+fwGIyzYebg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TT0rWzgx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1079FC4CEE7;
-	Wed, 16 Jul 2025 23:11:23 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=denpMf69JlYuXVz2obyjn/yYxUcc17ITlk6UnGbWkEMVCZ9ybUBGHK7VlMzVGP4vFRUqth2r4bId/eqIwLoLdN8g0jDYp45eD1ucwfFeV1YWwys6Mg4tgzLkMPpgOQsQuubnj2t+pqxTcRE1mwUdOltTcMIw1iaR+kygiEx/bhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PdRxKix7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D48C4CEE7;
+	Wed, 16 Jul 2025 23:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752707483;
-	bh=/l4TyeEkX/0K3FTsq04WjRdyLLSoPhLq+387Eo/nNuo=;
+	s=k20201202; t=1752708181;
+	bh=kc48KClrflS3QKuEYBrw6FQdfI3+0RKI6uqfLZEJCJA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TT0rWzgxzeCEn7X6fG28hWm08c5vXFsCr9qHK4nYL8gcx5mY1bo3fjACkUdL+EecL
-	 55ItTWub+UjltOIgqq7AIwxMlzoLUdoxhCEMsG4qUKTDy0NpgDP5dKLq9i2t+1eWTH
-	 zHZqq4L7379nhcdp6IZNV/vImuuityWOUAiaIBomhb9mqfI6uaoWBG9IaISSy3ZvyM
-	 zJc7KDYd9l2fmBGhRjLh+sN3L92q9arWiTu+2p5PIPyGNf1AB5JfJplvXXgi4zQaeJ
-	 ztE6bpdWTQuRxrnozLbKm5AwT1TXzxbSq5nHEcA7sc/qAtNUxnCljEMaRBXTdEtCuS
-	 pNIV5pK3208Pg==
-Date: Wed, 16 Jul 2025 18:11:21 -0500
+	b=PdRxKix7vIub6Gp83B+TjdRX9RT5n0aOAp+7iLG3sar+bkphz2AxNajgCR6Q5GetF
+	 kvrzzKiqY9/Ez8rJ6UCttQpmr4wbRxRjT7Qp+ad4M+04xdkpKXRHhnOSU+oQrQOcn5
+	 C7Rac+lPveNjLIqMz+krFJGo5a5J8PXunMqjny+Vj4ZhntS3TinZFib/sgkc9go1Dp
+	 Hla+maen/j4qwXWOK1ch0swazxv+ROJglFlI6zOBSc0x1B2QAZ2bX4CNdq8T36GSBG
+	 ZA779cD7dPXejEtlo5ztNScmQxaXBNUcRU28TZGdZxFnb9v9KTENfWg/MbrhXqBOkc
+	 Y1eO4q0QLnhKw==
+Date: Wed, 16 Jul 2025 18:23:00 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	jingoohan1@gmail.com, mani@kernel.org, robh@kernel.org,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v14 0/7] Refactor capability search into common macros
-Message-ID: <20250716231121.GA2564572@bhelgaas>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+	"open list:SOUND" <linux-sound@vger.kernel.org>,
+	Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v8 0/9] Adjust fbcon console device detection
+Message-ID: <20250716232300.GA2565283@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,125 +74,79 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250716161203.83823-1-18255117159@163.com>
+In-Reply-To: <20250714212147.2248039-1-superm1@kernel.org>
 
-On Thu, Jul 17, 2025 at 12:11:56AM +0800, Hans Zhang wrote:
-> Dear Maintainers,
+On Mon, Jul 14, 2025 at 04:21:37PM -0500, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> This patch series addresses long-standing code duplication in PCI
-> capability discovery logic across the PCI core and controller drivers.
-> The existing implementation ties capability search to fully initialized
-> PCI device structures, limiting its usability during early controller
-> initialization phases where device/bus structures may not yet be
-> available.
+> This series started out as changes to VGA arbiter to try to handle a case
+> of a system with 2 GPUs that are not VGA devices.  This was discussed
+> but decided not to overload the VGA arbiter for non VGA devices.
 > 
-> The primary goal is to decouple capability discovery from PCI device
-> dependencies by introducing a unified framework using config space
-> accessor-based macros. This enables:
+> Instead move the x86 specific detection of framebuffer resources into x86
+> specific code that the fbcon can use to properly identify the primary
+> device. This code is still called from the VGA arbiter, and the logic does
+> not change there. To avoid regression default to VGA arbiter and only fall
+> back to looking up with x86 specific detection method.
 > 
-> 1. Early Capability Discovery: Host controllers (e.g., Cadence, DWC)
-> can now perform capability searches during pre-initialization stages
-> using their native config accessors.
+> In order for userspace to also be able to discover which device was the
+> primary video display device create a new sysfs file 'boot_display'.
 > 
-> 2. Code Consolidation: Common logic for standard and extended capability
-> searches is refactored into shared macros (`PCI_FIND_NEXT_CAP` and
-> `PCI_FIND_NEXT_EXT_CAP`), eliminating redundant implementations.
+> A matching userspace implementation for this file is available here:
+> Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/39
+> Link: https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/2038
 > 
-> 3. Safety and Maintainability: TTL checks are centralized within the
-> macros to prevent infinite loops, while hardcoded offsets in drivers
-> are replaced with dynamic discovery, reducing fragility.
+> Dave Airlie has been pinged for a comment on this approach.
+> Dave had suggested in the past [1]:
 > 
-> Key improvements include:  
-> - Driver Conversions: DesignWare and Cadence drivers are migrated to
->   use the new macros, removing device-specific assumptions and ensuring
->   consistent error handling.
+> "
+>  But yes if that doesn't work, then maybe we need to make the boot_vga
+>  flag mean boot_display_gpu, and fix it in the kernel
+> "
 > 
-> - Enhanced Readability: Magic numbers are replaced with symbolic
->   constants, and config space accessors are standardized for clarity.
+> This was one of the approached tried in earlier revisions and it was
+> rejected in favor of creating a new sysfs file (which is what this
+> version does).
 > 
-> - Backward Compatibility: Existing PCI core behavior remains unchanged.
+> It is suggested that this series merge entirely through the PCI tree.
 > 
-> ---
-> Changes since v13:
-> - Split patch 3/6 into two patches for searching standard and extended capability. (Bjorn)
-> - Optimize the code based on the review comments from Bjorn.
-> - Patch 5/7 and 6/7 use simplified macro definitions: PCI_FIND_NEXT_CAP(), PCI_FIND_NEXT_EXT_CAP().
-> - The other patches have not been modified.
-> 
-> Changes since v12:
-> - Modify some commit messages, code format issues, and optimize the function return values.
-> 
-> Changes since v11:
-> - Resolved some compilation warning.
-> - Add some include.
-> - Add the *** BLURB HERE *** description(Corrected by Mani and Krzysztof).
-> 
-> Changes since v10:
-> - The patch [v10 2/6] remove #include <uapi/linux/pci_regs.h> and add macro definition comments.
-> - The patch [v10 3/6] remove #include <uapi/linux/pci_regs.h> and commit message were modified.
-> - The other patches have not been modified.
-> 
-> Changes since v9:
-> - Resolved [v9 4/6] compilation error.
->   The latest 6.15 rc1 merge __dw_pcie_find_vsec_capability, which uses 
->   dw_pcie_find_next_ext_capability.
-> - The other patches have not been modified.
-> 
-> Changes since v8:
-> - Split patch.
-> - The patch commit message were modified.
-> - Other patches(4/6, 5/6, 6/6) are unchanged.
-> 
-> Changes since v7:
-> - Patch 2/5 and 3/5 compilation error resolved.
-> - Other patches are unchanged.
-> 
-> Changes since v6:
-> - Refactor capability search into common macros.
-> - Delete pci-host-helpers.c and MAINTAINERS.
-> 
-> Changes since v5:
-> - If you put the helpers in drivers/pci/pci.c, they unnecessarily enlarge
->   the kernel's .text section even if it's known already at compile time
->   that they're never going to be used (e.g. on x86).
-> - Move the API for find capabilitys to a new file called
->   pci-host-helpers.c.
-> - Add new patch for MAINTAINERS.
-> 
-> Changes since v4:
-> - Resolved [v4 1/4] compilation warning.
-> - The patch subject and commit message were modified.
-> 
-> Changes since v3:
-> - Resolved [v3 1/4] compilation error.
-> - Other patches are not modified.
-> 
-> Changes since v2:
-> - Add and split into a series of patches.
-> ---
-> 
-> Hans Zhang (7):
->   PCI: Introduce generic bus config read helper function
->   PCI: Clean up __pci_find_next_cap_ttl() readability
->   PCI: Refactor standard capability search into common macro
->   PCI: Refactor extended capability search into common macro
->   PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
->   PCI: cadence: Use common PCI host bridge APIs for finding the
->     capabilities
->   PCI: cadence: Use cdns_pcie_find_*capability to avoid hardcode
-> 
->  drivers/pci/access.c                          | 15 ++++
->  .../pci/controller/cadence/pcie-cadence-ep.c  | 38 ++++----
->  drivers/pci/controller/cadence/pcie-cadence.c | 30 +++++++
->  drivers/pci/controller/cadence/pcie-cadence.h | 18 ++--
->  drivers/pci/controller/dwc/pcie-designware.c  | 83 ++++--------------
->  drivers/pci/pci.c                             | 76 +++-------------
->  drivers/pci/pci.h                             | 87 +++++++++++++++++++
->  include/uapi/linux/pci_regs.h                 |  3 +
->  8 files changed, 196 insertions(+), 154 deletions(-)
-> 
-> 
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/37#note_2938602 [1]
 
-Applied to pci/capability-search for v6.17, thanks for all this work!
+There's an underlying bug that we're trying to fix with this series
+and the related libpciaccess and xserver changes, isn't there?  Can we
+include that somewhere to help motivate this?  (I guess it's really
+only the last two or three patches that are strictly related, right?)
+
+> v8 fixes an LKP robot reported issue
+> 
+> Mario Limonciello (9):
+>   PCI: Add helper for checking if a PCI device is a display controller
+>   vfio/pci: Use pci_is_display()
+>   vga_switcheroo: Use pci_is_display()
+>   iommu/vt-d: Use pci_is_display()
+>   ALSA: hda: Use pci_is_display()
+>   Fix access to video_is_primary_device() when compiled without
+>     CONFIG_VIDEO
+>   PCI/VGA: Replace vga_is_firmware_default() with a screen info check
+>   fbcon: Use screen info to find primary device
+>   PCI: Add a new 'boot_display' attribute
+> 
+>  Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
+>  arch/parisc/include/asm/video.h         |  2 +-
+>  arch/sparc/include/asm/video.h          |  2 ++
+>  arch/x86/include/asm/video.h            |  2 ++
+>  arch/x86/video/video-common.c           | 17 ++++++++-
+>  drivers/gpu/vga/vga_switcheroo.c        |  2 +-
+>  drivers/iommu/intel/iommu.c             |  2 +-
+>  drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++++++
+>  drivers/pci/vgaarb.c                    | 31 +++--------------
+>  drivers/vfio/pci/vfio_pci_igd.c         |  3 +-
+>  include/linux/pci.h                     | 15 ++++++++
+>  sound/hda/hdac_i915.c                   |  2 +-
+>  sound/pci/hda/hda_intel.c               |  4 +--
+>  13 files changed, 101 insertions(+), 35 deletions(-)
+> 
+> -- 
+> 2.43.0
+> 
 
