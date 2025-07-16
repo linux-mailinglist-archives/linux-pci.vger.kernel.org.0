@@ -1,103 +1,143 @@
-Return-Path: <linux-pci+bounces-32281-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32282-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5E1DB079BE
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 17:26:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 00575B079DA
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 17:29:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78B1D1C25705
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 15:23:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C28E1892A50
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 15:25:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4091C2F6F83;
-	Wed, 16 Jul 2025 15:21:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0E9E2F3C30;
+	Wed, 16 Jul 2025 15:24:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OS9vTLlE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eXV0vx9q"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12BC92F5C5C;
-	Wed, 16 Jul 2025 15:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90394288CAF;
+	Wed, 16 Jul 2025 15:24:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752679288; cv=none; b=I9LEqFcBokXCC92vOoVgFmv14qG7RgcfYm5+3QnB8RRaGRVbuXXTnzzg2/jECKl+NFJPlygqcwNNFj0idBKkYb9/x4Kxg2cXSneKFgO8Jb+p7xflGWECeUUxVPEjtQI988xLtPfpRa9WMEIGdZtdOWMOtpt7X0pmT7B9RKiwnFQ=
+	t=1752679467; cv=none; b=OVMI6W7KKKqxk/HfuMUbdTEDjYWZK7A5vbMrIU2en1zEWDtCYzVDvliokVjcmLH0JXOR46+YuLdAn+icn/vJ5dLInsPvOZ4KYV5DTponitw5xeOT/l4y+bWP/MpOLSoghQiHWgit+vJBoIJJAOE77AICowCcHlaWn80Np14IB+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752679288; c=relaxed/simple;
-	bh=+5nBuTaHK2eqj8Sbjf7jOgP+gLLgEVm3azLVcfpx7Wk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ZhvONk02sE4kniATsLTn5MvS4EPI1XIYShROdJIzEweBwxnVwMlke9HEk7iK7crlcUGr6S+17eefaiVYJi88Tu2Wmj9yyajEANtKzXhTt7aEFMVq3IHkxF5Ja42o7uQby8oog1bxkvVDHxSu+bO+zlFNhODl5ZwUyHTXkSDtSKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OS9vTLlE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74D37C4CEFC;
-	Wed, 16 Jul 2025 15:21:27 +0000 (UTC)
+	s=arc-20240116; t=1752679467; c=relaxed/simple;
+	bh=LAicS+pihtv9EEihexoFYLo1L3pM9ZqAXYRukX438Nw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uINzc62rXn4EpAkJ3LS4mW2ssoPAUxhvgU5KsdG5LdCwUzFfjv735sldHs26nQFoXaW45TIvYXbbXwNLpU1V6g9FBHPIId3F+n+sTiPEgePy+yRJBIMKEs43iF4qL9CzGjxm5YTxeC0WXfWWS6DYq3122dXL7bj6IuxKwvc5OMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eXV0vx9q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5741BC4CEF0;
+	Wed, 16 Jul 2025 15:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752679287;
-	bh=+5nBuTaHK2eqj8Sbjf7jOgP+gLLgEVm3azLVcfpx7Wk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=OS9vTLlExI0ev1o7vTPmfJqaiGDqDFdXLIYU/2oNar9+GE0p2sFREnmEPM9tchhJs
-	 L1Y2aUgJ4GkDvZyEazbL1L4zjmorIK5QnLjOF5jQ53IdaQ865dzJqVFtTLE1IAo27A
-	 RvDAwYt17LRGns6LsX/cnluz58W0pJAFqXqJ7Vr/bV7i/gQg+DN7Sp0ck+1Yd2EW66
-	 KAiEFjBbdQKlsYfAto11NOc+gChFKfdj9FN85e4nGDbF2oMyRkkXd2lKBnS4GyIP7N
-	 yAaR39a7tCBwUcM5duceF2G1CYskt7SaW0TbDtgxAdJVQX0D5dotcL1wbeoKPl8FH9
-	 KBOFS1Hs7+Khg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id C64EB383BA33;
-	Wed, 16 Jul 2025 15:21:48 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1752679467;
+	bh=LAicS+pihtv9EEihexoFYLo1L3pM9ZqAXYRukX438Nw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eXV0vx9qsPrkBBLAYy4/BJFyqFKY7mfLVIIl/hUHZBRcBi1p1i6xoMoDMgFTiDcsV
+	 MVBJDfF+6g2FvAvMAt0V8p0+SxYErYjU4HcK2UM0oiqt4PSzCpPNxGIZVYqIx0ivDs
+	 c0huQIb6tjN3KkM2uKjEqN7BVSSZoHZIaZonZbGPViwBo9SG6hayKuMuS+LSyuhFvM
+	 bOYzJWOWLGEspFmpulKbFJoyvEkfovtHTDN4qRg3zoNLQuNwJ4hyqMzUvs7GLBL49Z
+	 rR2DpPB6jo2d1Dew+8bEJ6F4aQ8FtryO+uO3Xb+jgh380PaOaULW6g5H0RVSmHdK9P
+	 Szcu9EgUZpT9w==
+Message-ID: <051e5c07-f012-44b1-8e6b-ef9c13ee7177@kernel.org>
+Date: Wed, 16 Jul 2025 10:24:24 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/3] PCI: host-generic: Fix driver_data overwriting bugs
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <175267930756.1224517.4628176951767870692.git-patchwork-notify@kernel.org>
-Date: Wed, 16 Jul 2025 15:21:47 +0000
-References: <20250625111806.4153773-1-maz@kernel.org>
-In-Reply-To: <20250625111806.4153773-1-maz@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-riscv@lists.infradead.org, bhelgaas@google.com,
- alyssa@rosenzweig.io, robh@kernel.org, mani@kernel.org,
- lpieralisi@kernel.org, kwilczynski@kernel.org, j@jannau.net,
- geert+renesas@glider.be, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 9/9] PCI: Add a new 'boot_display' attribute
+To: Maxime Ripard <mripard@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+ "open list:SOUND" <linux-sound@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250714212147.2248039-1-superm1@kernel.org>
+ <20250714212147.2248039-10-superm1@kernel.org>
+ <20250716-upbeat-tody-of-psychology-93e2a2@houat>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250716-upbeat-tody-of-psychology-93e2a2@houat>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This series was applied to riscv/linux.git (fixes)
-by Bjorn Helgaas <bhelgaas@google.com>:
-
-On Wed, 25 Jun 2025 12:18:03 +0100 you wrote:
-> Geert reports that some drivers do rely on the device driver_data
-> field containing a pointer to the bridge structure at the point of
-> initialising the root port, while this has been recently changed to
-> contain some other data for the benefit of the Apple PCIe driver.
+On 7/16/25 3:22 AM, Maxime Ripard wrote:
+> Hi Mario,
 > 
-> This small series builds on top of Geert previously posted (and
-> included as a prefix for reference) fix for the Microchip driver,
-> which breaks the Apple driver. This is basically swapping a regression
-> for another, which isn't a massive deal at this stage, as the
-> follow-up patch fixes things for the Apple driver by adding extra
-> tracking.
+> On Mon, Jul 14, 2025 at 04:21:46PM -0500, Mario Limonciello wrote:
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> On systems with multiple GPUs there can be uncertainty which GPU is the
+>> primary one used to drive the display at bootup. In order to disambiguate
+>> this add a new sysfs attribute 'boot_display' that uses the output of
+>> video_is_primary_device() to populate whether a PCI device was used for
+>> driving the display.
+>>
+>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>> v7:
+>>   * fix lkp failure
+>>   * Add tag
+>> v6:
+>>   * Only show for the device that is boot display
+>>   * Only create after PCI device sysfs files are initialized to ensure
+>>     that resources are ready.
+>> v4:
+>>   * new patch
+>> ---
+>>   Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
+>>   drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++++++
+>>   2 files changed, 54 insertions(+)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+>> index 69f952fffec72..8b455b1a58852 100644
+>> --- a/Documentation/ABI/testing/sysfs-bus-pci
+>> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+>> @@ -612,3 +612,11 @@ Description:
+>>   
+>>   		  # ls doe_features
+>>   		  0001:01        0001:02        doe_discovery
+>> +
+>> +What:		/sys/bus/pci/devices/.../boot_display
+>> +Date:		October 2025
+>> +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
+>> +Description:
+>> +		This file indicates the device was used as a boot
+>> +		display. If the device was used as the boot display, the file
+>> +		will be present and contain "1".
 > 
-> [...]
+> It would probably be a good idea to define what a "boot display" here
+> is. I get what you mean, but it's pretty vague and could easily be
+> misunderstood.
+> 
+> Maxime
 
-Here is the summary with links:
-  - [1/3] PCI: host-generic: Set driver_data before calling gen_pci_init()
-    https://git.kernel.org/riscv/c/bdb32a0f6780
-  - [2/3] PCI: apple: Add tracking of probed root ports
-    https://git.kernel.org/riscv/c/643c0c9d0496
-  - [3/3] Revert "PCI: ecam: Allow cfg->priv to be pre-populated from the root port device"
-    https://git.kernel.org/riscv/c/ba74278c638d
+Here's my proposal for updated text, can you please bikeshed or propose 
+an alternative?
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+This file indicates that displays connected to the device were used to 
+display the boot sequence.  If a display connected to the device was
+used to display the boot sequence the file will be present and contain "1".
 
 
 
