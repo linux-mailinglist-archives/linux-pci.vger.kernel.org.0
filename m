@@ -1,145 +1,162 @@
-Return-Path: <linux-pci+bounces-32207-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32208-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D8D3B06A0C
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 01:47:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DF1CFB06BF9
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 05:07:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B4B1179091
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Jul 2025 23:47:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0343F178F44
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 03:07:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 225A62D4B7E;
-	Tue, 15 Jul 2025 23:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21C88279DCB;
+	Wed, 16 Jul 2025 03:06:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="na5YKnSf"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="f/Cm3yBO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF04425B31B;
-	Tue, 15 Jul 2025 23:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C242797BD;
+	Wed, 16 Jul 2025 03:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752623260; cv=none; b=uPYHg4szx5aotXopaG5iIIcodKWKz+RMNY3MvyE+hP5J1dwBdD6HiKZBb3tnIo8VLPmQaB+spI78BZhL5qeqNi3YzZRtI2Ec0+gxi3qXumHLWptY1lDdLSci4ryK5UoD3LMTJ+8VCv9sX1SJWjsJ1gDjIeoi6qT2eJZDKcPh5QE=
+	t=1752635188; cv=none; b=kMQrb+JKpbL4aOJglROAkbeg4geLIp1RwfZSYHA3n0LW8EGCe49EwAqFDsZcd3XnQEHNhbSVeR+JxLl5XRChA2/HuNG2Ma4dRGGdKu15BocdrCon17oytWPemDergXwTTVnjzEtkL0aBNFxPAatuN87bMxRtk2H/WDqEii4NMvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752623260; c=relaxed/simple;
-	bh=D3c6sfdeoqU0+rpixMaPXjWlnYZEYRf6Fje/K+TEVYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ckNghBTMxpo9yxwXoNhflovyLMzbL7cMk3i1kBseENdzHW6j4LwlHkrQXdOXYzWG8w8FigCld14deKOkTfKkPvt4G5B2tzytk2DWnPLpDNsE4B6aMC+TL57sRjdjVwveHI4sQ2w+0srHLlxncyD7J0U6IZ23xpR8joN0TP+tkIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=na5YKnSf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BB2FC4CEE3;
-	Tue, 15 Jul 2025 23:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752623256;
-	bh=D3c6sfdeoqU0+rpixMaPXjWlnYZEYRf6Fje/K+TEVYk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=na5YKnSffEt9VavXq/l8lZWfSazjB4rpYX/YnWyZPMJ/jlvIVI8z3wGV1ZbAUhB1i
-	 8C7UFx8Qo4WTZrmqcWE7d1ZHUgXgjCCTRwP9OfC8IgTp7nYafVSDDqALiEDKFvvRvP
-	 ps223zl6DOta6+Hq/AUYdUyk/+Y/Fz1HcpZYCBNbY8fE+9arK0nIXUF6E3hJmFUT2i
-	 goPaXvzctB100fcLRfF6X9MdrQ7POeCCBlrT6U3XUfXSaPRzPSB1zYndpDUL51Znsg
-	 17SCUk5jt5AvUKcTOgIhp+RZrT8c3xzKErM7wo0ceXg/WadxHc0pI48MjEo4+Ed8BJ
-	 sFfIcz4DA5hXA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id CBA16CE0811; Tue, 15 Jul 2025 16:47:35 -0700 (PDT)
-Date: Tue, 15 Jul 2025 16:47:35 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Keith Busch <kbusch@meta.com>
-Cc: alex.williamson@redhat.com, kvm@vger.kernel.org,
-	linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCHv2] vfio/type1: conditional rescheduling while pinning
-Message-ID: <d00cc343-b900-47d5-ba30-1ecc5d11393f@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250715184622.3561598-1-kbusch@meta.com>
+	s=arc-20240116; t=1752635188; c=relaxed/simple;
+	bh=dCp/UCpr4GavL9cgZvFa6YTICidgQ0aooqsKTZtkXtY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=VBgCvFtvfbRxr/rc58y6Yf+reaZ/T/VE/fT6mcNcaxW3sMPUW7HRcYXcaHNhUy59xB6wsQtfU6DxCguFQ/mAz5yWczKMk/BGZ6pQsh3Eb3Y2Xe84x+0ZwM+hCpskRLe3IPq1jfh5mgt6XfAAaXyh1ixFJ54MwUEScPV8TFrZd/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=f/Cm3yBO; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56FGDU72008226;
+	Wed, 16 Jul 2025 03:06:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=YM4m4LvwJpEIvXehHnO+Z9
+	OI4GIz8l3zpiUHNdqZPDw=; b=f/Cm3yBOnsfQ6nHMxBkcHS7dIXey6ipeM8VvhD
+	Z7wACvSWrDQIYXTzoIic2mkFuK8SFbzqy5bRf3hDc34/w9IRyhOEta2Fi1cHTE30
+	bwGyhpLhwObsKIuxzkpElmuJe2LO7n49Sx6t2Hwau9eLy2hP8GNhY4FddCmDzg94
+	iS4bwn9M2eSEeSaJq4kNpb6bwddwQEkbPV90BzblV5ah8IQx8Hy+c6sOoFZt2aBU
+	JT/xGbx+H44eYK5m04BwdsZN0gbpvH4Y52y7DTCjH+aZa25ENoLwQVBtfvYeXXYm
+	YkOP2ic+5zOjOnxEX5J4O+oolQ4gzCaGpSO8o0ESNdR9vIhg==
+Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47wnh5tfqd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Jul 2025 03:06:13 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 56G36BsF018523;
+	Wed, 16 Jul 2025 03:06:11 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 47ugsmhveh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Jul 2025 03:06:11 +0000
+Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 56G36BuD018518;
+	Wed, 16 Jul 2025 03:06:11 GMT
+Received: from cse-cd01-lnx.ap.qualcomm.com (cse-cd01-lnx.qualcomm.com [10.64.75.209])
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 56G36ANd018476
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Jul 2025 03:06:11 +0000
+Received: by cse-cd01-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
+	id CC98F2122F; Wed, 16 Jul 2025 11:06:09 +0800 (CST)
+From: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
+        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
+        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+        kw@linux.com
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>,
+        Tingguo Cheng <quic_tingguoc@quicinc.com>
+Subject: [PATCH v1 1/1] arm64: dts: qcom: qcs615: Set LDO12A regulator to HPM to avoid boot hang
+Date: Wed, 16 Jul 2025 11:06:01 +0800
+Message-Id: <20250716030601.1705364-1-ziyue.zhang@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250715184622.3561598-1-kbusch@meta.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=dKimmPZb c=1 sm=1 tr=0 ts=68771725 cx=c_pps
+ a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=ae3z3FTj68mGPq7uMvUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 7NYoC0pDTzXfesvzBybFEgEklgYO2ZeW
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE2MDAyNyBTYWx0ZWRfX4X0cQHxWGj4q
+ XkHVzEkBuBdsXGMEXqODLnR88M2hLK0mJhINAZRZElv6t4uDforEm+VsJYzGlBLvUE/TJa/WWDX
+ hBKLk1NRS3bViNMvPHJ3XK9TGsxLQRjWHeSN6jhxznkGcA++ugD77/FDblJaFbkyRzSHmGTl90r
+ cRQIXWCmGFBfU9yGbMBPd3i4UNibvsYTWANWfPr6jjA6S4dEikj8SOKaNm7mp55NxFbLfzzXP9y
+ i8W2IWQr5XclWKUCNhk15iYMPCwRaDHX6xGu8sSuqmZvLrQmaNKKZRy1Ewam2DubGOOjmHAQkJE
+ GzzhULZka8tL60ubAKB6lAKhcs/BRV0oB1gGGDyhQxxOr2Fv+HxqzYlF4Qf7aEo6sfvo6HRnvrK
+ iU834tHm81vV03X6uPCBONwSNVnv96Jkbv6sazs0dz8U9oNsZlD8M056w1uvvQhxZuyvQgxn
+X-Proofpoint-ORIG-GUID: 7NYoC0pDTzXfesvzBybFEgEklgYO2ZeW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-16_01,2025-07-15_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 spamscore=0
+ adultscore=0 impostorscore=0 priorityscore=1501 suspectscore=0 bulkscore=0
+ phishscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507160027
 
-On Tue, Jul 15, 2025 at 11:46:22AM -0700, Keith Busch wrote:
-> From: Keith Busch <kbusch@kernel.org>
-> 
-> A large DMA mapping request can loop through dma address pinning for
-> many pages. In cases where THP can not be used, the repeated vmf_insert_pfn can
-> be costly, so let the task reschedule as need to prevent CPU stalls. Failure to
-> do so has potential harmful side effects, like increased memory pressure
-> as unrelated rcu tasks are unable to make their reclaim callbacks and
-> result in OOM conditions.
-> 
->  rcu: INFO: rcu_sched self-detected stall on CPU
->  rcu:   36-....: (20999 ticks this GP) idle=b01c/1/0x4000000000000000 softirq=35839/35839 fqs=3538
->  rcu:            hardirqs   softirqs   csw/system
->  rcu:    number:        0        107            0
->  rcu:   cputime:       50          0        10446   ==> 10556(ms)
->  rcu:   (t=21075 jiffies g=377761 q=204059 ncpus=384)
-> ...
->   <TASK>
->   ? asm_sysvec_apic_timer_interrupt+0x16/0x20
->   ? walk_system_ram_range+0x63/0x120
->   ? walk_system_ram_range+0x46/0x120
->   ? pgprot_writethrough+0x20/0x20
->   lookup_memtype+0x67/0xf0
->   track_pfn_insert+0x20/0x40
->   vmf_insert_pfn_prot+0x88/0x140
->   vfio_pci_mmap_huge_fault+0xf9/0x1b0 [vfio_pci_core]
->   __do_fault+0x28/0x1b0
->   handle_mm_fault+0xef1/0x2560
->   fixup_user_fault+0xf5/0x270
->   vaddr_get_pfns+0x169/0x2f0 [vfio_iommu_type1]
->   vfio_pin_pages_remote+0x162/0x8e0 [vfio_iommu_type1]
->   vfio_iommu_type1_ioctl+0x1121/0x1810 [vfio_iommu_type1]
->   ? futex_wake+0x1c1/0x260
->   x64_sys_call+0x234/0x17a0
->   do_syscall_64+0x63/0x130
->   ? exc_page_fault+0x63/0x130
->   entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> 
-> Signed-off-by: Keith Busch <kbusch@kernel.org>
+On certain platforms (e.g., QCS615), consumers of LDO12A—such as PCIe,
+UFS, and eMMC—may draw more than 10mA of current during boot. This can
+exceed the regulator's limit in Low Power Mode (LPM), triggering current
+limit protection and causing the system to hang.
 
-From an RCU CPU stall-warning viewpoint, given that vaddr_get_pfns()
-invokes mmap_read_lock(), thus this code can schedule:
+To address this, there are two possible approaches:
+a) Set the regulator's initial mode to High Performance Mode (HPM) in
+   the device tree.
+b) Keep the default LPM setting and have each consumer driver explicitly
+   set its current load.
 
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+Since some regulators are shared among multiple consumers, and setting
+the current must be coordinated across all of them, we will initially
+adopt option a by setting the regulator to HPM. We can later migrate to
+option b when the timing is appropriate and all consumer drivers are
+ready.
 
-> ---
-> v1->v2:
-> 
->   Merged up to vfio/next
-> 
->   Moved the cond_resched() to a more appropriate place within the
->   loop, and added a comment about why it's there.
-> 
->   Update to change log describing one of the consequences of not doing
->   this.
-> 
->  drivers/vfio/vfio_iommu_type1.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 1136d7ac6b597..ad599b1601711 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -647,6 +647,13 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
->  
->  	while (npage) {
->  		if (!batch->size) {
-> +			/*
-> +			 * Large mappings may take a while to repeatedly refill
-> +			 * the batch, so conditionally relinquish the CPU when
-> +			 * needed to avoid stalls.
-> +			 */
-> +			cond_resched();
-> +
->  			/* Empty batch, so refill it. */
->  			ret = vaddr_get_pfns(mm, vaddr, npage, dma->prot,
->  					     &pfn, batch);
-> -- 
-> 2.47.1
-> 
+Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+Signed-off-by: Tingguo Cheng <quic_tingguoc@quicinc.com>
+---
+This patch follows a suggestion from Bjorn Andersson regarding USB
+regulator handling where each consumer is expected to explicitly set its
+current load.
+Link: https://lore.kernel.org/linux-arm-msm/37fc7aa6-23d2-4636-8e02-4957019121a3@quicinc.com/
+---
+ arch/arm64/boot/dts/qcom/qcs615-ride.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+index a6652e4817d1..7639635c67c4 100644
+--- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
++++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+@@ -166,7 +166,7 @@ vreg_l12a: ldo12 {
+ 			regulator-name = "vreg_l12a";
+ 			regulator-min-microvolt = <1800000>;
+ 			regulator-max-microvolt = <1890000>;
+-			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 			regulator-allow-set-load;
+ 			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
+ 						   RPMH_REGULATOR_MODE_HPM>;
+-- 
+2.34.1
+
 
