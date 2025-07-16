@@ -1,205 +1,99 @@
-Return-Path: <linux-pci+bounces-32311-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32312-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 591DEB07C3A
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 19:43:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76BBAB07C61
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 19:55:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 571CA3B0CF8
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 17:43:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D6651C27363
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 17:56:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E04F2F6F80;
-	Wed, 16 Jul 2025 17:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D05F28852E;
+	Wed, 16 Jul 2025 17:55:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RmsABY9h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KcigDzRH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06092F549E;
-	Wed, 16 Jul 2025 17:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE3828850F;
+	Wed, 16 Jul 2025 17:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752687805; cv=none; b=DAAqkECNOQ2rgRIfdor2QSPpvYF6baaJ1P31DaA/X1jnbZGsEixWcUaJOTYFyQC4Zye9pgjM4yL1KEELJe64lq8OrY8Uyc3NN3MJS+UmKU52VHISCCadHigjO2VW7TwwBtVC1h1VeDHPZRBgaSTOm/07siPMFFre2v/Pac8b7Wo=
+	t=1752688547; cv=none; b=Tphbz13N+EQpAc318a5cI9ktkw1y+POgRuzVS4WQbGYgx4qChZTB8BH9prRudvjXJcyWbIpemz0MUY98wID0h0utAXvQsDtmM1l9lmkb9aCcTpYujmRVl6inSpxRmBu5RVSgkrBBMwLqXg9zNEdh+bJiqGY2ISs3ZB/Np25/P5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752687805; c=relaxed/simple;
-	bh=WNnVrZTyjfQ0iCokOmrNWmhV5/HpncUmCFT0sgwfs4M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DTRCldZHB7yjWZG/hu1QWn+XyD6VTzzI04i6eiABiPqgi8XLX4msa3KJz0mMH8o1lScobUXaDpxKJa0RQoMkXXYuSn++s9qSmBB4N7Xeekp5UTKI4QaFjTfWg4onjWtbbEgTpH/XQSuZ3upl90gPOQVJ8lL9ClaaoZjpSGwhu04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RmsABY9h; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4ab814c4f2dso2726921cf.1;
-        Wed, 16 Jul 2025 10:43:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752687802; x=1753292602; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AA5/tCiuP2JLJTNlACta44IlmdwORZsKRaxa7XE2CPs=;
-        b=RmsABY9hVdLaHmIu4ZlrY1qBr1g63u27X+EbUzE1Svlu1tvzWWTdchK9j0z/Di/ht4
-         0CDkssdUshAfw28gcXP/LAUgpiZcSVK26AIf2c1ogYGr897mj4b7WpqxdanbvqivDNCg
-         ZXHnWcmSPCLwA7aAo4oku3pFfZi6mhl8L/Pum+rcaG2Qi9oYxxpySQJNVWoo4qJ2Vwfp
-         zOBAf2pOWpmwq53Xy2n1Qr5Lq+Z4LGsSJs2j991HjcIYBshkl/UZ7BSATxN441NOKPfH
-         lYfYoYqQLG06J6udI7luTsVRt8xWwAu2PHlvSORBXiYGphrmNl7vQaryk4PryMAxA2no
-         07OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752687802; x=1753292602;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AA5/tCiuP2JLJTNlACta44IlmdwORZsKRaxa7XE2CPs=;
-        b=pQ0VnnQ/+PHKsNK+WflZRIE2boEFw7vkJihlsRqmbDV42U7CiQXZeFDJ0j0FY4yup7
-         qaiqfw79jbmF+s+8cEUzSONfyFscQxh/xOBkuRD93nUZyjV5X+mcx5vZ/seMpNCqAEYN
-         on/gO8e+94Y67i8W9IrlRf9vR1vrJWOLZfsGGcT6wsQsX44cesuzPg3XCQrAc7XEVPIC
-         kMl8ueY3VVJFAoyCzWoj9ix3T3BkYdRcaAhXmMkXNWYND3ST9d0fU6906Ucrh2KvdPlU
-         0Yw7hsYlK7lLHeIwikX0Fs586BESwMzn3wfZlzydvIzPGXU2BTytX+BjhxX95qdmJlM6
-         49tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVspXWZglK5Y4wXl3DeU94ZuNAkVsZX9ZQdYthKqvvCxrb2d8hWrexsBkXzQ0Rw3wmxyWhDzQrOFYl@vger.kernel.org, AJvYcCXjTAHMHTrZkmaMd7RCrYIj6jyPhFcVSfO736BnPzg+MtycrqRyoprAlyLOiQZmzgGJxkYK+02kfH0Chuw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYfpnYe6XLqNTnypanDQRiqBko/HTkxHrI1KdlRvZ2Si9E2Xnb
-	kXfvZyxG/mW2QcNxdmhNDnUQsttsf8ess6KHA7HEUZ7n9oJDprWMgEIDIfuB1cADGGW+g2ZNlvs
-	7BHuQJXxlXwY2b6rptEaqMB595vrgBSk=
-X-Gm-Gg: ASbGncvUzhgeC8xgc9j+d9UbYrjPaLl6x09zo/xwv0JtnN3EYlpWMZRPFYMVPdbn4tc
-	zScZMNedycySPINinQ0+jAGv6PBmFEuP2Dav0LDYgVNfjEXy/yW36EyFFqGsecWRDN7tV3odCGb
-	lB+Lkc1km+MbYlJxvFxgRtXmt/JtEjQbtECJmODUpkmyFWYKKtFeOirWYXkXpAQdXQ6iUcH+r7F
-	uq0ZGzSVYeD4g+iN/T2nA==
-X-Google-Smtp-Source: AGHT+IFfxo82ulTnxyDyRWmwoZFor5eUkdLV4oDsU70TChHIlz7F1ILwbmGB0C+lsP2g0aLBdvwTTjLbIlZa2ca9ZV0=
-X-Received: by 2002:a05:622a:41:b0:4ab:8d13:7151 with SMTP id
- d75a77b69052e-4ab93c43046mr59074561cf.7.1752687802445; Wed, 16 Jul 2025
- 10:43:22 -0700 (PDT)
+	s=arc-20240116; t=1752688547; c=relaxed/simple;
+	bh=wnQ+6qL0ewVoo3bzjKS3h0tuzgVpvP0pV+2qhh7DPfs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=oLIqF2txu9anVnGqVeFZyAnuP0E7RFz5zd6tnTLdWLgCV0FCBWhrtBIW+bsa716Ii/rXtlNMS10Fk9T6IGYsC+H0hzkiIkIQfoIW9wcZacmJV2qp9ZW2opvs2GrL9Gb/qenM4Ggdj7jgengR+oKsW/wfBXoL/m/XIIcfeWGYJDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KcigDzRH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F1E9C4CEE7;
+	Wed, 16 Jul 2025 17:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752688545;
+	bh=wnQ+6qL0ewVoo3bzjKS3h0tuzgVpvP0pV+2qhh7DPfs=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=KcigDzRHakxOR91XF51JOqVi2cLKi/4lsv9/UKjIixu3qFHbjrnh8kcYGL4MJEM0Y
+	 drc4IUbrEEBdVe0obKunNUKkvwHk04yi9JGN4i079HzeO2FK4Eoxurn9qZnRla2Tl8
+	 gOsbxXoGFHrATTKKRjL3QjFZ6jtoCzhsFoLcHtg7bc+AXCgl9s6wYmhKVCnEpuQQU/
+	 zj9+qAcA30mx7hU2eO5Tekddgg0Yn9CaBhML8aCL1cuEKx4qotjwiIv0CHTesa6AKr
+	 AkLd5d57aGb8VwCre6cNDMKP1UyGOtDr6yIiXtC0TwPfFJULr5UAsgIPbm8lZ6d9/W
+	 KocELeOS/kpwA==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250716163213.469226-1-thepacketgeek@gmail.com>
- <20250716163213.469226-2-thepacketgeek@gmail.com> <7cae9919-4ccd-41ed-a899-0e97ee2c0250@kernel.org>
-In-Reply-To: <7cae9919-4ccd-41ed-a899-0e97ee2c0250@kernel.org>
-From: Matthew Wood <thepacketgeek@gmail.com>
-Date: Wed, 16 Jul 2025 10:43:09 -0700
-X-Gm-Features: Ac12FXwaWGrawL8h0ydexMi8_5v2a909eZYO8ejVbzSWLKEuJ-ZNdpsAGIt5t4c
-Message-ID: <CADvopvZD+daGD2S-eGPe3Dh+Ot2Oq-tEsBBK83vF7QDgaaUtFw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] PCI/sysfs: Expose PCIe device serial number
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 16 Jul 2025 19:55:40 +0200
+Message-Id: <DBDO8FVL9NKE.201JEW4MRHS6F@kernel.org>
+Subject: Re: [PATCH v2 2/5] rust: dma: add DMA addressing capabilities
+Cc: <abdiel.janulgue@gmail.com>, <robin.murphy@arm.com>,
+ <a.hindborg@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <lossin@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <bhelgaas@google.com>, <kwilczynski@kernel.org>,
+ <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+To: "Daniel Almeida" <daniel.almeida@collabora.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20250716150354.51081-1-dakr@kernel.org>
+ <20250716150354.51081-3-dakr@kernel.org>
+ <0984E8E7-C442-42E6-A8E7-691616304F6F@collabora.com>
+In-Reply-To: <0984E8E7-C442-42E6-A8E7-691616304F6F@collabora.com>
 
-On Wed, Jul 16, 2025 at 10:02=E2=80=AFAM Mario Limonciello <superm1@kernel.=
-org> wrote:
+On Wed Jul 16, 2025 at 7:32 PM CEST, Daniel Almeida wrote:
+> Hi Danilo,
 >
-> On 7/16/25 11:32 AM, Matthew Wood wrote:
-> > Add a single sysfs read-only interface for reading PCIe device serial
-> > numbers from userspace in a programmatic way. This device attribute
-> > uses the same hexadecimal 1-byte dashed formatting as lspci serial numb=
-er
-> > capability output. If a device doesn't support the serial number
-> > capability, the device_serial_number sysfs attribute will not be visibl=
-e.
-> >
-> > Signed-off-by: Matthew Wood <thepacketgeek@gmail.com>
-> > ---
-> >   Documentation/ABI/testing/sysfs-bus-pci |  7 +++++++
-> >   drivers/pci/pci-sysfs.c                 | 27 ++++++++++++++++++++++--=
--
-> >   2 files changed, 31 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/AB=
-I/testing/sysfs-bus-pci
-> > index 69f952fffec7..f7e84b3a4204 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-pci
-> > +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> > @@ -612,3 +612,10 @@ Description:
-> >
-> >                 # ls doe_features
-> >                 0001:01        0001:02        doe_discovery
-> > +
-> > +What:                /sys/bus/pci/devices/.../device_serial_number
-> > +Date:                July 2025
-> > +Contact:     Matthew Wood <thepacketgeek@gmail.com>
-> > +Description:
-> > +             This is visible only for PCIe devices that support the se=
-rial
-> > +             number extended capability. The file is read only.
-> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > index 268c69daa4d5..b7b52dea6e31 100644
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -239,6 +239,22 @@ static ssize_t current_link_width_show(struct devi=
-ce *dev,
-> >   }
-> >   static DEVICE_ATTR_RO(current_link_width);
-> >
-> > +static ssize_t device_serial_number_show(struct device *dev,
-> > +                                    struct device_attribute *attr, cha=
-r *buf)
-> > +{
-> > +     struct pci_dev *pci_dev =3D to_pci_dev(dev);
-> > +     u64 dsn;
-> > +
-> > +     dsn =3D pci_get_dsn(pci_dev);
-> > +     if (!dsn)
-> > +             return -EIO;
-> > +
-> > +     return sysfs_emit(buf, "%02llx-%02llx-%02llx-%02llx-%02llx-%02llx=
--%02llx-%02llx\n",
-> > +             dsn >> 56, (dsn >> 48) & 0xff, (dsn >> 40) & 0xff, (dsn >=
-> 32) & 0xff,
-> > +             (dsn >> 24) & 0xff, (dsn >> 16) & 0xff, (dsn >> 8) & 0xff=
-, dsn & 0xff);
-> > +}
-> > +static DEVICE_ATTR_RO(device_serial_number);
+>> +    #[inline]
+>> +    pub const fn new(n: usize) -> Result<Self> {
+>> +        Ok(Self(match n {
+>> +            0 =3D> 0,
+>> +            1..=3D64 =3D> u64::MAX >> (64 - n),
+>> +            _ =3D> return Err(EINVAL),
+>> +        }))
+>> +    }
+>> +
 >
-> The serial number /could/ be considered sensitive information.  I think
-> it's better to use DEVICE_ATTR_ADMIN_RO.
+> Isn=E2=80=99t this equivalent to genmask_u64(0..=3Dn) ? See [0].
 
-That makes sense, thanks for the suggestion.
+Instead of the match this can use genmask_checked_u64() and convert the Opt=
+ion
+to a Result, once genmask is upstream.
 
->
-> Also, as this is a "device" attribute is it really necessary to encode
-> the extra word and "number"?
+> You should also get a compile-time failure if n is out of bounds by defau=
+lt using
+> genmask.
 
-Another good point. I will remove the device_ prefix however I think
-"serial_number" is helpful to keep as "serial" alone is too easy to
-conflate with any of the other usages of the serial word.
+No, we can't use genmask_u64(), `n` is not guaranteed to be known at compil=
+e
+time, so we'd need to use genmask_checked_u64().
 
->
-> > +
-> >   static ssize_t secondary_bus_number_show(struct device *dev,
-> >                                        struct device_attribute *attr,
-> >                                        char *buf)
-> > @@ -660,6 +676,7 @@ static struct attribute *pcie_dev_attrs[] =3D {
-> >       &dev_attr_current_link_width.attr,
-> >       &dev_attr_max_link_width.attr,
-> >       &dev_attr_max_link_speed.attr,
-> > +     &dev_attr_device_serial_number.attr,
-> >       NULL,
-> >   };
-> >
-> > @@ -1749,10 +1766,14 @@ static umode_t pcie_dev_attrs_are_visible(struc=
-t kobject *kobj,
-> >       struct device *dev =3D kobj_to_dev(kobj);
-> >       struct pci_dev *pdev =3D to_pci_dev(dev);
-> >
-> > -     if (pci_is_pcie(pdev))
-> > -             return a->mode;
-> > +     if (!pci_is_pcie(pdev))
-> > +             return 0;
-> > +
-> > +     if (a =3D=3D &dev_attr_device_serial_number.attr && !pci_get_dsn(=
-pdev))
-> > +             return 0;
-> > +
-> > +     return a->mode;
-> >
-> > -     return 0;
-> >   }
-> >
-> >   static const struct attribute_group pci_dev_group =3D {
->
+Of course, we could have a separate DmaMask constructor, e.g. with a const
+generic -- not sure that's worth though.
 
