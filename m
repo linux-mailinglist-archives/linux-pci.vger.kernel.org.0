@@ -1,71 +1,91 @@
-Return-Path: <linux-pci+bounces-32343-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32344-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 857B0B080E6
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 01:23:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85E36B08119
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 01:46:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A90AC1AA63A8
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 23:23:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2CCD77AC307
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 23:44:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C904D2EF9AA;
-	Wed, 16 Jul 2025 23:23:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB0D12C3276;
+	Wed, 16 Jul 2025 23:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PdRxKix7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YVp+G2pc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FE62EF9A6;
-	Wed, 16 Jul 2025 23:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209D4289E16;
+	Wed, 16 Jul 2025 23:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752708181; cv=none; b=HVE9bzKNJd+cjraCmH95dsAFEMCS52NaI/gsO0OzB28e1Qe/WjfQBONbAflqQ2TbgPUj2v2YwMfkiN1mvAp3SvaTxGlQUg69bqJJNLLzk3I8yJlCcYriM7/lbX+ItYgsuzWeUdFW6pJjhBtxzAa1KYd9NojYXKhyM5cRI/+tREU=
+	t=1752709559; cv=none; b=TVKLtZ/xczL5e/yIhL+5hd4vhBtt/jsqNxH/CJYA0VxHx+W7ZLO2BFacYuVYz12R78fmdM9lLI9XdIcVZPmfOSC9jXKfK/37MZ+oC+TGPE9I8klsc9fSTnSs1JH1TJyl9I1LcYzBkKPOBfJTsOorSllpepjR0BQnPnO1pSVI6Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752708181; c=relaxed/simple;
-	bh=kc48KClrflS3QKuEYBrw6FQdfI3+0RKI6uqfLZEJCJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=denpMf69JlYuXVz2obyjn/yYxUcc17ITlk6UnGbWkEMVCZ9ybUBGHK7VlMzVGP4vFRUqth2r4bId/eqIwLoLdN8g0jDYp45eD1ucwfFeV1YWwys6Mg4tgzLkMPpgOQsQuubnj2t+pqxTcRE1mwUdOltTcMIw1iaR+kygiEx/bhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PdRxKix7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D48C4CEE7;
-	Wed, 16 Jul 2025 23:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752708181;
-	bh=kc48KClrflS3QKuEYBrw6FQdfI3+0RKI6uqfLZEJCJA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=PdRxKix7vIub6Gp83B+TjdRX9RT5n0aOAp+7iLG3sar+bkphz2AxNajgCR6Q5GetF
-	 kvrzzKiqY9/Ez8rJ6UCttQpmr4wbRxRjT7Qp+ad4M+04xdkpKXRHhnOSU+oQrQOcn5
-	 C7Rac+lPveNjLIqMz+krFJGo5a5J8PXunMqjny+Vj4ZhntS3TinZFib/sgkc9go1Dp
-	 Hla+maen/j4qwXWOK1ch0swazxv+ROJglFlI6zOBSc0x1B2QAZ2bX4CNdq8T36GSBG
-	 ZA779cD7dPXejEtlo5ztNScmQxaXBNUcRU28TZGdZxFnb9v9KTENfWg/MbrhXqBOkc
-	 Y1eO4q0QLnhKw==
-Date: Wed, 16 Jul 2025 18:23:00 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
-	"open list:SOUND" <linux-sound@vger.kernel.org>,
-	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v8 0/9] Adjust fbcon console device detection
-Message-ID: <20250716232300.GA2565283@bhelgaas>
+	s=arc-20240116; t=1752709559; c=relaxed/simple;
+	bh=J3UG5GnJ5BjYLTM0CP7GT2WZiod9LqwrORLiSgAOFFE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AwhxMXIKyM29NrJxN3vvUAxQlav3rGS6WrJhTbMcY2ROXDyJb38Gt4BgQTvY1Nrfx5lbKfH2dOQSuTIi14nIlAHXxyKdz/wAYXIBcnlQYP975cK6FvM4YhY44hrcvsr9j3QUL3XRinzIrMDoW1aiHqzgt/PdjBkOF4YU8m9qlOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YVp+G2pc; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752709558; x=1784245558;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=J3UG5GnJ5BjYLTM0CP7GT2WZiod9LqwrORLiSgAOFFE=;
+  b=YVp+G2pcDDcGWQVucnhFCn6FavR1EdyisX/3G2ijnTX5Ok3UoDFjdoiT
+   GQb0APfmGNOs53VgRhrvLN27zdwGHHzh/LytCBGIBPeP7zsm8Bo9RLdsU
+   3ej2O7YoNKIrHFgvTcDOtnGO2TwSZXfQ0iq8y3gNPIaIlY2dc+zOjcwsU
+   i2s/30ME0GWcRENlF70LTPua/X2aIXn9sjgNGq3aXJOwntB8DAc0XPWJV
+   NCzBzltV0bLW8TIIdXV8gX6vAcGNI/KH7C7Xfg7hKO6TmfEYUB6iQJU8G
+   9QgRQfRnE/UNBxntiD5ejaBBpYqayvav7vYl5KMxb9pzoZyfkJ7ZRdN5d
+   A==;
+X-CSE-ConnectionGUID: gGM90jKOT8ynNiIA+jQNFQ==
+X-CSE-MsgGUID: 0k4WWt9zReigZShtvNfJ9g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="58780582"
+X-IronPort-AV: E=Sophos;i="6.16,317,1744095600"; 
+   d="scan'208";a="58780582"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2025 16:45:57 -0700
+X-CSE-ConnectionGUID: wzgqLGgTT62ROBCL6R80XQ==
+X-CSE-MsgGUID: O/jRKJFhSyq3YGSi9Gk1bw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,317,1744095600"; 
+   d="scan'208";a="157741471"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 16 Jul 2025 16:45:52 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ucBos-000Cxf-2v;
+	Wed, 16 Jul 2025 23:45:50 +0000
+Date: Thu, 17 Jul 2025 07:45:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: Daniel Almeida <daniel.almeida@collabora.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Benno Lossin <lossin@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Daniel Almeida <daniel.almeida@collabora.com>
+Subject: Re: [PATCH v7 3/6] rust: irq: add support for non-threaded IRQs and
+ handlers
+Message-ID: <202507170718.AVqYqRan-lkp@intel.com>
+References: <20250715-topics-tyr-request_irq2-v7-3-d469c0f37c07@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,79 +94,47 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250714212147.2248039-1-superm1@kernel.org>
+In-Reply-To: <20250715-topics-tyr-request_irq2-v7-3-d469c0f37c07@collabora.com>
 
-On Mon, Jul 14, 2025 at 04:21:37PM -0500, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> This series started out as changes to VGA arbiter to try to handle a case
-> of a system with 2 GPUs that are not VGA devices.  This was discussed
-> but decided not to overload the VGA arbiter for non VGA devices.
-> 
-> Instead move the x86 specific detection of framebuffer resources into x86
-> specific code that the fbcon can use to properly identify the primary
-> device. This code is still called from the VGA arbiter, and the logic does
-> not change there. To avoid regression default to VGA arbiter and only fall
-> back to looking up with x86 specific detection method.
-> 
-> In order for userspace to also be able to discover which device was the
-> primary video display device create a new sysfs file 'boot_display'.
-> 
-> A matching userspace implementation for this file is available here:
-> Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/39
-> Link: https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/2038
-> 
-> Dave Airlie has been pinged for a comment on this approach.
-> Dave had suggested in the past [1]:
-> 
-> "
->  But yes if that doesn't work, then maybe we need to make the boot_vga
->  flag mean boot_display_gpu, and fix it in the kernel
-> "
-> 
-> This was one of the approached tried in earlier revisions and it was
-> rejected in favor of creating a new sysfs file (which is what this
-> version does).
-> 
-> It is suggested that this series merge entirely through the PCI tree.
-> 
-> Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/37#note_2938602 [1]
+Hi Daniel,
 
-There's an underlying bug that we're trying to fix with this series
-and the related libpciaccess and xserver changes, isn't there?  Can we
-include that somewhere to help motivate this?  (I guess it's really
-only the last two or three patches that are strictly related, right?)
+kernel test robot noticed the following build errors:
 
-> v8 fixes an LKP robot reported issue
-> 
-> Mario Limonciello (9):
->   PCI: Add helper for checking if a PCI device is a display controller
->   vfio/pci: Use pci_is_display()
->   vga_switcheroo: Use pci_is_display()
->   iommu/vt-d: Use pci_is_display()
->   ALSA: hda: Use pci_is_display()
->   Fix access to video_is_primary_device() when compiled without
->     CONFIG_VIDEO
->   PCI/VGA: Replace vga_is_firmware_default() with a screen info check
->   fbcon: Use screen info to find primary device
->   PCI: Add a new 'boot_display' attribute
-> 
->  Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
->  arch/parisc/include/asm/video.h         |  2 +-
->  arch/sparc/include/asm/video.h          |  2 ++
->  arch/x86/include/asm/video.h            |  2 ++
->  arch/x86/video/video-common.c           | 17 ++++++++-
->  drivers/gpu/vga/vga_switcheroo.c        |  2 +-
->  drivers/iommu/intel/iommu.c             |  2 +-
->  drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++++++
->  drivers/pci/vgaarb.c                    | 31 +++--------------
->  drivers/vfio/pci/vfio_pci_igd.c         |  3 +-
->  include/linux/pci.h                     | 15 ++++++++
->  sound/hda/hdac_i915.c                   |  2 +-
->  sound/pci/hda/hda_intel.c               |  4 +--
->  13 files changed, 101 insertions(+), 35 deletions(-)
-> 
-> -- 
-> 2.43.0
-> 
+[auto build test ERROR on 3964d07dd821efe9680e90c51c86661a98e60a0f]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Daniel-Almeida/rust-irq-add-irq-module/20250715-232121
+base:   3964d07dd821efe9680e90c51c86661a98e60a0f
+patch link:    https://lore.kernel.org/r/20250715-topics-tyr-request_irq2-v7-3-d469c0f37c07%40collabora.com
+patch subject: [PATCH v7 3/6] rust: irq: add support for non-threaded IRQs and handlers
+config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250717/202507170718.AVqYqRan-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+rustc: rustc 1.88.0 (6b00bc388 2025-06-23)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250717/202507170718.AVqYqRan-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507170718.AVqYqRan-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> error[E0425]: cannot find value `SHARED` in module `flags`
+   --> rust/doctests_kernel_generated.rs:4790:58
+   |
+   4790 |     let registration = Registration::new(request, flags::SHARED, c_str!("my_device"), handler);
+   |                                                          ^^^^^^ not found in `flags`
+   |
+   help: consider importing this constant
+   |
+   3    + use kernel::mm::virt::flags::SHARED;
+   |
+   help: if you import `SHARED`, refer to it directly
+   |
+   4790 -     let registration = Registration::new(request, flags::SHARED, c_str!("my_device"), handler);
+   4790 +     let registration = Registration::new(request, SHARED, c_str!("my_device"), handler);
+   |
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
