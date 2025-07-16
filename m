@@ -1,204 +1,156 @@
-Return-Path: <linux-pci+bounces-32303-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32304-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3C06B07B89
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 18:51:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B9C8B07BB4
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 19:02:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 34FFB167F7F
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 16:51:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 545CE16E4DD
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 17:02:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2983E2F3C2F;
-	Wed, 16 Jul 2025 16:51:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A661236A73;
+	Wed, 16 Jul 2025 17:02:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b0t9G7bS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M0hz4ujV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F246283FE0
-	for <linux-pci@vger.kernel.org>; Wed, 16 Jul 2025 16:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD7442049;
+	Wed, 16 Jul 2025 17:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752684666; cv=none; b=JU8wBZYHbFqbG7CJGf3J4ITbDvJ5GlGIzvzGCFhOgLXswrWKj+u5jtZjZdbUEL+EcueCigKNqx0JVY5hH3mXsJD1CfStzd3x0CZw1sSmLZ8ycd+X+45IZ6pqc7iBD/wRwU++o27Bz/Mld711QNS+iqhf6G4HT3K5jQD47vJW/AY=
+	t=1752685361; cv=none; b=pQVX3a1+LVvpl17R3J7kEaR9LSztXWaFWBGyOgWrIcrEL35PbiknZUDy1xEoABPyEJQPzSJbI6kOuFKCpRzxlNJmYuSjP4gWtaVrxS+qZvL+Y68EeCdF9yDUKi9dL7B2HDTqJHEro/rrHvO6xgxitsgSc62S/o2MMeij84npuGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752684666; c=relaxed/simple;
-	bh=MEVCV8CdJXMQTKGe040SYS4S7S8C9eGjGg7d0RYfgwE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=O08xNIw2gc/11u90XnuiebMQD/BvVtVVNF9FujVk7PPrHju5sINUC+RXaA/YBXP8MORFD4cK5G+/qukJGQlRsYfBzVH0lQK4u6C/ndh48YstxB9mreYcv+ifz7KgawmtXdO9W126rQjnwLFjZpaVpSkA3sePM8peozWVj5Ek/8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b0t9G7bS; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752684661; x=1784220661;
-  h=date:from:to:cc:subject:message-id;
-  bh=MEVCV8CdJXMQTKGe040SYS4S7S8C9eGjGg7d0RYfgwE=;
-  b=b0t9G7bSA5CHvCg/f7k+/vsrD0RaYOYx67FD4gmiaSMI40bQ8nTJrnYI
-   kdrXFlmAp2b18W05AZ2ZvRep9Of66DF6mSyx1IoMYyh3CgkpahvZeCDHC
-   OUPrnaVE5VO4T++evumzNlRVCcxdqKyjykApD3p0IKpP3KqWls8j71gjg
-   QwtWv8PufLd9VafBIiOEAXPZ+BH32ZTytTc/FQCDYt3WchHiIS7rdupXU
-   uF6+kIICa+FJ3bUbINZ5oGtGhXrGkcye2LBGFueXbK1iPD64jHLeZn9/X
-   fUeXa7TrOra5jiaSZxto75PbnmdL7RWV+uGO/qBOneEXLfxogrQOgvlar
-   g==;
-X-CSE-ConnectionGUID: oF2/SNTeS52SE7XhGZ2/xQ==
-X-CSE-MsgGUID: 8mO+fPPTTdqwPQoqdIKX+g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="72393340"
-X-IronPort-AV: E=Sophos;i="6.16,316,1744095600"; 
-   d="scan'208";a="72393340"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2025 09:51:00 -0700
-X-CSE-ConnectionGUID: mZ2vjIB7TUGuIl+AlJQ4xg==
-X-CSE-MsgGUID: 8ANkEO5HQe+K1O1h8xy/4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,316,1744095600"; 
-   d="scan'208";a="157907470"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 16 Jul 2025 09:50:58 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uc5LM-000CeX-1t;
-	Wed, 16 Jul 2025 16:50:56 +0000
-Date: Thu, 17 Jul 2025 00:50:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:enumeration] BUILD SUCCESS
- 91703041697c9d2e8dffe5b3a159198ba0dd24e7
-Message-ID: <202507170007.xr58nJ01-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1752685361; c=relaxed/simple;
+	bh=Nk8r5lNpqHLsdZRzSm9gX+C1MJ9SZPhZTOf9SPBThE4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UUvnlUsfwuNW1+pN9BtQK8+nXCGIE/sK7yy+W2DNfH/sRfwSmY94UFuS1ZXyephPInQBPuAr8etxngXbF5o/OntJ3JCnLUpS7I0OWWaYXcYIRf2fAFQihVEghVh1RQE8SsNSsI57Xh48Tk9Vex61L470veMaGlu5oFuszkLAPIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M0hz4ujV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A556C4CEF0;
+	Wed, 16 Jul 2025 17:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752685361;
+	bh=Nk8r5lNpqHLsdZRzSm9gX+C1MJ9SZPhZTOf9SPBThE4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=M0hz4ujVXE1KJoc71fTUWld9G+IpQLR6Um2ibxRYH181fHJtv3kl3CvVGDnxFjEU+
+	 COQtMsW5XUGiBEpgtDGcH/KRbS3ta3foPVTJQmkCydCAjI0rWzL9QC+CPqjrquN5o+
+	 cqmKO8A3SnLINk1fWj5O2/N6SVREhJSUB6W42pGm45hR8BK3r7IpQqzN+Pz7QWgHuo
+	 nZjGAwbdivlc0ezxyIrwAsKi0jcxnXD4Z+vz5aUxUf3mULtp13c7qOo2yg0DUFPOou
+	 okSvVfhHr/5Uka08xAvJe9nmx5pkw4DrgcrW7Aq71Py+Gh2ZFauHa3x78n4zWEc0Ud
+	 2Xd952f1lQbMg==
+Message-ID: <7cae9919-4ccd-41ed-a899-0e97ee2c0250@kernel.org>
+Date: Wed, 16 Jul 2025 12:02:39 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] PCI/sysfs: Expose PCIe device serial number
+To: Matthew Wood <thepacketgeek@gmail.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250716163213.469226-1-thepacketgeek@gmail.com>
+ <20250716163213.469226-2-thepacketgeek@gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250716163213.469226-2-thepacketgeek@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
-branch HEAD: 91703041697c9d2e8dffe5b3a159198ba0dd24e7  PCI: Allow built-in drivers to use async initial probing
+On 7/16/25 11:32 AM, Matthew Wood wrote:
+> Add a single sysfs read-only interface for reading PCIe device serial
+> numbers from userspace in a programmatic way. This device attribute
+> uses the same hexadecimal 1-byte dashed formatting as lspci serial number
+> capability output. If a device doesn't support the serial number
+> capability, the device_serial_number sysfs attribute will not be visible.
+> 
+> Signed-off-by: Matthew Wood <thepacketgeek@gmail.com>
+> ---
+>   Documentation/ABI/testing/sysfs-bus-pci |  7 +++++++
+>   drivers/pci/pci-sysfs.c                 | 27 ++++++++++++++++++++++---
+>   2 files changed, 31 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> index 69f952fffec7..f7e84b3a4204 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> @@ -612,3 +612,10 @@ Description:
+>   
+>   		  # ls doe_features
+>   		  0001:01        0001:02        doe_discovery
+> +
+> +What:		/sys/bus/pci/devices/.../device_serial_number
+> +Date:		July 2025
+> +Contact:	Matthew Wood <thepacketgeek@gmail.com>
+> +Description:
+> +		This is visible only for PCIe devices that support the serial
+> +		number extended capability. The file is read only.
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 268c69daa4d5..b7b52dea6e31 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -239,6 +239,22 @@ static ssize_t current_link_width_show(struct device *dev,
+>   }
+>   static DEVICE_ATTR_RO(current_link_width);
+>   
+> +static ssize_t device_serial_number_show(struct device *dev,
+> +				       struct device_attribute *attr, char *buf)
+> +{
+> +	struct pci_dev *pci_dev = to_pci_dev(dev);
+> +	u64 dsn;
+> +
+> +	dsn = pci_get_dsn(pci_dev);
+> +	if (!dsn)
+> +		return -EIO;
+> +
+> +	return sysfs_emit(buf, "%02llx-%02llx-%02llx-%02llx-%02llx-%02llx-%02llx-%02llx\n",
+> +		dsn >> 56, (dsn >> 48) & 0xff, (dsn >> 40) & 0xff, (dsn >> 32) & 0xff,
+> +		(dsn >> 24) & 0xff, (dsn >> 16) & 0xff, (dsn >> 8) & 0xff, dsn & 0xff);
+> +}
+> +static DEVICE_ATTR_RO(device_serial_number);
 
-elapsed time: 1458m
+The serial number /could/ be considered sensitive information.  I think 
+it's better to use DEVICE_ATTR_ADMIN_RO.
 
-configs tested: 111
-configs skipped: 5
+Also, as this is a "device" attribute is it really necessary to encode 
+the extra word and "number"?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> +
+>   static ssize_t secondary_bus_number_show(struct device *dev,
+>   					 struct device_attribute *attr,
+>   					 char *buf)
+> @@ -660,6 +676,7 @@ static struct attribute *pcie_dev_attrs[] = {
+>   	&dev_attr_current_link_width.attr,
+>   	&dev_attr_max_link_width.attr,
+>   	&dev_attr_max_link_speed.attr,
+> +	&dev_attr_device_serial_number.attr,
+>   	NULL,
+>   };
+>   
+> @@ -1749,10 +1766,14 @@ static umode_t pcie_dev_attrs_are_visible(struct kobject *kobj,
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct pci_dev *pdev = to_pci_dev(dev);
+>   
+> -	if (pci_is_pcie(pdev))
+> -		return a->mode;
+> +	if (!pci_is_pcie(pdev))
+> +		return 0;
+> +
+> +	if (a == &dev_attr_device_serial_number.attr && !pci_get_dsn(pdev))
+> +		return 0;
+> +
+> +	return a->mode;
+>   
+> -	return 0;
+>   }
+>   
+>   static const struct attribute_group pci_dev_group = {
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250716    gcc-13.4.0
-arc                   randconfig-002-20250716    gcc-8.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                       aspeed_g4_defconfig    clang-21
-arm                            qcom_defconfig    clang-21
-arm                   randconfig-001-20250716    clang-20
-arm                   randconfig-002-20250716    gcc-12.4.0
-arm                   randconfig-003-20250716    gcc-8.5.0
-arm                   randconfig-004-20250716    gcc-8.5.0
-arm                       spear13xx_defconfig    gcc-15.1.0
-arm                        vexpress_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250716    gcc-9.5.0
-arm64                 randconfig-002-20250716    gcc-8.5.0
-arm64                 randconfig-003-20250716    gcc-8.5.0
-arm64                 randconfig-004-20250716    clang-21
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250716    gcc-14.3.0
-csky                  randconfig-002-20250716    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250716    clang-21
-hexagon               randconfig-002-20250716    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250716    gcc-12
-i386        buildonly-randconfig-002-20250716    clang-20
-i386        buildonly-randconfig-003-20250716    gcc-12
-i386        buildonly-randconfig-004-20250716    gcc-11
-i386        buildonly-randconfig-005-20250716    gcc-12
-i386        buildonly-randconfig-006-20250716    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-21
-loongarch             randconfig-001-20250716    clang-18
-loongarch             randconfig-002-20250716    clang-21
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                     loongson1b_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250716    gcc-14.2.0
-nios2                 randconfig-002-20250716    gcc-11.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250716    gcc-8.5.0
-parisc                randconfig-002-20250716    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc               randconfig-001-20250716    gcc-8.5.0
-powerpc               randconfig-002-20250716    clang-21
-powerpc               randconfig-003-20250716    gcc-14.3.0
-powerpc64             randconfig-001-20250716    gcc-10.5.0
-powerpc64             randconfig-003-20250716    gcc-13.4.0
-riscv                             allnoconfig    gcc-15.1.0
-riscv                 randconfig-001-20250716    gcc-8.5.0
-riscv                 randconfig-002-20250716    gcc-11.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250716    gcc-11.5.0
-s390                  randconfig-002-20250716    gcc-11.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                 kfr2r09-romimage_defconfig    gcc-15.1.0
-sh                    randconfig-001-20250716    gcc-15.1.0
-sh                    randconfig-002-20250716    gcc-14.3.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250716    gcc-8.5.0
-sparc                 randconfig-002-20250716    gcc-14.3.0
-sparc64               randconfig-001-20250716    clang-20
-sparc64               randconfig-002-20250716    clang-21
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250716    gcc-11
-um                    randconfig-002-20250716    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250716    gcc-12
-x86_64      buildonly-randconfig-002-20250716    clang-20
-x86_64      buildonly-randconfig-003-20250716    clang-20
-x86_64      buildonly-randconfig-004-20250716    clang-20
-x86_64      buildonly-randconfig-005-20250716    clang-20
-x86_64      buildonly-randconfig-006-20250716    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250716    gcc-9.3.0
-xtensa                randconfig-002-20250716    gcc-13.4.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
