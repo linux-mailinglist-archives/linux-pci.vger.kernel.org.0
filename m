@@ -1,136 +1,146 @@
-Return-Path: <linux-pci+bounces-32267-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32268-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 403C5B0766C
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 14:57:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 20100B07686
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 15:02:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B97E1AA74F4
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 12:57:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80DF11C22894
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 13:01:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD13A2F5484;
-	Wed, 16 Jul 2025 12:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zjwn+piG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3948485626;
+	Wed, 16 Jul 2025 13:01:20 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2872F531C;
-	Wed, 16 Jul 2025 12:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55216290D95
+	for <linux-pci@vger.kernel.org>; Wed, 16 Jul 2025 13:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752670585; cv=none; b=TacyoWtWlVKbxuZHzVpvqqoCJqYRR2HHsUw+m+Z3X+mJ7z3eqHOJNz4ZVs9QaPO2rx6WRzchcKNQM3XQ0K/mKhWi0IUFP36z4xSFQh+B+rdpw5VtWqoCPxom/uHE56tzZMrpM1reWLX0GJWo6+TOQQJq0clToIDoBZFKpXGtK54=
+	t=1752670880; cv=none; b=tqvKvqXEUU+rbUp7EoY8UAvaxkX4Noh3Hv+I2/6mptp6MyTktnRJlV4N+FL/Rlfz8YowfCVWtdkNUA0Rfh9OQawTRVL8bQ8ULbHOjc5qg7xSG79w3fhgqwHbGCq3kHeAHiyNy5XyIEP95pJmDbM+03cxPZvOU4vNA1GnGVGHXNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752670585; c=relaxed/simple;
-	bh=d5ezahiJEgmQKnKdHKwl1RCHamaJ0esu7vRT109SEbQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=itWBktj8bx7k6yY/qZ2C34AeuDTDnems10QmJmsVsOTkjw1Tp1h0BKxtfjN/88mDp0IK3y+tU4BKiVHl+h2vHABshAs9US+93yATV17jjorDavjBAhw4GYCriAzParKHYbvK/S3nMaL0re+ELjRv1PKKD7VxEalqJlIZ7bUCa0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zjwn+piG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 08C0CC19421;
-	Wed, 16 Jul 2025 12:56:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752670585;
-	bh=d5ezahiJEgmQKnKdHKwl1RCHamaJ0esu7vRT109SEbQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Zjwn+piGRW4ptJ/z0z/uECdIuQMEStd2Q07dBMlSQJ3syeuKkk9W1IysDQ/1idTk2
-	 pFcHTVlwQYQZqe9s1pj1axXyV2JP97Z1EhuEjol2fdSniYLHSf0u/SSYcMlOt5Saed
-	 n0DYy4c8/qPHEw3eUlDF3qzUMYs9dvaDVGec6vtO/ZGk0AktP3oZTUIx42nMtvJ/XM
-	 T7SSbSL6HzDVGF53Ni9x2NILo5T0w1LRoyPaAX9el7x3uEvrWh1S28tl3SG0PYUUUv
-	 Q3ibcCFPXXQnjxZ/ak+N2438aCO6wUrwqg4eKFha89W/tBOzEaj5r4S7Xp6jVAGDPH
-	 2nYUVc1/IOK+Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AB0C83F22;
-	Wed, 16 Jul 2025 12:56:24 +0000 (UTC)
-From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Wed, 16 Jul 2025 18:26:25 +0530
-Subject: [PATCH 6/6] wifi: ath10k: Use pci_{enable/disable}_link_state()
- APIs to enable/disable ASPM states
+	s=arc-20240116; t=1752670880; c=relaxed/simple;
+	bh=70lnk/Tdz3JNGzon8jPBh/IVS89WGfbp18uGwsP1m64=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Gz5bMw00/swT7FXqs9CNF+C/m8PCg4bLXN7NP128+CTddVKiQtQbcLE+0/3K4gSOvrYpA9uImAmCC78/4b9NJ2t1E8LYf46ujWrM3fA61kp29cvaciIS4gfjtmlJwaiuN191cPuPIM9ODNDCjGO/o+cARYlEG71a+O/J1eZ6gMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 4AB3F92009C; Wed, 16 Jul 2025 15:01:07 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 44B5492009B;
+	Wed, 16 Jul 2025 14:01:07 +0100 (BST)
+Date: Wed, 16 Jul 2025 14:01:07 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+cc: Matthew W Carlis <mattc@purestorage.com>, ashishk@purestorage.com, 
+    Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    msaggi@purestorage.com, sconnor@purestorage.com
+Subject: Re: [PATCH v2 0/1] PCI: pcie_failed_link_retrain() return if dev is
+ not ASM2824
+In-Reply-To: <2b72378d-a8c1-56b1-3dbb-142eb4c7f302@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.2507091730410.56608@angie.orcam.me.uk>
+References: <62c702a7-ce9b-21b8-c30e-a556771b987f@linux.intel.com> <20250708224917.7386-1-mattc@purestorage.com> <2b72378d-a8c1-56b1-3dbb-142eb4c7f302@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250716-ath-aspm-fix-v1-6-dd3e62c1b692@oss.qualcomm.com>
-References: <20250716-ath-aspm-fix-v1-0-dd3e62c1b692@oss.qualcomm.com>
-In-Reply-To: <20250716-ath-aspm-fix-v1-0-dd3e62c1b692@oss.qualcomm.com>
-To: Jeff Johnson <jjohnson@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Nirmal Patel <nirmal.patel@linux.intel.com>, 
- Jonathan Derrick <jonathan.derrick@linux.dev>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
- ath12k@lists.infradead.org, ath11k@lists.infradead.org, 
- ath10k@lists.infradead.org, Bjorn Helgaas <helgaas@kernel.org>, 
- ilpo.jarvinen@linux.intel.com, linux-arm-msm@vger.kernel.org, 
- linux-pci@vger.kernel.org, 
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1518;
- i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=Fx4ej/EicH41+mIOpWKF1WcnMWq9PYq0rbjy+/KSq0Q=;
- b=kA0DAAoBVZ8R5v6RzvUByyZiAGh3oXbIxqk80Tgh+RxdditU6/SfcGzUbtEKyagt0528i4qmg
- okBMwQAAQoAHRYhBGelQyqBSMvYpFgnl1WfEeb+kc71BQJod6F2AAoJEFWfEeb+kc71+zwH/j9g
- 77XQ+TyQtXbct+iV57W9c8g3ZQmgOtKIHRMLu+mcrcqHfSxz/V/4OcFnyjatqAbs33eteSiCZ55
- LoVeVbo3qOjovyINbJXFwgSGgb7MrPELoEBPbwyZvr7H6mp2v1GP3XUzZsi6NwIHjh1J7BQUqHV
- aDnAaoWlbmAChlKp0tbmRkWVN2LpMwTe6EfcYqrCmz7nBm1x0QLTpGPJkNYzV/HgleNa8aMEQFV
- eQP3tLVUolrRr8ZS4IJHlOEVQus5Ub4hqfKpnW3BFAvywjtvLCovpSp6Diwn0zkfZ0WLLS5Xk0R
- 6jeK1WBsuL8Emy0OHC085U9qIOq5psdkZ9ca4Pc=
-X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Endpoint-Received: by B4 Relay for
- manivannan.sadhasivam@oss.qualcomm.com/default with auth_id=461
-X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Reply-To: manivannan.sadhasivam@oss.qualcomm.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+On Wed, 9 Jul 2025, Ilpo Järvinen wrote:
 
-It is not recommended to enable/disable the ASPM states on the back of the
-PCI core directly using the LNKCTL register. It will break the PCI core's
-knowledge about the device ASPM states. So use the APIs exposed by the PCI
-core to enable/disable ASPM states.
+> > I wonder if it shouldn't have to see some kind of actual link activity 
+> > as a prereq to entering the quirk.
+> 
+> How would you observe that "link activity"? Doesn't LBMS itself imply 
+> "link activity" occurred?
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
----
- drivers/net/wireless/ath/ath10k/pci.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ It does, although in this case it shouldn't have been set in the first 
+place, because after reset the link never comes up (i.e. goes into the 
+Link Active state) and only keeps flipping between training and not 
+training, as indicated by the LT bit.  FAOD with the affected link the 
+LBMS bit doesn't ever retrigger once cleared while the link is in its 
+broken state.
 
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index 1e6d43285138ece619b9d7dc49f113a439e2085d..b20ab535a850ef1f5fe606bd7e7a230ebcd894c8 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -1965,9 +1965,7 @@ static int ath10k_pci_hif_start(struct ath10k *ar)
- 	ath10k_pci_irq_enable(ar);
- 	ath10k_pci_rx_post(ar);
- 
--	pcie_capability_clear_and_set_word(ar_pci->pdev, PCI_EXP_LNKCTL,
--					   PCI_EXP_LNKCTL_ASPMC,
--					   ar_pci->link_ctl & PCI_EXP_LNKCTL_ASPMC);
-+	pci_enable_link_state(ar_pci->pdev, ath_pci_aspm_state(ar_pci->link_ctl));
- 
- 	return 0;
- }
-@@ -2824,8 +2822,7 @@ static int ath10k_pci_hif_power_up(struct ath10k *ar,
- 
- 	pcie_capability_read_word(ar_pci->pdev, PCI_EXP_LNKCTL,
- 				  &ar_pci->link_ctl);
--	pcie_capability_clear_word(ar_pci->pdev, PCI_EXP_LNKCTL,
--				   PCI_EXP_LNKCTL_ASPMC);
-+	pci_disable_link_state(ar_pci->pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
- 
- 	/*
- 	 * Bring the target up cleanly.
+ Once the speed has been clamped and link retrained it goes up right away
+(i.e. into the Link Active state) and remains steady up, also once the 
+speed has been unclamped.
 
--- 
-2.45.2
+ I made a test once and left the system up for half a year or so.  The 
+LBMS bit was set once, a couple of days after system reset.  I cleared it 
+by hand and it never retriggered for the rest of the experiment, so this 
+single occasion must have been a glitch and not a link quality issue.
 
+ During that half a year the system and the link in question were both 
+used heavily in remote GNU toolchain verification over a network interface 
+placed downstream the problematic link.  Traffic included NFS and SSH.  
+No issues ever triggered, so I must conclude the link training issue is 
+specific to speed negotiation, likely at the protocol level, rather than 
+at the physical layer.
 
+ Last year I tried to make an alternative setup using a PCIe switch option 
+card using the same ASMedia device.  The card has turned out not to work 
+at all (the switch reporting in the configurations space, but all the 
+downstream switch permanently down) owing to the host leaving the Vaux 
+line disconnected in the slot, which is a conforming configuration.  I was 
+told by the option card manufacturer this is an erratum in the ASMedia 
+switch device and the workaround is to drive Vaux.  I think this just 
+tells what the quality of these devices is.  Sigh.
+
+ Anyway, I chose to rework the card and tracked down a suitable miniature 
+SMD switch to mount onto the PCB so as to let me select whether to drive 
+ASMedia device's Vaux input from the Vaux or a regular 3.3V slot position, 
+but owing to other commitments I've never got to completing this effort, 
+as it requires a couple of hours of precise manual work at the workshop.  
+I'll get back to it sometime and report the results.
+
+> Any good suggestions how to realize that check more precisely to 
+> differentiate if there was some link activity or not?
+
+ The LT bit is an obvious candidate and also how I wrote a corresponding 
+quirk in U-boot.  A problem however is while in U-boot it's fine to poll 
+the LT bit busy-looping for a second or so, it's absolutely not in Linux 
+where we have the rest of the OS running.  Sampling at random intervals 
+isn't going to help as we could well miss the active state.
+
+ FWIW it's all documented with the description of the quirk.
+
+> > One thing that honestly doesn't make any sense to me is the ID list in the
+> > quirk. If the link comes up after forcing to Gen1 then it would only restore
+> > TLS if the device is the ASMedia switch, but also ignoring what device is
+> > detected downstream. If we allow ASMedia to restore the speed for any downstream
+> > device when we only saw the initial issue with the Pericom switch then why
+> > do we exclude Intel Root Ports or AMD Root Ports or any other bridge from the
+> > list which did not have any issues reported.
+> 
+> I think it's because the restore has been tested on that device 
+> (whitelist).
+
+ Correct, the idea has been to err on the side of caution.  The ASMedia 
+device seems to cope well with this unclamping, so it's been listed, and 
+so should any other device that has been confirmed to work.
+
+ Matching the downstream and the upstream device both at a time instead, 
+once this quirk has triggered and succeeded, seems to make no sense: if 
+the device downstream turns out affected, then it matches the behaviour 
+observed, so it should be enough to have the upstream device checked.  I 
+did want to run it at full speed anyway.
+
+ OTOH matching the downstream device likely makes sense if the quirk has 
+been bypassed, such as when the link speed had been already clamped by the 
+firmware.  In this case we do not really know if the clamping has been 
+triggered by this erratum or something else, so such a check would be 
+justified.  I don't think it's going to matter for the problems discussed 
+though.
+
+ Apologies for the irregular replies, lots on my head right now and I had 
+to write this all down properly.
+
+  Maciej
 
