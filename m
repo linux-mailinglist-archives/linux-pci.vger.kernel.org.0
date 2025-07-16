@@ -1,52 +1,52 @@
-Return-Path: <linux-pci+bounces-32266-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32267-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37E2BB07668
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 14:56:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 403C5B0766C
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 14:57:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 66B104A55C8
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 12:56:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B97E1AA74F4
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 12:57:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 944912F5336;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD13A2F5484;
 	Wed, 16 Jul 2025 12:56:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IITQe2BA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zjwn+piG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470B52F5301;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2872F531C;
 	Wed, 16 Jul 2025 12:56:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752670585; cv=none; b=N9+gZcWGQ/afaqtH2RqgNETbpx1pmHgOjebm8o/MlTxHFD1iPfYvh3VC2AcbROm3nu6H7qStKxCyCbFL2zcne+NpVTYrx6kPvn+pmKjdAY8WK05S25Z6jvL8CojxEkZcGw08OvZOK6kzv3I1gQOxYaFOBzusc5fnaYj1i833eag=
+	t=1752670585; cv=none; b=TacyoWtWlVKbxuZHzVpvqqoCJqYRR2HHsUw+m+Z3X+mJ7z3eqHOJNz4ZVs9QaPO2rx6WRzchcKNQM3XQ0K/mKhWi0IUFP36z4xSFQh+B+rdpw5VtWqoCPxom/uHE56tzZMrpM1reWLX0GJWo6+TOQQJq0clToIDoBZFKpXGtK54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1752670585; c=relaxed/simple;
-	bh=N7blyqfQuKX3ng2cz062bliqBtPysSE2ISnQjV9aR9U=;
+	bh=d5ezahiJEgmQKnKdHKwl1RCHamaJ0esu7vRT109SEbQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sc3qTGYOKnlXO2U0mJSsSimxQ6Mgwc+NDa8ZG2KAbVgRVj9Jl/wwEl4bUNg17t4sGMzirSzzDnbyPEisZoU5j5ouetPn4DpU7jIvP5yNOX/G1DFxacXaTNSu8XZzdUsMvtT0cW7naJFMqTIJPDD7EIcgGQ8B9gjMR7G+LAZN82c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IITQe2BA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EB6A9C116B1;
-	Wed, 16 Jul 2025 12:56:24 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=itWBktj8bx7k6yY/qZ2C34AeuDTDnems10QmJmsVsOTkjw1Tp1h0BKxtfjN/88mDp0IK3y+tU4BKiVHl+h2vHABshAs9US+93yATV17jjorDavjBAhw4GYCriAzParKHYbvK/S3nMaL0re+ELjRv1PKKD7VxEalqJlIZ7bUCa0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zjwn+piG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 08C0CC19421;
+	Wed, 16 Jul 2025 12:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1752670585;
-	bh=N7blyqfQuKX3ng2cz062bliqBtPysSE2ISnQjV9aR9U=;
+	bh=d5ezahiJEgmQKnKdHKwl1RCHamaJ0esu7vRT109SEbQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=IITQe2BAL2dS1TnBFMJM6SZDIBfJHfyZCSXbLAD86InIqnrYN5urpZHbI8dS0Mjae
-	 G3JFESY/3ep/kaQvE+BZrv8YLgTcKhin3zXT9C0xR8p1s2gqc6DQJYG7kPeq2rwloP
-	 VaEf24sKxypHJ9Js5pFw0BNSrLHMgv81plA5wV/dYuPxvx7M4O/w6M+0CDqJPvlMu9
-	 555QxOCbU/xMVayngrDdJs1+cGYmQXoYqHYLQpF7mRlxB8fX0YCwhlO9Zz9Bg9MkaU
-	 ASipx0soW7lzwJYwhsK+gtnLaFcQ6RYPze0LWAH6CV6s4rXjKb/HHaeFm0jPtdzTdd
-	 40vDKQfAGhYhg==
+	b=Zjwn+piGRW4ptJ/z0z/uECdIuQMEStd2Q07dBMlSQJ3syeuKkk9W1IysDQ/1idTk2
+	 pFcHTVlwQYQZqe9s1pj1axXyV2JP97Z1EhuEjol2fdSniYLHSf0u/SSYcMlOt5Saed
+	 n0DYy4c8/qPHEw3eUlDF3qzUMYs9dvaDVGec6vtO/ZGk0AktP3oZTUIx42nMtvJ/XM
+	 T7SSbSL6HzDVGF53Ni9x2NILo5T0w1LRoyPaAX9el7x3uEvrWh1S28tl3SG0PYUUUv
+	 Q3ibcCFPXXQnjxZ/ak+N2438aCO6wUrwqg4eKFha89W/tBOzEaj5r4S7Xp6jVAGDPH
+	 2nYUVc1/IOK+Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EE1C83F34;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AB0C83F22;
 	Wed, 16 Jul 2025 12:56:24 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Wed, 16 Jul 2025 18:26:24 +0530
-Subject: [PATCH 5/6] wifi: ath11k: Use pci_{enable/disable}_link_state()
+Date: Wed, 16 Jul 2025 18:26:25 +0530
+Subject: [PATCH 6/6] wifi: ath10k: Use pci_{enable/disable}_link_state()
  APIs to enable/disable ASPM states
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250716-ath-aspm-fix-v1-5-dd3e62c1b692@oss.qualcomm.com>
+Message-Id: <20250716-ath-aspm-fix-v1-6-dd3e62c1b692@oss.qualcomm.com>
 References: <20250716-ath-aspm-fix-v1-0-dd3e62c1b692@oss.qualcomm.com>
 In-Reply-To: <20250716-ath-aspm-fix-v1-0-dd3e62c1b692@oss.qualcomm.com>
 To: Jeff Johnson <jjohnson@kernel.org>, 
@@ -74,16 +74,16 @@ Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
  Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1863;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1518;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=kXpW2mQuCN8+CNqdT+kLur7VSEl5MgZkBtsfbPtL7RY=;
- b=owEBbAGT/pANAwAKAVWfEeb+kc71AcsmYgBod6F22QPsndaD+8odr4XoI0/ocyp1ircoReHgt
- YGA0cbP6aCJATIEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaHehdgAKCRBVnxHm/pHO
- 9Sb9B/i3iAtipHaPFAxLp2zZTxGLgKyKliJu5K7gSsTqxmv7SltOMJyZmnTaGZYLk6v3zQnRcg6
- sw2o2uIH9fSmM8+4XO79TkWTmnh6trf1HQAgJs02XVm8x90kChSY3mH+1mglMtfm1Z5wZsMFXMD
- 6d2HdNNBDBi7DvWJnPlv3kjjhOQa6eBwGh9J0tCBghOy2ZOsg27sEwItnHNfsCEpPNpi4zMluiq
- 3zhfrwOB3g3t8SfYyX+0Zs1X2Rv2MVfl8EahkwZra0x7yV32Ina7XpSomJ1UGz46Atp4b61+BFT
- FRYW9/TtiB1XC9iicOaEtvo4z7d87s1a+ypf/M1h6fxvkfE=
+ bh=Fx4ej/EicH41+mIOpWKF1WcnMWq9PYq0rbjy+/KSq0Q=;
+ b=kA0DAAoBVZ8R5v6RzvUByyZiAGh3oXbIxqk80Tgh+RxdditU6/SfcGzUbtEKyagt0528i4qmg
+ okBMwQAAQoAHRYhBGelQyqBSMvYpFgnl1WfEeb+kc71BQJod6F2AAoJEFWfEeb+kc71+zwH/j9g
+ 77XQ+TyQtXbct+iV57W9c8g3ZQmgOtKIHRMLu+mcrcqHfSxz/V/4OcFnyjatqAbs33eteSiCZ55
+ LoVeVbo3qOjovyINbJXFwgSGgb7MrPELoEBPbwyZvr7H6mp2v1GP3XUzZsi6NwIHjh1J7BQUqHV
+ aDnAaoWlbmAChlKp0tbmRkWVN2LpMwTe6EfcYqrCmz7nBm1x0QLTpGPJkNYzV/HgleNa8aMEQFV
+ eQP3tLVUolrRr8ZS4IJHlOEVQus5Ub4hqfKpnW3BFAvywjtvLCovpSp6Diwn0zkfZ0WLLS5Xk0R
+ 6jeK1WBsuL8Emy0OHC085U9qIOq5psdkZ9ca4Pc=
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -100,44 +100,34 @@ core to enable/disable ASPM states.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- drivers/net/wireless/ath/ath11k/pci.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/net/wireless/ath/ath10k/pci.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/pci.c b/drivers/net/wireless/ath/ath11k/pci.c
-index 78444f8ea15356f1f4c90a496efd52780499bfb2..cec399765e04104ddcfcee5003c209e14c7d4ca0 100644
---- a/drivers/net/wireless/ath/ath11k/pci.c
-+++ b/drivers/net/wireless/ath/ath11k/pci.c
-@@ -19,6 +19,8 @@
- #include "pcic.h"
- #include "qmi.h"
+diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+index 1e6d43285138ece619b9d7dc49f113a439e2085d..b20ab535a850ef1f5fe606bd7e7a230ebcd894c8 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -1965,9 +1965,7 @@ static int ath10k_pci_hif_start(struct ath10k *ar)
+ 	ath10k_pci_irq_enable(ar);
+ 	ath10k_pci_rx_post(ar);
  
-+#include "../ath.h"
-+
- #define ATH11K_PCI_BAR_NUM		0
- #define ATH11K_PCI_DMA_MASK		36
- #define ATH11K_PCI_COHERENT_DMA_MASK	32
-@@ -597,8 +599,7 @@ static void ath11k_pci_aspm_disable(struct ath11k_pci *ab_pci)
- 		   u16_get_bits(ab_pci->link_ctl, PCI_EXP_LNKCTL_ASPM_L1));
+-	pcie_capability_clear_and_set_word(ar_pci->pdev, PCI_EXP_LNKCTL,
+-					   PCI_EXP_LNKCTL_ASPMC,
+-					   ar_pci->link_ctl & PCI_EXP_LNKCTL_ASPMC);
++	pci_enable_link_state(ar_pci->pdev, ath_pci_aspm_state(ar_pci->link_ctl));
  
- 	/* disable L0s and L1 */
--	pcie_capability_clear_word(ab_pci->pdev, PCI_EXP_LNKCTL,
+ 	return 0;
+ }
+@@ -2824,8 +2822,7 @@ static int ath10k_pci_hif_power_up(struct ath10k *ar,
+ 
+ 	pcie_capability_read_word(ar_pci->pdev, PCI_EXP_LNKCTL,
+ 				  &ar_pci->link_ctl);
+-	pcie_capability_clear_word(ar_pci->pdev, PCI_EXP_LNKCTL,
 -				   PCI_EXP_LNKCTL_ASPMC);
-+	pci_disable_link_state(ab_pci->pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
++	pci_disable_link_state(ar_pci->pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
  
- 	set_bit(ATH11K_PCI_ASPM_RESTORE, &ab_pci->flags);
- }
-@@ -606,10 +607,7 @@ static void ath11k_pci_aspm_disable(struct ath11k_pci *ab_pci)
- static void ath11k_pci_aspm_restore(struct ath11k_pci *ab_pci)
- {
- 	if (test_and_clear_bit(ATH11K_PCI_ASPM_RESTORE, &ab_pci->flags))
--		pcie_capability_clear_and_set_word(ab_pci->pdev, PCI_EXP_LNKCTL,
--						   PCI_EXP_LNKCTL_ASPMC,
--						   ab_pci->link_ctl &
--						   PCI_EXP_LNKCTL_ASPMC);
-+		pci_enable_link_state(ab_pci->pdev, ath_pci_aspm_state(ab_pci->link_ctl));
- }
- 
- #ifdef CONFIG_DEV_COREDUMP
+ 	/*
+ 	 * Bring the target up cleanly.
 
 -- 
 2.45.2
