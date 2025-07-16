@@ -1,60 +1,66 @@
-Return-Path: <linux-pci+bounces-32240-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32241-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E95DCB06F3A
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 09:42:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C8FCB06FC2
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 09:59:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 497FB1661A0
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 07:42:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7CFE2189F0AA
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 08:00:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA5D328CF65;
-	Wed, 16 Jul 2025 07:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2882928CF5E;
+	Wed, 16 Jul 2025 07:59:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MebXlxNv"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TbIJ5b9p";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u+0xHGWs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8230428CF5C;
-	Wed, 16 Jul 2025 07:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37642877C8;
+	Wed, 16 Jul 2025 07:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752651721; cv=none; b=oE+U6yjdAK8c8fJAftXrUrwKpoduyI/0PtxObmTEM4enC63VZgMJzjojsG1iJdX0rO0l8q/29seb58P+SdJVVSJPgzCTAtjkBUxv5cRttQK9bfRh3xxOPirBi1Fn6ckF/Zgzpa+p+zd2jAGvs/u7vlLHG4XBazlSLpwgNFcftuM=
+	t=1752652793; cv=none; b=p/llFgAYoC5Jue2/nx/j60QQ+Pwx0JeKqmkZO9lGi4J0+7wlrF8eASQKzOkpSuzeWcIjyQhR2UP+UC7RExCDbFRUAzQX1GV4/vS4bHxq2oNhoHw8hwev9Vp2wrUPLnPnnWLLL97m4I6YocdNDDVikPnM4AYZXcl5vVoZ+25Qntg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752651721; c=relaxed/simple;
-	bh=zdIsE8zMh+Q9b21Tzn+0aEdVw4+F6kLYzxIztPzl06U=;
+	s=arc-20240116; t=1752652793; c=relaxed/simple;
+	bh=Ar0Xb/Uf8JcXVLRgVcSyG1l0VNAQj6K9qFOU9YD1KGQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MFoG4jV4UjB+DcSIK1QDjriBmrpgaIRC2axARfGfY4ZETMovlIxnErEKd/PTsNc2ctBcRZb1X8y5SqB2d3H3m+NpX5W+fVlASG8pkiqe2rgn4TvxEKhI7Jc1oaUOlB8TP3BZyfetMW3vgjBtlvrF5UZdWCI5EtzM1R1aVZOZQsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MebXlxNv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A0D5C4CEF0;
-	Wed, 16 Jul 2025 07:41:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752651721;
-	bh=zdIsE8zMh+Q9b21Tzn+0aEdVw4+F6kLYzxIztPzl06U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MebXlxNvdo6y4CMS/mqxoQ2xFLxVMUEkAK0nDRI0znnVgjscwpAL6eKw1ElxcNis5
-	 pLFwQ0fTbKA0C3pg4H1dXXyd2CgXFKAmwJY0D3nZ9rQsTE++t4819Eh7/xs/UQ21Wp
-	 mF/RS3IztXa6/ELVGb+PZyJU5a+lbXiGZCXzR8TjQxHROo1+8SKuQe/ucCZa0TM/DX
-	 QORRzVFEHTsMl0upK+DPMk+xfPXU/C2a8Zkk7qxy4fgB78RtKf3fKeqk5WT/YvI8sS
-	 Na/gdoRKRqq8+/pzlFC+zCHX5N/rjrZD/g2HApXyRkgVKadQGvaxU1KDUfYrPOtZlq
-	 0zkTAF5CD23ZA==
-Date: Wed, 16 Jul 2025 09:41:54 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	heiko@sntech.de, mani@kernel.org, yue.wang@amlogic.com,
-	pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
-	jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
-	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v5 0/2] Configure root port MPS during host probing
-Message-ID: <aHdXwr-UZz6jZX3f@ryzen>
-References: <20250620155507.1022099-1-18255117159@163.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=CEl03w/Usa6MVWf1P/irrXbXETpwCG73v317fPBIS2MDqElXhSfNMaSLM3EBr9bKZwlyMjUOgMwF1gzPM+57J2IWiKIBt6WYOTY8HbCrgz4Ur4LlqI4Kakeo3NwLT8QrEd4cuNJsABJOhZk1Dsz+JYJ9V07PdC360z8iQECXGUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TbIJ5b9p; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u+0xHGWs; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Wed, 16 Jul 2025 09:59:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1752652784;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NNqMoBx61d+HMyv4cP0TPSF1O81dNABhWxIpn3gpQyY=;
+	b=TbIJ5b9pDaeCsnZ8PUhEMT7Y3+Iga0EcCg09V0TNLdpWOGdr7x407Y8U6AE2pciN8pn+Tm
+	UjEEKtNC84cf9m5lSVTLU6ea55Lfe4lgUiJhaKCv5ac3KxPNxiaVV7TrgoXB1MxhUFSh3J
+	8f7yRDyP/3rVxtmLOy25GwjtfE4BW/14NziCxoqkpJXNQdpdQ9XLSb/e4bvwWhLhFBN2mU
+	+Xf8sm/fUJS1rNi0o846TLyPFhI+WlBUHqJeI+qzC9vIzYRSwhF9L9O4uzhvUnMu+izMLb
+	OV2CGcw+7YUUgSsxBdC9hz9/vJBOv+tBTnHidqNv34BWh3C/2gIg4MqviN9QOw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1752652784;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NNqMoBx61d+HMyv4cP0TPSF1O81dNABhWxIpn3gpQyY=;
+	b=u+0xHGWsSbGWdBLjEvD4tgttGTvUnfDq9Xeehwcp0Rjrwkhc07ykuhUFysc6gbxcDZn4j9
+	dL+pqY6yoTQ6abDQ==
+From: Nam Cao <namcao@linutronix.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	linux-kernel@vger.kernel.org, tglx@linutronix.de,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] pci/controller: Use dev_fwnode()
+Message-ID: <20250716075942.2aCLkdCs@linutronix.de>
+References: <20250611104348.192092-16-jirislaby@kernel.org>
+ <20250715184917.GA2479996@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,29 +69,40 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250620155507.1022099-1-18255117159@163.com>
+In-Reply-To: <20250715184917.GA2479996@bhelgaas>
 
-On Fri, Jun 20, 2025 at 11:55:05PM +0800, Hans Zhang wrote:
-(snip)
-> ---
+On Tue, Jul 15, 2025 at 01:49:17PM -0500, Bjorn Helgaas wrote:
+> On Wed, Jun 11, 2025 at 12:43:44PM +0200, Jiri Slaby (SUSE) wrote:
+> > irq_domain_create_simple() takes fwnode as the first argument. It can be
+> > extracted from the struct device using dev_fwnode() helper instead of
+> > using of_node with of_fwnode_handle().
+> > 
+> > So use the dev_fwnode() helper.
+> > 
+> > Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: linux-pci@vger.kernel.org
+> > ---
+> >  drivers/pci/controller/mobiveil/pcie-mobiveil-host.c | 5 ++---
+> >  drivers/pci/controller/pcie-mediatek-gen3.c          | 3 +--
 > 
-> Hans Zhang (2):
->   PCI: Configure root port MPS during host probing
->   PCI: dwc: Remove redundant MPS configuration
-> 
->  drivers/pci/controller/dwc/pci-meson.c | 17 -----------------
->  drivers/pci/probe.c                    | 10 ++++++++++
->  2 files changed, 10 insertions(+), 17 deletions(-)
-> 
-> 
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> -- 
-> 2.25.1
-> 
+> I think the pcie-mediatek-gen3.c part of this is no longer relevant
+> after Nam's series [1].
 
-Any chance of this series getting picked up?
+fwnode is still needed after my patch. As part of
+struct irq_domain_info info = { ... }
 
+You could squash this one into my patch. I personally would leave it be.
+But fine to me either way.
 
-Kind regards,
-Niklas
+> This pcie-mediatek-gen3.c was the only thing on the
+> pci/controller/mediatek-gen3 branch, so I'm going to drop that for now.
+> 
+> The pcie-mobiveil-host.c part is still queued on
+> pci/controller/mobiveil for v6.17.
+> 
+> [1] https://patch.msgid.link/bfbd2e375269071b69e1aa85e629ee4b7c99518f.1750858083.git.namcao@linutronix.de
+
+Best regards,
+Nam
 
