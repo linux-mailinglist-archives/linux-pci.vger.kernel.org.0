@@ -1,127 +1,103 @@
-Return-Path: <linux-pci+bounces-32280-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32281-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C70CCB07981
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 17:21:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5E1DB079BE
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 17:26:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 028745808F0
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 15:21:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78B1D1C25705
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 15:23:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D14F2F50A7;
-	Wed, 16 Jul 2025 15:20:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4091C2F6F83;
+	Wed, 16 Jul 2025 15:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m36XHinj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OS9vTLlE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46A82F5086
-	for <linux-pci@vger.kernel.org>; Wed, 16 Jul 2025 15:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12BC92F5C5C;
+	Wed, 16 Jul 2025 15:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752679244; cv=none; b=Jt8SHbMUAn+JmgNEUqECDUIxNmPZWzknrcvdWKRCI0oNbA+JEs97c5O7oYE+REQHSP+4RN8/BXchviQaKrvjs2Su1i5QrsSgd8kSdOfPBp2aOAjNz32ipDkjenzQZkQViToGmUXLCUk90YVAWgYELn7RREWeQALdM7nd+tPok+0=
+	t=1752679288; cv=none; b=I9LEqFcBokXCC92vOoVgFmv14qG7RgcfYm5+3QnB8RRaGRVbuXXTnzzg2/jECKl+NFJPlygqcwNNFj0idBKkYb9/x4Kxg2cXSneKFgO8Jb+p7xflGWECeUUxVPEjtQI988xLtPfpRa9WMEIGdZtdOWMOtpt7X0pmT7B9RKiwnFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752679244; c=relaxed/simple;
-	bh=tXWo9DI0U4S27QdRpkx8bqAWOudlVH2rRpbfURoXpLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SVexJm02JatoxOvbiU0Vn7vVM8t5booSEFA7fgwOS5VWHNITAyxx+GELuVGQog1IFcRW61x+2wZtqZ913xWIkksahH9geOdFhly9wymAt2UdNCgvdqD/mv14NRVDQGV3vYo7XrcRohNj6W6pat3fbIrzFg1p9re7NmPGLybn1Ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=m36XHinj; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2363616a1a6so58813195ad.3
-        for <linux-pci@vger.kernel.org>; Wed, 16 Jul 2025 08:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1752679242; x=1753284042; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0kvAy9JuKk7cJOpP3kEzrHj2nDxIOe89eZJRSs0ppsc=;
-        b=m36XHinjMbQRFdf0KU6WIxrx7c8yoqXZsQKuUxBZ3THW7kWX3h9H6RRkWHBe12KQjw
-         TEOA3/cry9c08khweHEcjP0tmv5bGHGx+jZ4KCAwAMuQvdhUz+NKYNlRCEOVCXboKIfK
-         Vl/p1ZqKRnjUQa4FIfRNR2iOwvel4ggYjVkXM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752679242; x=1753284042;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0kvAy9JuKk7cJOpP3kEzrHj2nDxIOe89eZJRSs0ppsc=;
-        b=MXhXGqDmGdi4DlELHHCi1vuDpBS/AcGZPBV1lihIL7IWOpkUkjOOqU/ORMegYqJQf0
-         Jj67HKpO+zaMZbBvZs4fb89D0NC1hfhl5TNQYaQ/CtLdYL1jpapn1GXX8aCDcLeBf1vN
-         Od/wKJeOj+MWDASIpDiVrbGA1BgK+GQeBG9eS/JZwmNMuLiNMNa9c1ah5znSHtsRjKWf
-         FVGGGui1yt6BkSG+hjBK2GVlSLxEF3TOnrtihKcCe3TYDzGgCgUOdgQ7oFuB2U+Jn3bI
-         cnDSXK4lZZa3GAgRjuLhQaARqwZU8eeZfykS5399xl6jTiGGuUl8cX/ATsj0+2zHS4KS
-         vJfA==
-X-Forwarded-Encrypted: i=1; AJvYcCXhem+4+4E+NbupwqbJygeLDd7PFdVMEvSnYEaeNs1Q3xtUleSqStFQ8pd3AFCR3zWQdiGrAZUTElQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7jwrXekFOt8A0u8nzFv97adUGa2NpSb+r/6YAeWDfsEJHSh5Y
-	xF4bLbiGq7aTbJ1i7/AJMPxcsWBSiZflA8idOpAGr4hORSwycm3Fz9MOXijyUfITBg==
-X-Gm-Gg: ASbGncvrCs64O/tJaqIjQ1wg7SZEUhswPYTkYXDLzoHtsOkhiZoEfXVaNLeOvfVD6UD
-	5nmwpALQUURPfx4zeTYUS+vVAT+ceT0j/uTsVQLkgW7/XAZrRoSNyAdla5C+ljejYYQKwu2lhDP
-	i/H6HqphvPXuUlG+38OmP3y9mvSER35G8iC0qWUkliurODIBhzlDQKb2i7Xvvrn587hQ2v3zuoy
-	R8zb7g0Z3FtnVSZVJ70vIn1Kp8gULSaTxWc6LIhmcHhotG9c78DxQ261dHTlme6F0s7gaZLAkVz
-	2NeqF3cnCU3f3wKoKEu3brSPgUan5FhmE1gFhFMgWnVgEcWc3RLn1gJc2mHlaFIFbErR3aVprLr
-	XA2k3vjq62BAeE3atPj6mFGsXcbABygUo2uQxX0jHspxhVueAUhQy4BCJkxLNyVulIAdZpcQ=
-X-Google-Smtp-Source: AGHT+IGcYoDvzs2xrFfDj2S6BlQ3ZOLJw8uglFXYfVPAkAzuv1JUfWvGeNjcSV0DwEnPsEttZXrSDA==
-X-Received: by 2002:a17:903:3c23:b0:237:d486:706a with SMTP id d9443c01a7336-23e25778025mr49299945ad.48.1752679241689;
-        Wed, 16 Jul 2025 08:20:41 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:17f8:90f2:a7bc:b439])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23de4285a38sm126118035ad.44.2025.07.16.08.20.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Jul 2025 08:20:40 -0700 (PDT)
-Date: Wed, 16 Jul 2025 08:20:38 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Frank Li <Frank.li@nxp.com>, Bjorn Helgaas <helgaas@kernel.org>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-	Rob Herring <robh+dt@kernel.org>, imx@lists.linux.dev,
-	linux-pci@vger.kernel.org
-Subject: Re: Does dwc/pci-layerscape.c support AER?
-Message-ID: <aHfDRm2S8N8Qus_m@google.com>
-References: <20250702223841.GA1905230@bhelgaas>
- <aGW8NnHUlfv1NO3g@lizhi-Precision-Tower-5810>
- <aGXEcHTfT2k2ayAj@google.com>
- <tikcdb63ti6hbpypusxdiaoattpuez5rgpsglzllagnqfm5voa@5eornv77pl4i>
+	s=arc-20240116; t=1752679288; c=relaxed/simple;
+	bh=+5nBuTaHK2eqj8Sbjf7jOgP+gLLgEVm3azLVcfpx7Wk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ZhvONk02sE4kniATsLTn5MvS4EPI1XIYShROdJIzEweBwxnVwMlke9HEk7iK7crlcUGr6S+17eefaiVYJi88Tu2Wmj9yyajEANtKzXhTt7aEFMVq3IHkxF5Ja42o7uQby8oog1bxkvVDHxSu+bO+zlFNhODl5ZwUyHTXkSDtSKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OS9vTLlE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74D37C4CEFC;
+	Wed, 16 Jul 2025 15:21:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752679287;
+	bh=+5nBuTaHK2eqj8Sbjf7jOgP+gLLgEVm3azLVcfpx7Wk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=OS9vTLlExI0ev1o7vTPmfJqaiGDqDFdXLIYU/2oNar9+GE0p2sFREnmEPM9tchhJs
+	 L1Y2aUgJ4GkDvZyEazbL1L4zjmorIK5QnLjOF5jQ53IdaQ865dzJqVFtTLE1IAo27A
+	 RvDAwYt17LRGns6LsX/cnluz58W0pJAFqXqJ7Vr/bV7i/gQg+DN7Sp0ck+1Yd2EW66
+	 KAiEFjBbdQKlsYfAto11NOc+gChFKfdj9FN85e4nGDbF2oMyRkkXd2lKBnS4GyIP7N
+	 yAaR39a7tCBwUcM5duceF2G1CYskt7SaW0TbDtgxAdJVQX0D5dotcL1wbeoKPl8FH9
+	 KBOFS1Hs7+Khg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id C64EB383BA33;
+	Wed, 16 Jul 2025 15:21:48 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tikcdb63ti6hbpypusxdiaoattpuez5rgpsglzllagnqfm5voa@5eornv77pl4i>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 0/3] PCI: host-generic: Fix driver_data overwriting bugs
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <175267930756.1224517.4628176951767870692.git-patchwork-notify@kernel.org>
+Date: Wed, 16 Jul 2025 15:21:47 +0000
+References: <20250625111806.4153773-1-maz@kernel.org>
+In-Reply-To: <20250625111806.4153773-1-maz@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-riscv@lists.infradead.org, bhelgaas@google.com,
+ alyssa@rosenzweig.io, robh@kernel.org, mani@kernel.org,
+ lpieralisi@kernel.org, kwilczynski@kernel.org, j@jannau.net,
+ geert+renesas@glider.be, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Wed, Jul 16, 2025 at 12:47:10PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Jul 02, 2025 at 04:44:48PM GMT, Brian Norris wrote:
-> > On Wed, Jul 02, 2025 at 07:09:42PM -0400, Frank Li wrote:
-> > OTOH, I do also believe there are SoCs where DWC PCIe is available, but
-> > there is no external MSI controller, and so that same problem still may
-> > exist. I may even have such SoCs available...
-> > 
+Hello:
+
+This series was applied to riscv/linux.git (fixes)
+by Bjorn Helgaas <bhelgaas@google.com>:
+
+On Wed, 25 Jun 2025 12:18:03 +0100 you wrote:
+> Geert reports that some drivers do rely on the device driver_data
+> field containing a pointer to the bridge structure at the point of
+> initialising the root port, while this has been recently changed to
+> contain some other data for the benefit of the Apple PCIe driver.
 > 
-> Yes, pretty much all Qcom SoCs without GIC-v3 ITS suffer from this limitation.
-> And the same should be true for other vendors also.
+> This small series builds on top of Geert previously posted (and
+> included as a prefix for reference) fix for the Microchip driver,
+> which breaks the Apple driver. This is basically swapping a regression
+> for another, which isn't a massive deal at this stage, as the
+> follow-up patch fixes things for the Apple driver by adding extra
+> tracking.
 > 
-> Interestingly, the Qcom SoCs route the AER/PME via 'global' SPI interrupt, which
-> is only handled by the controller driver. This is similar to the 'aer' SPI
-> interrupt in layerscape platforms.
+> [...]
 
-Yeah, I have some SoCs like this as well. But I also believe that I have
-INTx available, and that even when MSI doesn't work for AER/PME, INTx
-might.
+Here is the summary with links:
+  - [1/3] PCI: host-generic: Set driver_data before calling gen_pci_init()
+    https://git.kernel.org/riscv/c/bdb32a0f6780
+  - [2/3] PCI: apple: Add tracking of probed root ports
+    https://git.kernel.org/riscv/c/643c0c9d0496
+  - [3/3] Revert "PCI: ecam: Allow cfg->priv to be pre-populated from the root port device"
+    https://git.kernel.org/riscv/c/ba74278c638d
 
-Do Qcom SoCs route INTx?
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> So I think there is an incentive in allowing the AER driver to work with vendor
-> specific IRQs.
 
-Yeah, I suppose even if my SoC (and Qcom, depending on the above answer)
-might work with INTx, it really does seem like an arbitrary decision
-about what SoC makers connected which DWC signals, so I suspect this is
-true.
-
-Brian
 
