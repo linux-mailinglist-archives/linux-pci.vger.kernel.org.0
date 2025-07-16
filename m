@@ -1,179 +1,139 @@
-Return-Path: <linux-pci+bounces-32301-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32302-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3C75B07B3B
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 18:32:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E435B07B77
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 18:48:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84CE75056CF
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 16:32:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D449C167722
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 16:47:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25AE52F5492;
-	Wed, 16 Jul 2025 16:32:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55FF62F5C3B;
+	Wed, 16 Jul 2025 16:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8vVh+4R"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lSRb5Itj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922D82F5485;
-	Wed, 16 Jul 2025 16:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F89290D95
+	for <linux-pci@vger.kernel.org>; Wed, 16 Jul 2025 16:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752683542; cv=none; b=TvuMOt1tJQbomDu5ahUqp8k9mypPQ6mq1MzOpXezVL5u91Qi/0ON40IR9ugJmF+vzTLs7fA+a85t8UevotML29C2KRks7VNIjvGN6+20myAcr6WbHd9BMi0FYQZ2UQgk2INLfReO1JYZ8zGqtsPUz24KuBEGtbVu/Sdjiv3hfbk=
+	t=1752684470; cv=none; b=aqO4sUNB9GLkERYhSPEVARz/eo59ld7X9ikWfpNX/z3ax0LChHF18JqaDGmRu5QhbCLwZKx+1tKQxwKMc/tlOlehXYO9b+0WlDvK2nwi17o6yFf4iEXalZTWjH5QKA+cPDHJ6ZUCaPa3TeuL/ekSTyaaTxlkUBVvTkX+Re/0xHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752683542; c=relaxed/simple;
-	bh=+GQWe2rh+1vBCxFyMeHyCqAzT7LOikCJ+r2yzy5xFRo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ig2BUMMsb4qhSipZ18CiLmX+5ny4HtOpGIC606cdyRBB0zLWoXRSx3HdJjbB8RWWVjea6Tm+aIY1kSma6+9xLSCxDGo/+zEHw7ieLDtnGFnAIOc9iOCJKAKOy2vib6lsx52bdo3sPfnkcxHl0/+kjbLAj34qeOFqVyaAWrmqNeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P8vVh+4R; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-234f17910d8so67360345ad.3;
-        Wed, 16 Jul 2025 09:32:20 -0700 (PDT)
+	s=arc-20240116; t=1752684470; c=relaxed/simple;
+	bh=KyfZXJ1BXnhap1nQD8idPegu23pZnjayNIe42nGLmi8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ND9Zfk1RwPKFggs9mPOKbMKHQ2sH3hgP7IOSHBWkKHZ4cmy0Grv9AF4DOqeAdaid7UmtYMRc0X2w82iidRZmenoCboGmSUHuDqinCtZthbyM2s8pT+G24h35dwPOouZ0kLkXtZ1whbgq7ubAVe4FOhFpjkZ304YQZFEVcQqlXsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lSRb5Itj; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-23649faf69fso510665ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 16 Jul 2025 09:47:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752683540; x=1753288340; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F8cgcYwxxKYhRO+b70u/IqCQdpzOxqZFlIVZxh4STFM=;
-        b=P8vVh+4RJhcFdxRPsjx4m0I7DsJg0XaqPBlXmgzlvmvTvFONg5ZwAN6RKyq2rNz8Uc
-         pB0l77m5fI46ss88mEDpIY9SsoiZ/Dk3yferbz5KOeICd3bTBPwvIIsWOg2dYOBGX79n
-         uONolGi81oewLNM7Jtyp0dH5fQOGNosMfqePBjoV5IvTrg9xrqP5nh7GssGeLN8nceig
-         UbtNdsh65JwWuJoYMTsjD9OJHnIKh9xPc6Zhi0HNmMefMYCC1kWwyW5+PkM1oUM94fKj
-         tDR6nr0Kk51s3qCPCTs5WtP/4M5P1PknoB61QR/WwIbMgOwgIvcSlNynN/mcDc7InlVW
-         SUfg==
+        d=chromium.org; s=google; t=1752684464; x=1753289264; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=io4H3bGs2Do8eEWfILE3wMRoqcXTJo/vwsNg6GEKpl4=;
+        b=lSRb5ItjWBRSuOMJu3+dDwa3FeqrAGLTxTsUNgcLqYSjp5pXz/vrD+NH1Id3IVKS2G
+         AHZZvj8jj+KFshO+if3GOJMg44wpAeor/jTgc3gHniiLT8UxFVwNQMNUBNmOeR/EJTn7
+         npRhmyMU/Q6GAK3o1GEHbm7JjJpCWJKcfBPs8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752683540; x=1753288340;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F8cgcYwxxKYhRO+b70u/IqCQdpzOxqZFlIVZxh4STFM=;
-        b=HNKM3P/WGE42e7KLmv1kYMOUBRclqa+ebgn16Yc+aSbH0u1BWf8j7JHG3u8VziKRnk
-         CWt2wmNINRHYtslYEktZHXHVq48if1HVhuFvW3M/DiD6EkRWDFSG5pD8YXJilIUTIyKo
-         jcDyMDbaZ4IKVJBFGIWLmQnJAreB7z9/hcjyWgba4/Kezd2ziSmLM0DBRMoTRZ9GqHuT
-         +Yy9/u0Mfqw09g2LAMpHesc73HlnPq525q5h/Y88hoFNV17izVkbcxfIHmBFr8iLxPt4
-         QIcHqWOtcLU3Wy3SM86Dv6b8whmy8cT6VqNRTfWBJgL35lc4YzuDdSTSvprCPaTl4C+w
-         NSQg==
-X-Forwarded-Encrypted: i=1; AJvYcCVgnxXT4mHF7QPtcgG7aD2UPSJ3JPXfB1VGLw/q6JuRtIcxvPu7v8aF+UIGYBmY+SavsOQaceClXgMO+94=@vger.kernel.org, AJvYcCWkyNYPmnC6UOpMATBpt17W07bKlPLuvqcGBCX+fq3uXRROGPM7iNf/qIuQxEjWVSlMUoC83SMAG3RE@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRyMinEjRWTP/YwfmrQl8s5kIvYFBJPxEXxzuJQyW1ytaCT4m+
-	6nFlcFBHc7Dlfcv7GyCeo7A/W5HAv9NsLz2ZUmnudvLJpS6nS75noa+bmzE7EA==
-X-Gm-Gg: ASbGnct4n56tzaHpGC0LkG2aJYmJ2gHXs/8pFtskZrYsFNefUHfTF4HMGMgoyHDsQ62
-	O4l3Q450mErmhVcPep31+Y6n+n3HEQFHcwgz1iUAV3Zu37TxERVBjPHmMdPshpRvxh8PVlk+/gA
-	xcwtvXDoLaaW23A5Phadks6z3RhKxzhwJ5ti/GAMVVFWZTZIJSBUAMpLU+tc8+oehncpA5d72R8
-	yE8xDq5moNaR53LXHGTZhMy2PAkm0JwF5kOdSnfeYDQxDb1Uj+IuCatb0FdnXAWc3XAwZEE5J6P
-	QPtnQKnTDm9TjUOIwgq4l60okj+zOxYz8R/UADvBDxliyP9zqprkFOKGDz4xKKoSa/q/3tD55+d
-	DiVIek8f4e5gDtDxzZpgxg0hG4U9V
-X-Google-Smtp-Source: AGHT+IHThwpCuAhY7wpw+0NnMNDHMgf7L34B4jdpjSe6OTXayh68FaDzRObR7Wa7WWplS5RCMmDsIg==
-X-Received: by 2002:a17:903:1b0f:b0:23d:eb0f:f44 with SMTP id d9443c01a7336-23e24ebe611mr51524455ad.8.1752683539701;
-        Wed, 16 Jul 2025 09:32:19 -0700 (PDT)
-Received: from localhost ([2600:1700:22f5:908f:1457:7499:d258:358f])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23de435f371sm126471385ad.237.2025.07.16.09.32.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jul 2025 09:32:17 -0700 (PDT)
-From: Matthew Wood <thepacketgeek@gmail.com>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v3 1/1] PCI/sysfs: Expose PCIe device serial number
-Date: Wed, 16 Jul 2025 09:32:11 -0700
-Message-ID: <20250716163213.469226-2-thepacketgeek@gmail.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250716163213.469226-1-thepacketgeek@gmail.com>
-References: <20250716163213.469226-1-thepacketgeek@gmail.com>
+        d=1e100.net; s=20230601; t=1752684464; x=1753289264;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=io4H3bGs2Do8eEWfILE3wMRoqcXTJo/vwsNg6GEKpl4=;
+        b=bFW3/KFekUwiPzTJyTuAfzqcfmeqBIz0HFpRE8Z7eNZSeNYzQGkab1GDG856cvI05i
+         dA5F/M+cdF3PhxIt5uaNe7OKexZ9lwEb7EpCC2bnqO7x8ejcskUzsYA4640iKWdpQcnJ
+         0zF+wSl0HvhI9wKhxtioMDpesTZkkC2y0+Xuinvv6JmcpIQujZnZSa9XC2SgP9BQ1Tze
+         alH6e8cWJ0H1JwelgIWuRiwKzDbZ6SItIPhXr5deAw9zr1KtpFVYJxRBZdpzk2bxNOvw
+         +FAbg04gc7nCdp3Xmo6A0K1HLcVzW9YWLGuXlx6iTO1hpvqlrUXudOWXmJ7RhueQ7QEm
+         buKA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4GkR32tg0/4R4QwNgu1swq94uH6W4g47fRISfXFOw/BDW6IOvV80Yqgs358j5AeexF8LIlmgfZhA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbQBUloEd4ebhR5bdud9OJL0qr5UOZerWRiig+rTHeBni70FVJ
+	PiGRZVWVssIZp13XF7rE77jroqZpzG2iBuhLvEpTinRL10NPw7gACB7dc2X0YWTw2RrMLWGepBA
+	MWIw=
+X-Gm-Gg: ASbGnct5WeuGIDiu4xJ5VFSON8SeVpsl5uQsfdpQ0Bkbhcw0KuxNHnU8MAuTIrqp80U
+	fxpM/vCiQik92n79XV0AnbCqYx1G4ys/mMOdJotRjlGdqC8xnlqXp35frzkV9ZQwAkgDgzb/3HZ
+	2Ch812zPpwZuuIR3poUGwklmEdeJ0SHZKmgNdbC5ZLluAcxoYAw3e7Vm6kQDqjMceDmSjC5NyIZ
+	YaWYRcvdiIwXN1jjxEWFG1VQWLm/GFfGG68fP59yyPsQP0q7pKhq1HPWVt4s2UL9sqeirvcaQUP
+	4B63ayzuPoYBSZ5VfCBsnbJS3LLQqYjY4UKsJ2WCXFRZWIy+xZYbnrFmtSv/nZR5W4h3HoVTFJH
+	9xUp4Px9kPkGoYGyIMyvi7o7RwAsJxUHUnZ2KjiJTbc84PWlBpC/GprXi4V5K
+X-Google-Smtp-Source: AGHT+IGNR7LutD6oNMe7hCEpNCiuXGBoISy3Dj8Mz9hZcfftgOIlNzGtyTzjgHi2yMdAXezmb77Wuw==
+X-Received: by 2002:a17:902:f64b:b0:234:f4da:7eeb with SMTP id d9443c01a7336-23e25684637mr47153465ad.7.1752684464248;
+        Wed, 16 Jul 2025 09:47:44 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:17f8:90f2:a7bc:b439])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23de42853c0sm126598165ad.28.2025.07.16.09.47.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Jul 2025 09:47:43 -0700 (PDT)
+Date: Wed, 16 Jul 2025 09:47:41 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/pwrctrl: Only destroy alongside host bridge
+Message-ID: <aHfXrT_rU0JAjnVD@google.com>
+References: <20250711174332.1.I623f788178c1e4c5b1a41dbfc8c7fa55966373c0@changeid>
+ <xg45pqki76l4v7lgdqsnv34agh5hxqscoabrkexnk2zbzewho5@5dmmk46yebua>
+ <aHbGax-7CiRmnKs7@google.com>
+ <cnbtk5ziotlksmmledv6hyugpn6zpvyrjlogtkg6sspaw5qcas@humkwz6o5xf6>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cnbtk5ziotlksmmledv6hyugpn6zpvyrjlogtkg6sspaw5qcas@humkwz6o5xf6>
 
-Add a single sysfs read-only interface for reading PCIe device serial
-numbers from userspace in a programmatic way. This device attribute
-uses the same hexadecimal 1-byte dashed formatting as lspci serial number
-capability output. If a device doesn't support the serial number
-capability, the device_serial_number sysfs attribute will not be visible.
+On Wed, Jul 16, 2025 at 09:27:55PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Jul 15, 2025 at 02:21:47PM GMT, Brian Norris wrote:
+> > OTOH, I also see that part of my change is not really doing quite what I
+> > thought it was -- so far, I think there may be some kind of resource
+> > leak (kobj ref), since I'm not seeing pci_release_host_bridge_dev()
+> > called when I think it should be. If I perform cleanup in
+> > pci_free_host_bridge() instead, then I do indeed see
+> > of_platform_device_destroy() tear things down the way I expect.
+> > 
+> 
+> Oh, that's bad! Which controller it is? I played with making the pcie-qcom
+> driver modular and I unloaded/loaded multiple times, but never saw any
+> refcount warning (I really hope if there was any leak, it would've tripped over
+> during insmod).
 
-Signed-off-by: Matthew Wood <thepacketgeek@gmail.com>
----
- Documentation/ABI/testing/sysfs-bus-pci |  7 +++++++
- drivers/pci/pci-sysfs.c                 | 27 ++++++++++++++++++++++---
- 2 files changed, 31 insertions(+), 3 deletions(-)
+I'm still trying to tease this apart, and I'm not sure when I'll have
+plenty of time to get further on this. I'm also primarily using a
+non-upstream DWC-based driver, which isn't really ready to be published.
+I also have some systems that use
+drivers/pci/controller/pcie-rockchip-host.c and are fully
+upstream-supported, so I'll see if I can replicate my observations
+there.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 69f952fffec7..f7e84b3a4204 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -612,3 +612,10 @@ Description:
- 
- 		  # ls doe_features
- 		  0001:01        0001:02        doe_discovery
-+
-+What:		/sys/bus/pci/devices/.../device_serial_number
-+Date:		July 2025
-+Contact:	Matthew Wood <thepacketgeek@gmail.com>
-+Description:
-+		This is visible only for PCIe devices that support the serial
-+		number extended capability. The file is read only.
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 268c69daa4d5..b7b52dea6e31 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -239,6 +239,22 @@ static ssize_t current_link_width_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(current_link_width);
- 
-+static ssize_t device_serial_number_show(struct device *dev,
-+				       struct device_attribute *attr, char *buf)
-+{
-+	struct pci_dev *pci_dev = to_pci_dev(dev);
-+	u64 dsn;
-+
-+	dsn = pci_get_dsn(pci_dev);
-+	if (!dsn)
-+		return -EIO;
-+
-+	return sysfs_emit(buf, "%02llx-%02llx-%02llx-%02llx-%02llx-%02llx-%02llx-%02llx\n",
-+		dsn >> 56, (dsn >> 48) & 0xff, (dsn >> 40) & 0xff, (dsn >> 32) & 0xff,
-+		(dsn >> 24) & 0xff, (dsn >> 16) & 0xff, (dsn >> 8) & 0xff, dsn & 0xff);
-+}
-+static DEVICE_ATTR_RO(device_serial_number);
-+
- static ssize_t secondary_bus_number_show(struct device *dev,
- 					 struct device_attribute *attr,
- 					 char *buf)
-@@ -660,6 +676,7 @@ static struct attribute *pcie_dev_attrs[] = {
- 	&dev_attr_current_link_width.attr,
- 	&dev_attr_max_link_width.attr,
- 	&dev_attr_max_link_speed.attr,
-+	&dev_attr_device_serial_number.attr,
- 	NULL,
- };
- 
-@@ -1749,10 +1766,14 @@ static umode_t pcie_dev_attrs_are_visible(struct kobject *kobj,
- 	struct device *dev = kobj_to_dev(kobj);
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 
--	if (pci_is_pcie(pdev))
--		return a->mode;
-+	if (!pci_is_pcie(pdev))
-+		return 0;
-+
-+	if (a == &dev_attr_device_serial_number.attr && !pci_get_dsn(pdev))
-+		return 0;
-+
-+	return a->mode;
- 
--	return 0;
- }
- 
- static const struct attribute_group pci_dev_group = {
--- 
-2.50.0
+But I think there are at least two problems:
 
+(1) I'm adding code to bridge->dev.release(). release() is only called
+    when the device's refcount drops to zero. And child devices hold a
+    refcount on their parent (the bridge). So, I have a circular
+    refcount, if there were any pwrctrl children present.
+
+    I think this is easily solved by moving the child destruction to
+    pci_free_host_bridge() instead.
+
+(2) Even after resolving 1, I'm seeing pci_free_host_bridge() exit with
+    a bridge->dev.kboj.kref refcount of 1 in some cases. I don't yet
+    have an explanation of that one.
+
+IIUC, this kind of error would be considered a leak, but crucially, I
+also don't think it would produce any kind of refcount warning or other
+error. It's "just" a device that has been removed (a la, device_del()),
+but still has some client holding a reference count (i.e., not enough
+put_device()).
+
+Brian
 
