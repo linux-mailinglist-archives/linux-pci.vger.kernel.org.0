@@ -1,172 +1,156 @@
-Return-Path: <linux-pci+bounces-32218-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32222-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 567B1B06D0D
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 07:12:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59671B06D24
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 07:22:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A4763A2576
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 05:11:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 85FC27A7AD0
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 05:20:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67905269AFB;
-	Wed, 16 Jul 2025 05:11:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 532BE23CEF8;
+	Wed, 16 Jul 2025 05:22:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b="coGNOoeg"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xQ7J8GsO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NpQOPaeh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mta-65-227.siemens.flowmailer.net (mta-65-227.siemens.flowmailer.net [185.136.65.227])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5B62749D6
-	for <linux-pci@vger.kernel.org>; Wed, 16 Jul 2025 05:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBEF86348;
+	Wed, 16 Jul 2025 05:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752642706; cv=none; b=DRum3m2NJR75td+5Af+dqV/9spsW3qoiiXybtDkQqPQ9fIhE8owK871fQODXnP2/NWezk0fUOwSoUx+ps/k55L7Oo5oygQ61jvw9iWVKgRwXmj6keSn1oAZfNYuKyKkwJYTw12+CFoFh3jnbdHF2/Jbh7lwCsizu0S9HmkBbfBQ=
+	t=1752643326; cv=none; b=QTo7ccBy3SSmLX4ojsBz2jn66VaDiMQNnDcba/ZyJpMTEWtelPbn2SV11RNXllrjHsVkxjMwYQrKCgJOkCMKutA55vCV3Sbu07od6EzXddUdJiJWVOPcY7TQDDNxhm4zn+tNZ2gVWs23Hcj7CZbrWWDSnggg0Mbmsr9hRZ1ac48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752642706; c=relaxed/simple;
-	bh=JcpLqjaUr9M1mi4dl/7gUP3Y3UTEl2H4ET8142ZGV6U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NL+HoBoRESdFKyxXyMaq74o1aCOVy6rDO0+E0HTt6t1phP97qUJL1yDSiX9I/uWkPRDK2wgLXh1aw6CEI7uFSt+oLfdDGijv7Yv3+Tm9LDAyD18yGpMVCoto2J6up2DNpqL1DohmSEibYdU37tOlT6JgVHP/J31A4r7FuYsK/j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b=coGNOoeg; arc=none smtp.client-ip=185.136.65.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
-Received: by mta-65-227.siemens.flowmailer.net with ESMTPSA id 2025071605114235d3d3bed3582d904e
-        for <linux-pci@vger.kernel.org>;
-        Wed, 16 Jul 2025 07:11:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
- d=siemens.com; i=huaqian.li@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=+LaZDA/FCK3jvCwMvQup/hbQjkRk3GDFDbtf0l3xKc4=;
- b=coGNOoegQxn/RntZ02PABsVCpufJWk5T4T9/Zu78/cXjBxXi0zilU/uBUHTM5K2SvGpjOj
- jwFH5gGB5EiA3skW5Iv2DyH+iDhKytM7tBXBwGqYHLdHkgnoUn0eKQqPvjZRMd2dAiuztA8v
- LlHkN5U4Kt3imC/xHwd/S2DWtsBkYOd5Ils5330DmtVdHn0Y6byxVelFDrXDoXly1ensFqXV
- 5Z/KllSYynuxZ5bvJgLmzmF5XPC/HeUCi4QzzGpU27Mb8IQ5mw6eNFI7B9nX8agmhVPP4dmc
- gRCuTlagrBWgAiltYPkoJSOfuj37P0UzThnyM6HUcrkVM15MDoxyUsfA==;
-From: huaqian.li@siemens.com
-To: s-vadapalli@ti.com
-Cc: baocheng.su@siemens.com,
-	bhelgaas@google.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	diogo.ivo@siemens.com,
-	helgaas@kernel.org,
-	huaqian.li@siemens.com,
-	jan.kiszka@siemens.com,
-	kristo@kernel.org,
-	krzk+dt@kernel.org,
-	kw@linux.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org,
-	nm@ti.com,
-	robh@kernel.org,
-	ssantosh@kernel.org,
-	vigneshr@ti.com
-Subject: [PATCH v9 7/7] arm64: dts: ti: iot2050: Add overlay for DMA isolation for devices behind PCI RC
-Date: Wed, 16 Jul 2025 13:10:35 +0800
-Message-Id: <20250716051035.170988-8-huaqian.li@siemens.com>
-In-Reply-To: <20250716051035.170988-1-huaqian.li@siemens.com>
-References: <e21c6ead-2bcb-422b-a1b9-eb9dd63b7dc7@ti.com>
- <20250716051035.170988-1-huaqian.li@siemens.com>
+	s=arc-20240116; t=1752643326; c=relaxed/simple;
+	bh=80fX+2gJUg3sVb3cwSeiDFCJSI0vRWZBzqVV+Z9QDGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ii1ONze1FyZ2wPUrgRwKo08qvtmvvDI9OkO9fRNkpUHVpiGF55zOJ5xjnIt9sxWXojAExjvcaW1z2E/fbYTCRiky+/5bqV1npmUjjwupysSCYgJbZQ4ei+fyuFg8if9WjN9SharF2yGv1w2PIRo0nAG6iidgL73rxU7mBIfjvCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xQ7J8GsO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NpQOPaeh; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Wed, 16 Jul 2025 07:22:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1752643322;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fy7sKnvvB0KBmla1/2OFjJaDVvyUk0O3ZtxVvNDnqCk=;
+	b=xQ7J8GsOMmCoSH5LSDGug2T6VMkcvNPbkUChYYv7kE9W9F+n9ft1unWcjK8sTZHXNkDpSp
+	lB//syvofrW636Wf2NzRa3ZquNyad3nCf+V34HdyQikk6bjDSBkKuCSDH/mo9DG2yoewYz
+	MTXFpy5+hfq8DIB3CNSrPKv7CbDhAR9n0BZ+mEKOWoKUhb11TtcVerbLuo1IFERpNpVTEH
+	LIqKXr7mwesLh4ETvvqkBpaOy37c5udy4y890D00C+YT2rNp+gYvAnfJHCW3u34oXNBGgy
+	QoY/cqYLaLGJim6t8Fj5m3aavJaWXJt5ddb+ayM6b+G1QPyk9mH1CjonbTst2w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1752643322;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fy7sKnvvB0KBmla1/2OFjJaDVvyUk0O3ZtxVvNDnqCk=;
+	b=NpQOPaehKpuyFMVDwJrAcPAvlyvRHQzbChaBR+mcYdgi2dEq3PHwCHwVN0zfE599tJdVym
+	iUrUzkXKLqnhQMDg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Matthew Wood <thepacketgeek@gmail.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH pci-next v2 1/1] PCI/sysfs: Expose PCIe device serial
+ number
+Message-ID: <20250716071618-b6d697c0-76e0-42f9-9937-7ba89e1792cc@linutronix.de>
+References: <20250716045323.456863-1-thepacketgeek@gmail.com>
+ <20250716045323.456863-2-thepacketgeek@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-959203:519-21489:flowmailer
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250716045323.456863-2-thepacketgeek@gmail.com>
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+On Tue, Jul 15, 2025 at 09:53:22PM -0700, Matthew Wood wrote:
+> Add a single sysfs read-only interface for reading PCIe device serial
+> numbers from userspace in a programmatic way. This device attribute
+> uses the same hexadecimal 1-byte dashed formatting as lspci serial number
+> capability output. If a device doesn't support the serial number
+> capability, the device_serial_number sysfs attribute will not be visible.
+> 
+> Signed-off-by: Matthew Wood <thepacketgeek@gmail.com>
+> ---
+>  drivers/pci/pci-sysfs.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 268c69daa4d5..d59756bc91c9 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -239,6 +239,22 @@ static ssize_t current_link_width_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(current_link_width);
+>  
+> +static ssize_t device_serial_number_show(struct device *dev,
+> +				       struct device_attribute *attr, char *buf)
+> +{
+> +	struct pci_dev *pci_dev = to_pci_dev(dev);
+> +	u64 dsn;
+> +
+> +	dsn = pci_get_dsn(pci_dev);
+> +	if (!dsn)
+> +		return -EINVAL;
 
-Reserve a 64M memory region and ensure that all PCI devices do their DMA
-only inside that region. This is configured via a restricted-dma-pool
-and enforced with the help of the first PVU.
+-EIO
 
-Applying this isolation is not totally free in terms of overhead and
-memory consumption. It  makes only sense for variants that support
-secure booting, and generally only when this is actually enable.
-Therefore model it as overlay that can be activated on demand. The
-firmware will take care of this via DT fixup during boot and will also
-provide a way to adjust the pool size.
+> +
+> +	return sysfs_emit(buf, "%02llx-%02llx-%02llx-%02llx-%02llx-%02llx-%02llx-%02llx\n",
+> +		dsn >> 56, (dsn >> 48) & 0xff, (dsn >> 40) & 0xff, (dsn >> 32) & 0xff,
+> +		(dsn >> 24) & 0xff, (dsn >> 16) & 0xff, (dsn >> 8) & 0xff, dsn & 0xff);
+> +}
+> +static DEVICE_ATTR_RO(device_serial_number);
+> +
+>  static ssize_t secondary_bus_number_show(struct device *dev,
+>  					 struct device_attribute *attr,
+>  					 char *buf)
+> @@ -660,6 +676,7 @@ static struct attribute *pcie_dev_attrs[] = {
+>  	&dev_attr_current_link_width.attr,
+>  	&dev_attr_max_link_width.attr,
+>  	&dev_attr_max_link_speed.attr,
+> +	&dev_attr_device_serial_number.attr,
+>  	NULL,
+>  };
+>  
+> @@ -1749,8 +1766,12 @@ static umode_t pcie_dev_attrs_are_visible(struct kobject *kobj,
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+>  
+> -	if (pci_is_pcie(pdev))
+> +	if (pci_is_pcie(pdev)) {
+> +		if (strncmp(a->name, "device_serial_number", 20) == 0 &&
 
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-Signed-off-by: Li Hua Qian <huaqian.li@siemens.com>
----
- arch/arm64/boot/dts/ti/Makefile               |  5 +++
- ...am6548-iot2050-advanced-dma-isolation.dtso | 33 +++++++++++++++++++
- 2 files changed, 38 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
+Compare to the real 'struct attribute *' instead of the name.
+You could restructure this a bit to be easier to read.
 
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index c6171de9fe88..66b1d8093fa2 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -84,8 +84,10 @@ k3-am654-gp-evm-dtbs := k3-am654-base-board.dtb \
- k3-am654-evm-dtbs := k3-am654-base-board.dtb k3-am654-icssg2.dtbo
- k3-am654-idk-dtbs := k3-am654-evm.dtb k3-am654-idk.dtbo k3-am654-pcie-usb2.dtbo
- k3-am6548-iot2050-advanced-m2-bkey-ekey-pcie-dtbs := k3-am6548-iot2050-advanced-m2.dtb \
-+	k3-am6548-iot2050-advanced-dma-isolation.dtbo \
- 	k3-am6548-iot2050-advanced-m2-bkey-ekey-pcie.dtbo
- k3-am6548-iot2050-advanced-m2-bkey-usb3-dtbs := k3-am6548-iot2050-advanced-m2.dtb \
-+	k3-am6548-iot2050-advanced-dma-isolation.dtbo \
- 	k3-am6548-iot2050-advanced-m2-bkey-usb3.dtbo
- dtb-$(CONFIG_ARCH_K3) += k3-am6528-iot2050-basic.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am6528-iot2050-basic-pg2.dtb
-@@ -288,7 +290,10 @@ DTC_FLAGS_k3-am62p5-sk += -@
- DTC_FLAGS_k3-am642-evm += -@
- DTC_FLAGS_k3-am642-phyboard-electra-rdk += -@
- DTC_FLAGS_k3-am642-tqma64xxl-mbax4xxl += -@
-+DTC_FLAGS_k3-am6548-iot2050-advanced += -@
- DTC_FLAGS_k3-am6548-iot2050-advanced-m2 += -@
-+DTC_FLAGS_k3-am6548-iot2050-advanced-pg2 += -@
-+DTC_FLAGS_k3-am6548-iot2050-advanced-sm += -@
- DTC_FLAGS_k3-am68-sk-base-board += -@
- DTC_FLAGS_k3-am69-sk += -@
- DTC_FLAGS_k3-j7200-common-proc-board += -@
-diff --git a/arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso b/arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
-new file mode 100644
-index 000000000000..dfd75d2dc245
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
-@@ -0,0 +1,33 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * IOT2050, overlay for isolating DMA requests via PVU
-+ * Copyright (c) Siemens AG, 2024
-+ *
-+ * Authors:
-+ *   Jan Kiszka <jan.kiszka@siemens.com>
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+&{/reserved-memory} {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	pci_restricted_dma_region: restricted-dma@c0000000 {
-+		compatible = "restricted-dma-pool";
-+		reg = <0 0xc0000000 0 0x4000000>;
-+	};
-+};
-+
-+&pcie0_rc {
-+	memory-region = <&pci_restricted_dma_region>;
-+};
-+
-+&pcie1_rc {
-+	memory-region = <&pci_restricted_dma_region>;
-+};
-+
-+&ti_pvu0 {
-+	status = "okay";
-+};
--- 
-2.34.1
+if (!pci_is_pcie(pdev))
+	return 0;
 
+if (a == &dev_addr_device_serial_number.attr && !pci_get_dns(pdev))
+	return 0;
+
+return a->mode;
+
+> +			!pci_get_dsn(pdev))
+> +			return 0;
+>  		return a->mode;
+> +	}
+
+Also should have some docs in Documentation/ABI/testing/sysfs-bus-pci.
+
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.50.0
+> 
 
