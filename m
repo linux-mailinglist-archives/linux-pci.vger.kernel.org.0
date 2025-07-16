@@ -1,161 +1,141 @@
-Return-Path: <linux-pci+bounces-32237-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32238-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4231AB06EB0
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 09:16:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E04CDB06EC1
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 09:17:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6CEA7566BAC
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 07:16:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4FEEB188EE7F
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Jul 2025 07:17:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8B5828850E;
-	Wed, 16 Jul 2025 07:16:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C56256C6D;
+	Wed, 16 Jul 2025 07:17:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B9TMPI7S"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dJjTmG8B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47E9381AF;
-	Wed, 16 Jul 2025 07:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333902459E5;
+	Wed, 16 Jul 2025 07:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752650193; cv=none; b=Sp79VbGkdAnp3RLvLnyvpHr/E8oyNSH3Pdh54HV88Ek2y8LjAz21vqz/12CJ3thfw6glNGwLkU6YyMhwC+hOiTp3tgPLQ/tIJw90swCjyjBy1GcwRXwI3+9wtu3H+3qvMNE9FNI0HFQHDR3pBmwxUsWC7Z7UX2kCh9Rz7zRdy48=
+	t=1752650244; cv=none; b=AmxG3bSWtTlpyng/KTlkucDMA9R1C/o6Tbmk8z9rkthlgiOCvSuWX2okhE9r0fAi3w8keDuqzHaYUb6SuKvG9K0QAhAfa1atOEJmoojElSpuOIaK3nHiiicOAYuxxe+aO7I305TdKbTGFJRNGz/izvjcJNC1Va3RhhOlNhiX/n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752650193; c=relaxed/simple;
-	bh=cgJpryTbNPT4uQieh/YRbOpgBOzYOqZivYucNN76U+Y=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kIC8peEz96xSckHUTS9NSmjUMtfnyUrmEjvoqRhEHaC0OSw2LMzeq3dHlUSsR5gSK5msYt4kjmu7EtnknxMplHP/aj6J+6aD6iKTfyx+QhQuhML0wYlF4dHP46J2MfkfapppdV1aLea7wE1obs5EqplRagVp3s1xWOkAI1LXwTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=B9TMPI7S; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 56G7GF5V195870;
-	Wed, 16 Jul 2025 02:16:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1752650175;
-	bh=fB5TsNwWgB45LAm6ZUD/fPdEU/smhkB4TT/cSr4jjJM=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=B9TMPI7SC4qU/6z6jDeESs3xi8l7HRBuGgZM68kBwZjADBftiwxiRTOfuu+RNJ+gm
-	 BEfXBxqBh6FukA4POWABRLH90qBU4yN/s+Fe7IBrh0JiI8a5MSpKsh9LaoNIQv17vg
-	 t1YeqiiPoIEsREb2tO3lRivtJioX4uw+rCKULtZo=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 56G7GFXg1184742
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 16 Jul 2025 02:16:15 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 16
- Jul 2025 02:16:15 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Wed, 16 Jul 2025 02:16:15 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.169])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 56G7GDQm046600;
-	Wed, 16 Jul 2025 02:16:14 -0500
-Date: Wed, 16 Jul 2025 12:46:13 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <huaqian.li@siemens.com>
-CC: <s-vadapalli@ti.com>, <baocheng.su@siemens.com>, <bhelgaas@google.com>,
-        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <diogo.ivo@siemens.com>, <helgaas@kernel.org>,
-        <jan.kiszka@siemens.com>, <kristo@kernel.org>, <krzk+dt@kernel.org>,
-        <kw@linux.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <lpieralisi@kernel.org>, <nm@ti.com>, <robh@kernel.org>,
-        <ssantosh@kernel.org>, <vigneshr@ti.com>
-Subject: Re: [PATCH v9 (RESEND) 4/7] PCI: keystone: Add support for PVU-based
- DMA isolation on AM654
-Message-ID: <0cd8175e-e448-483f-862e-b12d795ae1e5@ti.com>
-References: <e21c6ead-2bcb-422b-a1b9-eb9dd63b7dc7@ti.com>
- <20250716053950.199079-1-huaqian.li@siemens.com>
- <20250716053950.199079-5-huaqian.li@siemens.com>
+	s=arc-20240116; t=1752650244; c=relaxed/simple;
+	bh=vJTQesx+suD0QBepzarzrrknitZ0ytPnsI8U4eBlM1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AMv2jVRAUSEtvzPP+brjIWOCtRvtkw7SHCgKWl5gznHeVLnKhEffreW94HXEhIv9cLSAx+E1myxkdrtMen+5COKahjYdNG/wRdviebEM+SP2VvTXdnwUL7pSDv8ZqPfuo181oBUvGODUV1nHDOhvxVRQXxDBtJKbwBa8uEoMRhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dJjTmG8B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58FD8C4CEF5;
+	Wed, 16 Jul 2025 07:17:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752650243;
+	bh=vJTQesx+suD0QBepzarzrrknitZ0ytPnsI8U4eBlM1A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dJjTmG8BlCNs6X7QOqUZZCSP/msTa6RS4Mz+riP4hCZRWO2PltbQ//fqG6tZ6OkUJ
+	 tlaQwkEvfg7gd+sbGTTME2ykQx7dkE4xtbdDlWzMAFtQLy636n0Mvk+oHWhRRFg/MJ
+	 3KCZlLyaaBYQbzUKGppsVST+RkV4qYqnxH93a7akO1lhwAfODcin8LbyzALwWkt6H4
+	 k0IytbiUnD/AATPZ4G9Kp4LalD0nW6eDFMc2YrU6RKuNSHVpHJ2FTDC9eYa2wW4gdL
+	 +mMhxwdeRnaW5PEDA6pvmv7u31MHU0dLke6ofo2FkNiej0eUpX/40dc/6s2zBGkm9s
+	 H7LGebotSevUg==
+Date: Wed, 16 Jul 2025 12:47:10 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Frank Li <Frank.li@nxp.com>, Bjorn Helgaas <helgaas@kernel.org>, 
+	Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, 
+	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Rob Herring <robh+dt@kernel.org>, imx@lists.linux.dev, 
+	linux-pci@vger.kernel.org
+Subject: Re: Does dwc/pci-layerscape.c support AER?
+Message-ID: <tikcdb63ti6hbpypusxdiaoattpuez5rgpsglzllagnqfm5voa@5eornv77pl4i>
+References: <20250702223841.GA1905230@bhelgaas>
+ <aGW8NnHUlfv1NO3g@lizhi-Precision-Tower-5810>
+ <aGXEcHTfT2k2ayAj@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250716053950.199079-5-huaqian.li@siemens.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aGXEcHTfT2k2ayAj@google.com>
 
-On Wed, Jul 16, 2025 at 01:39:47PM +0800, huaqian.li@siemens.com wrote:
-> From: Jan Kiszka <jan.kiszka@siemens.com>
+On Wed, Jul 02, 2025 at 04:44:48PM GMT, Brian Norris wrote:
+
+Sorry for jumping late into this thread. I missed it completely as I was not
+CCed.
+
+> Hi Frank,
 > 
-> The AM654 lacks an IOMMU, thus does not support isolating DMA requests
-> from untrusted PCI devices to selected memory regions this way. Use
-> static PVU-based protection instead. The PVU, when enabled, will only
-> accept DMA requests that address previously configured regions.
+> On Wed, Jul 02, 2025 at 07:09:42PM -0400, Frank Li wrote:
+> > > Does the AER driver actually work on these platforms?
+> ...
+> > There are several attempts to upstream customer Aer irq support in past years.
+> > 
+> > For example:
+> >   https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1161848.html
+> > 
+> > some change port drivers.
+> > 
+> > If you think it is valuable to support customer AER IRQ support, I can restart
+> > this work.
 > 
-> Use the availability of a restricted-dma-pool memory region as trigger
-> and register it as valid DMA target with the PVU. In addition, enable
-> the mapping of requester IDs to VirtIDs in the PCI RC. Use only a single
-> VirtID so far, catching all devices.
+> Interesting thread. I read through it, but I'm still not convinced about
+> one detail:
 > 
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Li Hua Qian <huaqian.li@siemens.com>
-> ---
->  drivers/pci/controller/dwc/pci-keystone.c | 106 ++++++++++++++++++++++
->  1 file changed, 106 insertions(+)
+> Are you sure that AER can't possibly work over MSI? Even today, the
+> Synopsys manuals say that their integrated MSI receiver "terminate[s]
+> inbound MSI requests (received on the RX wire)" and after terminating,
+> "an interrupt is signaled locally through the msi_ctrl_int output."
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index 2b2632e513b5..fbf1bf43b7ca 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> That means that their msi_ctrl_int signal only handles MSI requests from
+> downstream functions, and it implies that the default
+> drivers/pci/controller/dwc/pcie-designware-host.c
+> dw_pcie_msi_domain_info implementation will not actually see MSIs from
+> the root port (such as PME and AER). So yes, it *appears* that AER does
+> not work over MSI.
+> 
+> But crucially, it does *not* mean that the port will not generate valid
+> MSI requests, if you have some kind of logic that will receive it. So
+> for instance, I pointed out in another reply that some SoCs choose to
+> hook up GIC ITS:
+> 
+>  commit 9c4cd0aef259 ("arm64: dts: qcom: x1e80100: enable GICv3 ITS for
+>  PCIe")
+> 
+> """
+>     Note that using the GIC ITS on x1e80100 will cause Advanced Error
+>     Reporting (AER) interrupts to be received on errors unlike when using
+>     the internal MSI controller. Consequently, notifications about
+>     (correctable) errors may now be logged for errors that previously went
+>     unnoticed.
+> """
+> 
+> And in fact, your arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi seems
+> to be doing the same. I'd be surprised if these port MSIs still don't
+> work after that.
+> 
+> OTOH, I do also believe there are SoCs where DWC PCIe is available, but
+> there is no external MSI controller, and so that same problem still may
+> exist. I may even have such SoCs available...
+> 
 
-[------------------email has been trimmed----------------------------]
+Yes, pretty much all Qcom SoCs without GIC-v3 ITS suffer from this limitation.
+And the same should be true for other vendors also.
 
-> +static void ks_release_restricted_dma(struct platform_device *pdev)
-> +{
-> +	struct of_phandle_iterator it;
-> +	struct resource phys;
-> +	int err;
-> +
-> +	if (!IS_ENABLED(CONFIG_TI_PVU))
-> +		return;
-> +
-> +	of_for_each_phandle(&it, err, pdev->dev.of_node, "memory-region",
-> +			    NULL, 0) {
-> +		if (of_device_is_compatible(it.node, "restricted-dma-pool") &&
-> +		    of_address_to_resource(it.node, 0, &phys) == 0) {
-> +			ti_pvu_remove_region(KS_PCI_VIRTID, &phys);
-> +			break;
-> +		}
-> +	}
-> +}
-> +
->  static int ks_pcie_probe(struct platform_device *pdev)
->  {
->  	const struct dw_pcie_host_ops *host_ops;
-> @@ -1284,6 +1384,10 @@ static int ks_pcie_probe(struct platform_device *pdev)
->  	if (ret < 0)
->  		goto err_get_sync;
->  
-> +	ret = ks_init_restricted_dma(pdev);
-> +	if (ret < 0)
-> +		goto err_get_sync;
-> +
+Interestingly, the Qcom SoCs route the AER/PME via 'global' SPI interrupt, which
+is only handled by the controller driver. This is similar to the 'aer' SPI
+interrupt in layerscape platforms.
 
-Please move the above into the section specific to RC mode. This has
-been agreed to by Jan at:
-https://lore.kernel.org/r/e9716614-1849-4524-af4d-20587df365cf@siemens.com/
+So I think there is an incentive in allowing the AER driver to work with vendor
+specific IRQs.
 
->  	switch (mode) {
->  	case DW_PCIE_RC_TYPE:
->  		if (!IS_ENABLED(CONFIG_PCI_KEYSTONE_HOST)) {
-> @@ -1365,6 +1469,8 @@ static void ks_pcie_remove(struct platform_device *pdev)
->  	int num_lanes = ks_pcie->num_lanes;
->  	struct device *dev = &pdev->dev;
->  
-> +	ks_release_restricted_dma(pdev);
-> +
+- Mani
 
-Regards,
-Siddharth.
+-- 
+மணிவண்ணன் சதாசிவம்
 
