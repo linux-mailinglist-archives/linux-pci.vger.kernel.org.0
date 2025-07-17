@@ -1,300 +1,582 @@
-Return-Path: <linux-pci+bounces-32458-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32459-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C90F7B09694
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 23:55:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04F4AB096BE
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 00:03:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 30F2C1AA65FA
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 21:56:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B722580662
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 22:03:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C438A2367DA;
-	Thu, 17 Jul 2025 21:55:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A0813597E;
+	Thu, 17 Jul 2025 22:03:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kwDRaKlh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VFqhIsne"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4192153CE;
-	Thu, 17 Jul 2025 21:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5307A22541B
+	for <linux-pci@vger.kernel.org>; Thu, 17 Jul 2025 22:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752789354; cv=none; b=Af29UY2//gxRDRNz8Hd8ue6LDWoMsxgTKeN63Uh8vl9FLV+Z7J0738Qu5ZkeW6EBNxlL5iNt+D078VLXYXgeEt5gXiIOhmVNh+jiX4lUVvolhmyg1tC1HxoAJVtUE3kmX9Joa0cAjfx4bVHuDf1sCi4qXmY0hWqr0o4ITHhPZZI=
+	t=1752789831; cv=none; b=sk/XI/iFMXaqe4ODObeGbkbyel+LWAzB2EoY9FWMQZINhUDCfEm9/7CZ2Vi3ceRLfr4Vqej51qhLr7anX2+fRBOwpp6zG1/7i4mWeqdStKQV04cHXBcu1BMp9+FvV+Mxj7IysM9bPo8PTg6NHIb6pIQ6nqQY7EA3Z5j6TXSAF9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752789354; c=relaxed/simple;
-	bh=aQ8AEa5y0u+VVf9vSpXwnKG8i5PF3aKYF/4AKnW6whs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=fQMi0zwJrnLe5G4lx/sHDzWcLmft7kC7k8CcS9JTmNsH2gjroE/JuLL4Rf/VBq7gtZbW82bqJCOq+bNTqxR6KIYIT70X0KVq6xdmJ6uOlvlVeZQmYU98g4fWT5UXxQwQTPrUpAqjZgrEZuqJjMhj6Urme/0SaUFXank6Mw92qhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kwDRaKlh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10260C4CEE3;
-	Thu, 17 Jul 2025 21:55:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752789354;
-	bh=aQ8AEa5y0u+VVf9vSpXwnKG8i5PF3aKYF/4AKnW6whs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kwDRaKlhffwnn7T6xKYIeqt0Cc1Wm5ueQDly3Pp9Nrua+jQ+MJBM8lA5NWQSIaXMo
-	 PCHcq7gHmgr7FT9HTCdqnrjdkOFtc1Oise47quZjRV1YAoV/amk9ayH9OWyRBVNCHS
-	 JaJvjIK+pZVstUJ2kgeQNjDNjLt50nW3XqYFKWP1vDzweH7XSAfPUpWkVU5cIddhlh
-	 HgqgR4XZeQIF+jZF0GTbq54tgGtvQEPnOlmrw0UE9hG9V/pUHeuTSj6UAnheFE21+2
-	 XnAVOmgjCsYyCcovCAYVKhKPntKcSQkTWZ4FmFLvYSENNQcek7ntk0Jky9gaFnKovE
-	 FzXv1G0dRIvvA==
-Date: Thu, 17 Jul 2025 16:55:52 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
-	"open list:HIBERNATION (aka Software Suspend, aka swsusp)" <linux-pm@vger.kernel.org>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
-	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	AceLan Kao <acelan.kao@canonical.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Denis Benato <benato.denis96@gmail.com>,
-	Merthan =?utf-8?Q?Karaka=C5=9F?= <m3rthn.k@gmail.com>
-Subject: Re: [PATCH v4 2/5] PCI: Put PCIe ports with downstream devices into
- D3 at hibernate
-Message-ID: <20250717215552.GA2655127@bhelgaas>
+	s=arc-20240116; t=1752789831; c=relaxed/simple;
+	bh=2HkykrtpkTf4LiwrQ9f1o1evpEdhfnzcslvgQDULhk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CfLw3bulErdLvXAWOGPGwmkPridxQjZuxT3OxQ2ChhjwF2uZD5+ifIp4n4i8An5WMJijcX/pzF7n8cQ0+bstjzMrnuY+2QI9k05yxb0xDgUMp/sldZtXkqAkOUGu8y1Hj8eZX3H1yRFvI+lxEd3dJUWDE6JrbxEpnP/GAUoe5So=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VFqhIsne; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1752789828;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mfc3K6tzuWD5BRu1O35NyPLFvhRYJ9Xgb2OfMSriW8I=;
+	b=VFqhIsneFZDot+G2MkMN7iJKjjTzUdMCYZ4ih/6ud8uObowXMWYSLPgHaU02TVqXktJvmg
+	BIq3z1/nNsUwPRH6wjawnH0QWfjieiXwc6HM8dgF19LcG8PtwzhTVrixfkyGe/83DYHFj5
+	btkH5LFjVM6JRFEU5I48SISamudMBYo=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-512-eE8S8O9MNOOLC6T2rNp1ow-1; Thu, 17 Jul 2025 18:03:46 -0400
+X-MC-Unique: eE8S8O9MNOOLC6T2rNp1ow-1
+X-Mimecast-MFC-AGG-ID: eE8S8O9MNOOLC6T2rNp1ow_1752789826
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4ab7464e3bfso16015021cf.2
+        for <linux-pci@vger.kernel.org>; Thu, 17 Jul 2025 15:03:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752789826; x=1753394626;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mfc3K6tzuWD5BRu1O35NyPLFvhRYJ9Xgb2OfMSriW8I=;
+        b=HTW3fs+g9GJteE9AIuyiEJZ1yrfQpmBFHw1eMQe4rVoPxII0Njwo6PtWMydv37IrZy
+         v4xVXg9gyXqvOiu4pcugxx0wo8SZgdylVRM4epLXuDOcnI8Z0LzOhD81mBryZ7yK7VDo
+         CbgvY4tmTJ5jWgzbVI/+STryjbRrJj7w1qorITjnlETdklb7igLrcF4GJNe6VfOjqqYh
+         EwogC/oA7JpB7fcU2j3GMsKq0lLnYlDVPhHfPUgksEvzlfRIHP4Jrznnc2lrbQ55nr7W
+         tgQFFzS/3w7uk1+fgJ+wTpDcFUDOFEeNN4GJ02Lzh7auVWlq16EgRDIe5Xtl+jVuK1Bx
+         6XgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVUh0DhwqP0iFtnpH/XQ2/bnmVcuuaNZJP0SGJvhkF7fUj7zFCxhk/RZYFZZBVsXB9HVs5nnpiSE5A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3tUMIBy5wmj4KUJ4c3rg0y+ErBu2RI4IjNXT1rx20iuzk9BFV
+	v1L1RSBVC76rpDOcMdQ5ewdlu8cqi0ShO53/vUpl55P4viMx4g+WNOJ++xyLtS+rxLB7Qf0uBbn
+	UU14vhUmH5bye8AStm7tyDuf4w8PZE5jwJqH2CCTQvdCTtr8RwcdaB+e5rxfPcg==
+X-Gm-Gg: ASbGncumkeguLdZfwQ2TkIE/5JA0BNEm7jAqbO3jW/ATEfscZWPwzvNnZVJ9/R3f6Ch
+	Wq1sooG1BmSGHk+csg3dkrmIZToYLhef1dTai/LlQnpfHEOVU4tg+QshdYcGC5QaJrW/YjSk7on
+	ksMIh1U/FwAcgPtWLV9JPRe8EuG78fj6yZ8oKNoxMovfpSDEjnorTXYe6gQv6DEsZPxohn4QD/X
+	q68C5IkAQjy/9HGG+jPBiAXSys5ONIwtvK2En1HdCPyUC+8Deda4um8RnwsVb78Izn1E4Fk7o81
+	bvwDWDrsCCV9YmUHbJu8IMni+ZupHVObUMioWN/7
+X-Received: by 2002:ac8:7fd4:0:b0:4ab:5fde:fb86 with SMTP id d75a77b69052e-4ab93dbaaccmr121375821cf.48.1752789825269;
+        Thu, 17 Jul 2025 15:03:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFzRNKXAfI4pw6guYF5dYfsmKrN/dtM9vQJWq0b67mN0nCIKlj8TBM6nBQ7cHR2otdk/WyxhA==
+X-Received: by 2002:ac8:7fd4:0:b0:4ab:5fde:fb86 with SMTP id d75a77b69052e-4ab93dbaaccmr121375091cf.48.1752789824485;
+        Thu, 17 Jul 2025 15:03:44 -0700 (PDT)
+Received: from [192.168.40.164] ([70.105.235.240])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4abb497fb35sm341791cf.15.2025.07.17.15.03.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Jul 2025 15:03:43 -0700 (PDT)
+Message-ID: <5b1f12e0-9113-41c4-accb-d8ab755cc7d7@redhat.com>
+Date: Thu, 17 Jul 2025 18:03:42 -0400
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250616175019.3471583-3-superm1@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/16] iommu: Compute iommu_groups properly for PCIe
+ switches
+Content-Language: en-US
+To: Jason Gunthorpe <jgg@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>,
+ linux-pci@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+ Will Deacon <will@kernel.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+ Lu Baolu <baolu.lu@linux.intel.com>, galshalom@nvidia.com,
+ Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
+ kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
+ tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+References: <3-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
+From: Donald Dutile <ddutile@redhat.com>
+In-Reply-To: <3-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 12:50:16PM -0500, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
+Jason,
+Hey!
+Function naming nit below...
+
+On 7/9/25 10:52 AM, Jason Gunthorpe wrote:
+> The current algorithm does not work if ACS is turned off, and it is not
+> clear how this has been missed for so long. Alex suspects a multi-function
+> modeling of the DSPs may have hidden it, but I could not find a switch
+> using that scheme.
 > 
-> For the suspend flow PCIe ports that have downstream devices are put into
-> the appropriate D3 state when children are not in D0. For the hibernate
-> flow, PCIe ports with downstream devices stay in D0 however. This can
-> lead to PCIe ports that are remained powered on needlessly during
-> hibernate.
-
-I suppose by "appropriate D3 state", you mean the Port is put in
-D3cold if all children are in D3cold, or D3hot if they are all in
-D1-D3hot?  PM-illiterate folks like me need some help to know what is
-"appropriate" :)
-
-This refers specifically to "PCIe ports", but it looks like the code
-applies to PCI bridges in general, so maybe it should just say
-"bridges"?
-
-s/ports that are remained powered on/ports that remain powered on/
-(or "bridges that remain powered on")
-
-> Adjust the pci_pm_poweroff_noirq() to follow the same flow as
-> pci_pm_suspend_noirq() in that PCIe ports that are power manageable should
-> without downstream devices in D0 should be put into their appropriate
-> sleep state.
-
-Extra "should" in this sentence, I guess?
-(s/power manageable should/power manageable/)
-
-Also "PCIe ports" here, maybe should be "bridges"?
-
-> Cc: AceLan Kao <acelan.kao@canonical.com>
-> Cc: Kai-Heng Feng <kaihengf@nvidia.com>
-> Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Cc: Denis Benato <benato.denis96@gmail.com>
-> Cc: Merthan Karakaş <m3rthn.k@gmail.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
-> v4:
->  * Use helper even when CONFIG_SUSPEND not set (LKP robot)
-> v3:
->  * Split out common code between suspend_noirq() and poweroff_noirq()
->    to a helper function
->  * https://lore.kernel.org/linux-pm/20250609024619.407257-1-superm1@kernel.org/T/#me6db0fb946e3d604a8f3d455128844ed802c82bb
-> ---
->  drivers/pci/pci-driver.c | 94 ++++++++++++++++++++++++++--------------
->  1 file changed, 61 insertions(+), 33 deletions(-)
+> Most likely people were simply happy they had smaller groups oblivious to
+> the security problems.
 > 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 0d4c67829958b..f7a0c23515718 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -759,6 +759,56 @@ static void pci_pm_complete(struct device *dev)
->  
->  #endif /* !CONFIG_PM_SLEEP */
->  
-> +#if defined(CONFIG_SUSPEND) || defined(CONFIG_HIBERNATE_CALLBACKS)
-> +/**
-> + * pci_pm_set_prepare_bus_pm
-> + * @pci_dev: pci device
-> + *
-> + * Prepare the device to go into a low power state by saving state
-> + * and configure bus PM policy.
-
-I guess "configure bus PM policy" must mean "if this device is in D0,
-set skip_bus_pm = true for the device and any upstream bridge so we
-won't change their power state"?
-
-> + * Return: TRUE for bus PM will be used
-> + *         FALSE for bus PM will be skipped
+> For discussion lets consider a simple topology like the below:
+> 
+>                                 -- DSP 02:00.0 -> End Point A
+>   Root 00:00.0 -> USP 01:00.0 --|
+>                                 -- DSP 02:03.0 -> End Point B
+> 
+> If ACS is fully activated we expect 00:00.0, 01:00.0, 02:00.0, 02:03.0, A,
+> B to all have unique single device groups.
+> 
+> If both DSPs have ACS off then we expect 00:00.0 and 01:00.0 to have
+> unique single device groups while 02:00.0, 02:03.0, A, B are part of one
+> multi-device group.
+> 
+> If the DSPs have asymmetric ACS, with one fully isolating and one
+> non-isolating we also expect the above multi-device group result.
+> 
+> Instead the current algorithm always creates unique single device groups
+> for this topology. It happens because the pci_device_group(DSP)
+> immediately moves to the USP and computes pci_acs_path_enabled(USP) ==
+> true and decides the DSP can get a unique group. The pci_device_group(A)
+> immediately moves to the DSP, sees pci_acs_path_enabled(DSP) == false and
+> then takes the DSPs group.
+> 
+> The current algorithm has several issues:
+> 
+>   1) It implicitly depends on ordering. Since the existing group discovery
+>      only goes in the upstream direction discovering a downstream device
+>      before its upstream will cause the wrong creation of narrower groups.
+> 
+>   2) It assumes that if the path from the end point to the root is entirely
+>      ACS isolated then that end point is isolated. This misses cross-traffic
+>      in the asymmetric ACS case.
+> 
+>   3) When evaluating a non-isolated DSP it does not check peer DSPs for an
+>      already established group unless the multi-function feature does it.
+> 
+>   4) It does not understand the aliasing rule for PCIe to PCI bridges
+>      where the alias is to the subordinate bus. The bridge's RID on the
+>      primary bus is not aliased. This causes the PCIe to PCI bridge to be
+>      wrongly joined to the group with the downstream devices.
+> 
+> As grouping is a security property for VFIO creating incorrectly narrowed
+> groups is a security problem for the system.
+> 
+> Revise the design to solve these problems.
+> 
+> Explicitly require ordering, or return EPROBE_DEFER if things are out of
+> order. This avoids silent errors that created smaller groups and solves
+> problem #1.
+> 
+> Work on busses, not devices. Isolation is a property of the bus, and the
+> first non-isolated bus should form a group containing all devices
+> downstream of that bus. If all busses on the path to an end device are
+> isolated then the end device has a chance to make a single-device group.
+> 
+> Use pci_bus_isolation() to compute the bus's isolation status based on the
+> ACS flags and technology. pci_bus_isolation() touches a lot of PCI
+> internals to get the information in the right format.
+> 
+> Add a new flag in the iommu_group to record that the group contains a
+> non-isolated bus. Any downstream pci_device_group() will see
+> bus->self->iommu_group is non-isolated and unconditionally join it. This
+> makes the first non-isolation apply to all downstream devices and solves
+> problem #2
+> 
+> The bus's non-isolated iommu_group will be stored in either the DSP of
+> PCIe switch or the bus->self upstream device, depending on the situation.
+> When storing in the DSP all the DSPs are checked first for a pre-existing
+> non-isolated iommu_group. When stored in the upstream the flag forces it
+> to all downstreams. This solves problem #3.
+> 
+> Put the handling of end-device aliases and MFD into pci_get_alias_group()
+> and only call it in cases where we have a fully isolated path. Otherwise
+> every downstream device on the bus is going to be joined to the group of
+> bus->self.
+> 
+> Finally, replace the initial pci_for_each_dma_alias() with a combination
+> of:
+> 
+>   - Directly checking pci_real_dma_dev() and enforcing ordering.
+>     The group should contain both pdev and pci_real_dma_dev(pdev) which is
+>     only possible if pdev is ordered after real_dma_dev. This solves a case
+>     of #1.
+> 
+>   - Indirectly relying on pci_bus_isolation() to report legacy PCI busses
+>     as non-isolated, with the enum including the distinction of the PCIe to
+>     PCI bridge being isolated from the downstream. This solves problem #4.
+> 
+> It is very likely this is going to expand iommu_group membership in
+> existing systems. After all that is the security bug that is being
+> fixed. Expanding the iommu_groups risks problems for users using VFIO.
+> 
+> The intention is to have a more accurate reflection of the security
+> properties in the system and should be seen as a security fix. However
+> people who have ACS disabled may now need to enable it. As such users may
+> have had good reason for ACS to be disabled I strongly recommend that
+> backporting of this also include the new config_acs option so that such
+> users can potentially minimally enable ACS only where needed.
+> 
+> Fixes: 104a1c13ac66 ("iommu/core: Create central IOMMU group lookup/creation interface")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> ---
+>   drivers/iommu/iommu.c | 274 ++++++++++++++++++++++++++++++++----------
+>   include/linux/pci.h   |   3 +
+>   2 files changed, 212 insertions(+), 65 deletions(-)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index d265de874b14b6..8b152266f20104 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -65,8 +65,16 @@ struct iommu_group {
+>   	struct list_head entry;
+>   	unsigned int owner_cnt;
+>   	void *owner;
+> +
+> +	/* Used by the device_group() callbacks */
+> +	u32 bus_data;
+>   };
+>   
+> +/*
+> + * Everything downstream of this group should share it.
 > + */
-> +static bool pci_pm_set_prepare_bus_pm(struct pci_dev *pci_dev)
-
-The "pci_pm_set_prepare_bus_pm" name doesn't immediately suggest a
-property that can be true or false.  It complicates things a bit when
-a bool function has side effects in addition to giving a yes/no or
-true/false answer.  Not sure whether or how this could be improved.
-
-And it's a little confusing that we return false when we set
-skip_bus_pm = true (mostly).  It's tough to keep track of what
-true/false means.
+> +#define BUS_DATA_PCI_NON_ISOLATED BIT(0)
+> +
+>   struct group_device {
+>   	struct list_head list;
+>   	struct device *dev;
+> @@ -1484,25 +1492,6 @@ static struct iommu_group *get_pci_alias_group(struct pci_dev *pdev,
+>   	return NULL;
+>   }
+>   
+> -struct group_for_pci_data {
+> -	struct pci_dev *pdev;
+> -	struct iommu_group *group;
+> -};
+> -
+> -/*
+> - * DMA alias iterator callback, return the last seen device.  Stop and return
+> - * the IOMMU group if we find one along the way.
+> - */
+> -static int get_pci_alias_or_group(struct pci_dev *pdev, u16 alias, void *opaque)
+> -{
+> -	struct group_for_pci_data *data = opaque;
+> -
+> -	data->pdev = pdev;
+> -	data->group = iommu_group_get(&pdev->dev);
+> -
+> -	return data->group != NULL;
+> -}
+> -
+>   /*
+>    * Generic device_group call-back function. It just allocates one
+>    * iommu-group per device.
+> @@ -1534,57 +1523,27 @@ struct iommu_group *generic_single_device_group(struct device *dev)
+>   }
+>   EXPORT_SYMBOL_GPL(generic_single_device_group);
+>   
+> -/*
+> - * Use standard PCI bus topology, isolation features, and DMA alias quirks
+> - * to find or create an IOMMU group for a device.
+> - */
+> -struct iommu_group *pci_device_group(struct device *dev)
+> +static struct iommu_group *pci_group_alloc_non_isolated(void)
+>   {
+> -	struct pci_dev *pdev = to_pci_dev(dev);
+> -	struct group_for_pci_data data;
+> -	struct pci_bus *bus;
+> -	struct iommu_group *group = NULL;
+> -	u64 devfns[4] = { 0 };
+> +	struct iommu_group *group;
+>   
+> -	if (WARN_ON(!dev_is_pci(dev)))
+> -		return ERR_PTR(-EINVAL);
+> +	group = iommu_group_alloc();
+> +	if (IS_ERR(group))
+> +		return group;
+> +	group->bus_data |= BUS_DATA_PCI_NON_ISOLATED;
+> +	return group;
+> +}
+>   
+> -	/*
+> -	 * Find the upstream DMA alias for the device.  A device must not
+> -	 * be aliased due to topology in order to have its own IOMMU group.
+> -	 * If we find an alias along the way that already belongs to a
+> -	 * group, use it.
+> -	 */
+> -	if (pci_for_each_dma_alias(pdev, get_pci_alias_or_group, &data))
+> -		return data.group;
+> -
+> -	pdev = data.pdev;
+> -
+> -	/*
+> -	 * Continue upstream from the point of minimum IOMMU granularity
+> -	 * due to aliases to the point where devices are protected from
+> -	 * peer-to-peer DMA by PCI ACS.  Again, if we find an existing
+> -	 * group, use it.
+> -	 */
+> -	for (bus = pdev->bus; !pci_is_root_bus(bus); bus = bus->parent) {
+> -		if (!bus->self)
+> -			continue;
+> -
+> -		if (pci_acs_path_enabled(bus->self, NULL, PCI_ACS_ISOLATED))
+> -			break;
+> -
+> -		pdev = bus->self;
+> -
+> -		group = iommu_group_get(&pdev->dev);
+> -		if (group)
+> -			return group;
+> -	}
+> +static struct iommu_group *pci_get_alias_group(struct pci_dev *pdev)
+So, the former pci_device_group() is completely re-written below,
+and what it use to do is renamed pci_get_alias_group(), which shouldn't be
+(easily) confused with ...
 
 > +{
-> +	if (!pci_dev->state_saved) {
-> +		pci_save_state(pci_dev);
-> +
-> +		/*
-> +		 * If the device is a bridge with a child in D0 below it,
-> +		 * it needs to stay in D0, so check skip_bus_pm to avoid
-> +		 * putting it into a low-power state in that case.
-> +		 */
-> +		if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
-> +			pci_prepare_to_sleep(pci_dev);
-> +	}
-> +
-> +	pci_dbg(pci_dev, "PCI PM: Sleep power state: %s\n",
-> +		pci_power_name(pci_dev->current_state));
-> +
-> +	if (pci_dev->current_state == PCI_D0) {
-> +		pci_dev->skip_bus_pm = true;
-> +		/*
-> +		 * Per PCI PM r1.2, table 6-1, a bridge must be in D0 if any
-> +		 * downstream device is in D0, so avoid changing the power state
-> +		 * of the parent bridge by setting the skip_bus_pm flag for it.
-> +		 */
-> +		if (pci_dev->bus->self)
-> +			pci_dev->bus->self->skip_bus_pm = true;
-> +	}
-> +
-> +	if (pci_dev->skip_bus_pm && pm_suspend_no_platform()) {
-> +		pci_dbg(pci_dev, "PCI PM: Skipped\n");
-> +		return FALSE;
-> +	}
-> +
-> +	pci_pm_set_unknown_state(pci_dev);
-> +
-> +	return TRUE;
+> +	struct iommu_group *group;
+> +	DECLARE_BITMAP(devfns, 256) = {};
+>   
+>   	/*
+>   	 * Look for existing groups on device aliases.  If we alias another
+>   	 * device or another device aliases us, use the same group.
+>   	 */
+> -	group = get_pci_alias_group(pdev, (unsigned long *)devfns);
+> +	group = get_pci_alias_group(pdev, devfns);
+... get_pci_alias_group() ?
 
-"true" and "false" instead of "TRUE" and "FALSE".
+... and it's only used for PCIe case below (in pci_device_group), so
+should it be named 'pcie_get_alias_group()' ?
+
+>   	if (group)
+>   		return group;
+>   
+> @@ -1593,12 +1552,197 @@ struct iommu_group *pci_device_group(struct device *dev)
+>   	 * slot and aliases of those funcions, if any.  No need to clear
+>   	 * the search bitmap, the tested devfns are still valid.
+>   	 */
+> -	group = get_pci_function_alias_group(pdev, (unsigned long *)devfns);
+> +	group = get_pci_function_alias_group(pdev, devfns);
+>   	if (group)
+>   		return group;
+>   
+> -	/* No shared group found, allocate new */
+> -	return iommu_group_alloc();
+> +	/*
+> +	 * When MFD's are included in the set due to ACS we assume that if ACS
+> +	 * permits an internal loopback between functions it also permits the
+> +	 * loopback to go downstream if a function is a bridge.
+> +	 *
+> +	 * It is less clear what aliases mean when applied to a bridge. For now
+> +	 * be conservative and also propagate the group downstream.
+> +	 */
+> +	__clear_bit(pdev->devfn & 0xFF, devfns);
+> +	if (!bitmap_empty(devfns, sizeof(devfns) * BITS_PER_BYTE))
+> +		return pci_group_alloc_non_isolated();
+> +	return NULL;
+> +}
+> +
+> +static struct iommu_group *pci_hierarchy_group(struct pci_dev *pdev)
+although static, could you provide a function description for its purpose ?
+
+> +{
+> +	/*
+> +	 * SRIOV functions may resid on a virtual bus, jump directly to the PFs
+nit: resid -> reside
+
+> +	 * bus in all cases.
+> +	 */
+> +	struct pci_bus *bus = pci_physfn(pdev)->bus;
+> +	struct iommu_group *group;
+> +
+> +	/* Nothing upstream of this */
+> +	if (pci_is_root_bus(bus))
+> +		return NULL;
+> +
+> +	/*
+> +	 * !self is only for SRIOV virtual busses which should have been
+> +	 * excluded above.
+by pci_is_root_bus() ?? -- that checks if bus->parent exists...
+not sure how that excludes the case of !bus->self ...
+
+> +	 */
+> +	if (WARN_ON(!bus->self))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	group = iommu_group_get(&bus->self->dev);
+> +	if (!group) {
+> +		/*
+> +		 * If the upstream bridge needs the same group as pdev then
+> +		 * there is no way for it's pci_device_group() to discover it.
+> +		 */
+> +		dev_err(&pdev->dev,
+> +			"PCI device is probing out of order, upstream bridge device of %s is not probed yet\n",
+> +			pci_name(bus->self));
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +	}
+> +	if (group->bus_data & BUS_DATA_PCI_NON_ISOLATED)
+> +		return group;
+> +	iommu_group_put(group);
+> +	return NULL;
+... and w/o the function description, I don't follow:
+-- rtn an iommu-group if it has NON_ISOLATED property ... but rtn null if all devices below it are isolated?
 
 > +}
-> +#endif /* CONFIG_SUSPEND || CONFIG_HIBERNATE_CALLBACKS */
 > +
->  #ifdef CONFIG_SUSPEND
->  static void pcie_pme_root_status_cleanup(struct pci_dev *pci_dev)
->  {
-> @@ -878,38 +928,8 @@ static int pci_pm_suspend_noirq(struct device *dev)
->  		}
->  	}
->  
-> -	if (!pci_dev->state_saved) {
-> -		pci_save_state(pci_dev);
-> -
-> -		/*
-> -		 * If the device is a bridge with a child in D0 below it,
-> -		 * it needs to stay in D0, so check skip_bus_pm to avoid
-> -		 * putting it into a low-power state in that case.
-> -		 */
-> -		if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
-> -			pci_prepare_to_sleep(pci_dev);
-> -	}
-> -
-> -	pci_dbg(pci_dev, "PCI PM: Suspend power state: %s\n",
-> -		pci_power_name(pci_dev->current_state));
-> -
-> -	if (pci_dev->current_state == PCI_D0) {
-> -		pci_dev->skip_bus_pm = true;
-> -		/*
-> -		 * Per PCI PM r1.2, table 6-1, a bridge must be in D0 if any
-> -		 * downstream device is in D0, so avoid changing the power state
-> -		 * of the parent bridge by setting the skip_bus_pm flag for it.
-> -		 */
-> -		if (pci_dev->bus->self)
-> -			pci_dev->bus->self->skip_bus_pm = true;
-> -	}
-> -
-> -	if (pci_dev->skip_bus_pm && pm_suspend_no_platform()) {
-> -		pci_dbg(pci_dev, "PCI PM: Skipped\n");
-> +	if (!pci_pm_set_prepare_bus_pm(pci_dev))
->  		goto Fixup;
-> -	}
-> -
-> -	pci_pm_set_unknown_state(pci_dev);
+> +/*
+> + * For legacy PCI we have two main considerations when forming groups:
+> + *
+> + *  1) In PCI we can loose the RID inside the fabric, or some devices will use
+> + *     the wrong RID. The PCI core calls this aliasing, but from an IOMMU
+> + *     perspective it means that a PCI device may have multiple RIDs and a
+> + *     single RID may represent many PCI devices. This effectively means all the
+> + *     aliases must share a translation, thus group, because the IOMMU cannot
+> + *     tell devices apart.
+> + *
+> + *  2) PCI permits a bus segment to claim an address even if the transaction
+> + *     originates from an end point not the CPU. When it happens it is called
+> + *     peer to peer. Claiming a transaction in the middle of the bus hierarchy
+> + *     bypasses the IOMMU translation. The IOMMU subsystem rules require these
+> + *     devices to be placed in the same group because they lack isolation from
+> + *     each other. In PCI Express the ACS system can be used to inhibit this and
+> + *     force transactions to go to the IOMMU.
+> + *
+> + *     From a PCI perspective any given PCI bus is either isolating or
+> + *     non-isolating. Isolating means downstream originated transactions always
+> + *     progress toward the CPU and do not go to other devices on the bus
+> + *     segment, while non-isolating means downstream originated transactions can
+> + *     progress back downstream through another device on the bus segment.
+> + *
+> + *     Beyond buses a multi-function device or bridge can also allow
+> + *     transactions to loop back internally from one function to another.
+> + *
+> + *     Once a PCI bus becomes non isolating the entire downstream hierarchy of
+> + *     that bus becomes a single group.
+> + */
+> +struct iommu_group *pci_device_group(struct device *dev)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	struct iommu_group *group;
+> +	struct pci_dev *real_pdev;
+> +
+> +	if (WARN_ON(!dev_is_pci(dev)))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	/*
+> +	 * Arches can supply a completely different PCI device that actually
+> +	 * does DMA.
+> +	 */
+> +	real_pdev = pci_real_dma_dev(pdev);
+> +	if (real_pdev != pdev) {
+> +		group = iommu_group_get(&real_pdev->dev);
+> +		if (!group) {
+> +			/*
+> +			 * The real_pdev has not had an iommu probed to it. We
+> +			 * can't create a new group here because there is no way
+> +			 * for pci_device_group(real_pdev) to pick it up.
+> +			 */
+> +			dev_err(dev,
+> +				"PCI device is probing out of order, real device of %s is not probed yet\n",
+> +				pci_name(real_pdev));
+> +			return ERR_PTR(-EPROBE_DEFER);
+> +		}
+> +		return group;
+> +	}
+> +
+> +	if (pdev->dev_flags & PCI_DEV_FLAGS_BRIDGE_XLATE_ROOT)
+> +		return iommu_group_alloc();
+> +
+> +	/* Anything upstream of this enforcing non-isolated? */
+> +	group = pci_hierarchy_group(pdev);
+> +	if (group)
+> +		return group;
+> +
+> +	switch (pci_bus_isolated(pci_physfn(pdev)->bus)) {
+> +	case PCIE_ISOLATED:
+> +		/* Check multi-function groups and same-bus devfn aliases */
+> +		group = pci_get_alias_group(pdev);
+> +		if (group)
+> +			return group;
+> +
+> +		/* No shared group found, allocate new */
+> +		return iommu_group_alloc();
+> +
+> +	/*
+> +	 * On legacy PCI there is no RID at an electrical level. On PCI-X the
+> +	 * RID of the bridge may be used in some cases instead of the
+> +	 * downstream's RID. This creates aliasing problems. PCI/PCI-X doesn't
+> +	 * provide isolation either. The end result is that as soon as we hit a
+> +	 * PCI/PCI-X bus we switch to non-isolated for the whole downstream for
+> +	 * both aliasing and isolation reasons. The bridge has to be included in
+> +	 * the group because of the aliasing.
+> +	 */
+> +	case PCI_BRIDGE_NON_ISOLATED:
+> +	/* A PCIe switch where the USP has MMIO and is not isolated. */
+> +	case PCIE_NON_ISOLATED:
+> +		group = iommu_group_get(&pdev->bus->self->dev);
+> +		if (WARN_ON(!group))
+> +			return ERR_PTR(-EINVAL);
+> +		/*
+> +		 * No need to be concerned with aliases here since we are going
+> +		 * to put the entire downstream tree in the bridge/USP's group.
+> +		 */
+> +		group->bus_data |= BUS_DATA_PCI_NON_ISOLATED;
+> +		return group;
+> +
+> +	/*
+> +	 * It is a PCI bus and the upstream bridge/port does not alias or allow
+> +	 * P2P.
+> +	 */
+> +	case PCI_BUS_NON_ISOLATED:
+> +	/*
+> +	 * It is a PCIe switch and the DSP cannot reach the USP. The DSP's
+> +	 * are not isolated from each other and share a group.
+> +	 */
+> +	case PCIE_SWITCH_DSP_NON_ISOLATED: {
+> +		struct pci_dev *piter = NULL;
+> +
+> +		/*
+> +		 * All the downstream devices on the bus share a group. If this
+> +		 * is a PCIe switch then they will all be DSPs
+> +		 */
+> +		for_each_pci_dev(piter) {
+> +			if (piter->bus != pdev->bus)
+> +				continue;
+> +			group = iommu_group_get(&piter->dev);
+> +			if (group) {
+> +				pci_dev_put(piter);
+> +				if (WARN_ON(!(group->bus_data &
+> +					      BUS_DATA_PCI_NON_ISOLATED)))
+> +					group->bus_data |=
+> +						BUS_DATA_PCI_NON_ISOLATED;
+> +				return group;
+> +			}
+> +		}
+> +		return pci_group_alloc_non_isolated();
+> +	}
+> +	default:
+> +		break;
+> +	}
+> +	WARN_ON(true);
+> +	return ERR_PTR(-EINVAL);
+>   }
+>   EXPORT_SYMBOL_GPL(pci_device_group);
+>   
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 0b1e28dcf9187d..517800206208b5 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2072,6 +2072,9 @@ static inline int pci_dev_present(const struct pci_device_id *ids)
+>   #define no_pci_devices()	(1)
+>   #define pci_dev_put(dev)	do { } while (0)
+>   
+> +static inline struct pci_dev *pci_real_dma_dev(struct pci_dev *dev)
+> +{ return dev; }
+> +
+>   static inline void pci_set_master(struct pci_dev *dev) { }
+>   static inline void pci_clear_master(struct pci_dev *dev) { }
+>   static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
 
-This part looks like it's mostly factoring this code out to
-pci_pm_set_prepare_bus_pm().  Would it be practical to split that
-factoring to a patch that makes no functional change?  I'm wondering
-if that would make the functional change smaller and easier to
-understand.
-
->  	/*
->  	 * Some BIOSes from ASUS have a bug: If a USB EHCI host controller's
-> @@ -1136,6 +1156,8 @@ static int pci_pm_poweroff(struct device *dev)
->  	struct pci_dev *pci_dev = to_pci_dev(dev);
->  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
->  
-> +	pci_dev->skip_bus_pm = false;
-> +
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return pci_legacy_suspend(dev, PMSG_HIBERNATE);
->  
-> @@ -1199,8 +1221,8 @@ static int pci_pm_poweroff_noirq(struct device *dev)
->  			return error;
->  	}
->  
-> -	if (!pci_dev->state_saved && !pci_has_subordinate(pci_dev))
-> -		pci_prepare_to_sleep(pci_dev);
-> +	if (!pci_pm_set_prepare_bus_pm(pci_dev))
-> +		goto Fixup;
->  
->  	/*
->  	 * The reason for doing this here is the same as for the analogous code
-> @@ -1209,6 +1231,7 @@ static int pci_pm_poweroff_noirq(struct device *dev)
->  	if (pci_dev->class == PCI_CLASS_SERIAL_USB_EHCI)
->  		pci_write_config_word(pci_dev, PCI_COMMAND, 0);
->  
-> +Fixup:
->  	pci_fixup_device(pci_fixup_suspend_late, pci_dev);
->  
->  	return 0;
-> @@ -1218,10 +1241,15 @@ static int pci_pm_restore_noirq(struct device *dev)
->  {
->  	struct pci_dev *pci_dev = to_pci_dev(dev);
->  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
-> +	pci_power_t prev_state = pci_dev->current_state;
-> +	bool skip_bus_pm = pci_dev->skip_bus_pm;
->  
->  	pci_pm_default_resume_early(pci_dev);
->  	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  
-> +	if (!skip_bus_pm && prev_state == PCI_D3cold)
-> +		pci_pm_bridge_power_up_actions(pci_dev);
-> +
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return 0;
->  
-> -- 
-> 2.43.0
-> 
 
