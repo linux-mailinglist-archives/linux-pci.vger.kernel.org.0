@@ -1,86 +1,86 @@
-Return-Path: <linux-pci+bounces-32459-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32460-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04F4AB096BE
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 00:03:57 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A5CEB096C0
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 00:04:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B722580662
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 22:03:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 970BF5804D0
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 22:04:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A0813597E;
-	Thu, 17 Jul 2025 22:03:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AC212AEF5;
+	Thu, 17 Jul 2025 22:04:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VFqhIsne"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VnIavw/L"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5307A22541B
-	for <linux-pci@vger.kernel.org>; Thu, 17 Jul 2025 22:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFA721ABAE
+	for <linux-pci@vger.kernel.org>; Thu, 17 Jul 2025 22:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752789831; cv=none; b=sk/XI/iFMXaqe4ODObeGbkbyel+LWAzB2EoY9FWMQZINhUDCfEm9/7CZ2Vi3ceRLfr4Vqej51qhLr7anX2+fRBOwpp6zG1/7i4mWeqdStKQV04cHXBcu1BMp9+FvV+Mxj7IysM9bPo8PTg6NHIb6pIQ6nqQY7EA3Z5j6TXSAF9s=
+	t=1752789852; cv=none; b=R91PXyvpTCLMhUeNosRlnYQHryqj4VNYe56GUMJj2PVDB/NsMrBnWH741QAOfPQ3BfQHuRir0jntcb5Z+xMxI3RsSaOCvsvO3GhxBQcnUhfwVkoC11Ze//2XEGVf9Sr1en19uACLFWw8QoMW2kEO3uQNvZM2PazxJWbKyzhu8F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752789831; c=relaxed/simple;
-	bh=2HkykrtpkTf4LiwrQ9f1o1evpEdhfnzcslvgQDULhk4=;
+	s=arc-20240116; t=1752789852; c=relaxed/simple;
+	bh=txFdG1TA1k7alMDI+822TkiUPrAEkZHjjc07gGexWaM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CfLw3bulErdLvXAWOGPGwmkPridxQjZuxT3OxQ2ChhjwF2uZD5+ifIp4n4i8An5WMJijcX/pzF7n8cQ0+bstjzMrnuY+2QI9k05yxb0xDgUMp/sldZtXkqAkOUGu8y1Hj8eZX3H1yRFvI+lxEd3dJUWDE6JrbxEpnP/GAUoe5So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VFqhIsne; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=lpILomxO/vCzBWX6ZG0ay8VEKZ8GBooBdYdPk24Djwak6ADTOQSrkJ74cY0VqXKGWZ246Wm/GfwoGaCYQJM5/nw3vVwvNRWr0Pb3jf5r5wpc557CkDv+VzzJjQmOTAyeC9nQeQf+yWQ+sjHObjs0Y/ismq9ekQNSFDJYvXeSfL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VnIavw/L; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752789828;
+	s=mimecast20190719; t=1752789849;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Mfc3K6tzuWD5BRu1O35NyPLFvhRYJ9Xgb2OfMSriW8I=;
-	b=VFqhIsneFZDot+G2MkMN7iJKjjTzUdMCYZ4ih/6ud8uObowXMWYSLPgHaU02TVqXktJvmg
-	BIq3z1/nNsUwPRH6wjawnH0QWfjieiXwc6HM8dgF19LcG8PtwzhTVrixfkyGe/83DYHFj5
-	btkH5LFjVM6JRFEU5I48SISamudMBYo=
+	bh=14qo4ckuSkp5wHkmhsPFGvb+FvEFS3eV6eZ9+5OrkLA=;
+	b=VnIavw/L4rBcVpQjOJZ9JsO1RxEkplQBqqzsBW7hlL2oG6s19GNkl5AH3VMIJCTU8vMy6j
+	7AA0AXKiPAmZbXsph25wR/Jw6T1qUO1TnkoBV+LVU8WsFsPLaWoJfzWeSlXqXJ3G+GIjRw
+	PG7C1YPKDgwPzki1NlR8kKUs2KdygWw=
 Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
  [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-512-eE8S8O9MNOOLC6T2rNp1ow-1; Thu, 17 Jul 2025 18:03:46 -0400
-X-MC-Unique: eE8S8O9MNOOLC6T2rNp1ow-1
-X-Mimecast-MFC-AGG-ID: eE8S8O9MNOOLC6T2rNp1ow_1752789826
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4ab7464e3bfso16015021cf.2
-        for <linux-pci@vger.kernel.org>; Thu, 17 Jul 2025 15:03:46 -0700 (PDT)
+ us-mta-249-W-Ft5OowMmykX1TGZhz8yA-1; Thu, 17 Jul 2025 18:04:08 -0400
+X-MC-Unique: W-Ft5OowMmykX1TGZhz8yA-1
+X-Mimecast-MFC-AGG-ID: W-Ft5OowMmykX1TGZhz8yA_1752789848
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4ab401e333bso45330251cf.1
+        for <linux-pci@vger.kernel.org>; Thu, 17 Jul 2025 15:04:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752789826; x=1753394626;
+        d=1e100.net; s=20230601; t=1752789848; x=1753394648;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mfc3K6tzuWD5BRu1O35NyPLFvhRYJ9Xgb2OfMSriW8I=;
-        b=HTW3fs+g9GJteE9AIuyiEJZ1yrfQpmBFHw1eMQe4rVoPxII0Njwo6PtWMydv37IrZy
-         v4xVXg9gyXqvOiu4pcugxx0wo8SZgdylVRM4epLXuDOcnI8Z0LzOhD81mBryZ7yK7VDo
-         CbgvY4tmTJ5jWgzbVI/+STryjbRrJj7w1qorITjnlETdklb7igLrcF4GJNe6VfOjqqYh
-         EwogC/oA7JpB7fcU2j3GMsKq0lLnYlDVPhHfPUgksEvzlfRIHP4Jrznnc2lrbQ55nr7W
-         tgQFFzS/3w7uk1+fgJ+wTpDcFUDOFEeNN4GJ02Lzh7auVWlq16EgRDIe5Xtl+jVuK1Bx
-         6XgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVUh0DhwqP0iFtnpH/XQ2/bnmVcuuaNZJP0SGJvhkF7fUj7zFCxhk/RZYFZZBVsXB9HVs5nnpiSE5A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3tUMIBy5wmj4KUJ4c3rg0y+ErBu2RI4IjNXT1rx20iuzk9BFV
-	v1L1RSBVC76rpDOcMdQ5ewdlu8cqi0ShO53/vUpl55P4viMx4g+WNOJ++xyLtS+rxLB7Qf0uBbn
-	UU14vhUmH5bye8AStm7tyDuf4w8PZE5jwJqH2CCTQvdCTtr8RwcdaB+e5rxfPcg==
-X-Gm-Gg: ASbGncumkeguLdZfwQ2TkIE/5JA0BNEm7jAqbO3jW/ATEfscZWPwzvNnZVJ9/R3f6Ch
-	Wq1sooG1BmSGHk+csg3dkrmIZToYLhef1dTai/LlQnpfHEOVU4tg+QshdYcGC5QaJrW/YjSk7on
-	ksMIh1U/FwAcgPtWLV9JPRe8EuG78fj6yZ8oKNoxMovfpSDEjnorTXYe6gQv6DEsZPxohn4QD/X
-	q68C5IkAQjy/9HGG+jPBiAXSys5ONIwtvK2En1HdCPyUC+8Deda4um8RnwsVb78Izn1E4Fk7o81
-	bvwDWDrsCCV9YmUHbJu8IMni+ZupHVObUMioWN/7
-X-Received: by 2002:ac8:7fd4:0:b0:4ab:5fde:fb86 with SMTP id d75a77b69052e-4ab93dbaaccmr121375821cf.48.1752789825269;
-        Thu, 17 Jul 2025 15:03:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFzRNKXAfI4pw6guYF5dYfsmKrN/dtM9vQJWq0b67mN0nCIKlj8TBM6nBQ7cHR2otdk/WyxhA==
-X-Received: by 2002:ac8:7fd4:0:b0:4ab:5fde:fb86 with SMTP id d75a77b69052e-4ab93dbaaccmr121375091cf.48.1752789824485;
-        Thu, 17 Jul 2025 15:03:44 -0700 (PDT)
+        bh=14qo4ckuSkp5wHkmhsPFGvb+FvEFS3eV6eZ9+5OrkLA=;
+        b=WXqAlqaOB+rY34kfeg35D8wkM3trhkcAriWUJ4EI8kFQxFa3L+AGk7A7XyAnEQQwxh
+         KvQdUDYzWKMObkD7DPVhPZ94A4dS+x0l7GJeFYx9gi+KZ/rM0PTaVQP2j66CXiYe8Hp+
+         DMAvFvNPYSLmLFX8gNURl3ouJ9KxTVAEe8Lkm9MNnYd4C56lKuunQ3/kcPtoZ5yfgnJb
+         AneLNIZH6Iy+BEK/0i/b7fjlfazGW6wTUzanur7j/g+wThRMPudjEdh+JLj2ghdqJD3c
+         1k3XUHT+Eeo1390L6N4wwfff1b9TmZ76MwRzU63y4HLbmBnw455blcw8+MM4SMN2Ew6/
+         J5zw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7JcqSs4QaGUQ2eO/yLkYTy648tckSytVJSaq843boJBKIV/0HrmTrW41ug/waQTIbGxgBbYm+Rzw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1XU5o/ikjJXgYkMZal/Eh/rW6peoJn+jbjBIoH7WrV7ZnY5aU
+	mgqc7WnQ2fKLYGWduqP8GhHB4fSkQBNOyzAFg+fkoOh42UzFTTMcB6fO4FjDRLrOxhe6BGVLyyK
+	ZhVI/4MjFOaSzs/MpbBcwqpx4fhk8QsvdtpIMj1hG/wm8ID7HrIpyeNcZr8cInw==
+X-Gm-Gg: ASbGnctTXdzEVoKU8HmLL/GEEnVrqBJVfuPSO3hj88dYFQukBpXVL/rpO4kVQStaKgh
+	1+taK5rI+Uh0x77vHi8mfJxsxNd0bnQl+H0I9ihtxNQ+0LcLacMb2IKIR0GlKEOI2dLxRsN+4wZ
+	Tza0fEMD7F8ypkySY7cq43TeHjZfNGHP1gdIzdOCAuaPNsAZS3kurwfX1DJNlpHZ160VRNVHUvM
+	tMq8KHheeAK8T/TWRQku5XGv05jUXrNHBozRL1xRmf6yYcomDCVYnbM2ppBEMrrkjQ3zxKAO50J
+	LNuckbrfSv01TAex5YV09c1T1VsrV0Jym9Jo2r4f
+X-Received: by 2002:a05:622a:4898:b0:4ab:622b:fffb with SMTP id d75a77b69052e-4abb078731emr29333431cf.5.1752789847768;
+        Thu, 17 Jul 2025 15:04:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE1MD1NbNTtFtXk2nNvNPQWBDbPtpdcIJIB0sY9UfJlcgBx07gvMOxQw7v7ytGjpx3C6A55ZA==
+X-Received: by 2002:a05:622a:4898:b0:4ab:622b:fffb with SMTP id d75a77b69052e-4abb078731emr29332751cf.5.1752789847095;
+        Thu, 17 Jul 2025 15:04:07 -0700 (PDT)
 Received: from [192.168.40.164] ([70.105.235.240])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4abb497fb35sm341791cf.15.2025.07.17.15.03.43
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4abb497fb35sm341791cf.15.2025.07.17.15.04.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Jul 2025 15:03:43 -0700 (PDT)
-Message-ID: <5b1f12e0-9113-41c4-accb-d8ab755cc7d7@redhat.com>
-Date: Thu, 17 Jul 2025 18:03:42 -0400
+        Thu, 17 Jul 2025 15:04:06 -0700 (PDT)
+Message-ID: <3bf0f555-535d-4e47-8ff1-f31b561a188c@redhat.com>
+Date: Thu, 17 Jul 2025 18:04:04 -0400
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,8 +88,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/16] iommu: Compute iommu_groups properly for PCIe
- switches
+Subject: Re: [PATCH v2 05/16] PCI: Add pci_reachable_set()
 Content-Language: en-US
 To: Jason Gunthorpe <jgg@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
  iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>,
@@ -100,483 +99,192 @@ Cc: Alex Williamson <alex.williamson@redhat.com>,
  Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
  kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
  tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
-References: <3-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
+References: <5-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
 From: Donald Dutile <ddutile@redhat.com>
-In-Reply-To: <3-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
+In-Reply-To: <5-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Jason,
-Hey!
-Function naming nit below...
+Hi!
+
+general question below, that you may know given your efficient compute log below.
 
 On 7/9/25 10:52 AM, Jason Gunthorpe wrote:
-> The current algorithm does not work if ACS is turned off, and it is not
-> clear how this has been missed for so long. Alex suspects a multi-function
-> modeling of the DSPs may have hidden it, but I could not find a switch
-> using that scheme.
+> Implement pci_reachable_set() to efficiently compute a set of devices on
+> the same bus that are "reachable" from a starting device. The meaning of
+> reachability is defined by the caller through a callback function.
 > 
-> Most likely people were simply happy they had smaller groups oblivious to
-> the security problems.
+This comment made me review get_pci_alias_group(), which states in its description:
+* Look for aliases to or from the given device for existing groups. DMA
+  * aliases are only supported on the same bus, therefore the search
+  * space is quite small
+
+So why does it do the for loop:
+   for_each_pci_dev(tmp) {
+
+vs getting the pdev->bus->devices -- list of devices on that bus, and only
+scan that smaller list, vs all pci devices on the system?
+
+
+> This is a faster implementation of the same logic in
+> pci_device_group(). Being inside the PCI core allows use of pci_bus_sem so
+> it can use list_for_each_entry() on a small list of devices instead of the
+> expensive for_each_pci_dev(). Server systems can now have hundreds of PCI
+> devices, but typically only a very small number of devices per bus.
 > 
-> For discussion lets consider a simple topology like the below:
+> An example of a reachability function would be pci_devs_are_dma_aliases()
+> which would compute a set of devices on the same bus that are
+> aliases. This would also be useful in future support for the ACS P2P
+> Egress Vector which has a similar reachability problem.
 > 
->                                 -- DSP 02:00.0 -> End Point A
->   Root 00:00.0 -> USP 01:00.0 --|
->                                 -- DSP 02:03.0 -> End Point B
+> This is effectively a graph algorithm where the set of devices on the bus
+> are vertexes and the reachable() function defines the edges. It returns a
+> set of vertexes that form a connected graph.
 > 
-> If ACS is fully activated we expect 00:00.0, 01:00.0, 02:00.0, 02:03.0, A,
-> B to all have unique single device groups.
-> 
-> If both DSPs have ACS off then we expect 00:00.0 and 01:00.0 to have
-> unique single device groups while 02:00.0, 02:03.0, A, B are part of one
-> multi-device group.
-> 
-> If the DSPs have asymmetric ACS, with one fully isolating and one
-> non-isolating we also expect the above multi-device group result.
-> 
-> Instead the current algorithm always creates unique single device groups
-> for this topology. It happens because the pci_device_group(DSP)
-> immediately moves to the USP and computes pci_acs_path_enabled(USP) ==
-> true and decides the DSP can get a unique group. The pci_device_group(A)
-> immediately moves to the DSP, sees pci_acs_path_enabled(DSP) == false and
-> then takes the DSPs group.
-> 
-> The current algorithm has several issues:
-> 
->   1) It implicitly depends on ordering. Since the existing group discovery
->      only goes in the upstream direction discovering a downstream device
->      before its upstream will cause the wrong creation of narrower groups.
-> 
->   2) It assumes that if the path from the end point to the root is entirely
->      ACS isolated then that end point is isolated. This misses cross-traffic
->      in the asymmetric ACS case.
-> 
->   3) When evaluating a non-isolated DSP it does not check peer DSPs for an
->      already established group unless the multi-function feature does it.
-> 
->   4) It does not understand the aliasing rule for PCIe to PCI bridges
->      where the alias is to the subordinate bus. The bridge's RID on the
->      primary bus is not aliased. This causes the PCIe to PCI bridge to be
->      wrongly joined to the group with the downstream devices.
-> 
-> As grouping is a security property for VFIO creating incorrectly narrowed
-> groups is a security problem for the system.
-> 
-> Revise the design to solve these problems.
-> 
-> Explicitly require ordering, or return EPROBE_DEFER if things are out of
-> order. This avoids silent errors that created smaller groups and solves
-> problem #1.
-> 
-> Work on busses, not devices. Isolation is a property of the bus, and the
-> first non-isolated bus should form a group containing all devices
-> downstream of that bus. If all busses on the path to an end device are
-> isolated then the end device has a chance to make a single-device group.
-> 
-> Use pci_bus_isolation() to compute the bus's isolation status based on the
-> ACS flags and technology. pci_bus_isolation() touches a lot of PCI
-> internals to get the information in the right format.
-> 
-> Add a new flag in the iommu_group to record that the group contains a
-> non-isolated bus. Any downstream pci_device_group() will see
-> bus->self->iommu_group is non-isolated and unconditionally join it. This
-> makes the first non-isolation apply to all downstream devices and solves
-> problem #2
-> 
-> The bus's non-isolated iommu_group will be stored in either the DSP of
-> PCIe switch or the bus->self upstream device, depending on the situation.
-> When storing in the DSP all the DSPs are checked first for a pre-existing
-> non-isolated iommu_group. When stored in the upstream the flag forces it
-> to all downstreams. This solves problem #3.
-> 
-> Put the handling of end-device aliases and MFD into pci_get_alias_group()
-> and only call it in cases where we have a fully isolated path. Otherwise
-> every downstream device on the bus is going to be joined to the group of
-> bus->self.
-> 
-> Finally, replace the initial pci_for_each_dma_alias() with a combination
-> of:
-> 
->   - Directly checking pci_real_dma_dev() and enforcing ordering.
->     The group should contain both pdev and pci_real_dma_dev(pdev) which is
->     only possible if pdev is ordered after real_dma_dev. This solves a case
->     of #1.
-> 
->   - Indirectly relying on pci_bus_isolation() to report legacy PCI busses
->     as non-isolated, with the enum including the distinction of the PCIe to
->     PCI bridge being isolated from the downstream. This solves problem #4.
-> 
-> It is very likely this is going to expand iommu_group membership in
-> existing systems. After all that is the security bug that is being
-> fixed. Expanding the iommu_groups risks problems for users using VFIO.
-> 
-> The intention is to have a more accurate reflection of the security
-> properties in the system and should be seen as a security fix. However
-> people who have ACS disabled may now need to enable it. As such users may
-> have had good reason for ACS to be disabled I strongly recommend that
-> backporting of this also include the new config_acs option so that such
-> users can potentially minimally enable ACS only where needed.
-> 
-> Fixes: 104a1c13ac66 ("iommu/core: Create central IOMMU group lookup/creation interface")
-> Cc: stable@vger.kernel.org
 > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Could we move this to just before patch 11 where it is used?
+or could this be used to improve get_pci_alias_group() and get_pci_function_alias_group() ?
+
 > ---
->   drivers/iommu/iommu.c | 274 ++++++++++++++++++++++++++++++++----------
->   include/linux/pci.h   |   3 +
->   2 files changed, 212 insertions(+), 65 deletions(-)
+>   drivers/pci/search.c | 90 ++++++++++++++++++++++++++++++++++++++++++++
+>   include/linux/pci.h  | 12 ++++++
+>   2 files changed, 102 insertions(+)
 > 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index d265de874b14b6..8b152266f20104 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -65,8 +65,16 @@ struct iommu_group {
->   	struct list_head entry;
->   	unsigned int owner_cnt;
->   	void *owner;
-> +
-> +	/* Used by the device_group() callbacks */
-> +	u32 bus_data;
->   };
->   
-> +/*
-> + * Everything downstream of this group should share it.
-> + */
-> +#define BUS_DATA_PCI_NON_ISOLATED BIT(0)
-> +
->   struct group_device {
->   	struct list_head list;
->   	struct device *dev;
-> @@ -1484,25 +1492,6 @@ static struct iommu_group *get_pci_alias_group(struct pci_dev *pdev,
->   	return NULL;
+> diff --git a/drivers/pci/search.c b/drivers/pci/search.c
+> index a13fad53e44df9..dc816dc4505c6d 100644
+> --- a/drivers/pci/search.c
+> +++ b/drivers/pci/search.c
+> @@ -585,3 +585,93 @@ int pci_dev_present(const struct pci_device_id *ids)
+>   	return 0;
 >   }
->   
-> -struct group_for_pci_data {
-> -	struct pci_dev *pdev;
-> -	struct iommu_group *group;
-> -};
-> -
-> -/*
-> - * DMA alias iterator callback, return the last seen device.  Stop and return
-> - * the IOMMU group if we find one along the way.
-> - */
-> -static int get_pci_alias_or_group(struct pci_dev *pdev, u16 alias, void *opaque)
-> -{
-> -	struct group_for_pci_data *data = opaque;
-> -
-> -	data->pdev = pdev;
-> -	data->group = iommu_group_get(&pdev->dev);
-> -
-> -	return data->group != NULL;
-> -}
-> -
->   /*
->    * Generic device_group call-back function. It just allocates one
->    * iommu-group per device.
-> @@ -1534,57 +1523,27 @@ struct iommu_group *generic_single_device_group(struct device *dev)
->   }
->   EXPORT_SYMBOL_GPL(generic_single_device_group);
->   
-> -/*
-> - * Use standard PCI bus topology, isolation features, and DMA alias quirks
-> - * to find or create an IOMMU group for a device.
-> - */
-> -struct iommu_group *pci_device_group(struct device *dev)
-> +static struct iommu_group *pci_group_alloc_non_isolated(void)
->   {
-> -	struct pci_dev *pdev = to_pci_dev(dev);
-> -	struct group_for_pci_data data;
-> -	struct pci_bus *bus;
-> -	struct iommu_group *group = NULL;
-> -	u64 devfns[4] = { 0 };
-> +	struct iommu_group *group;
->   
-> -	if (WARN_ON(!dev_is_pci(dev)))
-> -		return ERR_PTR(-EINVAL);
-> +	group = iommu_group_alloc();
-> +	if (IS_ERR(group))
-> +		return group;
-> +	group->bus_data |= BUS_DATA_PCI_NON_ISOLATED;
-> +	return group;
-> +}
->   
-> -	/*
-> -	 * Find the upstream DMA alias for the device.  A device must not
-> -	 * be aliased due to topology in order to have its own IOMMU group.
-> -	 * If we find an alias along the way that already belongs to a
-> -	 * group, use it.
-> -	 */
-> -	if (pci_for_each_dma_alias(pdev, get_pci_alias_or_group, &data))
-> -		return data.group;
-> -
-> -	pdev = data.pdev;
-> -
-> -	/*
-> -	 * Continue upstream from the point of minimum IOMMU granularity
-> -	 * due to aliases to the point where devices are protected from
-> -	 * peer-to-peer DMA by PCI ACS.  Again, if we find an existing
-> -	 * group, use it.
-> -	 */
-> -	for (bus = pdev->bus; !pci_is_root_bus(bus); bus = bus->parent) {
-> -		if (!bus->self)
-> -			continue;
-> -
-> -		if (pci_acs_path_enabled(bus->self, NULL, PCI_ACS_ISOLATED))
-> -			break;
-> -
-> -		pdev = bus->self;
-> -
-> -		group = iommu_group_get(&pdev->dev);
-> -		if (group)
-> -			return group;
-> -	}
-> +static struct iommu_group *pci_get_alias_group(struct pci_dev *pdev)
-So, the former pci_device_group() is completely re-written below,
-and what it use to do is renamed pci_get_alias_group(), which shouldn't be
-(easily) confused with ...
-
-> +{
-> +	struct iommu_group *group;
-> +	DECLARE_BITMAP(devfns, 256) = {};
->   
->   	/*
->   	 * Look for existing groups on device aliases.  If we alias another
->   	 * device or another device aliases us, use the same group.
->   	 */
-> -	group = get_pci_alias_group(pdev, (unsigned long *)devfns);
-> +	group = get_pci_alias_group(pdev, devfns);
-... get_pci_alias_group() ?
-
-... and it's only used for PCIe case below (in pci_device_group), so
-should it be named 'pcie_get_alias_group()' ?
-
->   	if (group)
->   		return group;
->   
-> @@ -1593,12 +1552,197 @@ struct iommu_group *pci_device_group(struct device *dev)
->   	 * slot and aliases of those funcions, if any.  No need to clear
->   	 * the search bitmap, the tested devfns are still valid.
->   	 */
-> -	group = get_pci_function_alias_group(pdev, (unsigned long *)devfns);
-> +	group = get_pci_function_alias_group(pdev, devfns);
->   	if (group)
->   		return group;
->   
-> -	/* No shared group found, allocate new */
-> -	return iommu_group_alloc();
-> +	/*
-> +	 * When MFD's are included in the set due to ACS we assume that if ACS
-> +	 * permits an internal loopback between functions it also permits the
-> +	 * loopback to go downstream if a function is a bridge.
-> +	 *
-> +	 * It is less clear what aliases mean when applied to a bridge. For now
-> +	 * be conservative and also propagate the group downstream.
-> +	 */
-> +	__clear_bit(pdev->devfn & 0xFF, devfns);
-> +	if (!bitmap_empty(devfns, sizeof(devfns) * BITS_PER_BYTE))
-> +		return pci_group_alloc_non_isolated();
-> +	return NULL;
-> +}
+>   EXPORT_SYMBOL(pci_dev_present);
 > +
-> +static struct iommu_group *pci_hierarchy_group(struct pci_dev *pdev)
-although static, could you provide a function description for its purpose ?
-
-> +{
-> +	/*
-> +	 * SRIOV functions may resid on a virtual bus, jump directly to the PFs
-nit: resid -> reside
-
-> +	 * bus in all cases.
-> +	 */
-> +	struct pci_bus *bus = pci_physfn(pdev)->bus;
-> +	struct iommu_group *group;
-> +
-> +	/* Nothing upstream of this */
-> +	if (pci_is_root_bus(bus))
-> +		return NULL;
-> +
-> +	/*
-> +	 * !self is only for SRIOV virtual busses which should have been
-> +	 * excluded above.
-by pci_is_root_bus() ?? -- that checks if bus->parent exists...
-not sure how that excludes the case of !bus->self ...
-
-> +	 */
-> +	if (WARN_ON(!bus->self))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	group = iommu_group_get(&bus->self->dev);
-> +	if (!group) {
-> +		/*
-> +		 * If the upstream bridge needs the same group as pdev then
-> +		 * there is no way for it's pci_device_group() to discover it.
-> +		 */
-> +		dev_err(&pdev->dev,
-> +			"PCI device is probing out of order, upstream bridge device of %s is not probed yet\n",
-> +			pci_name(bus->self));
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +	}
-> +	if (group->bus_data & BUS_DATA_PCI_NON_ISOLATED)
-> +		return group;
-> +	iommu_group_put(group);
-> +	return NULL;
-... and w/o the function description, I don't follow:
--- rtn an iommu-group if it has NON_ISOLATED property ... but rtn null if all devices below it are isolated?
-
-> +}
-> +
-> +/*
-> + * For legacy PCI we have two main considerations when forming groups:
+> +/**
+> + * pci_reachable_set - Generate a bitmap of devices within a reachability set
+> + * @start: First device in the set
+> + * @devfns: The set of devices on the bus
+> + * @reachable: Callback to tell if two devices can reach each other
 > + *
-> + *  1) In PCI we can loose the RID inside the fabric, or some devices will use
-> + *     the wrong RID. The PCI core calls this aliasing, but from an IOMMU
-> + *     perspective it means that a PCI device may have multiple RIDs and a
-> + *     single RID may represent many PCI devices. This effectively means all the
-> + *     aliases must share a translation, thus group, because the IOMMU cannot
-> + *     tell devices apart.
+> + * Compute a bitmap where every set bit is a device on the bus that is reachable
+> + * from the start device, including the start device. Reachability between two
+> + * devices is determined by a callback function.
 > + *
-> + *  2) PCI permits a bus segment to claim an address even if the transaction
-> + *     originates from an end point not the CPU. When it happens it is called
-> + *     peer to peer. Claiming a transaction in the middle of the bus hierarchy
-> + *     bypasses the IOMMU translation. The IOMMU subsystem rules require these
-> + *     devices to be placed in the same group because they lack isolation from
-> + *     each other. In PCI Express the ACS system can be used to inhibit this and
-> + *     force transactions to go to the IOMMU.
+> + * This is a non-recursive implementation that invokes the callback once per
+> + * pair. The callback must be commutative:
+> + *    reachable(a, b) == reachable(b, a)
+> + * reachable() can form a cyclic graph:
+> + *    reachable(a,b) == reachable(b,c) == reachable(c,a) == true
 > + *
-> + *     From a PCI perspective any given PCI bus is either isolating or
-> + *     non-isolating. Isolating means downstream originated transactions always
-> + *     progress toward the CPU and do not go to other devices on the bus
-> + *     segment, while non-isolating means downstream originated transactions can
-> + *     progress back downstream through another device on the bus segment.
-> + *
-> + *     Beyond buses a multi-function device or bridge can also allow
-> + *     transactions to loop back internally from one function to another.
-> + *
-> + *     Once a PCI bus becomes non isolating the entire downstream hierarchy of
-> + *     that bus becomes a single group.
+> + * Since this function is limited to a single bus the largest set can be 256
+> + * devices large.
 > + */
-> +struct iommu_group *pci_device_group(struct device *dev)
+> +void pci_reachable_set(struct pci_dev *start, struct pci_reachable_set *devfns,
+> +		       bool (*reachable)(struct pci_dev *deva,
+> +					 struct pci_dev *devb))
 > +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	struct iommu_group *group;
-> +	struct pci_dev *real_pdev;
+> +	struct pci_reachable_set todo_devfns = {};
+> +	struct pci_reachable_set next_devfns = {};
+> +	struct pci_bus *bus = start->bus;
+> +	bool again;
 > +
-> +	if (WARN_ON(!dev_is_pci(dev)))
-> +		return ERR_PTR(-EINVAL);
+> +	/* Assume devfn of all PCI devices is bounded by MAX_NR_DEVFNS */
+> +	static_assert(sizeof(next_devfns.devfns) * BITS_PER_BYTE >=
+> +		      MAX_NR_DEVFNS);
 > +
-> +	/*
-> +	 * Arches can supply a completely different PCI device that actually
-> +	 * does DMA.
-> +	 */
-> +	real_pdev = pci_real_dma_dev(pdev);
-> +	if (real_pdev != pdev) {
-> +		group = iommu_group_get(&real_pdev->dev);
-> +		if (!group) {
-> +			/*
-> +			 * The real_pdev has not had an iommu probed to it. We
-> +			 * can't create a new group here because there is no way
-> +			 * for pci_device_group(real_pdev) to pick it up.
-> +			 */
-> +			dev_err(dev,
-> +				"PCI device is probing out of order, real device of %s is not probed yet\n",
-> +				pci_name(real_pdev));
-> +			return ERR_PTR(-EPROBE_DEFER);
-> +		}
-> +		return group;
-> +	}
+> +	memset(devfns, 0, sizeof(devfns->devfns));
+> +	__set_bit(start->devfn, devfns->devfns);
+> +	__set_bit(start->devfn, next_devfns.devfns);
 > +
-> +	if (pdev->dev_flags & PCI_DEV_FLAGS_BRIDGE_XLATE_ROOT)
-> +		return iommu_group_alloc();
-> +
-> +	/* Anything upstream of this enforcing non-isolated? */
-> +	group = pci_hierarchy_group(pdev);
-> +	if (group)
-> +		return group;
-> +
-> +	switch (pci_bus_isolated(pci_physfn(pdev)->bus)) {
-> +	case PCIE_ISOLATED:
-> +		/* Check multi-function groups and same-bus devfn aliases */
-> +		group = pci_get_alias_group(pdev);
-> +		if (group)
-> +			return group;
-> +
-> +		/* No shared group found, allocate new */
-> +		return iommu_group_alloc();
-> +
-> +	/*
-> +	 * On legacy PCI there is no RID at an electrical level. On PCI-X the
-> +	 * RID of the bridge may be used in some cases instead of the
-> +	 * downstream's RID. This creates aliasing problems. PCI/PCI-X doesn't
-> +	 * provide isolation either. The end result is that as soon as we hit a
-> +	 * PCI/PCI-X bus we switch to non-isolated for the whole downstream for
-> +	 * both aliasing and isolation reasons. The bridge has to be included in
-> +	 * the group because of the aliasing.
-> +	 */
-> +	case PCI_BRIDGE_NON_ISOLATED:
-> +	/* A PCIe switch where the USP has MMIO and is not isolated. */
-> +	case PCIE_NON_ISOLATED:
-> +		group = iommu_group_get(&pdev->bus->self->dev);
-> +		if (WARN_ON(!group))
-> +			return ERR_PTR(-EINVAL);
-> +		/*
-> +		 * No need to be concerned with aliases here since we are going
-> +		 * to put the entire downstream tree in the bridge/USP's group.
-> +		 */
-> +		group->bus_data |= BUS_DATA_PCI_NON_ISOLATED;
-> +		return group;
-> +
-> +	/*
-> +	 * It is a PCI bus and the upstream bridge/port does not alias or allow
-> +	 * P2P.
-> +	 */
-> +	case PCI_BUS_NON_ISOLATED:
-> +	/*
-> +	 * It is a PCIe switch and the DSP cannot reach the USP. The DSP's
-> +	 * are not isolated from each other and share a group.
-> +	 */
-> +	case PCIE_SWITCH_DSP_NON_ISOLATED: {
-> +		struct pci_dev *piter = NULL;
+> +	down_read(&pci_bus_sem);
+> +	while (true) {
+> +		unsigned int devfna;
+> +		unsigned int i;
 > +
 > +		/*
-> +		 * All the downstream devices on the bus share a group. If this
-> +		 * is a PCIe switch then they will all be DSPs
+> +		 * For each device that hasn't been checked compare every
+> +		 * device on the bus against it.
 > +		 */
-> +		for_each_pci_dev(piter) {
-> +			if (piter->bus != pdev->bus)
-> +				continue;
-> +			group = iommu_group_get(&piter->dev);
-> +			if (group) {
-> +				pci_dev_put(piter);
-> +				if (WARN_ON(!(group->bus_data &
-> +					      BUS_DATA_PCI_NON_ISOLATED)))
-> +					group->bus_data |=
-> +						BUS_DATA_PCI_NON_ISOLATED;
-> +				return group;
+> +		again = false;
+> +		for_each_set_bit(devfna, next_devfns.devfns, MAX_NR_DEVFNS) {
+> +			struct pci_dev *deva = NULL;
+> +			struct pci_dev *devb;
+> +
+> +			list_for_each_entry(devb, &bus->devices, bus_list) {
+> +				if (devb->devfn == devfna)
+> +					deva = devb;
+> +
+> +				if (test_bit(devb->devfn, devfns->devfns))
+> +					continue;
+> +
+> +				if (!deva) {
+> +					deva = devb;
+> +					list_for_each_entry_continue(
+> +						deva, &bus->devices, bus_list)
+> +						if (deva->devfn == devfna)
+> +							break;
+> +				}
+> +
+> +				if (!reachable(deva, devb))
+> +					continue;
+> +
+> +				__set_bit(devb->devfn, todo_devfns.devfns);
+> +				again = true;
 > +			}
 > +		}
-> +		return pci_group_alloc_non_isolated();
+> +
+> +		if (!again)
+> +			break;
+> +
+> +		/*
+> +		 * Every new bit adds a new deva to check, reloop the whole
+> +		 * thing. Expect this to be rare.
+> +		 */
+> +		for (i = 0; i != ARRAY_SIZE(devfns->devfns); i++) {
+> +			devfns->devfns[i] |= todo_devfns.devfns[i];
+> +			next_devfns.devfns[i] = todo_devfns.devfns[i];
+> +			todo_devfns.devfns[i] = 0;
+> +		}
 > +	}
-> +	default:
-> +		break;
-> +	}
-> +	WARN_ON(true);
-> +	return ERR_PTR(-EINVAL);
->   }
->   EXPORT_SYMBOL_GPL(pci_device_group);
->   
+> +	up_read(&pci_bus_sem);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_reachable_set);
 > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 0b1e28dcf9187d..517800206208b5 100644
+> index 517800206208b5..2e629087539101 100644
 > --- a/include/linux/pci.h
 > +++ b/include/linux/pci.h
-> @@ -2072,6 +2072,9 @@ static inline int pci_dev_present(const struct pci_device_id *ids)
->   #define no_pci_devices()	(1)
->   #define pci_dev_put(dev)	do { } while (0)
+> @@ -834,6 +834,10 @@ struct pci_dynids {
+>   	struct list_head	list;	/* For IDs added at runtime */
+>   };
 >   
-> +static inline struct pci_dev *pci_real_dma_dev(struct pci_dev *dev)
-> +{ return dev; }
+> +struct pci_reachable_set {
+> +	DECLARE_BITMAP(devfns, 256);
+> +};
 > +
->   static inline void pci_set_master(struct pci_dev *dev) { }
->   static inline void pci_clear_master(struct pci_dev *dev) { }
->   static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
+>   enum pci_bus_isolation {
+>   	/*
+>   	 * The bus is off a root port and the root port has isolated ACS flags
+> @@ -1248,6 +1252,9 @@ struct pci_dev *pci_get_domain_bus_and_slot(int domain, unsigned int bus,
+>   struct pci_dev *pci_get_class(unsigned int class, struct pci_dev *from);
+>   struct pci_dev *pci_get_base_class(unsigned int class, struct pci_dev *from);
+>   
+> +void pci_reachable_set(struct pci_dev *start, struct pci_reachable_set *devfns,
+> +		       bool (*reachable)(struct pci_dev *deva,
+> +					 struct pci_dev *devb));
+>   enum pci_bus_isolation pci_bus_isolated(struct pci_bus *bus);
+>   
+>   int pci_dev_present(const struct pci_device_id *ids);
+> @@ -2063,6 +2070,11 @@ static inline struct pci_dev *pci_get_base_class(unsigned int class,
+>   						 struct pci_dev *from)
+>   { return NULL; }
+>   
+> +static inline void
+> +pci_reachable_set(struct pci_dev *start, struct pci_reachable_set *devfns,
+> +		  bool (*reachable)(struct pci_dev *deva, struct pci_dev *devb))
+> +{ }
+> +
+>   static inline enum pci_bus_isolation pci_bus_isolated(struct pci_bus *bus)
+>   { return PCIE_NON_ISOLATED; }
+>   
 
 
