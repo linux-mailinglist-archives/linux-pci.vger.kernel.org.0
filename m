@@ -1,197 +1,159 @@
-Return-Path: <linux-pci+bounces-32454-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32455-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FD51B095E5
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 22:45:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDEB3B0960E
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 22:57:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5B40560359
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 20:45:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 486BE188B78D
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 20:57:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CD6C1E3DF2;
-	Thu, 17 Jul 2025 20:45:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7968122A1D5;
+	Thu, 17 Jul 2025 20:57:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jstNJfmP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nmPdFv9s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80C9FBF6
-	for <linux-pci@vger.kernel.org>; Thu, 17 Jul 2025 20:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F4EEEBB;
+	Thu, 17 Jul 2025 20:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752785133; cv=none; b=aMAi1CG77xplciZ8Cb8pu442dOHM7AI3mRtVCY16LzaC7ycrYcH/ySIoKoD/ZYKU/lLTHvnmym3b+OrcLPRPAPYwInHkBASZkzJwJGvL2RV6nZjuvNM7AyTWpr91Kl5zso76iI4m9xonD8nMuWeyppuDUYD7oVCMM9ZuK6uLEcs=
+	t=1752785820; cv=none; b=rDZQeg0DNFN7zEoctc+HgE7PYk4u3IG6MnZ71wzGTZ5wJEviF60wCHYv7vR97yj7zM8bxaaraeEFKNilHH9fARekm11k41gT0Ot+av3LUhImx93dmKM+X+jxhKCfsiqcpq2BuWflHsiiRVQ5WDj2yORq5uUPG9R1nTI+/BsActY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752785133; c=relaxed/simple;
-	bh=xtPboCBMkHOywJcVq9WrBSRzXQV5eOxqe/rMRgzH6C8=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=i/SRCh4bIpUptnKnWAicj3v8qm6Vbh92yQUXo4xlC3asGK/ISJC2I6kIXd9tijw3JqXjBk7Rc+FsHC2W+Nibc/K+mV53Y8tB/gQK0+nU8FUemk+sUAZ/9oQQwVCzf+Dgtom2d0SHggpcEdZ9I7IYTawvRZQ8XkCT90zuIK70JHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jstNJfmP; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752785131; x=1784321131;
-  h=date:from:to:cc:subject:message-id;
-  bh=xtPboCBMkHOywJcVq9WrBSRzXQV5eOxqe/rMRgzH6C8=;
-  b=jstNJfmPP+5d4uPdOx8r8Dwjzb3Xu8XUx/yde1amUSW07JpE7kOBo57W
-   thjKSso/F7jHpzSBB3h/w7sL6/f51Bg08XTFInytrexfohVEqN2bISf+m
-   5xLwmgVCLv8OHf4Uf4uGBKMRBz9ZrKw38mgJZeoI2LZn2S1ANQ1cZ+dRm
-   XcxjPe8nK6vb+sdOsclsGVbY2/ZJI8pOBnYEBjaK5FkI+ungksYYRjLWb
-   U7gYLn4bx3bia0TUWRCdWo3Dvl5TEbnMdmylyHnllzLNLWXYgIIzC8Qoz
-   dmuYLewWLCHgc5mxRmqgDvs/oqiITPvRomkXCYeaU9WANUst7sHm7O5QB
-   Q==;
-X-CSE-ConnectionGUID: LFvFS4WwTvK2mEoHbxY1FA==
-X-CSE-MsgGUID: H95VA6MxQpa9eRPp8SWULQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11495"; a="66143926"
-X-IronPort-AV: E=Sophos;i="6.16,319,1744095600"; 
-   d="scan'208";a="66143926"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2025 13:45:31 -0700
-X-CSE-ConnectionGUID: jBA9ANpgQMexXzEOuSaaBA==
-X-CSE-MsgGUID: 1hnagW3hRWa64tWLFoKSHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,319,1744095600"; 
-   d="scan'208";a="162175322"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 17 Jul 2025 13:45:30 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ucVTr-000E0v-2Q;
-	Thu, 17 Jul 2025 20:45:27 +0000
-Date: Fri, 18 Jul 2025 04:44:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/msi-parent] BUILD SUCCESS
- 4246b7fccf2698cb116928e278e9fdb7e12e112b
-Message-ID: <202507180445.jg7W3pYG-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1752785820; c=relaxed/simple;
+	bh=hB3ECq2LvtFhlKyMHw+BjidxFJ+IC5vbDWpXnTL/FLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ewvlJ4w0PnOlnpPb27kFPXTllNMQTbC09PT5gSItAaHxZoCB0dQ9koLWMhtg/u9uz/iS+XjKmZqS+x2M/4mfq3G2nQrF382lAy1r8MY/9gazEpKMTUWQD7dLlNtewmRcD5CD6nPDzAVl7dtk+YpNxk/b/v0iInbvWnUCcleZDDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nmPdFv9s; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A0A7C4CEE3;
+	Thu, 17 Jul 2025 20:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752785819;
+	bh=hB3ECq2LvtFhlKyMHw+BjidxFJ+IC5vbDWpXnTL/FLU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=nmPdFv9s4xlXAy1klUkoXPSEIZfqAtNu7pPXMsYZ+mkkqp7kW6roP3ESMsMkt0Tm0
+	 sL7bQJ++QD5UvWMGMxt7cNCTr0sRD83lrrn6hnkyxBkvXEUubljBVW7FgmtDcrhGH0
+	 nIDJO5CMCu1v2NUKcXj2djnP97ipb2+mtihiXNhZGRfQAAIAgNQZIUCpUeQPTeLW33
+	 dXIt1V7/3Lnm/M2nXKSluFU5Rghb2HxuGVB8fPckOvJNGb26yYgDKZpsxme0YZN/no
+	 8FBUx984WqoniDQvFrFm++xzhE49NoljTVZVgS8oVn0vv2p/Nxd1tslrTGk3D6XktK
+	 WcBSbB+Fg1GTA==
+Date: Thu, 17 Jul 2025 15:56:58 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+	"open list:SOUND" <linux-sound@vger.kernel.org>,
+	Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v9 0/9] Adjust fbcon console device detection
+Message-ID: <20250717205658.GA2654514@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250717173812.3633478-1-superm1@kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/msi-parent
-branch HEAD: 4246b7fccf2698cb116928e278e9fdb7e12e112b  PCI: vmd: Switch to msi_create_parent_irq_domain()
+On Thu, Jul 17, 2025 at 12:38:03PM -0500, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> Systems with more than one GPU userspace doesn't know which one to be
+> used to treat as primary.  The concept of primary is important to be
+> able to decide which GPU is used for display and  which is used for
+> rendering.  If it's guessed wrong then both GPUs will be kept awake
+> burning a lot of power.
+> 
+> Historically it would use the "boot_vga" attribute but this isn't
+> present on modern GPUs.
+> 
+> This series started out as changes to VGA arbiter to try to handle a case
+> of a system with 2 GPUs that are not VGA devices and avoid changes to
+> userspace.  This was discussed but decided not to overload the VGA arbiter
+> for non VGA devices.
+> 
+> Instead move the x86 specific detection of framebuffer resources into x86
+> specific code that the fbcon can use to properly identify the primary
+> device. This code is still called from the VGA arbiter, and the logic does
+> not change there. To avoid regression default to VGA arbiter and only fall
+> back to looking up with x86 specific detection method.
+> 
+> In order for userspace to also be able to discover which device was the
+> primary video display device create a new sysfs file 'boot_display'.
+> 
+> A matching userspace implementation for this file is available here:
+> Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/39
+> Link: https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/2038
+> 
+> Dave Airlie has been pinged for a comment on this approach.
+> Dave had suggested in the past [1]:
+> 
+> "
+>  But yes if that doesn't work, then maybe we need to make the boot_vga
+>  flag mean boot_display_gpu, and fix it in the kernel
+> "
+> 
+> This was one of the approached tried in earlier revisions and it was
+> rejected in favor of creating a new sysfs file (which is what this
+> version does).
+> 
+> It is suggested that this series merge entirely through the PCI tree.
+> 
+> Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/37#note_2938602 [1]
+> 
+> v9:
+>  * Add more to cover letter
+>  * Add bug link to last patch
+>  * Update commit message for last patch
+>  * Update boot_display documentation description
+> 
+> Mario Limonciello (9):
+>   PCI: Add helper for checking if a PCI device is a display controller
+>   vfio/pci: Use pci_is_display()
+>   vga_switcheroo: Use pci_is_display()
+>   iommu/vt-d: Use pci_is_display()
+>   ALSA: hda: Use pci_is_display()
+>   Fix access to video_is_primary_device() when compiled without
+>     CONFIG_VIDEO
+>   PCI/VGA: Replace vga_is_firmware_default() with a screen info check
+>   fbcon: Use screen info to find primary device
+>   PCI: Add a new 'boot_display' attribute
+> 
+>  Documentation/ABI/testing/sysfs-bus-pci |  9 +++++
+>  arch/parisc/include/asm/video.h         |  2 +-
+>  arch/sparc/include/asm/video.h          |  2 ++
+>  arch/x86/include/asm/video.h            |  2 ++
+>  arch/x86/video/video-common.c           | 17 ++++++++-
+>  drivers/gpu/vga/vga_switcheroo.c        |  2 +-
+>  drivers/iommu/intel/iommu.c             |  2 +-
+>  drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++++++
+>  drivers/pci/vgaarb.c                    | 31 +++--------------
+>  drivers/vfio/pci/vfio_pci_igd.c         |  3 +-
+>  include/linux/pci.h                     | 15 ++++++++
+>  sound/hda/hdac_i915.c                   |  2 +-
+>  sound/pci/hda/hda_intel.c               |  4 +--
+>  13 files changed, 102 insertions(+), 35 deletions(-)
 
-elapsed time: 1448m
-
-configs tested: 104
-configs skipped: 6
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250717    gcc-8.5.0
-arc                   randconfig-002-20250717    gcc-15.1.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                           h3600_defconfig    gcc-15.1.0
-arm                          ixp4xx_defconfig    gcc-15.1.0
-arm                   randconfig-001-20250717    clang-21
-arm                   randconfig-002-20250717    gcc-8.5.0
-arm                   randconfig-003-20250717    gcc-8.5.0
-arm                   randconfig-004-20250717    clang-21
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250717    clang-18
-arm64                 randconfig-002-20250717    clang-18
-arm64                 randconfig-003-20250717    gcc-10.5.0
-arm64                 randconfig-004-20250717    clang-21
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250717    gcc-15.1.0
-csky                  randconfig-002-20250717    gcc-12.4.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250717    clang-20
-hexagon               randconfig-002-20250717    clang-19
-i386        buildonly-randconfig-001-20250717    gcc-12
-i386        buildonly-randconfig-002-20250717    gcc-12
-i386        buildonly-randconfig-003-20250717    clang-20
-i386        buildonly-randconfig-004-20250717    clang-20
-i386        buildonly-randconfig-005-20250717    clang-20
-i386        buildonly-randconfig-006-20250717    gcc-12
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-21
-loongarch             randconfig-001-20250717    gcc-15.1.0
-loongarch             randconfig-002-20250717    clang-21
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                          eyeq6_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250717    gcc-8.5.0
-nios2                 randconfig-002-20250717    gcc-9.3.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250717    gcc-9.3.0
-parisc                randconfig-002-20250717    gcc-9.3.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                 mpc836x_rdk_defconfig    clang-21
-powerpc               randconfig-001-20250717    clang-21
-powerpc               randconfig-002-20250717    gcc-13.4.0
-powerpc               randconfig-003-20250717    clang-21
-powerpc64             randconfig-001-20250717    clang-21
-powerpc64             randconfig-002-20250717    clang-18
-powerpc64             randconfig-003-20250717    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250717    gcc-8.5.0
-s390                  randconfig-002-20250717    gcc-9.3.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                    randconfig-001-20250717    gcc-14.3.0
-sh                    randconfig-002-20250717    gcc-9.3.0
-sh                          sdk7786_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250717    gcc-14.3.0
-sparc                 randconfig-002-20250717    gcc-8.5.0
-sparc                       sparc64_defconfig    gcc-15.1.0
-sparc64               randconfig-001-20250717    gcc-12.4.0
-sparc64               randconfig-002-20250717    clang-21
-um                               alldefconfig    clang-21
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250717    gcc-12
-um                    randconfig-002-20250717    gcc-12
-x86_64      buildonly-randconfig-001-20250717    clang-20
-x86_64      buildonly-randconfig-002-20250717    clang-20
-x86_64      buildonly-randconfig-003-20250717    clang-20
-x86_64      buildonly-randconfig-004-20250717    gcc-12
-x86_64      buildonly-randconfig-005-20250717    gcc-12
-x86_64      buildonly-randconfig-006-20250717    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250717    gcc-13.4.0
-xtensa                randconfig-002-20250717    gcc-9.3.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Applied to pci/boot-display for v6.17, thanks!
 
