@@ -1,46 +1,65 @@
-Return-Path: <linux-pci+bounces-32350-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32351-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FBF9B08473
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 08:00:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47D70B084A0
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 08:10:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1828C3A75F0
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 06:00:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8032F4A1847
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 06:10:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93A081FDE14;
-	Thu, 17 Jul 2025 06:00:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F3231FDE14;
+	Thu, 17 Jul 2025 06:10:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Uw5rHiZP"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="umAtp7Fi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out199-8.us.a.mail.aliyun.com (out199-8.us.a.mail.aliyun.com [47.90.199.8])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3881B28E7;
-	Thu, 17 Jul 2025 06:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E421FCD1F
+	for <linux-pci@vger.kernel.org>; Thu, 17 Jul 2025 06:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752732043; cv=none; b=IScMWWr6UOmWJ+0zqENqsCusZIbAL1TyFuHdo0/EUYSWNFxNkow1P++j+F2JGKjSux0xMXFsosxCc2fFUxWiZzShaQUaDIXyFsh4aXbAPhUt2U+oUpuXzfbo2KQsg3sa5/s2kd2vulgcVd3hFrsSGbvkBVHmqDwF2W638brDGMA=
+	t=1752732651; cv=none; b=cvOlLEegMCqP8DV0d+wuzO0lS1gBwR3L8pV4WUG3zO0JZM7XPrVeKekgdmvv22Sz7oz82bStswOl/JxhAQcDk4eM4ppYGHBHXpP4vUGO5FMR0YEF08JvJgTQ3lRvyrBZoDx0Yl/DBX4gsieGT/6sFj0BN0yQm3zcjGOtqZ+OGIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752732043; c=relaxed/simple;
-	bh=U0T6Bu3tjl8ID5ejFptgFvM7VZPyHrQIU0QciKVcYMo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s6qsF4sBIxDeOA3H2I5jnnbhk2n46D4MsH5W8qLiBH+llxg1uH7l52dNDcNIsE/lej5HF4bcmqLS2yQK5WJpflfFt/9PlY04qR7TxPvt0hgrMEDl4Ned881ExYdFcAp9R/R8Vn4CsFJ8gb7EXSERAc0TSlT+BWdfuWEsKXTXCM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Uw5rHiZP; arc=none smtp.client-ip=47.90.199.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1752732017; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=6AjoES+phDjQlU6QcJ6LgfMU4/uIlwyP6l9QIPe7StE=;
-	b=Uw5rHiZPNgV0Zv7W1gSji8PdSiYwXz4DgOaJEOHrp3c7h1trRyg9MvbiOhOwQJb44fpw3+YDTtv1tNO4EJvl/luWSjQbjVIfLDM/eUiVNSD+Hax5CTJN7OrhWLjmfGnPcCCF9aSZuEnmolbf0HA/O1DDKTiX1Y7Skxb1Ok6P5g8=
-Received: from 30.246.162.71(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Wj7.qAb_1752732014 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 17 Jul 2025 14:00:15 +0800
-Message-ID: <2687d27d-09ed-429d-9ec7-463c69a3fff7@linux.alibaba.com>
-Date: Thu, 17 Jul 2025 14:00:14 +0800
+	s=arc-20240116; t=1752732651; c=relaxed/simple;
+	bh=QG+48PXbmVszOQi4kb8cOkCE/o1MUnweXS1C0ATVUog=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qVq9cv1PyPGdnKVodpeAKovQuq4XQu0jAjSUDEpjKKSjnMhn5yd6ET73o7+9vUBsuRSVcFiYs+8EJbW1avmigIRfihiVG3m8ajEiZl3U9+s1x1vcmIGClBnU+psGaQxtqIfGMcHkOtGHrmjBNoOf76jMwtRIfNJcOF8uow6Fen8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=umAtp7Fi; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56H4okrg008376;
+	Thu, 17 Jul 2025 08:10:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	NGJtRGnAtRzGy3yHMtC4eVuqs6SIVCU4GpRn1D/WfwE=; b=umAtp7Fid9WkgJV8
+	inGQml9Z4JRTFTnIS1uvCcUKYqSH/nOkmNQ6zBatdwq2iY2T4vue2708MBauHI4U
+	N/0hPRwTkeK462LJDCikhGJmUHCHh7cKxe47XJfNsDsvdtKCkE0mfC9/rknETVmA
+	zAMOSvMCXnVZJYABkZ/70RgLEcankAoPvkvZIhERWM8iPmwggl3qWVuKbXE1c1v5
+	pDE9bnA0qnAIUkaUpX5VZI4QiaJSvogVZlei11iNxbn+KBkdCV6WJaxKam/8KbaY
+	pgUk/FMr/jJPJV42rrBtk1gNwu+Q0LD9kS3v8Ohy1YtCtHXrqD/4tO8k9ttECCdZ
+	/aQAlw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47v195kk9t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Jul 2025 08:10:31 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 20C8E40045;
+	Thu, 17 Jul 2025 08:09:58 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AA6157CE0E9;
+	Thu, 17 Jul 2025 08:09:44 +0200 (CEST)
+Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 17 Jul
+ 2025 08:09:44 +0200
+Message-ID: <5c3a9a27-f0d7-4f19-acd7-f93efefe3eff@foss.st.com>
+Date: Thu, 17 Jul 2025 08:09:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -48,164 +67,200 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: rostedt@goodmis.org, lukas@wunner.de, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bhelgaas@google.com,
- tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
- davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
- peterz@infradead.org, tianruidong@linux.alibaba.com,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250716222533.GA2559636@bhelgaas>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250716222533.GA2559636@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [pci:controller/dwc-stm32] BUILD REGRESSION
+ 5a972a01e24b278f7302a834c6eaee5bdac12843
+To: Bjorn Helgaas <helgaas@kernel.org>,
+        Manivannan Sadhasivam
+	<mani@kernel.org>
+CC: <linux-pci@vger.kernel.org>
+References: <20250716192418.GA2550861@bhelgaas>
+From: Christian Bruel <christian.bruel@foss.st.com>
+Content-Language: en-US
+In-Reply-To: <20250716192418.GA2550861@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-17_01,2025-07-16_02,2025-03-28_01
 
+Hi Bjorn,
 
+The fixing patch
 
-在 2025/7/17 06:25, Bjorn Helgaas 写道:
-> [+cc Ilpo, Jonathan (should have been included since the patch has his
-> Reviewed-by)]
+https://lore.kernel.org/linux-pci/20250626181537.1872159-1-christian.bruel@foss.st.com/
+
+is still pending for review, I will ping the pinctrl maintainer.
+
+thank you
+
+Christian
+
+On 7/16/25 21:24, Bjorn Helgaas wrote:
+> We have the pci/controller/dwc-stm32 branch pending, which currently
+> looks like this:
 > 
-
-Thanks.
-
-> Thanks for the ping; I noticed quite a bit of discussion but didn't
-> follow it myself, so didn't know it was basically all resolved.
+>    https://git.kernel.org/cgit/linux/kernel/git/pci/pci.git/log/?h=controller/dwc-stm32&id=5a972a01e24b
 > 
-> On Mon, May 12, 2025 at 09:38:39AM +0800, Shuai Xue wrote:
->> Hotplug events are critical indicators for analyzing hardware health,
->> particularly in AI supercomputers where surprise link downs can
->> significantly impact system performance and reliability.
+> which is identical to the 5a972a01e24b HEAD mentioned below.  This
+> build error is why I haven't included pci/controller/dwc-stm32 in
+> pci/next yet.
 > 
-> I dropped the "particularly in AI supercomputers" part because I think
-> this is relevant in general.
+> I would like to get this branch included for v6.17, but we need to
+> resolve this somehow.
 > 
->> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
->> tracepoint for hotplug event to help healthy check, and generate
->> tracepoints for pcie hotplug event.
-> 
-> I'm not quite clear on the difference between "add generic RAS
-> tracepoint for hotplug event" and "generate tracepoints for pcie
-> hotplug event."  Are these two different things?
-
-The purpose of this patch is to address the lack of tracepoints for PCIe
-hotplug events in our production environment. In the initial RFC
-version, I defined tracepoints such as "Link Up" and "Link Down"
-specifically for PCIe hotplug. Later, Lukas suggested that these
-tracepoints could be made more generic so that other PCI hotplug drivers
-could also use them.
-
-That’s why, when defining the event, I used a "generic" pci_hotplug_event
-instead of a pcie_hotplug_event. If you're interested in more details
-about this discussion, please refer to this link[1].
-
-[1]https://erol.kernel.org/linux-pci/git/0/commit/?id=0ffd56f572f25bcd6c2265a1863848a18dce0e29
-
-However, currently only PCIe hotplug is using these tracepoints, which
-is why the CREATE_TRACE_POINTS macro is placed in
-drivers/pci/hotplug/pciehp_ctrl.c.
-
-> 
-> I see the new TRACE_EVENT(pci_hp_event, ...) definition.  Is that what
-> you mean by the "generic RAS tracepoint"?
-
-Yes.
-
-
-> 
-> And the five new trace_pci_hp_event() calls that use the TRACE_EVENT
-> are the "tracepoints for PCIe hotplug event"?
-
-Actually, the tracepoints are generic, although right now they are only
-used for PCIe hotplug.
-
-> 
->> Add enum pci_hotplug_event in
->> include/uapi/linux/pci.h so applications like rasdaemon can register
->> tracepoint event handlers for it.
+> On Fri, Jun 27, 2025 at 06:10:31AM +0800, kernel test robot wrote:
+>> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc-stm32
+>> branch HEAD: 5a972a01e24b278f7302a834c6eaee5bdac12843  MAINTAINERS: add entry for ST STM32MP25 PCIe drivers
 >>
->> The output like below:
+>> Error/Warning (recently discovered and may have been fixed):
 >>
->> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
->> $ cat /sys/kernel/debug/tracing/trace_pipe
->>      <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
+>>      https://lore.kernel.org/oe-kbuild-all/202506260920.bmQ9hQ9s-lkp@intel.com
 >>
->>      <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
-> 
->> +#define PCI_HOTPLUG_EVENT					\
->> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
->> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
->> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
->> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
-> 
-> Running this:
-> 
->    $ git grep -E "\<(EM|EMe)\("
-> 
-> I notice that these new events don't look like the others, which
-> mostly look like "word" or "event-type" or "VERB object".
-> 
-> I'm OK with this, but just giving you a chance to consider what will
-> be the least surprise to users and easiest for grep and shell
-> scripting.
-
-I think this is also common. For example, MF_PAGE_TYPE for
-memory_failure_event uses a similar format:
-
-#define MF_PAGE_TYPE \
-	EM ( MF_MSG_KERNEL, "reserved kernel page" ) \
-	EM ( MF_MSG_KERNEL_HIGH_ORDER, "high-order kernel page" )
-
-
-and aer_uncorrectable_errors for aer_event:
-
-#define aer_uncorrectable_errors				\
-	{PCI_ERR_UNC_UND,	"Undefined"},			\
-	{PCI_ERR_UNC_DLP,	"Data Link Protocol Error"},	\
-	{PCI_ERR_UNC_SURPDN,	"Surprise Down Error"},		\
-	{PCI_ERR_UNC_POISON_TLP,"Poisoned TLP"},
-
-> 
-> I also noticed capitalization of "Up" and "Down", but not "present"
-> and "not present".
-
-Aha, this is a bit tricky:)
-
-The original kernel log messages are not consistent either:
-
-ctrl_info(ctrl, "Slot(%s): Link Down\n",
-ctrl_info(ctrl, "Slot(%s): Card not present\n",
-
-I tried to keep the output as close as possible to the existing log
-messages. If you prefer a more consistent capitalization style, I can
-send another patch to fix that.
-
-
-> 
-> "Card" is only used occasionally and informally in the PCIe spec, and
-> not at all in the context of hotplug of Slot Status (Presence Detect
-> State refers to "adapter in the slot"), but it does match the pciehp
-> dmesg text, so it probably makes sense to use that.
-> 
-> Anyway, I applied this on pci/trace for v6.17.  If there's anything
-> you want to tweak in the commit log or event text, we can still do
-> that.
-> 
->    https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=trace
-> 
-> Bjorn
-
-Thank you again for applying this to pci/trace for v6.17. If there’s
-anything more to tweak in the commit log or event text, please let me
-know.
-
-Best regards,
-
-Shuai
+>>      drivers/pci/controller/dwc/pcie-stm32.c:96:23: error: incomplete definition of type 'struct dev_pin_info'
+>>      drivers/pci/controller/dwc/pcie-stm32.c:96:30: error: invalid use of undefined type 'struct dev_pin_info'
+>>
+>> Error/Warning ids grouped by kconfigs:
+>>
+>> recent_errors
+>> |-- alpha-allyesconfig
+>> |   `-- drivers-pci-controller-dwc-pcie-stm32.c:error:invalid-use-of-undefined-type-struct-dev_pin_info
+>> `-- um-allmodconfig
+>>      `-- drivers-pci-controller-dwc-pcie-stm32.c:error:incomplete-definition-of-type-struct-dev_pin_info
+>>
+>> elapsed time: 1952m
+>>
+>> configs tested: 124
+>> configs skipped: 2
+>>
+>> tested configs:
+>> alpha                             allnoconfig    gcc-15.1.0
+>> alpha                            allyesconfig    clang-19
+>> alpha                            allyesconfig    gcc-15.1.0
+>> arc                              allmodconfig    clang-19
+>> arc                              allmodconfig    gcc-15.1.0
+>> arc                               allnoconfig    gcc-15.1.0
+>> arc                              allyesconfig    clang-19
+>> arc                              allyesconfig    gcc-15.1.0
+>> arc                   randconfig-001-20250626    clang-20
+>> arc                   randconfig-001-20250626    gcc-12.4.0
+>> arc                   randconfig-002-20250626    clang-20
+>> arc                   randconfig-002-20250626    gcc-13.3.0
+>> arm                              allmodconfig    clang-19
+>> arm                              allmodconfig    gcc-15.1.0
+>> arm                               allnoconfig    clang-21
+>> arm                              allyesconfig    clang-19
+>> arm                              allyesconfig    gcc-15.1.0
+>> arm                   randconfig-001-20250626    clang-20
+>> arm                   randconfig-001-20250626    clang-21
+>> arm                   randconfig-002-20250626    clang-20
+>> arm                   randconfig-003-20250626    clang-20
+>> arm                   randconfig-003-20250626    gcc-10.5.0
+>> arm                   randconfig-004-20250626    clang-20
+>> arm                   randconfig-004-20250626    clang-21
+>> arm64                            allmodconfig    clang-19
+>> arm64                             allnoconfig    gcc-15.1.0
+>> arm64                 randconfig-001-20250626    clang-20
+>> arm64                 randconfig-001-20250626    clang-21
+>> arm64                 randconfig-002-20250626    clang-17
+>> arm64                 randconfig-002-20250626    clang-20
+>> arm64                 randconfig-003-20250626    clang-20
+>> arm64                 randconfig-003-20250626    gcc-8.5.0
+>> arm64                 randconfig-004-20250626    clang-20
+>> arm64                 randconfig-004-20250626    clang-21
+>> csky                              allnoconfig    gcc-15.1.0
+>> hexagon                          allmodconfig    clang-17
+>> hexagon                          allmodconfig    clang-19
+>> hexagon                           allnoconfig    clang-21
+>> hexagon                          allyesconfig    clang-19
+>> hexagon                          allyesconfig    clang-21
+>> i386                             allmodconfig    clang-20
+>> i386                             allmodconfig    gcc-12
+>> i386                              allnoconfig    clang-20
+>> i386                              allnoconfig    gcc-12
+>> i386                             allyesconfig    clang-20
+>> i386                             allyesconfig    gcc-12
+>> i386        buildonly-randconfig-001-20250626    clang-20
+>> i386        buildonly-randconfig-001-20250627    gcc-12
+>> i386        buildonly-randconfig-002-20250626    clang-20
+>> i386        buildonly-randconfig-002-20250627    gcc-12
+>> i386        buildonly-randconfig-003-20250626    clang-20
+>> i386        buildonly-randconfig-003-20250627    gcc-12
+>> i386        buildonly-randconfig-004-20250626    clang-20
+>> i386        buildonly-randconfig-004-20250627    gcc-12
+>> i386        buildonly-randconfig-005-20250626    clang-20
+>> i386        buildonly-randconfig-005-20250627    gcc-12
+>> i386        buildonly-randconfig-006-20250626    clang-20
+>> i386        buildonly-randconfig-006-20250627    gcc-12
+>> i386                                defconfig    clang-20
+>> loongarch                        allmodconfig    gcc-15.1.0
+>> loongarch                         allnoconfig    gcc-15.1.0
+>> m68k                             allmodconfig    gcc-15.1.0
+>> m68k                              allnoconfig    gcc-15.1.0
+>> m68k                             allyesconfig    gcc-15.1.0
+>> microblaze                       allmodconfig    gcc-15.1.0
+>> microblaze                        allnoconfig    gcc-15.1.0
+>> microblaze                       allyesconfig    gcc-15.1.0
+>> mips                              allnoconfig    gcc-15.1.0
+>> nios2                             allnoconfig    gcc-14.2.0
+>> nios2                             allnoconfig    gcc-15.1.0
+>> openrisc                          allnoconfig    clang-21
+>> openrisc                          allnoconfig    gcc-15.1.0
+>> openrisc                         allyesconfig    gcc-15.1.0
+>> parisc                           allmodconfig    gcc-15.1.0
+>> parisc                            allnoconfig    clang-21
+>> parisc                            allnoconfig    gcc-15.1.0
+>> parisc                           allyesconfig    gcc-15.1.0
+>> powerpc                          allmodconfig    gcc-15.1.0
+>> powerpc                           allnoconfig    clang-21
+>> powerpc                           allnoconfig    gcc-15.1.0
+>> powerpc                          allyesconfig    gcc-15.1.0
+>> riscv                            allmodconfig    gcc-15.1.0
+>> riscv                             allnoconfig    clang-21
+>> riscv                             allnoconfig    gcc-15.1.0
+>> riscv                            allyesconfig    gcc-15.1.0
+>> s390                             allmodconfig    clang-18
+>> s390                             allmodconfig    gcc-15.1.0
+>> s390                              allnoconfig    clang-21
+>> s390                             allyesconfig    gcc-15.1.0
+>> sh                               allmodconfig    gcc-15.1.0
+>> sh                                allnoconfig    gcc-15.1.0
+>> sh                               allyesconfig    gcc-15.1.0
+>> sparc                            allmodconfig    gcc-15.1.0
+>> sparc                             allnoconfig    gcc-15.1.0
+>> um                               allmodconfig    clang-19
+>> um                                allnoconfig    clang-21
+>> um                               allyesconfig    clang-19
+>> um                               allyesconfig    gcc-12
+>> x86_64                            allnoconfig    clang-20
+>> x86_64                           allyesconfig    clang-20
+>> x86_64      buildonly-randconfig-001-20250626    clang-20
+>> x86_64      buildonly-randconfig-001-20250627    clang-20
+>> x86_64      buildonly-randconfig-002-20250626    clang-20
+>> x86_64      buildonly-randconfig-002-20250627    clang-20
+>> x86_64      buildonly-randconfig-003-20250626    clang-20
+>> x86_64      buildonly-randconfig-003-20250627    clang-20
+>> x86_64      buildonly-randconfig-004-20250626    clang-20
+>> x86_64      buildonly-randconfig-004-20250627    clang-20
+>> x86_64      buildonly-randconfig-005-20250626    clang-20
+>> x86_64      buildonly-randconfig-005-20250627    clang-20
+>> x86_64      buildonly-randconfig-006-20250626    clang-20
+>> x86_64      buildonly-randconfig-006-20250627    clang-20
+>> x86_64                              defconfig    clang-20
+>> x86_64                              defconfig    gcc-11
+>> x86_64                                  kexec    clang-20
+>> x86_64                               rhel-9.4    clang-20
+>> x86_64                           rhel-9.4-bpf    gcc-12
+>> x86_64                          rhel-9.4-func    clang-20
+>> x86_64                    rhel-9.4-kselftests    clang-20
+>> x86_64                         rhel-9.4-kunit    gcc-12
+>> x86_64                           rhel-9.4-ltp    gcc-12
+>> x86_64                          rhel-9.4-rust    clang-18
+>> x86_64                          rhel-9.4-rust    clang-20
+>> xtensa                            allnoconfig    gcc-15.1.0
+>>
+>> --
+>> 0-DAY CI Kernel Test Service
+>> https://github.com/intel/lkp-tests/wiki
 
