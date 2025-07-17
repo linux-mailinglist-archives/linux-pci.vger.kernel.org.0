@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-32471-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32472-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89932B09842
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 01:40:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C540AB098A9
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 01:51:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F6027BC8CE
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 23:39:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E67FB168EFF
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 23:51:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABA7A241CAF;
-	Thu, 17 Jul 2025 23:40:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F0B324110F;
+	Thu, 17 Jul 2025 23:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QalwuOgE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qvSSS9Hd"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8357524110F;
-	Thu, 17 Jul 2025 23:40:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F38749641;
+	Thu, 17 Jul 2025 23:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752795625; cv=none; b=PpRb/28Xdvuh/m9R+18uVkE2iB5lDK1DV37M2OKCjxoWi/T0sOaODsGZ2xSm2whrJyxPZanUxUjl7mtcuchIABJM2FKHkajznPVpKzfaEfDihB+ehw7S5zv1tb3a57K706xF8go3WyHvooP53PJNNi8ZaJsAHZuNF4h3KFsUscg=
+	t=1752796257; cv=none; b=leFYnNanpFa69dNx8QHoL18dexMVbDTsSmoz90GQUA2eioYTh+KCxhY8x/rTSXgQ4/fouPf+1SJAXQlUG1WPq1SySKskCmzwAaXW8+rpVThKoSX0DUn0rUd6iqVeVeThVRKxpjar9tX1Q7B5nQ3n5VymOvvpbtljSGDHbJhsccU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752795625; c=relaxed/simple;
-	bh=SLWT0EwWugKFmXyWBecyX2YOOzE33RWcso9rWV+H+sc=;
+	s=arc-20240116; t=1752796257; c=relaxed/simple;
+	bh=yBQKMNb9DUXYd65FGm7e8gSB0moGjWwDMSH57CnD83s=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=SNBVfYJ6hB180lbgI3Z1Ar6i5o6v62M+pAy/1WAXvGxSfZsNC5i6AYNsPGFYutusBMbLkbcUV8LZYOcIZZd8JnQVRleoL85ZtNXBdQMnmKlEJs1dKL15Vv+iORvqtfw+itnLklKXYJeT+AmT0liHPwmhXAyHDoK699wwFprqaSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QalwuOgE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43832C4CEEB;
-	Thu, 17 Jul 2025 23:40:25 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=H3wOji1Ja4HIWotOpu/LaKycJoa98UFF/TXbKPJHuxms33fniZ9pP6sxO/EMtg4GD9SCVs7j99wNXlr7ToLww9iapO69I5AppBEex56sVbhWhfD1ndRgqpfpV3qoI9T+gfOsVG6fYytxfhl8T0JilX0Qwf6UjtHMdzrN96Ehgeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qvSSS9Hd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CFECC4CEE3;
+	Thu, 17 Jul 2025 23:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752795625;
-	bh=SLWT0EwWugKFmXyWBecyX2YOOzE33RWcso9rWV+H+sc=;
+	s=k20201202; t=1752796257;
+	bh=yBQKMNb9DUXYd65FGm7e8gSB0moGjWwDMSH57CnD83s=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=QalwuOgEJQSJY/yW6nKuzzLXbQZLPRKCvV0T1SXwb6GxQdFSJNxowxsAUFlBl4YRr
-	 z41IVtyibynhfAmmseTwhzaNDDBW9PDORLw3KO1OV8TCp6HnniX3uH9dYwrvGgNBJQ
-	 r0+7c/492WzE+HSMsGR7rmaHkz16QtCYVkK4rknt7z8O8e1B7+vGYlBL/XWeN0gUsU
-	 dpU31xZYKXnkJ83x4CT1gOJ4bk4JpvE7tR9YNWmQIDwE4TCiwLbJ14yAaI2OKm4wEY
-	 CxViozkMHDpsTqbEJnoOJJ2qzZ13FOxs4a7ZL5u4CLKcOTDgteW0psfSnEBVNAyvIr
-	 7CEZ8x2zJLPyg==
-Date: Thu, 17 Jul 2025 18:40:24 -0500
+	b=qvSSS9HduJBUOlQa9uG4CkAI+RiOqYTQvUxJalwfD8SIjIEsWHtgVhSHnAnvw9GmO
+	 b7p9AkBnWADZRC0/CVIxf5cmnTHAzmJlB7ri6y/mzXjGwWxwuV/Xj9KJl4WNXiY9fN
+	 4YVZYtUupcbd880X3zGusjHieRY5x/JtIcCsouKc6Iw4Cv0VP2psC/8pblUuSeId2j
+	 L9UKIb2x5q0pdoVKLagWQBs+ClgJwxkWgUEyiRwMmIWATAUNilg3kVvyrgMIiVdV/u
+	 e9TjOmxb4TbPBVqwTr7x3fGVspeLB353mi/MXw35B285pBl8ranuBey3ZBcZ6XG4dm
+	 SbdxBA+P3UA4A==
+Date: Thu, 17 Jul 2025 18:50:55 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Hans de Goede <hansg@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-	David Airlie <airlied@redhat.com>,
-	Ben Hutchings <ben@decadent.org.uk>, Joerg Roedel <joro@8bytes.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Ahmed Salem <x0rw3ll@gmail.com>, Borislav Petkov <bp@alien8.de>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] agp/amd64: Check AGP Capability before binding to
- unsupported devices
-Message-ID: <20250717234024.GA2663372@bhelgaas>
+To: Matthew W Carlis <mattc@purestorage.com>
+Cc: lukas@wunner.de, anil.s.keshavamurthy@intel.com, bhelgaas@google.com,
+	bp@alien8.de, davem@davemloft.net, ilpo.jarvinen@linux.intel.com,
+	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org, naveen@kernel.org, oleg@redhat.com,
+	peterz@infradead.org, rostedt@goodmis.org,
+	tianruidong@linux.alibaba.com, tony.luck@intel.com,
+	xueshuai@linux.alibaba.com
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <20250717235055.GA2664149@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,35 +64,47 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aGvShrJJTj2ERdZr@wunner.de>
+In-Reply-To: <20250717232758.24605-1-mattc@purestorage.com>
 
-On Mon, Jul 07, 2025 at 03:58:30PM +0200, Lukas Wunner wrote:
-> On Mon, Jul 07, 2025 at 02:53:32PM +0200, Hans de Goede wrote:
-> > So I think we should move forward with Lukas' fix dor 6.16 and then
-> > my patch to disable probing of unsupported devices by default can
-> > be merged into linux-next .
+On Thu, Jul 17, 2025 at 05:27:58PM -0600, Matthew W Carlis wrote:
+> On Thu, 17 Jul 2025, Bjorn Helgaas wrote:
+> > - slot_name() (which I think comes from make_slot_name(); would you
+> >   want something else?)
 > 
-> Sounds good to me.
-> 
-> Dave is out all week and has not commented on this matter at all so far:
-> 
-> https://lore.kernel.org/r/CAPM=9tzrmRS9++MP_Y4ab95W71UxjFLzTd176Mok7akwdT2q+w@mail.gmail.com/
-> 
-> I assume Bjorn may not be comfortable applying my patch without an ack
-> from Dave.  I am technically able to apply my own patch through drm-misc
-> and I believe Hans' Reviewed-by is sufficient to allow me to do that.
-> 
-> I'd feel more comfortable having additional acks or Reviewed-by's though.
-> I'm contemplating applying the patch to drm-misc by Wednesday evening,
-> that would allow it to land in Linus' tree before v6.16-rc6.
-> 
-> If anyone has objections, needs more time to review or wants to apply
-> the patch, please let me know.
+> afaik it ends up coming from the Slot Cap Register "Physical Slot
+> Number" bits.  I brought up the slot to just say that I was happy to
+> see it & that it is useful for our purposes & why.
 
-Looks like this is now upstream:
-https://git.kernel.org/linus/d88dfb756d55 ("agp/amd64: Check AGP Capability before binding to unsupported devices")
+I don't think slot_name() is directly from Physical Slot Number
+because there's nothing to guarantee that is unique.  I think
+make_slot_name() starts with PSN but does add things to make sure the
+name unique.
 
-Seems OK to me, but I'm certainly not an AGP expert.
+> On Thu, 17 Jul 2025, Lukas Wunner wrote:
+> >> and IIUC, it would be helpful for you to add:
+> ...
+
+> >>   - USP/EP Vendor/Device ID
+> >
+> > There's no 1:1 relation between link or presence events on the one
+> > hand, and enumeration of hotplugged components on the other hand:
+> > The link may go up but the kernel may fail to enumerate the
+> > component, e.g. because it was yanked before it could be
+> > enumerated, or because the kernel has run out of MMIO space or bus
+> > numbers.
+> > 
+> > Hence this would have to be logged through a separate tracepoint
+> > in pciehp_configure_device(), not by changing the tracepoints
+> > added here.
+
+> Ok I think its reasonable to use a separate tracepoint that would have more
+> information about the EP.
+
+So I think your idea of adding current link speed/width to the "Link
+Up" event is still on the table, and that does sound useful to me.
+
+In the future we might add another tracepoint when we enumerate the
+device and know the Vendor/Device ID.
 
 Bjorn
 
