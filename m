@@ -1,194 +1,172 @@
-Return-Path: <linux-pci+bounces-32358-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32359-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1676CB085BE
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 09:00:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6025FB0869B
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 09:28:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66B1F1AA0464
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 07:00:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 18A447B914C
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 07:26:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D13D219A8B;
-	Thu, 17 Jul 2025 06:59:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 390EB22CBFE;
+	Thu, 17 Jul 2025 07:28:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cECTN+eV"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jJxHHA9z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823422185AC;
-	Thu, 17 Jul 2025 06:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F07122DFA4;
+	Thu, 17 Jul 2025 07:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752735589; cv=none; b=m4/7BZ46i5f1MOAZi0IlfGCJdJIfD1bTKTspeKwTUOR40d4GRYiUuSMeJVu3ubehWWw3l5VkwtVFkUfYA+Ifa1ZAeBxowt6MT+wjDT4YHeiHjbsohSbv07ngAO+sug6nJszvm8Gji3NuLpSQkmhToYOfYNTCWpgBsm4Q9bRyWQs=
+	t=1752737286; cv=none; b=OtYLovjuAHn6Y32eMlogwMD3phPxzDI+QrVK6Z6pB29MMl/3qY0V2JB6lyr6DAihE26P1JiOVEk0N4qvlUfoh0ziJ26elGEJY6bXVIKC/yN1dapyGwtsey5SS9CD1y0QJ+49KGOdCyCD8bF4vclhTMuVjHcMsbe02BeyEcsNEIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752735589; c=relaxed/simple;
-	bh=WfQDUZl8/0uR3HB4LyHO328cyXvBUlw0A/UhOlJxz1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PieC6B5ENhjhj4R1iyRvC78g4bTw6VUfhkaw1HIbqWlQ7+OyA9smpa+WWei/rhK36kmiiZ/HXqEg9iOpxjl7fO7F50X0vfGmcA8mPCNaUYEnQ6kCktHC410vY+3re0olfapb22PRrZnPyAj1kCKLeLM1fDSWkAKLchfw9/317EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cECTN+eV; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752735589; x=1784271589;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WfQDUZl8/0uR3HB4LyHO328cyXvBUlw0A/UhOlJxz1U=;
-  b=cECTN+eVmQPVhXT/U2vkMof1i90qD/D23SrCoISImNpDAxAqykWtphGJ
-   AMCD+kLBwmMG9jlI8L6A4GVmeeXPd/ALBe7UYhl7D07i9s/ov3crmTNwU
-   c2DiPQ/nQ6R6vhZqrk6Y9RVmarwqo27olu4qQJkWPeHRO+tKTCawDLqhD
-   mmB5tuZHpvbpG4itzJol3Tir0YVkXuB6Ahe8Dt2Qy+AesuolkdciN2079
-   xho9XS9em/AymwAS6aoMtLxRU3pKA1U4tC8+cNR+I/gw7fzNModzXkAun
-   J/uND1BJ1SQNs1iwTo94CZQk+VDhmiupBd6zx6elRcVuIkHeUvbp1AzIm
-   Q==;
-X-CSE-ConnectionGUID: onUM6+B2T7OIMYyxrxvWJQ==
-X-CSE-MsgGUID: BqEkDFFhR3uduD0WAO17XQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="57608558"
-X-IronPort-AV: E=Sophos;i="6.16,318,1744095600"; 
-   d="scan'208";a="57608558"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2025 23:59:48 -0700
-X-CSE-ConnectionGUID: xCcATFy/QTatTT5/uaWjQw==
-X-CSE-MsgGUID: ZIXncjgcTTumw+1qNYHO7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,318,1744095600"; 
-   d="scan'208";a="188654912"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 16 Jul 2025 23:59:42 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ucIah-000DGd-10;
-	Thu, 17 Jul 2025 06:59:39 +0000
-Date: Thu, 17 Jul 2025 14:59:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>
-Cc: oe-kbuild-all@lists.linux.dev, linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ath12k@lists.infradead.org,
-	ath11k@lists.infradead.org, ath10k@lists.infradead.org,
-	ilpo.jarvinen@linux.intel.com, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	Qiang Yu <qiang.yu@oss.qualcomm.com>
-Subject: Re: [PATCH 4/6] wifi: ath12k: Use pci_{enable/disable}_link_state()
- APIs to enable/disable ASPM states
-Message-ID: <202507171411.xOxUslAs-lkp@intel.com>
-References: <20250716-ath-aspm-fix-v1-4-dd3e62c1b692@oss.qualcomm.com>
+	s=arc-20240116; t=1752737286; c=relaxed/simple;
+	bh=iNGfZUT3vIjs9LIEtmZBN/64+7hv7dRJ5bx0l4MtKW4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=dShpJutaTL6VGlfPda2lXhtPC8nu+br17DV+rVand0eOKK15p2uDJvU/4VajneLTUGq7CRfZ3CzYoSvhVL3euSJ+53F8fmvSRJtZKh22PxpuABwnobz6GigMmQRHXVpvJWqQWb4+ELVZAwvLnvDqp9i1n5+VfSiqO0arRQd2B9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jJxHHA9z; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56H5PRRQ021567;
+	Thu, 17 Jul 2025 07:27:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=d14ckrCMuZgzNHnUDuNhFN
+	FqmXjLNb/Tp604F/4Ov/w=; b=jJxHHA9zif7whnGBq6dKLlrJx/7GYbLey9+/d+
+	cRsmwsMQm90sDNCQuW/HUQ0hFWwPYW21QOmRq/4Yzxs1PHkKrNjoBrvv8qAx/ULD
+	ZyYAmMrQi0kXLJli7LTk5Gn8cewbLaVhgu2Y53H+/gatcuk3csI0nfiUUO+8XJVH
+	noTVufU4NjojMPXi6MHcie6SWZM8mRn5b8XDbxh6YnaRP4V7D9mga7ylMynT+LF5
+	IGS839uV22m1QEqzOapG0m9hWJ2f+hT4qAyKoXP/FvyWNDW1vvRZbCfiaQ1j0G07
+	VZpknn7w/EVbom6pdkFIWaLpHUet7HTduqecRTYLyuN7ERlw==
+Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ufu8ejj9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Jul 2025 07:27:53 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 56H7RotA029527;
+	Thu, 17 Jul 2025 07:27:50 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 47ugsmt61c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Jul 2025 07:27:50 +0000
+Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 56H7Rn30029522;
+	Thu, 17 Jul 2025 07:27:50 GMT
+Received: from cse-cd01-lnx.ap.qualcomm.com (cse-cd01-lnx.qualcomm.com [10.64.75.209])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 56H7RmgQ029519
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Jul 2025 07:27:49 +0000
+Received: by cse-cd01-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
+	id E8A3D20CAF; Thu, 17 Jul 2025 15:27:47 +0800 (CST)
+From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
+        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
+        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+        kw@linux.com
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>,
+        Tingguo Cheng <quic_tingguoc@quicinc.com>
+Subject: [PATCH v2 1/1] arm64: dts: qcom: qcs615: Set LDO12A regulator to HPM to avoid boot hang
+Date: Thu, 17 Jul 2025 15:27:46 +0800
+Message-Id: <20250717072746.987298-1-quic_ziyuzhan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250716-ath-aspm-fix-v1-4-dd3e62c1b692@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE3MDA2NCBTYWx0ZWRfX7K9LvX4f/Cko
+ auYN982UNh+2cpgz6cn0/ECv8V71k+igsCBotfCN0/0FFRmBWCgVTipTlTOUxLUvSoCHtNrmjfN
+ uWVHv6pmdNUdrSIFJu/fqZEybVuBxRcg1uVwxmMd/IhU0oJ4wJeWO7l9xNE5kgKrDv8E0H1pQN+
+ RuYy6jmWbGAYA8MoFQIuP/XoMnOrtA/mjVosi3weNFmLiusVOMm62KLM/4wEnGkcknIi/9C6cjP
+ TIVvVtx+pF6s6OFa+SiUqlclJoTnr9jGbjbj6KAU6RWlLMlw7StkvVWdZT1HaVjEadasX61eHek
+ 8BGOHwlU6qoBPdtsww0iPSIYVgGELbjtu4IrX60owWdYT+8gXZejaJ9aXq4ZrRtiREo4fsuOgAc
+ xkkdnh1KlucjVH4XcRiLYIJVgFnWEGsAR5r17X7MtC9MCByNf8abScURQngBOqdJGcZNTZ6l
+X-Proofpoint-ORIG-GUID: 3xaLGOW8Gc40F4fpnWAo7K_NMNc0-Pa4
+X-Proofpoint-GUID: 3xaLGOW8Gc40F4fpnWAo7K_NMNc0-Pa4
+X-Authority-Analysis: v=2.4 cv=f59IBPyM c=1 sm=1 tr=0 ts=6878a5f9 cx=c_pps
+ a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=lOb7t7NH7aykvVN8AcwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-17_01,2025-07-16_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
+ bulkscore=0 suspectscore=0 impostorscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=999 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507170064
 
-Hi Manivannan,
+From: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
 
-kernel test robot noticed the following build errors:
+On certain platforms (e.g., QCS615), consumers of LDO12A—such as PCIe,
+UFS, and eMMC—may draw more than 10mA of current during boot. This can
+exceed the regulator's limit in Low Power Mode (LPM), triggering current
+limit protection and causing the system to hang.
 
-[auto build test ERROR on 19272b37aa4f83ca52bdf9c16d5d81bdd1354494]
+To address this, there are two possible approaches:
+a) Set the regulator's initial mode to High Performance Mode (HPM) in
+   the device tree.
+b) Keep the default LPM setting and have each consumer driver explicitly
+   set its current load.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam-via-B4-Relay/PCI-ASPM-Fix-the-behavior-of-pci_enable_link_state-APIs/20250716-205857
-base:   19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-patch link:    https://lore.kernel.org/r/20250716-ath-aspm-fix-v1-4-dd3e62c1b692%40oss.qualcomm.com
-patch subject: [PATCH 4/6] wifi: ath12k: Use pci_{enable/disable}_link_state() APIs to enable/disable ASPM states
-config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20250717/202507171411.xOxUslAs-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250717/202507171411.xOxUslAs-lkp@intel.com/reproduce)
+Since some regulators are shared among multiple consumers, and setting
+the current must be coordinated across all of them, we will initially
+adopt option a by setting the regulator to HPM. We can later migrate to
+option b when the timing is appropriate and all consumer drivers are
+ready.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507171411.xOxUslAs-lkp@intel.com/
+Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+Signed-off-by: Tingguo Cheng <quic_tingguoc@quicinc.com>
+---
+This patch follows a suggestion from Bjorn Andersson regarding USB
+regulator handling where each consumer is expected to explicitly set its
+current load.
+Link: https://lore.kernel.org/linux-arm-msm/37fc7aa6-23d2-4636-8e02-4957019121a3@quicinc.com/
 
-All errors (new ones prefixed by >>):
+changes in v2:
+ - Delete all LPM mode config in ldo12a, which may lead to potential
+   risks
+ - Link to v1: https://lore.kernel.org/all/20250716030601.1705364-1-ziyue.zhang@oss.qualcomm.com/
+---
+ arch/arm64/boot/dts/qcom/qcs615-ride.dts | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-   In file included from drivers/net/wireless/ath/main.c:22:
-   drivers/net/wireless/ath/ath.h: In function 'ath_pci_aspm_state':
->> drivers/net/wireless/ath/ath.h:346:26: error: 'PCIE_LINK_STATE_L0S' undeclared (first use in this function)
-     346 |                 state |= PCIE_LINK_STATE_L0S;
-         |                          ^~~~~~~~~~~~~~~~~~~
-   drivers/net/wireless/ath/ath.h:346:26: note: each undeclared identifier is reported only once for each function it appears in
->> drivers/net/wireless/ath/ath.h:348:26: error: 'PCIE_LINK_STATE_L1' undeclared (first use in this function)
-     348 |                 state |= PCIE_LINK_STATE_L1;
-         |                          ^~~~~~~~~~~~~~~~~~
---
-   In file included from drivers/net/wireless/ath/ath9k/common.h:19,
-                    from drivers/net/wireless/ath/ath9k/ath9k.h:29,
-                    from drivers/net/wireless/ath/ath9k/beacon.c:18:
-   drivers/net/wireless/ath/ath9k/../ath.h: In function 'ath_pci_aspm_state':
->> drivers/net/wireless/ath/ath9k/../ath.h:346:26: error: 'PCIE_LINK_STATE_L0S' undeclared (first use in this function)
-     346 |                 state |= PCIE_LINK_STATE_L0S;
-         |                          ^~~~~~~~~~~~~~~~~~~
-   drivers/net/wireless/ath/ath9k/../ath.h:346:26: note: each undeclared identifier is reported only once for each function it appears in
->> drivers/net/wireless/ath/ath9k/../ath.h:348:26: error: 'PCIE_LINK_STATE_L1' undeclared (first use in this function)
-     348 |                 state |= PCIE_LINK_STATE_L1;
-         |                          ^~~~~~~~~~~~~~~~~~
---
-   In file included from drivers/net/wireless/ath/carl9170/../regd.h:23,
-                    from drivers/net/wireless/ath/carl9170/carl9170.h:61,
-                    from drivers/net/wireless/ath/carl9170/main.c:47:
-   drivers/net/wireless/ath/carl9170/../ath.h: In function 'ath_pci_aspm_state':
->> drivers/net/wireless/ath/carl9170/../ath.h:346:26: error: 'PCIE_LINK_STATE_L0S' undeclared (first use in this function)
-     346 |                 state |= PCIE_LINK_STATE_L0S;
-         |                          ^~~~~~~~~~~~~~~~~~~
-   drivers/net/wireless/ath/carl9170/../ath.h:346:26: note: each undeclared identifier is reported only once for each function it appears in
->> drivers/net/wireless/ath/carl9170/../ath.h:348:26: error: 'PCIE_LINK_STATE_L1' undeclared (first use in this function)
-     348 |                 state |= PCIE_LINK_STATE_L1;
-         |                          ^~~~~~~~~~~~~~~~~~
---
-   In file included from drivers/net/wireless/ath/ath6kl/../regd.h:23,
-                    from drivers/net/wireless/ath/ath6kl/wmi.c:24:
-   drivers/net/wireless/ath/ath6kl/../ath.h: In function 'ath_pci_aspm_state':
->> drivers/net/wireless/ath/ath6kl/../ath.h:346:26: error: 'PCIE_LINK_STATE_L0S' undeclared (first use in this function)
-     346 |                 state |= PCIE_LINK_STATE_L0S;
-         |                          ^~~~~~~~~~~~~~~~~~~
-   drivers/net/wireless/ath/ath6kl/../ath.h:346:26: note: each undeclared identifier is reported only once for each function it appears in
->> drivers/net/wireless/ath/ath6kl/../ath.h:348:26: error: 'PCIE_LINK_STATE_L1' undeclared (first use in this function)
-     348 |                 state |= PCIE_LINK_STATE_L1;
-         |                          ^~~~~~~~~~~~~~~~~~
---
-   In file included from drivers/net/wireless/ath/ath10k/core.h:25,
-                    from drivers/net/wireless/ath/ath10k/mac.h:11,
-                    from drivers/net/wireless/ath/ath10k/mac.c:9:
-   drivers/net/wireless/ath/ath10k/../ath.h: In function 'ath_pci_aspm_state':
->> drivers/net/wireless/ath/ath10k/../ath.h:346:26: error: 'PCIE_LINK_STATE_L0S' undeclared (first use in this function)
-     346 |                 state |= PCIE_LINK_STATE_L0S;
-         |                          ^~~~~~~~~~~~~~~~~~~
-   drivers/net/wireless/ath/ath10k/../ath.h:346:26: note: each undeclared identifier is reported only once for each function it appears in
->> drivers/net/wireless/ath/ath10k/../ath.h:348:26: error: 'PCIE_LINK_STATE_L1' undeclared (first use in this function)
-     348 |                 state |= PCIE_LINK_STATE_L1;
-         |                          ^~~~~~~~~~~~~~~~~~
-
-
-vim +/PCIE_LINK_STATE_L0S +346 drivers/net/wireless/ath/ath.h
-
-   340	
-   341	static inline int ath_pci_aspm_state(u16 lnkctl)
-   342	{
-   343		int state = 0;
-   344	
-   345		if (lnkctl & PCI_EXP_LNKCTL_ASPM_L0S)
- > 346			state |= PCIE_LINK_STATE_L0S;
-   347		if (lnkctl & PCI_EXP_LNKCTL_ASPM_L1)
- > 348			state |= PCIE_LINK_STATE_L1;
-   349	
-   350		return state;
-   351	}
-   352	
-
+diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+index a6652e4817d1..75effc790c79 100644
+--- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
++++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+@@ -166,10 +166,7 @@ vreg_l12a: ldo12 {
+ 			regulator-name = "vreg_l12a";
+ 			regulator-min-microvolt = <1800000>;
+ 			regulator-max-microvolt = <1890000>;
+-			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
+-			regulator-allow-set-load;
+-			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
+-						   RPMH_REGULATOR_MODE_HPM>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 
+ 		vreg_l13a: ldo13 {
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
 
