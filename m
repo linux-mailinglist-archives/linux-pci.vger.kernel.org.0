@@ -1,228 +1,204 @@
-Return-Path: <linux-pci+bounces-32408-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32409-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3360EB09059
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 17:16:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C636CB090B2
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 17:37:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A7191C44725
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 15:16:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 17CF6168C4E
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 15:37:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B33BD1E572F;
-	Thu, 17 Jul 2025 15:15:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A64F62F85D1;
+	Thu, 17 Jul 2025 15:37:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hwnYI017"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I4DCe0Wu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC88A26AE4
-	for <linux-pci@vger.kernel.org>; Thu, 17 Jul 2025 15:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7906C1E47A5;
+	Thu, 17 Jul 2025 15:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752765353; cv=none; b=OqRyxz/hz5MoAU0A0fTgSZJ7NccOZX5wLy/o/pZz/L0qlRKYNzUzkXQN+5FcxAly4VCoHGU8NvyflB6e4a22nuIWzyWGzbCSrnFg0m8IaPGiN/YJ+3yRk2gJ9A3TltIyrq+ng41dfTiAjx5fTCHp86xz56lD425hsliiiY+V3wQ=
+	t=1752766639; cv=none; b=Y8DRVVhqN0fHAkgv3dtW7U17p32xU2SU8qEPO0h4AYJk8sFZOqlzw/bjhho7ZIl7Ky2gCdQDQI8JekufJhxApk+xR3NjZ2ND7Gu8v+V1BC7DwnFMD8XkuDOP8FC0KQsptyY7pq2/b3cMqf5RKgYmm5GfDU1azusLeDvLW7MvyOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752765353; c=relaxed/simple;
-	bh=OH9pGD1iFNuSAvyw46rRfSyGtP+Tbz3+klQk+Ryybog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BRBFE9EIpmPI3K80dfhK8TkUjAACeAJf/bAGTVLdHbUGBv8DyBN38xesvGCJ6ZAGKKJWw25xEELeL/88Ve6c7atbws/j8uArSynSMSbPOlDYylNWRvGXSPghWmwh1SUcEFs7frwaVcLzXWVHzXkyQzOucLrmGlPXfAMHjg2hklU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hwnYI017; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752765350;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3tvaS74PSIrIFmziB0xQ3dinCc+KQFLT6M72oZTrSb4=;
-	b=hwnYI017WZB63XvyLl7/nqQM+8gS8sbmCqD75fQtGv67WL+BeybfEQVJi8bvI2FmUXjxVI
-	6hhsB0HZZbCUrcofiJVujfROAUsMykV0CEutRRrcXmzVuwqXbK3Nh/ArP8BKOrXDJP6N64
-	x8ygFhcP9egFCEDaGy5QzJTEGmU0MWY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-359-rSSN5kIxPkSQQCDqVkD5ow-1; Thu, 17 Jul 2025 11:15:49 -0400
-X-MC-Unique: rSSN5kIxPkSQQCDqVkD5ow-1
-X-Mimecast-MFC-AGG-ID: rSSN5kIxPkSQQCDqVkD5ow_1752765348
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4f8192e2cso668342f8f.3
-        for <linux-pci@vger.kernel.org>; Thu, 17 Jul 2025 08:15:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752765348; x=1753370148;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3tvaS74PSIrIFmziB0xQ3dinCc+KQFLT6M72oZTrSb4=;
-        b=gaE6K64SzwTJhanxQvzesfZk5kNbefvuUXX77tncMI/vXdNVXtXGK/LP6OY53YqqYJ
-         5F/62eB993nN9WmzGiuNKB3dPhUjpQjituUAa7KAhJnFC6U4pW9cI7qNliPkDHmimALd
-         ZORy9mpMf00AjsFFi87UWz/qvCTp4lO9xy2JqXKB6KcOL3KLeIuxrqL2bsOjYZAWCU9C
-         1TYYCrxsCPU1u2YwcKpt9AA5SJVZkHT70kh4y7R3p7z4732Y7vuDQC+4KaKRtWUSfbI5
-         AVCxc0/ZgBiGaurS5F4WeVPwLnCz9dZcsiChBkc34KbiY+bb+jgiG4+Yi4RJMOaHKkYO
-         gqyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXeFd4+l7vdMqlT7wvYchJoimvAVQbUbhWylb24eaLJCB1TLmCh4/LUTxCZpoFxZCSBHo4z6X9adv8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGWKFjSCf8fOJgWchgkdOyMQdKdklyGn9KvK1K9H+L5GGEdn2q
-	ALXE7C+o+1BNJD1MB2vq8thFD8nGYtPhn8Kn83Xn6pMHTwMcj9YVGo5oXoDJEZPvUVfdzC/sFUw
-	umXQb5ZZU1p01bLgf+3PBcRi76bAymTwhbtoBY776/E/+3MtQD2fuxAs+Awunww==
-X-Gm-Gg: ASbGncsfmwltksg/v9mNFwJZGrO4/N1sHFzMOCCP693J8OOnlMs1O7qixKiU/oJtdCp
-	DBFOyVFsZnLC3EkURPuhz0NXcNznIZ+D63f/K3L7FaJ2bs3BUS+CvjQFTxg14/LsA7FEo0qM1U1
-	+x4AUWKESSHc4EkuwXmHNwzmb0+kAgO8s5Zk1ozlDuNBOnietjT3XY0TEd5lCnB9txo9lGUb03x
-	F/t/ISWRBwmX41AkZNem+8CCQC7OkAjUXcCuoUlbBeLpmIm6a8i3wWgVmdLnZ+7Tgt/igWU1b/k
-	0Yrgo5DkBG2Vfa2GZxJY0cGDw09wb+0T
-X-Received: by 2002:a05:6000:43c6:10b0:3a4:f744:e01b with SMTP id ffacd0b85a97d-3b60e50fde7mr4597796f8f.39.1752765347676;
-        Thu, 17 Jul 2025 08:15:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHFtPeuqTWsjIxNWgdgPfM7y344zYuORqf7QbkSlUFf9f++5E7a8c5uRhTqR3BnA+eFgTgbHw==
-X-Received: by 2002:a05:6000:43c6:10b0:3a4:f744:e01b with SMTP id ffacd0b85a97d-3b60e50fde7mr4597754f8f.39.1752765347181;
-        Thu, 17 Jul 2025 08:15:47 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:150d:fc00:de3:4725:47c6:6809])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8e1e8cfsm20568867f8f.80.2025.07.17.08.15.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jul 2025 08:15:46 -0700 (PDT)
-Date: Thu, 17 Jul 2025 11:15:43 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Parav Pandit <parav@nvidia.com>, virtualization@lists.linux.dev,
-	stefanha@redhat.com, alok.a.tiwari@oracle.com,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH RFC v5 1/5] pci: report surprise removal event
-Message-ID: <20250717111154-mutt-send-email-mst@kernel.org>
-References: <20250715022111-mutt-send-email-mst@kernel.org>
- <20250716222900.GA2556670@bhelgaas>
+	s=arc-20240116; t=1752766639; c=relaxed/simple;
+	bh=a0vlojsWLFqpyamqySLu2FdpCAD0OWEIk4/dwKtK5A4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IIxEVCqQQFH8yQwdIsrJTT9xGfbEumzHaffHjXkG3/y1uEHc98UoRCtGnDAtFsEWqlMheON9qkhVPi0Ej6WQe/1mO7W3LSnx2AjG6nih7XSAQE38aE9aahS+qKOwkQdwFZTr9mySRSTdEaeT+N8khI/XPQSiTFU7zM2btaybgOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I4DCe0Wu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D69F2C4CEE3;
+	Thu, 17 Jul 2025 15:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752766638;
+	bh=a0vlojsWLFqpyamqySLu2FdpCAD0OWEIk4/dwKtK5A4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=I4DCe0Wu76JCO9xDZy6z3QT2EJSoL/4HAqn+/RCsaDSmDHrDAffYxqBN+fp1+p8qT
+	 Rm+phDh+PpHpqtRCqc0X8nSSZcIeu5Y+kW1sTJ4WCwdKawJm0plH+j2eYbLeySCVAE
+	 81bCNEtaI4kWfJNmEfRnw2VQLLHyX50NKRojmVmmt/CTilaNNjHCGIO9P9XDz9a8FJ
+	 dosf7emh8TZRcXGVBafNZfeuga5fSHkOyiUywPe6eFDpJ0fHumazp7yuthkjkq/YpQ
+	 aD7zkmdIF9i1mmE5cbn/4LyVyecfchmSV8Xlwd5dHP9oCVt7RqRJSp7FJjE6gmRfKw
+	 3UJpxNawRqRJg==
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-611f48c6e30so541433eaf.0;
+        Thu, 17 Jul 2025 08:37:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW1tfAg67VouVbSCH1D2K/p6MxEjPkQmjtL/HZg8T0XT3iQfbop2/eLNP+N9K9vUiG2cOZ7g10yW9PKf3Y=@vger.kernel.org, AJvYcCWEOw74NqA51kAcA/lOXbzkKg7YHTFXfoKuLH0buZ3Ovl7QvP/vvcn1n8Ij6It7nKTAfyOLrpTT3XE7@vger.kernel.org, AJvYcCX+007svqMEdh/moRgrZvflPzxF07ygQC1cRhIC2GogPftfGS/XQWLPHhZNPmVJqeAdoeVdWa43VPY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztFYDUYI/XGgCbUWzDqJ5Wtu71CKYZY8ZdnVEOtEXXLIvptEPK
+	1y1ziq2kodTYWxgiQvKqksc6t4jtthUJhkaffdtpP/Bex8e9rNSBUhG1hhHLu1rNxJ2X96NQ3NJ
+	YPESTGTcJst/IcNdExIdGSTtud0Z6XoA=
+X-Google-Smtp-Source: AGHT+IEml34oxpvPpWkQPR5hHME0NYRSKwIBLGlh1zEHVcWbgVoD5yKsFFOO7VaTzk+7e7M5k8nyi+GD5WtLrHXmAjs=
+X-Received: by 2002:a05:6820:6408:b0:615:7f6b:2ccc with SMTP id
+ 006d021491bc7-615ad9c1bb9mr1656821eaf.3.1752766633284; Thu, 17 Jul 2025
+ 08:37:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250716222900.GA2556670@bhelgaas>
+References: <20250717004034.2998443-1-david.e.box@linux.intel.com>
+ <4xcwba3d4slmz5gfuwypavxqreobnigzyu4vib6powtbibytyp@mmqcns27vlyr>
+ <CAJZ5v0h+v5pUP39vTWpNNK2D8=X2UdjUTtZ7yQHCQ2k=r2kkMg@mail.gmail.com> <tbj67d2j4bzf3em5nw73w354lqji3baurajbseyouls53odjxq@4edjrxtdaeum>
+In-Reply-To: <tbj67d2j4bzf3em5nw73w354lqji3baurajbseyouls53odjxq@4edjrxtdaeum>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 17 Jul 2025 17:37:01 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0htsq80MT53HQ+=yJZjjjtaKc7Ccmvps6j9Z5phjT0d4w@mail.gmail.com>
+X-Gm-Features: Ac12FXyNRFPLuXjNGlwSJ-_TR4lsaaA7B_XUzqOjzN5kL3XwM3ytEw5kXKjHd5w
+Message-ID: <CAJZ5v0htsq80MT53HQ+=yJZjjjtaKc7Ccmvps6j9Z5phjT0d4w@mail.gmail.com>
+Subject: Re: [RFC 0/2] PCI/ASPM: Allow controller-defined default link state
+To: David Box <david.e.box@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, mani@kernel.org, bhelgaas@google.com, 
+	vicamo.yang@canonical.com, kenny@panix.com, ilpo.jarvinen@linux.intel.com, 
+	nirmal.patel@linux.intel.com, linux-pm@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 16, 2025 at 05:29:00PM -0500, Bjorn Helgaas wrote:
-> On Tue, Jul 15, 2025 at 02:28:20AM -0400, Michael S. Tsirkin wrote:
-> > On Mon, Jul 14, 2025 at 04:13:51PM -0500, Bjorn Helgaas wrote:
-> > > On Mon, Jul 14, 2025 at 02:26:19AM -0400, Michael S. Tsirkin wrote:
-> > > > On Wed, Jul 09, 2025 at 06:38:20PM -0500, Bjorn Helgaas wrote:
-> > > > > On Wed, Jul 09, 2025 at 04:55:26PM -0400, Michael S. Tsirkin wrote:
-> > > > > > At the moment, in case of a surprise removal, the regular
-> > > > > > remove callback is invoked, exclusively.  This works well,
-> > > > > > because mostly, the cleanup would be the same.
-> > > > > > 
-> > > > > > However, there's a race: imagine device removal was
-> > > > > > initiated by a user action, such as driver unbind, and it in
-> > > > > > turn initiated some cleanup and is now waiting for an
-> > > > > > interrupt from the device. If the device is now
-> > > > > > surprise-removed, that never arrives and the remove callback
-> > > > > > hangs forever.
-> > > > > > 
-> > > > > > For example, this was reported for virtio-blk:
-> > > > > > 
-> > > > > > 	1. the graceful removal is ongoing in the remove() callback, where disk
-> > > > > > 	   deletion del_gendisk() is ongoing, which waits for the requests +to
-> > > > > > 	   complete,
-> > > > > > 
-> > > > > > 	2. Now few requests are yet to complete, and surprise removal started.
-> > > > > > 
-> > > > > > 	At this point, virtio block driver will not get notified by the driver
-> > > > > > 	core layer, because it is likely serializing remove() happening by
-> > > > > > 	+user/driver unload and PCI hotplug driver-initiated device removal.  So
-> > > > > > 	vblk driver doesn't know that device is removed, block layer is waiting
-> > > > > > 	for requests completions to arrive which it never gets.  So
-> > > > > > 	del_gendisk() gets stuck.
-> > > > > > 
-> > > > > > Drivers can artificially add timeouts to handle that, but it can be
-> > > > > > flaky.
-> > > > > > 
-> > > > > > Instead, let's add a way for the driver to be notified about the
-> > > > > > disconnect. It can then do any necessary cleanup, knowing that the
-> > > > > > device is inactive.
-> > > > > 
-> > > > > This relies on somebody (typically pciehp, I guess) calling
-> > > > > pci_dev_set_disconnected() when a surprise remove happens.
-> > > > > 
-> > > > > Do you think it would be practical for the driver's .remove() method
-> > > > > to recognize that the device may stop responding at any point, even if
-> > > > > no hotplug driver is present to call pci_dev_set_disconnected()?
-> > > > > 
-> > > > > Waiting forever for an interrupt seems kind of vulnerable in general.
-> > > > > Maybe "artificially adding timeouts" is alluding to *not* waiting
-> > > > > forever for interrupts?  That doesn't seem artificial to me because
-> > > > > it's just a fact of life that devices can disappear at arbitrary
-> > > > > times.
-> > > > > 
-> > > > > It seems a little fragile to me to depend on some other part of the
-> > > > > system to notice the surprise removal and tell you about it or
-> > > > > schedule your work function.  I think it would be more robust for the
-> > > > > driver to check directly, i.e., assume writes to the device may be
-> > > > > lost, check for PCI_POSSIBLE_ERROR() after reads from the device, and
-> > > > > never wait for an interrupt without a timeout.
-> > > > 
-> > > > virtio is ... kind of special, in that users already take it for
-> > > > granted that having a device as long as they want to respond
-> > > > still does not lead to errors and data loss.
-> > > > 
-> > > > Makes it a bit harder as our timeout would have to
-> > > > check for presence and retry, we can't just fail as a
-> > > > normal hardware device does.
-> > > 
-> > > Sorry, I don't know enough about virtio to follow what you said about 
-> > > "having a device as long as they want to respond".
-> > > 
-> > > We started with a graceful remove.  That must mean the user no longer
-> > > needs the device.
-> > 
-> > I'll try to clarify:
-> > 
-> > Indeed, the user will not submit new requests,
-> > but users might also not know that there are some old requests
-> > being in progress of being processed by the device.
-> > The driver, currently, waits for that processsing to be complete.
-> > Cancelling that with a reset on a timeout might be a regression,
-> > unless the timeout is very long.
-> 
-> This seems like a corner case and maybe rare enough that simply making
-> the timeout very long would be a possibility.
+On Thu, Jul 17, 2025 at 4:13=E2=80=AFPM David Box <david.e.box@linux.intel.=
+com> wrote:
+>
+> Hi Mani, Rafael,
+>
+> On Thu, Jul 17, 2025 at 12:03:32PM +0200, Rafael J. Wysocki wrote:
+> > On Thu, Jul 17, 2025 at 8:55=E2=80=AFAM Manivannan Sadhasivam <mani@ker=
+nel.org> wrote:
+> > >
+> > > On Wed, Jul 16, 2025 at 05:40:24PM GMT, David E. Box wrote:
+> > > > Hi all,
+> > > >
+> > > > This RFC series addresses a limitation in the PCIe ASPM subsystem w=
+here
+> > > > devices on synthetic PCIe hierarchies, such as those created by Int=
+el=E2=80=99s
+> > > > Volume Management Device (VMD), do not receive default ASPM setting=
+s
+> > > > because they are not visible to firmware. As a result, ASPM remains
+> > > > disabled on these devices unless explicitly enabled later by the dr=
+iver,
+> > > > contrary to platform power-saving expectations.
+> > > >
+> > > > Problem with Current Behavior
+> > > >
+> > > > Today, ASPM default policy is set in pcie_aspm_cap_init() based on =
+values
+> > > > provided by BIOS. For devices under VMD, BIOS has no visibility int=
+o the
+> > > > hierarchy, and therefore no ASPM defaults are applied. The VMD driv=
+er can
+> > > > attempt to walk the bus hierarchy and enable ASPM post-init using r=
+untime
+> > > > mechanisms, but this fails when aspm_disabled is set because the ke=
+rnel
+> > > > intentionally blocks runtime ASPM changes under ACPI=E2=80=99s FADT=
+_NO_ASPM flag.
+> > > > However, this flag does not apply to VMD, which controls its domain
+> > > > independently of firmware.
+> > > >
+> > > > Goal
+> > > >
+> > > > The ideal solution is to allow VMD or any controller driver managin=
+g a
+> > > > synthetic hierarchy to provide a default ASPM link state at the sam=
+e time
+> > > > it's set for BIOS, in pcie_aspm_cap_init().
+> > > >
+> > >
+> > > I like the idea and would like to use it to address the similar limit=
+ation on
+> > > Qcom SoCs where the BIOS doesn't configure ASPM settings for any devi=
+ces and
+> > > sometimes there is no BIOS at all (typical for SoCs used in embedded =
+usecases).
+> > > So I was using pci_walk_bus() in the controller driver to enable ASPM=
+ for all
+> > > devices, but that obviously has issues with hotplugged devices.
+> > >
+> > > > Solution
+> > > >
+> > > > 1. A new bus flag, PCI_BUS_FLAGS_ASPM_DEFAULT_OVERRIDE, based on Ra=
+fael's
+> > > > suggestion, to signal that the driver intends to override the defau=
+lt ASPM
+> > > > setting. 2. A new field, aspm_bus_link_state, in 'struct pci_bus' t=
+o supply
+> > > > the desired default link state using the existing PCIE_LINK_STATE_X=
+XX
+> > > > bitmask.
+> > > >
+> > >
+> > > Why would you need to make it the 'bus' specific flag? It is clear th=
+at the
+> > > controller driver is providing the default ASPM setting. So pcie_aspm=
+_cap_init()
+> > > should be able to use the value provided by it for all busses.
+> > >
+> > > Like:
+> > >
+> > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > > index 2ad1852ac9b2..830496e556af 100644
+> > > --- a/drivers/pci/pcie/aspm.c
+> > > +++ b/drivers/pci/pcie/aspm.c
+> > > @@ -791,6 +791,7 @@ static void aspm_l1ss_init(struct pcie_link_state=
+ *link)
+> > >  static void pcie_aspm_cap_init(struct pcie_link_state *link, int bla=
+cklist)
+> > >  {
+> > >         struct pci_dev *child =3D link->downstream, *parent =3D link-=
+>pdev;
+> > > +       struct pci_host_bridge *host =3D pci_find_host_bridge(parent-=
+>bus);
+>
+> I see. This is better. I'll make this change.
+>
+> > >         u32 parent_lnkcap, child_lnkcap;
+> > >         u16 parent_lnkctl, child_lnkctl;
+> > >         struct pci_bus *linkbus =3D parent->subordinate;
+> > > @@ -866,8 +867,8 @@ static void pcie_aspm_cap_init(struct pcie_link_s=
+tate *link, int blacklist)
+> > >         }
+> > >
+> > >         /* Save default state */
+> > > -       if (parent->bus->bus_flags & PCI_BUS_FLAGS_NO_ASPM_DEFAULT)
+> > > -               link->aspm_default =3D parent->bus->aspm_bus_link_sta=
+te;
+> > > +       if (host && host->aspm_bus_link_state)
+> > > +               link->aspm_default =3D host->aspm_bus_link_state;
+> > >         else
+> > >                 link->aspm_default =3D link->aspm_enabled;
+> > >
+> > > This avoids the usage of the bus flag (which your series is not at al=
+l making
+> > > use of) and allows setting the 'host_bridge::aspm_bus_link_state' eas=
+ily by the
+> > > controller drivers.
+> >
+> > This is very similar to what I have just suggested and I like this one.
+>
+> I considered this. But 0 could technically mean that the controller wants
+> ASPM to be disabled. The VMD driver doesn't need to do this though and if
+> others don't currently need this then I can drop the flag.
 
-Indeed the timeout needs to be very long, and the average would still be
-reasonable, but the worst case is terrible and the user can't insert a
-replacement card all this time. The system is perceived as flaky.
-
-
-> > > > And there's the overhead thing - poking at the device a lot
-> > > > puts a high load on the host.
-> > > 
-> > > Checking for PCI_POSSIBLE_ERROR() doesn't touch the device.  If you
-> > > did a config read already, and the result happened to be ~0, *then* we
-> > > have the problem of figuring out whether the actual data from the
-> > > device was ~0, or if the read failed and the Root Complex synthesized
-> > > the ~0.  In many cases a driver knows that ~0 is not a possible
-> > > register value.  Otherwise it might have to read another register that
-> > > is known not to be ~0.
-> > 
-> > To clarify, virtio generally is designed to operate solely
-> > by means of DMA and interrupt, completely avoiding any PCI
-> > reads. This, due to PCI reads being very expensive in virtualized
-> > scenarios.
-> > 
-> > The extra overhead I refer to is exactly initiating such a read
-> > where there would not be one in normal operation.
-> 
-> Thanks, this part is very helpful.  And since config accesses are very
-> expensive in *all* environments, I expect most drivers for
-> high-performance devices work the same way and only do config accesses
-> during at probe time.
-> 
-> If that's true, it will make this more understandable if the commit
-> log approaches it from that direction and omits virtio specifics.
-> 
-> Bjorn
-
-Will do, thanks a lot!
-
--- 
-MST
-
+Until anyone wants 0 to mean something different from "figure out the
+default settings for me", I would not use the flag.
 
