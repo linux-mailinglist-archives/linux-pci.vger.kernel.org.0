@@ -1,178 +1,150 @@
-Return-Path: <linux-pci+bounces-32345-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32346-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82C8FB08137
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 02:02:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5878B08179
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 02:40:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77D053AFE24
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 00:02:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F948580216
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 00:40:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC78DEEC3;
-	Thu, 17 Jul 2025 00:02:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 679B981720;
+	Thu, 17 Jul 2025 00:40:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TpKbkaFz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hHHIdONq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937CFBE46;
-	Thu, 17 Jul 2025 00:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA762E370C;
+	Thu, 17 Jul 2025 00:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752710552; cv=none; b=pY1es9bw3lpa9R/CvXw7vhS+E5oFBbPt1W5G+UdlklNY7bEfiCcjdus6LUoJsXkTEDz2IOPhBlaVP30a0jebSyWK/gcFrzv5P1KmKtPRe2HRTlPerjNhQc/IxKPRdd/2MdaGHiDYOZds8dP56jY9GegaCog7iQDIq8Mk5+Xdz9Q=
+	t=1752712846; cv=none; b=e+DDGWMlificHNnLnwRpRqGOgbt20bJerPa9vLVkumaybxgtYL/sZoy1aKLrF1ip9znxZkiLYzSd/ucKbnfvLevLa/MSxAstB8s3aTbNCOIdD7dvoWXF/Gl4Ed9ueygD5sYc1aCyNSG4NWi8BDiYRETySrAsfpJS8uAqHFsir3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752710552; c=relaxed/simple;
-	bh=aN8uGrdQ9GV2sZ0Iao19m2r7XXJCyuraNegypk978EA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O5+QxSf09N13XCOplV56nPAf5NKYPMSc6cZN0Nzh/3el0jlvzusD+hsbjNwTG8I73D0elZASKSEFjCUukC7w8Zm+pGCp0TW/K2lXpT0otWO5kCmrNMRySHdKOXWxHi9jnBIYCkbbD6O3YUE+TCvRy2WLmaAer0BxLRGXts9gDCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TpKbkaFz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C389FC4CEE7;
-	Thu, 17 Jul 2025 00:02:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752710552;
-	bh=aN8uGrdQ9GV2sZ0Iao19m2r7XXJCyuraNegypk978EA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TpKbkaFzYgX/5qfdQm54MccCJUjNP5Qj0DcD2O38AWFj2+pTRdbWhgEzA9AQo9ot5
-	 rexTigbjuSCoxjiNrb0mEv9hRZNX8Zg3lyFx7he0pF/C0RAUykq6RYUAWcXC5Nzt0B
-	 N4ZrThShdXtJX6ONccFRB+hL6qVZltMIPKdh5g0BwQ5dyLTQP9tRP7qMHkNqYKlW4b
-	 WXZsxQK57wmkozzFZ+eErhaTo2en3ChRSFKBlLcRjDsuvYrXSyhECT5FtMJiQG0vz2
-	 9wTBPjiOXhhHd73EB102b+YGCon4uDFeRX4S0ZxJkqnypYCzo1ssC9oAHdggE2B3ge
-	 plfcEUOWRAj/g==
-Message-ID: <e9b331d1-d175-4e5a-ae08-445a8a8e1f45@kernel.org>
-Date: Wed, 16 Jul 2025 19:02:28 -0500
+	s=arc-20240116; t=1752712846; c=relaxed/simple;
+	bh=Y+Cots5rJi/FBfAEv4lDLQM4MAAkN0eNxoE077TY2OQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AxEM6aPRKFg4DC7kFHBJSS67A+L0BiDmlTHXC4ezbeXGXnJI5CcXFzKlXxILxABI52yTW8XS/5JHnX4lnLtToFaD/QonNb5FpwNi1De2CeGmPpG7jxpr56CsfKN/6n6Icv05LegqlvKy7KuRXSjdw1TpEv21selkNlNI/iEOk2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hHHIdONq; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752712845; x=1784248845;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Y+Cots5rJi/FBfAEv4lDLQM4MAAkN0eNxoE077TY2OQ=;
+  b=hHHIdONqJi9Zpj0As2WEdKN66ELXIgWDR6SHLLjQ05YYI9JofLduXWdW
+   XbDzhBF5BZYZLk/WoHHBBSsbPAs3XTZN4ao2rXoUr6MmXI2zw7NLYh9Nh
+   ZZ1eHJKPAn5FW5o5qE+4Eei91Ebo1SdNw0B4jr8ZZqCI3yp1m4y7R1Miv
+   EZEuLQB1V92pkpO6Vu5UMnoxXnxSAl17u41jq0e1ppE4COlZoDxmkppaD
+   hFVJnt5q1YWXxJv/89C+8WLpvjCNt02Ilrwo3V6anXX0B2GUdfgsHHGDc
+   oyJsOIEmy4hRWupj5esQnM9WtbhKra++4yVL1E+8OeD6Z/mxccdxe8Fqg
+   g==;
+X-CSE-ConnectionGUID: iA3INIuUTTK0Q82xnEJuCQ==
+X-CSE-MsgGUID: MS3rKLZ5QVi8g/wXku5i+w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="54912420"
+X-IronPort-AV: E=Sophos;i="6.16,317,1744095600"; 
+   d="scan'208";a="54912420"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2025 17:40:44 -0700
+X-CSE-ConnectionGUID: tmfiHJLNTvOBnxZra5SbBA==
+X-CSE-MsgGUID: 9djRhehiRJmPdxzYy78DMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,317,1744095600"; 
+   d="scan'208";a="188596607"
+Received: from rfrazer-mobl3.amr.corp.intel.com (HELO debox1-desk4.intel.com) ([10.124.220.193])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2025 17:40:42 -0700
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: rafael@kernel.org,
+	bhelgaas@google.com,
+	vicamo.yang@canonical.com,
+	kenny@panix.com,
+	ilpo.jarvinen@linux.intel.com,
+	nirmal.patel@linux.intel.com
+Cc: "David E. Box" <david.e.box@linux.intel.com>,
+	linux-pm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC 0/2] PCI/ASPM: Allow controller-defined default link state
+Date: Wed, 16 Jul 2025 17:40:24 -0700
+Message-ID: <20250717004034.2998443-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/9] Adjust fbcon console device detection
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
- "open list:SOUND" <linux-sound@vger.kernel.org>,
- Daniel Dadap <ddadap@nvidia.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250716232300.GA2565283@bhelgaas>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250716232300.GA2565283@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+This RFC series addresses a limitation in the PCIe ASPM subsystem where
+devices on synthetic PCIe hierarchies, such as those created by Intel=E2=80=
+=99s
+Volume Management Device (VMD), do not receive default ASPM settings
+because they are not visible to firmware. As a result, ASPM remains
+disabled on these devices unless explicitly enabled later by the driver,
+contrary to platform power-saving expectations.
+
+Problem with Current Behavior
+
+Today, ASPM default policy is set in pcie_aspm_cap_init() based on values
+provided by BIOS. For devices under VMD, BIOS has no visibility into the
+hierarchy, and therefore no ASPM defaults are applied. The VMD driver can
+attempt to walk the bus hierarchy and enable ASPM post-init using runtime
+mechanisms, but this fails when aspm_disabled is set because the kernel
+intentionally blocks runtime ASPM changes under ACPI=E2=80=99s FADT_NO_ASPM=
+ flag.
+However, this flag does not apply to VMD, which controls its domain
+independently of firmware.
+
+Goal
+
+The ideal solution is to allow VMD or any controller driver managing a
+synthetic hierarchy to provide a default ASPM link state at the same time
+it's set for BIOS, in pcie_aspm_cap_init().
+
+Solution
+
+1. A new bus flag, PCI_BUS_FLAGS_ASPM_DEFAULT_OVERRIDE, based on Rafael's
+suggestion, to signal that the driver intends to override the default ASPM
+setting. 2. A new field, aspm_bus_link_state, in 'struct pci_bus' to supply
+the desired default link state using the existing PCIE_LINK_STATE_XXX
+bitmask.
+
+If the flag is set, the ASPM core uses the driver-supplied value in place
+of the firmware one. If not, behavior is unchanged.
+
+Only the immediate parent bus is checked for this flag. If future use cases
+require deeper inheritance (e.g., through PCIe switches), the logic can be
+extended to walk the bus hierarchy.
+
+This approach avoids adding driver-specific logic to ASPM core code and
+keeps the layering clean.
+
+Testing is appreciated as I didn't get a chance to do so yet but plan to.
+
+Thanks, David
+
+---
+
+David E. Box (2):
+  PCI/ASPM: Allow drivers to provide ASPM link state via pci_bus
+  PCI: vmd: Provide default ASPM link state for synthetic hierarchy
+
+ drivers/pci/controller/vmd.c |  7 +++++--
+ drivers/pci/pcie/aspm.c      |  5 ++++-
+ include/linux/pci.h          | 12 ++++++++----
+ 3 files changed, 17 insertions(+), 7 deletions(-)
 
 
-
-On 7/16/25 6:23 PM, Bjorn Helgaas wrote:
-> On Mon, Jul 14, 2025 at 04:21:37PM -0500, Mario Limonciello wrote:
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> This series started out as changes to VGA arbiter to try to handle a case
->> of a system with 2 GPUs that are not VGA devices.  This was discussed
->> but decided not to overload the VGA arbiter for non VGA devices.
->>
->> Instead move the x86 specific detection of framebuffer resources into x86
->> specific code that the fbcon can use to properly identify the primary
->> device. This code is still called from the VGA arbiter, and the logic does
->> not change there. To avoid regression default to VGA arbiter and only fall
->> back to looking up with x86 specific detection method.
->>
->> In order for userspace to also be able to discover which device was the
->> primary video display device create a new sysfs file 'boot_display'.
->>
->> A matching userspace implementation for this file is available here:
->> Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/39
->> Link: https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/2038
->>
->> Dave Airlie has been pinged for a comment on this approach.
->> Dave had suggested in the past [1]:
->>
->> "
->>   But yes if that doesn't work, then maybe we need to make the boot_vga
->>   flag mean boot_display_gpu, and fix it in the kernel
->> "
->>
->> This was one of the approached tried in earlier revisions and it was
->> rejected in favor of creating a new sysfs file (which is what this
->> version does).
->>
->> It is suggested that this series merge entirely through the PCI tree.
->>
->> Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/37#note_2938602 [1]
-> 
-> There's an underlying bug that we're trying to fix with this series
-> and the related libpciaccess and xserver changes, isn't there?  Can we
-> include that somewhere to help motivate this?  (I guess it's really
-> only the last two or three patches that are strictly related, right?)
-
-Do you mean in the cover letter of another spin of the series or just 
-inline here?
-
-The issue is that on systems with more than one GPU userspace doesn't 
-know which one to be used to treat as primary.  The concept of primary 
-is important to be able to decide which GPU is used for display and 
-which is used for rendering.  If it's guessed wrong then both GPUs will 
-be kept awake burning a lot of power.
-
-Historically it would use the "boot_vga" attribute but this isn't 
-present on modern GPUs.  So this series introduces a new attribute to 
-give a hint to userspace which was used for display at bootup.  The 
-matching patches to libpciaccess and xorg-server utilize this new sysfs 
-file to set things up as intended.
-
-And yes, the last few ones are the only ones strictly related to this 
-issue. The other patches were just cleanups to use the same new helper 
-from these patches elsewhere in the kernel too.
-
-> 
->> v8 fixes an LKP robot reported issue
->>
->> Mario Limonciello (9):
->>    PCI: Add helper for checking if a PCI device is a display controller
->>    vfio/pci: Use pci_is_display()
->>    vga_switcheroo: Use pci_is_display()
->>    iommu/vt-d: Use pci_is_display()
->>    ALSA: hda: Use pci_is_display()
->>    Fix access to video_is_primary_device() when compiled without
->>      CONFIG_VIDEO
->>    PCI/VGA: Replace vga_is_firmware_default() with a screen info check
->>    fbcon: Use screen info to find primary device
->>    PCI: Add a new 'boot_display' attribute
->>
->>   Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
->>   arch/parisc/include/asm/video.h         |  2 +-
->>   arch/sparc/include/asm/video.h          |  2 ++
->>   arch/x86/include/asm/video.h            |  2 ++
->>   arch/x86/video/video-common.c           | 17 ++++++++-
->>   drivers/gpu/vga/vga_switcheroo.c        |  2 +-
->>   drivers/iommu/intel/iommu.c             |  2 +-
->>   drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++++++
->>   drivers/pci/vgaarb.c                    | 31 +++--------------
->>   drivers/vfio/pci/vfio_pci_igd.c         |  3 +-
->>   include/linux/pci.h                     | 15 ++++++++
->>   sound/hda/hdac_i915.c                   |  2 +-
->>   sound/pci/hda/hda_intel.c               |  4 +--
->>   13 files changed, 101 insertions(+), 35 deletions(-)
->>
->> -- 
->> 2.43.0
->>
+base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
+--=20
+2.43.0
 
 
