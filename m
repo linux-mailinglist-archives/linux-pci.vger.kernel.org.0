@@ -1,154 +1,149 @@
-Return-Path: <linux-pci+bounces-32445-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32446-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F2B1B09490
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 21:07:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3E70B09499
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 21:11:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A32225833C4
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 19:07:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D4FB0567933
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 19:11:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E88A298CA1;
-	Thu, 17 Jul 2025 19:07:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71CD82F7CEC;
+	Thu, 17 Jul 2025 19:11:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N+igieEw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lX4LSuxQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B432163BD;
-	Thu, 17 Jul 2025 19:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80442153FB;
+	Thu, 17 Jul 2025 19:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752779272; cv=none; b=CVAkUAw5AD5Jt+7iojLUtl+RNKT18xyJG2R2Ur/STf9mnfYYJknA6KWv5uM1X/0fZNh7dyfMOn4mJ5A5OXsk67gWiNkb7UoV+mUu8DLDQK8UyRkpx9P/qlMssPLHh4mtAayKWtWVrPmfRN+W6sE0gtdkkX4LVNfz8alYze5eoOQ=
+	t=1752779461; cv=none; b=beDmHXhCLOiyBxSAmUcL8DmvPe1vMFddd/h0NSzJYdOg/ri8HQ+DkmYdSvQ2zpTsJcblnJSIjLqvoFxQUwYvX1Cr7ctazI2ire24VwbyL/UCCssX0sP7sRTnDJgyvDZpnHveXE7U/GOABAjp4oakPv5Oq4XnxKouea3f0Qm5pv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752779272; c=relaxed/simple;
-	bh=PKFjRqVwhUwPbYtM13D4640UBaWEd7kT1tK0lbdIN0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jUs8xR4ISxZXWidPqdjsTF414mMEQgSpf+MrbNuXbZwJF3uX4ClpsTkQYr0jyRQbj6YRPdEkWvBIx9OKmyhACBlUdqhiIQ6+5CDwUSiS7lKetbgDmZ6khd5mEgVTPm3NUFqWIwf7u86i7kzsG/ZF1z4zWOlIVj2Kyp3pZu+Kqrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N+igieEw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC017C4CEE3;
-	Thu, 17 Jul 2025 19:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752779271;
-	bh=PKFjRqVwhUwPbYtM13D4640UBaWEd7kT1tK0lbdIN0E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=N+igieEwq4MRp14XvuTho3hv1FOnkG9+CHfPQ3Lp42p4/0JQnAVOU3aULMXucnQK5
-	 pgkBX5sZzTU6vjJp+euu0mEV8zSulxaZK2IzO7xbt+BFd6/ieB8KtWodaOYFYAoaJj
-	 UXgLfd6ECTjgXS08L9dFUWFV9YIvI7gCpENCwsPFp5lL9QirKO9foFui4k328Nb/uN
-	 mL7tIWM6aVi7zR9jKB1FnbnvQgDoXJFcHV5LqYigEIu0So10spoVAb/FHeOMYsxe+z
-	 /Dwu2jTbRceaZR6wzgFJ2CU7xZZxtFf1xMfggcqUaf9eu8qUKOjuSlP8tk3jnLQv2B
-	 YU3X/zcjsKAUg==
-Date: Thu, 17 Jul 2025 14:07:50 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Matthew W Carlis <mattc@purestorage.com>
-Cc: xueshuai@linux.alibaba.com, anil.s.keshavamurthy@intel.com,
-	bhelgaas@google.com, bp@alien8.de, davem@davemloft.net,
-	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	lukas@wunner.de, mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
-	naveen@kernel.org, oleg@redhat.com, peterz@infradead.org,
-	rostedt@goodmis.org, tianruidong@linux.alibaba.com,
-	tony.luck@intel.com,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20250717190750.GA2592519@bhelgaas>
+	s=arc-20240116; t=1752779461; c=relaxed/simple;
+	bh=X2QTX7soCtQoFbN1OcRPWW6+MAHVqg1KHTXwB1p8eZ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eAlnmRZPzkBBez6unuPLFBmsGlwj6wFL6y0wF64IjzIeIvT2bcU+knXTrdG4Hblx4McrPo49B9GQy5ost7pnVCoHLw/I2PxDEXS04zA0QaEVyQ9wz56mISVD2ZFWhCFoQPC93zymRn3ZEe4dvd4YMdzFeo+bXaO6JeZKkfU/Xys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lX4LSuxQ; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b3f2f8469b7so7470a12.3;
+        Thu, 17 Jul 2025 12:10:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752779459; x=1753384259; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=whHHXq9ZKdXTAW705B1rQtAiW8MTVvGsjlJTeXv7yyA=;
+        b=lX4LSuxQC8DuWRsrH78UyuLiD1jAAHFGQB62AnI6Yc3WFMFMQfCqyECxB2Zp1wx/yM
+         VvJf+I0w4/4K/iPF6Js2xlfZzTulg3T1eAB/J4KmXtBNfw6ynn9x5Q9hB6FVoBHBKgIx
+         1l/hELRj41cFGxgRZyVXvbyjc+1d5SJej2kDll/5XtweBiI7Wq8gXypz7Ju3NbowDMqF
+         jJG2Wo2483v0eUHggpXMCrwS/fgqK7YnyyyALHW8CFZ45vu5+h27UWhNW4YKvF1+mkQh
+         kUZH0owDHpoxjnKFMRvNrZ/JzxMCJsTAvfy+8YUjlduD1/Yzc3R9JsaTsHg/tkGHp0G0
+         pRRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752779459; x=1753384259;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=whHHXq9ZKdXTAW705B1rQtAiW8MTVvGsjlJTeXv7yyA=;
+        b=lfBvqebaYVuQ55eDJPRzuR5NyehIirhCN41qP7ULw29tx1XFhrDFWjw05iOdVaNeYc
+         sqnIXzxNU7HHUTiIoc8bi3vIBYQlUf2kUhrtDeoei11200V1Gque1eyCNvh4kBgwDMgy
+         uTBjdzK1Px31RVQqL4EVP4I4qJ6XA1SUWl2HzGT/Rg1vq/cOctHd6eTMEgmDWvMEVs6/
+         zPYsl+hYKZxigfOr4syIepOyjMhK95xUJBtpMCDBdtBb03TsJgcBzh+bqdL1kirT5zNz
+         qNK35sSe0qBnp4DcIwQyYK0Ruq1oNX5wYFi/iQYu/KFRoYW9DgR7dQQdI2/Ml1VXQdS0
+         60iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYilkWA9eqX2mmbKZtinNIuoB542NWtdgBvMpxUy7FntFiFuf6SzXDFEP/r7DQvZoTfVfj4jLEgymEyGU=@vger.kernel.org, AJvYcCVJ8X+9IiOkQGvyODqqLV4lv7TmDYt/YuPGieK8DsD8CDNOJyTKo/VfrOFg4thNw4gwgMLX3ux6WPVmcA==@vger.kernel.org, AJvYcCVKCTaUUdIVvffOEcWgc8oOdhlpSKDXBTdjrmcXn0IjQXcOR6NdI97z+LQMu2HSwuYTIbrfYN6VcvI=@vger.kernel.org, AJvYcCWELDfFQR8oz8bDaJfAuBgA7qzELVY5ZxBlzg2vyqa7t8y/mr5FsZEM4BOBa52gE893psVuLkivT/pq@vger.kernel.org, AJvYcCX/BGB+fG3WnWiR4PR/WU7UrvKHsa2ZQC/55fScU4iUro1uJbUW1P/x1hZ3g3bgbsKQmWTYXb1R8uCW@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWt+qFvgIuA9oku95+0dvJvX2ccrhi77mx3v+nOdXoGuIJNesJ
+	4XlNu6VR+zZCk21hQAIVE2zGySsSaYEDRV+VqHC/G24KQdYR1Z/SeLupae9Mu2oI5zIxoSxf1lD
+	tX6+Iu0ATXmop9JyOPTm7e7Dd66Fhg7o=
+X-Gm-Gg: ASbGncvgMKyHvxnChnZJgC4Axv1aYEVKS71TS/knoJiWo1RbK0RQINR0acu05kxDV+8
+	MhZlMYLLmo4OlOQ0pVnwUWxFltakaTPWJtT5rpnubi9SZ4E9k2p03LTjQIC0BD9uwQ5OX5HnYrX
+	S65mkLXp/NN174CAwEcB9JJ2MAZ9oxZ1KGEiGr9NGOSVUbxVQs7ZUmY57rc8Qg74gUWnOZbupxh
+	aTbqXBViOe2tRVd3dY=
+X-Google-Smtp-Source: AGHT+IFcDXeIo6uU4fndJVvGmN/jTY47SR5imHxzk90iAiBRzhNnnJo2QL9GoDY6Xm/D5hnz57/gEipwcAYqKUg8zQw=
+X-Received: by 2002:a17:90b:1cc3:b0:311:c5d9:2c8b with SMTP id
+ 98e67ed59e1d1-31c9e7767fbmr4619712a91.5.1752779459096; Thu, 17 Jul 2025
+ 12:10:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250717172826.22120-1-mattc@purestorage.com>
+References: <20250616175019.3471583-1-superm1@kernel.org> <20250616175019.3471583-4-superm1@kernel.org>
+In-Reply-To: <20250616175019.3471583-4-superm1@kernel.org>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Thu, 17 Jul 2025 15:10:47 -0400
+X-Gm-Features: Ac12FXzm6w4bvt8xXNl05VHu2uQA28FvAWVfU6YAJzv7lZsIpjWGCcVY04Bnf2I
+Message-ID: <CADnq5_Pn=0nCD-CyoeJxSAn=Gtn=evkaCBUH2pr_O-=7vpw+bw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] drm/amd: Avoid evicting resources at S5
+To: Mario Limonciello <superm1@kernel.org>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Alex Deucher <alexander.deucher@amd.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, 
+	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>, 
+	"open list:HIBERNATION (aka Software Suspend, aka swsusp)" <linux-pm@vger.kernel.org>, 
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K . Petersen" <martin.petersen@oracle.com>, 
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, 
+	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>, 
+	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>, 
+	AceLan Kao <acelan.kao@canonical.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, Denis Benato <benato.denis96@gmail.com>, 
+	=?UTF-8?Q?Merthan_Karaka=C5=9F?= <m3rthn.k@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[+cc Ilpo, Jonathan]
+On Mon, Jun 16, 2025 at 1:50=E2=80=AFPM Mario Limonciello <superm1@kernel.o=
+rg> wrote:
+>
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>
+> Normally resources are evicted on dGPUs at suspend or hibernate and
+> on APUs at hibernate.  These steps are unnecessary when using the S4
+> callbacks to put the system into S5.
+>
+> Cc: AceLan Kao <acelan.kao@canonical.com>
+> Cc: Kai-Heng Feng <kaihengf@nvidia.com>
+> Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Cc: Denis Benato <benato.denis96@gmail.com>
+> Cc: Merthan Karaka=C5=9F <m3rthn.k@gmail.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-On Thu, Jul 17, 2025 at 11:28:26AM -0600, Matthew W Carlis wrote:
-> A bit late to the discussion here..  Looks like "too late" in fact,
-> but I wanted to just make some comments.
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
 
-Not too late, thanks for your thoughts!  When I apply things, I
-consider them a draft with intention to go upstream, but not
-immutable.  If it makes sense to revise or postpone, we can still do
-that.
-
-> On Tue, 12 May 2025, Shuai Xue wrote:
-> > Hotplug events are critical indicators for analyzing hardware
-> > health,
-> 
-> In terms of a "hot plug" event I'm not actually sure what that
-> means. I mean to say that the spec has some room for different
-> implementations.  I think sometimes that means a presence detect
-> state change event, but a system is not required to implement a
-> presence pin (at least not for the Slot Status presence). Some
-> vendors support an "inband" presence which is when the LTSSM
-> essentially asserts presence if the link is active and deasserts it
-> when the link is down.
-> 
-> Appendix I in the newer PCIe specs say to use data link layer state
-> change event if presence is not implemented. It looks like this
-> tracepoint would still work, but its just something to keep in mind.
-> At the risk of including too much information I could see it also
-> being useful to put the device/vendor IDs of the DSP and the EP into
-> the trace event for link up. Perhaps even the link speed/width cap
-> for DSP/EP. The real challenge with tracking a fleet is getting all
-> the things you care about into one place.
-> 
-> On Tue, 20 May 2025, Lukas Wunner wrote:
-> > Link speed changes and device plug/unplug events are orthogonal
-> 
-> I guess what I wanted to get at here were some of the discussion
-> from Lukas & Ilpo. I think it makes sense to separate presence
-> events from link events, but I think it would make sense to have a
-> "link tracepoint" which reports previous and new speed. One of those
-> speeds being DOWN/DISABLED etc. Width could be in there as well. I
-> have seen many times now an engineer become confused about checking
-> speed because "Current Link Speed" & "Negotiated Link Width" are
-> "undefined" when "Data Link Layer Active" bit is unset. Ideally a
-> solution here would be immediately clear to the user.
-> 
-> When it comes to tracking things across a "fleet" having the slot
-> number of the device is extremely useful. We have an internal
-> specification for our slot number assignments that allows us to
-> track meaning across different generations of hardware or different
-> architectures. The BDF is often changing between generations, but
-> the meaning of the slot is not.
-
-All the tracepoints here already include:
-
-  - pci_name() (the bus/device/function)
-
-  - slot_name() (which I think comes from make_slot_name(); would you
-    want something else?)
-
-and IIUC, it would be helpful for you to add:
-
-  - DSP Vendor/Device ID (the Root Port or Switch Downstream Port,
-    which is relatively static, so seems less useful to me than the
-    USP/EP would be)
-
-  - USP/EP Vendor/Device ID
-
-And you would consider adding a new format for "Link Up" that would
-include the above plus current link speed/width?  I expect we will
-likely see new tracepoints similar to "Link Up" for link speed/width
-changes done by bwctrl, and this would definitely make sense for
-those.
-
-As a consumer of tracepoints, do you have an opinion on the event
-string?  I wonder if spaces in the strings complicate searching and
-scripting?  I don't think tracepoints necessarily need to match text
-in dmesg exactly because I suspect they're mostly processed
-mechanically.  But I'm not a tracepoint user myself (yet), and about
-20% of existing tracepoints already include spaces, so maybe it's not
-a concern.
-
-Bjorn
+> ---
+> v3: https://lore.kernel.org/linux-pm/20250609024619.407257-1-superm1@kern=
+el.org/T/#me6db0fb946e3d604a8f3d455128844ed802c82bb
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm=
+/amd/amdgpu/amdgpu_device.c
+> index 8edd88328749b..c5d8f6d551238 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> @@ -4966,6 +4966,10 @@ static int amdgpu_device_evict_resources(struct am=
+dgpu_device *adev)
+>         if (!adev->in_s4 && (adev->flags & AMD_IS_APU))
+>                 return 0;
+>
+> +       /* No need to evict when going to S5 through S4 callbacks */
+> +       if (system_state =3D=3D SYSTEM_HALT || system_state =3D=3D SYSTEM=
+_POWER_OFF)
+> +               return 0;
+> +
+>         ret =3D amdgpu_ttm_evict_resources(adev, TTM_PL_VRAM);
+>         if (ret)
+>                 DRM_WARN("evicting device resources failed\n");
+> --
+> 2.43.0
+>
 
