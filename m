@@ -1,172 +1,140 @@
-Return-Path: <linux-pci+bounces-32359-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32360-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6025FB0869B
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 09:28:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 623BFB08703
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 09:38:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 18A447B914C
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 07:26:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 11B471A67571
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Jul 2025 07:37:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 390EB22CBFE;
-	Thu, 17 Jul 2025 07:28:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 696AC25B1C7;
+	Thu, 17 Jul 2025 07:36:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jJxHHA9z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JY6/41s4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F07122DFA4;
-	Thu, 17 Jul 2025 07:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361E224A076;
+	Thu, 17 Jul 2025 07:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752737286; cv=none; b=OtYLovjuAHn6Y32eMlogwMD3phPxzDI+QrVK6Z6pB29MMl/3qY0V2JB6lyr6DAihE26P1JiOVEk0N4qvlUfoh0ziJ26elGEJY6bXVIKC/yN1dapyGwtsey5SS9CD1y0QJ+49KGOdCyCD8bF4vclhTMuVjHcMsbe02BeyEcsNEIQ=
+	t=1752737779; cv=none; b=KAJf49kgVWanDk9XRXPq4NoyjaPezuUVDZujEzr0t9VcgOp1HgyKgby0DfmFEsY6wfLK4UjwpJflwRPOpauw1rs0/CJ3pLYSQ5bLyQXDYHpv2EfH+zjESBBH+w00e8HTTr1pIEBplgrhe8nyhl9gC74bowvTPH1CQObxesRa7io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752737286; c=relaxed/simple;
-	bh=iNGfZUT3vIjs9LIEtmZBN/64+7hv7dRJ5bx0l4MtKW4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=dShpJutaTL6VGlfPda2lXhtPC8nu+br17DV+rVand0eOKK15p2uDJvU/4VajneLTUGq7CRfZ3CzYoSvhVL3euSJ+53F8fmvSRJtZKh22PxpuABwnobz6GigMmQRHXVpvJWqQWb4+ELVZAwvLnvDqp9i1n5+VfSiqO0arRQd2B9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jJxHHA9z; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56H5PRRQ021567;
-	Thu, 17 Jul 2025 07:27:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=d14ckrCMuZgzNHnUDuNhFN
-	FqmXjLNb/Tp604F/4Ov/w=; b=jJxHHA9zif7whnGBq6dKLlrJx/7GYbLey9+/d+
-	cRsmwsMQm90sDNCQuW/HUQ0hFWwPYW21QOmRq/4Yzxs1PHkKrNjoBrvv8qAx/ULD
-	ZyYAmMrQi0kXLJli7LTk5Gn8cewbLaVhgu2Y53H+/gatcuk3csI0nfiUUO+8XJVH
-	noTVufU4NjojMPXi6MHcie6SWZM8mRn5b8XDbxh6YnaRP4V7D9mga7ylMynT+LF5
-	IGS839uV22m1QEqzOapG0m9hWJ2f+hT4qAyKoXP/FvyWNDW1vvRZbCfiaQ1j0G07
-	VZpknn7w/EVbom6pdkFIWaLpHUet7HTduqecRTYLyuN7ERlw==
-Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ufu8ejj9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Jul 2025 07:27:53 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 56H7RotA029527;
-	Thu, 17 Jul 2025 07:27:50 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 47ugsmt61c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Jul 2025 07:27:50 +0000
-Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 56H7Rn30029522;
-	Thu, 17 Jul 2025 07:27:50 GMT
-Received: from cse-cd01-lnx.ap.qualcomm.com (cse-cd01-lnx.qualcomm.com [10.64.75.209])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 56H7RmgQ029519
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Jul 2025 07:27:49 +0000
-Received: by cse-cd01-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
-	id E8A3D20CAF; Thu, 17 Jul 2025 15:27:47 +0800 (CST)
-From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
-        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
-        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
-        kw@linux.com
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>,
-        Tingguo Cheng <quic_tingguoc@quicinc.com>
-Subject: [PATCH v2 1/1] arm64: dts: qcom: qcs615: Set LDO12A regulator to HPM to avoid boot hang
-Date: Thu, 17 Jul 2025 15:27:46 +0800
-Message-Id: <20250717072746.987298-1-quic_ziyuzhan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1752737779; c=relaxed/simple;
+	bh=hhhU4e4aqKE8PpZkiDXzguQPAKgEofaDpsLTegsHWz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eVGtywtgVUPykX/gGDKhu47bJ2TgF2OWwA1p1hdHCn1Mk/lXpFYoIGAftUkuGhdBtBPwHp4KbAvi7nzfZNxaiKuTotox58HOFuovquSX5TtW50LglqL9APFDAuqilcDbcNExc/ytl+lU2EwFuYilDJiTd11jl1itybFTUyASvIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JY6/41s4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5176C4CEE3;
+	Thu, 17 Jul 2025 07:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752737777;
+	bh=hhhU4e4aqKE8PpZkiDXzguQPAKgEofaDpsLTegsHWz8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JY6/41s4bMy5D4wwJjhvJZzgFBcooHC/UdvQVnxZHAwfUwdEjNWYkekFrsuR8xAb9
+	 F3YhWBbgeP9ssrmp8DnS4maFzQ5Npt5gl9LFbvwkQF3YqHy+dbrKSLyxOJiejJmkol
+	 FWy+Yaf3a/rialpN/MtQfwHiucFCVWo2BqdXGE3ZtTwOcjc8ptpWg9X3wI4ToSHEXW
+	 pGaPbkxgv4T7L1Go7BuyB0MnqXPeR2H9L1vuppR6bNwg4goK+Ugx47k8pw2lbBNo4i
+	 Jqedvh/Xon9tIqaDxtDBPsRsLxQECHWy+X3K6Ch5INn4tPAs1HO1Kal10ynNriUlMs
+	 33amfuvbQ7hNA==
+Date: Thu, 17 Jul 2025 13:06:05 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Nirmal Patel <nirmal.patel@linux.intel.com>, Jonathan Derrick <jonathan.derrick@linux.dev>, 
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, ath12k@lists.infradead.org, 
+	ath11k@lists.infradead.org, ath10k@lists.infradead.org, ilpo.jarvinen@linux.intel.com, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: Re: [PATCH 2/6] PCI/ASPM: Transition the device to D0 (if required)
+ inside pci_enable_link_state_locked() API
+Message-ID: <7o23kvvetjcohrucjhgkonrkkunykybce7q6tlfycbb6pafg4y@lpxvbepupemp>
+References: <20250716-ath-aspm-fix-v1-2-dd3e62c1b692@oss.qualcomm.com>
+ <20250716205601.GA2555277@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE3MDA2NCBTYWx0ZWRfX7K9LvX4f/Cko
- auYN982UNh+2cpgz6cn0/ECv8V71k+igsCBotfCN0/0FFRmBWCgVTipTlTOUxLUvSoCHtNrmjfN
- uWVHv6pmdNUdrSIFJu/fqZEybVuBxRcg1uVwxmMd/IhU0oJ4wJeWO7l9xNE5kgKrDv8E0H1pQN+
- RuYy6jmWbGAYA8MoFQIuP/XoMnOrtA/mjVosi3weNFmLiusVOMm62KLM/4wEnGkcknIi/9C6cjP
- TIVvVtx+pF6s6OFa+SiUqlclJoTnr9jGbjbj6KAU6RWlLMlw7StkvVWdZT1HaVjEadasX61eHek
- 8BGOHwlU6qoBPdtsww0iPSIYVgGELbjtu4IrX60owWdYT+8gXZejaJ9aXq4ZrRtiREo4fsuOgAc
- xkkdnh1KlucjVH4XcRiLYIJVgFnWEGsAR5r17X7MtC9MCByNf8abScURQngBOqdJGcZNTZ6l
-X-Proofpoint-ORIG-GUID: 3xaLGOW8Gc40F4fpnWAo7K_NMNc0-Pa4
-X-Proofpoint-GUID: 3xaLGOW8Gc40F4fpnWAo7K_NMNc0-Pa4
-X-Authority-Analysis: v=2.4 cv=f59IBPyM c=1 sm=1 tr=0 ts=6878a5f9 cx=c_pps
- a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
- a=EUspDBNiAAAA:8 a=lOb7t7NH7aykvVN8AcwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-17_01,2025-07-16_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
- bulkscore=0 suspectscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- mlxlogscore=999 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507170064
+In-Reply-To: <20250716205601.GA2555277@bhelgaas>
 
-From: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+On Wed, Jul 16, 2025 at 03:56:01PM GMT, Bjorn Helgaas wrote:
+> On Wed, Jul 16, 2025 at 06:26:21PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > 
+> > Both of the current callers of the pci_enable_link_state_locked() API
+> > transition the device to D0 before calling. This aligns with the PCIe spec
+> > r6.0, sec 5.5.4:
+> > 
+> > "If setting either or both of the enable bits for PCI-PM L1 PM Substates,
+> > both ports must be configured as described in this section while in D0."
+> > 
+> > But it looks redundant to let the callers transition the device to D0. So
+> > move the logic inside the API and perform D0 transition only if the PCI-PM
+> > L1 Substates are getting enabled.
+> 
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -1474,13 +1474,20 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
+> >   * Note that if the BIOS didn't grant ASPM control to the OS, this does
+> >   * nothing because we can't touch the LNKCTL register.
+> >   *
+> > - * Note: Ensure devices are in D0 before enabling PCI-PM L1 PM Substates, per
+> > - * PCIe r6.0, sec 5.5.4.
+> > + * Note: The device will be transitioned to D0 state if the PCI-PM L1 Substates
+> > + * are getting enabled.
+> >   *
+> >   * Return: 0 on success, a negative errno otherwise.
+> >   */
+> >  int pci_enable_link_state(struct pci_dev *pdev, int state)
+> >  {
+> > +	/*
+> > +	 * Ensure the device is in D0 before enabling PCI-PM L1 PM Substates, per
+> > +	 * PCIe r6.0, sec 5.5.4.
+> > +	 */
+> > +	if (FIELD_GET(PCIE_LINK_STATE_L1_SS_PCIPM, state))
+> > +		pci_set_power_state(pdev, PCI_D0);
+> 
+> This is really just a move, not new code, but this niggles at me a
+> little bit because my impression is that pci_set_power_state() doesn't
+> guarantee that the device *stays* in the given state.
+> 
+> Rafael, is there a get/put interface we should be wrapping this with
+> instead?
+> 
 
-On certain platforms (e.g., QCS615), consumers of LDO12A—such as PCIe,
-UFS, and eMMC—may draw more than 10mA of current during boot. This can
-exceed the regulator's limit in Low Power Mode (LPM), triggering current
-limit protection and causing the system to hang.
+I don't quite understand this statement. A device cannot transition itself to
+any D-states without host software intervention. So only host software should
+intiate the transition. So are you saying that this API could be used by other
+entities to change the device state? So you want to use some lock to prevent
+callers from racing aganist each other?
 
-To address this, there are two possible approaches:
-a) Set the regulator's initial mode to High Performance Mode (HPM) in
-   the device tree.
-b) Keep the default LPM setting and have each consumer driver explicitly
-   set its current load.
+I believe the current users of this API doesn't use any locks and just go by the
+fact that the device stays in the give state. It does look racy, but seems to be
+working fine so far. Obviously, the client driver need to ensure that it doesn't
+create any race within itself. But the race could exist between the PCI core and
+the driver theoretically.
 
-Since some regulators are shared among multiple consumers, and setting
-the current must be coordinated across all of them, we will initially
-adopt option a by setting the regulator to HPM. We can later migrate to
-option b when the timing is appropriate and all consumer drivers are
-ready.
+> I'm also not sure it's worth the FIELD_GET().  This should be a
+> low-frequency operation and making the power state dependent on the
+> exact "state" makes more paths to worry about.
+> 
 
-Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-Signed-off-by: Tingguo Cheng <quic_tingguoc@quicinc.com>
----
-This patch follows a suggestion from Bjorn Andersson regarding USB
-regulator handling where each consumer is expected to explicitly set its
-current load.
-Link: https://lore.kernel.org/linux-arm-msm/37fc7aa6-23d2-4636-8e02-4957019121a3@quicinc.com/
+Are you worrying about the usage of FIELD_GET() to check the ASPM state or the
+existence of the check itself?
 
-changes in v2:
- - Delete all LPM mode config in ldo12a, which may lead to potential
-   risks
- - Link to v1: https://lore.kernel.org/all/20250716030601.1705364-1-ziyue.zhang@oss.qualcomm.com/
----
- arch/arm64/boot/dts/qcom/qcs615-ride.dts | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+- Mani
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-index a6652e4817d1..75effc790c79 100644
---- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-@@ -166,10 +166,7 @@ vreg_l12a: ldo12 {
- 			regulator-name = "vreg_l12a";
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1890000>;
--			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
--			regulator-allow-set-load;
--			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
--						   RPMH_REGULATOR_MODE_HPM>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
- 
- 		vreg_l13a: ldo13 {
 -- 
-2.34.1
-
+மணிவண்ணன் சதாசிவம்
 
