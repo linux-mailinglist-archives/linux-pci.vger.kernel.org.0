@@ -1,258 +1,311 @@
-Return-Path: <linux-pci+bounces-32569-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32570-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACD56B0AB6E
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 23:29:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00D42B0AB70
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 23:29:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D0A6A5C010B
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 21:29:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A44C4AA15CC
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 21:29:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A02B111712;
-	Fri, 18 Jul 2025 21:29:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D6CB21E08D;
+	Fri, 18 Jul 2025 21:29:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ToZvlB0o"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YstQ7PzF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D4821D3EF;
-	Fri, 18 Jul 2025 21:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3417F149C6F
+	for <linux-pci@vger.kernel.org>; Fri, 18 Jul 2025 21:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752874143; cv=none; b=R7BmIU+pa8Ll3zYrmShN8WIax0Mr+txu4lM0xXOt7J6E3CLw5GOYoGlemBrUZOxlSGjljP+vpy12fNVkQvbSNGsF4w5xrVSy9a4vzCa+fjfke439Uk8fanfr9I7gGTJ14RnV/xy7K6p1668Ae937KbV3MmWH/0SObJWB69sqfRg=
+	t=1752874185; cv=none; b=dnVBujHxFHOoT/yRSuh4tFfntiX26tvLdmtgW6Bw6M5lVSF8QUgnj2RjENCYyUrY99UpSxJVW8hf6SSajDSTdKDSXve+YP4fyJQHbsNyBy3owNb2Y5lCcNJqu4mJ9UrctfIyyz2kyyEZMBKihdRIwEd39LzdunHYrN4ipI01pc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752874143; c=relaxed/simple;
-	bh=vOrb6Yb5DoiO0x4GnHqM3vMMF2dSaJYJ+AB9OGKAJH8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FzGx7aNspWdH293Q5v12FadwyffrnuyRABIH008zQVJzvVwBQDZRBxHQvoqK+/8dUAyGRTKZq3bu8Sb6Z64ISn9d6NOYz8+8J+GUV9zlCkDE8RGt3t1FkwFLa08Dk5OqKCxE94g9Xx0VrchEzC4bot7XGGGBJTUnSAnhI6nW6Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ToZvlB0o; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752874141; x=1784410141;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vOrb6Yb5DoiO0x4GnHqM3vMMF2dSaJYJ+AB9OGKAJH8=;
-  b=ToZvlB0ofj6UfiwUnVV/mUD4nhhOAqE+6yuvufdQ4fZx35/FCL9SMdxz
-   kR46LsxUrURuPAjm01M5ipP1acca7x1x08sritVgqq2+h/ovIgmUnXDAH
-   hDh+uzRX5CwdbpDFkMFvBjrgYl+c7p7H7G4OPv6zexl3L4BdJ+AcJRC8Q
-   E5xEyVZmOZvxBUFzuIFJ4W592ghsVu6NOCfrbFuK3jI7xSgMWSjtLYPLD
-   oZXF8aBKrPtb8DTah1omrfNEdedbCDu5zXHpwjjYy57C2rByZqPvDI58f
-   5v3V6r94CYUns4oAZt+iKBo0RYH0i6UhVtLD/m0h0knSvcNbD5uzbZ++x
-   g==;
-X-CSE-ConnectionGUID: 7Yggw/4eTWyf1LcaqsyxVg==
-X-CSE-MsgGUID: k3DNxok8QhKgx8luzEy6Dw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11496"; a="55322460"
-X-IronPort-AV: E=Sophos;i="6.16,322,1744095600"; 
-   d="scan'208";a="55322460"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2025 14:29:00 -0700
-X-CSE-ConnectionGUID: DQojZlq0SeaM2PJ0llAT2Q==
-X-CSE-MsgGUID: /VQhtCFHSq+w/sVVDTRrqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,322,1744095600"; 
-   d="scan'208";a="158561336"
-Received: from unknown (HELO [10.247.118.125]) ([10.247.118.125])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2025 14:28:51 -0700
-Message-ID: <a5b917d5-126e-48a8-b9c3-91d7bb2466e4@intel.com>
-Date: Fri, 18 Jul 2025 14:28:46 -0700
+	s=arc-20240116; t=1752874185; c=relaxed/simple;
+	bh=qqIUQ9QIcZhmGXl17HdzCq7eHSn5RW4buAwRdLV5Ez8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qjZoNv7PJ929aahVd1TgCspP/6GAgw8u5lGdYKj2/OHZkT+kbFdFr48JuUMOtsZQz6cZqU+rlrGJ1CAaZlp9dx8EocKHuQrkS+L8fL3ienM8O04Lc+Hug1CReS22hHsA/rLFfaVVa0rTXsnu+XCG46fXIj20g/SHM/gYB0vaWCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YstQ7PzF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1752874181;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MrWlbpRkRAWEEZSZUXR7gkDwQXPo2XGHR6bPglMnBt8=;
+	b=YstQ7PzF9Jn9hJwbQ48MUQXyAajxCOTN0xjxNbBIRw2pszpK+4PxREYf9Pe0c7WzBBtQHz
+	ZnljVctaoH2hKFv3p+E0pivXdcSvuZ6QFSKNnnighHbzne/03MDKeoX6Ya7jJk9Yq9cTRm
+	26XRO0u4NRLD7zhpGQC65rrs+PF5Juc=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-628-JpgGJ75xPv2T0r9w3rGeOg-1; Fri, 18 Jul 2025 17:29:39 -0400
+X-MC-Unique: JpgGJ75xPv2T0r9w3rGeOg-1
+X-Mimecast-MFC-AGG-ID: JpgGJ75xPv2T0r9w3rGeOg_1752874178
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddc47aebc2so5614975ab.0
+        for <linux-pci@vger.kernel.org>; Fri, 18 Jul 2025 14:29:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752874178; x=1753478978;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MrWlbpRkRAWEEZSZUXR7gkDwQXPo2XGHR6bPglMnBt8=;
+        b=u8Bw8qkIQt1bTs2GZFpgtUPiPm0GkDnzS/18enDiyt76SK2JU8w+VDvsDJ/IWysQin
+         WCb0DPk/NoowxyVGdIyH5EwRzwczfbHicmjpdb3te3EC17Q3LZAUk1VAFJ2DDCqKW8Mu
+         1s2DCAXA71rdx4dSlnLmgvj754LZigRhnfcUJDj5g8CtPlXkPkKPqmLQAwtxqpk+FP8I
+         JZfikytUbzUl8aQJ34fakJTMI3c1LbV3QFgxSRBgQz2/iaTkC5gZgvZGatgwcckAC4Bh
+         xl5KAVA/B13/YpWmeiEg2bvjgDxUd63fNZRqvhMGUPtsJr81CelUcXz21mBtKQSll+xW
+         2v4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVjmf0/vkNObQ7f8XvTdYXE6aMBB5bcW7ELR/fern0aWCWKQXMPrUWsIxITEtijITvUEEOmdZNWb7Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypVbqtaG3lb2vCtma72wce5pjqmELWB5EtgvQP+O2JIvGUHgOl
+	20iMDB5BQEzv6l1yQvvoNKOYh7G2HsDvvNICrp4QUznDuxoFjNOoFTvLoniFnQe/24+keWpOg5X
+	QNkpesnlzeR6+zMbgEJqLV5+sbb7Tbawh/s5WUJbfejB632y3I95BKm0PIogTCw==
+X-Gm-Gg: ASbGnctNUX5nQ7aklMI4Xz03j2hUJzYkRW7USM5GFB/DyGGd8uSttBfpGT/TMeTpSRe
+	n/ftGng2e+e0QvdDF/ydCpP1Ufl8iYEmhUhrRIO03OJaaFKaHUKTK1Brwz4lP61eqDYuaalPyi2
+	Aa+OoitJMbkFla5Wssjf2FV48a2/g8rkXkhdjjw0PPmHNwMGn1/6ZuFsRpxWY3e2YbeCjddjM2V
+	YPiT0MULd7h+FcF6lYZR/t51A+jzGc27hJ3b0DakMhTA6HvRFtu2Xaqoto+hVP2YK75GC60z8db
+	vZO4GZ5O3d/e7cf5YgdU7hBmCgjsGAQNk/cT+QAHBNw=
+X-Received: by 2002:a05:6e02:3e03:b0:3dd:c927:3b4f with SMTP id e9e14a558f8ab-3e2822ea512mr31319995ab.2.1752874178309;
+        Fri, 18 Jul 2025 14:29:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHsXml8xvO+E+R9hAay3c6AEsvzRM4HktRe693pIg5RRbn8ITcNmOIWJ6JbB3lZ/WFgJul1Sw==
+X-Received: by 2002:a05:6e02:3e03:b0:3dd:c927:3b4f with SMTP id e9e14a558f8ab-3e2822ea512mr31319925ab.2.1752874177726;
+        Fri, 18 Jul 2025 14:29:37 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5084ca6314csm512735173.125.2025.07.18.14.29.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Jul 2025 14:29:36 -0700 (PDT)
+Date: Fri, 18 Jul 2025 15:29:34 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev, Joerg Roedel
+ <joro@8bytes.org>, linux-pci@vger.kernel.org, Robin Murphy
+ <robin.murphy@arm.com>, Will Deacon <will@kernel.org>, Lu Baolu
+ <baolu.lu@linux.intel.com>, galshalom@nvidia.com, Joerg Roedel
+ <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org,
+ maorg@nvidia.com, patches@lists.linux.dev, tdave@nvidia.com, Tony Zhu
+ <tony.zhu@intel.com>
+Subject: Re: [PATCH v2 00/16] Fix incorrect iommu_groups with PCIe ACS
+Message-ID: <20250718152934.0cdb768f.alex.williamson@redhat.com>
+In-Reply-To: <0-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
+References: <0-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 09/17] cxl/pci: Map CXL Endpoint Port and CXL Switch
- Port RAS registers
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
- ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
- rrichter@amd.com, dan.carpenter@linaro.org,
- PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
- Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
- <20250626224252.1415009-10-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250626224252.1415009-10-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Wed,  9 Jul 2025 11:52:03 -0300
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-
-On 6/26/25 3:42 PM, Terry Bowman wrote:
-> CXL Endpoint (EP) Ports may include Root Ports (RP) or Downstream Switch
-> Ports (DSP). CXL RPs and DSPs contain RAS registers that require memory
-> mapping to enable RAS logging. This initialization is currently missing and
-> must be added for CXL RPs and DSPs.
+> The series patches have extensive descriptions as to the problem and
+> solution, but in short the ACS flags are not analyzed according to the
+> spec to form the iommu_groups that VFIO is expecting for security.
 > 
-> Update cxl_dport_init_ras_reporting() to support RP and DSP RAS mapping.
-> Add alongside the existing Restricted CXL Host Downstream Port RAS mapping.
+> ACS is an egress control only. For a path the ACS flags on each hop only
+> effect what other devices the TLP is allowed to reach. It does not prevent
+> other devices from reaching into this path.
 > 
-> Update cxl_endpoint_port_probe() to invoke cxl_dport_init_ras_reporting().
-> This will initiate the RAS mapping for CXL RPs and DSPs when each CXL EP is
-> created and added to the EP port.
+> For VFIO if device A is permitted to access device B's MMIO then A and B
+> must be grouped together. This says that even if a path has isolating ACS
+> flags on each hop, off-path devices with non-isolating ACS can still reach
+> into that path and must be grouped gother.
 > 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
->  drivers/cxl/cxl.h  |  2 ++
->  drivers/cxl/mem.c  |  3 ++-
->  drivers/cxl/port.c | 58 +++++++++++++++++++++++++++++++++++++++++++++-
->  3 files changed, 61 insertions(+), 2 deletions(-)
+> For switches, a PCIe topology like:
 > 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index c57c160f3e5e..d696d419bd5a 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -590,6 +590,7 @@ struct cxl_dax_region {
->   * @parent_dport: dport that points to this port in the parent
->   * @decoder_ida: allocator for decoder ids
->   * @reg_map: component and ras register mapping parameters
-> + * @uport_regs: mapped component registers
->   * @nr_dports: number of entries in @dports
->   * @hdm_end: track last allocated HDM decoder instance for allocation ordering
->   * @commit_end: cursor to track highest committed decoder for commit ordering
-> @@ -610,6 +611,7 @@ struct cxl_port {
->  	struct cxl_dport *parent_dport;
->  	struct ida decoder_ida;
->  	struct cxl_register_map reg_map;
-> +	struct cxl_component_regs uport_regs;
->  	int nr_dports;
->  	int hdm_end;
->  	int commit_end;
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 6e6777b7bafb..d2155f45240d 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -166,7 +166,8 @@ static int cxl_mem_probe(struct device *dev)
->  	else
->  		endpoint_parent = &parent_port->dev;
->  
-> -	cxl_dport_init_ras_reporting(dport, dev);
-> +	if (dport->rch)
-> +		cxl_dport_init_ras_reporting(dport, dev);
->  
->  	scoped_guard(device, endpoint_parent) {
->  		if (!endpoint_parent->driver) {
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index 021f35145c65..b52f82925891 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -111,6 +111,17 @@ static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
->  	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
->  }
->  
-> +static void cxl_uport_init_ras_reporting(struct cxl_port *port,
-> +					 struct device *host)
-> +{
-> +	struct cxl_register_map *map = &port->reg_map;
-> +
-> +	map->host = host;
-> +	if (cxl_map_component_regs(map, &port->uport_regs,
-> +				   BIT(CXL_CM_CAP_CAP_ID_RAS)))
-> +		dev_dbg(&port->dev, "Failed to map RAS capability\n");
-> +}
-> +
->  /**
->   * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
->   * @dport: the cxl_dport that needs to be initialized
-> @@ -119,7 +130,6 @@ static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
->  void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
->  {
->  	dport->reg_map.host = host;
-> -	cxl_dport_map_ras(dport);
->  
->  	if (dport->rch) {
->  		struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport->dport_dev);
-> @@ -127,12 +137,54 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
->  		if (!host_bridge->native_aer)
->  			return;
->  
-> +		cxl_dport_map_ras(dport);
->  		cxl_dport_map_rch_aer(dport);
->  		cxl_disable_rch_root_ints(dport);
-> +		return;
->  	}
-> +
-> +	if (cxl_map_component_regs(&dport->reg_map, &dport->regs.component,
-> +				   BIT(CXL_CM_CAP_CAP_ID_RAS)))
-> +		dev_dbg(dport->dport_dev, "Failed to map RAS capability\n");
-> +
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
->  
-> +static void cxl_switch_port_init_ras(struct cxl_port *port)
-> +{
-> +	if (is_cxl_root(to_cxl_port(port->dev.parent)))
-> +		return;
-> +
-> +	/* May have upstream DSP or RP */
-> +	if (port->parent_dport && dev_is_pci(port->parent_dport->dport_dev)) {
-> +		struct pci_dev *pdev = to_pci_dev(port->parent_dport->dport_dev);
-> +
-> +		if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) ||
-> +		    (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM))
-> +			cxl_dport_init_ras_reporting(port->parent_dport, &port->dev);
-> +	}
-> +
-> +	cxl_uport_init_ras_reporting(port, &port->dev);
-> +}
-> +
-> +static void cxl_endpoint_port_init_ras(struct cxl_port *port)
+>                                -- DSP 02:00.0 -> End Point A
+>  Root 00:00.0 -> USP 01:00.0 --|
+>                                -- DSP 02:03.0 -> End Point B
+> 
+> Will generate unique single device groups for every device even if ACS is
+> not enabled on the two DSP ports. It should at least group A/B together
+> because no ACS means A can reach the MMIO of B. This is a serious failure
+> for the VFIO security model.
+> 
+> For multi-function-devices, a PCIe topology like:
+> 
+>                   -- MFD 00:1f.0 ACS != REQ_ACS_FLAGS
+>   Root 00:00.00 --|- MFD 00:1f.2 ACS != REQ_ACS_FLAGS
+>                   |- MFD 00:1f.6 ACS = REQ_ACS_FLAGS
+> 
+> Will group [1f.0, 1f.2] and 1f.6 gets a single device group. In many cases
+> we suspect that the MFD actually doesn't need ACS, so this is probably not
+> as important a security failure, but from a spec perspective the correct
+> answer is one group of [1f.0, 1f.2, 1f.6] beacuse 1f.0/2 have no ACS
+> preventing them from reaching the MMIO of 1f.6.
 
-Maybe rename 'port' to 'ep' to be explicit
+This will break various LOM configurations where the NIC is a function
+within a MFD RCiEP which has or quirks ACS while the other functions
+have no ACS.
 
-> +{
-> +	struct cxl_dport *dport;
+> There is also some confusing spec language about how ACS and SRIOV works
+> which this series does not address.
+> 
+> This entire series goes further and makes some additional improvements to
+> the ACS validation found while studying this problem. The groups around a
+> PCIe to PCI bridge are shrunk to not include the PCIe bridge.
+> 
+> The last patches implement "ACS Enhanced" on top of it. Due to how ACS
+> Enhanced was defined as a non-backward compatible feature it is important
+> to get SW support out there.
+> 
+> Due to the potential of iommu_groups becoming winder and thus non-usable
+> for VFIO this should go to a linux-next tree to give it some more
+> exposure.
+> 
+> I have now tested this a few systems I could get:
+> 
+>  - Various Intel client systems:
+>    * Raptor Lake, with VMD enabled and using the real_dev mechanism
+>    * 6/7th generation 100 Series/C320
+>    * 5/6th generation 100 Series/C320 with a NIC MFD quirk
+>    * Tiger Lake
+>    * 5/6th generation Sunrise Point
+>   No change in grouping on any of these systems
 
-parent_dport would be clearer. I was thinking why does the endpoint have a dport for a second there.
+Sorry I haven't had much time to look at this, but it would still cause
+a regression on my AlderLake system.  I get the following new
+mega-group:
 
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
-> +	struct cxl_port *parent_port __free(put_cxl_port) =
-> +		cxl_mem_find_port(cxlmd, &dport);
-> +
-> +	if (!dport || !dev_is_pci(dport->dport_dev)) {
-> +		dev_err(&port->dev, "CXL port topology not found\n");> +		return;
-> +	}
-> +
-> +	cxl_dport_init_ras_reporting(dport, cxlmd->cxlds->dev);
-> +}
-> +
-> +#else
-> +static void cxl_endpoint_port_init_ras(struct cxl_port *port) { }
-> +static void cxl_switch_port_init_ras(struct cxl_port *port) { }
->  #endif /* CONFIG_PCIEAER_CXL */
+IOMMU Group 12:
+	0000:00:1c.0 PCI bridge [0604]: Intel Corporation Raptor Lake PCI Express Root Port #1 [8086:7a38] (rev 11)
+		Express Root Port (Slot+)
+	0000:00:1c.1 PCI bridge [0604]: Intel Corporation Device [8086:7a39] (rev 11)
+		Express Root Port (Slot+)
+		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
+	0000:00:1c.2 PCI bridge [0604]: Intel Corporation Raptor Point-S PCH - PCI Express Root Port 3 [8086:7a3a] (rev 11)
+		Express Root Port (Slot+)
+		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
+	0000:00:1c.3 PCI bridge [0604]: Intel Corporation Raptor Lake PCI Express Root Port #4 [8086:7a3b] (rev 11)
+		Express Root Port (Slot+)
+		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
+	0000:00:1c.1/06:00.0 USB controller [0c03]: Fresco Logic FL1100 USB 3.0 Host Controller [1b73:1100] (rev 10)
+		Express Endpoint
+	0000:00:1c.2/07:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd. RTL8125 2.5GbE Controller [10ec:8125] (rev 05)
+		Express Endpoint
+	0000:00:1c.3/08:00.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EL/SL PCIe2 4-Port/4-Lane Packet Switch [12d8:2404] (rev 05)
+		Express Upstream Port
+	0000:00:1c.3/08:00.0/09:01.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EL/SL PCIe2 4-Port/4-Lane Packet Switch [12d8:2404] (rev 05)
+		Express Downstream Port (Slot-)
+		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl+ DirectTrans+
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
+	0000:00:1c.3/08:00.0/09:02.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EL/SL PCIe2 4-Port/4-Lane Packet Switch [12d8:2404] (rev 05)
+		Express Downstream Port (Slot+)
+		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl+ DirectTrans+
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
+	0000:00:1c.3/08:00.0/09:03.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EL/SL PCIe2 4-Port/4-Lane Packet Switch [12d8:2404] (rev 05)
+		Express Downstream Port (Slot-)
+		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl+ DirectTrans+
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
+	0000:00:1c.3/08:00.0/09:01.0/0a:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller [10ec:8168] (rev 07)
+		Express Endpoint
+	0000:00:1c.3/08:00.0/09:03.0/0c:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller [10ec:8168] (rev 07)
+		Express Endpoint
 
-I cc'd you on the new patch to move all the AER stuff to core/pci_aer.c. That should take care of ifdef CONFIG_PCIEAER_CXL in pci.c and port.c.
+The source of the issue is the root port at 00:1c.0, which does not
+have ACS support, claims that it has a slot but there is none, and
+therefore has no subordinate DMA capable devices, nor does the root
+port itself have an MMIO BAR.  I don't know if there's something we can
+key on for the root port to mark it isolated.
 
-DJ
+00:1c.0 PCI bridge [0604]: Intel Corporation Raptor Lake PCI Express Root Port #1 [8086:7a38] (rev 11) (prog-if 00 [Normal decode])
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin ? routed to IRQ 125
+	IOMMU group: 12
+	Bus: primary=00, secondary=05, subordinate=05, sec-latency=0
+	I/O behind bridge: 6000-6fff [size=4K] [16-bit]
+	Memory behind bridge: 40800000-411fffff [size=10M] [32-bit]
+	Prefetchable memory behind bridge: 60e0000000-60e09fffff [size=10M] [32-bit]
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
+		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+	Capabilities: [40] Express (v2) Root Port (Slot+), IntMsgNum 0
+		DevCap:	MaxPayload 256 bytes, PhantFunc 0
+			ExtTag- RBE+ TEE-IO-
+		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
+			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
+			MaxPayload 256 bytes, MaxReadReq 128 bytes
+		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
+		LnkCap:	Port #1, Speed 8GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <1us, L1 <4us
+			ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
+		LnkCtl:	ASPM L0s L1 Enabled; RCB 64 bytes, LnkDisable- CommClk-
+			ExtSynch- ClockPM- AutWidDis- BWInt+ AutBWInt+
+		LnkSta:	Speed 2.5GT/s, Width x0
+			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+		SltCap:	AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+
+			Slot #0, PowerLimit 0W; Interlock- NoCompl+
+		SltCtl:	Enable: AttnBtn- PwrFlt- MRL- PresDet+ CmdCplt- HPIrq+ LinkChg+
+			Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
+		SltSta:	Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet- Interlock-
+			Changed: MRL- PresDet- LinkState-
+		RootCap: CRSVisible-
+		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible-
+		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
+		DevCap2: Completion Timeout: Range ABC, TimeoutDis+ NROPrPrP- LTR+
+			 10BitTagComp- 10BitTagReq- OBFF Via WAKE#, ExtFmt+ EETLPPrefix+, MaxEETLPPrefixes 2
+			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+			 FRS- LN System CLS Not Supported, TPHComp- ExtTPHComp- ARIFwd+
+			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
+		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- ARIFwd-
+			 AtomicOpsCtl: ReqEn- EgressBlck-
+			 IDOReq- IDOCompl- LTR+ EmergencyPowerReductionReq-
+			 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
+		LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer+ 2Retimers+ DRS-
+		LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
+			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+			 Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
+		LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
+			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
+			 Retimer- 2Retimers- CrosslinkRes: unsupported
+	Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit+
+		Address: 00000000fee002b8  Data: 0000
+	Capabilities: [90] Null
+	Kernel driver in use: pcieport
 
->  >  static int cxl_switch_port_probe(struct cxl_port *port)
-> @@ -149,6 +201,8 @@ static int cxl_switch_port_probe(struct cxl_port *port)
->  
->  	cxl_switch_parse_cdat(port);
->  
-> +	cxl_switch_port_init_ras(port);
-> +
->  	cxlhdm = devm_cxl_setup_hdm(port, NULL);
->  	if (!IS_ERR(cxlhdm))
->  		return devm_cxl_enumerate_decoders(cxlhdm, NULL);
-> @@ -203,6 +257,8 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
->  	if (rc)
->  		return rc;
->  
-> +	cxl_endpoint_port_init_ras(port);
-> +
->  	/*
->  	 * Now that all endpoint decoders are successfully enumerated, try to
->  	 * assemble regions from committed decoders
+This is seen on a Gigabyte B760M DS3H DDR4 motherboard.  There's a
+version of this board with wifi whereas this one has empty pads where
+that m.2 slot might go.  I'd guess wifi might sit downstream of this
+port if it were present, but I don't know how it'd change the feature
+set of the root port.  The populated root ports show a more reasonable
+set of capabilities:
+
+00:1c.1 PCI bridge [0604]: Intel Corporation Device [8086:7a39] (rev 11) (prog-if 00 [Normal decode])
+	Subsystem: Gigabyte Technology Co., Ltd Device [1458:5001]
+	Flags: bus master, fast devsel, latency 0, IRQ 126, IOMMU group 12
+	Bus: primary=00, secondary=06, subordinate=06, sec-latency=0
+	I/O behind bridge: [disabled] [16-bit]
+	Memory behind bridge: 41800000-419fffff [size=2M] [32-bit]
+	Prefetchable memory behind bridge: [disabled] [64-bit]
+	Capabilities: [40] Express Root Port (Slot+), IntMsgNum 0
+	Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit+
+	Capabilities: [98] Subsystem: Gigabyte Technology Co., Ltd Device [1458:5001]
+	Capabilities: [a0] Power Management version 3
+	Capabilities: [100] Advanced Error Reporting
+	Capabilities: [220] Access Control Services
+	Capabilities: [200] L1 PM Substates
+	Capabilities: [150] Precision Time Measurement
+	Capabilities: [a30] Secondary PCI Express
+	Capabilities: [a90] Data Link Feature <?>
+	Kernel driver in use: pcieport
+
+I can't say that the proposed code here is doing the wrong thing by
+propagating the lack of isolation, but it's gratuitous when there is no
+DMA initiator on the non-isolated branch and it causes a significant
+usage problem for vfio.  Thanks,
+
+Alex
 
 
