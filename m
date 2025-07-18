@@ -1,126 +1,190 @@
-Return-Path: <linux-pci+bounces-32542-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32543-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93A73B0A88C
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 18:35:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40425B0A8D0
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 18:47:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D4DEA5A5176
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 16:35:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B9827AA063B
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 16:45:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08BCC2E716A;
-	Fri, 18 Jul 2025 16:35:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EEFB2E7649;
+	Fri, 18 Jul 2025 16:44:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M292Sus/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovSJFFsR"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5192E6D3F;
-	Fri, 18 Jul 2025 16:35:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47ADE2E719D;
+	Fri, 18 Jul 2025 16:44:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752856535; cv=none; b=GIdD7KOWWcTHTz44KJYhzqcupVhDN5uJDnEb0BhQXPs4Wq9hYhTpIHjDELW7DCvWvSjI+fLMq2ZQMK/IdlykXCK5fCnLdI8Qpr2PJOzS8v8JB8t8gdbvxu9Zjvp8esvL3nGfZ2AL2FrnCGIWCqcEbCknMsZBfBE+Xm5zKJXOsTg=
+	t=1752857045; cv=none; b=cGKyxJW8sVmtD9NikiW/FmK44ltdVhKt8pMWPMeOwmDTuA+12WyQwcduFLkhtlQ5YhSvEz5UsHAV5iS1oyxTRqARm726R4cu1r4qjQYacml1+RFS+iEHiBLgTFP/m22e+w5hpmDiSEHZEmDEBhwZJG/sRzcv6MnyDxYj3kmkrWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752856535; c=relaxed/simple;
-	bh=11X9Sef1jq1w/S7oQRlR3n+bOEuUkdDS7reE/5JQmv8=;
+	s=arc-20240116; t=1752857045; c=relaxed/simple;
+	bh=lOSfX0cJceqH2rFjYeh2J0Y7zv4DeFUyuTHduob0lD8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=b59ae1v8nynItRizvbLM7ateLPrSda7Bic3yeS+Jx5tWZb7VVMMl2GxCpRkm7eHNfmfN7RzgI8rRuhhH0UOAiV9XgruxcgttrAAuJwURVRn45xDHPjonwjIZg0G0JrsQnS/PhR0TFeyAgw+9t9kJ1bNa6Qk8t79i8kp5DBTMgCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M292Sus/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C048AC4CEED;
-	Fri, 18 Jul 2025 16:35:34 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=fJybSOLBjGv+ARdEe45PFGc6WsGVyIZM4kI863YHYAH78/TBtJduhZKobu3QquFxsmf43NNJOYKyST5gpwE30m1oTi4vbIpnHC4e3OMXR9ciOhISkLKR1HcJ7EnoerM2EULo7oadBY6iQr1TZPvI0vZ8Pyeo3nNeBIIbhNCD6cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovSJFFsR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86C68C4CEEB;
+	Fri, 18 Jul 2025 16:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752856535;
-	bh=11X9Sef1jq1w/S7oQRlR3n+bOEuUkdDS7reE/5JQmv8=;
+	s=k20201202; t=1752857044;
+	bh=lOSfX0cJceqH2rFjYeh2J0Y7zv4DeFUyuTHduob0lD8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=M292Sus/VG02eGqA4KLBWSOMFPlC+C1kaajwzs311j55gIiMMIfr+1ahlMd2QFimz
-	 41uZzOvhSzU2mQXBDxwlvJIPmKPx5cKYaVfZtbpiFJ4ud6YVFiiQzjgU19cx6Io699
-	 5i1FTWcc74I/x6DBCOjl/80yhKwE/CQqoQiIrHZsr6M0wtDva0TH0x7jPyUQqFR22d
-	 mUjDVm9C03HqNDVrYHSlb6OiDnb3FuNJGVy8Ub3AJwqLo1/uf/U5BDYp69Ifu6I0wg
-	 BnWXS9h2FIJDYGsFAvy5fIB0zqLAFAQtWdbNaV7ZcQGBnd4+ZntxsH5nW2bfAlQniN
-	 vu5aue6rWXutA==
-Date: Fri, 18 Jul 2025 11:35:32 -0500
+	b=ovSJFFsRrnTfzxy88Gqm5UUB2d6MNVFnA/MiS699eKVt3zqMt6mybF9lY1uiwyn6c
+	 /JTnjPM8zicJAcpzUtNnNJ4htJCiW1sIMdzS0k4hgeJ5FYzFkrStdiasCdLWbqm2Qe
+	 8xm83dBM0TGAN+abTvv5bLCsZqxkKSBKri6va2kL2GehKGB6xOruYmW8dbtNUTBc++
+	 A++XlngxjWnuEkzfW1IhZZZBBrilaE9yMJr4dU3sXh+0DpFKhHwe+PLQbHiMzecs+b
+	 XvH9QfMrghBZjk0u0h5x9aT4hKBWxFSEo3GVZbIHFZRAa1em68Z6S69zn+q4o5nW05
+	 K7J3f7pyVPF6A==
+Date: Fri, 18 Jul 2025 11:44:02 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: Matthew W Carlis <mattc@purestorage.com>, lukas@wunner.de,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	anil.s.keshavamurthy@intel.com, bhelgaas@google.com, bp@alien8.de,
-	davem@davemloft.net, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
-	naveen@kernel.org, oleg@redhat.com, peterz@infradead.org,
-	rostedt@goodmis.org, tianruidong@linux.alibaba.com,
-	tony.luck@intel.com
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20250718163532.GA2700834@bhelgaas>
+To: Weili Qian <qianweili@huawei.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, liulongfang@huawei.com,
+	Hui Wang <hui.wang@canonical.com>
+Subject: Re: [PATCH] PCI: Add device-specific reset for Kunpeng virtual
+ functions
+Message-ID: <20250718164402.GA2701005@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e92f8d1f-457c-4248-8397-81b0e20ff4af@linux.alibaba.com>
+In-Reply-To: <5ed27a49-a437-66b1-8835-c3335edde07c@huawei.com>
 
-On Fri, Jul 18, 2025 at 01:29:18PM +0800, Shuai Xue wrote:
-> 在 2025/7/18 11:46, Matthew W Carlis 写道:
-> > On Thu, Jul 17, 2025 Bjorn Helgaas wrote
-> > > So I think your idea of adding current link speed/width to the "Link
-> > > Up" event is still on the table, and that does sound useful to me.
+On Fri, Jul 18, 2025 at 03:21:30PM +0800, Weili Qian wrote:
+> On 2025/7/15 3:19, Bjorn Helgaas wrote:
+> > On Sat, Jul 12, 2025 at 07:30:28PM +0800, Weili Qian wrote:
+> >> Prior to commit d591f6804e7e ("PCI: Wait for device readiness with
+> >> Configuration RRS"), pci_dev_wait() polls PCI_COMMAND register until
+> >> its value is not ~0(i.e., PCI_ERROR_RESPONSE). After d591f6804e7e,
+> >> if the Configuration Request Retry Status Software Visibility (RRS SV)
+> >> is enabled, pci_dev_wait() polls PCI_VENDOR_ID register until its value
+> >> is not the reserved Vendor ID value 0x0001.
+> >>
+> >> On Kunpeng accelerator devices, RRS SV is enabled. However,
+> >> when the virtual function's FLR (Function Level Reset) is not
+> >> ready, the pci_dev_wait() reads the PCI_VENDOR_ID register and gets
+> >> the value 0xffff instead of 0x0001. It then incorrectly assumes this
+> >> is a valid Vendor ID and concludes the device is ready, returning
+> >> successfully. In reality, the function may not be fully ready, leading
+> >> to the device becoming unavailable.
+> >>
+> >> A 100ms wait period is already implemented before calling pci_dev_wait().
+> >> In most cases, FLR completes within 100ms. However, to eliminate the
+> >> risk of function being unavailable due to an incomplete FLR, a
+> >> device-specific reset is added. After pcie_flr(), the function continues
+> >> to poll PCI_COMMAND register until its value is no longer ~0.
 > > 
-> > We're already reading the link status register here to check DLLA so
-> > it would be nice. I guess if everything is healthy we're probably already
-> > at the maximum speed by this point.
+> > As far as I can tell, there's nothing specific to Kungpeng devices
+> > here.  We've seen a similar issue with Intel NVMe devices [1], and I
+> > don't want a whole mess of quirks and device-specific reset methods.
 > > 
-> > > In the future we might add another tracepoint when we enumerate the
-> > > device and know the Vendor/Device ID.
+> > We need some sort of generic solution for this.  My understanding was
+> > that if devices are not ready 100ms after a reset, they are required
+> > to respond with RRS.  Maybe these devices are defective.  Or maybe my
+> > understanding is incorrect.  Either way, I think we should at least
+> > check for a PCIe error before assuming that 0xffff is a valid
+> > response.
+> 
+> A generic solution for this would be even better.
+> 
+> I tested the patch in [1], but it did not resolve the issue.
+> According to the PCIe specification(e.g., Section 7.5.1
+> PCI-Compatible Configuration Registers), the Vendor ID and Device ID
+> for VFs are 0xffff.  However, if VFs cannot respond using the RRS
+> mechanism, the pci_dev_wait() function reads the PCI_VENDOR_ID
+> register and gets the value 0xffffffff. This value is considered an
+> error on PCIe, causing pci_dev_wait() to continuously poll the
+> register until a timeout occurs.
+
+This is one of the problems: reading the VF Vendor ID gets ~0 in two
+cases: (1) the config read was successful (the VF Vendor ID is
+actually 0xffff), and (2) the config read failed and the RC
+synthesized ~0 return data.  I hoped to be able to distinguish these
+with the debug patch at [2], but so far it doesn't work as I expected,
+so more debug is required.
+
+[1] is an example of another way of doing a device-specific quirk.  It
+doesn't really matter whether that way works for the Kunpeng device,
+because I want to avoid any of these device-specific things if
+possible.
+
+> > [1] https://lore.kernel.org/linux-pci/20250611101442.387378-1-hui.wang@canonical.com/
+
+[2] https://lore.kernel.org/r/20250701232341.GA1859056@bhelgaas
+
+> >> Fixes: d591f6804e7e ("PCI: Wait for device readiness with Configuration RRS")
+> >> Signed-off-by: Weili Qian <qianweili@huawei.com>
+> >> ---
+> >>  drivers/pci/quirks.c | 36 ++++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 36 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> >> index d7f4ee634263..1df1756257d2 100644
+> >> --- a/drivers/pci/quirks.c
+> >> +++ b/drivers/pci/quirks.c
+> >> @@ -4205,6 +4205,36 @@ static int reset_hinic_vf_dev(struct pci_dev *pdev, bool probe)
+> >>  	return 0;
+> >>  }
+> >>  
+> >> +#define KUNPENG_OPERATION_WAIT_CNT	3000
+> >> +#define KUNPENG_RESET_WAIT_TIME		20
+> >> +
+> >> +/* Device-specific reset method for Kunpeng accelerator virtual functions */
+> >> +static int reset_kunpeng_acc_vf_dev(struct pci_dev *pdev, bool probe)
+> >> +{
+> >> +	u32 wait_cnt = 0;
+> >> +	u32 cmd;
+> >> +
+> >> +	if (probe)
+> >> +		return 0;
+> >> +
+> >> +	pcie_flr(pdev);
+> >> +
+> >> +	do {
+> >> +		pci_read_config_dword(pdev, PCI_COMMAND, &cmd);
+> >> +		if (!PCI_POSSIBLE_ERROR(cmd))
+> >> +			break;
+> >> +
+> >> +		if (++wait_cnt > KUNPENG_OPERATION_WAIT_CNT) {
+> >> +			pci_warn(pdev, "wait for FLR ready timeout; giving up\n");
+> >> +			return -ENOTTY;
+> >> +		}
+> >> +
+> >> +		msleep(KUNPENG_RESET_WAIT_TIME);
+> >> +	} while (true);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >>  static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+> >>  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
+> >>  		 reset_intel_82599_sfp_virtfn },
+> >> @@ -4220,6 +4250,12 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+> >>  		reset_chelsio_generic_dev },
+> >>  	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
+> >>  		reset_hinic_vf_dev },
+> >> +	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_ZIP_VF,
+> >> +		reset_kunpeng_acc_vf_dev },
+> >> +	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_SEC_VF,
+> >> +		reset_kunpeng_acc_vf_dev },
+> >> +	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_HPRE_VF,
+> >> +		reset_kunpeng_acc_vf_dev },
+> >>  	{ 0 }
+> >>  };
+> >>  
+> >> -- 
+> >> 2.33.0
+> >>
+> > .
 > > 
-> > I think we might have someone who would be interested in doing it.
-> 
-> IIUC, the current hotplug event (or presence event) is enough for Matthew.
-> and we would like a new tracepoing for link speed change which reports
-> speeds.
-> 
-> For hotplug event, I plan to send a new version to
-> 
-> 1. address Bjorn' concerns about event strings by removing its spaces.
-> 
-> #define PCI_HOTPLUG_EVENT							\
-> 	EM(PCI_HOTPLUG_LINK_UP,			"PCI_HOTPLUG_LINK_UP")		\
-> 	EM(PCI_HOTPLUG_LINK_DOWN,		"PCI_HOTPLUG_LINK_DOWN")	\
-> 	EM(PCI_HOTPLUG_CARD_PRESENT,		"PCI_HOTPLUG_CARD_PRESENT")	\
-> 	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"PCI_HOTPLUG_CARD_NOT_PRESENT")
-> 
-> 2. address Ilpo comments by moving pci_hp_event to a common place
-> (include/trace/events/pci.h) so that the new comming can also use it.
-> 
-> For link speed change event (perhaps named as pci_link_event),
-> I plan to send a seperate patch, which provides:
-> 
-> 	TP_STRUCT__entry(
-> 		__string(	port_name,	port_name	)
-> 		__field(	unsigned char,	cur_bus_speed	)
-> 		__field(	unsigned char,	max_bus_speed	)
->  		__field(	unsigned char,	width		)
->  		__field(	unsigned int,	flit_mode	)
-> 		__field(	unsigned char,	reason		)
-> 		),
-> 
-> The reason field is from Lukas ideas which indicates why the link speed
-> changed, e.g. "hotplug", "autonomous", "thermal", "retrain", etc.
-> 
-> Are you happy with above changes?
-
-Seems good to me.
-
-What do you plan for PCI_HOTPLUG_LINK_UP?  It would be nice to have
-the link info there since that's sort of a link speed change itself.
-
-Bjorn
 
