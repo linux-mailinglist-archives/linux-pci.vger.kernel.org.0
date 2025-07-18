@@ -1,133 +1,133 @@
-Return-Path: <linux-pci+bounces-32550-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32551-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7210DB0A961
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 19:26:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D32FB0A96C
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 19:27:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9574B1C81CC1
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 17:26:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C00441C81C4D
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 17:27:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64E812E764C;
-	Fri, 18 Jul 2025 17:25:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BBEC2E7177;
+	Fri, 18 Jul 2025 17:26:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BpYGJS8g"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VAlCdLTv"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C23F2E6D00;
-	Fri, 18 Jul 2025 17:25:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFFA2DCF4A
+	for <linux-pci@vger.kernel.org>; Fri, 18 Jul 2025 17:26:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752859548; cv=none; b=tKzJe6uXYpGvy6knKRLopZJnYATQUNSK8vqfkIwaNkGsrtlnpEBIElBfthpFrPuaqC/inCVjm4lYnKQOXn2AwhQUDJXOKTtxEpVUmI1zyRxjl3hukB5+OGWjbTUfOysmjW4F+lp9nWXpYZJxrIlOMd+ryz8l2GOr1s8CVmw8nJw=
+	t=1752859611; cv=none; b=BvsZJAn2P4OXlUb7tbRbuum3RzJfrElX+r6vAUccI3sLd4fc4v/Q4b3zwK3mBcWeb1Np/Z2/m+FTxiRp0axJPpPUyfDxfn/QId+6X1cIBHuEr9o6lAcoZFK8NfDsi8n2LNMGdQlOUg+2JcMyPQImKWMbzS4DpFdqhFqku/6a1E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752859548; c=relaxed/simple;
-	bh=0kZo1eB8bc2FYpG2nQ7zGvSsPolxhCxL/5xoSgTbknM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=BeKoJ/THrkqvpaohTkDAWB7lNM4Dz+ETx4ertivU5OMhe2Ho5hWVSpS6cptruo5bwvnvPjmuKc/XIRcoqFOrEg7h+TU1EugeQrdK1gcxgTuikLj1Wpl1wHOgmx8Q7IuBuphsTiJ0GBabX9GQ3DrM10Twwd+MUboM3o6Vm4Ctmo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BpYGJS8g; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72040C4CEEB;
-	Fri, 18 Jul 2025 17:25:47 +0000 (UTC)
+	s=arc-20240116; t=1752859611; c=relaxed/simple;
+	bh=8g7IrQcwl+6yXKAZxs2GmeVGt44lDoVaNhNbJ8JIL7o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bp3hehZyT8lUyANtqjTAgKwzpoiYnxmO1hLLKIz+X2EqHBVYezEdclxuagX6JgCXO8jfyhkuviA1KIkkbVmiFb2nTnbRdoSt2xWXa0NHCTDNRgSbWLRXNvG6vzTovlgyU+riTKvsxmQ8PRsoVzmqG0YTvOfOA2ZuPJ/DyufHukY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VAlCdLTv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73759C4CEED;
+	Fri, 18 Jul 2025 17:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752859547;
-	bh=0kZo1eB8bc2FYpG2nQ7zGvSsPolxhCxL/5xoSgTbknM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=BpYGJS8gyOeIoyF8kVxVdgIeN5FXNEUYLgbH167taMiUZqMOXHxhOxUn8pda+L9C8
-	 nF/MCpgHBl5HzOW4d7BeI+tFrL3PjxVF6pvqsfo+IYgmwwR1rHpYVHzyIxLUDEXWYi
-	 0NZ5ZPiGYU6X5n1AySHZJqpGDSMfOSbV/ANRu8520EQbCFt+igSkhqUqgpzNxv1gRX
-	 H+r6MygRO2SBnUhWfgY37x0CrEaokSywqN2qzDAKa7ae0u8sTGGrZXMsZZjTbIKZWh
-	 m5mK82heLsKZAEOWe8q94ATBFnmn6knKaoSQoiOUeWrkayknPIQKEhlI5ei7T1c0Ve
-	 hsK8Qf4bDTI2g==
-Date: Fri, 18 Jul 2025 12:25:45 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
-	"open list:SOUND" <linux-sound@vger.kernel.org>,
-	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v9 9/9] PCI: Add a new 'boot_display' attribute
-Message-ID: <20250718172545.GA2703510@bhelgaas>
+	s=k20201202; t=1752859611;
+	bh=8g7IrQcwl+6yXKAZxs2GmeVGt44lDoVaNhNbJ8JIL7o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VAlCdLTvllkkGBUwxEo63u3TPIrCVyVTYpQOWZktUw/T9fmf3k5mCxrsZFEQyr+zw
+	 i3+Ui8xgi5WpGX4WN1NC7ZL64K5VutSsuwUAnDggWxm4NABC1h0M3m77A1pzRErKFm
+	 92EmJuM45VwdjwVRiliwPes8G8WCWfD0D2eKRHFJVuBDGLvmSHseqz3MvOnrk685XH
+	 MjTNXbCjFjuJt10+fHEu9my5tRtyE9pdFXFakumm3w0CF9mm2u2Ecl07dwtmLujZE3
+	 z6y02f0kqiXctkqgZboez6d9GVZCCwOvAh3aZ6ZrR6LkV0mMgyF1WOqryFGlGZ57w6
+	 CWatml1lgwldw==
+Message-ID: <ca34c473-579b-4991-984d-4e037005c979@kernel.org>
+Date: Fri, 18 Jul 2025 12:26:49 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250717173812.3633478-10-superm1@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: Fix warning without CONFIG_VIDEO
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: mario.limonciello@amd.com, bhelgaas@google.com,
+ Stephen Rothwell <sfr@canb.auug.org.au>, linux-pci@vger.kernel.org
+References: <20250718134134.1710578-1-superm1@kernel.org>
+ <rdqrqwoye3b4tut4mgqckshmlslycg2weyleasduxawhyoifq6@pyykudf4ncke>
+ <b15cf1f2-7155-413a-973a-d632e5170596@kernel.org>
+ <hwdswlzbejlrawrrsgdlqtmzb6437kyei4hl5uqpe24orey2qd@2u7i7dzkhfyu>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <hwdswlzbejlrawrrsgdlqtmzb6437kyei4hl5uqpe24orey2qd@2u7i7dzkhfyu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 17, 2025 at 12:38:12PM -0500, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
+On 7/18/2025 12:23 PM, Manivannan Sadhasivam wrote:
+> On Fri, Jul 18, 2025 at 12:06:22PM GMT, Mario Limonciello wrote:
+>> On 7/18/2025 12:00 PM, Manivannan Sadhasivam wrote:
+>>> On Fri, Jul 18, 2025 at 08:41:33AM GMT, Mario Limonciello wrote:
+>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>
+>>>> When compiled without CONFIG_VIDEO pci_create_boot_display_file() will
+>>>> never create a sysfs file for boot_display. Guard the sysfs file
+>>>> declaration against CONFIG_VIDEO.
+>>>>
+>>>> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+>>>> Closes: https://lore.kernel.org/linux-next/20250718224118.5b3f22b0@canb.auug.org.au/
+>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>> ---
+>>>>    drivers/pci/pci-sysfs.c | 2 ++
+>>>>    1 file changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+>>>> index 6b1a0ae254d3a..f6540a72204d3 100644
+>>>> --- a/drivers/pci/pci-sysfs.c
+>>>> +++ b/drivers/pci/pci-sysfs.c
+>>>> @@ -680,12 +680,14 @@ const struct attribute_group *pcibus_groups[] = {
+>>>>    	NULL,
+>>>>    };
+>>>> +#ifdef CONFIG_VIDEO
+>>>>    static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
+>>>>    				 char *buf)
+>>>>    {
+>>>>    	return sysfs_emit(buf, "1\n");
+>>>>    }
+>>>>    static DEVICE_ATTR_RO(boot_display);
+>>>
+>>> I failed to give my comment during the offending series itself, but it is never
+>>> late than never. Why are we adding non-PCI attributes under bus/pci in the first
+>>> place? Though the underlying device uses PCI as a transport, only the PCI bus
+>>> specific attrbutes should be placed under bus/pci and the driver/peripheral
+>>> specific attrbutes should belong to the respective bus/class/device hierarchy.
+>>>
+>>> Now, if other peripherals (like netdev) start adding these device specific
+>>> attributes under bus/pci, it will turn out to be a mess.
+>>>
+>>> - Mani
+>>>
+>>
+>> It was mostly to mirror the location of where boot_vga is, which arguably
+>> has the same issue you raise.
+>>
 > 
-> On systems with multiple GPUs there can be uncertainty which GPU is the
-> primary one used to drive the display at bootup. In some desktop
-> environments this can lead to increased power consumption because
-> secondary GPUs may be used for rendering and never go to a low power
-> state. In order to disambiguate this add a new sysfs attribute
-> 'boot_display' that uses the output of video_is_primary_device() to
-> populate whether a PCI device was used for driving the display.
-
-> +What:		/sys/bus/pci/devices/.../boot_display
-> +Date:		October 2025
-> +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
-> +Description:
-> +		This file indicates that displays connected to the device were
-> +		used to display the boot sequence.  If a display connected to
-> +		the device was used to display the boot sequence the file will
-> +		be present and contain "1".
-
->  int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
->  {
-> +	int retval;
-> +
->  	if (!sysfs_initialized)
->  		return -EACCES;
->  
-> +	retval = pci_create_boot_display_file(pdev);
-
-In addition to Mani's question about whether /sys/bus/pci/ is the
-right place for this (which is a very good question), it's also been
-pointed out to me that we've been trying to get rid of
-pci_create_sysfs_dev_files() for years.
-
-If it's possible to make this a static attribute that would be much,
-much cleaner.
-
-> +	if (retval)
-> +		return retval;
-> +
->  	return pci_create_resource_files(pdev);
->  }
->  
-> @@ -1671,6 +1716,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
->  	if (!sysfs_initialized)
->  		return;
->  
-> +	pci_remove_boot_display_file(pdev);
->  	pci_remove_resource_files(pdev);
->  }
->  
-> -- 
-> 2.43.0
+> Yes, I agree. But 'boot_vga' has set a bad precedence IMO.
 > 
+>> I would be incredibly surprised if there was a proposal to add a
+>> 'boot_display' attribute from netdev..
+> 
+> Not 'boot_display' but why not 'boot_network' or something else. I was just
+> merely pointing out the fact that the other subsystems can start dumping
+> device/usecase specific attributes under bus/pci.
+> 
+> - Mani
+> 
+
+This is a pretty general problem that exists that attributes are first 
+come first served.  For example amdgpu adds mem_busy_percent and it has 
+certain semantics.  Now PCI core can't add that.
+
+And if nouveau.ko wants to add the same thing they need to follow the 
+same semantics because userspace will look for those.
 
