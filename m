@@ -1,190 +1,194 @@
-Return-Path: <linux-pci+bounces-32556-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32557-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1EFAB0A9D6
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 19:52:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B04DB0A9DA
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 19:56:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 52E981C82114
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 17:53:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B25B51C82FB4
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 17:56:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7295C2E7629;
-	Fri, 18 Jul 2025 17:52:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 264142E7BAE;
+	Fri, 18 Jul 2025 17:56:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qJWygoZg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Me//MvHA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2055.outbound.protection.outlook.com [40.107.95.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0C71EA7C4;
-	Fri, 18 Jul 2025 17:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752861160; cv=fail; b=TFOF8MinSjNdUHBvaXRykCZ+SDLJ2MXQklWRHv3B/7MTw3gSWIVLs3GNsbU0ohrTU8c6+CqfT2aUhLzPWiq0FdtiZxuPEJZ9UEZMlwNJk8TW3T06vYM49wdHwB/3wKKghR3T9YF51CNBMw8J2FWONN0EYWY7rk5Y/3UbFtH/95Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752861160; c=relaxed/simple;
-	bh=8/UuP8hx5pU8lVVp/eBNjj3ufnXYsjkKAylJXOzQwLo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=HHbB9qaADGeMZ38oEsC+DcBV7YRYmKeIh6xT+4ozf8yXD7gkoEncQerdLm6ZlqaczKCOHrtOQgAh9awJjijai2OeSSEwAZj6ENezlT0JAoOdZnIyNUA75snBb8UJV8yyYbZQb11ZAydQd/fc24u+IxYv03I1VbgnRwibiF3+F5M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qJWygoZg; arc=fail smtp.client-ip=40.107.95.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RI6hGpaBiPFc2TCQiZqN/qhghrx+m2+LwYksVRJiVu6HQXkUSwLZ13xTcjuwDZl49RI+hdKOGBG1VgC+JqGO1kpI3v00G0KSovqMiNNKBMlugy2gBcd0G1JDP4LUbGRpH5vWkbhN8nsttNQe3+KUAZRz0yDGo4o7ejPQWTHpY9KjAsjB24JfPdE6z296W1t9pqld8CR24TNLU0/Mb86Oq/chBHFsa6WSoQBTIK/z8sNN1sMf38eo6BuOsOVpI0mI2jNuD1pfiXzZJKBpJItHRRGY8H2pRkTKpGrkzJfR53zU2ysttSpbVzfVxEfK+hEl4RW8HKO7aEFcyZX9abXDLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LfgDcHsftb/poL2u9Hs1lqHMYoxSwIu8I49lI1K7Qwo=;
- b=Q/JRqL+UitVzpBYGiq1/u3FmCbH3vA2/Hsuqk3LMNoCPrtPJf6PsqSe+f8o7wBEYDeJbAuVcSOwbvw7f71xLOGaIPNWxp90S+RMtxy2u2BbBMGIstwysNT2RbQGeUeYqamKq9AO36JBwNos8jXgbvg8SBlR0yN7MR/ZGIgjQOkUZbMO12kYjf4DOanJPPoS12Mlgldp+4TLJ/x6t6I8tL7jElQKlqNCgLNKuoYBraKO6zdJJvoy1U7vIf/vMGtLQQwg0fyEf5B6DlETsas2Ev5rQPyuViDSkB6jQCroi7z5oNGmB9iWeov7ZrGXKUtKI1746glIdm5yWxKKAMD37LA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LfgDcHsftb/poL2u9Hs1lqHMYoxSwIu8I49lI1K7Qwo=;
- b=qJWygoZgfmxuXifqqPbN4+2Gi8IvEI7L5T5f0zVlr8eFifJfvb7NBV9GbX1h/vu1hPdEeDzysWDBg8HL0yN2X5RpZu0TH9xuaTx4oeqUMOX4VyZmAQi9DeOViT2OturiYTvC02elY+Uh5qfHkwWDo9ZmqjSZggL8hOStClRWez0+vZ95aB+Kke5lrLWbX7BP+22Yzfcq4uIOj6Ml17nl4jDGSBG8Uy4h/hY/NUxCAPZhWytAFDamkz5MAlv8EEJV8DtU8NZjgeDIUmVu7O7QY8VWQv7vd8lTJqZyZlj1MJ7Heu/ICsHVZd1N2Fzo7CdiV8Nu75pwSGoGUI0mRXw3hA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by SJ2PR12MB8739.namprd12.prod.outlook.com (2603:10b6:a03:549::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.26; Fri, 18 Jul
- 2025 17:52:34 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8901.033; Fri, 18 Jul 2025
- 17:52:34 +0000
-Date: Fri, 18 Jul 2025 14:52:32 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Donald Dutile <ddutile@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
-	Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
-	Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>, galshalom@nvidia.com,
-	Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
-	kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
-	tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
-Subject: Re: [PATCH v2 15/16] PCI: Check ACS DSP/USP redirect bits in
- pci_enable_pasid()
-Message-ID: <20250718175232.GA2394663@nvidia.com>
-References: <15-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
- <aa84cbc8-6d7e-4e70-887d-b103f2e01a77@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aa84cbc8-6d7e-4e70-887d-b103f2e01a77@redhat.com>
-X-ClientProxiedBy: MN2PR15CA0062.namprd15.prod.outlook.com
- (2603:10b6:208:237::31) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170FE2DECAA;
+	Fri, 18 Jul 2025 17:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752861367; cv=none; b=WPEYx0OFMYE07SlZT7KoSIrUMDIt6t5y7zGXqc/2C5y7ZpOMLUmm3GL0IagPZm34GxIS05KU83ypvKA117SER83caiWOyHWvDxRoKzJLmkJwEUVtPspnr1/g0CaUF8I5HGC0/rZ3/vACVFNFbhRMdPIv73AyIDYcudbhbzZJi3w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752861367; c=relaxed/simple;
+	bh=McAH1OCwdXwhqAQAklIqbVHdXdpc4H25iE07cWBLS0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oY+ZOjU/qQKJ8JD3YeHFTfbYhsnIFPb3H5rqNotiKVIobcZ6eS91brKI83nMaHboDEyc5htXus7B13PQ62h2V62av+3FgoXHkARSKsmm5R0V4+gB4aZiAI3gZrhSxIrlapTIwQsvZlKSyBDQ6aqmXr9YmstTZcyIsHv5cTDnOKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Me//MvHA; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752861366; x=1784397366;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=McAH1OCwdXwhqAQAklIqbVHdXdpc4H25iE07cWBLS0c=;
+  b=Me//MvHAdJQTNx+YbsEFVll63C/tk67wkHkMRrDXmcUyBxAegGzpkNhx
+   7ZOh4fPojHXeRfEkbTvJVFP+w9y8F2QkUYOXZul3m4K7JEsqRcerMH418
+   FT+beZ1RrNCcr+70EbL7CLxSXQUwHLWbiUDaaAgrkkKLQTPToB1pXsrRq
+   FZVEm6ecxwz1SeYsPdyynkOz+rR/DCBLB5wu4eFEtNDgzzZf/l1u0yNoC
+   e9/TXXHT+gEuU2JcDRgPJ/dNVIpLjXhlrdFQG8oH2U2SrjGlDnzJXKOLZ
+   mWAPh6595NZ+dK8syoidAp55LjyDFsKKW+MckgcP6Cy3vzKTtBwxv9tas
+   g==;
+X-CSE-ConnectionGUID: zjK/Y5C3QUiQFda2fkwcRA==
+X-CSE-MsgGUID: RmAVUWrhR5+KCkS2OPnFBw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11496"; a="65852936"
+X-IronPort-AV: E=Sophos;i="6.16,322,1744095600"; 
+   d="scan'208";a="65852936"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2025 10:56:05 -0700
+X-CSE-ConnectionGUID: RlfGcGgCTCyKroBUfmu2rA==
+X-CSE-MsgGUID: SWel8q8cSBizg2Up7Qw9EQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,322,1744095600"; 
+   d="scan'208";a="158809285"
+Received: from unknown (HELO [10.247.118.125]) ([10.247.118.125])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2025 10:55:56 -0700
+Message-ID: <d1885619-fc34-4b72-9538-34f1993a538a@intel.com>
+Date: Fri, 18 Jul 2025 10:55:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SJ2PR12MB8739:EE_
-X-MS-Office365-Filtering-Correlation-Id: f820a1cf-dfd1-4ae8-128c-08ddc623e038
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lxBe20vRS6p3g3HpV7lPQrarOQ2QDfi52zpN5qnvCEO5Iscm8HtLdAaTNwAw?=
- =?us-ascii?Q?yMhbFnf+IoVZcUp51GnKAvivg+kwghEghQfrbaoL9BYrc+tKmFmwLegXiXgF?=
- =?us-ascii?Q?oQpfKmCVqy21Y87+wzpeKZlJId4W+TalFbKcyxYygO9fq+SQWiwlfx6BpOEQ?=
- =?us-ascii?Q?WdRUOoPwVcJmu8qS/7RZt9A9NfaVGBR6OjbEKrSDE09Yme8Mlrwdn29jpEYw?=
- =?us-ascii?Q?9DOMUr0gXLFWttJkDjrR0/ka1h7+I0g/smT3SO258iuT3f+0VbHMy4BCc6c6?=
- =?us-ascii?Q?pD0JOfis+7rxUhFbPEz7qWSA1tQGCg9hwJoErzlzyQYOqP2ohH9Ch/OndwaS?=
- =?us-ascii?Q?eBlN/lVHz60qj1Tr9fdD/Fqsf1qzihVAJCTQKba019oU88UA/sgA7CnAFQ9z?=
- =?us-ascii?Q?5zqSbhRG0+dwcC0Vgu6o0C1i/FNyHpJIbgl7GnodyfmEhxEe7iCC5AK1kJA/?=
- =?us-ascii?Q?wGXx8CXTdsyWaxbOrrN/6NVrU6n2V74EOYMFJmnguIG4qpcyx6BSiyQKeC2I?=
- =?us-ascii?Q?S94KZ8mEiUTN8EYWC0R9miefqvrOJSoWAWDWzpx+1ymdQSTpTXefGoyeA+PI?=
- =?us-ascii?Q?tbBbP2oflwCQCnAbBwvwSyRNLcNayhF2c8/mj6HcXs6n4IyDZrAAUuvOOq69?=
- =?us-ascii?Q?izRE6+a35rJKUrAu4EVNfiyMGUsmAxyZLWZajAlCyhxxzzx0M+NSGyfieuRL?=
- =?us-ascii?Q?ZfhWlMnhkDAON+lpclNOwIcXl7PzcNN9z/0BxLND827YcVWvrTJKk0fkrpTY?=
- =?us-ascii?Q?pMW8CLUHRRCSdAcrOYWxjGzmF2n+un+pZHPDb13kjnpjX3/ov0eVs3Mwgils?=
- =?us-ascii?Q?AZlfWwThdx/zwpaPatemeZ9TaxgaovEKJAkP1BP6mtzWJx2iXSUuvAmfHOyB?=
- =?us-ascii?Q?p35/fH/H7QOoLLjqt0H7ed6P4ZUSr510f8nLF3ggUL6i037R+WJ+1mZI+JG2?=
- =?us-ascii?Q?3Um+e70CDwEZ0GyFvWKjtahEp4LW5Fz91AGtYHvDWuSjn7jCV/ZBrdkYLJPv?=
- =?us-ascii?Q?hdRi7ozzgLpwAs3Pg4yD7mXI8CGbY+Ejr6A3/g65tiqNVnSeUGAcXdmBqNH1?=
- =?us-ascii?Q?O2kmHnOSUPXwcjDfKe2hZcf2cAG7P0/AMH4LQAQVsgEz4FxiORd9jWd3CrB9?=
- =?us-ascii?Q?4iwtYgx6JhP1r13fqefsEoI18XttPREjlLYsw8s/mRfeBrJX/dJRsXH3epKe?=
- =?us-ascii?Q?hanVrGS3UjDHPajYmAD4oNNthJdxbwrrBlc+QlctLrZYsWrGNVwL9VizyJZz?=
- =?us-ascii?Q?UHt9o1D7l8DbliIyZNL3gifJttXmXWkmQxNWAsKY5eF8KKzcwPshHDjmBCSF?=
- =?us-ascii?Q?OUvlOUVze+hGqEFMx9QQoowXz/MWjckECd5XlpcxHCvKxhEhcUeWKeBib/Zy?=
- =?us-ascii?Q?9WkX7+2BASu70nyRCIiQm67RjhlGJfX6sfk1M0tlEhY/7LHXY6Z+GXtoOj+C?=
- =?us-ascii?Q?4UwX5D45f3A=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?wiUu87JSQdXLu2uDCORH2XqLhhJ0ujkoDlnp4BmDfXRGvVg7rOpi9lPWcsi+?=
- =?us-ascii?Q?Ri7QxfCi494HJM3u/F2sKp4TJiU9vnswGhFxacw2xaM6G+CZE3b9SWJwihME?=
- =?us-ascii?Q?JKQiopQlC+XGpxX19QVS1DCizw/sH8p+BrIwl5RCGz7lDkjBpOEBG1C7nmKU?=
- =?us-ascii?Q?lWb0tSW3lJ5MmrD40mdsYfjXvnuripWoZjp43wfDgiYil4sfDc5o7my7HAxk?=
- =?us-ascii?Q?+M5jvm2q07pl6KSyaFknax/1Tf4sC9rCbg0GbUFH9dP+jlw3MC0gUIZWyIZw?=
- =?us-ascii?Q?9mKkBeCOiRhxQkO00IC3lLZ0jiL+segdKtkyo+RMC/T0KV8LzLyW81RgN8KC?=
- =?us-ascii?Q?2CIsbN18RBN+nRC89u9zXggRPyu+baw0MK6JljP6Btn6qi58N+grpDbjU5qh?=
- =?us-ascii?Q?zSCzdYpLI7z/6Ke42ZqJnXQnoOK3OR9gTqvgXK0C5gEQSf0SS7II5FOdqzo1?=
- =?us-ascii?Q?fS3E0lEucQyhKL0JbycuaTvBQnQfqtPXjM3G9NCy8iYXv6dd5GYUqI5tDuCv?=
- =?us-ascii?Q?A+gKxq7zYJBooNEfYFJTwb9zhIjR4Sod+D3BqLnPDjODiEchYt4e7pvdPcqB?=
- =?us-ascii?Q?YlaLEXCHXXHb5RQpKL++N4dezsQrfE+N5JSJHl1yi39K55KPFUyn3A3EBQBx?=
- =?us-ascii?Q?ayAnlQ3jhy4/NqY4n6Gs/XJCX+pkBLmIwRSn1sP1XtlpAD96OcVYh1KBxaaY?=
- =?us-ascii?Q?PP2cVMFcQYgI8QobEax7QQe2dvIzi3Q6MbdD9jEdwRUmtGrxJBiJeXYdLfbJ?=
- =?us-ascii?Q?bHozrwZVNHOI4qVe1tTN8wVB378SWy/Ycw36CehJkheqM8fs9QAYViAnrgXd?=
- =?us-ascii?Q?2QI8rBRA3I9Ns9/L5IJqhevqTaTmGk2V5Cd5tTCG1MsA+v0ggByHdtd/F2Mq?=
- =?us-ascii?Q?qOOW4MRYGUZ1QoLr0r0OW3jY4y0F83Avr/ytwqf0r0byrVkVb2G3XsHpQ8eA?=
- =?us-ascii?Q?/3LIzUi0fDkDC5w4ef26rETp4BPkJYMYXQknikp7vGlL8yhGGe5hoYStGOuB?=
- =?us-ascii?Q?7gRLbRkYXWj7gXQYptEYWaiEo2bTq86P4AlOpiDGfd8YZL6t+FVNqrKwksdQ?=
- =?us-ascii?Q?dUC9v7qo9clvFcjUJGeydIOOc0KUV279RlxlhZnwzw4DiiEweYL8fw0arPlq?=
- =?us-ascii?Q?MdlnFmwipRVguMsvVqpcO4mzBMvfa1LN2+N6DsQynI3AKZWzUFwkNrhREIZ0?=
- =?us-ascii?Q?8jAdzFXaA4SVf9w8oF8+8vkNb7yH+HXJOTc+kr+b2s8pQYYNbEvZ8FI1KzW2?=
- =?us-ascii?Q?/PvZ5ZOa6vf4zT+5irgFb7sP284b/uiK74uu1uEEUYDqBofai9wUVL/Az4tp?=
- =?us-ascii?Q?y75hSCZ5jIEE5Syzr21onuDWZqdhiJJUQMN0SxT++WpDYKOan90rnOVJFibS?=
- =?us-ascii?Q?gOwx9MB5jHrDCsZTilGMCXv0iAEl5b+GcjSf36lrrkzvRLmw/L43uY8Q866G?=
- =?us-ascii?Q?Hcia3Soq9r0rZShJpDmwPb8oXomdxtsj7yrFcV4k6TpUSM/2ZGT63hxFqzcR?=
- =?us-ascii?Q?YVz1Sr493+uIARJ7L1Iac/phL3m0HO1YA9nsDQl2K304ldT7F16FFvlX92d8?=
- =?us-ascii?Q?cvvjzs96XNBrSVMzIovLjubqOKfb2hJIb+ji6mxm?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f820a1cf-dfd1-4ae8-128c-08ddc623e038
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2025 17:52:34.6564
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1gL+6JYP9/Aage3RFuq6AZZsHut9GQqOzkaRl0sJykH21DlOYT8M+IYZEKuwgZXE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8739
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 01/17] cxl/pci: Remove unnecessary CXL Endpoint
+ handling helper functions
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250626224252.1415009-1-terry.bowman@amd.com>
+ <20250626224252.1415009-2-terry.bowman@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250626224252.1415009-2-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 17, 2025 at 06:17:11PM -0400, Donald Dutile wrote:
+
+
+On 6/26/25 3:42 PM, Terry Bowman wrote:
+> The CXL driver's cxl_handle_endpoint_cor_ras()/cxl_handle_endpoint_ras()
+> are unnecessary helper functions used only for Endpoints. Remove these
+> functions as they are not common for all CXL devices and do not provide
+> value for EP handling.
 > 
+> Rename __cxl_handle_ras to cxl_handle_ras() and __cxl_handle_cor_ras()
+> to cxl_handle_cor_ras().
 > 
-> On 7/9/25 10:52 AM, Jason Gunthorpe wrote:
-> > Switches ignore the PASID when routing TLPs. This means the path from the
-> > PASID issuing end point to the IOMMU must be direct with no possibility
-> > for another device to claim the addresses.
-> > 
-> > This is done using ACS flags and pci_enable_pasid() checks for this.
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/cxl/core/pci.c | 26 ++++++++------------------
+>  1 file changed, 8 insertions(+), 18 deletions(-)
 > 
-> So a PASID device is a MFD, and it has ACS caps & bits to check?
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index b50551601c2e..06464a25d8bd 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -664,8 +664,8 @@ void read_cdat_data(struct cxl_port *port)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(read_cdat_data, "CXL");
+>  
+> -static void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds,
+> -				 void __iomem *ras_base)
+> +static void cxl_handle_cor_ras(struct cxl_dev_state *cxlds,
+> +			       void __iomem *ras_base)
+>  {
+>  	void __iomem *addr;
+>  	u32 status;
+> @@ -681,11 +681,6 @@ static void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds,
+>  	}
+>  }
+>  
+> -static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
+> -{
+> -	return __cxl_handle_cor_ras(cxlds, cxlds->regs.ras);
+> -}
+> -
+>  /* CXL spec rev3.0 8.2.4.16.1 */
+>  static void header_log_copy(void __iomem *ras_base, u32 *log)
+>  {
+> @@ -707,8 +702,8 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
+>   * Log the state of the RAS status registers and prepare them to log the
+>   * next error status. Return 1 if reset needed.
+>   */
+> -static bool __cxl_handle_ras(struct cxl_dev_state *cxlds,
+> -				  void __iomem *ras_base)
+> +static bool cxl_handle_ras(struct cxl_dev_state *cxlds,
+> +			   void __iomem *ras_base)
+>  {
+>  	u32 hl[CXL_HEADERLOG_SIZE_U32];
+>  	void __iomem *addr;
+> @@ -741,11 +736,6 @@ static bool __cxl_handle_ras(struct cxl_dev_state *cxlds,
+>  	return true;
+>  }
+>  
+> -static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
+> -{
+> -	return __cxl_handle_ras(cxlds, cxlds->regs.ras);
+> -}
+> -
+>  #ifdef CONFIG_PCIEAER_CXL
+>  
+>  static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
+> @@ -824,13 +814,13 @@ EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
+>  static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
+>  					  struct cxl_dport *dport)
+>  {
+> -	return __cxl_handle_cor_ras(cxlds, dport->regs.ras);
+> +	return cxl_handle_cor_ras(cxlds, dport->regs.ras);
+>  }
+>  
+>  static bool cxl_handle_rdport_ras(struct cxl_dev_state *cxlds,
+>  				       struct cxl_dport *dport)
+>  {
+> -	return __cxl_handle_ras(cxlds, dport->regs.ras);
+> +	return cxl_handle_ras(cxlds, dport->regs.ras);
+>  }
+>  
+>  /*
+> @@ -927,7 +917,7 @@ void cxl_cor_error_detected(struct pci_dev *pdev)
+>  		if (cxlds->rcd)
+>  			cxl_handle_rdport_errors(cxlds);
+>  
+> -		cxl_handle_endpoint_cor_ras(cxlds);
+> +		cxl_handle_cor_ras(cxlds, cxlds->regs.ras);
+>  	}
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_cor_error_detected, "CXL");
+> @@ -956,7 +946,7 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>  		 * chance the situation is recoverable dump the status of the RAS
+>  		 * capability registers and bounce the active state of the memdev.
+>  		 */
+> -		ue = cxl_handle_endpoint_ras(cxlds);
+> +		ue = cxl_handle_ras(cxlds, cxlds->regs.ras);
+>  	}
+>  
+>  
 
-Not a MFD, but the MFD loopback would follow the same rules for
-routing PASID TLPs. For a MFD none of the switch specific ACS
-Enhanced flags would make sense:
-
-> >   PCI_ACS_DSP_MT_RR: Prevents Downstream Port BAR's from claiming upstream
-> >                      flowing transactions
-> > 
-> >   PCI_ACS_USP_MT_RR: Prevents Upstream Port BAR's from claiming upstream
-> >                      flowing transactions
-> > 
-> >   PCI_ACS_UNCLAIMED_RR: Prevents a hole in the USP bridge window compared
-> >                         to all the DSP bridge windows from generating a
-> >                         error.
-
-Jason
 
