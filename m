@@ -1,311 +1,186 @@
-Return-Path: <linux-pci+bounces-32570-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32571-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00D42B0AB70
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 23:29:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9604B0ABB7
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 23:42:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A44C4AA15CC
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 21:29:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17E053A9A6A
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 21:41:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D6CB21E08D;
-	Fri, 18 Jul 2025 21:29:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CB4221FF28;
+	Fri, 18 Jul 2025 21:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YstQ7PzF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NrpmS24x"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3417F149C6F
-	for <linux-pci@vger.kernel.org>; Fri, 18 Jul 2025 21:29:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E494921CA0C
+	for <linux-pci@vger.kernel.org>; Fri, 18 Jul 2025 21:41:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752874185; cv=none; b=dnVBujHxFHOoT/yRSuh4tFfntiX26tvLdmtgW6Bw6M5lVSF8QUgnj2RjENCYyUrY99UpSxJVW8hf6SSajDSTdKDSXve+YP4fyJQHbsNyBy3owNb2Y5lCcNJqu4mJ9UrctfIyyz2kyyEZMBKihdRIwEd39LzdunHYrN4ipI01pc0=
+	t=1752874920; cv=none; b=M5vuNIvTFJxDF+DLzSB0YSkCFJF4Tud+l1xs348wauI7BRSjRY9buNhd4FkzPAe7wh0egwHzX1ZzMp7nTXqGpebYTkA2AFttP8lgsVfEyRC5w8tuqtTCB27t23NrS8+SBoYuBmCzzMQfsNyGzOzS1dZWuZ+hUZ5X+xWncxyk02k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752874185; c=relaxed/simple;
-	bh=qqIUQ9QIcZhmGXl17HdzCq7eHSn5RW4buAwRdLV5Ez8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qjZoNv7PJ929aahVd1TgCspP/6GAgw8u5lGdYKj2/OHZkT+kbFdFr48JuUMOtsZQz6cZqU+rlrGJ1CAaZlp9dx8EocKHuQrkS+L8fL3ienM8O04Lc+Hug1CReS22hHsA/rLFfaVVa0rTXsnu+XCG46fXIj20g/SHM/gYB0vaWCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YstQ7PzF; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1752874920; c=relaxed/simple;
+	bh=uxXpdkcHdOrQaJc+eu4/GeOXinhx7hO5tirp5wkNhw8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l/YCNEKww0qkCUqW9BGO8DjhPxTh25cT22xbG30tmO2i0mHOaY7BUv9zHqYo2M+OKwbA6fGmr7IhopHWnhCkW4Dhnf20VyYQYU3tSAPTOK53CipvRY37XrkaQCvRLdfuFnb6Qb92/NJCNG+gZxRx0kj6aZ7C0j3AWYC5fYY9gek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NrpmS24x; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752874181;
+	s=mimecast20190719; t=1752874918;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MrWlbpRkRAWEEZSZUXR7gkDwQXPo2XGHR6bPglMnBt8=;
-	b=YstQ7PzF9Jn9hJwbQ48MUQXyAajxCOTN0xjxNbBIRw2pszpK+4PxREYf9Pe0c7WzBBtQHz
-	ZnljVctaoH2hKFv3p+E0pivXdcSvuZ6QFSKNnnighHbzne/03MDKeoX6Ya7jJk9Yq9cTRm
-	26XRO0u4NRLD7zhpGQC65rrs+PF5Juc=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Pl8HYJY2kuf3xc5dYY1A2bTJiaSaxCFVikVVLsHu9SQ=;
+	b=NrpmS24xcQhFf7z3zT/77jdGQCvMJ90RGt8bYYURVEc4M0ttWaTWzXebb0nxLJsjVVyIuo
+	l09bxWed3YPytbDbPy2Ua0KrRazop3j6LAyeSJMxqQjuwcObJ2eO8f7MZwzyGNenAht3gX
+	h3EBiAANRHuIEdJPi0tWcPo0jHckT8c=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-628-JpgGJ75xPv2T0r9w3rGeOg-1; Fri, 18 Jul 2025 17:29:39 -0400
-X-MC-Unique: JpgGJ75xPv2T0r9w3rGeOg-1
-X-Mimecast-MFC-AGG-ID: JpgGJ75xPv2T0r9w3rGeOg_1752874178
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddc47aebc2so5614975ab.0
-        for <linux-pci@vger.kernel.org>; Fri, 18 Jul 2025 14:29:39 -0700 (PDT)
+ us-mta-166-9r3eZgRkNwmsE1g70LH0HA-1; Fri, 18 Jul 2025 17:41:57 -0400
+X-MC-Unique: 9r3eZgRkNwmsE1g70LH0HA-1
+X-Mimecast-MFC-AGG-ID: 9r3eZgRkNwmsE1g70LH0HA_1752874914
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-234a102faa3so21941395ad.0
+        for <linux-pci@vger.kernel.org>; Fri, 18 Jul 2025 14:41:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752874178; x=1753478978;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MrWlbpRkRAWEEZSZUXR7gkDwQXPo2XGHR6bPglMnBt8=;
-        b=u8Bw8qkIQt1bTs2GZFpgtUPiPm0GkDnzS/18enDiyt76SK2JU8w+VDvsDJ/IWysQin
-         WCb0DPk/NoowxyVGdIyH5EwRzwczfbHicmjpdb3te3EC17Q3LZAUk1VAFJ2DDCqKW8Mu
-         1s2DCAXA71rdx4dSlnLmgvj754LZigRhnfcUJDj5g8CtPlXkPkKPqmLQAwtxqpk+FP8I
-         JZfikytUbzUl8aQJ34fakJTMI3c1LbV3QFgxSRBgQz2/iaTkC5gZgvZGatgwcckAC4Bh
-         xl5KAVA/B13/YpWmeiEg2bvjgDxUd63fNZRqvhMGUPtsJr81CelUcXz21mBtKQSll+xW
-         2v4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVjmf0/vkNObQ7f8XvTdYXE6aMBB5bcW7ELR/fern0aWCWKQXMPrUWsIxITEtijITvUEEOmdZNWb7Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypVbqtaG3lb2vCtma72wce5pjqmELWB5EtgvQP+O2JIvGUHgOl
-	20iMDB5BQEzv6l1yQvvoNKOYh7G2HsDvvNICrp4QUznDuxoFjNOoFTvLoniFnQe/24+keWpOg5X
-	QNkpesnlzeR6+zMbgEJqLV5+sbb7Tbawh/s5WUJbfejB632y3I95BKm0PIogTCw==
-X-Gm-Gg: ASbGnctNUX5nQ7aklMI4Xz03j2hUJzYkRW7USM5GFB/DyGGd8uSttBfpGT/TMeTpSRe
-	n/ftGng2e+e0QvdDF/ydCpP1Ufl8iYEmhUhrRIO03OJaaFKaHUKTK1Brwz4lP61eqDYuaalPyi2
-	Aa+OoitJMbkFla5Wssjf2FV48a2/g8rkXkhdjjw0PPmHNwMGn1/6ZuFsRpxWY3e2YbeCjddjM2V
-	YPiT0MULd7h+FcF6lYZR/t51A+jzGc27hJ3b0DakMhTA6HvRFtu2Xaqoto+hVP2YK75GC60z8db
-	vZO4GZ5O3d/e7cf5YgdU7hBmCgjsGAQNk/cT+QAHBNw=
-X-Received: by 2002:a05:6e02:3e03:b0:3dd:c927:3b4f with SMTP id e9e14a558f8ab-3e2822ea512mr31319995ab.2.1752874178309;
-        Fri, 18 Jul 2025 14:29:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHsXml8xvO+E+R9hAay3c6AEsvzRM4HktRe693pIg5RRbn8ITcNmOIWJ6JbB3lZ/WFgJul1Sw==
-X-Received: by 2002:a05:6e02:3e03:b0:3dd:c927:3b4f with SMTP id e9e14a558f8ab-3e2822ea512mr31319925ab.2.1752874177726;
-        Fri, 18 Jul 2025 14:29:37 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5084ca6314csm512735173.125.2025.07.18.14.29.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Jul 2025 14:29:36 -0700 (PDT)
-Date: Fri, 18 Jul 2025 15:29:34 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev, Joerg Roedel
- <joro@8bytes.org>, linux-pci@vger.kernel.org, Robin Murphy
- <robin.murphy@arm.com>, Will Deacon <will@kernel.org>, Lu Baolu
- <baolu.lu@linux.intel.com>, galshalom@nvidia.com, Joerg Roedel
- <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org,
- maorg@nvidia.com, patches@lists.linux.dev, tdave@nvidia.com, Tony Zhu
- <tony.zhu@intel.com>
-Subject: Re: [PATCH v2 00/16] Fix incorrect iommu_groups with PCIe ACS
-Message-ID: <20250718152934.0cdb768f.alex.williamson@redhat.com>
-In-Reply-To: <0-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
-References: <0-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+        d=1e100.net; s=20230601; t=1752874914; x=1753479714;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pl8HYJY2kuf3xc5dYY1A2bTJiaSaxCFVikVVLsHu9SQ=;
+        b=qKI77ivr3URv3BvvzLe6jsT53zwnS+Ss11jlFJZol11ImPL14zsOjGRcupNQCUSSa2
+         9wkMDrpcvRVOliOnDtjSrZ1PMofCfhJU2rxPtfhxU1iFN+X8wyN7WQ5EinCgXS4RwEEz
+         gk8pMewKt+U5RUfbqwBFwz6ZRdCLrz/qokcbT9sbhM5Oew3uwkCVWvKlG7ddNaZZXVEC
+         YCIzExXTs+2JnlLTrARfo/zYaB2dado9FFumQA15kTcQv1Ql5Nf7xWI38x7gWCSOAYim
+         kzEGhOAMGfCenIr3WemmCP4pK6kvjDyDzCCft4ET28KRG9se36Oay8sANrEMvzOqhSqN
+         r2mg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNR4KwFbUUF04pDLl7O6zYQ97LMNyBHmG6tbzGQCE40PuMOwigk7F4k0AkLOacwgfkvA09EEltJAg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzofZ3ioBAoEbrWHw0hTblu76M3O74qcoWnlyNSv+JM0k9JQkcK
+	kN1/PaEycCnsTFCBkCK4+V9AIw9lo9E4B+E8V+fQCWQNM/wD1vTttsZy5b9hkX484HxT0r7/n3C
+	XbLggmAZRS1UZUfirPhW8eX4FKq2o3Ae6qsDelKxm9EzIXDMPPAEwn4khthG3Ww==
+X-Gm-Gg: ASbGncu9Zg+jx49x0x4XD2ohwwfqln3Mmk7t98SfsGDUu/NwqTTnbiKLNlvZpPdB1aE
+	D+lO6hGcn9DicsDn+A4MCi3Ye1sQgf2eq2HMTTPgUsxpnBGFwooCGr2pTrBEK4nRdndnt6ro/TH
+	jGKzO5gwtHfIDaMMvLSGLTkFF9jR6GCyYzTXr8+36D1yQDGPZ5jCMURqBadKROUDO8ptcfG5LBo
+	UOuS3WOYm5jzjHfRI5yYFbBfW4JWkUxgj8XfsUQoC8lQcef+K4HJn5LB/HWzA3pB2Fvu4lthu7Z
+	ijBJfQ4lw/aFWeoxX2HRS9vnemSM0zuHP/tjOC0F
+X-Received: by 2002:a17:902:ef02:b0:234:9656:7db9 with SMTP id d9443c01a7336-23e24f4ae0emr193121195ad.32.1752874914360;
+        Fri, 18 Jul 2025 14:41:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IElJIwNy/gAl1oOb5k7nEBq38Uon8tJbJo/3EEmGz51w51P0ZBbNDEpVhWKCJJ33lSWOle8bg==
+X-Received: by 2002:a17:902:ef02:b0:234:9656:7db9 with SMTP id d9443c01a7336-23e24f4ae0emr193120855ad.32.1752874913939;
+        Fri, 18 Jul 2025 14:41:53 -0700 (PDT)
+Received: from [192.168.40.164] ([70.105.235.240])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23e3b6b4b20sm18055975ad.121.2025.07.18.14.41.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Jul 2025 14:41:53 -0700 (PDT)
+Message-ID: <1cda6f16-fb56-450e-8d33-b775f57ae949@redhat.com>
+Date: Fri, 18 Jul 2025 17:41:47 -0400
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/16] iommu: Compute iommu_groups properly for PCIe
+ switches
+Content-Language: en-US
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
+ Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
+ Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Lu Baolu <baolu.lu@linux.intel.com>, galshalom@nvidia.com,
+ Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
+ kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
+ tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+References: <3-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
+ <5b1f12e0-9113-41c4-accb-d8ab755cc7d7@redhat.com>
+ <20250718180947.GB2394663@nvidia.com>
+ <1b47ede0-bd64-46b4-a24f-4b01bbdd9710@redhat.com>
+ <20250718201953.GI2250220@nvidia.com>
+From: Donald Dutile <ddutile@redhat.com>
+In-Reply-To: <20250718201953.GI2250220@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Wed,  9 Jul 2025 11:52:03 -0300
-Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-> The series patches have extensive descriptions as to the problem and
-> solution, but in short the ACS flags are not analyzed according to the
-> spec to form the iommu_groups that VFIO is expecting for security.
-> 
-> ACS is an egress control only. For a path the ACS flags on each hop only
-> effect what other devices the TLP is allowed to reach. It does not prevent
-> other devices from reaching into this path.
-> 
-> For VFIO if device A is permitted to access device B's MMIO then A and B
-> must be grouped together. This says that even if a path has isolating ACS
-> flags on each hop, off-path devices with non-isolating ACS can still reach
-> into that path and must be grouped gother.
-> 
-> For switches, a PCIe topology like:
-> 
->                                -- DSP 02:00.0 -> End Point A
->  Root 00:00.0 -> USP 01:00.0 --|
->                                -- DSP 02:03.0 -> End Point B
-> 
-> Will generate unique single device groups for every device even if ACS is
-> not enabled on the two DSP ports. It should at least group A/B together
-> because no ACS means A can reach the MMIO of B. This is a serious failure
-> for the VFIO security model.
-> 
-> For multi-function-devices, a PCIe topology like:
-> 
->                   -- MFD 00:1f.0 ACS != REQ_ACS_FLAGS
->   Root 00:00.00 --|- MFD 00:1f.2 ACS != REQ_ACS_FLAGS
->                   |- MFD 00:1f.6 ACS = REQ_ACS_FLAGS
-> 
-> Will group [1f.0, 1f.2] and 1f.6 gets a single device group. In many cases
-> we suspect that the MFD actually doesn't need ACS, so this is probably not
-> as important a security failure, but from a spec perspective the correct
-> answer is one group of [1f.0, 1f.2, 1f.6] beacuse 1f.0/2 have no ACS
-> preventing them from reaching the MMIO of 1f.6.
 
-This will break various LOM configurations where the NIC is a function
-within a MFD RCiEP which has or quirks ACS while the other functions
-have no ACS.
-
-> There is also some confusing spec language about how ACS and SRIOV works
-> which this series does not address.
+On 7/18/25 4:19 PM, Jason Gunthorpe wrote:
+> On Fri, Jul 18, 2025 at 03:00:28PM -0400, Donald Dutile wrote:
+>>>>> +	/*
+>>>>> +	 * !self is only for SRIOV virtual busses which should have been
+>>>>> +	 * excluded above.
+>>>> by pci_is_root_bus() ?? -- that checks if bus->parent exists...
+>>>> not sure how that excludes the case of !bus->self ...
+>>>
+>>> Should be this:
+>>>
+>>> 	/*
+>>> 	 * !self is only for SRIOV virtual busses which should have been
+>>> 	 * excluded by pci_physfn()
+>>> 	 */
+>>> 	if (WARN_ON(!bus->self))
+>>>
+>> my Linux tree says its this:
+>> static inline bool pci_is_root_bus(struct pci_bus *pbus)
+>> {
+>>          return !(pbus->parent);
+>> }
+>>
+>> is there a change to pci_is_root_bus() in a -next branch?
 > 
-> This entire series goes further and makes some additional improvements to
-> the ACS validation found while studying this problem. The groups around a
-> PCIe to PCI bridge are shrunk to not include the PCIe bridge.
+> Not that, at the start of the function there is a pci_physfn(), the
+> entire function never works on a VF, so bus is never a VF's bus.
 > 
-> The last patches implement "ACS Enhanced" on top of it. Due to how ACS
-> Enhanced was defined as a non-backward compatible feature it is important
-> to get SW support out there.
+Well, i guess it depends on what you call 'a VF's bus' -- it returns the VF's->PF(pdev)->bus if virt-fn,
+which I would call the VF's bus.
+thanks for pointing further up... now I get your added edit above (which I didn't read carefully, /my bad).
+
+>>>>> +	 */
+>>>>> +	if (WARN_ON(!bus->self))
+>>>>> +		return ERR_PTR(-EINVAL);
+>>>>> +
+>>>>> +	group = iommu_group_get(&bus->self->dev);
+>>>>> +	if (!group) {
+>>>>> +		/*
+>>>>> +		 * If the upstream bridge needs the same group as pdev then
+>>>>> +		 * there is no way for it's pci_device_group() to discover it.
+>>>>> +		 */
+>>>>> +		dev_err(&pdev->dev,
+>>>>> +			"PCI device is probing out of order, upstream bridge device of %s is not probed yet\n",
+>>>>> +			pci_name(bus->self));
+>>>>> +		return ERR_PTR(-EPROBE_DEFER);
+>>>>> +	}
+>>>>> +	if (group->bus_data & BUS_DATA_PCI_NON_ISOLATED)
+>>>>> +		return group;
+>>>>> +	iommu_group_put(group);
+>>>>> +	return NULL;
+>>>> ... and w/o the function description, I don't follow:
+>>>> -- rtn an iommu-group if it has NON_ISOLATED property ... but rtn null if all devices below it are isolated?
+>>>
+>>> Yes. For all these internal functions non null means we found a group
+>>> to join, NULL means to keep checking isolation rules.
+>>>
+>> ah, so !group == keep looking for for non-isolated conditions.. got it.
+>> Could that lead to two iommu-groups being created that could/should be one larger one?
 > 
-> Due to the potential of iommu_groups becoming winder and thus non-usable
-> for VFIO this should go to a linux-next tree to give it some more
-> exposure.
+> The insistence on doing things in order should prevent that from
+> happening. So long as the larger group is present in the upstream
+> direction, or within the current bus, then it can be joined up.
 > 
-> I have now tested this a few systems I could get:
+> This doesn't work if it randomly applies to PCI devices, it is why the
+> above has added the "PCI device is probing out of order" detection.
 > 
->  - Various Intel client systems:
->    * Raptor Lake, with VMD enabled and using the real_dev mechanism
->    * 6/7th generation 100 Series/C320
->    * 5/6th generation 100 Series/C320 with a NIC MFD quirk
->    * Tiger Lake
->    * 5/6th generation Sunrise Point
->   No change in grouping on any of these systems
+ok, will keep that concept in mind when reviewing.
 
-Sorry I haven't had much time to look at this, but it would still cause
-a regression on my AlderLake system.  I get the following new
-mega-group:
-
-IOMMU Group 12:
-	0000:00:1c.0 PCI bridge [0604]: Intel Corporation Raptor Lake PCI Express Root Port #1 [8086:7a38] (rev 11)
-		Express Root Port (Slot+)
-	0000:00:1c.1 PCI bridge [0604]: Intel Corporation Device [8086:7a39] (rev 11)
-		Express Root Port (Slot+)
-		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
-	0000:00:1c.2 PCI bridge [0604]: Intel Corporation Raptor Point-S PCH - PCI Express Root Port 3 [8086:7a3a] (rev 11)
-		Express Root Port (Slot+)
-		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
-	0000:00:1c.3 PCI bridge [0604]: Intel Corporation Raptor Lake PCI Express Root Port #4 [8086:7a3b] (rev 11)
-		Express Root Port (Slot+)
-		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
-	0000:00:1c.1/06:00.0 USB controller [0c03]: Fresco Logic FL1100 USB 3.0 Host Controller [1b73:1100] (rev 10)
-		Express Endpoint
-	0000:00:1c.2/07:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd. RTL8125 2.5GbE Controller [10ec:8125] (rev 05)
-		Express Endpoint
-	0000:00:1c.3/08:00.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EL/SL PCIe2 4-Port/4-Lane Packet Switch [12d8:2404] (rev 05)
-		Express Upstream Port
-	0000:00:1c.3/08:00.0/09:01.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EL/SL PCIe2 4-Port/4-Lane Packet Switch [12d8:2404] (rev 05)
-		Express Downstream Port (Slot-)
-		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl+ DirectTrans+
-		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
-	0000:00:1c.3/08:00.0/09:02.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EL/SL PCIe2 4-Port/4-Lane Packet Switch [12d8:2404] (rev 05)
-		Express Downstream Port (Slot+)
-		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl+ DirectTrans+
-		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
-	0000:00:1c.3/08:00.0/09:03.0 PCI bridge [0604]: Pericom Semiconductor PI7C9X2G404 EL/SL PCIe2 4-Port/4-Lane Packet Switch [12d8:2404] (rev 05)
-		Express Downstream Port (Slot-)
-		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl+ DirectTrans+
-		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans-
-	0000:00:1c.3/08:00.0/09:01.0/0a:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller [10ec:8168] (rev 07)
-		Express Endpoint
-	0000:00:1c.3/08:00.0/09:03.0/0c:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller [10ec:8168] (rev 07)
-		Express Endpoint
-
-The source of the issue is the root port at 00:1c.0, which does not
-have ACS support, claims that it has a slot but there is none, and
-therefore has no subordinate DMA capable devices, nor does the root
-port itself have an MMIO BAR.  I don't know if there's something we can
-key on for the root port to mark it isolated.
-
-00:1c.0 PCI bridge [0604]: Intel Corporation Raptor Lake PCI Express Root Port #1 [8086:7a38] (rev 11) (prog-if 00 [Normal decode])
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin ? routed to IRQ 125
-	IOMMU group: 12
-	Bus: primary=00, secondary=05, subordinate=05, sec-latency=0
-	I/O behind bridge: 6000-6fff [size=4K] [16-bit]
-	Memory behind bridge: 40800000-411fffff [size=10M] [32-bit]
-	Prefetchable memory behind bridge: 60e0000000-60e09fffff [size=10M] [32-bit]
-	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
-	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
-		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-	Capabilities: [40] Express (v2) Root Port (Slot+), IntMsgNum 0
-		DevCap:	MaxPayload 256 bytes, PhantFunc 0
-			ExtTag- RBE+ TEE-IO-
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-			MaxPayload 256 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-		LnkCap:	Port #1, Speed 8GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <1us, L1 <4us
-			ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
-		LnkCtl:	ASPM L0s L1 Enabled; RCB 64 bytes, LnkDisable- CommClk-
-			ExtSynch- ClockPM- AutWidDis- BWInt+ AutBWInt+
-		LnkSta:	Speed 2.5GT/s, Width x0
-			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
-		SltCap:	AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+
-			Slot #0, PowerLimit 0W; Interlock- NoCompl+
-		SltCtl:	Enable: AttnBtn- PwrFlt- MRL- PresDet+ CmdCplt- HPIrq+ LinkChg+
-			Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
-		SltSta:	Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet- Interlock-
-			Changed: MRL- PresDet- LinkState-
-		RootCap: CRSVisible-
-		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible-
-		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-		DevCap2: Completion Timeout: Range ABC, TimeoutDis+ NROPrPrP- LTR+
-			 10BitTagComp- 10BitTagReq- OBFF Via WAKE#, ExtFmt+ EETLPPrefix+, MaxEETLPPrefixes 2
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS- LN System CLS Not Supported, TPHComp- ExtTPHComp- ARIFwd+
-			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- ARIFwd-
-			 AtomicOpsCtl: ReqEn- EgressBlck-
-			 IDOReq- IDOCompl- LTR+ EmergencyPowerReductionReq-
-			 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-		LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer+ 2Retimers+ DRS-
-		LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
-			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-			 Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
-		LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
-			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
-			 Retimer- 2Retimers- CrosslinkRes: unsupported
-	Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit+
-		Address: 00000000fee002b8  Data: 0000
-	Capabilities: [90] Null
-	Kernel driver in use: pcieport
-
-This is seen on a Gigabyte B760M DS3H DDR4 motherboard.  There's a
-version of this board with wifi whereas this one has empty pads where
-that m.2 slot might go.  I'd guess wifi might sit downstream of this
-port if it were present, but I don't know how it'd change the feature
-set of the root port.  The populated root ports show a more reasonable
-set of capabilities:
-
-00:1c.1 PCI bridge [0604]: Intel Corporation Device [8086:7a39] (rev 11) (prog-if 00 [Normal decode])
-	Subsystem: Gigabyte Technology Co., Ltd Device [1458:5001]
-	Flags: bus master, fast devsel, latency 0, IRQ 126, IOMMU group 12
-	Bus: primary=00, secondary=06, subordinate=06, sec-latency=0
-	I/O behind bridge: [disabled] [16-bit]
-	Memory behind bridge: 41800000-419fffff [size=2M] [32-bit]
-	Prefetchable memory behind bridge: [disabled] [64-bit]
-	Capabilities: [40] Express Root Port (Slot+), IntMsgNum 0
-	Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit+
-	Capabilities: [98] Subsystem: Gigabyte Technology Co., Ltd Device [1458:5001]
-	Capabilities: [a0] Power Management version 3
-	Capabilities: [100] Advanced Error Reporting
-	Capabilities: [220] Access Control Services
-	Capabilities: [200] L1 PM Substates
-	Capabilities: [150] Precision Time Measurement
-	Capabilities: [a30] Secondary PCI Express
-	Capabilities: [a90] Data Link Feature <?>
-	Kernel driver in use: pcieport
-
-I can't say that the proposed code here is doing the wrong thing by
-propagating the lack of isolation, but it's gratuitous when there is no
-DMA initiator on the non-isolated branch and it causes a significant
-usage problem for vfio.  Thanks,
-
-Alex
+> Jason
+> 
 
 
