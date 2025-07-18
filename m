@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-32518-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32519-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFC86B0A041
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 12:02:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF07DB0A048
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 12:02:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BCFE5172716
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 10:02:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F1CD5A45BA
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 10:02:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4384429B23D;
-	Fri, 18 Jul 2025 10:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55D9B29C339;
+	Fri, 18 Jul 2025 10:02:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xf39+wID"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mY9wjtEG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10EFF1F0992;
-	Fri, 18 Jul 2025 10:02:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6D41EEA55;
+	Fri, 18 Jul 2025 10:02:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752832931; cv=none; b=mX8cWJEu202YsY9/6fiYzi0f+jm/fFk+inJ50gL9NBh5Ucl9UXWi6Lk0EpqHtz9G+kLcHWxOYD0NNN9FHMQK0bASGhwhW+XzB/VdgINyLxfXq9qHusFm5QwjcX14ke2E6lwqwE6jRjv0faqw2rQRIp+izbeYZSkloOJ6q3CZM9Y=
+	t=1752832956; cv=none; b=rJr4lJBu3WfrHLPnMN0OIrnE7aj3kYTC6g+vkVrfhjBvXukEHYWyYKdVz1fVJ2ncnRnLXMbUk2eH5rHbJ3qpqTblYPqWASh8RTmkfHFOs4YaJLpn0b3AQtt5AfSf7RZ0SIlXxJrzzlwZ+N6DgTzF1yRJksGZY90tP3xeknKcePM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752832931; c=relaxed/simple;
-	bh=YEshVgIRVJe+FIOG30qXtz98FkUKcdC9CfphVOWVuSo=;
+	s=arc-20240116; t=1752832956; c=relaxed/simple;
+	bh=izVYd/HMFuUxuo/j8GTZPX0Fyh4bT8qBFKIOCQk8DJk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HxUOESyKufFU6t3PLkHG57E+5Y/9COd0IXDRVQMZ4WFaPirl6QfUPwr7YDOEb41k8GbnVfFnfW+uDiIDMaNFpg0hlfS6zUJbhBUzh5Htwzh439UGag4FP5ZCFerIr8FbQZIgG035j+AouvBkZXd7Z+3hIONne+/4fdN4N2LkYAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xf39+wID; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E111C4CEEB;
-	Fri, 18 Jul 2025 10:02:10 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=SHsCdv77s9KB0RfdmgoZyuRWqsQFngL5tNYrVPFNXoIz/b+ZGMXFT3vSqecbw0JgUZpEQvCjIqR6itvBGI+RQQpzOC5BPTsQgC+jdm67DY4tb4nUQSVg5+yzduQW6/EvzES+wvbdLUYHoL90Qz5rGwcpdCarJYc78gc04UGM1Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mY9wjtEG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AACD1C4CEF0;
+	Fri, 18 Jul 2025 10:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752832930;
-	bh=YEshVgIRVJe+FIOG30qXtz98FkUKcdC9CfphVOWVuSo=;
+	s=k20201202; t=1752832955;
+	bh=izVYd/HMFuUxuo/j8GTZPX0Fyh4bT8qBFKIOCQk8DJk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xf39+wIDVK1OrrUxHmnLa08tKZQKbOEqtKMGVgrb3TjHC9YqGMPRAqqNXtlQfaeDx
-	 sx1ohGFwFJ3yf0+xooCXClBpS+W+V+J+DakSfW8mYu7ExRihyfjEyUBD1IfwZ3HQWE
-	 In9Tg9NMT5no4VPOV2Iu7MkwBuhowaCSgJH5ZBSOQZxDyNDondyfrX4yLZrq/7SPlz
-	 m9lwkwzZewspGNC1M5nxlKZegUDYcUnpqJ+P87Ucopt3D8/hzXMxsvt6vWRhlFjpCD
-	 VxHEyuwgqc2zwTFqqPMW4JD9HfrYqNcQw4Blln+V9HYzaQxTw1iBQf0RMS0H+yFhZf
-	 DXzLEyPANX4UQ==
+	b=mY9wjtEGcEzMQ9cN6ycT6j8D5qSq38VD0Kt4BmIJ7F860VNIuQBRrS2txenS6Hlpb
+	 iDO3hx23VVOZRGWp88iUyR7BzRiB7uW8xBTgizMDVr6gAh6ukqrMIXKm0jbAouHmky
+	 hMo0WPMwFfA8djZRXAAtnV4AvyP5AewHoGiOa3J5zdtIr/bjv9t5rm+1iICs1qdgzX
+	 IRMEro02V3lG7O3/MIrea35X4Olh08mn4f/C3DoG/4p5MZJiBDlpOrqFSnCikZ4ztw
+	 jbnqoshSQNFfO30hxnwZ9ckhij88vm5iYpKdS/udEjqb27l3Og24ALejkzYyMf5dGR
+	 cGqvZJXJ6owfA==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan@kernel.org>)
-	id 1uchuk-000000007sE-1z1R;
-	Fri, 18 Jul 2025 12:02:02 +0200
-Date: Fri, 18 Jul 2025 12:02:02 +0200
+	id 1uchv9-000000007sr-3Unq;
+	Fri, 18 Jul 2025 12:02:27 +0200
+Date: Fri, 18 Jul 2025 12:02:27 +0200
 From: Johan Hovold <johan@kernel.org>
 To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
 Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
@@ -57,12 +57,13 @@ Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
 	qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com,
-	quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v5 3/4] arm64: dts: qcom: sa8775p: remove aux clock from
- pcie phy
-Message-ID: <aHobmsHTjyJVUtFj@hovoldconsulting.com>
+	quic_vbadigan@quicinc.com,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v5 4/4] arm64: dts: qcom: sa8775p: add link_down reset
+ for pcie
+Message-ID: <aHobs30ZI-I8xLAD@hovoldconsulting.com>
 References: <20250718081718.390790-1-ziyue.zhang@oss.qualcomm.com>
- <20250718081718.390790-4-ziyue.zhang@oss.qualcomm.com>
+ <20250718081718.390790-5-ziyue.zhang@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,21 +72,14 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250718081718.390790-4-ziyue.zhang@oss.qualcomm.com>
+In-Reply-To: <20250718081718.390790-5-ziyue.zhang@oss.qualcomm.com>
 
-On Fri, Jul 18, 2025 at 04:17:17PM +0800, Ziyue Zhang wrote:
-> gcc_aux_clk is used in PCIe RC and it is not required in pcie phy, in
-> pcie phy it should be gcc_phy_aux_clk, so remove gcc_aux_clk and
-> replace it with gcc_phy_aux_clk.
-
-Expanding on why this is a correct change would be good since this does
-not yet seem to have been fully resolved:
-
-	https://lore.kernel.org/lkml/98088092-1987-41cc-ab70-c9a5d3fdbb41@oss.qualcomm.com/
-
-Looks like you're missing a Fixes tag here too.
-
+On Fri, Jul 18, 2025 at 04:17:18PM +0800, Ziyue Zhang wrote:
+> SA8775p supports 'link_down' reset on hardware, so add it for both pcie0
+> and pcie1, which can provide a better user experience.
+> 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 > Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
 
-Johan
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
 
