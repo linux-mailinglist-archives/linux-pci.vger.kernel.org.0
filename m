@@ -1,330 +1,243 @@
-Return-Path: <linux-pci+bounces-32558-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32559-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08D45B0A9E6
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 20:01:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CB98B0A9F9
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 20:09:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB8AB3A6208
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 18:01:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5267D3AC437
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 18:09:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5648E1E520A;
-	Fri, 18 Jul 2025 18:01:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 728ED2E7651;
+	Fri, 18 Jul 2025 18:09:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gfNgr1EW"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="n62eZz8F"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2057.outbound.protection.outlook.com [40.107.102.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6492E1A7AE3;
-	Fri, 18 Jul 2025 18:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752861702; cv=none; b=ELUPDf8uROwTIH8PnpaXk+lDaLfVCr8+ifuWMhgmJDmLTNMEmGjFkOp/NkiNf2HTj+l2AX0HsNXEJykmrnXMRBEayAz+SG9rxx27snY8JmYVBGgZvmEcz4FD2Ad5kYUcRcc6OsVcRbNTYb4CdE6N4PJOUyB+uXGYFJED1IMdCSw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752861702; c=relaxed/simple;
-	bh=VBCS4PzehuzYafFcmXlBRn07mFF0e1YNXRHEI2jgWCc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FdqYk4KA51lp9Qlg6JQMbHUsMm9ImppupEyFWqUf/LKID+PHyhzCmcfTzp0FdhLuhBHn1+NLCb7jieoSVjo2crrI4uCSobeS37E4ZzGj8pIfI3FPSVWTbUJAo47bMfLnOO12gykqQfSM78vgAr2NJ3AN+w/+mwkqeACTHMs6K9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gfNgr1EW; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752861700; x=1784397700;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VBCS4PzehuzYafFcmXlBRn07mFF0e1YNXRHEI2jgWCc=;
-  b=gfNgr1EW5YsuB3+fICjJBTJdEvbKQn2dpyW5pOtg5LMIMJS1+JGlEYpp
-   lZ8ZlokRR+8DhZD7SxvyMW91ysZIwUhmfokFVVAWYyEeKoL9E/Rq2MbdK
-   c5Qw0bSIRiHv8+P52pVBlUKdLI+sI4tVgqK4V9/JaUmL+xwggByXF+r+j
-   gxZn+Nxf0YqZFp69Bpl8uwF7h6jTkYDANVVdfYm319rVe1LOoPM/ysbJG
-   9p5qVPMTYy18WSa6F5dPs3i6wyYt7o0N16tstUSGIkfpzHdBr8H2YzR9t
-   XPR29LNeq/miIwMyu5v/Zv9G5mrs4Sx7JU/r7e6WKpkNhH/cgzVSy97NW
-   Q==;
-X-CSE-ConnectionGUID: TCMm0d+WSfm1yV8jJpVihQ==
-X-CSE-MsgGUID: 10JG/Q/SQnarqqrzqT3ujQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11496"; a="54264022"
-X-IronPort-AV: E=Sophos;i="6.16,322,1744095600"; 
-   d="scan'208";a="54264022"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2025 11:01:39 -0700
-X-CSE-ConnectionGUID: fJvT1S4hR9y4c5iCpknn3w==
-X-CSE-MsgGUID: s3YNyZnRQ3urgaMAl3NbsA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,322,1744095600"; 
-   d="scan'208";a="189101076"
-Received: from unknown (HELO [10.247.118.125]) ([10.247.118.125])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2025 11:01:30 -0700
-Message-ID: <7f7113db-7928-4c62-aa7d-69ab2cc6213e@intel.com>
-Date: Fri, 18 Jul 2025 11:01:26 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48E680C1C;
+	Fri, 18 Jul 2025 18:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752862193; cv=fail; b=HN+xcCTrhBcFocGE5h7Fr7JjRfo7vfJf394Bw04yC0T3E5fVqOviibiR0w+8qyL9CER864lpOM6wtrlUIJdblZFVokCGd8+jZeb6lKDVj/oRPIPN2ss2HTlk2ii37KmZWWk5x2ZrpeARjjuiJZ070sGsUz4PHJQILBi9kZuaWvc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752862193; c=relaxed/simple;
+	bh=V5lNPhHuH7aM03Tce+qi6XOvRSNpUrBTw/QjJGEYWbw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=qvxBx2kOnN6QsGRjJYLnODnLCM/MxN8jZMJwY2hTO7xXBVhVuqsIpnOnNhKTW70cbTQCBoBlMStZkWKwQJSpPLTnl7vtjJXDNpvq835AvwZd1TYDU0krfsarkc0creR8/1rChs9o0KC41SaENXQtkEoKpZ84A5jGsznYcrooju0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=n62eZz8F; arc=fail smtp.client-ip=40.107.102.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sl/QbJVRetroALWI71Zl6GwyTpzZTAj8msC47Pb1plfYSCuHQT/QBVCmXak1Py10HRRC/sJSc13u4pQ8Fel4F+g5cDLDvB2DDkSlLikkna6Ks4KLbmJShsJjT0Ad+MnMDk9F3WkvLoz9FUrH9BytXE58uhVFr5avdMNq9PqpZ86XdcMVy18FlX0HziJS1495O5NUc7ODdr4EgMZRVp5noTH/SFcjM8t8jtgrDAYIywxRSgc/6+bCX/3ismHWyHoH8PI9X+zoS8H+H5/9n7AArk72T7qIkvYY9x50igEP43qhkb52M87bDIf90F9vH+Dkeqe++13+FwlG5ZXifTfp0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MhUdXjsFdtqpK4Il/9f6d28JDHIHm4168xoE0ANfuE4=;
+ b=qpwc4v6urWAqh4SWWNyB3gflzu4BVICtO9+FN5mwS2Y0u4kYKrAWxh0gFzcYC228ceBy6LyspvOxqFlli4xQGV7l950WxfCXjsaQ1EhVekr2XmEztvg3eAeanXelVlIyH+QQ6sP/qFFHue/nZ9V1n0laJsIaaZSUVDcW0ZFOyh9kaQ5OBtUZAetusOZgc8Jr//jIKvmuCbZsRRNck6xTNTca6MvnI1y4yIuFmu0a4PlqBmLKRojVwjvC8LuSsouLqNJzN2hrPq05DHHDDpE0vSe83mDmthutLs4uNb5EJ8V3Kg0DAIuUO4MC8IaBHBlV4lhZRnb1wr7EBPvrOE608A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MhUdXjsFdtqpK4Il/9f6d28JDHIHm4168xoE0ANfuE4=;
+ b=n62eZz8F3A2h2KiSfXEx+S83COm9qfUxM84uvpHDlcqTMho6UIEdzllA1GPcaxBY4LEdzIu5fI4CMRuLCG6RRs3DN5unAchGLT58RMA8GJlW9GC3nlkdVsKQvpC3N4hBSnVjEqeIJ8MiHzsYPM4VBXQrmA4gX1//efePE+XAaw+bj0IfDdVQiYFg8P77UbyC+yZBp8XlsFn9bOy+khOkBrpL3FUVIl67pu2d4or9dJ8iLYQLa0o0qBAFvuUOt+6M9saON+NgTzlYB7TSzdqz1v+9/rc0rO56zVQAGzxidM2vgfBmQ4sE2fPHWWFcd7yQ0YJIqZx5Ya+bDJIL2cKaHQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by CH8PR12MB9766.namprd12.prod.outlook.com (2603:10b6:610:2b6::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8943.27; Fri, 18 Jul
+ 2025 18:09:49 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8901.033; Fri, 18 Jul 2025
+ 18:09:49 +0000
+Date: Fri, 18 Jul 2025 15:09:47 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Donald Dutile <ddutile@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
+	Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
+	Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>, galshalom@nvidia.com,
+	Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
+	kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
+	tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+Subject: Re: [PATCH v2 03/16] iommu: Compute iommu_groups properly for PCIe
+ switches
+Message-ID: <20250718180947.GB2394663@nvidia.com>
+References: <3-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
+ <5b1f12e0-9113-41c4-accb-d8ab755cc7d7@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b1f12e0-9113-41c4-accb-d8ab755cc7d7@redhat.com>
+X-ClientProxiedBy: BL1PR13CA0387.namprd13.prod.outlook.com
+ (2603:10b6:208:2c0::32) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 08/17] cxl/pci: Move RAS initialization to cxl_port
- driver
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
- ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
- rrichter@amd.com, dan.carpenter@linaro.org,
- PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
- Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
- <20250626224252.1415009-9-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250626224252.1415009-9-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CH8PR12MB9766:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6095689f-f120-4b90-efac-08ddc62648cb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ac+/HHEyKp0IcZj0TPCbGzr53mecs9FS4b4QRL0kWqGjhpSeAlgNlsHxfg6+?=
+ =?us-ascii?Q?zO9YS5t+52X3Rh2r+FdnbbhxHyMo+gVsnMnK+dMD02TBNcwb9jdM6lESXXeT?=
+ =?us-ascii?Q?ti44llQ4WpPu5QqiXGjaEQvdUDA0S8CcmpEXvUO4bE8DZd/KpA4pfpLfknVo?=
+ =?us-ascii?Q?2K8BYQAklprZtnjWBPWUvmDwWWTN5eH80/SAAtQ24d9Czz73nmb19vFhRUfv?=
+ =?us-ascii?Q?fVuXVyNMEVDr4Je9v2lVMiAripXbrltohp9Kk7wSaEla3VpCEYhuV5jOZXNl?=
+ =?us-ascii?Q?dSfNAfRNU+swLwbDeEa9UgIHwe4SuyYWG9bsLCZR9jqybw7bEb0DVNdWjQcT?=
+ =?us-ascii?Q?7r+uaF/vDVuurdGZMEKHBftsojMDutBe5jZPTz6Z5L1MAk9hbG5Y9bcPXG0d?=
+ =?us-ascii?Q?owrvujlr4DaA//4LR58i3xmc/uzTF57CaJw/5jxIOdDmJS9I4at927mOhwTY?=
+ =?us-ascii?Q?YLO0v2xEA+8u4iqGvxKQJlEbTu0lgmmOkbOnG0v0Yq/2zSEs48/F6INTqg8v?=
+ =?us-ascii?Q?JqKXYE2t6WH5bUltD86mv+/uCVfl7NUe7/nTA/cHZIsXgm/+BYh4wV2mNwwc?=
+ =?us-ascii?Q?tPXKNLkI1ey+fLUCGOtqLSdmCQsDI7Rs3wJ6XzZ+O/RUrOkmLjgYG6xuoATS?=
+ =?us-ascii?Q?RSfkOROc9Q9njpqaimahFYZLEiy+feVa4LGoNOnHIfXWelO8cyZtg6QXVsc2?=
+ =?us-ascii?Q?OsJIlqGle+KPyKx0iKcRv56h3ccyTr6MgmjZRPevrJogaPA2XFgU4nUXnCk5?=
+ =?us-ascii?Q?8dZkH6zAKV8dG682opFARBKV1Do8NUkaxOxglg2SyFVSQqFnDFwSpUlww05Y?=
+ =?us-ascii?Q?skCwgKsf4kOs6W+BVVeAeb+McU7ggRDcOdiul57L3CW/rHl9hkZflenjdPyv?=
+ =?us-ascii?Q?+bZfG5Gv80dzAn57pW0MNkd719CKKcX1tlIV1d++ZDLzPpNUs9EjByg17IwB?=
+ =?us-ascii?Q?DZJjR6GHHxiY5gwb9xY36AGvOs6xzzC3a5xyCj2tT6/yBCsZ7YpHBLbNHoKn?=
+ =?us-ascii?Q?jyFrPJWm/kYG/29eZ/EXUjoOI85p/1BnkmCP722RgFcnxqrlBf0XIdLy2j0f?=
+ =?us-ascii?Q?uKeFQ/FvtJVe9qErHjC2PSmTO4gXHvA9Uw7YjdNiFbPhm+IV7jW07aUfsAev?=
+ =?us-ascii?Q?J4ZZz62+OYtymtLXKNRXbh8WTk3AlS4neZdbLTF2evhTxtMuDbjgM+ArVN0Y?=
+ =?us-ascii?Q?Yr7exEDDjVkGsNErSbeSFl17TFkR1ftqZCgbe5bwSNoQDXWj84J9swLSVQli?=
+ =?us-ascii?Q?GbxONufMNTr5sz29hA7HD33ZwNAlbjBiNfMrepDN1ROx1voLLJTftyjX6nGr?=
+ =?us-ascii?Q?BBBB29PAbKCSKiolNYv2GTwHPJF/R6CUdNtlQr5Y8O3hW5yGUyaBDuIumssr?=
+ =?us-ascii?Q?XW9rdH+IRXIqBjpDy6FoAiYrLCoDuqu7cb5xRW5+9+bqIGX5h4DXl9yo79D4?=
+ =?us-ascii?Q?CjjfFvJiHmA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?zqy0zbcq3Hgv+Nf6uQV99dtZ4k8brGwoRQHdAl6N0pgNTrRpmYBm2DlLRpPS?=
+ =?us-ascii?Q?B7pTbZVZoXvbAUj68HjRXWnRqjSsO4geLs5CerBLJ8fOwJcdn2MWVZgsvJpr?=
+ =?us-ascii?Q?fTQyC/ScfpAIful1Xwt80IZB0SIHSxLARSuqz1Yjrv5zIE75iKlNH52S6LO/?=
+ =?us-ascii?Q?HWl/vWgJ19Y3WslhAy429rjJT1jhMpohj6I6BFiclUOkW2j30SKUIhxOo8MK?=
+ =?us-ascii?Q?e9iHQrCAcJ8eMsBk25jgyYWVtUeEJM5A7GLzTwX7CmCLvy0Ysc1hjaQmCc4s?=
+ =?us-ascii?Q?uXBsbEGMuirGtHQtgkPBDNRsVjriF/wUrAgSW+w5EznScwQAsUgyTNbaItCS?=
+ =?us-ascii?Q?WG9AJObKo9cRKt1DF5pz/oS6NoDIY0ZgfqgmILHjbyIi0d8guKAB07AZLmAY?=
+ =?us-ascii?Q?upXSsxpbQDFsP2l97cI/3UNCV8k/MniQxKZ3aOvImIre7pEMCO73fVf91otX?=
+ =?us-ascii?Q?1sVJGhzT78cGnEr5+Hr7CzpU9VZ70TGQzbC7eBU0dXYpU+XdDTWUcxbk/YaZ?=
+ =?us-ascii?Q?zIGBMGdTCelXD0A0Yt5mO1SKczUbcDSNYtG05GIqpAZawljb17lULRUwGgC2?=
+ =?us-ascii?Q?yXmj+ROyWilCtf/W7lFlaqYBq8wG5LmsSlHjoNHqAeDaSQYCjw7rm4ujz93R?=
+ =?us-ascii?Q?vZNLZKWGJ5RG2TnacVYFxQHS8DUHp5YPmU06IVs3ir+u2B5JPoVJNvPwjfvB?=
+ =?us-ascii?Q?cktv13HYcd9zeyKQ6vKDs5emZv/zAtKz8BlXhMq2dYXRLJcjwSD748+yDrDh?=
+ =?us-ascii?Q?RugIxISxzSW6o4IS6Q4f6TjJIT9T+pBwPGtqHMKkAmMXnXbFHjG26jCitDVt?=
+ =?us-ascii?Q?i1CDtVMQ6RbSA/xBWjZeGKqpnRfBMA3QN0oncee/CYojEp0wt9AE2gDbiBBR?=
+ =?us-ascii?Q?Axc2uwvYMh/TiDUpGmH7/EoAK3/o9MDDCxDUDJXmG5MShAPNXrCPczVcZEfY?=
+ =?us-ascii?Q?UdSRP1ZonJcrEse3XhKmCdGO9ZxPheJCuMcrjg6Y3OXO6orMR/AuFzjBxq7o?=
+ =?us-ascii?Q?nOqAE7z6ycE1r2zm9Ihr404jeNYakXXAMnh6LKLpNmnLy/vGKU4voy1O5iuS?=
+ =?us-ascii?Q?LeMH9Vanzp9JhFXJomAHEm8RAmKJpfTRucdF9EYrRtuNW68MAwynnLcQZyIo?=
+ =?us-ascii?Q?JlCWpmKgetmEphVr7vbqo4bbbpQU7qh+y0+yQINVCgqYyNz8WxOu6OVKlBUg?=
+ =?us-ascii?Q?ePIKm2FUPQ6NE1nncx/FDur5aYEAztT3DaVnzZdd7j9+xFygZEgNNlL8HMOr?=
+ =?us-ascii?Q?NTx+54cmJcveyiMcXJMx1hKMeDXQOn5LHSgpgAWw9wFRc1gc0z7OG7l4EPe0?=
+ =?us-ascii?Q?52t9kUMLpNE/ZTxmNOyq9gm6zvtu5JqeAr6mMQl5JNMPKs/aLyy0jNl2IVNn?=
+ =?us-ascii?Q?4z9XfFx+jeAaNrAjMImV70QfMCOF4PvnPmHSUueQCR0la6/7nyxFEN/N8ynK?=
+ =?us-ascii?Q?Ma7KzzPhJWS5ZPD5nQccrMFdSLN/8O/uYfEA8BvjcdyUqnViLVtVivpipOcc?=
+ =?us-ascii?Q?NuVeqlWOK99gDGgEhw6cyqtRrpuLzH6zT8Yd2j0yxePfhsePEGhbhC+Vfx85?=
+ =?us-ascii?Q?5SzHW2V+YbDugdx1/nmm0ZIBvbOm8LKDAerzZ4Kb?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6095689f-f120-4b90-efac-08ddc62648cb
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2025 18:09:49.0771
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zZVrXl3qbomrJWR0pXoRvDcsi+ospjo7lY2TIGTNBlHlgBNSow/SL7Tr5V8fb9eJ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR12MB9766
 
-
-
-On 6/26/25 3:42 PM, Terry Bowman wrote:
-> The cxl_port driver is intended to manage CXL Endpoint Ports and CXL Switch
-> Ports. Move existing RAS initialization to the cxl_port driver.
+On Thu, Jul 17, 2025 at 06:03:42PM -0400, Donald Dutile wrote:
+> > +static struct iommu_group *pci_get_alias_group(struct pci_dev *pdev)
+> So, the former pci_device_group() is completely re-written below,
+> and what it use to do is renamed pci_get_alias_group(), which shouldn't be
+> (easily) confused with ...
 > 
-> Restricted CXL Host (RCH) Downstream Port RAS initialization currently
-> resides in cxl/core/pci.c. The PCI source file is not otherwise associated
-> with CXL Port management.
+> > +{
+> > +	struct iommu_group *group;
+> > +	DECLARE_BITMAP(devfns, 256) = {};
+> >   	/*
+> >   	 * Look for existing groups on device aliases.  If we alias another
+> >   	 * device or another device aliases us, use the same group.
+> >   	 */
+> > -	group = get_pci_alias_group(pdev, (unsigned long *)devfns);
+> > +	group = get_pci_alias_group(pdev, devfns);
+> ... get_pci_alias_group() ?
 > 
-> Additional CXL Port RAS initialization will be added in future patches to
-> support a CXL Port device's CXL errors.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ... and it's only used for PCIe case below (in pci_device_group), so
+> should it be named 'pcie_get_alias_group()' ?
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/core/pci.c  | 73 --------------------------------------
->  drivers/cxl/core/regs.c |  2 ++
->  drivers/cxl/cxl.h       |  6 ++++
->  drivers/cxl/port.c      | 78 +++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 86 insertions(+), 73 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 06464a25d8bd..35c9c50534bf 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -738,79 +738,6 @@ static bool cxl_handle_ras(struct cxl_dev_state *cxlds,
->  
->  #ifdef CONFIG_PCIEAER_CXL
->  
-> -static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
-> -{
-> -	resource_size_t aer_phys;
-> -	struct device *host;
-> -	u16 aer_cap;
-> -
-> -	aer_cap = cxl_rcrb_to_aer(dport->dport_dev, dport->rcrb.base);
-> -	if (aer_cap) {
-> -		host = dport->reg_map.host;
-> -		aer_phys = aer_cap + dport->rcrb.base;
-> -		dport->regs.dport_aer = devm_cxl_iomap_block(host, aer_phys,
-> -						sizeof(struct aer_capability_regs));
-> -	}
-> -}
-> -
-> -static void cxl_dport_map_ras(struct cxl_dport *dport)
-> -{
-> -	struct cxl_register_map *map = &dport->reg_map;
-> -	struct device *dev = dport->dport_dev;
-> -
-> -	if (!map->component_map.ras.valid)
-> -		dev_dbg(dev, "RAS registers not found\n");
-> -	else if (cxl_map_component_regs(map, &dport->regs.component,
-> -					BIT(CXL_CM_CAP_CAP_ID_RAS)))
-> -		dev_dbg(dev, "Failed to map RAS capability.\n");
-> -}
-> -
-> -static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
-> -{
-> -	void __iomem *aer_base = dport->regs.dport_aer;
-> -	u32 aer_cmd_mask, aer_cmd;
-> -
-> -	if (!aer_base)
-> -		return;
-> -
-> -	/*
-> -	 * Disable RCH root port command interrupts.
-> -	 * CXL 3.0 12.2.1.1 - RCH Downstream Port-detected Errors
-> -	 *
-> -	 * This sequence may not be necessary. CXL spec states disabling
-> -	 * the root cmd register's interrupts is required. But, PCI spec
-> -	 * shows these are disabled by default on reset.
-> -	 */
-> -	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
-> -			PCI_ERR_ROOT_CMD_NONFATAL_EN |
-> -			PCI_ERR_ROOT_CMD_FATAL_EN);
-> -	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
-> -	aer_cmd &= ~aer_cmd_mask;
-> -	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
-> -}
-> -
-> -/**
-> - * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
-> - * @dport: the cxl_dport that needs to be initialized
-> - * @host: host device for devm operations
-> - */
-> -void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
-> -{
-> -	dport->reg_map.host = host;
-> -	cxl_dport_map_ras(dport);
-> -
-> -	if (dport->rch) {
-> -		struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport->dport_dev);
-> -
-> -		if (!host_bridge->native_aer)
-> -			return;
-> -
-> -		cxl_dport_map_rch_aer(dport);
-> -		cxl_disable_rch_root_ints(dport);
-> -	}
-> -}
-> -EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
-> -
->  static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
->  					  struct cxl_dport *dport)
->  {
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 5ca7b0eed568..b8e767a9571c 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -199,6 +199,7 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
->  
->  	return ret_val;
->  }
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_iomap_block, "CXL");
->  
->  int cxl_map_component_regs(const struct cxl_register_map *map,
->  			   struct cxl_component_regs *regs,
-> @@ -517,6 +518,7 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
->  
->  	return offset;
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_rcrb_to_aer, "CXL");
->  
->  static resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport)
->  {
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 3f1695c96abc..c57c160f3e5e 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -313,6 +313,12 @@ int cxl_setup_regs(struct cxl_register_map *map);
->  struct cxl_dport;
->  resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
->  					   struct cxl_dport *dport);
-> +
-> +u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
-> +
-> +void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
-> +				   resource_size_t length);
-> +
->  int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
->  
->  #define CXL_RESOURCE_NONE ((resource_size_t) -1)
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index fe4b593331da..021f35145c65 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -6,6 +6,7 @@
->  
->  #include "cxlmem.h"
->  #include "cxlpci.h"
-> +#include "cxl.h"
->  
->  /**
->   * DOC: cxl port
-> @@ -57,6 +58,83 @@ static int discover_region(struct device *dev, void *unused)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_PCIEAER_CXL
-> +
-> +static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
-> +{
-> +	resource_size_t aer_phys;
-> +	struct device *host;
-> +	u16 aer_cap;
-> +
-> +	aer_cap = cxl_rcrb_to_aer(dport->dport_dev, dport->rcrb.base);
-> +	if (aer_cap) {
-> +		host = dport->reg_map.host;
-> +		aer_phys = aer_cap + dport->rcrb.base;
-> +		dport->regs.dport_aer = devm_cxl_iomap_block(host, aer_phys,
-> +						sizeof(struct aer_capability_regs));
-> +	}
-> +}
-> +
-> +static void cxl_dport_map_ras(struct cxl_dport *dport)
-> +{
-> +	struct cxl_register_map *map = &dport->reg_map;
-> +	struct device *dev = dport->dport_dev;
-> +
-> +	if (!map->component_map.ras.valid)
-> +		dev_dbg(dev, "RAS registers not found\n");
-> +	else if (cxl_map_component_regs(map, &dport->regs.component,
-> +					BIT(CXL_CM_CAP_CAP_ID_RAS)))
-> +		dev_dbg(dev, "Failed to map RAS capability.\n");
-> +}
-> +
-> +static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
-> +{
-> +	void __iomem *aer_base = dport->regs.dport_aer;
-> +	u32 aer_cmd_mask, aer_cmd;
-> +
-> +	if (!aer_base)
-> +		return;
-> +
-> +	/*
-> +	 * Disable RCH root port command interrupts.
-> +	 * CXL 3.2 12.2.1.1 - RCH Downstream Port-detected Errors
-> +	 *
-> +	 * This sequence may not be necessary. CXL spec states disabling
-> +	 * the root cmd register's interrupts is required. But, PCI spec
-> +	 * shows these are disabled by default on reset.
-> +	 */
-> +	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
-> +			PCI_ERR_ROOT_CMD_NONFATAL_EN |
-> +			PCI_ERR_ROOT_CMD_FATAL_EN);
-> +	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
-> +	aer_cmd &= ~aer_cmd_mask;
-> +	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
-> +}
-> +
-> +/**
-> + * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
-> + * @dport: the cxl_dport that needs to be initialized
-> + * @host: host device for devm operations
-> + */
-> +void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
-> +{
-> +	dport->reg_map.host = host;
-> +	cxl_dport_map_ras(dport);
-> +
-> +	if (dport->rch) {
-> +		struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport->dport_dev);
-> +
-> +		if (!host_bridge->native_aer)
-> +			return;
-> +
-> +		cxl_dport_map_rch_aer(dport);
-> +		cxl_disable_rch_root_ints(dport);
-> +	}
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
-> +
-> +#endif /* CONFIG_PCIEAER_CXL */
-> +
->  static int cxl_switch_port_probe(struct cxl_port *port)
->  {
->  	struct cxl_hdm *cxlhdm;
+Well, the naming is alot better after this is reworked with the
+reachable set patch and these two functions are removed.
 
+But even then I guess it is not a great name.
+
+How about:
+
+/*
+ * Return a group if the function has isolation restrictions related to
+ * aliases or MFD ACS.
+ */
+static struct iommu_group *pci_get_function_group(struct pci_dev *pdev)
+{
+
+> > +static struct iommu_group *pci_hierarchy_group(struct pci_dev *pdev)
+> although static, could you provide a function description for its purpose ?
+
+/* Return a group if the upstream hierarchy has isolation restrictions. */
+
+> > +	/*
+> > +	 * !self is only for SRIOV virtual busses which should have been
+> > +	 * excluded above.
+> by pci_is_root_bus() ?? -- that checks if bus->parent exists...
+> not sure how that excludes the case of !bus->self ...
+
+Should be this:
+
+	/*
+	 * !self is only for SRIOV virtual busses which should have been
+	 * excluded by pci_physfn()
+	 */
+	if (WARN_ON(!bus->self))
+
+> > +	 */
+> > +	if (WARN_ON(!bus->self))
+> > +		return ERR_PTR(-EINVAL);
+> > +
+> > +	group = iommu_group_get(&bus->self->dev);
+> > +	if (!group) {
+> > +		/*
+> > +		 * If the upstream bridge needs the same group as pdev then
+> > +		 * there is no way for it's pci_device_group() to discover it.
+> > +		 */
+> > +		dev_err(&pdev->dev,
+> > +			"PCI device is probing out of order, upstream bridge device of %s is not probed yet\n",
+> > +			pci_name(bus->self));
+> > +		return ERR_PTR(-EPROBE_DEFER);
+> > +	}
+> > +	if (group->bus_data & BUS_DATA_PCI_NON_ISOLATED)
+> > +		return group;
+> > +	iommu_group_put(group);
+> > +	return NULL;
+> ... and w/o the function description, I don't follow:
+> -- rtn an iommu-group if it has NON_ISOLATED property ... but rtn null if all devices below it are isolated?
+
+Yes. For all these internal functions non null means we found a group
+to join, NULL means to keep checking isolation rules.
+
+Thanks,
+Jason
 
