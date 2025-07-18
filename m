@@ -1,155 +1,148 @@
-Return-Path: <linux-pci+bounces-32541-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32539-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9431AB0A885
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 18:35:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45C65B0A873
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 18:31:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F0531C46D3D
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 16:35:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C05E5A310C
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 16:31:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 521BB2E6D06;
-	Fri, 18 Jul 2025 16:35:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91D2B2E62B9;
+	Fri, 18 Jul 2025 16:31:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K3D9Ba47"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LtjXb2xF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA80F1DED53;
-	Fri, 18 Jul 2025 16:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC861DE4EC;
+	Fri, 18 Jul 2025 16:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752856531; cv=none; b=i9bnUxyo9GF5folLFEiCgd84Y0YAZJHTgggp/R13J29QrsSjSY+Gg3GVVhSMSb3+zbGtycp3ZTl1ci9ZrHzJXUmHCaAfI1BwlCIwTbGX7IkDTEEXJ0jKWfBf79M7ucWLSwR7PMsXymKt4XO9bSfggeXb70BGZuZVu9HJH30hxsA=
+	t=1752856313; cv=none; b=JM8Qi7pInIuGvN00JHPLiXvyP2AhYS84IBnZfOSmKyaHiQVtBXim+orJuP+00ACYDl2beQfDmeHIjBm4QYEQPmvEQgSYHb83a6HkZz22hFuUS3LTVKWO3EeVz0J8xhQ36XIUBal1Dov+2SuWW3wCMtCuK/+WKvTbOfjC3tH9LKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752856531; c=relaxed/simple;
-	bh=UDmAfnjy8pkg9BvFAmQ9gslBsr+Ob5O2A4EwZnWz7Bg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XQKrDbA0V4OixlCmjlLCDodrkC68yes4a8mESkz6JaYyfoeXkf3KGPm5uBK3sS8EGmG1ok6OMfhry45G1Ba0c6lvED4Kfk51kD1LPfht3m5spcJDAz6NZJg1UUMTMFNJMb/fXrvhO2pdWGRbt7ObLHuR3tI804oo41JlYH9io8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K3D9Ba47; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2e9a38d2a3aso2125862fac.3;
-        Fri, 18 Jul 2025 09:35:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752856529; x=1753461329; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S5fMBTsrhrDDK6xtK7LtgX4Zw2zx9+Mn87A7RF2ITBk=;
-        b=K3D9Ba47ZcRHqFv5hoBf/PZyk2IqUflpJIzmbJtLXy7V86gDdLIigOoXdLcUL+S2kT
-         Sz0B7NEezbaMf9/+ax4rikbIAdyJagRutel0FSmH8g6hCA2lBDfjQlnjMMyyBB+ra2L4
-         2B8J5KOGz3QeYo29QxrBcZbTtAGDst9zT/gZ9XAwq/nYLUYzvIKYeqAFl1m4k1jp40V/
-         NRh78rxqo5hiZ7pHLjfors9yhUpf96qHuiwc8J00Iu70Ul4j+SXpMSo2pXuOJka259ZF
-         KNrEewVOXXBDCIiAJj0ibrczdIo1KajANAav6L5JEjtOS9gx6LJVqGxwkL9swRV9xXyk
-         vsCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752856529; x=1753461329;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S5fMBTsrhrDDK6xtK7LtgX4Zw2zx9+Mn87A7RF2ITBk=;
-        b=up4HuyILC9rmLB38TdVgmcZLs8xZ2OQbifCSxnmZlC6lLpGYTqEB7OmHmRU1+YYxwT
-         bva3jcgSXuHCS9b21Htu0XqPKaE4RAISnSPE12P+YHWSkZ2uWAszxUL6+EWtI6Xuhp5n
-         jXfEseS/V79eFQ28KuASuYkQyBkc1/84WwHEMO+jlWforcX+CKIOp+DUvfH+Im67QJfN
-         gDpFIKroRRNLEQylearjK5V5NpO2T59cqOdE8vr+/Pu0p4AE4kbnGjD8/Uv8sCJDTmKr
-         qmkkLDmUHLP6KToL4/HO1hkVXf1wn6tBe77PYFm12M36mF+xkosZRyOL7z0JIeiFD0z+
-         GZsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUvKxHpA4/DEVkKkNb/thg5+B3UhpKx/p00OoZ7yr5kylldgrbDwd5v/QQkrbWvUawfOb653PGWXLx+@vger.kernel.org, AJvYcCWglKENiuUXuB/ziEcbhbPLKfxzNZ5SByaK7sIN/NwOXHzUZe20LEE1E92uY/71O+fJ2xll7T+HKCjXJwI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHXb1/X28fxaO+u/NxonvGBnKD4hQGW3rWaF0zaw6DCtldp828
-	9lHeM3xMyjmsb44EV14jhu0YhAd7k+VqHe2V6MR2BmVCNJyS26bbrYAA44a9c5sy4HdPXDYVx8S
-	ptemQUIy+Q1kKMPY1NXvlqDkSUwR9GZeP2w==
-X-Gm-Gg: ASbGnctBL1o2Han0w6gchtwbvoL+t8t7mZbdJCoL+Ij0AJdt7TJk3wau+g9uTxPo8sj
-	wBQgq3bdxQNb3dLvB5PO3Piw4CcbICBd2SVcyoLSrwwvvetSWj6Y8XPfzmn3eYSapocrtEShH6E
-	zIi+Qu7WlHyypt6IIfrB35laYPKdgRx3yq3YzEJtSAAA/PmJ3+V8Dr/FBS61sG4IZEODOWtfzIi
-	fxSobqLC5UaA1+x/Ie9KaA=
-X-Google-Smtp-Source: AGHT+IELLiAsxvKTUzSoPTZZRRusNn9I6JdMO0/hSrsDIrFm2f2dPHV082nEnE44/odp5xiA8nVTltUi6hVD+2JPvo8=
-X-Received: by 2002:ac8:5a91:0:b0:4ab:9551:476 with SMTP id
- d75a77b69052e-4abbf5574d4mr7492541cf.53.1752856040946; Fri, 18 Jul 2025
- 09:27:20 -0700 (PDT)
+	s=arc-20240116; t=1752856313; c=relaxed/simple;
+	bh=PD4pP9ILVb/fcBlFNyRadGIvO6v48LllMGgTKHNZLRU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Pcfe+ioKRh5iYwe0+mdBcmaMoOtAQkronWYkzgVKQGYPTTSBqR11C5RlEy/8GKxm6Et9JdJUQZwZOaFD7c2NowCcOlicb1Md6x9lSli22csiFgrIP0ZfF9IYn0xuqcZ/AB39FFH1aQjeLveuYDbs9ruJgNpuAgWW/2UH2Tbph6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LtjXb2xF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95EF6C4CEEB;
+	Fri, 18 Jul 2025 16:31:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752856312;
+	bh=PD4pP9ILVb/fcBlFNyRadGIvO6v48LllMGgTKHNZLRU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=LtjXb2xFfBadxtooK9HyOD9OigkmJPVLI2gkEvDTSMdzL7uQzrnAvoJLYu+yl94rG
+	 NI4qzrBHXZDoEtWd6xCRHXFCo7UKZqLxdDJKYYi+Vc3PwUd3mQZ2Ut8axfQ+4n+eZf
+	 VBclaue12YkdtHObikJU6HuWeaqeNFPTjTuvqIn5eS6qF+vBDyxXTyfHElEenE/LNh
+	 E7LwtMucX2gWjBdIMZVViOhqYmy/D7I8+PDkcFgsRqnLP7MMHRzJenPDt5eteV7cRW
+	 0j8iZXCMVlcwhga9hSXlXQYUXA5En4dYGgPWbkwczf7lWSBJ4Wcr2ruRe2tHIVJZT7
+	 RgVT2Kb6HxRBA==
+Date: Fri, 18 Jul 2025 11:31:50 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "mani@kernel.org" <mani@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"cassel@kernel.org" <cassel@kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Simek, Michal" <michal.simek@amd.com>,
+	"Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>,
+	"Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+Subject: Re: [PATCH v5 2/2] PCI: amd-mdb: Add support for PCIe RP PERST#
+ signal handling
+Message-ID: <20250718163150.GA2700763@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250717165056.562728-1-thepacketgeek@gmail.com>
- <20250717165056.562728-2-thepacketgeek@gmail.com> <20250718113611.00003c78@huawei.com>
- <20250718125935-75fa0343-af78-42be-bc3f-e8f806a4aee5@linutronix.de>
-In-Reply-To: <20250718125935-75fa0343-af78-42be-bc3f-e8f806a4aee5@linutronix.de>
-From: Matthew Wood <thepacketgeek@gmail.com>
-Date: Fri, 18 Jul 2025 09:27:10 -0700
-X-Gm-Features: Ac12FXzeo9T-VEnjAi37swPr2fGHGP7zpQWlL-WrRlJfLia2ykFnSljiRcOLxgI
-Message-ID: <CADvopvapHnuxztum4fPsZU5h3=977Y=h6xOVhyWfKU8tQ0wxeQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/1] PCI/sysfs: Expose PCIe device serial number
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Mario Limonciello <superm1@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM4PR12MB6158DFAD4351A17E3523CA58CD50A@DM4PR12MB6158.namprd12.prod.outlook.com>
 
-On Fri, Jul 18, 2025 at 4:02=E2=80=AFAM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> On Fri, Jul 18, 2025 at 11:36:11AM +0100, Jonathan Cameron wrote:
-> > On Thu, 17 Jul 2025 09:50:54 -0700
-> > Matthew Wood <thepacketgeek@gmail.com> wrote:
->
-> (...)
->
-> > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > > index 268c69daa4d5..bc0e0add15d1 100644
-> > > --- a/drivers/pci/pci-sysfs.c
-> > > +++ b/drivers/pci/pci-sysfs.c
-> > > @@ -239,6 +239,22 @@ static ssize_t current_link_width_show(struct de=
-vice *dev,
-> > >  }
-> > >  static DEVICE_ATTR_RO(current_link_width);
+On Fri, Jul 18, 2025 at 04:30:32AM +0000, Musham, Sai Krishna wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
+> 
+> Hi Bjorn,
+> 
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: Saturday, July 12, 2025 4:49 AM
+> > To: Musham, Sai Krishna <sai.krishna.musham@amd.com>
+> > Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com; mani@kernel.org;
+> > robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org; cassel@kernel.org;
+> > linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>; Gogada, Bharat
+> > Kumar <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
+> > <thippeswamy.havalige@amd.com>
+> > Subject: Re: [PATCH v5 2/2] PCI: amd-mdb: Add support for PCIe RP PERST#
+> > signal handling
+> >
+> > Caution: This message originated from an External Source. Use proper caution
+> > when opening attachments, clicking links, or responding.
+> >
+> >
+> > On Fri, Jul 11, 2025 at 10:53:57AM +0530, Sai Krishna Musham wrote:
+> > > Add support for handling the AMD Versal Gen 2 MDB PCIe Root Port PERST#
+> > > signal via a GPIO by parsing the new PCIe bridge node to acquire the
+> > > reset GPIO. If the bridge node is not found, fall back to acquiring it
+> > > from the PCIe node.
 > > >
-> > > +static ssize_t serial_number_show(struct device *dev,
-> > > +                                  struct device_attribute *attr, cha=
-r *buf)
-> > > +{
-> > > +   struct pci_dev *pci_dev =3D to_pci_dev(dev);
-> > > +   u64 dsn;
-> > > +
-> > > +   dsn =3D pci_get_dsn(pci_dev);
-> > > +   if (!dsn)
-> > > +           return -EIO;
-> > > +
-> > > +   return sysfs_emit(buf, "%02llx-%02llx-%02llx-%02llx-%02llx-%02llx=
--%02llx-%02llx\n",
-> > > +           dsn >> 56, (dsn >> 48) & 0xff, (dsn >> 40) & 0xff, (dsn >=
-> 32) & 0xff,
-> > > +           (dsn >> 24) & 0xff, (dsn >> 16) & 0xff, (dsn >> 8) & 0xff=
-, dsn & 0xff);
-> >
-> > I wonder if doing the following i too esoteric. Eyeballing those shifts=
- is painful.
-> >
-> >       u8 bytewise[8]; /* naming hard... */
-> >
-> >       put_unaligned_u64(dsn, bytewise);
-> >
-> >       return sysfs_emit(buf, "%02x-%02x-%02x-%02x-%02x-%02x-%02x-%02x\n=
-",
-> >               bytewise[0], bytewise[1], bytewise[2], bytewise[3],
-> >               bytewise[4], bytewise[5], bytewise[6], bytewise[7]);
->
-> This looks endianess-unsafe.
->
-> Maybe just do what some drivers are doing:
->
->         u8 bytes[8];
->
->         put_unaligned_be64(dsn, bytes);
->
->         return sysfs_emit(buf, "%8phD");
+> > > As part of this, update the interrupt controller node parsing to use
+> > > of_get_child_by_name() instead of of_get_next_child(), since the PCIe
+> > > node now has multiple children. This ensures the correct node is
+> > > selected during initialization.
 
-Thank you both for your continued review! That reads much nicer, I
-should've known to look at how others were doing this formatting. I'll
-have a new patch later today.
+> > > +      * If amd_mdb_parse_pcie_port returns -ENODEV, it indicates that the
+> > > +      * PCIe Bridge node was not found in the device tree. This is not
+> > > +      * considered a fatal error and will trigger a fallback where the
+> > > +      * reset GPIO is acquired directly from the PCIe node.
+> > > +      */
+> > > +     if (ret && ret != -ENODEV) {
+> > > +             return ret;
+> > > +     } else if (ret == -ENODEV) {
+> >
+> > The "ret" checking seems unnecessarily complicated.
+> >
+> > > +             dev_info(dev, "Falling back to acquire reset GPIO from PCIe node\n");
+> >
+> > I don't think this is worthy of a message.  If there are DTs in the
+> > field that were valid once, they continue to be valid forever, and
+> > there's no point in complaining about them.
+> >
+> > https://lore.kernel.org/all/20250702-perst-v5-2-920b3d1f6ee1@qti.qualcomm.com/
+> > has a good example of how to this fallback nicely.
+> >
+> > Otherwise looks good to me.
+> 
+> Thanks for the feedback. I've removed the fallback message and simplified the "ret"
+> checking. Could you please confirm if this looks good for v6?
+> 
+>         if (ret == -ENODEV) {
+> 
+>                 /* Request the GPIO for PCIe reset signal and assert */
+>                 pcie->perst_gpio = devm_gpiod_get_optional(dev, "reset",
+>                                                            GPIOD_OUT_HIGH);
+>                 if (IS_ERR(pcie->perst_gpio))
+>                         return dev_err_probe(dev, PTR_ERR(pcie->perst_gpio),
+>                                              "Failed to request reset GPIO\n");
+>         } else if (ret) {
+>                 return ret;
+>         }
+
+Looks good to me.  It's important to note that this -ENODEV fallback
+uses the PERST# GPIO described in the host bridge, not in a Root Port,
+but I think your comment above includes this.
+
+Bjorn
 
