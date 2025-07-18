@@ -1,163 +1,125 @@
-Return-Path: <linux-pci+bounces-32482-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32483-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08FCAB09A2F
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 05:33:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BA21B09A3D
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 05:46:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1A9D51793AB
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 03:33:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D80F53A9703
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 03:46:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 299D113AD3F;
-	Fri, 18 Jul 2025 03:33:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CF4517A2E3;
+	Fri, 18 Jul 2025 03:46:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LrxfF9lY"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="SCU5+M4o"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84EFF2E3701;
-	Fri, 18 Jul 2025 03:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33392D613
+	for <linux-pci@vger.kernel.org>; Fri, 18 Jul 2025 03:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752809606; cv=none; b=jDmzXd2fHAtFuY8USB9cK7UIN4ol2FLIyaE4BgN6BFPUwjnqoQVS2gy6hsc0OnN7XdSxJlJ3byNBySDcNedUp/6z1Mpj16YHo6K15OcM2CFft12UeMRG83UCivS5j6RBh7Z/EW7kN7ZUuaGVIh25GKRNbNABRFU6LzlbNpNdicg=
+	t=1752810415; cv=none; b=pLEVxl+0MZ9PKgjD6CibvONF13s4A7Is/leyd5wtwXSAxHO0XNDfapGjeNxrvA12vbkAUBnSTLc/4EbftC4cNtzQhptK6mHnzdsQEpn34iGB+mzyQ2iebRnfzWnEUEXw+uIDqf+T9AqaZ2dl75Q2DIG454YFUeGjKCgDMZ4faQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752809606; c=relaxed/simple;
-	bh=AMSMj4ctsIaylYGk5+a6qH6cp7Shzrqrf/JgV6iMSAg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fgnekURVogI6jH2P0lF/hS4/A1K0J0EcbMaOeSCCYElIj+3ORJ/DRE5m7pCVJrD7+YW54HYBBZu+9LpNfHqAdFRVW4gt3lMrn1+mQXDdJFVu4NwmVAvqjUXTaXrMQzqlAJ+aOvXyKTCVZZFpHd/7k8AblfrkvdvHuCg14hh96v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LrxfF9lY; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5347686c12cso753981e0c.0;
-        Thu, 17 Jul 2025 20:33:24 -0700 (PDT)
+	s=arc-20240116; t=1752810415; c=relaxed/simple;
+	bh=Mf9215EGCTrmzHCEhlJE5KvEgKqe2O87UjIpxFAjudo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KCo7ecQmtFu9V3OX961WEhVGgKgOaG4vVOEiN3eqweHkKg00IBaRa/Syn47Mqzf7o6fYXYmcfDA4UuoefM0WqJX2i+xOL3nieKPqPS4jn3YuXhfyCa/zsFt5lOeE1MdfTmegXvBW8HsPWr2Iej4H0iI2wEkXw+xBy1gzAZcMDm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=SCU5+M4o; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-742c7a52e97so1450220b3a.3
+        for <linux-pci@vger.kernel.org>; Thu, 17 Jul 2025 20:46:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752809603; x=1753414403; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=X4q0Q5EvAAnymgIMuX9CMnSNvFvZahS0xipjrXbSldw=;
-        b=LrxfF9lYu7cCj3ry0QPGs7tI9u2/oPnnsVuAKt0VOKjpkHnc/ry0U9GHqpo/BG8pEK
-         TYrPQoLDVl5zjubLye6PNyeYc0lCAkaM810U4U5tJxlMmViRBq4bALhzgaCZMNmbfrxQ
-         HrWLX1f5rtJTYINtWI7pLwA3himzzQx0TLVXfsX0hYO1OT2nmC4v2lLy8L8E9/xub5Hq
-         oZNprQXd/a0BKZooyc5wUS0x/qDS2TsZGzA94nttQGSzYa99HK/wDEFVbETVRjoIQPL8
-         y3ZCLS+Ad5in5Y7mnsKBB36qjtN4umX/f4y5wMpam80OH/DUbIK9LI25nbWwL/WdpQzJ
-         7HUg==
+        d=purestorage.com; s=google2022; t=1752810413; x=1753415213; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mf9215EGCTrmzHCEhlJE5KvEgKqe2O87UjIpxFAjudo=;
+        b=SCU5+M4owUAq67eGL2xlpSBkeKyUhA8Kq6XFmjO1BLZfka8BYKq+K2rc3Bo9ToKIwY
+         rXa23Ds4JToursaj7bEhWeibslzDKQNPDMK9HM55mwP52A+LNWvPuhu52cS+KJm7pnCw
+         Y+pN3TUF31U/sgTLEBooIErRvCdG6EXB1KlyT3JZZkBwIyXw0y/HkjBkUlRDj48MFEjZ
+         g9hJxDdDlA695w7GTsRlviDeMJzVfasC4u48WhwQ/I1JCI4ZkvuV8ozlFgJh8fl1j2NA
+         Ku2F66+xxyXEupdjqYNtkdqa3JMYqYPyA38a5sEuX32XOVMl5ZJi01rjj8Bo3ruXNfbA
+         6s4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752809603; x=1753414403;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X4q0Q5EvAAnymgIMuX9CMnSNvFvZahS0xipjrXbSldw=;
-        b=syycCpTpV7BomyNkjWP1nplI44BzsHzZ6q6lwL5vJd2puqz6alOLh1OOIPENDrQP/o
-         HBlbIwabI4KQSd36+OrYTYM67pd69yunsWYp+oS0+eOJLN8HpK0TZ3GTLqctS/jaxRnT
-         pG15gdz+ih9nNObYgd6avdOoto2+ndTbmGsqmjbZCt6DFLWdiX9v092jJqlOgcITQlq9
-         iz/+WmdOXJAjrsXLAFpGJzjf+SSHAoiqpIhFDeCCaSWJ28Pf8Zfu/MoZccaucTXXyphf
-         GZY3JziybB62FnZ2Z0JdA5XodJVmLK7K3y1rUTu6U4WJAHYS4qbLDAtvWWRIn4L9YjEw
-         jLiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUj2ekkyNfDMX8HS9W6sHeWOXlq6DeXbXWdQQshmHeQUXImy1ekftBJMRySdMfC2x0/qK24cidXmXjoFzA=@vger.kernel.org, AJvYcCWIVYKxeju9CEJn/SuUCaE0JNWwkzzpvNinOMkM7JvlJg4Fb6abA8OV28zQyNSnHp/OiP0beb3n5tYx@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqZsPPaKGgctGiLBlBrCeObCWp1eVmRIJqyYkrpKGrXoFTboRd
-	UYiv6LqzIp2gqbUOyLz2ISaVJftAumdauLXkdG8dpeIngjeErWEKaOue
-X-Gm-Gg: ASbGncstQZuzbbWJr3Klg4lyknlW0NiV/d5tZhizInzVgi9PTLcOdcyPgmrYgIGg+6a
-	J9iGOqzLjuJ4kCgekPqJ38jTQFSIkvaxPVKAhMh/pr6LJNWPVYZJcM536CreNvTcw7/3ZPNF7sN
-	W0LGXTIC4JJjoD1ipeQSjfDvjTbfNpqE/MoiEhcJVlOmUwHU4re2eeYwXqZbNzJuxuNBd5x9n+v
-	s8bUQFBBaZy9BJX1v+L/yGXJnVkvmfl3B/XGUI+VC0Zhjn9WgWh4U84V+7MaYmmkvu+D+Mbdv+W
-	VfN6GalJn658S/f2AlySy1HOPfJ8WNgSYgkI5xqWSNBMsi/aJ0qjLkipnuACQwpvA1aMS2Rdp2j
-	wzlvfHNJh+/fO1jJe5j37
-X-Google-Smtp-Source: AGHT+IFG+rqRc1GS9r7vH4lNCHz/0iF5wqAzIkwI4O1lQJw5WIt9L0WOWQNLdU0Vc6VPuIyzNQyhDA==
-X-Received: by 2002:a05:6102:3053:b0:4f1:7946:ed52 with SMTP id ada2fe7eead31-4f89996c9f6mr5408257137.12.1752809603242;
-        Thu, 17 Jul 2025 20:33:23 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:2246::dead:c001])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4f9ad094fadsm138027137.16.2025.07.17.20.33.17
+        d=1e100.net; s=20230601; t=1752810413; x=1753415213;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mf9215EGCTrmzHCEhlJE5KvEgKqe2O87UjIpxFAjudo=;
+        b=VWUHx09WolmDu8/aV/gAS8+TKcyM65yoTzcDiJeJqvD2FDpq5gvJTPUfCauT8M1T1K
+         w+EYLrqxPrtB+grUboBZ9VCCVRvhvY4QU8+2RgwayehDOAA12mUaKTcvg1EnOSQOYmuF
+         +1T920cVF+wclkbaT/NWd59xhdqn+IssOTOb1p+LS5NzRnNM5AJKGH4IQyCzVLIUwDuO
+         dUatLwq/fYLnm76ySS+II3o8rBLnODcNwx76NMhJMe22bWchMX0wMooxmZeiyrTMi0AX
+         B0qG4Y1o4Gx/CvbIO7CD6KnA/LMZCxDvRnHQdd1sWjaMS2q7j5s4TIZNlFIGiyPsEg+B
+         bSIw==
+X-Forwarded-Encrypted: i=1; AJvYcCXldFhO9q/tWCJVVLifhN+qeYl6RqHXymeypSkKgij8kN9CAI/yEmbehTN4De4QJf9FX52CRXQjP2c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhaUTTe/r4sk8JaiGuoEw3l14gjS8FV/tjNGvN9ptxxlpA0Zwx
+	H0zMmc4Fyp3nahyXO3SnxBvtdc0wCwmRA+jdr14D1yC1jzfwkqb3m7W5ZPPYO2njP9A=
+X-Gm-Gg: ASbGncsKC9iXLUInDZ/WV8bdYeb6a77KbiTGSRc0PZk2l7b1Zx6sWRrbvnH01Ps0c4x
+	oRW6PVnsX35ID8vNnEaA6DLiQv8/0uYjo4YQ/w0pUckS7SGjb11WQH5/9bgCGQujEedd7jCTpLO
+	IoeaRquUULO7f3cpQ/7n17OtTDmmfBNa1FIP1xuLbbL/xaAI0dsoeV+tS73CHD+Cq0vOVhLplA0
+	w/wXVh/yxG6/DIvbK1fWIERZiMmkc+SM9FXMCeoNa4t426p43aTnt5/oFuHQTtwEsK3lEMrGE+Y
+	W0qStwF25jdBv1a5D4PUd3os6QlE7t0WLVptyodSWbR1fIjvfLe4uqTl3998LMtgssi9Hhn7ab3
+	BUgjwX0quNI+EVMntdJjW25pFvq2HlhugSKCCINF0PxBIknaA
+X-Google-Smtp-Source: AGHT+IFNa+EcH83FNXnjEm3C0F6TihGjOc1OMxlRUqkqp/V85onlhfwD3tW3WOOTiHm6RK2tC/cZPA==
+X-Received: by 2002:a05:6a00:2189:b0:746:27fc:fea9 with SMTP id d2e1a72fcca58-759ad4002fdmr1963419b3a.11.1752810412983;
+        Thu, 17 Jul 2025 20:46:52 -0700 (PDT)
+Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-759cb678d8dsm310811b3a.110.2025.07.17.20.46.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jul 2025 20:33:21 -0700 (PDT)
-Date: Fri, 18 Jul 2025 00:33:05 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Hugh Cole-Baker <sigmaris@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [RFC PATCH v3 2/3] PCI: rockchip-host: Retry link training on
- failure without PERST#
-Message-ID: <aHnAcbXuFqcMXy_5@geday>
-References: <cover.1749582046.git.geraldogabriel@gmail.com>
- <b7c09279b4a7dbdba92543db9b9af169776bd90c.1749582046.git.geraldogabriel@gmail.com>
- <ac48d142-7aec-4fdd-92a4-6f9bc10a7928@rock-chips.com>
+        Thu, 17 Jul 2025 20:46:33 -0700 (PDT)
+From: Matthew W Carlis <mattc@purestorage.com>
+To: helgaas@kernel.org
+Cc: anil.s.keshavamurthy@intel.com,
+	bhelgaas@google.com,
+	bp@alien8.de,
+	davem@davemloft.net,
+	ilpo.jarvinen@linux.intel.com,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	lukas@wunner.de,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com,
+	mattc@purestorage.com,
+	mhiramat@kernel.org,
+	naveen@kernel.org,
+	oleg@redhat.com,
+	peterz@infradead.org,
+	rostedt@goodmis.org,
+	tianruidong@linux.alibaba.com,
+	tony.luck@intel.com,
+	xueshuai@linux.alibaba.com
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug event
+Date: Thu, 17 Jul 2025 21:46:16 -0600
+Message-ID: <20250718034616.26250-1-mattc@purestorage.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250717235055.GA2664149@bhelgaas>
+References: <20250717235055.GA2664149@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ac48d142-7aec-4fdd-92a4-6f9bc10a7928@rock-chips.com>
 
-On Fri, Jul 18, 2025 at 09:55:42AM +0800, Shawn Lin wrote:
-> Hi Geraldo,
-> 
-> 在 2025/06/11 星期三 3:05, Geraldo Nascimento 写道:
-> > After almost 30 days of battling with RK3399 buggy PCIe on my Rock Pi
-> > N10 through trial-and-error debugging, I finally got positive results
-> > with enumeration on the PCI bus for both a Realtek 8111E NIC and a
-> > Samsung PM981a SSD.
-> > 
-> > The NIC was connected to a M.2->PCIe x4 riser card and it would get
-> > stuck on Polling.Compliance, without breaking electrical idle on the
-> > Host RX side. The Samsung PM981a SSD is directly connected to M.2
-> > connector and that SSD is known to be quirky (OEM... no support)
-> > and non-functional on the RK3399 platform.
-> > 
-> > The Samsung SSD was even worse than the NIC - it would get stuck on
-> > Detect.Active like a bricked card, even though it was fully functional
-> > via USB adapter.
-> > 
-> > It seems both devices benefit from retrying Link Training if - big if
-> > here - PERST# is not toggled during retry.
-> > 
-> 
-> I didn't see this error before especially given RTL8111 NIC is widelly
-> used by customers.
+On Thu, Jul 17, 2025 Bjorn Helgaas wrote
+> So I think your idea of adding current link speed/width to the "Link
+> Up" event is still on the table, and that does sound useful to me.
 
-Hi Shawn, great to hear from you!
+We're already reading the link status register here to check DLLA so
+it would be nice. I guess if everything is healthy we're probably already
+at the maximum speed by this point.
 
-Notice that my board exposes PCIe only via NVMe connector, and not
-directly via a proper PCIe connector, so it is necessary for me to
-adapt with inexpensive riser card that exposes proper PCIe connector.
+> In the future we might add another tracepoint when we enumerate the
+> device and know the Vendor/Device ID.
 
-I say this because while I don't doubt that the RTL8111 NIC works
-out-of-the-box for boards that directly expose PCIe connector, the
-combination of riser card plus NIC has a similar effect - though not
-entirely equal, as described above - of connecting known good SSDs
-that simply refuse to work with Rockchip-IP PCIe.
-
-I admit that patch 1 looks a little crazy, but is has the effect of
-enabling use of presently non-working devices or combination of devices
-on this IP, at least on the board I have access to.
-
-> 
-> Could you help tried this?
-> [1] apply your patch 3 first
-
-Sure, I'm always open for testing, but could you clarify the patch 3
-part? AFAIK this series of mine only has 2 patches, so I'm a little
-confused about exactly which patch to apply as a preliminary step.
-
-Also, since you're asking me to test some code, I think it is only fair
-if I ask you to test my code, too. It shouldn't be too hard for you to
-find a otherwise working NVMe SSD that refuses to complete link training
-with current code. Connect this SSD please to a RK3399 board and let us
-know if my proposed code change does anything to ameliorate the
-long-standing issue of SSD that refuses to cooperate.
-
-Thank you,
-Geraldo Nascimento
+I think we might have someone who would be interested in doing it.
 
