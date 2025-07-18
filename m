@@ -1,247 +1,291 @@
-Return-Path: <linux-pci+bounces-32477-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32478-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2AF1B09978
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 03:58:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D932B09999
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 04:05:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3BEA01C80ABB
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 01:59:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 259B44A259C
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 02:05:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5007518035;
-	Fri, 18 Jul 2025 01:58:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2A131BC2A;
+	Fri, 18 Jul 2025 02:05:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5Wq/eCLP"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KtxVv2G7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2048.outbound.protection.outlook.com [40.107.102.48])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D20118A6AE;
-	Fri, 18 Jul 2025 01:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752803920; cv=fail; b=VAjEZ8AJdc16qt5UcpwnufRnEsIgHwUPOxTz21xF4DC2KmAK8Lyx1Ju4nmQ5dPO9uIJ0fnGoWJ99H8fsi7diot97e6j+lX+kFH3GSqLfmPi0OI53Xbg6KoXYgGINLcOP8vGdXoMgi+ycdJUIPS99wOYTYAIAgMyoVTr+FRuPm0U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752803920; c=relaxed/simple;
-	bh=JIpPzjoEPpsb9WuExlsU8a6GXGW7bZl4idvOB8g0Nsw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=gch/PKy8PC8JdV10bCN+FHrfc1mLZVgU0kuCPzcCSMU71+dO5qrC1o+W+tMhu3zB0NxLNsCfQrB4vwcGXN+DVXqNfqcY9azjIACv4t/xZ1UFP8neZ7iXuYOD6LrKIRlXRw51E2iuBwuWIvMobzYFtz0v9vP/4Duoa1unR0nOCfM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5Wq/eCLP; arc=fail smtp.client-ip=40.107.102.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RZCTZk1EmdJdvpLtXQyG2SwVKjnfAerXthmkOUl3LFFA/mvsF0f0AIwGYYbtxQG+FhREEagvsI/oTA6H1MHdPbMcs84thxRvH5tEXKsH86xhXJ+8CxMI+on7ocAhzNYSTsOv5cy5QOV2U1LfdO4+1I7jmlcK7xEZHkbbILvhQbSXRS6ZedFLvDbYqydX513dRP9+HtNaVjKAFIYEB05pRfSmZfdmPEvnXVTC2+qhx4w8VwPafB5l+6Lh/PqnzYCHOCNnDDU50FvMAhBpfcw9TB86m9W3FtPP+LgM1iJJIO9EYOiO24SZnICONPVz7QKy8TQdGsLee2oomxUWTqEtzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=X8ZtcbePW62bb49rt1Ee0rG6f6+hp58oI2EFbiQzLq0=;
- b=whedsON1PKNnf9/vHe6jEtpWjIb02ZRscVXI9f0bnunDoYBpnEa+WlifPbyfr+sBHfh8iUQtNxgln1BBhDfL8I0Jjj+113YsdSFvaW806MwatgAPAcI2VThIRqyernZ26UzUdkUNj5gyM75e8/TjX7TaOwRMi6AB7bfmA2AQ7V20emlLm+KImZANBCLDHPvKKeDtuT1hQMRjFJipnVG8hPuFLUp6BtHLTWQSn951SBuEKepFI89/C/DYRXcOMe8Sjn+IcGsnmFn8QJ0o7/cjnTzkb37QjltnCQBkM3wisjkQEC/W6Ts/NwgJtH8WWwsDiWFBn2AtKtFRY7/M3ko3PA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X8ZtcbePW62bb49rt1Ee0rG6f6+hp58oI2EFbiQzLq0=;
- b=5Wq/eCLPqZNZItc9D5jUIMuw9cUtMPSRvFCO/64SoythUEjVH3s+mRATuD1gcR5vdmzI8TDBQCdxpuX5hZZVij3nH6Lz7TblVB7FUhc7rakKBX+bOmaXNSFZ2lKMjQxIl+MeKPc6Vb0SQsPGb+a6upskY9lM7b+QyjenDx2tTJA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by PH0PR12MB7929.namprd12.prod.outlook.com (2603:10b6:510:284::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8922.39; Fri, 18 Jul
- 2025 01:58:36 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::1e6b:ca8b:7715:6fee]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::1e6b:ca8b:7715:6fee%7]) with mapi id 15.20.8922.037; Fri, 18 Jul 2025
- 01:58:34 +0000
-Message-ID: <d004a5c9-fbd9-4298-89ab-292524ae3ad6@amd.com>
-Date: Fri, 18 Jul 2025 11:58:22 +1000
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC PATCH] PCI: Add quirk to always map ivshmem as write-back
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, David Woodhouse <dwmw@amazon.co.uk>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Santosh Shukla <santosh.shukla@amd.com>,
- "Nikunj A. Dadhania" <nikunj@amd.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <20250612082233.3008318-1-aik@amd.com>
- <52f0d07a-b1a0-432c-8f6f-8c9bf59c1843@amd.com>
- <930fc54c-a88c-49b3-a1a7-6ad9228d84ac@amd.com>
- <opdpelyb26bzp723lyxljjb2dmxgunkcjlvpkxgbrxaxhoycv6@eigu7etse3g7>
-Content-Language: en-US
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <opdpelyb26bzp723lyxljjb2dmxgunkcjlvpkxgbrxaxhoycv6@eigu7etse3g7>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SY6PR01CA0009.ausprd01.prod.outlook.com
- (2603:10c6:10:e8::14) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E58542049
+	for <linux-pci@vger.kernel.org>; Fri, 18 Jul 2025 02:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752804313; cv=none; b=qNZ8PnSKJoKyRcRE+ArsMwYHjtohSR8Jr/LzpvMEes69iNAMrxaDjfKMYghbn8Ymx8DLFt4cbU1Y3Uw8RK5leuEuocH9oAdxl7nv6/P/VrOFrXOsA61+gNU9hEhCkfpzmb/gN6rqDeMnVziu6ufYmQso4DInfIWmY/SeecTrQ+M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752804313; c=relaxed/simple;
+	bh=gSDrkic5W1Hr3FuZ1KWmk1eVUKDcM+ZHRgVlt9HjAak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q6mLyEWcTXM3QoqxBTN4QrEsYKXSbXdrcmlpKbW3M2GhEP71B3UouzCNiaeMDpZivav+oP9lTuPweuJ9ckcd6yrQAUE8KxZgiCCXZoq6uukN00SR5mrQz+TpQTeKuBiKQN1Y+q0PJMwm3kUrirZ05WthQm08VW8mCEuslHw0MnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KtxVv2G7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56HL0XlI025180
+	for <linux-pci@vger.kernel.org>; Fri, 18 Jul 2025 02:05:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ukDmLOBA9Me68ebZBlzYCp7a83Bc1sghnwXXZNSGT/k=; b=KtxVv2G7r6dPu94+
+	AUnmdiwdI4mGN7ZscNcbkhidqi+r8pnCPrcf+tQHHrZ/8vBQZ23RrSZt7+bcuHoe
+	BHVKoOb4x5sDu6B0KrglM+fTxJHX2WCmkbz/ebhnG0KH/SBmDFBNGjUunccNRuIT
+	8BeCg44lOl8yLHvliJ7V0caSwzA1A20Oe4k9e8z03e0Sj3ekCiLsWN7Fqj4/MOvv
+	VByiPiibQ2QA7XijlHyPejJZBSSLDHcpFz0jmwUHGLmU2/Pev5yWn7aNLw+zgSjQ
+	sR9XApZ2mpKuARfL3SQIUTevCsPBhBFDJiKeKW4kux8h/XhqjRR2KVu20uLZkCJd
+	eL2fyQ==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47xbsqe04m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 18 Jul 2025 02:05:10 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3138f5e8ff5so1701345a91.3
+        for <linux-pci@vger.kernel.org>; Thu, 17 Jul 2025 19:05:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752804309; x=1753409109;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ukDmLOBA9Me68ebZBlzYCp7a83Bc1sghnwXXZNSGT/k=;
+        b=RdRjKN7DCG+JfqbRCVuZ8V8g/etAsAxYXBP/lNo46g0BSzBXG0x1SF0qXPb5+rxHud
+         9N3xjspnxBeY+dxaAnfjH+4VpxI1OKQ29Rg9Y+ZrM3cQHxrZShk9zYEaijwBV/lgA5lu
+         DALejERVm1V16rVfYyHoDXhipmexGSyGPnDMrRJPc2msGquoD/wYuZugs2IDG8VfjuBj
+         I+xDCw7Aa5Sk1cec7dQ8YoTxdltjWEBNZ7+j6ASWJfVQbhPbmPt55WduF+I4mbON5j//
+         reQlx2R4cVP8FJ7a+dbiAkqiuwACND8kjtNKnyJLi2t0Jmk99NSkqPRAGXccwwEj498p
+         nzpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJXVqE5n4A4ugmGo1TUE6tu5GJZWOiMi0mCnoZwvsqGvi5Q7fDPuOVkLmsyRTkI5fLw3JgYZnZPF8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzq4WYDju/azzQpji8+5CqLFp+FT6FLWdpadqsoH9jCT/kXEbhF
+	PZpGEmXMxnna1w1RHxck/uYOcND0Dx9iYCOlRitc8ihoI/Sot/F5jg7cqfGyoCU5uyS2/7kU9Ze
+	9Axrn4sA2MR7jlncDkO/Z0CISd+Xp612+bfR8WO7jHbe6MPpok1EJIwmCZLL2G2g=
+X-Gm-Gg: ASbGncvwufyFmeSDeja3L86ox0U4BzOwzPr6RCV75u5IqqlO1JDAo2onGEfmZr62pCx
+	SNUOw6U4fr0au2/+KOuFxOZZ0xhmeEnUI1y66uzZx0aGvd108gQUpG+6nHRk/NM+QY1NsUfWj+T
+	wRfpOBOOpTVZ3pfwSiLk0LZsYxWwBo4mB3dcdqArQBJXBj0ThaaefASEjXPspJS/ktZ9ITDMbhP
+	r6hYAQu+gzH+z08fUzS1YrqGDDzSOL9xOXvtbrEYH4La1xwJobEZpqKqDtldHqMjeemzNcxIkp8
+	F1yssBXDtamSnKu5PMeM4Wf7qENAewXr7yaH/Oj8XsiUQZTZe6AmR6azYDsteZrnXgMlvqfGtCw
+	FaKeL9eZ93hlw3rNnR1vDCmLyRjdX2Vgq
+X-Received: by 2002:a17:90b:3c4b:b0:311:fde5:c4be with SMTP id 98e67ed59e1d1-31c9f45c8e9mr12273902a91.35.1752804309260;
+        Thu, 17 Jul 2025 19:05:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHleUA4lqoylvc2MFKPhIkTtj2OpjdSpesz+JpNk4bXp3YNmyys7zS5On4MFq6zBZbVyFLw4w==
+X-Received: by 2002:a17:90b:3c4b:b0:311:fde5:c4be with SMTP id 98e67ed59e1d1-31c9f45c8e9mr12273871a91.35.1752804308759;
+        Thu, 17 Jul 2025 19:05:08 -0700 (PDT)
+Received: from [10.133.33.245] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31c9f1ba792sm4071428a91.5.2025.07.17.19.05.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Jul 2025 19:05:08 -0700 (PDT)
+Message-ID: <1db7c119-882f-4184-9ca4-9dbe5a49cb16@oss.qualcomm.com>
+Date: Fri, 18 Jul 2025 10:05:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|PH0PR12MB7929:EE_
-X-MS-Office365-Filtering-Correlation-Id: 54a63ba4-6e7e-43ef-8777-08ddc59e9a59
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?THVhVjB5dEZMZWF4UHA4eGNwQjM0L3ZxUnE5K3REeGg3M21hNFNvd1lCNW9p?=
- =?utf-8?B?bUg1RVVxRXVEeXhUd2dZUG5xNE9WaDlDMHdURmppZXBzczZFRFp4QVh5cFhU?=
- =?utf-8?B?aUlrb0hXaGpuREZXeEoyUWhNalVsYmdONmJuaEdUZExMMDc1aGU5bGhOM3lI?=
- =?utf-8?B?ZGYyTEF5RTZkaThzTXR0U1IrM2lNL2JTaFRPSENvby9OODU1NTZReU1ETzd4?=
- =?utf-8?B?cVdKYzlXK2o4RVRPMkFIVEI1V0FkQjlVT0hsekdCREdmYXZVMDM0cXpydkxv?=
- =?utf-8?B?bC84dDlkOWdycGV3VVZYcXBuM3l6bDFQZStsbnJJNHdlTmYyWk1wemp3bmlP?=
- =?utf-8?B?Vzc4aXpVaGVKKzFGbmhIdzREU2U4L3UvT2ZBMklmQ29FbFpza0VYVlNqUG5D?=
- =?utf-8?B?YWtkU3RYeE1JQXlRcFFwbVNnNHE5MEVIais3ZDdIY0pPRWZHY3IySGFsTDM4?=
- =?utf-8?B?ek5jcWJjSXE4MlJmTUtDQ1VVKzUxL2c0NnBQem95VS9rVk1EWkFGcCtDeWc3?=
- =?utf-8?B?Znhrd3gxZ2hjSjFFZXl4N0crbEVaWTh5M3pONHZzRFBYYTBqM0owZDRhTHY0?=
- =?utf-8?B?bGEzQnpCdWlia1gxSE1kZ1RZMFlyMmxWb3J0MzdxOFJ1Z0ZPR1ZjVm4zN1E1?=
- =?utf-8?B?eHU4d1l5RU9jTTBjNUZjWSsxczMwdWRFNi90SEdMTzRwOWZRTmVEQW8wY092?=
- =?utf-8?B?S0htZEtmWG9ZaGNuOE05cDd4RmdYRGJiSDBEakllQTB2M1MreExJQU5Dank5?=
- =?utf-8?B?RmRVeGRmZHVZSmJXMGluVXlGRlAxWGpXN2krQmVwdTdXdU15VERtZFc3cTJB?=
- =?utf-8?B?VHlJRlpBTlhvejZ6UXY2ZlVqSzFwRmVCUmRLbGpmN2JQb0VUOGpJZGY4WTE4?=
- =?utf-8?B?bU5TR1ZZQjY3cUZWMTI0b0Rnb3drNk5NUDBEK3hYKzROUlE4Tk1uQmtvcG9N?=
- =?utf-8?B?Y1NSWjgycW1NSkNQcjJ2TC9ML3ltOGhVOWhHN09PU2FPbTl0ZDBUT2dDTGFh?=
- =?utf-8?B?b0t1bHNJSFNucHo3bVBnWGtWMG1zbUtrRTVUMUZFM09Yb2xXVitQOXlvcUdR?=
- =?utf-8?B?cjF3NVZJMmlvN01QTlBWSVVsZ0E4U3YwVFVCSStXa0M2aUhmbEVTZHF1M0w5?=
- =?utf-8?B?WDgyQnZTRzdyRXRLSnhKMkM1MGRCNEg0aEtqdXVlVGpWaEx0djR3VllGc1lU?=
- =?utf-8?B?SGp5OGl6MVZyZTgzWlVpc2NmQlRJajE3SmxjWGtaQWhVSjJ1WjVWN09KQThE?=
- =?utf-8?B?TW9pRmplRC8xc2NuUUI4U2lKclZaeFZBdUFKd3Myb3hpTVpramxjQWhxbit5?=
- =?utf-8?B?YThEb3UyQzRSNWtlYjFxZ1o1VzVXbjVTdGRKR0RDOFA0NHd6Zk5xSzRvaVZy?=
- =?utf-8?B?QWZSbXVnWTNHUEVTUlV5eFcxRElSVVZ3OTJ3QkZxdHFhMm15enRBUElzUDZ6?=
- =?utf-8?B?cTFzTUdhMGlKV1RyNU1zMmRSOGNPOURpNkRBVCtNdHZBWkFPSUtrbG5kK0Ex?=
- =?utf-8?B?S25KeTBYVGZSZG9uZ3NZSG40TUN2Q0srVUFGRGRPeUJjbnROOU1keG5iei9y?=
- =?utf-8?B?MXlJeW8zLzFiYXFuYVM3Umdjc3htVGJGTWlXMTEvdEN1OXZyQXJWdTYxZ2Ft?=
- =?utf-8?B?c0dVdlE5S1VkQjJKUkFXbVllbFZObU5jekxYYzBZcFYzSU5jOW5pZTR4ZkRr?=
- =?utf-8?B?UVVGL2R0RHROOEltNE5lajI4UmFKdldyTVo5cjVaa21oZGt1RVFGdXlZemFJ?=
- =?utf-8?B?Z0xINmJ5ZUt6NGxncThzQXBYOGg5NEJIeWdJeWRmVmxMMVZ5K3VEdEJzb1hy?=
- =?utf-8?B?Yk82Vk9ML1R5RzhLK2MwaS9MQzlFeGJxZTdyeEZlNGYvZ05Vak5KT2VhWU45?=
- =?utf-8?B?b2RkRVJDOUZZU3owWjViNDdpbWJJSDZzSmUxUDFLY2VrdE01M3FOS0l3N3VD?=
- =?utf-8?Q?QomqaJASkV8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Tk1tMXArQ3VLSUR4YncyUlp2RXJBK2kzbUhCNlBsM1ZIZGFHV3JSWEVkSUNr?=
- =?utf-8?B?THZ2dS9odGJPVmRLdnl4VDgvWDIzYVJmQ3FpMFBuYzllclBNOU14MzRyNGFH?=
- =?utf-8?B?RkdkWERCY25IWGxiT3d0NENZRWhXRG5tRmdCV25NUzdrbXRJQ2J6MjF1bjdy?=
- =?utf-8?B?TFBmWHhWQjZhN0VJQUQ0N3dXMUs2WTV4S3oxTmlhb1RWTTNYWHByNCtSRFdy?=
- =?utf-8?B?Q3BjSU5ZZ0ZqekkzbG5tMVJWOU5xaVZacVdMcUhManEwamtNZUZjOS9kVXRy?=
- =?utf-8?B?MURsc21sWlU1N1ZaeTRXVnVGQ2xKWmVLWnFoNzRMQXhoMDNMaTVFMXdmeGhp?=
- =?utf-8?B?SjFKanRKcWJINGVJbmVsMk1FcWo5SGQyUTlsSmt4NE56dzREb1d0ZklNd1Nu?=
- =?utf-8?B?UTFPOE9ZSFJYRVcyRmtkV3hyeHJZK21tK1k0R2tiL3M1QlFqb1FwL20vcUtn?=
- =?utf-8?B?eGE1Y0g4aGI0bTNCVzFoZ0RWSHFhRDU2Y0tYa3VhaFQ2ZjhUWVZxRUxDWmw1?=
- =?utf-8?B?VDFxSUZIbW4wcWx4dmJubXpDcEhyQkJCWUdJemdBWmNCaHMrQnhZZ25SMHVQ?=
- =?utf-8?B?SUdLRnpaNjJRbkhBNFFsQUtleTZVNEIwdXlZNnFzR05tUS9ka0prWUxvVExq?=
- =?utf-8?B?UGJ6b1RCek5pdlVOdEFrS3ROREpFQVIwaWhoa3BmVThYaDZUR3VvK2RJUk9q?=
- =?utf-8?B?bHBCdmlHNDhlVFZQS0UzbXBvbW5tdlZ2cjBVU3hMSHlDM3FqS1RtR3lrcGRE?=
- =?utf-8?B?V2JPN3FXMXRkWnNVMzBISFQ4RTU5NEkyK0lmS1cvek1pallmbU5KL3l2RGpQ?=
- =?utf-8?B?R0lXeTVlbDlNbUdkQnlyUjJERjRVL0RzaDBnOFdKQXVQUFpiRWFJNFowN28y?=
- =?utf-8?B?RTRwakFrZlhCekxkQUxwUU90SUZQOXVEaE5sZE0wMEdIZmdjYVF5MUNxdHJ3?=
- =?utf-8?B?WDlhK2NIK1E4ZUdnRzZsQkNBWmxwQmJXaGw0UGhaVWhDSkcvazlTYW4vMXE1?=
- =?utf-8?B?bkZ2cWpQS0pqa1pWRmh6WkJjajJYRzhtUDkxMFNHbHZzSHJJaW83VWRGdGla?=
- =?utf-8?B?Z0lRSTRaY2JZS1VVYis3VkcrY3pxb00zMmNXRTE1WUcwRGdtK2R0VWt1blZH?=
- =?utf-8?B?cldESFZSNXV0VERaNUcwaEdjNUUyTThDUEs0Zkord1FLVlptWmV1c085engy?=
- =?utf-8?B?cmVGeVdVRHhUd2h1N21mWGhQeUtTb1BlODRVblRBZW5nazRDZG1jd1hSdVgw?=
- =?utf-8?B?MnU4VG1oQkNVL3N2cHhvbUdZeVNRQ28vMW5FdnIvZWpXMC9NbDZNQ3U2K1VP?=
- =?utf-8?B?RTVKNG5wQkdOUURVQ1g4akpyUWpEaHpkbXlpRzNmSng1TXArQTNVTFJnblJi?=
- =?utf-8?B?THhjNDJEdk1jR2FaL0VxWDdVR3RyUTJneUtmL2pkSkNoY1RJMHdFSmJ6RFF0?=
- =?utf-8?B?VWw5cXh3Z2VQWEJBNDVwdXdxUmN6bWgveW13SFMxeG0xcVN3L2FnMEFkdlJj?=
- =?utf-8?B?eG1FeWV2MldwTDNLdEV4Zy8zUURMU1FRV0xEQTVHZFhwK2xFMW1wNDZYYjJy?=
- =?utf-8?B?c0xPQ2U2Rm9vcHFqaStwNCt1dEU2MFJQaFEwM1J4Q01hNFU0TG9FYWllUm1R?=
- =?utf-8?B?RC9zQzNhbGYwV3NGR2xVU3pOR3cwZUZQMWdFNWxXRkJxMDU2NWFBay9LZ3kz?=
- =?utf-8?B?UU1QZ3NBd011VUxDeXhMMUExODBQZnpSZ0JDdTJjRjJsZVlIMWZaK0xBeE5y?=
- =?utf-8?B?eVdhUExCNUdrVGphTjZsMExqMjAySC9aNElyb1NjVk9jd3JUQ2hzN3lkUDBJ?=
- =?utf-8?B?b0xGV3NnNFgxWVlRS0ZuWjgzeEFrajhLYU80c3czVUhkNDJheTNVakc2bTQ2?=
- =?utf-8?B?QjR0ZkwrdkF1YVIyd0pkRFlDdFBwNGNZeXpBaTBJOWtiNUQ4SkE2VythUURl?=
- =?utf-8?B?eE1LYUNqeW5sYVlHeHp1UG1YSHc2L3lGNzVpZzY0d25QT1U2aHJRcVdqa0R5?=
- =?utf-8?B?SjRsREkyanVwM1ZZOTZ3dGFWbTZlR21tcngrbWZGYWRvckcrM1piVEZtWUhj?=
- =?utf-8?B?a0VBQ3REaWlOL3J2K2xMYyt4M0lxR2hucHFTOXlrNy90alM1ZU03ZkpKWWF1?=
- =?utf-8?Q?CpEkFH3ZoRUpjeodKPXaBQj2u?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54a63ba4-6e7e-43ef-8777-08ddc59e9a59
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2025 01:58:34.5606
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: E3Mpy53OLGS3OrF4YqAhqKSxVA+uQefk3B+eToqYWvFuqOwTJcczcLU41Q9kVJneHbmJQutXkTCBPUDhItnmPg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7929
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/6] wifi: ath12k: Use pci_{enable/disable}_link_state()
+ APIs to enable/disable ASPM states
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com,
+        Jeff Johnson
+ <jjohnson@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Jonathan Derrick <jonathan.derrick@linux.dev>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ath12k@lists.infradead.org, ath11k@lists.infradead.org,
+        ath10k@lists.infradead.org, Bjorn Helgaas <helgaas@kernel.org>,
+        ilpo.jarvinen@linux.intel.com, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Qiang Yu <qiang.yu@oss.qualcomm.com>
+References: <20250716-ath-aspm-fix-v1-0-dd3e62c1b692@oss.qualcomm.com>
+ <20250716-ath-aspm-fix-v1-4-dd3e62c1b692@oss.qualcomm.com>
+ <38ace6a3-d594-4438-a193-cf730a7b87d6@oss.qualcomm.com>
+ <wyqtr3tz3k2zdf62kgtcepf3sedm7z7wacv27visl2xsrqspmq@wi4fgef2mn2m>
+ <03806d02-1cfc-4db2-8b63-c1e51f5456e2@oss.qualcomm.com>
+ <o2gqqty6lakc4iw7vems2dejh6prjyl746gnq4gny4sxdxl65v@zmqse3244afv>
+Content-Language: en-US
+From: Baochen Qiang <baochen.qiang@oss.qualcomm.com>
+In-Reply-To: <o2gqqty6lakc4iw7vems2dejh6prjyl746gnq4gny4sxdxl65v@zmqse3244afv>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=ad1hnQot c=1 sm=1 tr=0 ts=6879abd6 cx=c_pps
+ a=0uOsjrqzRL749jD1oC5vDA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=J7HomXw41qA7Or-Ob6oA:9
+ a=QEXdDO2ut3YA:10 a=mQ_c8vxmzFEMiUWkPHU9:22
+X-Proofpoint-ORIG-GUID: avb8rDwxZ1Cno6SRWyfJnWd11o0d0g6v
+X-Proofpoint-GUID: avb8rDwxZ1Cno6SRWyfJnWd11o0d0g6v
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE4MDAxNCBTYWx0ZWRfXw9JI8XSzdWz5
+ +OgU9U83KEOxUHQBwcE7cUxE4cYRjjwc2Z3aETj0vLmu/xk6D452ri/zR0kzTfvLxzFawGaFwHz
+ Mz5k346jnDhEhhvR8B2eiIaoDLrBJz3DK79psZDQoyG1UAOa4jQQrG5Ibt0tqqYTaBniGjIG3Th
+ 4dDXQI7+R6mRBdVGjV/VNXxQs45npi0kUU+sFGAWv4nChZPRxRXPs2xPWpw+0UhJ4V72uW+lhLo
+ PRbUDHSpiRDF1e2pPn4LG2tbvEifRGIsx+hJ0aRia/F5qjybfnvQ2mm5dXp59EFHnAOdGSci5Jw
+ 8U4+8f0oOYfRekqff5r9zdbl+aLiVeKgkza+4wbz1VjzJ9cqL9mcOElyG35ze5A7cPUVdA2Y2lt
+ 8elbPqxNqg7/IWJnkZP6BdRw5otGo/CzNxDSXBuQeiQQgozJlzc674AzUNlDOiTZ8mLjLqzL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-17_05,2025-07-17_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 spamscore=0
+ malwarescore=0 phishscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507180014
 
 
 
-On 26/6/25 02:28, Manivannan Sadhasivam wrote:
-> On Tue, Jun 24, 2025 at 11:42:47AM +1000, Alexey Kardashevskiy wrote:
->> Ping? Thanks,
+On 7/17/2025 7:29 PM, Manivannan Sadhasivam wrote:
+> On Thu, Jul 17, 2025 at 06:46:12PM GMT, Baochen Qiang wrote:
 >>
 >>
->> On 12/6/25 18:27, Alexey Kardashevskiy wrote:
->>> Wrong email for Nikunj :) And I missed the KVM ml. Sorry for the noise.
+>> On 7/17/2025 6:31 PM, Manivannan Sadhasivam wrote:
+>>> On Thu, Jul 17, 2025 at 05:24:13PM GMT, Baochen Qiang wrote:
 >>>
+>>> [...]
 >>>
->>> On 12/6/25 18:22, Alexey Kardashevskiy wrote:
->>>> QEMU Inter-VM Shared Memory (ivshmem) is designed to share a memory
->>>> region between guest and host. The host creates a file, passes it to QEMU
->>>> which it presents to the guest via PCI BAR#2. The guest userspace
->>>> can map /sys/bus/pci/devices/0000:01:02.3/resource2(_wc) to use the region
->>>> without having the guest driver for the device at all.
+>>>>> @@ -16,6 +16,8 @@
+>>>>>  #include "mhi.h"
+>>>>>  #include "debug.h"
+>>>>>  
+>>>>> +#include "../ath.h"
+>>>>> +
+>>>>>  #define ATH12K_PCI_BAR_NUM		0
+>>>>>  #define ATH12K_PCI_DMA_MASK		36
+>>>>>  
+>>>>> @@ -928,8 +930,7 @@ static void ath12k_pci_aspm_disable(struct ath12k_pci *ab_pci)
+>>>>>  		   u16_get_bits(ab_pci->link_ctl, PCI_EXP_LNKCTL_ASPM_L1));
+>>>>>  
+>>>>>  	/* disable L0s and L1 */
+>>>>> -	pcie_capability_clear_word(ab_pci->pdev, PCI_EXP_LNKCTL,
+>>>>> -				   PCI_EXP_LNKCTL_ASPMC);
+>>>>> +	pci_disable_link_state(ab_pci->pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
 >>>>
->>>> The problem with this, since it is a PCI resource, the PCI sysfs
->>>> reasonably enforces:
->>>> - no caching when mapped via "resourceN" (PTE::PCD on x86) or
->>>> - write-through when mapped via "resourceN_wc" (PTE::PWT on x86).
+>>>> Not always, but sometimes seems the 'disable' does not work:
 >>>>
->>>> As the result, the host writes are seen by the guest immediately
->>>> (as the region is just a mapped file) but it takes quite some time for
->>>> the host to see non-cached guest writes.
+>>>> [  279.920507] ath12k_pci_power_up 1475: link_ctl 0x43 //before disable
+>>>> [  279.920539] ath12k_pci_power_up 1482: link_ctl 0x43 //after disable
 >>>>
->>>> Add a quirk to always map ivshmem's BAR2 as cacheable (==write-back) as
->>>> ivshmem is backed by RAM anyway.
->>>> (Re)use already defined but not used IORESOURCE_CACHEABLE flag.
 >>>>
+>>>>>  
+>>>>>  	set_bit(ATH12K_PCI_ASPM_RESTORE, &ab_pci->flags);
+>>>>>  }
+>>>>> @@ -958,10 +959,7 @@ static void ath12k_pci_aspm_restore(struct ath12k_pci *ab_pci)
+>>>>>  {
+>>>>>  	if (ab_pci->ab->hw_params->supports_aspm &&
+>>>>>  	    test_and_clear_bit(ATH12K_PCI_ASPM_RESTORE, &ab_pci->flags))
+>>>>> -		pcie_capability_clear_and_set_word(ab_pci->pdev, PCI_EXP_LNKCTL,
+>>>>> -						   PCI_EXP_LNKCTL_ASPMC,
+>>>>> -						   ab_pci->link_ctl &
+>>>>> -						   PCI_EXP_LNKCTL_ASPMC);
+>>>>> +		pci_enable_link_state(ab_pci->pdev, ath_pci_aspm_state(ab_pci->link_ctl));
+>>>>
+>>>> always, the 'enable' is not working:
+>>>>
+>>>> [  280.561762] ath12k_pci_start 1180: link_ctl 0x43 //before restore
+>>>> [  280.561809] ath12k_pci_start 1185: link_ctl 0x42 //after restore
+>>>>
+>>>
+>>> Interesting! I applied your diff and I never see this issue so far (across 10+
+>>> reboots):
+>>
+>> I was not testing reboot. Here is what I am doing:
+>>
+>> step1: rmmod ath12k
+>> step2: force LinkCtrl using setpci (make sure it is 0x43, which seems more likely to see
+>> the issue)
+>>
+>> 	sudo setpci -s 02:00.0 0x80.B=0x43
+>>
+>> step3: insmod ath12k and check linkctrl
+>>
 > 
-> It just makes me nervous to change the sematics of the sysfs attribute, even if
-> the user knows what it is expecting.
+> So I did the same and got:
+> 
+> [ 3283.363569] ath12k_pci_power_up 1475: link_ctl 0x43
+> [ 3283.363769] ath12k_pci_power_up 1480: link_ctl 0x40
+> [ 3284.007661] ath12k_pci_start 1180: link_ctl 0x40
+> [ 3284.007826] ath12k_pci_start 1185: link_ctl 0x42
+> 
+> My host machine is Qcom based Thinkpad T14s and it doesn't support L0s. So
+> that's why the lnkctl value once enabled becomes 0x42. This is exactly the
+> reason why the drivers should not muck around LNKCTL register manually.
 
-On 1) Intel 2) without VFIO, the user already gets this semantic. Which seems... alright?
+Thanks, then the 0x43 -> 0x40 -> 0x40 -> 0x42 sequence should not be a concern. But still
+the random 0x43 -> 0x43 -> 0x43 -> 0x42 sequence seems problematic.
 
-> Now the "resourceN_wc" essentially becomes
-> "resourceN_wb", which goes against the rule of sysfs I'm afraid.
-
-What is this rule?
+How many iterations have you done with above steps? From my side it seems random so better
+to do some stress test.
 
 > 
->>>> This does not affect other ways of mapping a PCI BAR, a driver can use
->>>> memremap() for this functionality.
->>>>
->>>> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
->>>> ---
->>>>
->>>> What is this IORESOURCE_CACHEABLE for actually?
->>>>
->>>> Anyway, the alternatives are:
->>>>
->>>> 1. add a new node in sysfs - "resourceN_wb" - for mapping as writeback
->>>> but this requires changing existing (and likely old) userspace tools;
->>>>
+>>>
+>>> [    3.758239] ath12k_pci_power_up 1475: link_ctl 0x42
+>>> [    3.758315] ath12k_pci_power_up 1480: link_ctl 0x40
+>>> [    4.383900] ath12k_pci_start 1180: link_ctl 0x40
+>>> [    4.384026] ath12k_pci_start 1185: link_ctl 0x42
+>>>
+>>> Are you sure that you applied all the 6 patches in the series and not just the
+>>> ath patches? Because, the first 3 PCI core patches are required to make the API
+>>> work as intended.
+>>
+>> pretty sure all of them:
+>>
+>> $ git log --oneline
+>> 07387d1bc17f (HEAD -> VALIDATE-pci-enable-link-state-behavior) wifi: ath12k: dump linkctrl reg
+>> dbb3e5a7828b wifi: ath10k: Use pci_{enable/disable}_link_state() APIs to enable/disable
+>> ASPM states
+>> 392d7b3486b3 wifi: ath11k: Use pci_{enable/disable}_link_state() APIs to enable/disable
+>> ASPM states
+>> f2b0685c456d wifi: ath12k: Use pci_{enable/disable}_link_state() APIs to enable/disable
+>> ASPM states
+>> b1c8fad998f1 PCI/ASPM: Improve the kernel-doc for pci_disable_link_state*() APIs
+>> b8f5204ba4b0 PCI/ASPM: Transition the device to D0 (if required) inside
+>> pci_enable_link_state_locked() API
+>> 186b1bbd4c62 PCI/ASPM: Fix the behavior of pci_enable_link_state*() APIs
+>> 5a1ad8faaa16 (tag: ath-202507151704, origin/master, origin/main, origin/HEAD) Add
+>> localversion-wireless-testing-ath
+>>
 > 
-> I guess this would the cleanest approach. The old tools can continue to suffer
-> from the performance issue and the new tools can work more faster.
-
-Well yes but the only possible user of this is going to be ivshmem as every other cache coherent thing has a driver which can pick any sort of caching policy, and nobody will ever want a slow ivshmem because there will be no added benefit. I can send a patch if we get consensus on this though. Thanks,
-
-
--- 
-Alexey
+> Ok!
+> 
+>>
+>>>
+>>>>
+>>>>>  }
+>>>>>  
+>>>>>  static void ath12k_pci_cancel_workqueue(struct ath12k_base *ab)
+>>>>>
+>>>>
+>>>> In addition, frequently I can see below AER warnings:
+>>>>
+>>>> [  280.383143] aer_ratelimit: 30 callbacks suppressed
+>>>> [  280.383151] pcieport 0000:00:1c.0: AER: Correctable error message received from
+>>>> 0000:00:1c.0
+>>>> [  280.383177] pcieport 0000:00:1c.0: PCIe Bus Error: severity=Correctable, type=Data Link
+>>>> Layer, (Transmitter ID)
+>>>> [  280.383184] pcieport 0000:00:1c.0:   device [8086:7ab8] error status/mask=00001000/00002000
+>>>> [  280.383193] pcieport 0000:00:1c.0:    [12] Timeout
+>>>>
+>>>
+>>> I don't see any AER errors either.
+>>
+>> My WLAN chip is attached via a PCIe-to-M.2 adapter, maybe some hardware issue? However I
+>> never saw them until your changes applied.
+>>
+> 
+> I don't think it should matter. I have an Intel NUC lying around with QCA6390
+> attached via M.2. Let me test this change on that and report back the result.
+> 
+> - Mani
+> 
 
 
