@@ -1,227 +1,155 @@
-Return-Path: <linux-pci+bounces-32538-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32541-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A33EB0A863
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 18:26:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9431AB0A885
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 18:35:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 454EC5A4315
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 16:26:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F0531C46D3D
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 16:35:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CBB82E336F;
-	Fri, 18 Jul 2025 16:26:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 521BB2E6D06;
+	Fri, 18 Jul 2025 16:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VitDl0P2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K3D9Ba47"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA6C2DD608;
-	Fri, 18 Jul 2025 16:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA80F1DED53;
+	Fri, 18 Jul 2025 16:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752855964; cv=none; b=LDHFAmx5/40t8jBEjqZw0f+PPGUo3ffZ4zFsGTyP7hRwdFAxFVppeNKRdG0sKropwH1bq7RyPw6nsIEZYOcuU7t+V2iW8LV/ZhsD0HQ8y3o1ewP1AvRoqcXSFNButEzg2jzY9zCidrnAT/TwYjUc/GB9IQ/KpfgA4oMlKg6Q4Kw=
+	t=1752856531; cv=none; b=i9bnUxyo9GF5folLFEiCgd84Y0YAZJHTgggp/R13J29QrsSjSY+Gg3GVVhSMSb3+zbGtycp3ZTl1ci9ZrHzJXUmHCaAfI1BwlCIwTbGX7IkDTEEXJ0jKWfBf79M7ucWLSwR7PMsXymKt4XO9bSfggeXb70BGZuZVu9HJH30hxsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752855964; c=relaxed/simple;
-	bh=aXCC6a0BRcLONBCEG+qLtT+Rm3FPzL7V91riur1H9Xg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jX2s6ufkFVap81Rv3ncfsGC06R37DQsAL8qq745DY7wrwqfsdyGZ/2/iXBoOJKIMT7Sw0IhNno+NBXOxb0N8vka24hkhFChAD2vyomBTIViFJ2uz6JxQefYEdOP9VLp2rBKrQmdVa7FOVOur79O3Jn3ZCO5mfWGpiPXlj20RqFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VitDl0P2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 812F3C4CEEB;
-	Fri, 18 Jul 2025 16:26:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752855963;
-	bh=aXCC6a0BRcLONBCEG+qLtT+Rm3FPzL7V91riur1H9Xg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VitDl0P293UBhnBWTfwW9kVJK0g1L/RqqX2mGlwmW2JmETRPxtereKE2Vuq0LK+EG
-	 bf8x/QDXwtgdesGEGkf9l3+tOv/u5eMPMLfDd5Jm8tmNgi/l9dkuuL+h79ov7lthlp
-	 UFI2NSU7GD4fAKI/DAVKgV5+ZvEGjKu37s3kDh3BO2tZWRiDjhL2lKGk1Q0vG+z9uf
-	 wI7zXsu3ola9AnO/2kZYI7KblB/WNrwX/y89x0GMfAWLCxdr3YZUcYLqkv2y4YdPhH
-	 a+Wk/8evsszEwS9hOiOwuRm74mqj4lvhO6udfWVIb4fa6/y07B1q7rkveAwQJ6a9dO
-	 Qcy/kMyM8zjbQ==
-Date: Fri, 18 Jul 2025 11:26:00 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Baochen Qiang <baochen.qiang@oss.qualcomm.com>,
-	manivannan.sadhasivam@oss.qualcomm.com,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ath12k@lists.infradead.org, ath11k@lists.infradead.org,
-	ath10k@lists.infradead.org, ilpo.jarvinen@linux.intel.com,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	Qiang Yu <qiang.yu@oss.qualcomm.com>
-Subject: Re: [PATCH 4/6] wifi: ath12k: Use pci_{enable/disable}_link_state()
- APIs to enable/disable ASPM states
-Message-ID: <20250718162600.GA2700538@bhelgaas>
+	s=arc-20240116; t=1752856531; c=relaxed/simple;
+	bh=UDmAfnjy8pkg9BvFAmQ9gslBsr+Ob5O2A4EwZnWz7Bg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XQKrDbA0V4OixlCmjlLCDodrkC68yes4a8mESkz6JaYyfoeXkf3KGPm5uBK3sS8EGmG1ok6OMfhry45G1Ba0c6lvED4Kfk51kD1LPfht3m5spcJDAz6NZJg1UUMTMFNJMb/fXrvhO2pdWGRbt7ObLHuR3tI804oo41JlYH9io8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K3D9Ba47; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2e9a38d2a3aso2125862fac.3;
+        Fri, 18 Jul 2025 09:35:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752856529; x=1753461329; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S5fMBTsrhrDDK6xtK7LtgX4Zw2zx9+Mn87A7RF2ITBk=;
+        b=K3D9Ba47ZcRHqFv5hoBf/PZyk2IqUflpJIzmbJtLXy7V86gDdLIigOoXdLcUL+S2kT
+         Sz0B7NEezbaMf9/+ax4rikbIAdyJagRutel0FSmH8g6hCA2lBDfjQlnjMMyyBB+ra2L4
+         2B8J5KOGz3QeYo29QxrBcZbTtAGDst9zT/gZ9XAwq/nYLUYzvIKYeqAFl1m4k1jp40V/
+         NRh78rxqo5hiZ7pHLjfors9yhUpf96qHuiwc8J00Iu70Ul4j+SXpMSo2pXuOJka259ZF
+         KNrEewVOXXBDCIiAJj0ibrczdIo1KajANAav6L5JEjtOS9gx6LJVqGxwkL9swRV9xXyk
+         vsCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752856529; x=1753461329;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S5fMBTsrhrDDK6xtK7LtgX4Zw2zx9+Mn87A7RF2ITBk=;
+        b=up4HuyILC9rmLB38TdVgmcZLs8xZ2OQbifCSxnmZlC6lLpGYTqEB7OmHmRU1+YYxwT
+         bva3jcgSXuHCS9b21Htu0XqPKaE4RAISnSPE12P+YHWSkZ2uWAszxUL6+EWtI6Xuhp5n
+         jXfEseS/V79eFQ28KuASuYkQyBkc1/84WwHEMO+jlWforcX+CKIOp+DUvfH+Im67QJfN
+         gDpFIKroRRNLEQylearjK5V5NpO2T59cqOdE8vr+/Pu0p4AE4kbnGjD8/Uv8sCJDTmKr
+         qmkkLDmUHLP6KToL4/HO1hkVXf1wn6tBe77PYFm12M36mF+xkosZRyOL7z0JIeiFD0z+
+         GZsA==
+X-Forwarded-Encrypted: i=1; AJvYcCUvKxHpA4/DEVkKkNb/thg5+B3UhpKx/p00OoZ7yr5kylldgrbDwd5v/QQkrbWvUawfOb653PGWXLx+@vger.kernel.org, AJvYcCWglKENiuUXuB/ziEcbhbPLKfxzNZ5SByaK7sIN/NwOXHzUZe20LEE1E92uY/71O+fJ2xll7T+HKCjXJwI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHXb1/X28fxaO+u/NxonvGBnKD4hQGW3rWaF0zaw6DCtldp828
+	9lHeM3xMyjmsb44EV14jhu0YhAd7k+VqHe2V6MR2BmVCNJyS26bbrYAA44a9c5sy4HdPXDYVx8S
+	ptemQUIy+Q1kKMPY1NXvlqDkSUwR9GZeP2w==
+X-Gm-Gg: ASbGnctBL1o2Han0w6gchtwbvoL+t8t7mZbdJCoL+Ij0AJdt7TJk3wau+g9uTxPo8sj
+	wBQgq3bdxQNb3dLvB5PO3Piw4CcbICBd2SVcyoLSrwwvvetSWj6Y8XPfzmn3eYSapocrtEShH6E
+	zIi+Qu7WlHyypt6IIfrB35laYPKdgRx3yq3YzEJtSAAA/PmJ3+V8Dr/FBS61sG4IZEODOWtfzIi
+	fxSobqLC5UaA1+x/Ie9KaA=
+X-Google-Smtp-Source: AGHT+IELLiAsxvKTUzSoPTZZRRusNn9I6JdMO0/hSrsDIrFm2f2dPHV082nEnE44/odp5xiA8nVTltUi6hVD+2JPvo8=
+X-Received: by 2002:ac8:5a91:0:b0:4ab:9551:476 with SMTP id
+ d75a77b69052e-4abbf5574d4mr7492541cf.53.1752856040946; Fri, 18 Jul 2025
+ 09:27:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <wkapzhyr6hzp5az4jae3y5c77c3fg4uwrmyyipbq4uosamcivq@z7nv6w7nbyrp>
+References: <20250717165056.562728-1-thepacketgeek@gmail.com>
+ <20250717165056.562728-2-thepacketgeek@gmail.com> <20250718113611.00003c78@huawei.com>
+ <20250718125935-75fa0343-af78-42be-bc3f-e8f806a4aee5@linutronix.de>
+In-Reply-To: <20250718125935-75fa0343-af78-42be-bc3f-e8f806a4aee5@linutronix.de>
+From: Matthew Wood <thepacketgeek@gmail.com>
+Date: Fri, 18 Jul 2025 09:27:10 -0700
+X-Gm-Features: Ac12FXzeo9T-VEnjAi37swPr2fGHGP7zpQWlL-WrRlJfLia2ykFnSljiRcOLxgI
+Message-ID: <CADvopvapHnuxztum4fPsZU5h3=977Y=h6xOVhyWfKU8tQ0wxeQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/1] PCI/sysfs: Expose PCIe device serial number
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Mario Limonciello <superm1@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 18, 2025 at 05:19:28PM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Jul 18, 2025 at 07:05:03PM GMT, Baochen Qiang wrote:
-> > On 7/18/2025 6:20 PM, Manivannan Sadhasivam wrote:
-> > > On Fri, Jul 18, 2025 at 01:27:27PM GMT, Manivannan Sadhasivam wrote:
-> > >> On Fri, Jul 18, 2025 at 10:05:02AM GMT, Baochen Qiang wrote:
-> > >>> On 7/17/2025 7:29 PM, Manivannan Sadhasivam wrote:
-> > >>>> On Thu, Jul 17, 2025 at 06:46:12PM GMT, Baochen Qiang wrote:
-> > >>>>> On 7/17/2025 6:31 PM, Manivannan Sadhasivam wrote:
-> > >>>>>> On Thu, Jul 17, 2025 at 05:24:13PM GMT, Baochen Qiang wrote:
-> > >>>>>>
-> > >>>>>> [...]
-> > >>>>>>
-> > >>>>>>>> @@ -16,6 +16,8 @@
-> > >>>>>>>>  #include "mhi.h"
-> > >>>>>>>>  #include "debug.h"
-> > >>>>>>>>  
-> > >>>>>>>> +#include "../ath.h"
-> > >>>>>>>> +
-> > >>>>>>>>  #define ATH12K_PCI_BAR_NUM		0
-> > >>>>>>>>  #define ATH12K_PCI_DMA_MASK		36
-> > >>>>>>>>  
-> > >>>>>>>> @@ -928,8 +930,7 @@ static void ath12k_pci_aspm_disable(struct ath12k_pci *ab_pci)
-> > >>>>>>>>  		   u16_get_bits(ab_pci->link_ctl, PCI_EXP_LNKCTL_ASPM_L1));
-> > >>>>>>>>  
-> > >>>>>>>>  	/* disable L0s and L1 */
-> > >>>>>>>> -	pcie_capability_clear_word(ab_pci->pdev, PCI_EXP_LNKCTL,
-> > >>>>>>>> -				   PCI_EXP_LNKCTL_ASPMC);
-> > >>>>>>>> +	pci_disable_link_state(ab_pci->pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
-> > >>>>>>>
-> > >>>>>>> Not always, but sometimes seems the 'disable' does not work:
-> > >>>>>>>
-> > >>>>>>> [  279.920507] ath12k_pci_power_up 1475: link_ctl 0x43 //before disable
-> > >>>>>>> [  279.920539] ath12k_pci_power_up 1482: link_ctl 0x43 //after disable
-> > >>>>>>>
-> > >>>>>>>
-> > >>>>>>>>  
-> > >>>>>>>>  	set_bit(ATH12K_PCI_ASPM_RESTORE, &ab_pci->flags);
-> > >>>>>>>>  }
-> > >>>>>>>> @@ -958,10 +959,7 @@ static void ath12k_pci_aspm_restore(struct ath12k_pci *ab_pci)
-> > >>>>>>>>  {
-> > >>>>>>>>  	if (ab_pci->ab->hw_params->supports_aspm &&
-> > >>>>>>>>  	    test_and_clear_bit(ATH12K_PCI_ASPM_RESTORE, &ab_pci->flags))
-> > >>>>>>>> -		pcie_capability_clear_and_set_word(ab_pci->pdev, PCI_EXP_LNKCTL,
-> > >>>>>>>> -						   PCI_EXP_LNKCTL_ASPMC,
-> > >>>>>>>> -						   ab_pci->link_ctl &
-> > >>>>>>>> -						   PCI_EXP_LNKCTL_ASPMC);
-> > >>>>>>>> +		pci_enable_link_state(ab_pci->pdev, ath_pci_aspm_state(ab_pci->link_ctl));
-> > >>>>>>>
-> > >>>>>>> always, the 'enable' is not working:
-> > >>>>>>>
-> > >>>>>>> [  280.561762] ath12k_pci_start 1180: link_ctl 0x43 //before restore
-> > >>>>>>> [  280.561809] ath12k_pci_start 1185: link_ctl 0x42 //after restore
-> > >>>>>>>
-> > >>>>>>
-> > >>>>>> Interesting! I applied your diff and I never see this issue so far (across 10+
-> > >>>>>> reboots):
-> > >>>>>
-> > >>>>> I was not testing reboot. Here is what I am doing:
-> > >>>>>
-> > >>>>> step1: rmmod ath12k
-> > >>>>> step2: force LinkCtrl using setpci (make sure it is 0x43, which seems more likely to see
-> > >>>>> the issue)
-> > >>>>>
-> > >>>>> 	sudo setpci -s 02:00.0 0x80.B=0x43
-> > >>>>>
-> > >>>>> step3: insmod ath12k and check linkctrl
-> > >>>>>
-> > >>>>
-> > >>>> So I did the same and got:
-> > >>>>
-> > >>>> [ 3283.363569] ath12k_pci_power_up 1475: link_ctl 0x43
-> > >>>> [ 3283.363769] ath12k_pci_power_up 1480: link_ctl 0x40
-> > >>>> [ 3284.007661] ath12k_pci_start 1180: link_ctl 0x40
-> > >>>> [ 3284.007826] ath12k_pci_start 1185: link_ctl 0x42
-> > >>>>
-> > >>>> My host machine is Qcom based Thinkpad T14s and it doesn't
-> > >>>> support L0s. So that's why the lnkctl value once enabled
-> > >>>> becomes 0x42. This is exactly the reason why the drivers
-> > >>>> should not muck around LNKCTL register manually.
-> > >>>
-> > >>> Thanks, then the 0x43 -> 0x40 -> 0x40 -> 0x42 sequence should
-> > >>> not be a concern. But still the random 0x43 -> 0x43 -> 0x43 ->
-> > >>> 0x42 sequence seems problematic.
-> > >>>
-> > >>> How many iterations have you done with above steps? From my
-> > >>> side it seems random so better to do some stress test.
-> > >>>
-> > >>
-> > >> So I ran the modprobe for about 50 times on the Intel NUC that
-> > >> has QCA6390, but didn't spot the disparity. This is the script
-> > >> I used:
-> > >>
-> > >> for i in {1..50} ;do echo "Loop $i"; sudo setpci -s 01:00.0 0x80.B=0x43;\
-> > >> sudo modprobe -r ath11k_pci; sleep 1; sudo modprobe ath11k_pci; sleep 1;done
-> > >>
-> > >> And I always got:
-> > >>
-> > >> [ 5862.388083] ath11k_pci_aspm_disable: 609 lnkctrl: 0x43
-> > >> [ 5862.388124] ath11k_pci_aspm_disable: 614 lnkctrl: 0x40
-> > >> [ 5862.876291] ath11k_pci_start: 880 lnkctrl: 0x40
-> > >> [ 5862.876346] ath11k_pci_start: 886 lnkctrl: 0x42
-> > >>
-> > >> Also no AER messages. TBH, I'm not sure how you were able to
-> > >> see the random issues with these APIs. That looks like a race,
-> > >> which is scary.
-> > >>
-> > >> I do not want to ignore your scenario, but would like to
-> > >> reproduce and get to the bottom of it.
-> > > 
-> > > I synced with Baochen internally and able to repro the issue.
-> > > Ths issue is due to hand modifying the LNKCTL register from
-> > > userspace. The PCI core maintains the ASPM state internally and
-> > > uses it to change the state when the
-> > > pci_{enable/disable}_link_state*() APIs are called.
-> > > 
-> > > So if the userspace or a client driver modifies the LNKCTL
-> > > register manually, it makes the PCI cached ASPM states invalid.
-> > > So while this series fixes the driver from doing that, nothing
-> > > prevents userspace from doing so using 'setpci' and other tools.
-> > > Userspace should only use sysfs attributes to change the state
-> > > and avoid modifying the PCI registers when the PCI core is
-> > > controlling the device.  So this is the reason behind the
-> > > errantic behavior of the API and it is not due to the issue with
-> > > the API or the PCI core.
-> > 
-> > IMO we can not rely on userspace doing what or not doing what, or
-> > on how it is doing, right? So can we fix PCI core to avoid this?
-> 
-> I'm not sure it is possible to *fix* the PCI core here. Since the
-> PCI core gives userspace access to the entire config space of the
-> device, the userspace reads/writes to any of the registers it want.
-> So unless the config space access if forbidden if a driver is bound
-> to the device, it is inevitable. And then there is also /dev/mem...
-> 
-> Interestingly, there is an API available for this purpose:
-> pci_request_config_region_exclusive(), but it is used only by the
-> AMD arch driver to prevent userspace from writing to the entire
-> config space of the device.
-> 
-> Maybe it makes sense to use something like this to prevent the
-> userspace access to the entire config space if the driver is bind to
-> the device.
+On Fri, Jul 18, 2025 at 4:02=E2=80=AFAM Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
+>
+> On Fri, Jul 18, 2025 at 11:36:11AM +0100, Jonathan Cameron wrote:
+> > On Thu, 17 Jul 2025 09:50:54 -0700
+> > Matthew Wood <thepacketgeek@gmail.com> wrote:
+>
+> (...)
+>
+> > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > > index 268c69daa4d5..bc0e0add15d1 100644
+> > > --- a/drivers/pci/pci-sysfs.c
+> > > +++ b/drivers/pci/pci-sysfs.c
+> > > @@ -239,6 +239,22 @@ static ssize_t current_link_width_show(struct de=
+vice *dev,
+> > >  }
+> > >  static DEVICE_ATTR_RO(current_link_width);
+> > >
+> > > +static ssize_t serial_number_show(struct device *dev,
+> > > +                                  struct device_attribute *attr, cha=
+r *buf)
+> > > +{
+> > > +   struct pci_dev *pci_dev =3D to_pci_dev(dev);
+> > > +   u64 dsn;
+> > > +
+> > > +   dsn =3D pci_get_dsn(pci_dev);
+> > > +   if (!dsn)
+> > > +           return -EIO;
+> > > +
+> > > +   return sysfs_emit(buf, "%02llx-%02llx-%02llx-%02llx-%02llx-%02llx=
+-%02llx-%02llx\n",
+> > > +           dsn >> 56, (dsn >> 48) & 0xff, (dsn >> 40) & 0xff, (dsn >=
+> 32) & 0xff,
+> > > +           (dsn >> 24) & 0xff, (dsn >> 16) & 0xff, (dsn >> 8) & 0xff=
+, dsn & 0xff);
+> >
+> > I wonder if doing the following i too esoteric. Eyeballing those shifts=
+ is painful.
+> >
+> >       u8 bytewise[8]; /* naming hard... */
+> >
+> >       put_unaligned_u64(dsn, bytewise);
+> >
+> >       return sysfs_emit(buf, "%02x-%02x-%02x-%02x-%02x-%02x-%02x-%02x\n=
+",
+> >               bytewise[0], bytewise[1], bytewise[2], bytewise[3],
+> >               bytewise[4], bytewise[5], bytewise[6], bytewise[7]);
+>
+> This looks endianess-unsafe.
+>
+> Maybe just do what some drivers are doing:
+>
+>         u8 bytes[8];
+>
+>         put_unaligned_be64(dsn, bytes);
+>
+>         return sysfs_emit(buf, "%8phD");
 
-I'm not really a fan of pci_request_config_region_exclusive() because
-it's such a singleton thing.  I don't like to be one of only a few
-users of an interface.
-
-Linux has a long tradition of allowing root users to shoot themselves
-in the foot, and setpci is very useful as a debugging tool.  Maybe
-tainting the kernel for config writes from userspace, and possibly
-even a WARN_ONCE() at the time, would be a compromise.
-
-Bjorn
+Thank you both for your continued review! That reads much nicer, I
+should've known to look at how others were doing this formatting. I'll
+have a new patch later today.
 
