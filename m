@@ -1,327 +1,257 @@
-Return-Path: <linux-pci+bounces-32525-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32526-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C10B6B0A157
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 12:57:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E137B0A159
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 12:57:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 63371188F205
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 10:57:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8FFB1188BC56
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 10:57:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91F1140BF5;
-	Fri, 18 Jul 2025 10:56:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB81F2BD00C;
+	Fri, 18 Jul 2025 10:57:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cuioUIHR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8irAvlZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08DE2BD030
-	for <linux-pci@vger.kernel.org>; Fri, 18 Jul 2025 10:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFC61FBC90;
+	Fri, 18 Jul 2025 10:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752836218; cv=none; b=WdUw+p/jQkBXm28m4ktFiM/fZBjM1EweGiRiMR3k6uz1r0jh73bt23roRHn8N2B4ukCFjiERyDSFQbNxN7u/n1Cm32LPnINGKNh3UTSqV8khCj5kSdzlNDc7B/WQKVnUrZ6E9AHTDpISvtYVs5guZhHK4pZhNyztDuSe1hzIA1E=
+	t=1752836240; cv=none; b=k/YkWPz292LMuggI+GX1nAOTru6OmQLc0hUXv8vM2WJpmYKP+8JC1oOUk5Hgi60TC4dmUE6Vz5TQDChMv2kj/1c6saSnmtd5DFPkSulX4OVs/ZgWUrnsgvOR1E/kqHeKneNCvHjBJjPlGodgxjChMinnWD93GHsckuUCq+thyXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752836218; c=relaxed/simple;
-	bh=PTIQ5mYIablmDBmZU9Mbf2o1+heL1zNQm/kwoUkW8oA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=TtbvSMbvXChfP7JbP8mhRWvD0q2A6EQLUHFILEw4xYJ59oFcqi8y/4C146EuGLBPpkZQuOOB9ZfX3q5bSKzSzMYRbVWo07RTLLjMn4Ypt3bGcAL4Z/ofIBljrPMEQpgvQCZ6bMX5lzW5818g871TOUvJnqpdvOuIpuIzpBT78IU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cuioUIHR; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752836216; x=1784372216;
-  h=date:from:to:cc:subject:message-id;
-  bh=PTIQ5mYIablmDBmZU9Mbf2o1+heL1zNQm/kwoUkW8oA=;
-  b=cuioUIHRAC5jsA2uZY4hnzbrZMCqJcvfrvjzudlhxRYZDHtr0CimqWQ3
-   zTxhdN8XexdUQmddvD3WvYCcN+uP2kiFezgSwYGRofxYWrEitu05eNXXC
-   lhLWKI7AM8aSUYwrbCukhZI0jrdzUDkfRvXRjGsA1uJ3LuJ1mXwhE9Oi9
-   qf1NPNKq12/f3xmMjXRPwJ5YQ35EVggTlQlqfIRWKV87DImRXK2Uw/hjs
-   KzeRn7kUEn48AOclsxIFoPG8cuMjHdHU64rOCyit8AnIxYGkK6o+wP/Yx
-   lmkbGDdGPmXUpDGirmUPgHN796nP3HOHA5vWovvS4rgA19gR0kus2l1Xv
-   A==;
-X-CSE-ConnectionGUID: /UAtKBKAQdqUMKvefys/IQ==
-X-CSE-MsgGUID: 3INOMTHbRjiE9Sd3d7KHZA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11495"; a="55092618"
-X-IronPort-AV: E=Sophos;i="6.16,321,1744095600"; 
-   d="scan'208";a="55092618"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2025 03:56:55 -0700
-X-CSE-ConnectionGUID: WkQnuSfiQz2jfhIo2lLRUw==
-X-CSE-MsgGUID: /o792+R7RaWQ2IP3SGsJWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,321,1744095600"; 
-   d="scan'208";a="162061835"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 18 Jul 2025 03:56:54 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ucilo-000EZh-1J;
-	Fri, 18 Jul 2025 10:56:52 +0000
-Date: Fri, 18 Jul 2025 18:56:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/xgene] BUILD SUCCESS
- 8db22d697c52e3959f02b9125175dd826608e7a0
-Message-ID: <202507181815.UvIThVvt-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1752836240; c=relaxed/simple;
+	bh=egDvUDaR9VMobj3jfwGG9Y6MP3GzIIQobcEHCHjRoKc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gIcn7ZtiS7uyEq6pX566SpldbGqmPthZEzBSf+7PAVJCjUoBTXHO9DnGPl+TNbVNv5DtXEPitm+PbOtDeZ+n1r6ujxzlVTocUF30TFnUHr68EIeKyuS0iEPKhmtAtV8uS/HMVdvMZGaJ1q5wGm/1yfwKptKMOpHg221B6zeHalo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j8irAvlZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89909C4CEEB;
+	Fri, 18 Jul 2025 10:57:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752836240;
+	bh=egDvUDaR9VMobj3jfwGG9Y6MP3GzIIQobcEHCHjRoKc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=j8irAvlZiYSO4cwJITR2b2jVJy7ab50Eti2L3b9ZTlfZx20T4QQAz8FWx/lL03g2I
+	 vxYdlYMcpFwRYO1bqmZRm0JRY2J67aqhDEjdFmUu2LYM2iPNlh2yAIi0r6kSxeUWmE
+	 s1I4/3ff7zpYI7MrNxNWhkoJgsqTHD1ZDOEZLy36P82yp2mbNNIYMun2/nXTjZ9iHn
+	 xFS5zo26AMHeJRB/erjdvpgI6p/1QYDHGRtLNO/16ixASKu/uNeEfo00+dBNiyiruX
+	 dJTRPZi5GxvYUJSKTVhQ+eZd2T61JZ3MeB8UkVGNz43pmz+kJcJaBKGWLHeGgPU9q4
+	 Fccis0Pcu4iZA==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, bhelgaas@google.com, aik@amd.com,
+	lukas@wunner.de,
+	Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Isaku Yamahata <isaku.yamahata@intel.com>,
+	John Allen <john.allen@amd.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Samuel Ortiz <sameo@rivosinc.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Xiaoyao Li <xiaoyao.li@intel.com>,
+	Xu Yi lun <yilun.xu@linux.intel.com>,
+	Yilun Xu <yilun.xu@intel.com>
+Subject: Re: [PATCH v4 00/10] PCI/TSM: Core infrastructure for PCI device
+ security (TDISP)
+In-Reply-To: <20250717183358.1332417-1-dan.j.williams@intel.com>
+References: <20250717183358.1332417-1-dan.j.williams@intel.com>
+Date: Fri, 18 Jul 2025 16:27:11 +0530
+Message-ID: <yq5ah5z922d4.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/xgene
-branch HEAD: 8db22d697c52e3959f02b9125175dd826608e7a0  cpu/hotplug: Remove unused cpuhp_state CPUHP_PCI_XGENE_DEAD
+Dan Williams <dan.j.williams@intel.com> writes:
 
-elapsed time: 1459m
+> Changes since v3 [1]:
+> - Move the TSM core out of the host/ subdirectory since it is shared
+>   with the guest (Aneesh)
+> - Support multiple simultaneous TSM providers (Jason, Alexey)
+> - Do not reuse the "connect" operation for both Link and Security state
+>   management (Aneesh, Alexey)
+> - Derive the pci_tsm instance type from details in the @pdev or @dsm
+>   properties (Aneesh)
+> - Delay TSM association until ->connect(), results in removing the need
+>   for the @state attribute
+> - Introduce reverse iterators for all PCI bus and function walking.
+> - Move all per-device context setup/teardown to
+>   pci_tsm_(constructor,destructor)
+> - Add pci_ide_stream_release() for scope-based cleanup of IDE setup
+> - Shorten the name of the "stream" sysfs link (Jonathan)
+> - misc fixups (Jonathan)
+> - Note creation of pci_host_bridge_type in changelog (Jonathan)
+> - Drop now unused PREP_PCI_IDE_SEL_ADDR1() and related macros (Jonathan)
+> - Open code PREP_PCI_IDE_SEL_RID_2 in its only caller (Jonathan)
+> - Clarify the specification Stream term from a Linux "stream" object
+>   (Jonathan)
+> - Convert samples/devsec/ to faux device (Jonathan)
+> - Drop Date: from ABI entries
+> - Add basic driver-api documentation to build kdoc
+> - Switch to ACQUIRE()
+> - Add an explicit 'disconnect' attribute
+> - Clarify the PCI_IDE_STREAM_MAX Kconfig help (Jonathan)
+> - Use unsigned variables from sel_ide_offset (Jonathan)
+>
+> [1]: http://lore.kernel.org/20250516054732.2055093-1-dan.j.williams@intel=
+.com
+>
+> This set is available at tsm.git#staging (rebasing branch) or
+> tsm.git#devsec-20250717 (immutable tag). It passes a basic that
+> exercises load/unload of the samples/devsec/ modules and
+> connect/disconnect of the emulated device.
+>
+> Status (complexity reductions):
+> -------------------------------
+>
+> Between the support for multiple TSMs, the split of "Link" and
+> "Security" operations and inferring the type of 'struct pci_tsm' context
+> from its properties, the implementation shed complexity.
+>
+> Now, ->probe() is only called in the sysfs::connect_store() path which
+> means that there is no need to track the PCI_TSM_INIT and
+> PCI_TSM_CONNECT states. Simply, when a Device Security Manager (DSM) is
+> connected, at that point all potential TDIs (assignable functions where
+> the DSM can manage its security state) are probed.
+>
+> Now, initial determination of when the "tsm/" sysfs group appears
+> follows typical expectations. If at least one TSM device has been
+> registered prior to a DSM device being scanned, its "tsm/" attribute
+> group will appear. No more need for a pci_tsm_init() call via
+> pci_init_capabilities().
+>
+> The pci_tsm_destroy() path is now simply arranging for
+> pci_tsm_disconnect() of all DSMs after all TDIs have gone through
+> ->remove() callback. This is accomplished with new "reverse" iterators
+> for all PCI bus walks.
+>
+> Next steps:
+> -----------
+> The campaign to graduate this out of tsm.git#staging and into mainline
+> starts in earnest when samples/devsec/ + 1 vendor implementation, or 2
+> vendor implementations can demonstrate the end-to-end flow (minus
+> attestation). That is the "consensus" event horizon where prior to that
+> it seems reasonable for impacted subsystem maintainers to opt-out of
+> reviewing all the fine details under debate. Suffice to say there are a
+> lot of fine details flying around.
+>
+> To that end I expect it would help to have a tracking document in
+> tsm.git#staging that catalogs the open debates and the current leanings
+> of the staging tree. That is next in the hopper.
+>
+> Original Cover letter:
+> ----------------------
+>
+> Trusted execution environment (TEE) Device Interface Security Protocol
+> (TDISP) is a chapter name in the PCI specification. It describes an
+> alphabet soup of mechanisms, SPDM, CMA, IDE, TSM/DSM, that system
+> software uses to establish trust in a device and assign it to a
+> confidential virtual machine (CVM). It is protocol for dynamically
+> extending the trusted computing boundary (TCB) of a CVM with a PCI
+> device interface that can issue DMA to CVM private memory.
+>
+> The acronym soup problem is enhanced by every major platform vendor
+> having distinct TEE Security Manager (TSM) API implementations /
+> capabilities, and to a lesser extent, every potential endpoint Device
+> Security Manager (DSM) having its own idiosyncratic behaviors around
+> TDISP state transitions.
+>
+> Despite all that opportunity for differentiation, there is a significant
+> portion of the implementation that is cross-vendor common. However, it
+> is difficult to develop, debate, test and settle all those pieces absent
+> a low level TSM driver implementation to pull it all together.
+>
+> The proposal, of which this set is the first phase, is incrementally
+> develop the shared infrastructure on top of a sample TSM driver
+> implementation to enable clean vendor agnostic discussions about the
+> commons. "samples/devsec/" is meant to be: just enough emulation to
+> exercise all the core infrastructure, a reference implementation, and a
+> simple unit test. The sample also enables coordination with the native
+> PCI device security effort [2].
+>
+> [2]: http://lore.kernel.org/cover.1719771133.git.lukas@wunner.de
+>
+> Dan Williams (10):
+>   coco/tsm: Introduce a core device for TEE Security Managers
+>   PCI/IDE: Enumerate Selective Stream IDE capabilities
+>   PCI: Introduce pci_walk_bus_reverse(), for_each_pci_dev_reverse()
+>   PCI/TSM: Authenticate devices via platform TSM
+>   samples/devsec: Introduce a PCI device-security bus + endpoint sample
+>   PCI: Add PCIe Device 3 Extended Capability enumeration
+>   PCI/IDE: Add IDE establishment helpers
+>   PCI/IDE: Report available IDE streams
+>   PCI/TSM: Report active IDE streams
+>   samples/devsec: Add sample IDE establishment
+>
+>  Documentation/ABI/testing/sysfs-bus-pci       |  51 ++
+>  Documentation/ABI/testing/sysfs-class-tsm     |  19 +
+>  .../ABI/testing/sysfs-devices-pci-host-bridge |  29 +
+>  Documentation/driver-api/pci/index.rst        |   1 +
+>  Documentation/driver-api/pci/tsm.rst          |  12 +
+>  MAINTAINERS                                   |   7 +-
+>  drivers/base/bus.c                            |  38 +
+>  drivers/pci/Kconfig                           |  28 +
+>  drivers/pci/Makefile                          |   2 +
+>  drivers/pci/bus.c                             |  37 +
+>  drivers/pci/ide.c                             | 578 ++++++++++++++
+>  drivers/pci/pci-sysfs.c                       |   4 +
+>  drivers/pci/pci.h                             |  17 +
+>  drivers/pci/probe.c                           |  25 +-
+>  drivers/pci/remove.c                          |   3 +
+>  drivers/pci/search.c                          |  63 +-
+>  drivers/pci/tsm.c                             | 554 ++++++++++++++
+>  drivers/virt/coco/Kconfig                     |   3 +
+>  drivers/virt/coco/Makefile                    |   2 +
+>  drivers/virt/coco/tsm-core.c                  | 198 +++++
+>  include/linux/device/bus.h                    |   3 +
+>  include/linux/pci-ide.h                       |  72 ++
+>  include/linux/pci-tsm.h                       | 158 ++++
+>  include/linux/pci.h                           |  36 +
+>  include/linux/tsm.h                           |  15 +
+>  include/uapi/linux/pci_regs.h                 |  89 +++
+>  samples/Kconfig                               |  16 +
+>  samples/Makefile                              |   1 +
+>  samples/devsec/Makefile                       |  10 +
+>  samples/devsec/bus.c                          | 711 ++++++++++++++++++
+>  samples/devsec/common.c                       |  26 +
+>  samples/devsec/devsec.h                       |  40 +
+>  samples/devsec/tsm.c                          | 241 ++++++
+>  33 files changed, 3078 insertions(+), 11 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-tsm
+>  create mode 100644 Documentation/driver-api/pci/tsm.rst
+>  create mode 100644 drivers/pci/ide.c
+>  create mode 100644 drivers/pci/tsm.c
+>  create mode 100644 drivers/virt/coco/tsm-core.c
+>  create mode 100644 include/linux/pci-ide.h
+>  create mode 100644 include/linux/pci-tsm.h
+>  create mode 100644 samples/devsec/Makefile
+>  create mode 100644 samples/devsec/bus.c
+>  create mode 100644 samples/devsec/common.c
+>  create mode 100644 samples/devsec/devsec.h
+>  create mode 100644 samples/devsec/tsm.c
+>
+>
+> base-commit: df877487cac3509cbae2625181e7ad6748afed24
 
-configs tested: 234
-configs skipped: 7
+This series currently doesn=E2=80=99t include the TDI bind equivalent.
+Incorporating some of the changes from patch [1] would help lay the
+groundwork for submitting the remaining POC patches.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Also, could you clarify the purpose of sec_probe and sec_remove? How are
+they being used?
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    clang-19
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    clang-19
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    clang-19
-arc                   randconfig-001-20250717    gcc-8.5.0
-arc                   randconfig-001-20250718    gcc-8.5.0
-arc                   randconfig-002-20250717    gcc-15.1.0
-arc                   randconfig-002-20250718    gcc-8.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-19
-arm                           h3600_defconfig    gcc-15.1.0
-arm                          ixp4xx_defconfig    gcc-15.1.0
-arm                            qcom_defconfig    clang-21
-arm                   randconfig-001-20250717    clang-21
-arm                   randconfig-001-20250718    gcc-8.5.0
-arm                   randconfig-002-20250717    gcc-8.5.0
-arm                   randconfig-002-20250718    gcc-8.5.0
-arm                   randconfig-003-20250717    gcc-8.5.0
-arm                   randconfig-003-20250718    gcc-8.5.0
-arm                   randconfig-004-20250717    clang-21
-arm                   randconfig-004-20250718    gcc-8.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    clang-19
-arm64                 randconfig-001-20250717    clang-18
-arm64                 randconfig-001-20250718    gcc-8.5.0
-arm64                 randconfig-002-20250717    clang-18
-arm64                 randconfig-002-20250718    gcc-8.5.0
-arm64                 randconfig-003-20250717    gcc-10.5.0
-arm64                 randconfig-003-20250718    gcc-8.5.0
-arm64                 randconfig-004-20250717    clang-21
-arm64                 randconfig-004-20250718    gcc-8.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    clang-19
-csky                  randconfig-001-20250717    gcc-15.1.0
-csky                  randconfig-001-20250718    gcc-15.1.0
-csky                  randconfig-002-20250717    gcc-12.4.0
-csky                  randconfig-002-20250718    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-19
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-19
-hexagon               randconfig-001-20250717    clang-20
-hexagon               randconfig-001-20250718    gcc-15.1.0
-hexagon               randconfig-002-20250717    clang-19
-hexagon               randconfig-002-20250718    gcc-15.1.0
-i386                             alldefconfig    clang-21
-i386                             allmodconfig    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    clang-20
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-20
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250717    gcc-12
-i386        buildonly-randconfig-001-20250718    gcc-12
-i386        buildonly-randconfig-002-20250717    gcc-12
-i386        buildonly-randconfig-002-20250718    gcc-12
-i386        buildonly-randconfig-003-20250717    clang-20
-i386        buildonly-randconfig-003-20250718    gcc-12
-i386        buildonly-randconfig-004-20250717    clang-20
-i386        buildonly-randconfig-004-20250718    gcc-12
-i386        buildonly-randconfig-005-20250717    clang-20
-i386        buildonly-randconfig-005-20250718    gcc-12
-i386        buildonly-randconfig-006-20250717    gcc-12
-i386        buildonly-randconfig-006-20250718    gcc-12
-i386                                defconfig    clang-20
-i386                  randconfig-001-20250718    gcc-12
-i386                  randconfig-002-20250718    gcc-12
-i386                  randconfig-003-20250718    gcc-12
-i386                  randconfig-004-20250718    gcc-12
-i386                  randconfig-005-20250718    gcc-12
-i386                  randconfig-006-20250718    gcc-12
-i386                  randconfig-007-20250718    gcc-12
-i386                  randconfig-011-20250718    clang-20
-i386                  randconfig-012-20250718    clang-20
-i386                  randconfig-013-20250718    clang-20
-i386                  randconfig-014-20250718    clang-20
-i386                  randconfig-015-20250718    clang-20
-i386                  randconfig-016-20250718    clang-20
-i386                  randconfig-017-20250718    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-21
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20250717    gcc-15.1.0
-loongarch             randconfig-001-20250718    gcc-15.1.0
-loongarch             randconfig-002-20250717    clang-21
-loongarch             randconfig-002-20250718    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    clang-19
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                          eyeq6_defconfig    clang-21
-nios2                             allnoconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-15.1.0
-nios2                               defconfig    gcc-14.2.0
-nios2                               defconfig    gcc-15.1.0
-nios2                 randconfig-001-20250717    gcc-8.5.0
-nios2                 randconfig-001-20250718    gcc-15.1.0
-nios2                 randconfig-002-20250717    gcc-9.3.0
-nios2                 randconfig-002-20250718    gcc-15.1.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250717    gcc-9.3.0
-parisc                randconfig-001-20250718    gcc-15.1.0
-parisc                randconfig-002-20250717    gcc-9.3.0
-parisc                randconfig-002-20250718    gcc-15.1.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-21
-powerpc                    gamecube_defconfig    clang-21
-powerpc                 mpc836x_rdk_defconfig    clang-21
-powerpc                      pcm030_defconfig    clang-21
-powerpc               randconfig-001-20250717    clang-21
-powerpc               randconfig-001-20250718    gcc-15.1.0
-powerpc               randconfig-002-20250717    gcc-13.4.0
-powerpc               randconfig-002-20250718    gcc-15.1.0
-powerpc               randconfig-003-20250717    clang-21
-powerpc               randconfig-003-20250718    gcc-15.1.0
-powerpc64             randconfig-001-20250717    clang-21
-powerpc64             randconfig-001-20250718    gcc-15.1.0
-powerpc64             randconfig-002-20250717    clang-18
-powerpc64             randconfig-002-20250718    gcc-15.1.0
-powerpc64             randconfig-003-20250717    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250717    gcc-14.3.0
-riscv                 randconfig-001-20250718    gcc-15.1.0
-riscv                 randconfig-002-20250717    clang-21
-riscv                 randconfig-002-20250718    gcc-15.1.0
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250717    gcc-8.5.0
-s390                  randconfig-001-20250718    gcc-15.1.0
-s390                  randconfig-002-20250717    gcc-9.3.0
-s390                  randconfig-002-20250718    gcc-15.1.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                         apsh4a3a_defconfig    clang-21
-sh                                  defconfig    gcc-12
-sh                    randconfig-001-20250717    gcc-14.3.0
-sh                    randconfig-001-20250718    gcc-15.1.0
-sh                    randconfig-002-20250717    gcc-9.3.0
-sh                    randconfig-002-20250718    gcc-15.1.0
-sh                          sdk7786_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250717    gcc-14.3.0
-sparc                 randconfig-001-20250718    gcc-15.1.0
-sparc                 randconfig-002-20250717    gcc-8.5.0
-sparc                 randconfig-002-20250718    gcc-15.1.0
-sparc                       sparc64_defconfig    gcc-15.1.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250717    gcc-12.4.0
-sparc64               randconfig-001-20250718    gcc-15.1.0
-sparc64               randconfig-002-20250717    clang-21
-sparc64               randconfig-002-20250718    gcc-15.1.0
-um                               alldefconfig    clang-21
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-12
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250717    gcc-12
-um                    randconfig-001-20250718    gcc-15.1.0
-um                    randconfig-002-20250717    gcc-12
-um                    randconfig-002-20250718    gcc-15.1.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250717    clang-20
-x86_64      buildonly-randconfig-001-20250718    clang-20
-x86_64      buildonly-randconfig-002-20250717    clang-20
-x86_64      buildonly-randconfig-002-20250718    clang-20
-x86_64      buildonly-randconfig-003-20250717    clang-20
-x86_64      buildonly-randconfig-003-20250718    clang-20
-x86_64      buildonly-randconfig-004-20250717    gcc-12
-x86_64      buildonly-randconfig-004-20250718    clang-20
-x86_64      buildonly-randconfig-005-20250717    gcc-12
-x86_64      buildonly-randconfig-005-20250718    clang-20
-x86_64      buildonly-randconfig-006-20250717    clang-20
-x86_64      buildonly-randconfig-006-20250718    clang-20
-x86_64                              defconfig    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20250718    clang-20
-x86_64                randconfig-002-20250718    clang-20
-x86_64                randconfig-003-20250718    clang-20
-x86_64                randconfig-004-20250718    clang-20
-x86_64                randconfig-005-20250718    clang-20
-x86_64                randconfig-006-20250718    clang-20
-x86_64                randconfig-007-20250718    clang-20
-x86_64                randconfig-008-20250718    clang-20
-x86_64                randconfig-071-20250718    clang-20
-x86_64                randconfig-072-20250718    clang-20
-x86_64                randconfig-073-20250718    clang-20
-x86_64                randconfig-074-20250718    clang-20
-x86_64                randconfig-075-20250718    clang-20
-x86_64                randconfig-076-20250718    clang-20
-x86_64                randconfig-077-20250718    clang-20
-x86_64                randconfig-078-20250718    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250717    gcc-13.4.0
-xtensa                randconfig-001-20250718    gcc-15.1.0
-xtensa                randconfig-002-20250717    gcc-9.3.0
-xtensa                randconfig-002-20250718    gcc-15.1.0
+[1] https://lore.kernel.org/all/20250516054732.2055093-13-dan.j.williams@in=
+tel.com
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-aneesh
 
