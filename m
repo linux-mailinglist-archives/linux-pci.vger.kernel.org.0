@@ -1,85 +1,202 @@
-Return-Path: <linux-pci+bounces-32519-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32520-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF07DB0A048
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 12:02:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3262B0A07A
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 12:20:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F1CD5A45BA
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 10:02:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 61DA11AA58C5
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Jul 2025 10:20:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55D9B29C339;
-	Fri, 18 Jul 2025 10:02:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AC3C2957A0;
+	Fri, 18 Jul 2025 10:20:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mY9wjtEG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iuSlBAGv"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6D41EEA55;
-	Fri, 18 Jul 2025 10:02:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0720E218EA8;
+	Fri, 18 Jul 2025 10:20:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752832956; cv=none; b=rJr4lJBu3WfrHLPnMN0OIrnE7aj3kYTC6g+vkVrfhjBvXukEHYWyYKdVz1fVJ2ncnRnLXMbUk2eH5rHbJ3qpqTblYPqWASh8RTmkfHFOs4YaJLpn0b3AQtt5AfSf7RZ0SIlXxJrzzlwZ+N6DgTzF1yRJksGZY90tP3xeknKcePM=
+	t=1752834015; cv=none; b=PJeEAlc/24auhBlWWVjQh4yyP9xvEV1plWNO8fLWaM3+9+Ia//Dz+X3BOrztGyE6bJruSP1zO3tY10TDfnJ23xaDwUS9gW6NGfCMif175AKXg5zUfDDGwBjqQS1nx3wWqKyWGwrPhmSl9XzbhAnP8VaQ7IZ5c8JaXQQVtvJ9iVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752832956; c=relaxed/simple;
-	bh=izVYd/HMFuUxuo/j8GTZPX0Fyh4bT8qBFKIOCQk8DJk=;
+	s=arc-20240116; t=1752834015; c=relaxed/simple;
+	bh=+5ibE7W/5saHgifi0etEPnKSgL+kf0dniPuKyO3xXDc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SHsCdv77s9KB0RfdmgoZyuRWqsQFngL5tNYrVPFNXoIz/b+ZGMXFT3vSqecbw0JgUZpEQvCjIqR6itvBGI+RQQpzOC5BPTsQgC+jdm67DY4tb4nUQSVg5+yzduQW6/EvzES+wvbdLUYHoL90Qz5rGwcpdCarJYc78gc04UGM1Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mY9wjtEG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AACD1C4CEF0;
-	Fri, 18 Jul 2025 10:02:35 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=FoKi4+zJ5UtY17F35MEh2OU5yWrqx3y9cra8bQODNhLIbrqwUUkD2IvibpOrF+L1+hTmeUy+LpzHrXkDEV1z9RtCpP+ugvh5jds/IoELm1zLc1d3hR3koC9ADuXC8AFYRn9W/WkbS0IZPjkWI9G/GRpb7koQyq0KjRQGrcFteCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iuSlBAGv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9827C4CEEB;
+	Fri, 18 Jul 2025 10:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752832955;
-	bh=izVYd/HMFuUxuo/j8GTZPX0Fyh4bT8qBFKIOCQk8DJk=;
+	s=k20201202; t=1752834014;
+	bh=+5ibE7W/5saHgifi0etEPnKSgL+kf0dniPuKyO3xXDc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mY9wjtEGcEzMQ9cN6ycT6j8D5qSq38VD0Kt4BmIJ7F860VNIuQBRrS2txenS6Hlpb
-	 iDO3hx23VVOZRGWp88iUyR7BzRiB7uW8xBTgizMDVr6gAh6ukqrMIXKm0jbAouHmky
-	 hMo0WPMwFfA8djZRXAAtnV4AvyP5AewHoGiOa3J5zdtIr/bjv9t5rm+1iICs1qdgzX
-	 IRMEro02V3lG7O3/MIrea35X4Olh08mn4f/C3DoG/4p5MZJiBDlpOrqFSnCikZ4ztw
-	 jbnqoshSQNFfO30hxnwZ9ckhij88vm5iYpKdS/udEjqb27l3Og24ALejkzYyMf5dGR
-	 cGqvZJXJ6owfA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uchv9-000000007sr-3Unq;
-	Fri, 18 Jul 2025 12:02:27 +0200
-Date: Fri, 18 Jul 2025 12:02:27 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
-	mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
-	kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
-	kw@linux.com, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-	qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com,
-	quic_vbadigan@quicinc.com,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v5 4/4] arm64: dts: qcom: sa8775p: add link_down reset
- for pcie
-Message-ID: <aHobs30ZI-I8xLAD@hovoldconsulting.com>
-References: <20250718081718.390790-1-ziyue.zhang@oss.qualcomm.com>
- <20250718081718.390790-5-ziyue.zhang@oss.qualcomm.com>
+	b=iuSlBAGv+ZcdD3mBcvVOK3pWxBQHS5Cf3X5tUUogmfSgNJPbcxpxwPTbALmSV5hzZ
+	 JKWjAkKaGm0nkRbz3yBvGd1aiVCmsawQkCOJ+mxCb81TSSP2WesMvpISYpv/nqs6l3
+	 yjOlzFXchTxybbRIkvE3tVlrWqfopsMvXyhyqqpWLn/5f6qBSThEGEjmXHfW/xTJ0+
+	 j/xPjyf/azbwtxaQBr6+2BxYR1MAFK2Us6QoB9+LQZKrUKJwmAhynws3owTORgr9MV
+	 Ejmff87hbc2Sc783ZqcHr7C1wjRjIeLIRvr3lIL5rla9Egp5MK9MpE1lcBSZj0VEss
+	 KWedwqYlyG7jQ==
+Date: Fri, 18 Jul 2025 15:50:02 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Baochen Qiang <baochen.qiang@oss.qualcomm.com>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, 
+	Jeff Johnson <jjohnson@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Nirmal Patel <nirmal.patel@linux.intel.com>, 
+	Jonathan Derrick <jonathan.derrick@linux.dev>, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ath12k@lists.infradead.org, ath11k@lists.infradead.org, ath10k@lists.infradead.org, 
+	Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com, linux-arm-msm@vger.kernel.org, 
+	linux-pci@vger.kernel.org, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Qiang Yu <qiang.yu@oss.qualcomm.com>
+Subject: Re: [PATCH 4/6] wifi: ath12k: Use pci_{enable/disable}_link_state()
+ APIs to enable/disable ASPM states
+Message-ID: <otdgyzdymraa3f33vyb445kmssi3mqf5z2mw7w5pib4q4sb7vz@qbrzvrojqji3>
+References: <20250716-ath-aspm-fix-v1-0-dd3e62c1b692@oss.qualcomm.com>
+ <20250716-ath-aspm-fix-v1-4-dd3e62c1b692@oss.qualcomm.com>
+ <38ace6a3-d594-4438-a193-cf730a7b87d6@oss.qualcomm.com>
+ <wyqtr3tz3k2zdf62kgtcepf3sedm7z7wacv27visl2xsrqspmq@wi4fgef2mn2m>
+ <03806d02-1cfc-4db2-8b63-c1e51f5456e2@oss.qualcomm.com>
+ <o2gqqty6lakc4iw7vems2dejh6prjyl746gnq4gny4sxdxl65v@zmqse3244afv>
+ <1db7c119-882f-4184-9ca4-9dbe5a49cb16@oss.qualcomm.com>
+ <gx5gruyhrhwhvwkiqlkp2bggqd4oqe4quvqiiphfzolhjtzun6@okogvabkqah3>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250718081718.390790-5-ziyue.zhang@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <gx5gruyhrhwhvwkiqlkp2bggqd4oqe4quvqiiphfzolhjtzun6@okogvabkqah3>
 
-On Fri, Jul 18, 2025 at 04:17:18PM +0800, Ziyue Zhang wrote:
-> SA8775p supports 'link_down' reset on hardware, so add it for both pcie0
-> and pcie1, which can provide a better user experience.
+On Fri, Jul 18, 2025 at 01:27:27PM GMT, Manivannan Sadhasivam wrote:
+> On Fri, Jul 18, 2025 at 10:05:02AM GMT, Baochen Qiang wrote:
+> > 
+> > 
+> > On 7/17/2025 7:29 PM, Manivannan Sadhasivam wrote:
+> > > On Thu, Jul 17, 2025 at 06:46:12PM GMT, Baochen Qiang wrote:
+> > >>
+> > >>
+> > >> On 7/17/2025 6:31 PM, Manivannan Sadhasivam wrote:
+> > >>> On Thu, Jul 17, 2025 at 05:24:13PM GMT, Baochen Qiang wrote:
+> > >>>
+> > >>> [...]
+> > >>>
+> > >>>>> @@ -16,6 +16,8 @@
+> > >>>>>  #include "mhi.h"
+> > >>>>>  #include "debug.h"
+> > >>>>>  
+> > >>>>> +#include "../ath.h"
+> > >>>>> +
+> > >>>>>  #define ATH12K_PCI_BAR_NUM		0
+> > >>>>>  #define ATH12K_PCI_DMA_MASK		36
+> > >>>>>  
+> > >>>>> @@ -928,8 +930,7 @@ static void ath12k_pci_aspm_disable(struct ath12k_pci *ab_pci)
+> > >>>>>  		   u16_get_bits(ab_pci->link_ctl, PCI_EXP_LNKCTL_ASPM_L1));
+> > >>>>>  
+> > >>>>>  	/* disable L0s and L1 */
+> > >>>>> -	pcie_capability_clear_word(ab_pci->pdev, PCI_EXP_LNKCTL,
+> > >>>>> -				   PCI_EXP_LNKCTL_ASPMC);
+> > >>>>> +	pci_disable_link_state(ab_pci->pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
+> > >>>>
+> > >>>> Not always, but sometimes seems the 'disable' does not work:
+> > >>>>
+> > >>>> [  279.920507] ath12k_pci_power_up 1475: link_ctl 0x43 //before disable
+> > >>>> [  279.920539] ath12k_pci_power_up 1482: link_ctl 0x43 //after disable
+> > >>>>
+> > >>>>
+> > >>>>>  
+> > >>>>>  	set_bit(ATH12K_PCI_ASPM_RESTORE, &ab_pci->flags);
+> > >>>>>  }
+> > >>>>> @@ -958,10 +959,7 @@ static void ath12k_pci_aspm_restore(struct ath12k_pci *ab_pci)
+> > >>>>>  {
+> > >>>>>  	if (ab_pci->ab->hw_params->supports_aspm &&
+> > >>>>>  	    test_and_clear_bit(ATH12K_PCI_ASPM_RESTORE, &ab_pci->flags))
+> > >>>>> -		pcie_capability_clear_and_set_word(ab_pci->pdev, PCI_EXP_LNKCTL,
+> > >>>>> -						   PCI_EXP_LNKCTL_ASPMC,
+> > >>>>> -						   ab_pci->link_ctl &
+> > >>>>> -						   PCI_EXP_LNKCTL_ASPMC);
+> > >>>>> +		pci_enable_link_state(ab_pci->pdev, ath_pci_aspm_state(ab_pci->link_ctl));
+> > >>>>
+> > >>>> always, the 'enable' is not working:
+> > >>>>
+> > >>>> [  280.561762] ath12k_pci_start 1180: link_ctl 0x43 //before restore
+> > >>>> [  280.561809] ath12k_pci_start 1185: link_ctl 0x42 //after restore
+> > >>>>
+> > >>>
+> > >>> Interesting! I applied your diff and I never see this issue so far (across 10+
+> > >>> reboots):
+> > >>
+> > >> I was not testing reboot. Here is what I am doing:
+> > >>
+> > >> step1: rmmod ath12k
+> > >> step2: force LinkCtrl using setpci (make sure it is 0x43, which seems more likely to see
+> > >> the issue)
+> > >>
+> > >> 	sudo setpci -s 02:00.0 0x80.B=0x43
+> > >>
+> > >> step3: insmod ath12k and check linkctrl
+> > >>
+> > > 
+> > > So I did the same and got:
+> > > 
+> > > [ 3283.363569] ath12k_pci_power_up 1475: link_ctl 0x43
+> > > [ 3283.363769] ath12k_pci_power_up 1480: link_ctl 0x40
+> > > [ 3284.007661] ath12k_pci_start 1180: link_ctl 0x40
+> > > [ 3284.007826] ath12k_pci_start 1185: link_ctl 0x42
+> > > 
+> > > My host machine is Qcom based Thinkpad T14s and it doesn't support L0s. So
+> > > that's why the lnkctl value once enabled becomes 0x42. This is exactly the
+> > > reason why the drivers should not muck around LNKCTL register manually.
+> > 
+> > Thanks, then the 0x43 -> 0x40 -> 0x40 -> 0x42 sequence should not be a concern. But still
+> > the random 0x43 -> 0x43 -> 0x43 -> 0x42 sequence seems problematic.
+> > 
+> > How many iterations have you done with above steps? From my side it seems random so better
+> > to do some stress test.
+> > 
 > 
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+> So I ran the modprobe for about 50 times on the Intel NUC that has QCA6390, but
+> didn't spot the disparity. This is the script I used:
+> 
+> for i in {1..50} ;do echo "Loop $i"; sudo setpci -s 01:00.0 0x80.B=0x43;\
+> sudo modprobe -r ath11k_pci; sleep 1; sudo modprobe ath11k_pci; sleep 1;done
+> 
+> And I always got:
+> 
+> [ 5862.388083] ath11k_pci_aspm_disable: 609 lnkctrl: 0x43
+> [ 5862.388124] ath11k_pci_aspm_disable: 614 lnkctrl: 0x40
+> [ 5862.876291] ath11k_pci_start: 880 lnkctrl: 0x40
+> [ 5862.876346] ath11k_pci_start: 886 lnkctrl: 0x42
+> 
+> Also no AER messages. TBH, I'm not sure how you were able to see the random
+> issues with these APIs. That looks like a race, which is scary.
+> 
+> I do not want to ignore your scenario, but would like to reproduce and get to
+> the bottom of it.
+> 
 
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+I synced with Baochen internally and able to repro the issue. Ths issue is due
+to hand modifying the LNKCTL register from userspace. The PCI core maintains
+the ASPM state internally and uses it to change the state when the
+pci_{enable/disable}_link_state*() APIs are called.
+
+So if the userspace or a client driver modifies the LNKCTL register manually, it
+makes the PCI cached ASPM states invalid. So while this series fixes the driver
+from doing that, nothing prevents userspace from doing so using 'setpci' and
+other tools. Userspace should only use sysfs attributes to change the state and
+avoid modifying the PCI registers when the PCI core is controlling the device.
+So this is the reason behind the errantic behavior of the API and it is not due
+to the issue with the API or the PCI core.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
