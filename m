@@ -1,123 +1,102 @@
-Return-Path: <linux-pci+bounces-32595-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32596-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97521B0B304
-	for <lists+linux-pci@lfdr.de>; Sun, 20 Jul 2025 02:46:52 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1A4FB0B324
+	for <lists+linux-pci@lfdr.de>; Sun, 20 Jul 2025 04:07:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9FADC189C3EE
-	for <lists+linux-pci@lfdr.de>; Sun, 20 Jul 2025 00:47:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E93097ABAC8
+	for <lists+linux-pci@lfdr.de>; Sun, 20 Jul 2025 02:05:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B07EF507;
-	Sun, 20 Jul 2025 00:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEDF614F9FB;
+	Sun, 20 Jul 2025 02:07:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="QJ/wvtJv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gj4EYbdL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D0E186A;
-	Sun, 20 Jul 2025 00:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752972406; cv=pass; b=pn8rsmt2CAn6LAJ1ryFIinssnIDesBQjF32oiLt3TmMSuShkoPm3lz0w9pOACh23uUeCZHOBEr201y1sZJ3yaXdBSQbxoohgozJ1/7HDuIASytePEYjnU/vy/YjLYTHwer69J55NWQI8kNkDzQmi7Cbdf0sZdRSsnyu9boiPGb0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752972406; c=relaxed/simple;
-	bh=RCMhaNF73IsXyuAJ+j6RrC60q8zTRTKwzopHxGIjgSY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=AA3dHaiTDyFDDol9nMZCGodiBpDA02Phv25KZ5/yg1XOiN3xvuWhm1Ka48d8qeR5mPzEA6zhu+E3xYBZVwRE3ebTBTbyhyqwmWjTlaMBn6rovPlsnDMce+2TeR4WLFFqQbYKtgLxWsM6h0aiaInVdx1F4ebZGGxEgJxllYO0efM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=QJ/wvtJv; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1752972362; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=g4COvUywzMSeRRyXvcFAnvKY3+hu+MDC6ae9mXd6c8fPl+us9VrDamaq6sC8XHEtJFsBmoY1Hzv4vZBMnc1gfarvsGsgU0DwXAmxSXJt/ijU+z92vQP1uoPNslX2Be7tyu1hatdu8+uzihvTEaOGqh3cOUDLglvij7zquiAubnw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1752972362; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=lMTx2r8Z+X9Aqblv0RaFBmOLKDhzz5NGNxEUj/Eml3Y=; 
-	b=h0bx7tYIXnVtHnMSs3vJSBueufe2O9QqnFm6QJL5Oa1bQ2hvOOB2vBHzAaCL8zkK83ED0jS9MkmmPfWWy9iF94RKpRFNU4NtxesuqJHBMARoDn8ByM2Bb994TSkLEPwO3mBbt6uZjT8kOCcKCVj6iHw6Z9GkjdsIw71aW/eSuwI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752972362;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=lMTx2r8Z+X9Aqblv0RaFBmOLKDhzz5NGNxEUj/Eml3Y=;
-	b=QJ/wvtJvq6UH1xOGLLwv+6div3lICXpcQn2gmnJ7CBkmvUrxhOWRmfmMQmgQIjg2
-	oFdO47uul6gfLZ3qQFCabDVEkJDj11+fwuoPTjxB8G0o4a/2S0mvmlL6ZzRERSEkfxC
-	S7fKehhSYTczceOfdvhCn9e91fFXXklCvWKKyYbk=
-Received: by mx.zohomail.com with SMTPS id 1752972361237945.5987989359068;
-	Sat, 19 Jul 2025 17:46:01 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF381F92E;
+	Sun, 20 Jul 2025 02:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752977232; cv=none; b=qjtjWIrwJ5wglv6znR3OBHW+IWbaEs+ZmZAj+Ho52h1/LAhRzFhzfRmeGeqxDvfAjRitl+xGBsfWvzVAjyrfl5Km1P9DIWI5EyPmT/2GMP+J2f92pTSxtcXm8GgDSAmi5rydSskVia4JFufDI7n6mND26sWwjjBcJ82skKiuoGg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752977232; c=relaxed/simple;
+	bh=duEgnSqN7VZ25CtEj1NJ+N/NS03iMSFE94CX4KQIj90=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DrNkforNtBA/gODs3uXGNY1iFlUUnq+RgKahKihechlVtmzxb20d4KRQZCMjg7aAhDWwXIQ5ImxAN9T5QeGdtWvs3XMUB/g4K/FW3hmv2UTZeofqQQr5wp+xrEwroLD960+LCgQ2KqUEgfEq9IWy0u3buUBvalLs8Z/KD2cnbzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gj4EYbdL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D64EEC4CEE3;
+	Sun, 20 Jul 2025 02:07:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752977232;
+	bh=duEgnSqN7VZ25CtEj1NJ+N/NS03iMSFE94CX4KQIj90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gj4EYbdLYW+0r+owZYcELTUhXlaUjLr6Z+7bF3/8LIkSXQHLgGU86NwXD8JxhvHjF
+	 iyEhoMfCa1PRRXRY3VkvEwZaVk7Q8UXalKZQGaQdQwQc8r2AFfOwyduSTA7rpU3zl7
+	 qkI8Mju7wlzV46xYJTMA5gSYgo+GFCzZcIVaiZ/hxuzl/r3F3Dw9nMycQGRt5to/Gw
+	 bYsvIsY9wRnNpqoxYTu7slDPax6L21oPIfMgZslKdhRJoSw0w5D3mtv0DCcwQRGJgz
+	 FNjm0kuUgeUswCmHXRnUCvfTnsB9zoUJgfnclaJwEGsoIwut/2Ld3kjbSA3J+YsCvb
+	 SyaEvYjC0bhFA==
+Date: Sat, 19 Jul 2025 21:07:11 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+Cc: linux-phy@lists.infradead.org, jingoohan1@gmail.com,
+	qiang.yu@oss.qualcomm.com, johan+linaro@kernel.org,
+	quic_vbadigan@quicinc.com, krzk+dt@kernel.org, bhelgaas@google.com,
+	linux-arm-msm@vger.kernel.org, quic_krichai@quicinc.com,
+	kishon@kernel.org, andersson@kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	kwilczynski@kernel.org, lpieralisi@kernel.org, mani@kernel.org,
+	neil.armstrong@linaro.org, conor+dt@kernel.org, kw@linux.com,
+	konradybcio@kernel.org, vkoul@kernel.org,
+	devicetree@vger.kernel.org, abel.vesa@linaro.org
+Subject: Re: [PATCH v5 1/4] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
+ Update pcie phy bindings
+Message-ID: <175297718511.927073.3298628726286160154.robh@kernel.org>
+References: <20250718081718.390790-1-ziyue.zhang@oss.qualcomm.com>
+ <20250718081718.390790-2-ziyue.zhang@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v6 3/6] rust: irq: add support for non-threaded IRQs and
- handlers
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <ce656239-08a1-49e8-86b1-b33d0cdfbcd3@gmail.com>
-Date: Sat, 19 Jul 2025 21:45:43 -0300
-Cc: Danilo Krummrich <dakr@kernel.org>,
- Benno Lossin <lossin@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- linux-pci@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E1C5BFA7-9B72-4277-A7E9-BC6F19110AB7@collabora.com>
-References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com>
- <20250703-topics-tyr-request_irq-v6-3-74103bdc7c52@collabora.com>
- <DBAE5TCBT8F8.25XWHTO92R9V4@kernel.org>
- <DAD3292B-2DBF-442A-8B60-A999AE0F6511@collabora.com>
- <DBAURC9BEFI0.1LQCRIDT6ZBV9@kernel.org>
- <DBAVXQTMR38Z.2782EGR84L7OP@kernel.org>
- <DBAWQG1PX5TO.6I2ARFGLX88N@kernel.org> <DBAX59YKO0FV.ANLOWRHDDS92@kernel.org>
- <DBAXP68U809C.2G8DMB52M3UZ7@kernel.org>
- <C4A101A7-282D-4A67-A966-CF39850952EA@collabora.com>
- <DBAZRNHGIGL8.3L2NGPCVXLI25@kernel.org>
- <DBAZXDRPYWPC.14RI91KYE16RM@kernel.org>
- <18B23FD3-56E9-4531-A50C-F204616E7D17@collabora.com>
- <DBB0NXU86D6G.2M3WZMS2NUV10@kernel.org>
- <1F0227F0-8554-4DD2-BADE-0184D0824AF8@collabora.com>
- <AACC99CD-086A-45AB-929C-7F25AABF8B6E@collabora.com>
- <ce656239-08a1-49e8-86b1-b33d0cdfbcd3@gmail.com>
-To: Dirk Behme <dirk.behme@gmail.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250718081718.390790-2-ziyue.zhang@oss.qualcomm.com>
 
-Hi Dirk,
 
->=20
-> fn handle(&self) -> IrqReturn {
->  let dev =3D ??;
->  let io =3D self.iomem.access(dev);
->=20
-> Thanks,
->=20
-> Dirk
+On Fri, 18 Jul 2025 16:17:15 +0800, Ziyue Zhang wrote:
+> The gcc_aux_clk is required by the PCIe controller but not by the PCIe
+> PHY. In PCIe PHY, the source of aux_clk used in low-power mode should
+> be gcc_phy_aux_clk. Hence, remove gcc_aux_clk and replace it with
+> gcc_phy_aux_clk.
+> 
+> Removed the phy_aux clock from the PCIe PHY binding as it is no longer
+> used by any instance.
+> 
+> Fixes: fd2d4e4c1986 ("dt-bindings: phy: qcom,qmp: Add sa8775p QMP PCIe PHY")
+> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+> ---
+>  .../devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml   | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-FYI, until there is a patch to provide Device<Bound> as an argument, you =
-can
-resort to the slower try_access().
 
-=E2=80=94 Daniel=
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
+
+If a tag was not added on purpose, please state why and what changed.
+
+Missing tags:
+
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+
+
+
 
