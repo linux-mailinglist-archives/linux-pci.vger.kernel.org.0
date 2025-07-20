@@ -1,73 +1,64 @@
-Return-Path: <linux-pci+bounces-32603-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32604-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19F70B0B87D
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 00:22:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13547B0B94C
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 01:43:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1A4018983C5
-	for <lists+linux-pci@lfdr.de>; Sun, 20 Jul 2025 22:22:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D716218982A0
+	for <lists+linux-pci@lfdr.de>; Sun, 20 Jul 2025 23:43:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CADEF1EF397;
-	Sun, 20 Jul 2025 22:22:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E12F1E1DE5;
+	Sun, 20 Jul 2025 23:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4vBWyG5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABLkidrE"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9650A1C32;
-	Sun, 20 Jul 2025 22:22:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E189984D02;
+	Sun, 20 Jul 2025 23:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753050151; cv=none; b=jMAmEdRm1Ru385DY0ZY0nOnhSvbrgxZ+RPiWaYPF3ClbmwRu9y2KQM9sKUt1eDcpeOSKLNqGtK+H0zmNLsOubOLTjGuHAkkjICigL8udAEulmwH1hRclzwU3uBzBSjwvIswwFwoD00sbuoX20QTGaeQSdLHP12LfZc+BHHj3va8=
+	t=1753054985; cv=none; b=hFIHe/yx8gaKgCKJygp9jJvmsBQ3x3WfM88KV+iDhhWxKfFJT/G5ktlBoyJOsgI9cNF2V4B4XxDTtHrR3uvftTr39LWHuwf3bOQnEyv2ELD2FKpYYqNB0mex9NZU5gaNYtLb3gx3qPxDlYsZOJ6NzjfIZZn3shPMJ6G0hIQqK5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753050151; c=relaxed/simple;
-	bh=bM5zL7tOJogVkxC/dBJDYgKh+3nVk9kFwkbmG9c9IYc=;
+	s=arc-20240116; t=1753054985; c=relaxed/simple;
+	bh=hi1P1Md3lx0mFctv/IZEeLMfN66v8OwqSqJnjru2AKs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SNzkoRG8PHvLDkCZpzjz/6QCV+46cwLsBEd8HMYmdmzSXhrRgMQ7vBiivJVYttBbWXRIcfVhiqqqFfyYXf0qDg0iEtLtSuXkIgiTUBFoaaJVrZ3x2cZWId4YCD7imZlMeSSeeA+d+TwFy8Uk2EQimrS7j/MVGyBsWWXiU9zOty0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4vBWyG5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49802C4CEE7;
-	Sun, 20 Jul 2025 22:22:31 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=g9XHC58MZk2yGrOuKGsPBJYejfMc42nkwcYT0kNjEA9HvHnqkPGkcn6/vK9MEh87eik47+LCfwnNIWOiuj80e+fQTCjovXdT0iya9BuvW9hEeqTmI4UgEQwqIeg4oZ431TKih2fuq+8eUuf/Kd+JVKuDr7CZK841KUXBNG2Xj7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABLkidrE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30910C4CEF1;
+	Sun, 20 Jul 2025 23:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753050151;
-	bh=bM5zL7tOJogVkxC/dBJDYgKh+3nVk9kFwkbmG9c9IYc=;
+	s=k20201202; t=1753054984;
+	bh=hi1P1Md3lx0mFctv/IZEeLMfN66v8OwqSqJnjru2AKs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X4vBWyG5vYZwDD4v2i65ZI4jQq15qc+dO83q2BtBhpT8khyJea2edi80gvwCjdceK
-	 rVvzMuoo5dguYkK7l33e59cKcnmQnmwC3cLPs8NEx/EwhpPwlGjhlHU1f49uuSuaGw
-	 Y9zyAoOUeZ4oruAML2zbIcz1nQwCmW530rt0I/Y7bZkT3y6/I8Q4Gw8Ax7SzTf2nRD
-	 uoltJpkQZcGDywtPuKMPvKQZaryHCNXQNy1siQfPmiEypjDkTSFZna8idcQLfh64Wl
-	 w7th2aSsgrAX6dzEtrww2rquC1AaugyP6S2V6tHsuk5SPMlPY1TBdVwom3UQ67WxNi
-	 6p+5Yv/wbVEMA==
-Date: Sun, 20 Jul 2025 17:22:30 -0500
-From: Rob Herring <robh@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"joel@jms.id.au" <joel@jms.id.au>,
-	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-	BMC-SW <BMC-SW@aspeedtech.com>
-Subject: Re: [PATCH v2 06/10] ARM: dts: aspeed-g6: Add PCIe RC node
-Message-ID: <20250720222230.GA2842356-robh@kernel.org>
-References: <20250715034320.2553837-1-jacky_chou@aspeedtech.com>
- <20250715034320.2553837-7-jacky_chou@aspeedtech.com>
- <CAL_JsqJ4yeYGAyCwHi=4CBurxGOc5oAqTQqun+5+Ps4hxwDU9Q@mail.gmail.com>
- <SEYPR06MB5134EB5D018F8518E88495FF9D56A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+	b=ABLkidrEM2saNjFzmOPHi29nSFhi1ImiUstYIa9yWmskrhoktNS5WuZjis65jTXRz
+	 EKhBUHbQbM7wE+228YJdxf53icCDaPhE6RyY7JHHEWJ9u+BS1lwFX86/0myp3zyBqu
+	 Mt4GYUjy4msPoJe2Z9JFKjXlB3lSfPnG6CZOj8lIApsV9xKadTvLKiVtuo+wUfMXnx
+	 aWFRM71T9t7WhjFLb1Q4/RVPP9stBFqHPL4jiR69gVan7MbPsdz9THwJUtT995xlHB
+	 aff7lL8tlUBv0Xx4k8QZPGMSbwLtIkj2nRavbC14DeD4vBniYJfOL3yMCAeJOAhjsT
+	 EgYnWx+7oM20w==
+Date: Sun, 20 Jul 2025 18:43:03 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+Cc: conor+dt@kernel.org, quic_krichai@quicinc.com, vkoul@kernel.org,
+	bhelgaas@google.com, lpieralisi@kernel.org, krzk+dt@kernel.org,
+	jingoohan1@gmail.com, qiang.yu@oss.qualcomm.com,
+	abel.vesa@linaro.org, linux-arm-msm@vger.kernel.org, kw@linux.com,
+	neil.armstrong@linaro.org, mani@kernel.org,
+	devicetree@vger.kernel.org, johan+linaro@kernel.org,
+	andersson@kernel.org, linux-pci@vger.kernel.org,
+	kwilczynski@kernel.org, linux-kernel@vger.kernel.org,
+	quic_vbadigan@quicinc.com, kishon@kernel.org,
+	konradybcio@kernel.org, linux-phy@lists.infradead.org
+Subject: Re: [PATCH v5 2/4] dt-bindings: PCI: qcom,pcie-sa8775p: document
+ link_down reset
+Message-ID: <175305498292.3083407.12105009386525845667.robh@kernel.org>
+References: <20250718081718.390790-1-ziyue.zhang@oss.qualcomm.com>
+ <20250718081718.390790-3-ziyue.zhang@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,104 +67,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SEYPR06MB5134EB5D018F8518E88495FF9D56A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+In-Reply-To: <20250718081718.390790-3-ziyue.zhang@oss.qualcomm.com>
 
-On Wed, Jul 16, 2025 at 03:51:11AM +0000, Jacky Chou wrote:
-> Hi Rob,
-> 
-> Thank you for your reply.
-> 
-> > >                                 quality = <100>;
-> > >                         };
-> > >
-> > > +                       pcie_phy1: syscon@1e6ed200 {
-> > > +                               compatible = "aspeed,pcie-phy",
-> > "syscon";
-> > > +                               reg = <0x1e6ed200 0x100>;
-> > 
-> > This looks like part of something else? It should be a child of that.
-> > 
-> > If this is the controls for the PCIe PHY, then use the PHY binding instead of your
-> > own custom phandle property.
-> > 
-> 
-> Our PCIe design has multiple functions. And the series of patches are submitted for
-> PCIe RC. The other PCIe functions also use this phy node.
-> I traced the PHY driver interface, it cannot meet our usage.
 
-Why not?
-
-There is also no requirement that using the DT PHY binding means you 
-have to use the Linux PHY subsystem.
-
-> Therefore, the RC driver uses the phandle property to configure.
-> And this syscon also is used by the other PCIe functions.
-
-Like what?
-
-> > > +                       };
-> > > +
-> > > +                       pcie_cfg: syscon@1e770000 {
-> > > +                               compatible = "aspeed,pcie-cfg",
-> > "syscon";
-> > > +                               reg = <0x1e770000 0x80>;
-> > 
-> > Looks like this is really part of the PCIe block as a h/w block isn't going to start
-> > at offset 0xc0.
-> > 
-> > 
+On Fri, 18 Jul 2025 16:17:16 +0800, Ziyue Zhang wrote:
+> Each PCIe controller on SA8775P includes a 'link_down' reset line in
+> hardware. This patch documents the reset in the device tree binding.
 > 
-> Actually.
-> There are two PCIe bus in AST2600
-> We use the other one PCIe to EP mode, here I call PCIe A.
-> I call the pcie0 node as PCIe B.
-> We do not provide PCIe A to RC mode for usage, just EP mode.
-> But, when PCIe A is used as RC, it reg mapping is starting from 0x1e770080.
-> I list there mapping.
+> The 'link_down' reset is used to forcefully bring down the PCIe link
+> layer, which is useful in scenarios such as link recovery after errors,
+> power management transitions, and hotplug events. Including this reset
+> line improves robustness and provides finer control over PCIe controller
+> behavior.
 > 
-> 0x1e77_0000 ~ 0x1e77_007f : common usage
-> 0x1e77_0080 ~ 0x1e77_00bf : PCIE A
-> 0x1e77_00C0 ~ 0x1e77_00ff : PCIE B
+> As the 'link_down' reset was omitted in the initial submission, it is now
+> being documented. While this reset is not required for most of the block's
+> basic functionality, and device trees lacking it will continue to function
+> correctly in most cases, it is necessary to ensure maximum robustness when
+> shutting down or recovering the PCIe core. Therefore, its inclusion is
+> justified despite the minor ABI change.
 > 
-> So, it is why we create one node to describe common usage for PCIe A and B.
-> And, why the pcie0 reg mapping is starting from 0x1e77_00c0.
+> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml    | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
 
-In that case, maybe you need a common parent node with 2 child nodes for 
-each bus.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-Rob
-
-> 
-> > > +                       };
-> > > +
-> > > +                       pcie0: pcie@1e7700c0 {
-> > > +                               compatible = "aspeed,ast2600-pcie";
-> > > +                               device_type = "pci";
-> > > +                               reg = <0x1e7700c0 0x40>;
-> > > +                               linux,pci-domain = <0>;
-> > 
-> > No need for this. You only have 1 PCI host.
-> > 
-> 
-> Agreed.
-> We only provide one RC.
-> 
-> > > +                               #address-cells = <3>;
-> > > +                               #size-cells = <2>;
-> > > +                               interrupts = <GIC_SPI 168
-> > IRQ_TYPE_LEVEL_HIGH>;
-> > > +                               bus-range = <0x80 0xff>;
-> > 
-> > Does this h/w not support bus 0-0x7f for some reason?
-> > 
-> 
-> List:
-> PCIE A: 0-0x7f
-> PCIE B: 0x80-0xff
-> 
-> It is our design on PCIe B to use bus-range 0x80-0xff.
-
-That's a policy or h/w limitation?
-
-Rob
 
