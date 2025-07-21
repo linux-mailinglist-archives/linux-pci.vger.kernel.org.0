@@ -1,54 +1,71 @@
-Return-Path: <linux-pci+bounces-32606-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32607-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84ADDB0BAD8
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 04:38:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2C8EB0BB12
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 05:00:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99FAE3B44AD
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 02:37:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FCF33B33DE
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 03:00:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96A0D84D13;
-	Mon, 21 Jul 2025 02:38:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23BCE1DFD96;
+	Mon, 21 Jul 2025 03:00:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VcseaKMx"
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b="CSEMp9A3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta-64-227.siemens.flowmailer.net (mta-64-227.siemens.flowmailer.net [185.136.64.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709232E36EE
-	for <linux-pci@vger.kernel.org>; Mon, 21 Jul 2025 02:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DEB1E515
+	for <linux-pci@vger.kernel.org>; Mon, 21 Jul 2025 03:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753065504; cv=none; b=dHGjNpGwGSHnhklk1KhnMgK2rFJ+qL/0RMNjd2JBoQ8VQDW7AVvWCu5KZUKVj7cHm4JlgmaRUp5Rbt7hIQr1+195cLlN/8K8MqI+N83xf7iYQZzyPY2qoUjeDar8bnGboHZjc2sSVGRRDnx1s6gp/gRGHu1JQqFTokyBpjk3v5Q=
+	t=1753066832; cv=none; b=cwfx3UjCKbYD+k03eAx/zOpR33NukTJuWaERz4WW5DjyKfz1AdIWg3bQq2beiolVpLH1wfZyBzgUCXPVZ3r/AsKg0dHQeoI2ufLiDEQsIPOphnzyWAAired6xYleJnoveSlRwOsn6fe/YqGOzfTsgyS/1H2m7o1DNTluknoeKrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753065504; c=relaxed/simple;
-	bh=YTCU5uiigh3wPKvV/cAgXPwImMQKHvzGt6U3g7uHYF0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=itVvQ5Eetv+kilqjEMQAte6WviKdpGuSoXnXJWUQAY6IC6bo2CGgyydGkLWtudFAej44RYw6eug77/545IntWdTnTSC0BRcQ5Bz+Z8Jy/bGgPY70TPtlZ5LbC3gR1MqBnbUnLQvQp85LeO/gVx75uPmowzcJRT5BSrTPimdNEXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VcseaKMx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7967AC4CEE7;
-	Mon, 21 Jul 2025 02:38:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753065504;
-	bh=YTCU5uiigh3wPKvV/cAgXPwImMQKHvzGt6U3g7uHYF0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VcseaKMxT6RJsU7SoYqOj2Z8T0gKZzsSF9k9YkcIiXl6gQpenu/g/Ylntuwh19hvi
-	 tBy4NdlPbtSMg9dLXu9HbWXZKfRyvJnedHGRo2rJL2J5ADOUz3MrDKyoRhPKREwvRL
-	 F3iS+fwz/DX8C7PIf3NEEeGtxUOjkzCp0H12vMDhwbcZGyYYrFRYpHPOQtixfp74eo
-	 P+0Ns0MlG8udVBpZ3CUf/ZsSRjugh//ecRzpnMFtUVt4ZKmzysz7r/oIHiqGwtcKTK
-	 y5TSeoXa+Nn1ljXXSbh5RSZ7bxvNg9+GYJf4z84TSUtUJE9d1n+jbTHMkfw7NkzUi+
-	 BNK6GCDZbUvZw==
-From: Mario Limonciello <superm1@kernel.org>
-To: mario.limonciello@amd.com,
-	bhelgaas@google.com
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v3] PCI: Adjust visibility of boot_display attribute instead of creation
-Date: Sun, 20 Jul 2025 21:37:58 -0500
-Message-ID: <20250721023818.2410062-1-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1753066832; c=relaxed/simple;
+	bh=TgvI4pH0zzQKQDw/OkID03reNaqXJ6HAsqPZ99ss/DI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VIjessFa8B02IGES0LdUC8a0mIo/7MFSc6lSumYr/4HW+qa4GAue+8/vT2zzOtdPtebck2vae9wx/JBAvA6zcK8PmspmASkmZ0pi0OXaaEY5at5iTlHhbqTVMuvMe5rWhlRoIZpNBJqcnwuNqpMJsNMHr4tkKioL1lHY+ARJJS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b=CSEMp9A3; arc=none smtp.client-ip=185.136.64.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+Received: by mta-64-227.siemens.flowmailer.net with ESMTPSA id 202507210300200a0f742348b8204d60
+        for <linux-pci@vger.kernel.org>;
+        Mon, 21 Jul 2025 05:00:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=huaqian.li@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=sPiWAawzP1fMXUjI4LwXIY9bk5kszfAYp+F30dzPrLQ=;
+ b=CSEMp9A3KoTiv8kuiTZ0nmXH1sbnn2ayhZPI3gMlnRi35jicdY+c/ay++aVfpZah6Bwd0F
+ o2rVGQgZysw0S1Ihr1/5r81kdxyediLGgaMWQB1Yqy+JPPMrarhhRPGPQAR1eYqAd/XFaWMm
+ 9bhR7YOx3OUtdsbtuW9tr7gJYMptZRd7GPrJ9TQmtP51aivDMXG+Sw2LJHLWnniqBqHa+WO0
+ KzaPMXoEJSQ48uN+3mvHhXLblmOeykQf7TaSfUXAPtDeo8Jcyjq+Jyp2v9sF/kc+BRlXbAo/
+ VtLq1MOqJHKQeaJNp4ce4DQXLnkL+p++c6Ab5idd3iJrypaAsU12T6eQ==;
+From: huaqian.li@siemens.com
+To: s-vadapalli@ti.com
+Cc: baocheng.su@siemens.com,
+	bhelgaas@google.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	diogo.ivo@siemens.com,
+	helgaas@kernel.org,
+	huaqian.li@siemens.com,
+	jan.kiszka@siemens.com,
+	kristo@kernel.org,
+	krzk+dt@kernel.org,
+	kw@linux.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org,
+	nm@ti.com,
+	robh@kernel.org,
+	ssantosh@kernel.org,
+	vigneshr@ti.com
+Subject: [PATCH v10 0/7] soc: ti: Add and use PVU on K3-AM65 for DMA isolation
+Date: Mon, 21 Jul 2025 10:59:38 +0800
+Message-Id: <20250721025945.204422-1-huaqian.li@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,141 +73,119 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-959203:519-21489:flowmailer
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+From: Li Hua Qian <huaqian.li@siemens.com>
 
-There is a desire to avoid creating new sysfs files late, so instead
-of dynamically deciding to create the boot_display attribute, make
-it static and use sysfs_update_group() to adjust visibility on the
-applicable devices.
+Changes in v10:
+ - Move restricted DMA initialization and cleanup to RC-specific code
+   only (patch 4) as it's only needed for RC mode, not EP mode
 
-This also fixes a compilation failure when compiled without
-CONFIG_VIDEO on sparc.
+Changes in v9:
+ - Update commit message (patch 4) to remove ambiguous extension claims
+   based on upstream feedback
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Closes: https://lore.kernel.org/linux-next/20250718224118.5b3f22b0@canb.auug.org.au/
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v3:
- * Move to pci_sysfs_init()
-v2:
- * Change to sysfs_update_group() instead
----
- drivers/pci/pci-sysfs.c | 67 ++++++++++++++++++-----------------------
- 1 file changed, 29 insertions(+), 38 deletions(-)
+Changes in v8:
+ - remove patch 8 from this series to simplify the patchset
+ - fix dt_bindings_check warnings (patch 2), 'memory-region' must
+   not be a required property
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 6b1a0ae254d3a..65ba67af0f6cc 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1059,37 +1059,6 @@ void pci_remove_legacy_files(struct pci_bus *b)
- }
- #endif /* HAVE_PCI_LEGACY */
- 
--/**
-- * pci_create_boot_display_file - create a file in sysfs for @dev
-- * @pdev: dev in question
-- *
-- * Creates a file `boot_display` in sysfs for the PCI device @pdev
-- * if it is the boot display device.
-- */
--static int pci_create_boot_display_file(struct pci_dev *pdev)
--{
--#ifdef CONFIG_VIDEO
--	if (video_is_primary_device(&pdev->dev))
--		return sysfs_create_file(&pdev->dev.kobj, &dev_attr_boot_display.attr);
--#endif
--	return 0;
--}
--
--/**
-- * pci_remove_boot_display_file - remove the boot display file for @dev
-- * @pdev: dev in question
-- *
-- * Removes the file `boot_display` in sysfs for the PCI device @pdev
-- * if it is the boot display device.
-- */
--static void pci_remove_boot_display_file(struct pci_dev *pdev)
--{
--#ifdef CONFIG_VIDEO
--	if (video_is_primary_device(&pdev->dev))
--		sysfs_remove_file(&pdev->dev.kobj, &dev_attr_boot_display.attr);
--#endif
--}
--
- #if defined(HAVE_PCI_MMAP) || defined(ARCH_GENERIC_PCI_MMAP_RESOURCE)
- /**
-  * pci_mmap_resource - map a PCI resource into user memory space
-@@ -1691,17 +1660,34 @@ static const struct attribute_group pci_dev_resource_resize_group = {
- 	.is_visible = resource_resize_is_visible,
- };
- 
--int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
-+static struct attribute *pci_display_attrs[] = {
-+	&dev_attr_boot_display.attr,
-+	NULL,
-+};
-+
-+static umode_t pci_boot_display_visible(struct kobject *kobj,
-+					struct attribute *a, int n)
- {
--	int retval;
-+#ifdef CONFIG_VIDEO
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	if (a == &dev_attr_boot_display.attr && video_is_primary_device(&pdev->dev))
-+		return a->mode;
-+#endif
-+	return 0;
-+}
- 
-+static const struct attribute_group pci_display_attr_group = {
-+	.attrs = pci_display_attrs,
-+	.is_visible = pci_boot_display_visible,
-+};
-+
-+int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
-+{
- 	if (!sysfs_initialized)
- 		return -EACCES;
- 
--	retval = pci_create_boot_display_file(pdev);
--	if (retval)
--		return retval;
--
- 	return pci_create_resource_files(pdev);
- }
- 
-@@ -1716,7 +1702,6 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
- 	if (!sysfs_initialized)
- 		return;
- 
--	pci_remove_boot_display_file(pdev);
- 	pci_remove_resource_files(pdev);
- }
- 
-@@ -1728,6 +1713,11 @@ static int __init pci_sysfs_init(void)
- 
- 	sysfs_initialized = 1;
- 	for_each_pci_dev(pdev) {
-+		retval = sysfs_update_group(&pdev->dev.kobj, &pci_display_attr_group);
-+		if (retval) {
-+			pci_dev_put(pdev);
-+			return retval;
-+		}
- 		retval = pci_create_sysfs_dev_files(pdev);
- 		if (retval) {
- 			pci_dev_put(pdev);
-@@ -1845,6 +1835,7 @@ static const struct attribute_group pcie_dev_attr_group = {
- 
- const struct attribute_group *pci_dev_attr_groups[] = {
- 	&pci_dev_attr_group,
-+	&pci_display_attr_group,
- 	&pci_dev_hp_attr_group,
- #ifdef CONFIG_PCI_IOV
- 	&sriov_pf_dev_attr_group,
+Changes in v7:
+ - add schema expressing dependency as suggested on pci-host bindings
+ - resolve review comments on pci-keystone driver
+ - add a new patch to make IO_TLB_SEGSIZE configurable
+ - improve patches based on checkpath.pl
+
+Changes in v6:
+ - make restricted DMA memory-region available to all pci-keystone
+   devices, moving property to unconditional section (patch 2)
+
+Changes in v5:
+ - resolve review comments on pci-host bindings
+ - reduce DMA memory regions to 1 - swiotlb does not support more
+ - move activation into overlay (controlled via firmware)
+ - use ks_init_vmap helper instead of loop in
+   rework ks_init_restricted_dma
+ - add more comments to pci-keystone
+ - use 2 chained TLBs of PVU to support maximum of swiotlb (320 MB)
+
+Changes in v4:
+ - reorder patch queue, moving all DTS changes to the back
+ - limit activation to IOT2050 Advanced variants
+ - move DMA pool to allow firmware-based expansion it up to 512M
+
+Changes in v3:
+ - fix ti,am654-pvu.yaml according to review comments
+ - address review comments on ti,am65-pci-host.yaml
+ - differentiate between different compatibles in ti,am65-pci-host.yaml
+ - move pvu nodes to k3-am65-main.dtsi
+ - reorder patch series, pulling bindings and generic DT bits to the front
+
+Changes in v2:
+ - fix dt_bindings_check issues (patch 1)
+ - address first review comments (patch 2)
+ - extend ti,am65-pci-host bindings for PVU (new patch 3)
+
+Only few of the K3 SoCs have an IOMMU and, thus, can isolate the system
+against DMA-based attacks of external PCI devices. The AM65 is without
+an IOMMU, but it comes with something close to it: the Peripheral
+Virtualization Unit (PVU).
+
+The PVU was originally designed to establish static compartments via a
+hypervisor, isolate those DMA-wise against each other and the host and
+even allow remapping of guest-physical addresses. But it only provides
+a static translation region, not page-granular mappings. Thus, it cannot
+be handled transparently like an IOMMU.
+
+Now, to use the PVU for the purpose of isolated PCI devices from the
+Linux host, this series takes a different approach. It defines a
+restricted-dma-pool for the PCI host, using swiotlb to map all DMA
+buffers from a static memory carve-out. And to enforce that the devices
+actually follow this, a special PVU soc driver is introduced. The driver
+permits access to the GIC ITS and otherwise waits for other drivers that
+detect devices with constrained DMA to register pools with the PVU.
+
+For the AM65, the first (and possibly only) driver where this is
+introduced is the pci-keystone host controller. Finally, this series
+provides a DT overlay for the IOT2050 Advanced devices (all have
+MiniPCIe or M.2 extension slots) to make use of this protection scheme.
+Application of this overlay will be handled by firmware.
+
+Due to the cross-cutting nature of these changes, multiple subsystems
+are affected. However, I wanted to present the whole thing in one series
+to allow everyone to review with the complete picture in hands. If
+preferred, I can also split the series up, of course.
+
+Jan
+
+Jan Kiszka (7):
+  dt-bindings: soc: ti: Add AM65 peripheral virtualization unit
+  dt-bindings: PCI: ti,am65: Extend for use with PVU
+  soc: ti: Add IOMMU-like PVU driver
+  PCI: keystone: Add support for PVU-based DMA isolation on AM654
+  arm64: dts: ti: k3-am65-main: Add PVU nodes
+  arm64: dts: ti: k3-am65-main: Add VMAP registers to PCI root complexes
+  arm64: dts: ti: iot2050: Add overlay for DMA isolation for devices
+    behind PCI RC
+
+ .../bindings/pci/ti,am65-pci-host.yaml        |  28 +-
+ .../bindings/soc/ti/ti,am654-pvu.yaml         |  51 ++
+ arch/arm64/boot/dts/ti/Makefile               |   5 +
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |  38 +-
+ ...am6548-iot2050-advanced-dma-isolation.dtso |  33 ++
+ drivers/pci/controller/dwc/pci-keystone.c     | 118 ++++-
+ drivers/soc/ti/Kconfig                        |   4 +
+ drivers/soc/ti/Makefile                       |   1 +
+ drivers/soc/ti/ti-pvu.c                       | 500 ++++++++++++++++++
+ include/linux/ti-pvu.h                        |  32 ++
+ 10 files changed, 800 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
+ create mode 100644 drivers/soc/ti/ti-pvu.c
+ create mode 100644 include/linux/ti-pvu.h
+
 -- 
-2.43.0
+2.34.1
 
 
