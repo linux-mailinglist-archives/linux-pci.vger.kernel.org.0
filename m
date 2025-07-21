@@ -1,157 +1,186 @@
-Return-Path: <linux-pci+bounces-32624-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32625-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41F82B0BE56
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 10:01:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 85898B0BE5F
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 10:04:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E3F43A37FF
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 08:00:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB8973B2374
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 08:03:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C836EEBA;
-	Mon, 21 Jul 2025 08:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0491E283FE1;
+	Mon, 21 Jul 2025 08:04:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QtwtjFla"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PDq2/vpV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D13469D
-	for <linux-pci@vger.kernel.org>; Mon, 21 Jul 2025 08:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56625EEBA;
+	Mon, 21 Jul 2025 08:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753084867; cv=none; b=PLnWU3HZBrWtS1vGIaltdy06TA8tvGqER5s0HhQG4jlPaqxZRaun9deAN78cVFJkR7WiIWIUgPjze9Z6HKNXavk4sb78m4vAMO1eoLC8ETmYOG2Jl+hXovy5GHTnTUIbA5f/QTz44ek6uS/a6lkDog+g/djrNbUHPiMslznzPZ4=
+	t=1753085062; cv=none; b=omhCY31n9sY5BnCSR3TDxAthmokbXq14tq8+LZJS0s68/CM99KheBSqI050RglIw+fgZNMCk/rA/q53z2qRuQIdxsI9f+ftZYWmXFtLDM5aNPt3svxH1kB1GfrjKU5G7WyUgPDWtkDENzWBpSEsrt0KGnN3P2ODh8KiltN406PE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753084867; c=relaxed/simple;
-	bh=UV4FxFcNw5fENRS7/A2haNkNzeYWsGbFUoh808XQnJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nRDJ/2MjsAeHZZLN2v5Jf8jUHB7h1cHc/avyCIGeD/7eI6sJE5jqarCTXOp6RrbktUs97c7zbIkTc4+0bYUrxO5cQ08og4wLDJg+fIX1DRkCkWO62zH7YX7PY7xFITIOr7WwB9JZDOqTv36je2iqKWdE6NYCUX/Aa72ysLk6dCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QtwtjFla; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3568C4CEED;
-	Mon, 21 Jul 2025 08:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753084867;
-	bh=UV4FxFcNw5fENRS7/A2haNkNzeYWsGbFUoh808XQnJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QtwtjFlapuseR9YFt6kTyLB5LRODCJulWBn5bM8SWPC1i41M/YzRjpnpRA87NoOpH
-	 C3fkllRAO+rFrdIsjxOzF/hOZyCNXWH+RRS5UXtvFa8Hu/drcDCWSA915P6hprZsK8
-	 AYo7lH35piDUcWV2mHtTIZjDbG1yiKJVURHcp9DpW3cba20+G/SGX2PHenwvzIk7jq
-	 hpkDdMXXrWIKuIwIiP834JjSR8MVyAm9UygCpFZk/8jB9inI4axRlwzEEuP5zntrXF
-	 fdYz/IP1kJ5CI/AnjYjd137FOBYxktJ18V1vfiNgQ6kintYdzk1b5Tg2szG9uICDpU
-	 2lAmTR/6nEz3w==
-Date: Mon, 21 Jul 2025 13:30:59 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: mario.limonciello@amd.com, bhelgaas@google.com, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Fix warning without CONFIG_VIDEO
-Message-ID: <zvpa4rrhfgpnjdfk2e64qaneoavjs4hqe5a7zqnhtddprnvkbr@viutp5nqevnh>
-References: <20250718134134.1710578-1-superm1@kernel.org>
- <rdqrqwoye3b4tut4mgqckshmlslycg2weyleasduxawhyoifq6@pyykudf4ncke>
- <b15cf1f2-7155-413a-973a-d632e5170596@kernel.org>
- <hwdswlzbejlrawrrsgdlqtmzb6437kyei4hl5uqpe24orey2qd@2u7i7dzkhfyu>
- <ca34c473-579b-4991-984d-4e037005c979@kernel.org>
- <5gthsstizscrujhx46ybngtuny2lafmjwaidykn4rbvi6lr2by@jnuryin54ghx>
- <793a0872-37a8-4fe7-bf68-b9072d7a6aec@kernel.org>
+	s=arc-20240116; t=1753085062; c=relaxed/simple;
+	bh=2o9zyX3cerqp5g/7zwFTMs7Wun4Ck/BEYMqIIsd5pSI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jtXJzR1Kge2BNZmyMGFL4YVcS0g0A6LunENdGfTmluBNyBc9aMxrXWVfn4B6OU1EorTcGwfJ1rMTL3ZM3xLa09HUfZ5CaDoUhOEbeytJ08wbkjMi2GFSJLoZSH587KsGN/GoVL7zDNDW+HrId5Ri9jygutb5/+w7PEbVCvDgzX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PDq2/vpV; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753085061; x=1784621061;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=2o9zyX3cerqp5g/7zwFTMs7Wun4Ck/BEYMqIIsd5pSI=;
+  b=PDq2/vpV4msvoRAYA6gMK0OljYkd+TLbnHp6TMA/0ieKHPX9llPzwpPZ
+   NVTYZlaIzhZBC1/sYH/dDHiWFQld/inr2mCIsQK02loLLFJ6A8/Qt4W22
+   rARVIdsYtQ2gNrX7c4oIeUKdnW4Z2GDaSZGjwER33JICh4mZoBbpxEYmd
+   HmSzcZK+5c265SLOlC2NbSy446uVkKq+pVSF7Ybf4KZXEklSXc3m4PfOq
+   +kmY3BfTXxYmlQguBvvTEWw+BvnnL/ZMkJjTpWIUiwWd3U05sP6eiN28O
+   UuvyybUE2EqbJiG9VlSQe+VFapBCz5Tqj5dEe3ES13fWhJTfEZ9kVZuZ1
+   A==;
+X-CSE-ConnectionGUID: uqZu/BOjTzWJqNNcTZc8og==
+X-CSE-MsgGUID: pIJKFXH9RE6yphLiStge2w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11498"; a="55447602"
+X-IronPort-AV: E=Sophos;i="6.16,328,1744095600"; 
+   d="scan'208";a="55447602"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 01:04:21 -0700
+X-CSE-ConnectionGUID: BWkutBHqS9af8EK7EQYPNw==
+X-CSE-MsgGUID: YTV/OCYcRgOXDZIMMaHlpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,328,1744095600"; 
+   d="scan'208";a="158888328"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 01:04:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 21 Jul 2025 11:04:10 +0300 (EEST)
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+cc: Jeff Johnson <jjohnson@kernel.org>, 
+    Manivannan Sadhasivam <mani@kernel.org>, 
+    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, 
+    Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+    Nirmal Patel <nirmal.patel@linux.intel.com>, 
+    Jonathan Derrick <jonathan.derrick@linux.dev>, 
+    linux-wireless@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    ath12k@lists.infradead.org, ath11k@lists.infradead.org, 
+    ath10k@lists.infradead.org, Bjorn Helgaas <helgaas@kernel.org>, 
+    linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+    Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+    Qiang Yu <qiang.yu@oss.qualcomm.com>
+Subject: Re: [PATCH 4/6] wifi: ath12k: Use pci_{enable/disable}_link_state()
+ APIs to enable/disable ASPM states
+In-Reply-To: <20250716-ath-aspm-fix-v1-4-dd3e62c1b692@oss.qualcomm.com>
+Message-ID: <7a97d075-2e37-5f40-5247-867146938613@linux.intel.com>
+References: <20250716-ath-aspm-fix-v1-0-dd3e62c1b692@oss.qualcomm.com> <20250716-ath-aspm-fix-v1-4-dd3e62c1b692@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <793a0872-37a8-4fe7-bf68-b9072d7a6aec@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
 
-On Sat, Jul 19, 2025 at 08:46:04AM GMT, Mario Limonciello wrote:
-> 
-> 
-> On 7/18/25 9:47 PM, Manivannan Sadhasivam wrote:
-> > On Fri, Jul 18, 2025 at 12:26:49PM GMT, Mario Limonciello wrote:
-> > > On 7/18/2025 12:23 PM, Manivannan Sadhasivam wrote:
-> > > > On Fri, Jul 18, 2025 at 12:06:22PM GMT, Mario Limonciello wrote:
-> > > > > On 7/18/2025 12:00 PM, Manivannan Sadhasivam wrote:
-> > > > > > On Fri, Jul 18, 2025 at 08:41:33AM GMT, Mario Limonciello wrote:
-> > > > > > > From: Mario Limonciello <mario.limonciello@amd.com>
-> > > > > > > 
-> > > > > > > When compiled without CONFIG_VIDEO pci_create_boot_display_file() will
-> > > > > > > never create a sysfs file for boot_display. Guard the sysfs file
-> > > > > > > declaration against CONFIG_VIDEO.
-> > > > > > > 
-> > > > > > > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > > > > > Closes: https://lore.kernel.org/linux-next/20250718224118.5b3f22b0@canb.auug.org.au/
-> > > > > > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > > > > > > ---
-> > > > > > >     drivers/pci/pci-sysfs.c | 2 ++
-> > > > > > >     1 file changed, 2 insertions(+)
-> > > > > > > 
-> > > > > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > > > > > > index 6b1a0ae254d3a..f6540a72204d3 100644
-> > > > > > > --- a/drivers/pci/pci-sysfs.c
-> > > > > > > +++ b/drivers/pci/pci-sysfs.c
-> > > > > > > @@ -680,12 +680,14 @@ const struct attribute_group *pcibus_groups[] = {
-> > > > > > >     	NULL,
-> > > > > > >     };
-> > > > > > > +#ifdef CONFIG_VIDEO
-> > > > > > >     static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
-> > > > > > >     				 char *buf)
-> > > > > > >     {
-> > > > > > >     	return sysfs_emit(buf, "1\n");
-> > > > > > >     }
-> > > > > > >     static DEVICE_ATTR_RO(boot_display);
-> > > > > > 
-> > > > > > I failed to give my comment during the offending series itself, but it is never
-> > > > > > late than never. Why are we adding non-PCI attributes under bus/pci in the first
-> > > > > > place? Though the underlying device uses PCI as a transport, only the PCI bus
-> > > > > > specific attrbutes should be placed under bus/pci and the driver/peripheral
-> > > > > > specific attrbutes should belong to the respective bus/class/device hierarchy.
-> > > > > > 
-> > > > > > Now, if other peripherals (like netdev) start adding these device specific
-> > > > > > attributes under bus/pci, it will turn out to be a mess.
-> > > > > > 
-> > > > > > - Mani
-> > > > > > 
-> > > > > 
-> > > > > It was mostly to mirror the location of where boot_vga is, which arguably
-> > > > > has the same issue you raise.
-> > > > > 
-> > > > 
-> > > > Yes, I agree. But 'boot_vga' has set a bad precedence IMO.
-> > > > 
-> > > > > I would be incredibly surprised if there was a proposal to add a
-> > > > > 'boot_display' attribute from netdev..
-> > > > 
-> > > > Not 'boot_display' but why not 'boot_network' or something else. I was just
-> > > > merely pointing out the fact that the other subsystems can start dumping
-> > > > device/usecase specific attributes under bus/pci.
-> > > > 
-> > > > - Mani
-> > > > 
-> > > 
-> > > This is a pretty general problem that exists that attributes are first come
-> > > first served.  For example amdgpu adds mem_busy_percent and it has certain
-> > > semantics.  Now PCI core can't add that.
-> > > 
-> > > And if nouveau.ko wants to add the same thing they need to follow the same
-> > > semantics because userspace will look for those.
-> > 
-> > But here, userspace is not yet looking for 'boot_display' isn't it? Why do you
-> > need to mirror 'boot_vga' attribute?
-> > 
-> 
-> I have a pull request opened in libpciaccess; but correct it has not been
-> merged.
-> 
-> /If/ we're to change this, what would you propose the path to be for this
-> sysfs file?
+On Wed, 16 Jul 2025, Manivannan Sadhasivam via B4 Relay wrote:
 
-Obviously, DRM.
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> 
+> It is not recommended to enable/disable the ASPM states on the back of the
+> PCI core directly using the LNKCTL register. It will break the PCI core's
+> knowledge about the device ASPM states. So use the APIs exposed by the PCI
+> core to enable/disable ASPM states.
+> 
+> Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+> 
+> Reported-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+>  drivers/net/wireless/ath/ath.h        | 14 ++++++++++++++
+>  drivers/net/wireless/ath/ath12k/pci.c | 10 ++++------
+>  2 files changed, 18 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath.h b/drivers/net/wireless/ath/ath.h
+> index 34654f710d8a1e63f65a47d4602e2035262a4d9e..ef685123b66bf4f41428fec67c1967f242a9ef27 100644
+> --- a/drivers/net/wireless/ath/ath.h
+> +++ b/drivers/net/wireless/ath/ath.h
+> @@ -21,6 +21,8 @@
+>  #include <linux/skbuff.h>
+>  #include <linux/if_ether.h>
+>  #include <linux/spinlock.h>
+> +#include <linux/pci.h>
+> +#include <linux/pci_regs.h>
+>  #include <net/mac80211.h>
+>  
+>  /*
+> @@ -336,4 +338,16 @@ static inline const char *ath_bus_type_to_string(enum ath_bus_type bustype)
+>  	return ath_bus_type_strings[bustype];
+>  }
+>  
+> +static inline int ath_pci_aspm_state(u16 lnkctl)
+> +{
+> +	int state = 0;
+> +
+> +	if (lnkctl & PCI_EXP_LNKCTL_ASPM_L0S)
+> +		state |= PCIE_LINK_STATE_L0S;
+> +	if (lnkctl & PCI_EXP_LNKCTL_ASPM_L1)
+> +		state |= PCIE_LINK_STATE_L1;
+> +
+> +	return state;
+> +}
+> +
+>  #endif /* ATH_H */
+> diff --git a/drivers/net/wireless/ath/ath12k/pci.c b/drivers/net/wireless/ath/ath12k/pci.c
+> index 489d546390fcdab8f615cc9184006a958d9f140a..a5e11509e3ab8faad6638ff78ce6a8a5e9c3cbbd 100644
+> --- a/drivers/net/wireless/ath/ath12k/pci.c
+> +++ b/drivers/net/wireless/ath/ath12k/pci.c
+> @@ -16,6 +16,8 @@
+>  #include "mhi.h"
+>  #include "debug.h"
+>  
+> +#include "../ath.h"
+> +
+>  #define ATH12K_PCI_BAR_NUM		0
+>  #define ATH12K_PCI_DMA_MASK		36
+>  
+> @@ -928,8 +930,7 @@ static void ath12k_pci_aspm_disable(struct ath12k_pci *ab_pci)
+>  		   u16_get_bits(ab_pci->link_ctl, PCI_EXP_LNKCTL_ASPM_L1));
+>  
+>  	/* disable L0s and L1 */
+> -	pcie_capability_clear_word(ab_pci->pdev, PCI_EXP_LNKCTL,
+> -				   PCI_EXP_LNKCTL_ASPMC);
+> +	pci_disable_link_state(ab_pci->pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
 
-- Mani
+I'd remove to comment too as the code is self-explanatory after this 
+change.
+
+>  
+>  	set_bit(ATH12K_PCI_ASPM_RESTORE, &ab_pci->flags);
+>  }
+> @@ -958,10 +959,7 @@ static void ath12k_pci_aspm_restore(struct ath12k_pci *ab_pci)
+>  {
+>  	if (ab_pci->ab->hw_params->supports_aspm &&
+>  	    test_and_clear_bit(ATH12K_PCI_ASPM_RESTORE, &ab_pci->flags))
+> -		pcie_capability_clear_and_set_word(ab_pci->pdev, PCI_EXP_LNKCTL,
+> -						   PCI_EXP_LNKCTL_ASPMC,
+> -						   ab_pci->link_ctl &
+> -						   PCI_EXP_LNKCTL_ASPMC);
+> +		pci_enable_link_state(ab_pci->pdev, ath_pci_aspm_state(ab_pci->link_ctl));
+>  }
+>  
+>  static void ath12k_pci_cancel_workqueue(struct ath12k_base *ab)
+
+As you now depend on ASPM driver being there, these should also add to 
+Kconfig:
+
+depends on PCIEASPM
 
 -- 
-மணிவண்ணன் சதாசிவம்
+ i.
+
 
