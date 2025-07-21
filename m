@@ -1,179 +1,173 @@
-Return-Path: <linux-pci+bounces-32649-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32650-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAD29B0C597
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 15:56:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD7CCB0C60F
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 16:17:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2951C3AD774
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 13:55:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 81F171887565
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 14:18:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 713002D97A6;
-	Mon, 21 Jul 2025 13:56:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F41162D6617;
+	Mon, 21 Jul 2025 14:17:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="S/hMs1J1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D++7aQYF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF13A85C5E;
-	Mon, 21 Jul 2025 13:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A893273FD
+	for <linux-pci@vger.kernel.org>; Mon, 21 Jul 2025 14:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753106160; cv=none; b=luwvIkMwOWEj2O4xp+AQewfqwMFa9QHpIQdmF/ego4u1XYbMvKBZQywkN54CUntHkGte3BT2q7B/9aRVYrRgIkZIKzu9XQd26NvSnTJ5+OAPhtS9qqj5xWHm65cHhXknHQ76VFGVfsnK59vSQCYzkrJaK4R4Oq4qSY4VOF0N4Ds=
+	t=1753107465; cv=none; b=OUXMg7k5lpIJgncCYMkrRlTl9s7Ae5TyQj4CFIJx4BCXE5X9Z4GVSRz6KWW56PjGCJaFBLDM8h7YgMAgHNdKg6eWYbauil8LkHutINa+X9pUkmt+NlAVh/9uEI3Qh5JuV7vyAbV5NnyxcX5ITXsZ/ldkX7uSr5swSBC1WtjMUsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753106160; c=relaxed/simple;
-	bh=luNd2hdiHpXbkn51CVS1PrnHahAzaRIMafg/kGX72tU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vDw8IokZ3y4j9L3tiCUPjyGa8EwdOmRxv6mqpH7Jxg7upcYi/ZtFMCJdA+77F7IekCeFnN0YmSvHRSmvph4eA5OCueyEQwXc+5CeDDHpJ2lGUOahvbbw7vuCYjG9pAodJNbgU1qDhviFyFQYbgK8cWPzY0UcDa7d6m1NNXFtzYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=S/hMs1J1; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 476F640E00CE;
-	Mon, 21 Jul 2025 13:55:48 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id tNtVBVq-EtrH; Mon, 21 Jul 2025 13:55:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1753106144; bh=nlscqHmlqxD6hBwb5iB6jeV5V3isx4CM7hl7kXHzeP8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S/hMs1J1tWF4XHylcao5H5R4Z4XLI9EyXKPqtAYOghbP7FblaU/9tnLnjUThM5b9p
-	 HMi7nTm+ZKfPwpMoK6nQCr0pFjdtKr8zkPfmIvgCTPZDtuhzz5KSjq74tssBg9LRbs
-	 Rz74d2M3sc00RXK4mvhSIOZwC6TxAZxslXvu8C4huXxMuKzsGbS9asDdvHqrquiZC0
-	 4T5pa0zP5Vqo8yw8iHQCGQ0qUxfowJfMMEprHZRsoLdo6aqlJAk5cb8PTPeZ7+dkJf
-	 JJsGUCuxgRv79TkeZmVUU/xyEMjXVcmSBhKvyvjPghpf9f7Q1WHkSfBwAiMUiE8KnJ
-	 A1uoeaARQ2HvyC1Fbirh1RbXi0aIA2fP5rauaT1E/s/bduEIz81n/ANMRSQliAIKHJ
-	 FThek94c7sT30G6u7YKLW+EjCvjcndFjg+fGTT/V67Ln9DcEYEsDCIS/EjGmLe5qle
-	 b9Gr2PDtqA/sxmuAeMJ2iljDz/FX+momdWOx7VfBqAmtqZ6M58UeTfgvvwbu+RbrrI
-	 YNxE1q8Ke8cSZLZQehucpd7Se5vUQMdNZ7Gfjvy6QbjeiRoXyjdC/7uYGhwOjANozr
-	 7s6nkYTPUJ/W+Vwgaf3Xq7y92pA+9PRJzb0feA9Mo7jm6NpKllBW5D43GG8VQ1vwGr
-	 SMc9qLT6n9IdU6NqsPK5zgJg=
-Received: from rn.tnic (unknown [78.130.214.207])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id DF69640E01F6;
-	Mon, 21 Jul 2025 13:55:17 +0000 (UTC)
-Date: Mon, 21 Jul 2025 15:57:18 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Breno Leitao <leitao@debian.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>,
-	Robert Moore <robert.moore@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev,
-	osandov@osandov.com, xueshuai@linux.alibaba.com,
-	konrad.wilk@oracle.com, linux-edac@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v2] vmcoreinfo: Track and log recoverable hardware errors
-Message-ID: <20250721135718.GAaH5HPinaKvXjM-1g@renoirsky.local>
-References: <20250721-vmcore_hw_error-v2-1-ab65a6b43c5a@debian.org>
+	s=arc-20240116; t=1753107465; c=relaxed/simple;
+	bh=jx62/zzI69MGOw6Q1ltR2MwUC388v3A5IGqMmpKVPmI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s3MCOr2oB9Ul7VhsrMG88SDTItHvzZR2lEbqsxvyatGmSjguyGtDEV7PVzgjjiQdDKe4b0Gl0pivHvIuAVSP8/05yBNvzsFmVWjgXbOr+aIDUzW3MgLamNRdGHwFP9jihPWmc1fDrVEfPIlsDx8BcybfiuUDanYujdn3SqxoCUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D++7aQYF; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4563cfac19cso33318585e9.2
+        for <linux-pci@vger.kernel.org>; Mon, 21 Jul 2025 07:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1753107462; x=1753712262; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aHTz2f/tCB5gJfHRUHusAnrHo0WkysiHKc8/HuxZcyk=;
+        b=D++7aQYFr5L68qNWwL/6zhUENYiKjmqUo1TJh2Z+2mF60qdLzy6CIZ+pGTEMtQM+HK
+         7YKl+TD5gKVwZ3EMqoX75nloA/j9A4+Ics/VJADr3c7MCue2dUtz2eDhJiPOeIDmj4Kj
+         woZ0BiltwOVZoVbDkT4AoIoq5NZlBAUoQu0I4sWUvmi6YoSdApdLKoHzn9h2mz+DKMKw
+         0DZYegFgRd+N6AxhW69vAmAJhKuWrX6zrBIEr4IL5AUpPzx8ZHobPTEvPFucknhKpSJ/
+         LMdwYMp2C5v812DMHr7QH0aWt7+fR96mCMpCJGDu18HnPppnpjQ7ayqkJvnUcBAr2RGI
+         EXMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753107462; x=1753712262;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aHTz2f/tCB5gJfHRUHusAnrHo0WkysiHKc8/HuxZcyk=;
+        b=cT869i3Q3opnteXuempeB1/pqGXisCk5DW9L2zRdgNFRBocBNLZO04kZLzJ3Cwjwxw
+         +GcTZDoGfhvfZ+qIXAjtnIYzhsSnF67PXhU8IyGYZOdVKchvq/Op/h5Xpao8rMzM0sCx
+         nIej6Svq0fQSLxIj7lxkrTAHa0KVP1l12oLhl+clquu2TFm89Qsyc0hFO50iRpo9LbG8
+         Vzpy+CRsEGP4O8Rn9Ftfukw8f4yMzeVec7A20NEP+PXfRAG8PHL9UAY9vA2tztg0XwjW
+         5/i8wfNSGTbQpbNQrqiMDAq5XwlYquHllXuSOBlmz3thfFaFA8T1mpVQid7p/jF/gcGd
+         HvYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpu+P8JIgxvqDv0F44rpdeWqHIGJiy4Qsid8BssBRAUxHxSLY/yIOykF2dpSXjWNjIzCOSKaR7R68=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqJBHFCWqHL/TeR1dumHlIG5anpHHwQsxYHc5ZCo7iGatdRaDr
+	Y1heTEhWBTQw8RMw0D0laFhyvYM3Rp/70Eikw5KnlV0bJqtXGKk15lbIHE1wtyvjkUeWnmfOnG0
+	XjvDYyyLiNuOccwi55EUoeoBuM4h0j9u1xFsLA3xU
+X-Gm-Gg: ASbGnctp2wd/vB3s+0D3Ob6YYJT3Klcr7/QxxhA59bjbfOsrkObhNBh7hSj9KN4s0/d
+	VJDVF9RGbJnQgE72fgWyK+5mBFxXmy0C2YFP4oM0SDUJoP4R5+IbwRKE8GIWxUvV2qEoluDMvRn
+	2t3hs7cZhjT+IpYnleEDg1Zvh4jugXtg0ni+UDvrQz8UGpBI+IHMWlfNnlCDd3n5DWnPPjZQarz
+	xYc/AbH5ky0MQl0pdlNspKKu02uGBNaCNHUQg==
+X-Google-Smtp-Source: AGHT+IGjLzZ7/Km2FCbSNRsrArfXJV2GEMgIhjJN78UwwjSKkWJY+F2cHXQv40vfc3kSfYwQzfjjab4StDfPm4kGNEg=
+X-Received: by 2002:a05:600c:5253:b0:456:1efa:8fe9 with SMTP id
+ 5b1f17b1804b1-4562e03a678mr216153965e9.2.1753107462190; Mon, 21 Jul 2025
+ 07:17:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250721-vmcore_hw_error-v2-1-ab65a6b43c5a@debian.org>
+References: <20250715-topics-tyr-request_irq2-v7-3-d469c0f37c07@collabora.com>
+ <202507170718.AVqYqRan-lkp@intel.com> <9834736F-F70F-4290-9DE8-755A6D0D5EB8@collabora.com>
+In-Reply-To: <9834736F-F70F-4290-9DE8-755A6D0D5EB8@collabora.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 21 Jul 2025 16:17:29 +0200
+X-Gm-Features: Ac12FXzqc3WLYmS_rx0F_dtIhtQQ4LQMKVOtCM3xLb6rdTs9AmutrC95-1kYQiY
+Message-ID: <CAH5fLggfp36q0UmF_XNLCZKn+fc1xd2hMBsYX1UrtJqBFYrf+g@mail.gmail.com>
+Subject: Re: [PATCH v7 3/6] rust: irq: add support for non-threaded IRQs and handlers
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: kernel test robot <lkp@intel.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Bjorn Helgaas <helgaas@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Benno Lossin <lossin@kernel.org>, llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 21, 2025 at 03:13:40AM -0700, Breno Leitao wrote:
-> Introduce a generic infrastructure for tracking recoverable hardware
-> errors (HW errors that did not cause a panic) and record them for vmcore
-> consumption. This aids post-mortem crash analysis tools by preserving
-> a count and timestamp for the last occurrence of such errors.
-> 
-> This patch adds centralized logging for three common sources of
+On Thu, Jul 17, 2025 at 6:21=E2=80=AFPM Daniel Almeida
+<daniel.almeida@collabora.com> wrote:
+>
+>
+>
+> > On 16 Jul 2025, at 20:45, kernel test robot <lkp@intel.com> wrote:
+> >
+> > Hi Daniel,
+> >
+> > kernel test robot noticed the following build errors:
+> >
+> > [auto build test ERROR on 3964d07dd821efe9680e90c51c86661a98e60a0f]
+> >
+> > url:    https://github.com/intel-lab-lkp/linux/commits/Daniel-Almeida/r=
+ust-irq-add-irq-module/20250715-232121
+> > base:   3964d07dd821efe9680e90c51c86661a98e60a0f
+> > patch link:    https://lore.kernel.org/r/20250715-topics-tyr-request_ir=
+q2-v7-3-d469c0f37c07%40collabora.com
+> > patch subject: [PATCH v7 3/6] rust: irq: add support for non-threaded I=
+RQs and handlers
+> > config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/2=
+0250717/202507170718.AVqYqRan-lkp@intel.com/config)
+> > compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87=
+f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+> > rustc: rustc 1.88.0 (6b00bc388 2025-06-23)
+> > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/arc=
+hive/20250717/202507170718.AVqYqRan-lkp@intel.com/reproduce)
+> >
+> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
+rsion of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202507170718.AVqYqRan-l=
+kp@intel.com/
+> >
+> > All errors (new ones prefixed by >>):
+> >
+> >>> error[E0425]: cannot find value `SHARED` in module `flags`
+> >   --> rust/doctests_kernel_generated.rs:4790:58
+> >   |
+> >   4790 |     let registration =3D Registration::new(request, flags::SHA=
+RED, c_str!("my_device"), handler);
+> >   |                                                          ^^^^^^ not=
+ found in `flags`
+> >   |
+> >   help: consider importing this constant
+> >   |
+> >   3    + use kernel::mm::virt::flags::SHARED;
+> >   |
+> >   help: if you import `SHARED`, refer to it directly
+> >   |
+> >   4790 -     let registration =3D Registration::new(request, flags::SHA=
+RED, c_str!("my_device"), handler);
+> >   4790 +     let registration =3D Registration::new(request, SHARED, c_=
+str!("my_device"), handler);
+> >   |
+> >
+> > --
+> > 0-DAY CI Kernel Test Service
+> > https://github.com/intel/lkp-tests/wiki
+> >
+>
+> This is a single character fix, so I am waiting for the discussion on the=
+ cover
+> letter [0] to advance before sending a new version.
+>
+> [0] https://lore.kernel.org/all/DBCQKJIBVGGM.1R0QNKO3TE4N0@kernel.org/#t
 
-"Add centralized... "
+My suggestion is to make the flags module private and re-export the
+Flags type from the irq module. That way you don't have to write
+use kernel::irq::flags::Flags;
 
-> recoverable hardware errors:
-> 
->   - PCIe AER Correctable errors
->   - x86 Machine Check Exceptions (MCE)
->   - APEI/CPER GHES corrected or recoverable errors
-> 
-> hwerror_tracking is write-only at kernel runtime, and it is meant to be
-> read from vmcore using tools like crash/drgn. For example, this is how
-> it looks like when opening the crashdump from drgn.
-> 
-> 	>>> prog['hwerror_tracking']
-> 	(struct hwerror_tracking_info [3]){
-> 		{
-> 			.count = (int)844,
-> 			.timestamp = (time64_t)1752852018,
-> 		},
-> 		...
-> 
-
-I'm still missing the justification why rasdaemon can't be used here.
-You did explain it already in past emails.
-
-> +enum hwerror_tracking_source {
-> +	HWE_RECOV_AER,
-> +	HWE_RECOV_MCE,
-> +	HWE_RECOV_GHES,
-> +	HWE_RECOV_MAX,
-> +};
-
-Are we confident this separation will serve all cloud dudes?
-
-> +
-> +#ifdef CONFIG_VMCORE_INFO
-> +void hwerror_tracking_log(enum hwerror_tracking_source src);
-> +#else
-> +void hwerror_tracking_log(enum hwerror_tracking_source src) {};
-> +#endif
-> +
->  #endif /* LINUX_VMCORE_INFO_H */
-> diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
-> index e066d31d08f89..23d7ddcd55cdd 100644
-> --- a/kernel/vmcore_info.c
-> +++ b/kernel/vmcore_info.c
-> @@ -31,6 +31,13 @@ u32 *vmcoreinfo_note;
->  /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
->  static unsigned char *vmcoreinfo_data_safecopy;
->  
-> +struct hwerror_tracking_info {
-> +	int __data_racy count;
-> +	time64_t __data_racy timestamp;
-> +};
-> +
-> +static struct hwerror_tracking_info hwerror_tracking[HWE_RECOV_MAX];
-> +
->  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->  			  void *data, size_t data_len)
->  {
-> @@ -118,6 +125,17 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
->  }
->  EXPORT_SYMBOL(paddr_vmcoreinfo_note);
->  
-> +void hwerror_tracking_log(enum hwerror_tracking_source src)
-
-A function should have a verb in its name explaining what it does:
-
-hwerr_log_error_type()
-
-or so.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Alice
 
