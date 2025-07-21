@@ -1,84 +1,75 @@
-Return-Path: <linux-pci+bounces-32625-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32626-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85898B0BE5F
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 10:04:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71F47B0BEB0
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 10:21:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB8973B2374
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 08:03:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9702B160A05
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 08:21:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0491E283FE1;
-	Mon, 21 Jul 2025 08:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87311283FE1;
+	Mon, 21 Jul 2025 08:20:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PDq2/vpV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eM8nxIZe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56625EEBA;
-	Mon, 21 Jul 2025 08:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2535218593;
+	Mon, 21 Jul 2025 08:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753085062; cv=none; b=omhCY31n9sY5BnCSR3TDxAthmokbXq14tq8+LZJS0s68/CM99KheBSqI050RglIw+fgZNMCk/rA/q53z2qRuQIdxsI9f+ftZYWmXFtLDM5aNPt3svxH1kB1GfrjKU5G7WyUgPDWtkDENzWBpSEsrt0KGnN3P2ODh8KiltN406PE=
+	t=1753086056; cv=none; b=cas9GNFMn260N1RdH9c4sGB8tHWNzNryq9YCtxY6vBrypMYrP2MPqgLwbEOMJ7xEskCziKoOG8UQS7FjVxf7mt1Nzb2z6340PJONxV0i0THwBFgYU5ShNMR68fjwU65YoQHUbac+8fzYn6db3i3VdwnSlZZ1/c1WK0lD9TGhGno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753085062; c=relaxed/simple;
-	bh=2o9zyX3cerqp5g/7zwFTMs7Wun4Ck/BEYMqIIsd5pSI=;
+	s=arc-20240116; t=1753086056; c=relaxed/simple;
+	bh=mwwy26YuAuU7rP6YljFYLkH6SdwYhat+AAosw36Hj2s=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jtXJzR1Kge2BNZmyMGFL4YVcS0g0A6LunENdGfTmluBNyBc9aMxrXWVfn4B6OU1EorTcGwfJ1rMTL3ZM3xLa09HUfZ5CaDoUhOEbeytJ08wbkjMi2GFSJLoZSH587KsGN/GoVL7zDNDW+HrId5Ri9jygutb5/+w7PEbVCvDgzX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PDq2/vpV; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version:Content-Type; b=meMyAxoEi38qEsxlQRj25bG0fSpV+Lbkccq+CHO50vjneOgxQ+2VlTSWQSbk8DQbKUoGuOSzTw8MLqK+TRgbzkjeTV9/C5lzgTEJOULhR1mblgCH9ye8Bp9FdaEV+E3H+zmrKfGGZDc0loSmJCPCG05KWsoU1j3oSJ2YBqAIr24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eM8nxIZe; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753085061; x=1784621061;
+  t=1753086054; x=1784622054;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=2o9zyX3cerqp5g/7zwFTMs7Wun4Ck/BEYMqIIsd5pSI=;
-  b=PDq2/vpV4msvoRAYA6gMK0OljYkd+TLbnHp6TMA/0ieKHPX9llPzwpPZ
-   NVTYZlaIzhZBC1/sYH/dDHiWFQld/inr2mCIsQK02loLLFJ6A8/Qt4W22
-   rARVIdsYtQ2gNrX7c4oIeUKdnW4Z2GDaSZGjwER33JICh4mZoBbpxEYmd
-   HmSzcZK+5c265SLOlC2NbSy446uVkKq+pVSF7Ybf4KZXEklSXc3m4PfOq
-   +kmY3BfTXxYmlQguBvvTEWw+BvnnL/ZMkJjTpWIUiwWd3U05sP6eiN28O
-   UuvyybUE2EqbJiG9VlSQe+VFapBCz5Tqj5dEe3ES13fWhJTfEZ9kVZuZ1
-   A==;
-X-CSE-ConnectionGUID: uqZu/BOjTzWJqNNcTZc8og==
-X-CSE-MsgGUID: pIJKFXH9RE6yphLiStge2w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11498"; a="55447602"
+  bh=mwwy26YuAuU7rP6YljFYLkH6SdwYhat+AAosw36Hj2s=;
+  b=eM8nxIZeuVjDojRXOeMTjideALP6fqYCjdGPgt0ULPi/IXrMz9Sed7/G
+   ZaVDJAzobPRZiNE3eMOb3ijtVk611LeI0/tuFd15u2QKl3VXna77R6ySJ
+   rjUoKgRcnDn0Km1rSDlbgPPSK9c5m0Aix95/GTLjlooqVRYfbqT78g2U6
+   F4B+1j8hT1LYzqZ4MLv1F6eP6CFHljZb0YebzJ8CBBIb8O0YyB6GnYAoP
+   b7MggwatOcDU3XUkg5KFPcriW+FYgWzzlaJs6RXNjcwFeGvMEaeSpbUWa
+   T8Gloryo4tntE0fmzwFIrXSgzIFhNuUXIB7H0v6U5PonaRs9LLEB9rGLo
+   Q==;
+X-CSE-ConnectionGUID: /JguQsw9TnSfTNT7i7gCZg==
+X-CSE-MsgGUID: F7XzyhbUT6qg91tYEU7tVA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11498"; a="66642059"
 X-IronPort-AV: E=Sophos;i="6.16,328,1744095600"; 
-   d="scan'208";a="55447602"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 01:04:21 -0700
-X-CSE-ConnectionGUID: BWkutBHqS9af8EK7EQYPNw==
-X-CSE-MsgGUID: YTV/OCYcRgOXDZIMMaHlpg==
+   d="scan'208";a="66642059"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 01:20:54 -0700
+X-CSE-ConnectionGUID: X9h7F1+/T4merf/BTnL3Jg==
+X-CSE-MsgGUID: 3aLyU92KSAaJwQXh+yAuPw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,328,1744095600"; 
-   d="scan'208";a="158888328"
+   d="scan'208";a="182479935"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 01:04:14 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 01:20:50 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 21 Jul 2025 11:04:10 +0300 (EEST)
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-cc: Jeff Johnson <jjohnson@kernel.org>, 
-    Manivannan Sadhasivam <mani@kernel.org>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, 
-    Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-    Nirmal Patel <nirmal.patel@linux.intel.com>, 
-    Jonathan Derrick <jonathan.derrick@linux.dev>, 
-    linux-wireless@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    ath12k@lists.infradead.org, ath11k@lists.infradead.org, 
-    ath10k@lists.infradead.org, Bjorn Helgaas <helgaas@kernel.org>, 
-    linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
-    Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-    Qiang Yu <qiang.yu@oss.qualcomm.com>
-Subject: Re: [PATCH 4/6] wifi: ath12k: Use pci_{enable/disable}_link_state()
- APIs to enable/disable ASPM states
-In-Reply-To: <20250716-ath-aspm-fix-v1-4-dd3e62c1b692@oss.qualcomm.com>
-Message-ID: <7a97d075-2e37-5f40-5247-867146938613@linux.intel.com>
-References: <20250716-ath-aspm-fix-v1-0-dd3e62c1b692@oss.qualcomm.com> <20250716-ath-aspm-fix-v1-4-dd3e62c1b692@oss.qualcomm.com>
+Date: Mon, 21 Jul 2025 11:20:46 +0300 (EEST)
+To: Hans Zhang <18255117159@163.com>
+cc: Bjorn Helgaas <helgaas@kernel.org>, lpieralisi@kernel.org, 
+    bhelgaas@google.com, mani@kernel.org, kwilczynski@kernel.org, 
+    robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v13 3/6] PCI: Refactor capability search into common
+ macros
+In-Reply-To: <903ea9c4-87d6-45a8-9825-4a0d45ec608f@163.com>
+Message-ID: <d59fde6e-3e4a-248a-ae56-c35b4c6ec44c@linux.intel.com>
+References: <20250715224705.GA2504490@bhelgaas> <903ea9c4-87d6-45a8-9825-4a0d45ec608f@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,98 +78,249 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 16 Jul 2025, Manivannan Sadhasivam via B4 Relay wrote:
+On Thu, 17 Jul 2025, Hans Zhang wrote:
 
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 > 
-> It is not recommended to enable/disable the ASPM states on the back of the
-> PCI core directly using the LNKCTL register. It will break the PCI core's
-> knowledge about the device ASPM states. So use the APIs exposed by the PCI
-> core to enable/disable ASPM states.
 > 
-> Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+> On 2025/7/16 06:47, Bjorn Helgaas wrote:
+> > On Sun, Jun 08, 2025 at 12:14:02AM +0800, Hans Zhang wrote:
+> > > The PCI Capability search functionality is duplicated across the PCI core
+> > > and several controller drivers. The core's current implementation requires
+> > > fully initialized PCI device and bus structures, which prevents controller
+> > > drivers from using it during early initialization phases before these
+> > > structures are available.
+> > > 
+> > > Move the Capability search logic into a header-based macro that accepts a
+> > > config space accessor function as an argument. This enables controller
+> > > drivers to perform Capability discovery using their early access
+> > > mechanisms prior to full device initialization while sharing the
+> > > Capability search code.
+> > > 
+> > > Convert the existing PCI core Capability search implementation to use this
+> > > new macro. Controller drivers can later use the same macros with their
+> > > early access mechanisms while maintaining the existing protection against
+> > > infinite loops through preserved TTL checks.
+> > > 
+> > > The ttl parameter was originally an additional safeguard to prevent
+> > > infinite loops in corrupted config space. However, the
+> > > PCI_FIND_NEXT_CAP_TTL() macro already enforces a TTL limit internally.
+> > > Removing redundant ttl handling simplifies the interface while maintaining
+> > > the safety guarantee. This aligns with the macro's design intent of
+> > > encapsulating TTL management.
+> > 
+> > This is a big gulp, but I think I like it :)  It really enables some
+> > nice cleanups later.
+> > 
+> > > -static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int
+> > > devfn,
+> > > -				  u8 pos, int cap, int *ttl)
+> > > -{
+> > > -	u8 id;
+> > > -	u16 ent;
+> > > -
+> > > -	pci_bus_read_config_byte(bus, devfn, pos, &pos);
+> > > -
+> > > -	while ((*ttl)--) {
+> > > -		if (pos < PCI_STD_HEADER_SIZEOF)
+> > > -			break;
+> > > -		pos = ALIGN_DOWN(pos, 4);
+> > > -		pci_bus_read_config_word(bus, devfn, pos, &ent);
+> > > -
+> > > -		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
+> > > -		if (id == 0xff)
+> > > -			break;
+> > > -		if (id == cap)
+> > > -			return pos;
+> > > -		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
+> > > -	}
+> > > -	return 0;
+> > > -}
+> > > -
+> > >   static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
+> > >   			      u8 pos, int cap)
+> > >   {
+> > > -	int ttl = PCI_FIND_CAP_TTL;
+> > > -
+> > > -	return __pci_find_next_cap_ttl(bus, devfn, pos, cap, &ttl);
+> > > +	return PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config, pos, cap, bus,
+> > > devfn);
+> > >   }
+> > >     u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
+> > > @@ -554,42 +527,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
+> > >    */
+> > >   u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int
+> > > cap)
+> > >   {
+> > > -	u32 header;
+> > > -	int ttl;
+> > > -	u16 pos = PCI_CFG_SPACE_SIZE;
+> > > -
+> > > -	/* minimum 8 bytes per capability */
+> > > -	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+> > > -
+> > >   	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
+> > >   		return 0;
+> > >   -	if (start)
+> > > -		pos = start;
+> > > -
+> > > -	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
+> > > -		return 0;
+> > > -
+> > > -	/*
+> > > -	 * If we have no capabilities, this is indicated by cap ID,
+> > > -	 * cap version and next pointer all being 0.
+> > > -	 */
+> > > -	if (header == 0)
+> > > -		return 0;
+> > > -
+> > > -	while (ttl-- > 0) {
+> > > -		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+> > > -			return pos;
+> > > -
+> > > -		pos = PCI_EXT_CAP_NEXT(header);
+> > > -		if (pos < PCI_CFG_SPACE_SIZE)
+> > > -			break;
+> > > -
+> > > -		if (pci_read_config_dword(dev, pos, &header) !=
+> > > PCIBIOS_SUCCESSFUL)
+> > > -			break;
+> > > -	}
+> > > -
+> > > -	return 0;
+> > > +	return PCI_FIND_NEXT_EXT_CAPABILITY(pci_bus_read_config, start, cap,
+> > > +					    dev->bus, dev->devfn);
+> > >   }
+> > >   EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
+> > >   @@ -649,7 +591,7 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
+> > >     static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int
+> > > ht_cap)
+> > >   {
+> > > -	int rc, ttl = PCI_FIND_CAP_TTL;
+> > > +	int rc;
+> > >   	u8 cap, mask;
+> > >     	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
+> > > @@ -657,8 +599,8 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev,
+> > > u8 pos, int ht_cap)
+> > >   	else
+> > >   		mask = HT_5BIT_CAP_MASK;
+> > >   -	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
+> > > -				      PCI_CAP_ID_HT, &ttl);
+> > > +	pos = PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config, pos,
+> > > +				    PCI_CAP_ID_HT, dev->bus, dev->devfn);
+> > >   	while (pos) {
+> > >   		rc = pci_read_config_byte(dev, pos + 3, &cap);
+> > >   		if (rc != PCIBIOS_SUCCESSFUL)
+> > > @@ -667,9 +609,10 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev,
+> > > u8 pos, int ht_cap)
+> > >   		if ((cap & mask) == ht_cap)
+> > >   			return pos;
+> > >   -		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
+> > > -					      pos + PCI_CAP_LIST_NEXT,
+> > > -					      PCI_CAP_ID_HT, &ttl);
+> > > +		pos = PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config,
+> > > +					    pos + PCI_CAP_LIST_NEXT,
+> > > +					    PCI_CAP_ID_HT, dev->bus,
+> > > +					    dev->devfn);
+> > >   	}
+> > >     	return 0;
+> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > > index e7d31ed56731..46fb6b5a854e 100644
+> > > --- a/drivers/pci/pci.h
+> > > +++ b/drivers/pci/pci.h
+> > > @@ -2,6 +2,8 @@
+> > >   #ifndef DRIVERS_PCI_H
+> > >   #define DRIVERS_PCI_H
+> > >   +#include <linux/align.h>
+> > > +#include <linux/bitfield.h>
+> > >   #include <linux/pci.h>
+> > >     struct pcie_tlp_log;
+> > > @@ -93,6 +95,89 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+> > >   int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32
+> > > size,
+> > >   			u32 *val);
+> > >   +/* Standard Capability finder */
+> > > +/**
+> > > + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
+> > 
+> > I don't think "_TTL" is relevant in the macro name here.  I see it
+> > copied the previous __pci_find_next_cap_ttl() name; "ttl" *was*
+> > relevant there, but it isn't anymore.
+> > 
 > 
-> Reported-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> ---
->  drivers/net/wireless/ath/ath.h        | 14 ++++++++++++++
->  drivers/net/wireless/ath/ath12k/pci.c | 10 ++++------
->  2 files changed, 18 insertions(+), 6 deletions(-)
+> Dear Bjorn,
 > 
-> diff --git a/drivers/net/wireless/ath/ath.h b/drivers/net/wireless/ath/ath.h
-> index 34654f710d8a1e63f65a47d4602e2035262a4d9e..ef685123b66bf4f41428fec67c1967f242a9ef27 100644
-> --- a/drivers/net/wireless/ath/ath.h
-> +++ b/drivers/net/wireless/ath/ath.h
-> @@ -21,6 +21,8 @@
->  #include <linux/skbuff.h>
->  #include <linux/if_ether.h>
->  #include <linux/spinlock.h>
-> +#include <linux/pci.h>
-> +#include <linux/pci_regs.h>
->  #include <net/mac80211.h>
->  
->  /*
-> @@ -336,4 +338,16 @@ static inline const char *ath_bus_type_to_string(enum ath_bus_type bustype)
->  	return ath_bus_type_strings[bustype];
->  }
->  
-> +static inline int ath_pci_aspm_state(u16 lnkctl)
-> +{
-> +	int state = 0;
-> +
-> +	if (lnkctl & PCI_EXP_LNKCTL_ASPM_L0S)
-> +		state |= PCIE_LINK_STATE_L0S;
-> +	if (lnkctl & PCI_EXP_LNKCTL_ASPM_L1)
-> +		state |= PCIE_LINK_STATE_L1;
-> +
-> +	return state;
-> +}
-> +
->  #endif /* ATH_H */
-> diff --git a/drivers/net/wireless/ath/ath12k/pci.c b/drivers/net/wireless/ath/ath12k/pci.c
-> index 489d546390fcdab8f615cc9184006a958d9f140a..a5e11509e3ab8faad6638ff78ce6a8a5e9c3cbbd 100644
-> --- a/drivers/net/wireless/ath/ath12k/pci.c
-> +++ b/drivers/net/wireless/ath/ath12k/pci.c
-> @@ -16,6 +16,8 @@
->  #include "mhi.h"
->  #include "debug.h"
->  
-> +#include "../ath.h"
-> +
->  #define ATH12K_PCI_BAR_NUM		0
->  #define ATH12K_PCI_DMA_MASK		36
->  
-> @@ -928,8 +930,7 @@ static void ath12k_pci_aspm_disable(struct ath12k_pci *ab_pci)
->  		   u16_get_bits(ab_pci->link_ctl, PCI_EXP_LNKCTL_ASPM_L1));
->  
->  	/* disable L0s and L1 */
-> -	pcie_capability_clear_word(ab_pci->pdev, PCI_EXP_LNKCTL,
-> -				   PCI_EXP_LNKCTL_ASPMC);
-> +	pci_disable_link_state(ab_pci->pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
+> Thank you very much for your reply.
+> 
+> The _TTL suffix will be removed.
+> 
+> 
+> > I would like this a lot better if it could be implemented as a
+> > function, but I assume it has to be a macro for some varargs reason.
+> > 
+> 
+> Yes. The macro definitions used in combination with the previous review
+> opinions of Ilpo.
 
-I'd remove to comment too as the code is self-explanatory after this 
-change.
+The other option would be to standardize the accessor interface signature 
+and pass the function as a pointer. One might immediately think of generic 
+PCI core accessors making it sound simpler than it is but here the 
+complication is the controller drivers want to pass some internal 
+structure due to lack of pci_dev so it would need to be void 
+*read_cfg_data. Then we'd need to deal with those voids also in some 
+generic PCI accessors which is a bit ugly.
 
->  
->  	set_bit(ATH12K_PCI_ASPM_RESTORE, &ab_pci->flags);
->  }
-> @@ -958,10 +959,7 @@ static void ath12k_pci_aspm_restore(struct ath12k_pci *ab_pci)
->  {
->  	if (ab_pci->ab->hw_params->supports_aspm &&
->  	    test_and_clear_bit(ATH12K_PCI_ASPM_RESTORE, &ab_pci->flags))
-> -		pcie_capability_clear_and_set_word(ab_pci->pdev, PCI_EXP_LNKCTL,
-> -						   PCI_EXP_LNKCTL_ASPMC,
-> -						   ab_pci->link_ctl &
-> -						   PCI_EXP_LNKCTL_ASPMC);
-> +		pci_enable_link_state(ab_pci->pdev, ath_pci_aspm_state(ab_pci->link_ctl));
->  }
->  
->  static void ath12k_pci_cancel_workqueue(struct ath12k_base *ab)
+> > > + * @read_cfg: Function pointer for reading PCI config space
+> > > + * @start: Starting position to begin search
+> > > + * @cap: Capability ID to find
+> > > + * @args: Arguments to pass to read_cfg function
+> > > + *
+> > > + * Iterates through the capability list in PCI config space to find
+> > > + * @cap. Implements TTL (time-to-live) protection against infinite loops.
+> > > + *
+> > > + * Returns: Position of the capability if found, 0 otherwise.
+> > > + */
+> > > +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)
+> > > \
+> > > +({									\
+> > > +	int __ttl = PCI_FIND_CAP_TTL;					\
+> > > +	u8 __id, __found_pos = 0;					\
+> > > +	u8 __pos = (start);						\
+> > > +	u16 __ent;							\
+> > > +									\
+> > > +	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
+> > > +									\
+> > > +	while (__ttl--) {						\
+> > > +		if (__pos < PCI_STD_HEADER_SIZEOF)			\
+> > > +			break;						\
+> > 
+> > I guess this is just lifted directly from __pci_find_next_cap_ttl(),
+> > but wow, I wish it weren't quite *so* subtle.  Totally fine though.
+> > 
+> > Maybe this could be split into one patch for standard capabilities and
+> > a second for extended capabilities, just so the connection between
+> > this and __pci_find_next_cap_ttl() would be clearer.
+> > 
+> 
+> I will split the two patches.
+> 
+> > > +									\
+> > > +		__pos = ALIGN_DOWN(__pos, 4);				\
+> > > +		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
+> > > +									\
+> > > +		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
+> > > +		if (__id == 0xff)					\
+> > > +			break;						\
+> > > +									\
+> > > +		if (__id == (cap)) {					\
+> > > +			__found_pos = __pos;				\
+> > > +			break;						\
+> > > +		}							\
+> > > +									\
+> > > +		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
+> > > +	}								\
+> > > +	__found_pos;							\
+> > > +})
 
-As you now depend on ASPM driver being there, these should also add to 
-Kconfig:
-
-depends on PCIEASPM
 
 -- 
  i.
