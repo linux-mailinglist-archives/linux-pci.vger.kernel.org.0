@@ -1,175 +1,154 @@
-Return-Path: <linux-pci+bounces-32665-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32666-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5E42B0C7D0
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 17:40:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 512B9B0C7DA
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 17:43:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A241167A27
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 15:40:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DD3A3AD47E
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 15:43:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACA342DE70A;
-	Mon, 21 Jul 2025 15:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="ANGCruJu"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C03662DECD8;
+	Mon, 21 Jul 2025 15:43:31 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B837170A2B;
-	Mon, 21 Jul 2025 15:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753112413; cv=pass; b=fBssNIAl3LV5ZSeGVT8hf82blqLpeRyWHMHvhf+a5RxXWI9hN+01zS84ntFBHNLp6HSiSr7ofOjLHFWE4O7rBSzRjjIa64Gse5LYsUKmvTtCDCszv90vni2YU6NuUx4emGAtfGkuOr+zPSQGNlXCplI/yrCMPQSiIyeguhx5k4k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753112413; c=relaxed/simple;
-	bh=Oa3E9DZrZKrWi0b6xMSB/3xGFv+yRLURj6f7V19Xm20=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=rxby3PlK1ho6+YV3cKslLtJSlqqwOJ+sLdMZwCh2NKSJeKlgiLYlA84hOZk1YpgQMYO3zsaP9eFfLI4Qvxb6M+opg41+V8PE17TCHbENbyEYh++viaSNcN6AAU1Nz6fqSlfXnV9P5KJRzv2g3thxukaZml5S+LAkRgMkNN6EN5U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=ANGCruJu; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1753112391; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ObAS1cVnZe4GtB2Mw58Ew1pSljyXZYtNLhEh6Ahm5C0U2v5+fMUe6lkHaznuZKNG0VnnDRwiCniVdd66+WEeyWkImBGBX5KR843rOMOPby1+nv8VLzMGdSYZ/F3sldtGUSeblRzG/omRF2BLu4g8GNynVL1dDooShmBrAW+zjK8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1753112391; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Oa3E9DZrZKrWi0b6xMSB/3xGFv+yRLURj6f7V19Xm20=; 
-	b=AZWcEnijkohVF4EG77WEsv379buoFNd32uQNLnnelafKsyObKhn5A2JkInWukWcPNOeEqGr0blCZMRbBbVIQlw9qxQ8qGeQ6tIjkNHf4FMYiUB31n9hXgi4L7XPg+/UQpieXu4OiMB1ypRmdkfyyea0mMkSfqDdas7KKhIwd+Aw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1753112391;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=Oa3E9DZrZKrWi0b6xMSB/3xGFv+yRLURj6f7V19Xm20=;
-	b=ANGCruJuodraWt9UzBZXqIRB2mcysZOiU7jsXetJbzpB+XxhTTxqVLuN0qKfddDc
-	HJicDM4XzIe+DEQljZ0NlFJgaUXuJrZQDYLcFZGouE4rcLtjtzyHK5KYfLYBSK3YAdo
-	b3RnVAW/8tseLkArYpI3U3d3RRzKWWoYxBMrZ44E=
-Received: by mx.zohomail.com with SMTPS id 1753112390371703.9991459836481;
-	Mon, 21 Jul 2025 08:39:50 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09195170A2B;
+	Mon, 21 Jul 2025 15:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753112611; cv=none; b=b3D/13gVM0i8Fd8dPN3eX9EVF3DyCDS7sTzn6dSRa24d8sMR4w+A1oD0K1EA+5ahOWJuYmJtztFdp9MVa0WN7SdBRTFeQ5gRtwXDk13VxIglo9KMVZbi8buW2irgMRrmmblRl+JvXcYjAanigQpqjLySIj15ImHH0obQpWRGfAE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753112611; c=relaxed/simple;
+	bh=FmHzynu9CSyBjY7snrkDKw/+CacF/IzAQo3vvCbvS+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ByCd8QCoNqYkMEjhXbrUcpDxZFAKqh1S0fs6quqbVTDD4k+WYcPAKFuxRQ62GzcUFOI7KRAQ4HgsQYp8vZf82eEt7qmKKE3HN/Ow1OBGwkCOZF2CUzbojJv1cxjzSjlxGbHrjQMxt0T1NbAVvO/Y2BL2b/UX/H2iKht4WFEPlxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6077dea37easo6978369a12.3;
+        Mon, 21 Jul 2025 08:43:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753112608; x=1753717408;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q8EMch7mkTjcU9bPeMD8J/i/5F0EvPo6dc4/iWe3Dl8=;
+        b=cvlXpL555Dil8P857eWH+XR0hmotVtqiwaClLhIbwQM8fFgRMCg71pc5WimBpg3n3R
+         HgnoUVeoEPskXSBEQJXGPg0sYfF3/8Womdc4A3/mpSn2P6HwQwE3f2hNWNyjViQxLfBB
+         kLbEW19BLVfyawk93hWq71WxPxiCB64MM6s8TsQ35Z9cR5W/sm59TIiR26Cm+r7k9Bgh
+         ObjAR+VQ1PiYNOFlB0vZAtjAsDPKuAoc3ruHb5VZ1G9ofb5ByNSOCKdE0BGjXaPFNxCw
+         h917UFBmAnMKnNqQilXZOibIcgYOMitWHinTiqt51K22exqn25spTOEH6Z7la4dz6HWt
+         PvkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGXAmtW2G+HXtWvXhIOhCgPKMp+YT8G5GbftnOjlfPEvsl/hRF8Xnf/k9bc2wfH2wjMMkjSfaWbclGxa4r@vger.kernel.org, AJvYcCVlKN65A7hfV/Xq8iWUMWMfy2RNIBcpKTULF5lzJvjioWteE+ALpDeD7rf+sG5m7UMCgQSDFS72hTZo@vger.kernel.org, AJvYcCX+pbJClUaJz6cJAaQ0+XcB9a66mTImlkKTci4fcCAFOhPta6Tqt7AuH1ikD4DKBtXaEpXVG1eKfsMG@vger.kernel.org, AJvYcCX0/7jIwcIW/+uZhXY+GE0MiqueWKrKymmN3F8E22CgC+dRAEr7pKtF8bk2gwdEeA6f4ER4IvVl2w1e5Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXqRVK8GFOfzKtOeItjxOkO1b7C0z31vfSZbesXOQtubg23Yaz
+	1eZB7W4F4uQoQwWOiKGaJzJ7ngSUujAUFDWiYjf8CDbp4Gh7eV194j49B/lt1g==
+X-Gm-Gg: ASbGnctRkWi6JFs/Q/ch7+GmjJoHeBktZISeWuU7UYqBIcAPP5u6dw3GeBkAj8bYuhi
+	UK4xW6S1pLTviFoHqYu4goyLGS5C9jUiPhpEciVCs1EN7Xp9HvW3WbofK8MvBqJWkKkL4AS2KL1
+	luSeG3xcHwNe8SiKr3yYZaNTG+dKg89ms1l1NO6xJxmIdrRrP5hRYge50VVVLjER1g0mN8SezGY
+	WH4mT8KL18HXsPfaLdGjQQDu/DWdFUO7Py2vXz7wh8Z2cWFgf9ZqkclasA7hviuX0kbvtB81hvV
+	r3RPx/A4+oy81ar+JQJgU9EE/5wjtn7NlwAsYMnJhDJVh/gY/umZf0cJ0XEvndDhncHzuiclcYa
+	vEAl2tnLRiPhbeVD9P4TRASM=
+X-Google-Smtp-Source: AGHT+IHiVZajLNzCqasc/a84TFi9Eq0YagQ04C+1iS6aqNPgOjIXzg/tFI2BWhK3viZOkIp11MJmpg==
+X-Received: by 2002:a05:6402:13c8:b0:612:b573:f4bb with SMTP id 4fb4d7f45d1cf-612b57401cfmr14728022a12.0.1753112608001;
+        Mon, 21 Jul 2025 08:43:28 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:4::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-612c8f0a0e2sm5675860a12.4.2025.07.21.08.43.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Jul 2025 08:43:27 -0700 (PDT)
+Date: Mon, 21 Jul 2025 08:43:24 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>, 
+	Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev, osandov@osandov.com, 
+	xueshuai@linux.alibaba.com, konrad.wilk@oracle.com, linux-edac@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v2] vmcoreinfo: Track and log recoverable hardware errors
+Message-ID: <crxrexye2nmqebct6eisgkvpc7btrg6ckh5qr7tmhpkdnqys2h@6dpf2j6yhlxq>
+References: <20250721-vmcore_hw_error-v2-1-ab65a6b43c5a@debian.org>
+ <20250721135718.GAaH5HPinaKvXjM-1g@renoirsky.local>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v7 3/6] rust: irq: add support for non-threaded IRQs and
- handlers
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <DBHU8JNG1P7I.NNDX9ZDT9DNU@kernel.org>
-Date: Mon, 21 Jul 2025 12:39:33 -0300
-Cc: Alice Ryhl <aliceryhl@google.com>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Trevor Gross <tmgross@umich.edu>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Benno Lossin <lossin@kernel.org>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- linux-pci@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <17DE1CFA-11D2-43B0-8710-A55983E2E918@collabora.com>
-References: <20250715-topics-tyr-request_irq2-v7-0-d469c0f37c07@collabora.com>
- <20250715-topics-tyr-request_irq2-v7-3-d469c0f37c07@collabora.com>
- <aH5SiKFESpnD4jvZ@google.com>
- <1CC4638E-C682-4F68-A616-553169BB677C@collabora.com>
- <DBHU8JNG1P7I.NNDX9ZDT9DNU@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250721135718.GAaH5HPinaKvXjM-1g@renoirsky.local>
 
+Hello Borislav,
 
+On Mon, Jul 21, 2025 at 03:57:18PM +0200, Borislav Petkov wrote:
+> On Mon, Jul 21, 2025 at 03:13:40AM -0700, Breno Leitao wrote:
+> > Introduce a generic infrastructure for tracking recoverable hardware
+> > errors (HW errors that did not cause a panic) and record them for vmcore
+> > consumption. This aids post-mortem crash analysis tools by preserving
+> > a count and timestamp for the last occurrence of such errors.
+> > 
+> > This patch adds centralized logging for three common sources of
+> 
+> "Add centralized... "
 
-> On 21 Jul 2025, at 12:28, Danilo Krummrich <dakr@kernel.org> wrote:
->=20
-> On Mon Jul 21, 2025 at 5:10 PM CEST, Daniel Almeida wrote:
->> Hi Alice, thanks for looking into this again :)
->>=20
->>=20
->> [=E2=80=A6]
->>=20
->>>> diff --git a/rust/kernel/irq/request.rs =
-b/rust/kernel/irq/request.rs
->>>> new file mode 100644
->>>> index =
-0000000000000000000000000000000000000000..2f4637d8bc4c9fda23cbc83076870359=
-57b0042a
->>>> --- /dev/null
->>>> +++ b/rust/kernel/irq/request.rs
->>>> @@ -0,0 +1,267 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +// SPDX-FileCopyrightText: Copyright 2025 Collabora ltd.
->>>> +
->>>> +//! This module provides types like [`Registration`] which allow =
-users to
->>>> +//! register handlers for a given IRQ line.
->>>> +
->>>> +use core::marker::PhantomPinned;
->>>> +
->>>> +use crate::alloc::Allocator;
->>>> +use crate::device::Bound;
->>>> +use crate::device::Device;
->>>=20
->>> The usual style is to write this as:
->>>=20
->>> use crate::device::{Bound, Device};
->>=20
->> I dislike this syntax because I think it is a conflict magnet. =
-Moreover, when
->> you get conflicts, they are harder to solve than they are when each =
-import
->> is in its own line, at least IMHO. =20
->=20
-> Intuitively, I would agree. However, I think practically it's not that =
-bad.
->=20
-> While it's true that Rust has generally more conflict potential - =
-especially in
-> the current phase - my feeling hasn't been that includes produce =
-significantly
-> more conflicts then any other code so far.
+Ack!
 
-Hmm, I faced lots of conflicts for the platform I/O stuff, for example. =
-They
-were all on the imports and it was a bit hard to fix it by hand. i.e.: =
-it=E2=80=99s
-much simpler to discard the modifications and then ask rust-analyzer to =
-figure
-out what should be grouped where on the new code. This is a bit =
-undesirable.
+> > recoverable hardware errors:
+> > 
+> >   - PCIe AER Correctable errors
+> >   - x86 Machine Check Exceptions (MCE)
+> >   - APEI/CPER GHES corrected or recoverable errors
+> > 
+> > hwerror_tracking is write-only at kernel runtime, and it is meant to be
+> > read from vmcore using tools like crash/drgn. For example, this is how
+> > it looks like when opening the crashdump from drgn.
+> > 
+> > 	>>> prog['hwerror_tracking']
+> > 	(struct hwerror_tracking_info [3]){
+> > 		{
+> > 			.count = (int)844,
+> > 			.timestamp = (time64_t)1752852018,
+> > 		},
+> > 		...
+> > 
+> 
+> I'm still missing the justification why rasdaemon can't be used here.
+> You did explain it already in past emails.
 
+Sorry, I will update it.
 
->=20
->> In any case, I don't think we have a guideline for imports at the =
-moment?
->=20
-> No, but I think we should try to be as consistent as possible (at =
-least within a
-> a certain logical unit, e.g. subsystem, module, etc.). Not sure where =
-exactly
-> the IRQ stuff will end up yet. :)
+> > +enum hwerror_tracking_source {
+> > +	HWE_RECOV_AER,
+> > +	HWE_RECOV_MCE,
+> > +	HWE_RECOV_GHES,
+> > +	HWE_RECOV_MAX,
+> > +};
+> 
+> Are we confident this separation will serve all cloud dudes?
 
+I am not, but, I've added them to CC list of this patch, so, they are
+more than free to chime in.
 
-Sure, I just think we should discuss this at the kernel crate level at a =
-future
-point then, at least IMHO. I think it's something that Andreas had =
-already
-commented on, by the way.
+> > +void hwerror_tracking_log(enum hwerror_tracking_source src)
+> 
+> A function should have a verb in its name explaining what it does:
+> 
+> hwerr_log_error_type()
+> 
+> or so.
 
-=E2=80=94 Daniel
+Ack!
 
+I will wait a bit more and send an updated version.
+
+Thanks for the review
+--breno
 
