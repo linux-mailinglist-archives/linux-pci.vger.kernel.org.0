@@ -1,282 +1,151 @@
-Return-Path: <linux-pci+bounces-32674-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32675-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 110A3B0CAC1
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 20:57:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7ECDB0CAE7
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 21:14:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27CC63BB5A3
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 18:57:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 247B63BE99A
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 19:13:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFC36221D94;
-	Mon, 21 Jul 2025 18:57:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DE0B226D04;
+	Mon, 21 Jul 2025 19:14:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mqXQJH0t"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="WOvb9k+n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88143221721;
-	Mon, 21 Jul 2025 18:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753124251; cv=none; b=CNHgWbt5XJnixlRJVONbjJUuAGMr3sb1QW+8pPvjNa7Y9mf9//HbJzQilCuX+QrG2SGa/G7uMh4qvtxdipFaOCOrydqeLTXKpqGpDI97kinDYLa2zIa2NNc11iUGUPAVNApWAo8YvSKdndxBhFnWjC7+Fk/9GW7asQaDscdjDAs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753124251; c=relaxed/simple;
-	bh=3u19+HJbqZLGOkvO9EOVcJxRBd+pyMHDYhsiKgTxEtk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KiCb84AiY/uCwoiDYiCW5ZsgBOn2nUSCh5WbC2kFs9A5KMX7vFkpM4GMhczKC+s/BTwz2kQYw2tYXmFeEZfxY1PPQLdDhpa7FA4u4lZmVIOFdph/qVlmvCnXgZxEROCAYcjCOAtXKHIVIPDE6IDda+r+eiHZp2/GOygDuDWkh0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mqXQJH0t; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2B6EC4CEF4;
-	Mon, 21 Jul 2025 18:57:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753124251;
-	bh=3u19+HJbqZLGOkvO9EOVcJxRBd+pyMHDYhsiKgTxEtk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mqXQJH0tXgQZIPE5fhuL/ULHSjaem2QXkQJoDZmcqrVweiw3bR2jcKnEHqTWQxWxx
-	 0eRATsmQX8XMqP8YY1+YzL+tAx7zYq68IqbQRVzqmhxXa6PCFwVP1SLIJgRAxHvKwB
-	 zysbiLIZU2NLn841wk7vl7FFa9BUgpK9NBRfVla/tqqHarTZJ3YkpTYg0qWpqkpgjV
-	 pqcqvm0g83ituE+LgGUIrRvdg1gDhDkP0OXXVYj6WCfYlQwQ57fAS34j4Xa5um/Hzl
-	 to1nyf9loSMGGjhPSLh7mmMCq8LyZ2WJaazcpInzRvTpAJD00G7KqGZgbngwvYWUUN
-	 f8Q5Nc+HTY4Mg==
-From: Mario Limonciello <superm1@kernel.org>
-To: David Airlie <airlied@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-kernel@vger.kernel.org (open list),
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH v4 1/1] PCI: Move boot display attribute to DRM
-Date: Mon, 21 Jul 2025 13:57:26 -0500
-Message-ID: <20250721185726.1264909-2-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250721185726.1264909-1-superm1@kernel.org>
-References: <20250721185726.1264909-1-superm1@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B6321D3CD;
+	Mon, 21 Jul 2025 19:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753125251; cv=pass; b=OOxV7aLVhaji0fz8eqk3Dq004QD7ZMRJXRAoGzslLGiBvs7o9fEEvgvcMYR9uIRORphz14kaQskoBHFE9l1ICbFtQZL9HRqyJ1SI0MpTUDkKZRzztOQeCZ+uv1lYBkUPnyF397I6PPyHYkRgsdwSjxv1aD3oHV10Ezw6lkeUDFQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753125251; c=relaxed/simple;
+	bh=0h0SQouOS+2/ecprirETTnJHVqGqbMtPui7LsXV271w=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=XaSa6EVXMR5LI4GZDb4ortmiG9qlMO9AgZ9Z7vvsk4PBOk1oKuUyYAvSCR9uq8apBiC43FInpZV8Ny9/dYiUyOEacYbeEWmW4IfqkzbDArm8hRLI3IClflu8U5eh5isRnXVl6pF/JorpgZe4iqZr9jyo7cZAguUUl1D2A0IAlC8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=WOvb9k+n; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1753125229; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=UpwfzHxlshxi99vvcgDCdiC103IxjsttCljykHz944X1Pn2oh4lFWtl106yYg/5rNRqbNqk1yly5zqnSWM4JpQ6rl0MbKWDkH90pKl/C/GVgKpz2FrWbqqAJe8mR6hZpJ7+hyQLKl1f1uBzHSKbKjgxRUqJO+N6TXGMF4ex+lRw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1753125229; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Ou8ViXoRaNCpJ3Be1xNdxsQtmjp1qCTLsimQKmnyD8w=; 
+	b=FijhhAiYB1Q0oQ41pMY6WaVQyBRSUGzmvzdbPw1ATf5TBJ9CKljLonKuGC1mFIC4UZ1yDgy20YKL6Ff5CJsUW4CUk9tA413uIgBaZ23X86v6ppRUeW/bD2wtefu1UgIlhHrCliv5pqQjLge+nG5aocrn2waS/gSqMqHQC8IwpTY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1753125229;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=Ou8ViXoRaNCpJ3Be1xNdxsQtmjp1qCTLsimQKmnyD8w=;
+	b=WOvb9k+n7gaqvwL3fq68zIkrgXpoKVQcQi9cx2b3F1PD1Ea9kX/qNnJdxwD8fntr
+	gwCoxV4k/N7cJbWENd91hYVWIuntQx+DVt+LKF9pvNtZzA2T8lacQ5b0/1LyUvKuAvf
+	TSha05t+gRcuFVGBgL0PAeC4P+shtQJGnTQ7ZNOU=
+Received: by mx.zohomail.com with SMTPS id 1753125226406624.466779770213;
+	Mon, 21 Jul 2025 12:13:46 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH] rust: irq: add &Device<Bound> argument to irq callbacks
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250721-irq-bound-device-v1-1-4fb2af418a63@google.com>
+Date: Mon, 21 Jul 2025 16:13:30 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Benno Lossin <lossin@kernel.org>,
+ Dirk Behme <dirk.behme@gmail.com>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <DCBBFAC5-A4B4-41BA-8732-32FA96EDE28E@collabora.com>
+References: <20250721-irq-bound-device-v1-1-4fb2af418a63@google.com>
+To: Alice Ryhl <aliceryhl@google.com>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+Alice,
 
-The boot_display attribute is currently created by PCI core, but the
-main reason it exists is for userspace software that interacts with
-drm to make decisions. Move the attribute to DRM.
+> On 21 Jul 2025, at 11:38, Alice Ryhl <aliceryhl@google.com> wrote:
+>=20
+> When working with a bus device, many operations are only possible =
+while
+> the device is still bound. The &Device<Bound> type represents a proof =
+in
+> the type system that you are in a scope where the device is guaranteed
+> to still be bound. Since we deregister irq callbacks when unbinding a
+> device, if an irq callback is running, that implies that the device =
+has
+> not yet been unbound.
+>=20
+> To allow drivers to take advantage of that, add an additional argument
+> to irq callbacks.
+>=20
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+> This patch is a follow-up to Daniel's irq series [1] that adds a
+> &Device<Bound> argument to all irq callbacks. This allows you to use
+> operations that are only safe on a bound device inside an irq =
+callback.
+>=20
+> The patch is otherwise based on top of driver-core-next.
+>=20
+> [1]: =
+https://lore.kernel.org/r/20250715-topics-tyr-request_irq2-v7-0-d469c0f37c=
+07@collabora.com
 
-This also fixes a compilation failure when compiled without
-CONFIG_VIDEO on sparc.
+I am having a hard time applying this locally.
 
-Suggested-by: Manivannan Sadhasivam <mani@kernel.org>
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Closes: https://lore.kernel.org/linux-next/20250718224118.5b3f22b0@canb.auug.org.au/
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- Documentation/ABI/testing/sysfs-bus-pci   |  9 -----
- Documentation/ABI/testing/sysfs-class-drm |  8 ++++
- drivers/gpu/drm/drm_sysfs.c               | 41 +++++++++++++++++++++
- drivers/pci/pci-sysfs.c                   | 45 -----------------------
- 4 files changed, 49 insertions(+), 54 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-class-drm
+> ///
+> /// This function should be only used as the callback in =
+`request_irq`.
+> unsafe extern "C" fn handle_irq_callback<T: Handler>(_irq: i32, ptr: =
+*mut c_void) -> c_uint {
+> -    // SAFETY: `ptr` is a pointer to T set in `Registration::new`
+> -    let handler =3D unsafe { &*(ptr as *const T) };
+> -    T::handle(handler) as c_uint
+> +    // SAFETY: `ptr` is a pointer to `Registration<T>` set in =
+`Registration::new`
+> +    let registration =3D unsafe { &*(ptr as *const Registration<T>) =
+};
+> +    // SAFETY: The irq callback is removed before the device is =
+unbound, so the fact that the irq
+> +    // callback is running implies that the device has not yet been =
+unbound.
+> +    let device =3D unsafe { registration.inner.device().as_bound() };
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index a2c74d4ebeadd..69f952fffec72 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -612,12 +612,3 @@ Description:
- 
- 		  # ls doe_features
- 		  0001:01        0001:02        doe_discovery
--
--What:		/sys/bus/pci/devices/.../boot_display
--Date:		October 2025
--Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
--Description:
--		This file indicates that displays connected to the device were
--		used to display the boot sequence.  If a display connected to
--		the device was used to display the boot sequence the file will
--		be present and contain "1".
-diff --git a/Documentation/ABI/testing/sysfs-class-drm b/Documentation/ABI/testing/sysfs-class-drm
-new file mode 100644
-index 0000000000000..536820afca05b
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-drm
-@@ -0,0 +1,8 @@
-+What:		/sys/class/drm/.../boot_display
-+Date:		October 2025
-+Contact:	Linux DRI developers <dri-devel@vger.kernel.org>
-+Description:
-+		This file indicates that displays connected to the device were
-+		used to display the boot sequence.  If a display connected to
-+		the device was used to display the boot sequence the file will
-+		be present and contain "1".
-diff --git a/drivers/gpu/drm/drm_sysfs.c b/drivers/gpu/drm/drm_sysfs.c
-index 60c1f26edb6fa..1bc2e6abaa1a9 100644
---- a/drivers/gpu/drm/drm_sysfs.c
-+++ b/drivers/gpu/drm/drm_sysfs.c
-@@ -18,6 +18,7 @@
- #include <linux/gfp.h>
- #include <linux/i2c.h>
- #include <linux/kdev_t.h>
-+#include <linux/pci.h>
- #include <linux/property.h>
- #include <linux/slab.h>
- 
-@@ -30,6 +31,8 @@
- #include <drm/drm_property.h>
- #include <drm/drm_sysfs.h>
- 
-+#include <asm/video.h>
-+
- #include "drm_internal.h"
- #include "drm_crtc_internal.h"
- 
-@@ -508,6 +511,43 @@ void drm_sysfs_connector_property_event(struct drm_connector *connector,
- }
- EXPORT_SYMBOL(drm_sysfs_connector_property_event);
- 
-+static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
-+				 char *buf)
-+{
-+	return sysfs_emit(buf, "1\n");
-+}
-+static DEVICE_ATTR_RO(boot_display);
-+
-+static struct attribute *display_attrs[] = {
-+	&dev_attr_boot_display.attr,
-+	NULL
-+};
-+
-+static umode_t boot_display_visible(struct kobject *kobj,
-+				    struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj)->parent;
-+
-+	if (dev_is_pci(dev)) {
-+		struct pci_dev *pdev = to_pci_dev(dev);
-+
-+		if (video_is_primary_device(&pdev->dev))
-+			return a->mode;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct attribute_group display_attr_group = {
-+	.attrs = display_attrs,
-+	.is_visible = boot_display_visible,
-+};
-+
-+static const struct attribute_group *card_dev_groups[] = {
-+	&display_attr_group,
-+	NULL
-+};
-+
- struct device *drm_sysfs_minor_alloc(struct drm_minor *minor)
- {
- 	const char *minor_str;
-@@ -531,6 +571,7 @@ struct device *drm_sysfs_minor_alloc(struct drm_minor *minor)
- 
- 		kdev->devt = MKDEV(DRM_MAJOR, minor->index);
- 		kdev->class = drm_class;
-+		kdev->groups = card_dev_groups;
- 		kdev->type = &drm_sysfs_device_minor;
- 	}
- 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 6ccd65f5b1051..b3fb6024e0ba7 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -680,13 +680,6 @@ const struct attribute_group *pcibus_groups[] = {
- 	NULL,
- };
- 
--static ssize_t boot_display_show(struct device *dev,
--				 struct device_attribute *attr, char *buf)
--{
--	return sysfs_emit(buf, "1\n");
--}
--static DEVICE_ATTR_RO(boot_display);
--
- static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf)
- {
-@@ -1059,37 +1052,6 @@ void pci_remove_legacy_files(struct pci_bus *b)
- }
- #endif /* HAVE_PCI_LEGACY */
- 
--/**
-- * pci_create_boot_display_file - create "boot_display"
-- * @pdev: dev in question
-- *
-- * Create "boot_display" in sysfs for the PCI device @pdev if it is the
-- * boot display device.
-- */
--static int pci_create_boot_display_file(struct pci_dev *pdev)
--{
--#ifdef CONFIG_VIDEO
--	if (video_is_primary_device(&pdev->dev))
--		return sysfs_create_file(&pdev->dev.kobj, &dev_attr_boot_display.attr);
--#endif
--	return 0;
--}
--
--/**
-- * pci_remove_boot_display_file - remove "boot_display"
-- * @pdev: dev in question
-- *
-- * Remove "boot_display" in sysfs for the PCI device @pdev if it is the
-- * boot display device.
-- */
--static void pci_remove_boot_display_file(struct pci_dev *pdev)
--{
--#ifdef CONFIG_VIDEO
--	if (video_is_primary_device(&pdev->dev))
--		sysfs_remove_file(&pdev->dev.kobj, &dev_attr_boot_display.attr);
--#endif
--}
--
- #if defined(HAVE_PCI_MMAP) || defined(ARCH_GENERIC_PCI_MMAP_RESOURCE)
- /**
-  * pci_mmap_resource - map a PCI resource into user memory space
-@@ -1693,15 +1655,9 @@ static const struct attribute_group pci_dev_resource_resize_group = {
- 
- int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
- {
--	int retval;
--
- 	if (!sysfs_initialized)
- 		return -EACCES;
- 
--	retval = pci_create_boot_display_file(pdev);
--	if (retval)
--		return retval;
--
- 	return pci_create_resource_files(pdev);
- }
- 
-@@ -1716,7 +1672,6 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
- 	if (!sysfs_initialized)
- 		return;
- 
--	pci_remove_boot_display_file(pdev);
- 	pci_remove_resource_files(pdev);
- }
- 
--- 
-2.43.0
+Where was this function introduced? i.e. I am missing the change that =
+brought
+in RegistrationInner::device(), or maybe some Deref impl that would make =
+this
+possible?
+
+Also, I wonder if we can't make the scope of this unsafe block smaller?
+
+=E2=80=94 Daniel
+
 
 
