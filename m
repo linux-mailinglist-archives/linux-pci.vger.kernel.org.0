@@ -1,181 +1,137 @@
-Return-Path: <linux-pci+bounces-32645-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32646-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D40BB0C468
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 14:49:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D7465B0C501
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 15:18:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 91A6116793D
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 12:49:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B746172625
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 13:18:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CBBC2D46C2;
-	Mon, 21 Jul 2025 12:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CABC2D59E8;
+	Mon, 21 Jul 2025 13:18:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kGkvWwlF"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rkcVs88b"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D420F2D46AE;
-	Mon, 21 Jul 2025 12:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601C029E109;
+	Mon, 21 Jul 2025 13:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753102166; cv=none; b=nbk3uBrh188UPOE3D3ymNSVpdA+F6QjiARvAIaWWoShLRWBTEdXwY/bjmcTPw2wKr63Fm38fFE2gexVgfueaDgnX4BGMkM3Q9z8GDZCbjxd4kXNGpMDZaFSBMObZcQ9JlJeFwiCyG31M5AW+YZKKU2qn/fJTTSOWJgNzt8mLWiE=
+	t=1753103886; cv=none; b=MLzAocQB7z0iKMgwmwN0zPC1dKsrDnKlUhKyhvSfpkersoymfZynTRibIbUvYZPxdFrz0deeIL2jby4FhR6V8iX49v2w6y6kblZ9wIuMWXhO44xtD94qV5gDI2DB4iOowD0gWLT+6IRv97cq9Dr/vGtsx3xN0vUah26dCUKnV4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753102166; c=relaxed/simple;
-	bh=ohPHgBghu6f1fO7+k+hBTWWYaerI/ppVg0Kx1KUtBO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rF1OAkc/l0bjVqCBbfL+Rdp64NNGPhdAqI+KoO7hfmn1GyWowDGRgBe906XtszD+de9p1N90HA5IU+jDRigfM8+PUA/hFrmPrpxtqdlb7cnDM+YXNqFwjyisCe+qACwTKDt6SrfwqcKQO6qpnh5Kgp658xe26IUe3GUzWTs/6Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kGkvWwlF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 652E3C4CEF7;
-	Mon, 21 Jul 2025 12:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753102166;
-	bh=ohPHgBghu6f1fO7+k+hBTWWYaerI/ppVg0Kx1KUtBO0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kGkvWwlFd+DoY2STa58QgwK1FhyrZQBvUZQS4nlPmJs1YqknObFumP3LWwXtRTkaB
-	 DcNibY+5rsS+g140aekdJ/OaX/2rOcXmlLm8P8nyR5kioU7P5ZAVv4LsqzB3rX8dpA
-	 FwQFrQF6wzfDcZQg6N2gD6r0xffj6lNH6Yk2BiEAA+EoTIdrThYKumAwjScZRk5s4i
-	 RADw0bcKYNylyCMedR0iH5ByudY/jB6RooWapd7QRUv1aH1Yd06Kfqh+YQ+z/RzhWm
-	 HgVNwXVhn6xv4HVCxQhaMEszjkDgW5OtSlIxyhU1LZMYDBMzkPaNQCXvzRobLMcpi1
-	 E2tSYiyFsNh4g==
-Received: from johan by xi.lan with local (Exim 4.98.2)
-	(envelope-from <johan@kernel.org>)
-	id 1udpxC-000000007uL-2QXv;
-	Mon, 21 Jul 2025 14:49:15 +0200
-Date: Mon, 21 Jul 2025 14:49:14 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: qcom: Switch to bus notifier for enabling ASPM
- of PCI devices
-Message-ID: <aH43Sm3LWoipx5Yn@hovoldconsulting.com>
-References: <20250714-aspm_fix-v1-0-7d04b8c140c8@oss.qualcomm.com>
- <20250714-aspm_fix-v1-1-7d04b8c140c8@oss.qualcomm.com>
- <aH4JPBIk_GEoAezy@hovoldconsulting.com>
- <rmltahsjvllae3or7jjk5kwvdkcqohj4bbjsfv4mnfbuq7376s@wtsha4zorf2p>
+	s=arc-20240116; t=1753103886; c=relaxed/simple;
+	bh=dGm4NQ+3hGK/6za3afP2H7y1+PzpmhYcTH4ocGmLxsM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZBbUNXR8PEfoh0O5hVRhGzq4BVVPw6N1//V2AnIuWfs0rAiqkdG8LYJKk0S2KWYsOpKDaxG5ybuMPiIUOqBFs12qRapGRdlVSGdCadHA4h+BFjNy8mzT0u9n8Nv3lOOvLSfHd301GoWxyLdQqBOjfNmVPqX/gl9IuAUnznK+0YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rkcVs88b; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1753103879; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=WnaoPqjkhqlDN6kTZRO3wpxLenliqy2lR/lm2VYfgC4=;
+	b=rkcVs88b+dc96OwGR3/nv1/xcBNjVE4AdaMd3WgC/jITbpvCs91H7w88KkzESvU8sV9NCCL03G0Fr+F+rOTEGHwL5XkWziy+DnIfer/04VLaxrXy+GE20FRqmmKgfByucn1x5JWCPNq1M81DWbKeigyNBoZXEiTYlZNMNw6BIaQ=
+Received: from 30.246.160.95(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WjPkmgl_1753103876 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 21 Jul 2025 21:17:57 +0800
+Message-ID: <25285fbd-ffab-49e5-a8be-e3a1c8e70d3c@linux.alibaba.com>
+Date: Mon, 21 Jul 2025 21:17:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <rmltahsjvllae3or7jjk5kwvdkcqohj4bbjsfv4mnfbuq7376s@wtsha4zorf2p>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+ Matthew W Carlis <mattc@purestorage.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: anil.s.keshavamurthy@intel.com, bhelgaas@google.com, bp@alien8.de,
+ davem@davemloft.net, linux-edac@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, mhiramat@kernel.org, naveen@kernel.org,
+ oleg@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
+ tianruidong@linux.alibaba.com, tony.luck@intel.com
+References: <20250718163532.GA2700834@bhelgaas>
+ <fc0ded97-8643-4faa-a606-732bcd4ce4a1@linux.alibaba.com>
+ <aHtFG3QsdohG466k@wunner.de>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <aHtFG3QsdohG466k@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 21, 2025 at 04:26:41PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Jul 21, 2025 at 11:32:44AM GMT, Johan Hovold wrote:
-> > On Mon, Jul 14, 2025 at 11:31:04PM +0530, Manivannan Sadhasivam wrote:
-> > > Commit 9f4f3dfad8cf ("PCI: qcom: Enable ASPM for platforms supporting 1.9.0
-> > > ops") allowed the Qcom controller driver to enable ASPM for all PCI devices
-> > > enumerated at the time of the controller driver probe. It proved to be
-> > > useful for devices already powered on by the bootloader as it allowed
-> > > devices to enter ASPM without user intervention.
-> > > 
-> > > However, it could not enable ASPM for the hotplug capable devices i.e.,
-> > > devices enumerated *after* the controller driver probe. This limitation
-> > > mostly went unnoticed as the Qcom PCI controllers are not hotplug capable
-> > > and also the bootloader has been enabling the PCI devices before Linux
-> > > Kernel boots (mostly on the Qcom compute platforms which users use on a
-> > > daily basis).
-> > > 
-> > > But with the advent of the commit b458ff7e8176 ("PCI/pwrctl: Ensure that
-> > > pwrctl drivers are probed before PCI client drivers"), the pwrctrl driver
-> > > started to block the PCI device enumeration until it had been probed.
-> > > Though, the intention of the commit was to avoid race between the pwrctrl
-> > > driver and PCI client driver, it also meant that the pwrctrl controlled PCI
-> > > devices may get probed after the controller driver and will no longer have
-> > > ASPM enabled. So users started noticing high runtime power consumption with
-> > > WLAN chipsets on Qcom compute platforms like Thinkpad X13s, and Thinkpad
-> > > T14s, etc...
-> > 
-> > Note the ASPM regression for ath11k/ath12k only happened in 6.15, so
-> > commit b458ff7e8176 ("PCI/pwrctl: Ensure that pwrctl drivers are probed
-> > before PCI client drivers") in 6.13 does not seem to be the immediate
-> > culprit here.
+
+
+在 2025/7/19 15:11, Lukas Wunner 写道:
+> On Sat, Jul 19, 2025 at 01:23:28PM +0800, Shuai Xue wrote:
+>>             <...>-120     [002] .....   104.864051: pci_hp_event: 0000:00:03.0 slot:30, event:PCI_HOTPLUG_CARD_PRESENT
+>>             <...>-120     [002] .....   104.864081: pci_hp_event: 0000:00:03.0 slot:30, event:PCI_HOTPLUG_LINK_UP
 > 
-> This series was intented to fix the ASPM issue which exist even before the
-> introduction of pwrctrl framework.
-
-But this limitation of the ASPM enable implementation wasn't really an
-issue before pwrctrl since, as you point out above, these controllers
-are not hotplug capable.
-
-> But I also agree that the below commits made
-> the issue more visible and caused regression on platforms where WLAN used to
-> work.
+> Somehow I liked the simple "Link Up" and "Card present" strings more
+> than this. :)
 > 
-> > Candidates from 6.15 include commits like
-> > 
-> > 	957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
-> > 	2489eeb777af ("PCI/pwrctrl: Skip scanning for the device further if pwrctrl device is created")
-> > 
-> > This is probably related to the reports of these drivers sometimes
-> > failing to probe with
-> > 
-> > 	ath12k_pci 0004:01:00.0: of_irq_parse_pci: failed with rc=134
-> > 
-> > after pwrctrl was merged, and which since 6.15 should instead result in
-> > the drivers not probing at all (as we've discussed off list).
+> The PCI_HOTPLUG substring repeats what pci_hp_event already betrays,
+> that this is a hotplug event.
+
+I think Bjorn's concern is mainly about parsing issues when strings
+contain spaces.
+
+So, how about using "Link_UP" and "Card_Present" instead?
+
 > 
-> We discussed about the ASPM issue IIRC. The above mentioned of_irq_parse_pci
-> could also be related to the fact that we are turning off the supplies after
-> pci_dev destruction. For this issue, I guess the patch from Brian could be the
-> fix:
+>>     irq/57-pciehp-120     [002] .....   104.990434: pci_link_event: 0000:00:03.0 cur_bus_speed:20, max_bus_speed:23, width:1, flit_mode:0, reason:5
+>>     irq/57-pciehp-120     [002] .....   104.992377: pci_link_event: 0000:00:03.0 cur_bus_speed:20, max_bus_speed:23, width:1, flit_mode:0, reason:0
 > 
-> https://lore.kernel.org/linux-pci/20250711174332.1.I623f788178c1e4c5b1a41dbfc8c7fa55966373c0@changeid/
-
-We've also discussed the rc=134 issue, which appears to be due to some
-pwrctrl race. IIRC, you thought it may be the bluetooth driver powering
-down the bt/wlan controller before the wlan bit has had a chance to
-(complete its) probe. Not sure if that was fully confirmed, but I
-remember you saying that the rc=134 symptom would no longer be visible
-since 6.15 and instead wlan would never even probe at all if we hit this
-issue...
-
-The patch you link to above only appears to relate to drivers being
-manually unbound. I hope we're not also hitting such issues during
-regular boot?
-
-> > > Obviously, it is the pwrctrl change that caused regression, but it
-> > > ultimately uncovered a flaw in the ASPM enablement logic of the controller
-> > > driver. So to address the actual issue, switch to the bus notifier for
-> > > enabling ASPM of the PCI devices. The notifier will notify the controller
-> > > driver when a PCI device is attached to the bus, thereby allowing it to
-> > > enable ASPM more reliably. It should be noted that the
-> > > 'pci_dev::link_state', which is required for enabling ASPM by the
-> > > pci_enable_link_state_locked() API, is only set by the time of
-> > > BUS_NOTIFY_BIND_DRIVER stage of the notification. So we cannot enable ASPM
-> > > during BUS_NOTIFY_ADD_DEVICE stage.
-> > > 
-> > > So with this, we can also get rid of the controller driver specific
-> > > 'qcom_pcie_ops::host_post_init' callback.
-> > > 
-> > > Cc: stable@vger.kernel.org # v6.7
-> > > Fixes: 9f4f3dfad8cf ("PCI: qcom: Enable ASPM for platforms supporting 1.9.0 ops")
-> > 
-> > So whatever form this fix ends up taking it only needs to be backported
-> > to 6.15.
-> > 
-> > As you mention above these platforms do not support hotplug, but even if
-> > they were, enabling ASPM for hotplugged devices is arguably more of a
-> > new features than a bug fix.
+> This contains a lot of terminology specific to PCI *Express*
+> (versus Conventional PCI or PCI-X).  Either it needs to be
+> "pcie_link_event" or we need to come up with a structure that
+> works for non-PCIe as well.
 > 
-> FYI, I'm going to drop this series in favor this (with one yet-to-be-submitted
-> patch on top):
-> https://lore.kernel.org/linux-pci/20250720190140.2639200-1-david.e.box@linux.intel.com/
 
-Sounds good. Thanks.
+I see, I will rename it to pcie_link_event.
 
-Johan
+> PCI links can be tunneled over Thunderbolt, in this case the
+> link speed is fixed to 2.5 GT/s (USB4 v1.0 sec 11.2.1), but
+> in reality is governed by the speed of the Thunderbolt fabric
+> (which can even be asymmetric).  Do we want to report the
+> virtual 2.5 GT/s in this case or the actual Thunderbolt speed?
+> Or do we want a separate trace event for Thunderbolt?
+
+I'm not a user of Thunderbolt, which way do you prefer?
+
+> 
+> For Root and Downstream Ports, the physical "port" points "downstream",
+> whereas for Upstream Ports and Endpoints, the physical "port" points
+> "upstream".  Software interpreting the trace event may want to know
+> the direction (or whatever one wants to call it) because it cannot
+> tell from the address 0000:00:03.0 what the PCIe type is.  Having to
+> look this up in lspci seems cumbersome.  So it may be worthwhile to
+> include either the port's direction or the device's PCIe type in the
+> trace event.
+> 
+> Of course, hotplug only exists at Root or Downstream Ports, so any
+> trace event generated from the PCIe hotplug driver will pertain to
+> a downstream-facing port.  But the bandwidth controller also binds
+> to Upstream Ports and its trace events may thus pertain to link speed
+> changes at an upstream-facing port.
+
+Got it, i will device's PCIe type,
+
+> 
+> Thanks,
+> 
+> Lukas
+
+Thanks for valuable comments.
+
+Best Regards,
+Shuai
 
