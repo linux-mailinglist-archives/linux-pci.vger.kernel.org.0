@@ -1,179 +1,235 @@
-Return-Path: <linux-pci+bounces-32647-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32648-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 960FBB0C51A
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 15:25:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77137B0C56A
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 15:42:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BAB1217EC26
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 13:25:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 595F63B38C9
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 13:41:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDC9D2BF016;
-	Mon, 21 Jul 2025 13:25:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E8FB2D9787;
+	Mon, 21 Jul 2025 13:41:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="i7Af87Rl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SK42AtzW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F232D879E
-	for <linux-pci@vger.kernel.org>; Mon, 21 Jul 2025 13:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F872D5C61;
+	Mon, 21 Jul 2025 13:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753104325; cv=none; b=KGNGhR4yZ3PdDj+929Ko1U/a+O5uDFLiAsHWgwZExkElBmgc8V5TzpM85N2FQC73PLXr7VXtOVahNEvSsOwBSodl6bFBfaYkvVloGozaNHpL1XE3ZgZliRXlf5WCKS/VqaKvXwXLai+N5nb6Wa0koiP6rXkuCudFOMkzCwbEMqI=
+	t=1753105305; cv=none; b=Wm62TxOlEMmEpy7IaobAik20YLHWbu2yDA/VIVaUisSBnGyqcm6DRyxMPk7BLlt0orNAqKEQGLkiR/M0kUvTBddie3kCQFCmBi/PAUbo4HoxRWiTzzneijNHm4GmcD35DKxhz0M4x689xWuDj3sVkFiLEZN2zoV3HXunViNhoeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753104325; c=relaxed/simple;
-	bh=UIGaP2WMgsKajna8R0R2j3HUDLSthHfOLtrl0z1bpfg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SiYf9o01lHK+r2MI8s25/TChbzMaAT2F0r7MBsO5/PHuTdM2UGeG2J5AmWvEZqk4iiGI3xhAwfZTvG25FKaxAS3nVTuKbxxBVt0RIWvgAmwRQJ3umHPxWj21295YdlqTLr03luqiz5EtU2msViSYJnnUIhWGo6GJQ0nzek+yRR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=i7Af87Rl; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56LA8ZQ4029270
-	for <linux-pci@vger.kernel.org>; Mon, 21 Jul 2025 13:25:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rZQHynXS9Aj+ofzqFulsvS4teiqfVzJDlJMHSlRQVic=; b=i7Af87RlSsyPtyRr
-	HrR0kGeh9hBMhTS8D+mPtI2cUrZ6cZFvfm6WqrUYS9Lgng9+sPvqV0ogMQKwBuZf
-	h+z88asJNbJ/WqxDZZloocEJ+hJyjC23vnIIV0IJPY5RQXT6SPNwAQO9jJBPFLYo
-	3Q6MDy2LOp0vidV8nn3ODILDkEbq3J/wB7gz9TTXsBmeCV2WcYt7BYNa3u5zF4Z9
-	eUdRlsZNCVI2SA50hRM7wk6IX81r25SPRz5A2ykwvTMQkQdc03t9MKcKpxqtCe7U
-	yc+xa3PP7yfNN4RgoyPomX+v4r6wAxjMr1MSR9iT8OnEK1MZ5CiStaKJu2OLtz8L
-	koqCgw==
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48048td6aa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Mon, 21 Jul 2025 13:25:22 +0000 (GMT)
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-748e6457567so2901274b3a.1
-        for <linux-pci@vger.kernel.org>; Mon, 21 Jul 2025 06:25:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753104321; x=1753709121;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rZQHynXS9Aj+ofzqFulsvS4teiqfVzJDlJMHSlRQVic=;
-        b=LKcJZws+XRZb/7Pg8Y0bVMNzt+IIporvBfICJPdeuU3TRGLnKzN37GaVaD9LcmzJs0
-         elSFADSb1urQ3lxrLeR9LsRewCkIskL6SRxZXz1WcxRWzhKQ4HLL9uG8E8ZJuhuXilV1
-         6QUhHt36SdikaZVtxxFmh3jNN4g/6DloA/p+tCGSAp5uhWo6+nXU2OU8SejUUKHyl8xo
-         LGOCvLY6RDOQ3EtJ1FqXpbSZzg8Du4YtWY9oi0PgG+01gmrI1eQ6qyWImk1fTFmmLYGF
-         gJzzLYZlRk2nHvywXDv+Gvdy1s8Uc8ot8Y6nNQTMmZAHquUnztlZsK9kw1Gj6EPQ9edc
-         bDHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUiTD+YLAka4CBK15xCcjDBNe7R0W0xTwayPHf08xcFl/SA+IgZvmf2j0YUPcibzMOI5rD3ZTOaoZg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJIiGepe2CyvB2Hl6yMOlqgQ3oJDit2YYaNFnqJRUDeffI+VN9
-	cGkBlaZlDuqUHrr8p8Q3M0p+nPlGR82WD7dNBPbHzMcWUAFFgqoKN6l6NsTUJKKV+IMqNjui8oh
-	lHF+mGkeaI88M7DlnOlcjzOUuWV7TNoNecK4k7OM1ohP63RLOmyUxqzo4qcQ26QY=
-X-Gm-Gg: ASbGncv9/QZ+JIUEhScHk69LOT0qVKeWPx6sH1CcJJKP+7E98ogJ6Hg2EBr1SWMjKVz
-	eol372jRFSPEgJNIGjR1C7bNx6tbcu9FZTuI8vpCwlIpjIyvY+XJXOVFgDr0AZkYvl3TvCUd536
-	mtC6O4R1uyLX3bkWv2aYwKmACaNvXT4oi8PeZRlcK/+zgb9Eoo8lqBKmDFMoaqDUYXh/upoCL8U
-	hi2p2f/hJYqjGuxJ2o88UvHIkG4REUa1X+B7rXYt4MjO+99lYop+fwJQNipA14e5326zLDgXQM5
-	Ug6BUX97VsPZQkrOIHXcEC0=
-X-Received: by 2002:a05:6a00:440b:b0:74e:aaca:c32d with SMTP id d2e1a72fcca58-7583806f7c9mr22318747b3a.10.1753104321186;
-        Mon, 21 Jul 2025 06:25:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFVAG2MuKiinbLb8Q53VUsMTuw7REYbjlHCJcq0ez6hDk7d0Yrje6e4GNuTCOXMv94W2Rtf2A==
-X-Received: by 2002:a05:6a00:440b:b0:74e:aaca:c32d with SMTP id d2e1a72fcca58-7583806f7c9mr22318689b3a.10.1753104320687;
-        Mon, 21 Jul 2025 06:25:20 -0700 (PDT)
-Received: from work.. ([120.60.76.1])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-759cb76da69sm5688821b3a.115.2025.07.21.06.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jul 2025 06:25:20 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Kishon Vijay Abraham I <kishon@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Danilo Krummrich <dakr@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Shuah Khan <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Frank Li <Frank.Li@nxp.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Niklas Cassel <cassel@kernel.org>,
-        dlemoal@kernel.org, jdmason@kudzu.us, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, imx@lists.linux.dev,
-        devicetree@vger.kernel.org
-Subject: Re: (subset) [PATCH v21 0/9] PCI: EP: Add RC-to-EP doorbell with platform MSI controller
-Date: Mon, 21 Jul 2025 18:55:05 +0530
-Message-ID: <175310419611.11873.17918717791350182486.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250710-ep-msi-v21-0-57683fc7fb25@nxp.com>
-References: <20250710-ep-msi-v21-0-57683fc7fb25@nxp.com>
+	s=arc-20240116; t=1753105305; c=relaxed/simple;
+	bh=yNHo/yBmAD+zaXsjJA5Y11qSY/zQKwh/4qvEIaoDKMs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EX4VVxrvG6TAQBZWRw3rDmo8pP7IjcKVaqDZoAyh31DtC60BY2Oyszmd9vKMtK+bwFt/gmEB0uqaQkRyEFYIMNuQKrjpoyqoJt4EIapW3A5y0NesjxjMqRYwV3I1zHfYegsd3DUbCq5kFeJv92PhnfL+9QV0xfdtymjt7OZolVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SK42AtzW; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753105304; x=1784641304;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yNHo/yBmAD+zaXsjJA5Y11qSY/zQKwh/4qvEIaoDKMs=;
+  b=SK42AtzWGRwH6509ytACjWN7HsxOMq1JGpYDRgJFBOQvkWaxg6sUz6RK
+   VQBAq0jbzMYmkcTLT3lIY885zKaFu6LKAm9Lm3qAx5m9rc+i5/jUE0T2W
+   Z8jy6kh16XXhyWg5NjUv0Sj/0kEKUsCaFUu4abYqINGO0JKexeTOTjLW6
+   YpM9F4tqCNFkKrLrAqpHDQA68GAOr+PrMstzJvpmJokHmKRXiI9Tvpn5D
+   R/Mv2vQNNwmblrAQmneGV0MSLxH1wedXbVpRrwNqHq9d8QoSOjZDYBkRQ
+   KiPL3qXSNbD792NPMbK/5R2eCvqLpNB2jn0LosA1e6DHPyDppYB08hi82
+   g==;
+X-CSE-ConnectionGUID: SZIDj9g3RSeAxaB+g1yJSw==
+X-CSE-MsgGUID: V9ZlOVoDTVGqdvYB/fdeTA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11499"; a="59134448"
+X-IronPort-AV: E=Sophos;i="6.16,329,1744095600"; 
+   d="scan'208";a="59134448"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 06:41:38 -0700
+X-CSE-ConnectionGUID: VQO7lgNvQBiokLZmq996hQ==
+X-CSE-MsgGUID: D5/JKbwNRY2y6JlMYOjNow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,329,1744095600"; 
+   d="scan'208";a="158946600"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 21 Jul 2025 06:41:31 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1udqll-000GqT-0B;
+	Mon, 21 Jul 2025 13:41:29 +0000
+Date: Mon, 21 Jul 2025 21:40:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Breno Leitao <leitao@debian.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>,
+	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+	Robert Moore <robert.moore@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	acpica-devel@lists.linux.dev, osandov@osandov.com,
+	xueshuai@linux.alibaba.com, konrad.wilk@oracle.com,
+	linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org, kernel-team@meta.com,
+	Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH v2] vmcoreinfo: Track and log recoverable hardware errors
+Message-ID: <202507212132.OA9HtsQY-lkp@intel.com>
+References: <20250721-vmcore_hw_error-v2-1-ab65a6b43c5a@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzIxMDExOSBTYWx0ZWRfXyhWnmJ5mpt/R
- orPiyPMRZ16NXabOaQMk2SWGvsKhLlpJKr+0lo2c8ccznyD7frRMg1yLl1GvRZi/7i5CYq60+7M
- VE8EH046AZTSBO9EQAqeGpHsdMYH0peu6Enogv5EoZOlUYfk2q3d8aOphdhl78gGpeEQ5Qtrv5F
- AodrnIUrhk7KhfY14+yKJ4A+3qbjGyZt+A1qIYorrvTxo2+4s3UmlKjM4QGzzCyzkVY9RzFE/sW
- ONvffWd4Y4/Z3zi1LWrdZ9bhimWxkwerLz5mv+70VJMwHFjLnV/5dhHQpzfXPwfON/kbig8c2k+
- 8MF6fyqKau0+xiZRouL0lKhZUqe0hTEqoVwtIwjptLe7S4mQs1geImWGgcIKjwaWYK03ifoGMxo
- foN6OAWKzxYci1CKVIx14NPZwaxYYryl/LTLcN6NYj9QEP7YGmHmU/PgbMtRwdxvqmhTXd2Q
-X-Authority-Analysis: v=2.4 cv=Jb68rVKV c=1 sm=1 tr=0 ts=687e3fc2 cx=c_pps
- a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=5oemJFBbzWj47VPNxq3P8A==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=mrIX6-fznQKVqVjsUugA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=zc0IvFSfCIW2DFIPzwfm:22
-X-Proofpoint-GUID: ISg5LbospibHWYIHiDZf-KHxFOwjTiTE
-X-Proofpoint-ORIG-GUID: ISg5LbospibHWYIHiDZf-KHxFOwjTiTE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-21_04,2025-07-21_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=942 adultscore=0 priorityscore=1501 clxscore=1015 phishscore=0
- lowpriorityscore=0 suspectscore=0 bulkscore=0 malwarescore=0 mlxscore=0
- spamscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507210119
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250721-vmcore_hw_error-v2-1-ab65a6b43c5a@debian.org>
 
+Hi Breno,
 
-On Thu, 10 Jul 2025 15:13:46 -0400, Frank Li wrote:
-> ┌────────────┐   ┌───────────────────────────────────┐   ┌────────────────┐
-> │            │   │                                   │   │                │
-> │            │   │ PCI Endpoint                      │   │ PCI Host       │
-> │            │   │                                   │   │                │
-> │            │◄──┤ 1.platform_msi_domain_alloc_irqs()│   │                │
-> │            │   │                                   │   │                │
-> │ MSI        ├──►│ 2.write_msi_msg()                 ├──►├─BAR<n>         │
-> │ Controller │   │   update doorbell register address│   │                │
-> │            │   │   for BAR                         │   │                │
-> │            │   │                                   │   │ 3. Write BAR<n>│
-> │            │◄──┼───────────────────────────────────┼───┤                │
-> │            │   │                                   │   │                │
-> │            ├──►│ 4.Irq Handle                      │   │                │
-> │            │   │                                   │   │                │
-> │            │   │                                   │   │                │
-> └────────────┘   └───────────────────────────────────┘   └────────────────┘
-> 
-> [...]
+kernel test robot noticed the following build errors:
 
-Applied, thanks!
+[auto build test ERROR on 97987520025658f30bb787a99ffbd9bbff9ffc9d]
 
-[1/9] PCI: imx6: Add helper function imx_pcie_add_lut_by_rid()
-      commit: 9d0ca8df2451eb66a0c13a9932f348d417d9603b
-[2/9] PCI: imx6: Add LUT configuration for MSI/IOMMU in Endpoint mode
-      commit: 234b9258c6907cabbb2594ee366286d35ff056f3
+url:    https://github.com/intel-lab-lkp/linux/commits/Breno-Leitao/vmcoreinfo-Track-and-log-recoverable-hardware-errors/20250721-181439
+base:   97987520025658f30bb787a99ffbd9bbff9ffc9d
+patch link:    https://lore.kernel.org/r/20250721-vmcore_hw_error-v2-1-ab65a6b43c5a%40debian.org
+patch subject: [PATCH v2] vmcoreinfo: Track and log recoverable hardware errors
+config: x86_64-buildonly-randconfig-004-20250721 (https://download.01.org/0day-ci/archive/20250721/202507212132.OA9HtsQY-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250721/202507212132.OA9HtsQY-lkp@intel.com/reproduce)
 
-NOTE: I've dropped the Tested-by tag from Niklas since the tag was only given
-for the EP patches.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507212132.OA9HtsQY-lkp@intel.com/
 
-Best regards,
+All error/warnings (new ones prefixed by >>):
+
+   In file included from include/linux/kexec.h:18,
+                    from init/initramfs.c:603:
+>> include/linux/vmcore_info.h:91:6: warning: no previous prototype for 'hwerror_tracking_log' [-Wmissing-prototypes]
+      91 | void hwerror_tracking_log(enum hwerror_tracking_source src) {};
+         |      ^~~~~~~~~~~~~~~~~~~~
+--
+   ld: arch/x86/kernel/traps.o: in function `hwerror_tracking_log':
+>> traps.c:(.text+0x68e): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/traps.o: in function `__pfx_hwerror_tracking_log':
+>> traps.c:(.text+0x67e): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: arch/x86/kernel/dumpstack_64.o: in function `hwerror_tracking_log':
+   dumpstack_64.c:(.text+0x10): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/dumpstack_64.o: in function `__pfx_hwerror_tracking_log':
+   dumpstack_64.c:(.text+0x0): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: arch/x86/kernel/dumpstack.o: in function `__pfx_hwerror_tracking_log':
+   dumpstack.c:(.text+0xc9): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: arch/x86/kernel/dumpstack.o: in function `hwerror_tracking_log':
+   dumpstack.c:(.text+0xd9): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/setup.o: in function `hwerror_tracking_log':
+   setup.c:(.text+0x54): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/setup.o: in function `__pfx_hwerror_tracking_log':
+   setup.c:(.text+0x44): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: arch/x86/kernel/e820.o: in function `__pfx_hwerror_tracking_log':
+   e820.c:(.text+0x19f): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: arch/x86/kernel/e820.o: in function `hwerror_tracking_log':
+   e820.c:(.text+0x1af): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/cpu/mce/core.o: in function `hwerror_tracking_log':
+   core.c:(.text+0x14f0): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/cpu/mce/core.o: in function `__pfx_hwerror_tracking_log':
+   core.c:(.text+0x14e0): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: arch/x86/kernel/acpi/madt_wakeup.o: in function `hwerror_tracking_log':
+   madt_wakeup.c:(.text+0x180): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/acpi/madt_wakeup.o: in function `__pfx_hwerror_tracking_log':
+   madt_wakeup.c:(.text+0x170): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: arch/x86/kernel/reboot.o: in function `hwerror_tracking_log':
+   reboot.c:(.text+0x13d): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/reboot.o: in function `__pfx_hwerror_tracking_log':
+   reboot.c:(.text+0x12d): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: arch/x86/kernel/smp.o: in function `hwerror_tracking_log':
+   smp.c:(.text+0x28e): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/smp.o: in function `__pfx_hwerror_tracking_log':
+   smp.c:(.text+0x27e): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: arch/x86/kernel/smpboot.o: in function `hwerror_tracking_log':
+   smpboot.c:(.text+0x8fe): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/smpboot.o: in function `__pfx_hwerror_tracking_log':
+   smpboot.c:(.text+0x8ee): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: arch/x86/kernel/setup_percpu.o: in function `hwerror_tracking_log':
+   setup_percpu.c:(.text+0x10): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/setup_percpu.o: in function `__pfx_hwerror_tracking_log':
+   setup_percpu.c:(.text+0x0): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: arch/x86/kernel/machine_kexec_64.o: in function `hwerror_tracking_log':
+   machine_kexec_64.c:(.text+0x772): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/machine_kexec_64.o: in function `__pfx_hwerror_tracking_log':
+   machine_kexec_64.c:(.text+0x762): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: arch/x86/kernel/kexec-bzimage64.o: in function `hwerror_tracking_log':
+   kexec-bzimage64.c:(.text+0xb9c): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/kexec-bzimage64.o: in function `__pfx_hwerror_tracking_log':
+   kexec-bzimage64.c:(.text+0xb8c): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: arch/x86/kernel/early_printk.o: in function `hwerror_tracking_log':
+   early_printk.c:(.text+0x31e): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: arch/x86/kernel/early_printk.o: in function `__pfx_hwerror_tracking_log':
+   early_printk.c:(.text+0x30e): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: kernel/panic.o: in function `hwerror_tracking_log':
+   panic.c:(.text+0x466): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: kernel/panic.o: in function `__pfx_hwerror_tracking_log':
+   panic.c:(.text+0x456): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: kernel/ksysfs.o: in function `hwerror_tracking_log':
+   ksysfs.c:(.text+0x1f6): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: kernel/ksysfs.o: in function `__pfx_hwerror_tracking_log':
+   ksysfs.c:(.text+0x1e6): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: kernel/reboot.o: in function `hwerror_tracking_log':
+   reboot.c:(.text+0xd31): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: kernel/reboot.o: in function `__pfx_hwerror_tracking_log':
+   reboot.c:(.text+0xd21): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: kernel/printk/printk.o: in function `hwerror_tracking_log':
+   printk.c:(.text+0x2119): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: kernel/printk/printk.o: in function `__pfx_hwerror_tracking_log':
+   printk.c:(.text+0x2109): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: kernel/kexec_core.o: in function `hwerror_tracking_log':
+   kexec_core.c:(.text+0x346): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: kernel/kexec_core.o: in function `__pfx_hwerror_tracking_log':
+   kexec_core.c:(.text+0x336): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: kernel/kexec_file.o: in function `hwerror_tracking_log':
+   kexec_file.c:(.text+0x42a): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: kernel/kexec_file.o: in function `__pfx_hwerror_tracking_log':
+   kexec_file.c:(.text+0x41a): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: kernel/kexec_handover.o: in function `hwerror_tracking_log':
+   kexec_handover.c:(.text+0xf63): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: kernel/kexec_handover.o: in function `__pfx_hwerror_tracking_log':
+   kexec_handover.c:(.text+0xf53): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: mm/mm_init.o: in function `hwerror_tracking_log':
+   mm_init.c:(.text+0x26d): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: mm/mm_init.o: in function `__pfx_hwerror_tracking_log':
+   mm_init.c:(.text+0x25d): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: block/blk-mq.o: in function `hwerror_tracking_log':
+   blk-mq.c:(.text+0x48d3): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: block/blk-mq.o: in function `__pfx_hwerror_tracking_log':
+   blk-mq.c:(.text+0x48c3): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: drivers/iommu/dma-iommu.o: in function `hwerror_tracking_log':
+   dma-iommu.c:(.text+0x196e): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: drivers/iommu/dma-iommu.o: in function `__pfx_hwerror_tracking_log':
+   dma-iommu.c:(.text+0x195e): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: drivers/md/dm-ioctl.o: in function `hwerror_tracking_log':
+   dm-ioctl.c:(.text+0x2f65): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: drivers/md/dm-ioctl.o: in function `__pfx_hwerror_tracking_log':
+   dm-ioctl.c:(.text+0x2f55): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+   ld: drivers/firmware/efi/efi.o: in function `hwerror_tracking_log':
+   efi.c:(.text+0x5f2): multiple definition of `hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x80): first defined here
+   ld: drivers/firmware/efi/efi.o: in function `__pfx_hwerror_tracking_log':
+   efi.c:(.text+0x5e2): multiple definition of `__pfx_hwerror_tracking_log'; init/initramfs.o:initramfs.c:(.text+0x70): first defined here
+
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
