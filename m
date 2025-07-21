@@ -1,154 +1,135 @@
-Return-Path: <linux-pci+bounces-32686-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32687-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48F0FB0CCFA
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 23:55:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E9B34B0CD01
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 23:56:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 475B81C23143
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 21:55:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6FDA18820D9
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 21:57:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 124DB23A98E;
-	Mon, 21 Jul 2025 21:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 885EB22D785;
+	Mon, 21 Jul 2025 21:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ghrsl6yz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lqRdCICL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43B51B4242;
-	Mon, 21 Jul 2025 21:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5461B4242;
+	Mon, 21 Jul 2025 21:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753134899; cv=none; b=s1NRpiuaE/hqWPpe1tUAFZ4EM31yiQfxU7fNM0yuvfcYxATQf1Gt7bTQFshFSjeyVBtYrtRZWAIozH/L4DPWz7PhQxsLauw/XzEVhMZ57J45I4jMLWTFu/5qick2GvPh/S1Pw/57Q/c/QA9zuYjn0HJAccd1uPldlS97lKmcUKg=
+	t=1753135007; cv=none; b=oTjH+q9vBK7p8M/n6xPihq7oUZXb8ifMeBaaoT9NOxadQU2uOlHA0VHeVFGxi3vbJGRWG7sM1dGb1AVHeKxN7Gg8cwJ/jDganieFpe9juyR5VlRB4fbmgQvXxApjUct8jWy4/a6yhAiFibkWNr2rKKyzbgeaHdEn6/AfviK7lkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753134899; c=relaxed/simple;
-	bh=TGMtM0oq5q8pDi6wOyW4p0wFReNzv8+xD+zrJ9vF+9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=AglQ1f+62bh80znjUN343hE+M5vqrgt76VZSRQGlNjs2ZmbEFiOHqgvRVVBIfhQWkallLNRY4KtIdrVOwVojLLk+DIgZSWGJ40qSKLSziJ55qgjpyYec6wIz3nRhDA/DwAv9pt1qsN65ZcnLTd7GnubULxqzNqGqnPUMJYriRps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ghrsl6yz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26B23C4CEED;
-	Mon, 21 Jul 2025 21:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753134899;
-	bh=TGMtM0oq5q8pDi6wOyW4p0wFReNzv8+xD+zrJ9vF+9Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ghrsl6yzBuoHPaD+rYi8qDAhd0xSipUUiAgwlRuiOyQg9wltxflDeyQdP7w1qRE/C
-	 q0D1D5LXuMrYhYQBQSgI4o/dWGbL8T6+eXhQ3Zslj2cYp71yCPUrzx5thbsuWbS/vC
-	 rwUsOZaiOwUZy+7OdHFyM1RhmWlrZim+K/FwxAke7jWc7AWwHpL4HzZWc74BbXUkPh
-	 vzGrUToPK+wtCmQVz4RUGbMipohhd+sCnZPmoZkbkajmXJ7tssNzdZopuQUUMrPflG
-	 eG7ZT40LQZUn/arxBcgQ8YW4c6gd6YAt5Opy+/OlUVU0VsLLmgjoVv4rBXO247A2i8
-	 4h+AYlvEbKGuQ==
-Date: Mon, 21 Jul 2025 16:54:57 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sai Krishna Musham <sai.krishna.musham@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, cassel@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
-	thippeswamy.havalige@amd.com
-Subject: Re: [PATCH v6 2/2] PCI: amd-mdb: Add support for PCIe RP PERST#
- signal handling
-Message-ID: <20250721215457.GA2756536@bhelgaas>
+	s=arc-20240116; t=1753135007; c=relaxed/simple;
+	bh=bAnc8ZFiiDDj8PUvd1jg/alvXW50RDf/rLRtkE0vaWA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M1ZkPmXyuucPk/ERFO6vMfttfF+wgbZaZ8uzhTu99V3C+6T0h2fqkx2722hgjirN2zkRpz4Ec4ZT8Vn6NT8BuyT6SIyPrPVi/wRMzxuRTZbZaWNsqsE8VAi5NS7WGnHSYScM7BMhalSfjyOpYfqMpQ2x3BrWpr1zo4Qmpi5HZ3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lqRdCICL; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753135005; x=1784671005;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bAnc8ZFiiDDj8PUvd1jg/alvXW50RDf/rLRtkE0vaWA=;
+  b=lqRdCICLB2u1tK7dGATzQ0VLnIRa8tWFNWsBm/L5LTEO9ysdb74pffu/
+   4BoDvVgLl6Dz8PpS4X/AFrY5axQG7jqfKvn4mnqvifRS6/LQN3k8YVgUO
+   /3V4Ks1yP/VDWJevQMbQ+a8KBfB3Yo+d2wWqDFysHKeTT9S//mSz+PRmU
+   4SZXcBvoJOTRCRM7pyDSOtk5QStlxEiQkOe17cTz7ES/kK8/91cRBPT3s
+   e8Y1ueaEdXs2ulfam/e+aCXQX6ridWlndVbxH9Jti6ZpviHbC/IExp3tk
+   h7WkXWy5QQX8b1VY12A/2baZWzsP8OpbLWm7hjVkIjtMyxvQpkIlRnju8
+   g==;
+X-CSE-ConnectionGUID: PiXI9NQZRqu2e8c3KyHXSw==
+X-CSE-MsgGUID: HCicCs27TbSrIJw+vhdGmg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11499"; a="55073516"
+X-IronPort-AV: E=Sophos;i="6.16,330,1744095600"; 
+   d="scan'208";a="55073516"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 14:56:44 -0700
+X-CSE-ConnectionGUID: S/mtya/zRMS6jlk7lrkJfA==
+X-CSE-MsgGUID: L5PvRFbLTo+6BV16lm1e/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,330,1744095600"; 
+   d="scan'208";a="163514795"
+Received: from vverma7-mobl3.amr.corp.intel.com (HELO [10.247.118.153]) ([10.247.118.153])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 14:56:36 -0700
+Message-ID: <d81c3ce6-94c6-463d-a5f8-f5607ec74cf8@intel.com>
+Date: Mon, 21 Jul 2025 14:56:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250719030951.3616385-3-sai.krishna.musham@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 11/17] cxl/pci: Log message if RAS registers are
+ unmapped
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250626224252.1415009-1-terry.bowman@amd.com>
+ <20250626224252.1415009-12-terry.bowman@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250626224252.1415009-12-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jul 19, 2025 at 08:39:51AM +0530, Sai Krishna Musham wrote:
-> Add support for handling the AMD Versal Gen 2 MDB PCIe Root Port PERST#
-> signal via a GPIO by parsing the new PCIe bridge node to acquire the
-> reset GPIO. If the bridge node is not found, fall back to acquiring it
-> from the PCIe node.
+
+
+On 6/26/25 3:42 PM, Terry Bowman wrote:
+> The CXL RAS handlers do not currently log if the RAS registers are
+> unmapped. This is needed in order to help debug CXL error handling. Update
+> the CXL driver to log a warning message if the RAS register block is
+> unmapped during RAS error handling.
 > 
-> As part of this, update the interrupt controller node parsing to use
-> of_get_child_by_name() instead of of_get_next_child(), since the PCIe
-> node now has multiple children. This ensures the correct node is
-> selected during initialization.
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-> +static int amd_mdb_parse_pcie_port(struct amd_mdb_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->pci.dev;
-> +	struct device_node *pcie_port_node;
-> +
-> +	pcie_port_node = of_get_next_child_with_prefix(dev->of_node, NULL, "pcie");
-> +	if (!pcie_port_node) {
-> +		dev_err(dev, "No PCIe Bridge node found\n");
-> +		return -ENODEV;
-> +	}
-
-Sorry I didn't notice this before.   I don't think we want to emit a
-message here either because existing DTs in the field will not have a
-Root Port node, and we will just fall back to the 'reset' in the PCIe
-node.
-
-There's really nothing wrong in that case, so no need to annoy users
-with messages they can't fix.
-
-IIUC, PERST# in the DT is optional anyway (you use
-devm_gpiod_get_optional() below).
-
-> +	/* Request the GPIO for PCIe reset signal and assert */
-> +	pcie->perst_gpio = devm_fwnode_gpiod_get(dev, of_fwnode_handle(pcie_port_node),
-> +						 "reset", GPIOD_OUT_HIGH, NULL);
-> +	if (IS_ERR(pcie->perst_gpio)) {
-> +		if (PTR_ERR(pcie->perst_gpio) != -ENOENT) {
-> +			of_node_put(pcie_port_node);
-> +			return dev_err_probe(dev, PTR_ERR(pcie->perst_gpio),
-> +					     "Failed to request reset GPIO\n");
-> +		}
-> +		pcie->perst_gpio = NULL;
-> +	}
-> +
-> +	of_node_put(pcie_port_node);
-> +
-> +	return 0;
-> +}
-
-> @@ -444,6 +483,7 @@ static int amd_mdb_pcie_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct amd_mdb_pcie *pcie;
->  	struct dw_pcie *pci;
-> +	int ret;
->  
->  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
->  	if (!pcie)
-> @@ -454,6 +494,26 @@ static int amd_mdb_pcie_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, pcie);
->  
-> +	ret = amd_mdb_parse_pcie_port(pcie);
-> +
-> +	/*
-> +	 * If amd_mdb_parse_pcie_port returns -ENODEV, it indicates that the
-> +	 * PCIe Bridge node was not found in the device tree. This is not
-> +	 * considered a fatal error and will trigger a fallback where the
-> +	 * reset GPIO is acquired directly from the PCIe node.
-> +	 */
-> +	if (ret == -ENODEV) {
-> +
-> +		/* Request the GPIO for PCIe reset signal and assert */
-> +		pcie->perst_gpio = devm_gpiod_get_optional(dev, "reset",
-> +							   GPIOD_OUT_HIGH);
-> +		if (IS_ERR(pcie->perst_gpio))
-> +			return dev_err_probe(dev, PTR_ERR(pcie->perst_gpio),
-> +					     "Failed to request reset GPIO\n");
-> +	} else if (ret) {
-> +		return ret;
-> +	}
-> +
->  	return amd_mdb_add_pcie_port(pcie, pdev);
->  }
->  
-> -- 
-> 2.44.1
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/cxl/core/pci.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 9b464f9c55c1..c9a4b528e0b8 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -670,8 +670,10 @@ static void cxl_handle_cor_ras(struct device *dev,
+>  	void __iomem *addr;
+>  	u32 status;
+>  
+> -	if (!ras_base)
+> +	if (!ras_base) {
+> +		dev_warn_once(dev, "CXL RAS register block is not mapped");
+>  		return;
+> +	}
+>  
+>  	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
+>  	status = readl(addr);
+> @@ -709,8 +711,10 @@ static bool cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+>  	u32 status;
+>  	u32 fe;
+>  
+> -	if (!ras_base)
+> +	if (!ras_base) {
+> +		dev_warn_once(dev, "CXL RAS register block is not mapped");
+>  		return false;
+> +	}
+>  
+>  	addr = ras_base + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
+>  	status = readl(addr);
+
 
