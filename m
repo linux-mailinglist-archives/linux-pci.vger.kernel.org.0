@@ -1,326 +1,146 @@
-Return-Path: <linux-pci+bounces-32668-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32669-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A48AB0C83D
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 17:55:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED195B0C8AD
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 18:26:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3BEFF1C2167F
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 15:55:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A72DB162E2D
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 16:25:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 878DE2E11A8;
-	Mon, 21 Jul 2025 15:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EAC72E0B45;
+	Mon, 21 Jul 2025 16:24:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VCfYLxVG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I0N8KIng"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577872E092A
-	for <linux-pci@vger.kernel.org>; Mon, 21 Jul 2025 15:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B3C2E093F;
+	Mon, 21 Jul 2025 16:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753113184; cv=none; b=RjxefEyJ3MEKr5gmgTs852uHcjAZnXa34KOOPrc7RBzuS7SWtQIFCMl96F02jomE1phf5AI6VOSJPUHCLZmlLzdWD+p1ARUOi0U6Chvg45BsBWbGmeYw5a0EbBENS4Tr8QSg3N1XPLd9Cg5TlM/AhWSdeKTrphgAVzjcC4f3PEE=
+	t=1753115098; cv=none; b=BJM/Itn6dJ7UxRUa58duj83eeZUdEhEakY7ZRiWmHxjBgbfCYEJ29SLq/5yX3iK6+EfG/2t1fBZ28m9vhpbYJBxsRuoV0K4H3UKgo2kE7lrvm7S/yI1hoSREW4H229H64bXWglHEqXuJ2zWpMHgQZE8aJTipXBT8TJp2tRt8kpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753113184; c=relaxed/simple;
-	bh=Tru6mUU+iCCDap926QFI/QE8fHmIDFa7JUWzEQ9+meA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iIkPsQKt+TGLler7GD5iHLLtDCRgmzXWUlNsbiJ7rCgmjcIBJC9w3DRFJW3vVapmGKV42wYpu1R8Zwhe+gxcQpRVAVv2wbXNDyuXMUzZaUDsN1XSpWMfCbZrpGuxoJswZJS7J+JH3EnQMUr6+ur2u2GSoGpWnXxD69rSATBo7AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VCfYLxVG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76A2CC4CEED;
-	Mon, 21 Jul 2025 15:53:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753113183;
-	bh=Tru6mUU+iCCDap926QFI/QE8fHmIDFa7JUWzEQ9+meA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VCfYLxVGU3pdYqZsnYkKwCVVy0tE0t2JupJaTxLkysPFPr28Mkz9KbdSSo93tHqqi
-	 isIPw49RNTT9PEYvCZ9IfgRwuQhvYcxQeSvuBECchF/YXUoE5iy/iQiMowGs4JaWEr
-	 jS0I2BwPcXKj4XnMklK+Gza98Sl3raxBbrQIfJX0ntU0uUT400zLT7ttcIoFO8Qe6Z
-	 qyTV5rUVHIW/0m6cYoPOG+VVcc+7FxdwKb7y+9O4Mjt9Yen4NXY1UIqqlenX/qeZ6R
-	 VhwafLTR3Lf/xlWKCnECNAoximcEciMhZ0lQQqW8yldlTBzHXdQDSXVzVRLOgR0gOc
-	 MB9Sh147B0l4A==
-Message-ID: <c9e31945-e00d-409c-987b-ddf8395b52ad@kernel.org>
-Date: Mon, 21 Jul 2025 10:53:02 -0500
+	s=arc-20240116; t=1753115098; c=relaxed/simple;
+	bh=Y0c8fyTNCDbBI1ib06Eg9UDIUghtCzMuq8qbf2t/k5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cf3j7S1b9ph2BQHlxi+rOtGRkPvyaeEtbcpY38VR1SgdAgiUjJBXb3Zz0i0BTXuaBMZaK3FrhSVcU2yaGiQbnC14yujM6YapjNKfONcgZCP7+KM7gAqgZn6ja4qSncYj4PcJ1rwbjsnC7H7uikhR7GkHTOzhjtyBgJUrlkcWLaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I0N8KIng; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753115097; x=1784651097;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Y0c8fyTNCDbBI1ib06Eg9UDIUghtCzMuq8qbf2t/k5w=;
+  b=I0N8KIng0drH2AyEy2zklWBPTdbm//+e0uM5oHYx5Cal8Jw3+cDPZvWY
+   lwrQ7dgUFrmD4mLHANl2fEAk+XZodaqvHVaAm07NnayIW8jQs2asFojd/
+   lYzAnvk++G69LRW8LqHyPyg4NMMV07zBiXFreTtmuX+tpVGnlEECxsvWR
+   TofXtuIvHen3AVThmU9V3XQaDRXTPdqIv19z4yDb+ZfIZa9KHjr+aF1yT
+   wS5c4Jz1OhWxdssH4mzGOFmwdJiuhAjIcxkspe/Hw92ZiX8QnTgRKQ1tI
+   m4HyauRyfDTvE7RDxqWKD4U411pKijmhJwXRTGCykZjUOx9vhFXr5LlKd
+   Q==;
+X-CSE-ConnectionGUID: RaKZtsdBRkWdEuS5bBUoig==
+X-CSE-MsgGUID: MXo5+SD7TjGwhcEfKGBqfw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11499"; a="72791487"
+X-IronPort-AV: E=Sophos;i="6.16,329,1744095600"; 
+   d="scan'208";a="72791487"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 09:24:56 -0700
+X-CSE-ConnectionGUID: /80dSFaRRlanM/T6SY8zFw==
+X-CSE-MsgGUID: l0qUhxBCQz+Cpzl2V+Cj2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,329,1744095600"; 
+   d="scan'208";a="158184620"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 21 Jul 2025 09:24:49 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1udtJn-000GyP-0h;
+	Mon, 21 Jul 2025 16:24:47 +0000
+Date: Tue, 22 Jul 2025 00:24:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Breno Leitao <leitao@debian.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>,
+	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+	Robert Moore <robert.moore@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-media@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev,
+	osandov@osandov.com, xueshuai@linux.alibaba.com,
+	konrad.wilk@oracle.com, linux-edac@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	kernel-team@meta.com, Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH v2] vmcoreinfo: Track and log recoverable hardware errors
+Message-ID: <202507220057.iVSR8aqd-lkp@intel.com>
+References: <20250721-vmcore_hw_error-v2-1-ab65a6b43c5a@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Fix warning without CONFIG_VIDEO
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: mario.limonciello@amd.com, bhelgaas@google.com,
- Stephen Rothwell <sfr@canb.auug.org.au>, linux-pci@vger.kernel.org
-References: <20250718134134.1710578-1-superm1@kernel.org>
- <rdqrqwoye3b4tut4mgqckshmlslycg2weyleasduxawhyoifq6@pyykudf4ncke>
- <b15cf1f2-7155-413a-973a-d632e5170596@kernel.org>
- <hwdswlzbejlrawrrsgdlqtmzb6437kyei4hl5uqpe24orey2qd@2u7i7dzkhfyu>
- <ca34c473-579b-4991-984d-4e037005c979@kernel.org>
- <5gthsstizscrujhx46ybngtuny2lafmjwaidykn4rbvi6lr2by@jnuryin54ghx>
- <793a0872-37a8-4fe7-bf68-b9072d7a6aec@kernel.org>
- <zvpa4rrhfgpnjdfk2e64qaneoavjs4hqe5a7zqnhtddprnvkbr@viutp5nqevnh>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <zvpa4rrhfgpnjdfk2e64qaneoavjs4hqe5a7zqnhtddprnvkbr@viutp5nqevnh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250721-vmcore_hw_error-v2-1-ab65a6b43c5a@debian.org>
 
-On 7/21/25 3:00 AM, Manivannan Sadhasivam wrote:
-> On Sat, Jul 19, 2025 at 08:46:04AM GMT, Mario Limonciello wrote:
->>
->>
->> On 7/18/25 9:47 PM, Manivannan Sadhasivam wrote:
->>> On Fri, Jul 18, 2025 at 12:26:49PM GMT, Mario Limonciello wrote:
->>>> On 7/18/2025 12:23 PM, Manivannan Sadhasivam wrote:
->>>>> On Fri, Jul 18, 2025 at 12:06:22PM GMT, Mario Limonciello wrote:
->>>>>> On 7/18/2025 12:00 PM, Manivannan Sadhasivam wrote:
->>>>>>> On Fri, Jul 18, 2025 at 08:41:33AM GMT, Mario Limonciello wrote:
->>>>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>>>>>>
->>>>>>>> When compiled without CONFIG_VIDEO pci_create_boot_display_file() will
->>>>>>>> never create a sysfs file for boot_display. Guard the sysfs file
->>>>>>>> declaration against CONFIG_VIDEO.
->>>>>>>>
->>>>>>>> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
->>>>>>>> Closes: https://lore.kernel.org/linux-next/20250718224118.5b3f22b0@canb.auug.org.au/
->>>>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>>>>>> ---
->>>>>>>>      drivers/pci/pci-sysfs.c | 2 ++
->>>>>>>>      1 file changed, 2 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
->>>>>>>> index 6b1a0ae254d3a..f6540a72204d3 100644
->>>>>>>> --- a/drivers/pci/pci-sysfs.c
->>>>>>>> +++ b/drivers/pci/pci-sysfs.c
->>>>>>>> @@ -680,12 +680,14 @@ const struct attribute_group *pcibus_groups[] = {
->>>>>>>>      	NULL,
->>>>>>>>      };
->>>>>>>> +#ifdef CONFIG_VIDEO
->>>>>>>>      static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
->>>>>>>>      				 char *buf)
->>>>>>>>      {
->>>>>>>>      	return sysfs_emit(buf, "1\n");
->>>>>>>>      }
->>>>>>>>      static DEVICE_ATTR_RO(boot_display);
->>>>>>>
->>>>>>> I failed to give my comment during the offending series itself, but it is never
->>>>>>> late than never. Why are we adding non-PCI attributes under bus/pci in the first
->>>>>>> place? Though the underlying device uses PCI as a transport, only the PCI bus
->>>>>>> specific attrbutes should be placed under bus/pci and the driver/peripheral
->>>>>>> specific attrbutes should belong to the respective bus/class/device hierarchy.
->>>>>>>
->>>>>>> Now, if other peripherals (like netdev) start adding these device specific
->>>>>>> attributes under bus/pci, it will turn out to be a mess.
->>>>>>>
->>>>>>> - Mani
->>>>>>>
->>>>>>
->>>>>> It was mostly to mirror the location of where boot_vga is, which arguably
->>>>>> has the same issue you raise.
->>>>>>
->>>>>
->>>>> Yes, I agree. But 'boot_vga' has set a bad precedence IMO.
->>>>>
->>>>>> I would be incredibly surprised if there was a proposal to add a
->>>>>> 'boot_display' attribute from netdev..
->>>>>
->>>>> Not 'boot_display' but why not 'boot_network' or something else. I was just
->>>>> merely pointing out the fact that the other subsystems can start dumping
->>>>> device/usecase specific attributes under bus/pci.
->>>>>
->>>>> - Mani
->>>>>
->>>>
->>>> This is a pretty general problem that exists that attributes are first come
->>>> first served.  For example amdgpu adds mem_busy_percent and it has certain
->>>> semantics.  Now PCI core can't add that.
->>>>
->>>> And if nouveau.ko wants to add the same thing they need to follow the same
->>>> semantics because userspace will look for those.
->>>
->>> But here, userspace is not yet looking for 'boot_display' isn't it? Why do you
->>> need to mirror 'boot_vga' attribute?
->>>
->>
->> I have a pull request opened in libpciaccess; but correct it has not been
->> merged.
->>
->> /If/ we're to change this, what would you propose the path to be for this
->> sysfs file?
-> 
-> Obviously, DRM.
-> 
-> - Mani
-> 
+Hi Breno,
 
-The problem is sysfs for drm is oriented around connectors.
-This is definitely not a connector, it's a property of the device itself.
+kernel test robot noticed the following build warnings:
 
-❯ cd /sys/class/drm/
-❯ ls
-lrwxrwxrwx    - root 21 Jul 10:41  card0 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0
-lrwxrwxrwx    - root 21 Jul 10:41  card0-DP-1 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0/card0-DP-1
-lrwxrwxrwx    - root 21 Jul 10:41  card0-DP-2 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0/card0-DP-2
-lrwxrwxrwx    - root 21 Jul 10:41  card0-DP-3 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0/card0-DP-3
-lrwxrwxrwx    - root 21 Jul 10:41  card0-DP-4 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0/card0-DP-4
-lrwxrwxrwx    - root 21 Jul 10:41  card0-DP-5 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0/card0-DP-5
-lrwxrwxrwx    - root 21 Jul 10:41  card0-DP-6 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0/card0-DP-6
-lrwxrwxrwx    - root 21 Jul 10:41  card0-DP-7 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0/card0-DP-7
-lrwxrwxrwx    - root 21 Jul 10:41  card0-DP-8 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0/card0-DP-8
-lrwxrwxrwx    - root 21 Jul 10:41  card0-DP-9 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0/card0-DP-9
-lrwxrwxrwx    - root 21 Jul 10:41  card0-DP-10 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0/card0-DP-10
-lrwxrwxrwx    - root 21 Jul 10:41  card0-DP-11 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0/card0-DP-11
-lrwxrwxrwx    - root 21 Jul 10:41  card0-HDMI-A-1 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0/card0-HDMI-A-1
-lrwxrwxrwx    - root 21 Jul 10:41  card0-Writeback-1 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/card0/card0-Writeback-1
-lrwxrwxrwx    - root 21 Jul 10:41  renderD128 -> 
-../../devices/pci0000:00/0000:00:08.1/0000:c2:00.0/drm/renderD128
-.r--r--r-- 4.1k root 21 Jul 10:41 󰡯 version
-❯ cat version
-drm 1.1.0 20060810
-❯ cd card0
-❯ ls
-drwxr-xr-x    - root 21 Jul 08:14  card0-DP-1
-drwxr-xr-x    - root 21 Jul 08:14  card0-DP-2
-drwxr-xr-x    - root 21 Jul 08:14  card0-DP-3
-drwxr-xr-x    - root 21 Jul 08:14  card0-DP-4
-drwxr-xr-x    - root 21 Jul 08:14  card0-DP-5
-drwxr-xr-x    - root 21 Jul 08:14  card0-DP-6
-drwxr-xr-x    - root 21 Jul 08:14  card0-DP-7
-drwxr-xr-x    - root 21 Jul 08:14  card0-DP-8
-drwxr-xr-x    - root 21 Jul 08:14  card0-DP-9
-drwxr-xr-x    - root 21 Jul 08:14  card0-DP-10
-drwxr-xr-x    - root 21 Jul 08:14  card0-DP-11
-drwxr-xr-x    - root 21 Jul 08:14  card0-HDMI-A-1
-drwxr-xr-x    - root 21 Jul 08:14  card0-Writeback-1
-lrwxrwxrwx    - root 21 Jul 08:14  device -> ../../../0000:c2:00.0
-drwxr-xr-x    - root 21 Jul 08:14  power
-lrwxrwxrwx    - root 21 Jul 08:14  subsystem -> ../../../../../../class/drm
-.r--r--r-- 4.1k root 21 Jul 08:14 󰡯 dev
-.rw-r--r-- 4.1k root 21 Jul 08:14 󰡯 uevent
+[auto build test WARNING on 97987520025658f30bb787a99ffbd9bbff9ffc9d]
 
-If you look at the device you can see there are dozens of properties for 
-the device at the device folder that come from all different parts of 
-the stack that populate them.
+url:    https://github.com/intel-lab-lkp/linux/commits/Breno-Leitao/vmcoreinfo-Track-and-log-recoverable-hardware-errors/20250721-181439
+base:   97987520025658f30bb787a99ffbd9bbff9ffc9d
+patch link:    https://lore.kernel.org/r/20250721-vmcore_hw_error-v2-1-ab65a6b43c5a%40debian.org
+patch subject: [PATCH v2] vmcoreinfo: Track and log recoverable hardware errors
+config: i386-buildonly-randconfig-001-20250721 (https://download.01.org/0day-ci/archive/20250722/202507220057.iVSR8aqd-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250722/202507220057.iVSR8aqd-lkp@intel.com/reproduce)
 
-❯ cd device
-❯ ls
-lrwxrwxrwx    - root 16 Jul 11:34  consumer:pci:0000:c2:00.1 -> 
-../../../virtual/devlink/pci:0000:c2:00.0--pci:0000:c2:00.1
-lrwxrwxrwx    - root 16 Jul 11:34  driver -> 
-../../../../bus/pci/drivers/amdgpu
-drwxr-xr-x    - root 16 Jul 11:34  drm
-lrwxrwxrwx    - root 16 Jul 11:34  firmware_node -> 
-../../../LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:18/LNXVIDEO:00
-drwxr-xr-x    - root 16 Jul 11:34  fw_version
-drwxr-xr-x    - root 16 Jul 11:34  graphics
-drwxr-xr-x    - root 16 Jul 11:34  hwmon
-drwxr-xr-x    - root 16 Jul 11:34  i2c-0
-drwxr-xr-x    - root 16 Jul 11:34  i2c-1
-drwxr-xr-x    - root 16 Jul 11:34  i2c-2
-drwxr-xr-x    - root 16 Jul 11:34  i2c-3
-drwxr-xr-x    - root 16 Jul 11:34  i2c-4
-drwxr-xr-x    - root 16 Jul 11:34  i2c-5
-drwxr-xr-x    - root 16 Jul 11:34  i2c-6
-drwxr-xr-x    - root 16 Jul 11:34  i2c-7
-drwxr-xr-x    - root 16 Jul 11:34  i2c-8
-drwxr-xr-x    - root 16 Jul 11:34  i2c-17
-drwxr-xr-x    - root 16 Jul 11:34  i2c-18
-lrwxrwxrwx    - root 16 Jul 11:34  iommu -> ../../0000:00:00.2/iommu/ivhd0
-lrwxrwxrwx    - root 16 Jul 11:34  iommu_group -> 
-../../../../kernel/iommu_groups/19
-drwxr-xr-x    - root 16 Jul 11:34  ip_discovery
-drwxr-xr-x    - root 16 Jul 11:34  link
-drwxr-xr-x    - root 16 Jul 11:34  msi_irqs
-drwxr-xr-x    - root 16 Jul 11:34  power
-lrwxrwxrwx    - root 16 Jul 11:34  subsystem -> ../../../../bus/pci
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 ari_enabled
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 broken_parity_status
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 class
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 compute_reset_mask
-.rw-r--r-- 4.1k root 16 Jul 11:34 󱁻 config
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 consistent_dma_mask_bits
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 current_link_speed
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 current_link_width
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 d3cold_allowed
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 device
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 dma_mask_bits
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 driver_override
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 enable
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 enforce_isolation
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 gfx_reset_mask
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 gpu_busy_percent
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 gpu_metrics
-.rw-rw-r-- 5.1k root 16 Jul 11:34 󰡯 hdcp_srm
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 irq
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 jpeg_reset_mask
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 local_cpulist
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 local_cpus
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 max_link_speed
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 max_link_width
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 mem_info_gtt_total
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 mem_info_gtt_used
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 mem_info_preempt_used
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 mem_info_vis_vram_total
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 mem_info_vis_vram_used
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 mem_info_vram_total
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 mem_info_vram_used
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 modalias
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 msi_bus
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 numa_node
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 pcie_replay_count
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 power_dpm_force_performance_level
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 power_dpm_state
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 power_state
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 pp_cur_state
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 pp_dpm_dcefclk
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 pp_dpm_fclk
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 pp_dpm_mclk
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 pp_dpm_pcie
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 pp_dpm_sclk
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 pp_dpm_socclk
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 pp_force_state
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 pp_num_states
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 pp_od_clk_voltage
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 pp_table
-.-w--w---- 4.1k root 16 Jul 11:34 󰡯 remove
-.-w------- 4.1k root 16 Jul 11:34 󰡯 rescan
-.-w------- 4.1k root 16 Jul 11:34 󰡯 reset
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 reset_method
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 resource
-.rw------- 8.6G root 16 Jul 11:34 󰡯 resource0
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 resource0_resize
-.rw------- 8.6G root 16 Jul 11:34 󰡯 resource0_wc
-.rw------- 268M root 16 Jul 11:34 󰡯 resource2
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 resource2_resize
-.rw------- 268M root 16 Jul 11:34 󰡯 resource2_wc
-.rw-------  256 root 16 Jul 11:34 󰡯 resource4
-.rw------- 1.0M root 16 Jul 11:34 󰡯 resource5
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 revision
-.-w------- 4.1k root 16 Jul 11:34 󰡯 run_cleaner_shader
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 sdma_reset_mask
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 subsystem_device
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 subsystem_vendor
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 thermal_throttling_logging
-.rw-r--r-- 4.1k root 16 Jul 11:34 󰡯 uevent
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 vbios_version
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 vcn_busy_percent
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 vendor
-.r--r--r-- 4.1k root 16 Jul 11:34 󰡯 vpe_reset_mask
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507220057.iVSR8aqd-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from init/initramfs.c:603:
+   In file included from include/linux/kexec.h:18:
+>> include/linux/vmcore_info.h:91:6: warning: no previous prototype for function 'hwerror_tracking_log' [-Wmissing-prototypes]
+      91 | void hwerror_tracking_log(enum hwerror_tracking_source src) {};
+         |      ^
+   include/linux/vmcore_info.h:91:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+      91 | void hwerror_tracking_log(enum hwerror_tracking_source src) {};
+         | ^
+         | static 
+   1 warning generated.
+
+
+vim +/hwerror_tracking_log +91 include/linux/vmcore_info.h
+
+    87	
+    88	#ifdef CONFIG_VMCORE_INFO
+    89	void hwerror_tracking_log(enum hwerror_tracking_source src);
+    90	#else
+  > 91	void hwerror_tracking_log(enum hwerror_tracking_source src) {};
+    92	#endif
+    93	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
