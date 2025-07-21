@@ -1,207 +1,404 @@
-Return-Path: <linux-pci+bounces-32642-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32643-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9226FB0C27B
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 13:16:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 10545B0C2E9
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 13:28:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 650531887C0C
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 11:16:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA7991AA12B8
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 11:29:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DEB81DED42;
-	Mon, 21 Jul 2025 11:16:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51EED29C340;
+	Mon, 21 Jul 2025 11:28:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BLuG+B7g"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lj4ANwo0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99D01DDC08
-	for <linux-pci@vger.kernel.org>; Mon, 21 Jul 2025 11:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7CF29B8D2;
+	Mon, 21 Jul 2025 11:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753096581; cv=none; b=eR5fJT59TQBNB2oAs93RSLGqdQtSOjzlVvv7De9L0cagD3VEw0bniGqmy1LwXOctl0lXJqFHiIHzf8qnjlEIn9ZsbgICFAU1615h9C1H/hxdT1dt+9/rWbqaS7KIy3p8+y2u4X9Ywk9jAGs8inSYGhilAz6qrNAvwlGOhzIu29o=
+	t=1753097318; cv=none; b=F6RLIU7deOpzjlQ+88lZw2gfVtSuqkm8Ba7UqZ02M8NRs5AMyOLtCtI5/MIlXZD0HYmb7A+6YXrzVXyajWNa0enWcD/fQpw1YWqMRoWLuh6I50v0eD6h6WSGlq7/R974segBjhXU0mph/3SRV/AM/juiwnjpJbDpq4DKhUHLxKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753096581; c=relaxed/simple;
-	bh=bHEQspKrfpBAKVXfLJ9J/k88DCm6qVGXyw8JjUn4EjA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=H4frgvKONrybxDdKDnPvNUQ3PTs17+2MTLW86qo4l+caVMRVeC/9t1vaKhrgU9IUgGv37aCt+EaFlkONzeiLZN3nnhYIqnsY5ngG1lS90dKAXvkAPcoQqOm3LoqvDJNejNnwy9+kgGe/wx1SsWfWeE2WcoOAIC8SuQS3v959IQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=BLuG+B7g; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3122368d7c4so3463945a91.1
-        for <linux-pci@vger.kernel.org>; Mon, 21 Jul 2025 04:16:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1753096579; x=1753701379; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bHEQspKrfpBAKVXfLJ9J/k88DCm6qVGXyw8JjUn4EjA=;
-        b=BLuG+B7g6xP1nTeYAnkobW6T4GHiKmN2HxRvoXUrMHbR9FzmXffe5d96S4XXc5EH1q
-         PGpCA9YGXowa6w0XInFM/KsRNIQz4xJMwe+e2ahmj26niWasfPjWJ2KwJprrTj7etqrC
-         koo6Obtz42RNQpwuQZMdqYqTMwkXdQuwe/wWk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753096579; x=1753701379;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bHEQspKrfpBAKVXfLJ9J/k88DCm6qVGXyw8JjUn4EjA=;
-        b=EbyUZqR0MNfyLdb33tQyZ742N3TiBDVVdxnN4W6x7VFTkx1R8oXjrjL2KualMZmPiG
-         vY06rsQFBVdUrRFBKoKRNxdgfRninX71jWV9cMtzSLShcotOM03nblEN00ZZ97yXM+18
-         ePhZp2Txlc9Vr3PzPATbvv2DlyBDBUhulb/WamfSIx0qneGyY9UfDEQRgPuhKwEjaXck
-         IHHUI0yQcdXQD+9Yz1HrjqcKiDnHc+Lvgpkf+CwUt8Kyq1Hw1dn7NNcGRXbZFf9ExyBG
-         razQHDTksMS9WpJdtNJZik6WJ0hbWVAlZqzsaAG5ZivXSB/sFTQwVdXhuRTlSXQDKZ2n
-         zCaw==
-X-Gm-Message-State: AOJu0YxKDbO2EM7Rdw1RbcgiASrO3ed03CUUxpXG+4g2SCmBVAmUa9cR
-	2Gvvp8OTr5RNp5CkHUX9TolofD5P95oNuC2sBdTfKxtiV2EQscJSm3zi4EiH+UCYKkdBI++qHx7
-	mekiVg6RpB1+I6BM/wA3r/9yBIHNAcNf0am8c2JSr4Aa3lzLd9r4kuQ==
-X-Gm-Gg: ASbGncveFBAR1+2HtDiGZrKDjGKkbWr/22DK+YFouJRvTraaPDZxeQYnEg/ZopOwY7P
-	Yf6DbJ4hhEo3A8tlsPyXn1dhAFoP9ce3Jt+grhIOMGJZsd/JHfss50vqCYIsmbLcejmlceVSeHU
-	BUTsvkKvCFayP+acE6qtkqDa7BAKugeJn/YU/ofnyJUibgqlLO/KDmM6DAa+ezCBHTbHUflPLBY
-	dDmyZbQ
-X-Google-Smtp-Source: AGHT+IGLsmPhTjs5o9UzpNB4DkuFhSwm3j3by4dY8Jo0B5qnLBhFzQhpDoTncxUpdpyFVmYabrflB1foyX4Ub2haS8U=
-X-Received: by 2002:a17:90a:fc46:b0:2ee:d371:3227 with SMTP id
- 98e67ed59e1d1-31c9e7617d1mr32332564a91.17.1753096578697; Mon, 21 Jul 2025
- 04:16:18 -0700 (PDT)
+	s=arc-20240116; t=1753097318; c=relaxed/simple;
+	bh=eQezYz66/+XQz7IKViqI2K/mgmBuRA+/oJUk8NS0y3M=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bRDdGtPzT0AG8CqnX3duvmfJwP508WoNRsuq6Te8vQ9sw2s9YpweP5mL5dVwMS6N/BiNZghtngXuHgoOQUb0rkOJUFklXenbdVrHuqcBSryOYAcPddwQYtGvG3eQWAymD+Q5wBJ/yX15qqCnDGhJQf/7KJc85ZNOb3oX0uvkvWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lj4ANwo0; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753097316; x=1784633316;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=eQezYz66/+XQz7IKViqI2K/mgmBuRA+/oJUk8NS0y3M=;
+  b=lj4ANwo0meC48397Hxv9AzSuT6pQuuOOwuIznqYjjcp+5jxreqN2rytu
+   PI55FQJ+yfUoc3J2/s/3jDvhXQc4YmpQ6D09fKrDkUeUW6DgESUOIG6nW
+   JtsiDKjJAoklUbMNJYit2El20Z5vbk8V1TdwLWtZmIlDDUsfq7CRXx1rp
+   gSH0OI6n0eRPDvllh6nyHyKURGDnyRea2DNiSrE4LlhfGfk8LkQf6cDch
+   AgHRoHuf0YEKmifGQI2hJsg9jF9aiF367bFNTWsc9utOb3YvF7p6CC/oS
+   aZEBLc3c8i9q9HG2ypfjbNZzfcgUmzPvjR3nH0d+i8Pa4gUdGC8/95n8N
+   Q==;
+X-CSE-ConnectionGUID: 8UA/VAeMT2qYOz6pBKNj+Q==
+X-CSE-MsgGUID: B/JnR9MGQomVEL/8K0hrnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11498"; a="65568039"
+X-IronPort-AV: E=Sophos;i="6.16,328,1744095600"; 
+   d="scan'208";a="65568039"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 04:28:35 -0700
+X-CSE-ConnectionGUID: 1/T2S8u1Q2a/5Zgu9KCCcA==
+X-CSE-MsgGUID: p+6P3nXnQ1a2p9PTO3h6zA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,328,1744095600"; 
+   d="scan'208";a="158471166"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 04:28:28 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 21 Jul 2025 14:28:24 +0300 (EEST)
+To: Manivannan Sadhasivam <mani@kernel.org>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>
+cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+    Jeff Johnson <jjohnson@kernel.org>, 
+    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, 
+    Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+    Nirmal Patel <nirmal.patel@linux.intel.com>, 
+    Jonathan Derrick <jonathan.derrick@linux.dev>, 
+    linux-wireless@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    ath12k@lists.infradead.org, ath11k@lists.infradead.org, 
+    ath10k@lists.infradead.org, Bjorn Helgaas <helgaas@kernel.org>, 
+    linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+    Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+    Qiang Yu <qiang.yu@oss.qualcomm.com>
+Subject: Re: [PATCH 4/6] wifi: ath12k: Use pci_{enable/disable}_link_state()
+ APIs to enable/disable ASPM states
+In-Reply-To: <je7sz6lgig3picksxv4ncfjcnnw2sdsp5ja6bwofqjuydhc4v6@b3kavwicxggu>
+Message-ID: <fdfcc2c8-c749-2616-9295-7f4aa37fb0a4@linux.intel.com>
+References: <20250716-ath-aspm-fix-v1-0-dd3e62c1b692@oss.qualcomm.com> <20250716-ath-aspm-fix-v1-4-dd3e62c1b692@oss.qualcomm.com> <7a97d075-2e37-5f40-5247-867146938613@linux.intel.com> <3q2gqo6ipzyqr7i64yhndtpg4etwep4lgffk7emxluxuhjfya5@vt7czmsgpbuw>
+ <52baf40b-41ed-2588-7817-4d8cd859e0d1@linux.intel.com> <je7sz6lgig3picksxv4ncfjcnnw2sdsp5ja6bwofqjuydhc4v6@b3kavwicxggu>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Raghu Halharvi <raghu.halharvi@broadcom.com>
-Date: Mon, 21 Jul 2025 16:46:07 +0530
-X-Gm-Features: Ac12FXwFhbWr8EUDS6mgwGJ6m7bntVcYbjtDTrwGrVLsetWofSsELQUV2fMguQc
-Message-ID: <CAEDZ0BRrt1TBu+Bwc0yK4x9OiK63zXa8ORg4SSdCLu-OLKcXOQ@mail.gmail.com>
-Subject: Does linux kernel support PCIe System Firmware Intermediary(SFI)
-To: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000db7041063a6e9a28"
+Content-Type: multipart/mixed; boundary="8323328-1126931654-1753097304=:69097"
 
---000000000000db7041063a6e9a28
-Content-Type: multipart/alternative; boundary="000000000000d4c3a7063a6e9add"
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---000000000000d4c3a7063a6e9add
-Content-Type: text/plain; charset="UTF-8"
+--8323328-1126931654-1753097304=:69097
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hello,
+On Mon, 21 Jul 2025, Manivannan Sadhasivam wrote:
 
-Not sure if this is the right forum but wanted to know if the Linux kernel
-supports SFI/eSFI?
+> On Mon, Jul 21, 2025 at 01:09:05PM GMT, Ilpo J=C3=A4rvinen wrote:
+> > On Mon, 21 Jul 2025, Manivannan Sadhasivam wrote:
+> > > On Mon, Jul 21, 2025 at 11:04:10AM GMT, Ilpo J=C3=A4rvinen wrote:
+> > > > On Wed, 16 Jul 2025, Manivannan Sadhasivam via B4 Relay wrote:
+> > > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.c=
+om>
+> > > > >=20
+> > > > > It is not recommended to enable/disable the ASPM states on the ba=
+ck of the
+> > > > > PCI core directly using the LNKCTL register. It will break the PC=
+I core's
+> > > > > knowledge about the device ASPM states. So use the APIs exposed b=
+y the PCI
+> > > > > core to enable/disable ASPM states.
+> > > > >=20
+> > > > > Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.=
+0_V2.0_SILICONZ-3
+> > > > >=20
+> > > > > Reported-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.q=
+ualcomm.com>
+> > > > > ---
+> > > > >  drivers/net/wireless/ath/ath.h        | 14 ++++++++++++++
+> > > > >  drivers/net/wireless/ath/ath12k/pci.c | 10 ++++------
+> > > > >  2 files changed, 18 insertions(+), 6 deletions(-)
+> > > > >=20
+> > > > > diff --git a/drivers/net/wireless/ath/ath.h b/drivers/net/wireles=
+s/ath/ath.h
+> > > > > index 34654f710d8a1e63f65a47d4602e2035262a4d9e..ef685123b66bf4f41=
+428fec67c1967f242a9ef27 100644
+> > > > > --- a/drivers/net/wireless/ath/ath.h
+> > > > > +++ b/drivers/net/wireless/ath/ath.h
+> > > > > @@ -21,6 +21,8 @@
+> > > > >  #include <linux/skbuff.h>
+> > > > >  #include <linux/if_ether.h>
+> > > > >  #include <linux/spinlock.h>
+> > > > > +#include <linux/pci.h>
+> > > > > +#include <linux/pci_regs.h>
+> > > > >  #include <net/mac80211.h>
+> > > > > =20
+> > > > >  /*
+> > > > > @@ -336,4 +338,16 @@ static inline const char *ath_bus_type_to_st=
+ring(enum ath_bus_type bustype)
+> > > > >  =09return ath_bus_type_strings[bustype];
+> > > > >  }
+> > > > > =20
+> > > > > +static inline int ath_pci_aspm_state(u16 lnkctl)
+> > > > > +{
+> > > > > +=09int state =3D 0;
+> > > > > +
+> > > > > +=09if (lnkctl & PCI_EXP_LNKCTL_ASPM_L0S)
+> > > > > +=09=09state |=3D PCIE_LINK_STATE_L0S;
+> > > > > +=09if (lnkctl & PCI_EXP_LNKCTL_ASPM_L1)
+> > > > > +=09=09state |=3D PCIE_LINK_STATE_L1;
+> > > > > +
+> > > > > +=09return state;
+> > > > > +}
+> > > > > +
+> > > > >  #endif /* ATH_H */
+> > > > > diff --git a/drivers/net/wireless/ath/ath12k/pci.c b/drivers/net/=
+wireless/ath/ath12k/pci.c
+> > > > > index 489d546390fcdab8f615cc9184006a958d9f140a..a5e11509e3ab8faad=
+6638ff78ce6a8a5e9c3cbbd 100644
+> > > > > --- a/drivers/net/wireless/ath/ath12k/pci.c
+> > > > > +++ b/drivers/net/wireless/ath/ath12k/pci.c
+> > > > > @@ -16,6 +16,8 @@
+> > > > >  #include "mhi.h"
+> > > > >  #include "debug.h"
+> > > > > =20
+> > > > > +#include "../ath.h"
+> > > > > +
+> > > > >  #define ATH12K_PCI_BAR_NUM=09=090
+> > > > >  #define ATH12K_PCI_DMA_MASK=09=0936
+> > > > > =20
+> > > > > @@ -928,8 +930,7 @@ static void ath12k_pci_aspm_disable(struct at=
+h12k_pci *ab_pci)
+> > > > >  =09=09   u16_get_bits(ab_pci->link_ctl, PCI_EXP_LNKCTL_ASPM_L1))=
+;
+> > > > > =20
+> > > > >  =09/* disable L0s and L1 */
+> > > > > -=09pcie_capability_clear_word(ab_pci->pdev, PCI_EXP_LNKCTL,
+> > > > > -=09=09=09=09   PCI_EXP_LNKCTL_ASPMC);
+> > > > > +=09pci_disable_link_state(ab_pci->pdev, PCIE_LINK_STATE_L0S | PC=
+IE_LINK_STATE_L1);
+> > > >=20
+> > > > I'd remove to comment too as the code is self-explanatory after thi=
+s=20
+> > > > change.
+> > > >=20
+> > >=20
+> > > Ack
+> > >=20
+> > > > > =20
+> > > > >  =09set_bit(ATH12K_PCI_ASPM_RESTORE, &ab_pci->flags);
+> > > > >  }
+> > > > > @@ -958,10 +959,7 @@ static void ath12k_pci_aspm_restore(struct a=
+th12k_pci *ab_pci)
+> > > > >  {
+> > > > >  =09if (ab_pci->ab->hw_params->supports_aspm &&
+> > > > >  =09    test_and_clear_bit(ATH12K_PCI_ASPM_RESTORE, &ab_pci->flag=
+s))
+> > > > > -=09=09pcie_capability_clear_and_set_word(ab_pci->pdev, PCI_EXP_L=
+NKCTL,
+> > > > > -=09=09=09=09=09=09   PCI_EXP_LNKCTL_ASPMC,
+> > > > > -=09=09=09=09=09=09   ab_pci->link_ctl &
+> > > > > -=09=09=09=09=09=09   PCI_EXP_LNKCTL_ASPMC);
+> > > > > +=09=09pci_enable_link_state(ab_pci->pdev, ath_pci_aspm_state(ab_=
+pci->link_ctl));
+> > > > >  }
+> > > > > =20
+> > > > >  static void ath12k_pci_cancel_workqueue(struct ath12k_base *ab)
+> > > >=20
+> > > > As you now depend on ASPM driver being there, these should also add=
+ to=20
+> > > > Kconfig:
+> > > >=20
+> > > > depends on PCIEASPM
+> > > >=20
+> > >=20
+> > > I thought about it, but since this driver doesn't necessarily enable =
+ASPM for
+> > > all the devices it supports, I didn't add the dependency. But looking=
+ at it
+> > > again, I think makes sense to add the dependency since the driver can=
+not work
+> > > reliably without disabling ASPM (for the supported devices).
+> >=20
+> > PCIEASPM is already default y and if EXPERT so it is not something=20
+> > that is expected to be disabled.
+> >=20
+> > You also no longer need to move the ASPM link state defines LKP found o=
+ut=20
+> > about after adding the depends on.
+> >=20
+>=20
+> Yes, it will fix the reported issue, but guarding the definitions feels w=
+rong to
+> me still. Maybe that's something we can worry later.
+>=20
+> > I'm a bit worried this series will regress in the cases where OS doesn'=
+t=20
+> > control ASPM so it might be necessary to include something along the=20
+> > lines of the patch below too (the earlier discussion on this is in Link=
+=20
+> > tags):
+> >=20
+>=20
+> atheros drivers didn't have such comment (why they were manually changing=
+ the
+> LNKCTL register), but I agree that there is a chance that they could caus=
+e issue
+> on platforms where BIOS didn't give ASPM control to the OS.
+>=20
+> But as a non-ACPI developer, I don't know what does 'ACPI doesn't give
+> permission to manage ASPM' mean exactly. Does ACPI allow to disable ASPM =
+but not
+> enable it?
 
-Regards
-Raghu
+While others are likely better qualified to answer this, my impression is=
+=20
+that even disabling ASPM is not allowed when OS does has not been granted=
+=20
+control over ASPM (OS should not change the value of ASPM Control in=20
+LNKCTL at all).
 
---000000000000d4c3a7063a6e9add
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The obvious trouble then is, if a driver/hw needs ASPM to be disabled over=
+=20
+certain period of its operation or entirely to ensure stable operation,=20
+and ASPM is enabled, we're between a rock and a hard place when changes to=
+=20
+ASPM Control field are disallowed.
 
-<div dir=3D"ltr">Hello,<div><br></div><div>Not sure if this is the right=C2=
-=A0forum but wanted to know if the Linux kernel supports SFI/eSFI?</div><di=
-v><br></div><div>Regards</div><div>Raghu</div></div>
+Because the ASPM driver took a hard stance of conformance here and did=20
+not let touching the ASPM Control field, we ended up having drivers that=20
+then write ASPM Control on their own to work around HW problems (see e.g.=
+=20
+the comments in drivers/net/ethernet/intel/e1000e/netdev.c that make it=20
+very clear it was intentional from the driver) so it was considered that=20
+allowing disabling ASPM might be acceptable compromise over drivers doing=
+=20
+it on their own (and leaving the ASPM driver out of the loop because it=20
+cannot be relied to disable ASPM consistently in all cases).
 
---000000000000d4c3a7063a6e9add--
+--=20
+ i.
 
---000000000000db7041063a6e9a28
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-Q9xb8vqQRgNZeTulkvr0FxHUmdExlx0jwHzEMf+mZi3lz60JiVNv0GwaULFRyiOKNeGY0CofnIzi
-mCnGN94BevxEkLawq1aHdiVo/wcQe2siEO892b6Ee2VycQAO1J5SAcbDKUaGdcrISXU1FKFFmRYq
-p+GZ3VaagiEs8bDCSiIAPXe3mbIZh0fbaXQ6R+RqUdnO9qL+jKAX8XXpUfcCAwEAAaOCAdwwggHY
-MA4GA1UdDwEB/wQEAwIFoDCBkwYIKwYBBQUHAQEEgYYwgYMwRgYIKwYBBQUHMAKGOmh0dHA6Ly9z
-ZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjZzbWltZWNhMjAyMy5jcnQwOQYIKwYB
-BQUHMAGGLWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjZzbWltZWNhMjAyMzBlBgNV
-HSAEXjBcMAkGB2eBDAEFAwEwCwYJKwYBBAGgMgEoMEIGCisGAQQBoDIKAwIwNDAyBggrBgEFBQcC
-ARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBBBgNV
-HR8EOjA4MDagNKAyhjBodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjZzbWltZWNhMjAy
-My5jcmwwJgYDVR0RBB8wHYEbcmFnaHUuaGFsaGFydmlAYnJvYWRjb20uY29tMBMGA1UdJQQMMAoG
-CCsGAQUFBwMEMB8GA1UdIwQYMBaAFAApNp5ceroPry1QLdugI4UYsKCSMB0GA1UdDgQWBBQkK6Ai
-DjZK8tB4SM50rdG0OzhfbDANBgkqhkiG9w0BAQsFAAOCAgEAiiTpitFV6vMrqY/21KDymGmFQTLk
-1Fx0DLC90lv18HvUYplkx29FEvPQVZbepHkIsF8/YttS9ESBDOaSoZ5/pJ/ZLy1I1ECugnqML6+L
-yWfq1w6zjIs1IsN7Vs5IoNRdBr6NkgMfHhOx9yWwfoIMYfBumf4SqpGgGtYs8EYMRylRSA+zxOcH
-api65fSgYw+2+XVNOcVZg3+HNxX/5ACUcLM2by3+mANnrjxj5UwdDFgYVZMdpExw5fHQ5GM+VLSW
-t2N1XMfQJMAEulT8AoQFRCwawedlI81I+tIc0wTYpQOh0xYUDTxmtxDbWlfL9NMk4plswvAl5cBa
-5VJy0E+AVuLkwB02OI+2+O0UIJvaTbepEduotxyqNt5oJzmgqZZ3gqYr0cV7ZOeYAxeYxTSbl0zc
-EMLSL1zyMfTdwgEadxKFEBfnha1GOMbkGdm97hxmA3GbANjSGoLQg+FuFb85TQzSO3HW2baFo1iW
-uO6oQDa/nmzWa9HfkEyu35hxZx3Q2XTS0eEj/L7LNkef1H3e9KBOk5UZ+7d4enb0rfe//lkmRiVw
-d71xM1eQFLg7qC2nxA2KNPSp4riYQyB+07u/sy/TkYAkYQqBcosBGY+lg70abCH5nCPjlVvsYXWG
-ePYxD8D+T2e2mdacrxg5OocASDBZrXiFGBQQPxoo/VW7koMxggJXMIICUwIBATBiMFIxCzAJBgNV
-BAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQDEx9HbG9iYWxTaWduIEdD
-QyBSNiBTTUlNRSBDQSAyMDIzAgwJTk8itsWDK67bXzQwDQYJYIZIAWUDBAIBBQCggccwLwYJKoZI
-hvcNAQkEMSIEIMNAPMtwL2VJu6iWlXBZMIPtidHHj/YFh2RnphrGnrLpMBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDcyMTExMTYxOVowXAYJKoZIhvcNAQkPMU8w
-TTALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
-hkiG9w0BAQcwCwYJYIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBABHnbuMFPp2ZwUGDlW2rH/Fl
-owkl1VSsdROHEIdIuaJAtqSIRDQB9JzOm+OKT8bjBMSKkVRZ+wef7lyQFkaUY50gxzEY6UAT+2j4
-vrc5rlx+FRiJO70+1dn6/+ZwWDUZIIhBJ/COnogJL6MT94SaQIKY/LF5Ha7Iu24KAjpogFJGVPS9
-Q7rDFmttmfZo6pU3YmZWOx1GYgLMPme34aq++Oo214VGQsm+5UAtxAKO1UeG7RYZdhoV6WiYsshl
-rmkh63W4bb2nZUGE9DonzXH7rQXUAq8fjuSBM5/pntgaDK4leQxB20L1oSJYiR8awqE+sRuL8Mt2
-xjYCEEdQyT73Xj8=
---000000000000db7041063a6e9a28--
+> > -----
+> > From: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > Subject: [PATCH] PCI/ASPM: Always disable ASPM when driver requests it
+> >=20
+> > PCI core/ASPM service driver allows controlling ASPM state through
+> > pci_disable_link_state() API. It was decided earlier (see the Link
+> > below), to not allow ASPM changes when OS does not have control over it
+> > but only log a warning about the problem (commit 2add0ec14c25
+> > ("PCI/ASPM: Warn when driver asks to disable ASPM, but we can't do
+> > it")).
+> >=20
+> > A number of drivers have added workarounds to force ASPM off with own
+> > writes into the Link Control Register (some even with comments
+> > explaining why PCI core does not disable it under some circumstances).
+> > According to the comments, some drivers require ASPM to be off for
+> > reliable operation.
+> >=20
+> > Having custom ASPM handling in drivers is problematic because the state
+> > kept in the ASPM service driver is not updated by the changes made
+> > outside the link state management API.
+> >=20
+> > As the first step to address this issue, make pci_disable_link_state()
+> > to unconditionally disable ASPM so the motivation for drivers to come
+> > up with custom ASPM handling code is eliminated.
+> >=20
+> > To fully take advantage of the ASPM handling core provides, the drivers
+> > that need to quirk ASPM have to be altered depend on PCIEASPM and the
+> > custom ASPM code is removed. This is to be done separately. As PCIEASPM
+> > is already behind EXPERT, it should be no problem to limit disabling it
+> > for configurations that do not require touching ASPM.
+> >=20
+> > Make pci_disable_link_state() function comment to comply kerneldoc
+> > formatting while changing the description.
+> >=20
+> > Link: https://lore.kernel.org/all/CANUX_P3F5YhbZX3WGU-j1AGpbXb_T9Bis2Er=
+hvKkFMtDvzatVQ@mail.gmail.com/
+> > Link: https://lore.kernel.org/all/20230511131441.45704-1-ilpo.jarvinen@=
+linux.intel.com/
+> > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> >=20
+> > ---
+> >  drivers/pci/pcie/aspm.c | 33 ++++++++++++++++++++-------------
+> >  1 file changed, 20 insertions(+), 13 deletions(-)
+> >=20
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index 5721ebfdea71..11732031e342 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -1382,16 +1382,23 @@ static int __pci_disable_link_state(struct pci_=
+dev *pdev, int state, bool locked
+> >  =09=09return -EINVAL;
+> >  =09/*
+> >  =09 * A driver requested that ASPM be disabled on this device, but
+> > -=09 * if we don't have permission to manage ASPM (e.g., on ACPI
+> > +=09 * if we might not have permission to manage ASPM (e.g., on ACPI
+> >  =09 * systems we have to observe the FADT ACPI_FADT_NO_ASPM bit and
+> > -=09 * the _OSC method), we can't honor that request.  Windows has
+> > -=09 * a similar mechanism using "PciASPMOptOut", which is also
+> > -=09 * ignored in this situation.
+> > +=09 * the _OSC method), previously we chose to not honor disable
+> > +=09 * request in that case. Windows has a similar mechanism using
+> > +=09 * "PciASPMOptOut", which is also ignored in this situation.
+> > +=09 *
+> > +=09 * Not honoring the requests to disable ASPM, however, led to
+> > +=09 * drivers forcing ASPM off on their own. As such changes of ASPM
+> > +=09 * state are not tracked by this service driver, the state kept her=
+e
+> > +=09 * became out of sync.
+> > +=09 *
+> > +=09 * Therefore, honor ASPM disable requests even when OS does not hav=
+e
+> > +=09 * ASPM control. Plain disable for ASPM is assumed to be slightly
+> > +=09 * safer than fully managing it.
+> >  =09 */
+> > -=09if (aspm_disabled) {
+> > -=09=09pci_warn(pdev, "can't disable ASPM; OS doesn't have ASPM control=
+\n");
+> > -=09=09return -EPERM;
+> > -=09}
+> > +=09if (aspm_disabled)
+> > +=09=09pci_warn(pdev, "OS doesn't have ASPM control, disabling ASPM any=
+way\n");
+> > =20
+> >  =09if (!locked)
+> >  =09=09down_read(&pci_bus_sem);
+> > @@ -1418,13 +1425,13 @@ int pci_disable_link_state_locked(struct pci_de=
+v *pdev, int state)
+> >  EXPORT_SYMBOL(pci_disable_link_state_locked);
+> > =20
+> >  /**
+> > - * pci_disable_link_state - Disable device's link state, so the link w=
+ill
+> > - * never enter specific states.  Note that if the BIOS didn't grant AS=
+PM
+> > - * control to the OS, this does nothing because we can't touch the LNK=
+CTL
+> > - * register. Returns 0 or a negative errno.
+> > - *
+> > + * pci_disable_link_state - Disable device's link state
+> >   * @pdev: PCI device
+> >   * @state: ASPM link state to disable
+> > + *
+> > + * Disable device's link state so the link will never enter specific s=
+tates.
+> > + *
+> > + * Return: 0 or a negative errno
+> >   */
+> >  int pci_disable_link_state(struct pci_dev *pdev, int state)
+> >  {
+> >=20
+> > --=20
+> > tg: (9f4972a5d481..) aspm/disable-always (depends on: pci/set-default-c=
+omment2)
+>=20
+>=20
+>=20
+--8323328-1126931654-1753097304=:69097--
 
