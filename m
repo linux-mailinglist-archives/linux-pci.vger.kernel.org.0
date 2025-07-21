@@ -1,328 +1,251 @@
-Return-Path: <linux-pci+bounces-32626-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32627-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71F47B0BEB0
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 10:21:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46F05B0BEC1
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 10:24:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9702B160A05
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 08:21:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CA4327A72E3
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Jul 2025 08:23:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87311283FE1;
-	Mon, 21 Jul 2025 08:20:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8010F288C8F;
+	Mon, 21 Jul 2025 08:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eM8nxIZe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVGB4HYK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2535218593;
-	Mon, 21 Jul 2025 08:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55026288C87;
+	Mon, 21 Jul 2025 08:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753086056; cv=none; b=cas9GNFMn260N1RdH9c4sGB8tHWNzNryq9YCtxY6vBrypMYrP2MPqgLwbEOMJ7xEskCziKoOG8UQS7FjVxf7mt1Nzb2z6340PJONxV0i0THwBFgYU5ShNMR68fjwU65YoQHUbac+8fzYn6db3i3VdwnSlZZ1/c1WK0lD9TGhGno=
+	t=1753086246; cv=none; b=PFUnULNpM7ApKIv6LRk25aJnfrlrupJ2sBEmqyct8KPldf70bhYprfr4vt1xotizHVSp/vfAS08zEGJaDUSmmk0c+qYTUxMCXOyJ0B6e+U9HgHItPTioxyyw2cDOeYOaOsJdF40TkA8rZCGieDV71axoqJwrpdKLU5fbLzf3CPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753086056; c=relaxed/simple;
-	bh=mwwy26YuAuU7rP6YljFYLkH6SdwYhat+AAosw36Hj2s=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=meMyAxoEi38qEsxlQRj25bG0fSpV+Lbkccq+CHO50vjneOgxQ+2VlTSWQSbk8DQbKUoGuOSzTw8MLqK+TRgbzkjeTV9/C5lzgTEJOULhR1mblgCH9ye8Bp9FdaEV+E3H+zmrKfGGZDc0loSmJCPCG05KWsoU1j3oSJ2YBqAIr24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eM8nxIZe; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753086054; x=1784622054;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=mwwy26YuAuU7rP6YljFYLkH6SdwYhat+AAosw36Hj2s=;
-  b=eM8nxIZeuVjDojRXOeMTjideALP6fqYCjdGPgt0ULPi/IXrMz9Sed7/G
-   ZaVDJAzobPRZiNE3eMOb3ijtVk611LeI0/tuFd15u2QKl3VXna77R6ySJ
-   rjUoKgRcnDn0Km1rSDlbgPPSK9c5m0Aix95/GTLjlooqVRYfbqT78g2U6
-   F4B+1j8hT1LYzqZ4MLv1F6eP6CFHljZb0YebzJ8CBBIb8O0YyB6GnYAoP
-   b7MggwatOcDU3XUkg5KFPcriW+FYgWzzlaJs6RXNjcwFeGvMEaeSpbUWa
-   T8Gloryo4tntE0fmzwFIrXSgzIFhNuUXIB7H0v6U5PonaRs9LLEB9rGLo
-   Q==;
-X-CSE-ConnectionGUID: /JguQsw9TnSfTNT7i7gCZg==
-X-CSE-MsgGUID: F7XzyhbUT6qg91tYEU7tVA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11498"; a="66642059"
-X-IronPort-AV: E=Sophos;i="6.16,328,1744095600"; 
-   d="scan'208";a="66642059"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 01:20:54 -0700
-X-CSE-ConnectionGUID: X9h7F1+/T4merf/BTnL3Jg==
-X-CSE-MsgGUID: 3aLyU92KSAaJwQXh+yAuPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,328,1744095600"; 
-   d="scan'208";a="182479935"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 01:20:50 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 21 Jul 2025 11:20:46 +0300 (EEST)
-To: Hans Zhang <18255117159@163.com>
-cc: Bjorn Helgaas <helgaas@kernel.org>, lpieralisi@kernel.org, 
-    bhelgaas@google.com, mani@kernel.org, kwilczynski@kernel.org, 
-    robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v13 3/6] PCI: Refactor capability search into common
- macros
-In-Reply-To: <903ea9c4-87d6-45a8-9825-4a0d45ec608f@163.com>
-Message-ID: <d59fde6e-3e4a-248a-ae56-c35b4c6ec44c@linux.intel.com>
-References: <20250715224705.GA2504490@bhelgaas> <903ea9c4-87d6-45a8-9825-4a0d45ec608f@163.com>
+	s=arc-20240116; t=1753086246; c=relaxed/simple;
+	bh=/x9+cA7gjtERQEBbad6KnzYh4lPoWOvw8tMYWZ737U4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BrBxt+FCMS4CIFjhJn0Furb75aAqTkn4O6a1UiTujsq9IxEMAdR+fnVIt4lCdMgCgQ40rPbuCqQzZjfIKedQrwSsP77x2v+lcu/sU7FnXa+NLhP5zAK7JDYGj74TBFMRNhDOPIvIs596/W7WgQGy2tlEcoWPx/muUVgm7JyB+ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVGB4HYK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15CA5C4CEF4;
+	Mon, 21 Jul 2025 08:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753086245;
+	bh=/x9+cA7gjtERQEBbad6KnzYh4lPoWOvw8tMYWZ737U4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IVGB4HYKFd7gGc08LDamFTjWYPKAMcpXkyMD4kwcsbyWfePbLFOEblU3/KE/gcRfq
+	 SmwScMJDtY7ZJo/lyVsUjF6IdbAdEDYBhijQ+EkXXw5cyV3/WXawRXp3y1vLVHekJ3
+	 rbpJK3m/wUdJ1O1sGyyxi8QlKD/186KMsrfeTlnQCnBYzt3kRRK9NX+M4+/s2cCnjI
+	 1vioP4t3XGeqm0CuHQq2YQOv8aS9LZI6/AJBY8c25dCy3FyePG+9I0zh4CjBUi92IR
+	 ccwNelI3sWmC5Z5vhi9pBCHR9UrthGUiIHtnHQ824mL7YTK4+HiP+BaBB6xYx+besj
+	 Bjeq8S14vicjA==
+Date: Mon, 21 Jul 2025 13:53:57 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: "David E. Box" <david.e.box@linux.intel.com>
+Cc: rafael@kernel.org, bhelgaas@google.com, vicamo.yang@canonical.com, 
+	kenny@panix.com, ilpo.jarvinen@linux.intel.com, nirmal.patel@linux.intel.com, 
+	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/ASPM: Allow controller drivers to override default
+ ASPM and CLKPM link state
+Message-ID: <c6757u3xdyxxuodcjsbpdje7m4qiq26tug5lfxvpbs5wm7r56l@ksy4yge7kg35>
+References: <20250720190140.2639200-1-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250720190140.2639200-1-david.e.box@linux.intel.com>
 
-On Thu, 17 Jul 2025, Hans Zhang wrote:
+On Sun, Jul 20, 2025 at 12:01:37PM GMT, David E. Box wrote:
+> Synthetic PCIe hierarchies, such as those created by Intel VMD, are not
+> visible to firmware and do not receive BIOS-provided default ASPM and CLKPM
+> configuration. As a result, devices behind such domains operate without
+> proper power management, regardless of platform intent.
+> 
+> To address this, allow controller drivers to supply an override for the
+> default link state by setting aspm_dflt_link_state for their associated
+> pci_host_bridge. During link initialization, if this field is non-zero,
+> ASPM and CLKPM defaults are derived from its value instead of being taken
+> from BIOS.
+> 
+> This mechanism enables drivers like VMD to achieve platform-aligned power
+> savings by statically defining the expected link configuration at
+> enumeration time, without relying on runtime calls such as
+> pci_enable_link_state(), which are ineffective when ASPM is disabled
+> globally.
+> 
+> This approach avoids per-controller hacks in ASPM core logic and provides a
+> general mechanism for domains that require explicit control over link power
+> state defaults.
+> 
+> Link: https://lore.kernel.org/linux-pm/0b166ece-eeec-ba5d-2212-50d995611cef@panix.com
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+> 
+> Changes from RFC:
+> 
+>   -- Rename field to aspm_dflt_link_state since it stores
+>      PCIE_LINK_STATE_XXX flags, not a policy enum.
+>   -- Move the field to struct pci_host_bridge since it's being applied to
+>      the entire host bridge per Mani's suggestion.
+>   -- During testing noticed that clkpm remained disabled and this was
+>      also handled by the formerly used pci_enable_link_state(). Add a
+>      check in pcie_clkpm_cap_init() as well to enable clkpm during init.
+> 
+>  drivers/pci/controller/vmd.c | 12 +++++++++---
+>  drivers/pci/pcie/aspm.c      | 13 +++++++++++--
+>  include/linux/pci.h          |  4 ++++
+>  3 files changed, 24 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 8df064b62a2f..6f0de95c87fd 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -730,7 +730,7 @@ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
+>  }
+>  
+>  /*
+> - * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
+> + * Enable LTR settings on devices that aren't configured by BIOS.
+>   */
+>  static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
+>  {
+> @@ -770,7 +770,6 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
+>  	 * PCIe r6.0, sec 5.5.4.
+>  	 */
+>  	pci_set_power_state_locked(pdev, PCI_D0);
 
-> 
-> 
-> On 2025/7/16 06:47, Bjorn Helgaas wrote:
-> > On Sun, Jun 08, 2025 at 12:14:02AM +0800, Hans Zhang wrote:
-> > > The PCI Capability search functionality is duplicated across the PCI core
-> > > and several controller drivers. The core's current implementation requires
-> > > fully initialized PCI device and bus structures, which prevents controller
-> > > drivers from using it during early initialization phases before these
-> > > structures are available.
-> > > 
-> > > Move the Capability search logic into a header-based macro that accepts a
-> > > config space accessor function as an argument. This enables controller
-> > > drivers to perform Capability discovery using their early access
-> > > mechanisms prior to full device initialization while sharing the
-> > > Capability search code.
-> > > 
-> > > Convert the existing PCI core Capability search implementation to use this
-> > > new macro. Controller drivers can later use the same macros with their
-> > > early access mechanisms while maintaining the existing protection against
-> > > infinite loops through preserved TTL checks.
-> > > 
-> > > The ttl parameter was originally an additional safeguard to prevent
-> > > infinite loops in corrupted config space. However, the
-> > > PCI_FIND_NEXT_CAP_TTL() macro already enforces a TTL limit internally.
-> > > Removing redundant ttl handling simplifies the interface while maintaining
-> > > the safety guarantee. This aligns with the macro's design intent of
-> > > encapsulating TTL management.
-> > 
-> > This is a big gulp, but I think I like it :)  It really enables some
-> > nice cleanups later.
-> > 
-> > > -static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int
-> > > devfn,
-> > > -				  u8 pos, int cap, int *ttl)
-> > > -{
-> > > -	u8 id;
-> > > -	u16 ent;
-> > > -
-> > > -	pci_bus_read_config_byte(bus, devfn, pos, &pos);
-> > > -
-> > > -	while ((*ttl)--) {
-> > > -		if (pos < PCI_STD_HEADER_SIZEOF)
-> > > -			break;
-> > > -		pos = ALIGN_DOWN(pos, 4);
-> > > -		pci_bus_read_config_word(bus, devfn, pos, &ent);
-> > > -
-> > > -		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
-> > > -		if (id == 0xff)
-> > > -			break;
-> > > -		if (id == cap)
-> > > -			return pos;
-> > > -		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
-> > > -	}
-> > > -	return 0;
-> > > -}
-> > > -
-> > >   static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
-> > >   			      u8 pos, int cap)
-> > >   {
-> > > -	int ttl = PCI_FIND_CAP_TTL;
-> > > -
-> > > -	return __pci_find_next_cap_ttl(bus, devfn, pos, cap, &ttl);
-> > > +	return PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config, pos, cap, bus,
-> > > devfn);
-> > >   }
-> > >     u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
-> > > @@ -554,42 +527,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
-> > >    */
-> > >   u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int
-> > > cap)
-> > >   {
-> > > -	u32 header;
-> > > -	int ttl;
-> > > -	u16 pos = PCI_CFG_SPACE_SIZE;
-> > > -
-> > > -	/* minimum 8 bytes per capability */
-> > > -	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
-> > > -
-> > >   	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
-> > >   		return 0;
-> > >   -	if (start)
-> > > -		pos = start;
-> > > -
-> > > -	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
-> > > -		return 0;
-> > > -
-> > > -	/*
-> > > -	 * If we have no capabilities, this is indicated by cap ID,
-> > > -	 * cap version and next pointer all being 0.
-> > > -	 */
-> > > -	if (header == 0)
-> > > -		return 0;
-> > > -
-> > > -	while (ttl-- > 0) {
-> > > -		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
-> > > -			return pos;
-> > > -
-> > > -		pos = PCI_EXT_CAP_NEXT(header);
-> > > -		if (pos < PCI_CFG_SPACE_SIZE)
-> > > -			break;
-> > > -
-> > > -		if (pci_read_config_dword(dev, pos, &header) !=
-> > > PCIBIOS_SUCCESSFUL)
-> > > -			break;
-> > > -	}
-> > > -
-> > > -	return 0;
-> > > +	return PCI_FIND_NEXT_EXT_CAPABILITY(pci_bus_read_config, start, cap,
-> > > +					    dev->bus, dev->devfn);
-> > >   }
-> > >   EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
-> > >   @@ -649,7 +591,7 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
-> > >     static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int
-> > > ht_cap)
-> > >   {
-> > > -	int rc, ttl = PCI_FIND_CAP_TTL;
-> > > +	int rc;
-> > >   	u8 cap, mask;
-> > >     	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
-> > > @@ -657,8 +599,8 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev,
-> > > u8 pos, int ht_cap)
-> > >   	else
-> > >   		mask = HT_5BIT_CAP_MASK;
-> > >   -	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
-> > > -				      PCI_CAP_ID_HT, &ttl);
-> > > +	pos = PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config, pos,
-> > > +				    PCI_CAP_ID_HT, dev->bus, dev->devfn);
-> > >   	while (pos) {
-> > >   		rc = pci_read_config_byte(dev, pos + 3, &cap);
-> > >   		if (rc != PCIBIOS_SUCCESSFUL)
-> > > @@ -667,9 +609,10 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev,
-> > > u8 pos, int ht_cap)
-> > >   		if ((cap & mask) == ht_cap)
-> > >   			return pos;
-> > >   -		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
-> > > -					      pos + PCI_CAP_LIST_NEXT,
-> > > -					      PCI_CAP_ID_HT, &ttl);
-> > > +		pos = PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config,
-> > > +					    pos + PCI_CAP_LIST_NEXT,
-> > > +					    PCI_CAP_ID_HT, dev->bus,
-> > > +					    dev->devfn);
-> > >   	}
-> > >     	return 0;
-> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > > index e7d31ed56731..46fb6b5a854e 100644
-> > > --- a/drivers/pci/pci.h
-> > > +++ b/drivers/pci/pci.h
-> > > @@ -2,6 +2,8 @@
-> > >   #ifndef DRIVERS_PCI_H
-> > >   #define DRIVERS_PCI_H
-> > >   +#include <linux/align.h>
-> > > +#include <linux/bitfield.h>
-> > >   #include <linux/pci.h>
-> > >     struct pcie_tlp_log;
-> > > @@ -93,6 +95,89 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
-> > >   int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32
-> > > size,
-> > >   			u32 *val);
-> > >   +/* Standard Capability finder */
-> > > +/**
-> > > + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
-> > 
-> > I don't think "_TTL" is relevant in the macro name here.  I see it
-> > copied the previous __pci_find_next_cap_ttl() name; "ttl" *was*
-> > relevant there, but it isn't anymore.
-> > 
-> 
-> Dear Bjorn,
-> 
-> Thank you very much for your reply.
-> 
-> The _TTL suffix will be removed.
-> 
-> 
-> > I would like this a lot better if it could be implemented as a
-> > function, but I assume it has to be a macro for some varargs reason.
-> > 
-> 
-> Yes. The macro definitions used in combination with the previous review
-> opinions of Ilpo.
+This call becomes useless now.
 
-The other option would be to standardize the accessor interface signature 
-and pass the function as a pointer. One might immediately think of generic 
-PCI core accessors making it sound simpler than it is but here the 
-complication is the controller drivers want to pass some internal 
-structure due to lack of pci_dev so it would need to be void 
-*read_cfg_data. Then we'd need to deal with those voids also in some 
-generic PCI accessors which is a bit ugly.
+> -	pci_enable_link_state_locked(pdev, PCIE_LINK_STATE_ALL);
+>  	return 0;
+>  }
+>  
+> @@ -785,6 +784,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  	resource_size_t membar2_offset = 0x2000;
+>  	struct pci_bus *child;
+>  	struct pci_dev *dev;
+> +	struct pci_host_bridge *vmd_host_bridge;
+>  	int ret;
+>  
+>  	/*
+> @@ -911,8 +911,14 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  		return -ENODEV;
+>  	}
+>  
+> +	vmd_host_bridge = to_pci_host_bridge(vmd->bus->bridge);
+> +
+> +#ifdef CONFIG_PCIEASPM
+> +	vmd_host_bridge->aspm_dflt_link_state = PCIE_LINK_STATE_ALL;
+> +#endif
 
-> > > + * @read_cfg: Function pointer for reading PCI config space
-> > > + * @start: Starting position to begin search
-> > > + * @cap: Capability ID to find
-> > > + * @args: Arguments to pass to read_cfg function
-> > > + *
-> > > + * Iterates through the capability list in PCI config space to find
-> > > + * @cap. Implements TTL (time-to-live) protection against infinite loops.
-> > > + *
-> > > + * Returns: Position of the capability if found, 0 otherwise.
-> > > + */
-> > > +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)
-> > > \
-> > > +({									\
-> > > +	int __ttl = PCI_FIND_CAP_TTL;					\
-> > > +	u8 __id, __found_pos = 0;					\
-> > > +	u8 __pos = (start);						\
-> > > +	u16 __ent;							\
-> > > +									\
-> > > +	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
-> > > +									\
-> > > +	while (__ttl--) {						\
-> > > +		if (__pos < PCI_STD_HEADER_SIZEOF)			\
-> > > +			break;						\
-> > 
-> > I guess this is just lifted directly from __pci_find_next_cap_ttl(),
-> > but wow, I wish it weren't quite *so* subtle.  Totally fine though.
-> > 
-> > Maybe this could be split into one patch for standard capabilities and
-> > a second for extended capabilities, just so the connection between
-> > this and __pci_find_next_cap_ttl() would be clearer.
-> > 
-> 
-> I will split the two patches.
-> 
-> > > +									\
-> > > +		__pos = ALIGN_DOWN(__pos, 4);				\
-> > > +		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
-> > > +									\
-> > > +		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
-> > > +		if (__id == 0xff)					\
-> > > +			break;						\
-> > > +									\
-> > > +		if (__id == (cap)) {					\
-> > > +			__found_pos = __pos;				\
-> > > +			break;						\
-> > > +		}							\
-> > > +									\
-> > > +		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
-> > > +	}								\
-> > > +	__found_pos;							\
-> > > +})
+I think it is better to provide an API that accepts the link state. We can
+provide a stub if CONFIG_PCIEASPM is not selected. This will avoid the ifdef
+clutter in the callers. Like:
 
+void pci_set_default_link_state(struct pci_host_bridge *host_bridge,
+				unsigned int state)
+{
+#ifdef CONFIG_PCIEASPM
+	 host_bridge->aspm_default_link_state = state;
+#endif	
+}
+
+Or you can stub the entire function to align with other ASPM APIs.
+
+One more thought: Since this API is only going to be called by the host bridge
+drivers, we can place it in drivers/pci/controller/pci-host-common.c and name it
+as pci_host_common_set_default_link_state().
+
+> +
+>  	vmd_copy_host_bridge_flags(pci_find_host_bridge(vmd->dev->bus),
+> -				   to_pci_host_bridge(vmd->bus->bridge));
+> +				   vmd_host_bridge);
+>  
+>  	vmd_attach_resources(vmd);
+>  	if (vmd->irq_domain)
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 29fcb0689a91..6f5b34b172f9 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -380,6 +380,7 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+>  	u16 reg16;
+>  	struct pci_dev *child;
+>  	struct pci_bus *linkbus = link->pdev->subordinate;
+> +	struct pci_host_bridge *host = pci_find_host_bridge(link->pdev->bus);
+>  
+>  	/* All functions should have the same cap and state, take the worst */
+>  	list_for_each_entry(child, &linkbus->devices, bus_list) {
+> @@ -394,7 +395,10 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+>  			enabled = 0;
+>  	}
+>  	link->clkpm_enabled = enabled;
+> -	link->clkpm_default = enabled;
+> +	if (host && host->aspm_dflt_link_state & PCIE_LINK_STATE_CLKPM)
+> +		link->clkpm_default = 1;
+> +	else
+> +		link->clkpm_default = enabled;
+>  	link->clkpm_capable = capable;
+>  	link->clkpm_disable = blacklist ? 1 : 0;
+>  }
+> @@ -794,6 +798,7 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+>  	u32 parent_lnkcap, child_lnkcap;
+>  	u16 parent_lnkctl, child_lnkctl;
+>  	struct pci_bus *linkbus = parent->subordinate;
+> +	struct pci_host_bridge *host;
+>  
+>  	if (blacklist) {
+>  		/* Set enabled/disable so that we will disable ASPM later */
+> @@ -866,7 +871,11 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+>  	}
+>  
+>  	/* Save default state */
+> -	link->aspm_default = link->aspm_enabled;
+> +	host = pci_find_host_bridge(parent->bus);
+
+You can initialize 'host' while defining it.
+
+Also, please add a comment on why we are doing this. The inline comment for the
+member is not elaborate enough:
+
+	/*
+	 * Use the default link state provided by the Host Bridge driver if
+	 * available. If the BIOS is not able to provide default ASPM link
+	 * state for some reason, the Host Bridge driver could do.
+	 */
+
+> +	if (host && host->aspm_dflt_link_state)
+> +		link->aspm_default = host->aspm_dflt_link_state;
+> +	else
+> +		link->aspm_default = link->aspm_enabled;
+>  
+>  	/* Setup initial capable state. Will be updated later */
+>  	link->aspm_capable = link->aspm_support;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 05e68f35f392..930028bf52b4 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -614,6 +614,10 @@ struct pci_host_bridge {
+>  	unsigned int	size_windows:1;		/* Enable root bus sizing */
+>  	unsigned int	msi_domain:1;		/* Bridge wants MSI domain */
+>  
+> +#ifdef CONFIG_PCIEASPM
+> +	unsigned int    aspm_dflt_link_state;	/* Controller provided link state */
+
+	/* Controller provided default link state */
+
+
+Nit: Please expand 'default' as 'dflt' is not a commonly used acronym for
+'default'.
+
+- Mani
 
 -- 
- i.
-
+மணிவண்ணன் சதாசிவம்
 
