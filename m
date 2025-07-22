@@ -1,156 +1,122 @@
-Return-Path: <linux-pci+bounces-32709-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32710-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D3B7B0D64C
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 11:52:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97302B0D6EB
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 12:08:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 73AC61C26BDB
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 09:52:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 925DE7AF1D8
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 10:05:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B1872DECC5;
-	Tue, 22 Jul 2025 09:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cbyzv/mx"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6C7A23ABBF;
+	Tue, 22 Jul 2025 10:05:40 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401D72DECB1;
-	Tue, 22 Jul 2025 09:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5E72DFA28;
+	Tue, 22 Jul 2025 10:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753177914; cv=none; b=MyLEmeyV20ubrtl3wkvVolblZne9SMneXeZugodZ09SjBkEUHxeGV3zo1Li0lTS6aN2CuKI2LI9NioB6s2H0JTyJdfDPZfCMRDhr2J9z75QAfhyvz8jIn/hWe+cKVq0OmbsKZdwxmVMfkcu9TLR+AVI/g7OqTm7+6JXNMvlTD94=
+	t=1753178740; cv=none; b=H3ndazexKROwEOGTjMcuHy2ImbdbeW/DAwtRYiDzdxF2jpOUsE03wr6U/oAW8wmRNWkyb659B7kraHg0dDTxlFvfWZygttq4T5NblZAeffz2xtYrRY2ytWYM678JrBm7r3wMGa2lk1ZQB4Ezy7OTfePqp7xcEbuM04InsbWbPq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753177914; c=relaxed/simple;
-	bh=g9Czfb6/NYPOxRMMj/Y+35i+ICwKvV5Vq7aeNekjp6E=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=gBI5toehtZyqi5VsN+d3t2vSLBM6q10exnF8USlNguJFJxX+0xJjYZHQXZqIFKgDyo/zhfTxZ7ABA8IDtWyl7QRmQKccqeuX/GB/BgqCARtmTe5d2l1aptiPbTawUZsUpRNxO3fTzAg/M+Jw9Ws82Ad+vDkP3LEke9ulGAsUHOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cbyzv/mx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F0C8C4CEEB;
-	Tue, 22 Jul 2025 09:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753177913;
-	bh=g9Czfb6/NYPOxRMMj/Y+35i+ICwKvV5Vq7aeNekjp6E=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=cbyzv/mxrBzEHhit25wf2Vl1yiDppfGeX+HJQtnUXsD86a+hxphTEp9xlqjL5FPcY
-	 veZer4iy1oL6RO/Dw1KlvU05Ctm8okCKnnV9+Kuj6hLxo5LDIyDYdMIoVjs7wmXi88
-	 9mYzBdaQeQBZLDP49SqotiBmnsDjcZfGSRqVsvvNAbGzcsmIqXhy65LfxrZRjklU2b
-	 8ePQoLF1iUAdQb1VN8mLC5Bq5vzDljA5IfslofyeSA8UAXD2VPl/cQceKD3ot7owlD
-	 +t5UzXz6rCViogRJfecaEnOZOHgV2iX1demFLog6Q7cFuuyXawqy96yYTEOHRxN2Ug
-	 rCVr21lZVq4Cg==
+	s=arc-20240116; t=1753178740; c=relaxed/simple;
+	bh=lSZJM+Cmkevs2pRpsraF39Zvx0NW8Mvm/3hNXQnS4JE=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S/MCE4V/CZZ9+kK0WiMBeoUCOhV7I7KckKfM0KuZLXvg/tMvtB6sQM+Ui8/gF0ZZrWVrVL/0GdmNjp+rFO8FnXDOuMx0iHyGjMfBpucgT33RERRNxlz+SsLH2EgO5FGlB76rfz4hXrBHtxtmxQIfe261zpVMT/qzXbBMPE8uGrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bmXsq1MCFz6GBbq;
+	Tue, 22 Jul 2025 18:03:59 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id BEE5C140158;
+	Tue, 22 Jul 2025 18:05:28 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 22 Jul
+ 2025 12:05:28 +0200
+Date: Tue, 22 Jul 2025 11:05:26 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Johan Hovold <johan+linaro@kernel.org>
+CC: Bjorn Helgaas <bhelgaas@google.com>, Manivannan Sadhasivam
+	<mani@kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/3] PCI/pwrctrl: Fix device leak at registration
+Message-ID: <20250722110526.00002a60@huawei.com>
+In-Reply-To: <20250721153609.8611-2-johan+linaro@kernel.org>
+References: <20250721153609.8611-1-johan+linaro@kernel.org>
+	<20250721153609.8611-2-johan+linaro@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 22 Jul 2025 11:51:48 +0200
-Message-Id: <DBIHP8IP3OHA.8Y1S9ZV1Y1SZ@kernel.org>
-Subject: Re: [PATCH v2 1/2] rust: Update PCI binding safety comments and add
- inline compiler hint
-Cc: "Benno Lossin" <lossin@kernel.org>, <rust-for-linux@vger.kernel.org>,
- "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Miguel
- Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
- Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "John Hubbard" <jhubbard@nvidia.com>, "Alexandre Courbot"
- <acourbot@nvidia.com>, <linux-pci@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-To: "Alistair Popple" <apopple@nvidia.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20250710022415.923972-1-apopple@nvidia.com>
- <DB87TX9Y5018.N1WDM8XRN74K@kernel.org>
- <DB9BF6WK8KMH.1RQOOMYBL6UAO@kernel.org>
- <DB9FUEJUOH3L.14CYPZ8YQT52E@kernel.org>
- <DB9H6HEF9CKG.2SAPXM8F9KOO3@kernel.org>
- <DB9IQAU4WPSP.XZL4ZDPT59KU@kernel.org>
- <bwbern2t7k5fcj6zxze6bjpasu3t26n6dmfptlmhbhd7qmligs@3fgwifsw7qai>
-In-Reply-To: <bwbern2t7k5fcj6zxze6bjpasu3t26n6dmfptlmhbhd7qmligs@3fgwifsw7qai>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue Jul 22, 2025 at 7:17 AM CEST, Alistair Popple wrote:
-> On Fri, Jul 11, 2025 at 10:46:13PM +0200, Benno Lossin wrote:
->> On Fri Jul 11, 2025 at 9:33 PM CEST, Danilo Krummrich wrote:
->> > On Fri Jul 11, 2025 at 8:30 PM CEST, Benno Lossin wrote:
->> >> On Fri Jul 11, 2025 at 5:02 PM CEST, Danilo Krummrich wrote:
->> >>> On Thu Jul 10, 2025 at 10:01 AM CEST, Benno Lossin wrote:
->> >>>> On Thu Jul 10, 2025 at 4:24 AM CEST, Alistair Popple wrote:
->> >>>>> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
->> >>>>> index 8435f8132e38..5c35a66a5251 100644
->> >>>>> --- a/rust/kernel/pci.rs
->> >>>>> +++ b/rust/kernel/pci.rs
->> >>>>> @@ -371,14 +371,18 @@ fn as_raw(&self) -> *mut bindings::pci_dev {
->> >>>>> =20
->> >>>>>  impl Device {
->> >>>>>      /// Returns the PCI vendor ID.
->> >>>>> +    #[inline]
->> >>>>>      pub fn vendor_id(&self) -> u16 {
->> >>>>> -        // SAFETY: `self.as_raw` is a valid pointer to a `struct =
-pci_dev`.
->> >>>>> +        // SAFETY: by its type invariant `self.as_raw` is always =
-a valid pointer to a
->> >>>>
->> >>>> s/by its type invariant/by the type invariants of `Self`,/
->> >>>> s/always//
->> >>>>
->> >>>> Also, which invariant does this refer to? The only one that I can s=
-ee
->> >>>> is:
->> >>>>
->> >>>>     /// A [`Device`] instance represents a valid `struct device` cr=
-eated by the C portion of the kernel.
->> >>>>
->> >>>> And this doesn't say anything about the validity of `self.as_raw()`=
-...
->> >>>
->> >>> Hm...why not? If an instance of Self always represents a valid struc=
-t pci_dev,
->> >>> then consequently self.as_raw() can only be a valid pointer to a str=
-uct pci_dev,
->> >>> no?
->> >>
->> >> While it's true, you need to look into the implementation of `as_raw`=
-.
->> >> It could very well return a null pointer...
->> >>
->> >> This is where we can use a `Guarantee` on that function. But since it=
-'s
->> >> not shorter than `.0.get()`, I would just remove it.
->> >
->> > We have 15 to 20 as_raw() methods of this kind in the tree. If this re=
-ally needs
->> > a `Guarantee` to be clean, we should probably fix it up in a treewide =
-change.
->> >
->> > as_raw() is a common pattern and everyone knows what it does, `.0.get(=
-)` seems
->> > much less obvious.
->
-> Coming from a C kernel programming background I agree `.as_raw()` is more
-> obvious than `.0.get()`. However now I'm confused ... what if anything ne=
-eds
-> changing to get these two small patches merged?
+On Mon, 21 Jul 2025 17:36:07 +0200
+Johan Hovold <johan+linaro@kernel.org> wrote:
 
-I think they're good, but we're pretty late in the cycle now. That should b=
-e
-fine though, we can probably take them through the nova tree, or in the wor=
-st
-case share a tag, if needed.
+> Make sure to drop the reference to the pwrctrl device taken by
+> of_find_device_by_node() when registering a PCI device.
+> 
+> Fixes: b458ff7e8176 ("PCI/pwrctl: Ensure that pwrctl drivers are probed before PCI client drivers")
+> Cc: stable@vger.kernel.org	# 6.13
+> Cc: Manivannan Sadhasivam <mani@kernel.org>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
-Given that, it would probably be good to add the Guarantee section on as_ra=
-w(),
-as proposed by Benno, right away.
+Hi Johan,
 
-@Benno: Any proposal on what this section should say?
+Perhaps time for 
+DEFINE_FREE(put_pdev, struct platform_device *, if (_T) put_device(&_T->dev));
 
-One minor nit would be to start the safety comments with a capital letter
-instead.
+then...
+
+> ---
+>  drivers/pci/bus.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index 69048869ef1c..0394a9c77b38 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -362,11 +362,15 @@ void pci_bus_add_device(struct pci_dev *dev)
+>  	 * before PCI client drivers.
+>  	 */
+>  	pdev = of_find_device_by_node(dn);
+> -	if (pdev && of_pci_supply_present(dn)) {
+> -		if (!device_link_add(&dev->dev, &pdev->dev,
+> -				     DL_FLAG_AUTOREMOVE_CONSUMER))
+> -			pci_err(dev, "failed to add device link to power control device %s\n",
+> -				pdev->name);
+
+	struct platform_device *pdev __free(put_pdev) =
+		of_find_device_by_node(dn);
+> +	if (pdev) {
+> +		if (of_pci_supply_present(dn)) {
+> +			if (!device_link_add(&dev->dev, &pdev->dev,
+> +					     DL_FLAG_AUTOREMOVE_CONSUMER)) {
+> +				pci_err(dev, "failed to add device link to power control device %s\n",
+> +					pdev->name);
+> +			}
+> +		}
+> +		put_device(&pdev->dev);
+
+and no need for any explicit put.
+
+We already do this extensively in some subsystems (e.g. CXL) and it
+greatly simplifies code.
+
+>  	}
+>  
+>  	if (!dn || of_device_is_available(dn))
+
 
