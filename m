@@ -1,58 +1,56 @@
-Return-Path: <linux-pci+bounces-32761-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32762-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69654B0E678
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 00:35:27 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DC8BB0E6DC
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 01:03:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99EBD6C3D1B
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 22:34:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4B6FF7B632D
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 23:02:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52F5C27A446;
-	Tue, 22 Jul 2025 22:35:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8517025A32C;
+	Tue, 22 Jul 2025 23:03:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z326O/6u"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dke1QX+a"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E21C27A13D
-	for <linux-pci@vger.kernel.org>; Tue, 22 Jul 2025 22:35:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC4F19DF62;
+	Tue, 22 Jul 2025 23:03:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753223724; cv=none; b=XmyMc9/vrA+3QdJDdO6VI4Sq1RkJmAZgtU5OXKnCLQSAhLoi0jv2W5Lj3q/Mr/Gc2kLMpSc60wy9v80phjZGxoh8erqfo6DU3J8IcmlhfOcIHnoTZhnG3c/pBuvGTNT7gUQSotoDGmT+Z9HwcJJ229NktqtmPKkkDma55xsy/7E=
+	t=1753225403; cv=none; b=Ty+Z8BtTtptqXHWVJKSgPB/vs40dq3SUxm8TQY4TOBNvF1HQgyxxU6/kKlAK3MBNfafPFH2VrwbZBTYxbQ9ZIoGt+dHpyfU3CFGrpD2SeXeBHOQI3h27JbZ+kl36q8dr5TmkExmxBfms/zgHXGDAyMXy8lZWcIXQ9GirnjWCUOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753223724; c=relaxed/simple;
-	bh=XVygRUNpIKt3YzXhLA/An7kw5kFfYsgRVyeZ+q7YwQA=;
+	s=arc-20240116; t=1753225403; c=relaxed/simple;
+	bh=H4/Fw/YMMr0MMtlaU/LX3CjtnXZ0L6wq4mkRrxSMTNg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=T3eiQ+mWpLS2bJ8ioMHPS9SE+eiheb33IzcxDL3alrpsIWVc6ZscdMwen4CXOR1cAHFc0vU71tOEdMDQ0J5xyLHCsDxZJXiiEJEOr1DduijTn37WnpEfFbEI1I2k5/DVI1uvajquAEyH4VMZQMbOPBPHbcNCqYKBYV3al0UqgOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z326O/6u; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1A03C4CEEB;
-	Tue, 22 Jul 2025 22:35:23 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=uyb0mO83ocy+dT4eyZr3UHAmdNZc4O6fsCi+SWobVzUEZmEqjTycToK/spFZUy5qJGYb2q343hYcmsaZ0HU9gBGAG9BfbeJCWiw7TlQPce7ig1305NKMcR6TGVkAj7WuUHi30bhz6A6aPMFtr7h4VZVl5CB1Nyhv94JPVTv/SlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dke1QX+a; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A27C4CEEB;
+	Tue, 22 Jul 2025 23:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753223723;
-	bh=XVygRUNpIKt3YzXhLA/An7kw5kFfYsgRVyeZ+q7YwQA=;
+	s=k20201202; t=1753225403;
+	bh=H4/Fw/YMMr0MMtlaU/LX3CjtnXZ0L6wq4mkRrxSMTNg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Z326O/6uistlbpKij6OGtp4++KY7zGkDHC2sUiyvhcv46fw2ICdNrRkj4mnQGJox9
-	 1p6fu05N+ZhTXO4Z2WIOIf4Enze/3C3brz1gA1wdeb9bFp2Mq+MJkDBpPU5ufcYoIK
-	 2+n0JshLMpV2rPK2PNYm0Z+H25ERzY7E2U0CzUSZcdkGTe/nRNMBxbq7AYRicH56QN
-	 eRPyiWCvuTqvLtd258Cw7UziH8+YqhmHz7yeudXBPYTjpJjS9wRTnT6iHFr7UjanAw
-	 LIJ+hCcEFNi1oDoXlJ0xZ4EYAmGHVJu1ZR6C3IEHFwR/U2INVShmbxytz/qhHLMrio
-	 Xi1rl7H1WV50Q==
-Date: Tue, 22 Jul 2025 17:35:22 -0500
+	b=Dke1QX+a+FR7P/hDbBEi1WxSbuHdxEb91hDy/7lOn8xOFpSytQgbqTUxnNf2cXPKF
+	 z5Rl2nM5IUObXDSbi/j/pvgdcCXW3lweVx1yKK1UYQUKki9ZL3cLyKBNKfHnTDXFAr
+	 iXYcO6bx3woIrlTswLh/oglT2XjesWnv37NMr5NGcWGJfEbHZE5/XWw58PfyfaK8If
+	 Z64RaAaIjn1UDHel+QGoY7nffWy9uPzye8t/oPKix3ZiBUVjmvmLTTaNrVpp3+2kNQ
+	 vkNuCoSlKf9ouoMShWHIKMTiHoPkdW9M/rsImNAgnmkYGPUyr3P+t/mRk6H5fd2QEi
+	 8ThN+5bYvlLPg==
+Date: Tue, 22 Jul 2025 18:03:21 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Laurent Bigonville <bigon@bigon.be>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <westeri@kernel.org>,
-	Alan Borzeszkowski <alan.borzeszkowski@linux.intel.com>,
-	Gil Fine <gil.fine@linux.intel.com>,
-	Rene Sapiens <rene.sapiens@intel.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] PCI: Clean up and fix is_hotplug_bridge usage
-Message-ID: <20250722223522.GA2856849@bhelgaas>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
+	Vipin Sharma <vipinsh@google.com>,
+	Aaron Lewis <aaronlewis@google.com>
+Subject: Re: [PATCH v2] PCI: Support Immediate Readiness on devices without
+ PM capabilities
+Message-ID: <20250722230321.GA2861805@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,58 +59,85 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1752390101.git.lukas@wunner.de>
+In-Reply-To: <20250722155926.352248-1-seanjc@google.com>
 
-On Sun, Jul 13, 2025 at 04:31:00PM +0200, Lukas Wunner wrote:
-> The original impetus of this series is to fix a runtime PM ref imbalance
-> on hot-removal of PCIe hotplug ports (patch [1/5]).
+On Tue, Jul 22, 2025 at 08:59:26AM -0700, Sean Christopherson wrote:
+> Query support for Immediate Readiness irrespective of whether or not the
+> device supports PM capabilities, as nothing in the PCIe spec suggests that
+> Immediate Readiness is in any way dependent on PM functionality.
 > 
-> That is achieved by adding an is_pciehp flag to struct pci_dev.
-> The new flag is only set on PCIe Hot-Plug Capable ports, unlike the
-> existing is_hotplug_bridge flag, which is also set on ACPI slots and
-> Conventional PCI hotplug bridges (via quirk_hotplug_bridge()).
-> 
-> Patches [2/5] to [4/5] replace is_hotplug_bridge with is_pciehp in a
-> number of places for clarity and to fix some actual bugs.
-> 
-> Optional patch [5/5] follows a suggestion from Bjorn to set
-> host->native_pcie_hotplug up front based on pcie_ports_native.
-> That patch needs an ack from Rafael because it touches ACPI code.
-> Up to Bjorn whether it is a worthwhile improvement or not.
-> 
-> I'm open to suggestions for a different name than is_pciehp,
-> e.g. is_pciehp_bridge.
-> 
-> I've reviewed this a couple of times, but would appreciate further
-> reviewing and testing by others to raise the confidence.  Mika is
-> out of office until July 28, so I'm cc'ing thunderbolt developers
-> Alan, Gil and Rene.
-> 
-> I've got an additional patch to replace is_hotplug_bridge with is_pciehp
-> in quirk_thunderbolt_hotplug_msi() and tb_apple_add_links().  I intend
-> to submit it to Mika separately if/when this series is accepted.
-> 
-> Link to v1, which consisted only of a (problematic) variant of patch [1/5]:
-> https://lore.kernel.org/r/86c3bd52bda4552d63ffb48f8a30343167e85271.1750698221.git.lukas@wunner.de/
-> 
-> Lukas Wunner (5):
->   PCI/ACPI: Fix runtime PM ref imbalance on Hot-Plug Capable ports
->   PCI/portdrv: Use is_pciehp instead of is_hotplug_bridge
->   PCI: pciehp: Use is_pciehp instead of is_hotplug_bridge
->   PCI: Move is_pciehp check out of pciehp_is_native()
->   PCI: Set native_pcie_hotplug up front based on pcie_ports_native
-> 
->  drivers/acpi/pci_root.c          |  3 ++-
->  drivers/pci/hotplug/pciehp_hpc.c |  2 +-
->  drivers/pci/pci-acpi.c           | 10 +---------
->  drivers/pci/pci.c                | 18 +++++++++++++-----
->  drivers/pci/pcie/portdrv.c       |  4 ++--
->  drivers/pci/probe.c              |  2 +-
->  include/linux/pci.h              |  6 ++++++
->  include/linux/pci_hotplug.h      |  3 ++-
->  8 files changed, 28 insertions(+), 20 deletions(-)
+> Fixes: d6112f8def51 ("PCI: Add support for Immediate Readiness")
+> Cc: David Matlack <dmatlack@google.com>
+> Cc: Vipin Sharma <vipinsh@google.com>
+> Cc: Aaron Lewis <aaronlewis@google.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-Thanks!  I applied these to pci/hotplug, hoping to put them in v6.17.
+Applied to pci/enumeration for v6.17, thanks!
 
-I moved the previous pci/hotplug branch to pci/hotplug-pnv_php.
+> ---
+> 
+> v2: Move logic to pci_init_capabilities() instead of piggybacking the
+>     PM initialization code. [Vipin, Bjorn]
+> 
+> v1 [RFC]:  https://lore.kernel.org/all/20250624171637.485616-1-seanjc@google.com
+> 
+>  drivers/pci/pci.c   |  4 ----
+>  drivers/pci/probe.c | 10 ++++++++++
+>  2 files changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 9e42090fb108..4a1ba5c017cd 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3205,7 +3205,6 @@ void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev)
+>  void pci_pm_init(struct pci_dev *dev)
+>  {
+>  	int pm;
+> -	u16 status;
+>  	u16 pmc;
+>  
+>  	device_enable_async_suspend(&dev->dev);
+> @@ -3266,9 +3265,6 @@ void pci_pm_init(struct pci_dev *dev)
+>  		pci_pme_active(dev, false);
+>  	}
+>  
+> -	pci_read_config_word(dev, PCI_STATUS, &status);
+> -	if (status & PCI_STATUS_IMM_READY)
+> -		dev->imm_ready = 1;
+>  poweron:
+>  	pci_pm_power_up_and_verify_state(dev);
+>  	pm_runtime_forbid(&dev->dev);
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 4b8693ec9e4c..d33b8af37247 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2595,6 +2595,15 @@ void pcie_report_downtraining(struct pci_dev *dev)
+>  	__pcie_print_link_status(dev, false);
+>  }
+>  
+> +static void pci_imm_ready_init(struct pci_dev *dev)
+> +{
+> +	u16 status;
+> +
+> +	pci_read_config_word(dev, PCI_STATUS, &status);
+> +	if (status & PCI_STATUS_IMM_READY)
+> +		dev->imm_ready = 1;
+> +}
+> +
+>  static void pci_init_capabilities(struct pci_dev *dev)
+>  {
+>  	pci_ea_init(dev);		/* Enhanced Allocation */
+> @@ -2604,6 +2613,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
+>  	/* Buffers for saving PCIe and PCI-X capabilities */
+>  	pci_allocate_cap_save_buffers(dev);
+>  
+> +	pci_imm_ready_init(dev);	/* Immediate Ready */
+>  	pci_pm_init(dev);		/* Power Management */
+>  	pci_vpd_init(dev);		/* Vital Product Data */
+>  	pci_configure_ari(dev);		/* Alternative Routing-ID Forwarding */
+> 
+> base-commit: 89be9a83ccf1f88522317ce02f854f30d6115c41
+> -- 
+> 2.50.0.727.gbf7dc18ff4-goog
+> 
 
