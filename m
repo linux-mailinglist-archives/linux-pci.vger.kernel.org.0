@@ -1,75 +1,58 @@
-Return-Path: <linux-pci+bounces-32736-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32737-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1E90B0DCFC
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 16:07:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 073EAB0DE9F
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 16:31:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24D9F1739EC
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 14:04:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 36993AC83E1
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 14:20:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44BFB2EA15C;
-	Tue, 22 Jul 2025 14:04:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 835DD2ED873;
+	Tue, 22 Jul 2025 14:16:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sWkFl8nC"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ei5JrRZT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FBEA32;
-	Tue, 22 Jul 2025 14:04:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FEFF2ECE9D;
+	Tue, 22 Jul 2025 14:16:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753193076; cv=none; b=QYrH8yv541/qVHtMGvrrYe/YyEh42wfzY78zv6JTRHRe3uOlfq7IpW5vgMjWoxdhu2iigHs7U1UTEow8YNVu7y9H68UN53PGUzGGPIMFmEr9uVQQUmtWkAzSxGWvY2XygNSGqqFD9SG5phLD/l8TPg1x9O6jI5+KHtExv4xvkbw=
+	t=1753193783; cv=none; b=AmwJsljSeXGz776vrM/WNbC9b3ExERVN5wbz6icxkc1gaU/ISEhwtehR+GJXWDk+x9xafLbobajNgd9SeI3qOtWQFD1RvjVCDhBQJ24bogHAmpbkcrgxAbMVPv+fTloCmjyXVy8NIkunMmrx0R1NIetuKGCyV7j+RxGZfjn2Vt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753193076; c=relaxed/simple;
-	bh=uPFuamjn8JgXag9RFI74J/C90ZWWlQSjqj7GpBmomJ4=;
+	s=arc-20240116; t=1753193783; c=relaxed/simple;
+	bh=lvlIsTL0552lQuywV3G4MsYNUlFAfmcSfSeYBIIh/yY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fSq1lqGBOzEvEGRxi7yvn7WM/M3aVugrrA2k4LBHar+XQvJ+b8q0AO9DSkWUcuxj+/nb9kB6TDW4fa+RoigRZj5YaLXCW9CwV27i6sosh77R3uWXY4ikEMbBZuOGyvAKb57Ws8iV/rNyuP4UeDGotz5oOMH77XS28jSqBsdEyEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sWkFl8nC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85268C4CEF1;
-	Tue, 22 Jul 2025 14:04:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753193075;
-	bh=uPFuamjn8JgXag9RFI74J/C90ZWWlQSjqj7GpBmomJ4=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=S9Jra0yhnYPvg42YUGwLAUwjRVqgZOPGb0IzhAVvhdgzdTo/pbt2tZvQXK7nW14HfRI1Dly5Ib8X6PvFYoUaUmr8H6pl1Z3bOYLN9NfeGKrILHop8pTcacYWbVIieGBkVbNPHUDJYQFlCBA9qFxmheO1S0X4wH92I8r7jPVyJQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ei5JrRZT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B386DC4CEEB;
+	Tue, 22 Jul 2025 14:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1753193783;
+	bh=lvlIsTL0552lQuywV3G4MsYNUlFAfmcSfSeYBIIh/yY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sWkFl8nCPLNDlOJMG6Ch0dE8liwQT/TjEDMiX0lMwJnuLusjuKrCzLod80NRSELUo
-	 u8NHIk9I5drvAO5b8cWaslWSSVtrI12ORXbU6cnC3czmox0Gpc/eBFVmQbv7WsXDHP
-	 7XI0tTvIdC3OANtPZeGtvVmL87/AUfVlow3h8BPE2czQ//X9ztlbTiQMaD2B0vzKbf
-	 q9hGEfFkRTSDPXvxHMcUnuRjST9bZDk/bPZV2PYpDIsFdoH6g089xiau1VqsOdWm+K
-	 5yrtXZWYlUbYU8EfrX/vfKb1ZfK13RF2n1xAXnRVjHWsiZpxmDlx7rVQTbvJetcEdK
-	 Bwqfe2NYx+UOw==
-Date: Tue, 22 Jul 2025 16:04:31 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Peter Rosin <peda@axentia.se>, Derek Kiernan <derek.kiernan@amd.com>, 
-	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Wolfram Sang <wsa@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
-	Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund <steen.hegelund@microchip.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 15/28] i2c: core: Introduce i2c_get_adapter_physdev()
-Message-ID: <sk6dwbont52x7zt3woqghurkkkms72f3zxubbadi2gp2yj3sbw@wdstymdtzouc>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-16-herve.codina@bootlin.com>
+	b=ei5JrRZTyN4C5B/4kFm4mwRhz+yqyweq7Xu0VMe2JC6B36JyEJjvIhc0YpT2ob8/3
+	 uIgaSeOb/sndGFzmsiBkJyC+aljVAtzdyWS/X4+aylan5gA6gM89fmmOlI1Hv+6l5T
+	 FMUDpu5MUXtgb06TpotvnTRYwnOAeo49xyDNAkks=
+Date: Tue, 22 Jul 2025 16:08:09 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] syscore: Pass context data to callbacks
+Message-ID: <2025072218-decipher-spree-327d@gregkh>
+References: <20250717103241.2806798-1-thierry.reding@gmail.com>
+ <2025071716-phoney-object-1648@gregkh>
+ <rzbzah5iigz25jtxyqadnitkzkazxsaxntajhlfrfdslyioevk@pylcjkfh5n42>
+ <2025071919-patience-cattishly-cf7c@gregkh>
+ <l54i36uk33je744w4f47tehdopk5dsjotvozfv5b2hehmxrwpq@eins7awyq4dy>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,31 +61,52 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250613134817.681832-16-herve.codina@bootlin.com>
+In-Reply-To: <l54i36uk33je744w4f47tehdopk5dsjotvozfv5b2hehmxrwpq@eins7awyq4dy>
 
-Hi Herve,
-
-On Fri, Jun 13, 2025 at 03:47:55PM +0200, Herve Codina wrote:
-> The physical device providing an I2C adapter is the device that calls
-> i2c_add_adapter() or variants and i2c_del_adapter().
+On Tue, Jul 22, 2025 at 03:56:40PM +0200, Thierry Reding wrote:
+> On Sat, Jul 19, 2025 at 08:52:41AM +0200, Greg Kroah-Hartman wrote:
+> > On Fri, Jul 18, 2025 at 03:49:37PM +0200, Thierry Reding wrote:
+> > > On Thu, Jul 17, 2025 at 02:11:41PM +0200, Greg Kroah-Hartman wrote:
+> > > > On Thu, Jul 17, 2025 at 12:32:34PM +0200, Thierry Reding wrote:
+> [...]
+> > > 	struct syscore;
+> > > 
+> > > 	struct syscore_ops {
+> > > 		int (*suspend)(struct syscore *syscore);
+> > > 		void (*resume)(struct syscore *syscore);
+> > > 		void (*shutdown)(struct syscore *syscore);
+> > > 	};
+> > > 
+> > > 	struct syscore {
+> > > 		const struct syscore_ops *ops;
+> > > 		struct list_head node;
+> > > 	};
+> > > 
+> > > Is that what you had in mind?
+> > 
+> > I missed the list_head, so yes, this would be better, but don't pass
+> > back the syscore structure, how about just a void * instead, making the
+> > whole container_of() stuff go away?
 > 
-> Most of the time this physical device is the parent of the adapter
-> device.
+> Yeah, that's a possibility. I personally don't like passing the void *
+> around because it's easier to make mistakes that way. I also find it
+> unintuitive because it doesn't immediately show you what the functions
+> expect.
 > 
-> Exceptions exist with i2c muxes. Indeed, in case of i2c muxes, the
-> parent of the mux adapter device points to the adapter device the mux is
-> connected to instead of the physical of this mux adapter.
-> 
-> Introduce i2c_get_adapter_physdev() and a new physdev field in the
-> adapter structure in order to ease the adapter physical device
-> retrieval.
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> My understanding is that the container_of() should get optimized away
+> most of the time, so there aren't any obvious downsides that I can see.
 
-Makes sense to me,
+container_of() is just pointer math, but a cast is even faster :)
 
-Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
+> But I don't feel very strongly, so if you have a strong preference for
+> void pointers, I can do that.
 
-Thanks,
-Andi
+That's what you really want to have here, it's a syscore data type
+thing, that the callback wants to reference.  Just like a irqrequest_t
+function passes back a void * that the handler "knows" how to deal with
+properly.
+
+thanks,
+
+greg k-h
 
