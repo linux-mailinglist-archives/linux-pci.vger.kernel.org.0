@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-32748-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32749-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80811B0E323
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 19:59:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 506A2B0E306
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 19:51:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 593517B9947
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 17:49:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 75F0C56597B
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 17:51:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BDF928000A;
-	Tue, 22 Jul 2025 17:50:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 269DA27EFE1;
+	Tue, 22 Jul 2025 17:51:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qiSU+qmQ"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LxZCtP7n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2045.outbound.protection.outlook.com [40.107.102.45])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2061.outbound.protection.outlook.com [40.107.94.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CE43B29E;
-	Tue, 22 Jul 2025 17:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BEB3B29E;
+	Tue, 22 Jul 2025 17:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753206659; cv=fail; b=W5OoZ5P1XOnrIHNvNmntr5ribKs0IpgdXFokFMrwR+emvzpN7tnx7Oz1cShnDGMq4GWFvlNPAyO8f+3d8TNrz9G+rz6DOvy3zrMXe//XxXko9aaJlxhE89TIkWu5NFLvfQILVLc9aHxyBIBqWd6JAkkC50/CK07T9gy+BXyrkRk=
+	t=1753206668; cv=fail; b=FKOLgykJOVibEZYk9vRpsnSsfBkR3uwWjX9LVOh38kjghPeFZ6qFu4lqZ1FFhFkV0sk77E9oES53lHEAbBcvglhcjTG50+2qDTaRJ2ZfdS13EP1xDUE0Dujz7nu+pGPyrMicPTgw2fCQEJ1b0Dii4rq5JIKC3IFS8TSziwPuo/4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753206659; c=relaxed/simple;
-	bh=oy+PsLQ1N2BJ2aQftvwA3O4fqEmxoQN1bsK1I+xL3tg=;
+	s=arc-20240116; t=1753206668; c=relaxed/simple;
+	bh=tup3kQ6qId53aXX4g+ejEgNTDC13LjCzjYunkpjP9b0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R3PvlCJrmM6LzJHqjuFnj/r49vQ0JYGDzQLd9o6GoHrhgv/gduBL/xGoBITqpAoi6VeK5YVSNLvVqknJKAxYZlFxFUASNkiwxAZ8ww4K8vxW0ME6nFE+15WKW8AylPOsl4RSleHf+tXsUhC3Ejz7uN2LGjlMh0Mak9MpFz7BvTg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qiSU+qmQ; arc=fail smtp.client-ip=40.107.102.45
+	 MIME-Version:Content-Type; b=lSekpW0qoKdool2YIhw5VKYIGaP5W/WSYc26nTd3/y6yRWpAk0G4EECa7wBC0ml1/cClhR7WB2t4vG+cS2CUJ80eLb2T/MkgpPG1Sr1AhEL/VMn6p2hXZuI1GSvyD04KvryNDf0SeAEPJiLcs+/qmYMvqvkSKuwsvGXyZbyoU58=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LxZCtP7n; arc=fail smtp.client-ip=40.107.94.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=o30VhgQfp0rDAasW0LYljFBpefudOQagcMAl6WPxWCmngOq+1/VNWZCuSR9Tuj/GShPSkccUD1KWJSKiForZCTAFCgjFq6mzQbmfy9v4XMaPUsEFqVW1LDndH/F0yo9irURt6K1+VgV3HqFGyM356vHoh1DMA8KfWHQ2XbJFU6W9me+dbFPC4nsSWvwbWZKVOH1GP6TgBUrz+QDmaSrnAKOJtXf6jer26k8p5uPC2GShL+NBxHxH8UTZX/gty/eGFjbmf3Ghe9UjAo7vBsUkGl6V5et2g1w02Ag0+gS2cmE/ZWXQCPzFZD3UOkpgmSbLhJOb1WMTwPmoL6ZokVoKkw==
+ b=jAgVpAL52FfFXU8CTG/dqJhZ7CY8MciHbV++/kxVjnSWDmeHmskVW2wZtA7uOLsMO5FOyz+ZWW5eyWSViF/YBW3nv/9HqPsjfF5vlSvgxRntDpFEaD4iaBqGid0igN6RrjCBTjAlrZrFrdwyJ2lNOyVaR4cjYyrfd3NlkQcJMop9VjE/6TQ+ccWRf/MLvlqEB7PYIqcDZomXe6aU5FpP6qsDEEuY4B38iJu2H/4f6+oLr+TQZ/1Gbo5abh8AczcH2QqFxUAmbdAm0swo3P8UbvKykAHMaNYUEQ6uO5pFAr9s6jRKhLSbi0VjWc1KeGzZdYTiZ+Zm9N2WsPMKi+j6Ew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1+q+N0vLbOO+f1GyhXF44zfcEm41Mltia5/ZDu3+pJc=;
- b=pGAj7AxfVucX+CHKRqdCkNE/RFUmZJI8h4rvzwuJyofl/ojdAyxGlcM9ImFN2wX1lsR1I8E4E4iOJFbCupTkC8xhQMxwUQO9VGveKO9qeCgEq5NXDoO0iRi3eLbdTT6VwI+3tLo/XMamacc3/XuouASm3xFXgpx0A7jKDKdY7cg2wn/t+oJskr4mjCaPMwH8Q5kJbvbi/3bOV8WIX+bbQmZejmt7ZzD74ZWILVi1pZ5ftzX3sSPT4imY7Pi+2xUEMoRIKrF21EeGtNbxvExvabrDlEqdVDYKwmldhCprVKQbe3gHkLzMqcrmvbDcC0/+EsYPINh69ywjy+nOb5mnSw==
+ bh=zFlrgGwD3Zf74YC+2NQ8gyCirDJmUOKmgHhM3e2yFS0=;
+ b=saEQVtNdKiur6MgzjDpgp0rQU5NcSGTSh8BgJWrq0BJNncv5ZiAwvKfQS8u7ps1kAFmKGVQJ0oa2SZWzAwsGn4Wi+ol0nWVEjScCKS23y2X+vtQ8FOKyNssTEfN12Wka/YJWoJ27UcqDQDolHW94tx24Y42pJXEITyptBkFejFGbyTI8wIl4M5TP8Rx14xyG/XTUh4U7zAUfe/ciUuIcRsa6D+cV8Rd7VYHzRkEy5y5hIvQs4aDurz+mGFFNh7UULfAYrxXoGeQiISvhBrq6GHKvqhe/1u8TZPl2+VRZdnxE3Uk4dhmblScbhPooAz2Sqy4GTMjuCcUb9gjjJ1s9ug==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1+q+N0vLbOO+f1GyhXF44zfcEm41Mltia5/ZDu3+pJc=;
- b=qiSU+qmQ9Jg7s1YgXAZYFxZBVcasxi4qoumNw3Nuhmu5KYMuuCqUo7vCZzR5Wg0XK1lpWD+RmhvyeA0y47xzMW/QoQfASne6QdHqOsL1TJJG/V1WoDvzeqHw7RJJsU+ZYXD44OKYQrtOV6D5z+wInY2+Corlsa7W+XDIzRA3R0o=
-Received: from BN9P222CA0002.NAMP222.PROD.OUTLOOK.COM (2603:10b6:408:10c::7)
- by IA1PR12MB8494.namprd12.prod.outlook.com (2603:10b6:208:44c::11) with
+ bh=zFlrgGwD3Zf74YC+2NQ8gyCirDJmUOKmgHhM3e2yFS0=;
+ b=LxZCtP7nrl3Dmk8tul7xB21oLx8w08yQbnwv5WF+JpsE5pLe7nuqHTOQS8S27lsMUA9M6XWrBrPdlAB9vzRCb/9rRihObBtI1cmRJ0+M5RXqifgQmh0DQ0ZAx853v0LWyiws2TNhTeXQ7p+IURfOq7yhPGkupHm8ZaF5PG6DEnA=
+Received: from BN8PR15CA0039.namprd15.prod.outlook.com (2603:10b6:408:80::16)
+ by PH0PR12MB5647.namprd12.prod.outlook.com (2603:10b6:510:144::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8943.30; Tue, 22 Jul
- 2025 17:50:55 +0000
-Received: from BN1PEPF00004686.namprd03.prod.outlook.com
- (2603:10b6:408:10c:cafe::34) by BN9P222CA0002.outlook.office365.com
- (2603:10b6:408:10c::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8943.20 via Frontend Transport; Tue,
- 22 Jul 2025 17:50:55 +0000
+ 2025 17:51:01 +0000
+Received: from BN1PEPF00004680.namprd03.prod.outlook.com
+ (2603:10b6:408:80:cafe::a1) by BN8PR15CA0039.outlook.office365.com
+ (2603:10b6:408:80::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8964.21 via Frontend Transport; Tue,
+ 22 Jul 2025 17:51:00 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,22 +63,22 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN1PEPF00004686.mail.protection.outlook.com (10.167.243.91) with Microsoft
+ BN1PEPF00004680.mail.protection.outlook.com (10.167.243.85) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8964.20 via Frontend Transport; Tue, 22 Jul 2025 17:50:55 +0000
+ 15.20.8964.20 via Frontend Transport; Tue, 22 Jul 2025 17:51:00 +0000
 Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 22 Jul
- 2025 12:50:52 -0500
+ 2025 12:50:57 -0500
 From: Raju Rangoju <Raju.Rangoju@amd.com>
 To: <linux-usb@vger.kernel.org>, <linux-pci@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
 CC: <andreas.noever@gmail.com>, <michael.jamet@intel.com>,
 	<westeri@kernel.org>, <YehezkelShB@gmail.com>, <bhelgaas@google.com>,
 	<Sanath.S@amd.com>, Raju Rangoju <Raju.Rangoju@amd.com>
-Subject: [PATCH 1/3] thunderbolt: Dynamically populate vendor properties for XDomain
-Date: Tue, 22 Jul 2025 23:20:24 +0530
-Message-ID: <20250722175026.1994846-2-Raju.Rangoju@amd.com>
+Subject: [PATCH 2/3] PCI: Add PCI vendor ID for ASMedia USB4 devices
+Date: Tue, 22 Jul 2025 23:20:25 +0530
+Message-ID: <20250722175026.1994846-3-Raju.Rangoju@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250722175026.1994846-1-Raju.Rangoju@amd.com>
 References: <20250722175026.1994846-1-Raju.Rangoju@amd.com>
@@ -94,121 +94,76 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004686:EE_|IA1PR12MB8494:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0c4443c0-4d76-4daf-f48f-08ddc9484ec5
+X-MS-TrafficTypeDiagnostic: BN1PEPF00004680:EE_|PH0PR12MB5647:EE_
+X-MS-Office365-Filtering-Correlation-Id: 51036a21-27d1-4f82-610b-08ddc9485227
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7JTNsjKmVcXa/FSiGzKRVF/EHNM/+FNjHa3VfV/yNeCcr8wrK71oht0Ep+4k?=
- =?us-ascii?Q?v3dYletal1fwxekW9TmEF6jeZxTewm0shTZVFX7ymkUYZS3C02NVb/8poIUW?=
- =?us-ascii?Q?NiZ9roqqGzizV1fLSnWT8Z9i0MdDfUnrWTQminSHSynzq7ur/MqwIW718/Fe?=
- =?us-ascii?Q?RiEO85N3bUom7KAclOQ2qVC4dmtqi28ViDdL/yuXAg2cLoAX1u/tGgxPvMvl?=
- =?us-ascii?Q?fCOYn6CHuEFmtZLsnFkIbrWLMVMftNzkPZ5FJ3Gj9x6ZU178kXmwXb+O9yyO?=
- =?us-ascii?Q?XhNFk6l8iww+HYom32j2YBBBdqLSKTkfgx9XQgyHZ+fN0PmXEqfcEPFpUjz7?=
- =?us-ascii?Q?eRoX1lY4IGMYXS9b4JoHhTrKti9W9h+4x89d1p9N9+PO3FTFa9M6b9mRU2o8?=
- =?us-ascii?Q?GzZudw6PqtQjL4ChcuavquthMutnmNPmDfQKKjz0deowhfALrUXJFAMWqcm2?=
- =?us-ascii?Q?UpA30KCMPJE5Toq3QXLz5XZ5SOEVzxWWXepXqIpk2rCwFoxYNOV0bFi+o6Kz?=
- =?us-ascii?Q?uaOyYje312bekMECUJOuWp8whhUvmCgTdqxRB0/zTKMvmUEisQBW6UV9WKt3?=
- =?us-ascii?Q?xhpy++Kpm0LyiHMmUkeHASeRnFrWHZFjCZ7/kU3l4a6XQVlJDXEcdXSifUGX?=
- =?us-ascii?Q?OZQeyQMcdqO4EDBxdSEZ4UaXIJbWGLjD81UjJAYE/BnpRFyXQaHOUwYH0lvl?=
- =?us-ascii?Q?nYCyYHGf1q79xRR/1PrEnIycjkw+bZjDHcAMd4hDXiUzXeJaFQeVZHIF6mZ2?=
- =?us-ascii?Q?KCqtC3nsb/bXAJPb7UwmFWJVVb5oVIJaKiYIWfD7tyITDIW9s0lFL4XinA84?=
- =?us-ascii?Q?QRQvgdMNCRhcy6fKhiv5qhwkV9VUn3fDYiFssLtaArKp6iwfoePiNmsuA8Sw?=
- =?us-ascii?Q?LeY3IZH3PL3ERefUD5qJ9FMEwqvtz+vp69eHWeDDLGXtu24OS81HUJhlhh/D?=
- =?us-ascii?Q?jGGhjkvkV1AUif4qL9CLg4X9mvTLRYUy3F2pYuvQIEFCFaQafXcdlRikuP9X?=
- =?us-ascii?Q?tg73CwyMbhcVuXSTpQEW2X5gqTVp7qRJEGOX07bTKc0ewxisxg2cAVExq6hq?=
- =?us-ascii?Q?fsiRV/0XKXigzihEwLIqFKHPderLULlM8qkp4Cp4egei+wZY9DXCxHM0/QMC?=
- =?us-ascii?Q?aVH0r0fKLr9envtCAle63SFjIOseLZDOlUgCgtOeoQFsWM6r+gYqKYID1BvB?=
- =?us-ascii?Q?QEyl0lgg5gimQfbLKPNYLVlcuRkg0WGN5GPfNedHLZiF5sQAUu53tJ0hLAer?=
- =?us-ascii?Q?/H8BIPBrvIJacdsI6s7RwXAz3VKy0hYdOtygbhby4nr4j2RUC2wtcnNk1qp7?=
- =?us-ascii?Q?od+gzQVYItQs6uTs//fTGa+A6tiu/gCVWIVeoLfwkEZrnu6o58/ItmOBD/we?=
- =?us-ascii?Q?+zpP4aIGL35XyghD50OJ1yM+Vs7Op77syx0Y4zejN9O0Wjx+lJqMOVRLBC+k?=
- =?us-ascii?Q?agHiul5GOg9bOyJuKx3MVFChzpt438iKJi5mP1ZGk9dvimRcvNSWzJBI1yRR?=
- =?us-ascii?Q?ZM4B/wU80BXnKmIbZz8f1x49ROJqM3AJM2ve?=
+	=?us-ascii?Q?n47wZGT5CNPsG2+ntnGjQSzZwQ4pmaDEv87smI6uVH9u11Y7XIhW10njU0hX?=
+ =?us-ascii?Q?5VXI2HxY787Qtu494fWez8GobfFANPiKqPSzlWDwKhIWryOUlpp5YZej4dMV?=
+ =?us-ascii?Q?o78jYp/bBo3e8tQvA81JbvyS1G9yihMebC8vdbJQACjdobiH+agnxKQfi+KV?=
+ =?us-ascii?Q?deU/HHEoInsG0uYPA9W+xd/UaroZb8xi4iojmaNjThvms3Ao93aPqZqe/ffM?=
+ =?us-ascii?Q?YwwTO0PJDH4laCkRGWOjuRIRh9IG4/8E3HPeLfilResYTugznmdmeW28DjPe?=
+ =?us-ascii?Q?wUOQurBRqk7AVnURHIltN1lc7lfkh3QdV9KQ6j3HgZG/Okh62RGfuxTmL2zS?=
+ =?us-ascii?Q?Xop+R0Pyz9Ptj1v7AknlAxX06kJBsicfVJ4kJ0JaDZQlRIv/xhY2kUyW0x3+?=
+ =?us-ascii?Q?PEYoKdz2op7AZrlFCW3iAJpBZ9I+g89hXkzPoFITzSr0Ao5nMTTMjLF9KUC4?=
+ =?us-ascii?Q?5jdcWilECpS7Xw8RNC/5vMqjnP/Pbef9O3hiW+gOuM7LQrYKLxT0eOWd2jsu?=
+ =?us-ascii?Q?34ofLgpWW4Q7QmGowB75h0H+ixLmTZvMCWPoBsDK+kgqo9+89BD0DUWtbg/j?=
+ =?us-ascii?Q?f2nR/lKr7bfC3BnQlKdwuBd6m/iXbKfAGLch3XeKUbrIbNV9kRDx2/8Dpgyk?=
+ =?us-ascii?Q?AWttBQTpBRFv2pYTujeBWZRQdUH2/Oka3bjUPb0DcKo3mPmCCkvby/aUaSjC?=
+ =?us-ascii?Q?nW6lH98GOI+Doh9lmDIGUDdmsOsxyUXXWHT+ILNE4ByxmbmzIuMuYNJ7NXAR?=
+ =?us-ascii?Q?a5jlGcdRR+OpFNQJ67I8GYrcgp63WXbq2LmSuNdMkVYz8inudxi0wF3+/lc6?=
+ =?us-ascii?Q?j6abG6ye1MDJN49BtVtDX/udFILoeTp1WjntjKgQn8nww9om4ita2vhWSvD2?=
+ =?us-ascii?Q?H/Inv0UPc9BFaGc7iLJYneEMmSb77xuWMpD8D6SzwvtAxJyDulbeeQxWHFg1?=
+ =?us-ascii?Q?7F9e8Zrl4xpcc23J2yXyYWZNP8rCoue4LL2ghIX+IonrU/IP0PryWQ6gaYNe?=
+ =?us-ascii?Q?8+4sS9ExjQqlEXlxmwtfrO77F6aP8jIyY6CK46KKoEVC7rcG40cxK4hdWtAg?=
+ =?us-ascii?Q?ATG7mC6LP9+JgK2u71rIsZTkbYgOqWhv1eYIhh8nb9UDaBr7L9j7/P6lLi4C?=
+ =?us-ascii?Q?fKrni5NEMnh8O1A32UimPk707UcB8Da5BeIi+n5beK7WHXAFua8F2umClF2X?=
+ =?us-ascii?Q?J5ymkNPjdM+Oh0Wk2Wg1RbofkNMx0NSuAnwJbESoaFskUq8jBA0ucXDnjMFn?=
+ =?us-ascii?Q?xDE5mfSJ7uJf8KxMVCW/GhkNg7WEfq0py0uAxzNbrYTe/4F/7Edn7rFVy0/0?=
+ =?us-ascii?Q?PR5f/gj+navZaZfRL5ULv2rZOG+hXt8gfZ+ZJjyat/BkPzmTpXzKdHQnHh6I?=
+ =?us-ascii?Q?3tPOI1BkHBhK4+fTWVw70zdlfhtzwirxNXbRXT+6F3w2SkZFmktm+mHKf6ML?=
+ =?us-ascii?Q?/oLyC0Xma78Evb523EKO2x8FsJ3FWWbIDTvrdNBlzixjQsIibjW0+bq+B9Fa?=
+ =?us-ascii?Q?KC8JPOAmt+hPRto7KqI3FjLRdC28RBYY/sU9?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2025 17:50:55.2461
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2025 17:51:00.9185
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c4443c0-4d76-4daf-f48f-08ddc9484ec5
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51036a21-27d1-4f82-610b-08ddc9485227
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004686.namprd03.prod.outlook.com
+	BN1PEPF00004680.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8494
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5647
 
-Currently, the XDomain driver hardcodes the vendor information
-properties, but there are multiple vendors that need to be
-supported. Remove the hardcoded properties and fill it
-dynamically in the update_property_block.
+Add a new PCI vendor ID (PCI_VENDOR_ID_ASMEDIA_USB4) for ASMedia
+USB4 devices. This change enables proper identification and support
+for ASMedia USB4 hardware in the kernel.
 
 Co-developed-by: Sanath S <Sanath.S@amd.com>
 Signed-off-by: Sanath S <Sanath.S@amd.com>
 Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
 ---
- drivers/thunderbolt/xdomain.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+ include/linux/pci_ids.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/thunderbolt/xdomain.c b/drivers/thunderbolt/xdomain.c
-index b0630e6d9472..749faa7c487f 100644
---- a/drivers/thunderbolt/xdomain.c
-+++ b/drivers/thunderbolt/xdomain.c
-@@ -653,6 +653,8 @@ static void update_property_block(struct tb_xdomain *xd)
- 	 */
- 	if (!xd->local_property_block ||
- 	    xd->local_property_block_gen < xdomain_property_block_gen) {
-+		struct tb_switch *sw = tb_xdomain_parent(xd);
-+		struct pci_dev *pdev = sw->tb->nhi->pdev;
- 		struct tb_property_dir *dir;
- 		int ret, block_len;
- 		u32 *block;
-@@ -664,7 +666,21 @@ static void update_property_block(struct tb_xdomain *xd)
- 		}
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index e2d71b6fdd84..3397954ce96e 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2592,6 +2592,7 @@
+ #define PCI_SUBDEVICE_ID_QEMU            0x1100
  
- 		/* Fill in non-static properties now */
-+		tb_property_add_immediate(dir, "vendorid", pdev->vendor);
-+		switch (pdev->vendor) {
-+		case PCI_VENDOR_ID_INTEL:
-+			tb_property_add_text(dir, "vendorid", "Intel Corp.");
-+			break;
-+		case PCI_VENDOR_ID_AMD:
-+			tb_property_add_text(dir, "vendorid", "AMD");
-+			break;
-+		default:
-+			tb_property_add_text(dir, "vendorid", "Unknown Vendor");
-+			break;
-+		}
-+		tb_property_add_immediate(dir, "deviceid", sw->config.device_id);
- 		tb_property_add_text(dir, "deviceid", utsname()->nodename);
-+		tb_property_add_immediate(dir, "devicerv", sw->config.revision);
- 		tb_property_add_immediate(dir, "maxhopid", xd->local_max_hopid);
+ #define PCI_VENDOR_ID_ASMEDIA		0x1b21
++#define PCI_VENDOR_ID_ASMEDIA_USB4	0x174C
  
- 		ret = tb_property_format_dir(dir, NULL, 0);
-@@ -2555,18 +2571,9 @@ int tb_xdomain_init(void)
- 		return -ENOMEM;
+ #define PCI_VENDOR_ID_REDHAT		0x1b36
  
- 	/*
--	 * Initialize standard set of properties without any service
--	 * directories. Those will be added by service drivers
--	 * themselves when they are loaded.
--	 *
--	 * Rest of the properties are filled dynamically based on these
--	 * when the P2P connection is made.
-+	 * All the properties are filled dynamically when the
-+	 * P2P connection is made.
- 	 */
--	tb_property_add_immediate(xdomain_property_dir, "vendorid",
--				  PCI_VENDOR_ID_INTEL);
--	tb_property_add_text(xdomain_property_dir, "vendorid", "Intel Corp.");
--	tb_property_add_immediate(xdomain_property_dir, "deviceid", 0x1);
--	tb_property_add_immediate(xdomain_property_dir, "devicerv", 0x80000100);
- 
- 	xdomain_property_block_gen = get_random_u32();
- 	return 0;
 -- 
 2.34.1
 
