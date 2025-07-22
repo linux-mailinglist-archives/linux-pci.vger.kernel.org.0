@@ -1,86 +1,86 @@
-Return-Path: <linux-pci+bounces-32720-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32721-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 895FDB0D877
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 13:42:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0ABB6B0D887
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 13:48:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7F0B161532
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 11:42:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3AF676C5150
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 11:47:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFBD623A98E;
-	Tue, 22 Jul 2025 11:42:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAA412E0919;
+	Tue, 22 Jul 2025 11:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="iHGIY227"
+	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="OigT1CgD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013000.outbound.protection.outlook.com [40.107.159.0])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011049.outbound.protection.outlook.com [52.101.65.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771FB1E520D;
-	Tue, 22 Jul 2025 11:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CCD2D660B;
+	Tue, 22 Jul 2025 11:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.49
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753184538; cv=fail; b=ADvitfF+EHV86JOD+kOkXz9ZKrKP0Q9wqpgBhM7D3/QghtUZf3yrtisQMdbV/nDiOqpxLCXG8K7wkuR9C8iyIIm0e6L0SFB6Xurz6kH5uQYv2BeN1+T4vH3Rm5m+bOne3Cu+76waz7XyR/rI1EOn6f0IccpmsRz6sirvG+dGWzU=
+	t=1753184881; cv=fail; b=jSnmSIGm8e6ZKs7K5Xv/tSgWdvJvV6rfftLqrWKkhU/kDTZ1JUxqjZOThpjTG9Aa5JnhclIXe43dARtEothXflgNFiZR1M7VKH0Y86WlIVtk0p9Qr3anTYB7mmOyOV0zOSszNy4CkxJp06ZmPCSHxsRAeipMcboXv5VlV1WPJtE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753184538; c=relaxed/simple;
-	bh=+sKaZ5Rf7vlDUZpdy5FU0JUp9IZNhvRiBx11wMf0u9k=;
+	s=arc-20240116; t=1753184881; c=relaxed/simple;
+	bh=N4wrZYiqnGXpxkP1Ix6idAQ5uSnv50T+FuPB+PvtHKc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pAGeXjhLws/P9L/KYVaIa8MIEOTGBWI1O1WRlnJXkbEexkFuoo71blQfV/a4KrcmQKdAN6yNd9g/eKto23F6Sg6obYRiHnzflYhIq6wD+I57/JsEKvEYgY2yN1jULbh8BIxikIw+AsfNaaRbcimeOBSGAnrtcC4vIF8cgsbTaUA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=iHGIY227; arc=fail smtp.client-ip=40.107.159.0
+	 In-Reply-To:Content-Type; b=r3IY0oLsb+/TsZ7upoyRUma6Q9Z0dywPg0lePRWDP3B/q0UXsnZ9muN+TtgrVageZSFgrr+SLdWWelXe+tSNskczJ0AwBS39FzIof6coE2WLSLOHgqhvu5iGuSqrlL4fTtQ/7N6SijRcEvnEClTB6PXjjwnFvz3B/fxg+9uLGOA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=OigT1CgD; arc=fail smtp.client-ip=52.101.65.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sq7RzVxoh0Ow9vgNPkwskwToqBzFKFBjhIrqbmoPbSFcD/xc+JtdRjlix/X4D3GWJ3hAPZ3r03Fi7z3M4+ljiMt5N3QZtYddJA9wg1oNk2zYdh5349Vk8zonBiwe02LwFDlergjtSWUofueQLy6aEvj05BiezVC+Ruhu/Qy3rEmLwNVvJwFjLLIC4CQs/L0gSB7TnmBTR3du7y46LNRUU2b1VV5l+JP0/uM5uuNy47zHSsmZ4M9Tqh9eHsahbu68TceUu9HFh7A2+HC/NCOlNapCJyreCS0WVPsqYwPWhHJGq1wBtnUDWpG1bHPUmFcLbaNQ8YwM/78eHfnDsL/tlg==
+ b=tj6n38kkRZnUpKia1Au90a5ezjD+sbNrRkpBmv8fA+uypvXWESN0Ubs/DXc+TZzl/QQlGd+18HdtNSGhpGGbpDN9SR7N4O9mkgxLRtIZlp5aKEoXvY25Q0HLfgHlXTDi8yNDP+J7ag4oMs2Hml4BQfLzS3lxi5PYhDZNKxFeZVF6yk2x0bgsoF8Kiw5zkVBHJbgm1/hkXothz6/+YUKD0MtOqqcbOZ7qnmyiGs5vuxTCPzPeAMvhY1dZ6HQK/tKovyVs2iavearO9aT17hTbnNtmTnWFk4hz9hLDi3AQRnEUD7kAjrSRS2uXyadvQ9yZiAoCZyHN+jgOw0BBs8JSig==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=24lSkkITWojsww2CRziY/gv0wogqKKBghPXBa/T+qTE=;
- b=ol9VFIA/ppTbvli+oecWRpeOwEEboRBsMwLEYc01ChB3itt/rZFQx2MFugg92WTusF5K67gBu1/YmjwUEuj7dGa/G0IDgLZVVYHjjX2soGMTDVxakH+0UNAZX+2KsvuAyobIkL9PJzNUV2dRvhqiEV3851IZ9gOBdmHaCpzs7Z1WmWu0JeGwP6uzFixt0KBdIsgtSIe6Bp8jgsVCSpP+MPosqU2dy1o29KgjkPFa/QpLQazWnrK3X7MGcNG8GhRjqHc6YyUfnQjMZta1VrWcMZYMRiQqCQP5Xghh+MoOQ/NONhwixDc7/pe3bZ3oBWByool54TU7xCrzhKJZPfp8Rg==
+ bh=OoeTQ87PVRFO9wvoCFp2Qec6I25aQ2cOeLBZCVJy9XE=;
+ b=xzGHGI0YzjPUVAPIVRoEc9fsdH+wsYkuXwakqoDzhgOV+BQLvHcajByEJl97dIWLr8VZPjp8q6yUNb020hSZ6nVm6gxLkNEFYxeH0mrZR0yZj9XaPA5U265P+vcE4BFRZvtqrRYrITBUqnrqmCaygYHlLIEr2TQBhU/QmX0RYJccYgMrxzsUdwlcsGgOto0blV4L9orXrl4DwDLs53WsUXeMF8tg99Nk0kcx9Jm/hbWrPbkwYFuhzmgYNgfzjodbBtjAOVRWiafxgL3gb+MNQ73Uy2ua3Nz6zHbtERqGeYNPW4NyxklrAYITCisaXTn451rHHMyZjwvwzaI+Wv0Fqw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 139.15.153.206) smtp.rcpttodomain=collabora.com smtp.mailfrom=de.bosch.com;
+ 139.15.153.205) smtp.rcpttodomain=google.com smtp.mailfrom=de.bosch.com;
  dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=24lSkkITWojsww2CRziY/gv0wogqKKBghPXBa/T+qTE=;
- b=iHGIY227X7269Z0wWHU+RjcBN63ZxnIHQ1q2t7ol+R4+7gwYl6X1bEHb3f7+D7komg32V5NiF9lpNS18sUUl20dtoP+nPlH1UjlAOHICUTeSMsyLFS5lB6FHiBJF3kCC0rD46z1YnlzzyyIWmhFdtNaUmcK4gHvjK9OAQ6/mDAUDVx2ecKGihG8SBpZ5zIzFNk7tlHaVTqyFUrp3jLfbF+xP1VHue+Pyn4EeJEBC7dyM5PzHPWSjatU5tRjNQlSALPKkkPFiBx/bbfqzgw//MjxilH8X5+v+BoVhyYOSOhMYNbL6RudV4hRvLdaiYL3FjRs+Uev9jRHDjbTvpKWbXA==
-Received: from DB9PR02CA0021.eurprd02.prod.outlook.com (2603:10a6:10:1d9::26)
- by AM0PR10MB3522.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:153::23) with
+ bh=OoeTQ87PVRFO9wvoCFp2Qec6I25aQ2cOeLBZCVJy9XE=;
+ b=OigT1CgDUCZcYxGfHmqETVwOdiP53PHfjQrz4nl2dj6nvjapIZT4MruKbQg6Dx0IHpRdKrtEZ5vJYRe8MhFA3pDMdA/jrB5SgAiRf71nk4v7IpDGf+dlO3LIJfJF+98wKaPYRhNXjqOrL+2L030ZKBGr+hKpapoVNX9PWoiTm9AvKviNPabZpAvtSqcdcHMQH4HmKC+h1yfbNeedpn9LRIOKXg598gzrbq8USwZQ6u3CXulwhTUAZSnWLcXtWmj13A8HZ7MuXPQTghMCieDZOxXvGL0O8lKh5LJeEMXPGlbUqlnHYEpNSA+HhGCOAiG8kg0y0isusNii4yGMoOsSjw==
+Received: from DU7P251CA0029.EURP251.PROD.OUTLOOK.COM (2603:10a6:10:551::35)
+ by VI0PR10MB8471.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:231::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.21; Tue, 22 Jul
- 2025 11:42:10 +0000
-Received: from DB1PEPF000509E6.eurprd03.prod.outlook.com
- (2603:10a6:10:1d9:cafe::a5) by DB9PR02CA0021.outlook.office365.com
- (2603:10a6:10:1d9::26) with Microsoft SMTP Server (version=TLS1_3,
+ 2025 11:47:51 +0000
+Received: from DB3PEPF0000885C.eurprd02.prod.outlook.com
+ (2603:10a6:10:551:cafe::55) by DU7P251CA0029.outlook.office365.com
+ (2603:10a6:10:551::35) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8943.29 via Frontend Transport; Tue,
- 22 Jul 2025 11:42:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.206)
+ 22 Jul 2025 11:47:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.205)
  smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=de.bosch.com;
 Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
- 139.15.153.206 as permitted sender) receiver=protection.outlook.com;
- client-ip=139.15.153.206; helo=eop.bosch-org.com; pr=C
-Received: from eop.bosch-org.com (139.15.153.206) by
- DB1PEPF000509E6.mail.protection.outlook.com (10.167.242.56) with Microsoft
+ 139.15.153.205 as permitted sender) receiver=protection.outlook.com;
+ client-ip=139.15.153.205; helo=eop.bosch-org.com; pr=C
+Received: from eop.bosch-org.com (139.15.153.205) by
+ DB3PEPF0000885C.mail.protection.outlook.com (10.167.242.7) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8964.20 via Frontend Transport; Tue, 22 Jul 2025 11:42:10 +0000
+ 15.20.8964.20 via Frontend Transport; Tue, 22 Jul 2025 11:47:50 +0000
 Received: from SI-EXCAS2001.de.bosch.com (10.139.217.202) by eop.bosch-org.com
- (139.15.153.206) with Microsoft SMTP Server (version=TLS1_2,
+ (139.15.153.205) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.26; Tue, 22 Jul
- 2025 13:41:56 +0200
-Received: from RNGMBX3002.de.bosch.com (10.124.11.207) by
+ 2025 13:47:37 +0200
+Received: from RNGMBX3003.de.bosch.com (10.124.11.208) by
  SI-EXCAS2001.de.bosch.com (10.139.217.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.57; Tue, 22 Jul 2025 13:41:54 +0200
+ 15.1.2507.57; Tue, 22 Jul 2025 13:47:36 +0200
 Received: from [10.34.219.93] (10.34.219.93) by smtp.app.bosch.com
- (10.124.11.207) with Microsoft SMTP Server (version=TLS1_2,
+ (10.124.11.208) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 22 Jul
- 2025 13:41:53 +0200
-Message-ID: <dd34e5f4-5027-4096-9f32-129c8a067d0a@de.bosch.com>
-Date: Tue, 22 Jul 2025 13:41:46 +0200
+ 2025 13:47:37 +0200
+Message-ID: <361ebaf2-efc6-46ec-a9d2-0722cfe382ea@de.bosch.com>
+Date: Tue, 22 Jul 2025 13:47:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,301 +88,353 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v7 0/6] rust: add support for request_irq
-To: Daniel Almeida <daniel.almeida@collabora.com>, Miguel Ojeda
-	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
+Subject: Re: [PATCH] rust: irq: add &Device<Bound> argument to irq callbacks
+To: Alice Ryhl <aliceryhl@google.com>, Daniel Almeida
+	<daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>, Boqun Feng
 	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
 	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg
-	<a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross
-	<tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Benno Lossin
-	<lossin@kernel.org>
+	<a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich
+	<dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael
+ J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+	<kwilczynski@kernel.org>, Benno Lossin <lossin@kernel.org>, Dirk Behme
+	<dirk.behme@gmail.com>
 CC: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-References: <20250715-topics-tyr-request_irq2-v7-0-d469c0f37c07@collabora.com>
+	<linux-pci@vger.kernel.org>
+References: <20250721-irq-bound-device-v1-1-4fb2af418a63@google.com>
 Content-Language: en-GB
 From: Dirk Behme <dirk.behme@de.bosch.com>
-In-Reply-To: <20250715-topics-tyr-request_irq2-v7-0-d469c0f37c07@collabora.com>
+In-Reply-To: <20250721-irq-bound-device-v1-1-4fb2af418a63@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB1PEPF000509E6:EE_|AM0PR10MB3522:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce673b62-e06a-4a4d-04a9-08ddc914cb49
+X-MS-TrafficTypeDiagnostic: DB3PEPF0000885C:EE_|VI0PR10MB8471:EE_
+X-MS-Office365-Filtering-Correlation-Id: dd789edf-4cb7-4993-1ccb-08ddc915963b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|7416014|376014|1800799024|921020;
+	BCL:0;ARA:13230040|376014|7416014|1800799024|82310400026|36860700013|7053199007|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cU56VzFzdzhBTVZtTS93bCt5YTdWVEQwenFOMkJXVlJHRzVESDhIbjhGckpm?=
- =?utf-8?B?ZE9IT2UzSjlRMTBzZ2dpRmNoV1NtWkVYNit3eHR3VEN0WVJWOVNySGdKMEJv?=
- =?utf-8?B?OWp0K2w2SUNtenpOTmdtZXFSZEYrV2c2OVd0UmRkNGo2aEkxZGZmVkdET1BL?=
- =?utf-8?B?L1Z0T3dIYUloanJNNXRBeFZqWlZyaEZzSzdOS3M2eUw5L3ZaZ0NHcWxaS1g5?=
- =?utf-8?B?YVJhK0dLckJqdk9EeW9TbmlvbW1raDJBaEVFSXVobnF6bmFQV2FqTkd3c2Vi?=
- =?utf-8?B?aktLL0VLS3I4aGxBVXphYTZZU1NPa01qdDlLbkVLNUJ6aVRLeFBHU1oyZHEz?=
- =?utf-8?B?ZFUwWGJNQTZLUTNwaUZPUjZiWk8xcGdWUkh1THFPblZTZHArY2kzOU5NcmxH?=
- =?utf-8?B?VDNQaTZGcmRkV1pQMzUxclpiaEtMdVA3MjBaVGlxZFpyRGVVSVE2bTdiQmJJ?=
- =?utf-8?B?OXhJSDRUZm1uTjJPQlF2V1hpWGJHTUNkWnZJRy9aNlN4N2hKY21VWXd3M0xZ?=
- =?utf-8?B?Q1htWG9ocUp0a2h5Tmd5OC9LeUZJVXNaYVBXUGJXS3l0ZjZNQkVkTUtOeXJG?=
- =?utf-8?B?bTBSQWo4NzhvUmhBckU0aU50NUt0SjlaQTkyc2VoTGtjU2J6NjN5elIzTk82?=
- =?utf-8?B?eHZHWlM3djZDQmRUT3pDQm13MkZaMFdYa3Y2OGNYaWV1enYvb2RVS1RxTklt?=
- =?utf-8?B?UkY4bjN0S3VtV3JGOVR0NHIwZ3N5ZEExZUZUQzJTdjBKYkoxb0w5K3lTY2dm?=
- =?utf-8?B?T090Y3dsNktCMUtkUG05TlRiaEIzajlwS3NCUHd4RWJwM01weERDUkNZOXpJ?=
- =?utf-8?B?eGE2SDlBYkFSbFhac2FsREplRVJDMzVub3NaKzlPRHp6NFlLVXVlVTF2UDlQ?=
- =?utf-8?B?d0xtNlpGYUFmZ013WksxVDJUUkp4Q2pTODA5SEF2UkRDQXlMWVBEaHZ6ejJB?=
- =?utf-8?B?bC96MU14Mm45dE12R09YQWU3ZUtPdUlld2xkNVJXMGx0RTJPNVBBK2JydlVD?=
- =?utf-8?B?QTlEQ0k3UnRESGJqeElRaktJS1pnMXdEekZJUU42anBEOVgvWGY2OHUzRlMr?=
- =?utf-8?B?K2hvUG5XYW1CSG9TMGZkMW9CVFpyWjd3NWlCbSs1TWRHL3gwYi85QTBsbldo?=
- =?utf-8?B?TGFoWkVLNUdPQTlQajhRUEpqb1M5UElKd3lQQ2lMNS8waGlIOWlTcU1TWlNn?=
- =?utf-8?B?QVgrN3A3bmNEK1pLMkgxbVBaRW1FazIwdHdPOTllTUxRQXBucHhrRlRzMzRu?=
- =?utf-8?B?bzIwc3pxZUtNbEJ4cS9iWVVtMlIvVVVBOHdsYjloZFVLL3F1NHkrNlZ6MW9s?=
- =?utf-8?B?aFI2eDdvNUFSZkZ0QTkyeS9hUWFyZ0RzdThJeFBETWMvOFpHQ0lGVDlmdHlH?=
- =?utf-8?B?NUxUS2pLQnhva0lid3g4VUU4VUdmQTd5M3J2aTV2Y0FWSDEvLzBiTzhMMVd2?=
- =?utf-8?B?eTI2bDJPYmp2d3hBSkpIbjIxVVkyYklLeFp3WWJ2ZXlXcGNJSWNWNXNVMjZ3?=
- =?utf-8?B?YTh0dHdwOUpWTWx2Y0pGeWU2L1ljdldaampMeDNJVUcydkJMTWJ2Qmwwb0Js?=
- =?utf-8?B?V0ltdTFqY0ZIeUJ5TGQwRk44TG1OMzZsOU93MzJ0MEl0LzVTTlNIYWN5ZnFJ?=
- =?utf-8?B?cXZmSU8weUlrZDRXYUl6eERyOGEwMHlYeEFNemxVMkhNTXdScEFVTWxVcUFl?=
- =?utf-8?B?aDZXaW9mSDduWENZbk1FYWxjMm5oM1RsM3hhUjcxZmdEMi9NVzA3RDFVcWFQ?=
- =?utf-8?B?Ym9hdnlya3JRUit6UW9xSm1ndGNvL2dPN05LV2hkeTdnZS9RcnRwdUJKMENV?=
- =?utf-8?B?RDFjd2J3aDB6QjE4d2pIbmlURmdSWjNrZlFPd1JKN2EraDUveDBMM2h5ZGVD?=
- =?utf-8?B?UUtkbExVOFpDRXVKOEt2THZNdTA4VUltK0pKdnl4WHJUU21odCtUQ0NWd3lo?=
- =?utf-8?B?R3dJdjI2NFhkSWd1ZlNMYmhHL0JsU0F1QnE1TjVZdXlnYkJ0Q3g1b2dvZHpH?=
- =?utf-8?B?aUxmQWZXSDExOTlyWmkvc253TTNERERjVkxQQi94NitNTjRuTkoyb0NKbi9G?=
- =?utf-8?B?UG8vM2tDem9QdVNtbUwxdGxJTmpCWEJzdDNnUT09?=
+	=?utf-8?B?Ymc4M2VNc0QzTEM1S0kwTFEwUHFJZU1mRkxDL0FXQWl1ejFyc05XNDQzTUNj?=
+ =?utf-8?B?R1hCcU1GdjhIN1V5WDJHaFlsUUF4YmpjeHFyeTk3dVZId0hsYUFiRDRYQnVj?=
+ =?utf-8?B?L2d0c3NJbllJa0UySjFKMllHYmZHd29YQzFuVlNRVHYxOUp4TjVNLzB2VWc2?=
+ =?utf-8?B?em1VellBVjZtc290K1g2dXUveVNuMnlDVmlnam1RNmdBVWFKTUV4VVpPbmRC?=
+ =?utf-8?B?MFlMM2YwVktNR0EwYVh1N3lNUjR4NzNjcWhVNWxOUXNuSUUxQzZNaithQmVy?=
+ =?utf-8?B?a0dDRTlBTDdIeW84SlBaajRRb2JKQWV0dk1oZmJyUGRzUjhia3ZXTXplSFMx?=
+ =?utf-8?B?Sm5BNmxiMEdhSSt5RklKTzJlczkyMW1yNE1uS2tFR0ozeEtyeHlPckN6cjRY?=
+ =?utf-8?B?Z0p4azNiNUt0SWI4MkZJVmw4YXVJTWl4YTdaZVNmYy8wWjJoVno4WlkrS2J3?=
+ =?utf-8?B?Nlp0ZmQ0aWVzaCtGMzVEQ0JZM2FYbkpwbjc3TFpjMFc5amdLM2FXZFNSeWhu?=
+ =?utf-8?B?RzI3dUxtS1lGcmNqSmJRWEtDanVxR1hxRDR2TGswamtMSVc5VXFCU296UWtU?=
+ =?utf-8?B?Zkc1VlNjdzRJSW1xbnJqYjZkalJkZW9TM3ltUDBSRGphb3FyUzh6aHZEckhF?=
+ =?utf-8?B?c3VsNEQ5QUNZNjZpbFNRcStaTlpXR2wvUXhybTNOWXpvTit4NjBjR09Bd3hE?=
+ =?utf-8?B?dVdYTWtaSmhvTjdoTDI4Sm9oS2V1UEJnWWp2Qkc2MWQ4bEcxNWczMFRZUDVr?=
+ =?utf-8?B?aU0zYVF4SWF3STAzWExVbS9uOXVqR3dTNmo0bzVQNFRuUVZzekpuVm5RTlUz?=
+ =?utf-8?B?STdJMWxBN2h4Qk1mejROS0ZEdTZQUGFuTlJWN3o4Z3NYcVZoVTRSdjFieFN0?=
+ =?utf-8?B?ck1icVdYaVFqbXNRSkorbTFhMjFqOFVXMFdlVmNBc2ZyM1BnR1Y3MjNuUElz?=
+ =?utf-8?B?OHVGUEtIV1FsRzZxU2JFd3lSam8yd2lwazdFV1NKWEhJRFpWUzVlYjZtby9h?=
+ =?utf-8?B?Yk0yK3NPUjNQUlhlcE01VDMzbThreGVFNm1JYmw0U3VJS3EvYkFOZ0wvMlRk?=
+ =?utf-8?B?OGNTWUtPeUpleFZyYnJWeThCMmw5OVk4dWN1U25vR3NidjNTeXRNcklNb0xN?=
+ =?utf-8?B?akdSN1kvWEtrVjBNaGo5VDUxVFp5WUxoOHVKOWw0YU5ZMzFFa083RlNVUlZK?=
+ =?utf-8?B?NXU1OGhWMUx1Ykd4SGFDVWorWE5hdDlWNjR5SGhmL0hWNEZZRlpnNWJ0Qno1?=
+ =?utf-8?B?RlR1VEVpc0RFM2NkYlFkOWxSWFVHa1lOc0FYdXcveWd1RWRVN2ViZERKcnFw?=
+ =?utf-8?B?SFpYZ01vYVZPQTBSOUl6T25FQTZHT28rSHNJdzFhVE9xbjMvMEc0TUdsK3NV?=
+ =?utf-8?B?dFIrN2xQbG1vV3EvV2p6eDlTS2pyNVZLbXUxc3Q0SXp3d3B5SkFSS2wxbXdw?=
+ =?utf-8?B?Z3d5YkRtcU50NTlCM3hQN3dKbjgxbzBoSGU5bGZJM0I2QStmTnRLRUx5L0ZL?=
+ =?utf-8?B?c3U5eVFnS3prOEIvNUJ5T3lDcjFRclp1bUFuRFpMWnBleElKMzhrSVd4dXp1?=
+ =?utf-8?B?L2RYSWJjbE82c1I4SzJ6Tkw3M2JPd2tRVDhweFJ1U2txbzFIbmxGWXdxWncy?=
+ =?utf-8?B?UWxFMk16MGUyam5meTBhRUJVYWZkTGhLb09jenR6S0dRTmxJUnFNdWZNYlhN?=
+ =?utf-8?B?ampxbm1OMVhXWFhqclAxOFNuTUQwU0FiclpnSVNiQlJkMHB2TnYzQm9Vbmho?=
+ =?utf-8?B?TnNaR3E4ZVB4WmNOaVkrR3Z0Z1o5eXVHSzhMbVo1NlozdS9ZM2U5VEZGZHQv?=
+ =?utf-8?B?bE56Z1Njc3dNSUkyTnN2eS9STHVzMGlHYW0remg4NFdwaExWd1B1K1RjRit5?=
+ =?utf-8?B?eER4WHQrSm5VR2EraUZNOHMyb2ZEbU83OEZxWENFTjBtWkFKbG0yZDVmRkhI?=
+ =?utf-8?B?YStmV2MycHdsT2drV21lV1BVd01JZDZGRllwM0NoaHVoK1h4Qk9NWjJyLzg1?=
+ =?utf-8?B?Tkd4SE9IUTY5MUxCVEpkcEJEdjNPS2J1Ym1iNzZYMUNobEtTL2xSeS9JSGVP?=
+ =?utf-8?B?ekx1NmRkcWhvR3loZXJoNUJXTzJmVE5hM0NHdz09?=
 X-Forefront-Antispam-Report:
-	CIP:139.15.153.206;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
+	CIP:139.15.153.205;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(82310400026)(36860700013)(7053199007)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: de.bosch.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2025 11:42:10.2553
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2025 11:47:50.7317
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce673b62-e06a-4a4d-04a9-08ddc914cb49
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd789edf-4cb7-4993-1ccb-08ddc915963b
 X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.206];Helo=[eop.bosch-org.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.205];Helo=[eop.bosch-org.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF000509E6.eurprd03.prod.outlook.com
+	DB3PEPF0000885C.eurprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB3522
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR10MB8471
 
-On 15/07/2025 17:16, Daniel Almeida wrote:
-> Changes in v7:
-> - Rebased on top of driver-core-next
-> - Added Flags::new(), which is a const fn. This lets us use build_assert!()
->   to verify the casts (hopefully this is what you meant, Alice?)
-> - Changed the Flags inner type to take c_ulong directly, to minimize casts
->   (Thanks, Alice)
-> - Moved the flag constants into Impl Flags, instead of using a separate
->   module (Alice)
-> - Reverted to using #[repr(u32)] in Threaded/IrqReturn (Thanks Alice,
->   Benno)
-> - Fixed all instances where the full path was specified for types in the
->   prelude (Alice)
-> - Removed 'static from the CStr used to perform the lookup in the platform
->   accessor (Alice)
-> - Renamed the PCI accessors, as asked by Danilo
-> - Added more docs to Flags, going into more detail on what they do and how
->   to use them (Miguel)
-> - Fixed the indentation in some of the docs (Alice)
-> - Added Alice's r-b as appropriate
-> - Link to v6: https://lore.kernel.org/rust-for-linux/20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com/
+On 21/07/2025 16:38, Alice Ryhl wrote:
+> When working with a bus device, many operations are only possible while
+> the device is still bound. The &Device<Bound> type represents a proof in
+> the type system that you are in a scope where the device is guaranteed
+> to still be bound. Since we deregister irq callbacks when unbinding a
+> device, if an irq callback is running, that implies that the device has
+> not yet been unbound.
+> 
+> To allow drivers to take advantage of that, add an additional argument
+> to irq callbacks.
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
 
-Looking for an easy way to test interrupts on an ARM64 Renesas RCar3 SoC
-I found a quite simple timer unit (TMU) which has a configurable (start
-value & frequency) count down. An interrupt is generated when the
-counter reaches 0. And the counter restarts then. There is a C driver
-for this already [1].
+With
 
-Using this patch series together with Alice's [2] I got a quite simple
-periodic 1 min interrupt handling to run (just for testing, of course
-not a full driver): [3] (output [4]).
+https://lore.kernel.org/rust-for-linux/dd34e5f4-5027-4096-9f32-129c8a067d0a@de.bosch.com/
 
-With that:
+let me add
 
 Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
 
-Thanks to Daniel for the support!
+here as well.
+
+Thanks!
 
 Dirk
 
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/clocksource/sh_tmu.c
 
-[2]
-https://lore.kernel.org/rust-for-linux/20250721-irq-bound-device-v1-1-4fb2af418a63@google.com/
-
-[3]
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 645f517a1ac2..d009a0e3508c 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -554,7 +554,16 @@ config RENESAS_OSTM
- 	  Enables the support for the Renesas OSTM.
-
- config SH_TIMER_TMU
--	bool "Renesas TMU timer driver" if COMPILE_TEST
-+	bool "Renesas TMU timer driver"
-+	depends on HAS_IOMEM
-+	default SYS_SUPPORTS_SH_TMU
-+	help
-+	  This enables build of a clocksource and clockevent driver for
-+	  the 32-bit Timer Unit (TMU) hardware available on a wide range
-+	  SoCs from Renesas.
-+
-+config SH_TIMER_TMU_RUST
-+	bool "Renesas TMU Rust timer driver"
- 	depends on HAS_IOMEM
- 	default SYS_SUPPORTS_SH_TMU
- 	help
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 205bf3b0a8f3..66567f871502 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_SH_TIMER_CMT)	+= sh_cmt.o
- obj-$(CONFIG_SH_TIMER_MTU2)	+= sh_mtu2.o
- obj-$(CONFIG_RENESAS_OSTM)	+= renesas-ostm.o
- obj-$(CONFIG_SH_TIMER_TMU)	+= sh_tmu.o
-+obj-$(CONFIG_SH_TIMER_TMU_RUST)	+= sh_tmu_rust.o
- obj-$(CONFIG_EM_TIMER_STI)	+= em_sti.o
- obj-$(CONFIG_CLKBLD_I8253)	+= i8253.o
- obj-$(CONFIG_CLKSRC_MMIO)	+= mmio.o
-diff --git a/drivers/clocksource/sh_tmu_rust.rs
-b/drivers/clocksource/sh_tmu_rust.rs
-new file mode 100644
-index 000000000000..328f9541d1bb
---- /dev/null
-+++ b/drivers/clocksource/sh_tmu_rust.rs
-@@ -0,0 +1,113 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Rust Renesas TMU driver.
-+
-+use kernel::{
-+    c_str,
-+    device::{Core, Device, Bound},
-+    devres::Devres,
-+    io::mem::IoMem,
-+    irq::{flags::Flags, IrqReturn, Registration},
-+    of, platform,
-+    prelude::*,
-+    sync::Arc,
-+    types::ARef,
-+};
-+
-+struct RenesasTMUDriver {
-+    pdev: ARef<platform::Device>,
-+    _registration: Arc<Registration<Handler>>,
-+    _iomem: Arc<Devres<IoMem>>,
-+}
-+
-+struct Info;
-+
-+kernel::of_device_table!(
-+    OF_TABLE,
-+    MODULE_OF_TABLE,
-+    <RenesasTMUDriver as platform::Driver>::IdInfo,
-+    [(of::DeviceId::new(c_str!("renesas,tmu")), Info)]
-+);
-+
-+const TSTR: usize =  0x4; //  8 Bit register
-+const TCOR: usize =  0x8; // 32 Bit register
-+const TCNT: usize =  0xC; // 32 Bit register
-+const TCR:  usize = 0x10; // 16 Bit register
-+
-+struct Handler {
-+    iomem: Arc<Devres<IoMem>>,
-+}
-+
-+impl kernel::irq::request::Handler for Handler {
-+    fn handle(&self, dev: &Device<Bound>) -> IrqReturn {
-+        pr_info!("Renesas TMU IRQ handler called.\n");
-+
-+        // Reset the underflow flag
-+        let io = self.iomem.access(dev).unwrap();
-+        let tcr = io.try_read16_relaxed(TCR).unwrap_or(0);
-+        if tcr & (0x1 << 8) != 0 {
-+            io.try_write16_relaxed(tcr & !(0x1 << 8), TCR).unwrap_or(());
-+        }
-+
-+        IrqReturn::Handled
-+    }
-+}
-+
-+impl platform::Driver for RenesasTMUDriver {
-+    type IdInfo = Info;
-+    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
-+
-+    fn probe(
-+        pdev: &platform::Device<Core>,
-+        _info: Option<&Self::IdInfo>,
-+    ) -> Result<Pin<KBox<Self>>> {
-+        let dev = pdev.as_ref();
-+
-+        dev_dbg!(dev, "Probe Rust Renesas TMU driver.\n");
-+
-+        let request = pdev.request_io_by_index(0).ok_or(EINVAL)?;
-+        let iomem = Arc::pin_init(request.iomap()?, GFP_KERNEL)?;
-+        let io = Arc::pin_init(iomem.access(dev)?, GFP_KERNEL)?;
-+
-+        // Set count to 1 minute. Clock is 16.66MHz / 4 = 4.165MHz
-+        let timeout = 4165000 * 60; // 1 minute in clock ticks
-+        io.try_write32_relaxed(timeout, TCOR)?;
-+        io.try_write32_relaxed(timeout, TCNT)?;
-+        // Enable underflow interrupt (UNIE, Underflow Interrupt Control)
-+        let tcr = io.try_read16_relaxed(TCR)?;
-+        io.try_write16_relaxed(tcr | 0x1 << 5, TCR)?;
-+
-+        let request = pdev.irq_by_index(0)?;
-+        dev_info!(dev, "IRQ:  {}\n", request.irq());
-+        let registration = Registration::new(request, Flags::SHARED,
-c_str!("tmu"), Handler{iomem: iomem.clone()});
-+        let registration = Arc::pin_init(registration, GFP_KERNEL)?;
-+
-+        // Enable TMU
-+        io.try_write8_relaxed(0x1, TSTR)?;
-+        // Read back registers to verify
-+        dev_info!(dev, "TSTR: 0x{:x}\n", io.try_read8_relaxed(TSTR)?);
-+        dev_info!(dev, "TCOR: 0x{:x}\n", io.try_read32_relaxed(TCOR)?);
-+        dev_info!(dev, "TCNT: 0x{:x}\n", io.try_read32_relaxed(TCNT)?);
-+        dev_info!(dev, "TCR:  0x{:x}\n", io.try_read16_relaxed(TCR)?);
-+
-+        let drvdata = KBox::pin_init(Self { pdev: pdev.into(),
-_registration: registration, _iomem: iomem.clone()}, GFP_KERNEL)?;
-+
-+        dev_info!(dev, "probe done\n");
-+
-+        Ok(drvdata)
-+    }
-+}
-+
-+impl Drop for RenesasTMUDriver {
-+    fn drop(&mut self) {
-+        dev_dbg!(self.pdev.as_ref(), "Remove Rust Renesas TMU driver.\n");
-+    }
-+}
-+
-+kernel::module_platform_driver! {
-+    type: RenesasTMUDriver,
-+    name: "rust_tmu",
-+    authors: ["Dirk Behme"],
-+    description: "Rust Renesas TMU driver",
-+    license: "GPL v2",
-+}
-
-[4] Interrupt each 60s:
-
-...
-[  430.655055] rust_tmu: Renesas TMU IRQ handler called.
-[  490.637054] rust_tmu: Renesas TMU IRQ handler called.
-[  550.619052] rust_tmu: Renesas TMU IRQ handler called.
-[  610.601050] rust_tmu: Renesas TMU IRQ handler called.
-[  670.583049] rust_tmu: Renesas TMU IRQ handler called.
-[  730.565047] rust_tmu: Renesas TMU IRQ handler called.
-...
-
-
+> ---
+> This patch is a follow-up to Daniel's irq series [1] that adds a
+> &Device<Bound> argument to all irq callbacks. This allows you to use
+> operations that are only safe on a bound device inside an irq callback.
+> 
+> The patch is otherwise based on top of driver-core-next.
+> 
+> [1]: https://lore.kernel.org/r/20250715-topics-tyr-request_irq2-v7-0-d469c0f37c07@collabora.com
+> ---
+>  rust/kernel/irq/request.rs | 88 ++++++++++++++++++++++++++--------------------
+>  1 file changed, 49 insertions(+), 39 deletions(-)
+> 
+> diff --git a/rust/kernel/irq/request.rs b/rust/kernel/irq/request.rs
+> index d070ddabd37e7806f76edefd5d2ad46524be620e..f99aff2dd479f5223c90f0d2694f57e6c864bdb5 100644
+> --- a/rust/kernel/irq/request.rs
+> +++ b/rust/kernel/irq/request.rs
+> @@ -37,18 +37,18 @@ pub trait Handler: Sync {
+>      /// All work that does not necessarily need to be executed from
+>      /// interrupt context, should be deferred to a threaded handler.
+>      /// See also [`ThreadedRegistration`].
+> -    fn handle(&self) -> IrqReturn;
+> +    fn handle(&self, device: &Device<Bound>) -> IrqReturn;
+>  }
+>  
+>  impl<T: ?Sized + Handler + Send> Handler for Arc<T> {
+> -    fn handle(&self) -> IrqReturn {
+> -        T::handle(self)
+> +    fn handle(&self, device: &Device<Bound>) -> IrqReturn {
+> +        T::handle(self, device)
+>      }
+>  }
+>  
+>  impl<T: ?Sized + Handler, A: Allocator> Handler for Box<T, A> {
+> -    fn handle(&self) -> IrqReturn {
+> -        T::handle(self)
+> +    fn handle(&self, device: &Device<Bound>) -> IrqReturn {
+> +        T::handle(self, device)
+>      }
+>  }
+>  
+> @@ -134,7 +134,7 @@ pub fn irq(&self) -> u32 {
+>  /// use core::sync::atomic::Ordering;
+>  ///
+>  /// use kernel::prelude::*;
+> -/// use kernel::device::Bound;
+> +/// use kernel::device::{Bound, Device};
+>  /// use kernel::irq::flags::Flags;
+>  /// use kernel::irq::Registration;
+>  /// use kernel::irq::IrqRequest;
+> @@ -156,7 +156,7 @@ pub fn irq(&self) -> u32 {
+>  /// impl kernel::irq::request::Handler for Handler {
+>  ///     // This is executing in IRQ context in some CPU. Other CPUs can still
+>  ///     // try to access to data.
+> -///     fn handle(&self) -> IrqReturn {
+> +///     fn handle(&self, _dev: &Device<Bound>) -> IrqReturn {
+>  ///         self.0.fetch_add(1, Ordering::Relaxed);
+>  ///
+>  ///         IrqReturn::Handled
+> @@ -182,8 +182,7 @@ pub fn irq(&self) -> u32 {
+>  ///
+>  /// # Invariants
+>  ///
+> -/// * We own an irq handler using `&self.handler` as its private data.
+> -///
+> +/// * We own an irq handler whose cookie is a pointer to `Self`.
+>  #[pin_data]
+>  pub struct Registration<T: Handler + 'static> {
+>      #[pin]
+> @@ -211,8 +210,8 @@ pub fn new<'a>(
+>              inner <- Devres::new(
+>                  request.dev,
+>                  try_pin_init!(RegistrationInner {
+> -                    // SAFETY: `this` is a valid pointer to the `Registration` instance
+> -                    cookie: unsafe { &raw mut (*this.as_ptr()).handler }.cast(),
+> +                    // INVARIANT: `this` is a valid pointer to the `Registration` instance
+> +                    cookie: this.as_ptr().cast::<c_void>(),
+>                      irq: {
+>                          // SAFETY:
+>                          // - The callbacks are valid for use with request_irq.
+> @@ -225,7 +224,7 @@ pub fn new<'a>(
+>                                  Some(handle_irq_callback::<T>),
+>                                  flags.into_inner(),
+>                                  name.as_char_ptr(),
+> -                                (&raw mut (*this.as_ptr()).handler).cast(),
+> +                                this.as_ptr().cast::<c_void>(),
+>                              )
+>                          })?;
+>                          request.irq
+> @@ -262,9 +261,13 @@ pub fn synchronize(&self, dev: &Device<Bound>) -> Result {
+>  ///
+>  /// This function should be only used as the callback in `request_irq`.
+>  unsafe extern "C" fn handle_irq_callback<T: Handler>(_irq: i32, ptr: *mut c_void) -> c_uint {
+> -    // SAFETY: `ptr` is a pointer to T set in `Registration::new`
+> -    let handler = unsafe { &*(ptr as *const T) };
+> -    T::handle(handler) as c_uint
+> +    // SAFETY: `ptr` is a pointer to `Registration<T>` set in `Registration::new`
+> +    let registration = unsafe { &*(ptr as *const Registration<T>) };
+> +    // SAFETY: The irq callback is removed before the device is unbound, so the fact that the irq
+> +    // callback is running implies that the device has not yet been unbound.
+> +    let device = unsafe { registration.inner.device().as_bound() };
+> +
+> +    T::handle(&registration.handler, device) as c_uint
+>  }
+>  
+>  /// The value that can be returned from `ThreadedHandler::handle_irq`.
+> @@ -288,32 +291,32 @@ pub trait ThreadedHandler: Sync {
+>      /// limitations do apply. All work that does not necessarily need to be
+>      /// executed from interrupt context, should be deferred to the threaded
+>      /// handler, i.e. [`ThreadedHandler::handle_threaded`].
+> -    fn handle(&self) -> ThreadedIrqReturn;
+> +    fn handle(&self, device: &Device<Bound>) -> ThreadedIrqReturn;
+>  
+>      /// The threaded IRQ handler.
+>      ///
+>      /// This is executed in process context. The kernel creates a dedicated
+>      /// kthread for this purpose.
+> -    fn handle_threaded(&self) -> IrqReturn;
+> +    fn handle_threaded(&self, device: &Device<Bound>) -> IrqReturn;
+>  }
+>  
+>  impl<T: ?Sized + ThreadedHandler + Send> ThreadedHandler for Arc<T> {
+> -    fn handle(&self) -> ThreadedIrqReturn {
+> -        T::handle(self)
+> +    fn handle(&self, device: &Device<Bound>) -> ThreadedIrqReturn {
+> +        T::handle(self, device)
+>      }
+>  
+> -    fn handle_threaded(&self) -> IrqReturn {
+> -        T::handle_threaded(self)
+> +    fn handle_threaded(&self, device: &Device<Bound>) -> IrqReturn {
+> +        T::handle_threaded(self, device)
+>      }
+>  }
+>  
+>  impl<T: ?Sized + ThreadedHandler, A: Allocator> ThreadedHandler for Box<T, A> {
+> -    fn handle(&self) -> ThreadedIrqReturn {
+> -        T::handle(self)
+> +    fn handle(&self, device: &Device<Bound>) -> ThreadedIrqReturn {
+> +        T::handle(self, device)
+>      }
+>  
+> -    fn handle_threaded(&self) -> IrqReturn {
+> -        T::handle_threaded(self)
+> +    fn handle_threaded(&self, device: &Device<Bound>) -> IrqReturn {
+> +        T::handle_threaded(self, device)
+>      }
+>  }
+>  
+> @@ -334,7 +337,7 @@ fn handle_threaded(&self) -> IrqReturn {
+>  /// use core::sync::atomic::Ordering;
+>  ///
+>  /// use kernel::prelude::*;
+> -/// use kernel::device::Bound;
+> +/// use kernel::device::{Bound, Device};
+>  /// use kernel::irq::flags::Flags;
+>  /// use kernel::irq::ThreadedIrqReturn;
+>  /// use kernel::irq::ThreadedRegistration;
+> @@ -356,7 +359,7 @@ fn handle_threaded(&self) -> IrqReturn {
+>  /// impl kernel::irq::request::ThreadedHandler for Handler {
+>  ///     // This is executing in IRQ context in some CPU. Other CPUs can still
+>  ///     // try to access the data.
+> -///     fn handle(&self) -> ThreadedIrqReturn {
+> +///     fn handle(&self, _dev: &Device<Bound>) -> ThreadedIrqReturn {
+>  ///         self.0.fetch_add(1, Ordering::Relaxed);
+>  ///         // By returning `WakeThread`, we indicate to the system that the
+>  ///         // thread function should be called. Otherwise, return
+> @@ -366,7 +369,7 @@ fn handle_threaded(&self) -> IrqReturn {
+>  ///
+>  ///     // This will run (in a separate kthread) if and only if `handle`
+>  ///     // returns `WakeThread`.
+> -///     fn handle_threaded(&self) -> IrqReturn {
+> +///     fn handle_threaded(&self, _dev: &Device<Bound>) -> IrqReturn {
+>  ///         self.0.fetch_add(1, Ordering::Relaxed);
+>  ///         IrqReturn::Handled
+>  ///     }
+> @@ -391,8 +394,7 @@ fn handle_threaded(&self) -> IrqReturn {
+>  ///
+>  /// # Invariants
+>  ///
+> -/// * We own an irq handler using `&T` as its private data.
+> -///
+> +/// * We own an irq handler whose cookie is a pointer to `Self`.
+>  #[pin_data]
+>  pub struct ThreadedRegistration<T: ThreadedHandler + 'static> {
+>      #[pin]
+> @@ -420,8 +422,8 @@ pub fn new<'a>(
+>              inner <- Devres::new(
+>                  request.dev,
+>                  try_pin_init!(RegistrationInner {
+> -                    // SAFETY: `this` is a valid pointer to the `ThreadedRegistration` instance.
+> -                    cookie: unsafe { &raw mut (*this.as_ptr()).handler }.cast(),
+> +                    // INVARIANT: `this` is a valid pointer to the `ThreadedRegistration` instance.
+> +                    cookie: this.as_ptr().cast::<c_void>(),
+>                      irq: {
+>                          // SAFETY:
+>                          // - The callbacks are valid for use with request_threaded_irq.
+> @@ -435,7 +437,7 @@ pub fn new<'a>(
+>                                  Some(thread_fn_callback::<T>),
+>                                  flags.into_inner() as usize,
+>                                  name.as_char_ptr(),
+> -                                (&raw mut (*this.as_ptr()).handler).cast(),
+> +                                this.as_ptr().cast::<c_void>(),
+>                              )
+>                          })?;
+>                          request.irq
+> @@ -475,16 +477,24 @@ pub fn synchronize(&self, dev: &Device<Bound>) -> Result {
+>      _irq: i32,
+>      ptr: *mut c_void,
+>  ) -> c_uint {
+> -    // SAFETY: `ptr` is a pointer to T set in `ThreadedRegistration::new`
+> -    let handler = unsafe { &*(ptr as *const T) };
+> -    T::handle(handler) as c_uint
+> +    // SAFETY: `ptr` is a pointer to `ThreadedRegistration<T>` set in `ThreadedRegistration::new`
+> +    let registration = unsafe { &*(ptr as *const ThreadedRegistration<T>) };
+> +    // SAFETY: The irq callback is removed before the device is unbound, so the fact that the irq
+> +    // callback is running implies that the device has not yet been unbound.
+> +    let device = unsafe { registration.inner.device().as_bound() };
+> +
+> +    T::handle(&registration.handler, device) as c_uint
+>  }
+>  
+>  /// # Safety
+>  ///
+>  /// This function should be only used as the callback in `request_threaded_irq`.
+>  unsafe extern "C" fn thread_fn_callback<T: ThreadedHandler>(_irq: i32, ptr: *mut c_void) -> c_uint {
+> -    // SAFETY: `ptr` is a pointer to T set in `ThreadedRegistration::new`
+> -    let handler = unsafe { &*(ptr as *const T) };
+> -    T::handle_threaded(handler) as c_uint
+> +    // SAFETY: `ptr` is a pointer to `ThreadedRegistration<T>` set in `ThreadedRegistration::new`
+> +    let registration = unsafe { &*(ptr as *const ThreadedRegistration<T>) };
+> +    // SAFETY: The irq callback is removed before the device is unbound, so the fact that the irq
+> +    // callback is running implies that the device has not yet been unbound.
+> +    let device = unsafe { registration.inner.device().as_bound() };
+> +
+> +    T::handle_threaded(&registration.handler, device) as c_uint
+>  }
+> 
+> ---
+> base-commit: d860d29e91be18de62b0f441edee7d00f6cb4972
+> change-id: 20250721-irq-bound-device-c9fdbfdd8cd9
+> 
+> Best regards,
 
 
