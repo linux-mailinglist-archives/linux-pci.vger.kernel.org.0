@@ -1,170 +1,156 @@
-Return-Path: <linux-pci+bounces-32708-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32709-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 202DFB0D641
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 11:48:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D3B7B0D64C
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 11:52:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CB0191C269FE
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 09:48:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 73AC61C26BDB
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 09:52:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D597223E226;
-	Tue, 22 Jul 2025 09:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B1872DECC5;
+	Tue, 22 Jul 2025 09:51:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uY3jpVhI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cbyzv/mx"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A385523C50E;
-	Tue, 22 Jul 2025 09:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401D72DECB1;
+	Tue, 22 Jul 2025 09:51:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753177701; cv=none; b=A2exwGr6o3S5CJQF5boUPL3t/0LR30lIpp3VHrak4EiWa4pSq8UYFKZoMiabKtf7jurlIInKlOrd5s3P3MlWTL/0lCsYwdyoWRPml63fL9h2aHux59lweXm4pTaLvxnMYx4XrHvAtzI0UCww98Hh8/BLdg0fNPNpd/g9P8n9rUc=
+	t=1753177914; cv=none; b=MyLEmeyV20ubrtl3wkvVolblZne9SMneXeZugodZ09SjBkEUHxeGV3zo1Li0lTS6aN2CuKI2LI9NioB6s2H0JTyJdfDPZfCMRDhr2J9z75QAfhyvz8jIn/hWe+cKVq0OmbsKZdwxmVMfkcu9TLR+AVI/g7OqTm7+6JXNMvlTD94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753177701; c=relaxed/simple;
-	bh=/fkjRHbtz6L40UsKyBjKVzJsr6GgvV345DTaJqD2qqw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IFnKHMjc5ddNyzQEmEqhhyoapxFaMnA7U4Y87uwJSdgBNfo5BUDIWTUoj0VagGnEOt++MLSivc1Q4LHnXO3fV3HPF2VmwKZRgzIH+hMzUsRrMNa2qziraIx5Fyp1OulGFrkNmPN3pTy/AiV4J7yINNWIAztUD0TxA6gFpywY/gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uY3jpVhI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D80FC4CEF5;
-	Tue, 22 Jul 2025 09:48:21 +0000 (UTC)
+	s=arc-20240116; t=1753177914; c=relaxed/simple;
+	bh=g9Czfb6/NYPOxRMMj/Y+35i+ICwKvV5Vq7aeNekjp6E=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=gBI5toehtZyqi5VsN+d3t2vSLBM6q10exnF8USlNguJFJxX+0xJjYZHQXZqIFKgDyo/zhfTxZ7ABA8IDtWyl7QRmQKccqeuX/GB/BgqCARtmTe5d2l1aptiPbTawUZsUpRNxO3fTzAg/M+Jw9Ws82Ad+vDkP3LEke9ulGAsUHOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cbyzv/mx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F0C8C4CEEB;
+	Tue, 22 Jul 2025 09:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753177701;
-	bh=/fkjRHbtz6L40UsKyBjKVzJsr6GgvV345DTaJqD2qqw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uY3jpVhIrJXrnJoyRCM8Kz2D0ikZfV4UaKvE/s46ETcnW2xM2RH5rsH8+p48fg62n
-	 DV8wmvTmHkUzx1fCy3HqiosXk9ZXn4bG7y40hh5jLWNMF6jzx4g42KmtN7a9uKBlcs
-	 DnnNnMT+MEwE282k60g5dW6QNwypY/myaHwjZhyUgLOCkUVNkx8EiSWJWpTMqlUe4p
-	 BLU8CthLpRmFfyVndjD81unqnPDKaxlETV1P5NW51h7k3TmRmp5HliIUrMJ48y4atG
-	 zMB+tiBaj8tBwNXgc9N7sTsaBeu7jJlqg3CCBfj5cdqlGr7JEC8SMqzBKpj9ZlwHSi
-	 6wLSTNEOwDsiA==
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-613b02e801aso3053827eaf.2;
-        Tue, 22 Jul 2025 02:48:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWQQdZDRHwqnx2keYzaX8N8Nk3hgW+OIQAz77YYvRz3ABy/y+a9/+zBZYcskytWn8rRb7c9ycEdX9GfAPrY@vger.kernel.org, AJvYcCWv1L1+tTtY6fKCEqAo7HzOGC70GRUYr/Yem37gzUlJmuKWc9m0LHLRmaYwVMpys2TcIwNHQayQnOlUbCQSMFk=@vger.kernel.org, AJvYcCX0c9xSb42bz1AU49BLiu8nQsXd+ECC/MtIYq7sZbKjYdxXWJ86/xVXV3nJkRso28FljIDqDeU9ERtZ@vger.kernel.org, AJvYcCXhnMhFIyiWvQHrMsronmsqEvBopTjv6A3xOYdlt/zMpv7EO0F64BAzq8ucyElWmx7GkqhtuliKUczNpw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqMNZYldIkh6Bqo4gWz/jiHrCO3MHYoPPDoI/mtHbUrPJXljyi
-	A4RFUPPzEU9sEbC6DwG/RqCJB678SHVmovh2vS0aDM/Z5GfqccWDFkkrGo30mRrpo/UMDaN5R40
-	Auh5q89dkzHuCivnvtgKlALwyLewld1k=
-X-Google-Smtp-Source: AGHT+IEfTTSEyAOWYu++w5ruAiPqSTMP5i2OLym7qvAO9o3zZKs/j+u5M18LziWEI2JeDHbEZLYaFm+Dh+IghvOJRP4=
-X-Received: by 2002:a05:6820:8186:b0:615:ca49:388f with SMTP id
- 006d021491bc7-615ca493bf4mr8078409eaf.4.1753177700484; Tue, 22 Jul 2025
- 02:48:20 -0700 (PDT)
+	s=k20201202; t=1753177913;
+	bh=g9Czfb6/NYPOxRMMj/Y+35i+ICwKvV5Vq7aeNekjp6E=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=cbyzv/mxrBzEHhit25wf2Vl1yiDppfGeX+HJQtnUXsD86a+hxphTEp9xlqjL5FPcY
+	 veZer4iy1oL6RO/Dw1KlvU05Ctm8okCKnnV9+Kuj6hLxo5LDIyDYdMIoVjs7wmXi88
+	 9mYzBdaQeQBZLDP49SqotiBmnsDjcZfGSRqVsvvNAbGzcsmIqXhy65LfxrZRjklU2b
+	 8ePQoLF1iUAdQb1VN8mLC5Bq5vzDljA5IfslofyeSA8UAXD2VPl/cQceKD3ot7owlD
+	 +t5UzXz6rCViogRJfecaEnOZOHgV2iX1demFLog6Q7cFuuyXawqy96yYTEOHRxN2Ug
+	 rCVr21lZVq4Cg==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250721145952.2601422-1-colin.i.king@gmail.com> <20250721214004.GA2756360@bhelgaas>
-In-Reply-To: <20250721214004.GA2756360@bhelgaas>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 22 Jul 2025 11:48:07 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gT1X9zuoAfxGS5XP0s1TD1tyP2shbC_cbiRJPjDg4=jA@mail.gmail.com>
-X-Gm-Features: Ac12FXyrTfRVdkTJQlvj2cygHb3kv9Y5PxK2A1xgwD3hpMohtoUsDBnOxKEKga0
-Message-ID: <CAJZ5v0gT1X9zuoAfxGS5XP0s1TD1tyP2shbC_cbiRJPjDg4=jA@mail.gmail.com>
-Subject: Re: [PATCH][next] ACPI: pci_link: Remove space before \n newline
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Colin Ian King <colin.i.king@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 22 Jul 2025 11:51:48 +0200
+Message-Id: <DBIHP8IP3OHA.8Y1S9ZV1Y1SZ@kernel.org>
+Subject: Re: [PATCH v2 1/2] rust: Update PCI binding safety comments and add
+ inline compiler hint
+Cc: "Benno Lossin" <lossin@kernel.org>, <rust-for-linux@vger.kernel.org>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Miguel
+ Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
+ Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "John Hubbard" <jhubbard@nvidia.com>, "Alexandre Courbot"
+ <acourbot@nvidia.com>, <linux-pci@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+To: "Alistair Popple" <apopple@nvidia.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20250710022415.923972-1-apopple@nvidia.com>
+ <DB87TX9Y5018.N1WDM8XRN74K@kernel.org>
+ <DB9BF6WK8KMH.1RQOOMYBL6UAO@kernel.org>
+ <DB9FUEJUOH3L.14CYPZ8YQT52E@kernel.org>
+ <DB9H6HEF9CKG.2SAPXM8F9KOO3@kernel.org>
+ <DB9IQAU4WPSP.XZL4ZDPT59KU@kernel.org>
+ <bwbern2t7k5fcj6zxze6bjpasu3t26n6dmfptlmhbhd7qmligs@3fgwifsw7qai>
+In-Reply-To: <bwbern2t7k5fcj6zxze6bjpasu3t26n6dmfptlmhbhd7qmligs@3fgwifsw7qai>
 
-On Mon, Jul 21, 2025 at 11:40=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
- wrote:
+On Tue Jul 22, 2025 at 7:17 AM CEST, Alistair Popple wrote:
+> On Fri, Jul 11, 2025 at 10:46:13PM +0200, Benno Lossin wrote:
+>> On Fri Jul 11, 2025 at 9:33 PM CEST, Danilo Krummrich wrote:
+>> > On Fri Jul 11, 2025 at 8:30 PM CEST, Benno Lossin wrote:
+>> >> On Fri Jul 11, 2025 at 5:02 PM CEST, Danilo Krummrich wrote:
+>> >>> On Thu Jul 10, 2025 at 10:01 AM CEST, Benno Lossin wrote:
+>> >>>> On Thu Jul 10, 2025 at 4:24 AM CEST, Alistair Popple wrote:
+>> >>>>> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+>> >>>>> index 8435f8132e38..5c35a66a5251 100644
+>> >>>>> --- a/rust/kernel/pci.rs
+>> >>>>> +++ b/rust/kernel/pci.rs
+>> >>>>> @@ -371,14 +371,18 @@ fn as_raw(&self) -> *mut bindings::pci_dev {
+>> >>>>> =20
+>> >>>>>  impl Device {
+>> >>>>>      /// Returns the PCI vendor ID.
+>> >>>>> +    #[inline]
+>> >>>>>      pub fn vendor_id(&self) -> u16 {
+>> >>>>> -        // SAFETY: `self.as_raw` is a valid pointer to a `struct =
+pci_dev`.
+>> >>>>> +        // SAFETY: by its type invariant `self.as_raw` is always =
+a valid pointer to a
+>> >>>>
+>> >>>> s/by its type invariant/by the type invariants of `Self`,/
+>> >>>> s/always//
+>> >>>>
+>> >>>> Also, which invariant does this refer to? The only one that I can s=
+ee
+>> >>>> is:
+>> >>>>
+>> >>>>     /// A [`Device`] instance represents a valid `struct device` cr=
+eated by the C portion of the kernel.
+>> >>>>
+>> >>>> And this doesn't say anything about the validity of `self.as_raw()`=
+...
+>> >>>
+>> >>> Hm...why not? If an instance of Self always represents a valid struc=
+t pci_dev,
+>> >>> then consequently self.as_raw() can only be a valid pointer to a str=
+uct pci_dev,
+>> >>> no?
+>> >>
+>> >> While it's true, you need to look into the implementation of `as_raw`=
+.
+>> >> It could very well return a null pointer...
+>> >>
+>> >> This is where we can use a `Guarantee` on that function. But since it=
+'s
+>> >> not shorter than `.0.get()`, I would just remove it.
+>> >
+>> > We have 15 to 20 as_raw() methods of this kind in the tree. If this re=
+ally needs
+>> > a `Guarantee` to be clean, we should probably fix it up in a treewide =
+change.
+>> >
+>> > as_raw() is a common pattern and everyone knows what it does, `.0.get(=
+)` seems
+>> > much less obvious.
 >
-> On Mon, Jul 21, 2025 at 03:59:52PM +0100, Colin Ian King wrote:
-> > There is an extraneous space before a newline in an acpi_handle_debug
-> > message.  Remove it.
-> >
-> > Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
->
-> FWIW,
->
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->
-> Fixes for more ACPI-related typos below, feel free to squash or I can
-> send separately.
+> Coming from a C kernel programming background I agree `.as_raw()` is more
+> obvious than `.0.get()`. However now I'm confused ... what if anything ne=
+eds
+> changing to get these two small patches merged?
 
-If I can assume your sign-off on this, no need to resend.
+I think they're good, but we're pretty late in the cycle now. That should b=
+e
+fine though, we can probably take them through the nova tree, or in the wor=
+st
+case share a tag, if needed.
 
-> > ---
-> >  drivers/acpi/pci_link.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-> > index 08e10b6226dc..e4560b33b8ad 100644
-> > --- a/drivers/acpi/pci_link.c
-> > +++ b/drivers/acpi/pci_link.c
-> > @@ -268,7 +268,7 @@ static int acpi_pci_link_get_current(struct acpi_pc=
-i_link *link)
-> >
-> >       link->irq.active =3D irq;
-> >
-> > -     acpi_handle_debug(handle, "Link at IRQ %d \n", link->irq.active);
-> > +     acpi_handle_debug(handle, "Link at IRQ %d\n", link->irq.active);
-> >
-> >        end:
-> >       return result;
->
-> diff --git a/Documentation/ABI/testing/sysfs-firmware-acpi b/Documentatio=
-n/ABI/testing/sysfs-firmware-acpi
-> index f4de60c4134d..72e7c9161ce7 100644
-> --- a/Documentation/ABI/testing/sysfs-firmware-acpi
-> +++ b/Documentation/ABI/testing/sysfs-firmware-acpi
-> @@ -108,15 +108,15 @@ Description:
->                 number of a "General Purpose Events" (GPE).
->
->                 A GPE vectors to a specified handler in AML, which
-> -               can do a anything the BIOS writer wants from
-> +               can do anything the BIOS writer wants from
->                 OS context.  GPE 0x12, for example, would vector
->                 to a level or edge handler called _L12 or _E12.
->                 The handler may do its business and return.
-> -               Or the handler may send send a Notify event
-> +               Or the handler may send a Notify event
->                 to a Linux device driver registered on an ACPI device,
->                 such as a battery, or a processor.
->
-> -               To figure out where all the SCI's are coming from,
-> +               To figure out where all the SCIs are coming from,
->                 /sys/firmware/acpi/interrupts contains a file listing
->                 every possible source, and the count of how many
->                 times it has triggered::
-> diff --git a/Documentation/firmware-guide/acpi/gpio-properties.rst b/Docu=
-mentation/firmware-guide/acpi/gpio-properties.rst
-> index db0c0b1f3700..1e603189b5b1 100644
-> --- a/Documentation/firmware-guide/acpi/gpio-properties.rst
-> +++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
-> @@ -92,8 +92,8 @@ and polarity settings. The table below shows the expect=
-ations:
->  |             | Low         | as low, assuming active                   =
-    |
->  +-------------+-------------+-------------------------------------------=
-----+
->
-> -That said, for our above example the both GPIOs, since the bias setting
-> -is explicit and _DSD is present, will be treated as active with a high
-> +That said, for our above example, since the bias setting is explicit and
-> +_DSD is present, both GPIOs will be treated as active with a high
->  polarity and Linux will configure the pins in this state until a driver
->  reprograms them differently.
->
-> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> index c2ab2783303f..a984ccd4a2a0 100644
-> --- a/drivers/acpi/bus.c
-> +++ b/drivers/acpi/bus.c
-> @@ -1406,7 +1406,7 @@ static int __init acpi_bus_init(void)
->                 goto error1;
->
->         /*
-> -        * Register the for all standard device notifications.
-> +        * Register for all standard device notifications.
->          */
->         status =3D
->             acpi_install_notify_handler(ACPI_ROOT_OBJECT, ACPI_SYSTEM_NOT=
-IFY,
+Given that, it would probably be good to add the Guarantee section on as_ra=
+w(),
+as proposed by Benno, right away.
+
+@Benno: Any proposal on what this section should say?
+
+One minor nit would be to start the safety comments with a capital letter
+instead.
 
