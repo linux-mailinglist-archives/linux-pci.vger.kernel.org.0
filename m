@@ -1,55 +1,61 @@
-Return-Path: <linux-pci+bounces-32756-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32757-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65C12B0E3F8
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 21:15:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 15246B0E513
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 22:47:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A85B5483B7
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 19:15:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51497581157
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 20:47:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 906AD285040;
-	Tue, 22 Jul 2025 19:15:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D7DF221734;
+	Tue, 22 Jul 2025 20:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b5y6dRVb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aO6hZyB7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676A3284B3B;
-	Tue, 22 Jul 2025 19:15:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238A0A95C;
+	Tue, 22 Jul 2025 20:47:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753211708; cv=none; b=QWRssQm6ghbNmlwNZqKnzDonh9GWHmvTBWNmRZnb5bWNd4X1OlPVZeXu1e0UThQmAoNztsU62WOgpAqY5h4lbJvgXu5tyctvUCoflnX9g/qFCkf9cLiN2snckDrHymb03nSEFx8Xnpx6GSnZzYCo4xiz1ZsTN2H0rymXd6OO88Q=
+	t=1753217226; cv=none; b=TnUfT2hvqFzCqxkE20RiIxxnEvIUkfGmY8oEis7/U9WsDKrM+wXltcp4rcQhPJxY8FK0Q/Pp9lErnnnDKOJufconpBu/R6qCTqfYxYwL6RM4ZImkoCYLe/pGpoMbhbRVI5uGY7xSJQ+uHdh4DOKKiKxx+1DaaDl7AF2xY/L7vfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753211708; c=relaxed/simple;
-	bh=hYl7SIkdl/URxlHfT+Z6G/6IY/jmbMbxnem0O0iNRPQ=;
+	s=arc-20240116; t=1753217226; c=relaxed/simple;
+	bh=/sxFwYUyBdxHVgbNyek2wBg4Uk82NRyFiZxIzDBnIs4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=fW66MT6qgrRmc0t/wUMW8Ko5WlxcSdEwWfGIla6D+/F0l5pp6xrOUdLxba5E2J7G7b/XWW2kyInVMFGIwIY6nmEsj3cKJwSiuDeT7tPdwH5tKV7GcTfnkXGsNsXNDM7zN8vjm2ZO22rbfpQnZ3vX3lIA6N96jaqKNPrhjAoSou8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b5y6dRVb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC582C4CEEB;
-	Tue, 22 Jul 2025 19:15:07 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=aiqVHXdb+2n0RDDJXm1fU1Vfv41qSfV0eq3BQra2pn8ek1K+LyKFBdpiCzFLFwKB3yd/dsb5krT+AVa6lAzFFiygCI6SwZUXtGMItA8nGh2xsuO+UIDgdgPRW3tQWOr9ipU3H71M9NvlJ7VEwRS0nt3kWafwNJHFTAzYpvNpEXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aO6hZyB7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88561C4CEEB;
+	Tue, 22 Jul 2025 20:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753211707;
-	bh=hYl7SIkdl/URxlHfT+Z6G/6IY/jmbMbxnem0O0iNRPQ=;
+	s=k20201202; t=1753217225;
+	bh=/sxFwYUyBdxHVgbNyek2wBg4Uk82NRyFiZxIzDBnIs4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=b5y6dRVb8lebfblIJneCLKujCxqzhhtuQCuQtP7wJmCI2x3Cdj2zOaBiewzL25kHs
-	 0sR3tWHh0iH2zMIW5NUYXD4bc+GIIlICDGxcGfuOPW8MOQH76m9s6YCpOVJ/xqU3yz
-	 60CR72x8VBQTn0LBizpRHM9QiqDIAsRTIED2P3b/aDduVHqIv5d6YHdAXRTAvyvRrB
-	 52Px7l0ut0ssZOfn9fHpP/lKyikAn54DEPDiklv7B75FasHLz/oiDhEA982n+Gw7AJ
-	 2+85ee0d6YMNKuHShBQJqp958gTHE1uczZGn0usPnmv0K2a7QMFnBg8gQqnXwCSuH8
-	 OII9E8yaOKD6w==
-Date: Tue, 22 Jul 2025 14:15:06 -0500
+	b=aO6hZyB7vN81Un5hba7wW6Ql7I5ci2Z6++fnxK1N+B6uWOg2jTwNX1Uau7rZiYT5e
+	 AOcAgtWIFwH7Nz7plV0qxsFzT9sOlR4vz4FaTVau6e1tcQhlZgVhsEYur1Ddxb+2Up
+	 i0uRqXQuq1y15hjJ7pQ+4offCfJ6eK6OlyzR/DZUiWo8J7wg9hheEgm24Fvt04kTFu
+	 PoAVyzmb6Z4Ue4KyFxdq1k++Fo6uJE4HtCM1XFxyQCWhRClM2tMgz1jJyaSZFAWw32
+	 mzbgFKQFD7LWON8AQD9BqQg+KisPWLzKmseMc4c8E+743oZjhhTP8RmpEU/MMmhORD
+	 KezzqnP4+4FDg==
+Date: Tue, 22 Jul 2025 15:47:04 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: bhelgaas@google.com, lukas@wunner.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Jim Quinlan <james.quinlan@broadcom.com>
-Subject: Re: [PATCH v2] PCI/pwrctrl: Skip creating pwrctrl device unless
- CONFIG_PCI_PWRCTRL is enabled
-Message-ID: <20250722191506.GA2810550@bhelgaas>
+To: Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-pci <linux-pci@vger.kernel.org>,
+	christophe leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Anastasio <sanastasio@raptorengineering.com>,
+	Timothy Pearson <tpearson@raptorengineering.com>
+Subject: Re: [PATCH v3 0/6] PowerNV PCIe Hotplug Driver Fixes
+Message-ID: <20250722204704.GA2815491@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,104 +64,65 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250722185810.GA2809731@bhelgaas>
+In-Reply-To: <20250717232752.GA2662535@bhelgaas>
 
-[use Mani's new email addr]
+[-> to: Madhavan, Michael, Mahesh; seeking acks]
 
-On Tue, Jul 22, 2025 at 01:58:11PM -0500, Bjorn Helgaas wrote:
-> On Tue, Jul 01, 2025 at 12:17:31PM +0530, Manivannan Sadhasivam wrote:
-> > If devicetree describes power supplies related to a PCI device, we
-> > previously created a pwrctrl device even if CONFIG_PCI_PWRCTL was
-> > not enabled.
+On Thu, Jul 17, 2025 at 06:27:52PM -0500, Bjorn Helgaas wrote:
+> On Tue, Jul 15, 2025 at 04:31:49PM -0500, Timothy Pearson wrote:
+> > Hello all,
 > > 
-> > When pci_pwrctrl_create_device() creates and returns a pwrctrl device,
-> > pci_scan_device() doesn't enumerate the PCI device. It assumes the pwrctrl
-> > core will rescan the bus after turning on the power. However, if
-> > CONFIG_PCI_PWRCTL is not enabled, the rescan never happens.
+> > This series includes several fixes for bugs in the PowerNV PCIe hotplug
+> > driver that were discovered in testing with a Microsemi Switchtec PM8533
+> > PFX 48xG3 PCIe switch on a PowerNV system, as well as one workaround for
+> > PCIe switches that don't correctly implement slot presence detection
+> > such as the aforementioned one. Without the workaround, the switch works
+> > and downstream devices can be hot-unplugged, but the devices never come
+> > back online after being plugged in again until the system is rebooted.
+> > Other hotplug drivers (like pciehp_hpc) use a similar workaround.
 > > 
-> > This may break PCI enumeration on any system that describes power supplies
-> > in devicetree but does not use pwrctrl. Jim reported that some brcmstb
-> > platforms break this way.
+> > Also included are fixes for the EEH driver to make it hotplug safe,
+> > and a small patch to enable all three attention indicator states per
+> > the PCIe specification.
 > > 
-> > While the actual fix would be to convert all the platforms to use pwrctrl
-> > framework, we also need to skip creating the pwrctrl device if
-> > CONFIG_PCI_PWRCTL is not enabled and let the PCI core scan the device
-> > normally (assuming it is already powered on or by the controller driver).
+> > Thanks,
 > > 
-> > Cc: stable@vger.kernel.org # 6.15
-> > Fixes: 957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
-> > Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > Closes: https://lore.kernel.org/r/CA+-6iNwgaByXEYD3j=-+H_PKAxXRU78svPMRHDKKci8AGXAUPg@mail.gmail.com
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Shawn Anastasio (2):
+> >   PCI: pnv_php: Properly clean up allocated IRQs on unplug
+> >   PCI: pnv_php: Work around switches with broken presence detection
+> > 
+> > Timothy Pearson (4):
+> >   powerpc/eeh: Export eeh_unfreeze_pe()
+> >   powerpc/eeh: Make EEH driver device hotplug safe
+> >   PCI: pnv_php: Fix surprise plug detection and recovery
+> >   PCI: pnv_php: Enable third attention indicator state
+> > 
+> >  arch/powerpc/kernel/eeh.c         |   1 +
+> >  arch/powerpc/kernel/eeh_driver.c  |  48 ++++--
+> >  arch/powerpc/kernel/eeh_pe.c      |  10 +-
+> >  arch/powerpc/kernel/pci-hotplug.c |   3 +
+> >  drivers/pci/hotplug/pnv_php.c     | 244 +++++++++++++++++++++++++++---
+> >  5 files changed, 263 insertions(+), 43 deletions(-)
 > 
-> I (finally) applied this to for-linus for v6.16 with the following
-> commit log:
+> I'm OK with this from a PCI perspective, and I optimistically put it
+> on pci/hotplug.
 > 
->     PCI/pwrctrl: Create pwrctrl devices only when CONFIG_PCI_PWRCTRL is enabled
->     
->     If devicetree describes power supplies related to a PCI device, we
->     unnecessarily created a pwrctrl device even if CONFIG_PCI_PWRCTL was not
->     enabled.
->     
->     We only need pci_pwrctrl_create_device() when CONFIG_PCI_PWRCTRL is
->     enabled.  Compile it out when CONFIG_PCI_PWRCTRL is not enabled.
->     
->     When pci_pwrctrl_create_device() creates and returns a pwrctrl device,
->     pci_scan_device() doesn't enumerate the PCI device. It assumes the pwrctrl
->     core will rescan the bus after turning on the power. However, if
->     CONFIG_PCI_PWRCTRL is not enabled, the rescan never happens, which breaks
->     PCI enumeration on any system that describes power supplies in devicetree
->     but does not use pwrctrl.
->     
->     Jim reported that some brcmstb platforms break this way.  The brcmstb
->     driver is still broken if CONFIG_PCI_PWRCTRL is enabled, but this commit at
->     least allows brcmstb to work when it's NOT enabled.
->     
->     Fixes: 957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
->     Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
->     Link: https://lore.kernel.org/r/CA+-6iNwgaByXEYD3j=-+H_PKAxXRU78svPMRHDKKci8AGXAUPg@mail.gmail.com
->     Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->     [bhelgaas: commit log]
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->     Reviewed-by: Lukas Wunner <lukas@wunner.de>
->     Cc: stable@vger.kernel.org  # v6.15
->     Link: https://patch.msgid.link/20250701064731.52901-1-manivannan.sadhasivam@linaro.org
+> I'm happy to merge via the PCI tree, but would need acks from the
+> powerpc folks for the arch/powerpc parts.
 > 
-> > ---
-> > 
-> > Changes in v2:
-> > 
-> > * Used the stub instead of returning NULL inside the function
-> > 
-> >  drivers/pci/probe.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 4b8693ec9e4c..e6a34db77826 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -2508,6 +2508,7 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
-> >  }
-> >  EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
-> >  
-> > +#if IS_ENABLED(CONFIG_PCI_PWRCTRL)
-> >  static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
-> >  {
-> >  	struct pci_host_bridge *host = pci_find_host_bridge(bus);
-> > @@ -2537,6 +2538,12 @@ static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, in
-> >  
-> >  	return pdev;
-> >  }
-> > +#else
-> > +static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
-> > +{
-> > +	return NULL;
-> > +}
-> > +#endif
-> >  
-> >  /*
-> >   * Read the config data for a PCI device, sanity-check it,
-> > -- 
-> > 2.43.0
-> > 
+> Alternatively it could be merged via powerpc with my ack on the
+> drivers/pci patches:
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> If you do merge via powerpc, I made some comment formatting and commit
+> log tweaks that I would like reflected in the drivers/pci part.  These
+> are on
+> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=hotplug
+
+Powerpc folks: let me know how you want to handle this.  I haven't
+included it in pci/next yet because I don't have acks for the
+arch/powerpc parts.
+
+Bjorn
 
