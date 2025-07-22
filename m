@@ -1,238 +1,100 @@
-Return-Path: <linux-pci+bounces-32695-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32696-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11F7DB0D0BE
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 06:01:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CD3E1B0D0D1
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 06:11:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C6AD3AD831
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 04:01:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F21F23A6683
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 04:10:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54A2F18DB35;
-	Tue, 22 Jul 2025 04:01:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A2BF28C2D8;
+	Tue, 22 Jul 2025 04:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="reloDuwb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJ8yVbhm"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB1F5223;
-	Tue, 22 Jul 2025 04:01:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724FB4C92;
+	Tue, 22 Jul 2025 04:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753156895; cv=none; b=KpfzX2FnYAF+e/rVtZJ0Jb0yf4LM4Dm+tijzqgBZbtpJVnZi7TH6zqj7/Bzpxn+z1W58PjO1Fx7EZTNb6jeaQfGBzZMG1TuujWdT3Vtk9Wl0JAY31NvYbIUiKc4DR9N1vB1zgE2HyxJtJZs/VLPqcU5YT9i85+a5C5RiywD+kII=
+	t=1753157456; cv=none; b=TRp6kN6I8ZPWbSL9X3RDCDZ/sFtQ1O4PNvMM5yygYPiH9d63J2B4LcAg7+dFzG/6m2+8DlSI69G0nP5QMM3evk7VH+Ga6IQ0X5Mh3IoZ+da4vvhFPatT9Xxr3lz/WAQn+nA47xNlnOPnAdL5hbKILeGFZDPasClfFFwV2gJHwF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753156895; c=relaxed/simple;
-	bh=hd0DO3IvY7D/o1H3RXDIIZ4Xokoc9Zt5xzE9us69fXY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ipbBJjIDkuC68cfvBRhT8SJcER1ZeKt7MGApu7LqSqsjD7ebgSYZSfz9Z3drwltPM7mYnyb42njyeU34qcag793yI5rSjFVbCczh7pfjMcEE7fHqHu1nlcnrW/2m5Pg3WQ96MKah/vBY2Vc2Pgsf6rmcjgz2Y80DQUBWgDp0w3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=reloDuwb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67DFFC4CEEB;
-	Tue, 22 Jul 2025 04:01:32 +0000 (UTC)
+	s=arc-20240116; t=1753157456; c=relaxed/simple;
+	bh=FH7yks64NF643MaNnJLEAGnr3ziSpbc76lbP3ZXYW1M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CluBkAjdBho2qsXyxu15PRnno11Cd7+xIMiH8SFnQkjEi08r+vu0Duhz0SIUdopb/SNhMzvuBny1Lin4hQ8sPDX3wYNqtDf4TdvSAP2IfyNu2sZuiCuJxpsiXDo2g498+Qw+a+cl0HKO9Dwp5kRX2HBsb5KQI3a/pcteRpXmBFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJ8yVbhm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7038C4CEF1;
+	Tue, 22 Jul 2025 04:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753156894;
-	bh=hd0DO3IvY7D/o1H3RXDIIZ4Xokoc9Zt5xzE9us69fXY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=reloDuwbj2E9SGlqgx3RNS2JkQMF8PnexnGVFb3EyMPAGubdZEPBzWjfNMR2JJE7A
-	 m5+plSlsZ6v2KtLe1nv0cFa6klRySzyZteUvEg+eUW81dZc8JZDb+ApCHlWe/4N20+
-	 H2Cwcq7yDorGXCvfuLuXKfejMcaxZx585LbYr8v8WrLr0tt77eW8ZqTbAyglzRFJ6J
-	 F433LzMIsrGKIjxjZPFqCQvUDBuKnCg5nuakM6GUwiDrtCJcc3poZwWeiqndTOjapr
-	 GqJLiHmsxN3tilTLBeCkP89xf0FrGZLsGWTHyMW/IlghGaOiv4T0jtLm5mtNPVM9gx
-	 HGfciKJSMpQ5Q==
-Message-ID: <577c103b-f68f-4748-a7ba-3e88fc71f8d7@kernel.org>
-Date: Mon, 21 Jul 2025 23:01:31 -0500
+	s=k20201202; t=1753157456;
+	bh=FH7yks64NF643MaNnJLEAGnr3ziSpbc76lbP3ZXYW1M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NJ8yVbhmwkYdTSvohJFHgXSfMVdYq8MKiRO6iJTgorH4zcdSgIX+1fblApJOPT+pL
+	 qH/lMGjO4kpCxjjGngKUpCaTTfYnvXucTeNInjG013K7t/e3age9IGaBVqT/IZDuSB
+	 PCDM/KQKlMbVq/+ckotEdJ2XTwnyaPg2vjffFJ1tO8NeZzmYQZLGBD/c/eJ70dOF6J
+	 gEPx05Mu5FgkjOkyP6SJXQj0J7k1v2JP5h7N4iAIzS206RdwM8i6nPqkXDUfCqA8w6
+	 9DjIA5HAdLE2bn7WMzY9zsVxFsADgT60mgARn+POvyeDn8FYdw/nsY0ZUOVEjEXRfS
+	 TBgTBK6wcnMHg==
+From: Mario Limonciello <superm1@kernel.org>
+To: David Airlie <airlied@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+	linux-kernel@vger.kernel.org (open list),
+	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+	Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v5 0/2] Alternative approach for boot_display visibility
+Date: Mon, 21 Jul 2025 23:10:49 -0500
+Message-ID: <20250722041051.3354121-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 9/9] PCI: Add a new 'boot_display' attribute
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
- "open list:SOUND" <linux-sound@vger.kernel.org>,
- Daniel Dadap <ddadap@nvidia.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250722015934.GA2763711@bhelgaas>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250722015934.GA2763711@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Mario Limonciello <mario.limonciello@amd.com>
 
+The past few days there have been various discussions about what to do
+with the boot_display sysfs file so that it doesn't need to be made so
+late in startup.
 
-On 7/21/25 8:59 PM, Bjorn Helgaas wrote:
-> On Mon, Jul 21, 2025 at 07:28:07PM -0500, Mario Limonciello wrote:
->> On 7/21/25 6:00 PM, Bjorn Helgaas wrote:
->>> On Fri, Jul 18, 2025 at 12:44:11PM -0500, Mario Limonciello wrote:
->>>> On 7/18/2025 12:36 PM, Bjorn Helgaas wrote:
->>>>> On Fri, Jul 18, 2025 at 12:29:05PM -0500, Mario Limonciello wrote:
->>>>>> On 7/18/2025 12:25 PM, Bjorn Helgaas wrote:
->>>>>>> On Thu, Jul 17, 2025 at 12:38:12PM -0500, Mario Limonciello wrote:
->>>>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>>>>>>
->>>>>>>> On systems with multiple GPUs there can be uncertainty which GPU is the
->>>>>>>> primary one used to drive the display at bootup. In some desktop
->>>>>>>> environments this can lead to increased power consumption because
->>>>>>>> secondary GPUs may be used for rendering and never go to a low power
->>>>>>>> state. In order to disambiguate this add a new sysfs attribute
->>>>>>>> 'boot_display' that uses the output of video_is_primary_device() to
->>>>>>>> populate whether a PCI device was used for driving the display.
->>>>>>>
->>>>>>>> +What:		/sys/bus/pci/devices/.../boot_display
->>>>>>>> +Date:		October 2025
->>>>>>>> +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
->>>>>>>> +Description:
->>>>>>>> +		This file indicates that displays connected to the device were
->>>>>>>> +		used to display the boot sequence.  If a display connected to
->>>>>>>> +		the device was used to display the boot sequence the file will
->>>>>>>> +		be present and contain "1".
->>>>>>>
->>>>>>>>      int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
->>>>>>>>      {
->>>>>>>> +	int retval;
->>>>>>>> +
->>>>>>>>      	if (!sysfs_initialized)
->>>>>>>>      		return -EACCES;
->>>>>>>> +	retval = pci_create_boot_display_file(pdev);
->>>>>>>
->>>>>>> In addition to Mani's question about whether /sys/bus/pci/ is
->>>>>>> the right place for this (which is a very good question), it's
->>>>>>> also been pointed out to me that we've been trying to get rid
->>>>>>> of pci_create_sysfs_dev_files() for years.
->>>>>>>
->>>>>>> If it's possible to make this a static attribute that would be
->>>>>>> much, much cleaner.
->>>>>>
->>>>>> Right - I tried to do this, but the problem is at the time the
->>>>>> PCI device is created the information needed to make the
->>>>>> judgement isn't ready.  The options end up being:
->>>>>> * a sysfs file for every display device with 0/1
->>>>>> * a sysfs file that is not accurate until later in the boot
->>>>>
->>>>> What's missing?  The specifics might be helpful if someone has
->>>>> another crack at getting rid of pci_create_sysfs_dev_files() in
->>>>> the future.
->>>>
->>>> The underlying SCREEN_INFO code tries to walk through all the PCI
->>>> devices in a loop, but at the time all the devices are walked the
->>>> memory regions associated with the device weren't populated.
->>>
->>> Which loop are you referring to that walks through all the PCI
->>> devices?  I see this:
->>>
->>>     efifb_set_system
->>>       for_each_pci_dev(dev)
->>>
->>> but that only looks at VGA devices and IIUC you also want to look at
->>> non-VGA GPUs.
-> 
-> [I assume the loop is the "while (pdev =
-> pci_get_base_class(PCI_BASE_CLASS_DISPLAY))" in
-> __screen_info_pci_dev(), which indeed walks through all known PCI
-> devices]
-> 
->>> I don't see a loop in *this* series, where the screen_info path looks
->>> like this:
->>>
->>>     pci_create_boot_display_file
->>>       video_is_primary_device
->>>         screen_info_pci_dev      # added by "fbcon: Use screen info to find primary device"
->>>           screen_info_resources
->>>           __screen_info_pci_dev
->>>
->>> and we're basically matching the screen_info base/address with BAR
->>> values.
->>>
->>> The usual problem is that BARs may not have been assigned by the
->>> time pci_device_add() -> device_add() creates the static
->>> attributes.
->>>
->>> So we call pci_assign_unassigned_root_bus_resources() to assign
->>> all the BARs.  Then we call pci_create_sysfs_dev_files(), where
->>> pci_create_resource_files() creates a "resource%d" file for each
->>> BAR.
->>>
->>> But since we're trying to find the GPU that was used by BIOS, I
->>> assume its BARs were programmed by BIOS and we shouldn't have to
->>> wait until after pci_assign_unassigned_root_bus_resources().
->>
->> Yes it was screen_info_pci_dev() and __screen_info_pci_dev().  The
->> resources weren't ready on the first call into
->> __screen_info_pci_dev().
->>
->> That's why the attribute needed to be created later.
-> 
-> I don't understand this.  IIUC, screen_info contains addresses
-> programmed by BIOS.  If we want to use that to match with a PCI
-> device, we have to compare with the BAR contents *before* Linux does
-> any assignments of its own.
-> 
-> So the only thing this should depend on is the BAR value at BIOS ->
-> Linux handoff, which we know at the time of device_add(), and we
-> should be able to do something like this:
-> 
->    bool pci_video_is_primary_device(struct pci_dev *pdev)
->    {
->      struct screen_info *si = &screen_info;
->      struct resource res[SCREEN_INFO_MAX_RESOURCES];
->      ssize_t i, numres;
-> 
->      numres = screen_info_resources(si, res, ARRAY_SIZE(res));
->      ...
-> 
->      for (i = 0; i < numres; ++i) {
->        if (pci_find_resource(pdev, &res[i]))
->          return true;
->      }
-> 
->      return false;
->    }
-> 
->    static umode_t pci_dev_boot_display_is_visible(...)
->    {
->      struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
-> 
->      if (pci_video_is_primary_device(pdev))
->        return a->mode;
-> 
->      return 0;
->    }
-> 
-> We should be able to check each BAR of each device in this path, with
-> no loop through the devices at all:
-> 
->    pci_device_add
->      device_add
->        device_add_attrs
->          device_add_groups
->            ...
->              create_files
->                grp->is_visible()
->                  pci_dev_boot_display_is_visible
-> 
-> Bjorn
+Bjorn had an aha moment pointing out that there is no reason to "find"
+the PCI device using screen_info_pci_dev() because the device is already
+known.  Instead we just need to check if it has the screen resources.
 
-You're spot on, I did a test and this works.  I'll clean it up and put 
-it on the list and we can decide between this way and moving to drm.
+This series adjusts the boot_display behavior to use that and then convert
+boot_display into a static sysfs file that can be loaded when the device
+is created without needing to change visibility.
+
+This is an ALTERNATIVE to moving it to DRM, which is what v4 does [1].
+Either solution can be picked up depending upon the collective decision
+whether to keep boot_display file in PCI core or DRM core.
+
+Link: https://lore.kernel.org/linux-pci/20250721185726.1264909-1-superm1@kernel.org/T/#me4356b3a172cbdafe83393bedce10f17a86e0da7
+
+Mario Limonciello (2):
+  fbcon: Stop using screen_info_pci_dev()
+  PCI: Adjust visibility of boot_display attribute instead of creation
+
+ arch/x86/video/video-common.c | 12 ++++++--
+ drivers/pci/pci-sysfs.c       | 58 ++++++++++++-----------------------
+ 2 files changed, 30 insertions(+), 40 deletions(-)
+
+-- 
+2.48.1
 
 
