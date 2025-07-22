@@ -1,229 +1,191 @@
-Return-Path: <linux-pci+bounces-32692-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32693-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABE4AB0CF72
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 03:59:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F2E4AB0CFD4
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 04:43:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC06C6C64C4
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 01:59:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C78B6C5B5B
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Jul 2025 02:43:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F5B0130E58;
-	Tue, 22 Jul 2025 01:59:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9156E1E25EB;
+	Tue, 22 Jul 2025 02:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EWC0dAlh"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="V/UTAvpF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C2A469D;
-	Tue, 22 Jul 2025 01:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AFF1DE8A0;
+	Tue, 22 Jul 2025 02:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753149580; cv=none; b=MsG2tHqZ4pEHvTCV8VizobZJ8NfLaw9Fu87xQtLik2ez3xt/4cD5Tb227ABUiT4EbNbef5bjsosHwTo98p5Cy6hbBvr0m8Ym9Iig4vktHAPWiJQMfliOO/K5gMUMrUcN4ATx2INj5GUfN3S5kl+d7OCALRn+RPs5GCRRcGKEUHM=
+	t=1753152220; cv=none; b=h41xPanxPaGh7agLrpDjh5Gx8SxYKTB1xoWrwYLA63fwLJQYOWUIFUIKJtaSBtJakB3eUpYJ8IH8mjc3Gf3aK4ovvoP5MNJh4qbkIysIFmyq4HT+X9kFqAGIegVIYctC9d/miMGi5IUrfUoL4Rr3X7Rg0JgI2cIymr0qIrDmmDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753149580; c=relaxed/simple;
-	bh=bm0m4nJCJwr818tAwn/pFGu42E+zoi1w1iM6fehYaY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=DYaOQtddDmMUkfOYfdOesNhD9pSxqE4hC0CSZ6M+1f2PkKAWwifEidv7/txoQgeMYyek2QcSIg8O4IuiCaB3Bb/c02gIpkNMd7B/cZdsZLC+l046/liNIDQyUuWFAtAFdXs1Gje70YZqcSiGRbwEz2F5G2yK4vERx2nm63nA0ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EWC0dAlh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31C6EC4CEF1;
-	Tue, 22 Jul 2025 01:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753149576;
-	bh=bm0m4nJCJwr818tAwn/pFGu42E+zoi1w1iM6fehYaY4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=EWC0dAlhj3RGOrRbeKwXNZEQj7dwLpmNlpJMJOGQFJE85GZ+moiEa1Lo5iMos3Qjr
-	 P9nKYIeDLQ4eZy0j7EiIWFsHjBTwjNESgh3OSUPqB7N7PW7quWVlVHqlONZtK0g8lF
-	 KJ1oidnQYnfWv7Q8vIVp65CV6DUkdL+QnxJfOZXNcw3OSkjTFxFXT1rr0R8rsDpY2K
-	 ucJCsndqhKZW8W29Y/taeY0dH/RYfm1yodHowS3LRR9UKf92hKqZPyPhytsK3OFjLD
-	 v1k5RcwtfMZ6LCbEpQGU4fldzhk5SDEE8kKB4AqQrAUPuZEs1TypBGhJ9m7qreBZG5
-	 Xs6Eq5MSZ11og==
-Date: Mon, 21 Jul 2025 20:59:34 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
-	"open list:SOUND" <linux-sound@vger.kernel.org>,
-	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v9 9/9] PCI: Add a new 'boot_display' attribute
-Message-ID: <20250722015934.GA2763711@bhelgaas>
+	s=arc-20240116; t=1753152220; c=relaxed/simple;
+	bh=TpfBpPjtQ1TIVKcfvIOgBenSM0Z5cK8+wHNXEIxdfG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VTU7wVOK0ZBYCkxvUsSPUVfxZC3nVvKYm3pli8TJ5MLfxJIebCSQecq9GtZ7/ui+zkiQZdhyKEZr+4JfywucinUILgxevEg+zb8rdCotnhYw69DXDcCn1jWrRcCu00Da3wappoLfuSylPpbxfS1j5OQWseeiUalxJlqNVncV4r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=V/UTAvpF; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1753152212; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=PSvOwAd8F8NSw1DU5J+G8+UcmSTgRBwFglVhweOlEgw=;
+	b=V/UTAvpFe22i21zs9tTZmyYoSpShw+oar2ObjnVEodRkRiyZZnYn7OWtw1wBXQIm/kM4punfgLSInLhEs/S6eHeZdNCA/6ZdPP3pzLGMWHsp6nhR50nVkkdH516xfrBZNjtduW/vU99xpADxSKGgzFW+CjhVYa79SeUb9eK9+uI=
+Received: from 30.246.160.95(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WjTqfLr_1753152209 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 22 Jul 2025 10:43:30 +0800
+Message-ID: <fcfc51c0-6a1f-435b-844b-4daba132f7b6@linux.alibaba.com>
+Date: Tue, 22 Jul 2025 10:43:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <860bcc59-f0d0-4c8d-865c-89127c213cdf@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoinggt for
+ hotplug event
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Matthew W Carlis <mattc@purestorage.com>, helgaas@kernel.org,
+ Lukas Wunner <lukas@wunner.de>, anil.s.keshavamurthy@intel.com,
+ bhelgaas@google.com, bp@alien8.de, davem@davemloft.net,
+ linux-edac@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mark.rutland@arm.com, mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+ naveen@kernel.org, oleg@redhat.com, peterz@infradead.org,
+ rostedt@goodmis.org, tianruidong@linux.alibaba.com, tony.luck@intel.com
+References: <20250717235055.GA2664149@bhelgaas>
+ <20250718034616.26250-1-mattc@purestorage.com>
+ <e92f8d1f-457c-4248-8397-81b0e20ff4af@linux.alibaba.com>
+ <11119800-3b6a-a683-3500-115a057c2826@linux.intel.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <11119800-3b6a-a683-3500-115a057c2826@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 21, 2025 at 07:28:07PM -0500, Mario Limonciello wrote:
-> On 7/21/25 6:00 PM, Bjorn Helgaas wrote:
-> > On Fri, Jul 18, 2025 at 12:44:11PM -0500, Mario Limonciello wrote:
-> > > On 7/18/2025 12:36 PM, Bjorn Helgaas wrote:
-> > > > On Fri, Jul 18, 2025 at 12:29:05PM -0500, Mario Limonciello wrote:
-> > > > > On 7/18/2025 12:25 PM, Bjorn Helgaas wrote:
-> > > > > > On Thu, Jul 17, 2025 at 12:38:12PM -0500, Mario Limonciello wrote:
-> > > > > > > From: Mario Limonciello <mario.limonciello@amd.com>
-> > > > > > > 
-> > > > > > > On systems with multiple GPUs there can be uncertainty which GPU is the
-> > > > > > > primary one used to drive the display at bootup. In some desktop
-> > > > > > > environments this can lead to increased power consumption because
-> > > > > > > secondary GPUs may be used for rendering and never go to a low power
-> > > > > > > state. In order to disambiguate this add a new sysfs attribute
-> > > > > > > 'boot_display' that uses the output of video_is_primary_device() to
-> > > > > > > populate whether a PCI device was used for driving the display.
-> > > > > > 
-> > > > > > > +What:		/sys/bus/pci/devices/.../boot_display
-> > > > > > > +Date:		October 2025
-> > > > > > > +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
-> > > > > > > +Description:
-> > > > > > > +		This file indicates that displays connected to the device were
-> > > > > > > +		used to display the boot sequence.  If a display connected to
-> > > > > > > +		the device was used to display the boot sequence the file will
-> > > > > > > +		be present and contain "1".
-> > > > > > 
-> > > > > > >     int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
-> > > > > > >     {
-> > > > > > > +	int retval;
-> > > > > > > +
-> > > > > > >     	if (!sysfs_initialized)
-> > > > > > >     		return -EACCES;
-> > > > > > > +	retval = pci_create_boot_display_file(pdev);
-> > > > > > 
-> > > > > > In addition to Mani's question about whether /sys/bus/pci/ is
-> > > > > > the right place for this (which is a very good question), it's
-> > > > > > also been pointed out to me that we've been trying to get rid
-> > > > > > of pci_create_sysfs_dev_files() for years.
-> > > > > > 
-> > > > > > If it's possible to make this a static attribute that would be
-> > > > > > much, much cleaner.
-> > > > > 
-> > > > > Right - I tried to do this, but the problem is at the time the
-> > > > > PCI device is created the information needed to make the
-> > > > > judgement isn't ready.  The options end up being:
-> > > > > * a sysfs file for every display device with 0/1
-> > > > > * a sysfs file that is not accurate until later in the boot
-> > > > 
-> > > > What's missing?  The specifics might be helpful if someone has
-> > > > another crack at getting rid of pci_create_sysfs_dev_files() in
-> > > > the future.
-> > > 
-> > > The underlying SCREEN_INFO code tries to walk through all the PCI
-> > > devices in a loop, but at the time all the devices are walked the
-> > > memory regions associated with the device weren't populated.
-> > 
-> > Which loop are you referring to that walks through all the PCI
-> > devices?  I see this:
-> > 
-> >    efifb_set_system
-> >      for_each_pci_dev(dev)
-> > 
-> > but that only looks at VGA devices and IIUC you also want to look at
-> > non-VGA GPUs.
 
-[I assume the loop is the "while (pdev =
-pci_get_base_class(PCI_BASE_CLASS_DISPLAY))" in
-__screen_info_pci_dev(), which indeed walks through all known PCI
-devices]
 
-> > I don't see a loop in *this* series, where the screen_info path looks
-> > like this:
-> > 
-> >    pci_create_boot_display_file
-> >      video_is_primary_device
-> >        screen_info_pci_dev      # added by "fbcon: Use screen info to find primary device"
-> >          screen_info_resources
-> >          __screen_info_pci_dev
-> > 
-> > and we're basically matching the screen_info base/address with BAR
-> > values.
-> > 
-> > The usual problem is that BARs may not have been assigned by the
-> > time pci_device_add() -> device_add() creates the static
-> > attributes.
-> > 
-> > So we call pci_assign_unassigned_root_bus_resources() to assign
-> > all the BARs.  Then we call pci_create_sysfs_dev_files(), where
-> > pci_create_resource_files() creates a "resource%d" file for each
-> > BAR.
-> > 
-> > But since we're trying to find the GPU that was used by BIOS, I
-> > assume its BARs were programmed by BIOS and we shouldn't have to
-> > wait until after pci_assign_unassigned_root_bus_resources().
+在 2025/7/21 18:18, Ilpo Järvinen 写道:
+> On Fri, 18 Jul 2025, Shuai Xue wrote:
+>> 在 2025/7/18 11:46, Matthew W Carlis 写道:
+>>> On Thu, Jul 17, 2025 Bjorn Helgaas wrote
+>>>> So I think your idea of adding current link speed/width to the "Link
+>>>> Up" event is still on the table, and that does sound useful to me.
+>>>
+>>> We're already reading the link status register here to check DLLA so
+>>> it would be nice. I guess if everything is healthy we're probably already
+>>> at the maximum speed by this point.
+>>>
+>>>> In the future we might add another tracepoint when we enumerate the
+>>>> device and know the Vendor/Device ID.
+>>>
+>>> I think we might have someone who would be interested in doing it.
+>>
+>>
+>> Hi, all,
+>>
+>> IIUC, the current hotplug event (or presence event) is enough for Matthew.
+>> and we would like a new tracepoing for link speed change which reports
+>> speeds.
+>>
+>> For hotplug event, I plan to send a new version to
+>>
+>> 1. address Bjorn' concerns about event strings by removing its spaces.
+>>
+>> #define PCI_HOTPLUG_EVENT
+>> \
+>> 	EM(PCI_HOTPLUG_LINK_UP,			"PCI_HOTPLUG_LINK_UP")
+>> \
+>> 	EM(PCI_HOTPLUG_LINK_DOWN,		"PCI_HOTPLUG_LINK_DOWN")
+>> \
+>> 	EM(PCI_HOTPLUG_CARD_PRESENT,		"PCI_HOTPLUG_CARD_PRESENT")
+>> \
+>> 	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,
+>> "PCI_HOTPLUG_CARD_NOT_PRESENT")
+>>
+>> 2. address Ilpo comments by moving pci_hp_event to a common place
+>> (include/trace/events/pci.h) so that the new comming can also use it.
 > 
-> Yes it was screen_info_pci_dev() and __screen_info_pci_dev().  The
-> resources weren't ready on the first call into
-> __screen_info_pci_dev().
->
-> That's why the attribute needed to be created later.
+> Ah, I only now noticed you've decided to re-place them. Please disregard
+> my other comment about this being still open/undecided item.
+> 
+>> For link speed change event (perhaps named as pci_link_event),
+>> I plan to send a seperate patch, which provides:
+>>
+>> 	TP_STRUCT__entry(
+>> 		__string(	port_name,	port_name	)
+>> 		__field(	unsigned char,	cur_bus_speed	)
+>> 		__field(	unsigned char,	max_bus_speed	)
+>>   		__field(	unsigned char,	width		)
+>>   		__field(	unsigned int,	flit_mode	)
+>> 		__field(	unsigned char,	reason		)
+>> 		),
+>>
+>> The reason field is from Lukas ideas which indicates why the link speed
+>> changed, e.g. "hotplug", "autonomous", "thermal", "retrain", etc.
+>>
+>> Are you happy with above changes?
+> 
+> Since you're probably quite far with the pcie link event patch too given
+> above, could you take a look at the LNKSTA flags representation in my
+> patch and incorporate those as well as there seems to always lot of
+> uncertainty about those flags when investigating the LBMS/bwctrl related
+> issues so it seems prudent to explicitly include them into the traceevent
+> output:
+> 
+> https://lore.kernel.org/linux-pci/7c289bba-3133-0989-6333-41fc41fe3504@linux.intel.com/
+> 
+> 
 
-I don't understand this.  IIUC, screen_info contains addresses
-programmed by BIOS.  If we want to use that to match with a PCI
-device, we have to compare with the BAR contents *before* Linux does
-any assignments of its own.
+Sure, Thank you for the feedback.
 
-So the only thing this should depend on is the BAR value at BIOS ->
-Linux handoff, which we know at the time of device_add(), and we
-should be able to do something like this:
+I like the LNKSTA flags, LNKSTA flags provides better genericity
+compared to the custom reason field I initially proposed. But it may
+cause confusion when used in pcie_retrain_link(). However, I've
+identified a potential issue when this approach is applied in
+pcie_retrain_link() scenarios.
 
-  bool pci_video_is_primary_device(struct pci_dev *pdev)
-  {
-    struct screen_info *si = &screen_info;
-    struct resource res[SCREEN_INFO_MAX_RESOURCES];
-    ssize_t i, numres;
+Consider the following trace output when a device hotpluged:
 
-    numres = screen_info_resources(si, res, ARRAY_SIZE(res));
-    ...
+$ cat /sys/kernel/debug/tracing/trace_pipe
+$ cat /sys/kernel/debug/tracing/trace_pipe
+            <...>-118     [002] .....    28.414220: pci_hp_event: 0000:00:03.0 slot:30, event:PCI_HOTPLUG_CARD_PRESENT
 
-    for (i = 0; i < numres; ++i) {
-      if (pci_find_resource(pdev, &res[i]))
-        return true;
-    }
+            <...>-118     [002] .....    28.414273: pci_hp_event: 0000:00:03.0 slot:30, event:PCI_HOTPLUG_LINK_UP
 
-    return false;
-  }
+    irq/57-pciehp-118     [002] .....    28.540189: pcie_link_event: 0000:00:03.0 type:4, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s PCIe, width:1, flit_mode:0, status:DLLLA
 
-  static umode_t pci_dev_boot_display_is_visible(...)
-  {
-    struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+    irq/57-pciehp-118     [002] .....    28.544999: pcie_link_event: 0000:00:03.0 type:4, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s PCIe, width:1, flit_mode:0, status:DLLLA
 
-    if (pci_video_is_primary_device(pdev))
-      return a->mode;
+The problem is that both trace events show status:DLLLA (Data Link Layer
+Link Active), which is the direct reading from PCI_EXP_LNKSTA. However,
+this doesn't accurately reflect the underlying context:
 
-    return 0;
-  }
+- First DLLLA: Triggered by board_added() - link establishment after
+   card insertion
+- Second DLLLA: Triggered by pcie_retrain_link() - link retraining
+   completion
 
-We should be able to check each BAR of each device in this path, with
-no loop through the devices at all:
+( I trace the events in pcie_update_link_speed() )
 
-  pci_device_add
-    device_add
-      device_add_attrs
-        device_add_groups
-          ...
-            create_files
-              grp->is_visible()
-                pci_dev_boot_display_is_visible
+In the second case, the more relevant status would be PCI_EXP_LNKSTA_LT
+(Link Training) to indicate that link retraining was performed, even
+though the final register state shows DLLLA.
 
-Bjorn
+Question: Should we explicitly report the contextual status (e.g.,
+PCI_EXP_LNKSTA_LT for retraining scenarios) rather than always reading
+the current register field? This would provide more meaningful trace
+information for debugging link state transitions.
+
+Additionally, I'd appreciate your thoughts on the overall tracepoint
+format shown above. Does this structure provide sufficient information
+for hotplug and link analysis while maintaining readability?
+
+Thanks.
+Shuai
 
