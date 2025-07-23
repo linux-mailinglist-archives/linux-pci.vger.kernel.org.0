@@ -1,280 +1,95 @@
-Return-Path: <linux-pci+bounces-32812-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32815-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DF78B0F43F
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 15:41:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43107B0F4E0
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 16:06:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD6F71C8100D
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 13:41:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 699DA1892F27
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 14:06:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AF6A2E7BC8;
-	Wed, 23 Jul 2025 13:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UkCKiO0B"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2317D2F2348;
+	Wed, 23 Jul 2025 14:06:14 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C502E762A;
-	Wed, 23 Jul 2025 13:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0ACF78F3E;
+	Wed, 23 Jul 2025 14:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753278052; cv=none; b=jyutyvhMjHlXLG84E/cf+XMB42QkPm0vRJLqBJvm71Wt1yfEnFB6kEF8x2C8M8u+KmoyI5GYjawMNgXuQjLG8g/GixX8bdWANojCIv4/7VDJo8SutnGZl0DMgzFhGHgulP4cPllECJt5p/l84KkWZfVdK2Or3Ftcyp67pPpUGWg=
+	t=1753279574; cv=none; b=rm5wO1BqgqDVYzwYLpm9LK8qVM14OVILDwH1oO5rEDIAnA5ymG8JVLscpD+QeyoNvtTBkpFahnLSJhIAyTqF24OZ0uO5X9qYFusA8EIGMCAEVafkEcxlbCyaoFvXuO9lB72tp7hIWV8ySlhl1VkSwCR2oHvWAjIvERrH1alo6PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753278052; c=relaxed/simple;
-	bh=coLoLYxWLllvcdZbIRjO431b+308cMu89PGKwdtOb3o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jOS0OzzcgJfiavDxNL0uWh6pnI0i/h855nPVCsseL3kKN50JjAfQsNk3F1zg7q5WJgpujTNs8GnB2bIvsh42yERfa1YTPnsL+dBwE0l3J1Ztjag1jF7RheZ0bvjxK5HNRNTVhu+PoCoIElOnXHI9msJ+8qs1ByTzRpDW+lmlrtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UkCKiO0B; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753278050; x=1784814050;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=coLoLYxWLllvcdZbIRjO431b+308cMu89PGKwdtOb3o=;
-  b=UkCKiO0Bwkd6PLh5iaEYuSTTxn7M+DUbmnT0YfPYDd5yUdSz/sK8pMPg
-   nknpJB/LmphiexTsJ9HNVjqEWTTF9JYpvT5Ho/XDnIK2Q7l/Cz6MTbBEH
-   owSbS+K31/C78hGjkO0bll7P4+Nha8N+2+ctU/RHBYvNqylo/NWqMHVun
-   FJUFCwGHmhQft6a9Gg3837gmLdObWKaCf6oze4AS3ByC1Lyd+4A6h1S7L
-   pZYweV6z10GFSgIOm+lwCjBBQKFh6XYRpRQecI7Wg9ALwJ6hsxRS0K3RK
-   x8vkRHDMstJe+tP61+Y4FNyk+kCxk28AbX78NVEBqmEAmGb8/jwL2Y+fD
-   w==;
-X-CSE-ConnectionGUID: mSCJ8HT5SQ2V+EPYohKJOw==
-X-CSE-MsgGUID: HxiyGPwfRfqTh2739gY5Mw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11501"; a="58175407"
-X-IronPort-AV: E=Sophos;i="6.16,333,1744095600"; 
-   d="scan'208";a="58175407"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2025 06:40:49 -0700
-X-CSE-ConnectionGUID: r8XU4QRDQteAE1UuqzchEg==
-X-CSE-MsgGUID: I5lzYzdbQ4GRu7SYbdmniw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,333,1744095600"; 
-   d="scan'208";a="159278054"
-Received: from unknown (HELO intel-Lenovo-Legion-Y540-15IRH-PG0.iind.intel.com) ([10.224.186.95])
-  by orviesa009.jf.intel.com with ESMTP; 23 Jul 2025 06:40:47 -0700
-From: Kiran K <kiran.k@intel.com>
-To: linux-bluetooth@vger.kernel.org
-Cc: ravishankar.srivatsa@intel.com,
-	chethan.tumkur.narayan@intel.com,
-	bhelgaas@google.com,
-	linux-pci@vger.kernel.org,
-	Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>,
-	Kiran K <kiran.k@intel.com>
-Subject: [PATCH v5] Bluetooth: btintel_pcie: Add support for _suspend() / _resume()
-Date: Wed, 23 Jul 2025 19:27:15 +0530
-Message-ID: <20250723135715.1302241-1-kiran.k@intel.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1753279574; c=relaxed/simple;
+	bh=lMxJ452v0orPlmOr+epyAVHrDfvjemEaQSUKSAWFW5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KL7SGWoyPD/Px5crPXlR4z2falztOU35ksK15DYHkkRIfUo8BwiSInQXccVk8HKudp7eT7GYMiFUt87mKyf+X7v8G/NQE3sc7l0jQa3hc+hO9mul7YykU/TE33ZbOYy/bRE+1BZ68hD50dyjrC+Ftj571MrUd1cmKtEbVxs43zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 7C56F1606A4;
+	Wed, 23 Jul 2025 14:06:03 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id BCD5E2D;
+	Wed, 23 Jul 2025 14:05:58 +0000 (UTC)
+Date: Wed, 23 Jul 2025 10:05:59 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: lukas@wunner.de, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
+ ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
+ Jonathan.Cameron@huawei.com, bhelgaas@google.com, tony.luck@intel.com,
+ bp@alien8.de, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
+ anil.s.keshavamurthy@intel.com, mark.rutland@arm.com, peterz@infradead.org,
+ tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v9 2/2] PCI: trace: Add a RAS tracepoint to monitor link
+ speed changes
+Message-ID: <20250723100559.7f0adb3c@batman.local.home>
+In-Reply-To: <20250723033108.61587-3-xueshuai@linux.alibaba.com>
+References: <20250723033108.61587-1-xueshuai@linux.alibaba.com>
+	<20250723033108.61587-3-xueshuai@linux.alibaba.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: kfh95roe4azn51jwbc9w8snmy97e6oiu
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: BCD5E2D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19uu5kwrnovz3Zkv5N+cwHtWAyPjoGFzaM=
+X-HE-Tag: 1753279558-65806
+X-HE-Meta: U2FsdGVkX18EcBzxU5d2jMMvSMTDBFTAbWnieQrV6k8YfBJ6MEAHk+B+CAbikFXBJnqLIQgSVt445rKrwaBBa6Auvns6OK++ZmErCE8sU0Ez50ansF+A7gQWzAunWcOuyXUpE0S5IXv00CqWQvSwxPxwA1YuvU3QmvEzJd+FTgggGliPepeJs5OylpcMMbnJjaIdkdc1rHmyv7I0NFYDYCLcMJjJwWO1xF3gXEeUqxO35xy5UuQL06DMgxSusYQOx7opywjLHRjhmiCQlmu9xF8Vp4xoroRkSJ6ZtHFCGISfrPnqpLcwGY9Hs1QHCVopk5puHRuaJqXpEi2u8yVgmiBaXTZAx/Ed
 
-From: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
+On Wed, 23 Jul 2025 11:31:08 +0800
+Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 
-This patch implements _suspend() and _resume() functions for the
-Bluetooth controller. When the system enters a suspended state, the
-driver notifies the controller to perform necessary housekeeping tasks
-by writing to the sleep control register and waits for an alive
-interrupt. The firmware raises the alive interrupt when it has
-transitioned to the D3 state. The same flow occurs when the system
-resumes.
+> +	TP_printk("%s type:%d, reason:%d, cur_bus_speed:%s, max_bus_speed:%s, width:%u, flit_mode:%u, status:%s\n",
+> +		__get_str(port_name),
+> +		__entry->type,
+> +		__entry->reason,
+> +		pci_speed_string(__entry->cur_bus_speed),
+> +		pci_speed_string(__entry->max_bus_speed),
 
-Command to test host initiated wakeup after 60 seconds
-sudo rtcwake -m mem -s 60
+Hmm, I guess pci_speed_string() should be added to libtraceveent so
+that perf and trace-cmd parses it correctly. I guess rasdaemon would
+want that too (which also uses libtraceevent).
 
-dmesg log (tested on Whale Peak2 on Panther Lake platform)
-On system suspend:
-[  516.418316] Bluetooth: hci0: device entered into d3 state from d0 in 81 us
+-- Steve
 
-On system resume:
-[  542.174128] Bluetooth: hci0: device entered into d0 state from d3 in 357 us
 
-Signed-off-by: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
-Signed-off-by: Kiran K <kiran.k@intel.com>
----
-changes in v5:
-     - Address review comments
-
-changes in v4:
-     - Moved document and section details from the commit message as comment in code.
-
-changes in v3:
-     - Corrected the typo's
-     - Updated the CC list as suggested.
-     - Corrected the format specifiers in the logs.
-
-changes in v2:
-     - Updated the commit message with test steps and logs.
-     - Added logs to include the timeout message.
-     - Fixed a potential race condition during suspend and resume.
-
- drivers/bluetooth/btintel_pcie.c | 102 +++++++++++++++++++++++++++++++
- drivers/bluetooth/btintel_pcie.h |   4 ++
- 2 files changed, 106 insertions(+)
-
-diff --git a/drivers/bluetooth/btintel_pcie.c b/drivers/bluetooth/btintel_pcie.c
-index 6e7bbbd35279..a96975a55cbe 100644
---- a/drivers/bluetooth/btintel_pcie.c
-+++ b/drivers/bluetooth/btintel_pcie.c
-@@ -540,6 +540,12 @@ static int btintel_pcie_reset_bt(struct btintel_pcie_data *data)
- 	return reg == 0 ? 0 : -ENODEV;
- }
- 
-+static void btintel_pcie_set_persistence_mode(struct btintel_pcie_data *data)
-+{
-+	btintel_pcie_set_reg_bits(data, BTINTEL_PCIE_CSR_HW_BOOT_CONFIG,
-+				  BTINTEL_PCIE_CSR_HW_BOOT_CONFIG_KEEP_ON);
-+}
-+
- static void btintel_pcie_mac_init(struct btintel_pcie_data *data)
- {
- 	u32 reg;
-@@ -829,6 +835,8 @@ static int btintel_pcie_enable_bt(struct btintel_pcie_data *data)
- 	 */
- 	data->boot_stage_cache = 0x0;
- 
-+	btintel_pcie_set_persistence_mode(data);
-+
- 	/* Set MAC_INIT bit to start primary bootloader */
- 	reg = btintel_pcie_rd_reg32(data, BTINTEL_PCIE_CSR_FUNC_CTRL_REG);
- 	reg &= ~(BTINTEL_PCIE_CSR_FUNC_CTRL_FUNC_INIT |
-@@ -2573,11 +2581,105 @@ static void btintel_pcie_coredump(struct device *dev)
- }
- #endif
- 
-+#ifdef CONFIG_PM
-+static int btintel_pcie_suspend_late(struct device *dev, pm_message_t mesg)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct btintel_pcie_data *data;
-+	ktime_t start;
-+	u32 dxstate;
-+	s64 delta;
-+	int err;
-+
-+	data = pci_get_drvdata(pdev);
-+
-+	if (mesg.event == PM_EVENT_SUSPEND)
-+		dxstate = BTINTEL_PCIE_STATE_D3_HOT;
-+	else
-+		dxstate = BTINTEL_PCIE_STATE_D3_COLD;
-+
-+	data->gp0_received = false;
-+
-+	start = ktime_get();
-+
-+	/* Refer: 6.4.11.7 -> Platform power management */
-+	btintel_pcie_wr_sleep_cntrl(data, dxstate);
-+	err = wait_event_timeout(data->gp0_wait_q, data->gp0_received,
-+				 msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TIMEOUT_MS));
-+	delta = ktime_to_ns(ktime_get() - start) / 1000;
-+
-+	if (err == 0) {
-+		bt_dev_err(data->hdev, "Timeout (%u ms) on alive interrupt for D3 entry",
-+				BTINTEL_DEFAULT_INTR_TIMEOUT_MS);
-+		return -EBUSY;
-+	}
-+	bt_dev_info(data->hdev, "device entered into d3 state from d0 in %lld us",
-+		    delta);
-+	return 0;
-+}
-+
-+static int btintel_pcie_suspend(struct device *dev)
-+{
-+	return btintel_pcie_suspend_late(dev, PMSG_SUSPEND);
-+}
-+
-+static int btintel_pcie_hibernate(struct device *dev)
-+{
-+	return btintel_pcie_suspend_late(dev, PMSG_HIBERNATE);
-+}
-+
-+static int btintel_pcie_freeze(struct device *dev)
-+{
-+	return btintel_pcie_suspend_late(dev, PMSG_FREEZE);
-+}
-+
-+static int btintel_pcie_resume(struct device *dev)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct btintel_pcie_data *data;
-+	ktime_t start;
-+	int err;
-+	s64 delta;
-+
-+	data = pci_get_drvdata(pdev);
-+	data->gp0_received = false;
-+
-+	start = ktime_get();
-+
-+	/* Refer: 6.4.11.7 -> Platform power management */
-+	btintel_pcie_wr_sleep_cntrl(data, BTINTEL_PCIE_STATE_D0);
-+	err = wait_event_timeout(data->gp0_wait_q, data->gp0_received,
-+				 msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TIMEOUT_MS));
-+	delta = ktime_to_ns(ktime_get() - start) / 1000;
-+
-+	if (err == 0) {
-+		bt_dev_err(data->hdev, "Timeout (%u ms) on alive interrupt for D0 entry",
-+				BTINTEL_DEFAULT_INTR_TIMEOUT_MS);
-+		return -EBUSY;
-+	}
-+	bt_dev_info(data->hdev, "device entered into d0 state from d3 in %lld us",
-+		    delta);
-+	return 0;
-+}
-+
-+const struct dev_pm_ops btintel_pcie_pm_ops = {
-+	.suspend = btintel_pcie_suspend,
-+	.resume = btintel_pcie_resume,
-+	.freeze = btintel_pcie_freeze,
-+	.thaw = btintel_pcie_resume,
-+	.poweroff = btintel_pcie_hibernate,
-+	.restore = btintel_pcie_resume,
-+};
-+#define BTINTELPCIE_PM_OPS	(&btintel_pcie_pm_ops)
-+#else
-+#define BTINTELPCIE_PM_OPS	NULL
-+#endif
- static struct pci_driver btintel_pcie_driver = {
- 	.name = KBUILD_MODNAME,
- 	.id_table = btintel_pcie_table,
- 	.probe = btintel_pcie_probe,
- 	.remove = btintel_pcie_remove,
-+	.driver.pm = BTINTELPCIE_PM_OPS,
- #ifdef CONFIG_DEV_COREDUMP
- 	.driver.coredump = btintel_pcie_coredump
- #endif
-diff --git a/drivers/bluetooth/btintel_pcie.h b/drivers/bluetooth/btintel_pcie.h
-index 0fa876c5b954..5bc69004b692 100644
---- a/drivers/bluetooth/btintel_pcie.h
-+++ b/drivers/bluetooth/btintel_pcie.h
-@@ -8,6 +8,7 @@
- 
- /* Control and Status Register(BTINTEL_PCIE_CSR) */
- #define BTINTEL_PCIE_CSR_BASE			(0x000)
-+#define BTINTEL_PCIE_CSR_HW_BOOT_CONFIG		(BTINTEL_PCIE_CSR_BASE + 0x000)
- #define BTINTEL_PCIE_CSR_FUNC_CTRL_REG		(BTINTEL_PCIE_CSR_BASE + 0x024)
- #define BTINTEL_PCIE_CSR_HW_REV_REG		(BTINTEL_PCIE_CSR_BASE + 0x028)
- #define BTINTEL_PCIE_CSR_RF_ID_REG		(BTINTEL_PCIE_CSR_BASE + 0x09C)
-@@ -55,6 +56,9 @@
- #define BTINTEL_PCIE_CSR_BOOT_STAGE_ALIVE		(BIT(23))
- #define BTINTEL_PCIE_CSR_BOOT_STAGE_D3_STATE_READY	(BIT(24))
- 
-+/* CSR HW BOOT CONFIG Register */
-+#define BTINTEL_PCIE_CSR_HW_BOOT_CONFIG_KEEP_ON		(BIT(31))
-+
- /* Registers for MSI-X */
- #define BTINTEL_PCIE_CSR_MSIX_BASE		(0x2000)
- #define BTINTEL_PCIE_CSR_MSIX_FH_INT_CAUSES	(BTINTEL_PCIE_CSR_MSIX_BASE + 0x0800)
--- 
-2.43.0
-
+> +		__entry->width,
+> +		__entry->flit_mode,
+> +		__print_flags((unsigned long)__entry->link_status, "|",
+> +				LNKSTA_FLAGS)
+> +	)
+> +);
 
