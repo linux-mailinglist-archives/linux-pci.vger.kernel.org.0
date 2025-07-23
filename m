@@ -1,100 +1,88 @@
-Return-Path: <linux-pci+bounces-32820-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32821-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3772AB0F56E
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 16:36:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B3ADB0F573
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 16:36:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 65B7F189B90C
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 14:35:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ACF9C1CC2DA6
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 14:35:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CC732F5314;
-	Wed, 23 Jul 2025 14:34:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE2B72EF9BD;
+	Wed, 23 Jul 2025 14:35:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OGuCA5ca"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aojR7DZ7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165682E7BBD;
-	Wed, 23 Jul 2025 14:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8330F1E1DFC;
+	Wed, 23 Jul 2025 14:35:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753281298; cv=none; b=LeKvIJtyRl4AzHV9zTFtwSU2Kx2eXxe3ZxABAUPpa7GWjzCvj7rtZIAKBvmCgFu96Z/aYpG0t/FY20aMaAE91XRfuevPo6rpVTVNPBFwcpNfmQs5w48vLvi9VjePFN2sFQoxuX/yuNENf2qUGZS/YJYFNVoCcRt+eEoQ+lhZQFE=
+	t=1753281315; cv=none; b=tsq37vAA3r3rqhCMXAOIWLHUr7SkzHbiuPAc3WuB6t0YdbVkrk4+etH87BuKDo31NRCdlTYbU19rIz6ygH6RTvhm4Hvmj+53Kxcz3ZGsn+vzMzbjPqfH2pRS8M/JGPKxZ5jt0TS3WB4ck89Xy9/Nyn+ViSUz0CdOgI7f2Q+0wi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753281298; c=relaxed/simple;
-	bh=hqQgXXO/2Sxe0qvV4ysJSFDc0vsyketKesbfM+KBHTo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UqXOU+UdB72JrcHmHcLOe7fd+QrRiXinxn+2xsOfh/5oS1ecOeznvNl1jGga6vHJXC3JZPjWWqGdOAyJiACN0xmRkvoeu1Q5iPU/MBe0YOcZPbdI06+xlsWCu7RVipUVBqThMxOIM5hJUdd096TAdts25FRfudjm+DqPOgAWwrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OGuCA5ca; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05D19C4CEF1;
-	Wed, 23 Jul 2025 14:34:50 +0000 (UTC)
+	s=arc-20240116; t=1753281315; c=relaxed/simple;
+	bh=xJym56oTvMq1mcxKBIzonpnQCj70oitN1cD+aRK/ddo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qbdkNrMfB+RsTPXIbkWf3u6SxEzEMAhiCVx3Lr1ydYfXzE8iP1fAd+ZMyNtRjnw1G5FamyYGzk23DRnKh9RjObulS+Kb8hlu70SgwqEnU082H6VRAXyXbWG4u+aGxwTABmm5I45FsG1Ns2CBJNPLq1MwH+HhaUnNpr1gYONVsPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aojR7DZ7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 964D9C4CEE7;
+	Wed, 23 Jul 2025 14:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753281297;
-	bh=hqQgXXO/2Sxe0qvV4ysJSFDc0vsyketKesbfM+KBHTo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OGuCA5caY3RTuxc6BqatpaaL7WVJccOd+gLxQA/lKzjEzu/CcJ5sfCJgjkcB3p8qT
-	 0HzTnwQJOYZ7Eea4+VY4e2K91DiL/S6topwdE/Cr0xMovGlvW4qcvZ/D0oTNMLcAQx
-	 0WJ1EVJ8P+BA4+U1qWwpw0Ldi9iX2MwEfdZrVmbiMAZLndOgBn6CcV8R9bJ8O/QB2a
-	 4XSCnK+/kLmGyGPyLeZzjPY4rQgrw48Mj1d/WFbxtSRgIsU91XkieImQVehzzzp+T9
-	 EBrTWhjGqZEwUZrA5Uf8OT+oSXtdP6Y/AWI0ixHUHVlrvTYwKdE4gHeCKKji/2bZiZ
-	 KMeAdnXzlINRw==
-Date: Wed, 23 Jul 2025 20:04:46 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Wenbin Yao <quic_wenbyao@quicinc.com>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
-	bhelgaas@google.com, sfr@canb.auug.org.au, qiang.yu@oss.qualcomm.com, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, andersson@kernel.org, 
-	konradybcio@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, krishna.chundru@oss.qualcomm.com, 
-	quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, quic_cang@quicinc.com
-Subject: Re: [PATCH v5 1/3] PCI: dwc: enable PCI Power Control Slot driver
- for QCOM
-Message-ID: <g4vti733clyly7uludeypp55s2s3ajznw4g3mjgo3segah3zdm@uixreuvty7px>
-References: <20250722091151.1423332-1-quic_wenbyao@quicinc.com>
- <20250722091151.1423332-2-quic_wenbyao@quicinc.com>
+	s=k20201202; t=1753281314;
+	bh=xJym56oTvMq1mcxKBIzonpnQCj70oitN1cD+aRK/ddo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aojR7DZ7bxyLE+5/qTN4yPDLC/oMLEyGSELJ8w+VK0jQTydCGNhC8bFeke4koFF6h
+	 vi1HxiYIpSEKfsMmpS3G4HqEor2C6j9My4E47C1dnwj6+PLRaZMyEw/gD7KjZtLjk0
+	 5q96WMVTKzzSPUmYNrM4tl4Ib5rejQGvgh9ldqISo3pGOGTOPp2vomjJ3CYmc8kvIi
+	 4uu54P1gv/kYF91gAntBZNMOIFDSrpylo024kf0bE5RlniQ6qURP2lc3h+x2nqa4P5
+	 crTCwcpOgDybWTVFmfFr3KAW2uwQVHPZv4YSnH1kOmZnHgOM4I5jTYkyrbp/iEg4C9
+	 k72ctk5TVOhHw==
+Message-ID: <7fa90026-d2ac-4d39-bbd8-4e6c9c935b34@kernel.org>
+Date: Wed, 23 Jul 2025 16:35:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250722091151.1423332-2-quic_wenbyao@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 3/6] rust: irq: add support for non-threaded IRQs and
+ handlers
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C2=B4nski?= <kwilczynski@kernel.org>,
+ Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250715-topics-tyr-request_irq2-v7-0-d469c0f37c07@collabora.com>
+ <20250715-topics-tyr-request_irq2-v7-3-d469c0f37c07@collabora.com>
+ <aIBl6JPh4MQq-0gu@tardis-2.local>
+ <ED19060D-265A-4DEF-A12B-3F5901BBF4F3@collabora.com>
+ <aIDxFoQV_fRLjt3h@tardis-2.local>
+From: Danilo Krummrich <dakr@kernel.org>
+Content-Language: en-US
+In-Reply-To: <aIDxFoQV_fRLjt3h@tardis-2.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 22, 2025 at 05:11:49PM GMT, Wenbin Yao wrote:
-> From: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> 
-> Enable the pwrctrl driver, which is utilized to manage the power supplies
-> of the devices connected to the PCI slots. This ensures that the voltage
-> rails of the standard PCI slots on some platforms eg. X1E80100-QCP can be
-> correctly turned on/off if they are described under PCIe port device tree
-> node.
-> 
-> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index ff6b6d9e1..deafc512b 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -298,6 +298,7 @@ config PCIE_QCOM
->  	select CRC8
->  	select PCIE_QCOM_COMMON
->  	select PCI_HOST_COMMON
-> +	select PCI_PWRCTRL_SLOT
+On 7/23/25 4:26 PM, Boqun Feng wrote:
+> On Wed, Jul 23, 2025 at 10:55:20AM -0300, Daniel Almeida wrote:
+> But sure, this and the handler pinned initializer thing is not a blocker
+> issue. However, I would like to see them resolved as soon as possible
+> once merged.
 
-I guess you also need 'if HAVE_PWRCTRL'
+I think it would be trivial to make the T an impl PinInit<T, E> and use a
+completion as example instead of an atomic. So, we should do it right away.
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+- Danilo
 
