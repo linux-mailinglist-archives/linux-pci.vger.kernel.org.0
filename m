@@ -1,121 +1,112 @@
-Return-Path: <linux-pci+bounces-32838-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32839-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 950F5B0FA93
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 20:59:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED57CB0FADC
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 21:13:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 942233B5F59
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 18:59:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E92DE3B0B8B
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 19:13:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52D7622B8D9;
-	Wed, 23 Jul 2025 18:59:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C410C208994;
+	Wed, 23 Jul 2025 19:13:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="WNhhE56j"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="S+RwnfRZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8A02222CA;
-	Wed, 23 Jul 2025 18:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3151339A4
+	for <linux-pci@vger.kernel.org>; Wed, 23 Jul 2025 19:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753297172; cv=none; b=k+rFJWC6axCMtsw2JM62oip/t60jxUXll2Yfk6oxG6ppq6Wsypmk8l2YQY/YdZzrv6FQcj1C+5dAoHhsh2emcjOnR1Qpe3HIs1ZuSkIe+6dJw3eR1smbHS/pSe1+FHqkRi7VOY0qtKrIh4oJib7U2CLVUYsOG3CwF9W5F1ZuU0Y=
+	t=1753298025; cv=none; b=aAwtB0gs+Atz9fi5IsB4Wp8j5LQox1SlB+quBZgNa3I8voNoaxQFLICLueCbPQEg9U7QIdaJVbKeyZujst4DVxS/1lprVvEk1A+rVN9k/qS9VW58RQbGa9yYjQ/yUFa8Si5p27+Tc3JZ7nM5DHW5wwkEm2JZif8dXXYvQ9tkByI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753297172; c=relaxed/simple;
-	bh=YMmKd8UC5P21tTrV/oIf5AKV3dDkkV89/6bPT5QQSlo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nxFQ0i7iZHMVLwkIjECTSrGdgR1yb3ZdTIaDkwTv3cwx0iAX6PPJZzdOJ4SIXFse23wIptE+Ra57TfjqXflYCLf1aVZMgPrZsKM+Kb9cxUegRrQPkHYQqEumZa6Kp5iTC9M7NezCzzrlCeSxUP7yTSh+ThBusLICWIFFnfvmskI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=WNhhE56j; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C1C1740E0163;
-	Wed, 23 Jul 2025 18:59:20 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id NV1TOurcSxM6; Wed, 23 Jul 2025 18:59:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1753297157; bh=3/iUg3kpzsiZrZyEgEoQDrYxpq8863x42bI2MvnPvd8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WNhhE56jaVQu8KmDXYrC1yQdKtIH4nMnxxKq6HHMfPn3KWLUYHkITgL5pmZOmECm2
-	 qIx5yZsp9NhxWPtrmSuKgpzrdK+6tDoipIeQAsybPeBFHe8nsxHbu9eGiRUwKvN35I
-	 moWd3v49g+xVRScU8E2A1IRcf9nJuTnXJf0IoCcR5ViZ97oHkY2LPBNpggxXfI8909
-	 KElCdwzek1ygeNaV95IzQSFtsYmW6y8EmMOZaOMj7eOAXvijsv9rBOh2DZ3mFNzXuu
-	 ZF+l+TxcKo2TiX2+lIhI3pFmBVZA83e5J1tRBwTLfOopbAJnkvNL9m60r/t253U8pg
-	 q/8ZlCL3IKF5Fg+PYg5+iDhJ3zt+Grhz4SPpVg3gvV2nq1fO3tKXzlnUZTy76DuQqZ
-	 8w5WlekiffnTR7PRFrECf+uRApDOGb6dhTBLovo+ph+FCh/pMiKZbcADaVPA9P6JDc
-	 pDVpuaKA19Snh/y1Uoa6TATlcEZ6FfJ1U2zkredBLcHM+xaX/TaPvBxUquapEQtLZw
-	 bz3KciijHf7kc2P7gju5ur8KnwqmE+AAwyZx7tJYAGWAqA7ro+T4GvvI9YCkERW2Or
-	 kRbhhGcn+OTYKMO/PQ2vTfHBNSTB5iEv+4o44KOwVfGCIiShLJhDiCKGmo+1U0Em4x
-	 mws8PKuTNcbxgVonXq9TlbUc=
-Received: from rn.tnic (unknown [78.130.214.207])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id C25CE40E0254;
-	Wed, 23 Jul 2025 18:58:47 +0000 (UTC)
-Date: Wed, 23 Jul 2025 21:00:48 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Breno Leitao <leitao@debian.org>
-Cc: kernel test robot <lkp@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Robert Moore <robert.moore@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, oe-kbuild-all@lists.linux.dev,
-	linux-media@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev,
-	osandov@osandov.com, xueshuai@linux.alibaba.com,
-	konrad.wilk@oracle.com, linux-edac@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v3] vmcoreinfo: Track and log recoverable hardware errors
-Message-ID: <20250723190048.GBaIExYJYiHWnSBFye@renoirsky.local>
-References: <20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org>
- <202507232209.GrgpSr47-lkp@intel.com>
- <cdlrppnrheyq7z3gmwmwsmktpmoiwq7g5hxa67rcx4iem5i6ge@jksa5o5use4w>
+	s=arc-20240116; t=1753298025; c=relaxed/simple;
+	bh=JKDF1Z8cdyHoCNNDMDQSp/oPrVWxJYqsqXYKwWddD5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WMVTDr5j37VzoCWXGxtvLka82ebVa1i43H3x6TaxWub9ajNernEnVyrvZu8KCoCg0oGnyR2QVMJ+B0sPMRmStHtsNPc00xQO8PODUvr7yPN6o0DOcuZCzhyGXj+Ye1AIvrhgbT9k8ipzNqFAzCQw2qI7bw6gGXuDan72SmJZSzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=S+RwnfRZ; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-748d982e92cso211441b3a.1
+        for <linux-pci@vger.kernel.org>; Wed, 23 Jul 2025 12:13:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1753298023; x=1753902823; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DzcqWLVW669oK1A7bo54m0evV4oxKQmhFTEkp6aUrbk=;
+        b=S+RwnfRZ7wPZUgPmRsytOmfzcimXqj80iGuKqSyQMA/YC/Uc5+t3ectsI9rik/oYKp
+         NkRb4b0ECyZn+xIHqmYuPgQpcL32SgF9tLYQIKee6XQR4c/97fI0gwF8BXSkCSKjWowd
+         830X2BRXIgyRmAg5LAqK0yRHMY7z1LvLTYmu6R284Y5aFduj7G1I64V09Pv5xxFq2DIN
+         JbdBdj+pHre3/GlhzjLqOd7ldZZMZ0SqNIk9GZfjX4aGqVKQ70RlBb5cBaZOm2gYJDJ1
+         Sndk9Es+zBdOGSJWG9s0WkpV/TnnYkR2DX26eDMeTAPs20Q1eyZ2Ozi9kcmeil1l29H5
+         e4Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753298023; x=1753902823;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DzcqWLVW669oK1A7bo54m0evV4oxKQmhFTEkp6aUrbk=;
+        b=ujzxFpwBVOn71sNLcNnyNamgeyxlvuND2aCD0G3AsC3lGr4XOEhdpqiaf6YTVemtQN
+         HodqMi0g/TDy2YLOXzrqfAbiDYlub5C+tXl+le45ADN9GBv71YgxlM1KLBdrmnCRGspF
+         QPpT8/IcX3lBj61I3znTJvDNN0sANeI/+6sY/Iz+2wugUa26fQGY8EW/NwSKMkBfl3EZ
+         jNrsGesvcsXI1zLQvbOkb5IERRAMVZ6BCwpbi+Dc4IB/NEZruGiObLl4p0tIMaK8Gmss
+         S996YqF4TZVYbYJjyvlzqYUIRHXW7HgDgY8Cj1K+XBdzdhPFEdWQYHocwECftegGKnsC
+         FeJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXcpGcVV3/iHrVSFrJBzKLZvIcfQKBQVc7WGrz4qRgYU9Jr68jr2b6QATDjoGtC+S/qbenxN9uvYv4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzDxHErxzm1wni0fnhm+iBTWFdTDEYbw3mh4jWMNSkPQLGgToo
+	Y0qFxwXUVoHr0EL/asW7I4OoqybSZqWax43TBaXJlhEF5XRUgWm/wmdO2urwhQBRaUg=
+X-Gm-Gg: ASbGnctTGBIOAAS32vSmUmWU30IQXVEetqNR5aBdE1XMR0zhzBKwgqc3HeYf9RSdiL5
+	U+nK06CJOk5h9hA+0uk+1bgueJXrSj6ZgpBnHIAYK4H/VQZ/2K3GIDNh3JAmPdSqNd+5J8NcraC
+	AQ/KAIeF20QEIJWfIN1XjzIwDvOIZSu9zC1Tp9FLA/ejQgt5DWhbwtfG9EJDuR3NKi++sa90Gs0
+	m0W/MG6gHgWORSFE/4sJPIdH6GcJAoC5dF3r5z0rragFvFgRWLpCxd0nEPWJ7JP3phJLEx+j7Yb
+	i1xVjg2JFdGTf4uqb5CnC1jcUKUps7ecbenFaatnrj9okqT68M7HbZqCnSAIfqp2QfBbsrZcseg
+	34oMqrIFnE3snQVQHZQR/4bU8AgEIqZqBvG+lURwP1JzhpoBq
+X-Google-Smtp-Source: AGHT+IFT3fORCS1uO3agAaI0DSJUuopjwqwOJ72j25HnjbQXpO526LvyCiEC/PVEA/MY4yroAH4+nw==
+X-Received: by 2002:a05:6a00:9285:b0:74e:a9ba:55f with SMTP id d2e1a72fcca58-76035af7b5bmr6077752b3a.20.1753298022925;
+        Wed, 23 Jul 2025 12:13:42 -0700 (PDT)
+Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-759cbc67a87sm10307680b3a.145.2025.07.23.12.13.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Jul 2025 12:13:42 -0700 (PDT)
+From: Matthew W Carlis <mattc@purestorage.com>
+To: macro@orcam.me.uk
+Cc: ashishk@purestorage.com,
+	bhelgaas@google.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-pci@vger.kernel.org,
+	mattc@purestorage.com,
+	msaggi@purestorage.com,
+	sconnor@purestorage.com
+Subject: [PATCH v2 0/1] PCI: pcie_failed_link_retrain() return if dev is not ASM2824
+Date: Wed, 23 Jul 2025 13:13:34 -0600
+Message-ID: <20250723191334.35277-1-mattc@purestorage.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <alpine.DEB.2.21.2507091730410.56608@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2507091730410.56608@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cdlrppnrheyq7z3gmwmwsmktpmoiwq7g5hxa67rcx4iem5i6ge@jksa5o5use4w>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 23, 2025 at 08:36:52AM -0700, Breno Leitao wrote:
-> Basically there are two approaches, from what I understand:
-> 
-> 	1) mark do_machine_check() as noinstr
+On Wed, 16 Jul 2025, Maciej W. Rozycki wrote:
+>  I made a test once and left the system up for half a year or so.  The 
+> LBMS bit was set once, a couple of days after system reset.  I cleared it 
+> by hand and it never retriggered for the rest of the experiment, so this 
+> single occasion must have been a glitch and not a link quality issue.
 
-do_machine_check is already noinstr. I think you mean mark
-hwerr_log_error_type() noinstr.
+I guess you also did not observe unusual number of correctable errors? I wonder
+if AER was under OS control & the relevant errors were unmasked (RxErr, BadTLP,
+BadDLLP, Replay Rollover, Replay Timeout). If the link transitions from L0 to
+Recovery state due to excessive LCRC failures I have seen it return at the same
+speed many times. I won't be able to say what the LBMS behavior is in that case
+for some time unless I get lucky & find one in our internal test pool.
 
-And yes, you can mark it. hwerr_log_error_type() is not that fascinating
-to allow instrumentation for it.
-
-> 	2) Move hwerr_log_error_type() earlier inside the
-> 	instrumentation_begin() area.
-
-Or you can do that - that looks like less of an effort btw.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
 
