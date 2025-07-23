@@ -1,162 +1,233 @@
-Return-Path: <linux-pci+bounces-32783-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32784-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3727CB0EAEF
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 08:48:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5E87B0EB1E
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 08:59:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1E6B1C823C6
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 06:48:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A07FA188DA1D
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 06:59:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6CB826FA5E;
-	Wed, 23 Jul 2025 06:47:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 824BD254858;
+	Wed, 23 Jul 2025 06:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f6JtxCOy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EK36zhtZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBEC26FA58;
-	Wed, 23 Jul 2025 06:47:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EDC253F3D;
+	Wed, 23 Jul 2025 06:59:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753253270; cv=none; b=FK6VsngzkL8diGQcOMulkFo00hXGPru2UgXz/yXv7UMnvqdNcvaAuBiWxBPoQbeBflUvw4mtyEbPZ2igsS0OoC/6U2KNkaJ6fBTd/TSV5YIiCSwGxv+Pgk6+3KJiaNppGhv06ytnycckFu1OmLQOMZLoEiapZ4PFt6K9SAbLfXQ=
+	t=1753253953; cv=none; b=RoFMCbR53XSBgM+uKbmHBUa6Ly9Hqetw9S2c5um/Re9I9wf2tQ2hRB0luFqVP/Pd8q33DSSaAgqQ/X7O4UN0esHGZX8dnm34EY8TozY84q0bQnopp5Na1W3kPARV4NyzM6qPQCjUdQv7k9D+2lWi1rZplHvgjbSwl9mY0FBy83U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753253270; c=relaxed/simple;
-	bh=7zkhMiynmV7ttrTgKe2oO/0dCFzwTwF9NlgqRU5gQRU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ribUil42PqJSMrLkPVCKUxGFdeDen4CvsFyD++U+hMG4NkgBSjV4TQZZbez62M6jvkXMf6NqPraQqoL+MyfPfs8qnTiESzE9vDMHChhJan3AwSSbz6t8U/3hw+P5dh2k7d3/iS66uv6hU+A881S237PEwmKg+VS4vAuD2dNDicE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f6JtxCOy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DB94C4CEE7;
-	Wed, 23 Jul 2025 06:47:48 +0000 (UTC)
+	s=arc-20240116; t=1753253953; c=relaxed/simple;
+	bh=zeuIaU8cqKTdhTRyjKP+bKeTvoJA6oWm+SnTvG8Gs0A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aJCkfyqYeEPlUBAxqVMnLqyPAiAKgG09GOfUR7SGi3zN1XQOzP3tOcRE98HeaugVEnj7cI55Pe/8LgNLrjaLZC/u9oBh+ktEn4fYVvaGYYxmb9nkkh08r/xnDlb1yUGdA5cIhN4JMKuM/p83VDb3oK0+7rRG1ZtFqyNipBya4+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EK36zhtZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE3BEC4CEE7;
+	Wed, 23 Jul 2025 06:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753253270;
-	bh=7zkhMiynmV7ttrTgKe2oO/0dCFzwTwF9NlgqRU5gQRU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=f6JtxCOyTOCTAV0joAoGB9qRuxnyFsqVAyxJMOhwpH1lTZ44qqjv23vjn+8pfYXXP
-	 1tCg2zSptxXTP0T6B9Z79B+RSDLY1LmSMV325PJcauJMWbPPgGrgfZ4/xNv6XF3/fB
-	 as2omzTgBEYuUEFIRq1pMDwRmUSQMF9UETYLXHPTZM6BAz0way/OBw7/rQIX9VIV4l
-	 IP41IQrbrVVyE5bKN+41+fbtnfbiab7c2U5TbcoTPVPfZY19Hv8j0uufOV3zmR1FUD
-	 3D4hv5gBBiRIK3FDxINoCNOscJ0LEGkxxrcqcgKIsWjMic/3xUN/gsmM8LmzZyrSix
-	 yCk5bKR/5DM3A==
-Message-ID: <4ee9c7c0-4a3f-4afa-ae5a-7fd8a750c92b@kernel.org>
-Date: Wed, 23 Jul 2025 08:47:46 +0200
+	s=k20201202; t=1753253952;
+	bh=zeuIaU8cqKTdhTRyjKP+bKeTvoJA6oWm+SnTvG8Gs0A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EK36zhtZGaE+lCdwPOm076nMdFqFhA11W3IVIuimZf5L9SUbpc3745cCpqdJIVNbK
+	 jJY34ERQBuRtvp8yFxIefvuUjHb0SH/HT+1WMglQ8cY4Vhnv47bibqftB6Wp0iFCLY
+	 5lxlLFSmp9wBRfUmMZ6NKSK/WDGoBT+1JcVJqrYvF3jg2rKiFNAYypB/wcbsgOoqLk
+	 MbN6jcparCj4qB2XAiA4pQtW8k7yO8MmJdCTTiyvXLMEoS3XYGwx3lIEUq8zmXPg/y
+	 QsqbOxekTyl69bcI7Iptao+V6F6B+sCpLRsmGwvj+goC5moSHnHddWxJXSfHAyHUOO
+	 yaVcwXKW7mK2Q==
+From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+To: bhelgaas@google.com
+Cc: tglx@linutronix.de,
+	linux-kernel@vger.kernel.org,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+	Joyce Ooi <joyce.ooi@intel.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] PCI: controller: use dev_fwnode()
+Date: Wed, 23 Jul 2025 08:59:07 +0200
+Message-ID: <20250723065907.1841758-1-jirislaby@kernel.org>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pci/controller: Use dev_fwnode()
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- Arnd Bergmann <arnd@arndb.de>, Nam Cao <namcao@linutronix.de>
-References: <20250722232005.GA2863060@bhelgaas>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250722232005.GA2863060@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 23. 07. 25, 1:20, Bjorn Helgaas wrote:
-> On Tue, Jul 22, 2025 at 08:24:26AM +0200, Jiri Slaby wrote:
->> On 21. 07. 25, 19:08, Bjorn Helgaas wrote:
->>> Jiri, question for you below about more possible drivers/pci/
->>> conversions to use dev_fwnode() for struct device * cases.
->>
->> Sorry, I am a way too occupied :/.
->>
->>> Would like to get this in for v6.17 if these should be changed.
->>
->> It's not necessary, but a good to have cleanup (opposed to the posted fixes,
->> which were required). I will switch those eventually, but I don't promise
->> 6.17. (If someone does not beat me to it.)
-> 
-> It's not clear from the commit log:
-> 
->    irq_domain_create_simple() takes fwnode as the first argument. It can be
->    extracted from the struct device using dev_fwnode() helper instead of
->    using of_node with of_fwnode_handle().
-> 
->    So use the dev_fwnode() helper.
-> 
-> why the posted fixes are required (other than Arnd's change to
-> altera_pcie_init_irq_domain(), which fixes an unused variable warning
-> when CONFIG_OF is not enabled).
+All irq_domain functions now accept fwnode instead of of_node. But many
+PCI controllers still extract dev to of_node and then of_node to fwnode.
 
-Sorry, my bad. These are a cleanup suggested in this series:
-https://lore.kernel.org/all/4bc0e1ca-a523-424a-8759-59e353317fba@kernel.org/
+Instead, clean this up and simply use the dev_fwnode() helper to extract
+fwnode directly from dev. Internally, it still does dev => of_node =>
+fwnode steps, but it's now hidden from the users.
 
-I.e. series switching from irq_domain_add_*() (take of_node) to 
-irq_domain_create_*() (take fwnode).
+Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Link: https://lore.kernel.org/all/4ee9c7c0-4a3f-4afa-ae5a-7fd8a750c92b@kernel.org/
+Link: https://lore.kernel.org/all/4bc0e1ca-a523-424a-8759-59e353317fba@kernel.org/
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: "Krzysztof Wilczyński" <kwilczynski@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Cc: Joyce Ooi <joyce.ooi@intel.com>
+Cc: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Jianjun Wang <jianjun.wang@mediatek.com>
+Cc: Michal Simek <michal.simek@amd.com>
+Cc: Daire McNamara <daire.mcnamara@microchip.com>
+---
+Cc: linux-pci@vger.kernel.org
+Cc: linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ drivers/pci/controller/dwc/pcie-designware-host.c    | 3 +--
+ drivers/pci/controller/mobiveil/pcie-mobiveil-host.c | 3 +--
+ drivers/pci/controller/pcie-altera-msi.c             | 3 +--
+ drivers/pci/controller/pcie-mediatek.c               | 4 +---
+ drivers/pci/controller/pcie-xilinx-dma-pl.c          | 3 +--
+ drivers/pci/controller/pcie-xilinx-nwl.c             | 3 +--
+ drivers/pci/controller/plda/pcie-plda-host.c         | 3 +--
+ 7 files changed, 7 insertions(+), 15 deletions(-)
 
-These days, fwnode is preferred and if there were no more users of 
-of_node in changed functions, the series above even produced warnings 
-(Arnd's and others' fixes).
-
-> Since it sounds like no changes are required for the other ones I
-> mentioned, I'm going to leave them alone for now:
-> 
->    dw_pcie_allocate_domains()
->    mobiveil_allocate_msi_domains()
->    altera_allocate_domains()
->    mtk_pcie_allocate_msi_domains()
->    xilinx_pl_dma_pcie_init_msi_irq_domain()
->    nwl_pcie_init_msi_irq_domain()
->    plda_allocate_msi_domains()
-
-Given fwnode is always used them, it's not necessary to use 
-dev_fwnode(). But it'd be a nice cleanup. Provided the list, I started 
-the cleanup now :).
-
-thanks,
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 4af7da14b350..952f8594b501 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -214,9 +214,8 @@ static const struct irq_domain_ops dw_pcie_msi_domain_ops = {
+ int dw_pcie_allocate_domains(struct dw_pcie_rp *pp)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-	struct fwnode_handle *fwnode = of_fwnode_handle(pci->dev->of_node);
+ 	struct irq_domain_info info = {
+-		.fwnode		= fwnode,
++		.fwnode		= dev_fwnode(pci->dev),
+ 		.ops		= &dw_pcie_msi_domain_ops,
+ 		.size		= pp->num_vectors,
+ 		.host_data	= pp,
+diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+index d17e887b6b61..dbc72c73fd0a 100644
+--- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
++++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+@@ -439,13 +439,12 @@ static const struct irq_domain_ops msi_domain_ops = {
+ static int mobiveil_allocate_msi_domains(struct mobiveil_pcie *pcie)
+ {
+ 	struct device *dev = &pcie->pdev->dev;
+-	struct fwnode_handle *fwnode = of_fwnode_handle(dev->of_node);
+ 	struct mobiveil_msi *msi = &pcie->rp.msi;
+ 
+ 	mutex_init(&msi->lock);
+ 
+ 	struct irq_domain_info info = {
+-		.fwnode		= fwnode,
++		.fwnode		= dev_fwnode(dev),
+ 		.ops		= &msi_domain_ops,
+ 		.host_data	= pcie,
+ 		.size		= msi->num_of_vectors,
+diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
+index 2e48acd632c5..ea2ca2e70f20 100644
+--- a/drivers/pci/controller/pcie-altera-msi.c
++++ b/drivers/pci/controller/pcie-altera-msi.c
+@@ -166,9 +166,8 @@ static const struct irq_domain_ops msi_domain_ops = {
+ 
+ static int altera_allocate_domains(struct altera_msi *msi)
+ {
+-	struct fwnode_handle *fwnode = of_fwnode_handle(msi->pdev->dev.of_node);
+ 	struct irq_domain_info info = {
+-		.fwnode		= fwnode,
++		.fwnode		= dev_fwnode(&msi->pdev->dev),
+ 		.ops		= &msi_domain_ops,
+ 		.host_data	= msi,
+ 		.size		= msi->num_of_vectors,
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 3ac5d14dd543..24cc30a2ab6c 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -487,12 +487,10 @@ static const struct msi_parent_ops mtk_msi_parent_ops = {
+ 
+ static int mtk_pcie_allocate_msi_domains(struct mtk_pcie_port *port)
+ {
+-	struct fwnode_handle *fwnode = of_fwnode_handle(port->pcie->dev->of_node);
+-
+ 	mutex_init(&port->lock);
+ 
+ 	struct irq_domain_info info = {
+-		.fwnode		= fwnode,
++		.fwnode		= dev_fwnode(port->pcie->dev),
+ 		.ops		= &msi_domain_ops,
+ 		.host_data	= port,
+ 		.size		= MTK_MSI_IRQS_NUM,
+diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+index fbc379fd118b..b037c8f315e4 100644
+--- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
++++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+@@ -465,9 +465,8 @@ static int xilinx_pl_dma_pcie_init_msi_irq_domain(struct pl_dma_pcie *port)
+ 	struct device *dev = port->dev;
+ 	struct xilinx_msi *msi = &port->msi;
+ 	int size = BITS_TO_LONGS(XILINX_NUM_MSI_IRQS) * sizeof(long);
+-	struct fwnode_handle *fwnode = of_fwnode_handle(port->dev->of_node);
+ 	struct irq_domain_info info = {
+-		.fwnode		= fwnode,
++		.fwnode		= dev_fwnode(port->dev),
+ 		.ops		= &dev_msi_domain_ops,
+ 		.host_data	= port,
+ 		.size		= XILINX_NUM_MSI_IRQS,
+diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+index de76c836915f..05b8c205493c 100644
+--- a/drivers/pci/controller/pcie-xilinx-nwl.c
++++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+@@ -498,10 +498,9 @@ static int nwl_pcie_init_msi_irq_domain(struct nwl_pcie *pcie)
+ {
+ #ifdef CONFIG_PCI_MSI
+ 	struct device *dev = pcie->dev;
+-	struct fwnode_handle *fwnode = of_fwnode_handle(dev->of_node);
+ 	struct nwl_msi *msi = &pcie->msi;
+ 	struct irq_domain_info info = {
+-		.fwnode		= fwnode,
++		.fwnode		= dev_fwnode(dev),
+ 		.ops		= &dev_msi_domain_ops,
+ 		.host_data	= pcie,
+ 		.size		= INT_PCI_MSI_NR,
+diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/controller/plda/pcie-plda-host.c
+index 92866840875e..8e2db2e5b64b 100644
+--- a/drivers/pci/controller/plda/pcie-plda-host.c
++++ b/drivers/pci/controller/plda/pcie-plda-host.c
+@@ -153,13 +153,12 @@ static const struct msi_parent_ops plda_msi_parent_ops = {
+ static int plda_allocate_msi_domains(struct plda_pcie_rp *port)
+ {
+ 	struct device *dev = port->dev;
+-	struct fwnode_handle *fwnode = of_fwnode_handle(dev->of_node);
+ 	struct plda_msi *msi = &port->msi;
+ 
+ 	mutex_init(&port->msi.lock);
+ 
+ 	struct irq_domain_info info = {
+-		.fwnode		= fwnode,
++		.fwnode		= dev_fwnode(dev),
+ 		.ops		= &msi_domain_ops,
+ 		.host_data	= port,
+ 		.size		= msi->num_vectors,
 -- 
-js
-suse labs
+2.50.1
+
 
