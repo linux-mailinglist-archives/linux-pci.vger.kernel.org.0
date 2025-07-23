@@ -1,155 +1,204 @@
-Return-Path: <linux-pci+bounces-32817-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32818-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1633B0F53B
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 16:25:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AFE5B0F53E
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 16:26:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0CF6AC10AB
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 14:25:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44652AC0E0C
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 14:26:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC62B2EF2B4;
-	Wed, 23 Jul 2025 14:25:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A4702EF2B2;
+	Wed, 23 Jul 2025 14:26:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZtKuJ02"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CB8pn/gA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928AA2D9EDC;
-	Wed, 23 Jul 2025 14:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12052D9EDC;
+	Wed, 23 Jul 2025 14:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753280753; cv=none; b=I4/WhBCEqWeoV4djV9lbsUSIzdmF68/kSiR5gJsk7OZj58byX868Ft/Csz5OqPGuMi1r+eUACnhybQLU7z+e2g0oTsk2czz1mPLfmaEZU7b6zBTUSHJLKRQkvcy3cStGYksW5tZSWlqhihj5J+LEMbg5Pi7/pNeMtWxdt+pewiI=
+	t=1753280796; cv=none; b=RxqFmNMklLK+5A6vmqAGGvX8Di/UCeS+qhabEmRzwr0UM7q/Ak2VRoeMO/zouT5PQKMF4MwoLWx8BXGWvrlrk+XRyATcVryxIpbZIjkfktDUQTTgd7Gj4NlvioUiFau4cftn+lExWkkMrhh3z3wr0krKNKZyTC6doIEcJ4HYRVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753280753; c=relaxed/simple;
-	bh=fzHnblsgfySNaH2EsHFzy4vZVAOUhRBnZwE03ZsLOec=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=gpfBAoKhD2MYgz9h6IgTyIPXZ3Aa23WDiFmQDP96hiFmx6zsuOtZJbW9Cs9iiMDiTAnWHrLGYZihhX8eiHPeCyi9+7wZ8O/JUAzlo6XYQV8631U64Xmrmp9Arjup4Yu77VIuyf3XaqbhKdsHxZ6bo1jwo5aLwJ9eZqwrdilXx44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kZtKuJ02; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A41BFC4CEE7;
-	Wed, 23 Jul 2025 14:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753280753;
-	bh=fzHnblsgfySNaH2EsHFzy4vZVAOUhRBnZwE03ZsLOec=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=kZtKuJ02zCU3VAdZelmzShoXa8SBSk/3PQbG1K1JP32a1AEJzEBnTSpRdKFzSP64P
-	 hbfqs6YCvaqOLAE0LxZx11YbSGXYI7WDT8221i3Ty8pKWbZOeaefZBbfefYy1NdB9F
-	 Vf1pkvSUUuyfBQK/0b9NIGIwHOe0KdXf2etXYsYY9bcS3yH8u2MBMj7E4HLcvLwj5d
-	 RO53NlqnQDm3bzn7W96mVT8zQKgZsrqYh2tbK9PslTMrvolX+bkCzjkPJ5ZrSs5p6U
-	 621rMLeBsBPfGpTn6n75FpFyzKkUDmjAqxa+CZLBCcBXbIcMjIEUP+sI6vzmn7l//P
-	 K5R1Yhvqnc2ew==
+	s=arc-20240116; t=1753280796; c=relaxed/simple;
+	bh=u5kcz7+z11ZecDw4BOO0cuxQi4nShrexRctLR1fj8sI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LTuHRwvWiZ6DUrpYYxOU9GMdpMBHY+9VGkwne3YRguUgeg+Ou3BcVUzCWKCqEAxStytUA7OPtx+FWB+hqZg2hAXZi1vKsiJNjipfiIxYrJ/d3/j8d+cYiYB2wrCsYtrzCV9HvBUNT2SbVSx7uRFoxMAoY/c2Sz/EeYK9ehJmnkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CB8pn/gA; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7e33d36491dso921431685a.3;
+        Wed, 23 Jul 2025 07:26:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753280794; x=1753885594; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2o2EjZkq+kx8CAy5J/9DD0iXT5RJwEkXNP+TIRG9l2g=;
+        b=CB8pn/gAL4GI4chCTzDqMUq/ZsZXjjy6Ah2mdQ7XkMz/ZYrHRp+T9o9ArvQbCvWa8E
+         RRIdENLGdvmP4nYSbWVE+dzZjF8STLCsTsILDHsYrTY2tA1eOPNi0axXBoCQxNR/jfWv
+         +S0X1EV48Q7qLSxRK0HYg5Pt3SZYubi4ILXVrCkW+nzZUZ/GdKWmDN+2isHEtL/hkgsF
+         sSaMYdSxT0cz+oFT7iSJuTaRXbK2NmzoOB+7TwxqE4sqUglGBCp5125Q4SQmtx9oMtqv
+         DawwgZO+yw8QAXprS2v+xVvzWy6Dxlwv/k/IeOAI4sIDSXEGMZXxZhLMFjFPSNxgDiOC
+         YSPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753280794; x=1753885594;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2o2EjZkq+kx8CAy5J/9DD0iXT5RJwEkXNP+TIRG9l2g=;
+        b=oWNNCGeU5/tZwfdA2vgy3HlKPHaaL93G/apA/O6jMmz3i3m9CZuRY/tL+Y8RFdwUws
+         P+psj8L2XcB4fzbMdWLuSue30Jy1lqEt6uoS9NucXr4DM9iOoVCwwvT+ZDoUR10NDGtP
+         2GbyGW5bMiV8i01+ih00tJED0BeaH7b/IDnYrIuDl7+9yukzVzQN9pDy0nzM1gbpYTkq
+         SWPhvRuCO/YRCqmWhKCcrnW5WAI+ni03Ldj0IWXRWYAOzZM4tq2oHOA/widJjDO87aVH
+         H6GrISi5noavqRu1tPTdmM/0QkzMXWrj/E7uFumi9XHUqWkkP3PpUw6pY0C0YlMMaGUc
+         PywA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgo2VrmzjGGh/uUMtw9pBX2C6HZCsyDZBLp8sLBEVhgBIhmaniehKWHzf6mJxrTkRH2zZ3rm8J7SJlorynmpw=@vger.kernel.org, AJvYcCVi7F4arLGZ27IoUicpMDrqaaKCvEGw6D6u5KQ0xildumYml+nTqbaq0VCigGZnvZOsrPSxrN6EuA6X@vger.kernel.org, AJvYcCWKdlqjzkT7ls4Y0iiMvUDc5y7AmNKtLFimKe2I0arRpLhui9tll9c3jM6GhxRTwfKnihV4O5azKtqOnaQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2lFiy/It37zz8OCWumMojJb+wbLCfDdRq59MABLtuOMO0fyys
+	pHc9McT8ftAUNRK+owprRcDzxFmslGnTxFmAo8kQlTlvTSYQ1ABkH1/r064FsQ==
+X-Gm-Gg: ASbGncvNFl+U+DKJwP7RCWwhfz3+Ygcp/lpjIbCv8ql6SHBMb6u6CgpsutgLN1ouzTB
+	xS5xL+SvqPES/gDQ+vIQldVusJWzElmRWze3ft9FOgN/n9VOr/rDl6ZRZpv38p3x4s5BZDx6DYP
+	t40hRlCQ9S4hvBHyCUHgTzMiGGHSqQHPb/eHPGpNx3wAoTPgcw8X+FQWax+r8SnJ9ZCxJMk40NS
+	zdRHVHA+/IJaQbRnNtzylfB4OryYgQvsxMSjKaEXI9FDlqJR6y0zExEwf9ZY++qk4SoLqUImnmt
+	7eqJ/d/EEdrDgD881HcFRJqOvxUdsV6EOIDugsoDASJWBpcacGB9+2NSUZoEYXxoXiRr6nAAHjV
+	hXDrBRieXY0/eg253cr+uViqoYN3axjW0CauRiaFutHajwMXBfx5kQqZ7ahvUtRfmwMuP7Ow5+1
+	ahQOK4uijvZzmOsROwC+FG3dY=
+X-Google-Smtp-Source: AGHT+IHNYOLGvnD/plZB0uTH+rbzjsRIN7YnkQld5If9zgM8/fDwPdGODJSVQxYRBKNmFt3aBG/7GA==
+X-Received: by 2002:a05:620a:4113:b0:7e1:f16c:16d6 with SMTP id af79cd13be357-7e62a0926f1mr355009785a.8.1753280793435;
+        Wed, 23 Jul 2025 07:26:33 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e356b60cb2sm666903785a.48.2025.07.23.07.26.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Jul 2025 07:26:33 -0700 (PDT)
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 8BA9CF40066;
+	Wed, 23 Jul 2025 10:26:32 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Wed, 23 Jul 2025 10:26:32 -0400
+X-ME-Sender: <xms:GPGAaOQyU0z_zAH_bkn2B2w1eORDMvtRYEZeKQ9_Sua22ZQcsZ8QUA>
+    <xme:GPGAaKWM-_bDGYEetZsm7ETL5JE_m_ehZYfEYnqNJhKNesF8WvLNC-1dckRjedSLF
+    PyZ7yiIHztSCoaGLg>
+X-ME-Received: <xmr:GPGAaNh9dvy2hv07Qr4MfsyKotP-IJdDFBh6awbB3waNK_Jvoe9AtaNX6l8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdejkedtudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddunecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhepveehteffvdffteekueduuedukedtgfehtddugfehvdfgtdegudffhfduudfhjeeu
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
+    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
+    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
+    drnhgrmhgvpdhnsggprhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepuggrnhhivghlrdgrlhhmvghiuggrsegtohhllhgrsghorhgrrdgtohhmpdhrtg
+    hpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhg
+    rgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuoh
+    drnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtgho
+    mhdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpth
+    htoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhmghhr
+    ohhsshesuhhmihgthhdrvgguuhdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorh
+    hg
+X-ME-Proxy: <xmx:GPGAaDf3kvgrxlMBRwo1V4sT7qRbhU7Hi8NqVxClpU0wdmGMt7saZg>
+    <xmx:GPGAaIfkGJ6YVThjZpXXmiRil0lsP6N8BjV1UxI_OLjzPhZnwUSAFg>
+    <xmx:GPGAaPWLvYbKX92E2Ad0RwDHSzqlJrfC3gG_2BTQ_pGoH6zmvCXqNQ>
+    <xmx:GPGAaMeMIKPtAEbdPjR7W8TjS6PETPWEGnt_Qrh9HwvhhX2XnVpHwg>
+    <xmx:GPGAaD8DF0Bw52frFcLuGHp78fMOUq-AGXi3f4IV30D-zWGRl0mPz5ti>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 23 Jul 2025 10:26:31 -0400 (EDT)
+Date: Wed, 23 Jul 2025 07:26:30 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?iso-8859-1?Q?Wilczy=B4nski?= <kwilczynski@kernel.org>,
+	Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v7 3/6] rust: irq: add support for non-threaded IRQs and
+ handlers
+Message-ID: <aIDxFoQV_fRLjt3h@tardis-2.local>
+References: <20250715-topics-tyr-request_irq2-v7-0-d469c0f37c07@collabora.com>
+ <20250715-topics-tyr-request_irq2-v7-3-d469c0f37c07@collabora.com>
+ <aIBl6JPh4MQq-0gu@tardis-2.local>
+ <ED19060D-265A-4DEF-A12B-3F5901BBF4F3@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 23 Jul 2025 16:25:47 +0200
-Message-Id: <DBJI5K94Q0K0.336A61IF19ZEZ@kernel.org>
-Cc: "Alice Ryhl" <aliceryhl@google.com>, "Alistair Popple"
- <apopple@nvidia.com>, <rust-for-linux@vger.kernel.org>, "Bjorn Helgaas"
- <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Trevor Gross" <tmgross@umich.edu>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "John Hubbard" <jhubbard@nvidia.com>, "Alexandre Courbot"
- <acourbot@nvidia.com>, <linux-pci@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] rust: Update PCI binding safety comments and add
- inline compiler hint
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250710022415.923972-1-apopple@nvidia.com>
- <DB87TX9Y5018.N1WDM8XRN74K@kernel.org>
- <DB9BF6WK8KMH.1RQOOMYBL6UAO@kernel.org>
- <DB9FUEJUOH3L.14CYPZ8YQT52E@kernel.org>
- <DB9H6HEF9CKG.2SAPXM8F9KOO3@kernel.org>
- <DB9IQAU4WPSP.XZL4ZDPT59KU@kernel.org>
- <bwbern2t7k5fcj6zxze6bjpasu3t26n6dmfptlmhbhd7qmligs@3fgwifsw7qai>
- <DBIHP8IP3OHA.8Y1S9ZV1Y1SZ@kernel.org>
- <DBIJ3POBANNM.KSO1I5557PFV@kernel.org>
- <CAH5fLghic7MZd-BO=Z-ostGLgWmBciQmZp9VjQpLGWskFK_gyQ@mail.gmail.com>
- <DBIKM7U4TSB8.17MTNSR81W8F3@kernel.org>
- <DBILHBVA0NKJ.3R2QIVE9QIMM3@kernel.org>
-In-Reply-To: <DBILHBVA0NKJ.3R2QIVE9QIMM3@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <ED19060D-265A-4DEF-A12B-3F5901BBF4F3@collabora.com>
 
-On Tue Jul 22, 2025 at 2:49 PM CEST, Danilo Krummrich wrote:
-> On Tue Jul 22, 2025 at 2:08 PM CEST, Benno Lossin wrote:
->> On Tue Jul 22, 2025 at 1:35 PM CEST, Alice Ryhl wrote:
->>> On Tue, Jul 22, 2025 at 12:57=E2=80=AFPM Benno Lossin <lossin@kernel.or=
-g> wrote:
->>>>
->>>> On Tue Jul 22, 2025 at 11:51 AM CEST, Danilo Krummrich wrote:
->>>> > I think they're good, but we're pretty late in the cycle now. That s=
-hould be
->>>> > fine though, we can probably take them through the nova tree, or in =
-the worst
->>>> > case share a tag, if needed.
->>>> >
->>>> > Given that, it would probably be good to add the Guarantee section o=
-n as_raw(),
->>>> > as proposed by Benno, right away.
->>>> >
->>>> > @Benno: Any proposal on what this section should say?
->>>>
->>>> At a minimum I'd say "The returned pointer is valid.", but that doesn'=
-t
->>>> really say for what it's valid... AFAIK you're mostly using this point=
-er
->>>> to pass it to the C side, in that case, how about:
->>>>
->>>>     /// # Guarantees
->>>>     ///
->>>>     /// The returned pointer is valid for reads and writes from the C =
-side for as long as `self` exists.
->>>>
->>>> Maybe we need to change it a bit more, but let's just start with this.
->>>>
->>>> (If you're also using the pointer from Rust, then we need to make
->>>> changes)
->>>
->>> Honestly I think this is a bit over the top. I wouldn't bother adding
->>> a section like that to every single as_raw() method out there.
->>
->> Hmm. And then just assume that these kinds of functions return valid
->> pointers? I get that this is annoying to put on every function...
->>
->> Another option would be to have a `Ptr<'a, T>` type that is a valid
->> pointer, but doesn't allow writing/reading safely (you need to justify
->> why it's not a data race). And for FFI there could be an `as_ptr`
->> function.
->
-> I don't understand where's the difference between the two. For FFI calls =
-we'd
-> also have to justify it's not a data race, no?
+On Wed, Jul 23, 2025 at 10:55:20AM -0300, Daniel Almeida wrote:
+> Hi Boqun,
+> 
+> [...]
+> 
+> >> +        IrqRequest { dev, irq }
+> >> +    }
+> >> +
+> >> +    /// Returns the IRQ number of an [`IrqRequest`].
+> >> +    pub fn irq(&self) -> u32 {
+> >> +        self.irq
+> >> +    }
+> >> +}
+> >> +
+> >> +/// A registration of an IRQ handler for a given IRQ line.
+> >> +///
+> >> +/// # Examples
+> >> +///
+> >> +/// The following is an example of using `Registration`. It uses a
+> >> +/// [`AtomicU32`](core::sync::AtomicU32) to provide the interior mutability.
+> > 
+> > We are going to remove all usage of core::sync::Atomic* when the LKMM
+> > atomics [1] land. You can probably use `Completion` here (handler does
+> > complete_all(), and registration uses wait_for_completion()) because
+> > `Completion` is irq-safe. And this brings my next comment..
+> 
+> How are completions equivalent to atomics? I am trying to highlight interior
+> mutability in this example.
+> 
 
-Yes, but there you need a raw pointer.
+Well, `Completion` also has interior mutability.
 
-> The only guarantee we take as granted from as_raw() is that it returns a =
-raw
-> pointer to the wrapped FFI type in Self, i.e. it points to valid memory. =
-Any
-> additional guarantees may come from the context where the pointer is used=
- and
-> which specific fields it is used to access.
+> Is the LKMM atomic series getting merged during the upcoming merge window? Because my
+> understanding was that the IRQ series was ready to go in 6.17, pending a reply
 
-Sure you need additional guarantees from the context, but you also need
-the fact that the pointer coming from `as_raw` isn't just a random
-pointer, but that it is derived from the reference...
+Nope, it's likely to be in 6.18.
 
-I don't have any good plan forward for this, so maybe we should revisit
-this in the future...
+> from Thomas and some minor comments that have been mentioned in v7.
+> 
+> If the LKMM series is not ready yet, my proposal is to leave the
+> Atomics->Completion change for a future patch (or really, to just use the new
+> Atomic types introduced by your series, because again, I don't think Completion
+> is the right thing to have there).
+> 
 
----
-Cheers,
-Benno
+Why? I can find a few examples that an irq handler does a
+complete_all(), e.g. gpi_process_ch_ctrl_irq() in
+drivers/dma/qcom/gpi.c. I think it's very normal for a driver thread to
+use completions to wait for an irq to happen.
+
+But sure, this and the handler pinned initializer thing is not a blocker
+issue. However, I would like to see them resolved as soon as possible
+once merged.
+
+Regards,
+Boqun
+
+> 
+> - Daniel
 
