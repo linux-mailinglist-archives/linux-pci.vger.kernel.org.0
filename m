@@ -1,216 +1,224 @@
-Return-Path: <linux-pci+bounces-32786-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32787-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 642B0B0EDF9
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 11:01:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD3C1B0EF92
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 12:17:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A81953B4EB5
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 09:00:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 104EF562DD5
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 10:17:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F8FB283CB8;
-	Wed, 23 Jul 2025 09:01:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8A58280A5E;
+	Wed, 23 Jul 2025 10:17:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTnM5XzO"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HPgbOEzC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E751281526;
-	Wed, 23 Jul 2025 09:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753261274; cv=none; b=s03QXbsV7sh9n2S3Nx7tCjrhOOsAjNg5ACPBd3LpvPhtcpFVzl2qih2OCJ26g1WZzD4JjljwJ5s2xcWLUiee3hBWGZsJmqTqWn+76iZd/OWlwQTb3YI1ZEKBCZEvvbxFV8ZUp7cCCOyXIhzQPpUHR1R6ExNy6fPlG+msBDmUeUE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753261274; c=relaxed/simple;
-	bh=HVQUD3Ib6X4vO1vXKL8LG+SI0kZlkOlq4KpZxCl65JM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iks2YfScb2zL0OToQI07fr0RlB333hHC186ez81CewbAdtCyLnYEl+iugyCjQCXC2Yfe4aRvOFSN4JSaSWapi4+hN0FQNc0WYzRHMsNtlg/fJajb7Xh1BCN1DIT+PILSCGQ2VBHnrH7TvgdUbIRzjzCR0aKcz93N/bphD6lC3GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dTnM5XzO; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-451d6ade159so46444785e9.1;
-        Wed, 23 Jul 2025 02:01:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753261271; x=1753866071; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vfi+7jzS+QroB9ovq5xCDmfLCYDKNlqIdXI2M9FMRkQ=;
-        b=dTnM5XzOon+hYkFce4v6HlsQVUqWSbG+luh3GOazYDIB7lxmlTdOMNrGcYasjwDovO
-         4nbUzlzZFZkMSyCBrM8Myz13/vVPmanODR1v4XUyK075zOua2KHIicFwNmek70NrQtQt
-         mUBGB8kpoqoMx2JQEyqRyJBPVFKk/OzOA9nEqsXJfOAk8RS1EG/T+BEcNZJ0x1yNj8ww
-         wpmGq0wqmBzOlCpNpBT46KlJ2y8bGAAwQNCV6P4+QonQ+ryOlZbMMmGI9oF8NbfJyUAJ
-         ynQPMc7R++g8rtTl+jhlkidoXegIV0elaf9DkC90RstOK5C9qNaGliyFcLdvJteTKHM9
-         pyXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753261271; x=1753866071;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vfi+7jzS+QroB9ovq5xCDmfLCYDKNlqIdXI2M9FMRkQ=;
-        b=tM95JbJknTO5amcvBuD9mqVZGSKJY1ikD1eQJuB6aSOJh4PBZgP3gOQ5AJsPUkonAh
-         l811sjYVB/paJKdFQ7lbcg9/CFskbLwLEBAORARaA/HkGpuKbcxnLPo+ApMc7BFAYk1F
-         HTJMGsqR6BA3JxCNWZtp6P6gahd9KrIB6AMIXQgCutZh4f/bYkhz94fHs5erX3ZX9uE5
-         Au9rcJHDcPczKu0GNbVZk0ifoPBDJRoFXHzWjSYumcOWyY286F51cEJtFUhhME+b/vY7
-         LNOdPCzIKAAdN0l+HuYgrLv/0qanhwOsmqh1PbyfuS7u9h4kKFyo1RWQMxOusssId3nS
-         p96A==
-X-Forwarded-Encrypted: i=1; AJvYcCVBdziDoIkGh+W77lsl9WRKyL7NhfQoOAjf1fxfNhkSCw4QI2r/L/R9By44M9D/Xdq/sm5pDRok4M5L@vger.kernel.org, AJvYcCVZxgL0MgnGcDZ04pTVQoh0OQpUYEyeHa/uSFyZCqgVrCUEkjrq5wUCdG1yho6a1iyCmyzFDYWpTqj8@vger.kernel.org, AJvYcCVlmwcdyKQsDj66H410QFs+ve00XquhBfULeTMV5BLElT3WOINaUGXpGsdp8U5gII1WDOGxhVuvm7s=@vger.kernel.org, AJvYcCWeqVyjBxeJ1+JE7DNtO+3Un7qqyvJ7HFZ8/u4TI8xTQyuw28IbdSDJ1WwRbi/GzQW7qnlpiMnexdDYbQ==@vger.kernel.org, AJvYcCX1vu+Axx8jhu0oo9Mo5/XjUREB+D4lpAD8eSor4VfxdQeY8EwSiZ2NMB6WK0/bPshnU53s1Stu4Q4eMuPe@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEZ+ZYurPG55EDoqwlFNpfrNNOdJi8ujOJY0bsWPzYCpT92pRR
-	gKfNm8CMdFoNz2P1/2zhUw+vlocXS5c/z8OnUEyaivE4zeICT2fuOK0O
-X-Gm-Gg: ASbGncuZnvtMR52VXcMm8oi1MgrDo/nDbotQIHjfmUmdamFreKltkR9yJlLj1SW0IO9
-	Qcs9XLeYC+hW6li8Di4Hz5irXZ1IqIpLrPq+wMTCBaFaScMyW90onAZD1G8dwxMMQ1lhD2T25wQ
-	nlcWiLdaB+5A8ZqWa0DyO20L0eAn7i0I66gEtjvZYcUVXZBFPHcfwM8XYKgQRMRjcXBRLIbHsQo
-	U+22lotcEfwHY3AZsNF6f6Igcb+c8V95LMXVfDNVwsUGkj3o/HdYQzYzmmiEQonSkbEFfy1/p5O
-	c7RRq6x04hPmQMXRBLO4N3Cljui9H/tT7/aQV5thYes3Iq2tbxYeAE0itgOZN4GaDQPAift1iAP
-	z3gUOEwEQeOrSgdaLeWaaNrwMd3v4rubNYnMhoAWIHd5nryMjpLk4h4QF/nZDBRYo07xJvCfa9Q
-	sfxZwfkMqY
-X-Google-Smtp-Source: AGHT+IEknrstHg6cUD/SgoHhNho7BNCTRJA/GS5vJOJzPvYI6zayldv/5uJL7C58FRXa6VpYJz8Fmg==
-X-Received: by 2002:a05:600c:8b08:b0:456:1b93:76b with SMTP id 5b1f17b1804b1-45868c79052mr16967605e9.4.1753261270574;
-        Wed, 23 Jul 2025 02:01:10 -0700 (PDT)
-Received: from orome (p200300e41f4e9b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4e:9b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b61ca25533sm15448303f8f.11.2025.07.23.02.01.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Jul 2025 02:01:09 -0700 (PDT)
-Date: Wed, 23 Jul 2025 11:01:07 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] syscore: Pass context data to callbacks
-Message-ID: <awvdox3bgabbc42aamezlg33k4cje6y75qoxn7ruh3nhd4qv5n@u3spdahehad4>
-References: <20250717103241.2806798-1-thierry.reding@gmail.com>
- <2025071716-phoney-object-1648@gregkh>
- <rzbzah5iigz25jtxyqadnitkzkazxsaxntajhlfrfdslyioevk@pylcjkfh5n42>
- <2025071919-patience-cattishly-cf7c@gregkh>
- <l54i36uk33je744w4f47tehdopk5dsjotvozfv5b2hehmxrwpq@eins7awyq4dy>
- <2025072218-decipher-spree-327d@gregkh>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BD326C391;
+	Wed, 23 Jul 2025 10:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753265824; cv=fail; b=OD93MWqAIt7W4mC+WAKlEkcglyia2p0/Yp092bKK+P78hsqgvgVmjNgbvom4sfRBktj+ahDOUw6Bi9D5bg75GUwid59ABEnAzBgzh3lwt8sVBH+uYw7RrO1dxMMulF1xu22Tn0Zfg9pHlHSAN9ys3xLi9x3RMosTE0EBExMNkrY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753265824; c=relaxed/simple;
+	bh=T4YCCjPQv6BE07x4Pb7xLo+2SzOHuJGHP6C7iRB7I40=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=u9Q/hyg7bpCJzRKbaYgiSCLrsKmXyoYRLQCgZPwHUrznQkNNjLlJL3E7ZKOJX6D2GkMmRggngdmjuqSVh2nA0yQ76Unv0yy9D/pa2L4vRB3xOpyd8SmW2NmVTVPXDM4AfTuIlh9PihsNKPasm4G095oU+tiopPgwNTMCm0PdiPc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HPgbOEzC; arc=fail smtp.client-ip=40.107.236.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xiiwPi2zquswvEGJxgIovY1N7oBgUhC+J/LkuLY9XSToQdFf+UOk9o7rhqByexsXLjkMBeeVa7+DOrG+uvWx0WlT1//TNlX5XZ3IwOEBDCqOriRSKdnfxchA0DRUXIMbC2YTBAOq7kHomdoIX0wgm/04zvje+vqv663J7cG78PvU3Q5RRzOLGrrCJ6VkeWOPP5Eew4rqVMPc6T37ZoQaY7nm3L+/li9Kox0gE8vi2GD3UBBKT8SPmQI9+gXZo+sgWBIpc0aZ1WMUTWJmnPMjd3hM1Jt/IRCWUGLTsPKCmAeqQWsxqedqJJH0W8RkY0wbmu66u/wAyomIvOwQJvqAFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EHQqioVlb8nJ466RE7Fo6xV35t7D/pi475OuoAEfUTs=;
+ b=p6GVwkMsKxrW+TpiAxkz+u/Sw+PizzDGuqSxPfKy6dIp4zuBiQ1lgZnwZJaPIDZVSUlwadaRozPT806k4ZPneaE5QAHbEOs5KBt2AxcDNoVjoT+oRmQ4h2mBy78s30ZsoI+M8W91f9qWz0MU4XPKEJvPTkH+JyrvndcNVWX3U2I8g32klYd9eDWlbMabWbw+pRo3mFwQcBh8pfoq6J2QPHrvrTd+I2ieqQ5YDbxTI9rQhXGyN2I8F7q3oe8u8PDpu8IqbOHkxAuF6h7PW2RLDadmzMKk7LhpcGiX6Fj6LfCg4HWUrF6blw+xkGq7Sbn/xD85OaG2nwImocaYQ2yNxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EHQqioVlb8nJ466RE7Fo6xV35t7D/pi475OuoAEfUTs=;
+ b=HPgbOEzCoIoc3Ks9dpXiLeSiDp21cUhDmawq5tQyg2O7dh2r1KTnKhp48PtbVpPpWHPpHFxoAwHz25YkOk1EIzaz2N44q45FttqHwu6/MBz3DrUS3JrUVk2EDNpQT9wao8Gw1zQ0MHrOUbisomZhKjh2r1QadKdxoHfU1Q7hpuY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6395.namprd12.prod.outlook.com (2603:10b6:510:1fd::14)
+ by IA1PR12MB6116.namprd12.prod.outlook.com (2603:10b6:208:3e8::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8922.39; Wed, 23 Jul
+ 2025 10:17:00 +0000
+Received: from PH7PR12MB6395.namprd12.prod.outlook.com
+ ([fe80::5a9e:cee7:496:6421]) by PH7PR12MB6395.namprd12.prod.outlook.com
+ ([fe80::5a9e:cee7:496:6421%4]) with mapi id 15.20.8943.029; Wed, 23 Jul 2025
+ 10:17:00 +0000
+Message-ID: <eda6c473-dde8-4a56-8422-278971fa970f@amd.com>
+Date: Wed, 23 Jul 2025 15:46:27 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] PCI: Add PCI vendor ID for ASMedia USB4 devices
+To: Bjorn Helgaas <helgaas@kernel.org>, Chloe_Chen@asmedia.com.tw
+Cc: linux-usb@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, andreas.noever@gmail.com,
+ michael.jamet@intel.com, westeri@kernel.org, YehezkelShB@gmail.com,
+ bhelgaas@google.com, Sanath.S@amd.com
+References: <20250722191417.GA2809926@bhelgaas>
+Content-Language: en-US
+From: "Rangoju, Raju" <raju.rangoju@amd.com>
+In-Reply-To: <20250722191417.GA2809926@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4P287CA0052.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:270::17) To PH7PR12MB6395.namprd12.prod.outlook.com
+ (2603:10b6:510:1fd::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="t3b24mrvydogtoje"
-Content-Disposition: inline
-In-Reply-To: <2025072218-decipher-spree-327d@gregkh>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6395:EE_|IA1PR12MB6116:EE_
+X-MS-Office365-Filtering-Correlation-Id: 475f1675-5a36-4b56-d87b-08ddc9d20f84
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RW5aRW9vRGU5N3BubFFncnFVcU1NdzFhSzAvYU1QQjBhcFlYVGVBdVhULzlV?=
+ =?utf-8?B?SFA5Wk9NWmNYdWp1YkYzdFJDYm01OFdIS3RCM3lpdk8zbnc1U1hjbkZPcW9z?=
+ =?utf-8?B?WVhnVWdpemorNHR3MUl3VDRBUXlDKzRKVjl6Rk9nSCt3V3RxZG1QTzZFbUlt?=
+ =?utf-8?B?T1dNU3NoT3pSTUYwaHpMSUZIR3FWWmZBMDdmQ2VXZTRtYTl4TCttbDVaZGxX?=
+ =?utf-8?B?QmRXVnlmNVpjVlptRzNxNHE5TU14RUxXRDBVdlRyT3ZzbGszTXk2NHhwa2F4?=
+ =?utf-8?B?L2k2U2xla2lvSG9uY05Ta0QwVnJNU3d2bDdQaldhOEFOYnlOMnVuSjB1eTRN?=
+ =?utf-8?B?NDZ2cFdtY2NHQ3NjRGdqTklLZlFWQkhrMjRXY0N5TDR5RHU5S1JQNjJudWdI?=
+ =?utf-8?B?dU1MS3JieVBYSFVmWUd3TXFGeU8ya3dmTEE1R2VuaUM1TSsxLy9lM2FLd3Uv?=
+ =?utf-8?B?UjdGYVNaVkkzSGo1ZlU2ZzdaelUxY25CMExINTZZU1B0S3B6YkVSWkdOVG5G?=
+ =?utf-8?B?Y2lkeWpHMjQ1eHhpZUZ5b2ttcnhlRkhWSzNPeHZyZmpySFdra2pjckVaZ0tj?=
+ =?utf-8?B?WGI2blZtV2dONUhjYklRbDVXNjF5djN4ZGk5R2xDWDBwMGM0OWozTVhsWkZq?=
+ =?utf-8?B?MDFpMk9XN0MreTVPeUxlRnZSM1JSYWxRWEdidmRXSmd6NjBVMnFPM2c3YU1I?=
+ =?utf-8?B?SlpVTnJXY1RxK3NsWkY1aE1MVndJOVhMeWg0SVVVV2FESXd0c1Z6MFNFcEtl?=
+ =?utf-8?B?clpVTkxYdEFNbEFuWWdYUGZ2bUNxN2paZjF2UUIrMEVkMnlRbEJHeW8vSXpm?=
+ =?utf-8?B?R21DSnV6aUhESmdNVzM2ZkwwNmlZQzdLSmZtOFpOZHI4OUg5ZGFCY0svbXJ0?=
+ =?utf-8?B?MEp6Uk1taDBIWlhIbWxpUzM0MlVWUUdUY1ZVWm9WNkNnTmlZcXJ3V2dQeXNJ?=
+ =?utf-8?B?NHUzYVRKVitMUGNubDltczBseDFjVzRVdmROaGhwb3R2RitWSmY0cGg5QmtZ?=
+ =?utf-8?B?ZitEb1BOeldTZWFRbk8wQi9SS2N0SC80UUpUZTVSYnhzNWZJM3EwS0k1QkE3?=
+ =?utf-8?B?YjJSZ1ZHS1NHRXYvbFZHOGNSMzV3YjVHVjQwMDd6a0wzMHpJa3oxbGJpbE9X?=
+ =?utf-8?B?WFhlZGZrTWlaWDhXN0FBcmhhTm5SS2NCSWhyQVJ6R1N1NEF4bGpSQTVORWx6?=
+ =?utf-8?B?OHhGckNkSUxRMmQxNnBibW1zTDl4NXR4eWhVeXM4RWl6Tkk5L1dQQnlyaE40?=
+ =?utf-8?B?L3VQb0xWWXQxbWxsbC8reGhlNHhxN05zT2Z4OGFieGJHU240Wk95bE40bFZa?=
+ =?utf-8?B?Q09oVEtIcWx0M0VCeEwvdDNUbGxtV2dPdE93OHE0SXJXSW5NYllvbkRkV21Y?=
+ =?utf-8?B?clBkVDg4MC91cVhKamcyMjdrN2RaN0hhMjNMbDg4Rkc3UWM0QjBKbFltaThy?=
+ =?utf-8?B?Y3paVGlwQkhaQ3R6c0FiWE9VTlduN3JTU3FES3pZU3puaDk1bElnL1BpY0Vu?=
+ =?utf-8?B?R2lJR0lFN3Z3WEJXWjEvb2dhY200OUJLUEJtckNVVnZldTlTTmNRQmFIdjNx?=
+ =?utf-8?B?a2lWcUxSOVE5WWFnc0Z4ZjBJdGV3UWZ4cTJicmRiNGhGc29qWjNwdDhyVGVM?=
+ =?utf-8?B?aGRMeE1jWk5jaVZtbERHQnZ4WUVRSG1ibjFWalI1eWR5VUlYZCtET0lVMUtO?=
+ =?utf-8?B?N2piV25weVZZMVo5ZjUzbGYxeEpEVUFwNjU4S1FpMFNjR0Z6MlpFcXc5K01n?=
+ =?utf-8?B?bTliQmNGK0JRY1NBeHdWbFZqSHB1SzlNVkNzT1JGemxuVzE2R3oya0paUmZ4?=
+ =?utf-8?B?RGFMV28rc2NhV2JNYnJJeGRHMCt0eTBaTkRsWGtWb25Sb1pFY2pDREY4bnhw?=
+ =?utf-8?B?S3BJQjA1VFBiUHR2NHlRaktPSEc3QWJraW9mMEs2NkJkVHZEeUpuRUo4TWEv?=
+ =?utf-8?Q?d4waJZFXgxs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6395.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?M3MvM1VwRTkyU1AxcEM5SnQ4VEpVZ0swaGdLaHg1RmdvdnlFcGlMOUI4b1A2?=
+ =?utf-8?B?U0JaTVJ4Tm1GRG4vQUFGVXNaMUxYVXZHbTk2UlY4NzcvR3pCNXBsc0k3MVFO?=
+ =?utf-8?B?N1ZaT2ltcU52Sm41NHZUMmJlOS9PSTR2MjU3WFZuUXdHclo0ZXVsZ3VrbUpT?=
+ =?utf-8?B?SGZVZ0g5NmNCQXRPa0dDenNSVGdtUjFSYVB1a0JpSTBvMmJ0YUsvTVYxRDhq?=
+ =?utf-8?B?SVJMOFA5ZVV3VXZLZEhhZ0tOcjBGOWZWbjZqLzg4TWNYYlFQY0pRT0t2TjBB?=
+ =?utf-8?B?a1FnRlNBMFY0V1NPaW1naURJVm5YRW1GY3h6Q3d4b1pBUTFFbWVEZEpKakpk?=
+ =?utf-8?B?VTZDc25jZ0J3Vm41bzVvR3A2VVV6UE5vLzYrYnZPL2R1Zy9xVzVBSGh1R3RD?=
+ =?utf-8?B?bytUaFZJUkRYSnFUNlhFSHlZVlprNUw2Zy85cVVwS2RnclRHMnJGSDR4VUpB?=
+ =?utf-8?B?OWk5R0xCZVRlQTFHUG56bjVxVXFHWldtSndZVjZvdCtCZ2FIalpuYmlyYTIy?=
+ =?utf-8?B?Z21xcWhHTzZxRGp6eXg3MklDVG9ibUpLTHhpU0xyVEFqWE1ZYlNWME9hNFNl?=
+ =?utf-8?B?TC81V2NVYXBWSWNxMjRqbTExdHBLY3pTd0MxQmpCZGluTitDUWxMbGI3MDdU?=
+ =?utf-8?B?bXdBRW1ZWXRvRXIvWkl1c1ZrTG43Z2tJYmlEMWJuKy9IWXYveUpHVUNqUzQ3?=
+ =?utf-8?B?bTZYakJKUUgxWkxRZWJzWk5Mb0JHTDFNK0pJNTJScGJYdkZwVUQyWU81SWlI?=
+ =?utf-8?B?ZkdQVmNVY0FUR2QyVk82dmFodWUwci9vdnFqb2UvY05XbWxWTXJISmF0dFl0?=
+ =?utf-8?B?aWpYeTQ1TGwzeGhzTTBLSXVYcTBiUGhnaVpYVGJoaXBHVHF3VStPSmwxS2xn?=
+ =?utf-8?B?QVJTQmVUWm5EczdCL2Z1QjJEUjJSR2pzT0p1Qk9pQzBhVkJiM2g5TmZhUHJr?=
+ =?utf-8?B?c1Q5MXpQWXpKWUlkQVdLamR4R2pGM0NUYVk3cW8wQktjL2xDTjROMGt6eVJP?=
+ =?utf-8?B?QmFsTkFCeVV2WTM2MU80c3JGNWFxb0ZzL3BxTWMyUWNIT1drQUh2dlNiVHhI?=
+ =?utf-8?B?cjJoUTRnUjlmREpMNE1BRHlHTzVRMlhhSnBnWmp4N0pyNjR6T1d3WlhwQ25t?=
+ =?utf-8?B?L3Nlc3EyNXpIb3h3QzVuT0FHYVBrc2FvRFBRVmFGMk15KzV3eDJVYkdHK2Vo?=
+ =?utf-8?B?VUNGajBQRXhrc1JDbklNTllVNXRlVEppNlA1UG5HejlLZ0cyQzQyTEE3a2Mz?=
+ =?utf-8?B?Y2h6NkY3N2tmTWg2RGlSZDNwNERCVC9oQ3FFSnRnbVB3U0ZoZmkybm1tYlFC?=
+ =?utf-8?B?UTdDaWxzTzluaUtJSUhJZjRFYkJmbkdNTUtVK3g1UTlaL2dqYThkcTY5T2hq?=
+ =?utf-8?B?ZEI5L2JsdXR5cGMvSzNPWlJlRUFEWEk0VVYzcVlZN2dNdFRsVU16NWZidnZC?=
+ =?utf-8?B?QktGMElycWtNaHpKMjJXL2g1OTZGVkdGclMzNmJsM1huaWJFMGVlem5EcEo4?=
+ =?utf-8?B?UDk3Qkc4TmMxNW9KcWZFQ2hJZHc4WUFlMTJwRHo4cWc4Y2ZVbHVySzcxS2p2?=
+ =?utf-8?B?akNBUU10UWZrek5LbWtsemt4Qk1aRHhnL1RrSjMrMDdPeVJSUHRRRmtWeHhn?=
+ =?utf-8?B?NzViYlIwMTBYbVpIN1RzaVp6dldndXNMWUFtT2I2aW1hZXdvdGJiTXVIVldl?=
+ =?utf-8?B?aDBiODl5RnRoV0pKdEZ4NFJsWnFmTU00S3NSa3poSVI5c3I5MkRZN2xrcmVy?=
+ =?utf-8?B?SjJBdG93YTNBWEJhc3ZPZVgyTXpTM2R5R0gwUFFiT3hoRXlkWDhNVkN3WU9k?=
+ =?utf-8?B?RzV5cTd4YmgvODFpSUxvQkRacUZJaDU0ZDlMR1BNRHZ6UHpXQXNRYUJubG9q?=
+ =?utf-8?B?NzJGbnFlcFhCYXllTnBycmZmWHRQRUQxYk5Pbm1sODVPdWIrMjBUanlVTmo0?=
+ =?utf-8?B?c3MxZ3FDaW5KbjR1Mm5sdEVFdVpwSThZU1FuaExCMHlvMGxqU096ZTY5RkJF?=
+ =?utf-8?B?cGxVTER6OS9yRzlOSHNwVUM1Qi9ONGhKWFMrejcvSlZ5cHB0dTZoeGhKeFBv?=
+ =?utf-8?B?c2RnWEN3Y0tkTzJkcHNpNDBnejNkc1ViWHRtZ3lOYjBlQ3BOdVlkdHEvQm1n?=
+ =?utf-8?Q?euCrSFZlCtSyGONn4CiUCB/Or?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 475f1675-5a36-4b56-d87b-08ddc9d20f84
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6395.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2025 10:17:00.1282
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OABUxmtkA+9k+MzTSbroC87sQEmNziLMBb2P2wgrOMP698/VaT5JIguCHeMfytfS9BMGS9zHXSmSllPSWyKtjg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6116
 
 
---t3b24mrvydogtoje
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 0/7] syscore: Pass context data to callbacks
-MIME-Version: 1.0
 
-On Tue, Jul 22, 2025 at 04:08:09PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Jul 22, 2025 at 03:56:40PM +0200, Thierry Reding wrote:
-> > On Sat, Jul 19, 2025 at 08:52:41AM +0200, Greg Kroah-Hartman wrote:
-> > > On Fri, Jul 18, 2025 at 03:49:37PM +0200, Thierry Reding wrote:
-> > > > On Thu, Jul 17, 2025 at 02:11:41PM +0200, Greg Kroah-Hartman wrote:
-> > > > > On Thu, Jul 17, 2025 at 12:32:34PM +0200, Thierry Reding wrote:
-> > [...]
-> > > > 	struct syscore;
-> > > >=20
-> > > > 	struct syscore_ops {
-> > > > 		int (*suspend)(struct syscore *syscore);
-> > > > 		void (*resume)(struct syscore *syscore);
-> > > > 		void (*shutdown)(struct syscore *syscore);
-> > > > 	};
-> > > >=20
-> > > > 	struct syscore {
-> > > > 		const struct syscore_ops *ops;
-> > > > 		struct list_head node;
-> > > > 	};
-> > > >=20
-> > > > Is that what you had in mind?
-> > >=20
-> > > I missed the list_head, so yes, this would be better, but don't pass
-> > > back the syscore structure, how about just a void * instead, making t=
-he
-> > > whole container_of() stuff go away?
-> >=20
-> > Yeah, that's a possibility. I personally don't like passing the void *
-> > around because it's easier to make mistakes that way. I also find it
-> > unintuitive because it doesn't immediately show you what the functions
-> > expect.
-> >=20
-> > My understanding is that the container_of() should get optimized away
-> > most of the time, so there aren't any obvious downsides that I can see.
->=20
-> container_of() is just pointer math, but a cast is even faster :)
->=20
-> > But I don't feel very strongly, so if you have a strong preference for
-> > void pointers, I can do that.
->=20
-> That's what you really want to have here, it's a syscore data type
-> thing, that the callback wants to reference.  Just like a irqrequest_t
-> function passes back a void * that the handler "knows" how to deal with
-> properly.
+On 7/23/2025 12:44 AM, Bjorn Helgaas wrote:
+> On Tue, Jul 22, 2025 at 11:20:25PM +0530, Raju Rangoju wrote:
+>> Add a new PCI vendor ID (PCI_VENDOR_ID_ASMEDIA_USB4) for ASMedia
+>> USB4 devices. This change enables proper identification and support
+>> for ASMedia USB4 hardware in the kernel.
+>>
+>> Co-developed-by: Sanath S <Sanath.S@amd.com>
+>> Signed-off-by: Sanath S <Sanath.S@amd.com>
+>> Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
+>> ---
+>>   include/linux/pci_ids.h | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+>> index e2d71b6fdd84..3397954ce96e 100644
+>> --- a/include/linux/pci_ids.h
+>> +++ b/include/linux/pci_ids.h
+>> @@ -2592,6 +2592,7 @@
+>>   #define PCI_SUBDEVICE_ID_QEMU            0x1100
+>>   
+>>   #define PCI_VENDOR_ID_ASMEDIA		0x1b21
+>> +#define PCI_VENDOR_ID_ASMEDIA_USB4	0x174C
+>>   
+>>   #define PCI_VENDOR_ID_REDHAT		0x1b36
+> 
+> Sort by Vendor ID value (not the name), per the comment at the top.
+> 
+> Use lower-case hex to match style (not universally observed, but
+> close).
 
-IRQ handlers are different, though, because you pass the void * data
-when you register the interrupt. That void * then gets stored and passed
-to the handler when the interrupt is processed.
+Sure Bjorn, I'll address these changes in v2.
 
-We'd have to change it to something like this:
+> 
+> Per https://pcisig.com/membership/member-companies, 0x174c is not
+> reserved, although the same is true for 0x1b21 and many other Vendor
+> IDs.  Do you know the history of 0x174c and 0x1b21, or why these don't
+> show up as reserved?
 
-	struct syscore_ops {
-		/* parameters now changed to driver-specific data */
-		int (*suspend)(void *data);
-		void (*resume)(void *data);
-		void (*shutdown)(void *data);
-	};
+Chloe_Chen@asmedia.com.tw, could you please comment here?
 
-	struct syscore {
-		const struct syscore_ops *ops;
-		struct list_head node;
-		/* NEW driver-specific data */
-		void *data;
-	};
+> 
+> With these,
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Bjorn
 
-It ends up increasing the syscore structure's size, about 33%, though
-given that there aren't a lot of these that's probably negligible.
-
-What I think is a bit more unnatural about it in this case is that we
-embed the struct syscore into some driver-private data anyway so that
-it becomes per instance, and then we have a circular reference:
-
-	foo->syscore.ops =3D &foo_syscore_ops;
-	foo->syscore.data =3D foo;
-
-Which looks kind of weird. Alternatively I suppose we could completely
-rework it and make register_syscore_ops() allocate struct syscore, and
-hide the internals from drivers completely:
-
-	err =3D register_syscore(&foo_syscore_ops, foo);
-
-With that it may be problematic that register_syscore() can now fail.
-
-Thierry
-
---t3b24mrvydogtoje
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmiApM8ACgkQ3SOs138+
-s6G76RAAlyjbBOBTf8eNokhrwb69GbuFv4iEunTnd/Xy91IhOncqHjdYHN3rqTn9
-GZWy+L9VFYLaEmLV5W1ChOD3rYHCxZ3gep+jdE5ThLQvJaK4IBB4oGZ0OGXLHmVy
-TqNy+Tq/dQi2jM2o7MW1DUDM8EunrbLmjBWZZONJzH18GqJPn3LWazuC7tBBL6vu
-bmowzEXxm+4NWx5Ow3IvFnLzDa05JLaBKtVREPuf/UdRHcjzrra1RyYLyaYUI9Gy
-pWZHkgUA+1gAO2hutK8eyL98cZlnl8zrArmduJZsyZQhcNe1ltwPTzUq9wejYOr+
-Vywgy/CxznLtvKd0e27hP/I7zCx64ktofCb6l0SwueraLWYTcpJLQ23T93g1bDwY
-02o6cq0874YQdndJytU7t3cKETe5uXF0AGmepX/+GKvcQN6lBqo04OL+Ge6yRMyy
-G9gv6P2nxqY+RWkDrFtqO6RwFB+lJSwc2J3RfxHC/2ygMy2Zr2AJ5oeeAKOtTZ/0
-smpK40Y2FB6y4ohGq3UK3uPyBvOJi/jw6sMuRyv2Ou7tJIFE2EtSpA5+m5DcwUcR
-gRcfO6O0V9Y6qWBx2Tt+i6Fzekj/0xBzlQdyvCom8xrhRZ9VGbZBfpIaXDs/Anp6
-ovlk/rkbo8DsYQQxINnmSBx2uQcWSCYAU53leg5fnr4EoSGPCsg=
-=l8CI
------END PGP SIGNATURE-----
-
---t3b24mrvydogtoje--
 
