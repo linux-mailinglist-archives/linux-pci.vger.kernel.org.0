@@ -1,201 +1,125 @@
-Return-Path: <linux-pci+bounces-32791-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32792-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49585B0F125
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 13:27:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0445CB0F13E
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 13:33:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B7551C21098
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 11:27:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EB965461BC
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 11:33:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 703662C1581;
-	Wed, 23 Jul 2025 11:27:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E5512DE702;
+	Wed, 23 Jul 2025 11:33:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gna5kEEQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YtWWXbZR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33188298CA5;
-	Wed, 23 Jul 2025 11:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B825E2D94B9
+	for <linux-pci@vger.kernel.org>; Wed, 23 Jul 2025 11:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753270044; cv=none; b=Wr1exv4SUQQf1xCgcZGEn6teWVWuXr8q5qE+ofvqKvyDI9eEiRyT3nsjCsC6WNF/PQeLzzsBUg6Uz5kgSEaaWtrTDaYxLU7QZLKiBQHa/xJ1W1AIKAsNKtZh8ggTh6PLKRlJ3y13OkYc0Zjzq2Bk+C9pfsi9vm5wr5uksf6KppU=
+	t=1753270387; cv=none; b=B7zIH+fk9leZp7cq9wa/4QyextdqXAWef8+cH51pXFd+txqhXJsfNhsPPmfmauguo6rm94D4j+He7Fi9wImL5lz4WGg//849Dtbmk/byDBx3GLnUR7YkP8+dFcjdgatjVNyf7bHDStJzA4fBZr1rWF7p2mVgPyodTv5tJxVIHCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753270044; c=relaxed/simple;
-	bh=hD86L6FsrlkjppEeAolQw2+wF9G9eL2p4jeufpqBKxk=;
+	s=arc-20240116; t=1753270387; c=relaxed/simple;
+	bh=aAjvSl8CP8e8poOdqbC32WczsF+aY5e0wedprJiV2Pg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nz8Oxckp0BymRRHH2osrDZkMaSbERMMag4ODDRUdsSQsxNqAJ1VzOofgVZX0usn2MwTThYtH2eVSN/4Q+jJfHacwTaQe7/1sX6jpJ9MlThFh/Y1Mqiv9bGhQHswPY1wvUnNcQf5uEbc2nmcdTdKXAyBqKy3ab0iC8z2/APK5Kfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gna5kEEQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B482C4CEFB;
-	Wed, 23 Jul 2025 11:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753270044;
-	bh=hD86L6FsrlkjppEeAolQw2+wF9G9eL2p4jeufpqBKxk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gna5kEEQO0FOgZEpDT/57P3FtgjTpO2uSn7YtKJvIt8uQQR2K96rr5I5udfJm84c7
-	 hUCixUBGhFeFewlQZl5ImSC12rQ066qMf33T+t3KnfWw+hieP3bmovSIvdSeAyro8T
-	 rDAvE+1zTwuK+7PZStdlqwoxksDnTVrcewtIfj0R90Lk/7OxSRV5htQPL9mATKUKqn
-	 FNwWYdXoTMs9ewijIHqVuJHpbLeK6rcl8FxiEfKc5PDZ3OLEg2jRWi7e2qpVcLBpwt
-	 iwQTgypKrgsoWPbsVBwEt0XAYFokUpVjX2z6qSPVn+usBpJA0Qs7v+HL/XzcT/azs+
-	 7u/n5xDVV9aNQ==
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-615950642d9so3685530eaf.1;
-        Wed, 23 Jul 2025 04:27:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVA90WZwlVDKAAhkMgJ9pQs5ATm5vXqWNDP+sJCiVEAK78c41BTZ/U3FKkSEM7f7qdLw9WVTHHfTW3kTg==@vger.kernel.org, AJvYcCVlJyI9wxUCKkbpaZ/U2Xqljovewpkizp+6ECP7hfxBh4i5M0E5c35dzwNNYQKjtQqjd01/FfI7KnI2bq8M@vger.kernel.org, AJvYcCW/iGCLypQJwBalgOSD7vA1mW5xb/Hwz9yCttbSJlC0PoAAVvBU/LAWDhmQ/JBjJDvAtDnDJo+8SOOg@vger.kernel.org, AJvYcCWFvtxvIEDxM8Uyb1mglCpQ4LuT1AuxaCFT1i58qW8vwOGYzhnu9TWPrTiLJENx69c5aWmTVglfJr8=@vger.kernel.org, AJvYcCXng8T4on/6u7aTCHQPNAcmwa+KiIHwPQ3nu9T6CgSCT2LjeIhRCTcdloh4uhDCQ74HFOk/XrxdhZNs@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/9zDwljMwqXHSMsJ3UrKyvCrl2nRZUiylz3HYwvNUL004yDV5
-	JXFopWExb/ZTLbZ/zzkUl7CmF9JV3tIpJQVdTcqNWPqu69A0TMeQniVQ2XOTB4I2Ee1TfDTi/27
-	0p4CcGNwSjYSxNn6kLuJpHklzdhppHfk=
-X-Google-Smtp-Source: AGHT+IFBBrTSzcKsgRsjEmVEi3AQj37BeFlkMYzSpLg5VvEYvowlyBOnql/yOqAWuu2WwDYjxLgaMwyjRGbr4TyyCQA=
-X-Received: by 2002:a05:6820:1792:b0:615:d742:6672 with SMTP id
- 006d021491bc7-6187d90ed5dmr1918110eaf.8.1753270043105; Wed, 23 Jul 2025
- 04:27:23 -0700 (PDT)
+	 To:Cc:Content-Type; b=qICFzeULlJXl7OzzbXVKIlI+lM2CKdce1oE6GvRwLCMmQIpURfiUfjg2X2tv6Gl6tZ787eKmwsqzjZPcdh6xorE9PUnSWiCQlfLZf+F9Vvpiw4Q0yxeEfQD8sAPzgh7xO2+ph7jarAeUd61c+ROWzFss90rehwJ/OJTJB/OJgHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YtWWXbZR; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5561c20e2d5so8424984e87.0
+        for <linux-pci@vger.kernel.org>; Wed, 23 Jul 2025 04:33:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1753270384; x=1753875184; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TWJ1vaC9mhdphahBr4AxdkgQcamHOy69P9zg4SNDFJE=;
+        b=YtWWXbZRP+8yhBvBXY22DxrsIWNl27hACDq/BJo083tD+gw6mR3Gu96a2Wzyi3qRyW
+         cTwiiXYWJVK6wtou9ie7ChC859awFYv4BVVN1DBkumd06ViaqNdPZ90ps7FE6pFviDqf
+         9evPVGD/liatxLrR7sDumg8OtiTk/GIbovA/VsUW+kQOx3TJ1R3uh5CXwOzpYVZb98+C
+         cEg55gR5NLlrj8Mbd2jY+67JS8V52N/ONlt8ciV790YxzFU1t34zDCq8tewelpfYcV63
+         0obiYVynZtY5obbzW8Ua5oTYacoNUUJV0INZ7TmAbxwj5kGEHeJM/KlmCPCpdXXk4t6v
+         PTfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753270384; x=1753875184;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TWJ1vaC9mhdphahBr4AxdkgQcamHOy69P9zg4SNDFJE=;
+        b=ECD7yaM7nnz7ykNKfZ5UkEFxceVWb+EuRC+9/Om72yLOdFk1KCM2VYqpwiDI+W/IND
+         dWt+IoGbSNiZrPLL4O7NGKg2lRajxRM0W6vdMnpo9e/5yEguiJB67XLErQg/3TojYzNA
+         h3CqcadL5EI8rHCbvN1a+0MQFWuIBtK8pPBrpb47j52gQkwf0J3RQhyJAfJvLsPq25u8
+         e5v7D9kXBacCj+xa6q/e184QrnKQlJ/0I6CwqdCcn50B/jQKuylWzBgo4zPYb0fOlKHr
+         6h6DSn5ols+Z0qSrMFmI5zep2+Q0Dj3vWEoymEVd1es9dQFATmxC+llqMM4t3p4WzYqw
+         4jQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWutt3Qt4Z4YmXIaTSfFiBjnDYjwr/k0OLCChf4cmktFBUSLnTfy+6izwUf6DlVChjLe0ifs6jgtq8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBuqKjnt+m1Iq6jNJcQJjHZuzR3gncnA5m7IS0biM3uCoSAmd3
+	ZMZky43BkfsUEmJT5hstJsB9PPY5M0PJepsDsxTt9HzY19A5H3fjQ2a20rA/NFeQtvvsKWLtPSi
+	lwz8fHdf/gIsP1F8tb6LIlUEIFLOs3UhbWMM314isFQ==
+X-Gm-Gg: ASbGncucJlXBwxmsuXLxcdSXgB6iMGdmwDNqUKvnvCXGDILjTbZgwT38EYhwNqvF2zk
+	sbzUvr473dA+ZbT/3iqvNZeyklXK6UPK6sfqzJjzPJn9AU0BPkkhCgflHaeudrewda9cRsYtIHY
+	cdlxG1EGGuHCvYEyRHII8dY7mPXSXCI02SrvyekLX7H/9ODIDnFQYhsu8il1t8Ogz6m3tehbkk3
+	G7+9+A=
+X-Google-Smtp-Source: AGHT+IGAxN/JXh1EsU6InJKjwWnNX99YeFSCDuYAjM788AXYCd+mzZfDQU6t+N5nE5+MTj/X0VenBnfY0SKgi/lR+VM=
+X-Received: by 2002:a05:6512:3e1f:b0:55a:826d:fa31 with SMTP id
+ 2adb3069b0e04-55a826dfcfemr569462e87.37.1753270383732; Wed, 23 Jul 2025
+ 04:33:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250717103241.2806798-1-thierry.reding@gmail.com>
- <2025071716-phoney-object-1648@gregkh> <rzbzah5iigz25jtxyqadnitkzkazxsaxntajhlfrfdslyioevk@pylcjkfh5n42>
- <2025071919-patience-cattishly-cf7c@gregkh> <l54i36uk33je744w4f47tehdopk5dsjotvozfv5b2hehmxrwpq@eins7awyq4dy>
- <2025072218-decipher-spree-327d@gregkh> <awvdox3bgabbc42aamezlg33k4cje6y75qoxn7ruh3nhd4qv5n@u3spdahehad4>
-In-Reply-To: <awvdox3bgabbc42aamezlg33k4cje6y75qoxn7ruh3nhd4qv5n@u3spdahehad4>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 23 Jul 2025 13:27:09 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iYBOephv29sj0DSKZVyF3JLBsoUCckhTbGcbYHUUhYyQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzC6e4YCoK78tnnsrW1OvCOkcpvLKri7HC2f5clbN5j5h64RJlwkH_QRPE
-Message-ID: <CAJZ5v0iYBOephv29sj0DSKZVyF3JLBsoUCckhTbGcbYHUUhYyQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] syscore: Pass context data to callbacks
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250717063042.2236524-1-christian.bruel@foss.st.com>
+In-Reply-To: <20250717063042.2236524-1-christian.bruel@foss.st.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 23 Jul 2025 13:32:52 +0200
+X-Gm-Features: Ac12FXz0suPsP2VK94jurXo8uzOTltHa9LM0UQkrYO80w5wNLroNiLg4heFForw
+Message-ID: <CACRpkdZHw8am05Qcjp7FJyo7D7bZcvzZKVjdB7BUCq3FuQCy8A@mail.gmail.com>
+Subject: Re: [RESEND PATCH 0/2] Add pinctrl_pm_select_init_state helper function
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org, 
+	robh@kernel.org, bhelgaas@google.com, mcoquelin.stm32@gmail.com, 
+	alexandre.torgue@foss.st.com, linux-pci@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 23, 2025 at 11:01=E2=80=AFAM Thierry Reding
-<thierry.reding@gmail.com> wrote:
+On Thu, Jul 17, 2025 at 8:33=E2=80=AFAM Christian Bruel
+<christian.bruel@foss.st.com> wrote:
+
+> We have the helper functions pinctrl_pm_select_default_state and
+> pinctrl_pm_select_sleep_state.
+> This patch adds the missing pinctrl_pm_select_init_state function.
 >
-> On Tue, Jul 22, 2025 at 04:08:09PM +0200, Greg Kroah-Hartman wrote:
-> > On Tue, Jul 22, 2025 at 03:56:40PM +0200, Thierry Reding wrote:
-> > > On Sat, Jul 19, 2025 at 08:52:41AM +0200, Greg Kroah-Hartman wrote:
-> > > > On Fri, Jul 18, 2025 at 03:49:37PM +0200, Thierry Reding wrote:
-> > > > > On Thu, Jul 17, 2025 at 02:11:41PM +0200, Greg Kroah-Hartman wrot=
-e:
-> > > > > > On Thu, Jul 17, 2025 at 12:32:34PM +0200, Thierry Reding wrote:
-> > > [...]
-> > > > >         struct syscore;
-> > > > >
-> > > > >         struct syscore_ops {
-> > > > >                 int (*suspend)(struct syscore *syscore);
-> > > > >                 void (*resume)(struct syscore *syscore);
-> > > > >                 void (*shutdown)(struct syscore *syscore);
-> > > > >         };
-> > > > >
-> > > > >         struct syscore {
-> > > > >                 const struct syscore_ops *ops;
-> > > > >                 struct list_head node;
-> > > > >         };
-> > > > >
-> > > > > Is that what you had in mind?
-> > > >
-> > > > I missed the list_head, so yes, this would be better, but don't pas=
-s
-> > > > back the syscore structure, how about just a void * instead, making=
- the
-> > > > whole container_of() stuff go away?
-> > >
-> > > Yeah, that's a possibility. I personally don't like passing the void =
-*
-> > > around because it's easier to make mistakes that way. I also find it
-> > > unintuitive because it doesn't immediately show you what the function=
-s
-> > > expect.
-> > >
-> > > My understanding is that the container_of() should get optimized away
-> > > most of the time, so there aren't any obvious downsides that I can se=
+> The STM32MP2 needs to set the pinctrl to an initial state during
+> pm_resume, just like in probe. To achieve this, the function
+> pinctrl_pm_select_init_state is added.
+>
+> This allows a driver to balance pinctrl_pm_select_sleep_state()
+> with pinctrl_pm_select_default_state() and
+> pinctrl_pm_select_init_state() in pm_runtime_suspend and pm_runtime_resum=
 e.
-> >
-> > container_of() is just pointer math, but a cast is even faster :)
-> >
-> > > But I don't feel very strongly, so if you have a strong preference fo=
-r
-> > > void pointers, I can do that.
-> >
-> > That's what you really want to have here, it's a syscore data type
-> > thing, that the callback wants to reference.  Just like a irqrequest_t
-> > function passes back a void * that the handler "knows" how to deal with
-> > properly.
 >
-> IRQ handlers are different, though, because you pass the void * data
-> when you register the interrupt. That void * then gets stored and passed
-> to the handler when the interrupt is processed.
->
-> We'd have to change it to something like this:
->
->         struct syscore_ops {
->                 /* parameters now changed to driver-specific data */
->                 int (*suspend)(void *data);
->                 void (*resume)(void *data);
->                 void (*shutdown)(void *data);
->         };
->
->         struct syscore {
->                 const struct syscore_ops *ops;
->                 struct list_head node;
->                 /* NEW driver-specific data */
->                 void *data;
->         };
+> Christian Bruel (2):
+>   pinctrl: Add pinctrl_pm_select_init_state helper function
+>   PCI: stm32: use pinctrl_pm_select_init_state() in
+>     stm32_pcie_resume_noirq()
 
-I like this more than the original, but I would do
+If Bjorn Helgaas is OK with it I can apply this to the pinctrl tree.
 
-struct syscore_ops_ops {
-                 int (*suspend)(void *data);
-                 void (*resume)(void *data);
-                 void (*shutdown)(void *data);
-};
+Otherwise I can also just apply patch 1/2, but that doesn't solve
+any problem.
 
-struct syscore_ops {
-                 struct list_head node;
-                 const struct syscore_ops_ops *ops;
-                 void *data;
-};
+What should I do?
 
-and change register_syscore_ops() to take three arguments, the struct
-syscore_ops pointer, the (constified) struct syscore_ops_ops one, and
-the (void *) data one.
-
-Note that it is not necessary to change the signature of
-unregister_syscore_ops() in this case.
-
-> It ends up increasing the syscore structure's size, about 33%, though
-> given that there aren't a lot of these that's probably negligible.
-
-That's not a problem IMV.
-
-> What I think is a bit more unnatural about it in this case is that we
-> embed the struct syscore into some driver-private data anyway so that
-> it becomes per instance, and then we have a circular reference:
->
->         foo->syscore.ops =3D &foo_syscore_ops;
->         foo->syscore.data =3D foo;
-
-That depends because "data" need not be "foo" in all cases, but also
-see above.  If the initialization of struct syscore_ops is all done by
-register_syscore_ops(), it doesn't look circular any more.
-
-> Which looks kind of weird. Alternatively I suppose we could completely
-> rework it and make register_syscore_ops() allocate struct syscore, and
-> hide the internals from drivers completely:
->
->         err =3D register_syscore(&foo_syscore_ops, foo);
->
-> With that it may be problematic that register_syscore() can now fail.
-
-Yes, that might be a problem.
+Yours,
+Linus Walleij
 
