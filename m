@@ -1,204 +1,126 @@
-Return-Path: <linux-pci+bounces-32818-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32819-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AFE5B0F53E
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 16:26:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AD80B0F546
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 16:29:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44652AC0E0C
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 14:26:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6828554768C
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Jul 2025 14:29:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A4702EF2B2;
-	Wed, 23 Jul 2025 14:26:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E6EB2EF676;
+	Wed, 23 Jul 2025 14:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CB8pn/gA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JjM8tild"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12052D9EDC;
-	Wed, 23 Jul 2025 14:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324E1433A6;
+	Wed, 23 Jul 2025 14:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753280796; cv=none; b=RxqFmNMklLK+5A6vmqAGGvX8Di/UCeS+qhabEmRzwr0UM7q/Ak2VRoeMO/zouT5PQKMF4MwoLWx8BXGWvrlrk+XRyATcVryxIpbZIjkfktDUQTTgd7Gj4NlvioUiFau4cftn+lExWkkMrhh3z3wr0krKNKZyTC6doIEcJ4HYRVw=
+	t=1753280968; cv=none; b=u3d+VwrcEbUxQo9j1HTk3gTrMkN1hRbztCECVl3cCoL9j2etPznHSyHa4OqATMRE7DtR65ZgeD4vnXCC5inCaQnb+IcQg4a0Gczp8UB/vQ7wdf4JhM9X8bRsb9wevvVXVScxEfD2vBRakseY2EZ/9/JroqGEvr1uXFpLqJcUvAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753280796; c=relaxed/simple;
-	bh=u5kcz7+z11ZecDw4BOO0cuxQi4nShrexRctLR1fj8sI=;
+	s=arc-20240116; t=1753280968; c=relaxed/simple;
+	bh=JnPfz05COLFbrti4eA0oit4iSLVZ3XvOremqEbmexSk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LTuHRwvWiZ6DUrpYYxOU9GMdpMBHY+9VGkwne3YRguUgeg+Ou3BcVUzCWKCqEAxStytUA7OPtx+FWB+hqZg2hAXZi1vKsiJNjipfiIxYrJ/d3/j8d+cYiYB2wrCsYtrzCV9HvBUNT2SbVSx7uRFoxMAoY/c2Sz/EeYK9ehJmnkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CB8pn/gA; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7e33d36491dso921431685a.3;
-        Wed, 23 Jul 2025 07:26:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753280794; x=1753885594; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2o2EjZkq+kx8CAy5J/9DD0iXT5RJwEkXNP+TIRG9l2g=;
-        b=CB8pn/gAL4GI4chCTzDqMUq/ZsZXjjy6Ah2mdQ7XkMz/ZYrHRp+T9o9ArvQbCvWa8E
-         RRIdENLGdvmP4nYSbWVE+dzZjF8STLCsTsILDHsYrTY2tA1eOPNi0axXBoCQxNR/jfWv
-         +S0X1EV48Q7qLSxRK0HYg5Pt3SZYubi4ILXVrCkW+nzZUZ/GdKWmDN+2isHEtL/hkgsF
-         sSaMYdSxT0cz+oFT7iSJuTaRXbK2NmzoOB+7TwxqE4sqUglGBCp5125Q4SQmtx9oMtqv
-         DawwgZO+yw8QAXprS2v+xVvzWy6Dxlwv/k/IeOAI4sIDSXEGMZXxZhLMFjFPSNxgDiOC
-         YSPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753280794; x=1753885594;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2o2EjZkq+kx8CAy5J/9DD0iXT5RJwEkXNP+TIRG9l2g=;
-        b=oWNNCGeU5/tZwfdA2vgy3HlKPHaaL93G/apA/O6jMmz3i3m9CZuRY/tL+Y8RFdwUws
-         P+psj8L2XcB4fzbMdWLuSue30Jy1lqEt6uoS9NucXr4DM9iOoVCwwvT+ZDoUR10NDGtP
-         2GbyGW5bMiV8i01+ih00tJED0BeaH7b/IDnYrIuDl7+9yukzVzQN9pDy0nzM1gbpYTkq
-         SWPhvRuCO/YRCqmWhKCcrnW5WAI+ni03Ldj0IWXRWYAOzZM4tq2oHOA/widJjDO87aVH
-         H6GrISi5noavqRu1tPTdmM/0QkzMXWrj/E7uFumi9XHUqWkkP3PpUw6pY0C0YlMMaGUc
-         PywA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgo2VrmzjGGh/uUMtw9pBX2C6HZCsyDZBLp8sLBEVhgBIhmaniehKWHzf6mJxrTkRH2zZ3rm8J7SJlorynmpw=@vger.kernel.org, AJvYcCVi7F4arLGZ27IoUicpMDrqaaKCvEGw6D6u5KQ0xildumYml+nTqbaq0VCigGZnvZOsrPSxrN6EuA6X@vger.kernel.org, AJvYcCWKdlqjzkT7ls4Y0iiMvUDc5y7AmNKtLFimKe2I0arRpLhui9tll9c3jM6GhxRTwfKnihV4O5azKtqOnaQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2lFiy/It37zz8OCWumMojJb+wbLCfDdRq59MABLtuOMO0fyys
-	pHc9McT8ftAUNRK+owprRcDzxFmslGnTxFmAo8kQlTlvTSYQ1ABkH1/r064FsQ==
-X-Gm-Gg: ASbGncvNFl+U+DKJwP7RCWwhfz3+Ygcp/lpjIbCv8ql6SHBMb6u6CgpsutgLN1ouzTB
-	xS5xL+SvqPES/gDQ+vIQldVusJWzElmRWze3ft9FOgN/n9VOr/rDl6ZRZpv38p3x4s5BZDx6DYP
-	t40hRlCQ9S4hvBHyCUHgTzMiGGHSqQHPb/eHPGpNx3wAoTPgcw8X+FQWax+r8SnJ9ZCxJMk40NS
-	zdRHVHA+/IJaQbRnNtzylfB4OryYgQvsxMSjKaEXI9FDlqJR6y0zExEwf9ZY++qk4SoLqUImnmt
-	7eqJ/d/EEdrDgD881HcFRJqOvxUdsV6EOIDugsoDASJWBpcacGB9+2NSUZoEYXxoXiRr6nAAHjV
-	hXDrBRieXY0/eg253cr+uViqoYN3axjW0CauRiaFutHajwMXBfx5kQqZ7ahvUtRfmwMuP7Ow5+1
-	ahQOK4uijvZzmOsROwC+FG3dY=
-X-Google-Smtp-Source: AGHT+IHNYOLGvnD/plZB0uTH+rbzjsRIN7YnkQld5If9zgM8/fDwPdGODJSVQxYRBKNmFt3aBG/7GA==
-X-Received: by 2002:a05:620a:4113:b0:7e1:f16c:16d6 with SMTP id af79cd13be357-7e62a0926f1mr355009785a.8.1753280793435;
-        Wed, 23 Jul 2025 07:26:33 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e356b60cb2sm666903785a.48.2025.07.23.07.26.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Jul 2025 07:26:33 -0700 (PDT)
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 8BA9CF40066;
-	Wed, 23 Jul 2025 10:26:32 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Wed, 23 Jul 2025 10:26:32 -0400
-X-ME-Sender: <xms:GPGAaOQyU0z_zAH_bkn2B2w1eORDMvtRYEZeKQ9_Sua22ZQcsZ8QUA>
-    <xme:GPGAaKWM-_bDGYEetZsm7ETL5JE_m_ehZYfEYnqNJhKNesF8WvLNC-1dckRjedSLF
-    PyZ7yiIHztSCoaGLg>
-X-ME-Received: <xmr:GPGAaNh9dvy2hv07Qr4MfsyKotP-IJdDFBh6awbB3waNK_Jvoe9AtaNX6l8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdejkedtudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttddunecuhfhrohhmpeeuohhquhhnucfh
-    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
-    hrnhepveehteffvdffteekueduuedukedtgfehtddugfehvdfgtdegudffhfduudfhjeeu
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
-    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
-    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
-    drnhgrmhgvpdhnsggprhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepuggrnhhivghlrdgrlhhmvghiuggrsegtohhllhgrsghorhgrrdgtohhmpdhrtg
-    hpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhg
-    rgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuoh
-    drnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtgho
-    mhdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpth
-    htoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhmghhr
-    ohhsshesuhhmihgthhdrvgguuhdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorh
-    hg
-X-ME-Proxy: <xmx:GPGAaDf3kvgrxlMBRwo1V4sT7qRbhU7Hi8NqVxClpU0wdmGMt7saZg>
-    <xmx:GPGAaIfkGJ6YVThjZpXXmiRil0lsP6N8BjV1UxI_OLjzPhZnwUSAFg>
-    <xmx:GPGAaPWLvYbKX92E2Ad0RwDHSzqlJrfC3gG_2BTQ_pGoH6zmvCXqNQ>
-    <xmx:GPGAaMeMIKPtAEbdPjR7W8TjS6PETPWEGnt_Qrh9HwvhhX2XnVpHwg>
-    <xmx:GPGAaD8DF0Bw52frFcLuGHp78fMOUq-AGXi3f4IV30D-zWGRl0mPz5ti>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 23 Jul 2025 10:26:31 -0400 (EDT)
-Date: Wed, 23 Jul 2025 07:26:30 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=OH/3G9aImvnRFstvLjFDVPZQ/XVi1yW0EtlNWalN4iESPwoRIx/JAtMnRuEYHr2DPRqVcSUZEGU57lmtQcvPwIPP1mrMH9W06J8Lb95YF5HVM2zk3bYi9L/WJp1mGs/IkejYIl3FuIBbGfbNf3/0MkV5ZZsQKOh3wsnRypVv50I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JjM8tild; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753280967; x=1784816967;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JnPfz05COLFbrti4eA0oit4iSLVZ3XvOremqEbmexSk=;
+  b=JjM8tildqKRdGU+ADVYHW+mOMr9p/te3fMCwzPvfyPp1NXLk6NLdjMb8
+   z9GLBn367lEZjkO0/5a468HPqLfxNkSWvlzC6+E5b1CEu1kkYaJ83F/2k
+   yLQsVbE6Y+6CJwcRC9FiQLfsDeN9jUbY49eiycaSxKNbsIyl2hkI8j+eF
+   qrS0dnDtJ+bqU8Vo6RvZCnvCehSRtvv8b5T/T7pRWuDB9866WGjPkSD1I
+   jlmADsLUkVwylXgTQ71RCZVp/UisXD2lxigGr2Cszp51KwfRT2aqt/hAg
+   dye6sddHElwghIKdaM0pgoBtuMJ9OKePWHCiDelkplG2vfnJr1USdS6u8
+   A==;
+X-CSE-ConnectionGUID: GYC6BE01ThCrDgc7rwTulw==
+X-CSE-MsgGUID: tEM0QZ0HSuKd681BcpvO5Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11501"; a="58180465"
+X-IronPort-AV: E=Sophos;i="6.16,333,1744095600"; 
+   d="scan'208";a="58180465"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2025 07:29:26 -0700
+X-CSE-ConnectionGUID: bLMBwyrWRkeAJvKC8iopDQ==
+X-CSE-MsgGUID: UZkMCzLeRXqiwiq1mUGeIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,333,1744095600"; 
+   d="scan'208";a="159562699"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 23 Jul 2025 07:29:21 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ueaT8-000JRD-1n;
+	Wed, 23 Jul 2025 14:29:18 +0000
+Date: Wed, 23 Jul 2025 22:28:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: Breno Leitao <leitao@debian.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>,
+	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+	Robert Moore <robert.moore@intel.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?iso-8859-1?Q?Wilczy=B4nski?= <kwilczynski@kernel.org>,
-	Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v7 3/6] rust: irq: add support for non-threaded IRQs and
- handlers
-Message-ID: <aIDxFoQV_fRLjt3h@tardis-2.local>
-References: <20250715-topics-tyr-request_irq2-v7-0-d469c0f37c07@collabora.com>
- <20250715-topics-tyr-request_irq2-v7-3-d469c0f37c07@collabora.com>
- <aIBl6JPh4MQq-0gu@tardis-2.local>
- <ED19060D-265A-4DEF-A12B-3F5901BBF4F3@collabora.com>
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	acpica-devel@lists.linux.dev, osandov@osandov.com,
+	xueshuai@linux.alibaba.com, konrad.wilk@oracle.com,
+	linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org, kernel-team@meta.com,
+	Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH v3] vmcoreinfo: Track and log recoverable hardware errors
+Message-ID: <202507232209.GrgpSr47-lkp@intel.com>
+References: <20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ED19060D-265A-4DEF-A12B-3F5901BBF4F3@collabora.com>
+In-Reply-To: <20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org>
 
-On Wed, Jul 23, 2025 at 10:55:20AM -0300, Daniel Almeida wrote:
-> Hi Boqun,
-> 
-> [...]
-> 
-> >> +        IrqRequest { dev, irq }
-> >> +    }
-> >> +
-> >> +    /// Returns the IRQ number of an [`IrqRequest`].
-> >> +    pub fn irq(&self) -> u32 {
-> >> +        self.irq
-> >> +    }
-> >> +}
-> >> +
-> >> +/// A registration of an IRQ handler for a given IRQ line.
-> >> +///
-> >> +/// # Examples
-> >> +///
-> >> +/// The following is an example of using `Registration`. It uses a
-> >> +/// [`AtomicU32`](core::sync::AtomicU32) to provide the interior mutability.
-> > 
-> > We are going to remove all usage of core::sync::Atomic* when the LKMM
-> > atomics [1] land. You can probably use `Completion` here (handler does
-> > complete_all(), and registration uses wait_for_completion()) because
-> > `Completion` is irq-safe. And this brings my next comment..
-> 
-> How are completions equivalent to atomics? I am trying to highlight interior
-> mutability in this example.
-> 
+Hi Breno,
 
-Well, `Completion` also has interior mutability.
+kernel test robot noticed the following build warnings:
 
-> Is the LKMM atomic series getting merged during the upcoming merge window? Because my
-> understanding was that the IRQ series was ready to go in 6.17, pending a reply
+[auto build test WARNING on 97987520025658f30bb787a99ffbd9bbff9ffc9d]
 
-Nope, it's likely to be in 6.18.
+url:    https://github.com/intel-lab-lkp/linux/commits/Breno-Leitao/vmcoreinfo-Track-and-log-recoverable-hardware-errors/20250723-005950
+base:   97987520025658f30bb787a99ffbd9bbff9ffc9d
+patch link:    https://lore.kernel.org/r/20250722-vmcore_hw_error-v3-1-ff0683fc1f17%40debian.org
+patch subject: [PATCH v3] vmcoreinfo: Track and log recoverable hardware errors
+config: x86_64-buildonly-randconfig-001-20250723 (https://download.01.org/0day-ci/archive/20250723/202507232209.GrgpSr47-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250723/202507232209.GrgpSr47-lkp@intel.com/reproduce)
 
-> from Thomas and some minor comments that have been mentioned in v7.
-> 
-> If the LKMM series is not ready yet, my proposal is to leave the
-> Atomics->Completion change for a future patch (or really, to just use the new
-> Atomic types introduced by your series, because again, I don't think Completion
-> is the right thing to have there).
-> 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507232209.GrgpSr47-lkp@intel.com/
 
-Why? I can find a few examples that an irq handler does a
-complete_all(), e.g. gpi_process_ch_ctrl_irq() in
-drivers/dma/qcom/gpi.c. I think it's very normal for a driver thread to
-use completions to wait for an irq to happen.
+All warnings (new ones prefixed by >>):
 
-But sure, this and the handler pinned initializer thing is not a blocker
-issue. However, I would like to see them resolved as soon as possible
-once merged.
+>> vmlinux.o: warning: objtool: do_machine_check+0x5cc: call to hwerr_log_error_type() leaves .noinstr.text section
 
-Regards,
-Boqun
-
-> 
-> - Daniel
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
