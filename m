@@ -1,205 +1,288 @@
-Return-Path: <linux-pci+bounces-32867-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32868-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5137B10006
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 07:44:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DA51B10074
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 08:18:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 677E31C26A91
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 05:45:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C49A51618D3
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 06:18:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05B6720127B;
-	Thu, 24 Jul 2025 05:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6jGoMhe"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C38E1A2396;
+	Thu, 24 Jul 2025 06:18:03 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FA217F4F6;
-	Thu, 24 Jul 2025 05:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CFA204592;
+	Thu, 24 Jul 2025 06:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753335888; cv=none; b=OCPTFHrmnnsSxb2GKZHJsaZNSkkmTmBbmqmQKhGmbdjMB8EZ1WOHBjc1jDWPYl3tfDP0GFcEiYadOubfsP6QxpQdPFRvojuOy/9AAJPL1KhiqfikJjp5AGJ3x6/LDT6AeK4i5600yive7qTvTh/1jfwIDlj7hMDCxAT7cS+Molo=
+	t=1753337883; cv=none; b=r1pTzR5FlWmrX3ivUQTf3Rl29Xn0YROotI+EsTPOoXf0p41FsT6luoupK9HeRgmWEWI+WWOmL5nZNvZqb63Vhl5XAR8d74CXN6aUTB0OIt7RFPybK/MeviL2C6lr1eQlpyExJU/kCFsB03pYzJS84wrq9Qwq8RByN4Z6l/eDbOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753335888; c=relaxed/simple;
-	bh=U4I+CEURF422p0sGN26ha9HaOt720UUk24J+vl+6mjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jhk/VWkCQr1YjCrZqFChJSr6tJV+rfBwLHM43A9rYqWv6VkH9mYdjYLZHsCh81n4t7OWckfQBdBdruvQxP8jCIThwSPOVMavvmnreuOb2ES5BxHMBMGo1GeiPlhvecNpTBRZ0IkukWccvMcU31SDDD4XBaHQO9Gwwv5PF7wvCdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6jGoMhe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E9B6C4CEED;
-	Thu, 24 Jul 2025 05:44:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753335888;
-	bh=U4I+CEURF422p0sGN26ha9HaOt720UUk24J+vl+6mjI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C6jGoMhePxWs2G1RnhF59gG3AXap97mUUE40SE0Rm0zZuH4EkRp+dPag/rTKFTJtk
-	 aIH8UT5BEZzz8AS2s95p9XeW+qVBOtlMdJU9OcofPSwraKN+wgvSIt7eeHshgWCTsT
-	 z/pst5aWEXs8QqfceKtXDCpdgWnxSY7hlyYDAOq+nTfBlhT9pT/3LCgyEKtkwCcEYG
-	 Qc+p/WDMbD1kDL3Wqi3br3L11qZxkfSyOQLi2R2Bu3EOjG1wVamcR4BfC5KFfACpsJ
-	 9GcKqEIPKMc7PjakSUojQydViLJlolHSBB2JOKHxDcIAki1C99B8uS3kEZjWAxtRnX
-	 jtT9QAxe4rLNA==
-Date: Thu, 24 Jul 2025 08:44:43 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	Jens Axboe <axboe@kernel.dk>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 10/10] vfio/pci: Add dma-buf export support for MMIO
- regions
-Message-ID: <20250724054443.GP402218@unreal>
-References: <cover.1753274085.git.leonro@nvidia.com>
- <aea452cc27ca9e5169f7279d7b524190c39e7260.1753274085.git.leonro@nvidia.com>
- <IA0PR11MB7185E487736B8B4CD70600DEF85EA@IA0PR11MB7185.namprd11.prod.outlook.com>
+	s=arc-20240116; t=1753337883; c=relaxed/simple;
+	bh=HW22suxYwW1XYKqwuKLqzZPfVaa5+jy4K+9JpWivrqU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HlSyeeaNCCh39bHOo2r+niRWJOCUm7jaVu0gEd6dd0na5UJ/NrQa+QUlvVLH9yL68Qe7kRJFnOtCqOxIn8roysC4MGXcJlWxOSUompYBSXJs7JRtUt3YFtijRmhwXjQ468JF580kUh0/U72IFFZ/TSmCBCkGkri52vY+kX5jMpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.192] (ip5f5af79a.dynamic.kabel-deutschland.de [95.90.247.154])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id E4AB761E647A8;
+	Thu, 24 Jul 2025 08:17:43 +0200 (CEST)
+Message-ID: <5323f487-0060-4396-b08e-b68a18f1893d@molgen.mpg.de>
+Date: Thu, 24 Jul 2025 08:17:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <IA0PR11MB7185E487736B8B4CD70600DEF85EA@IA0PR11MB7185.namprd11.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] Bluetooth: btintel_pcie: Add support for _suspend() /
+ _resume()
+To: Kiran K <kiran.k@intel.com>,
+ Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
+Cc: linux-bluetooth@vger.kernel.org, ravishankar.srivatsa@intel.com,
+ chethan.tumkur.narayan@intel.com, bhelgaas@google.com,
+ linux-pci@vger.kernel.org
+References: <20250723135715.1302241-1-kiran.k@intel.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20250723135715.1302241-1-kiran.k@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 24, 2025 at 05:13:49AM +0000, Kasireddy, Vivek wrote:
-> Hi Leon,
+Dear Kiran, dear Chandrashekar,
+
+
+Thank you for your patch.
+
+Am 23.07.25 um 15:57 schrieb Kiran K:
+> From: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
 > 
-> > Subject: [PATCH 10/10] vfio/pci: Add dma-buf export support for MMIO
-> > regions
-> > 
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> > 
-> > Add support for exporting PCI device MMIO regions through dma-buf,
-> > enabling safe sharing of non-struct page memory with controlled
-> > lifetime management. This allows RDMA and other subsystems to import
-> > dma-buf FDs and build them into memory regions for PCI P2P operations.
-> > 
-> > The implementation provides a revocable attachment mechanism using
-> > dma-buf move operations. MMIO regions are normally pinned as BARs
-> > don't change physical addresses, but access is revoked when the VFIO
-> > device is closed or a PCI reset is issued. This ensures kernel
-> > self-defense against potentially hostile userspace.
-> > 
-> > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> > Signed-off-by: Vivek Kasireddy <vivek.kasireddy@intel.com>
-> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > ---
-> >  drivers/vfio/pci/Kconfig           |  20 ++
-> >  drivers/vfio/pci/Makefile          |   2 +
-> >  drivers/vfio/pci/vfio_pci_config.c |  22 +-
-> >  drivers/vfio/pci/vfio_pci_core.c   |  25 ++-
-> >  drivers/vfio/pci/vfio_pci_dmabuf.c | 321 +++++++++++++++++++++++++++++
-> >  drivers/vfio/pci/vfio_pci_priv.h   |  23 +++
-> >  include/linux/dma-buf.h            |   1 +
-> >  include/linux/vfio_pci_core.h      |   3 +
-> >  include/uapi/linux/vfio.h          |  19 ++
-> >  9 files changed, 431 insertions(+), 5 deletions(-)
-> >  create mode 100644 drivers/vfio/pci/vfio_pci_dmabuf.c
-
-<...>
-
-> > +static int validate_dmabuf_input(struct vfio_pci_core_device *vdev,
-> > +				 struct vfio_device_feature_dma_buf *dma_buf)
-> > +{
-> > +	struct pci_dev *pdev = vdev->pdev;
-> > +	u32 bar = dma_buf->region_index;
-> > +	u64 offset = dma_buf->offset;
-> > +	u64 len = dma_buf->length;
-> > +	resource_size_t bar_size;
-> > +	u64 sum;
-> > +
-> > +	/*
-> > +	 * For PCI the region_index is the BAR number like  everything else.
-> > +	 */
-> > +	if (bar >= VFIO_PCI_ROM_REGION_INDEX)
-> > +		return -ENODEV;
-
-<...>
-
-> > +/**
-> > + * Upon VFIO_DEVICE_FEATURE_GET create a dma_buf fd for the
-> > + * regions selected.
-> > + *
-> > + * open_flags are the typical flags passed to open(2), eg O_RDWR,
-> > O_CLOEXEC,
-> > + * etc. offset/length specify a slice of the region to create the dmabuf from.
-> > + * nr_ranges is the total number of (P2P DMA) ranges that comprise the
-> > dmabuf.
-> Any particular reason why you dropped the option (nr_ranges) of creating a
-> single dmabuf from multiple ranges of an MMIO region?
-
-I did it for two reasons. First, I wanted to simplify the code in order
-to speed-up discussion over the patchset itself. Second, I failed to
-find justification for need of multiple ranges, as the number of BARs
-are limited by VFIO_PCI_ROM_REGION_INDEX (6) and same functionality
-can be achieved by multiple calls to DMABUF import.
-
+> This patch implements _suspend() and _resume() functions for the
+> Bluetooth controller. When the system enters a suspended state, the
+> driver notifies the controller to perform necessary housekeeping tasks
+> by writing to the sleep control register and waits for an alive
+> interrupt. The firmware raises the alive interrupt when it has
+> transitioned to the D3 state. The same flow occurs when the system
+> resumes.
 > 
-> Restricting the dmabuf to a single range (or having to create multiple dmabufs
-> to represent multiple regions/ranges associated with a single scattered buffer)
-> would be very limiting and may not work in all cases. For instance, in my use-case,
-> I am trying to share a large (4k mode) framebuffer (FB) located in GPU's VRAM
-> between two (p2p compatible) GPU devices. And, this would probably not work
-> given that allocating a large contiguous FB (nr_ranges = 1) in VRAM may not be
-> feasible when there is memory pressure.
-
-Can you please help me and point to the place in the code where this can fail?
-I'm probably missing something basic as there are no large allocations
-in the current patchset.
-
+> Command to test host initiated wakeup after 60 seconds
+> sudo rtcwake -m mem -s 60
 > 
-> Furthermore, since you are adding a new UAPI with this patch/feature, as you know,
-> we cannot go back and tweak it (to add support for nr_ranges > 1) should there
-> be a need in the future, but you can always use nr_ranges = 1 anytime. Therefore,
-> I think it makes sense to be flexible in terms of the number of ranges to include
-> while creating a dmabuf instead of restricting ourselves to one range.
-
-I'm not a big fan of over-engineering. Let's first understand if this
-case is needed.
-
-Thanks
-
+> dmesg log (tested on Whale Peak2 on Panther Lake platform)
+> On system suspend:
+> [  516.418316] Bluetooth: hci0: device entered into d3 state from d0 in 81 us
 > 
-> Thanks,
-> Vivek
+> On system resume:
+> [  542.174128] Bluetooth: hci0: device entered into d0 state from d3 in 357 us
+
+Just to avoid confusion, is the timestamp correct, as this is only a 26 
+s difference and your command says 60 s. (I am only aware of inaccurate 
+timestamps using human-readable format (`dmesg -T`).)
+
+> Signed-off-by: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
+> Signed-off-by: Kiran K <kiran.k@intel.com>
+> ---
+> changes in v5:
+>       - Address review comments
+
+This should be more detailed, if code was changed.
+
+> changes in v4:
+>       - Moved document and section details from the commit message as comment in code.
 > 
-> > + *
-> > + * Return: The fd number on success, -1 and errno is set on failure.
-> > + */
-> > +#define VFIO_DEVICE_FEATURE_DMA_BUF 11
-> > +
-> > +struct vfio_device_feature_dma_buf {
-> > +	__u32	region_index;
-> > +	__u32	open_flags;
-> > +	__u64	offset;
-> > +	__u64	length;
-> > +};
-> > +
-> >  /* -------- API for Type1 VFIO IOMMU -------- */
-> > 
-> >  /**
-> > --
-> > 2.50.1
+> changes in v3:
+>       - Corrected the typo's
+>       - Updated the CC list as suggested.
+>       - Corrected the format specifiers in the logs.
 > 
+> changes in v2:
+>       - Updated the commit message with test steps and logs.
+>       - Added logs to include the timeout message.
+>       - Fixed a potential race condition during suspend and resume.
+> 
+>   drivers/bluetooth/btintel_pcie.c | 102 +++++++++++++++++++++++++++++++
+>   drivers/bluetooth/btintel_pcie.h |   4 ++
+>   2 files changed, 106 insertions(+)
+> 
+> diff --git a/drivers/bluetooth/btintel_pcie.c b/drivers/bluetooth/btintel_pcie.c
+> index 6e7bbbd35279..a96975a55cbe 100644
+> --- a/drivers/bluetooth/btintel_pcie.c
+> +++ b/drivers/bluetooth/btintel_pcie.c
+> @@ -540,6 +540,12 @@ static int btintel_pcie_reset_bt(struct btintel_pcie_data *data)
+>   	return reg == 0 ? 0 : -ENODEV;
+>   }
+>   
+> +static void btintel_pcie_set_persistence_mode(struct btintel_pcie_data *data)
+> +{
+> +	btintel_pcie_set_reg_bits(data, BTINTEL_PCIE_CSR_HW_BOOT_CONFIG,
+> +				  BTINTEL_PCIE_CSR_HW_BOOT_CONFIG_KEEP_ON);
+> +}
+> +
+>   static void btintel_pcie_mac_init(struct btintel_pcie_data *data)
+>   {
+>   	u32 reg;
+> @@ -829,6 +835,8 @@ static int btintel_pcie_enable_bt(struct btintel_pcie_data *data)
+>   	 */
+>   	data->boot_stage_cache = 0x0;
+>   
+> +	btintel_pcie_set_persistence_mode(data);
+> +
+
+This hunk is not described in the commit message.
+
+>   	/* Set MAC_INIT bit to start primary bootloader */
+>   	reg = btintel_pcie_rd_reg32(data, BTINTEL_PCIE_CSR_FUNC_CTRL_REG);
+>   	reg &= ~(BTINTEL_PCIE_CSR_FUNC_CTRL_FUNC_INIT |
+> @@ -2573,11 +2581,105 @@ static void btintel_pcie_coredump(struct device *dev)
+>   }
+>   #endif
+>   
+> +#ifdef CONFIG_PM
+> +static int btintel_pcie_suspend_late(struct device *dev, pm_message_t mesg)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	struct btintel_pcie_data *data;
+> +	ktime_t start;
+> +	u32 dxstate;
+> +	s64 delta;
+
+Append the unit to the name? `delta_us`?
+
+> +	int err;
+> +
+> +	data = pci_get_drvdata(pdev);
+> +
+> +	if (mesg.event == PM_EVENT_SUSPEND)
+> +		dxstate = BTINTEL_PCIE_STATE_D3_HOT;
+> +	else
+> +		dxstate = BTINTEL_PCIE_STATE_D3_COLD;
+
+I’d use the ternary operator.
+
+> +
+> +	data->gp0_received = false;
+> +
+> +	start = ktime_get();
+> +
+> +	/* Refer: 6.4.11.7 -> Platform power management */
+> +	btintel_pcie_wr_sleep_cntrl(data, dxstate);
+> +	err = wait_event_timeout(data->gp0_wait_q, data->gp0_received,
+> +				 msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TIMEOUT_MS));
+> +	delta = ktime_to_ns(ktime_get() - start) / 1000;
+
+Move it below right before `bt_dev_info`?
+
+> +
+> +	if (err == 0) {
+> +		bt_dev_err(data->hdev, "Timeout (%u ms) on alive interrupt for D3 entry",
+> +				BTINTEL_DEFAULT_INTR_TIMEOUT_MS);
+> +		return -EBUSY;
+> +	}
+> +	bt_dev_info(data->hdev, "device entered into d3 state from d0 in %lld us",
+> +		    delta);
+> +	return 0;
+> +}
+> +
+> +static int btintel_pcie_suspend(struct device *dev)
+> +{
+> +	return btintel_pcie_suspend_late(dev, PMSG_SUSPEND);
+> +}
+> +
+> +static int btintel_pcie_hibernate(struct device *dev)
+> +{
+> +	return btintel_pcie_suspend_late(dev, PMSG_HIBERNATE);
+> +}
+> +
+> +static int btintel_pcie_freeze(struct device *dev)
+> +{
+> +	return btintel_pcie_suspend_late(dev, PMSG_FREEZE);
+> +}
+> +
+> +static int btintel_pcie_resume(struct device *dev)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	struct btintel_pcie_data *data;
+> +	ktime_t start;
+> +	int err;
+> +	s64 delta;
+> +
+> +	data = pci_get_drvdata(pdev);
+> +	data->gp0_received = false;
+> +
+> +	start = ktime_get();
+> +
+> +	/* Refer: 6.4.11.7 -> Platform power management */
+> +	btintel_pcie_wr_sleep_cntrl(data, BTINTEL_PCIE_STATE_D0);
+> +	err = wait_event_timeout(data->gp0_wait_q, data->gp0_received,
+> +				 msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TIMEOUT_MS));
+> +	delta = ktime_to_ns(ktime_get() - start) / 1000;
+> +
+> +	if (err == 0) {
+> +		bt_dev_err(data->hdev, "Timeout (%u ms) on alive interrupt for D0 entry",
+> +				BTINTEL_DEFAULT_INTR_TIMEOUT_MS);
+> +		return -EBUSY;
+> +	}
+> +	bt_dev_info(data->hdev, "device entered into d0 state from d3 in %lld us",
+> +		    delta);
+> +	return 0;
+> +}
+> +
+> +const struct dev_pm_ops btintel_pcie_pm_ops = {
+> +	.suspend = btintel_pcie_suspend,
+> +	.resume = btintel_pcie_resume,
+> +	.freeze = btintel_pcie_freeze,
+> +	.thaw = btintel_pcie_resume,
+> +	.poweroff = btintel_pcie_hibernate,
+> +	.restore = btintel_pcie_resume,
+> +};
+> +#define BTINTELPCIE_PM_OPS	(&btintel_pcie_pm_ops)
+> +#else
+> +#define BTINTELPCIE_PM_OPS	NULL
+> +#endif
+>   static struct pci_driver btintel_pcie_driver = {
+>   	.name = KBUILD_MODNAME,
+>   	.id_table = btintel_pcie_table,
+>   	.probe = btintel_pcie_probe,
+>   	.remove = btintel_pcie_remove,
+> +	.driver.pm = BTINTELPCIE_PM_OPS,
+>   #ifdef CONFIG_DEV_COREDUMP
+>   	.driver.coredump = btintel_pcie_coredump
+>   #endif
+> diff --git a/drivers/bluetooth/btintel_pcie.h b/drivers/bluetooth/btintel_pcie.h
+> index 0fa876c5b954..5bc69004b692 100644
+> --- a/drivers/bluetooth/btintel_pcie.h
+> +++ b/drivers/bluetooth/btintel_pcie.h
+> @@ -8,6 +8,7 @@
+>   
+>   /* Control and Status Register(BTINTEL_PCIE_CSR) */
+>   #define BTINTEL_PCIE_CSR_BASE			(0x000)
+> +#define BTINTEL_PCIE_CSR_HW_BOOT_CONFIG		(BTINTEL_PCIE_CSR_BASE + 0x000)
+>   #define BTINTEL_PCIE_CSR_FUNC_CTRL_REG		(BTINTEL_PCIE_CSR_BASE + 0x024)
+>   #define BTINTEL_PCIE_CSR_HW_REV_REG		(BTINTEL_PCIE_CSR_BASE + 0x028)
+>   #define BTINTEL_PCIE_CSR_RF_ID_REG		(BTINTEL_PCIE_CSR_BASE + 0x09C)
+> @@ -55,6 +56,9 @@
+>   #define BTINTEL_PCIE_CSR_BOOT_STAGE_ALIVE		(BIT(23))
+>   #define BTINTEL_PCIE_CSR_BOOT_STAGE_D3_STATE_READY	(BIT(24))
+>   
+> +/* CSR HW BOOT CONFIG Register */
+> +#define BTINTEL_PCIE_CSR_HW_BOOT_CONFIG_KEEP_ON		(BIT(31))
+> +
+>   /* Registers for MSI-X */
+>   #define BTINTEL_PCIE_CSR_MSIX_BASE		(0x2000)
+>   #define BTINTEL_PCIE_CSR_MSIX_FH_INT_CAUSES	(BTINTEL_PCIE_CSR_MSIX_BASE + 0x0800)
+
+
+Kind regards,
+
+Paul
 
