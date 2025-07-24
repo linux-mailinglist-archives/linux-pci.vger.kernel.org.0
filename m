@@ -1,155 +1,179 @@
-Return-Path: <linux-pci+bounces-32883-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32884-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 390FAB10BA3
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 15:37:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D86A0B10BB5
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 15:39:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B4505A7A8F
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 13:35:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7F99AE847A
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 13:38:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2C4E2D5A18;
-	Thu, 24 Jul 2025 13:34:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 708DD2D8767;
+	Thu, 24 Jul 2025 13:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="8DuW1mVW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB51613BC0C;
-	Thu, 24 Jul 2025 13:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1C913BC0C;
+	Thu, 24 Jul 2025 13:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753364078; cv=none; b=GddP4x7VQayeZO/VshKBsOB9Fj+Ogf9kXLgY8BBrz/bWcecENqK4KB1xlsskQIoW3Je0/KpEzraMeU1MuXohxhSBUTfJauI3+UTk9OhFVdLBhCC66xL7o4WvZRcAMq3wmakkdgpTgoBdiMaj5zPy+4b3xmIxYCTaD0dFY7bhedY=
+	t=1753364355; cv=none; b=trk88nXrqw0haUHofEFcHgOkqLevii2b3N64T6hbLOjz0B8ey/Y6116mgp1YjTBPmeW/He/v2y2cO/GcRLj8R6Jw1+Z9oa2GIM5uQqtHTTQbKZ1F2zQMQv8b0mBfEZRRtk3Su/9uetYMX4BUgJXx4nR/Xw5mTkvUZibplFLY0tA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753364078; c=relaxed/simple;
-	bh=MVJ3E/91h69I0bmDMezkRZP4rkHbijJOQ6KILSOiZCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D5TyZl0Q/3dEAIVMrh+F5EwN6S8zkpA3m/nPOtrkN1yhMDK4zPqNQ2CJ3LaPpijwzi8y1wZPKKv1W/sUNXcbQ95y3JxmQeGjVTKVsluR+pT7WJ+Lkxt3SZs7X8jpFEshXmmiSTE5BBTu7RoEjAqY5dmjkqMaFUHrMlBiG9T2Wp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-af2a2a54a95so162762066b.0;
-        Thu, 24 Jul 2025 06:34:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753364075; x=1753968875;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/fx+2jC1brmgVu9hs4XiOEifPBnLGokabrEM+R2kq2s=;
-        b=pAH/Z8xdK0+QpGizQ6NuqWHfiFMAaYNv2Tov10c2YcezJaCxR8WlODx/ugavmVPyYR
-         tqd5Vo0UvtLUm6eLDc4Luxbib+gfOx9C7/CktiAxXWZ+wHa6KyJlGvr2GvVaghkxfyDo
-         Pqh0UIAP5Yw8nt5Zuy7vH59gMNumCN6DIj32OhTt+4YGhVrWc9AlSzEDR2qTscH/kYBR
-         KExYk4vlp7rhsjqEB57TkSEgsybWgW+c0Lrd+x9VN9UO7oBARgzYDiH+p8Ch7RR1Kycc
-         RadCJQ1UXAtnUmYIZNdiTtwO2t23EBinzyK4EhwBpCByd9w7VNogEEanIi+Fn/MX4+en
-         IkKw==
-X-Forwarded-Encrypted: i=1; AJvYcCW6cFmtOT5l0dGa5Mlo8J0r2MgHainsQ1B2CKc4GzsqIUTsyEEas8Iv2KIz3fDH7lBbOGtNEyg2MidNcg==@vger.kernel.org, AJvYcCWAG1MdyVBLDOi9Jx5nEvpF0tHcfsSdxV40ssk5M2hHpqqHn6GCr3kLtdT1Y6WveE1gIfXdmP3+i3rL@vger.kernel.org, AJvYcCWco3+clfJrs7fd0vyNbzmXEovTeIOkE70+NXEFtm2eagGvpPBcFvupu1PkRuYpjcmHz57u7z6rSp5A@vger.kernel.org, AJvYcCXtSym/WcXizoM0yWfgrKDp6DJBNRWmWW9HQZ8Nqctp0s2M2e7HWuvY9BHwdqoAhE6XfmUNbyKxCxyo/4TE@vger.kernel.org
-X-Gm-Message-State: AOJu0YyefYRXlDMZXDTr4JRXMpR5b52SOMsZu3uTBl3rjV07HlLCiESl
-	GekYevEwhtVnLYf4cd8lvItm+p/hb3AVLPpX3D+rIN48VVNTGj/5sbUv
-X-Gm-Gg: ASbGnctVAr+M8C9xMzOwxb76ahgBTFuyAlW7lPUnJwcc+27lZoy6RNxQ984C/rfVEjg
-	+csaBqeN0aBY/25B/pKnJxLZHRknFXg0UAeJtFpzTojuzA7RjfgPCzWsJTs10ZyFU/F4UWqm5TT
-	szRmMZ2NCQPzgpVV063ALJKPHrx45Ps2LkrV2msHuMTMxagB4LkLvkbm2FSpsKsfW70YVKtm9gt
-	OLY2zyTEkcOwO7LShWCn9qu3fVfcZzutwrp7TmLq80odssPA4YYoPt2QJ74v0TNAZZKilk8AQDr
-	I/Rx8kN63uyBwXK3i7pYpH1/Vo9PudSfKhmFGcODqaorrbXGLSf8l+7j+pV9Iua95cvCVjGMtKg
-	BbWI8AMxRZg==
-X-Google-Smtp-Source: AGHT+IErTV5E5SvHgukSA8OS+U/Vctcx7DT/kAXhifsJMwbjohYquNlfTpV+af0AGvLRHpjhkGn6qQ==
-X-Received: by 2002:a17:907:e8e:b0:aec:76c6:6ef6 with SMTP id a640c23a62f3a-af2f8d4fc6amr617861566b.50.1753364074854;
-        Thu, 24 Jul 2025 06:34:34 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af47f861d7bsm111509066b.119.2025.07.24.06.34.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Jul 2025 06:34:34 -0700 (PDT)
-Date: Thu, 24 Jul 2025 06:34:31 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
-	Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev, osandov@osandov.com, 
-	konrad.wilk@oracle.com, linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-pci@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v3] vmcoreinfo: Track and log recoverable hardware errors
-Message-ID: <4qh2wbcbzdajh2tvki26qe4tqjazmyvbn7v7aqqhkxpitdrexo@ucch4ppo7i4e>
-References: <20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org>
- <7ce9731a-b212-4e27-8809-0559eb36c5f2@linux.alibaba.com>
+	s=arc-20240116; t=1753364355; c=relaxed/simple;
+	bh=GGKPx34LBUi+sDBe9RnkRVW9eRR9QWY4VywRj+xNMhE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mSlrYnzcMWcPbbzuKmMDpI8pmyL8coS9BIM1tWG5CWHZKIJ8Al1XEU8OxAK9tFwM4kp6N6/RTynvLQH2BZUBNcmAAdSqYQMAbgCLelz6W3M49LfNMUcPqd4Qp3Jyms/AwOJ9YK7Kdpf60ie87xRp7wu7+z3GEgMq8BpbXOaJwY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=8DuW1mVW; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56ODAgol018828;
+	Thu, 24 Jul 2025 15:38:57 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	w9y6lMVKoGSGbAQ4r7YRTQAIypLEALnPa938lwZnu4s=; b=8DuW1mVWb5Zmz+q0
+	7RKe020XQCaScSNVrCjpPnmByr2ryfDEsJqHwQPObJeuAtdyS46qENjf789qB2Gn
+	Y9jkz0gnExfyBxnDdCXcKF/U1bvmXiPSL0WnENoFzkBrzJOHYylmsIvuGCerLywl
+	ZaA9oZ7lKwFoF195X342XP1lYemLrGWn/qjVkHL6zChh+CpYuigHX7/+E62GiSba
+	SVAHo4H6Hei4POCBjTIbbBtR678I3fMIdBg41DlglPcRw9/urX+wij9vSihPDcRp
+	TxPHyIN2JW2TvS5/OuWkzhrAFqWa9uAwPyPD4tuvxnn6RfeIub6Uo+oLKBm8zZIJ
+	H13+MA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4800g91e0a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Jul 2025 15:38:57 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4750C4005D;
+	Thu, 24 Jul 2025 15:37:50 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 594A6763978;
+	Thu, 24 Jul 2025 15:36:56 +0200 (CEST)
+Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 24 Jul
+ 2025 15:36:55 +0200
+Message-ID: <99737d4f-488d-4208-91aa-83ce52957147@foss.st.com>
+Date: Thu, 24 Jul 2025 15:36:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH 0/2] Add pinctrl_pm_select_init_state helper
+ function
+To: Bjorn Helgaas <helgaas@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>
+CC: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@foss.st.com>, <linux-pci@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+References: <20250723210753.GA2911683@bhelgaas>
+From: Christian Bruel <christian.bruel@foss.st.com>
+Content-Language: en-US
+In-Reply-To: <20250723210753.GA2911683@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7ce9731a-b212-4e27-8809-0559eb36c5f2@linux.alibaba.com>
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-24_02,2025-07-24_01,2025-03-28_01
 
-Hello Shuai,
 
-On Thu, Jul 24, 2025 at 04:00:09PM +0800, Shuai Xue wrote:
-> 在 2025/7/23 00:56, Breno Leitao 写道:
-> > Introduce a generic infrastructure for tracking recoverable hardware
-> > errors (HW errors that did not cause a panic) and record them for vmcore
-> > consumption. This aids post-mortem crash analysis tools by preserving
-> > a count and timestamp for the last occurrence of such errors.
-> > 
-> > Add centralized logging for three common sources of recoverable hardware
-> > errors:
+
+On 7/23/25 23:07, Bjorn Helgaas wrote:
+> On Wed, Jul 23, 2025 at 01:32:52PM +0200, Linus Walleij wrote:
+>> On Thu, Jul 17, 2025 at 8:33 AM Christian Bruel
+>> <christian.bruel@foss.st.com> wrote:
+>>
+>>> We have the helper functions pinctrl_pm_select_default_state and
+>>> pinctrl_pm_select_sleep_state.
+>>> This patch adds the missing pinctrl_pm_select_init_state function.
+>>>
+>>> The STM32MP2 needs to set the pinctrl to an initial state during
+>>> pm_resume, just like in probe. To achieve this, the function
+>>> pinctrl_pm_select_init_state is added.
+>>>
+>>> This allows a driver to balance pinctrl_pm_select_sleep_state()
+>>> with pinctrl_pm_select_default_state() and
+>>> pinctrl_pm_select_init_state() in pm_runtime_suspend and pm_runtime_resume.
+>>>
+>>> Christian Bruel (2):
+>>>    pinctrl: Add pinctrl_pm_select_init_state helper function
+>>>    PCI: stm32: use pinctrl_pm_select_init_state() in
+>>>      stm32_pcie_resume_noirq()
+>>
+>> If Bjorn Helgaas is OK with it I can apply this to the pinctrl tree.
+>>
+>> Otherwise I can also just apply patch 1/2, but that doesn't solve
+>> any problem.
 > 
-> The term "recoverable" is highly ambiguous. Even within the x86
-> architecture, different vendors define errors differently. I'm not
-> trying to be pedantic about classification. As far as I know, for 2-bit
-> memory errors detected by scrub, AMD defines them as deferred errors
-> (DE) and handles them with log_error_deferred, while Intel uses
-> machine_check_poll. For 2-bit memory errors consumed by processes,
-> both Intel and AMD use MCE handling via do_machine_check(). Does your
-> HWERR_RECOV_MCE only focus on synchronous UE errors handled in
-> do_machine_check? What makes it special?
-
-I understand that deferred errors (DE) detected by memory scrubbing are
-typically silent and may not significantly impact system stability. In
-other words, I’m not convinced that including DE metrics in crash dumps
-would be helpful for correlating crashes with hardware issues—it might
-just add noise.
-
-Do you think it would be valuable to also log these events within
-log_error_deferred()?
-
-> > -	if (ghes_severity(estatus->error_severity) >= GHES_SEV_PANIC)
-> > +	sev = ghes_severity(estatus->error_severity);
-> > +	if (sev == GHES_SEV_RECOVERABLE || sev ==  GHES_SEV_CORRECTED)
-> > +		hwerr_log_error_type(HWERR_RECOV_GHES);
+> The stm32 driver has been posted and is on this branch of the PCI
+> tree:
 > 
-> APEI does not define an error type named GHES. GHES is just a kernel
-> driver name. Many hardware error types can be handled in GHES (see
-> ghes_do_proc), for example, AER is routed by GHES when firmware-first
-> mode is used. As far as I know, firmware-first mode is commonly used in
-> production. Should GHES errors be categorized into AER, memory, and CXL
-> memory instead?
+>    https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/dwc-stm32&id=5a972a01e24b
+> 
+> but it's not in mainline (or even in pci/next) yet, so you would only
+> be able to apply patch 2/2 if you took the whole driver, which is
+> probably more than you would want to do.
+> 
+> I haven't put it in pci/next yet because it doesn't build when
+> CONFIG_PINCTRL is not defined:
+> 
+>    https://lore.kernel.org/r/20250716192418.GA2550861@bhelgaas
+> 
+> I don't know enough about pinctrl to know why stm32 needs this when
+> nobody else seems to.  I doubt it's really unique, so maybe it's just
+> not doing the right thing here.
 
-I also considered slicing the data differently initially, but then
-realized it would add more complexity than necessary for my needs.
+The STM32MP2 is unique because the core clock is gated on CLKREQ#. 
+Consequently, it is not possible to access the core registers from DBI 
+when no card is attached, causing the board to freeze. I don't know 
+another platform with this limitation
 
-If you believe we should further subdivide the data, I’m happy to do so.
+To fix this, we use a GPIO to de-assert CLKREQ# during probe and restore 
+the pin to its default AF mode afterward. This works perfectly for 
+probe, but we lack functionality for PM resume unless we explicitly 
+select the state with pinctrl_pm_select_XXX_state().
 
-You’re suggesting a structure like this, which would then map to the
-corresponding CPER_SEC_ sections:
+For reference, the init_state functionality was introduced in
+https://lkml.org/lkml/2015/10/21/1
 
-	enum hwerr_error_type {
-	HWERR_RECOV_AER,     // maps to CPER_SEC_PCIE
-	HWERR_RECOV_MCE,     // maps to default MCE + CPER_SEC_PCIE
-	HWERR_RECOV_CXL,     // maps to CPER_SEC_CXL_*
-	HWERR_RECOV_MEMORY,  // maps to CPER_SEC_PLATFORM_MEM
-	}
+If we prefer not to extend the pinctrl API in patch 1/2, I can fix the 
+case in patch 2/2 only with something like:
 
-Additionally, what about events related to CPU, Firmware, or DMA
-errors—for example, CPER_SEC_PROC, CPER_SEC_FW, CPER_SEC_DMAR? Should we
-include those in the classification as well?
+in stm32_pcie_probe()
+      pinctrl = devm_pinctrl_get(dev);
+
+      if(pinctrl!= -ENODEV) // PINCTRL is defined
+           pinctrl_init = pinctrl_lookup_state(stm32_pcie>pinctrl, 
+PINCTRL_STATE_IN
+
+in stm32_pcie_resume_noirq()
+    if (pinctrl) {
+           ret = pinctrl_select_state(stm32_pcie->pinctrl, 
+stm32_pcie->pinctrl_init);
+
+What do you advise ?
+
+thank you
+
+Christian
 
 
-Thanks for your review and for the ongoing discussion!
---breno
+
+> 
+> Bjorn
+
 
