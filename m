@@ -1,352 +1,354 @@
-Return-Path: <linux-pci+bounces-32879-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32880-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8589DB1065F
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 11:37:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FE83B10725
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 11:58:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8210C188801F
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 09:34:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB5A73BC6EF
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 09:58:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEA9829E0F7;
-	Thu, 24 Jul 2025 09:28:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD4FE25A2A7;
+	Thu, 24 Jul 2025 09:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="jXrO8QY6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lw+McJPC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013012.outbound.protection.outlook.com [40.107.159.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E017729A307;
-	Thu, 24 Jul 2025 09:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753349323; cv=fail; b=BoX5ly9v6noy8wsfGMufRlYM74Ox/AuDfsh+Ka48yFsyVEKUDk14suzFqQMwQWYnIieQAnlNFj+2UWNH/zoahZ/3WPpi02UiDZyynmFsi3+cQMva0Tc/6WlBuOtyYjBrpXMLMGGE6b6effQgUfOOnb/+YxmyeJZlNfhfO1/4Tl8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753349323; c=relaxed/simple;
-	bh=esjqZVqCh4YaB4aEFMOdlT+7mviZ388YZxmmDl28Vvw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=FGsQ3JvwLzf6kkwI7dhHHuPz6iFgvAO/8mg/DinLGQe6XdAJLohtSNjzBe2b28aeY3kWWrpN+vfEiaibOdFXTMo3tQPKWs37iCMe5KZq7rxrxsCbmNTbGWKGekFYKQ6SK0/BUQ3EsTNnn2cf9EF2LRHTm54aa4gSsMkardZ6VDs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=jXrO8QY6; arc=fail smtp.client-ip=40.107.159.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uEVCsz9268pQU/Wuit9XvLozdPTXqwX/Kasww2n15ODYpFmtt++x2wdAAb1lNdQ9v6jjoirlvef1K0tjxFmmagU3GyQibDAsd3LSN3g2Wb6DqO+aVkTHammOjHVKgoHaRdmpRv0AkDkemdFksr/+jrcP8/rDpabG7f6uPSwbORcoBWbudA/kL3qrVe6126LLau/wjRuLlDlBJzJqsapL75yfjAsmljVBB5xLIeptdmAGXblp3AiD9j5spUMJGcO8ShIaRWy5Bg/Kb/yPEfEE7m9srJuIhuuj3eSSUyrEmm14XG4OT7cMRJPPRm9rjSpVpf1mn98Ap9vjjiCNyN/S1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=esjqZVqCh4YaB4aEFMOdlT+7mviZ388YZxmmDl28Vvw=;
- b=KDxk6324bSFFJXylhwzM2CDPYTuAK8NyBcpWjsTDQm7+vmKYsDLm4Q8P7FD5XJCzyZoSQUnoT6jiBO2njnQ7f7zZSGalJEQWOlNKy5KGzy/bFjUBDyLdz2S2KgvDPJ6Ttyg0S8oxCNWEJtCkMms7+lrNmboLYy4cl6s6mkns6DRDCVwRiPHdMNqcDCEOvghH8JZQas3rCwS//qGS2BHPRwdFlYw8DYGFYot92JBb7oXH8XdtLlqqokgWrnDlWevBuiqwHgbYubTiDaCS3+uxd9fbpYsIf2yVk35IF7nrjxnj9OsjvIwM0BOnrzREdj7EVYFn9c/rdNPUwp4412D37Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=esjqZVqCh4YaB4aEFMOdlT+7mviZ388YZxmmDl28Vvw=;
- b=jXrO8QY6hf/ktNsIEfBWSnOyQPsi2dPpKZVUzUzBLkVzMcmRSPPRBqVVR9PigFS5XQJmg1K3hvnLsj/erhqM72Ds91I3pjQNmPMyJ26HmZmJ7GYn4xmP7pmLUBB6FaWsuIrvKEx9Z64mGiH1yCELoRQH4JxRyGfWIH1tOzXUuHINdYcQBb5KrL3LVZ7UGTv4Q66AH4JtQ5zWEbtqUJk6K1n+gy3Cb4suWHUPlf7e5Z5DvJTf9XrdA3qmjypOjoymhtnzV+eKTo1HmHHJ6+r/2VBBfbJbc+eGYMvnuHF3tPhviqFFcyjuTnGlesaVfiviI1+Mcg59vU6GsprBE9pPlQ==
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
- by AM9PR04MB8778.eurprd04.prod.outlook.com (2603:10a6:20b:409::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.22; Thu, 24 Jul
- 2025 09:28:36 +0000
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93]) by AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93%4]) with mapi id 15.20.8964.019; Thu, 24 Jul 2025
- 09:28:36 +0000
-From: Hongxing Zhu <hongxing.zhu@nxp.com>
-To: "manivannan.sadhasivam@oss.qualcomm.com"
-	<manivannan.sadhasivam@oss.qualcomm.com>, Bjorn Helgaas
-	<bhelgaas@google.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver
- O'Halloran <oohall@gmail.com>, Will Deacon <will@kernel.org>, Lorenzo
- Pieralisi <lpieralisi@kernel.org>, =?gb2312?B?S3J6eXN6dG9mIFdpbGN6eai9c2tp?=
-	<kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Rob
- Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Philipp Zabel
-	<p.zabel@pengutronix.de>
-CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org"
-	<linux-arm-msm@vger.kernel.org>, "linux-rockchip@lists.infradead.org"
-	<linux-rockchip@lists.infradead.org>, Niklas Cassel <cassel@kernel.org>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>, Krishna Chaitanya Chundru
-	<krishna.chundru@oss.qualcomm.com>, Lukas Wunner <lukas@wunner.de>
-Subject: RE: [PATCH v6 0/4] PCI: Add support for resetting the Root Ports in a
- platform specific way
-Thread-Topic: [PATCH v6 0/4] PCI: Add support for resetting the Root Ports in
- a platform specific way
-Thread-Index: AQHb9ZWplueJtbe1+U+t+kXCMggPGrRBCzoQ
-Date: Thu, 24 Jul 2025 09:28:36 +0000
-Message-ID:
- <AS8PR04MB8676DE8224D6242FA0597F5C8C5EA@AS8PR04MB8676.eurprd04.prod.outlook.com>
-References: <20250715-pci-port-reset-v6-0-6f9cce94e7bb@oss.qualcomm.com>
-In-Reply-To: <20250715-pci-port-reset-v6-0-6f9cce94e7bb@oss.qualcomm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS8PR04MB8676:EE_|AM9PR04MB8778:EE_
-x-ms-office365-filtering-correlation-id: a51c9e40-e7e3-40d6-7054-08ddca947786
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|19092799006|366016|1800799024|13003099007|38070700018|921020;
-x-microsoft-antispam-message-info:
- =?gb2312?B?c005dEVmUjJ3MUZYd2FWLzVkRUpZNUFQbHdtb0NmU0pPbWNJMjhBUmdaRTNi?=
- =?gb2312?B?ODVmeEkxWFZEVHhFVHJCNDZsK0VJR1liNVNCTTRYM1hrVzdBbWdseWhscFJV?=
- =?gb2312?B?bmxMQWZBUEphc1VnRFZ6dElPU3kxalZHUjhxTjFSUjdxdUhQaWRLU0ExRzEx?=
- =?gb2312?B?cFRsZ1FKeHAxOUE0cVZnQUtWYjRmUXZsYS9DcWZyMUN4Z2RHMXBESit3RWhF?=
- =?gb2312?B?cUFzRmpMcGJoSkV0U3B4OHVEU09NaXBENjNtelkwRm1qQXVFNnpoK1RLTGpJ?=
- =?gb2312?B?Z1hqMFZoYXVIbHd3am93MmUwMEVsRFdWV0NIL0VkSWxQQmlTK3NTQVdCUkhP?=
- =?gb2312?B?dU9GeFFDWGJpMWV6NFBMVDErTEUzTE4rak03TUxJVmZSNFZaVWhJNjNBVzJS?=
- =?gb2312?B?akwvL2s5WUJxemhWaWJGeEFXaFNRT1h6ckc5c2VVd0RpcUM1RFJTTlJGUDJY?=
- =?gb2312?B?enZGd09DOWFZUVJwUUlzdlRBUHhtM3RrSVRJclNUTDVTUXMwd0dRdEk3OGZZ?=
- =?gb2312?B?ZElVTUJJWlRITU1aamMrc0p0RFVIWFRuWWp6UHpPNDdpWmUya1ZZSGNWU0pl?=
- =?gb2312?B?b0hacmZ3bmhDMFVYcENhVTAxMVlPMjNXUUVZaHhaeW9ucUQxTkJWMTVYL1dE?=
- =?gb2312?B?VmJBTy8rZU16amNpUXEwdWJlWHQwQmoyODFKTGtnNW1WVzFnLzZ4cmZkdGtI?=
- =?gb2312?B?TDBZZk5mZDZrcjVpdU1zd1ZmcFIxTmtPa2FRZVl0dmtzdWJMalduV2Y0MU9U?=
- =?gb2312?B?RlYzMkdJZUY0T2RjLy94YzBRcllVeGhqRUFEaE45QkRIWWN0NXVjNGJZR056?=
- =?gb2312?B?OEZHdUVOSnhRUUtXZThmRXU4V2FNbmE1WnozcDc1ek5IRHJZZkJqQ2RkeDlw?=
- =?gb2312?B?U2lILzJDK29NZUwwY1h1TVczaXJrVkJQYUlXY3FWYlVyZ3BZZVppYVk4RzdC?=
- =?gb2312?B?blZTMXVpUFFvRjgyYnRrcHZ1c2luOEVNMEQwUzVpV0pyRXI2eEZpK0VIWlAx?=
- =?gb2312?B?TmVPVFROR3pCY01Gem0rUEFaVTV2T204OFlXeFQxVU92aEE5d001UXp2RHFS?=
- =?gb2312?B?YlRuSlBBWVkrOUg1SHdBUUh5SGZsdk1wMmhQQTNvbjNKU0pKK2NTOVErclkw?=
- =?gb2312?B?eDlmd1k0bGRRL0ZiZzMxS0hDbHJ0bm5ScmNZN2M3ZVoyMzY1cDk3dy8xdnZN?=
- =?gb2312?B?QUVieE9SOWNtMXZyYnczMWd5T1QvWWlocFpwQ2ZtallxZCtDNmQ2eUJmOTIv?=
- =?gb2312?B?SjFCQWw2UExGQmlMbXNVOXNvM0puOURRVWUzdDh0VTRwdFF5T1BIejdVN0o3?=
- =?gb2312?B?OVdmTFdkbHlObmdQa0JWSTU3bm40UGhjcDlrUThocDd2M1NnOFVYR2Y3SGFK?=
- =?gb2312?B?V1JXcVFwS1U4ZVdyOHlPN2Q1SVdpOFdaczFQL0lKOGVpVnVvY1BsQ3NpZjhm?=
- =?gb2312?B?S1g1eXhUOGZHUEEwemlXaHVjZXEvc1pNcmkzdmFSTzRoWFp0WHc5WGlTZ3Y0?=
- =?gb2312?B?S3NaK0xPYjR5NmlVUkpwVUFwRUtGbGdEZnNKUmxnMHZKOTRHS2U1S2hsMS9p?=
- =?gb2312?B?K3NwVlBtUzk5TngyWnMvMEFscGpXZFFPajZCNE1JRmdCMHU1c2swanNnMjN5?=
- =?gb2312?B?ZVM1Qjh3d3ZWSXJ0ZFFhdGkvbkhJc2JJMkhMODVqUHpWTGdLV0xPb2NLUVI3?=
- =?gb2312?B?TDh5WlR5NEdiRFJRelAwSjFQbi9VZXZoT1NsRTlOWnNlU0JKRW10TmNvUk1o?=
- =?gb2312?B?UWRQVWJhbXlBNEkyUlhGRlRQUDg1ZVNIVm8yNS9PRVJrZ3lGK1JOWHNBWUpp?=
- =?gb2312?B?SDdkTHpNaFpwM2FBVFF1eEttN2NpYnB5Tm5WSDA2UFlWSVdLSkl6bEdvdDli?=
- =?gb2312?B?dkc2elZ0VlpwbGdXRDRhS2xyaXNWeVByTGpjejVJb1NER2RmeGJucXVlWit2?=
- =?gb2312?Q?Y9DqhrMv8PXyM5mV/X7ExIaRNCUV8gpy?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(19092799006)(366016)(1800799024)(13003099007)(38070700018)(921020);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?gb2312?B?OTJxNlJBcEpSNTBVL2EvcWZaNmVBS3M4YURNd2lFdjFSaDhVTkQybnJXdzhW?=
- =?gb2312?B?dENoekFDanVoemZnQklEbmNsMklIT3hCZ0RzNGhUa2xiS3pZK0JGOWVGa1g4?=
- =?gb2312?B?b0lCdDhKYjdydE9WNndjdzZKYzJuZzBGY1pxeFVWWEFROTQxSzFrUjJPV1lE?=
- =?gb2312?B?TURwOFZ6QXNINnZEWXlJbTBZV0M0eHZ4VlBaVDE1bm8vRytBRnZuLzJTcWRj?=
- =?gb2312?B?UHdtblVBaUhZcnVuT0V5OEljREwvaGRtdDBSVzAxdEJaeGhYRm5MSWVmMnRQ?=
- =?gb2312?B?blRnSjVQQ1Jjc1ZDNk95Yk8vemZYdnM3bkVoZUNQOERMZmcvVGVMWlY3Ritz?=
- =?gb2312?B?K1h4dkx5d01jWXh1SDIwYmUrZ0NTcS9FNW52a3dqTkV3TWRaZHlEVzJyU2R0?=
- =?gb2312?B?NXUxUmZMQXBvUlYzeUh1MFhmRGpqQnBrWWMwZ3poVGw3amtPZExBZGdsZitO?=
- =?gb2312?B?ZG83U3JuTVp5a0NGVnFQNG02UlJvZXJyalRRaFBFeGhCMUM1SGY4MlJnd2pG?=
- =?gb2312?B?NzlxS015dUVoMURoU3V4UTl0cFBScER2b21hdk5WRTRBQmQwbVNyaTJwZHV4?=
- =?gb2312?B?SForb3Bnays1WkJxVjVxZjVucy9uODdTdzV0WElBUzV2Wk9qRHphcG5sTVMr?=
- =?gb2312?B?bVBMSjg0WnNWQjE4Mnl5UnE0cngvdER2dWp5QVpMZnc2SzIxd0N1clpuYXVm?=
- =?gb2312?B?VnRST2EyeDNmVTBHcGpsb3FTVzFWdEM5ZXdZZ2tLanY0NzFnanRaQzZ6V2FZ?=
- =?gb2312?B?VFFMT3ZFczllVTM5NHZDbUVkLytKZU5ma3hjTVRJSGdtTk8yZXFBSjhadlJn?=
- =?gb2312?B?T3pJNFQraHVRamFvR3NzbldmUTdGY2hwRUNvTklWdzBHeWVIemlDSkhHVGgy?=
- =?gb2312?B?aG5YTVNqTWZDZkprZmFiV3hudEJLZFFKSXJ1Tms5N2s5M2lXL2NzZUNiMEVs?=
- =?gb2312?B?TzljcFZwamNhY0t2ZUgzdlVxc3BTTzQ1MkxhMnA5d1QwWjZET2ovY2JlUmhW?=
- =?gb2312?B?RncxclFiMk5UVEdMcENUTWNQOUNuTUJISlRpOWdxMkJRWWsvODJTMVlpUXNW?=
- =?gb2312?B?NkVFYW9HdUI2Ty9maUtOWC9iTHUwYnBBZ2JRZlFKMlFRdUc1N3JmaUpDVWVM?=
- =?gb2312?B?L2swc1lxQWJ1a2E2K2V1dGM2Yy84SjBmc1ZJTmh1YUlDNnBlVjhvYVJWZEMw?=
- =?gb2312?B?WGwwc1YvTUc1aFlVS0wrYlQ3bGdrcnBla0N1cG1xd2hlRTEvNUxWcThmeEdt?=
- =?gb2312?B?V2dRZVdUMFVDUnB3OXJ4ZkJWWExBaEhPOWlIQVk3QklyNjQ5WGZ2WlRNRTVv?=
- =?gb2312?B?WDN5b3BVSkNHeHZVSWVEYktMQlNCSUJydWtYL0NNOXRTSHBZaHdJcFg2b2Np?=
- =?gb2312?B?a3dseWxSRTM1ZDlsVXpXdXhJN2dVSGViRnVaRjFIaDZlOFNMby9NcDNVQTlF?=
- =?gb2312?B?Q1cvUzFWS2l0RTBoam1xd2NaNUZ1Vm5hTFhXK0Y1eCtieEpsZ1JQdUoyMGZk?=
- =?gb2312?B?Y2ZMeHQvc2tGRXdCUkJPUy9ET2FnOUNNZjF6Ukx6Zkl2cWtoVTRJd09waHNQ?=
- =?gb2312?B?TXM2SU9ENkFPSTJxaGNBanZjRmlLVUFTNlJ4OUZ0T0xEb2JXQmZ3VUV3QnVU?=
- =?gb2312?B?cXA2RWNwVmZuNHJpRDRuWnpXYTNOTldIQjdnbjY5cjVoR2JRcEw4dVBjelov?=
- =?gb2312?B?QUIzei9FNEY5OTU3SHZlSHh6ZThOVGFRZmxWRVJxc3RjWDJDbXpTdUhHeStS?=
- =?gb2312?B?SGR0WDBaU3RvMGtwMnA1d1htYytpZ2wycWhaTU5SZmNXTlNsVVBGWElNUEta?=
- =?gb2312?B?aEVOc2UyMTE4amFtR1NXeUhlRkt4QTBpMFAyZjZqUnNBWG4yVFlaNzNTcWNp?=
- =?gb2312?B?TFhINVVnandHYzJmSW14blUvbG9IZnRUT3pseDIweVB6UHJmMmFtckFlV0pK?=
- =?gb2312?B?THpKTWRCaW5BZWNDZlRBQXRCcjZyR1FDTHJkSWVUajFFaXJ3NXZ0bExQQ29u?=
- =?gb2312?B?ZG1SY1doR2dWY0MzbFJsZHhidjJTTkxTVEpWMldGczg4OVZTNnVUMjB2clM4?=
- =?gb2312?B?bnF3RzB4bWFUM0ZETGZQZmJ3YWU3NmhBREdLa1hiaWxNaHNubUp3YTZBMzhV?=
- =?gb2312?Q?dCPccyzxYP538Es9O9iLkl9c7?=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08FB257440;
+	Thu, 24 Jul 2025 09:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753351134; cv=none; b=W9ZrLDtK4Eouuq7CO7apmJFfifJcSCEY1/SE6DjOkWhzyz6K6ywxTyM/ORZNQio6EJUoUmt8c52AgcGtoaeT/TbTXVFizY/ZYsljlVxGIe6wf1tRhNXI5YGZgb1C5JXFohRUQD223p01qlju/03Pr9Bz4/Exv6sKddw67wTsHj4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753351134; c=relaxed/simple;
+	bh=4KcbXiAk6KU/vgJDDoU5l9DZUfzMiDCuLPIQqZu6bm4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QYUe7cjUWfwDtHC60QgSbUBNaqfhcBeK9E3Ok/Q6FGKmxjlSQ3jyZ1UMeHJom/RxRmk3B0sP+w1SnorFPvgoVw/Dlo4UxeMLukyx5f3YUeG2ubPx4LM2yovfJONeU0X/bG4PnugmwV1WJToIDdPyUkc/Ml98ZNxplUAPNaD8vy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lw+McJPC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E3A7C4CEF8;
+	Thu, 24 Jul 2025 09:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753351134;
+	bh=4KcbXiAk6KU/vgJDDoU5l9DZUfzMiDCuLPIQqZu6bm4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Lw+McJPC8yKTl5Q4n+FKt+drPNo9Hjojl9UiOHdx9f8H/TuTXRZZaBVN+JZFVCXzn
+	 odol8RKPHqCd8aoeoltXS5ZK4B+C/dI4Zecpg1i2DU/bhrY7C0Fkw+3WZClu6n+Wpa
+	 WUmAKhZ4ZKfKxNRYcZnvlY4wYpEI5QQG01WoLlwf21YdMcHlVz9oRXqY6ecnTU0bL/
+	 a16jTfBWbk4R+o+C/YZ009IW2Y9uFJfPqRJpoTNF6WoGlXNlciLiGwoS58PvvedrB5
+	 GcCPt+FNVM0SYMHTE0yhcO0aNFs9hBeHkT8O4K8XevRd8Oo9Dc/0xD2qM9EBUFQQQZ
+	 NVCkaVHZqAc7w==
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72c09f8369cso374897a34.3;
+        Thu, 24 Jul 2025 02:58:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUXhquWq5n5v01uJHjS+OJs29T96jJwQKHXzgn4mH5rj/EmtxH1jEPHWhEzJNhiq28O64RzEDfQlXpz@vger.kernel.org, AJvYcCV/hzWutxg4jyoO9AKvx1hB6NYElhXbh78paBBKpblxv+7ZSN1+vUChEChKLisIwOvijLyCZ8j60M+Z/z0=@vger.kernel.org, AJvYcCVWauBh6KXmaHiRQgbSNK0+qHjeiEEG49LAQJlj4wQpp5x3nw4giy5WyX5H6b9njYJL6uyQLJqF/6I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxW4JbXLLazDnJA4gHZJoih24uv0P4qAqY8nzb/o9HNcTKmDmzk
+	6v0G/wE5gDE+YI61g+qQykALP30ohZdj/EOzg1WYr9/eqc0WkX02KbQ3zEPPNCnz5KC7c2cRrCY
+	K0eWU/hwLCGJTKuYV0NgGT6dYMe0szKc=
+X-Google-Smtp-Source: AGHT+IEvVUcaL09saG7JvMSWU2BvT8HuFgwXOot+6fLdqKzHF4Ko/+EjvNeckIwhnzGvMOUmxiZcTHwJ7vlG6jxShwg=
+X-Received: by 2002:a4a:ec44:0:b0:615:a6d2:348a with SMTP id
+ 006d021491bc7-6187d959488mr3918147eaf.6.1753351133238; Thu, 24 Jul 2025
+ 02:58:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a51c9e40-e7e3-40d6-7054-08ddca947786
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2025 09:28:36.5243
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QfiGSTbssEgOBzOyxvDiQpnfqQ6QdaABWzp6TxwZNnLzlC+Bl8OKvxqhy9b0OWqeAFT2tuFvxqvVMKmkKr96Sw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8778
+References: <20250720190140.2639200-1-david.e.box@linux.intel.com>
+ <c6757u3xdyxxuodcjsbpdje7m4qiq26tug5lfxvpbs5wm7r56l@ksy4yge7kg35>
+ <CAJZ5v0jZrPyW9+Ccoo955Y4oje2SiAQA9aCChAoPgM28SJqf5g@mail.gmail.com> <arotuyooaoo6ustmp5gnoj64pkpyvcc3plekh4yt46siuemlik@sv6tjxnggznx>
+In-Reply-To: <arotuyooaoo6ustmp5gnoj64pkpyvcc3plekh4yt46siuemlik@sv6tjxnggznx>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 24 Jul 2025 11:58:40 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hDEX_ZMiAZU-PwriCpURiw04f=JLAVwP9UJ54wv3HBEg@mail.gmail.com>
+X-Gm-Features: Ac12FXzHRJ85hgVv_l3XWTJ-C4BbF4wouOGVrAAO-azI8wwa5-WFrcSxuTPgTiA
+Message-ID: <CAJZ5v0hDEX_ZMiAZU-PwriCpURiw04f=JLAVwP9UJ54wv3HBEg@mail.gmail.com>
+Subject: Re: [PATCH] PCI/ASPM: Allow controller drivers to override default
+ ASPM and CLKPM link state
+To: David Box <david.e.box@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, bhelgaas@google.com, 
+	vicamo.yang@canonical.com, kenny@panix.com, ilpo.jarvinen@linux.intel.com, 
+	nirmal.patel@linux.intel.com, linux-pm@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYW5pdmFubmFuIFNhZGhhc2l2
-YW0gdmlhIEI0IFJlbGF5DQo+IDxkZXZudWxsK21hbml2YW5uYW4uc2FkaGFzaXZhbS5vc3MucXVh
-bGNvbW0uY29tQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMjXE6jfUwjE1yNUgMjI6MjENCj4gVG86
-IEJqb3JuIEhlbGdhYXMgPGJoZWxnYWFzQGdvb2dsZS5jb20+OyBNYWhlc2ggSiBTYWxnYW9ua2Fy
-DQo+IDxtYWhlc2hAbGludXguaWJtLmNvbT47IE9saXZlciBPJ0hhbGxvcmFuIDxvb2hhbGxAZ21h
-aWwuY29tPjsgV2lsbA0KPiBEZWFjb24gPHdpbGxAa2VybmVsLm9yZz47IExvcmVuem8gUGllcmFs
-aXNpIDxscGllcmFsaXNpQGtlcm5lbC5vcmc+OyBLcnp5c3p0b2YNCj4gV2lsY3p5qL1za2kgPGt3
-aWxjenluc2tpQGtlcm5lbC5vcmc+OyBNYW5pdmFubmFuIFNhZGhhc2l2YW0NCj4gPG1hbmlAa2Vy
-bmVsLm9yZz47IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+OyBIZWlrbyBTdHVlYm5lcg0K
-PiA8aGVpa29Ac250ZWNoLmRlPjsgUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5k
-ZT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4LWFybS1tc21Admdlci5rZXJuZWwub3Jn
-OyBsaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnOyBOaWtsYXMNCj4gQ2Fzc2VsIDxj
-YXNzZWxAa2VybmVsLm9yZz47IFdpbGZyZWQgTWFsbGF3YSA8d2lsZnJlZC5tYWxsYXdhQHdkYy5j
-b20+Ow0KPiBLcmlzaG5hIENoYWl0YW55YSBDaHVuZHJ1IDxrcmlzaG5hLmNodW5kcnVAb3NzLnF1
-YWxjb21tLmNvbT47DQo+IG1hbmlAa2VybmVsLm9yZzsgTHVrYXMgV3VubmVyIDxsdWthc0B3dW5u
-ZXIuZGU+OyBNYW5pdmFubmFuIFNhZGhhc2l2YW0NCj4gPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBv
-c3MucXVhbGNvbW0uY29tPjsgTWFuaXZhbm5hbiBTYWRoYXNpdmFtDQo+IDxtYW5pQGtlcm5lbC5v
-cmc+DQo+IFN1YmplY3Q6IFtQQVRDSCB2NiAwLzRdIFBDSTogQWRkIHN1cHBvcnQgZm9yIHJlc2V0
-dGluZyB0aGUgUm9vdCBQb3J0cyBpbiBhDQo+IHBsYXRmb3JtIHNwZWNpZmljIHdheQ0KPg0KPiBb
-WW91IGRvbid0IG9mdGVuIGdldCBlbWFpbCBmcm9tDQo+IGRldm51bGwrbWFuaXZhbm5hbi5zYWRo
-YXNpdmFtLm9zcy5xdWFsY29tbS5jb21Aa2VybmVsLm9yZy4gTGVhcm4gd2h5DQo+IHRoaXMgaXMg
-aW1wb3J0YW50IGF0IGh0dHBzOi8vYWthLm1zL0xlYXJuQWJvdXRTZW5kZXJJZGVudGlmaWNhdGlv
-biBdDQo+DQo+IEhpLA0KPg0KPiBDdXJyZW50bHksIGluIHRoZSBldmVudCBvZiBBRVIvRFBDLCBQ
-Q0kgY29yZSB3aWxsIHRyeSB0byByZXNldCB0aGUgc2xvdCAoUm9vdA0KPiBQb3J0KSBhbmQgaXRz
-IHN1Ym9yZGluYXRlIGRldmljZXMgYnkgaW52b2tpbmcgYnJpZGdlIGNvbnRyb2wgcmVzZXQgYW5k
-IEZMUi4gQnV0IGluDQo+IHNvbWUgY2FzZXMgbGlrZSBBRVIgRmF0YWwgZXJyb3IsIGl0IG1pZ2h0
-IGJlIG5lY2Vzc2FyeSB0byByZXNldCB0aGUgUm9vdCBQb3J0cw0KPiB1c2luZyB0aGUgUENJIGhv
-c3QgYnJpZGdlIGRyaXZlcnMgaW4gYSBwbGF0Zm9ybSBzcGVjaWZpYyB3YXkgKGFzIGluZGljYXRl
-ZCBieSB0aGUNCj4gVE9ETyBpbiB0aGUgcGNpZV9kb19yZWNvdmVyeSgpIGZ1bmN0aW9uIGluIGRy
-aXZlcnMvcGNpL3BjaWUvZXJyLmMpLg0KPiBPdGhlcndpc2UsIHRoZSBQQ0kgbGluayB3b24ndCBi
-ZSByZWNvdmVyZWQgc3VjY2Vzc2Z1bGx5Lg0KPg0KPiBTbyB0aGlzIHNlcmllcyBhZGRzIGEgbmV3
-IGNhbGxiYWNrICdwY2lfaG9zdF9icmlkZ2U6OnJlc2V0X3Jvb3RfcG9ydCcgZm9yIHRoZQ0KPiBo
-b3N0IGJyaWRnZSBkcml2ZXJzIHRvIHJlc2V0IHRoZSBSb290IFBvcnQgd2hlbiBhIGZhdGFsIGVy
-cm9yIGhhcHBlbnMuDQo+DQo+IEFsc28sIHRoaXMgc2VyaWVzIGFsbG93cyB0aGUgaG9zdCBicmlk
-Z2UgZHJpdmVycyB0byBoYW5kbGUgUENJIGxpbmsgZG93biBldmVudCBieQ0KPiByZXNldHRpbmcg
-dGhlIFJvb3QgUG9ydHMgYW5kIHJlY292ZXJpbmcgdGhlIGJ1cy4gVGhpcyBpcyBhY2NvbXBsaXNo
-ZWQgYnkgdGhlIGhlbHANCj4gb2YgdGhlIG5ldyAncGNpX2hvc3RfaGFuZGxlX2xpbmtfZG93bigp
-JyBBUEkuIEhvc3QgYnJpZGdlIGRyaXZlcnMgYXJlIGV4cGVjdGVkDQo+IHRvIGNhbGwgdGhpcyBB
-UEkgKHByZWZlcnJhYmx5IGZyb20gYSB0aHJlYWRlZCBJUlEgaGFuZGxlcikgd2l0aCByZWxldmFu
-dCBSb290DQo+IFBvcnQgJ3BjaV9kZXYnIHdoZW4gYSBsaW5rIGRvd24gZXZlbnQgaXMgZGV0ZWN0
-ZWQgZm9yIHRoZSBwb3J0Lg0KPiBUaGUgQVBJIHdpbGwgcmV1c2UgdGhlIHBjaWVfZG9fcmVjb3Zl
-cnkoKSBmdW5jdGlvbiB0byByZWNvdmVyIHRoZSBsaW5rIGlmIEFFUg0KPiBzdXBwb3J0IGlzIGVu
-YWJsZWQsIG90aGVyd2lzZSBpdCB3aWxsIGRpcmVjdGx5IGNhbGwgdGhlIHJlc2V0X3Jvb3RfcG9y
-dCgpIGNhbGxiYWNrDQo+IG9mIHRoZSBob3N0IGJyaWRnZSBkcml2ZXIgKGlmIGV4aXN0cykuDQo+
-DQo+IEZvciByZWZlcmVuY2UsIEkndmUgbW9kaWZpZWQgdGhlIHBjaWUtcWNvbSBkcml2ZXIgdG8g
-Y2FsbA0KPiBwY2lfaG9zdF9oYW5kbGVfbGlua19kb3duKCkgQVBJIHdpdGggUm9vdCBQb3J0ICdw
-Y2lfZGV2JyBhZnRlciByZWNlaXZpbmcgdGhlDQo+IExJTktfRE9XTiBnbG9iYWxfaXJxIGV2ZW50
-IGFuZCBwb3B1bGF0ZWQNCj4gJ3BjaV9ob3N0X2JyaWRnZTo6cmVzZXRfcm9vdF9wb3J0KCknDQo+
-IGNhbGxiYWNrIHRvIHJlc2V0IHRoZSBSb290IFBvcnQuIFNpbmNlIHRoZSBRY29tIFBDSWUgY29u
-dHJvbGxlcnMgc3VwcG9ydCBvbmx5IGENCj4gc2luZ2xlIFJvb3QgUG9ydCAoc2xvdCkgcGVyIGNv
-bnRyb2xsZXIgaW5zdGFuY2UsIHRoZSBBUEkgaXMgZ29pbmcgdG8gYmUgaW52b2tlZCBvbmx5DQo+
-IG9uY2UuIEZvciBtdWx0aSBSb290IFBvcnQgY29udHJvbGxlcnMsIHRoZSBjb250cm9sbGVyIGRy
-aXZlciBpcyBleHBlY3RlZCB0byBkZXRlY3QNCj4gdGhlIFJvb3QgUG9ydCB0aGF0IHJlY2VpdmVk
-IHRoZSBsaW5rIGRvd24gZXZlbnQgYW5kIGNhbGwgdGhlDQo+IHBjaV9ob3N0X2hhbmRsZV9saW5r
-X2Rvd24oKSBBUEkgd2l0aCAncGNpX2Rldicgb2YgdGhhdCBSb290IFBvcnQuDQo+DQo+IFRlc3Rp
-bmcNCj4gLS0tLS0tLQ0KPg0KPiBJJ3ZlIGxvc3QgYWNjZXNzIHRvIG15IHRlc3Qgc2V0dXAgbm93
-LiBTbyBLcmlzaG5hIChDY2VkKSB3aWxsIGhlbHAgd2l0aCB0ZXN0aW5nIG9uDQo+IHRoZSBRY29t
-IHBsYXRmb3JtIGFuZCBXaWxmcmVkIG9yIE5pa2xhcyBzaG91bGQgYmUgYWJsZSB0byB0ZXN0IGl0
-IG9uIFJvY2tjaGlwDQo+IHBsYXRmb3JtLiBGb3IgdGhlIG1vbWVudCwgdGhpcyBzZXJpZXMgaXMg
-Y29tcGlsZSB0ZXN0ZWQgb25seS4NCj4NCj4gQ2hhbmdlcyBpbiB2NjoNCj4gLSBJbmNvcnBvcmF0
-ZWQgdGhlIHBhdGNoOg0KPiBodHRwczovL2xvcmUua2Vybi8NCj4gZWwub3JnJTJGYWxsJTJGMjAy
-NTA1MjQxODUzMDQuMjY2OTgtMi1tYW5pdmFubmFuLnNhZGhhc2l2YW0lNDBsaW5hcm8ubw0KPiBy
-ZyUyRiZkYXRhPTA1JTdDMDIlN0Nob25neGluZy56aHUlNDBueHAuY29tJTdDMzNjMDhlNWJiMTQz
-NDdlNWMzDQo+IGNjMDhkZGMzYWNjYWY1JTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2
-MzUlN0MwJTdDMCU3QzYzODgNCj4gODE4NjkwODM0NDAyMjIlN0NVbmtub3duJTdDVFdGcGJHWnNi
-M2Q4ZXlKRmJYQjBlVTFoY0draU9uUnlkVw0KPiBVc0lsWWlPaUl3TGpBdU1EQXdNQ0lzSWxBaU9p
-SlhhVzR6TWlJc0lrRk9Jam9pVFdGcGJDSXNJbGRVSWpveWZRJTNEJTNEDQo+ICU3QzAlN0MlN0Ml
-N0Mmc2RhdGE9QnNFaWJmN3Y4d0FRend0JTJCYmdvenhFMFNlOHZ2RjlsYjFPJTJGMEh3DQo+IDFn
-RzFNJTNEJnJlc2VydmVkPTANCj4gLSBMaW5rIHRvIHY1Og0KPiBodHRwczovL2xvcmUua2Vybi8N
-Cj4gZWwub3JnJTJGciUyRjIwMjUwNzE1LXBjaS1wb3J0LXJlc2V0LXY1LTAtMjZhNWQyNzhkYjQw
-JTQwb3NzLnF1YWxjb21tLg0KPiBjb20mZGF0YT0wNSU3QzAyJTdDaG9uZ3hpbmcuemh1JTQwbnhw
-LmNvbSU3QzMzYzA4ZTViYjE0MzQ3ZTVjM2MNCj4gYzA4ZGRjM2FjY2FmNSU3QzY4NmVhMWQzYmMy
-YjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2Mzg4OA0KPiAxODY5MDgzNDYwNjc0JTdD
-VW5rbm93biU3Q1RXRnBiR1pzYjNkOGV5SkZiWEIwZVUxaGNHa2lPblJ5ZFdVcw0KPiBJbFlpT2lJ
-d0xqQXVNREF3TUNJc0lsQWlPaUpYYVc0ek1pSXNJa0ZPSWpvaVRXRnBiQ0lzSWxkVUlqb3lmUSUz
-RCUzRCUNCj4gN0MwJTdDJTdDJTdDJnNkYXRhPUpWVUsydWRtQUM0R0NONiUyQmclMkI3ck1WaG5R
-V0pYQkY5NzJKQjINCj4gR0pNcmZXYyUzRCZyZXNlcnZlZD0wDQo+DQo+IENoYW5nZXMgaW4gdjU6
-DQo+ICogUmV3b3JrZWQgdGhlIHBjaV9ob3N0X2hhbmRsZV9saW5rX2Rvd24oKSB0byBhY2NlcHQg
-Um9vdCBQb3J0IGluc3RlYWQgb2YNCj4gICByZXNldHRpbmcgYWxsIFJvb3QgUG9ydHMgaW4gdGhl
-IGV2ZW50IG9mIGxpbmsgZG93bi4NCj4gKiBSZW5hbWVkICdyZXNldF9zbG90JyB0byAncmVzZXRf
-cm9vdF9wb3J0JyB0byBhdm9pZCBjb25mdXNpb24gYXMgYm90aCB0ZXJtcw0KPiAgIHdlcmUgdXNl
-ZCBpbnRlcmNoYW5naWJseSBhbmQgdGhlIHNlcmllcyBpcyBpbnRlbmRlZCB0byByZXNldCBSb290
-IFBvcnQgb25seS4NCj4gKiBBZGRlZCB0aGUgUm9ja2NoaXAgZHJpdmVyIGNoYW5nZSB0byB0aGlz
-IHNlcmllcy4NCj4gKiBEcm9wcGVkIHRoZSBhcHBsaWVkIHBhdGNoZXMgYW5kIHJldmlldy90ZXN0
-ZWQgdGFncyBkdWUgdG8gcmV3b3JrLg0KPiAqIFJlYmFzZWQgb24gdG9wIG9mIHY2LjE2LXJjMS4N
-Cj4NCj4gQ2hhbmdlcyBpbiB2NDoNCj4gLSBIYW5kbGVkIGxpbmsgZG93biBmaXJzdCBpbiB0aGUg
-aXJxIGhhbmRsZXINCj4gLSBVcGRhdGVkIElDQyAmIE9QUCBiYW5kd2lkdGggYWZ0ZXIgbGluayB1
-cCBpbiByZXNldF9zbG90KCkgY2FsbGJhY2sNCj4gLSBMaW5rIHRvIHYzOg0KPiBodHRwczovL2xv
-cmUua2Vybi8NCj4gZWwub3JnJTJGciUyRjIwMjUwNDE3LXBjaWUtcmVzZXQtc2xvdC12My0wLTU5
-YTEwODExYzk2MiU0MGxpbmFyby5vcmcmZGF0DQo+IGE9MDUlN0MwMiU3Q2hvbmd4aW5nLnpodSU0
-MG54cC5jb20lN0MzM2MwOGU1YmIxNDM0N2U1YzNjYzA4ZGRjM2ENCj4gY2NhZjUlN0M2ODZlYTFk
-M2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM4ODgxODY5MDgzNA0KPiA3NDcw
-OCU3Q1Vua25vd24lN0NUV0ZwYkdac2IzZDhleUpGYlhCMGVVMWhjR2tpT25SeWRXVXNJbFlpT2lJ
-d0xqDQo+IEF1TURBd01DSXNJbEFpT2lKWGFXNHpNaUlzSWtGT0lqb2lUV0ZwYkNJc0lsZFVJam95
-ZlElM0QlM0QlN0MwJTdDJQ0KPiA3QyU3QyZzZGF0YT12RVZxZGdqdFVDR0xNcEVpVW9NazV3ZFJO
-UEFJU2xwWG5nZ3V5QTA0VHUwJTNEJnJlc2UNCj4gcnZlZD0wDQo+DQo+IENoYW5nZXMgaW4gdjM6
-DQo+IC0gTWFkZSB0aGUgcGNpLWhvc3QtY29tbW9uIGRyaXZlciBhcyBhIGNvbW1vbiBsaWJyYXJ5
-IGZvciBob3N0IGNvbnRyb2xsZXINCj4gICBkcml2ZXJzDQo+IC0gTW92ZWQgdGhlIHJlc2V0IHNs
-b3QgY29kZSB0byBwY2ktaG9zdC1jb21tb24gbGlicmFyeQ0KPiAtIExpbmsgdG8gdjI6DQo+IGh0
-dHBzOi8vbG9yZS5rZXJuLw0KPiBlbC5vcmclMkZyJTJGMjAyNTA0MTYtcGNpZS1yZXNldC1zbG90
-LXYyLTAtZWZlNzZiMjc4YzEwJTQwbGluYXJvLm9yZyZkYXQNCj4gYT0wNSU3QzAyJTdDaG9uZ3hp
-bmcuemh1JTQwbnhwLmNvbSU3QzMzYzA4ZTViYjE0MzQ3ZTVjM2NjMDhkZGMzYQ0KPiBjY2FmNSU3
-QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2Mzg4ODE4NjkwODM0
-DQo+IDg4MzQwJTdDVW5rbm93biU3Q1RXRnBiR1pzYjNkOGV5SkZiWEIwZVUxaGNHa2lPblJ5ZFdV
-c0lsWWlPaUl3TGoNCj4gQXVNREF3TUNJc0lsQWlPaUpYYVc0ek1pSXNJa0ZPSWpvaVRXRnBiQ0lz
-SWxkVUlqb3lmUSUzRCUzRCU3QzAlN0MlDQo+IDdDJTdDJnNkYXRhPThCRnUwWVZNRVMxaUJtNjQ5
-RTBPbGx6Mkp1MlpFd3V4QjYlMkJDJTJGMnNPMTlRJTNEDQo+ICZyZXNlcnZlZD0wDQo+DQo+IENo
-YW5nZXMgaW4gdjI6DQo+IC0gTW92ZWQgY2FsbGluZyByZXNldF9zbG90KCkgY2FsbGJhY2sgZnJv
-bSBwY2llX2RvX3JlY292ZXJ5KCkgdG8NCj4gcGNpYmlvc19yZXNldF9zZWNvbmRhcnlfYnVzKCkN
-Cj4gLSBMaW5rIHRvIHYxOg0KPiBodHRwczovL2xvcmUua2Vybi8NCj4gZWwub3JnJTJGciUyRjIw
-MjUwNDA0LXBjaWUtcmVzZXQtc2xvdC12MS0wLTk4OTUyOTE4YmY5MCU0MGxpbmFyby5vcmcmZGF0
-DQo+IGE9MDUlN0MwMiU3Q2hvbmd4aW5nLnpodSU0MG54cC5jb20lN0MzM2MwOGU1YmIxNDM0N2U1
-YzNjYzA4ZGRjM2ENCj4gY2NhZjUlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3
-QzAlN0MwJTdDNjM4ODgxODY5MDgzNQ0KPiAwNjE0OSU3Q1Vua25vd24lN0NUV0ZwYkdac2IzZDhl
-eUpGYlhCMGVVMWhjR2tpT25SeWRXVXNJbFlpT2lJd0xqDQo+IEF1TURBd01DSXNJbEFpT2lKWGFX
-NHpNaUlzSWtGT0lqb2lUV0ZwYkNJc0lsZFVJam95ZlElM0QlM0QlN0MwJTdDJQ0KPiA3QyU3QyZz
-ZGF0YT1tYnM4Y3pVSDBUemJaWEQ5emVVVFByMVF5dUN4OGIlMkJjWVJoeFVUWEVqVVElM0Qmcg0K
-PiBlc2VydmVkPTANCj4NCj4gU2lnbmVkLW9mZi1ieTogTWFuaXZhbm5hbiBTYWRoYXNpdmFtDQo+
-IDxtYW5pdmFubmFuLnNhZGhhc2l2YW1Ab3NzLnF1YWxjb21tLmNvbT4NCg0KW1JpY2hhcmQgWmh1
-XSBUZXN0ZWQtYnk6IFJpY2hhcmQgWmh1IDxob25neGluZy56aHVAbnhwLmNvbT4NClRlc3RlZCB0
-aGlzIHY2LXNlcmllcyBwYXRjaGVzIG9uIGkuTVg5NSBwbGF0Zm9ybS4gQXQgbGVhc3QsIHRoZSBQ
-Q0llIGxpbmsNCiBjYW4gYmUgcmUtZXN0YWJsaXNoZWQgc3VjY2Vzc2Z1bGx5IGFsdGhvdWdoIEFF
-UiBoYXMgc29tZSBjb21wbGFpbnMuDQpMb2dzOg0KPHNuaXBwZWQ+DQpbICAgMzIuNTYzMDIwXSBp
-bXg2cS1wY2llIDRjMzAwMDAwLnBjaWU6IFN0b3Agcm9vdCBidXMgYW5kIGhhbmRsZSBsaW5rIGRv
-d24NClsgICAzMi41NzAwMjVdIHBjaWVwb3J0IDAwMDA6MDA6MDAuMDogUmVjb3ZlcmluZyBSb290
-IFBvcnQgZHVlIHRvIExpbmsgRG93bg0KWyAgIDMyLjU3ODIxM10gcGNpIDAwMDA6MDE6MDAuMDog
-QUVSOiBjYW4ndCByZWNvdmVyIChubyBlcnJvcl9kZXRlY3RlZCBjYWxsYmFjaykNClsgICAzMi41
-ODY1MzZdIHBjaSAwMDAwOjAxOjAwLjE6IEFFUjogY2FuJ3QgcmVjb3ZlciAobm8gZXJyb3JfZGV0
-ZWN0ZWQgY2FsbGJhY2spDQpbICAgMzIuODk4Mzk5XSBpbXg2cS1wY2llIDRjMzAwMDAwLnBjaWU6
-IFBDSWUgR2VuLjIgeDEgbGluayB1cA0KWyAgIDMzLjAzMDQzOF0gcGNpZXBvcnQgMDAwMDowMDow
-MC4wOiBSb290IFBvcnQgaGFzIGJlZW4gcmVzZXQNClsgICAzMy4wMzYxMzNdIHBjaWVwb3J0IDAw
-MDA6MDA6MDAuMDogQUVSOiBkZXZpY2UgcmVjb3ZlcnkgZmFpbGVkDQpbICAgMzMuMDQxOTkxXSBp
-bXg2cS1wY2llIDRjMzAwMDAwLnBjaWU6IFJlc2NhbiBidXMgYWZ0ZXIgbGluayB1cCBpcyBkZXRl
-Y3RlZA0KWyAgIDMzLjA1MDEzNV0gcGNpZXBvcnQgMDAwMDowMDowMC4wOiBicmlkZ2UgY29uZmln
-dXJhdGlvbiBpbnZhbGlkIChbYnVzIDAwLTAwXSksIHJlY29uZmlndXJpbmcNClsgICAzMy4wNTg2
-MjBdIHBjaV9idXMgMDAwMDowMTogYnVzbl9yZXM6IFtidXMgMDEtZmZdIGVuZCBpcyB1cGRhdGVk
-IHRvIDAxDQo8c25pcHBlZD4NCg0KQmVzdCBSZWdhcmRzDQpSaWNoYXJkIFpodQ0KDQo+IC0tLQ0K
-PiBNYW5pdmFubmFuIFNhZGhhc2l2YW0gKDMpOg0KPiAgICAgICBQQ0kvRVJSOiBBZGQgc3VwcG9y
-dCBmb3IgcmVzZXR0aW5nIHRoZSBSb290IFBvcnRzIGluIGEgcGxhdGZvcm0gc3BlY2lmaWMNCj4g
-d2F5DQo+ICAgICAgIFBDSTogaG9zdC1jb21tb246IEFkZCBsaW5rIGRvd24gaGFuZGxpbmcgZm9y
-IFJvb3QgUG9ydHMNCj4gICAgICAgUENJOiBxY29tOiBBZGQgc3VwcG9ydCBmb3IgcmVzZXR0aW5n
-IHRoZSBSb290IFBvcnQgZHVlIHRvIGxpbmsgZG93bg0KPiBldmVudA0KPg0KPiBXaWxmcmVkIE1h
-bGxhd2EgKDEpOg0KPiAgICAgICBQQ0k6IGR3LXJvY2tjaGlwOiBBZGQgc3VwcG9ydCB0byByZXNl
-dCBSb290IFBvcnQgdXBvbiBsaW5rIGRvd24gZXZlbnQNCj4NCj4gIGRyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvZHdjL0tjb25maWcgICAgICAgICAgICB8ICAgMiArDQo+ICBkcml2ZXJzL3BjaS9jb250
-cm9sbGVyL2R3Yy9wY2llLWR3LXJvY2tjaGlwLmMgfCAgOTEgKysrKysrKysrKysrKysrKysrLQ0K
-PiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1xY29tLmMgICAgICAgIHwgMTIwDQo+
-ICsrKysrKysrKysrKysrKysrKysrKysrKy0tDQo+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3Bj
-aS1ob3N0LWNvbW1vbi5jICAgICAgfCAgMzMgKysrKysrKw0KPiAgZHJpdmVycy9wY2kvY29udHJv
-bGxlci9wY2ktaG9zdC1jb21tb24uaCAgICAgIHwgICAxICsNCj4gIGRyaXZlcnMvcGNpL3BjaS5j
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyMSArKysrKw0KPiAgZHJpdmVycy9wY2kv
-cGNpZS9lcnIuYyAgICAgICAgICAgICAgICAgICAgICAgIHwgICA2ICstDQo+ICBpbmNsdWRlL2xp
-bnV4L3BjaS5oICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiAgOCBmaWxlcyBj
-aGFuZ2VkLCAyNjAgaW5zZXJ0aW9ucygrKSwgMTUgZGVsZXRpb25zKC0pDQo+IC0tLQ0KPiBiYXNl
-LWNvbW1pdDogMTkyNzJiMzdhYTRmODNjYTUyYmRmOWMxNmQ1ZDgxYmRkMTM1NDQ5NA0KPiBjaGFu
-Z2UtaWQ6IDIwMjUwNzE1LXBjaS1wb3J0LXJlc2V0LTRkOTUxOTU3MDEyMw0KPg0KPiBCZXN0IHJl
-Z2FyZHMsDQo+IC0tDQo+IE1hbml2YW5uYW4gU2FkaGFzaXZhbSA8bWFuaXZhbm5hbi5zYWRoYXNp
-dmFtQG9zcy5xdWFsY29tbS5jb20+DQo+DQo+DQoNCg==
+On Wed, Jul 23, 2025 at 11:27=E2=80=AFPM David Box <david.e.box@linux.intel=
+.com> wrote:
+>
+> On Wed, Jul 23, 2025 at 01:54:41PM +0200, Rafael J. Wysocki wrote:
+> > On Mon, Jul 21, 2025 at 10:24=E2=80=AFAM Manivannan Sadhasivam <mani@ke=
+rnel.org> wrote:
+> > >
+> > > On Sun, Jul 20, 2025 at 12:01:37PM GMT, David E. Box wrote:
+> > > > Synthetic PCIe hierarchies, such as those created by Intel VMD, are=
+ not
+> > > > visible to firmware and do not receive BIOS-provided default ASPM a=
+nd CLKPM
+> > > > configuration. As a result, devices behind such domains operate wit=
+hout
+> > > > proper power management, regardless of platform intent.
+> > > >
+> > > > To address this, allow controller drivers to supply an override for=
+ the
+> > > > default link state by setting aspm_dflt_link_state for their associ=
+ated
+> > > > pci_host_bridge. During link initialization, if this field is non-z=
+ero,
+> > > > ASPM and CLKPM defaults are derived from its value instead of being=
+ taken
+> > > > from BIOS.
+> > > >
+> > > > This mechanism enables drivers like VMD to achieve platform-aligned=
+ power
+> > > > savings by statically defining the expected link configuration at
+> > > > enumeration time, without relying on runtime calls such as
+> > > > pci_enable_link_state(), which are ineffective when ASPM is disable=
+d
+> > > > globally.
+> > > >
+> > > > This approach avoids per-controller hacks in ASPM core logic and pr=
+ovides a
+> > > > general mechanism for domains that require explicit control over li=
+nk power
+> > > > state defaults.
+> > > >
+> > > > Link: https://lore.kernel.org/linux-pm/0b166ece-eeec-ba5d-2212-50d9=
+95611cef@panix.com
+> > > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > > > ---
+> > > >
+> > > > Changes from RFC:
+> > > >
+> > > >   -- Rename field to aspm_dflt_link_state since it stores
+> > > >      PCIE_LINK_STATE_XXX flags, not a policy enum.
+> > > >   -- Move the field to struct pci_host_bridge since it's being appl=
+ied to
+> > > >      the entire host bridge per Mani's suggestion.
+> > > >   -- During testing noticed that clkpm remained disabled and this w=
+as
+> > > >      also handled by the formerly used pci_enable_link_state(). Add=
+ a
+> > > >      check in pcie_clkpm_cap_init() as well to enable clkpm during =
+init.
+> > > >
+> > > >  drivers/pci/controller/vmd.c | 12 +++++++++---
+> > > >  drivers/pci/pcie/aspm.c      | 13 +++++++++++--
+> > > >  include/linux/pci.h          |  4 ++++
+> > > >  3 files changed, 24 insertions(+), 5 deletions(-)
+> > > >
+> > > > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/=
+vmd.c
+> > > > index 8df064b62a2f..6f0de95c87fd 100644
+> > > > --- a/drivers/pci/controller/vmd.c
+> > > > +++ b/drivers/pci/controller/vmd.c
+> > > > @@ -730,7 +730,7 @@ static void vmd_copy_host_bridge_flags(struct p=
+ci_host_bridge *root_bridge,
+> > > >  }
+> > > >
+> > > >  /*
+> > > > - * Enable ASPM and LTR settings on devices that aren't configured =
+by BIOS.
+> > > > + * Enable LTR settings on devices that aren't configured by BIOS.
+> > > >   */
+> > > >  static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdat=
+a)
+> > > >  {
+> > > > @@ -770,7 +770,6 @@ static int vmd_pm_enable_quirk(struct pci_dev *=
+pdev, void *userdata)
+> > > >        * PCIe r6.0, sec 5.5.4.
+> > > >        */
+> > > >       pci_set_power_state_locked(pdev, PCI_D0);
+> > >
+> > > This call becomes useless now.
+>
+> Missed this. I'll remove it.
+>
+> > >
+> > > > -     pci_enable_link_state_locked(pdev, PCIE_LINK_STATE_ALL);
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > @@ -785,6 +784,7 @@ static int vmd_enable_domain(struct vmd_dev *vm=
+d, unsigned long features)
+> > > >       resource_size_t membar2_offset =3D 0x2000;
+> > > >       struct pci_bus *child;
+> > > >       struct pci_dev *dev;
+> > > > +     struct pci_host_bridge *vmd_host_bridge;
+> > > >       int ret;
+> > > >
+> > > >       /*
+> > > > @@ -911,8 +911,14 @@ static int vmd_enable_domain(struct vmd_dev *v=
+md, unsigned long features)
+> > > >               return -ENODEV;
+> > > >       }
+> > > >
+> > > > +     vmd_host_bridge =3D to_pci_host_bridge(vmd->bus->bridge);
+> > > > +
+> > > > +#ifdef CONFIG_PCIEASPM
+> > > > +     vmd_host_bridge->aspm_dflt_link_state =3D PCIE_LINK_STATE_ALL=
+;
+> > > > +#endif
+> > >
+> > > I think it is better to provide an API that accepts the link state. W=
+e can
+> > > provide a stub if CONFIG_PCIEASPM is not selected. This will avoid th=
+e ifdef
+> > > clutter in the callers. Like:
+> > >
+> > > void pci_set_default_link_state(struct pci_host_bridge *host_bridge,
+> > >                                 unsigned int state)
+> > > {
+> > > #ifdef CONFIG_PCIEASPM
+> > >          host_bridge->aspm_default_link_state =3D state;
+> > > #endif
+> > > }
+> > >
+> > > Or you can stub the entire function to align with other ASPM APIs.
+> > >
+> > > One more thought: Since this API is only going to be called by the ho=
+st bridge
+> > > drivers, we can place it in drivers/pci/controller/pci-host-common.c =
+and name it
+> > > as pci_host_common_set_default_link_state().
+>
+> This would require VMD to select PCI_HOST_COMMON just to set one field in=
+ a
+> common struct. Seems heavy-handed. Thoughts? Also, with this and dropping=
+ the D0
+> call, I'll split the VMD cleanup into a separate patch again.
+
+So maybe define a __weak pci_host_set_default_pcie_link_state() doing
+nothing in the ASPM core and let VMD override it with its own
+implementation?
+
+> >
+> > I agree with the above except for the new function name.  I'd call it
+> > pci_host_set_default_pcie_link_state()
+>
+> Sounds good.
+>
+> >
+> > > > +
+> > > >       vmd_copy_host_bridge_flags(pci_find_host_bridge(vmd->dev->bus=
+),
+> > > > -                                to_pci_host_bridge(vmd->bus->bridg=
+e));
+> > > > +                                vmd_host_bridge);
+> > > >
+> > > >       vmd_attach_resources(vmd);
+> > > >       if (vmd->irq_domain)
+> > > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > > > index 29fcb0689a91..6f5b34b172f9 100644
+> > > > --- a/drivers/pci/pcie/aspm.c
+> > > > +++ b/drivers/pci/pcie/aspm.c
+> > > > @@ -380,6 +380,7 @@ static void pcie_clkpm_cap_init(struct pcie_lin=
+k_state *link, int blacklist)
+> > > >       u16 reg16;
+> > > >       struct pci_dev *child;
+> > > >       struct pci_bus *linkbus =3D link->pdev->subordinate;
+> > > > +     struct pci_host_bridge *host =3D pci_find_host_bridge(link->p=
+dev->bus);
+> > > >
+> > > >       /* All functions should have the same cap and state, take the=
+ worst */
+> > > >       list_for_each_entry(child, &linkbus->devices, bus_list) {
+> > > > @@ -394,7 +395,10 @@ static void pcie_clkpm_cap_init(struct pcie_li=
+nk_state *link, int blacklist)
+> > > >                       enabled =3D 0;
+> > > >       }
+> > > >       link->clkpm_enabled =3D enabled;
+> > > > -     link->clkpm_default =3D enabled;
+> > > > +     if (host && host->aspm_dflt_link_state & PCIE_LINK_STATE_CLKP=
+M)
+> > > > +             link->clkpm_default =3D 1;
+> > > > +     else
+> > > > +             link->clkpm_default =3D enabled;
+> > > >       link->clkpm_capable =3D capable;
+> > > >       link->clkpm_disable =3D blacklist ? 1 : 0;
+> > > >  }
+> > > > @@ -794,6 +798,7 @@ static void pcie_aspm_cap_init(struct pcie_link=
+_state *link, int blacklist)
+> > > >       u32 parent_lnkcap, child_lnkcap;
+> > > >       u16 parent_lnkctl, child_lnkctl;
+> > > >       struct pci_bus *linkbus =3D parent->subordinate;
+> > > > +     struct pci_host_bridge *host;
+> > > >
+> > > >       if (blacklist) {
+> > > >               /* Set enabled/disable so that we will disable ASPM l=
+ater */
+> > > > @@ -866,7 +871,11 @@ static void pcie_aspm_cap_init(struct pcie_lin=
+k_state *link, int blacklist)
+> > > >       }
+> > > >
+> > > >       /* Save default state */
+> > > > -     link->aspm_default =3D link->aspm_enabled;
+> > > > +     host =3D pci_find_host_bridge(parent->bus);
+> > >
+> > > You can initialize 'host' while defining it.
+> > >
+> > > Also, please add a comment on why we are doing this. The inline comme=
+nt for the
+> > > member is not elaborate enough:
+> > >
+> > >         /*
+> > >          * Use the default link state provided by the Host Bridge dri=
+ver if
+> > >          * available. If the BIOS is not able to provide default ASPM=
+ link
+> > >          * state for some reason, the Host Bridge driver could do.
+> > >          */
+> > >
+> > > > +     if (host && host->aspm_dflt_link_state)
+> > > > +             link->aspm_default =3D host->aspm_dflt_link_state;
+> > > > +     else
+> > > > +             link->aspm_default =3D link->aspm_enabled;
+> >
+> > Or
+> >
+> > link->aspm_default =3D pci_host_get_default_pcie_link_state(parent);
+> > if (link->aspm_default)
+> >         link->aspm_default =3D link->aspm_enabled;
+> >
+> > and make pci_host_get_default_pcie_link_state() return 0 on failures.
+> >
+> > Then you can put all of the relevant information into the
+> > pci_host_get_default_pcie_link_state() kerneldoc comment.
+>
+> Sure. I'll add get/set APIs (plus the !) and put the comment there.
+
+Sounds good!
+
+> > > >
+> > > >       /* Setup initial capable state. Will be updated later */
+> > > >       link->aspm_capable =3D link->aspm_support;
+> > > > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > > > index 05e68f35f392..930028bf52b4 100644
+> > > > --- a/include/linux/pci.h
+> > > > +++ b/include/linux/pci.h
+> > > > @@ -614,6 +614,10 @@ struct pci_host_bridge {
+> > > >       unsigned int    size_windows:1;         /* Enable root bus si=
+zing */
+> > > >       unsigned int    msi_domain:1;           /* Bridge wants MSI d=
+omain */
+> > > >
+> > > > +#ifdef CONFIG_PCIEASPM
+> > > > +     unsigned int    aspm_dflt_link_state;   /* Controller provide=
+d link state */
+> > >
+> > >         /* Controller provided default link state */
+> > >
+> > >
+> > > Nit: Please expand 'default' as 'dflt' is not a commonly used acronym=
+ for
+> > > 'default'.
+> >
+> > I agree.
+>
+> Will do.
+
+Thanks!
 
