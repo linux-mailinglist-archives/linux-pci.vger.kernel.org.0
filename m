@@ -1,135 +1,202 @@
-Return-Path: <linux-pci+bounces-32886-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32887-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E035B10D0D
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 16:19:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DD465B10FA5
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 18:30:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF7D31D00AF6
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 14:18:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D5A7F1CC4DEB
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 16:31:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 000C52E4260;
-	Thu, 24 Jul 2025 14:13:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00F488F7D;
+	Thu, 24 Jul 2025 16:30:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dryJ1YJs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="arkeuWCN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2F52E4256;
-	Thu, 24 Jul 2025 14:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370962E3707
+	for <linux-pci@vger.kernel.org>; Thu, 24 Jul 2025 16:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753366431; cv=none; b=V2b8llNOXzDfjviB+Bqgx8tutHG+k8AO5rmULzgsMDKTnfYugII1cdyBFcR6qnb5WdUKXMFAmjqFVCEhAOlp9wfj5zT6BRYtLOWeZdY5QfXBkWOEYnEFH3RZ5T398o465gca5fOu7xGWsbDV7LFe//sHmcUwyhNs81+gBBOg4DY=
+	t=1753374646; cv=none; b=uVbES6A27NKpQ0DAWSQ4DQMrALYKDwdPZ4o2QP5f9N1H7zFbwIaVsfpjptmH2ngwgLGgfhONm8Ny9DEg+MUg4dYNSuncHW+inMaPxPoGSKkcw/WjQ4hDpo47MaR8604MrNYB0M2juqqblnHD4IMrSLen1/NzqMSOcNT8nvu6o3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753366431; c=relaxed/simple;
-	bh=iP21wARuzAVybuDfrhi/ZmKVWvFZlKJMhFjcyKMiDOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sKbt85Zm5o35TQnhmEcyfejg90OKvgqlqzfQoeBoq6bSWxsDBPNCR67mpcMLg+oG1L4bTSv2SQdWZJB2h5QcEHxGXp+GJ5UoadC/bG0vUI5siVm5rT6+sFfWusFanHO7IUoFvvrwNb+pZvldSZvk44ABTHVRbwULEv5ZVN8AP7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dryJ1YJs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D418C4CEED;
-	Thu, 24 Jul 2025 14:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753366431;
-	bh=iP21wARuzAVybuDfrhi/ZmKVWvFZlKJMhFjcyKMiDOo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dryJ1YJskl7pP6EZbhlVYPbvYngcJHHHtazegM1TgWqREeyogXTEgMG8ms5KvQMZ+
-	 8dUzPvtXyAkyS9XMhHK3obW288FKpbGjGbyjG/IPqimgdlHZL1Dvy5HDbSPwaW7270
-	 d86RbpCXyHX/QMs2ZVFrZcyfR7a06QLvEwdbdhQuNaiF1refGOiFIW63Nylaq1yCp5
-	 hEpYRAdAMUb6AUW55hjo+kH5H/KZFsgKcVLpT3jt8IcLUYWDmwBIN6vmWZnTz9UuOK
-	 51ekVxtKW6pMBGAr3akRpiXYjKPGgbMM8VKU3bKgdcJTL9XEISH4pVjCqye79YycuW
-	 G4XImgA+whU5Q==
-Date: Thu, 24 Jul 2025 19:43:38 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: Re: [PATCH RFC 2/3] PCI/pwrctrl: Allow pwrctrl core to control
- PERST# GPIO if available
-Message-ID: <uh7r37l7a2btd3p5dighewfmat2caewrlyf2lwjtslolbr5bov@jgstvnfhxur6>
-References: <20250707-pci-pwrctrl-perst-v1-0-c3c7e513e312@kernel.org>
- <20250707-pci-pwrctrl-perst-v1-2-c3c7e513e312@kernel.org>
- <aHGueAD70abjw8D_@google.com>
- <k5rf5azftn4mpztcjtvdxiligngmaz7fecdryv244m726y5rfd@mobway4c4ueh>
+	s=arc-20240116; t=1753374646; c=relaxed/simple;
+	bh=FIu/qUaifeUHqRpuOGG1N6IvXxQcFJTiCyzNCokAxb8=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=qyOoZDqZRjNIKz94FiBPRF8zhoEebj6XrAikZ/QWAshZvO5i/EqovSQ7V0uN26Pqz80mpZ1djGm2UYAOMsvvULBFgnpMtOKBe43rKy9gVCqlxdv6KXCT71J5cigTJ/SdnW9i8bThKO1UhBCsTbLX8xyAC/8AsK0qjewQtTgdYzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=arkeuWCN; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753374645; x=1784910645;
+  h=date:from:to:cc:subject:message-id;
+  bh=FIu/qUaifeUHqRpuOGG1N6IvXxQcFJTiCyzNCokAxb8=;
+  b=arkeuWCNej9ppPYHB+nbcH6TRqbsceHbi0WqBmNQmGC0OJFPj7r5rWaC
+   eQMGSdelPf/8PKgnyVyh4qLNko6E7AuvFZVk1RvVRjRQ6Yd0dG9Op+upO
+   hI308r3WSE6icedALYoM2uxBcj2DTP5AoXTEsBb+ZIsLeUDacE6/Pq0A1
+   eRSxZa9CqCDowZt8OUrsu+0/ruyZU5F4WZFXspDnuHJ/alScG4a8uh1Rj
+   x6Nfjc86k1PsKF1j14tI2800Nn6giW7URvzyDMCmXl928VrtytX2ksDEf
+   iFdIAKzd1HLYohmWWno5Pf6tlT6nWRor66lQHSrUJpuzU7p7Exy3uxEj7
+   w==;
+X-CSE-ConnectionGUID: RrNnJCgqQl62mCIqfAdzaQ==
+X-CSE-MsgGUID: UoDp24j5SH2VY3XbUQo+5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11501"; a="58321394"
+X-IronPort-AV: E=Sophos;i="6.16,337,1744095600"; 
+   d="scan'208";a="58321394"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2025 09:30:44 -0700
+X-CSE-ConnectionGUID: e5cMqK0HRAerY/3ZZ+dp7A==
+X-CSE-MsgGUID: kgBOpIJRQ/ih3kbpIKlHAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,337,1744095600"; 
+   d="scan'208";a="164850358"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 24 Jul 2025 09:30:43 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ueyq8-000KcP-38;
+	Thu, 24 Jul 2025 16:30:40 +0000
+Date: Fri, 25 Jul 2025 00:30:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:dt-bindings] BUILD SUCCESS
+ 10e7298dc0f14c52d9b5c52fb52558f567815b7c
+Message-ID: <202507250018.CIwihbUp-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <k5rf5azftn4mpztcjtvdxiligngmaz7fecdryv244m726y5rfd@mobway4c4ueh>
 
-On Sat, Jul 12, 2025 at 01:59:34PM GMT, Manivannan Sadhasivam wrote:
-> On Fri, Jul 11, 2025 at 05:38:16PM GMT, Brian Norris wrote:
-> > Sorry for so many individual reviews, but I've passed over this a few
-> > times and had new questions/comments several times:
-> > 
-> 
-> That's fine. I'm happy to answer as someone other than me is interested in
-> pwrctrl :)
-> 
-> > On Mon, Jul 07, 2025 at 11:48:39PM +0530, Manivannan Sadhasivam wrote:
-> > > PERST# is an (optional) auxiliary signal provided by the PCIe host to
-> > > components for signalling 'Fundamental Reset' as per the PCIe spec r6.0,
-> > > sec 6.6.1.
-> > 
-> > >  void pci_pwrctrl_init(struct pci_pwrctrl *pwrctrl, struct device *dev)
-> > >  {
-> > > +	struct pci_host_bridge *host_bridge = to_pci_host_bridge(dev->parent);
-> > > +	int devfn;
-> > > +
-> > >  	pwrctrl->dev = dev;
-> > >  	INIT_WORK(&pwrctrl->work, rescan_work_func);
-> > > +
-> > > +	if (!host_bridge->perst)
-> > > +		return;
-> > > +
-> > > +	devfn = of_pci_get_devfn(dev_of_node(dev));
-> > > +	if (devfn >= 0 && host_bridge->perst[PCI_SLOT(devfn)])
-> > 
-> > This seems to imply a 1:1 correlation between slots and pwrctrl devices,
-> > almost as if you expect everyone is using drivers/pci/pwrctrl/slot.c.
-> > But there is also endpoint-specific pwrctrl support, and there's quite
-> > a bit of flexibility around what these hierarchies can look like.
-> > 
-> > How do you account for that?
-> > 
-> > For example, couldn't you have both a "port" and an "endpoint" pwrctrl? Would
-> > they both grab the same PERST# GPIO here? And might that incur excessive
-> > resets, possibly even clobbering each other?
-> > 
-> 
-> If both port and endpoint nodes are present, then only one will contain
-> 'reset-gpios'. Right now, the DT binding only supports PERST#, WAKE#, CLKREQ#
-> properties in RP node, but that won't work if we have multiple lines per slot/
-> controller. Ideally, we would want the properties to be present in endpoint node
-> if available. But if we have only standard expansion slots, then it makes sense
-> to define them in the port node. But doing so, we can only expect the slot to
-> have only one instance of these properties as we cannot reliably map which
-> property corresponds to the endpoint.
-> 
-> I've opened a dtschema issue for this:
-> https://github.com/devicetree-org/dt-schema/issues/168
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
+branch HEAD: 10e7298dc0f14c52d9b5c52fb52558f567815b7c  dt-bindings: PCI: qcom,pcie-sa8775p: Document 'link_down' reset
 
-I realized that there is no need to define these properties (PERST#, WAKE#,
-CLKREQ#) in the endpoint node (the DT binding also doesn't allow now anyway).
-These properties should just exist in the Root Port node as there can be only
-one set per hierarchy i.e., Root Complex would only use one set of these GPIOs
-per Root Port and the endpoint need to share them.
+elapsed time: 1446m
 
-So I closed the dtschema issue.
+configs tested: 109
+configs skipped: 3
 
-- Mani
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--- 
-மணிவண்ணன் சதாசிவம்
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                   randconfig-001-20250724    gcc-13.4.0
+arc                   randconfig-002-20250724    gcc-15.1.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    gcc-15.1.0
+arm                   randconfig-001-20250724    gcc-10.5.0
+arm                   randconfig-002-20250724    clang-22
+arm                   randconfig-003-20250724    gcc-8.5.0
+arm                   randconfig-004-20250724    gcc-12.5.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250724    gcc-8.5.0
+arm64                 randconfig-002-20250724    clang-22
+arm64                 randconfig-003-20250724    gcc-13.4.0
+arm64                 randconfig-004-20250724    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250724    gcc-13.4.0
+csky                  randconfig-002-20250724    gcc-10.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-22
+hexagon               randconfig-001-20250724    clang-22
+hexagon               randconfig-002-20250724    clang-22
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250724    gcc-12
+i386        buildonly-randconfig-002-20250724    clang-20
+i386        buildonly-randconfig-003-20250724    clang-20
+i386        buildonly-randconfig-004-20250724    clang-20
+i386        buildonly-randconfig-005-20250724    clang-20
+i386        buildonly-randconfig-006-20250724    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch             randconfig-001-20250724    clang-22
+loongarch             randconfig-002-20250724    gcc-13.4.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20250724    gcc-11.5.0
+nios2                 randconfig-002-20250724    gcc-8.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250724    gcc-14.3.0
+parisc                randconfig-002-20250724    gcc-8.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc               randconfig-001-20250724    clang-22
+powerpc               randconfig-002-20250724    gcc-8.5.0
+powerpc               randconfig-003-20250724    clang-22
+powerpc64             randconfig-001-20250724    clang-22
+powerpc64             randconfig-002-20250724    gcc-13.4.0
+powerpc64             randconfig-003-20250724    gcc-15.1.0
+riscv                             allnoconfig    gcc-15.1.0
+riscv                 randconfig-001-20250724    gcc-13.4.0
+riscv                 randconfig-002-20250724    gcc-8.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                  randconfig-001-20250724    clang-22
+s390                  randconfig-002-20250724    gcc-10.5.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                    randconfig-001-20250724    gcc-13.4.0
+sh                    randconfig-002-20250724    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250724    gcc-15.1.0
+sparc                 randconfig-002-20250724    gcc-8.5.0
+sparc64               randconfig-001-20250724    gcc-8.5.0
+sparc64               randconfig-002-20250724    clang-22
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250724    clang-22
+um                    randconfig-002-20250724    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250724    gcc-12
+x86_64      buildonly-randconfig-002-20250724    clang-20
+x86_64      buildonly-randconfig-003-20250724    gcc-12
+x86_64      buildonly-randconfig-004-20250724    gcc-12
+x86_64      buildonly-randconfig-005-20250724    clang-20
+x86_64      buildonly-randconfig-006-20250724    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250724    gcc-12.5.0
+xtensa                randconfig-002-20250724    gcc-12.5.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
