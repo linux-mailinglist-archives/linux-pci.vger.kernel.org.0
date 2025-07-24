@@ -1,284 +1,155 @@
-Return-Path: <linux-pci+bounces-32882-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32883-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDF4EB10A60
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 14:38:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 390FAB10BA3
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 15:37:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A761C7B4A45
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 12:36:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B4505A7A8F
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Jul 2025 13:35:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95ECE2D23BD;
-	Thu, 24 Jul 2025 12:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXHP+Iia"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2C4E2D5A18;
+	Thu, 24 Jul 2025 13:34:38 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6410A2D2394;
-	Thu, 24 Jul 2025 12:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB51613BC0C;
+	Thu, 24 Jul 2025 13:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753360699; cv=none; b=QcejCKy9+Y2u27H8fhVsGeSo73RDRULVFnFILfnRLqIcT+jM5uOsKh/b4jIDBToIZqgpcriEwdiJOSJtItLAVuMiz95d3k6zown3TZChVdjrpDCpgJUBtoJ0AyR3Ld0ciK9jc02XhtF8v/E3/51ZDxsgoUdLxNnVqdZW6OQL/Dc=
+	t=1753364078; cv=none; b=GddP4x7VQayeZO/VshKBsOB9Fj+Ogf9kXLgY8BBrz/bWcecENqK4KB1xlsskQIoW3Je0/KpEzraMeU1MuXohxhSBUTfJauI3+UTk9OhFVdLBhCC66xL7o4WvZRcAMq3wmakkdgpTgoBdiMaj5zPy+4b3xmIxYCTaD0dFY7bhedY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753360699; c=relaxed/simple;
-	bh=/Fd2dbY46+nBw/SuxVNMWZV5DxNiY31qjK4IwBKCoK8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=cVyyaotcsCzrT21tTBmB6tlLDG6qji5UA03PvgGJBLLbuWcyQmSkf77CZoXaq24miLBmznNKhuD11pH598mNii6dtMb0QEYUQ7+mI7WIw/BuI7Dl1Id0hZubCcRH2nkki7+Qz2zFOhH5Y44zDiM1RUBFfYnU5DArNIA3ZskHKj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXHP+Iia; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0A25C4CEEF;
-	Thu, 24 Jul 2025 12:38:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753360697;
-	bh=/Fd2dbY46+nBw/SuxVNMWZV5DxNiY31qjK4IwBKCoK8=;
-	h=From:Date:Subject:To:Cc:From;
-	b=GXHP+Iia+nvex6ZfvQnOJUKGaVC0jt2egJEDcpG4gcts8VStSdvav2MlYwBfJyfkt
-	 e34gBQXC8h5VdodRM7RWrvTYdbtaT6NJPCcttxaW25SFNGa9m+rHDby00KQ7FoU5h1
-	 uRYkj1g0m7b1QOvPyIiW1zgwoTiPaRHZYJ1ULO0Bqzue6M2qGyXnv9WlOQixxPYlE0
-	 tNo9Qhn0BExOSv3+1zhYcgA9hUc8SBBHBIguXxgnpWQ00kBc9+jEuhF5ljL8F29bbn
-	 ALvrgD48nHLPb7crkPIZ8LWKuspf9KWfZIrcHYMN1btwGG9VpMWZTuSMQsRW4UtBKf
-	 OFmu0qmifr0Ng==
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-613a6e39f52so483977eaf.3;
-        Thu, 24 Jul 2025 05:38:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU0eJyDOgmk3yGTAjll9f60b97xfUpY3F6B9sjTkzsAJiAByH+kfFqumRcSq90zBDuuuC4CBkYhDmv27cs=@vger.kernel.org, AJvYcCX7/W4MhbFEsg5EXlUO1gceYft318S+xFCE67oUj+qtlAerQvDfr5L1LPV9pTmo+D3AbvPv2Rw0c48=@vger.kernel.org, AJvYcCXRe9W/asK+JMvVh4TEI+k2kpCJ+fK2w0+DXsGmcpdongRNXcTDBepU1SeCFJMmzlclA80BP0atBoNT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5l5Ok5iHzU6ObePAajXwljfphu2fbijKNnyEYEcNMLwDj+oFj
-	Ep9IiMy3HRVUrz8d15iVs9/VbZ/DU0aG758Y4SK/5OSw+3SW31/xQhjowTDI1I62NiSRH6PV5sf
-	o4tqMgEivHtjJtxvWVgj4To6cHZY+VfQ=
-X-Google-Smtp-Source: AGHT+IEkAmZy5QE7Vk6V7gx+c/efF4IyXjJE6AByaRl+/ROgN+l7w1X3AWDgTR/uKU2aTwOkv1mh3/7/yi998ls2kTo=
-X-Received: by 2002:a05:6820:2004:b0:615:b293:1f17 with SMTP id
- 006d021491bc7-6187d8f800emr4676536eaf.8.1753360697059; Thu, 24 Jul 2025
- 05:38:17 -0700 (PDT)
+	s=arc-20240116; t=1753364078; c=relaxed/simple;
+	bh=MVJ3E/91h69I0bmDMezkRZP4rkHbijJOQ6KILSOiZCE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D5TyZl0Q/3dEAIVMrh+F5EwN6S8zkpA3m/nPOtrkN1yhMDK4zPqNQ2CJ3LaPpijwzi8y1wZPKKv1W/sUNXcbQ95y3JxmQeGjVTKVsluR+pT7WJ+Lkxt3SZs7X8jpFEshXmmiSTE5BBTu7RoEjAqY5dmjkqMaFUHrMlBiG9T2Wp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-af2a2a54a95so162762066b.0;
+        Thu, 24 Jul 2025 06:34:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753364075; x=1753968875;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/fx+2jC1brmgVu9hs4XiOEifPBnLGokabrEM+R2kq2s=;
+        b=pAH/Z8xdK0+QpGizQ6NuqWHfiFMAaYNv2Tov10c2YcezJaCxR8WlODx/ugavmVPyYR
+         tqd5Vo0UvtLUm6eLDc4Luxbib+gfOx9C7/CktiAxXWZ+wHa6KyJlGvr2GvVaghkxfyDo
+         Pqh0UIAP5Yw8nt5Zuy7vH59gMNumCN6DIj32OhTt+4YGhVrWc9AlSzEDR2qTscH/kYBR
+         KExYk4vlp7rhsjqEB57TkSEgsybWgW+c0Lrd+x9VN9UO7oBARgzYDiH+p8Ch7RR1Kycc
+         RadCJQ1UXAtnUmYIZNdiTtwO2t23EBinzyK4EhwBpCByd9w7VNogEEanIi+Fn/MX4+en
+         IkKw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6cFmtOT5l0dGa5Mlo8J0r2MgHainsQ1B2CKc4GzsqIUTsyEEas8Iv2KIz3fDH7lBbOGtNEyg2MidNcg==@vger.kernel.org, AJvYcCWAG1MdyVBLDOi9Jx5nEvpF0tHcfsSdxV40ssk5M2hHpqqHn6GCr3kLtdT1Y6WveE1gIfXdmP3+i3rL@vger.kernel.org, AJvYcCWco3+clfJrs7fd0vyNbzmXEovTeIOkE70+NXEFtm2eagGvpPBcFvupu1PkRuYpjcmHz57u7z6rSp5A@vger.kernel.org, AJvYcCXtSym/WcXizoM0yWfgrKDp6DJBNRWmWW9HQZ8Nqctp0s2M2e7HWuvY9BHwdqoAhE6XfmUNbyKxCxyo/4TE@vger.kernel.org
+X-Gm-Message-State: AOJu0YyefYRXlDMZXDTr4JRXMpR5b52SOMsZu3uTBl3rjV07HlLCiESl
+	GekYevEwhtVnLYf4cd8lvItm+p/hb3AVLPpX3D+rIN48VVNTGj/5sbUv
+X-Gm-Gg: ASbGnctVAr+M8C9xMzOwxb76ahgBTFuyAlW7lPUnJwcc+27lZoy6RNxQ984C/rfVEjg
+	+csaBqeN0aBY/25B/pKnJxLZHRknFXg0UAeJtFpzTojuzA7RjfgPCzWsJTs10ZyFU/F4UWqm5TT
+	szRmMZ2NCQPzgpVV063ALJKPHrx45Ps2LkrV2msHuMTMxagB4LkLvkbm2FSpsKsfW70YVKtm9gt
+	OLY2zyTEkcOwO7LShWCn9qu3fVfcZzutwrp7TmLq80odssPA4YYoPt2QJ74v0TNAZZKilk8AQDr
+	I/Rx8kN63uyBwXK3i7pYpH1/Vo9PudSfKhmFGcODqaorrbXGLSf8l+7j+pV9Iua95cvCVjGMtKg
+	BbWI8AMxRZg==
+X-Google-Smtp-Source: AGHT+IErTV5E5SvHgukSA8OS+U/Vctcx7DT/kAXhifsJMwbjohYquNlfTpV+af0AGvLRHpjhkGn6qQ==
+X-Received: by 2002:a17:907:e8e:b0:aec:76c6:6ef6 with SMTP id a640c23a62f3a-af2f8d4fc6amr617861566b.50.1753364074854;
+        Thu, 24 Jul 2025 06:34:34 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af47f861d7bsm111509066b.119.2025.07.24.06.34.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Jul 2025 06:34:34 -0700 (PDT)
+Date: Thu, 24 Jul 2025 06:34:31 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
+	Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev, osandov@osandov.com, 
+	konrad.wilk@oracle.com, linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-pci@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v3] vmcoreinfo: Track and log recoverable hardware errors
+Message-ID: <4qh2wbcbzdajh2tvki26qe4tqjazmyvbn7v7aqqhkxpitdrexo@ucch4ppo7i4e>
+References: <20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org>
+ <7ce9731a-b212-4e27-8809-0559eb36c5f2@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 24 Jul 2025 14:38:05 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jTEdWhm-1aYbLtyqo99dJw4kY0PaYUy=_zh+1M+jo3Vw@mail.gmail.com>
-X-Gm-Features: Ac12FXyOWhpG1bIKrnrrOQtS5GKQsc2xVEuW-EisH29LnmbfBKphNrK8Ka_NJOM
-Message-ID: <CAJZ5v0jTEdWhm-1aYbLtyqo99dJw4kY0PaYUy=_zh+1M+jo3Vw@mail.gmail.com>
-Subject: [GIT PULL] ACPI updates for v6.17-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7ce9731a-b212-4e27-8809-0559eb36c5f2@linux.alibaba.com>
 
-Hi Linus,
+Hello Shuai,
 
-I'm sending this early because I will be mostly offline next week
-and I'm not planning to add anything to it.
+On Thu, Jul 24, 2025 at 04:00:09PM +0800, Shuai Xue wrote:
+> 在 2025/7/23 00:56, Breno Leitao 写道:
+> > Introduce a generic infrastructure for tracking recoverable hardware
+> > errors (HW errors that did not cause a panic) and record them for vmcore
+> > consumption. This aids post-mortem crash analysis tools by preserving
+> > a count and timestamp for the last occurrence of such errors.
+> > 
+> > Add centralized logging for three common sources of recoverable hardware
+> > errors:
+> 
+> The term "recoverable" is highly ambiguous. Even within the x86
+> architecture, different vendors define errors differently. I'm not
+> trying to be pedantic about classification. As far as I know, for 2-bit
+> memory errors detected by scrub, AMD defines them as deferred errors
+> (DE) and handles them with log_error_deferred, while Intel uses
+> machine_check_poll. For 2-bit memory errors consumed by processes,
+> both Intel and AMD use MCE handling via do_machine_check(). Does your
+> HWERR_RECOV_MCE only focus on synchronous UE errors handled in
+> do_machine_check? What makes it special?
 
-Please pull from the tag
+I understand that deferred errors (DE) detected by memory scrubbing are
+typically silent and may not significantly impact system stability. In
+other words, I’m not convinced that including DE metrics in crash dumps
+would be helpful for correlating crashes with hardware issues—it might
+just add noise.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-6.17-rc1
+Do you think it would be valuable to also log these events within
+log_error_deferred()?
 
-with top-most commit ea34e67ae7a6318dc775a8d98cf00c3e45bfb7d2
+> > -	if (ghes_severity(estatus->error_severity) >= GHES_SEV_PANIC)
+> > +	sev = ghes_severity(estatus->error_severity);
+> > +	if (sev == GHES_SEV_RECOVERABLE || sev ==  GHES_SEV_CORRECTED)
+> > +		hwerr_log_error_type(HWERR_RECOV_GHES);
+> 
+> APEI does not define an error type named GHES. GHES is just a kernel
+> driver name. Many hardware error types can be handled in GHES (see
+> ghes_do_proc), for example, AER is routed by GHES when firmware-first
+> mode is used. As far as I know, firmware-first mode is commonly used in
+> production. Should GHES errors be categorized into AER, memory, and CXL
+> memory instead?
 
- Merge branch 'acpi-misc'
+I also considered slicing the data differently initially, but then
+realized it would add more complexity than necessary for my needs.
 
-on top of commit 89be9a83ccf1f88522317ce02f854f30d6115c41
+If you believe we should further subdivide the data, I’m happy to do so.
 
- Linux 6.16-rc7
+You’re suggesting a structure like this, which would then map to the
+corresponding CPER_SEC_ sections:
 
-to receive ACPI updates for 6.17-rc1.
+	enum hwerr_error_type {
+	HWERR_RECOV_AER,     // maps to CPER_SEC_PCIE
+	HWERR_RECOV_MCE,     // maps to default MCE + CPER_SEC_PCIE
+	HWERR_RECOV_CXL,     // maps to CPER_SEC_CXL_*
+	HWERR_RECOV_MEMORY,  // maps to CPER_SEC_PLATFORM_MEM
+	}
 
-These update APEI (new EINJv2 error injection, assorted fixes), fix the
-ACPI processor driver, update the legacy ACPI /proc interface (multiple
-assorted fixes of minor issues) and several assorted ACPI drivers (minor
-fixes and cleanups):
-
- - Printing the address in acpi_ex_trace_point() is either incorrect
-   during early kernel boot or not really useful later when pathnames
-   resolve properly, so stop doing it (Mario Limonciello)
-
- - Address several minor issues in the legacy ACPI proc interface (Andy
-   Shevchenko)
-
- - Fix acpi_object union initialization in the ACPI processor driver to
-   avoid using memory that contains leftover data (Sebastian Ott)
-
- - Make the ACPI processor perflib driver take the initial _PPC limit
-   into account as appropriate (Jiayi Li)
-
- - Fix message formatting in the ACPI processor throttling driver and
-   in the ACPI PCI link driver (Colin Ian King)
-
- - Clean up general ACPI PM domain handling (Rafael Wysocki)
-
- - Fix iomem-related sparse warnings in the APEI EINJ driver (Zaid
-   Alali, Tony Luck)
-
- - Add EINJv2 error injection support to the APEI EINJ driver (Zaid
-   Alali)
-
- - Fix memory corruption in error_type_set() in the APEI EINJ driver (Dan
-   Carpenter)
-
- - Fix less than zero comparison on a size_t variable in the APEI EINJ
-   driver (Colin Ian King)
-
- - Fix check and iounmap of an uninitialized pointer in the APEI EINJ
-   driver (Colin Ian King)
-
- - Add TAINT_MACHINE_CHECK to the GHES panic path in APEI to improve
-   diagnostics and post-mortem analysis (Breno Leitao)
-
- - Update APEI reviewer records and other ACPI-related information in
-   MAINTAINERS as well as the contact information in the ACPI ABI
-   documentation (Rafael Wysocki)
-
- - Fix the handling of synchronous uncorrected memory errors in APEI
-   (Shuai Xue)
-
- - Remove an AudioDSP-related ID from the ACPI LPSS driver (Andy
-   Shevchenko)
-
- - Replace sprintf()/scnprintf() with sysfs_emit() in the ACPI fan
-   driver and update a debug message in fan_get_state_acpi4() (Eslam
-   Khafagy, Abdelrahman Fekry, Sumeet Pawnikar)
-
- - Add Intel Wildcat Lake support to the ACPI DPTF driver (Srinivas
-   Pandruvada)
-
- - Add more debug information regarding failing firmware updates to the
-   ACPI pfr_update driver (Chen Yu)
-
- - Reduce the verbosity of the ACPI PRM (platform runtime mechanism)
-   driver to avoid user confusion (Zhu Qiyu)
-
- - Replace sprintf() with sysfs_emit() in the ACPI TAD (time and alarm
-   device) driver (Sukrut Heroorkar)
-
- - Enable CONFIG_ACPI_DEBUG by default to make it easier to get ACPI
-   debug messages from OEM platforms (Mario Limonciello)
-
- - Fix parent device references in ASL examples in the ACPI
-   documentation and fix spelling and style in the gpio-properties
-   documentation in firmware-guide (Andy Shevchenko)
-
- - Fix typos in ACPI documentation and comments (Bjorn Helgaas)
-
-Thanks!
+Additionally, what about events related to CPU, Firmware, or DMA
+errors—for example, CPER_SEC_PROC, CPER_SEC_FW, CPER_SEC_DMAR? Should we
+include those in the classification as well?
 
 
----------------
-
-Abdelrahman Fekry (1):
-      ACPI: fan: Replace sprintf()/scnprintf() with sysfs_emit() in
-show() functions
-
-Andy Shevchenko (8):
-      ACPI: wakeup: Drop unneeded casting for sleep_state
-      ACPI: proc: Use correct format specifier and drop casting
-      ACPI: proc: Remove unused header
-      ACPI: proc: Use str_enabled_disabled() helper
-      ACPI: proc: Prefer to use octal permission
-      Documentation: firmware-guide: gpio-properties: Spelling and style fixes
-      ACPI: LPSS: Remove AudioDSP related ID
-      Documentation: ACPI: Fix parent device references
-
-Breno Leitao (1):
-      ACPI: APEI: GHES: add TAINT_MACHINE_CHECK on GHES panic path
-
-Chen Yu (1):
-      ACPI: pfr_update: Add more debug information when firmware update failed
-
-Colin Ian King (4):
-      ACPI: APEI: EINJ: Fix less than zero comparison on a size_t variable
-      ACPI: APEI: EINJ: Fix check and iounmap of uninitialized pointer p
-      ACPI: processor: throttling: Remove space before newline
-      ACPI/PCI: Remove space before newline
-
-Dan Carpenter (1):
-      ACPI: APEI: EINJ: prevent memory corruption in error_type_set()
-
-Eslam Khafagy (1):
-      ACPI: fan: Replace sprintf() with sysfs_emit()
-
-Jiayi Li (1):
-      ACPI: processor: perflib: Fix initial _PPC limit application
-
-Mario Limonciello (2):
-      ACPI: Enable CONFIG_ACPI_DEBUG by default
-      ACPICA: Decrease `AcpiExTracePoint` verbosity
-
-Rafael J. Wysocki (3):
-      ACPI: PM: Set .detach in acpi_general_pm_domain definition
-      ACPI: APEI: MAINTAINERS: Update reviewers for APEI
-      ACPI/PNP: Use my kernel.org address in MAINTAINERS and ABI docs
-
-Sebastian Ott (1):
-      ACPI: processor: fix acpi_object initialization
-
-Shuai Xue (2):
-      ACPI: APEI: send SIGBUS to current task if synchronous memory
-error not recovered
-      ACPI: APEI: handle synchronous exceptions in task work
-
-Srinivas Pandruvada (1):
-      ACPI: DPTF: Support for Wildcat Lake
-
-Sukrut Heroorkar (1):
-      ACPI: TAD: Replace sprintf() with sysfs_emit()
-
-Sumeet Pawnikar (1):
-      ACPI: fan: Update debug message in fan_get_state_acpi4()
-
-Tony Luck (2):
-      ACPI: APEI: EINJ: Create debugfs files to enter device id and syndrome
-      ACPI: APEI: EINJ: Fix trigger actions
-
-Zaid Alali (6):
-      ACPI: APEI: EINJ: Fix kernel test sparse warnings
-      ACPI: APEI: EINJ: Enable the discovery of EINJv2 capabilities
-      ACPI: APEI: EINJ: Add einjv2 extension struct
-      ACPI: APEI: EINJ: Discover EINJv2 parameters
-      ACPI: APEI: EINJ: Enable EINJv2 error injections
-      ACPI: APEI: EINJ: Update the documentation for EINJv2 support
-
-Zhu Qiyu (1):
-      ACPI: PRM: Reduce unnecessary printing to avoid user confusion
-
----------------
-
- Documentation/ABI/testing/sysfs-bus-acpi           |  18 +-
- Documentation/ABI/testing/sysfs-firmware-acpi      |   6 +-
- Documentation/firmware-guide/acpi/apei/einj.rst    |  33 ++
- .../firmware-guide/acpi/gpio-properties.rst        |  34 +-
- Documentation/firmware-guide/acpi/i2c-muxes.rst    |   8 +-
- MAINTAINERS                                        |   9 +-
- drivers/acpi/Kconfig                               |   1 +
- drivers/acpi/acpi_processor.c                      |   2 +-
- drivers/acpi/acpi_tad.c                            |   4 +-
- drivers/acpi/acpica/extrace.c                      |   4 +-
- drivers/acpi/apei/apei-internal.h                  |   2 +-
- drivers/acpi/apei/einj-core.c                      | 386 +++++++++++++++++----
- drivers/acpi/apei/einj-cxl.c                       |   2 +-
- drivers/acpi/apei/ghes.c                           |  90 +++--
- drivers/acpi/bus.c                                 |   2 +-
- drivers/acpi/device_pm.c                           |   4 +-
- drivers/acpi/dptf/dptf_power.c                     |   2 +
- drivers/acpi/dptf/int340x_thermal.c                |   7 +
- drivers/acpi/fan.h                                 |   1 +
- drivers/acpi/fan_attr.c                            |   8 +-
- drivers/acpi/fan_core.c                            |   2 +-
- drivers/acpi/pci_link.c                            |   2 +-
- drivers/acpi/pfr_update.c                          |  63 +++-
- drivers/acpi/prmt.c                                |  26 +-
- drivers/acpi/proc.c                                |  17 +-
- drivers/acpi/processor_perflib.c                   |  10 +-
- drivers/acpi/processor_throttling.c                |   2 +-
- drivers/acpi/wakeup.c                              |   4 +-
- drivers/acpi/x86/lpss.c                            |   3 -
- .../intel/int340x_thermal/int3400_thermal.c        |   1 +
- .../intel/int340x_thermal/int3403_thermal.c        |   1 +
- include/acpi/ghes.h                                |   3 -
- include/linux/mm.h                                 |   1 -
- mm/memory-failure.c                                |  13 -
- 34 files changed, 567 insertions(+), 204 deletions(-)
+Thanks for your review and for the ongoing discussion!
+--breno
 
