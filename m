@@ -1,150 +1,140 @@
-Return-Path: <linux-pci+bounces-32909-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32910-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6EE4B1164B
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 04:16:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2058B11662
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 04:25:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A41B3AD6B9
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 02:16:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 984F3AC3106
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 02:25:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FAF12264DB;
-	Fri, 25 Jul 2025 02:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="GmLIjHgL"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 937F422F16C;
+	Fri, 25 Jul 2025 02:25:22 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F61615E90;
-	Fri, 25 Jul 2025 02:16:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD39254673;
+	Fri, 25 Jul 2025 02:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753409805; cv=none; b=bH0sn3lsNPfHJqpa9OBBdbcrHs9StIJnFPxP32E8f7IJJZ8FYHLsxumZ3zuJCpQtb2601sY+X8tAudO8Y6FS9mM9JXEUQGKdUa/+yrJ1nkk1df6CDQxByVDfIEY1vWfmxs5DcXBIZiuxjZ/8dBpfSG9hAJItMy2QWZt9g/Gkw1M=
+	t=1753410322; cv=none; b=q1e6gYAyL5c5iiIgsRo79C7cP36M/5prNBjOswLzcwR9GJ73fPsc7RQxmfONm5+VBoHekHxZXSwMWNipoaTjdB14jyxOMRb795E/r2b1cHBn2ECJSa7BywaTMC7sXC5CMHPaoaz/3/Is3efNxMBGcQgw44OsDP+x/khZ3U2XLPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753409805; c=relaxed/simple;
-	bh=jklrWlvZSAvEwya4WHpogsJH90OlBTNToR0j1DSs7Vk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SxLqDna6IVlWRpwnfBzAngUxWztVqDkmNmP+QDRiecVdPyVaIx1361skGtrdT7saGtktm6OVGc6xNg1pKXtbN2Qx4FWmuvVvuU5cRAAwe18bbhhzgQiuGZWt0MSa1OKX6qisftjW0YeCgojo6Fs+Wfmy2HuQaOPmzeNjK0Jr1u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=GmLIjHgL; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1753409799; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=yrZolcLcXQ859KBYYZrptDVW8HUiOnYUEc53nlnfK7Q=;
-	b=GmLIjHgL0f93AvReQ7B3gtuwf7luLF2xVKStKljM1byAf3IyFPtgyvI+O5MpEhjO6Kkish9Wm8DVA6EbLJxDNqDLaQp4RYhPeBhDBbXmj0gjhRtau1SwbtmN39XBT8qQVQHYghUI14OyJudIRRj0ZJrxmC0ArnlKGRBzUZBYiQw=
-Received: from 30.246.181.19(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WjuuK8u_1753409471 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 25 Jul 2025 10:11:12 +0800
-Message-ID: <0611d06d-e198-4617-a0ba-3050ca6191c6@linux.alibaba.com>
-Date: Fri, 25 Jul 2025 10:11:10 +0800
+	s=arc-20240116; t=1753410322; c=relaxed/simple;
+	bh=L2idtvIt/1uihIpQ8b9OtDmVC7OmE4x9WnLbp3Mdl9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rvUVEOXR+ZkikOBfVKRIIT7RkXciRp64qru/LOacrFqk/Qkc5w+q6eOfTjKaU8VYCeu4F5+viv8HyXCEkLr5nuXdXXJxEvna/tBg9bMwWY0/1nZXFj9zqwBNMt0yqs5vxWSvxC/M7adAFpIAX2dzjLJi8bABxgn35pzDXgSCL9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 1AC151605AF;
+	Fri, 25 Jul 2025 02:25:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 377261B;
+	Fri, 25 Jul 2025 02:25:07 +0000 (UTC)
+Date: Thu, 24 Jul 2025 22:25:10 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: lukas@wunner.de, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
+ ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
+ Jonathan.Cameron@huawei.com, bhelgaas@google.com, tony.luck@intel.com,
+ bp@alien8.de, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
+ anil.s.keshavamurthy@intel.com, mark.rutland@arm.com, peterz@infradead.org,
+ tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v9 2/2] PCI: trace: Add a RAS tracepoint to monitor link
+ speed changes
+Message-ID: <20250724222510.7b00ea79@gandalf.local.home>
+In-Reply-To: <0611d06d-e198-4617-a0ba-3050ca6191c6@linux.alibaba.com>
+References: <20250723033108.61587-1-xueshuai@linux.alibaba.com>
+	<20250723033108.61587-3-xueshuai@linux.alibaba.com>
+	<20250723100559.7f0adb3c@batman.local.home>
+	<0611d06d-e198-4617-a0ba-3050ca6191c6@linux.alibaba.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 2/2] PCI: trace: Add a RAS tracepoint to monitor link
- speed changes
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- helgaas@kernel.org, ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
- Jonathan.Cameron@huawei.com, bhelgaas@google.com, tony.luck@intel.com,
- bp@alien8.de, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
- anil.s.keshavamurthy@intel.com, mark.rutland@arm.com, peterz@infradead.org,
- tianruidong@linux.alibaba.com
-References: <20250723033108.61587-1-xueshuai@linux.alibaba.com>
- <20250723033108.61587-3-xueshuai@linux.alibaba.com>
- <20250723100559.7f0adb3c@batman.local.home>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250723100559.7f0adb3c@batman.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 377261B
+X-Stat-Signature: 5hi1kbyyqh1ikfey7kfjuxq3egm7nu3s
+X-Rspamd-Server: rspamout02
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/MoJxA/jhPTrRIoH2xbHAuuPBlBDFxjpY=
+X-HE-Tag: 1753410307-806746
+X-HE-Meta: U2FsdGVkX18vpnF45ei3qcCwLbzlr91TQHIearcao6J5ZztGfnRfW19kN5BvnxAN/U22+6o1JXO8g3V2HBQKK/Dh4hHfsv1VJR0+k0uVanM39RAosoIdgIU/qE7fPZb2nG6C2dYesS/FRb6up+/DZTzCnQEVLD2C9Hlgylm/A/4TXJAxL8nLi8aBmwzmgHvmhdZKmSFdvb8KF/xa9NrmoMuKc8R3hepW33HbDICTu5D1t88ED9XSvBfdZQP1WseE6GIQkYA+peRAw8otaa1Otx4pVhQbrXd6xZPv+tQXLWTH0acraIorK/VhfO5hlOzAHkQ9B28yTeckomcP3gyggadd6QhP57DnTiadCp0j8wm9ukeD5azKm6MuQ1maJM2o+NA8UVGROpMlqduiFTiCAn/Iqvo3jEVAo2HBb95KpLrELTJ2gHgDiAB3TnhjzicPZrckKZYB4B4=
 
-Hi, Steve
+On Fri, 25 Jul 2025 10:11:10 +0800
+Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 
-在 2025/7/23 22:05, Steven Rostedt 写道:
-> On Wed, 23 Jul 2025 11:31:08 +0800
-> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> For the libtraceevent implementation, I believe we'd
+> need to:
 > 
->> +	TP_printk("%s type:%d, reason:%d, cur_bus_speed:%s, max_bus_speed:%s, width:%u, flit_mode:%u, status:%s\n",
->> +		__get_str(port_name),
->> +		__entry->type,
->> +		__entry->reason,
->> +		pci_speed_string(__entry->cur_bus_speed),
->> +		pci_speed_string(__entry->max_bus_speed),
+> - Add the PCI speed mapping table to libtraceevent
+> - Create a print function similar to other existing parsers
+> - Ensure perf, trace-cmd, and rasdaemon can all benefit from it
 > 
-> Hmm, I guess pci_speed_string() should be added to libtraceveent so
-> that perf and trace-cmd parses it correctly. I guess rasdaemon would
-> want that too (which also uses libtraceevent).
+> Would you like me to investigate the libtraceevent changes, or do you
 
-Thank you for pointing this out. You're absolutely right that
-pci_speed_string() should be properly handled in libtraceevent for
-better userspace tool support.
+Yeah, just update libtraceevent. In fact, libtraceevent has plugins for
+things like this.
 
-$ cat /sys/kernel/debug/tracing/trace_pipe
+You can use this as an example:
 
-    irq/57-pciehp-119     [002] .....   125.904335: pcie_link_event: 0000:00:03.0 type:4, reason:4, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s PCIe, width:1, flit_mode:0, status:DLLLA
+  https://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git/tree/plugins/plugin_jbd2.c
 
-    irq/57-pciehp-119     [002] .....   125.907051: pcie_link_event: 0000:00:03.0 type:4, reason:0, cur_bus_speed:2.5 GT/s PCIe, max_bus_speed:16.0 GT/s PCIe, width:1, flit_mode:0, status:DLLLA
+That adds two functions that are used in print fmt strings. Here's one:
 
-Compared with debug/tracing, perf trace used the raw event field, and
-the speed is not handman readable.
+static unsigned long long
+process_jbd2_dev_to_name(struct trace_seq *s, unsigned long long *args)
+{
+	unsigned int dev = args[0];
 
-$ perf trace -e pci:pcie_link_event
-      0.000 irq/57-pciehp/121 pci:pcie_link_event(port_name: "0000:00:03.0", type: 4, reason: 4, cur_bus_speed: 20, max_bus_speed: 23, width: 1, link_status: 8192)
-      4.058 irq/57-pciehp/121 pci:pcie_link_event(port_name: "0000:00:03.0", type: 4, cur_bus_speed: 20, max_bus_speed: 23, width: 1, link_status: 8192)
-
-I see a couple of options here:
-
-1. Keep the current approach and add libtraceevent support as follow-up
-work. The tracepoint would still be functional, but userspace tools
-would show raw speed values instead of formatted strings until
-libtraceevent is updated.
-
-2. Use raw values in the tracepoint for now (e.g., store speed as
-integer) and let userspace tools handle the formatting. This would avoid
-the immediate dependency on libtraceevent updates.
-
-3. Address both kernel and userspace in coordinated patch set.
-
-Which approach would you prefer? If you think option1 is acceptable, I'm
-happy to work on the libtraceevent changes as a follow-up.
-Alternatively, if you'd prefer option 2, I can modify the tracepoint to
-use raw values. And if you perfer opiton 3, I will also include a new
-patch 3 to add a plugin helper for libtraceevent.
+	trace_seq_printf(s, "%d:%d", MAJOR(dev), MINOR(dev));
+	return 0;
+}
 
 
-For the libtraceevent implementation, I believe we'd
-need to:
+int TEP_PLUGIN_LOADER(struct tep_handle *tep)
+{
+	tep_register_print_function(tep,
+				    process_jbd2_dev_to_name,
+				    TEP_FUNC_ARG_STRING,
+				    "jbd2_dev_to_name",
+				    TEP_FUNC_ARG_INT,
+				    TEP_FUNC_ARG_VOID);
+[..]
 
-- Add the PCI speed mapping table to libtraceevent
-- Create a print function similar to other existing parsers
-- Ensure perf, trace-cmd, and rasdaemon can all benefit from it
+The above defines:
 
-Would you like me to investigate the libtraceevent changes, or do you
-have other suggestions for the approach?
+	char *jbd2_dev_to_name(int arg0);
 
-Thanks again for the feedback.
+And when this is found in the parsing, it calls process_jbd2_dev_to_name()
+passing it the arguments that was found in the trace.
 
-Best regards,
-Shuai
+You would have something like:
 
+	tep_register_print_function(tep,
+				    process_pci_speed_string,
+				    TEP_FUNC_ARG_STRING,
+				    "pci_speed_string",
+				    TEP_FUNC_ARG_INT,
+				    TEP_FUNC_ARG_VOID);
 
-> 
-> -- Steve
-> 
-> 
->> +		__entry->width,
->> +		__entry->flit_mode,
->> +		__print_flags((unsigned long)__entry->link_status, "|",
->> +				LNKSTA_FLAGS)
->> +	)
->> +);
+Which will return a string and take an integer as an argument. Then you
+would just implement the process_pci_speed_string() function to do the same
+thing as the pci_speed_string() does in the kernel.
+
+Oh, and here's the man page for you on tep_register_print_function()
+
+  https://trace-cmd.org/Documentation/libtraceevent/libtraceevent-reg_print_func.html
+
+-- Steve
 
