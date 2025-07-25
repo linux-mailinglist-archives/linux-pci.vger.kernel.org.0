@@ -1,408 +1,157 @@
-Return-Path: <linux-pci+bounces-32919-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32920-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5348EB117FD
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 07:35:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DAB7B11803
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 07:37:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 271F7AC5D0B
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 05:34:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4553C5A1B3E
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 05:37:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FCE5522F;
-	Fri, 25 Jul 2025 05:35:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69A09242917;
+	Fri, 25 Jul 2025 05:37:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LPdx4nUS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQjJwZkC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422371DEFDD;
-	Fri, 25 Jul 2025 05:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753421719; cv=fail; b=RhdYjfgQ8gieYrYaI5Kzk4Iys/Q/hSMZLou3+qIe5MIk3Pn3w/AKI3awMAr/nnEcUnsyJ8mtiaQxeMum7nawkHu79S0V4AgNlRmXpujPXCoUMA3WE5hvACQ84sEgVaWUwfyZqmaHWuAcBXpU8Kn/OiypFddENxBFgBFRqiXZTYs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753421719; c=relaxed/simple;
-	bh=+ykA1GinmkeX9aOrZt0lxJZmMZ/crmGw3BtfXC2U8+g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=KB7RcXSncZy7PBSbH84aDgv6EYp3KdKufF/4Bb315fBMYq1Qbwpjk5Js1nYTddG+TrFOamKdbNKNZwkRDsPeRPIr6XAXHHImRbi92qw0QetNZ1jSWf4XCfUxTiSVjZN5TZpZx8ziCWSTJfkLTEoisQBMFOZgAvZoWAHmos2IMbo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LPdx4nUS; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753421717; x=1784957717;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=+ykA1GinmkeX9aOrZt0lxJZmMZ/crmGw3BtfXC2U8+g=;
-  b=LPdx4nUShoiMTQFgC40xQy8vtBTdzTjGQudkXX32caijAiAloJKNZXt6
-   678nrm4AFXZBVlsT4qsu6JO8BLyDlO6nfQiuVoO/AE0a+o3nStjj6+9Eo
-   AjDDZjZ/L0/QMbeiPr65Qy/N4btIj6a+KbbG4AHZJXYj/o1VbwYWXuwg0
-   oWtrXg81TRkgGHqE8zSiqChrTnCVoaBkigmQ4Caw/nAKfGU+LPnV9o+Nz
-   qI4ch5H2ma6HV7Qd30Gq7UFT2PSgMw0KMe9FRd46cQazbMcrhbwnSaxVN
-   tU9AZyI/eWcqniOXoVaC6RHXBciDHYaCREWQYICZE9T58jPE/iMCYCzW+
-   w==;
-X-CSE-ConnectionGUID: hqVNuCZ1RCKPv6U7XnCvbw==
-X-CSE-MsgGUID: zJpnErfKTY6hWHrhbld9+w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11501"; a="67103876"
-X-IronPort-AV: E=Sophos;i="6.16,338,1744095600"; 
-   d="scan'208";a="67103876"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2025 22:35:14 -0700
-X-CSE-ConnectionGUID: NxPhb5t0S7CKlOFCQQZzmg==
-X-CSE-MsgGUID: BtKlH1fcSCapNwi6WZwIIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,338,1744095600"; 
-   d="scan'208";a="159893247"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2025 22:35:14 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26; Thu, 24 Jul 2025 22:35:11 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26 via Frontend Transport; Thu, 24 Jul 2025 22:35:11 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.43)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26; Thu, 24 Jul 2025 22:35:09 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CDUogXIhtZuBt9X873ynjAehD5U77T01uD3bfMBOQMnY7vosShPJsLqhrBBE+9U5wKtrxZa/tHpOF+cLlq3b3bWVsNTyGgJVPxs+1VF6eimvY1MVRP4CWA1dCfrnezCb6qH+rE0kI+sQQkT8m3BxBxqgtNbzDTbATmyNhl9Vsp0LJXCtkHQDFudQTtaHY/gUlB9nyB86SJTd34XslHW62FfzPSt47QSjbONxaTtUkP2SLqhpoFvwg+xKmwXSJ2VukaQU9sxKlfMEFglcVAlD8Yv54BK2eHDl5A0m+qvO+Shejx/n401VMxwc9H/kXwkorAh9K9+klwB+amT+RkPJ9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6p8xnh5uPIVEHYCep2fbZkINgQ1Sn0UjMAN1emoIDSU=;
- b=l/VRu33yELQmNZA5aSoMtS7m3wMFtbU1TqTXTFF+xitwFYDBGK2j4wheaddOCE5hMrkvunEHVTVTA1X6T+CLaL2PxyMBlB7oXsLKRbasywVQypVkM/GevCROR8UNFzuloO2fJLYO+Uz4HfeIOIOiDAaoLJ1QehEQl+GlyQlLtucxGumXeODORRsQaelW4lOJGL47LT8bf4XpN7r+inqn5VzXVvadwYdm/kwqs0MAp8pACkTdkNIwR+Wg6LwQf1Z/SjBWlyP7QbpMVYs7006cOId3+6OZSKJ5EXBtyvFMKAb7FjtcuHEaBAUkpGq/o4vBWOrHnGSPqK6PWeZSgcIkig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from IA0PR11MB7185.namprd11.prod.outlook.com (2603:10b6:208:432::20)
- by LV8PR11MB8608.namprd11.prod.outlook.com (2603:10b6:408:1f0::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.28; Fri, 25 Jul
- 2025 05:34:40 +0000
-Received: from IA0PR11MB7185.namprd11.prod.outlook.com
- ([fe80::dd3b:ce77:841a:722b]) by IA0PR11MB7185.namprd11.prod.outlook.com
- ([fe80::dd3b:ce77:841a:722b%3]) with mapi id 15.20.8943.029; Fri, 25 Jul 2025
- 05:34:40 +0000
-From: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
-To: Leon Romanovsky <leon@kernel.org>
-CC: Alex Williamson <alex.williamson@redhat.com>, Christoph Hellwig
-	<hch@lst.de>, Jason Gunthorpe <jgg@nvidia.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	=?iso-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, Jens Axboe
-	<axboe@kernel.dk>, =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-	Joerg Roedel <joro@8bytes.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, Logan Gunthorpe <logang@deltatee.com>, "Marek
- Szyprowski" <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>, Will Deacon <will@kernel.org>
-Subject: RE: [PATCH 10/10] vfio/pci: Add dma-buf export support for MMIO
- regions
-Thread-Topic: [PATCH 10/10] vfio/pci: Add dma-buf export support for MMIO
- regions
-Thread-Index: AQHb+9IaqW2aYf5a0kKT+xAFJGMHyLRAkYIggAAy9YCAALri8A==
-Date: Fri, 25 Jul 2025 05:34:40 +0000
-Message-ID: <IA0PR11MB71855A080F43E4D657A70311F859A@IA0PR11MB7185.namprd11.prod.outlook.com>
-References: <cover.1753274085.git.leonro@nvidia.com>
- <aea452cc27ca9e5169f7279d7b524190c39e7260.1753274085.git.leonro@nvidia.com>
- <IA0PR11MB7185E487736B8B4CD70600DEF85EA@IA0PR11MB7185.namprd11.prod.outlook.com>
- <20250724054443.GP402218@unreal>
-In-Reply-To: <20250724054443.GP402218@unreal>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA0PR11MB7185:EE_|LV8PR11MB8608:EE_
-x-ms-office365-filtering-correlation-id: 72a76a66-36f7-4b7c-edc1-08ddcb3cf3dd
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
-x-microsoft-antispam-message-info: =?iso-8859-1?Q?2V/V0TtdzhZqSO9vdhz+N3JCc40ok7U6BbBdsI8Zq3xGxRO9rKsOMdIRnO?=
- =?iso-8859-1?Q?pRGkSoWCPLWV2SHobXgZV11+CymM1MXgM6MOA/O7lZnlHVVIvPSNjUMKtR?=
- =?iso-8859-1?Q?/4ss0H/629Vgf4g0GsDvHaoedNI1FR70hdiVm8LqhDp1XM8wMhMJ1MjzXX?=
- =?iso-8859-1?Q?morzlcOQdLd1sOxQsgvPvTos7z5gzzI3oEKOK5c2JOs97tZ+4tS20GVYKW?=
- =?iso-8859-1?Q?8VH2KapZFd8MlRgO31MZrD7ve+d1qW+wKdE3tNPWOwkGP8xZjJ2uWu13py?=
- =?iso-8859-1?Q?CfVQa6nnfEbo/ElzuO60jz6v9s8pMM8RN3yddsWnZZWG4x6RoOPzuo7lxb?=
- =?iso-8859-1?Q?S6eMa1tIv7+du+WDLvc5uaIt/WuvQe3DrvN5MR+Wjzk2fl+gtqk0+w9gDl?=
- =?iso-8859-1?Q?SisBNf4/oYrDbUfwPaQj/NocxA69NKOR34h/m6TAa8NOr3Va2A3T1d6++q?=
- =?iso-8859-1?Q?THHS0+vWeCyoIMZizonpCck6oLKmfrlX9jUdrcIxfgQVJbaQC4DaIorjdy?=
- =?iso-8859-1?Q?qmXQ5FCQVtfdQEGZl87CVlkiveavEB+xshnXuZUW8kst5PA+u+8EUYeV6+?=
- =?iso-8859-1?Q?jafCr0gNz5yE1BMxenJ40GdmjLoHNL7hu2f/t3pnw40V6VIQVXXmhLZaAa?=
- =?iso-8859-1?Q?y2evN5I2R8v0jHuiOKaKh7wYjmctzPUmuvQzfS6rSz8ZhMkoS8N+lBRU2Q?=
- =?iso-8859-1?Q?qu2THonbKNXSzBifPaC/dTZDNNmXQJpIOzvpuHzvIwnui0yYUoEg8Gqg/r?=
- =?iso-8859-1?Q?6jnQTjanHI0hUrs0+somAmT1TWZ1bFFPFn6YeKnWyIzgxJlEC4KAdYApn1?=
- =?iso-8859-1?Q?y7UeTmD6/4bx5zsvJ+/rJQ3jbic0XMfsetRpWLBt8dmfWhbliyzFTMyzh9?=
- =?iso-8859-1?Q?Fhv+M2n0nghZF9MISzsuA6lUMXXxG56fBvrvJXEH5ZVwiE0ddp7/DSOeuP?=
- =?iso-8859-1?Q?GFP12oZcQqlHo91BC5E2HdfangJ8l+ZNpEAhxJJ6vULjmXkVZodCNk6hFR?=
- =?iso-8859-1?Q?mWJScbfI4n+QitkGgSRgqvmCVT8Otj4oYFNyJ0KY3dbhRPFyExA79Rkq6/?=
- =?iso-8859-1?Q?UySPqP1liaVsFse/tfnlgsjxhncX6n4n3XsCvY9/rODyzO6RJeUcpxOnDn?=
- =?iso-8859-1?Q?76jGuy1lHl3EkL8GirWkX6W+EuWg+SqZ/x9wDcDMp/oHpdKj3INXgR3U+f?=
- =?iso-8859-1?Q?f5NIud5VoFmHhTgLh1wyuCOoaAUr3Kg0mwNYUDw8NAM8u+Ebfz1AyZKVHD?=
- =?iso-8859-1?Q?JDjVfzgJM9VbFBOXV4+h0RFPf9te4eu5Dlam2JTL8tZnviNyQs/fMInOl4?=
- =?iso-8859-1?Q?6IAf2OMzbN4dEysj59EcORSWKXtXyfLA6j1ZsdZmG7V4Nv2iu31mP21R0B?=
- =?iso-8859-1?Q?psbrEQds59W8W5h77QKH337+L0dGQSRqZadVcjNkSEKaqC0c+gV9/fFJuC?=
- =?iso-8859-1?Q?HfaCZhzS9LuJUXig51aIyWnf9vNoLUr9tZdDFna/H68kUu2QM5ntvXEXBd?=
- =?iso-8859-1?Q?4=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR11MB7185.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?jXk/jJ9sXof40pxEqcnaU7MfH0OX7V3yc9p/K8I9Wc4x5LEo8YD00HcYPJ?=
- =?iso-8859-1?Q?79wxK2KbzH842ZywrcEOSgojMxTbLz7kR4F0sy1ZapKe757Op152+0AIRf?=
- =?iso-8859-1?Q?WeXuTEpNODJIDv50NbRvmRwpno3EWf558ebIFkihncoOFDXk19ZjHR4RqT?=
- =?iso-8859-1?Q?NFHe5DJ9x2gyDsdgAKb5x1KmW5GXabscg4AjBQtsBisJvrovhmKW4MyXzt?=
- =?iso-8859-1?Q?mGL6a79sS1zU3Uyg5hNEdWzvsPoIOvqbokE9+0I5ldbZ/toRR738Qi5fgr?=
- =?iso-8859-1?Q?uzrTKil9IiAoDhziv/U0SqPWn9HZPGLIf5pQN9bIzDnXF1OwIedjcByhN4?=
- =?iso-8859-1?Q?a9wljgitQuKV/2fUcC16DlEZuZ8jtqHk54Xzfa2c9jy31Q8HUne9g2Wl2i?=
- =?iso-8859-1?Q?A7Qb3TA9PASW2kfAEEW1VWxS0WD2Fj2oFprHIijl1wbO8b7RmqaCvnijL2?=
- =?iso-8859-1?Q?Tl2PBAFbACxBs9hXZyP9s3DzL+bD+lKY88Znlz3BCAk7coLwzijUwiaIRL?=
- =?iso-8859-1?Q?t3lySr7RdRc6iNkRIcgucMgIw20j8Ezw1v90wcmgZVOhqquWU6CbjnJfse?=
- =?iso-8859-1?Q?hy5iCE6W3rtZQLMb33SjOGrgjfAQOfZ1D2a9hwtTsq5UfA8vsw5ZnYq4AM?=
- =?iso-8859-1?Q?blmkLmLQWdaxCB82tJPmCLl/57Lt67u9U7PXu/BmukqnjL7ChTijwJ8xkw?=
- =?iso-8859-1?Q?xBOhn97jWpuRjoLmYhaLRzW72plLxoEMDtuyen8HZy160aEUJcTr/aBK3C?=
- =?iso-8859-1?Q?01tUSWQrnQRhsAsYJREHgflzKTVntEhcSadBAlDVGLPOfeN0aYP5fV2OxN?=
- =?iso-8859-1?Q?biugPOpMv9J1VtnZfqVOIlg3IzY1qw5S+fDCo/oR2K0AYPYpLt7zdqPqTN?=
- =?iso-8859-1?Q?89Rj6f7yiUbjxHL6lDtblt9O8rumqn0xdWVP0AptA3VqUqs1KTBOs1JFql?=
- =?iso-8859-1?Q?OtSZSl3XFF1yEB0EB9v2ONs5V3HdjLEAciEUzgnoqimDnp0JVVAkQIyUlY?=
- =?iso-8859-1?Q?u/Y2PBbxfNz87Pv9OW4c7h1bAJNPCproda8KhgqxIgRyHxN99uI7Ce1Ptz?=
- =?iso-8859-1?Q?GFYqpalz4iKbrcKBbQN9VF/PO/5cIjC5OGbtE2K8CZZV2B8ei5lo4FhrKe?=
- =?iso-8859-1?Q?uKOMjS7PzZOLS/WpYnfdQtJ/a2qw5BQxOOMHtBCi7z9z5rI3NDEqPyLOKk?=
- =?iso-8859-1?Q?gbkhk8H9iyxdCEa9nowcvMmoiV8gMT2LyOgybxWsMfdjMHTmPPphtsxRlR?=
- =?iso-8859-1?Q?M1gsaym8L+BPPoFWigqJ3YXSvw0KoVCGsEDpJIN72popq+ux5prrvb8xpN?=
- =?iso-8859-1?Q?Ay4UwM7eVWrU/5tbcSENt+KVC6+jJ5fgsfKEurOa4aDRPwxAotGXC2zimH?=
- =?iso-8859-1?Q?zaMEYDRnK/COFQpPreYbVIiP5A/3iO4jOE7jdhi5K9Uvpj3HSLzK38vmeA?=
- =?iso-8859-1?Q?+55s5lOs3+pshCNEiz8MPvQI74c1Hoy/a2OUkGgpA6VDXZ6f45hCSr9Nxc?=
- =?iso-8859-1?Q?tTVxNHgRKi0wo5ebE475Hc7xAlhXnNvwPq4rCOtN+IK5kwnNEKAdu2NXG7?=
- =?iso-8859-1?Q?pnwUWC7eXJBmufzFvjln3g2CUSR6b7rjlg+sS/rQuHWLKWrkouEoUFQxN1?=
- =?iso-8859-1?Q?RQIdHAFwt2wqd7sLX/fgvkR0leITbEx3hn?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9111DEFDD;
+	Fri, 25 Jul 2025 05:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753421827; cv=none; b=AbpQLRv/+8qBjICySJTCK8hvrwZVXwquxMs4zjeEqMVKylc5wFM/2dXHcCesQe+LugU+Pm+EVnxK2PTUcygIpqq/CF8ljeSdarFtOLipZDH9kE84G4aY1IziQBu6iC3s291zRzMVO7pp5Pr+6LLpX3cUjsauYEVuJ98JGMVwYoY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753421827; c=relaxed/simple;
+	bh=7z2tBnyb7/nOKECUtWjp4H4u0g7JztJBqSTatEKRjXA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iRKKemswZIR16vSDpOYtfXyNMHb+OetN+iXWprEEGPqUjdhkK5RPdEyq4ZPKQVmSd4TXlQgnpdjyBSzdtACTcqWK8qjqR4wTKSzgLlLe/tTKOtb8le+t0uC2FRMxNSONtUTfMZdRkA9XNokF4qKj9Dkxn0GjKwRyllpBqbtMZiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQjJwZkC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E17C4CEE7;
+	Fri, 25 Jul 2025 05:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753421826;
+	bh=7z2tBnyb7/nOKECUtWjp4H4u0g7JztJBqSTatEKRjXA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dQjJwZkCdgSAaK8hBuXWtOkZrlE/wWT7+YRHMdiLwfHfrmVG0OuMOI0fpNPFMewQL
+	 sNaha2tLQAMMgFGCy8SDbub8G72g4aBH9sS7iLQPDKiV1RcX6yAMMtb0ZseDn36HbA
+	 43FJfSOrmPnTTxLJlI9Q5uM4zHN7cmXlCiQfWxBL5AcMYoymPsgqOhj+CfnB17czjS
+	 iH8PofFKsGD+9S+3mdnnD23Pnf3FsITOCPcvb+gCg1DpvXRbmYwXYXcuJv9/fFgT/w
+	 MgfVV8YCLeNwKZNTVsexyLEbQNyD9GFShOArj4IwUkKH0/lRVGSi5x3ooXY1FyKjPf
+	 i7C1COLJIPaQA==
+Message-ID: <1736b3c9-dd02-4014-b6d9-4897f4e97d64@kernel.org>
+Date: Fri, 25 Jul 2025 07:37:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR11MB7185.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72a76a66-36f7-4b7c-edc1-08ddcb3cf3dd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2025 05:34:40.6229
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vBwOjp45moms5qpvVve6kATdWSQPSuOZxuwWfyj9NGCekgTDWY7piXkkn4Ufl2Re4IB6641yf39VU0lnWOsRH4aoUxIfdaJgIPfG7aUpVu4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8608
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: controller: use dev_fwnode()
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+ Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+ Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Joyce Ooi <joyce.ooi@intel.com>,
+ Ryder Lee <ryder.lee@mediatek.com>, Jianjun Wang
+ <jianjun.wang@mediatek.com>, Michal Simek <michal.simek@amd.com>,
+ Daire McNamara <daire.mcnamara@microchip.com>, linux-pci@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ Arnd Bergmann <arnd@arndb.de>, Nam Cao <namcao@linutronix.de>
+References: <20250724231041.GA3079592@bhelgaas>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250724231041.GA3079592@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Leon,
+On 25. 07. 25, 1:10, Bjorn Helgaas wrote:
+> [+cc Arnd, Nam]
+> 
+> On Wed, Jul 23, 2025 at 08:59:07AM +0200, Jiri Slaby (SUSE) wrote:
+>> All irq_domain functions now accept fwnode instead of of_node. But many
+>> PCI controllers still extract dev to of_node and then of_node to fwnode.
+>>
+>> Instead, clean this up and simply use the dev_fwnode() helper to extract
+>> fwnode directly from dev. Internally, it still does dev => of_node =>
+>> fwnode steps, but it's now hidden from the users.
+>>
+>> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+>> Link: https://lore.kernel.org/all/4ee9c7c0-4a3f-4afa-ae5a-7fd8a750c92b@kernel.org/
+>> Link: https://lore.kernel.org/all/4bc0e1ca-a523-424a-8759-59e353317fba@kernel.org/
+> 
+> Thanks, Jiri, I applied this on pci/controller/msi-parent for v6.17;
+> it's at
+> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/msi-parent
+> 
+> The dev_fwnode() conversions touched the same places as Nam's changes
+> to use msi_create_parent_irq_domain().  The previous dev_fwnode()
+> conversions were *before* Nam's changes and these are *after*, and it
+> all ended up looking more complicated than I wanted, so I squashed all
+> the dev_fwnode() conversions together in
+> https://git.kernel.org/cgit/linux/kernel/git/pci/pci.git/commit/?id=a103d2dede56
+> ("PCI: controller: Use dev_fwnode() instead of of_fwnode_handle()")
+> and then added Nam's msi_create_parent_irq_domain() patches on top.
+> 
+> So a103d2dede56 ("PCI: controller: Use dev_fwnode() instead of
+> of_fwnode_handle()") ends up *looking* different from the patch below,
+> but I think having them all together makes it more obvious that
+> they're all making the same conversion, and I think the end result is
+> identical.
 
-> Subject: Re: [PATCH 10/10] vfio/pci: Add dma-buf export support for MMIO
-> regions
->=20
-> > >
-> > > From: Leon Romanovsky <leonro@nvidia.com>
-> > >
-> > > Add support for exporting PCI device MMIO regions through dma-buf,
-> > > enabling safe sharing of non-struct page memory with controlled
-> > > lifetime management. This allows RDMA and other subsystems to
-> import
-> > > dma-buf FDs and build them into memory regions for PCI P2P
-> operations.
-> > >
-> > > The implementation provides a revocable attachment mechanism using
-> > > dma-buf move operations. MMIO regions are normally pinned as BARs
-> > > don't change physical addresses, but access is revoked when the VFIO
-> > > device is closed or a PCI reset is issued. This ensures kernel
-> > > self-defense against potentially hostile userspace.
-> > >
-> > > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> > > Signed-off-by: Vivek Kasireddy <vivek.kasireddy@intel.com>
-> > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > > ---
-> > >  drivers/vfio/pci/Kconfig           |  20 ++
-> > >  drivers/vfio/pci/Makefile          |   2 +
-> > >  drivers/vfio/pci/vfio_pci_config.c |  22 +-
-> > >  drivers/vfio/pci/vfio_pci_core.c   |  25 ++-
-> > >  drivers/vfio/pci/vfio_pci_dmabuf.c | 321
-> +++++++++++++++++++++++++++++
-> > >  drivers/vfio/pci/vfio_pci_priv.h   |  23 +++
-> > >  include/linux/dma-buf.h            |   1 +
-> > >  include/linux/vfio_pci_core.h      |   3 +
-> > >  include/uapi/linux/vfio.h          |  19 ++
-> > >  9 files changed, 431 insertions(+), 5 deletions(-)
-> > >  create mode 100644 drivers/vfio/pci/vfio_pci_dmabuf.c
->=20
-> <...>
->=20
-> > > +static int validate_dmabuf_input(struct vfio_pci_core_device *vdev,
-> > > +				 struct vfio_device_feature_dma_buf
-> *dma_buf)
-> > > +{
-> > > +	struct pci_dev *pdev =3D vdev->pdev;
-> > > +	u32 bar =3D dma_buf->region_index;
-> > > +	u64 offset =3D dma_buf->offset;
-> > > +	u64 len =3D dma_buf->length;
-> > > +	resource_size_t bar_size;
-> > > +	u64 sum;
-> > > +
-> > > +	/*
-> > > +	 * For PCI the region_index is the BAR number like  everything else=
-.
-> > > +	 */
-> > > +	if (bar >=3D VFIO_PCI_ROM_REGION_INDEX)
-> > > +		return -ENODEV;
->=20
-> <...>
->=20
-> > > +/**
-> > > + * Upon VFIO_DEVICE_FEATURE_GET create a dma_buf fd for the
-> > > + * regions selected.
-> > > + *
-> > > + * open_flags are the typical flags passed to open(2), eg O_RDWR,
-> > > O_CLOEXEC,
-> > > + * etc. offset/length specify a slice of the region to create the dm=
-abuf
-> from.
-> > > + * nr_ranges is the total number of (P2P DMA) ranges that comprise t=
-he
-> > > dmabuf.
-> > Any particular reason why you dropped the option (nr_ranges) of creatin=
-g
-> a
-> > single dmabuf from multiple ranges of an MMIO region?
->=20
-> I did it for two reasons. First, I wanted to simplify the code in order
-> to speed-up discussion over the patchset itself. Second, I failed to
-> find justification for need of multiple ranges, as the number of BARs
-> are limited by VFIO_PCI_ROM_REGION_INDEX (6) and same functionality
-> can be achieved by multiple calls to DMABUF import.
-I don't think the same functionality can be achieved by multiple calls to
-dmabuf import. AFAIU, a dmabuf (as of today) is backed by a SGL that can
-have multiple entries because it represents a scattered buffer (multiple
-non-contiguous entries in System RAM or an MMIO region). But in this
-patch you are constraining it such that only one entry associated with a
-buffer would be included, which effectively means that we cannot create
-a dmabuf to represent scattered buffers (located in a single MMIO region
-such as VRAM or other device memory) anymore.=20
+Makes sense to me.
 
->=20
-> >
-> > Restricting the dmabuf to a single range (or having to create multiple
-> dmabufs
-> > to represent multiple regions/ranges associated with a single scattered
-> buffer)
-> > would be very limiting and may not work in all cases. For instance, in =
-my
-> use-case,
-> > I am trying to share a large (4k mode) framebuffer (FB) located in GPU'=
-s
-> VRAM
-> > between two (p2p compatible) GPU devices. And, this would probably not
-> work
-> > given that allocating a large contiguous FB (nr_ranges =3D 1) in VRAM m=
-ay
-> not be
-> > feasible when there is memory pressure.
->=20
-> Can you please help me and point to the place in the code where this can
-> fail?
-> I'm probably missing something basic as there are no large allocations
-> in the current patchset.
-Sorry, I was not very clear. What I meant is that it is not prudent to assu=
-me that
-there will only be one range associated with an MMIO region which we need t=
-o
-consider while creating a dmabuf. And, I was pointing out my use-case as an
-example where vfio-pci needs to create a dmabuf for a large buffer (FB) tha=
-t
-would likely be scattered (and not contiguous) in an MMIO region (such as V=
-RAM).
+Thanks!
 
-Let me further explain with my use-case. Here is a link to my Qemu-based te=
-st:
-https://gitlab.freedesktop.org/Vivek/qemu/-/commit/b2bdb16d9cfaf55384c95b1f=
-060f175ad1c89e95#81dc845f0babf39649c4e086e173375614111b4a_29_46
-
-While exhaustively testing this case, I noticed that the Guest VM (GPU driv=
-er)
-would occasionally create the buffer (represented by virtio_gpu_simple_reso=
-urce,
-for which we need to create a dmabuf) in such a way that there are multiple
-entries (indicated by res->iov_cnt) that need to be included. This is the m=
-ain
-reason why I added support for nr_ranges > 1 to this patch/feature.
-
-Furthermore, creating multiple dmabufs to represent each range of the same
-buffer, like you suggest IIUC is suboptimal and does not align with how dma=
-buf
-works currently.
-
->=20
-> >
-> > Furthermore, since you are adding a new UAPI with this patch/feature, a=
-s
-> you know,
-> > we cannot go back and tweak it (to add support for nr_ranges > 1) shoul=
-d
-> there
-> > be a need in the future, but you can always use nr_ranges =3D 1 anytime=
-.
-> Therefore,
-> > I think it makes sense to be flexible in terms of the number of ranges =
-to
-> include
-> > while creating a dmabuf instead of restricting ourselves to one range.
->=20
-> I'm not a big fan of over-engineering. Let's first understand if this
-> case is needed.
-As explained above with my use-case, having support for nr_ranges > 1 is no=
-t
-just nice to have but absolutely necessary. Otherwise, this feature would b=
-e
-constrained to creating dmabufs for contiguous buffers (nr_ranges =3D 1) on=
-ly,
-which would limit its effectiveness as most GPU buffers are rarely contiguo=
-us.
-
-Thanks,
-Vivek
-
->=20
-> Thanks
->=20
-> >
-> > Thanks,
-> > Vivek
-> >
-> > > + *
-> > > + * Return: The fd number on success, -1 and errno is set on failure.
-> > > + */
-> > > +#define VFIO_DEVICE_FEATURE_DMA_BUF 11
-> > > +
-> > > +struct vfio_device_feature_dma_buf {
-> > > +	__u32	region_index;
-> > > +	__u32	open_flags;
-> > > +	__u64	offset;
-> > > +	__u64	length;
-> > > +};
-> > > +
-> > >  /* -------- API for Type1 VFIO IOMMU -------- */
-> > >
-> > >  /**
-> > > --
-> > > 2.50.1
-> >
+-- 
+js
+suse labs
 
