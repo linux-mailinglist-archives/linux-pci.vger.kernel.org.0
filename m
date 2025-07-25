@@ -1,207 +1,215 @@
-Return-Path: <linux-pci+bounces-32957-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32958-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58F71B125D3
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 22:50:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B54B5B125DA
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 22:53:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 81AD25A09C6
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 20:50:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A6717188B74D
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 20:53:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F09525B1CB;
-	Fri, 25 Jul 2025 20:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51CA425B1CB;
+	Fri, 25 Jul 2025 20:53:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GT8t3z/R"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gxejuH+3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A260725178C
-	for <linux-pci@vger.kernel.org>; Fri, 25 Jul 2025 20:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8E61FDA
+	for <linux-pci@vger.kernel.org>; Fri, 25 Jul 2025 20:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753476607; cv=none; b=mk5u28SwTwsd/oXxm9aWUhldWmuVZdBJABGQJdNStn9I/XBkuFCJbdUDy2OHhdHYe4MxoeSS5zeKpZ8v97t79keHbR0al0P8kMCCXZxyDQD1PLYctNUSXfyy5uvdUSYMOPx/hghz52GLfpRGkDS7akM9iWJwcOMjiNQOq7g49Oo=
+	t=1753476787; cv=none; b=ls4Q5g09YNrag7ftqOWHmIn6VRjJnLefrPGXIz22+hY75M5fOwQRBaml1B/9iluMvxwjXB/L7mg2mKnEBslPttRmOkO7IGeq831DRPnHhqUg8YLE1ykmi4OJFG67S18GVsENQDkIGEB7Q8YBrLC59JkwgmoMkRu9B92BAOf8mus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753476607; c=relaxed/simple;
-	bh=y/NM4olwbMDiZWf/Aup4DU4JAT8QbjCPgUUpDkUyeGE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=XrgUuvUn1VPFI9Y84aSq+4cWu4dFXEhJruA6LimmMLmHOE2X9hGYXayoBX6jpdbWjhmycMEbFtyoxb3dHGjRC27Gm9SlvbrD0RNj7v9t/1xVD42Yo8qOvMf6WL5J0Ejs/IXdjGX7MzhTFEVat3KUCNPLdAiXGd7KlvvfSid55rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GT8t3z/R; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753476605; x=1785012605;
-  h=date:from:to:cc:subject:message-id;
-  bh=y/NM4olwbMDiZWf/Aup4DU4JAT8QbjCPgUUpDkUyeGE=;
-  b=GT8t3z/R5AsUGZ+Iyn/RJEkya+IVz9hWYTkY59mCCzPckufzhGona9PE
-   PEIzdvMcb0WbtO1dct4WOlnkjFSsK0fJgVJfWtuawqMOj0zXn4zfc+QW6
-   XF17rf0o+n/xlEUGtYaFGQYQ0Fr+RjIr1PP3UlloHPlBt+vTC9YbnMYNL
-   U26+BuckH/PeZtIYUgpRaMXEGVMkn00j0hg/TK2NxcOhvikuMERjq3mYJ
-   VpB/d1zMhLKbWUMd7/QEDrGdU4qlNUTLboJGmoKHK33Zvh8QmUuY1MfGF
-   36Tm6WgaQVnGf843IXWmFBYNOMv6VSIxDwtBUubWhDlKDtav/pUiKsg9E
-   A==;
-X-CSE-ConnectionGUID: XzazOAjKR9SkFTPpkhy02A==
-X-CSE-MsgGUID: mnT7FbgITra8ioYBFYpSPQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11503"; a="66515341"
-X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
-   d="scan'208";a="66515341"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2025 13:50:05 -0700
-X-CSE-ConnectionGUID: c8SxJWohSBu5sNw06KJ4KA==
-X-CSE-MsgGUID: Q1upyuopSeCy522SaA9asQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
-   d="scan'208";a="161104391"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 25 Jul 2025 13:50:04 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ufPMf-000LZ9-2Z;
-	Fri, 25 Jul 2025 20:50:01 +0000
-Date: Sat, 26 Jul 2025 04:49:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/dev_fwnode] BUILD SUCCESS
- 263f418c118e0a9f00540b2f3b3bb20cc0052d5e
-Message-ID: <202507260415.8tXGIJvp-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1753476787; c=relaxed/simple;
+	bh=4xvXaVpHFyGpTUK0nPs1QabdpiGcctfRTdpk7NVY8zM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gb/MkqaIHiw8K5W/7kUOfQnD6jEt3ltt7y/HHaGzjF54CAdjUVNbWq/icxXJo8MIcE1N9KLZgUaN53FYFiK/gICFebGNizZRdODUxxh/t9wzkmYc/wSHGYAFpWK1Tu7PZFAqaUIqQeKKgMEj5h0D2YdKK5E5nDyac2PCfm1kmPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gxejuH+3; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-234fcadde3eso35015625ad.0
+        for <linux-pci@vger.kernel.org>; Fri, 25 Jul 2025 13:53:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1753476785; x=1754081585; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GGLclRMhnKPBnE2c1s1qMNnbNcocHFvf+xLZSPlILVs=;
+        b=gxejuH+3Fj9iOYHF3IWVrsZ0I1PoIUuu4+lZhsRjNuBqelEg2Y8HBnMkFXtAej/UzB
+         fpOeDA5WNtsIROyHs0nn5PAjhMPU1LzK9CRgbSpErG65Ub6F0HFdIofXivIliVyAkngd
+         49a3z+KSRbuBcMCMeBhBDDqXEvEmCetF6wXBQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753476785; x=1754081585;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GGLclRMhnKPBnE2c1s1qMNnbNcocHFvf+xLZSPlILVs=;
+        b=uzjaqciLHuCw16BaNDS/X5JMPGXsg61C7aInckkgk3eNPD0X3zYmAVNPLbORXnYW9H
+         gZlLA+TlGnyQfQZei53xluqUyuDxUFy3ik1RxvsUz7+hzJzSjGnqWnnDi2/bvYX3fzrf
+         9PbqAku2WKzCY04t0aNCp2wEc8D8yQr3aNUpVaLGbaeGX8PSEOE2gyFN4qEVWV8IARPm
+         36E64NVg18W0Rxe4coZd01AmKjgRCoXX9NN7C+SVdKA0V+xCg0oP7g5M0M522jj371Y8
+         u43iAJPs6YkZj/Z2p5ZNJueTrc7P/5v4FxoeSzvEivVmtlC7B++e4nLi1msx9Znze/8n
+         6lDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWS8VY1ghuk4+O/jw8fGhK3L1r87Rp3fOUy/0EMWJ2OpkouJefDqqALaDe7Mek2hDdgjc+zMwoQDLA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNKTNlZBr8kyGnIHPYFeVNDlmdjXuZa8tBVGDVay94zvMZ48cy
+	CxIX5BVcIChHlQg4fc6VXCXkO80gw/DQdiyJRsCIs6r/a0K++7o7Mf7QrZ+N3RoNsg==
+X-Gm-Gg: ASbGncuiOkP5TyQcmeZYaUH1ztbVMqUWzlRINlGE3gOz0OfW7lnUBSQAtxjULweuOzI
+	xUbmR9IQxTevF/hURKq/YqmAH7ZpCvlK4FGMV1bV6rFuhbtkw2Ab4CzQyTpUFj2qCB0Bp9kWcC1
+	mUQ4cYCvDag4BQ8ivEhOAQgGWIkRaTC6CjAUX4C9zvnZwvFm0GS9q+H7ICKf0Xxr01heaFLbUW9
+	/ua3OWewoL5JK16pjF51RIYXbSaFH09Q1Wglr3s+lzgQXRcRSaThAuwlSFFTJA7ae6W2TxHzAN/
+	E5e4NOx6c0933Ttk530cCotNpkYspOmM0HfaHJYkSZvr//rmOAyc3qukYNmKF00fh5TbAxvqKPs
+	mrHvK0TuUIOron8N4YmulroYlU6ERKFnPKwtCLthPNBSpXxHDQIMjMF8zEJc=
+X-Google-Smtp-Source: AGHT+IGacVASkcZlDKCCN3RzNaW/5grGoST8o1yKkU+/tmCsKHybYVMhu8Q6KHD6Mf+qTSzjJKTM5w==
+X-Received: by 2002:a17:903:1c2:b0:23d:dd63:2cd9 with SMTP id d9443c01a7336-23fb31d3328mr58085215ad.46.1753476785059;
+        Fri, 25 Jul 2025 13:53:05 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:5a7:d366:b2e1:fcd1])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23fc5a9d1b9sm321905ad.94.2025.07.25.13.53.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Jul 2025 13:53:04 -0700 (PDT)
+Date: Fri, 25 Jul 2025 13:53:02 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: Re: [PATCH RFC 3/3] PCI: qcom: Allow pwrctrl framework to control
+ PERST#
+Message-ID: <aIPuruD6jdpIDujD@google.com>
+References: <20250707-pci-pwrctrl-perst-v1-0-c3c7e513e312@kernel.org>
+ <20250707-pci-pwrctrl-perst-v1-3-c3c7e513e312@kernel.org>
+ <aHGhd3LLg8Dwk1qn@google.com>
+ <qolpaorpkoyr5vzuowx3ml7uzwf4xc6atikrpilvbprc2ny5no@rcune7o57fuz>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <qolpaorpkoyr5vzuowx3ml7uzwf4xc6atikrpilvbprc2ny5no@rcune7o57fuz>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dev_fwnode
-branch HEAD: 263f418c118e0a9f00540b2f3b3bb20cc0052d5e  PCI: controller: Use dev_fwnode() instead of of_fwnode_handle()
+Hi Manivannan,
 
-elapsed time: 1452m
+Sorry for some delay. Things get busy, and I don't get the time for
+proper review/reply sometimes...
 
-configs tested: 114
-configs skipped: 3
+On Sat, Jul 12, 2025 at 11:50:43AM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Jul 11, 2025 at 04:42:47PM GMT, Brian Norris wrote:
+> > Hi,
+> > 
+> > On Mon, Jul 07, 2025 at 11:48:40PM +0530, Manivannan Sadhasivam wrote:
+> > > Since the Qcom platforms rely on pwrctrl framework to control the power
+> > > supplies, allow it to control PERST# also. PERST# should be toggled during
+> > > the power-on and power-off scenarios.
+> > > 
+> > > But the controller driver still need to assert PERST# during the controller
+> > > initialization. So only skip the deassert if pwrctrl usage is detected. The
+> > > pwrctrl framework will deassert PERST# after turning on the supplies.
+> > > 
+> > > The usage of pwrctrl framework is detected based on the new DT binding
+> > > i.e., with the presence of PERST# and PHY properties in the Root Port node
+> > > instead of the host bridge node.
+> > 
+> > I just noticed what this paragraph means. IIUC, this implies that in
+> > your new binding, one *must* describe one or more *-supply in the port
+> > or endpoint device(s). Otherwise, no pwrctrl devices will be created,
+> > and no one will deassert PERST# for you. My understanding is that
+> > *-supply is optional, and so this is a poor requirement.
+> > 
+> 
+> Your understanding is correct. But the problem is, you thought that pwrctrl
+> would work across all platforms without any modifications, which unfortunately
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I do not think this. Of course there's some modification needed on
+occasion, especially when drivers assume they can poll for the link to
+come up when power isn't ready, or if they want to get PERST# right
+(i.e., $subject).
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250725    gcc-13.4.0
-arc                   randconfig-002-20250725    gcc-11.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                            qcom_defconfig    clang-22
-arm                   randconfig-001-20250725    gcc-15.1.0
-arm                   randconfig-002-20250725    clang-22
-arm                   randconfig-003-20250725    clang-20
-arm                   randconfig-004-20250725    clang-22
-arm                           u8500_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250725    clang-22
-arm64                 randconfig-002-20250725    gcc-12.5.0
-arm64                 randconfig-003-20250725    gcc-14.3.0
-arm64                 randconfig-004-20250725    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250725    gcc-11.5.0
-csky                  randconfig-002-20250725    gcc-10.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250725    clang-22
-hexagon               randconfig-002-20250725    clang-22
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250725    gcc-12
-i386        buildonly-randconfig-002-20250725    clang-20
-i386        buildonly-randconfig-003-20250725    clang-20
-i386        buildonly-randconfig-004-20250725    clang-20
-i386        buildonly-randconfig-005-20250725    clang-20
-i386        buildonly-randconfig-006-20250725    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20250725    gcc-15.1.0
-loongarch             randconfig-002-20250725    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                        bcm47xx_defconfig    clang-18
-mips                          eyeq6_defconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250725    gcc-9.5.0
-nios2                 randconfig-002-20250725    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250725    gcc-15.1.0
-parisc                randconfig-002-20250725    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc               randconfig-001-20250725    gcc-8.5.0
-powerpc               randconfig-002-20250725    clang-22
-powerpc               randconfig-003-20250725    gcc-8.5.0
-powerpc64             randconfig-001-20250725    clang-22
-powerpc64             randconfig-002-20250725    gcc-8.5.0
-powerpc64             randconfig-003-20250725    gcc-10.5.0
-riscv                             allnoconfig    gcc-15.1.0
-riscv                 randconfig-001-20250725    gcc-10.5.0
-riscv                 randconfig-002-20250725    clang-22
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250725    gcc-8.5.0
-s390                  randconfig-002-20250725    clang-17
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                    randconfig-001-20250725    gcc-15.1.0
-sh                    randconfig-002-20250725    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250725    gcc-8.5.0
-sparc                 randconfig-002-20250725    gcc-11.5.0
-sparc64               randconfig-001-20250725    gcc-8.5.0
-sparc64               randconfig-002-20250725    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250725    clang-22
-um                    randconfig-002-20250725    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250725    clang-20
-x86_64      buildonly-randconfig-002-20250725    clang-20
-x86_64      buildonly-randconfig-003-20250725    clang-20
-x86_64      buildonly-randconfig-004-20250725    clang-20
-x86_64      buildonly-randconfig-005-20250725    gcc-12
-x86_64      buildonly-randconfig-006-20250725    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250725    gcc-13.4.0
-xtensa                randconfig-002-20250725    gcc-8.5.0
+OTOH, I don't think you can claim that platforms *don't* support
+pwrctrl. If a driver has a well-behaved start_link() behavior and
+doesn't otherwise manage slot/endpoint *-supply properties (a la
+pcie-brcmstb), it should mostly work without further involvement.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+But crucially, that changes with PERST#. And I think you're making
+very narrow assumptions when you do that.
+
+> is not true and is the main source of confusion. And I never claim anywhere that
+> pwrctrl is ready for all platforms. I just want platforms to start showing
+> interest towards it and we will collectively solve the issues. Or I'll be happy
+> to solve the issues if platform maintainers show interest towards it. This is
+> what currently happening with brcmstb. I signed up for the transition to
+> pwrctrl as their out-of-tree is breaking with pwrctrl.
+> 
+> Right now, we indeed create pwrctrl device based on the presence of power
+> supplies as that's how the sole user of pwrctrl (Qcom platforms) behave. But
+
+I don't see how this is really Qualcomm specific, unless you simply
+require that all new Qcom DTs specify external *-supply. I don't see
+that in your Documentation/devicetree/bindings/pci/qcom*.yaml though,
+and I don't think that's reasonable.
+
+> sure, for some other platforms we might have only 'reset-gpios'. When we have to
+> support those platforms, we will extend the logic.
+
+The thing is, you don't have 100% control over this. You sound like you
+only want to support device trees that are shipped in the upstream
+kernel, but that's not how they work -- it's totally valid to ship
+non-upstream device trees, if you follow the DT bindings. And you've
+already hit that pitfall with brcmstb.
+
+Suppose you have a Qcom platform today, with pwrctrl support, and:
+
+ 1. it has GPIO PERST#
+ 2. some boards have external power controls for the endpoint. *-supply
+    nodes are described for the endpoint, and pwrctrl is in use.
+ 3. some boards have hardwired power that is always-on / on at boot (no
+    *-supply node, no pwrctrl).
+
+As you've written it today, #3 will no longer work, since you're
+deferring PERST# to pwrctrl, but pwrctrl never gets involved.
+
+Crucially, you can't read the driver source to tell the difference
+between #2 and #3, and it's not even in the binding schema. Now magnify
+this across other drivers that might support this.
+
+I have boards like #2 and #3, and I don't know how I'm supposed to
+develop my driver.
+
+> > And even if all QCOM device trees manage to have external regulators
+> > described in their device trees, there are certainly other systems where
+> > the driver might (optionally) use pwrctrl for some devices, but others
+> > will establish power on their own (e.g., PCIe tied to some other system
+> > power rail).
+> > 
+> > I think you either need the PCI core to tell you whether pwrctrl is in
+> > use, or else you need to disconnect this PERST# support from pwrctrl.
+> > 
+> 
+> It is not straightforward for the PCI core to tell whether pwrctrl is in use or
+> not.
+
+Yes, well this seems like a fundamental recurring problem at the root
+here. This agnostic design just causes more problems, IMO.
+
+> pwrctrl has no devicetree representation as it is not a separate hardware
+> entity. It just reuses the PCI device DT node. So I used the -supply properties
+> to assume that the pwrctrl device will be used. And almost none of the upstream
+> DTS has -supply properties in the PCI child node (only exception is brcmstb
+> where they define -supply properties in the PCI child node, but only in the DT
+> binding). So that added up.
+
+You gotta work off DT bindings and schema to make assertions. You can't
+just guess based on in-tree device trees, and so you can't prove
+non-existence, if it's not explicit in the bindings.
+
+Brian
 
