@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-32907-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32908-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74F4BB1159B
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 03:14:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C1DDB115BD
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 03:21:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A17DF580D14
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 01:14:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 60CC03AAE54
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 01:21:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74BAF19D06B;
-	Fri, 25 Jul 2025 01:14:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF3E81D5CFB;
+	Fri, 25 Jul 2025 01:21:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eib7mR13"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m1Rk3hWs"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D131199EAD;
-	Fri, 25 Jul 2025 01:14:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6057B1C84C6;
+	Fri, 25 Jul 2025 01:21:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753406052; cv=none; b=t0wFlsRjVBUfaCE8hAjePHzSic5qk1X6tU+HoxqzWq7lJMAWC3n5mt6zA+fKLrhY3LdR6W+lPUUAWWlAeCFwrTnmMUbFmGOBItpDmK6jJotu+HL7o7NrkCH9n/y3RVI+Y8DNoIt8iB0EqrIJqU69UHnnGzgFC2t48JzIFxChfgM=
+	t=1753406486; cv=none; b=VIY9bi0fY3z7vS0b6dygttK8ggww4GzQ3TaXREfv50GhHiEVYC821sPKdhbbiR3qxv/fFsp8OVRUUbWcDp6olIu5b7sY+liHALx7OjpxIhi5HJoWk9giHA/Ro+PmjC0nearC8hloMxIe1ChgjPmr1sRl+oed4yIzBEhyt7ynKeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753406052; c=relaxed/simple;
-	bh=QCfq7NK2qUEbOfaVUsUfHClTgphOJ5SqPV/8zEcK5wk=;
+	s=arc-20240116; t=1753406486; c=relaxed/simple;
+	bh=MwqHEfaufpCZenjp6i2XUuWCEA4wM5dG9Nbu1j4rcuc=;
 	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=SQZpYRqYLeoj22O5azJjKtz0dSQYlUoXktNp35gGemHaBzQ8j6LY6TL0OKt5goHUAWXH1Zyk+Q2LQrnwqsR5eNcMlFKB/W4H6rnhEYjKC6seYqNWY+YLJGTOJA5QPyRPWdUV2eR3SRoiLL0JlbENoor+2g7SLx1tnsRZBQySS/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eib7mR13; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E852C4CEED;
-	Fri, 25 Jul 2025 01:14:11 +0000 (UTC)
+	 To:Date:Message-ID; b=EREiUA2lS2/oW8Jq09nz02i7qWhKZ8f8iLB586oOHaFB7MRTOYoteb+WjjRbu0JprjcHEEE4IZTKg6cwlE666c16rbXRG2EvIw9OEx32M0PbXQzGor3zA90klGz8pbIAEhvuewNwW64Dq+H/aEWhYOi6HZLRJ97iGSu4wEa0Aw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m1Rk3hWs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB5D7C4CEF6;
+	Fri, 25 Jul 2025 01:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753406051;
-	bh=QCfq7NK2qUEbOfaVUsUfHClTgphOJ5SqPV/8zEcK5wk=;
+	s=k20201202; t=1753406486;
+	bh=MwqHEfaufpCZenjp6i2XUuWCEA4wM5dG9Nbu1j4rcuc=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=eib7mR13CXAqUYOGvZuBnzmXTI28/D0YWPjLXhdoeP2ORv2J/Bg0cre+NJXHgkvlK
-	 JyS6JBrn3yGS57nKM5UJ14FmIckuuILLLwq3pvt1YoDAqLfk5LmjIQCkPIytUlTNpJ
-	 cLqu+6QxYzG4zkvPS35ormr/S06tETerOT4NCnCpKMKGLmhpCxgtGoze/ZZkjk3W4R
-	 XYJ6vldLFjCDoLxMoZwR5Q274cnYfR/X6eeqcgq8Pt/Zj4QwzHxBIZi6usZGcL3or7
-	 h1xE6oTKpeNi3bW0aycHqsQ0vymIyGUOoQjyr1OzMlr8nt92advrsBmVyZRhIuEhEi
-	 RsgTts79mDXWw==
+	b=m1Rk3hWsOdacTaqRQmyKq2WcAz4JOiCCmafCCpJZccGewpWk5tGPQ8vUmkzPGQNtx
+	 Nae3LJoRHEwKyp1nMtsPRvccMrdF64rL2Kwoq4uUk9osiNEPUvWp858ZzH2tvAnyKp
+	 L57gcyS169BmwAj5aTWef7sjQKz2aikszYiwkniZivAlFvilRhoL07uCJePxeU0z7D
+	 6mediv7gl4GjUtxouU0P4vAmIV3kWOuq+zyrSkJWTedoI/jwOQxK2WKce1EjRxufSD
+	 UdcrsM6goolXixPwQPkVuanLvYRSH+rGkJrILKsKqPPuKKhZkRK51RqEMAWbC+nVoY
+	 t8BHUQy0d00Lw==
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -49,30 +49,25 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250623-byeword-update-v2-19-cf1fc08a2e1f@collabora.com>
-References: <20250623-byeword-update-v2-0-cf1fc08a2e1f@collabora.com> <20250623-byeword-update-v2-19-cf1fc08a2e1f@collabora.com>
-Subject: Re: [PATCH v2 19/20] clk: sp7021: switch to FIELD_PREP_WM16 macro
+In-Reply-To: <20250710-core-cstr-cstrings-v1-4-027420ea799e@gmail.com>
+References: <20250710-core-cstr-cstrings-v1-0-027420ea799e@gmail.com> <20250710-core-cstr-cstrings-v1-4-027420ea799e@gmail.com>
+Subject: Re: [PATCH 04/17] rust: clk: replace `kernel::c_str!` with C-Strings
 From: Stephen Boyd <sboyd@kernel.org>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-phy@lists.infradead.org, linux-sound@vger.kernel.org, netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Alexandre Torgue <alexandre.torgue@foss.st.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Andy Yan <andy.yan@rock-chips.com>, Bill Wendling <morbo@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Chanwoo Choi <cw00.choi@samsung.com>, David Airlie <airlied@gmail.com>, David S. Miller <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Heiko Stuebner <heiko@sntech.de>, Jaehoon Chung <jh80.chung@samsung.com>, Jakub Kicinski <kuba@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Justin Stitt <justinstitt@google.com>, Kishon Vijay Abraham I <kishon@kernel.org>, Krzysztof =?utf-8?q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Manivannan Sadhasivam <mani@kernel.org>, Mark Brown <broonie@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Maxime Ripard <mripard@k
- ernel.org>, Michael Turquette <mturquette@baylibre.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Paolo Abeni <pabeni@redhat.com>, Qin Jian <qinjian@cqplus1.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Rob Herring <robh@kernel.org>, Sandy Huang <hjc@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>, Shreeya Patel <shreeya.patel@collabora.com>, Simona Vetter <simona@ffwll.ch>, Takashi Iwai <tiwai@suse.com>, Thomas Zimmermann <tzimmermann@suse.de>, Ulf Hansson <ulf.hansson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Yury Norov <yury.norov@gmail.com>
-Date: Thu, 24 Jul 2025 18:14:10 -0700
-Message-ID: <175340605069.3513.18204498860033427106@lazor>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, linux-clk@vger.kernel.org, linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-block@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
+To: Alex Gaynor <alex.gaynor@gmail.com>, Alice Ryhl <aliceryhl@google.com>, Andreas Hindborg <a.hindborg@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, Benno Lossin <lossin@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, =?utf-8?q?Bj=C3=B6rn?= Roy Baron <bjorn3_gh@protonmail.com>, Boqun Feng <boqun.feng@gmail.com>, Brendan Higgins <brendan.higgins@linux.dev>, Breno Leitao <leitao@debian.org>, Danilo Krummrich <dakr@kernel.org>, Dave Ertman <david.m.ertman@intel.com>, David Airlie <airlied@gmail.com>, David Gow <davidgow@google.com>, David S. Miller <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, FUJITA Tomonori <fujita.tomonori@gmail.com>, Gary Guo <gary@garyguo.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heiner Kallweit <hkallweit1@gmail.com>, Ira Weiny <ira.weiny@intel.com>, Jakub Kicinski <kuba@kernel.org>, Jens Axboe <axboe@kernel.dk>, Krzysztof =?utf-8?q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Leon Romanovsky <leon@kernel.or
+ g>, Luis Chamberlain <mcgrof@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Miguel Ojeda <ojeda@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rae Moar <rmoar@google.com>, Rafael J. Wysocki <rafael@kernel.org>, Russ Weight <russ.weight@linux.dev>, Russell King <linux@armlinux.org.uk>, Simona Vetter <simona@ffwll.ch>, Tamir Duberstein <tamird@gmail.com>, Thomas Zimmermann <tzimmermann@suse.de>, Trevor Gross <tmgross@umich.edu>, Viresh Kumar <viresh.kumar@linaro.org>
+Date: Thu, 24 Jul 2025 18:21:24 -0700
+Message-ID: <175340648493.3513.9465215631125389438@lazor>
 User-Agent: alot/0.11
 
-Quoting Nicolas Frattaroli (2025-06-23 09:05:47)
-> The sp7021 clock driver has its own shifted high word mask macro,
-> similar to the ones many Rockchip drivers have.
+Quoting Tamir Duberstein (2025-07-10 08:31:07)
+> C-String literals were added in Rust 1.77. Replace instances of
+> `kernel::c_str!` with C-String literals where possible.
 >=20
-> Remove it, and replace instances of it with hw_bitfield.h's
-> FIELD_PREP_WM16 macro, which does the same thing except in a common
-> macro that also does compile-time error checking.
->=20
-> This was compile-tested with 32-bit ARM with Clang, no runtime tests
-> were performed as I lack the hardware. However, I verified that fix
-> commit 5c667d5a5a3e ("clk: sp7021: Adjust width of _m in HWM_FIELD_PREP()=
-")
-> is not regressed. No warning is produced.
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
 
-Does it generate the same code before and after?
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 
