@@ -1,192 +1,204 @@
-Return-Path: <linux-pci+bounces-32947-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32950-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAA2DB12234
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 18:42:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A5B7AB123B2
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 20:22:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F41DA581537
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 16:42:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF479563258
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 18:22:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8E2A2EF282;
-	Fri, 25 Jul 2025 16:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D942417DE;
+	Fri, 25 Jul 2025 18:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XE4OmoYD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eCmW3q2C"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2068.outbound.protection.outlook.com [40.107.220.68])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61730243378;
-	Fri, 25 Jul 2025 16:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753461742; cv=fail; b=LScgvnY+eH6AuXAcx/GIvajm543RQChfBRVYWz/6IcSZyupWbmz8B4l7k96/NFPw/GtpQlPlKD6k6kzDPSC5ZRVWQV+ee5I8Ks71/e2fgh7J6eGFWGZKOaxabpDsrAGpehvt+Zw9OgxinBk32Mm5S1iCT2pwqsy5F/mi6Gv78Co=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753461742; c=relaxed/simple;
-	bh=UyZMB1dcPYxNJs078xJnBsifJYkKd+IEUP3g+aDoZUo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4UkwtC/LLBvlrFeI8nZswgzrEzBsPKFgX7JJ3unQq/styT6UN9/nA+360ATwUkIKze9keLBsPw5KBtamZoqkMty0SFvo+DUZPDlRZ0IDhYJQ79GXH/Z2unI/TVqLWPfLavIF7xby0g2Nm9rFS+aIgu5h0Yeljb4TPzAyxYvDnY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XE4OmoYD; arc=fail smtp.client-ip=40.107.220.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p0yn7HGNXbMA04KPbT8qho4gwwFAaMwLitCil7Vwlb2fXPJsG59v+Ut+T8dzoN05YVqle2dAoiPH8AtLaQwm3Ue6ySW5wwzvNbUorCdN1shY2AwwLBTQAcLVRqKu1o6rfNujufQ4lVVDUy+jXIfXU08U49Vj9aG+pHB1iQzKTrSOJ6voS+HCZjbhLJdQZ0N8UzHZkEHrIGPf4ENTsPM6h1SO3q6iIDMz4pGYHdGs4rTiXhhIqGFnDjMQOWauB+3eNG5W8jhs0W8awc1yjFsgqikYGEnCiWKOiVzFAkrY+AxDGIiHTLaMUWsWNw4fTg57iOt/cbLmw9zLQI+4r/CNaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0cEw2jGRRXTVNjDx8dNqM7En4f2cjK+RJPnjm/RqJSU=;
- b=CHeC+7JTlBhTSs6oVvyMHSdBIp0C5+CVNB8wbJvx7XzVQ1fU0xYtKacym6yhAQs0gvOJjcqBsVoC/Jgv5sZuD/8Ojd23KqwkzS2+Xpl65yTQ+nposo0DCnzOYbg2skVM3OxsiVMaX5Nhfo9tQC3UtuLLWtTpSLFfbw+Cdp6CH8F3aknsJS3VMUU+NqgofzTAXT1SP0yyerxZbMbvrdrbRfUSRNg3xkNnMYFqVT8dYylLEv0Ly4MM8Yi2XAzZb2UUVaGq1ddbZSfKIZVRGy3r0FUG6icwDP6IZEdCg5jUuMrQRXFc8RITPFebH/Z7MJx/F2I8XGO0T4yLJIsbFQmTJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0cEw2jGRRXTVNjDx8dNqM7En4f2cjK+RJPnjm/RqJSU=;
- b=XE4OmoYDa+Tmw0+MaIkZxIozURyhxTYi8os6kMP/t+WWIa/inmX0Ak2ZwWZzjh9eU/K7pxhk2rZSvPbN0C3bM5+Q5yiLTasafbnwNeU/mHe76x/8lT89kGKitmdsjOwuMhIpIBaW0Or8naQAVp8cTS2eb1PTt9BFybkFeecmUYF9oKG3tx0LVjjpY9bO5N3boy9nlIdaNtpJ/Apc7I5khufn9xkiFF2fKCN2d481UK7LQ47/zc6YmHSIdtU+ueJGxeyzuKM+5JSMgTQre8EdqvKSS3fJ2bRSC+iQIhLupw/28Wc+YudntjEJkSBnv2cf4g4cTrzUCbBmFtxp2XdM5w==
-Received: from SJ0PR13CA0172.namprd13.prod.outlook.com (2603:10b6:a03:2c7::27)
- by PH0PR12MB7488.namprd12.prod.outlook.com (2603:10b6:510:1e9::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.23; Fri, 25 Jul
- 2025 16:42:16 +0000
-Received: from CO1PEPF000042AE.namprd03.prod.outlook.com
- (2603:10b6:a03:2c7:cafe::86) by SJ0PR13CA0172.outlook.office365.com
- (2603:10b6:a03:2c7::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8989.7 via Frontend Transport; Fri,
- 25 Jul 2025 16:42:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- CO1PEPF000042AE.mail.protection.outlook.com (10.167.243.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8964.20 via Frontend Transport; Fri, 25 Jul 2025 16:42:16 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 25 Jul
- 2025 09:42:00 -0700
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 25 Jul 2025 09:41:59 -0700
-Received: from Asurada-Nvidia (10.127.8.14) by mail.nvidia.com
- (10.126.190.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Fri, 25 Jul 2025 09:41:58 -0700
-Date: Fri, 25 Jul 2025 09:41:57 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Ethan Zhao <etzhao1900@gmail.com>
-CC: <jgg@nvidia.com>, <joro@8bytes.org>, <will@kernel.org>,
-	<robin.murphy@arm.com>, <rafael@kernel.org>, <lenb@kernel.org>,
-	<bhelgaas@google.com>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
-	<pjaroszynski@nvidia.com>, <vsethi@nvidia.com>, <helgaas@kernel.org>,
-	<baolu.lu@linux.intel.com>
-Subject: Re: [PATCH RFC v2 0/4] Disable ATS via iommu during PCI resets
-Message-ID: <aIOz1bzgfK9q0n4b@Asurada-Nvidia>
-References: <cover.1751096303.git.nicolinc@nvidia.com>
- <4f7e4bfb-1bc7-4c87-a9f1-8c8b6ee9a336@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CF8187332
+	for <linux-pci@vger.kernel.org>; Fri, 25 Jul 2025 18:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753467718; cv=none; b=cFm7hP6kbpVdlB1vjCLyC6gQ8lJpHd7x/MMigP2dhaSEOd6ZdBvkSSghH81IrlzB8X7feOVk1g1DspEPA3UYT1uQpX3B/9DZ9RZbvyXsovX0wAR/CnxUEEKoJUdmcCR46cI5jIEoTK6WdhosLInnTONf8AWfplww8ZxT9PGJEFA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753467718; c=relaxed/simple;
+	bh=QIZD9IDVZDErUirj87Twztcof7T/CQ+v/B/0xNwK09c=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=g3dcG4hX4D9pDWMSrx7xYh0NlzqCo2PDAOXDzp5Zxii7qrDAs6QGJQ8+HJBZD/DoS0LDfmmboFlhBocYa2RQj/3plYa2px9RtQ0oxGzR3Sqf4DIqbSh+8GdtXkKex54Yo60+WIyqYRWepZatlWDPHXZOGmfEt62Xm5kIUD0JCyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eCmW3q2C; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753467717; x=1785003717;
+  h=date:from:to:cc:subject:message-id;
+  bh=QIZD9IDVZDErUirj87Twztcof7T/CQ+v/B/0xNwK09c=;
+  b=eCmW3q2ClNGZyYWvI2/29BPfuDVkMCX13Fb7UPTbmHubp4akk2/M906B
+   nXdEUtkk42GxvCJphifNI/Da++yo0tTPbIGAcA6owpEkr7InBnmQopxUP
+   G5Zz1fTVBVWAxhSnu/XTT23JBqMgHzNyISvGRPjeB3hW/XbaOphZGoF3q
+   UrrJA8LIWhMs5v8bAkXfp0l650jURAlP/dDQgSkMHhELmVq/JBzitLvVp
+   A61YQt/DISQWgelHWS42wPjZgndFAE0PmDF5lZygppR+hF1OgfuczyIQV
+   Lz0o/NJyDHH4xwi7uh53a9P4kT8DrPn/M2cyb6C5D1B/lByAC7WHz8NE4
+   g==;
+X-CSE-ConnectionGUID: mEnd+ewOQCexX7pyMvXtGg==
+X-CSE-MsgGUID: XKpkl7AJRsq52Ss25azk+w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11503"; a="58429374"
+X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
+   d="scan'208";a="58429374"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2025 11:21:54 -0700
+X-CSE-ConnectionGUID: Ao3r38T6Q8CvTeDrCCb8Kg==
+X-CSE-MsgGUID: MFC5zFotTqe9v7XvICtaeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
+   d="scan'208";a="198238646"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 25 Jul 2025 11:21:53 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ufN3G-000LV3-1l;
+	Fri, 25 Jul 2025 18:21:50 +0000
+Date: Sat, 26 Jul 2025 02:21:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/imx6] BUILD SUCCESS
+ 2e6ea70690ddd1ffa422423fd0d4523e4dfe4b62
+Message-ID: <202507260222.xFiOQY13-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <4f7e4bfb-1bc7-4c87-a9f1-8c8b6ee9a336@gmail.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000042AE:EE_|PH0PR12MB7488:EE_
-X-MS-Office365-Filtering-Correlation-Id: a8b234ab-94ce-4b98-1b85-08ddcb9a3725
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?IZyhEi2D+lXWw0sI6YM7NHdhhBU++5S0CobsBzxNEwBmRv/x7+1oYumpXFGk?=
- =?us-ascii?Q?ytohOxdv0mylpjZgfuG63qCWz9kfPgyazKy2ib6m0pZ8OmbIHeGpGMtJ8hr5?=
- =?us-ascii?Q?1V0AtW18oRzaT8zm6ozPqw3hgx7IlCUl0SUPy8QLpCQ+2VZLZoEo68wHZdV6?=
- =?us-ascii?Q?v2yQTQ57eiido+GZCH0JikrdixNhmT/2X4J/IPhM+M4NQfhza9oZKnB2EWjS?=
- =?us-ascii?Q?Un8e7UOb0pD9wU+IGUO+mecVqL3OZEtU8qNPbpn9o0zDs+C7CeF2IC+YgtZP?=
- =?us-ascii?Q?zJUFGdOHwSZuYNb23XjWRB0vPhRozxpFdIAbJJ5EVUcJok4n5xzvPsCI22ZS?=
- =?us-ascii?Q?NHRunguvPnQ+WPmefzVNVcVhtNRbqcEPu3G7zAeHkt0Jr2JnYo5b7XPwQAFD?=
- =?us-ascii?Q?FRksJymMWbMbEWCeUz8MNEV3qjsz1isB16VCcF8RI9V9GnXkR5i2wYnhVd2A?=
- =?us-ascii?Q?eZL/NQQ/mQrlBtPstf8uGLGDD5YEAjS0QvKSouTP5uvNWYlJy917g9/JPfYW?=
- =?us-ascii?Q?G/KiwhJGrO4nDoZHV0Djz6uUWdrTQCSOaQFSXaNPblnTzegCnveW4s/REExR?=
- =?us-ascii?Q?V4F+PGz0CcO5gLqZB7k+WZ6cu1H/FNgyjP96EDpSl9QlsJteqpBwXY8Xz5o/?=
- =?us-ascii?Q?ab229L2uocikIQ+1DKTYv/iHESr7jhdRUG1mlAHGbk68VdgSALX3fbblcQ80?=
- =?us-ascii?Q?M4yz7SRC/2eWZmcwb0kJheLqvSxDFvvOYy/tyvn+IfqFZwBQfQ68KrOYcYpT?=
- =?us-ascii?Q?juVY+YWqm1EUNUa4q2oYAEgJPTsazw1s5sYljocFm6xGjrRWL1p+yD/NMMN1?=
- =?us-ascii?Q?xKTeiijeTAxv/uo2Z4D1hLW/7pjQz7Usk10ik49g6QtkKxcIb724b8RAH/LR?=
- =?us-ascii?Q?+3Lo5O1KymwE86Np75m0GI+havFKGiV4EI+bK462eBBH6isgTBJ7rIXM4PZg?=
- =?us-ascii?Q?J4dCOd2e/MGpiCIujomeoog/wo9lfSxHvHsrrxy4NL3MBO65hJw1aej0kNo9?=
- =?us-ascii?Q?8ddubwOOcixVHH7bej7Y0hlVIEoyIy6d1ikY/tvaxQ0RnEKKj839/xRtnVTS?=
- =?us-ascii?Q?G+u2T/XSwKgQNSAG1D2qm3R77EyAHZ3qce124VhaGvGb2ndgMIVRxD1LlXdo?=
- =?us-ascii?Q?JB0EXhrxNBHYw2aSBTKCqFllJAJt2zlqNOuHR+8XNcnTEpJBAvc9JzIQO1fj?=
- =?us-ascii?Q?AH0Inzce7Kkpk0k4j1kGcvEc0TsMjiJExZQ2lZon5GxYXqx9TDRe13RpbSeD?=
- =?us-ascii?Q?2Ua+rJ8eAmrKG7M48/CLwccwwVnsCT90v6TF+xpv2HDF6LEd8wMQ8nNwhT1R?=
- =?us-ascii?Q?ma/R2I/6cRTS2kGK3rmh8+IiFV7SvREZkPkXlDjH+hAfjbAutypToRYwu8Dz?=
- =?us-ascii?Q?LSO6G5XHA5Fkv95S4CAtsDc2Ovlp3q7zPfHpPgFHGTelDFRRUbVv4LASSj4X?=
- =?us-ascii?Q?vXUxAooyNz4uOGonrYVi7sJ2hRYRsBui503qv4nCERZIJzzW0vCmlWbbHdJH?=
- =?us-ascii?Q?O2HcNSIxQ6dLCWfoRl1im0h7bdLk5l6F/vV7?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jul 2025 16:42:16.6137
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8b234ab-94ce-4b98-1b85-08ddcb9a3725
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000042AE.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7488
 
-On Thu, Jul 24, 2025 at 02:50:53PM +0800, Ethan Zhao wrote:
-> On 6/28/2025 3:42 PM, Nicolin Chen wrote:
-> > PCIe permits a device to ignore ATS invalidation TLPs, while processing a
-> > reset. This creates a problem visible to the OS where an ATS invalidation
-> > command will time out: e.g. an SVA domain will have no coordination with a
-> > reset event and can racily issue ATS invalidations to a resetting device.
-> > 
-> > The OS should do something to mitigate this as we do not want production
-> > systems to be reporting critical ATS failures, especially in a hypervisor
-> > environment. Broadly, OS could arrange to ignore the timeouts, block page
-> > table mutations to prevent invalidations, or disable and block ATS.
-> > 
-> > The PCIe spec in sec 10.3.1 IMPLEMENTATION NOTE recommends to disable and
-> > block ATS before initiating a Function Level Reset. It also mentions that
-> > other reset methods could have the same vulnerability as well.
-> > 
-> > Provide a callback from the PCI subsystem that will enclose the reset and
-> > have the iommu core temporarily change all the attached domain to BLOCKED.
-> > After attaching a BLOCKED domain, IOMMU drivers should fence any incoming
-> > ATS queries, synchronously stop issuing new ATS invalidations, and wait
-> > for all ATS invalidations to complete. This can avoid any ATS invaliation
-> > timeouts.
-> 
-> This approach seems effective for reset operations initiated through
-> software interface functions, but how would we handle those triggered by
-> hardware mechanisms? For example, resets caused by PCIe DPC mechanisms,
-> device firmware, or manual hot-plug operations?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/imx6
+branch HEAD: 2e6ea70690ddd1ffa422423fd0d4523e4dfe4b62  PCI: imx6: Delay link start until configfs 'start' written
 
-That's a good point. But I am not sure what SW can do about those.
+elapsed time: 1448m
 
-IIUIC, DPC resets PCI at the HW level, SW only gets a notification
-after the HW reset finishes. So, during this HW reset, iommu might
-issue ATC invalidations (resulting in invalidation timeout noises)
-since at the SW level the device is still actively attached to an
-IOMMU instance. Right?
+configs tested: 111
+configs skipped: 3
 
-Nicolin
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                   randconfig-001-20250725    gcc-13.4.0
+arc                   randconfig-002-20250725    gcc-11.5.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    gcc-15.1.0
+arm                   randconfig-001-20250725    gcc-15.1.0
+arm                   randconfig-002-20250725    clang-22
+arm                   randconfig-003-20250725    clang-20
+arm                   randconfig-004-20250725    clang-22
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250725    clang-22
+arm64                 randconfig-002-20250725    gcc-12.5.0
+arm64                 randconfig-003-20250725    gcc-14.3.0
+arm64                 randconfig-004-20250725    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250725    gcc-11.5.0
+csky                  randconfig-002-20250725    gcc-10.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-22
+hexagon               randconfig-001-20250725    clang-22
+hexagon               randconfig-002-20250725    clang-22
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386        buildonly-randconfig-001-20250725    gcc-12
+i386        buildonly-randconfig-002-20250725    clang-20
+i386        buildonly-randconfig-003-20250725    clang-20
+i386        buildonly-randconfig-004-20250725    clang-20
+i386        buildonly-randconfig-005-20250725    clang-20
+i386        buildonly-randconfig-006-20250725    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch             randconfig-001-20250725    gcc-15.1.0
+loongarch             randconfig-002-20250725    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20250725    gcc-9.5.0
+nios2                 randconfig-002-20250725    gcc-8.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250725    gcc-15.1.0
+parisc                randconfig-002-20250725    gcc-8.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-22
+powerpc               randconfig-001-20250725    gcc-8.5.0
+powerpc               randconfig-002-20250725    clang-22
+powerpc               randconfig-003-20250725    gcc-8.5.0
+powerpc64             randconfig-001-20250725    clang-22
+powerpc64             randconfig-002-20250725    gcc-8.5.0
+powerpc64             randconfig-003-20250725    gcc-10.5.0
+riscv                            allmodconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                 randconfig-001-20250725    gcc-10.5.0
+riscv                 randconfig-002-20250725    clang-22
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                  randconfig-001-20250725    gcc-8.5.0
+s390                  randconfig-002-20250725    clang-17
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                    randconfig-001-20250725    gcc-15.1.0
+sh                    randconfig-002-20250725    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250725    gcc-8.5.0
+sparc                 randconfig-002-20250725    gcc-11.5.0
+sparc64               randconfig-001-20250725    gcc-8.5.0
+sparc64               randconfig-002-20250725    gcc-8.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250725    clang-22
+um                    randconfig-002-20250725    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250725    clang-20
+x86_64      buildonly-randconfig-002-20250725    clang-20
+x86_64      buildonly-randconfig-003-20250725    clang-20
+x86_64      buildonly-randconfig-004-20250725    clang-20
+x86_64      buildonly-randconfig-005-20250725    gcc-12
+x86_64      buildonly-randconfig-006-20250725    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250725    gcc-13.4.0
+xtensa                randconfig-002-20250725    gcc-8.5.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
