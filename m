@@ -1,158 +1,106 @@
-Return-Path: <linux-pci+bounces-32913-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32914-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A032B116C8
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 04:59:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5C3FB116D8
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 05:07:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B5AE5A1435
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 02:59:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE1481CC59E2
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 03:07:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB1F9238C11;
-	Fri, 25 Jul 2025 02:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="f5CFj9sX"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D5ED1D5AD4;
+	Fri, 25 Jul 2025 03:06:59 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1C7236431;
-	Fri, 25 Jul 2025 02:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B90EEAB;
+	Fri, 25 Jul 2025 03:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753412365; cv=none; b=Ab7FyDDYPt0RhkQcAqimsyErKJR19g7kWlqiMW3+el2KGkz9GQ89r9Yfhs2+pXBmPq1+qkKR87StlRXR1yVR/mnWcUTUmUaPN829QehG8FCR+/xZa2fGGRS35k9+9s6clqupkUXlLDu3+HgTRhk2S49775Wh2/XSm2BoGXbsZcQ=
+	t=1753412819; cv=none; b=Ntelz++Rz5n5JGZLlOtlUflO9TjBNzZj+vyUSu9xXn1qyvvbeD5NVriC/uoSmU9MRFU7AnNYRMJjMwwmEmgFKPBrKWXSbhuIE/OdFwdc2IlwPgTEKKTOsHO00WDAzIhGUlA56czx/XqS/bmW//tuD5nNIZDqF8egJMDMAQgC5KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753412365; c=relaxed/simple;
-	bh=8exFeMWBFjBwAGhQy1yCpCEe3ewba/ziDS+LBKSq1i8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fdcUUJkZ19hgirg7MWLNEbBT2Si9ltPLmfruuiF8O/dVqvghNezbe3P+xMX/R3IuvM8+ehDMKZBBjABZaPsAxa75fsekdF6oDL36fE9VY8DIzcT3UtZGciJMlUg94srBAPP5WmmgK/MTsMZdaavfJynAWXdugrB+mMa3RPLpdSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=f5CFj9sX; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1753412360; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Iv5xiIaVXnRlWY2yuS29Q5y+R/jOh7G7miW9asrp4AE=;
-	b=f5CFj9sXbEbC8AqF5hm+4o8NLkYbSAd3jRG0EbBVjc80MAes9p/Yvq/dAkXuu7V24mi9W8MqjpJ/VifO2pvgGuH/xppJOAzrxN0BfGnGBBx/1BdbSKII2crIMPs6EQJpkrlr5dk3SBx00shDn2vO3yuLLcL1yIXKr05XPwJNoLs=
-Received: from 30.246.181.19(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Wjv8nHq_1753412357 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 25 Jul 2025 10:59:18 +0800
-Message-ID: <d87b1029-b572-4995-82a9-c7d83551900e@linux.alibaba.com>
-Date: Fri, 25 Jul 2025 10:59:16 +0800
+	s=arc-20240116; t=1753412819; c=relaxed/simple;
+	bh=dJqlW2RblcHAJp6X/GdaHOKsCm+CMLAEE3v8Md4Vae0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gsZJCCoxZHMr1Lb/vPF1m7TCphZoLhle+RxvKxJa4CobipkxzL4hakwu3BqZf2qrGnJ2NliBJkComUaTWpNpGgHsg5/dO7hh46rv/7pnMzoodHbiBbZyf7j1GfwKVyLShypZkVcscuBq0dtZkxjfhgD0Tj+eND2NLBeb9Fc2oPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 46C57C05C6;
+	Fri, 25 Jul 2025 03:06:48 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id CF1B76000A;
+	Fri, 25 Jul 2025 03:06:43 +0000 (UTC)
+Date: Thu, 24 Jul 2025 23:06:47 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: lukas@wunner.de, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
+ ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
+ Jonathan.Cameron@huawei.com, bhelgaas@google.com, tony.luck@intel.com,
+ bp@alien8.de, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
+ anil.s.keshavamurthy@intel.com, mark.rutland@arm.com, peterz@infradead.org,
+ tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v9 2/2] PCI: trace: Add a RAS tracepoint to monitor link
+ speed changes
+Message-ID: <20250724230647.1875702f@gandalf.local.home>
+In-Reply-To: <d87b1029-b572-4995-82a9-c7d83551900e@linux.alibaba.com>
+References: <20250723033108.61587-1-xueshuai@linux.alibaba.com>
+	<20250723033108.61587-3-xueshuai@linux.alibaba.com>
+	<20250723100559.7f0adb3c@batman.local.home>
+	<0611d06d-e198-4617-a0ba-3050ca6191c6@linux.alibaba.com>
+	<20250724222510.7b00ea79@gandalf.local.home>
+	<d87b1029-b572-4995-82a9-c7d83551900e@linux.alibaba.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 2/2] PCI: trace: Add a RAS tracepoint to monitor link
- speed changes
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- helgaas@kernel.org, ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
- Jonathan.Cameron@huawei.com, bhelgaas@google.com, tony.luck@intel.com,
- bp@alien8.de, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
- anil.s.keshavamurthy@intel.com, mark.rutland@arm.com, peterz@infradead.org,
- tianruidong@linux.alibaba.com
-References: <20250723033108.61587-1-xueshuai@linux.alibaba.com>
- <20250723033108.61587-3-xueshuai@linux.alibaba.com>
- <20250723100559.7f0adb3c@batman.local.home>
- <0611d06d-e198-4617-a0ba-3050ca6191c6@linux.alibaba.com>
- <20250724222510.7b00ea79@gandalf.local.home>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250724222510.7b00ea79@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 9wsxr8bkoh8qt36twrwbwtmeywo835ty
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: CF1B76000A
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+7fcpPccKnDaXIHE4xe9rNJz+2XjvTHgI=
+X-HE-Tag: 1753412803-107182
+X-HE-Meta: U2FsdGVkX1/k+D8mWXYcapC/KHUri1LpPc4jinE9J80v71xEGkwFev3acuvX8/KVrGHSjxq5w5ag4KuUxiKefW+rghkE7pZwydLUcqnGMonxSK+u9tHmr/sTUrXdxPR/vxTUOXx91ZK1UT9kXq60zB2mMCmZTHPB5XK4Rr1nQ6KE8WBSMIkMrT79Sxv8R/VAP0YKNqHpOKaCHksGyeuqpOF/BUPHmTBovjpVH3S8Lj+JwjCx7NGOY2FhEMZkf9VcO1Lz1tcsHSay1QJIJ9MBurI2wsDdf3zUS3ZhzYyY4cE2lbraUDaEPlFWRpCo2Mu+pKy1syyLOnWYsjWuqSdPguFQ64O3Px9YC+ATtZPMUl1NwiHE9WRjVA==
 
+On Fri, 25 Jul 2025 10:59:16 +0800
+Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 
+> Thank you so much for the detailed guidance and the excellent example!
+> This makes it much clearer how to implement the libtraceevent support.
+> 
+> Should I include the libtraceevent plugin patch in the same kernel patch
+> series, or submit it separately? I'm not sure about the best practice
+> here.
 
-在 2025/7/25 10:25, Steven Rostedt 写道:
-> On Fri, 25 Jul 2025 10:11:10 +0800
-> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
-> 
->> For the libtraceevent implementation, I believe we'd
->> need to:
->>
->> - Add the PCI speed mapping table to libtraceevent
->> - Create a print function similar to other existing parsers
->> - Ensure perf, trace-cmd, and rasdaemon can all benefit from it
->>
->> Would you like me to investigate the libtraceevent changes, or do you
-> 
-> Yeah, just update libtraceevent. In fact, libtraceevent has plugins for
-> things like this.
-> 
-> You can use this as an example:
-> 
->    https://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git/tree/plugins/plugin_jbd2.c
-> 
-> That adds two functions that are used in print fmt strings. Here's one:
-> 
-> static unsigned long long
-> process_jbd2_dev_to_name(struct trace_seq *s, unsigned long long *args)
-> {
-> 	unsigned int dev = args[0];
-> 
-> 	trace_seq_printf(s, "%d:%d", MAJOR(dev), MINOR(dev));
-> 	return 0;
-> }
-> 
-> 
-> int TEP_PLUGIN_LOADER(struct tep_handle *tep)
-> {
-> 	tep_register_print_function(tep,
-> 				    process_jbd2_dev_to_name,
-> 				    TEP_FUNC_ARG_STRING,
-> 				    "jbd2_dev_to_name",
-> 				    TEP_FUNC_ARG_INT,
-> 				    TEP_FUNC_ARG_VOID);
-> [..]
-> 
-> The above defines:
-> 
-> 	char *jbd2_dev_to_name(int arg0);
-> 
-> And when this is found in the parsing, it calls process_jbd2_dev_to_name()
-> passing it the arguments that was found in the trace.
-> 
-> You would have something like:
-> 
-> 	tep_register_print_function(tep,
-> 				    process_pci_speed_string,
-> 				    TEP_FUNC_ARG_STRING,
-> 				    "pci_speed_string",
-> 				    TEP_FUNC_ARG_INT,
-> 				    TEP_FUNC_ARG_VOID);
-> 
-> Which will return a string and take an integer as an argument. Then you
-> would just implement the process_pci_speed_string() function to do the same
-> thing as the pci_speed_string() does in the kernel.
-> 
-> Oh, and here's the man page for you on tep_register_print_function()
-> 
->    https://trace-cmd.org/Documentation/libtraceevent/libtraceevent-reg_print_func.html
-
-Hi Steve,
-
-Thank you so much for the detailed guidance and the excellent example!
-This makes it much clearer how to implement the libtraceevent support.
-
-Should I include the libtraceevent plugin patch in the same kernel patch
-series, or submit it separately? I'm not sure about the best practice
-here.
+No, libtraceevent lives outside the kernel tree.
 
 > 
-> -- Steve
+> > 
+> > -- Steve  
+> 
+> I'll work on the libtraceevent patch and submit it according to your
+> guidance. Thanks again for the clear direction and the documentation
+> link!
 
-I'll work on the libtraceevent patch and submit it according to your
-guidance. Thanks again for the clear direction and the documentation
-link!
+Make a patch against: git://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git
 
-Thanks.
-Shuai
+Follow the same procedure as you would for submitting to the linux kernel,
+but instead of sending it to LKML, send it to: linux-trace-devel@vger.kernel.org
+
+You don't even need to Cc me. I'll get it from that mailing list.
+
+Patchwork is here: https://patchwork.kernel.org/project/linux-trace-devel/list/
+
+-- Steve
 
