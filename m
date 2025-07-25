@@ -1,147 +1,110 @@
-Return-Path: <linux-pci+bounces-32946-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32948-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8A30B121CF
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 18:19:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E485B122B6
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 19:10:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C675817F0FB
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 16:17:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 55EC716506E
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 17:10:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C79012EF66C;
-	Fri, 25 Jul 2025 16:16:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9CAC2EF670;
+	Fri, 25 Jul 2025 17:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="QwPbWJ/O"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE882EE97B;
-	Fri, 25 Jul 2025 16:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E884D2EF647;
+	Fri, 25 Jul 2025 17:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753460195; cv=none; b=gBg+M6XfbjdqQMHph0mWke88LSHqk4/z6Yh1izCo0S8X9rEjz84Kja2lgU0cghDvcZT2wf8FNAUoJq17CNYCqVNY7ac/VG7HVEAISMdDWAtHH0OZvZX8dPMBjsWditpn2JpNJD6tF2sEfRhRRZnox2ZFBRE3RJNRQqo05//6vMw=
+	t=1753463405; cv=none; b=BAnztAuWLs63FTFtTO0lHKwJVL6+pkagiqLz8+p/mRSRrdnKTsrIqF7MW5hxiV94xIw9mfUNUQsSirg4gzf7h7r2kp0PCRAjQG7bhu/poEwy0ysrf7coOlVHURcKPP40ZoXMrLNZ92SIFdXB4efFEkjWPZ4a1EQi8pguSiBLWfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753460195; c=relaxed/simple;
-	bh=VQ1Sb6bzClPJLyUB37odBN7nVHwdCTVLgyDv6w/LViw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=itoKFUj/HWC1Hh2fmrwyvSyHHrB/puYLn3E6tOQcijqY+WdTfGIDIfbWwqFzI3/O1GlEuvRg4o4eWh9nhF7JcD7QwEjIsaUrC6Ssg3eH1XL6PfZg/Xza8C/dAsZ87ReaYgF/1CukxQF+nM5+XLWGYoPpcNf7dpW2NcIrHnYw4JI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ae3b336e936so448581666b.3;
-        Fri, 25 Jul 2025 09:16:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753460192; x=1754064992;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k9lVzColSUbzoyzWK1v2ytYya9LR+3IJRUPOrRIrYkE=;
-        b=OKHxCC7KLs+dVooVtYQLip1Un20W5CzcAXXA3e3KXELSGxmo7ppXjbQAB7mYuMiZav
-         mZPqXH5o7poo53+Q3PE11Qa4sc1wNk0sAH/TjdpfxY4+g4a721bVKl1DKcmWDoTbNRiV
-         kr/w8mDevqZp/wFz548LpNwZPZ/rXrh+V0zluRFyAj46nU1D8AcliyXlSlfya9geqrn4
-         RKnEnyJvzKSExaHHonQhiqbxWeaEe2LVRzrxzi7k8zbfO0MnH49tDJSvlsbUKbWVNsDf
-         L/XEg17kEbtv/9MPkbASoAByq0CKbWjWatpeWdjpbMsmmaabU4kU/r4Z75cy/LMaYuUV
-         lczg==
-X-Forwarded-Encrypted: i=1; AJvYcCVj6fu/WQF4vCUzFkxOM40zdLxJCc1eK87l2HxWYio235Vnl0/umXBPtF8Hig19sXwWJSMRucDnld8l@vger.kernel.org, AJvYcCW2mYG22Getv4JmGy2HtA7GSP34/EKqAeqFn82WsxB5iZ4ThdbVglYzeObQHj4ZpfFkfGHnJC9Q0lNK@vger.kernel.org, AJvYcCWNLs9WRHi3nkkPUmbnP5L7yd+iJxfN77ZMaBWrC1m9AZ0v3zqEWisnIP1QrCsSBxJMPQEY7sKvYcGLWg==@vger.kernel.org, AJvYcCXriWbD2Ms2y0srHeq8dQdvteWvVF8Hf40zi9WYJvIndeLEbgZU7tdLnIr36vo4Qn8Dd9j7cgsT8e53IBUR@vger.kernel.org
-X-Gm-Message-State: AOJu0YwONUHGKThdU5Vc7MHh48J9VIP7PLVyKfYuyOAY280/3u+O2yGa
-	DfxzUUhJcr48UaJJFRYEXZc+7h7sg2bdKgsodRuY/O+MZ9HYEHepuMsX
-X-Gm-Gg: ASbGncvUnFEGXRYGj/cJ9VMWbpimMlDLB3t/GV5uFSEp5jistPeW3OuuMfF/O65nihQ
-	IOhZlHVZ8BVq3nw9UNQbhZCT76bKnzcJq3oq5uJLzpyvW9oQwP1EhPF8YrhTKvZGFNxusNYp/23
-	lxylxYyiWDKydvV87AZAdt11hfjy3IJlr+CUr5Lpj8WAXaiIjaSgFNpqqpublgP5hIVotn4Fxmt
-	BD5MeUHbLUDwf0Bilm3NpJjQMCuc9KVmBlC6tl6L6+3LbfLU5l8r3vZIbH42yB1rfboSyIJpmqN
-	tBQoxjEkUH5VCiDpetARBu+vsBGVlhejYTcorAnbCNySHplPoUFz9UnB9IMqUzyqAGPxq5MFv55
-	urcrOsjcTf721BA==
-X-Google-Smtp-Source: AGHT+IHbjaJ8cbbWsPvmFdchaHgB59gZMNGBegBtlGVNhjnCNqWbZSGSDTI+qaKic8T0W3LbKoDy/Q==
-X-Received: by 2002:a17:907:7ea9:b0:ae0:9fdf:25e8 with SMTP id a640c23a62f3a-af61e6368d8mr274930166b.47.1753460191687;
-        Fri, 25 Jul 2025 09:16:31 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:74::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af635af9967sm11514466b.131.2025.07.25.09.16.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Jul 2025 09:16:31 -0700 (PDT)
-Date: Fri, 25 Jul 2025 09:16:28 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>, 
-	Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev, osandov@osandov.com, 
-	konrad.wilk@oracle.com, linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-pci@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v3] vmcoreinfo: Track and log recoverable hardware errors
-Message-ID: <ldlansfiesfxf4a6dzp5z2etquz5jgiq6ttx3al6q7sesgros6@xh4lkevbzsow>
-References: <20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org>
- <7ce9731a-b212-4e27-8809-0559eb36c5f2@linux.alibaba.com>
- <4qh2wbcbzdajh2tvki26qe4tqjazmyvbn7v7aqqhkxpitdrexo@ucch4ppo7i4e>
- <fdb5dced-ea5a-48b8-bbb4-fc3ade7f3df8@linux.alibaba.com>
+	s=arc-20240116; t=1753463405; c=relaxed/simple;
+	bh=oVAaxXaaVQWWWIQFP0Hh2cN/zmIiJIe6UurtigGiPfw=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Subject; b=YjzPXixvijKPa37jLy4uSPfdLFzrMXPiztM9EOHIZ6W6MU3K9AiCsWJ7wq3M8iXEP6cXziVQYEwilkHBY7oljfZBfVonE7RzooQdbuE/D8PHdRHQ/dysJHBGzN1E3iZ9bq1QgaJL5do/M77avwQ/YZPC+0AvbZ8kwPCFbbgfdIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=QwPbWJ/O; arc=none smtp.client-ip=204.191.154.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+	MIME-Version:Date:Message-ID:content-disposition;
+	bh=f47Ky90dFPkL1Ya+qWKSgUqpFHN5ODLjpNudWVSb5u8=; b=QwPbWJ/OWzQX8Q226ojxfza0WS
+	hTwTo6/vPF246VLRi+47uocSVLkOn0eD6rbMZRZD07tT3AUM6z95tZTUeAEDALmOKRCr9SwWCtSWo
+	Vl40IAQDTTCjPykxMQJzgZjUrWmcuoWHdCN8wv2e2ot8dxaFvJW7K4bmnXuC/9eazXKfZuuVimmSg
+	tGZI0VE8yThg0M2uXVwtlJ46NYkhpaiehvoG18/F/CMQ0pf9gs/S0p4bVOocrwE1PtjveEbBVRg1u
+	Kb4oYtEyAdpejHSKoYmOlKpt55+jX9YkR+phKZwkr98AAn+Xl4RiugB4uevi4n7lK1TZ6DnW/l4Ya
+	BaSNp5Dg==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <logang@deltatee.com>)
+	id 1ufLJz-006C5W-2Q;
+	Fri, 25 Jul 2025 10:31:00 -0600
+Message-ID: <b32ae619-6c4a-46fc-a368-6ad4e245d581@deltatee.com>
+Date: Fri, 25 Jul 2025 10:30:46 -0600
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fdb5dced-ea5a-48b8-bbb4-fc3ade7f3df8@linux.alibaba.com>
+User-Agent: Mozilla Thunderbird
+To: Leon Romanovsky <leon@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
+ <jglisse@redhat.com>, Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-mm@kvack.org, linux-pci@vger.kernel.org,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
+References: <cover.1753274085.git.leonro@nvidia.com>
+ <82e62eb59afcd39b68ae143573d5ed113a92344e.1753274085.git.leonro@nvidia.com>
+ <20250724080313.GA31887@lst.de> <20250724081321.GT402218@unreal>
+Content-Language: en-CA
+From: Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20250724081321.GT402218@unreal>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: leon@kernel.org, hch@lst.de, alex.williamson@redhat.com, jgg@nvidia.com, akpm@linux-foundation.org, bhelgaas@google.com, christian.koenig@amd.com, dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, axboe@kernel.dk, jglisse@redhat.com, joro@8bytes.org, kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, m.szyprowski@samsung.com, robin.murphy@arm.com, sumit.semwal@linaro.org, vivek.kasireddy@intel.com, will@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Level: 
+Subject: Re: [PATCH 05/10] PCI/P2PDMA: Export pci_p2pdma_map_type() function
+X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-Hello Shuai,
 
-On Fri, Jul 25, 2025 at 03:40:58PM +0800, Shuai Xue wrote:
-> > > APEI does not define an error type named GHES. GHES is just a kernel
-> > > driver name. Many hardware error types can be handled in GHES (see
-> > > ghes_do_proc), for example, AER is routed by GHES when firmware-first
-> > > mode is used. As far as I know, firmware-first mode is commonly used in
-> > > production. Should GHES errors be categorized into AER, memory, and CXL
-> > > memory instead?
-> > 
-> > I also considered slicing the data differently initially, but then
-> > realized it would add more complexity than necessary for my needs.
-> > 
-> > If you believe we should further subdivide the data, I’m happy to do so.
-> > 
-> > You’re suggesting a structure like this, which would then map to the
-> > corresponding CPER_SEC_ sections:
-> > 
-> > 	enum hwerr_error_type {
-> > 	HWERR_RECOV_AER,     // maps to CPER_SEC_PCIE
-> > 	HWERR_RECOV_MCE,     // maps to default MCE + CPER_SEC_PCIE
+
+On 2025-07-24 02:13, Leon Romanovsky wrote:
+> On Thu, Jul 24, 2025 at 10:03:13AM +0200, Christoph Hellwig wrote:
+>> On Wed, Jul 23, 2025 at 04:00:06PM +0300, Leon Romanovsky wrote:
+>>> From: Leon Romanovsky <leonro@nvidia.com>
+>>>
+>>> Export the pci_p2pdma_map_type() function to allow external modules
+>>> and subsystems to determine the appropriate mapping type for P2PDMA
+>>> transfers between a provider and target device.
+>>
+>> External modules have no business doing this.
 > 
-> CPER_SEC_PCIE is typo?
+> VFIO PCI code is built as module. There is no way to access PCI p2p code
+> without exporting functions in it.
 
-Correct, HWERR_RECOV_MCE would map to the regular MCE and not errors
-coming from GHES.
+The solution that would make more sense to me would be for either
+dma_iova_try_alloc() or another helper in dma-iommu.c to handle the
+P2PDMA case. dma-iommu.c already uses those same interfaces and thus
+there would be no need to export the low level helpers from the p2pdma code.
 
-> > 	HWERR_RECOV_CXL,     // maps to CPER_SEC_CXL_*
-> > 	HWERR_RECOV_MEMORY,  // maps to CPER_SEC_PLATFORM_MEM
-> > 	}
-> > 
-> > Additionally, what about events related to CPU, Firmware, or DMA
-> > errors—for example, CPER_SEC_PROC, CPER_SEC_FW, CPER_SEC_DMAR? Should we
-> > include those in the classification as well?
-> 
-> I would like to split a error from ghes to its own type,
-> it sounds more reasonable. I can not tell what happened from HWERR_RECOV_AERat all :(
-
-Makes sense. Regarding your answer, I suppose we might want to have
-something like the following:
-
-	enum hwerr_error_type {
-		HWERR_RECOV_MCE,     // maps to errors in do_machine_check()
-		HWERR_RECOV_CXL,     // maps to CPER_SEC_CXL_
-		HWERR_RECOV_PCI,     // maps to AER (pci_dev_aer_stats_incr()) and CPER_SEC_PCIE and CPER_SEC_PCI
-		HWERR_RECOV_MEMORY,  // maps to CPER_SEC_PLATFORM_MEM_
-		HWERR_RECOV_CPU,     // maps to CPER_SEC_PROC_
-		HWERR_RECOV_DMA,     // maps to CPER_SEC_DMAR_
-		HWERR_RECOV_OTHERS,  // maps to CPER_SEC_FW_, CPER_SEC_DMAR_, 
-	}
-
-Is this what you think we should track?
-
-Thanks
---breno
+Logan
 
