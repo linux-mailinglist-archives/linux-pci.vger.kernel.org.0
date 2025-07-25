@@ -1,193 +1,125 @@
-Return-Path: <linux-pci+bounces-32953-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32954-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 967D6B124AB
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 21:14:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 99205B124B9
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 21:33:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 81CE91CC1C99
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 19:14:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADAD51CC3B29
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 19:33:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36706237164;
-	Fri, 25 Jul 2025 19:14:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA2613D994;
+	Fri, 25 Jul 2025 19:33:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i4SMU7S4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FDgtndPt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAB4257AC8
-	for <linux-pci@vger.kernel.org>; Fri, 25 Jul 2025 19:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3AA2D052
+	for <linux-pci@vger.kernel.org>; Fri, 25 Jul 2025 19:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753470841; cv=none; b=TdnJ6YsfUwEckqw3EQWHMnelZRONGqLrNqEuX6eQdEnv6uDv++q8fb9FcHXu9OvSVRFmUY+Jgf3AQDLNgHCpv4aIfGS+qQAlGqm4q9Vf99xfEsJCTd9eMw/C6Cu9nm5d2C8bQEzUzOvBedZqCbuAGPhpJVT3Mb3+KltQX0LCHHo=
+	t=1753472002; cv=none; b=O1D3BIU0+iF9IRiezfy7jqDp73qewfbdC3XqX/4In3MiK618sGYiR98jtYqRfh93KpIhkuq57LCp/dM3APbQNPTG2sVnvn8UfKvB5FCJ6rYm+OO/9p8TM0JvDFZIKdH8JC3zE4HdKsOipnhIPkTMhUk01UeePSwA2nL6S89DocI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753470841; c=relaxed/simple;
-	bh=KJkAr+fEVDtaz6KHUl5FFM1Q7UJVm96xwzb7G7eJ0mA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=S2CChRHt0eV/053vXcYYewRP0j6AJQh3d9nj0b/V4Jdf+mz+gsvUqd/++ytNhFrtnuZPDxRy9K521k/ril3BhwlFNpdmsj+fBYJ09GSMz6uupiN7ZadGYS1sqh3ECY9C3v5aCERZPT8t+V0U/WYMnAMQ7LSqs/oLZHFi1VAsbhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i4SMU7S4; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753470839; x=1785006839;
-  h=date:from:to:cc:subject:message-id;
-  bh=KJkAr+fEVDtaz6KHUl5FFM1Q7UJVm96xwzb7G7eJ0mA=;
-  b=i4SMU7S4mNksDcJbctcZXGughxyFa4pPIPKwpQ/j7RIwWtwAHMq4Bz+X
-   4i1A8W2WtEKJWTeppXS35tsksIT1dIoQicxG8NHXj9E+mVnoushrw7EIh
-   j+/ABhHKCasAEZrZreb7o8S7aEivagAOrEqPW6TAvkNf0YCawB77WyEpb
-   UGztOz0pp6jZ/L9eTiNkJMC1tIfHptRaPYp/6lWV8Cmt97OUbCPPa6oIW
-   V+6Cc/9YLxph8KYJk0bQIF+AMfwa6FIDzTvOi1P4yNy96oW0z5BWmU1q0
-   RtA9RtrjfnCKMgDLOI4rBjOLfTB+SRTOm5U4xsCInKVnDD/nwolrKcGby
-   A==;
-X-CSE-ConnectionGUID: bJPl2Z9aQaqTCpn4QqavGg==
-X-CSE-MsgGUID: RrbmIkOFS62FGmEdRs7e6A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11503"; a="55024999"
-X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
-   d="scan'208";a="55024999"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2025 12:13:58 -0700
-X-CSE-ConnectionGUID: 92W2aGOKRcCkd2fDy5/bZQ==
-X-CSE-MsgGUID: J8S4EVyYSsCDr5GCLzp/cQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,339,1744095600"; 
-   d="scan'208";a="161414177"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 25 Jul 2025 12:13:58 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ufNrf-000LXH-0c;
-	Fri, 25 Jul 2025 19:13:55 +0000
-Date: Sat, 26 Jul 2025 03:13:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/sophgo] BUILD SUCCESS
- 467d9c0348d6fd37b3d3a82e46c113ee9228d84b
-Message-ID: <202507260322.6EfNe4II-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1753472002; c=relaxed/simple;
+	bh=9Prp8cX0nlbbBFjCdqlppyvkDksiwgZqDhn5fgnFSi4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ciA04oCrK1+nDiEtYKFag+b1nDG77aO9KFWchILPcVmyHi9E4mb8VZSS+C7CwkAvzDpm3cfdMGD4NxMcTnlWhqRlV+j/J+CyCdIeXIU/PwWVi+p2Ojf+bBpsLqB0B2/1CoKiKakVd6YKeuczoYa8NJCf5XkPN8pIbJ0arsBHCFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FDgtndPt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4A24C4CEE7;
+	Fri, 25 Jul 2025 19:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753472001;
+	bh=9Prp8cX0nlbbBFjCdqlppyvkDksiwgZqDhn5fgnFSi4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FDgtndPt0jzKWejT87k3jKzfnDxsS56wLJ1sAf1OxEeJDFY6Z5iCRmnCdDIiMBb9r
+	 OV08HvxN2uyNu6UchcJ+Xj1oAr/YX3KPCI3QB1FsxeQPA4Mv0gY/Qux3InXzBtD/BC
+	 tWRyHSZHn/YXfe5COzcNcVwK1psche/340s/l3bJc7oK7C3jJZgbfqn/hPuJ+sKi+X
+	 FJO+WN9niifgqd+qeDL+babpbBmVbOWMiakn25+KCMJh4PnUqI6AHHPOg/AD6NqWDt
+	 ep1jFpOfdbScFGwpwR42+IuCtbPjF8cdZecIF+ZX5qjB5kRjvgXDw0HWQM0IDeNkbf
+	 UlxlCKmmep3CQ==
+Date: Fri, 25 Jul 2025 14:33:19 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Laurent Bigonville <bigon@bigon.be>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Alan Borzeszkowski <alan.borzeszkowski@linux.intel.com>,
+	Gil Fine <gil.fine@linux.intel.com>,
+	Rene Sapiens <rene.sapiens@intel.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] PCI: Clean up and fix is_hotplug_bridge usage
+Message-ID: <20250725193319.GA3104836@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aIM99vImO6kwAkO2@wunner.de>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/sophgo
-branch HEAD: 467d9c0348d6fd37b3d3a82e46c113ee9228d84b  PCI: dwc: Add Sophgo SG2044 PCIe controller driver in Root Complex mode
+[-> to: Rafael for possible ack]
 
-elapsed time: 1283m
+On Fri, Jul 25, 2025 at 10:19:02AM +0200, Lukas Wunner wrote:
+> On Tue, Jul 22, 2025 at 05:35:22PM -0500, Bjorn Helgaas wrote:
+> > On Sun, Jul 13, 2025 at 04:31:00PM +0200, Lukas Wunner wrote:
+> > >   PCI/ACPI: Fix runtime PM ref imbalance on Hot-Plug Capable ports
+> > >   PCI/portdrv: Use is_pciehp instead of is_hotplug_bridge
+> > >   PCI: pciehp: Use is_pciehp instead of is_hotplug_bridge
+> > >   PCI: Move is_pciehp check out of pciehp_is_native()
+> > >   PCI: Set native_pcie_hotplug up front based on pcie_ports_native
+> > 
+> > Thanks!  I applied these to pci/hotplug, hoping to put them in v6.17.
+> > 
+> > I moved the previous pci/hotplug branch to pci/hotplug-pnv_php.
+> 
+> Just a heads-up in case it's unintentional, pci/next as of 10 hours ago
+> does not include the following pci.git branches:
+> 
+> - hotplug
 
-configs tested: 100
-configs skipped: 1
+Thanks for the reminder, I did miss it.  Rafael, would be glad for
+your ack on this one if you have time:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  PCI/ACPI: Fix runtime PM ref imbalance on Hot-Plug Capable ports
 
-tested configs:
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250725    gcc-13.4.0
-arc                   randconfig-002-20250725    gcc-11.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                              allyesconfig    gcc-15.1.0
-arm                   randconfig-001-20250725    gcc-15.1.0
-arm                   randconfig-002-20250725    clang-22
-arm                   randconfig-003-20250725    clang-20
-arm                   randconfig-004-20250725    clang-22
-arm64                            allmodconfig    clang-19
-arm64                 randconfig-001-20250725    clang-22
-arm64                 randconfig-002-20250725    gcc-12.5.0
-arm64                 randconfig-003-20250725    gcc-14.3.0
-arm64                 randconfig-004-20250725    clang-22
-csky                  randconfig-001-20250725    gcc-11.5.0
-csky                  randconfig-002-20250725    gcc-10.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250725    clang-22
-hexagon               randconfig-002-20250725    clang-22
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250725    gcc-12
-i386        buildonly-randconfig-002-20250725    clang-20
-i386        buildonly-randconfig-003-20250725    clang-20
-i386        buildonly-randconfig-004-20250725    clang-20
-i386        buildonly-randconfig-005-20250725    clang-20
-i386        buildonly-randconfig-006-20250725    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch             randconfig-001-20250725    gcc-15.1.0
-loongarch             randconfig-002-20250725    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                 randconfig-001-20250725    gcc-9.5.0
-nios2                 randconfig-002-20250725    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                randconfig-001-20250725    gcc-15.1.0
-parisc                randconfig-002-20250725    gcc-8.5.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc               randconfig-001-20250725    gcc-8.5.0
-powerpc               randconfig-002-20250725    clang-22
-powerpc               randconfig-003-20250725    gcc-8.5.0
-powerpc64             randconfig-001-20250725    clang-22
-powerpc64             randconfig-002-20250725    gcc-8.5.0
-powerpc64             randconfig-003-20250725    gcc-10.5.0
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250725    gcc-10.5.0
-riscv                 randconfig-002-20250725    clang-22
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250725    gcc-8.5.0
-s390                  randconfig-002-20250725    clang-17
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                    randconfig-001-20250725    gcc-15.1.0
-sh                    randconfig-002-20250725    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250725    gcc-8.5.0
-sparc                 randconfig-002-20250725    gcc-11.5.0
-sparc64               randconfig-001-20250725    gcc-8.5.0
-sparc64               randconfig-002-20250725    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250725    clang-22
-um                    randconfig-002-20250725    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250725    clang-20
-x86_64      buildonly-randconfig-002-20250725    clang-20
-x86_64      buildonly-randconfig-003-20250725    clang-20
-x86_64      buildonly-randconfig-004-20250725    clang-20
-x86_64      buildonly-randconfig-005-20250725    gcc-12
-x86_64      buildonly-randconfig-006-20250725    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250725    gcc-13.4.0
-xtensa                randconfig-002-20250725    gcc-8.5.0
+Re this one:
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  PCI: Set native_pcie_hotplug up front based on pcie_ports_native
+
+I do see your concern about leaking pcie_ports_native into ACPI code.
+Currently all uses are in drivers/pci/, so it would be nice to move
+the declaration to drivers/pci/pci.h.
+
+Here's the call path:
+
+  acpi_pci_root_add
+    negotiate_os_control                   # _OSC platform negotiation
+    pci_acpi_scan_root
+      acpi_pci_root_create
+        pci_create_root_bus
+          pci_init_host_bridge
+            host_bridge->native_aer = 1    # Linux owns by default
+        if (!OSC_PCI_EXPRESS_AER_CONTROL)
+          host_bridge->native_aer = 0      # override, platform owns
+        pci_scan_child_bus
+          pci_scan_child_bus_extend
+
+We could add some kind of "bridge->force_linux_ownership" bit in
+struct pci_host_bridge (and we should probably mention this in dmesg
+and maybe taint the kernel (is that still a thing?) because it's
+definitely a potential conflict with platform firmware.
+
+Then acpi_pci_root_create() could ignore the _OSC results if set.
+
+Maybe I'll just defer this patch for now since it's a cleanup that
+doesn't fix anything?  We can come back later and see if it makes
+sense to extend this idea to bits other than native_pcie_hotplug.
+
+Bjorn
 
