@@ -1,318 +1,147 @@
-Return-Path: <linux-pci+bounces-32945-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32946-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 991BEB11FA1
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 15:54:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8A30B121CF
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 18:19:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1B40188B861
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 13:54:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C675817F0FB
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Jul 2025 16:17:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D9982E36EC;
-	Fri, 25 Jul 2025 13:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+ZPx3xL"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C79012EF66C;
+	Fri, 25 Jul 2025 16:16:35 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA141E51EF;
-	Fri, 25 Jul 2025 13:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE882EE97B;
+	Fri, 25 Jul 2025 16:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753451632; cv=none; b=Dq2oQgteboTZo7PTnSlEPFhEVtncIsDcOEtNUxASQj7IUtq34hlTEsejDLxsP1lCbHGFtdTFiO19wHXzqLJBA6x6qcsDJqWhBgW55O/a209qRXj+sM7H32Zitkc38covpuF5s27Ur9jnkPKCNrdqbAHugIJ80DNqL7cweIu25eU=
+	t=1753460195; cv=none; b=gBg+M6XfbjdqQMHph0mWke88LSHqk4/z6Yh1izCo0S8X9rEjz84Kja2lgU0cghDvcZT2wf8FNAUoJq17CNYCqVNY7ac/VG7HVEAISMdDWAtHH0OZvZX8dPMBjsWditpn2JpNJD6tF2sEfRhRRZnox2ZFBRE3RJNRQqo05//6vMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753451632; c=relaxed/simple;
-	bh=eOB7yXo2LoXF2GIMVzJWuRIXM7ag/qKFdH7POf8TuI4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iowBoBCgPDUYaZS9RJx7tc9VsKEDPRYTOmn79NeeF0IBhy4P1LYou2saiskEYmzHggln3REJyVhyJ13o6F5Z8gu2pqlWK0nNoWzS2Ev/tJTT809x7IlXwPV0FYOCnMtg7djkViXDTcOjT8BuvdVpLvl6B2FnvSr2+Nf6dm0yOUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R+ZPx3xL; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1753460195; c=relaxed/simple;
+	bh=VQ1Sb6bzClPJLyUB37odBN7nVHwdCTVLgyDv6w/LViw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=itoKFUj/HWC1Hh2fmrwyvSyHHrB/puYLn3E6tOQcijqY+WdTfGIDIfbWwqFzI3/O1GlEuvRg4o4eWh9nhF7JcD7QwEjIsaUrC6Ssg3eH1XL6PfZg/Xza8C/dAsZ87ReaYgF/1CukxQF+nM5+XLWGYoPpcNf7dpW2NcIrHnYw4JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32ce1b2188dso18355531fa.3;
-        Fri, 25 Jul 2025 06:53:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753451629; x=1754056429; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2fWdhR0VBfiS/L09WfJDV+7CjbZeT3b1nXdFbi2Z3Bg=;
-        b=R+ZPx3xLuL2KTOFzYE00WN5jdNiOkKyApSRjJFeCl24wqqNUGCXE4e/PomWf4rmGPH
-         QSGl59NRu9xM1pKnIAkBltxjGDMh/K7tWWRDHFfd5PSbcnFbxycbitWWSf7wf9r7RGJW
-         UHBZKmOT09qgrGoQAXpnigV5+yGEd+ZOgBcbUCuyCTb5Aw1RdX/8dQgxMQOlurXh57tH
-         9n5wYo5z5HnTaKGBQ416SRJO8lqD8Vy+QdNDSBmaNYHrCvJKpSMiC92GE8xzzjN+pIAG
-         0TLtLmgPKJlbLa0W5HR3+fWBnj9/8zr6oPmORCeiTTLqQivJQ1Y2e3Cw3+MIFyNzyzkQ
-         UOYA==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ae3b336e936so448581666b.3;
+        Fri, 25 Jul 2025 09:16:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753451629; x=1754056429;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2fWdhR0VBfiS/L09WfJDV+7CjbZeT3b1nXdFbi2Z3Bg=;
-        b=Dz3NpBzK3Txnj1NtZoRK056/p4thZ6uUCTQxA2JUyOdlgzGfbHnXBTpnNk6WHFmd3P
-         u9Yb5eBPAkka8UstyfbSjOQXok5++UwpY1HPMbGO7qGpIUUNK78/Gd3VTXPeJb+0Vk6K
-         n9TJ4cf+/0IlV3DTn3U9aKuEKLoDxTyAR/UrFIVM3aOPw3cAOmflnkSfBTR4n6f5AkoE
-         dgx0RNODWlcY2A+69XEkUMkn7Vn2Hzrn+w2LcMK1pO3H1YSCx2QKAMBJEcq3R6Ec1eoR
-         gxm3gztm6FUFWjqnhb3H7Q564Aus6zjz6rmMjS0SPVZj/LmJOyE3zrnz7nGZbrqLzZiG
-         ZOgw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+tZ5a2Ka2Q++2K+8IoTuGxOrOAhCbF96AT2dVhpwMP4NB/IUFLutmg4pjrHt8oRpNLk/5RwPF2lk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9QbzgtV5b5PqY7NAyuV0VdKSMyU8xA2ePzlzQiPgOTmc0FCrW
-	hFLP8fzJlp1urL7W7GKaMLzD6ZbbfB8+Bb7zb5OaJhMNbmjS4JJIrX9WSIHb8+5HGomhCcMOzub
-	iG/Pb8kSktofJlveZ+YVtoio01fzzmpI=
-X-Gm-Gg: ASbGnct96S0L9t1bDjdFIscRJPu3ykgfZ3f/F28QIXd0BjQKj8T3S40WPLSZKvNU/Ml
-	zpertaYoYzgNvJO4U+oATI3isPyCKFda1rit3XCpP4A79qpPkkr6aUlQRqbWGfh7Pu5vw56ljgb
-	/i3a+DUgajPtT4x5/xNymBeC5wKo0T8ZerEMQMKHLYLA8K0xUUC4j6XJhaKZyEPO8QdrW/shj0b
-	s2zxg==
-X-Google-Smtp-Source: AGHT+IGSjJBjVeIF1UiOOZx7zrUyhUUvmR7dt5xoYizfxKDueOSb41cniJIQvhqsIC4AGtjyNkKon8kDnFPOf5OSx+M=
-X-Received: by 2002:a05:651c:1585:b0:32a:869e:4c13 with SMTP id
- 38308e7fff4ca-331ee6bde7bmr4926761fa.14.1753451628096; Fri, 25 Jul 2025
- 06:53:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753460192; x=1754064992;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k9lVzColSUbzoyzWK1v2ytYya9LR+3IJRUPOrRIrYkE=;
+        b=OKHxCC7KLs+dVooVtYQLip1Un20W5CzcAXXA3e3KXELSGxmo7ppXjbQAB7mYuMiZav
+         mZPqXH5o7poo53+Q3PE11Qa4sc1wNk0sAH/TjdpfxY4+g4a721bVKl1DKcmWDoTbNRiV
+         kr/w8mDevqZp/wFz548LpNwZPZ/rXrh+V0zluRFyAj46nU1D8AcliyXlSlfya9geqrn4
+         RKnEnyJvzKSExaHHonQhiqbxWeaEe2LVRzrxzi7k8zbfO0MnH49tDJSvlsbUKbWVNsDf
+         L/XEg17kEbtv/9MPkbASoAByq0CKbWjWatpeWdjpbMsmmaabU4kU/r4Z75cy/LMaYuUV
+         lczg==
+X-Forwarded-Encrypted: i=1; AJvYcCVj6fu/WQF4vCUzFkxOM40zdLxJCc1eK87l2HxWYio235Vnl0/umXBPtF8Hig19sXwWJSMRucDnld8l@vger.kernel.org, AJvYcCW2mYG22Getv4JmGy2HtA7GSP34/EKqAeqFn82WsxB5iZ4ThdbVglYzeObQHj4ZpfFkfGHnJC9Q0lNK@vger.kernel.org, AJvYcCWNLs9WRHi3nkkPUmbnP5L7yd+iJxfN77ZMaBWrC1m9AZ0v3zqEWisnIP1QrCsSBxJMPQEY7sKvYcGLWg==@vger.kernel.org, AJvYcCXriWbD2Ms2y0srHeq8dQdvteWvVF8Hf40zi9WYJvIndeLEbgZU7tdLnIr36vo4Qn8Dd9j7cgsT8e53IBUR@vger.kernel.org
+X-Gm-Message-State: AOJu0YwONUHGKThdU5Vc7MHh48J9VIP7PLVyKfYuyOAY280/3u+O2yGa
+	DfxzUUhJcr48UaJJFRYEXZc+7h7sg2bdKgsodRuY/O+MZ9HYEHepuMsX
+X-Gm-Gg: ASbGncvUnFEGXRYGj/cJ9VMWbpimMlDLB3t/GV5uFSEp5jistPeW3OuuMfF/O65nihQ
+	IOhZlHVZ8BVq3nw9UNQbhZCT76bKnzcJq3oq5uJLzpyvW9oQwP1EhPF8YrhTKvZGFNxusNYp/23
+	lxylxYyiWDKydvV87AZAdt11hfjy3IJlr+CUr5Lpj8WAXaiIjaSgFNpqqpublgP5hIVotn4Fxmt
+	BD5MeUHbLUDwf0Bilm3NpJjQMCuc9KVmBlC6tl6L6+3LbfLU5l8r3vZIbH42yB1rfboSyIJpmqN
+	tBQoxjEkUH5VCiDpetARBu+vsBGVlhejYTcorAnbCNySHplPoUFz9UnB9IMqUzyqAGPxq5MFv55
+	urcrOsjcTf721BA==
+X-Google-Smtp-Source: AGHT+IHbjaJ8cbbWsPvmFdchaHgB59gZMNGBegBtlGVNhjnCNqWbZSGSDTI+qaKic8T0W3LbKoDy/Q==
+X-Received: by 2002:a17:907:7ea9:b0:ae0:9fdf:25e8 with SMTP id a640c23a62f3a-af61e6368d8mr274930166b.47.1753460191687;
+        Fri, 25 Jul 2025 09:16:31 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:74::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af635af9967sm11514466b.131.2025.07.25.09.16.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Jul 2025 09:16:31 -0700 (PDT)
+Date: Fri, 25 Jul 2025 09:16:28 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>, 
+	Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev, osandov@osandov.com, 
+	konrad.wilk@oracle.com, linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-pci@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v3] vmcoreinfo: Track and log recoverable hardware errors
+Message-ID: <ldlansfiesfxf4a6dzp5z2etquz5jgiq6ttx3al6q7sesgros6@xh4lkevbzsow>
+References: <20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org>
+ <7ce9731a-b212-4e27-8809-0559eb36c5f2@linux.alibaba.com>
+ <4qh2wbcbzdajh2tvki26qe4tqjazmyvbn7v7aqqhkxpitdrexo@ucch4ppo7i4e>
+ <fdb5dced-ea5a-48b8-bbb4-fc3ade7f3df8@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250725090133.1358775-1-kiran.k@intel.com>
-In-Reply-To: <20250725090133.1358775-1-kiran.k@intel.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Fri, 25 Jul 2025 09:53:35 -0400
-X-Gm-Features: Ac12FXwyzqNHfLPdHqEA0hYTNkMUgglGxxQQ1Y7JFYBSg_MQ752ng7-zdHJ5DaY
-Message-ID: <CABBYNZLJyT=z5gLCArU6pMo1sVq-0PSPpvV5yYXHCaxCp2GOZg@mail.gmail.com>
-Subject: Re: [PATCH v6] Bluetooth: btintel_pcie: Add support for _suspend() / _resume()
-To: Kiran K <kiran.k@intel.com>
-Cc: linux-bluetooth@vger.kernel.org, ravishankar.srivatsa@intel.com, 
-	chethan.tumkur.narayan@intel.com, bhelgaas@google.com, 
-	linux-pci@vger.kernel.org, 
-	Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fdb5dced-ea5a-48b8-bbb4-fc3ade7f3df8@linux.alibaba.com>
 
-Hi Kiran,
+Hello Shuai,
 
-On Fri, Jul 25, 2025 at 4:45=E2=80=AFAM Kiran K <kiran.k@intel.com> wrote:
->
-> From: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
->
-> This patch implements _suspend() and _resume() functions for the
-> Bluetooth controller. When the system enters a suspended state, the
-> driver notifies the controller to perform necessary housekeeping tasks
-> by writing to the sleep control register and waits for an alive
-> interrupt. The firmware raises the alive interrupt when it has
-> transitioned to the D3 state. The same flow occurs when the system
-> resumes.
->
-> Command to test host initiated wakeup after 60 seconds
-> sudo rtcwake -m mem -s 60
->
-> dmesg log (tested on Whale Peak2 on Panther Lake platform)
-> On system suspend:
-> [Fri Jul 25 11:05:37 2025] Bluetooth: hci0: device entered into d3 state =
-from d0 in 80 us
->
-> On system resume:
-> [Fri Jul 25 11:06:36 2025] Bluetooth: hci0: device entered into d0 state =
-from d3 in 7117 us
->
-> Signed-off-by: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com=
->
-> Signed-off-by: Kiran K <kiran.k@intel.com>
-> ---
-> changes in v6:
->      - s/delta/delta_us/g
->      - s/CONFIG_PM/CONFIG_PM_SLEEP/g
->      - use pm_sleep_pr()/pm_str() to avoid #ifdefs
->      - remove the code to set persistance mode as its not relevant to thi=
-s patch
->
-> changes in v5:
->      - refactor _suspend() / _resume() to set the D3HOT/D3COLD based on p=
-ower
->        event
->      - remove SIMPLE_DEV_PM_OPS and define the required pm_ops callback
->        functions
->
-> changes in v4:
->      - Moved document and section details from the commit message as comm=
-ent in code.
->
-> changes in v3:
->      - Corrected the typo's
->      - Updated the CC list as suggested.
->      - Corrected the format specifiers in the logs.
->
-> changes in v2:
->      - Updated the commit message with test steps and logs.
->      - Added logs to include the timeout message.
->      - Fixed a potential race condition during suspend and resume.
->
->  drivers/bluetooth/btintel_pcie.c | 90 ++++++++++++++++++++++++++++++++
->  1 file changed, 90 insertions(+)
->
-> diff --git a/drivers/bluetooth/btintel_pcie.c b/drivers/bluetooth/btintel=
-_pcie.c
-> index 6e7bbbd35279..c419521493fe 100644
-> --- a/drivers/bluetooth/btintel_pcie.c
-> +++ b/drivers/bluetooth/btintel_pcie.c
-> @@ -2573,11 +2573,101 @@ static void btintel_pcie_coredump(struct device =
-*dev)
->  }
->  #endif
->
-> +#ifdef CONFIG_PM_SLEEP
-> +static int btintel_pcie_suspend_late(struct device *dev, pm_message_t me=
-sg)
-> +{
-> +       struct pci_dev *pdev =3D to_pci_dev(dev);
-> +       struct btintel_pcie_data *data;
-> +       ktime_t start;
-> +       u32 dxstate;
-> +       s64 delta_us;
-> +       int err;
-> +
-> +       data =3D pci_get_drvdata(pdev);
-> +
-> +       dxstate =3D (mesg.event =3D=3D PM_EVENT_SUSPEND ?
-> +                  BTINTEL_PCIE_STATE_D3_HOT : BTINTEL_PCIE_STATE_D3_COLD=
-);
-> +
-> +       data->gp0_received =3D false;
-> +
-> +       start =3D ktime_get();
-> +
-> +       /* Refer: 6.4.11.7 -> Platform power management */
-> +       btintel_pcie_wr_sleep_cntrl(data, dxstate);
-> +       err =3D wait_event_timeout(data->gp0_wait_q, data->gp0_received,
-> +                                msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TI=
-MEOUT_MS));
-> +       if (err =3D=3D 0) {
-> +               bt_dev_err(data->hdev, "Timeout (%u ms) on alive interrup=
-t for D3 entry",
-> +                               BTINTEL_DEFAULT_INTR_TIMEOUT_MS);
-> +               return -EBUSY;
-> +       }
-> +
-> +       delta_us =3D ktime_to_ns(ktime_get() - start) / 1000;
-> +       bt_dev_info(data->hdev, "device entered into d3 state from d0 in =
-%lld us",
-> +                   delta_us);
-> +       return 0;
-> +}
-> +
-> +static int btintel_pcie_suspend(struct device *dev)
-> +{
-> +       return btintel_pcie_suspend_late(dev, PMSG_SUSPEND);
-> +}
-> +
-> +static int btintel_pcie_hibernate(struct device *dev)
-> +{
-> +       return btintel_pcie_suspend_late(dev, PMSG_HIBERNATE);
-> +}
-> +
-> +static int btintel_pcie_freeze(struct device *dev)
-> +{
-> +       return btintel_pcie_suspend_late(dev, PMSG_FREEZE);
-> +}
-> +
-> +static int btintel_pcie_resume(struct device *dev)
-> +{
-> +       struct pci_dev *pdev =3D to_pci_dev(dev);
-> +       struct btintel_pcie_data *data;
-> +       ktime_t start;
-> +       int err;
-> +       s64 delta_us;
-> +
-> +       data =3D pci_get_drvdata(pdev);
-> +       data->gp0_received =3D false;
-> +
-> +       start =3D ktime_get();
-> +
-> +       /* Refer: 6.4.11.7 -> Platform power management */
-> +       btintel_pcie_wr_sleep_cntrl(data, BTINTEL_PCIE_STATE_D0);
-> +       err =3D wait_event_timeout(data->gp0_wait_q, data->gp0_received,
-> +                                msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TI=
-MEOUT_MS));
-> +       if (err =3D=3D 0) {
-> +               bt_dev_err(data->hdev, "Timeout (%u ms) on alive interrup=
-t for D0 entry",
-> +                               BTINTEL_DEFAULT_INTR_TIMEOUT_MS);
-> +               return -EBUSY;
-> +       }
-> +
-> +       delta_us =3D ktime_to_ns(ktime_get() - start) / 1000;
-> +       bt_dev_info(data->hdev, "device entered into d0 state from d3 in =
-%lld us",
-> +                   delta_us);
-> +       return 0;
-> +}
-> +
-> +const struct dev_pm_ops btintel_pcie_pm_ops =3D {
-> +       .suspend =3D pm_sleep_ptr(btintel_pcie_suspend),
-> +       .resume =3D pm_sleep_ptr(btintel_pcie_resume),
-> +       .freeze =3D pm_sleep_ptr(btintel_pcie_freeze),
-> +       .thaw =3D pm_sleep_ptr(btintel_pcie_resume),
-> +       .poweroff =3D pm_sleep_ptr(btintel_pcie_hibernate),
-> +       .restore =3D pm_sleep_ptr(btintel_pcie_resume),
-> +};
-> +#endif
-> +
->  static struct pci_driver btintel_pcie_driver =3D {
->         .name =3D KBUILD_MODNAME,
->         .id_table =3D btintel_pcie_table,
->         .probe =3D btintel_pcie_probe,
->         .remove =3D btintel_pcie_remove,
-> +       .driver.pm =3D pm_ptr(&btintel_pcie_pm_ops),
+On Fri, Jul 25, 2025 at 03:40:58PM +0800, Shuai Xue wrote:
+> > > APEI does not define an error type named GHES. GHES is just a kernel
+> > > driver name. Many hardware error types can be handled in GHES (see
+> > > ghes_do_proc), for example, AER is routed by GHES when firmware-first
+> > > mode is used. As far as I know, firmware-first mode is commonly used in
+> > > production. Should GHES errors be categorized into AER, memory, and CXL
+> > > memory instead?
+> > 
+> > I also considered slicing the data differently initially, but then
+> > realized it would add more complexity than necessary for my needs.
+> > 
+> > If you believe we should further subdivide the data, I’m happy to do so.
+> > 
+> > You’re suggesting a structure like this, which would then map to the
+> > corresponding CPER_SEC_ sections:
+> > 
+> > 	enum hwerr_error_type {
+> > 	HWERR_RECOV_AER,     // maps to CPER_SEC_PCIE
+> > 	HWERR_RECOV_MCE,     // maps to default MCE + CPER_SEC_PCIE
+> 
+> CPER_SEC_PCIE is typo?
 
-This doesn't seem quite right, btintel_pcie_pm_ops is behind
-CONFIG_PM_SLEEP not just CONFIG_PM, so it would be undefined if just
-CONFIG_PM is set, so we might as well do:
+Correct, HWERR_RECOV_MCE would map to the regular MCE and not errors
+coming from GHES.
 
-diff --git a/drivers/bluetooth/btintel_pcie.c b/drivers/bluetooth/btintel_p=
-cie.c
-index 5b32f5a6b0b0..2f1b1be94080 100644
---- a/drivers/bluetooth/btintel_pcie.c
-+++ b/drivers/bluetooth/btintel_pcie.c
-@@ -2654,12 +2654,12 @@ static int btintel_pcie_resume(struct device *dev)
- }
+> > 	HWERR_RECOV_CXL,     // maps to CPER_SEC_CXL_*
+> > 	HWERR_RECOV_MEMORY,  // maps to CPER_SEC_PLATFORM_MEM
+> > 	}
+> > 
+> > Additionally, what about events related to CPU, Firmware, or DMA
+> > errors—for example, CPER_SEC_PROC, CPER_SEC_FW, CPER_SEC_DMAR? Should we
+> > include those in the classification as well?
+> 
+> I would like to split a error from ghes to its own type,
+> it sounds more reasonable. I can not tell what happened from HWERR_RECOV_AERat all :(
 
- const struct dev_pm_ops btintel_pcie_pm_ops =3D {
--       .suspend =3D pm_sleep_ptr(btintel_pcie_suspend),
--       .resume =3D pm_sleep_ptr(btintel_pcie_resume),
--       .freeze =3D pm_sleep_ptr(btintel_pcie_freeze),
--       .thaw =3D pm_sleep_ptr(btintel_pcie_resume),
--       .poweroff =3D pm_sleep_ptr(btintel_pcie_hibernate),
--       .restore =3D pm_sleep_ptr(btintel_pcie_resume),
-+       .suspend =3D btintel_pcie_suspend,
-+       .resume =3D btintel_pcie_resume,
-+       .freeze =3D btintel_pcie_freeze,
-+       .thaw =3D btintel_pcie_resume,
-+       .poweroff =3D btintel_pcie_hibernate,
-+       .restore =3D btintel_pcie_resume,
- };
- #endif
+Makes sense. Regarding your answer, I suppose we might want to have
+something like the following:
 
-@@ -2668,7 +2668,7 @@ static struct pci_driver btintel_pcie_driver =3D {
-        .id_table =3D btintel_pcie_table,
-        .probe =3D btintel_pcie_probe,
-        .remove =3D btintel_pcie_remove,
--       .driver.pm =3D pm_ptr(&btintel_pcie_pm_ops),
-+       .driver.pm =3D pm_sleep_ptr(&btintel_pcie_pm_ops),
- #ifdef CONFIG_DEV_COREDUMP
-        .driver.coredump =3D btintel_pcie_coredump
- #endif
+	enum hwerr_error_type {
+		HWERR_RECOV_MCE,     // maps to errors in do_machine_check()
+		HWERR_RECOV_CXL,     // maps to CPER_SEC_CXL_
+		HWERR_RECOV_PCI,     // maps to AER (pci_dev_aer_stats_incr()) and CPER_SEC_PCIE and CPER_SEC_PCI
+		HWERR_RECOV_MEMORY,  // maps to CPER_SEC_PLATFORM_MEM_
+		HWERR_RECOV_CPU,     // maps to CPER_SEC_PROC_
+		HWERR_RECOV_DMA,     // maps to CPER_SEC_DMAR_
+		HWERR_RECOV_OTHERS,  // maps to CPER_SEC_FW_, CPER_SEC_DMAR_, 
+	}
 
+Is this what you think we should track?
 
->  #ifdef CONFIG_DEV_COREDUMP
->         .driver.coredump =3D btintel_pcie_coredump
->  #endif
-> --
-> 2.43.0
->
->
-
-
---=20
-Luiz Augusto von Dentz
+Thanks
+--breno
 
