@@ -1,163 +1,130 @@
-Return-Path: <linux-pci+bounces-32992-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32993-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 451E8B1332C
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 04:54:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78D42B133C4
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 06:49:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7511B173D07
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 02:54:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 124D71883A5D
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 04:49:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D66FE1F4606;
-	Mon, 28 Jul 2025 02:53:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 726F817DFE7;
+	Mon, 28 Jul 2025 04:49:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KiQbiB7M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jwp3LCO6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB0D60DCF;
-	Mon, 28 Jul 2025 02:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4383A42A96;
+	Mon, 28 Jul 2025 04:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753671235; cv=none; b=JJdHWtRflXeeT3WNCfDYbc5vHeIA24HwCMwhs0D6ycVLO3anU82emDTfxLrNtXI/70VH4gPMd/H/RJcqpPpk3OSQdueNdMnUBquU9TLEJDGAW/Sc+zuBMmwmSU2X1cqBRFCCuOExjEqUxjqVro8U9LG1Es8csF1h/hq4gTflAv0=
+	t=1753678147; cv=none; b=pAGU3Nb1vZS8z7Pn5dvbDcmQrTckFyGmGqiv3I5ryGBYHD+uaYcDb8P6qPuLw4CHaiao1xnwqn//tMkztX2g5fv32ztNc0NSGTtr3stOye2Py48L9yJv9vVAfj+Z7FgCHtAgIhP3cZzHgr3FQVX70yBQpovR/V8tNvju0sZHHvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753671235; c=relaxed/simple;
-	bh=AO8ExueeFDrWkBuqgwFTApyFkJq4/UGY2C5kxNOOkIQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kLFtkLwULy+xMM51pk/ZGsaSOe/5N0KT4jpdaSO++9yAZN5U+WhbQLO1pqpwNChU65vU2iz9BagnscJGXSyD9hk29yVJvuhRBhnrp25pOXpRrhlFudXSBf5+jVlZ9g/GzPrcrDSyY9pXEG+USA9SVammDPKU4ARJIKu+JC9ZIKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KiQbiB7M; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-74af4af04fdso3576606b3a.1;
-        Sun, 27 Jul 2025 19:53:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753671232; x=1754276032; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=avmHlpsimPpbcMG0DyymdLKOLlQNmhtiWj3hCWq4+7A=;
-        b=KiQbiB7MubzBobEXPdz5SBpmP//LWP20s7PBbPjTqsJtdV8+sKd80wEB3UnIkC2dOQ
-         q/lSaVHflqJ2P8LdQHacRP6IPBJLnam/Ubh0nvbVYv8UFCY5Qzq+cESJSITw3jUGKHUW
-         VXclJSXxh/fsXE5x2A040uQcq7y+kR5w/TeBHC9T8YFyzTf+HUnj+DADmoIDlStoUo6D
-         wdJ18EOR7pFL3C1wzH31d5+KrDgK9j/JtVujZNWJGCbZuxFNdf5KW1K7peYDMqDme1bt
-         jSX9d5HvaaigjqCqH/WY/22zVYJ6XxWJyYpP9Q8XqFJX2lr7JSm+8gL38me5+NW2hE47
-         rsGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753671232; x=1754276032;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=avmHlpsimPpbcMG0DyymdLKOLlQNmhtiWj3hCWq4+7A=;
-        b=q1f/Gtsbr/I8YuiJIjvemm+slnY9x7Ffi9/77MEKMIdE8Y/HXMl/ackidjyUCLOkdU
-         51iSiRufNNaWfgHSEAlaY85PvPsHOoIXbrTtfW2feAuQKdXsALvdXrJHpWDbI89SPd1m
-         USMUBUxd8Hqye8ljsvO2uzRWun1XUksrI+58Y2fug6ex4he1nxuguIhVNyS3HMKUY3W5
-         SLXAQZFgRkoKFqhrJ3kWvVUQQKFGkkmEK8t9klj3B4T3knBPZ3jF+6pKk6qjguRYhGUy
-         cfpHMz3y6v9ac4bVtOvNu0jqDW2WSaZ9c4vf+iUxyV+z86s9mMlJZgqe0kqw3f533uMh
-         BCmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOeZQCmOxYP1ixKWCDaArtSa2r9dpQ3YVSnUAi4H5dbDjErG/AXlCY2Y541YnxXiLiqg+ZWixNfh3E@vger.kernel.org, AJvYcCUvJCKgU1hbqXqQLhH7jHNT79PUpXllJFHrfk6ItJhrcXPHvcJUbdpZzr8DYCebaQ0uJXC6cO5WUyemp5w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7PzMamRuYlCReTK4TWxl+Bu1mUvFGHp8kLxNOz26eQvvueOXO
-	OD2Uaoys+nuvVbOD7lVq4sZ6L4VqLQXghmI0v/Sin7nH9N4lvwjRS1u0
-X-Gm-Gg: ASbGncujgsUly6GtPzDT+IosNjkjv1xHSbQgI1qSqxo12vPxcDA8OU0J9mfkjnknG0E
-	zdxFlW56gZsCEC4e7XTfhgaTzdXDy4HbDsIYb1kDpYKhpwcMBu0gbwbSP7B+ZnTZTtD3AVkomEx
-	HjKG/kSuidPUKA3E4Sb6Evw20grVgixtJO/nAP5bp/ZXWjjFKsV9D8FIwSej2D+EGed0pFQmS1o
-	1ZfDWHeRoKqcnb9ekNh3Sah2lDo4BgCr8DrgQkSpndfWR4hM/5Ew9VyBCIP+Ax2kxCWUUqZw0K/
-	3ifkeOSf7RC0TPxtOmcy0t79wcb7Qjsj+WD6e+HffVMsPORtXPw1Gtq+eZyEJ0ryUjaS2bpJGAW
-	OdNgeyUSkedYEImIS4l1rNlstYBI9vMS1tyrBLf4OSDj3gyfQ1g0Bug==
-X-Google-Smtp-Source: AGHT+IEYsDkEjeROakf6QvDIh82nureJAidRuBH/5kgU/0KECEZzQNwNS08YU/h476V5OM7NqtrndA==
-X-Received: by 2002:a05:6a20:3c90:b0:23d:34f2:3a22 with SMTP id adf61e73a8af0-23d6dfc0172mr15767894637.7.1753671232393;
-        Sun, 27 Jul 2025 19:53:52 -0700 (PDT)
-Received: from sw.. (220-128-98-63.hinet-ip.hinet.net. [220.128.98.63])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7640b4d15cfsm4297219b3a.119.2025.07.27.19.53.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Jul 2025 19:53:51 -0700 (PDT)
-From: Szuying Chen <chensiying21@gmail.com>
-X-Google-Original-From: Szuying Chen <Chloe_Chen@asmedia.com.tw>
-To: raju.rangoju@amd.com,
-	helgaas@kernel.org
-Cc: linux-usb@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	andreas.noever@gmail.com,
-	michael.jamet@intel.com,
-	westeri@kernel.org,
-	YehezkelShB@gmail.com,
-	bhelgaas@google.com,
-	Sanath.S@amd.com,
-	Richard_Hsu@asmedia.com.tw,
-	Chloe_Chen@asmedia.com.tw
-Subject: Re: [PATCH 23] PCI Add PCI vendor ID for ASMedia USB4 devices
-Date: Mon, 28 Jul 2025 10:53:45 +0800
-Message-Id: <20250728025345.5318-1-Chloe_Chen@asmedia.com.tw>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1753678147; c=relaxed/simple;
+	bh=2pShuDsf2St341pwshBRJdlIVr05/G+zG7IMXaNIKMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RasuoM2YWrmAjk6LTQLUe04+ES7Yjti+uWnGVrRHU7QKfsW9nm5uFLaaVMqNPRqxDTU40M9WEvEZ2XbSOqtLKUgj2FsWvm1egplM2f3VtohK1ldKuVa0h2rfSkEdMR9t4EoqIiWGBK+RDPwMnWv0AMxBJQKMKRNrbNKn0G4CH94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jwp3LCO6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F15DC4CEE7;
+	Mon, 28 Jul 2025 04:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753678146;
+	bh=2pShuDsf2St341pwshBRJdlIVr05/G+zG7IMXaNIKMU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jwp3LCO6QrpyvrFYrsEzFOGf4L7KJgp7x8GdOqa7TxusD8CygOoDIo411SW+LUJLD
+	 1Le6LA6Z3NFBLMF7x81GGJDddoYL8U0+EZH7a/+E8AZ4Ez4rHiKTn5N9jl7HtrlPt0
+	 F2ddhp4E9SnGFVbza9+3EeRfymQY+XiUMoqwJPrum4G7LHefIUBttEZD+jYESOhhY3
+	 FdlKrHTQUZr9DSMIduBeiFMP8Gy8wespHWvBHcK5spsdGwtD+fdNf57N69eG7IQ3pA
+	 PyBmnsmQNr8Y/9p4o8IfBPn4sT7x9Nhc9y+6k4wFwzkny2bWzugqS7WgieoxSaVIdN
+	 rpBlUCgP9pVkQ==
+Date: Mon, 28 Jul 2025 10:18:59 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: Re: [PATCH RFC 2/3] PCI/pwrctrl: Allow pwrctrl core to control
+ PERST# GPIO if available
+Message-ID: <fcnbgbm3sywwi5foj3tlsrnwrrmjiqm6mw3numscdazcdpn3jl@raymzppw5taq>
+References: <20250707-pci-pwrctrl-perst-v1-0-c3c7e513e312@kernel.org>
+ <20250707-pci-pwrctrl-perst-v1-2-c3c7e513e312@kernel.org>
+ <aHGueAD70abjw8D_@google.com>
+ <k5rf5azftn4mpztcjtvdxiligngmaz7fecdryv244m726y5rfd@mobway4c4ueh>
+ <uh7r37l7a2btd3p5dighewfmat2caewrlyf2lwjtslolbr5bov@jgstvnfhxur6>
+ <aIPxXD6LZp7PHicR@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aIPxXD6LZp7PHicR@google.com>
 
-Signed-off-by: Szuying Chen <Chloe_Chen@asmedia.com.tw>
----
+On Fri, Jul 25, 2025 at 02:04:28PM GMT, Brian Norris wrote:
+> Thanks for clearing up some confusion. I was misled on some aspects. But
+> I think there's still a problem in here:
+> 
+> On Thu, Jul 24, 2025 at 07:43:38PM +0530, Manivannan Sadhasivam wrote:
+> > On Sat, Jul 12, 2025 at 01:59:34PM GMT, Manivannan Sadhasivam wrote:
+> > > On Fri, Jul 11, 2025 at 05:38:16PM GMT, Brian Norris wrote:
+> > > > On Mon, Jul 07, 2025 at 11:48:39PM +0530, Manivannan Sadhasivam wrote:
+> > > > > PERST# is an (optional) auxiliary signal provided by the PCIe host to
+> > > > > components for signalling 'Fundamental Reset' as per the PCIe spec r6.0,
+> > > > > sec 6.6.1.
+> > > > 
+> > > > >  void pci_pwrctrl_init(struct pci_pwrctrl *pwrctrl, struct device *dev)
+> > > > >  {
+> > > > > +	struct pci_host_bridge *host_bridge = to_pci_host_bridge(dev->parent);
+> > > > > +	int devfn;
+> > > > > +
+> > > > >  	pwrctrl->dev = dev;
+> > > > >  	INIT_WORK(&pwrctrl->work, rescan_work_func);
+> > > > > +
+> > > > > +	if (!host_bridge->perst)
+> > > > > +		return;
+> > > > > +
+> > > > > +	devfn = of_pci_get_devfn(dev_of_node(dev));
+> > > > > +	if (devfn >= 0 && host_bridge->perst[PCI_SLOT(devfn)])
+> > > > 
+> > > > This seems to imply a 1:1 correlation between slots and pwrctrl devices,
+> > > > almost as if you expect everyone is using drivers/pci/pwrctrl/slot.c.
+> > > > But there is also endpoint-specific pwrctrl support, and there's quite
+> > > > a bit of flexibility around what these hierarchies can look like.
+> > > > 
+> > > > How do you account for that?
+> > > > 
+> > > > For example, couldn't you have both a "port" and an "endpoint" pwrctrl? Would
+> > > > they both grab the same PERST# GPIO here? And might that incur excessive
+> > > > resets, possibly even clobbering each other?
+> ...
+> > I realized that there is no need to define these properties (PERST#, WAKE#,
+> > CLKREQ#) in the endpoint node (the DT binding also doesn't allow now anyway).
+> > These properties should just exist in the Root Port node as there can be only
+> > one set per hierarchy i.e., Root Complex would only use one set of these GPIOs
+> > per Root Port and the endpoint need to share them.
+> 
+> That implies it's not a 1:1 correlation between PERST# GPIO and pwrctrl
+> device. Multiple endpoints might need powered up, but they may share a
+> PERST#. I don't think this patch solves this properly, as it allows the
+> first one to deassert PERST# before the other(s) are powered.
+> 
 
+You are right. This series doesn't take account of this configuration and I plan
+to incorporate it in the next one. It might take some time as supporting such
+configuration (and others that we discussed in this thread) is not
+straightforward.
 
-On 7/23/2025 18:16 PM, Rangoju, Raju wrote:
->On 7/23/2025 12:44 AM, Bjorn Helgaas wrote:
->> On Tue, Jul 22, 2025 at 11:20:25PM +0530, Raju Rangoju wrote:
->>> Add a new PCI vendor ID (PCI_VENDOR_ID_ASMEDIA_USB4) for ASMedia
->>> USB4 devices. This change enables proper identification and support
->>> for ASMedia USB4 hardware in the kernel.
->>>
->>> Co-developed-by: Sanath S <Sanath.S@amd.com>
->>> Signed-off-by: Sanath S <Sanath.S@amd.com>
->>> Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
->>> ---
->>>   include/linux/pci_ids.h | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
->>> index e2d71b6fdd84..3397954ce96e 100644
->>> --- a/include/linux/pci_ids.h
->>> +++ b/include/linux/pci_ids.h
->>> @@ -2592,6 +2592,7 @@
->>>   #define PCI_SUBDEVICE_ID_QEMU            0x1100
->>>   
->>>   #define PCI_VENDOR_ID_ASMEDIA		0x1b21
->>> +#define PCI_VENDOR_ID_ASMEDIA_USB4	0x174C
->>>   
->>>   #define PCI_VENDOR_ID_REDHAT		0x1b36
->> 
->> Sort by Vendor ID value (not the name), per the comment at the top.
->> 
->> Use lower-case hex to match style (not universally observed, but
->> close).
+- Mani
 
->Sure Bjorn, I'll address these changes in v2.
-
->> 
->> Per https://smex-ctp.trendmicro.com:443/wis/clicktime/v1/query?url=https%3a%2f%2fpcisig.com%2fmembership%2fmember%2dcompanies&umid=7321be44-7922-453f-bbc2-19fe22b27570&auth=777e34cb6e3f3df7218bc96aae4e57e309393472-c37a74b95e80c9c8801718f6d732e8ec1f1f31bb, 0x174c is not
->> reserved, although the same is true for 0x1b21 and many other Vendor
->> IDs.  Do you know the history of 0x174c and 0x1b21, or why these don't
->> show up as reserved?
-
->Chloe_Chen@asmedia.com.tw, could you please comment here?
-
-Hi Rangoju,
-  0x174c is ASMedia USB-IF's VendorID
-  0x1b21 is ASMedia PCI device's VendorID 
-        
-  You can search it at the following URL: 
-  https://devicehunt.com/
-  
-       
-  kind regards,
-  Chloe    
->> 
->> With these,
->> 
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->> 
->> Bjorn
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
