@@ -1,149 +1,137 @@
-Return-Path: <linux-pci+bounces-33025-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33027-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B601B136A8
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 10:30:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CCA3B13708
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 10:54:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 84D72174677
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 08:29:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D189E17857B
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 08:54:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 498B0266B52;
-	Mon, 28 Jul 2025 08:25:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D9912367C4;
+	Mon, 28 Jul 2025 08:54:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mz29zVDR"
+	dkim=pass (2048-bit key) header.d=cachyos.org header.i=@cachyos.org header.b="gL/9WQ/q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ptr1337.dev (mail.ptr1337.dev [202.61.224.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5C2266581;
-	Mon, 28 Jul 2025 08:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134C43398B;
+	Mon, 28 Jul 2025 08:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.61.224.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753691104; cv=none; b=WdCvvAgMo2NEWx8IwVUYFFK9J5h+b3pz8oL7FMJGdBDF8FxeZNnzJ7NYRYEPfEKqDPzCoZrXmdEvjI7uehfd43L//yExMgx2UvT4SakCtuN42y0NRlnP6xuOUcNShBTqELu8kSZ1h11BnkuIVt4TIXs6lWnFuJX3XMekAxIcZVI=
+	t=1753692847; cv=none; b=ahXgubNIUyR3s9sJ0zKVKIbOdTgy9l7htXQ7smpAftQTBtcDiPYco5Ho8KjyBlzpX24B2J2D+Mxd4GL3zSphiycFBeiTa3Mv6ZYcRKL9GZssuOCqNQN6mgwWq2VRBJd33QOB5XknehIjmvY6czM2ZCz4vZGq+dONu/pdK1wj4RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753691104; c=relaxed/simple;
-	bh=3vcIBee/NbsvEu80GFPtvaNBMX//h7roLKyHUYZ6P1c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UszJr5q479JR7mVqs7RNQ07kz4hp/+ZPxF7w/z9lp1cSNoakOhOkVXoChojImFU7BBYnSzjlm8bmGttW4r8uQZSGgOtAR5RSaBYDBkCBtVxHxPNOhhke5j7Mc8sLgTZ7wqp8L68MuKmKrLHkyglZLnhWRNfFb4TRIefXl542euk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mz29zVDR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71D1BC4CEE7;
-	Mon, 28 Jul 2025 08:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753691104;
-	bh=3vcIBee/NbsvEu80GFPtvaNBMX//h7roLKyHUYZ6P1c=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=mz29zVDRT8liVIK8t1ESFDAN2IRTTIukTWs75GH8BWCt2F2vEfkPVXkwiIe51qLbh
-	 w4WPMdfQfuBndExKcVFjpoOkMJCZG7WsfeluFPGwYZoDfT9j876pLJSbxji/1zNsd9
-	 U5g9pgg4K/aNFsngP3s7pZI3fZixnZ5zIvA/a1T0P+XssZBoCasqk2oR7iFWTmyB8d
-	 TS0BZQEat3oRiMwx0T2J4cnlxNxTZBufZKYaxtQIuI07SlXsFD/qy73Y/aFzqufFh+
-	 60k8+YVDowgzieP3HJgDvNj1odFWrVwaLM9Lq0XobcypLlE7gdF17NNhc5pBYy8GNi
-	 ptC54BXElc+5A==
-From: chrisl@kernel.org
-Date: Mon, 28 Jul 2025 01:24:55 -0700
-Subject: [PATCH RFC 25/25] PCI/LUO: Clean up PCI_SER_GET()
+	s=arc-20240116; t=1753692847; c=relaxed/simple;
+	bh=B0IJjL98PhPeCgMKI5R+ISp5vmenYly7y+1rdHXxrI8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pk8y9aZ1CbVQN6LzrCdhlTGeYz0/wqTtinZmYDq9KuJae5uvX8e2kYmloNfzYM+9EjAHOAcg6ZTl4xis4FOimj7DvRY2V3UDbPZhtTkwHh4gntDGotvL0di7teARakQcLOnzAAmc/3CxxDgtmuYOHLAKDHN/b9ecsUE1Ce9Ypk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cachyos.org; spf=pass smtp.mailfrom=cachyos.org; dkim=pass (2048-bit key) header.d=cachyos.org header.i=@cachyos.org header.b=gL/9WQ/q; arc=none smtp.client-ip=202.61.224.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cachyos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cachyos.org
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 05FAE2842E3;
+	Mon, 28 Jul 2025 10:45:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cachyos.org; s=dkim;
+	t=1753692331; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=hZAZQxcJny2MJlnbj6INcbeqX5pbA4FFdFvh2PmI64w=;
+	b=gL/9WQ/qCqbdu8zR86gU47Fb4JEBykEZI3fYcn9RWlJ1FkRil9jRegxpKVtlMVHiuCRkvD
+	eUN8qjcTZbRYiOkvX4mdgh/LxFAr5+8+kF7N59rXBpMN6Ij4pFM7K0toI9/17YaGKGKaib
+	TRUqRWvjhzvFhphSevh08vs5VWbN3+rSK8oTR33/pl3tDKExtUZjXzo2iLkcAc7fqbskIw
+	LuRqFnwnfmC9KGst5fDt6aVyRY9/lqAnz1lnsj7VqV6WWNJBP5H76boU0TjPx4UuuMwu9R
+	DCIWav85qzoBaQQMN29prltn9IdsIgfcfFXvyThIPqE17s2r92h8R/Qfq6plxQ==
+Message-ID: <d9a1ed6d-05bb-440d-afa9-cb30315bd02d@cachyos.org>
+Date: Mon, 28 Jul 2025 15:45:25 +0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/5] Improvements to S5 power consumption
+To: Mario Limonciello <superm1@kernel.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: "open list:RADEON and AMDGPU DRM DRIVERS"
+ <amd-gfx@lists.freedesktop.org>,
+ "open list:HIBERNATION (aka Software Suspend, aka swsusp)"
+ <linux-pm@vger.kernel.org>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Danilo Krummrich <dakr@kernel.org>,
+ "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ "open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
+ "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250616175019.3471583-1-superm1@kernel.org>
+Content-Language: en-US
+From: Eric Naim <dnaim@cachyos.org>
+In-Reply-To: <20250616175019.3471583-1-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250728-luo-pci-v1-25-955b078dd653@kernel.org>
-References: <20250728-luo-pci-v1-0-955b078dd653@kernel.org>
-In-Reply-To: <20250728-luo-pci-v1-0-955b078dd653@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- Len Brown <lenb@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-acpi@vger.kernel.org, David Matlack <dmatlack@google.com>, 
- Pasha Tatashin <tatashin@google.com>, Jason Miu <jasonmiu@google.com>, 
- Vipin Sharma <vipinsh@google.com>, Saeed Mahameed <saeedm@nvidia.com>, 
- Adithya Jayachandran <ajayachandra@nvidia.com>, 
- Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, 
- Mike Rapoport <rppt@kernel.org>, Chris Li <chrisl@kernel.org>, 
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
-X-Mailer: b4 0.14.2
+X-Last-TLS-Session-Version: TLSv1.3
 
-From: David Matlack <dmatlack@google.com>
+On 6/17/25 00:50, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> A variety of issues both in function and in power consumption have been
+> raised as a result of devices not being put into a low power state when
+> the system is powered off.
+> 
+> There have been some localized changes[1] to PCI core to help these issues,
+> but they have had various downsides.
+> 
+> This series instead tries to use the S4 flow when the system is being
+> powered off.  This lines up the behavior with what other operating systems
+> do as well.  If for some reason that fails or is not supported, unwind and
+> do the previous S5 flow that will wake all devices and run their shutdown()
+> callbacks.
+> 
 
-Refactor PCI_SER_GET() to be more readable by storing the pointer
-to struct pci_dev_ser in an intermediate variable and adding a helper
-function to_pci_dev_ser().
+Hi Mario,
 
-Change pci_lu_adopt() to return a boolean since it is only used to check
-if a device has preserved state.
+I've been running this series on CachyOS since 6.16-rc3 and have no issues.
 
-Opportunistically fix the formatting on the static inline prototype of
-pci_liveupdate_reclaim_resource() as well.
+Feel free to add
 
-No functional change intended.
-
-Signed-off-by: David Matlack <dmatlack@google.com>
-Signed-off-by: Chris Li <chrisl@kernel.org>
----
- drivers/pci/pci.h | 32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 7af32edb128faef9c5e2665ca5055374f7fd30ea..d092cea96dc22cca5d3526c720cfb8b330c47683 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -1196,27 +1196,37 @@ static inline int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int inde
- 	 PCI_CONF1_EXT_REG(reg))
- 
- #ifdef CONFIG_LIVEUPDATE
--#define PCI_SER_GET(__pci_dev, __var, __def)			\
--	(__pci_dev->dev.lu.dev_state) ?				\
--	((struct pci_dev_ser *)__pci_dev->dev.lu.dev_state)->__var : __def
--
- void pci_liveupdate_restore(struct pci_dev *dev);
- void pci_liveupdate_override_driver(struct pci_dev *dev);
--static inline struct pci_dev_ser *pci_lu_adopt(struct pci_dev *dev)
-+static inline struct pci_dev_ser *to_pci_dev_ser(struct pci_dev *dev)
-+{
-+	return dev->dev.lu.dev_state;
-+}
-+static inline bool pci_lu_adopt(struct pci_dev *dev)
- {
--	return dev->dev.lu.requested ? dev->dev.lu.dev_state : NULL;
-+	return dev->dev.lu.requested && to_pci_dev_ser(dev);
- }
- int pci_liveupdate_reclaim_resource(struct pci_dev *dev);
- #else
--#define PCI_SER_GET(__dev, __var, __def) __def
--
- static inline void pci_liveupdate_restore(struct pci_dev *dev) {}
- static inline void pci_liveupdate_override_driver(struct pci_dev *dev) {}
--static inline struct pci_dev_ser *pci_lu_adopt(struct pci_dev *dev)
-+static inline struct pci_dev_ser *to_pci_dev_ser(struct pci_dev *dev)
- {
- 	return NULL;
- }
--static inline int pci_liveupdate_reclaim_resource(
--	struct pci_dev *dev) { return -ENXIO; }
-+static inline bool pci_lu_adopt(struct pci_dev *dev)
-+{
-+	return false;
-+}
-+static inline int pci_liveupdate_reclaim_resource(struct pci_dev *dev)
-+{
-+	return -ENXIO;
-+}
- #endif
-+
-+#define PCI_SER_GET(__pci_dev, __field, __default) ({			\
-+	struct pci_dev_ser *__ser = to_pci_dev_ser(__pci_dev);		\
-+									\
-+	__ser ? __ser->__field : __default;				\
-+})
- #endif /* DRIVERS_PCI_H */
+Tested-by: Eric Naim <dnaim@cachyos.org>
 
 -- 
-2.50.1.487.gc89ff58d15-goog
-
+Regards,
+  Eric
+> v3->v4:
+>  * Fix LKP robot failure
+>  * Rebase on v6.16-rc2
+> 
+> Previous submissions [1]:
+> Link: https://lore.kernel.org/linux-pm/CAJZ5v0hrKEJa8Ad7iiAvQ3d_0ysVhzZcXSYc5kkL=6vtseF+bg@mail.gmail.com/T/#m91e4eae868a7405ae579e89b135085f4906225d2
+> Link: https://lore.kernel.org/linux-pci/20250506041934.1409302-1-superm1@kernel.org/
+> Link: https://lore.kernel.org/linux-pci/20231213182656.6165-1-mario.limonciello@amd.com/ (v1)
+> Link: https://lore.kernel.org/linux-pm/20250514193406.3998101-1-superm1@kernel.org/ (v2)
+> Link: https://lore.kernel.org/linux-pm/20250609024619.407257-1-superm1@kernel.org/ (v3)
+> 
+> Mario Limonciello (5):
+>   PM: Use hibernate flows for system power off
+>   PCI: Put PCIe ports with downstream devices into D3 at hibernate
+>   drm/amd: Avoid evicting resources at S5
+>   scsi: Add PM_EVENT_POWEROFF into suspend callbacks
+>   usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
+> 
+>  drivers/base/power/main.c                  |  7 ++
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  4 +
+>  drivers/pci/pci-driver.c                   | 94 ++++++++++++++--------
+>  drivers/scsi/mesh.c                        |  1 +
+>  drivers/scsi/stex.c                        |  1 +
+>  drivers/usb/host/sl811-hcd.c               |  1 +
+>  include/linux/pm.h                         |  3 +
+>  include/trace/events/power.h               |  3 +-
+>  kernel/reboot.c                            |  6 ++
+>  9 files changed, 86 insertions(+), 34 deletions(-)
+> 
 
