@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-33034-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33035-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAF49B13C18
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 15:55:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8930B13C23
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 15:56:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5670F189FBA4
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 13:54:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F1C34E063D
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 13:53:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16DA026E142;
-	Mon, 28 Jul 2025 13:52:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB1AC2701BD;
+	Mon, 28 Jul 2025 13:52:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n4nbgzXG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLmSmbmJ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D409B265CDD;
-	Mon, 28 Jul 2025 13:52:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACBDE26D4DD;
+	Mon, 28 Jul 2025 13:52:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753710770; cv=none; b=OVImODeWRvwvcx16oWzVRKXJVKz6jnRg1f+gtjQX6sUmu3/dtXWRLHH88MdA3UbgWuUs5ZfhtSBOU5RPBe7jt01oJU8l4LvUWf/sXuhQWxoQ9eZ3ocq3ktWRcyPxL8SLSN3KdC+1ttRCfZR+cZ3WPSxZ/70h6d6/LUR/tDdBukw=
+	t=1753710775; cv=none; b=pic2jpjJXSu/MUo0/XeBm2ZB6JQ3oA1HTDGx8PpfTUZOqvvhNWg8WDexACnDfejEIvq6bJsWz1h1GdApWW97fxV8MyiTuzzpMcDzcE5Y6YiV8KeLkXp4xMuEsg4nku4XSFvRUt6Ds/KqMc+RyZDOMm3XRXesVRj3LnbZjz431YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753710770; c=relaxed/simple;
-	bh=GcvXXx1lH7e5vihnT4eJBpV8ZfmSctEe/4HiQvmUR7M=;
+	s=arc-20240116; t=1753710775; c=relaxed/simple;
+	bh=AqBuQnK0sDfshKqlYHLg/bl0U14MWqk1At9ebxulyvA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AqU6xM9DQ12EqrdtUno/kdG+MLd0obadn8bkaid7a3r0CsJHaklMe6S+DXLTYJPDdxxCJVaNYxFlNMvyEFr+ud0L2qnCVBcZQwbZnXdK8mjTChqzoeKYrnnvXIYjIGoWJLwbEmVIqQW19SMWd+ap93Xy+WpjJLRNO04MIHRcRUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n4nbgzXG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DFE4C4CEE7;
-	Mon, 28 Jul 2025 13:52:44 +0000 (UTC)
+	 MIME-Version; b=ezWuQ55tFOTBnfMNP74Caa1svAHFNCtEYbuTZHdsIOPLc2RPYaavrfO/8ke+d5DxgeEswfhak7Jh0wDiCPWTlpbKgouu6EzGSP3AQ9tPk0l+uwIXDGQfHYP51L6EVbDU5kz/+lrdwCrF7WR5q+r6YbU7uFflG695LmnRqiPvooQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLmSmbmJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3109FC4CEE7;
+	Mon, 28 Jul 2025 13:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753710769;
-	bh=GcvXXx1lH7e5vihnT4eJBpV8ZfmSctEe/4HiQvmUR7M=;
+	s=k20201202; t=1753710775;
+	bh=AqBuQnK0sDfshKqlYHLg/bl0U14MWqk1At9ebxulyvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n4nbgzXGytKie8QjM2gZk0snFtn4Qd7ijbdfmS12NoKBMtFxsZljNEy/StsgiSFsC
-	 T83aEkES7dg6x4hTeWXhSwgPbIVMLY6wEZfTi0o/okeCOqVOu/YRm0JnEfuq8q/DA9
-	 W+ZwNq07I5YRzou+aYWBcSYqcN+QDmd7c1Rwc1JG0tWNrPVvdmQ79nuZvMBcJfd2S4
-	 3vKjjC6BbYQjapBd7CDM7eua8lqd96KibfD2iJcko99598DJ9TAYyrmzqzeXTlSoyy
-	 OWCljYzbhYF3XNqga9E39lbXZVOTwGLNcT6go9th6R0YPYgbo06OHemunEQKXJwBCS
-	 jGTfReMlqZoiA==
+	b=KLmSmbmJBslsBOUQm6x1VY/uQhZDigYPp6vu6f8cZnOFKdUgddBGu5LoZYiHoJ/uE
+	 VYJSjGusa7UGBn3joUWUEtUQF9W3kamKiA4oQKfVMomuw9MOxUfAyzmUwcS6Xp4JCo
+	 r3OstmDVhEs5rEkquJVjIR25JeSNDD1ij81nUF0jhpNgbxy3opqS/dRgLP364cRTcR
+	 DvDqfpSrl+511jQ8KDt56t370BxvU5TQuo4iLEgOU9b1qOgFytstpyG+N87XIVYQ4m
+	 z4g3NrRiqSjeXZEqK3gfIkYwYgyVMGBqU9WZlysh7e8VK5EvbG9yWsSWLJXX4jaAhy
+	 fbe087Qq8IA5w==
 From: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
 To: linux-coco@lists.linux.dev,
 	kvmarm@lists.linux.dev
@@ -58,9 +58,9 @@ Cc: linux-pci@vger.kernel.org,
 	Will Deacon <will@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
-Subject: [RFC PATCH v1 02/38] tsm: Move tsm core outside the host directory
-Date: Mon, 28 Jul 2025 19:21:39 +0530
-Message-ID: <20250728135216.48084-3-aneesh.kumar@kernel.org>
+Subject: [RFC PATCH v1 03/38] tsm: Move dsm_dev from pci_tdi to pci_tsm
+Date: Mon, 28 Jul 2025 19:21:40 +0530
+Message-ID: <20250728135216.48084-4-aneesh.kumar@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250728135216.48084-1-aneesh.kumar@kernel.org>
 References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
@@ -72,79 +72,153 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A later patch will add guest changes that will also use the same
-infrastructure.
-
 Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
 ---
- drivers/virt/coco/Kconfig               | 3 ++-
- drivers/virt/coco/Makefile              | 6 ++++--
- drivers/virt/coco/host/Kconfig          | 6 ------
- drivers/virt/coco/host/Makefile         | 6 ------
- drivers/virt/coco/{host => }/tsm-core.c | 0
- 5 files changed, 6 insertions(+), 15 deletions(-)
- delete mode 100644 drivers/virt/coco/host/Kconfig
- delete mode 100644 drivers/virt/coco/host/Makefile
- rename drivers/virt/coco/{host => }/tsm-core.c (100%)
+ drivers/pci/tsm.c       | 72 ++++++++++++++++++++++++-----------------
+ include/linux/pci-tsm.h |  4 +--
+ 2 files changed, 45 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/virt/coco/Kconfig b/drivers/virt/coco/Kconfig
-index 14e7cf145d85..57248b088545 100644
---- a/drivers/virt/coco/Kconfig
-+++ b/drivers/virt/coco/Kconfig
-@@ -15,4 +15,5 @@ source "drivers/virt/coco/arm-cca-guest/Kconfig"
+diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
+index 794de2f258c3..e4a3b5b37939 100644
+--- a/drivers/pci/tsm.c
++++ b/drivers/pci/tsm.c
+@@ -415,15 +415,55 @@ static enum pci_tsm_type pci_tsm_type(struct pci_dev *pdev)
+ 	return PCI_TSM_INVALID;
+ }
  
- source "drivers/virt/coco/guest/Kconfig"
++/* lookup the Device Security Manager (DSM) pf0 for @pdev */
++static struct pci_dev *dsm_dev_get(struct pci_dev *pdev)
++{
++	struct pci_dev *uport_pf0;
++
++	struct pci_dev *pf0 __free(pci_dev_put) = pf0_dev_get(pdev);
++	if (!pf0)
++		return NULL;
++
++	if (pf0 == pdev)
++		return no_free_ptr(pf0);
++
++	/* Check that @pf0 was not initialized as PCI_TSM_DOWNSTREAM */
++	if (pf0->tsm && pf0->tsm->type == PCI_TSM_PF0)
++		return no_free_ptr(pf0);
++
++	/*
++	 * For cases where a switch may be hosting TDISP services on
++	 * behalf of downstream devices, check the first usptream port
++	 * relative to this endpoint.
++	 */
++	if (!pdev->dev.parent || !pdev->dev.parent->parent)
++		return NULL;
++
++	uport_pf0 = to_pci_dev(pdev->dev.parent->parent);
++	if (!uport_pf0->tsm)
++		return NULL;
++	return pci_dev_get(uport_pf0);
++}
++
+ /**
+  * pci_tsm_initialize() - base 'struct pci_tsm' initialization
+  * @pdev: The PCI device
+  * @tsm: context to initialize
+  */
+-void pci_tsm_initialize(struct pci_dev *pdev, struct pci_tsm *tsm)
++int pci_tsm_initialize(struct pci_dev *pdev, struct pci_tsm *tsm)
+ {
++	struct pci_dev *dsm_dev __free(pci_dev_put) = dsm_dev_get(pdev);
++	if (!dsm_dev)
++		return -EINVAL;
++
+ 	tsm->type = pci_tsm_type(pdev);
+ 	tsm->pdev = pdev;
++	/*
++	 * No reference needed because when we destroy
++	 * dsm_dev all the tdis get destroyed before that.
++	 */
++	tsm->dsm_dev = dsm_dev;
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(pci_tsm_initialize);
  
--source "drivers/virt/coco/host/Kconfig"
-+config TSM
-+	tristate
-diff --git a/drivers/virt/coco/Makefile b/drivers/virt/coco/Makefile
-index 73f1b7bc5b11..04e124b2d7cf 100644
---- a/drivers/virt/coco/Makefile
-+++ b/drivers/virt/coco/Makefile
-@@ -2,10 +2,12 @@
- #
- # Confidential computing related collateral
- #
-+
- obj-$(CONFIG_EFI_SECRET)	+= efi_secret/
- obj-$(CONFIG_ARM_PKVM_GUEST)	+= pkvm-guest/
- obj-$(CONFIG_SEV_GUEST)		+= sev-guest/
- obj-$(CONFIG_INTEL_TDX_GUEST)	+= tdx-guest/
- obj-$(CONFIG_ARM_CCA_GUEST)	+= arm-cca-guest/
--obj-$(CONFIG_TSM_REPORTS)	+= guest/
--obj-y				+= host/
-+
-+obj-$(CONFIG_TSM) 		+= tsm-core.o
-+obj-y				+= guest/
-diff --git a/drivers/virt/coco/host/Kconfig b/drivers/virt/coco/host/Kconfig
-deleted file mode 100644
-index 4fbc6ef34f12..000000000000
---- a/drivers/virt/coco/host/Kconfig
-+++ /dev/null
-@@ -1,6 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--#
--# TSM (TEE Security Manager) Common infrastructure and host drivers
--#
--config TSM
--	tristate
-diff --git a/drivers/virt/coco/host/Makefile b/drivers/virt/coco/host/Makefile
-deleted file mode 100644
-index be0aba6007cd..000000000000
---- a/drivers/virt/coco/host/Makefile
-+++ /dev/null
-@@ -1,6 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--#
--# TSM (TEE Security Manager) Common infrastructure and host drivers
+@@ -447,7 +487,8 @@ int pci_tsm_pf0_initialize(struct pci_dev *pdev, struct pci_tsm_pf0 *tsm)
+ 	}
+ 
+ 	tsm->state = PCI_TSM_INIT;
+-	pci_tsm_initialize(pdev, &tsm->tsm);
++	if (pci_tsm_initialize(pdev, &tsm->tsm))
++		return -ENODEV;
+ 
+ 	return 0;
+ }
+@@ -612,32 +653,6 @@ int pci_tsm_doe_transfer(struct pci_dev *pdev, enum pci_doe_proto type,
+ }
+ EXPORT_SYMBOL_GPL(pci_tsm_doe_transfer);
+ 
+-/* lookup the Device Security Manager (DSM) pf0 for @pdev */
+-static struct pci_dev *dsm_dev_get(struct pci_dev *pdev)
+-{
+-	struct pci_dev *uport_pf0;
 -
--obj-$(CONFIG_TSM) += tsm.o
--tsm-y := tsm-core.o
-diff --git a/drivers/virt/coco/host/tsm-core.c b/drivers/virt/coco/tsm-core.c
-similarity index 100%
-rename from drivers/virt/coco/host/tsm-core.c
-rename to drivers/virt/coco/tsm-core.c
+-	struct pci_dev *pf0 __free(pci_dev_put) = pf0_dev_get(pdev);
+-	if (!pf0)
+-		return NULL;
+-
+-	/* Check that @pf0 was not initialized as PCI_TSM_DOWNSTREAM */
+-	if (pf0->tsm && pf0->tsm->type == PCI_TSM_PF0)
+-		return no_free_ptr(pf0);
+-
+-	/*
+-	 * For cases where a switch may be hosting TDISP services on
+-	 * behalf of downstream devices, check the first usptream port
+-	 * relative to this endpoint.
+-	 */
+-	if (!pdev->dev.parent || !pdev->dev.parent->parent)
+-		return NULL;
+-
+-	uport_pf0 = to_pci_dev(pdev->dev.parent->parent);
+-	if (!uport_pf0->tsm)
+-		return NULL;
+-	return pci_dev_get(uport_pf0);
+-}
+ 
+ /* Only implement non-interruptible lock for now */
+ static struct mutex *tdi_ops_lock(struct pci_dev *pf0_dev)
+@@ -695,7 +710,6 @@ int pci_tsm_bind(struct pci_dev *pdev, struct kvm *kvm, u64 tdi_id)
+ 		return -ENXIO;
+ 
+ 	tdi->pdev = pdev;
+-	tdi->dsm_dev = dsm_dev;
+ 	tdi->kvm = kvm;
+ 	pdev->tsm->tdi = tdi;
+ 
+diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
+index 1920ca591a42..0d4303726b25 100644
+--- a/include/linux/pci-tsm.h
++++ b/include/linux/pci-tsm.h
+@@ -38,7 +38,6 @@ enum pci_tsm_type {
+  */
+ struct pci_tdi {
+ 	struct pci_dev *pdev;
+-	struct pci_dev *dsm_dev;
+ 	struct kvm *kvm;
+ };
+ 
+@@ -56,6 +55,7 @@ struct pci_tdi {
+  */
+ struct pci_tsm {
+ 	struct pci_dev *pdev;
++	struct pci_dev *dsm_dev;
+ 	enum pci_tsm_type type;
+ 	struct pci_tdi *tdi;
+ };
+@@ -173,7 +173,7 @@ void pci_tsm_core_unregister(const struct pci_tsm_ops *ops);
+ int pci_tsm_doe_transfer(struct pci_dev *pdev, enum pci_doe_proto type,
+ 			 const void *req, size_t req_sz, void *resp,
+ 			 size_t resp_sz);
+-void pci_tsm_initialize(struct pci_dev *pdev, struct pci_tsm *tsm);
++int pci_tsm_initialize(struct pci_dev *pdev, struct pci_tsm *tsm);
+ int pci_tsm_pf0_initialize(struct pci_dev *pdev, struct pci_tsm_pf0 *tsm);
+ int pci_tsm_bind(struct pci_dev *pdev, struct kvm *kvm, u64 tdi_id);
+ int pci_tsm_unbind(struct pci_dev *pdev);
 -- 
 2.43.0
 
