@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-33049-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33050-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1227B13C4C
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 16:02:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B504B13C48
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 16:01:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA9423B3300
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 13:57:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2E61D189DB06
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 13:58:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E7532701D8;
-	Mon, 28 Jul 2025 13:54:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64A87271476;
+	Mon, 28 Jul 2025 13:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CS8wbfHd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRFmya0a"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322562701C8;
-	Mon, 28 Jul 2025 13:54:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28289270557;
+	Mon, 28 Jul 2025 13:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753710859; cv=none; b=GtFRlqxJKLiwjvkw3Y6+oh8ogNfJ78UOApGBkZj0N7TaWLJkZpTOXmMnrXJelzP6z76WJl/aM5csoxNJtPPoWg1bKty/I4U5kFcC3UGXK/ceJkgaQE7kIn134LayhLdK8A0FYYmknW3+0RS20uJRW29lTAuJsilwOjesDYmRUUs=
+	t=1753710865; cv=none; b=rjihfwttdtlDbh0bdM4/VmRjIwAMB5uF0fcEG9Dd3/cyNPodS0MJdcAbHcfDYH1O9I8X1H8wod1lzMKtLZPeT6hYZBgLGNNeyTqMcPXsceXWGRIP72unrzygmCGyey6cV+GAhS5sNi9tGqRhLdG54XbnRdGlyUowhU/hsUZpFTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753710859; c=relaxed/simple;
-	bh=tQeo2gHr3WzOtcNTI9kRaE714QohDLHrOKasMXl+XLA=;
+	s=arc-20240116; t=1753710865; c=relaxed/simple;
+	bh=GTTAsUvGA0z7kzwZp8HnqrA/zR5zZGrXrfASn4SucGI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ukvIclqya2fmHuTC+FBIBacBSOvH/v+FmU1j8s8jl4L5Yr32H3a/8Et1eHTR1o99orSYCOmj+eWmGznSaYgXtvZX5Jf3W2VVDdGItbEqDX3pLcBqyUfzLa5zb2mwOdHMtwRY+XHYx3F6M6cosP1aj4z99vtUQmR3jfH/wtteIyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CS8wbfHd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D468CC116B1;
-	Mon, 28 Jul 2025 13:54:12 +0000 (UTC)
+	 MIME-Version; b=t43FNH0H5kinny5+4fz/1cmkPeWY7GuD4eKTFvOlqndeqMWCA6AIABBN1M7rvXnmHlG5jFZBA50FlltzfKwrkTB2Bvxvkp8hv7Y6LaVVZazPFm2E0OD4mYHRH4687jnllk9xiHoO/CF9SJHiNjje9yrtw+1XUp9ZrV/KvIdmInY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oRFmya0a; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A62B6C4CEF8;
+	Mon, 28 Jul 2025 13:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753710859;
-	bh=tQeo2gHr3WzOtcNTI9kRaE714QohDLHrOKasMXl+XLA=;
+	s=k20201202; t=1753710865;
+	bh=GTTAsUvGA0z7kzwZp8HnqrA/zR5zZGrXrfASn4SucGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CS8wbfHd63SixPN09zu+HTRf9TJeLndhmm0Osw+BHGeC7d7LAe+lC5vA7Pzj3eq9O
-	 2Ck9Wmd9FjBZvVRR+b/byx1tqKJxQbDc4p0oiO853/EI4Rf52TQEI8Ad0y1T9FOyII
-	 b8sSs4ukqHtc5X2P9SMOM5l94X72UtLnvE5J0aNUc3OW3Mjt1S2y1Crhxgm3ip+PLc
-	 eQoiFu5lsv0ZCYgWnz3r1RsC3jjIrNoIMuJswt83o1ReiNCuBhqRZrNyLiH1/Rep3U
-	 I/mDd7X5zqwZROVTitGUNQW6akS9ixrbkZC+lpnR6vpu/hU+g1viZn/e8prPbJN8zx
-	 5JS/inHOtTaeA==
+	b=oRFmya0a4DXWNnlwzGx9XgWsjNEjKrmnZTPJ3C1+M4bCQiN+XfE+VuUFk6lf1ntuG
+	 TwS9+LHT9UjkSgPBjnwKvHvrUFw+LRR0DmK1A8xq2sKPNVGCC735vWbf5qKtdh5MC9
+	 EEDLFeZjMT85vMe9BzRfeJl7yfc+oFUdSmx+SWduIofbW4J77g0dRtQnnUF4Kj2/4C
+	 TKWnnS39yiVqjgP/1TeH90xbYcK74Vbqvtj17MJwNThHfKrQJZtarSgPJeJmaWYOwT
+	 ZsSQKQ8ZUa8MTM7kR9aXqTs1Xu/S7Ek0reaMCeq+AtCQ/W2qMfWsXLTNsGzPAF8209
+	 5qS1uUJ0cKZfg==
 From: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
 To: linux-coco@lists.linux.dev,
 	kvmarm@lists.linux.dev
@@ -57,13 +57,11 @@ Cc: linux-pci@vger.kernel.org,
 	Marc Zyngier <maz@kernel.org>,
 	Will Deacon <will@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Subject: [RFC PATCH v1 17/38] X.509: Parse Subject Alternative Name in certificates
-Date: Mon, 28 Jul 2025 19:21:54 +0530
-Message-ID: <20250728135216.48084-18-aneesh.kumar@kernel.org>
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [RFC PATCH v1 18/38] X.509: Move certificate length retrieval into new helper
+Date: Mon, 28 Jul 2025 19:21:55 +0530
+Message-ID: <20250728135216.48084-19-aneesh.kumar@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250728135216.48084-1-aneesh.kumar@kernel.org>
 References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
@@ -73,61 +71,102 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Lukas Wunner <lukas@wunner.de>
 
-The upcoming support for PCI device authentication with CMA-SPDM
-(PCIe r6.1 sec 6.31) requires validating the Subject Alternative Name
-in X.509 certificates.
+The upcoming in-kernel SPDM library (Security Protocol and Data Model,
+https://www.dmtf.org/dsp/DSP0274) needs to retrieve the length from
+ASN.1 DER-encoded X.509 certificates.
 
-Store a pointer to the Subject Alternative Name upon parsing for
-consumption by CMA-SPDM.
+Such code already exists in x509_load_certificate_list(), so move it
+into a new helper for reuse by SPDM.
+
+Export the helper so that SPDM can be tristate.  (Some upcoming users of
+the SPDM libray may be modular, such as SCSI and ATA.)
+
+No functional change intended.
 
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Reviewed-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Dan Williams <dan.j.williams@intel.com>
 ---
- crypto/asymmetric_keys/x509_cert_parser.c | 9 +++++++++
- include/keys/x509-parser.h                | 2 ++
- 2 files changed, 11 insertions(+)
+ crypto/asymmetric_keys/x509_loader.c | 38 +++++++++++++++++++---------
+ include/keys/asymmetric-type.h       |  2 ++
+ 2 files changed, 28 insertions(+), 12 deletions(-)
 
-diff --git a/crypto/asymmetric_keys/x509_cert_parser.c b/crypto/asymmetric_keys/x509_cert_parser.c
-index 2ffe4ae90bea..ac8a01c2b9fc 100644
---- a/crypto/asymmetric_keys/x509_cert_parser.c
-+++ b/crypto/asymmetric_keys/x509_cert_parser.c
-@@ -571,6 +571,15 @@ int x509_process_extension(void *context, size_t hdrlen,
- 		return 0;
- 	}
+diff --git a/crypto/asymmetric_keys/x509_loader.c b/crypto/asymmetric_keys/x509_loader.c
+index a41741326998..25ff027fad1d 100644
+--- a/crypto/asymmetric_keys/x509_loader.c
++++ b/crypto/asymmetric_keys/x509_loader.c
+@@ -4,28 +4,42 @@
+ #include <linux/key.h>
+ #include <keys/asymmetric-type.h>
  
-+	if (ctx->last_oid == OID_subjectAltName) {
-+		if (ctx->cert->raw_san)
-+			return -EBADMSG;
++ssize_t x509_get_certificate_length(const u8 *p, unsigned long buflen)
++{
++	ssize_t plen;
 +
-+		ctx->cert->raw_san = v;
-+		ctx->cert->raw_san_size = vlen;
-+		return 0;
-+	}
++	/* Each cert begins with an ASN.1 SEQUENCE tag and must be more
++	 * than 256 bytes in size.
++	 */
++	if (buflen < 4)
++		return -EINVAL;
 +
- 	if (ctx->last_oid == OID_keyUsage) {
- 		/*
- 		 * Get hold of the keyUsage bit string
-diff --git a/include/keys/x509-parser.h b/include/keys/x509-parser.h
-index 37436a5c7526..8e450befe3b9 100644
---- a/include/keys/x509-parser.h
-+++ b/include/keys/x509-parser.h
-@@ -36,6 +36,8 @@ struct x509_certificate {
- 	unsigned	raw_subject_size;
- 	unsigned	raw_skid_size;
- 	const void	*raw_skid;		/* Raw subjectKeyId in ASN.1 */
-+	const void	*raw_san;		/* Raw subjectAltName in ASN.1 */
-+	unsigned	raw_san_size;
- 	unsigned	index;
- 	bool		seen;			/* Infinite recursion prevention */
- 	bool		verified;
++	if (p[0] != 0x30 &&
++	    p[1] != 0x82)
++		return -EINVAL;
++
++	plen = (p[2] << 8) | p[3];
++	plen += 4;
++	if (plen > buflen)
++		return -EINVAL;
++
++	return plen;
++}
++EXPORT_SYMBOL_GPL(x509_get_certificate_length);
++
+ int x509_load_certificate_list(const u8 cert_list[],
+ 			       const unsigned long list_size,
+ 			       const struct key *keyring)
+ {
+ 	key_ref_t key;
+ 	const u8 *p, *end;
+-	size_t plen;
++	ssize_t plen;
+ 
+ 	p = cert_list;
+ 	end = p + list_size;
+ 	while (p < end) {
+-		/* Each cert begins with an ASN.1 SEQUENCE tag and must be more
+-		 * than 256 bytes in size.
+-		 */
+-		if (end - p < 4)
+-			goto dodgy_cert;
+-		if (p[0] != 0x30 &&
+-		    p[1] != 0x82)
+-			goto dodgy_cert;
+-		plen = (p[2] << 8) | p[3];
+-		plen += 4;
+-		if (plen > end - p)
++		plen = x509_get_certificate_length(p, end - p);
++		if (plen < 0)
+ 			goto dodgy_cert;
+ 
+ 		key = key_create_or_update(make_key_ref(keyring, 1),
+diff --git a/include/keys/asymmetric-type.h b/include/keys/asymmetric-type.h
+index 69a13e1e5b2e..e2af07fec3c6 100644
+--- a/include/keys/asymmetric-type.h
++++ b/include/keys/asymmetric-type.h
+@@ -84,6 +84,8 @@ extern struct key *find_asymmetric_key(struct key *keyring,
+ 				       const struct asymmetric_key_id *id_2,
+ 				       bool partial);
+ 
++ssize_t x509_get_certificate_length(const u8 *p, unsigned long buflen);
++
+ int x509_load_certificate_list(const u8 cert_list[], const unsigned long list_size,
+ 			       const struct key *keyring);
+ 
 -- 
 2.43.0
 
