@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-33001-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33002-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10478B13652
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 10:24:58 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A79BEB13656
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 10:25:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3AEF81899B87
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 08:25:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B5BAA7A3B8A
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 08:23:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF99C2356C7;
-	Mon, 28 Jul 2025 08:24:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19BA0237A4F;
+	Mon, 28 Jul 2025 08:24:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Keksb5hB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="srjVlvxl"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9558223535F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9EA2367D5;
 	Mon, 28 Jul 2025 08:24:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753691088; cv=none; b=UipmtD7cH5IovpXXjf+qmgGKaql/LeToemtYX4bY1d6Xdk5//YLw2HTI60TIjhML3oSsOqpfHRG57ZfU+2xqZdyRgjj2y6FN7pCh3LYSvNX9ML65qrtFiAy7O0LGS22msQF4XWGFG5Gy1M2HCBduf6zk+Xu7GDh6jP7hZA2En+E=
+	t=1753691089; cv=none; b=jjf90Wpl+LO8dC2AT+rnopu8f/c6sz21VGQmaH/xvjup7DPOK5gGgKKlRiGyDwunf+5KfiXls+ht17hJ04MAKHZzUq42iP5MMH/jPtO0rBG3GvRKYLwEEiDGwUI6rwF6G807tS3MnegUpjTR7ek2qbGhLSGhqBnTVGoPEpV4Hr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753691088; c=relaxed/simple;
-	bh=339S8W+LIbjLrc20LVLjOM20MZJcWx7ggezRpXxT290=;
+	s=arc-20240116; t=1753691089; c=relaxed/simple;
+	bh=DDHEw2l9COqoOnSii06vLrGixN7NrFhwB0y2CTTbV2w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=spKFkSHrjMDHkKYn74NbWNECtAgrKK4EfMJQbd13Wc7Q6HwhRG4EK21hFjoEPe4g166fUAbLeIebNHxnn8n/uNia5ttPa/0QQtIpWySc+xgNlhIqz6RajUwkOTWXWJ4xak+qoySVrF4++p2Va6OMgUW1ngMQXsnwh2sIQyPBF8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Keksb5hB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93042C4CEF9;
-	Mon, 28 Jul 2025 08:24:47 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=Y4FfA0fFHdXaOugoaL3dUD8HEKUVDr9tBn8UL0v9MlBGPlJzNvXsuvBR0ieVrf3Jw9CikRGpgXUO6nWkNNftym23uOPCbOG3f40vYdfWMIJ4QgnJxZ7qvbSoJQxlocV/gGCz35MzFoprmGySfJrSKS4jl1x00QAf/OK8ig1J670=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=srjVlvxl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F48AC4AF0B;
+	Mon, 28 Jul 2025 08:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1753691088;
-	bh=339S8W+LIbjLrc20LVLjOM20MZJcWx7ggezRpXxT290=;
+	bh=DDHEw2l9COqoOnSii06vLrGixN7NrFhwB0y2CTTbV2w=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Keksb5hBboY7LZ/TRxonenEr39KjJj2lrEO06nYmBJmzdKjWAZZjlRnAEfp9y8tGW
-	 lvoxJBKn37mhQMYn8quJt1/klA3Irm9/BH4roP86BfhUOoz+oXxipVKiWjEzhna8SW
-	 PgerGsO1jpZHxCch9pO5rhcRwkaymMCFa1oZwe0xnxHJNPHyAai2fJa0MTeeX+Xwry
-	 ActoKKkoL8BUyxQpVeTLeThD5t477BQeXqNk/AhlGT1Y5xkTinGKESIQlYmMfC924D
-	 4PfMzLWNYcvXfP94YamRzAXRx8vazDuxZ3utreP65y0GNYk30Ag/Lxi858qO582Q/q
-	 q2uvb7UzalM9w==
+	b=srjVlvxlluDoh0Vj/xjN5mI3mQSTgoM1mo//6tuiu1tHx51su7COlep1BroTMmKj6
+	 lcwCqto57s1tx7mHEJWsYlbaVqGaGNcTwIaWf1Wn+ovuJv0Iq84ZaqIkUfk+yFAqP1
+	 Ys5Thwto14y/A7TtLXAo7alqS+POX+TnBrAXAzgqkQTijkJyLSfQrR3kRQEaOKOckC
+	 3la8bJXllKcVxheHB8oj6LUaMmomgF2+pmOFZ0VGaH0aMdul93AzP0dJi1TTC7CUU8
+	 hJi4NciHgjJKMjxIfnCFytoqmwODc5EM+83MwcCAYBLh7xU8x6J+mlCQs/2RZ51Nju
+	 GvOZpikNOjnyw==
 From: Chris Li <chrisl@kernel.org>
-Date: Mon, 28 Jul 2025 01:24:31 -0700
-Subject: [PATCH RFC 01/25] PCI/LUO: Register with Liveupdate Orchestrator
+Date: Mon, 28 Jul 2025 01:24:32 -0700
+Subject: [PATCH RFC 02/25] PCI/LUO: Add struct dev_liveupdate
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250728-luo-pci-v1-1-955b078dd653@kernel.org>
+Message-Id: <20250728-luo-pci-v1-2-955b078dd653@kernel.org>
 References: <20250728-luo-pci-v1-0-955b078dd653@kernel.org>
 In-Reply-To: <20250728-luo-pci-v1-0-955b078dd653@kernel.org>
 To: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -69,87 +69,110 @@ Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
 X-Mailer: b4 0.14.2
 
-Register PCI subsystem with the Liveupdate Orchestrator
-and provide noop liveupdate callbacks.
+Introduce struct dev_liveupdate and add it to struct device.
+
+Use the new struct to track a device's liveupdate states.
+- requested: The device is requested for a live update.
+- depended:  One of the child devices is requested for live update.
+
+When the device is requested, the dev->lu.requested will
+set to 1.
 
 Signed-off-by: Chris Li <chrisl@kernel.org>
 ---
- drivers/pci/Makefile     |  1 +
- drivers/pci/liveupdate.c | 54 ++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 55 insertions(+)
+ drivers/pci/liveupdate.c       |  3 +++
+ include/linux/dev_liveupdate.h | 35 +++++++++++++++++++++++++++++++++++
+ include/linux/device.h         |  6 ++++++
+ 3 files changed, 44 insertions(+)
 
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 67647f1880fb8fb0629d680398f5b88d69aac660..aa1bac7aed7d12c641a6b55e56176fb3cdde4c91 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_PCI_DOE)		+= doe.o
- obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) += of_property.o
- obj-$(CONFIG_PCI_NPEM)		+= npem.o
- obj-$(CONFIG_PCIE_TPH)		+= tph.o
-+obj-$(CONFIG_LIVEUPDATE)	+= liveupdate.o
- 
- # Endpoint library must be initialized before its users
- obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
 diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..86b4f3a2fb44781c6e323ba029db510450556fa9
---- /dev/null
+index 86b4f3a2fb44781c6e323ba029db510450556fa9..1c69adf412255c8ee5bc6db588ff04b1642e8e19 100644
+--- a/drivers/pci/liveupdate.c
 +++ b/drivers/pci/liveupdate.c
-@@ -0,0 +1,54 @@
-+// SPDX-License-Identifier: GPL-2.0
+@@ -6,8 +6,11 @@
+  */
+ 
+ #define pr_fmt(fmt) "PCI liveupdate: " fmt
++#define dev_fmt(fmt) "PCI liveupdate: " fmt
+ 
++#include <linux/types.h>
+ #include <linux/liveupdate.h>
++#include "pci.h"
+ 
+ #define PCI_SUBSYSTEM_NAME "pci"
+ 
+diff --git a/include/linux/dev_liveupdate.h b/include/linux/dev_liveupdate.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..057407c030b0872bfa8cd666e6ffc305f7aa4083
+--- /dev/null
++++ b/include/linux/dev_liveupdate.h
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +
 +/*
 + * Copyright (c) 2025, Google LLC.
++ * Pasha Tatashin <pasha.tatashin@soleen.com>
 + * Chris Li <chrisl@kernel.org>
 + */
-+
-+#define pr_fmt(fmt) "PCI liveupdate: " fmt
++#ifndef _LINUX_DEV_LIVEUPDATE_H
++#define _LINUX_DEV_LIVEUPDATE_H
 +
 +#include <linux/liveupdate.h>
 +
-+#define PCI_SUBSYSTEM_NAME "pci"
++#ifdef CONFIG_LIVEUPDATE
 +
-+static int pci_liveupdate_prepare(void *arg, u64 *data)
-+{
-+	pr_info("prepare data[%llx]\n", *data);
-+	return 0;
-+}
-+
-+static int pci_liveupdate_freeze(void *arg, u64 *data)
-+{
-+	pr_info("freeze data[%llx]\n", *data);
-+	return 0;
-+}
-+
-+static void pci_liveupdate_cancel(void *arg, u64 data)
-+{
-+	pr_info("cancel data[%llx]\n", data);
-+}
-+
-+static void pci_liveupdate_finish(void *arg, u64 data)
-+{
-+	pr_info("finish data[%llx]\n", data);
-+}
-+
-+struct liveupdate_subsystem pci_liveupdate_ops = {
-+	.prepare = pci_liveupdate_prepare,
-+	.freeze = pci_liveupdate_freeze,
-+	.cancel = pci_liveupdate_cancel,
-+	.finish = pci_liveupdate_finish,
-+	.name = PCI_SUBSYSTEM_NAME,
++/**
++ * struct dev_liveupdate - Device state for live update operations
++ * @lu_next:	List head for linking the device into live update
++ *		related lists (e.g., a list of devices participating
++ *		in a live update sequence).
++ * @requested:	Set if a live update has been requested for this
++ *		device (i.e. device will participate in live update).
++ * @depended:	Set if the device participtate the live update due to
++ *		one of its child device is requested in live update.
++ *
++ * This structure holds the state information required for performing
++ * live update operations on a device. It is embedded within a struct device.
++ */
++struct dev_liveupdate {
++	struct list_head lu_next;
++	bool requested:1;
++	bool depended:1;
 +};
 +
-+static int __init pci_liveupdate_init(void)
-+{
-+	int ret;
++#endif /* CONFIG_LIVEUPDATE */
++#endif /* _LINUX_DEV_LIVEUPDATE_H */
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 4940db137fffff4ceacf819b32433a0f4898b125..4aee7912218865168a73fe4c6d3a82646b8dd86f 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -21,6 +21,7 @@
+ #include <linux/lockdep.h>
+ #include <linux/compiler.h>
+ #include <linux/types.h>
++#include <linux/dev_liveupdate.h>
+ #include <linux/mutex.h>
+ #include <linux/pm.h>
+ #include <linux/atomic.h>
+@@ -508,6 +509,7 @@ struct device_physical_location {
+  * @pm_domain:	Provide callbacks that are executed during system suspend,
+  * 		hibernation, system resume and during runtime PM transitions
+  * 		along with subsystem-level and driver-level callbacks.
++ * @lu:		Live update state.
+  * @em_pd:	device's energy model performance domain
+  * @pins:	For device pin management.
+  *		See Documentation/driver-api/pin-control.rst for details.
+@@ -603,6 +605,10 @@ struct device {
+ 	struct dev_pm_info	power;
+ 	struct dev_pm_domain	*pm_domain;
+ 
++#ifdef CONFIG_LIVEUPDATE
++	struct dev_liveupdate	lu;
++#endif
 +
-+	ret = liveupdate_register_subsystem(&pci_liveupdate_ops);
-+	if (ret && liveupdate_state_updated())
-+		panic("PCI liveupdate: Register subsystem failed: %d", ret);
-+	WARN(ret, "PCI liveupdate: Register subsystem failed %d", ret);
-+	return 0;
-+}
-+late_initcall_sync(pci_liveupdate_init);
+ #ifdef CONFIG_ENERGY_MODEL
+ 	struct em_perf_domain	*em_pd;
+ #endif
 
 -- 
 2.50.1.487.gc89ff58d15-goog
