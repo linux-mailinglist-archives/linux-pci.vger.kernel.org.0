@@ -1,139 +1,151 @@
-Return-Path: <linux-pci+bounces-33077-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33078-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 523BFB13FA4
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 18:14:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFB24B14085
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 18:41:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3B7727A24CE
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 16:11:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BEBF3A2A89
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 16:41:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 292F925D53B;
-	Mon, 28 Jul 2025 16:12:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D14632749C2;
+	Mon, 28 Jul 2025 16:41:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="NuShxQGB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+keFTh/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DBB1DE4EF;
-	Mon, 28 Jul 2025 16:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AED218ABD;
+	Mon, 28 Jul 2025 16:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753719179; cv=none; b=L6P2wcly+3L7QOB2JRl562OHItRyvq5IYLE53a85uq301egSx3hU4WJsCP3zXZp0yET9iVYdANJl6JNWw51YBXmIaiSM09ElCUK92ci7BvMBUz+mk0ENLb2jXLU90X/yQB5AwNNno60T4806K0yNYmVB6RFePo0Ph70Hxt6BsaU=
+	t=1753720903; cv=none; b=IrOANAseTZ078tKj5fGWHYFH5lauqmIoNSsQKk0vLbcRCgSZBEyYr+WYN/tyGSxdgB9dFfcElDMZqqVhMLEQlseMD3aodittTyPFrLvmg34fzmDz9JSoeg3WuALLsO1T7YxqhucjErftKZjsAUU0+k9qW/TZ0knWicKnFpnwNLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753719179; c=relaxed/simple;
-	bh=R0FQOHpsHRyxpvqcJA2ITt/gHmHam74Pd/G3iRxqIRA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=G2TJaFP6nzCix3Jbl/SgulMa11AMhmll7uo1ZxTUH07+TGNppNub0ZxUqjaYV9T9FiRQU7J6d3zWPo1Yk1joul8OlvpEqJa4ZxKyaN3nZ77kxL+RReUW6eIy7s0K1DLyvoxnQfMSY4Wjf96KGsJf9VggumpdcN1bgk3XIxng2yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=NuShxQGB; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=VSF5wX9vjIP6fRF1ybWxqYJSZXcEgqAR8cCPBeo7HdU=; b=NuShxQGBV5IaVLB+r9+8Z5iKvq
-	dFIGr5esAaj+hCO3a4jw+w6/OlzvIoB6kvaxTwpkrr6lmTchzYodZvaI+lNSnKbAzMm0EglMM03Vv
-	crZTKZAcuqrSFjxZewSYCzRT/HYo/mkFbMKO7es26V5QoeFZvRVj7QgbRx/G4WDAZX6VXrq9/YsDD
-	xRRo8ObEJbFOXuNbyFVv5S0ZE/n4R76NpOr3WVRG9mlUx6T3DEJBkwhVcxvUHoaulcQa3MefNqBEW
-	9lVNjow5xoGlNwMQVVuWUtFAwKyMGUtxejZnJC6r2JA2ZkfHlVUptsg1l/w1rFXLBfEBhBC4DZjlx
-	SCCTlj+w==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <logang@deltatee.com>)
-	id 1ugQSy-008Nxz-1h;
-	Mon, 28 Jul 2025 10:12:45 -0600
-Message-ID: <d69e0d74-285e-4cde-a2e4-a803accfa9e1@deltatee.com>
-Date: Mon, 28 Jul 2025 10:12:31 -0600
+	s=arc-20240116; t=1753720903; c=relaxed/simple;
+	bh=7x0ZgIgFMhmGblvNn1rp9l0J3jLs/NKo357QqFEU40c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dBOknKt0Tlyw0y72pRRvVlIzOqUJ9DSEwXjKByOC0FHLakpzUXRv+G2hj36n3Anep9plgnL5wufoFfMHOBQzqITVoB4Xiy5jGob0pPwnPbkS+Ml2K5p+S2S66AhnPiwpcUAVsi+IZmqhlhjMby7g+2k2oGD303Cu+BMA46qivKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+keFTh/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51E4FC4CEE7;
+	Mon, 28 Jul 2025 16:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753720902;
+	bh=7x0ZgIgFMhmGblvNn1rp9l0J3jLs/NKo357QqFEU40c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B+keFTh/H3uyJm+2CRXywKicPx1XFBBkxeKmrZZbdSdo7TbhwSKWM+9PVaAkV/Ggd
+	 rdbs8jBkHbT/8OTgeGMPL4gfUOW2ABlcD8WUcg8AnFQUJTXwNmVXpc6MVeqX+1gX/B
+	 Hl4YyyFNqJKjrMehvwoAGQununhgEiDlRgPJ4pHhRsT2e9nnS0dUD7g029zGYqMvz0
+	 +n1X/yXScSmTwLjOGstVCV5NVXNowOdBanEpgP5gJZIZzUwp2PqhdbrI1ndD1ANzQ6
+	 U3SK+z5/iiu7H8t8oy3Nyrh+r+SHqvFdQXzv1CHbtq87l4SZmHe8/P8OoUYzv0vSLF
+	 T/9RjFtCR33XQ==
+Date: Mon, 28 Jul 2025 19:41:36 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Logan Gunthorpe <logang@deltatee.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, Christoph Hellwig <hch@lst.de>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
+	Jens Axboe <axboe@kernel.dk>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 05/10] PCI/P2PDMA: Export pci_p2pdma_map_type() function
+Message-ID: <20250728164136.GD402218@unreal>
+References: <cover.1753274085.git.leonro@nvidia.com>
+ <82e62eb59afcd39b68ae143573d5ed113a92344e.1753274085.git.leonro@nvidia.com>
+ <20250724080313.GA31887@lst.de>
+ <20250724081321.GT402218@unreal>
+ <b32ae619-6c4a-46fc-a368-6ad4e245d581@deltatee.com>
+ <20250727190514.GG7551@nvidia.com>
+ <d69e0d74-285e-4cde-a2e4-a803accfa9e1@deltatee.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Alex Williamson <alex.williamson@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
- Jens Axboe <axboe@kernel.dk>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
- <jglisse@redhat.com>, Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mm@kvack.org, linux-pci@vger.kernel.org,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>,
- Vivek Kasireddy <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
-References: <cover.1753274085.git.leonro@nvidia.com>
- <82e62eb59afcd39b68ae143573d5ed113a92344e.1753274085.git.leonro@nvidia.com>
- <20250724080313.GA31887@lst.de> <20250724081321.GT402218@unreal>
- <b32ae619-6c4a-46fc-a368-6ad4e245d581@deltatee.com>
- <20250727190514.GG7551@nvidia.com>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20250727190514.GG7551@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: jgg@nvidia.com, leon@kernel.org, hch@lst.de, alex.williamson@redhat.com, akpm@linux-foundation.org, bhelgaas@google.com, christian.koenig@amd.com, dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, axboe@kernel.dk, jglisse@redhat.com, joro@8bytes.org, kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, m.szyprowski@samsung.com, robin.murphy@arm.com, sumit.semwal@linaro.org, vivek.kasireddy@intel.com, will@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH 05/10] PCI/P2PDMA: Export pci_p2pdma_map_type() function
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d69e0d74-285e-4cde-a2e4-a803accfa9e1@deltatee.com>
 
-
-
-On 2025-07-27 13:05, Jason Gunthorpe wrote:
-> On Fri, Jul 25, 2025 at 10:30:46AM -0600, Logan Gunthorpe wrote:
->>
->>
->> On 2025-07-24 02:13, Leon Romanovsky wrote:
->>> On Thu, Jul 24, 2025 at 10:03:13AM +0200, Christoph Hellwig wrote:
->>>> On Wed, Jul 23, 2025 at 04:00:06PM +0300, Leon Romanovsky wrote:
->>>>> From: Leon Romanovsky <leonro@nvidia.com>
->>>>>
->>>>> Export the pci_p2pdma_map_type() function to allow external modules
->>>>> and subsystems to determine the appropriate mapping type for P2PDMA
->>>>> transfers between a provider and target device.
->>>>
->>>> External modules have no business doing this.
->>>
->>> VFIO PCI code is built as module. There is no way to access PCI p2p code
->>> without exporting functions in it.
->>
->> The solution that would make more sense to me would be for either
->> dma_iova_try_alloc() or another helper in dma-iommu.c to handle the
->> P2PDMA case.
+On Mon, Jul 28, 2025 at 10:12:31AM -0600, Logan Gunthorpe wrote:
 > 
-> This has nothing to do with dma-iommu.c, the decisions here still need
-> to be made even if dma-iommu.c is not compiled in.
+> 
+> On 2025-07-27 13:05, Jason Gunthorpe wrote:
+> > On Fri, Jul 25, 2025 at 10:30:46AM -0600, Logan Gunthorpe wrote:
+> >>
+> >>
+> >> On 2025-07-24 02:13, Leon Romanovsky wrote:
+> >>> On Thu, Jul 24, 2025 at 10:03:13AM +0200, Christoph Hellwig wrote:
+> >>>> On Wed, Jul 23, 2025 at 04:00:06PM +0300, Leon Romanovsky wrote:
+> >>>>> From: Leon Romanovsky <leonro@nvidia.com>
+> >>>>>
+> >>>>> Export the pci_p2pdma_map_type() function to allow external modules
+> >>>>> and subsystems to determine the appropriate mapping type for P2PDMA
+> >>>>> transfers between a provider and target device.
+> >>>>
+> >>>> External modules have no business doing this.
+> >>>
+> >>> VFIO PCI code is built as module. There is no way to access PCI p2p code
+> >>> without exporting functions in it.
+> >>
+> >> The solution that would make more sense to me would be for either
+> >> dma_iova_try_alloc() or another helper in dma-iommu.c to handle the
+> >> P2PDMA case.
+> > 
+> > This has nothing to do with dma-iommu.c, the decisions here still need
+> > to be made even if dma-iommu.c is not compiled in.
+> 
+> Doesn't it though? Every single call in patch 10 to the newly exported
+> PCI functions calls into the the dma-iommu functions. If there were
+> non-iommu paths then I would expect the code would use the regular DMA
+> api directly which would then call in to dma-iommu.
 
-Doesn't it though? Every single call in patch 10 to the newly exported
-PCI functions calls into the the dma-iommu functions. If there were
-non-iommu paths then I would expect the code would use the regular DMA
-api directly which would then call in to dma-iommu.
+If p2p type is PCI_P2PDMA_MAP_BUS_ADDR, there will no dma-iommu and DMA
+at all.
 
-I can't imagine a use case where someone would want to call the p2pdma
-functions to map p2p memory and not have a similar path to do the exact
-same mapping with vanilla memory and thus call the DMA API. And it seems
-much better to me to export higher level functions to drivers that take
-care of the details correctly than to expose the nuts and bolts to every
-driver.
-
-The thing that seems special to me about VFIO is that it is calling
-directly into dma-iommu code to setup unique mappings as opposed to
-using the higher level DMA API. I don't see in what way it is special
-that it needs to know intimate details of the memory it's mapping and
-have different paths to map different types of memory. That's what the
-dma layer is for.
-
-Logan
-
++static int vfio_pci_dma_buf_attach(struct dma_buf *dmabuf,
++				   struct dma_buf_attachment *attachment)
++{
++	struct vfio_pci_dma_buf *priv = dmabuf->priv;
++
++	if (!attachment->peer2peer)
++		return -EOPNOTSUPP;
++
++	if (priv->revoked)
++		return -ENODEV;
++
++	switch (pci_p2pdma_map_type(priv->vdev->provider, attachment->dev)) {
++	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
++		break;
++	case PCI_P2PDMA_MAP_BUS_ADDR:
++		/*
++		 * There is no need in IOVA at all for this flow.
++		 * We rely on attachment->priv == NULL as a marker
++		 * for this mode.
++		 */
++		return 0;
++	default:
++		return -EINVAL;
++	}
++
++	attachment->priv = kzalloc(sizeof(struct dma_iova_state), GFP_KERNEL);
++	if (!attachment->priv)
++		return -ENOMEM;
++
++	dma_iova_try_alloc(attachment->dev, attachment->priv, 0, priv->phys_vec.len);
++	return 0;
++}
 
