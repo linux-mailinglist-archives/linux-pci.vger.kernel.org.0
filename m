@@ -1,162 +1,139 @@
-Return-Path: <linux-pci+bounces-33076-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33077-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65FACB13D3B
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 16:34:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 523BFB13FA4
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 18:14:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E84BD16830E
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 14:33:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3B7727A24CE
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 16:11:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C71CB264623;
-	Mon, 28 Jul 2025 14:33:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 292F925D53B;
+	Mon, 28 Jul 2025 16:12:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="EugBp2bK"
+	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="NuShxQGB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A13237163
-	for <linux-pci@vger.kernel.org>; Mon, 28 Jul 2025 14:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DBB1DE4EF;
+	Mon, 28 Jul 2025 16:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753713202; cv=none; b=M9ia/hMq61DWkcjt0PDLAfVdPFEwpoPx2q2A0jDqiKuLQo22hcVB7nl9COHoS9eTgzFg6xewdVgszfTfoUIV68JHK1BeLegI7++asW84wtbnmWv/VlBKUFzWsd7kPjfBjZDeWFxkxdITxOSRSzuTA1L7S6Hy51vkBIYnwa3reG0=
+	t=1753719179; cv=none; b=L6P2wcly+3L7QOB2JRl562OHItRyvq5IYLE53a85uq301egSx3hU4WJsCP3zXZp0yET9iVYdANJl6JNWw51YBXmIaiSM09ElCUK92ci7BvMBUz+mk0ENLb2jXLU90X/yQB5AwNNno60T4806K0yNYmVB6RFePo0Ph70Hxt6BsaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753713202; c=relaxed/simple;
-	bh=W9cZd84LF6duF0602DMOOstiN56aNMhgPt1nX1d9jRE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oqHGc+EwM13oTcAoxho1Bnix+ecZARaHJzK5flK1ZnHe2/sv9ZYPj2bLtrGdD8MFf2LGRYL7zpPvNDU1fcqAMVx/IZWKMvo4hb43izWkqdVVeWfbcCpNi8HhaV2nLQUFQCDnbYeZcq3FYsI8vdTvQ0I3A1etp1Fa1Rsnq41p1eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=EugBp2bK; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-7074bad055eso4433246d6.3
-        for <linux-pci@vger.kernel.org>; Mon, 28 Jul 2025 07:33:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1753713200; x=1754318000; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VWXJt0ksyO0+qZpgSvPEVSB9f2WnFWOci7NBGJx/i70=;
-        b=EugBp2bKZzZS1D0wsHPwDGKmbt6hCvQ0lYjaRuSyVoMbQqXNRL4KPYOSVQlz+nqN9w
-         EitNkB7XMRAlfRmiX0v9POBps1zB5HCoCOvywJ2qiymUQ85UQgVNJcu0fskwuKay1YzD
-         uAqC4l6m6p4AiE+JvwedqRqS38Cbk1kZ2KXlsrHRIfH69xtxI7XmWDvQSK60EzCqvkpu
-         piGZfwduta7VOMAFLaYYY+DeVb+I7DS1U6a7dUBXXHj9WmFg9bueAaCVAU9FJlKXzyrl
-         5KvTx9/FYvCaCd3RG9A+Edx/iZqBawjHbsDJQv3xa1NkDqAscTfbYO8rMizr+3YvTijD
-         1qrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753713200; x=1754318000;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VWXJt0ksyO0+qZpgSvPEVSB9f2WnFWOci7NBGJx/i70=;
-        b=Enzu/Byt9W3f6HOXa8mUNR22YDFNkFWXa1OthMy+yZ4w/0uYLaeb0Objj0dO5DtVxn
-         dx5X5gE0YnJTqLyaibuAHEXOEezHOCDzTAqpKfvO17ytSN4GSEG78XypAO/vWrjuaH8T
-         NhKFJxHL17339ocwoMHI4ZKNUN/p+54ORgY5/iAnQoSnnR5viPuyNVMWrHB044tiiPGI
-         tJr8jLaETjtrjUrsWgI//9pey942d4FB7wH2U6MrHjvYbaFrn9NxdLCVMOL+oSpgIF3i
-         hNukZ5fbTWnqmS1N/X3zGa3s8lsm2myHGHv0tbembxdzF/vxg+M1h9hf1UbYgKrZlG2L
-         7H2A==
-X-Forwarded-Encrypted: i=1; AJvYcCX/tAwCvlBqdMvNMz2r+Mf7AjkgqHqYVZCN5q+6hkAiIVsxkO/e2CcAHJmFbb3VGqWEkkLavyTqcCc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdHrPV5Boq3bl/xiQCa83kR2eVF8vLjS3PuHMa7817YGhznBE7
-	NURhLXYaUHMWmPMRhaGZ3iuEdXypzl2lgOfCFZqtJ7Zf9eyVjrdBryi7r33lB4DMrTQ=
-X-Gm-Gg: ASbGnctdhFG0QODmwDUpngqP3e310elOb3Oyg0S/6OC5DYqIav7yxIOA2/Xpy4eTAB3
-	6RN+DMSLI6INHNhQoO8lxQZZ0Js/yWrUrNaSLoCkaFjH7HU9b3JkqM2ZhilbihUuZoWIJRF7LvH
-	EBglQ9znQK7qMkL5GtAPNbQNB7r2tQMCXtAqbWF0+2KTNpQEXgFA6rxhEC1dIHLd1yB/I4dGu/c
-	T7xwNUoxXDSHcsZl+hJbWM3emP2CnzkjaJVpH9eIDxhCAS6R4+87VhffbZ+lbgbtdFe0iLIThvL
-	oA+judmcZzyogmIQ3lgC0oo9duzp8Vwj1VM4+Nc1WqZfqQIgDTM6gLpxSqQpGcAv3s850c1x6Vq
-	/+IexkoYXOP8MsTP7Xj/iMYtcBZJ/5xo0LKOuvv4qtGcooMUw4eZOU2LAP1X2/s0/MDcVddbsJK
-	i69+c=
-X-Google-Smtp-Source: AGHT+IHMY4rGulXXEHfYzZtPMGVblgwyt5UUI5t558D0JMhsu4TWVCWFWjqwz9Xtl5YNFBAdYTlQIg==
-X-Received: by 2002:a05:6214:224a:b0:707:9eb:d483 with SMTP id 6a1803df08f44-707205a1bcemr162291726d6.27.1753713199708;
-        Mon, 28 Jul 2025 07:33:19 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-7074c37e84asm9044456d6.19.2025.07.28.07.33.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Jul 2025 07:33:19 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1ugOuk-00000000Ayl-2Dx4;
-	Mon, 28 Jul 2025 11:33:18 -0300
-Date: Mon, 28 Jul 2025 11:33:18 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
-Cc: linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	aik@amd.com, lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [RFC PATCH v1 04/38] tsm: Support DMA Allocation from private
- memory
-Message-ID: <20250728143318.GD26511@ziepe.ca>
-References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
- <20250728135216.48084-5-aneesh.kumar@kernel.org>
+	s=arc-20240116; t=1753719179; c=relaxed/simple;
+	bh=R0FQOHpsHRyxpvqcJA2ITt/gHmHam74Pd/G3iRxqIRA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Subject; b=G2TJaFP6nzCix3Jbl/SgulMa11AMhmll7uo1ZxTUH07+TGNppNub0ZxUqjaYV9T9FiRQU7J6d3zWPo1Yk1joul8OlvpEqJa4ZxKyaN3nZ77kxL+RReUW6eIy7s0K1DLyvoxnQfMSY4Wjf96KGsJf9VggumpdcN1bgk3XIxng2yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=NuShxQGB; arc=none smtp.client-ip=204.191.154.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+	MIME-Version:Date:Message-ID:content-disposition;
+	bh=VSF5wX9vjIP6fRF1ybWxqYJSZXcEgqAR8cCPBeo7HdU=; b=NuShxQGBV5IaVLB+r9+8Z5iKvq
+	dFIGr5esAaj+hCO3a4jw+w6/OlzvIoB6kvaxTwpkrr6lmTchzYodZvaI+lNSnKbAzMm0EglMM03Vv
+	crZTKZAcuqrSFjxZewSYCzRT/HYo/mkFbMKO7es26V5QoeFZvRVj7QgbRx/G4WDAZX6VXrq9/YsDD
+	xRRo8ObEJbFOXuNbyFVv5S0ZE/n4R76NpOr3WVRG9mlUx6T3DEJBkwhVcxvUHoaulcQa3MefNqBEW
+	9lVNjow5xoGlNwMQVVuWUtFAwKyMGUtxejZnJC6r2JA2ZkfHlVUptsg1l/w1rFXLBfEBhBC4DZjlx
+	SCCTlj+w==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <logang@deltatee.com>)
+	id 1ugQSy-008Nxz-1h;
+	Mon, 28 Jul 2025 10:12:45 -0600
+Message-ID: <d69e0d74-285e-4cde-a2e4-a803accfa9e1@deltatee.com>
+Date: Mon, 28 Jul 2025 10:12:31 -0600
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250728135216.48084-5-aneesh.kumar@kernel.org>
+User-Agent: Mozilla Thunderbird
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
+ <jglisse@redhat.com>, Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-mm@kvack.org, linux-pci@vger.kernel.org,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
+References: <cover.1753274085.git.leonro@nvidia.com>
+ <82e62eb59afcd39b68ae143573d5ed113a92344e.1753274085.git.leonro@nvidia.com>
+ <20250724080313.GA31887@lst.de> <20250724081321.GT402218@unreal>
+ <b32ae619-6c4a-46fc-a368-6ad4e245d581@deltatee.com>
+ <20250727190514.GG7551@nvidia.com>
+Content-Language: en-CA
+From: Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20250727190514.GG7551@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: jgg@nvidia.com, leon@kernel.org, hch@lst.de, alex.williamson@redhat.com, akpm@linux-foundation.org, bhelgaas@google.com, christian.koenig@amd.com, dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, axboe@kernel.dk, jglisse@redhat.com, joro@8bytes.org, kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, m.szyprowski@samsung.com, robin.murphy@arm.com, sumit.semwal@linaro.org, vivek.kasireddy@intel.com, will@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Level: 
+Subject: Re: [PATCH 05/10] PCI/P2PDMA: Export pci_p2pdma_map_type() function
+X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-On Mon, Jul 28, 2025 at 07:21:41PM +0530, Aneesh Kumar K.V (Arm) wrote:
-> @@ -48,3 +49,12 @@ int set_memory_decrypted(unsigned long addr, int numpages)
->  	return crypt_ops->decrypt(addr, numpages);
->  }
->  EXPORT_SYMBOL_GPL(set_memory_decrypted);
-> +
-> +bool force_dma_unencrypted(struct device *dev)
-> +{
-> +	if (dev->tdi_enabled)
-> +		return false;
 
-Is this OK? I see code like this:
 
-static inline dma_addr_t phys_to_dma_direct(struct device *dev,
-		phys_addr_t phys)
-{
-	if (force_dma_unencrypted(dev))
-		return phys_to_dma_unencrypted(dev, phys);
-	return phys_to_dma(dev, phys);
+On 2025-07-27 13:05, Jason Gunthorpe wrote:
+> On Fri, Jul 25, 2025 at 10:30:46AM -0600, Logan Gunthorpe wrote:
+>>
+>>
+>> On 2025-07-24 02:13, Leon Romanovsky wrote:
+>>> On Thu, Jul 24, 2025 at 10:03:13AM +0200, Christoph Hellwig wrote:
+>>>> On Wed, Jul 23, 2025 at 04:00:06PM +0300, Leon Romanovsky wrote:
+>>>>> From: Leon Romanovsky <leonro@nvidia.com>
+>>>>>
+>>>>> Export the pci_p2pdma_map_type() function to allow external modules
+>>>>> and subsystems to determine the appropriate mapping type for P2PDMA
+>>>>> transfers between a provider and target device.
+>>>>
+>>>> External modules have no business doing this.
+>>>
+>>> VFIO PCI code is built as module. There is no way to access PCI p2p code
+>>> without exporting functions in it.
+>>
+>> The solution that would make more sense to me would be for either
+>> dma_iova_try_alloc() or another helper in dma-iommu.c to handle the
+>> P2PDMA case.
+> 
+> This has nothing to do with dma-iommu.c, the decisions here still need
+> to be made even if dma-iommu.c is not compiled in.
 
-What are the ARM rules for generating dma addreses?
+Doesn't it though? Every single call in patch 10 to the newly exported
+PCI functions calls into the the dma-iommu functions. If there were
+non-iommu paths then I would expect the code would use the regular DMA
+api directly which would then call in to dma-iommu.
 
-1) Device is T=0, memory is unencrypted, call dma_addr_unencrypted()
-   and do "top bit IBA set"
+I can't imagine a use case where someone would want to call the p2pdma
+functions to map p2p memory and not have a similar path to do the exact
+same mapping with vanilla memory and thus call the DMA API. And it seems
+much better to me to export higher level functions to drivers that take
+care of the details correctly than to expose the nuts and bolts to every
+driver.
 
-2) Device is T=1, memory is encrypted, use the phys_to_dma() normally
+The thing that seems special to me about VFIO is that it is calling
+directly into dma-iommu code to setup unique mappings as opposed to
+using the higher level DMA API. I don't see in what way it is special
+that it needs to know intimate details of the memory it's mapping and
+have different paths to map different types of memory. That's what the
+dma layer is for.
 
-3) Device it T=1, memory is uncrypted, use the phys_to_dma()
-   normally??? Seems odd, I would have guessed the DMA address sould
-   be the same as case #1?
-
-Can you document this in a comment?
-
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 4940db137fff..d62e0dd9d8ee 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -688,6 +688,7 @@ struct device {
->  #ifdef CONFIG_IOMMU_DMA
->  	bool			dma_iommu:1;
->  #endif
-> +	bool			tdi_enabled:1;
->  };
-
-I would give the dev->tdi_enabled a clearer name, maybe
-dev->encrypted_dma_supported ?
-
-Also need to think carefully of a bitfield is OK here, we can't
-locklessly change a bitfield so need to audit that all members are set
-under, probably, the device lock or some other single threaded hand
-waving. It seems believable it is like that but should be checked out,
-and add a lockdep if it relies on the device lock.
-
-Jason
+Logan
 
 
