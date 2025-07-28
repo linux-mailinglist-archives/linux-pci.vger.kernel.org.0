@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-33021-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33022-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B831EB13698
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 10:29:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BBBAB1369C
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 10:30:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F400617922B
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 08:29:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6F99E17A3DE
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 08:29:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A27EE263F44;
-	Mon, 28 Jul 2025 08:25:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48FC2264A7F;
+	Mon, 28 Jul 2025 08:25:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VpxQqHVd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZdrC8Fv"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74164263F5E;
-	Mon, 28 Jul 2025 08:25:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE9A264638;
+	Mon, 28 Jul 2025 08:25:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753691101; cv=none; b=C5u6gmq9XM7k0jnbobKyrvw3KQVOnJVVa436b/X+pafEZfB3dyzp2RrfDGNp83A26JIbzqkkQAbPyO7lSgC4RJLBLyJvTj+CibxIzcYzGSUZZmN7pqZhjId35IY+Mt4J1X3IeHl0H6Uwp0xrKhzWuebZQS2RBRAZA5gfKp99Eac=
+	t=1753691102; cv=none; b=nBSfjq7Lm+nWve54j/rVPycBDuS2FwrPqbxXmhwrKArepX5yfrfLg+gbo7lNwzqk2rEiAz6gLACC8ZvU7A6F0XxO6TzSeF9a/PzK9kSrmwTkpjTQSqEkLeLLRvi/j8I7KF5F6IIt5eIebOzoQCszs4KKzI/4nmhVWoarspjPibk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753691101; c=relaxed/simple;
-	bh=li5Q22e4feDbcXIQrk3wPzRkb+BbXFeCCERNZ9GWjto=;
+	s=arc-20240116; t=1753691102; c=relaxed/simple;
+	bh=903NuybbYnxSHrFX0vEqTNoJB/Kj4NeieaFb+MTU0mk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hTSQr3eybmEHDb5vlkN1+s7FagXch6raMhanz9mbfdxkmEfJzozMZAl+Kt+y0+0IccdZ8m+THGzw69EXpZD0ixFUY/LCyxY5LK1xOWJKEkjuyBNHMVS1BhemtSonizLOcupvRp94mqegdDNgzgayr+qHxyy0jDjNXzWPpqp8tjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VpxQqHVd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8B06C4CEE7;
-	Mon, 28 Jul 2025 08:25:00 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=COZD//JHkFJkO9t4DRLexT0wUih+hGkQLwRbcNAdYjm8gzrr9zz3NyBDrd3sPZBOwSXBmP1Gn3eHOuYBHslCOotuAQa1vTcCvxhyzKgxNwfgxd2aRAsCSLGv8hFf9SL5EoAESer/wJlmh3mLat2Geo1HenlRNOFHovmeHncxRAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZdrC8Fv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7552BC4CEFB;
+	Mon, 28 Jul 2025 08:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753691101;
-	bh=li5Q22e4feDbcXIQrk3wPzRkb+BbXFeCCERNZ9GWjto=;
+	s=k20201202; t=1753691102;
+	bh=903NuybbYnxSHrFX0vEqTNoJB/Kj4NeieaFb+MTU0mk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=VpxQqHVdeNn9dKW35pGt9VhlI0tG1Y97OEeSuRy8RRA0NBGtHVnh8HBhrfCKZCOOQ
-	 fAqX0ZZi9IK6e3EjbxDB4ASIcYeNlI1rWTV604Kku9rtAVY4tl4kPwSYAdyKpMqf4G
-	 30+CZRGImjxpi56PFtyQEKO402lBTnZtsqAIP+SiYQEpzZ2xs2PCKAY+sTHkRVyJVr
-	 3mDw+KfQ4wV6BqIFI2h7cjk4viJiP48QFeCL/CmPETm6m8XiRvA0SEfxzkHgeU4Cle
-	 nt2Pyc707ui+8tvZ4bQdW8BQud6xCXp+Y+Bor6pDABD06WNqYrDR0g2R56If+l2y4D
-	 dtRRNeweMXZ2w==
+	b=aZdrC8Fv2tLqZr6YNNoEx/xvn92aW1MWReV4sFxFXCZEVUtmr2l7GNztDWakURsZ2
+	 ahVRaUdvhp8zJ0e2W3UOdEyNBePFaReCM6nw6X4bTRzQ1dLZu675I6V6QEbNPjBmbx
+	 h9+dxjQAZAGvgkKRJ9P6qRzCaLTnoUAU6nOvl7JPnvQ0+7DMy+SWfXk1cjfgf9vnz8
+	 U4NGTuiDBIkD6K0Xok/FUeWuo8YAMM+x2G07pII3/v8IMDkWZkum8r5LAZZieyxMUT
+	 0M6ZUemexwzcPAs/cbqx8JPL+ayQ02auqmBFMAPJ2H8bLoZy8tqQnqtXurJwsyhDoj
+	 yms/YAh4F4N1g==
 From: chrisl@kernel.org
-Date: Mon, 28 Jul 2025 01:24:51 -0700
-Subject: [PATCH RFC 21/25] PCI/LUO: Save and restore the PCI resource
+Date: Mon, 28 Jul 2025 01:24:52 -0700
+Subject: [PATCH RFC 22/25] PCI/LUO: Save PCI bus and host bridge states
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250728-luo-pci-v1-21-955b078dd653@kernel.org>
+Message-Id: <20250728-luo-pci-v1-22-955b078dd653@kernel.org>
 References: <20250728-luo-pci-v1-0-955b078dd653@kernel.org>
 In-Reply-To: <20250728-luo-pci-v1-0-955b078dd653@kernel.org>
 To: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -71,197 +71,120 @@ X-Mailer: b4 0.14.2
 
 From: Jason Miu <jasonmiu@google.com>
 
-Preserve the resource array in pci_dev, in pci_dev_ser with an array
-of `struct pci_resource_ser`. This array save all resource regions
-claimed by a PCI device in the LUO prepare phase.
+In the LUO prepare phase, saves the PCI bus and host bridge states.
 
-When a PCI device is setting up after a liveupdate reboot, normally it
-read/write the PCI BARs for probing the available resource regions,
-with pci_read_bases() function. We check if liveupdate is enabled and
-the preserved resource is preserved. If it does, we restore the
-resource data structure instead of accessing the hardware.
+For a PCI bus, save the domain and bus numbers. Save the bridge types.
+Save the upstream bus domain and bus numbers so we can verify the
+relationship in the later restoration phase.
+
+If the current bridge is a host bridge, save also the PCI bridge
+resource. This is not needed by other PCI bridges as the resource is
+already preserved by its associated struct pci_dev.
 
 Tested:
-  - QEMU VM boot test. Save and restore a pf-test driver.
+  - QEMU VM boot test, preserve device with pci-lu-stub
 
 Signed-off-by: Chris Li <chrisl@kernel.org>
 ---
- drivers/pci/liveupdate.c | 52 +++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/pci/pci.h        | 17 ++++++++++++++++
- drivers/pci/probe.c      | 18 ++++++++++++++---
- 3 files changed, 83 insertions(+), 4 deletions(-)
+ drivers/pci/liveupdate.c | 60 +++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 52 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-index bc2c166ef494fd0b38cc05500bf0817c0f50fd95..7fda7e4d409adce6bf92ef7af1167f7bda302c7e 100644
+index 7fda7e4d409adce6bf92ef7af1167f7bda302c7e..be22af7a2db3a9bb06d8e100603a59f11b7fa5f8 100644
 --- a/drivers/pci/liveupdate.c
 +++ b/drivers/pci/liveupdate.c
-@@ -166,10 +166,12 @@ static int pci_save_device_state(struct device *dev, struct pci_dev_ser *s)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	const char *name = dev->driver->name;
-+	int i;
+@@ -20,9 +20,20 @@ static LIST_HEAD(preserved_buses);
+ static LIST_HEAD(probe_devices);
+ static LIST_HEAD(probe_buses);
  
- 	if (!name)
- 		return -ENXIO;
--	if (strlen(name) > sizeof(s->driver_name) - 1)
-+	if ((strlen(name) > sizeof(s->driver_name) - 1) ||
-+	    (strlen(name) > sizeof(s->resource[0].name) - 1))
- 		return -ENOSPC;
- 	strscpy(s->driver_name, name, sizeof(s->driver_name));
- 	s->path = pci_get_device_path(pdev);
-@@ -190,6 +192,28 @@ static int pci_save_device_state(struct device *dev, struct pci_dev_ser *s)
- 	s->pref_window = pdev->pref_window;
- 	s->pref_64_window = pdev->pref_64_window;
- 
-+	/*
-+	 * Per PCIe r4.0, sec 9.3.4.1.11, the VF BARs are all RO Zero,
-+	 * no need to preserve the resource.
-+	 */
-+	if (pdev->is_virtfn)
-+		return 0;
++enum pci_bus_ser_bridge_type {
++	PCI_BUS_SER_NULL_BRIDGE, /* virtual bus */
++	PCI_BUS_SER_PCI_HOST_BRIDGE,
++	PCI_BUS_SER_PCI_BRIDGE,
++};
 +
-+	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
-+		/* This resource region is not claimed by this device, skip. */
-+		if ((pdev->resource[i].name == NULL) ||
-+		    (strlen(pdev->resource[i].name) == 0))
-+			continue;
-+
-+		s->resource[i].start = pdev->resource[i].start;
-+		s->resource[i].end = pdev->resource[i].end;
-+		s->resource[i].flags = pdev->resource[i].flags;
-+		s->resource[i].desc = pdev->resource[i].desc;
-+
-+		strscpy((char *)s->resource[i].name, pci_name(pdev),
-+			sizeof(s->resource[i].name));
-+	}
-+
- 	return 0;
- }
- 
-@@ -502,6 +526,32 @@ void pci_liveupdate_override_driver(struct pci_dev *dev)
- 		panic("PCI Liveupdate override driver failed: %s", s->driver_name);
- }
- 
-+int pci_liveupdate_reclaim_resource(struct pci_dev *dev)
-+{
-+	const char *name = pci_name(dev);
-+	int i;
-+
-+	if (!dev->dev.lu.dev_state)
-+		return -EINVAL;
-+
-+	if (dev->is_virtfn)
-+		return 0;
-+
-+	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
-+		/* This resource region was not claimed, skip.  */
-+		if (strncmp(PCI_SER_GET(dev, resource[i].name, ""), name,
-+				strlen(name)) != 0)
-+			continue;
-+
-+		dev->resource[i].start = PCI_SER_GET(dev, resource[i].start, 0);
-+		dev->resource[i].end = PCI_SER_GET(dev, resource[i].end, 0);
-+		dev->resource[i].name = pci_name(dev);
-+		dev->resource[i].flags = PCI_SER_GET(dev, resource[i].flags, 0);
-+		dev->resource[i].desc = PCI_SER_GET(dev, resource[i].desc, 0);
-+	}
-+
-+	return 0;
-+}
- 
- static int __init pci_liveupdate_init(void)
- {
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index bd198227ae3cf687f4ddae76c2f53125681ca91d..7af32edb128faef9c5e2665ca5055374f7fd30ea 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -489,6 +489,19 @@ struct pci_sriov {
- 	bool		drivers_autoprobe; /* Auto probing of VFs by driver */
+ struct pci_bus_ser {
+ 	u16	domain;
+ 	u8	number;
++	u16	parent_domain;
++	u8	parent_number;
++	enum pci_bus_ser_bridge_type bridge_type;
++	/* For a root bus, saves the host bridge PCI bridge resource */
++	struct pci_resource_ser resource[PCI_BRIDGE_RESOURCE_NUM];
  };
  
-+#define PCI_RESOURCE_SER_NAME_SIZE 64
-+struct pci_resource_ser {
-+	u64 start;
-+	u64 end;
-+	const char name[PCI_RESOURCE_SER_NAME_SIZE];
-+	u64 flags;
-+	u64 desc;
-+	/*
-+	 * The PCI resource is not nested. We do not need to preserve
-+	 * the parent, sibling, child pointers in the original struct resource.
-+	 */
-+} __packed;
-+
- struct pci_dev_ser {
- 	u32	path;		/* domain + bus + slot + fn */
- 	u8	requested;
-@@ -509,6 +522,7 @@ struct pci_dev_ser {
- 	u32	hotplug_user_indicators:1;
- 	u32	pref_window:1;
- 	u32	pref_64_window:1;
-+	struct pci_resource_ser resource[DEVICE_COUNT_RESOURCE];
- } __packed;
- 
- #ifdef CONFIG_PCI_DOE
-@@ -1192,6 +1206,7 @@ static inline struct pci_dev_ser *pci_lu_adopt(struct pci_dev *dev)
- {
- 	return dev->dev.lu.requested ? dev->dev.lu.dev_state : NULL;
+ struct pci_ser {
+@@ -162,6 +173,16 @@ static int pci_get_device_path(struct pci_dev *pdev)
+ 	return (pci_domain_nr(pdev->bus) << 16) | pci_dev_id(pdev);
  }
-+int pci_liveupdate_reclaim_resource(struct pci_dev *dev);
- #else
- #define PCI_SER_GET(__dev, __var, __def) __def
  
-@@ -1201,5 +1216,7 @@ static inline struct pci_dev_ser *pci_lu_adopt(struct pci_dev *dev)
++static void save_device_resource(struct pci_resource_ser *dest,
++				 struct resource *src)
++{
++	strscpy((char *)dest->name, src->name, sizeof(dest->name));
++	dest->start = src->start;
++	dest->end = src->end;
++	dest->flags = src->flags;
++	dest->desc = src->desc;
++}
++
+ static int pci_save_device_state(struct device *dev, struct pci_dev_ser *s)
  {
- 	return NULL;
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+@@ -205,13 +226,7 @@ static int pci_save_device_state(struct device *dev, struct pci_dev_ser *s)
+ 		    (strlen(pdev->resource[i].name) == 0))
+ 			continue;
+ 
+-		s->resource[i].start = pdev->resource[i].start;
+-		s->resource[i].end = pdev->resource[i].end;
+-		s->resource[i].flags = pdev->resource[i].flags;
+-		s->resource[i].desc = pdev->resource[i].desc;
+-
+-		strscpy((char *)s->resource[i].name, pci_name(pdev),
+-			sizeof(s->resource[i].name));
++		save_device_resource(s->resource + i, pdev->resource + i);
+ 	}
+ 
+ 	return 0;
+@@ -219,8 +234,37 @@ static int pci_save_device_state(struct device *dev, struct pci_dev_ser *s)
+ 
+ static void pci_save_bus_state(struct pci_bus *bus, struct pci_bus_ser *s)
+ {
+-	s->number = bus->number;
++	int i;
++
+ 	s->domain = pci_domain_nr(bus);
++	s->number = bus->number;
++	if (bus->parent) {
++		s->parent_domain = pci_domain_nr(bus->parent);
++		s->parent_number = bus->parent->number;
++	}
++
++	/* This bus is a virtual bus if no physical bridge is being referred. */
++	if (!bus->bridge) {
++		s->bridge_type = PCI_BUS_SER_NULL_BRIDGE;
++		return;
++	}
++
++	if (!pci_is_root_bus(bus)) {
++		s->bridge_type = PCI_BUS_SER_PCI_BRIDGE;
++		return;
++	}
++
++	/* This bridge is a PCI host bridge. Saves its resource. */
++	for (i = 0; i < PCI_BRIDGE_RESOURCE_NUM; i++) {
++		/* This resource region is not claimed, skip. */
++		if ((bus->resource[i] == NULL) ||
++		    (bus->resource[i]->name == NULL) ||
++		    (strlen(bus->resource[i]->name) == 0))
++			continue;
++
++		save_device_resource(s->resource + i, bus->resource[i]);
++	}
++	s->bridge_type = PCI_BUS_SER_PCI_HOST_BRIDGE;
  }
-+static inline int pci_liveupdate_reclaim_resource(
-+	struct pci_dev *dev) { return -ENXIO; }
- #endif
- #endif /* DRIVERS_PCI_H */
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 5c30d1d52a96b17a92794756cab5db0972548267..a101a44956821e5e81c6b063e6aab7db49a4cf7f 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2096,7 +2096,13 @@ int pci_setup_device(struct pci_dev *dev)
- 		if (class == PCI_CLASS_BRIDGE_PCI)
- 			goto bad;
- 		pci_read_irq(dev);
--		pci_read_bases(dev, PCI_STD_NUM_BARS, PCI_ROM_ADDRESS);
-+
-+		/*
-+		 * If we can reclaim the resource from liveupdate preserved data,
-+		 * do not access the hardware.
-+		 */
-+		if (pci_liveupdate_reclaim_resource(dev) < 0)
-+			pci_read_bases(dev, PCI_STD_NUM_BARS, PCI_ROM_ADDRESS);
  
- 		pci_subsystem_ids(dev, &dev->subsystem_vendor, &dev->subsystem_device);
- 
-@@ -2152,7 +2158,10 @@ int pci_setup_device(struct pci_dev *dev)
- 		 */
- 		pci_read_irq(dev);
- 		dev->transparent = ((dev->class & 0xff) == 1);
--		pci_read_bases(dev, 2, PCI_ROM_ADDRESS1);
-+
-+		if (pci_liveupdate_reclaim_resource(dev) < 0)
-+			pci_read_bases(dev, 2, PCI_ROM_ADDRESS1);
-+
- 		pci_read_bridge_windows(dev);
- 		set_pcie_hotplug_bridge(dev);
- 		pos = pci_find_capability(dev, PCI_CAP_ID_SSVID);
-@@ -2166,7 +2175,10 @@ int pci_setup_device(struct pci_dev *dev)
- 		if (class != PCI_CLASS_BRIDGE_CARDBUS)
- 			goto bad;
- 		pci_read_irq(dev);
--		pci_read_bases(dev, 1, 0);
-+
-+		if (pci_liveupdate_reclaim_resource(dev) < 0)
-+			pci_read_bases(dev, 1, 0);
-+
- 		pci_read_config_word(dev, PCI_CB_SUBSYSTEM_VENDOR_ID, &dev->subsystem_vendor);
- 		pci_read_config_word(dev, PCI_CB_SUBSYSTEM_ID, &dev->subsystem_device);
- 		break;
+ static int pci_call_prepare(struct pci_ser *pci_state,
 
 -- 
 2.50.1.487.gc89ff58d15-goog
