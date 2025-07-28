@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-33060-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33061-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0C8CB13C5E
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 16:05:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3DEBB13C6C
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 16:08:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9138518903F0
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 14:00:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B6493A1B8F
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 14:00:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 271AC273D77;
-	Mon, 28 Jul 2025 13:55:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCE6D273D7F;
+	Mon, 28 Jul 2025 13:55:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TznB8qC9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHTzaYAT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF307270EA9;
-	Mon, 28 Jul 2025 13:55:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2612273D7C;
+	Mon, 28 Jul 2025 13:55:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753710924; cv=none; b=uUQKF/zi4B1yYnO8yT6Wwerk7cqJ5f5PUicNTZDr6wiV0CQIXZOenq834xiQIKStmAvI5BixRNwJ1fgT59K+aJXN9OmYIXRAsL79Zx6JH2GP+LwFpqTjTUMSf2zeWSSuo8cSXWUB59ikvsTU3ewfdVa0NooV7C5BAHwVw7H4Vqg=
+	t=1753710929; cv=none; b=ALg4C5LKVr4M+eURqOspOHbPBIggVlieQeXXoZDa58xDiEnu6JpV299uevFkifLFKhrEbjDrbgIgfp8QbI+LQg6S4ku6Gs6TYXNCBA1FAzp7SwquQAln3FAS8nOFkjd9ZjUZtQYotLeSXgxZ8Onr7E0WawS0XkDd2W2u/oJ/MIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753710924; c=relaxed/simple;
-	bh=uAR/fHNQy0wfaJGiSb9ysOvjo+hmJLlA8JN4JOUsFiM=;
+	s=arc-20240116; t=1753710929; c=relaxed/simple;
+	bh=Ze7PT5F9v/p5VT9WHtpaCA4SAdVWFE+04WmlwvCiPpM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T6q0fYKtJ9CZdW3S0lY7IV6lnzx1jcSuh6J+bUpJXMrgrrdco9w+uAzJc0I3n8kdt3MCM/E9PzrBLLO2AsdGcU/O75VLycni2FGRf5ngXZZjRMqoNLkPhXgvQ5K/oDqU653MDxx2kaem6obaM3ognFjFfWHetRXso4zs2UZ9qlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TznB8qC9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7D28C4CEF8;
-	Mon, 28 Jul 2025 13:55:18 +0000 (UTC)
+	 MIME-Version; b=CRRZzN3E0YnmKTJcowu9Hvzb3Am5weht/+IfXwGx0j75PwPgjHMli0F2wQWLp+/IgclCzSjes5T4z9vyOUrYrP6s/NvH7yIE8dqywu1k1xyJPR8Byb6tKYl0Tir+hx+TiDf4QNmq5xu7vl8tgRtcSIKDlz5zIF1UJDbHf1HR5eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHTzaYAT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E0FDC4CEF7;
+	Mon, 28 Jul 2025 13:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753710923;
-	bh=uAR/fHNQy0wfaJGiSb9ysOvjo+hmJLlA8JN4JOUsFiM=;
+	s=k20201202; t=1753710929;
+	bh=Ze7PT5F9v/p5VT9WHtpaCA4SAdVWFE+04WmlwvCiPpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TznB8qC94CBNClsONzdJpQ1lDat0p5hFbSDwJGQzr5qpetO2lbP52rtuoIU1ZotUG
-	 ET62gdXUgRNIHIeTYJ2+PfyRUk2+R5mgCfURTXGPFS9m493pwWz3sP1qsrCqJClhzz
-	 1cJVUs0ORHpTl3rRY8AvAxYYzAAo9+olRQkUF70TieUNJrQTPUuFT7AEPIouKAOb4V
-	 czXlK43d1LhGmAcrl8r+16WbLYnvm3pBVIgQ7koUtCw4X6PC71qpNANSWFB2alnr26
-	 ZkRSHEwfCBPkcf9L1iYmOT2WkiihBKAz05iOxBpQiCk/fKdjzs4/OKPsRfviVZVytr
-	 dGbobRT5MaEDg==
+	b=EHTzaYATelYucJ58eoPs+D2HGmOMerJ9TqheUwRR9fWa80wiu3b7afAwuTXXVMx0I
+	 qsZeHTG96YAtnWohw8UHhyOWU2J/5tD2kQ50w4nSMXCSccAmy2AhKu+Ut7PD3VJduq
+	 PufT9ds23yxb9pGu5O6xzmm2B1Y4R2ps9R4O9G0SNcMEZORyDtPltcVnV+x70gUOXm
+	 VEyKWeePSybKuOavQnrlTsT5ftDRNVnkcAN9h+u2p/cmb9PE3q0uy3zi9E29Dz8LtJ
+	 EmkeGgRzC0G2jfvSgWMMrUm7PD43syBGxXI3GABAkrgMJhYAxcSvG3Cnt80sFXokdY
+	 OzFg2rvRigPXA==
 From: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
 To: linux-coco@lists.linux.dev,
 	kvmarm@lists.linux.dev
@@ -58,9 +58,9 @@ Cc: linux-pci@vger.kernel.org,
 	Will Deacon <will@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
-Subject: [RFC PATCH v1 28/38] coco: host: arm64: Add support for device communication exit handler
-Date: Mon, 28 Jul 2025 19:22:05 +0530
-Message-ID: <20250728135216.48084-29-aneesh.kumar@kernel.org>
+Subject: [RFC PATCH v1 29/38] coco: guest: arm64: Add support for collecting interface reports
+Date: Mon, 28 Jul 2025 19:22:06 +0530
+Message-ID: <20250728135216.48084-30-aneesh.kumar@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250728135216.48084-1-aneesh.kumar@kernel.org>
 References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
@@ -72,172 +72,105 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Different RSI calls that require device communication result in a REC
-exit, which is handled by the device communication exit handler.
+Support collecting interface reports using RSI calls.
 
 Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
 ---
- arch/arm64/include/asm/rmi_smc.h         |  6 ++
- drivers/virt/coco/arm-cca-host/arm-cca.c |  1 +
- drivers/virt/coco/arm-cca-host/rmm-da.c  | 75 ++++++++++++++++++++++++
- drivers/virt/coco/arm-cca-host/rmm-da.h  |  4 ++
- 4 files changed, 86 insertions(+)
+ arch/arm64/include/asm/rsi_cmds.h        | 14 ++++++++++
+ arch/arm64/include/asm/rsi_smc.h         |  2 ++
+ drivers/virt/coco/arm-cca-guest/rsi-da.c | 34 ++++++++++++++++++++++++
+ 3 files changed, 50 insertions(+)
 
-diff --git a/arch/arm64/include/asm/rmi_smc.h b/arch/arm64/include/asm/rmi_smc.h
-index 6b23afa070d1..7073eccaec5f 100644
---- a/arch/arm64/include/asm/rmi_smc.h
-+++ b/arch/arm64/include/asm/rmi_smc.h
-@@ -457,4 +457,10 @@ struct rmi_vdev_params {
- 	};
- };
- 
-+#define RMI_VDEV_ACTION_GET_INTERFACE_REPORT	0x0
-+#define RMI_VDEV_ACTION_GET_MEASUREMENTS	0x1
-+#define RMI_VDEV_ACTION_LOCK			0x2
-+#define RMI_VDEV_ACTION_START			0x3
-+#define RMI_VDEV_ACTION_STOP			0x4
-+
- #endif /* __ASM_RMI_SMC_H */
-diff --git a/drivers/virt/coco/arm-cca-host/arm-cca.c b/drivers/virt/coco/arm-cca-host/arm-cca.c
-index 837bd10ccd47..be1296fb1bf2 100644
---- a/drivers/virt/coco/arm-cca-host/arm-cca.c
-+++ b/drivers/virt/coco/arm-cca-host/arm-cca.c
-@@ -243,6 +243,7 @@ static struct pci_tdi *cca_tsm_bind(struct pci_dev *pdev, struct pci_dev *pf0_de
- 	rmm_vdev = rme_create_vdev(realm, pdev, pf0_dev, tdi_id);
- 	if (!IS_ERR_OR_NULL(rmm_vdev)) {
- 		host_tdi->rmm_vdev = rmm_vdev;
-+		host_tdi->vdev_id = tdi_id;
- 		return &no_free_ptr(host_tdi)->tdi;
- 	}
- 
-diff --git a/drivers/virt/coco/arm-cca-host/rmm-da.c b/drivers/virt/coco/arm-cca-host/rmm-da.c
-index d4f1da590b90..bef33e618fd3 100644
---- a/drivers/virt/coco/arm-cca-host/rmm-da.c
-+++ b/drivers/virt/coco/arm-cca-host/rmm-da.c
-@@ -233,6 +233,16 @@ static int __do_dev_communicate(int type, struct pci_tsm *tsm)
- 			cache_offset = &dsc_pf0->cert_chain.cache.size;
- 			cache_remaining = sizeof(dsc_pf0->cert_chain.cache.buf) - *cache_offset;
- 			break;
-+		case RMI_DEV_INTERFACE_REPORT:
-+			cache_buf = dsc_pf0->interface_report.buf;
-+			cache_offset = &dsc_pf0->interface_report.size;
-+			cache_remaining = sizeof(dsc_pf0->interface_report.buf) - *cache_offset;
-+			break;
-+		case RMI_DEV_MEASUREMENTS:
-+			cache_buf = dsc_pf0->measurements.buf;
-+			cache_offset = &dsc_pf0->measurements.size;
-+			cache_remaining = sizeof(dsc_pf0->measurements.buf) - *cache_offset;
-+			break;
- 		default:
- 			/* FIXME!! depending on the DevComms status,
- 			 * it might require to ABORT the communcation.
-@@ -661,6 +671,21 @@ void rme_unbind_vdev(struct realm *realm, struct pci_dev *pdev, struct pci_dev *
- 	}
+diff --git a/arch/arm64/include/asm/rsi_cmds.h b/arch/arm64/include/asm/rsi_cmds.h
+index b9c4b8ff5631..1d76f7d37cb6 100644
+--- a/arch/arm64/include/asm/rsi_cmds.h
++++ b/arch/arm64/include/asm/rsi_cmds.h
+@@ -205,4 +205,18 @@ static inline unsigned long rsi_rdev_continue(unsigned long vdev_id, unsigned lo
+ 	return res.a0;
  }
  
-+static struct pci_tsm *find_pci_tsm_from_vdev(phys_addr_t vdev_phys)
++static inline unsigned long __rsi_rdev_get_interface_report(unsigned long vdev_id,
++							  unsigned long inst_id,
++							  unsigned long version_max,
++							  unsigned long *version)
 +{
-+	struct pci_dev *pdev = NULL;
-+	struct cca_host_tdi *host_tdi;
++	struct arm_smccc_res res;
 +
-+	for_each_pci_dev(pdev) {
-+		host_tdi = to_cca_host_tdi(pdev);
-+		if (!host_tdi)
-+			continue;
-+		if (virt_to_phys(host_tdi->rmm_vdev) == vdev_phys)
-+			return pdev->tsm;
-+	}
-+	return NULL;
++	arm_smccc_1_1_invoke(SMC_RSI_RDEV_GET_INTERFACE_REPORT,
++			     vdev_id, inst_id, version_max, &res);
++
++	*version = res.a1;
++	return res.a0;
 +}
 +
- static struct pci_tsm *find_pci_tsm_from_vdev_id(unsigned long vdev_id)
- {
- 	struct pci_dev *pdev = NULL;
-@@ -676,6 +701,55 @@ static struct pci_tsm *find_pci_tsm_from_vdev_id(unsigned long vdev_id)
- 	return NULL;
+ #endif /* __ASM_RSI_CMDS_H */
+diff --git a/arch/arm64/include/asm/rsi_smc.h b/arch/arm64/include/asm/rsi_smc.h
+index 44b583ab6d67..6afcccee2ae7 100644
+--- a/arch/arm64/include/asm/rsi_smc.h
++++ b/arch/arm64/include/asm/rsi_smc.h
+@@ -194,6 +194,8 @@ struct realm_config {
+ #define SMC_RSI_RDEV_GET_INSTANCE_ID		SMC_RSI_FID(0x19c)
+ #define SMC_RSI_RDEV_CONTINUE			SMC_RSI_FID(0x1a4)
+ 
++#define SMC_RSI_RDEV_GET_INTERFACE_REPORT	SMC_RSI_FID(0x1a6)
++
+ #define SMC_RSI_RDEV_LOCK			SMC_RSI_FID(0x1a9)
+ 
+ #endif /* __ASM_RSI_SMC_H_ */
+diff --git a/drivers/virt/coco/arm-cca-guest/rsi-da.c b/drivers/virt/coco/arm-cca-guest/rsi-da.c
+index 097cf52ee199..28ec946df1e2 100644
+--- a/drivers/virt/coco/arm-cca-guest/rsi-da.c
++++ b/drivers/virt/coco/arm-cca-guest/rsi-da.c
+@@ -29,9 +29,31 @@ static inline unsigned long rsi_rdev_lock(struct pci_dev *pdev,
+ 	return RSI_SUCCESS;
  }
  
-+static int rme_exit_vdev_comm_handler(struct realm_rec *rec)
++static inline unsigned long
++rsi_rdev_get_interface_report(struct pci_dev *pdev, unsigned long vdev_id,
++			      unsigned long inst_id, unsigned long version_max,
++			      unsigned long *version)
 +{
-+	int ret;
-+	unsigned long state;
-+	struct cca_host_tdi *host_tdi;
-+	struct cca_host_comm_data *comm_data;
-+	phys_addr_t vdev_phys = rec->run->exit.vdev;
-+	struct pci_tsm *tsm = find_pci_tsm_from_vdev(vdev_phys);
++	unsigned long ret;
 +
-+	if (!tsm)
-+		goto err_out;
++	ret = __rsi_rdev_get_interface_report(vdev_id, inst_id, version_max, version);
++	if (ret != RSI_SUCCESS)
++		return ret;
 +
-+	host_tdi = to_cca_host_tdi(tsm->pdev);
-+	if (!host_tdi)
-+		goto err_out;
-+
-+	comm_data = to_cca_comm_data(tsm->pdev);
-+	if (!comm_data->vdev_comm_active) {
-+		struct rmi_dev_comm_enter *io_enter;
-+
-+		io_enter = &comm_data->io_params->enter;
-+		io_enter->resp_len = 0;
-+		io_enter->status = RMI_DEV_COMM_NONE;
-+		comm_data->vdev_comm_active = true;
++	do {
++		ret = rsi_rdev_continue(vdev_id, inst_id);
++	} while (ret == RSI_INCOMPLETE);
++	if (ret != RSI_SUCCESS) {
++		pci_err(pdev, "failed to communicate with the device (%lu)\n", ret);
++		return ret;
 +	}
-+
-+	/* FIXME!! Should this be a work? */
-+	ret = __do_dev_communicate(VDEV_COMMUNICATE, tsm);
-+	if (ret)
-+		goto err_out;
-+
-+	ret = rmi_vdev_get_state(virt_to_phys(host_tdi->rmm_vdev), &state);
-+	if (ret)
-+		goto err_out;
-+	/*
-+	 * If vdev is done communicating, the next update should
-+	 * reinitialize the cache
-+	 */
-+	if (state != RMI_VDEV_COMMUNICATING)
-+		comm_data->vdev_comm_active = false;
-+
-+err_out:
-+	/*
-+	 * Return back to the guest without calling DEV communicate.
-+	 * The Realm will treat that as an error.
-+	 */
-+	return 1;
++	return RSI_SUCCESS;
 +}
 +
- static int rme_exit_vdev_req_handler(struct realm_rec *rec)
+ int rsi_device_lock(struct pci_dev *pdev)
  {
- 	struct cca_host_tdi *host_tdi = NULL;
-@@ -697,5 +771,6 @@ static int rme_exit_vdev_req_handler(struct realm_rec *rec)
+ 	unsigned long ret;
++	unsigned long tdisp_version;
+ 	struct cca_guest_dsc *dsm = to_cca_guest_dsc(pdev);
+ 	int vdev_id = (pci_domain_nr(pdev->bus) << 16) |
+ 		PCI_DEVID(pdev->bus->number, pdev->devfn);
+@@ -48,5 +70,17 @@ int rsi_device_lock(struct pci_dev *pdev)
+ 		return -EIO;
+ 	}
  
- void rme_register_exit_handlers(void)
- {
-+	realm_exit_vdev_comm_handler = rme_exit_vdev_comm_handler;
- 	realm_exit_vdev_req_handler = rme_exit_vdev_req_handler;
- }
-diff --git a/drivers/virt/coco/arm-cca-host/rmm-da.h b/drivers/virt/coco/arm-cca-host/rmm-da.h
-index 7f51b611467b..cebddab8464d 100644
---- a/drivers/virt/coco/arm-cca-host/rmm-da.h
-+++ b/drivers/virt/coco/arm-cca-host/rmm-da.h
-@@ -22,6 +22,8 @@ struct cca_host_comm_data {
- 	void *resp_buff;
- 	void *req_buff;
- 	struct rmi_dev_comm_data *io_params;
++	ret = rsi_rdev_get_interface_report(pdev, vdev_id, dsm->instance_id,
++					   PCI_TDISP_MESSAGE_VERSION_10, &tdisp_version);
++	if (ret != RSI_SUCCESS) {
++		pci_err(pdev, "failed to get interface report (%lu)\n", ret);
++		return -EIO;
++	}
 +
-+	bool vdev_comm_active;
- };
- 
- struct cca_host_dsc_pf0 {
-@@ -43,6 +45,8 @@ struct cca_host_dsc_pf0 {
- 		bool valid;
- 	} cert_chain;
- 	struct cache_object vca;
-+	struct cache_object interface_report;
-+	struct cache_object measurements;
- };
- 
- struct cca_host_tdi {
++	if (tdisp_version != PCI_TDISP_MESSAGE_VERSION_10) {
++		pci_err(pdev, "unknown TDISP version (%lu)\n", tdisp_version);
++		return -EOPNOTSUPP;
++	}
++
+ 	return ret;
+ }
 -- 
 2.43.0
 
