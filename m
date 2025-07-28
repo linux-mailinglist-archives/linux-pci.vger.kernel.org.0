@@ -1,151 +1,112 @@
-Return-Path: <linux-pci+bounces-33078-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33079-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFB24B14085
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 18:41:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12630B140D8
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 19:02:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BEBF3A2A89
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 16:41:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FC4A3A422C
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 17:02:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D14632749C2;
-	Mon, 28 Jul 2025 16:41:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BB0523C4F1;
+	Mon, 28 Jul 2025 17:02:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+keFTh/"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="am+xvDzv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AED218ABD;
-	Mon, 28 Jul 2025 16:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFB306FB9;
+	Mon, 28 Jul 2025 17:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753720903; cv=none; b=IrOANAseTZ078tKj5fGWHYFH5lauqmIoNSsQKk0vLbcRCgSZBEyYr+WYN/tyGSxdgB9dFfcElDMZqqVhMLEQlseMD3aodittTyPFrLvmg34fzmDz9JSoeg3WuALLsO1T7YxqhucjErftKZjsAUU0+k9qW/TZ0knWicKnFpnwNLA=
+	t=1753722155; cv=none; b=P/Ve9G2yZQ1cEthvPvUoa7/LMMQ/1WR0wBmrgg1huKjhSIuFRX7Vk+bVv/MPyO3vU6kSSHI7rJnvpzUa/38lJWDpRFDz6S4L23aaFEGfhzV4MPrZYD76MUk2mWhB0JXEI3SS2joVZduL+fyhGSSYC+efN7fAwng6XdyAl7qFW+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753720903; c=relaxed/simple;
-	bh=7x0ZgIgFMhmGblvNn1rp9l0J3jLs/NKo357QqFEU40c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dBOknKt0Tlyw0y72pRRvVlIzOqUJ9DSEwXjKByOC0FHLakpzUXRv+G2hj36n3Anep9plgnL5wufoFfMHOBQzqITVoB4Xiy5jGob0pPwnPbkS+Ml2K5p+S2S66AhnPiwpcUAVsi+IZmqhlhjMby7g+2k2oGD303Cu+BMA46qivKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+keFTh/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51E4FC4CEE7;
-	Mon, 28 Jul 2025 16:41:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753720902;
-	bh=7x0ZgIgFMhmGblvNn1rp9l0J3jLs/NKo357QqFEU40c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B+keFTh/H3uyJm+2CRXywKicPx1XFBBkxeKmrZZbdSdo7TbhwSKWM+9PVaAkV/Ggd
-	 rdbs8jBkHbT/8OTgeGMPL4gfUOW2ABlcD8WUcg8AnFQUJTXwNmVXpc6MVeqX+1gX/B
-	 Hl4YyyFNqJKjrMehvwoAGQununhgEiDlRgPJ4pHhRsT2e9nnS0dUD7g029zGYqMvz0
-	 +n1X/yXScSmTwLjOGstVCV5NVXNowOdBanEpgP5gJZIZzUwp2PqhdbrI1ndD1ANzQ6
-	 U3SK+z5/iiu7H8t8oy3Nyrh+r+SHqvFdQXzv1CHbtq87l4SZmHe8/P8OoUYzv0vSLF
-	 T/9RjFtCR33XQ==
-Date: Mon, 28 Jul 2025 19:41:36 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Logan Gunthorpe <logang@deltatee.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Christoph Hellwig <hch@lst.de>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
-	Jens Axboe <axboe@kernel.dk>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 05/10] PCI/P2PDMA: Export pci_p2pdma_map_type() function
-Message-ID: <20250728164136.GD402218@unreal>
-References: <cover.1753274085.git.leonro@nvidia.com>
- <82e62eb59afcd39b68ae143573d5ed113a92344e.1753274085.git.leonro@nvidia.com>
- <20250724080313.GA31887@lst.de>
- <20250724081321.GT402218@unreal>
- <b32ae619-6c4a-46fc-a368-6ad4e245d581@deltatee.com>
- <20250727190514.GG7551@nvidia.com>
- <d69e0d74-285e-4cde-a2e4-a803accfa9e1@deltatee.com>
+	s=arc-20240116; t=1753722155; c=relaxed/simple;
+	bh=7c3SNVtj1tYyffbU7QShuuFAcnhvIKUQvO7+rwQHIuc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UudDu3oP6R9pBNSUrDjri/CbC0YyRhP24MntKNiU06xqst7Ks8s90fOz9EgVWJnDPTPLLizIJ/lGn2CIqrkRjMiKsJwsMbBnTaXANydsM8LGPmqOgK1QAUSz7Y5xAHL8Xzgj362vZoeLzEGYcv7uw6VsLkPKPWkvPKJ14NpS04w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=am+xvDzv; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.64.232.206] (unknown [52.148.171.5])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C4268201B1CC;
+	Mon, 28 Jul 2025 10:02:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C4268201B1CC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1753722153;
+	bh=2DNBQnXA8dcGCQuVJocQEOXmGajpYBtPA9D+7X3s7Dg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=am+xvDzvI/wG0H0dAQ9VK+E7DV/5bXtrwFwEzEOvzSPW+oXzxUjgsJ5WMHS+jDiC6
+	 KHTli7jCk3B4cFGSKCwhak+CKF1zdHKtuaTY+cy7EQ9EO+T1N6+jrPCxq/wjXzsbDq
+	 Zmr21H8fPXSTNH88EkmmFTTnyUOkVfNP2STvLjMI=
+Message-ID: <1303b11c-0d84-4f42-995e-6dd2c5a528c7@linux.microsoft.com>
+Date: Mon, 28 Jul 2025 10:02:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d69e0d74-285e-4cde-a2e4-a803accfa9e1@deltatee.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/7] Drivers: hv: Use hv_setup_*() to set up hypercall
+ arguments
+To: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ lpieralisi@kernel.org, kw@linux.com, mani@kernel.org, robh@kernel.org,
+ bhelgaas@google.com, arnd@arndb.de
+Cc: x86@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org
+References: <20250718045545.517620-1-mhklinux@outlook.com>
+ <20250718045545.517620-5-mhklinux@outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <20250718045545.517620-5-mhklinux@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 28, 2025 at 10:12:31AM -0600, Logan Gunthorpe wrote:
-> 
-> 
-> On 2025-07-27 13:05, Jason Gunthorpe wrote:
-> > On Fri, Jul 25, 2025 at 10:30:46AM -0600, Logan Gunthorpe wrote:
-> >>
-> >>
-> >> On 2025-07-24 02:13, Leon Romanovsky wrote:
-> >>> On Thu, Jul 24, 2025 at 10:03:13AM +0200, Christoph Hellwig wrote:
-> >>>> On Wed, Jul 23, 2025 at 04:00:06PM +0300, Leon Romanovsky wrote:
-> >>>>> From: Leon Romanovsky <leonro@nvidia.com>
-> >>>>>
-> >>>>> Export the pci_p2pdma_map_type() function to allow external modules
-> >>>>> and subsystems to determine the appropriate mapping type for P2PDMA
-> >>>>> transfers between a provider and target device.
-> >>>>
-> >>>> External modules have no business doing this.
-> >>>
-> >>> VFIO PCI code is built as module. There is no way to access PCI p2p code
-> >>> without exporting functions in it.
-> >>
-> >> The solution that would make more sense to me would be for either
-> >> dma_iova_try_alloc() or another helper in dma-iommu.c to handle the
-> >> P2PDMA case.
-> > 
-> > This has nothing to do with dma-iommu.c, the decisions here still need
-> > to be made even if dma-iommu.c is not compiled in.
-> 
-> Doesn't it though? Every single call in patch 10 to the newly exported
-> PCI functions calls into the the dma-iommu functions. If there were
-> non-iommu paths then I would expect the code would use the regular DMA
-> api directly which would then call in to dma-iommu.
+On 7/17/2025 9:55 PM, mhkelley58@gmail.com wrote:
+<snip>
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index 2b4080e51f97..d9b569b204d2 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -1577,21 +1577,21 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
+>  {
+>  	unsigned long flags;
+>  	struct hv_memory_hint *hint;
+> -	int i, order;
+> +	int i, order, batch_size;
+>  	u64 status;
+>  	struct scatterlist *sg;
+>  
+> -	WARN_ON_ONCE(nents > HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES);
+>  	WARN_ON_ONCE(sgl->length < (HV_HYP_PAGE_SIZE << page_reporting_order));
+>  	local_irq_save(flags);
+> -	hint = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +
+> +	batch_size = hv_setup_in_array(&hint, sizeof(*hint), sizeof(hint->ranges[0]));
+>  	if (!hint) {
+>  		local_irq_restore(flags);
+>  		return -ENOSPC;
+>  	}
+> +	WARN_ON_ONCE(nents > batch_size);
+>  
 
-If p2p type is PCI_P2PDMA_MAP_BUS_ADDR, there will no dma-iommu and DMA
-at all.
+I don't think WARN_ON_ONCE is sufficient here... this looks like a bug in the current code.
+The loop below will go out of bounds of the input page if nents is too large.
 
-+static int vfio_pci_dma_buf_attach(struct dma_buf *dmabuf,
-+				   struct dma_buf_attachment *attachment)
-+{
-+	struct vfio_pci_dma_buf *priv = dmabuf->priv;
-+
-+	if (!attachment->peer2peer)
-+		return -EOPNOTSUPP;
-+
-+	if (priv->revoked)
-+		return -ENODEV;
-+
-+	switch (pci_p2pdma_map_type(priv->vdev->provider, attachment->dev)) {
-+	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-+		break;
-+	case PCI_P2PDMA_MAP_BUS_ADDR:
-+		/*
-+		 * There is no need in IOVA at all for this flow.
-+		 * We rely on attachment->priv == NULL as a marker
-+		 * for this mode.
-+		 */
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	attachment->priv = kzalloc(sizeof(struct dma_iova_state), GFP_KERNEL);
-+	if (!attachment->priv)
-+		return -ENOMEM;
-+
-+	dma_iova_try_alloc(attachment->dev, attachment->priv, 0, priv->phys_vec.len);
-+	return 0;
-+}
+Ideally this function would be refactored to batch the operation so that this isn't a
+problem.
+
+Nuno
+>  	hint->heat_type = HV_EXTMEM_HEAT_HINT_COLD_DISCARD;
+> -	hint->reserved = 0;
+>  	for_each_sg(sgl, sg, nents, i) {
+>  		union hv_gpa_page_range *range;
+>  
+<snip>
+
 
