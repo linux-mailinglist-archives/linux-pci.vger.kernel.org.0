@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-33007-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33008-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 527C5B13666
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 10:26:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6243B13668
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 10:26:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B462E3BB03C
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 08:25:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0BDBD1899E2F
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 08:26:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8634254B18;
-	Mon, 28 Jul 2025 08:24:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 561CD255F4C;
+	Mon, 28 Jul 2025 08:24:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mTyjVyhn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQX56eWj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC61254AE1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AD225524D;
 	Mon, 28 Jul 2025 08:24:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753691092; cv=none; b=qCXLwKrNld0/m0PU8Y0kZE7skLnLoIeS2uikR4VA247t6hvzW2scwcyQpjUy/89JH1J/BMJgrLmotafjRgVz8IFnUUBkTrWCSwqHhWWZTBRTAsn3lDkJUo4CnVmcC31G34b6yNH5tIZMsyCnqm81+xjkl5siWBmfSkqDjoTKluI=
+	t=1753691093; cv=none; b=Fg5JHzLIfAEHidiomhZ30N5UYVmf2KohNNcMwsiGLznG76c4rPS5fZhhaL/5PptaNxH/dB7wK1F7jizAPuVIyJ05uip09IfRPL0v2hStCKTwruX4NUF9Ps3dSGrd5iDl6FsSaDNOAmfb67wJDtYYeh1A8fpf6iKMW7VXGjdo3vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753691092; c=relaxed/simple;
-	bh=ORuVCAuJLsqUOqfM75E4PnbYm0689SwSZA5Lo3dCJQo=;
+	s=arc-20240116; t=1753691093; c=relaxed/simple;
+	bh=5MJjhbKurh9H3wo8pggfA7BuVWDa3XXOmJlG/RO2c/E=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=meqvunEA2FolR9nFlA7dPp6gGzJ7RvFShKupRTXJ8SUpDdJ7lvF3eyUnILtoGHrzWADOm83uy2hmQpbRt84bUmvQiWKkxnMp4ZdGBJ2Goj475SpTVqR9sbzPTuB5wowSZxrL7slegiuoM/L4ffjZMzwN0sx9Y8AFUXc6nFB+GCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mTyjVyhn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A13C4CEF8;
-	Mon, 28 Jul 2025 08:24:51 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=CyyooCDdHcpiqClnBmHmR2DK5AoSEWiGUWjNEoM68zkFOM0hBWfln0ns8uc7NT0JEVWKSM1LYs6GHIssggWhc+2BZG9J1zbt71NIIfbfKvJlIOwkZ6zpLCQp9SCHx6i04uXmKMouy5P2aM/KSI1eSTorVu4uAo63eFyWIPAMt2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQX56eWj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36133C4CEFC;
+	Mon, 28 Jul 2025 08:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1753691092;
-	bh=ORuVCAuJLsqUOqfM75E4PnbYm0689SwSZA5Lo3dCJQo=;
+	bh=5MJjhbKurh9H3wo8pggfA7BuVWDa3XXOmJlG/RO2c/E=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=mTyjVyhnjMaES1Jh0AVnzfoQzrRcUQsQ76PhOOxxH29O61lhDBwImYMgKefL567rs
-	 dmqdwf4nR5god7ABWtNFCbRlUmtdYwvVUrhxSPXYA67rKbOS+/28CQFwN/CmmhQ6tY
-	 UAIo7cN1GET/DZq0NeirfVckjEnPxL8uPwioa8FmaYimNuiZAUM6MHcuKZ/534gR37
-	 sKkWOkedfww79TVKuLxbLZ2utI4vZUWWH8TzRY0JeXbMubw47kEby38V/I7nlwRWeB
-	 PSDoHxdjDwYwIMIjSfXPLYGfye1MJvyrOxngIwebLP7XchH4ukELZb8HmYwyUdIXsp
-	 xJIGq3YXMfbUQ==
+	b=WQX56eWjBRHu/4oZURg5khPQ9g81kL/wxaBS5BnhTuCxGb7JINyxKFzzuOwVaehYM
+	 f2WF1u+wFE6XF7hE6cHNlzk2vk+VbRp7OlwN7HPD2xyl0DPSmWozeHMTf6AO0rSMyR
+	 AmVUXW/KD+BXCREtvieJPY01XZtHT8zHhtwSp0COVPmsAbqO9tTLNPR7m6wadWjAO4
+	 wg+lulwCMzGb1bBZ3aQsHI6K5KlB6QdFsLojJlnoHA2RYmDqaEdJIXquYi8U30BLx5
+	 /WVAtxfGPyW4Sdw2ICl+Xm93/w3QSo38vTpxmngh81ayk1+VOtK/jzwy+m3h0/gJIJ
+	 QzBgC+UAa0ATg==
 From: Chris Li <chrisl@kernel.org>
-Date: Mon, 28 Jul 2025 01:24:37 -0700
-Subject: [PATCH RFC 07/25] PCI/LUO: Save and restore driver name
+Date: Mon, 28 Jul 2025 01:24:38 -0700
+Subject: [PATCH RFC 08/25] PCI/LUO: Add liveupdate to pcieport driver
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250728-luo-pci-v1-7-955b078dd653@kernel.org>
+Message-Id: <20250728-luo-pci-v1-8-955b078dd653@kernel.org>
 References: <20250728-luo-pci-v1-0-955b078dd653@kernel.org>
 In-Reply-To: <20250728-luo-pci-v1-0-955b078dd653@kernel.org>
 To: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -69,126 +69,48 @@ Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
 X-Mailer: b4 0.14.2
 
-Save the PCI driver name into "struct pci_dev_ser" during the PCI
-prepare callback.
+The PCIe port driver is the driver bound to the PCI-PCI bridge.
+The PCIe port device is depended on by its PCI children devices.
 
-After kexec, use driver_set_override() to ensure the device is
-bound only to the saved driver.
-
-Clear the override after the finish callback.
+Add the empty liveupdate callback to the pcieport driver to indicate
+this driver supports liveupdate. Otherwise it can fail the liveupdate
+operation if the PCI-PCI bridge is depended..
 
 Signed-off-by: Chris Li <chrisl@kernel.org>
 ---
- drivers/pci/liveupdate.c | 36 ++++++++++++++++++++++++++++++++++--
- drivers/pci/pci.h        |  2 ++
- drivers/pci/probe.c      |  2 ++
- 3 files changed, 38 insertions(+), 2 deletions(-)
+ drivers/pci/pcie/portdrv.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-index 6b85673f4ec20add7e49b04dc44f1bcd868adbdc..189827c6111b2c00ebb24404a205cde3f75d33c3 100644
---- a/drivers/pci/liveupdate.c
-+++ b/drivers/pci/liveupdate.c
-@@ -21,6 +21,7 @@ static LIST_HEAD(probe_devices);
- struct pci_dev_ser {
- 	u32	path;		/* domain + bus + slot + fn */
- 	u8	requested;
-+	char	driver_name[63];
- 	u64	driver_data;	/* driver data */
+diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+index 0e9ef387182856771d857181d88f376632b46f0d..fd43c1ebfb9d2852fbc460b0390dd7fb016226d2 100644
+--- a/drivers/pci/pcie/portdrv.c
++++ b/drivers/pci/pcie/portdrv.c
+@@ -789,6 +789,15 @@ static const struct pci_error_handlers pcie_portdrv_err_handler = {
+ 	.mmio_enabled = pcie_portdrv_mmio_enabled,
  };
  
-@@ -91,6 +92,10 @@ static int build_liveupdate_devices(struct list_head *head)
- 
- static void dev_cleanup_liveupdate(struct device *dev)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
++#ifdef CONFIG_LIVEUPDATE
 +
-+	if (liveupdate_state_updated())
-+		WARN_ON(driver_set_override(dev, &pdev->driver_override, "", 0));
- 	dev->lu.depended = 0;
- 	dev->lu.dev_state = NULL;
- 	list_del_init(&dev->lu.lu_next);
-@@ -139,7 +144,13 @@ static int pci_get_device_path(struct pci_dev *pdev)
- static int pci_save_device_state(struct device *dev, struct pci_dev_ser *s)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
-+	const char *name = dev->driver->name;
- 
-+	if (!name)
-+		return -ENXIO;
-+	if (strlen(name) > sizeof(s->driver_name) - 1)
-+		return -ENOSPC;
-+	strscpy(s->driver_name, name, sizeof(s->driver_name));
- 	s->path = pci_get_device_path(pdev);
- 	s->requested = dev->lu.requested;
- 	return 0;
-@@ -370,9 +381,9 @@ static void pci_dev_do_restore(struct pci_dev *dev, struct pci_dev_ser *s)
- 		dev->dev.lu.requested = 1;
- 	else
- 		dev->dev.lu.depended = 1;
--	pci_info(dev, "liveupdate restore [%s] data: [%llx]\n",
-+	pci_info(dev, "liveupdate restore [%s] driver: %s data: [%llx]\n",
- 		 s->requested ? "requested" : "depended",
--		 s->driver_data);
-+		 s->driver_name, s->driver_data);
- 	list_move_tail(&dev->dev.lu.lu_next, &probe_devices);
- }
- 
-@@ -392,6 +403,27 @@ void pci_liveupdate_restore(struct pci_dev *dev)
- 			return pci_dev_do_restore(dev, s);
- }
- 
-+void pci_liveupdate_override_driver(struct pci_dev *dev)
-+{
-+	struct pci_dev_ser *s = dev->dev.lu.dev_state;
-+	int ret;
-+	int len;
++/*
++ * Empty pcie_port_lu_ops to indicate this driver support liveupdate.
++ */
++static struct dev_liveupdate_ops pcie_port_lu_ops;
 +
-+	if (!s)
-+		return;
++#endif /* CONFIG_LIVEUPDATE */
 +
-+	len = strlen(s->driver_name);
-+	if (!len)
-+		return;
-+
-+	ret = driver_set_override(&dev->dev,
-+				  &dev->driver_override,
-+				  s->driver_name, len);
-+	if (ret)
-+		panic("PCI Liveupdate override driver failed: %s", s->driver_name);
-+}
-+
-+
- static int __init pci_liveupdate_init(void)
- {
- 	int ret;
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index c9a7383753949994e031dc362920286a475fe2ab..b79a18c5e948980fe2ef3f0a10e0d795b1eee6d7 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -1161,8 +1161,10 @@ static inline int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int inde
+ static struct pci_driver pcie_portdriver = {
+ 	.name		= "pcieport",
+ 	.id_table	= port_pci_ids,
+@@ -802,6 +811,9 @@ static struct pci_driver pcie_portdriver = {
+ 	.driver_managed_dma = true,
  
- #ifdef CONFIG_LIVEUPDATE
- void pci_liveupdate_restore(struct pci_dev *dev);
-+void pci_liveupdate_override_driver(struct pci_dev *dev);
- #else
- static inline void pci_liveupdate_restore(struct pci_dev *dev) {}
-+static inline void pci_liveupdate_override_driver(struct pci_dev *dev) {}
- #endif
+ 	.driver.pm	= PCIE_PORTDRV_PM_OPS,
++#ifdef CONFIG_LIVEUPDATE
++	.driver.lu	= &pcie_port_lu_ops,
++#endif
+ };
  
- #endif /* DRIVERS_PCI_H */
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index a0605af1a699cd07b09897172803dcba1d2da9f9..e41a1bef2083aa9184fd1c894d5de964f19d5c01 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2714,6 +2714,8 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
- 	/* Set up MSI IRQ domain */
- 	pci_set_msi_domain(dev);
- 
-+	pci_liveupdate_override_driver(dev);
-+
- 	/* Notifier could use PCI capabilities */
- 	ret = device_add(&dev->dev);
- 	WARN_ON(ret < 0);
+ static int __init dmi_pcie_pme_disable_msi(const struct dmi_system_id *d)
 
 -- 
 2.50.1.487.gc89ff58d15-goog
