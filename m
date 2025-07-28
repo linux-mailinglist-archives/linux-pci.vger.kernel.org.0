@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-33043-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33044-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5888B13C36
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 15:59:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 364F7B13C3A
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 15:59:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFC601C2021E
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 13:56:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 317D318893BF
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 13:56:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E22626CE2F;
-	Mon, 28 Jul 2025 13:53:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4E57274B42;
+	Mon, 28 Jul 2025 13:53:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F13jPxay"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iDj5USVM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0B626CE1C;
-	Mon, 28 Jul 2025 13:53:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4ACC274B25;
+	Mon, 28 Jul 2025 13:53:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753710824; cv=none; b=P8OeezRjkrr3wzeJ9a++Nqx4zGKQJtl+NwRgGa29VsNQt5fMIASQkzQfm9Vo4NABvcIZLWVqgY9547qbORt3qGzVAr6bBVXUNsAQiic829d/UrSe7MLKtb9iaJ77QrqvfXsXD2jSHkqGS7HeBi1h4wosXZ7VWylIkdXpQJWhRCI=
+	t=1753710828; cv=none; b=MgZGFftTH4FWZmZG4l2DF8boVw0JauUfEs6yQFDUDBtQ7iGHer6rl2J028/6QlkXz+20adhdKOvKGi/huVv9jJMxBnOzdQc+Gy4d4c0QuMOgPPfijXFuIC1NJ8MiMs0j01bxHy9QFnZ6V2jIHaHr5AQSlOg7TQiYPOWDGr+lZ6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753710824; c=relaxed/simple;
-	bh=b8DNZd0OWQO+/qyBhIEURTzrRcRTx4S5avd9jivd7EU=;
+	s=arc-20240116; t=1753710828; c=relaxed/simple;
+	bh=skkmTrobQDZGFt53QbtosVSpxpFbDP0+nW5NvEz59wg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hOGmPR1caHcHzarFzAEYpH3g9Nf4o5WiKtNG8EvA56Mwcieon4hUksDnQvH8jfTJpaLBN8OqRhdB1xJQgzqzYVtVsx7EgAd04X1/Od8ERwAEONEjlCy9frAtNdTcblQHXoUr+Eg1XUmb/ZfKWt4LEaUs0lWs/0ekvNBPLXhmtfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F13jPxay; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3101FC4CEE7;
-	Mon, 28 Jul 2025 13:53:36 +0000 (UTC)
+	 MIME-Version; b=UhYgEKn5ecfy4I1uI0+3FUsMIVtx82ArlSV8b8tbygkOk/04u96vqzU/0Ipsz/JPvG+15jNkoYa+JQLXG6bcPiHwMCUm9E5vJ7Jbv4RDADZemOgjdIu6BWp25koR8r5L4FW0x+MFHGIgCxRvqI6rq8UDTpIvQpnOCE2n9HbhJ0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDj5USVM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5079FC4CEF7;
+	Mon, 28 Jul 2025 13:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753710822;
-	bh=b8DNZd0OWQO+/qyBhIEURTzrRcRTx4S5avd9jivd7EU=;
+	s=k20201202; t=1753710828;
+	bh=skkmTrobQDZGFt53QbtosVSpxpFbDP0+nW5NvEz59wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F13jPxayOoMzgp7VKZEdViJybGfxuLkSHJUCPgTuWQJ0i+CLH33v+qmwcZJUi8lNT
-	 Q1RtRnDhuxiqteYRDQAmCJE9bhpkyhDmetlhujeaP4VHVfS5/3+seo0w99SRxy32Ql
-	 O/38UqmGE7syHkqUW2JLox1WdLGknXnhzFsPL80PGhfbpp7PpGAOQrqiZ4u2ZkKl8N
-	 QeZ4BzZkzNYEnvdyI+IhhfX1+Xa7qG7LFYLUN0zsxIebsekBqwXUfAc2NUrSRI2tHp
-	 w7zxhSFR0mF+5N7HwdyU4ZpuerB0kLeUg0xgQb10HKxqN8hwwABigryOPDnQ5AyZQ1
-	 LXqmvqfoDoeAw==
+	b=iDj5USVMbhRXmRBxR4tAWy3HrA9W0KOQGGr03N8mmrkma9x4TkkKI87JB3DmEYawK
+	 RG1A9g51wQtN5LsBxR7rWDedvb3sVG7PrgFRJ/AlpsCb1nBspdESRL0fGrd+QjmCGe
+	 lMZmtei3Gga6HOlbMtM5u+/imfLR+yeBuyTpnLB7YFjsqPcAhnrJZKLghfRkv7RUTC
+	 6RB5E8UAX0unPHGNMxZUlLLK6kW/wBNx4o6JdxU3kxUEbRHRltb9E6GqYo9GUAv52H
+	 Z9qAYHNQeIaJHKFtRu4rvm9xLfXDoHeOySON3Y8PvIz9P81LYRBbv7MD7h5BT4kVDg
+	 1FGZL+4h7OrEA==
 From: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
 To: linux-coco@lists.linux.dev,
 	kvmarm@lists.linux.dev
@@ -58,9 +58,9 @@ Cc: linux-pci@vger.kernel.org,
 	Will Deacon <will@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
-Subject: [RFC PATCH v1 11/38] KVM: arm64: CCA: register host tsm platform device
-Date: Mon, 28 Jul 2025 19:21:48 +0530
-Message-ID: <20250728135216.48084-12-aneesh.kumar@kernel.org>
+Subject: [RFC PATCH v1 12/38] coco: host: arm64: CCA host platform device driver
+Date: Mon, 28 Jul 2025 19:21:49 +0530
+Message-ID: <20250728135216.48084-13-aneesh.kumar@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250728135216.48084-1-aneesh.kumar@kernel.org>
 References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
@@ -72,77 +72,322 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Register a platform device if the CCA DA feature is supported.
-A driver for this platform device will further drive the CCA DA workflow.
+This driver registers the pci_tsm_ops with tsm subsystem.
 
 Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
 ---
- arch/arm64/include/asm/rmi_smc.h |  3 +++
- arch/arm64/kvm/rme.c             | 16 ++++++++++++++++
- 2 files changed, 19 insertions(+)
+ drivers/virt/coco/Kconfig                |   2 +
+ drivers/virt/coco/Makefile               |   1 +
+ drivers/virt/coco/arm-cca-host/Kconfig   |  12 ++
+ drivers/virt/coco/arm-cca-host/Makefile  |   5 +
+ drivers/virt/coco/arm-cca-host/arm-cca.c | 209 +++++++++++++++++++++++
+ drivers/virt/coco/arm-cca-host/rmm-da.h  |  29 ++++
+ 6 files changed, 258 insertions(+)
+ create mode 100644 drivers/virt/coco/arm-cca-host/Kconfig
+ create mode 100644 drivers/virt/coco/arm-cca-host/Makefile
+ create mode 100644 drivers/virt/coco/arm-cca-host/arm-cca.c
+ create mode 100644 drivers/virt/coco/arm-cca-host/rmm-da.h
 
-diff --git a/arch/arm64/include/asm/rmi_smc.h b/arch/arm64/include/asm/rmi_smc.h
-index 504009a42035..42708d500048 100644
---- a/arch/arm64/include/asm/rmi_smc.h
-+++ b/arch/arm64/include/asm/rmi_smc.h
-@@ -12,6 +12,8 @@
+diff --git a/drivers/virt/coco/Kconfig b/drivers/virt/coco/Kconfig
+index 57248b088545..43e9508301bf 100644
+--- a/drivers/virt/coco/Kconfig
++++ b/drivers/virt/coco/Kconfig
+@@ -15,5 +15,7 @@ source "drivers/virt/coco/arm-cca-guest/Kconfig"
  
- #include <linux/arm-smccc.h>
+ source "drivers/virt/coco/guest/Kconfig"
  
-+#define RMI_DEV_NAME "arm-rmi-dev"
++source "drivers/virt/coco/arm-cca-host/Kconfig"
 +
- #define SMC_RMI_CALL(func)				\
- 	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,		\
- 			   ARM_SMCCC_SMC_64,		\
-@@ -87,6 +89,7 @@ enum rmi_ripas {
- #define RMI_FEATURE_REGISTER_0_GICV3_NUM_LRS	GENMASK(37, 34)
- #define RMI_FEATURE_REGISTER_0_MAX_RECS_ORDER	GENMASK(41, 38)
- #define RMI_FEATURE_REGISTER_0_Reserved		GENMASK(63, 42)
-+#define RMI_FEATURE_REGISTER_0_DA		BIT(42)
+ config TSM
+ 	tristate
+diff --git a/drivers/virt/coco/Makefile b/drivers/virt/coco/Makefile
+index 04e124b2d7cf..d0a859dd9eaf 100644
+--- a/drivers/virt/coco/Makefile
++++ b/drivers/virt/coco/Makefile
+@@ -11,3 +11,4 @@ obj-$(CONFIG_ARM_CCA_GUEST)	+= arm-cca-guest/
  
- #define RMI_REALM_PARAM_FLAG_LPA2		BIT(0)
- #define RMI_REALM_PARAM_FLAG_SVE		BIT(1)
-diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-index ec8093ec2da3..d1c147aba2ed 100644
---- a/arch/arm64/kvm/rme.c
-+++ b/arch/arm64/kvm/rme.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <linux/kvm_host.h>
+ obj-$(CONFIG_TSM) 		+= tsm-core.o
+ obj-y				+= guest/
++obj-$(CONFIG_ARM_CCA_HOST)	+= arm-cca-host/
+diff --git a/drivers/virt/coco/arm-cca-host/Kconfig b/drivers/virt/coco/arm-cca-host/Kconfig
+new file mode 100644
+index 000000000000..0f19fbf47613
+--- /dev/null
++++ b/drivers/virt/coco/arm-cca-host/Kconfig
+@@ -0,0 +1,12 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# TSM (TEE Security Manager) host drivers
++#
++config ARM_CCA_HOST
++	tristate "Arm CCA Host driver"
++	depends on ARM64
++	depends on PCI_TSM
++	select TSM
++
++	help
++	  The driver provides TSM backend for ARM CCA
+diff --git a/drivers/virt/coco/arm-cca-host/Makefile b/drivers/virt/coco/arm-cca-host/Makefile
+new file mode 100644
+index 000000000000..ad353b07e95a
+--- /dev/null
++++ b/drivers/virt/coco/arm-cca-host/Makefile
+@@ -0,0 +1,5 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++obj-$(CONFIG_ARM_CCA_HOST) += arm-cca-host.o
++
++arm-cca-host-$(CONFIG_TSM) +=  arm-cca.o
+diff --git a/drivers/virt/coco/arm-cca-host/arm-cca.c b/drivers/virt/coco/arm-cca-host/arm-cca.c
+new file mode 100644
+index 000000000000..c8b0e6db1f47
+--- /dev/null
++++ b/drivers/virt/coco/arm-cca-host/arm-cca.c
+@@ -0,0 +1,209 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2025 ARM Ltd.
++ */
++
 +#include <linux/platform_device.h>
- 
- #include <asm/kvm_emulate.h>
- #include <asm/kvm_mmu.h>
-@@ -1724,6 +1725,18 @@ int kvm_init_realm_vm(struct kvm *kvm)
- 	return 0;
- }
- 
-+static struct platform_device cca_host_dev = {
-+	.name = RMI_DEV_NAME,
-+	.id = PLATFORM_DEVID_NONE
-+};
++#include <linux/pci-tsm.h>
++#include <linux/pci-ide.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/tsm.h>
++#include <linux/vmalloc.h>
 +
-+static void rmm_tsm_init(void)
++#include "rmm-da.h"
++
++/* Number of streams that we can support at the hostbridge level */
++#define CCA_HB_PLATFORM_STREAMS 4
++
++/* Total number of stream id supported at root port level */
++#define MAX_STREAM_ID	256
++
++DEFINE_FREE(vfree, void *, if (!IS_ERR_OR_NULL(_T)) vfree(_T))
++static struct pci_tsm *cca_tsm_pci_probe(struct pci_dev *pdev)
 +{
-+	if (!platform_device_register(&cca_host_dev))
-+		pr_info("CCA host DA platform device initialized.\n");
++	int rc;
++	struct pci_host_bridge *hb;
++	struct cca_host_dsc_pf0 *dsc_pf0 __free(vfree) = NULL;
 +
++	if (pdev->is_virtfn)
++		return NULL;
++
++	if (!is_pci_tsm_pf0(pdev)) {
++		struct pci_tsm *tsm = kzalloc(sizeof(*tsm), GFP_KERNEL);
++
++		if (!tsm)
++			goto err_out;
++
++		pci_tsm_initialize(pdev, tsm);
++		return tsm;
++	}
++
++	if (!pdev->ide_cap)
++		goto err_out;
++
++	dsc_pf0 = vcalloc(sizeof(*dsc_pf0), GFP_KERNEL);
++	if (!dsc_pf0)
++		goto err_out;
++
++	rc = pci_tsm_pf0_initialize(pdev, &dsc_pf0->pci);
++	if (rc)
++		return NULL;
++	/*
++	 * FIXME!!
++	 * update the hostbridge details. This should go into
++	 * some host bridge probe/init routine.
++	 * than the selective index supported by the endpoint
++	 */
++	hb = pci_find_host_bridge(pdev->bus);
++	pci_ide_init_nr_streams(hb, CCA_HB_PLATFORM_STREAMS);
++
++	pci_info(pdev, "tsm enabled\n");
++	return &no_free_ptr(dsc_pf0)->pci.tsm;
++
++err_out:
++	return NULL;
 +}
 +
- void kvm_init_rme(void)
- {
- 	if (PAGE_SIZE != SZ_4K)
-@@ -1737,6 +1750,9 @@ void kvm_init_rme(void)
- 	if (WARN_ON(rmi_features(0, &rmm_feat_reg0)))
- 		return;
- 
-+	if (rme_has_feature(RMI_FEATURE_REGISTER_0_DA))
-+		rmm_tsm_init();
++static void cca_tsm_pci_remove(struct pci_tsm *tsm)
++{
++	struct pci_dev *pdev = tsm->pdev;
++	struct cca_host_dsc_pf0 *dsc_pf0;
 +
- 	if (rme_vmid_init())
- 		return;
- 
++	if (WARN_ON(pdev->is_virtfn))
++		return;
++
++	if (!is_pci_tsm_pf0(pdev)) {
++
++		pci_dbg(tsm->pdev, "tsm disabled\n");
++		kfree(pdev->tsm);
++		return;
++	}
++
++	dsc_pf0 = to_cca_dsc_pf0(pdev);
++	pci_dbg(tsm->pdev, "tsm disabled\n");
++	vfree(dsc_pf0);
++}
++
++/* per root port unique with multiple restrictions. For now global */
++static DECLARE_BITMAP(cca_stream_ids, MAX_STREAM_ID);
++
++static int cca_tsm_connect(struct pci_dev *pdev)
++{
++	struct pci_dev *rp = pcie_find_root_port(pdev);
++	struct cca_host_dsc_pf0 *dsc_pf0;
++	struct pci_ide *ide;
++	int rc, stream_id;
++
++	/* Only function 0 supports connect in host */
++	if (WARN_ON(!is_pci_tsm_pf0(pdev)))
++		return -EIO;
++
++	dsc_pf0 = to_cca_dsc_pf0(pdev);
++	/* Allocate stream id */
++	stream_id = find_first_zero_bit(cca_stream_ids, MAX_STREAM_ID);
++	if (stream_id == MAX_STREAM_ID)
++		return -EBUSY;
++	set_bit(stream_id, cca_stream_ids);
++
++	ide = pci_ide_stream_alloc(pdev);
++	if (!ide) {
++		rc = -ENOMEM;
++		goto err_stream_alloc;
++	}
++
++	dsc_pf0->sel_stream = ide;
++	ide->stream_id = stream_id;
++	rc = pci_ide_stream_register(ide);
++	if (rc)
++		goto err_stream;
++
++	pci_ide_stream_setup(pdev, ide);
++	pci_ide_stream_setup(rp, ide);
++
++	rc = tsm_ide_stream_register(pdev, ide);
++	if (rc)
++		goto err_tsm;
++
++	/*
++	 * Once ide is setup enable the stream at endpoint
++	 * Root port will be done by RMM
++	 */
++	pci_ide_stream_enable(pdev, ide);
++	return 0;
++
++err_tsm:
++	pci_ide_stream_teardown(rp, ide);
++	pci_ide_stream_teardown(pdev, ide);
++	pci_ide_stream_unregister(ide);
++err_stream:
++	pci_ide_stream_free(ide);
++err_stream_alloc:
++	clear_bit(stream_id, cca_stream_ids);
++
++	return rc;
++}
++
++static void cca_tsm_disconnect(struct pci_dev *pdev)
++{
++	struct pci_dev *rp = pcie_find_root_port(pdev);
++	struct cca_host_dsc_pf0 *dsc_pf0;
++	struct pci_ide *ide;
++
++	if (WARN_ON(!is_pci_tsm_pf0(pdev)))
++		return;
++
++	dsc_pf0 = to_cca_dsc_pf0(pdev);
++	ide = dsc_pf0->sel_stream;
++	dsc_pf0->sel_stream = NULL;
++	pci_ide_stream_disable(pdev, ide);
++	tsm_ide_stream_unregister(ide);
++	pci_ide_stream_teardown(rp, ide);
++	pci_ide_stream_teardown(pdev, ide);
++	pci_ide_stream_unregister(ide);
++	clear_bit(ide->stream_id, cca_stream_ids);
++	pci_ide_stream_free(ide);
++}
++
++static const struct pci_tsm_ops cca_pci_ops = {
++	.probe = cca_tsm_pci_probe,
++	.remove = cca_tsm_pci_remove,
++	.connect = cca_tsm_connect,
++	.disconnect = cca_tsm_disconnect,
++};
++
++static void cca_tsm_remove(void *tsm_core)
++{
++	tsm_unregister(tsm_core);
++}
++
++static int cca_tsm_probe(struct platform_device *pdev)
++{
++	struct tsm_core_dev *tsm_core;
++
++	tsm_core = tsm_register(&pdev->dev, NULL, &cca_pci_ops);
++	if (IS_ERR(tsm_core))
++		return PTR_ERR(tsm_core);
++
++	return devm_add_action_or_reset(&pdev->dev, cca_tsm_remove, tsm_core);
++}
++
++static const struct platform_device_id arm_cca_host_id_table[] = {
++	{ RMI_DEV_NAME, 0},
++	{ }
++};
++MODULE_DEVICE_TABLE(platform, arm_cca_host_id_table);
++
++
++static struct platform_driver cca_tsm_platform_driver = {
++	.probe = cca_tsm_probe,
++	.id_table = arm_cca_host_id_table,
++	.driver = {
++		.name = "cca_tsm",
++	},
++};
++
++MODULE_IMPORT_NS("PCI_IDE");
++module_platform_driver(cca_tsm_platform_driver);
++MODULE_DESCRIPTION("ARM CCA Host TSM driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/virt/coco/arm-cca-host/rmm-da.h b/drivers/virt/coco/arm-cca-host/rmm-da.h
+new file mode 100644
+index 000000000000..840cb584acdd
+--- /dev/null
++++ b/drivers/virt/coco/arm-cca-host/rmm-da.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2024 ARM Ltd.
++ */
++
++#ifndef RMM_DA_H_
++#define RMM_DA_H_
++
++#include <linux/pci.h>
++#include <linux/pci-ide.h>
++#include <linux/pci-tsm.h>
++#include <asm/rmi_smc.h>
++
++struct cca_host_dsc_pf0 {
++	struct pci_tsm_pf0 pci;
++	struct pci_ide *sel_stream;
++};
++
++static inline struct cca_host_dsc_pf0 *to_cca_dsc_pf0(struct pci_dev *pdev)
++{
++	struct pci_tsm *tsm = pdev->tsm;
++
++	if (!tsm || pdev->is_virtfn || !is_pci_tsm_pf0(pdev))
++		return NULL;
++
++	return container_of(tsm, struct cca_host_dsc_pf0, pci.tsm);
++}
++
++#endif
 -- 
 2.43.0
 
