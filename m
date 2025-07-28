@@ -1,53 +1,47 @@
-Return-Path: <linux-pci+bounces-33080-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33081-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B315B140ED
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 19:07:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC3DCB14104
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 19:12:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 82FE41899FC4
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 17:08:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F2F216CA43
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 17:12:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE91D274B52;
-	Mon, 28 Jul 2025 17:07:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1A922737E3;
+	Mon, 28 Jul 2025 17:12:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="XHjgXFrK"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ISRKPyRX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D842273D6E;
-	Mon, 28 Jul 2025 17:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33114EED8;
+	Mon, 28 Jul 2025 17:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753722466; cv=none; b=ViBdCGHYZ5vY1Qyy5OO8ZffAYnybJlGgYp7jYkyyR2G/1xsMxKhminFVWCx0SeErwoEiL79k2h5+dfBTW7ERGwwX7wBnZ6L+ETLWJ8AHA444MzaIdKe1LO2vNu/puR8vRS//KoCLKOLeMxN9hp4GfUi0s2MJH+NIiM0S0aELTNg=
+	t=1753722732; cv=none; b=ncZA+H1ARpAit4m5x6Kcrbk0ISqNVcQY5puLAb5k191Gumw6ls7teLLg8iOjzS9TykcCwvy6yOhx3yoEteAy+1BP6NSaV9uV0JrLBwVmrZBNkgl62CAtYJXgrArQ6IOuRcZ9qtQPT2P/QVcTb7Ftv8Ga8901xldpDWt3dGtM+nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753722466; c=relaxed/simple;
-	bh=8zF2yMQp+ihqRs6CXyF3EAgjaysxgFn3aji1yds87Gw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=ujaZDjBRkVKbUmLahosWlaRu+SOeEoPRQ13pVaN6y+yK2YZUEEGeIRA8JFe6nBkVlTp4hvxFsxHExAkFlpQRo+YcoYsOB6cqgOGd7m5SLWNYJ7hJxXZIAfOT+j9+sOMuAZRl0gipIz6jq5AaJDDdPX8kL2tbWuzVbJ7SChHAeW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=XHjgXFrK; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=vCTi7Vmk9aRE1IKFUsfxXldYjrZeeC/iIVRDXKgVHWo=; b=XHjgXFrKuAhiveJ6zCrvJT8Pvw
-	re9J8LZpJpl40TreVfHUPY2lnYVRFy+PufGoNxDVEgTuS0s84xxDxMwecbKLo3UpnvzoMVqFabY5O
-	fns6daDQC4GZzjzk81dgUnIBncap8IUcFBgRQ+FDj7GtQEkK7F51IIrGWpfK4rRTXW5sfS9q1MDKQ
-	6/wNP0s/OHbfhbpmZL9kyyw6F9TOJplnVRRzeSNunWZGOK7MaBeHKnz82mVkMDabojTslET5bVvMG
-	d6AG/BDnrsJDD6etzDoLtYTAaCoD+hgyhnRjFdBQiaqbGi/0dIRgNCr5slZOAZysPyyIWQSEA7f7t
-	Ibk+mOxA==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <logang@deltatee.com>)
-	id 1ugRK6-008OdV-0r;
-	Mon, 28 Jul 2025 11:07:39 -0600
-Message-ID: <d3c8c573-f201-4450-9400-cc3ccafd2c04@deltatee.com>
-Date: Mon, 28 Jul 2025 11:07:34 -0600
+	s=arc-20240116; t=1753722732; c=relaxed/simple;
+	bh=jm8GHfoU8DWdKYSCTigI98dUJfuD9vlNqLzgT9PHHwI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J8T0rTYsPNg+l0MO9ekPBzn2jGfz3KtwYOo1wFg4f1+l5SCLCOFrPXqjg+8N5qk6tYPNTW0GV/BKp45TMkKlVuGTeqly4STylEHGyNc4K+xKFETEexgTFYCLb5TDFAiAJFokjJd8sUxhqYQbd5Wz0+yWaEcBoUiiUjVmSK88M1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ISRKPyRX; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.64.232.206] (unknown [52.148.140.42])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5E84F2114274;
+	Mon, 28 Jul 2025 10:12:10 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5E84F2114274
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1753722730;
+	bh=/O3Zq1iAdcSb7vXbke8ttLkPel/qXHUJTuDYYr+EkFQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ISRKPyRXDJnUgLM62BqlHo8k+3QddOaPibWcTOkOmmzvIbImRFP++2q4iZ9S+OOml
+	 L0BTHhKHh7JOMPygtGqeduCRxsHOVi5Sd582dIJ0FDFggrTbUJaWPEKghqqw50aN8i
+	 QMBVEvIe6NbRiXNVrVmdP+sr7kUpFZJRiKfXllCI=
+Message-ID: <e823efbd-892b-45c6-a747-9a7dc1caf48c@linux.microsoft.com>
+Date: Mon, 28 Jul 2025 10:12:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,90 +49,116 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Christoph Hellwig <hch@lst.de>,
- Alex Williamson <alex.williamson@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
- Jens Axboe <axboe@kernel.dk>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
- <jglisse@redhat.com>, Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mm@kvack.org, linux-pci@vger.kernel.org,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>,
- Vivek Kasireddy <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
-References: <cover.1753274085.git.leonro@nvidia.com>
- <82e62eb59afcd39b68ae143573d5ed113a92344e.1753274085.git.leonro@nvidia.com>
- <20250724080313.GA31887@lst.de> <20250724081321.GT402218@unreal>
- <b32ae619-6c4a-46fc-a368-6ad4e245d581@deltatee.com>
- <20250727190514.GG7551@nvidia.com>
- <d69e0d74-285e-4cde-a2e4-a803accfa9e1@deltatee.com>
- <20250728164136.GD402218@unreal>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20250728164136.GD402218@unreal>
+Subject: Re: [PATCH v4 5/7] PCI: hv: Use hv_setup_*() to set up hypercall
+ arguments
+To: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ lpieralisi@kernel.org, kw@linux.com, mani@kernel.org, robh@kernel.org,
+ bhelgaas@google.com, arnd@arndb.de
+Cc: x86@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org
+References: <20250718045545.517620-1-mhklinux@outlook.com>
+ <20250718045545.517620-6-mhklinux@outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <20250718045545.517620-6-mhklinux@outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: leon@kernel.org, jgg@nvidia.com, hch@lst.de, alex.williamson@redhat.com, akpm@linux-foundation.org, bhelgaas@google.com, christian.koenig@amd.com, dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, axboe@kernel.dk, jglisse@redhat.com, joro@8bytes.org, kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, m.szyprowski@samsung.com, robin.murphy@arm.com, sumit.semwal@linaro.org, vivek.kasireddy@intel.com, will@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH 05/10] PCI/P2PDMA: Export pci_p2pdma_map_type() function
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-
-
-On 2025-07-28 10:41, Leon Romanovsky wrote:
-> On Mon, Jul 28, 2025 at 10:12:31AM -0600, Logan Gunthorpe wrote:
->>
->>
->> On 2025-07-27 13:05, Jason Gunthorpe wrote:
->>> On Fri, Jul 25, 2025 at 10:30:46AM -0600, Logan Gunthorpe wrote:
->>>>
->>>>
->>>> On 2025-07-24 02:13, Leon Romanovsky wrote:
->>>>> On Thu, Jul 24, 2025 at 10:03:13AM +0200, Christoph Hellwig wrote:
->>>>>> On Wed, Jul 23, 2025 at 04:00:06PM +0300, Leon Romanovsky wrote:
->>>>>>> From: Leon Romanovsky <leonro@nvidia.com>
->>>>>>>
->>>>>>> Export the pci_p2pdma_map_type() function to allow external modules
->>>>>>> and subsystems to determine the appropriate mapping type for P2PDMA
->>>>>>> transfers between a provider and target device.
->>>>>>
->>>>>> External modules have no business doing this.
->>>>>
->>>>> VFIO PCI code is built as module. There is no way to access PCI p2p code
->>>>> without exporting functions in it.
->>>>
->>>> The solution that would make more sense to me would be for either
->>>> dma_iova_try_alloc() or another helper in dma-iommu.c to handle the
->>>> P2PDMA case.
->>>
->>> This has nothing to do with dma-iommu.c, the decisions here still need
->>> to be made even if dma-iommu.c is not compiled in.
->>
->> Doesn't it though? Every single call in patch 10 to the newly exported
->> PCI functions calls into the the dma-iommu functions. If there were
->> non-iommu paths then I would expect the code would use the regular DMA
->> api directly which would then call in to dma-iommu.
+On 7/17/2025 9:55 PM, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
 > 
-> If p2p type is PCI_P2PDMA_MAP_BUS_ADDR, there will no dma-iommu and DMA
-> at all.
+> Update hypercall call sites to use the new hv_setup_*() functions
+> to set up hypercall arguments. Since these functions zero the
+> fixed portion of input memory, remove now redundant calls to memset().
+> 
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+> 
+> Notes:
+>     Changes in v4:
+>     * Rename hv_hvcall_*() functions to hv_setup_*() [Easwar Hariharan]
+>     * Rename hv_hvcall_in_batch_size() to hv_get_input_batch_size()
+>       [Easwar Hariharan]
+>     
+>     Changes in v3:
+>     * Removed change to definition of struct hv_mmio_write_input so it remains
+>       consistent with original Hyper-V definitions. Adjusted argument to
+>       hv_hvcall_in_array() accordingly so that the 64 byte 'data' array is
+>       not zero'ed. [Nuno Das Neves]
+>     
+>     Changes in v2:
+>     * In hv_arch_irq_unmask(), added check of the number of computed banks
+>       in the hv_vpset against the batch_size. Since an hv_vpset currently
+>       represents a maximum of 4096 CPUs, the hv_vpset size does not exceed
+>       512 bytes and there should always be sufficent space. But do the
+>       check just in case something changes. [Nuno Das Neves]
+> 
+>  drivers/pci/controller/pci-hyperv.c | 18 ++++++++----------
+>  1 file changed, 8 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index d2b7e8ea710b..79de85d1d68b 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -620,7 +620,7 @@ static void hv_irq_retarget_interrupt(struct irq_data *data)
+>  	struct pci_dev *pdev;
+>  	unsigned long flags;
+>  	u32 var_size = 0;
+> -	int cpu, nr_bank;
+> +	int cpu, nr_bank, batch_size;
+>  	u64 res;
+>  
+>  	dest = irq_data_get_effective_affinity_mask(data);
+> @@ -636,8 +636,8 @@ static void hv_irq_retarget_interrupt(struct irq_data *data)
+>  
+>  	local_irq_save(flags);
+>  
+> -	params = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> -	memset(params, 0, sizeof(*params));
+> +	batch_size = hv_setup_in_array(&params, sizeof(*params),
+> +					sizeof(params->int_target.vp_set.bank_contents[0]));
+>  	params->partition_id = HV_PARTITION_ID_SELF;
+>  	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
+>  	params->int_entry.msi_entry.address.as_uint32 = int_desc->address & 0xffffffff;
+> @@ -669,7 +669,7 @@ static void hv_irq_retarget_interrupt(struct irq_data *data)
+>  		nr_bank = cpumask_to_vpset(&params->int_target.vp_set, tmp);
+>  		free_cpumask_var(tmp);
+>  
+> -		if (nr_bank <= 0) {
+> +		if (nr_bank <= 0 || nr_bank > batch_size) {
+>  			res = 1;
+>  			goto out;
+>  		}
+> @@ -1102,11 +1102,9 @@ static void hv_pci_read_mmio(struct device *dev, phys_addr_t gpa, int size, u32
+>  
+>  	/*
+>  	 * Must be called with interrupts disabled so it is safe
+> -	 * to use the per-cpu input argument page.  Use it for
+> -	 * both input and output.
+> +	 * to use the per-cpu argument page.
+>  	 */
+> -	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> -	out = *this_cpu_ptr(hyperv_pcpu_input_arg) + sizeof(*in);
+> +	hv_setup_inout(&in, sizeof(*in), &out, sizeof(*out));
+>  	in->gpa = gpa;
+>  	in->size = size;
+>  
+> @@ -1135,9 +1133,9 @@ static void hv_pci_write_mmio(struct device *dev, phys_addr_t gpa, int size, u32
+>  
+>  	/*
+>  	 * Must be called with interrupts disabled so it is safe
+> -	 * to use the per-cpu input argument memory.
+> +	 * to use the per-cpu argument page.
+>  	 */
+> -	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +	hv_setup_in_array(&in, offsetof(typeof(*in), data), sizeof(in->data[0]));
+>  	in->gpa = gpa;
+>  	in->size = size;
+>  	switch (size) {
 
-I understand that and it is completely beside my point.
-
-If the dma mapping for P2P memory doesn't need to create an iommu
-mapping then that's fine. But it should be the dma-iommu layer to decide
-that. It's not a decision that should be made by every driver doing this
-kind of thing.
-
-With P2PDMA memory we are still creating a DMA mapping. It's just the
-dma address will be a PCI bus address instead of an IOVA. My opinion
-remains: none of these details should be exposed to the drivers.
-
-Logan
+Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
