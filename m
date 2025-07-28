@@ -1,140 +1,203 @@
-Return-Path: <linux-pci+bounces-32983-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32984-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60D26B132BC
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 03:08:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 446EAB132FA
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 04:37:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 68DE818952BA
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 01:09:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D6361895ADB
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 02:37:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D1DA130A73;
-	Mon, 28 Jul 2025 01:08:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8D8C1EA7C4;
+	Mon, 28 Jul 2025 02:37:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="eGKpMu8N"
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b="U3YV+BWl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from mta-64-225.siemens.flowmailer.net (mta-64-225.siemens.flowmailer.net [185.136.64.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473AD29B0;
-	Mon, 28 Jul 2025 01:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E26F19D8A8
+	for <linux-pci@vger.kernel.org>; Mon, 28 Jul 2025 02:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753664921; cv=none; b=jmKTKLadiqXkV6eEaJSO1Wx2CdzybqpaupzbfVNJTJjombYcrVXY3J7ZZV2swYQFCDr+tyzV6EFHFiMhogbJBvqmSVePqvH21rUFVcvsXmBs9h44JG5ayR+Y4lqhggknLdGmFmJaL+vDs4Z/ONzXEdQur7FzE+luCewrixA/pfQ=
+	t=1753670243; cv=none; b=tM+ZmR5Yw99tf8DVWnuz55I+MSaqa/0mFQuD6gPcpu+mhVRmInhGYKFG4gef+UN68tQ+jbIAlM6xuVdZKtRZpjzCJYpm7TcutV0zapyJuIbYsC9zjYAt7EZmrUAjycTWMBjDlbZGfpAxiVIV1kIHekYZ4otpMVX+35ywdMqKE0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753664921; c=relaxed/simple;
-	bh=6Y3D9D9Ou7Tlb+4EPgKYBcu/72sFDKzVsN8C1xEr5d0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GXpT7wg9q9gtynEngKYJ5Bk/75dzPwRW1Ls210kmgsDdJUfsLCKSEFZqM5Tb2tEsS0S27Z364nyAebS5hO0cXyzIiaIWBlM8HjhSWX4i8mwGq6Zg5duygO7uBvBUZuy7KeKbosxsXnU3NWdyvqejo9hCyHk9RBEVdpxTxUn6wtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=eGKpMu8N; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1753664908; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=2Iz/DOKZWtt9pD+4iMxQ3XO3FM24VBfncMNR3ZAeizA=;
-	b=eGKpMu8NscuyUwKZnRp3q8JcVV05i/CslvjaduwcGJ4JGAVbxoBKkdH+efdAXASIX8mYJySv2+aHT7VylLCfSJ0JWtmoP8dFopeh3IzzyyjDbMOak0cgEY2+BDpxSe45xjlLEe+I6ay/nEQpWD32lTWqmHEdsuP/9zGoloh4D2o=
-Received: from 30.246.181.19(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WkBBPjH_1753664905 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 28 Jul 2025 09:08:26 +0800
-Message-ID: <4ef01be1-44b2-4bf5-afec-a90d4f71e955@linux.alibaba.com>
-Date: Mon, 28 Jul 2025 09:08:25 +0800
+	s=arc-20240116; t=1753670243; c=relaxed/simple;
+	bh=MSoy18Lo62LAUyq7KCF54vpyP7GG406rj0ccDQ10Skg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m36j+dSi6kRnbwjTVmOYf5k7muTvwf5ef/NFqZfpzfHWyl33FqD+KeH5qNNdbd1pfbXQt7/TyDYjIYudL0pq2AHyNhqusoCYUvrZcZE5VcMwpGZkTs+8lng7UoGOARe6Rb89Ak+YC7Ajl3CSmr8g82kmUrSOdqpHFIQDisbxZZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b=U3YV+BWl; arc=none smtp.client-ip=185.136.64.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+Received: by mta-64-225.siemens.flowmailer.net with ESMTPSA id 20250728023711c0e2d6331b0673c88b
+        for <linux-pci@vger.kernel.org>;
+        Mon, 28 Jul 2025 04:37:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=huaqian.li@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=fC62cQYdvCylNFP9ovM8Zka6qtPTBphxpPNRAOfRouY=;
+ b=U3YV+BWlE3S6BOSuSkdzj6nvU/TcZfdmL0cvhO9q8Am+/vXxc1AdazlTlq2dbL4wx9vy9x
+ IRR6uMmk+PX201rntikUQgc4s8KDgt61Mt0AgEM5ldqZtvgLXtx30i41dBOo7XUSYRZIEbcH
+ se1kOnvxVRzvnwGjCWUM7a55U+99lxR+bkPoVzyjPwHPksKx8Tq5NxfHu6kNeVAVs7CPXxyo
+ bZvH8OqzUfxg6FSHYFOpGS4tWGVG9WyWbBWeem1dgF5fGMYY1axQlhcYRiYTdQgNwmTqZLol
+ +B7+q+8V4MIsnMddX56u1apHWRyfhHEOgD8NWRA1/FnrZzDYQUo6/MOQ==;
+From: huaqian.li@siemens.com
+To: lkp@intel.com
+Cc: baocheng.su@siemens.com,
+	bhelgaas@google.com,
+	christophe.jaillet@wanadoo.fr,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	diogo.ivo@siemens.com,
+	helgaas@kernel.org,
+	huaqian.li@siemens.com,
+	jan.kiszka@siemens.com,
+	kristo@kernel.org,
+	krzk+dt@kernel.org,
+	kw@linux.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org,
+	nm@ti.com,
+	oe-kbuild-all@lists.linux.dev,
+	robh@kernel.org,
+	s-vadapalli@ti.com,
+	ssantosh@kernel.org,
+	vigneshr@ti.com
+Subject: [PATCH v12 0/7] soc: ti: Add and use PVU on K3-AM65 for DMA isolation
+Date: Mon, 28 Jul 2025 10:36:54 +0800
+Message-Id: <20250728023701.116963-1-huaqian.li@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] vmcoreinfo: Track and log recoverable hardware errors
-To: Breno Leitao <leitao@debian.org>
-Cc: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- James Morse <james.morse@arm.com>, Robert Moore <robert.moore@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- acpica-devel@lists.linux.dev, osandov@osandov.com, konrad.wilk@oracle.com,
- linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org, kernel-team@meta.com
-References: <20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org>
- <7ce9731a-b212-4e27-8809-0559eb36c5f2@linux.alibaba.com>
- <4qh2wbcbzdajh2tvki26qe4tqjazmyvbn7v7aqqhkxpitdrexo@ucch4ppo7i4e>
- <fdb5dced-ea5a-48b8-bbb4-fc3ade7f3df8@linux.alibaba.com>
- <ldlansfiesfxf4a6dzp5z2etquz5jgiq6ttx3al6q7sesgros6@xh4lkevbzsow>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <ldlansfiesfxf4a6dzp5z2etquz5jgiq6ttx3al6q7sesgros6@xh4lkevbzsow>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-959203:519-21489:flowmailer
 
+From: Li Hua Qian <huaqian.li@siemens.com>
 
+Changes in v12:
+ - Fix Sparse warnings by replacing plain integer 0 with NULL for
+   pointer arguments in ti_pvu_probe() (patch 3)
+   (Reported-by: kernel test robot lkp@intel.com)
 
-在 2025/7/26 00:16, Breno Leitao 写道:
-> Hello Shuai,
-> 
-> On Fri, Jul 25, 2025 at 03:40:58PM +0800, Shuai Xue wrote:
->>>> APEI does not define an error type named GHES. GHES is just a kernel
->>>> driver name. Many hardware error types can be handled in GHES (see
->>>> ghes_do_proc), for example, AER is routed by GHES when firmware-first
->>>> mode is used. As far as I know, firmware-first mode is commonly used in
->>>> production. Should GHES errors be categorized into AER, memory, and CXL
->>>> memory instead?
->>>
->>> I also considered slicing the data differently initially, but then
->>> realized it would add more complexity than necessary for my needs.
->>>
->>> If you believe we should further subdivide the data, I’m happy to do so.
->>>
->>> You’re suggesting a structure like this, which would then map to the
->>> corresponding CPER_SEC_ sections:
->>>
->>> 	enum hwerr_error_type {
->>> 	HWERR_RECOV_AER,     // maps to CPER_SEC_PCIE
->>> 	HWERR_RECOV_MCE,     // maps to default MCE + CPER_SEC_PCIE
->>
->> CPER_SEC_PCIE is typo?
-> 
-> Correct, HWERR_RECOV_MCE would map to the regular MCE and not errors
-> coming from GHES.
-> 
->>> 	HWERR_RECOV_CXL,     // maps to CPER_SEC_CXL_*
->>> 	HWERR_RECOV_MEMORY,  // maps to CPER_SEC_PLATFORM_MEM
->>> 	}
->>>
->>> Additionally, what about events related to CPU, Firmware, or DMA
->>> errors—for example, CPER_SEC_PROC, CPER_SEC_FW, CPER_SEC_DMAR? Should we
->>> include those in the classification as well?
->>
->> I would like to split a error from ghes to its own type,
->> it sounds more reasonable. I can not tell what happened from HWERR_RECOV_AERat all :(
-> 
-> Makes sense. Regarding your answer, I suppose we might want to have
-> something like the following:
-> 
-> 	enum hwerr_error_type {
-> 		HWERR_RECOV_MCE,     // maps to errors in do_machine_check()
-> 		HWERR_RECOV_CXL,     // maps to CPER_SEC_CXL_
-> 		HWERR_RECOV_PCI,     // maps to AER (pci_dev_aer_stats_incr()) and CPER_SEC_PCIE and CPER_SEC_PCI
-> 		HWERR_RECOV_MEMORY,  // maps to CPER_SEC_PLATFORM_MEM_
-> 		HWERR_RECOV_CPU,     // maps to CPER_SEC_PROC_
-> 		HWERR_RECOV_DMA,     // maps to CPER_SEC_DMAR_
-> 		HWERR_RECOV_OTHERS,  // maps to CPER_SEC_FW_, CPER_SEC_DMAR_,
-> 	}
-> 
-> Is this what you think we should track?
-> 
-> Thanks
-> --breno
+Changes in v11:
+ - Improve error handling and resolve review comments on pci-keystone
+   driver (patch 4)
 
-It sounds good to me.
+Changes in v10:
+ - Move restricted DMA initialization and cleanup to RC-specific code
+   only (patch 4) as it's only needed for RC mode, not EP mode
 
-Thanks.
-Shuai
+Changes in v9:
+ - Update commit message (patch 4) to remove ambiguous extension claims
+   based on upstream feedback
+
+Changes in v8:
+ - remove patch 8 from this series to simplify the patchset
+ - fix dt_bindings_check warnings (patch 2), 'memory-region' must
+   not be a required property
+
+Changes in v7:
+ - add schema expressing dependency as suggested on pci-host bindings
+ - resolve review comments on pci-keystone driver
+ - add a new patch to make IO_TLB_SEGSIZE configurable
+ - improve patches based on checkpath.pl
+
+Changes in v6:
+ - make restricted DMA memory-region available to all pci-keystone
+   devices, moving property to unconditional section (patch 2)
+
+Changes in v5:
+ - resolve review comments on pci-host bindings
+ - reduce DMA memory regions to 1 - swiotlb does not support more
+ - move activation into overlay (controlled via firmware)
+ - use ks_init_vmap helper instead of loop in
+   rework ks_init_restricted_dma
+ - add more comments to pci-keystone
+ - use 2 chained TLBs of PVU to support maximum of swiotlb (320 MB)
+
+Changes in v4:
+ - reorder patch queue, moving all DTS changes to the back
+ - limit activation to IOT2050 Advanced variants
+ - move DMA pool to allow firmware-based expansion it up to 512M
+
+Changes in v3:
+ - fix ti,am654-pvu.yaml according to review comments
+ - address review comments on ti,am65-pci-host.yaml
+ - differentiate between different compatibles in ti,am65-pci-host.yaml
+ - move pvu nodes to k3-am65-main.dtsi
+ - reorder patch series, pulling bindings and generic DT bits to the front
+
+Changes in v2:
+ - fix dt_bindings_check issues (patch 1)
+ - address first review comments (patch 2)
+ - extend ti,am65-pci-host bindings for PVU (new patch 3)
+
+Only few of the K3 SoCs have an IOMMU and, thus, can isolate the system
+against DMA-based attacks of external PCI devices. The AM65 is without
+an IOMMU, but it comes with something close to it: the Peripheral
+Virtualization Unit (PVU).
+
+The PVU was originally designed to establish static compartments via a
+hypervisor, isolate those DMA-wise against each other and the host and
+even allow remapping of guest-physical addresses. But it only provides
+a static translation region, not page-granular mappings. Thus, it cannot
+be handled transparently like an IOMMU.
+
+Now, to use the PVU for the purpose of isolated PCI devices from the
+Linux host, this series takes a different approach. It defines a
+restricted-dma-pool for the PCI host, using swiotlb to map all DMA
+buffers from a static memory carve-out. And to enforce that the devices
+actually follow this, a special PVU soc driver is introduced. The driver
+permits access to the GIC ITS and otherwise waits for other drivers that
+detect devices with constrained DMA to register pools with the PVU.
+
+For the AM65, the first (and possibly only) driver where this is
+introduced is the pci-keystone host controller. Finally, this series
+provides a DT overlay for the IOT2050 Advanced devices (all have
+MiniPCIe or M.2 extension slots) to make use of this protection scheme.
+Application of this overlay will be handled by firmware.
+
+Due to the cross-cutting nature of these changes, multiple subsystems
+are affected. However, I wanted to present the whole thing in one series
+to allow everyone to review with the complete picture in hands. If
+preferred, I can also split the series up, of course.
+
+Jan
+
+Jan Kiszka (7):
+  dt-bindings: soc: ti: Add AM65 peripheral virtualization unit
+  dt-bindings: PCI: ti,am65: Extend for use with PVU
+  soc: ti: Add IOMMU-like PVU driver
+  PCI: keystone: Add support for PVU-based DMA isolation on AM654
+  arm64: dts: ti: k3-am65-main: Add PVU nodes
+  arm64: dts: ti: k3-am65-main: Add VMAP registers to PCI root complexes
+  arm64: dts: ti: iot2050: Add overlay for DMA isolation for devices
+    behind PCI RC
+
+ .../bindings/pci/ti,am65-pci-host.yaml        |  28 +-
+ .../bindings/soc/ti/ti,am654-pvu.yaml         |  51 ++
+ arch/arm64/boot/dts/ti/Makefile               |   5 +
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |  38 +-
+ ...am6548-iot2050-advanced-dma-isolation.dtso |  33 ++
+ drivers/pci/controller/dwc/pci-keystone.c     | 118 ++++-
+ drivers/soc/ti/Kconfig                        |   4 +
+ drivers/soc/ti/Makefile                       |   1 +
+ drivers/soc/ti/ti-pvu.c                       | 500 ++++++++++++++++++
+ include/linux/ti-pvu.h                        |  32 ++
+ 10 files changed, 800 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
+ create mode 100644 drivers/soc/ti/ti-pvu.c
+ create mode 100644 include/linux/ti-pvu.h
+
+-- 
+2.34.1
 
 
