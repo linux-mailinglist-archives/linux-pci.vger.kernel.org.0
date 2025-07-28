@@ -1,49 +1,46 @@
-Return-Path: <linux-pci+bounces-33026-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33028-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51B5AB13702
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 10:54:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2A27B1372D
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 11:05:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B62216258B
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 08:54:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18E28178591
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Jul 2025 09:05:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCB3222A4D6;
-	Mon, 28 Jul 2025 08:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A76451F8755;
+	Mon, 28 Jul 2025 09:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cachyos.org header.i=@cachyos.org header.b="gL/9WQ/q"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="RNaYNqKU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.ptr1337.dev (mail.ptr1337.dev [202.61.224.105])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134EF38F80;
-	Mon, 28 Jul 2025 08:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.61.224.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFA6199EAD;
+	Mon, 28 Jul 2025 09:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753692846; cv=none; b=oLVb76ssvwIWzv48PmCiJhVWPF4FeMXUUOLCB4Ko22GJw+T3vmJUfcCZYwN5PtGIUQwb3Lk2N4JTfcRIN2AV5qeTgLLlRrC49ILTvco1a31svC5rteHDs4NshKmWEdwkeDAZMuC6Fv6pz+WHZNOrTr8Ix7s/q6l1ruybOoDpL7o=
+	t=1753693532; cv=none; b=OT10GTVvu4MmiYjumuoLMeotyOrGoAmzVKBVY1ztB3QRXlgnikFhzr89ndxkzdTLUrrKeNBbpZgRnO+2y/z+0IwGfAS8syAkQyM4tAiI/tEJgUnSmYHyi2EDBnfARBkm2BwV7BVNyNYyVqT3SUBryLDrjGDqhjABozZbrEywb7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753692846; c=relaxed/simple;
-	bh=B0IJjL98PhPeCgMKI5R+ISp5vmenYly7y+1rdHXxrI8=;
+	s=arc-20240116; t=1753693532; c=relaxed/simple;
+	bh=ZC1PBwzhgJuuOcx5rmgZcY9QFnKGOwDm6B46DS0dnFg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gMa6POZuqItSSWoDIS9tByhUJWoHNWPv/9y8C6p1cDK4yRdoMumT8AS9Iwxkju8mVPp9gJwu1zn31Dlh1BHGBffX0RiLweglkAutK4FJ6Asw+ubBaEHk9RGbKUIB68j+mwjLPAJA7s4Q+U/VaIIMt4wq7NgWo7bYnF34L1+J2VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cachyos.org; spf=pass smtp.mailfrom=cachyos.org; dkim=pass (2048-bit key) header.d=cachyos.org header.i=@cachyos.org header.b=gL/9WQ/q; arc=none smtp.client-ip=202.61.224.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cachyos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cachyos.org
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5403F284303;
-	Mon, 28 Jul 2025 10:45:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cachyos.org; s=dkim;
-	t=1753692331; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=hZAZQxcJny2MJlnbj6INcbeqX5pbA4FFdFvh2PmI64w=;
-	b=gL/9WQ/qCqbdu8zR86gU47Fb4JEBykEZI3fYcn9RWlJ1FkRil9jRegxpKVtlMVHiuCRkvD
-	eUN8qjcTZbRYiOkvX4mdgh/LxFAr5+8+kF7N59rXBpMN6Ij4pFM7K0toI9/17YaGKGKaib
-	TRUqRWvjhzvFhphSevh08vs5VWbN3+rSK8oTR33/pl3tDKExtUZjXzo2iLkcAc7fqbskIw
-	LuRqFnwnfmC9KGst5fDt6aVyRY9/lqAnz1lnsj7VqV6WWNJBP5H76boU0TjPx4UuuMwu9R
-	DCIWav85qzoBaQQMN29prltn9IdsIgfcfFXvyThIPqE17s2r92h8R/Qfq6plxQ==
-Message-ID: <d9a1ed6d-05bb-440d-afa9-cb30315bd02d@cachyos.org>
-Date: Mon, 28 Jul 2025 15:45:25 +0700
+	 In-Reply-To:Content-Type; b=dHtil8Out6lZBtJAkzIzmO4g0F1gWS4ajYn2+1G0yrf4EkEuCTwbcjyJzSr+O5DbiGkH8XZBvBCK2eozE5eJAY34EakySm+mRgnib9l3V4kLTq/JNV0qzBMwbJWR+503fJNaDhnLJuvgZdqQP+rWbW9ycy9FsTHejEU/Qmmql5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=RNaYNqKU; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1753693526; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=T8LcCGaO+6i8uxsy1cdV0D7zwVU5uHMOV2qU0c01c9o=;
+	b=RNaYNqKUsi+4GmgioPacoK1ZdJp/0/JtntzhbCmCUYYK7DtR3X4rmxgm7iB/OtxCInbgIkmsHosYdoLt1Kqe7QaSoYQffrZAO6b/ovgmBztrOxsATI32rtDT5NRETsDDt6HQ5ZnIpziopF3BtSBEsWR6soUHASmVvD/eyr4bvsA=
+Received: from 30.246.181.19(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WkGahay_1753693523 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 28 Jul 2025 17:05:25 +0800
+Message-ID: <09cc9d71-5375-4e35-bbd9-5eec7930ddc7@linux.alibaba.com>
+Date: Mon, 28 Jul 2025 17:05:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -51,87 +48,186 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/5] Improvements to S5 power consumption
-To: Mario Limonciello <superm1@kernel.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: "open list:RADEON and AMDGPU DRM DRIVERS"
- <amd-gfx@lists.freedesktop.org>,
- "open list:HIBERNATION (aka Software Suspend, aka swsusp)"
- <linux-pm@vger.kernel.org>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>,
- "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- "open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
- "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250616175019.3471583-1-superm1@kernel.org>
-Content-Language: en-US
-From: Eric Naim <dnaim@cachyos.org>
-In-Reply-To: <20250616175019.3471583-1-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
+Subject: Re: [PATCH v9 1/2] PCI: trace: Add a generic RAS tracepoint for
+ hotplug event
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: rostedt@goodmis.org, lukas@wunner.de, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+ mattc@purestorage.com, Jonathan.Cameron@huawei.com, bhelgaas@google.com,
+ tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+ davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+ peterz@infradead.org, tianruidong@linux.alibaba.com
+References: <20250725210913.GA3130903@bhelgaas>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250725210913.GA3130903@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 6/17/25 00:50, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> A variety of issues both in function and in power consumption have been
-> raised as a result of devices not being put into a low power state when
-> the system is powered off.
-> 
-> There have been some localized changes[1] to PCI core to help these issues,
-> but they have had various downsides.
-> 
-> This series instead tries to use the S4 flow when the system is being
-> powered off.  This lines up the behavior with what other operating systems
-> do as well.  If for some reason that fails or is not supported, unwind and
-> do the previous S5 flow that will wake all devices and run their shutdown()
-> callbacks.
-> 
+Hi, Bjorn,
 
-Hi Mario,
-
-I've been running this series on CachyOS since 6.16-rc3 and have no issues.
-
-Feel free to add
-
-Tested-by: Eric Naim <dnaim@cachyos.org>
-
--- 
-Regards,
-  Eric
-> v3->v4:
->  * Fix LKP robot failure
->  * Rebase on v6.16-rc2
+在 2025/7/26 05:09, Bjorn Helgaas 写道:
+> On Wed, Jul 23, 2025 at 11:31:07AM +0800, Shuai Xue wrote:
+>> Hotplug events are critical indicators for analyzing hardware health,
+>> and surprise link downs can significantly impact system performance and
+>> reliability.
+>>
+>> Define a new TRACING_SYSTEM named "pci", add a generic RAS tracepoint
+>> for hotplug event to help health checks. Add enum pci_hotplug_event in
+>> include/uapi/linux/pci.h so applications like rasdaemon can register
+>> tracepoint event handlers for it.
+>>
+>> The output is like below:
+>>
+>> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+>> $ cat /sys/kernel/debug/tracing/trace_pipe
+>>      <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:LINK_DOWN
+>>
+>>      <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:CARD_NOT_PRESENT
 > 
-> Previous submissions [1]:
-> Link: https://lore.kernel.org/linux-pm/CAJZ5v0hrKEJa8Ad7iiAvQ3d_0ysVhzZcXSYc5kkL=6vtseF+bg@mail.gmail.com/T/#m91e4eae868a7405ae579e89b135085f4906225d2
-> Link: https://lore.kernel.org/linux-pci/20250506041934.1409302-1-superm1@kernel.org/
-> Link: https://lore.kernel.org/linux-pci/20231213182656.6165-1-mario.limonciello@amd.com/ (v1)
-> Link: https://lore.kernel.org/linux-pm/20250514193406.3998101-1-superm1@kernel.org/ (v2)
-> Link: https://lore.kernel.org/linux-pm/20250609024619.407257-1-superm1@kernel.org/ (v3)
+> I asked about documentation earlier [1], but didn't see any response.
+> I think these tracepoints are important and will be widely used, so it
+> seems like some kind of user guide would be helpful.
+
+Sorry for missing your earlier email about documentation.
+
+> Is there any convention for documenting tracepoints somewhere?  It
+> looks like there's some doc in Documentation/trace/?  Should we be
+> adding something there?
+
+Regarding tracepoint documentation conventions, you raise a good point.
+Looking at Documentation/trace/, most of the existing documentation
+focuses on the tracing infrastructure itself rather than individual
+tracepoint events.
+
+For tracepoint events like the ones I'm familiar with (aer_event,
+memory_failure_event, mce_event, mc_event), the typical approach has
+been:
+
+     - Self-documenting through code - The TRACE_EVENT() definitions in
+       include/trace/events/ serve as the primary specification
+     - UAPI headers - Enums and structures in include/uapi/ provide the
+       interface definitions
+     - Commit messages - Detailed explanations of when/why events are
+       generated
+
+However, there are some exceptions where specific events do have
+dedicated documentation:
+
+     - Documentation/trace/events-power.rst - Power management events
+     - Documentation/trace/events-kmem.rst - Kernel memory allocation events
+     - Documentation/trace/events-nmi.rst - NMI events
+     - Documentation/trace/events-msr.rst - MSR (Model Specific Register) events
+
+Given your point about these PCI tracepoints potentially being widely
+used, I think adding documentation would be valuable. Bellow is the RFC
+doc, are you happy with this?
+
+diff --git a/Documentation/trace/events-pci.rst b/Documentation/trace/events-pci.rst
+new file mode 100644
+index 000000000000..f2f7cacba862
+--- /dev/null
++++ b/Documentation/trace/events-pci.rst
+@@ -0,0 +1,72 @@
++===========================
++Subsystem Trace Points: PCI
++===========================
++
++Overview
++========
++The PCI tracing system provides tracepoints to monitor critical hardware events
++that can impact system performance and reliability. These events normally show
++up here:
++
++       /sys/kernel/tracing/events/pci
++
++Cf. include/trace/events/pci.h for the events definitions.
++
++Available Tracepoints
++=====================
++
++pci_hp_event
++------------
++
++Monitors PCI hotplug events including card insertion/removal and link
++state changes.
++::
++
++    pci_hp_event  "%s slot:%s, event:%s\n"
++
++**Event Types**:
++
++* ``LINK_UP`` - PCIe link established
++* ``LINK_DOWN`` - PCIe link lost
++* ``CARD_PRESENT`` - Card detected in slot
++* ``CARD_NOT_PRESENT`` - Card removed from slot
++
++**Example Usage**:
++
++    # Enable the tracepoint
++    echo 1> /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
++
++    # Monitor events
++    cat /sys/kernel/debug/tracing/trace_pipe
++    <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:LINK_DOWN
++
++    <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:CARD_NOT_PRESENT
++
++
++pcie_link_event
++---------------
++
++Monitors PCIe link speed changes and provides detailed link status information.
++::
++
++    pcie_link_event  "%s type:%d, reason:%d, cur_bus_speed:%s, max_bus_speed:%s, width:%u, flit_mode:%u, status:%s\n"
++
++**Parameters**:
++
++* ``type`` - PCIe device type (4=Root Port, etc.)
++* ``reason`` - Reason for link change:
++
++  - ``0`` - Link retrain
++  - ``1`` - Bus enumeration
++  - ``2`` - Bandwidth controller enable
++  - ``3`` - Bandwidth controller IRQ
++  - ``4`` - Hotplug event
++
++
++**Example Usage**::
++
++    # Enable the tracepoint
++    echo1 > /sys/kernel/debug/tracing/events/pci/pcie_link_event/enable
++
++    # Monitor link events
++    cat /sys/kernel/debug/tracing/trace_pipe
+
+
 > 
-> Mario Limonciello (5):
->   PM: Use hibernate flows for system power off
->   PCI: Put PCIe ports with downstream devices into D3 at hibernate
->   drm/amd: Avoid evicting resources at S5
->   scsi: Add PM_EVENT_POWEROFF into suspend callbacks
->   usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
+>> Suggested-by: Lukas Wunner <lukas@wunner.de>
+>> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > 
->  drivers/base/power/main.c                  |  7 ++
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  4 +
->  drivers/pci/pci-driver.c                   | 94 ++++++++++++++--------
->  drivers/scsi/mesh.c                        |  1 +
->  drivers/scsi/stex.c                        |  1 +
->  drivers/usb/host/sl811-hcd.c               |  1 +
->  include/linux/pm.h                         |  3 +
->  include/trace/events/power.h               |  3 +-
->  kernel/reboot.c                            |  6 ++
->  9 files changed, 86 insertions(+), 34 deletions(-)
+> Nit: I assume this came from the patch I had applied to pci/trace, but
+> you shouldn't include any sign-offs from people to whom you send
+> patches [2].
+
+Yep, I copied the commit log from your applied patch in pci/trace. I
+will drop your sign-offs.
+
 > 
+> Bjorn
+> 
+> [1] https://lore.kernel.org/all/20250717192950.GA2594528@bhelgaas/#t
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.13#n449
+
+
+Thanks for the guidance!
+
+Best regards,
+Shuai
+
+
 
