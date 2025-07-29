@@ -1,45 +1,81 @@
-Return-Path: <linux-pci+bounces-33089-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33090-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29756B145AC
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Jul 2025 03:13:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEC93B1480F
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Jul 2025 08:16:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 816303A27C4
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Jul 2025 01:13:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C8E5E1AA01DA
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Jul 2025 06:17:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E2001A4F12;
-	Tue, 29 Jul 2025 01:13:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63280194A65;
+	Tue, 29 Jul 2025 06:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oie9yO+K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AEA19ADBF;
-	Tue, 29 Jul 2025 01:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B08186A;
+	Tue, 29 Jul 2025 06:16:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753751612; cv=none; b=H63wzln6NhSnpPv16M448deVJBoK8cT+jZBeAoF6kyRyz2ObfpurLki1/Upfb+PbSn+tZgNyyj+5lzr01ac9ZoyGMG5vOl81ocvo//23s8O+po1j6HLIhCXIP++PIcg364REW9AKNlugfcEHtpJGPvPaS5jz4zdE497ePcQg/yw=
+	t=1753769813; cv=none; b=Zvh6BhHWUdATaghoIexMdunzHd1NLX24qWCnIAw8p/2mHtty+YJ9hJtIRETzeQAiby8ebjTFAjXGnbttNZbT0k7sri/3XsizorA+jTFD1O3Jmbu5EeUeD8lNrgq8l/u6Z43ZX9ESkmpFwvL1M94bop+nuD8qbxdw0IRaF3mgAl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753751612; c=relaxed/simple;
-	bh=JxQhMbieoH+pcYD4gh0c2BRRXzBkkH+0ATFusGNdDrE=;
-	h=Message-ID:Date:MIME-Version:To:CC:From:Subject:Content-Type; b=uFhKLlQP6qfh88Pv4gjG007Od2t8ZqMTNUloXuKG42yXCpXJjlRExpFO2Hmi3TtP8i7E1kGkPNVBJmOQ6lppyr0ekj5KYOizsF0upNLhoPTxqkfYNa9oK+2vk/Dx093mmFXF2eZa7alggseXIaMyniIYjkqJzbkdBhPQqCajhpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com; spf=pass smtp.mailfrom=h-partners.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4brcjc1nFNz23jZm;
-	Tue, 29 Jul 2025 09:11:00 +0800 (CST)
-Received: from kwepemo100013.china.huawei.com (unknown [7.202.195.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id 539D1180044;
-	Tue, 29 Jul 2025 09:13:20 +0800 (CST)
-Received: from [10.67.120.83] (10.67.120.83) by kwepemo100013.china.huawei.com
- (7.202.195.244) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 29 Jul
- 2025 09:13:19 +0800
-Message-ID: <b51519d6-ce45-4b6d-8135-c70169bd110e@h-partners.com>
-Date: Tue, 29 Jul 2025 09:13:19 +0800
+	s=arc-20240116; t=1753769813; c=relaxed/simple;
+	bh=wTnoAzg5SgQHuoVQdRdLoINjYsqmiKdXxCqy4IBJh4c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f6H3vbWYN7iIWZj5sTJjWCedoHB7qMhVr4XQ1qrhP+7Fbi/xDdKuMYxn0bvw8FQEJilxdGYu05JrKRzeTv3H86aAzf/CCBCZJjQDEoA6oLDWvUs4ATt4B2cLGsdaQwwYUcRHjsFbZVUl6ET6Hhq3D3//3eKCfSlKt7bdVCj/Mps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oie9yO+K; arc=none smtp.client-ip=209.85.221.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-3a4ef2c2ef3so4304797f8f.2;
+        Mon, 28 Jul 2025 23:16:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753769810; x=1754374610; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EuJHExjp9oNluHLopPDQOcmTjqGBwTBeOtcBmZlA+3w=;
+        b=Oie9yO+KkyKmTglZQSGVVGO2HFBK4exipXk+aRvFOVejlZEqbgRyobZAHL2jpB8oAR
+         G8f81J7Lc3zuhzQ9GYQmjstR6gIurR0Itxi0cIYy3kfHnm8qjlWSchoDxWis0TXG9RPb
+         9KwjRLqMEpaY9FnWW5Iq6yYjAlenmpBuwcw2Ez0afIY4xvcYHIrIZGWEtHL3x8h9l3fw
+         vHZhQc+r5bC/99i+g8vFR4TrFiMfiApFO9K3jsVSN0sRgCUufLwsf5ZY7FlpDm0ZUUJ6
+         yWdgkt2vNhLtrETjxKZ915mPYrMFpt+f/6BK9y4zICPMZuMco1AZ/9jkzcaGnEkVE2QI
+         RrFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753769810; x=1754374610;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EuJHExjp9oNluHLopPDQOcmTjqGBwTBeOtcBmZlA+3w=;
+        b=PKTD1ERq20kcTtN+jmkI875lufAe0al2Rl+r0GIrUXryc32LEHr839R716ECmLGM2F
+         q0koqbQDwYXjNQMcXodq7f/008iqxqHTpDaE873uHe709Mhbn6oCRAiXvRKifpFz0sI8
+         YIAfP/0r/+aIMdGxGzVCEPSUOURLuM25GwHJtpD8oHXWYDBiZ9hz7IZp05CgHeXDnTrh
+         kODbC80s1/jfUYtieuiLD3nFph/5GAajFmLiVTM5jV82W3DjAMjgK1H5rbvYxekqpnpf
+         IECrzrRlR30xdxQDKD4KX5cQjZrIFsmIw02SYrbUBB9FvM2rOH62v1sM+OdzVt0eK4iF
+         tAvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVaWzgp82XuK36NpLUduqpWvvfZfa2P9TLPlKVB3JsEvpC2T2wSt2sS/0J5YkfF8klC8KFbg2KTuVHQ@vger.kernel.org, AJvYcCWYnYzAa8zLrqj7uPkUO7rOlZCvtMOrXEWHc2NVXqv/STI1YHrc9862haYutZ/46iC1CWB1hbv4wtpW02Jh@vger.kernel.org, AJvYcCWbOgT3ydWRGKLOkEXnWrn9j18lp/NkF7rdmjszly5ZmS2xfPTbQiJ93WE/KzMPILHmsCTBosOhkikB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTFUZoQsY+YFx8enJPjWIPvxq0QL5qx98wJTfwW93bx0MGqhkj
+	rbokuRRfTBL65goQlmKlcK1//5jxwk3rzpXa/LHifPQoYNJsBKbDwjWZ
+X-Gm-Gg: ASbGnctP3doTgDq2HIgj5uClb3mrdL95FA/axmxMWTWOmW9en8m6X1dsgz4xviKc3Fd
+	VsEx2fklZlgdyeIe/2GJw8zE+6g5V1cXOfDvYMDHVWOW2nhEec8q22c616aICOsBY5CSozfX3U/
+	Rs9O+BUbeTCyQrZBgu3V/vOy0ZMeGuifg5YlbruV7nkCldFySS3kh9ehM7+InORTxnUiN576u+W
+	V+wV1kudSk14HDYAYAC3AYp4zJqMZnlLTLDvFj7xOhNlIwijtlVTp0JTq4HmdiNQdXesU3PsZ3V
+	Fn3DcUNrrO7Jx8J9zEXcT8ah9y7mD374qB8oIUvv/EcRgXNycDEg8/8KaCDd6/u3jHO5RV31fkH
+	LyvSOI9rypvb9sYjMzYg6pJMZa+gavq3DvRoV31N7YXeuJENDSkUuuSRHOXK8LSeybMwJwhx1KG
+	cQH65iKC1MW9Ivy90LRyJvmk1TerGPiZDJkcQ=
+X-Google-Smtp-Source: AGHT+IFZiUcA4w11LB+vPoG9+WgvjzJn2Lg7goJvqZWvIHe8uQeH2yzKGxTThZpRNn9MQWBJHoc45w==
+X-Received: by 2002:a5d:588b:0:b0:3b7:8473:312c with SMTP id ffacd0b85a97d-3b78473319dmr5207539f8f.0.1753769809715;
+        Mon, 28 Jul 2025 23:16:49 -0700 (PDT)
+Received: from [26.26.26.1] (ec2-63-178-178-86.eu-central-1.compute.amazonaws.com. [63.178.178.86])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4588d89c50fsm10876755e9.0.2025.07.28.23.16.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Jul 2025 23:16:49 -0700 (PDT)
+Message-ID: <d7543795-b172-4452-8789-e1c810d8075a@gmail.com>
+Date: Tue, 29 Jul 2025 14:16:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -47,154 +83,59 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 0/4] Disable ATS via iommu during PCI resets
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Nicolin Chen <nicolinc@nvidia.com>, joro@8bytes.org, will@kernel.org,
+ robin.murphy@arm.com, rafael@kernel.org, lenb@kernel.org,
+ bhelgaas@google.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+ patches@lists.linux.dev, pjaroszynski@nvidia.com, vsethi@nvidia.com,
+ helgaas@kernel.org, baolu.lu@linux.intel.com
+References: <cover.1751096303.git.nicolinc@nvidia.com>
+ <4f7e4bfb-1bc7-4c87-a9f1-8c8b6ee9a336@gmail.com>
+ <aIOz1bzgfK9q0n4b@Asurada-Nvidia>
+ <606f65e1-ccfc-4492-a32f-90343be654e7@gmail.com>
+ <20250727162041.GC7551@nvidia.com>
 Content-Language: en-US
-To: <bhelgaas@google.com>
-CC: <ilpo.jarvinen@linux.intel.com>, <lukas@wunner.de>, linux-arm
-	<linux-arm-kernel@lists.infradead.org>, linux-kernl
-	<linux-kernel@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>,
-	fanghao <fanghao11@huawei.com>, gaozhihao <gaozhihao6@h-partners.com>,
-	lujunhua <lujunhua7@h-partners.com>, shenyang <shenyang39@huawei.com>,
-	wushanping <wushanping@huawei.com>, zengtao <prime.zeng@hisilicon.com>,
-	<jonathan.cameron@huawei.com>
-From: moubingquan <moubingquan@h-partners.com>
-Subject: [BUG] sysfs: duplicate resource file creation during PCIe rescan
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Ethan Zhao <etzhao1900@gmail.com>
+In-Reply-To: <20250727162041.GC7551@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemo100013.china.huawei.com (7.202.195.244)
 
-Hi all,
 
-When uninstalling the driver on the ARM64 platform and invoking `sriov_disable()`,
-another thread simultaneously performed `echo 1 > /sys/bus/pci/rescan`,
-which resulted in a call trace error (`sysfs: cannot create duplicate filename`) when subsequently loading the driver.
 
-Under certain multi-threaded scenarios (e.g. VF teardown + PCI rescan triggered in parallel),
-The following sequence may result in files appearing in sysfs that should not exist:
-
-1. sriov_disable() uninstalls VFs and removes the corresponding VF files in sysfs.
-2.At the same time, when rescan_store() rescan the entire PCI device tree,
-there is a possibility that VF files that should have been deleted are added back,
-resulting in VF files in sysfs that should have been removed but were not.
-
-Tested on:
-- Kernel version: Linux version 6.15.0-rc4+ (phisik3@10-50-163-153-ARM-openEuler22-3)
-- Platform: ARM64 (Huawei Kunpeng920)
-- Repro steps:
-1.Thread A unloads the driver and VF (requires calling sriov_disable()).
-2.Thread B calls `echo 1 > /sys/bus/pci/rescan `
-
-The system will report a call trace as follows:
-
-sysfs: cannot create duplicate filename '/devices/pci0000:3c/0000:3c:01.0/0000:3e:00.2/resource2'
-CPU: 138 UID: 0 PID: 11067 Comm: sh Kdump: loaded Tainted: G      D W  O        6.15.0-rc4+ #1 PREEMPT
-Tainted: [D]=DIE, [W]=WARN, [O]=OOT_MODULE
-Call trace:
-  show_stack+0x20/0x38 (C)
-  dump_stack_lvl+0x80/0xf8
-  dump_stack+0x18/0x28
-  sysfs_warn_dup+0x6c/0x90
-  sysfs_add_bin_file_mode_ns+0x12c/0x178
-  sysfs_create_bin_file+0x7c/0xb8
-  pci_create_attr+0x104/0x1b0
-  pci_create_resource_files.part.0+0x50/0xd0
-  pci_create_sysfs_dev_files+0x30/0x50
-  pci_bus_add_device+0x40/0x120
-  pci_bus_add_devices+0x40/0x98
-  pci_bus_add_devices+0x6c/0x98
-  pci_rescan_bus+0x38/0x58
-  rescan_store+0x80/0xb0
-  bus_attr_store+0x2c/0x48
-  sysfs_kf_write+0x84/0xa8
-  kernfs_fop_write_iter+0x120/0x1b8
-  vfs_write+0x338/0x3f8
-  ksys_write+0x70/0x110
-  __arm64_sys_write+0x24/0x38
-  invoke_syscall+0x50/0x120
-  el0_svc_common.constprop.0+0xc8/0xf0
-  do_el0_svc+0x24/0x38
-  el0_svc+0x34/0xf0
-  el0t_64_sync_handler+0xc8/0xd0
-  el0t_64_sync+0x1ac/0x1b0
-
-The general analysis and corresponding code are as follows:
-
-drivers/pci/iov.c
-
-736 static void sriov_disable(struct pci_dev *dev)
-737 {
-738         struct pci_sriov *iov = dev->sriov;
-739
-740         if (!iov->num_VFs)
-741                 return;
-742
-743         sriov_del_vfs(dev);
-744         iov->ctrl &= ~(PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE);
-745         pci_cfg_access_lock(dev);
-746         pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, iov->ctrl);
-747         ssleep(1);
-748         pci_cfg_access_unlock(dev);
-749
-750         pcibios_sriov_disable(dev);
-751
-752         if (iov->link != dev->devfn)
-753                 sysfs_remove_link(&dev->dev.kobj, "dep_link");
-754
-755         iov->num_VFs = 0;
-756         pci_iov_set_numvfs(dev, 0);
-757 }
-
-sriov_disable() will unload the VF and remove its files from sysfs.
-
-drivers/pci/pci-sysfs.c
-
-  435 static ssize_t rescan_store(const struct bus_type *bus, const char *buf, size_t count)
-  436 {
-  437         unsigned long val;
-  438         struct pci_bus *b = NULL;
-  439
-  440         if (kstrtoul(buf, 0, &val) < 0)
-  441                 return -EINVAL;
-  442
-  443         if (val) {
-  444                 pci_lock_rescan_remove();
-  445                 while ((b = pci_find_next_bus(b)) != NULL)
-  446                         pci_rescan_bus(b);
-  447                 pci_unlock_rescan_remove();
-  448         }
-  449         return count;
-  450 }
-  451 static BUS_ATTR_WO(rescan);
-
-The `rescan_store()` function will scan the entire PCI bus, including the relevant sysfs files for the aforementioned VFs.
-
-Initially, it seemed that directly adding the pci_lock_rescan_remove() lock to sriov_disable() could solve the problem.
-However, it was later discovered that this might lead to a deadlock issue (because the remove_store() function would call sriov_disable(), causing a deadlock).
-
-drivers/pci/pci-sysfs.c
-
-  487 static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
-  488                             const char *buf, size_t count)
-  489 {
-  490         unsigned long val;
-  491
-  492         if (kstrtoul(buf, 0, &val) < 0)
-  493                 return -EINVAL;
-  494
-  495         if (val && device_remove_file_self(dev, attr))
-  496
-         //Subsequently, sriov_disable() will be invoked.
-                 pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
-  497         return count;
-  498 }
-  499 static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL,
-  500                                   remove_store);
-
-The function `pci_stop_and_remove_bus_device_locked()` acquires the `pci_lock_rescan_remove()` lock and subsequently calls `sriov_disable()`.
-If the lock is added within `sriov_disable()`, it could lead to a deadlock.
-
-Should we add a new lock to address this issue, or are there any other ideas? I would like to consult and discuss this with everyone.
+On 7/28/2025 12:20 AM, Jason Gunthorpe wrote:
+> On Sun, Jul 27, 2025 at 08:48:26PM +0800, Ethan Zhao wrote:
+> 
+>> At least, we can do some attempt in DPC and Hot-plug driver, and then
+>> push the hardware specification update to provide pre-reset notification for
+>> DPC & hotplug. does it make sense ?
+> 
+> I think DPC is a different case..
+More complex and practical case.
+> 
+> If we get a DPC we should also push the iommu into blocking, disable
+> ATS and abandon any outstanding ATC invalidations as part of
+> recovering from the DPC. Once everythings is cleaned up we can set the
+Yup, even pure software resets, there might be ATC invalidation pending
+  (in software queue or HW queue).
+> iommu back up again and allow the driver to recover the device.
+> 
+> I think the current series is a good step along that path, but we'd
+> also need to improve the drivers to handle abandonding/aborting the
+> ATC invalidations.
+Also aborting ATC invalidation works as per-condition for DPC or 
+Hot-plug cases. agree, such improvement seems necessary.
+> 
+> IMHO DPC and SW initiated reset are separate projects.
+Of Course, Rome wasn't built in a day; I endorse the success philosophy 
+of restricting project scope. The discussion is purely focused on 
+technical methodology.
 
 Thanks,
-Bingquan Mou <moubingquan@h-partners.com>
+Ethan
+
+> 
+> Jason
+
 
