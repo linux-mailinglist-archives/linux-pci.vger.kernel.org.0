@@ -1,139 +1,200 @@
-Return-Path: <linux-pci+bounces-33088-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33089-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9FAAB1455E
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Jul 2025 02:32:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29756B145AC
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Jul 2025 03:13:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FE7517CAF1
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Jul 2025 00:32:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 816303A27C4
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Jul 2025 01:13:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBE58155393;
-	Tue, 29 Jul 2025 00:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cc4SyHjM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E2001A4F12;
+	Tue, 29 Jul 2025 01:13:32 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7869461;
-	Tue, 29 Jul 2025 00:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AEA19ADBF;
+	Tue, 29 Jul 2025 01:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753749121; cv=none; b=X+whZYXENbGzJTmH6SeEbH7viAx3YdPOfKeE5N5ZaB0PmhtmfoSrQXXXt6mUClAAQcmX+WZBrgjAjFaJkMP8ZFH4I8XEX9SSPIVwVDF17V8WbbERHFU3pWZgS2mht8481MOYbCMORFiIyHI2vMdWgu7jE58Sj7sMBHpguBgnq5c=
+	t=1753751612; cv=none; b=H63wzln6NhSnpPv16M448deVJBoK8cT+jZBeAoF6kyRyz2ObfpurLki1/Upfb+PbSn+tZgNyyj+5lzr01ac9ZoyGMG5vOl81ocvo//23s8O+po1j6HLIhCXIP++PIcg364REW9AKNlugfcEHtpJGPvPaS5jz4zdE497ePcQg/yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753749121; c=relaxed/simple;
-	bh=yUtEztOfMVM5dWoR0DRHrEvlYr8ultlYw22nWVaI+og=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NJs/Rh6WTjENt1Z8gTfl4H/Tu3RxO931ETQ/D3lzTR5Tqkyv0MuHOFJNMF3S/ceT+0iG+MT0FK5lGPNxVORfJmlUATeNJAsruPYB/p4Azplj0Ci4NGwplC4oJm9XIH1sqlwxmwu+bxg+P7NV6cO60i2LD0AQAUdEuzraaUwdGtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cc4SyHjM; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7490702fc7cso3166163b3a.1;
-        Mon, 28 Jul 2025 17:32:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753749119; x=1754353919; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Jz6iF8q/yFJCJ16p/k5WRpifZDd/z8EpWvv3BpRFNk=;
-        b=cc4SyHjMBEN1iRfGVX5I+KOsaeunL2O0ryTAzghx01sbK991AJczSuRWsR1lgCAqW3
-         w6xK/cXlN97ZzGHCGompu6StAGlrc0t6a8zxb6DZkgzuvPzmDLEJAulnKSV6y99k0z3j
-         ImWIKVCryIjCSYKnUlMrs86Nin17hkkfZmi+UkbAJzU/L2H58d8VFmK1xR2qn/HPfRWT
-         NFo/yi8S9/WITnIsrlMFJ19Yqu+44bGFlMj3Sv0w3QCsu6cHBSsc/Xe6HjylSv0mbKP6
-         Bvz6PpB3dBWJ8r7DhJP+FfONlrr3wq0rE4nUvvhP7MjaFxm6JRVWrcRvZVwXfm+XHahc
-         CTgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753749119; x=1754353919;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8Jz6iF8q/yFJCJ16p/k5WRpifZDd/z8EpWvv3BpRFNk=;
-        b=Wno0TYDZ3vJMKNc+m7zQGFhw/AtHawYZpIDYePOMnvnGEsp7fnPsMniTUHI33YnlgO
-         Az/dxshjqL27H1Ywtlw7NtjejVigqX0swwhXQXTUal6BEYvbaxPOKyf//6TbsNCR6dCN
-         jUgla4SbDXcYeDAsjH8JwsFaAFTGtRr1BbHmUNxNUsb7OOakc2wCvaLUFLCFo7aGEYrz
-         0dszlnOaaqkUxnVmqnsPBLjPz73BT1AWnz8DYUniqw2AD9jD0CXYxhpctzl1yJr5DVB0
-         dO7adBXmZu9Z1SgBMNqbjRF3f4QqGPNhxP78iNDW2pEDz2nsBIwKh3zyFGKbfpMPmwIC
-         iNPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOWA66/pwpUoQbhNX4nLYVWa17hRNYVUjlpHMMuyhjBqT8EEol5f2Coww3hNhtzWCmJ4uLGYk/Me+UXGy7kgI=@vger.kernel.org, AJvYcCUbsLu63slDfrGqF4sQSkRE8GDdAlRIZC3EnK8UxvXnit9pkk+T7zWxueeqWTwNH2ZNUrg7J4zTaP4LYUU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOEViIpQRmh6emFVBeLqGzgkVAN5r/rncSzRLeB3He76n+n3+G
-	1BdOVfQeSkRqtkk67sSBpesBrslIDGaUYzrTcGQ9vYqrInSFYETZqKTj
-X-Gm-Gg: ASbGncsoMvi9H31olkxhcXJgymvkXCgj9VYxx5m0e9MxiyBUks8+GR2A01ANvoaEZUQ
-	90j5kGSKlkja0ymoYdvhJZygMnIZmmOB5AZR9NBaOFDdOpNqMejrFXwATU0D2qp5EgTFskS8FxZ
-	4s30OB7ElqCkHuusBFTR5x792xbED684TPuPbNMIE+AUQF0LLzsZvt/f9lSbp2kFmbgu3s40Ds5
-	p7MFrRUh7UbwdOwYa27BxZl7nZCAJcCJUWB+LahF+mKYiW4SsHFkXn8lzHxHTUF5lvBe5OVFwkM
-	diiCENv/qkl32FKnzhaESw6LF0lTN+ZeG80/hKev3ymnv4npBZcqAxNVG8rlx1U2fPQJmgVV9TL
-	UfOJmS7YRJOSiqpKKL23ZpaN6b7EUIyJPm/s=
-X-Google-Smtp-Source: AGHT+IGzYlSKiWdEk9YIJwMO1mmDe1SmXkX9wPe/K7B830GQSNHWlQ322spZwyZruRrhP4xlAXckKg==
-X-Received: by 2002:a05:6a20:7f8f:b0:239:c7c:8de8 with SMTP id adf61e73a8af0-23d700245d9mr20512119637.12.1753749119539;
-        Mon, 28 Jul 2025 17:31:59 -0700 (PDT)
-Received: from pop-os.. ([2401:4900:1c96:2e3e:1600:4d4c:911f:a526])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76408c024c1sm6506531b3a.33.2025.07.28.17.31.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Jul 2025 17:31:58 -0700 (PDT)
-From: herculoxz <abhinav.ogl@gmail.com>
-To: dakr@kernel.org,
-	bhelgaas@google.com,
-	kwilczynski@kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu
-Cc: linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Abhinav Ananthu <abhinav.ogl@gmail.com>
-Subject: [PATCH] rust: pci: use c_* types via kernel prelude
-Date: Tue, 29 Jul 2025 05:59:43 +0530
-Message-Id: <20250729002941.7643-1-abhinav.ogl@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1753751612; c=relaxed/simple;
+	bh=JxQhMbieoH+pcYD4gh0c2BRRXzBkkH+0ATFusGNdDrE=;
+	h=Message-ID:Date:MIME-Version:To:CC:From:Subject:Content-Type; b=uFhKLlQP6qfh88Pv4gjG007Od2t8ZqMTNUloXuKG42yXCpXJjlRExpFO2Hmi3TtP8i7E1kGkPNVBJmOQ6lppyr0ekj5KYOizsF0upNLhoPTxqkfYNa9oK+2vk/Dx093mmFXF2eZa7alggseXIaMyniIYjkqJzbkdBhPQqCajhpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com; spf=pass smtp.mailfrom=h-partners.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4brcjc1nFNz23jZm;
+	Tue, 29 Jul 2025 09:11:00 +0800 (CST)
+Received: from kwepemo100013.china.huawei.com (unknown [7.202.195.244])
+	by mail.maildlp.com (Postfix) with ESMTPS id 539D1180044;
+	Tue, 29 Jul 2025 09:13:20 +0800 (CST)
+Received: from [10.67.120.83] (10.67.120.83) by kwepemo100013.china.huawei.com
+ (7.202.195.244) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 29 Jul
+ 2025 09:13:19 +0800
+Message-ID: <b51519d6-ce45-4b6d-8135-c70169bd110e@h-partners.com>
+Date: Tue, 29 Jul 2025 09:13:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: <bhelgaas@google.com>
+CC: <ilpo.jarvinen@linux.intel.com>, <lukas@wunner.de>, linux-arm
+	<linux-arm-kernel@lists.infradead.org>, linux-kernl
+	<linux-kernel@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>,
+	fanghao <fanghao11@huawei.com>, gaozhihao <gaozhihao6@h-partners.com>,
+	lujunhua <lujunhua7@h-partners.com>, shenyang <shenyang39@huawei.com>,
+	wushanping <wushanping@huawei.com>, zengtao <prime.zeng@hisilicon.com>,
+	<jonathan.cameron@huawei.com>
+From: moubingquan <moubingquan@h-partners.com>
+Subject: [BUG] sysfs: duplicate resource file creation during PCIe rescan
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemo100013.china.huawei.com (7.202.195.244)
 
-From: Abhinav Ananthu <abhinav.ogl@gmail.com>
+Hi all,
 
- Update PCI FFI callback signatures to use  from the ,
- instead of accessing it via . This aligns with the Rust-for-Linux coding
- guidelines and ensures ABI correctness when interfacing with C code.
+When uninstalling the driver on the ARM64 platform and invoking `sriov_disable()`,
+another thread simultaneously performed `echo 1 > /sys/bus/pci/rescan`,
+which resulted in a call trace error (`sysfs: cannot create duplicate filename`) when subsequently loading the driver.
 
-Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
----
- rust/kernel/pci.rs | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Under certain multi-threaded scenarios (e.g. VF teardown + PCI rescan triggered in parallel),
+The following sequence may result in files appearing in sysfs that should not exist:
 
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 5ce07999168e..fbeeaec4e044 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -61,7 +61,7 @@ impl<T: Driver + 'static> Adapter<T> {
-     extern "C" fn probe_callback(
-         pdev: *mut bindings::pci_dev,
-         id: *const bindings::pci_device_id,
--    ) -> kernel::ffi::c_int {
-+    ) -> c_int {
-         // SAFETY: The PCI bus only ever calls the probe callback with a valid pointer to a
-         // `struct pci_dev`.
-         //
-@@ -333,7 +333,7 @@ unsafe fn do_release(pdev: &Device, ioptr: usize, num: i32) {
-         // `ioptr` is valid by the safety requirements.
-         // `num` is valid by the safety requirements.
-         unsafe {
--            bindings::pci_iounmap(pdev.as_raw(), ioptr as *mut kernel::ffi::c_void);
-+            bindings::pci_iounmap(pdev.as_raw(), ioptr as *mut c_void);
-             bindings::pci_release_region(pdev.as_raw(), num);
-         }
-     }
--- 
-2.34.1
+1. sriov_disable() uninstalls VFs and removes the corresponding VF files in sysfs.
+2.At the same time, when rescan_store() rescan the entire PCI device tree,
+there is a possibility that VF files that should have been deleted are added back,
+resulting in VF files in sysfs that should have been removed but were not.
 
+Tested on:
+- Kernel version: Linux version 6.15.0-rc4+ (phisik3@10-50-163-153-ARM-openEuler22-3)
+- Platform: ARM64 (Huawei Kunpeng920)
+- Repro steps:
+1.Thread A unloads the driver and VF (requires calling sriov_disable()).
+2.Thread B calls `echo 1 > /sys/bus/pci/rescan `
+
+The system will report a call trace as follows:
+
+sysfs: cannot create duplicate filename '/devices/pci0000:3c/0000:3c:01.0/0000:3e:00.2/resource2'
+CPU: 138 UID: 0 PID: 11067 Comm: sh Kdump: loaded Tainted: G      D W  O        6.15.0-rc4+ #1 PREEMPT
+Tainted: [D]=DIE, [W]=WARN, [O]=OOT_MODULE
+Call trace:
+  show_stack+0x20/0x38 (C)
+  dump_stack_lvl+0x80/0xf8
+  dump_stack+0x18/0x28
+  sysfs_warn_dup+0x6c/0x90
+  sysfs_add_bin_file_mode_ns+0x12c/0x178
+  sysfs_create_bin_file+0x7c/0xb8
+  pci_create_attr+0x104/0x1b0
+  pci_create_resource_files.part.0+0x50/0xd0
+  pci_create_sysfs_dev_files+0x30/0x50
+  pci_bus_add_device+0x40/0x120
+  pci_bus_add_devices+0x40/0x98
+  pci_bus_add_devices+0x6c/0x98
+  pci_rescan_bus+0x38/0x58
+  rescan_store+0x80/0xb0
+  bus_attr_store+0x2c/0x48
+  sysfs_kf_write+0x84/0xa8
+  kernfs_fop_write_iter+0x120/0x1b8
+  vfs_write+0x338/0x3f8
+  ksys_write+0x70/0x110
+  __arm64_sys_write+0x24/0x38
+  invoke_syscall+0x50/0x120
+  el0_svc_common.constprop.0+0xc8/0xf0
+  do_el0_svc+0x24/0x38
+  el0_svc+0x34/0xf0
+  el0t_64_sync_handler+0xc8/0xd0
+  el0t_64_sync+0x1ac/0x1b0
+
+The general analysis and corresponding code are as follows:
+
+drivers/pci/iov.c
+
+736 static void sriov_disable(struct pci_dev *dev)
+737 {
+738         struct pci_sriov *iov = dev->sriov;
+739
+740         if (!iov->num_VFs)
+741                 return;
+742
+743         sriov_del_vfs(dev);
+744         iov->ctrl &= ~(PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE);
+745         pci_cfg_access_lock(dev);
+746         pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, iov->ctrl);
+747         ssleep(1);
+748         pci_cfg_access_unlock(dev);
+749
+750         pcibios_sriov_disable(dev);
+751
+752         if (iov->link != dev->devfn)
+753                 sysfs_remove_link(&dev->dev.kobj, "dep_link");
+754
+755         iov->num_VFs = 0;
+756         pci_iov_set_numvfs(dev, 0);
+757 }
+
+sriov_disable() will unload the VF and remove its files from sysfs.
+
+drivers/pci/pci-sysfs.c
+
+  435 static ssize_t rescan_store(const struct bus_type *bus, const char *buf, size_t count)
+  436 {
+  437         unsigned long val;
+  438         struct pci_bus *b = NULL;
+  439
+  440         if (kstrtoul(buf, 0, &val) < 0)
+  441                 return -EINVAL;
+  442
+  443         if (val) {
+  444                 pci_lock_rescan_remove();
+  445                 while ((b = pci_find_next_bus(b)) != NULL)
+  446                         pci_rescan_bus(b);
+  447                 pci_unlock_rescan_remove();
+  448         }
+  449         return count;
+  450 }
+  451 static BUS_ATTR_WO(rescan);
+
+The `rescan_store()` function will scan the entire PCI bus, including the relevant sysfs files for the aforementioned VFs.
+
+Initially, it seemed that directly adding the pci_lock_rescan_remove() lock to sriov_disable() could solve the problem.
+However, it was later discovered that this might lead to a deadlock issue (because the remove_store() function would call sriov_disable(), causing a deadlock).
+
+drivers/pci/pci-sysfs.c
+
+  487 static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+  488                             const char *buf, size_t count)
+  489 {
+  490         unsigned long val;
+  491
+  492         if (kstrtoul(buf, 0, &val) < 0)
+  493                 return -EINVAL;
+  494
+  495         if (val && device_remove_file_self(dev, attr))
+  496
+         //Subsequently, sriov_disable() will be invoked.
+                 pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+  497         return count;
+  498 }
+  499 static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL,
+  500                                   remove_store);
+
+The function `pci_stop_and_remove_bus_device_locked()` acquires the `pci_lock_rescan_remove()` lock and subsequently calls `sriov_disable()`.
+If the lock is added within `sriov_disable()`, it could lead to a deadlock.
+
+Should we add a new lock to address this issue, or are there any other ideas? I would like to consult and discuss this with everyone.
+
+Thanks,
+Bingquan Mou <moubingquan@h-partners.com>
 
