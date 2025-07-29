@@ -1,56 +1,57 @@
-Return-Path: <linux-pci+bounces-33121-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33122-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98ADAB14FB1
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Jul 2025 16:57:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5EB9B15011
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Jul 2025 17:16:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB0123A4936
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Jul 2025 14:56:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EC09F18A35F5
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Jul 2025 15:17:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 239F81F1505;
-	Tue, 29 Jul 2025 14:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0983013C3F2;
+	Tue, 29 Jul 2025 15:16:53 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E367149C4D;
-	Tue, 29 Jul 2025 14:56:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4E0101E6;
+	Tue, 29 Jul 2025 15:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753801020; cv=none; b=f5F+kAbd5iLfQUDGpJEzAdFRIRUHDaqO81kckqqPicloZib7/t8/hhpGV/Y5pdbqmlsCc9Q/YLbx60aKqsxu9CM22xCkxnREc4u/+SNbG9jYQQFa0kVeqa0GbHpClFpFS1idK9Oyh2pVXn6vPi1+H+zl3DI9XLM3VH8vYJP2JqY=
+	t=1753802212; cv=none; b=myv5kM198BgOE/s6WgCM9ul9jYGz9Chunn9fK1C/xuTbFNULibNWvkLGSszKJ7ZONG6a7AaBEkuJ2FjTZT7IaRZYe+RW/P7Kp9tVxsFnB2SXXcPILYJ/IZANMqbjlgYpm9BrwKdPOEAZloLRzn8BNPt47hS4CopiRKvhmmNm+xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753801020; c=relaxed/simple;
-	bh=jQzpdSmc/8gT5ATyfvBg5LQS2Mv/4J8m7uih6NQQ5T8=;
+	s=arc-20240116; t=1753802212; c=relaxed/simple;
+	bh=V2owKkmxso8ky64gkK84N96b5AuZo8LdM/hJidy3RL4=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lWxRmX0ugiBt0fSO2kPk/7rTKu6PgoVWiSZ74FVoop6CwcX7pCm8WjxWkSzQNsH3UWzByeUeV1AimKfYfdGL0zRhvdlDJkpWINYyM1JPetOFxOmOCW2Mk+qJ+H3Ztgf6vLe2hdejzPI0u1jucwtXljYZTJpBYfqa4qc72YEz7NM=
+	 MIME-Version:Content-Type; b=DVHaGpoVCu0eKjZPHCvDhsf/KoLLMZSvXxuzFiqSb3YRmgEOh/Ux2qwUctpN2Fbrfm052QePCQtF18RTuxmUHPOqqxms+2uhKXO5GqmDiVW82mR6pMKCXjIsUvuAic8MebRg6jOx0qqqumXfXrSV0MEYqdGkGWypAVvW4JTH4tU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4brz0N16vwz6L5Pd;
-	Tue, 29 Jul 2025 22:55:00 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4brzRg5JyCz6H8f2;
+	Tue, 29 Jul 2025 23:15:11 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E85C4140446;
-	Tue, 29 Jul 2025 22:56:52 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 60379140372;
+	Tue, 29 Jul 2025 23:16:46 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 29 Jul
- 2025 16:56:52 +0200
-Date: Tue, 29 Jul 2025 15:56:50 +0100
+ 2025 17:16:45 +0200
+Date: Tue, 29 Jul 2025 16:16:43 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: Dan Williams <dan.j.williams@intel.com>
 CC: <linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <bhelgaas@google.com>, <aik@amd.com>,
 	<lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>, Xu Yilun
 	<yilun.xu@linux.intel.com>
-Subject: Re: [PATCH v4 04/10] PCI/TSM: Authenticate devices via platform TSM
-Message-ID: <20250729155650.000017b3@huawei.com>
-In-Reply-To: <20250717183358.1332417-5-dan.j.williams@intel.com>
+Subject: Re: [PATCH v4 05/10] samples/devsec: Introduce a PCI
+ device-security bus + endpoint sample
+Message-ID: <20250729161643.000023e7@huawei.com>
+In-Reply-To: <20250717183358.1332417-6-dan.j.williams@intel.com>
 References: <20250717183358.1332417-1-dan.j.williams@intel.com>
-	<20250717183358.1332417-5-dan.j.williams@intel.com>
+	<20250717183358.1332417-6-dan.j.williams@intel.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -60,453 +61,260 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 17 Jul 2025 11:33:52 -0700
+On Thu, 17 Jul 2025 11:33:53 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> The PCIe 6.1 specification, section 11, introduces the Trusted Execution
-> Environment (TEE) Device Interface Security Protocol (TDISP).  This
-> protocol definition builds upon Component Measurement and Authentication
-> (CMA), and link Integrity and Data Encryption (IDE). It adds support for
-> assigning devices (PCI physical or virtual function) to a confidential
-> VM such that the assigned device is enabled to access guest private
-> memory protected by technologies like Intel TDX, AMD SEV-SNP, RISCV
-> COVE, or ARM CCA.
+> Establish just enough emulated PCI infrastructure to register a sample
+> TSM (platform security manager) driver and have it discover an IDE + TEE
+> (link encryption + device-interface security protocol (TDISP)) capable
+> device.
 > 
-> The "TSM" (TEE Security Manager) is a concept in the TDISP specification
-> of an agent that mediates between a "DSM" (Device Security Manager) and
-> system software in both a VMM and a confidential VM. A VMM uses TSM ABIs
-> to setup link security and assign devices. A confidential VM uses TSM
-> ABIs to transition an assigned device into the TDISP "RUN" state and
-> validate its configuration. From a Linux perspective the TSM abstracts
-> many of the details of TDISP, IDE, and CMA. Some of those details leak
-> through at times, but for the most part TDISP is an internal
-> implementation detail of the TSM.
+> Use the existing a CONFIG_PCI_BRIDGE_EMUL to emulate an IDE capable root
+> port, and open code the emulation of an endpoint device via simulated
+> configuration cycle responses.
 > 
-> CONFIG_PCI_TSM adds an "authenticated" attribute and "tsm/" subdirectory
-> to pci-sysfs. Consider that the TSM driver may itself be a PCI driver.
-> Userspace can watch for the arrival of a "TSM" device,
-> /sys/class/tsm/tsm0/uevent KOBJ_CHANGE, to know when the PCI core has
-> initialized TSM services.
+> The devsec_tsm driver responds to the PCI core TSM operations as if it
+> successfully exercised the given interface security protocol message.
 > 
-> The operations that can be executed against a PCI device are split into
-> 2 mutually exclusive operation sets, "Link" and "Security" (struct
-> pci_tsm_{link,security}_ops). The "Link" operations manage physical link
-> security properties and communication with the device's Device Security
-> Manager firmware. These are the host side operations in TDISP. The
-> "Security" operations coordinate the security state of the assigned
-> virtual device (TDI). These are the guest side operations in TDISP. Only
-> link management operations are defined at this stage and placeholders
-> provided for the security operations.
+> The devsec_bus and devsec_tsm drivers can be loaded in either order to
+> reflect cases like SEV-TIO where the TSM is PCI-device firmware, and
+> cases like TDX Connect where the TSM is a software agent running on the
+> host CPU.
 > 
-> The locking allows for multiple devices to be executing commands
-> simultaneously, one outstanding command per-device and an rwsem
-> synchronizes the implementation relative to TSM
-> registration/unregistration events.
+> Follow-on patches add common code for TSM managed IDE establishment. For
+> now, just successfully complete setup and teardown of the DSM (device
+> security manager) context as a building block for management of TDI
+> (trusted device interface) instances.
 > 
-> Thanks to Wu Hao for his work on an early draft of this support.
+>  # modprobe devsec_bus
+>     devsec_bus devsec_bus: PCI host bridge to bus 10000:00
+>     pci_bus 10000:00: root bus resource [bus 00-01]
+>     pci_bus 10000:00: root bus resource [mem 0xf000000000-0xffffffffff 64bit]
+>     pci 10000:00:00.0: [8086:7075] type 01 class 0x060400 PCIe Root Port
+>     pci 10000:00:00.0: PCI bridge to [bus 00]
+>     pci 10000:00:00.0:   bridge window [io  0x0000-0x0fff]
+>     pci 10000:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
+>     pci 10000:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+>     pci 10000:00:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>     pci 10000:01:00.0: [8086:ffff] type 00 class 0x000000 PCIe Endpoint
+>     pci 10000:01:00.0: BAR 0 [mem 0xf000000000-0xf0001fffff 64bit pref]
+>     pci_doe_abort: pci 10000:01:00.0: DOE: [100] Issuing Abort
+>     pci_doe_cache_protocols: pci 10000:01:00.0: DOE: [100] Found protocol 0 vid: 1 prot: 1
+>     pci 10000:01:00.0: disabling ASPM on pre-1.1 PCIe device.  You can enable it with 'pcie_aspm=force'
+>     pci 10000:00:00.0: PCI bridge to [bus 01]
+>     pci_bus 10000:01: busn_res: [bus 01] end is updated to 01
+>  # modprobe devsec_tsm
+>     devsec_tsm_pci_probe: pci 10000:01:00.0: devsec: tsm enabled
+>     __pci_tsm_init: pci 10000:01:00.0: TSM: Device security capabilities detected ( ide tee ), TSM attach
 > 
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
 > Cc: Lukas Wunner <lukas@wunner.de>
 > Cc: Samuel Ortiz <sameo@rivosinc.com>
 > Cc: Alexey Kardashevskiy <aik@amd.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Co-developed-by: Xu Yilun <yilun.xu@linux.intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> Cc: Xu Yilun <yilun.xu@linux.intel.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Various things inline.
 
-> diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
+A fairly superficial review.  Too much staring at code today
+to check the emulation was right and have any chance of spotting bugs!
+
+> diff --git a/samples/devsec/bus.c b/samples/devsec/bus.c
 > new file mode 100644
-> index 000000000000..0784cc436dd3
+> index 000000000000..675e185fcf79
 > --- /dev/null
-> +++ b/drivers/pci/tsm.c
-> @@ -0,0 +1,554 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * TEE Security Manager for the TEE Device Interface Security Protocol
-> + * (TDISP, PCIe r6.1 sec 11)
-> + *
-> + * Copyright(c) 2024 Intel Corporation. All rights reserved.
-> + */
+> +++ b/samples/devsec/bus.c
+> @@ -0,0 +1,708 @@
 
-> +static void tsm_remove(struct pci_tsm *tsm)
+> +static int alloc_devs(struct devsec *devsec)
 > +{
-> +	struct pci_dev *pdev;
-> +
-> +	if (!tsm)
+> +	struct device *dev = devsec->dev;
 
-You protect against this in the DEFINE_FREE() so probably safe
-to assume it is always set if we get here.
+Similar to below.  Maybe use it inline.
 
-> +		return;
 > +
-> +	pdev = tsm->pdev;
-> +	tsm->ops->remove(tsm);
-> +	pdev->tsm = NULL;
+> +	for (int i = 0; i < ARRAY_SIZE(devsec->devsec_devs); i++) {
+> +		struct devsec_dev *devsec_dev = devsec_dev_alloc(devsec);
+> +		int rc;
+> +
+> +		if (IS_ERR(devsec_dev))
+> +			return PTR_ERR(devsec_dev);
+> +		rc = devm_add_action_or_reset(dev, destroy_devsec_dev,
+> +					      devsec_dev);
+> +		if (rc)
+> +			return rc;
+> +		devsec->devsec_devs[i] = devsec_dev;
+> +	}
+> +
+> +	return 0;
 > +}
-> +DEFINE_FREE(tsm_remove, struct pci_tsm *, if (_T) tsm_remove(_T))
+
+
+> +static int init_port(struct devsec_port *devsec_port)
+> +{
+> +	struct pci_bridge_emul *bridge = &devsec_port->bridge;
 > +
-> +static int call_cb_put(struct pci_dev *pdev, void *data,
+> +	*bridge = (struct pci_bridge_emul) {
+> +		.conf = {
+> +			.vendor = cpu_to_le16(0x8086),
+> +			.device = cpu_to_le16(0x7075),
 
-Is this combination worth while?  I don't like the 'and' aspect of it
-and it only saves a few lines...
+Emulating something real?  If not maybe we should get an ID from another space
+(or reserve this one ;)
 
-vs
-	if (pdev) {
-		rc = cb(pdev, data);
-		pci_dev_put(pdev);
-		if (rc)
-			return;
-	}
+> +			.class_revision = cpu_to_le32(0x1),
+> +			.pref_mem_base = cpu_to_le16(PCI_PREF_RANGE_TYPE_64),
+> +			.pref_mem_limit = cpu_to_le16(PCI_PREF_RANGE_TYPE_64),
+> +		},
 
-> +		       int (*cb)(struct pci_dev *pdev, void *data))
+
+> +{
+> +	struct device *dev = devsec->dev;
+
+Only used once. I'd move it down there.
+
+> +
+> +	for (int i = 0; i < ARRAY_SIZE(devsec->devsec_ports); i++) {
+> +		struct devsec_port *devsec_port = devsec_port_alloc();
+> +		int rc;
+> +
+> +		if (IS_ERR(devsec_port))
+> +			return PTR_ERR(devsec_port);
+> +		rc = devm_add_action_or_reset(dev, destroy_port, devsec_port);
+> +		if (rc)
+> +			return rc;
+> +		devsec->devsec_ports[i] = devsec_port;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init devsec_bus_probe(struct platform_device *pdev)
+> +{
+> +	int rc;
+> +	struct devsec *devsec;
+> +	u64 mmio_size = SZ_64G;
+> +	struct devsec_sysdata *sd;
+> +	struct pci_host_bridge *hb;
+> +	struct device *dev = &pdev->dev;
+> +	u64 mmio_start = iomem_resource.end + 1 - SZ_64G;
+> +
+> +	hb = devm_pci_alloc_host_bridge(
+> +		dev, sizeof(*devsec) - sizeof(struct pci_host_bridge));
+
+I'd move dev up a line.
+
+> +	if (!hb)
+> +		return -ENOMEM;
+
+
+
+> diff --git a/samples/devsec/tsm.c b/samples/devsec/tsm.c
+> new file mode 100644
+> index 000000000000..a4705212a7e4
+> --- /dev/null
+> +++ b/samples/devsec/tsm.c
+> @@ -0,0 +1,173 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2024 - 2025 Intel Corporation. All rights reserved. */
+
+> +
+> +static const struct pci_tsm_ops *__devsec_pci_ops;
+> +
+> +static struct pci_tsm *devsec_tsm_pf0_probe(struct pci_dev *pdev)
 > +{
 > +	int rc;
 > +
-> +	if (!pdev)
-> +		return 0;
-> +	rc = cb(pdev, data);
-> +	pci_dev_put(pdev);
-> +	return rc;
-> +}
-> +
-> +static void pci_tsm_walk_fns(struct pci_dev *pdev,
-> +			     int (*cb)(struct pci_dev *pdev, void *data),
-> +			     void *data)
-> +{
-> +	struct pci_dev *fn;
-> +	int i;
-> +
-> +	/* walk virtual functions */
-> +        for (i = 0; i < pci_num_vf(pdev); i++) {
-> +		fn = pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
-> +						 pci_iov_virtfn_bus(pdev, i),
-> +						 pci_iov_virtfn_devfn(pdev, i));
-> +		if (call_cb_put(fn, data, cb))
-> +			return;
-> +        }
-> +
-> +	/* walk subordinate physical functions */
-> +	for (i = 1; i < 8; i++) {
-> +		fn = pci_get_slot(pdev->bus,
-> +				  PCI_DEVFN(PCI_SLOT(pdev->devfn), i));
-> +		if (call_cb_put(fn, data, cb))
-> +			return;
-> +	}
-> +
-> +	/* walk downstream devices */
-> +        if (pci_pcie_type(pdev) != PCI_EXP_TYPE_UPSTREAM)
-
-spaces rather than tabs...
-
-
-> +                return;
-> +
-> +        if (!is_dsm(pdev))
-> +                return;
-> +
-> +        pci_walk_bus(pdev->subordinate, cb, data);
-> +}
-> +
-> +static void pci_tsm_walk_fns_reverse(struct pci_dev *pdev,
-> +				     int (*cb)(struct pci_dev *pdev,
-> +					       void *data),
-> +				     void *data)
-> +{
-> +	struct pci_dev *fn;
-> +	int i;
-> +
-> +	/* reverse walk virtual functions */
-> +	for (i = pci_num_vf(pdev) - 1; i >= 0; i--) {
-> +		fn = pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
-> +						 pci_iov_virtfn_bus(pdev, i),
-> +						 pci_iov_virtfn_devfn(pdev, i));
-> +		if (call_cb_put(fn, data, cb))
-> +			return;
-> +	}
-> +
-While it probably doesn't matter can we make this strict reverse by doing
-the physical functions first?  I prefer not to think about whether it matters.
-
-
-> +	/* reverse walk subordinate physical functions */
-> +	for (i = 7; i >= 1; i--) {
-> +		fn = pci_get_slot(pdev->bus,
-> +				  PCI_DEVFN(PCI_SLOT(pdev->devfn), i));
-> +		if (call_cb_put(fn, data, cb))
-> +			return;
-> +	}
-> +
-> +	/* reverse walk downstream devices */
-> +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_UPSTREAM)
-> +		return;
-> +
-> +	if (!is_dsm(pdev))
-> +		return;
-> +
-> +	pci_walk_bus_reverse(pdev->subordinate, cb, data);
-
-Likewise, can we do this before the rest.
-
-> +}
-
-> +/*
-> + * Find the PCI Device instance that serves as the Device Security
-> + * Manger (DSM) for @pdev. Note that no additional reference is held for
-> + * the resulting device because @pdev always has a longer registered
-> + * lifetime than its DSM by virtue of being a child of or identical to
-> + * its DSM.
-> + */
-> +static struct pci_dev *find_dsm_dev(struct pci_dev *pdev)
-> +{
-> +	struct pci_dev *uport_pf0;
-> +
-> +	if (is_pci_tsm_pf0(pdev))
-> +		return pdev;
-> +
-> +	struct pci_dev *pf0 __free(pci_dev_put) = pf0_dev_get(pdev);
-> +	if (!pf0)
+> +	struct devsec_tsm_pf0 *devsec_tsm __free(kfree) =
+> +		kzalloc(sizeof(*devsec_tsm), GFP_KERNEL);
+> +	if (!devsec_tsm)
 > +		return NULL;
 > +
-> +	if (is_dsm(pf0))
-> +		return pf0;
+> +	rc = pci_tsm_pf0_constructor(pdev, &devsec_tsm->pci, __devsec_pci_ops);
 
+As below. I'm not seeing why we can't use &devsec_pci_ops directly here.
 
-Unusual for a find command to not hold the device reference on the device
-it returns.  Maybe just call that out in the comment.
-
-> +
-> +	/*
-> +	 * For cases where a switch may be hosting TDISP services on
-> +	 * behalf of downstream devices, check the first usptream port
-> +	 * relative to this endpoint.
-> +         */
-Odd alignment. Space rather than tab.
-
-
-> +	if (!pdev->dev.parent || !pdev->dev.parent->parent)
+> +	if (rc)
 > +		return NULL;
 > +
-> +	uport_pf0 = to_pci_dev(pdev->dev.parent->parent);
-> +	if (is_dsm(uport_pf0))
-> +		return uport_pf0;
-> +	return NULL;
+> +	pci_dbg(pdev, "tsm enabled\n");
+> +	return &no_free_ptr(devsec_tsm)->pci.tsm;
 > +}
-
-
-> +/**
-> + * pci_tsm_pf0_constructor() - common 'struct pci_tsm_pf0' initialization
-> + * @pdev: Physical Function 0 PCI device (as indicated by is_pci_tsm_pf0())
-> + * @tsm: context to initialize
-
-ops missing.  Run kernel-doc or do W=1 build to catch these.
-
-> + */
-> +int pci_tsm_pf0_constructor(struct pci_dev *pdev, struct pci_tsm_pf0 *tsm,
-> +			    const struct pci_tsm_ops *ops)
-> +{
-> +	struct tsm_dev *tsm_dev = ops->owner;
 > +
-> +	mutex_init(&tsm->lock);
-Might as well do devm_mutex_init()
-
-> +	tsm->doe_mb = pci_find_doe_mailbox(pdev, PCI_VENDOR_ID_PCI_SIG,
-> +					   PCI_DOE_PROTO_CMA);
-> +	if (!tsm->doe_mb) {
-> +		pci_warn(pdev, "TSM init failure, no CMA mailbox\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (tsm_pci_group(tsm_dev))
-> +		sysfs_merge_group(&pdev->dev.kobj, tsm_pci_group(tsm_dev));
-> +
-> +	return pci_tsm_constructor(pdev, &tsm->tsm, ops);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_tsm_pf0_constructor);
-
-> diff --git a/drivers/virt/coco/tsm-core.c b/drivers/virt/coco/tsm-core.c
-> index 1f53b9049e2d..093824dc68dd 100644
-> --- a/drivers/virt/coco/tsm-core.c
-> +++ b/drivers/virt/coco/tsm-core.c
-
-> +/*
-> + * Caller responsible for ensuring it does not race tsm_dev
-> + * unregistration.
-Wrap is a bit early. unregistration fits on the line above.
-> + */
-> +struct tsm_dev *find_tsm_dev(int id)
-> +{
-> +	guard(rcu)();
-> +	return idr_find(&tsm_idr, id);
-> +}
-
-> @@ -44,6 +76,29 @@ static struct tsm_dev *alloc_tsm_dev(struct device *parent,
->  	return no_free_ptr(tsm_dev);
->  }
->  
-> +static struct tsm_dev *tsm_register_pci_or_reset(struct tsm_dev *tsm_dev,
-> +						 struct pci_tsm_ops *pci_ops)
+> +static struct pci_tsm *devsec_tsm_fn_probe(struct pci_dev *pdev)
 > +{
 > +	int rc;
 > +
-> +	if (!pci_ops)
-> +		return tsm_dev;
+> +	struct devsec_tsm_fn *devsec_tsm __free(kfree) =
+> +		kzalloc(sizeof(*devsec_tsm), GFP_KERNEL);
+> +	if (!devsec_tsm)
+> +		return NULL;
 > +
-> +	pci_ops->owner = tsm_dev;
-> +	tsm_dev->pci_ops = pci_ops;
-> +	rc = pci_tsm_register(tsm_dev);
-> +	if (rc) {
-> +		dev_err(tsm_dev->dev.parent,
-> +			"PCI/TSM registration failure: %d\n", rc);
-> +		device_unregister(&tsm_dev->dev);
+> +	rc = pci_tsm_constructor(pdev, &devsec_tsm->pci, __devsec_pci_ops);
 
-As below. I'm fairly sure this device_unregister is nothing to do with
-what this function is doing, so having it buried in here is less easy
-to follow than pushing it up a layer.
+here as well.
 
-> +		return ERR_PTR(rc);
-> +	}
+> +	if (rc)
+> +		return NULL;
 > +
-> +	/* Notify TSM userspace that PCI/TSM operations are now possible */
-> +	kobject_uevent(&tsm_dev->dev.kobj, KOBJ_CHANGE);
-> +	return tsm_dev;
+> +	pci_dbg(pdev, "tsm (sub-function) enabled\n");
+> +	return &no_free_ptr(devsec_tsm)->pci;
+> +}
+
+> +static struct pci_tsm_ops devsec_pci_ops = {
+> +	.probe = devsec_tsm_pci_probe,
+> +	.remove = devsec_tsm_pci_remove,
+> +	.connect = devsec_tsm_connect,
+> +	.disconnect = devsec_tsm_disconnect,
+> +};
+> +
+> +static void devsec_tsm_remove(void *tsm_dev)
+> +{
+> +	tsm_unregister(tsm_dev);
 > +}
 > +
->  static void put_tsm_dev(struct tsm_dev *tsm_dev)
->  {
->  	if (!IS_ERR_OR_NULL(tsm_dev))
-> @@ -54,7 +109,8 @@ DEFINE_FREE(put_tsm_dev, struct tsm_dev *,
->  	    if (!IS_ERR_OR_NULL(_T)) put_tsm_dev(_T))
->  
->  struct tsm_dev *tsm_register(struct device *parent,
-> -			     const struct attribute_group **groups)
-> +			     const struct attribute_group **groups,
-> +			     struct pci_tsm_ops *pci_ops)
->  {
->  	struct tsm_dev *tsm_dev __free(put_tsm_dev) =
->  		alloc_tsm_dev(parent, groups);
-> @@ -73,12 +129,13 @@ struct tsm_dev *tsm_register(struct device *parent,
->  	if (rc)
->  		return ERR_PTR(rc);
->  
-> -	return no_free_ptr(tsm_dev);
-> +	return tsm_register_pci_or_reset(no_free_ptr(tsm_dev), pci_ops);
-
-Having a function call that either succeeds or cleans up something it
-never did on error is odd.  The or_reset hints at that oddity but
-to me is not enough. If you want to use __free magic in here
-maybe hand off the tsm_dev on succesful device registration.
-
-	struct tsm_dev *registered_tsm_dev __free(unregister_tsm_dev) =
-		no_free_ptr(tsm_dev);
-
-	rc = tsm_register_pci(registered_tsm_dev, pci_ops);
-	//change return type as no need for another tsm_dev
-	if (rc)
-		return ERR_PTR(rc);
-
-	return no_free_ptr(registered_tsm_dev);
-	
-
->  }
->  EXPORT_SYMBOL_GPL(tsm_register);
->  
->  void tsm_unregister(struct tsm_dev *tsm_dev)
->  {
-> +	pci_tsm_unregister(tsm_dev);
->  	device_unregister(&tsm_dev->dev);
->  }
->  EXPORT_SYMBOL_GPL(tsm_unregister);
-> diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
-> new file mode 100644
-> index 000000000000..f370c022fac4
-> --- /dev/null
-> +++ b/include/linux/pci-tsm.h
-> @@ -0,0 +1,158 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __PCI_TSM_H
-> +#define __PCI_TSM_H
-> +#include <linux/mutex.h>
-> +#include <linux/pci.h>
+> +static int devsec_tsm_probe(struct faux_device *fdev)
+> +{
+> +	struct tsm_dev *tsm_dev;
 > +
-> +struct pci_tsm;
+> +	tsm_dev = tsm_register(&fdev->dev, NULL, &devsec_pci_ops);
+> +	if (IS_ERR(tsm_dev))
+> +		return PTR_ERR(tsm_dev);
 > +
-> +/*
-
-/**
-
-Or was this intentional? Feels like it should be kernel-doc. 
-
-> + * struct pci_tsm_ops - manage confidential links and security state
-> + * @link_ops: Coordinate PCIe SPDM and IDE establishment via a platform TSM.
-> + * 	      Provide a secure session transport for TDISP state management
-> + * 	      (typically bare metal physical function operations).
-> + * @sec_ops: Lock, unlock, and interrogate the security state of the
-> + *	     function via the platform TSM (typically virtual function
-> + *	     operations).
-> + * @owner: Back reference to the TSM device that owns this instance.
-> + *
-> + * This operations are mutually exclusive either a tsm_dev instance
-> + * manages phyiscal link properties or it manages function security
-> + * states like TDISP lock/unlock.
-> + */
-> +struct pci_tsm_ops {
-> +	/*
-Likewise though I'm not sure if kernel-doc deals with struct groups.
-
-> +	 * struct pci_tsm_link_ops - Manage physical link and the TSM/DSM session
-> +	 * @probe: probe device for tsm link operation readiness, setup
-> +	 *	   DSM context
-> +	 * @remove: destroy DSM context
-> +	 * @connect: establish / validate a secure connection (e.g. IDE)
-> +	 *	     with the device
-> +	 * @disconnect: teardown the secure link
-> +	 *
-> +	 * @probe and @remove run in pci_tsm_rwsem held for write context. All
-> +	 * other ops run under the @pdev->tsm->lock mutex and pci_tsm_rwsem held
-> +	 * for read.
-> +	 */
-> +	struct_group_tagged(pci_tsm_link_ops, link_ops,
-> +		struct pci_tsm *(*probe)(struct pci_dev *pdev);
-> +		void (*remove)(struct pci_tsm *tsm);
-> +		int (*connect)(struct pci_dev *pdev);
-> +		void (*disconnect)(struct pci_dev *pdev);
-> +	);
+> +	return devm_add_action_or_reset(&fdev->dev, devsec_tsm_remove,
+> +					tsm_dev);
+> +}
 > +
-> +	/*
-> +	 * struct pci_tsm_security_ops - Manage the security state of the function
-> +	 * @sec_probe: probe device for tsm security operation
-> +	 *	       readiness, setup security context
-> +	 * @sec_remove: destroy security context
-> +	 *
-> +	 * @sec_probe and @sec_remove run in pci_tsm_rwsem held for
-> +	 * write context. All other ops run under the @pdev->tsm->lock
-> +	 * mutex and pci_tsm_rwsem held for read.
-> +	 */
-> +	struct_group_tagged(pci_tsm_security_ops, ops,
-> +		struct pci_tsm *(*sec_probe)(struct pci_dev *pdev);
-> +		void (*sec_remove)(struct pci_tsm *tsm);
-> +	);
-> +	struct tsm_dev *owner;
+> +static struct faux_device *devsec_tsm;
+> +
+> +static const struct faux_device_ops devsec_device_ops = {
+> +	.probe = devsec_tsm_probe,
 > +};
-
 > +
-> +/**
-> + * struct pci_tsm_pf0 - Physical Function 0 TDISP link context
-> + * @tsm: generic core "tsm" context
-> + * @lock: protect @state vs pci_tsm_ops invocation
+> +static int __init devsec_tsm_init(void)
+> +{
+> +	__devsec_pci_ops = &devsec_pci_ops;
 
-What is @state referring to? 
+I'm not immediately grasping why this global is needed.
+You never check if it's set, so why not just move definition of devsec_pci_ops
+early enough that can be directly used everywhere.
 
-> + * @doe_mb: PCIe Data Object Exchange mailbox
-> + */
-> +struct pci_tsm_pf0 {
-> +	struct pci_tsm tsm;
-> +	struct mutex lock;
-> +	struct pci_doe_mb *doe_mb;
-> +};
 
+> +	devsec_tsm = faux_device_create("devsec_tsm", NULL, &devsec_device_ops);
+> +	if (!devsec_tsm)
+> +		return -ENOMEM;
+> +	return 0;
+> +}
+> +module_init(devsec_tsm_init);
+> +
+> +static void __exit devsec_tsm_exit(void)
+> +{
+> +	faux_device_destroy(devsec_tsm);
+> +}
+> +module_exit(devsec_tsm_exit);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("Device Security Sample Infrastructure: Platform TSM Driver");
 
 
