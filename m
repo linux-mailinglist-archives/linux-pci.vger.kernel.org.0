@@ -1,57 +1,57 @@
-Return-Path: <linux-pci+bounces-33190-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33191-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55F9DB16300
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 16:43:32 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E403B16315
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 16:46:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8056018C851D
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 14:43:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BDE9B7A2BB8
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 14:45:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0D2F2DAFBA;
-	Wed, 30 Jul 2025 14:43:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3FF2298CA6;
+	Wed, 30 Jul 2025 14:46:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="t0sO3azx"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Qm3xWw6g"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sinmsgout02.his.huawei.com (sinmsgout02.his.huawei.com [119.8.177.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7484B2DAFA4;
-	Wed, 30 Jul 2025 14:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7927E1953A1;
+	Wed, 30 Jul 2025 14:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=119.8.177.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753886603; cv=none; b=GPI8Y2EPRK0YMQYTn0/KlHYRbjB+cwl1ha6+tmdCAPWb/KY5+s0zhj2KcIx4yBGLzbJ1j0qGBjgaNNq8XTVQSXxfqI29iwxtkdMQcT04kD3MWtnPIuHoTN5gN2hlwzYTFRIVOlWsDrsDvUnCgS2dhl+7MQ3knYBV1vq4e0CbA3k=
+	t=1753886802; cv=none; b=taTQs9J5iD0p+EfjZkqWLp7k/JM4z7lCwBPgHH3ipAKLilwqO9suaNItpMfN3TiQQN/OIMDwt9A7paLRSJiWPgFui43062iimvY1EENOoHpF9YmKzxYwJ8e4W37YT9KPNM/imdNil7g1tEpMYG2u+EnK+onTM3KI4QDQO4lbLY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753886603; c=relaxed/simple;
-	bh=VELo7VNAXS/sb3xrgvY31EEborJY9bTvrjj5jfDKUq4=;
+	s=arc-20240116; t=1753886802; c=relaxed/simple;
+	bh=fv8z732sb0X7FzfQv/LemtDxEILk4pkH79izQS4oPcc=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FM23aD2E77vR2ptzhLMmlWf/CorV9O9MFPvxeNeHZda8VGTiu1ExGNkIMh4m6Y3Alfttr0ERvIYiuHfD/Sx+h23N8rN64cPIm+VO2Idrb0Wj4setarkCFaD1BdHQguROxPGFgsxEbY9fR/4yXmu0WRc8Y3O2K5x5dLUuyTEdv+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=t0sO3azx; arc=none smtp.client-ip=119.8.177.37
+	 MIME-Version:Content-Type; b=iG7SCwL8y5kUUi6doEwEHJdtPODFKMliMO1r6IXlnre/iqYqp+D2x33gFQzVx8wiDTRfQsCJrSMRuYFH/R0scLPV9SArxWbHutoCvcU13AFlLfdB0+L0y7QyRyuYSQe8L6Mh/q8NR0GcFAAV6RT2FVK0W5vgY/nKxbD9LH8SmVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Qm3xWw6g; arc=none smtp.client-ip=119.8.177.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=13nxrJFzoNH9R0ItCgDej6Iay89BP9TwCN9S91Hx9KY=;
-	b=t0sO3azx1nRwWmTjpCAJPEF48zVxKioQa/X35Ep+ZRwIzzthRuXfC07qHseADBj5IrXrW1fv/
-	mXevKHgtKxWLjPBMDgho00EaKGJJewPcW6a8lkqJtDOPw+a6j9WnRl08m2wApw477yYKgSdD72t
-	b5k6Of9M1yNRQZx01riqCvg=
-Received: from frasgout.his.huawei.com (unknown [172.18.146.35])
-	by sinmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4bsZfX5HG2z1vnJ5;
-	Wed, 30 Jul 2025 22:41:40 +0800 (CST)
+	bh=gDYuSUHEA/sgI6zOOL1uogU4Aat+EC2bRnpHV0fNS/w=;
+	b=Qm3xWw6g48vH8xrLWZO/dGKQFGudk8v6f/koYNcKOk+JXGBYrj+3QXLXm5CP2+RLa8v2A19QV
+	6Iqvi80S9yaahqrMT1duBJAWckGaAFygmROtmETbnqjwbYoq1JjQLzxeFqYIClPsXYFIpwr9feQ
+	CqkFkv9aXXjmMz0WJGyWLJ0=
+Received: from frasgout.his.huawei.com (unknown [172.18.146.36])
+	by sinmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4bsZkN5KDzz1vnKW;
+	Wed, 30 Jul 2025 22:45:00 +0800 (CST)
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bsZfS6MGSz6M4yg;
-	Wed, 30 Jul 2025 22:41:36 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bsZjw6gwfz6L58r;
+	Wed, 30 Jul 2025 22:44:36 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 03EDB140122;
-	Wed, 30 Jul 2025 22:43:13 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id E4A83140122;
+	Wed, 30 Jul 2025 22:46:32 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 30 Jul
- 2025 16:43:12 +0200
-Date: Wed, 30 Jul 2025 15:43:10 +0100
+ 2025 16:46:31 +0200
+Date: Wed, 30 Jul 2025 15:46:30 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
 CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
@@ -61,12 +61,12 @@ CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
  Poulose" <Suzuki.Poulose@arm.com>, Steven Price <steven.price@arm.com>,
 	Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
 	Will Deacon <will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [RFC PATCH v1 30/38] coco: host: arm64: Add support for realm
- host interface (RHI)
-Message-ID: <20250730154310.00003143@huawei.com>
-In-Reply-To: <20250728135216.48084-31-aneesh.kumar@kernel.org>
+Subject: Re: [RFC PATCH v1 31/38] coco: guest: arm64: Add support for
+ fetching interface report and certificate chain from host
+Message-ID: <20250730154630.00004905@huawei.com>
+In-Reply-To: <20250728135216.48084-32-aneesh.kumar@kernel.org>
 References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
-	<20250728135216.48084-31-aneesh.kumar@kernel.org>
+	<20250728135216.48084-32-aneesh.kumar@kernel.org>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -79,243 +79,183 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, 28 Jul 2025 19:22:07 +0530
+On Mon, 28 Jul 2025 19:22:08 +0530
 "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
 
-> Device assignment-related RHI calls result in a REC exit, which is
-> handled by the tsm guest_request callback.
+> Fetch interface report and certificate chain from the host using RHI calls.
 > 
 > Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
 
-Comments below.
+Comments inline
 
-> ---
->  arch/arm64/include/asm/rhi.h             | 32 ++++++++++
->  drivers/virt/coco/arm-cca-host/arm-cca.c | 68 ++++++++++++++++++++
->  drivers/virt/coco/arm-cca-host/rmm-da.c  | 81 ++++++++++++++++++++++++
->  drivers/virt/coco/arm-cca-host/rmm-da.h  |  4 ++
->  include/linux/tsm.h                      |  3 +
->  5 files changed, 188 insertions(+)
->  create mode 100644 arch/arm64/include/asm/rhi.h
-
-> diff --git a/drivers/virt/coco/arm-cca-host/arm-cca.c b/drivers/virt/coco/arm-cca-host/arm-cca.c
-> index be1296fb1bf2..0807fcf8d222 100644
-> --- a/drivers/virt/coco/arm-cca-host/arm-cca.c
-> +++ b/drivers/virt/coco/arm-cca-host/arm-cca.c
-
-> +static int cca_tsm_guest_req(struct pci_dev *pdev, struct tsm_guest_req_info *info)
-> +{
-> +	int ret;
-> +
-> +	switch (info->type) {
-> +	case ARM_CCA_DA_OBJECT_SIZE:
-> +	{
-> +		int object_size;
-> +		struct da_object_size_req req;
-> +
-> +		if (sizeof(req) != info->req_len)
-> +			return -EINVAL;
-> +
-> +		if (copy_from_user(&req, info->req, info->req_len))
-> +			return -EFAULT;
-> +
-> +		object_size = rme_get_da_object_size(pdev, req.object_type);
-> +		if (object_size > 0) {
-> +			if (info->resp_len < sizeof(object_size))
-> +				return -EINVAL;
-> +			if (copy_to_user(info->resp, &object_size, sizeof(object_size)))
-> +				return -EFAULT;
-> +			info->resp_len = sizeof(object_size);
-> +			ret = 0;
-			return 0;
-then else isn't needed.
-
-> +		} else
-
-#Style is {} on all legs if any need it.
-
-> +			/* error */
-> +			ret = object_size;
-			return object_size;
-
-> +		break;
-> +	}
-> +	case ARM_CCA_DA_OBJECT_READ:
-> +	{
-> +		int resp_len;
-> +		struct da_object_read_req req;
-> +
-> +		if (sizeof(req) != info->req_len)
-> +			return -EINVAL;
-> +
-> +		if (copy_from_user(&req, info->req, info->req_len))
-> +			return -EFAULT;
-> +
-> +		resp_len = rme_da_object_read(pdev, req.object_type, req.offset,
-> +					      info->resp_len,
-> +					      info->resp);
-> +		if (resp_len > 0) {
-> +			info->resp_len = resp_len;
-> +			ret = 0;
-Similar to above.
-> +		} else
-> +			/* error */
-> +			ret = resp_len;
-> +		break;
-> +	}
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +	return ret;
-As you've probably figured out, I love an early return.  This sort
-of function shows why as it reduced indent etc in lots of places.
-Here you mix and match. Maybe it will make sense later in the series though!
-
-> +}
-
-> diff --git a/drivers/virt/coco/arm-cca-host/rmm-da.c b/drivers/virt/coco/arm-cca-host/rmm-da.c
-> index bef33e618fd3..c7da9d12f258 100644
-> --- a/drivers/virt/coco/arm-cca-host/rmm-da.c
-> +++ b/drivers/virt/coco/arm-cca-host/rmm-da.c
-> @@ -10,7 +10,9 @@
->  #include <keys/asymmetric-type.h>
->  #include <keys/x509-parser.h>
->  #include <linux/kvm_types.h>
-> +#include <linux/kvm_host.h>
->  #include <asm/kvm_rme.h>
-> +#include <asm/kvm_emulate.h>
+> diff --git a/drivers/virt/coco/arm-cca-guest/rsi-da.c b/drivers/virt/coco/arm-cca-guest/rsi-da.c
+> index 28ec946df1e2..47b379318e7c 100644
+> --- a/drivers/virt/coco/arm-cca-guest/rsi-da.c
+> +++ b/drivers/virt/coco/arm-cca-guest/rsi-da.c
+> @@ -4,6 +4,7 @@
+>   */
 >  
->  #include "rmm-da.h"
+>  #include <linux/pci.h>
+> +#include <linux/mem_encrypt.h>
+>  #include <asm/rsi_cmds.h>
 >  
-> @@ -769,6 +771,85 @@ static int rme_exit_vdev_req_handler(struct realm_rec *rec)
->  	return 1;
+>  #include "rsi-da.h"
+> @@ -50,6 +51,121 @@ rsi_rdev_get_interface_report(struct pci_dev *pdev, unsigned long vdev_id,
+>  	return RSI_SUCCESS;
 >  }
 >  
-> +int rme_get_da_object_size(struct pci_dev *pdev, int type)
+> +static long rhi_get_report(int vdev_id, int da_object_type, void **report, int *report_size)
 > +{
-> +	int ret = 0;
-> +	unsigned long len;
-> +	struct pci_tsm *tsm = pdev->tsm;
-> +	struct cca_host_dsc_pf0 *dsc_pf0;
+> +	int ret, enc_ret = 0;
+> +	int nr_pages;
+> +	int max_data_len;
+> +	void *data_buf_shared, *data_buf_private;
+> +	struct rsi_host_call *rhicall;
 > +
-> +	if (!tsm)
-> +		return -EINVAL;
+> +	rhicall = kmalloc(sizeof(struct rsi_host_call), GFP_KERNEL);
+> +	if (!rhicall)
+> +		return -ENOMEM;
 > +
-> +	dsc_pf0 = to_cca_dsc_pf0(tsm->dsm_dev);
+> +	rhicall->imm = 0;
+> +	rhicall->gprs[0] = RHI_DA_FEATURES;
 > +
-> +	/* Determine the buffer that should be used */
-> +	if (type == RHI_DA_OBJECT_INTERFACE_REPORT) {
-> +		len = dsc_pf0->interface_report.size;
-> +	} else if (type == RHI_DA_OBJECT_MEASUREMENT) {
-> +		len = dsc_pf0->measurements.size;
-> +	} else if (type == RHI_DA_OBJECT_CERTIFICATE) {
-> +		len = dsc_pf0->cert_chain.cache.size;
-> +	} else if (type == RHI_DA_OBJECT_VCA) {
-> +		len = dsc_pf0->vca.size;
-> +	} else {
-> +		ret = -EINVAL;
+> +	ret = rsi_host_call(virt_to_phys(rhicall));
+> +	if (ret != RSI_SUCCESS) {
+> +		ret =  -EIO;
+
+Extra space.
+
 > +		goto err_out;
 > +	}
 > +
-> +	return len;
-> +err_out:
-
-Similar to below. This pattern just makes things more complex.
-If we need to introduce a label, do it in the patch where you add
-code to do something on error.
-
-> +	return ret;
-> +}
-> +
-> +int rme_da_object_read(struct pci_dev *pdev, int type, unsigned long offset,
-> +		       unsigned long max_len, void __user *user_buf)
-> +{
-> +	void *buf;
-> +	int ret = 0;
-> +	unsigned long len;
-> +	struct cca_host_dsc_pf0 *dsc_pf0;
-> +	struct pci_tsm *tsm = pdev->tsm;
-> +
-> +	if (!tsm)
-> +		return -EINVAL;
-> +
-> +	dsc_pf0 = to_cca_dsc_pf0(tsm->dsm_dev);
-> +
-> +	/* Determine the buffer that should be used */
-> +	if (type == RHI_DA_OBJECT_INTERFACE_REPORT) {
-> +		len = dsc_pf0->interface_report.size;
-> +		buf = dsc_pf0->interface_report.buf;
-> +	} else if (type == RHI_DA_OBJECT_MEASUREMENT) {
-> +		len = dsc_pf0->measurements.size;
-> +		buf = dsc_pf0->measurements.buf;
-> +	} else if (type == RHI_DA_OBJECT_CERTIFICATE) {
-> +		len = dsc_pf0->cert_chain.cache.size;
-> +		buf = dsc_pf0->cert_chain.cache.buf;
-> +	} else if (type == RHI_DA_OBJECT_VCA) {
-> +		len = dsc_pf0->vca.size;
-> +		buf = dsc_pf0->vca.buf;
-> +	} else {
-> +		ret = -EINVAL;
+> +	if (rhicall->gprs[0] != 0x3) {
+> +		ret =  -EIO;
 > +		goto err_out;
 > +	}
 > +
-> +	/* Assume that the buffer is large enough for the whole report */
-> +	if ((max_len - offset) < len) {
-> +		/* FIXME!! the error code */
+> +	rhicall->imm = 0;
+> +	rhicall->gprs[0] = RHI_DA_OBJECT_SIZE;
+> +	rhicall->gprs[1] = vdev_id;
+> +	rhicall->gprs[2] = da_object_type;
+> +
+> +	ret = rsi_host_call(virt_to_phys(rhicall));
+> +	if (ret != RSI_SUCCESS) {
+> +		ret =  -EIO;
+> +		goto err_out;
+> +	}
+> +	if (rhicall->gprs[0] != RHI_DA_SUCCESS) {
+> +		ret =  -EIO;
+> +		goto err_out;
+> +	}
+> +	max_data_len = rhicall->gprs[1];
+> +	*report_size = max_data_len;
+> +
+> +	/*
+> +	 * We need to share this memory with hypervisor.
+> +	 * So it should be multiple of sharing unit.
+> +	 */
+> +	max_data_len = ALIGN(max_data_len, PAGE_SIZE);
+> +	nr_pages = max_data_len >> PAGE_SHIFT;
+> +
+> +	if (!max_data_len || nr_pages > MAX_ORDER_NR_PAGES) {
 > +		ret = -ENOMEM;
 > +		goto err_out;
 > +	}
 > +
-> +	if (copy_to_user(user_buf + offset, buf, len)) {
-> +		ret = -EIO;
+> +	/*
+> +	 * We need to share this memory with hypervisor.
+> +	 * So it should be multiple of sharing unit.
+> +	 */
+> +	data_buf_shared = (void *)__get_free_pages(GFP_KERNEL, get_order(max_data_len));
+> +	if (!data_buf_shared) {
+> +		ret =  -ENOMEM;
+
+extra space.  All of these seem to have one.  Not seeing a reason for it
+though.
+
+
 > +		goto err_out;
 > +	}
-> +	ret = len;
+> +
+> +	data_buf_private = kmalloc(*report_size, GFP_KERNEL);
+> +	if (!data_buf_private) {
+> +		ret =  -ENOMEM;
+> +		goto err_private_alloc;
+> +	}
+> +
+> +	ret = set_memory_decrypted((unsigned long)data_buf_shared, nr_pages);
+> +	if (ret) {
+> +		ret =  -EIO;
+> +		goto err_decrypt;
+> +	}
+> +
+> +	rhicall->imm = 0;
+> +	rhicall->gprs[0] = RHI_DA_OBJECT_READ;
+> +	rhicall->gprs[1] = vdev_id;
+> +	rhicall->gprs[2] = da_object_type;
+> +	rhicall->gprs[3] = 0; /* offset within the data buffer */
+> +	rhicall->gprs[4] = max_data_len;
+> +	rhicall->gprs[5] = virt_to_phys(data_buf_shared);
+> +	ret = rsi_host_call(virt_to_phys(rhicall));
+> +	if (ret != RSI_SUCCESS || rhicall->gprs[0] != RHI_DA_SUCCESS) {
+> +		ret =  -EIO;
+> +		goto err_rhi_call;
+> +	}
+> +
+> +	memcpy(data_buf_private, data_buf_shared, *report_size);
+> +	enc_ret = set_memory_encrypted((unsigned long)data_buf_shared, nr_pages);
+> +	if (!enc_ret)
+> +		/* If we fail to mark it encrypted don't free it back */
+> +		free_pages((unsigned long)data_buf_shared, get_order(max_data_len));
+> +
+> +	*report = data_buf_private;
+> +	kfree(rhicall);
+> +	return 0;
+> +
+> +err_rhi_call:
+> +	enc_ret = set_memory_encrypted((unsigned long)data_buf_shared, nr_pages);
+> +err_decrypt:
+> +	kfree(data_buf_private);
+> +err_private_alloc:
+> +	if (!enc_ret)
+> +		/* If we fail to mark it encrypted don't free it back */
+> +		free_pages((unsigned long)data_buf_shared, get_order(max_data_len));
 > +err_out:
+I'd expect there to be nothing to do except return under an err_out label
+So rename it.
 
-Definitely makes sense to just return directly in the error paths above and
-just return len here
-
-
+> +	*report = NULL;
+> +	*report_size = 0;
+> +	kfree(rhicall);
 > +	return ret;
 > +}
 > +
->  void rme_register_exit_handlers(void)
+>  int rsi_device_lock(struct pci_dev *pdev)
 >  {
->  	realm_exit_vdev_comm_handler = rme_exit_vdev_comm_handler;
-> diff --git a/drivers/virt/coco/arm-cca-host/rmm-da.h b/drivers/virt/coco/arm-cca-host/rmm-da.h
-> index cebddab8464d..457660ff3b69 100644
-> --- a/drivers/virt/coco/arm-cca-host/rmm-da.h
-> +++ b/drivers/virt/coco/arm-cca-host/rmm-da.h
-> @@ -10,6 +10,7 @@
->  #include <linux/pci-ide.h>
->  #include <linux/pci-tsm.h>
->  #include <asm/rmi_smc.h>
-> +#include <asm/rhi.h>
+>  	unsigned long ret;
+> @@ -82,5 +198,20 @@ int rsi_device_lock(struct pci_dev *pdev)
+>  		return -EOPNOTSUPP;
+>  	}
 >  
->  #define MAX_CACHE_OBJ_SIZE	4096
->  struct cache_object {
-> @@ -101,4 +102,7 @@ void *rme_create_vdev(struct realm *realm, struct pci_dev *pdev,
->  void rme_unbind_vdev(struct realm *realm, struct pci_dev *pdev,
->  		     struct pci_dev *pf0_dev);
->  void rme_register_exit_handlers(void);
-> +int rme_get_da_object_size(struct pci_dev *pdev, int type);
-> +int rme_da_object_read(struct pci_dev *pdev, int type, unsigned long offset,
-> +		       unsigned long max_len, void __user *user_buf);
->  #endif
-> diff --git a/include/linux/tsm.h b/include/linux/tsm.h
-> index 497a3b4df5a0..e82046b0c7fa 100644
-> --- a/include/linux/tsm.h
-> +++ b/include/linux/tsm.h
-> @@ -145,5 +145,8 @@ struct tsm_guest_req_info {
->  	size_t resp_len;
->  };
->  
-> +#define ARM_CCA_DA_OBJECT_SIZE 0x1
-> +#define ARM_CCA_DA_OBJECT_READ 0x2
+> +	/* Now make a host call to copy the interface report to guest. */
+> +	ret = rhi_get_report(vdev_id, RHI_DA_OBJECT_INTERFACE_REPORT,
+> +			     &dsm->interface_report, &dsm->interface_report_size);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to get interface report from the host (%lu)\n", ret);
+> +		return -EIO;
+> +	}
 > +
->  int tsm_guest_req(struct device *dev, struct tsm_guest_req_info *info);
->  #endif /* __TSM_H */
+> +	ret = rhi_get_report(vdev_id, RHI_DA_OBJECT_CERTIFICATE,
+> +			     &dsm->certificate, &dsm->certificate_size);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to get device certificate from the host (%lu)\n", ret);
+> +		return -EIO;
+> +	}
+> +
+
+>  	return ret;
+return 0;
+
+>  }
 
 
