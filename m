@@ -1,211 +1,129 @@
-Return-Path: <linux-pci+bounces-33151-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33152-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B1E5B15896
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 07:52:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D07EB15925
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 08:52:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 880B13B7227
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 05:51:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8F46618A6A0B
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 06:53:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B1021D88D7;
-	Wed, 30 Jul 2025 05:52:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 184481F5823;
+	Wed, 30 Jul 2025 06:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SW1QXMYP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A61U6QZB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA8B14F90
-	for <linux-pci@vger.kernel.org>; Wed, 30 Jul 2025 05:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DDA1F4C92;
+	Wed, 30 Jul 2025 06:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753854736; cv=none; b=oYaj/Am1m8R1kQPjmRxxO2MHpISGoBSrbAlxL3k1iCYJuGZbHqMH0YFGOhZo0jDYTYyRqceLGoCYSP5h1yF9D6sxQA4MKrm9/okKQnfAgc0ldbg3sKojR7H0u3+Su/Z54RmqI5qPR7izOd5lvQtX7H/EUE9nhFXa583kEYXTO9g=
+	t=1753858373; cv=none; b=UCI18G/62CfhdFbeOsj5q7YnBbwjxFshYq7go5aMedSEzkn8JDZeNMyMKUmnXYPPIThOIKIF5cNi+8JDQzLeVrpJXpHDKUzFwmeOCZMeOHWP30dbrhbuNbLbxZKK+FILk9XJVVLnSq1DKp/HSSrTP0TYGngYV68ZpmtWmL3lsXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753854736; c=relaxed/simple;
-	bh=0ESVDtM12Qnm4oEZL3e3KzNzVoYgKTfz/EZn+GyMDpE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=jjUnHb2CwzqE8MfpOIrtFpSPV5fWkEZ4/XfmC6kIXGzqe05OWQRYgrRYfOZCg5HqQ8n2uVOYyN4AhBbi+qVSM+jy92CotPZTGqjXL6G/ESw5wf3tq0J9L2ulwaBPU4Tb/TThybbHgaeIXd31MLL6qzkGnWzxVN1u+Bi7JKGSMEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SW1QXMYP; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1753858373; c=relaxed/simple;
+	bh=7OGyvNg7RATkxbxEUz2W1V8qPCkZTTFRPvx4rkkG0yo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dgvKeRP3DGksxJE7tLJrmiirKmqPZardcxsHdlDNFdwnwwr+CgyJHfTCVogI/HvwPXS6pMGH3thMRQ0VVIT15/XzJTpZ2Lko2GskQ/ea0k5c7b5eD5u+oujUT/nUesbHBRrhUqNRRwWDSauaLSwK+Oi58E0JFdZbRQaTR9Yj1UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A61U6QZB; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753854735; x=1785390735;
-  h=date:from:to:cc:subject:message-id;
-  bh=0ESVDtM12Qnm4oEZL3e3KzNzVoYgKTfz/EZn+GyMDpE=;
-  b=SW1QXMYPukdek7J3iM1CC1tgoDJT3naF7YXsDOL5VAgUbx+NU27itbu5
-   LCb+e2RTA3jvqFWVFcII5WQBzwl/Osp3vZkZOtLtkZJv15TctKki3ikum
-   uCE1gT/FYeLhOSrM9N1ldkz7K9DNEJDAqJGW+wKEqoe7D/XslrDKTWQgJ
-   V4hpvzo8DL5KmA5qbkwSi17bGc/7Y8hGw98Jwe/WizkE57xhSE7lJoklE
-   vG/9witEM+4EWRCRlz5rWllybOAxIQ23ybcAOCfVelR5Sm8hoDK5y7wS3
-   aM3TjPUYDtnwmC+hm5LTKREPBmIZs71scX+5KNwYuK0qi0yzQWNW64jgm
+  t=1753858371; x=1785394371;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7OGyvNg7RATkxbxEUz2W1V8qPCkZTTFRPvx4rkkG0yo=;
+  b=A61U6QZBLpsAj81ChF5sPWV7UU9mxS4DNQXInrTl9Zz6mDlJI2y4YWbo
+   OzUJD8S3nH3cgACOACTa3cuHSniC+5ERi/9uEh7ztFz1LHFYl8rYUJfi/
+   ieJvhxOJT5ROitpan1td2sM5BSzoJO56vtxDP3qXBk95D3gyTx64SmAzT
+   yWAU3Md7nneb/ovBaGmWt9dLSFptIFPMrTIRHLWXWlx7oFML4MgMQC8bN
+   ppzXdljguomEqDngj7YP+TBj1Qd11NNb9za4m0y42S+sJiLEUiH7L1y2G
+   rBPzECFQLz2zCXIIoRQgVNYsQW4uFIJbxlnGxaR0hGJW1qLmMVJE5n7K1
    A==;
-X-CSE-ConnectionGUID: eoospS6HTQ2pIQiArzkfQA==
-X-CSE-MsgGUID: YoSOhZAGTISsd9Wz1Qzhtg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11506"; a="55354042"
+X-CSE-ConnectionGUID: KsvrMuzuRJOnG2aB3VaKAw==
+X-CSE-MsgGUID: pR+slbxJTuyId3ZFWmmWNg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11506"; a="56227438"
 X-IronPort-AV: E=Sophos;i="6.16,350,1744095600"; 
-   d="scan'208";a="55354042"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2025 22:52:15 -0700
-X-CSE-ConnectionGUID: AZzN+UX0QvG/A1x47UYv3w==
-X-CSE-MsgGUID: 0sEU/wirT9+k4XwLTbfoJQ==
+   d="scan'208";a="56227438"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2025 23:52:50 -0700
+X-CSE-ConnectionGUID: Hr79EHAhRQqjX7DKPUXkVA==
+X-CSE-MsgGUID: efddGYvwS96+x3Wq3Ik7ew==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,350,1744095600"; 
-   d="scan'208";a="163678269"
-Received: from lkp-server01.sh.intel.com (HELO 160750d4a34c) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 29 Jul 2025 22:52:13 -0700
-Received: from kbuild by 160750d4a34c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ugzjX-00025O-26;
-	Wed, 30 Jul 2025 05:52:11 +0000
-Date: Wed, 30 Jul 2025 13:51:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:hotplug] BUILD SUCCESS
- c2f9de5e2db29158a8caa86a37aa479488e4ba43
-Message-ID: <202507301308.lSaQHIsW-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="200088693"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa001.jf.intel.com with ESMTP; 29 Jul 2025 23:52:47 -0700
+Date: Wed, 30 Jul 2025 14:43:28 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
+Cc: linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	aik@amd.com, lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: [RFC PATCH v1 06/38] iommufd: Add and option to request for bar
+ mapping with IORESOURCE_EXCLUSIVE
+Message-ID: <aIm/EFCoGdNmhaou@yilunxu-OptiPlex-7050>
+References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
+ <20250728135216.48084-7-aneesh.kumar@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250728135216.48084-7-aneesh.kumar@kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git hotplug
-branch HEAD: c2f9de5e2db29158a8caa86a37aa479488e4ba43  PCI: Move is_pciehp check out of pciehp_is_native()
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 6328c3a05bcd..bee3cf3226e9 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -1753,8 +1753,15 @@ int vfio_pci_core_mmap(struct vfio_device *core_vdev, struct vm_area_struct *vma
+>  	 * we need to request the region and the barmap tracks that.
+>  	 */
+>  	if (!vdev->barmap[index]) {
+> -		ret = pci_request_selected_regions(pdev,
+> +
+> +		if (core_vdev->iommufd_device &&
+> +		    iommufd_device_need_exclusive_range(core_vdev->iommufd_device))
+> +			ret = pci_request_selected_regions_exclusive(pdev,
+> +							1 << index, "vfio-pci");
+> +		else
+> +			ret = pci_request_selected_regions(pdev,
+>  						   1 << index, "vfio-pci");
+> +
+>  		if (ret)
+>  			return ret;
 
-elapsed time: 726m
+I did't get the idea.
 
-configs tested: 118
-configs skipped: 3
+The purpose of my original patch [1] is not to make VFIO choose between
+pci_request_regions_exclusive() or pci_request_regions(). It is mainly
+to prevent userspace mmap/read/write against a vfio_cdev FD. For
+example:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  If pci_request_selected_regions() is succesfully executed on mmap(),
+  later TSM Bind would fail on its pci_request_regions_exclusive(). It
+  means userspace should not mmap otherwise you can't do private
+  assignment. Vice versa, if you've done TSM Bind, you cannot mmap
+  anymore.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250730    gcc-8.5.0
-arc                   randconfig-002-20250730    gcc-14.3.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                       aspeed_g4_defconfig    clang-22
-arm                        multi_v5_defconfig    gcc-15.1.0
-arm                          pxa168_defconfig    clang-19
-arm                   randconfig-001-20250730    clang-22
-arm                   randconfig-002-20250730    clang-20
-arm                   randconfig-003-20250730    gcc-8.5.0
-arm                   randconfig-004-20250730    gcc-14.3.0
-arm                           sunxi_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250730    clang-22
-arm64                 randconfig-002-20250730    clang-20
-arm64                 randconfig-003-20250730    clang-17
-arm64                 randconfig-004-20250730    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250730    gcc-14.3.0
-csky                  randconfig-002-20250730    gcc-12.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250730    clang-20
-hexagon               randconfig-002-20250730    clang-22
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250730    clang-20
-i386        buildonly-randconfig-002-20250730    clang-20
-i386        buildonly-randconfig-003-20250730    gcc-12
-i386        buildonly-randconfig-004-20250730    gcc-12
-i386        buildonly-randconfig-005-20250730    clang-20
-i386        buildonly-randconfig-006-20250730    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20250730    clang-22
-loongarch             randconfig-002-20250730    clang-20
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250730    gcc-11.5.0
-nios2                 randconfig-002-20250730    gcc-9.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250730    gcc-14.3.0
-parisc                randconfig-002-20250730    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc               randconfig-001-20250730    gcc-8.5.0
-powerpc               randconfig-002-20250730    gcc-8.5.0
-powerpc               randconfig-003-20250730    clang-22
-powerpc                     tqm8555_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20250730    clang-22
-powerpc64             randconfig-002-20250730    clang-22
-powerpc64             randconfig-003-20250730    gcc-10.5.0
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250730    gcc-10.5.0
-riscv                 randconfig-002-20250730    gcc-8.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250730    clang-20
-s390                  randconfig-002-20250730    gcc-15.1.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                    randconfig-001-20250730    gcc-12.5.0
-sh                    randconfig-002-20250730    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250730    gcc-14.3.0
-sparc                 randconfig-002-20250730    gcc-14.3.0
-sparc64               randconfig-001-20250730    clang-22
-sparc64               randconfig-002-20250730    clang-20
-um                               alldefconfig    clang-22
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250730    gcc-11
-um                    randconfig-002-20250730    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250730    gcc-12
-x86_64      buildonly-randconfig-002-20250730    clang-20
-x86_64      buildonly-randconfig-003-20250730    clang-20
-x86_64      buildonly-randconfig-004-20250730    clang-20
-x86_64      buildonly-randconfig-005-20250730    clang-20
-x86_64      buildonly-randconfig-006-20250730    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250730    gcc-11.5.0
-xtensa                randconfig-002-20250730    gcc-12.5.0
+The _exclusive is just a bonus that further prevents "/dev/mem and the
+sysfs MMIO access"
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[1]: https://lore.kernel.org/all/20250529053513.1592088-20-yilun.xu@linux.intel.com/
+
+Thanks,
+Yilun
 
