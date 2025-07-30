@@ -1,60 +1,61 @@
-Return-Path: <linux-pci+bounces-33204-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33205-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A871B16876
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 23:47:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A7AFB16878
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 23:48:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71F2B5469C0
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 21:47:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89FAA5469FE
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 21:48:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A17A22068F;
-	Wed, 30 Jul 2025 21:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CB8413D246;
+	Wed, 30 Jul 2025 21:48:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LInNrWuX"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jYPuQ9Vp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2049.outbound.protection.outlook.com [40.107.95.49])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2043.outbound.protection.outlook.com [40.107.95.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED24C2C9;
-	Wed, 30 Jul 2025 21:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569BC22068F;
+	Wed, 30 Jul 2025 21:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753912066; cv=fail; b=Uujf1Pw0eT9YdELxjN3DAP1cCgmAmS6g2KoC2ZoqBO6983ntO+X69hRDFD84QFEiQ/GXur/9QyqOrF2npOJjxZzBtRLelnmA2CzAMaQdU1Qg/MAymVg6dE8PLExW+r/WogQHktEA9piTF0pPWh9qZ9zVrqR5PKY9CrYRbc69ISg=
+	t=1753912082; cv=fail; b=PvNnKX/dsX82gaT45sB39tMEadmtA6+lMLGyibIkNz/TJCsoat9u8mg5tedw9O8H9GrRGvtUewY06lTnbw+gQ6YKnvWilYnJDiuPSJ2arOE8v2kYr3L43cmxWjJQmr3XielhyWz8CQkA9cjTFJslaSFx6pKLN6xjBw4jS7o6v00=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753912066; c=relaxed/simple;
-	bh=1AyhPAdnL43TbCGuEEJlEgWFnW3st91hwaNc4L5bpEY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g1jY5hBsz1RK8NW01ahmusKFFPU4oBeei9JMDRur6dV3HRd/igC6/V4Iu3b92voBDmAbmMCribch8jQsr3oLQFSFzUXsZwCwyp9MK3nPGOhh5OlEL7FGcAH72XCpjd1HQN0H7C5vAIoqaDkHhprYE0CQLkCyEPjzEZS5ekoelTE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LInNrWuX; arc=fail smtp.client-ip=40.107.95.49
+	s=arc-20240116; t=1753912082; c=relaxed/simple;
+	bh=YwHvylV35izlWDVW8JsrBZMlGKDwEk2e2oDAjt+PLSw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PDUgIou8ugevnycEv/2Yqeb1NjQXhYV8t38A/p8Qe8TXKqWToxzE9HioLFqGXQ9v4QD4M7v4gqqVClOgeeBS2X7wnIAmv6cRopl/FMX8FjJcVCSwjzPZy8Sl+gCJa8MB9f9KAOFe+TMnqopzE0WiXaml+6oy18F35DpNdMCs87w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jYPuQ9Vp; arc=fail smtp.client-ip=40.107.95.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=udMb5o3i6FIdmtrX3Bqy/SJ0g+zICVDSjKubk7C1viBtJc6icTsPymPJcOjo0wXyjwTaSZBOKf3jB3e9/T3bjLcXxbWKAw+CCyaSEsGeE/Rxcan+wdpq2oYAI9vdTpB0DK9pDMrN6FN1lWKVmIg/VriYhqlzkH7o9983m83zCK9TdmWBkRQH2E8IDfE8kSVoVKsOaz8VlrIqhzdK8bWA6xCYZtpq4CdmrgTy5t7AUD55syPCFrtyuJ6bsAfIBKBT3DoOuPDSXMZFJk6Nxl5NzNzQNqKe5F7jtiCG/WJLJOufPWQADZbu9WuVpDDytnEnTPdz9r7XjNUCLyv4jV1bjQ==
+ b=c+BLajCXa6cyRlG3ciEaC3TYJkZVBqmPnJNuns1JjXO+THUJB9L+shmXtfu8vGMiSkOZov+9CoE1M1qvHlmb+/34zgyNfxxiSryYGUmgtwbQEuh+fsWR1IxnjXaOiJgNGXqJOgKay6hTU3+CvJkiZGQrZMr9Z4mKgVqr+80rKgKhS3btDXf+QQ9pkSnrcj74IaxTuEFBQJCqiDFHj/0FeOINb6wWsngPRVS6Z4c6k95YPSbmBO2Eh2iu/8WNFyOGZnGdrdh2G+UBgRZ/2/prGrSJo14aUdCrIOvOu3tRQxaPd7qNchDQ2Ubp+sjk3HClHBG3eh8H+HQ+oxp9oPftJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pqfBNxMiwn4s1ZNNck7fmnIrXK3Gk8ifT5ljXg4VJ2U=;
- b=TkfJ7PEaGcLmt2IMZiXA9WgIob87yGZzZvxznmlZz261l9oD10nScrZ8GHr8/ZIFvNb55jt5radmHAE7GUO8NGk8q6OzOlxy/uvo8L7tgF4fgw2NRvXOLgAjR35roGC/osOoGok9LesKOdvNAGDVO6aJ5rcpNRGCkim2qOCrLZzqL0m8opgQdV9N3o/b0G2fe+ZnQ9hH2zW47Jm876r0M/2rYF5c5+eIpHwTv1fHPmAmMFkpxK8JqcWsMWsNf6wV772vdnhP9DhIPcM8oKOEpzIlsO+bQehG1CzxX3mHz6SL77GI2he9tMwwcPkE/UiRQNTxe/zvGxPk4eCxE+4GaA==
+ bh=7tCbh85AUNWT1/7e5jifNraHVWujD5z9mkhoX//xv2c=;
+ b=nBrfqcyvJ0fIA/EJX+WM5zpba4T8W3hQtp3IM6w6RjbJ59gr4tXYIzvDk+x0hQuzRF79FGjapIa9RpRN1AxZFGEy3VpT9wjET5RLFp9Yt7puMPtrA/n09vMZvp5P3VuSgtUrQk2Mm8RCuc89mBjSNxW1Z3/ZwCpMpguqKQLrTdc57MZgY0VpRlCFVelcgSqnpVbv0Ot5qMTxeYRdyEfyoTItTydP3aKHud8A36FbnzWMJZ6S0owceMf9Ub4zjx/GyzYM4UsII7AtldsyRGncoWfcTzcQFPJWsKfVZaykJlgctkUumdjPOfbzNWJ0kIeiVqrF2UAIPR85Mv7LfGLyag==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pqfBNxMiwn4s1ZNNck7fmnIrXK3Gk8ifT5ljXg4VJ2U=;
- b=LInNrWuX4LXibj0ml4n1NjiV2foxmmecQyiHkDzdaNKU9KQ+kI8dJzMbnfgSfyHq/9oEd3LJnqeY14zhclUd7lJB4mOhIO9XEIIth3Ak0ueDX+joK3sCJlPBsWvAvKvpsVeKnV494ydam2oeoFPL/FtPE1CleQLeg5RyCoueArI=
-Received: from BN9P223CA0023.NAMP223.PROD.OUTLOOK.COM (2603:10b6:408:10b::28)
- by CY1PR12MB9557.namprd12.prod.outlook.com (2603:10b6:930:fe::12) with
+ bh=7tCbh85AUNWT1/7e5jifNraHVWujD5z9mkhoX//xv2c=;
+ b=jYPuQ9VpXf9urCGElF86Ng3IrxHKkMY9AXiv9uujnsA0PstxBd/CqJA7h616+HmWRaChQIYucuXZf2KIptIZfildmHB970EeIvCImeLjq8HLXEzJ+tKMnETKO8fCoTgTCPw46NuhvI7Z3HHwdHvyCBgw8zZQI1N1nAqilxi4/n0=
+Received: from BN8PR15CA0069.namprd15.prod.outlook.com (2603:10b6:408:80::46)
+ by SJ5PPFEB07C8E34.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::9a8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.11; Wed, 30 Jul
- 2025 21:47:41 +0000
-Received: from BL02EPF00021F6B.namprd02.prod.outlook.com
- (2603:10b6:408:10b:cafe::e9) by BN9P223CA0023.outlook.office365.com
- (2603:10b6:408:10b::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8989.11 via Frontend Transport; Wed,
- 30 Jul 2025 21:47:41 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.20; Wed, 30 Jul
+ 2025 21:47:56 +0000
+Received: from BL02EPF00021F6A.namprd02.prod.outlook.com
+ (2603:10b6:408:80:cafe::9e) by BN8PR15CA0069.outlook.office365.com
+ (2603:10b6:408:80::46) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8989.13 via Frontend Transport; Wed,
+ 30 Jul 2025 21:47:56 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -62,21 +63,23 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF00021F6B.mail.protection.outlook.com (10.167.249.7) with Microsoft
+ BL02EPF00021F6A.mail.protection.outlook.com (10.167.249.6) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8989.10 via Frontend Transport; Wed, 30 Jul 2025 21:47:41 +0000
+ 15.20.8989.10 via Frontend Transport; Wed, 30 Jul 2025 21:47:56 +0000
 Received: from SCS-L-bcheatha.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Jul
- 2025 16:47:39 -0500
+ 2025 16:47:55 -0500
 From: Ben Cheatham <Benjamin.Cheatham@amd.com>
 To: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
 	<linux-acpi@vger.kernel.org>
 CC: Ben Cheatham <Benjamin.Cheatham@amd.com>
-Subject: [PATCH 00/16] CXL.mem error isolation support
-Date: Wed, 30 Jul 2025 16:47:02 -0500
-Message-ID: <20250730214718.10679-1-Benjamin.Cheatham@amd.com>
+Subject: [PATCH 01/16] cxl/regs: Add cxl_unmap_component_regs()
+Date: Wed, 30 Jul 2025 16:47:03 -0500
+Message-ID: <20250730214718.10679-2-Benjamin.Cheatham@amd.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250730214718.10679-1-Benjamin.Cheatham@amd.com>
+References: <20250730214718.10679-1-Benjamin.Cheatham@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -89,193 +92,194 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF00021F6B:EE_|CY1PR12MB9557:EE_
-X-MS-Office365-Filtering-Correlation-Id: cfed2cdb-1f8d-4dbf-2f6a-08ddcfb2b58d
+X-MS-TrafficTypeDiagnostic: BL02EPF00021F6A:EE_|SJ5PPFEB07C8E34:EE_
+X-MS-Office365-Filtering-Correlation-Id: b471cc3d-bb12-4278-1018-08ddcfb2be62
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?RPukX0og3r8Io9EY4FAsQRq1MDCAfDPCZMzodr96CthZH2i3Ava3sZ2TRVAe?=
- =?us-ascii?Q?9lBfavtyxJKDMxkWJt0VFbV/TOntztxks7+YiR5ftEkQ/sSqtFucx/8PR8o6?=
- =?us-ascii?Q?10M1CDYkgxGB1fOC/7xZvPLrO/k5tL5lfediqeMxXyAjVzps7qALxqaUm5oo?=
- =?us-ascii?Q?TPUOuX3vLHhlcublBawT2UJW6159f8ofgxOrtm4JHZ4alplW5A4aDXJtzUlu?=
- =?us-ascii?Q?mq+R/eGhF5bCrcUMBcmEkDwXyIG1x9RCTFxE9xxb/gG4BmmfwNDG8QNQeJ7e?=
- =?us-ascii?Q?vxSUGE5DXMnGcJ/UgItsTvt4Mt3LwGxtQR7L/S7zYYaxbnqTCk/ccCM3kVXZ?=
- =?us-ascii?Q?+1VVcWQBbW5nBvSQBlh06DqVkAT+/a2kKdXxRZHZ2NbhEVi2R/V+adVj9aUg?=
- =?us-ascii?Q?JgTZt6l5EPGhwflOj9JzQgL1Vwpshoz/SfPjzZLt9BbLOy6KeB461plhZKHG?=
- =?us-ascii?Q?iZ/Rp/GWKm3xcnsIFK+3fknIhMZdznMBdOxRbgi+cXgryHdem2cQQnpN4JrO?=
- =?us-ascii?Q?DbWph1xSGgyDEqRROINqYsVgvMeraeOC1lmnHGjKmziU22rY5vEzG8iT8pui?=
- =?us-ascii?Q?pL+IN/zFqmiyMQ4OBXB8TMP2v8icX2360yqBKu7oYIdEkhpYFE4+DAFx0A7s?=
- =?us-ascii?Q?63q1UsSWjmeJsYka+sSFXoTSOCxn9faZ6jop3j6ZiifioRQWUk1mkSKOKq7D?=
- =?us-ascii?Q?fYjbSEoLeqiSPXEenvA6Tuk/ZCo+rNJ/YGKIGsAZzgdaMsUdTp6KmX2wjSdW?=
- =?us-ascii?Q?yAYKV0M34Y4Qck2MBT+wa5OHLv9RL8Ns9IgNu9HGOW3qZfx/2QOvuO0zNno2?=
- =?us-ascii?Q?UdywPFwsk0p5u6Co6aaseJdayFcTtzUex33ouQ5RLdgtTaHd5XObf9zSZFd7?=
- =?us-ascii?Q?RwxeAXjbcZnovgB2J+atPzpg+r9ti5wytH0LBbWQ2Qvkcsp0n39iEPPi1dJ1?=
- =?us-ascii?Q?QAH3KGMdh2jOFzNuaDkAIOLdh0OKoHLuEuhDfDc4147D5weuV+iivK+5xSAN?=
- =?us-ascii?Q?rKBrOJ18mWSu7V0N9gJhpjvWCCVuIitKYrWumRGsf00+bHMa4AbV5/u6FDP+?=
- =?us-ascii?Q?3VuD/jPRmd4M/TNrKj2OLrl0DnD+RPVvUTyX3J2vlqz6zFA7wV8s9jLmM3fC?=
- =?us-ascii?Q?tLkXwfvFVGspdRS6Ryj7cwOgUN3SfQP4yzSiXAkC1jduicisw/CHMBASZFqK?=
- =?us-ascii?Q?x4IoPzHMhMbYL8GBZvSyTEzcsegClOJdFFJSnlbWQmEY2h+bKSh41PTHmc6E?=
- =?us-ascii?Q?pxRlWqGvyM+uayzkTH6AUTXQrHKWXp47U3saEoNwClDvAUNbKF4dNku+VbGW?=
- =?us-ascii?Q?unv+Z4Lnd/h7aDZr3B1Hg6/NeYtXpr22uWTc5tUg1A2alSQqHSk2v4ewFp1j?=
- =?us-ascii?Q?lgNxPS4PCMEwWilsl2fIQVPS0st/60oqJAPjpqohAl7eN/QrrlZf/u++ptBj?=
- =?us-ascii?Q?5iszf5pn7JzodqRBX1xzX8Xh+bRlyaHSfsLcpvmL577U3FmlNRTbbg=3D=3D?=
+	=?us-ascii?Q?Q2BH5zwCmFKorsigk6ZbkQBrs2PvX3BS5DgQbY/a57R6VR/0DbYKDTDiIkco?=
+ =?us-ascii?Q?/gV+lb5wb6wRNuJpdAfJOEFcICoHcPS25Cs6KzxUpCjMbsX9ZkJZ8pC1F9Me?=
+ =?us-ascii?Q?TMlxXUg8MI8RRwb1I07TTk0za2iKtfk9QqGaFGs+3a7mVDPEruIlEje3QAV7?=
+ =?us-ascii?Q?ytTpJBgj8THtyECxkN3UYveqDgP4tol2wL63uyeR4zBe4JhQKrbXWFiVHcLK?=
+ =?us-ascii?Q?7AefeZccpA83o1pV/ca5Jk5zCCnap9XbAxkAxNyVor/ozBJykwNzPgpxk+AQ?=
+ =?us-ascii?Q?WpzxUtggOgHQt0rC2aOjxd2J9ClntmjVaJCgWgqUvcaNsNDhnmxFfvc8BBug?=
+ =?us-ascii?Q?jR1bHcsEJzs8chn0Jrs8x9gJdd80NyksRehgBzbcCrEE2zE4A7Rurhn2NSrx?=
+ =?us-ascii?Q?KMAdIFdxCHSdpkn3s1R/TfUHRO2+kBib7DYGpXQqvs3GWat8u0c1BC5/mFz7?=
+ =?us-ascii?Q?ozUUDX/qMoDMRnHV296VALz3Mp+HWQsbC8EQlQzWq9fegCLfcV+eAw0jtQux?=
+ =?us-ascii?Q?tj1dzKcFEijfsfMbM4GQTewO4IYgzQIMGq4VbP4bXVrnxYrcLuZuP8DipOyI?=
+ =?us-ascii?Q?ehiV7Zm65BP4dhSFIVcXCm48wv2vu4mwcGTXXHJoU25ZBY6gQ58m5gkAfR0c?=
+ =?us-ascii?Q?LKHDrpVclRXQKPcQNQisgAGHZ8BhFs2zvACOourGEIhyyW/YYUgywPaJJcKk?=
+ =?us-ascii?Q?2WmBU2lGQonNGVor+R0x5JjZxeUS0tZ+qc+Csp86yg+Zenm1yWj2ez8JgYPW?=
+ =?us-ascii?Q?fm0HFB9cLdUk9GDDZJzhNUYlxAE5+/Fi1shqsg9pGMY8Ttg0f4j67bh+9eDl?=
+ =?us-ascii?Q?yyQSDgs2J09PeyROjdqSLN9c4QLztoCpG1vqecNVJLokxYQjlQDDb/2Lwd1/?=
+ =?us-ascii?Q?KyOTXse31uR6o6Ts4Y4P6RV5AV4uY0hKGUOxHdMCuxQNx55kjZvTKwGWElaG?=
+ =?us-ascii?Q?4dv9bjyyaRJCw3bXBu18bsPNmEL07tdVaJS5A6INwnDcI4Cc+/FQniOTS/o3?=
+ =?us-ascii?Q?vojoMo7Zz84KAeGm4bwYHVo7cJt8YNDO3V+MZAkZqgryjXgsbQnZRe8ljOPm?=
+ =?us-ascii?Q?Br8eOOEPiXwQEbAiYlcPx9w6JenEg92mPPYn9wa4ferBSg74G6m5o1/4z3tF?=
+ =?us-ascii?Q?zO5bsf3jgFzbIqTWi+Q7R4CS5m/V2Ohj42BQ2nGczzSACbXfKuNu7LMYWJYG?=
+ =?us-ascii?Q?Ygen37jmK9SKMQtBo+f9QRD+CseVcFOhc0CPO/ezVnNDgdX7+i8k8VkO3Kwq?=
+ =?us-ascii?Q?VkVFg+xF9ekXG9d/LHoz8FkgKWZIrvuENqna9uv3vTpWoLofwws2aIsQELgj?=
+ =?us-ascii?Q?om/w/MbDrYeoUlapi110NwyNlf8EBsjc9QLjPkfxZWJCeffc/Yj9Fc5jlyR2?=
+ =?us-ascii?Q?7XLxYoyUOdYT1qTMIi9CTDj+EshmCVF2ZLhUsMWQ8x2CQ1KrKMC8fxEUk/yV?=
+ =?us-ascii?Q?3yiRyPtJ9WQHuh94hYp4P1wkuNorXBh4+5c5mY1z1eRZc+NtCvVNK7wb01uA?=
+ =?us-ascii?Q?VkXS35QSMqmCkkJT8ByqlV+/W2sHzW84MRfj?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2025 21:47:41.3104
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2025 21:47:56.1276
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfed2cdb-1f8d-4dbf-2f6a-08ddcfb2b58d
+X-MS-Exchange-CrossTenant-Network-Message-Id: b471cc3d-bb12-4278-1018-08ddcfb2be62
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF00021F6B.namprd02.prod.outlook.com
+	BL02EPF00021F6A.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR12MB9557
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFEB07C8E34
 
-Overview
-========
-This series adds support for the CXL.mem Timeout & Isolation Capability
-as defined by the CXL 3.2 spec (section 8.2.4.24), with some extras
-(explained below). This is an optional capability implemented by
-CXL-capable PCIe Root Ports to prevent the host system from resetting
-when the CXL.mem link times out or goes down (i.e. CXL memory device is
-suprise removed or dies). Without this capability, the system is
-expected to immediately reset or power off when either of these
-conditions occurs.
+In order to allocate the MSI/-X interrupt for CXL error isolation the
+PCIe portdrv driver needs to map the MMIO-space isolation capability
+register that contains the interrupt vector. The CXL core already
+provides a function to map registers in this space:
+cxl_map_component_regs(). The mappings given this function are managed
+by devres. If the isolation registers are left mapped by the PCIe
+portdrv driver, the CXL driver will run into a devres conflict when it
+goes to map the same registers during probe.
 
-When CXL.mem isolation is triggered, the CXL memory below the port is no
-longer accessible. Writes to the memory from the host are expected to
-silently drop, while a synchronous response is expected for reads. This
-response is implemntation specific, but an example response would be poisoned
-data.
+Add cxl_unmap_component_regs() to be called from the PCIe portdrv
+driver. This function will unwind the devres allocations done by
+cxl_map_component_regs(), which will allow the PCIe portdrv driver to
+map the isolation capability register without conflicts.
 
-The specific features enabled by this series are:
- - Enabling CXL.mem isolation on link down conditions and transaction
-   timeout
- - Setting up, enabling, and handling CXL isolation interrupts
- - Preventing onlining/enabling of isolated CXL memory
- - Sysfs attributes for system administrators to tune isolation
-   capabilities
+Factor out the register mapping retrieval code in
+cxl_map_component_regs() to be reused by cxl_map/unmap_component_regs().
 
-The Extras
-==========
-The last 3 commits provide support for an ECN [1] submitted by AMD that
-allows platform firmware to modify how the OS enables and handles CXL
-isolation. The ECN contents are expected to land in revision 4 of the
-CXL spec. The link at [1] is only accessible to CXL SSWG members, but
-I've done my best to explain the changes in the relevant commits.
+Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+---
+ drivers/cxl/core/regs.c | 77 +++++++++++++++++++++++++++++++----------
+ drivers/cxl/cxl.h       |  3 ++
+ 2 files changed, 62 insertions(+), 18 deletions(-)
 
-The changes in these commits could probably be moved to earlier commits,
-but I've opted to leave them tacked on the end just in case anyone has a
-problem with their inclusion.
-
-Intended Behavior
-=================
-Due to how CXL memory is currently handled by Linux, this feature isn't
-all that useful for type 3 cards. The intended behavior for type 3 cards
-is to panic when isolation is triggered, which defeats the purpose of
-the feature.
-
-The reason I'm sending this out anyway is twofold:
-1) I've seen rumblings that CXL memory will be part of it's own opt-in
-allocator in the future and the memory may be safely removable at that
-point.
-2) CXL memory provided by a Type 2 card may be safely removable, though
-it's left up to the type 2 endpoint driver to handle isolation recovery.
-
-I've also not included a flow for isolation recovery. This is because I
-a) don't have a system that supports it, and b) it's not applicable to
-the type 3 driver.
-
-Building the Set
-================
-This series is based on both Terry's port error handling patch set (v10)
-and Dave's deferred downstream port probe set (v7). Terry's set was needed
-since it introduces the uncorrectable CXL error = system panic paradigm, as
-well as the routines for logging the AER info from the CXL subsystem.
-
-I included Dave's set due to a timing issue I saw where the PCIe portdrv
-code would run after the CXL ports that have the isolation capability
-were probed. This caused the isolation set up to fail because the PCIe
-portdrv provides the information to allocate the CXL isolation
-interrupt. I tried deferring the probe, but the deferral caused the
-cxl_mem driver to break because the port wasn't probed yet. I could have
-introduced a scheme to get around this, but it seemed easier to just use
-Dave's set to fix it.
-
-The isolation support is gated behind the CXL core being built-in
-because the CXL isolation PCIe service needs the mapping code in
-cxl/core/regs.c. I realize a rework is planned for the PCIe portdrv to
-(hopefully) not make this the case, so I've kept the code as minimal as
-possible.
-
-To build the set I applied Terry's set to the base commit below, Dave's
-on top of that, then my patches.
-
-Patch Breakdown
-===============
-Patches 3-5 & 12-13 will need eyes from PCIe folks.
-Patch 14 needs an ACPI reviewer.
-
-- Patches 1-2: Register mapping updates needed for isolation support
-- Patches 3-5: CXL isolation service driver & MSI/-X vector allocation
-- Patch 6: Enable CXL.mem isolation
-- Patches 7-8: Set up and enable CXL isolation interrupts
-- Patch 9: Preventing onlining isolated memory
-- Patch 10: Enable CXL.mem transaction timeout
-- Patch 11: cxl_pci isolation handler
-- Patches 12-13: CXL isolation sysfs attributes
-- Patch 14: ECN changes to CXL _OSC method
-- Patches 15-16: ECN additions
-
-[1]:
-Link: https://members.computeexpresslink.org/wg/software_systems/document/3118
-
-Ben Cheatham (16):
-  cxl/regs: Add cxl_unmap_component_regs()
-  cxl/regs: Add CXL Isolation capability mapping
-  PCI: PCIe portdrv: Add CXL Isolation service driver
-  PCI: PCIe portdrv: Allocate CXL isolation MSI/-X vector
-  PCI: PCIe portdrv: Add interface for getting CXL isolation IRQ
-  cxl/core: Enable CXL.mem isolation
-  cxl/core: Set up isolation interrupts
-  cxl/core: Enable CXL isolation interrupts
-  cxl/core: Prevent onlining CXL memory behind isolated ports
-  cxl/core: Enable CXL.mem timeout
-  cxl/pci: Add isolation handler
-  PCI: PCIe portdrv: Add cxl_isolation sysfs attributes
-  cxl/core, PCI: PCIe portdrv: Add CXL timeout range programming
-  ACPI: Add CXL isolation _OSC fields
-  cxl/core, cxl/acpi: Enable CXL isolation based on _OSC handshake
-  cxl/core, cxl/acpi: Add CXL isolation notify handler
-
- drivers/acpi/pci_root.c          |   9 +
- drivers/cxl/Kconfig              |  14 ++
- drivers/cxl/acpi.c               |  75 +++++++
- drivers/cxl/core/core.h          |   2 +
- drivers/cxl/core/pci.c           | 138 ++++++++++++
- drivers/cxl/core/port.c          | 248 +++++++++++++++++++++
- drivers/cxl/core/region.c        |   3 +
- drivers/cxl/core/regs.c          |  85 +++++--
- drivers/cxl/cxl.h                |  35 +++
- drivers/cxl/cxlmem.h             |   4 +
- drivers/cxl/pci.c                |   9 +
- drivers/pci/pci-sysfs.c          |   3 +
- drivers/pci/pci.h                |   4 +
- drivers/pci/pcie/Makefile        |   1 +
- drivers/pci/pcie/cxl_isolation.c | 371 +++++++++++++++++++++++++++++++
- drivers/pci/pcie/portdrv.c       |  21 +-
- drivers/pci/pcie/portdrv.h       |  18 +-
- include/cxl/isolation.h          |  66 ++++++
- include/linux/acpi.h             |   3 +
- 19 files changed, 1086 insertions(+), 23 deletions(-)
- create mode 100644 drivers/pci/pcie/cxl_isolation.c
- create mode 100644 include/cxl/isolation.h
-
-base-commit: a403fe6c0b17f472e01246eb350f5eef105243ac
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index b8e767a9571c..da8e668a3b70 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -201,40 +201,81 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+ }
+ EXPORT_SYMBOL_NS_GPL(devm_cxl_iomap_block, "CXL");
+ 
+-int cxl_map_component_regs(const struct cxl_register_map *map,
++struct mapinfo {
++	const struct cxl_reg_map *rmap;
++	void __iomem **addr;
++};
++
++static int cxl_get_mapinfo(const struct cxl_register_map *map,
+ 			   struct cxl_component_regs *regs,
+-			   unsigned long map_mask)
++			   unsigned long map_mask, struct mapinfo *info)
+ {
+-	struct device *host = map->host;
+-	struct mapinfo {
+-		const struct cxl_reg_map *rmap;
+-		void __iomem **addr;
+-	} mapinfo[] = {
++	struct mapinfo mapinfo[] = {
+ 		{ &map->component_map.hdm_decoder, &regs->hdm_decoder },
+ 		{ &map->component_map.ras, &regs->ras },
+ 	};
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(mapinfo); i++) {
+-		struct mapinfo *mi = &mapinfo[i];
+-		resource_size_t addr;
+-		resource_size_t length;
+-
+-		if (!mi->rmap->valid)
++		if (!mapinfo[i].rmap->valid)
+ 			continue;
+-		if (!test_bit(mi->rmap->id, &map_mask))
++		if (!test_bit(mapinfo[i].rmap->id, &map_mask))
+ 			continue;
+-		addr = map->resource + mi->rmap->offset;
+-		length = mi->rmap->size;
+-		*(mi->addr) = devm_cxl_iomap_block(host, addr, length);
+-		if (!*(mi->addr))
+-			return -ENOMEM;
++
++		*info = mapinfo[i];
++		return 0;
+ 	}
+ 
++	return -ENXIO;
++}
++
++int cxl_map_component_regs(const struct cxl_register_map *map,
++			   struct cxl_component_regs *regs,
++			   unsigned long map_mask)
++{
++	struct device *host = map->host;
++	resource_size_t addr, length;
++	struct mapinfo mi;
++	int rc;
++
++	rc = cxl_get_mapinfo(map, regs, map_mask, &mi);
++	if (rc)
++		return rc;
++
++	addr = map->resource + mi.rmap->offset;
++	length = mi.rmap->size;
++	*mi.addr = devm_cxl_iomap_block(host, addr, length);
++	if (!(*mi.addr))
++		return -ENOMEM;
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_map_component_regs, "CXL");
+ 
++int cxl_unmap_component_regs(const struct cxl_register_map *map,
++			     struct cxl_component_regs *regs,
++			     unsigned long map_mask)
++{
++	struct device *host = map->host;
++	resource_size_t addr, length;
++	struct mapinfo mi;
++	int rc;
++
++	rc = cxl_get_mapinfo(map, regs, map_mask, &mi);
++	if (rc)
++		return rc;
++
++	if (!(*mi.addr))
++		return 0;
++
++	addr = map->resource + mi.rmap->offset;
++	length = mi.rmap->size;
++
++	devm_iounmap(host, *mi.addr);
++	devm_release_mem_region(host, addr, length);
++	return 0;
++}
++
+ int cxl_map_device_regs(const struct cxl_register_map *map,
+ 			struct cxl_device_regs *regs)
+ {
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 51b7058387ef..a0fda305e25b 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -300,6 +300,9 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+ int cxl_map_component_regs(const struct cxl_register_map *map,
+ 			   struct cxl_component_regs *regs,
+ 			   unsigned long map_mask);
++int cxl_unmap_component_regs(const struct cxl_register_map *map,
++			     struct cxl_component_regs *regs,
++			     unsigned long map_mask);
+ int cxl_map_device_regs(const struct cxl_register_map *map,
+ 			struct cxl_device_regs *regs);
+ int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs);
 -- 
 2.34.1
 
