@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-33165-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33166-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 461F2B15D5E
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 11:54:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77788B15D92
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 11:56:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ECEBE166C9E
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 09:53:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8D2556570B
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 09:55:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3669D293C47;
-	Wed, 30 Jul 2025 09:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E523326E71A;
+	Wed, 30 Jul 2025 09:55:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LBFMp/Qt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VqjE9TQ0"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0364D293B5F;
-	Wed, 30 Jul 2025 09:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3379269AFB;
+	Wed, 30 Jul 2025 09:55:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753869186; cv=none; b=tAtN9Ku0egDeIkg+bGuc0JTX3cAxrHaWYEaeP/RiPpAM0C1QXQTzb+os7ISaaYliNHkOITxKUpwUPJpZ3W8EksR/C84VPfspLN34JjJD/BfoIDuee6B8PWH2TUI9UWQvbZqB/cBY7C/Hf8xZOMqab7HGDBRDZTI6wBlhdmXtiaI=
+	t=1753869349; cv=none; b=Nx+qYs0srM6a5Q7LCZNKg9s91Xgezh2DAD3jocEF+eW/O9ZJ+tG7gkyF+DUFT1dt6asA+Vss70XckZHJeZ/WLYAqyZ86lPhgblpa6zJ4nQdW5rWduCLSUKbHwE4VQjMYLbxIbvJhD2cOdSXsqElDMW2Wlnm3nIYURSca0ALC3BI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753869186; c=relaxed/simple;
-	bh=5Mrrxi9bNBL8D/ee8NRHVOpef29mu452vpZ0ynsESPE=;
+	s=arc-20240116; t=1753869349; c=relaxed/simple;
+	bh=FqV1olhUgft990I/oyZdVydA0AezeH5ltbHMVflBEyE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P4ghz3QOxrQGdQ/BvQy2ljlgQc4VJBl2ATueZwimoZkx4z/+/sKWxPKt54FKGb66uXAlIBPrEXhuZaB6JQHjKdtmIWSFBPlDLaaMGqvCuEuDL71wslRNam4tspxXontRz7AYkmQoNlsoCmvLTuR4P1b2dUJAY6B02JcL1JWl9S0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LBFMp/Qt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 800FEC4CEF5;
-	Wed, 30 Jul 2025 09:53:05 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=HqNYVZHfxw1JHbp/zTg3Bu1rfIhlGcO4HH5Rt/1Kdwoq14Mse1wAX76m2HHeh7ZY7ZtSIk8WnVreRMdbP06jz5d3Ex2OICDTrY/hfC6tFApLKyfT9DxI6tIUHWCykKC82gVCqktod8g3ImexLQ+w2Mg3gN147kO1UQXyMbbuWVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VqjE9TQ0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ABB0C4CEF5;
+	Wed, 30 Jul 2025 09:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753869185;
-	bh=5Mrrxi9bNBL8D/ee8NRHVOpef29mu452vpZ0ynsESPE=;
+	s=k20201202; t=1753869349;
+	bh=FqV1olhUgft990I/oyZdVydA0AezeH5ltbHMVflBEyE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LBFMp/QttoquzlQynDEx48o4qachvu35Xu5wgZEi84KHfxF4/7NqsilYzjh3g2E0P
-	 sTWvy+MuYy8KQX/MM1bm4VvGV1Re+e6/YkCDfkl9dHJJBoQeg1SOKrsZ5TiGlBwmWj
-	 +AHIZbOIQcpQLrLyq9f9WXlHZwt6RbsI1JG2ypJ9YkZaLh5upPYBOCyIR4dv28xPt/
-	 Z6ykRMiyzfbqpEkQLGU8OZictU0I76H5hlEsSK5rBP6tguIm2HHDhvJDMKBVL4n/zL
-	 c0ExIvaQ2ayGvunrFFAcOFcg2eRK1dg6XfrmlZU/3SS2ydvN0p2sM+GKvBk7C+YI/P
-	 QODw0LxLr1CXQ==
+	b=VqjE9TQ0NooUsJykjVTLtlDpM2IjROOWmoZQeKXPI2UDXExgyqqZ37HESjkbJcp7j
+	 XGX9xNfsJSfgsp+8c2hiVm3L6U+TRqizMEvf3rfBAZd/p6axkEBkt5gGFMkAedxrzU
+	 v/xFtq5fLgRwLHOPdZ2Lf3Y1RwclrR5J4xkgC25w3owQGvFCuu25IKG6LnHoyAmnq0
+	 bsJ7TA4QmeInt+0k90dNCkVg/XyJlzlAWMMfXzwNzkYPStpWjgUa7yJQLXfXOISryn
+	 Arn5MIaGRb+N+RcXy5Ywc+ztAn0PHTIEjQHzD8U5YoqRskFvhRdK++1k7gtrQ64zC1
+	 KiDwDcg+GGHSA==
 Received: from johan by xi.lan with local (Exim 4.98.2)
 	(envelope-from <johan@kernel.org>)
-	id 1uh3Ug-000000006Gw-0XOb;
-	Wed, 30 Jul 2025 11:53:06 +0200
-Date: Wed, 30 Jul 2025 11:53:06 +0200
+	id 1uh3XJ-000000006JN-3FwZ;
+	Wed, 30 Jul 2025 11:55:49 +0200
+Date: Wed, 30 Jul 2025 11:55:49 +0200
 From: Johan Hovold <johan@kernel.org>
 To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
 Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
@@ -58,40 +58,51 @@ Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
 	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
 	qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com,
 	quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v7 2/3] arm64: dts: qcom: sa8775p: remove aux clock from
- pcie phy
-Message-ID: <aInrgnGsBSVpxrWE@hovoldconsulting.com>
-References: <20250725102231.3608298-1-ziyue.zhang@oss.qualcomm.com>
- <20250725102231.3608298-3-ziyue.zhang@oss.qualcomm.com>
+Subject: Re: [PATCH v9 1/5] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
+ Update pcie phy bindings for qcs8300
+Message-ID: <aInsJbZSqgRYkB5x@hovoldconsulting.com>
+References: <20250725104037.4054070-1-ziyue.zhang@oss.qualcomm.com>
+ <20250725104037.4054070-2-ziyue.zhang@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250725102231.3608298-3-ziyue.zhang@oss.qualcomm.com>
+In-Reply-To: <20250725104037.4054070-2-ziyue.zhang@oss.qualcomm.com>
 
-On Fri, Jul 25, 2025 at 06:22:30PM +0800, Ziyue Zhang wrote:
-> The gcc_aux_clk is used by the PCIe Root Complex (RC) and is not required
-> by the PHY. The correct clock for the PHY is gcc_phy_aux_clk, which this
-> patch uses to replace the incorrect reference.
+On Fri, Jul 25, 2025 at 06:40:33PM +0800, Ziyue Zhang wrote:
+> The gcc_aux_clk is not required by the PCIe PHY on qcs8300 and is not
+> specified in the device tree node. Hence, move the qcs8300 phy
+> compatibility entry into the list of PHYs that require six clocks.
 > 
-> The distinction between AUX_CLK and PHY_AUX_CLK is important: AUX_CLK is
-> typically used by the controller, while PHY_AUX_CLK is required by certain
-> PHYs—particularly Gen4 QMP PHYs—for internal operations such as clock
-> gating and power management. Some non-Gen4 Qualcomm PHYs also use
-> PHY_AUX_CLK, but they do not require AUX_CLK.
+> Removed the phy_aux clock from the PCIe PHY binding as it is no longer
+> used by any instance.
 > 
-> This change ensures proper clock configuration and avoids unnecessary
-> dependencies.
+> Fixes: e46e59b77a9e ("dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the QCS8300 QMP PCIe PHY Gen4 x2")
 > 
 > Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml  | 15 +--------------
+>  1 file changed, 1 insertion(+), 14 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+> index b6f140bf5b3b..e04d5940a498 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+> @@ -65,7 +65,6 @@ properties:
+>        - enum: [rchng, refgen]
+>        - const: pipe
+>        - const: pipediv2
+> -      - const: phy_aux
 
-With the fixes tag added (Konrad's comment should be picked up by the
-maintainer/tooling, no need to resend for that):
+Just realised that you forgot to update clocks: maxItems above, with
+that fixed you can add my:
 
 Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+
+Johan
 
