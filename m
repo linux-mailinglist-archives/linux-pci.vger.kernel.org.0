@@ -1,364 +1,412 @@
-Return-Path: <linux-pci+bounces-33179-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33180-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E254B161DB
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 15:51:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEFA4B161E3
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 15:53:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4557B565F85
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 13:51:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C9DB718C83C7
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 13:53:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6052A2D836D;
-	Wed, 30 Jul 2025 13:50:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 775012D3EC5;
+	Wed, 30 Jul 2025 13:53:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hQ8zRoiK"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="kl8rDpUA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from sinmsgout01.his.huawei.com (sinmsgout01.his.huawei.com [119.8.177.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A7D2D6623;
-	Wed, 30 Jul 2025 13:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13ECE2D8DC0;
+	Wed, 30 Jul 2025 13:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=119.8.177.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753883455; cv=none; b=EjXdbmSqkbsZOAViCrXjPZJjCwF8WHN+6qG+i40XZM6dugjUK1iibQcLhyeU6fNVy96IWfgSsvJDFK6mhHrPvsHL5PR4ezCmYPgqXL8vYJzjS43Kq3mWiwe9PRRtzpTr0Uw1GaLGnELa9kMhmdgTHpyTS8xiknRfRUgISPm+w/c=
+	t=1753883582; cv=none; b=Dmj4TqE/IbMycEecJXgLEZ7bOAUc5C4o0pbWEQkPn1tx+97xTcV+U7acii5xg19s1u+9mHQUatOkq3ILGoPayW8fNYfeXh2Z6pHZFx3DdEct41b2KvQiCSpQefFiDfZucNSPkyCXf/qyJHWKj/MNcvdq4IZgwY/H3hVt/Nql6Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753883455; c=relaxed/simple;
-	bh=gmqE1v/10OSqnNIM7BFeVaVrhw2zOKaTd7SHyK0j9vo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Av+dDLcGHYTikjtFdBzztyYrYlWv2qmNlXE/UiLn0Bytq33itcSm1y8+ntRYOjW/to1KVYX8g1dOWNKhfBAzMpEvG+8FEH58YETp66ploAMJvBM9Pf8pfH+hYn0floOS6Hz6iMg5y8ezfZw/gTaB/r0or8mYHEdxOZuu4Om4G1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hQ8zRoiK; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1753883444; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=1MpGugib20n3vs7zkXtgRFQ9xp4jr9eeh6RMYkJ++vU=;
-	b=hQ8zRoiKjhUo5rnvmENXqYYaigmPqsR6kpQsQAKqo2hdE9nTrqU1YwzV7h2hGCF6qkH6q+ZgsuUC/a9p4kwtWpEksZdf+z5o5vGrG7Gcl4S+ycNtcP4InJKhOwfe5JrnYYhyiGnEw3ij+WU7SA7/hAKH40UMrCKGzsevg/OOAy8=
-Received: from 30.246.181.19(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WkV4r6F_1753883440 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 30 Jul 2025 21:50:41 +0800
-Message-ID: <a0839ff9-ea8d-44b9-8289-fcd5039e9263@linux.alibaba.com>
-Date: Wed, 30 Jul 2025 21:50:39 +0800
+	s=arc-20240116; t=1753883582; c=relaxed/simple;
+	bh=BAmHpzt4m8Wv2BX/UxN2/H8wSYy8eAJM1Q5ZEMU4sD8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WepOS6ZA3Ahl38xcU1QaujmiC4Y02ei7qVQIGFHfj0x53+rcKD8vdg3ou6/rvR3tyl+z5NDZtOvBbNDTUpnd16T5p3xQ/LQyTaYvjy2gLxtmlrR1eLdKVPJCQ1PaSP26aa6PkyIToAe4Ig5HCUUEiyX/v93DqCCeILwQIPsqEB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=kl8rDpUA; arc=none smtp.client-ip=119.8.177.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=Gc2QVYXne8v5Gr++1qUUckK9n0HJPpvU8JkrSwBdWJY=;
+	b=kl8rDpUAmErl49POLR1f51qhIzH8uaWx57folt5ziC+Yk0L9Vy+W+LgrcBqIeicr0in2V89e5
+	C0xhl98PNYVzJSJc5m/UIn4Qne6udShch5vpNQXVg0GOwo+Fjs3V391J73QzsM8t0t5GbQ4ERYo
+	ERvBUTHVGL99YlPj7Tlh4Y0=
+Received: from frasgout.his.huawei.com (unknown [172.18.146.37])
+	by sinmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4bsYXg5WS5z1P6lQ;
+	Wed, 30 Jul 2025 21:51:31 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bsYTL34dmz6HJcL;
+	Wed, 30 Jul 2025 21:48:38 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5ED311402EA;
+	Wed, 30 Jul 2025 21:52:51 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 30 Jul
+ 2025 15:52:50 +0200
+Date: Wed, 30 Jul 2025 14:52:48 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
+CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
+	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <aik@amd.com>,
+	<lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>, Xu Yilun
+	<yilun.xu@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>, "Suzuki K
+ Poulose" <Suzuki.Poulose@arm.com>, Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: [RFC PATCH v1 14/38] coco: host: arm64: Device communication
+ support
+Message-ID: <20250730145248.000043be@huawei.com>
+In-Reply-To: <20250728135216.48084-15-aneesh.kumar@kernel.org>
+References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
+	<20250728135216.48084-15-aneesh.kumar@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] vmcoreinfo: Track and log recoverable hardware errors
-To: Breno Leitao <leitao@debian.org>
-Cc: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- James Morse <james.morse@arm.com>, Robert Moore <robert.moore@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- acpica-devel@lists.linux.dev, osandov@osandov.com, konrad.wilk@oracle.com,
- linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org, kernel-team@meta.com
-References: <20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org>
- <7ce9731a-b212-4e27-8809-0559eb36c5f2@linux.alibaba.com>
- <4qh2wbcbzdajh2tvki26qe4tqjazmyvbn7v7aqqhkxpitdrexo@ucch4ppo7i4e>
- <fdb5dced-ea5a-48b8-bbb4-fc3ade7f3df8@linux.alibaba.com>
- <ldlansfiesfxf4a6dzp5z2etquz5jgiq6ttx3al6q7sesgros6@xh4lkevbzsow>
- <4ef01be1-44b2-4bf5-afec-a90d4f71e955@linux.alibaba.com>
- <2a7ok3hdq3hmz45fzosd5vve4qpn6zy5uoogg33warsekigazu@wgfi7qsg5ixo>
- <a87c5e74-082f-4be6-bbfd-4867bf72ddcc@linux.alibaba.com>
- <zc4jm3hwvtwo5y2knk2bqzwmpf7ma7bdzs6uv2osavzcdew3nk@lfjrlp6sr7zz>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <zc4jm3hwvtwo5y2knk2bqzwmpf7ma7bdzs6uv2osavzcdew3nk@lfjrlp6sr7zz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Mon, 28 Jul 2025 19:21:51 +0530
+"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
 
+> Add helpers for device communication from RMM
+> 
+> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+> ---
+>  arch/arm64/include/asm/rmi_cmds.h        |  11 ++
+>  arch/arm64/include/asm/rmi_smc.h         |  49 ++++++
+>  drivers/virt/coco/arm-cca-host/arm-cca.c |  45 ++++++
+>  drivers/virt/coco/arm-cca-host/rmm-da.c  | 198 +++++++++++++++++++++++
+>  drivers/virt/coco/arm-cca-host/rmm-da.h  |  41 +++++
+>  5 files changed, 344 insertions(+)
+> 
 
-在 2025/7/30 21:11, Breno Leitao 写道:
-> Hello Shuai,
-> 
-> On Wed, Jul 30, 2025 at 10:13:13AM +0800, Shuai Xue wrote:
->> In ghes_log_hwerr(), you're counting both CPER_SEV_CORRECTED and
->> CPER_SEV_RECOVERABLE errors:
-> 
-> Thanks. I was reading this code a bit more, and I want to make sure my
-> understanding is correct, giving I was confused about CORRECTED and
-> RECOVERABLE errors.
-> 
-> CPER_SEV_CORRECTED means it is corrected in the background, and the OS
-> was not even notified about it. That includes 1-bit ECC error.
+>  #endif /* __ASM_RMI_CMDS_H */
+> diff --git a/arch/arm64/include/asm/rmi_smc.h b/arch/arm64/include/asm/rmi_smc.h
+> index a84ed61e5001..8bece465b670 100644
+> --- a/arch/arm64/include/asm/rmi_smc.h
+> +++ b/arch/arm64/include/asm/rmi_smc.h
+> @@ -47,6 +47,7 @@
 
-Not quite correct. From ACPI spec:
-
-     > A corrected error is a hardware error condition that has been
-     > corrected by the hardware or by the firmware by the time the OSPM is
-     > notified about the existence of the error condition.
-
-For example, 1-bit ECC errors can be reported via CMCI interrupt when
-the threshold of correctable errors exceeds the desired limit. The Linux
-GHES driver then initiates kernel actions like soft-offlining pages.
-
-> THose are not the errors we are interested in, since they are irrelavant
-> to the OS.
-> 
-> If that is true, then I might not want count CPER_SEV_CORRECTED errors
-> at all, but only CPER_SEV_RECOVERABLE.
-
-Yes, that's the right approach. Hardware corrects CE errors and software
-can continue running without intervention. Since HWERR_RECOV_MCE only
-records uncorrected errors, focusing on CPER_SEV_RECOVERABLE is more
-appropriate for crash correlation analysis.
-
-> 
->> However, in the AER section, you're only handling AER_CORRECTABLE cases.
->> IMHO, Non-fatal errors are recoverable and correspond to
->> CPER_SEV_RECOVERABLE in the ACPI context.
->>
->> The mapping should probably be:
->>
->> - AER_CORRECTABLE → CPER_SEV_CORRECTED
->> - AER_NONFATAL → CPER_SEV_RECOVERABLE
-> 
-> Thanks. This means I want to count AER_NONFATAL but not AER_CORRECTABLE.
-> Is this right?
-
-Exactly. IMHO, the updated mapping looks correct:
-
-     - GHES: Only CPER_SEV_RECOVERABLE
-     - AER: Only AER_NONFATAL (which maps to recoverable errors)
-     - MCE: Uncorrected errors that didn't cause panic
-
-> 
-> Summarizing, This is the a new version of the change, according to my
-> new understanding:
-> 
-> commit deca1c4b99dcfa64b29fe035f8422b4601212413
-> Author: Breno Leitao <leitao@debian.org>
-> Date:   Thu Jul 17 07:39:26 2025 -0700
-> 
->      vmcoreinfo: Track and log recoverable hardware errors
-> 
->      Introduce a generic infrastructure for tracking recoverable hardware
->      errors (HW errors that are visible to the OS but does not cause a panic)
->      and record them for vmcore consumption. This aids post-mortem crash
->      analysis tools by preserving a count and timestamp for the last
->      occurrence of such errors. On the other side, correctable errors, which
->      the OS typically remains unaware of because the underlying hardware
->      handles them transparently, are less relevant and therefore are NOT
->      tracked in this infrastructure.
-> 
->      Add centralized logging for sources of recoverable hardware
->      errors based on the subsystem it has been notified.
-> 
->      hwerror_data is write-only at kernel runtime, and it is meant to be read
->      from vmcore using tools like crash/drgn. For example, this is how it
->      looks like when opening the crashdump from drgn.
-> 
->              >>> prog['hwerror_data']
->              (struct hwerror_info[6]){
->                      {
->                              .count = (int)844,
->                              .timestamp = (time64_t)1752852018,
->                      },
->                      ...
-> 
->      This helps fleet operators quickly triage whether a crash may be
->      influenced by hardware recoverable errors (which executes a uncommon
->      code path in the kernel), especially when recoverable errors occurred
->      shortly before a panic, such as the bug fixed by
->      commit ee62ce7a1d90 ("page_pool: Track DMA-mapped pages and unmap them
->      when destroying the pool")
-> 
->      This is not intended to replace full hardware diagnostics but provides
->      a fast way to correlate hardware events with kernel panics quickly.
-> 
->      Suggested-by: Tony Luck <tony.luck@intel.com>
->      Signed-off-by: Breno Leitao <leitao@debian.org>
-> 
-> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-> index 4da4eab56c81d..f85759453f89a 100644
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -45,6 +45,7 @@
->   #include <linux/task_work.h>
->   #include <linux/hardirq.h>
->   #include <linux/kexec.h>
-> +#include <linux/vmcore_info.h>
-> 
->   #include <asm/fred.h>
->   #include <asm/cpu_device_id.h>
-> @@ -1690,6 +1691,9 @@ noinstr void do_machine_check(struct pt_regs *regs)
->   	}
-> 
->   out:
-> +	/* Given it didn't panic, mark it as recoverable */
-> +	hwerr_log_error_type(HWERR_RECOV_MCE);
+>  
+> +#define RMI_DEV_COMM_EXIT_CACHE_REQ	BIT(0)
+> +#define RMI_DEV_COMM_EXIT_CACHE_RSP	BIT(1)
+> +#define RMI_DEV_COMM_EXIT_SEND		BIT(2)
+> +#define RMI_DEV_COMM_EXIT_WAIT		BIT(3)
+> +#define RMI_DEV_COMM_EXIT_MULTI		BIT(4)
 > +
-
-Indentation: needs tab alignment.
-
-The current placement only logs errors that reach the out: label. Errors
-that go to `clear` lable won't be recorded. Would it be better to log at
-the beginning of do_machine_check() to capture all recoverable MCEs?
-
->   	instrumentation_end();
-> 
->   clear:
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index a0d54993edb3b..9c549c4a1a708 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -43,6 +43,7 @@
->   #include <linux/uuid.h>
->   #include <linux/ras.h>
->   #include <linux/task_work.h>
-> +#include <linux/vmcore_info.h>
-> 
->   #include <acpi/actbl1.h>
->   #include <acpi/ghes.h>
-> @@ -867,6 +868,40 @@ int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd)
->   }
->   EXPORT_SYMBOL_NS_GPL(cxl_cper_kfifo_get, "CXL");
-> 
-> +static void ghes_log_hwerr(int sev, guid_t *sec_type)
-> +{
-> +	if (sev != CPER_SEV_RECOVERABLE)
-> +		return;
+> +#define RMI_DEV_COMM_NONE	0
+> +#define RMI_DEV_COMM_RESPONSE	1
+> +#define RMI_DEV_COMM_ERROR	2
 > +
-> +	if (guid_equal(sec_type, &CPER_SEC_PROC_ARM) ||
-> +	    guid_equal(sec_type, &CPER_SEC_PROC_GENERIC) ||
-> +	    guid_equal(sec_type, &CPER_SEC_PROC_IA)) {
-> +		hwerr_log_error_type(HWERR_RECOV_CPU);
-> +		return;
-> +	}
+> +#define RMI_PROTOCOL_SPDM		0
+> +#define RMI_PROTOCOL_SECURE_SPDM	1
 > +
-> +	if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR) ||
-> +	    guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID) ||
-> +	    guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID) ||
-> +	    guid_equal(sec_type, &CPER_SEC_CXL_MEM_MODULE_GUID)) {
-> +		hwerr_log_error_type(HWERR_RECOV_CXL);
-> +		return;
-> +	}
+> +#define RMI_DEV_VCA			0
+> +#define RMI_DEV_CERTIFICATE		1
+> +#define RMI_DEV_MEASUREMENTS		2
+> +#define RMI_DEV_INTERFACE_REPORT	3
 > +
-> +	if (guid_equal(sec_type, &CPER_SEC_PCIE) ||
-> +	    guid_equal(sec_type, &CPER_SEC_PCI_X_BUS) {
-> +		hwerr_log_error_type(HWERR_RECOV_PCI);
-> +		return;
-> +	}
-> +
-> +	if (guid_equal(sec_type, &CPER_SEC_PLATFORM_MEM)) {
-> +		hwerr_log_error_type(HWERR_RECOV_MEMORY);
-> +		return;
-> +	}
-> +
-> +	hwerr_log_error_type(HWERR_RECOV_OTHERS);
-> +}
-> +
->   static void ghes_do_proc(struct ghes *ghes,
->   			 const struct acpi_hest_generic_status *estatus)
->   {
-> @@ -888,6 +923,7 @@ static void ghes_do_proc(struct ghes *ghes,
->   		if (gdata->validation_bits & CPER_SEC_VALID_FRU_TEXT)
->   			fru_text = gdata->fru_text;
-> 
-> +		ghes_log_hwerr(sev, sec_type);
->   		if (guid_equal(sec_type, &CPER_SEC_PLATFORM_MEM)) {
->   			struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index e286c197d7167..d814c06cdbee6 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -30,6 +30,7 @@
->   #include <linux/kfifo.h>
->   #include <linux/ratelimit.h>
->   #include <linux/slab.h>
-> +#include <linux/vmcore_info.h>
->   #include <acpi/apei.h>
->   #include <acpi/ghes.h>
->   #include <ras/ras_event.h>
-> @@ -751,6 +752,7 @@ static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
->   		break;
->   	case AER_NONFATAL:
->   		aer_info->dev_total_nonfatal_errs++;
-> +		hwerr_log_error_type(HWERR_RECOV_PCI);
->   		counter = &aer_info->dev_nonfatal_errs[0];
->   		max = AER_MAX_TYPEOF_UNCOR_ERRS;
->   		break;
-> diff --git a/include/linux/vmcore_info.h b/include/linux/vmcore_info.h
-> index 37e003ae52626..538a3635fb1e5 100644
-> --- a/include/linux/vmcore_info.h
-> +++ b/include/linux/vmcore_info.h
-> @@ -77,4 +77,21 @@ extern u32 *vmcoreinfo_note;
->   Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->   			  void *data, size_t data_len);
->   void final_note(Elf_Word *buf);
-> +
-> +enum hwerr_error_type {
-> +	HWERR_RECOV_MCE,
-> +	HWERR_RECOV_CPU,
-> +	HWERR_RECOV_MEMORY,
-> +	HWERR_RECOV_PCI,
-> +	HWERR_RECOV_CXL,
-> +	HWERR_RECOV_OTHERS,
-> +	HWERR_RECOV_MAX,
+> +struct rmi_dev_comm_enter {
+> +	u64 status;
+> +	u64 req_addr;
+> +	u64 resp_addr;
+> +	u64 resp_len;
 > +};
 > +
-> +#ifdef CONFIG_VMCORE_INFO
-> +noinstr void hwerr_log_error_type(enum hwerr_error_type src);
-> +#else
-> +static inline void hwerr_log_error_type(enum hwerr_error_type src) {};
-> +#endif
-> +
->   #endif /* LINUX_VMCORE_INFO_H */
-> diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
-> index e066d31d08f89..4b5ab45d468f5 100644
-> --- a/kernel/vmcore_info.c
-> +++ b/kernel/vmcore_info.c
-> @@ -31,6 +31,13 @@ u32 *vmcoreinfo_note;
->   /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
->   static unsigned char *vmcoreinfo_data_safecopy;
-> 
-> +struct hwerr_info {
-> +	int __data_racy count;
-> +	time64_t __data_racy timestamp;
+> +struct rmi_dev_comm_exit {
+> +	u64 flags;
+> +	u64 cache_req_offset;
+> +	u64 cache_req_len;
+> +	u64 cache_rsp_offset;
+> +	u64 cache_rsp_len;
+> +	u64 cache_obj_id;
+> +	u64 protocol;
+> +	u64 req_len;
+> +	u64 timeout;
+In latest spec called rsp_timeout.
+Not sure we care that much but if no strong reason otherwise, should
+aim to match the spec text. (Maybe this got renamed?)
 > +};
-> +
-> +static struct hwerr_info hwerr_data[HWERR_RECOV_MAX];
-> +
->   Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->   			  void *data, size_t data_len)
->   {
-> @@ -118,6 +125,17 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
->   }
->   EXPORT_SYMBOL(paddr_vmcoreinfo_note);
-> 
-> +void hwerr_log_error_type(enum hwerr_error_type src)
+
+> diff --git a/drivers/virt/coco/arm-cca-host/arm-cca.c b/drivers/virt/coco/arm-cca-host/arm-cca.c
+> index 84d97dd41191..294a6ef60d5f 100644
+> --- a/drivers/virt/coco/arm-cca-host/arm-cca.c
+> +++ b/drivers/virt/coco/arm-cca-host/arm-cca.c
+> @@ -85,6 +85,45 @@ static void cca_tsm_pci_remove(struct pci_tsm *tsm)
+>  	vfree(dsc_pf0);
+>  }
+>  
+> +static int init_dev_communication_buffers(struct cca_host_comm_data *comm_data)
 > +{
-> +	if (src < 0 || src >= HWERR_RECOV_MAX)
-> +		return;
+> +	int ret = -ENOMEM;
 > +
-> +	/* No need to atomics/locks given the precision is not important */
-> +	hwerr_data[src].count++;
-> +	hwerr_data[src].timestamp = ktime_get_real_seconds();
+> +	comm_data->io_params = (struct rmi_dev_comm_data *)get_zeroed_page(GFP_KERNEL);
+
+Hmm. There isn't a DEFINE_FREE() yet for free_page().  Maybe time to add one.
+If we did then we'd use local variables until all allocations succeed then
+assign with no_free_ptr()
+
+
+> +	if (!comm_data->io_params)
+> +		goto err_out;
+> +
+> +	comm_data->resp_buff = (void *)__get_free_page(GFP_KERNEL);
+> +	if (!comm_data->resp_buff)
+> +		goto err_res_buff;
+> +
+> +	comm_data->req_buff = (void *)__get_free_page(GFP_KERNEL);
+> +	if (!comm_data->req_buff)
+> +		goto err_req_buff;
+> +
+> +
+> +	comm_data->io_params->enter.status = RMI_DEV_COMM_NONE;
+> +	comm_data->io_params->enter.resp_addr = virt_to_phys(comm_data->resp_buff);
+> +	comm_data->io_params->enter.req_addr  = virt_to_phys((void *)comm_data->req_buff);
+I think it's already a a void * and even if it were some other pointer type
+no cast would be necessary.
+
+> +	comm_data->io_params->enter.resp_len = 0;
+> +
+> +	return 0;
+> +
+> +err_req_buff:
+> +	free_page((unsigned long)comm_data->resp_buff);
+> +err_res_buff:
+> +	free_page((unsigned long)comm_data->io_params);
+> +err_out:
+> +	return ret;
 > +}
-> +EXPORT_SYMBOL_GPL(hwerr_log_error_type);
 > +
->   static int __init crash_save_vmcoreinfo_init(void)
->   {
->   	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
 
-Look good for me.
+> +
+>  /* per root port unique with multiple restrictions. For now global */
+>  static DECLARE_BITMAP(cca_stream_ids, MAX_STREAM_ID);
+>  
+> @@ -124,6 +163,7 @@ static int cca_tsm_connect(struct pci_dev *pdev)
+>  	rc = tsm_ide_stream_register(pdev, ide);
+>  	if (rc)
+>  		goto err_tsm;
+> +	init_dev_communication_buffers(&dsc_pf0->comm_data);
+>  	/*
+>  	 * Take a module reference so that we won't call unregister
+>  	 * without rme_unasign_device
+> @@ -133,6 +173,11 @@ static int cca_tsm_connect(struct pci_dev *pdev)
+>  		goto err_tsm;
+>  	}
+>  	rme_asign_device(pdev);
+	rme_assign_device() - I obviously missed this earlier!
 
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> +	/*
+> +	 * Schedule a work to fetch device certificate and setup IDE
+Single line comment probably fine here.  Though it perhaps doesn't add
+much over the function name.
+> +	 */
+> +	schedule_rme_ide_setup(pdev);
+> +
+>  	/*
+>  	 * Once ide is setup enable the stream at endpoint
+>  	 * Root port will be done by RMM
+> diff --git a/drivers/virt/coco/arm-cca-host/rmm-da.c b/drivers/virt/coco/arm-cca-host/rmm-da.c
+> index 426e530ac182..d123940ce82e 100644
+> --- a/drivers/virt/coco/arm-cca-host/rmm-da.c
+> +++ b/drivers/virt/coco/arm-cca-host/rmm-da.c
+> @@ -148,3 +148,201 @@ int rme_asign_device(struct pci_dev *pci_dev)
+>  err_out:
+>  	return ret;
+>  }
+> +
+> +static int doe_send_req_resp(struct pci_tsm *tsm)
+> +{
+> +	u8 protocol;
+> +	int ret, data_obj_type;
+> +	struct cca_host_comm_data *comm_data;
+> +	struct rmi_dev_comm_exit *io_exit;
+> +
+> +	comm_data = to_cca_comm_data(tsm->pdev);
+> +
+> +	io_exit = &comm_data->io_params->exit;
+> +	protocol = io_exit->protocol;
 
-It would be valuable to get additional review from other RAS experts.
+For all these I'd combine with the declarations.
 
-Thanks.
-Shuai
+> +
+> +	pr_debug("doe_req size:%lld doe_io_type=%d\n", io_exit->req_len, (int)protocol);
+> +
+> +	if (protocol == RMI_PROTOCOL_SPDM)
+> +		data_obj_type = PCI_DOE_PROTO_CMA;
+> +	else if (protocol == RMI_PROTOCOL_SECURE_SPDM)
+> +		data_obj_type = PCI_DOE_PROTO_SSESSION;
+> +	else
+> +		return -EINVAL;
+> +
+> +	ret = pci_tsm_doe_transfer(tsm->dsm_dev, data_obj_type,
+> +				   comm_data->req_buff, io_exit->req_len,
+> +				   comm_data->resp_buff, PAGE_SIZE);
+> +	pr_debug("doe returned:%d\n", ret);
+> +	return ret;
+> +}
+> +
+> +/* Parallel update for cca_dsc contents FIXME!! */
+> +static int __do_dev_communicate(int type, struct pci_tsm *tsm)
+> +{
+> +	int ret;
+> +	bool is_multi;
+> +	u8 *cache_buf;
+> +	int *cache_offset;
+> +	int nbytes, cache_remaining;
+> +	struct cca_host_dsc_pf0 *dsc_pf0;
+> +	struct rmi_dev_comm_exit *io_exit;
+> +	struct rmi_dev_comm_enter *io_enter;
+> +	struct cca_host_comm_data *comm_data;
+> +
+> +
+> +	comm_data = to_cca_comm_data(tsm->pdev);
+> +	io_enter = &comm_data->io_params->enter;
+> +	io_exit = &comm_data->io_params->exit;
+
+Might as well set these local variables as the declaration point
+above.  None of them will be very long lines.
+
+> +
+> +	dsc_pf0 = to_cca_dsc_pf0(tsm->dsm_dev);
+> +redo_communicate:
+> +	is_multi = false;
+> +
+> +	if (type == PDEV_COMMUNICATE)
+> +		ret = rmi_pdev_communicate(virt_to_phys(dsc_pf0->rmm_pdev),
+> +					   virt_to_phys(comm_data->io_params));
+> +	else
+> +		ret = RMI_ERROR_INPUT;
+
+I'd split this case out and return here farther than using the match below
+as it feels like the error message auto to be more specific. Something
+about type not matching.
+
+> +	if (ret != RMI_SUCCESS) {
+> +		pr_err("pdev communicate error\n");
+> +		return ret;
+> +	}
+> +
+> +	/* caching request from RMM */
+> +	if (io_exit->flags & RMI_DEV_COMM_EXIT_CACHE_RSP) {
+> +		switch (io_exit->cache_obj_id) {
+> +		case RMI_DEV_VCA:
+> +			cache_buf = dsc_pf0->vca.buf;
+> +			cache_offset = &dsc_pf0->vca.size;
+> +			cache_remaining = sizeof(dsc_pf0->vca.buf) - *cache_offset;
+> +			break;
+> +		case RMI_DEV_CERTIFICATE:
+> +			cache_buf = dsc_pf0->cert_chain.cache.buf;
+> +			cache_offset = &dsc_pf0->cert_chain.cache.size;
+> +			cache_remaining = sizeof(dsc_pf0->cert_chain.cache.buf) - *cache_offset;
+> +			break;
+> +		default:
+> +			/* FIXME!! depending on the DevComms status,
+> +			 * it might require to ABORT the communcation.
+> +			 */
+> +			return -EINVAL;
+> +		}
+> +
+> +		if (io_exit->cache_rsp_len > cache_remaining)
+> +			return -EINVAL;
+> +
+> +		memcpy(cache_buf + *cache_offset,
+> +		       (comm_data->resp_buff + io_exit->cache_rsp_offset), io_exit->cache_rsp_len);
+> +		*cache_offset += io_exit->cache_rsp_len;
+> +	}
+> +
+> +	/*
+> +	 * wait for last packet request from RMM.
+> +	 * We should not find this because our device communication in synchronous
+> +	 */
+> +	if (io_exit->flags & RMI_DEV_COMM_EXIT_WAIT)
+> +		return -ENXIO;
+> +
+> +	is_multi = !!(io_exit->flags & RMI_DEV_COMM_EXIT_MULTI);
+
+!! doesn't add anything here that I can see over
+
+	is_multi = io_exit->flags & RMI_DEV_COMM_EXIT_MULTI;
+
+
+> +
+> +	/* next packet to send */
+> +	if (io_exit->flags & RMI_DEV_COMM_EXIT_SEND) {
+> +		nbytes = doe_send_req_resp(tsm);
+> +		if (nbytes < 0) {
+> +			/* report error back to RMM */
+> +			io_enter->status = RMI_DEV_COMM_ERROR;
+> +		} else {
+> +			/* send response back to RMM */
+> +			io_enter->resp_len = nbytes;
+> +			io_enter->status = RMI_DEV_COMM_RESPONSE;
+> +		}
+> +	} else {
+> +		/* no data transmitted => no data received */
+> +		io_enter->resp_len = 0;
+> +	}
+> +
+> +	/* The call need to do multiple request/respnse */
+> +	if (is_multi)
+> +		goto redo_communicate;
+> +
+> +	return 0;
+> +}
+> +
+> +static int do_dev_communicate(int type, struct pci_tsm *tsm, int target_state)
+> +{
+> +	int ret;
+> +	unsigned long state;
+> +	unsigned long error_state;
+> +	struct cca_host_dsc_pf0 *dsc_pf0;
+> +	struct rmi_dev_comm_enter *io_enter;
+> +
+> +	dsc_pf0 = to_cca_dsc_pf0(tsm->dsm_dev);
+> +	io_enter = &dsc_pf0->comm_data.io_params->enter;
+> +	io_enter->resp_len = 0;
+> +	io_enter->status = RMI_DEV_COMM_NONE;
+> +
+> +	state = -1;
+> +	do {
+> +		ret = __do_dev_communicate(type, tsm);
+> +		if (ret != 0) {
+		if (ret)
+
+> +			pr_err("dev communication error\n");
+> +			break;
+
+I'd just return in error cases.
+
+> +		}
+> +
+> +		if (type == PDEV_COMMUNICATE) {
+> +			ret = rmi_pdev_get_state(virt_to_phys(dsc_pf0->rmm_pdev),
+> +						 &state);
+> +			error_state = RMI_PDEV_ERROR;
+> +		}
+> +		if (ret != 0) {
+> +			pr_err("Get dev state error\n");
+> +			break;
+> +		}
+> +	} while (state != target_state && state != error_state);
+> +
+> +	pr_info("dev_io_complete: status: %d state:%ld\n", ret, state);
+> +
+> +	return state;
+> +}
+
 
