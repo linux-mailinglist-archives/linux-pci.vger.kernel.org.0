@@ -1,310 +1,482 @@
-Return-Path: <linux-pci+bounces-33146-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33147-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F00A3B156FF
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 03:34:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89946B15720
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 03:51:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A0D05A044F
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 01:34:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0FB456049E
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 01:51:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE8401531C1;
-	Wed, 30 Jul 2025 01:34:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2008119CD13;
+	Wed, 30 Jul 2025 01:51:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gLDd+tCV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZkI+Qx8k"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2075.outbound.protection.outlook.com [40.107.243.75])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E05FC13D;
-	Wed, 30 Jul 2025 01:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753839276; cv=fail; b=ULRIsFlQW1ZArSrrxHDUh8pJE+q9i0uCzbvTbjMDSlM35rCQR2ii6vWtQE66oclfccPmecshO7U4SxUbOnj2nu5cx1VDG1eblgU3Euv+HgEhIFhGsd/YUW/wi/rQT9UCkenYk6voyAQ5+3v4GVRUUsfWYBXeEQV/fB0OKxS7/gY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753839276; c=relaxed/simple;
-	bh=r0xLVuvuHIDk6NpOeUZrcBufF8SN+0KqZU76YdY2uh4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=s2CJDRDEzL737XrMWAElGzD4k0sJ3YuqyHVZcmypy3+a0FX4n+iVGqSEy92rPX1IvxDfne9dVCxG6GjTDQiy/UER+VR3y/hgXt+HVN4dJtXOp7TCdjA36pR4xCfal8PrQ/Q1Z542rqAPFECo2nceLfpb+HoSEOZ6LTc8Db9Nw/Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gLDd+tCV; arc=fail smtp.client-ip=40.107.243.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n1hpNIZyv+DVEm1hL/6MH7Moj6HhfNCuga/7sOpCL/lwcOJ8SfxAFGe1XFsQRUQ54DHAWLLuTPN3RYb5lX8wQ2hO8lgPjx1/9+TJ0gI6AEL9EUCqYIuCKCVAbioxJxnzqwptEUl7RhVIE9USlbBzhIXZwSEhvrM43hkycfFbrI4WGadhewUOZ62oojpvOZPQT84B4HZfY99PLyKc9CUwxtI31QKc8ZwNvP1MpkjV3p4n+t04LfqtBso/nBjrG3QQXfCdkJtQZTuqQfsOHXGs1aEDUsgzwqXZH9kMCwI6SfEFcjRauU0FjTE/+UKFrIUt29Yajw/sT6JUeqmgCOq7Jw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Nxlf9garnQyXH1VL5bDcYPUnP3vPJUAi1kmgvoEEx+g=;
- b=JbdylwMcGNIF4ApmLx3rfRPidl+UpVJXaM9k3FA8RLhUIG/PwyjMF4mRZiTMyIY1yXKJaoh1ONbQE/px1wRQCaJNY3SC1nh7+SpK7m/WPN2QR1h0vhj8H+Q7+lojsTPNcNp59Dw0oiRUDSQCJ9H9J0zJEMvG0NuzdP0O5mpfmxFS0Aol0Dbkx843FMnOaY0mvssbK/1Iu3JUOWS3vWb1cGV6CizhVK0fF+5yy+nFG8UTQ4mDEQYeshHElZLEtyn00+1u76D9Ax9nUkw5ZsMVX7OLuSLazD76GxIbH7b8pp1Sx9OCQ7ivltuj6gYCelvOcpysvk19Macch5fqijIe9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nxlf9garnQyXH1VL5bDcYPUnP3vPJUAi1kmgvoEEx+g=;
- b=gLDd+tCVJSfZwUUekUAPCax1pI6HPgv7YytSRqf1BpMvVlrE6WADhZfYPmiq2kGxfoiigId4LkbXADjUthVS5q74BbWEkSyNuJfXyISXXPb7FC0ijh89isB+6n+yH8eFU6DBsTMEKPy8sbatAkCReDu/ueOpQkJGNvSWvMo0lpXNAcdUCkCTNVax/11JOnrV1f5foE6+OnbWJTzv9X/jzNUVg6ITNYftnTdURED6drGQWPeASORfEHwVRTWxii/DDgO2j45KE17yjAIEkMyx2arNEGFOhL2u9IUAtRQD2UOyUS9JDYo8c8q3Q3ChVRdFwMPBkbsHPJ7kvxHiYN/U6w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- SN7PR12MB8147.namprd12.prod.outlook.com (2603:10b6:806:32e::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8989.11; Wed, 30 Jul 2025 01:34:31 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%3]) with mapi id 15.20.8964.024; Wed, 30 Jul 2025
- 01:34:31 +0000
-From: Alistair Popple <apopple@nvidia.com>
-To: rust-for-linux@vger.kernel.org
-Cc: Alistair Popple <apopple@nvidia.com>,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	John Hubbard <jhubbard@nvidia.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] rust: Add several miscellaneous PCI helpers
-Date: Wed, 30 Jul 2025 11:34:17 +1000
-Message-ID: <20250730013417.640593-2-apopple@nvidia.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250730013417.640593-1-apopple@nvidia.com>
-References: <20250730013417.640593-1-apopple@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SY5P300CA0099.AUSP300.PROD.OUTLOOK.COM
- (2603:10c6:10:248::10) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE72C19A2A3
+	for <linux-pci@vger.kernel.org>; Wed, 30 Jul 2025 01:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753840301; cv=none; b=kBPkB8MnnG1jG/vrkhFdjO/AsKBYUpElEGpE02aQLpWphxwO4lQK0k/aF2lVas1RsokIZWvxqF0FpW3XvexZj9/fGFXLfHcPSEROGn+X3ftLmyYsabwi7F2i1blXM8r0xZHQ3I17ZWJvsf8TxMsUfYoYA2iH4QllLzUPcZR5VUc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753840301; c=relaxed/simple;
+	bh=QRGK7T0rnihApOShy1dGGdyvxViRwDlM1P9dzMVht+M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c9HrRj2g2L5/lICwCfcYex5ILsQjupZNdv1/5mzB6GjHJXnNjtjcRoHNk+GW+MkF9WygNBvfVS08/bgof0GW42BsQForgLAlYctwXES1EnAPqLgqekdtJy2wJS915PP4ec8FysMhHuyRblYi+S9ZHbcUOJyboNns6fn1tzBH4zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZkI+Qx8k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78A8BC19422
+	for <linux-pci@vger.kernel.org>; Wed, 30 Jul 2025 01:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753840300;
+	bh=QRGK7T0rnihApOShy1dGGdyvxViRwDlM1P9dzMVht+M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZkI+Qx8kmVmtT+ZbzAbPlNSlmbbrIWtFY1iNHmpQ1Z0/wKc0WPvtdlK3q1fqYy58N
+	 o+GBSzyGh0uusgNkx5nBSVezLNf/dgH4Jn4K4hPVyaFHaeM5d5oA/OJXdNVNrFmQ6C
+	 pCAsPRyp0VHBkJz8gGPGs1vs4rjHc4auqBXReWdM0zkSRGOsRAshwb0Yy4I4ygffSz
+	 KcM4Tr5q8BzeSral8oJRIftjEn/gyEUP2kDS5MSvXYkLkRHYkU15YQSp5X7gXpbR6c
+	 pwta5PFs8eeYmk5/LenihHKO5jLqowUEj5Cp/WcidKA+YuMXxIZd+DW/9NBhecMe6A
+	 bKxdz4ykEpsvw==
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4561b43de62so44685e9.0
+        for <linux-pci@vger.kernel.org>; Tue, 29 Jul 2025 18:51:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWpBR40Zi2Ct0EruOS534KFZOwO/7wRTrinxesB9xD8UV9MtQzPyDGKUuZMuKLCCEiRRW9E/AqpMuo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt3VMndNQihhvNmNihTn0P31HwAIhAXGDIw6Bu43oBoX4Il/Uu
+	+8lhhuMlvGFsxy60uY8Mf+bNWJGdgd9a91O0Trs+zhnJxe4DB3gEz7bn62/dLRXQsBMtcKmEqsq
+	N825XWwSKbhkBr2Gr6scxDJsvXAu/QDUHNg38Dglu
+X-Google-Smtp-Source: AGHT+IFVJ4GRdwU6HSu4lkllSKQtOadwGBHwmdTT/hu2qK6/C0k3KNPt9SkIOIBodqDTqZxgb0MOEu1Ov1wNUBRa96Y=
+X-Received: by 2002:a05:600c:681:b0:453:672b:5b64 with SMTP id
+ 5b1f17b1804b1-45893a5f51emr520475e9.2.1753840298732; Tue, 29 Jul 2025
+ 18:51:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|SN7PR12MB8147:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7da00a81-3e3d-4977-a15d-08ddcf093b21
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?R2lVb1hSK2tvOFBrV2o3S2xiNm5iRlFPdXdxOGxLSjBGd3FQTXYxamtNM2Fr?=
- =?utf-8?B?c05PZWkxU0srNHk2YzdiRW9LUVVuMkxNdyszd1dlZHE2M3RCKzFhVnZZOGhW?=
- =?utf-8?B?dG5tVkNwQktTV2tPUE5EMDZsaXgzdDZ0RHF0RVgwdEVhQkxUcGkyRzA0RUV0?=
- =?utf-8?B?Q1NVRGg1enZ3Z0xGR2p4TEVObzZVWmg2Q1VsRHIzeG83SkJ6Y0p0ZEV6VmlB?=
- =?utf-8?B?YnhUUTBueEF5Ync4VThMVHpsRm03TWpqSWxiYktiTzNOdFExOW1nRmltRzMw?=
- =?utf-8?B?VDcyMG92RWJkYmlNYmRKZ3lUSzE5MGVvOTdwang5WXkxMzYvYzAxbUtmSUZa?=
- =?utf-8?B?T3RWSEVueWtUUXo5ZW9aQ0JwUVBTQ1ZGdGRlS1pnVmpoVHhHdGVJS2psRmF5?=
- =?utf-8?B?QlhhelFKK3AwN1UzNTlPRUh3YmUxQ3hhYkR2ZTdkYm1Fa25uVnFHcjhuc3NE?=
- =?utf-8?B?cjFtVmdRMUFsSi9IeGtqVkowd2xTd3VrWlFTbHhtUW5MZUpRcVJQeVZQU0VB?=
- =?utf-8?B?MDRkMEdJeEpzM0hWZ1FZNzltS01yZWg4SmlYMEJxU2FnZ0tGTjR1WitKOVJn?=
- =?utf-8?B?THFFMEdkWmN3YVUwOXc1NGhNU0tGMWpJNjRTaC9Eem0zRXF2a1RiTURjdHVB?=
- =?utf-8?B?TkVGd3lwYldQMis3ZDNXM25NMi91T3lTOEtvdDBJcmNFY3c3b0UzeWhnZTJ6?=
- =?utf-8?B?azJZamMyMTZqSVFSRU1FVndOdG4zSEl5d1BVcVFkY2xmM3UzbXhzVXJwWnZY?=
- =?utf-8?B?YjRlZ05DNFNLYk96bTFCR3ZEMDRUUllzNXdDTUFPY0ZlWDQvMFgzaU40RCth?=
- =?utf-8?B?OUxJS0R0a3dYeXphQkQxUnJsN3p1VjdOZlRReVBuMWhjUjJyMFhQNFdvTEZQ?=
- =?utf-8?B?QTBmblRXNkNhU0xKc3hOZjZIM2Vxano4b3JYaFBtTFFmbjNPMkI2K2dyaG1l?=
- =?utf-8?B?ZUJ6dmI3ZHMxV0J2bDZUekh3anUrYmxkOWREYm1pNStndlMwRjgwYlFnUy81?=
- =?utf-8?B?aDdxV3FVWElyRUNEWDNTenNaTEFxZzhnM3RITkNNU0RDZ0lKZDBpc1ovWDM5?=
- =?utf-8?B?REcyRGdXMnRVV2xYV0VZTy9xMDVRdS9CMGFaYVllenA2c0xGeEcwcjdmTlJP?=
- =?utf-8?B?V0UxL2xYZ2w4VnRTeXVOeTlkUk9kMFhqQWdUYzExVnlubFlQYzNFTFZ2U3lh?=
- =?utf-8?B?YzhGeDFhSllMUTQzS05NaCtRdVFGL0FVVnoyMWkwSWhnZDcxaVdpWHM0Tjcy?=
- =?utf-8?B?Wkw4N0tsYTM3TFlxcE8rY3oxMHNRZ0FKUldCV3ZQOGVIUit3bHYyT0ZuUHl1?=
- =?utf-8?B?ZFlhSXNUVnBITWRGbU9qbFByODEwdFdvaWQva21uWWZrV0laWm15MkFhRVgw?=
- =?utf-8?B?dDM0Q0I1SjhkcnZaQlF3NnFKYkdrZTU0ZWVqSU1vY254S2xsSzJNa0x2ZThE?=
- =?utf-8?B?YmpKaUg0UXdDblN2eGJEVGd0ckNlT0JNTVAwOGRRaEpEV3ZZTDlyekVBUUR3?=
- =?utf-8?B?V2tuZjV0cDQ1RjBqa2Z3d2pzS1kwY1k4YStsZFVFQVRkTW9uTkhaekZQRUpp?=
- =?utf-8?B?L2tPcktOYjNTclEwVWFLbndzSDFxL3FvYjR3T1JrQ2c0TlJCVXZoSjFEeWJj?=
- =?utf-8?B?Y2dXU0EwR2JQWm12WjI4bDFJaXFaSDZDUFdkRGNvYlZFMFdRRmJTSXVGVFNK?=
- =?utf-8?B?QnNzczM3UWJHV1h3REhqREZHaE90cDJTUit3MnJkd1JwYmlFeDJVVEpGWFJm?=
- =?utf-8?B?TDhsazNKZENHa1JFLzk1a3pmMmdhMFVhUENZU043SFB3V0xhL1VLdjVZWkRa?=
- =?utf-8?B?NWRpSWVRUkF3bmh0RERWNHJGU1czUml2V0p2QytJQVRoVXV6RE1samVoUktB?=
- =?utf-8?B?WmpYbGxZd1F3djFRaERRSXJlalZ5Z3h3a0VoZVdQckUvMHQ0OG1DNHFNZ2tp?=
- =?utf-8?Q?HPIYsPP9SBg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SXlUZGxNUnh3WDQ5cksvaFJzOGlob3lDNk1TQ09RbktCNGZDejRqRGUzeVlU?=
- =?utf-8?B?b3pjcDhrUE5rYmV1QlpYaGp6bEZRM21YZk9yNGJLU09jY0Q1QjBMQWtwQk1a?=
- =?utf-8?B?V29mdVorRGdrNzA5KzlwYkNHQWtESGtvWjNyekhVQm9lMkRtZnJBWDV3L3hx?=
- =?utf-8?B?SjJwM3l5QUFxQVdIaWNoVVNZRG1XQjF0eDNwamFqbEZVMTV6TXNkMTAxQ2pk?=
- =?utf-8?B?bjlqemV0ZU9JSjFOS0FVRHJpZDkzV2R4aExqUVM5RmVjbjFlWi9sNE96OFdN?=
- =?utf-8?B?cDFOZzZydGJ6bWNmRk9zWldUekgrUURLd2lLQXhUQzNnVUFocFArTEdYQmRW?=
- =?utf-8?B?V2c1NWNWVWxFZXV1S0pXcVBUdFdwbHI2VTlnNnhxSVZtemFmZzNTVzlzRGRC?=
- =?utf-8?B?VTRvYzVtL3NGdlFaSDJjcDhiS0JuZG9NeWhmRFloVG5MK0ZkSElTdnkwRE9D?=
- =?utf-8?B?RWJ1OWhFemJJV2VvOHdjWWFEbVJvdTlOamplc1hsRVdiZVVMd1lleFY2dGtq?=
- =?utf-8?B?QU9wZHRyTlNiWmVqSVhuSWN3WUU1bkVtT1ErTGI4TjVKRmRsNDdOWEJSZnhs?=
- =?utf-8?B?ZUtOekhRbytZRmxnZWZoUHhpeWw0YlU1M1VqZ0FvV00vWlBrS1NPL0ZhUDQ1?=
- =?utf-8?B?VzJQMmZ5NnZ4bVB0b2pOajA2SG85WnZwUUhBRE41QVlhYW43RElJVUFzMlFJ?=
- =?utf-8?B?ZHdIZ250OEJKUEVpeFliYmx0NEhzY0c1NXNhcHYrY0M5am1NeFBxYm5XYjJF?=
- =?utf-8?B?VDYweE13UFhXVlAyenAwaHFjaExwOGh2S0w2ZnRGZXRTTmJEaVhXRkNnd05M?=
- =?utf-8?B?aWU0STJRQWhWcmFGclhxb1d4a0dNTVZ3cEdQMzdaYjdrNndsSlNIK1JyQURR?=
- =?utf-8?B?b25LamJKMGc3WjFxRGx2NUxHcEhZVlFHeDI5ZVcyYm0wUVRxeUwwa2lGTUk5?=
- =?utf-8?B?bkF5dlVvSUk5WUl0dnRZRCtqMWpyNzB4U0ZLc3pLd1FodHdNZnlza0p3STda?=
- =?utf-8?B?LzF2TW5ubnZzOU9JdElyV1lHSUdJb2JkdDdXRHlmUlg3K3ZoRFVZd21pUm9E?=
- =?utf-8?B?MWREL0RkeElwSjV2L3E4RVl3ZGg4bDJiQmtmUU4raERpQXhoYSt4amU2czhP?=
- =?utf-8?B?VFlRc2NzL1R5UHUrTnI0dFUrays3ZnZKK3ZEaXgzT0tuY2dES2ppdVVsNUh4?=
- =?utf-8?B?bFVWVmRqTlNqdERhNlNxWFlBbEZYNVdKbWw2UW5DcWxQV3IvcEU0TUVpYmcx?=
- =?utf-8?B?OWtmQ2hsQVM0SEVGOGdYemtSZXQxU29CektWY3NwU3NJeWl5aEJRM08yZTlJ?=
- =?utf-8?B?akJkc0lkbnRPY2EzdGgvbUt4NWhNTnkrVEhHbU9FVWYrMCtqcHk5VUFVK3Vp?=
- =?utf-8?B?cUtiZTh0YU1HUzdWOUhZWVVVUHZCcHNXVE1BK2pHRzRENmc5ZSsrVVJWc0lT?=
- =?utf-8?B?bzRONFA5VjRseDNuZHYyQ0d5a21sSWVEYkVkMWxBZVYzY3ZIVVdxRVVUQkox?=
- =?utf-8?B?VHVzNGdabHV1cXYrRnFJUzN4b2c2d29zdEZTUDVIS0RjcE4wQmhGZHdpYUxy?=
- =?utf-8?B?aXVwWFFydy8vSnA0aXozN2dTUFhQV0pid2pNditnUCtKdW10MnUyMjhYZUxt?=
- =?utf-8?B?WE9wWTk4Yjd6dU5BaEl3SkJhY3Y3bStmZDM2Mkg5NTNMRW1icUFaRTVDZ2hj?=
- =?utf-8?B?NmxLRk5oSkpSS2wwSjBKU2QrWmQwK1NlQ2IvaGdsMEtVWVFSWU1ndXhQZ3R4?=
- =?utf-8?B?a2JFOWk1NGgvUjZwTGE0ZG0xS2RyYnlJNFBxWnI1VUF5RmNYVmpjbDltUG1n?=
- =?utf-8?B?djFhVlI1cnMvWVA4T3JuekJoZXlqK0NZRG5UUXcxb3d6aEtHdG5PQzA0bXRx?=
- =?utf-8?B?c01EWk94cVpiRXhldm9idlFDbWtYeGl4bFBxUmZpdit2TVByQWtjcEQrZ296?=
- =?utf-8?B?V1VJMjRvVVp3WHhxOStIYlRmRTAyOFcrdkl1NVVRVXlIKzBlQVRLUGhUcnBH?=
- =?utf-8?B?dXhBbGRXQUFLRURFVjVuMUxRSklZMXBWWFRRQUZWbm5DMzZkZGtnSmJvcDAr?=
- =?utf-8?B?Njh5T2tvRlcrcVdEbFhaRmVKblRMd3Q0QW9UY2hPVWRCZThORkxuSU05QjZN?=
- =?utf-8?Q?ICqOJQvcyMzzDDIdSyhbRjar8?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7da00a81-3e3d-4977-a15d-08ddcf093b21
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2025 01:34:31.3166
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1MSGlcdG18x23dZFnaftphGhyN6fQL4ymXuFxAesZPpaAMb0IEw78ZJ7Z0Wwiawa9JXvINVYv+5cYhwc7gT/Iw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8147
+References: <20250728-luo-pci-v1-0-955b078dd653@kernel.org>
+ <20250728-luo-pci-v1-20-955b078dd653@kernel.org> <87zfconsaw.ffs@tglx>
+In-Reply-To: <87zfconsaw.ffs@tglx>
+From: Chris Li <chrisl@kernel.org>
+Date: Tue, 29 Jul 2025 18:51:27 -0700
+X-Gmail-Original-Message-ID: <CAF8kJuOM=2oEFP20xWtQ==ECwF_vNB032Os3-N12zY1xVau-yw@mail.gmail.com>
+X-Gm-Features: Ac12FXxnjSA_5g1BiBGXIvXEzdwU-zqT35zbMfT82ZSWhkngdOqj32BeUVz077Y
+Message-ID: <CAF8kJuOM=2oEFP20xWtQ==ECwF_vNB032Os3-N12zY1xVau-yw@mail.gmail.com>
+Subject: Re: [PATCH RFC 20/25] PCI/LUO: Avoid write to liveupdate devices at boot
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, David Matlack <dmatlack@google.com>, 
+	Pasha Tatashin <tatashin@google.com>, Jason Miu <jasonmiu@google.com>, 
+	Vipin Sharma <vipinsh@google.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, 
+	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add bindings to obtain a PCI device's resource start address, bus/
-device function, revision ID and subsystem device and vendor IDs.
+Hi Thomas,
 
-These will be used by the nova-core GPU driver which is currently in
-development.
+On Mon, Jul 28, 2025 at 10:23=E2=80=AFAM Thomas Gleixner <tglx@linutronix.d=
+e> wrote:
+>
+> On Mon, Jul 28 2025 at 01:24, Chris Li wrote:
+> > The liveupdate devices are already initialized by the kernel before the
+> > kexec. During the kexec the device is still running. Avoid write to the
+> > liveupdate devices during the new kernel boot up.
+>
+> This change log is way too meager for this kind of change.
 
-Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Gary Guo <gary@garyguo.net>
-Cc: Björn Roy Baron <bjorn3_gh@protonmail.com>
-Cc: Benno Lossin <lossin@kernel.org>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Alice Ryhl <aliceryhl@google.com>
-Cc: Trevor Gross <tmgross@umich.edu>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rafael J. Wysocki <rafael@kernel.org>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Alexandre Courbot <acourbot@nvidia.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Alistair Popple <apopple@nvidia.com>
+I agree with you. I mention it in the cover letter, I do expect this
+part of change to be controversial. This RFC series is just to kick
+off the discussion for PCI device liveupdate.
 
----
+>  1) You want to explain in detail how this works.
+>     "initialized by the kernel before the kexec" is as vague as it gets.
 
-Changes for v3:
+Agree. Sorry I haven't included more documents in this series. Working on i=
+t.
 
- - Fixed capitalisation of SAFETY comments.
- - There was a long discussion about the SAFETY comments on v2 of the
-   series[1]. I don't think anything actionable came of it so I haven't
-   made any changes as a result of that discussion.
+>
+>  2) Avoid write ....
+>
+>     Again this lacks any information how this is supposed to work correct=
+ly.
 
-[1] - https://lore.kernel.org/rust-for-linux/20250710022415.923972-1-apopple@nvidia.com/
----
- rust/helpers/pci.c | 10 ++++++++++
- rust/kernel/pci.rs | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
+I guess I haven't presented the big picture of how liveupdate works
+with a PCI device.
 
-diff --git a/rust/helpers/pci.c b/rust/helpers/pci.c
-index cd0e6bf2cc4d9..59d15bd4bdb13 100644
---- a/rust/helpers/pci.c
-+++ b/rust/helpers/pci.c
-@@ -12,6 +12,16 @@ void *rust_helper_pci_get_drvdata(struct pci_dev *pdev)
- 	return pci_get_drvdata(pdev);
- }
- 
-+u16 rust_helper_pci_dev_id(struct pci_dev *dev)
-+{
-+	return PCI_DEVID(dev->bus->number, dev->devfn);
-+}
-+
-+resource_size_t rust_helper_pci_resource_start(struct pci_dev *pdev, int bar)
-+{
-+	return pci_resource_start(pdev, bar);
-+}
-+
- resource_size_t rust_helper_pci_resource_len(struct pci_dev *pdev, int bar)
- {
- 	return pci_resource_len(pdev, bar);
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 7da1712398938..d47226a679f6c 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -386,6 +386,50 @@ pub fn device_id(&self) -> u16 {
-         unsafe { (*self.as_raw()).device }
-     }
- 
-+    /// Returns the PCI revision ID.
-+    #[inline]
-+    pub fn revision_id(&self) -> u8 {
-+        // SAFETY: By its type invariant `self.as_raw` is always a valid pointer to a
-+        // `struct pci_dev`.
-+        unsafe { (*self.as_raw()).revision }
-+    }
-+
-+    /// Returns the PCI bus device/function.
-+    #[inline]
-+    pub fn dev_id(&self) -> u16 {
-+        // SAFETY: By its type invariant `self.as_raw` is always a valid pointer to a
-+        // `struct pci_dev`.
-+        unsafe { bindings::pci_dev_id(self.as_raw()) }
-+    }
-+
-+    /// Returns the PCI subsystem vendor ID.
-+    #[inline]
-+    pub fn subsystem_vendor_id(&self) -> u16 {
-+        // SAFETY: By its type invariant `self.as_raw` is always a valid pointer to a
-+        // `struct pci_dev`.
-+        unsafe { (*self.as_raw()).subsystem_vendor }
-+    }
-+
-+    /// Returns the PCI subsystem device ID.
-+    #[inline]
-+    pub fn subsystem_device_id(&self) -> u16 {
-+        // SAFETY: By its type invariant `self.as_raw` is always a valid pointer to a
-+        // `struct pci_dev`.
-+        unsafe { (*self.as_raw()).subsystem_device }
-+    }
-+
-+    /// Returns the start of the given PCI bar resource.
-+    pub fn resource_start(&self, bar: u32) -> Result<bindings::resource_size_t> {
-+        if !Bar::index_is_valid(bar) {
-+            return Err(EINVAL);
-+        }
-+
-+        // SAFETY:
-+        // - `bar` is a valid bar number, as guaranteed by the above call to `Bar::index_is_valid`,
-+        // - by its type invariant `self.as_raw` is always a valid pointer to a `struct pci_dev`.
-+        Ok(unsafe { bindings::pci_resource_start(self.as_raw(), bar.try_into()?) })
-+    }
-+
-     /// Returns the size of the given PCI bar resource.
-     pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
-         if !Bar::index_is_valid(bar) {
--- 
-2.47.2
+Let's start with the background why we want to do this. We want to
+upgrade a host kernel, which has a VM running with a GPU device
+attached to the VM via vfio_pci. We want the host kernel upgrade in a
+way that the VM can continue without shutting down and restarting the
+VM. The VM will pause during the host kernel kexec. The GPU device
+will continue running and DMA without pausing. VM will not be able to
+run the interrupt until the new kernel is finished booting and resume
+the VM.
 
+Pasha's LUO series already have designs on the liveupdate state, with
+callback associated with the state.
+
+https://lore.kernel.org/lkml/20250515182322.117840-1-pasha.tatashin@soleen.=
+com/
+
+I copy paste some of Pasha's LUO state here:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3Dquote=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+LUO State Machine and Events:
+
+NORMAL:   Default operational state.
+PREPARED: Initial preparation complete after LIVEUPDATE_PREPARE
+          event. Subsystems have saved initial state.
+FROZEN:   Final "blackout window" state after LIVEUPDATE_FREEZE
+          event, just before kexec. Workloads must be suspended.
+UPDATED:  Next kernel has booted via live update. Awaiting restoration
+          and LIVEUPDATE_FINISH.
+
+Events:
+LIVEUPDATE_PREPARE: Prepare for reboot, serialize state.
+LIVEUPDATE_FREEZE:  Final opportunity to save state before kexec.
+LIVEUPDATE_FINISH:  Post-reboot cleanup in the next kernel.
+LIVEUPDATE_CANCEL:  Abort prepare or freeze, revert changes.
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3Dquote ends =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+The PCI core register will register as a subsystem to LUO and
+participate in the LUO callbacks.
+1) In NORMAL state:
+The PCI device will register to the PCI subsystem by setting the
+pci_dev->dev.lu.requested flag.
+
+2) PREPARE callback. The PCI subsystem will build the list of the PCI
+devices using the PCI device dependency. VF depends on PF, PCI devices
+depend on the parent bridge.
+
+The PCI subsystem will save the struct pci_dev part of the pci device
+state. Then forward the prepare callback to the PCI devices to
+serialize the PCI devices driver state. The VM  is still running but
+with some limitations. e.g. can't create new DMA mapping. can't attach
+to an additional new vfio_pci device.
+
+3) FREEZE callback: VM is paused. Last change for PCI device to
+serialize the device state.
+
+4) kexec booting up the new kernel.
+
+5) PCI device enumeration and probing. Find the PCI device in the
+serialized preserved device list, restore the device serialized data
+pointer for PCI device. PF device probe(), restores the number of  VF
+and creates the VF, the VF device probe()
+
+6) VM re-attach to the requested PCI device via vfio_pci.
+
+7) FINISH callback. PCI subsystem and PCI devices free their preserved
+serialized data. System go back to NORMAL state.
+
+8) VM resume running.
+
+>
+> >  drivers/pci/ats.c            |  7 ++--
+> >  drivers/pci/iov.c            | 58 ++++++++++++++++++------------
+> >  drivers/pci/msi/msi.c        | 32 ++++++++++++-----
+> >  drivers/pci/msi/pcidev_msi.c |  4 +--
+> >  drivers/pci/pci-acpi.c       |  3 ++
+> >  drivers/pci/pci.c            | 85 +++++++++++++++++++++++++++++-------=
+--------
+> >  drivers/pci/pci.h            |  9 ++++-
+> >  drivers/pci/pcie/aspm.c      |  7 ++--
+> >  drivers/pci/pcie/pme.c       | 11 ++++--
+> >  drivers/pci/probe.c          | 43 +++++++++++++++-------
+> >  drivers/pci/setup-bus.c      | 10 +++++-
+>
+> Then you sprinkle this stuff into files, which have completely different
+> purposes, without any explanation for the particular instances why they
+> are supposed to be correct and how this works.
+
+They follow a pattern that the original kernel needs to write to the
+device and change the device state. The liveupdate device needs to
+maintain the previous state not changed, therefore needs to prevent
+such write initialization in liveupdate case.
+
+I can certainly split it into more patches and group them by functions
+in the later series.
+This patch does it in a whole sale just to demonstrate what needs to
+happen to make a device live update.
+
+>
+> I'm just looking at the MSI parts, as I have no expertise with the rest.
+
+Thank you for your feedback, that is very helpful.
+
+>
+> > diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+> > index 6ede55a7c5e652c80b51b10e58f0290eb6556430..7c40fde1ba0f89ad1d72064=
+ac9e80696faeab426 100644
+> > --- a/drivers/pci/msi/msi.c
+> > +++ b/drivers/pci/msi/msi.c
+> > @@ -113,7 +113,8 @@ static int pci_setup_msi_context(struct pci_dev *de=
+v)
+> >
+> >  void pci_msi_update_mask(struct msi_desc *desc, u32 clear, u32 set)
+> >  {
+> > -     raw_spinlock_t *lock =3D &to_pci_dev(desc->dev)->msi_lock;
+> > +     struct pci_dev *pci_dev =3D to_pci_dev(desc->dev);
+> > +     raw_spinlock_t *lock =3D &pci_dev->msi_lock;
+> >       unsigned long flags;
+> >
+> >       if (!desc->pci.msi_attrib.can_mask)
+> > @@ -122,8 +123,9 @@ void pci_msi_update_mask(struct msi_desc *desc, u32=
+ clear, u32 set)
+> >       raw_spin_lock_irqsave(lock, flags);
+> >       desc->pci.msi_mask &=3D ~clear;
+> >       desc->pci.msi_mask |=3D set;
+> > -     pci_write_config_dword(msi_desc_to_pci_dev(desc), desc->pci.mask_=
+pos,
+> > -                            desc->pci.msi_mask);
+> > +     if (!pci_lu_adopt(pci_dev))
+> > +             pci_write_config_dword(pci_dev, desc->pci.mask_pos,
+> > +                                    desc->pci.msi_mask);
+>
+> This results in inconsistent state, which is a bad idea to begin
+> with. How is cached software state and hardware state going to be
+> brought in sync at some point?
+
+Yes, to make the interrupt fully working we need to tell the new
+kernel about the previous kernel's interrupt descriptor in IOMMU etc.
+As it is, the liveupdate device interrupt is not fully working yet.
+David is working on the interrupt and later there will be an interrupt
+series to make interrupt working with liveupdate devices. This is just
+the first baby step.
+
+>
+> If you analyzed all places, which actually depend on hardware state and
+> make decisions based on it, for correctness, then you failed to provide
+> that analysis. If not, no comment.
+
+Let me clarify. This avoid writing to devices only applies to
+liveupdate devices. Only between FREEZE and FINISH. After the LUO
+finish(), LUO is back to normal state again. The device can be
+writable again as normal, most likely by the VM. We don't want the
+device state to change between FREEZE and FINISH.
+
+>
+> >       raw_spin_unlock_irqrestore(lock, flags);
+> >  }
+> >
+> > @@ -190,6 +192,9 @@ static inline void pci_write_msg_msi(struct pci_dev=
+ *dev, struct msi_desc *desc,
+> >       int pos =3D dev->msi_cap;
+> >       u16 msgctl;
+> >
+> > +     if (pci_lu_adopt(dev))
+> > +             return;
+> > +
+> >       pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
+> >       msgctl &=3D ~PCI_MSI_FLAGS_QSIZE;
+> >       msgctl |=3D FIELD_PREP(PCI_MSI_FLAGS_QSIZE, desc->pci.msi_attrib.=
+multiple);
+> > @@ -214,6 +219,8 @@ static inline void pci_write_msg_msix(struct msi_de=
+sc *desc, struct msi_msg *msg
+> >
+> >       if (desc->pci.msi_attrib.is_virtual)
+> >               return;
+> > +     if (pci_lu_adopt(to_pci_dev(desc->dev)))
+> > +             return;
+>
+> So you don't allow the new kernel to write the MSI message, but the
+> interrupt subsystem has this new message and there are places which
+> utilize that cached message. How is this supposed to work?
+
+We don't allow the PCI subsystem or driver to write the MSI message
+before FINISH.
+There are two possible ways. 1) Have someone save the incoming MSI
+message somehow, and re-deliver them after the FINISH call. 2) Don't
+save the MSI message between FREEZE and FINISH. At finish, deliver one
+spurious interrupt to the device driver, so the device driver can have
+a chance to check if there is any pending work that needs to be done.
+It is possible that no MSI has been dropped, the driver finds out
+there is nothing that needs to be done. We expect the driver can
+tolerate such one time spurious interruptions. Because spurious
+interruptions can happen for other reasons, that should be fine? Let
+me know if there is a case where this kind of spurious interrupt can
+cause a problem, we are very interested to know.
+
+>
+> >       /*
+> >        * The specification mandates that the entry is masked
+> >        * when the message is modified:
+> > @@ -279,7 +286,8 @@ static void pci_msi_set_enable(struct pci_dev *dev,=
+ int enable)
+> >       control &=3D ~PCI_MSI_FLAGS_ENABLE;
+> >       if (enable)
+> >               control |=3D PCI_MSI_FLAGS_ENABLE;
+> > -     pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, control)=
+;
+> > +     if (!pci_lu_adopt(dev))
+> > +             pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, =
+control);
+>
+> The placement of these conditionals is arbitrary. Some are the begin of
+> a function, others just block the write. Is that based on some logic or
+> were the places selected by shabby AI queries?
+They all can be converted to the pattern as:
+if (!pci_luo_adopt(dev))
+      pci_write_config_xxx().
+
+Sometimes I choose to return early if there is multiple write but not
+data stored in struct pci_dev. Mostly just try to reduce the number of
+if (!pci_luo_adopt(dev)). I am not satisfied with this change yet. The
+goal of this patch is to show what effect needs to happen, we can
+discuss better ways to do it.
+
+>
+> >  static int msi_setup_msi_desc(struct pci_dev *dev, int nvec,
+> > @@ -553,6 +561,7 @@ static void pci_msix_clear_and_set_ctrl(struct pci_=
+dev *dev, u16 clear, u16 set)
+> >  {
+> >       u16 ctrl;
+> >
+> > +     BUG_ON(pci_lu_adopt(dev));
+>
+> Not going to happen. BUG() is only appropriate when there is absolutely
+> no way to handle a situation. This is as undocumented as everything else
+> here.
+
+Agree. This is some developing/debug stuff left over. I haven't
+encountered msix_clear_and_set_ctrl() in my test. I will remove the
+bug in the next version.
+
+>
+> >       pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &ctrl);
+> >       ctrl &=3D ~clear;
+> >       ctrl |=3D set;
+> > @@ -720,8 +729,9 @@ static int msix_capability_init(struct pci_dev *dev=
+, struct msix_entry *entries,
+> >        * registers can be accessed.  Mask all the vectors to prevent
+> >        * interrupts coming in before they're fully set up.
+> >        */
+> > -     pci_msix_clear_and_set_ctrl(dev, 0, PCI_MSIX_FLAGS_MASKALL |
+> > -                                 PCI_MSIX_FLAGS_ENABLE);
+> > +     if (!pci_lu_adopt(dev))
+> > +             pci_msix_clear_and_set_ctrl(dev, 0, PCI_MSIX_FLAGS_MASKAL=
+L |
+> > +                                         PCI_MSIX_FLAGS_ENABLE);
+>
+> And for enhanced annoyance you sprinkle this condition everywhere into
+> the code and then BUG() when you missed an instance. Because putting it
+> into the function which is invoked a gazillion of times would be too
+> obvious, right? That would at least be tasteful, but that's not the
+> primary problem of all this.
+>
+> Sprinkling these conditionals all over the place is absolutely
+> unmaintainable, error prone and burdens everyone with this insanity and
+> the related hard to chase bugs.
+
+If you prefer, I can move them all into the pci_config_write. We
+actually start with pci_config_write_xxx(). But that solution has its
+own problem as well.  For starters, the function name does not reflect
+what the function actually does any more. Also for the complicated
+case, where liveupdate does need to write some config register but not
+the other. e.g. From the live update point of view, PF devices
+shouldn't write to SR-IOV related registers that change the VF devices
+number. But PF devices should be able to tolerate some other config
+space write, because the VM is not using the PF device. The PF device
+state can be changed without impacting the VM.
+It is going to be unmaintainable to make a complicated logic inside
+pci_config_write_xxx(), depending on which caller and what state, what
+is allowed and what is not.
+
+I can discuss and try different approaches to address this problem. I
+understand it is a hard problem. I don't have a perfect solution
+without cons. This is just the first baby step to demonstrate what is
+the resulting effect we want. Then we can shape the code to our
+liking. I am happy to explore other approaches as well.
+
+>
+> Especially as there is no concept behind this and zero documentation how
+> any of this should work or even be remotely correct.
+
+I hope the above description can help you understand better why we
+want to do it and the approach we take. I am happy to answer questions
+if you have any. Mind you that I don't have all the answers. It is
+part of the journey to find the best solution.
+>
+> Before you start the next hackery, please sit down and write up coherent
+> explanations:
+>
+>   What is the general concept of this?
+
+See above.
+
+>
+>   What is the exact state in which a device is left when the old kernel
+>   jumps into the new kernel?
+
+The device allows DMA to the mapping region during PREPARE and raise
+interrupt. The interrupt handler will not be able to run during kexec
+black out period (between freeze and finish). Other than the state
+store in the device, there is also a PCI subsystem and device driver
+state serialized in the preserved folio for the next kernel to
+interrupt.
+
+>   What is the state of the MSI[-X] or legacy PCI interrupts at this
+>   point?
+
+The current approach is that, just drop the interrupt during black out
+period (between freeze and finish) then deliver a spurious interrupt
+to the device at finish(), that gives the device driver a chance to
+perform the interrupt handler action which can't happen in black out.
+
+>
+>   Can the device raise interrupts during the transition from the old to
+>   the new kernel?
+
+Yes, can raise interrupt but interrupt handle won't able to run during
+black out.
+After finish() it is business as usual.
+>
+>   How is the "live" state of the device reflected and restored
+>   throughout the interrupt subsystem?
+
+Those are very good questions. Current approach just drop them and use
+the spurious interrupt to catch up in the end.
+>
+>   How is the device driver supposed to attach to the same interrupt
+>   state as before?
+
+We can't if we did not save the interrupt state changed during black
+out. Current approach is just using a spurious interrupt to catch up
+in finish().
+
+>
+>   How are the potentially different Linux interrupt numbers mapped to
+>   the previous state?
+The IRQ number will remain the state cross kexec. However the
+interrupt descriptor address might have changed in the new kernel. We
+need to save some of the interrupt descriptor and interrupt state into
+the preserved folio for the next kernel to rebuild. To be continued in
+the interrupt series. Not covered by this patch series yet.
+>
+> Before this materializes and is agreed on, this is not going anywhere.
+
+Those are very good questions. Hopefully I have answered some of it.
+Please let me know if you have more questions I can clarify.
+
+Again this is just an RFC to show what was the resulting effect we
+want to get from the PCI device livedupate. It is not complete nor
+perfect. I am happy to explore different approaches.
+
+Thanks for the questions. I still owe you a write up document for the
+PCI device liveupdate. I will work on that.
+
+Hope that helps explain some of the background and approach. It is not
+a substitution of the document. I am working on that and will include
+it in the next version.
+
+Chris
+
+
+
+Chris
 
