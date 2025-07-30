@@ -1,123 +1,113 @@
-Return-Path: <linux-pci+bounces-33154-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33155-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC70FB15A0D
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 09:57:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45C3AB15A23
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 10:03:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6CDF3A5AD1
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 07:56:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 48F10166597
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 08:03:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50257290092;
-	Wed, 30 Jul 2025 07:56:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20EF5235046;
+	Wed, 30 Jul 2025 08:03:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EJjjYj2u"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Phq6ne8j"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C807291C3D
-	for <linux-pci@vger.kernel.org>; Wed, 30 Jul 2025 07:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA7D1D5AC6;
+	Wed, 30 Jul 2025 08:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753862214; cv=none; b=pdc5yB6xTFGtibXcK8jdbMfVRgOGRFcXEDAhOw6S5+nxEM/xXG+ZSOnNZyyog5hIfR2lftUkOpkdNTnVOS6jaNW+PWeUHXLNnr4eWI7WVgG899P20BCrr+xkxlrHRmmirp5nk/dNno0Ea4x+3vsca4AOXPvUYSzhPQjO+hY1iHE=
+	t=1753862604; cv=none; b=jviImF74GiapGvAs8Fbapl946Bu0iEPZrGXJyXynQc1ZDe2X8WjXZCoA5Ozd+Nzy3mdj5QsQ0mgN9ugmyBjvgKsoSe32mqgagapsV9vpz06yi4JX1NH9bCe9f04aqMqB7qFBH/xUpB/9FByPulWMX1Axk2SaFX4zf6+qy6kzm/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753862214; c=relaxed/simple;
-	bh=GLaeAIqc00e+USukSnbAVMe5TgFLMlpYRPa2jWKuX/g=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=f+M+ub72Yw3esG0H9VBfFbkGR6WWsXYXy/2CVIQUmR/NFqWS9A3kE943fuOkO6nDV475ZWvwToAdbhvTZioklgm5eq/E6O7n4zgOiuhbABsTOrYDnRnXuYmOcI4wZ1oF7qkq4dJzMOco8ic3hWCZaDllr93wOTxevGA6B1b6QG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EJjjYj2u; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-451d3f03b74so32463935e9.3
-        for <linux-pci@vger.kernel.org>; Wed, 30 Jul 2025 00:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753862211; x=1754467011; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GLaeAIqc00e+USukSnbAVMe5TgFLMlpYRPa2jWKuX/g=;
-        b=EJjjYj2u10QgmPAXA/Al+RTNAf9Au5dPvN1pG/QbHUjPAuiHejzV+XDfYSxlFi+kUU
-         8SdLROlzM4rBZnCm4oIHeJeWR9neEqA+QhFIk5CjiKAS2Iy3j52QaGdp9M3jjODLU7H0
-         8mxdPDEKCgMyp0cUfGOewwfidJQaqe968tsEcL10zA9k9bhPgpTmmGj3HYj7UapUmGQw
-         WYUnFjd9bxRV3neQdcSy2EfHDlkCaXz1RlnNRZxrknYQxh32biIjLItVkxQDQEU8/Wav
-         5A5+LLFzb17JuU8yWQC1YPI2nURj+XLMW7zhoQsYbDnqTpSWbH2A8TnKZTzNpFxU+xCl
-         mwVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753862211; x=1754467011;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GLaeAIqc00e+USukSnbAVMe5TgFLMlpYRPa2jWKuX/g=;
-        b=esZddfVebAivqeuuOajdgugWOH+3Gu/Jgif9iYX46fF4/itySoOkR0zVlnerjN6bjo
-         7WJlYsIaho8B4anXbHaUN8xNqPD3B0FpgKQ/uPjOAf+o0IGWfqABqS4iOnt0VxgZ9z3H
-         eUcYMjmroXS2kN1YdJhD+Anv875p0RiHl+DrxsN7t+NgqQkydyLPFEk6BjDdGWmt+Q5Y
-         G/+iqZQilD50X22dXeZ6gjeABBUlU2VROeuQq3xvtef6zpSiujRCd12u4Nqo7DKj+I8O
-         bZ3KpVsU7M2e6nq/QpsUGtf8qsptm+IOFg49QZz+qWECKg5FkoVatRIojfI8l6mLUJAi
-         CCEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHAYAmcm+cRvn3RBJTAgZ6kykzo5u0ovGzQIhd4fR3je+zB16coh3IZ9Q776FdBKPSoIbz1QUjRMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylrP24oBmRGLpkxZRj6ThsR3Lv9w0Z2gu4MlFqGGKYoAIgbAHr
-	2/qwTGYQN0hEDh0IYBDBq3PBd2+Zz9PfMA4zOYY3ipyow0nKjGoo9PcCD1OrzFEksduNXXfLUP/
-	J3kfIJEOpw+JbdWmxgg==
-X-Google-Smtp-Source: AGHT+IGDvFaMLBXu0klWBt4C95avW2dNPswDP4VOmyuf+KsNi7Hgiwedn0E92QWyR5XhNzUkZu0QiLLjbVDSw60=
-X-Received: from wmrn20.prod.google.com ([2002:a05:600c:5014:b0:458:709b:28a0])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:8706:b0:456:1e4a:bb5b with SMTP id 5b1f17b1804b1-45892cea07fmr18028965e9.32.1753862210888;
- Wed, 30 Jul 2025 00:56:50 -0700 (PDT)
-Date: Wed, 30 Jul 2025 07:56:50 +0000
-In-Reply-To: <DBOMC68QGS76.2MYEXRE1I34VV@kernel.org>
+	s=arc-20240116; t=1753862604; c=relaxed/simple;
+	bh=HEgPRodovJalgZ/g1kb94tmKLk2QtGEpj7zW37uzKec=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Peyl2xsLGon5YcrfgY8l/khWyYWW5Rd71BduZ4ixczHnGave63Dd5jd6a8sHk3se5KzCpOOklZrX6r3gM1OhDa3XMQaH+HDTDs6z0FluAiEfBlgym4iXBGouTqugX+t2UokHhfvGUQclmhTjQBNyiM5WYKqHMdcCLHOvZPEhq6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Phq6ne8j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C439C4CEE7;
+	Wed, 30 Jul 2025 08:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753862603;
+	bh=HEgPRodovJalgZ/g1kb94tmKLk2QtGEpj7zW37uzKec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Phq6ne8jeiHRh+g/jyaIbVu24BslXtOFr5jlNeVkeq5Pd4JP4IP/urevgfTH7y8Ng
+	 IM4N1EVTTw6lIyVWLMQ5K0tdY5QpmQj79Qaao8gIoOMRohyP/vZ3M9ekEqXib6GZL+
+	 Vd2t51G/uWQd6oD58QoSzV0VWLuJ8QqSIDQStXuXWQ5G8gEHsTZDXx81LTTpzH1daZ
+	 ezVZXuukAwl9TGk23btBxOterY1GjPt8BN4i8ULPTxzKhdnMZ1IhejtxHnXHMC5Wo6
+	 rXCmw6UrvY7ectigm1BvmYyiZfOF9dlvJf0mlr92yHUxxT/i06Xv2nhdtuZ9olDn3p
+	 c3RNuuUGIqBAg==
+Date: Wed, 30 Jul 2025 11:03:17 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Logan Gunthorpe <logang@deltatee.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, Christoph Hellwig <hch@lst.de>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
+	Jens Axboe <axboe@kernel.dk>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 05/10] PCI/P2PDMA: Export pci_p2pdma_map_type() function
+Message-ID: <20250730080317.GO402218@unreal>
+References: <82e62eb59afcd39b68ae143573d5ed113a92344e.1753274085.git.leonro@nvidia.com>
+ <20250724080313.GA31887@lst.de>
+ <20250724081321.GT402218@unreal>
+ <b32ae619-6c4a-46fc-a368-6ad4e245d581@deltatee.com>
+ <20250727190514.GG7551@nvidia.com>
+ <d69e0d74-285e-4cde-a2e4-a803accfa9e1@deltatee.com>
+ <20250728164136.GD402218@unreal>
+ <d3c8c573-f201-4450-9400-cc3ccafd2c04@deltatee.com>
+ <20250728231107.GE36037@nvidia.com>
+ <f332e2b9-151f-49ca-ac0c-8c9494c38027@deltatee.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250729102953.141412-1-abhinav.ogl@gmail.com>
- <CANiq72kRu5Wd-3Tk7px=2Y5kU5Tq2fQch=+f3ExYSrJa2+tSSg@mail.gmail.com> <DBOMC68QGS76.2MYEXRE1I34VV@kernel.org>
-Message-ID: <aInQQqmDUZy40t3E@google.com>
-Subject: Re: [PATCH v2] rust: pci: Use explicit types in FFI callbacks
-From: Alice Ryhl <aliceryhl@google.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, herculoxz <abhinav.ogl@gmail.com>, 
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
-	a.hindborg@kernel.org, tmgross@umich.edu
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f332e2b9-151f-49ca-ac0c-8c9494c38027@deltatee.com>
 
-On Tue, Jul 29, 2025 at 04:45:50PM +0200, Danilo Krummrich wrote:
-> On Tue Jul 29, 2025 at 12:52 PM CEST, Miguel Ojeda wrote:
-> > On Tue, Jul 29, 2025 at 12:30=E2=80=AFPM herculoxz <abhinav.ogl@gmail.c=
-om> wrote:
-> >>
-> >> and improves ABI
-> >> correctness when interfacing with C code.
-> >
-> > I think this still sounds like it is fixing an ABI issue -- I would
-> > probably just remove that second sentence.
->=20
-> I agree, the types exported via prelude are the ones from kernel::ffi.
->=20
-> > (But no need for a v3 -- I think it can be fixed on apply unless
-> > Danilo wants it).
->=20
-> Yeah, I can fix it up when applying the patch.
->=20
-> I also think the subject from v1, i.e. "use c_* types via kernel prelude"=
-, was
-> better. This one is a bit misleading, the types in the FFI callbacks are =
-already
-> explicit.
->=20
-> Unless I hear otherwise, I will also revert the subject to the one of v1 =
-when I
-> apply the patch.
+On Tue, Jul 29, 2025 at 02:54:13PM -0600, Logan Gunthorpe wrote:
+> 
+> 
+> On 2025-07-28 17:11, Jason Gunthorpe wrote:
+> >> If the dma mapping for P2P memory doesn't need to create an iommu
+> >> mapping then that's fine. But it should be the dma-iommu layer to decide
+> >> that.
+> > 
+> > So above, we can't use dma-iommu.c, it might not be compiled into the
+> > kernel but the dma_map_phys() path is still valid.
+> 
+> This is an easily solved problem. I did a very rough sketch below to say
+> it's really not that hard. (Note it has some rough edges that could be
+> cleaned up and I based it off Leon's git repo which appears to not be
+> the same as what was posted, but the core concept is sound).
 
-With the above changes:
+I started to prepare v2, this is why posted version is slightly
+different from dmabuf-vfio branch.
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+In addition to what Jason wrote. there is an extra complexity with using
+state. The wrappers which operate on dma_iova_state assume that all memory,
+which is going to be mapped, is the same type: or p2p or not.
+
+This is not the cased for HMM/RDMA users, there you create state in
+advance and get mixed type of pages.
+
+Thanks
 
