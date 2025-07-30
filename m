@@ -1,120 +1,116 @@
-Return-Path: <linux-pci+bounces-33158-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33159-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BACEB15B1C
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 11:00:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC296B15B32
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 11:05:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DD10418A5B73
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 09:00:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A44E18A5D13
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 09:05:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8550292B52;
-	Wed, 30 Jul 2025 08:59:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 237631DF738;
+	Wed, 30 Jul 2025 09:05:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/5jUloS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Js3erVtJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F64292B48;
-	Wed, 30 Jul 2025 08:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B5D224FA;
+	Wed, 30 Jul 2025 09:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753865942; cv=none; b=j5FdC+P5ERNZe1qd2nYC32NCMr7kD54j8SneOogqNRa7nivtko4gkMMojuSMjfx19AOM7LFYkeEY5QwEBZC5FTDJZ3kc4W0xsgKqnlZXEoOfH6aPmDhKiF6pcWC91dade0Sx+rBUxukUkpqP27PBSBgPfslZfgfWtsPBBRa3bTI=
+	t=1753866331; cv=none; b=cWjeqQuhqBEItW1lQlTuvFkclEDDBeN47UNW1YOPCYr1fvXQ1biL8cBMzxcQv4bzSa1ksnTwMqzF8iwDuI6M+g+smyM2UawetfzXULs9MsTFMN/pkVz+q5WjXsHp8HSoSmn67NPVLrA+nQM7YAeJnJUQook/6nxy0KNkC1SAWAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753865942; c=relaxed/simple;
-	bh=zT4NPRZ9FMf/6OItmdKPO5L1pWmoqk9QHmm4Af0TsIc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WHSdK8luAZ2VKZtVvZIZZqUgr8oRByt9KTUw8SoPKiO8s9VShk95WhSLwT7pY2l2Xygra5ca9sSP6972pHk2kOzTfHrr/miCw+5pmHS8pwWBAJHj8padffXIzhmCwV6plKXrrH0F5gRVrHQN+2CAgoUU7rpcmjR1fbtt+ciMakg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/5jUloS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 424B6C4CEE7;
-	Wed, 30 Jul 2025 08:58:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753865942;
-	bh=zT4NPRZ9FMf/6OItmdKPO5L1pWmoqk9QHmm4Af0TsIc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=m/5jUloSppv6eyK+1hX9XhjbR4IcMIsoyFre0AlROlWOpBerfvgINP56Ul0eWnUZg
-	 3NcPCO02sfLYFVo0ehYnns8qROTmr5G2oONIEIWLkN8LR4ojxNS0TyWmr/9awAxRmc
-	 7vVDlZ60VAvif2B3xGJIbqB6sUrq0Utxp7LTtCUIi+pDRoa7FdEOOPtWe36Mlce0fC
-	 8L0AM3W0J24SxOFvQjw7OqciPVOie6yjKho7AvST6r7kdcSK+L8/MZUVKqKnYXKB66
-	 bifB1pzxHbXedXKK/QQlTuBsIIv+JC1kZqyyt8tEttpdjYMBL5c17H829GJJaS7KBp
-	 xwvmQPTgP2Tcg==
-X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, aik@amd.com,
-	lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [RFC PATCH v1 12/38] coco: host: arm64: CCA host platform
- device driver
-In-Reply-To: <20250729182244.00002f4f@huawei.com>
-References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
- <20250728135216.48084-13-aneesh.kumar@kernel.org>
- <20250729182244.00002f4f@huawei.com>
-Date: Wed, 30 Jul 2025 14:28:55 +0530
-Message-ID: <yq5ao6t29hrk.fsf@kernel.org>
+	s=arc-20240116; t=1753866331; c=relaxed/simple;
+	bh=/EsMy17JElruVccra2rJNhXuxYY654TvWWIqnzkBzaM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QZeGHQdnwkNmmguGPW9HDx5GGFV0mF4zsVHZYYvZN36dePM++VWtmSWUISNlU8xyA3zeqy7pEGL9N/z8iry51WPRiw8nvjWVEkRoEL4dHVeyV2nv0vR5OWp2iP0EGz/0w3Dl42NeIFIlQDIq21T1HhgZ7wfarH7zjAN+byC0dYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Js3erVtJ; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2400b3008e8so3704125ad.3;
+        Wed, 30 Jul 2025 02:05:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753866329; x=1754471129; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/EsMy17JElruVccra2rJNhXuxYY654TvWWIqnzkBzaM=;
+        b=Js3erVtJzMWenl7RkMfEez/mJAlc710TMaO6Tp8FVMyaskKb+HQ8NUQIsbRQwjbZGu
+         nVt/vWVBIQSA1LbCm3p+vfenj40mR+kXbnGwtEwMpNbcoS8w4RAitsJdD5MS8rVRYV17
+         fyGsGZ0w8Xm03vyPF7oijm3Ru6JuPSY9QAuLf/+yNVhgXGKnGCec2zaIyTTpABePo/mb
+         hnJEqQYFhA5W3CBRdEB+HSwYxZ3ua8MA4jgrZ/IOeJ5NzDqkTVvhWY0b4o52YbvhiRyL
+         vB60o7o3xOT8LahsheDYFmg2ke7kWyja2ikWq7Zclfe0fs4lXvd4bov/BvlOSUE/Z+NI
+         MONw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753866329; x=1754471129;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/EsMy17JElruVccra2rJNhXuxYY654TvWWIqnzkBzaM=;
+        b=O/mF1Fjn6AZFFdHZGeEdPXmnYoadE/bEpNb9s5fFeVF/darVFkZLsiwX8pIPdIhNIW
+         MW7kATxOZBWMJKlsmmzxhuDgn3jOoanIK34LWhm5aY6VapskSBad+djrLgQIws50Q4HZ
+         WMjUoR4RdetJrgMbuiKaAfZcutVcUg1R6+zxOKHOhFSRwjntdW84xvfSMC3/DE//sRfI
+         dQ2Z+qmyfTlk5yxglzwwWNUCnXjI6tNjBvvAQjgvvoK6QwK7kZ7LCPoWg08qicAk+rVp
+         DJzlcYlhdI9XCpHbBs3cT3QeJgtQCqkj+1cExkVqimOBg+E9CBwz7fqqMbBOqJWXLjhj
+         o3wA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNK1p4hRqOrf4gqUYLCQwjI31dCp+Tr5qiejH6xmIx70wvux7lceZVYPfm2UNEzxRIj4X9odiVIeIMtiQ=@vger.kernel.org, AJvYcCXy5z2IzB2Sl5ZvA46gqkQB1oacrfGhaVeBHvwdQGt6qZ/I6OWKZCeAdZ70BbD/ahur1NfWYncT211s@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUjbHNV8OY3KtZy6/f1ZnMKWjKy9Emu40Hk3XywKPYAPiOZQXr
+	N1Ikk2JhbKzDgV+/+sFvFkcnf++GYo0FsBIwCxnHX2JQxE8+7fpi9z8N+UJIG5hX3p/95oCa556
+	iqWBNxWRkgL4ZXjy8RaGA6Kqyoae8uyxTK+cm
+X-Gm-Gg: ASbGnctMGWFeHptNS+G6gEMI8M5Y6pfwng2Pz3+aewNexm+XeWillL4celFyKulsOQO
+	VQxPx4bQliqBc+mK5VDc7uJiN6AKN5UJczci+aDZNQxls6nsiCj77+D2VPSJ26L2iNRFxCM80RF
+	PrdEdl+HPVna4EWsbs8R4qnw9hEpMMCLV3AULpHN2xqROFFIzlp1/72L092Q6GYLZJn3jvZpYYh
+	Pikbgdx
+X-Google-Smtp-Source: AGHT+IGySRAOV+djesXDaPR4TJ3aHBZNppgospN11oNLqL5TYtRHOtJyQQTzANoECnSbt+2wN+anMAN9utsfht0XdN0=
+X-Received: by 2002:a17:902:d50d:b0:22e:62c3:8c5d with SMTP id
+ d9443c01a7336-24096b0c531mr19943065ad.8.1753866328704; Wed, 30 Jul 2025
+ 02:05:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250730013417.640593-1-apopple@nvidia.com>
+In-Reply-To: <20250730013417.640593-1-apopple@nvidia.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 30 Jul 2025 11:05:15 +0200
+X-Gm-Features: Ac12FXwbXvIMu5qIoQekmsCAUtlTUoCMVOFLDM1LV1SLDgQ3ZVljXgRFPwoAfMA
+Message-ID: <CANiq72mt3xaDCiGs30XG6VkEJrEj8KnHfjDFdhrj5qgW-dTgdw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] rust: Update PCI binding safety comments and add
+ inline compiler hint
+To: Alistair Popple <apopple@nvidia.com>
+Cc: rust-for-linux@vger.kernel.org, Danilo Krummrich <dakr@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	John Hubbard <jhubbard@nvidia.com>, Alexandre Courbot <acourbot@nvidia.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
-
-> On Mon, 28 Jul 2025 19:21:49 +0530
-> "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
+On Wed, Jul 30, 2025 at 3:34=E2=80=AFAM Alistair Popple <apopple@nvidia.com=
+> wrote:
 >
+> Cc: linux-kernel@vger.kernel.org
 
-...
+I think this list of Ccs is automated, given even the LKML is
+included, but the Cc: tag inside the commit message is not meant to be
+used to mention every maintainer/reviewer, i.e. it is normally used
+when you want to document that someone was contacted (i.e. for a
+particular reason, not in general).
 
->> +
->> +#include "rmm-da.h"
->> +
->> +/* Number of streams that we can support at the hostbridge level */
->> +#define CCA_HB_PLATFORM_STREAMS 4
->> +
->> +/* Total number of stream id supported at root port level */
->> +#define MAX_STREAM_ID	256
->> +
->> +DEFINE_FREE(vfree, void *, if (!IS_ERR_OR_NULL(_T)) vfree(_T))
->> +static struct pci_tsm *cca_tsm_pci_probe(struct pci_dev *pdev)
->> +{
->> +	int rc;
->> +	struct pci_host_bridge *hb;
->> +	struct cca_host_dsc_pf0 *dsc_pf0 __free(vfree) =3D NULL;
->
-> Read the stuff in cleanup.h and work out why this needs
-> changing to be inline below and not use this NULL pattern here
-> (unless you like grumpy Linus ;)
->
-> Note that with the err_out, even if you do that you'll still be
-> breaking with the guidance doc (and actually causing undefined
-> behavior :)  Get rid of those gotos if you want to use __free()
->
->
+Otherwise, all commits would have very long lists of Ccs and the value
+of the tag is diminished.
 
-I=E2=80=99ve already fixed up similar cases by removing the goto based on c=
-leanup.h
-docs in other functions.I must have missed this one.
-
-By the way, isn't using the `NULL` pattern acceptable when there are
-no additional lock variables involved (ie, unwind order doesn't matter)?
-Or should we always follow the pattern below regardless?
-
-	struct cca_host_dsc_pf0 *dsc_pf0 __free(vfree) =3D
-		vcalloc(sizeof(*dsc_pf0), GFP_KERNEL);
-
--aneesh
+Cheers,
+Miguel
 
