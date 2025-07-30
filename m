@@ -1,82 +1,80 @@
-Return-Path: <linux-pci+bounces-33216-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33217-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 430BDB16890
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 23:50:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDE3BB16892
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 23:50:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E954188AF2A
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 21:50:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E4F59169CF8
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 21:50:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 719DA224249;
-	Wed, 30 Jul 2025 21:50:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44CB822331B;
+	Wed, 30 Jul 2025 21:50:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xJH7+eDo"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VjVEWsgo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2080.outbound.protection.outlook.com [40.107.93.80])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2074.outbound.protection.outlook.com [40.107.101.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66331E1A05;
-	Wed, 30 Jul 2025 21:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A323F2222D8;
+	Wed, 30 Jul 2025 21:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.74
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753912226; cv=fail; b=f18Xm9uNgSB45jm3mUwr/ou3nyMXObA5CyT9SBN1z2HEQLFBH2j8cqQz/YsyQMnj94b5SvcqXrf5BmMsNJM2WCeI7XTavUi8AA4RS32GErmN9UplzxnKr+zEnel6Ooe/+C0hpSCDP8QsDmULXA7Di+5Lp9Cifq/pm4//jhXxRFg=
+	t=1753912236; cv=fail; b=ROcxKILfxMzTL363dlptw63WNFVZW5CM8nAiBRNMUt/fXgVacm0q3YyR7nlsZiuvw5p0YZpI77tNPdtOplgZ1nQEelT4fMRoWpqoceaMf0wnWnW+z4UuIlR1B9zoR78ATB4c4BF7i6eXkZvIpc0RxX1bHfREr90raD1njJVozeQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753912226; c=relaxed/simple;
-	bh=mWP4VO0UsH5XVAcgnd1KrOmIbEntR7iwVasgQbowuec=;
+	s=arc-20240116; t=1753912236; c=relaxed/simple;
+	bh=V1ktLKYxuoM2wr07W/9R6nIM7UKRn7aveJz+ywpfjSQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hpN0IGNbDabd4GedisLvA4AziVwu3HNmAdzw7BVudzbASrY/tYMRS5QUjy+CszWtlmNaxXeNiVcajKAvRYsVCdW7l4p7LmpffQvN5q0b3RiX72J6aYpETdmASlpxx6qRdk0mdVD6Uz9Xjv6AOHznRa3kf69yWK9oXxWYQesXelQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xJH7+eDo; arc=fail smtp.client-ip=40.107.93.80
+	 MIME-Version:Content-Type; b=BcryM6zDDHnL9VIrvt80RsuD8WW/UM3eBjv3MN6Rz9Lo6YqAr8i8FzZP5IgaF9GRIliksqc+nJSlqeZlolFSDYc8zCTsieyIzjCkHSNioK6HrVWFE26nVftpZ00GH6TkZ5YjBq14o0UXQUwbfc/B0jRlBGotnG6TRbQWWtmz91s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VjVEWsgo; arc=fail smtp.client-ip=40.107.101.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zP/DlyzZoG3yqFVhoOarWIuphldAxFvgKZF1zrarul8OBwE0LomsC7rvM77bU/pkwD54MslGirI1gtWm8B0UPGXO+0IiW7vetJLUhihd0DWKITr+eXFb0+wU+dI+rbSQk4tHUetE0UieyJmXgMXwmgvQGiNn+6i1kUYx7ADIGAJQUzdUzs7c078OPhyxfLqKp0W5m8IFuKj/hA9UXBi+3IC3kX3OelA3YajlVdcD/4XFZtmyk7luE8dL35WUkwujJg/rMS11hQOhFUyhdUpEtz76bhynXFJ7sZUjqAdvgxp/wR4xBBJiT3wNXm5ynMGgqEcJadc9mqdumEK5CrLeNw==
+ b=umC89W59F1/gzzuhFjD1AVgiQsbhMIdYvz0vj+wJ+1/iNZtOfwTXkIHYs/YrKDunlhhe8nwV4tyY90Krbb51hOU+aqmlIRr4KTvvRwE2HOaBPWN1i2B/E0Eq4NDLMpFr3YQaGIxOQ3JMY8J9c32cNnDxy8Pf2lhTbeevEu1yUZvx6o6DpjDxAWhZYbmKFEpDJvx7QVS6i/4EjLrTuRszoXMOR5/oCjmFy9BQAPYjJb32c6CmJLi9Nhfj6CtfrBx2Qz3YzlAzwGBEPuMHnV+FVMC6d46i8Oj9pAaQC79to094h5Pi0JvohBmDHt7BWq09uWJXYsTavTmV790o7uE/2A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+XBr1fAez3VDNvplE7+dvMOUyys35RFj0pgLLN1j/sQ=;
- b=Bp93ZnI8IH4yG7B4s/BiPiDZ5QsjkbdvPZTfldNIwtHGsNVOydInyvfyVolcPkiWBRFW8IHZ4cpBl4gGtPDKPyGKu90vxt92TxjsvfUNznQLZS7bPJhedrmdmvNyi4lPWdDSTh8CinRpMbDkVEaXd8s/pfi8sP1KEbGlEXyjErdCL+m1MngRKvN8wh/T5235IDUrgZZpscA5R1pDsIYSw2oQjhD39HIG2DPEKgtXFgEiq2whuGLHLPQSCklXOpr60aoAlMWxHnNF4nuY0s+FqpglmCByUIYHgCDJAaSUSLAtNC0wpot+A9tRaVPzeP/f3aALpMP79KL8fjS59K7Xsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
+ bh=zKTHzqd0LwVIuCWgovP7RveFs4+kY3u96G0zccRjoGY=;
+ b=UIIaZgLMf2fMSR0cJNYstoTbSG0FFoFOR8tGc17q0qwnmaALZQXJZ4PISZU0ZYILwtQCsDt5ISd+Rqbctbl10WJQbbPAautwqZ9HfDNzZ+CXERa9bydxMNyXu7lRaTnGu7myYlrQd5vfjvJY8AjfhwnLInk+oeL+bMFjt3KcTPoJ4lLJYgXY/XqSB2wxlcdtIKaqmYRFgx7wDhC5n8rpj5zvSO+gH6RKpT4WkLa/JLN8yU37/sJTKdLskBwuTf1V09kqRVtXFzxJcEZheb/srFPKSH6Anx9Awl0wu9T6f1qjQQiup1UKTdpmgJhhKnIsolOXjrHYkz01zReKK/sozQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
+ is 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=temperror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+XBr1fAez3VDNvplE7+dvMOUyys35RFj0pgLLN1j/sQ=;
- b=xJH7+eDoVFYzbevfw8mddUqHXhd4VrYM/L04/AARAfSk72gFeeFCzkMF3VOdG01cwU4N7paqOidDFTjZCo1PT8bN0CZUDfOrJlASP8MWIl0ONNfP3/jUBByvzqLSpP3lDJx5ChuJfixeka3L4tgYxlM+0SetrL5KsFgrriIRuNQ=
-Received: from BN0PR08CA0026.namprd08.prod.outlook.com (2603:10b6:408:142::28)
- by CH1PR12MB9599.namprd12.prod.outlook.com (2603:10b6:610:2ae::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.12; Wed, 30 Jul
- 2025 21:50:19 +0000
-Received: from MN1PEPF0000F0E1.namprd04.prod.outlook.com
- (2603:10b6:408:142:cafe::d7) by BN0PR08CA0026.outlook.office365.com
- (2603:10b6:408:142::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8989.13 via Frontend Transport; Wed,
- 30 Jul 2025 21:50:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+ bh=zKTHzqd0LwVIuCWgovP7RveFs4+kY3u96G0zccRjoGY=;
+ b=VjVEWsgorUX8zqb0LNvIwV4YZN3J3OMvISK1Hrq67nQtqdfpyBqa1LnQ2NWVvp4IrBa6bAxV0gCiYleACI54jzRfOXxzjLuBqsScqIpY1MDOOec2e00pROEEMnhZDuW09oybRLVLL6pQd6cGwKFXRqibrK8g5ERBB6lTQDVaFEQ=
+Received: from BL1PR13CA0069.namprd13.prod.outlook.com (2603:10b6:208:2b8::14)
+ by DM4PR12MB6184.namprd12.prod.outlook.com (2603:10b6:8:a6::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8989.12; Wed, 30 Jul 2025 21:50:32 +0000
+Received: from MN1PEPF0000F0DF.namprd04.prod.outlook.com
+ (2603:10b6:208:2b8:cafe::32) by BL1PR13CA0069.outlook.office365.com
+ (2603:10b6:208:2b8::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8989.11 via Frontend Transport; Wed,
+ 30 Jul 2025 21:50:32 +0000
+X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is
+ 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=temperror action=none header.from=amd.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of amd.com: DNS Timeout)
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MN1PEPF0000F0E1.mail.protection.outlook.com (10.167.242.39) with Microsoft
+ MN1PEPF0000F0DF.mail.protection.outlook.com (10.167.242.37) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8989.10 via Frontend Transport; Wed, 30 Jul 2025 21:50:19 +0000
+ 15.20.8989.10 via Frontend Transport; Wed, 30 Jul 2025 21:50:30 +0000
 Received: from SCS-L-bcheatha.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Jul
- 2025 16:50:18 -0500
+ 2025 16:50:30 -0500
 From: Ben Cheatham <Benjamin.Cheatham@amd.com>
 To: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
 	<linux-acpi@vger.kernel.org>
 CC: Ben Cheatham <Benjamin.Cheatham@amd.com>
-Subject: [PATCH 12/16] PCI: PCIe portdrv: Add cxl_isolation sysfs attributes
-Date: Wed, 30 Jul 2025 16:47:14 -0500
-Message-ID: <20250730214718.10679-13-Benjamin.Cheatham@amd.com>
+Subject: [PATCH 13/16] cxl/core, PCI: PCIe portdrv: Add CXL timeout range programming
+Date: Wed, 30 Jul 2025 16:47:15 -0500
+Message-ID: <20250730214718.10679-14-Benjamin.Cheatham@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250730214718.10679-1-Benjamin.Cheatham@amd.com>
 References: <20250730214718.10679-1-Benjamin.Cheatham@amd.com>
@@ -92,165 +90,191 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E1:EE_|CH1PR12MB9599:EE_
-X-MS-Office365-Filtering-Correlation-Id: c8745b11-fedb-4b4d-576b-08ddcfb313d5
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0DF:EE_|DM4PR12MB6184:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a18d14c-92cd-471d-7822-08ddcfb31a9c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?oe5/FeyGzUupHQt3PEMY/Ey6n1Rp9aN+xeSYYAIBFStmtenr9QKe98VWu1eW?=
- =?us-ascii?Q?IN/IU6lyTQH/TLlwSV+dGWG/72PuoQaWPcSez0GBiZ4vD2l7Nok/PSOh7i/Q?=
- =?us-ascii?Q?CIsxHEQxAwE+s1MTs2ZGNhqCdHyKRm8xmwZwnqddGKIuoxrwlhTt1S0xWZfu?=
- =?us-ascii?Q?DWqoAtDuuTEcqHWolZ6cKmIUXAN/Sie2I2dex4yjKYsNIWnQPoZlzI9SbQSE?=
- =?us-ascii?Q?o17Tn23XRP9/nquf6TTC1BBUhm7EQQ7f9Ho4UkYY8iggUNakQ/0JWI8aZZ57?=
- =?us-ascii?Q?YDGlYwvoRzGRfRX06YaWP68uB94y4oAuRd76d3jQGC0DnAL3QMJMgDY027Hn?=
- =?us-ascii?Q?OPLGbgj124KfRGxO/A38QFDBxtcVs1NBHZxmGKdUm8XG9OjuC0H69/Fym/ky?=
- =?us-ascii?Q?rx+hZD3tt+6aNIILJN/lc7l7TKyc8NvuZvsh0U/obXKd0yY5uo2hX6rPlIgz?=
- =?us-ascii?Q?eRXxKu62gye8N2UgiOaWVnFEX/W1pQ/BE+1uoh5B9IFKS4oAhjjPX3SKIjIZ?=
- =?us-ascii?Q?2gDfzlxKiIGWYZcR3M/kXh1WcjJKP+Y2BJ/fMUXp7KNOg+f0rQiwP0H2pSsY?=
- =?us-ascii?Q?MLrGPWI/9JFCaQmNbSB+QCNt/x3AXNv6G/cax0a7CMiC7JsR2NaLoH0Is5m6?=
- =?us-ascii?Q?oz8EJrNWitGIkda4RTozhlg1Hk/jtqO3xCXOMf4IubCKsjV4zt+8pNmmElP2?=
- =?us-ascii?Q?mwdgU1XrJPxz7eRHbH08ZdVjlQatqjjiTkJx4mPofGaJCFb3w/6gpV2RvSns?=
- =?us-ascii?Q?XOLMv0ng4KQ3x+WSMuKPk6KVR5RpncQwpWD9lPNDAM+7LIdU430Y1yYMhrGe?=
- =?us-ascii?Q?j0u79qOauzZ95FQdVHqKLipJ6d8CwnEuCkkwRvUFpVNpyU2nGYhfLHkABkVs?=
- =?us-ascii?Q?ts14pIZX24BtMBjFQYVI/IWg99PYgY2eTuyM2WUWqsXIZXM3X0IYa3M73dwD?=
- =?us-ascii?Q?ED4jRjmNnTmdXrQ61OTWaplJoKkZSnTsbQL8jQ7O/enlZrWT+hYxWD08YwVs?=
- =?us-ascii?Q?a5/gg2lEUfH0JXaptG/rHgUxIEJtpWfG28ZDNqpzfCl8bdE1H+kn3VkFFMFF?=
- =?us-ascii?Q?SXU7EF5o2tKxl/Kej7PQn3sKRnl3ZwTnuB0kNxGc/Cozxx3nD1PREZexYrUV?=
- =?us-ascii?Q?VHSWSdowwX2Y2+W/R8yZTcVFF7aMF6Lcls6vC2CRb3gwDz3tCSEKCNvZN6za?=
- =?us-ascii?Q?EvvGlGSK+4YTY/L6wCmQj2MnzkPd6hi/moEKPdM8wcO+jAB9hiyNmMoAZQge?=
- =?us-ascii?Q?TLDq6yNYC7F5tjCYBiqTtyxe7FQr8uaOE7j5e3K/UpOBKCWn5v/RRAox4NNK?=
- =?us-ascii?Q?ikhuQ94S4fgNqKHla9NFl5xrE48NGAkSMh61Z3pv9M8IhDu4NRmFmP3qNMpv?=
- =?us-ascii?Q?L/LLSPHFm+xLHGZEnJ3PLfPqPmwA7lkIYSaEymWfVHeDKuIg3bjL3t+4WTu8?=
- =?us-ascii?Q?2ysjq0BbLWI0AwV4LzUZZs2VjKeq36jcpcQdXVWNdKARK9Lo30pb/kfdLQlg?=
- =?us-ascii?Q?MRP+tzHttvow4yjCmO6oC7quDRkLj8g9Kjmz?=
+	=?us-ascii?Q?e+yHql1aJj0Eg2N1d29N4n5FavroGCtfUxyphnHB5I9QacDYVsy7J7jIt8wx?=
+ =?us-ascii?Q?846+Tt96JZgdNNMLdHQx0u7Er7UITXWD1zDCWas4Zp8GvuFIBcwfzBNCO0nP?=
+ =?us-ascii?Q?ZUXrylAThZXElPtfbwreg+cUvu3NFLpawNwIaAZCAgrqDuXgrFrF8U3e8uDH?=
+ =?us-ascii?Q?Iom+UE3L4YzomYuceQ+GOh1qNQGzDW0UKD1fkHOOXuwrXojnfq4rYMEJDD8E?=
+ =?us-ascii?Q?g07hSL/Qoh9G0m4StV1LA0HXtHvrfTxKL6NwDjDc5nFApacUi5YiBufG3NCP?=
+ =?us-ascii?Q?3+LqpD7ywHhmydMlIoxEjwoQqDXcRgYp1Il4DOonNL7V3g25BHA0FngR9s++?=
+ =?us-ascii?Q?WGK685a0fW/ZpbzdChBDye8iNiXbiggUBAOuiL2/ioc67Cjn2yjZ6JYIl/yv?=
+ =?us-ascii?Q?72jvWZ8qUeR3QkpcC+NlNn7rgT8BCyGjSqNvlgw8CaRW06sR1pqxGksXdNCc?=
+ =?us-ascii?Q?6UzHpITYqPIpMei4pns19kS0Dd/ZuZtAPcV1yLT1jsD0WtueYgPdPBQ9pGMX?=
+ =?us-ascii?Q?6IE4Z3jhwXIKRkD4fMSRANKzJVB9rlRWycD8Lce+Hzh0mTtrwCBxtMObuhv9?=
+ =?us-ascii?Q?09zp9nJoMo8dxRKNhX+b30O9imoZyTN8S/zscoG8mJYpwFoiwVwCylJVP3yN?=
+ =?us-ascii?Q?jp+ibthJGzuXcXnfLJlZsXBy/hkXPTmJwuIX/yCRHwLE1IfHmO0axs8OON0C?=
+ =?us-ascii?Q?3QbJmWJI1KFfW3PP5CTXovlC/ePaI++ggln3Lg3Z61itASVzT3HBZ/h84h0p?=
+ =?us-ascii?Q?B8uqQkZ0I7/t7wFw5FA0NeF3yidzu9p1KOOIJh1cYqZsLoqOGOTrG/CehO1n?=
+ =?us-ascii?Q?iU8+jdUVuIspQFHWYyTwjQVPoshKcIV6PwSvnHrfR5x/SGv1siq4ypLm1XP6?=
+ =?us-ascii?Q?GqqseqjLXY/kfqvo1l4pv3MLDEi3IoHEyNGRXeEojlHCe31iYmOnfkZ4EPL/?=
+ =?us-ascii?Q?0x3s/AFFjzcrYirpz4FcIZRLMnfeLCGEO9SqsmvQ0s4UHoH1IYUKXHAy4KUA?=
+ =?us-ascii?Q?9oEZIqmlF5iq1MHMS8RnIPlqmm9g4O34eVL/SGCs3zEU3HL/adWMi86Ii0bH?=
+ =?us-ascii?Q?cHBig+Wtv3o0ZL4Oxx0zXRmZNUNzJgDmQvPSRkghbkWdjVWllzO4yc0JqcnS?=
+ =?us-ascii?Q?YjWWnj0t6zur1jSpP8kS4bLqqQAchxxUZkFKzq1Rdc8fVloJwJL2Na0FWKxX?=
+ =?us-ascii?Q?t4jmnNHZ+Xb0n3nbqh7MaiqcCHnFVWmUWYVv6Xv7EEDZXkcaiBXR8mlfyky1?=
+ =?us-ascii?Q?x8V6GgDjfRvBJ4hOi9XLiNcP2YlfURkzFXz3xpsflp/4akq5r51pOD7yvl3o?=
+ =?us-ascii?Q?dVE6y6YGEfB2UHNt028YY6DadPhaxCozpQeofCKqlpQonjVvUccc1rvpUzAo?=
+ =?us-ascii?Q?mQiP9Uv0/qdHtwYYtsVIrPosMF9pqzZIJ0uTiRjOTj5e6BvyZgV6GWollC+S?=
+ =?us-ascii?Q?6mxNoD5J43nwuzXBeYBxSpi2Bqt/F7Jhvd6Xq6uf0pkZa+fe9ZYiQP56pkmS?=
+ =?us-ascii?Q?MXVJpw+3YMgyQNdATHIuv3gSUvCnXq4A2Kug?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2025 21:50:19.4879
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2025 21:50:30.8602
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8745b11-fedb-4b4d-576b-08ddcfb313d5
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a18d14c-92cd-471d-7822-08ddcfb31a9c
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000F0E1.namprd04.prod.outlook.com
+	MN1PEPF0000F0DF.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PR12MB9599
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6184
 
-Add sysfs attributes to enable/disable CXL isolation and transaction
-timeout. The intended use for these attributes is to disable isolation
-and/or timeout as part of device maintenance or hotplug.
+Add functions to enable programming the CXL.mem transaction timeout
+range, if supported. Add a sysfs attribute to the "cxl_isolation" group
+to allow programming the timeout from userspace.
 
-The attributes are added under a new "cxl_isolation" group on the PCIe
-Root Port device.
+The attribute can take either the CXL spec-defined hex value for the
+associated timeout range (CXL 3.2 8.2.4.24.2 field 3:0) or a
+string with the range. The range string is formatted as the range letter
+in uppercase or lowercase, with an optional "2" to specify the second
+range in the aforementioned spec ref.
+
+For example, to program the port with a timeout of 65ms to 210ms (range B)
+the following strings could be specified: "b2"/"B2". Picking the first
+portion of range B (16ms to 55ms) would be: "b"/"B".
 
 Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
 ---
- drivers/cxl/core/port.c          |  29 ++++++
- drivers/pci/pci-sysfs.c          |   3 +
- drivers/pci/pci.h                |   4 +
- drivers/pci/pcie/cxl_isolation.c | 158 +++++++++++++++++++++++++++++++
- include/cxl/isolation.h          |   8 ++
- 5 files changed, 202 insertions(+)
+ drivers/cxl/core/pci.c           |  49 +++++++++++++++
+ drivers/pci/pcie/cxl_isolation.c | 102 +++++++++++++++++++++++++++++++
+ include/cxl/isolation.h          |   3 +
+ 3 files changed, 154 insertions(+)
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 6591e83e719c..b5a306341bb2 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1346,6 +1346,7 @@ static int cxl_dport_enable_timeout_isolation(struct device *host,
- 	if (!(cap & CXL_ISOLATION_CAP_MEM_TIME_SUPP))
- 		cxl_enable_timeout(dport);
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index dd6c602d57d3..616c337c818d 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -1259,3 +1259,52 @@ void cxl_disable_timeout(struct cxl_dport *dport)
  
-+	pcie_update_cxl_isolation_group(dport->dport_dev);
- 	return 0;
+ 	dev_dbg(dport->dport_dev, "Disabled CXL.mem transaction timeout\n");
  }
- 
-@@ -1598,6 +1599,34 @@ struct cxl_port *find_cxl_port(struct device *dport_dev,
- 	return port;
- }
- 
-+/**
-+ * cxl_find_pcie_rp - Find CXL port that contains a CXL-capable PCIe Root Port
-+ * @dport_dev: CXL-capable PCIe Root Port device
-+ * @rp: Pointer to store found dport in
-+ *
-+ * Returns CXL port with elevated reference count if @dport_dev is found
-+ */
-+struct cxl_port *cxl_find_pcie_rp(struct pci_dev *dport_dev,
-+				  struct cxl_dport **rp)
++
++static bool timeout_range_supported(u32 cap, u32 val)
 +{
-+	struct cxl_dport *dport;
-+	struct cxl_port *parent;
++	u32 supported = FIELD_GET(CXL_ISOLATION_CAP_MEM_TIME_MASK, cap);
 +
-+	struct cxl_port *hb __free(put_cxl_port) =
-+		find_cxl_port(&dport_dev->dev, &dport);
-+	if (!hb || !dport)
-+		return NULL;
++	if (!supported)
++		return false;
 +
-+	parent = parent_port_of(hb);
-+	if (!parent || !is_cxl_root(parent))
-+		return NULL;
-+
-+	if (rp)
-+		*rp = dport;
-+
-+	return_ptr(hb);
++	/* CXL 3.2 8.2.4.24.1 field 3:0 */
++	switch (val) {
++	/* Range A (default) */
++	case 0x0:
++	case 0x1:
++	case 0x2:
++		return (supported & BIT(0));
++	/* Range B */
++	case 0x5:
++	case 0x6:
++		return (supported & BIT(1));
++	/* Range C */
++	case 0x9:
++	case 0xA:
++		return (supported & BIT(2));
++	case 0xD:
++	case 0xE:
++	/* Range D */
++		return (supported & BIT(3));
++	default:
++		return false;
++	}
 +}
 +
- static struct cxl_port *find_cxl_port_at(struct cxl_port *parent_port,
- 					 struct device *dport_dev,
- 					 struct cxl_dport **dport)
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 268c69daa4d5..86e8d8d918cf 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1815,6 +1815,9 @@ const struct attribute_group *pci_dev_attr_groups[] = {
- #endif
- #ifdef CONFIG_PCI_DOE
- 	&pci_doe_sysfs_group,
-+#endif
-+#ifdef CONFIG_CXL_ISOLATION
-+	&cxl_isolation_attr_group,
- #endif
- 	NULL,
- };
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index c7fc86d93bea..3510a75c880b 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -677,6 +677,10 @@ static inline void pci_rcec_exit(struct pci_dev *dev) { }
- static inline void pcie_link_rcec(struct pci_dev *rcec) { }
- #endif
- 
-+#ifdef CONFIG_CXL_ISOLATION
-+extern struct attribute_group cxl_isolation_attr_group;
-+#endif
++int cxl_set_timeout_range(struct cxl_dport *dport, u8 val)
++{
++	u32 cap, ctrl;
 +
- #ifdef CONFIG_PCI_ATS
- /* Address Translation Service */
- void pci_ats_init(struct pci_dev *dev);
++	cap = readl(dport->regs.isolation + CXL_ISOLATION_CAPABILITY_OFFSET);
++	if (!(cap & CXL_ISOLATION_CAP_MEM_TIME_SUPP))
++		return -ENXIO;
++
++	if (!timeout_range_supported(cap, val))
++		return -EINVAL;
++
++	ctrl = readl(dport->regs.isolation + CXL_ISOLATION_CTRL_OFFSET);
++	ctrl &= FIELD_PREP(CXL_ISOLATION_CTRL_MEM_TIME_MASK, 0);
++	ctrl |= FIELD_PREP(CXL_ISOLATION_CTRL_MEM_TIME_MASK, val);
++	writel(ctrl, dport->regs.isolation + CXL_ISOLATION_CTRL_OFFSET);
++	return 0;
++}
 diff --git a/drivers/pci/pcie/cxl_isolation.c b/drivers/pci/pcie/cxl_isolation.c
-index 5a56a327b599..9d2ad14810e8 100644
+index 9d2ad14810e8..107201b5843f 100644
 --- a/drivers/pci/pcie/cxl_isolation.c
 +++ b/drivers/pci/pcie/cxl_isolation.c
-@@ -77,6 +77,164 @@ pcie_cxl_dport_get_isolation_info(struct pci_dev *dport_dev)
- 	return get_service_data(to_pcie_device(dev));
+@@ -193,9 +193,111 @@ static ssize_t timeout_ctrl_show(struct device *dev,
  }
+ DEVICE_ATTR_RW(timeout_ctrl);
  
-+static ssize_t isolation_ctrl_store(struct device *dev,
-+				    struct device_attribute *attr,
-+				    const char *buf, size_t n)
++/* CXL 3.2 8.2.4.24.2 CXL Timeout & Isolation Control Register, field 3:0 */
++const struct timeout_ranges {
++	char *str;
++	u8 val;
++} ranges[] = {
++	{ .str = "a", .val = 0x1 },
++	{ .str = "A", .val = 0x1 },
++	{ .str = "a2", .val = 0x2 },
++	{ .str = "A2", .val = 0x2 },
++	{ .str = "b", .val = 0x5 },
++	{ .str = "B", .val = 0x5 },
++	{ .str = "b2", .val = 0x6 },
++	{ .str = "B2", .val = 0x6 },
++	{ .str = "c", .val = 0x9 },
++	{ .str = "C", .val = 0x9 },
++	{ .str = "c2", .val = 0xA },
++	{ .str = "C2", .val = 0xA },
++	{ .str = "d", .val = 0xD },
++	{ .str = "D", .val = 0xD },
++	{ .str = "d2", .val = 0xE },
++	{ .str = "D2", .val = 0xE },
++};
++
++static int timeout_range_str_to_val(const char *str, u8 *val)
++{
++	char val_buf[32] = { 0 };
++	char *start;
++
++	strscpy(val_buf, str, ARRAY_SIZE(val_buf) - 1);
++	start = strim(val_buf);
++	if (!start)
++		return -EINVAL;
++
++	for (int i = 0; i < ARRAY_SIZE(ranges); i++)
++		if (strcmp(start, ranges[i].str) == 0)
++			return ranges[i].val;
++
++	return -EINVAL;
++}
++
++static ssize_t timeout_range_store(struct device *dev,
++				   struct device_attribute *attr,
++				   const char *buf, size_t n)
 +{
 +	struct pci_dev *pdev = to_pci_dev(dev);
 +	struct cxl_port *port;
-+	bool enable;
++	u8 val;
 +	int rc;
 +
-+	rc = kstrtobool(buf, &enable);
-+	if (rc)
-+		return rc;
++	rc = kstrtou8(buf, 0, &val);
++	if (rc && timeout_range_str_to_val(buf, &val) < 0)
++		return -EINVAL;
 +
 +	struct cxl_dport **dport __free(kfree) =
 +		kzalloc(sizeof(*dport), GFP_KERNEL);
@@ -261,21 +285,20 @@ index 5a56a327b599..9d2ad14810e8 100644
 +	if (!port || !(*dport))
 +		return -ENODEV;
 +
-+	if (enable)
-+		cxl_enable_isolation(*dport);
-+	else
-+		rc = cxl_disable_isolation(*dport);
++	if (!(*dport)->regs.isolation)
++		return -ENXIO;
 +
++	rc = cxl_set_timeout_range(*dport, val);
 +	put_device(&port->dev);
 +	return rc ? rc : n;
 +}
 +
-+static ssize_t isolation_ctrl_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
++static ssize_t timeout_range_show(struct device *dev,
++				  struct device_attribute *attr, char * buf)
 +{
 +	struct pci_dev *pdev = to_pci_dev(dev);
 +	struct cxl_port *port;
-+	u32 ctrl;
++	u32 ctrl, val;
 +
 +	struct cxl_dport **dport __free(kfree) =
 +		kzalloc(sizeof(*dport), GFP_KERNEL);
@@ -292,148 +315,43 @@ index 5a56a327b599..9d2ad14810e8 100644
 +	ctrl = readl((*dport)->regs.isolation + CXL_ISOLATION_CTRL_OFFSET);
 +	put_device(&port->dev);
 +
-+	return sysfs_emit(buf, "%lu\n",
-+			  FIELD_GET(CXL_ISOLATION_CTRL_MEM_ISO_ENABLE, ctrl));
++	val = FIELD_GET(CXL_ISOLATION_CTRL_MEM_TIME_MASK, ctrl);
++	for (int i = 0; i < ARRAY_SIZE(ranges); i++)
++		if (ranges[i].val == val)
++			return sysfs_emit(buf, "%s\n", ranges[i].str);
++
++	return -ENXIO;
 +}
-+DEVICE_ATTR_RW(isolation_ctrl);
++DEVICE_ATTR_RW(timeout_range);
 +
-+static ssize_t timeout_ctrl_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t n)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct cxl_port *port;
-+	bool enable;
-+	int rc;
-+
-+	rc = kstrtobool(buf, &enable);
-+	if (rc)
-+		return rc;
-+
-+	struct cxl_dport **dport __free(kfree) =
-+		kzalloc(sizeof(*dport), GFP_KERNEL);
-+	if (!dport)
-+		return -ENOMEM;
-+
-+	port = cxl_find_pcie_rp(pdev, dport);
-+	if (!port || !(*dport))
-+		return -ENODEV;
-+
-+	if (enable)
-+		cxl_enable_timeout(*dport);
-+	else
-+		cxl_disable_timeout(*dport);
-+
-+	put_device(&port->dev);
-+	return n;
-+}
-+
-+static ssize_t timeout_ctrl_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct cxl_port *port;
-+	u32 ctrl;
-+
-+	struct cxl_dport **dport __free(kfree) =
-+		kzalloc(sizeof(*dport), GFP_KERNEL);
-+	if (!dport)
-+		return -ENOMEM;
-+
-+	port = cxl_find_pcie_rp(pdev, dport);
-+	if (!port || !(*dport))
-+		return -ENODEV;
-+
-+	if (!(*dport)->regs.isolation)
-+		return -ENXIO;
-+
-+	ctrl = readl((*dport)->regs.isolation + CXL_ISOLATION_CTRL_OFFSET);
-+	put_device(&port->dev);
-+
-+	return sysfs_emit(buf, "%lu\n",
-+			  FIELD_GET(CXL_ISOLATION_CTRL_MEM_TIME_ENABLE, ctrl));
-+}
-+DEVICE_ATTR_RW(timeout_ctrl);
-+
-+static struct attribute *isolation_attrs[] = {
-+	&dev_attr_timeout_ctrl.attr,
-+	&dev_attr_isolation_ctrl.attr,
-+	NULL,
-+};
-+
-+static umode_t cxl_isolation_attrs_visible(struct kobject *kobj,
-+					   struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	if (!pcie_is_cxl(pdev) || pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT)
-+		return 0;
-+
-+	if (pcie_port_find_device(pdev, PCIE_PORT_SERVICE_CXLISO))
-+		return a->mode;
-+	return 0;
-+}
-+
-+const struct attribute_group cxl_isolation_attr_group = {
-+	.name = "cxl_isolation",
-+	.attrs = isolation_attrs,
-+	.is_visible = cxl_isolation_attrs_visible,
-+};
-+
-+void
-+pcie_update_cxl_isolation_group(struct device *dport_dev)
-+{
-+	struct device *dev;
-+
-+	if (!dev_is_pci(dport_dev))
-+		return;
-+
-+	dev = pcie_port_find_device(to_pci_dev(dport_dev),
-+				    PCIE_PORT_SERVICE_CXLISO);
-+	if (!dev)
-+		return;
-+
-+	sysfs_update_group(&dport_dev->kobj, &cxl_isolation_attr_group);
-+}
-+
- static int cxl_isolation_probe(struct pcie_device *dev)
- {
- 	struct cxl_isolation_info *info;
+ static struct attribute *isolation_attrs[] = {
+ 	&dev_attr_timeout_ctrl.attr,
+ 	&dev_attr_isolation_ctrl.attr,
++	&dev_attr_timeout_range.attr,
+ 	NULL,
+ };
+ 
 diff --git a/include/cxl/isolation.h b/include/cxl/isolation.h
-index 73282ac262a6..0b6e4f0160a8 100644
+index 0b6e4f0160a8..f2c4feb5a42b 100644
 --- a/include/cxl/isolation.h
 +++ b/include/cxl/isolation.h
-@@ -31,21 +31,29 @@ int cxl_disable_isolation(struct cxl_dport *dport);
+@@ -30,6 +30,7 @@ void cxl_enable_isolation(struct cxl_dport *dport);
+ int cxl_disable_isolation(struct cxl_dport *dport);
  void cxl_enable_timeout(struct cxl_dport *dport);
  void cxl_disable_timeout(struct cxl_dport *dport);
++int cxl_set_timeout_range(struct cxl_dport *dport, u8 val);
  
-+struct cxl_port *cxl_find_pcie_rp(struct pci_dev *pdev,
-+				  struct cxl_dport **dport);
- #else /* !CONFIG_CXL_BUS */
- static inline void cxl_enable_isolation(struct cxl_dport *dport) {}
- static inline int cxl_disable_isolation(struct cxl_dport *dport)
+ struct cxl_port *cxl_find_pcie_rp(struct pci_dev *pdev,
+ 				  struct cxl_dport **dport);
+@@ -39,6 +40,8 @@ static inline int cxl_disable_isolation(struct cxl_dport *dport)
  { return -ENXIO; }
  static inline void cxl_enable_timeout(struct cxl_dport *dport) {}
  static inline void cxl_disable_timeout(struct cxl_dport *dport) {}
-+
-+static inline struct cxl_port *cxl_find_pcie_rp(struct pci_dev *pdev,
-+						struct cxl_dport **dport);
-+{ return NULL; }
- #endif /* !CONFIG_CXL_BUS */
++static inline int cxl_set_timeout_range(struct cxl_dport *dport, u8 val)
++{ return -ENXIO; }
  
- #ifdef CONFIG_CXL_ISOLATION
- struct cxl_isolation_info *
- pcie_cxl_dport_get_isolation_info(struct pci_dev *dport_dev);
-+void pcie_update_cxl_isolation_group(struct device *dport_dev);
- #else /* !CONFIG_CXL_ISOLATION */
- static inline struct cxl_isolation_info *
- pcie_cxl_dport_get_isolation_info(struct pci_dev *dport_dev)
- { return NULL; }
-+static inline void pcie_update_cxl_isolation_group(struct device *dport_dev) {}
- #endif /* !CONFIG_CXL_ISOLATION */
- 
- #endif
+ static inline struct cxl_port *cxl_find_pcie_rp(struct pci_dev *pdev,
+ 						struct cxl_dport **dport);
 -- 
 2.34.1
 
