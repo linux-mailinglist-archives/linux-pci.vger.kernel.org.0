@@ -1,68 +1,69 @@
-Return-Path: <linux-pci+bounces-33198-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33199-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6691CB16542
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 19:16:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D08DAB16561
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 19:23:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69AA35A4195
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 17:16:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 132B91AA375E
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 17:23:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51CA91DED42;
-	Wed, 30 Jul 2025 17:16:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59E102DEA94;
+	Wed, 30 Jul 2025 17:23:02 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0D86F06A;
-	Wed, 30 Jul 2025 17:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7AB1D7E41;
+	Wed, 30 Jul 2025 17:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753895793; cv=none; b=Z2GMOP4M4fpV5ZizOp2JsL5Pa2kSRZjhNcbKQEpGvPDCrddandc2Q5jAlk/DCPv3Nq6ke8BHpNpNSIcRDPLllIZvtTYNvyRg/h7yt8Dj9ciBY+LDStghjsvn+BpclObz0v1C2MU+qkadY621FxhHHUdm+5CJjBIxFi2W4XCwP5c=
+	t=1753896182; cv=none; b=bs6OoNW7amOlMYNLqtiJ9yk9/5JyCCIAcWpBaGRH3yFyHb0WEWbY3vU3poaAHZ610ZK+17wk+jfzQ4MRNKGrq8Qy/y8l0OZha8WCiPKBhsI0s5N/CL7gd4YYQ2qstVMiwYskXVoCLkByz68UwljSVKYf16xvwzpw86LvjnIY2h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753895793; c=relaxed/simple;
-	bh=5dgWE8kGKN0+BBI5HchFbQBXxau1BlUs1gU3Amh3ayM=;
+	s=arc-20240116; t=1753896182; c=relaxed/simple;
+	bh=2inB9lrYIxnh5dD0KnQ79CfqCqa2mBwK28Hu1ed57RY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tsG052AQAPKQERbPMGZ+5TsIX5zGquhgfFi4GRlA0/hFwgA0aXdCG0EbBx8NaWrfLkacuau9SiwQpQK2tq8e4NhnOcCS+81B6Ix9h/G3n/waKuXDKsDYH8MugMssAXjPkrtI5vWUrClwQczfyHSYjzea0UAju1Bppo1mCfnn91Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=nyKxbBM5g8AXkrBswQjUE05h2GNiRvsipyYufFSMLFy2nyuqhx7P7MdBAMBd9hYpn4g53KsNouK9TFvO2lgb0c3TC7qeFG3q5FGkYP/1ecf5onJ6DsHvOHtWwqBzsOEzuZwO1KyzYomU7OhCJeAZkxsY+Mq0NQdq/5Iy3/IY9K0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-61568fbed16so3841938a12.3;
-        Wed, 30 Jul 2025 10:16:31 -0700 (PDT)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae36dc91dc7so2845466b.2;
+        Wed, 30 Jul 2025 10:23:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753895790; x=1754500590;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QnBLTSAmqLEpz+AnF+mqUYEiUlYclERoRLZ14/+NMT0=;
-        b=S6KXDPNltFS4D1H7hhCE7UBfNXNYOfX53A8neoHnXBS+K2PS83gVKiRXZSJOM59xt8
-         L6H2Mxz9Ali/ahtNc8oNks519NkBNQDpQesWICzMuEUMV9xaWmF9Eaey9/KaFRE6qRxL
-         qvsTJk53vPgxq0z164aC3yBQFyTIj/g+UBzcWNr12CKzlpA58G6CV+aAw+U6cqYRhJ5b
-         b3n4Y/UKtibn1H1hf49IzKa3CU+OEmv9uBGgUXQjFZE/elrWQLWzg10luxuD01gZ4mlj
-         yhZhsTO1IlnyKhROMRKwT4Ew2ynpLabho37pJnOsMFJpEgNkKlOgX9djfz2OHN6gjgSl
-         VrXg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/yeaR8sgdSOpwyMkBAqOUVz10RIHJKK/bzxfBcdSOo8WNauL0wLHxz2gztGBll72A11gLAOXYa8ephg==@vger.kernel.org, AJvYcCX44V6m21W67Oq7H0h0Kkyjh229nzmeM8As2hYdts669aSeSJZkFB57b9cctp6PoT4SILf3OfA86iymMDsO@vger.kernel.org, AJvYcCXRdlskmsk7LZSKPmy6JIIK3Y6cKQXNB0hGxdki7ySmdDhcyZt/DgTXsUsy3Cy8vwiTD7Qf/I1HjC5p@vger.kernel.org, AJvYcCXyuMMJPQr+Lvcn86ZYK6l/BNLIlPutC/y5dCYIRvWj4nomXkTFzkggT4TO7XE6Z0S6SqC/Q3GJk775@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzn885TAipC61ZTxB3nkm9RP5hLZhdS3ERE1sEDtgWUoT8AFl+f
-	yYVDPCEONz3reF5Woql0IL/bTJ+7K05YCPD6iz7M1CJAvgUZKiYQP7/o
-X-Gm-Gg: ASbGncv/TwhhENwVLGWWkZKyPbNJU4hfk6grik8d0mw4Fq69t75hNh3aHmUIQzKSU7o
-	15XddMoKmrXXJwdatPJ87HoC885DI8i2k5x+605vcJ89yqV7IA4P5dwz/sPzVZFx3fY2D82H7SC
-	44Gf5OPIqsRdutchr+AbNYBSi2g9Sa4y0ZT91Dk0rLVq0iWZ/GmDNl4wp7WeK8N9+7PxR7c118w
-	YGvtB5uilQleqBGntriLAm9UP6xXbKc8f5A+v9fYUQdKwt2dYGY80R8qnnIbwoVlqccko66jWvP
-	rNXyTpkxPUDVgyriEd9oeyFtuUpPwuDDsxbVzD1Zf/ij3pTgd0rcwm/eyEOG4K3BgCmt0XECmTx
-	6HzzktBnJebZk
-X-Google-Smtp-Source: AGHT+IEiGi0ZE+hn6nJPN3xAPRd7sUfNkdea1puk9Js+8BUSU2zNcBVIaxaV6D3y2/hqS+gwsWTE+g==
-X-Received: by 2002:a05:6402:5245:b0:615:7703:e0a7 with SMTP id 4fb4d7f45d1cf-615872098ccmr4788798a12.26.1753895789412;
-        Wed, 30 Jul 2025 10:16:29 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:3::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61548bca6acsm3819155a12.17.2025.07.30.10.16.27
+        d=1e100.net; s=20230601; t=1753896179; x=1754500979;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RVG5g2ageWB6fvYTmlrchc1VftQuavVCJU6Q16hxq1Q=;
+        b=TWsJFbVmcJ+2unhu6eVN9mU6koxU7zwsliO+KRn0dym5wi8MJNeN5kn6PfMbSkh/10
+         r7KmwZsbOl4EZY8cAS98q0E2zOALhq5Y3Sa55AKmszu8o4bCfdGQk7//4lc9nTL4xt6n
+         uwe7L8Zjld6YrSVnLFnzS+xwpNLaxgumy55ddvrz36qbzkOdiJM2IAORBFOPLNzTd/uT
+         GXr6d0ayttRFdcjc0d+XHYW1d71GrVd+PCcaLzBDO4ZclHCIWZaRZeUaQGd6vIBO+wC0
+         SmVuvOyTItC+sdPJs1Ww97noa+v/auv70LNbZugXNiGiRM8l/HLLhP68HFg56y9oDPXV
+         dQjw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2RbvdzOPiEHreN593rrstqTuHqvrFPf8HzsOi0gJBwej/FLXl28lW3ngwKuWTHIgBE15Gq4skuU0T@vger.kernel.org, AJvYcCUpKqLRNX2kHuJtZR/zn1WpMPUGExNrpJ+bh4RbXJpqRB1hgn7OrYcvy1N5foI78mmTZi0jNphEeWf4@vger.kernel.org, AJvYcCX0geZbygbugmleA+KoSBCNE6m3N4R6ZEUAethNPh9W6UbQW/fqihhUOHNLMXIGyX76UX01/piq4qyCgdnb@vger.kernel.org, AJvYcCXWfkAIZqsAzqMhkJWh/fOWXA5IzZFRdxKeV8MJv3nZr2jB5o5bD/7/AKjRIZymsNShWy9Yy9atpueWcg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEftKqWYmY3O8h/J9jbwaaxkLsXng1moLqxPSmUVa8GfNGp5Iw
+	TLN8O01RAH8Sum6B6UN76HrI9DQbX5CGuykq98fQJMu1kSvOOm+wb/VN
+X-Gm-Gg: ASbGncuAm5mxYRjzc4kDrk19ESn8YXjGf61k9GypwnK637vevGeWWauKacXS5WWrCuz
+	H72Aup6388uWGg3jv67VbcX7zE587VHqYkCjMQQRwLwHtzq1CH0dEXhTZD/kq2gzy0kvwxSRuUM
+	9ELTZllvRIah7KgKIC1GJXY0HVszHZm/jhxtbdtRPb/dtWvyeRAUYoBMMkUZ7YsM8U0+RM/rrTS
+	GJ9WVC/4K/mSrtm2I/1zDxl7qOGYeWFvp3oGWzA50HaGFiEkyvQSK7eMLZi5i8nbA6l3UiKuDpX
+	yiFL12vqIYgtffy3juA9RJBpXmNnCBg0LNnxy6i/J7OKyG+D/pSy3Lul+j6CWH7QIuTQskB9rKA
+	WBDVvYXsiTbrz
+X-Google-Smtp-Source: AGHT+IEUbbT7MGZ9RPV14AyB319B+ILu1Zn4HTqqRjqhmc6jefo1B6r2lcAh4WufQuwJ5cKV1ZycMA==
+X-Received: by 2002:a17:907:3d0f:b0:ade:3eb6:3c6 with SMTP id a640c23a62f3a-af8fd71454bmr552748166b.15.1753896178789;
+        Wed, 30 Jul 2025 10:22:58 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:9::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af635a63a5bsm781297566b.93.2025.07.30.10.22.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Jul 2025 10:16:28 -0700 (PDT)
-Date: Wed, 30 Jul 2025 10:16:26 -0700
+        Wed, 30 Jul 2025 10:22:58 -0700 (PDT)
+Date: Wed, 30 Jul 2025 10:22:55 -0700
 From: Breno Leitao <leitao@debian.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, 
+	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
 	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>, 
 	Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
 	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -73,7 +74,7 @@ Cc: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
 	konrad.wilk@oracle.com, linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
 	linux-pci@vger.kernel.org, kernel-team@meta.com
 Subject: Re: [PATCH v3] vmcoreinfo: Track and log recoverable hardware errors
-Message-ID: <yhfoip6ihr5r75pa7vnz3x53nifaxvi6rbin32nhwqx4hu7gnn@taj22iria3aa>
+Message-ID: <4w7adjalaisxhdx4l2zzl6ghanky4geijl523q2ezz7b5kj4kq@fr44nlwsw6qa>
 References: <20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org>
  <7ce9731a-b212-4e27-8809-0559eb36c5f2@linux.alibaba.com>
  <4qh2wbcbzdajh2tvki26qe4tqjazmyvbn7v7aqqhkxpitdrexo@ucch4ppo7i4e>
@@ -83,111 +84,54 @@ References: <20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org>
  <2a7ok3hdq3hmz45fzosd5vve4qpn6zy5uoogg33warsekigazu@wgfi7qsg5ixo>
  <a87c5e74-082f-4be6-bbfd-4867bf72ddcc@linux.alibaba.com>
  <zc4jm3hwvtwo5y2knk2bqzwmpf7ma7bdzs6uv2osavzcdew3nk@lfjrlp6sr7zz>
- <a0839ff9-ea8d-44b9-8289-fcd5039e9263@linux.alibaba.com>
+ <20250730182137.18605ea1@foz.lan>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a0839ff9-ea8d-44b9-8289-fcd5039e9263@linux.alibaba.com>
+In-Reply-To: <20250730182137.18605ea1@foz.lan>
 
-Hello Shuai,
+Hello Mauro,
 
-Thanks for the review,
-
-On Wed, Jul 30, 2025 at 09:50:39PM +0800, Shuai Xue wrote:
-> 在 2025/7/30 21:11, Breno Leitao 写道:
-> >
-> > @@ -1690,6 +1691,9 @@ noinstr void do_machine_check(struct pt_regs *regs)
-> >   	}
+On Wed, Jul 30, 2025 at 06:21:37PM +0200, Mauro Carvalho Chehab wrote:
+> Em Wed, 30 Jul 2025 06:11:52 -0700
+> Breno Leitao <leitao@debian.org> escreveu:
+> > On Wed, Jul 30, 2025 at 10:13:13AM +0800, Shuai Xue wrote:
+> > > In ghes_log_hwerr(), you're counting both CPER_SEV_CORRECTED and
+> > > CPER_SEV_RECOVERABLE errors:  
 > > 
-> >   out:
-> > +	/* Given it didn't panic, mark it as recoverable */
-> > +	hwerr_log_error_type(HWERR_RECOV_MCE);
-> > +
+> > Thanks. I was reading this code a bit more, and I want to make sure my
+> > understanding is correct, giving I was confused about CORRECTED and
+> > RECOVERABLE errors.
+> > 
+> > CPER_SEV_CORRECTED means it is corrected in the background, and the OS
+> > was not even notified about it. That includes 1-bit ECC error.
+> > THose are not the errors we are interested in, since they are irrelavant
+> > to the OS.
 > 
-> Indentation: needs tab alignment.
+> Hardware-corrected errors aren't irrelevant. The rasdaemon utils capture
+> such errors, as they may be a symptom of a hardware defect. In a matter
+> of fact, at rasdamon, thresholds can be set to trigger an action, like
+> for instance, disable memory blocks that contain defective memories.
 
-No sure I got what it the alignment process. The code seems to be
-properly aligned, and using tabs. Could you please clarify what is the
-current problem?
+Sorry, I meant that Hardware-corrected errors aren't relevant in the
+context of this patch, where we are errors that the OS has some
+influence and decision.
 
-> The current placement only logs errors that reach the out: label. Errors
-> that go to `clear` lable won't be recorded. Would it be better to log at
-> the beginning of do_machine_check() to capture all recoverable MCEs?
+> This is specially relevant on HPC and supercomputer workloads, where
+> it is a lot cheaper to disable a block of bad memory than to lose
+> an entire job because that could take several weeks of run time on
+> a supercomputer, just because a defective memory ended causing a
+> failure at the application.
 
-This is a good point, and I've thought about it. I understand we don't
-want to track the code flow that goes to the clear: label, since it is
-wrongly triggered by some CPUs, and it is not a real MCE.
-That is described in commit 8ca97812c3c830 ("x86/mce: Work around an
-erratum on fast string copy instructions").
+Agree. These errors are used in several ways, including to detect
+hardware aging and hardware replacement at maintenance windows.
 
-At the same time, the current block of MCEs are not being properly
-tracked, since they return earlier in do_machine_check(). Here is
-a quick 
-
-   void do_machine_check(struct pt_regs *regs)
-   ...
-          if (unlikely(mce_flags.p5))
-                  return pentium_machine_check(regs);
-          else if (unlikely(mce_flags.winchip))
-                  return winchip_machine_check(regs);
-          else if (unlikely(!mca_cfg.initialized))
-                  return unexpected_machine_check(regs);
-
-         if (mce_flags.skx_repmov_quirk && quirk_skylake_repmov())
-                  goto clear;
-
-	  /* Code doesn't exit anymore unless through out: */
-
-    }
-
-Given that instrumentation is not enabled when those return are called,
-we cannot easily call hwerr_log_error_type() before the returns.
-
-An option is just to ignore those, given they are unlikely. Another
-option is to call hwerr_log_error_type() inside those functions above,
-so, we do not miss these counters in case do_machine_check() returns
-earlier. 
-
-
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1481,6 +1481,7 @@ static void queue_task_work(struct mce_hw_err *err, char *msg, void (*func)(stru
- static noinstr void unexpected_machine_check(struct pt_regs *regs)
- {
-        instrumentation_begin();
-+       hwerr_log_error_type(HWERR_RECOV_MCE);
-        pr_err("CPU#%d: Unexpected int18 (Machine Check)\n",
-               smp_processor_id());
-        instrumentation_end();
-diff --git a/arch/x86/kernel/cpu/mce/p5.c b/arch/x86/kernel/cpu/mce/p5.c
-index 2272ad53fc339..a627ed10b752d 100644
---- a/arch/x86/kernel/cpu/mce/p5.c
-+++ b/arch/x86/kernel/cpu/mce/p5.c
-@@ -26,6 +26,7 @@ noinstr void pentium_machine_check(struct pt_regs *regs)
-        u32 loaddr, hi, lotype;
-
-        instrumentation_begin();
-+       hwerr_log_error_type(HWERR_RECOV_MCE);
-        rdmsr(MSR_IA32_P5_MC_ADDR, loaddr, hi);
-        rdmsr(MSR_IA32_P5_MC_TYPE, lotype, hi);
-
-diff --git a/arch/x86/kernel/cpu/mce/winchip.c b/arch/x86/kernel/cpu/mce/winchip.c
-index 6c99f29419090..b7862bf5ba870 100644
---- a/arch/x86/kernel/cpu/mce/winchip.c
-+++ b/arch/x86/kernel/cpu/mce/winchip.c
-@@ -20,6 +20,7 @@
- noinstr void winchip_machine_check(struct pt_regs *regs)
- {
-        instrumentation_begin();
-+       hwerr_log_error_type(HWERR_RECOV_MCE);
-        pr_emerg("CPU0: Machine Check Exception.\n");
-        add_taint(TAINT_MACHINE_CHECK, LOCKDEP_NOW_UNRELIABLE);
-        instrumentation_end();
-
+In this patchset, I am more focused on what information to add to
+crashdump, so, it makes it easy to correlate crashes to hardware events,
+and RECOVERABLE are the main ones.
 
