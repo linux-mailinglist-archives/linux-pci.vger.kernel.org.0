@@ -1,138 +1,123 @@
-Return-Path: <linux-pci+bounces-33153-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33154-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4048CB1593F
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 09:04:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC70FB15A0D
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 09:57:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AD6818A3B49
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 07:04:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6CDF3A5AD1
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 07:56:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A3B51F76A5;
-	Wed, 30 Jul 2025 07:04:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50257290092;
+	Wed, 30 Jul 2025 07:56:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d+FizXXU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EJjjYj2u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24831F1306;
-	Wed, 30 Jul 2025 07:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C807291C3D
+	for <linux-pci@vger.kernel.org>; Wed, 30 Jul 2025 07:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753859069; cv=none; b=ge7Hy+5VThIl0E/gLVtE66jguUtO/vW1Zs60BVjucpCzRNx+YDXXxWh8YIGbVY1OamMy8tCSQis3KndDKLuQ0fXdCOl/2mVZup392u4p+R806tqHcg+zDKDDQl8HWkqk3n606bOVaB9DwbeGPojzrPlufvd510MWGTAzZjHx2Wo=
+	t=1753862214; cv=none; b=pdc5yB6xTFGtibXcK8jdbMfVRgOGRFcXEDAhOw6S5+nxEM/xXG+ZSOnNZyyog5hIfR2lftUkOpkdNTnVOS6jaNW+PWeUHXLNnr4eWI7WVgG899P20BCrr+xkxlrHRmmirp5nk/dNno0Ea4x+3vsca4AOXPvUYSzhPQjO+hY1iHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753859069; c=relaxed/simple;
-	bh=hRRwxJjQE9wJHAhuatc6RMPSyGgs/xP53hoMSHC/2FU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=npO+xs0uamom6kz8omSeqBaPWlP3RFOn5sCAWZ/ZBjtiPBx2pGC1H63amckPeLldchdI1aeHsSwl9z4+HSvEBB23AbFvQSdFdOpFjWdSyHkJiVNv4uCJO42wS35F455ORNfyw1pBffg6t9ojlKRYwGtT1p90jiPGWhvlhXUW8NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d+FizXXU; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753859068; x=1785395068;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=hRRwxJjQE9wJHAhuatc6RMPSyGgs/xP53hoMSHC/2FU=;
-  b=d+FizXXUMwXt4JoZecJEYSTDfklMiN8MMtEkszEOlhIY5i7SHotKc2Wj
-   PpzTIR8FpbS96JQ7MOolvunHpUNeCs89NPFFYUO8cuc/SDGWqF5IOlNBr
-   3Yhg0XWQQx9xHSxXHACrEMsCJUr8nD1/WirBbvLF8DTLl6ATZVvugCwlZ
-   tjVWGS000pC7RBgINpKnTquuFYjMIy/uLZfjTiuTuDdbmUmILMP2rm6Ux
-   Eozdxz9hjSghUjyi6iHtIGZZwGapPhe7xpWslmbfhUURtsVwgTaGzMiCB
-   40/J3qgoU4exxAFdp+nNSgYrwT/P0Ids5ciaY65Gp63zKWOETqb7PkIBa
-   g==;
-X-CSE-ConnectionGUID: W/vh5BJvS+m/1mPTgz1kUw==
-X-CSE-MsgGUID: Lumic/dFTwiPB+kPEUA2Hw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11506"; a="56229392"
-X-IronPort-AV: E=Sophos;i="6.16,350,1744095600"; 
-   d="scan'208";a="56229392"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2025 00:04:24 -0700
-X-CSE-ConnectionGUID: gxhRvuheTAG+uvZ6+T69iw==
-X-CSE-MsgGUID: kU6LqtksTKK5o0weRmGeTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,350,1744095600"; 
-   d="scan'208";a="167122521"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa003.jf.intel.com with ESMTP; 30 Jul 2025 00:04:21 -0700
-Date: Wed, 30 Jul 2025 14:55:02 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	aik@amd.com, lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [RFC PATCH v1 06/38] iommufd: Add and option to request for bar
- mapping with IORESOURCE_EXCLUSIVE
-Message-ID: <aInBxnVIu+lnkzlV@yilunxu-OptiPlex-7050>
-References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
- <20250728135216.48084-7-aneesh.kumar@kernel.org>
- <20250728140841.GA26511@ziepe.ca>
- <yq5a34afbdtl.fsf@kernel.org>
- <20250729142917.GF26511@ziepe.ca>
+	s=arc-20240116; t=1753862214; c=relaxed/simple;
+	bh=GLaeAIqc00e+USukSnbAVMe5TgFLMlpYRPa2jWKuX/g=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=f+M+ub72Yw3esG0H9VBfFbkGR6WWsXYXy/2CVIQUmR/NFqWS9A3kE943fuOkO6nDV475ZWvwToAdbhvTZioklgm5eq/E6O7n4zgOiuhbABsTOrYDnRnXuYmOcI4wZ1oF7qkq4dJzMOco8ic3hWCZaDllr93wOTxevGA6B1b6QG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EJjjYj2u; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-451d3f03b74so32463935e9.3
+        for <linux-pci@vger.kernel.org>; Wed, 30 Jul 2025 00:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1753862211; x=1754467011; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GLaeAIqc00e+USukSnbAVMe5TgFLMlpYRPa2jWKuX/g=;
+        b=EJjjYj2u10QgmPAXA/Al+RTNAf9Au5dPvN1pG/QbHUjPAuiHejzV+XDfYSxlFi+kUU
+         8SdLROlzM4rBZnCm4oIHeJeWR9neEqA+QhFIk5CjiKAS2Iy3j52QaGdp9M3jjODLU7H0
+         8mxdPDEKCgMyp0cUfGOewwfidJQaqe968tsEcL10zA9k9bhPgpTmmGj3HYj7UapUmGQw
+         WYUnFjd9bxRV3neQdcSy2EfHDlkCaXz1RlnNRZxrknYQxh32biIjLItVkxQDQEU8/Wav
+         5A5+LLFzb17JuU8yWQC1YPI2nURj+XLMW7zhoQsYbDnqTpSWbH2A8TnKZTzNpFxU+xCl
+         mwVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753862211; x=1754467011;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GLaeAIqc00e+USukSnbAVMe5TgFLMlpYRPa2jWKuX/g=;
+        b=esZddfVebAivqeuuOajdgugWOH+3Gu/Jgif9iYX46fF4/itySoOkR0zVlnerjN6bjo
+         7WJlYsIaho8B4anXbHaUN8xNqPD3B0FpgKQ/uPjOAf+o0IGWfqABqS4iOnt0VxgZ9z3H
+         eUcYMjmroXS2kN1YdJhD+Anv875p0RiHl+DrxsN7t+NgqQkydyLPFEk6BjDdGWmt+Q5Y
+         G/+iqZQilD50X22dXeZ6gjeABBUlU2VROeuQq3xvtef6zpSiujRCd12u4Nqo7DKj+I8O
+         bZ3KpVsU7M2e6nq/QpsUGtf8qsptm+IOFg49QZz+qWECKg5FkoVatRIojfI8l6mLUJAi
+         CCEA==
+X-Forwarded-Encrypted: i=1; AJvYcCXHAYAmcm+cRvn3RBJTAgZ6kykzo5u0ovGzQIhd4fR3je+zB16coh3IZ9Q776FdBKPSoIbz1QUjRMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylrP24oBmRGLpkxZRj6ThsR3Lv9w0Z2gu4MlFqGGKYoAIgbAHr
+	2/qwTGYQN0hEDh0IYBDBq3PBd2+Zz9PfMA4zOYY3ipyow0nKjGoo9PcCD1OrzFEksduNXXfLUP/
+	J3kfIJEOpw+JbdWmxgg==
+X-Google-Smtp-Source: AGHT+IGDvFaMLBXu0klWBt4C95avW2dNPswDP4VOmyuf+KsNi7Hgiwedn0E92QWyR5XhNzUkZu0QiLLjbVDSw60=
+X-Received: from wmrn20.prod.google.com ([2002:a05:600c:5014:b0:458:709b:28a0])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:8706:b0:456:1e4a:bb5b with SMTP id 5b1f17b1804b1-45892cea07fmr18028965e9.32.1753862210888;
+ Wed, 30 Jul 2025 00:56:50 -0700 (PDT)
+Date: Wed, 30 Jul 2025 07:56:50 +0000
+In-Reply-To: <DBOMC68QGS76.2MYEXRE1I34VV@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250729142917.GF26511@ziepe.ca>
+Mime-Version: 1.0
+References: <20250729102953.141412-1-abhinav.ogl@gmail.com>
+ <CANiq72kRu5Wd-3Tk7px=2Y5kU5Tq2fQch=+f3ExYSrJa2+tSSg@mail.gmail.com> <DBOMC68QGS76.2MYEXRE1I34VV@kernel.org>
+Message-ID: <aInQQqmDUZy40t3E@google.com>
+Subject: Re: [PATCH v2] rust: pci: Use explicit types in FFI callbacks
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, herculoxz <abhinav.ogl@gmail.com>, 
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
+	a.hindborg@kernel.org, tmgross@umich.edu
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 29, 2025 at 11:29:17AM -0300, Jason Gunthorpe wrote:
-> On Tue, Jul 29, 2025 at 01:58:54PM +0530, Aneesh Kumar K.V wrote:
-> > Jason Gunthorpe <jgg@ziepe.ca> writes:
-> > 
-> > > On Mon, Jul 28, 2025 at 07:21:43PM +0530, Aneesh Kumar K.V (Arm) wrote:
-> > >> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
-> > >
-> > > Why would we need this?
-> > >
-> > > I can sort of understand why Intel would need it due to their issues
-> > > with MCE, but ARM shouldn't care either way, should it?
-> > >
-> > > But also why is it an iommufd option? That doesn't seem right..
-> > >
-> > > Jason
-> > 
-> > This is based on our previous discussion https://lore.kernel.org/all/20250606120919.GH19710@nvidia.com
-> 
-> I suggested a global option, this is a per-device option, and that
-> especially seems wrong for iommufd. If it is per-device that is vfio,
+On Tue, Jul 29, 2025 at 04:45:50PM +0200, Danilo Krummrich wrote:
+> On Tue Jul 29, 2025 at 12:52 PM CEST, Miguel Ojeda wrote:
+> > On Tue, Jul 29, 2025 at 12:30=E2=80=AFPM herculoxz <abhinav.ogl@gmail.c=
+om> wrote:
+> >>
+> >> and improves ABI
+> >> correctness when interfacing with C code.
+> >
+> > I think this still sounds like it is fixing an ABI issue -- I would
+> > probably just remove that second sentence.
+>=20
+> I agree, the types exported via prelude are the ones from kernel::ffi.
+>=20
+> > (But no need for a v3 -- I think it can be fixed on apply unless
+> > Danilo wants it).
+>=20
+> Yeah, I can fix it up when applying the patch.
+>=20
+> I also think the subject from v1, i.e. "use c_* types via kernel prelude"=
+, was
+> better. This one is a bit misleading, the types in the FFI callbacks are =
+already
+> explicit.
+>=20
+> Unless I hear otherwise, I will also revert the subject to the one of v1 =
+when I
+> apply the patch.
 
-I think this should be per-device. The original purpose of this
-pci_region_request_*() is to prevent further mmap/read/write against
-a vfio_cdev FD which would be used for private assignment. You shouldn't
-prevent all other devices from working with userspace APPs (e.g. DPDK)
-if there is one private assignment in system.
+With the above changes:
 
-> if it is global then vfio can pick it up during the early phases of
-> opening the device.
-> 
-> > IIUC, we intend to request the resource in exclusive mode for secure
-> > guests—regardless of whether the platform is Intel or ARM. Could you
-> > help clarify the MCE issue observed on Intel platforms in this context?
-> 
-> As I understand it Intel MCEs if the non-secure side ever reads from
-> secure'd address space. So there is alot of emphasis there to ensure
-
-Yeah, Intel TDX doesn't have a lower access control table for CC. So if
-host reads, the TLP sends and MCE happens.
-
-Thanks,
-Yilun
-
-> there are no CPU mappings.
-> 
-> Jason
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
