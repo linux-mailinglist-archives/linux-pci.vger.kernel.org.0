@@ -1,190 +1,199 @@
-Return-Path: <linux-pci+bounces-33192-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33193-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC21BB1631E
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 16:50:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70FA6B1632F
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 16:52:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3425618C553F
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 14:50:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61CCB3AA622
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 14:51:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 651822DA776;
-	Wed, 30 Jul 2025 14:49:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE9BF2DBF7C;
+	Wed, 30 Jul 2025 14:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="S+AevKxR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7359F2798E5;
-	Wed, 30 Jul 2025 14:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from sinmsgout03.his.huawei.com (sinmsgout03.his.huawei.com [119.8.177.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1172DAFD2;
+	Wed, 30 Jul 2025 14:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=119.8.177.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753886994; cv=none; b=Uc2EsqSerAcC1Wvx8Xi57vfkeHy+3O/ZSLNnguviSbATYquK5fYGIziUWz5SxTTCXmWw8VqExhwmwf/T551MpIwGfhUiL9xScyjxZVdkhNPIPMFchFx6Dcrpmu6z/krV2zI46zgN/sWYc0XlxQog4zvHu+4kHBxZO1hbP/geA8w=
+	t=1753887108; cv=none; b=Efm00fPKrCkpBpVdp9g2M1D5iAruLIuboVmPQeSSmEvuWIoYWlBcgwjA5uvBYIUUNHnabzcAowf/nnhm9CrwLMS7THN1VQZBYtncXLzEwCYi30hvIiYKxLjt4CM0hw8P1wdp1HuNJrDQLa+3JJC0ZCUWIv0YIYuJN1J3PxqseBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753886994; c=relaxed/simple;
-	bh=kiil3a12z0g8EHN6aN3WXtdYZoEr8JUmTMUWd7FUTPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cdjqx5BJ5LTLFTxu7PW31fMFrvNXIxs3T0I/tqzCaj0DlwmqZJgUDK9kpjM9JEdE0LTJCL4QPw23LScgiDEryC/nciPq7cM8ePBxIzYEjFPHISbimHIDICOSUo57uNUzTjr2Ez8WrIrW8eKr346BYZxWlX6ofe04OaVZWMkt5BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A671E1BC0;
-	Wed, 30 Jul 2025 07:49:43 -0700 (PDT)
-Received: from [10.57.3.116] (unknown [10.57.3.116])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B8B53F673;
-	Wed, 30 Jul 2025 07:49:47 -0700 (PDT)
-Message-ID: <6c5fb9f0-c608-4e19-8c60-5d8cef3efbdf@arm.com>
-Date: Wed, 30 Jul 2025 15:49:45 +0100
+	s=arc-20240116; t=1753887108; c=relaxed/simple;
+	bh=q5UBGjR9V0TiCXYMpVi0Vb0FvsZJoTTs2TRMwSYwVUs=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rMjde1HUP014B4TLov1bHGTGvCDnmTAp0j2wmNsC3PrZInoBUKmZlNzk8NmHFhAZp9+JMCYgHAWad4oEc6y8gWLqw4X+pz6jQr0C9FhoEGWAjJ8doUglaefQspNFFBGYa13DIm8lKdKVe+mtFgTCp/gldJ2x2THHwKE5FlQCsXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=S+AevKxR; arc=none smtp.client-ip=119.8.177.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=3e5XihT0AEvE9k2vfKg6bdeeRMsMb3oRVgdt3JCiDtM=;
+	b=S+AevKxRi9MUVpn74t6kjeavWhdteQg51A15oj30m5JwwkjOl5PC/1Y607tYITqkBiQXWAiED
+	fV7vQhvClARLa59CSv/85rVK0fSuTOgfv+1mmxjf6MIGKPzJfXpW4T8WOwExmI7nRVKNJPJg6c6
+	xrMD/2lZi/pqrz5Lc5s1WuY=
+Received: from frasgout.his.huawei.com (unknown [172.18.146.35])
+	by sinmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4bsZrK4g6XzN0s6;
+	Wed, 30 Jul 2025 22:50:09 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bsZrC0pGdz6M4Zg;
+	Wed, 30 Jul 2025 22:50:03 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3DFD01402EA;
+	Wed, 30 Jul 2025 22:51:39 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 30 Jul
+ 2025 16:51:38 +0200
+Date: Wed, 30 Jul 2025 15:51:36 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
+CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
+	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <aik@amd.com>,
+	<lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>, Xu Yilun
+	<yilun.xu@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>, "Suzuki K
+ Poulose" <Suzuki.Poulose@arm.com>, Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: [RFC PATCH v1 32/38] coco: guest: arm64: Add support for guest
+ initiated TDI bind/unbind
+Message-ID: <20250730155136.00003d5f@huawei.com>
+In-Reply-To: <20250728135216.48084-33-aneesh.kumar@kernel.org>
+References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
+	<20250728135216.48084-33-aneesh.kumar@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/10] vfio/pci: Add dma-buf export support for MMIO
- regions
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>,
- Alex Williamson <alex.williamson@redhat.com>,
- Leon Romanovsky <leonro@nvidia.com>, Christoph Hellwig <hch@lst.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
- Jens Axboe <axboe@kernel.dk>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
- <jglisse@redhat.com>, Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mm@kvack.org, linux-pci@vger.kernel.org,
- Logan Gunthorpe <logang@deltatee.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- Vivek Kasireddy <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
-References: <cover.1753274085.git.leonro@nvidia.com>
- <aea452cc27ca9e5169f7279d7b524190c39e7260.1753274085.git.leonro@nvidia.com>
- <8f912671-f1d9-4f73-9c1d-e39938bfc09f@arm.com>
- <20250729201351.GA82395@nvidia.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250729201351.GA82395@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 2025-07-29 9:13 pm, Jason Gunthorpe wrote:
-> On Tue, Jul 29, 2025 at 08:44:21PM +0100, Robin Murphy wrote:
+On Mon, 28 Jul 2025 19:22:09 +0530
+"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
+
+> Add RHI for VDEV_SET_TDI_STATE
 > 
->> In this case with just one single
->> contiguous mapping, it is clearly objectively worse to have to bounce in and
->> out of the IOMMU layer 3 separate times and store a dma_map_state,
+> Note: This is not part of RHI spec. This is a POC implementation
+> and will be later switced to correct interface defined by RHI.
 > 
-> The non-contiguous mappings are comming back, it was in earlier drafts
-> of this. Regardless, the point is to show how to use the general API
-> that we would want to bring into the DRM drivers that don't have
-> contiguity even though VFIO is a bit special.
-> 
->> Oh yeah, and mapping MMIO with regular memory attributes (IOMMU_CACHE)
->> rather than appropriate ones (IOMMU_MMIO), as this will end up doing, isn't
->> guaranteed not to end badly either (e.g. if the system interconnect ends up
->> merging consecutive write bursts and exceeding the target root port's MPS.)
-> 
-> Yes, I recently noticed this too, it should be fixed..
-> 
-> But so we are all on the same page, alot of the PCI P2P systems are
-> setup so P2P does not transit through the iommu. It either takes the
-> ACS path through a switch or it uses ATS and takes a different ACS
-> path through a switch. It only transits through the iommu in
-> misconfigured systems or in the rarer case of P2P between root ports.
+> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
 
-For non-ATS (and ATS Untranslated traffic), my understanding is that we 
-rely on ACS upstream redirect to send transactions all the way up to the 
-root port for translation (and without that then they are indeed pure 
-bus addresses, take the pci_p2pdma_bus_addr_map() case, and the rest of 
-this is all irrelevant). In Arm system terms, simpler root ports may 
-well have to run that traffic out to an external SMMU TBU, at which 
-point any P2P would loop back externally through the memory space window 
-in the system interconnect PA space, as opposed to DTI-ATS root 
-complexes that effectively implement their own internal translation 
-agent on the PCIe side. Thus on some systems, even P2P behind a single 
-root port may end up looking functionally the same as the cross-RP case, 
-but in general cross-RP *is* something that people seem to care about as 
-well. We're seeing more and more systems where each slot has its own RP 
-as a separate segment, rather than giant root complexes with a host 
-bridge and everyone on one big happy root bus together.
+A few minor comments. 
 
->> And again, if the IOMMU is in bypass (the idea of P2P with vfio-noiommu simply
->> isn't worth entertaining)
-> 
-> Not quite. DMABUF is sort of upside down.
-> 
-> For example if we are exporting a DMABUF from VFIO and importing it to
-> RDMA then RDMA will call VFIO to make an attachment and the above VFIO
-> code will perform the DMA map to the RDMA struct device. DMABUF
-> returns a dma mapped scatterlist back to the RDMA driver.
-> 
-> The above dma_map_phys(rdma_dev,...) can be in bypass because the rdma
-> device can legitimately be in bypass, or not have a iommu, or
-> whatever.
+Maybe we need some discussion of how this is used.
 
-I understand how dma-buf works - obviously DMA mapping for the VFIO 
-device itself while it's not even attached to its default domain would 
-be silly. I mean that any system that has 64-bit coherent PCIe behind an 
-IOMMU such that this VFIO exporter could exist, is realistically going 
-to have the same (or equivalent) IOMMU in front of any potential 
-importers as well. *Especially* if you expect the normal case for P2P to 
-be within a single hierarchy. Thus I was simply commenting that 
-IOMMU_DOMAIN_IDENTITY is the *only* realistic reason to actually expect 
-to interact with dma-direct here.
+> diff --git a/arch/arm64/kernel/rhi.c b/arch/arm64/kernel/rhi.c
+> new file mode 100644
+> index 000000000000..3685b50c2e94
+> --- /dev/null
+> +++ b/arch/arm64/kernel/rhi.c
+> @@ -0,0 +1,35 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2025 ARM Ltd.
+> + */
+> +
+> +#include <asm/memory.h>
+> +#include <asm/string.h>
+> +#include <asm/rsi.h>
+> +#include <asm/rhi.h>
+> +
+> +#include <linux/slab.h>
+> +
+> +long rhi_da_vdev_set_tdi_state(unsigned long guest_rid, unsigned long target_state)
+> +{
+> +	long ret;
+> +	struct rsi_host_call *rhi_call;
+> +
+> +	rhi_call = kmalloc(sizeof(struct rsi_host_call), GFP_KERNEL);
+	struct rsi_host_call *rhi_call __free(kfree) =
+		kmalloc(sizeof(*rhi_call), GFP_KERNEL);
 
-But of course, if it's not dma-direct because we're on POWER with TCE, 
-rather than VFIO Type1 implying an iommu-dma/dma-direct arch, then who 
-knows? I imagine the complete absence of any mention means this hasn't 
-been tried, or possibly even considered?
+then direct returns on errors.
 
->> AFAICS you're *depending* on this call being an effective no-op, and thus
->> only demonstrating that the dma_map_phys() idea is still entirely
->> unnecessary.
-> 
-> It should not be a full no-op, and it should be closer to
-> dma map resource to avoid the mmio issues.
+> +	if (!rhi_call)
+> +		return -ENOMEM;
+> +
+> +	rhi_call->imm = 0;
+> +	rhi_call->gprs[0] = RHI_DA_VDEV_SET_TDI_STATE;
+> +	rhi_call->gprs[1] = guest_rid;
+> +	rhi_call->gprs[2] = target_state;
+> +
+> +	ret = rsi_host_call(virt_to_phys(rhi_call));
+> +	if (ret != RSI_SUCCESS)
+> +		ret =  -EIO;
+> +	else
+> +		ret = rhi_call->gprs[0];
+> +
+> +	kfree(rhi_call);
+> +	return ret;
+> +}
+> diff --git a/drivers/virt/coco/arm-cca-guest/arm-cca.c b/drivers/virt/coco/arm-cca-guest/arm-cca.c
+> index 2c0190bcb2a9..de70fba09e92 100644
+> --- a/drivers/virt/coco/arm-cca-guest/arm-cca.c
+> +++ b/drivers/virt/coco/arm-cca-guest/arm-cca.c
+> @@ -222,11 +222,20 @@ static void cca_tsm_pci_remove(struct pci_tsm *tsm)
+>  
+>  static int cca_tsm_lock(struct pci_dev *pdev)
+>  {
+> -	unsigned long ret;
+> +	long ret;
 
-I don't get what you mean by "not be a full no-op", can you clarify 
-exactly what you think it should be doing? Even if it's just the 
-dma_capable() mask check equivalent to dma_direct_map_resource(), you 
-don't actually want that here either - in that case you'd want to fail 
-the entire attachment to begin with since it can never work.
+Push this earlier. It doesn't do any harm that I can see and will reduce churn
 
-> It should be failing for cases where it is not supported (ie
-> swiotlb=force), it should still be calling the legacy dma_ops, and it
-> should be undoing any CC mangling with the address. (also the
-> pci_p2pdma_bus_addr_map() needs to deal with any CC issues too)
+> +	int vdev_id = (pci_domain_nr(pdev->bus) << 16) |
+> +		PCI_DEVID(pdev->bus->number, pdev->devfn);
+>  
+> +	ret = rhi_da_vdev_set_tdi_state(vdev_id, RHI_DA_TDI_CONFIG_LOCKED);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to TSM bind the device (%ld)\n", ret);
+> +		return -EIO;
+> +	}
+> +
+> +	/* This will be done by above rhi in later spec */
+>  	ret = rsi_device_lock(pdev);
+>  	if (ret) {
+> -		pci_err(pdev, "failed to lock the device (%lu)\n", ret);
+> +		pci_err(pdev, "failed to lock the device (%ld)\n", ret);
+>  		return -EIO;
+>  	}
+>  	return 0;
 
-Um, my whole point is that the "legacy DMA ops" cannot be called, 
-because they still assume page-backed memory, so at best are guaranteed 
-to fail; any "CC mangling" assumed for memory is most likely wrong for 
-MMIO, and there simply is no "deal with" at this point.
+>  
+>  static const struct pci_tsm_ops cca_pci_ops = {
+> diff --git a/drivers/virt/coco/arm-cca-host/arm-cca.c b/drivers/virt/coco/arm-cca-host/arm-cca.c
+> index 0807fcf8d222..18d0a627baa4 100644
+> --- a/drivers/virt/coco/arm-cca-host/arm-cca.c
+> +++ b/drivers/virt/coco/arm-cca-host/arm-cca.c
+> @@ -254,9 +254,13 @@ static struct pci_tdi *cca_tsm_bind(struct pci_dev *pdev, struct pci_dev *pf0_de
+>  static void cca_tsm_unbind(struct pci_tdi *tdi)
+>  {
+>  	struct realm *realm = &tdi->kvm->arch.realm;
+> -
+> +	/*
+> +	 * FIXME!!
+> +	 * All the related DEV RIPAS regions should be unmapped by now.
+> +	 * For now we handle them during stage2 teardown. There is no
+> +	 * bound IPA address available here. Possibly dmabuf can help
+> +	 */
+>  	rme_unbind_vdev(realm, tdi->pdev, tdi->pdev->tsm->dsm_dev);
+> -
 
-A device BAR is simply not under control of the trusted hypervisor the 
-same way memory is; whatever (I/G)PA it is at must already be the 
-correct address, if the aliasing scheme even applies at all. Sticking to 
-Arm CCA terminology for example, if a device in shared state tries to 
-import a BAR from a device in locked/private state, there is no notion 
-of touching the shared alias and hoping it somehow magically works (at 
-best it might throw the exporting device into TDISP error state 
-terminally); that attachment simply cannot be allowed. If an shared 
-resource exists in the shared IPA space to begin with, dma_to_phys() 
-will do the wrong thing, and even phys_to_dma() would technically not 
-walk dma_range_map correctly, because both assume "phys" represents 
-kernel memory. However it's also all moot since any attempt at any 
-combination will fail anyway due to SWIOTLB being forced by 
-is_realm_world().
+Tidy up these whitespace changes.  Just adds noise.
 
-(OK, I admit "crash" wasn't strictly the right word to use there - I 
-keep forgetting that some of the P2P scatterlist support in dma-direct 
-ended up affecting the map_page path too, even though that was never 
-really the functional intent - but hey, the overall result of failing to 
-work as expected is the same.)
+>  	module_put(THIS_MODULE);
+>  }
+>  
 
-Thanks,
-Robin.
 
