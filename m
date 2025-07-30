@@ -1,108 +1,136 @@
-Return-Path: <linux-pci+bounces-33166-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33167-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77788B15D92
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 11:56:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 600C2B15DD4
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 12:09:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8D2556570B
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 09:55:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77EC43A3E67
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 10:09:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E523326E71A;
-	Wed, 30 Jul 2025 09:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VqjE9TQ0"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCB3426CE1D;
+	Wed, 30 Jul 2025 10:09:41 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3379269AFB;
-	Wed, 30 Jul 2025 09:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 780A015E96;
+	Wed, 30 Jul 2025 10:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753869349; cv=none; b=Nx+qYs0srM6a5Q7LCZNKg9s91Xgezh2DAD3jocEF+eW/O9ZJ+tG7gkyF+DUFT1dt6asA+Vss70XckZHJeZ/WLYAqyZ86lPhgblpa6zJ4nQdW5rWduCLSUKbHwE4VQjMYLbxIbvJhD2cOdSXsqElDMW2Wlnm3nIYURSca0ALC3BI=
+	t=1753870181; cv=none; b=TikqV5r7jhU/gYkdEqpTmou1vFDNW5gzUslAobC4NVGK64sCWGYhlb3HWiAjVc9FagtQJfuoVekvdJ60lrh6aHwEFOoGu48OXEdPGgAScBRTqPV3PXHxWZj4R+y8CLU4DYjDAko07H7E9SYF+Iyn9CSlDiWuXI3S78CvWLAQLnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753869349; c=relaxed/simple;
-	bh=FqV1olhUgft990I/oyZdVydA0AezeH5ltbHMVflBEyE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HqNYVZHfxw1JHbp/zTg3Bu1rfIhlGcO4HH5Rt/1Kdwoq14Mse1wAX76m2HHeh7ZY7ZtSIk8WnVreRMdbP06jz5d3Ex2OICDTrY/hfC6tFApLKyfT9DxI6tIUHWCykKC82gVCqktod8g3ImexLQ+w2Mg3gN147kO1UQXyMbbuWVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VqjE9TQ0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ABB0C4CEF5;
-	Wed, 30 Jul 2025 09:55:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753869349;
-	bh=FqV1olhUgft990I/oyZdVydA0AezeH5ltbHMVflBEyE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VqjE9TQ0NooUsJykjVTLtlDpM2IjROOWmoZQeKXPI2UDXExgyqqZ37HESjkbJcp7j
-	 XGX9xNfsJSfgsp+8c2hiVm3L6U+TRqizMEvf3rfBAZd/p6axkEBkt5gGFMkAedxrzU
-	 v/xFtq5fLgRwLHOPdZ2Lf3Y1RwclrR5J4xkgC25w3owQGvFCuu25IKG6LnHoyAmnq0
-	 bsJ7TA4QmeInt+0k90dNCkVg/XyJlzlAWMMfXzwNzkYPStpWjgUa7yJQLXfXOISryn
-	 Arn5MIaGRb+N+RcXy5Ywc+ztAn0PHTIEjQHzD8U5YoqRskFvhRdK++1k7gtrQ64zC1
-	 KiDwDcg+GGHSA==
-Received: from johan by xi.lan with local (Exim 4.98.2)
-	(envelope-from <johan@kernel.org>)
-	id 1uh3XJ-000000006JN-3FwZ;
-	Wed, 30 Jul 2025 11:55:49 +0200
-Date: Wed, 30 Jul 2025 11:55:49 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
-	mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
-	kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
-	kw@linux.com, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-	qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com,
-	quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v9 1/5] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
- Update pcie phy bindings for qcs8300
-Message-ID: <aInsJbZSqgRYkB5x@hovoldconsulting.com>
-References: <20250725104037.4054070-1-ziyue.zhang@oss.qualcomm.com>
- <20250725104037.4054070-2-ziyue.zhang@oss.qualcomm.com>
+	s=arc-20240116; t=1753870181; c=relaxed/simple;
+	bh=UCyVpLH87cSFpHt6B2Knjye0VwgeSGRgyWbokISmTG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HUSe4TC3PZHSMtF827crdhxmI+JcoTDCzU46oYdj605Qmnk2i3ozzJMk3k5GeHFHj9r7tD+Iz9X+jtpU/5KKjquLUgIcT4Mjq1GkEea/PtfFfPFxPAPG4eOfJOHKOZMUJiLWYVT7GJaXJ5xhDEsto4Y2796mCDJ4ezWM2kF7GzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D36201BC0;
+	Wed, 30 Jul 2025 03:09:30 -0700 (PDT)
+Received: from [10.57.3.117] (unknown [10.57.3.117])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 94F683F673;
+	Wed, 30 Jul 2025 03:09:36 -0700 (PDT)
+Message-ID: <bbe2a41a-8f72-4224-a0bc-225c1e35a180@arm.com>
+Date: Wed, 30 Jul 2025 11:09:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250725104037.4054070-2-ziyue.zhang@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 04/38] tsm: Support DMA Allocation from private
+ memory
+Content-Language: en-GB
+To: Jason Gunthorpe <jgg@ziepe.ca>, "Aneesh Kumar K.V"
+ <aneesh.kumar@kernel.org>
+Cc: linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, aik@amd.com,
+ lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
+ Xu Yilun <yilun.xu@linux.intel.com>, Steven Price <steven.price@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
+References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
+ <20250728135216.48084-5-aneesh.kumar@kernel.org>
+ <20250728143318.GD26511@ziepe.ca> <yq5a5xfbbe35.fsf@kernel.org>
+ <20250729143339.GH26511@ziepe.ca>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250729143339.GH26511@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 25, 2025 at 06:40:33PM +0800, Ziyue Zhang wrote:
-> The gcc_aux_clk is not required by the PCIe PHY on qcs8300 and is not
-> specified in the device tree node. Hence, move the qcs8300 phy
-> compatibility entry into the list of PHYs that require six clocks.
+On 29/07/2025 15:33, Jason Gunthorpe wrote:
+> On Tue, Jul 29, 2025 at 01:53:10PM +0530, Aneesh Kumar K.V wrote:
+>> Jason Gunthorpe <jgg@ziepe.ca> writes:
+>>
+>>> On Mon, Jul 28, 2025 at 07:21:41PM +0530, Aneesh Kumar K.V (Arm) wrote:
+>>>> @@ -48,3 +49,12 @@ int set_memory_decrypted(unsigned long addr, int numpages)
+>>>>   	return crypt_ops->decrypt(addr, numpages);
+>>>>   }
+>>>>   EXPORT_SYMBOL_GPL(set_memory_decrypted);
+>>>> +
+>>>> +bool force_dma_unencrypted(struct device *dev)
+>>>> +{
+>>>> +	if (dev->tdi_enabled)
+>>>> +		return false;
+>>>
+>>> Is this OK? I see code like this:
+>>>
+>>> static inline dma_addr_t phys_to_dma_direct(struct device *dev,
+>>> 		phys_addr_t phys)
+>>> {
+>>> 	if (force_dma_unencrypted(dev))
+>>> 		return phys_to_dma_unencrypted(dev, phys);
+>>> 	return phys_to_dma(dev, phys);
+>>>
+>>> What are the ARM rules for generating dma addreses?
+>>>
+>>> 1) Device is T=0, memory is unencrypted, call dma_addr_unencrypted()
+>>>     and do "top bit IBA set"
+>>>
+>>> 2) Device is T=1, memory is encrypted, use the phys_to_dma() normally
+>>>
+>>> 3) Device it T=1, memory is uncrypted, use the phys_to_dma()
+>>>     normally??? Seems odd, I would have guessed the DMA address sould
+>>>     be the same as case #1?
+>>>
+>>> Can you document this in a comment?
+>>>
+>>
+>> If a device is operating in secure mode (T=1), it is currently assumed
+>> that only access to private (encrypted) memory is supported.
 > 
-> Removed the phy_aux clock from the PCIe PHY binding as it is no longer
-> used by any instance.
+> No, this is no how the PCI specs were written as far as I
+> understand. The XT bit thing is supposed to add more fine grained
+> device side control over what memory the DMA can target. T alone does
+> not do that.
 > 
-> Fixes: e46e59b77a9e ("dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the QCS8300 QMP PCIe PHY Gen4 x2")
+>> It is unclear whether devices would need to perform DMA to shared
+>> (unencrypted) memory while operating in this mode, as TLPs with T=1
+>> are generally expected to target private memory.
 > 
-> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  .../bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml  | 15 +--------------
->  1 file changed, 1 insertion(+), 14 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
-> index b6f140bf5b3b..e04d5940a498 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
-> @@ -65,7 +65,6 @@ properties:
->        - enum: [rchng, refgen]
->        - const: pipe
->        - const: pipediv2
-> -      - const: phy_aux
+> PCI SIG supports it, kernel should support it.
 
-Just realised that you forgot to update clocks: maxItems above, with
-that fixed you can add my:
+ACK. On Arm CCA, the device can access shared IPA, with T=1 transaction
+as long as the mapping is active in the Stage2 managed by RMM.
 
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+Rather than mapping the entire memory from the host, it would be ideal
+if the Coco vms have some sort of a callback to "make sure the DMA
+wouldn't fault for a device". e.g, it could be as simple as touching
+the page in Arm CCA (GFP_ZERO could do the trick, well one byte
+per Granule is good). or an ACCEPT a given page.
 
-Johan
+Is this a problem for AMDE SNP / Intel TDX ?
+
+Suzuki
+
+
+
+
+> 
+> Jason
+
 
