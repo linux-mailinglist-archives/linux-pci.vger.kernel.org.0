@@ -1,137 +1,146 @@
-Return-Path: <linux-pci+bounces-33199-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33200-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D08DAB16561
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 19:23:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1C08B1673C
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 21:59:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 132B91AA375E
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 17:23:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 007907A13CB
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Jul 2025 19:57:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59E102DEA94;
-	Wed, 30 Jul 2025 17:23:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2F8E21771F;
+	Wed, 30 Jul 2025 19:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zwipy1d/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7AB1D7E41;
-	Wed, 30 Jul 2025 17:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD34218E377
+	for <linux-pci@vger.kernel.org>; Wed, 30 Jul 2025 19:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753896182; cv=none; b=bs6OoNW7amOlMYNLqtiJ9yk9/5JyCCIAcWpBaGRH3yFyHb0WEWbY3vU3poaAHZ610ZK+17wk+jfzQ4MRNKGrq8Qy/y8l0OZha8WCiPKBhsI0s5N/CL7gd4YYQ2qstVMiwYskXVoCLkByz68UwljSVKYf16xvwzpw86LvjnIY2h8=
+	t=1753905534; cv=none; b=hbMgyiQGQ+wepEC/u92Vt5G/+JzYkYU/HIJ6+20OQCu7WFXL/GsTKJcgJJGlmFRvqdq/xUbvVtBEiPRypHLvUen8BY0gVsPT+Drx+nLtGO1qu3K7wLWNW58B9TNnESRnv9OFToF+gVp0Vyrt7JGkzoT8gArCC7EYathaPM8W3uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753896182; c=relaxed/simple;
-	bh=2inB9lrYIxnh5dD0KnQ79CfqCqa2mBwK28Hu1ed57RY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nyKxbBM5g8AXkrBswQjUE05h2GNiRvsipyYufFSMLFy2nyuqhx7P7MdBAMBd9hYpn4g53KsNouK9TFvO2lgb0c3TC7qeFG3q5FGkYP/1ecf5onJ6DsHvOHtWwqBzsOEzuZwO1KyzYomU7OhCJeAZkxsY+Mq0NQdq/5Iy3/IY9K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae36dc91dc7so2845466b.2;
-        Wed, 30 Jul 2025 10:23:00 -0700 (PDT)
+	s=arc-20240116; t=1753905534; c=relaxed/simple;
+	bh=CG5SKXa8zPOQn3DCX5/e8odAxj8sWImHdXc+IA7A+Io=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fF3yFJxLMei06PhBGwGptDHMbIhCvR7rNCWABqxKYUFKR7Hj7hwFXj5qYHYbAleQMV89JGvtMYqSIXZLG3enUWJUBf5+7xcGQikNe3uXBfH/aApJju5HdMeItmog5sAMT+XfAYDq1TBIoPvQIDHSusXy+Q/r5cYtbRokfSM5nTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zwipy1d/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753905531;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MJ8yWqGXhru7WhV5DGnUZnDJthF7Yg1ZkZASyV+JWoM=;
+	b=Zwipy1d/+aYeX49YUl3RPWoAUZbooFhei0QjfGCwO7B6gicBefkcYFOHLVp3nRcdVyAnK8
+	fz9dbP/EKgOzMP/UlVW7s06aAtjY3f8I+AnGHnlKsxTV+SZKY9U+K8UdHAtu69hNexPuN+
+	a5nOYkou2V0wu0FmawyGX5zof/5RgdY=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-393-3erOo6BSOXyYeEWHI6bFVQ-1; Wed, 30 Jul 2025 15:58:50 -0400
+X-MC-Unique: 3erOo6BSOXyYeEWHI6bFVQ-1
+X-Mimecast-MFC-AGG-ID: 3erOo6BSOXyYeEWHI6bFVQ_1753905530
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-88118bfccf4so4301239f.2
+        for <linux-pci@vger.kernel.org>; Wed, 30 Jul 2025 12:58:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753896179; x=1754500979;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RVG5g2ageWB6fvYTmlrchc1VftQuavVCJU6Q16hxq1Q=;
-        b=TWsJFbVmcJ+2unhu6eVN9mU6koxU7zwsliO+KRn0dym5wi8MJNeN5kn6PfMbSkh/10
-         r7KmwZsbOl4EZY8cAS98q0E2zOALhq5Y3Sa55AKmszu8o4bCfdGQk7//4lc9nTL4xt6n
-         uwe7L8Zjld6YrSVnLFnzS+xwpNLaxgumy55ddvrz36qbzkOdiJM2IAORBFOPLNzTd/uT
-         GXr6d0ayttRFdcjc0d+XHYW1d71GrVd+PCcaLzBDO4ZclHCIWZaRZeUaQGd6vIBO+wC0
-         SmVuvOyTItC+sdPJs1Ww97noa+v/auv70LNbZugXNiGiRM8l/HLLhP68HFg56y9oDPXV
-         dQjw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2RbvdzOPiEHreN593rrstqTuHqvrFPf8HzsOi0gJBwej/FLXl28lW3ngwKuWTHIgBE15Gq4skuU0T@vger.kernel.org, AJvYcCUpKqLRNX2kHuJtZR/zn1WpMPUGExNrpJ+bh4RbXJpqRB1hgn7OrYcvy1N5foI78mmTZi0jNphEeWf4@vger.kernel.org, AJvYcCX0geZbygbugmleA+KoSBCNE6m3N4R6ZEUAethNPh9W6UbQW/fqihhUOHNLMXIGyX76UX01/piq4qyCgdnb@vger.kernel.org, AJvYcCXWfkAIZqsAzqMhkJWh/fOWXA5IzZFRdxKeV8MJv3nZr2jB5o5bD/7/AKjRIZymsNShWy9Yy9atpueWcg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEftKqWYmY3O8h/J9jbwaaxkLsXng1moLqxPSmUVa8GfNGp5Iw
-	TLN8O01RAH8Sum6B6UN76HrI9DQbX5CGuykq98fQJMu1kSvOOm+wb/VN
-X-Gm-Gg: ASbGncuAm5mxYRjzc4kDrk19ESn8YXjGf61k9GypwnK637vevGeWWauKacXS5WWrCuz
-	H72Aup6388uWGg3jv67VbcX7zE587VHqYkCjMQQRwLwHtzq1CH0dEXhTZD/kq2gzy0kvwxSRuUM
-	9ELTZllvRIah7KgKIC1GJXY0HVszHZm/jhxtbdtRPb/dtWvyeRAUYoBMMkUZ7YsM8U0+RM/rrTS
-	GJ9WVC/4K/mSrtm2I/1zDxl7qOGYeWFvp3oGWzA50HaGFiEkyvQSK7eMLZi5i8nbA6l3UiKuDpX
-	yiFL12vqIYgtffy3juA9RJBpXmNnCBg0LNnxy6i/J7OKyG+D/pSy3Lul+j6CWH7QIuTQskB9rKA
-	WBDVvYXsiTbrz
-X-Google-Smtp-Source: AGHT+IEUbbT7MGZ9RPV14AyB319B+ILu1Zn4HTqqRjqhmc6jefo1B6r2lcAh4WufQuwJ5cKV1ZycMA==
-X-Received: by 2002:a17:907:3d0f:b0:ade:3eb6:3c6 with SMTP id a640c23a62f3a-af8fd71454bmr552748166b.15.1753896178789;
-        Wed, 30 Jul 2025 10:22:58 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:9::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af635a63a5bsm781297566b.93.2025.07.30.10.22.57
+        d=1e100.net; s=20230601; t=1753905530; x=1754510330;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MJ8yWqGXhru7WhV5DGnUZnDJthF7Yg1ZkZASyV+JWoM=;
+        b=UBXTMOliOMHJL/pTTXd6e+l6TuUQaDdPfiEXh8hFxbKZRPgzt0+SoVsaVXQpbdmMCk
+         4C3mEp0uMc/tGsqfcP60r3UyUdQNED7MEg34xt/FoT30U0yyCpAW0qxr1mVqmj3hRgyZ
+         jG0C0bDM/fuwCrwkxTAnwG101pCkIM5YR9E+gt1495fQSM0rZTuV6PHoLpVCz1Bqd37G
+         E4jqP3dKV3o0Te+Vv4GNyJuZroTY50BYqKUmMQ0rQ09Ddh8mtPtm+UWQIGdAQTUDM52v
+         YvEBGZ/PBv6YFsVqC50iWaw027AC1J12gXtAFguE+mCMzq5JqNEXmVT7q9otaK3qUUdX
+         y3pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVIg2OTOljglTFb6593s6NoA+ohWYQidf4+ZCpw9vUSk8oQiIdGeHbqctAyMrAM8ebKntwB3M7CHQQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yysje7lf3gOkFbBK8wqDlNx9OIHtOPRA2EKwoc31eg+AVhAeSLG
+	EFi5toiuLV1WM71uW7wMbs0scP6SY7dhltcT3ecRxtIn/6qFyvXXOf2W77LG7XiHG3BJySoZPk6
+	vjlY+gZauRJq13aESJC/OVphaF5e5j/xnUYjYBcNB9QqQl01izAomZIqf7vMaww==
+X-Gm-Gg: ASbGncsX6GrPt0Be5u6AipkiNTFQWN4dZNpCR5Frd9H5OPynBxv3XmTvdtKkMizaq9K
+	H3vr2VE5e0H+Smo+Qq7ycm2kIcqzpJKONRjDnmng9H6f+RdQ1vo04kSW6faYQlmU3xH7AqT2r3o
+	+uThCHigDUUMQVxXGxHCKnUNuOUZUrSkoGXnnM/m8Enqf9nq2jXvAcUCqIzkGnTz9QeffUGeZIG
+	JnyihGEztySwGhl++PveGVzrtixX/S2Z/5ludMZ16uTJWU8Bzt+BxAjQObcXnpg0h6fISRArFoX
+	HQYyR2qHigwH08P8Zh4b7D7IOcwrudKnPJD4jp4mszc=
+X-Received: by 2002:a05:6602:3403:b0:85b:544c:ba6c with SMTP id ca18e2360f4ac-88137489c1bmr247638539f.1.1753905529655;
+        Wed, 30 Jul 2025 12:58:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEqzTNDwtWgU4diezEDNzfWAqDpdNRdRLffgeb0LuFILxM3AuzO6OxVkpYobVhQ8ZrxcWgziA==
+X-Received: by 2002:a05:6602:3403:b0:85b:544c:ba6c with SMTP id ca18e2360f4ac-88137489c1bmr247635939f.1.1753905529204;
+        Wed, 30 Jul 2025 12:58:49 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50a55da3278sm19521173.84.2025.07.30.12.58.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Jul 2025 10:22:58 -0700 (PDT)
-Date: Wed, 30 Jul 2025 10:22:55 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>, 
-	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>, 
-	Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev, osandov@osandov.com, 
-	konrad.wilk@oracle.com, linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-pci@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v3] vmcoreinfo: Track and log recoverable hardware errors
-Message-ID: <4w7adjalaisxhdx4l2zzl6ghanky4geijl523q2ezz7b5kj4kq@fr44nlwsw6qa>
-References: <20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org>
- <7ce9731a-b212-4e27-8809-0559eb36c5f2@linux.alibaba.com>
- <4qh2wbcbzdajh2tvki26qe4tqjazmyvbn7v7aqqhkxpitdrexo@ucch4ppo7i4e>
- <fdb5dced-ea5a-48b8-bbb4-fc3ade7f3df8@linux.alibaba.com>
- <ldlansfiesfxf4a6dzp5z2etquz5jgiq6ttx3al6q7sesgros6@xh4lkevbzsow>
- <4ef01be1-44b2-4bf5-afec-a90d4f71e955@linux.alibaba.com>
- <2a7ok3hdq3hmz45fzosd5vve4qpn6zy5uoogg33warsekigazu@wgfi7qsg5ixo>
- <a87c5e74-082f-4be6-bbfd-4867bf72ddcc@linux.alibaba.com>
- <zc4jm3hwvtwo5y2knk2bqzwmpf7ma7bdzs6uv2osavzcdew3nk@lfjrlp6sr7zz>
- <20250730182137.18605ea1@foz.lan>
+        Wed, 30 Jul 2025 12:58:48 -0700 (PDT)
+Date: Wed, 30 Jul 2025 13:58:46 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Leon Romanovsky <leonro@nvidia.com>, Christoph Hellwig <hch@lst.de>,
+ Jason Gunthorpe <jgg@nvidia.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Bjorn Helgaas <bhelgaas@google.com>, Christian
+ =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+ dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, Jens Axboe
+ <axboe@kernel.dk>, =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+ Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-mm@kvack.org, linux-pci@vger.kernel.org, Logan Gunthorpe
+ <logang@deltatee.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Robin
+ Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 00/10] vfio/pci: Allow MMIO regions to be exported
+ through dma-buf
+Message-ID: <20250730135846.2208fe89.alex.williamson@redhat.com>
+In-Reply-To: <cover.1753274085.git.leonro@nvidia.com>
+References: <cover.1753274085.git.leonro@nvidia.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250730182137.18605ea1@foz.lan>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello Mauro,
+On Wed, 23 Jul 2025 16:00:01 +0300
+Leon Romanovsky <leon@kernel.org> wrote:
 
-On Wed, Jul 30, 2025 at 06:21:37PM +0200, Mauro Carvalho Chehab wrote:
-> Em Wed, 30 Jul 2025 06:11:52 -0700
-> Breno Leitao <leitao@debian.org> escreveu:
-> > On Wed, Jul 30, 2025 at 10:13:13AM +0800, Shuai Xue wrote:
-> > > In ghes_log_hwerr(), you're counting both CPER_SEV_CORRECTED and
-> > > CPER_SEV_RECOVERABLE errors:  
-> > 
-> > Thanks. I was reading this code a bit more, and I want to make sure my
-> > understanding is correct, giving I was confused about CORRECTED and
-> > RECOVERABLE errors.
-> > 
-> > CPER_SEV_CORRECTED means it is corrected in the background, and the OS
-> > was not even notified about it. That includes 1-bit ECC error.
-> > THose are not the errors we are interested in, since they are irrelavant
-> > to the OS.
+> From: Leon Romanovsky <leonro@nvidia.com>
 > 
-> Hardware-corrected errors aren't irrelevant. The rasdaemon utils capture
-> such errors, as they may be a symptom of a hardware defect. In a matter
-> of fact, at rasdamon, thresholds can be set to trigger an action, like
-> for instance, disable memory blocks that contain defective memories.
+> ---------------------------------------------------------------------------
+> Based on blk and DMA patches which will be sent during coming merge window.
+> ---------------------------------------------------------------------------
+> 
+> This series extends the VFIO PCI subsystem to support exporting MMIO regions
+> from PCI device BARs as dma-buf objects, enabling safe sharing of non-struct
+> page memory with controlled lifetime management. This allows RDMA and other
+> subsystems to import dma-buf FDs and build them into memory regions for PCI
+> P2P operations.
+> 
+> The series supports a use case for SPDK where a NVMe device will be owned
+> by SPDK through VFIO but interacting with a RDMA device. The RDMA device
+> may directly access the NVMe CMB or directly manipulate the NVMe device's
+> doorbell using PCI P2P.
+> 
+> However, as a general mechanism, it can support many other scenarios with
+> VFIO. This dmabuf approach can be usable by iommufd as well for generic
+> and safe P2P mappings.
 
-Sorry, I meant that Hardware-corrected errors aren't relevant in the
-context of this patch, where we are errors that the OS has some
-influence and decision.
+I think this will eventually enable DMA mapping of device MMIO through
+an IOMMUFD IOAS for the VM P2P use cases, right?  How do we get from
+what appears to be a point-to-point mapping between two devices to a
+shared IOVA between multiple devices?  I'm guessing we need IOMMUFD to
+support something like IOMMU_IOAS_MAP_FILE for dma-buf, but I can't
+connect all the dots.  Thanks,
 
-> This is specially relevant on HPC and supercomputer workloads, where
-> it is a lot cheaper to disable a block of bad memory than to lose
-> an entire job because that could take several weeks of run time on
-> a supercomputer, just because a defective memory ended causing a
-> failure at the application.
+Alex
 
-Agree. These errors are used in several ways, including to detect
-hardware aging and hardware replacement at maintenance windows.
-
-In this patchset, I am more focused on what information to add to
-crashdump, so, it makes it easy to correlate crashes to hardware events,
-and RECOVERABLE are the main ones.
 
