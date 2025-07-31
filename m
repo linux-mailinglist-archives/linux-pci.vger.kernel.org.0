@@ -1,137 +1,141 @@
-Return-Path: <linux-pci+bounces-33258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33262-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09845B1765D
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Jul 2025 21:02:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B93A1B178A5
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Jul 2025 23:59:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1AC447B687B
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Jul 2025 19:00:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E41E758275C
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Jul 2025 21:59:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EFED19F48D;
-	Thu, 31 Jul 2025 19:01:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43E3A26C39E;
+	Thu, 31 Jul 2025 21:59:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GxcrQpeF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQ8SuycP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA87198E9B;
-	Thu, 31 Jul 2025 19:01:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073D325CC52;
+	Thu, 31 Jul 2025 21:59:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753988500; cv=none; b=nVtvi2VGS4drsy4zcS1KERDMoqf/M+/oPK8ZHUO7wbEojGDnudEna3xwSGDUK/WZ1LImYoDzUepTof40DzI1QfpdKI1f8br1PnroLBS11PT1A0Ml3/AnL/pCPpBlhiREls40gm4fsTcWIHFtQbJNz7RkYA5zzTysA/mcvND00bs=
+	t=1753999170; cv=none; b=ZbpPbjMQtjrl0BqZ/CyRVh0KyQHqwUOwHX22Jo6RFapPwnxLd5ub7N0WAwVV00WHL5Vl4LSQ75kkRiB2qWYHOyi0uG4EqTqASo7FJveE5xJmdG90Qwwz/PiEbz8v9RrGfdoNj6vN7Vmc0FeNsIoCQJbO793OXPxEdHDWnmzVSKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753988500; c=relaxed/simple;
-	bh=jFRy8D/uMyEpm99e7t7mFshpQp5ReIy/WWIZ0D9wB5E=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=qpxPfvXkphB2EMBDUg2xZd4TWxcArrno85iZYWc8o4tLS/ZR619itGQ1dJu5NlD5Qn5AQZgZ6ht8PZq6MAvIo+hnKA1WK+/Dke6c3NQcBol5WbX90U0/VxLg61b1Bbaid26naLTT5/UuolXUShgiBJV7qcoB/yX8W89xNWuRfks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GxcrQpeF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1207BC4CEF6;
-	Thu, 31 Jul 2025 19:01:38 +0000 (UTC)
+	s=arc-20240116; t=1753999170; c=relaxed/simple;
+	bh=VTivWzBig8qO+f9kiueL0YgCcL2cFIHpCmHWMnbJp1Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EFzbUcGCLm/QFH92jYA7Is03fz47OQ2pZ8oNo7rTOIVDOxJkhOs5qnuSQnmluMNR9dsPN25X5EsHD17h9YugJxDOz9qHmp0ypiLg6W+MZg4HCbF9HD/f43fyl+ulloOwwfK8HkymIne2Hk8DXbCADLuSZEBGqSzJ/KUkvvLg8SI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQ8SuycP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 93C55C4CEEF;
+	Thu, 31 Jul 2025 21:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753988499;
-	bh=jFRy8D/uMyEpm99e7t7mFshpQp5ReIy/WWIZ0D9wB5E=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=GxcrQpeFvQ01BQYfW/Ts2DfMDAiqT1yZFMlIaYidMMkTiD89OayIUVD78ownNWnTh
-	 Sll6yxnXBZClj9F9tV3msDJXmzAh+cxNAvTZBNhfqV6iaqQb8xdYfQrzdRyRHdRP/k
-	 QspkzRv2Hc/s1EIyOGuT51BrTg65fCMwQG1hU28YzSs1oe+cZirbLeeLVmLEYeZFrz
-	 G9qctKtdu7Stns49ztn6kDAMMkDF+Ns1GTbmmc6No4n1HyEEgbPtNCST7U6/QCygVo
-	 sONoWkSYecih28PnBOxTqL7Ts6Do2ekCyTCwD56IhKaZGKZqkwduYdwe3Yu0uMGmWW
-	 WLlMRQu6kzi2w==
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 1518DF40066;
-	Thu, 31 Jul 2025 15:01:38 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Thu, 31 Jul 2025 15:01:38 -0400
-X-ME-Sender: <xms:kb2LaMPdhEyW64fyqp1VO8RHIpFvuzzJNgnjenLlxT7kHEpx92Tn2w>
-    <xme:kb2LaC-6icXJS7UWZNeLmNBEp32qiyf5RcUNAIh4w0Q9u_b28ew8hjo4JIOyfxSXs
-    rleM8XIA5Sc-zBDzj0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddutdduiedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnhgvlhdrohhrgheqnecuggftrfgrth
-    htvghrnhepjeejffetteefteekieejudeguedvgfeffeeitdduieekgeegfeekhfduhfel
-    hfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdekhedujedtvdeg
-    qddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrdguvg
-    dpnhgspghrtghpthhtohepudejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopedu
-    kedvheehuddujeduheelseduieefrdgtohhmpdhrtghpthhtohepjhhinhhgohhohhgrnh
-    dusehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdr
-    tghomhdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopehkfihilhgtiiihnhhskhhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlphhi
-    vghrrghlihhsiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrnhhisehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    oheprghgohhruggvvghvsehlihhnuhigrdhisghmrdgtohhm
-X-ME-Proxy: <xmx:kb2LaINGGnQ7DvuKpwF_i4KfxlJVEYjnrCK4aerUN_Gthw1WyL_lew>
-    <xmx:kr2LaAYKPVf3w585Yo30KFi9BxRZh74HuzyV9cHu_gmJkX1G8u8umw>
-    <xmx:kr2LaKrgPJLD-On5iCdpVaVJAQ48EXh-Q_FVuE9bxVxVIwYJ_Oxltw>
-    <xmx:kr2LaNxY25iszNoqnYxqMyUteItYl8Y_tfJ_RoyeiZAJvIWYECoMXQ>
-    <xmx:kr2LaCJV3FaR3I0DI_lj9e-l6dcyYaqr-jXVpQpAVaH-Q4qU_HKbH4IB>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CB4FB700068; Thu, 31 Jul 2025 15:01:37 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1753999169;
+	bh=VTivWzBig8qO+f9kiueL0YgCcL2cFIHpCmHWMnbJp1Q=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=SQ8SuycP/YmL6RGqwpSfq3y1YWu9Z9Tn5Oac8fEqhD8vq085r1zCVnnczeuECB3jm
+	 rtkOSUn9m9dFhYAjdUSq2knM1X+cS2dQGdyaJFC+NGVy9jPew2UizQjJWQyeR8/Qj3
+	 rTp2ni/xUeH46bUbzAMMYfbNl4PZJHq8IYxtzjkRdrjbhYUlmwq7EsQkdUPtwnJuS2
+	 Ci1YZokaFybIRYYOtP2GooOgp1BvsaMqXTmxfSQd+/KdHlYwXl9wPsG3V3L3krImje
+	 uoH0/h3Tl9mfn8tMuRJXa15IAkeXLLSitlc9zEj1NrHN9JnEiC72xHzEdQmZLLHvI6
+	 4mZBImTzE1VEA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1F2C87FD3;
+	Thu, 31 Jul 2025 21:59:29 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Subject: [PATCH v7 0/3] PCI: tegra: Allow building as a module
+Date: Thu, 31 Jul 2025 16:59:23 -0500
+Message-Id: <20250731-pci-tegra-module-v7-0-cad4b088b8fb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tea76caf5b1f73f76
-Date: Thu, 31 Jul 2025 21:01:17 +0200
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Bjorn Helgaas" <helgaas@kernel.org>, "Gerd Bayer" <gbayer@linux.ibm.com>
-Cc: "Hans Zhang" <18255117159@163.com>, bhelgaas@google.com,
- "Alexander Gordeev" <agordeev@linux.ibm.com>,
- "Christian Borntraeger" <borntraeger@linux.ibm.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- jingoohan1@gmail.com,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
- linux-next <linux-next@vger.kernel.org>, linux-pci@vger.kernel.org,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- "Manivannan Sadhasivam" <mani@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Niklas Schnelle" <schnelle@linux.ibm.com>
-Message-Id: <6e34b4af-dff9-4360-b3da-c95ca7c740c9@app.fastmail.com>
-In-Reply-To: <20250731183944.GA3424583@bhelgaas>
-References: <20250731183944.GA3424583@bhelgaas>
-Subject: Re: [PATCH] PCI: Fix endianness issues in pci_bus_read_config()
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADzni2gC/4XPQWrDMBAF0KsErasijTSSnFXvUboYy2NHEMdBT
+ k1L8N0rp4ua2NDlH5j3+Xcxck48iuPhLjJPaUzDpQT/chDxRJeOZWpKFqAAldFGXmOSN+4yyX5
+ oPs8sfawbHZG9olaUt2vmNn09yPePkk9pvA35+9Ew6eX6i1lQW2zSUsmoSLehlKGlt66ndH6NQ
+ y8WbII1EHYAWACtydaVBmvdM2D+AFSwA5gCIDqylTfQePUM2DWAO4AtgAqhRoRoa72ZgP8BWIA
+ AnohiVYV6A7g14HcAt0xo2TjDREbBGpjn+QcAOCpn9QEAAA==
+X-Change-ID: 20250313-pci-tegra-module-7cbd1c5e70af
+To: Thomas Gleixner <tglx@linutronix.de>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, 
+ Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1753999168; l=1947;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=VTivWzBig8qO+f9kiueL0YgCcL2cFIHpCmHWMnbJp1Q=;
+ b=KNtTCfJzfNcIdkIiqUNgC5pYjwVCbgCsyt3Nc1YILP491nrjHJS8VDoZD1RNGygiRZ8ix5rcj
+ FUGA10pVnL9Dn+gVPl0fIO2uAY6mXjMAnv18S5+kITIONZ8ck7l9fQl
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-On Thu, Jul 31, 2025, at 20:39, Bjorn Helgaas wrote:
-> On Thu, Jul 31, 2025 at 07:38:58PM +0200, Gerd Bayer wrote:
->>  
->> -	if (size == 1)
->> -		return pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
->> -	else if (size == 2)
->> -		return pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
->> -	else if (size == 4)
->> -		return pci_bus_read_config_dword(bus, devfn, where, val);
->> -	else
->> -		return PCIBIOS_BAD_REGISTER_NUMBER;
->> +	if (size == 1) {
->> +		rc = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
->> +#if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
->> +		*val = ((*val >> 24) & 0xff);
->> +#endif
->
-> Yeah, this is all pretty ugly.  Obviously the previous code in
-> __pci_find_next_cap_ttl() didn't need this.  My guess is that was
-> because the destination for the read data was always the correct type
-> (u8/u16/u32), but here we always use a u32 and cast it to the
-> appropriate type.  Maybe we can use the correct types here instead of
-> the casts?
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+---
+Changes in v7:
+- Rebased on 6.16
+- Updated mailing address list
+- Link to v6: https://lore.kernel.org/r/20250507-pci-tegra-module-v6-0-5fe363eaa302@gmail.com
 
-Agreed, the casts here just add more potential for bugs.
+Changes in v6:
+- Remove unused debugfs cleanup function, as caught by kernel ci
+- Link to v5: https://lore.kernel.org/r/20250505-pci-tegra-module-v5-0-827aaac998ba@gmail.com
 
-The pci_bus_read_config() interface itself may have been a
-mistake, can't the callers just use the underlying helpers
-directly?
+Changes in v5:
+- Copy commit message exactly word for word on patch 1, as required by reviewer
+- Delete remove callback in patch 3, per request
+- Don't clean up debugfs, per request, which drops patch 4 entirely
+- Link to v4: https://lore.kernel.org/r/20250505-pci-tegra-module-v4-0-088b552c4b1a@gmail.com
 
-      Arnd
+Changes in v4:
+- Updated commit messages for patches 1 and 2, per review
+- Link to v3: https://lore.kernel.org/r/20250502-pci-tegra-module-v3-0-556a49732d70@gmail.com
+
+Changes in v3:
+- Add patch to drop remove callback, per request
+- Link to v2: https://lore.kernel.org/r/20250428-pci-tegra-module-v2-0-c11a4b912446@gmail.com
+
+Changes in v2:
+- Add patch to export tegra_cpuidle_pcie_irqs_in_use as required when
+  building pci-tegra as a module for arm
+- Drop module exit to prevent module unloading, as requested
+- Link to v1: https://lore.kernel.org/r/20250420-pci-tegra-module-v1-0-c0a1f831354a@gmail.com
+
+---
+Aaron Kling (3):
+      irqdomain: Export irq_domain_free_irqs
+      cpuidle: tegra: Export tegra_cpuidle_pcie_irqs_in_use
+      PCI: tegra: Allow building as a module
+
+ drivers/cpuidle/cpuidle-tegra.c    |  1 +
+ drivers/pci/controller/Kconfig     |  2 +-
+ drivers/pci/controller/pci-tegra.c | 35 ++++-------------------------------
+ kernel/irq/irqdomain.c             |  1 +
+ 4 files changed, 7 insertions(+), 32 deletions(-)
+---
+base-commit: 038d61fd642278bab63ee8ef722c50d10ab01e8f
+change-id: 20250313-pci-tegra-module-7cbd1c5e70af
+
+Best regards,
+-- 
+Aaron Kling <webgeek1234@gmail.com>
+
+
 
