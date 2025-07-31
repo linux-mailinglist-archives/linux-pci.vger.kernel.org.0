@@ -1,82 +1,82 @@
-Return-Path: <linux-pci+bounces-33236-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33237-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0C1AB1712A
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Jul 2025 14:28:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0769DB1713A
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Jul 2025 14:29:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E04ECA82F20
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Jul 2025 12:27:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CF6B5874F5
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Jul 2025 12:29:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A67A22C08AD;
-	Thu, 31 Jul 2025 12:26:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27A622C17A8;
+	Thu, 31 Jul 2025 12:28:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ELYgUIZw"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="HNfjI489"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157CD2C327D
-	for <linux-pci@vger.kernel.org>; Thu, 31 Jul 2025 12:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9350C2C08DB
+	for <linux-pci@vger.kernel.org>; Thu, 31 Jul 2025 12:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753964780; cv=none; b=CSDkTgfn2tyLy8SfryRwBBw6K6gRD2HEx31OvhJZ3gHfm11vODSZOeRjL3VxwEbDpg0zZp0RhkwQvAzzIaVc2Y1HgvJhGpFxMndKVtCofHotCqUTU9NrEhPkxSc4iv4Xee7SrO90o5CSdkeFXXQSou/ZkLXNOsgmOfve9K7CMT4=
+	t=1753964917; cv=none; b=T4eb34hD5oVp8TnwmlQTGqA412uW8w/QBIIwl9qHfXRMkRXxs7VScCl6dUHA1NfZhQNnZjuU/13IwgPGFDkNiSCctcJYpO8+wPnS5+a+itrYN0ROGKFtZGoowx+pu9SkAgwqMwy56iS08+O6OZnZvrEoOI3aVwMuTSkJLem2pYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753964780; c=relaxed/simple;
-	bh=DdxvPDAw0mc8/2mcJ0LEU5pxZezLf4CuYkBruMEyp5s=;
+	s=arc-20240116; t=1753964917; c=relaxed/simple;
+	bh=b7z5hjyg2X+VeoFo1PgyUE9sKzY0a5OOB4fYEBfffec=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fCa1fsAiYRe+FquCL/ei34CLOPOdJuYUjjtmJMt0s0fqv+3bo3M4XITYmoP3Muj0MC7mpuIeH9ptNwusvpvYh3HnrM67By9jAIvkeOMpNoWWIPD2z+qDpQ4CRhtI1vilWIihml9NUFOKexTSm4psvQOMkpgF2QBhJph/0kZyd1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=ELYgUIZw; arc=none smtp.client-ip=209.85.222.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=hHw171guKZyIGC1BlJ/d55o8PHhceyje8gZK90c9yeJMPb6Xeowu2MGy+2KQp0WQilsZkflvRe+1eLWw37s6LzIEY8DQK4fo88elEecBOq4wsGBRZ+8D9PDIf2E3LagJTRhu5IXooA7MMtPbeIqN3I15Ud4vjydKowfNTOuLS3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=HNfjI489; arc=none smtp.client-ip=209.85.222.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7e62a1cbf82so63607385a.2
-        for <linux-pci@vger.kernel.org>; Thu, 31 Jul 2025 05:26:18 -0700 (PDT)
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7e6783335a2so32423485a.1
+        for <linux-pci@vger.kernel.org>; Thu, 31 Jul 2025 05:28:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1753964778; x=1754569578; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1753964914; x=1754569714; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=I0UTzXjMbQLF812F/cBlHHlhQP11knn9ieRgsIR0U4g=;
-        b=ELYgUIZwQIAsqNJXhbwDMJCt9f6I/9ay7kMdcYgEIjyOqdd69Q19PwR/ZLGDCPbTuK
-         Xu8O3YHl0OTsJqyYE/U6mlbRY0hIu5rg0npaN5qXpF+CN4nuAM1kob7ZPC3ynU5dSanW
-         m85S/26N9/v6OyltlLIZPa5n0n/Xji5coPmGmruVwsgRueDAq23UKW4tcYbZL+KUSpqb
-         kyXeuNZB2Wv7Z2miCRlqIB5hRgxg9fbR/9ZfJMyoQx1iWR+BdIXnxIrO7QBLnXP6K+e2
-         e7/3v6lMVFPJkZ7W/YKmXN0JvQBKrZMvkULZynYcPhRYTSH+u2YKjXZggfe4vCKy1xP/
-         qKIw==
+        bh=OW/Iya9h0ABUEfHeAI61tqBJP6UR+IkHJ9+YZwygnb0=;
+        b=HNfjI489w/nmm9v4KPmn2rIBwTUX56yvucBIsp8A+P2kHlMrpYC991fnyl2jPaPE1o
+         YDGlknxsVwbDyt1Q01wRZxWKTsr0ViLyIAmUslu1NJ+orvOX1RU0Cha7ZIsUwJcyX8wh
+         dK3OzA370jwxBE2ayFCWz9PVsw1lC27hld8Cvtgs1jX2sGipWDiwRMNQ0cFZblol9cBD
+         R+kEgul4XexdcpbmDTQu9PE5SI0AWEYqCzNktzkjO4yYFV/BW+wvFc7UY407zpyInf57
+         x3qkfP5Re09HMNKUjrvmYjjwDI+2/55SwlMNalLkpOpOmzHxFw9F0DF2VYdD8KuQwyYm
+         QaMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753964778; x=1754569578;
+        d=1e100.net; s=20230601; t=1753964914; x=1754569714;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=I0UTzXjMbQLF812F/cBlHHlhQP11knn9ieRgsIR0U4g=;
-        b=S8ammLjIcYs9UVLvjbhTOplDKD8K5Z4NfyW1iKNqe3SS8O8rwuZnMbhgzxcBTfOap5
-         spqzKKgPx4evuO7Gegp1wWU7CpljSnOa8clQstW572OAFhdBejOUfdnkd3sfmziRvfJJ
-         Mh3ff8AECd3uWM8L085tOrNkfKINvyI6iVsHo4GK24/uGVH0x9GixnDBKIO90qW303f9
-         Yn22olUTHvxKwZoiZ8ujpS0pzxj1hACVTBSsyVl6M/+dDsjUurjNPBYxPTPAgPfxVMZF
-         YsxCWP02vwOKMINScOnFRo9xl1hf5rBBGBxwpenl2y+EeShGdnykdSZwBUDnCSZOLSju
-         OePA==
-X-Forwarded-Encrypted: i=1; AJvYcCVO5eCeMFmwo51oxZvKsnodBwn8hyySXOYO+43UCWakbtYAHs6HJ/pTCyvR0c70hZOWAtzOFkp2ExE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUOYESLAkh9mPWauqwAQRoHks4ZfgyqawXLKljI2JvEOHuDTDy
-	1+O68cMlli6V9U31xmrneMT6NZqMi7BRZT4B8S0Ld3ZVklXQAWTMu2+JnAKSPw+k+uY=
-X-Gm-Gg: ASbGncvHnhzWLBt2UMJsT2eJ44ZGKMc+HHBg5vQVL1jppr1ejvIh9L5typjsv3FTXhk
-	+2CHYUAhMDo2LdAW8jMgjkQUXsvb/PXNgzGiqi31F1+JKjpZ8axCpNIJTqrLAuKCKCwrRj79rsM
-	KCi6jmq158+dxFAqOHVvcQ9K3m8gyO8iMxOu1ykboJ9BE2pPoTiWIukN48V24YIrmq96lb2ej5i
-	/hDdOc/EHflu33LN6CqKF5kuVW9/TStNuSvisPiFDRXfBRdqVu3pkn1y6kJcW8pW4wnYJdiDa4X
-	J+E2m81SxwN8HwVHVI/G8dj7l+VJcvBU6d/8zAiZVzMot4i7z6DlU95vo9v1rtePbFLVkt7uVQC
-	DEmLdsjGYaalQVBmkSmhr2ZVdf7WvP52yMHYi2dHqnxg8+myFwrPgXTJlsXsgqG0pFB9Z
-X-Google-Smtp-Source: AGHT+IEV8Gmvc00o50P6OQKANpqFcknIb1Fql8SzhfROvZ160cWgmtvbR5AnJBSI+9ww0K1Z9AZwLQ==
-X-Received: by 2002:a05:6214:21e4:b0:707:4daf:62d with SMTP id 6a1803df08f44-70766f89168mr126988486d6.21.1753964777814;
-        Thu, 31 Jul 2025 05:26:17 -0700 (PDT)
+        bh=OW/Iya9h0ABUEfHeAI61tqBJP6UR+IkHJ9+YZwygnb0=;
+        b=lksnd3fW7AKWxrRfz2mObJ6fJM5+wfIg1ej7C9UEP008oh2gnngHLrtYnDbEeCElmT
+         BSrre0jTWHZO/wv2NJS+fX4luuBSSTNnuTY8S0NNG7pp9/KsZDqKGReN28bp+u6jojlg
+         XLCbWj0Ht6/imjiCgVarryrqLa0lMHamvq7cW9Dn/Q8DYbgIeRe7Vqb3YloXMvJ2l5dc
+         LDf8BhXuwqBgZbi18JAOHOcty+GmBa4lvvWAutvUrq4LDEp8JbnB15njLVDKkfgluDge
+         x4WU6zlFYBp8bJ73TrO5NTTqRPhcLQpwECs0JqR+fNEamT1JXSRtSUTjwCSJJcqXLbQg
+         LqUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzpHC/WKot4nrJtQWmkBqt1HicBj28LtZ2UEKIYC94F8gZmVMoKvbJUan3AxaA2VmbAdpSN4X9CT0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyzf0qehGMw/fCqj1iei7CTDpnHY2uS1K42NIIzacHeHhXi/XcI
+	hrpOi31S1uaKevIgFedSMXahy4mXEGLH/PTsVOXB1qmbK4kgpv/zrpGpOkmWwhw5RgQ=
+X-Gm-Gg: ASbGncssAcBetX6hha4WLXbjybQUxfxjRE2I2V+956k46dRqlxCmqo9m2mhmuUf6oOv
+	WD3YE3L/FfH6RYwz7bH9/M1IRIz6LbBuJFoHzr9jYfwLvtIzfD/tC7wV/WetZ5on0fFue0SnWVx
+	qR1w/lkpOV2Liazwnd5CsuhEgou6ZU+/Bx/yTaTYB0g26bgLmyuJHjkLs7TgZFRC+1Z++2CPntF
+	ZxARoaSRQAgwPC+Yepv/BDGnddr1BZfCto6ppx2XtK5a/MnDPNVb0fRGvaXmkl8QmpaG/SpKX8O
+	GFs98UuaGM//cVBUnp+6RZXeuUG1eBszCkiajaTicx5SVyK1YwUYxsAK8FzO2rdYiFubbJRQ5Sl
+	U4ZBCs8rPOpaKAqXH4/pqEUWXugq2IkwFWAqiBRyzlSBeTrObju+SilgLS9AbbwS86TXw
+X-Google-Smtp-Source: AGHT+IGB5rbfhCfpEBxYzQb9tShfBv5DP1x7P0EzX5XLP6rdIVy17VMQfI03BZoFiDbqj4lwUzglhg==
+X-Received: by 2002:a05:620a:571:b0:7e3:5129:db49 with SMTP id af79cd13be357-7e66f3515edmr758031285a.45.1753964914155;
+        Thu, 31 Jul 2025 05:28:34 -0700 (PDT)
 Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-7077c9da870sm6583536d6.1.2025.07.31.05.26.17
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e67f702578sm77242785a.57.2025.07.31.05.28.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Jul 2025 05:26:17 -0700 (PDT)
+        Thu, 31 Jul 2025 05:28:33 -0700 (PDT)
 Received: from jgg by wakko with local (Exim 4.97)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1uhSMS-00000000oZ9-3Vfz;
-	Thu, 31 Jul 2025 09:26:16 -0300
-Date: Thu, 31 Jul 2025 09:26:16 -0300
+	id 1uhSOf-00000000oaS-0Yjj;
+	Thu, 31 Jul 2025 09:28:33 -0300
+Date: Thu, 31 Jul 2025 09:28:33 -0300
 From: Jason Gunthorpe <jgg@ziepe.ca>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
@@ -89,14 +89,12 @@ Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [RFC PATCH v1 12/38] coco: host: arm64: CCA host platform device
- driver
-Message-ID: <20250731122616.GS26511@ziepe.ca>
+Subject: Re: [RFC PATCH v1 14/38] coco: host: arm64: Device communication
+ support
+Message-ID: <20250731122833.GT26511@ziepe.ca>
 References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
- <20250728135216.48084-13-aneesh.kumar@kernel.org>
- <20250729182244.00002f4f@huawei.com>
- <20250729232243.GK26511@ziepe.ca>
- <20250730112804.00002629@huawei.com>
+ <20250728135216.48084-15-aneesh.kumar@kernel.org>
+ <20250730145248.000043be@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -105,23 +103,23 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250730112804.00002629@huawei.com>
+In-Reply-To: <20250730145248.000043be@huawei.com>
 
-On Wed, Jul 30, 2025 at 11:28:04AM +0100, Jonathan Cameron wrote:
-> > devm is useful to solve complex things, these trivial things should be
-> > done normally..
+On Wed, Jul 30, 2025 at 02:52:48PM +0100, Jonathan Cameron wrote:
+> > +static int init_dev_communication_buffers(struct cca_host_comm_data *comm_data)
+> > +{
+> > +	int ret = -ENOMEM;
+> > +
+> > +	comm_data->io_params = (struct rmi_dev_comm_data *)get_zeroed_page(GFP_KERNEL);
 > 
-> Sure, that would be fine for now.  If we end up with a large complex flow that
-> happens to have a tsm_register() in amongst various managed resources
-> we can revisit.  If they all end up looking like this then a manual call
-> in remove is fine.
+> Hmm. There isn't a DEFINE_FREE() yet for free_page().  Maybe time to add one.
+> If we did then we'd use local variables until all allocations succeed then
+> assign with no_free_ptr()
 
-IMHO just don't use devm, it is so easy to use devm wrong and get out
-of order clean up. It works well for extremely simple case where 100%
-of cleanup is in devm (but then it is questionable if the overhead is
-worthwehile), and it is necessary for extremely hard cases where
-writing a manual unwind is too hard. But the middle ground it tends to
-just make ordering bugs and not provide alot of value, IMHO.
+Maybe think carefully if you really need a "page".
+
+What would prevent just using kzalloc(PAGE_SIZE)? Under the covers it
+is almost the same thing.
 
 Jason
 
