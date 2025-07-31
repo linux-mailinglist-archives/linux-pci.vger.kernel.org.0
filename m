@@ -1,52 +1,53 @@
-Return-Path: <linux-pci+bounces-33260-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33261-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1D4AB178A2
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Jul 2025 23:59:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BDF0B178A7
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Jul 2025 23:59:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D73C188DC1F
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Jul 2025 21:59:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1E3D1890704
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Jul 2025 21:59:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3919E26B2D3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D1C526C383;
 	Thu, 31 Jul 2025 21:59:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djiJg1l4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IuSZViBu"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073142512D7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07377256C9C;
 	Thu, 31 Jul 2025 21:59:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753999170; cv=none; b=FI43vqqK3C+2SqxvXzWGyQyx4SGfu8xd5Fp6Rrl7tP2cSPN95GLAsmEJlwxt/+Tma7GefkoUgXrlyIUiwPzbl2G0cJ6uqU3Iw3c5FMw6zGWoMvFUiS3roSxdFijifOnm6gsdUx31YCJIshq0NOM4jp6oOaj3XXxM5gydusPuV1U=
+	t=1753999170; cv=none; b=rW/76QYs3uI94NVudFWVWS4B35o3CrIza/SI4ZFXpH4UqPl9U7JswaiVRugCb7riaROGcDI8zzIBiPVgqFyLt65smoPwWoqBpGR7huSYrwfn4cQ3dClZIsfmYHnnKkk3dVc0FSoVpLjREDzJDqxUNwpfMz4dYWQr9Ya26Hlba5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1753999170; c=relaxed/simple;
-	bh=y9EfpfER3iG3oJpzB7Uv3sr7TbGqdJp799v9Smx2dtw=;
+	bh=F9e9tSYIordXZeE5OqM2JTzyisbrcH2j1AtrPQ2LZuE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hMizuyxMavdtMI89chXCVIy3/idAYr40wQ/g3Vb+/p5Vy1GyX+xQLfznsZJMSLIqkKm9JZKMNxODfEveldzgE/dnkPoXq6EDqo1HlvNmWL9OEMuGTw+MeYCeFUjvGnwPsU03Mep0CEp4EGrHn5rG6q0oZkIUjn6LIiIAJoAD0JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=djiJg1l4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A201DC4CEF7;
+	 In-Reply-To:To:Cc; b=qEOsMPVoWuf5frz8xPkRf2T9JqBZ++tgyYNmMzXuzXLrA9yze7E0AJAb48ga6yoHLJahSoKy+1x1FtiERHsGMMbo1gBK3hdqJmnKEVvyf2ZwhcvK3n/3/jy+y9HhmhJ6lTFsVeE5Wn+h3fTCR3rsDn43JhG0GsIbCCDFvKrHaXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IuSZViBu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B08E8C4CEF4;
 	Thu, 31 Jul 2025 21:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1753999169;
-	bh=y9EfpfER3iG3oJpzB7Uv3sr7TbGqdJp799v9Smx2dtw=;
+	bh=F9e9tSYIordXZeE5OqM2JTzyisbrcH2j1AtrPQ2LZuE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=djiJg1l4ih+UsnPUwY18CbuRXx1laKZBwwOCnAT6OOw6QYTCAO2WwpsCRZVH4ESF/
-	 oDgcrp1n3vDYOv7DVTPqstO4L5NKk5lGN7UsV6TAqSbktWFVzOr1RQuozw7raZRwbG
-	 hg5ABhjse2nuHnQDVDWgk4H1Wus7Xxz55z7N7yQYIvEckhp5/Rt01GqNGIMMjpOKUI
-	 uCFX0E+7eYoZq5enLQwL8+WgS33ADQlGv72DDwu/R3hKaOOi0SZFT/oru2e03HmISt
-	 nF+8QDeMIGZwaMjCCSTbhA/pHWkcrfn9HSP+rCBjiYFtH973uOUik3EuDc6X2AOHLx
-	 Txe6xScz7FCWw==
+	b=IuSZViBukNwZ1H5iO3RNSBrnvWZi3SFdRE4TBd7fjKn6vzjUoAqAk8pQoMwEPB60E
+	 4mr4Omc1f1X8cyuuSC5RXwcnUJKxvl0vTkW2X6byenbheZswD0jSREekb+SdJ21+2T
+	 o9jwavJxXTKrASheQfCCKCtSffc6O+KoLaCokSCqGVFl0UFTxdlMDZtybXkOrqMy24
+	 jeG0JUA2ebRZ4hHtL0JBFhGYBB6pdR5kbR/QBFzAaQiWxkFjGE+W+C/Ufqs3oVak3Q
+	 JxB23jE7UAEmgPMr0iOvWuuwD6X3nDRov9LwnoN9eYFr53sNw4MmdJcD57NT0oLzUs
+	 4Wq8zWfXjiwVg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC8FC87FCA;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0253C87FDA;
 	Thu, 31 Jul 2025 21:59:29 +0000 (UTC)
 From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Thu, 31 Jul 2025 16:59:24 -0500
-Subject: [PATCH v7 1/3] irqdomain: Export irq_domain_free_irqs
+Date: Thu, 31 Jul 2025 16:59:25 -0500
+Subject: [PATCH v7 2/3] cpuidle: tegra: Export
+ tegra_cpuidle_pcie_irqs_in_use
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250731-pci-tegra-module-v7-1-cad4b088b8fb@gmail.com>
+Message-Id: <20250731-pci-tegra-module-v7-2-cad4b088b8fb@gmail.com>
 References: <20250731-pci-tegra-module-v7-0-cad4b088b8fb@gmail.com>
 In-Reply-To: <20250731-pci-tegra-module-v7-0-cad4b088b8fb@gmail.com>
 To: Thomas Gleixner <tglx@linutronix.de>, 
@@ -72,11 +73,11 @@ Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, 
  Aaron Kling <webgeek1234@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1753999168; l=813;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1753999168; l=805;
  i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=zJfRZvCFTASylxqukHtONT8I03A9oylELli++Nq/N/o=;
- b=ziUT+U5OXljSSxWG75aYDzENmEmMIKimjN6dg8rDSrrFJWgzsmIfThorogDkzvbLqnhEBKRgg
- rMgixqVsE2cAAdM99wuBTqH30UNpSzUrq0GG4TUFU1QXep1hO2BMgM8
+ bh=BQaFZtR7Fm7B7nsp2ZQnjqbnUiyMM8zRmZn2k2TW44w=;
+ b=wfFDEDELw372gFNOlZws1E4tAwNhCQGy1Cm8MSywVcEUzrZorttMs/ZN4oswzg/oR2LxGkIB3
+ iBjhF90b2H5Chb8th6Tx0XoU/S3JD6V4zCpe4TVJdhD/RRtWdlHoaRo
 X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
  pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
 X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
@@ -86,26 +87,25 @@ Reply-To: webgeek1234@gmail.com
 
 From: Aaron Kling <webgeek1234@gmail.com>
 
-Export irq_domain_free_irqs() to allow PCI/MSI drivers like pci-tegra to
-be built as a module.
+Add export for tegra_cpuidle_pcie_irqs_in_use() so that drivers like
+pci-tegra can be loaded as a module.
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 ---
- kernel/irq/irqdomain.c | 1 +
+ drivers/cpuidle/cpuidle-tegra.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index c8b6de09047be768624b622a7a31fad1441de6d2..eb8eb9ee147cdc5d27a4da53ab62f852b78841f4 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1877,6 +1877,7 @@ void irq_domain_free_irqs(unsigned int virq, unsigned int nr_irqs)
- 	irq_domain_free_irq_data(virq, nr_irqs);
- 	irq_free_descs(virq, nr_irqs);
+diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
+index b203a93deac5f378572be90e22c73e7417adb99e..aca907a62bb5de4ee4c71c1900eacedd4b90bc0a 100644
+--- a/drivers/cpuidle/cpuidle-tegra.c
++++ b/drivers/cpuidle/cpuidle-tegra.c
+@@ -336,6 +336,7 @@ void tegra_cpuidle_pcie_irqs_in_use(void)
+ 	pr_info("disabling CC6 state, since PCIe IRQs are in use\n");
+ 	tegra_cpuidle_disable_state(TEGRA_CC6);
  }
-+EXPORT_SYMBOL_GPL(irq_domain_free_irqs);
++EXPORT_SYMBOL_GPL(tegra_cpuidle_pcie_irqs_in_use);
  
- static void irq_domain_free_one_irq(struct irq_domain *domain, unsigned int virq)
+ static void tegra_cpuidle_setup_tegra114_c7_state(void)
  {
 
 -- 
