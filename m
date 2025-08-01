@@ -1,186 +1,205 @@
-Return-Path: <linux-pci+bounces-33276-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33277-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD351B17F69
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 11:35:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ACD07B17F8E
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 11:47:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F045E17BBB3
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 09:35:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C926916235E
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 09:47:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2AC822A4DA;
-	Fri,  1 Aug 2025 09:35:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FCFB21CFF6;
+	Fri,  1 Aug 2025 09:47:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HlpmpxAX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRCmxn4n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275BC228C9D
-	for <linux-pci@vger.kernel.org>; Fri,  1 Aug 2025 09:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D7F1A76DE;
+	Fri,  1 Aug 2025 09:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754040942; cv=none; b=Uu0ITiGX5UCCmHL8ByUjemvV/O9mLxO13t3nyZF5iyuEiP49J9O8yl/9MOs4ZKTf9Rpvgg9ZN2drXiw7DAVbx0lRhYjBKkw3juY2tSlrZgNLAOjergODwF+wPvcZon7ClIsw3IJPCm3y/amx0Deu494HrFjrQvjjm0kD5N5SACE=
+	t=1754041642; cv=none; b=fPYR9abU94AJRGQcEoFD4Ee2okB5+7rn3wXBMvq6LMnTdbZY7GezU/NJ+WtZlLQt2cFUVLML60E1DSpMDVH3mMRAVoul3NHCWOZ1Hkfuf3SJvIyiPqEdZZLOhrmzs58ep/xVBupVQ/B336QeCEKVGi7GBfMVOLoEjDjKz2Kb1UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754040942; c=relaxed/simple;
-	bh=RereaYefPMJ+AN1G/WR2ZPJ7Q/9VsGyrmIOo6U3bInI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TnMTRm6JjW9ocX2y/iEN+SCUDUXyk2LzB+Y9qna/r8NaMqTUr2yZA9BTLljvNa1Po0yT8acOE0w6REY3DoZOmmrWcP8LiCQqI/l9l25Wlo2uueYxQYYrOrCeP9SxyQEP9BxXEBfLXZp5CK/22HV2XYRHcu0Vwn5zhq/k42L1JaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HlpmpxAX; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57199tpT004906
-	for <linux-pci@vger.kernel.org>; Fri, 1 Aug 2025 09:35:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FTE8Tu8b1amkpQAae9PG0gDF8STmsmRt79+CR3F5UKg=; b=HlpmpxAXKwE/hM1u
-	Vvr45SBbJSsOe208L9fPmhGEtdQ7zzm59J2Sp07WRhzO7rBeZaXdlrIwqqYH+6nn
-	7a5yeh6hOwgvw1qKBjhmTekG2uiDf9OrPOetBdNKvf2aD5X31PAR031EJXZ0ftte
-	RiHFgnWyPtj6oI0O0dA6yOLjurfsNDi3LOe4jvlHCjpbLkit+g29lMYwNoEyNZXK
-	JxPPajHIsUlwQCMSX0jrcQBeYKhG4BUrfNO/UATglbrCWS3fYvM6/SrPhUahdauM
-	Mno8z7oA/gKNWhCB1NsYffFz4V/47S2lWdD69jVy4nlMbhIrJMCgjQXRuJGCMWPx
-	4l/vfQ==
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 484q86bm6b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 01 Aug 2025 09:35:40 +0000 (GMT)
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b4226c60a38so985785a12.1
-        for <linux-pci@vger.kernel.org>; Fri, 01 Aug 2025 02:35:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754040939; x=1754645739;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FTE8Tu8b1amkpQAae9PG0gDF8STmsmRt79+CR3F5UKg=;
-        b=PTU/gM2xJXYKDNBw8zewKTV8N4yhfuVO0bk55FCiwfaDpzRBbqwt5H65w2FMtXgPUb
-         VRm4Wb5+D7vknl+dxqhNtcb5n+kKk2pG0cDuaBNOxnSZXuS01EWiOX3t87TlXORq9olX
-         99flF6Je319DBzP14hHEFstn/kBq40T3HDXMIxvYtmyKojN7v55kexiEehmO/rPZ3aRr
-         Ds0SLqz5iORiU0+VbKJSv6BINL8TphGQ/yufL7yP3TsWkl5/kZHmWHhafV50PdZ/umcT
-         s1OxAeQeqK5G0J1NH8gmvtiJv98t7HEKebFLtt5lBrMXTBPE9stj5xs1LJAMb1odlNqu
-         A4BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJCalbpeehn8IVfbQ/ZUGiC9DbaX+vmh3+PCajQdNNMbixfL5Yt+Kp1/Sl3Zh33xXhDLMrybnbxXI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZuhQok92W1H4GFajFPnFddUR6Jttt1/a6NVQWjgVHQhHnL4bP
-	vgXaq1GtaubfSxIHVm2/jFfcamMhgAA/cZXTVvi2bcuE/rO0sNmgExD3TFQKVhubNRdzMI7GWmR
-	Z6UDmjeCaUHtfwLjQRabGj4STHrSQzOVepdKyGb+5ihCJ1oFbowwCpwwY6zUdSJY=
-X-Gm-Gg: ASbGncvpJIhcLbBV4cgXlYyufowqq9+IACGn9NjynnOXjUIJxwbyTHs3uZxqt0Wk036
-	VSlDqNPHDqDKM/ou06iXEUr8Zv8Ff6pwgd531hDjLjscU8duk3LQrw9PBotkXkvziuXvFci/oa2
-	oa02ROhwaABWmOoG24TSBDpLOj/PrdpHwHunNg6xayQxvznyOS/eag3gKEFaNrhQFgJpL3Ij41Q
-	MDEcU7yCp7OzVfeP2Hgi0e2XH9AcJW6JdJxOwqXk2KQiY80jahl0x1rS8zECV+cigSH51/M2uFL
-	gw8m5BvP29jDPDGY7hxzlKQtk2oU6mMnOOLVIzfiTxfcZTo6OOoTaoxFM3Y8pH0umOY8/S1SmA=
-	=
-X-Received: by 2002:a17:903:22d0:b0:240:1850:cb18 with SMTP id d9443c01a7336-24096bcc7a9mr150191695ad.53.1754040939352;
-        Fri, 01 Aug 2025 02:35:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGbZdxiptvpigi7eLXKhWCFOZQbYGfK+h+OEAOD3ELNf+6iC45wP9TbESkBH3N8d372w+JIbg==
-X-Received: by 2002:a17:903:22d0:b0:240:1850:cb18 with SMTP id d9443c01a7336-24096bcc7a9mr150191225ad.53.1754040938913;
-        Fri, 01 Aug 2025 02:35:38 -0700 (PDT)
-Received: from [10.218.42.132] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3207ebc3266sm4196042a91.13.2025.08.01.02.35.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Aug 2025 02:35:38 -0700 (PDT)
-Message-ID: <7f1393ab-5ae2-428a-92f8-3c8a5df02058@oss.qualcomm.com>
-Date: Fri, 1 Aug 2025 15:05:31 +0530
+	s=arc-20240116; t=1754041642; c=relaxed/simple;
+	bh=BMntt7/aru1tXJivT6Bbb/N8lgR4/vQlo8pUtzmlNNg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AKX4eqafHhTgENAezl9JT8SPq+p62bW8/M5k83EUt4sRcsmKn3bVmDVCnZIMESHbS3KTvsE+hkP2yOCk/TC/bBpvKTBy4DS/1sziWSp9saft9fCLjaEgmXiDfEQIOnS+uf6oA6WEpFzEHfg5BscMik61YCLXQSi9CyRmiUCKdWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRCmxn4n; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC484C4CEE7;
+	Fri,  1 Aug 2025 09:47:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754041641;
+	bh=BMntt7/aru1tXJivT6Bbb/N8lgR4/vQlo8pUtzmlNNg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eRCmxn4njKU3sJ695x1FfbE19HUDyG20lp/Dq0VOYikHH0qwCDShuwa6up4RoRaHq
+	 tbdlxX9qw0rjuykrA8mofJQe8CpLTXLap00+KCYJXPHAGml3zCaTr4gZeUyh5xTVV0
+	 qcP7hOG4zhUKWTxq1O1Mm6N2uwWnOJ4sTX8GyFWJMsQopE9lH2JDmQhXVrQgB3xNd7
+	 015UL392LIrYzqbs5gzYg0yU2Mk6wS3iKrantn2RvMEPiVRntn8+OATcso4lnoEq9o
+	 scyte6/IIAs7dIrKFyC//TG8y1vIh8nE3VsvGs7s2ksDQ6O05l2lKy0fsKT5nBMIkH
+	 hHxUWv2ZwCFJA==
+Date: Fri, 1 Aug 2025 15:17:09 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hans Zhang <hans.zhang@cixtech.com>
+Cc: Arnd Bergmann <arnd@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, 
+	Gerd Bayer <gbayer@linux.ibm.com>, Hans Zhang <18255117159@163.com>, bhelgaas@google.com, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, jingoohan1@gmail.com, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-next <linux-next@vger.kernel.org>, linux-pci@vger.kernel.org, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Niklas Schnelle <schnelle@linux.ibm.com>, geert@linux-m68k.org
+Subject: Re: [PATCH] PCI: Fix endianness issues in pci_bus_read_config()
+Message-ID: <ofsbfhor5ah3yzvkc5g5kb4fpjlzoqkkzukctmr3f6ur4vl2e7@7zvudt63ucbk>
+References: <20250731183944.GA3424583@bhelgaas>
+ <6e34b4af-dff9-4360-b3da-c95ca7c740c9@app.fastmail.com>
+ <vf65usnffqzlkgijm72nuaslxnflwrugc25vw6q6blbn2s2d2s@b35vjkowd6yc>
+ <9a155e45-f723-4eec-81d3-2547bfe9a4e9@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] opp: Add bw_factor support to adjust bandwidth
- dynamically
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250717-opp_pcie-v1-0-dde6f452571b@oss.qualcomm.com>
- <0dfe9025-de00-4ec2-b6ca-5ef8d9414301@oss.qualcomm.com>
- <20250801072845.ppxka4ry4dtn6j3m@vireshk-i7>
- <7bac637b-9483-4341-91c0-e31d5c2f0ea3@oss.qualcomm.com>
- <20250801085628.7gdqycsggnqxdr67@vireshk-i7>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <20250801085628.7gdqycsggnqxdr67@vireshk-i7>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODAxMDA2OSBTYWx0ZWRfX+QBFj1IpGOts
- ctUm6Ad7lNqHPgGaavLQ6V1gVdgQrrf5ZX0XySQ4N157g9dW37vh7DB3fab2T5tWAsTLxjsPj1s
- q32ewv8/AG9yY6EWQ6RDlLBdtJjpVAn5ruaQaZXtNPXwk/GitaOGhXX50eva3ncDFoJWrbhxNzh
- jVZJbMHr1MG76DC+TsYNSQIxhRhTfVywK24wlocZj+1pXVncqv0whIlucbBF6ryepHNRWxGfk3/
- wyQmwffTDdobGn86Q26+kp+Uo1tglQ+PTIixbEcg00om9xqILmoSvaqHDTKAuiKAJBgT+0c8NKm
- 8RAW4c26dIvH2b0CWMqdly+JtLfjSmcSN4OAh8vC/pnVwjDaozIgTQMj1nmqecbT/jfbiQPUHdx
- /uYFNpYWmXgzTsrH+VlMspXFVfKRfexiIaQV81Y0PbUZHAujCwrvv/hxDbpdDUuuV/ePt8bL
-X-Authority-Analysis: v=2.4 cv=TqLmhCXh c=1 sm=1 tr=0 ts=688c8a6c cx=c_pps
- a=rz3CxIlbcmazkYymdCej/Q==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=lAXUmMm_w8SOBygwRYEA:9
- a=QEXdDO2ut3YA:10 a=bFCP_H2QrGi7Okbo017w:22
-X-Proofpoint-ORIG-GUID: RBia33ozR0UcBlGu2cf889p0nTHHEvfK
-X-Proofpoint-GUID: RBia33ozR0UcBlGu2cf889p0nTHHEvfK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-01_03,2025-07-31_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 phishscore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
- malwarescore=0 adultscore=0 spamscore=0 priorityscore=1501 clxscore=1015
- impostorscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2508010069
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9a155e45-f723-4eec-81d3-2547bfe9a4e9@cixtech.com>
 
-
-
-On 8/1/2025 2:26 PM, Viresh Kumar wrote:
-> On 01-08-25, 13:58, Krishna Chaitanya Chundru wrote:
->> When ever PCIe link speed/width changes we need to update the OPP votes,
->> If we use named properties approach we might not be able to change it
->> dynamically without removing the OPP table first. For that reason only
->> we haven't used that approach.
+On Fri, Aug 01, 2025 at 05:25:51PM GMT, Hans Zhang wrote:
 > 
-> I am not sure I understand it fully. I thought this was a one time configuration
-> you were required to do at boot time based on platform's configuration.
->
-I am not fully familiar with OPP here.
-
-> If you need to change the performance at runtime, won't you switch to a
-> different OPP ?
 > 
-yes we do set different OPP when we change it.
-
-Currently we are fetching the OPP based on the frequency and setting
-that OPP using dev_pm_opp_set_opp().
-
-As you are suggesting to use dev_pm_opp_set_prop_name() here.
-This what I understood
-
-First set prop name using dev_pm_opp_set_prop_name then
-set opp dev_pm_opp_set_opp()
-
-if you want to change above one we need to first clear using
-dev_pm_opp_put_prop_name() then again call dev_pm_opp_set_prop_name
-& dev_pm_opp_set_opp()
-
-I was in a impression that once you call dev_pm_opp_put_prop_name()
-the previous votes will be removed. we don't want that to happen.
-if this is not correct we can use this approach.
-
-If this is not correct assumption can you point me any reference to this
-I was not able to find any reference on this.
-
-- Krishna Chaitanya.
-
-> I don't have much knowledge of how PCIe works, maybe that's why the confusion.
+> On 2025/8/1 16:18, Manivannan Sadhasivam wrote:
+> > EXTERNAL EMAIL
+> > 
+> > On Thu, Jul 31, 2025 at 09:01:17PM GMT, Arnd Bergmann wrote:
+> > > On Thu, Jul 31, 2025, at 20:39, Bjorn Helgaas wrote:
+> > > > On Thu, Jul 31, 2025 at 07:38:58PM +0200, Gerd Bayer wrote:
+> > > > > 
+> > > > > -  if (size == 1)
+> > > > > -          return pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
+> > > > > -  else if (size == 2)
+> > > > > -          return pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
+> > > > > -  else if (size == 4)
+> > > > > -          return pci_bus_read_config_dword(bus, devfn, where, val);
+> > > > > -  else
+> > > > > -          return PCIBIOS_BAD_REGISTER_NUMBER;
+> > > > > +  if (size == 1) {
+> > > > > +          rc = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
+> > > > > +#if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
+> > > > > +          *val = ((*val >> 24) & 0xff);
+> > > > > +#endif
+> > > > 
+> > > > Yeah, this is all pretty ugly.  Obviously the previous code in
+> > > > __pci_find_next_cap_ttl() didn't need this.  My guess is that was
+> > > > because the destination for the read data was always the correct type
+> > > > (u8/u16/u32), but here we always use a u32 and cast it to the
+> > > > appropriate type.  Maybe we can use the correct types here instead of
+> > > > the casts?
+> > > 
+> > > Agreed, the casts here just add more potential for bugs.
+> > > 
+> > 
+> > Ack. Missed the obvious issue during review.
+> > 
+> > > The pci_bus_read_config() interface itself may have been a
+> > > mistake, can't the callers just use the underlying helpers
+> > > directly?
+> > > 
+> > 
+> > They can! Since the callers of this API is mostly the macros, we can easily
+> > implement the logic to call relevant accessors based on the requested size.
+> > 
+> > Hans, could you please respin the series based the feedback since the series is
+> > dropped for 6.17.
+> > 
 > 
+> Dear all,
+> 
+> I am once again deeply sorry for the problems that occurred in this series.
+> I only test pulling the ARM platform.
+> 
+> Thank you very much, Gerd, for reporting the problem.
+> 
+> Thank you all for your discussions and suggestions for revision.
+> 
+> Hi Mani,
+> 
+> Geert provided a solution. My patch based on this is as follows. Please
+> check if there are any problems.
+> https://lore.kernel.org/linux-pci/CAMuHMdVwFeV46oCid_sMHjXfP+yyGTpBfs9t3uaa=wRxNcSOAQ@mail.gmail.com/
+> 
+> Also, please ask Gerd to help test whether it works properly. Thank you very
+> much.
+> 
+> 
+> If there are no issues, am I sending the new version? Can this series of
+> pacth 0001 be directly replaced?
+> 
+
+What benefit does this helper provide if it simply invokes the accessors based
+on the requested size? IMO, the API should not return 'int' sized value if the
+caller has explicitly requested to read variable size from config space.
+
+- Mani
+
+> 
+> 
+> 
+> The patch is as follows:
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index ba66f55d2524..2bfd8fc1c0f5 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -89,15 +89,25 @@ int pci_bus_read_config(void *priv, unsigned int devfn,
+> int where, u32 size,
+>                         u32 *val)
+>  {
+>         struct pci_bus *bus = priv;
+> +       int rc;
+> +
+> +       if (size == 1) {
+> +               u8 byte;
+> +
+> +               rc = pci_bus_read_config_byte(bus, devfn, where, &byte);
+> +               *val = byte;
+> +       } else if (size == 2) {
+> +               u16 word;
+> +
+> +               rc = pci_bus_read_config_word(bus, devfn, where, &word);
+> +               *val = word;
+> +       } else if (size == 4) {
+> +               rc = pci_bus_read_config_dword(bus, devfn, where, val);
+> +       } else {
+> +               rc = PCIBIOS_BAD_REGISTER_NUMBER;
+> +       }
+> 
+> -       if (size == 1)
+> -               return pci_bus_read_config_byte(bus, devfn, where, (u8
+> *)val);
+> -       else if (size == 2)
+> -               return pci_bus_read_config_word(bus, devfn, where, (u16
+> *)val);
+> -       else if (size == 4)
+> -               return pci_bus_read_config_dword(bus, devfn, where, val);
+> -       else
+> -               return PCIBIOS_BAD_REGISTER_NUMBER;
+> +       return rc;
+>  }
+> 
+>  int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
+> 
+> 
+> 
+> Best regards,
+> Hans
+> 
+> 
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
