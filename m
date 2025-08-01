@@ -1,127 +1,177 @@
-Return-Path: <linux-pci+bounces-33308-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33309-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B26AB18629
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 19:03:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5007FB1864B
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 19:08:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 567393ADA20
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 17:03:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A6F4542BBB
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 17:08:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4CB21DDC33;
-	Fri,  1 Aug 2025 17:03:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C6FC26CE36;
+	Fri,  1 Aug 2025 17:06:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fFBv7MO8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fVvFP5Pm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CBE1A08CA
-	for <linux-pci@vger.kernel.org>; Fri,  1 Aug 2025 17:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDA91AA1F4;
+	Fri,  1 Aug 2025 17:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754067821; cv=none; b=nv0Esd0s3iOfIzzC3V8b45+a0TL3CmgJsfm87Zc474C1SfSKznHfe39VVUyAoVMOSTNipT001dZczP62K0TlGc4LZwV+0bnKpFzE9ObMJT417jRbN+57BSKHLC73MAa2JzseKReHLT3GQkSZ4wiatR9LHoc7cfWa2wQH3DUZPc4=
+	t=1754068015; cv=none; b=sLKn5F2aGfmjdzi3no+h36xHkbvVYsZhU8fkF69pyo9rswGHpJG0iHJrYWyy/dJlr+ehl6UtMhyjAh9LVxwlges8RfnsubzrswhzipBXby7tQqUSUChvNx/ZdeWbbQmQHjp9jH9W+fWJMCwITP/FTe57OswcJhb56etZX9r903E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754067821; c=relaxed/simple;
-	bh=nCQxiJoszU8ksOrhF3/w351OjygrjbbqU1ObSybD2RY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=I1Kgel2nY9VZ48iXgEmec4788Y8E/M0j+CsSTRqlcSqksPum/K40+XVdsMtVCTJi/DvEzJP2kWTjoaaX8tq1uCsYv+rtfeQMSuMo6qTmUXae1g4atKtuy4IGU7Y1gqgf2/sgnKo2AxZlmQKCxhvlVrHx6Nw48sT/SWkpUOvkg+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fFBv7MO8; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4563cfac2d2so10570745e9.3
-        for <linux-pci@vger.kernel.org>; Fri, 01 Aug 2025 10:03:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1754067818; x=1754672618; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=X8Idzcjcrmg19teuU7qWglO1ohyMC29kZ4c9xikiJd8=;
-        b=fFBv7MO8DM8RD48Bddnrzh2oxr+ZmOKyuxIUb+aD+BeljgnBqLLg2UxXuouQB+aZkm
-         5ZQmHN1C9HYfIfqjRlAHCyoYhCQrRzRgqnGCafbnnbwqKIEDnFKyNFkirumOU1n/edMy
-         i3I7xthmIvCA6eM/s/nqPDe+ixoGoIxOKrIMaoEcK0pdOZtkrBT9rSOe50ssOXPqDigl
-         nMBlfk5KQQmgAHVRagxcMQumqd8XEI96/fsVL7a5rq+XWIkNcE37/vyxTWpSOfoU2TbE
-         9cs1+vUvFIiI5Vam67kXFxRyQLDDXT9rxFZMBoJbikZ/+++Tsic5jFYOSdw4EhPyjNLq
-         H0jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754067818; x=1754672618;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X8Idzcjcrmg19teuU7qWglO1ohyMC29kZ4c9xikiJd8=;
-        b=AeaQwXVdKnCymmFqOc/mZnoXWonEQzyxxeW8X9/MKoCBi6fluPPehrm3ArGTMrWBHn
-         KaY1ksoR7MAiGjP5hwrHIog5rfcffl9k5pkp0P2a+XBRbNiSYGwDMiLXN3LyPz4GH6Y+
-         aEHAA+nmja9mps8XtkPM6ae+airhW+PGKdbCYgY3qWE1rksDAdvScWkHpoW3rXw+Lv7h
-         JWf1SlcZRtwYgFGAAN92UVhTKhNCnWi14u8Q1zhbrZi1bIFX0kPunwfFT+Yw2D/7+hMb
-         2Rue0403MyTALGWc+Ns2kGgvmoAybnFDwLSCDYwgAfb9R6PQASmU2sU1QClq4ihT5icB
-         /oLw==
-X-Forwarded-Encrypted: i=1; AJvYcCWty9hJ3ckykIQtMjc0Ze1Wm/1tFvN8l9FqkFh1o0U3SxM1xqK4rmi56c6c6TWNPXWH2ySnFG59LZs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoQrep2W6tVtGmTkir/TKkpfUOuK5PeujvjIzwrR25JLJnVVE8
-	z4OipLHL3XEwCcPa2D6fvZEbe+GQ4yBiTaYvQZBQtWPtUILkt5sMlI3eX+cJJyVZbhY=
-X-Gm-Gg: ASbGncvvD/srSI89vmJ/o/FLOOGdGMquuWtrKWKiDPKwsuCEXCn5TZzymJqD9mmHheq
-	c9xwNUqoc7PvmcE/PNm9JkmaKUPnmJEpnFlm/ji4Vs2omypiqehncBzz0f7pP+Bbk4dqbFOBtE+
-	atAC3Cvnc5NItrbJw4XNR9knAytmxsC85TJW2iatJwEUfeJtI/Ea4ivMwJcMKM8hJvAZ3uTaike
-	goJebiv83wtiEnkwQXP/urJ5ld8ySFn6LHnRa009eLaT9SL+36iEH8FXh91+b6e8rVrE0JLcno8
-	HdnLyPwEFW9N6EWa2cb6WOR/XViK3PURTXcYRKqCxRy+7uhHmCbDv0PgPo2g2bbEBcNG7vdT7nK
-	7ZgnYwkBmPjfIZe7BGxNBtXl8mKb03owmeNsaHC85rRE=
-X-Google-Smtp-Source: AGHT+IF4SZA4+gvm+qE0CvIZzsjptGyk828yA5KPOKH5NCsTm42x7LDrAlCkH3FYaw1k6NNDuh4ctA==
-X-Received: by 2002:a05:600c:35c1:b0:450:d04e:22d6 with SMTP id 5b1f17b1804b1-458b69ca289mr446125e9.7.1754067818139;
-        Fri, 01 Aug 2025 10:03:38 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4589edf5638sm71554525e9.4.2025.08.01.10.03.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Aug 2025 10:03:37 -0700 (PDT)
-Date: Fri, 1 Aug 2025 20:03:35 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH v2 next] misc: pci_endpoint_test: Fix array underflow in
- pci_endpoint_test_ioctl()
-Message-ID: <aIzzZ4vc6ZrmM9rI@suswa>
+	s=arc-20240116; t=1754068015; c=relaxed/simple;
+	bh=pL2sny8qY4ZVNcmqBHC8HZaVVqGeXoxbwB4E148bu6A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dk203CBAty3zoyT4nCyfiGwoLnP0cdEEENQ1pxScozBGcOKo0dd9taaCYq9/bcCS1rkS/pK4mm4fl9FJPcatrOPli867kYfdMsMlnVzITpHF7WGayFp8EtxinR/Hzx6f6sgINMmrN7uysf5k1IFaOGwSBxeYiKGQargNjWpJrIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fVvFP5Pm; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754068014; x=1785604014;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=pL2sny8qY4ZVNcmqBHC8HZaVVqGeXoxbwB4E148bu6A=;
+  b=fVvFP5PmnX7sWSI7KPwSs67pPELRWDfU60KQbbdNC26jgiIFEoh3jY2K
+   go52FJnLvkaVKbw2sRLeCDQ1C5bUKykpP84EdRWqwFurkXmXebYIG/Ybf
+   nmU5AMgdYQBQjUR6gtSQEV+4RiE18SnztUIF6sgzHE8c2bscXJd4EUgo6
+   LpOUyaYH8afLDo6XIJWY0b+U28QGFhPtk3NwoND00JZ9esHAvDLXsd6q7
+   5oVZTYuT5eNZSUN2Lf2lqgtaTuat6YeDplSXqByEG605xQL/jlJS/+cng
+   dZfJEY/NYg/+4M8Z1p+tfAGnvuHFNrj+CEYUNDcC0xOmjBDvZQoz9ObxY
+   g==;
+X-CSE-ConnectionGUID: KsIk0KKkQQ2rddLQK21u4Q==
+X-CSE-MsgGUID: u8mTGLZOQTmdzbQcvRhmYQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11508"; a="67787928"
+X-IronPort-AV: E=Sophos;i="6.17,255,1747724400"; 
+   d="scan'208";a="67787928"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2025 10:06:53 -0700
+X-CSE-ConnectionGUID: K4rjVZWrTJWS0GFvGgqYaQ==
+X-CSE-MsgGUID: 2ILxuBCgTLCw3iFfjsZd4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,255,1747724400"; 
+   d="scan'208";a="163624424"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.109.249]) ([10.125.109.249])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2025 10:06:52 -0700
+Message-ID: <842d675e-4c22-4f13-b40b-c4b5208e4223@intel.com>
+Date: Fri, 1 Aug 2025 10:06:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] vmcoreinfo: Track and log recoverable hardware errors
+To: Breno Leitao <leitao@debian.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>,
+ Borislav Petkov <bp@alien8.de>, Robert Moore <robert.moore@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ acpica-devel@lists.linux.dev, osandov@osandov.com,
+ xueshuai@linux.alibaba.com, konrad.wilk@oracle.com,
+ linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-pci@vger.kernel.org, kernel-team@meta.com, osandov@fb.com
+References: <20250801-vmcore_hw_error-v4-1-fa1fe65edb83@debian.org>
+ <85663f65-d746-4e2c-b8a6-d594d9d0ba42@intel.com>
+ <f3yl424iqiyctgz4j36hzjrhkgae3a2h5smhalm2qbmq3nrpzd@oeuprthscfez>
+ <0c045f1b-44d0-430c-9e8a-58b65dd84453@intel.com>
+ <buhwuankenpnvmio6jeoxverixoyfpn2eh62ix7vzxw7xvlxcv@rpibcrufr2yg>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <buhwuankenpnvmio6jeoxverixoyfpn2eh62ix7vzxw7xvlxcv@rpibcrufr2yg>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Commit eefb83790a0d ("misc: pci_endpoint_test: Add doorbell test case")
-added NO_BAR (-1) to the pci_barno enum which, in practical terms,
-changes the enum from an unsigned int to a signed int.  If the user
-passes a negative number in pci_endpoint_test_ioctl() then it results in
-an array underflow in pci_endpoint_test_bar().
+On 8/1/25 10:00, Breno Leitao wrote:
+> Would a solution like this look better?
+> 
+> 	enum hwerr_error_type {
+> 		HWERR_RECOV_CPU,
+> 		HWERR_RECOV_MEMORY,
+> 		HWERR_RECOV_PCI,
+> 		HWERR_RECOV_CXL,
+> 		HWERR_RECOV_OTHERS,
+> 	#ifdef CONFIG_X86_MCE
+> 		HWERR_RECOV_MCE,
+> 	#endif
+> 		HWERR_RECOV_MAX,
+> 	};
+> 
+> Or, would you prefer to have HWERR_RECOV_ARCH and keep it always there?
 
-Fixes: eefb83790a0d ("misc: pci_endpoint_test: Add doorbell test case")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
-v2: Update the commit message to mention the commit which adds the
-    NO_BAR.
+That would only work for HWERR_RECOV_MCE, though. If you added another:
 
- drivers/misc/pci_endpoint_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+#ifdef CONFIG_FOO
+	HWERR_RECOV_FOO
+#endif
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 1c156a3f845e..f935175d8bf5 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -937,7 +937,7 @@ static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
- 	switch (cmd) {
- 	case PCITEST_BAR:
- 		bar = arg;
--		if (bar > BAR_5)
-+		if (bar <= NO_BAR || bar > BAR_5)
- 			goto ret;
- 		if (is_am654_pci_dev(pdev) && bar == BAR_0)
- 			goto ret;
--- 
-2.47.2
+then your example of:
 
+	>>> prog['hwerror_data']
+	(struct hwerror_info[6]){
+		{
+			.count = (int)844,
+			.timestamp = (time64_t)1752852018,
+		},
+		...
+
+doesn't work any more. You wouldn't be able to tell HWERR_RECOV_MCE from
+HWERR_RECOV_FOO because they'd alias to the same constant.
+
+This whole thing is an ABI. Right?
 
