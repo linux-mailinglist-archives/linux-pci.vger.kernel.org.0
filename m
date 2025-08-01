@@ -1,106 +1,81 @@
-Return-Path: <linux-pci+bounces-33297-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33298-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD0A1B1843F
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 16:53:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BAA8B184BB
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 17:13:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D600170447
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 14:53:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 848B47B6844
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 15:12:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5CCD26CE2B;
-	Fri,  1 Aug 2025 14:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Dn/Y37Ho"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC349267F48;
+	Fri,  1 Aug 2025 15:13:33 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158E826E6E3
-	for <linux-pci@vger.kernel.org>; Fri,  1 Aug 2025 14:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2916C248868;
+	Fri,  1 Aug 2025 15:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754059989; cv=none; b=Nt673wj29zUYl9qjD9WIL48vJ0iKvMP0rn3rdHBuLXyEHbFrmFv7kTbKabdXTbErDvwFq/mJcc/8aul+xiE04OZqii4xJdWwYL5FTh3ZCrXVk/jadzuwg73D+Yl4R35Tac0B3Ww6dm9dw6JHEWE/hJE20YJLNVR4Tp9c70986rg=
+	t=1754061213; cv=none; b=QpMkHlXAeCqNbbPxY+/OvhPrGhHLI4FXqxtWozddbNNCFpcZpkd2H+jhTSJS1CuY+wA0kgTYIRzb5BYK3Bru7EnPY1mWfKJBsp9yPexLzx6UCTQYWJC0bFjEVwh0lr1CwBVNmyHaKQMqvVl3aoJYccqa4VUG5iJWlQJ8RUOVNSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754059989; c=relaxed/simple;
-	bh=9z8sFr7OTh7x/5XSMissRsaGqrEIK0lYaVRNZPtOZxc=;
+	s=arc-20240116; t=1754061213; c=relaxed/simple;
+	bh=nBk+x/sL+91shEFy5WplqXsJOJbjQ0q5hTrrJ7agcU4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bo0Ho0SKzceN9SkDoTieBVTDnyd144XHgCEI1GPokBXwjT/3bYfqJIsnypA4uD08uBa3NfrZvg8h7LSEPe24gzH8lvfMrJf/AONWYuxdQhBdVRomzAbrtOtC5SKaNyu66O4xiUlQMFQOf+FtttjIkmkzJAPf2eaYvBCnsyjRAUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Dn/Y37Ho; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-7072ed7094aso8873586d6.1
-        for <linux-pci@vger.kernel.org>; Fri, 01 Aug 2025 07:53:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1754059987; x=1754664787; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MNtgboVqwh20Ney7adiU0cV/UXdxsSM54P/Vl6XgEls=;
-        b=Dn/Y37HoXSu62uJZVaZ+ppaylMB6lTopRZEXRk18f90m24VjgevhGZI6Z+7AhsfL/g
-         /GbRF7TDfxqRFwLfh+xlyEscv5PRdiw8fyIk4nh/h9O7i4/Ex0J7a9L4o6IZ+wlCoFCo
-         7GxeyvQZkI8/69FakaX5W1ABs9vkb0X8h/n3MraINGqoDb3EV/o8zERIZ1nOOIKqJCS+
-         vpDCL0yKic5QJTf6/eMWQb1fVEiwYJI4K/Xfo5+dlePqlXT7lEyUe5uDtozUAGIM6HWF
-         PkXXfiSavwQsCimTDyMNXXsGgZpO//FOdaRKQEOiwkCjCtIRaKY4QAa5KeLx7vTURS0x
-         trYA==
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ycaz4mRj2rsbP2/TFQSKX/yNgLMKOuiPOdig/6PCOVtVA1uYU+0kxVxgsggzqQXdP4WfiOQwD9QQvNyjQXDycgC8nJfBrjLVB5YfEDkCNX+UxIA/LHCxkHdbSrUMFP47SD9xa7vwlPNIxo6U0wu9JDdQVp1vb6tnNL+gSt5WcS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-af8f5e38a9fso339813466b.0;
+        Fri, 01 Aug 2025 08:13:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754059987; x=1754664787;
+        d=1e100.net; s=20230601; t=1754061210; x=1754666010;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MNtgboVqwh20Ney7adiU0cV/UXdxsSM54P/Vl6XgEls=;
-        b=TDqsMaK1FNhUcPqKBjEOBtr6LaAnVDfrpHOmUdLdoIUxxtNKPTl0731RxE+jAoMNc8
-         fBlVZQXFhbKxDPOoOl28kayN+MFXb61pWtAh4ldnZwCiKs6SGqAn4gtvB8UL6P+lO06v
-         dhWz3KjztmCp59+dqumPBS9dxI9OCfhO25Cnnv/8qFucwKv+eoN2Se3pFnTOBBxZUsDW
-         jNRYIdd6Bq6OAGcwWINHCkkcNyz9PcnOXG+md4ryhf3c9YlbzsAciQLCqt3o0iAr2Xu/
-         qe9IxejCZIB3iEeEh+7vhbdyx6Rb1df+xAFgq6AJULzcjACjcBfQ3ZqYBGy8zsW7VrjK
-         yoAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKlWwAqySpguF1uqdtuJN8MZzpgmanEZsPzfZzR/GiKLZwdD/CxB4L4uJQUIIjEXh8UoU/S7JHbSI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMnyt4RTabcemssqNgzac6rAbZQgLGNvhhWTJHYSRF+k5YW7/P
-	jYyyIBsNoMRazUTNX8sbzg5kz9Kze1B497M6AL/+8a69asksVYTjqCtB2I1gGRuHvlA=
-X-Gm-Gg: ASbGncuSosKzHJb2LeQBpDhQ0mJuR2oppyEqmVIJ/nBUACXSe3kfDakkvvWqD4kKiZD
-	mnVKSCl01UNSD2sAAbBjxT/AO2khkGJNgnalBS2X6mMebvHocGwBiOuRHwOaPJm6YcQL8JtU/IV
-	iWfslmm0tj7/ddYFu4yUJmF9k8FZTuHVZskXjSNTPsPZcjrQYZzMu9NXwQsCoCgNU3Aklc9YYj0
-	aNAk6G795dXuhPr2o/8pgR9C0/WYFMpKjdjV3S2r6hmrKFqKFS4xKzSZbmJkQiizDmAo1Hwk1hI
-	L7iD097qyxJoPbfI4za0oQ3iOme3AaSM6CWRUPHgc4nM6/+l1cHynDDeLxSx1yZfYSkldS3hOVs
-	Oq8ZCBj+jJoNMURmVN/OUdm+6RWTIClacu+bBrpb/3dYuXS8PBw0ELp1vfg8WV/2udz0D
-X-Google-Smtp-Source: AGHT+IFhLzfh/tN6NcfbFOiHT6YBGOLWjYR19Ez0qlLrCLeR+IMa26shu3X/pz9tHfJr845QNLQ7TA==
-X-Received: by 2002:a05:6214:495:b0:707:56dc:178d with SMTP id 6a1803df08f44-70767185894mr176316596d6.37.1754059986819;
-        Fri, 01 Aug 2025 07:53:06 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-7077c9dfbbfsm22005316d6.13.2025.08.01.07.53.06
+        bh=pLvAFPQ8DYraj8LtMTWkc3DYDv2AWsFej7nsT5sUEtI=;
+        b=nRdzZ//A48eYJ6c4aZ46GzshZ7kIezOhRk9Yj7iejYBRu+af5wi3PKx/emb6NRcHPy
+         8kPF+3kVqzEkF3DSuBia0EFJPvzU9nl98oDBLFui3e6VvQnI37+7UgeJW1ou0CxAkyGF
+         5fxGtYPFCTWVGJfAH8NVGcpZG2If2CmhFYRqzHsjvPxxVEdjwRnisq2QSn93gjv57/lp
+         uETo2UCvN7gYpUub+G1s95cEjjVvPlgceKDX8E1Lei89LltBXQx7PDOeM9h/TtMBQAk8
+         iHeFFZyQGj3Jf5z2n8KosUx5tCabTFM+uOIxgKaYR94AT1IIgo0h7EhNF7pfcMPm+TJu
+         Km0g==
+X-Forwarded-Encrypted: i=1; AJvYcCV9AuUlWX8k8+T1AWZkGIfoWA2hrw/MQCUC5nYwLuI2LLUl9sqZ0DDaGer4O8JwgUaFv61e4juDDaHvHg==@vger.kernel.org, AJvYcCWex+DpUCqmAC75d3GVfBLyPJ2usWgxEdwXTHDNvhJBsWDmg0uqxP91l+/olNdvPVmozlTE2+KKlE0R@vger.kernel.org, AJvYcCWxdZUYCxH3lm8h9vBT5wZZOQBUxVP7Dmd1pDU4jmJhDj9XSnuud4cxlprjBGirkSwzSqJ6qIRjBjZT@vger.kernel.org, AJvYcCX3BHT7enYuvYS94XDGCsumeeqsVAbJGY/PKqz3AuWZVn2Zi0giY10u1XvgiFqXujVMV4xijOCo2kt8GKAk@vger.kernel.org
+X-Gm-Message-State: AOJu0YydrK7Z6++57/OEMlVaI0gEiwDZ7SBqt3CNCKY85bCyDKwK41TV
+	D6bNTTonpWbnxE8+5l81rW1DLaeWMorIuv9swhuXp6KZqzTMwTleEf6m
+X-Gm-Gg: ASbGncvPL1gClnWPHrmAfYezdMKWqla8OIN3VSWet0oXFDRUEe/yle0rcCTkVLwssFe
+	toEknconVpV/q1cW17EnmMqEuYtkR8Sj4O+3RT0h4khYYq1w29CKg2jYdEc2ZUEtha8zhxwkyZ4
+	2v0K4h0RSui3oLMxHSJusxxchM1tk4h/MSBo3A4eNuWAw8sd787zmPUHrnXQPfR1Mn0lHT60oFc
+	XgUm/0fpsom6yvJHBhj/FtTFxEA5/SiJ5EIfPnyMDkA+2ieBxkyl9723FsvSKdMTIvgTj1BDYzO
+	1ZMLr0CZbL07ImZuAJ7AA/wNziftHqp5rzBwyrjlR/LI5/kwTfsr6Uw1vlOhQZ3Ls8sI7FVdGtd
+	vWfGiZqaccAZRPw==
+X-Google-Smtp-Source: AGHT+IHxwNCV+mxtZBzz5cvZjpfuoqtgwb9V8VUnUiYcYZ36deiu6WNQjZZGI0DAGbFT+RybIxFgAA==
+X-Received: by 2002:a17:907:9706:b0:ae3:cd73:efde with SMTP id a640c23a62f3a-af9401b0c5emr13383466b.44.1754061210083;
+        Fri, 01 Aug 2025 08:13:30 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:72::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af91a24062esm303137466b.126.2025.08.01.08.13.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Aug 2025 07:53:06 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uhr85-000000012WJ-2mLW;
-	Fri, 01 Aug 2025 11:53:05 -0300
-Date: Fri, 1 Aug 2025 11:53:05 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	aik@amd.com, lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [RFC PATCH v1 04/38] tsm: Support DMA Allocation from private
- memory
-Message-ID: <20250801145305.GB26511@ziepe.ca>
-References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
- <20250728135216.48084-5-aneesh.kumar@kernel.org>
- <20250728143318.GD26511@ziepe.ca>
- <yq5a5xfbbe35.fsf@kernel.org>
- <20250729143339.GH26511@ziepe.ca>
- <bbe2a41a-8f72-4224-a0bc-225c1e35a180@arm.com>
- <20250731121740.GQ26511@ziepe.ca>
- <1388fb70-3d2d-4c41-9526-521cb75eb422@arm.com>
- <20250731164420.GW26511@ziepe.ca>
- <791e259b-3a57-487d-81ca-9d83f83ad685@arm.com>
+        Fri, 01 Aug 2025 08:13:29 -0700 (PDT)
+Date: Fri, 1 Aug 2025 08:13:26 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
+	Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev, osandov@osandov.com, 
+	xueshuai@linux.alibaba.com, konrad.wilk@oracle.com, linux-edac@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, kernel-team@meta.com, osandov@fb.com
+Subject: Re: [PATCH v4] vmcoreinfo: Track and log recoverable hardware errors
+Message-ID: <f3yl424iqiyctgz4j36hzjrhkgae3a2h5smhalm2qbmq3nrpzd@oeuprthscfez>
+References: <20250801-vmcore_hw_error-v4-1-fa1fe65edb83@debian.org>
+ <85663f65-d746-4e2c-b8a6-d594d9d0ba42@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -109,31 +84,75 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <791e259b-3a57-487d-81ca-9d83f83ad685@arm.com>
+In-Reply-To: <85663f65-d746-4e2c-b8a6-d594d9d0ba42@intel.com>
 
-On Fri, Aug 01, 2025 at 10:30:35AM +0100, Suzuki K Poulose wrote:
-> > Is there a reason not to just dump that into the T=0 SMMU using 1G
-> > huge pages and never touch it again? The GPT provides protection?
+Hello Dave,
+
+On Fri, Aug 01, 2025 at 07:52:17AM -0700, Dave Hansen wrote:
+> On 8/1/25 05:31, Breno Leitao wrote:
+> > Introduce a generic infrastructure for tracking recoverable hardware
+> > errors (HW errors that are visible to the OS but does not cause a panic)
+> > and record them for vmcore consumption.
+> ...
 > 
-> That is possible, once we get guest_memfd mmap support merged upstream.
-> GPT does provide protection. The only caveat is, does the guest_memfd
-> support this at all ? i.e., shared->private transitions with a shared
-> mapping in place (Though this is in SMMU only, not the Host CPU
-> pagetables)
+> Are there patches for the consumer side of this, too? Or do humans
+> looking at crash dumps have to know what to go digging for?
+> 
+> In either case, don't we need documentation for this new ABI?
 
-I don't know, we haven't got to the guestmemfd/IOMMU integration yet,
-which is why I ask the questions.
+I have considered this, but the documentation for vmcoreinfo
+(admin-guide/kdump/vmcoreinfo.rst) solely documents what is explicitly
+exposed by vmcore, which differs from the nature of these counters.
 
-I think AMD and ARM would both be interested in guestmemfd <-> iommu
-working this way, at least.
+Where would be a good place to document it?
 
-> I think we can go ahead with VMM pre-populating the entire DRAM
-> and keeping it pinned for DA. Rather than doing this from the
-> vfio kernel, it could be done by the VMM as it has better knowledge
-> of the populated contents and map the rest as "unmeasured" 0s.
+> > @@ -1690,6 +1691,9 @@ noinstr void do_machine_check(struct pt_regs *regs)
+> >  	}
+> >  
+> >  out:
+> > +	/* Given it didn't panic, mark it as recoverable */
+> > +	hwerr_log_error_type(HWERR_RECOV_MCE);
+> > +
+> 
+> Does "MCE" mean anything outside of x86?
 
-Yes, if done it should be done by the VMM and run through
-guestmemfd/kvm however that is agreed to.
+AFAIK this is a MCE concept.
 
-Jason
+> I wonder if this would be better left as "HWERR_RECOV_ARCH" or something.
+
+Sure. I can update it to be more generic.
+
+> > +void hwerr_log_error_type(enum hwerr_error_type src)
+> > +{
+> > +	if (src < 0 || src >= HWERR_RECOV_MAX)
+> > +		return;
+> > +
+> > +	/* No need to atomics/locks given the precision is not important */
+> 
+> Sure, but it's not even more lines of code to do:
+> 
+> 	atomic_inc(&hwerr_data[src].count);
+> 	WRITE_ONCE(hwerr_data[src].timestamp, ktime_get_real_seconds());
+> 
+> So why not?
+
+Sure, we can do that, I will update it also.
+
+> > +	hwerr_data[src].count++;
+> > +	hwerr_data[src].timestamp = ktime_get_real_seconds();
+> > +}
+> > +EXPORT_SYMBOL_GPL(hwerr_log_error_type);
+> 
+> I'd also love to hear more about _actual_ users of this. Surely, someone
+> hit a real world problem and thought this would be a nifty solution. Who
+> was that? What problem did they hit? How does this help them?
+
+Yes, this has been extensively discussed in the very first version of
+the patch. Borislav raised the same question, which was discussed in the
+following link:
+
+https://lore.kernel.org/all/20250715125327.GGaHZPRz9QLNNO-7q8@fat_crate.local/
+
+Thanks for the review,
+--breno
 
