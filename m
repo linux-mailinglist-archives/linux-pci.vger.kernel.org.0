@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-33305-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33306-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F738B18603
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 18:48:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C1D1B18613
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 18:55:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 909C5188DC39
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 16:48:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C5C41188A227
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 16:55:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 548A01C1AB4;
-	Fri,  1 Aug 2025 16:48:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 066AC1DB377;
+	Fri,  1 Aug 2025 16:55:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="G0Tg2Wsm"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YiczCgXe"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80A5419F11B;
-	Fri,  1 Aug 2025 16:48:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 529C013B58D;
+	Fri,  1 Aug 2025 16:55:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754066916; cv=none; b=SnqEONWu49rwclvi3VSPUguQTHbhYrWD71pdDt7Fgg8wL+AsTRyZKnxb0sQWIhrg3KjFEgfbQVVW1chThuYaK3Cdq1OSxXLaY2gdO42pg5uC5SbCndVB5BCnI4hmXj1CB6DtmVStXoNapChWlynviYslsymkmDLktSjGh8JKZfE=
+	t=1754067311; cv=none; b=dCl5Y4HCtrpAwOeUSkJr0Ol5LwWksL38GpqHeXu7NrdtwtJrVY7j42IsmHus0aiETIgnJ0zz9GV1L2B/q5/dwiF5aump5d4mNeQbFInuH/SK23I0VFOlFU2pKAmmvj/jzZEMqHtzGMUH8d6ucSmRMQcnWktBKtIiDTh9s54plao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754066916; c=relaxed/simple;
-	bh=ER9+A0AQoiNiR8H7LAXm3gGnSWm591ietRBP/qtDclg=;
+	s=arc-20240116; t=1754067311; c=relaxed/simple;
+	bh=E1oHwcjz1UkMy5n80W7KOoeyrVlY8354cvfcN9IThP8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sfQIX1okwNfQgHrtb1Ax/kDgTDgCEz8gtDxALv4GritSnzl8qUyOBIlf2+bLTHevOij076Hd0+8GUeodCqyb2KfQkfZ5pfhOm+Q12lMsCnneW/dxLk8dldixD57ZXtMHs0XSnozIb2iO3HjBWXW7SCvuccUWkxSRecVUek6hzuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=G0Tg2Wsm; arc=none smtp.client-ip=220.197.31.4
+	 In-Reply-To:Content-Type; b=D7uCPrPyyH+fFNV1Bsh2f6j0jWZdHfgf7JJliHRXmSOkyOB98OXHyefFvQVSh/jruHntUAnber7Zoj1pH6+yJDZwS1CjLrcDR4NUxBtto1tyKxIsAw+It3MK2o0ypRf3/TqqDvgZ7rlPt6MAjpPaSbatRRYWnnkB/QaizMcvthg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YiczCgXe; arc=none smtp.client-ip=220.197.31.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
 	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=EuM2jIdoJNNlb/WdA0ZGl2UlMubVd2wOiR6EDWunrvU=;
-	b=G0Tg2WsmgYqUNWajbdw3ELSQGqEYioLEoLoGp2OvqbxGXYqvPg5xuaX74lYWuP
-	2Y5dp3q576p42YLrB3VOks/ZUzkmS7MyR0IGyRhRhSvpKaWnIlLefJkFXCEdHNjT
-	M88bEu0msBjo0xmwaDqZGTrwrTpfV9qAu3mj9/t3qSTTY=
+	Content-Type; bh=ZHD4zlqBg4vyKNckG/xTKO9RRemj+oorW2za/dflA9A=;
+	b=YiczCgXe8uRiXNXEQutI/0eyQsKmiCUAjO63yc6w1YHPv53KfWNx+lGGz+wZm2
+	SaomrFgD5jXGiYHR2KteTkIeeGW9GVL8eJ/ahMCD8OSD3u0hd81pu3XA14b5RH9b
+	1DlAOkK9y7DO67g1T1gcmEQUXo1jmcF2c7I54XQ1GQoDE=
 Received: from [IPV6:240e:b8f:919b:3100:ecd9:c243:2a5f:12dd] (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wCHV0a774xoRDSkIw--.11070S2;
-	Sat, 02 Aug 2025 00:47:56 +0800 (CST)
-Message-ID: <f28be780-445e-4823-a0c5-44c61241d93f@163.com>
-Date: Sat, 2 Aug 2025 00:47:55 +0800
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDnn5VD8YxoofS4Iw--.19322S2;
+	Sat, 02 Aug 2025 00:54:29 +0800 (CST)
+Message-ID: <659b8389-16a7-423b-a231-5489c7cc0da9@163.com>
+Date: Sat, 2 Aug 2025 00:54:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -48,11 +48,10 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] PCI: Fix endianness issues in pci_bus_read_config()
-To: Manivannan Sadhasivam <mani@kernel.org>,
- Hans Zhang <hans.zhang@cixtech.com>
+To: Gerd Bayer <gbayer@linux.ibm.com>, Manivannan Sadhasivam
+ <mani@kernel.org>, Hans Zhang <hans.zhang@cixtech.com>
 Cc: Arnd Bergmann <arnd@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
- Gerd Bayer <gbayer@linux.ibm.com>, bhelgaas@google.com,
- Alexander Gordeev <agordeev@linux.ibm.com>,
+ bhelgaas@google.com, Alexander Gordeev <agordeev@linux.ibm.com>,
  Christian Borntraeger <borntraeger@linux.ibm.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  jingoohan1@gmail.com, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
@@ -68,130 +67,68 @@ References: <20250731183944.GA3424583@bhelgaas>
  <ofsbfhor5ah3yzvkc5g5kb4fpjlzoqkkzukctmr3f6ur4vl2e7@7zvudt63ucbk>
  <c8ffdd21-9000-40c2-9f4d-4d6318e730b5@cixtech.com>
  <cu7qdbwmnixqjce4aetr5ldwe3sqoixgq4fuzmzajzphjdywqq@yw6ojbgeqktm>
+ <06f16b1a55eede3dc3e0bf31ff14eca89ab6f009.camel@linux.ibm.com>
 Content-Language: en-US
 From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <cu7qdbwmnixqjce4aetr5ldwe3sqoixgq4fuzmzajzphjdywqq@yw6ojbgeqktm>
+In-Reply-To: <06f16b1a55eede3dc3e0bf31ff14eca89ab6f009.camel@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wCHV0a774xoRDSkIw--.11070S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Wr1kGFWxWrWUCryxKr4Durg_yoWxJw1DpF
-	W5JFW2yr4UJF13Arn2q3WFqr1Iyr9rJF1UXrn5W34UZFn0vr1FqFy0gF4YgFy0gr48JF4I
-	vws0qFW3u34qyFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UtuciUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwCco2iM6bG1mgAAs3
+X-CM-TRANSID:_____wDnn5VD8YxoofS4Iw--.19322S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJw18XFy3AryrGFWfAryxKrg_yoWrtr1fpF
+	W5Aayjyr48tr1ayrn2va18Xw1jyFn7tF4UZF1fG342vFn0yr1SqryjgF4agr1jqw48XF18
+	Z39YgFZ7Cw1DAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UulksUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgyco2iM6Nr5SgAAss
 
 
 
-On 2025/8/1 18:54, Manivannan Sadhasivam wrote:
-> On Fri, Aug 01, 2025 at 06:06:16PM GMT, Hans Zhang wrote:
->>
->>
->> On 2025/8/1 17:47, Manivannan Sadhasivam wrote:
->>> EXTERNAL EMAIL
->>>
->>> On Fri, Aug 01, 2025 at 05:25:51PM GMT, Hans Zhang wrote:
->>>>
->>>>
->>>> On 2025/8/1 16:18, Manivannan Sadhasivam wrote:
->>>>> EXTERNAL EMAIL
->>>>>
->>>>> On Thu, Jul 31, 2025 at 09:01:17PM GMT, Arnd Bergmann wrote:
->>>>>> On Thu, Jul 31, 2025, at 20:39, Bjorn Helgaas wrote:
->>>>>>> On Thu, Jul 31, 2025 at 07:38:58PM +0200, Gerd Bayer wrote:
->>>>>>>>
->>>>>>>> -  if (size == 1)
->>>>>>>> -          return pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
->>>>>>>> -  else if (size == 2)
->>>>>>>> -          return pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
->>>>>>>> -  else if (size == 4)
->>>>>>>> -          return pci_bus_read_config_dword(bus, devfn, where, val);
->>>>>>>> -  else
->>>>>>>> -          return PCIBIOS_BAD_REGISTER_NUMBER;
->>>>>>>> +  if (size == 1) {
->>>>>>>> +          rc = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
->>>>>>>> +#if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
->>>>>>>> +          *val = ((*val >> 24) & 0xff);
->>>>>>>> +#endif
->>>>>>>
->>>>>>> Yeah, this is all pretty ugly.  Obviously the previous code in
->>>>>>> __pci_find_next_cap_ttl() didn't need this.  My guess is that was
->>>>>>> because the destination for the read data was always the correct type
->>>>>>> (u8/u16/u32), but here we always use a u32 and cast it to the
->>>>>>> appropriate type.  Maybe we can use the correct types here instead of
->>>>>>> the casts?
->>>>>>
->>>>>> Agreed, the casts here just add more potential for bugs.
->>>>>>
->>>>>
->>>>> Ack. Missed the obvious issue during review.
->>>>>
->>>>>> The pci_bus_read_config() interface itself may have been a
->>>>>> mistake, can't the callers just use the underlying helpers
->>>>>> directly?
->>>>>>
->>>>>
->>>>> They can! Since the callers of this API is mostly the macros, we can easily
->>>>> implement the logic to call relevant accessors based on the requested size.
->>>>>
->>>>> Hans, could you please respin the series based the feedback since the series is
->>>>> dropped for 6.17.
->>>>>
->>>>
->>>> Dear all,
->>>>
->>>> I am once again deeply sorry for the problems that occurred in this series.
->>>> I only test pulling the ARM platform.
->>>>
->>>> Thank you very much, Gerd, for reporting the problem.
->>>>
->>>> Thank you all for your discussions and suggestions for revision.
->>>>
->>>> Hi Mani,
->>>>
->>>> Geert provided a solution. My patch based on this is as follows. Please
->>>> check if there are any problems.
->>>> https://lore.kernel.org/linux-pci/CAMuHMdVwFeV46oCid_sMHjXfP+yyGTpBfs9t3uaa=wRxNcSOAQ@mail.gmail.com/
->>>>
->>>> Also, please ask Gerd to help test whether it works properly. Thank you very
->>>> much.
->>>>
->>>>
->>>> If there are no issues, am I sending the new version? Can this series of
->>>> pacth 0001 be directly replaced?
->>>>
->>>
->>> What benefit does this helper provide if it simply invokes the accessors based
->>> on the requested size? IMO, the API should not return 'int' sized value if the
->>> caller has explicitly requested to read variable size from config space.
->>>
->>
->> Dear Mani,
->>
->> This newly added macro definition PCI_FIND_NEXT_CAP is derived from
->> __pci_find_next_cap_ttl. Another newly added macro definition,
->> PCI_FIND_NEXT_EXT_CAP, is derived from pci_find_next_ext_capability. The
->> first one has no return value judgment, while the second one has a judgment
->> return value. So, pci_bus_read_config is defined as having an int return
->> value.
->>
+On 2025/8/1 19:30, Gerd Bayer wrote:
+> On Fri, 2025-08-01 at 16:24 +0530, Manivannan Sadhasivam wrote:
 > 
-> Sorry, my previous reply was not clear. I was opposed to returning 'u32 *val'
-> for a variable 'size' value. The API should only return 'val' of 'size' ie. if
-> size is 1, it should return 'u8 *val' and so on. It finally breaks down to
-> calling the underlying accessors. So I don't see a value in having this API.
+> <--- snip --->
+> 
+>>>>>>> The pci_bus_read_config() interface itself may have been a
+>>>>>>> mistake, can't the callers just use the underlying helpers
+>>>>>>> directly?
+>>>>>>>
+>>>>>>
+>>>>>> They can! Since the callers of this API is mostly the macros, we can easily
+>>>>>> implement the logic to call relevant accessors based on the requested size.
+>>>>>>
+>>>>>> Hans, could you please respin the series based the feedback since the series is
+>>>>>> dropped for 6.17.
+>>>>>>
+>>>>>
+>>>>> Dear all,
+>>>>>
+>>>>> I am once again deeply sorry for the problems that occurred in this series.
+>>>>> I only test pulling the ARM platform.
+>>>>>
+>>>>> Thank you very much, Gerd, for reporting the problem.
+> 
+> no worries!
+> 
+>>>>> Thank you all for your discussions and suggestions for revision.
+>>>>>
+>>>>> Hi Mani,
+>>>>>
+>>>>> Geert provided a solution. My patch based on this is as follows. Please
+>>>>> check if there are any problems.
+>>>>> https://lore.kernel.org/linux-pci/CAMuHMdVwFeV46oCid_sMHjXfP+yyGTpBfs9t3uaa=wRxNcSOAQ@mail.gmail.com/
+>>>>>
+>>>>> Also, please ask Gerd to help test whether it works properly. Thank you very
+>>>>> much.
+>>>>>
+> 
+> I found Geert's proposal intriguing for a quick resolution of the
+> issue. Yet, I have not tried that proposal, though.
+> 
 
-Dear Mani,
+Hi Gerd,
 
-In this series, I had similar confusion before.
-https://lore.kernel.org/linux-pci/4d77e199-8df8-4510-ad49-9a452a29c923@163.com/
+As I mentioned in my reply to Mani's email, the data ultimately read 
+here is also a forced type conversion.
 
-
-I think there are a few pieces of code that stand out, such as:
-
-Forced type conversion is also used here. (*value = (type)data;)
-
-
-drivers/pci/access.c
 #define PCI_OP_READ(size, type, len) \
 int noinline pci_bus_read_config_##size \
 	(struct pci_bus *bus, unsigned int devfn, int pos, type *value)	\
@@ -214,8 +151,7 @@ int noinline pci_bus_read_config_##size \
 	return res;							\
 }
 
-
-This function also uses u32 *val as its return value.
+And this function. Could it be that I misunderstood something?
 
 int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
 			    int where, int size, u32 *val)
@@ -237,45 +173,94 @@ int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
 }
 EXPORT_SYMBOL_GPL(pci_generic_config_read);
 
+> Instead I spent some more cycles on Lukas' and Mani's question about
+> the value of the pci_bus_read_config() helper. So I changed
+> PCI_FIND_NEXT_CAP and PCI_FIND_NEXT_EXT_CAP to use size-aware versions
+> of read_cfg accessor functions like this:
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index ac954584d991..9e2f75ede95f 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -109,17 +109,17 @@ int pci_bus_read_config(void *priv, unsigned int
+> devfn, int where, u32 size,
+>   ({
+> \
+>          int __ttl = PCI_FIND_CAP_TTL;
+> \
+>          u8 __id, __found_pos = 0;
+> \
+> -       u32 __pos = (start);
+> \
+> -       u32 __ent;
+> \
+> +       u8 __pos = (start);
+> \
+> +       u16 __ent;
+> \
+>                                                                        
+> \
+> -       read_cfg(args, __pos, 1, &__pos);
+> \
+> +       read_cfg##_byte(args, __pos, &__pos);
+> \
+>                                                                        
+> \
+>          while (__ttl--) {
+> \
+>                  if (__pos < PCI_STD_HEADER_SIZEOF)
+> \
+>                          break;
+> \
+>                                                                        
+> \
+>                  __pos = ALIGN_DOWN(__pos, 4);
+> \
+> -               read_cfg(args, __pos, 2, &__ent);
+> \
+> +               read_cfg##_word(args, __pos, &__ent);
+> \
+>                                                                        
+> \
+>                  __id = FIELD_GET(PCI_CAP_ID_MASK, __ent);
+> \
+>                  if (__id == 0xff)
+> \
+> @@ -158,7 +158,7 @@ int pci_bus_read_config(void *priv, unsigned int
+> devfn, int where, u32 size,
+>                                                                        
+> \
+>          __ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+> \
+>          while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {
+> \
+> -               __ret = read_cfg(args, __pos, 4, &__header);
+> \
+> +               __ret = read_cfg##_dword(args, __pos, &__header);
+> \
+>                  if (__ret != PCIBIOS_SUCCESSFUL)
+> \
+>                          break;
+> \
+>                                                                        
+> \
+> 
+> 
+> This fixes the issue for s390's use-cases. With that
+> pci_bus_read_config() becomes unused - and could be removed in further
+> refinements.
+>                                                                        
+> However, this probably breaks your dwc and cdns use-cases. I think,
+> with the accessor functions for dwc and cadence changed to follow the
+> {_byte|_word|_dword} naming pattern they could be used straight out of
+> PCI_FIND_NEXT_{EXT_}CAP, too. Then, dw_pcie_read_cfg() and
+> cdns_pcie_read_cfg become obsolete as well.
+> 
+> Thoughts?
 
-And it's the same here.
-drivers/pci/controller/dwc/pcie-designware.c
-int dw_pcie_read(void __iomem *addr, int size, u32 *val)
-{
-	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-		*val = 0;
-		return PCIBIOS_BAD_REGISTER_NUMBER;
-	}
-
-	if (size == 4) {
-		*val = readl(addr);
-	} else if (size == 2) {
-		*val = readw(addr);
-	} else if (size == 1) {
-		*val = readb(addr);
-	} else {
-		*val = 0;
-		return PCIBIOS_BAD_REGISTER_NUMBER;
-	}
-
-	return PCIBIOS_SUCCESSFUL;
-}
-EXPORT_SYMBOL_GPL(dw_pcie_read);
-
-
-Mani, I'm not here to refute you. I just want to ask if there are bugs 
-everywhere here?
-
-I think it's a good idea as mentioned in Gerd's latest reply email. For 
-dw_pcie_read_cfg() and cdns_pcie_read_cfg, I can delete it and provide 
-the macro definition function of {_byte/_word/_dword}.
-
-Similar to this macro definition:
-PCI_OP_READ(byte, u8, 1)
-PCI_OP_READ(word, u16, 2)
-PCI_OP_READ(dword, u32, 4)
-https://lore.kernel.org/linux-pci/06f16b1a55eede3dc3e0bf31ff14eca89ab6f009.camel@linux.ibm.com/
-
+In my opinion, it's no problem. I can provide the corresponding function 
+of {_byte / _word / _dword}. But it is necessary to know Bjorn, Mani, 
+Arnd, Lukas... Their viewpoints or suggestions.
 
 Best regards,
 Hans
