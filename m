@@ -1,65 +1,45 @@
-Return-Path: <linux-pci+bounces-33304-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33305-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66AF5B185B1
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 18:24:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F738B18603
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 18:48:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 88D6416EB4C
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 16:24:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 909C5188DC39
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 16:48:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 841C828C870;
-	Fri,  1 Aug 2025 16:24:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 548A01C1AB4;
+	Fri,  1 Aug 2025 16:48:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q0hnKkGb"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="G0Tg2Wsm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5A928C867;
-	Fri,  1 Aug 2025 16:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80A5419F11B;
+	Fri,  1 Aug 2025 16:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754065486; cv=none; b=bSt61bKTxHBB9l8D7iJB5duHSZJ1qkJvhbNg/puRxqRShuigM4NZcXGwstPrQ4fGu7/1vPkC5wQWUOoMoWwQq+N0xTiR5u5plN66KFumYXePsh6O+Jw/n78SvWXdWNieSbqBaRd1++wSUCq3CIQ6tTcnWJZtYPmBV8ZWPf/yX34=
+	t=1754066916; cv=none; b=SnqEONWu49rwclvi3VSPUguQTHbhYrWD71pdDt7Fgg8wL+AsTRyZKnxb0sQWIhrg3KjFEgfbQVVW1chThuYaK3Cdq1OSxXLaY2gdO42pg5uC5SbCndVB5BCnI4hmXj1CB6DtmVStXoNapChWlynviYslsymkmDLktSjGh8JKZfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754065486; c=relaxed/simple;
-	bh=L65KpuFKY95nCG2r6EZ5ou3o2QbJ7zPptgi7NLjCcqo=;
+	s=arc-20240116; t=1754066916; c=relaxed/simple;
+	bh=ER9+A0AQoiNiR8H7LAXm3gGnSWm591ietRBP/qtDclg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dvVjTcp0a+biCJI5ycq2B5VCQaCW7mdTSwGcDXtybzPBCs5zP1G1uHCxNUK7UjKp2gHb84atwTZvIkIdKuJ3VSZiPxgP+MgVXfsP4zf/1t1tLyGX6CNvFGth+1wLRNhw88JOAJ04rzEMEuGU5apSOpgeCgEp59dP25pUVt1Wlis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q0hnKkGb; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754065485; x=1785601485;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=L65KpuFKY95nCG2r6EZ5ou3o2QbJ7zPptgi7NLjCcqo=;
-  b=Q0hnKkGbYdH1raZXPTFokTTzpn8zTjLcgfvxXAynk4puvDPV1Kxwrnik
-   8aDUrDkxBql5/V/mq5zEVH+3K/vMpPLBZaT5IaLfElOQV5UpD8Ui4CUSk
-   YMKBn2jfmlql4cIIfsfmWN9GURGIe41BFLBid3rpVQXvRvd+XgGl8RAmu
-   T/AYpuKkK/GfYB576cu74sVuYQb2yaQNbxQel4VyNz6GvwaEu7wGqYG+T
-   2yYQmRmANSJzvwHzXYdyOW/Dgm1aQx3sI+HpT2kKBQfMYxf8cb8p761Lm
-   DSSzG+m3uKHZOHW9GSU7j0sbrdgHULP1BSUmr7tBX8NHdOOTzNV/mc98b
-   g==;
-X-CSE-ConnectionGUID: ntglfKP+QOmQDjhCA+4ZNQ==
-X-CSE-MsgGUID: sRy+7lcATPCdWoum6VzPgQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11508"; a="73875458"
-X-IronPort-AV: E=Sophos;i="6.17,255,1747724400"; 
-   d="scan'208";a="73875458"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2025 09:24:44 -0700
-X-CSE-ConnectionGUID: pkbxLzpfRCe64/Km9bHfPg==
-X-CSE-MsgGUID: RSAUU9XwRUSz69D2Ut2enw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,255,1747724400"; 
-   d="scan'208";a="163949953"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.109.249]) ([10.125.109.249])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2025 09:24:44 -0700
-Message-ID: <0c045f1b-44d0-430c-9e8a-58b65dd84453@intel.com>
-Date: Fri, 1 Aug 2025 09:24:43 -0700
+	 In-Reply-To:Content-Type; b=sfQIX1okwNfQgHrtb1Ax/kDgTDgCEz8gtDxALv4GritSnzl8qUyOBIlf2+bLTHevOij076Hd0+8GUeodCqyb2KfQkfZ5pfhOm+Q12lMsCnneW/dxLk8dldixD57ZXtMHs0XSnozIb2iO3HjBWXW7SCvuccUWkxSRecVUek6hzuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=G0Tg2Wsm; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=EuM2jIdoJNNlb/WdA0ZGl2UlMubVd2wOiR6EDWunrvU=;
+	b=G0Tg2WsmgYqUNWajbdw3ELSQGqEYioLEoLoGp2OvqbxGXYqvPg5xuaX74lYWuP
+	2Y5dp3q576p42YLrB3VOks/ZUzkmS7MyR0IGyRhRhSvpKaWnIlLefJkFXCEdHNjT
+	M88bEu0msBjo0xmwaDqZGTrwrTpfV9qAu3mj9/t3qSTTY=
+Received: from [IPV6:240e:b8f:919b:3100:ecd9:c243:2a5f:12dd] (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wCHV0a774xoRDSkIw--.11070S2;
+	Sat, 02 Aug 2025 00:47:56 +0800 (CST)
+Message-ID: <f28be780-445e-4823-a0c5-44c61241d93f@163.com>
+Date: Sat, 2 Aug 2025 00:47:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,141 +47,237 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] vmcoreinfo: Track and log recoverable hardware errors
-To: Breno Leitao <leitao@debian.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>,
- Borislav Petkov <bp@alien8.de>, Robert Moore <robert.moore@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- acpica-devel@lists.linux.dev, osandov@osandov.com,
- xueshuai@linux.alibaba.com, konrad.wilk@oracle.com,
- linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org, kernel-team@meta.com, osandov@fb.com
-References: <20250801-vmcore_hw_error-v4-1-fa1fe65edb83@debian.org>
- <85663f65-d746-4e2c-b8a6-d594d9d0ba42@intel.com>
- <f3yl424iqiyctgz4j36hzjrhkgae3a2h5smhalm2qbmq3nrpzd@oeuprthscfez>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH] PCI: Fix endianness issues in pci_bus_read_config()
+To: Manivannan Sadhasivam <mani@kernel.org>,
+ Hans Zhang <hans.zhang@cixtech.com>
+Cc: Arnd Bergmann <arnd@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+ Gerd Bayer <gbayer@linux.ibm.com>, bhelgaas@google.com,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ jingoohan1@gmail.com, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-next <linux-next@vger.kernel.org>,
+ linux-pci@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Rob Herring <robh@kernel.org>, Niklas Schnelle <schnelle@linux.ibm.com>,
+ geert@linux-m68k.org
+References: <20250731183944.GA3424583@bhelgaas>
+ <6e34b4af-dff9-4360-b3da-c95ca7c740c9@app.fastmail.com>
+ <vf65usnffqzlkgijm72nuaslxnflwrugc25vw6q6blbn2s2d2s@b35vjkowd6yc>
+ <9a155e45-f723-4eec-81d3-2547bfe9a4e9@cixtech.com>
+ <ofsbfhor5ah3yzvkc5g5kb4fpjlzoqkkzukctmr3f6ur4vl2e7@7zvudt63ucbk>
+ <c8ffdd21-9000-40c2-9f4d-4d6318e730b5@cixtech.com>
+ <cu7qdbwmnixqjce4aetr5ldwe3sqoixgq4fuzmzajzphjdywqq@yw6ojbgeqktm>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <f3yl424iqiyctgz4j36hzjrhkgae3a2h5smhalm2qbmq3nrpzd@oeuprthscfez>
-Content-Type: text/plain; charset=UTF-8
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <cu7qdbwmnixqjce4aetr5ldwe3sqoixgq4fuzmzajzphjdywqq@yw6ojbgeqktm>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wCHV0a774xoRDSkIw--.11070S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Wr1kGFWxWrWUCryxKr4Durg_yoWxJw1DpF
+	W5JFW2yr4UJF13Arn2q3WFqr1Iyr9rJF1UXrn5W34UZFn0vr1FqFy0gF4YgFy0gr48JF4I
+	vws0qFW3u34qyFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UtuciUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwCco2iM6bG1mgAAs3
 
-On 8/1/25 08:13, Breno Leitao wrote:
-> Hello Dave,
-> 
-> On Fri, Aug 01, 2025 at 07:52:17AM -0700, Dave Hansen wrote:
->> On 8/1/25 05:31, Breno Leitao wrote:
->>> Introduce a generic infrastructure for tracking recoverable hardware
->>> errors (HW errors that are visible to the OS but does not cause a panic)
->>> and record them for vmcore consumption.
->> ...
+
+
+On 2025/8/1 18:54, Manivannan Sadhasivam wrote:
+> On Fri, Aug 01, 2025 at 06:06:16PM GMT, Hans Zhang wrote:
 >>
->> Are there patches for the consumer side of this, too? Or do humans
->> looking at crash dumps have to know what to go digging for?
 >>
->> In either case, don't we need documentation for this new ABI?
-> 
-> I have considered this, but the documentation for vmcoreinfo
-> (admin-guide/kdump/vmcoreinfo.rst) solely documents what is explicitly
-> exposed by vmcore, which differs from the nature of these counters.
-> 
-> Where would be a good place to document it?
-
-I'm not picky. But you also didn't quite answer the question I was asking.
-
-Is this new data for humans or machines to read?
-
->>> @@ -1690,6 +1691,9 @@ noinstr void do_machine_check(struct pt_regs *regs)
->>>  	}
->>>  
->>>  out:
->>> +	/* Given it didn't panic, mark it as recoverable */
->>> +	hwerr_log_error_type(HWERR_RECOV_MCE);
->>> +
+>> On 2025/8/1 17:47, Manivannan Sadhasivam wrote:
+>>> EXTERNAL EMAIL
+>>>
+>>> On Fri, Aug 01, 2025 at 05:25:51PM GMT, Hans Zhang wrote:
+>>>>
+>>>>
+>>>> On 2025/8/1 16:18, Manivannan Sadhasivam wrote:
+>>>>> EXTERNAL EMAIL
+>>>>>
+>>>>> On Thu, Jul 31, 2025 at 09:01:17PM GMT, Arnd Bergmann wrote:
+>>>>>> On Thu, Jul 31, 2025, at 20:39, Bjorn Helgaas wrote:
+>>>>>>> On Thu, Jul 31, 2025 at 07:38:58PM +0200, Gerd Bayer wrote:
+>>>>>>>>
+>>>>>>>> -  if (size == 1)
+>>>>>>>> -          return pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
+>>>>>>>> -  else if (size == 2)
+>>>>>>>> -          return pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
+>>>>>>>> -  else if (size == 4)
+>>>>>>>> -          return pci_bus_read_config_dword(bus, devfn, where, val);
+>>>>>>>> -  else
+>>>>>>>> -          return PCIBIOS_BAD_REGISTER_NUMBER;
+>>>>>>>> +  if (size == 1) {
+>>>>>>>> +          rc = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
+>>>>>>>> +#if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
+>>>>>>>> +          *val = ((*val >> 24) & 0xff);
+>>>>>>>> +#endif
+>>>>>>>
+>>>>>>> Yeah, this is all pretty ugly.  Obviously the previous code in
+>>>>>>> __pci_find_next_cap_ttl() didn't need this.  My guess is that was
+>>>>>>> because the destination for the read data was always the correct type
+>>>>>>> (u8/u16/u32), but here we always use a u32 and cast it to the
+>>>>>>> appropriate type.  Maybe we can use the correct types here instead of
+>>>>>>> the casts?
+>>>>>>
+>>>>>> Agreed, the casts here just add more potential for bugs.
+>>>>>>
+>>>>>
+>>>>> Ack. Missed the obvious issue during review.
+>>>>>
+>>>>>> The pci_bus_read_config() interface itself may have been a
+>>>>>> mistake, can't the callers just use the underlying helpers
+>>>>>> directly?
+>>>>>>
+>>>>>
+>>>>> They can! Since the callers of this API is mostly the macros, we can easily
+>>>>> implement the logic to call relevant accessors based on the requested size.
+>>>>>
+>>>>> Hans, could you please respin the series based the feedback since the series is
+>>>>> dropped for 6.17.
+>>>>>
+>>>>
+>>>> Dear all,
+>>>>
+>>>> I am once again deeply sorry for the problems that occurred in this series.
+>>>> I only test pulling the ARM platform.
+>>>>
+>>>> Thank you very much, Gerd, for reporting the problem.
+>>>>
+>>>> Thank you all for your discussions and suggestions for revision.
+>>>>
+>>>> Hi Mani,
+>>>>
+>>>> Geert provided a solution. My patch based on this is as follows. Please
+>>>> check if there are any problems.
+>>>> https://lore.kernel.org/linux-pci/CAMuHMdVwFeV46oCid_sMHjXfP+yyGTpBfs9t3uaa=wRxNcSOAQ@mail.gmail.com/
+>>>>
+>>>> Also, please ask Gerd to help test whether it works properly. Thank you very
+>>>> much.
+>>>>
+>>>>
+>>>> If there are no issues, am I sending the new version? Can this series of
+>>>> pacth 0001 be directly replaced?
+>>>>
+>>>
+>>> What benefit does this helper provide if it simply invokes the accessors based
+>>> on the requested size? IMO, the API should not return 'int' sized value if the
+>>> caller has explicitly requested to read variable size from config space.
+>>>
 >>
->> Does "MCE" mean anything outside of x86?
-> 
-> AFAIK this is a MCE concept.
-
-I'm not really sure what that response means.
-
-There are two problems here. First is that HWERR_RECOV_MCE is defined in
-arch-generic code, but it may never get used by anything other than x86
-when CONFIG_X86_MCE.
-
-That also completely wastes space in your data structure when
-HWERR_RECOV_MCE=n. Not a huge deal as-is, but it's still a bit sloppy
-and wasteful.
-
-...
->>> +	hwerr_data[src].count++;
->>> +	hwerr_data[src].timestamp = ktime_get_real_seconds();
->>> +}
->>> +EXPORT_SYMBOL_GPL(hwerr_log_error_type);
+>> Dear Mani,
 >>
->> I'd also love to hear more about _actual_ users of this. Surely, someone
->> hit a real world problem and thought this would be a nifty solution. Who
->> was that? What problem did they hit? How does this help them?
+>> This newly added macro definition PCI_FIND_NEXT_CAP is derived from
+>> __pci_find_next_cap_ttl. Another newly added macro definition,
+>> PCI_FIND_NEXT_EXT_CAP, is derived from pci_find_next_ext_capability. The
+>> first one has no return value judgment, while the second one has a judgment
+>> return value. So, pci_bus_read_config is defined as having an int return
+>> value.
+>>
 > 
-> Yes, this has been extensively discussed in the very first version of
-> the patch. Borislav raised the same question, which was discussed in the
-> following link:
-> 
-> https://lore.kernel.org/all/20250715125327.GGaHZPRz9QLNNO-7q8@fat_crate.local/
+> Sorry, my previous reply was not clear. I was opposed to returning 'u32 *val'
+> for a variable 'size' value. The API should only return 'val' of 'size' ie. if
+> size is 1, it should return 'u8 *val' and so on. It finally breaks down to
+> calling the underlying accessors. So I don't see a value in having this API.
 
-When someone raises a concern, we usually try to alleviate the concern
-in a way that is self-contained in the next posting. A cover letter with
-a full explanation would be one place to put the reasoning, for example.
+Dear Mani,
 
-But expecting future reviewers to plod through all the old threads isn't
-really feasible.
+In this series, I had similar confusion before.
+https://lore.kernel.org/linux-pci/4d77e199-8df8-4510-ad49-9a452a29c923@163.com/
+
+
+I think there are a few pieces of code that stand out, such as:
+
+Forced type conversion is also used here. (*value = (type)data;)
+
+
+drivers/pci/access.c
+#define PCI_OP_READ(size, type, len) \
+int noinline pci_bus_read_config_##size \
+	(struct pci_bus *bus, unsigned int devfn, int pos, type *value)	\
+{									\
+	unsigned long flags;						\
+	u32 data = 0;							\
+	int res;							\
+									\
+	if (PCI_##size##_BAD)						\
+		return PCIBIOS_BAD_REGISTER_NUMBER;			\
+									\
+	pci_lock_config(flags);						\
+	res = bus->ops->read(bus, devfn, pos, len, &data);		\
+	if (res)							\
+		PCI_SET_ERROR_RESPONSE(value);				\
+	else								\
+		*value = (type)data;					\
+	pci_unlock_config(flags);					\
+									\
+	return res;							\
+}
+
+
+This function also uses u32 *val as its return value.
+
+int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
+			    int where, int size, u32 *val)
+{
+	void __iomem *addr;
+
+	addr = bus->ops->map_bus(bus, devfn, where);
+	if (!addr)
+		return PCIBIOS_DEVICE_NOT_FOUND;
+
+	if (size == 1)
+		*val = readb(addr);
+	else if (size == 2)
+		*val = readw(addr);
+	else
+		*val = readl(addr);
+
+	return PCIBIOS_SUCCESSFUL;
+}
+EXPORT_SYMBOL_GPL(pci_generic_config_read);
+
+
+And it's the same here.
+drivers/pci/controller/dwc/pcie-designware.c
+int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+{
+	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+		*val = 0;
+		return PCIBIOS_BAD_REGISTER_NUMBER;
+	}
+
+	if (size == 4) {
+		*val = readl(addr);
+	} else if (size == 2) {
+		*val = readw(addr);
+	} else if (size == 1) {
+		*val = readb(addr);
+	} else {
+		*val = 0;
+		return PCIBIOS_BAD_REGISTER_NUMBER;
+	}
+
+	return PCIBIOS_SUCCESSFUL;
+}
+EXPORT_SYMBOL_GPL(dw_pcie_read);
+
+
+Mani, I'm not here to refute you. I just want to ask if there are bugs 
+everywhere here?
+
+I think it's a good idea as mentioned in Gerd's latest reply email. For 
+dw_pcie_read_cfg() and cdns_pcie_read_cfg, I can delete it and provide 
+the macro definition function of {_byte/_word/_dword}.
+
+Similar to this macro definition:
+PCI_OP_READ(byte, u8, 1)
+PCI_OP_READ(word, u16, 2)
+PCI_OP_READ(dword, u32, 4)
+https://lore.kernel.org/linux-pci/06f16b1a55eede3dc3e0bf31ff14eca89ab6f009.camel@linux.ibm.com/
+
+
+Best regards,
+Hans
+
 
