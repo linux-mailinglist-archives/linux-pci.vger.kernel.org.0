@@ -1,174 +1,171 @@
-Return-Path: <linux-pci+bounces-33268-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33269-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E0A1B17D89
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 09:30:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9C1CB17DD0
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 09:53:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7181418935A1
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 07:30:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD43C563E85
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 07:53:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F081221F24;
-	Fri,  1 Aug 2025 07:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dB87r9ua"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A04BA1F4297;
+	Fri,  1 Aug 2025 07:53:14 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8788B21ABAD
-	for <linux-pci@vger.kernel.org>; Fri,  1 Aug 2025 07:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C491273FD;
+	Fri,  1 Aug 2025 07:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754033332; cv=none; b=AeWjkqBJbQSAyhxttAN8Kwvo5YABxO+RrSutQSpLfI9ADlGukq6Cg6LwBM8POqfdhp973sJEWhs4mDqrJPgdErttECJkd09+D/wqtImORWvDmD1sEJ+Xo4+LTZf9X8DT16c4WScqM8BNoOYDMYCwIXjlz1T730hkXdW+dLfu0TQ=
+	t=1754034794; cv=none; b=ORuHGUx1Uqr5WPlN5c5uMbce2gwhhFjFDT/YkznnTBQcZQxhcEGbGmvDIKIYSvR/0ADh/GSo0U78gmJLsGsEcrByca0MJkM6biCdIExFSGoQUR207YnY7gqrdrAmADUmNI6ACXxuHXD/Fz69fDhDRKC3MVEG1++htDUzpIZXrsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754033332; c=relaxed/simple;
-	bh=CqrQYPbngH4gLmvaALqLQbhUf1mxtvza2ZZJS/+cKZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NgCwu6ae1Q53+KXrpGhn1DI24eLZhS0PqxCTSqNikmaUHEMAGR52tjWx9UKYUXO1OZNbOt469bNK0swbUmGcGBxK+rW37lxSnCTuxx38Or1d6lr5K0dNSGLWOcHxOgsWmaIvS5oU2O4OocMRI7ZZS8hmmQppw5QGpG/Ou1P0zBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dB87r9ua; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-76b6422756fso1885604b3a.2
-        for <linux-pci@vger.kernel.org>; Fri, 01 Aug 2025 00:28:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1754033329; x=1754638129; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KpEuo4BDT0PzWNynKyWHN573No1LAQVNOfN+WCfJMR4=;
-        b=dB87r9uahyGEtgCMSwZ7ZU3bKSyCc6wwySGN3iUT4GI/UDle2iRBu923NEjgF1+Vle
-         B2xlF7RR3Blzf0vHCSlAGlEmfAVFpVjsm23TwpmKCJ5j9RagnTAB1F0oZc5MQ8L+y8ng
-         Lqxtvy4NkPnb+WSxyrSUeSORHWKD60YRF+3P75Apm5rlsUSwb7zpWMQCDDG2gcNmqJjY
-         WNXF8F81kubzyLYxZf9mZUFgeQzNPaL3X3IZuYlL0NwyHYtQ38+4TuzIOK8yVc9veaQU
-         CoSQOC8Kkj6JWn7Rgjkj4V9enXtAIkD8kR5WnfTnG09OlsUHRwwjoRwIZvBu8QoeOs4d
-         6UFQ==
+	s=arc-20240116; t=1754034794; c=relaxed/simple;
+	bh=oLgt1/cGb6EuE5nSEM0TtuVrL7A1aY7RnNmfEhjf0n8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g0PLYgi3Wz066GhZoNd1bApQ0e59gkDKByZLZW3Oyub6ljNo7nKqpJr722aEeRxYaGXhNvV2exK/igvYWqUd7Q8wN/bCD9UxoYash+1W9cbT6m1d+kVnwJbocbaPRc/BVxLqlLHgS+y1NKcQwWHRIaiPASl6UE/k+0ocBpaiVWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4efbfe9c7a5so1911453137.0;
+        Fri, 01 Aug 2025 00:53:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754033329; x=1754638129;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KpEuo4BDT0PzWNynKyWHN573No1LAQVNOfN+WCfJMR4=;
-        b=nAMYlKIX7O88L4hy/bMDX6tD/4tCkFxjQTnPW2w+VuWaEHJDLfQwwtQ2YCkI1F+SXQ
-         U0UtUW/pj98KWFzTQuqTEROl3kLq5gU09fZZObL9XgPqELoI/jCdaClKqlk1ysm4rB7y
-         HpRExLgUVZpEIbkqbqR35VCPHiQLyIqCSMGnRFm73C/zuAAl6x9HknjrocKUeEqTdjSY
-         fEKJNDEztc36NVSibQ146N58EhWIoU4lJ+ALikFcgVhKeH13woqQ5mZOK/CDKEpwuxwZ
-         ftNGyxACu0uZJxWqURn3A2pq4KGX1LpVumv41gRlGTJ3i6jImG15m3Y1pJOW/qUhz+sW
-         fVsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFLogpNwubgtcQ/I4ogQLbp6vVylr/3GRfrL7ni0A9PFwbOwYuWY2hHOvxC0bCDVJObuJXoz+FeJI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzscHuzcouxxuwOwKaMlMNrqQp0gK85s3SDi4ZkoYcxkf/5hzzt
-	6Up0un+8zfmnUZCoAYpx7ycFccVzdlbgWPucYkDN80ksG5HGusnwpcTFN6QwuEoTB7U=
-X-Gm-Gg: ASbGnctHVeAFxc3oWraYDfzyiUihXKRl7tuusxiYEikW/nk7Hj3sPx6NARSVrzUxmyf
-	HTDWv+2UETcYxnk+e4P0B5QzZi+4PYaNG/bkQFMvqUlwAYnuYR3qCyHT5MKwwUJ/vHAgOOsVbDg
-	PK4kfTMrplFbCM8YeNiWi6z2ZTieJpnFI6pj5tqBJSM88GtjRbhgb3uxoT384mAYMmHkwZrD4Uq
-	h6l/RQ9PVQCDD8sIU6vzyfc4mJRtODAMnb2Ss7tPJ0xPL2vJjwsNEV1/0+M4no5hFBxPfHUzIlj
-	BUSOchlVkQri/7K3mtuNSETtUORfT7bMBAM18x4tzw+CM5e+iNJf9FJehgeYGOVY9Na2iTUMGm/
-	0OPB7OVqaYkPBEHjhqZXhPc1pWtpjyfyBeg==
-X-Google-Smtp-Source: AGHT+IGSdX0UyQUNm5XJ/ZBNM/4/pg1b54fM7m9r5KZvvoYq4sBygbeHXrF0rtDWYuflNPBaXiwwJw==
-X-Received: by 2002:a05:6a00:4648:b0:746:24c9:c92e with SMTP id d2e1a72fcca58-76bdce7e38fmr3006512b3a.8.1754033328877;
-        Fri, 01 Aug 2025 00:28:48 -0700 (PDT)
-Received: from localhost ([122.172.83.75])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76bcceab592sm3362367b3a.58.2025.08.01.00.28.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Aug 2025 00:28:48 -0700 (PDT)
-Date: Fri, 1 Aug 2025 12:58:45 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 0/3] opp: Add bw_factor support to adjust bandwidth
- dynamically
-Message-ID: <20250801072845.ppxka4ry4dtn6j3m@vireshk-i7>
-References: <20250717-opp_pcie-v1-0-dde6f452571b@oss.qualcomm.com>
- <0dfe9025-de00-4ec2-b6ca-5ef8d9414301@oss.qualcomm.com>
+        d=1e100.net; s=20230601; t=1754034792; x=1754639592;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DzFKrk5qEr4Es0kahjlnt5GIGR4PQyQRZQNgTseC61A=;
+        b=vryZUWSRRCI44yxBAjBHKelBomnZ2acDL5oLyJJLahRklYO9wm64G/aFFasYdw51iT
+         CsN+sQa/uoWaskdNW649GlTtL+sTE1YDL7Ay6Zrik4zkJZqvknprEYRG61mopv7nTOvs
+         8JAKoWschVh4TIJNza3r81LVluw/G01wVcRz4RX5Kd7YukW7QTCZ7SC/3G4r0AXipOvJ
+         Cx03fVc38btJGz9vJN7IJryArUazkvomH0PFixEAwh/6MFSw4u/V8aAIfXZU0fOFR/RT
+         D99cXbjfleHysMyI68NxN/vNG5K/M0CYdSostkvfII4NOnY9hKQZj32noD8OG5qSXifk
+         a/EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCUb4Zq8eidVQYYMIFjMc63FOwciGEAzqIr3IDedI3b061NSEpiBwuos87GQ1tx5XdQ+TjFoSJVo/TZg==@vger.kernel.org, AJvYcCUdNNGXbwfi2/I/q0fSBwPfznZk5qIbICBJjwvtyb9Z701nP92QhCCzLjwl9uCpSaFvPbZjovMO8i7oqQw=@vger.kernel.org, AJvYcCUvqv2ySP5whsoIpXyPL23jFX1mxlEKFp2YgzamqlYVs6COqP9ZXIt4nYK8QCf3DwfJHGjELDRw02Iu@vger.kernel.org, AJvYcCXHiZC4T8AVbT/5N2d968rOZtLv/G+njlby6/sNsfsErAi9p/qWF8fUvrPeR+2Gxnh7ay4e+qMAP2W+Og==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxs/icqbCPrUZTO1jhxuoKChFX3/0EoxhFqbxtWl/cLOFWnocYB
+	OenYADsmSafiu1iwHzk8MyI1ZUY6oKpKVOHFIQv0iY2MVUe9XpK6OEqRvI+XXbXV
+X-Gm-Gg: ASbGncvDbXoMGbaJEJPNa9cUEYzxfiXjAqmTobfrcZZYvd8UsF8eM2GTUcMfoeqVDib
+	UGiIoIl/lje80WiJkiqStMi3IbhGKH+GE/FHLwtRUMEqNe8FnQzvGvjJbZ9jYXdPY0jXSConZkn
+	pzlZlQRxXLEqJbPxd7oqxqMMoEENVgkZsnwat8Bi3NhM4hW+PsbFZ5far+litpRGZ9W4KBR1MKf
+	OBo6wm3DKN1FTXAinkBElYpz0jkBEHQ+FtJ3TRqjUDFQoJSGWvwC9UAOEX4KK5r+BSi2CBn9KAb
+	0NJiWOcJmHyvWEQCFi/RBPpk9pXofLTkgJ2srJQjEtw80gv3lpCIM9jBYqSlc/tVQK9UnUk7/C1
+	djCghDjTdIOSgAK7Mb3z71vjgHYBy6J6BCacIc+zBHkOQh85C1JfKH199kvPM
+X-Google-Smtp-Source: AGHT+IH8ZCF1y9qER27dQCY8WWuoBK9OLgaVzKvECUpp4rg+YPt02uN4bfERbxFbjgUdHD1tauAoJw==
+X-Received: by 2002:a05:6102:324e:10b0:4f3:2f5f:c2e8 with SMTP id ada2fe7eead31-4fc0fe5e086mr1838199137.1.1754034791710;
+        Fri, 01 Aug 2025 00:53:11 -0700 (PDT)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-88d8f3f0c5dsm754672241.13.2025.08.01.00.53.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Aug 2025 00:53:10 -0700 (PDT)
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4fc2132cc97so538634137.1;
+        Fri, 01 Aug 2025 00:53:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWSAkB8dMewm47egHPwhelcGYuhFEE57+rhCo1mKCwGhm+7eLi7MEr2pTyLL1ZWw33UcjjdI+DeLpM/tVo=@vger.kernel.org, AJvYcCX4cQ3aArJw8nVnqS5OMX1BROBpt3Ir4KwsiR2FdgRwOxKoeQnHPUzSTeGoedOieaUKVA+qPLtLXL+d@vger.kernel.org, AJvYcCX4qh0yT+F8IrFCZMSwzuZh5h3JO/waU8jkDGvL8p3T6hUv/TQZKjtl/hEAwDwJB6bPyN88wmnfTkd9EQ==@vger.kernel.org, AJvYcCXAuoD9ZlDWx+KDhut2KvIkBMwqFhrgwjG0cM21mvK2HbcG01Hf3drkOT0GDuz1n8hV9NHkmOm3ShgDKw==@vger.kernel.org
+X-Received: by 2002:a05:6102:6102:10b0:4fb:f495:43ec with SMTP id
+ ada2fe7eead31-4fc1014a568mr1725889137.12.1754034790307; Fri, 01 Aug 2025
+ 00:53:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0dfe9025-de00-4ec2-b6ca-5ef8d9414301@oss.qualcomm.com>
+References: <4e10bea3aa91ee721bb40e9388e8f72f930908fe.camel@linux.ibm.com> <20250731173858.1173442-1-gbayer@linux.ibm.com>
+In-Reply-To: <20250731173858.1173442-1-gbayer@linux.ibm.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 1 Aug 2025 09:52:58 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVwFeV46oCid_sMHjXfP+yyGTpBfs9t3uaa=wRxNcSOAQ@mail.gmail.com>
+X-Gm-Features: Ac12FXxryTPC1ndd8ms1Hjwe7h8qRvkBWHnbRS0kseU5i-4Dc5zEC3g15MUQeuA
+Message-ID: <CAMuHMdVwFeV46oCid_sMHjXfP+yyGTpBfs9t3uaa=wRxNcSOAQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Fix endianness issues in pci_bus_read_config()
+To: Gerd Bayer <gbayer@linux.ibm.com>
+Cc: 18255117159@163.com, bhelgaas@google.com, helgaas@kernel.org, 
+	agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
+	ilpo.jarvinen@linux.intel.com, jingoohan1@gmail.com, kwilczynski@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-next@vger.kernel.org, linux-pci@vger.kernel.org, lpieralisi@kernel.org, 
+	mani@kernel.org, robh@kernel.org, schnelle@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 01-08-25, 12:05, Krishna Chaitanya Chundru wrote:
-> Can you please review this once.
+Hi Gerd,
 
-Sorry about the delay.
+On Thu, 31 Jul 2025 at 20:57, Gerd Bayer <gbayer@linux.ibm.com> wrote:
+> Simple pointer-casts to map byte and word reads from PCI config space
+> into dwords (i.e. u32) produce unintended results on big-endian systems.
+> Add the necessary adjustments under compile-time switch
+> CONFIG_CPU_BIG_ENDIAN.
+>
+> pci_bus_read_config() was just introduced with
+> https://lore.kernel.org/all/20250716161203.83823-2-18255117159@163.com/
+>
+> Signed-off-by: Gerd Bayer <gbayer@linux.ibm.com>
 
-> > The existing OPP table in the device tree for PCIe is shared across
-> > different link configurations such as data rates 8GT/s x2 and 16GT/s x1.
-> > These configurations often operate at the same frequency, allowing them
-> > to reuse the same OPP entries. However, 8GT/s and 16 GT/s may have
-> > different characteristics beyond frequency—such as RPMh votes in QCOM
-> > case, which cannot be represented accurately when sharing a single OPP.
+Thanks for your patch!
 
-From the looks of it, something like this should also work:
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -89,15 +89,24 @@ int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
+>                         u32 *val)
+>  {
+>         struct pci_bus *bus = priv;
+> +       int rc;
+>
+> -       if (size == 1)
+> -               return pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
+> -       else if (size == 2)
+> -               return pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
+> -       else if (size == 4)
+> -               return pci_bus_read_config_dword(bus, devfn, where, val);
+> -       else
+> -               return PCIBIOS_BAD_REGISTER_NUMBER;
+> +       if (size == 1) {
+> +               rc = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
+> +#if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
+> +               *val = ((*val >> 24) & 0xff);
+> +#endif
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-index 54c6d0fdb2af..0a76bc4c4dc9 100644
---- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-@@ -2216,18 +2216,12 @@ opp-2500000 {
-                                        opp-peak-kBps = <250000 1>;
-                                };
+IMHO this looks ugly and error-prone.  In addition, it still relies
+on the caller initializing the upper bits to zero on little-endian.
 
--                               /* GEN 1 x2 and GEN 2 x1 */
-+                               /* GEN 2 x1 */
-                                opp-5000000 {
-                                        opp-hz = /bits/ 64 <5000000>;
-                                        required-opps = <&rpmhpd_opp_low_svs>;
--                                       opp-peak-kBps = <500000 1>;
--                               };
--
--                               /* GEN 2 x2 */
--                               opp-10000000 {
--                                       opp-hz = /bits/ 64 <10000000>;
--                                       required-opps = <&rpmhpd_opp_low_svs>;
--                                       opp-peak-kBps = <1000000 1>;
-+                                       opp-peak-kBps-x1 = <500000 1>;
-+                                       opp-peak-kBps-x2 = <1000000 1>;
-                                };
+What about:
 
-                                /* GEN 3 x1 */
-@@ -2237,18 +2231,12 @@ opp-8000000 {
-                                        opp-peak-kBps = <984500 1>;
-                                };
+    u8 byte;
 
--                               /* GEN 3 x2 and GEN 4 x1 */
-+                               /* GEN 4 x1 */
-                                opp-16000000 {
-                                        opp-hz = /bits/ 64 <16000000>;
-                                        required-opps = <&rpmhpd_opp_nom>;
--                                       opp-peak-kBps = <1969000 1>;
--                               };
--
--                               /* GEN 4 x2 */
--                               opp-32000000 {
--                                       opp-hz = /bits/ 64 <32000000>;
--                                       required-opps = <&rpmhpd_opp_nom>;
--                                       opp-peak-kBps = <3938000 1>;
-+                                       opp-peak-kBps-x1 = <1969000 1>;
-+                                       opp-peak-kBps-x2 = <3938000 1>;
-                                };
-                        };
+    rc = pci_bus_read_config_byte(bus, devfn, where, &byte);
+    *val = byte;
 
-The OPP core supports named properties, which will make this work.
+> +       } else if (size == 2) {
+> +               rc = pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
+> +#if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
+> +               *val = ((*val >> 16) & 0xffff);
+> +#endif
+
+and:
+
+    u16 word;
+
+    rc = pci_bus_read_config_word(bus, devfn, where, &word);
+    *val = word;
+
+> +       } else if (size == 4) {
+> +               rc = pci_bus_read_config_dword(bus, devfn, where, val);
+> +       } else {
+> +               rc =  PCIBIOS_BAD_REGISTER_NUMBER;
+> +       }
+> +       return rc;
+>  }
+>
+>  int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-viresh
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
