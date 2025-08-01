@@ -1,133 +1,135 @@
-Return-Path: <linux-pci+bounces-33265-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33266-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71F81B17C6E
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 07:44:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4187B17CB5
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 08:01:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 029EF1C2181A
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 05:45:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C1AB4E116A
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Aug 2025 06:01:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B01101917E3;
-	Fri,  1 Aug 2025 05:44:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 720461F03D8;
+	Fri,  1 Aug 2025 06:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WgSEXUb3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E4CAD4B;
-	Fri,  1 Aug 2025 05:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D76ABA27;
+	Fri,  1 Aug 2025 06:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754027076; cv=none; b=BjHCnOItPiUIRn8VtFvZXSsTSTKGloYomGdbfasYjl9uUkcYir8dkL332YkmdNyBOjf7KaSzywd/XkhKfIZctFTg18EHL8I8d1pC4nTi1HRXpOlwDiLW8x1ViEG06Lo4EqcbbfMm7S93ToQiIkz33ISeiW4m4dlb8HG5hMUil+0=
+	t=1754028064; cv=none; b=QIk/drhW488CffNtjSPof9548kCPPz2yERYcyp2DqYM7tCt5scpdXQ819OeSiWnskcFdObJ6FvdxZ1xBsTBsfochrl7O8V2WMKJpnEuOax2LxhahqjDQQ02E0eFppME37/k04P1mrhUkYIWsATT5Bce/EgH1Q1xIz4656SxDL9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754027076; c=relaxed/simple;
-	bh=RkCsCxuwv0+qxSCr9cyr4vDB1+qbUwftbbBFarELzfA=;
+	s=arc-20240116; t=1754028064; c=relaxed/simple;
+	bh=/263uIWcvhc0I5wZ3WHa0/u1tV91vOaXPF5PpqenmT0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nqjVnaFQxa1pLyJxX9mdnl8giyo1GJxDrQohZX1bmimKxVW17qjKeJQYGgOLISHoqSk9eZilhRWgX/0EAMPsuHRFOKoWbFRuH68ZnbSSlUKL00MUZLhhBMdlcwN/5albZWXDw7llrueyDXHeDcGtXQ3ncwxVQ3wDdiqRNKBfL1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 69F252012A16;
-	Fri,  1 Aug 2025 07:44:14 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 3BF1B38CA21; Fri,  1 Aug 2025 07:44:14 +0200 (CEST)
-Date: Fri, 1 Aug 2025 07:44:14 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Niklas Schnelle <schnelle@linux.ibm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Linas Vepstas <linasvepstas@gmail.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Peter Oberparleiter <oberpar@linux.ibm.com>,
-	Matthew Rosato <mjrosato@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>, Sinan Kaya <okaya@kernel.org>,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH v3 1/2] PCI/AER: Fix missing uevent on recovery when a
- reset is requested
-Message-ID: <aIxULlDfQw4yhFDv@wunner.de>
-References: <20250730-add_err_uevents-v3-0-540b158c070f@linux.ibm.com>
- <20250730-add_err_uevents-v3-1-540b158c070f@linux.ibm.com>
- <aIp6LiKJor9KLVpv@wunner.de>
- <aIp_Z9IdwSjMtDho@wunner.de>
- <aItpKIhYr0T8jf7A@wunner.de>
- <4969c441-fe2a-470f-9efd-4661efca56ec@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qy11vegT6wBZxQDK2IRc1ulmgvzfELgSHJlbnmbdGqko0F8oEhm5W9lNmXfCknGr/giHwUYko2zoWaoc2kz69ZpUWauuEhsz27yC1hOYJ2E9denKH4DadVlELh7v7/VnIy9HvJAaWyc/5kiQ4UFr5WIBi5KIG1+UtBIkH827CKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgSEXUb3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4FCDC4CEE7;
+	Fri,  1 Aug 2025 06:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754028063;
+	bh=/263uIWcvhc0I5wZ3WHa0/u1tV91vOaXPF5PpqenmT0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WgSEXUb30+pWs5GoXv2VA0qaCXKyTl3k2ikLLryeXh2n9LZXECRSptTzAhDl97YkC
+	 py21gmJ+O3NPGbEKvZuF1VJgpKc5n0ObYWneRIVLWRujqdbF1CZlfkE/FWH6VLFWpg
+	 PREbWhaHPMdM5oJKelqLHF9TFxDYfxSkjrihZ9lR8PnwEeKzelv45XkXVHPOGuTNh8
+	 Ls8jGZRlAilSMGH8Bxj6GEAQ0yLOlfJziWvoClU6L1wdhIkqLV3DCNjLEyaU3gz3Bj
+	 7+y/G/kAjcq1mcpgYkAWVt8SlAlkOwn+Ky4kXVYU+iUwkGN83mdd6ELcAfxAbDiZZL
+	 +s2+fki20RAqg==
+Date: Fri, 1 Aug 2025 11:30:48 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Aaron Kling <webgeek1234@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v7 0/3] PCI: tegra: Allow building as a module
+Message-ID: <omchhpbmsydfcsm6mzmbdiupsrxmxxvkxqf33fgi563akn76vf@vkc7k2zhlvee>
+References: <20250731-pci-tegra-module-v7-0-cad4b088b8fb@gmail.com>
+ <CALHNRZ9tOJccZ5sQjvkoPe4-+VUtWRxAzAOUainGUCs4+_RBCw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4969c441-fe2a-470f-9efd-4661efca56ec@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALHNRZ9tOJccZ5sQjvkoPe4-+VUtWRxAzAOUainGUCs4+_RBCw@mail.gmail.com>
 
-On Thu, Jul 31, 2025 at 10:04:38AM -0700, Sathyanarayanan Kuppuswamy wrote:
-> On 7/31/25 6:01 AM, Lukas Wunner wrote:
-> > +++ b/drivers/pci/pcie/err.c
-> > @@ -165,6 +165,12 @@ static int report_resume(struct pci_dev *dev, void *data)
-> >   	return 0;
-> >   }
-> > +static int report_disconnect(struct pci_dev *dev, void *data)
-> > +{
-> > +	pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
-> > +	return 0;
-> > +}
+On Thu, Jul 31, 2025 at 05:01:55PM GMT, Aaron Kling wrote:
+> On Thu, Jul 31, 2025 at 4:59 PM Aaron Kling via B4 Relay
+> <devnull+webgeek1234.gmail.com@kernel.org> wrote:
+> >
+> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> > ---
+> > Changes in v7:
+> > - Rebased on 6.16
+> > - Updated mailing address list
+> > - Link to v6: https://lore.kernel.org/r/20250507-pci-tegra-module-v6-0-5fe363eaa302@gmail.com
+> >
+> > Changes in v6:
+> > - Remove unused debugfs cleanup function, as caught by kernel ci
+> > - Link to v5: https://lore.kernel.org/r/20250505-pci-tegra-module-v5-0-827aaac998ba@gmail.com
+> >
+> > Changes in v5:
+> > - Copy commit message exactly word for word on patch 1, as required by reviewer
+> > - Delete remove callback in patch 3, per request
+> > - Don't clean up debugfs, per request, which drops patch 4 entirely
+> > - Link to v4: https://lore.kernel.org/r/20250505-pci-tegra-module-v4-0-088b552c4b1a@gmail.com
+> >
+> > Changes in v4:
+> > - Updated commit messages for patches 1 and 2, per review
+> > - Link to v3: https://lore.kernel.org/r/20250502-pci-tegra-module-v3-0-556a49732d70@gmail.com
+> >
+> > Changes in v3:
+> > - Add patch to drop remove callback, per request
+> > - Link to v2: https://lore.kernel.org/r/20250428-pci-tegra-module-v2-0-c11a4b912446@gmail.com
+> >
+> > Changes in v2:
+> > - Add patch to export tegra_cpuidle_pcie_irqs_in_use as required when
+> >   building pci-tegra as a module for arm
+> > - Drop module exit to prevent module unloading, as requested
+> > - Link to v1: https://lore.kernel.org/r/20250420-pci-tegra-module-v1-0-c0a1f831354a@gmail.com
+> >
+> > ---
+> > Aaron Kling (3):
+> >       irqdomain: Export irq_domain_free_irqs
+> >       cpuidle: tegra: Export tegra_cpuidle_pcie_irqs_in_use
+> >       PCI: tegra: Allow building as a module
+> >
+> >  drivers/cpuidle/cpuidle-tegra.c    |  1 +
+> >  drivers/pci/controller/Kconfig     |  2 +-
+> >  drivers/pci/controller/pci-tegra.c | 35 ++++-------------------------------
+> >  kernel/irq/irqdomain.c             |  1 +
+> >  4 files changed, 7 insertions(+), 32 deletions(-)
+> > ---
+> > base-commit: 038d61fd642278bab63ee8ef722c50d10ab01e8f
+> > change-id: 20250313-pci-tegra-module-7cbd1c5e70af
+> >
+> > Best regards,
+> > --
+> > Aaron Kling <webgeek1234@gmail.com>
+> >
+> >
 > 
-> Since you are notifying the user space, I am wondering whether the drivers
-> should be notified about the recovery failure?
+> Continuing the conversation from the last revision [0]. Is there any
+> path forward for this series?
+> 
 
-The drivers are usually *causing* the recovery failure by returning
-PCI_ERS_RESULT_DISCONNECT from their pci_error_handlers callbacks
-(or by lacking pci_error_handlers, in particular ->error_detected()).
+Daniel, could you please look into the cpufreq patch?
 
-So in principle the drivers should be aware of recovery failure.
+- Mani
 
-There are cases where multiple drivers are involved.  E.g. on GPUs,
-there's often a PCIe switch with a graphics device and various sound
-or telemetry devices.  Typically errors are reported by the Upstream
-Port, so the Secondary Bus Reset occurs at the Root or Downstream Port
-above the Upstream Port and affects the switch and all subordinate
-devices.  In cases like this, recovery failure may be caused by a
-single driver (e.g. GPU) and the other drivers (e.g. telemetry) may
-be unaware of it.
-
-The recovery flow documented in Documentation/PCI/pci-error-recovery.rst
-was originally conceived for EEH and indeed EEH does notify all drivers
-of recovery failures by invoking the ->error_detected() callback with
-channel_state pci_channel_io_perm_failure.  See this call ...
-
-	eeh_pe_report("error_detected(permanent failure)", pe,
-		      eeh_report_failure, NULL);
-
-... in arch/powerpc/kernel/eeh_driver.c below the recover_failed label
-in eeh_handle_normal_event().
-
-I don't know why pcie_do_recovery() doesn't do the same on recovery
-failure.  This is one of several annoying deviations between AER and
-EEH.  Ideally the behavior should be the same across all platforms
-so that drivers don't have to cope with platform-specific quirks.
-
-However I think that's orthogonal to the pci_uevent_ers() invocation
-in pcie_do_recovery().
-
-Thanks,
-
-Lukas
+-- 
+மணிவண்ணன் சதாசிவம்
 
