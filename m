@@ -1,117 +1,134 @@
-Return-Path: <linux-pci+bounces-33357-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33358-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 863C2B19FA7
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 12:23:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEABDB19FB2
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 12:26:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 068B33BAE27
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 10:23:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 279D97A6C29
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 10:24:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62736248F78;
-	Mon,  4 Aug 2025 10:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="krZ916p6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B97E11FE444;
+	Mon,  4 Aug 2025 10:25:53 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sinmsgout03.his.huawei.com (sinmsgout03.his.huawei.com [119.8.177.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88C54A07;
-	Mon,  4 Aug 2025 10:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=119.8.177.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BB42C1A2;
+	Mon,  4 Aug 2025 10:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754303024; cv=none; b=MEzLFyQA7e0VMFL4HJeo7EjFRBcISQW+5rKK04BofS2FPvYqXIzRjDBT8cBlqa1GVpimrZCvJlMI2L4jcj31dFW/9HutHFkAs8FWA9FsIYrYtQqcxWQCVaE6pa73/O1N3Xg1B7V2Hj2dJS/VxxC8H7FlDA91ZMbwxVttnFtZHOg=
+	t=1754303153; cv=none; b=qdHMIiFPHAKOhT1OGvLSUNfjVo70VafMamtLZaYqA72HIMEmw3ROmBybHDeqklYYXyrmzPcJ/fxoyjsP+lCuOJELVLShM4eiSHqrPvTlrzBMLWTlkQbqc8Ayzn5xWsOSnP/6rzdUTK2ONdehs1lBTX08iUUyLbaTugcMgv9y0yA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754303024; c=relaxed/simple;
-	bh=X1VUhgt8QW/ZfVr4EXLGfxcOIQqMZmFuJ0KQugFBrP0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G3Jt0bFwdAxMDRH3PTO4nKdyK4GCcZlPFscV4aIRHxVfwxU3wvtaEUPNEVTedaxwEt8OpjDXo6ggi1xE0OC9tKmPTjZRUjCUbE6+UgEacZ86xrzSqxoMcQLUKOSXhibdwggNCrXamW8yoeTRwqJ+h+k2CIooff/PhxX0Knc5vYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=krZ916p6; arc=none smtp.client-ip=119.8.177.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=yXPzIEEoaPN1VOdITWv34hp9rv4PXkmKFCr/GnHNnyQ=;
-	b=krZ916p6MflWi+t54Nh5ZPuOIQXBLK17j9mJYliCU3H8LoGXgjO1vjrCmf+7jTthc71o+Scz/
-	8gRm/qrszeSN0RjpvFGrpSumMnaTnLPyhy0sYRhp+Mugi7yKgilUQHdwE9HkleCa1H4GnJSDTuD
-	7dTPC95O7J3AD57GduXJkAQ=
-Received: from frasgout.his.huawei.com (unknown [172.18.146.37])
-	by sinmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4bwXfV5p2mzN0dZ;
-	Mon,  4 Aug 2025 18:21:54 +0800 (CST)
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bwXb96HLrz6L5Ks;
-	Mon,  4 Aug 2025 18:19:01 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0EAAA140133;
-	Mon,  4 Aug 2025 18:23:29 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 4 Aug
- 2025 12:23:28 +0200
-Date: Mon, 4 Aug 2025 11:23:26 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
-	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <aik@amd.com>,
-	<lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>, Xu Yilun
-	<yilun.xu@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>, "Suzuki K
- Poulose" <Suzuki.Poulose@arm.com>, Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
-	Will Deacon <will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [RFC PATCH v1 38/38] coco: guest: arm64: Add support for
- fetching device info
-Message-ID: <20250804112326.00000f40@huawei.com>
-In-Reply-To: <yq5ao6sv8tw9.fsf@kernel.org>
-References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
-	<20250728135216.48084-39-aneesh.kumar@kernel.org>
-	<20250731113653.000000cd@huawei.com>
-	<yq5ao6sv8tw9.fsf@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1754303153; c=relaxed/simple;
+	bh=Gv/Yco+PLRB+eO81Xk6Z2wVlYEMcrAQFutwtK52dQYc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fSXvUmZDtVOmCtBi+EryleAUObiYY8swR2rrBmpAwpHWHMNl1ofV9Wldr5w2wUw9f6GpvHgAVvXva8Re6fuSw7s8oVilMqlOpEcATJY0Q6YkztoTy6w+OcZj09sjJEResJoX/Fp3ucf8herHJKofu8O3AwZk4hrkkoT5wd6iEUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-88ba6bb90d6so3001975241.0;
+        Mon, 04 Aug 2025 03:25:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754303150; x=1754907950;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eZddScDjOIs1bcwZar1ryVoYUm2q/hDGWLi3mEU/nG4=;
+        b=rjsdqISahIt9YtYeQjvBO10Rtlp+ZmHXo0cusaC6V5GYxypJaO2VmqXL9/LG5O6ZMw
+         4xPFioaLPlW6CMiwWw1wl/yYsD8X2RrNcOxLcb9AQbYt7YVcLEJa94Kz7lX8AXWYu4uC
+         ye44+UL76x/2IbXHM7AUja2hxjTRND34z5UKnlCfjghdigHJT4Cq89Tx3m69Y83mmu7P
+         IJliIrnuqUQ3Ktif9GFNg+hYqSfeWR32PBTN6dMcb3h7h6wmDNaMfBEniBT8AlBxodhx
+         Td75+Ursl1HARLUQhsC3f/Zo0S7+z8fH3BGVTp6QtiPCCQgQamkoQztnWoYnT1h9hFRo
+         6SMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlCS9ZM3T7cV82MW59381KmyiigiwCJUfQOj+k94rH8mR7e54krG5TlPXC3qaXHqeV8psLQhr2yXDb@vger.kernel.org, AJvYcCWUAIjVuogZXXnNUOp1eaj2jeEJqaPWHfesOjvgm9oLtjtEeFCCknBz4VsCyQwSU2F4tveJgmKuaIjU@vger.kernel.org, AJvYcCX4vO/eczw/v7nW2l8pnZCaWR4ngw3gXdlEpHsrxaTmQbltjg8uiwUB1txG+g6UnQYerXw1LQXIAin5Beed@vger.kernel.org, AJvYcCXQYZV3tPcsLqqmxLJjBYBnML1yJrfOjYyhwIFzlUftEi7fxG/iCqKZLT2Ucjz5k2lr25vRiL7GdAl1m6S6cbWJoJk=@vger.kernel.org, AJvYcCXulT5sYKrIXCvDvSyU0qNwMG9g5IFxjNshJNSNnFGLTGPX1NJiUEVvEpQQ4MGRdXBCrmiKAtm/t1Z9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz60AdKImkK0zEaklfHAWTMB3b7E6ZgCFp3MdSU70/dfxKHOcQt
+	EnXl7QkDknjsz9nrqU29eK/FmVVN9NvMqTfzd8HZTKUzzC3SiQ3K5uNaFXkFxn4n
+X-Gm-Gg: ASbGncttezy9QDIBmNvQLITPy3qv2X+gqhmaGo2VKBVjuyN9CLEJJ46TrESccdN6S08
+	jWVIZB7DgJSObrQxWnGKMNJq+mTJKmzIliUneZnbA8Eh8P0dYtyRYwJ2mjduxnaYyBHEiMMSV8M
+	o5wD5QDmay/UBrWFlyLCzpR2zpDSjfFSq9NAn8a2kq+ZRMqHB8WvOMMrbqlNhe7S2D4jFCi9WgP
+	ab7+N9LruonGWNbjXms93lS+t8GZBK8SYgFEVJIFHS+eC8RyjIa6S19gH7R+bkVGZF3U3H/DPeF
+	AapQZKLAuRixU5KcI6bo+3xKFf2CL7MwZ4U6GVnB6MlJDc3WYUL9Bk4nE/qibaIsz+EzhxKv5jM
+	ES1Ilt4f9bSTLJAW83XUmJVhjTmDHJic9UWtpsv3lLdX4GgvujCxBS6zH969i
+X-Google-Smtp-Source: AGHT+IEb6a7Bd5VuoZnxYlYIATgP0FQjULwTFEBTZ5xQm6f07KtBAzHdP4x3XKxt2V8CJPIinTxpjA==
+X-Received: by 2002:a05:6102:3199:b0:4ee:5244:6607 with SMTP id ada2fe7eead31-4fc1014a862mr5910437137.11.1754303150292;
+        Mon, 04 Aug 2025 03:25:50 -0700 (PDT)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-88d8f44b688sm2252555241.26.2025.08.04.03.25.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Aug 2025 03:25:49 -0700 (PDT)
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-88bc19ddfe3so1183667241.1;
+        Mon, 04 Aug 2025 03:25:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU+Bt+EMxBqYZFRQaNicB4iFSaJz6hY5u9q40HPFoDdadyFGGpEGxcoJXhYDAIp/oPyU0oBe3JGC7jv@vger.kernel.org, AJvYcCV97rVL+yn17FTwTzZ4Cu0lEIv4wLsgFgXIzp9TzefQSGXmxQ3fVQZMmwj+Hqd5K+amj1swe3gEOz3m@vger.kernel.org, AJvYcCVuPaQgxukZFJmxD0tHg5sQ2++opDcjFeQIB56/ciwWI0MG0/K3ETLv6E+Sk1IHBnIIx+vMgL5M61/DZJyaiKBESOc=@vger.kernel.org, AJvYcCW/KoEtkE74xwoFSxGuUMe3Fvl5eS64/+EDF3ih+uVXONTnFXJfWNovprz/2iBAUP5zZYpuZULQgf+G@vger.kernel.org, AJvYcCXgCepwEedYcQLbeJl9k57f+ZbUWCbYoeoEl8YFwKT/kBgN1fhc1wmZfjDzKtGYHHz7rm+DXpYVv6o8xzM5@vger.kernel.org
+X-Received: by 2002:a05:6102:6102:10b0:4fb:f495:43ec with SMTP id
+ ada2fe7eead31-4fc1014a568mr4289741137.12.1754303149196; Mon, 04 Aug 2025
+ 03:25:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com> <20250704161410.3931884-3-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250704161410.3931884-3-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 4 Aug 2025 12:25:38 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVrbOPrzwMMP0+HHqh01nwDfoUx8Mx0nZ=24ZU9XkFqgQ@mail.gmail.com>
+X-Gm-Features: Ac12FXwFJTXzLRJiS_KcBRTI0cWrJpi5fbuV92Ri-bNxlf-GM9ClQh0GwvKc4cU
+Message-ID: <CAMuHMdVrbOPrzwMMP0+HHqh01nwDfoUx8Mx0nZ=24ZU9XkFqgQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/9] clk: renesas: r9a08g045: Add clocks and resets
+ support for PCIe
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org, 
+	mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de, 
+	lizhi.hou@amd.com, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, 4 Jul 2025 at 18:14, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Add clocks and resets for the PCIe IP available on the Renesas RZ/G3S SoC.
+> The clkl1pm clock is required for PCIe link power management (PM) control
+> and should be enabled based on the state of the CLKREQ# pin. Therefore,
+> mark it as a no_pm clock to allow the PCIe driver to manage it during link
+> PM transitions.
+>
+> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-> >  
-> >> +	if (!dev_info) {
-> >> +		ret = -ENOMEM;
-> >> +		goto err_out;
-> >> +	}
-> >> +
-> >> +	ret = rsi_rdev_get_info(vdev_id, dsm->instance_id, virt_to_phys(dev_info));
-> >> +	if (ret != RSI_SUCCESS) {
-> >> +		pci_err(pdev, "failed to get device digests (%lu)\n", ret);
-> >> +		ret = -EIO;
-> >> +		kfree(dev_info);
-> >> +		goto err_out;
-> >> +	}
-> >> +
-> >> +	dsm->dev_info.attest_type   = dev_info->attest_type;
-> >> +	dsm->dev_info.cert_id       = dev_info->cert_id;
-> >> +	dsm->dev_info.hash_algo     = dev_info->hash_algo;
-> >> +	memcpy(dsm->dev_info.cert_digest, dev_info->cert_digest, SHA512_DIGEST_SIZE);
-> >> +	memcpy(dsm->dev_info.meas_digest, dev_info->meas_digest, SHA512_DIGEST_SIZE);
-> >> +	memcpy(dsm->dev_info.report_digest, dev_info->report_digest, SHA512_DIGEST_SIZE);
-> >> +  
-> >
-> > Can't you memcpy the whole thing in one go?
-> >  
-> 
-> yes. But won't that be confusing? Is there a difference?
-> Also struct dsm_device_info is not same as struct rsi_device_info. We
-> don't need to keep all that padding in dsm_device_info.
-Ah. I misread and thought they were the same structure.  No problem copying
-only relevant fields then!
+Thanks for your patch!
 
-Jonathan
+> --- a/drivers/clk/renesas/r9a08g045-cpg.c
+> +++ b/drivers/clk/renesas/r9a08g045-cpg.c
+> @@ -289,6 +289,10 @@ static const struct rzg2l_mod_clk r9a08g045_mod_clks[] = {
+>                                         MSTOP(BUS_MCPU2, BIT(14))),
+>         DEF_MOD("tsu_pclk",             R9A08G045_TSU_PCLK, R9A08G045_CLK_TSU, 0x5ac, 0,
+>                                         MSTOP(BUS_MCPU2, BIT(15))),
+> +       DEF_MOD("pci_aclk",             R9A08G045_PCI_ACLK, R9A08G045_CLK_M0, 0x608, 0,
+> +                                       MSTOP(BUS_PERI_COM, BIT(10))),
+> +       DEF_MOD("pci_clk1pm",           R9A08G045_PCI_CLKL1PM, R9A08G045_CLK_ZT, 0x608, 1,
+
+pci_clkl1pm
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk for v6.18, with the above fixed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
