@@ -1,134 +1,291 @@
-Return-Path: <linux-pci+bounces-33358-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33359-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEABDB19FB2
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 12:26:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90710B1A02A
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 13:05:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 279D97A6C29
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 10:24:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E5B5188A0C4
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 11:05:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B97E11FE444;
-	Mon,  4 Aug 2025 10:25:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 667B123FC54;
+	Mon,  4 Aug 2025 11:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JV/SgZCZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BB42C1A2;
-	Mon,  4 Aug 2025 10:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A0F22D7B6;
+	Mon,  4 Aug 2025 11:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754303153; cv=none; b=qdHMIiFPHAKOhT1OGvLSUNfjVo70VafMamtLZaYqA72HIMEmw3ROmBybHDeqklYYXyrmzPcJ/fxoyjsP+lCuOJELVLShM4eiSHqrPvTlrzBMLWTlkQbqc8Ayzn5xWsOSnP/6rzdUTK2ONdehs1lBTX08iUUyLbaTugcMgv9y0yA=
+	t=1754305505; cv=none; b=pRdbxoMCblImcF4dZYPoW/VrFnFOYusNT6X71hOZ+N2yjK8VNipvYlPC4SNFb7Zola8s0ETni5Syr/Y4f1/yHOKt+fR7CqeGmiSHy5Njf9uMe9WOv57WAFepx+L//L1yUOX4SHePMjENpAiQ810mMw5wn5qdEXzqLnwTLbEEwmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754303153; c=relaxed/simple;
-	bh=Gv/Yco+PLRB+eO81Xk6Z2wVlYEMcrAQFutwtK52dQYc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fSXvUmZDtVOmCtBi+EryleAUObiYY8swR2rrBmpAwpHWHMNl1ofV9Wldr5w2wUw9f6GpvHgAVvXva8Re6fuSw7s8oVilMqlOpEcATJY0Q6YkztoTy6w+OcZj09sjJEResJoX/Fp3ucf8herHJKofu8O3AwZk4hrkkoT5wd6iEUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-88ba6bb90d6so3001975241.0;
-        Mon, 04 Aug 2025 03:25:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754303150; x=1754907950;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eZddScDjOIs1bcwZar1ryVoYUm2q/hDGWLi3mEU/nG4=;
-        b=rjsdqISahIt9YtYeQjvBO10Rtlp+ZmHXo0cusaC6V5GYxypJaO2VmqXL9/LG5O6ZMw
-         4xPFioaLPlW6CMiwWw1wl/yYsD8X2RrNcOxLcb9AQbYt7YVcLEJa94Kz7lX8AXWYu4uC
-         ye44+UL76x/2IbXHM7AUja2hxjTRND34z5UKnlCfjghdigHJT4Cq89Tx3m69Y83mmu7P
-         IJliIrnuqUQ3Ktif9GFNg+hYqSfeWR32PBTN6dMcb3h7h6wmDNaMfBEniBT8AlBxodhx
-         Td75+Ursl1HARLUQhsC3f/Zo0S7+z8fH3BGVTp6QtiPCCQgQamkoQztnWoYnT1h9hFRo
-         6SMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUlCS9ZM3T7cV82MW59381KmyiigiwCJUfQOj+k94rH8mR7e54krG5TlPXC3qaXHqeV8psLQhr2yXDb@vger.kernel.org, AJvYcCWUAIjVuogZXXnNUOp1eaj2jeEJqaPWHfesOjvgm9oLtjtEeFCCknBz4VsCyQwSU2F4tveJgmKuaIjU@vger.kernel.org, AJvYcCX4vO/eczw/v7nW2l8pnZCaWR4ngw3gXdlEpHsrxaTmQbltjg8uiwUB1txG+g6UnQYerXw1LQXIAin5Beed@vger.kernel.org, AJvYcCXQYZV3tPcsLqqmxLJjBYBnML1yJrfOjYyhwIFzlUftEi7fxG/iCqKZLT2Ucjz5k2lr25vRiL7GdAl1m6S6cbWJoJk=@vger.kernel.org, AJvYcCXulT5sYKrIXCvDvSyU0qNwMG9g5IFxjNshJNSNnFGLTGPX1NJiUEVvEpQQ4MGRdXBCrmiKAtm/t1Z9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz60AdKImkK0zEaklfHAWTMB3b7E6ZgCFp3MdSU70/dfxKHOcQt
-	EnXl7QkDknjsz9nrqU29eK/FmVVN9NvMqTfzd8HZTKUzzC3SiQ3K5uNaFXkFxn4n
-X-Gm-Gg: ASbGncttezy9QDIBmNvQLITPy3qv2X+gqhmaGo2VKBVjuyN9CLEJJ46TrESccdN6S08
-	jWVIZB7DgJSObrQxWnGKMNJq+mTJKmzIliUneZnbA8Eh8P0dYtyRYwJ2mjduxnaYyBHEiMMSV8M
-	o5wD5QDmay/UBrWFlyLCzpR2zpDSjfFSq9NAn8a2kq+ZRMqHB8WvOMMrbqlNhe7S2D4jFCi9WgP
-	ab7+N9LruonGWNbjXms93lS+t8GZBK8SYgFEVJIFHS+eC8RyjIa6S19gH7R+bkVGZF3U3H/DPeF
-	AapQZKLAuRixU5KcI6bo+3xKFf2CL7MwZ4U6GVnB6MlJDc3WYUL9Bk4nE/qibaIsz+EzhxKv5jM
-	ES1Ilt4f9bSTLJAW83XUmJVhjTmDHJic9UWtpsv3lLdX4GgvujCxBS6zH969i
-X-Google-Smtp-Source: AGHT+IEb6a7Bd5VuoZnxYlYIATgP0FQjULwTFEBTZ5xQm6f07KtBAzHdP4x3XKxt2V8CJPIinTxpjA==
-X-Received: by 2002:a05:6102:3199:b0:4ee:5244:6607 with SMTP id ada2fe7eead31-4fc1014a862mr5910437137.11.1754303150292;
-        Mon, 04 Aug 2025 03:25:50 -0700 (PDT)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-88d8f44b688sm2252555241.26.2025.08.04.03.25.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Aug 2025 03:25:49 -0700 (PDT)
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-88bc19ddfe3so1183667241.1;
-        Mon, 04 Aug 2025 03:25:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+Bt+EMxBqYZFRQaNicB4iFSaJz6hY5u9q40HPFoDdadyFGGpEGxcoJXhYDAIp/oPyU0oBe3JGC7jv@vger.kernel.org, AJvYcCV97rVL+yn17FTwTzZ4Cu0lEIv4wLsgFgXIzp9TzefQSGXmxQ3fVQZMmwj+Hqd5K+amj1swe3gEOz3m@vger.kernel.org, AJvYcCVuPaQgxukZFJmxD0tHg5sQ2++opDcjFeQIB56/ciwWI0MG0/K3ETLv6E+Sk1IHBnIIx+vMgL5M61/DZJyaiKBESOc=@vger.kernel.org, AJvYcCW/KoEtkE74xwoFSxGuUMe3Fvl5eS64/+EDF3ih+uVXONTnFXJfWNovprz/2iBAUP5zZYpuZULQgf+G@vger.kernel.org, AJvYcCXgCepwEedYcQLbeJl9k57f+ZbUWCbYoeoEl8YFwKT/kBgN1fhc1wmZfjDzKtGYHHz7rm+DXpYVv6o8xzM5@vger.kernel.org
-X-Received: by 2002:a05:6102:6102:10b0:4fb:f495:43ec with SMTP id
- ada2fe7eead31-4fc1014a568mr4289741137.12.1754303149196; Mon, 04 Aug 2025
- 03:25:49 -0700 (PDT)
+	s=arc-20240116; t=1754305505; c=relaxed/simple;
+	bh=oiYM4Ls3p+VplICjiDkUM1oWhIQVv/lXV7+1mydqYS0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eQ7wCcOzn2epZ3x+ucCQhs7pjBefiw2qibNVrPVwCfR3LJQxJTqH73NdLPqfUE7Hu1DgTmtngIAhzqkTC81NzQrQtgYUsSeXyLUTipndB/FNIXPnjQqDqHQWuI7nS1dr8BwiqlTf25dExx9+B10ojLleMd546e40EyaKoa9fbv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JV/SgZCZ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 574Aakba022730;
+	Mon, 4 Aug 2025 11:04:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=35qq+K
+	7fBnVu3duIpnhRbj3i361bevzkWP73LNGKLMU=; b=JV/SgZCZSynbvcweiLXOi7
+	3DzdE3p/27agC1iuRYcVLZ4uFbmao+9SQgk0VpnIZU1PaG6cO1lgqh8hXnEdjlJT
+	aOA+bDoTLQ1L0XRyV/8tpfa7CcM9vE8o5hWs1hY7VhvGia8CwEvJ5lJtwRoUZ+gO
+	SLrVEdFcAnwnQxejkjyiOg6y1o83+bmFSjVUP7rEZT67Il7liTgRD4timpQAnyKg
+	egwlBcKt7hZp0FwzpZ/qpGtIcYPhexyuI8kHk3RCNKn6SAyHif3r88UfD5vBi6Lm
+	KZlStTXeXBjejuY6OA6/5IL5UHPQDfh9tdsYGCZuLErVWbrenpfbNkg8PvOCp5nA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 489ab3gh6x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Aug 2025 11:04:54 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 574B1tWo030216;
+	Mon, 4 Aug 2025 11:04:53 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 489ab3gh6t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Aug 2025 11:04:53 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 574AEoJ8009563;
+	Mon, 4 Aug 2025 11:04:52 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 489x0nwgjn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Aug 2025 11:04:52 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 574B4pfU9503562
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 4 Aug 2025 11:04:51 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 841C05814B;
+	Mon,  4 Aug 2025 11:04:51 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5B3055814E;
+	Mon,  4 Aug 2025 11:04:48 +0000 (GMT)
+Received: from [9.87.134.79] (unknown [9.87.134.79])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  4 Aug 2025 11:04:48 +0000 (GMT)
+Message-ID: <3e356ac60da0c9b9a3b54e7ebbea404f72f2b7a3.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 1/2] PCI/AER: Fix missing uevent on recovery when a
+ reset is requested
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+        Mahesh J Salgaonkar	
+ <mahesh@linux.ibm.com>,
+        Linas Vepstas <linasvepstas@gmail.com>,
+        Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Manivannan
+ Sadhasivam <mani@kernel.org>,
+        Gerald Schaefer	
+ <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger	 <borntraeger@linux.ibm.com>,
+        Sven Schnelle
+ <svens@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Matthew
+ Rosato <mjrosato@linux.ibm.com>,
+        "Oliver O'Halloran"	 <oohall@gmail.com>, Sinan Kaya <okaya@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Keith Busch	 <kbusch@kernel.org>
+Date: Mon, 04 Aug 2025 13:04:47 +0200
+In-Reply-To: <aItpKIhYr0T8jf7A@wunner.de>
+References: <20250730-add_err_uevents-v3-0-540b158c070f@linux.ibm.com>
+	 <20250730-add_err_uevents-v3-1-540b158c070f@linux.ibm.com>
+	 <aIp6LiKJor9KLVpv@wunner.de> <aIp_Z9IdwSjMtDho@wunner.de>
+	 <aItpKIhYr0T8jf7A@wunner.de>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com> <20250704161410.3931884-3-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250704161410.3931884-3-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 4 Aug 2025 12:25:38 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVrbOPrzwMMP0+HHqh01nwDfoUx8Mx0nZ=24ZU9XkFqgQ@mail.gmail.com>
-X-Gm-Features: Ac12FXwFJTXzLRJiS_KcBRTI0cWrJpi5fbuV92Ri-bNxlf-GM9ClQh0GwvKc4cU
-Message-ID: <CAMuHMdVrbOPrzwMMP0+HHqh01nwDfoUx8Mx0nZ=24ZU9XkFqgQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/9] clk: renesas: r9a08g045: Add clocks and resets
- support for PCIe
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org, 
-	mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de, 
-	lizhi.hou@amd.com, linux-pci@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset="UTF-8"
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Z+jsHGRA c=1 sm=1 tr=0 ts=689093d6 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=5lxhj9nRAAAA:8
+ a=OeQ8Y3SuLcdRRhuw2K0A:9 a=QEXdDO2ut3YA:10 a=OuQ7SawVy7enJLTDvLAF:22
+X-Proofpoint-ORIG-GUID: HBXhzScVxFYIIKZyFtb5CAvhgum4CyNd
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA0MDA1OSBTYWx0ZWRfXxdrZGUyTK7ub
+ 1aLyQ9tnv6i/NJ3egjPRRNC3nEFbMymGnkHJ6uW0NurPDX1Mz23pgTdsn7uvB20m6dRIOjoaGFq
+ ihospiHRYWOL4pCRfdZ32aWbG6S9qXh29JYIGoZM87BRoK11OgskpJ60lI7QBAmwIFAkoDifQZd
+ PAPO6PdPfX6mXHbyvkM/ifg7trnRaMx9KjNPggWRwEe4r1/9FhkxB4+Pn4vRY9t1ULuBfY+G5xN
+ vzcoec0+6mm70EkRWif2Ih1OrO7at3tDneqjZAlcs0HTbjQWD4j9FfDMLF2AdLsO74b+/l1GhlT
+ Y0ARC6sn14WqxnYaTkoJcaK1JxCplFr81fzycdgK5mZmRBGGZgEA4kfGYEYAsYubzIp+KxdvIof
+ 5hvPUCO2gjSsY9xubGyTmBeUH9CnzMqCV8ukKmUke+Im+AwBc7FRWgU4xF6ZsLK90OdBFmAt
+X-Proofpoint-GUID: tXLJWzrkavzZwjtPm1NJ13lVG45HX9FA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-04_04,2025-08-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 spamscore=0 malwarescore=0 clxscore=1015 suspectscore=0
+ priorityscore=1501 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2508040059
 
-On Fri, 4 Jul 2025 at 18:14, Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Add clocks and resets for the PCIe IP available on the Renesas RZ/G3S SoC.
-> The clkl1pm clock is required for PCIe link power management (PM) control
-> and should be enabled based on the state of the CLKREQ# pin. Therefore,
-> mark it as a no_pm clock to allow the PCIe driver to manage it during link
-> PM transitions.
->
-> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Thu, 2025-07-31 at 15:01 +0200, Lukas Wunner wrote:
+> On Wed, Jul 30, 2025 at 10:24:07PM +0200, Lukas Wunner wrote:
+> > On Wed, Jul 30, 2025 at 10:01:50PM +0200, Lukas Wunner wrote:
+> > > On Wed, Jul 30, 2025 at 01:20:57PM +0200, Niklas Schnelle wrote:
+> > > > Since commit 7b42d97e99d3 ("PCI/ERR: Always report current recovery
+> > > > status for udev") AER uses the result of error_detected() as parame=
+ter
+> > > > to pci_uevent_ers(). As pci_uevent_ers() however does not handle
+> > > > PCI_ERS_RESULT_NEED_RESET this results in a missing uevent for the
+> > > > beginning of recovery if drivers request a reset. Fix this by treat=
+ing
+> > > > PCI_ERS_RESULT_NEED_RESET as beginning recovery.
+> > > [...]
+> > > > +++ b/drivers/pci/pci-driver.c
+> > > > @@ -1592,6 +1592,7 @@ void pci_uevent_ers(struct pci_dev *pdev, enu=
+m pci_ers_result err_type)
+> > > >  	switch (err_type) {
+> > > >  	case PCI_ERS_RESULT_NONE:
+> > > >  	case PCI_ERS_RESULT_CAN_RECOVER:
+> > > > +	case PCI_ERS_RESULT_NEED_RESET:
+> > > >  		envp[idx++] =3D "ERROR_EVENT=3DBEGIN_RECOVERY";
+> > > >  		envp[idx++] =3D "DEVICE_ONLINE=3D0";
+> > > >  		break;
+> > >=20
+> > > I note that PCI_ERS_RESULT_NO_AER_DRIVER is also missing in that
+> > > switch/case statement.  I guess for the patch to be complete,
+> > > it needs to be added to the PCI_ERS_RESULT_DISCONNECT case.
+> > > Do you agree?
 
-Thanks for your patch!
+As far as I can see PCI_ERS_RESULT_NO_AER_DRIVER only occurs in the AER
+code and leads to abandoning all recovery attempts for the whole
+subtree with a disconnect. So my thinking is that the uevent is just
+disconnect. That also matches your proposal below. Thankfully it looks
+like there are still kernel messages indicating the reason of the
+failure.
 
-> --- a/drivers/clk/renesas/r9a08g045-cpg.c
-> +++ b/drivers/clk/renesas/r9a08g045-cpg.c
-> @@ -289,6 +289,10 @@ static const struct rzg2l_mod_clk r9a08g045_mod_clks[] = {
->                                         MSTOP(BUS_MCPU2, BIT(14))),
->         DEF_MOD("tsu_pclk",             R9A08G045_TSU_PCLK, R9A08G045_CLK_TSU, 0x5ac, 0,
->                                         MSTOP(BUS_MCPU2, BIT(15))),
-> +       DEF_MOD("pci_aclk",             R9A08G045_PCI_ACLK, R9A08G045_CLK_M0, 0x608, 0,
-> +                                       MSTOP(BUS_PERI_COM, BIT(10))),
-> +       DEF_MOD("pci_clk1pm",           R9A08G045_PCI_CLKL1PM, R9A08G045_CLK_ZT, 0x608, 1,
+> >=20
+> > I realize now there's a bigger problem here:  In pcie_do_recovery(),
+> > when control reaches the "failed:" label, a uevent is only signaled
+> > for the *bridge*.  Shouldn't a uevent instead be signaled for every
+> > device *below* the bridge?  (And possibly the bridge itself if it was
+> > the device reporting the error.)
+>=20
+> The small patch below should resolve this issue.
+> Please let me know what you think.
 
-pci_clkl1pm
+The patch makes sense to me I agree one should get uevents for each
+downstream device. Please Cc me when you send it.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v6.18, with the above fixed.
+>=20
+> > In that case you don't need to add PCI_ERS_RESULT_NO_AER_DRIVER to
+> > the switch/case statement because we wouldn't want to have multiple
+> > uevents reporting disconnect, so the one emitted below the "failed:"
+> > label would be sufficient.
+>=20
+> I'll send a separate Reviewed-by for your original patch as the small
+> patch below should resolve my concern about PCI_ERS_RESULT_NO_AER_DRIVER.
+>=20
+> > This all looks so broken that I'm starting to wonder if there's any
+> > user space application at all that takes advantage of these uevents?
+>=20
+> I'd still be interested to know which user space application you're
+> using to track these uevents?
+>=20
+> Thanks,
+>=20
+> Lukas
 
-Gr{oetje,eeting}s,
+Thanks for the R-b! And yes I agree we should minimize the differences
+between the behavior of the implementations. I'll see if I can sync up
+on this with Mahesh too.
 
-                        Geert
+I only tested this with udevadm so far. That said I had multiple
+projects ask for ways to monitor for errors/recovery from user-space so
+at least for s390 there is interest for these events. There is also a
+bit of mainframe specifics here of course, for example our machines
+have the ability to fail over a broken PCI link to an I/O drawer with
+an alternate path and that piggybacks on these recovery mechanisms. And
+generally, we're looking at expanding our support for and use of PCI
+error recovery and will hopefully be sharing some more of that soon.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Also note that with the recently released IBM z17 and IBM LinuxONE 5
+with Linux we're significantly expanding our reliance on native
+PCI[0][1].
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+[0]
+https://www.ibm.com/docs/en/linux-on-systems?topic=3Dnetworking-network-exp=
+ress
+[1]
+https://vmworkshop.org/2025/present/9175tovr.pdf
+>=20
 
