@@ -1,113 +1,123 @@
-Return-Path: <linux-pci+bounces-33376-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33377-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8951BB1A574
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 17:05:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAD02B1A5FC
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 17:30:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4415218A0405
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 15:06:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E05618A3D2F
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 15:29:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68A12217F36;
-	Mon,  4 Aug 2025 15:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FD0E21FF2E;
+	Mon,  4 Aug 2025 15:26:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Z4nm3Ekd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8aHgZEn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DE3121421D;
-	Mon,  4 Aug 2025 15:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625E721D3D4;
+	Mon,  4 Aug 2025 15:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754319936; cv=none; b=LZmcRe0+Me66bKHPRTs5CFoX7nACyUGv4JFY8/chczV67HaB6M5Co8L3JqrFuKMNTaTH4Ifo6ZXy8iZ0p8nSJnxeSZGoRkv+p5XIgLjZ1zapA8V0OsO2reqiL7akYxsj9DnGReZgfp4g9mhOIK6xvIoIVDfIzX7vtF1ZM9uiEU4=
+	t=1754321184; cv=none; b=WhcUTgjgQyRNuAbroy6GmTa4ygYT9WGIWwMROzZGO8jR/eSR0m3zLDmc7b7DAmFGs9poUOdB+t+LRhLca0WMbiWvMMvhY+NvaQs+LhH8pHydOPrmLGb/Bcrh7dGzMOeDKnMcsFaBg5EHYrL6ArygNf3dmO8KwrANE98ICsxIigE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754319936; c=relaxed/simple;
-	bh=w4o+sZu3r/al9qNNdqgyQOw7OmxvM4RVKLSSpyUPXLc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UwFa9qBIk3A/AGxIXaPmT1pAewNJWWBPsFzuIOdGg36WEFJmoeynPLnTLf8AfL2RukSOlBAoaxNb+DSp2Im66xIGhP4J6nlf5q1e0OE22fQrPVVZzlXoEu8pkey/p7vLfS9AV96wbV3kIvxPNi5978LpdQCpVhjNSuO5l40xzwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Z4nm3Ekd; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=Rt2ga71sRvEoE+eMHbF1P6C8pCr7yGyyXy+c7pka4Xc=;
-	b=Z4nm3EkdNLfRro70O9dzOUGnt6SR6zjawMaTXAXw0MiSJgudChTcscjNNq1cH+
-	oXaVVJHc71ADG67JOd5PGA4jF36RrlBUgPzxRsmkk6YG+27c57KiRd3Av5pC1SK/
-	Qky0bwHiKGiFGUZ4Lm5BDLL6FLY1r7R5ZRewpfu10xLD4=
-Received: from [IPV6:240e:b8f:919b:3100:ecd9:c243:2a5f:12dd] (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wB3lozny5Bo+VLrJg--.22748S2;
-	Mon, 04 Aug 2025 23:04:08 +0800 (CST)
-Message-ID: <6628a4b9-befe-4bb1-a72a-4e9085338598@163.com>
-Date: Mon, 4 Aug 2025 23:04:06 +0800
+	s=arc-20240116; t=1754321184; c=relaxed/simple;
+	bh=A7QWfqthNAE1vRjDCcZdbOxk67HAqqSO9Vh3esAKykw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bR2qKV8aTfiHKarR4h/eCJwFQ1JDq9andM7qLGlwga2fQDBpNX711bv3BdQqlyb4lx9eK82LceyHe1wYRRJNac0M1PHQafaV4t8NrZBJtu1B8unwuOkrERJZM0cHT+3v4ZQrfmKBKlDhfuy6Ywgs2imP0IQxnalxkXqVItVdebs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G8aHgZEn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28538C4CEE7;
+	Mon,  4 Aug 2025 15:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754321183;
+	bh=A7QWfqthNAE1vRjDCcZdbOxk67HAqqSO9Vh3esAKykw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G8aHgZEnu5iXvCP7Bs5tuWefE4ftgA8h8Cjl85Cwm5By9LieCOsjVqy3AdZGS2J2M
+	 gWpzl+6EFBw/RcBqC5KpnG1ipGUhJpU+Zji4nx/hTyt4NrdEsiC2Yz2U1Wkzd/Ib2a
+	 QqAw4VBqd0cclEUaixH0rs/7nLDQeEd4unvRQYUSQURTz7+jVwS/zV9otrzj3jp79N
+	 yUvnvgyE3xRQ4zHvh0Mw/ECgF8Le7V8q2qdcMJT+F/84f2NxFe4MykBa4PKbCdIa1S
+	 PCz7RUMVTUjwcVuJgGK+jMXUeWg1UaBDlwSS3wIOPEFwlaX7GvD5jEG30YanErScjg
+	 iRFzDP1lYO0Lg==
+Date: Mon, 4 Aug 2025 18:26:18 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Christoph Hellwig <hch@lst.de>, dri-devel@lists.freedesktop.org,
+	iommu@lists.linux.dev, Jens Axboe <axboe@kernel.dk>,
+	Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v1 10/10] vfio/pci: Add dma-buf export support for MMIO
+ regions
+Message-ID: <20250804152618.GU402218@unreal>
+References: <cover.1754311439.git.leon@kernel.org>
+ <5e043d8b95627441db6156e7f15e6e1658e9d537.1754311439.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Fix endianness issues in pci_bus_read_config()
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Gerd Bayer <gbayer@linux.ibm.com>, Manivannan Sadhasivam
- <mani@kernel.org>, Hans Zhang <hans.zhang@cixtech.com>,
- Arnd Bergmann <arnd@kernel.org>, bhelgaas@google.com,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- jingoohan1@gmail.com, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-next <linux-next@vger.kernel.org>,
- linux-pci@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Rob Herring <robh@kernel.org>, Niklas Schnelle <schnelle@linux.ibm.com>,
- geert@linux-m68k.org
-References: <20250804143313.GA3624395@bhelgaas>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250804143313.GA3624395@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wB3lozny5Bo+VLrJg--.22748S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cw4rAw18JFyfJF47Kw48WFg_yoW8JFW5p3
-	yIyFsxtFs7GFZ2yay8Wr4jqF17u3yvyry3J34rG3sxJ3Z8KrykJrs3ZF4jgFZrurZ7uF1a
-	vw12qrW5Z34qvaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UtuciUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwWfo2iQgPKsBgACsA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e043d8b95627441db6156e7f15e6e1658e9d537.1754311439.git.leon@kernel.org>
 
-
-
-On 2025/8/4 22:33, Bjorn Helgaas wrote:
-> On Mon, Aug 04, 2025 at 11:06:36AM +0800, Hans Zhang wrote:
->> ...
+On Mon, Aug 04, 2025 at 04:00:45PM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
 > 
->> According to the issue mentioned by Lukas and Mani. Gerd has already been
->> tested on the s390. I have tested it on the RK3588 and it works fine. RK3588
->> uses Synopsys' PCIe IP, that is, the DWC driver. Our company's is based on
->> Cadence's PCIe 4.0 IP, and the test function is normal. All the platforms I
->> tested were based on ARM.
->>
->> The following is the patch based on the capability-search branch. May I ask
->> everyone, do you have any more questions?
->>
->> Gerd, if there's no problem, I'll add your Tested-by label.
->>
->> Branch: ttps://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=capability-search
+> Add support for exporting PCI device MMIO regions through dma-buf,
+> enabling safe sharing of non-struct page memory with controlled
+> lifetime management. This allows RDMA and other subsystems to import
+> dma-buf FDs and build them into memory regions for PCI P2P operations.
 > 
-> Since this series will now target v6.18, I'll watch for a complete v15
-> series based on v6.17-rc1, with this fix and any typo or other fixes
-> from pci/capability-search fully integrated.
+> The implementation provides a revocable attachment mechanism using
+> dma-buf move operations. MMIO regions are normally pinned as BARs
+> don't change physical addresses, but access is revoked when the VFIO
+> device is closed or a PCI reset is issued. This ensures kernel
+> self-defense against potentially hostile userspace.
 > 
-> Then that series can be tested and completely replace the current
-> pci/capability-search branch.
-> 
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Vivek Kasireddy <vivek.kasireddy@intel.com>
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> ---
+>  drivers/vfio/pci/Kconfig           |  20 ++
+>  drivers/vfio/pci/Makefile          |   2 +
+>  drivers/vfio/pci/vfio_pci_config.c |  22 +-
+>  drivers/vfio/pci/vfio_pci_core.c   |  25 +-
+>  drivers/vfio/pci/vfio_pci_dmabuf.c | 390 +++++++++++++++++++++++++++++
+>  drivers/vfio/pci/vfio_pci_priv.h   |  23 ++
+>  include/linux/dma-buf.h            |   1 +
+>  include/linux/vfio_pci_core.h      |   3 +
+>  include/uapi/linux/vfio.h          |  25 ++
+>  9 files changed, 506 insertions(+), 5 deletions(-)
+>  create mode 100644 drivers/vfio/pci/vfio_pci_dmabuf.c
 
-Dear Bjorn,
+<...>
 
-Here is the patch based on pci/capability-search branch. It's to discuss 
-clearly how the final v15 should be modified. The final plan has been 
-confirmed. I will submit the v15 version of this series based on v6.17-rc1.
+> diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+> index d58e329ac0e71..f14b413aae48d 100644
+> --- a/include/linux/dma-buf.h
+> +++ b/include/linux/dma-buf.h
+> @@ -483,6 +483,7 @@ struct dma_buf_attach_ops {
+>   * @dev: device attached to the buffer.
+>   * @node: list of dma_buf_attachment, protected by dma_resv lock of the dmabuf.
+>   * @peer2peer: true if the importer can handle peer resources without pages.
+> + * #state: DMA structure to provide support for physical addresses DMA interface
 
-Best regards,
-Hans
+This is rebase error, there is no need in this hunk.
 
+Thanks
 
