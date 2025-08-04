@@ -1,183 +1,176 @@
-Return-Path: <linux-pci+bounces-33348-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33349-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8E00B19BD4
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 08:58:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15444B19D43
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 10:04:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5E8027A45CE
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 06:57:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 072AA189214D
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 08:05:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8CC022D4C0;
-	Mon,  4 Aug 2025 06:58:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB9E623AB8D;
+	Mon,  4 Aug 2025 08:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y/jdK+ut"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ntIloNWl"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A653E154BF5;
-	Mon,  4 Aug 2025 06:58:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04C8230BD2;
+	Mon,  4 Aug 2025 08:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754290720; cv=none; b=cKD+BxGF+ZKBruUS5m/KK8dTko+sdJ+Qm8MIc/VLmn7w1dn8xhOoroCwz2/dD4riMl1pnBfu6U7SUYj73kW4t8zuf5nUKk11n2CV1jb5Ceicte+DJaUd1QmHl20gLwQEaM/qBQix0Mb4nXOCt4qfPnOM7/tr7KvKLjnhRd2dPnM=
+	t=1754294665; cv=none; b=DEeEW4xyrJo8YqS0XGH1qogHBPbc4KGYWPDI/QI+R9hJ4QxzUMTmDujarqrndjBmEOePoEcClvTIDdpPOexgHLs82RXL5DqeqqbYk4Zdb5XJ7X386z+QCOgvoHc2SwXUHXwWRXMMWyJUfM0x1IRsAMZrDFh30oCsF5hw/pVexks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754290720; c=relaxed/simple;
-	bh=v9xHj22hdbHBZDlVa+VuQOMIt2QxRwUCOV+GzKrIJhA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=oqmgLd/4FAZNZNx+BShuZ3fl8Q3JkNEHe/bnlUpnT37xEK1LYQMx5InnaO+Pq/xQ0ES+AJ16I7HEakhLNfsx/VRILAO8gcjku3JU3J9xfgJvjQyc74vhnBR9ZUEMeqzZ4rYIYVC8HDAFWWPYWpgFNk3oWnOSEgPqSppacZ12EAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y/jdK+ut; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 505DEC4CEE7;
-	Mon,  4 Aug 2025 06:58:36 +0000 (UTC)
+	s=arc-20240116; t=1754294665; c=relaxed/simple;
+	bh=RKECXLolZ0+Hcz5RAIsl9N60kpDeOYEqxiBHrrjYHco=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=VnG9hUzvTISnZVUHz6dIyY+DQH1sKNoxaIaNyzQAtm1Re2//Y2wWZfssPgKXedXac48VU9f04kl69HsmV7Z2Dcp6RTjDMzqYVIc/fMJ24qG4OPpSNWvhkmLVyttVxy+L7C3yAldDdywQnFXGf3hu7MBiCvcMjR9URlaRb6E/yDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ntIloNWl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D359CC4AF0B;
+	Mon,  4 Aug 2025 08:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754290720;
-	bh=v9xHj22hdbHBZDlVa+VuQOMIt2QxRwUCOV+GzKrIJhA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Y/jdK+ut68wZ5ohu3wdskfRvZyF3bu6qBSWXqMLqfml+LqgNX5ezRTNOo9kpWScYQ
-	 J2koYnAyY6AWUeMG0PORloDMlUkATt9dURYjg/SkGx8Hizx++TJq7FeANZlGAazH91
-	 y6GPS7zWa/qZQ0g98dJp51ZqXKK4waE5MHDPtMltTzNfIX601Tjnv/JPCQobZdo58g
-	 ZU6lDm13A2Qb9XBHampfiYuOMuUaNmJ7gO3yj2g4JEyXf3Kdm8t5tK/6TnKXcHshKQ
-	 yjBZ+hYsNSgLj/S/7yokaDCafy2QcqHHjzfCADFeSO1Izx2iuloBKg2uxJYGofi6Jf
-	 m2II9zTbLrTTQ==
-X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, aik@amd.com,
-	lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [RFC PATCH v1 04/38] tsm: Support DMA Allocation from private
- memory
-In-Reply-To: <20250802134154.GI26511@ziepe.ca>
-References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
- <20250728135216.48084-5-aneesh.kumar@kernel.org>
- <20250728143318.GD26511@ziepe.ca> <yq5a5xfbbe35.fsf@kernel.org>
- <20250729143339.GH26511@ziepe.ca> <yq5aikj69kpn.fsf@kernel.org>
- <20250802134154.GI26511@ziepe.ca>
-Date: Mon, 04 Aug 2025 12:28:33 +0530
-Message-ID: <yq5aldnz8teu.fsf@kernel.org>
+	s=k20201202; t=1754294665;
+	bh=RKECXLolZ0+Hcz5RAIsl9N60kpDeOYEqxiBHrrjYHco=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=ntIloNWl7dkUnA4Ud+WOESb+RaoQQ2dR5bm9FGDhn5ciK3RJJyMAjXjrx1vHHvMPM
+	 M2igx1ffKbH7yH0zcxq7TUWxp6Ba1cHkGzTTj5ucJVSwaG5vqyrjSZu1V0bLCIurh4
+	 srMH/SJTozryxgsT7eP/BzFAXr2g/YsSQ3Ml5a5gp13dpfqvjxtA1Vu/xQj1i51Ojz
+	 n0lbw9Oo2dbLPEyQwOcrP/nEWPd/D1bj2K3uj1CY+MAVqbEoDYxO3IPFCHDTXrnsrN
+	 PhxqZJoCnC9hlA5kirTsfzVsit0ZKyjKGeUOiwrWNAj7p55hcFWs6OG6gzsDvjiQv5
+	 dwfAr6v6QMVmw==
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id DEE52F40066;
+	Mon,  4 Aug 2025 04:04:23 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Mon, 04 Aug 2025 04:04:23 -0400
+X-ME-Sender: <xms:h2mQaOTvDGl2k3J9v9cSKPnak2UIF77Lx8E02Vnu7KRqqNt9ZJkqPg>
+    <xme:h2mQaDwYL4BsiFCdjGVDjyt8YjfmxjfKAQ_gmgUoZ6npolQqU5lXmv4l8N4Mj4HEx
+    uz9uDU8roPztJ3svSg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduuddujeeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnhgvlhdrohhrgheqnecuggftrfgrth
+    htvghrnhepjeejffetteefteekieejudeguedvgfeffeeitdduieekgeegfeekhfduhfel
+    hfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdekhedujedtvdeg
+    qddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrdguvg
+    dpnhgspghrtghpthhtohepudelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopedu
+    kedvheehuddujeduheelseduieefrdgtohhmpdhrtghpthhtohephhgrnhhsrdiihhgrnh
+    hgsegtihigthgvtghhrdgtohhmpdhrtghpthhtohepjhhinhhgohhohhgrnhdusehgmhgr
+    ihhlrdgtohhmpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprh
+    gtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkfihi
+    lhgtiiihnhhskhhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlphhivghrrghlih
+    hsiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrnhhisehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:h2mQaFu7LhuyRrCKWhVwBTFKZTy29wc0MNFkqT6qbXBuqu7n9fT67Q>
+    <xmx:h2mQaHSV16-CTyAh22EXVWSltH71ro2e80F6WNAkqDuefzyQ6pJ6Sw>
+    <xmx:h2mQaKGL0ovkpIZnJ3tp8_ETHmsv9mhFdALfraI-euVJwXNXOapq2Q>
+    <xmx:h2mQaBces6M1nvOF6jd5Rr51louf-pmXq0oy6IhxkJz2wY5zQC6_5w>
+    <xmx:h2mQaJshPPqjSUIluVDY9rFZ3XsSShNj4P2CCMSyTl4P_ckuQRyQ413e>
+Feedback-ID: i36794607:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id B3B7E700065; Mon,  4 Aug 2025 04:04:23 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: Tea76caf5b1f73f76
+Date: Mon, 04 Aug 2025 10:03:43 +0200
+From: "Arnd Bergmann" <arnd@kernel.org>
+To: "Hans Zhang" <18255117159@163.com>, "Gerd Bayer" <gbayer@linux.ibm.com>,
+ "Manivannan Sadhasivam" <mani@kernel.org>,
+ "Hans Zhang" <hans.zhang@cixtech.com>
+Cc: "Bjorn Helgaas" <helgaas@kernel.org>, bhelgaas@google.com,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>,
+ "Christian Borntraeger" <borntraeger@linux.ibm.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ jingoohan1@gmail.com,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ linux-next <linux-next@vger.kernel.org>, linux-pci@vger.kernel.org,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Niklas Schnelle" <schnelle@linux.ibm.com>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>
+Message-Id: <74c17623-f1b5-4b28-a118-4e828e1e711a@app.fastmail.com>
+In-Reply-To: <06012cc6-824d-4a7d-85c9-9995ec915382@163.com>
+References: <20250731183944.GA3424583@bhelgaas>
+ <6e34b4af-dff9-4360-b3da-c95ca7c740c9@app.fastmail.com>
+ <vf65usnffqzlkgijm72nuaslxnflwrugc25vw6q6blbn2s2d2s@b35vjkowd6yc>
+ <9a155e45-f723-4eec-81d3-2547bfe9a4e9@cixtech.com>
+ <ofsbfhor5ah3yzvkc5g5kb4fpjlzoqkkzukctmr3f6ur4vl2e7@7zvudt63ucbk>
+ <c8ffdd21-9000-40c2-9f4d-4d6318e730b5@cixtech.com>
+ <cu7qdbwmnixqjce4aetr5ldwe3sqoixgq4fuzmzajzphjdywqq@yw6ojbgeqktm>
+ <06f16b1a55eede3dc3e0bf31ff14eca89ab6f009.camel@linux.ibm.com>
+ <06012cc6-824d-4a7d-85c9-9995ec915382@163.com>
+Subject: Re: [PATCH] PCI: Fix endianness issues in pci_bus_read_config()
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Jason Gunthorpe <jgg@ziepe.ca> writes:
-
-> On Sat, Aug 02, 2025 at 02:14:20PM +0530, Aneesh Kumar K.V wrote:
->> Jason Gunthorpe <jgg@ziepe.ca> writes:
->>=20
->> > On Tue, Jul 29, 2025 at 01:53:10PM +0530, Aneesh Kumar K.V wrote:
->> >> Jason Gunthorpe <jgg@ziepe.ca> writes:
->> >>=20
->> >> > On Mon, Jul 28, 2025 at 07:21:41PM +0530, Aneesh Kumar K.V (Arm) wr=
-ote:
->> >> >> @@ -48,3 +49,12 @@ int set_memory_decrypted(unsigned long addr, in=
-t numpages)
->> >> >>  	return crypt_ops->decrypt(addr, numpages);
->> >> >>  }
->> >> >>  EXPORT_SYMBOL_GPL(set_memory_decrypted);
->> >> >> +
->> >> >> +bool force_dma_unencrypted(struct device *dev)
->> >> >> +{
->> >> >> +	if (dev->tdi_enabled)
->> >> >> +		return false;
->> >> >
->> >> > Is this OK? I see code like this:
->> >> >
->> >> > static inline dma_addr_t phys_to_dma_direct(struct device *dev,
->> >> > 		phys_addr_t phys)
->> >> > {
->> >> > 	if (force_dma_unencrypted(dev))
->> >> > 		return phys_to_dma_unencrypted(dev, phys);
->> >> > 	return phys_to_dma(dev, phys);
->> >> >
->> >> > What are the ARM rules for generating dma addreses?
->> >> >
->> >> > 1) Device is T=3D0, memory is unencrypted, call dma_addr_unencrypte=
-d()
->> >> >    and do "top bit IBA set"
->> >> >
->> >> > 2) Device is T=3D1, memory is encrypted, use the phys_to_dma() norm=
-ally
->> >> >
->> >> > 3) Device it T=3D1, memory is uncrypted, use the phys_to_dma()
->> >> >    normally??? Seems odd, I would have guessed the DMA address sould
->> >> >    be the same as case #1?
->> >> >
->> >> > Can you document this in a comment?
->> >> >
->> >>=20
->> >> If a device is operating in secure mode (T=3D1), it is currently assu=
-med
->> >> that only access to private (encrypted) memory is supported.
->> >
->> > No, this is no how the PCI specs were written as far as I
->> > understand. The XT bit thing is supposed to add more fine grained
->> > device side control over what memory the DMA can target. T alone does
->> > not do that.
->> >
->> >> It is unclear whether devices would need to perform DMA to shared
->> >> (unencrypted) memory while operating in this mode, as TLPs with T=3D1
->> >> are generally expected to target private memory.
->> >
->> > PCI SIG supports it, kernel should support it.
->> >
->>=20
->> Would we also need a separate DMA allocation API for allocating
->> addresses intended to be shared with the non-secure hypervisor?
->>=20
->> Are there any existing drivers in the kernel that already require such
->> shared allocations, which I could use as a reference?
+On Mon, Aug 4, 2025, at 05:06, Hans Zhang wrote:
+> On 2025/8/1 19:30, Gerd Bayer wrote:
+>> On Fri, 2025-08-01 at 16:24 +0530, Manivannan Sadhasivam wrote:
+>   }
 >
-> The most likely case in the near term is PCI P2P to shared MMIO.
->
-> I don't know any way to allocate shared memory in a driver??
->
-> At the bare minimum this patch should be documenting the correct
-> architecture and outlining any gaps in the current implementation.
->
-> I also don't really understand what the above code is even
-> doing.. Isn't the design on ARM that the IPA always encodes the
-> shared/private in the top bit?
->
-> How do we get a shared page that does not already have a phys_addr_t
-> in the shared IPA? Shouldn't the kernel have switched to the shared
-> IPA alias when it returned the swiotlb buffer? eg why do we need to do:
->
-> #define dma_addr_unencrypted(x)		((x) | PROT_NS_SHARED)
->
+> +#define CDNS_PCI_OP_READ(size, type, len)		\
+> +static inline int cdns_pcie_read_cfg_##size		\
+> +	(struct cdns_pcie *pcie, int where, type *val)	\
+> +{							\
+> +	if (len == 4)					\
+> +		*val = cdns_pcie_readl(pcie, where);	\
+> +	else if (len == 2)				\
+> +		*val = cdns_pcie_readw(pcie, where);	\
+> +	else if (len == 1)				\
+> +		*val = cdns_pcie_readb(pcie, where);	\
+> +	else						\
+> +		return PCIBIOS_BAD_REGISTER_NUMBER;	\
+> +							\
+> +	return PCIBIOS_SUCCESSFUL;			\
+> +}
+> +
+> +CDNS_PCI_OP_READ(byte, u8, 1)
+> +CDNS_PCI_OP_READ(word, u16, 2)
+> +CDNS_PCI_OP_READ(dword, u32, 4)
+> +
 
-swiotlb virt addr is updated in the direct map page table such that we
-have the correct attribute set. For ex: swiotlb_update_mem_attributes
-uses set_memory_decrypted() to mark the memory as shared.
+This is fine for the calling conventions, but the use of a macro
+doesn't really help readability, so I'd suggest just having
+separate inline functions if they are even needed.
 
-	set_memory_decrypted((unsigned long)mem->vaddr, bytes >> PAGE_SHIFT);
+> @@ -112,17 +110,17 @@ int pci_bus_read_config(void *priv, unsigned int 
+> devfn, int where, u32 size,
+>   ({									\
+>   	int __ttl = PCI_FIND_CAP_TTL;					\
+>   	u8 __id, __found_pos = 0;					\
+> -	u32 __pos = (start);						\
+> -	u32 __ent;							\
+> +	u8 __pos = (start);						\
+> +	u16 __ent;							\
+>   									\
+> -	read_cfg(args, __pos, 1, &__pos);				\
+> +	read_cfg##_byte(args, __pos, &__pos);				\
+>   									\
+>   	while (__ttl--) {						\
+>   		if (__pos < PCI_STD_HEADER_SIZEOF)			\
+>   			break;						\
+>   									\
+>   		__pos = ALIGN_DOWN(__pos, 4);				\
+> -		read_cfg(args, __pos, 2, &__ent);			\
+> +		read_cfg##_word(args, __pos, &__ent);			\
+>   									\
+>   		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
+>   		if (__id == 0xff)					\
 
-However, when mapping swiotlb regions to obtain a `dma_addr_t`, we still
-need to explicitly convert the physical address:
+I still don't feel great about this macro either, and suspect
+we should have a better abstraction with fixed types and a
+global function to do it, but I don't see anything obviously
+wrong here either.
 
-swiotlb_map()
-	swiotlb_addr =3D swiotlb_tbl_map_single(dev, paddr, size, 0, dir, attrs);
-        ...
-
-	/* Ensure that the address returned is DMA'ble */
-	dma_addr =3D phys_to_dma_unencrypted(dev, swiotlb_addr);
-
-Note that we don=E2=80=99t update the phys_addr_t to set the top
-bit. For reference:
-
-	tlb_addr =3D slot_addr(pool->start, index) + offset;
-
--aneesh
+     Arnd
 
