@@ -1,142 +1,249 @@
-Return-Path: <linux-pci+bounces-33353-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33354-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2016FB19EA4
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 11:17:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F693B19F16
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 11:56:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C2BED3B44CC
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 09:17:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1882B7AC343
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 09:55:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E26D923FC66;
-	Mon,  4 Aug 2025 09:17:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2E9A2459DC;
+	Mon,  4 Aug 2025 09:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mE6GWYG0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1145F23497B;
-	Mon,  4 Aug 2025 09:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791A71FBCA7;
+	Mon,  4 Aug 2025 09:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754299068; cv=none; b=o7GW9fVsJKvumP5IGIh0pw/Lp0+PR4h0js3tgEu5TG/NS4KlcDXYwDIGyBNm7MZqPhDiKaaffZlJbwoMuMdLY4rDHMYnTznMqb1c8dEATED6PFqJnnj+psc1LBPPxxDpfLS7UA5CQGVwWifxf4TUro46HP2rtDvEKbSe45eGqEo=
+	t=1754301401; cv=none; b=Dm8FHtqimM/JlyCqvGvu8IshbLWv0PEWzWnrFFm+0DdCXFh0Co0eh2b2rEwsrSWXY7PTwqgWb0ByYmsIJkNKPGrDuceMHv9IsdwR5oNYoV/7+g1PvlFkq8TcYDfwYmTWlsfagJtxuMDt2Rtoq8625OnmlhThdmzelYnagRfcGEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754299068; c=relaxed/simple;
-	bh=i0OFIqRZ+2MCROlqNGaAy7Gthq89bO35bHAcnJh3VlA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MD/NSltBDWhZQOyUpDQzLOFPGrOabW7285pJK80T+uV8cw0rxASLUFmxA97/KI+1wlGOxI8ejNipF75s3v8ncmYtFXrparFwO1FCiY37kpGc6NXozW7K8PkQgGUVxsVk0s9yTsZt6vPQ95/sm5Me6HeCOOe1z8TNM9Q69PwxoXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-af8fd1b80e5so688456566b.2;
-        Mon, 04 Aug 2025 02:17:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754299065; x=1754903865;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xamvBtEdKuAbOd1z+jRRJHYAkrTu7JX4mmKkjKPIws0=;
-        b=dJ4chnUie+7evyoBz74WZGq6bN8oEL8KelLSBJZw+eBaRC571yvtqKidrYeY5BpcdJ
-         b19m5qYL9fcAR5jw9TM09RQ2TcVOtdbcPbQ5IeCftXl0z6CEgXw6IbOFbGGqDW6WFKm8
-         kF3cOzU3Uw4NN/2P5Gdp53fMPf2fuJmlaPPskcaCDPVAMEWkV7gaiqSfa5bcrmZYKfRv
-         XMabyfIAeJ456WICt5YkDlKDkbOGOEMtvMcL+fxjAYsT97cDFnjceCciEqo1ZcpiHK2b
-         ZQm5iO0wUj32lWE1RPv8EiCJqBirGSXSlMoo9FGA2wgqA9y1iMZ1vmnnnIGgaKf0bZcG
-         GE3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUDZ/8wQ3oJcDBgKd3zBbp9GZWAT+kYx/cSIkP3bHT8YYUgPMOjoi7D1Ya0ZO/6T/maUEAY0Abx686/kJE=@vger.kernel.org, AJvYcCWLzaAfPSw4BAYkAWNo5+YHL+TQ7Rm7C1GS8Smz7tFGyFb9tErVUvS91iYB4HaUL/oa3fr4rM1ZL9DY@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRxzBKyWrYalI9QTczsYb0nwR3zp9NjA7b3OAVtAw++6B+oqb1
-	3MJEJ9xZ+V/wXxmgJmQ1ktZTTrKQJAWIEvOx6M/evA1gcIgRbTJz6omwWTk4hA==
-X-Gm-Gg: ASbGncso2GC5p+nWqsd5Xl8fIkzqV/JNyiPMyDvn2g8fOKS5D4FjixhitdDK/fRbqiO
-	1l/wncRSm2EDHaaVJeL1C+C7Oy9GRyI+Cgew1XuyPDSEKL8HqBGTwhcJFFkUAlSnBjlHXOpYsVN
-	iRcfoUqgtRRVp0a1sOnxAFe1XymiErBZjmgQrGgkGnP+3g2lcrYf8aYvR8ty0MBT0nUJl6mdT3V
-	iLxqep41ofRbVrVQMQO+vIXdYj2mLq2umU0AvcR22b2l3FSh7G/oWWk8OzgJYLLzwwlIHqndBb0
-	gZK2TQ9VmrbFhIrMcWexER/ZWHlksjsIz/kiJjfFFmNr6+Gx6DhtZNkQ4DvXZQNpOCfflgVrY1+
-	KferMZEWPLo1V
-X-Google-Smtp-Source: AGHT+IEbHhIr5xiJI4WCsuusUsNAMV+ToZt7UWotIYnSTg2xxYU2vexFSF+WiWH8cmp0UryOEkWQ3w==
-X-Received: by 2002:a17:907:8688:b0:ade:43e8:8fa4 with SMTP id a640c23a62f3a-af94008422dmr1005072366b.18.1754299064846;
-        Mon, 04 Aug 2025 02:17:44 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:3::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af91a21c0ccsm703510666b.111.2025.08.04.02.17.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Aug 2025 02:17:44 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Mon, 04 Aug 2025 02:17:22 -0700
-Subject: [PATCH] PCI/AER: Check for NULL aer_info before ratelimiting in
- pci_print_aer()
+	s=arc-20240116; t=1754301401; c=relaxed/simple;
+	bh=C/ENhUEs3LsCipsjC9Q/ykoF43mS7sYAKJg8VhQad9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z1hHSkCmiwoDMfOudAO21sz2NwsR77utLMjO4yyKTJ1AM8GmaXbMZYQgn8Di7WLQHVoAiqyQcAAZZeyV9B6TXxKq9VSDxifx9fK+5kda/bNPU88Oc5QvU2Z2C/rMeUBlVK0GUXMQwxiTPQam+JS0TJYaRtIiFz+BgbpVWXBvWVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mE6GWYG0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54E72C4CEE7;
+	Mon,  4 Aug 2025 09:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754301401;
+	bh=C/ENhUEs3LsCipsjC9Q/ykoF43mS7sYAKJg8VhQad9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mE6GWYG0POB+f7AgXEyeCI/r4BKRJGuWe6RltdxLIUboA41fonIDXFFSLRTP5uO3V
+	 pLOQ+SimG90YYKj1fv+71yaXJ9T5uOhXhW8M7zFiqrM2vGvtvYYgI1LIpFPPq2kVLM
+	 6997pjzttYxysj6eepYrOeENSCV4NaRNslO1oOCsdpYfkbiBK2pWlcDv4U8R49Kg5f
+	 XYzukgBUCQ5/xOKG3kDJ5ZACUwMscTKUhQNPF3dfYxferMVzcdcpcIrJ1b57m28jqU
+	 xCOTopap/vEtk6r7/YQxbJEev5DqRrTl2s/2zpW4D3SxAWObH29wNzWn1FqlBGgB1v
+	 JhjCuOnCoeD/A==
+Date: Mon, 4 Aug 2025 15:26:30 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+	Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, 
+	sherry.sun@nxp.com, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] PCI: Add support for PCIe WAKE# interrupt
+Message-ID: <tipgh2nf5yz7sevz3mef43f7dgagwbhx6vi42qay7xmz2wtxg4@kv3nkctpqe5z>
+References: <20250801-wake_irq_support-v4-3-6b6639013a1a@oss.qualcomm.com>
+ <20250801212725.GA3506354@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250804-aer_crash_2-v1-1-fd06562c18a4@debian.org>
-X-B4-Tracking: v=1; b=H4sIAKF6kGgC/x3M0QmAMAwFwFXC+7aQBgTpKiJSa9T8qKQggri74
- A1wD6q6aUWiB66XVTt2JIoNoWx5XzXYjEQQlpY7jiGrj8Vz3UYJk8RSRBeemdEQTtfF7n/rh/f
- 9AKuzfaNdAAAA
-X-Change-ID: 20250801-aer_crash_2-b21cc2ef0d00
-To: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
- Jon Pan-Doh <pandoh@google.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kernel-team@meta.com, 
- Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-dd21f
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1368; i=leitao@debian.org;
- h=from:subject:message-id; bh=i0OFIqRZ+2MCROlqNGaAy7Gthq89bO35bHAcnJh3VlA=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBokHq3J6RaxpQfmijCmhT8xwiAfy7q4+tdEwFP4
- yJyxN2RFW6JAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaJB6twAKCRA1o5Of/Hh3
- bQd3D/405/+BXCq8MZtdnT0v0HPlyz++xhl/hpeSOvxquiUiEEfkaHiUL2uqGxGtZtApFaz24gn
- JXC6Ncm8AhRJWEcLw0n830Iuo+eE+UOLzV9LVe3tJG0mrs05AMXRzKIB9gC1qAhWeCY/mcd7ZaO
- hMgXwO4gEuhKA6wAJBqwKo/NYaTNsWj/rWxwqnjYBWC1GW0CPAk/lBVVww+0RGKx1WJIZAmRVxB
- /fEecTarqVnj0ouyvEc2763i6GMm2AhDnNdDQ8qCMN6qH6EPWnEbflBEbVgKVetq2YqrbaFGvGe
- wv/ULHHRlR/HNb4K7YJmTjUeg164O6RWtwJwU6UoHQXIwqJ+hig4UznuTRFbS7UV9x+Rg0+x8P5
- /V35p2mr49zxy1OhQRp4+olU2Y+d/bARyi4Se5hxXZU41d2qlzSaKIiwSWXmyhcHaScUZNz2CPy
- Be+BcociZDT/+b1CDjtImSEZ0+kWMihnXlhSPbgM+TfwZA3quoFcMK/DXdEjSpWQTDyCLx3GHYN
- E+vpmi0oueXyU+j98iYBOJ42zeyvxHJk5heWaqkxmR7XRrpYAdNdp3XVM/z+HFW9VCCJ51aSl1H
- wPd2WKlvGnRMSeqH490icMf0RRGqATNaJoeOL3Y/NQZjCL4bt4cHL+arcgZ7+kYsOQdt+XnWkuK
- lxgZ3D9L1RwM4MQ==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250801212725.GA3506354@bhelgaas>
 
-Similarly to pci_dev_aer_stats_incr(), pci_print_aer() may be called
-when dev->aer_info is NULL. Add a NULL check before proceeding to avoid
-calling aer_ratelimit() with a NULL aer_info pointer, returning 1, which
-does not rate limit, given this is fatal.
+On Fri, Aug 01, 2025 at 04:27:25PM GMT, Bjorn Helgaas wrote:
+> On Fri, Aug 01, 2025 at 04:29:44PM +0530, Krishna Chaitanya Chundru wrote:
+> > According to the PCIe specification 6, sec 5.3.3.2, there are two defined
+> > wakeup mechanisms: Beacon and WAKE# for the Link wakeup mechanisms to
+> > provide a means of signaling the platform to re-establish power and
+> > reference clocks to the components within its domain. Adding WAKE#
+> > support in PCI framework.
+> 
+> I think Beacon is a hardware mechanism invisible to software (PCIe
+> r7.0, sec 4.2.7.8.1).
+> 
+> > According to the PCIe specification, multiple WAKE# signals can exist in a
+> > system. In configurations involving a PCIe switch, each downstream port
+> > (DSP) of the switch may be connected to a separate WAKE# line, allowing
+> > each endpoint to signal WAKE# independently. To support this, the WAKE#
+> > should be described in the device tree node of the upstream bridge to which
+> > the endpoint is connected.
+> 
+> I think this says a bit more than we know.  AFAICS, the PCIe spec does
+> not require any particular WAKE# routing.  WAKE# *could* be routed to
+> an upstream bridge (as shown in the 5.3.3.2 implementation note), but
+> it doesn't have to be.  I think we need to allow WAKE# to be described
+> by an Endpoint directly (which I think this patch does).
+> 
+> I'm not sure about searching upstream PCI bridges.  I don't think
+> there's anything in the PCIe spec about a connection between WAKE#
+> routing and the PCI topology.  Maybe we need to search enclosing DT
+> scopes?  I'm not really sure how DT works in this respect.  WAKE#
+> could be routed to some GPIO completely unrelated to the PCI host
+> bridge.
+> 
 
-This prevents a kernel crash triggered by dereferencing a NULL pointer
-in aer_ratelimit(), ensuring safer handling of PCI devices that lack
-AER info. This change aligns pci_print_aer() with pci_dev_aer_stats_incr()
-which already performs this NULL check.
+PCIe spec r5, fig 5-4 describes that WAKE# is supposed to be connected to a
+*slot*, not directly to the endpointi, though endpoint is the one toggling it.
+And in devicetree, we describe the slot using the bridge node. So it makes sense
+to add the 'wake-gpios' property to the bridge node only. It is what allowed by
+the dtschema today.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Fixes: a57f2bfb4a5863 ("PCI/AER: Ratelimit correctable and non-fatal error logging")
----
- drivers/pci/pcie/aer.c | 3 +++
- 1 file changed, 3 insertions(+)
+> I don't see anything that would prevent a Switch Port from asserting a
+> WAKE# interrupt, so I'm not sure we should restrict it to Endpoints.
+> 
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 70ac661883672..b5f96fde4dcda 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -786,6 +786,9 @@ static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
- 
- static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
- {
-+	if (!dev->aer_info)
-+		return 1;
-+
- 	switch (severity) {
- 	case AER_NONFATAL:
- 		return __ratelimit(&dev->aer_info->nonfatal_ratelimit);
+Atleast fig 5-4 describes that the switch has to generate Beacon to RC for WAKE#
+asserted by the endpoints connected to the downstream slots.
 
----
-base-commit: 89748acdf226fd1a8775ff6fa2703f8412b286c8
-change-id: 20250801-aer_crash_2-b21cc2ef0d00
+> > For example, in a switch-based topology, the
+> > WAKE# can be defined in the DSP of the switch. In a direct connection
+> > scenario, the WAKE# can be defined in the root port. If all endpoints share
+> > a single WAKE# line, the GPIO should be defined in the root port.
+> > 
+> > During endpoint probe, the driver searches for the WAKE# in its immediate
+> > upstream bridge. If not found, it continues walking up the hierarchy until
+> > it either finds a WAKE# or reaches the root port. Once found, the driver
+> > registers the wake IRQ in shared mode, as the WAKE# may be shared among
+> > multiple endpoints.
+> > 
+> > When the IRQ is asserted, the wake handler triggers a pm_runtime_resume().
+> 
+> I guess "wake handler" refers to handle_threaded_wake_irq()?  If so,
+> just use the name directly to make it easier for people to follow
+> this.
+> 
+> > The PM framework ensures that the parent device is resumed before the
+> > child i.e controller driver which can bring back link to D0.
+> 
+> Nit: a *device* can be in D0.  Links would be in L0, etc.
+> 
+> > WAKE# is added in dts schema and merged based on this link.
+> > 
+> > Link: https://lore.kernel.org/all/20250515090517.3506772-1-krishna.chundru@oss.qualcomm.com/
+> > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > ...
+> 
+> > +void pci_parse_of_wake_gpio(struct pci_dev *dev)
+> > +{
+> > +	struct device_node *dn __free(device_node) = pci_device_to_OF_node(dev);
+> 
+> I'm still trying to wrap my head around __free().  Why are we using
+> __free() and no_free_ptr() here?  AFAICS we're not allocating anything
+> here.
+> 
+> > +	struct gpio_desc *gpio;
+> > +
+> > +	if (!dn)
+> > +		return;
+> > +
+> > +	gpio = fwnode_gpiod_get_index(of_fwnode_handle(no_free_ptr(dn)),
+> > +				      "wake", 0, GPIOD_IN, NULL);
+> > +	if (!IS_ERR(gpio))
+> > +		dev->wake = gpio;
+> > +}
+> > +
+> > +void pci_remove_of_wake_gpio(struct pci_dev *dev)
+> > +{
+> > +	if (!dev->wake)
+> > +		return;
+> > +
+> > +	gpiod_put(dev->wake);
+> > +	dev->wake = NULL;
+> > +}
+> >  #endif	/* CONFIG_OF_IRQ */
+> >  
+> >  static int pci_parse_request_of_pci_ranges(struct device *dev,
+> > @@ -1010,3 +1035,44 @@ int of_pci_get_equalization_presets(struct device *dev,
+> >  	return 0;
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_pci_get_equalization_presets);
+> > +
+> > +int pci_configure_wake_irq(struct pci_dev *pdev)
+> > +{
+> > +	struct pci_dev *bridge = pdev;
+> > +	struct gpio_desc *wake;
+> > +	int ret, wake_irq;
+> > +
+> > +	while (bridge) {
+> > +		wake = bridge->wake;
+> > +		if (wake)
+> > +			break;
+> > +		bridge = pci_upstream_bridge(bridge);  // Move to upstream bridge
+> 
+> If we need to search more scopes, I think we should be searching DT
+> scopes, not PCI bridges.
+> 
+> > +	}
+> > +
+> > +	if (!wake)
+> > +		return 0;
+> > +
+> > +	wake_irq = gpiod_to_irq(wake);
+> > +	if (wake_irq < 0) {
+> > +		dev_err(&pdev->dev, "Failed to get wake irq: %d\n", wake_irq);
+> > +		return wake_irq;
+> > +	}
+> > +
+> > +	device_init_wakeup(&pdev->dev, true);
+> > +
+> > +	ret = dev_pm_set_dedicated_wake_irq_flags(&pdev->dev, wake_irq,
+> > +						  IRQF_SHARED | IRQ_TYPE_EDGE_FALLING);
+> > +	if (ret < 0) {
+> > +		dev_err(&pdev->dev, "Failed to set wake IRQ: %d\n", ret);
+> > +		device_init_wakeup(&pdev->dev, false);
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +void pci_remove_wake_irq(struct pci_dev *pdev)
+> > +{
+> > +	dev_pm_clear_wake_irq(&pdev->dev);
+> > +	device_init_wakeup(&pdev->dev, false);
+> > +}
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index b853585cb1f87216981bde2a7782b8ed9c337636..2a1dca1d19b914d21b300ea78be0e0dce418cc88 100644
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -447,10 +447,19 @@ static int pci_device_probe(struct device *dev)
+> >  	if (error < 0)
+> >  		return error;
+> >  
+> > +	if (pci_pcie_type(pci_dev) == PCI_EXP_TYPE_ENDPOINT) {
+> 
+> I guess there's a policy question here: configuring this in
+> pci_device_probe() implies that we only pay attention to WAKE# when a
+> driver is bound to the device.  Or, since WAKE# may be shared, I guess
+> we pay attention to it if any device sharing this WAKE# IRQ has a
+> driver?
+> 
 
-Best regards,
---  
-Breno Leitao <leitao@debian.org>
+I don't think we check if the driver is bind to the device before putting it
+into D3Cold. If the device was previously enabled from sysfs, then it cannot
+ask host to wake it up.
 
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
