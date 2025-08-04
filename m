@@ -1,51 +1,50 @@
-Return-Path: <linux-pci+bounces-33345-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33346-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 751A1B19AE4
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 06:50:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B3DBB19BA8
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 08:37:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17E543B5AEF
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 04:50:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 865391691BE
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Aug 2025 06:37:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DC161A83F9;
-	Mon,  4 Aug 2025 04:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A486D22AE65;
+	Mon,  4 Aug 2025 06:37:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qmkWlnDh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F93+omvJ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F1810E4;
-	Mon,  4 Aug 2025 04:50:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2F021CA04;
+	Mon,  4 Aug 2025 06:37:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754283049; cv=none; b=CaQORttuXUtIYh4q1RAYBXy/BL1m8wBABtW2Yjkzw15OaZg3SIDdQ7PlHzPOVi6LyXZyV/9YbWwFQxQ1VrhQwbus982yhnH7oLINGZDmjfL9K88rrteJcq2dYB7slzeIegiPFOSVQR7fJrz4YkhRbsv8oyXo7cpCJSP7VUQb+YI=
+	t=1754289459; cv=none; b=XHKgalt3PcyJcWasEMEr9GfwfCvDZWIKfY8HVoiJoSUHUw32/uCNvjJfXgkswRY9/64+JmOS4U+EgHc6U/mGp1BycBumjFm2m7cpalpi5Q3J+aFCSWZkRTvIGjHWDfn3d+K1eQ7fIfPHP1651BwSWBJj+J6sGqw02Ws+LF/5E+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754283049; c=relaxed/simple;
-	bh=lH4buzDNUXIHUwd/vEAcXsWRPckSNqm7+MzMh4iVkzs=;
+	s=arc-20240116; t=1754289459; c=relaxed/simple;
+	bh=TvtCydpyP+2SRqXbmOoGwrTxbWE+LSTytKIAEhbyUbs=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Bl//fYQd9YVYqAslQy0bonLIf9IkXSj9yPt52YpI37Bfhxgey1iRz5VCFGkvhkhjM5k8Zfwi0mj6HxxzM1ox0gtmRcyfntL2wP+x/S3mblPWUMvLebNptzfKyRRPtEvcyNtjQZzxDhrLLNtcXeIDciER6itRx8IxVokrSe67VsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qmkWlnDh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A34B8C4CEE7;
-	Mon,  4 Aug 2025 04:50:43 +0000 (UTC)
+	 MIME-Version:Content-Type; b=ef7jPxolmlQT+AwJwqHGno3EBtFGJgCsuDA8i0j5+itxn5qS5WbHJ5lxTCHXZ5quPG5TmY31rjN5ieFvJiXnMbGBux/YKR9VUcov2zEPIdToHIjXJkww2Q8yBZw9AtgVzBXntsK57QRs6Qcd3LCrH/KWH1gjUVIpZUj2ywHXGhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F93+omvJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9172CC4CEE7;
+	Mon,  4 Aug 2025 06:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754283048;
-	bh=lH4buzDNUXIHUwd/vEAcXsWRPckSNqm7+MzMh4iVkzs=;
+	s=k20201202; t=1754289457;
+	bh=TvtCydpyP+2SRqXbmOoGwrTxbWE+LSTytKIAEhbyUbs=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=qmkWlnDhmyORK08CG1GGDF2d3jo3LDjJVrgPAtHOvaYTQpdowKCsROXj+R3h12a/T
-	 d/WdxXkuCcLflY4sx52O0UINvEDCXQQkOYnM/Y1DH7ES6Ljsh0bEegf22MOhZ7lEnC
-	 8X97EmW8+NMH0WaVq83YonaFFjw0csk47HVxYkQ7xPGxXe5WFF1zZZtowR7a8BnxX5
-	 lYErMEqPPscBNZk50TwzsK4g9wkENTxrYZi+ao1uOwiAwfE2YyPt0vgBuB4Iek3pQa
-	 5RJECIpKwu0/OvI7P2pQ+1V/6Zh7lKxwvZ6QGHKO60zkDXyC+vflxxKBqzdzH2NzgX
-	 T2jhamAvI9gxg==
+	b=F93+omvJ3lMAguvUh/zkgrZ1bWn27qcBW1Ejscm63WvcTsIFj5+jdY+Uq6k39qimq
+	 gNr3EtUfq8J2liZ6cx0jRr4QqHGuZApPNntmZt7xEXZPA0XL43ktJTPpSfDcSy3duz
+	 r2U16oMApx6NbxAEe/4UVDhtJH/F9YviOF26ZTkt9pxz0Bjv4lhAKUcl/bkQU/GB2X
+	 yR/WfXphakKrVcQSFxf+R/uqnHZ4Ih7FGXK7V12gnsjuGwZjwkortGfd2Ft04v4R8c
+	 OPMtutDZg/+AT5byBS0Unty7S4vNKh5HQgF9VgzKuwNies8N9TDkFppFRkDUw0Sj4K
+	 SazAOCa9mrzAA==
 X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
 From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, aik@amd.com,
+To: Arto Merilainen <amerilainen@nvidia.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, aik@amd.com,
 	lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
 	Xu Yilun <yilun.xu@linux.intel.com>,
 	Jason Gunthorpe <jgg@ziepe.ca>,
@@ -53,14 +52,16 @@ Cc: linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
 	Steven Price <steven.price@arm.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [RFC PATCH v1 24/38] arm64: CCA: Register guest tsm callback
-In-Reply-To: <20250730152613.00006693@huawei.com>
+	Oliver Upton <oliver.upton@linux.dev>, kvmarm@lists.linux.dev,
+	linux-coco@lists.linux.dev
+Subject: Re: [RFC PATCH v1 34/38] coco: guest: arm64: Validate mmio range
+ found in the interface report
+In-Reply-To: <d57d12ce-78c6-4381-80eb-03e9e94f9903@nvidia.com>
 References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
- <20250728135216.48084-25-aneesh.kumar@kernel.org>
- <20250730152613.00006693@huawei.com>
-Date: Mon, 04 Aug 2025 10:20:41 +0530
-Message-ID: <yq5att2n8zby.fsf@kernel.org>
+ <20250728135216.48084-35-aneesh.kumar@kernel.org>
+ <d57d12ce-78c6-4381-80eb-03e9e94f9903@nvidia.com>
+Date: Mon, 04 Aug 2025 12:07:29 +0530
+Message-ID: <yq5aqzxr8udy.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,83 +71,66 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
+Arto Merilainen <amerilainen@nvidia.com> writes:
 
-> On Mon, 28 Jul 2025 19:22:01 +0530
-> "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
+> On 28.7.2025 16.52, Aneesh Kumar K.V (Arm) wrote:
 >
->> Register the TSM callback if the DA feature is supported by RSI.
->>=20
->> Additionally, adjust the build order so that the TSM class is created
->> before the arm-cca-guest driver initialization.
->>=20
->> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
-> See below.
->
->> diff --git a/arch/arm64/kernel/rsi.c b/arch/arm64/kernel/rsi.c
->> index bf9ea99e2aa1..ef06c083990a 100644
->> --- a/arch/arm64/kernel/rsi.c
->> +++ b/arch/arm64/kernel/rsi.c
->> @@ -15,6 +15,7 @@
->>  #include <asm/rsi.h>
->>=20=20
->>  static struct realm_config config;
->> +static unsigned long rsi_feat_reg0;
->>=20=20
->>  unsigned long prot_ns_shared;
->>  EXPORT_SYMBOL(prot_ns_shared);
->> @@ -22,6 +23,12 @@ EXPORT_SYMBOL(prot_ns_shared);
->>  DEFINE_STATIC_KEY_FALSE_RO(rsi_present);
->>  EXPORT_SYMBOL(rsi_present);
->>=20=20
->> +bool rsi_has_da_feature(void)
->> +{
->> +	return !!u64_get_bits(rsi_feat_reg0, RSI_FEATURE_REGISTER_0_DA);
->
-> !! not needed.
->
->> +}
->> +EXPORT_SYMBOL_GPL(rsi_has_da_feature);
->
->
->> diff --git a/drivers/virt/coco/arm-cca-guest/arm-cca.c b/drivers/virt/co=
-co/arm-cca-guest/arm-cca.c
->> index 547fc2c79f7d..3adbbd67e06e 100644
->> --- a/drivers/virt/coco/arm-cca-guest/arm-cca.c
->> +++ b/drivers/virt/coco/arm-cca-guest/arm-cca.c
->> @@ -1,6 +1,6 @@
->
->>  static int cca_guest_probe(struct platform_device *pdev)
->>  {
->>  	int ret;
->> @@ -200,11 +256,22 @@ static int cca_guest_probe(struct platform_device =
-*pdev)
->>  		return -ENODEV;
->>=20=20
->>  	ret =3D tsm_report_register(&arm_cca_tsm_report_ops, NULL);
->> -	if (ret < 0)
->> +	if (ret < 0) {
->>  		pr_err("Error %d registering with TSM\n", ret);
->> +		goto err_out;
->> +	}
->>=20=20
->>  	ret =3D devm_add_action_or_reset(&pdev->dev, unregister_cca_tsm_report=
-, NULL);
->> +	if (ret < 0) {
->> +		pr_err("Error %d registering devm action\n", ret);
->> +		unregister_cca_tsm_report(NULL);
->> +		goto err_out;
->> +	}
+>> +	for (int i =3D 0; i < interface_report->mmio_range_count; i++, mmio_ra=
+nge++) {
 >> +
->> +	if (rsi_has_da_feature())
->> +		ret =3D cca_tsm_register(pdev);
-> Why do we not need to call unregister_cca_tsm_report()
-> if this fails?
+>> +		/*FIXME!! units in 4K size*/
+>> +		range_id =3D FIELD_GET(TSM_INTF_REPORT_MMIO_RANGE_ID, mmio_range->ran=
+ge_attributes);
+>> +
+>> +		/* no secure interrupts */
+>> +		if (msix_tbl_bar !=3D -1 && range_id =3D=3D msix_tbl_bar) {
+>> +			pr_info("Skipping misx table\n");
+>> +			continue;
+>> +		}
+>> +
+>> +		if (msix_pba_bar !=3D -1 && range_id =3D=3D msix_pba_bar) {
+>> +			pr_info("Skipping misx pba\n");
+>> +			continue;
+>> +		}
+>> +
+>
+>
+> MSI-X and PBA can be placed to a BAR that has other registers as well.=20
+> While the PCIe specification recommends BAR-level isolation for MSI-X=20
+> structures, it is not mandated. It is enough to have sufficient=20
+> isolation within the BAR. Therefore, skipping the MSI-X and PBA BARs=20
+> altogether may leave registers unintentionally mapped via unprotected=20
+> IPA when they should have been mapped via protected IPA.
+>
+> Instead of skipping the whole BAR, would it make sense to determine
+> where the MSI-X related regions reside, and skip validation only from=20
+> these regions?
 >
 
-`tsm_report` and DA are independent functionalities. I=E2=80=99ll update the
-guest probe to return success so that `tsm_report` remains available
-even if the DA tsm registration fails.
+Yes, that was added because at one point the FVP model was including the
+MSI-X table and PBA regions in the interface report.
+
+If I understand correctly, we shouldn't expect to see those regions in
+the report unless secure interrupts are supported. The BAR-based
+skipping was added as a workaround to handle the FVP issue.
+
+I believe we can drop that workaround now=E2=80=94if those regions are
+incorrectly present, the below validation logic should catch and
+reject them appropriately. Does that sound reasonable?
+
+		/* No secure interrupts, we should not find this set, ignore for now. */
+		if (FIELD_GET(TSM_INTF_REPORT_MMIO_MSIX_TABLE, mmio_range->range_attribut=
+es) ||
+		    FIELD_GET(TSM_INTF_REPORT_MMIO_PBA, mmio_range->range_attributes)) {
+			pci_info(pdev, "Skipping MSIX (%ld/%ld) range [%d] #%d %d pages, %llx..%=
+llx\n",
+				 FIELD_GET(TSM_INTF_REPORT_MMIO_MSIX_TABLE, mmio_range->range_attribute=
+s),
+				 FIELD_GET(TSM_INTF_REPORT_MMIO_PBA, mmio_range->range_attributes),
+				 i, range_id, mmio_range->num_pages, r->start, r->end);
+			continue;
+		}
+
 
 -aneesh
 
