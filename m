@@ -1,160 +1,135 @@
-Return-Path: <linux-pci+bounces-33410-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33412-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1160AB1AC6F
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 04:35:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23998B1ACD9
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 05:43:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E1D274E1F40
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 02:35:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C06217C4B9
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 03:43:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B758D18FC92;
-	Tue,  5 Aug 2025 02:35:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D3611DF968;
+	Tue,  5 Aug 2025 03:43:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Faez5goL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhFoVy1Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119D0A927;
-	Tue,  5 Aug 2025 02:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483481DD525;
+	Tue,  5 Aug 2025 03:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754361347; cv=none; b=HtcdpRnmJgWTPQjIho/ArSeE8oEGAYsz9FyAoRTSn+lul8fJ3KCmnAEYjVzvmrP86vWlxVBCQNnnA7BLLt6Zy0QHol/r8ldyPQE2jXgHyoOpnsvhNkMpD0qtCSXfCosJj621ogFFLxv9vis61VNn28EhvEzhIniIs3gMatGrkKk=
+	t=1754365418; cv=none; b=Mj8bIDqsGsXynxklj/QrPsFN7117mAe92/B3SPTqWlKBeXoxxA3Zy0/cLWAvS1p/YX8/CSv9T20mhU4azVy4cy5SAfJ7FOM//9FyRFQ1vDxZFK2vspw1EdozubMQSd4gMUs46fE4IlR7RYnVXcgYokSaRCPrKZV+clKTNMCJ4xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754361347; c=relaxed/simple;
-	bh=WNJEOW8KWqBdbtvoj3VmjtsdImT7zj15PWKPLcsJXAk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nTXg0yXzU+lxtOKg/KjT62p6rlQ5Z3H31LPyEyS4q6DLAeseQ9kgC5J5gPh9imWmVNRKqofH50Mxbqq0Z3GI22UASHxDgQBlqR/arI+I9vf0EfGOO3rY++gtXKKtBTGgVFRmTup7CHBqGwmhJOFwtQ7KEnlQyjlGwuVWgKKTKKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Faez5goL; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754361346; x=1785897346;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WNJEOW8KWqBdbtvoj3VmjtsdImT7zj15PWKPLcsJXAk=;
-  b=Faez5goLHe5vYZal0pqC6idZYpJDHE3Nlz51S5j0wvi69IVDkog1LKZ4
-   QVzk5k0bg4rZCjbbNpAziC+wHPgx19PVa5foLfhfVxLwAgg36nXw3tC3V
-   m1myaAHlmYWhdsl5b0Gt0EiEZhzrEAyVHLhwRMtdJubavSs7S0whQfskj
-   B0wNuc0mNi7t0979AWVoKPLVdbJnXNjIRCsNZvUHwhQHfENcdjIMIQfex
-   NhAQj4uNQWxiNOtqHJLWzjakKkyFYRhsodkJ1Nf/xUtlYm3I4rPIRRmup
-   xds5mwgnFnKaapZQxK44IPLRcmMb4xocGSwO74QzUghLlp0OBbziFCLDI
-   Q==;
-X-CSE-ConnectionGUID: xZJNLWbdR82Rx0u3NPg/bg==
-X-CSE-MsgGUID: Wga05cSgQ5iWJtdD34VVew==
-X-IronPort-AV: E=McAfee;i="6800,10657,11512"; a="67217352"
-X-IronPort-AV: E=Sophos;i="6.17,265,1747724400"; 
-   d="scan'208";a="67217352"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 19:35:45 -0700
-X-CSE-ConnectionGUID: /YnWTCSyTmu5PHjREof3iQ==
-X-CSE-MsgGUID: JeLk3g5WR5mXt7k4FP7kmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,265,1747724400"; 
-   d="scan'208";a="163577182"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa006.jf.intel.com with ESMTP; 04 Aug 2025 19:35:42 -0700
-Date: Tue, 5 Aug 2025 10:26:06 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	aik@amd.com, lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [RFC PATCH v1 06/38] iommufd: Add and option to request for bar
- mapping with IORESOURCE_EXCLUSIVE
-Message-ID: <aJFrvsURkhpTJgh8@yilunxu-OptiPlex-7050>
-References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
- <20250728135216.48084-7-aneesh.kumar@kernel.org>
- <20250728140841.GA26511@ziepe.ca>
- <yq5a34afbdtl.fsf@kernel.org>
- <20250729142917.GF26511@ziepe.ca>
- <aInBxnVIu+lnkzlV@yilunxu-OptiPlex-7050>
- <20250731122217.GR26511@ziepe.ca>
+	s=arc-20240116; t=1754365418; c=relaxed/simple;
+	bh=ZniYHKY8QuSd7kXt4f9NMukHnaBfrOkk5MNpA7EfaWg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kSCmo8qd5G9VKfHgr+bwHTR9Ayvha7g+SkjZzqhEkO5otn/64WSXVvBVkpCYSRP751JdqqseE8weTL6YRAGh+3u3q+tN8aMEszaav4TQQHrj2851aNACkdOuuwEElPko1as6uaq2FrgzfaDIURmOnXNKAbe2jyvKbrWuvi7x/Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fhFoVy1Q; arc=none smtp.client-ip=209.85.218.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-af967835d0aso278938766b.0;
+        Mon, 04 Aug 2025 20:43:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754365416; x=1754970216; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8WbAm5nExTQIfe1sqlUAgj5NdK4GQb4TTe8phjhgS70=;
+        b=fhFoVy1QCqYbF30A0gmnkPPxzB/F/lQCOjIy91Dv+QhZAtnVsHMR2WETvdDRBFooVm
+         GRa/jfexETV2wqh1cuOAhKdHe/CauSi308778Y6TBtu3mraVzdZtux6yRjXv6IVBAruZ
+         NOez25bUSw5p+NhuoetTV+J+MRxaPf8bgUGYLKy19LJycRDH8Q0MevPxvCjxRUmOJizB
+         ygwI2WmLrnIVsHy+JVZbueR+mhKAQiVPwNGBhM5CsFuOXpdwWAvNGJJPrJoO+eVzssmK
+         9IpihGQ+r1uL6KsIhOJAigIvZs+To2wWcOsO6ZquGYGLNiYyWVnWUBFfNmTFl1j9tHXG
+         9/kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754365416; x=1754970216;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8WbAm5nExTQIfe1sqlUAgj5NdK4GQb4TTe8phjhgS70=;
+        b=hDgp0f1D4nHYapAEBpcTqvYHMJ8HlQgUSfXmFfJyyr7cDpT/IdzSuteLxVl8cTu2UW
+         wes3nilh8i5YiyXxQ/MIJe24n5HtbgeHVcEii52x/guUGR/AXebNWqvT4w+va8XpzxRD
+         QTAp3k9uQfAXwBblP/LXUT7hzuVNiqUnCQVS0kosJdnF86/+YUNoORffb5oQq59jVaez
+         3EC9qKw/NCzcEMSFZmI3wsf00ICGFzanQfbjgsRTSftIYdn6TooIUQlItQZHqYQD3OyZ
+         cBMKJbvkSMnnSXyKTpjobW9HWP+E/hRSnKbmpV9yw9eCAAM4k3HEm/vA5eu1tRtawUd+
+         mKKg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6ep5lN6y9eTNTPo8P9z+ZzCNYSvFv1z65coFkxR0Aanfr1otwe/W/AVj81yYA2Kd3cAk=@vger.kernel.org, AJvYcCXEQ4eEmAS5FT371QWYeuLpeo2UzxM7QkSYDvn3AFnvlc8fe2u/O/Eq6pEswFHAV0nIPMWS7E3Pj9x2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeHbecpwKl1og/GAImilECmq6h3HheY5k1RGSwoF9ukOcagPJt
+	RUVPnz9SDi2UV8ZVG7+KylUDrrwBSPz7HIi0Yyh5KYNcfYIDMi6260IB
+X-Gm-Gg: ASbGncuAq9y1yUtj2VT9za4l9bxu0NWzRviDTPiOp9s8FIGVmgcl8jdTpwoCx3010oI
+	H7qa0+Wi6JVSLD1uA82R7LoZ1alZ19zqCLTWOdTpyZZpeG/hijMdn13PVWD9dkfusYGHEg88u5a
+	18EOOCiQKvv4Ik/Lc8jUu4ncJQ6T3KoLKu7vop1skcu09xDRT3aU3/SywkeqJ8K5F1my9lPWAVf
+	3duk9U7RoDI+W22DpkheUuwJ/3oRlNmbiYICl4S79KMr1+hE1GNecel44fL/oA46XMkaXYQQRE1
+	qGl1xyzHuDfXrLLorNBB5Qdl4EtlK/ljPhAvUuF2l1WuasEa0aM5qNxAtGFfZMyOOzCPJ57dQmc
+	dUAs45+iomHacAPLQEBt4LD74TntVDiggo3zskhA5obLRHVU6Jz+wriQFJhbZ5Qkzz54iLKxYFh
+	/jLjs7UlgepzuGbxwXEub1C8FXgLRbe02oaRg=
+X-Google-Smtp-Source: AGHT+IEjmKLsdjb2ZjdT33M1Kp092lXe481aQZe89Govc26G8aNvSHe8HQJ6UUJmTxXI+6BFVbhvGw==
+X-Received: by 2002:a17:907:6d04:b0:ae0:d804:236a with SMTP id a640c23a62f3a-af93ffcaddemr1330563966b.3.1754365415456;
+        Mon, 04 Aug 2025 20:43:35 -0700 (PDT)
+Received: from [26.26.26.1] (ec2-3-126-215-244.eu-central-1.compute.amazonaws.com. [3.126.215.244])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af91ee3c1f7sm772698966b.68.2025.08.04.20.43.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Aug 2025 20:43:34 -0700 (PDT)
+Message-ID: <1684792a-97d6-4383-a0d2-f342e69c91ff@gmail.com>
+Date: Tue, 5 Aug 2025 11:43:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250731122217.GR26511@ziepe.ca>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/16] Fix incorrect iommu_groups with PCIe ACS
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
+ Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
+ Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Lu Baolu <baolu.lu@linux.intel.com>, galshalom@nvidia.com,
+ Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
+ kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
+ tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+References: <0-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
+ <a692448d-48b8-4af3-bf88-2cc913a145ca@gmail.com>
+ <20250802151816.GC184255@nvidia.com>
+Content-Language: en-US
+From: Ethan Zhao <etzhao1900@gmail.com>
+In-Reply-To: <20250802151816.GC184255@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 31, 2025 at 09:22:17AM -0300, Jason Gunthorpe wrote:
-> On Wed, Jul 30, 2025 at 02:55:02PM +0800, Xu Yilun wrote:
-> > On Tue, Jul 29, 2025 at 11:29:17AM -0300, Jason Gunthorpe wrote:
-> > > On Tue, Jul 29, 2025 at 01:58:54PM +0530, Aneesh Kumar K.V wrote:
-> > > > Jason Gunthorpe <jgg@ziepe.ca> writes:
-> > > > 
-> > > > > On Mon, Jul 28, 2025 at 07:21:43PM +0530, Aneesh Kumar K.V (Arm) wrote:
-> > > > >> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
-> > > > >
-> > > > > Why would we need this?
-> > > > >
-> > > > > I can sort of understand why Intel would need it due to their issues
-> > > > > with MCE, but ARM shouldn't care either way, should it?
-> > > > >
-> > > > > But also why is it an iommufd option? That doesn't seem right..
-> > > > >
-> > > > > Jason
-> > > > 
-> > > > This is based on our previous discussion https://lore.kernel.org/all/20250606120919.GH19710@nvidia.com
-> > > 
-> > > I suggested a global option, this is a per-device option, and that
-> > > especially seems wrong for iommufd. If it is per-device that is vfio,
-> > 
-> > I think this should be per-device.
+
+
+On 8/2/2025 11:18 PM, Jason Gunthorpe wrote:
+> On Sat, Aug 02, 2025 at 09:45:08AM +0800, Ethan Zhao wrote:
+>>
+>>
+>> On 7/9/2025 10:52 PM, Jason Gunthorpe wrote:
+>>> The series patches have extensive descriptions as to the problem and
+>>> solution, but in short the ACS flags are not analyzed according to the
+>>> spec to form the iommu_groups that VFIO is expecting for security.
+>>>
+>>> ACS is an egress control only. For a path the ACS flags on each hop only
+>>> effect what other devices the TLP is allowed to reach. It does not prevent
+>>> other devices from reaching into this path.
 > 
-> IMHO there is no use case for that, it should arguably be global to
-> the whole kernel.
-
-I think there are 2 topics here:
-
-1. Prevent VFIO mmap
-2. Prevent /sys/../resource, /dev/mem users
-
-I assume you are refering to the 2nd, then I agree.
-
+>> Perhaps I was a little confused here, the egress control vector on the
 > 
-> > The original purpose of this pci_region_request_*() is to prevent
-> > further mmap/read/write against a vfio_cdev FD which would be used
-> 
-> No way, the VFIO internal mmap should be controled by VFIO not by
-
-I assume your point is never to use more than one request region in the
-same driver to achieve some mutual exclusion. I'm good to it. We could
-switch to some bound flag.
-
-> request region. If you want to block that it should be blocked by
-> iommufd telling VFIO that the device is bound which revokes the
-> mmaps/dmabufs/etc and prevents opening new ones.
-
-Agree.
-
-> 
-> The only thing request region should do is prevent /sys/../resource,
-> /dev/mem users and so on, which is why it can and should be
-> global. Arguably VFIO should always block those things but
-> historically hasn't..
-
-Agree. So seems no need a global option?
+> Linux does not support egress control vector. Enabling that is a
+> different project and we would indeed need to introduce different
+> logic.
+My understanding, iommu has no logic yet to handle the egress control
+vector configuration case, the static groups were created according to
+FW DRDB tables, also not the case handled by notifiers for Hot-plug
+events (BUS_NOTIFY_ADD_DEVICE etc). iommu groups need some kind of {
+add, remove etc } per egress control vector configuration operation.
 
 Thanks,
-Yilun
-
-> 
-> There should only be one request region call in VFIO, it should
-> ideally happen when the VFIO driver probes the device.
-> 
+Ethan>
 > Jason
+
 
