@@ -1,113 +1,160 @@
-Return-Path: <linux-pci+bounces-33411-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33410-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59722B1AC8F
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 04:53:34 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1160AB1AC6F
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 04:35:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 196646218B7
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 02:53:33 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E1D274E1F40
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 02:35:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E63B1D63F5;
-	Tue,  5 Aug 2025 02:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B758D18FC92;
+	Tue,  5 Aug 2025 02:35:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=nobuhiro1.iwamatsu@toshiba.co.jp header.b="jRm2RC6H"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Faez5goL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1120.securemx.jp [210.130.202.128])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86B51607A4;
-	Tue,  5 Aug 2025 02:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119D0A927;
+	Tue,  5 Aug 2025 02:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754362409; cv=none; b=ULp9atgKhq1VfRMHl7Sx/pF+eCYnULNt2lr0jovmg9o6gs2XTdrmDPCV3Cq6Bl07NAZydJNkNr784E9awhn8WCH/PRP2NKQFF00jLYM1hfRnWfeuYt0KhZQiCrcVbmWKoCAzUOnjYZ/TN5c4piaV1xTQFtBtHXUvrol9qbZZDxw=
+	t=1754361347; cv=none; b=HtcdpRnmJgWTPQjIho/ArSeE8oEGAYsz9FyAoRTSn+lul8fJ3KCmnAEYjVzvmrP86vWlxVBCQNnnA7BLLt6Zy0QHol/r8ldyPQE2jXgHyoOpnsvhNkMpD0qtCSXfCosJj621ogFFLxv9vis61VNn28EhvEzhIniIs3gMatGrkKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754362409; c=relaxed/simple;
-	bh=pGq8OghSRkoVpKXdQVPo3XwOy10QtKXSakuHLC/l4X0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=P1jQ7zKINieV8oFrVQRzOJrN95jmmm/jOxhDPoKrZw9bLYMIEsKvVps8XG1rI5/w7lx1de/Ejz/JFzAN1rQ1O2jCVswgvJqBc9UeM1pIPaPPnnt5LkjF3bhiHbr1f23GszDnp4vVmNHc4my+nIAwU3FCnP2xWqfvTODF5qP1kCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=nobuhiro1.iwamatsu@toshiba.co.jp header.b=jRm2RC6H; arc=none smtp.client-ip=210.130.202.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1120) id 5751lilm1323521; Tue, 5 Aug 2025 10:47:44 +0900
-DKIM-Signature: v=1;a=rsa-sha256;c=relaxed/simple;d=toshiba.co.jp;h=From:To:Cc
-	:Subject:Date:Message-Id:In-Reply-To:References;i=
-	nobuhiro1.iwamatsu@toshiba.co.jp;s=key1.smx;t=1754358432;x=1755568032;bh=pGq8
-	OghSRkoVpKXdQVPo3XwOy10QtKXSakuHLC/l4X0=;b=jRm2RC6HD8TzM4etmwwj+8IvAJHHnMB+Dg
-	ZmDQbcWi9cZzvvDvoUvWDKyx2FSC/ICUTRY7Oe/x61ogo/+o5HwQi9AJUwlX7H6f4asPgz3y69R4z
-	p0+iL72HsjfUC4SP+k6KsY4lc9FewdGM0pV6py8LrwQGS3u0Cue82omNZKzKnbdBWEtDITwT2kRZu
-	tiwEBPALmGTOhpCHzFYnceXk8T2g9ceJCRMlkwSmsO0WbEaYpCVr8RezDGd3YZAxNLZ1e2CLjC3nF
-	V3/zHl+vKorLuUbFMwxFDH81sHczixY9zRPjM1lRUtqpFRZa1Nb5ED0BlHc7w4tpqSFFz1VFmyMhQ
-	==;
-Received: by mo-csw.securemx.jp (mx-mo-csw1122) id 5751lAjP3375559; Tue, 5 Aug 2025 10:47:10 +0900
-X-Iguazu-Qid: 2rWhSHZE8neFYwT8dx
-X-Iguazu-QSIG: v=2; s=0; t=1754358429; q=2rWhSHZE8neFYwT8dx; m=Vy0RmsCaLnFpSTmT4FGM0wu37Shjywsl5PqDNukgIcc=
-Received: from imx12-a.toshiba.co.jp ([38.106.60.135])
-	by relay.securemx.jp (mx-mr1122) id 5751l7gS037751
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 5 Aug 2025 10:47:08 +0900
-From: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To: Frank.Li@nxp.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-        lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-        bhelgaas@google.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        yuji2.ishikawa@toshiba.co.jp
-Subject: [PATCH v2 2/2] PCI: dwc: visconti: Remove cpu_addr_fix() after DTS fix ranges
-Date: Tue,  5 Aug 2025 10:47:01 +0900
-X-TSB-HOP2: ON
-Message-Id: <1754358421-12578-3-git-send-email-nobuhiro1.iwamatsu@toshiba.co.jp>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1754358421-12578-1-git-send-email-nobuhiro1.iwamatsu@toshiba.co.jp>
-References: <1754358421-12578-1-git-send-email-nobuhiro1.iwamatsu@toshiba.co.jp>
+	s=arc-20240116; t=1754361347; c=relaxed/simple;
+	bh=WNJEOW8KWqBdbtvoj3VmjtsdImT7zj15PWKPLcsJXAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nTXg0yXzU+lxtOKg/KjT62p6rlQ5Z3H31LPyEyS4q6DLAeseQ9kgC5J5gPh9imWmVNRKqofH50Mxbqq0Z3GI22UASHxDgQBlqR/arI+I9vf0EfGOO3rY++gtXKKtBTGgVFRmTup7CHBqGwmhJOFwtQ7KEnlQyjlGwuVWgKKTKKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Faez5goL; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754361346; x=1785897346;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WNJEOW8KWqBdbtvoj3VmjtsdImT7zj15PWKPLcsJXAk=;
+  b=Faez5goLHe5vYZal0pqC6idZYpJDHE3Nlz51S5j0wvi69IVDkog1LKZ4
+   QVzk5k0bg4rZCjbbNpAziC+wHPgx19PVa5foLfhfVxLwAgg36nXw3tC3V
+   m1myaAHlmYWhdsl5b0Gt0EiEZhzrEAyVHLhwRMtdJubavSs7S0whQfskj
+   B0wNuc0mNi7t0979AWVoKPLVdbJnXNjIRCsNZvUHwhQHfENcdjIMIQfex
+   NhAQj4uNQWxiNOtqHJLWzjakKkyFYRhsodkJ1Nf/xUtlYm3I4rPIRRmup
+   xds5mwgnFnKaapZQxK44IPLRcmMb4xocGSwO74QzUghLlp0OBbziFCLDI
+   Q==;
+X-CSE-ConnectionGUID: xZJNLWbdR82Rx0u3NPg/bg==
+X-CSE-MsgGUID: Wga05cSgQ5iWJtdD34VVew==
+X-IronPort-AV: E=McAfee;i="6800,10657,11512"; a="67217352"
+X-IronPort-AV: E=Sophos;i="6.17,265,1747724400"; 
+   d="scan'208";a="67217352"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 19:35:45 -0700
+X-CSE-ConnectionGUID: /YnWTCSyTmu5PHjREof3iQ==
+X-CSE-MsgGUID: JeLk3g5WR5mXt7k4FP7kmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,265,1747724400"; 
+   d="scan'208";a="163577182"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa006.jf.intel.com with ESMTP; 04 Aug 2025 19:35:42 -0700
+Date: Tue, 5 Aug 2025 10:26:06 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	aik@amd.com, lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: [RFC PATCH v1 06/38] iommufd: Add and option to request for bar
+ mapping with IORESOURCE_EXCLUSIVE
+Message-ID: <aJFrvsURkhpTJgh8@yilunxu-OptiPlex-7050>
+References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
+ <20250728135216.48084-7-aneesh.kumar@kernel.org>
+ <20250728140841.GA26511@ziepe.ca>
+ <yq5a34afbdtl.fsf@kernel.org>
+ <20250729142917.GF26511@ziepe.ca>
+ <aInBxnVIu+lnkzlV@yilunxu-OptiPlex-7050>
+ <20250731122217.GR26511@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250731122217.GR26511@ziepe.ca>
 
-From: Frank Li <Frank.Li@nxp.com>
+On Thu, Jul 31, 2025 at 09:22:17AM -0300, Jason Gunthorpe wrote:
+> On Wed, Jul 30, 2025 at 02:55:02PM +0800, Xu Yilun wrote:
+> > On Tue, Jul 29, 2025 at 11:29:17AM -0300, Jason Gunthorpe wrote:
+> > > On Tue, Jul 29, 2025 at 01:58:54PM +0530, Aneesh Kumar K.V wrote:
+> > > > Jason Gunthorpe <jgg@ziepe.ca> writes:
+> > > > 
+> > > > > On Mon, Jul 28, 2025 at 07:21:43PM +0530, Aneesh Kumar K.V (Arm) wrote:
+> > > > >> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+> > > > >
+> > > > > Why would we need this?
+> > > > >
+> > > > > I can sort of understand why Intel would need it due to their issues
+> > > > > with MCE, but ARM shouldn't care either way, should it?
+> > > > >
+> > > > > But also why is it an iommufd option? That doesn't seem right..
+> > > > >
+> > > > > Jason
+> > > > 
+> > > > This is based on our previous discussion https://lore.kernel.org/all/20250606120919.GH19710@nvidia.com
+> > > 
+> > > I suggested a global option, this is a per-device option, and that
+> > > especially seems wrong for iommufd. If it is per-device that is vfio,
+> > 
+> > I think this should be per-device.
+> 
+> IMHO there is no use case for that, it should arguably be global to
+> the whole kernel.
 
-Remove cpu_addr_fix() since it is no longer needed. The PCIe ranges
-property has been corrected in the DTS, and the DesignWare common code now
-handles address translation properly without requiring this workaround.
+I think there are 2 topics here:
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-v2:
-  No Update.
+1. Prevent VFIO mmap
+2. Prevent /sys/../resource, /dev/mem users
 
- drivers/pci/controller/dwc/pcie-visconti.c | 13 -------------
- 1 file changed, 13 deletions(-)
+I assume you are refering to the 2nd, then I agree.
 
-diff --git a/drivers/pci/controller/dwc/pcie-visconti.c b/drivers/pci/controller/dwc/pcie-visconti.c
-index 2a724ab587f78..d8765e57147af 100644
---- a/drivers/pci/controller/dwc/pcie-visconti.c
-+++ b/drivers/pci/controller/dwc/pcie-visconti.c
-@@ -171,20 +171,7 @@ static void visconti_pcie_stop_link(struct dw_pcie *pci)
- 	visconti_mpu_writel(pcie, val | MPU_MP_EN_DISABLE, PCIE_MPU_REG_MP_EN);
- }
- 
--/*
-- * In this SoC specification, the CPU bus outputs the offset value from
-- * 0x40000000 to the PCIe bus, so 0x40000000 is subtracted from the CPU
-- * bus address. This 0x40000000 is also based on io_base from DT.
-- */
--static u64 visconti_pcie_cpu_addr_fixup(struct dw_pcie *pci, u64 cpu_addr)
--{
--	struct dw_pcie_rp *pp = &pci->pp;
--
--	return cpu_addr & ~pp->io_base;
--}
--
- static const struct dw_pcie_ops dw_pcie_ops = {
--	.cpu_addr_fixup = visconti_pcie_cpu_addr_fixup,
- 	.link_up = visconti_pcie_link_up,
- 	.start_link = visconti_pcie_start_link,
- 	.stop_link = visconti_pcie_stop_link,
--- 
-2.49.0
+> 
+> > The original purpose of this pci_region_request_*() is to prevent
+> > further mmap/read/write against a vfio_cdev FD which would be used
+> 
+> No way, the VFIO internal mmap should be controled by VFIO not by
 
+I assume your point is never to use more than one request region in the
+same driver to achieve some mutual exclusion. I'm good to it. We could
+switch to some bound flag.
 
+> request region. If you want to block that it should be blocked by
+> iommufd telling VFIO that the device is bound which revokes the
+> mmaps/dmabufs/etc and prevents opening new ones.
+
+Agree.
+
+> 
+> The only thing request region should do is prevent /sys/../resource,
+> /dev/mem users and so on, which is why it can and should be
+> global. Arguably VFIO should always block those things but
+> historically hasn't..
+
+Agree. So seems no need a global option?
+
+Thanks,
+Yilun
+
+> 
+> There should only be one request region call in VFIO, it should
+> ideally happen when the VFIO driver probes the device.
+> 
+> Jason
 
