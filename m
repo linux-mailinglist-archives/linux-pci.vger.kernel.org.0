@@ -1,89 +1,118 @@
-Return-Path: <linux-pci+bounces-33414-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33415-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B554B1AD2E
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 06:40:29 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72776B1AD46
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 06:50:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C514A189C67B
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 04:40:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D3AC37AA809
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 04:49:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C480156C6F;
-	Tue,  5 Aug 2025 04:40:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78AC6217F34;
+	Tue,  5 Aug 2025 04:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b="aaKWUQIS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4El6S8+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-o95.zoho.com (sender4-pp-o95.zoho.com [136.143.188.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D30A927;
-	Tue,  5 Aug 2025 04:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.95
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754368823; cv=pass; b=sJ+Qp3mnJ19Fq3xpFO8Zw1G6fbEkm8i6YRTDFMYLiwt1hqMcN3pds7EwZxWkchm75fKzIsfVL9DNbCgbvVPkJYPffmrQmG6/I2f4b6fmiHKdJreSk3iw/leKZWxI5zblJ1p8HMl+WZbKYNbF6BfE1qyc/VXNYqp7CYJGD5+9t3o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754368823; c=relaxed/simple;
-	bh=vx4DftUwwXSdyzbwHUzTA5ckOdfuuDc8ELVLhPGqGxg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lmo9FJS6hTJqRD7HilrEXgiBNLoBKJlSI4QKXjBpUB6E61H7I+t7+t8XQlMnTFWO/tLU5MrZPFWISaWo1PgSdrSIbwdfjcPI0vlTszDEqBEDnU7cSfQ2S1zu1/tWm20Cz22F3PtRPCUh+QBCVtZ4RGtiYFXIl9zIBf3iVm4VVCU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b=aaKWUQIS; arc=pass smtp.client-ip=136.143.188.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-ARC-Seal: i=1; a=rsa-sha256; t=1754368802; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=hLL0XtTgNsR8WSE4fXNd1z2CdzJur7opUEr/SkPBUDDjlSulSvT94VODsNgGwIr2vUkgbfytas4n4P6BWlxZrKIN1TyYe/FZ5I/nfO1wvhXOL7bI4nTFQpOFY2GNwjQW+YMx2aaOqT8GweRrYdb3qVtBN4zJfYvb4SFz1C4IPC8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1754368802; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=vx4DftUwwXSdyzbwHUzTA5ckOdfuuDc8ELVLhPGqGxg=; 
-	b=UpvdkMFGqv+nhsXyiFujsJoqZCSbBgiheBx8kZTsfhLF6atD18y9Ml+LhjjwFk0VoiQl2y6Qes0sSVRnK1eRKp1GqQ13soGeDnzyQ22HjQ8u+A/Q5hth/ly4LAExzwQAfoLKokpt/x921EnVP24nyK9iRkKTNtxahDoHyemy6DQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
-	dmarc=pass header.from=<safinaskar@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1754368802;
-	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=vx4DftUwwXSdyzbwHUzTA5ckOdfuuDc8ELVLhPGqGxg=;
-	b=aaKWUQISpExcEcVMiW+kAhc7F6a1dWnwPT9BUxCJLsNRimeGL2AE1BNh2uO+Zgra
-	alSRc7jHjW1rAWNOoiQMSg9J7i0rhAgkY9V1YwCAX26KkNCFRNZhhX70QORFZ8OeSzM
-	j3dDY7xpi/35SQxegkFNWmmQskXGJcMYlr+FoAfc=
-Received: by mx.zohomail.com with SMTPS id 1754368798702522.0385252595497;
-	Mon, 4 Aug 2025 21:39:58 -0700 (PDT)
-From: Askar Safin <safinaskar@zohomail.com>
-To: jgg@nvidia.com
-Cc: alex.williamson@redhat.com,
-	baolu.lu@linux.intel.com,
-	bhelgaas@google.com,
-	galshalom@nvidia.com,
-	iommu@lists.linux.dev,
-	joro@8bytes.org,
-	jroedel@suse.de,
-	kevin.tian@intel.com,
-	kvm@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	maorg@nvidia.com,
-	patches@lists.linux.dev,
-	robin.murphy@arm.com,
-	tdave@nvidia.com,
-	tony.zhu@intel.com,
-	will@kernel.org
-Subject: Re: [PATCH v2 15/16] PCI: Check ACS DSP/USP redirect bits in pci_enable_pasid()
-Date: Tue,  5 Aug 2025 07:39:48 +0300
-Message-ID: <20250805043948.97938-1-safinaskar@zohomail.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <15-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
-References: <15-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463A721639B;
+	Tue,  5 Aug 2025 04:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754369438; cv=none; b=puEXYCZsR4zgM7Cm3M0q52jbXSkpZOn+FjQK1k2hoE7R/cqfHNzS4dxL7vceWM1t+0l0xSnq0JJ+fWnOwI/qKloxIa4/oSc2lT9d7dVqzbyML8q5C8rNGaCyh2uEUKReIC/WQXo0K/nps1uOx3lSfPggkZuF4EL5N3nUsTsMJiw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754369438; c=relaxed/simple;
+	bh=fVWNpB6uzPWSzmZr0uT2aPWOOivAck8Ett7wh/W2aVU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=AbWomXF+kHdzNAgdXOT4JlwqYIdgwq9m8ItiYCVtIeeqn7JM98QVt0CZoVAUgAbnNzzcXwJkOBwO5HaWklQk7s2mi8G6yqjqNGP+4ulX/vIpKWnUERBK3/2aj9NhoIUwyUzyA8mQy11FbnQ63Y7Yl+j6vl+EGA+zJwL45a2A00M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4El6S8+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BC47C4CEF4;
+	Tue,  5 Aug 2025 04:50:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754369437;
+	bh=fVWNpB6uzPWSzmZr0uT2aPWOOivAck8Ett7wh/W2aVU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=F4El6S8+IawdSAD8fksaTfbbKtGS+nE3I8MKiRTseeG1AB8uMLPCSOwknxK1ojb6L
+	 tuz+9TP0LScVsHNyhI/gmm5Z8PAcLdCbMxLsE62MGeaUaJ/XCqA+xXKBqIrtUMlGAT
+	 JUhT96eHUgSgdImjhUz+QGwj2gq+bEeMXpvn1gDFoaEO53OdfiwbvX5cyYHRwOzXj5
+	 RtALf24V53/Ylb26LE/blICqBGvmpptJBNrEH6lWckTpjGlQqIUfQTQN3RWhUlinAE
+	 BDRNtEE3xYA4DAy4qeJiNy7kEXmfqPEaYuc3lMyb8K+ES7dvnNZA+02dIOlUXhYwGM
+	 4nBnPfrzC21+w==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: dan.j.williams@intel.com, linux-coco@lists.linux.dev,
+	kvmarm@lists.linux.dev
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, aik@amd.com,
+	lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: [RFC PATCH v1 00/38] ARM CCA Device Assignment support
+In-Reply-To: <688c2155849a2_cff99100dd@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
+ <688c2155849a2_cff99100dd@dwillia2-xfh.jf.intel.com.notmuch>
+Date: Tue, 05 Aug 2025 10:20:30 +0530
+Message-ID: <yq5afre68j8p.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227836b5a84cbec9309bce67830000009930723b1a51d76665429b8f21e634aea6d8b917e42cdb7ee:zu080112276350d1e42093adc1218a592a000051016fedef33d9f8d9d25fa5d589293ff61c022154552f52f8:rf0801122cabce9c8de7e03eff3770245c0000d597922cdc6364a109d4e084b3f192b48cf8a9a71bfb944dc2bee1c2cc69:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain
 
-"interpretation" should be, not "interpritation"
+<dan.j.williams@intel.com> writes:
+
+> Aneesh Kumar K.V (Arm) wrote:
+>> This patch series implements support for Device Assignment in the ARM CCA
+>> architecture. The code changes are based on Alp12 specification published here
+>> [1].
+>> 
+>> The code builds on the TSM framework patches posted at [2]. We add extension to
+>> that framework so that TSM is now used in both the host and the guest.
+>> 
+>> A DA workflow can be summarized as below:
+>> 
+>> Host:
+>> step 1.
+>> echo ${DEVICE} > /sys/bus/pci/devices/${DEVICE}/driver/unbind
+>> echo vfio-pci > /sys/bus/pci/devices/${DEVICE}/driver_override
+>> echo ${DEVICE} > /sys/bus/pci/drivers_probe
+>> 
+>> step 2.
+>> echo 1 > /sys/bus/pci/devices/$DEVICE/tsm/connect
+>
+> Just for my own understanding... presumably there is no ordering
+> constraint for ARM CCA between step1 and step2, right? I.e. The connect
+> state is independent of the bind state.
+>
+> In the v4 PCI/TSM scheme the connect command is now:
+>
+> echo $tsm_dev > /sys/bus/pci/devices/$DEVICE/tsm/connect
+>
+>> Now in the guest we follow the below steps
+>
+> I assume a signifcant amount of kvmtool magic happens here to get the
+> TDI into a "bind capable" state, can you share that command?
+>
+
+lkvm run --realm -c 2 -m 256 -k /kselftest/Image  -p  "$KERNEL_PARAMS" -d ./rootfs-guest.ext2 --iommufd-vdevice --vfio-pci $DEVICE1 --vfio-pci $DEVICE2
+
+> I had been assuming that everyone was prototyping with QEMU. Not a
+> problem per se, but the memory management for shared device assignment /
+> bounce buffering has had a quite of bit of work on the QEMU side, so
+> just curious about the difference in approach here. Like, does kvmtool
+> support operating the device in shared mode with bounce buffering and
+> page conversion (shared <=> private) support? In any event, happy to see
+> mutiple simultaneous consumers of this new kernel infrastructure.
+>
+
+-aneesh
 
