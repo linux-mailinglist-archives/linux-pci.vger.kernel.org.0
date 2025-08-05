@@ -1,157 +1,154 @@
-Return-Path: <linux-pci+bounces-33427-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33428-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68C9AB1B5D5
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 16:08:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AD1BB1B656
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 16:25:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F5943A6A01
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 14:07:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0534A1890228
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 14:25:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1329B27AC3D;
-	Tue,  5 Aug 2025 14:03:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BCA72571D4;
+	Tue,  5 Aug 2025 14:25:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JRiKIZIe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BALySto9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B369427C150
-	for <linux-pci@vger.kernel.org>; Tue,  5 Aug 2025 14:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6093275B02;
+	Tue,  5 Aug 2025 14:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754402583; cv=none; b=A2ae0H7IjhOXhf2qq1ArwCKW9qgssM+1XEc0BlTfQH8zT4Dg6++lO/DZLOhh2n88GNw47UcVd+vpD2oJpJ5t5tNDHtzHYONV/jlLu0HWu9lcQpm0K/xapCez4y6px6TA3udUEcA82oJS/fI3vmV6iX9EPr6BUWzGNBhschRyU8g=
+	t=1754403919; cv=none; b=WmH8pmh1Lma7+eWOaill6X/L705zUEvOc3z2YwF/PP0kggsps+Y5fh/g9g43tx7KJKszYtCNbvt3h/bA91lp4a/vDk5QWURUwlNwzOr9DYjn+dfT+TB9R8eJXa3vq8iGFMiweriYWVHwRAvPTGtgcoDtkxseR4NNkBKpTbqZrC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754402583; c=relaxed/simple;
-	bh=rYqahp5dO50rvCcxhZagxi6ByuZ24UUdFYhoskFvjtE=;
+	s=arc-20240116; t=1754403919; c=relaxed/simple;
+	bh=Qlfe5AXKtXUS04DgaEuEvKiKFgMc3p0BJ8g2tTkzts4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AizU6I4UpEQCCCAHYIFtEwPXQE1w5970dg6/oFQXBFkCtnMPtc1z39EceyDWQ5yT7HMfc18/3QNsSkFJvZ2NKIM7LJ8TMqSf/VtauRU9uKDVWfq18SWy3FBurfG3aGqsl7rKtsj4Fho+twTtb6BXRP2hbk+nNZycz+0mPaNlH9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JRiKIZIe; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <666b06a8-fd9a-428b-a9dd-c2f09710aa14@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1754402568;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JeWkOlMpD/ZKftryfglYqZoj0Efx+cBsF10Eo0rrTYw=;
-	b=JRiKIZIedtkBWLyxLlW93RK2Nrz8xJ8otUXoMVIHRCEZzBxPWm7HYUuuzxoDPhArgpKtoM
-	EEVBtfMrSc2SzoUX6IRfeUnqikCFxexOOhqpeyvqDWRNWyZi7aQLZrVasgKgR9fBE24BOd
-	BZxnM9WNTq2/AQfFER4ugZOZ6y38iXU=
-Date: Tue, 5 Aug 2025 10:02:39 -0400
+	 In-Reply-To:Content-Type; b=irVorwcUXAZdTpdu3u3+1z9JblRCdEn4s2QV2x7FrCl4juMm5qImvmKL6++70xv2GuweG7TJfx21SHSFTR4prNhMfyxlQs0u+KbAzxgnpVhcJx5n+NapwrshHq8o0mLXBrcygdmaEOuki4hLeAdOmKubtCb8XtHWcWhQIXJCSWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BALySto9; arc=none smtp.client-ip=209.85.208.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-615c29fc31eso9022080a12.0;
+        Tue, 05 Aug 2025 07:25:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754403916; x=1755008716; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JwL5zRYEtiklaHm3SpHhcTGST02UpRtHf+IbVq5I8rg=;
+        b=BALySto9F5eR1LolU4g+aeILu5adBZofcIPTJ0Z25KKDd8KuKu/BQTJUWXKeFFtHOz
+         D/4uczgCQqPg7SdVStkVNQm+HPVO5RzjW8ImKzVpouilADDNaeK9ws496+ZBSkkWk6Vv
+         12+Fv8YbRuk0AWVKkVaJVUqDUYfz2SQ9R1U8QNKIrXzbm7vqzK/feD5vRVl6KgAkh0BR
+         2Pnm/qACe0I1jKltk347DIaheSWUS3gzbL3b2FocNNN6lzg955RYEyUAUrbGmok+7+LN
+         vQ9SxUa3iFXYJ+1MqBPnpyC76gISzySFeiW8GT7TlA0+od4hxvrjCaN06KK9fIiIa3zn
+         rbKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754403916; x=1755008716;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JwL5zRYEtiklaHm3SpHhcTGST02UpRtHf+IbVq5I8rg=;
+        b=EzJBmJ4X94K9eCI6dE5bkOskTIEf3AdVNPIsz+UznF6zFNdDkvhSVzBDuQz0wwVEik
+         LHY+cSa+LmwynrUEo+2Loxoisc9hBlOTeXxlZujj4LvNBrsYQ91h4p2d1TugK9ll87KE
+         ShocKhY/7RgUZL8l2TFqJLeQ0OlvckgQC6OVXKFnzsdHODE303ZDH9zXMEse+ADwFkJl
+         LfzP5Qi8KaXuK1jBK/cQ3aOSVJCYADbs708AqJKOk9GfNWX4ZPS+8uF2yuUW+ZZw/D38
+         moHkf6agbMK/r5c/8CgFXRemEwzBTU0rxVOtw3BPRo2BZ75dsNS6NK4smy2xuaAKdVfv
+         GK2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUTbTolMx8g8Y1WY0g+kNAFcv+6ecZmox78cSe9oD9rCEa5jrscYqRlyZuhwooDP/n6ybdGDBkFyVnzQNM=@vger.kernel.org, AJvYcCWmWDeQIYx5h3MtAvvR1Gifssce45IN9vJlOU4JnFIicfRJIpnTlOwCP2b62e2MklJ68+K6Ed84j9JK@vger.kernel.org
+X-Gm-Message-State: AOJu0YxH3xkikOlLyn/bNwOrUUHQ41WgGnRgX9l2Ie19QCgTIPDbWSy4
+	5vNMICiaG4pxl7RxcxQBzSvO8RmlqUUOvcSG0zXBlXHYznLuYMFrqmIk
+X-Gm-Gg: ASbGnct5TBVANgfsgKWrH0Mi+cHu0UteF2z3dB3zn7YevWfBT6kJ0UpPB47Z8PS+Zv9
+	OhB/alAXyqj5qY7+hr4D5/m601/NeyTzwr0pHMxyMGI7LcRK8F/fzcnsY82epdBPvFE1QsChRrD
+	Sq63GBGZ83v4MpvpdULo5pXA/b+rVyjW+jivP5jgxWVC9JGpboTM2+GYB7OBUc4UjVxiJoP2KSG
+	dEk98y5sQPqBoxO7QOlj1OU+JKcP3zhMFkhfDPxYqcg5zOHw6082gETr7pCBHJjekaFWLVorXoy
+	DWsGF13GAqghcFf0OKe6gxWgr3hA+JUVvhU2DxsnG/Qv5r2QEoa9j26LhYa6XLNB0pYkZ4d/A4v
+	tkqhWxXEibPCQkPYKNyiHOMSsJyLywAS5dWr5mMR7rM8HpCEJ0p91bnCvIwa+7n9tEHc/F26kEo
+	AjBjExdQZiN8tfvXkNfgEwzEqWDHY8Zg==
+X-Google-Smtp-Source: AGHT+IFMnbOmPOkh2KoJ9SKdrdwTiw7fxvxwn6Wm4g2NsRxJY1JwJTk04j1ewMhEnfw6wd2bNsxyuw==
+X-Received: by 2002:a05:6402:1ecb:b0:615:c5a9:4caf with SMTP id 4fb4d7f45d1cf-615e6eb68f1mr12187369a12.7.1754403915795;
+        Tue, 05 Aug 2025 07:25:15 -0700 (PDT)
+Received: from [26.26.26.1] (ec2-52-29-20-83.eu-central-1.compute.amazonaws.com. [52.29.20.83])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-615a8f000c3sm8599838a12.4.2025.08.05.07.25.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Aug 2025 07:25:15 -0700 (PDT)
+Message-ID: <1e332191-e1b0-49e9-afa9-09e76779f72f@gmail.com>
+Date: Tue, 5 Aug 2025 22:25:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [BUG] pci: nwl: Unhandled AER correctable error
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI/AER: Check for NULL aer_info before ratelimiting in
+ pci_print_aer()
+To: Breno Leitao <leitao@debian.org>,
  Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
  Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Michal Simek <michal.simek@amd.com>, Brian Norris
- <briannorris@chromium.org>, Minghuan Lian <minghuan.Lian@nxp.com>,
- Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
- Frank Li <Frank.Li@nxp.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250804205702.GA3640524@bhelgaas>
- <23d9f128-af95-41b1-a5b9-3c69d2df8ab8@linux.dev>
- <g4w5tcasa4ka24rqhgmbrmrua5a23dytgcbsqkuoyzekgmv43f@2wjltdepyizc>
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Jon Pan-Doh <pandoh@google.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com
+References: <20250804-aer_crash_2-v1-1-fd06562c18a4@debian.org>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <g4w5tcasa4ka24rqhgmbrmrua5a23dytgcbsqkuoyzekgmv43f@2wjltdepyizc>
-Content-Type: text/plain; charset=UTF-8
+From: Ethan Zhao <etzhao1900@gmail.com>
+In-Reply-To: <20250804-aer_crash_2-v1-1-fd06562c18a4@debian.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 8/5/25 06:42, Manivannan Sadhasivam wrote:
-> On Mon, Aug 04, 2025 at 06:10:48PM GMT, Sean Anderson wrote:
->> On 8/4/25 16:57, Bjorn Helgaas wrote:
->> > [+cc more folks who might be interested in AER with non-standard
->> > interrupts]
->> > 
->> > On Fri, Aug 01, 2025 at 01:43:19PM -0400, Sean Anderson wrote:
->> >> Hi,
->> >> 
->> >> AER correctable errors are pretty rare. I only saw one once before and
->> >> came up with commit 78457cae24cb ("PCI: xilinx-nwl: Rate-limit misc
->> >> interrupt messages") in response. I saw another today and,
->> >> unfortunately, clearing the correctable AER bit in MSGF_MISC_STATUS is
->> >> not sufficient to handle the IRQ. It gets immediately re-raised,
->> >> preventing the system from making any other progress. I suspect that it
->> >> needs to be cleared in PCI_ERR_ROOT_STATUS. But since the AER IRQ never
->> >> gets delivered to aer_irq, those registers never get tickled.
->> >> 
->> >> The underlying problem is that pcieport thinks that the IRQ is going to
->> >> be one of the MSIs or a legacy interrupt, but it's actually a native
->> >> interrupt:
->> >> 
->> >>            CPU0       CPU1       CPU2       CPU3       
->> >>  42:          0          0          0          0     GICv2 150 Level     nwl_pcie:misc
->> >>  45:          0          0          0          0  nwl_pcie:legacy   0 Level     PCIe PME, aerdrv
->> >>  46:         25          0          0          0  nwl_pcie:msi 524288 Edge      nvme0q0
->> >>  47:          0          0          0          0  nwl_pcie:msi 524289 Edge      nvme0q1
->> >>  48:          0          0          0          0  nwl_pcie:msi 524290 Edge      nvme0q2
->> >>  49:         46          0          0          0  nwl_pcie:msi 524291 Edge      nvme0q3
->> >>  50:          0          0          0          0  nwl_pcie:msi 524292 Edge      nvme0q4
->> >> 
->> >> In the above example, AER errors will trigger interrupt 42, not 45.
->> >> Actually, there are a bunch of different interrupts in MSGF_MISC_STATUS,
->> >> so maybe nwl_pcie_misc_handler should be an interrupt controller
->> >> instead? But even then pcie_port_enable_irq_vec() won't figure out the
->> >> correct IRQ. Any ideas on how to fix this?
->> >> 
->> >> Additionally, any tips on actually triggering AER/PME stuff in a
->> >> consistent way? Are there any off-the-shelf cards for sending weird PCIe
->> >> stuff over a link for testing? Right now all I have 
->> > 
->> > This is definitely a problem.  We have had some discussion about this
->> > in the past, but haven't quite achieved critical mass to solve this in
->> > a generic way.  Here are some links:
->> > 
->> >   https://lore.kernel.org/linux-pci/20250702223841.GA1905230@bhelgaas/t/#u
->> >   https://lore.kernel.org/linux-pci/1464242406-20203-1-git-send-email-po.liu@nxp.com/
->> 
->> Thanks for the links. Toggling PERST does seem to reliably cause
->> correctable errors (however "correctable" they may actually be in
->> practice). With the patch I posted on the other branch of this chain I
->> now get
->> 
->> [   43.041610] pcieport 0000:00:00.0: AER: Multiple Corrected error message received from 0000:00:00.0
->> [   43.050693] pcieport 0000:00:00.0: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
->> [   43.061477] pcieport 0000:00:00.0:   device [10ee:d011] error status/mask=00000001/0000e000
->> [   43.069842] pcieport 0000:00:00.0:    [ 0] RxErr                 
->> 
->> Whether or not that's the right fix, at least I can test things :)
+
+
+On 8/4/2025 5:17 PM, Breno Leitao wrote:
+> Similarly to pci_dev_aer_stats_incr(), pci_print_aer() may be called
+> when dev->aer_info is NULL. Add a NULL check before proceeding to avoid
+> calling aer_ratelimit() with a NULL aer_info pointer, returning 1, which
+> does not rate limit, given this is fatal.
 > 
-> Could you please check if INTX is working for AER? You can just pass the cmdline
-> parameter, "pcie_pme=nomsi" and observe if the IRQ is getting triggered.
-
-I don't really understand what you want me to check. As shown above, pme
-and aer are already assigned to INTA, not an MSI. This of course never
-gets triggered.
-
-Figure 30-5 in UG1085 [1] shows the interrupt architecture, and I think
-it's clear from that diagram that there's no pathway for root port
-errors to trigger an MSI or a legacy interrupt.
-
---Sean
-
-[1] https://docs.amd.com/api/khub/documents/xzMsp_c5sG9J6A3u7NkJYQ/content?Ft-Calling-App=ft%2Fturnkey-portal&Ft-Calling-App-Version=5.1.38#G32.381770
-
-> We have a desire to add platform IRQs for AER, but before doing that we need to
-> make sure that the platform doesn't support both MSI and INTx.
+> This prevents a kernel crash triggered by dereferencing a NULL pointer
+> in aer_ratelimit(), ensuring safer handling of PCI devices that lack
+> AER info. This change aligns pci_print_aer() with pci_dev_aer_stats_incr()
+> which already performs this NULL check.
 > 
-> - Mani
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Fixes: a57f2bfb4a5863 ("PCI/AER: Ratelimit correctable and non-fatal error logging")
+> ---
+>   drivers/pci/pcie/aer.c | 3 +++
+>   1 file changed, 3 insertions(+)
 > 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 70ac661883672..b5f96fde4dcda 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -786,6 +786,9 @@ static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
+>   
+>   static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
+>   {
+> +	if (!dev->aer_info)
+> +		return 1;
+> +
+>   	switch (severity) {
+>   	case AER_NONFATAL:
+>   		return __ratelimit(&dev->aer_info->nonfatal_ratelimit);
+> 
+> ---
+Seems you are using arm64 platform default config item
+arch/arm64/configs/defconfig:CONFIG_ACPI_APEI_PCIEAER=y
+So the issue wouldn't be triggered on X86_64 with default config.
+
+
+Thanks,
+Ethan
+
+> base-commit: 89748acdf226fd1a8775ff6fa2703f8412b286c8
+> change-id: 20250801-aer_crash_2-b21cc2ef0d00
+> 
+> Best regards,
+> --
+> Breno Leitao <leitao@debian.org>
+> 
+> 
+
 
