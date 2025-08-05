@@ -1,172 +1,174 @@
-Return-Path: <linux-pci+bounces-33423-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33424-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A6ADB1B3E7
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 15:00:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E30D3B1B48E
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 15:14:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95B7017D610
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 13:00:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7398A1640AE
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Aug 2025 13:14:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 787265D8F0;
-	Tue,  5 Aug 2025 13:00:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 574342749C1;
+	Tue,  5 Aug 2025 13:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b8gUxI89"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74ED17996;
-	Tue,  5 Aug 2025 13:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FD627467D;
+	Tue,  5 Aug 2025 13:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754398815; cv=none; b=L/RxXtQ35lQlYa54SPhqdjoigtVTRSSuMRxsjA7gr4U62QTtKlQVMscOCLciNffrryESLwz9zjvUZFu3OZmYgO/xcpVx1/RV/Wg2hhfu4JB4TMt9UOsRSXLOAE8Q++EnBvL2kh0j0DXORxYXCRMxkgAm8Fl7HrLwyvh/8vSwuLU=
+	t=1754399520; cv=none; b=HJGvnQptD6zzSBF4a08UL0PoTsoYx0dN+PqoELx+W34qsFDDlIaUx4CY3maXN80nStduqTfhNEc5HUKSnGwJb+yTaCWoBC8qQV8tKqp0Nrdeazry+7IU+p7Tw8A8Vam7SOspLd3gn4Vjd1LHq79O4XNFCPRjDTW4WW8O3oatAeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754398815; c=relaxed/simple;
-	bh=4t7dMcqzc7zDlbYdbuJAk8tlv9zQyDoso6MSnjmvM50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sdlaTrk9DCw8tUM8zrs/4/SRZHSOqbC/1EYW7j+BYZ1c66sUYMhx5DnMszoA6YaAqTDiHVJpo7UKGWZCNHCb9sKov/ioWXNB8BMr+YsPxP1EYqqHd7Cp0BJGuo52WI7nLUi4fZ1knxVjXikoD6HrAW7wekIn4Zq4HIEIsqwsIOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6154655c8aeso7587848a12.3;
-        Tue, 05 Aug 2025 06:00:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754398812; x=1755003612;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BzQHx1i5Fs/JOgRu+gEHkLfTlj9ZTI1ibV6XEx4O938=;
-        b=JUsTIk7LiRZfCbPteZKgD13Bx88wsb/6aaBGdpECOA11fFVTAEXvWFaa9mmEjwoqua
-         VUAS/r5FFWrqc9Cy4VdcFQ9xKe5yUIXNt56kqMMJjIzKQDY4J07fwIKalVtHPac/MKrX
-         +/fIlCzXoGdtnYSWRv9o2erF9YODUE3AOwQspOS5G15FTUZTHpYsVF3442oBT8YQ+KUS
-         f+WEcf3sU8c0AX21CVlZbfFs77tom7GTzB/szbTy/4Feg9wyvaDfvdt99zvsOvf+7bc7
-         D1FW+OV1Erg+p7hvUmblgBCT4OktQfnOA3TMlz9eRAiPYMuZlZVoYhSVYSJzFoB2MYP4
-         YrCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVCgcvL5VOmL+Lq0sXH3cv9fMgFIq0iamPy2BDLkJWWkl/o40zgMqn6phl91T2GQYHepwFnsYhysKhj@vger.kernel.org, AJvYcCW+hjNKoa+zChQB5GBQ28LG6lb45BULULlf7LCut3PQ1oXEswZCq0rcWkaJrz0CJG7VOAi2efM/QZ+n@vger.kernel.org, AJvYcCWf4neT7Wh71m/7ilqF/YwstPxXBtd4d1whDDsU18psOilGwVVRnByvix33RLIxxVx/3cjeGLHXl5+PKluK@vger.kernel.org, AJvYcCWsltZkemN8/vG86hEj3dkrcLQ3GIgsH8OxXv2R07HUpzOqAPU3JQiNJPGgBosAYBKkEuADEW4wHJiQUA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTrM1KFLXiUP3OfLYQ7l0yI5FobOeJ2tvJ8fgYDTstkRFzKDnO
-	IxJI2nlm5fVgDVoWOT+11zqZuJn6KywZWYKwdn6mXFjcW/z2GBMT03Mi
-X-Gm-Gg: ASbGncuWcljrjn0P6YdrsguMVELhzOOFKQ5JRVzdFHtdpC+AD8JBbQNqJ5bTm0MxOZT
-	LNZ2QeU17bItx9aTnnudgenXUlr9tJKdeI/696omhLcNkpawLkNjnXrGOOl24TbZPCBNEVXw08P
-	1DRSxuax5qDs33wraQtbacaGimm88YKXTGmnrl/Ru+DgS0BQFPu9IWqH7uW66u9ydNfqht17nnb
-	R0GKRrRenACyMJqLYSQLPkLrEfLhDbiAVQpb2A4G1YzvY434CJ3Ar9F/an1RqgwC9pYOp4S1j6N
-	UvTvQO7Xg7Hkd4J1K/wFrb9c39GU3eHo73BVEqq9zzLyASWm0n46Sg9RHEuXELdFDuIzYme0feN
-	lMUFupVtnKmnS
-X-Google-Smtp-Source: AGHT+IGjZSNpW7mJUj3kJ0f8IpMzBnPj+YUjP2KOPDwITdV1e7i/FDQIvzJwDgp/H8IFr3t8Mztalg==
-X-Received: by 2002:a05:6402:4402:b0:615:b0e2:124b with SMTP id 4fb4d7f45d1cf-615e715bd27mr13276935a12.24.1754398811018;
-        Tue, 05 Aug 2025 06:00:11 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:8::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-615a8f2a448sm8429117a12.20.2025.08.05.06.00.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Aug 2025 06:00:10 -0700 (PDT)
-Date: Tue, 5 Aug 2025 06:00:07 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
-	Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev, osandov@osandov.com, 
-	xueshuai@linux.alibaba.com, konrad.wilk@oracle.com, linux-edac@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, kernel-team@meta.com, osandov@fb.com
-Subject: Re: [PATCH v4] vmcoreinfo: Track and log recoverable hardware errors
-Message-ID: <j4ac55vpiemdjdbfzoktoqv763fhpv6q2agmgaeggvahfj5kuy@v7l5lrrdwkjj>
-References: <20250801-vmcore_hw_error-v4-1-fa1fe65edb83@debian.org>
- <85663f65-d746-4e2c-b8a6-d594d9d0ba42@intel.com>
- <f3yl424iqiyctgz4j36hzjrhkgae3a2h5smhalm2qbmq3nrpzd@oeuprthscfez>
- <0c045f1b-44d0-430c-9e8a-58b65dd84453@intel.com>
- <buhwuankenpnvmio6jeoxverixoyfpn2eh62ix7vzxw7xvlxcv@rpibcrufr2yg>
- <842d675e-4c22-4f13-b40b-c4b5208e4223@intel.com>
- <ipdhflmgqrlq2vor657fiwex66jqw2do747uvu3tvrcsvtvdjj@lg5zrcua2dgn>
- <529fbbc1-90fe-467b-9bd2-d1a18bb38670@intel.com>
+	s=arc-20240116; t=1754399520; c=relaxed/simple;
+	bh=G30icMWKligdm4rxiwBEu77y6DCF8r1SkJgxI7mqJcY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LOwCuyc1DRY3dppPmRayRySSF+co3g8khkrw8Pg3Tl6YeETukZO7D+eOcIhGjE3S2Pxzp+QV/55j69EMkGwj9vk4dIHWu4CLQAnK/YLNf1+HtGAAgOPE/gEC/JHCqgS+zdcMHke6zEpA1TvqyYsZj+LqnOTzvUnI2XwasehY1Gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b8gUxI89; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52499C4CEF0;
+	Tue,  5 Aug 2025 13:11:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754399520;
+	bh=G30icMWKligdm4rxiwBEu77y6DCF8r1SkJgxI7mqJcY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=b8gUxI89iTZY585tV6CRrJinpRw/RwYN10j4A/GyfrEZYY/wb6xBTcCokTWVMjhnd
+	 w9UCTKcACkEGjhSJBlLH1AsWvHk5wpv3LSXRb+dmumzD2l1akLDRdrOj0yOiVV/UG1
+	 QjEAk8629TADCwRiiU2jcbJKX7ajlLgfaUjw5X4XTyjxNAs4lxfOkJC4oSVgBY4Njr
+	 b9ud7AWKasjWLQmhTjAnuMMPXbWGrptrXvBJKIyXtaQfhciIqs1qKMZz6jZpM2oWhk
+	 p2uGVDgnXqQjRLuOs2o5Ici23hENbL2Hk8H39KnYZtYVcPhD4C71+NpgGojeL3dqLU
+	 YFWHHZFBqKKag==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Marc Zyngier <maz@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Sasha Levin <sashal@kernel.org>,
+	toan@os.amperecomputing.com,
+	kwilczynski@kernel.org,
+	mani@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.16-6.6] PCI: xgene-msi: Resend an MSI racing with itself on a different CPU
+Date: Tue,  5 Aug 2025 09:09:34 -0400
+Message-Id: <20250805130945.471732-59-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250805130945.471732-1-sashal@kernel.org>
+References: <20250805130945.471732-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <529fbbc1-90fe-467b-9bd2-d1a18bb38670@intel.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.16
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 04, 2025 at 10:41:05AM -0700, Dave Hansen wrote:
-> On 8/4/25 10:12, Breno Leitao wrote:
-> ...
-> > +- These errros are divided by are, which includes CPU, Memory, PCI, CXL and
-> > +  others.
-> 
-> There's a double typo in there I think:
-> 
-> 	errros => errors
-> and
-> 	are,=>area,
-> 
-> > --- a/include/linux/vmcore_info.h
-> > +++ b/include/linux/vmcore_info.h
-> > @@ -77,4 +77,20 @@ extern u32 *vmcoreinfo_note;
-> >  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
-> >  			  void *data, size_t data_len);
-> >  void final_note(Elf_Word *buf);
-> > +
-> > +enum hwerr_error_type {
-> > +	HWERR_RECOV_CPU,
-> > +	HWERR_RECOV_MEMORY,
-> > +	HWERR_RECOV_PCI,
-> > +	HWERR_RECOV_CXL,
-> > +	HWERR_RECOV_OTHERS,
-> > +	HWERR_RECOV_MAX,
-> > +};
-> That enum needs to go into an abi header.
+From: Marc Zyngier <maz@kernel.org>
 
-Agree. I came up with something like the change below. Is it the right
-thing to mark the enum as stable ABI?
+[ Upstream commit 3cc8f625e4c6a0e9f936da6b94166e62e387fe1d ]
 
-Thanks
---breno
+Since changing the affinity of an MSI really is about changing
+the target address and that it isn't possible to mask an individual
+MSI, it is completely possible for an interrupt to race with itself,
+usually resulting in a lost interrupt.
 
-diff --git a/include/linux/vmcore_info.h b/include/linux/vmcore_info.h
-index 37e003ae52626..e71518caacdfc 100644
---- a/include/linux/vmcore_info.h
-+++ b/include/linux/vmcore_info.h
-@@ -5,6 +5,7 @@
- #include <linux/linkage.h>
- #include <linux/elfcore.h>
- #include <linux/elf.h>
-+#include <uapi/linux/vmcore.h>
+Paper over the design blunder by informing the core code of this
+sad state of affairs.
 
- #define CRASH_CORE_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
- #define CRASH_CORE_NOTE_NAME_BYTES ALIGN(sizeof(NN_PRSTATUS), 4)
-@@ -77,4 +78,11 @@ extern u32 *vmcoreinfo_note;
- Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
-                          void *data, size_t data_len);
- void final_note(Elf_Word *buf);
-+
-+#ifdef CONFIG_VMCORE_INFO
-+void hwerr_log_error_type(enum hwerr_error_type src);
-+#else
-+static inline void hwerr_log_error_type(enum hwerr_error_type src) {};
-+#endif
-+
- #endif /* LINUX_VMCORE_INFO_H */
-diff --git a/include/uapi/linux/vmcore.h b/include/uapi/linux/vmcore.h
-index 3e9da91866ffd..2ba89fafa518a 100644
---- a/include/uapi/linux/vmcore.h
-+++ b/include/uapi/linux/vmcore.h
-@@ -15,4 +15,13 @@ struct vmcoredd_header {
-        __u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
- };
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Link: https://lore.kernel.org/r/20250708173404.1278635-11-maz@kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
 
-+enum hwerr_error_type {
-+       HWERR_RECOV_CPU,
-+       HWERR_RECOV_MEMORY,
-+       HWERR_RECOV_PCI,
-+       HWERR_RECOV_CXL,
-+       HWERR_RECOV_OTHERS,
-+       HWERR_RECOV_MAX,
-+};
-+
- #endif /* _UAPI_VMCORE_H */
+LLM Generated explanations, may be completely bogus:
+
+**Backport Status: YES**
+
+This commit should be backported to stable kernel trees. Here's my
+detailed analysis:
+
+## Key Evidence for Backporting:
+
+1. **Fixes a Real Bug - Lost Interrupts**: The commit addresses a race
+   condition where MSI interrupts can be lost when CPU affinity changes
+   occur. The commit message explicitly states this results in "a lost
+   interrupt" which is a serious issue that can cause system malfunction
+   or hangs.
+
+2. **Minimal and Contained Change**: The fix consists of a single line
+   addition:
+  ```c
+  irqd_set_resend_when_in_progress(irq_get_irq_data(virq));
+  ```
+  This is an extremely small, targeted fix that only affects the xgene-
+  msi driver's interrupt allocation path.
+
+3. **Part of a Broader Fix Pattern**: This commit follows the same
+   pattern established for other interrupt controllers:
+   - Commit 9c15eeb5362c4 introduced this mechanism for fasteoi handlers
+     in 2023
+   - Commit 2c9e7f857400 extended it to handle_simple_irq() flow
+   - This commit applies the same proven workaround to the xgene-msi
+     driver
+
+4. **Addresses Hardware Design Limitation**: The commit message
+   describes this as papering over a "design blunder" - the hardware
+   inability to mask individual MSIs combined with affinity changes
+   creates an unavoidable race condition. This is not a new feature but
+   a critical workaround for existing hardware defects.
+
+5. **History of Race Conditions in This Driver**: The xgene-msi driver
+   has had race condition issues before (commit a93c00e5f975 fixed a
+   different race in 2021), indicating this subsystem needs these types
+   of fixes for stability.
+
+6. **No Architecture Changes**: The fix uses existing kernel
+   infrastructure (irqd_set_resend_when_in_progress) without introducing
+   new APIs or changing kernel architecture.
+
+7. **Low Risk of Regression**: The change only affects the specific
+   xgene-msi driver and only adds a resend mechanism when interrupts are
+   already in progress - it doesn't change the normal interrupt handling
+   path.
+
+## Stable Tree Criteria Met:
+- ✅ Fixes a real bug (lost interrupts)
+- ✅ Small change (1 line)
+- ✅ Not a new feature
+- ✅ Isolated to specific driver
+- ✅ Uses established kernel mechanisms
+- ✅ Addresses hardware limitation that affects deployed systems
+
+The fix prevents interrupt loss during CPU affinity changes on X-Gene
+MSI controllers, which is exactly the type of bug fix that stable
+kernels should receive to maintain system reliability.
+
+ drivers/pci/controller/pci-xgene-msi.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/controller/pci-xgene-msi.c b/drivers/pci/controller/pci-xgene-msi.c
+index b05ec8b0bb93..50647fa14e69 100644
+--- a/drivers/pci/controller/pci-xgene-msi.c
++++ b/drivers/pci/controller/pci-xgene-msi.c
+@@ -200,6 +200,7 @@ static int xgene_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 	irq_domain_set_info(domain, virq, msi_irq,
+ 			    &xgene_msi_bottom_irq_chip, domain->host_data,
+ 			    handle_simple_irq, NULL, NULL);
++	irqd_set_resend_when_in_progress(irq_get_irq_data(virq));
+ 
+ 	return 0;
+ }
+-- 
+2.39.5
+
 
