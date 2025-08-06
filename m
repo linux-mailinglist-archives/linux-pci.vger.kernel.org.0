@@ -1,53 +1,56 @@
-Return-Path: <linux-pci+bounces-33486-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33487-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD70AB1CE58
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Aug 2025 23:23:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AD3AB1CE7E
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Aug 2025 23:34:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D0A267B1607
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Aug 2025 21:21:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 112563A4E68
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Aug 2025 21:34:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A06CB22256F;
-	Wed,  6 Aug 2025 21:23:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF4FD22A1E1;
+	Wed,  6 Aug 2025 21:34:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CDk+AGbK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQ9MkMaD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75219219300;
-	Wed,  6 Aug 2025 21:23:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CEA21C161;
+	Wed,  6 Aug 2025 21:34:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754515395; cv=none; b=tqcxK9HmJl1sye/CullEH6TlF1PYfSfAWVpdWom3HNsW2eBzd4zVaFnFSkgp4yoQypSnE1npllOYcfp7W7k5hlsuvsGHtnwJPdxNbMkT/fkffwIUgz5fyj5nb72ptX7fToHMqZaKVyhj/ripDT4iS/Ezc5lGrNzDCivLKy5NR3g=
+	t=1754516051; cv=none; b=RJPBeV2lEJ8+Wjk3axCpWh2NIZvvdGnziCMwPH9bkxpeYpnY3IfGsVxlHUV45vzkoWMAvgdAs5yHuWMQe5VDihHYtI66iqfpj0/5/oeAaiOVNNreVkkX7yUQ/Eh4cAFPGer87WdkYYJvnC7O/iX5zz38hTeym+8sWEI3bppUI50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754515395; c=relaxed/simple;
-	bh=WvNM36LLpqAXnbl/wdmEMZifs8nyq0/j+UYBi/yIlgs=;
+	s=arc-20240116; t=1754516051; c=relaxed/simple;
+	bh=uss7K+d/97COqJCqwYC+U7xTzgza8CHg+t+2/FaXkcA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rT7uL6iiXjVMqvQrd7irFuK8I8EHWtjagj4/vRP2k3VQhZ+8F772Gjggd7zTcIicsZ/MAzB5klXx3vF9jiPkRJw5udzE2caLdGWgH/py/fojg63VyA5yziQVQpkYSS0og5KoXWWViz4KzIktBHIbp9Ce/qYhGo/VTsLcULXYvoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CDk+AGbK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D71D8C4CEE7;
-	Wed,  6 Aug 2025 21:23:13 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=uv0d8aBwScJ0YFmxD9GIWkd0YX+ugSUKdGnIV5ybUcUWmWAEjb30KRl2GtK+QlefU5IXyvJ+LOiryTIkAQ0OqFKL7yy74b4D/dSL9TOcjFEjQ7R/9cm0DP54pkImObX8gHT/rQEzJUwOQ6UtJk4C/lVc3ksFefi8ioCsAhtBKTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQ9MkMaD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 204C1C4CEE7;
+	Wed,  6 Aug 2025 21:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754515394;
-	bh=WvNM36LLpqAXnbl/wdmEMZifs8nyq0/j+UYBi/yIlgs=;
+	s=k20201202; t=1754516051;
+	bh=uss7K+d/97COqJCqwYC+U7xTzgza8CHg+t+2/FaXkcA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=CDk+AGbKnZ0zUSLo2BQ/QF7bkKyXufZl1i8fDdqO06ZkN4aLTfEgkx+8vbQyqxSl6
-	 J1uSa7gmRTiuOAbqTVDtfWFzK7Re8M8bOmcBqr+WUohnf0FWM1sXsKfaAcaJykqj/v
-	 wHHkQr6lLxyIImcdgNSsQ6IAYVPJC6ja5xIOH2htdE6+b5Ca/aFmzuwW0ouOMtH6my
-	 9sSZyyycrN7gRgF2X/Von4E6/z5K/+K9QBTisFzNhwPCXVwziU2sdw3rxS6fpXFXlq
-	 Ww438BAtKjWIUeYO8FbmkhxKFGccdhK6TGhzGOidLrixS3HSlPHAbI9mZ0jAEfblFj
-	 EeoI/2Mi9763g==
-Date: Wed, 6 Aug 2025 16:23:12 -0500
+	b=ZQ9MkMaD3SurYVE4C5TtQbg4XczpUtqzDiZCKx2fOAxAuGN6h39Ba6k01BXs8TAf6
+	 hfCuGENc785dHl4kpstCCDyBQO5B4hLWhuX1AeezldWB7nnpH0D3RbFkcSUu/ciBsa
+	 R9VSmSzXva+V96bUxE7w8I2DjXuxhgkzUmdRo3ldKqGoSU8btjNg2JLpP3OhNHR1fS
+	 G4AE3uyUVGFwC4AaqaDPEnOWhsU3NQ3v3oYSLQXtKBsizRdqh8CGRm8yi1W1VmR6fu
+	 K7WhBDt2Cak+qNgkKuMp51b0nmuvgNg2jVQEGMV+lZpopYwYEfF7nuc8WegH5aTjOU
+	 oH4y7nogCjopA==
+Date: Wed, 6 Aug 2025 16:34:09 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Marcos Del Sol Vives <marcos@orca.pet>
-Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] pci: disable MSI on RDC PCI to PCI-E bridges
-Message-ID: <20250806212312.GA18466@bhelgaas>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Hongbo Yao <andy.xu@hj-micro.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	bhelgaas@google.com, mahesh@linux.ibm.com, oohall@gmail.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jemma.zhang@hj-micro.com, peter.du@hj-micro.com
+Subject: Re: [PATCH] PCI/DPC: Extend DPC recovery timeout
+Message-ID: <20250806213409.GA19037@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,37 +59,65 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250705233209.721507-1-marcos@orca.pet>
+In-Reply-To: <aHCPTU03s-SkAsPs@wunner.de>
 
-On Sun, Jul 06, 2025 at 01:32:08AM +0200, Marcos Del Sol Vives wrote:
-> These bridges, present on Vortex86DX3 and Vortex86EX2 SoCs, do not
-> support MSIs. If enabled, interrupts generated by PCI-E devices never
-> reach the processor.
+On Fri, Jul 11, 2025 at 06:13:01AM +0200, Lukas Wunner wrote:
+> On Fri, Jul 11, 2025 at 11:20:15AM +0800, Hongbo Yao wrote:
+> > 2025/7/8 1:04, Sathyanarayanan Kuppuswamy:
+> > > On 7/7/25 3:30 AM, Andy Xu wrote:
+> > > > Setting timeout to 7s covers both devices with safety margin.
+> > > 
+> > > Instead of updating the recovery time, can you check why your device
+> > > recovery takes
+> > > such a long time and how to fix it from the device end?
+> > 
+> > I fully agree that ideally the root cause should be addressed on the
+> > device side to reduce the DPC recovery latency, and that waiting longer
+> > in the kernel is not a perfect solution.
+> > 
+> > However, the current 4 seconds timeout in pci_dpc_recovered() is indeed
+> > an empirical value rather than a hard requirement from the PCIe
+> > specification. In real-world scenarios, like with Mellanox ConnectX-5/7
+> > adapters, we've observed that full DPC recovery can take more than 5-6
+> > seconds, which leads to premature hotplug processing and device removal.
 > 
-> I have contacted the manufacturer (DM&P) and they confirmed that PCI MSIs
-> need to be disabled for them.
-> 
-> Signed-off-by: Marcos Del Sol Vives <marcos@orca.pet>
+> I think Sathya's point was:  Have you made an effort to talk to the
+> vendor and ask them to root-cause and fix the issue e.g. with a firmware
+> update.
 
-Applied to pci/msi for v6.18, thanks!
+Would definitely be great, but unless we have a number in the spec to
+point to, they might just shrug and ask what the requirement is.
 
-> ---
->  drivers/pci/quirks.c | 1 +
->  1 file changed, 1 insertion(+)
+> > To improve robustness and maintain flexibility, I???m considering
+> > introducing a module parameter to allow tuning the DPC recovery timeout
+> > dynamically. Would you like me to prepare and submit such a patch for
+> > review?
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index d7f4ee634263..f610ea45ca9e 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -2715,6 +2715,7 @@ static void quirk_disable_msi(struct pci_dev *dev)
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_8131_BRIDGE, quirk_disable_msi);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_VIA, 0xa238, quirk_disable_msi);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x5a3f, quirk_disable_msi);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_RDC, 0x1031, quirk_disable_msi);
->  
->  /*
->   * The APC bridge device in AMD 780 family northbridges has some random
-> -- 
-> 2.34.1
+> We try to avoid adding new module parameters.  Things should just work
+> out of the box without the user having to adjust the kernel command
+> line for their system.
 > 
+> So the solution is indeed to either adjust the delay for everyone
+> (as you've done) or introduce an unsigned int to struct pci_dev
+> which can be assigned the delay after reset for the device to be
+> responsive.
+> 
+> For comparison, we're allowing up to 60 sec for devices to become
+> available after a Fundamental Reset or Conventional Reset
+> (PCIE_RESET_READY_POLL_MS).  That's how long we're waiting in
+> dpc_reset_link() -> pci_bridge_wait_for_secondary_bus() and
+> we're not consistent with that when we wait only 4 sec in
+> pci_dpc_recovered().
+> 
+> I think the reason is that we weren't really sure whether this approach
+> to synchronize hotplug with DPC works well and how to choose delays.
+> But we've had this for a few years now and it seems to have worked nicely
+> for people.  I think this is the first report where it's not been
+> working out of the box.
+
+Why would we wait less than PCIE_RESET_READY_POLL_MS?  DPC disables
+the link, so that's basically a reset for the device.  Seems like we
+should allow as much time as we do for any other kind of reset.
+
+Bjorn
 
