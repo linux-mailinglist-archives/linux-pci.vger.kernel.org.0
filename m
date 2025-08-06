@@ -1,165 +1,366 @@
-Return-Path: <linux-pci+bounces-33493-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33494-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87AC7B1CEFD
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 00:07:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 18342B1CF07
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 00:25:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BBA6917A042
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Aug 2025 22:07:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E3DC566E04
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Aug 2025 22:25:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E43D23505F;
-	Wed,  6 Aug 2025 22:06:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA98F2343CF;
+	Wed,  6 Aug 2025 22:25:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWGQg/wR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bh9a1F/Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D32233D9C;
-	Wed,  6 Aug 2025 22:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFEB21CC68
+	for <linux-pci@vger.kernel.org>; Wed,  6 Aug 2025 22:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754518017; cv=none; b=YgRrK2TJw6QerOFKwIENpnl7RD88W4i2gfc1iKjW7rHFcoRUZhtrtilciLQZei65CR2vEf0yZ/tyqU68l1pZ5/J6uaDI19PxU0t+7Xzd0ek7MFqybDIeitDLDJwXeH2tC9uA67Z1V8ib74ZlGZAtd62bLSxXrSvwfphgOn/Qm+4=
+	t=1754519105; cv=none; b=PRrkLOs3xAzAxBNZ8t5iii/CuolhH0RW9a8Gy8D2xntEvjuBf/1tDYKuBmwop+qqnQM5U0K5nIQKcclRifb7WCa2F94QhN5v4dm4hl/TjNuF9Jh/Wec2dlV19tJ5xtRBwltnjKuagiqUgwd2pZKWziBNnRAGGKAX1hnqQf3tpaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754518017; c=relaxed/simple;
-	bh=W5KDX1Oo+lZSX0tbOFKjtk+FjaBNv9Ve/X9SznlVBBU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=DiozhFH5rcxvmGYI/2LU/vg/jKza7gR6QxDpCG8o/AdmcHMdKRn07Ol6khf7yXJRibAmdWtwvnS27O2RoKQ/6BLadsdOZeBeDKZQQB0pZ7atFdmUld+cg2/+br9OrsyDtkvvrN0aqtNhK1IrhP6+/RHcwoLI0lRIQhkEJEqd2Zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWGQg/wR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A80E5C4CEE7;
-	Wed,  6 Aug 2025 22:06:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754518014;
-	bh=W5KDX1Oo+lZSX0tbOFKjtk+FjaBNv9Ve/X9SznlVBBU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fWGQg/wRiMFXJBoaCDiw2bEI6tPeGVH4K/WgBmVH6Gyz07KICeFO95Pwuxid2uO2m
-	 uzvybAuw9CB/waZUM42423hArIR2wbjWKdRmMPJ4jAQt4bYmGljl1/0CYuebizzaPR
-	 z1wTYm51FKbj/Tdv4gX9whVVTaCuRoYnHxAhvDHXkvUMwO7enbcAPGFiga+vWrI+50
-	 rFl2rvyk5ydK8lGDZRtuSQzxTEElfrPSNolj7qhucLVaR7TQSfRXSeoGDtEeE4LaDa
-	 7GRM+nqDePC3a+kbAhyMoxsfnfHDWBEZb4QdlthJN+qT1q+MHZU3ipX6JD/Tbl1nTr
-	 PA3xWDHuoNb5Q==
-Date: Wed, 6 Aug 2025 17:06:53 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: grwhyte@linux.microsoft.com
-Cc: linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com,
-	code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com,
-	linux-kernel@vger.kernel.org,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v3 1/2] PCI: Add flr_delay parameter to pci_dev struct
-Message-ID: <20250806220653.GA20136@bhelgaas>
+	s=arc-20240116; t=1754519105; c=relaxed/simple;
+	bh=E8mVSJu/tMPT+RCSYBB/JKwAzVd4GM2qVRUojQoI5Yk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AsWbx3Bt/SnjkDMEu9gx/iWgenb4tNlNfylL0ukwOU0Kk8u9L5wiB9irygb/4lE1I6QETSqTbo/dQAoVzqsK95KV37TX9r6Q0vDB2HLtyX9xATNdo8VTFgraVjhiMT80awbclSx8M/HbZWw3pbR0qZJXjtf0JH1RuM3SC4cPrMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bh9a1F/Q; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754519102;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2KWudinkIbXD4F4ulzK9/+oUi2avXDJW6sBf89lUWmU=;
+	b=bh9a1F/QQZqimR8naHWs7xCUacLE+AxSbAHAEijZVyyquS0D9T2eFJ0G0hp0DDa1n9qNXp
+	YJmz395QE9CrfZJ8Mqk+Fh/sa7Coqbv4/P3Mmrk2l3YyYXIOgIEN9dros7cP28LKQGa+eL
+	HAC4VmznYjuYblq7jM72edaJ8bmTtvk=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-623-kJJ9nSReP2SnBlzCnpte0Q-1; Wed, 06 Aug 2025 18:25:01 -0400
+X-MC-Unique: kJJ9nSReP2SnBlzCnpte0Q-1
+X-Mimecast-MFC-AGG-ID: kJJ9nSReP2SnBlzCnpte0Q_1754519101
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3e410d87802so630525ab.0
+        for <linux-pci@vger.kernel.org>; Wed, 06 Aug 2025 15:25:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754519100; x=1755123900;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2KWudinkIbXD4F4ulzK9/+oUi2avXDJW6sBf89lUWmU=;
+        b=oTp1Oi4OQwPML1kIeW/GwX3S7jQBhQ/TFtZkE8b/7GYsK2Jj+5FoSPw/IUSH2nxnCx
+         1GVWNQB0uvVqXek0IT7FbePvF8ejvl8P1+IF0dqCNWQ8LUy+RNnyAIObwnnFOKTEKKjF
+         qB42JCTTf6WJqkxwit30ZqffAcFRRQ/LMb7o49dnwfmefXO84ny0NgetYch5Z7Cc3twF
+         a+jp0plyI05vRJCKQWVLcuRmMU5PKQuBttHdb8wFSaHVCnU3O10vjnNax7nWviF0j+q2
+         BIbE5/fTfzvuvRhioJYNQQCrdJLxCcSxZ41tBinBFNFswcka0UkGHzJb1031DXXggI3A
+         tauA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWYqKmnQZcH7joo1l4bb7ROWFUIzqzvgrIIGx9rMd1YVl1MVfYGfw1I4YBjtN3ArtSVqZcSEGIbpA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBWR3enzPybjtumcsKhdDs2KAGGN324Q79TjLKQX24X0ja3Qkw
+	lTkKO0aaT1phN1gM4yV+G2Q4vnjnicHK5aBOwXOvfVT5gMrUmm/TewoD2x+TYzjDqnXqWbQSpJS
+	DwEze5CvDTj9X+xjyS33VLxhKs4kIzXtv1C3tta2jKuj8im4+qIHlBzAuI/G6Uw==
+X-Gm-Gg: ASbGncu8F4tr8wNtNwvVMlzMygPWk6A+ipsD5eE8Y20ZvojhpZN8W/BnsDbeBovXClW
+	4lQDkKGixFrdYJ6GO+zaxuoTXJCYe9GAwfumTZes28Q1pZwGg4LW1iu5iqq6l1BR3C6wfDTJmE0
+	qmwU/bS4Ep5vz6Jk38TWLUudJfLrwOU64wOheesFzIz8B+vsOOrXDy33lOr2utOHKZln7GZbETe
+	S3W87xhhcMfB0ajD0glwICsZ11hGcmh9Z2flrUJ5FEfZwotHSOD96E2Xt5qWfG+KD8Gwc2+xNgz
+	N9InkDQA2nUS76cCLucKgeGqv6VBUzFFT1nUzDkER4A=
+X-Received: by 2002:a05:6602:148a:b0:85d:9793:e0d8 with SMTP id ca18e2360f4ac-8819eddca30mr265751339f.0.1754519100569;
+        Wed, 06 Aug 2025 15:25:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGJbvSuwj5vna+ENO4HZHTFh+EQIF6Bqd2408Pfz1T06ISMEQUJO+65aGvhO/KGJJ7KSEu0KQ==
+X-Received: by 2002:a05:6602:148a:b0:85d:9793:e0d8 with SMTP id ca18e2360f4ac-8819eddca30mr265749739f.0.1754519100087;
+        Wed, 06 Aug 2025 15:25:00 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-88175b2e0c6sm314280239f.31.2025.08.06.15.24.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Aug 2025 15:24:59 -0700 (PDT)
+Date: Wed, 6 Aug 2025 16:24:55 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Leon Romanovsky <leonro@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, Christoph Hellwig <hch@lst.de>,
+ dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, Jens Axboe
+ <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-mm@kvack.org, linux-pci@vger.kernel.org, Logan Gunthorpe
+ <logang@deltatee.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Robin
+ Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v1 10/10] vfio/pci: Add dma-buf export support for MMIO
+ regions
+Message-ID: <20250806162455.350f73a4.alex.williamson@redhat.com>
+In-Reply-To: <5e043d8b95627441db6156e7f15e6e1658e9d537.1754311439.git.leon@kernel.org>
+References: <cover.1754311439.git.leon@kernel.org>
+	<5e043d8b95627441db6156e7f15e6e1658e9d537.1754311439.git.leon@kernel.org>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611000552.1989795-2-grwhyte@linux.microsoft.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 11, 2025 at 12:05:51AM +0000, grwhyte@linux.microsoft.com wrote:
-> From: Graham Whyte <grwhyte@linux.microsoft.com>
+On Mon,  4 Aug 2025 16:00:45 +0300
+Leon Romanovsky <leon@kernel.org> wrote:
+
+> From: Leon Romanovsky <leonro@nvidia.com>
 > 
-> Add a new flr_delay member of the pci_dev struct to allow customization of
-> the delay after FLR for devices that do not support immediate readiness.
+> Add support for exporting PCI device MMIO regions through dma-buf,
+> enabling safe sharing of non-struct page memory with controlled
+> lifetime management. This allows RDMA and other subsystems to import
+> dma-buf FDs and build them into memory regions for PCI P2P operations.
 > 
-> Signed-off-by: Graham Whyte <grwhyte@linux.microsoft.com>
+> The implementation provides a revocable attachment mechanism using
+> dma-buf move operations. MMIO regions are normally pinned as BARs
+> don't change physical addresses, but access is revoked when the VFIO
+> device is closed or a PCI reset is issued. This ensures kernel
+> self-defense against potentially hostile userspace.
+> 
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Vivek Kasireddy <vivek.kasireddy@intel.com>
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 > ---
->  drivers/pci/pci.c   | 8 ++++++--
->  drivers/pci/pci.h   | 2 ++
->  include/linux/pci.h | 1 +
->  3 files changed, 9 insertions(+), 2 deletions(-)
+>  drivers/vfio/pci/Kconfig           |  20 ++
+>  drivers/vfio/pci/Makefile          |   2 +
+>  drivers/vfio/pci/vfio_pci_config.c |  22 +-
+>  drivers/vfio/pci/vfio_pci_core.c   |  25 +-
+>  drivers/vfio/pci/vfio_pci_dmabuf.c | 390 +++++++++++++++++++++++++++++
+>  drivers/vfio/pci/vfio_pci_priv.h   |  23 ++
+>  include/linux/dma-buf.h            |   1 +
+>  include/linux/vfio_pci_core.h      |   3 +
+>  include/uapi/linux/vfio.h          |  25 ++
+>  9 files changed, 506 insertions(+), 5 deletions(-)
+>  create mode 100644 drivers/vfio/pci/vfio_pci_dmabuf.c
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e9448d55113b..04f2660df7c4 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3233,6 +3233,8 @@ void pci_pm_init(struct pci_dev *dev)
->  	dev->bridge_d3 = pci_bridge_d3_possible(dev);
->  	dev->d3cold_allowed = true;
+> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+> index 2b0172f546652..55ae888bf26ae 100644
+> --- a/drivers/vfio/pci/Kconfig
+> +++ b/drivers/vfio/pci/Kconfig
+> @@ -55,6 +55,26 @@ config VFIO_PCI_ZDEV_KVM
 >  
-> +	dev->flr_delay = PCI_FLR_DELAY;
-
-There are some delays mentioned in pci_pm_init(), but I don't think
-this one has anything to do with the PM Capability, so it should go
-elsewhere.  Maybe somewhere related to this recent change:
-https://git.kernel.org/linus/5c0d0ee36f16 ("PCI: Support Immediate
-Readiness on devices without PM cap abilities").
-
-This would be more attractive if we actually added support for the
-Readiness Time Reporting Capability (PCIe r7.0, sec 7.9.16).  Then
-devices that implement that would get actual benefit from this.
-
-I'm not committing to merging a quirk just for the Microsoft devices,
-but I definitely wouldn't merge it unless devices that did the work of
-supporting the standard mechanism also got the benefit.  The hardest
-part might be *finding* a device that supports Readiness Time
-Reporting so we could test it.
-
->  	dev->d1_support = false;
->  	dev->d2_support = false;
->  	if (!pci_no_d1d2(dev)) {
-> @@ -4529,9 +4531,11 @@ int pcie_flr(struct pci_dev *dev)
->  	/*
->  	 * Per PCIe r4.0, sec 6.6.2, a device must complete an FLR within
->  	 * 100ms, but may silently discard requests while the FLR is in
-> -	 * progress.  Wait 100ms before trying to access the device.
-> +	 * progress.  Wait 100ms before trying to access the device, unless
-> +	 * otherwise modified if the device supports a faster reset.
-> +	 * Use usleep_range to support delays under 20ms.
->  	 */
-> -	msleep(100);
-> +	usleep_range(dev->flr_delay, dev->flr_delay+1);
-
-As Ilpo suggested, I think fsleep() is the right thing for this.
-Readiness Time Reporting supports values down to 1ns, but I suspect we
-can live with microsecond resolution for now.
-
->  	return pci_dev_wait(dev, "FLR", PCIE_RESET_READY_POLL_MS);
+>  	  To enable s390x KVM vfio-pci extensions, say Y.
+>  
+> +config VFIO_PCI_DMABUF
+> +	bool "VFIO PCI extensions for DMA-BUF"
+> +	depends on VFIO_PCI_CORE
+> +	depends on PCI_P2PDMA && DMA_SHARED_BUFFER
+> +	default y
+> +	help
+> +	  Enable support for VFIO PCI extensions that allow exporting
+> +	  device MMIO regions as DMA-BUFs for peer devices to access via
+> +	  peer-to-peer (P2P) DMA.
+> +
+> +	  This feature enables a VFIO-managed PCI device to export a portion
+> +	  of its MMIO BAR as a DMA-BUF file descriptor, which can be passed
+> +	  to other userspace drivers or kernel subsystems capable of
+> +	  initiating DMA to that region.
+> +
+> +	  Say Y here if you want to enable VFIO DMABUF-based MMIO export
+> +	  support for peer-to-peer DMA use cases.
+> +
+> +	  If unsure, say N.
+> +
+>  source "drivers/vfio/pci/mlx5/Kconfig"
+>  
+>  source "drivers/vfio/pci/hisilicon/Kconfig"
+> diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
+> index cf00c0a7e55c8..f9155e9c5f630 100644
+> --- a/drivers/vfio/pci/Makefile
+> +++ b/drivers/vfio/pci/Makefile
+> @@ -2,7 +2,9 @@
+>  
+>  vfio-pci-core-y := vfio_pci_core.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
+>  vfio-pci-core-$(CONFIG_VFIO_PCI_ZDEV_KVM) += vfio_pci_zdev.o
+> +
+>  obj-$(CONFIG_VFIO_PCI_CORE) += vfio-pci-core.o
+> +vfio-pci-core-$(CONFIG_VFIO_PCI_DMABUF) += vfio_pci_dmabuf.o
+>  
+>  vfio-pci-y := vfio_pci.o
+>  vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index 8f02f236b5b4b..7e23387a43b4d 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+> @@ -589,10 +589,12 @@ static int vfio_basic_config_write(struct vfio_pci_core_device *vdev, int pos,
+>  		virt_mem = !!(le16_to_cpu(*virt_cmd) & PCI_COMMAND_MEMORY);
+>  		new_mem = !!(new_cmd & PCI_COMMAND_MEMORY);
+>  
+> -		if (!new_mem)
+> +		if (!new_mem) {
+>  			vfio_pci_zap_and_down_write_memory_lock(vdev);
+> -		else
+> +			vfio_pci_dma_buf_move(vdev, true);
+> +		} else {
+>  			down_write(&vdev->memory_lock);
+> +		}
+>  
+>  		/*
+>  		 * If the user is writing mem/io enable (new_mem/io) and we
+> @@ -627,6 +629,8 @@ static int vfio_basic_config_write(struct vfio_pci_core_device *vdev, int pos,
+>  		*virt_cmd &= cpu_to_le16(~mask);
+>  		*virt_cmd |= cpu_to_le16(new_cmd & mask);
+>  
+> +		if (__vfio_pci_memory_enabled(vdev))
+> +			vfio_pci_dma_buf_move(vdev, false);
+>  		up_write(&vdev->memory_lock);
+>  	}
+>  
+> @@ -707,12 +711,16 @@ static int __init init_pci_cap_basic_perm(struct perm_bits *perm)
+>  static void vfio_lock_and_set_power_state(struct vfio_pci_core_device *vdev,
+>  					  pci_power_t state)
+>  {
+> -	if (state >= PCI_D3hot)
+> +	if (state >= PCI_D3hot) {
+>  		vfio_pci_zap_and_down_write_memory_lock(vdev);
+> -	else
+> +		vfio_pci_dma_buf_move(vdev, true);
+> +	} else {
+>  		down_write(&vdev->memory_lock);
+> +	}
+>  
+>  	vfio_pci_set_power_state(vdev, state);
+> +	if (__vfio_pci_memory_enabled(vdev))
+> +		vfio_pci_dma_buf_move(vdev, false);
+>  	up_write(&vdev->memory_lock);
 >  }
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 12215ee72afb..abc1cf6e6d9b 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -135,6 +135,8 @@ struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
->  #define PCI_PM_D3HOT_WAIT       10	/* msec */
->  #define PCI_PM_D3COLD_WAIT      100	/* msec */
 >  
-> +#define PCI_FLR_DELAY           100000 /* usec */
+> @@ -900,7 +908,10 @@ static int vfio_exp_config_write(struct vfio_pci_core_device *vdev, int pos,
+>  
+>  		if (!ret && (cap & PCI_EXP_DEVCAP_FLR)) {
+>  			vfio_pci_zap_and_down_write_memory_lock(vdev);
+> +			vfio_pci_dma_buf_move(vdev, true);
+>  			pci_try_reset_function(vdev->pdev);
+> +			if (__vfio_pci_memory_enabled(vdev))
+> +				vfio_pci_dma_buf_move(vdev, true);
 
-Isn't PCIE_RESET_CONFIG_WAIT_MS the right value for the default delay?
-(I think that name was probably settled on after you posted this.)
+@revoked true -> true seems wrong.
 
-Maybe it's not; I see that Readiness Time Reporting includes separate
-values for Reset Time, DL_Up Time, FLR Time, and D3Hot to D0 Time.
-I'm not sure Linux comprehends those differences yet.
+>  			up_write(&vdev->memory_lock);
+>  		}
+>  	}
+> @@ -982,7 +993,10 @@ static int vfio_af_config_write(struct vfio_pci_core_device *vdev, int pos,
+>  
+>  		if (!ret && (cap & PCI_AF_CAP_FLR) && (cap & PCI_AF_CAP_TP)) {
+>  			vfio_pci_zap_and_down_write_memory_lock(vdev);
+> +			vfio_pci_dma_buf_move(vdev, true);
+>  			pci_try_reset_function(vdev->pdev);
+> +			if (__vfio_pci_memory_enabled(vdev))
+> +				vfio_pci_dma_buf_move(vdev, true);
 
->  void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
->  void pci_refresh_power_state(struct pci_dev *dev);
->  int pci_power_up(struct pci_dev *dev);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 05e68f35f392..4c9989037ed1 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -402,6 +402,7 @@ struct pci_dev {
->  						   bit manually */
->  	unsigned int	d3hot_delay;	/* D3hot->D0 transition time in ms */
->  	unsigned int	d3cold_delay;	/* D3cold->D0 transition time in ms */
-> +	unsigned int    flr_delay;      /* pci post flr sleep time in us */
+Same.
 
-I think this should be named to correspond with the Readiness Time
-Reporting Capability.  
+>  			up_write(&vdev->memory_lock);
+>  		}
+>  	}
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index b1863d84b11aa..8e840ac413e9b 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -28,7 +28,9 @@
+>  #include <linux/nospec.h>
+>  #include <linux/sched/mm.h>
+>  #include <linux/iommufd.h>
+> +#ifdef CONFIG_VFIO_PCI_DMABUF
+>  #include <linux/pci-p2pdma.h>
+> +#endif
+>  #if IS_ENABLED(CONFIG_EEH)
+>  #include <asm/eeh.h>
+>  #endif
+> @@ -287,6 +289,8 @@ static int vfio_pci_runtime_pm_entry(struct vfio_pci_core_device *vdev,
+>  	 * semaphore.
+>  	 */
+>  	vfio_pci_zap_and_down_write_memory_lock(vdev);
+> +	vfio_pci_dma_buf_move(vdev, true);
+> +
+>  	if (vdev->pm_runtime_engaged) {
+>  		up_write(&vdev->memory_lock);
+>  		return -EINVAL;
+> @@ -370,6 +374,8 @@ static void vfio_pci_runtime_pm_exit(struct vfio_pci_core_device *vdev)
+>  	 */
+>  	down_write(&vdev->memory_lock);
+>  	__vfio_pci_runtime_pm_exit(vdev);
+> +	if (__vfio_pci_memory_enabled(vdev))
+> +		vfio_pci_dma_buf_move(vdev, false);
+>  	up_write(&vdev->memory_lock);
+>  }
+>  
+> @@ -690,6 +696,8 @@ void vfio_pci_core_close_device(struct vfio_device *core_vdev)
+>  #endif
+>  	vfio_pci_core_disable(vdev);
+>  
+> +	vfio_pci_dma_buf_cleanup(vdev);
+> +
+>  	mutex_lock(&vdev->igate);
+>  	if (vdev->err_trigger) {
+>  		eventfd_ctx_put(vdev->err_trigger);
+> @@ -1222,7 +1230,10 @@ static int vfio_pci_ioctl_reset(struct vfio_pci_core_device *vdev,
+>  	 */
+>  	vfio_pci_set_power_state(vdev, PCI_D0);
+>  
+> +	vfio_pci_dma_buf_move(vdev, true);
+>  	ret = pci_try_reset_function(vdev->pdev);
+> +	if (__vfio_pci_memory_enabled(vdev))
+> +		vfio_pci_dma_buf_move(vdev, false);
+>  	up_write(&vdev->memory_lock);
+>  
+>  	return ret;
+> @@ -1511,6 +1522,8 @@ int vfio_pci_core_ioctl_feature(struct vfio_device *device, u32 flags,
+>  		return vfio_pci_core_pm_exit(vdev, flags, arg, argsz);
+>  	case VFIO_DEVICE_FEATURE_PCI_VF_TOKEN:
+>  		return vfio_pci_core_feature_token(vdev, flags, arg, argsz);
+> +	case VFIO_DEVICE_FEATURE_DMA_BUF:
+> +		return vfio_pci_core_feature_dma_buf(vdev, flags, arg, argsz);
+>  	default:
+>  		return -ENOTTY;
+>  	}
+> @@ -2085,9 +2098,13 @@ int vfio_pci_core_init_dev(struct vfio_device *core_vdev)
+>  	INIT_LIST_HEAD(&vdev->dummy_resources_list);
+>  	INIT_LIST_HEAD(&vdev->ioeventfds_list);
+>  	INIT_LIST_HEAD(&vdev->sriov_pfs_item);
+> +#ifdef CONFIG_VFIO_PCI_DMABUF
+>  	vdev->provider = pci_p2pdma_enable(vdev->pdev);
+>  	if (IS_ERR(vdev->provider))
+>  		return PTR_ERR(vdev->provider);
+> +
+> +	INIT_LIST_HEAD(&vdev->dmabufs);
+> +#endif
+>  	init_rwsem(&vdev->memory_lock);
+>  	xa_init(&vdev->ctx);
+>  
+> @@ -2470,11 +2487,17 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
+>  	 * cause the PCI config space reset without restoring the original
+>  	 * state (saved locally in 'vdev->pm_save').
+>  	 */
+> -	list_for_each_entry(vdev, &dev_set->device_list, vdev.dev_set_list)
+> +	list_for_each_entry(vdev, &dev_set->device_list, vdev.dev_set_list) {
+> +		vfio_pci_dma_buf_move(vdev, true);
+>  		vfio_pci_set_power_state(vdev, PCI_D0);
+> +	}
 
->  	u16		l1ss;		/* L1SS Capability pointer */
->  #ifdef CONFIG_PCIEASPM
-> -- 
-> 2.25.1
-> 
+The revoke should have happened at the time the BARs were zapped.
+Thanks,
+
+Alex
+
+>  
+>  	ret = pci_reset_bus(pdev);
+>  
+> +	list_for_each_entry(vdev, &dev_set->device_list, vdev.dev_set_list)
+> +		if (__vfio_pci_memory_enabled(vdev))
+> +			vfio_pci_dma_buf_move(vdev, false);
+> +
+>  	vdev = list_last_entry(&dev_set->device_list,
+>  			       struct vfio_pci_core_device, vdev.dev_set_list);
+>  
+
 
