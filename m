@@ -1,101 +1,100 @@
-Return-Path: <linux-pci+bounces-33516-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33517-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A10B5B1D1FB
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 07:27:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7213EB1D243
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 08:03:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B7EF8580B13
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 05:27:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EF021AA0C07
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 06:03:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 406C41A23AC;
-	Thu,  7 Aug 2025 05:26:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9958817A2EA;
+	Thu,  7 Aug 2025 06:03:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNzBxySl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ep8BEcEe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178759478;
-	Thu,  7 Aug 2025 05:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEC72E36FE;
+	Thu,  7 Aug 2025 06:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754544416; cv=none; b=ieLg638JAztTgLsiyZIYCO8HVWzhmcCKEeiMr+TYTArkqhgvLDU5PYu5ViN55LpO8peXTJd+1EJb2/MWFTTL7il6UNF5Yaj52Z2EFLEmKVbttfaEx5w/l/YWEDQWkShIUNTJOSyqWCQdvTXkS/pJ3i6fERPjBJ43dy/XnvdzemM=
+	t=1754546599; cv=none; b=s4d2IHJVmGV32i0av4NMiRMilDd8nVnQQ4MAa7eXvnb+5YZ7FPq7uYDywus4VCPmVP6oXqqjr0Z3WtfC28wmA071A3g/ku3b7S22Czz3CNAbQuJAIX5vbZmiJl4Z/m+Ue1MtAOGr5YYhqS83Sd2Zybm0x8htjMaSTP8XU01ifYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754544416; c=relaxed/simple;
-	bh=DA+RdVvSTs6M4sCjuqioqJz44R7iAMq+lOuhcUm3W1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oktIRGoE0TFwGGFiv0awm5EzhaBnwuXuJUvksI0qPexLCgV0/62HGgGHRt7hgcsWNh2Wd7Msw0TsTmhKRVl0f5BGXEY2w2uBH4U6L54K/Xh6PsImLaTpP/vBWbpwq7heE6YFrZgchL1E2+lezV3R+Np/sCTfVniaNH2q1Ux9/Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNzBxySl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB711C4CEEB;
-	Thu,  7 Aug 2025 05:26:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754544415;
-	bh=DA+RdVvSTs6M4sCjuqioqJz44R7iAMq+lOuhcUm3W1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tNzBxySlD9SAhiXo1+8OFDocyJI5nuXkNkkoMtzucyRzkXCOlgqY1alVZQx4xsjD3
-	 lc0quQjSyQx7cTJ5gbHz3zEZa9noi9VkbmGiOFTU/zaJqBa9I6BEXkda4XrqkdJxk6
-	 RBVLBT2FBeDLCrW91TSZxZKDSQ9CdDlwj+9SP1uvSHNCZNPjjzaEB1/Af4SW0eQ4yN
-	 Pf4DG1k+GeDTBLDvUrJPl0r7nzAVt6/Loqu5MduaMuWXWShCMElmIqEKuzJjAMtiDc
-	 zOE60faAuO1AffQonkSpLbA7QAHumSm3ek++l+SVpP6OzhOqASzwr8dhZbsjhHqgcH
-	 35vDIJQs9GbGA==
-Date: Thu, 7 Aug 2025 10:56:46 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, 
-	Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Cyril Brulebois <kibi@debian.org>, 
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] PCI: brcmstb: Add panic/die handler to driver
-Message-ID: <yqtfhokgfgiwk62lhxkxna26lpexgnlvcmwgfopewlj5u74drt@q6adhcvm7hqz>
-References: <20250806185051.GA10150@bhelgaas>
- <0a518bd3-0a20-4b69-a29f-04b5cd3c3ea8@broadcom.com>
+	s=arc-20240116; t=1754546599; c=relaxed/simple;
+	bh=Mgm3+Zt+sdADRkXhMMYxJzDIxJVuJ0elzR4ohr+MinQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=oV5dTjA06Wvboh+SsESPfjUpH9gw5NBBYTJHdGOsvXEOlnFQ1tmOuO0fKVErU3CkhF2+Q30f6ENhrwD4sEjyEgXR9Gn7iMajnUWvoGiiCVoV2KzVTEyJrVlSjgEOyht86vRqcRsl41ZFb1ay8Ipx8/yVCBKMed9qA2N9hySj+G8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ep8BEcEe; arc=none smtp.client-ip=209.85.210.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-76bed310fa1so604404b3a.2;
+        Wed, 06 Aug 2025 23:03:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754546596; x=1755151396; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Mgm3+Zt+sdADRkXhMMYxJzDIxJVuJ0elzR4ohr+MinQ=;
+        b=ep8BEcEenyTT3LQ+hDTcBUC8OjIvKXGQrcs7bCGBOn57C/OEJpAt0DYe7BErEA8ELS
+         DDgpj8Mb7wM9jn85geTCk6sPo+vFfjddx7RhEr2W4PL0MdMnZwfqx1spSjPrf8MKaTnu
+         sx5rRs/2UOb+752HRDTlQU4IK9IbKqVJubruAHZY0nKMjARWHU2TDp4FriSCa3ar2xZo
+         qlIccQYSacJiredQ728ObzhdtNH1TF80Cvef+0Ak+6JLmmUuan3PxMQioVWNjO3bQ/Al
+         i6oUBMzebEGzmBylqu8wrOJj/YSC7HeXp4q6G7EP9QvVPtQmUNOMlpwAHddE2T2bvJYC
+         Z3Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754546596; x=1755151396;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Mgm3+Zt+sdADRkXhMMYxJzDIxJVuJ0elzR4ohr+MinQ=;
+        b=k+FIrPO+RsE6/+n+n0jE59lOU5rj7zkahmhx4an/X3PILamOMhWfHFEvL7uuEuI10N
+         4ZHbdT6LHt3QLX9UptQWmmoWfSc2CHwMTFa7HT1qxziEG1Y21ULsxZnt/ZjKxzVsGt5k
+         S4jMfT2JHtprVcyZBjb4OpG2yftuGHGLjh8xqbkeO2einu/+RvtT9s6x6ZhsGC0dv5Pg
+         qz+8+5W+r0ofHf1XFgZPb+uTz6WCoUOENTfwt927hCxu5r6CLGU5c0SoIq3gbpntChSU
+         lA3wqw2LVPnmoby2pU5QB2FcKaVEQnFZk/ZKE4bfYRU1NHCtLYWdPTaFea1eq9HrF0jw
+         CApw==
+X-Forwarded-Encrypted: i=1; AJvYcCUf9Cmu/hSXbY90oUB0wbNZ0RVbZvQ7J0DqZ5udWe7qgSLTKD21RFOFShQgeD+RliZ38N1DNjG1rLY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxgxberv93ptVgOWxyuldTAeUFRw+aoKM0R5nWu6hgupMMnrT9x
+	HSX/43qOp+nJjfEOcZBSp7JYuJ6uqDtBGimui1/O9tLxuKotRNU23H48
+X-Gm-Gg: ASbGncvxtg4kkOKHT3G3lKiVOIr0B2ikRssJMSTv6dNf6M8YL57N+QNslpGsasR9fI4
+	SldoctgG6tucnjev+qtZvMoAuxqGcPYBKP1QEStQGlM5/0vnGmK9e8dXCvUp04YzeYlfrk5mVL0
+	AbdomM+HZSkhNB93t+knNhdjQUgXUSsl2Jj4W2JMBLH2t8uGZvxQaPzAaASpwms4AbQs1dMqbnb
+	/vuuCk7dyf8H4OCHdXb16RByiZdMIAh+PXRm/YtEBDY7B4GgPUhP2+PRrgcSZ96Oi8FUhOtC0hL
+	ttep07kcqqRA7XsiMAUAw+xcSWt910e0AZ7fst0D0dsnXQVdscfsKdCPrSHUOYNnv7g+xqk0i1b
+	SaIkzIe3KHDsIcselOTv7
+X-Google-Smtp-Source: AGHT+IH6lABCGe6nUJ3kPvVb563/6ouywKEcAdbkht5BNXwnbBe1ECADH5tMvk01xS+e301pC/fA/g==
+X-Received: by 2002:a05:6a20:1611:b0:240:d12:775c with SMTP id adf61e73a8af0-240330fb815mr6956353637.36.1754546596218;
+        Wed, 06 Aug 2025 23:03:16 -0700 (PDT)
+Received: from ?IPv6:::1? ([2409:40e0:b:6bac:8000::])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76c2ea6893csm2864209b3a.104.2025.08.06.23.03.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Aug 2025 23:03:15 -0700 (PDT)
+Date: Thu, 07 Aug 2025 11:33:08 +0530
+From: Bandhan Pramanik <bandhanpramanik06.foss@gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
+CC: linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
+ ath10k@lists.infradead.org, Manivannan Sadhasivam <mani@kernel.org>
+Subject: Re: Packet loss with QCA9377 (ath10k) on ASUS VivoBook E410KA
+User-Agent: Thunderbird for Android
+In-Reply-To: <20250806204018.GA14933@bhelgaas>
+References: <20250806204018.GA14933@bhelgaas>
+Message-ID: <BBAB0136-BB7C-4D59-B29D-2F35FC29D7AC@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0a518bd3-0a20-4b69-a29f-04b5cd3c3ea8@broadcom.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 06, 2025 at 01:41:35PM GMT, Florian Fainelli wrote:
-> On 8/6/25 11:50, Bjorn Helgaas wrote:
-> > > I'm not sure I understand the "racy" comment.  If the PCIe bridge is
-> > > off, we do not read the PCIe error registers.  In this case, PCIe is
-> > > probably not the cause of the panic.   In the rare case the PCIe
-> > > bridge is off  and it was the PCIe that caused the panic, nothing
-> > > gets reported, and this is where we are without this commit.
-> > > Perhaps this is what you mean by "mostly-works".  But this is the
-> > > best that can be done with SW given our HW.
-> > 
-> > Right, my fault.  The error report registers don't look like standard
-> > PCIe things, so I suppose they are on the host side, not the PCIe
-> > side, so they're probably guaranteed to be accessible and non-racy
-> > unless the bridge is in reset.
-> 
-> To expand upon that part, the situation that I ran in we had the PCIe link
-> down and therefore clock gated the PCIe root complex hardware to conserve
-> power. Eventually I did hit a voluntary panic, and since all panic notifiers
-> registered are invoked in succession, the one registered for the PCIe RC was
-> invoked as well and accessing clock gated registers would not work and
-> trigger another fault which would be confusing and mingle with the panic I
-> was trying to debug initially. Hence this check, and a clock gated PCIe RC
-> would not be logging any errors anyway.
+I'll tell the guy to clone the ath-next branch then and will inform you pre=
+tty soon=2E
 
-May I ask how you are recovering from link down? Can the driver detect link down
-using any platform IRQ?
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Bandhan
 
