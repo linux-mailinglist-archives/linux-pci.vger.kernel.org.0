@@ -1,349 +1,252 @@
-Return-Path: <linux-pci+bounces-33586-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33587-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04A7AB1DF4B
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 00:15:32 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21A35B1DF62
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 00:37:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6EE71895A38
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 22:15:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8AA057AE8EA
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 22:36:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2B2F256C73;
-	Thu,  7 Aug 2025 22:15:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EEBE1E520E;
+	Thu,  7 Aug 2025 22:37:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cBlhPrF+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dfUCWIYy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3529420296A
-	for <linux-pci@vger.kernel.org>; Thu,  7 Aug 2025 22:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754604924; cv=none; b=MRpdgnSFtVMuokm8B0pnB1JOzVjIsy72FHt6DXd0e2vfOojjvVOGYCg0ovuWLkzAfBOPkzjBVe284nofdU3E6F23DcAcAZhrS4hVzJhkZObsAAkcm4kDqUSzeIYGz2r+qnHO5tg8o8WgCTmkZUI8WwiBFDQju2E+EBVSa/F7ft4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754604924; c=relaxed/simple;
-	bh=b++w7n9UcEIF0kfuMLVTkm2T5H5oPwLC2M81iAY1xKQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J5Bf7bbm6kwr/GkR0xsXWc9VdxH7julhyGbSP/B23vWBbKNpN7HUwlQBpypgHe2tu6W2MFMtHBbVpDhTAx2tVXyeHGHBDECMvOexEAX/nNoR0lbaEwTwrIlKutsTDPpdz88MELgaC1hypMgfj84aKsFE2s/FKP1JWnBzLN8hvFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=cBlhPrF+; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4b0ad5fa282so6583301cf.1
-        for <linux-pci@vger.kernel.org>; Thu, 07 Aug 2025 15:15:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1754604920; x=1755209720; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5jYW+PSZIquq87XIfneJCMUIneGwyGc9tsrP0Mk4ojE=;
-        b=cBlhPrF+R5Qsj1OsohCOEHnzwQ8nrbmPTYfyKbpyq/LjTPyHLcVeCVfRDEovXUCDuf
-         9kivD9tBaQPBCQ5leNldQb0t4QQN+M0Dzr6WzHBR/GfMoyM72UMuMRm6tVqCx20zprI8
-         /NLn6KA9M6Ks3j7E/eFL2AC/RmIGPaLbPRWvQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754604920; x=1755209720;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5jYW+PSZIquq87XIfneJCMUIneGwyGc9tsrP0Mk4ojE=;
-        b=bnAp0NI+di+awxRqBGn1BTk1BcA7FsYTNugB18TCtin/TlaEmbdtVxT2xOfTXMfvNz
-         nKBb9LVHCPgm1GXXYu9G9i6md2STiEsjaV5F8F7rWMT2bcebrl/l5JkMQhte84by7Z4w
-         PsPzlzW17kncNvdVwahd7zZ9y/Gakrl8xBm2XA3/82+C9WlG/SvX7DJxvQz7srTqfZmV
-         3nwyJ/6HpSEpdr2M6ajQCevn+2WhoAftg4ibdP/iBmhFVpdQ9nCf3v9SsaVUzikh16BZ
-         2seXiiX6eYG4gx3O4t2dvyFtLG4P9tALvpV2NNSYRFIBXOZboOkkdwjTU48lrp8ZMdGh
-         J7mA==
-X-Gm-Message-State: AOJu0YxtxUXgbBKCSwu75+ifuiq48yugAl1z8MQSQj5wmwo9pfgNjk/c
-	CWCek1sEvhXbC3omq0CfonAYTkqELgMi/+2LS4ID32HiLAlYde0RdeGDZaRoTB/OqZaFFUvFnbf
-	Ig/m701z1ZUkbc3WOdTjPHjQcaRqZcXeZhTzAMBv33SZN8AI4WFUWAwY63WSVfG9/ybD7XX9qdY
-	oCwfpR08tA6YAeuSAzfDlT9/sXtZh8cmEhk2COeFLv9qrRwTo56w==
-X-Gm-Gg: ASbGncvlbvl5ett+UhqnTZYVG090nPgUEjr6LD9ufed6ssSnXg57SOKB6rphOO6DdYw
-	xRpDzGAj3IaEfxFQUkE9GhgvE2MZgLKqpOXGTSFT68S1+OCGsqWPIy1IVuUs4dV1WYz7QyyVPfN
-	+It8bzmZT6W3IwsoWld9aTZ2rcX7pD1aXoMWp0XVDObrGsKNY+c2vZh9f8Ty6MjCLQxoqo08Vn2
-	hFKmj6qSJvqvoPz8cViEK7ueY3lR0CEQz4ShauhB4MDKoUH3wBEaI92e1UgKillUPAVtbyi2V5c
-	BcyoqyeLUm5FTfq0YJVqpxD6Vn2PIPD7ev/IWg5l1G+AAnmMlzKktktzI7/xu63iT/YntxCQeRD
-	z9WkH+7SkLOCQ1jou92yqGmrBrcmwzzgVxyHl9QPRf15AYLOMIK/V4v5lqdrGKO3uv2hwHOjkNf
-	a6aQ==
-X-Google-Smtp-Source: AGHT+IEP2/GGK0JMu+NX/V1KJMI1F/LXcfkstdOsWhBZULL4vo6ZiUpJyMyYHhBerb+zc2yyI6Q32w==
-X-Received: by 2002:ac8:5e4b:0:b0:4b0:7db9:92d7 with SMTP id d75a77b69052e-4b0a06eefbfmr77409541cf.2.1754604919914;
-        Thu, 07 Aug 2025 15:15:19 -0700 (PDT)
-Received: from stband-bld-1.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b0aa1efe78sm9527421cf.8.2025.08.07.15.15.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Aug 2025 15:15:19 -0700 (PDT)
-From: Jim Quinlan <james.quinlan@broadcom.com>
-To: linux-pci@vger.kernel.org,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	bcm-kernel-feedback-list@broadcom.com,
-	jim2101024@gmail.com,
-	james.quinlan@broadcom.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/2] PCI: brcmstb: Add panic/die handler to driver
-Date: Thu,  7 Aug 2025 18:15:13 -0400
-Message-Id: <20250807221513.1439407-3-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250807221513.1439407-1-james.quinlan@broadcom.com>
-References: <20250807221513.1439407-1-james.quinlan@broadcom.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4143FE7;
+	Thu,  7 Aug 2025 22:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754606264; cv=fail; b=QTEw/XBeFsBB9WNiDP0VEltqEg6XRqaKoYpYGY5wbQJGx932+w2fb/j1vbeTJ04oZfjeratILxYZ1cQzTQpmS8S9GjJIy3ltERkiKo1lfoOn9dQDDmQqfBhtwjYdYtLefJNdOknuM7jGgrIKHV1Pr+FPyGfwnk1ykcogI8IfDlE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754606264; c=relaxed/simple;
+	bh=83MOCKkV9TQkqLKqg9ASih+KTUWlhxSKyBXU9JrTeTk=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=GbMv/DI7/hI2Ceudc7ZONzSxibc1nGq3MVr3P26TWBsY8YTdCdeBEYu9nKjOiG2dKtSwlGgxb/HKDlTVgE3Kq3DZHBdTOD8yoF7pURCNL4gD/NjAf+uKj391y8oZVri+S40hydAJ1GnO6Y2xAnHk0miXZ5b3/un57RPJGqWDyJ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dfUCWIYy; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754606263; x=1786142263;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=83MOCKkV9TQkqLKqg9ASih+KTUWlhxSKyBXU9JrTeTk=;
+  b=dfUCWIYyL72VGHELTuiXex+s/hAsl+yWJFQQnUcJB8G0j/7RLTbUcTgN
+   hFxDbW8Nb5QdcUEbusu5VkNy/EUpljwpiQuu2SihuyHpdIuy74gbLmWnS
+   9aflplR29vMS9XQYGdoYNSwlIobm9VnV57x3UknhW5Fz2Mdv9hVWaXKp5
+   E8y+F4fdK2z4RMVwLYCCyt+C5BGCI6aTQspf9Du72EERiPKIxW1A/BSY3
+   bHmNz3OiaGJEGbyj4LwaIxPc6jKWPzXiyQnBAmmvfHGpXU3l4qB/TWEed
+   stv0NcoKVatkrUFbRytgZcn92y2yu6MFXNs/3OvkuU7djWw/BGMXG5cR2
+   A==;
+X-CSE-ConnectionGUID: RbtAPK3pTEitBZTr0yrjGQ==
+X-CSE-MsgGUID: gP/DBirARPy8PslMsada3A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="57087055"
+X-IronPort-AV: E=Sophos;i="6.17,274,1747724400"; 
+   d="scan'208";a="57087055"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2025 15:37:42 -0700
+X-CSE-ConnectionGUID: 0NkisUPDRPCv1NEg1D0biA==
+X-CSE-MsgGUID: whH+/q0lTQ61iuGeMYKo+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,274,1747724400"; 
+   d="scan'208";a="196174356"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2025 15:37:40 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Thu, 7 Aug 2025 15:37:41 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26 via Frontend Transport; Thu, 7 Aug 2025 15:37:41 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (40.107.94.82) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 7 Aug 2025 15:37:41 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kljw2X4idzdkCzmlLByfm9TS4wmm8hWTmHsZuDMQ3DHCKyVCzvPQousMJFOgAQ0VmcjHqdKEYQo4jnXLhOZJzT5Dzt1z8RQB3hcXZYevSZFylICTAE7UgC+UJWWGIjiLIHftNuryQrWlpIF+2VH/uV1dVEWN2+cx/4hISaEUzr1+CayDtoX/yPe8W+KKjZ1JWi3BUGj6xNLdBvCF0JLc3fxPnSCbBml4rnUegcH42IXh7quTwrX+cIwv4Lex4KHZo/exeBQ0l/zomu9uPo0vw+JPJU05MFHhYgnaRsIW4p1KBnw0UCiuZfiIQPQxIzYC3mFlcoC6IG2jNKfeCxbOLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8GeV4iU1+z08w/1uo1Tq5jyivbRLlx9Ax8xpRqRMzkw=;
+ b=cDNHsElckYWgMxGwJqpQ95E06vAa4ueX7qvin1jPeEc7HdGnTdfip+6r+0xQHVTi9zecG5ARFDK+3dGtzo668+5B4jktdJiD6RizIxptxwoi/nlhaQW1BRZwa0OMVRyYkGHHJ7kYeW/l0EUdEBBpkPpuKBd7IEO/J//CIDNJEFEpojbieLWNmo8/LFCwOwnZPhpODBe3yEQ7HHvPnIBwGUbTmIJ2nf8fFo8g9oF0VsmIbAr6N/3kO3z5iseTw+/8ohtxNXbS7qCh+Q8YU1NatVN8q8DZSbh7+jcx1kv/0PPu0F3txLVTFYXYAULu+QqKckOjMfhTYPAyS69sbQf50Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by IA0PR11MB7307.namprd11.prod.outlook.com (2603:10b6:208:437::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.15; Thu, 7 Aug
+ 2025 22:37:38 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%2]) with mapi id 15.20.9009.013; Thu, 7 Aug 2025
+ 22:37:38 +0000
+From: <dan.j.williams@intel.com>
+Date: Thu, 7 Aug 2025 15:37:36 -0700
+To: Bjorn Helgaas <helgaas@kernel.org>, Dan Williams
+	<dan.j.williams@intel.com>
+CC: <linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <bhelgaas@google.com>, <aik@amd.com>,
+	<lukas@wunner.de>, Yilun Xu <yilun.xu@intel.com>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>, Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+Message-ID: <68952ab060b6d_cff9910033@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <20250807201236.GA60870@bhelgaas>
+References: <20250717183358.1332417-3-dan.j.williams@intel.com>
+ <20250807201236.GA60870@bhelgaas>
+Subject: Re: [PATCH v4 02/10] PCI/IDE: Enumerate Selective Stream IDE
+ capabilities
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0027.namprd03.prod.outlook.com
+ (2603:10b6:a03:33a::32) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA0PR11MB7307:EE_
+X-MS-Office365-Filtering-Correlation-Id: d35d5e53-d2d2-4f31-4373-08ddd6030368
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?aXlnU3kxY2hlMDZad2pXQ2dPcml4ZmVtcnU0Y3hFaHdIRmdRQXdtbGwvWDhN?=
+ =?utf-8?B?VEFBbXBnVTBXZExoV3Q4Q3BZYURRZzhSUkIvcWkrL1BpUzVuaVR3elF5c0Yw?=
+ =?utf-8?B?SlJNTG45K2ZCVDdkcy92YWhsWU01R2w3OXJOVWVUdHgyQWNYVXk2YVg4Qkd6?=
+ =?utf-8?B?engxVUx6cExOTklKZW5ydnFRckpQcVJiYkcwY3l1UjQraDhSQlp5S0ZoZFZU?=
+ =?utf-8?B?YjdQRDhyNTRwWDdoWDVDZGdBd2JULzN5SEd6SlZuTmdHUzFEc2tqc2ZTM0ov?=
+ =?utf-8?B?dFBoRVo2QXB4WVNlNzhJQ1M2SHNxR3hTNDBOcTBHWGIzK0s3eTU3ZWZHOGxE?=
+ =?utf-8?B?WHAyOVdudENsWTUwQUlVajEyK3YwZ0t5QXBIUG5acGRxeHVYMUJHYThhODV2?=
+ =?utf-8?B?N0RYTnduRTU2WWh3ald5NFhxVFlNL1Z6Zk00WHRsbWdORTNEQlY4U1d4YU5w?=
+ =?utf-8?B?VGRZRFZUZmhuMWZMMU5kL2pCeFcwSyt5Vi81RXRmL1BsNzJEY0dhclVCQzlE?=
+ =?utf-8?B?VmFIL255UTNiUGwyMXRWY2RUcEpKcFh2L21HZkFTd0R1ZGd6MTZ3MHVjMmVv?=
+ =?utf-8?B?cW51bkpCWklrMHVWRHhYUUNvbHcyeHJZeDdTWmhmc2hKUXN3anhXU05DQ0ZS?=
+ =?utf-8?B?ektwRmZlcERYb1lXT3dvWkVzM3ZvWjBaV3RnQVNDdk5BamxocmRwVUdGWjVJ?=
+ =?utf-8?B?VnJmUWR5V2tkenZGbzlSM3R6Mmd2ZkNJU3JtbnJzVmVvb2x3UXhqMWpNZzVy?=
+ =?utf-8?B?MlZPNTFmenlUd3FwMVZwY1dqWVR3SVNpaXFwNWI5OEttU2hYQjV1cmJHUVYz?=
+ =?utf-8?B?K09qOENBTk43cW1YdUlaMENpaWo4ektyQnB6cWJjN2VmamxEamFMUU5KZmEv?=
+ =?utf-8?B?VkErTG1Xb1h3RTlTZmgya2FpakU3dFpzVUEzc0J1ZmQwQ1F2bGRyVkpUcFQ0?=
+ =?utf-8?B?ZmNPY3ZLMXd3dlFHK2tmM1pDVEJzbzNJeXdHUDNSMnZMeGNhVFZVZzkxK0I2?=
+ =?utf-8?B?RGZ2WXdFamVROURCYnBIcFdnYkE2TEJ4WVgvYzAvWFZSMnUvV0lhSk1nZldo?=
+ =?utf-8?B?NDlOTHA3aUVHQVl4Q0xtZ2VIS0NkSEF5MEQ1NFhldURVMHpqN1p6OVN6YW9U?=
+ =?utf-8?B?ZHJrQldIQ2ZoQUNtUXBweWlQbTVlRjBlNVpBNWxXUnhmbXFlV2JFcWFvMkhp?=
+ =?utf-8?B?ekxKQlFjajFFdVJURU5OSTB1d3Y3U3A2VVh4Y0pPVHBLZEJYSXgrcUJqYmhu?=
+ =?utf-8?B?SWJYWE8ySEc3bVF5d1F4dCtJYXZzL2hTaEtVSVp2WVE3ampPdHBDazhoaCt6?=
+ =?utf-8?B?L3plU1hOYXM0VDZLTkZROW1SWnR1OE9HWGVyUGVXMlBFV1JrZ0F4VStpcUNS?=
+ =?utf-8?B?TFN4WWRUdVl6MkllSkZqbk1KMy80cWp4UnZWazhNc3NMRkNXblM5T2xaWWo1?=
+ =?utf-8?B?MFo0S3Rtd2xzd3B4WHdseHhxYmpvTUk5Y0FONEo3Wm9lMGtRTnA2Z2xSRHQ2?=
+ =?utf-8?B?SkVoaHMzaVI1eEpaWklvZ0wzNm1rOGx1SzdyODJUbjFpb3k5NU9SM3U3TDk2?=
+ =?utf-8?B?RHA1ZXE0VVRaY2h5KzlHMEhSNGhOYWZhWEVmbnVBejBGdDE3dnlSSXd3UmlO?=
+ =?utf-8?B?M25LanVJUzdSV1RxeUhZR3M2a1lOVVlCWFBzWUkwd3RIekhoZWdDZ1dCYm5l?=
+ =?utf-8?B?MURTcXY2Zll5V0pIZWlPc3FXTituUEVSc0F2cDRjQllGMUpLWHZJa0M3eXJS?=
+ =?utf-8?B?L0krQ0FBUWVtcW51Z0xvaWMwYkhxRXdpdnRXR2hKR0J3Vjh5U2N1d1o2SVMr?=
+ =?utf-8?B?SmdtODdVRUJPTUxrcjJFd3FlckppdCtmTFVNRVdHZFhwMVpBZkRPdm81dC9o?=
+ =?utf-8?B?dGo3ZXZpTGlvU1RuT3ZxbTdxaElJQkZHS0M0dzJ3M2hodVNtUGVNSnp2eVlR?=
+ =?utf-8?Q?Z3DNwE6XuT0=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dkhSeWszNmdETG96RWMwR3R5MHd5ZThGbWJtMXB4REF6dTN1eU5TTUJHa2FT?=
+ =?utf-8?B?d0JET1RyZU5YUzNHYVQ3MG1NREdQaStDekR5eDRwNkQwVllIa3VrUzk3eFFD?=
+ =?utf-8?B?UU5zSHBIVTU2QmdIRlRHK0FvMjBtQ2liSStSL1Q3cloxbFFuTHYyd1I0bExZ?=
+ =?utf-8?B?OFEyNXBnTDlQdytHb3FCUFFKQVRKR05YU0lGenVlQmNTS3UvMTVXRXJqSjEr?=
+ =?utf-8?B?a2g1a2h5dTFVekp2RmxNamoxWFF6Ny9aLzhPSzVqTE5xTlBkdW13MmhFRHdC?=
+ =?utf-8?B?RDQvQ3RmMHRvL2ZPYWdoc3I3VEQzZXdkZjlOTGdrRXhlNWFBdklXN0NLdnpP?=
+ =?utf-8?B?SENKemxwQnBPN2VwMndwNzE2RFVqeU9paEVobm11THUzSG1nMitYUWdVSCth?=
+ =?utf-8?B?NnRwelM3QU1RODZkbU5GUGlLT05mOHZVaVM4ZDIwZU5TQTRVYkVjc25EVDAv?=
+ =?utf-8?B?TzNtc2pPbnhTaE5JVG5vRS9GNTk0UkltcjRzUnJFNjdPNk9BcG15Z3dzZVpt?=
+ =?utf-8?B?SUdMNnhwSld3MW9sQ1k2NS9xSzQzSkNDK1dUeWRFUHJtcDdFOHhMdkxBQjQw?=
+ =?utf-8?B?OHVReEhyemZVb0lNeGRFTnd6WmUwMG0zVy9aYmhXdkpWRFQ3VzlBL3FTQldm?=
+ =?utf-8?B?UXhuS21lblhHT0hLMEkyWDhVcTZxMWFBNXB4UUZQRGxiYTRFUGdwZ2J5UFlR?=
+ =?utf-8?B?Q2o4MENhQVhBajM2bnMvRllSR3dyREI3aFh0U2gyL2wzbEFLSDg3djZyN0pT?=
+ =?utf-8?B?UGM2ZldKZit2aFlza2RZMHNoT0IrckdHM1NjSm1Ecm9kdEc2ZWtwRzAzbXYv?=
+ =?utf-8?B?RWlwdjhHSHB5L21hSkJSejVFY0RGMUZwR21CTFlrVzVWckdxNGFoak9pU3FR?=
+ =?utf-8?B?TGZoYnBoZzlNOU50SVZHRnljMmhnQ2MzYmhoR2VCdU8rN0xVeVcrTXZmd1V0?=
+ =?utf-8?B?c2pwYndQbkRlSTdVTXhvNUxmVjViYks4eENwVWxxZWNUdkFaeVhEUXZZc09E?=
+ =?utf-8?B?R3liU1U2Q3JlaEQ2Z2RnWkJhc3lHd0hPZGlsWXlwNUEveVJIcENxbW5OMGhs?=
+ =?utf-8?B?SGlGNGpKTWU2REo5bzEwNzFHRDNVRkovVG0wYzRWWitGQm0xMkhwYXlaNUxj?=
+ =?utf-8?B?UGwvbWIyZ3NKa0RLVGN6RnptMlRQY0tsSXRBK3J1RVpYK2ozVFAxOTl3WjNr?=
+ =?utf-8?B?NFJZNmZ1WEsvTmd6UjI2WlhZcFgyZXBxUzZwZVpCQnl6UlhEVHJRRmk5SllR?=
+ =?utf-8?B?aEhUN21ONlIzZXJ0emR0SUZFR3IzaEJnL3VFWjN3bm80TUpqMUlqT3krY1BK?=
+ =?utf-8?B?eUdneWl6ZlpoUGVQSUpSYW0xTS9FTDU4Rm16dC9wVE53NTRGQVJDeG1rVHQ2?=
+ =?utf-8?B?UkMyblpHai9jS1lrZjZWQzVYU0dmZ1JzUDJBVjJjVXpPTWZJNS81QThnWVlL?=
+ =?utf-8?B?djJZWG51K1I3OEs4MEcvOXFERmRuNTRlMGFTdFZaazBJMXdGbUlTdEo3TUZE?=
+ =?utf-8?B?ZUd3WElzL0F1WVROd3FBY1RvTzIwQXJyMDA0c2VvZUJYOWVSN0tPV0pFblYy?=
+ =?utf-8?B?WDcvZExVbkQxbVhXWEU2dHl1R1ZmM3VOb1ZzZFJOcFVGUGZtb2kraUhTTVA4?=
+ =?utf-8?B?Q09mZ2NkblhBUVV6c0dBT1JNYVBzMThsL2s5enhUaWRQMlVMMUU5UDNFYkxO?=
+ =?utf-8?B?d1lNZUN6MmNhZnMxSGZhWElOekVRRzArR3dtZ3hHcmpabm41TUxHZlFzMkVJ?=
+ =?utf-8?B?S2R6NDBvaVY3TDg2YkkwTFNUL3lLVklBa211ODcvbTZqUnozMzZMbTk4ZzFR?=
+ =?utf-8?B?TURhZ3k3TzBzSkUrNzRoalNXUUZ4aUFCV0MxSjlrM2JzSWhqTnlRQmpuZk5U?=
+ =?utf-8?B?RzZLMU1Qdk9DVVoyTzRORFcvQW9GMnE5YVJoeGcvTEU2TkFYSUtsMHNpa2ox?=
+ =?utf-8?B?d3RCblpEVDhoTXgvRmhRSm54Tk8vV3hCSzJzMXF4bEZKRThUNnltOEFWdXlP?=
+ =?utf-8?B?WHp2RHpkeUFrSHQza29Sa2M2emltamxkR0JWQjM4amI5VG9RL2VsU3FtUUxn?=
+ =?utf-8?B?RTN4dStOSTQ1UXFpSTZIbjh5TWNUTW9XRVdxcDdjSEJjdWFsVWdEZjlFNW0x?=
+ =?utf-8?B?U1dhd0p2YXdBZC9VYk5QbmJSNTBFUS9xSjRmQ3p4UlM0M3ZoSGlaOGhNdWFG?=
+ =?utf-8?B?b2c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d35d5e53-d2d2-4f31-4373-08ddd6030368
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2025 22:37:38.8137
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aKTvceuRtDbLNeOBCtwoNEieG7qGAkdor0bWLv5g6nf9CwFhMlDXRXyzsWvMJX91k7klFCeRWJpTCr19TUMWA0cMOmeflIQ/NBSQfM2HhR8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7307
+X-OriginatorOrg: intel.com
 
-Whereas most PCIe HW returns 0xffffffff on illegal accesses and the like,
-by default Broadcom's STB PCIe controller effects an abort.  Some SoCs --
-7216 and its descendants -- have new HW that identifies error details.
+Bjorn Helgaas wrote:
+> On Thu, Jul 17, 2025 at 11:33:50AM -0700, Dan Williams wrote:
+> > Link encryption is a new PCIe feature enumerated by "PCIe 6.2 section
+> > 7.9.26 IDE Extended Capability".
+> 
+> > +++ b/drivers/pci/ide.c
+> > @@ -0,0 +1,93 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
+> > +
+> > +/* PCIe 6.2 section 6.33 Integrity & Data Encryption (IDE) */
+> > +
+> > +#define dev_fmt(fmt) "PCI/IDE: " fmt
+> > +#include <linux/pci.h>
+> > +#include <linux/bitfield.h>
+> 
+> Trend is to alphabetize these.  And I think there should be more
+> #includes here instead of using other things pulled in indirectly:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submit-checklist.rst?id=v6.16#n17
 
-This simple handler determines if the PCIe controller was the cause of the
-abort and if so, prints out diagnostic info.  Unfortunately, an abort still
-occurs.
+In this case I think it was only missing a:
 
-Care is taken to read the error registers only when the PCIe bridge is
-active and the PCIe registers are acceptable.  Otherwise, a "die" event
-caused by something other than the PCIe could cause an abort if the PCIe
-"die" handler tried to access registers when the bridge is off.
+#include <linux/pci_regs.h>
 
-Example error output:
-  brcm-pcie 8b20000.pcie: Error: Mem Acc: 32bit, Read, @0x38000000
-  brcm-pcie 8b20000.pcie:  Type: TO=0 Abt=0 UnspReq=1 AccDsble=0 BadAddr=0
+...but more includes are needed in follow-on patches. Added those and
+alphabetized.
 
-Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 155 +++++++++++++++++++++++++-
- 1 file changed, 154 insertions(+), 1 deletion(-)
+> 
+> > +++ b/include/uapi/linux/pci_regs.h
+> 
+> > +#define  PCI_IDE_CAP_ALG_MASK		__GENMASK(12, 8) /* Supported Algorithms */
+> > +#define  PCI_IDE_CAP_ALG_AES_GCM_256	0    /* AES-GCM 256 key size, 96b MAC */
+> > +#define  PCI_IDE_CAP_LINK_TC_NUM_MASK	__GENMASK(15, 13) /* Link IDE TCs */
+> > +#define  PCI_IDE_CAP_SEL_NUM_MASK	__GENMASK(23, 16)/* Supported Selective IDE Streams */
+> 
+> I'm totally OK with dropping the "_MASK" suffix since I think uses are
+> completely readable without it, especially with __GENMASK()/FIELD_GET()/
+> FIELD_PREP().
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index ceb431a252b7..43c4ada3de07 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -14,15 +14,18 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqchip/irq-msi-lib.h>
- #include <linux/irqdomain.h>
-+#include <linux/kdebug.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/log2.h>
- #include <linux/module.h>
- #include <linux/msi.h>
-+#include <linux/notifier.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
-+#include <linux/panic_notifier.h>
- #include <linux/pci.h>
- #include <linux/pci-ecam.h>
- #include <linux/printk.h>
-@@ -156,6 +159,39 @@
- #define  MSI_INT_MASK_SET		0x10
- #define  MSI_INT_MASK_CLR		0x14
- 
-+/* Error report registers */
-+#define PCIE_OUTB_ERR_TREAT				0x6000
-+#define  PCIE_OUTB_ERR_TREAT_CONFIG_MASK		0x1
-+#define  PCIE_OUTB_ERR_TREAT_MEM_MASK			0x2
-+#define PCIE_OUTB_ERR_VALID				0x6004
-+#define PCIE_OUTB_ERR_CLEAR				0x6008
-+#define PCIE_OUTB_ERR_ACC_INFO				0x600c
-+#define  PCIE_OUTB_ERR_ACC_INFO_CFG_ERR_MASK		0x01
-+#define  PCIE_OUTB_ERR_ACC_INFO_MEM_ERR_MASK		0x02
-+#define  PCIE_OUTB_ERR_ACC_INFO_TYPE_64_MASK		0x04
-+#define  PCIE_OUTB_ERR_ACC_INFO_DIR_WRITE_MASK		0x10
-+#define  PCIE_OUTB_ERR_ACC_INFO_BYTE_LANES_MASK		0xff00
-+#define PCIE_OUTB_ERR_ACC_ADDR				0x6010
-+#define PCIE_OUTB_ERR_ACC_ADDR_BUS_MASK			0xff00000
-+#define PCIE_OUTB_ERR_ACC_ADDR_DEV_MASK			0xf8000
-+#define PCIE_OUTB_ERR_ACC_ADDR_FUNC_MASK		0x7000
-+#define PCIE_OUTB_ERR_ACC_ADDR_REG_MASK			0xfff
-+#define PCIE_OUTB_ERR_CFG_CAUSE				0x6014
-+#define  PCIE_OUTB_ERR_CFG_CAUSE_TIMEOUT_MASK		0x40
-+#define  PCIE_OUTB_ERR_CFG_CAUSE_ABORT_MASK		0x20
-+#define  PCIE_OUTB_ERR_CFG_CAUSE_UNSUPP_REQ_MASK	0x10
-+#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_TIMEOUT_MASK	0x4
-+#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_DISABLED_MASK	0x2
-+#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_64BIT__MASK	0x1
-+#define PCIE_OUTB_ERR_MEM_ADDR_LO			0x6018
-+#define PCIE_OUTB_ERR_MEM_ADDR_HI			0x601c
-+#define PCIE_OUTB_ERR_MEM_CAUSE				0x6020
-+#define  PCIE_OUTB_ERR_MEM_CAUSE_TIMEOUT_MASK		0x40
-+#define  PCIE_OUTB_ERR_MEM_CAUSE_ABORT_MASK		0x20
-+#define  PCIE_OUTB_ERR_MEM_CAUSE_UNSUPP_REQ_MASK	0x10
-+#define  PCIE_OUTB_ERR_MEM_CAUSE_ACC_DISABLED_MASK	0x2
-+#define  PCIE_OUTB_ERR_MEM_CAUSE_BAD_ADDR_MASK		0x1
-+
- #define  PCIE_RGR1_SW_INIT_1_PERST_MASK			0x1
- #define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT		0x0
- 
-@@ -305,6 +341,8 @@ struct brcm_pcie {
- 	struct subdev_regulators *sr;
- 	bool			ep_wakeup_capable;
- 	const struct pcie_cfg_data	*cfg;
-+	struct notifier_block	die_notifier;
-+	struct notifier_block	panic_notifier;
- 	bool			bridge_on;
- 	spinlock_t		bridge_lock;
- };
-@@ -1730,6 +1768,115 @@ static int brcm_pcie_resume_noirq(struct device *dev)
- 	return ret;
- }
- 
-+/* Dump out PCIe errors on die or panic */
-+static int _brcm_pcie_dump_err(struct brcm_pcie *pcie,
-+			       const char *type)
-+{
-+	void __iomem *base = pcie->base;
-+	int i, is_cfg_err, is_mem_err, lanes;
-+	char *width_str, *direction_str, lanes_str[9];
-+	u32 info, cfg_addr, cfg_cause, mem_cause, lo, hi;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&pcie->bridge_lock, flags);
-+	/* Don't access registers when the bridge is off */
-+	if (!pcie->bridge_on || readl(base + PCIE_OUTB_ERR_VALID) == 0) {
-+		spin_unlock_irqrestore(&pcie->bridge_lock, flags);
-+		return NOTIFY_DONE;
-+	}
-+
-+	/* Read all necessary registers so we can release the spinlock ASAP */
-+	info = readl(base + PCIE_OUTB_ERR_ACC_INFO);
-+	is_cfg_err = !!(info & PCIE_OUTB_ERR_ACC_INFO_CFG_ERR_MASK);
-+	is_mem_err = !!(info & PCIE_OUTB_ERR_ACC_INFO_MEM_ERR_MASK);
-+	if (is_cfg_err) {
-+		cfg_addr = readl(base + PCIE_OUTB_ERR_ACC_ADDR);
-+		cfg_cause = readl(base + PCIE_OUTB_ERR_CFG_CAUSE);
-+	}
-+	if (is_mem_err) {
-+		mem_cause = readl(base + PCIE_OUTB_ERR_MEM_CAUSE);
-+		lo = readl(base + PCIE_OUTB_ERR_MEM_ADDR_LO);
-+		hi = readl(base + PCIE_OUTB_ERR_MEM_ADDR_HI);
-+	}
-+	/* We've got all of the info, clear the error */
-+	writel(1, base + PCIE_OUTB_ERR_CLEAR);
-+	spin_unlock_irqrestore(&pcie->bridge_lock, flags);
-+
-+	dev_err(pcie->dev, "handling %s error notification\n", type);
-+	width_str = (info & PCIE_OUTB_ERR_ACC_INFO_TYPE_64_MASK) ? "64bit" : "32bit";
-+	direction_str = (info & PCIE_OUTB_ERR_ACC_INFO_DIR_WRITE_MASK) ? "Write" : "Read";
-+	lanes = FIELD_GET(PCIE_OUTB_ERR_ACC_INFO_BYTE_LANES_MASK, info);
-+	for (i = 0, lanes_str[8] = 0; i < 8; i++)
-+		lanes_str[i] = (lanes & (1 << i)) ? '1' : '0';
-+
-+	if (is_cfg_err) {
-+		int bus = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_BUS_MASK, cfg_addr);
-+		int dev = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_DEV_MASK, cfg_addr);
-+		int func = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_FUNC_MASK, cfg_addr);
-+		int reg = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_REG_MASK, cfg_addr);
-+
-+		dev_err(pcie->dev, "Error: CFG Acc, %s, %s, Bus=%d, Dev=%d, Fun=%d, Reg=0x%x, lanes=%s\n",
-+			width_str, direction_str, bus, dev, func, reg, lanes_str);
-+		dev_err(pcie->dev, " Type: TO=%d Abt=%d UnsupReq=%d AccTO=%d AccDsbld=%d Acc64bit=%d\n",
-+			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_TIMEOUT_MASK),
-+			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ABORT_MASK),
-+			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_UNSUPP_REQ_MASK),
-+			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ACC_TIMEOUT_MASK),
-+			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ACC_DISABLED_MASK),
-+			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ACC_64BIT__MASK));
-+	}
-+
-+	if (is_mem_err) {
-+		u64 addr = ((u64)hi << 32) | (u64)lo;
-+
-+		dev_err(pcie->dev, "Error: Mem Acc, %s, %s, @0x%llx, lanes=%s\n",
-+			width_str, direction_str, addr, lanes_str);
-+		dev_err(pcie->dev, " Type: TO=%d Abt=%d UnsupReq=%d AccDsble=%d BadAddr=%d\n",
-+			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_TIMEOUT_MASK),
-+			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_ABORT_MASK),
-+			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_UNSUPP_REQ_MASK),
-+			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_ACC_DISABLED_MASK),
-+			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_BAD_ADDR_MASK));
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int brcm_pcie_die_notify_cb(struct notifier_block *self,
-+				   unsigned long v, void *p)
-+{
-+	struct brcm_pcie *pcie =
-+		container_of(self, struct brcm_pcie, die_notifier);
-+
-+	return _brcm_pcie_dump_err(pcie, "Die");
-+}
-+
-+static int brcm_pcie_panic_notify_cb(struct notifier_block *self,
-+				     unsigned long v, void *p)
-+{
-+	struct brcm_pcie *pcie =
-+		container_of(self, struct brcm_pcie, panic_notifier);
-+
-+	return _brcm_pcie_dump_err(pcie, "Panic");
-+}
-+
-+static void brcm_register_die_notifiers(struct brcm_pcie *pcie)
-+{
-+	pcie->panic_notifier.notifier_call = brcm_pcie_panic_notify_cb;
-+	atomic_notifier_chain_register(&panic_notifier_list,
-+				       &pcie->panic_notifier);
-+
-+	pcie->die_notifier.notifier_call = brcm_pcie_die_notify_cb;
-+	register_die_notifier(&pcie->die_notifier);
-+}
-+
-+static void brcm_unregister_die_notifiers(struct brcm_pcie *pcie)
-+{
-+	unregister_die_notifier(&pcie->die_notifier);
-+	atomic_notifier_chain_unregister(&panic_notifier_list,
-+					 &pcie->panic_notifier);
-+}
-+
- static void __brcm_pcie_remove(struct brcm_pcie *pcie)
- {
- 	brcm_msi_remove(pcie);
-@@ -1748,6 +1895,9 @@ static void brcm_pcie_remove(struct platform_device *pdev)
- 
- 	pci_stop_root_bus(bridge->bus);
- 	pci_remove_root_bus(bridge->bus);
-+	if (pcie->cfg->has_err_report)
-+		brcm_unregister_die_notifiers(pcie);
-+
- 	__brcm_pcie_remove(pcie);
- }
- 
-@@ -1848,6 +1998,7 @@ static const struct pcie_cfg_data bcm7216_cfg = {
- 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
- 	.has_phy	= true,
- 	.num_inbound_wins = 3,
-+	.has_err_report = true,
- };
- 
- static const struct pcie_cfg_data bcm7712_cfg = {
-@@ -2022,8 +2173,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	if (pcie->cfg->has_err_report)
-+	if (pcie->cfg->has_err_report) {
- 		spin_lock_init(&pcie->bridge_lock);
-+		brcm_register_die_notifiers(pcie);
-+	}
- 
- 	return 0;
- 
--- 
-2.34.1
-
+Sounds good, and helps with the column width pressure. There might be
+isolated cases of "mask vs value" confusion, but I think proximity to
+FIELD_PREP()/FIELD_GET(), like you say, makes this clear.
 
