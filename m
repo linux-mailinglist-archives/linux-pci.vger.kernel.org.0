@@ -1,134 +1,77 @@
-Return-Path: <linux-pci+bounces-33530-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33531-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F6EEB1D411
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 10:11:19 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE5C7B1D43B
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 10:24:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E97433B3A79
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 08:11:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D8D567B1C1D
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 08:22:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 549C6242D8C;
-	Thu,  7 Aug 2025 08:11:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B1FC2222D6;
+	Thu,  7 Aug 2025 08:24:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="usbxQSzd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PKtyp8/e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSJkgmwG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160BC2253F2;
-	Thu,  7 Aug 2025 08:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1553B1B7F4;
+	Thu,  7 Aug 2025 08:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754554274; cv=none; b=RWOd/dU9J2QhxDC+GrIJCe1AJqS9VFJnhkolJdq0mSo5fL0Z7BqZqDaJX5kSvM7uOh7lko9u3ikpANbizCjuzndBFYBze75RzR0b3N3J0RLbaPxS2O+hGcc7egeRFu0v5qD0+f/k4lyFqaifcUz9tq7H1fCWljIk6pKAtNBN648=
+	t=1754555040; cv=none; b=gHwR+HedbCQ3SzveSPAygEZg+suQDaXwLy8LVSgjb28f3Tj2uDpAvLPCy41xPxsPhC1gLi6UW8GVqTw3LyDbzuqi/YsEq1zyXLICLiExMS+zZ1T7ti0lCmf1TiudxAvHrOdIQ4t38UBAgiauhak/kwhPpOVPGpTbpvQgKSicuY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754554274; c=relaxed/simple;
-	bh=5aKGQmsykQ4YHSNcqMkkGkOQMP71M+/2z4kV/REFkc0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qxAdMPuUDbxVrNOytpVbE6uYLxFjpKxi1yVZ1oA5U1qWU3+Vjb3yi3xG10aa/A9F5AEHJvk8pQM6/NERpOAA9ryQFJ5NlL6nzQZk2j6kK+jY1Di80CiEULwqrL10/9MLcj4QLN1mM+3kRypbQnatHbeCiDoJIlSTsPAnAKgzjGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=usbxQSzd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PKtyp8/e; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754554264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=qyDsKn1cvshzt5w4qfnD1ZngtpdUolUH5csMP8VFrqA=;
-	b=usbxQSzdeRq9jwMtPeZEX5Z32jk8PDI+RjAM4A+u07i+KUe3O4/+k0gFsR/KJikdjt9jyG
-	zZiscs4nNcVE1Ct/xV57Z6+3wsiwq0xK2vNXpYrXGRKKp0nYf+X6N8o6aHD5FRg8MkIlPH
-	xj96vAmf151lE9Oc/XFhIjsarEwlaVuV2hy1cskhINZUGK39XIo47WNVODGYEEmbtvyv96
-	wFKldPESx5hagUEyCTdpTArHdyC6qGZLjhcA5vnICidedR2bFH0SVdBeHygVwQYW/GmvP6
-	JUXrJsUEYT3aMa8kHVmmrq2851VeZ917EleWIj7xvtjfX67RnVBUwcluBMlztw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754554264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=qyDsKn1cvshzt5w4qfnD1ZngtpdUolUH5csMP8VFrqA=;
-	b=PKtyp8/e48A1fyib0m80072mCH25Ba+Z1smfn9UMcLJORu+GJcWy+FSBABdkVATDu60r7E
-	W9sl9dQyXTO6UJAw==
-To: Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	Kenneth Crudup <kenny@panix.com>,
-	Ammar Faizi <ammarfaizi2@gnuweeb.org>
-Subject: [PATCH v2] PCI: vmd: Fix wrong kfree() in vmd_msi_free()
-Date: Thu,  7 Aug 2025 10:10:51 +0200
-Message-Id: <20250807081051.2253962-1-namcao@linutronix.de>
+	s=arc-20240116; t=1754555040; c=relaxed/simple;
+	bh=0NJziiGdCrPe6ikKhGXkqWzuF7OOp0aWP72QcSrY1sA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gMGb9nSUVqwsWhcry5GkZGb3WF1Wsg0MNCaYV6U12FdYU+NFvQCSj9pDuz+grNYYJCKnblVKBkDu1XDoQfV56mk3++OLoNuB8cssCLM7pAuwnW9jxL66uTI5EgUq5PnU0gL2I7X1A9CSfiJGclhzXEeAFHXt8Oq2Yy+bR4IrSpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSJkgmwG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB81C4CEEB;
+	Thu,  7 Aug 2025 08:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754555039;
+	bh=0NJziiGdCrPe6ikKhGXkqWzuF7OOp0aWP72QcSrY1sA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CSJkgmwGR2vsL1LzbGcKaHmFg8JyJ3j/w5LgPkpCCIirdIU0F465cq4NJk3fvWscl
+	 OcRP5/byezip2uwstA0ur+eZ7TnZlW3jviU0hHHu2+xF9tLZu+ZjP1A10qkSWcxwCf
+	 s/C6OvTb4xBqhf3H4dj2xLgnpV4YpDUT0YRX3kIxMbG8flF6N3xMhZyqCqeB9XHRrO
+	 bxRJSHmxvaACBOm2SmxvVFj1T9NryskWtQo9thWeOaPPCPdyxqBgMnIuRvWlm94Fk9
+	 NRLxQyj5ADu6YtcCRxvQFsThn2GQnLhj6zGAu89oXTiLBAv11PIE+hcyONe9FLedtr
+	 A8pPLeB+S+m0g==
+Date: Thu, 7 Aug 2025 13:53:53 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bandhan Pramanik <bandhanpramanik06.foss@gmail.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
+	linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org, ath10k@lists.infradead.org
+Subject: Re: Packet loss with QCA9377 (ath10k) on ASUS VivoBook E410KA
+Message-ID: <l3iebypcyxpqxod5os3mn6465cwdlbnmlkbjnx3vu5bzyb4vhl@3dxnam2a7c2t>
+References: <20250806204018.GA14933@bhelgaas>
+ <BBAB0136-BB7C-4D59-B29D-2F35FC29D7AC@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BBAB0136-BB7C-4D59-B29D-2F35FC29D7AC@gmail.com>
 
-vmd_msi_alloc() allocates struct vmd_irq and stashes it into
-irq_data->chip_data associated with the VMD's interrupt domain.
-vmd_msi_free() extracts the pointer by calling irq_get_chip_data() and
-frees it.
+On Thu, Aug 07, 2025 at 11:33:08AM GMT, Bandhan Pramanik wrote:
+> I'll tell the guy to clone the ath-next branch then and will inform you pretty soon.
 
-irq_get_chip_data() returns the chip_data associated with the top interrupt
-domain. This worked in the past, because VMD's interrupt domain was the top
-domain.
+The patches are not in ath-next. You need to manually pick them up from mailing
+list.
 
-But since commit d7d8ab87e3e7 ("PCI: vmd: Switch to
-msi_create_parent_irq_domain()") changed the interrupt domain hierarchy,
-VMD's interrupt domain is not the top domain anymore. irq_get_chip_data()
-now returns the chip_data at the MSI devices' interrupt domains. It is
-therefore broken for vmd_msi_free() to kfree() this chip_data.
+But even if it doesn't help, try to disable ASPM using cmdline by passing
+'pcie_aspm=off'.
 
-Fix this issue, correctly extract the chip_data associated with the VMD's
-interrupt domain.
+- Mani
 
-Fixes: d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()")
-Reported-by: Kenneth Crudup <kenny@panix.com>
-Closes: https://lore.kernel.org/linux-pci/dfa40e48-8840-4e61-9fda-25cdb3ad8=
-1c1@panix.com/
-Reported-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-Closes: https://lore.kernel.org/linux-pci/ed53280ed15d1140700b96cca2734bf32=
-7ee92539e5eb68e80f5bbbf0f01@linux.gnuweeb.org/
-Tested-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-Tested-by: Kenneth Crudup <kenny@panix.com>
-Signed-off-by: Nam Cao <namcao@linutronix.de>
----
-v2: Fix typo and describe the change more precisely
----
- drivers/pci/controller/vmd.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 9bbb0ff4cc15..b679c7f28f51 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -280,10 +280,12 @@ static int vmd_msi_alloc(struct irq_domain *domain, u=
-nsigned int virq,
- static void vmd_msi_free(struct irq_domain *domain, unsigned int virq,
- 			 unsigned int nr_irqs)
- {
-+	struct irq_data *irq_data;
- 	struct vmd_irq *vmdirq;
-=20
- 	for (int i =3D 0; i < nr_irqs; ++i) {
--		vmdirq =3D irq_get_chip_data(virq + i);
-+		irq_data =3D irq_domain_get_irq_data(domain, virq + i);
-+		vmdirq =3D irq_data->chip_data;
-=20
- 		synchronize_srcu(&vmdirq->irq->srcu);
-=20
---=20
-2.39.5
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
