@@ -1,1248 +1,444 @@
-Return-Path: <linux-pci+bounces-33548-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33549-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26F7DB1D704
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 13:53:22 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21914B1D731
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 14:02:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB8A53AF1F5
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 11:53:20 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AD71B4E1135
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 12:02:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F6332356D9;
-	Thu,  7 Aug 2025 11:53:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32ECE23504B;
+	Thu,  7 Aug 2025 12:02:25 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0911F224B0C;
-	Thu,  7 Aug 2025 11:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24915221275;
+	Thu,  7 Aug 2025 12:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754567596; cv=none; b=mwNbnvHaK3PqZmWTD3eEFMdXBqOGoXz8u8vIm7yu0jDGU5GWl6awX3fxKu00jsl5hkEtSCHDQWUM/iLY3ZRMNSrjuudzehFDMNu56y7Rg2jkXU4DGo/sL5/1h4FF4/LhczYoRIe943LCegfgG3Wj2aA1qQ+uMAhWWOeWaUFt5v0=
+	t=1754568145; cv=none; b=NVAj8HPtv4fHC8tlTNRdxWJkgWJewH0RObAByKmoljlshR75Ou34Tg6pFnlj/MNfe3hPqK+wHO373jBU4vNS8g7y4sf/ZOths2tMElIKlv2oVx2i2IiqYbEIvAPQFjeBbO3k0mcFTqtwqry5XR5BQWL8Sjkw79NkYaLoewsrv+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754567596; c=relaxed/simple;
-	bh=udj3T3LWxzxSuLGiEO5/tGF5pnwBtHpUx+KQejvVMNw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Ga0EadrQLgMXRCiRFdUk5WmDa7q+BAWp+KwFMUnRuHYkgns4NIRp/DI7rD+cWTnCH67YzRXRJqExNwlQ7wAJ2OBOzWm2dY9dFKue0Tyr6pbRVqxzNdchLQeImHLRAUP3UkHgJlTyeYc9iRt1gnUe51SnJs4CgZVMp1zNb0jxLRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4byQTJ39yYz2RW5T;
-	Thu,  7 Aug 2025 19:50:28 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 198541402CA;
-	Thu,  7 Aug 2025 19:53:01 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 7 Aug 2025 19:52:59 +0800
-Message-ID: <cc611dda-d1e4-4793-9bb2-0eaa47277584@huawei.com>
-Date: Thu, 7 Aug 2025 19:52:58 +0800
+	s=arc-20240116; t=1754568145; c=relaxed/simple;
+	bh=WmmLTqk2OgTgbcaK+tbH9f2X98OF6Jw7cAoJOaXSLIE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=K8krU621zjp9CKXlZsNVEnMb5JrOwnXvYQRSmh1l6GF/MhVYwUcf4A+Fr2IEZ7A+1xGWDDiX7ukrejN11DhV9ALpdCsGNM0TVAG8On0WQGb+YOTvVSZKt7KRuMb8AjwdJH+XidmkFG0oXxpiCSH8ZCoi9On00bGoy76lw+0pM5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-af949891d3aso132132566b.1;
+        Thu, 07 Aug 2025 05:02:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754568141; x=1755172941;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TcEqD2Pp6Z225d6tl17GjpdF9VhMMcRo1GStFJJS27w=;
+        b=wEprYdzqWtQ3ZqohktgdfttcByCQ3AXQNFA5NJLiPwYbsM/1XgBFvC5Fh8Fb9WeEQp
+         EbkrsNXu87a1S1XAEhnVo412seuOfzD5v3F+1DKud1kTg+pVaRDi7z6mtpvVI7heaLLY
+         u0NaaNWFNn3Yvx/PucNAeOcuDyAUq7G+acfAh2I0Mrgrtn+2q53DHTSb7gIhZ4wdkZHK
+         69VQ72EyvdJN7eiK0Mo5bQdU8yVnOmKF5+lInvDiN2MRuyR+9NF4H3k2+7QHopS3Kk7M
+         kCduwNOjujxpH9LOtiBU9WDZWuFuFHNHXcScm4a85VGsNK4hUqdkJqb3RMw/jaDZr4kf
+         e0/A==
+X-Forwarded-Encrypted: i=1; AJvYcCVL43qydsf7o6S3bfl82rGOWU6OdpiKzMzR7cfJXSpowCwWg3hZrsxqWem3fGyn+tKM7F0aPp0aVKlx@vger.kernel.org, AJvYcCVbVvqvzdcKZmNsQ7tTQPBkLCYCmlF1vMgVWBmnbJL7Oam9TF+kvLyYhaUGW8gQyqizRbZBc5hpPqnn@vger.kernel.org, AJvYcCW+FhFjyZ3P+iSNxDXblnF9QDCj3Y97uP7eQ5/EYlTY9fRvfHhuTUQ96IALu8dVPAV9WbLxB1aUnnFFBII+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHIGGDubZc6q/U/bsvT5G8sA+OBApCinnoiu3/jjyx/DYbi8H+
+	CCRQH0zfm8JkptwdB+DwyYMk9I5r9NDEYmL1YgA6Rkj5BsbRQ21vRO/9xXs+Gw==
+X-Gm-Gg: ASbGncvldYuU80fZktLopp8G1+PzEvubAA6G/Kz4Wqjeqd6jBa23eHBqTGIwlvKEkAm
+	2McErPi8iRzsG8EcwcxRNBI9+KQ4ggF+gvtEzWu7f7MTlQIKV6C0UL7JX2b8v5w4jSM0y7wMBRq
+	KCIkgTo4j0rKnurcpvywonOlGV7OgWMp5VVO1+lCoPD0MKwdS9Mf0Al8K4Bqaz/Fioy8nUIpbcE
+	NL7Z4NCLQUT6ktkCT8g3varkk3xBe1klK1TU2iTHTt92yMW0k8MnCpvukBwLMwHWIg5+NxypdYr
+	0N59ChezKRAM3dROhsjUMtMUslGYzDsEuQi74J3qnFIUPNmMb/gcrZ6AL1CsoyJPxIN+tbdS0co
+	f5OL6W2VKt3FS5iAFoue+3go=
+X-Google-Smtp-Source: AGHT+IGa1I/ilvIOBCvInSAxZfDpaVsMb4OkBgAFcX5LwdXi64LWkAcj3+hpGQebA5QV/8oJSjfE7g==
+X-Received: by 2002:a17:907:3d93:b0:af5:a834:c327 with SMTP id a640c23a62f3a-af99031cd5fmr577553966b.21.1754568140812;
+        Thu, 07 Aug 2025 05:02:20 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:9::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af91a219ef2sm1295120066b.96.2025.08.07.05.02.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Aug 2025 05:02:20 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+Date: Thu, 07 Aug 2025 05:02:11 -0700
+Subject: [PATCH v5] vmcoreinfo: Track and log recoverable hardware errors
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v7 22/31] irqchip/gic-v5: Add GICv5 LPI/IPI support
-Content-Language: en-US
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: Arnd Bergmann <arnd@arndb.de>, Sascha Bischoff <sascha.bischoff@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Timothy Hayes
-	<timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>
-References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
- <20250703-gicv5-host-v7-22-12e71f1b3528@kernel.org>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20250703-gicv5-host-v7-22-12e71f1b3528@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250807-vmcore_hw_error-v5-1-0df35396e4b2@debian.org>
+X-B4-Tracking: v=1; b=H4sIAMKVlGgC/23PzWrDMAzA8VcxOsfDkr+ynPYeYxTHkRsflgxnp
+ B0l7z5SNpbhXgX6/aUbLFwyL9CJGxRe85LnCTphGwFxDNOZZR6gE0CKrPLKy/U9zoVP4+XEpcx
+ FaiJDz+yiRgeNgI/CKV/v4utbI2DMy+dcvu6BFffpj4WmslaUKNuYjOWhd1qbl4H7HKanuZxhx
+ 1Y6Aq4GSKJM2PrkB0ehD0eg+f2C8PFi6J0Nrjc62lCV9aFMVAN6LyflWp0iJvQVYP6AVj24wOx
+ AwMRu/77V/4Bt274Bb1xdTasBAAA=
+X-Change-ID: 20250707-vmcore_hw_error-322429e6c316
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+ James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>, 
+ Borislav Petkov <bp@alien8.de>, Robert Moore <robert.moore@intel.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ acpica-devel@lists.linux.dev, osandov@osandov.com, 
+ xueshuai@linux.alibaba.com, konrad.wilk@oracle.com, 
+ linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-pci@vger.kernel.org, kernel-team@meta.com, 
+ Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.15-dev-dd21f
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11826; i=leitao@debian.org;
+ h=from:subject:message-id; bh=WmmLTqk2OgTgbcaK+tbH9f2X98OF6Jw7cAoJOaXSLIE=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBolJXLLipo1TDCKVywDcpai5J+PL9QnUPwrqKfW
+ P8sDVDZTvKJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaJSVywAKCRA1o5Of/Hh3
+ bSrHD/95S6d363l5YVcJC+RC5CaiPry+uBeGaRYCZ46OUPPhWLlCd14I+s8M3tyZau7hg+Ng47C
+ 0+jMJjzWQhYrPrWiVshbf2JA8oxwx6ZImBx3VPaYlKWNUz1k+GyH468Rj+3juO+KeERQIT4HDoU
+ DapphCHFmO0joirLNNEAAA5vfLN2vChY4CXyAGFrZq3ONzyPRowry0Tv93UcRlfvVhwrNMGeipT
+ ymVpDgfkdfvApspenJjvsPanUC1a9QWB0LLaTqDaNVwML/MmLVyaxlGTZIW5jP5jhAM9RBN3x9q
+ r6LivoXpbAQBIJScHrrMgPz1FcuvcdvyQcBfd/L8GnHZs8uPpemmOF8+yBkPJSpAuJSQuirMrnG
+ Yxco9PV5o3LOmBfRT5giYRqr4AzsEuTg5rhARhS/v8uAa360I7NmmYlkvP5jE5zykGpY+k5ofDe
+ MOv61/NfOHSIbbNrnxJcvFsOpZj/dmQ25ipxsJ5i1OG29W9X8M2Re+HfNK3R+cya5UdLp0G0p+Q
+ 3DrciRehC6/8tnIZ1PNSlZ4bpUTYOeS3q6qDq+BHYkh1urV4NCEcIJDi/5oKZzakvPUeEJO4pQZ
+ ST6OsrwjYBE0gFGwQPmoBmfBe8aP7eI8/EENCYjviC1ZmKtFYyqxHE3pgIsZVl8q5irbq0PKhqx
+ Q5K1jD22+WLzL6w==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
+Introduce a generic infrastructure for tracking recoverable hardware
+errors (HW errors that are visible to the OS but does not cause a panic)
+and record them for vmcore consumption. This aids post-mortem crash
+analysis tools by preserving a count and timestamp for the last
+occurrence of such errors. On the other side, correctable errors, which
+the OS typically remains unaware of because the underlying hardware
+handles them transparently, are less relevant for crash dump
+and therefore are NOT tracked in this infrastructure.
 
+Add centralized logging for sources of recoverable hardware
+errors based on the subsystem it has been notified.
 
-On 2025/7/3 18:25, Lorenzo Pieralisi wrote:
-> An IRS supports Logical Peripheral Interrupts (LPIs) and implement
-> Linux IPIs on top of it.
-> 
-> LPIs are used for interrupt signals that are translated by a
-> GICv5 ITS (Interrupt Translation Service) but also for software
-> generated IRQs - namely interrupts that are not driven by a HW
-> signal, ie IPIs.
-> 
-> LPIs rely on memory storage for interrupt routing and state.
-> 
-> LPIs state and routing information is kept in the Interrupt
-> State Table (IST).
-> 
-> IRSes provide support for 1- or 2-level IST tables configured
-> to support a maximum number of interrupts that depend on the
-> OS configuration and the HW capabilities.
-> 
-> On systems that provide 2-level IST support, always allow
-> the maximum number of LPIs; On systems with only 1-level
-> support, limit the number of LPIs to 2^12 to prevent
-> wasting memory (presumably a system that supports a 1-level
-> only IST is not expecting a large number of interrupts).
-> 
-> On a 2-level IST system, L2 entries are allocated on
-> demand.
-> 
-> The IST table memory is allocated using the kmalloc() interface;
-> the allocation required may be smaller than a page and must be
-> made up of contiguous physical pages if larger than a page.
-> 
-> On systems where the IRS is not cache-coherent with the CPUs,
-> cache mainteinance operations are executed to clean and
-> invalidate the allocated memory to the point of coherency
-> making it visible to the IRS components.
-> 
-> On GICv5 systems, IPIs are implemented using LPIs.
-> 
-> Add an LPI IRQ domain and implement an IPI-specific IRQ domain created
-> as a child/subdomain of the LPI domain to allocate the required number
-> of LPIs needed to implement the IPIs.
-> 
-> IPIs are backed by LPIs, add LPIs allocation/de-allocation
-> functions.
-> 
-> The LPI INTID namespace is managed using an IDA to alloc/free LPI INTIDs.
-> 
-> Associate an IPI irqchip with IPI IRQ descriptors to provide
-> core code with the irqchip.ipi_send_single() method required
-> to raise an IPI.
-> 
-> Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
-> Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
-> Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
-> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Reviewed-by: Marc Zyngier <maz@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> ---
->  arch/arm64/include/asm/smp.h       |  17 ++
->  arch/arm64/include/asm/sysreg.h    |   6 +
->  arch/arm64/kernel/smp.c            |  17 --
->  drivers/irqchip/irq-gic-v5-irs.c   | 364 +++++++++++++++++++++++++++++++++++++
->  drivers/irqchip/irq-gic-v5.c       | 299 +++++++++++++++++++++++++++++-
->  include/linux/irqchip/arm-gic-v5.h |  63 ++++++-
->  6 files changed, 746 insertions(+), 20 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-> index d6fd6efb66a6..d48ef6d5abcc 100644
-> --- a/arch/arm64/include/asm/smp.h
-> +++ b/arch/arm64/include/asm/smp.h
-> @@ -50,6 +50,23 @@ struct seq_file;
->   */
->  extern void smp_init_cpus(void);
->  
-> +enum ipi_msg_type {
-> +	IPI_RESCHEDULE,
-> +	IPI_CALL_FUNC,
-> +	IPI_CPU_STOP,
-> +	IPI_CPU_STOP_NMI,
-> +	IPI_TIMER,
-> +	IPI_IRQ_WORK,
-> +	NR_IPI,
-> +	/*
-> +	 * Any enum >= NR_IPI and < MAX_IPI is special and not tracable
-> +	 * with trace_ipi_*
-> +	 */
-> +	IPI_CPU_BACKTRACE = NR_IPI,
-> +	IPI_KGDB_ROUNDUP,
-> +	MAX_IPI
-> +};
-> +
->  /*
->   * Register IPI interrupts with the arch SMP code
->   */
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index efd2e7a1fbe2..948007cd3684 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -1088,6 +1088,7 @@
->  #define GICV5_OP_GIC_CDAFF		sys_insn(1, 0, 12, 1, 3)
->  #define GICV5_OP_GIC_CDDI		sys_insn(1, 0, 12, 2, 0)
->  #define GICV5_OP_GIC_CDDIS		sys_insn(1, 0, 12, 1, 0)
-> +#define GICV5_OP_GIC_CDHM		sys_insn(1, 0, 12, 2, 1)
->  #define GICV5_OP_GIC_CDEN		sys_insn(1, 0, 12, 1, 1)
->  #define GICV5_OP_GIC_CDEOI		sys_insn(1, 0, 12, 1, 7)
->  #define GICV5_OP_GIC_CDPEND		sys_insn(1, 0, 12, 1, 4)
-> @@ -1115,6 +1116,11 @@
->  #define GICV5_GIC_CDEN_TYPE_MASK	GENMASK_ULL(31, 29)
->  #define GICV5_GIC_CDEN_ID_MASK		GENMASK_ULL(23, 0)
->  
-> +/* Definitions for GIC CDHM */
-> +#define GICV5_GIC_CDHM_HM_MASK		BIT_ULL(32)
-> +#define GICV5_GIC_CDHM_TYPE_MASK	GENMASK_ULL(31, 29)
-> +#define GICV5_GIC_CDHM_ID_MASK		GENMASK_ULL(23, 0)
-> +
->  /* Definitions for GIC CDPEND */
->  #define GICV5_GIC_CDPEND_PENDING_MASK	BIT_ULL(32)
->  #define GICV5_GIC_CDPEND_TYPE_MASK	GENMASK_ULL(31, 29)
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index 2c501e917d38..4797e2c70014 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -64,23 +64,6 @@ struct secondary_data secondary_data;
->  /* Number of CPUs which aren't online, but looping in kernel text. */
->  static int cpus_stuck_in_kernel;
->  
-> -enum ipi_msg_type {
-> -	IPI_RESCHEDULE,
-> -	IPI_CALL_FUNC,
-> -	IPI_CPU_STOP,
-> -	IPI_CPU_STOP_NMI,
-> -	IPI_TIMER,
-> -	IPI_IRQ_WORK,
-> -	NR_IPI,
-> -	/*
-> -	 * Any enum >= NR_IPI and < MAX_IPI is special and not tracable
-> -	 * with trace_ipi_*
-> -	 */
-> -	IPI_CPU_BACKTRACE = NR_IPI,
-> -	IPI_KGDB_ROUNDUP,
-> -	MAX_IPI
-> -};
-> -
->  static int ipi_irq_base __ro_after_init;
->  static int nr_ipi __ro_after_init = NR_IPI;
->  
-> diff --git a/drivers/irqchip/irq-gic-v5-irs.c b/drivers/irqchip/irq-gic-v5-irs.c
-> index fba8efceb26e..f00a4a6fece7 100644
-> --- a/drivers/irqchip/irq-gic-v5-irs.c
-> +++ b/drivers/irqchip/irq-gic-v5-irs.c
-> @@ -5,12 +5,20 @@
->  
->  #define pr_fmt(fmt)	"GICv5 IRS: " fmt
->  
-> +#include <linux/log2.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  
->  #include <linux/irqchip.h>
->  #include <linux/irqchip/arm-gic-v5.h>
->  
-> +/*
-> + * Hardcoded ID_BITS limit for systems supporting only a 1-level IST
-> + * table. Systems supporting only a 1-level IST table aren't expected
-> + * to require more than 2^12 LPIs. Tweak as required.
-> + */
-> +#define LPI_ID_BITS_LINEAR		12
-> +
->  #define IRS_FLAGS_NON_COHERENT		BIT(0)
->  
->  static DEFINE_PER_CPU_READ_MOSTLY(struct gicv5_irs_chip_data *, per_cpu_irs_data);
-> @@ -28,6 +36,331 @@ static void irs_writel_relaxed(struct gicv5_irs_chip_data *irs_data,
->  	writel_relaxed(val, irs_data->irs_base + reg_offset);
->  }
->  
-> +static u64 irs_readq_relaxed(struct gicv5_irs_chip_data *irs_data,
-> +			     const u32 reg_offset)
-> +{
-> +	return readq_relaxed(irs_data->irs_base + reg_offset);
-> +}
-> +
-> +static void irs_writeq_relaxed(struct gicv5_irs_chip_data *irs_data,
-> +			       const u64 val, const u32 reg_offset)
-> +{
-> +	writeq_relaxed(val, irs_data->irs_base + reg_offset);
-> +}
-> +
-> +/*
-> + * The polling wait (in gicv5_wait_for_op_s_atomic()) on a GIC register
-> + * provides the memory barriers (through MMIO accessors)
-> + * required to synchronize CPU and GIC access to IST memory.
-> + */
-> +static int gicv5_irs_ist_synchronise(struct gicv5_irs_chip_data *irs_data)
-> +{
-> +	return gicv5_wait_for_op_atomic(irs_data->irs_base, GICV5_IRS_IST_STATUSR,
-> +					GICV5_IRS_IST_STATUSR_IDLE, NULL);
-> +}
-> +
-> +static int __init gicv5_irs_init_ist_linear(struct gicv5_irs_chip_data *irs_data,
-> +					    unsigned int lpi_id_bits,
-> +					    unsigned int istsz)
-> +{
-> +	size_t l2istsz;
-> +	u32 n, cfgr;
-> +	void *ist;
-> +	u64 baser;
-> +	int ret;
-> +
-> +	/* Taken from GICv5 specifications 10.2.1.13 IRS_IST_BASER */
-> +	n = max(5, lpi_id_bits + 1 + istsz);
-> +
-> +	l2istsz = BIT(n + 1);
-> +	/*
-> +	 * Check memory requirements. For a linear IST we cap the
-> +	 * number of ID bits to a value that should never exceed
-> +	 * kmalloc interface memory allocation limits, so this
-> +	 * check is really belt and braces.
-> +	 */
-> +	if (l2istsz > KMALLOC_MAX_SIZE) {
-> +		u8 lpi_id_cap = ilog2(KMALLOC_MAX_SIZE) - 2 + istsz;
-> +
-> +		pr_warn("Limiting LPI ID bits from %u to %u\n",
-> +			lpi_id_bits, lpi_id_cap);
-> +		lpi_id_bits = lpi_id_cap;
-> +		l2istsz = KMALLOC_MAX_SIZE;
-> +	}
-> +
-> +	ist = kzalloc(l2istsz, GFP_KERNEL);
+hwerror_data is write-only at kernel runtime, and it is meant to be read
+from vmcore using tools like crash/drgn. For example, this is how it
+looks like when opening the crashdump from drgn.
 
+	>>> prog['hwerror_data']
+	(struct hwerror_info[1]){
+		{
+			.count = (int)844,
+			.timestamp = (time64_t)1752852018,
+		},
+		...
 
-When kmemleak is on, There is a memory leak occurring as below:
+This helps fleet operators quickly triage whether a crash may be
+influenced by hardware recoverable errors (which executes a uncommon
+code path in the kernel), especially when recoverable errors occurred
+shortly before a panic, such as the bug fixed by
+commit ee62ce7a1d90 ("page_pool: Track DMA-mapped pages and unmap them
+when destroying the pool")
 
+This is not intended to replace full hardware diagnostics but provides
+a fast way to correlate hardware events with kernel panics quickly.
 
-unreferenced object 0xffff00080039a000 (size 4096):
-  comm "swapper/0", pid 0, jiffies 4294892296
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace (crc 0):
-    kmemleak_alloc+0x34/0x40
-    __kmalloc_noprof+0x320/0x464
-    gicv5_irs_iste_alloc+0x1a4/0x484
-    gicv5_irq_lpi_domain_alloc+0xe4/0x194
-    irq_domain_alloc_irqs_parent+0x78/0xd8
-    gicv5_irq_ipi_domain_alloc+0x180/0x238
-    irq_domain_alloc_irqs_locked+0x238/0x7d4
-    __irq_domain_alloc_irqs+0x88/0x114
-    gicv5_of_init+0x284/0x37c
-    of_irq_init+0x3b8/0xb18
-    irqchip_init+0x18/0x40
-    init_IRQ+0x104/0x164
-    start_kernel+0x1a4/0x3d4
-    __primary_switched+0x8c/0x94
+Rare machine check exceptions—like those indicated by mce_flags.p5 or
+mce_flags.winchip—are not accounted for in this method, as they fall
+outside the intended usage scope for this feature’s user base.
 
+Suggested-by: Tony Luck <tony.luck@intel.com>
+Suggested-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+---
+Changes in v5:
+- Move the headers to uapi file (Dave Hansen)
+- Use atomic operations in the tracking struct (Dave Hansen)
+- Drop the MCE enum type, and track MCE errors as "others"
+- Document this feature better
+- Link to v4: https://lore.kernel.org/r/20250801-vmcore_hw_error-v4-1-fa1fe65edb83@debian.org
 
-> +	if (!ist)
-> +		return -ENOMEM;
-> +
-> +	if (irs_data->flags & IRS_FLAGS_NON_COHERENT)
-> +		dcache_clean_inval_poc((unsigned long)ist,
-> +				       (unsigned long)ist + l2istsz);
-> +	else
-> +		dsb(ishst);
-> +
-> +	cfgr = FIELD_PREP(GICV5_IRS_IST_CFGR_STRUCTURE,
-> +			  GICV5_IRS_IST_CFGR_STRUCTURE_LINEAR)	|
-> +	       FIELD_PREP(GICV5_IRS_IST_CFGR_ISTSZ, istsz)	|
-> +	       FIELD_PREP(GICV5_IRS_IST_CFGR_L2SZ,
-> +			  GICV5_IRS_IST_CFGR_L2SZ_4K)		|
-> +	       FIELD_PREP(GICV5_IRS_IST_CFGR_LPI_ID_BITS, lpi_id_bits);
-> +	irs_writel_relaxed(irs_data, cfgr, GICV5_IRS_IST_CFGR);
-> +
-> +	gicv5_global_data.ist.l2 = false;
-> +
-> +	baser = (virt_to_phys(ist) & GICV5_IRS_IST_BASER_ADDR_MASK) |
-> +		FIELD_PREP(GICV5_IRS_IST_BASER_VALID, 0x1);
-> +	irs_writeq_relaxed(irs_data, baser, GICV5_IRS_IST_BASER);
-> +
-> +	ret = gicv5_irs_ist_synchronise(irs_data);
-> +	if (ret) {
-> +		kfree(ist);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int __init gicv5_irs_init_ist_two_level(struct gicv5_irs_chip_data *irs_data,
-> +					       unsigned int lpi_id_bits,
-> +					       unsigned int istsz,
-> +					       unsigned int l2sz)
-> +{
-> +	__le64 *l1ist;
-> +	u32 cfgr, n;
-> +	size_t l1sz;
-> +	u64 baser;
-> +	int ret;
-> +
-> +	/* Taken from GICv5 specifications 10.2.1.13 IRS_IST_BASER */
-> +	n = max(5, lpi_id_bits - ((10 - istsz) + (2 * l2sz)) + 2);
-> +
-> +	l1sz = BIT(n + 1);
-> +
-> +	l1ist = kzalloc(l1sz, GFP_KERNEL);
-> +	if (!l1ist)
-> +		return -ENOMEM;
-> +
-> +	if (irs_data->flags & IRS_FLAGS_NON_COHERENT)
-> +		dcache_clean_inval_poc((unsigned long)l1ist,
-> +				       (unsigned long)l1ist + l1sz);
-> +	else
-> +		dsb(ishst);
-> +
-> +	cfgr = FIELD_PREP(GICV5_IRS_IST_CFGR_STRUCTURE,
-> +			  GICV5_IRS_IST_CFGR_STRUCTURE_TWO_LEVEL)	|
-> +	       FIELD_PREP(GICV5_IRS_IST_CFGR_ISTSZ, istsz)		|
-> +	       FIELD_PREP(GICV5_IRS_IST_CFGR_L2SZ, l2sz)		|
-> +	       FIELD_PREP(GICV5_IRS_IST_CFGR_LPI_ID_BITS, lpi_id_bits);
-> +	irs_writel_relaxed(irs_data, cfgr, GICV5_IRS_IST_CFGR);
-> +
-> +	/*
-> +	 * The L2SZ determine bits required at L2 level. Number of bytes
-> +	 * required by metadata is reported through istsz - the number of bits
-> +	 * covered by L2 entries scales accordingly.
-> +	 */
-> +	gicv5_global_data.ist.l2_size = BIT(11 + (2 * l2sz) + 1);
-> +	gicv5_global_data.ist.l2_bits = (10 - istsz) + (2 * l2sz);
-> +	gicv5_global_data.ist.l1ist_addr = l1ist;
-> +	gicv5_global_data.ist.l2 = true;
-> +
-> +	baser = (virt_to_phys(l1ist) & GICV5_IRS_IST_BASER_ADDR_MASK) |
-> +		FIELD_PREP(GICV5_IRS_IST_BASER_VALID, 0x1);
-> +	irs_writeq_relaxed(irs_data, baser, GICV5_IRS_IST_BASER);
-> +
-> +	ret = gicv5_irs_ist_synchronise(irs_data);
-> +	if (ret) {
-> +		kfree(l1ist);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Alloc L2 IST entries on demand.
-> + *
-> + * Locking/serialization is guaranteed by irqdomain core code by
-> + * taking the hierarchical domain struct irq_domain.root->mutex.
-> + */
-> +int gicv5_irs_iste_alloc(const u32 lpi)
-> +{
-> +	struct gicv5_irs_chip_data *irs_data;
-> +	unsigned int index;
-> +	u32 l2istr, l2bits;
-> +	__le64 *l1ist;
-> +	size_t l2size;
-> +	void *l2ist;
-> +	int ret;
-> +
-> +	if (!gicv5_global_data.ist.l2)
-> +		return 0;
-> +
-> +	irs_data = per_cpu(per_cpu_irs_data, smp_processor_id());
-> +	if (!irs_data)
-> +		return -ENOENT;
-> +
-> +	l2size = gicv5_global_data.ist.l2_size;
-> +	l2bits = gicv5_global_data.ist.l2_bits;
-> +	l1ist = gicv5_global_data.ist.l1ist_addr;
-> +	index = lpi >> l2bits;
-> +
-> +	if (FIELD_GET(GICV5_ISTL1E_VALID, le64_to_cpu(l1ist[index])))
-> +		return 0;
-> +
-> +	l2ist = kzalloc(l2size, GFP_KERNEL);
-> +	if (!l2ist)
-> +		return -ENOMEM;
-> +
-> +	l1ist[index] = cpu_to_le64(virt_to_phys(l2ist) & GICV5_ISTL1E_L2_ADDR_MASK);
-> +
-> +	if (irs_data->flags & IRS_FLAGS_NON_COHERENT) {
-> +		dcache_clean_inval_poc((unsigned long)l2ist,
-> +				       (unsigned long)l2ist + l2size);
-> +		dcache_clean_poc((unsigned long)(l1ist + index),
-> +				 (unsigned long)(l1ist + index) + sizeof(*l1ist));
-> +	} else {
-> +		dsb(ishst);
-> +	}
-> +
-> +	l2istr = FIELD_PREP(GICV5_IRS_MAP_L2_ISTR_ID, lpi);
-> +	irs_writel_relaxed(irs_data, l2istr, GICV5_IRS_MAP_L2_ISTR);
-> +
-> +	ret = gicv5_irs_ist_synchronise(irs_data);
-> +	if (ret) {
-> +		l1ist[index] = 0;
-> +		kfree(l2ist);
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * Make sure we invalidate the cache line pulled before the IRS
-> +	 * had a chance to update the L1 entry and mark it valid.
-> +	 */
-> +	if (irs_data->flags & IRS_FLAGS_NON_COHERENT) {
-> +		/*
-> +		 * gicv5_irs_ist_synchronise() includes memory
-> +		 * barriers (MMIO accessors) required to guarantee that the
-> +		 * following dcache invalidation is not executed before the
-> +		 * IST mapping operation has completed.
-> +		 */
-> +		dcache_inval_poc((unsigned long)(l1ist + index),
-> +				 (unsigned long)(l1ist + index) + sizeof(*l1ist));
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Try to match the L2 IST size to the pagesize, and if this is not possible
-> + * pick the smallest supported L2 size in order to minimise the requirement for
-> + * physically contiguous blocks of memory as page-sized allocations are
-> + * guaranteed to be physically contiguous, and are by definition the easiest to
-> + * find.
-> + *
-> + * Fall back to the smallest supported size (in the event that the pagesize
-> + * itself is not supported) again serves to make it easier to find physically
-> + * contiguous blocks of memory.
-> + */
-> +static unsigned int gicv5_irs_l2_sz(u32 idr2)
-> +{
-> +	switch (PAGE_SIZE) {
-> +	case SZ_64K:
-> +		if (GICV5_IRS_IST_L2SZ_SUPPORT_64KB(idr2))
-> +			return GICV5_IRS_IST_CFGR_L2SZ_64K;
-> +		fallthrough;
-> +	case SZ_4K:
-> +		if (GICV5_IRS_IST_L2SZ_SUPPORT_4KB(idr2))
-> +			return GICV5_IRS_IST_CFGR_L2SZ_4K;
-> +		fallthrough;
-> +	case SZ_16K:
-> +		if (GICV5_IRS_IST_L2SZ_SUPPORT_16KB(idr2))
-> +			return GICV5_IRS_IST_CFGR_L2SZ_16K;
-> +		break;
-> +	}
-> +
-> +	if (GICV5_IRS_IST_L2SZ_SUPPORT_4KB(idr2))
-> +		return GICV5_IRS_IST_CFGR_L2SZ_4K;
-> +
-> +	return GICV5_IRS_IST_CFGR_L2SZ_64K;
-> +}
-> +
-> +static int __init gicv5_irs_init_ist(struct gicv5_irs_chip_data *irs_data)
-> +{
-> +	u32 lpi_id_bits, idr2_id_bits, idr2_min_lpi_id_bits, l2_iste_sz, l2sz;
-> +	u32 l2_iste_sz_split, idr2;
-> +	bool two_levels, istmd;
-> +	u64 baser;
-> +	int ret;
-> +
-> +	baser = irs_readq_relaxed(irs_data, GICV5_IRS_IST_BASER);
-> +	if (FIELD_GET(GICV5_IRS_IST_BASER_VALID, baser)) {
-> +		pr_err("IST is marked as valid already; cannot allocate\n");
-> +		return -EPERM;
-> +	}
-> +
-> +	idr2 = irs_readl_relaxed(irs_data, GICV5_IRS_IDR2);
-> +	two_levels = !!FIELD_GET(GICV5_IRS_IDR2_IST_LEVELS, idr2);
-> +
-> +	idr2_id_bits = FIELD_GET(GICV5_IRS_IDR2_ID_BITS, idr2);
-> +	idr2_min_lpi_id_bits = FIELD_GET(GICV5_IRS_IDR2_MIN_LPI_ID_BITS, idr2);
-> +
-> +	/*
-> +	 * For two level tables we are always supporting the maximum allowed
-> +	 * number of IDs.
-> +	 *
-> +	 * For 1-level tables, we should support a number of bits that
-> +	 * is >= min_lpi_id_bits but cap it to LPI_ID_BITS_LINEAR lest
-> +	 * the level 1-table gets too large and its memory allocation
-> +	 * may fail.
-> +	 */
-> +	if (two_levels) {
-> +		lpi_id_bits = idr2_id_bits;
-> +	} else {
-> +		lpi_id_bits = max(LPI_ID_BITS_LINEAR, idr2_min_lpi_id_bits);
-> +		lpi_id_bits = min(lpi_id_bits, idr2_id_bits);
-> +	}
-> +
-> +	/*
-> +	 * Cap the ID bits according to the CPUIF supported ID bits
-> +	 */
-> +	lpi_id_bits = min(lpi_id_bits, gicv5_global_data.cpuif_id_bits);
-> +
-> +	if (two_levels)
-> +		l2sz = gicv5_irs_l2_sz(idr2);
-> +
-> +	istmd = !!FIELD_GET(GICV5_IRS_IDR2_ISTMD, idr2);
-> +
-> +	l2_iste_sz = GICV5_IRS_IST_CFGR_ISTSZ_4;
-> +
-> +	if (istmd) {
-> +		l2_iste_sz_split = FIELD_GET(GICV5_IRS_IDR2_ISTMD_SZ, idr2);
-> +
-> +		if (lpi_id_bits < l2_iste_sz_split)
-> +			l2_iste_sz = GICV5_IRS_IST_CFGR_ISTSZ_8;
-> +		else
-> +			l2_iste_sz = GICV5_IRS_IST_CFGR_ISTSZ_16;
-> +	}
-> +
-> +	/*
-> +	 * Follow GICv5 specification recommendation to opt in for two
-> +	 * level tables (ref: 10.2.1.14 IRS_IST_CFGR).
-> +	 */
-> +	if (two_levels && (lpi_id_bits > ((10 - l2_iste_sz) + (2 * l2sz)))) {
-> +		ret = gicv5_irs_init_ist_two_level(irs_data, lpi_id_bits,
-> +						   l2_iste_sz, l2sz);
-> +	} else {
-> +		ret = gicv5_irs_init_ist_linear(irs_data, lpi_id_bits,
-> +						l2_iste_sz);
-> +	}
-> +	if (ret)
-> +		return ret;
-> +
-> +	gicv5_init_lpis(BIT(lpi_id_bits));
-> +
-> +	return 0;
-> +}
-> +
->  struct iaffid_entry {
->  	u16	iaffid;
->  	bool	valid;
-> @@ -362,6 +695,13 @@ static int __init gicv5_irs_init(struct device_node *node)
->  		goto out_iomem;
->  	}
->  
-> +	idr = irs_readl_relaxed(irs_data, GICV5_IRS_IDR2);
-> +	if (WARN(!FIELD_GET(GICV5_IRS_IDR2_LPI, idr),
-> +		 "LPI support not available - no IPIs, can't proceed\n")) {
-> +		ret = -ENODEV;
-> +		goto out_iomem;
-> +	}
-> +
->  	idr = irs_readl_relaxed(irs_data, GICV5_IRS_IDR7);
->  	irs_data->spi_min = FIELD_GET(GICV5_IRS_IDR7_SPI_BASE, idr);
->  
-> @@ -391,6 +731,8 @@ static int __init gicv5_irs_init(struct device_node *node)
->  		spi_count = FIELD_GET(GICV5_IRS_IDR5_SPI_RANGE, idr);
->  		gicv5_global_data.global_spi_count = spi_count;
->  
-> +		gicv5_init_lpi_domain();
-> +
->  		pr_debug("Detected %u SPIs globally\n", spi_count);
->  	}
->  
-> @@ -409,6 +751,9 @@ void __init gicv5_irs_remove(void)
->  {
->  	struct gicv5_irs_chip_data *irs_data, *tmp_data;
->  
-> +	gicv5_free_lpi_domain();
-> +	gicv5_deinit_lpis();
-> +
->  	list_for_each_entry_safe(irs_data, tmp_data, &irs_nodes, entry) {
->  		iounmap(irs_data->irs_base);
->  		list_del(&irs_data->entry);
-> @@ -416,6 +761,25 @@ void __init gicv5_irs_remove(void)
->  	}
->  }
->  
-> +int __init gicv5_irs_enable(void)
-> +{
-> +	struct gicv5_irs_chip_data *irs_data;
-> +	int ret;
-> +
-> +	irs_data = list_first_entry_or_null(&irs_nodes,
-> +					    struct gicv5_irs_chip_data, entry);
-> +	if (!irs_data)
-> +		return -ENODEV;
-> +
-> +	ret = gicv5_irs_init_ist(irs_data);
-> +	if (ret) {
-> +		pr_err("Failed to init IST\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  int __init gicv5_irs_of_probe(struct device_node *parent)
->  {
->  	struct device_node *np;
-> diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-> index 9c55ddcfa0df..84ed13c4f2b1 100644
-> --- a/drivers/irqchip/irq-gic-v5.c
-> +++ b/drivers/irqchip/irq-gic-v5.c
-> @@ -5,7 +5,9 @@
->  
->  #define pr_fmt(fmt)	"GICv5: " fmt
->  
-> +#include <linux/idr.h>
->  #include <linux/irqdomain.h>
-> +#include <linux/slab.h>
->  #include <linux/wordpart.h>
->  
->  #include <linux/irqchip.h>
-> @@ -28,6 +30,42 @@ static bool gicv5_cpuif_has_gcie(void)
->  
->  struct gicv5_chip_data gicv5_global_data __read_mostly;
->  
-> +static DEFINE_IDA(lpi_ida);
-> +static u32 num_lpis __ro_after_init;
-> +
-> +void __init gicv5_init_lpis(u32 lpis)
-> +{
-> +	num_lpis = lpis;
-> +}
-> +
-> +void __init gicv5_deinit_lpis(void)
-> +{
-> +	num_lpis = 0;
-> +}
-> +
-> +static int alloc_lpi(void)
-> +{
-> +	if (!num_lpis)
-> +		return -ENOSPC;
-> +
-> +	return ida_alloc_max(&lpi_ida, num_lpis - 1, GFP_KERNEL);
-> +}
-> +
-> +static void release_lpi(u32 lpi)
-> +{
-> +	ida_free(&lpi_ida, lpi);
-> +}
-> +
-> +int gicv5_alloc_lpi(void)
-> +{
-> +	return alloc_lpi();
-> +}
-> +
-> +void gicv5_free_lpi(u32 lpi)
-> +{
-> +	release_lpi(lpi);
-> +}
-> +
->  static void gicv5_ppi_priority_init(void)
->  {
->  	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRI_MI), SYS_ICC_PPI_PRIORITYR0_EL1);
-> @@ -60,7 +98,7 @@ static void gicv5_hwirq_init(irq_hw_number_t hwirq, u8 priority, u8 hwirq_type)
->  	u16 iaffid;
->  	int ret;
->  
-> -	if (hwirq_type == GICV5_HWIRQ_TYPE_SPI) {
-> +	if (hwirq_type == GICV5_HWIRQ_TYPE_LPI || hwirq_type == GICV5_HWIRQ_TYPE_SPI) {
->  		cdpri = FIELD_PREP(GICV5_GIC_CDPRI_PRIORITY_MASK, priority)	|
->  			FIELD_PREP(GICV5_GIC_CDPRI_TYPE_MASK, hwirq_type)	|
->  			FIELD_PREP(GICV5_GIC_CDPRI_ID_MASK, hwirq);
-> @@ -122,6 +160,11 @@ static void gicv5_spi_irq_mask(struct irq_data *d)
->  	gicv5_iri_irq_mask(d, GICV5_HWIRQ_TYPE_SPI);
->  }
->  
-> +static void gicv5_lpi_irq_mask(struct irq_data *d)
-> +{
-> +	gicv5_iri_irq_mask(d, GICV5_HWIRQ_TYPE_LPI);
-> +}
-> +
->  static void gicv5_ppi_irq_unmask(struct irq_data *d)
->  {
->  	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
-> @@ -149,7 +192,7 @@ static void gicv5_iri_irq_unmask(struct irq_data *d, u8 hwirq_type)
->  	/*
->  	 * Rule R_XCLJC states that the effects of a GIC system instruction
->  	 * complete in finite time and that's the only requirement when
-> -	 * unmasking an SPI IRQ.
-> +	 * unmasking an SPI/LPI IRQ.
->  	 */
->  	gic_insn(cden, CDEN);
->  }
-> @@ -159,6 +202,11 @@ static void gicv5_spi_irq_unmask(struct irq_data *d)
->  	gicv5_iri_irq_unmask(d, GICV5_HWIRQ_TYPE_SPI);
->  }
->  
-> +static void gicv5_lpi_irq_unmask(struct irq_data *d)
-> +{
-> +	gicv5_iri_irq_unmask(d, GICV5_HWIRQ_TYPE_LPI);
-> +}
-> +
->  static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
->  {
->  	u64 cddi;
-> @@ -181,6 +229,11 @@ static void gicv5_spi_irq_eoi(struct irq_data *d)
->  	gicv5_hwirq_eoi(d->hwirq, GICV5_HWIRQ_TYPE_SPI);
->  }
->  
-> +static void gicv5_lpi_irq_eoi(struct irq_data *d)
-> +{
-> +	gicv5_hwirq_eoi(d->hwirq, GICV5_HWIRQ_TYPE_LPI);
-> +}
-> +
->  static int gicv5_iri_irq_set_affinity(struct irq_data *d,
->  				      const struct cpumask *mask_val,
->  				      bool force, u8 hwirq_type)
-> @@ -216,6 +269,14 @@ static int gicv5_spi_irq_set_affinity(struct irq_data *d,
->  					  GICV5_HWIRQ_TYPE_SPI);
->  }
->  
-> +static int gicv5_lpi_irq_set_affinity(struct irq_data *d,
-> +				      const struct cpumask *mask_val,
-> +				      bool force)
-> +{
-> +	return gicv5_iri_irq_set_affinity(d, mask_val, force,
-> +					  GICV5_HWIRQ_TYPE_LPI);
-> +}
-> +
->  enum ppi_reg {
->  	PPI_PENDING,
->  	PPI_ACTIVE,
-> @@ -336,6 +397,14 @@ static int gicv5_spi_irq_get_irqchip_state(struct irq_data *d,
->  					       GICV5_HWIRQ_TYPE_SPI);
->  }
->  
-> +static int gicv5_lpi_irq_get_irqchip_state(struct irq_data *d,
-> +					   enum irqchip_irq_state which,
-> +					   bool *state)
-> +{
-> +	return gicv5_iri_irq_get_irqchip_state(d, which, state,
-> +					       GICV5_HWIRQ_TYPE_LPI);
-> +}
-> +
->  static int gicv5_ppi_irq_set_irqchip_state(struct irq_data *d,
->  					   enum irqchip_irq_state which,
->  					   bool state)
-> @@ -370,6 +439,11 @@ static void gicv5_spi_irq_write_pending_state(struct irq_data *d, bool state)
->  	gicv5_iri_irq_write_pending_state(d, state, GICV5_HWIRQ_TYPE_SPI);
->  }
->  
-> +static void gicv5_lpi_irq_write_pending_state(struct irq_data *d, bool state)
-> +{
-> +	gicv5_iri_irq_write_pending_state(d, state, GICV5_HWIRQ_TYPE_LPI);
-> +}
-> +
->  static int gicv5_spi_irq_set_irqchip_state(struct irq_data *d,
->  					   enum irqchip_irq_state which,
->  					   bool state)
-> @@ -386,12 +460,41 @@ static int gicv5_spi_irq_set_irqchip_state(struct irq_data *d,
->  	return 0;
->  }
->  
-> +static int gicv5_lpi_irq_set_irqchip_state(struct irq_data *d,
-> +					   enum irqchip_irq_state which,
-> +					   bool state)
-> +{
-> +	switch (which) {
-> +	case IRQCHIP_STATE_PENDING:
-> +		gicv5_lpi_irq_write_pending_state(d, state);
-> +		break;
-> +
-> +	default:
-> +		pr_debug("Unexpected irqchip_irq_state\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int gicv5_spi_irq_retrigger(struct irq_data *data)
->  {
->  	return !gicv5_spi_irq_set_irqchip_state(data, IRQCHIP_STATE_PENDING,
->  						true);
->  }
->  
-> +static int gicv5_lpi_irq_retrigger(struct irq_data *data)
-> +{
-> +	return !gicv5_lpi_irq_set_irqchip_state(data, IRQCHIP_STATE_PENDING,
-> +						true);
-> +}
-> +
-> +static void gicv5_ipi_send_single(struct irq_data *d, unsigned int cpu)
-> +{
-> +	/* Mark the LPI pending */
-> +	irq_chip_retrigger_hierarchy(d);
-> +}
-> +
->  static bool gicv5_ppi_irq_is_level(irq_hw_number_t hwirq)
->  {
->  	u64 bit = BIT_ULL(hwirq % 64);
-> @@ -425,6 +528,32 @@ static const struct irq_chip gicv5_spi_irq_chip = {
->  				  IRQCHIP_MASK_ON_SUSPEND,
->  };
->  
-> +static const struct irq_chip gicv5_lpi_irq_chip = {
-> +	.name			= "GICv5-LPI",
-> +	.irq_mask		= gicv5_lpi_irq_mask,
-> +	.irq_unmask		= gicv5_lpi_irq_unmask,
-> +	.irq_eoi		= gicv5_lpi_irq_eoi,
-> +	.irq_set_affinity	= gicv5_lpi_irq_set_affinity,
-> +	.irq_retrigger		= gicv5_lpi_irq_retrigger,
-> +	.irq_get_irqchip_state	= gicv5_lpi_irq_get_irqchip_state,
-> +	.irq_set_irqchip_state	= gicv5_lpi_irq_set_irqchip_state,
-> +	.flags			= IRQCHIP_SKIP_SET_WAKE	  |
-> +				  IRQCHIP_MASK_ON_SUSPEND,
-> +};
-> +
-> +static const struct irq_chip gicv5_ipi_irq_chip = {
-> +	.name			= "GICv5-IPI",
-> +	.irq_mask		= irq_chip_mask_parent,
-> +	.irq_unmask		= irq_chip_unmask_parent,
-> +	.irq_eoi		= irq_chip_eoi_parent,
-> +	.irq_set_affinity	= irq_chip_set_affinity_parent,
-> +	.irq_get_irqchip_state	= irq_chip_get_parent_state,
-> +	.irq_set_irqchip_state	= irq_chip_set_parent_state,
-> +	.ipi_send_single	= gicv5_ipi_send_single,
-> +	.flags			= IRQCHIP_SKIP_SET_WAKE	  |
-> +				  IRQCHIP_MASK_ON_SUSPEND,
-> +};
-> +
->  static __always_inline int gicv5_irq_domain_translate(struct irq_domain *d,
->  						      struct irq_fwspec *fwspec,
->  						      irq_hw_number_t *hwirq,
-> @@ -585,6 +714,130 @@ static const struct irq_domain_ops gicv5_irq_spi_domain_ops = {
->  	.free		= gicv5_irq_domain_free,
->  	.select		= gicv5_irq_spi_domain_select
->  };
-> +
-> +static void gicv5_lpi_config_reset(struct irq_data *d)
-> +{
-> +	u64 cdhm;
-> +
-> +	/*
-> +	 * Reset LPIs handling mode to edge by default and clear pending
-> +	 * state to make sure we start the LPI with a clean state from
-> +	 * previous incarnations.
-> +	 */
-> +	cdhm = FIELD_PREP(GICV5_GIC_CDHM_HM_MASK, 0)				|
-> +	       FIELD_PREP(GICV5_GIC_CDHM_TYPE_MASK, GICV5_HWIRQ_TYPE_LPI)	|
-> +	       FIELD_PREP(GICV5_GIC_CDHM_ID_MASK, d->hwirq);
-> +	gic_insn(cdhm, CDHM);
-> +
-> +	gicv5_lpi_irq_write_pending_state(d, false);
-> +}
-> +
-> +static int gicv5_irq_lpi_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> +				      unsigned int nr_irqs, void *arg)
-> +{
-> +	irq_hw_number_t hwirq;
-> +	struct irq_data *irqd;
-> +	u32 *lpi = arg;
-> +	int ret;
-> +
-> +	if (WARN_ON_ONCE(nr_irqs != 1))
-> +		return -EINVAL;
-> +
-> +	hwirq = *lpi;
-> +
-> +	irqd = irq_domain_get_irq_data(domain, virq);
-> +
-> +	irq_domain_set_info(domain, virq, hwirq, &gicv5_lpi_irq_chip, NULL,
-> +			    handle_fasteoi_irq, NULL, NULL);
-> +	irqd_set_single_target(irqd);
-> +
-> +	ret = gicv5_irs_iste_alloc(hwirq);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	gicv5_hwirq_init(hwirq, GICV5_IRQ_PRI_MI, GICV5_HWIRQ_TYPE_LPI);
-> +	gicv5_lpi_config_reset(irqd);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops gicv5_irq_lpi_domain_ops = {
-> +	.alloc	= gicv5_irq_lpi_domain_alloc,
-> +	.free	= gicv5_irq_domain_free,
-> +};
-> +
-> +void __init gicv5_init_lpi_domain(void)
-> +{
-> +	struct irq_domain *d;
-> +
-> +	d = irq_domain_create_tree(NULL, &gicv5_irq_lpi_domain_ops, NULL);
-> +	gicv5_global_data.lpi_domain = d;
-> +}
-> +
-> +void __init gicv5_free_lpi_domain(void)
-> +{
-> +	irq_domain_remove(gicv5_global_data.lpi_domain);
-> +	gicv5_global_data.lpi_domain = NULL;
-> +}
-> +
-> +static int gicv5_irq_ipi_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> +				      unsigned int nr_irqs, void *arg)
-> +{
-> +	struct irq_data *irqd;
-> +	int ret, i;
-> +	u32 lpi;
-> +
-> +	for (i = 0; i < nr_irqs; i++) {
-> +		ret = gicv5_alloc_lpi();
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		lpi = ret;
-> +
-> +		ret = irq_domain_alloc_irqs_parent(domain, virq + i, 1, &lpi);
-> +		if (ret) {
-> +			gicv5_free_lpi(lpi);
-> +			return ret;
-> +		}
-> +
-> +		irqd = irq_domain_get_irq_data(domain, virq + i);
-> +
-> +		irq_domain_set_hwirq_and_chip(domain, virq + i, i,
-> +				&gicv5_ipi_irq_chip, NULL);
-> +
-> +		irqd_set_single_target(irqd);
-> +
-> +		irq_set_handler(virq + i, handle_percpu_irq);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void gicv5_irq_ipi_domain_free(struct irq_domain *domain, unsigned int virq,
-> +				      unsigned int nr_irqs)
-> +{
-> +	struct irq_data *d;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < nr_irqs; i++) {
-> +		d = irq_domain_get_irq_data(domain, virq + i);
-> +
-> +		if (!d)
-> +			return;
-> +
-> +		gicv5_free_lpi(d->parent_data->hwirq);
-> +
-> +		irq_set_handler(virq + i, NULL);
-> +		irq_domain_reset_irq_data(d);
-> +		irq_domain_free_irqs_parent(domain, virq + i, 1);
-> +	}
-> +}
-> +
-> +static const struct irq_domain_ops gicv5_irq_ipi_domain_ops = {
-> +	.alloc	= gicv5_irq_ipi_domain_alloc,
-> +	.free	= gicv5_irq_ipi_domain_free,
-> +};
-> +
->  static void handle_irq_per_domain(u32 hwirq)
->  {
->  	u8 hwirq_type = FIELD_GET(GICV5_HWIRQ_TYPE, hwirq);
-> @@ -598,6 +851,9 @@ static void handle_irq_per_domain(u32 hwirq)
->  	case GICV5_HWIRQ_TYPE_SPI:
->  		domain = gicv5_global_data.spi_domain;
->  		break;
-> +	case GICV5_HWIRQ_TYPE_LPI:
-> +		domain = gicv5_global_data.lpi_domain;
-> +		break;
->  	default:
->  		pr_err_once("Unknown IRQ type, bail out\n");
->  		return;
-> @@ -679,9 +935,12 @@ static void __init gicv5_free_domains(void)
->  		irq_domain_remove(gicv5_global_data.ppi_domain);
->  	if (gicv5_global_data.spi_domain)
->  		irq_domain_remove(gicv5_global_data.spi_domain);
-> +	if (gicv5_global_data.ipi_domain)
-> +		irq_domain_remove(gicv5_global_data.ipi_domain);
->  
->  	gicv5_global_data.ppi_domain = NULL;
->  	gicv5_global_data.spi_domain = NULL;
-> +	gicv5_global_data.ipi_domain = NULL;
->  }
->  
->  static int __init gicv5_init_domains(struct fwnode_handle *handle)
-> @@ -709,6 +968,19 @@ static int __init gicv5_init_domains(struct fwnode_handle *handle)
->  		irq_domain_update_bus_token(d, DOMAIN_BUS_WIRED);
->  	}
->  
-> +	if (!WARN(!gicv5_global_data.lpi_domain,
-> +		  "LPI domain uninitialized, can't set up IPIs")) {
-> +		d = irq_domain_create_hierarchy(gicv5_global_data.lpi_domain,
-> +						0, GICV5_IPIS_PER_CPU * nr_cpu_ids,
-> +						NULL, &gicv5_irq_ipi_domain_ops,
-> +						NULL);
-> +
-> +		if (!d) {
-> +			gicv5_free_domains();
-> +			return -ENOMEM;
-> +		}
-> +		gicv5_global_data.ipi_domain = d;
-> +	}
->  	gicv5_global_data.fwnode = handle;
->  
->  	return 0;
-> @@ -732,6 +1004,24 @@ static void gicv5_set_cpuif_pribits(void)
->  	}
->  }
->  
-> +static void gicv5_set_cpuif_idbits(void)
-> +{
-> +	u32 icc_idr0 = read_sysreg_s(SYS_ICC_IDR0_EL1);
-> +
-> +	switch (FIELD_GET(ICC_IDR0_EL1_ID_BITS, icc_idr0)) {
-> +	case ICC_IDR0_EL1_ID_BITS_16BITS:
-> +		gicv5_global_data.cpuif_id_bits = 16;
-> +		break;
-> +	case ICC_IDR0_EL1_ID_BITS_24BITS:
-> +		gicv5_global_data.cpuif_id_bits = 24;
-> +		break;
-> +	default:
-> +		pr_err("Unexpected ICC_IDR0_EL1_ID_BITS value, default to 16");
-> +		gicv5_global_data.cpuif_id_bits = 16;
-> +		break;
-> +	}
-> +}
-> +
->  static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
->  {
->  	int ret = gicv5_irs_of_probe(node);
-> @@ -743,6 +1033,7 @@ static int __init gicv5_of_init(struct device_node *node, struct device_node *pa
->  		goto out_irs;
->  
->  	gicv5_set_cpuif_pribits();
-> +	gicv5_set_cpuif_idbits();
->  
->  	pri_bits = min_not_zero(gicv5_global_data.cpuif_pri_bits,
->  				gicv5_global_data.irs_pri_bits);
-> @@ -755,6 +1046,10 @@ static int __init gicv5_of_init(struct device_node *node, struct device_node *pa
->  	if (ret)
->  		goto out_int;
->  
-> +	ret = gicv5_irs_enable();
-> +	if (ret)
-> +		goto out_int;
-> +
->  	return 0;
->  
->  out_int:
-> diff --git a/include/linux/irqchip/arm-gic-v5.h b/include/linux/irqchip/arm-gic-v5.h
-> index 1064a69ab33f..680eed794a35 100644
-> --- a/include/linux/irqchip/arm-gic-v5.h
-> +++ b/include/linux/irqchip/arm-gic-v5.h
-> @@ -7,8 +7,12 @@
->  
->  #include <linux/iopoll.h>
->  
-> +#include <asm/cacheflush.h>
-> +#include <asm/smp.h>
->  #include <asm/sysreg.h>
->  
-> +#define GICV5_IPIS_PER_CPU		MAX_IPI
-> +
->  /*
->   * INTID handling
->   */
-> @@ -17,6 +21,7 @@
->  #define GICV5_HWIRQ_INTID		GENMASK_ULL(31, 0)
->  
->  #define GICV5_HWIRQ_TYPE_PPI		UL(0x1)
-> +#define GICV5_HWIRQ_TYPE_LPI		UL(0x2)
->  #define GICV5_HWIRQ_TYPE_SPI		UL(0x3)
->  
->  /*
-> @@ -36,7 +41,7 @@
->  #define GICV5_INNER_SHARE		0b11
->  
->  /*
-> - * IRS registers
-> + * IRS registers and tables structures
->   */
->  #define GICV5_IRS_IDR1			0x0004
->  #define GICV5_IRS_IDR2			0x0008
-> @@ -51,6 +56,10 @@
->  #define GICV5_IRS_PE_SELR		0x0140
->  #define GICV5_IRS_PE_STATUSR		0x0144
->  #define GICV5_IRS_PE_CR0		0x0148
-> +#define GICV5_IRS_IST_BASER		0x0180
-> +#define GICV5_IRS_IST_CFGR		0x0190
-> +#define GICV5_IRS_IST_STATUSR		0x0194
-> +#define GICV5_IRS_MAP_L2_ISTR		0x01c0
->  
->  #define GICV5_IRS_IDR1_PRIORITY_BITS	GENMASK(22, 20)
->  #define GICV5_IRS_IDR1_IAFFID_BITS	GENMASK(19, 16)
-> @@ -72,6 +81,11 @@
->  #define GICV5_IRS_IDR5_SPI_RANGE	GENMASK(24, 0)
->  #define GICV5_IRS_IDR6_SPI_IRS_RANGE	GENMASK(24, 0)
->  #define GICV5_IRS_IDR7_SPI_BASE		GENMASK(23, 0)
-> +
-> +#define GICV5_IRS_IST_L2SZ_SUPPORT_4KB(r)	FIELD_GET(BIT(11), (r))
-> +#define GICV5_IRS_IST_L2SZ_SUPPORT_16KB(r)	FIELD_GET(BIT(12), (r))
-> +#define GICV5_IRS_IST_L2SZ_SUPPORT_64KB(r)	FIELD_GET(BIT(13), (r))
-> +
->  #define GICV5_IRS_CR0_IDLE		BIT(1)
->  #define GICV5_IRS_CR0_IRSEN		BIT(0)
->  
-> @@ -103,6 +117,33 @@
->  
->  #define GICV5_IRS_PE_CR0_DPS		BIT(0)
->  
-> +#define GICV5_IRS_IST_STATUSR_IDLE	BIT(0)
-> +
-> +#define GICV5_IRS_IST_CFGR_STRUCTURE	BIT(16)
-> +#define GICV5_IRS_IST_CFGR_ISTSZ	GENMASK(8, 7)
-> +#define GICV5_IRS_IST_CFGR_L2SZ		GENMASK(6, 5)
-> +#define GICV5_IRS_IST_CFGR_LPI_ID_BITS	GENMASK(4, 0)
-> +
-> +#define GICV5_IRS_IST_CFGR_STRUCTURE_LINEAR	0b0
-> +#define GICV5_IRS_IST_CFGR_STRUCTURE_TWO_LEVEL	0b1
-> +
-> +#define GICV5_IRS_IST_CFGR_ISTSZ_4	0b00
-> +#define GICV5_IRS_IST_CFGR_ISTSZ_8	0b01
-> +#define GICV5_IRS_IST_CFGR_ISTSZ_16	0b10
-> +
-> +#define GICV5_IRS_IST_CFGR_L2SZ_4K	0b00
-> +#define GICV5_IRS_IST_CFGR_L2SZ_16K	0b01
-> +#define GICV5_IRS_IST_CFGR_L2SZ_64K	0b10
-> +
-> +#define GICV5_IRS_IST_BASER_ADDR_MASK	GENMASK_ULL(55, 6)
-> +#define GICV5_IRS_IST_BASER_VALID	BIT_ULL(0)
-> +
-> +#define GICV5_IRS_MAP_L2_ISTR_ID	GENMASK(23, 0)
-> +
-> +#define GICV5_ISTL1E_VALID		BIT_ULL(0)
-> +
-> +#define GICV5_ISTL1E_L2_ADDR_MASK	GENMASK_ULL(55, 12)
-> +
->  /*
->   * Global Data structures and functions
->   */
-> @@ -110,9 +151,18 @@ struct gicv5_chip_data {
->  	struct fwnode_handle	*fwnode;
->  	struct irq_domain	*ppi_domain;
->  	struct irq_domain	*spi_domain;
-> +	struct irq_domain	*lpi_domain;
-> +	struct irq_domain	*ipi_domain;
->  	u32			global_spi_count;
->  	u8			cpuif_pri_bits;
-> +	u8			cpuif_id_bits;
->  	u8			irs_pri_bits;
-> +	struct {
-> +		__le64 *l1ist_addr;
-> +		u32 l2_size;
-> +		u8 l2_bits;
-> +		bool l2;
-> +	} ist;
->  };
->  
->  extern struct gicv5_chip_data gicv5_global_data __read_mostly;
-> @@ -150,10 +200,21 @@ static inline int gicv5_wait_for_op_s_atomic(void __iomem *addr, u32 offset,
->  #define gicv5_wait_for_op_atomic(base, reg, mask, val) \
->  	gicv5_wait_for_op_s_atomic(base, reg, #reg, mask, val)
->  
-> +void __init gicv5_init_lpi_domain(void);
-> +void __init gicv5_free_lpi_domain(void);
-> +
->  int gicv5_irs_of_probe(struct device_node *parent);
->  void gicv5_irs_remove(void);
-> +int gicv5_irs_enable(void);
->  int gicv5_irs_register_cpu(int cpuid);
->  int gicv5_irs_cpu_to_iaffid(int cpu_id, u16 *iaffid);
->  struct gicv5_irs_chip_data *gicv5_irs_lookup_by_spi_id(u32 spi_id);
->  int gicv5_spi_irq_set_type(struct irq_data *d, unsigned int type);
-> +int gicv5_irs_iste_alloc(u32 lpi);
-> +
-> +void gicv5_init_lpis(u32 max);
-> +void gicv5_deinit_lpis(void);
-> +
-> +int gicv5_alloc_lpi(void);
-> +void gicv5_free_lpi(u32 lpi);
->  #endif
-> 
+Changes in v4:
+- Split the error by hardware subsystem instead of kernel
+  subsystem/driver (Shuai)
+- Do not count the corrected errors, only focusing on recoverable errors (Shuai)
+- Link to v3: https://lore.kernel.org/r/20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org
+
+Changes in v3:
+- Add more information about this feature in the commit message
+  (Borislav Petkov)
+- Renamed the function to hwerr_log_error_type() and use hwerr as
+  suffix (Borislav Petkov)
+- Make the empty function static inline (kernel test robot)
+- Link to v2: https://lore.kernel.org/r/20250721-vmcore_hw_error-v2-1-ab65a6b43c5a@debian.org
+
+Changes in v2:
+- Split the counter by recoverable error (Tony Luck)
+- Link to v1: https://lore.kernel.org/r/20250714-vmcore_hw_error-v1-1-8cf45edb6334@debian.org
+---
+ Documentation/driver-api/hw-recoverable-errors.rst | 60 ++++++++++++++++++++++
+ arch/x86/kernel/cpu/mce/core.c                     |  4 ++
+ drivers/acpi/apei/ghes.c                           | 36 +++++++++++++
+ drivers/pci/pcie/aer.c                             |  2 +
+ include/linux/vmcore_info.h                        |  8 +++
+ include/uapi/linux/vmcore.h                        |  9 ++++
+ kernel/vmcore_info.c                               | 17 ++++++
+ 7 files changed, 136 insertions(+)
+
+diff --git a/Documentation/driver-api/hw-recoverable-errors.rst b/Documentation/driver-api/hw-recoverable-errors.rst
+new file mode 100644
+index 0000000000000..fc526c3454bd7
+--- /dev/null
++++ b/Documentation/driver-api/hw-recoverable-errors.rst
+@@ -0,0 +1,60 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=================================================
++Recoverable Hardware Error Tracking in vmcoreinfo
++=================================================
++
++Overview
++--------
++
++This feature provides a generic infrastructure within the Linux kernel to track
++and log recoverable hardware errors. These are hardware recoverable errors
++visible that might not cause immediate panics but may influence health, mainly
++because new code path will be executed in the kernel.
++
++By recording counts and timestamps of recoverable errors into the vmcoreinfo
++crash dump notes, this infrastructure aids post-mortem crash analysis tools in
++correlating hardware events with kernel failures. This enables faster triage
++and better understanding of root causes, especially in large-scale cloud
++environments where hardware issues are common.
++
++Benefits
++--------
++
++- Facilitates correlation of hardware recoverable errors with kernel panics or
++  unusual code paths that lead to system crashes.
++- Provides operators and cloud providers quick insights, improving reliability
++  and reducing troubleshooting time.
++- Complements existing full hardware diagnostics without replacing them.
++
++Data Exposure and Consumption
++-----------------------------
++
++- The tracked error data consists of per-error-type counts and timestamps of
++  last occurrence.
++- This data is stored in the `hwerror_data` array, categorized by error source
++  types like CPU, memory, PCI, CXL, and others.
++- It is exposed via vmcoreinfo crash dump notes and can be read using tools
++  like `crash`, `drgn`, or other kernel crash analysis utilities.
++- There is no other way to read these data other than from crash dumps.
++- These errors are divided by area, which includes CPU, Memory, PCI, CXL and
++  others.
++
++Typical usage example (in drgn REPL):
++
++.. code-block:: python
++
++    >>> prog['hwerror_data']
++    (struct hwerror_info[HWERR_RECOV_MAX]){
++        {
++            .count = (int)844,
++            .timestamp = (time64_t)1752852018,
++        },
++        ...
++    }
++
++Enabling
++--------
++
++- This feature is enabled when CONFIG_VMCORE_INFO is set.
++
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 4da4eab56c81d..9cc38c5ffb77a 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -45,6 +45,7 @@
+ #include <linux/task_work.h>
+ #include <linux/hardirq.h>
+ #include <linux/kexec.h>
++#include <linux/vmcore_info.h>
+ 
+ #include <asm/fred.h>
+ #include <asm/cpu_device_id.h>
+@@ -1690,6 +1691,9 @@ noinstr void do_machine_check(struct pt_regs *regs)
+ 	}
+ 
+ out:
++	/* Given it didn't panic, mark it as recoverable */
++	hwerr_log_error_type(HWERR_RECOV_OTHERS);
++
+ 	instrumentation_end();
+ 
+ clear:
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index a0d54993edb3b..562459e9d632e 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -43,6 +43,7 @@
+ #include <linux/uuid.h>
+ #include <linux/ras.h>
+ #include <linux/task_work.h>
++#include <linux/vmcore_info.h>
+ 
+ #include <acpi/actbl1.h>
+ #include <acpi/ghes.h>
+@@ -867,6 +868,40 @@ int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_cper_kfifo_get, "CXL");
+ 
++static void ghes_log_hwerr(int sev, guid_t *sec_type)
++{
++	if (sev != CPER_SEV_RECOVERABLE)
++		return;
++
++	if (guid_equal(sec_type, &CPER_SEC_PROC_ARM) ||
++	    guid_equal(sec_type, &CPER_SEC_PROC_GENERIC) ||
++	    guid_equal(sec_type, &CPER_SEC_PROC_IA)) {
++		hwerr_log_error_type(HWERR_RECOV_CPU);
++		return;
++	}
++
++	if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR) ||
++	    guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID) ||
++	    guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID) ||
++	    guid_equal(sec_type, &CPER_SEC_CXL_MEM_MODULE_GUID)) {
++		hwerr_log_error_type(HWERR_RECOV_CXL);
++		return;
++	}
++
++	if (guid_equal(sec_type, &CPER_SEC_PCIE) ||
++	    guid_equal(sec_type, &CPER_SEC_PCI_X_BUS)) {
++		hwerr_log_error_type(HWERR_RECOV_PCI);
++		return;
++	}
++
++	if (guid_equal(sec_type, &CPER_SEC_PLATFORM_MEM)) {
++		hwerr_log_error_type(HWERR_RECOV_MEMORY);
++		return;
++	}
++
++	hwerr_log_error_type(HWERR_RECOV_OTHERS);
++}
++
+ static void ghes_do_proc(struct ghes *ghes,
+ 			 const struct acpi_hest_generic_status *estatus)
+ {
+@@ -888,6 +923,7 @@ static void ghes_do_proc(struct ghes *ghes,
+ 		if (gdata->validation_bits & CPER_SEC_VALID_FRU_TEXT)
+ 			fru_text = gdata->fru_text;
+ 
++		ghes_log_hwerr(sev, sec_type);
+ 		if (guid_equal(sec_type, &CPER_SEC_PLATFORM_MEM)) {
+ 			struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
+ 
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index e286c197d7167..d814c06cdbee6 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -30,6 +30,7 @@
+ #include <linux/kfifo.h>
+ #include <linux/ratelimit.h>
+ #include <linux/slab.h>
++#include <linux/vmcore_info.h>
+ #include <acpi/apei.h>
+ #include <acpi/ghes.h>
+ #include <ras/ras_event.h>
+@@ -751,6 +752,7 @@ static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
+ 		break;
+ 	case AER_NONFATAL:
+ 		aer_info->dev_total_nonfatal_errs++;
++		hwerr_log_error_type(HWERR_RECOV_PCI);
+ 		counter = &aer_info->dev_nonfatal_errs[0];
+ 		max = AER_MAX_TYPEOF_UNCOR_ERRS;
+ 		break;
+diff --git a/include/linux/vmcore_info.h b/include/linux/vmcore_info.h
+index 37e003ae52626..e71518caacdfc 100644
+--- a/include/linux/vmcore_info.h
++++ b/include/linux/vmcore_info.h
+@@ -5,6 +5,7 @@
+ #include <linux/linkage.h>
+ #include <linux/elfcore.h>
+ #include <linux/elf.h>
++#include <uapi/linux/vmcore.h>
+ 
+ #define CRASH_CORE_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
+ #define CRASH_CORE_NOTE_NAME_BYTES ALIGN(sizeof(NN_PRSTATUS), 4)
+@@ -77,4 +78,11 @@ extern u32 *vmcoreinfo_note;
+ Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+ 			  void *data, size_t data_len);
+ void final_note(Elf_Word *buf);
++
++#ifdef CONFIG_VMCORE_INFO
++void hwerr_log_error_type(enum hwerr_error_type src);
++#else
++static inline void hwerr_log_error_type(enum hwerr_error_type src) {};
++#endif
++
+ #endif /* LINUX_VMCORE_INFO_H */
+diff --git a/include/uapi/linux/vmcore.h b/include/uapi/linux/vmcore.h
+index 3e9da91866ffd..2ba89fafa518a 100644
+--- a/include/uapi/linux/vmcore.h
++++ b/include/uapi/linux/vmcore.h
+@@ -15,4 +15,13 @@ struct vmcoredd_header {
+ 	__u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
+ };
+ 
++enum hwerr_error_type {
++	HWERR_RECOV_CPU,
++	HWERR_RECOV_MEMORY,
++	HWERR_RECOV_PCI,
++	HWERR_RECOV_CXL,
++	HWERR_RECOV_OTHERS,
++	HWERR_RECOV_MAX,
++};
++
+ #endif /* _UAPI_VMCORE_H */
+diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
+index e066d31d08f89..fe9bf8db1922e 100644
+--- a/kernel/vmcore_info.c
++++ b/kernel/vmcore_info.c
+@@ -31,6 +31,13 @@ u32 *vmcoreinfo_note;
+ /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
+ static unsigned char *vmcoreinfo_data_safecopy;
+ 
++struct hwerr_info {
++	atomic_t count;
++	time64_t timestamp;
++};
++
++static struct hwerr_info hwerr_data[HWERR_RECOV_MAX];
++
+ Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+ 			  void *data, size_t data_len)
+ {
+@@ -118,6 +125,16 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+ }
+ EXPORT_SYMBOL(paddr_vmcoreinfo_note);
+ 
++void hwerr_log_error_type(enum hwerr_error_type src)
++{
++	if (src < 0 || src >= HWERR_RECOV_MAX)
++		return;
++
++	atomic_inc(&hwerr_data[src].count);
++	WRITE_ONCE(hwerr_data[src].timestamp, ktime_get_real_seconds());
++}
++EXPORT_SYMBOL_GPL(hwerr_log_error_type);
++
+ static int __init crash_save_vmcoreinfo_init(void)
+ {
+ 	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
+
+---
+base-commit: 54efec8782214652b331c50646013f8526570e8d
+change-id: 20250707-vmcore_hw_error-322429e6c316
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
+
 
