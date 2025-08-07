@@ -1,129 +1,98 @@
-Return-Path: <linux-pci+bounces-33581-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33582-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0B0FB1DF0B
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 23:46:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 926B4B1DF37
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 00:04:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C75F91882646
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 21:46:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA4D8582C08
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 22:04:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4EFC282FA;
-	Thu,  7 Aug 2025 21:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11A711E1A3F;
+	Thu,  7 Aug 2025 22:04:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="heOOZV2a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YOO/r/nZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C52124B29;
-	Thu,  7 Aug 2025 21:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC951C8633;
+	Thu,  7 Aug 2025 22:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754603157; cv=none; b=uE99LOloifvA64hPLqfGkMkPsFHNgGbXkmT+h5B8XvYzkaLXS9Vks6IPzJb9MhTdzGR2nIYhosqCskXLv0yCBtNS1YXdEuevZafkrGmPSmayFCM9FKdqj5ttW2bubK+lvGj3MXINNWwKeiputnAX70xP4counErdpaOYJHqg/PQ=
+	t=1754604256; cv=none; b=tS+jsBjRoBq9Ec3xAWK68eh4LNv226XlMvImtohlP1cqyoHYpnZBQ6W6zO6LEbl00SIteSE5xGO3WBLq51WxVCcZqeL59lEfKOO3LFPFO66lgAPR5FR3d9crOq77zgghGUYeN/JvNqYhJXR5WvbAkj3s1RpIBkO9xa62bSiBf9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754603157; c=relaxed/simple;
-	bh=L+NVF+13JGNJ3SpYwk9loHGdcV3JgX/IGVOXLZzuTfI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=iLX1I1bihXtkuAHNjMFyrk1hfE867kZA5oxjgDfqeuDVr5ae/IbCeW+J3EMFtcNtgVcqcIaS7mclHHpr6kgjTeGjwAj2fLXvueDoPaUNYulAoKDKuJmX6djWbd4zeFAEYuI42P3uLgwhzFoJOzVdSic0OHm51vU3PQyh3Fv0aLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=heOOZV2a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 115ABC4CEEB;
-	Thu,  7 Aug 2025 21:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754603157;
-	bh=L+NVF+13JGNJ3SpYwk9loHGdcV3JgX/IGVOXLZzuTfI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=heOOZV2a83lmdFL5bz1KDJ5ite60lE0S8k5/wfaozDWClL5eEKb2bljH34aAk8Q6K
-	 nZ1YbhteXS+n3GPaIk/qdLyFjHL1H5n9pPFDuAyQe+aNu5hD5SH0H6u1aO26munw0m
-	 AhF65+g8i56YXA57CCwdBxc+9ai/a3u/R6g6+EMNyE+0qQz5oZQR2x1S1AR0Stvc/6
-	 +LpgtOvczEQpH5Y2yTrmmHXMye6pHUEeoJIhQitSGua7mAV/rLvPfSQRwMY0LdWF8+
-	 Ym7diOR228PwuWX0YsOqupBF3REe50ULO0OJ/puvzI+JcUASHMwlyjfihttb9gW6N8
-	 ryjlwihN7bHxA==
-Date: Thu, 7 Aug 2025 16:45:55 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bhelgaas@google.com, aik@amd.com,
-	lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>
-Subject: Re: [PATCH v4 05/10] samples/devsec: Introduce a PCI device-security
- bus + endpoint sample
-Message-ID: <20250807214555.GA63946@bhelgaas>
+	s=arc-20240116; t=1754604256; c=relaxed/simple;
+	bh=ifGUVYPRQoynFHz12tbMQrqd7GTUJ+TmyWzhPo9UjYs=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=hxNh99Pjb+ab1X/zclnziDQbHUToZuAiothT1wZ+A95bz4htwuxEWupzBQGhpRPevN26Y5vWgfkPWZc06u4vEUDphcZubWmfBFZa/bnDuy5F8IExkG/t1LMQCwL6pxf5EW4XnPpt06eenRtrYqyS10Jkc0MD9HJ3oDMPGvwkIa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YOO/r/nZ; arc=none smtp.client-ip=209.85.216.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f68.google.com with SMTP id 98e67ed59e1d1-3214762071bso1825618a91.3;
+        Thu, 07 Aug 2025 15:04:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754604254; x=1755209054; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ifGUVYPRQoynFHz12tbMQrqd7GTUJ+TmyWzhPo9UjYs=;
+        b=YOO/r/nZPpZZXczfHBqcgDq8mVYivwEXuBhvMvN5iU2DjUbq96FLbpyYi/IUbBpCZj
+         p3Oul0rX1k61H9xNqyiG01PVK/RSy475IHaJV92LbGfLUzNRON1Lo/TRZb4ZRiQo1wPK
+         jBgA2EpnZC5uIZRLgrqWfeGhd/vbRleFli9o1LQKnwaNLn+L0Np1lQzR3m+63/b321QS
+         byVRjwHSbL25M/wGW+pPay5NxHxiU3LIzo3UVRxqY7wQcypMhfcU/MlUJMS9iuEPVj4i
+         RJiaBFuewlRDfPxA9yQKb7rlBdr+xfbRGihBVxiXtkHQCb1LpFT3Q1sUGs2VH3oqbfk6
+         LFSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754604254; x=1755209054;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ifGUVYPRQoynFHz12tbMQrqd7GTUJ+TmyWzhPo9UjYs=;
+        b=MKMvekNoozwHBL13PvchI0innJqbon5KUvTlCsVwOT1sGL08SsIN0B2ob2DhBLGUj+
+         7YrEtlV4VT/js/gW7HHVCy7qbcew98abxq0prGjIfKiiJlEHyyH6hjnzlLs+VZx9CrPN
+         2lDqumyTuKBCo49UrKkiyPmbLMhTdghtzFYXITItPVF74PsoyUlwt1wPiZGHnOxwkExA
+         eFO4GYQiL0xFkA1fOpw9//ZWIrN4MSG80WHhbxHZ7jL2Fk2gTf+ibnyDRUzSeY7kTW1n
+         OPTdzscYWNc9dJG0IgouSrMltl0R3/WbulDCnWwNXduw2u/8dcTprkU+abtH+wcpoiOF
+         f2oA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJXtymyg9pglF8cbMCnVta474C4h9NFEf3BwWqPo6uFuAivEbzniMPUOvgZC8orsxwi6EhdLujGnPGkLNR4/Q=@vger.kernel.org, AJvYcCVHPSGI9VMq/gl0OZa72kaJCfk4QNj73K1B7rqU7qFXPkoPXs6I9ysN5SOJbIdzlNRqGVNywDq4z1M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzkB2XhATY4dveuuxmEV7cwzXLH+VB1RQnrAgOhc2zBSzepCTf
+	56ErG7r4hCFQ2T9TUFQ+AdoApLCLTq8lbuTQBo5woWC9Eqg8x12cn0uqLQnyijHqxYk=
+X-Gm-Gg: ASbGnctTElZ4Ne9TK06ocxfERjdhN7Hpu+I+ekV8XPyJjpURhSJuloY7psG/SYuAGNk
+	uAtUAsDr0m3YBkFUbFH6xe9XE25tuQ2J1TEfW21tmyjQim0p1m7UksIr07g/Gmc6ozEf52D/g6w
+	yQx1kAtyebB5HjBC/x3l8MnqfZ6sjRpdVu00k/s8znoFjUFt2MhmGq4/YSfjza3aLTPVELGeTun
+	BvBjqCpFfOZTwhDO+qxwqeUHZuhEs8CGp4g5DOFJEZ9O3aR3EroJqA48H7KoRpmRIPYef89hUiP
+	OgSUbzDDS5cWDH5QpMF6wG0VvIQLzVra6M0eC6TRgdALBEms/E7xGqBd6bSigv/h75v2GYsm7gE
+	7EoGEMdRD5wasDGEAbqfMnUkdd/4CtzkRjlDAA2q4XLFZgh99
+X-Google-Smtp-Source: AGHT+IGGPVIaalaGEXnZpDCIqt2E6rbMu+NvzCNol0RFWT2Q1ikoELaGZ/qbA2/kE8Zg2b7t2+yCpA==
+X-Received: by 2002:a17:90b:2ccc:b0:31f:484f:7075 with SMTP id 98e67ed59e1d1-32183e6d968mr799203a91.26.1754604253711;
+        Thu, 07 Aug 2025 15:04:13 -0700 (PDT)
+Received: from [127.0.0.1] ([115.187.48.187])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76bccead450sm18919860b3a.54.2025.08.07.15.04.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Aug 2025 15:04:13 -0700 (PDT)
+Date: Fri, 08 Aug 2025 03:34:00 +0530
+From: Bandhan Pramanik <bandhanpramanik06.foss@gmail.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+CC: Bjorn Helgaas <helgaas@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+ linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
+ ath10k@lists.infradead.org
+Subject: Re: Packet loss with QCA9377 (ath10k) on ASUS VivoBook E410KA
+User-Agent: Thunderbird for Android
+In-Reply-To: <l3iebypcyxpqxod5os3mn6465cwdlbnmlkbjnx3vu5bzyb4vhl@3dxnam2a7c2t>
+References: <20250806204018.GA14933@bhelgaas> <BBAB0136-BB7C-4D59-B29D-2F35FC29D7AC@gmail.com> <l3iebypcyxpqxod5os3mn6465cwdlbnmlkbjnx3vu5bzyb4vhl@3dxnam2a7c2t>
+Message-ID: <176B76BC-6801-4C3F-A774-9611B43ED4AF@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250717183358.1332417-6-dan.j.williams@intel.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 17, 2025 at 11:33:53AM -0700, Dan Williams wrote:
-> Establish just enough emulated PCI infrastructure to register a sample
-> TSM (platform security manager) driver and have it discover an IDE + TEE
-> (link encryption + device-interface security protocol (TDISP)) capable
-> device.
-> 
-> Use the existing a CONFIG_PCI_BRIDGE_EMUL to emulate an IDE capable root
-> port, and open code the emulation of an endpoint device via simulated
-> configuration cycle responses.
-
-s/existing a/existing/
-
-> The devsec_tsm driver responds to the PCI core TSM operations as if it
-> successfully exercised the given interface security protocol message.
-> 
-> The devsec_bus and devsec_tsm drivers can be loaded in either order to
-> reflect cases like SEV-TIO where the TSM is PCI-device firmware, and
-> cases like TDX Connect where the TSM is a software agent running on the
-> host CPU.
-> 
-> Follow-on patches add common code for TSM managed IDE establishment. For
-> now, just successfully complete setup and teardown of the DSM (device
-> security manager) context as a building block for management of TDI
-> (trusted device interface) instances.
-> 
->  # modprobe devsec_bus
->     devsec_bus devsec_bus: PCI host bridge to bus 10000:00
->     pci_bus 10000:00: root bus resource [bus 00-01]
->     pci_bus 10000:00: root bus resource [mem 0xf000000000-0xffffffffff 64bit]
->     pci 10000:00:00.0: [8086:7075] type 01 class 0x060400 PCIe Root Port
->     pci 10000:00:00.0: PCI bridge to [bus 00]
->     pci 10000:00:00.0:   bridge window [io  0x0000-0x0fff]
->     pci 10000:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
->     pci 10000:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
->     pci 10000:00:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
->     pci 10000:01:00.0: [8086:ffff] type 00 class 0x000000 PCIe Endpoint
->     pci 10000:01:00.0: BAR 0 [mem 0xf000000000-0xf0001fffff 64bit pref]
->     pci_doe_abort: pci 10000:01:00.0: DOE: [100] Issuing Abort
->     pci_doe_cache_protocols: pci 10000:01:00.0: DOE: [100] Found protocol 0 vid: 1 prot: 1
->     pci 10000:01:00.0: disabling ASPM on pre-1.1 PCIe device.  You can enable it with 'pcie_aspm=force'
->     pci 10000:00:00.0: PCI bridge to [bus 01]
->     pci_bus 10000:01: busn_res: [bus 01] end is updated to 01
-
-Most of these messages don't seem relevant to DSM/TDISP/etc.  It
-*would* be useful to have a hint about what specifically makes this an
-IDE + TEE device.  Capability visible via lspci?  Are devices at both
-ends required, e.g., a Root Port and an Endpoint?
-
-Oooh, I see (finally).  This hierarchy is all totally fabricated, no
-actual hardware involved at all.  You did say that above; it just took
-a while to sink in.
-
->  # modprobe devsec_tsm
->     devsec_tsm_pci_probe: pci 10000:01:00.0: devsec: tsm enabled
->     __pci_tsm_init: pci 10000:01:00.0: TSM: Device security capabilities detected ( ide tee ), TSM attach
-
-s/tsm/TSM/ in the message
-s/ide/IDE/
-s/tee/TEE/
-
-Looks like spurious spaces inside parens?
-
-> + * The expectation is the helpers referenceed are convenience "library"
-
-s/referenceed/referenced/
+Thanks, I will update you guys as soon as I get the logs=2E
 
