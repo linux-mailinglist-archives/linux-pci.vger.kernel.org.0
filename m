@@ -1,252 +1,386 @@
-Return-Path: <linux-pci+bounces-33579-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33580-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 033D4B1DED9
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 23:27:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FCA2B1DEEF
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 23:41:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BBB4718C12F0
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 21:27:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF5427240CB
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 21:41:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCDFB1EEA5D;
-	Thu,  7 Aug 2025 21:27:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8598523372C;
+	Thu,  7 Aug 2025 21:41:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tgA49b+q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eby9nJEt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC89D4430;
-	Thu,  7 Aug 2025 21:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9D321E08B
+	for <linux-pci@vger.kernel.org>; Thu,  7 Aug 2025 21:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754602038; cv=none; b=e5V/IyEo4EMnZ1CfdWdvc87iHhq8acLpjo5k/inAHsYVIQhAbSLJpitU3UiLqOmdzTQCbXR+anY/6Hfa1TMy04tpeVAbWBNdGtpStNXCmL4jlifmP5K+pFqr0SsREzE5bhaPTTgNFOxSyhfrD6jecOCCrN/mYKRj5S43e3uRRFM=
+	t=1754602869; cv=none; b=bA/LXPG0G1FbOtMY5ixTf1mGtMoM4Y2NR7gns+3UR0BBLeFrW+RM3+BUmjIljmEdMAOmxBVfvJYNe6+AS7BQIBbeUSgXReq7OgJqg9o0IpGXGUam4j4Rf00NAYVmu8lmuTTeGr1PitjCJeaUsRFUIpUaSkQ+Rk2zk+FNfg5KjDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754602038; c=relaxed/simple;
-	bh=M+BpxkzLlHggZ+tzzpG3I7CKLqmuVCeyZCvynYpp+cI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=BxC5L7XyYLByBQH0Dy994+tzUX8tAOo2L4bbpazIhZ+K0PQ1Om4aYnek5lTWoMm0Dwx36JyXCrog9nbha0HXavh18EMC4lQOhEUF3hdCHS+IKtSUOCCsku/NgcGZ4GZMNO0zM2wz0/LW1c2ZH8zhFVBQwTUbXqJGlF8b+vFRhqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tgA49b+q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C326C4CEEB;
-	Thu,  7 Aug 2025 21:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754602038;
-	bh=M+BpxkzLlHggZ+tzzpG3I7CKLqmuVCeyZCvynYpp+cI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=tgA49b+qML6PL5Nw3Npd8nkQGofTTIN3bl8U8n3258gH2XQRG775PVx5zWEXpt7qx
-	 ShgISsRS3CBesFuYKQ4lTECYOZrFprP7FZvwF/Y4oGoG8Lb9NV7sKRcNlF+dYYXasK
-	 odmm5pnqmuUImoscTfYT6tPlYQGgDMGvMcVT/o+Ig8BX992zWm/GF5rqJyfYjpfOB6
-	 2zTFUKVCZ557RnvFH6yb67pJAy74x6sS644GXb2fYwPsCaEFuOjGntgXlB/uRTQrwF
-	 yLAONkcemsMR6FMbDQ6ApOys6l3BR2uUF+WCNH9sM7LfGZDakfWIBRbdc7fjHrDJb9
-	 IjM1iYbTwzk9g==
-Date: Thu, 7 Aug 2025 16:27:16 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bhelgaas@google.com, aik@amd.com,
-	lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>
-Subject: Re: [PATCH v4 04/10] PCI/TSM: Authenticate devices via platform TSM
-Message-ID: <20250807212716.GA62016@bhelgaas>
+	s=arc-20240116; t=1754602869; c=relaxed/simple;
+	bh=4p21OzJ2R3epIB6ttqsoDLlSwuFAMMrv+ihhP1EbSUI=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=FnxonKuCVELC6+R974imYMEoApakzeSUylYQyqy3rZWmoolsB47Re6lYK3XqE89M6iS63LA806M9befoyUTvtNgIrGtsQw76Jdh0zd1bC9exelNEsy0K3Lf975tK/PVm2n/ySn+Hb+pPqftAwmBznpc/naJm3wbsni6ovvcOd38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eby9nJEt; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754602867; x=1786138867;
+  h=date:from:to:cc:subject:message-id;
+  bh=4p21OzJ2R3epIB6ttqsoDLlSwuFAMMrv+ihhP1EbSUI=;
+  b=Eby9nJEtvLJHaPONx+Y0hges0EujnRDPOxYYVvwgLR193q35XHs4VK9h
+   Skbe/voEGfIhsH3Ovj/C5+e1z6QdYqiZjGT7UeHhZIsQRGjNfkI9kkjkO
+   mY1MNkvm56LItclc1d2MphNDgdayqtdaYFZB7CBHiURcOtZH1ZfldU+O0
+   EzK7/OY1YzqGHcHjKtZoBSvfKNexfJjhifcNPh7ebnXdpgWcqpMLvwwIh
+   kD9G6KSFNeFiGxI9bMWLTSc0ws5Zhy8BDZ8N5NWBAS/ecXpHr7tJ5T0hH
+   4MbgmcWeHgoiGaHc7L+JO0MBABaFmrPCN/3T76owlsSwyH9W/z0P/uTUG
+   w==;
+X-CSE-ConnectionGUID: eDvjl6PPSFuypun/umZ85A==
+X-CSE-MsgGUID: bP+FwnOyQaa50x+u5oAD9w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="57084164"
+X-IronPort-AV: E=Sophos;i="6.17,274,1747724400"; 
+   d="scan'208";a="57084164"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2025 14:41:06 -0700
+X-CSE-ConnectionGUID: u9gxv+95RN+/VMg2OARswg==
+X-CSE-MsgGUID: Y1lxK79SSuG3j3SHnWdSIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,274,1747724400"; 
+   d="scan'208";a="196001697"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 07 Aug 2025 14:41:06 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uk8MB-0003GE-1i;
+	Thu, 07 Aug 2025 21:41:03 +0000
+Date: Fri, 08 Aug 2025 05:40:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:msi] BUILD SUCCESS
+ 69583ff3489c97689d577275ef2e7ffe63aec38a
+Message-ID: <202508080549.0kLw6YtQ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250717183358.1332417-5-dan.j.williams@intel.com>
 
-On Thu, Jul 17, 2025 at 11:33:52AM -0700, Dan Williams wrote:
-> The PCIe 6.1 specification, section 11, introduces the Trusted Execution
-> Environment (TEE) Device Interface Security Protocol (TDISP).  This
-> protocol definition builds upon Component Measurement and Authentication
-> (CMA), and link Integrity and Data Encryption (IDE). It adds support for
-> assigning devices (PCI physical or virtual function) to a confidential
-> VM such that the assigned device is enabled to access guest private
-> memory protected by technologies like Intel TDX, AMD SEV-SNP, RISCV
-> COVE, or ARM CCA.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git msi
+branch HEAD: 69583ff3489c97689d577275ef2e7ffe63aec38a  PCI: Disable MSI on RDC PCI to PCIe bridges
 
-Previous patches reference PCIe r6.2.  Personally I would change them
-all the citations to r7.0, since that's out now and (I assume)
-includes everything.  I guess you said "introduced in r6.1," which is
-not the same as "introduced in r7.0," but I'm not sure how relevant it
-is to know that very first revision.
+elapsed time: 1394m
 
-> The operations that can be executed against a PCI device are split into
-> 2 mutually exclusive operation sets, "Link" and "Security" (struct
+configs tested: 293
+configs skipped: 4
 
-s/2/two/  Old skool, but you obviously pay attention to details like
-that :)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> +What:		/sys/bus/pci/devices/.../tsm/
-> +Contact:	linux-coco@lists.linux.dev
-> +Description:
-> +		This directory only appears if a physical device function
-> +		supports authentication (PCIe CMA-SPDM), interface security
-> +		(PCIe TDISP), and is accepted for secure operation by the
-> +		platform TSM driver. This attribute directory appears
-> +		dynamically after the platform TSM driver loads. So, only after
-> +		the /sys/class/tsm/tsm0 device arrives can tools assume that
-> +		devices without a tsm/ attribute directory will never have one,
-> +		before that, the security capabilities of the device relative to
-> +		the platform TSM are unknown. See
-> +		Documentation/ABI/testing/sysfs-class-tsm.
+tested configs:
+alpha                             allnoconfig    clang-22
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    clang-19
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    clang-19
+arc                              allmodconfig    clang-19
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    clang-22
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    clang-19
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    clang-19
+arc                   randconfig-001-20250807    clang-22
+arc                   randconfig-001-20250807    gcc-13.4.0
+arc                   randconfig-002-20250807    clang-22
+arc                   randconfig-002-20250807    gcc-12.5.0
+arm                              allmodconfig    clang-19
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    clang-19
+arm                              allyesconfig    gcc-15.1.0
+arm                         axm55xx_defconfig    clang-22
+arm                                 defconfig    clang-19
+arm                      jornada720_defconfig    clang-22
+arm                        mvebu_v7_defconfig    clang-22
+arm                             mxs_defconfig    clang-22
+arm                   randconfig-001-20250807    clang-22
+arm                   randconfig-002-20250807    clang-22
+arm                   randconfig-002-20250807    gcc-10.5.0
+arm                   randconfig-003-20250807    clang-22
+arm                   randconfig-004-20250807    clang-22
+arm                   randconfig-004-20250807    gcc-8.5.0
+arm                         socfpga_defconfig    gcc-15.1.0
+arm                        spear3xx_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    clang-22
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    clang-19
+arm64                 randconfig-001-20250807    clang-22
+arm64                 randconfig-001-20250807    gcc-8.5.0
+arm64                 randconfig-002-20250807    clang-22
+arm64                 randconfig-002-20250807    gcc-8.5.0
+arm64                 randconfig-003-20250807    clang-22
+arm64                 randconfig-004-20250807    clang-22
+arm64                 randconfig-004-20250807    gcc-14.3.0
+csky                              allnoconfig    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    clang-19
+csky                                defconfig    clang-22
+csky                  randconfig-001-20250807    gcc-15.1.0
+csky                  randconfig-002-20250807    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-19
+hexagon                          allyesconfig    clang-22
+hexagon                             defconfig    clang-19
+hexagon               randconfig-001-20250807    clang-22
+hexagon               randconfig-001-20250807    gcc-15.1.0
+hexagon               randconfig-002-20250807    clang-22
+hexagon               randconfig-002-20250807    gcc-15.1.0
+i386                             allmodconfig    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250807    clang-20
+i386        buildonly-randconfig-001-20250807    gcc-12
+i386        buildonly-randconfig-001-20250808    gcc-12
+i386        buildonly-randconfig-002-20250807    clang-20
+i386        buildonly-randconfig-002-20250807    gcc-12
+i386        buildonly-randconfig-002-20250808    gcc-12
+i386        buildonly-randconfig-003-20250807    gcc-12
+i386        buildonly-randconfig-003-20250808    gcc-12
+i386        buildonly-randconfig-004-20250807    gcc-11
+i386        buildonly-randconfig-004-20250807    gcc-12
+i386        buildonly-randconfig-004-20250808    gcc-12
+i386        buildonly-randconfig-005-20250807    gcc-12
+i386        buildonly-randconfig-005-20250808    gcc-12
+i386        buildonly-randconfig-006-20250807    gcc-12
+i386        buildonly-randconfig-006-20250808    gcc-12
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250807    gcc-12
+i386                  randconfig-001-20250808    clang-20
+i386                  randconfig-002-20250807    gcc-12
+i386                  randconfig-002-20250808    clang-20
+i386                  randconfig-003-20250807    gcc-12
+i386                  randconfig-003-20250808    clang-20
+i386                  randconfig-004-20250807    gcc-12
+i386                  randconfig-004-20250808    clang-20
+i386                  randconfig-005-20250807    gcc-12
+i386                  randconfig-005-20250808    clang-20
+i386                  randconfig-006-20250807    gcc-12
+i386                  randconfig-006-20250808    clang-20
+i386                  randconfig-007-20250807    gcc-12
+i386                  randconfig-007-20250808    clang-20
+i386                  randconfig-011-20250807    clang-20
+i386                  randconfig-011-20250808    clang-20
+i386                  randconfig-012-20250807    clang-20
+i386                  randconfig-012-20250808    clang-20
+i386                  randconfig-013-20250807    clang-20
+i386                  randconfig-013-20250808    clang-20
+i386                  randconfig-014-20250807    clang-20
+i386                  randconfig-014-20250808    clang-20
+i386                  randconfig-015-20250807    clang-20
+i386                  randconfig-015-20250808    clang-20
+i386                  randconfig-016-20250807    clang-20
+i386                  randconfig-016-20250808    clang-20
+i386                  randconfig-017-20250807    clang-20
+i386                  randconfig-017-20250808    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20250807    clang-22
+loongarch             randconfig-001-20250807    gcc-15.1.0
+loongarch             randconfig-002-20250807    gcc-15.1.0
+m68k                             allmodconfig    clang-19
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    clang-19
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    clang-19
+m68k                       m5249evb_defconfig    gcc-15.1.0
+microblaze                       allmodconfig    clang-19
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    clang-19
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                          rb532_defconfig    clang-22
+mips                         rt305x_defconfig    gcc-15.1.0
+nios2                            alldefconfig    clang-22
+nios2                             allnoconfig    gcc-11.5.0
+nios2                             allnoconfig    gcc-15.1.0
+nios2                               defconfig    gcc-11.5.0
+nios2                               defconfig    gcc-15.1.0
+nios2                 randconfig-001-20250807    gcc-11.5.0
+nios2                 randconfig-001-20250807    gcc-15.1.0
+nios2                 randconfig-002-20250807    gcc-15.1.0
+nios2                 randconfig-002-20250807    gcc-8.5.0
+openrisc                          allnoconfig    clang-22
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    clang-22
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250807    gcc-15.1.0
+parisc                randconfig-001-20250807    gcc-8.5.0
+parisc                randconfig-002-20250807    gcc-11.5.0
+parisc                randconfig-002-20250807    gcc-15.1.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    clang-22
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-22
+powerpc                          allyesconfig    gcc-15.1.0
+powerpc                    amigaone_defconfig    clang-22
+powerpc                   currituck_defconfig    clang-22
+powerpc                     mpc512x_defconfig    gcc-15.1.0
+powerpc                       ppc64_defconfig    clang-22
+powerpc               randconfig-001-20250807    gcc-12.5.0
+powerpc               randconfig-001-20250807    gcc-15.1.0
+powerpc               randconfig-002-20250807    gcc-10.5.0
+powerpc               randconfig-002-20250807    gcc-15.1.0
+powerpc               randconfig-003-20250807    gcc-11.5.0
+powerpc               randconfig-003-20250807    gcc-15.1.0
+powerpc                         wii_defconfig    clang-22
+powerpc64             randconfig-001-20250807    gcc-11.5.0
+powerpc64             randconfig-001-20250807    gcc-15.1.0
+powerpc64             randconfig-002-20250807    clang-22
+powerpc64             randconfig-002-20250807    gcc-15.1.0
+powerpc64             randconfig-003-20250807    gcc-13.4.0
+powerpc64             randconfig-003-20250807    gcc-15.1.0
+riscv                            allmodconfig    clang-22
+riscv                            allmodconfig    gcc-15.1.0
+riscv                             allnoconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                            allyesconfig    gcc-15.1.0
+riscv                               defconfig    gcc-12
+riscv                               defconfig    gcc-15.1.0
+riscv                    nommu_virt_defconfig    clang-22
+riscv                 randconfig-001-20250807    gcc-12.5.0
+riscv                 randconfig-002-20250807    gcc-12.5.0
+riscv                 randconfig-002-20250807    gcc-8.5.0
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250807    clang-22
+s390                  randconfig-001-20250807    gcc-12.5.0
+s390                  randconfig-002-20250807    clang-22
+s390                  randconfig-002-20250807    gcc-12.5.0
+sh                               alldefconfig    gcc-15.1.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-12
+sh                    randconfig-001-20250807    gcc-12.5.0
+sh                    randconfig-001-20250807    gcc-14.3.0
+sh                    randconfig-002-20250807    gcc-12.5.0
+sh                    randconfig-002-20250807    gcc-9.5.0
+sh                      rts7751r2d1_defconfig    clang-22
+sh                           se7721_defconfig    clang-22
+sh                             sh03_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250807    gcc-12.5.0
+sparc                 randconfig-001-20250807    gcc-14.3.0
+sparc                 randconfig-002-20250807    gcc-12.5.0
+sparc                 randconfig-002-20250807    gcc-15.1.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250807    clang-22
+sparc64               randconfig-001-20250807    gcc-12.5.0
+sparc64               randconfig-002-20250807    clang-22
+sparc64               randconfig-002-20250807    gcc-12.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    clang-19
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250807    gcc-12
+um                    randconfig-001-20250807    gcc-12.5.0
+um                    randconfig-002-20250807    gcc-11
+um                    randconfig-002-20250807    gcc-12.5.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250807    clang-20
+x86_64      buildonly-randconfig-001-20250807    gcc-11
+x86_64      buildonly-randconfig-001-20250808    gcc-12
+x86_64      buildonly-randconfig-002-20250807    gcc-11
+x86_64      buildonly-randconfig-002-20250807    gcc-12
+x86_64      buildonly-randconfig-002-20250808    gcc-12
+x86_64      buildonly-randconfig-003-20250807    clang-20
+x86_64      buildonly-randconfig-003-20250807    gcc-11
+x86_64      buildonly-randconfig-003-20250808    gcc-12
+x86_64      buildonly-randconfig-004-20250807    clang-20
+x86_64      buildonly-randconfig-004-20250807    gcc-11
+x86_64      buildonly-randconfig-004-20250808    gcc-12
+x86_64      buildonly-randconfig-005-20250807    gcc-11
+x86_64      buildonly-randconfig-005-20250808    gcc-12
+x86_64      buildonly-randconfig-006-20250807    gcc-11
+x86_64      buildonly-randconfig-006-20250807    gcc-12
+x86_64      buildonly-randconfig-006-20250808    gcc-12
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250807    gcc-12
+x86_64                randconfig-001-20250808    gcc-12
+x86_64                randconfig-002-20250807    gcc-12
+x86_64                randconfig-002-20250808    gcc-12
+x86_64                randconfig-003-20250807    gcc-12
+x86_64                randconfig-003-20250808    gcc-12
+x86_64                randconfig-004-20250807    gcc-12
+x86_64                randconfig-004-20250808    gcc-12
+x86_64                randconfig-005-20250807    gcc-12
+x86_64                randconfig-005-20250808    gcc-12
+x86_64                randconfig-006-20250807    gcc-12
+x86_64                randconfig-006-20250808    gcc-12
+x86_64                randconfig-007-20250807    gcc-12
+x86_64                randconfig-007-20250808    gcc-12
+x86_64                randconfig-008-20250807    gcc-12
+x86_64                randconfig-008-20250808    gcc-12
+x86_64                randconfig-071-20250807    clang-20
+x86_64                randconfig-072-20250807    clang-20
+x86_64                randconfig-073-20250807    clang-20
+x86_64                randconfig-074-20250807    clang-20
+x86_64                randconfig-075-20250807    clang-20
+x86_64                randconfig-076-20250807    clang-20
+x86_64                randconfig-077-20250807    clang-20
+x86_64                randconfig-078-20250807    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                          rhel-9.4-func    clang-20
+x86_64                    rhel-9.4-kselftests    clang-20
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250807    gcc-12.5.0
+xtensa                randconfig-001-20250807    gcc-15.1.0
+xtensa                randconfig-002-20250807    gcc-12.5.0
+xtensa                randconfig-002-20250807    gcc-8.5.0
+xtensa                         virt_defconfig    clang-22
 
-s/never have one,/never have one;/
-
-> +++ b/drivers/pci/tsm.c
-> +#define dev_fmt(fmt) "TSM: " fmt
-
-Include "PCI" for context?
-
-> + * Provide a read/write lock against the init / exit of pdev tsm
-> + * capabilities and arrival/departure of a tsm instance
-
-s/tsm/TSM/ in comments.
-
-> +static void pci_tsm_walk_fns(struct pci_dev *pdev,
-> +			     int (*cb)(struct pci_dev *pdev, void *data),
-> +			     void *data)
-> +{
-> +	struct pci_dev *fn;
-> +	int i;
-> +
-> +	/* walk virtual functions */
-> +        for (i = 0; i < pci_num_vf(pdev); i++) {
-> +		fn = pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
-> +						 pci_iov_virtfn_bus(pdev, i),
-> +						 pci_iov_virtfn_devfn(pdev, i));
-> +		if (call_cb_put(fn, data, cb))
-> +			return;
-> +        }
-> +
-> +	/* walk subordinate physical functions */
-> +	for (i = 1; i < 8; i++) {
-> +		fn = pci_get_slot(pdev->bus,
-> +				  PCI_DEVFN(PCI_SLOT(pdev->devfn), i));
-> +		if (call_cb_put(fn, data, cb))
-> +			return;
-> +	}
-> +
-> +	/* walk downstream devices */
-> +        if (pci_pcie_type(pdev) != PCI_EXP_TYPE_UPSTREAM)
-> +                return;
-> +
-> +        if (!is_dsm(pdev))
-> +                return;
-> +
-> +        pci_walk_bus(pdev->subordinate, cb, data);
-
-What's the difference between all this and just pci_walk_bus() of
-pdev->subordinate?  Are VFs not included in that walk?  Maybe a
-hint here would be useful.
-
-> +static int pci_tsm_connect(struct pci_dev *pdev, struct tsm_dev *tsm_dev)
-> +{
-> +	int rc;
-> +	struct pci_tsm_pf0 *tsm_pf0;
-> +	const struct pci_tsm_ops *ops = tsm_pci_ops(tsm_dev);
-> +	struct pci_tsm *pci_tsm __free(tsm_remove) = ops->probe(pdev);
-> +
-> +	if (!pci_tsm)
-> +		return -ENXIO;
-> +
-> +	pdev->tsm = pci_tsm;
-> +	tsm_pf0 = to_pci_tsm_pf0(pdev->tsm);
-> +
-> +	ACQUIRE(mutex_intr, lock)(&tsm_pf0->lock);
-> +	if ((rc = ACQUIRE_ERR(mutex_intr, &lock)))
-> +		return rc;
-> +
-> +	rc = ops->connect(pdev);
-> +	if (rc)
-> +		return rc;
-> +
-> +	pdev->tsm = no_free_ptr(pci_tsm);
-> +
-> +	/*
-> +	 * Now that the DSM is established, probe() all the potential
-> +	 * dependent functions. Failure to probe a function is not fatal
-> +	 * to connect(), it just disables subsequent security operations
-> +	 * for that function.
-> +	 */
-> +	pci_tsm_probe_fns(pdev);
-
-Makes me wonder what happens if a device is hot-added in the
-hierarchy.  I guess nothing.  Is that what we want?  What would be the
-flow if we *did* want to do something?  I guess disconnect and connect
-again?
-
-> + * Find the PCI Device instance that serves as the Device Security
-> + * Manger (DSM) for @pdev. Note that no additional reference is held for
-
-s/Manger/Manager/
-
-> +	 * For cases where a switch may be hosting TDISP services on
-> +	 * behalf of downstream devices, check the first usptream port
-> +	 * relative to this endpoint.
-
-s/usptream/upstream/
-
-> +++ b/include/linux/pci-tsm.h
-> + * struct pci_tsm_ops - manage confidential links and security state
-> + * @link_ops: Coordinate PCIe SPDM and IDE establishment via a platform TSM.
-> + * 	      Provide a secure session transport for TDISP state management
-> + * 	      (typically bare metal physical function operations).
-> + * @sec_ops: Lock, unlock, and interrogate the security state of the
-> + *	     function via the platform TSM (typically virtual function
-> + *	     operations).
-> + * @owner: Back reference to the TSM device that owns this instance.
-> + *
-> + * This operations are mutually exclusive either a tsm_dev instance
-> + * manages phyiscal link properties or it manages function security
-> + * states like TDISP lock/unlock.
-
-s/phyiscal/physical/
-
-> +struct pci_tsm_ops {
-> +	/*
-> +	 * struct pci_tsm_link_ops - Manage physical link and the TSM/DSM session
-> +	 * @probe: probe device for tsm link operation readiness, setup
-> +	 *	   DSM context
-
-s/tsm link/TSM link/
-
-> +	 * struct pci_tsm_security_ops - Manage the security state of the function
-> +	 * @sec_probe: probe device for tsm security operation
-> +	 *	       readiness, setup security context
-
-s/for tsm/for TSM/
-
-> + * struct pci_tsm - Core TSM context for a given PCIe endpoint
-> + * @pdev: Back ref to device function, distinguishes type of pci_tsm context
-> + * @dsm: PCI Device Security Manager for link operations on @pdev.
-
-Extra period at end, unlike others.
-
-> + * @ops: Link Confidentiality or Device Function Security operations
-
-> +static inline bool is_pci_tsm_pf0(struct pci_dev *pdev)
-> +{
-> +	if (!pci_is_pcie(pdev))
-> +		return false;
-> +
-> +	if (pdev->is_virtfn)
-> +		return false;
-> +
-> +	/*
-> +	 * Allow for a Device Security Manager (DSM) associated with function0
-> +	 * of an Endpoint to coordinate TDISP requests for other functions
-> +	 * (physical or virtual) of the device, or allow for an Upstream Port
-> +	 * DSM to accept TDISP requests for switch Downstream Endpoints.
-
-What exactly is a "switch Downstream Endpoint"?  Do you mean a "Switch
-Downstream Port"?  Or an Endpoint that is downstream of a Switch?
-
-Bjorn
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
