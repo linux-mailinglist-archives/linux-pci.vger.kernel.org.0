@@ -1,63 +1,58 @@
-Return-Path: <linux-pci+bounces-33532-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33533-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA75EB1D44B
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 10:34:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9308EB1D458
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 10:39:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 873573A195E
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 08:34:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 524606281F2
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 08:39:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83FC11F09A8;
-	Thu,  7 Aug 2025 08:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 394DE25394A;
+	Thu,  7 Aug 2025 08:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhyU4wYw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WYhUSCRn"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5244A18FC92;
-	Thu,  7 Aug 2025 08:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2B9243378;
+	Thu,  7 Aug 2025 08:39:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754555642; cv=none; b=tc52qqP+1taLxuOgMB5HgrdJcnzy9sij//2C9rTqPivCT8Pe8N5qTXqtj8txTbSxrjgzx59NisD17bDSP0kjjcXooWq2q9wZpfygT1E5JhrbYNQtfsAPb+Xll2oWF0JK5JN0Z9FKEvaY+1QziE23nzq3osAEYjXzTGIWwTAsaUk=
+	t=1754555992; cv=none; b=Y9ElEN46Xp92Sf+aRlWNNf6srLLRMo6LI4Rs20c8VZihO3+VNI9Prmck497O1/b9GRVBMmq3l4ChHeQhnhh592F7jXci/DFPeo6eBgFd4K0izZwaPPa1kGqYgeYECmoJkQV2GYgRi6TqAZ4F+LVPchLhVnlUsW8csPb3ydciBng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754555642; c=relaxed/simple;
-	bh=m8Wmo3xaDB+aWRD2CluuYq5IQa40NOivyY3r5ZFPsjQ=;
+	s=arc-20240116; t=1754555992; c=relaxed/simple;
+	bh=AJJPiy1agRwTpowv6EP+XoQUHx8R5qQZZKujEl0mnSY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Di72ChN9HitlrZtbEuVxmwaQgEJvZyjGmPXGQayBLT5aJ/Kg+bWKdPPU9A28N5y/ZICfv5Yx/7lb5yYCX8qMGW4jlC8Bbq1DPv01kZrxzJICl5Bk6D+CV413UX5sXtJbqENH5o7Ux8lHiy3o1ukAzrS1Ic5qP73B3gGfnN2DQk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhyU4wYw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5544BC4CEEB;
-	Thu,  7 Aug 2025 08:33:57 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=A6DXhX1t1h5SABKVZbfQ2WQkTL5vY5yZlagVlbFjQgTxSKDGK6qHp/l623LXT06aAIzghmACW438+U6t72EGprHPa3J62VnnRNKJARTUQFZBdv6uxPd9e+9BGOatfuqh7vIvwCUk9ASTYg8zc8hxexi9lN66gv2xgOaKUYSFZY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WYhUSCRn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBE24C4CEEB;
+	Thu,  7 Aug 2025 08:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754555641;
-	bh=m8Wmo3xaDB+aWRD2CluuYq5IQa40NOivyY3r5ZFPsjQ=;
+	s=k20201202; t=1754555991;
+	bh=AJJPiy1agRwTpowv6EP+XoQUHx8R5qQZZKujEl0mnSY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BhyU4wYwRUAUWRwCWl4V6zMGJIaZnRU4rDCuwxJBjCDPT6aDRbAxlWNfh+/ni239U
-	 61FBKFBVlPBbPvSNrfw7fFGN7qiOTriuIwx2PRy17SkGhSAhflhXthnLuaqM02JWw8
-	 rqHPgg2x66lfuCqfk+8+/aGIQTVdzbkhP8gghU+t9w6wJopyHKXfmza1i3fi+Ivotv
-	 AE+UqBvdFAGaw77+KOa4aCZzpY/dkllaRdD51UYCQLBtuubXgGmt+2vzXqAC8e3Czb
-	 W0HOT9ZnZGQ/ue8iAiBLnB/EOOf9rpoweK2q1BNuSbc6Vrx4ACoEWf3cjsBO1oJHsO
-	 ccDigjrF6uRtg==
-Date: Thu, 7 Aug 2025 14:03:53 +0530
-From: "mani@kernel.org" <mani@kernel.org>
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: Hans Zhang <hans.zhang@cixtech.com>, Frank Li <frank.li@nxp.com>, 
-	"Z.Q. Hou" <zhiqiang.hou@nxp.com>, "bhelgaas@google.com" <bhelgaas@google.com>, 
-	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>, "Jonthan.Cameron@huawei.com" <Jonthan.Cameron@huawei.com>, 
-	"lukas@wunner.de" <lukas@wunner.de>, "feng.tang@linux.alibaba.com" <feng.tang@linux.alibaba.com>, 
-	"jingoohan1@gmail.com" <jingoohan1@gmail.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>, "robh@kernel.org" <robh@kernel.org>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH v1 2/2] PCI: dwc: Fetch dedicated AER/PME interrupters
-Message-ID: <pxes6n4nja4v2yfrr335b6ynggwbz3n6t5cgjx26462thefr64@po4bdjwp43h3>
-References: <20250807070917.2245463-1-hongxing.zhu@nxp.com>
- <20250807070917.2245463-3-hongxing.zhu@nxp.com>
- <b721ecf5-5da6-4ab1-b352-b7ce19d1b13a@cixtech.com>
- <AS8PR04MB88331790CE4783BC0856A82A8C2CA@AS8PR04MB8833.eurprd04.prod.outlook.com>
+	b=WYhUSCRnbFzRVQVuJl3VU70y9U0HGu8e/e6ji9e91TXFx6kNBt/05Di5eZKI6gkqS
+	 ixEc/xQc33xfDrQ1lIm9GP7lTnkMPcuWznChsGwkY7psf1NzKgVCc6rW2BB43dOy3k
+	 RqC6/zt2xVxOL1E1e2ltdkVPaiQQk2rlLmdGQm+27JIL6+L70KLKoHNz2TOAq2Skg/
+	 3bO3z1z/Ke1K8WW5DM5OeELprOLf2fjvY8EN/AyGTrIB4Fti3VbWbTwU+m4K4CkrNA
+	 2ok+6mcFtZwHcMg+RQS5VY5JpIVRLT3VSqgrEBuCJZNSBOG9YyUNlTcyBB+n9Y2uOY
+	 sWHR1vpm9I/gg==
+Date: Thu, 7 Aug 2025 14:09:43 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Nirmal Patel <nirmal.patel@linux.intel.com>, 
+	Jonathan Derrick <jonathan.derrick@linux.dev>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Kenneth Crudup <kenny@panix.com>, 
+	Ammar Faizi <ammarfaizi2@gnuweeb.org>
+Subject: Re: [PATCH v2] PCI: vmd: Fix wrong kfree() in vmd_msi_free()
+Message-ID: <rbwjykknpgx5hgu36t7ncxbs6kpq4a6ty2234velg5kt7ntq4v@5jkqysy62rch>
+References: <20250807081051.2253962-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,117 +62,67 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB88331790CE4783BC0856A82A8C2CA@AS8PR04MB8833.eurprd04.prod.outlook.com>
+In-Reply-To: <20250807081051.2253962-1-namcao@linutronix.de>
 
-On Thu, Aug 07, 2025 at 07:38:06AM GMT, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Hans Zhang <hans.zhang@cixtech.com>
-> > Sent: 2025年8月7日 15:21
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>; Frank Li <frank.li@nxp.com>;
-> > Z.Q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
-> > ilpo.jarvinen@linux.intel.com; Jonthan.Cameron@huawei.com;
-> > lukas@wunner.de; feng.tang@linux.alibaba.com; jingoohan1@gmail.com;
-> > mani@kernel.org; lpieralisi@kernel.org; kwilczynski@kernel.org;
-> > robh@kernel.org
-> > Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > imx@lists.linux.dev
-> > Subject: Re: [PATCH v1 2/2] PCI: dwc: Fetch dedicated AER/PME interrupters
-> > 
-> > 
-> > 
-> > On 2025/8/7 15:09, Richard Zhu wrote:
-> > > EXTERNAL EMAIL
-> > >
-> > > Some PCI host bridges have limitation that AER/PME can't work over MSI.
-> > > Vendors route the AER/PME via the dedicated SPI interrupter which is
-> > > only handled by the controller driver.
-> > >
-> > > Because that aer and pme had been defined in the snps,dw-pcie.yaml
-> > > document. Fetch the vendor specific AER/PME interrupters if they are
-> > > defined in the fdt file by generic bridge->get_service_irqs hook.
-> > >
-> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > ---
-> > >   .../pci/controller/dwc/pcie-designware-host.c | 32
-> > +++++++++++++++++++
-> > >   1 file changed, 32 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > index 906277f9ffaf7..9393dc99df81f 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > @@ -13,11 +13,13 @@
-> > >   #include <linux/irqdomain.h>
-> > >   #include <linux/msi.h>
-> > >   #include <linux/of_address.h>
-> > > +#include <linux/of_irq.h>
-> > >   #include <linux/of_pci.h>
-> > >   #include <linux/pci_regs.h>
-> > >   #include <linux/platform_device.h>
-> > >
-> > >   #include "../../pci.h"
-> > > +#include "../../pcie/portdrv.h"
-> > >   #include "pcie-designware.h"
-> > >
-> > >   static struct pci_ops dw_pcie_ops;
-> > > @@ -461,6 +463,35 @@ static int dw_pcie_host_get_resources(struct
-> > dw_pcie_rp *pp)
-> > >          return 0;
-> > >   }
-> > >
-> > > +static int dw_pcie_get_service_irqs(struct pci_host_bridge *bridge,
-> > > +                                   int *irqs, int mask) {
-> > > +       struct device *dev = bridge->dev.parent;
-> > > +       struct device_node *np = dev->of_node;
-> > > +       int ret, count = 0;
-> > > +
-> > > +       if (!np)
-> > > +               return 0;
-> > > +
-> > > +       if (mask & PCIE_PORT_SERVICE_AER) {
-> > > +               ret = of_irq_get_byname(np, "aer");
-> > > +               if (ret > 0) {
-> > > +                       irqs[PCIE_PORT_SERVICE_AER_SHIFT] = ret;
-> > > +                       count++;
-> > > +               }
-> > > +       }
-> > > +
-> > > +       if (mask & PCIE_PORT_SERVICE_PME) {
-> > > +               ret = of_irq_get_byname(np, "pme");
-> > > +               if (ret > 0) {
-> > > +                       irqs[PCIE_PORT_SERVICE_PME_SHIFT] = ret;
-> > > +                       count++;
-> > > +               }
-> > > +       }
-> > > +
-> > 
-> > Hi Richard,
-> > 
-> > As far as I know, some SoCs directly use the misc SPI interrupt derived from
-> > Synopsys PCIe IP. This includes PME, AER and other interrupts. So here, can
-> > we assign the interrupt number ourselves?
-> >
-> [Richard Zhu] Yes, they can be assigned by vendor themselves. The
->  different PME, AER or other interrupts can be defined in the chip
->  specific dts files.
-> > Also, whether to trigger the AER/PME interrupt in a similar way.
-> > (generic_handle_domain_irq)
-> [Richard Zhu] This patch-set is just fetch the dedicated AER/PME
-> interrupt for portdrv in none MSI/MSI-x/INTx mode. The trigger of
->  AER/PME would be handled in portdrv.
-> > Because there may be a misc SPI interrupt that requires a clear related state,
-> > what is referred to here is not the AER/PME state.
-> [Richard Zhu]How about to do the other misc SPI interrupts related state
->  clear in vendor local driver?
+On Thu, Aug 07, 2025 at 10:10:51AM GMT, Nam Cao wrote:
+> vmd_msi_alloc() allocates struct vmd_irq and stashes it into
+> irq_data->chip_data associated with the VMD's interrupt domain.
+> vmd_msi_free() extracts the pointer by calling irq_get_chip_data() and
+> frees it.
 > 
+> irq_get_chip_data() returns the chip_data associated with the top interrupt
+> domain. This worked in the past, because VMD's interrupt domain was the top
+> domain.
+> 
+> But since commit d7d8ab87e3e7 ("PCI: vmd: Switch to
+> msi_create_parent_irq_domain()") changed the interrupt domain hierarchy,
+> VMD's interrupt domain is not the top domain anymore. irq_get_chip_data()
+> now returns the chip_data at the MSI devices' interrupt domains. It is
+> therefore broken for vmd_msi_free() to kfree() this chip_data.
+> 
+> Fix this issue, correctly extract the chip_data associated with the VMD's
+> interrupt domain.
+> 
+> Fixes: d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()")
+> Reported-by: Kenneth Crudup <kenny@panix.com>
+> Closes: https://lore.kernel.org/linux-pci/dfa40e48-8840-4e61-9fda-25cdb3ad81c1@panix.com/
+> Reported-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+> Closes: https://lore.kernel.org/linux-pci/ed53280ed15d1140700b96cca2734bf327ee92539e5eb68e80f5bbbf0f01@linux.gnuweeb.org/
+> Tested-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+> Tested-by: Kenneth Crudup <kenny@panix.com>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
 
-I'd expect the controller drivers to call the relevant part of the AER/PME
-handlers from their own platform IRQ handler. This will work for platforms using
-the shared IRQ line, and platforms requiring clearing custom bits in their own
-register space before handling the interrupts.
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 
 - Mani
+
+> ---
+> v2: Fix typo and describe the change more precisely
+> ---
+>  drivers/pci/controller/vmd.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 9bbb0ff4cc15..b679c7f28f51 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -280,10 +280,12 @@ static int vmd_msi_alloc(struct irq_domain *domain, unsigned int virq,
+>  static void vmd_msi_free(struct irq_domain *domain, unsigned int virq,
+>  			 unsigned int nr_irqs)
+>  {
+> +	struct irq_data *irq_data;
+>  	struct vmd_irq *vmdirq;
+>  
+>  	for (int i = 0; i < nr_irqs; ++i) {
+> -		vmdirq = irq_get_chip_data(virq + i);
+> +		irq_data = irq_domain_get_irq_data(domain, virq + i);
+> +		vmdirq = irq_data->chip_data;
+>  
+>  		synchronize_srcu(&vmdirq->irq->srcu);
+>  
+> -- 
+> 2.39.5
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
