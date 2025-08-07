@@ -1,157 +1,188 @@
-Return-Path: <linux-pci+bounces-33501-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33502-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1AC1B1CFDB
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 02:46:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B463B1CFDE
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 02:50:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA0D8722C1C
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 00:46:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E813E18C29EF
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 00:51:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5297B1F95C;
-	Thu,  7 Aug 2025 00:46:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4406849641;
+	Thu,  7 Aug 2025 00:50:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fovr11XA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HTz9IEpv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f196.google.com (mail-vk1-f196.google.com [209.85.221.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66CE2E36E2;
-	Thu,  7 Aug 2025 00:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F30E136E
+	for <linux-pci@vger.kernel.org>; Thu,  7 Aug 2025 00:50:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754527580; cv=none; b=a14sAhgBdhz7ysOk0uTw9EW3ZW1mV8FF22hCmZa2swNoDOdVHG91RfNUYRwtVTwyyoDsAYy2ERtQVQhSyDCsbv/DUh9Khsz6ehdgQrkUZPF74ygMpEzB/QmyhjXS05KOXujG06Pd9NrhMr91uBh0FekByuqfvNU+68vEVLanWLk=
+	t=1754527851; cv=none; b=lFroqzXrQZZGbn766po9xgQj6A7ofBSHOYHUWsOW572L8oBar8GEAT3q3vpoWmse0UzGxKj+OBYb3uHZQznQqUtOpN/LKVfJ2itJ70oOYfKva0fSUruMl6ifLbxrrpkQGr/0mRj+lvx+El3s1MWJaftJI3hodheuOi1tfDXJ79A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754527580; c=relaxed/simple;
-	bh=8ARsvRmbGTr1c/flMy85gwIvw4VsWQIgMoVqfGy7IJ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BIio/6Nae9xf/Ff/9sKvkSe58vJNbOVyVhcusi6NEbkIv3CWGsWPgiz4meOPGBstJHYtTOvhiSncT4gEYv1aMuDVMmazW1cxOoOrIl5Y2SEzeu6Lg9sGaieeqp/l6G9PVLlaDbDm2FF2zpRSDD6x3J6Rt07ySdO9u/dlrQEOiOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fovr11XA; arc=none smtp.client-ip=209.85.221.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f196.google.com with SMTP id 71dfb90a1353d-53960818e9fso392263e0c.0;
-        Wed, 06 Aug 2025 17:46:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754527578; x=1755132378; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Rmc1rEtWWDIvM/pd+dlvLBSfFeCnTebznounEkESmm8=;
-        b=Fovr11XArDmAvhVpKdNRkzg5KadIwumYeacJ0ECX2j+m9bAbrL/E54+w3U40Kv3mzS
-         TxIYuA+lru/mMLpTe4E0CJ5gkBDpKfxSH8aM7wPqVDCdg8nvxiqcc5kyMgXr6wjglzZI
-         eUSL++hkzDr23UuU2fgjoHNGPewksdO/vWBKEtAvavMV1kKOtpfZhcD7TbwNwqXHX1dg
-         p7gByIGJY/sLC7Y2W9XjEyIuBkIXUsfdjasbC3WKSPhIriefXzg/uCEMtpUV5M3p8/s6
-         OWFMsaT2J6q+AVTs2j68BqREV0DcUT98ndcprDcE0mHZ4iba41yjNO3Ys0jEgSY5E30h
-         WP0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754527578; x=1755132378;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rmc1rEtWWDIvM/pd+dlvLBSfFeCnTebznounEkESmm8=;
-        b=cqlbbvTOkivVmrxcRIUlGZ6bFuXShxmHqPeO40+f2UkY14UqqMiiFOomg5uELu/Fit
-         5lFnP4OZ6Y/D+hKTj6jnwuErjKsurNMaOums87DyqYj8IXQ0Ln/NOzY2ksPSsZn/EGs2
-         JOtLEztvg7rwoUy4Sr+jBAlYUndBv5QL4GNjT3T6EFsOqHBRhMuuSf9uyU7LqURG7yI9
-         /dJQQYQsAEdqSaGa7JxH4QFD+c2L2V+Z008XSoyWLRYLvUcrMXH+/DVUYNo8MU9wGRd9
-         qM31gVrzyY6UOWJsf3myTrg6XM5szxD179qKy88Gt/WjoHwoflggsntdo20e8AEmv0MN
-         NYiw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2LVD/SSXC0GdogMavyjYcUd0OyPzhFGetEeH8lnVBTjJaXAp9SRedH3FeiNjmrx2GxHTDcHkeYVGW@vger.kernel.org, AJvYcCW5Y/QdO67n5DFvixzcZ8NHbvkAgFzQHSqceVfpMUto5QS9J/DaHPjALAKCh/Semw2hw/HlJUZh1VSSDV0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCwA5nlXFBzQOscfMYws+Zv0m7qY51UsB+AlKridTw6+o1VESK
-	XAsrDuGCbCpz0BS3H2nDeWSZEZiGK6QQK0yPGBN33G3La1Sec85hSrwF
-X-Gm-Gg: ASbGnctvWTFqfVXZo3L7v0JM0KvrQp5ublM9RHptqogrz3uBpI5FyfOEPyjunXcJVfo
-	gYBDZ5wuKS6AVIfoof5XUB2UAFX2Z4v1SotaUvBadZm9+aKuxdk26lthpmt/dPb8ZM6ol/cF5pp
-	BpMcccNJGhU9MtWX2C1KjsEqDb+OhH4+lZufHUyiQnR2/mk2kI3glTLaQe9WpgBWDa9K5SxUs3J
-	gQhEDlR7QQxF2RLfs0kv1/StGSEbFT0Tf1zq+/isK/FHLjurasXYcc48xfCGHNm+ExwOe/jFhYu
-	AvOt7PA6k6ZnRF+tYCNRk1TT1xbhd6Ru3E7jiJnXeQsNK8En0qYI6qjiBBtm53KGf8d+Qvshld/
-	OswbRF0B+9ecMMBevnyuap7AYErQXklgev6Nrw1FEDqG9O9D09sv8Zcq70sUVBPHgNWpbYpS1wl
-	sLjC9spKvPJTWypF0AyA==
-X-Google-Smtp-Source: AGHT+IFZepYERxh2hTblseaMPrVinVFDPj77BmHfxlgef5ZJVdCxI3Rs/9/yOXAWQqnIRxoRQr+uHg==
-X-Received: by 2002:a05:6122:2020:b0:539:4e00:dba0 with SMTP id 71dfb90a1353d-539a03d5349mr2625544e0c.4.1754527577649;
-        Wed, 06 Aug 2025 17:46:17 -0700 (PDT)
-Received: from [26.26.26.1] (95.112.207.35.bc.googleusercontent.com. [35.207.112.95])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-539b02b2113sm121074e0c.31.2025.08.06.17.46.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Aug 2025 17:46:17 -0700 (PDT)
-Message-ID: <3eca0594-ebe4-4b34-8463-555136199dc1@gmail.com>
-Date: Thu, 7 Aug 2025 08:46:10 +0800
+	s=arc-20240116; t=1754527851; c=relaxed/simple;
+	bh=grPj4nUiqlg/GvMehvwd/PM7Ps+66XCt4iskjSNeqTI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NtjbB7Rxnww6j4Bz82sIiK/xA1e3vOmz6bKfNezgRd/jCVzVhM5kZFpeo32oca+fYNUES7sIfPOJGf5xuPIg4rcFFW/oNrnaroADvuy4Vxqrz95DHskGup4s7ZQJ5poNCqtbxcL/TfedAT6S0FDb6DNATl3yXZOozKzFoLjlMrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HTz9IEpv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42C4C4CEF9
+	for <linux-pci@vger.kernel.org>; Thu,  7 Aug 2025 00:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754527850;
+	bh=grPj4nUiqlg/GvMehvwd/PM7Ps+66XCt4iskjSNeqTI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HTz9IEpvRGU5Kag0/OLxpBfg31H/M5cMUEZ3opwD93imc7f4sGxKgs3oUex89I2nb
+	 hxzO6iowo+ZbiQ70YFpfKaBTo/wZ1uDMb3ImAwgkUtrprdBZ/C7w1GSZ85i9S2wINF
+	 flqmfWsLLtA7qsIVS5IR2pkuUqjXvBh9SIoIkJcYGTgIpPKsPLM58AvSkhXVLjzvPk
+	 qvejLXRMKRvkwtIY9Dyp2rSxbxSOZPw0Dnu4di3x/SBgqtzC0fYPSfeTTUGajbYr2d
+	 k840k1dNkB+jRAMX/wnJPz4hATkHNcA5iGcyQR9p+xJkmaG4YiRPu88jd0T5Z69vR5
+	 xgQphFzj9cBCQ==
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-459b3904fdeso18235e9.1
+        for <linux-pci@vger.kernel.org>; Wed, 06 Aug 2025 17:50:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXPlBaefbS4lTWOVAOI8NZO44GuYK3vvlTrMMGaHV9a9aPfJvbitSTl5YwgBY6cM5p3pT6y25kd7x0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKzM3O0mx9P4c8iK6sjVHxnsp4gLfNnb/DqNH+GjW8nQ9ao+PF
+	Zpa/OUqKUuOcca991goNr1YSM1lvcjHWBmxJHjaKVw5WlxaeR//wfquAPFp++e9bvOkTxzcnMSp
+	p6jgMbSC9XAGiGwIjk5aMW+j7LOnFj62f2Dc69fqN
+X-Google-Smtp-Source: AGHT+IGd7AVqzUBj3ViITTLxWIkbOiciEeiGJAqp3Zj3Tc1+LEEggLoa5F5uWFg80218MiuBPCcZLN8HDT/+zDOogCY=
+X-Received: by 2002:a05:600c:a215:b0:453:65f4:f4c8 with SMTP id
+ 5b1f17b1804b1-459eee38e99mr254455e9.3.1754527849296; Wed, 06 Aug 2025
+ 17:50:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI/AER: Check for NULL aer_info before ratelimiting in
- pci_print_aer()
-To: Breno Leitao <leitao@debian.org>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Jon Pan-Doh <pandoh@google.com>, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
-References: <20250804-aer_crash_2-v1-1-fd06562c18a4@debian.org>
- <50f6c23f-1f46-4be1-813a-c11f2db3ec4f@gmail.com>
- <umpfhbh2eufgryjzngc7kyvjlqf3d6fgzftgeb44yf4bbtizb6@x7iqbksbbcot>
-Content-Language: en-US
-From: Ethan Zhao <etzhao1900@gmail.com>
-In-Reply-To: <umpfhbh2eufgryjzngc7kyvjlqf3d6fgzftgeb44yf4bbtizb6@x7iqbksbbcot>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250728-luo-pci-v1-0-955b078dd653@kernel.org>
+ <20250728-luo-pci-v1-20-955b078dd653@kernel.org> <87zfconsaw.ffs@tglx>
+ <CAF8kJuOM=2oEFP20xWtQ==ECwF_vNB032Os3-N12zY1xVau-yw@mail.gmail.com>
+ <20250731150132.GV26511@ziepe.ca> <CAF8kJuPbJWea+o=GTFEM6KRCq4DxDad+83+vM0Np+n=Mmzqzag@mail.gmail.com>
+ <20250802135034.GJ26511@ziepe.ca>
+In-Reply-To: <20250802135034.GJ26511@ziepe.ca>
+From: Chris Li <chrisl@kernel.org>
+Date: Wed, 6 Aug 2025 17:50:37 -0700
+X-Gmail-Original-Message-ID: <CAF8kJuN4yjBzaTuAA9wERbxbJQs=YSf-1RY_nHu+XvMybpYbfA@mail.gmail.com>
+X-Gm-Features: Ac12FXwr_lgsbosoQEiUbhniouBJKo-bOKc3xyjaNCaRQ66umGk7SeForY_LB9o
+Message-ID: <CAF8kJuN4yjBzaTuAA9wERbxbJQs=YSf-1RY_nHu+XvMybpYbfA@mail.gmail.com>
+Subject: Re: [PATCH RFC 20/25] PCI/LUO: Avoid write to liveupdate devices at boot
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, Pasha Tatashin <tatashin@google.com>, 
+	Jason Miu <jasonmiu@google.com>, Vipin Sharma <vipinsh@google.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
+	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
+	Leon Romanovsky <leon@kernel.org>, Junaid Shahid <junaids@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Jason,
 
+Thanks for your feedback.
 
-On 8/6/2025 4:45 PM, Breno Leitao wrote:
-> Hello Ethan,
-> 
-> On Wed, Aug 06, 2025 at 09:55:05AM +0800, Ethan Zhao wrote:
->> On 8/4/2025 5:17 PM, Breno Leitao wrote:
->>> Similarly to pci_dev_aer_stats_incr(), pci_print_aer() may be called
->>> when dev->aer_info is NULL. Add a NULL check before proceeding to avoid
->>> calling aer_ratelimit() with a NULL aer_info pointer, returning 1, which
->>> does not rate limit, given this is fatal.
->>>
->>> This prevents a kernel crash triggered by dereferencing a NULL pointer
->>> in aer_ratelimit(), ensuring safer handling of PCI devices that lack
->>> AER info. This change aligns pci_print_aer() with pci_dev_aer_stats_incr()
->>> which already performs this NULL check.
->>>
->> The enqueue side has lock to protect the ring, but the dequeue side no lock
->> held.
->>
->> The kfifo_get in
->> static void aer_recover_work_func(struct work_struct *work)
->> {
->> ...
->> while (kfifo_get(&aer_recover_ring, &entry)) {
->> ...
->> }
->> should be replaced by
->> kfifo_out_spinlocked()
-> 
-> The design seems not to need the lock on the reader side. There is just
-> one reader, which is the aer_recover_work. aer_recover_work runs
-> aer_recover_work_func(). So, if we just have one reader, we do not need
-> to protect the kfifo by spinlock, right?
+On Sat, Aug 2, 2025 at 6:50=E2=80=AFAM Jason Gunthorpe <jgg@ziepe.ca> wrote=
+:
+>
+> On Fri, Aug 01, 2025 at 04:04:39PM -0700, Chris Li wrote:
+> > My philosophy is that the LUO PCI subsystem is for service of the PCI
+> > device driver. Ultimately it is the PCI device driver who decides what
+> > part of the config space they want to preserve or overwrite. The PCI
+> > layer is just there to facilitate that service.
+>
+> I don't think this makes any sense at all. There is nothing the device
+> driver can contribute here.
 
-Not exactly,
-If the writer and reader are serialized, no lock is needed. However, 
-here the writer kfifo_in_spinlocked() and the system work queue task 
-aer_recover_work() cannot guarantee serialized execution.
+I am considering that the device driver owner will know a lot more
+device internal knowledge, e.g. why it needs to reserve this and that
+register where the PCI layer might not know much about the internal
+device behavior.
 
-@Bjorn, help to check it out.
+> > If you still think it is unjustifiable to have one test try to
+> > preserve all config space for liveupdate.
+>
+> I do think it is unjustifiable, it is architecurally wrong. You only
+> should be preserving the absolute bare minimum of config space bits
+> and everything else should be rewritten by the next kernel in the
+> normal way. This MSI is a prime example of a nonsensical outcome if
+> you take the position the config space should not be written to.
 
+OK. Let me rework the V2 with your approach.
 
-Thanks,
-Ethan>
-> In fact, the code documents it in the aer_recover_ring_lock.
-> 
-> 	/*
-> 	* Mutual exclusion for writers of aer_recover_ring, reader side don't
-> 	* need lock, because there is only one reader and lock is not needed
-> 	* between reader and writer.
-> 	*/
-> 	static DEFINE_SPINLOCK(aer_recover_ring_lock);
+>
+> > > Only some config accesse are bad. Each and every "bad" one needs to b=
+e
+> > > clearly explained *why* it is bad and only then mitigated.
+> >
+> > That is exactly the reason why we have the conservative test that
+> > preserves every config space test as a starting point.
+>
+> That is completely the opposite of what I said. Preserving everything
+> is giving up on the harder job of identifying which bits cannot be
+> changed, explaining why they can't be changed, and then mitigating
+> only those things.
 
+We can still preserve every thing then work backwards to preserve
+less.  As I said, I will rework V2 with your approach preserving bare
+minimum as the starting place.
+
+> > Another constraint is that the data center servers are dependent on
+> > the network device able to connect to the network appropriately. Take
+> > diorite NIC  for example, if I try only preserving ATS/PASID did not
+> > finish the rest of liveupdate, the nic wasn't able to boot up and
+> > connect to the network all the way. Even if the test passes for the
+> > ATS part, the over test fails because the server is not back online. I
+> > can't include that test into the test dashboard, because it brings
+> > down the server. The only way to recover from that is rebooting the
+> > server, which takes a long time for a big server. I can only keep that
+> > non-passing test as my own private developing test, not the regression
+> > test set.
+>
+> I have no idea what this is trying to say and it sounds like you also
+> can't explain exactly what is "wrong" and justify why things are being
+> preserved.
+
+I know what register is causing the trouble but I think we are under a
+different philosophy of addressing the problem from different ends.
+Another consideration is the device testing matrixs. The kexec with
+device liveupdate is a rare event. With that many device state
+re-initializing might trigger some very rare bug in the device or
+firmware. So it might be due to the device internal implementation,
+even though PCI spec might say otherwise or undefined.
+
+Anyway, let me do it your way in V2 then.
+
+> Again, your series should be starting simpler. Perserve the dumbest
+> simplest PCI configuration. Certainly no switches, P2P, ATS or
+> PASID. When that is working you can then add on more complex PCI
+> features piece by piece.
+
+With the V1 the patch series deliverable is having an Intel diorite
+NVMe device preserve every config space access and pass to the vfio
+and iommu people to build the vfio and iommu on top of it. Let's
+forget about V1.
+
+With V2 I want to start with the minimal end. No switches,P2P, ATS or
+PASID. I need some help to define what is deliverable in such a
+minimal preserve. e.g. Do I be able to read back the config value not
+changed then call it a day. Or do I expect to see the device fully
+initialized, it is able to be used by the user space. Will the device
+need to perform any DMA? Interrupt?
+
+I will probably find a device as simple as possible and it is attached
+to the root PCI host bridge, not the PCI-PCI bridge.
+Maybe no interrupt as the first step. One possibility is using the
+Intel DSA device that does the DMA streaming.
+
+If you have any other feedback on the candidate device and deliverable
+test for V2, I am looking forward to it.
+
+Thanks.
+
+Chris
 
