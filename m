@@ -1,273 +1,248 @@
-Return-Path: <linux-pci+bounces-33505-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33506-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18066B1D0CA
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 04:00:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42945B1D0F5
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 04:36:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BBC00188A547
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 02:00:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0ED2F626C98
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 02:36:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B09471E4AB;
-	Thu,  7 Aug 2025 02:00:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 850C71A841E;
+	Thu,  7 Aug 2025 02:35:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WMlOq1yt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NNjvBB0T"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f68.google.com (mail-ed1-f68.google.com [209.85.208.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D7D286A9;
-	Thu,  7 Aug 2025 02:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.68
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754532031; cv=none; b=fNVi1E3UyzXSmM2y1r2O9y+HOuqau2k6BcsDdW2OgY9P6U0j48XDdDSqIw7CEgOq5oKae1CdZ+5C1qeHYXGZmfqIm+/PbwfFUjuXDRnwum3lB9PZCAS4eHtDj3lNEusf++UTCR4/8npyBS5vxwPn6Zn61UtJ3mNhGg6Woqu7eKQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754532031; c=relaxed/simple;
-	bh=nEu9rgA6GeCYi3YzHKi+ug6Nu0lKdz8H8aV7Jp+ZH1c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J7cFSsgCs+s8G9PlHUaoIn0arprTG2qwKj40cuxyy2mwitWDOeOMt4+XOPiEeQK7SNQKlu51Es1iTRauDH87P0JJXRwtslNmiWQ1a5szdyPglM/Lykdfi2/cBPOKWMCa2idbb5Ga4HpXQurZbjVSf+9n71uyEgGSzstq6jZzVgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WMlOq1yt; arc=none smtp.client-ip=209.85.208.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f68.google.com with SMTP id 4fb4d7f45d1cf-61571192c3aso622846a12.2;
-        Wed, 06 Aug 2025 19:00:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754532028; x=1755136828; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ABRrAgyeGksuFUpWeQANtztghSDdAocaJuPB0k003W8=;
-        b=WMlOq1yt9Cavb4lWrYv2ZP+mD//RAUDOuXVude9hco89E8dI8yaW7FBlbFBvaQu5Tv
-         MafTv4LUrvFivP7z/WSvyz9IlU23EetcDYAnc7eo43ukdGFb7l8bQeYcBFn0mxbEqLmz
-         PM3vCc7rKDqubaQJgw2PIUeA/NzsZMtjlOcz5mKgpklFHUdYTJLowYFCr2Qj9CxRsyZ2
-         TBjq2NsXVsdl39ik1LbGeML6DNqpjMxg+3oYVRLOXOHIaCoEV1+aCFcc1HXhprjCxt40
-         Na8Pdpt1O1pHtnjietDxPZLcfuSO6M4wzu8MfBvgldCGlIn1j5xxjUggXzaumviAFypW
-         W25A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754532028; x=1755136828;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ABRrAgyeGksuFUpWeQANtztghSDdAocaJuPB0k003W8=;
-        b=oXjJEJIsX0s1CoaVlvIZvU0bXyvWLoH/btWChl14Cm7CDYTdDo+eRI1QcqfJLc12PN
-         SKP6qWyXip6rlpeFTYaJ3aQuTITimgxCmzOGGvZ6s7JBkXIyWPS+wFNK/A/7Javxtckp
-         UvqaRVrsDaGuymzqAApAqoX7FMP1lsbTAGvB9CgH3Ie9DLhNM4Sihw2pLc3yQWM382/i
-         LMIYbN5CS3WB81+mGy8YGqxqmd/Ou8Cm+S/6WvNoGf9I+TvO4XDZ2LIGrT56m6Pqh1+d
-         Os5AeNgHj5sMLj+5CckNCqT83XG7FJtLj1S9TqTlQJlje+tQQSTnCOybJ0Nc/a94hRRL
-         Zj7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUKVSldN8cTlgDK1c8w8ldpw9E8spNchZ1GdREp7qRWnQE0xUpULOnooN5aOvBhD9IArSuKVAV3MO9k@vger.kernel.org, AJvYcCVfNlRQEsWalXY+hvqhPLgeXZJGaDi6fzocSlQlIHUDqPB7NpzpP8ZVd5RIYLZqliYkvM6X2rPJyXjbpAk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSt+F+FA2Dw56r3t5qprnfmGYyCpipe8905/mG2kuoW6jv0EC9
-	1Tr8exB8vrTngVaQQawviLMfT5pU5s+Llpu4kjsP0sESOuZqlLwemXeE
-X-Gm-Gg: ASbGncuU4ZGqz9F4TQkL69dkhijbQBJ/waggox/sbGZ8ynty2lpFj2h+u4EJ8HEENQB
-	6c8UAByw9aSp0UVUwCWOKW4DuPMoKqsMd7KjqkzFt+ISjvC3NDv06Xiv6A6gQAk+7pKfWGs1q6Q
-	aaR0QYPIZeRAQHf6kdYjpo/WgN8oblApQE3V8J1HUQo4bt3XMIRVMh4PNwdUNmHD7FcOEAqT15/
-	WrWbLrGnGTjvV9HpMqHEys5i/XVL9+9joOr14PHyFNx9hQlmbJ0sPQADi0wdxpESuAU7qB5lfXW
-	wkChjoh6GAjf2keF+aRuLDFfy21y0NB9pDi5udKAq1v0W1MdIFTF5c3hk6opceO2DmFsbbCmhrX
-	0GZ3aCW9VMQ2HZeD1lL7oevcMjGTyZaF0xTK48jAlZYzVYbobFguVH5sNxrkYvpOz2pnw+uLASh
-	f49Cj1Xzn/ha37PnxrbWegrpJCSF4=
-X-Google-Smtp-Source: AGHT+IEnSbQ9l5AyMsBRP/idqZTwghLbST+oqy4zLw7snINhb9wyCkI1OH6xs/LXOrnsd8nZVwfUhw==
-X-Received: by 2002:a17:907:6d19:b0:af2:9a9d:2857 with SMTP id a640c23a62f3a-af992a344b7mr441804666b.3.1754532027835;
-        Wed, 06 Aug 2025 19:00:27 -0700 (PDT)
-Received: from [26.26.26.1] (95.112.207.35.bc.googleusercontent.com. [35.207.112.95])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af91a0766f9sm1235552766b.24.2025.08.06.19.00.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Aug 2025 19:00:27 -0700 (PDT)
-Message-ID: <43b6812c-4f00-48c2-a917-a3e25911c11c@gmail.com>
-Date: Thu, 7 Aug 2025 10:00:21 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A592D1A23B0;
+	Thu,  7 Aug 2025 02:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754534154; cv=fail; b=qSxo6s28nl/YTAQX85JFnYVr6TuaM1htQM79L5XXGKNV6NTTPX31tIH7XgB5p4DH9Wq43sC8gGkeTVtYVNZKNYBLD3dGOTF/6v9F93Pe7GYdfuxp4F3WSjSwr+J3WkWdsr5juDq4Imt5udZVhp/bDfHBOKnUapMYNbf8kRdubvM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754534154; c=relaxed/simple;
+	bh=FbhU8Qm0xkH02tkXy9ETMDI8xGlVamHbpMXH9zYM+I0=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=fdB8q62xrEIg7JGuW3bri9SDy+ggxuXzDTbwPnWpC4Fq1Bn+a3vKQQVh6fOCcgQzC6VV9Gzjy+X6gBYOqpG8NOf8X1bLEZ02deLq47RXfkTCpe9pJlBosPVrvqJy34hiLStKuPZJGqzylpiYVCOCYPmrh7dpUWrmAKQ1tqBcDkw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NNjvBB0T; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754534153; x=1786070153;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=FbhU8Qm0xkH02tkXy9ETMDI8xGlVamHbpMXH9zYM+I0=;
+  b=NNjvBB0TyT9tBHZUfco/6FX+xkaNNIUH1/IrEQJ39XXnSzyqdp4XN0BO
+   F02EILM8eX4Du471DQkHZseVzC0im1YHe6LpiRjqTfdsX2gZIVYJC3eOj
+   taBeViS2TpqZHv0yrYnkDygqjSzwpwxq/XZuQNjGeK28DQw7JVh+lBmPu
+   32hCRnQSJmFlau9KaWWhIJyv5V1oePeIqxtaea9zRJGcdxE1xTeIspQhn
+   nVtfuKRnKqMFzxJwgjZ2N1dzPmycymqxBqSI/hvbyPLWTHaDsNKNnZTrF
+   LY1/ES4h0k1XyB2N/VVsz/e6+aJoyX56BknR466/K8SOB5HVFRpgtL6p8
+   Q==;
+X-CSE-ConnectionGUID: 3Q5xq7heSZmVS/vdEvpDig==
+X-CSE-MsgGUID: 8oBzNkfNTielDKM6Hm4tMg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="56825387"
+X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
+   d="scan'208";a="56825387"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 19:35:53 -0700
+X-CSE-ConnectionGUID: VorWwNgXTLSFjsqgBZQqsw==
+X-CSE-MsgGUID: a4uJicltSH+U+HCvQF1v0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
+   d="scan'208";a="169058722"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 19:35:52 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Wed, 6 Aug 2025 19:35:51 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26 via Frontend Transport; Wed, 6 Aug 2025 19:35:51 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.87)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Wed, 6 Aug 2025 19:35:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fm5dq5ks4uDA9rHHPgY6EtsTvgpoa2Ijs7fVxjzcW4b/1waus4aKfBYBsYKxTsHg9WjkVNKiN08fTLLBqmBPhjQTWIoW7Ft4tqA0zQXngUwMvIT+nQMg58cbQIJ5Em3Gx7Zml/MNLDHnWQqMtXn+Fck+fYnj623uaKPVRpToK8MzC0cLPv5CsJizIjeJGKbWSM64aiZB0FZhZkkOWSjNCybUPmHhPjj4RGGm4BsYBip6mQSGtU/go+gT/p53ElBoZ1q86zeoJTi/dVFP1oX9FqJnrRR0JFGQZWbJ3Yx42a2IAO3jRAIfK27eAd4BO+ctIs8FwRwPEZjqMn0eA5+FHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2hT/zwjesOlPpB+cS6xyxfU5ytHBdRQsYYAeKbJhOf8=;
+ b=Wz9gFH55y/GVGW0Da3YVyBQv2teSbjUT/pvkBZL1abp4lfoDdw1L79dFUSdfYO0QQcRNATg1vXwkc3mr7UN9b9njS5/z8ydDEDpY57d3/LXo67NhG4zR5flmI1UATQAucjrl4fgE0p92sJ8vMckYY3qPe4cJz3DVuZZo69FN+otZpi5f/23bZs8iD06DlGmlg9ce5aeCaUshPtJSiP5o3cggj5EFcWAEnoQe99tyDC+OC9ZhAonNNAAcgTD+0Ay2mNBgPzxypPAK69gz9bAPu+mFiFKcAZoWeY9+5kGeJpXYuKC3biOqZd97Z/HAU1f5xHoCC0Kk+aVoQRb+bct+4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DS0PR11MB7383.namprd11.prod.outlook.com (2603:10b6:8:133::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.15; Thu, 7 Aug
+ 2025 02:35:42 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%2]) with mapi id 15.20.9009.013; Thu, 7 Aug 2025
+ 02:35:42 +0000
+From: <dan.j.williams@intel.com>
+Date: Wed, 6 Aug 2025 19:35:40 -0700
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, <dan.j.williams@intel.com>
+CC: <linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <bhelgaas@google.com>, <aik@amd.com>,
+	<lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>, Xu Yilun
+	<yilun.xu@linux.intel.com>
+Message-ID: <689410fcb5bc2_cff9910036@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <20250806121026.000023fe@huawei.com>
+References: <20250717183358.1332417-1-dan.j.williams@intel.com>
+ <20250717183358.1332417-5-dan.j.williams@intel.com>
+ <20250729155650.000017b3@huawei.com>
+ <6892b172976f7_55f0910067@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250806121026.000023fe@huawei.com>
+Subject: Re: [PATCH v4 04/10] PCI/TSM: Authenticate devices via platform TSM
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY5PR04CA0022.namprd04.prod.outlook.com
+ (2603:10b6:a03:1d0::32) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI/DPC: Extend DPC recovery timeout
-To: Hongbo Yao <andy.xu@hj-micro.com>,
- Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
- bhelgaas@google.com, lukas@wunner.de
-Cc: mahesh@linux.ibm.com, oohall@gmail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, jemma.zhang@hj-micro.com, peter.du@hj-micro.com
-References: <20250707103014.1279262-1-andy.xu@hj-micro.com>
- <24dfe8e2-e4b3-40e9-b9ac-026e057abd30@linux.intel.com>
- <b9b64b4f-dcec-4ab1-b796-54d66ec91fc5@hj-micro.com>
-Content-Language: en-US
-From: Ethan Zhao <etzhao1900@gmail.com>
-In-Reply-To: <b9b64b4f-dcec-4ab1-b796-54d66ec91fc5@hj-micro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB7383:EE_
+X-MS-Office365-Filtering-Correlation-Id: 143ca835-0682-4471-cd68-08ddd55b1aa8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?cllhSmVTMGFhZXVuajRNMlhrZlBqTW1NTlpFQ2xBcXRLejgxMzcrRHJZUGZG?=
+ =?utf-8?B?d1NtYVVZWGFqRXI2WUdQTm1iNk5kSUNUTUIvMThKeHdwekUxb2RsVkdyTDcy?=
+ =?utf-8?B?eGFYajlna1p2clJ2d1Z0akNIbkEvdFhlb1c0OWMzM0VQcFFYNDlNaU5tYkE0?=
+ =?utf-8?B?aHk4MTVEOXkwS3c2ODNNM3dsMHYrUGQ0MGwwS1JNZk5vVzAyM2gxSzY3RXpv?=
+ =?utf-8?B?MHpRcW40THc2Rit4VmlMK3lsOUtPT2VJY29VaEp0WWJWTkJZTEtjdnF6bi9T?=
+ =?utf-8?B?TmNmT3F1RU1MSE9aR3ZHNVlwUXY0bEw0Q1J2VnJoNVhxUFplbnlHcnFIVEE1?=
+ =?utf-8?B?bi9BQjNLbk5EZmxiTEVmcmM4U3FlY2pYcm9JbllNQVFrMmIzaENaMkdMZ1Vo?=
+ =?utf-8?B?OWd1bDZHTWpGT3dua2xueExqRHJBbWhJMDlITmtqNDFITVBjSlpjSjVObGh0?=
+ =?utf-8?B?ZXVmZXRjajZOMlI3K0lWRDJyVHdJeUhIdGIxZ2FDMGQyeTVNQjFPNzdsOEMz?=
+ =?utf-8?B?S3o4QmZFRW9vSUsyVk81VjJibmRTOXZWZnBkWkt2Kzd3T0dhYWgwejAxdFlN?=
+ =?utf-8?B?bC84SVZ1L1VyMXhwVmNWSWNLUDlXelBPRHdEMVhVaCtKMys1VS9QVk00eTZq?=
+ =?utf-8?B?Y2xuSEppT1AvSDc0NGw2SWFDaU4yOXV4V2FzVG5Ka1E3R0RXQXNoNjM3Z3Q0?=
+ =?utf-8?B?Y1RYK0JWRkhndUEvajlMRUNvU0FqMUdNRThSTTFZbUxPcVo2WmxjYmhpaXow?=
+ =?utf-8?B?d0hQZmJzQTlXVGh0cDU1UkdWZFBJREU3SGVaMk1tMlNTSFBUajI0TFdRMS9F?=
+ =?utf-8?B?RmVDUkV6bmhNaGNta2hYc2JENWFGWDFmM1BpemhyWlRkNjdBM1ZzZGZ0TzBk?=
+ =?utf-8?B?Uzk4dXhxbGpZQVgvb2lJMFQ1NzcrWit4V1d1OU9sM1gvLytVbTdVVDRnUURN?=
+ =?utf-8?B?aGJqb3ZtZWF4WG5PVU1SZDdZWkdnMTJMNENZeTNYK0tWUTVueWRHVVBGYWRG?=
+ =?utf-8?B?MGdqZEg2ZE9vemo4RHg0RENKU1RRVGhlamk0WGFiM1hsSlBxcHFSNXp3Q1Vn?=
+ =?utf-8?B?Q0l4eVVaZG9ZOWdUYng3aU9ObFlwTlh1Rms4QTQvbCszTDFZMXhiVHdGRlJm?=
+ =?utf-8?B?WUVNN3d3VEd0a2t0Q3JNYko1VzhyTmlDY0pkQ0pxQ291Y1VzMkYyanUzeFJo?=
+ =?utf-8?B?c1drT3BUS1JPS2dnUk0wNWIrZWlRckwxVXExc0pBMTZOVlpIQmp1eE1DM3B2?=
+ =?utf-8?B?SitMR0V1VXdjK1RnWnhiUDNRUDRINWZqckpRZkxnUXNGWXRsMjhjZm9ycDJ1?=
+ =?utf-8?B?RytKbVI1dkppeVZhNkJ3a3owc0I3UlRkV29ucDY5em5HUnJnR29EOXR3K1Aw?=
+ =?utf-8?B?bTEyMXcrNm9nOGZuTHhDVWdhdFNvcHg5aUUyNnlpcW1MY1B6RlY2a1o0dGhT?=
+ =?utf-8?B?b0M2cERlaWVCMVJ0Y1NJS21tNUpSU1NxNjR2UUZ5alpCNlc2bEN5cXgzeEVv?=
+ =?utf-8?B?MXNaTWJPaWFMVXh1S0RsZzU3R2N3dVpuWDVWUU9INk45Njl5dWRsb1ZYbm9C?=
+ =?utf-8?B?VDJEdEtxUlp0MnkyZG1EcGxqdmVSR1N6V0toQWd4OGROaFA5U0x1MUIyd29P?=
+ =?utf-8?B?dzZpYmY4cHBncVBTQnZOcmhjS1hqZmxJRzNqUkxkbVo5cFhIZm5uMVRSK2Zu?=
+ =?utf-8?B?ajRhZ2ZBWDZTWXJUSkJ5d1NFZjNIWnF3MGh0WnFmYjN0bm1kN2FoK3hXNUxP?=
+ =?utf-8?B?b0xndUJxSCtQR2o4MVFWVm5ob21PTG01NlZreWhVVkRsZHAzZURCSG9YOG9w?=
+ =?utf-8?B?cEVQbDgvZ2Z6WlVQV3M4dGtUejJxa1pJdTVMOUZDN2hVMWJrbnd5UC80SVBX?=
+ =?utf-8?B?cE5UMEpVbnk3SUlQL25uWmZkNVBrL28vL3ZJbzlCTkwzaGc9PQ==?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eUp1ZlhnT2kyaXNpRFNnMFk1RGhTY0ZjWk1IcHhIbWRiM0pCeTNPNVJVZm5t?=
+ =?utf-8?B?V21xL1BxVjVkSlh0M1ZvdjFKVGxSTkRqZ0JvK01nemNMYmJhRFUxZ3NmaGFz?=
+ =?utf-8?B?OTRXTkRGalBZT0ptYzRjaEZQUTRkYnZXeWVOalAySWx2em1DMXdMUWRlY0o1?=
+ =?utf-8?B?N05sMUU4eGFOQVRnaEloKzZ0dEhsdmVoM0RKN2x5U3kvL3hXRVFWZW8zNHFy?=
+ =?utf-8?B?U0ZpTEpieWVvUFFHNjhiQXV0L3QvZU8vRHhaTzFRTzFGRDBMMXVjV0J4VENM?=
+ =?utf-8?B?MDQ0ZlF2QUhjQUpGclhXYnZSNmdydFg2RlBMelQrUkhrVTB5OVc4bzhjRGxR?=
+ =?utf-8?B?RGxydy8yZXAyemMrazJrM1NEVHQ2WjR1Q0FRcjdXbmVqcC9Lb2RnRnRaa1Bk?=
+ =?utf-8?B?VEVuMnNWSHFPYTFEK3QwM3ZwTXJraGY0RU4wN29aOFM0UFI1SWcvWXFjVjFk?=
+ =?utf-8?B?OWJBdzNHUVRaMkh3b1RIblVVQkg1Nk9BVGw2TXpwU0YyYTBPQlNMVXRWNHl6?=
+ =?utf-8?B?eExGTVlEWDJ6TklBTCtiaGRpUGFoNzFSMmZ0V2R5dEhocGtmZEU2RnJ2Smcw?=
+ =?utf-8?B?Q2IrTFRwZzkvd3ljckp0cmZjNW9pMDNHSi9jbURKanlSY1FqTUZlMEJRdmt2?=
+ =?utf-8?B?dmpoNm9Taml1cHBnUVBxRXZrNWR6WUxpbzNUbGNJQnNqaUpwSzBlZnpRM0Zi?=
+ =?utf-8?B?eWllZURaMFIvbGdub2VCWCtUdG9PY2kzTDl5Nm41eSt5QzlNRWltVGJIMWVU?=
+ =?utf-8?B?NGJaNmFuZE8vM1laUitRTGJlcFZuMFBKQzVjR3ZJWmM5NlF4NVdBWlVxcnZw?=
+ =?utf-8?B?OFZGdUEwZlhndlI5QXhwdjB4ZUZPOHM3QjI5WnkyMGUrYzEvRy9KNzNyaVlE?=
+ =?utf-8?B?eGRSUGw4VExCbjA2Mk4yZjZnMnBXVFJTUTlzSENMWW1XaFNRQ0FqSmpESW1G?=
+ =?utf-8?B?ejhLRHNuZCtlUjFNenNPTG96RmJRdERxZWdGaytVMnVTYW1KM01sbVFTaGJB?=
+ =?utf-8?B?Y0p1bTgraWxObFlxYktSZ2xmWkE2ZXV0MlA4NHVOM25SZVNPZmtyUXp4WS91?=
+ =?utf-8?B?TVREVXRFZndUbmRvVGVtQmFpS1MzQ3R0L01SQkRXaFpKNngxSkRWZmFGTHJi?=
+ =?utf-8?B?M0l2cTg1R3dpaGUwOHlHRFY1eXYrL2NoRE1uUnVmNHFKb2crbHgzTUw0RkZr?=
+ =?utf-8?B?aGgxWjh6WTZ0bkdZOE9LdFZ4dHU2ZTJJcW1MTU9JUm45Y2VpcHRmQzJIYjRL?=
+ =?utf-8?B?TExzMDk2bHRTLzNRaDdnMm1Gcit2OFVycEhCVUh0RjMrdVZ3bkxibU9aS0Mw?=
+ =?utf-8?B?dXRQZVQwejFNWjZtQ1pGQ3JRcWhZSnQwcWxVYlY4ZkRia0ZaRUl5Z1YveEZQ?=
+ =?utf-8?B?b0JDZFhDSEZ4djJGZmx3dEErM1R1MWtPVFREN05RSUJtdjUraDhTQUk5c1Nv?=
+ =?utf-8?B?TFRXSC9BUStvZ1hXTG5SNkFmb3VJTHdzbGxLUzZkSVlQL0RTcGg3OU0yUEp4?=
+ =?utf-8?B?RjhTYjc1cjF5S09Fck9oT0Rhd3NyUWtlWVBRS2NCSDBic0R5aEhUaVhZb1RE?=
+ =?utf-8?B?a3NJUnNIYVVhdFcvbUFlMC8wUURKZTIzd00rYVNWSHN0Q1JKSkdZY3FHelFK?=
+ =?utf-8?B?eGZweVlPUExZVEw2aWxhOGMycDY1VVpRVFg5Yjk2L2w5aEZ1dDZwbTc5VWN2?=
+ =?utf-8?B?Zm1vYyt3UnVtK1phVTNTVkt5K1NzQUp5SG1SMXU5Y1hvNHZYZHAxd3Q0VUgv?=
+ =?utf-8?B?Mkpka3VRRW9paTdnYStDb2xTMWsrTTJuOEJDaENBeXhOZ1RYeEtLTGdoVFlo?=
+ =?utf-8?B?Sk5EZkkxYTNrWXZwYmxiTENaSUxyL1haSkdlbUtYak1BWFROZ2Z3YWorb1Ey?=
+ =?utf-8?B?MVlWMk5nbUxLa0lXajB0cTlVaERueE1nQmc2SE9SaUpwalEwTFltbFVLeTFD?=
+ =?utf-8?B?alEyUTRqZ3BrMTUrL01EWmt4Vyt5Y2dwUEQ4V1I4MDh4S3M5LzUyMVdhdzNu?=
+ =?utf-8?B?R1FvMFA2cVZHdUZnVlpWcXdoamNBdysrYjdsbVhqeVBMeTY5TXlnelRFa0NI?=
+ =?utf-8?B?UzhnZUlGdmUwUXJPVFdKdEJndmQweEViMG9kcCtYczRVZnJubCtzUlR6MytU?=
+ =?utf-8?B?U2NqM1hkNmkxbUlheTBnVWhVUHBLQ0o5OUMwdWYrSHlTbjBvL2x5UC9jMjJW?=
+ =?utf-8?B?bUE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 143ca835-0682-4471-cd68-08ddd55b1aa8
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2025 02:35:42.3464
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EqsiKLn3U+qzwELrqQDsQdVVr6EO4tUzI+4Co1TGik2hCh28wjHbyxVBHowRA0m4XAigKB/wcRhtfH0KpcqzGxabF54kHOep5XOxt5FVg3s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7383
+X-OriginatorOrg: intel.com
 
+Jonathan Cameron wrote:
+[..]
+> > > > diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
+> > > > new file mode 100644
+> > > > index 000000000000..0784cc436dd3
+> > > > --- /dev/null
+> > > > +++ b/drivers/pci/tsm.c
+> > > > @@ -0,0 +1,554 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +/*
+> > > > + * TEE Security Manager for the TEE Device Interface Security Protocol
+> > > > + * (TDISP, PCIe r6.1 sec 11)
+> > > > + *
+> > > > + * Copyright(c) 2024 Intel Corporation. All rights reserved.
+> > > > + */  
+> > >   
+> > > > +static void tsm_remove(struct pci_tsm *tsm)
+> > > > +{
+> > > > +	struct pci_dev *pdev;
+> > > > +
+> > > > +	if (!tsm)  
+> > > 
+> > > You protect against this in the DEFINE_FREE() so probably safe
+> > > to assume it is always set if we get here.  
+> > 
+> > It is safe, but I would rather not require reading other code to
+> > understand the expectation that some callers may unconditionally call
+> > this routine.
+> 
+> I think a function like remove being called on 'nothing' should
+> pretty much always be a bug, but meh, up to you.
 
+I should have noted earlier that tsm_probe() on subfunctions might fail
+without failing the 'connect' operation and unwinding the subfunctions
+that did probe successfully. tsm_probe() should rarely fail, it is just
+subject to kmalloc(GFP_KERNEL) failure in most cases.
 
-On 7/11/2025 11:20 AM, Hongbo Yao wrote:
-> 
-> 
-> 在 2025/7/8 1:04, Sathyanarayanan Kuppuswamy 写道:
->>
->> On 7/7/25 3:30 AM, Andy Xu wrote:
->>> From: Hongbo Yao <andy.xu@hj-micro.com>
->>>
->>> Extend the DPC recovery timeout from 4 seconds to 7 seconds to
->>> support Mellanox ConnectX series network adapters.
->>>
->>> My environment:
->>>     - Platform: arm64 N2 based server
->>>     - Endpoint1: Mellanox Technologies MT27800 Family [ConnectX-5]
->>>     - Endpoint2: Mellanox Technologies MT2910 Family [ConnectX-7]
->>>
->>> With the original 4s timeout, hotplug would still be triggered:
->>>
->>> [ 81.012463] pcieport 0004:00:00.0: DPC: containment event,
->>> status:0x1f01 source:0x0000
->>> [ 81.014536] pcieport 0004:00:00.0: DPC: unmasked uncorrectable error
->>> detected
->>> [ 81.029598] pcieport 0004:00:00.0: PCIe Bus Error:
->>> severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver ID)
->>> [ 81.040830] pcieport 0004:00:00.0: device [0823:0110] error status/
->>> mask=00008000/04d40000
->>> [ 81.049870] pcieport 0004:00:00.0: [ 0] ERCR (First)
->>> [ 81.053520] pcieport 0004:00:00.0: AER: TLP Header: 60008010 010000ff
->>> 00001000 9c4c0000
->>> [ 81.065793] mlx5_core 0004:01:00.0: mlx5_pci_err_detected Device
->>> state = 1 health sensors: 1 pci_status: 1. Enter, pci channel state = 2
->>> [ 81.076183] mlx5_core 0004:01:00.0: mlx5_error_sw_reset:231:(pid
->>> 1618): start
->>> [ 81.083307] mlx5_core 0004:01:00.0: mlx5_error_sw_reset:252:(pid
->>> 1618): PCI channel offline, stop waiting for NIC IFC
->>> [ 81.077428] mlx5_core 0004:01:00.0: E-Switch: Disable: mode(LEGACY),
->>> nvfs(0), neovfs(0), active vports(0)
->>> [ 81.486693] mlx5_core 0004:01:00.0: mlx5_wait_for_pages:786:(pid
->>> 1618): Skipping wait for vf pages stage
->>> [ 81.496965] mlx5_core 0004:01:00.0: mlx5_wait_for_pages:786:(pid
->>> 1618): Skipping wait for vf pages stage
->>> [ 82.395040] mlx5_core 0004:01:00.1: print_health:819:(pid 0): Fatal
->>> error detected
->>> [ 82.395493] mlx5_core 0004:01:00.1: print_health_info:423:(pid 0):
->>> PCI slot 1 is unavailable
->>> [ 83.431094] mlx5_core 0004:01:00.0: mlx5_pci_err_detected Device
->>> state = 2 pci_status: 0. Exit, result = 3, need reset
->>> [ 83.442100] mlx5_core 0004:01:00.1: mlx5_pci_err_detected Device
->>> state = 2 health sensors: 1 pci_status: 1. Enter, pci channel state = 2
->>> [ 83.441801] mlx5_core 0004:01:00.0: mlx5_crdump_collect:50:(pid
->>> 2239): crdump: failed to lock gw status -13
->>> [ 83.454050] mlx5_core 0004:01:00.1: mlx5_error_sw_reset:231:(pid
->>> 1618): start
->>> [ 83.454050] mlx5_core 0004:01:00.1: mlx5_error_sw_reset:252:(pid
->>> 1618): PCI channel offline, stop waiting for NIC IFC
->>> [ 83.849429] mlx5_core 0004:01:00.1: E-Switch: Disable: mode(LEGACY),
->>> nvfs(0), neovfs(0), active vports(0)
->>> [ 83.858892] mlx5_core 0004:01:00.1: mlx5_wait_for_pages:786:(pid
->>> 1618): Skipping wait for vf pages stage
->>> [ 83.869464] mlx5_core 0004:01:00.1: mlx5_wait_for_pages:786:(pid
->>> 1618): Skipping wait for vf pages stage
->>> [ 85.201433] pcieport 0004:00:00.0: pciehp: Slot(41): Link Down
->>> [ 85.815016] mlx5_core 0004:01:00.1: mlx5_health_try_recover:335:(pid
->>> 2239): handling bad device here
->>> [ 85.824164] mlx5_core 0004:01:00.1: mlx5_error_sw_reset:231:(pid
->>> 2239): start
->>> [ 85.831283] mlx5_core 0004:01:00.1: mlx5_error_sw_reset:252:(pid
->>> 2239): PCI channel offline, stop waiting for NIC IFC
->>> [ 85.841899] mlx5_core 0004:01:00.1: mlx5_unload_one_dev_locked:1612:
->>> (pid 2239): mlx5_unload_one_dev_locked: interface is down, NOP
->>> [ 85.853799] mlx5_core 0004:01:00.1: mlx5_health_wait_pci_up:325:(pid
->>> 2239): PCI channel offline, stop waiting for PCI
->>> [ 85.863494] mlx5_core 0004:01:00.1: mlx5_health_try_recover:338:(pid
->>> 2239): health recovery flow aborted, PCI reads still not working
->>> [ 85.873231] mlx5_core 0004:01:00.1: mlx5_pci_err_detected Device
->>> state = 2 pci_status: 0. Exit, result = 3, need reset
->>> [ 85.879899] mlx5_core 0004:01:00.1: E-Switch: Unload vfs:
->>> mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
->>> [ 85.921428] mlx5_core 0004:01:00.1: E-Switch: Disable: mode(LEGACY),
->>> nvfs(0), neovfs(0), active vports(0)
->>> [ 85.930491] mlx5_core 0004:01:00.1: mlx5_wait_for_pages:786:(pid
->>> 1617): Skipping wait for vf pages stage
->>> [ 85.940849] mlx5_core 0004:01:00.1: mlx5_wait_for_pages:786:(pid
->>> 1617): Skipping wait for vf pages stage
->>> [ 85.949971] mlx5_core 0004:01:00.1: mlx5_uninit_one:1528:(pid 1617):
->>> mlx5_uninit_one: interface is down, NOP
->>> [ 85.959944] mlx5_core 0004:01:00.1: E-Switch: cleanup
->>> [ 86.035541] mlx5_core 0004:01:00.0: E-Switch: Unload vfs:
->>> mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
->>> [ 86.077568] mlx5_core 0004:01:00.0: E-Switch: Disable: mode(LEGACY),
->>> nvfs(0), neovfs(0), active vports(0)
->>> [ 86.071727] mlx5_core 0004:01:00.0: mlx5_wait_for_pages:786:(pid
->>> 1617): Skipping wait for vf pages stage
->>> [ 86.096577] mlx5_core 0004:01:00.0: mlx5_wait_for_pages:786:(pid
->>> 1617): Skipping wait for vf pages stage
->>> [ 86.106909] mlx5_core 0004:01:00.0: mlx5_uninit_one:1528:(pid 1617):
->>> mlx5_uninit_one: interface is down, NOP
->>> [ 86.115940] pcieport 0004:00:00.0: AER: subordinate device reset failed
->>> [ 86.122557] pcieport 0004:00:00.0: AER: device recovery failed
->>> [ 86.128571] mlx5_core 0004:01:00.0: E-Switch: cleanup
->>>
->>> I added some prints and found that:
->>>    - ConnectX-5 requires >5s for full recovery
->>>    - ConnectX-7 requires >6s for full recovery
->>>
->>> Setting timeout to 7s covers both devices with safety margin.
->>
->>
->> Instead of updating the recovery time, can you check why your device
->> recovery takes
->> such a long time and how to fix it from the device end?
->>
-> Hi, Sathyanarayanan.
-> 
-> Thanks for the valuable feedback and suggestions.
-> 
-> I fully agree that ideally the root cause should be addressed on the
-> device side to reduce the DPC recovery latency, and that waiting longer
-> in the kernel is not a perfect solution.
-> 
-> However, the current 4 seconds timeout in pci_dpc_recovered() is indeed
-> an empirical value rather than a hard requirement from the PCIe
-> specification. In real-world scenarios, like with Mellanox ConnectX-5/7
-> adapters, we've observed that full DPC recovery can take more than 5-6
-> seconds, which leads to premature hotplug processing and device removal.
-> 
-> To improve robustness and maintain flexibility, I’m considering
-> introducing a module parameter to allow tuning the DPC recovery timeout
-> dynamically. Would you like me to prepare and submit such a patch for
-> review?
-> 
-What if another device just needs 7.1 seconds to recover ? revise the
-timeout again ?  no spec says 4 seconds is mandated. have a kernel 
-parameter to override it's default value is one choice to workaround.
-
-Ask FW guys to fix ? what justification we have ?
-
-Thanks,
-Ethan
-> 
-> Best regards,
-> Hongbo Yao
-> 
-> 
->>
->>> Signed-off-by: Hongbo Yao <andy.xu@hj-micro.com>
->>> ---
->>>    drivers/pci/pcie/dpc.c | 4 ++--
->>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
->>> index fc18349614d7..35a37fd86dcd 100644
->>> --- a/drivers/pci/pcie/dpc.c
->>> +++ b/drivers/pci/pcie/dpc.c
->>> @@ -118,10 +118,10 @@ bool pci_dpc_recovered(struct pci_dev *pdev)
->>>        /*
->>>         * Need a timeout in case DPC never completes due to failure of
->>>         * dpc_wait_rp_inactive().  The spec doesn't mandate a time limit,
->>> -     * but reports indicate that DPC completes within 4 seconds.
->>> +     * but reports indicate that DPC completes within 7 seconds.
->>>         */
->>>        wait_event_timeout(dpc_completed_waitqueue, dpc_completed(pdev),
->>> -               msecs_to_jiffies(4000));
->>> +               msecs_to_jiffies(7000));
->>>          return test_and_clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
->>>    }
->>
-> 
-> 
-
+So at shutdown time tsm_remove() will opportunistically cleanup just the
+subfunctions that probed.
 
