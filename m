@@ -1,131 +1,102 @@
-Return-Path: <linux-pci+bounces-33545-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33546-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EF84B1D697
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 13:25:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D490B1D6C9
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 13:35:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 211987A8703
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 11:23:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38906189DCE7
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 11:35:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E73122797A5;
-	Thu,  7 Aug 2025 11:24:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJopB5yb"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 883F9279798;
+	Thu,  7 Aug 2025 11:34:55 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA2F279DDD;
-	Thu,  7 Aug 2025 11:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D79275B12;
+	Thu,  7 Aug 2025 11:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754565874; cv=none; b=FneOdfihseqcZ6CST3veALPIDG7HCPlI4Ii95TKW+zxlgRwQJ19kA2TqHTEtVYaf6YnKf4QcPTO087wKMCk4kRjDxzMdvGVqUWcVGK+hYDV+o5qyIELYHopLwdo3nYRxYvjocjymfk/3roeEJXYzBIS1lIX8oKPWxCtZGXgXccg=
+	t=1754566495; cv=none; b=biA9/jdwAl4LwKwsDn/5Q6OFdpMv5OuOqkQU0U3/rPCbCAHR+xS2yER5J0o/vx4wO9PHQMglhLzhKA4d1pqdmGI3O+HYfaQyhrQpJjRqBFWg1Y+lfjiYDUg+bu7LtCWWq9LViiCdVcoLx36LdJDmBglIAA6MIswjvyCnkajP3VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754565874; c=relaxed/simple;
-	bh=2stwprMZvZW2XYJRa7n21iVChnBjrX0o24yCS96ndBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dH5ICKZhepllxC2szDRTcvIoMRfXUO6rWRUAdk43T01KuUE2zlVvmr2qd5kZfW3E3kDI74H1NBwdU2MW6pm8m8wYN+Q8w9HMwJCNK3gYVKOf+2iR0U6SWz8zzlfDFa3pD24tf6S/t9wVD/RGUGBnL9JiDTyVSRf3kLa9XGOTMbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NJopB5yb; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-55b978c61acso856384e87.2;
-        Thu, 07 Aug 2025 04:24:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754565871; x=1755170671; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t+kyO7X5xrXGHDKfjnAsz54SBIL83moTTuqtIiJyAcI=;
-        b=NJopB5ybuVwWaXkdN95J/UVMRH+upKLkfrpr945onBn3nN2xrJ1yt3uQLoYF94TY58
-         ifRMM1dSCw2l6z9LRcAsaNT07XmldmYDJxmEYhaTI94s+sYIJTKTy8U3PibGPcuJhQCv
-         EVPE4qvwcDlM7+iGLfvan+puoPkpcLW4yMu9rjBOhJquYExOx98qn5i+0RkuWL4U/fMU
-         o2JdskzNZF39JdtP1VSjnQtj9HsoiyrDecobuPhBZURiOAgYV6wnyx8CLoFVkGszgfBG
-         qDMiJdNVmBxK0+YSfwQQLN3HlzrG87vR3aC3FvjlPFKY4A8gOO2NYnGiH4WUWgqVm8pw
-         lxpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754565871; x=1755170671;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t+kyO7X5xrXGHDKfjnAsz54SBIL83moTTuqtIiJyAcI=;
-        b=hg/ct6ZSyHYbMPbbo1J0QBvUzlJNZs4cEURP3qr7d9azEoX6WyzlWTVRagcwiwkCyo
-         Lqp2fX6QBul+iPRDXOmAwQRsI9vruoNBYCHMB2/Z+1aQzD1MCLNif930DsaU2tImRpwd
-         45k75q8vA6BygfeqRyGoVLdC6z55rSJHhUdOcZG86lO6wqDgq3B/shf+QS8C/dHe3043
-         poG52CzgjPjfby1wUJgjQf0ZQRS5oT8ow75507h1jYMsIzdkQrP9H61/q4+4/NMP4qNU
-         ZyJSDkNG6ZQRw2RLTw89Z9Xc5DDK3MPiF3mHcaNhm+EhhNt/6n8t0KmdHNPNqhKnQ2fP
-         rriw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9UWXkL1Wp2EuERt0LcPKu8+CYyNpb4sJfGieVqeO6rqqSL0iZnogAH2dqsZgy2jkfvNARGz6PiWk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0MqpsQpPiS71FhfBa31+gQcP+vUxjLPXFFrgexWZZyrhUOoyf
-	uKg7egQ8fE9Xo1Bp5aq91ryGzz11u0jq8LITI6U6A5vOMgzYpa1HUM0lM2Ufx3XkdNo=
-X-Gm-Gg: ASbGncuzix5p8qGZHGCyM11Rzkg0P0U+c1RlrEuWIfsFruMw+4pgzYfJ12YOcjSTVCg
-	9MCWCUbtAkJxOwZ8jO4joT2dYq7KtFzNBhYILu8Gs1FpaExpn5NC9AsVAQ5u94N14ttjDo+fQmx
-	Fi1KvZRv8k08N31PvBbWVA0OIFJJ0dg94S4RMqZ9Ban/adqmFmWbaxIBCjFiw2X+RoqPtqwqsWG
-	UFtpfGx/2xqwaRIzPNGRfgiXr+0VZnXbIq39jxOOQFgwlcktvrs6anfrwFxSxoo5I0jaVgmniB9
-	OFpKQOtMi7jHjoU6/2OznJYauUXISzWWCIyYxWJCvjz+bef4WE6+SE/Psm+G+C1NeMY31lNOqZV
-	l592xKFCjGpDp1+Sasq5yIQ==
-X-Google-Smtp-Source: AGHT+IHRxwVgdAXmWpFo5aw8+rh5B8CNDljQxH4KtZXaN26ziWtW2a/nAmokkO9elGLy9RQFkY2TQg==
-X-Received: by 2002:a05:6512:b01:b0:55a:26ae:56e9 with SMTP id 2adb3069b0e04-55caf5ee78fmr1810359e87.40.1754565870969;
-        Thu, 07 Aug 2025 04:24:30 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-55cac7626fasm644277e87.174.2025.08.07.04.24.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Aug 2025 04:24:30 -0700 (PDT)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Chen Wang <unicorn_wang@outlook.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH 4/4] irqchip/sg2042-msi: Set MSI_FLAG_MULTI_PCI_MSI flags for SG2044
-Date: Thu,  7 Aug 2025 19:23:25 +0800
-Message-ID: <20250807112326.748740-5-inochiama@gmail.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250807112326.748740-1-inochiama@gmail.com>
-References: <20250807112326.748740-1-inochiama@gmail.com>
+	s=arc-20240116; t=1754566495; c=relaxed/simple;
+	bh=G6vZA4wmQaLjgQfEsmiovY05d3mgMfUQwi8NEhL89MM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o3S5/xq3Vke7dIGyz0g0UEUQytbfKxRCdP10Qs2DjOn9m8J7qR4XS4aPDLy7MVr6tr2Di5rMNduRaH0eHvsLrr5Hlpm8u0TvUDU3diGC+0j4ogts3HnHQhX5eTkd52Hxrf4jbY1sJxxHKCMtY/U92u5oQkM2E8U3C5S5xZRaB+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id B89B52C02AF7;
+	Thu,  7 Aug 2025 13:34:43 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id A174D48BAC8; Thu,  7 Aug 2025 13:34:43 +0200 (CEST)
+Date: Thu, 7 Aug 2025 13:34:43 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Linas Vepstas <linasvepstas@gmail.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Peter Oberparleiter <oberpar@linux.ibm.com>,
+	Matthew Rosato <mjrosato@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>, Sinan Kaya <okaya@kernel.org>,
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH v4 2/3] powerpc/eeh: Use result of error_detected() in
+ uevent
+Message-ID: <aJSPU6bF-DRNN1ZT@wunner.de>
+References: <20250807-add_err_uevents-v4-0-c624bfd8638d@linux.ibm.com>
+ <20250807-add_err_uevents-v4-2-c624bfd8638d@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250807-add_err_uevents-v4-2-c624bfd8638d@linux.ibm.com>
 
-The MSI controller on SG2044 has the ability to allocate
-multiple PCI MSI interrupt if the controller supports it.
-Add the missing flag so the controller can make full use
-of it.
+On Thu, Aug 07, 2025 at 12:15:32PM +0200, Niklas Schnelle wrote:
+> With pci_uevent_ers() handling PCI_ERS_RESULT_NEED_RESET the result of
+> error_detected() can be used in pci_uevent_ers() even if drivers request
+> a reset. This aligns EEH's behavior with both AER.
 
-Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
----
- drivers/irqchip/irq-sg2042-msi.c | 1 +
- 1 file changed, 1 insertion(+)
+I guess the sentence is supposed to end with "and s390"?
 
-diff --git a/drivers/irqchip/irq-sg2042-msi.c b/drivers/irqchip/irq-sg2042-msi.c
-index 2b7ee17232ab..6efb34a91937 100644
---- a/drivers/irqchip/irq-sg2042-msi.c
-+++ b/drivers/irqchip/irq-sg2042-msi.c
-@@ -212,6 +212,7 @@ static const struct msi_parent_ops sg2042_msi_parent_ops = {
- 				   MSI_FLAG_PCI_MSI_STARTUP_PARENT)
- 
- #define SG2044_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK |	\
-+				    MSI_FLAG_MULTI_PCI_MSI |	\
- 				    MSI_FLAG_PCI_MSIX)
- 
- static const struct msi_parent_ops sg2044_msi_parent_ops = {
--- 
-2.50.1
+I would have recounted the history a bit, e.g.:
 
+Ever since uevent support was added for AER and EEH with commit
+856e1eb9bdd4 ("PCI/AER: Add uevents in AER and EEH error/resume"), it
+reported PCI_ERS_RESULT_NONE as the result of ->error_detected() to
+user space.
+
+Commit 7b42d97e99d3 ("PCI/ERR: Always report current recovery status for
+udev") subsequently amended AER to report the actual return value of
+->error_detected().
+
+Make the same change to EEH to align it with AER (and s390 error
+recovery).
+
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Link: https://lore.kernel.org/linux-pci/aIp6LiKJor9KLVpv@wunner.de/
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
 
