@@ -1,237 +1,1248 @@
-Return-Path: <linux-pci+bounces-33547-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33548-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3A39B1D6EF
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 13:49:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26F7DB1D704
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 13:53:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8F4C1188EE3E
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 11:50:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB8A53AF1F5
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 11:53:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FEBF196C7C;
-	Thu,  7 Aug 2025 11:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IK7cjiJN"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F6332356D9;
+	Thu,  7 Aug 2025 11:53:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F5520B7F9;
-	Thu,  7 Aug 2025 11:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0911F224B0C;
+	Thu,  7 Aug 2025 11:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754567384; cv=none; b=mQtvVqCD0BrVGwJHPIOY883dDevlc11FhWYvAx0zYnV201I3Gv+N4BKJQng4IxMr7eCJenJQifPNLn6tq/YM/JKMTws/QkLb/xFagF8jbQNZBoiwqxvsddhfY6osFkq+YH7IVWfF3Dc3YsJ53mKH2VfAezveGc4PQqytT0oQB1o=
+	t=1754567596; cv=none; b=mwNbnvHaK3PqZmWTD3eEFMdXBqOGoXz8u8vIm7yu0jDGU5GWl6awX3fxKu00jsl5hkEtSCHDQWUM/iLY3ZRMNSrjuudzehFDMNu56y7Rg2jkXU4DGo/sL5/1h4FF4/LhczYoRIe943LCegfgG3Wj2aA1qQ+uMAhWWOeWaUFt5v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754567384; c=relaxed/simple;
-	bh=BT1HlxdXNuTIhguxoWsF6urixgs3t34G1XWxfUWA/MA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kqKV/p4VY7T9W5qb4Ljk/5CnQY9JRsRW1PATMcP5Snf0DQkEXrJln806zmn1hfbEirMH0u/2/S1MXZpeaBGo/7rmZIKljmRY4mFwChb5DtmTKXADQyMgqWXCpAMOy4n0r+vLrZnht/Z2VeptKjvpyInzax1nL5u4JWVKFNBr+jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IK7cjiJN; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5775bj2b012372;
-	Thu, 7 Aug 2025 11:49:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=BT1Hlx
-	dXNuTIhguxoWsF6urixgs3t34G1XWxfUWA/MA=; b=IK7cjiJNi4o97y1CyXr4YY
-	xBiYwwKVU5zPMDDMK1gMp8LUNVDuskcKWbk8I9r+mQ3BRQrvlAh5EcYy/9DNMDRb
-	HwlSbVmgSC30377j3NhQpHSMGtx97xz3S3iW1tICkzgC260+vKR9TjAd4lMOsgOB
-	e7tPujpLcCaSKCb48KLxB5D2jqSEI4cx4qrQtdUSAAQ3W1z9BzLlDpm/PeBjeF+K
-	dx3/MY1Bq+DE3KfUJR3m5f7vIzfkSiYZJZn0mWW4tEk62rWDy1oHXTXpjZk+s0MQ
-	FPOKY5xOaj3GZ1qMeVJZOAe0Hob74Sa4caflmd8gOdwyxg9DsG20XXFFxBaARG8w
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48bq63ss6f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Aug 2025 11:49:32 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 577BgXVn018736;
-	Thu, 7 Aug 2025 11:49:32 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48bq63ss6d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Aug 2025 11:49:32 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5779QR3g020616;
-	Thu, 7 Aug 2025 11:49:31 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 48bpwn0cy5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Aug 2025 11:49:31 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 577BnTml64815412
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 7 Aug 2025 11:49:30 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B21A75805E;
-	Thu,  7 Aug 2025 11:49:29 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EF16858055;
-	Thu,  7 Aug 2025 11:49:26 +0000 (GMT)
-Received: from [9.152.212.100] (unknown [9.152.212.100])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  7 Aug 2025 11:49:26 +0000 (GMT)
-Message-ID: <9e27675effcee26fce059a7e81ea4ba0fecfa86d.camel@linux.ibm.com>
-Subject: Re: [PATCH v4 2/3] powerpc/eeh: Use result of error_detected() in
- uevent
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-        Mahesh J Salgaonkar	
- <mahesh@linux.ibm.com>,
-        Linas Vepstas <linasvepstas@gmail.com>,
-        Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Manivannan
- Sadhasivam <mani@kernel.org>,
-        Gerald Schaefer	
- <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger	 <borntraeger@linux.ibm.com>,
-        Sven Schnelle
- <svens@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Matthew
- Rosato <mjrosato@linux.ibm.com>,
-        "Oliver O'Halloran"	 <oohall@gmail.com>, Sinan Kaya <okaya@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Keith Busch	 <kbusch@kernel.org>
-Date: Thu, 07 Aug 2025 13:49:26 +0200
-In-Reply-To: <aJSPU6bF-DRNN1ZT@wunner.de>
-References: <20250807-add_err_uevents-v4-0-c624bfd8638d@linux.ibm.com>
-	 <20250807-add_err_uevents-v4-2-c624bfd8638d@linux.ibm.com>
-	 <aJSPU6bF-DRNN1ZT@wunner.de>
-Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1754567596; c=relaxed/simple;
+	bh=udj3T3LWxzxSuLGiEO5/tGF5pnwBtHpUx+KQejvVMNw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Ga0EadrQLgMXRCiRFdUk5WmDa7q+BAWp+KwFMUnRuHYkgns4NIRp/DI7rD+cWTnCH67YzRXRJqExNwlQ7wAJ2OBOzWm2dY9dFKue0Tyr6pbRVqxzNdchLQeImHLRAUP3UkHgJlTyeYc9iRt1gnUe51SnJs4CgZVMp1zNb0jxLRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4byQTJ39yYz2RW5T;
+	Thu,  7 Aug 2025 19:50:28 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 198541402CA;
+	Thu,  7 Aug 2025 19:53:01 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 7 Aug 2025 19:52:59 +0800
+Message-ID: <cc611dda-d1e4-4793-9bb2-0eaa47277584@huawei.com>
+Date: Thu, 7 Aug 2025 19:52:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA3MDA5MCBTYWx0ZWRfX9Pye0DKyMrAL
- b7tNmwL/8ush2E2mCttj/E4tERwjnctVAyPcZKV62Jy43G7ej/Ea89yCGWqLDpCLQ4tDRNDptPX
- 44xWlZ4we3aUVV5sUWLHPxBmoa4qGKi5DRWg+wLU4545QFltBf2Fu/sXL2wApFssxowqT97C6o6
- lKbS/5o27I6VwYjrrwcHWg7r1foYSnC/0XcpFr1vpm71QY1rtJdU51RzpweRdCirc2VQRCAMQP9
- iEcLTK9CDRjZIARx34rttrZV8Duyn+JWSJjoG2kE4fu2cKfFgctlRAa5naso7RkSVkMsnAgyF92
- 7BBqqnneLZjrNoKscWgwi6pCySBZ/KQcr9cflJ6Wv/TQKKx4PIqxVkS9xlifhy7LmGEEO4o3PG1
- OrCocExyjo8vl+1PdVx4dKr252e85V+tFDAJo6h/nGRNXLm+s+97BDZnGiY4OgdLudSn5iuP
-X-Proofpoint-ORIG-GUID: IDnsoJ2r8JayJPGOrGhM0d7NiaaXetfZ
-X-Authority-Analysis: v=2.4 cv=LreSymdc c=1 sm=1 tr=0 ts=689492cc cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=y5LWfs1rpAMjDq6n04wA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: MRF2tTobtj6c6Dbk-XeirXgADp0PnXUS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-07_02,2025-08-06_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0 spamscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 mlxlogscore=999 bulkscore=0
- malwarescore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2507300000
- definitions=main-2508070090
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v7 22/31] irqchip/gic-v5: Add GICv5 LPI/IPI support
+Content-Language: en-US
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Arnd Bergmann <arnd@arndb.de>, Sascha Bischoff <sascha.bischoff@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Timothy Hayes
+	<timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "Liam R.
+ Howlett" <Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>
+References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
+ <20250703-gicv5-host-v7-22-12e71f1b3528@kernel.org>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20250703-gicv5-host-v7-22-12e71f1b3528@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-On Thu, 2025-08-07 at 13:34 +0200, Lukas Wunner wrote:
-> On Thu, Aug 07, 2025 at 12:15:32PM +0200, Niklas Schnelle wrote:
-> > With pci_uevent_ers() handling PCI_ERS_RESULT_NEED_RESET the result of
-> > error_detected() can be used in pci_uevent_ers() even if drivers reques=
-t
-> > a reset. This aligns EEH's behavior with both AER.
->=20
-> I guess the sentence is supposed to end with "and s390"?
 
-Yes had it there and then realized that this is only true after the
-last patch, did a bad job of adjusting.
 
->=20
-> I would have recounted the history a bit, e.g.:
->=20
-> Ever since uevent support was added for AER and EEH with commit
-> 856e1eb9bdd4 ("PCI/AER: Add uevents in AER and EEH error/resume"), it
-> reported PCI_ERS_RESULT_NONE as the result of ->error_detected() to
-> user space.
->=20
-> Commit 7b42d97e99d3 ("PCI/ERR: Always report current recovery status for
-> udev") subsequently amended AER to report the actual return value of
-> ->error_detected().
->=20
-> Make the same change to EEH to align it with AER (and s390 error
-> recovery).
+On 2025/7/3 18:25, Lorenzo Pieralisi wrote:
+> An IRS supports Logical Peripheral Interrupts (LPIs) and implement
+> Linux IPIs on top of it.
+> 
+> LPIs are used for interrupt signals that are translated by a
+> GICv5 ITS (Interrupt Translation Service) but also for software
+> generated IRQs - namely interrupts that are not driven by a HW
+> signal, ie IPIs.
+> 
+> LPIs rely on memory storage for interrupt routing and state.
+> 
+> LPIs state and routing information is kept in the Interrupt
+> State Table (IST).
+> 
+> IRSes provide support for 1- or 2-level IST tables configured
+> to support a maximum number of interrupts that depend on the
+> OS configuration and the HW capabilities.
+> 
+> On systems that provide 2-level IST support, always allow
+> the maximum number of LPIs; On systems with only 1-level
+> support, limit the number of LPIs to 2^12 to prevent
+> wasting memory (presumably a system that supports a 1-level
+> only IST is not expecting a large number of interrupts).
+> 
+> On a 2-level IST system, L2 entries are allocated on
+> demand.
+> 
+> The IST table memory is allocated using the kmalloc() interface;
+> the allocation required may be smaller than a page and must be
+> made up of contiguous physical pages if larger than a page.
+> 
+> On systems where the IRS is not cache-coherent with the CPUs,
+> cache mainteinance operations are executed to clean and
+> invalidate the allocated memory to the point of coherency
+> making it visible to the IRS components.
+> 
+> On GICv5 systems, IPIs are implemented using LPIs.
+> 
+> Add an LPI IRQ domain and implement an IPI-specific IRQ domain created
+> as a child/subdomain of the LPI domain to allocate the required number
+> of LPIs needed to implement the IPIs.
+> 
+> IPIs are backed by LPIs, add LPIs allocation/de-allocation
+> functions.
+> 
+> The LPI INTID namespace is managed using an IDA to alloc/free LPI INTIDs.
+> 
+> Associate an IPI irqchip with IPI IRQ descriptors to provide
+> core code with the irqchip.ipi_send_single() method required
+> to raise an IPI.
+> 
+> Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
+> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Reviewed-by: Marc Zyngier <maz@kernel.org>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> ---
+>  arch/arm64/include/asm/smp.h       |  17 ++
+>  arch/arm64/include/asm/sysreg.h    |   6 +
+>  arch/arm64/kernel/smp.c            |  17 --
+>  drivers/irqchip/irq-gic-v5-irs.c   | 364 +++++++++++++++++++++++++++++++++++++
+>  drivers/irqchip/irq-gic-v5.c       | 299 +++++++++++++++++++++++++++++-
+>  include/linux/irqchip/arm-gic-v5.h |  63 ++++++-
+>  6 files changed, 746 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+> index d6fd6efb66a6..d48ef6d5abcc 100644
+> --- a/arch/arm64/include/asm/smp.h
+> +++ b/arch/arm64/include/asm/smp.h
+> @@ -50,6 +50,23 @@ struct seq_file;
+>   */
+>  extern void smp_init_cpus(void);
+>  
+> +enum ipi_msg_type {
+> +	IPI_RESCHEDULE,
+> +	IPI_CALL_FUNC,
+> +	IPI_CPU_STOP,
+> +	IPI_CPU_STOP_NMI,
+> +	IPI_TIMER,
+> +	IPI_IRQ_WORK,
+> +	NR_IPI,
+> +	/*
+> +	 * Any enum >= NR_IPI and < MAX_IPI is special and not tracable
+> +	 * with trace_ipi_*
+> +	 */
+> +	IPI_CPU_BACKTRACE = NR_IPI,
+> +	IPI_KGDB_ROUNDUP,
+> +	MAX_IPI
+> +};
+> +
+>  /*
+>   * Register IPI interrupts with the arch SMP code
+>   */
+> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> index efd2e7a1fbe2..948007cd3684 100644
+> --- a/arch/arm64/include/asm/sysreg.h
+> +++ b/arch/arm64/include/asm/sysreg.h
+> @@ -1088,6 +1088,7 @@
+>  #define GICV5_OP_GIC_CDAFF		sys_insn(1, 0, 12, 1, 3)
+>  #define GICV5_OP_GIC_CDDI		sys_insn(1, 0, 12, 2, 0)
+>  #define GICV5_OP_GIC_CDDIS		sys_insn(1, 0, 12, 1, 0)
+> +#define GICV5_OP_GIC_CDHM		sys_insn(1, 0, 12, 2, 1)
+>  #define GICV5_OP_GIC_CDEN		sys_insn(1, 0, 12, 1, 1)
+>  #define GICV5_OP_GIC_CDEOI		sys_insn(1, 0, 12, 1, 7)
+>  #define GICV5_OP_GIC_CDPEND		sys_insn(1, 0, 12, 1, 4)
+> @@ -1115,6 +1116,11 @@
+>  #define GICV5_GIC_CDEN_TYPE_MASK	GENMASK_ULL(31, 29)
+>  #define GICV5_GIC_CDEN_ID_MASK		GENMASK_ULL(23, 0)
+>  
+> +/* Definitions for GIC CDHM */
+> +#define GICV5_GIC_CDHM_HM_MASK		BIT_ULL(32)
+> +#define GICV5_GIC_CDHM_TYPE_MASK	GENMASK_ULL(31, 29)
+> +#define GICV5_GIC_CDHM_ID_MASK		GENMASK_ULL(23, 0)
+> +
+>  /* Definitions for GIC CDPEND */
+>  #define GICV5_GIC_CDPEND_PENDING_MASK	BIT_ULL(32)
+>  #define GICV5_GIC_CDPEND_TYPE_MASK	GENMASK_ULL(31, 29)
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 2c501e917d38..4797e2c70014 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -64,23 +64,6 @@ struct secondary_data secondary_data;
+>  /* Number of CPUs which aren't online, but looping in kernel text. */
+>  static int cpus_stuck_in_kernel;
+>  
+> -enum ipi_msg_type {
+> -	IPI_RESCHEDULE,
+> -	IPI_CALL_FUNC,
+> -	IPI_CPU_STOP,
+> -	IPI_CPU_STOP_NMI,
+> -	IPI_TIMER,
+> -	IPI_IRQ_WORK,
+> -	NR_IPI,
+> -	/*
+> -	 * Any enum >= NR_IPI and < MAX_IPI is special and not tracable
+> -	 * with trace_ipi_*
+> -	 */
+> -	IPI_CPU_BACKTRACE = NR_IPI,
+> -	IPI_KGDB_ROUNDUP,
+> -	MAX_IPI
+> -};
+> -
+>  static int ipi_irq_base __ro_after_init;
+>  static int nr_ipi __ro_after_init = NR_IPI;
+>  
+> diff --git a/drivers/irqchip/irq-gic-v5-irs.c b/drivers/irqchip/irq-gic-v5-irs.c
+> index fba8efceb26e..f00a4a6fece7 100644
+> --- a/drivers/irqchip/irq-gic-v5-irs.c
+> +++ b/drivers/irqchip/irq-gic-v5-irs.c
+> @@ -5,12 +5,20 @@
+>  
+>  #define pr_fmt(fmt)	"GICv5 IRS: " fmt
+>  
+> +#include <linux/log2.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  
+>  #include <linux/irqchip.h>
+>  #include <linux/irqchip/arm-gic-v5.h>
+>  
+> +/*
+> + * Hardcoded ID_BITS limit for systems supporting only a 1-level IST
+> + * table. Systems supporting only a 1-level IST table aren't expected
+> + * to require more than 2^12 LPIs. Tweak as required.
+> + */
+> +#define LPI_ID_BITS_LINEAR		12
+> +
+>  #define IRS_FLAGS_NON_COHERENT		BIT(0)
+>  
+>  static DEFINE_PER_CPU_READ_MOSTLY(struct gicv5_irs_chip_data *, per_cpu_irs_data);
+> @@ -28,6 +36,331 @@ static void irs_writel_relaxed(struct gicv5_irs_chip_data *irs_data,
+>  	writel_relaxed(val, irs_data->irs_base + reg_offset);
+>  }
+>  
+> +static u64 irs_readq_relaxed(struct gicv5_irs_chip_data *irs_data,
+> +			     const u32 reg_offset)
+> +{
+> +	return readq_relaxed(irs_data->irs_base + reg_offset);
+> +}
+> +
+> +static void irs_writeq_relaxed(struct gicv5_irs_chip_data *irs_data,
+> +			       const u64 val, const u32 reg_offset)
+> +{
+> +	writeq_relaxed(val, irs_data->irs_base + reg_offset);
+> +}
+> +
+> +/*
+> + * The polling wait (in gicv5_wait_for_op_s_atomic()) on a GIC register
+> + * provides the memory barriers (through MMIO accessors)
+> + * required to synchronize CPU and GIC access to IST memory.
+> + */
+> +static int gicv5_irs_ist_synchronise(struct gicv5_irs_chip_data *irs_data)
+> +{
+> +	return gicv5_wait_for_op_atomic(irs_data->irs_base, GICV5_IRS_IST_STATUSR,
+> +					GICV5_IRS_IST_STATUSR_IDLE, NULL);
+> +}
+> +
+> +static int __init gicv5_irs_init_ist_linear(struct gicv5_irs_chip_data *irs_data,
+> +					    unsigned int lpi_id_bits,
+> +					    unsigned int istsz)
+> +{
+> +	size_t l2istsz;
+> +	u32 n, cfgr;
+> +	void *ist;
+> +	u64 baser;
+> +	int ret;
+> +
+> +	/* Taken from GICv5 specifications 10.2.1.13 IRS_IST_BASER */
+> +	n = max(5, lpi_id_bits + 1 + istsz);
+> +
+> +	l2istsz = BIT(n + 1);
+> +	/*
+> +	 * Check memory requirements. For a linear IST we cap the
+> +	 * number of ID bits to a value that should never exceed
+> +	 * kmalloc interface memory allocation limits, so this
+> +	 * check is really belt and braces.
+> +	 */
+> +	if (l2istsz > KMALLOC_MAX_SIZE) {
+> +		u8 lpi_id_cap = ilog2(KMALLOC_MAX_SIZE) - 2 + istsz;
+> +
+> +		pr_warn("Limiting LPI ID bits from %u to %u\n",
+> +			lpi_id_bits, lpi_id_cap);
+> +		lpi_id_bits = lpi_id_cap;
+> +		l2istsz = KMALLOC_MAX_SIZE;
+> +	}
+> +
+> +	ist = kzalloc(l2istsz, GFP_KERNEL);
 
-Thanks for figuring out the history, I'll incorporate this and send a
-v5.
 
->=20
-> > Suggested-by: Lukas Wunner <lukas@wunner.de>
-> > Link: https://lore.kernel.org/linux-pci/aIp6LiKJor9KLVpv@wunner.de/
-> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
->=20
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+When kmemleak is on, There is a memory leak occurring as below:
 
-Thanks for the R-b.
+
+unreferenced object 0xffff00080039a000 (size 4096):
+  comm "swapper/0", pid 0, jiffies 4294892296
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace (crc 0):
+    kmemleak_alloc+0x34/0x40
+    __kmalloc_noprof+0x320/0x464
+    gicv5_irs_iste_alloc+0x1a4/0x484
+    gicv5_irq_lpi_domain_alloc+0xe4/0x194
+    irq_domain_alloc_irqs_parent+0x78/0xd8
+    gicv5_irq_ipi_domain_alloc+0x180/0x238
+    irq_domain_alloc_irqs_locked+0x238/0x7d4
+    __irq_domain_alloc_irqs+0x88/0x114
+    gicv5_of_init+0x284/0x37c
+    of_irq_init+0x3b8/0xb18
+    irqchip_init+0x18/0x40
+    init_IRQ+0x104/0x164
+    start_kernel+0x1a4/0x3d4
+    __primary_switched+0x8c/0x94
+
+
+> +	if (!ist)
+> +		return -ENOMEM;
+> +
+> +	if (irs_data->flags & IRS_FLAGS_NON_COHERENT)
+> +		dcache_clean_inval_poc((unsigned long)ist,
+> +				       (unsigned long)ist + l2istsz);
+> +	else
+> +		dsb(ishst);
+> +
+> +	cfgr = FIELD_PREP(GICV5_IRS_IST_CFGR_STRUCTURE,
+> +			  GICV5_IRS_IST_CFGR_STRUCTURE_LINEAR)	|
+> +	       FIELD_PREP(GICV5_IRS_IST_CFGR_ISTSZ, istsz)	|
+> +	       FIELD_PREP(GICV5_IRS_IST_CFGR_L2SZ,
+> +			  GICV5_IRS_IST_CFGR_L2SZ_4K)		|
+> +	       FIELD_PREP(GICV5_IRS_IST_CFGR_LPI_ID_BITS, lpi_id_bits);
+> +	irs_writel_relaxed(irs_data, cfgr, GICV5_IRS_IST_CFGR);
+> +
+> +	gicv5_global_data.ist.l2 = false;
+> +
+> +	baser = (virt_to_phys(ist) & GICV5_IRS_IST_BASER_ADDR_MASK) |
+> +		FIELD_PREP(GICV5_IRS_IST_BASER_VALID, 0x1);
+> +	irs_writeq_relaxed(irs_data, baser, GICV5_IRS_IST_BASER);
+> +
+> +	ret = gicv5_irs_ist_synchronise(irs_data);
+> +	if (ret) {
+> +		kfree(ist);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init gicv5_irs_init_ist_two_level(struct gicv5_irs_chip_data *irs_data,
+> +					       unsigned int lpi_id_bits,
+> +					       unsigned int istsz,
+> +					       unsigned int l2sz)
+> +{
+> +	__le64 *l1ist;
+> +	u32 cfgr, n;
+> +	size_t l1sz;
+> +	u64 baser;
+> +	int ret;
+> +
+> +	/* Taken from GICv5 specifications 10.2.1.13 IRS_IST_BASER */
+> +	n = max(5, lpi_id_bits - ((10 - istsz) + (2 * l2sz)) + 2);
+> +
+> +	l1sz = BIT(n + 1);
+> +
+> +	l1ist = kzalloc(l1sz, GFP_KERNEL);
+> +	if (!l1ist)
+> +		return -ENOMEM;
+> +
+> +	if (irs_data->flags & IRS_FLAGS_NON_COHERENT)
+> +		dcache_clean_inval_poc((unsigned long)l1ist,
+> +				       (unsigned long)l1ist + l1sz);
+> +	else
+> +		dsb(ishst);
+> +
+> +	cfgr = FIELD_PREP(GICV5_IRS_IST_CFGR_STRUCTURE,
+> +			  GICV5_IRS_IST_CFGR_STRUCTURE_TWO_LEVEL)	|
+> +	       FIELD_PREP(GICV5_IRS_IST_CFGR_ISTSZ, istsz)		|
+> +	       FIELD_PREP(GICV5_IRS_IST_CFGR_L2SZ, l2sz)		|
+> +	       FIELD_PREP(GICV5_IRS_IST_CFGR_LPI_ID_BITS, lpi_id_bits);
+> +	irs_writel_relaxed(irs_data, cfgr, GICV5_IRS_IST_CFGR);
+> +
+> +	/*
+> +	 * The L2SZ determine bits required at L2 level. Number of bytes
+> +	 * required by metadata is reported through istsz - the number of bits
+> +	 * covered by L2 entries scales accordingly.
+> +	 */
+> +	gicv5_global_data.ist.l2_size = BIT(11 + (2 * l2sz) + 1);
+> +	gicv5_global_data.ist.l2_bits = (10 - istsz) + (2 * l2sz);
+> +	gicv5_global_data.ist.l1ist_addr = l1ist;
+> +	gicv5_global_data.ist.l2 = true;
+> +
+> +	baser = (virt_to_phys(l1ist) & GICV5_IRS_IST_BASER_ADDR_MASK) |
+> +		FIELD_PREP(GICV5_IRS_IST_BASER_VALID, 0x1);
+> +	irs_writeq_relaxed(irs_data, baser, GICV5_IRS_IST_BASER);
+> +
+> +	ret = gicv5_irs_ist_synchronise(irs_data);
+> +	if (ret) {
+> +		kfree(l1ist);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Alloc L2 IST entries on demand.
+> + *
+> + * Locking/serialization is guaranteed by irqdomain core code by
+> + * taking the hierarchical domain struct irq_domain.root->mutex.
+> + */
+> +int gicv5_irs_iste_alloc(const u32 lpi)
+> +{
+> +	struct gicv5_irs_chip_data *irs_data;
+> +	unsigned int index;
+> +	u32 l2istr, l2bits;
+> +	__le64 *l1ist;
+> +	size_t l2size;
+> +	void *l2ist;
+> +	int ret;
+> +
+> +	if (!gicv5_global_data.ist.l2)
+> +		return 0;
+> +
+> +	irs_data = per_cpu(per_cpu_irs_data, smp_processor_id());
+> +	if (!irs_data)
+> +		return -ENOENT;
+> +
+> +	l2size = gicv5_global_data.ist.l2_size;
+> +	l2bits = gicv5_global_data.ist.l2_bits;
+> +	l1ist = gicv5_global_data.ist.l1ist_addr;
+> +	index = lpi >> l2bits;
+> +
+> +	if (FIELD_GET(GICV5_ISTL1E_VALID, le64_to_cpu(l1ist[index])))
+> +		return 0;
+> +
+> +	l2ist = kzalloc(l2size, GFP_KERNEL);
+> +	if (!l2ist)
+> +		return -ENOMEM;
+> +
+> +	l1ist[index] = cpu_to_le64(virt_to_phys(l2ist) & GICV5_ISTL1E_L2_ADDR_MASK);
+> +
+> +	if (irs_data->flags & IRS_FLAGS_NON_COHERENT) {
+> +		dcache_clean_inval_poc((unsigned long)l2ist,
+> +				       (unsigned long)l2ist + l2size);
+> +		dcache_clean_poc((unsigned long)(l1ist + index),
+> +				 (unsigned long)(l1ist + index) + sizeof(*l1ist));
+> +	} else {
+> +		dsb(ishst);
+> +	}
+> +
+> +	l2istr = FIELD_PREP(GICV5_IRS_MAP_L2_ISTR_ID, lpi);
+> +	irs_writel_relaxed(irs_data, l2istr, GICV5_IRS_MAP_L2_ISTR);
+> +
+> +	ret = gicv5_irs_ist_synchronise(irs_data);
+> +	if (ret) {
+> +		l1ist[index] = 0;
+> +		kfree(l2ist);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * Make sure we invalidate the cache line pulled before the IRS
+> +	 * had a chance to update the L1 entry and mark it valid.
+> +	 */
+> +	if (irs_data->flags & IRS_FLAGS_NON_COHERENT) {
+> +		/*
+> +		 * gicv5_irs_ist_synchronise() includes memory
+> +		 * barriers (MMIO accessors) required to guarantee that the
+> +		 * following dcache invalidation is not executed before the
+> +		 * IST mapping operation has completed.
+> +		 */
+> +		dcache_inval_poc((unsigned long)(l1ist + index),
+> +				 (unsigned long)(l1ist + index) + sizeof(*l1ist));
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Try to match the L2 IST size to the pagesize, and if this is not possible
+> + * pick the smallest supported L2 size in order to minimise the requirement for
+> + * physically contiguous blocks of memory as page-sized allocations are
+> + * guaranteed to be physically contiguous, and are by definition the easiest to
+> + * find.
+> + *
+> + * Fall back to the smallest supported size (in the event that the pagesize
+> + * itself is not supported) again serves to make it easier to find physically
+> + * contiguous blocks of memory.
+> + */
+> +static unsigned int gicv5_irs_l2_sz(u32 idr2)
+> +{
+> +	switch (PAGE_SIZE) {
+> +	case SZ_64K:
+> +		if (GICV5_IRS_IST_L2SZ_SUPPORT_64KB(idr2))
+> +			return GICV5_IRS_IST_CFGR_L2SZ_64K;
+> +		fallthrough;
+> +	case SZ_4K:
+> +		if (GICV5_IRS_IST_L2SZ_SUPPORT_4KB(idr2))
+> +			return GICV5_IRS_IST_CFGR_L2SZ_4K;
+> +		fallthrough;
+> +	case SZ_16K:
+> +		if (GICV5_IRS_IST_L2SZ_SUPPORT_16KB(idr2))
+> +			return GICV5_IRS_IST_CFGR_L2SZ_16K;
+> +		break;
+> +	}
+> +
+> +	if (GICV5_IRS_IST_L2SZ_SUPPORT_4KB(idr2))
+> +		return GICV5_IRS_IST_CFGR_L2SZ_4K;
+> +
+> +	return GICV5_IRS_IST_CFGR_L2SZ_64K;
+> +}
+> +
+> +static int __init gicv5_irs_init_ist(struct gicv5_irs_chip_data *irs_data)
+> +{
+> +	u32 lpi_id_bits, idr2_id_bits, idr2_min_lpi_id_bits, l2_iste_sz, l2sz;
+> +	u32 l2_iste_sz_split, idr2;
+> +	bool two_levels, istmd;
+> +	u64 baser;
+> +	int ret;
+> +
+> +	baser = irs_readq_relaxed(irs_data, GICV5_IRS_IST_BASER);
+> +	if (FIELD_GET(GICV5_IRS_IST_BASER_VALID, baser)) {
+> +		pr_err("IST is marked as valid already; cannot allocate\n");
+> +		return -EPERM;
+> +	}
+> +
+> +	idr2 = irs_readl_relaxed(irs_data, GICV5_IRS_IDR2);
+> +	two_levels = !!FIELD_GET(GICV5_IRS_IDR2_IST_LEVELS, idr2);
+> +
+> +	idr2_id_bits = FIELD_GET(GICV5_IRS_IDR2_ID_BITS, idr2);
+> +	idr2_min_lpi_id_bits = FIELD_GET(GICV5_IRS_IDR2_MIN_LPI_ID_BITS, idr2);
+> +
+> +	/*
+> +	 * For two level tables we are always supporting the maximum allowed
+> +	 * number of IDs.
+> +	 *
+> +	 * For 1-level tables, we should support a number of bits that
+> +	 * is >= min_lpi_id_bits but cap it to LPI_ID_BITS_LINEAR lest
+> +	 * the level 1-table gets too large and its memory allocation
+> +	 * may fail.
+> +	 */
+> +	if (two_levels) {
+> +		lpi_id_bits = idr2_id_bits;
+> +	} else {
+> +		lpi_id_bits = max(LPI_ID_BITS_LINEAR, idr2_min_lpi_id_bits);
+> +		lpi_id_bits = min(lpi_id_bits, idr2_id_bits);
+> +	}
+> +
+> +	/*
+> +	 * Cap the ID bits according to the CPUIF supported ID bits
+> +	 */
+> +	lpi_id_bits = min(lpi_id_bits, gicv5_global_data.cpuif_id_bits);
+> +
+> +	if (two_levels)
+> +		l2sz = gicv5_irs_l2_sz(idr2);
+> +
+> +	istmd = !!FIELD_GET(GICV5_IRS_IDR2_ISTMD, idr2);
+> +
+> +	l2_iste_sz = GICV5_IRS_IST_CFGR_ISTSZ_4;
+> +
+> +	if (istmd) {
+> +		l2_iste_sz_split = FIELD_GET(GICV5_IRS_IDR2_ISTMD_SZ, idr2);
+> +
+> +		if (lpi_id_bits < l2_iste_sz_split)
+> +			l2_iste_sz = GICV5_IRS_IST_CFGR_ISTSZ_8;
+> +		else
+> +			l2_iste_sz = GICV5_IRS_IST_CFGR_ISTSZ_16;
+> +	}
+> +
+> +	/*
+> +	 * Follow GICv5 specification recommendation to opt in for two
+> +	 * level tables (ref: 10.2.1.14 IRS_IST_CFGR).
+> +	 */
+> +	if (two_levels && (lpi_id_bits > ((10 - l2_iste_sz) + (2 * l2sz)))) {
+> +		ret = gicv5_irs_init_ist_two_level(irs_data, lpi_id_bits,
+> +						   l2_iste_sz, l2sz);
+> +	} else {
+> +		ret = gicv5_irs_init_ist_linear(irs_data, lpi_id_bits,
+> +						l2_iste_sz);
+> +	}
+> +	if (ret)
+> +		return ret;
+> +
+> +	gicv5_init_lpis(BIT(lpi_id_bits));
+> +
+> +	return 0;
+> +}
+> +
+>  struct iaffid_entry {
+>  	u16	iaffid;
+>  	bool	valid;
+> @@ -362,6 +695,13 @@ static int __init gicv5_irs_init(struct device_node *node)
+>  		goto out_iomem;
+>  	}
+>  
+> +	idr = irs_readl_relaxed(irs_data, GICV5_IRS_IDR2);
+> +	if (WARN(!FIELD_GET(GICV5_IRS_IDR2_LPI, idr),
+> +		 "LPI support not available - no IPIs, can't proceed\n")) {
+> +		ret = -ENODEV;
+> +		goto out_iomem;
+> +	}
+> +
+>  	idr = irs_readl_relaxed(irs_data, GICV5_IRS_IDR7);
+>  	irs_data->spi_min = FIELD_GET(GICV5_IRS_IDR7_SPI_BASE, idr);
+>  
+> @@ -391,6 +731,8 @@ static int __init gicv5_irs_init(struct device_node *node)
+>  		spi_count = FIELD_GET(GICV5_IRS_IDR5_SPI_RANGE, idr);
+>  		gicv5_global_data.global_spi_count = spi_count;
+>  
+> +		gicv5_init_lpi_domain();
+> +
+>  		pr_debug("Detected %u SPIs globally\n", spi_count);
+>  	}
+>  
+> @@ -409,6 +751,9 @@ void __init gicv5_irs_remove(void)
+>  {
+>  	struct gicv5_irs_chip_data *irs_data, *tmp_data;
+>  
+> +	gicv5_free_lpi_domain();
+> +	gicv5_deinit_lpis();
+> +
+>  	list_for_each_entry_safe(irs_data, tmp_data, &irs_nodes, entry) {
+>  		iounmap(irs_data->irs_base);
+>  		list_del(&irs_data->entry);
+> @@ -416,6 +761,25 @@ void __init gicv5_irs_remove(void)
+>  	}
+>  }
+>  
+> +int __init gicv5_irs_enable(void)
+> +{
+> +	struct gicv5_irs_chip_data *irs_data;
+> +	int ret;
+> +
+> +	irs_data = list_first_entry_or_null(&irs_nodes,
+> +					    struct gicv5_irs_chip_data, entry);
+> +	if (!irs_data)
+> +		return -ENODEV;
+> +
+> +	ret = gicv5_irs_init_ist(irs_data);
+> +	if (ret) {
+> +		pr_err("Failed to init IST\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  int __init gicv5_irs_of_probe(struct device_node *parent)
+>  {
+>  	struct device_node *np;
+> diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+> index 9c55ddcfa0df..84ed13c4f2b1 100644
+> --- a/drivers/irqchip/irq-gic-v5.c
+> +++ b/drivers/irqchip/irq-gic-v5.c
+> @@ -5,7 +5,9 @@
+>  
+>  #define pr_fmt(fmt)	"GICv5: " fmt
+>  
+> +#include <linux/idr.h>
+>  #include <linux/irqdomain.h>
+> +#include <linux/slab.h>
+>  #include <linux/wordpart.h>
+>  
+>  #include <linux/irqchip.h>
+> @@ -28,6 +30,42 @@ static bool gicv5_cpuif_has_gcie(void)
+>  
+>  struct gicv5_chip_data gicv5_global_data __read_mostly;
+>  
+> +static DEFINE_IDA(lpi_ida);
+> +static u32 num_lpis __ro_after_init;
+> +
+> +void __init gicv5_init_lpis(u32 lpis)
+> +{
+> +	num_lpis = lpis;
+> +}
+> +
+> +void __init gicv5_deinit_lpis(void)
+> +{
+> +	num_lpis = 0;
+> +}
+> +
+> +static int alloc_lpi(void)
+> +{
+> +	if (!num_lpis)
+> +		return -ENOSPC;
+> +
+> +	return ida_alloc_max(&lpi_ida, num_lpis - 1, GFP_KERNEL);
+> +}
+> +
+> +static void release_lpi(u32 lpi)
+> +{
+> +	ida_free(&lpi_ida, lpi);
+> +}
+> +
+> +int gicv5_alloc_lpi(void)
+> +{
+> +	return alloc_lpi();
+> +}
+> +
+> +void gicv5_free_lpi(u32 lpi)
+> +{
+> +	release_lpi(lpi);
+> +}
+> +
+>  static void gicv5_ppi_priority_init(void)
+>  {
+>  	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRI_MI), SYS_ICC_PPI_PRIORITYR0_EL1);
+> @@ -60,7 +98,7 @@ static void gicv5_hwirq_init(irq_hw_number_t hwirq, u8 priority, u8 hwirq_type)
+>  	u16 iaffid;
+>  	int ret;
+>  
+> -	if (hwirq_type == GICV5_HWIRQ_TYPE_SPI) {
+> +	if (hwirq_type == GICV5_HWIRQ_TYPE_LPI || hwirq_type == GICV5_HWIRQ_TYPE_SPI) {
+>  		cdpri = FIELD_PREP(GICV5_GIC_CDPRI_PRIORITY_MASK, priority)	|
+>  			FIELD_PREP(GICV5_GIC_CDPRI_TYPE_MASK, hwirq_type)	|
+>  			FIELD_PREP(GICV5_GIC_CDPRI_ID_MASK, hwirq);
+> @@ -122,6 +160,11 @@ static void gicv5_spi_irq_mask(struct irq_data *d)
+>  	gicv5_iri_irq_mask(d, GICV5_HWIRQ_TYPE_SPI);
+>  }
+>  
+> +static void gicv5_lpi_irq_mask(struct irq_data *d)
+> +{
+> +	gicv5_iri_irq_mask(d, GICV5_HWIRQ_TYPE_LPI);
+> +}
+> +
+>  static void gicv5_ppi_irq_unmask(struct irq_data *d)
+>  {
+>  	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
+> @@ -149,7 +192,7 @@ static void gicv5_iri_irq_unmask(struct irq_data *d, u8 hwirq_type)
+>  	/*
+>  	 * Rule R_XCLJC states that the effects of a GIC system instruction
+>  	 * complete in finite time and that's the only requirement when
+> -	 * unmasking an SPI IRQ.
+> +	 * unmasking an SPI/LPI IRQ.
+>  	 */
+>  	gic_insn(cden, CDEN);
+>  }
+> @@ -159,6 +202,11 @@ static void gicv5_spi_irq_unmask(struct irq_data *d)
+>  	gicv5_iri_irq_unmask(d, GICV5_HWIRQ_TYPE_SPI);
+>  }
+>  
+> +static void gicv5_lpi_irq_unmask(struct irq_data *d)
+> +{
+> +	gicv5_iri_irq_unmask(d, GICV5_HWIRQ_TYPE_LPI);
+> +}
+> +
+>  static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
+>  {
+>  	u64 cddi;
+> @@ -181,6 +229,11 @@ static void gicv5_spi_irq_eoi(struct irq_data *d)
+>  	gicv5_hwirq_eoi(d->hwirq, GICV5_HWIRQ_TYPE_SPI);
+>  }
+>  
+> +static void gicv5_lpi_irq_eoi(struct irq_data *d)
+> +{
+> +	gicv5_hwirq_eoi(d->hwirq, GICV5_HWIRQ_TYPE_LPI);
+> +}
+> +
+>  static int gicv5_iri_irq_set_affinity(struct irq_data *d,
+>  				      const struct cpumask *mask_val,
+>  				      bool force, u8 hwirq_type)
+> @@ -216,6 +269,14 @@ static int gicv5_spi_irq_set_affinity(struct irq_data *d,
+>  					  GICV5_HWIRQ_TYPE_SPI);
+>  }
+>  
+> +static int gicv5_lpi_irq_set_affinity(struct irq_data *d,
+> +				      const struct cpumask *mask_val,
+> +				      bool force)
+> +{
+> +	return gicv5_iri_irq_set_affinity(d, mask_val, force,
+> +					  GICV5_HWIRQ_TYPE_LPI);
+> +}
+> +
+>  enum ppi_reg {
+>  	PPI_PENDING,
+>  	PPI_ACTIVE,
+> @@ -336,6 +397,14 @@ static int gicv5_spi_irq_get_irqchip_state(struct irq_data *d,
+>  					       GICV5_HWIRQ_TYPE_SPI);
+>  }
+>  
+> +static int gicv5_lpi_irq_get_irqchip_state(struct irq_data *d,
+> +					   enum irqchip_irq_state which,
+> +					   bool *state)
+> +{
+> +	return gicv5_iri_irq_get_irqchip_state(d, which, state,
+> +					       GICV5_HWIRQ_TYPE_LPI);
+> +}
+> +
+>  static int gicv5_ppi_irq_set_irqchip_state(struct irq_data *d,
+>  					   enum irqchip_irq_state which,
+>  					   bool state)
+> @@ -370,6 +439,11 @@ static void gicv5_spi_irq_write_pending_state(struct irq_data *d, bool state)
+>  	gicv5_iri_irq_write_pending_state(d, state, GICV5_HWIRQ_TYPE_SPI);
+>  }
+>  
+> +static void gicv5_lpi_irq_write_pending_state(struct irq_data *d, bool state)
+> +{
+> +	gicv5_iri_irq_write_pending_state(d, state, GICV5_HWIRQ_TYPE_LPI);
+> +}
+> +
+>  static int gicv5_spi_irq_set_irqchip_state(struct irq_data *d,
+>  					   enum irqchip_irq_state which,
+>  					   bool state)
+> @@ -386,12 +460,41 @@ static int gicv5_spi_irq_set_irqchip_state(struct irq_data *d,
+>  	return 0;
+>  }
+>  
+> +static int gicv5_lpi_irq_set_irqchip_state(struct irq_data *d,
+> +					   enum irqchip_irq_state which,
+> +					   bool state)
+> +{
+> +	switch (which) {
+> +	case IRQCHIP_STATE_PENDING:
+> +		gicv5_lpi_irq_write_pending_state(d, state);
+> +		break;
+> +
+> +	default:
+> +		pr_debug("Unexpected irqchip_irq_state\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int gicv5_spi_irq_retrigger(struct irq_data *data)
+>  {
+>  	return !gicv5_spi_irq_set_irqchip_state(data, IRQCHIP_STATE_PENDING,
+>  						true);
+>  }
+>  
+> +static int gicv5_lpi_irq_retrigger(struct irq_data *data)
+> +{
+> +	return !gicv5_lpi_irq_set_irqchip_state(data, IRQCHIP_STATE_PENDING,
+> +						true);
+> +}
+> +
+> +static void gicv5_ipi_send_single(struct irq_data *d, unsigned int cpu)
+> +{
+> +	/* Mark the LPI pending */
+> +	irq_chip_retrigger_hierarchy(d);
+> +}
+> +
+>  static bool gicv5_ppi_irq_is_level(irq_hw_number_t hwirq)
+>  {
+>  	u64 bit = BIT_ULL(hwirq % 64);
+> @@ -425,6 +528,32 @@ static const struct irq_chip gicv5_spi_irq_chip = {
+>  				  IRQCHIP_MASK_ON_SUSPEND,
+>  };
+>  
+> +static const struct irq_chip gicv5_lpi_irq_chip = {
+> +	.name			= "GICv5-LPI",
+> +	.irq_mask		= gicv5_lpi_irq_mask,
+> +	.irq_unmask		= gicv5_lpi_irq_unmask,
+> +	.irq_eoi		= gicv5_lpi_irq_eoi,
+> +	.irq_set_affinity	= gicv5_lpi_irq_set_affinity,
+> +	.irq_retrigger		= gicv5_lpi_irq_retrigger,
+> +	.irq_get_irqchip_state	= gicv5_lpi_irq_get_irqchip_state,
+> +	.irq_set_irqchip_state	= gicv5_lpi_irq_set_irqchip_state,
+> +	.flags			= IRQCHIP_SKIP_SET_WAKE	  |
+> +				  IRQCHIP_MASK_ON_SUSPEND,
+> +};
+> +
+> +static const struct irq_chip gicv5_ipi_irq_chip = {
+> +	.name			= "GICv5-IPI",
+> +	.irq_mask		= irq_chip_mask_parent,
+> +	.irq_unmask		= irq_chip_unmask_parent,
+> +	.irq_eoi		= irq_chip_eoi_parent,
+> +	.irq_set_affinity	= irq_chip_set_affinity_parent,
+> +	.irq_get_irqchip_state	= irq_chip_get_parent_state,
+> +	.irq_set_irqchip_state	= irq_chip_set_parent_state,
+> +	.ipi_send_single	= gicv5_ipi_send_single,
+> +	.flags			= IRQCHIP_SKIP_SET_WAKE	  |
+> +				  IRQCHIP_MASK_ON_SUSPEND,
+> +};
+> +
+>  static __always_inline int gicv5_irq_domain_translate(struct irq_domain *d,
+>  						      struct irq_fwspec *fwspec,
+>  						      irq_hw_number_t *hwirq,
+> @@ -585,6 +714,130 @@ static const struct irq_domain_ops gicv5_irq_spi_domain_ops = {
+>  	.free		= gicv5_irq_domain_free,
+>  	.select		= gicv5_irq_spi_domain_select
+>  };
+> +
+> +static void gicv5_lpi_config_reset(struct irq_data *d)
+> +{
+> +	u64 cdhm;
+> +
+> +	/*
+> +	 * Reset LPIs handling mode to edge by default and clear pending
+> +	 * state to make sure we start the LPI with a clean state from
+> +	 * previous incarnations.
+> +	 */
+> +	cdhm = FIELD_PREP(GICV5_GIC_CDHM_HM_MASK, 0)				|
+> +	       FIELD_PREP(GICV5_GIC_CDHM_TYPE_MASK, GICV5_HWIRQ_TYPE_LPI)	|
+> +	       FIELD_PREP(GICV5_GIC_CDHM_ID_MASK, d->hwirq);
+> +	gic_insn(cdhm, CDHM);
+> +
+> +	gicv5_lpi_irq_write_pending_state(d, false);
+> +}
+> +
+> +static int gicv5_irq_lpi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> +				      unsigned int nr_irqs, void *arg)
+> +{
+> +	irq_hw_number_t hwirq;
+> +	struct irq_data *irqd;
+> +	u32 *lpi = arg;
+> +	int ret;
+> +
+> +	if (WARN_ON_ONCE(nr_irqs != 1))
+> +		return -EINVAL;
+> +
+> +	hwirq = *lpi;
+> +
+> +	irqd = irq_domain_get_irq_data(domain, virq);
+> +
+> +	irq_domain_set_info(domain, virq, hwirq, &gicv5_lpi_irq_chip, NULL,
+> +			    handle_fasteoi_irq, NULL, NULL);
+> +	irqd_set_single_target(irqd);
+> +
+> +	ret = gicv5_irs_iste_alloc(hwirq);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	gicv5_hwirq_init(hwirq, GICV5_IRQ_PRI_MI, GICV5_HWIRQ_TYPE_LPI);
+> +	gicv5_lpi_config_reset(irqd);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops gicv5_irq_lpi_domain_ops = {
+> +	.alloc	= gicv5_irq_lpi_domain_alloc,
+> +	.free	= gicv5_irq_domain_free,
+> +};
+> +
+> +void __init gicv5_init_lpi_domain(void)
+> +{
+> +	struct irq_domain *d;
+> +
+> +	d = irq_domain_create_tree(NULL, &gicv5_irq_lpi_domain_ops, NULL);
+> +	gicv5_global_data.lpi_domain = d;
+> +}
+> +
+> +void __init gicv5_free_lpi_domain(void)
+> +{
+> +	irq_domain_remove(gicv5_global_data.lpi_domain);
+> +	gicv5_global_data.lpi_domain = NULL;
+> +}
+> +
+> +static int gicv5_irq_ipi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> +				      unsigned int nr_irqs, void *arg)
+> +{
+> +	struct irq_data *irqd;
+> +	int ret, i;
+> +	u32 lpi;
+> +
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		ret = gicv5_alloc_lpi();
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		lpi = ret;
+> +
+> +		ret = irq_domain_alloc_irqs_parent(domain, virq + i, 1, &lpi);
+> +		if (ret) {
+> +			gicv5_free_lpi(lpi);
+> +			return ret;
+> +		}
+> +
+> +		irqd = irq_domain_get_irq_data(domain, virq + i);
+> +
+> +		irq_domain_set_hwirq_and_chip(domain, virq + i, i,
+> +				&gicv5_ipi_irq_chip, NULL);
+> +
+> +		irqd_set_single_target(irqd);
+> +
+> +		irq_set_handler(virq + i, handle_percpu_irq);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void gicv5_irq_ipi_domain_free(struct irq_domain *domain, unsigned int virq,
+> +				      unsigned int nr_irqs)
+> +{
+> +	struct irq_data *d;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		d = irq_domain_get_irq_data(domain, virq + i);
+> +
+> +		if (!d)
+> +			return;
+> +
+> +		gicv5_free_lpi(d->parent_data->hwirq);
+> +
+> +		irq_set_handler(virq + i, NULL);
+> +		irq_domain_reset_irq_data(d);
+> +		irq_domain_free_irqs_parent(domain, virq + i, 1);
+> +	}
+> +}
+> +
+> +static const struct irq_domain_ops gicv5_irq_ipi_domain_ops = {
+> +	.alloc	= gicv5_irq_ipi_domain_alloc,
+> +	.free	= gicv5_irq_ipi_domain_free,
+> +};
+> +
+>  static void handle_irq_per_domain(u32 hwirq)
+>  {
+>  	u8 hwirq_type = FIELD_GET(GICV5_HWIRQ_TYPE, hwirq);
+> @@ -598,6 +851,9 @@ static void handle_irq_per_domain(u32 hwirq)
+>  	case GICV5_HWIRQ_TYPE_SPI:
+>  		domain = gicv5_global_data.spi_domain;
+>  		break;
+> +	case GICV5_HWIRQ_TYPE_LPI:
+> +		domain = gicv5_global_data.lpi_domain;
+> +		break;
+>  	default:
+>  		pr_err_once("Unknown IRQ type, bail out\n");
+>  		return;
+> @@ -679,9 +935,12 @@ static void __init gicv5_free_domains(void)
+>  		irq_domain_remove(gicv5_global_data.ppi_domain);
+>  	if (gicv5_global_data.spi_domain)
+>  		irq_domain_remove(gicv5_global_data.spi_domain);
+> +	if (gicv5_global_data.ipi_domain)
+> +		irq_domain_remove(gicv5_global_data.ipi_domain);
+>  
+>  	gicv5_global_data.ppi_domain = NULL;
+>  	gicv5_global_data.spi_domain = NULL;
+> +	gicv5_global_data.ipi_domain = NULL;
+>  }
+>  
+>  static int __init gicv5_init_domains(struct fwnode_handle *handle)
+> @@ -709,6 +968,19 @@ static int __init gicv5_init_domains(struct fwnode_handle *handle)
+>  		irq_domain_update_bus_token(d, DOMAIN_BUS_WIRED);
+>  	}
+>  
+> +	if (!WARN(!gicv5_global_data.lpi_domain,
+> +		  "LPI domain uninitialized, can't set up IPIs")) {
+> +		d = irq_domain_create_hierarchy(gicv5_global_data.lpi_domain,
+> +						0, GICV5_IPIS_PER_CPU * nr_cpu_ids,
+> +						NULL, &gicv5_irq_ipi_domain_ops,
+> +						NULL);
+> +
+> +		if (!d) {
+> +			gicv5_free_domains();
+> +			return -ENOMEM;
+> +		}
+> +		gicv5_global_data.ipi_domain = d;
+> +	}
+>  	gicv5_global_data.fwnode = handle;
+>  
+>  	return 0;
+> @@ -732,6 +1004,24 @@ static void gicv5_set_cpuif_pribits(void)
+>  	}
+>  }
+>  
+> +static void gicv5_set_cpuif_idbits(void)
+> +{
+> +	u32 icc_idr0 = read_sysreg_s(SYS_ICC_IDR0_EL1);
+> +
+> +	switch (FIELD_GET(ICC_IDR0_EL1_ID_BITS, icc_idr0)) {
+> +	case ICC_IDR0_EL1_ID_BITS_16BITS:
+> +		gicv5_global_data.cpuif_id_bits = 16;
+> +		break;
+> +	case ICC_IDR0_EL1_ID_BITS_24BITS:
+> +		gicv5_global_data.cpuif_id_bits = 24;
+> +		break;
+> +	default:
+> +		pr_err("Unexpected ICC_IDR0_EL1_ID_BITS value, default to 16");
+> +		gicv5_global_data.cpuif_id_bits = 16;
+> +		break;
+> +	}
+> +}
+> +
+>  static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
+>  {
+>  	int ret = gicv5_irs_of_probe(node);
+> @@ -743,6 +1033,7 @@ static int __init gicv5_of_init(struct device_node *node, struct device_node *pa
+>  		goto out_irs;
+>  
+>  	gicv5_set_cpuif_pribits();
+> +	gicv5_set_cpuif_idbits();
+>  
+>  	pri_bits = min_not_zero(gicv5_global_data.cpuif_pri_bits,
+>  				gicv5_global_data.irs_pri_bits);
+> @@ -755,6 +1046,10 @@ static int __init gicv5_of_init(struct device_node *node, struct device_node *pa
+>  	if (ret)
+>  		goto out_int;
+>  
+> +	ret = gicv5_irs_enable();
+> +	if (ret)
+> +		goto out_int;
+> +
+>  	return 0;
+>  
+>  out_int:
+> diff --git a/include/linux/irqchip/arm-gic-v5.h b/include/linux/irqchip/arm-gic-v5.h
+> index 1064a69ab33f..680eed794a35 100644
+> --- a/include/linux/irqchip/arm-gic-v5.h
+> +++ b/include/linux/irqchip/arm-gic-v5.h
+> @@ -7,8 +7,12 @@
+>  
+>  #include <linux/iopoll.h>
+>  
+> +#include <asm/cacheflush.h>
+> +#include <asm/smp.h>
+>  #include <asm/sysreg.h>
+>  
+> +#define GICV5_IPIS_PER_CPU		MAX_IPI
+> +
+>  /*
+>   * INTID handling
+>   */
+> @@ -17,6 +21,7 @@
+>  #define GICV5_HWIRQ_INTID		GENMASK_ULL(31, 0)
+>  
+>  #define GICV5_HWIRQ_TYPE_PPI		UL(0x1)
+> +#define GICV5_HWIRQ_TYPE_LPI		UL(0x2)
+>  #define GICV5_HWIRQ_TYPE_SPI		UL(0x3)
+>  
+>  /*
+> @@ -36,7 +41,7 @@
+>  #define GICV5_INNER_SHARE		0b11
+>  
+>  /*
+> - * IRS registers
+> + * IRS registers and tables structures
+>   */
+>  #define GICV5_IRS_IDR1			0x0004
+>  #define GICV5_IRS_IDR2			0x0008
+> @@ -51,6 +56,10 @@
+>  #define GICV5_IRS_PE_SELR		0x0140
+>  #define GICV5_IRS_PE_STATUSR		0x0144
+>  #define GICV5_IRS_PE_CR0		0x0148
+> +#define GICV5_IRS_IST_BASER		0x0180
+> +#define GICV5_IRS_IST_CFGR		0x0190
+> +#define GICV5_IRS_IST_STATUSR		0x0194
+> +#define GICV5_IRS_MAP_L2_ISTR		0x01c0
+>  
+>  #define GICV5_IRS_IDR1_PRIORITY_BITS	GENMASK(22, 20)
+>  #define GICV5_IRS_IDR1_IAFFID_BITS	GENMASK(19, 16)
+> @@ -72,6 +81,11 @@
+>  #define GICV5_IRS_IDR5_SPI_RANGE	GENMASK(24, 0)
+>  #define GICV5_IRS_IDR6_SPI_IRS_RANGE	GENMASK(24, 0)
+>  #define GICV5_IRS_IDR7_SPI_BASE		GENMASK(23, 0)
+> +
+> +#define GICV5_IRS_IST_L2SZ_SUPPORT_4KB(r)	FIELD_GET(BIT(11), (r))
+> +#define GICV5_IRS_IST_L2SZ_SUPPORT_16KB(r)	FIELD_GET(BIT(12), (r))
+> +#define GICV5_IRS_IST_L2SZ_SUPPORT_64KB(r)	FIELD_GET(BIT(13), (r))
+> +
+>  #define GICV5_IRS_CR0_IDLE		BIT(1)
+>  #define GICV5_IRS_CR0_IRSEN		BIT(0)
+>  
+> @@ -103,6 +117,33 @@
+>  
+>  #define GICV5_IRS_PE_CR0_DPS		BIT(0)
+>  
+> +#define GICV5_IRS_IST_STATUSR_IDLE	BIT(0)
+> +
+> +#define GICV5_IRS_IST_CFGR_STRUCTURE	BIT(16)
+> +#define GICV5_IRS_IST_CFGR_ISTSZ	GENMASK(8, 7)
+> +#define GICV5_IRS_IST_CFGR_L2SZ		GENMASK(6, 5)
+> +#define GICV5_IRS_IST_CFGR_LPI_ID_BITS	GENMASK(4, 0)
+> +
+> +#define GICV5_IRS_IST_CFGR_STRUCTURE_LINEAR	0b0
+> +#define GICV5_IRS_IST_CFGR_STRUCTURE_TWO_LEVEL	0b1
+> +
+> +#define GICV5_IRS_IST_CFGR_ISTSZ_4	0b00
+> +#define GICV5_IRS_IST_CFGR_ISTSZ_8	0b01
+> +#define GICV5_IRS_IST_CFGR_ISTSZ_16	0b10
+> +
+> +#define GICV5_IRS_IST_CFGR_L2SZ_4K	0b00
+> +#define GICV5_IRS_IST_CFGR_L2SZ_16K	0b01
+> +#define GICV5_IRS_IST_CFGR_L2SZ_64K	0b10
+> +
+> +#define GICV5_IRS_IST_BASER_ADDR_MASK	GENMASK_ULL(55, 6)
+> +#define GICV5_IRS_IST_BASER_VALID	BIT_ULL(0)
+> +
+> +#define GICV5_IRS_MAP_L2_ISTR_ID	GENMASK(23, 0)
+> +
+> +#define GICV5_ISTL1E_VALID		BIT_ULL(0)
+> +
+> +#define GICV5_ISTL1E_L2_ADDR_MASK	GENMASK_ULL(55, 12)
+> +
+>  /*
+>   * Global Data structures and functions
+>   */
+> @@ -110,9 +151,18 @@ struct gicv5_chip_data {
+>  	struct fwnode_handle	*fwnode;
+>  	struct irq_domain	*ppi_domain;
+>  	struct irq_domain	*spi_domain;
+> +	struct irq_domain	*lpi_domain;
+> +	struct irq_domain	*ipi_domain;
+>  	u32			global_spi_count;
+>  	u8			cpuif_pri_bits;
+> +	u8			cpuif_id_bits;
+>  	u8			irs_pri_bits;
+> +	struct {
+> +		__le64 *l1ist_addr;
+> +		u32 l2_size;
+> +		u8 l2_bits;
+> +		bool l2;
+> +	} ist;
+>  };
+>  
+>  extern struct gicv5_chip_data gicv5_global_data __read_mostly;
+> @@ -150,10 +200,21 @@ static inline int gicv5_wait_for_op_s_atomic(void __iomem *addr, u32 offset,
+>  #define gicv5_wait_for_op_atomic(base, reg, mask, val) \
+>  	gicv5_wait_for_op_s_atomic(base, reg, #reg, mask, val)
+>  
+> +void __init gicv5_init_lpi_domain(void);
+> +void __init gicv5_free_lpi_domain(void);
+> +
+>  int gicv5_irs_of_probe(struct device_node *parent);
+>  void gicv5_irs_remove(void);
+> +int gicv5_irs_enable(void);
+>  int gicv5_irs_register_cpu(int cpuid);
+>  int gicv5_irs_cpu_to_iaffid(int cpu_id, u16 *iaffid);
+>  struct gicv5_irs_chip_data *gicv5_irs_lookup_by_spi_id(u32 spi_id);
+>  int gicv5_spi_irq_set_type(struct irq_data *d, unsigned int type);
+> +int gicv5_irs_iste_alloc(u32 lpi);
+> +
+> +void gicv5_init_lpis(u32 max);
+> +void gicv5_deinit_lpis(void);
+> +
+> +int gicv5_alloc_lpi(void);
+> +void gicv5_free_lpi(u32 lpi);
+>  #endif
+> 
 
