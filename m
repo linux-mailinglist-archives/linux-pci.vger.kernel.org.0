@@ -1,148 +1,118 @@
-Return-Path: <linux-pci+bounces-33514-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33515-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F4198B1D1E3
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 07:15:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DA12B1D1E8
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 07:16:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1A9D18C0B30
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 05:16:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF8833B7D3C
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 05:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E02B51E3DDE;
-	Thu,  7 Aug 2025 05:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86AAE1D7995;
+	Thu,  7 Aug 2025 05:16:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ni8aT9GD"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UgEZa+SV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9jECH44t"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0641C5F27;
-	Thu,  7 Aug 2025 05:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CCA1DB546
+	for <linux-pci@vger.kernel.org>; Thu,  7 Aug 2025 05:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754543739; cv=none; b=XFqUxLJ3XD+t9MkPHzqM1ant7H6Eoa+WQIr+dZyUXvA4AJbVTqQ7ltQck6kdxJQNgvNb8Pf7wmiLSkJzzGdqgfP9vEJUKGHKVT4Xbblq8OWKxsluCCaHqjyWsbesKSYQamuea1TqTDIPwrrfV57eFeiG01dj4XrfxxTK3Cb913o=
+	t=1754543777; cv=none; b=F4L430HXrll3hsQcnsmW++Yg8ugyc6JftySswZMOo42v8aAsWAI6ysDPWFLwIhgMl85FeD0ZZsxkhe9zvDOo4m6bVeWQVStB3e/+vmQeQ5gd3WD+gyWGs5+trLJuBGppWKMiTrZvu98kKjIhNh2MXRHOYDUNMAPoDezXPDlw+OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754543739; c=relaxed/simple;
-	bh=OABG8QK27oVphx3KmqQS2k4HAfAU3yskGkRAX0znjrU=;
+	s=arc-20240116; t=1754543777; c=relaxed/simple;
+	bh=WFlHnzcTE7lwS4aksaP3AZV+IIN4vrzrDqKqt1Qc7mw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M1rOphzRomV1Yqe+HU7BLMyd/4aArL++UjcV/x4n7a/qVHgR3cHvkLcs+/P0RA1mWzXgGed1jR3yt+LlutSzzZKa6mwv0Rr5TVKyfSKdrsyQBR80q1ccSWb1D/lTay3dKqLJ1SWeDihMZAmT+WBY9e4raQPKI0arj8PzKJWKWrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ni8aT9GD; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754543738; x=1786079738;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OABG8QK27oVphx3KmqQS2k4HAfAU3yskGkRAX0znjrU=;
-  b=ni8aT9GDVeagtkfiZZYn4LUHWggDwVURr2EHEfHgH/P3i9FxsrFO/pEF
-   zCXe0FuIzjmFgaCjY/iRrCdkYOVo9kGLm21c+fNiwe7ekV54n3V/2Ghxx
-   702nws8vOb+hag2HjFasfcshWjX6cX8jhpius487nOSIaTP6jvvac1JUv
-   ay8DJxsW1mMYoswRx6oHX7fb36Q4EEv2R28bQSNPrWnkX/bukD8LifeFx
-   kj1Tt7sIIjD0nKj/5isL2Swch8kzeao07dJf0uIpx0hBKh7fkIOUegZDl
-   kHJAx1KlXnBrGQm3JM9DSL/AL5IB6z7623J2FDqf/FLUIAtpeNnKcNJ6P
-   Q==;
-X-CSE-ConnectionGUID: i5G4oNfHQxiNhivXFNHirw==
-X-CSE-MsgGUID: J/8IHxFcQ2+KYXH+4OeVpg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="74329375"
-X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="74329375"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 22:15:37 -0700
-X-CSE-ConnectionGUID: A+BIQ4/nTU2iPkTP4V9FmA==
-X-CSE-MsgGUID: 6nXx22+eRF2/SLMSaTn02Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="165327763"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa009.fm.intel.com with ESMTP; 06 Aug 2025 22:15:34 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id B8DF793; Thu, 07 Aug 2025 07:15:33 +0200 (CEST)
-Date: Thu, 7 Aug 2025 07:15:33 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Mario Limonciello <superm1@kernel.org>,
-	"Rangoju, Raju" <raju.rangoju@amd.com>, linux-usb@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	andreas.noever@gmail.com, michael.jamet@intel.com,
-	westeri@kernel.org, YehezkelShB@gmail.com, bhelgaas@google.com,
-	Sanath.S@amd.com
-Subject: Re: [PATCH 0/3] thunderbolt: Update XDomain vendor properties
- dynamically
-Message-ID: <20250807051533.GG476609@black.igk.intel.com>
-References: <20250722175026.1994846-1-Raju.Rangoju@amd.com>
- <20250728064743.GS2824380@black.fi.intel.com>
- <59cd3694-c6e5-42c4-a757-594b11b69525@amd.com>
- <20250806085118.GE476609@black.igk.intel.com>
- <9a757d21-a6e0-4022-b844-57c91323af5e@kernel.org>
- <20250806150024.GF476609@black.igk.intel.com>
- <2025080628-viral-untruth-4811@gregkh>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jo8ZhPN8oRtLM2O5bSf2GpwTiA6yOSc+FzLDlRmA8AT7dHCYhtJgdur5HE8/2B56X9ugnwPArVIqD6vU4Z+0eQY1TDOd0an4HsxCjSdyPKU9wupURgqTa3dOTcqiDcSTCi7pJ7Na5CUau0xQsxvnFARzYjE2HmPPClbJiS+hmcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UgEZa+SV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9jECH44t; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Thu, 7 Aug 2025 07:16:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1754543774;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+nLKafRJSjND6TOvvqadUr6SQ00vyQHsB8OdT018nMU=;
+	b=UgEZa+SVgeq5OOf6Vgspk94Za1GqVtOGhB2cmXzGk3uGXlqeQH4zu7fF2a0WWXjhOZ+udg
+	fFsA2LxeP4/21mKZD4U9NLBhqkkNmTuWqXvgjDAqdeXo+R71zbc9EFYyoFX84zyMkaV9pL
+	P2Ab/va/cKNX5Cx8KdQ5Qnr23wAxESqTYM6pRMl29afBuKbPTcWJORudISGC6AUgxI+rlE
+	Wh4kfThbODN790Jm2FhzcPEFfBXQ7+tSu9U3WhcewHBWgEOWRmGJGcItPGs/Bt93x7GltE
+	4QsUcQDnFri9num/LowiVbwgkrgIsgEA/m++PHMyAhlRBYNaTl7CFRn9xn2w7Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1754543774;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+nLKafRJSjND6TOvvqadUr6SQ00vyQHsB8OdT018nMU=;
+	b=9jECH44tsYTolpeq1GuQ4FkBGAqhqPpurg007wFSOMcE2qIuPSYuMa8MmBiNb0smXMMWSj
+	HVqg4nazR5l24fBQ==
+From: Nam Cao <namcao@linutronix.de>
+To: Kenneth Crudup <kenny@panix.com>
+Cc: mani@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: Commit d7d8ab87e3e ("PCI: vmd: Switch to
+ msi_create_parent_irq_domain()") causes early-stage reboots on my Dell
+ XPS-9320
+Message-ID: <20250807051608.ExhI9r1T@linutronix.de>
+References: <dfa40e48-8840-4e61-9fda-25cdb3ad81c1@panix.com>
+ <87v7mzn3ta.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2025080628-viral-untruth-4811@gregkh>
+In-Reply-To: <87v7mzn3ta.fsf@yellow.woof>
 
-On Wed, Aug 06, 2025 at 05:58:26PM +0100, Greg KH wrote:
-> On Wed, Aug 06, 2025 at 05:00:24PM +0200, Mika Westerberg wrote:
-> > On Wed, Aug 06, 2025 at 09:06:30AM -0500, Mario Limonciello wrote:
-> > > On 8/6/2025 3:51 AM, Mika Westerberg wrote:
-> > > > On Wed, Aug 06, 2025 at 11:46:04AM +0530, Rangoju, Raju wrote:
-> > > > > 
-> > > > > 
-> > > > > On 7/28/2025 12:17 PM, Mika Westerberg wrote:
-> > > > > > Hi,
-> > > > > > 
-> > > > > > On Tue, Jul 22, 2025 at 11:20:23PM +0530, Raju Rangoju wrote:
-> > > > > > > This patch series aims to update vendor properties for XDomain
-> > > > > > > dynamically for vendors like AMD, Intel and ASMedia.
-> > > > > > 
-> > > > > > The XDomain properties pretty much describe "software" not the underlying
-> > > > > > hardware so I don't understand why this is needed? We could have some USB
-> > > > > > IF registered Linux specific ID there but I don't see why this matters at
-> > > > > > all.
-> > > > > 
-> > > > > Currently, it is showing up as "Intel" on AMD host controllers during
-> > > > > inter-domain connection. I suppose an alternative is to just call it "Linux"
-> > > > > or "Linux Connection Manager" to ensure we accurately represent the
-> > > > > connections across different systems.
-> > > > > 
-> > > > > I appreciate your guidance on this and suggestions you might have.
-> > > > 
-> > > > Yeah, something like that (I prefer "Linux"). The "ID" still is 0x8086
-> > > > though but I don't think that matters. AFAIK we have other "donated" IDs in
-> > > > use in Linux. Let me check on our side if that's okay.
-> > > 
-> > > Having looked through this discussion I personally like "Linux" for this
-> > > string too.
-> > > 
-> > > As for the vendor ID doesn't the LF have an ID assigned already of 0x1d6b?
-> > > Would it make sense to use that?
-> > 
-> > AFAIK that's PCI ID, right? It should be USB IF assigned ID and LF is not
-> > here at least:
-> > 
-> >   https://www.usb.org/members
-> > 
-> > If it really matters we can sure register one.
+On Thu, Aug 07, 2025 at 06:39:13AM +0200, Nam Cao wrote:
+> Kenneth Crudup <kenny@panix.com> writes:
 > 
-> Linux has an official USB vendor id, we use it for when Linux is used as
-> a USB gadget device and in a few other places.  If you want to reserve a
-> product id from it, just let me know and I can dole it out (the list is
-> around here somewhere...)
+> > I'm running Linus' master (as of today, cca7a0aae8958c9b1).
+> >
+> > If I revert the named commit, I can boot OK. Unfortunately there's no 
+> > real output before the machine reboots, to help identify the problem.
+> >
+> > I have a(n enabled) VMD in my Alderlake machine:
+> >
+> > [    0.141952] [      T1] smpboot: CPU0: 12th Gen Intel(R) Core(TM) 
+> > i7-1280P (family: 0x6, model: 0x9a, stepping: 0x3)
+> >
+> > If there's something else I can try, let me know.
+> 
+> Thanks for the report. It is unfortunate that there is no output to work
+> with :(
+> 
+> Let me stare at the commit again..
 
-Yes please :) I think this is the right thing to do.
+Another person reported problem with this commit, and that was resolved
+with the diff below.
 
-> Note, the LF is NOT listed as a USB-IF member anymore, as the USB-IF
-> kicked us out at the request of one of their founding members many years
-> ago.  But we still got to keep the product id, they can't take that away
-> from us :)
+Does it fix your case too?
 
-Hehe, understood.
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 9bbb0ff4cc15..b679c7f28f51 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -280,10 +280,12 @@ static int vmd_msi_alloc(struct irq_domain *domain, unsigned int virq,
+ static void vmd_msi_free(struct irq_domain *domain, unsigned int virq,
+ 			 unsigned int nr_irqs)
+ {
++	struct irq_data *irq_data;
+ 	struct vmd_irq *vmdirq;
+ 
+ 	for (int i = 0; i < nr_irqs; ++i) {
+-		vmdirq = irq_get_chip_data(virq + i);
++		irq_data = irq_domain_get_irq_data(domain, virq + i);
++		vmdirq = irq_data->chip_data;
+ 
+ 		synchronize_srcu(&vmdirq->irq->srcu);
+ 
 
