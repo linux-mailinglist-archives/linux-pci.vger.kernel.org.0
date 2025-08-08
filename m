@@ -1,131 +1,190 @@
-Return-Path: <linux-pci+bounces-33597-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33598-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EA9DB1DFC9
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 01:26:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25652B1E020
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 03:20:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35427623DEE
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Aug 2025 23:26:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A683563965
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 01:20:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D43222DA15;
-	Thu,  7 Aug 2025 23:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Md0xDHXC"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04D5E1F949;
+	Fri,  8 Aug 2025 01:20:44 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF04C1946AA;
-	Thu,  7 Aug 2025 23:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2650AEAF9;
+	Fri,  8 Aug 2025 01:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754609198; cv=none; b=n7i91ZYRfpWphm13ynhRTazBVyafghUkuuJzfA3T2RryUtE4kpysqoeBv09Uf27eWCk2U81aHciwxPYbFP+QHXEbg9uKL5sQNrsmRh33WtSi1W4afrqwQ6dbbLamhgErV4Dkk68/kAZSSEdg2vAnm2i+ncmc5rp+MnHsYVzvX0I=
+	t=1754616043; cv=none; b=CTStsafdz8O5oMRhzE3IF63ZMcl+P3Ks/MahAl6NQyZg25BKQcaADa8e5TCJpY6hm1w/ACyFpXyihHmdvxwei3zPbyU3VSxvwrZVaYmtqfx2vuMrtLZPkC7PxhZ4eDUjURblfhU4qhxZbkd+rEDgW70Rkhnv5yrQKUV21Exa0OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754609198; c=relaxed/simple;
-	bh=/Dha1AnamekDF+eoFpqLFEytcJK/ld7mdjOG9Qbmd4I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ZgjhXYBVgmlLm4/rpDTw4v3eXv2pbMTnWDl0RAPH4O4RsxwLUf2cebvTYQcTapntoZdvWAhdeFz1X5uV1ulQqdoQd0irQDKlFEWzzIRr76aGqrTuRK+FkyCHFlNYGcHVNWYxi7cpW85RvwmM+tvazBYyDs7Ww/EZQ18roPO70UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Md0xDHXC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36D2BC4CEEB;
-	Thu,  7 Aug 2025 23:26:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754609198;
-	bh=/Dha1AnamekDF+eoFpqLFEytcJK/ld7mdjOG9Qbmd4I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Md0xDHXCqK0W1aOnfinpaq5J0qSsqFz+a9V42g554Rmlslwzh5qrWu3HoboBSJref
-	 dRj2RTrkGPuanolIXn0H8YVE+gk9sB9YOaBqRIMGcH38KKU/o5Rs9ds5h/mbHgVqIN
-	 I15K32DokaG2nuPK1CTGxx+wepDlpmWIaD+FjULeZ9vgUdtRc5c2Pqjf4fX2oU/DIP
-	 fIBEUsr8XmMzUbzWrJQqgod2WqXGajinftyfkBrpiiAheqhAs2s6se1ubpmmrjdshn
-	 z/GESIkfPLU0w9DQ66PsRE2XilsS/Gmkh8xtJ/Rv7lynRgnDHo+w+HOVQstnnplLWV
-	 4zg+1tCUxjVGw==
-Date: Thu, 7 Aug 2025 18:26:36 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: dan.j.williams@intel.com
-Cc: linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bhelgaas@google.com, aik@amd.com,
-	lukas@wunner.de
-Subject: Re: [PATCH v4 03/10] PCI: Introduce pci_walk_bus_reverse(),
- for_each_pci_dev_reverse()
-Message-ID: <20250807232636.GA68733@bhelgaas>
+	s=arc-20240116; t=1754616043; c=relaxed/simple;
+	bh=Gg09YzVfrrD0Ahyvrgz1u9XSWw51btwBjpVpV1tFyX0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Go7FYP8bs8Ke6y3sAe/mm5WiN+AWQSq8VJMDBkBQvbQuASJXi0V+2DTDCVJ/OZLIr+/2VGUnkct2AfOvgHcTwi0Of/WqycnxTBrjuXXtwm1N3CAEOEIP5QzTCPFWg5HKtgQ/tYJceDRYMfQ710uSqHRnI+BxM3HxAeWVvg+r1mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bymLM5xB7z14MC1;
+	Fri,  8 Aug 2025 09:15:39 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id CC83F180080;
+	Fri,  8 Aug 2025 09:20:36 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 8 Aug 2025 09:20:30 +0800
+Message-ID: <c8e3dc2c-617b-2988-10ff-88082370e787@huawei.com>
+Date: Fri, 8 Aug 2025 09:20:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6895342226a99_cff9910086@dwillia2-xfh.jf.intel.com.notmuch>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v7 22/31] irqchip/gic-v5: Add GICv5 LPI/IPI support
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Bischoff
+	<sascha.bischoff@arm.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Timothy Hayes <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Peter Maydell
+	<peter.maydell@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby
+	<jirislaby@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+References: <20250703-gicv5-host-v7-0-12e71f1b3528@kernel.org>
+ <20250703-gicv5-host-v7-22-12e71f1b3528@kernel.org>
+ <cc611dda-d1e4-4793-9bb2-0eaa47277584@huawei.com>
+ <aJSvUWRqLEiARDIW@lpieralisi>
+Content-Language: en-US
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <aJSvUWRqLEiARDIW@lpieralisi>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-On Thu, Aug 07, 2025 at 04:17:54PM -0700, dan.j.williams@intel.com wrote:
-> Bjorn Helgaas wrote:
-> > On Thu, Jul 17, 2025 at 11:33:51AM -0700, Dan Williams wrote:
 
-> > > +++ b/drivers/base/bus.c
-> > > +static struct device *prev_device(struct klist_iter *i)
-> > > +{
-> > > +	struct klist_node *n = klist_prev(i);
-> > > +	struct device *dev = NULL;
-> > > +	struct device_private *dev_prv;
-> > > +
-> > > +	if (n) {
-> > > +		dev_prv = to_device_private_bus(n);
-> > > +		dev = dev_prv->device;
-> > > +	}
-> > > +	return dev;
-> > 
-> > I think this would be simpler as:
-> > 
-> >   if (!n)
-> >     return NULL;
-> > 
-> >   dev_prv = to_device_private_bus(n);
-> >   return dev_prv->device;
+
+On 2025/8/7 21:51, Lorenzo Pieralisi wrote:
+> On Thu, Aug 07, 2025 at 07:52:58PM +0800, Jinjie Ruan wrote:
+>>
+>>
+>> On 2025/7/3 18:25, Lorenzo Pieralisi wrote:
+>>> An IRS supports Logical Peripheral Interrupts (LPIs) and implement
+>>> Linux IPIs on top of it.
+>>>
+
+[...]
+
+>>> +static int __init gicv5_irs_init_ist_linear(struct gicv5_irs_chip_data *irs_data,
+>>> +					    unsigned int lpi_id_bits,
+>>> +					    unsigned int istsz)
+>>> +{
+>>> +	size_t l2istsz;
+>>> +	u32 n, cfgr;
+>>> +	void *ist;
+>>> +	u64 baser;
+>>> +	int ret;
+>>> +
+>>> +	/* Taken from GICv5 specifications 10.2.1.13 IRS_IST_BASER */
+>>> +	n = max(5, lpi_id_bits + 1 + istsz);
+>>> +
+>>> +	l2istsz = BIT(n + 1);
+>>> +	/*
+>>> +	 * Check memory requirements. For a linear IST we cap the
+>>> +	 * number of ID bits to a value that should never exceed
+>>> +	 * kmalloc interface memory allocation limits, so this
+>>> +	 * check is really belt and braces.
+>>> +	 */
+>>> +	if (l2istsz > KMALLOC_MAX_SIZE) {
+>>> +		u8 lpi_id_cap = ilog2(KMALLOC_MAX_SIZE) - 2 + istsz;
+>>> +
+>>> +		pr_warn("Limiting LPI ID bits from %u to %u\n",
+>>> +			lpi_id_bits, lpi_id_cap);
+>>> +		lpi_id_bits = lpi_id_cap;
+>>> +		l2istsz = KMALLOC_MAX_SIZE;
+>>> +	}
+>>> +
+>>> +	ist = kzalloc(l2istsz, GFP_KERNEL);
+>>
+>>
+>> When kmemleak is on, There is a memory leak occurring as below:
+>>
+>>
+>> unreferenced object 0xffff00080039a000 (size 4096):
+>>   comm "swapper/0", pid 0, jiffies 4294892296
+>>   hex dump (first 32 bytes):
+>>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>>   backtrace (crc 0):
+>>     kmemleak_alloc+0x34/0x40
+>>     __kmalloc_noprof+0x320/0x464
+>>     gicv5_irs_iste_alloc+0x1a4/0x484
+>>     gicv5_irq_lpi_domain_alloc+0xe4/0x194
+>>     irq_domain_alloc_irqs_parent+0x78/0xd8
+>>     gicv5_irq_ipi_domain_alloc+0x180/0x238
+>>     irq_domain_alloc_irqs_locked+0x238/0x7d4
+>>     __irq_domain_alloc_irqs+0x88/0x114
+>>     gicv5_of_init+0x284/0x37c
+>>     of_irq_init+0x3b8/0xb18
+>>     irqchip_init+0x18/0x40
+>>     init_IRQ+0x104/0x164
+>>     start_kernel+0x1a4/0x3d4
+>>     __primary_switched+0x8c/0x94
 > 
-> Agree, in isolation, but next to next_device() the style looks odd. So,
-> go back and style-fix code from 2008, or make 2025 code look like 2008
-> code is the choice.
-
-Good point, I didn't look around at that code.  Following the existing
-style seems right to me.
-
-> > > +++ b/drivers/pci/bus.c
-> > > +static int __pci_walk_bus_reverse(struct pci_bus *top,
-> > > +				  int (*cb)(struct pci_dev *, void *),
-> > > +				  void *userdata)
-> > > +{
-> > > +	struct pci_dev *dev;
-> > > +	int ret = 0;
-> > > +
-> > > +	list_for_each_entry_reverse(dev, &top->devices, bus_list) {
-> > > +		if (dev->subordinate) {
-> > > +			ret = __pci_walk_bus_reverse(dev->subordinate, cb,
-> > > +						     userdata);
-> > > +			if (ret)
-> > > +				break;
-> > > +		}
-> > > +		ret = cb(dev, userdata);
-> > > +		if (ret)
-> > > +			break;
-> > > +	}
-> > > +	return ret;
-> > 
-> > Why not:
-> > 
-> >   list_for_each_entry_reverse(...) {
-> >     ...
-> >     if (ret)
-> >       return ret;
-> >   }
-> >   return 0;
+> Thank you for reporting it.
 > 
-> Again, for conformance to existing style of __pci_walk_bus(). Want a
-> lead-in cleanup for that?
+> It should be a false positive, we hand over the memory to the GIC but
+> never store the pointer anywhere (only its PA).
+> 
+> Patch below should "fix" it - well, it is obvious, we are telling
+> kmemleak to ignore the pointer value:
 
-Don't bother.  Maybe some janitor will show up and do it eventually.
+I also did not see any place in the code where these pointers are
+accessed, nor did I see in section "L2_ISTE, Level 2 interrupt state
+table entry" that L2_ISTE can be accessed by software. So, are these
+states of the LPI interrupt maintained by the GIC hardware itself?
 
-Bjorn
+> 
+> -- >8 --
+> diff --git a/drivers/irqchip/irq-gic-v5-irs.c b/drivers/irqchip/irq-gic-v5-irs.c
+> index ad1435a858a4..e8a576f66366 100644
+> --- a/drivers/irqchip/irq-gic-v5-irs.c
+> +++ b/drivers/irqchip/irq-gic-v5-irs.c
+> @@ -5,6 +5,7 @@
+>  
+>  #define pr_fmt(fmt)	"GICv5 IRS: " fmt
+>  
+> +#include <linux/kmemleak.h>
+>  #include <linux/log2.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> @@ -117,6 +118,7 @@ static int __init gicv5_irs_init_ist_linear(struct gicv5_irs_chip_data *irs_data
+>  		kfree(ist);
+>  		return ret;
+>  	}
+> +	kmemleak_ignore(ist);
+>  
+>  	return 0;
+>  }
+> @@ -232,6 +234,7 @@ int gicv5_irs_iste_alloc(const u32 lpi)
+>  		kfree(l2ist);
+>  		return ret;
+>  	}
+> +	kmemleak_ignore(l2ist);
+>  
+>  	/*
+>  	 * Make sure we invalidate the cache line pulled before the IRS
+> 
 
