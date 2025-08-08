@@ -1,80 +1,80 @@
-Return-Path: <linux-pci+bounces-33626-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33627-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3DE9B1E744
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 13:28:19 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C058B1E74E
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 13:28:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6148B1C20F78
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 11:28:38 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 41ECA4E43BF
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 11:28:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C212277003;
-	Fri,  8 Aug 2025 11:25:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01734274B3D;
+	Fri,  8 Aug 2025 11:27:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="B4ST1Bxh"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="fzDoCjIX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93597276030
-	for <linux-pci@vger.kernel.org>; Fri,  8 Aug 2025 11:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A33274B25
+	for <linux-pci@vger.kernel.org>; Fri,  8 Aug 2025 11:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754652349; cv=none; b=hicJ8C0Bx8qfVuo6xA9Rb+Dup4o7L3falMgrF+7mxzpN89OsO2H4uagSqCbaYfPq0f7BCwdD7Gz+fZNOaWD41RgGRDMiLmFtufyypAREO+Zj0XcTAGFl86cczbyEiOvYMyg5mXIZLLBtfmN/Fqf6XEhT21OydjBu9RKLuL5QRVc=
+	t=1754652420; cv=none; b=AjPVMjNJ+vinFM6XxyRtawlmYoMADg2bYQgx/t3/0feLUjSKEtgm62Rj8SrSEKrsq2ILoMtyRh+0X7U0RixuaUyl3j/IudEkP+rMQKGPqlyDa1V83MDWclhqNap4/JGciwx7b2rPbpUwZK6dMT+SMwc05+GqV3soqQGfMLd+zw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754652349; c=relaxed/simple;
-	bh=QA+SPUv+ZJM564GNbwnCFpJZjmCakzVI2B7d0dDz/P0=;
+	s=arc-20240116; t=1754652420; c=relaxed/simple;
+	bh=PHwIx/DdNtH6flF1xerQiN6Sk7tIPcKXZKHuKQM8yJc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kj2c1CQlZK6fj+VVG2RQw06HXYbd9dhTzmWptmloG+t2OB6s5TiTj874uBIuiFeJU8gxuaVqdLH5vNcKH8RpyiXZXIViSxxufV/gwVQqV9PgUnG9FIktfQTzN2O2dRBIwmd+vkaphnJG5YzuQzzFqwdRL/sRPRpjAFsCWMdOgjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=B4ST1Bxh; arc=none smtp.client-ip=209.85.221.45
+	 In-Reply-To:Content-Type; b=M5QdgbLwrRxd+XqqhN0/mK3XmRPqF1GQlRGqwH/hqRLLAvD1Cur7zhRf5lI+Rrfs0cz5CLzCY+e6Y7UWghXkhSPF5m/iUsTIJpFNost41zwcB3G1g8kRJWm8VcS3SINLaUiet6OiPg/UOeKKEwQfvTETB23c3T2lBDUEjGseB4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=fzDoCjIX; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3b7823559a5so933239f8f.0
-        for <linux-pci@vger.kernel.org>; Fri, 08 Aug 2025 04:25:46 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-458c063baeaso11719975e9.1
+        for <linux-pci@vger.kernel.org>; Fri, 08 Aug 2025 04:26:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1754652345; x=1755257145; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1754652417; x=1755257217; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1f6xy+aBOaPKs56VR9kjp6cxPwtioSpnzbBMEVe8kGI=;
-        b=B4ST1BxhwH48Z49rewmBOYuuKHqK7zc55gHqNZJJXhgFp+EHc+tKNMkCOtWvF9AWpe
-         9mmhjj/RhsSRMqZ0MSvotKyPi5Lfm3EMVWkVKE8nVKgZfFlsfGGpAkBonRcFvnInGI8Z
-         G5BgYHruv8iZCoWdS2iwvfzDF78EBuZ7YwHRfhawXE6cA2gaJQ0XECZCrUtvjIPt4OTT
-         dTo+GO7MCI70U/tuai1oAFZSUI2z5eg3KUcZeYRV3rnHigrISuz7ZRReuSuAVI8oVDfq
-         p7mIZl5brtJ3heD2P6idvBH6ItqWyjC3126U1bqz5qwqOueg09x487B1QVX5ps/qMovM
-         r4xA==
+        bh=kQD9ZN86fbnOv3Py6c0GNoRIiGV/UrKy3H7tuotUIpg=;
+        b=fzDoCjIXV/4UdeKdFmlmaB8G5G/Uylcj6tY5c+8e35wa4iRkq9rFY322hzLktQ54MO
+         j4oj09k+WhbZS9heeaEyGeZDQUcld/H6lPCq23fM55va8rAYIfPfrTogT0rgK3r/cpAt
+         gRpUaNCh7AB5V7YLRPpjQJ3c4feS2vX8dAeLHF/Y9NG3GkZOHSowU/VsBtSeCRSgYwqL
+         LDPbS7SeMmf87H/OE8gKlBWW7NWqto+/Kl2Wd5Wx+D1MMm/S/jF+9eKikQFleuwQK5Tb
+         gVrhy7Ib+9pXkWvnbNTd2yYLy3y3sOnG+JU/wQInTlJ6aF5fUv8EGqKgFph4iQVpm9H2
+         7sZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754652345; x=1755257145;
+        d=1e100.net; s=20230601; t=1754652417; x=1755257217;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1f6xy+aBOaPKs56VR9kjp6cxPwtioSpnzbBMEVe8kGI=;
-        b=g75dRcpqd+vj9uT3bSybeC3720fug8qMe3txaZHofH+4N4ahFVUHgcFnPSPrPwd6OJ
-         L23UF9dytq/fXMhapmijHV7gV9b/VxLSmg+yRoejG5wn5HjiD/Cl5WHTL1b94HaEfHui
-         6qseslfZhjBqOt1WiNw5AIcTEyNf0ERboeXegchYHhkhYQZZbSdR+lQUlRQGoF4PhW15
-         SPF5AtWnR+q69snbURwxZSjQz9WLzv1gByNtscd5Ay89VUQI15Clz0Es/SsqNAGABqhC
-         VMlklmMHpf2VIgSKAQXCjurXcsdO9LYpzAv6DN6EyLHmknLH/+Kprod8kZfzOo/1Sqdy
-         kvbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJcnPrl7Oy3AMYRtSCx6ST9vt4xC2N9ngGVd9ts0zXWieXp80TNtKv63SD07nd8iyXgSx4R2EuE4I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1hWAgvyDwSPCaHMw3Uez1HOhginWAXTE3CBxvNeubBKrAmtky
-	bIdyVS18RzsvJNA0CQ5VNW1HUDMhK5Ht/W6yXs0hO7LHVUFcJVWuKND0Dfmg+UPm3iQ=
-X-Gm-Gg: ASbGnctFJL3uEHUxZHJfwAUs8sC4GpZwV/JD3RxlgyJbhXgNH6ESoGYgCdBDc93ANrM
-	qW5F4d9dtxDltY/YeZo44j/9axBjVyK81Uv5kksTevm5qnrMHg9yIgaDm3NQ2q///bFtdNRDbWm
-	GgVZ3hClJeD5VtR/irydF6KMCVTSzLw+CQNktTZmYB5TsmF+MpaTpByLWBRvdHAfSM1SZAB5mNg
-	rGUX4XqcXOCimw+pBJ6ZCKkxBxXIx1+wbF7tZ36xBdV2Xz23O+Ic5YwN+78EcucJxoW4yX0IUWL
-	/b/ybtShQxIJeIkiLfF5ze3dD93ksoHkLoGyyi1y44uPn3gcazIq3n5JgB0mHyeBpSdfdb7ePfi
-	YZ+rX4yK9c4g9N0zzorwHLChcQJfRgjf7tdv3dHz5Rg==
-X-Google-Smtp-Source: AGHT+IG+d+QVEEJZwj2dMpvlEXKWBGDwCt68UnmyWGJ/cwYSS+LXI8Tj/fvC7ktt2tblrQA7hmZ3Sw==
-X-Received: by 2002:a05:6000:24c5:b0:3b7:8f49:94f7 with SMTP id ffacd0b85a97d-3b900b4d8b6mr2051559f8f.31.1754652344801;
-        Fri, 08 Aug 2025 04:25:44 -0700 (PDT)
+        bh=kQD9ZN86fbnOv3Py6c0GNoRIiGV/UrKy3H7tuotUIpg=;
+        b=hQh8sSIPu3znYLUm7int9eue0gAWmjOQ2xvtn85bnA9Q6QzqXz0Ke3HQg6JXmPVKkp
+         FRd7pXzJPN0SkP4v9LdL76bJdUonNiqs3Fe2976TNRufT9wPhC9xReTbznbiimZVAaEQ
+         WpBrXimPJUjc8ZMespYM2rhU7ECUgkXbD3RiESi+5AYBcLaoOLCdPJ2S04Qr3ENZnlL/
+         HpoduPEt7+OCvL0BXY1JyRLmKlWZxJbP4n3rdH1yTgZjm426Cy64eTbTP7oO1BrzD1QM
+         Sz/GwdS/Z4GZXAiSugueiYnOJVtfEKZS37Xa2K5wu1fTV0TI6NwBalomBav+N1LG6py6
+         9XXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEWvqRUXW5PDKPzCddNSCPzeg2pwSapyU9lBebHKcsrep9cqRQjtpgeCqWwjzOG6w+fmSi033o/Ms=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYhEstrJIvgUc7+hs1YwRNLCZmqttt8WcD+1O39PCgfnOjWOaS
+	gpX8VcP1cQ41M0u1sPq4UpLDBNPdUyr29QGeTxFqDKiEDyWKMQ8ZEVjqhihjM0/t6sc=
+X-Gm-Gg: ASbGncu4++fKV9/26kWLRK2ysDcJy9n8xF9XIXNe1GBwbfXN/RGPs2T6ARL1SjpE5VY
+	BtTQA6Xr7yWheO0YrAT6TfudZfXnJ47gr/olY/nFdDGMhC2Da5lSs+FRdwAVfexnk7+7cK2ZBta
+	U7pZS3t+iPDdW13wVJr3sLu2ghlHU55uoMirDGEWEXv5WzVY6fjmunqa+dY8lMCd/ARN0KrAtFJ
+	v3Wjht2dut4Id8sxaSDh8RYSzje4dl/G5y8AVeOTo3XQm54GfFGFz6OuyIivMlKlmKnhcpvQEDF
+	2YbQ8YMoGk4KNM97gdC6XrN6Yqo6W/cJ2zq4Re4xrNXmKf+Y6M568gD+qE/U1dY0mk7FUJ7NSPn
+	1vdI7gGLT+xAtj5tAGbiUqe2n4L2LtNo=
+X-Google-Smtp-Source: AGHT+IGrw6qJfbOAqNVKVNHju607OPKnyRwv/T0hcF1UsbBaa/pvlDY7WeC0PqYLDYFHFXx38VFdTg==
+X-Received: by 2002:a05:6000:26c9:b0:3b7:89c2:464b with SMTP id ffacd0b85a97d-3b900b4496bmr2232459f8f.5.1754652416806;
+        Fri, 08 Aug 2025 04:26:56 -0700 (PDT)
 Received: from [192.168.50.4] ([82.78.167.188])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-459e58553f8sm141920125e9.14.2025.08.08.04.25.42
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c4a2187sm31150895f8f.70.2025.08.08.04.26.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Aug 2025 04:25:44 -0700 (PDT)
-Message-ID: <71d109a1-211a-45ee-8525-03f1859b789a@tuxon.dev>
-Date: Fri, 8 Aug 2025 14:25:42 +0300
+        Fri, 08 Aug 2025 04:26:56 -0700 (PDT)
+Message-ID: <0addc570-a3c6-4d7e-9cbd-06eedd2447bb@tuxon.dev>
+Date: Fri, 8 Aug 2025 14:26:54 +0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,7 +84,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 4/9] dt-bindings: PCI: renesas,r9a08g045s33-pcie: Add
  documentation for the PCIe IP on Renesas RZ/G3S
-To: Bjorn Helgaas <helgaas@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
 Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
  mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
  geert+renesas@glider.be, magnus.damm@gmail.com, catalin.marinas@arm.com,
@@ -95,132 +95,88 @@ Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
  linux-clk@vger.kernel.org, Claudiu Beznea
  <claudiu.beznea.uj@bp.renesas.com>,
  Wolfram Sang <wsa+renesas@sang-engineering.com>
-References: <20250708163407.GA2149616@bhelgaas>
+References: <20250709132449.GA2193594@bhelgaas>
+ <2e0d815a-774a-4e31-92f1-71e0772294c7@kernel.org>
 From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 Content-Language: en-US
-In-Reply-To: <20250708163407.GA2149616@bhelgaas>
+In-Reply-To: <2e0d815a-774a-4e31-92f1-71e0772294c7@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi, Bjorn,
+Hi, all,
 
-On 08.07.2025 19:34, Bjorn Helgaas wrote:
-> On Fri, Jul 04, 2025 at 07:14:04PM +0300, Claudiu wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Apologies for the late reply.
+
+
+On 09.07.2025 16:43, Krzysztof Kozlowski wrote:
+> On 09/07/2025 15:24, Bjorn Helgaas wrote:
+>> On Wed, Jul 09, 2025 at 08:47:05AM +0200, Krzysztof Kozlowski wrote:
+>>> On 08/07/2025 18:34, Bjorn Helgaas wrote:
+>>>> On Fri, Jul 04, 2025 at 07:14:04PM +0300, Claudiu wrote:
+>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>>
+>>>>> The PCIe IP available on the Renesas RZ/G3S complies with the PCI Express
+>>>>> Base Specification 4.0. It is designed for root complex applications and
+>>>>> features a single-lane (x1) implementation. Add documentation for it.
+>>>>
+>>>>> +++ b/Documentation/devicetree/bindings/pci/renesas,r9a08g045s33-pcie.yaml
+>>>>
+>>>> The "r9a08g045s33" in the filename seems oddly specific.  Does it
+>>>> leave room for descendants of the current chip that will inevitably be
+>>>> added in the future?  Most bindings are named with a fairly generic
+>>>> family name, e.g., "fsl,layerscape", "hisilicon,kirin", "intel,
+>>>> keembay", "samsung,exynos", etc.
+>>>>
+>>>
+>>> Bindings should be named by compatible, not in a generic way, so name is
+>>> correct. It can always grow with new compatibles even if name matches
+>>> old one, it's not a problem.
 >>
->> The PCIe IP available on the Renesas RZ/G3S complies with the PCI Express
->> Base Specification 4.0. It is designed for root complex applications and
->> features a single-lane (x1) implementation. Add documentation for it.
+>> Ok, thanks!
+>>
+>> I guess that means I'm casting shade on the "r9a08g045s33" compatible.
+>> I suppose it means something to somebody.
 > 
->> +++ b/Documentation/devicetree/bindings/pci/renesas,r9a08g045s33-pcie.yaml
-> 
-> The "r9a08g045s33" in the filename seems oddly specific.  Does it
-> leave room for descendants of the current chip that will inevitably be
-> added in the future?  Most bindings are named with a fairly generic
-> family name, e.g., "fsl,layerscape", "hisilicon,kirin", "intel,
-> keembay", "samsung,exynos", etc.
-> 
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/r9a08g045-cpg.h>
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +    bus {
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +
->> +        pcie@11e40000 {
->> +            compatible = "renesas,r9a08g045s33-pcie";
->> +            reg = <0 0x11e40000 0 0x10000>;
->> +            ranges = <0x02000000 0 0x30000000 0 0x30000000 0 0x8000000>;
->> +            dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0 0x38000000>;
->> +            bus-range = <0x0 0xff>;
->> +            clocks = <&cpg CPG_MOD R9A08G045_PCI_ACLK>,
->> +                     <&cpg CPG_MOD R9A08G045_PCI_CLKL1PM>;
->> +            clock-names = "aclk", "pm";
->> +            resets = <&cpg R9A08G045_PCI_ARESETN>,
->> +                     <&cpg R9A08G045_PCI_RST_B>,
->> +                     <&cpg R9A08G045_PCI_RST_GP_B>,
->> +                     <&cpg R9A08G045_PCI_RST_PS_B>,
->> +                     <&cpg R9A08G045_PCI_RST_RSM_B>,
->> +                     <&cpg R9A08G045_PCI_RST_CFG_B>,
->> +                     <&cpg R9A08G045_PCI_RST_LOAD_B>;
->> +            reset-names = "aresetn", "rst_b", "rst_gp_b", "rst_ps_b",
->> +                          "rst_rsm_b", "rst_cfg_b", "rst_load_b";
->> +            interrupts = <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>;
->> +            interrupt-names = "serr", "serr_cor", "serr_nonfatal",
->> +                              "serr_fatal", "axi_err", "inta",
->> +                              "intb", "intc", "intd", "msi",
->> +                              "link_bandwidth", "pm_pme", "dma",
->> +                              "pcie_evt", "msg", "all";
->> +            #interrupt-cells = <1>;
->> +            interrupt-controller;
->> +            interrupt-map-mask = <0 0 0 7>;
->> +            interrupt-map = <0 0 0 1 &pcie 0 0 0 0>, /* INT A */
->> +                            <0 0 0 2 &pcie 0 0 0 1>, /* INT B */
->> +                            <0 0 0 3 &pcie 0 0 0 2>, /* INT C */
->> +                            <0 0 0 4 &pcie 0 0 0 3>; /* INT D */
-> 
-> The spec styles these closed up: "INTA", "INTB", etc.
+> Well, I hope it matches the name of the SoC, from which the compatible
+> should come :)
 
-I'll update it.
+The r9a08g45s33 is the part number of a device from the RZ/G3S group. This
+particular device from RZ/G3S group supports PCIe.
 
-> 
->> +            device_type = "pci";
->> +            num-lanes = <1>;
->> +            #address-cells = <3>;
->> +            #size-cells = <2>;
->> +            power-domains = <&cpg>;
->> +            vendor-id = <0x1912>;
->> +            device-id = <0x0033>;
-> 
-> Some of this is specific to a Root Port, not to the Root Complex as a
-> whole.  E.g., device-type = "pci", num-lanes, vendor-id, device-id,
-> are Root Port properties.  Some of the resets, clocks, and interrupts
-> might be as well.
-> 
-> I really want to separate those out because even though this
-> particular version of this PCIe controller only supports a single Root
-> Port, there are other controllers (and possibly future iterations of
-> this controller) that support multiple Root Ports, and it makes
-> maintenance easier if the DT bindings and the driver structures are
-> similar.
+In the RZ/G3S group there are more SoC variants (each with its own part
+number). Not all support PCIe. To differentiate b/w PCIe and non-PCIe
+variants it has been chosen to use the full part number here.
 
-I'll ask the Renesas HW team about the resets and clocks as the HW manual
-don't offer any information about this.
+The available RZ/G3S part numbers are listed in Table 1.1 Product Lineup at [1]
 
-If they will confirm some of the clocks and/or resets could be controlled
-as part of a port then patch 3/9 "PCI: of_property: Restore the arguments
-of the next level parent" in this series will not be needed anymore. Would
-you prefer me to abandon it or post it as individual patch, if any?
+(The following steps should be followed to access the manual:
+1/ Click the "User Manual" button
+2/ Click "Confirm"; this will start downloading an archive
+3/ Open the downloaded archive
+4/ Navigate to r01uh1014ej*-rzg3s-users-manual-hardware -> Deliverables
+5/ Open the file r01uh1014ej*-rzg3s.pdf)
 
-> 
-> This email includes pointers to sample DT bindings and driver code
-> that is structured to allow multiple Root Ports:
-> 
->   https://lore.kernel.org/linux-pci/20250625221653.GA1590146@bhelgaas/
+We use a similar compatible scheme in other drivers.
 
-Thank you for this!
+Geert, I may be wrong. Please correct me otherwise, as I don't have the
+full picture of this.
 
-And, thank you for your review,
+Maybe, the other variant would be to use "renesas,rzg3s-pcie", or maybe a
+more generic one "renesas,rz-pcie" (though I think this last one is too
+generic).
+
+Geert, please let us know if you have some suggestions here with regards to
+the compatible. The IP on RZ/G3S is compatible also with the one in RZ/V2H,
+RZ/G3E.
+
+Thank you,
 Claudiu
 
+[1]
+https://www.renesas.com/en/products/rz-g3s?queryID=695cc067c2d89e3f271d43656ede4d12
+
 > 
-> Bjorn
+> Best regards,
+> Krzysztof
 
 
