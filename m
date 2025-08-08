@@ -1,246 +1,184 @@
-Return-Path: <linux-pci+bounces-33621-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33622-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF7CAB1E666
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 12:21:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69190B1E6E5
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 12:59:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6F4757A8A62
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 10:19:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E67527A6303
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 10:58:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0FAC2737E4;
-	Fri,  8 Aug 2025 10:21:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11E91256C73;
+	Fri,  8 Aug 2025 10:59:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Fnn2WHLr"
+	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="q4RG3tTS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2076.outbound.protection.outlook.com [40.107.100.76])
+Received: from server-vie001.gnuweeb.org (server-vie001.gnuweeb.org [89.58.62.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFC020E6F3;
-	Fri,  8 Aug 2025 10:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754648474; cv=fail; b=jWxa3R62EgNWpfUP9AA0XeHG51JjdHtLNAPtK1sYF4iv7DRBKrnPyFDcIKp3izJbhOi88XW8HXSqkRJEta6UGMvq7g1Qo+WtWh1JHYzz1lDpGGeB5mru2BLctuTgHmwqhSrsoZQ/HXX43Z0jkVYClLD1Be7YqSKIQvs34rQmVK8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754648474; c=relaxed/simple;
-	bh=Zd6rQ85pghtvRnnKnbw05eNPPOe/CfBqsCEMXLZIxrY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uA4lAjoiDDJmv473F7kk9ocGEgbrP2wY/inJgAjz/gCcf3zIPo+D/39/55E92cQ/gscOM9F7KwfAjEOp/+GXB5TO6B/T66X8mcFEpyO40Vxn+urMWWkYrYbVbxaxDPUzQ3Ohv13S8lIDPfGAPiUlOkyWzBjcCG8J3m8dUIT7yWk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Fnn2WHLr; arc=fail smtp.client-ip=40.107.100.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Dh2TLdTaIs3t/DaitsA1xuHeN1iwO6/Hc86ipFP3wZegmQ4rlBtWjIpyS5kC9lMX/ynccv9meU6+Rin9kpaq0JArFTS/rk4FBu844+k8vql91ZBnJLRELjQQ0k9v8tKAEcB3vrIAnZ7xhinG1M3cLpI5l5XdkYTjB8tNpdpqFT4dknW8t0nIJedgWy+c/dKmc19jGxGbTgKnwdLIXakJx+FwBb3jl+uMmRVkoG06Ox6Fp4sK1Nh1vIOeMdlEL08BfjsYAhhqhO1fuZB1j/i5iueBDOzutzZaTuCDTfuVDmDGzh5CHwVLmhhqBeO0m62mzDoN+M3a1ENuKkcL2TLgEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EHFfC8ZXc9v2vaQo7JBLDWt7/vE/B5nv0SakNohkyVg=;
- b=wzVAbI7x52+ctUZwbSwLq8tfV17ONQYZd1c6EaCjVFClUB2qxkxBZWAk50ZVJqTkppC0gr9lYaH1hSo5Wr2uHKMJ9Noin8HapF5UFizpmUfHtbCi1BXoXSCJ66rCZDBL2cisncsh5n4Wn2GXU5wTgQFJqEfB4ixArLjphF6UB7KYL/6WJHDx5zM/1dDm1q/fMpSwgoakJP9Pw78MkB1gQCYDplSn72+5lBHnqwjmGtcX0jX5VjYHlMt7k2QU8V6jmbwDgfqCPxVeEf2FnGX3juPTHfKJFb7hLWyDwVLq29NBzzx1G3BPN6DIDk1v81poxJ+s7Q5y2KM3awDtcakjUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EHFfC8ZXc9v2vaQo7JBLDWt7/vE/B5nv0SakNohkyVg=;
- b=Fnn2WHLrEY41lh3KgMhRaTTRsCRmZvumkAtsAXWveqf/rH2JrhxHA960oGoOfB2RIrGJARUPC5CPvMlnFrMWMZletkQpbYWEBbBJYsFfWQ1itWnUZ/Vq1l1iVI358nBKojmWeWKA3fTys/6h/a8xXVe4eIVZxCujsJE7rTRzilMZ6ddXNST3HyJayV2m3tQAHm3OFl6NJGQwVA7fjy8UQZ3KYRAzi6Est+I82u5GAUZ6oO0q/Xd9ci7LJGICqdLVKHk7gYJQF8kq1F7x1S5N1BfumJ9nsndn5hnerzqU54R2ejtKYudv+iSsnZFZZqDx2o82S9zeiJHCqn/yO14mkA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM4PR12MB5391.namprd12.prod.outlook.com (2603:10b6:5:39a::14)
- by SA5PPFAB8DFE4E8.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8db) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.17; Fri, 8 Aug
- 2025 10:21:09 +0000
-Received: from DM4PR12MB5391.namprd12.prod.outlook.com
- ([fe80::6096:acf3:4a5c:f003]) by DM4PR12MB5391.namprd12.prod.outlook.com
- ([fe80::6096:acf3:4a5c:f003%5]) with mapi id 15.20.9009.013; Fri, 8 Aug 2025
- 10:21:09 +0000
-Message-ID: <9683c850-3152-4da5-97f1-3e86ba39e8d3@nvidia.com>
-Date: Fri, 8 Aug 2025 13:21:04 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 07/10] PCI/IDE: Add IDE establishment helpers
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-kernel@vger.kernel.org, bhelgaas@google.com, aik@amd.com,
- lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
- Yilun Xu <yilun.xu@linux.intel.com>, linux-pci@vger.kernel.org,
- linux-coco@lists.linux.dev, "Aneesh Kumar K.V (Arm)"
- <aneesh.kumar@kernel.org>
-References: <20250717183358.1332417-1-dan.j.williams@intel.com>
- <20250717183358.1332417-8-dan.j.williams@intel.com>
-Content-Language: en-US
-From: Arto Merilainen <amerilainen@nvidia.com>
-In-Reply-To: <20250717183358.1332417-8-dan.j.williams@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P123CA0100.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:139::15) To DM4PR12MB5391.namprd12.prod.outlook.com
- (2603:10b6:5:39a::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B57023535A;
+	Fri,  8 Aug 2025 10:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.62.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754650774; cv=none; b=Igj3kkGyMIhFik/VGLxbCLTigSpNIKxI4g9vLLIh67+HXT1a0EuQoVae01lirkZkompBb5fbGMmk2acGWcihBYJu2GCywPb4YTuJXc+Z+JKg3Ns2ighDTNkbUxgrCWOmh0JMaz+NcIcqJQdLlBT4IrzyYbBUF0nEHms3cLRpAOo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754650774; c=relaxed/simple;
+	bh=0Kz37+b2HmhQsaCCr11nF9LPPY0BleYfH+dO9HDEFlk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eCmJFD/gBR5OaF8jZlJhjjygT6DDo25zHOec0gobUKyFrgZykBW3ieNaj8Q43ey5hPCiw8HUQ/lQsVTNifw4G8577WVUQm5gxWlLb22kNsb/lylPxYfOZFzHvwiGzwD84MYb7/OmalbWquBM5Q8OSLZmlV/F4upd/g6xx6i3Si4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=q4RG3tTS; arc=none smtp.client-ip=89.58.62.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
+	s=new2025; t=1754650763;
+	bh=0Kz37+b2HmhQsaCCr11nF9LPPY0BleYfH+dO9HDEFlk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To:Message-ID:Date:From:Reply-To:Subject:To:
+	 Cc:In-Reply-To:References:Resent-Date:Resent-From:Resent-To:
+	 Resent-Cc:User-Agent:Content-Type:Content-Transfer-Encoding;
+	b=q4RG3tTSLaF8x1NxuBYCxz+426cAzi8275UkWCKuyywKptTlX2hj2MfDjJpMfQIJV
+	 pnSaLqt7kLp9aVWgwzCdvRQq/6TnrInuRpCP3I1ewdd6bKf+jjPZ2MnkFOU6Ysue1M
+	 728rXB8iyTTmnO7jnl+zM2rmbU9EwvBCht0qnUZaGylzwr/HcuuML3Z5iH+wABZlLt
+	 E00F2yJKxsdm59nFqteAvbpbXwrGFwQwuPvTo3mi8amRZFs3v2hgbZhoIfKX9lsz4Z
+	 RYNup+F8TkJ5BUHV2aYmD5XtblDg8sVGzxnGjFNiX+Xnb2W3D5yvZSLPj78VTTmAD3
+	 IqJUVAMAaCNnA==
+Received: from linux.gnuweeb.org (unknown [182.253.126.185])
+	by server-vie001.gnuweeb.org (Postfix) with ESMTPSA id 9D90D3127DA9;
+	Fri,  8 Aug 2025 10:59:20 +0000 (UTC)
+X-Gw-Bpl: wU/cy49Bu1yAPm0bW2qiliFUIEVf+EkEatAboK6pk2H2LSy2bfWlPAiP3YIeQ5aElNkQEhTV9Q==
+Date: Fri, 8 Aug 2025 17:59:17 +0700
+From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux PCI Mailing List <linux-pci@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof Wilczynski <kwilczynski@kernel.org>,
+	Armando Budianto <sprite@gnuweeb.org>,
+	Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
+	gwml@vger.gnuweeb.org
+Subject: Re: [GIT PULL v2] PCI changes for v6.17
+Message-ID: <aJXYhfc/6DfcqfqF@linux.gnuweeb.org>
+References: <20250801142254.GA3496192@bhelgaas>
+ <175408424863.4088284.13236765550439476565.pr-tracker-bot@kernel.org>
+ <ed53280ed15d1140700b96cca2734bf327ee92539e5eb68e80f5bbbf0f01@linux.gnuweeb.org>
+ <aJQi3RN6WX6ZiQ5i@wunner.de>
+ <aJQxdBxcx6pdz8VO@linux.gnuweeb.org>
+ <20250807050350.FyWHwsig@linutronix.de>
+ <aJQ19UvTviTNbNk4@linux.gnuweeb.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5391:EE_|SA5PPFAB8DFE4E8:EE_
-X-MS-Office365-Filtering-Correlation-Id: ea61dd4b-ffc1-4312-8754-08ddd6654a9c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bG94M3RmaHpnQ0xuYUNQbnk5b1BBVTRFeXF2Qzl0Ly9tSjJ1WVRDWU5md0xr?=
- =?utf-8?B?UmNFcklsbC9CQkUxeExnUjdkazMxL2JKOTlFNGpWN2lmWStESDcyRWdDNndQ?=
- =?utf-8?B?eS9aUE00cUwvODJ0cHJBRUlTNzBjRkpHT3Y0N3RrUG4xV1d0Ym1FVE04UUVW?=
- =?utf-8?B?QWZlVm5WQnpTNEovVEJoNHQvdHhkR3ZxemxqclY3ZXlROG5waG1RZ2VxTGlE?=
- =?utf-8?B?ZDlkZ2ZDQmpTUEpDVmhRRzI1NGVQQkxJSG5IdTU1U2w4c0g3dXB1S0NpdUow?=
- =?utf-8?B?UjFXZWFReHJBT3l0MmVuSjZCSFBicVA2UzZPMVdQOWN6VnJ5UWRIT3B1V1pS?=
- =?utf-8?B?TmdDMjh4blh6aFQzSnAvVGplMXFOUnpRcUcrcnEvaVE3Qnd5YWp0TVFoak43?=
- =?utf-8?B?VHpTUWdldFlUM3J3L0NOYUE4czB4NSt4dkRiWTlOd0huQ1VLN3BOREkwYmpz?=
- =?utf-8?B?ejBCd1JyNk9zc2NhYUtIbDVxd1ltYjU4TDAzYkNOTXV5VGJSTWU2NVpzbTBW?=
- =?utf-8?B?RmQzODNsMXMyaTNxL0c4UFY2d0pZZTVlbFlhNHh4ZTNxL21RR0VBdllNRWRH?=
- =?utf-8?B?UkdkUWp6MzU4eWs4ZEpvNk5ETjVaY2xzU0JpMVNtbUdKZFJsZTN3aWpUei9K?=
- =?utf-8?B?WTd0SW16NDBJVWhrU1hSdnViRXZjUUMva2IrM1NpMVZTNG96eEpNYUYwNDIr?=
- =?utf-8?B?bHVmdWwzSTFuMVBKS3g3cnl6b1U2RTh3MFZjZmlCZFNyWWVaZlRSWE1ZU3U1?=
- =?utf-8?B?S3ZXdTJ0REwrbEtEamNJUDhFenpaK21NRzJveEo4WjQ1a2RtU2dDM2FEV0d0?=
- =?utf-8?B?TmRzQmFzZW81QnZsUTZkYmN5Z0IxN0NtTGpCYjdsdTRxOUlPNHhEeDVOQWE4?=
- =?utf-8?B?bDROYjhMV0xwTGp3SWJmZktRYkZONCsvSUQ5YThnRzBTMXQ4bUVxdTZnaWVY?=
- =?utf-8?B?U09PZENhVWdid2UwOEZDNzRwRXk1MlFyK01GaEtaMTYwQVRaSTZzL0hUcVUx?=
- =?utf-8?B?Z1F1STdlYkl3UFJpbGlMclFEVm1rcDAraFZVenM1WGw4YW5aeFpGVDYzc0Jo?=
- =?utf-8?B?SkViTkpkRjFXQmh5RFYzMEFpN20xVWxISXRXSlRSaTRqRTVSTjdWRDk0T2x4?=
- =?utf-8?B?cXhDemxxN1NsdlJMNlFRUWJMY0QzL0w0MC9DUUNIaDBzajRZcXI4Z3JZSTB1?=
- =?utf-8?B?T0o5V09pY3hiUVZISS9yZndFSGlMS1pXSzFuYlRtMWlwd1Z2U3hpR2RnVzBD?=
- =?utf-8?B?VG0ybHNuanlZZDYwR05UanAvVlIxeHZ0ZUVOd2E1cU5VZWFGL3VweWZ1OHN1?=
- =?utf-8?B?UHM5LzRMSDl5R29oYlkwclZ3TkRSVnpRamdINGcySzJISnlVL1R3MGM2R29L?=
- =?utf-8?B?cXJ2UE9UclJHdUE5a0hTQ1R0Q2VpY2dmcldKZTRrUGR5L3RKcFkxeUYyaEs0?=
- =?utf-8?B?d2hRNTNOazRDVUNDTjk1ZFFUNnUwa21oTW5HM2lHeFo3eUhIWFNkRVM2Ukp4?=
- =?utf-8?B?SDlQRHFUcDBZNVpBdDRZRExIU0pNWnpDVEtVMU9TYkJhek5Bem9vY1dwV1Fn?=
- =?utf-8?B?SmJySURkVldkd1lQN0F5WHc0V2lNTlhoSzhmanNRTnA4VFRFMnd5UVNYZFVj?=
- =?utf-8?B?N0RuZURDZ1ZDZlcwRWw0UFZEaFJzWEVWZFAyL2FuYnhUQktJVDdoMGJ3MkJB?=
- =?utf-8?B?bTlUK053dGhRTXBCTDZ5NzNkUmF0YkVrdlluNkczZTUxVHJSRnJXT0tzcHpZ?=
- =?utf-8?B?MWpnOWdlWVAyNWp6WXVTdDBXMCs1Z254U0JIdkxQR0g0UDVSODl3UTR2OG5P?=
- =?utf-8?B?SGpJb3ovNU1kY3p3czlyT3dBa2IyUGh5TEJscUkrYWhweFYrbllFVytEU2lL?=
- =?utf-8?B?a2tPVHBrT05WdHcycUVqd243QlgrNUVaanM1VDZENEpMOS9uSmhaeTZ3eHFK?=
- =?utf-8?Q?+k43344BSXU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5391.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?d1ZRQXdES3RlTVM4NjJjRUJRajBjellQS0Y2a2hlMjBEemRDQ2NUZEt2enhY?=
- =?utf-8?B?T0FjY3BWenBUYnIyN0owYlBYT1BydjNzajRSUVJjOGpiL2N2K21nckdOdVNB?=
- =?utf-8?B?NzB0VnFmbmxUdnRISmsrdlNMbml4Z0haYzF4SUZwMm1ESGMvVE1kS2ZMbmNs?=
- =?utf-8?B?ODRGa0hYYzBTNDFaOTBWTU1CM0FYOTVZUDFGN3AzUDBFZFdnSDhyQTBtWFNz?=
- =?utf-8?B?RDF3OXN6bWxZNEFjMEJGWXVaTzdQbE5tRWdkT3JzYXlOc0RiRlZ1WXliSzE0?=
- =?utf-8?B?NWt5TnRhcGliVU4wMXQvL3ByVHNQd0l2NFBiYXdvOGk4a3JMMSt4a2ZpczZS?=
- =?utf-8?B?TDNiVVU2dm0xMEt2TTBLQjhMdDMvQXIwZmVCc3BPN2FxOExDYWh2WGkvWElP?=
- =?utf-8?B?anRheHY2V2R3RGlrWE9kN2p4V1pvTm1TdFdVQkp1bm56c2ZmS2JxS05EdXNX?=
- =?utf-8?B?bUpSODZHSUptRDFNSmhHWjlSVTNDdkpTcEUwRlBnM1p6OEMzcERBa25ENWVJ?=
- =?utf-8?B?bmNCRUYzWGpza2F1MkZ6SGpoVXNsUndsbGRGUjFvUzE5dk1xckxEUlBIc3hy?=
- =?utf-8?B?di9RZkw1R2lDVVN5RDd4dXNCYjNOZ0xiejlEUTVlMHhObUNMUkFtdm1zVkZY?=
- =?utf-8?B?cGJQQllVVVNrSlgxbStYY2ROS1hpM1RORmUydytUcGI3bTlqb3BtWjAya0N6?=
- =?utf-8?B?YmNPbHRCSUhLdDM3QVByL241ZDBIcy9qNE4zVmN4WmhJZW1RMlFxMjNIQVZm?=
- =?utf-8?B?WGVyZWxXSlhxSGxreWQ3MUhPNEdPNHlQRUhaV01sUzdxZktBalhUeWY2RWUv?=
- =?utf-8?B?dWgzL3R3d3NBR3drc0tsdmx5SmFTaXJvREtiNlJVbUh0S3dDd005UkdNalBs?=
- =?utf-8?B?TXhzaG0vckdJZ0h5bDUvOVFDQmorV0wzb1FwTmQ0T0FvUTl2ZDZMejRnMzlL?=
- =?utf-8?B?ZmU2aFFRSG1zREdZMW03cmFaSFVEc09LeEV3alVWdmJ1eWpWRndCZjVGUUtL?=
- =?utf-8?B?WGhCZG1GbXpwZDdxTUxXemVHRkxjS2ZLN05FaEZ6OHJvYzFxNnNoT005Q0J4?=
- =?utf-8?B?NnVCeDdhRzZpTUgxckxldUdjRHN4aERrTVRNTXlqZ2JLMm1TM0dRdFdUVndK?=
- =?utf-8?B?RW56TE9LdmRhd3BuN3krZ3pNaHVtS2xsamRvRkUrdmxZK090MW5MdWJZUXFz?=
- =?utf-8?B?OXFxN2ZDRTMwejZ0YlI2OEJzblhZZTg5K2UyVlBSODJxS2cvZ2RMNkI5clBp?=
- =?utf-8?B?MkZHNC9ySjJZNFBmVlo5dzIrd1cxcUxVc3laL2gyK2Q5NkNrRXptbnJwZWpq?=
- =?utf-8?B?eE5JQXB2K3pkQy80QWhJdWQxQ1VWRW5CUmNDcTEzR3gzdGxxY3dlc1Iyd0hW?=
- =?utf-8?B?S2JWOElkSHFGSFNQbDdmOThHeUZ0QnZucEZXYWJJQmpFNExhM0lCQjA5Y2I5?=
- =?utf-8?B?VmNMRVlnRXN4UVdTUmQwMjVuQ0FOUk1Od0RCUGk3aGJIakt2Vy8vbEZwRVNG?=
- =?utf-8?B?dkVBdURueEM0VUNLbS91VkJhbi9Wcms0aS95Z1NDNngrQUFTckxFM2RsSUhq?=
- =?utf-8?B?MEdRN1dHZGpXV1pVdlF6YlUzRWMyeVR5UkJzWWFLMEE1UlBBL3pWQWlMQ0Ji?=
- =?utf-8?B?M2kxVHJYU1RMdWZ5amVOYWJtMExZUnlvQzZWenRodVZsbjVoSnpWZ2tnWkxU?=
- =?utf-8?B?NWpOS0Q2M0wzUWVuRExJdGJxTEJJeTIrUG15MkZGT1BzWmZjbVpnK0lIYjFw?=
- =?utf-8?B?Q2NVY0VLWkVRT2I3NkFPaDNKdFdYZ2lJTkg5ZUVlNWd0MjlMaWNYWTJlM2tx?=
- =?utf-8?B?SnVpTjg1Tkd1MG5QVTYxN0UvZlZwS1hNTThrcDNFN1F1RnZYejkvanhvQjVG?=
- =?utf-8?B?VTNHZ0F4dER5L2hTKzl0UDZKWWpSeWlCNnIwS2hZc0lUT0x5OWJtTkZwa2lh?=
- =?utf-8?B?blJOSEREQ1NTS25YWWxDTXJ1TjdBUzRpVTRCdHFOMDVXMkZseDdsWVFMNElZ?=
- =?utf-8?B?S3pWelhFdFB1R1o2aUpQRzA5bCtQc05Walk1Y0hORGxYMUtOYXg0cTZxQitn?=
- =?utf-8?B?aFJRek5SL1JiTytReWViR1JsTTB5UTF5SzR6cGdldVBSZ0pacmVNYnBDcEVO?=
- =?utf-8?Q?8fk9j7tLuq0lJEeAI4qLF4RV6?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea61dd4b-ffc1-4312-8754-08ddd6654a9c
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5391.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2025 10:21:09.1368
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: M1J3TuSI+XrJRr1KnsYJJGE72N8WwoaV7ASG35bMrgVaiqGc8yZ/4Jgq1w03RaASa2/dHBscIKdkDir9jKavKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPFAB8DFE4E8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aJQ19UvTviTNbNk4@linux.gnuweeb.org>
+X-Machine-Hash: hUx9VaHkTWcLO7S8CQCslj6OzqBx2hfLChRz45nPESx5VSB/xuJQVOKOB1zSXE3yc9ntP27bV1M1
 
-On 17.7.2025 21.33, Dan Williams wrote:
-> +static void set_ide_sel_ctl(struct pci_dev *pdev, struct pci_ide *ide, int pos,
-> +			    bool enable)
-> +{
-> +	u32 val = FIELD_PREP(PCI_IDE_SEL_CTL_ID_MASK, ide->stream_id) |
-> +		  FIELD_PREP(PCI_IDE_SEL_CTL_DEFAULT, 1) |
+On Thu, Aug 07, 2025 at 12:13:37PM +0700, Ammar Faizi wrote:
+> On Thu, Aug 07, 2025 at 07:03:50AM +0200, Nam Cao wrote:
+> > Does the diff below help?
+> 
+> Yes, it works.
 
-If I recall correctly, setting the DEFAULT bit is allowed only for one 
-SEL_SID instance at a time. If we consider the root port, wouldn't this 
-prevent having multiple IDE capable devices under the same RP?
+So today, I synced with Linus' master branch again:
 
-> +		  FIELD_PREP(PCI_IDE_SEL_CTL_CFG_EN, pdev->ide_cfg) |
-> +		  FIELD_PREP(PCI_IDE_SEL_CTL_TEE_LIMITED, pdev->ide_tee_limit) |
-> +		  FIELD_PREP(PCI_IDE_SEL_CTL_EN, enable);
-> +
-> +	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_CTL, val);
-> +}
-> +
-> +/**
-> + * pci_ide_stream_setup() - program settings to Selective IDE Stream registers
-> + * @pdev: PCIe device object for either a Root Port or Endpoint Partner Port
-> + * @ide: registered IDE settings descriptor
-> + *
-> + * When @pdev is a PCI_EXP_TYPE_ENDPOINT then the PCI_IDE_EP partner
-> + * settings are written to @pdev's Selective IDE Stream register block,
-> + * and when @pdev is a PCI_EXP_TYPE_ROOT_PORT, the PCI_IDE_RP settings
-> + * are selected.
-> + */
-> +void pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide)
-> +{
-> +	struct pci_ide_partner *settings = pci_ide_to_settings(pdev, ide);
-> +	int pos;
-> +	u32 val;
-> +
-> +	if (!settings)
-> +		return;
-> +
-> +	pos = sel_ide_offset(pdev, settings);
-> +
-> +	val = FIELD_PREP(PCI_IDE_SEL_RID_1_LIMIT_MASK, settings->rid_end);
-> +	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_1, val);
-> +
-> +	val = FIELD_PREP(PCI_IDE_SEL_RID_2_VALID, 1) |
-> +	      FIELD_PREP(PCI_IDE_SEL_RID_2_BASE_MASK, settings->rid_start) |
-> +	      FIELD_PREP(PCI_IDE_SEL_RID_2_SEG_MASK, pci_ide_domain(pdev));
-> +
-> +	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_2, val);
-> +
-> +	/*
-> +	 * Setup control register early for devices that expect
-> +	 * stream_id is set during key programming.
-> +	 */
-> +	set_ide_sel_ctl(pdev, ide, pos, false);
-> +	settings->setup = 1;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_ide_stream_setup);
+  37816488247d ("Merge tag 'net-6.17-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net")
 
-The first revision of this patch had address association register 
-programming but it has since been removed. Could you comment if there is 
-a reason for this change?
+and applied your fix on top of it.
 
-Some background: This might be problematic for ARM CCA. I recall seeing 
-a comment stating that the address association register programming can 
-be skipped on some architectures (e.g., apparently AMD uses a separate 
-table that contains the StreamID) but on ARM CCA the StreamID 
-association AFAIK happens through these registers.
+I can boot, but I get this splat. Looking at the call trace, it seems
+it's still related to pci, but different issue. The call trace is also
+different from the previous one.
 
-- R2
+Let me know if you have something for me to test.
+
+  [    1.017767] pci 10000:e0:1d.0: bridge window [mem 0x82000000-0x820fffff]: assigned
+  [    1.018519] pci 10000:e0:1d.0: bridge window [io  size 0x1000]: can't assign; no space
+  [    1.019268] pci 10000:e0:1d.0: bridge window [io  size 0x1000]: failed to assign
+  [    1.020026] pci 10000:e0:1d.0: bridge window [io  size 0x1000]: can't assign; no space
+  [    1.020789] pci 10000:e0:1d.0: bridge window [io  size 0x1000]: failed to assign
+  [    1.021539] pci 10000:e1:00.0: BAR 0 [mem 0x82000000-0x82003fff 64bit]: assigned
+  [    1.022317] pci 10000:e0:1d.0: PCI bridge to [bus e1]
+  [    1.023091] pci 10000:e0:1d.0:   bridge window [mem 0x82000000-0x820fffff]
+  [    1.023885] pci 10000:e1:00.0: VMD: Default LTR value set by driver
+  [    1.024654] pci 10000:e1:00.0: can't override BIOS ASPM; OS doesn't have ASPM control
+  [    1.025442] pcieport 10000:e0:1d.0: can't derive routing for PCI INT A
+  [    1.026245] pcieport 10000:e0:1d.0: PCI INT A: no GSI
+  [    1.027058] ------------[ cut here ]------------
+  [    1.027849] WARNING: CPU: 0 PID: 166 at drivers/pci/controller/vmd.c:309 vmd_init_dev_msi_info+0x36/0x40 [vmd]
+  [    1.028649] Modules linked in: hid_generic i2c_hid_acpi i2c_hid drm intel_lpss_pci i2c_i801 i2c_mux intel_lpss idma64 i2c_smbus vmd(+) hid video wmi pinctrl_tigerlake
+  [    1.029467] CPU: 0 UID: 0 PID: 166 Comm: systemd-udevd Not tainted 6.16.0-afh-home-2025-08-08-g6026508bdb9d #10 PREEMPT(full)  fe08b908bb15b9ded6f7769c45f204194ebf7eef
+  [    1.030301] Hardware name: HP HP Laptop 14s-dq2xxx/87FD, BIOS F.21 03/21/2022
+  [    1.031122] RIP: 0010:vmd_init_dev_msi_info+0x36/0x40 [vmd]
+  [    1.031953] Code: 48 89 cb e8 7c 49 4f e1 84 c0 74 1a 48 8b 53 20 48 c7 42 18 70 18 40 a0 48 8b 53 20 48 c7 42 20 e0 17 40 a0 5b c3 31 c0 5b c3 <0f> 0b 31 c0 c3 0f 1f 44 00 00 0f 1f 44 00 00 41 56 41 55 41 54 49
+  [    1.032798] RSP: 0018:ffff888105a47860 EFLAGS: 00010297
+  [    1.033642] RAX: ffff8881014d5d98 RBX: ffff8881014d5c00 RCX: ffff8881014d5d98
+  [    1.034506] RDX: ffff888120a49400 RSI: ffff888120a49400 RDI: ffff88810132b0c8
+  [    1.035359] RBP: 0000000000000001 R08: ffff888100d8de3a R09: 00000000ffffffff
+  [    1.036206] R10: 0000000000000004 R11: 0000000000000005 R12: ffff8881019b7e40
+  [    1.036561] usb 1-2: new full-speed USB device number 3 using xhci_hcd
+  [    1.037058] R13: ffffffffa020c680 R14: ffff88810132b0c8 R15: ffff888120a49400
+  [    1.038724] FS:  00007f25ede3a8c0(0000) GS:ffff8890f1a2d000(0000) knlGS:0000000000000000
+  [    1.039559] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  [    1.040400] CR2: 00007f25ee475ea0 CR3: 000000011dfd1003 CR4: 0000000000770ef0
+  [    1.041265] PKRU: 55555554
+  [    1.042121] Call Trace:
+  [    1.042971]  <TASK>
+  [    1.043803]  msi_create_device_irq_domain+0x1eb/0x290
+  [    1.044645]  __pci_enable_msi_range+0x106/0x300
+  [    1.045488]  pci_alloc_irq_vectors_affinity+0xc5/0x110
+  [    1.046336]  pcie_portdrv_probe+0x24e/0x610
+  [    1.047177]  ? kernfs_activate+0x48/0x60
+  [    1.048015]  local_pci_probe+0x3c/0x80
+  [    1.048854]  pci_device_probe+0xbc/0x1b0
+  [    1.049693]  really_probe+0xcd/0x380
+  [    1.050529]  ? driver_probe_device+0x90/0x90
+  [    1.051353]  __driver_probe_device+0x78/0x150
+  [    1.052182]  driver_probe_device+0x1f/0x90
+  [    1.053000]  __device_attach_driver+0x76/0xf0
+  [    1.053812]  bus_for_each_drv+0x69/0xa0
+  [    1.054633]  __device_attach+0xaa/0x1a0
+  [    1.055448]  pci_bus_add_device+0x4c/0x70
+  [    1.056260]  pci_bus_add_devices+0x2c/0x70
+  [    1.057063]  vmd_probe+0x81e/0xa20 [vmd 65bddf00234a3cddd21388091a077f038c9af2be]
+  [    1.057881]  local_pci_probe+0x3c/0x80
+  [    1.058682]  pci_device_probe+0xbc/0x1b0
+  [    1.059489]  really_probe+0xcd/0x380
+  [    1.060303]  ? __device_attach_driver+0xf0/0xf0
+  [    1.061112]  __driver_probe_device+0x78/0x150
+  [    1.061908]  driver_probe_device+0x1f/0x90
+  [    1.062711]  __driver_attach+0xbf/0x1b0
+  [    1.063500]  bus_for_each_dev+0x64/0xa0
+  [    1.064303]  bus_add_driver+0x10a/0x230
+  [    1.065100]  driver_register+0x55/0xf0
+  [    1.065892]  ? vmd_drv_exit+0x9a0/0x9a0 [vmd 65bddf00234a3cddd21388091a077f038c9af2be]
+  [    1.066673]  do_one_initcall+0x31/0x1e0
+  [    1.067460]  do_init_module+0x60/0x260
+  [    1.068264]  init_module_from_file+0x74/0x90
+  [    1.069068]  idempotent_init_module+0xed/0x2c0
+  [    1.069853]  __x64_sys_finit_module+0x65/0xd0
+  [    1.070630]  do_syscall_64+0x56/0x260
+  [    1.071394]  entry_SYSCALL_64_after_hwframe+0x29/0x31
+  [    1.072152] RIP: 0033:0x7f25ee53288d
+  [    1.072918] Code: 5b 41 5c c3 66 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 73 b5 0f 00 f7 d8 64 89 01 48
+  [    1.073698] RSP: 002b:00007fff09cbd5b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+  [    1.074477] RAX: ffffffffffffffda RBX: 000055d9edf36030 RCX: 00007f25ee53288d
+  [    1.075254] RDX: 0000000000000000 RSI: 00007f25ee6cc441 RDI: 0000000000000005
+  [    1.076042] RBP: 0000000000020000 R08: 0000000000000000 R09: 00007fff09cbd6f0
+  [    1.076827] R10: 0000000000000005 R11: 0000000000000246 R12: 00007f25ee6cc441
+  [    1.077609] R13: 000055d9edf323b0 R14: 000055d9edf36120 R15: 000055d9edf35850
+  [    1.078389]  </TASK>
+  [    1.079166] ---[ end trace 0000000000000000 ]---
+
+-- 
+Ammar Faizi
+
 
