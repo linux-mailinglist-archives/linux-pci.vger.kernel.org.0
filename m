@@ -1,199 +1,184 @@
-Return-Path: <linux-pci+bounces-33608-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33615-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DBF9B1E390
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 09:38:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96826B1E3EF
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 09:56:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 45A0D16679C
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 07:36:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4CB7B3A9274
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 07:56:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 552CB274FD7;
-	Fri,  8 Aug 2025 07:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C47DA247DE1;
+	Fri,  8 Aug 2025 07:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0v2z2qK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022111.outbound.protection.outlook.com [40.107.75.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2554723C4FC;
-	Fri,  8 Aug 2025 07:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.111
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754638184; cv=fail; b=TAjyQRmbUTx/IZQN/zsSrjM1gzA4vDNffP5iKUVEIWspG7x7MUDN3t/HydNPT+u5BvL+AR/hJuMquDe9jW0m4nFIWd2YGviNOfkO7FfuEYp60ao5ELJvr44IdtUidERm74Vmagxqbx6PXw2+AWjgoXDQTF6E/IkfdK2HzxbHUs4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754638184; c=relaxed/simple;
-	bh=r+Qkefs47oY6jF0PEqr2QE+PsGCgJIkkgwfbMofRvbI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TQptFq6SAdG4xkuou2veWf//Cg4mVZ4WCHnLiOg7WIBXWvbeWDha9Jpcck5Yz09nB2U1k/VAba5t+BDZk9o/XCRyz8GsioHH+anr91Y1VQdLRqW8Jd7jYuEHrETqnrF1sKdORoZ8s8JSYYYY5s53pe2RjsZkk5VjmRkDun9fwuk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eker2cvojW5An/e3aYoALn3PCbpj842QLnxOGLp/hQ6HoJhEfMA+gY3qOR5rdAKqkd+WKDlJ+EOyv51yOkZ040WQ720CGhODMn5NsrIJGDDfhhc6Ez0xLSh0ZrIScpO2gIEJ22v0xhq0OENG/U2lcGIOjFw1ga8ljqZdRVcuVZR8EH/bAUeqBTh6ZLSSLl0oY4EP/VuJ2Pnu5NaswSL7vFti8BnzzvurfRklm0fjInWj03kI0G/mdf9FuVFLLRecxkasel6hjVDRNUtCiEE1EpJDEqxrYQW+RLl8VqxL5i9L7GOWG0YFTuEepO/ibKR61h0uqVPW7VurNZ8CweAX8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M+5ibsszrIdg2MynYFSRWpz2hkTGEqoGCPPfJGeKGNk=;
- b=Xhl9Kfc2uC3yxihlojRBQU1Tu50ShDZdzDu08aVryegXcn/X0lgbarcvXu02+3Bqe0B7lXu1N5a8tz54pvidCKCoR93hmKS6q0nCBCm93QWfFB++NOtPH41T0igI96x1CgRX13aarkeycVLyqFVFdeVW0s0KN4qbEJS0/0009qteegbGeQIjVYmz8MwkaApmkqYuiNZd/SsML1zwBDJ1J3dQZQgsZpFkLAYKspcjFObes+piKxroD1G2Tlzc34bS9o5iHgbRJm934aEjGsldUZ3IWRGGvPsqa1L4KaGDghDgozrJpWA7woD/eZE3mXZcsu8lGvi2YbIX/fCU5GlUAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SI2P153CA0001.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::7) by
- TYZPR06MB6914.apcprd06.prod.outlook.com (2603:1096:405:41::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9009.15; Fri, 8 Aug 2025 07:29:38 +0000
-Received: from SG1PEPF000082E8.apcprd02.prod.outlook.com
- (2603:1096:4:140:cafe::d5) by SI2P153CA0001.outlook.office365.com
- (2603:1096:4:140::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9031.9 via Frontend Transport; Fri, 8
- Aug 2025 07:29:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG1PEPF000082E8.mail.protection.outlook.com (10.167.240.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9009.8 via Frontend Transport; Fri, 8 Aug 2025 07:29:36 +0000
-Received: from hans.. (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id AAE9F4160511;
-	Fri,  8 Aug 2025 15:29:31 +0800 (CST)
-From: hans.zhang@cixtech.com
-To: bhelgaas@google.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	mani@kernel.org,
-	robh@kernel.org,
-	kwilczynski@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: mpillai@cadence.com,
-	fugang.duan@cixtech.com,
-	guoyin.chen@cixtech.com,
-	peter.chen@cixtech.com,
-	cix-kernel-upstream@cixtech.com,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <hans.zhang@cixtech.com>
-Subject: [PATCH v6 12/12] arm64: dts: cix: Enable PCIe on the Orion O6 board
-Date: Fri,  8 Aug 2025 15:29:29 +0800
-Message-ID: <20250808072929.4090694-13-hans.zhang@cixtech.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250808072929.4090694-1-hans.zhang@cixtech.com>
-References: <20250808072929.4090694-1-hans.zhang@cixtech.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079CD23B62C;
+	Fri,  8 Aug 2025 07:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754639784; cv=none; b=iSSY1D27U4P5RnUsEzzvroS7btdO4VfEZihK6VWOK+w6Meyk80DoJtS41f/U4BHp5l62+ihND2PXccBmm2R08HE4au9DHlC+fWnxC2Oxuw4QTZF9l9fQ2nVTTVa64rwKqrYLgMatBBJRsnfHEBqGoslT6MhYLXRy1GWRjwgow6s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754639784; c=relaxed/simple;
+	bh=eH0NyDPZql4wCTz3i6PHT+N8D4o8WobMpqdwAmhOD8o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rw+dSYtK0OEs71GShE757r3v2yZ44kzMC6+Uj+ErpphlA2BXNwOsxGx2wjpkLIpc2L4mBAsWf+XAOECp0c3JS4EQDJTzvp7vQO3oyXaXwS+Y25dRxe42hV5XeCbWYhK4W/3skSmyKJZBmH9dNgt8Abfr8Ohs9cuBLcMSe/MeVyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k0v2z2qK; arc=none smtp.client-ip=209.85.128.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-459e20ec1d9so17561155e9.3;
+        Fri, 08 Aug 2025 00:56:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754639781; x=1755244581; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=g47/JQMYnoJFt8X2Gyr00t3GiLF5ts7OyvZLVgHeWbk=;
+        b=k0v2z2qKxJa82vs3scsaXhdrU5tkWHRqHcBAT6dsQirZC+5a4Ufugqc0TIAkt6wgIh
+         Jo/5MUj4zgMYcQRqJXwZFT3a2HLBhcXx4Pkojiv5Pvlwv5WEMPwePI+WhfkZB+FyLH6e
+         jFCCy6oHh3gTozlZFhlBwR1/0RsKkbk/7qujOqIL91o1ACgdkbikuozZkWz1qSDwUm9v
+         1vUcohrhM58k0bfSFF9YLv6xohfU5RFBRG6daGPg09iYcvKY/0Pq9J/1q/8Gdo5UyNX6
+         EM6lN84L1wueJWsjorDO1rjNbVtUnT8OIo8Jby29gSk7ROHjxsi42FqRhTPsGayxvLpA
+         //0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754639781; x=1755244581;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g47/JQMYnoJFt8X2Gyr00t3GiLF5ts7OyvZLVgHeWbk=;
+        b=H6LTqelYESNNNXJqNCpoUv5td39S6ebuCLfEyeF8tkHhqDl2c0VMem7j84regP0JgM
+         q4OOdS50tXNQTtuEvArjVrC0OkfK7nlvQs8Gca6f3+1cWFD0tMKXiqW/wysHEZNp7cy5
+         o3R6uSbHVlXciSMNY2aOXUnj75DKS3NLwcJOxg483X6MIbViib0uFM+5Ma+MSZHXNkIb
+         w6STTeNdiKlVkSXx1TYCFTrkU3tBGhFAywdjRHaLbQxcJQBtcEuV+JqHXacI1lXP6e5o
+         1O/clMejcsWdFZU+SIpNAD1SX39fGErrYS8BWoNKWqeZUrBN2TMfCsk3OuKRiYq6TUyx
+         dUOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnxh2Hs1IXUplOUBQAOruSULNiKTYp6sgFDtqmYA232qKuZtI9b3/JYSPrWCf0D057Khg=@vger.kernel.org, AJvYcCXQ0zs7rEgeDrEeocFt37+MVLVaSqdcefOOnK8DhBnzA9/PX9DDz6UzWa4P7yez7++sOdUjRR+9RWb2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY6JFE1fFHP6krCN2EMj5lwFLqAzIT/SKokknben1DrA61+xum
+	OVGga8R13NVTGElGt+XO+uJdT9sTbM3tKzBJCezcjUNppl4PTXE0mC/6
+X-Gm-Gg: ASbGncvl4rLeabpIScizFRvEHwHXlpAuk0e4OOQ5vxfwBV8dVulutyEuzzHIwzzTnYB
+	GURUYM9kGAT7ZZnjZX4dMseJw7HMfrSZjuqAtbgbT3naCNby4KZ85piRcMbQ2wBEAT3ysy2q75s
+	33mDFI59A5IrED4TArtW5RSDSvbP/wOym/7DtvACZf68Xnt/8prxp5U7/J+tn/4/EPPB88oVTG1
+	gMViXKGKwKt59P6k98uwiPubhrvx39qOI/z29NusKNRFCpgOcMMq12OsTFFLEP7C9jSN9PNskMv
+	mQTF4rL8/9Nwi7bAHyTSkN2IwPg2XGyRorkM0J1e9NnC7qeZokHTdXVuaC5WZiBci2TsYVeX02H
+	z6bYBJK9Wg1Pvd5VBd/bPgvKd13qpNB0hP/Yd8rYmOAt8dt0Y6Y8Ss+k0C30ZkWv7zBgHhpB+6G
+	rAmT384mUv+rc2QhePN9nULM496jZL7owIpw==
+X-Google-Smtp-Source: AGHT+IEBs27Uy9PNJpjOLnJbY5yuC13GxO0mFq67O2Xv2B5Lc++fQpKDmSg1kZHFuBQVQnQHeW4qhw==
+X-Received: by 2002:a05:600c:524a:b0:456:1204:e7e6 with SMTP id 5b1f17b1804b1-459f4f517dbmr14242675e9.11.1754639781007;
+        Fri, 08 Aug 2025 00:56:21 -0700 (PDT)
+Received: from [26.26.26.1] (ec2-3-72-134-22.eu-central-1.compute.amazonaws.com. [3.72.134.22])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3bf956sm30081041f8f.24.2025.08.08.00.56.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Aug 2025 00:56:20 -0700 (PDT)
+Message-ID: <c6b5067e-8ae4-44f6-83de-f098761608ba@gmail.com>
+Date: Fri, 8 Aug 2025 15:56:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG1PEPF000082E8:EE_|TYZPR06MB6914:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: fccb934d-03f4-4614-5c0b-08ddd64d5430
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?c9HPCUoYmIMdzr/E0ep7ItL0yh6PeoVQrt2Y+kduHz0eIhNjMAh1kuNDrY/1?=
- =?us-ascii?Q?lelv0E3JU3+81BTl2I0CQK7zOQEPt7OIBQlhbECKd2XKyT/r+UNoOLs/eaQV?=
- =?us-ascii?Q?Ksd7C9j1AvicJmmnknWVo7LNjD51SVKxtpGIJou2GcDX6zvZma2nG4Zkn+ZJ?=
- =?us-ascii?Q?iow5HE0oKfyd17LSFPW6zFGdBW4j0MkQgtXA863d6FKEerAXVqU1kvy6vsnh?=
- =?us-ascii?Q?Tk5THiJKqCyQQm4koVZmX0gaK1ez4irdDFh9t8Ij7z9xEEk5X1VR8mRRhHxa?=
- =?us-ascii?Q?Zwq1FdUjXDehsNcWQ3wDFfCLoeQ07GOlKbGwHuloSDvGKSLj0mCisXudjqko?=
- =?us-ascii?Q?SOT2b+XU2tdn4AP9MY7oQBEh/A3BZLovYP0XasYpP0ThbR1kwCndbc3PNxNU?=
- =?us-ascii?Q?UyFVaZep+NB8uZmwlACEvRgffKbwabX1AwOb65KJVFMYBwnq21PJMKIxGbID?=
- =?us-ascii?Q?O/5EIDQBqnZs3Syz9DwNAZd8yUFkJVs2t8u5UcYNK6x3I8U71nBX7bpAB/Cp?=
- =?us-ascii?Q?4sP0tlhB6pFmi88u1t57UVo5KaDn1oMrruja+LpYm1KUy5M94v8/J9E45s8z?=
- =?us-ascii?Q?4XgjX1tt8AW3+mVdTLe7/2zFPFzozeiyrAjahAK9aCcofT02Pf2xoOpTCsLm?=
- =?us-ascii?Q?NaeNMPaMmBszxzEfSvrcWcboIHehEa1shtFZG37pGRcbDnD3aqC23urz60Ub?=
- =?us-ascii?Q?TjsDas1BApAgVi7xy/d5qvsdG5OsgRjX1/Z0qShwjymShfMcoaJRKMtc5cFQ?=
- =?us-ascii?Q?uGQrbSsOfTwx8zoWbXbiki+JBzDkK++RP5Kp7lYnksUQJWDox4t24VH6L2WZ?=
- =?us-ascii?Q?4bIw7Uw+7SG+eB31aLPv/fjZ+cdb98l84xFULb5g3X9XkYppwoz+eIqn8WDW?=
- =?us-ascii?Q?f+C5kQgWkYw6hS5sIFCwJ6b39WbYv9n0l+Xp8FDIz7rW4iVcpMFlcWs9lnsp?=
- =?us-ascii?Q?AHC3/Hx8Yo1kNVLWVOF2xYCrW9k2fHTlFcl20L3ylrtbR5FPDMmnh4p0O54F?=
- =?us-ascii?Q?K/vZ+gUh5EkLM53cMWM80TUsTZW4Sv+xEmLPUau8D3rdkvym2p54c0tPjYjw?=
- =?us-ascii?Q?tdilTLTlJb151xm/XQEzFPUkyLfUzU/zA3oRuOCGFrWmUxzXVZnRTlma9uEc?=
- =?us-ascii?Q?uUzY9BIKyboaB06GFgABFf25N2Shto0QaNi8vFShG+lqlplTyXfMUiIA/7BI?=
- =?us-ascii?Q?pBkHbCjrv95luFaKYYcQEIu+5/XdBspipTxoTD8R5WtOM+sjpB7oCGOXdM4J?=
- =?us-ascii?Q?wyotAYnWDWVbwcFcLatHKr2yIxvcSdnhBONxEj0NNydKeirJsp0UGfImn3Ob?=
- =?us-ascii?Q?hVdg+pUp0xciPsBLP+j5zmbKN1ZxYWLg6Bfz5jBDQOe7gDE2DoSsVnGvEqSw?=
- =?us-ascii?Q?+4V7Vq9mzAqrfCN+u6tgadXrGvzrKAP/OvsoKmAZ4EjqW9nQ1xKQCG7mFzZ/?=
- =?us-ascii?Q?beQtHkZd22maQAGbaadb6YIXNJAnsXZQJKiwX2M6OwNfUd5lXDZNPX10qIjr?=
- =?us-ascii?Q?CgRF3eyg7Ly5ZKwQ5uM+kIwUYhdEhnD69p4D?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2025 07:29:36.2956
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fccb934d-03f4-4614-5c0b-08ddd64d5430
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG1PEPF000082E8.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB6914
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/16] Fix incorrect iommu_groups with PCIe ACS
+To: Baolu Lu <baolu.lu@linux.intel.com>, Jason Gunthorpe <jgg@nvidia.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
+ Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
+ Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+ Alex Williamson <alex.williamson@redhat.com>, galshalom@nvidia.com,
+ Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
+ kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
+ tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+References: <0-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com>
+ <a692448d-48b8-4af3-bf88-2cc913a145ca@gmail.com>
+ <20250802151816.GC184255@nvidia.com>
+ <1684792a-97d6-4383-a0d2-f342e69c91ff@gmail.com>
+ <20250805123555.GI184255@nvidia.com>
+ <964c8225-d3fc-4b60-9ee5-999e08837988@gmail.com>
+ <20250805144301.GO184255@nvidia.com>
+ <6ca56de5-01df-4636-9c6a-666ccc10b7ff@gmail.com>
+ <3abaf43b-0b81-46e9-a313-0120d30541cc@linux.intel.com>
+Content-Language: en-US
+From: Ethan Zhao <etzhao1900@gmail.com>
+In-Reply-To: <3abaf43b-0b81-46e9-a313-0120d30541cc@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Hans Zhang <hans.zhang@cixtech.com>
 
-Add PCIe RC support on Orion O6 board.
 
-Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
----
-Dear Krzysztof,
+On 8/6/2025 10:41 AM, Baolu Lu wrote:
+> On 8/6/25 10:22, Ethan Zhao wrote:
+>> On 8/5/2025 10:43 PM, Jason Gunthorpe wrote:
+>>> On Tue, Aug 05, 2025 at 10:41:03PM +0800, Ethan Zhao wrote:
+>>>
+>>>>>> My understanding, iommu has no logic yet to handle the egress control
+>>>>>> vector configuration case,
+>>>>>
+>>>>> We don't support it at all. If some FW leaves it configured then it
+>>>>> will work at the PCI level but Linux has no awarness of what it is
+>>>>> doing.
+>>>>>
+>>>>> Arguably Linux should disable it on boot, but we don't..
+>>>> linux tool like setpci could access PCIe configuration raw data, so
+>>>> does to the ACS control bits. that is boring.
+>>>
+>>> Any change to ACS after boot is "not supported" - iommu groups are one
+>>> time only using boot config only. If someone wants to customize ACS
+>>> they need to use the new config_acs kernel parameter.
+>> That would leave ACS to boot time configuration only. Linux never
+>> limits tools to access(write) hardware directly even it could do that.
+>> Would it be better to have interception/configure-able policy for such
+>> hardware access behavior in kernel like what hypervisor does to MSR etc ?
+> 
+> A root user could even clear the BME or MSE bits of a device's PCIe
+> configuration space, even if the device is already bound to a driver and
+> operating normally. I don't think there's a mechanism to prevent that
+> from happening, besides permission enforcement. I believe that the same
+> applies to the ACS control.
+> 
+>>>
+>>>>>> The static groups were created according to
+>>>>>> FW DRDB tables,
+>>>>>
+>>>>> ?? iommu_groups have nothing to do with FW tables.
+>>>> Sorry, typo, ACPI drhd table.
+>>>
+>>> Same answer, AFAIK FW tables have no effect on iommu_groups 
+>> My understanding, FW tables are part of the description about device 
+>> topology and iommu-device relationship. did I really misunderstand
+>> something ?
+> 
+> The ACPI/DMAR table describes the platform's IOMMU topology, not the
+> device topology, which is described by the PCI bus. So, the firmware
+> table doesn't impact the iommu_group.
+There is kernel lockdown lsm works via kernel parameter lockdown=
+{integrity | confidentiality},
 
-Due to the fact that the GPIO, PINCTRL and other modules of our platform are
-not yet ready for upstream. Attributes that PCIe depends on, such as reset-gpios
-and pinctrl*, have not been added for the time being. It will be added gradually
-in the future.
+"If set to integrity, kernel features that allow userland to modify the 
+running kernel are disabled. If set to confidentiality, kernel features 
+that allow userland to extract confidential information from the kernel
+are also disabled. "
 
-The following are Arnd's previous comments. We can go to upsteam separately.
-https://lore.kernel.org/all/422deb4d-db29-48c1-b0c9-7915951df500@app.fastmail.com/
----
- arch/arm64/boot/dts/cix/sky1-orion-o6.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+It also works for PCIe configuration space directly access from 
+userland, but the levels of configuration granularity is coarse, can't 
+configure kernel to only prevent PCI device from accessing from userland.
 
-diff --git a/arch/arm64/boot/dts/cix/sky1-orion-o6.dts b/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
-index d74964d53c3b..be3ec4f5d11e 100644
---- a/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
-+++ b/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
-@@ -34,6 +34,26 @@ linux,cma {
- 
- };
- 
-+&pcie_x8_rc {
-+	status = "okay";
-+};
-+
-+&pcie_x4_rc {
-+	status = "okay";
-+};
-+
-+&pcie_x2_rc {
-+	status = "okay";
-+};
-+
-+&pcie_x1_0_rc {
-+	status = "okay";
-+};
-+
-+&pcie_x1_1_rc {
-+	status = "okay";
-+};
-+
- &uart2 {
- 	status = "okay";
- };
--- 
-2.49.0
+The design and implementation is structured and the granularity is fine-
+grained, it is easy to extended and add new kernel parameter to only
+lockdown PCI device configuration space access.
+
+[LOCKDOWN_PCI_ACCESS] = "direct PCI access"
+
+Thanks,
+Ethan
+
+
+
+> 
+> Thanks,
+> baolu
 
 
