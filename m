@@ -1,123 +1,127 @@
-Return-Path: <linux-pci+bounces-33635-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33636-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2F48B1E952
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 15:34:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B631B1EB11
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 17:04:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5DB63A059F1
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 13:34:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A515F16DE0F
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 15:01:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D0C027A900;
-	Fri,  8 Aug 2025 13:34:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1EA8281538;
+	Fri,  8 Aug 2025 14:59:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="fqlhB4DQ"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="WbnCVx14"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from server-vie001.gnuweeb.org (server-vie001.gnuweeb.org [89.58.62.56])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96469219311;
-	Fri,  8 Aug 2025 13:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.62.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DC827E7FD;
+	Fri,  8 Aug 2025 14:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754660079; cv=none; b=njexczeu3U4HYIHMVftMSF+6981f2TutHv64bXmKmA5OpID/+WJ14URfQIwS9RCZZqVhTOAmbcgX49o6BnmQ0ok7Piy9xvcSxvrbEiE+2Fhq1xPxIYMirKTtIBVpgL3wACATiPsYqyAbGhlpdR0DcI1SIxreRaW5cgLLOtsFQg0=
+	t=1754665154; cv=none; b=oXlhsRdrdOpOvx3EuJoeejIxvh4R+CEZ2dL87OY+utaq9+0zOCGYBmqdsrJPhZmt70GKR2a5JY7ObSpJ8s155ysV5wE6e3kooEwASGBOcN3B36NXRG7bHG5F+qLI4tB2YBnWyCWbNV6iQ7soSKAhTz70ZN1Cs69ScCMtBGltGts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754660079; c=relaxed/simple;
-	bh=FhRZ3giE7cy9srIz3kiAgRkrIILznjoxxss1HdK3v2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BPb7FVOS4D7xMG6zB/mm3hNwdxu1XMATb1M42SFoPkNeuhIPn8Pvq1JgtuePIbTtAbVfdGdmZIIUweiRqs1bCceSCzK2p9YWL5kC6yh+FoT+5+XzE1dp9KQ/2k3gb4VPaVxYnjzeqNrTKEdBIAYkh1VufLtECyyI4rq/HwZTxWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=fqlhB4DQ; arc=none smtp.client-ip=89.58.62.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
-	s=new2025; t=1754660075;
-	bh=FhRZ3giE7cy9srIz3kiAgRkrIILznjoxxss1HdK3v2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To:Message-ID:Date:From:Reply-To:Subject:To:
-	 Cc:In-Reply-To:References:Resent-Date:Resent-From:Resent-To:
-	 Resent-Cc:User-Agent:Content-Type:Content-Transfer-Encoding;
-	b=fqlhB4DQ9ySHEypAF9w9jIvWZWkaZfz1clpotBjvy0HVe8bHomf22VlMjYSxrCyeq
-	 DCr+8jXYy4u3b/ERNfSCHfRhmcXDsjDODd0G9Fk3nR9j2dQRd+y6s6ei4rfiyHc/zs
-	 490lwuut75rirnn8rhz4osA0T7Eyc7R5/FJCP9oIni074gmWkE+2Bu7g0Uu+rBRu83
-	 2DsZJumgsqAUQV+FIlakQaWmvJ4cey+AbHYLlYENfM96HirZmpgMRXi5rplOE7Axyb
-	 3yUb85lNIZ2bxmDkZr+oeOcEjKDxEbPpWRo3kivThNvnfTg5JRzMtu1pP4GxruYvTd
-	 Sl6FNxO9V5XVQ==
-Received: from linux.gnuweeb.org (unknown [182.253.126.185])
-	by server-vie001.gnuweeb.org (Postfix) with ESMTPSA id AB8BE3127DAC;
-	Fri,  8 Aug 2025 13:34:32 +0000 (UTC)
-X-Gw-Bpl: wU/cy49Bu1yAPm0bW2qiliFUIEVf+EkEatAboK6pk2H2LSy2bfWlPAiP3YIeQ5aElNkQEhTV9Q==
-Date: Fri, 8 Aug 2025 20:34:29 +0700
-From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux PCI Mailing List <linux-pci@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof Wilczynski <kwilczynski@kernel.org>,
-	Armando Budianto <sprite@gnuweeb.org>,
-	Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
-	gwml@vger.gnuweeb.org
-Subject: Re: [GIT PULL v2] PCI changes for v6.17
-Message-ID: <aJX85RPzsW/TmNeS@linux.gnuweeb.org>
-References: <20250801142254.GA3496192@bhelgaas>
- <175408424863.4088284.13236765550439476565.pr-tracker-bot@kernel.org>
- <ed53280ed15d1140700b96cca2734bf327ee92539e5eb68e80f5bbbf0f01@linux.gnuweeb.org>
- <aJQi3RN6WX6ZiQ5i@wunner.de>
- <aJQxdBxcx6pdz8VO@linux.gnuweeb.org>
- <20250807050350.FyWHwsig@linutronix.de>
- <aJQ19UvTviTNbNk4@linux.gnuweeb.org>
- <aJXYhfc/6DfcqfqF@linux.gnuweeb.org>
- <aJXdMPW4uQm6Tmyx@linux.gnuweeb.org>
+	s=arc-20240116; t=1754665154; c=relaxed/simple;
+	bh=JS5l0JTvxjfWhfOl7mWhGheL2sKK5NX/r1b9XGlPSYQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=S3rkz4XzuXljVCnb00OOF+VBlLuKPg1n7lLPtekzISZefGbDh/2qPnhZQyUwxOTJrwS2FkgRWJQTUDpyUcUwYtMkFaimqxLIA32+ucClQXOpN1DEznPXI1PBxe9h80NZY1HMZCJgj3oaaZYQQv6d9DHMKjq5udBOm+1HGHAQu+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=WbnCVx14; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 578DVG8N014777;
+	Fri, 8 Aug 2025 16:58:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	NKA5zhqFYGJHApG3LHZ1wsad9XAvKI/FIK3QKmiMCpI=; b=WbnCVx14jjeuJHN6
+	GJIn+Fy7uBInALd0yOmv8xY1N92s1MboPmYDOVGOfKlyJ1dR9TdIdZfZZ4z7u230
+	hOZgX2ZobRFpBIOy2vaW04NBtp7pze1/toMUiVE1RtWulxbwt1s/1hMJbrSvEsKM
+	mv8O0GZCz25MOCQgGka/uT3VEShhKKugQsfHOZnGaYcy6pyoWjDb679PqL8ypGYf
+	RLUCtOMzNsz/XeURNPf+0IqflqC3ZDk4Ifwp9S9Vi0zr9ltkc3dOgbgt3l/YYUuW
+	ArazUWAES+HMyrjVVRVsnQhgUvAFXTm2W7oQM/aPTere3xJqK2sqyKGuQm7MwPo8
+	C4I3tQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 48cq00pdk0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 08 Aug 2025 16:58:44 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A8D2340046;
+	Fri,  8 Aug 2025 16:57:20 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D7F79727648;
+	Fri,  8 Aug 2025 16:55:57 +0200 (CEST)
+Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 8 Aug
+ 2025 16:55:54 +0200
+Message-ID: <e7cd764d-bc6d-4e39-aa03-0eee8e30d3e5@foss.st.com>
+Date: Fri, 8 Aug 2025 16:55:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aJXdMPW4uQm6Tmyx@linux.gnuweeb.org>
-X-Machine-Hash: hUx9VaHkTWcLO7S8CQCslj6OzqBx2hfLChRz45nPESx5VSB/xuJQVOKOB1zSXE3yc9ntP27bV1M1
+User-Agent: Mozilla Thunderbird
+From: Christian Bruel <christian.bruel@foss.st.com>
+Subject: Re: [PATCH v12 2/9] PCI: stm32: Add PCIe host support for STM32MP25
+To: Bjorn Helgaas <helgaas@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>
+CC: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@foss.st.com>, <p.zabel@pengutronix.de>,
+        <johan+linaro@kernel.org>, <cassel@kernel.org>,
+        <shradha.t@samsung.com>, <thippeswamy.havalige@amd.com>,
+        <quic_schintav@quicinc.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250807180951.GA56737@bhelgaas>
+Content-Language: en-US
+In-Reply-To: <20250807180951.GA56737@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-08_04,2025-08-06_01,2025-03-28_01
 
-On Fri, Aug 08, 2025 at 06:19:18PM +0700, Ammar Faizi wrote:
-> It'll be a bit tricky to bisect this one. Because if I step back to
-> a bad commit post:
+
+
+On 8/7/25 20:09, Bjorn Helgaas wrote:
+> [+to Linus for pinctrl usage question below]
 > 
->    d7d8ab87e3e ("PCI: vmd: Switch to msi_create_parent_irq_domain()")
+> On Tue, Jun 10, 2025 at 11:07:07AM +0200, Christian Bruel wrote:
+>> Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
+>> controller based on the DesignWare PCIe core.
+>>
+
+>> +
+>> +	return pinctrl_pm_select_sleep_state(dev);
 > 
-> I won't be able to boot to reach this new splat :/
+> Isn't there some setup required before we can use
+> pinctrl_select_state(), pinctrl_pm_select_sleep_state(),
+> pinctrl_pm_select_default_state(), etc?
 > 
-> I guess I need to apply the fix dirty for each bisection step. But I'll
-> also need to make sure the current step has the d7d8ab87e3e commit
-> anchestor before applying.
+> I expected something like devm_pinctrl_get() in the .probe() path, but
+> I don't see anything.  I don't know how pinctrl works, but I don't see
+> how dev->pins gets set up.
 
-Unfortunately, it turns out I don't have time to bisect it at the moment.
-But if you have something for me to test, I'll give it a try.
+Linus knows better, but the dev->pins states are attached to the dev 
+struct before probe by the pinctrl driver
 
-I can continue bisecting it later, maybe after rc1 is out if the fix is
-still pending.
+/**
+  * pinctrl_bind_pins() - called by the device core before probe
+  * @dev: the device that is just about to probe
+  */
+int pinctrl_bind_pins(struct device *dev)
 
-For now, I revert the PCI merge entirely in my local tree and it
-resolves the issue.
-
-  0bd0a41a5120 ("Merge tag 'pci-v6.17-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pc")
-
-  git revert -m 1 -s 0bd0a41a5120;
-
-This is an interesting case for me because it is my first time reverting
-a merge commit :-)
-
-I'll probably need to revert that revert-commit later when the PCI fix
-actually arrives in mainline before syncing.
-
-Happy weekend!
-
--- 
-Ammar Faizi
-
+Christian
 
