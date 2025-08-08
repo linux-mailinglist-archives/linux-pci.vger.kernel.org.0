@@ -1,93 +1,90 @@
-Return-Path: <linux-pci+bounces-33632-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33633-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0484B1E7EE
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 14:04:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF044B1E81D
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 14:14:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0FBA47A2717
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 12:02:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B6BE1C22877
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 12:14:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16E9026658F;
-	Fri,  8 Aug 2025 12:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 772FE27602B;
+	Fri,  8 Aug 2025 12:13:46 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378B01DED4A;
-	Fri,  8 Aug 2025 12:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B981A26D4FC;
+	Fri,  8 Aug 2025 12:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754654648; cv=none; b=GzF0XC+Uc8/NokgtjOYChXlOBXcvMa6DRuw1MEDrIAReq5sDGbV78znZVPUsJGwLZFOtYTwUfj3pG/A5ENMtOqnTe/QOnJS5lGMjEy+taBlSf0TVP4EcAkETWBFxxndv8l5nZ6XykelEb99bjyOy48ZVMWylRLpgmJFQH6jAXuQ=
+	t=1754655226; cv=none; b=t5QbslXQ+n9HngXyPraqIUXqC61Bm9y69/9ZP3oY1Zis7J9lkPebrp1c6zu53J7vLB3Qpo9BtEcEmo+AppkJLnQxEo74txn36Fvf7Rklg9W4H7SoY2GN4zoqa8sM188ldJJxL4oate+0ExmBx0FHKvDmTHcMTArblNBB2pcVka4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754654648; c=relaxed/simple;
-	bh=7I705A2rjEbkZh1s5xJhalzN1XVTGWCWQjPtJ+3xe5k=;
+	s=arc-20240116; t=1754655226; c=relaxed/simple;
+	bh=QK8g7ngnJYW5nvW8US1c1dEvOFH4rtqw0CUFFjx8TMk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cGRAG41m0Kqgmvgr2eJ7rkZ2CVB7lyjv+QIvJ+5H93ixZ5LS7ulo+RscBdZbrz/gQzeWfw6w5dMM8jAAZa8fvSoewUpuwjjUJ7wQpR/eWVM6GACEy3qTw4ugmANRDo6tL0slgSuBQA9taYk39flq+49iatmcEnz2F8zhMIM0SUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.44
+	 To:Cc:Content-Type; b=pnV7s+5n2caO4p9XjEdbPT1UCJP0XD8cIWd8AtJhcE1mHUw+mxEDe+F6bOGLGzCT5Diw8IE4Y7JbNrt1ItEMriOgyK7zleW/geF7FloHyaT2lfWu4QYZFGbki7cHxzh1XhQ+99XSB7zYVNfRVJj+VvR99E0XNzwkio7zUNtaAAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4fc10abc179so1401243137.3;
-        Fri, 08 Aug 2025 05:04:06 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-5067f6b30adso297138137.3;
+        Fri, 08 Aug 2025 05:13:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754654646; x=1755259446;
+        d=1e100.net; s=20230601; t=1754655223; x=1755260023;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CItPX3Nziwspy+DUPcMmH1OYCckJOPZ1VMD2rIXFTYo=;
-        b=AFfIZFWlP+xnwoMyKkPgAvhAjIiSJFZ9H8f9qmQClgHmXWozeM3y0mUtI4S6QA2fA7
-         2RhpkamUuHlEGDB9VeoQ6wIWrpDc8KqSXC3c7Du5OkQF0SzkVdwTSBW+wpwrv1kgxYFP
-         Gkt97+u9mwWV0hB08LMbPAaFw90dViHW6pBSgvZg47ykt5zwFtutfSXDUScs5vvRyB+k
-         vD23DBOquBVX1PBrEZupe5Hc2Ng/as2gbCXTo1vmrqxePp4U8W1SS7T8rKP33ufcVMaR
-         xpuqAqoALRIOcX1v+eCMvbtqklkzK+31EVM/wE2bXNAa0Tc/Isu0Q9dTBzDEOTUjKrsO
-         5SfA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrPb/4IBr39pW2C9fRsbpqiong0NtIakoBoc6x/DiSToXgswvWME6I1hhc28EBXn6bnt8MGu0Fu6/tYdVE6ZmunH0=@vger.kernel.org, AJvYcCWXvs6b2t31m26Tz/AG4Caf5c2u5uY7TVHpq7NmchV+OJmEGHCycPci0Y8JJ+rER9FvMmJb4KRQc1g4@vger.kernel.org, AJvYcCXU0cu4DjCQR3glNa1fO3ICWVAM/+LiEN7VxE8Rnxqhhp8/cG32H+XFl/pwz9tDG5Z16EZiHvHxJdh2@vger.kernel.org, AJvYcCXeQYKPP0eYQcnjg13Wahw6hNX+6BSriwoQl3KUrC3HnTb5hvmi5psQ1S2C2gLWOdvuIIBszVmpFx/F@vger.kernel.org, AJvYcCXm9b6ZMxhiyJLbaiScuaflyjbZunWAY2sE7WGZayYvrXo6Zl/MQp5MMcm8gxgwr3HoL2v2FZ5t3TpFz8O9@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJU7P16l2kV408/glsM43y4LdJY23gryOsIGu7+oIhC/k/yih8
-	7pp54a3crK0l5c7obfoX+fEnGKI2SEZSTZjIEu351EMP/SUU0vj33kjRF1WzVtHg
-X-Gm-Gg: ASbGncuK8/f4aYXIhy2Qk+mph3Zrvqr1rg9YSkhztzrA1z4Q4uEoX6fMFCP9f+vdual
-	1iLOUwS8HvVetrUkgtgDLEDzWbTHNSb5I9RED3wCTvSvY3Zsjk5NLc+4ZGowx7Bo8+IxS/+SYWc
-	KAvGZyIWpfJWR6pDzrsys6qVShuegCRel/Wq6xxXp8WQjB+LMzjiqV2XonetLe3kIfhBnI5ZGUN
-	maLtdtOqCDPwTqpCP/gDajmZYyUQeStN3CBYCs0cbAUFCaTqUZvAxfZnyeHwnpU8poJZpUxRFy5
-	per9A+YHvjgsBGomsAIt375RmXERN9XGZt8yTTVNz9T6q3PcVSTffbUjM8cy6XRGHBjn1FNPw8P
-	J+ThSjm3lO+96znRMJN2d+6D/kbkySeFYf66AtYnuo9PiSyYsi3wuNTJQx1eG
-X-Google-Smtp-Source: AGHT+IHgiuZeffo98aCoUXOZpexzc1b5rd8j4hiUiFmZzm9YSRS/saZh49KNvVQiqKng0ugLNuEYTQ==
-X-Received: by 2002:a05:6102:508a:b0:4e5:ade7:eb7c with SMTP id ada2fe7eead31-5060d4a71d5mr1024625137.12.1754654645670;
-        Fri, 08 Aug 2025 05:04:05 -0700 (PDT)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-506290ef371sm314407137.5.2025.08.08.05.04.05
+        bh=TeUQG1VkSQkZJejGzniJ85mMFqiHeVxBeYS5KK1IWx0=;
+        b=KxlVn1XFdinYKQV9qkj4wed6AoxKSpmM0QXj/spYtvDCwUntPvMo3Jw1/NXnI8WheB
+         5+LfGhiUR7Lb9GzC0N/fsYA4c3/qJJdKnjK4LAmE9J/bG/I2uJCDNbJYheKNzdd2wjZg
+         UcAx+iwbIz8/pb+mqgmpIuMOkNPy+OV2X4PY+VUx7J2xQ+kbIIgQUYgAqT31NECmLZ64
+         fG80oEYMKRXpEG6B7041oF6KxUcIfC9w0mWZ6iZC9YEvp8JIgHUuK5VwC09YcLpgAXS4
+         5D9LI2DDsC/kNhU2LTmLpe8roJi2LRb58uC+eZhdzm2l/p5XtISThqvWlBWlXXy99ARW
+         MMmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIWVBCgcAq+GL1TYla4pZkGr52FCuMM51VAZWAzeDkJjuT6JdLC8IIDEC4HA2vhfQdsrrCuVh5ocyA8fCj@vger.kernel.org, AJvYcCVUPmwvJSkhY/uwvbfPT+FwmLQf0Cq6X/9mutjPffO0MK+IW1LZGe9Hff7A4sC0TuPbkZR9pMOz9Ehi@vger.kernel.org, AJvYcCWKlrS90P+VFj7z30CsEVbHX4GpgHK9FfcvU7LaldiJRyjj1GXU+kQXtSGWDc1ipDtQQzuUFHX0npVb@vger.kernel.org, AJvYcCX7xfOSWgRq0gER2JAqYrWPAzmG5Dv+9Aswm+ff0fHtU9uO5ewxqkVdAoE/RoTJuxnUP472+a5OL2y68kZiakSzWEk=@vger.kernel.org, AJvYcCXkT7GyZcKK9dcFB8psKNqC3G3jf6rGl2auRHcGVfnE93w5IWbi4G854YDaRUYLvCy5cjyyqqO3bhYB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxr2Yq8RjbQ7WP9wDkFhvQXAXx/vl4LRjZ7bXkvSqSGQk1t1kpP
+	Bqu3XQljXmljRL+zKZQi7/UYYn034ltw4s8U7+v/hCzJ4pQCL0L558OcUR8mCDjl
+X-Gm-Gg: ASbGncvHry4vOSbbdFmJ3yaWn6No1Zd7aFwfyzVPTmTwm2rHFTXN/YuMIB3I84O96zK
+	YxVfmEoYkcBbq7/N9Qc7GfYgprrkb98jFzHapgkCw4RcNfyP/6ovR/8Q5UgYpqPq+r+kEVQuSMT
+	KeEDxNTVdJ1TYsA1jTREtkErZOxXLrEmJnv9fQWpOVfJ1ZIGWoH+ZBIRwjzvUjXNaOD1FZWoL00
+	njSgtVpn7IYbaOT+hSv28MZlCrcGxrYD7RN6jFKu7qAo3ZZDYR25Xr+f1+1Ejk8AX4cGgMRWVkL
+	rVRCVJhYnsTgsOXLrVepKcHeMs9aaDWyYZm2Vkr6CeokG4XROiQ70Ljr4KvrM/9EasLCDM1QXCR
+	gQWb9mmmxKyomhHoBEz3hdbuVgIOEzzhmwENoi0hD3R5/dtkVF4WIU2/M9Aw6
+X-Google-Smtp-Source: AGHT+IGjc+ZOrJOoedtuQfQwzPzmSx42eD9dHecav+yqcyZozhI97VmJsl78M391IXv9wxa288VN2g==
+X-Received: by 2002:a05:6102:6ce:b0:4ec:c513:f3d with SMTP id ada2fe7eead31-506104d859emr918395137.25.1754655223432;
+        Fri, 08 Aug 2025 05:13:43 -0700 (PDT)
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-88e028f6a8dsm694635241.14.2025.08.08.05.13.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Aug 2025 05:04:05 -0700 (PDT)
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-50307b67169so1707076137.1;
-        Fri, 08 Aug 2025 05:04:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUJOmr/bSpucsYDmPtIj5BMgnv1BYj40K4jIYCpArWRauF/fxDu6gRsx51gxHlWqXCedJkgEkNyv3/LUrI3@vger.kernel.org, AJvYcCUdsmSwV5UurRyJjuooCCl1mPDvRiahxqNffUusOlFZ1BhLlxTYWzclQupE4HSyddhbDnZu5f0olRFE@vger.kernel.org, AJvYcCV+T/I0BUNntHWtEhgeH5GheZ7wumr4uTN4LyD9XxWletLTQskMtGyL2K77WVY1wvyeMKSCEp0JxeaF@vger.kernel.org, AJvYcCWOJ5zaR+1BusaAuih1DL9xdLZfJpgszeIood06B6XwYG3Dns4TSFXoAowfA+8jzme9aUjbDfl8Y6DMV1Irn+4c0vg=@vger.kernel.org, AJvYcCX9We9JB1eznnnf+E+CVAHs3Ef9ih/2KwG4rlrFBmvZfnG6mkN7U5R9rUthvNOyrzrMwQHnj2bZRx8O@vger.kernel.org
-X-Received: by 2002:a05:6102:c89:b0:4fb:df6d:61e9 with SMTP id
- ada2fe7eead31-5060cc8f424mr967777137.1.1754654644981; Fri, 08 Aug 2025
- 05:04:04 -0700 (PDT)
+        Fri, 08 Aug 2025 05:13:41 -0700 (PDT)
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-5067f6b30adso297089137.3;
+        Fri, 08 Aug 2025 05:13:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV/gdk/wIhzkWsgxU8TeYLl+ZkHmdTd0FoZ2kNmelA5fkLFixOVrN9lR4d6CwY/Dqz/EweTlmlXfQ2i@vger.kernel.org, AJvYcCV1T/NoI8ECLkmmnzrdYPiSRhUsqOD68/MRXpZWB1UayLwpE8/hfSVoyStdMvowJBRRMd6b4wqR/ra4@vger.kernel.org, AJvYcCV8CAOfLCXggQV2azyi6ViU7iUcTZS2gzaCrMbajpkrJkSy2Knh0qwouSUPupwH7BiZTeqBAq9f4kvF@vger.kernel.org, AJvYcCWEIKyMVpfS8tLtXeovUazwxSnTUrH7lqtBA3NwXNQLd/PvzuN1WDtPHwgFk5IzC0+IIgxxe/Ob5+KM7HTd@vger.kernel.org, AJvYcCWN0oKzPTBU+Pqh5SAJRWg076biAbxABPNf2bQ0FbyYH1Qh2ESJFe5I85WqUuVRI61y3eczNt/NBMyNkuB9/eGK0z4=@vger.kernel.org
+X-Received: by 2002:a05:6102:5cc9:b0:4fb:142:1ff5 with SMTP id
+ ada2fe7eead31-506104d8812mr1032620137.26.1754655220395; Fri, 08 Aug 2025
+ 05:13:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250709132449.GA2193594@bhelgaas> <2e0d815a-774a-4e31-92f1-71e0772294c7@kernel.org>
- <0addc570-a3c6-4d7e-9cbd-06eedd2447bb@tuxon.dev>
-In-Reply-To: <0addc570-a3c6-4d7e-9cbd-06eedd2447bb@tuxon.dev>
+References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com> <20250704161410.3931884-7-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250704161410.3931884-7-claudiu.beznea.uj@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 8 Aug 2025 14:03:53 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVS7VRBj3Neh7P1FDfaG7uPfpny4tFsDTk6tsmiYu3S+g@mail.gmail.com>
-X-Gm-Features: Ac12FXxvhlSsjlxIyp9wLVrjxx1brBJSnSBO2bel6v02fDMzhy9BrWS7nxQ7HtU
-Message-ID: <CAMuHMdVS7VRBj3Neh7P1FDfaG7uPfpny4tFsDTk6tsmiYu3S+g@mail.gmail.com>
-Subject: Re: [PATCH v3 4/9] dt-bindings: PCI: renesas,r9a08g045s33-pcie: Add
- documentation for the PCIe IP on Renesas RZ/G3S
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com, 
-	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	geert+renesas@glider.be, magnus.damm@gmail.com, catalin.marinas@arm.com, 
-	will@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
-	p.zabel@pengutronix.de, lizhi.hou@amd.com, linux-pci@vger.kernel.org, 
+Date: Fri, 8 Aug 2025 14:13:29 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUGOJHFaCUd7qjtGmRhwU0EPXpVVBuP31JgbCEADNF3ew@mail.gmail.com>
+X-Gm-Features: Ac12FXzM8iJwkzA-RFb9JbCrkQWoOo3N-HyMUTOszuGFrs4cxQKU_50xLXL2bB0
+Message-ID: <CAMuHMdUGOJHFaCUd7qjtGmRhwU0EPXpVVBuP31JgbCEADNF3ew@mail.gmail.com>
+Subject: Re: [PATCH v3 6/9] arm64: dts: renesas: r9a08g045s33: Add PCIe node
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org, 
+	mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de, 
+	lizhi.hou@amd.com, linux-pci@vger.kernel.org, 
 	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
 	linux-clk@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
@@ -96,84 +93,38 @@ Content-Type: text/plain; charset="UTF-8"
 
 Hi Claudiu,
 
-On Fri, 8 Aug 2025 at 13:44, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
-> On 09.07.2025 16:43, Krzysztof Kozlowski wrote:
-> > On 09/07/2025 15:24, Bjorn Helgaas wrote:
-> >> On Wed, Jul 09, 2025 at 08:47:05AM +0200, Krzysztof Kozlowski wrote:
-> >>> On 08/07/2025 18:34, Bjorn Helgaas wrote:
-> >>>> On Fri, Jul 04, 2025 at 07:14:04PM +0300, Claudiu wrote:
-> >>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >>>>>
-> >>>>> The PCIe IP available on the Renesas RZ/G3S complies with the PCI Express
-> >>>>> Base Specification 4.0. It is designed for root complex applications and
-> >>>>> features a single-lane (x1) implementation. Add documentation for it.
-> >>>>
-> >>>>> +++ b/Documentation/devicetree/bindings/pci/renesas,r9a08g045s33-pcie.yaml
-> >>>>
-> >>>> The "r9a08g045s33" in the filename seems oddly specific.  Does it
-> >>>> leave room for descendants of the current chip that will inevitably be
-> >>>> added in the future?  Most bindings are named with a fairly generic
-> >>>> family name, e.g., "fsl,layerscape", "hisilicon,kirin", "intel,
-> >>>> keembay", "samsung,exynos", etc.
-> >>>>
-> >>>
-> >>> Bindings should be named by compatible, not in a generic way, so name is
-> >>> correct. It can always grow with new compatibles even if name matches
-> >>> old one, it's not a problem.
-> >>
-> >> Ok, thanks!
-> >>
-> >> I guess that means I'm casting shade on the "r9a08g045s33" compatible.
-> >> I suppose it means something to somebody.
-> >
-> > Well, I hope it matches the name of the SoC, from which the compatible
-> > should come :)
+On Fri, 4 Jul 2025 at 18:14, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> The r9a08g45s33 is the part number of a device from the RZ/G3S group. This
-> particular device from RZ/G3S group supports PCIe.
->
-> In the RZ/G3S group there are more SoC variants (each with its own part
-> number). Not all support PCIe. To differentiate b/w PCIe and non-PCIe
-> variants it has been chosen to use the full part number here.
->
-> The available RZ/G3S part numbers are listed in Table 1.1 Product Lineup at [1]
->
-> (The following steps should be followed to access the manual:
-> 1/ Click the "User Manual" button
-> 2/ Click "Confirm"; this will start downloading an archive
-> 3/ Open the downloaded archive
-> 4/ Navigate to r01uh1014ej*-rzg3s-users-manual-hardware -> Deliverables
-> 5/ Open the file r01uh1014ej*-rzg3s.pdf)
->
-> We use a similar compatible scheme in other drivers.
->
-> Geert, I may be wrong. Please correct me otherwise, as I don't have the
-> full picture of this.
->
-> Maybe, the other variant would be to use "renesas,rzg3s-pcie", or maybe a
-> more generic one "renesas,rz-pcie" (though I think this last one is too
-> generic).
+> The RZ/G3S SoC has a variant (R9A08G045S33) which support PCIe. Add the
 
-Both would be too generic for the myriad of RZ devices.
+supports
 
-AFAIU, the R9A08G045Sxx variants are really the same SoC, with some
-hardware modules disabled/nonfunctional.  This is typically handled by:
-  1. Using the base part number (r9a08g045) in the compatible value,
-  2. Having the device node in the base .dtsi,
-  3. Deleting nodes in the variant-specific .dtsi file when needed
-     (see e.g. arch/arm64/boot/dts/renesas/r9a09g047{,e[35]7}.dtsi)
+> PCIe node.
+>
+> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Hence as R9A08G045S13, R9A08G045S17, R9A08G045S33, and
-R9A08G045S37 all have PCIe, I think it is more appropriate
-to use "renesas,r9a08g045-pcie" as the compatible value than
-"renesas,r9a08g045s33-pcie".
+Thanks for your patch!
 
-> Geert, please let us know if you have some suggestions here with regards to
-> the compatible. The IP on RZ/G3S is compatible also with the one in RZ/V2H,
-> RZ/G3E.
+> --- a/arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
+> @@ -12,3 +12,63 @@
+>  / {
+>         compatible = "renesas,r9a08g045s33", "renesas,r9a08g045";
+>  };
+> +
+> +&soc {
+> +       pcie: pcie@11e40000 {
+> +               compatible = "renesas,r9a08g045s33-pcie";
 
-RZ/V2H and RZ/G3E can use "renesas,r9a09g057-pcie" resp.
-"renesas,r9a09g047-pcie", with "renesas,r9a08g045-pcie" as a fallback.
+In light of the discussion on "[PATCH v3 4/9] dt-bindings: PCI:
+renesas,r9a08g045s33-pcie: Add documentation for the PCIe IP on Renesas
+RZ/G3S", this should be "renesas,r9a08g045-pcie", and the device node
+should be added to the base r9a08g045.dtsi instead (else everything
+has to be duplicated in r9a08g045s{13,17,37}.dtsi).  When support for
+the variants without PCIe is added, the pcie node should be deleted
+using /delete-node/ in r9a08g045s{11,15,31,35}.dtsi.
 
 Gr{oetje,eeting}s,
 
