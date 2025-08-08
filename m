@@ -1,61 +1,59 @@
-Return-Path: <linux-pci+bounces-33641-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33642-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34EEFB1ED30
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 18:45:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33FFBB1EDA8
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 19:14:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D63F5726746
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 16:45:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5617C585993
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Aug 2025 17:14:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 183F2281509;
-	Fri,  8 Aug 2025 16:45:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A3F7286D6F;
+	Fri,  8 Aug 2025 17:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SvHuX7FE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YR9VK3pB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D382C285CB6;
-	Fri,  8 Aug 2025 16:45:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70CB423AB8A;
+	Fri,  8 Aug 2025 17:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754671530; cv=none; b=a6MsZS/ytRRzNlugei16WrcFnEwDOzSEazh/oLi9TPsaQmE/2e+M+K6kXUPHsjxQM6L+XTKUEgEuXyVtTMzeUDcTn5L/YTwultPqwyAgIC1nJAtUJz8INnQ/BylgWjGy0N4N69QkTgWeis5/GmMmahytQ92c7hXl4Bnft55M4pk=
+	t=1754673242; cv=none; b=R+6nTBpTUiycnhGPpgSb0Pjmj13fqXyPfZExkmojogj1DLYnUhaHN1Wn5hoDldnhbDVU2jlsIDoJ7VEB/n6x1ye+6Cmj8Sve9q4gVVE1KgKOuzCiULE2bC/UqpuNbW6rUOuy62IEWF/U/U6+ImfnrKA2YUpkhMXdJbUFTY2YvsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754671530; c=relaxed/simple;
-	bh=//umrJE1AbcTB9AycRys08E8KmLxAmzbvhRupedv5Dc=;
+	s=arc-20240116; t=1754673242; c=relaxed/simple;
+	bh=rQmwMDzWQz54H7vq9OiRnnWfOYUPtrw0kcRO5kw4zMY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Hj6m6Hv93lo+vlOnGIOPRwxBt5Kc5j2pfzVKbZrPNc98EfhEGu14DEgJ6To2ixQ8wK9HkSMPwB/f0QXhPe2AI5DMNZkiCkiRaA7wwGB875yy65T7j8njJry5oRBHWLRBz/kid/XZ+WUgUvK+PLL76ZbAMilNaY+r770fXhgrfq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SvHuX7FE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35B18C4CEED;
-	Fri,  8 Aug 2025 16:45:29 +0000 (UTC)
+	 Content-Disposition; b=KRyicUQrAjx7Pg6AFk/rpDnxoZESysiVSeYZoaw7V98uFwuVT+/0tFYskNs+sj0V2QNQ/ahADoXEVZ4uHbr0tvA4TcajSoat61Q6fCTjvb+aZPbEi4QK+uP/G4afEYZfKqhTUZiKibnBEycl7eBzanqXXwt0yk76ptCNw7VBi0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YR9VK3pB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D28C4CEED;
+	Fri,  8 Aug 2025 17:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754671529;
-	bh=//umrJE1AbcTB9AycRys08E8KmLxAmzbvhRupedv5Dc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=SvHuX7FEsNr/3GDzQCcVIGtDMzLvyEzFXv2qcJIyKcwE3G78CSt/D7BpyK8W2wlnq
-	 JcneXt1bupQaxlOiNKQqGSnYPJN3gHF2rsyY9huClbmsgeaaWtB6ztvE8lig3YSkom
-	 typw/etKQmR4W3aFAdlT3O1MtBlp3Ep1wqgigkNBBW9L/SL+AkcJKVVpBD//k/2gSL
-	 VjeTSEi189qln5PGC1fpGpcbTwSuFr32t8jznTpd45Yw4mTx9q/Wd/Cns+n+M12cC2
-	 Se0DxDoj28CwAkOJDftgEKv/PP5dBs1tSEC+Fc0no1sAx+NaR6LTEctwBcOto5dXzv
-	 ABu30wpzFBPDA==
-Date: Fri, 8 Aug 2025 11:45:27 -0500
+	s=k20201202; t=1754673241;
+	bh=rQmwMDzWQz54H7vq9OiRnnWfOYUPtrw0kcRO5kw4zMY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=YR9VK3pBsVfgBT3KUONo8ZIarEnM8VKSDuNmeLlb4weXWZHcbDCiiNWjMZq3UKCGx
+	 oQohy63p3T6kFqzb7uncT2W6i75bo1a8J8v7Fl76qkreRqdoHBP2g7f5Rg91b5cEzz
+	 +yZ5DvdjlyyG945gWVkObiG9eCzBzNHEqrfDYTy/CDnOTmve1SJEx5gelv9foXSq4f
+	 OdFCPtjVOxJA0dDCbwD+7orIsDjupGcJoyOHd/pW3k+4JyzmiasW8CFFnL0/2hCeR0
+	 x0IFSZR/SmuFAxKX1dwH970JH+2XLKD2yrhLQgccLvwAZseKSKK4oZ/1f8KyA8iozT
+	 mu2RVXjOGiluQ==
+Date: Fri, 8 Aug 2025 12:14:00 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	p.zabel@pengutronix.de, johan+linaro@kernel.org, cassel@kernel.org,
-	shradha.t@samsung.com, thippeswamy.havalige@amd.com,
-	quic_schintav@quicinc.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 2/9] PCI: stm32: Add PCIe host support for STM32MP25
-Message-ID: <20250808164527.GA92564@bhelgaas>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Nam Cao <namcao@linutronix.de>, Kenneth Crudup <kenny@panix.com>,
+	Ammar Faizi <ammarfaizi2@gnuweeb.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jinjie Ruan <ruanjinjie@huawei.com>
+Subject: [GIT PULL] PCI fixes for v6.17
+Message-ID: <20250808171400.GA95044@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,53 +62,28 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e7cd764d-bc6d-4e39-aa03-0eee8e30d3e5@foss.st.com>
 
-On Fri, Aug 08, 2025 at 04:55:52PM +0200, Christian Bruel wrote:
-> On 8/7/25 20:09, Bjorn Helgaas wrote:
-> > [+to Linus for pinctrl usage question below]
-> > 
-> > On Tue, Jun 10, 2025 at 11:07:07AM +0200, Christian Bruel wrote:
-> > > Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
-> > > controller based on the DesignWare PCIe core.
+The following changes since commit 0bd0a41a5120f78685a132834865b0a631b9026a:
 
-> > > +	return pinctrl_pm_select_sleep_state(dev);
-> > 
-> > Isn't there some setup required before we can use
-> > pinctrl_select_state(), pinctrl_pm_select_sleep_state(),
-> > pinctrl_pm_select_default_state(), etc?
-> > 
-> > I expected something like devm_pinctrl_get() in the .probe() path, but
-> > I don't see anything.  I don't know how pinctrl works, but I don't see
-> > how dev->pins gets set up.
-> 
-> Linus knows better, but the dev->pins states are attached to the dev struct
-> before probe by the pinctrl driver
-> 
-> /**
->  * pinctrl_bind_pins() - called by the device core before probe
->  * @dev: the device that is just about to probe
->  */
-> int pinctrl_bind_pins(struct device *dev)
+  Merge tag 'pci-v6.17-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci (2025-08-01 13:59:07 -0700)
 
-Thanks for the pointer.  Might be worthy of a mention in
-Documentation/driver-api/pin-control.rst.  Maybe pinctrl/consumer.h
-could even have a bread crumb to that effect since drivers use all
-those interfaces that rely in the implicit initialization done before
-their .probe().
+are available in the Git repository at:
 
-pin-control.rst mentions pinctrl_get_select_default() being called
-just before the driver probe, but that's now unused and it looks like
-pinctrl_bind_pins() does something similar:
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.17-fixes-1
 
-  really_probe
-    pinctrl_bind_pins
-      dev->pins = devm_kzalloc()
-      devm_pinctrl_get
-      pinctrl_lookup_state(PINCTRL_STATE_DEFAULT)
-      pinctrl_lookup_state(PINCTRL_STATE_INIT)
-      pinctrl_select_state(init)      # if present, else default
-    call_driver_probe
+for you to fetch changes up to d5c647b08ee02cb7fa50d89414ed0f5dc7c1ca0e:
 
-Bjorn
+  PCI: vmd: Fix wrong kfree() in vmd_msi_free() (2025-08-07 11:30:12 -0500)
+
+----------------------------------------------------------------
+
+- Fix vmd MSI interrupt domain restructure that caused crash early in boot
+  (Nam Cao)
+
+----------------------------------------------------------------
+Nam Cao (1):
+      PCI: vmd: Fix wrong kfree() in vmd_msi_free()
+
+ drivers/pci/controller/vmd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
