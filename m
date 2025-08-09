@@ -1,141 +1,114 @@
-Return-Path: <linux-pci+bounces-33670-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33671-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 699B9B1F539
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 17:32:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB799B1F555
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 18:03:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AFBFE3AE17A
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 15:32:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B105118C4C7E
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 16:04:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D53E276058;
-	Sat,  9 Aug 2025 15:32:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8772E2367CE;
+	Sat,  9 Aug 2025 16:03:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t5tx4/DC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yHa0EYuk"
+	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="h+V6mZ+S"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from server-vie001.gnuweeb.org (server-vie001.gnuweeb.org [89.58.62.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C00D176ADB;
-	Sat,  9 Aug 2025 15:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0994F84A35;
+	Sat,  9 Aug 2025 16:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.62.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754753540; cv=none; b=rBm0bUW4tfQC69gnB1W7bao3BptfpmsGABcdhFCFJmXpZXpgZL/RS6wnDiIEtxD6Zgqj0p6f8Vn7IjIZze/mJ79GtbbzAgyj3MzUPTNQOc0BjqcNifnKjwM6+X7NZ7e5hVbL0rkt64+8wI3dwTPZyn3gO7KZHD72ZazfIwf3vx8=
+	t=1754755425; cv=none; b=l6cdrbKpMgn+8giEdwi/Bxf5QSLxrLko8N8wyO4S34+y50p86M68Vvti/UlBekQe9F4oYsQEt+Nk7B+leWqr6tnBxCA2iIJazPSdt5gjUNxsnxECn+p9ULQorN/SxdLS818eIEElDyrs+k00fQoeDsmSidJrRhVhpgBalWKQOQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754753540; c=relaxed/simple;
-	bh=wsbKp4Rul3bBUSC3LqRvUkLGDNGpyyc3CDONbZFn5hM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iswFz/ficz9+XclPbr3H6tHoE9fYPj+uuP9xyzskDdoj55yGxpG9mck8nkfj+3B56rG/eHR1AKR0CDok6eSNxZA+EYERKZJ4RSVwWUm4ZOxi215V/QXnnGKb/WMJ4GXjKhkPXkz1Z7nU7cjHwIE2WxRHBkYVYXnV5T8PoQ/ax/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t5tx4/DC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yHa0EYuk; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754753537;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BZbRABX71KNiM1YZsVSV5L7I+pnm05kQRVz0yjcb9Jc=;
-	b=t5tx4/DCOsGMhdOC+GYxsOc8pGy6NjeC2wnDn/BjYlLNYJevf7hwH90b8GvHvDvxjPxXwz
-	XA3Z7OfwDWFGqCyhHckVT+n4Y3NC4Zdg4xmfdgJ+LkCmOQFYzSb+Z9dAHrq48wiaoLbLyZ
-	UFFrKog4Q/lP8ubEjAdqWD35OfBfixgDIekWy2EzyN5Z67Vb6LCIzvyIBTLxTfub7bCFi2
-	DhbDlvIBVxN88ozGe0iYXOQ9ot0JvxUSl0FfYlumHTGV2TmfuANGcqQeXmBXEIMXvw+5Qz
-	IMYeCE1iiXnFFVIi++/ts/EZDgIoPaPHbfKRK4YEFnKet7f53dHBe5ofdNFXrQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754753537;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BZbRABX71KNiM1YZsVSV5L7I+pnm05kQRVz0yjcb9Jc=;
-	b=yHa0EYukbFVUAlOsG4vONfTw5FGbtm4aPI4DvjK9nOeHCG5IDBGQ5Nzvf9ZLLp/TQ9zr1g
-	p4gZpfNcZ7HutKCg==
-To: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+	s=arc-20240116; t=1754755425; c=relaxed/simple;
+	bh=EypI9G8Vr/nQW0k5/vP9i30wLp/EuxAkr8epbMXEq+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CxofH9g4hCOrtk+j+FIBjVnYYkhmo7cUCtsdvuPpc6AOCNIoLcfXd//2qVF/CnGBqzQNCByTO/pkEylK+Xa1W5rzwmDthGHBrr9ShyXgONWcC1rNFJT7canAqy6dhH7WjnL2Y8f+fYdXIo8Y0aca70T7EZaHXkjhMX9Ayp3Mr7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=h+V6mZ+S; arc=none smtp.client-ip=89.58.62.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
+	s=new2025; t=1754755422;
+	bh=EypI9G8Vr/nQW0k5/vP9i30wLp/EuxAkr8epbMXEq+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To:Message-ID:Date:From:Reply-To:Subject:To:
+	 Cc:In-Reply-To:References:Resent-Date:Resent-From:Resent-To:
+	 Resent-Cc:User-Agent:Content-Type:Content-Transfer-Encoding;
+	b=h+V6mZ+SgWAby2j9+p+g30xLkGtTcRMllYCkbr9s7YwmujbweFCOznJxvtij8NUrb
+	 1+8cpsF+rMvuZEWDRHrKG1ufVKLgKCkIqFOICDZhc07OFrFecwvhUK3DDh4US7u0FO
+	 hvh7PlGtAEH8XM7bgzP8T/D8k0NuI98wyc2QBE4QEdvMjhQa1IHwXbWoleomnkRJu2
+	 oSmmOuqxf3pa32No444zkW3Nmz2lfasTrrNS0VhcKV1YkOyNdjSPNF9/V5y4lftc8C
+	 1JEBRUwTxEEy2aOfTTWvUtGe55Ys1xUjhXFWoOLJu4xHXr8aXTCzBnAty7Dc4jVdh7
+	 OE1zQ+E+vB2VQ==
+Received: from linux.gnuweeb.org (unknown [182.253.126.185])
+	by server-vie001.gnuweeb.org (Postfix) with ESMTPSA id B4D083127D72;
+	Sat,  9 Aug 2025 16:03:38 +0000 (UTC)
+X-Gw-Bpl: wU/cy49Bu1yAPm0bW2qiliFUIEVf+EkEatAboK6pk2H2LSy2bfWlPAiP3YIeQ5aElNkQEhTV9Q==
+Date: Sat, 9 Aug 2025 23:03:35 +0700
+From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+To: Nam Cao <namcao@linutronix.de>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Lukas Wunner <lukas@wunner.de>,
- Bjorn Helgaas <helgaas@kernel.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, Linux PCI Mailing List
- <linux-pci@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, Lorenzo
- Pieralisi <lorenzo.pieralisi@arm.com>, Manivannan Sadhasivam
- <mani@kernel.org>, Krzysztof Wilczynski <kwilczynski@kernel.org>, Armando
- Budianto <sprite@gnuweeb.org>, Alviro Iskandar Setiawan
- <alviro.iskandar@gnuweeb.org>, gwml@vger.gnuweeb.org, namcaov@gmail.com
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux PCI Mailing List <linux-pci@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof Wilczynski <kwilczynski@kernel.org>,
+	Armando Budianto <sprite@gnuweeb.org>,
+	Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
+	gwml@vger.gnuweeb.org, namcaov@gmail.com
 Subject: Re: [GIT PULL v2] PCI changes for v6.17
-In-Reply-To: <aJdmGwFU6b9zh1BO@linux.gnuweeb.org>
-References: <aJQxdBxcx6pdz8VO@linux.gnuweeb.org>
- <20250807050350.FyWHwsig@linutronix.de>
- <aJQ19UvTviTNbNk4@linux.gnuweeb.org> <aJXYhfc/6DfcqfqF@linux.gnuweeb.org>
- <aJXdMPW4uQm6Tmyx@linux.gnuweeb.org> <87ectlr8l4.fsf@yellow.woof>
+Message-ID: <aJdxVy1i3wGTvU3b@linux.gnuweeb.org>
+References: <aJQ19UvTviTNbNk4@linux.gnuweeb.org>
+ <aJXYhfc/6DfcqfqF@linux.gnuweeb.org>
+ <aJXdMPW4uQm6Tmyx@linux.gnuweeb.org>
+ <87ectlr8l4.fsf@yellow.woof>
  <aJZ/rum9bZqZInr+@biznet-home.integral.gnuweeb.org>
  <20250809043409.wLu40x1p@linutronix.de>
  <aJdNB8zITrkZ3n6r@linux.gnuweeb.org>
  <20250809144927.eUbR3MXg@linutronix.de>
  <aJdmGwFU6b9zh1BO@linux.gnuweeb.org>
-Date: Sat, 09 Aug 2025 17:32:16 +0200
-Message-ID: <87wm7ch5of.fsf@yellow.woof>
+ <87wm7ch5of.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87wm7ch5of.fsf@yellow.woof>
+X-Gw-Outgoing-Server-Hash: 01afd303c8b96d0c1d5e80aa96a4ee40ec69888f786fa24107c0862c0644af79
 
-Ammar Faizi <ammarfaizi2@gnuweeb.org> writes:
-> Here's the result after reverting those two commits and applied the diff.
->
->   https://gist.github.com/ammarfaizi2/03c7a9c0fec2a11f206931f1b7790709#file-dmesg_pci_debug_002-txt
->
-> Let's see if this one is enough for you to diagnose the problem.
+On Sat, Aug 09, 2025 at 05:32:16PM +0200, Nam Cao wrote:
+> So unlike what VMD doc says, it actually can have non-MSI-X children devices!
 
-Thanks, I think the problem is clear now. 
+If that's the conclusion, then Intel VMD doc also needs fixing :/
 
-The diff I sent you has a mistake, it should be
-    if (pci_msix_vec_count(pci_dev) < 0)
-not
-    if (!pci_msix_vec_count(pci_dev))
+> Please discard the reverts and the diff I sent you, and try the diff
+> below. I believe your machine will work now.
 
-So the log is wrong, it printed "MSI-X, looking good...". It should have
-printed the other one.
+Yes, I can confirm it's now clean. Just to verify both sides, here is
+the last result:
 
-But no need to re-run it, the backtrace is enough.
+  https://gist.github.com/ammarfaizi2/72578d2b4cc385fbdb5faee69013d530
 
-    MSI-X, looking good... <-------- wrong log
-    CPU: 3 UID: 0 PID: 183 Comm: systemd-udevd Not tainted 6.16.0-afh2-dbg-2025-08-09-gb622ab28bcac #13 PREEMPT(full)  28137b57996795286f6544f071ec852674a057d4
-    Hardware name: HP HP Laptop 14s-dq2xxx/87FD, BIOS F.21 03/21/2022
-    Call Trace:
-     <TASK>
-    dump_stack_lvl
-    vmd_msi_init
-    msi_domain_alloc
-    irq_domain_alloc_irqs_locked
-    __irq_domain_alloc_irqs
-    __msi_domain_alloc_irqs
-    msi_domain_alloc_irqs_all_locked
-    __msi_capability_init
-    __pci_enable_msi_range
-    pci_alloc_irq_vectors_affinity
-    pcie_portdrv_probe
+If that one fix is final, then:
 
-So unlike what VMD doc says, it actually can have non-MSI-X children devices!
+Tested-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
 
-Please discard the reverts and the diff I sent you, and try the diff
-below. I believe your machine will work now.
+Thanks for the debugging work.
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index b679c7f28f51..1bd5bf4a6097 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -306,9 +306,6 @@ static bool vmd_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
- 				  struct irq_domain *real_parent,
- 				  struct msi_domain_info *info)
- {
--	if (WARN_ON_ONCE(info->bus_token != DOMAIN_BUS_PCI_DEVICE_MSIX))
--		return false;
--
- 	if (!msi_lib_init_dev_msi_info(dev, domain, real_parent, info))
- 		return false;
- 
+It's probably too late to get the fix in mainline before rc1. But if it
+can go upstream sooner, that would be great.
+
+-- 
+Ammar Faizi
+
 
