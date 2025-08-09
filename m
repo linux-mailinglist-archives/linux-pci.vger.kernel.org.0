@@ -1,128 +1,111 @@
-Return-Path: <linux-pci+bounces-33668-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33669-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70991B1F523
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 17:15:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00C7FB1F526
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 17:18:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AEF0627555
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 15:15:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CB6417DAA2
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 15:18:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E5C5347C7;
-	Sat,  9 Aug 2025 15:15:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D25927602C;
+	Sat,  9 Aug 2025 15:18:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="UDgyqImB"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UuuGHDDU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fquZQ+de"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from server-vie001.gnuweeb.org (server-vie001.gnuweeb.org [89.58.62.56])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7B92E36EE;
-	Sat,  9 Aug 2025 15:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.62.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC331E5B60;
+	Sat,  9 Aug 2025 15:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754752549; cv=none; b=kVGKDYe8M3Va/xq64xB0jyoMRCqqp+gkaujfl6YjsEcY6tssJZIvVlNpTgSQolPwatNq0mWa2K6Jroi+mKObUus82Nc+Ud70ZOG+pcMOB6IPD7n9NJqbznx9XS2zWw1x0+1vYFeYC7ZboB7CuHVKicyRG3ZLEzhY3RjW6H3pk7Q=
+	t=1754752698; cv=none; b=BZluG0NDrL8IJAMIpr9AXinIN6sc3L0sGqxbN+qOG/6i1SedFNE8CK+x1zvRT64HoHUrjv7CYSJwSvc8p0wGkOoLQbJBG3O+XHP9Mx8TNIiTja3EfIb4FKECw/6jwOvg/1PdJrQbYgYALpjpju/bk1ptVwvRD1qnkOix5C7/YPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754752549; c=relaxed/simple;
-	bh=vGiupVnReMGz6Yp6fLQUpMFIklLD9xYX9UW2XQVrtWc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BsCp4XGfGDHUlNHPeJjhYfpBoFULBRLYKgfLi7JSHJ0MTY0d59a/o42+BYnJiCeM+Ycs7GDd/cocXKUjRmPlE51dTrjY2O7PpqhEKHmk/zwLcL9iDxatGRB4xE7q6hsIOOWlLgHXWvkbxOiGEZ3u6p9HkmHOGmfFeQvQHBpHGMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=UDgyqImB; arc=none smtp.client-ip=89.58.62.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
-	s=new2025; t=1754752545;
-	bh=vGiupVnReMGz6Yp6fLQUpMFIklLD9xYX9UW2XQVrtWc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To:Message-ID:Date:From:Reply-To:Subject:To:
-	 Cc:In-Reply-To:References:Resent-Date:Resent-From:Resent-To:
-	 Resent-Cc:User-Agent:Content-Type:Content-Transfer-Encoding;
-	b=UDgyqImBve9n2jkA4BUdYHQcdcqiZhYQX/RKMmNgmQXWwHyk6SsAC6p343L4qQP+m
-	 o/5vB1bmODOphwKJaBWUEes8u0Y8zS490HEealLqaSdDKZEB77beLiS7MH81HchbqE
-	 15i3+9Xl4iurOeILr7UJLleDSjuf0nbnBtCyjNsR7Hp39Bj+778ejUF5wT+z7ixktO
-	 jTo7fuZehr7w03Kwlp0Eh/9MO7baeeYBHqalF2t/1gSlMr8JXeOGawbO/FWmxJt4TI
-	 di9MBElFsB0IUTFBdJPR7dICmHlD3b2XKwjobexObKAzGNta7SyadcJTTRceimYsLq
-	 JhV/MAkXkDjUg==
-Received: from linux.gnuweeb.org (unknown [182.253.126.185])
-	by server-vie001.gnuweeb.org (Postfix) with ESMTPSA id 9DAE03127CC4;
-	Sat,  9 Aug 2025 15:15:42 +0000 (UTC)
-X-Gw-Bpl: wU/cy49Bu1yAPm0bW2qiliFUIEVf+EkEatAboK6pk2H2LSy2bfWlPAiP3YIeQ5aElNkQEhTV9Q==
-Date: Sat, 9 Aug 2025 22:15:39 +0700
-From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Lukas Wunner <lukas@wunner.de>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux PCI Mailing List <linux-pci@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof Wilczynski <kwilczynski@kernel.org>,
-	Armando Budianto <sprite@gnuweeb.org>,
-	Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
-	gwml@vger.gnuweeb.org, namcaov@gmail.com
-Subject: Re: [GIT PULL v2] PCI changes for v6.17
-Message-ID: <aJdmGwFU6b9zh1BO@linux.gnuweeb.org>
-References: <aJQxdBxcx6pdz8VO@linux.gnuweeb.org>
- <20250807050350.FyWHwsig@linutronix.de>
- <aJQ19UvTviTNbNk4@linux.gnuweeb.org>
- <aJXYhfc/6DfcqfqF@linux.gnuweeb.org>
- <aJXdMPW4uQm6Tmyx@linux.gnuweeb.org>
- <87ectlr8l4.fsf@yellow.woof>
- <aJZ/rum9bZqZInr+@biznet-home.integral.gnuweeb.org>
- <20250809043409.wLu40x1p@linutronix.de>
- <aJdNB8zITrkZ3n6r@linux.gnuweeb.org>
- <20250809144927.eUbR3MXg@linutronix.de>
+	s=arc-20240116; t=1754752698; c=relaxed/simple;
+	bh=Hls6mqOYnTN35cBxHbtYbYlN5GFh2eK6R9TKiwNYzsI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Xg8SBg10gB3Ql45kAXtvWw2WKih1WG8Wo6T/NxB/xbXCjmAefkAmqmSyu5wmgjkd9SmKRauERsiGhrt6SLrSgZ0bkjloKtCyhqFlC4UdliwceKZjJH1+djvg3bjYFOrxP3dKGMYa8czkmklHVotzrxgAJZG+uUBo98f4nhnvf1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UuuGHDDU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fquZQ+de; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1754752694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z3w31G8jhpfzZgVyoqxrvuWFTWkEVhs2+el9KBVYIH8=;
+	b=UuuGHDDUT4NcTCSJiR8ORMtb1KE1sy5vljRpc/gz+eIXk5VDNMj+m72ORjSQU3QA+FYCFG
+	P8E1e6C4NOWl2ti7h+AYxjuSegh5IVKK3gQflZEI4WTLCzD5md4MRk8j6xz4GpAYyxHDjR
+	lUZb9lCaS0SnIRT5SoxRORqZo7ITCxqckoL/EUETlOxO4eAYvWBW11GmYYvP5zH8cluxTy
+	GVUQ4tcU5uTyez+Bpjp/hTnRAdy3bIiIIPk8UIZapop3zd50Fb9IWS2CPrN3EmAg4uNnZb
+	aQnv+gwF17ICjdIO18FhC0pfhxtebzyUyXzneZWdac5JnzeHEaG8PgcvEQG43w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1754752694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z3w31G8jhpfzZgVyoqxrvuWFTWkEVhs2+el9KBVYIH8=;
+	b=fquZQ+dePKLF6LA3d9Sm6XRH2vheCckefoM7QL8KmlvYByjBnmB2SccAVf5Wik4/KvpLT8
+	3uUPFZkObmhZuwBQ==
+To: Claudiu <claudiu.beznea@tuxon.dev>, marek.vasut+renesas@gmail.com,
+ yoshihiro.shimoda.uh@renesas.com, lpieralisi@kernel.org,
+ kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
+ bhelgaas@google.com, geert+renesas@glider.be, magnus.damm@gmail.com,
+ tglx@linutronix.de
+Cc: claudiu.beznea@tuxon.dev, linux-pci@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu
+ Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH] PCI: rcar-host: Use proper IRQ domain
+In-Reply-To: <20250809144447.3939284-1-claudiu.beznea.uj@bp.renesas.com>
+References: <20250809144447.3939284-1-claudiu.beznea.uj@bp.renesas.com>
+Date: Sat, 09 Aug 2025 17:18:01 +0200
+Message-ID: <87zfc8h6c6.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250809144927.eUbR3MXg@linutronix.de>
-X-Gw-Outgoing-Server-Hash: 01afd303c8b96d0c1d5e80aa96a4ee40ec69888f786fa24107c0862c0644af79
+Content-Type: text/plain
 
-On Sat, Aug 09, 2025 at 04:49:27PM +0200, Nam Cao wrote:
-> Thanks! Here's the problem:
-> 
->     [    1.037223] pcieport 10000:e0:1d.0: __pci_enable_msix_range:840 err=hwsize
-> 
-> The PCIe port driver enables interrupt, trying MSI-X first. However, the
-> device does not support MSI-X, so it tries MSI instead, which triggers
-> the WARN_ON() in VMD driver.
-> 
-> What's strange is that, the VMD doc says:
-> 
->     "Intel VMD only supports MSIx Interrupts from child devices and
->     therefore the BIOS must enable PCIe Hot Plug and MSIx interrups"
-> 
-> Is it lying to us?
-> 
-> Can you	please try:
-> 
->     Revert d5c647b08ee0 ("PCI: vmd: Fix wrong kfree() in vmd_msi_free()")
->     Revert d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()")
-> 
-> So that the driver is back to the original state before I touched it.
-> 
-> And apply the diff below. This will tell us if my commit breaks the driver
-> somehow, or VMD has been allowing MSI all this time.
+Claudiu <claudiu.beznea@tuxon.dev> writes:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Starting with commit dd26c1a23fd5 ("PCI: rcar-host: Switch to
+> msi_create_parent_irq_domain()"), the MSI parent IRQ domain is NULL because
+> the object of type struct irq_domain_info passed to:
+>
+> msi_create_parent_irq_domain() ->
+>   irq_domain_instantiate()() ->
+>     __irq_domain_instantiate()
+>
+> has no reference to the parent IRQ domain. Using msi->domain->parent as an
+> argument for generic_handle_domain_irq() leads to a "Unable to handle
+> kernel NULL pointer dereference at virtual address" error.
 
-Here's the result after reverting those two commits and applied the diff.
+Right. Before that commit, msi->domain is the domain of the children PCI
+devices, and msi->domain->parent is the domain of this device.
 
-  https://gist.github.com/ammarfaizi2/03c7a9c0fec2a11f206931f1b7790709#file-dmesg_pci_debug_002-txt
+That commit changed msi->domain to be the domain of this
+device. msi->domain->parent does not exist anymore.
 
-Let's see if this one is enough for you to diagnose the problem.
+drivers/pci/controller/pcie-xilinx.c has the same issue, let me send a
+patch..
 
-Note that the previous printk() diff has to be discarded to avoid
-conflict in the reverts. If that's still needed, send me a fixed
-diff after clean reverts.
+> This error was identified while switching the upcoming RZ/G3S PCIe host
+> controller driver to msi_create_parent_irq_domain() (which was using a
+> similar pattern to handle MSIs (see link section)), but it was not tested
+> on hardware using the pcie-rcar-host controller driver due to lack of
+> hardware.
+>
+> Link: https://lore.kernel.org/all/20250704161410.3931884-6-claudiu.beznea.uj@bp.renesas.com/
+> Fixes: dd26c1a23fd5 ("PCI: rcar-host: Switch to msi_create_parent_irq_domain()")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
--- 
-Ammar Faizi
-
+Reviewed-by: Nam Cao <namcao@linutronix.de>
 
