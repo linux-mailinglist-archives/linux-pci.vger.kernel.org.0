@@ -1,59 +1,56 @@
-Return-Path: <linux-pci+bounces-33667-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33668-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92DEBB1F506
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 16:49:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70991B1F523
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 17:15:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A83B4563517
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 14:49:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AEF0627555
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 15:15:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7A36242D89;
-	Sat,  9 Aug 2025 14:49:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E5C5347C7;
+	Sat,  9 Aug 2025 15:15:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FUwnYD6r";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P8TkN1b8"
+	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="UDgyqImB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from server-vie001.gnuweeb.org (server-vie001.gnuweeb.org [89.58.62.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE08277800;
-	Sat,  9 Aug 2025 14:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7B92E36EE;
+	Sat,  9 Aug 2025 15:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.62.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754750981; cv=none; b=SEXFjqgAyCFXLRKUykI9zYBSVmTgnEOamzCArmIOT96Kto6By9p7/s16TqRfOoiVZWAMuTraYKOlzOy5S7GBFHylqR72bQwzYOdheGqtYCPyo9pjtIxwKvBRgRgg0KCcKKkkeB1htFRL6/EirCEIgEqXfPO54e7Y0mK3jHQb2fs=
+	t=1754752549; cv=none; b=kVGKDYe8M3Va/xq64xB0jyoMRCqqp+gkaujfl6YjsEcY6tssJZIvVlNpTgSQolPwatNq0mWa2K6Jroi+mKObUus82Nc+Ud70ZOG+pcMOB6IPD7n9NJqbznx9XS2zWw1x0+1vYFeYC7ZboB7CuHVKicyRG3ZLEzhY3RjW6H3pk7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754750981; c=relaxed/simple;
-	bh=TtOwJT5nuwHH5WlHRA9lm2C8VHkY2rOXzKeawNZvPDM=;
+	s=arc-20240116; t=1754752549; c=relaxed/simple;
+	bh=vGiupVnReMGz6Yp6fLQUpMFIklLD9xYX9UW2XQVrtWc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XuHp+EQIev2hUmDo4EffsRK3J08dJJUS9dxC5iRFlIZZpXdHt2Zr7LPhMYQ/2rsrKUMiS7+BRU02wQtWYrUudCqayDF9mYFE5cioMBor/GpHJNy7q8r4+1XL/xDQorZqDWoKEA73HgJwcAsZY3VCCrGdB8lg/mT+MQLcaN4eZ0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FUwnYD6r; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P8TkN1b8; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Date: Sat, 9 Aug 2025 16:49:27 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1754750972;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9/SCsrsZbryoDL2fTGngfjXiS+0Qzb6EX+QYe9kV8Ng=;
-	b=FUwnYD6rm625dYFWDPYPdbsTfo3jdHsmxKdG1n+KyloVxWN6vv2eIwj5igmqZXbKxrhG21
-	Y8ivUpHxTPpJf7kSuZ+1eqSmXfp9+SiQzAcubAbZD0DyNOX+IV422EY+CewRq6STRHMkX2
-	iQqy9z2LPa/tljNQ97uqP99MQ6wD+SXzj0sfJ/NSfgbBmS1eXkjU0j8GQX13B8DFSVAqkI
-	HB1geKXcDkoxzJhr4wyZbK75YoPzNz415/gCbJDI38PEamiEY98sugOSzoSe3opCpUowrQ
-	kHtBXJ5aTQHxFuG36CY9ci/tAFPNh5KVw58Uy3JIb5JXgcwEi2q5Kvao9tjwlQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1754750972;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9/SCsrsZbryoDL2fTGngfjXiS+0Qzb6EX+QYe9kV8Ng=;
-	b=P8TkN1b8CTZXvYbrb+oykxs9jubL/fwdv/IK+nzONYhtNNzmV35ykn/gOy3QB73i3wzHrx
-	6GI5cbIiAIwY+XCw==
-From: Nam Cao <namcao@linutronix.de>
-To: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=BsCp4XGfGDHUlNHPeJjhYfpBoFULBRLYKgfLi7JSHJ0MTY0d59a/o42+BYnJiCeM+Ycs7GDd/cocXKUjRmPlE51dTrjY2O7PpqhEKHmk/zwLcL9iDxatGRB4xE7q6hsIOOWlLgHXWvkbxOiGEZ3u6p9HkmHOGmfFeQvQHBpHGMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=UDgyqImB; arc=none smtp.client-ip=89.58.62.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
+	s=new2025; t=1754752545;
+	bh=vGiupVnReMGz6Yp6fLQUpMFIklLD9xYX9UW2XQVrtWc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To:Message-ID:Date:From:Reply-To:Subject:To:
+	 Cc:In-Reply-To:References:Resent-Date:Resent-From:Resent-To:
+	 Resent-Cc:User-Agent:Content-Type:Content-Transfer-Encoding;
+	b=UDgyqImBve9n2jkA4BUdYHQcdcqiZhYQX/RKMmNgmQXWwHyk6SsAC6p343L4qQP+m
+	 o/5vB1bmODOphwKJaBWUEes8u0Y8zS490HEealLqaSdDKZEB77beLiS7MH81HchbqE
+	 15i3+9Xl4iurOeILr7UJLleDSjuf0nbnBtCyjNsR7Hp39Bj+778ejUF5wT+z7ixktO
+	 jTo7fuZehr7w03Kwlp0Eh/9MO7baeeYBHqalF2t/1gSlMr8JXeOGawbO/FWmxJt4TI
+	 di9MBElFsB0IUTFBdJPR7dICmHlD3b2XKwjobexObKAzGNta7SyadcJTTRceimYsLq
+	 JhV/MAkXkDjUg==
+Received: from linux.gnuweeb.org (unknown [182.253.126.185])
+	by server-vie001.gnuweeb.org (Postfix) with ESMTPSA id 9DAE03127CC4;
+	Sat,  9 Aug 2025 15:15:42 +0000 (UTC)
+X-Gw-Bpl: wU/cy49Bu1yAPm0bW2qiliFUIEVf+EkEatAboK6pk2H2LSy2bfWlPAiP3YIeQ5aElNkQEhTV9Q==
+Date: Sat, 9 Aug 2025 22:15:39 +0700
+From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+To: Nam Cao <namcao@linutronix.de>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Lukas Wunner <lukas@wunner.de>,
 	Bjorn Helgaas <helgaas@kernel.org>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
@@ -67,9 +64,8 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Lukas Wunner <lukas@wunner.de>,
 	Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
 	gwml@vger.gnuweeb.org, namcaov@gmail.com
 Subject: Re: [GIT PULL v2] PCI changes for v6.17
-Message-ID: <20250809144927.eUbR3MXg@linutronix.de>
-References: <aJQi3RN6WX6ZiQ5i@wunner.de>
- <aJQxdBxcx6pdz8VO@linux.gnuweeb.org>
+Message-ID: <aJdmGwFU6b9zh1BO@linux.gnuweeb.org>
+References: <aJQxdBxcx6pdz8VO@linux.gnuweeb.org>
  <20250807050350.FyWHwsig@linutronix.de>
  <aJQ19UvTviTNbNk4@linux.gnuweeb.org>
  <aJXYhfc/6DfcqfqF@linux.gnuweeb.org>
@@ -78,6 +74,7 @@ References: <aJQi3RN6WX6ZiQ5i@wunner.de>
  <aJZ/rum9bZqZInr+@biznet-home.integral.gnuweeb.org>
  <20250809043409.wLu40x1p@linutronix.de>
  <aJdNB8zITrkZ3n6r@linux.gnuweeb.org>
+ <20250809144927.eUbR3MXg@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,70 +83,46 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aJdNB8zITrkZ3n6r@linux.gnuweeb.org>
+In-Reply-To: <20250809144927.eUbR3MXg@linutronix.de>
+X-Gw-Outgoing-Server-Hash: 01afd303c8b96d0c1d5e80aa96a4ee40ec69888f786fa24107c0862c0644af79
 
-On Sat, Aug 09, 2025 at 08:28:39PM +0700, Ammar Faizi wrote:
-> On Sat, Aug 09, 2025 at 06:34:29AM +0200, Nam Cao wrote:
-> > On Sat, Aug 09, 2025 at 07:52:30AM +0900, Ammar Faizi wrote:
-> > > I can do that. Send me a git diff. I'll test it and back with the dmesg
-> > > output.
-> > 
-> > That would be very helpful, thanks!
-> > 
-> > Please bear with me, this may take a few iterations.
-> > 
-> > Let's first try the below.
+On Sat, Aug 09, 2025 at 04:49:27PM +0200, Nam Cao wrote:
+> Thanks! Here's the problem:
 > 
-> I just got home from a family outing. A bit slow response.
+>     [    1.037223] pcieport 10000:e0:1d.0: __pci_enable_msix_range:840 err=hwsize
 > 
-> Here's the result:
+> The PCIe port driver enables interrupt, trying MSI-X first. However, the
+> device does not support MSI-X, so it tries MSI instead, which triggers
+> the WARN_ON() in VMD driver.
 > 
->   https://gist.github.com/ammarfaizi2/ef5f98123ed3868f8d64ed41662edd63#file-dmesg_pci_debug_001-txt-L853
+> What's strange is that, the VMD doc says:
+> 
+>     "Intel VMD only supports MSIx Interrupts from child devices and
+>     therefore the BIOS must enable PCIe Hot Plug and MSIx interrups"
+> 
+> Is it lying to us?
+> 
+> Can you	please try:
+> 
+>     Revert d5c647b08ee0 ("PCI: vmd: Fix wrong kfree() in vmd_msi_free()")
+>     Revert d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()")
+> 
+> So that the driver is back to the original state before I touched it.
+> 
+> And apply the diff below. This will tell us if my commit breaks the driver
+> somehow, or VMD has been allowing MSI all this time.
 
-Thanks! Here's the problem:
+Here's the result after reverting those two commits and applied the diff.
 
-    [    1.037223] pcieport 10000:e0:1d.0: __pci_enable_msix_range:840 err=hwsize
+  https://gist.github.com/ammarfaizi2/03c7a9c0fec2a11f206931f1b7790709#file-dmesg_pci_debug_002-txt
 
-The PCIe port driver enables interrupt, trying MSI-X first. However, the
-device does not support MSI-X, so it tries MSI instead, which triggers
-the WARN_ON() in VMD driver.
+Let's see if this one is enough for you to diagnose the problem.
 
-What's strange is that, the VMD doc says:
+Note that the previous printk() diff has to be discarded to avoid
+conflict in the reverts. If that's still needed, send me a fixed
+diff after clean reverts.
 
-    "Intel VMD only supports MSIx Interrupts from child devices and
-    therefore the BIOS must enable PCIe Hot Plug and MSIx interrups"
+-- 
+Ammar Faizi
 
-Is it lying to us?
-
-Can you	please try:
-
-    Revert d5c647b08ee0 ("PCI: vmd: Fix wrong kfree() in vmd_msi_free()")
-    Revert d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()")
-
-So that the driver is back to the original state before I touched it.
-
-And apply the diff below. This will tell us if my commit breaks the driver
-somehow, or VMD has been allowing MSI all this time.
-
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index d9b893bf4e45..e99d8cefb78d 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -255,9 +255,15 @@ static int vmd_msi_init(struct irq_domain *domain, struct msi_domain_info *info,
- 			msi_alloc_info_t *arg)
- {
- 	struct msi_desc *desc = arg->desc;
-+	struct pci_dev *pci_dev = msi_desc_to_pci_dev(desc);
- 	struct vmd_dev *vmd = vmd_from_bus(msi_desc_to_pci_dev(desc)->bus);
- 	struct vmd_irq *vmdirq = kzalloc(sizeof(*vmdirq), GFP_KERNEL);
- 
-+	if (!pci_msix_vec_count(pci_dev))
-+		pr_err("But VMD only supports MSIx Interrupts from child devices!\n");
-+	else
-+		pr_err("MSI-X, looking good...\n");
-+	dump_stack();
- 	if (!vmdirq)
- 		return -ENOMEM;
- 
 
