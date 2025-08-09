@@ -1,79 +1,92 @@
-Return-Path: <linux-pci+bounces-33657-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33658-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 166D8B1F261
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 07:46:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AEA1B1F3D3
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 11:43:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B9071AA2757
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 05:46:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28C543AE557
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Aug 2025 09:43:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EEA227A935;
-	Sat,  9 Aug 2025 05:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n484+ipx"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0BDC21FF53;
+	Sat,  9 Aug 2025 09:43:37 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FDC27A92F;
-	Sat,  9 Aug 2025 05:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1374217578
+	for <linux-pci@vger.kernel.org>; Sat,  9 Aug 2025 09:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754718334; cv=none; b=RGiGetPtz+81jUNvlIEoMmg7pSGoXviIvp/S5yEvNJdm4KW3h6JFXMl5l0Qqd586m13K0UAPftOUqIgmC2s8oVyuy/d3Qwn7IQZYz+04GAhVMHHYVJy27YTre1c3iB0C+VAjF+Gx8sXI6s0dulJLtB2erLV4JSgMkpFUvTpmhUU=
+	t=1754732617; cv=none; b=KE6rQ3lrkdySy1Bj2Rc3NHKJ4b7jKWn8YTwgMEM2+Z+6HXGO0PdRt+StBjd4jnXNzdvBFA2QtnainMQ5r9DQjx//yad4GTldIJGvmOQwLudqLYsnWTyC2dalXFAA4iFIcLwjiWAJu6OHJqU6743pvgyUKRxetONQVF3ymR5yyng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754718334; c=relaxed/simple;
-	bh=5SCb8+HPoVvAdXXUZADziFK0wm+bJAhQlDkm4TDjvwc=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=cGP+TPgL1kLvfwXX+aQyGlGrLAgwJ4AYni3s8CiEAwOnKzcqaEL6gCODUKrRUTg+oj50iFLExkhKsRMnVDAv8imqNfg3Sknvkhai4qRxB4JG5zy1kSfOR0xy2sbb4qttVlug8IihwfvVm6Ks8hlYJNGI6y/UmQ691NxFF5DGSzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n484+ipx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA3E1C4CEE7;
-	Sat,  9 Aug 2025 05:45:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754718333;
-	bh=5SCb8+HPoVvAdXXUZADziFK0wm+bJAhQlDkm4TDjvwc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=n484+ipxG/DEyHcH6arQA8dnOK9VEunGqruf9b0rPwSrlBwpValJqzsCn8EEKJPYg
-	 U/0xruICATJCvm89Lnijp+8QLPoDvhNo5nZjcbs6XyVB9YpfLg0Hvnc64UrTo2b1mQ
-	 O828klJVK33n/fsIQY5CrLsyiPcydAwBVnZdVSDnnbPFy3wo7bgYDeJ/Q1z4yR/5l+
-	 O3mz5+a+CtjsSpoUtbWPiclO4QrwVCiPwzEM/MabOoDonaM6u9Ji/xR1bpAWcVadX/
-	 HwVA/Ic2VIypFthQ/ZwyI38G/8fKYSC8LVa5xICxGxuIz+JhDMp3nMbQBwZFdh0s2v
-	 gKCFlPBlCQBVQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33CFA383BF5A;
-	Sat,  9 Aug 2025 05:45:48 +0000 (UTC)
-Subject: Re: [GIT PULL] PCI fixes for v6.17
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250808171400.GA95044@bhelgaas>
-References: <20250808171400.GA95044@bhelgaas>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250808171400.GA95044@bhelgaas>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.17-fixes-1
-X-PR-Tracked-Commit-Id: d5c647b08ee02cb7fa50d89414ed0f5dc7c1ca0e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 25046d5b005bddb927182df9780ef2e99bc19535
-Message-Id: <175471834683.387690.11620787432358735142.pr-tracker-bot@kernel.org>
-Date: Sat, 09 Aug 2025 05:45:46 +0000
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Nam Cao <namcao@linutronix.de>, Kenneth Crudup <kenny@panix.com>, Ammar Faizi <ammarfaizi2@gnuweeb.org>, Thomas Gleixner <tglx@linutronix.de>, Jinjie Ruan <ruanjinjie@huawei.com>
+	s=arc-20240116; t=1754732617; c=relaxed/simple;
+	bh=7LOoxV+FPVQ1yIXqHk3twaOKiR/zoULojqq0YafANDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ma7PspTih73vL7mT5BYpoxwtORix6QcdJPZVWIw7KSI153UHTIh6m942BzmLUScYoLKXPJ4PBlovLkXGqv5kRa559tPXZyvO4qSTEKMubdocL0WkHCtsTSCimncZ+PCNLGyjKWlMSPqpkaMW19HToKAKCXpG2Z68/ijY5abhw+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1957C2C0667D;
+	Sat,  9 Aug 2025 11:43:26 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 127FB3E94DF; Sat,  9 Aug 2025 11:43:26 +0200 (CEST)
+Date: Sat, 9 Aug 2025 11:43:26 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: andreasx0 <andreasx0@protonmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [BUG] PCI: build failure in pci_bus_add_device() due to missing
+ pci_dev_allow_binding() declaration (v6.16)
+Message-ID: <aJcYPmUm8toqd7Uo@wunner.de>
+References: <w_kdHQ9WkOAZaKa2b4PYXiI1fTbeRd0Xi2TQNxCsqJ2hy-Um4039DBYDgmqj46h5D4S8rUFrx9nQU4WhdfTplMsaa5I-vVfNfghCOl4v1OE=@protonmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <w_kdHQ9WkOAZaKa2b4PYXiI1fTbeRd0Xi2TQNxCsqJ2hy-Um4039DBYDgmqj46h5D4S8rUFrx9nQU4WhdfTplMsaa5I-vVfNfghCOl4v1OE=@protonmail.com>
 
-The pull request you sent on Fri, 8 Aug 2025 12:14:00 -0500:
+On Sat, Aug 09, 2025 at 01:22:13AM +0000, andreasx0 wrote:
+> When building Linux kernel v6.16 for x86_64, I encountered the following build error:
+> 
+>  drivers/pci/bus.c: In function 'pci_bus_add_device':
+>  drivers/pci/bus.c:373:17: error: implicit declaration of function 'pci_dev_allow_binding' [-Wimplicit-function-declaration]
+>   373 |         pci_dev_allow_binding(dev);
+>       |         ^~~~~~~~~~~~~~~~~~~~~
+>  make[4]: *** [scripts/Makefile.build:287: drivers/pci/bus.o] Error 1
+>  make[3]: *** [scripts/Makefile.build:555: drivers/pci] Error 2
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.17-fixes-1
+pci_dev_allow_binding() was introduced by ce45dc4bb22e ("PCI: Limit
+visibility of match_driver flag to PCI core"), which indeed first
+appeared in v6.16.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/25046d5b005bddb927182df9780ef2e99bc19535
+However I don't quite see how you'd get that error message.
 
-Thank you!
+pci_dev_allow_binding() is a static inline declared in drivers/pci/pci.h
+which is not guarded by any #if or #ifdef (except DRIVERS_PCI_H).
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+drivers/pci/bus.c #includes "pci.h".  So that all looks fine.
+
+This build error hasn't been seen by 0-day bot or anyone else.
+Would you mind uploading your .config somewhere (e.g. to a new
+bug on bugzilla.kernel.org or GitHub gist)?
+
+Is this an unmodified v6.16 kernel or are you applying custom
+patches on top?  Could the build error be explained by a local
+git merge or git rebase gone awry?
+
+Thanks,
+
+Lukas
 
