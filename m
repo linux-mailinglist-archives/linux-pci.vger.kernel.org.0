@@ -1,128 +1,126 @@
-Return-Path: <linux-pci+bounces-33729-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33730-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 271A3B208FB
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 14:40:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59AF4B20910
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 14:43:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D69937B14A0
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 12:38:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6CDD116BF68
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 12:43:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EC4E2D3A7B;
-	Mon, 11 Aug 2025 12:39:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3BA62D3A7B;
+	Mon, 11 Aug 2025 12:43:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="Ioa9F5oY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QXkAuN2w"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE41E41C62;
-	Mon, 11 Aug 2025 12:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754915960; cv=pass; b=ABA8cMBCK1vf6eHJyAiVz7LQX8ZR1OYgHGDVx5AM2ZEGtICpbtKz8C3S7rohMFQ3I/cMnGS4tXCsjHPs+BozVOhkNtRt1YEjMwvo+CYritKcJcrESdNLgAO/sWrmqm/zAEqAx1H6LuLKlGcfiH8dkV/Jk2debR2gBMkjOhtzkyU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754915960; c=relaxed/simple;
-	bh=z2hzk4IfGXWa4JuejGkWiKQo0s3XKBlVLEK9kN6K/lQ=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=rrkZhqRg81Dc41JDzKQ1n6lYtX5pZtacV9cVUwSLYnGBBZB0eoK+2B4GNE2m3KH6JX1BZev9Rp0t2x0SB7k430unM3M+gSpbSSsSspkH9+SNlU3j7UImIzRzuWvuH5JPGMMICgQX80ls5+tC6D+sdfmOdige+QQp6joCBqA1zrg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Ioa9F5oY; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1754915938; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=nFW+hitDNKztHDu3BY4oB26P8s1cDDMjiYZZvAHQP5SgaD0Pzfj88cX82zVRXVbMBTWSkUbCBGpwvp2AgRXhGNcK5vcgeKpKPUM6WglbrLm2wDCvC6VDrMmLllsTM42+BpoLkqtDikk/bQyRDcLX/vfyqYzjyRGRsDBEBHW28b8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1754915938; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=z2hzk4IfGXWa4JuejGkWiKQo0s3XKBlVLEK9kN6K/lQ=; 
-	b=mlLlyQmV0FiKndRvBftVnQheamwngjhNkOa5mtzX58SiBNTB0kPTlBd0NtKnKJcgi0DIRnQUHkkrPEoVs+JV7+kLbK+P2gzL31CEefE8uvqMYVab1jH86PC4NiVURvWSvjgYQV9+/g883fuffRrpf4tZpowgYcG0MLFM1F0nAlI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1754915938;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=z2hzk4IfGXWa4JuejGkWiKQo0s3XKBlVLEK9kN6K/lQ=;
-	b=Ioa9F5oY46jWlA7KeXvEZYb0FxA0buIINAMXinW4lTNZLYMxlGK4jtl7Onfbm6sB
-	72venE5LRq61e2yHh8qW0dwQt/JwbB9nLsCRGtdEcWRXzic5Y/ZixmkvZS9jc0ejM7M
-	P878dHjWIv5cD1s9zFbGWP+jhK+vmWZmiNUvYXfI=
-Received: by mx.zohomail.com with SMTPS id 1754915936203205.61364902100854;
-	Mon, 11 Aug 2025 05:38:56 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F822D3739
+	for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 12:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754916207; cv=none; b=mm725ADlryfVVAD9Ix+W145aUEe2/ETsIYu0nKfDBir9awOICOnvIVmuSjBmuzb9nVbyEIZa+TmhtXlojXWEjQ4RmP8yokP+hq00lk8QWvkDw4bavCbKy02UP5dW/j/uHPhDyyyI+Dy1KUAC5XFxsAUBHqsUDodti50CyxPHhIY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754916207; c=relaxed/simple;
+	bh=j3KuIhJo0ivrR9GdvJeQEnar7BGsh/Xlz36SAqt6LBM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LXLRAGt0TCXVo91JMKzHC2q6OocWzqyWewsytDQjfquyUhw05NxyjvBNHFRba9QpfR6av+5npOoHbghhbbdJVk4tAI+hOo3D+xEZWYJn0S8Kp+ecMmynewrg9iFCDTD/BVRRYq/KnQYIoNxGcwsRjOIrZWedGQdIBkPGqoflpdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QXkAuN2w; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3b786421e36so2295358f8f.3
+        for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 05:43:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1754916204; x=1755521004; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MZQtbM58CuYhzw1MvgZL2tVUq7quGscgzcUmkjWg4xQ=;
+        b=QXkAuN2wr4WFac+I4bBDG2gAfJb9+5Kty8ux4yUXpFZZTZ3w301ci7IC0ulAccWKY5
+         u0YVdsX/3OZkF1CCvOEd/FVUC2TYPnioRgyXapGEhYtdku+Jnryq2rT4dIsVGWUwpyz+
+         4XeiB/EAXOfEQV3N0nQ7Bbbe4vRuHEn0DB39dLBzo8hL0imlvL46DfXzwl5sk4JZ7JV/
+         O1v7A4O7geFCxcqnVmWyGdAkVOpdeb5lymae25PuQ1d03arGBlg/vJVvzRhitybNRHnC
+         Wy3/Rcqig+31ltu56j8dr18foZnIL1/vJNQJiKKQ4S1SXtOp+Dwnd2G0Wqg0mWIVJacP
+         6PNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754916204; x=1755521004;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MZQtbM58CuYhzw1MvgZL2tVUq7quGscgzcUmkjWg4xQ=;
+        b=ICIXEcFKJDRxF0L/ts+GhVxwsAfr8rlGiMcpaopor4JZU34IYM17TVkVQN+KRdrND6
+         bY2UNQOJS/PEjmMxDNhLkxeIu+RY4J17eArIm7l/m3p+lC5jhFo0pOqt1p5c3s/Cf3pq
+         HBUOeAOtoP5pBrE/Jq4YtnFbcE4BoireRNeRu2SeWRS5irblrOxbO5rqkIe9LcFoMqRC
+         i+9IH/lPasU1wpg4uyJYiXWdLgc2KIfi4EhZR1JXa6+0cNXBo+2O+ksVxkbTzBBhf2Rc
+         e7LfhKXkHquRtAtMtzSLR6GTxYPP0E/XLzDZ0vhYE+tytbfc7uvb9tDBCCte7UsnJvpP
+         8lvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUtHDtfaobB+wKuyygDOagyWEw9PC+CXXhPzO/T4b+gOrNJwNXQ/NjAS755cM/9/hwPHj19uOIRxro=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgFTAAzuUdJz+eknnYle58CQbV3wOugOKsMNJaFfqJt3zEiJZR
+	+mLdnN+BtwYkLWnUJ/yDmIGDCrDWxav3LbLlViH+546r77yaXvWEg1vjYG72uPiOSf5ZJdAp6oY
+	OCBj3Ar4RUDFWFu3tvDdYjExH8FUICLpmkIGf444O
+X-Gm-Gg: ASbGncuhMLb8ZbcUhGtMYpXzkuJ9MTN6j+kgNch/Q/MTEw7wA2aSJzgMhvG57R3t4do
+	dPcx+oMdJ/n80chJlVdw1d27Qd0EW/S5exHhB8524G4Qqie89XyA6aAiADBCpaT8Qwsvwo/SnrZ
+	i8Nld9fKLDUm8jpd8Jp1eAqZV09J9uGlQDtt0QnU2M1br0XJjnsN4o/vohL2/u23KBMmQwmeEGX
+	OD8aI76
+X-Google-Smtp-Source: AGHT+IFbHmiT69GgG6VywhTtWkjpjKn3ClF+vJUww36UOVmWy0SF/jHh//RsS8jPS05Gf6wMhqwnjOEo7UsZLyjUxfk=
+X-Received: by 2002:a05:6000:2507:b0:3b8:eb9f:a756 with SMTP id
+ ffacd0b85a97d-3b90092cab1mr9287296f8f.11.1754916204089; Mon, 11 Aug 2025
+ 05:43:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v2] rust: irq: add &Device<Bound> argument to irq
- callbacks
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250811-irq-bound-device-v2-1-d73ebb4a50a2@google.com>
-Date: Mon, 11 Aug 2025 09:38:41 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Benno Lossin <lossin@kernel.org>,
- Dirk Behme <dirk.behme@gmail.com>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- linux-pci@vger.kernel.org
+MIME-Version: 1.0
+References: <20250810-topics-tyr-request_irq2-v8-0-8163f4c4c3a6@collabora.com>
+ <20250810-topics-tyr-request_irq2-v8-3-8163f4c4c3a6@collabora.com>
+ <aJnM1LgUYjTloVwV@google.com> <4EE6F260-5AC9-47AD-9F34-0D6C224A8559@collabora.com>
+ <CAH5fLghV0aVZBBEmjf9CF9gFyG08dH7nFzKHnHM6RiANuSZaMw@mail.gmail.com> <AF48133C-BD57-4EEF-8E4A-ABEECB8A5C49@collabora.com>
+In-Reply-To: <AF48133C-BD57-4EEF-8E4A-ABEECB8A5C49@collabora.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 11 Aug 2025 14:43:12 +0200
+X-Gm-Features: Ac12FXxxIhPmaPtJKy3TMgtU486Km52fgwcFr8qaz3_2m5jCwDhsYNXHNvF34dE
+Message-ID: <CAH5fLggOqsrob-h2v8c5hsnMquJZhXJ2euAub2ia2fjj=NY8Vg@mail.gmail.com>
+Subject: Re: [PATCH v8 3/6] rust: irq: add support for non-threaded IRQs and handlers
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org, 
+	Joel Fernandes <joelagnelf@nvidia.com>, Dirk Behme <dirk.behme@de.bosch.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <19D30F1F-BA10-4C38-A0A8-1C0072516B55@collabora.com>
-References: <20250811-irq-bound-device-v2-1-d73ebb4a50a2@google.com>
-To: Alice Ryhl <aliceryhl@google.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
 
+On Mon, Aug 11, 2025 at 2:38=E2=80=AFPM Daniel Almeida
+<daniel.almeida@collabora.com> wrote:
+>
+>
+> >> Also, I was getting tons of =E2=80=9Cunreachable_pub=E2=80=9D warnings
+> >> otherwise, FYI.
+> >
+> > If you got unreachable_pub warnings, then you are missing re-exports.
+> >
+> > Alice
+>
+> The re-exports are as-is in the current patch, did I miss anything? Becau=
+se I
+> don=E2=80=99t think so.
+>
+> In particular, should the irq module itself be private?
 
+No, the end-user should be able to write
 
-> On 11 Aug 2025, at 09:33, Alice Ryhl <aliceryhl@google.com> wrote:
->=20
-> When working with a bus device, many operations are only possible =
-while
-> the device is still bound. The &Device<Bound> type represents a proof =
-in
-> the type system that you are in a scope where the device is guaranteed
-> to still be bound. Since we deregister irq callbacks when unbinding a
-> device, if an irq callback is running, that implies that the device =
-has
-> not yet been unbound.
->=20
-> To allow drivers to take advantage of that, add an additional argument
-> to irq callbacks.
->=20
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
-> This patch is a follow-up to Daniel's irq series [1] that adds a
-> &Device<Bound> argument to all irq callbacks. This allows you to use
-> operations that are only safe on a bound device inside an irq =
-callback.
->=20
-> [1]: =
-https://lore.kernel.org/all/20250810-topics-tyr-request_irq2-v8-0-8163f4c4=
-c3a6@collabora.com/
-> ---
-> Changes in v2:
-> - Rebase on v8 of [1] (and hence v6.17-rc1).
->=20
+    use kernel::irq::Flags;
 
-Thanks, I=E2=80=99ll apply on top of the series as a convenience to the =
-maintainers.
+so the irq module needs to be public.
 
-=E2=80=94 Daniel=20
-
+Alice
 
