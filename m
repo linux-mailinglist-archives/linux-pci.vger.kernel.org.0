@@ -1,45 +1,46 @@
-Return-Path: <linux-pci+bounces-33782-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33783-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DC40B21587
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 21:41:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E84A9B2159C
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 21:41:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B65337AFFEC
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 19:39:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 19D217B023E
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 19:39:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3651329BDB0;
-	Mon, 11 Aug 2025 19:41:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10E9C2D9496;
+	Mon, 11 Aug 2025 19:41:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZAB9MgbQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ouMEjsSS"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DB82BD580;
-	Mon, 11 Aug 2025 19:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89BF2D8DDC;
+	Mon, 11 Aug 2025 19:41:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754941269; cv=none; b=rHmyBL3N69M4Y1BWGTD+TqAWpbzZE8DyQ9PSJd5Fw/OI6Djk8d05YzK0r4AdlcZpeuKJioxdVUEYN/OUDDyZkWDP+XatFLmvPZNJxAZdLiyRKDeHNncuXFmqvMnr3QFpe5qfxm+wAX6dX1zTMCKBQJpJPmOXP+xLbgH/MDqpHCs=
+	t=1754941270; cv=none; b=j7+AD8FmdPwQ7hctB8w6KI53I3wL6STIL/2ZFuEzvIBuz6/g15FHTLlDFL7SwB6gURVa84q1EKh4p+2kaFmDMNCoCSqWSV/3CGt5v+kLN6QhiuzuAwYRoONvm/yy50p35qbMoUsWguivkYSeCmEiWHNU22Xa2zWaZtP5LksGW5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754941269; c=relaxed/simple;
-	bh=viw9iEJbruaVRxAarn3h2rKViXu80X2SSEHAI5fBb3I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MzU8ePl3/zvlQQZi7f9liaoljEzKaRYcnaT7OTNV0oBOmEkqNFovZDudLnz+7Wpf+ksyj+Op4hbkPVdGVmgjEwkCMmfkVXlbcI1CfB8faW6/s9mrJbI75/JJawHYnms4AtbRsstCRBFfsOhax3r7P2Ff3ZzIJymJOx319Atoe2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZAB9MgbQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AE53C4CEF8;
-	Mon, 11 Aug 2025 19:41:06 +0000 (UTC)
+	s=arc-20240116; t=1754941270; c=relaxed/simple;
+	bh=Kf4914LQNukSJINzCYRK5E52XgshaqkTzyZnxPJaf+Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=i6sluH1MrGPHkkD2DqIk07FkTWxFe7ZJsAWsYxQGVOmNB3j+hwLXlrHeaBjR7QExllo7/ASvSfLFy4YmbsayCzIIMiZvnEaAKdDhbIBaZ3QNc5TlgBp2hN1cmWkqVGKLwoZHhIlZmLzjNPB1Xkf7ldwDagJ7i7jDi10A6EqjajU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ouMEjsSS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBFFCC4CEF1;
+	Mon, 11 Aug 2025 19:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754941268;
-	bh=viw9iEJbruaVRxAarn3h2rKViXu80X2SSEHAI5fBb3I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZAB9MgbQl5azLDLqPZGXaRHb5QIXky3OWVFKLqnaVaBcyHH02XATaTwWiD/JRiFPv
-	 HY/TDgVR3pOlZG+NWoZsd9BAlmMtwWANONIoQLLi8jcP9gb0KKHdD1i6IMDX+VeTZg
-	 cNpD8z/MYYjqYKQwrTrtInt0pZMdBCBgb07zU2vreyJlu0DvWLU86lvkqEtdTfgqO+
-	 0BfyhNCyRKAqkfo7poiCwzBrid9WtVZ35SDsRs6CYfl7dA0ThWL//YagUm8vJHz9sN
-	 vTa5xbUL2TZYQb12/nmtH2MI7hONMU0KyMWwvEtfOxQQ4m5Txl1cpC+wIZKz+Wew/9
-	 w5T9jk8b8LUNw==
+	s=k20201202; t=1754941270;
+	bh=Kf4914LQNukSJINzCYRK5E52XgshaqkTzyZnxPJaf+Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ouMEjsSS0VDtSfEEFfLTZ7/hrZmfoztvz5eAGgLyL7QNv4F/XGAyBWyXHtsb7AVMT
+	 aNwukz4Uko8jQJAK6gF3CGtUk7egkDZtZerMe2YNwti7SEzc/b65gv837CH7urewxZ
+	 v/ciRZTtZA7KKairgKiR77Ex5jNd1hC8oRAMNbHmmDRkQ1fS6KYA+7pfPbmLYgddjj
+	 h7M2PaSwuiElvFRby27BlwJIgzmYgflF8yD0Izxi5FkmVFHPN1QAquwxKAHwqO518L
+	 TMGnQovmxEohx//6alF9VtleFU/6vH8Gmm/RO+VQnVLbEJ+PevT5lHsvZ1wHzfLfBy
+	 1e42j1oVpYonA==
 From: "Mario Limonciello (AMD)" <superm1@kernel.org>
 To: "Rafael J . Wysocki" <rafael@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>
@@ -64,71 +65,137 @@ Cc: Pavel Machek <pavel@kernel.org>,
 	=?UTF-8?q?Merthan=20Karaka=C5=9F?= <m3rthn.k@gmail.com>,
 	Eric Naim <dnaim@cachyos.org>,
 	"Mario Limonciello (AMD)" <superm1@kernel.org>
-Subject: [PATCH v5 00/11] Improvements to S5 power consumption
-Date: Mon, 11 Aug 2025 14:40:51 -0500
-Message-ID: <20250811194102.864225-1-superm1@kernel.org>
+Subject: [PATCH v5 01/11] PM: Introduce new PMSG_POWEROFF event
+Date: Mon, 11 Aug 2025 14:40:52 -0500
+Message-ID: <20250811194102.864225-2-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250811194102.864225-1-superm1@kernel.org>
+References: <20250811194102.864225-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-A variety of issues both in function and in power consumption have been
-raised as a result of devices not being put into a low power state when
-the system is powered off.
+PMSG_POWEROFF will be used for the PM core to allow differentiating between
+an S4 or S5 shutdown sequence when re-using callbacks.
 
-There have been some localized changes[1] to PCI core to help these issues,
-but they have had various downsides.
+This event should not have wakeups enabled so update PMSG_NO_WAKEUP() to
+match it as well.
 
-This series instead tries to use the S4 flow when the system is being
-powered off.  This lines up the behavior with what other operating systems
-do as well.  If for some reason that fails or is not supported, run their
-shutdown() callbacks.
-
-Cc: AceLan Kao <acelan.kao@canonical.com>
-Cc: Kai-Heng Feng <kaihengf@nvidia.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Merthan Karakaş <m3rthn.k@gmail.com>
-Cc: Eric Naim <dnaim@cachyos.org>
+Tested-by: Eric Naim <dnaim@cachyos.org>
+Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
 ---
-v4->v5:
- * Rebase on v6.17-rc1
- * Re-order series to be more bisectable for issues
- * Add tags where relevant
- * Split up PCI patches into more easily reviewable "chunks".
+v5:
+ * Re-order and split
+ * Add tags
+v4:
+ * https://lore.kernel.org/linux-pci/20250616175019.3471583-1-superm1@kernel.org/
+---
+ drivers/base/power/main.c    | 7 +++++++
+ include/linux/pm.h           | 5 ++++-
+ include/trace/events/power.h | 3 ++-
+ 3 files changed, 13 insertions(+), 2 deletions(-)
 
-Mario Limonciello (AMD) (11):
-  PM: Introduce new PMSG_POWEROFF event
-  scsi: Add PM_EVENT_POWEROFF into suspend callbacks
-  usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
-  USB: Pass PMSG_POWEROFF event to suspend_common() for poweroff with S4
-    flow
-  PCI: PM: Disable device wakeups when halting system through S4 flow
-  PCI: PM: Split out code from pci_pm_suspend_noirq() into helper
-  PCI: PM: Run bridge power up actions as part of restore phase
-  PCI: PM: Use pci_power_manageable() in pci_pm_poweroff_noirq()
-  PCI: Put PCIe ports with downstream devices into D3 at hibernate
-  drm/amd: Avoid evicting resources at S5
-  PM: Use hibernate flows for system power off
-
- drivers/base/power/main.c                  |  7 ++
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  4 +
- drivers/pci/pci-driver.c                   | 99 +++++++++++++++-------
- drivers/scsi/mesh.c                        |  1 +
- drivers/scsi/stex.c                        |  1 +
- drivers/usb/core/hcd-pci.c                 | 10 ++-
- drivers/usb/host/sl811-hcd.c               |  1 +
- include/linux/pm.h                         |  5 +-
- include/trace/events/power.h               |  3 +-
- kernel/reboot.c                            |  6 ++
- 10 files changed, 102 insertions(+), 35 deletions(-)
-
-
-base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index dbf5456cd891b..c59ab5286d9a5 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -99,6 +99,8 @@ static const char *pm_verb(int event)
+ 		return "restore";
+ 	case PM_EVENT_RECOVER:
+ 		return "recover";
++	case PM_EVENT_POWEROFF:
++		return "poweroff";
+ 	default:
+ 		return "(unknown PM event)";
+ 	}
+@@ -369,6 +371,7 @@ static pm_callback_t pm_op(const struct dev_pm_ops *ops, pm_message_t state)
+ 	case PM_EVENT_FREEZE:
+ 	case PM_EVENT_QUIESCE:
+ 		return ops->freeze;
++	case PM_EVENT_POWEROFF:
+ 	case PM_EVENT_HIBERNATE:
+ 		return ops->poweroff;
+ 	case PM_EVENT_THAW:
+@@ -403,6 +406,7 @@ static pm_callback_t pm_late_early_op(const struct dev_pm_ops *ops,
+ 	case PM_EVENT_FREEZE:
+ 	case PM_EVENT_QUIESCE:
+ 		return ops->freeze_late;
++	case PM_EVENT_POWEROFF:
+ 	case PM_EVENT_HIBERNATE:
+ 		return ops->poweroff_late;
+ 	case PM_EVENT_THAW:
+@@ -437,6 +441,7 @@ static pm_callback_t pm_noirq_op(const struct dev_pm_ops *ops, pm_message_t stat
+ 	case PM_EVENT_FREEZE:
+ 	case PM_EVENT_QUIESCE:
+ 		return ops->freeze_noirq;
++	case PM_EVENT_POWEROFF:
+ 	case PM_EVENT_HIBERNATE:
+ 		return ops->poweroff_noirq;
+ 	case PM_EVENT_THAW:
+@@ -1370,6 +1375,8 @@ static pm_message_t resume_event(pm_message_t sleep_state)
+ 		return PMSG_RECOVER;
+ 	case PM_EVENT_HIBERNATE:
+ 		return PMSG_RESTORE;
++	case PM_EVENT_POWEROFF:
++		return PMSG_ON;
+ 	}
+ 	return PMSG_ON;
+ }
+diff --git a/include/linux/pm.h b/include/linux/pm.h
+index cc7b2dc28574c..892bd93f13dad 100644
+--- a/include/linux/pm.h
++++ b/include/linux/pm.h
+@@ -507,6 +507,7 @@ const struct dev_pm_ops name = { \
+  * RECOVER	Creation of a hibernation image or restoration of the main
+  *		memory contents from a hibernation image has failed, call
+  *		->thaw() and ->complete() for all devices.
++ * POWEROFF	System will poweroff, call ->poweroff() for all devices.
+  *
+  * The following PM_EVENT_ messages are defined for internal use by
+  * kernel subsystems.  They are never issued by the PM core.
+@@ -537,6 +538,7 @@ const struct dev_pm_ops name = { \
+ #define PM_EVENT_USER		0x0100
+ #define PM_EVENT_REMOTE		0x0200
+ #define PM_EVENT_AUTO		0x0400
++#define PM_EVENT_POWEROFF	0x0800
+ 
+ #define PM_EVENT_SLEEP		(PM_EVENT_SUSPEND | PM_EVENT_HIBERNATE)
+ #define PM_EVENT_USER_SUSPEND	(PM_EVENT_USER | PM_EVENT_SUSPEND)
+@@ -551,6 +553,7 @@ const struct dev_pm_ops name = { \
+ #define PMSG_QUIESCE	((struct pm_message){ .event = PM_EVENT_QUIESCE, })
+ #define PMSG_SUSPEND	((struct pm_message){ .event = PM_EVENT_SUSPEND, })
+ #define PMSG_HIBERNATE	((struct pm_message){ .event = PM_EVENT_HIBERNATE, })
++#define PMSG_POWEROFF	((struct pm_message){ .event = PM_EVENT_POWEROFF, })
+ #define PMSG_RESUME	((struct pm_message){ .event = PM_EVENT_RESUME, })
+ #define PMSG_THAW	((struct pm_message){ .event = PM_EVENT_THAW, })
+ #define PMSG_RESTORE	((struct pm_message){ .event = PM_EVENT_RESTORE, })
+@@ -568,7 +571,7 @@ const struct dev_pm_ops name = { \
+ 
+ #define PMSG_IS_AUTO(msg)	(((msg).event & PM_EVENT_AUTO) != 0)
+ #define PMSG_NO_WAKEUP(msg)	(((msg).event & \
+-				(PM_EVENT_FREEZE | PM_EVENT_QUIESCE)) != 0)
++				(PM_EVENT_FREEZE | PM_EVENT_QUIESCE | PM_EVENT_POWEROFF)) != 0)
+ /*
+  * Device run-time power management status.
+  *
+diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+index 82904291c2b81..370f8df2fdb4b 100644
+--- a/include/trace/events/power.h
++++ b/include/trace/events/power.h
+@@ -179,7 +179,8 @@ TRACE_EVENT(pstate_sample,
+ 		{ PM_EVENT_HIBERNATE, "hibernate" }, \
+ 		{ PM_EVENT_THAW, "thaw" }, \
+ 		{ PM_EVENT_RESTORE, "restore" }, \
+-		{ PM_EVENT_RECOVER, "recover" })
++		{ PM_EVENT_RECOVER, "recover" }, \
++		{ PM_EVENT_POWEROFF, "poweroff" })
+ 
+ DEFINE_EVENT(cpu, cpu_frequency,
+ 
 -- 
 2.43.0
 
