@@ -1,123 +1,164 @@
-Return-Path: <linux-pci+bounces-33736-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33737-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED36BB209F1
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 15:18:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 062CBB20A40
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 15:33:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 240E2188C65A
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 13:19:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BBE25423664
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 13:33:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 829622D3A64;
-	Mon, 11 Aug 2025 13:18:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A80F2BDC38;
+	Mon, 11 Aug 2025 13:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g7lzNilg"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Zv4kHUCX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40D42222DD
-	for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 13:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D46149C41;
+	Mon, 11 Aug 2025 13:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754918336; cv=none; b=JIsKAmixU+L5dPLUQb6qVUAXfnSLRT/NWoYrYhszfK/P094Ar3kEhP8gDTNxE2kNknbzGgCK9ZUQybBy0OQJVV9H6m3EcOss0v1j42hldDIOFqBJ/TCKWARhOwTqIbpwNFhQ6Ge1SXOPvBSrisn8SsV+3PDXkXWx+AE7yVzpNZQ=
+	t=1754919201; cv=none; b=HIilbBZQTEHFgmy8ss/xHxMJsJMi85s68lvAECQyH0SjDPswI2lQSg6XblPuabdXf92ebQA5xUt8OVPsKftskZaql2gGRdJF1rW4dBfUC3ZF0Q4RMwQI6tPxMGIEm9aOzU7OnJ6j8RJmaAC2fSmhjG8fAFHsHt0BHIT8hHUpco8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754918336; c=relaxed/simple;
-	bh=YurnktU6uLK/QMMiHdEUOXfRLMdcVqtaWTbxLFOUN3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jo8QGx1ald0TV2zIcCE2oyA4XSkonHI7BlVg2EobJO/0+z3+ZrPjtufz9Ca2BM8j+9XHPh84xvT6l7uO3eTPqrrnBMwUdt0XOHcw0BYVYtQtxy60IaSZdaNmydplZ1i+5YvnGTY8timxf642t7ZVXUflmn4sAkcqXnBtde/QR1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g7lzNilg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1754918333;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eybU9c2mDvdB/SAMfEZIKdU5KhZDaZNeqdGbPmyFJI4=;
-	b=g7lzNilgFrI0d8WRceAfcO0Nex41uzEy9utQHQhI3VK/izYZKR4oqc1Vn/bLMoZk1Gus2Y
-	JS8oSqs+6bKum9TKifrPGig+BFvjGyLqgmS6kZfLM8EX3boqw3/v7it/2U/DILtSa9k694
-	1gLsTa8qlpSf8yT1DfSf0pM6ijA4f28=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-124-l5x060c7OpOwLNUxTQ9DaA-1; Mon,
- 11 Aug 2025 09:18:49 -0400
-X-MC-Unique: l5x060c7OpOwLNUxTQ9DaA-1
-X-Mimecast-MFC-AGG-ID: l5x060c7OpOwLNUxTQ9DaA_1754918327
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ACC2E18002B1;
-	Mon, 11 Aug 2025 13:18:46 +0000 (UTC)
-Received: from sirius.home.kraxel.org (unknown [10.45.224.64])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A47A419560AD;
-	Mon, 11 Aug 2025 13:18:45 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-	id 155C21800091; Mon, 11 Aug 2025 15:18:43 +0200 (CEST)
-Date: Mon, 11 Aug 2025 15:18:43 +0200
-From: Gerd Hoffmann <kraxel@redhat.com>
-To: dan.j.williams@intel.com
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	linux-coco@lists.linux.dev, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bhelgaas@google.com, aik@amd.com, lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>, 
-	Xu Yilun <yilun.xu@linux.intel.com>
-Subject: Re: [PATCH v4 05/10] samples/devsec: Introduce a PCI device-security
- bus + endpoint sample
-Message-ID: <mckkt3aiggiqogigbms4kcysaaqw5toieot5vvfw55smti4acr@mbwb2oe6jp7g>
-References: <20250717183358.1332417-1-dan.j.williams@intel.com>
- <20250717183358.1332417-6-dan.j.williams@intel.com>
- <20250729161643.000023e7@huawei.com>
- <6892c9fe760_55f09100d4@dwillia2-xfh.jf.intel.com.notmuch>
- <20250806121625.00001556@huawei.com>
- <68939feeef7d9_55f09100c7@dwillia2-xfh.jf.intel.com.notmuch>
+	s=arc-20240116; t=1754919201; c=relaxed/simple;
+	bh=x2Z43D2zhojMQgM06ThDtCQhqvpuE3g3VjKgoKe5c+o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=kYrFGFUnngLbhlyI2rINWU11bKyN1T5+U59yzCQpOCw/tjkf4tg85rxae9oMpNSw2xXP3nAIgOLvBxfLj6zdKoaBFFKQisAlPnTB6g76NHDlIuukk4Zy4SMNH8avQW1gkb+pCD5yfmUxU30W4MIAjxEqAXQzJfpy30RD4pghyQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Zv4kHUCX; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57BDNkl9025158;
+	Mon, 11 Aug 2025 15:32:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	aywYyzoixAm3Sjd8epTOZToUh9Gg+kyh1HfqY33n5bw=; b=Zv4kHUCXcILUQIx5
+	iF4WiJiPI9HHvmA+T3RoIcBguAuS3C3kJDOPnxHM0kLu4l/+9SwtqS4cV6SWc5UI
+	wU25e4iXd6rhFt8jyReReMhjqGC3POpMn3Fsvn19vgxAyo5jU/cF5q6co8GkTBAi
+	Y6ZkpKmwjsMMOAufHn1POVfQotIT9MsYheaNWLEwgf03SC9ZweA5EIPWXG57iv43
+	4NsH6+qCCE4kbtBLzwSxUc6wYRfBjVsj4PvD9iEtZhEol8L2Nv878LY6uMrUDmjR
+	o4uMnnnj6GuP8q+wSo0cNWkJQunTzuuQGx8Gf2Yoq7qBpxK+gD4WWO6kpG+ueWv3
+	ajQglg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 48dw7g65xf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Aug 2025 15:32:49 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 036A340044;
+	Mon, 11 Aug 2025 15:31:19 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0BA2474D375;
+	Mon, 11 Aug 2025 15:30:11 +0200 (CEST)
+Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 11 Aug
+ 2025 15:30:10 +0200
+Message-ID: <2c497e75-bdb7-45ee-96ba-e293e33db91b@foss.st.com>
+Date: Mon, 11 Aug 2025 15:30:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68939feeef7d9_55f09100c7@dwillia2-xfh.jf.intel.com.notmuch>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 2/9] PCI: stm32: Add PCIe host support for STM32MP25
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Linus Walleij <linus.walleij@linaro.org>, <lpieralisi@kernel.org>,
+        <kwilczynski@kernel.org>, <mani@kernel.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <johan+linaro@kernel.org>,
+        <cassel@kernel.org>, <shradha.t@samsung.com>,
+        <thippeswamy.havalige@amd.com>, <quic_schintav@quicinc.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250808164527.GA92564@bhelgaas>
+From: Christian Bruel <christian.bruel@foss.st.com>
+Content-Language: en-US
+In-Reply-To: <20250808164527.GA92564@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-11_02,2025-08-11_01,2025-03-28_01
 
-On Wed, Aug 06, 2025 at 11:33:18AM -0700, dan.j.williams@intel.com wrote:
-> Jonathan Cameron wrote:
-> > 
-> > +CC Gerd, of off chance we can use a Redhat PCI device ID for kernel
-> > emulation similar to those they let Qemu use.
-> > 
-> [..]
-> > > > Emulating something real?  If not maybe we should get an ID from another space
-> > > > (or reserve this one ;)  
-> > > 
-> > > I am happy to switch to something else, but no, I do not have time to
-> > > chase this through PCI SIG. I do not expect this id to cause conflicts,
-> > > but no guarantees.
-> > 
-> > Nothing to do with the SIG - you definitely don't want to try talking them
-> > into giving a Vendor ID for the kernel.  That's an Intel ID so you need to find
-> > the owner of whatever tracker Intel uses for these.
+
+
+On 8/8/25 18:45, Bjorn Helgaas wrote:
+> On Fri, Aug 08, 2025 at 04:55:52PM +0200, Christian Bruel wrote:
+>> On 8/7/25 20:09, Bjorn Helgaas wrote:
+>>> [+to Linus for pinctrl usage question below]
+>>>
+>>> On Tue, Jun 10, 2025 at 11:07:07AM +0200, Christian Bruel wrote:
+>>>> Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
+>>>> controller based on the DesignWare PCIe core.
 > 
-> About the same level of difficulty...
+>>>> +	return pinctrl_pm_select_sleep_state(dev);
+>>>
+>>> Isn't there some setup required before we can use
+>>> pinctrl_select_state(), pinctrl_pm_select_sleep_state(),
+>>> pinctrl_pm_select_default_state(), etc?
+>>>
+>>> I expected something like devm_pinctrl_get() in the .probe() path, but
+>>> I don't see anything.  I don't know how pinctrl works, but I don't see
+>>> how dev->pins gets set up.
+>>
+>> Linus knows better, but the dev->pins states are attached to the dev struct
+>> before probe by the pinctrl driver
+>>
+>> /**
+>>   * pinctrl_bind_pins() - called by the device core before probe
+>>   * @dev: the device that is just about to probe
+>>   */
+>> int pinctrl_bind_pins(struct device *dev)
 > 
-> > Or maybe we can ask for one of the Redhat ones (maintained by Gerd).
+> Thanks for the pointer.  Might be worthy of a mention in
+> Documentation/driver-api/pin-control.rst.  Maybe pinctrl/consumer.h
+> could even have a bread crumb to that effect since drivers use all
+> those interfaces that rely in the implicit initialization done before
+> their .probe().
+> 
+> pin-control.rst mentions pinctrl_get_select_default() being called
+> just before the driver probe, but that's now unused and it looks like
+> pinctrl_bind_pins() does something similar:
+> 
+>    really_probe
+>      pinctrl_bind_pins
+>        dev->pins = devm_kzalloc()
+>        devm_pinctrl_get
+>        pinctrl_lookup_state(PINCTRL_STATE_DEFAULT)
+>        pinctrl_lookup_state(PINCTRL_STATE_INIT)
+>        pinctrl_select_state(init)      # if present, else default
+>      call_driver_probe
 
-Well, they are meant for virtual devices emulated by qemu (and the
-registry is docs/specs/pci-ids.rst in the qemu repo).
+Yeah, and state_init is not mentioned in the documentation even for the 
+'normal probe'. The only doc I see from the original commit 
+ef0eebc05130b0d22b0ea65c0cd014ee16fc89c7
 
-We made exceptions to that rule before (linux/samples/vfio-mdev/mdpy.c
-got one for example).  So feel free to try sending a patch with an
-update to qemu-devel.  There should be a /good/ explanation why you want
-go that route, and "I'm to lazy to get one from my employer" is not what
-I'd consider "good".  Also it's qemu release freeze and vacation season
-right now, so don't expect this process to be fast.
+" 
 
-take care,
-  Gerd
+     Let's introudce a new "init" state.  If this is defined we'll set
+     pinctrl to this state before probe and then "default" after probe
+     (unless the driver explicitly changed states already). 
+
+"
+
+I will propose something in pin-control.rst, with maybe some code-block 
+for the pm part and respin [PATCH 0/2] Add pinctrl_pm_select_init_state 
+helper function...
+
+Christian
+
+> 
+> Bjorn
 
 
