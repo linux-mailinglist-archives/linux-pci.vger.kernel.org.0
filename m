@@ -1,207 +1,133 @@
-Return-Path: <linux-pci+bounces-33685-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33686-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A386B1FD98
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 04:12:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17C51B1FE14
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 05:26:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 72DEA18922C1
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 02:13:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C195B3A2A5D
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 03:25:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F3A1C07C4;
-	Mon, 11 Aug 2025 02:12:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F00A81991DD;
+	Mon, 11 Aug 2025 03:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KmWrLSLw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045E43D76;
-	Mon, 11 Aug 2025 02:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0813D12B93
+	for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 03:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754878369; cv=none; b=euAOLexRH9hTEayMB9XKtRqwxSzSoTFM2h9kEWXBwhprVJpyw7k3Ccbj7FbsaJOCbQKjFEiZtN76VZ3rF2HvI/nbtnp40p7qiZb2cwlCN+hje0mttGmxR6ToA+7rRPnu6ABi4w8dS6ldLNV3cixSr2i/kLpvrImYG3sR6Eh2tWU=
+	t=1754882756; cv=none; b=t/tVEDH7PThH48/hWv1cE5V8NjFtHvALlS+BVVqvE5jmgmGtBevxZX/8Ii8Fvy4Qu7RKqqLParNNWEhilXjyi5LqjtombV67E1gndPgS0Ni5PB5Pf4zIdsOWzxcaLMLNaZkYvLWurdA1ZRpB703bPVXoewUR4hOXlUzEsI9ks10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754878369; c=relaxed/simple;
-	bh=+ehj0RQSQc9PkfBwo3f2W9owJEDgwxSozOoQrdlpYpo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=r8eqq5bZIsk2d3PNRC6JiXQCEwP47N9ur8NFBc56pZuZWEBZ4Pki9YxS/KKq2dx5d6zxdkTmi6tMtjdTi+EVXHbaAOayUYgwjIZareIcT2362JRWiskc2w962nuEC0NzWeZoB1ElnCRMs87xD7+8vnQtLauBR523yFMrpYYdQTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com; spf=pass smtp.mailfrom=h-partners.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4c0dTw4b6Pz2YPms;
-	Mon, 11 Aug 2025 10:13:40 +0800 (CST)
-Received: from kwepemo100013.china.huawei.com (unknown [7.202.195.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id 03ADE140143;
-	Mon, 11 Aug 2025 10:12:37 +0800 (CST)
-Received: from [10.67.120.83] (10.67.120.83) by kwepemo100013.china.huawei.com
- (7.202.195.244) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 11 Aug
- 2025 10:12:36 +0800
-Message-ID: <9e3047e5-a6a2-4a56-967b-4dddbd3d1b43@h-partners.com>
-Date: Mon, 11 Aug 2025 10:12:35 +0800
+	s=arc-20240116; t=1754882756; c=relaxed/simple;
+	bh=p8v3CGh3AqDE9sU6mO3MmhmT8UJdaztvV1UQb77S2fI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GYa05174kmWAVr33sQnc9Pozdnsd5+oHJ3LJgZU/pxeZ4YNGqtOlWoYNRpnwyw7HfAIsXDwzcSMZTO8lhC1LphpYBcxO6tiuQ+0v8ggGc99WEJqRpibD6JqisMZhZvl0EcwI2zM1mTrQ3PAq/WarhMaQ1PseyYca9/ENzK0INck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KmWrLSLw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754882753;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=MyI6bQ4VKi6kzEU6MGPeSA2rT56TE5vaJOVAfdMj034=;
+	b=KmWrLSLwaomaSekNGut4Lrj6OoXDGy+xWNPSFJymkxNF4KJ1U5AyaohgCVCVOKIQY9xd5C
+	6f9jsr7WM0dxLpAEt5lI9+XC35ds7jAaCuWzyHUp4vHH3gcv2BJwIazW6KZ+Pcf3PHs+vR
+	jgdDiTieMH7lZuCTBUHtlRwlLa9tFvo=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-154-J3SFDRXyPuewQI6hUdXSPg-1; Sun, 10 Aug 2025 23:25:52 -0400
+X-MC-Unique: J3SFDRXyPuewQI6hUdXSPg-1
+X-Mimecast-MFC-AGG-ID: J3SFDRXyPuewQI6hUdXSPg_1754882751
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-242aa2e4887so90160705ad.3
+        for <linux-pci@vger.kernel.org>; Sun, 10 Aug 2025 20:25:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754882751; x=1755487551;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MyI6bQ4VKi6kzEU6MGPeSA2rT56TE5vaJOVAfdMj034=;
+        b=HeDRuQUzYv8wirc66yuuR+mQsCG2iu+WA8Qs/LPouQ9M0/p/5vATrkE3fLfSHVB8oi
+         QaEWBC8yPqqDJod5IdNVLJtJMmXwXWEWBh3DPJHME/m+Rk9X57ejGxXSHgevguZNehe/
+         ceSFVtQX2yL4OYkQofvePUDlahrixQj3xsWx7wLWHeaqHXVIUDcL78KfSw7DtsSmlZkQ
+         FuWFKyhNTLWT8d97Z166h+SPQMGcsS7/+DA7aRQJNZRsl6Ey5HmhK8umTn1BTnECVitD
+         BxqnoloR7FhaKgoRx8bHLXD3FUI2HmnWpP1BEG5Ky8OAeuyXuudj0T9ORCqIumB6770s
+         sqDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX4HbnTPvYMhqvq2ORTK64Ijb5L2P+U+bpcGrJjhAof6ms3ICCfnoy/ZiXe3ziB/da17Q8YgfGB2dM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxqiy9pik39AKoGLH9vTr8kVgDKiKRHJxx3g1rGE9NnL6PF0Tee
+	9+k03kfYWurmwWqfZQX0CKz1UOYTh/j1Nx4WHU6jJbs9tNVw2fXFCyQULZ0RPpUqrrs5TKa3KGM
+	MfTas9q6GwPN6GVA8psa4/NxW34ahBJIbxcbHwKhVCliwXjyEfzBRP0BU42iNgadSFQadJICuOM
+	U=
+X-Gm-Gg: ASbGncvG9edjHzOcpPCrfhu9PCjvytArV3XIE+RpoFloF9iy9XYo0hY7UeQfAPHTQoV
+	UplY+9a39ThPLnweqreZ9RDrnkAMGumIzmDWsV1t+ND0oGWbWBfGPuybh0c72Q1PxIcg3OMaQTg
+	TfoGHQC6XTjBFDQAc9Mgfo9gqh9f46I2ch3giiyto47j72mgqt1EGDNVzN9ZUx5xw6jkP3d+Qt3
+	nSjmXPHjiiP3vC/BpoZyNYJJpL0TPyLvsgeABlEMeT4E8Ulhg05YFGDrF4hxY3qzj6y3xMO5qPY
+	n/gwwtjkSifSnEinLr8IAB+FzVyCv3I=
+X-Received: by 2002:a17:902:f641:b0:240:7c39:9e25 with SMTP id d9443c01a7336-242c220019amr145851305ad.27.1754882750969;
+        Sun, 10 Aug 2025 20:25:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGij+iLLH1kTC74+yPsc/frGl3BwTOOImoH7zdGTiZxVFriyBsG7HIux9tyLkoa+5Pjls7KUw==
+X-Received: by 2002:a17:902:f641:b0:240:7c39:9e25 with SMTP id d9443c01a7336-242c220019amr145851095ad.27.1754882750559;
+        Sun, 10 Aug 2025 20:25:50 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241d1ef6a8fsm258509715ad.23.2025.08.10.20.25.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Aug 2025 20:25:50 -0700 (PDT)
+Date: Mon, 11 Aug 2025 11:23:49 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	kexec@lists.infradead.org
+Subject: [Regression] kdump fails to get DHCP address unless booting with
+ pci=nomsi or without nr_cpus=1
+Message-ID: <x5dwuzyddiasdkxozpjvh3usd7b5zdgim2ancrcbccfjxq7qwn@i6b24w22sy6s>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] sysfs: duplicate resource file creation during PCIe rescan
-From: moubingquan <moubingquan@h-partners.com>
-To: <bhelgaas@google.com>
-CC: <ilpo.jarvinen@linux.intel.com>, <lukas@wunner.de>, linux-arm
-	<linux-arm-kernel@lists.infradead.org>, linux-kernl
-	<linux-kernel@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>,
-	fanghao <fanghao11@huawei.com>, gaozhihao <gaozhihao6@h-partners.com>,
-	lujunhua <lujunhua7@h-partners.com>, shenyang <shenyang39@huawei.com>,
-	wushanping <wushanping@huawei.com>, zengtao <prime.zeng@hisilicon.com>,
-	<jonathan.cameron@huawei.com>
-References: <b51519d6-ce45-4b6d-8135-c70169bd110e@h-partners.com>
-Content-Language: en-US
-In-Reply-To: <b51519d6-ce45-4b6d-8135-c70169bd110e@h-partners.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemo100013.china.huawei.com (7.202.195.244)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-Hello everyone, does anyone have any ideas on how to approach this problem。
+Hi Thomas,
 
-On 7/29/2025 9:13 AM, moubingquan wrote:
-> Hi all,
-> 
-> When uninstalling the driver on the ARM64 platform and invoking `sriov_disable()`,
-> another thread simultaneously performed `echo 1 > /sys/bus/pci/rescan`,
-> which resulted in a call trace error (`sysfs: cannot create duplicate filename`) when subsequently loading the driver.
-> 
-> Under certain multi-threaded scenarios (e.g. VF teardown + PCI rescan triggered in parallel),
-> The following sequence may result in files appearing in sysfs that should not exist:
-> 
-> 1. sriov_disable() uninstalls VFs and removes the corresponding VF files in sysfs.
-> 2.At the same time, when rescan_store() rescan the entire PCI device tree,
-> there is a possibility that VF files that should have been deleted are added back,
-> resulting in VF files in sysfs that should have been removed but were not.
-> 
-> Tested on:
-> - Kernel version: Linux version 6.15.0-rc4+ (phisik3@10-50-163-153-ARM-openEuler22-3)
-> - Platform: ARM64 (Huawei Kunpeng920)
-> - Repro steps:
-> 1.Thread A unloads the driver and VF (requires calling sriov_disable()).
-> 2.Thread B calls `echo 1 > /sys/bus/pci/rescan `
-> 
-> The system will report a call trace as follows:
-> 
-> sysfs: cannot create duplicate filename '/devices/pci0000:3c/0000:3c:01.0/0000:3e:00.2/resource2'
-> CPU: 138 UID: 0 PID: 11067 Comm: sh Kdump: loaded Tainted: G      D W  O        6.15.0-rc4+ #1 PREEMPT
-> Tainted: [D]=DIE, [W]=WARN, [O]=OOT_MODULE
-> Call trace:
->   show_stack+0x20/0x38 (C)
->   dump_stack_lvl+0x80/0xf8
->   dump_stack+0x18/0x28
->   sysfs_warn_dup+0x6c/0x90
->   sysfs_add_bin_file_mode_ns+0x12c/0x178
->   sysfs_create_bin_file+0x7c/0xb8
->   pci_create_attr+0x104/0x1b0
->   pci_create_resource_files.part.0+0x50/0xd0
->   pci_create_sysfs_dev_files+0x30/0x50
->   pci_bus_add_device+0x40/0x120
->   pci_bus_add_devices+0x40/0x98
->   pci_bus_add_devices+0x6c/0x98
->   pci_rescan_bus+0x38/0x58
->   rescan_store+0x80/0xb0
->   bus_attr_store+0x2c/0x48
->   sysfs_kf_write+0x84/0xa8
->   kernfs_fop_write_iter+0x120/0x1b8
->   vfs_write+0x338/0x3f8
->   ksys_write+0x70/0x110
->   __arm64_sys_write+0x24/0x38
->   invoke_syscall+0x50/0x120
->   el0_svc_common.constprop.0+0xc8/0xf0
->   do_el0_svc+0x24/0x38
->   el0_svc+0x34/0xf0
->   el0t_64_sync_handler+0xc8/0xd0
->   el0t_64_sync+0x1ac/0x1b0
-> 
-> The general analysis and corresponding code are as follows:
-> 
-> drivers/pci/iov.c
-> 
-> 736 static void sriov_disable(struct pci_dev *dev)
-> 737 {
-> 738         struct pci_sriov *iov = dev->sriov;
-> 739
-> 740         if (!iov->num_VFs)
-> 741                 return;
-> 742
-> 743         sriov_del_vfs(dev);
-> 744         iov->ctrl &= ~(PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE);
-> 745         pci_cfg_access_lock(dev);
-> 746         pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, iov->ctrl);
-> 747         ssleep(1);
-> 748         pci_cfg_access_unlock(dev);
-> 749
-> 750         pcibios_sriov_disable(dev);
-> 751
-> 752         if (iov->link != dev->devfn)
-> 753                 sysfs_remove_link(&dev->dev.kobj, "dep_link");
-> 754
-> 755         iov->num_VFs = 0;
-> 756         pci_iov_set_numvfs(dev, 0);
-> 757 }
-> 
-> sriov_disable() will unload the VF and remove its files from sysfs.
-> 
-> drivers/pci/pci-sysfs.c
-> 
->   435 static ssize_t rescan_store(const struct bus_type *bus, const char *buf, size_t count)
->   436 {
->   437         unsigned long val;
->   438         struct pci_bus *b = NULL;
->   439
->   440         if (kstrtoul(buf, 0, &val) < 0)
->   441                 return -EINVAL;
->   442
->   443         if (val) {
->   444                 pci_lock_rescan_remove();
->   445                 while ((b = pci_find_next_bus(b)) != NULL)
->   446                         pci_rescan_bus(b);
->   447                 pci_unlock_rescan_remove();
->   448         }
->   449         return count;
->   450 }
->   451 static BUS_ATTR_WO(rescan);
-> 
-> The `rescan_store()` function will scan the entire PCI bus, including the relevant sysfs files for the aforementioned VFs.
-> 
-> Initially, it seemed that directly adding the pci_lock_rescan_remove() lock to sriov_disable() could solve the problem.
-> However, it was later discovered that this might lead to a deadlock issue (because the remove_store() function would call sriov_disable(), causing a deadlock).
-> 
-> drivers/pci/pci-sysfs.c
-> 
->   487 static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
->   488                             const char *buf, size_t count)
->   489 {
->   490         unsigned long val;
->   491
->   492         if (kstrtoul(buf, 0, &val) < 0)
->   493                 return -EINVAL;
->   494
->   495         if (val && device_remove_file_self(dev, attr))
->   496
->          //Subsequently, sriov_disable() will be invoked.
->                  pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
->   497         return count;
->   498 }
->   499 static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL,
->   500                                   remove_store);
-> 
-> The function `pci_stop_and_remove_bus_device_locked()` acquires the `pci_lock_rescan_remove()` lock and subsequently calls `sriov_disable()`.
-> If the lock is added within `sriov_disable()`, it could lead to a deadlock.
-> 
-> Should we add a new lock to address this issue, or are there any other ideas? I would like to consult and discuss this with everyone.
-> 
-> Thanks,
-> Bingquan Mou <moubingquan@h-partners.com>
+Recently I met an issue that on certain virtual machines, the kdump
+kernel fails to get DHCP IP address most of times starting from
+6.11-rc2. git bisection shows commit b5712bf89b4b ("irqchip/gic-v3-its:
+Provide MSI parent for PCI/MSI[-X]") is the 1st bad commit,
+
+     # good: [7d189c77106ed6df09829f7a419e35ada67b2bd0] PCI/MSI: Provide
+     # MSI_FLAG_PCI_MSI_MASK_PARENT
+     git bisect good 7d189c77106ed6df09829f7a419e35ada67b2bd0
+     # good: [48f71d56e2b87839052d2a2ec32fc97a79c3e264] irqchip/gic-v3-its:
+     # Provide MSI parent infrastructure
+     git bisect good 48f71d56e2b87839052d2a2ec32fc97a79c3e264
+     # good: [8c41ccec839c622b2d1be769a95405e4e9a4cb20] irqchip/irq-msi-lib:
+     # Prepare for PCI MSI/MSIX
+     git bisect good 8c41ccec839c622b2d1be769a95405e4e9a4cb20
+     # first bad commit: [b5712bf89b4bbc5bcc9ebde8753ad222f1f68296]
+     # irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]
+
+
+I'll appreciate it you can provide any suggestion on fixing this issue.
+And I'd be glad to verify any idea as this issue can seem to be reliably
+reproduced only on certain machines.
+
+The aarch64 kdump kernel on Fedora is booted wit "irqpoll nr_cpus=1
+reset_devices cgroup_disable=memory udev.children-max=2 panic=10
+swiotlb=noforce novmcoredd cma=0 hugetlb_cma=0". Removing "nr_cpus=1" or
+"adding pci=nomsi" can make this issue disappear. 
+
+Note I've also reported this issue to
+https://bugzilla.kernel.org/show_bug.cgi?id=220328
+
+-- 
+Best regards,
+Coiby
 
 
