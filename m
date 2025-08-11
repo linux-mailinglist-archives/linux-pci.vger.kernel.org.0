@@ -1,138 +1,120 @@
-Return-Path: <linux-pci+bounces-33753-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33754-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 909A1B20C91
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 16:51:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34D8FB20CB3
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 16:56:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3E97C6813FE
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 14:45:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C74C13A8CDC
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 14:52:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCF422DEA73;
-	Mon, 11 Aug 2025 14:43:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1728D2EB10;
+	Mon, 11 Aug 2025 14:52:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rh2nbCeb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNutl5aQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9AF25743D;
-	Mon, 11 Aug 2025 14:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78D1F9D9
+	for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 14:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754923387; cv=none; b=RkICAHaVdm7gqh6XHCUOVjRHheX2mvoRJnLimP6lm5fcJLmIwMm45qVOe6KA7IgUK+py6GM0z7Iw0/tFcgnOvJg1FKc9wMBmjehXP4iDmeH+L0a/1MNbpsFNk/x1kT9FhpdrLtoEqiKO5zE//gmKhNBRizoIsQ20aWfqYuyYJyc=
+	t=1754923928; cv=none; b=Ul08CIdQWoKCIR9q1xtL1Vs7Fj7IXJKBHZm/ilBD3bQcotz92SptQGenH/Gd2pZudZ6khzYngDF2dOdbArLVO8gyf5xBm561e1QNalIjeED6GOdYHkw+YZ2qVBTR7/SttMkLbKe2/yre9fzQhh1hkzsc4IOnTOid8gwXz4YJ61E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754923387; c=relaxed/simple;
-	bh=me89jiMprQ5Zfiw9QonH62Pq97r457WJa6dHcXh9NPk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TIQRdNlinOa/4l+boSdP1VTJiNAr08thJpcyTMMWMGyIxOBoEIOrhcAq9kV2SxTrpj6t4nlKu5E6Ju4UYyxEwejB/ONfM2ComLYCTsUEKsbTnPw2QCCvYPw8duNXWDJRk5jBNY9eE/r/EWWHMZO+HvfpRtkVnbyk5Qq4WoqUtx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rh2nbCeb; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754923386; x=1786459386;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=me89jiMprQ5Zfiw9QonH62Pq97r457WJa6dHcXh9NPk=;
-  b=Rh2nbCebKa+PEnSV+G31SLtvFIssv562mKIPOca23tr/V1KakMvWvaQ8
-   cHl19j3p6FYnKHYfYgoBufxza0rfXy+BbVyeNj1ro2atf0s7VF3HztTZG
-   KXcCfFW0IjcyMEOT1bdctDbi6UepSwQ/FT8vfFv0XsGvVAFBuCPPUWMi1
-   HrkDIh0RxGP2MFfRFG9bgnz04ob4i1VzshWXQTZQWLBJVVfmunjgHHi/Y
-   x8sp4imvMZAbE8vTNz1pIhkvtaPATSAa9go1dQ7fVrnFErWyyZBekEb7P
-   mmsH0A3H1vW31WZdA8jJcJDUqTGCYYdcc5N9CSCa0bjCItz82x3RD2DrS
-   g==;
-X-CSE-ConnectionGUID: UFyMPzLjRZK8B8EviDJGnA==
-X-CSE-MsgGUID: t6BN4IZ8QV6UmjQyz5rw2Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="60979444"
-X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
-   d="scan'208";a="60979444"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 07:43:05 -0700
-X-CSE-ConnectionGUID: uUJwsGcLSpa/qUF38eVxZA==
-X-CSE-MsgGUID: EpLjJDPRSZe32SqLyedxFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
-   d="scan'208";a="165566177"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa009.jf.intel.com with ESMTP; 11 Aug 2025 07:43:02 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id B0FD194; Mon, 11 Aug 2025 16:43:00 +0200 (CEST)
-Date: Mon, 11 Aug 2025 16:43:00 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <maz@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Nicolin Chen <nicolinc@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Chen Wang <unicorn_wang@outlook.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>, Han Gao <rabenda.cn@gmail.com>
-Subject: Re: [PATCH 3/4] irqchip/sg2042-msi: Fix broken affinity setting
-Message-ID: <aJoBdHlV6ZKcFry5@black.igk.intel.com>
-References: <20250807112326.748740-1-inochiama@gmail.com>
- <20250807112326.748740-4-inochiama@gmail.com>
+	s=arc-20240116; t=1754923928; c=relaxed/simple;
+	bh=lC9rVnFUh+y1IRTd2hGi9NBWzLfw/v1W1Ns4j9BGWvA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O7WPcsfIVLnS5tDBhbhYWEXgO8EdQQR59MGTF82b7YLwne566UvfOvpimrM5jmywwNd5yAECFB2tEI/XhGIm4xtoKBQvJkjo9GtbQg3AhUrk4l96xfOxntXLzvGl+WLMgDigU/azIUE5r5kvLcf8H3J/GOrzWiXXPmX7rK3T9uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNutl5aQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6E7CC4CEED;
+	Mon, 11 Aug 2025 14:52:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754923927;
+	bh=lC9rVnFUh+y1IRTd2hGi9NBWzLfw/v1W1Ns4j9BGWvA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tNutl5aQrKXvdYyqxEm82rEpTyNI/Dr+E00Wlshx5IZAcFiuuF+I2BW6mcBaSNH2P
+	 w56BIcGJi2fdIAkXd/tTa5bg4mtFCB23z89YsNAcDORM9+n9usFS0AZIszBBpykBxB
+	 PcvX6P23q8KoluEwgqN5hY0w/8d02kqW65oTDmIOl+I/oik1n7RA67agpiOgqNXOXD
+	 8VTyRUC7Gv4julVPLNrFvG2uhw/iunPRdYGanpwThTTpfoI6YEYOLxbF2u59klzYA6
+	 4jtizY1+ReoegHC7QASWT2oYM+fq7CJR4DYIxxOdqKA1Ym6E0uiJV62mOa42Y7nDLe
+	 PNxx90HiZUwzA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1ulTsb-006HEc-In;
+	Mon, 11 Aug 2025 15:52:05 +0100
+Date: Mon, 11 Aug 2025 15:52:04 +0100
+Message-ID: <86v7mt9ai3.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>, Coiby Xu <coxu@redhat.com>
+Cc: 	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	kexec@lists.infradead.org
+Subject: Re: [Regression] kdump fails to get DHCP address unless booting with pci=nomsi or without nr_cpus=1
+In-Reply-To: <878qjq80yu.ffs@tglx>
+References: <x5dwuzyddiasdkxozpjvh3usd7b5zdgim2ancrcbccfjxq7qwn@i6b24w22sy6s>
+	<87bjom8106.ffs@tglx>
+	<878qjq80yu.ffs@tglx>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250807112326.748740-4-inochiama@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, coxu@redhat.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, Aug 07, 2025 at 07:23:24PM +0800, Inochi Amaoto wrote:
-> When using NVME on SG2044, the NVME always complains "I/O tag XXX
-> (XXX) QID XX timeout, completion polled", which is caused by the
-> broken handler of the sg2042-msi driver.
+On Mon, 11 Aug 2025 14:03:21 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> As PLIC driver can only setting affinity when enabling, the sg2042-msi
-> does not properly handled affinity setting previously and enable irq in
-> an unexpected executing path.
+> On Mon, Aug 11 2025 at 15:02, Thomas Gleixner wrote:
 > 
-> Since the PCI template domain supports irq_startup/irq_shutdown, set
-> irq_chip_[startup/shutdown]_parent for irq_startup/irq_shutdown. So
-> the irq can be started properly.
+> CC+ Marc
+> 
+> > On Mon, Aug 11 2025 at 11:23, Coiby Xu wrote:
+> >> Recently I met an issue that on certain virtual machines, the kdump
+> >> kernel fails to get DHCP IP address most of times starting from
+> >> 6.11-rc2. git bisection shows commit b5712bf89b4b ("irqchip/gic-v3-its:
+> >> Provide MSI parent for PCI/MSI[-X]") is the 1st bad commit,
+> >>
+> >>      # good: [7d189c77106ed6df09829f7a419e35ada67b2bd0] PCI/MSI: Provide
+> >>      # MSI_FLAG_PCI_MSI_MASK_PARENT
+> >>      git bisect good 7d189c77106ed6df09829f7a419e35ada67b2bd0
+> >>      # good: [48f71d56e2b87839052d2a2ec32fc97a79c3e264] irqchip/gic-v3-its:
+> >>      # Provide MSI parent infrastructure
+> >>      git bisect good 48f71d56e2b87839052d2a2ec32fc97a79c3e264
+> >>      # good: [8c41ccec839c622b2d1be769a95405e4e9a4cb20] irqchip/irq-msi-lib:
+> >>      # Prepare for PCI MSI/MSIX
+> >>      git bisect good 8c41ccec839c622b2d1be769a95405e4e9a4cb20
+> >>      # first bad commit: [b5712bf89b4bbc5bcc9ebde8753ad222f1f68296]
+> >>      # irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]
+> >
+> > There were follow up fixes on this, so isolating this one is not really
+> > conclusive.
+> >
+> > Is the problem still there on v6.16 and v6.17-rc1?
 
-> Fixes: e96b93a97c90 ("irqchip/sg2042-msi: Add the Sophgo SG2044 MSI interrupt controller")
-> Reported-by: Han Gao <rabenda.cn@gmail.com>
+Yeah, there are way too many things that have been addressed since.
+kdump is also a particularly nasty case, as it tends to rely on the
+redistributor tables programmed by the previous kernel.
 
-Closes ?
+Also, this says "virtual machines". What's the hypervisor? How hard is
+it to reproduce?
 
-> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+Thanks,
 
-...
-
->  #define SG2042_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS |	\
-> -				   MSI_FLAG_USE_DEF_CHIP_OPS)
-> +				   MSI_FLAG_USE_DEF_CHIP_OPS |	\
-> +				   MSI_FLAG_PCI_MSI_MASK_PARENT |\
-
-Can we indent \ to be on the same column (using TABs)?
-
-> +				   MSI_FLAG_PCI_MSI_STARTUP_PARENT)
-
-...
-
->  #define SG2044_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS |	\
-> -				   MSI_FLAG_USE_DEF_CHIP_OPS)
-> +				   MSI_FLAG_USE_DEF_CHIP_OPS |	\
-> +				   MSI_FLAG_PCI_MSI_MASK_PARENT |\
-> +				   MSI_FLAG_PCI_MSI_STARTUP_PARENT)
-
-Ditto.
+	M.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Without deviation from the norm, progress is not possible.
 
