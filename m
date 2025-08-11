@@ -1,56 +1,82 @@
-Return-Path: <linux-pci+bounces-33751-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33752-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D52EB20C57
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 16:44:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E82BB20C5D
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 16:44:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0EEA6175B79
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 14:39:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AFECF424245
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 14:39:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3EDA273D6B;
-	Mon, 11 Aug 2025 14:38:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A95C255E27;
+	Mon, 11 Aug 2025 14:39:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAXyy64c"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="af1qJXa+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC0146447;
-	Mon, 11 Aug 2025 14:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC61211A19;
+	Mon, 11 Aug 2025 14:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754923137; cv=none; b=Z+xY+VncfSzc+RVvnZDUm+F+aGuVfkqaD3rWF7HgyVQ6ChXmH1IW+qG2678ufM0+fI2KEmArZ+wFLwlqA58I9i/se7EjWfxWIBhCt1PpnfLoauo9fXmtNJ6cIbVjKgmPaP+4bm5lu456pnSnII/c4jteE1HOtkAEqt9dCOmnBgQ=
+	t=1754923174; cv=none; b=LJ2dRZj4/wVZwssKqdUXVgzYzxoGL1jzWofsygL+ujRRq8n4ArE4gjtNOoeNYHi9n369fTOfuOg5wADeJ+bSRz47cWGx9fTqoCUPHuhW4ilvpMjLFZ51Q6ke8tuc0UrGHFWDdajpF1k3tK3A5h+b/xhsQVyKmfUXSrwHjofWMpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754923137; c=relaxed/simple;
-	bh=RBPx0dxNh+rNTcptWvcSPGABtt0/X8BmM7RC5h2kOkE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MXCxQzfX2rjwVK8CFVmVlBpvTO720z6lzEL+ng00EbWbmZGvKFHgTOwMdi+iH7V/lyc/OHR21OsaeuzuwCLlw4Elhetxbqu1KUQ7+N+q0rkwbavJvSiu0Q48mJoghG05zfGSedHhO9ptwCG3KoSW9aMOssfR2hGmbclezrXyTsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAXyy64c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76EB2C4CEED;
-	Mon, 11 Aug 2025 14:38:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754923137;
-	bh=RBPx0dxNh+rNTcptWvcSPGABtt0/X8BmM7RC5h2kOkE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rAXyy64cl/0Vqx16bd11on8kaBxmNBqqvHQkGrVD/cssPvyfXyzzL6CvbgzMVz9Ou
-	 xt12AXdopJlFCKQWHKIRFTYBDzfG+t+CL3buVGedwVSOGmFH+GoFbH/3fycPdSLhZ8
-	 da2YRJK6LCMmFDeKxQfBIWb4movWv+D0ViObnRBKHp5A8P1rXwnHiICa8mpTpV+JCk
-	 uiQGg8m7Wfa3b6osa6Isry3Nvp0k8tyAJ/3P3XrjfCR8SHyr26YrVsrdfkuBen3Ak/
-	 N1kajTLPuqmPXn0PW1pyoszYPVbYtZN93zUz5EHOW9Yw20xE3weQZNRMecNvSckhzS
-	 32AGinS4/wk7A==
-Date: Mon, 11 Aug 2025 09:38:56 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kenneth Crudup <kenny@panix.com>
-Cc: namcao@linutronix.de, mani@kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: Commit d7d8ab87e3e ("PCI: vmd: Switch to
- msi_create_parent_irq_domain()") causes early-stage reboots on my Dell
- XPS-9320
-Message-ID: <20250811143856.GA132204@bhelgaas>
+	s=arc-20240116; t=1754923174; c=relaxed/simple;
+	bh=yK6rDPSgFLQb1GYEgO6lg7WokH7Te7oZfFnIgEfutoA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TJM4fHpN2XF6ZOPqYIZrYl88RsS3ho0cERtXBmKRFAQ1NIKCTBJ6driZO/KWXMrR/BUyczFgXuxIAEFXuptRtZc9DuzW/Tagz5J0aVpkOXwpxN9CU8KwPyuIH8HvU5EawvYcDTIreQrAYEGm14jLS83t5tBoC57JLPNtBNBr++4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=af1qJXa+; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754923172; x=1786459172;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yK6rDPSgFLQb1GYEgO6lg7WokH7Te7oZfFnIgEfutoA=;
+  b=af1qJXa+VL8LhUdmqHZaOxGqUJhnTuQvxQ7t6GgAuEnNcCALhg/wmo1c
+   CSItr8oiW72ZvZPwptsdpypbxjeXYalgSkqZ+sN+2D0Y5MOUPLvk3Qxat
+   TEzFvacXlMtkDF+EFNW0EIKwF8DlfFGRfhmDkT1xlpux1ncyGGtg5UZKW
+   EgyXkKO++3ahDNqagcUSGheS5K/d2Eupo5a1YE142jWIZy095/AyAsXXs
+   E4fDYFZPKd/tOTljKtZlmlaD0LFy2s7wpgdCr6ElJbH/AkHl9Y+qG7EM/
+   EpAK+FAJHk0G1Jg/VBNIKJuyQ2EfyhGbJBu168RMhIgzpIkmBkSGt71Td
+   A==;
+X-CSE-ConnectionGUID: 0xWgYaQHSeKg3jLN25sd/g==
+X-CSE-MsgGUID: UJMGGI8fTiOXS2rYtbXzGw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="57097878"
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="57097878"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 07:39:32 -0700
+X-CSE-ConnectionGUID: TbIeAuvuQEOXd2NjxV2dbQ==
+X-CSE-MsgGUID: KAbOKEnrRumqcoTvJMv91w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="203118342"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa001.jf.intel.com with ESMTP; 11 Aug 2025 07:39:28 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 0421694; Mon, 11 Aug 2025 16:39:27 +0200 (CEST)
+Date: Mon, 11 Aug 2025 16:39:26 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <maz@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Nicolin Chen <nicolinc@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Chen Wang <unicorn_wang@outlook.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 1/4] genirq: Add irq_chip_(startup/shutdown)_parent
+Message-ID: <aJoAnkBfLqKc7Frd@black.igk.intel.com>
+References: <20250807112326.748740-1-inochiama@gmail.com>
+ <20250807112326.748740-2-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,22 +85,40 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250807160301.GA50800@bhelgaas>
+In-Reply-To: <20250807112326.748740-2-inochiama@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Aug 07, 2025 at 11:03:03AM -0500, Bjorn Helgaas wrote:
-> On Wed, Aug 06, 2025 at 04:07:30PM -0700, Kenneth Crudup wrote:
-> > 
-> > I'm running Linus' master (as of today, cca7a0aae8958c9b1).
-> > 
-> > If I revert the named commit, I can boot OK. Unfortunately there's no real
-> > output before the machine reboots, to help identify the problem.
-> > 
-> > I have a(n enabled) VMD in my Alderlake machine:
-> > 
-> > [    0.141952] [      T1] smpboot: CPU0: 12th Gen Intel(R) Core(TM) i7-1280P
-> > (family: 0x6, model: 0x9a, stepping: 0x3)
-> 
-> #regzbot introduced: d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()")
+On Thu, Aug 07, 2025 at 07:23:22PM +0800, Inochi Amaoto wrote:
+> Add helper irq_chip_startup_parent and irq_chip_shutdown_parent. The
 
-#regzbot fix: d5c647b08ee0 ("PCI: vmd: Fix wrong kfree() in vmd_msi_free()")
+irq_chip_startup_parent() and irq_chip_shutdown_parent()
+
+> helper implement the default behavior in case irq_startup or irq_shutdown
+
+In the same way...
+
+> is not implemented for the parent interrupt chip, which will fallback
+> to irq_chip_enable_parent or irq_chip_disable_parent if not available.
+
+In the same way...
+
+
+...
+
+> +/**
+> + * irq_chip_startup_parent - Startup the parent interrupt
+> + * @data:	Pointer to interrupt specific data
+> + *
+> + * Invokes the irq_startup() callback of the parent if available or falls
+> + * back to irq_chip_enable_parent().
+
+kernel-doc validator is not happy: Missing Return section.
+
+> + */
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
