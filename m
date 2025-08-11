@@ -1,180 +1,207 @@
-Return-Path: <linux-pci+bounces-33684-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33685-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67D98B1FD5D
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 02:49:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A386B1FD98
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 04:12:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 568231894978
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 00:50:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 72DEA18922C1
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 02:13:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3062E16A395;
-	Mon, 11 Aug 2025 00:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="D5HLT61f"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F3A1C07C4;
+	Mon, 11 Aug 2025 02:12:49 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E87F5A79B;
-	Mon, 11 Aug 2025 00:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754873393; cv=pass; b=fW6N3pU/beFXT/niRwC3m6/DynQmt4prvltWh9i9eZzJ7bmBwxIXNY9HIQfVWgXt6Z+3EG/GNWc5nvKKeBvz5tDaNFJlBjIxO7j7H8+g92cf1PABz3xdfrgAUxaQGP90rWY0WXZoOh1C99SO/WsK2+QogMl7/xFb/U67GP5SvW4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754873393; c=relaxed/simple;
-	bh=7tRAxSqqY10mzKrcbVRG8/IZwAS+LDj4oPQ8Z7Ab7ls=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Sjjjyu4c4VNTDdcNE8vbzr4CnypD+JLHdU3awf5IkiDLksPuRVv14MyL/GQdejlYk4/qEOu7aLqwqR02ukai2PwRk6xqH3xYM8CEYfy9xKjE4gPiCoG/Oxy56LYtHFMF6bpywYoBgkxl9IJqdMl9ylvmyHXzE57sjQSfIwJCZIQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=D5HLT61f; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1754873372; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Z8ofV6Cvt3DO1NJ0TmDOvxxCDpV/UF0IYFuezegzMlrUp8JwigZEab+8PA5y5/waHNemW63SHh7DAux2bxf1ea+iJv70Jf+I1fkHF2F26e00YIPjkzVS+cv4M5vhVuOr1B4oOCNogGI/uUcwk+f+l0ACYkXzd1v0F/2mSoeR2cI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1754873372; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=0Tb/rAbCLPWTr4mCwUuhZK5oJw4n1wEh7gOYvWxHnOA=; 
-	b=UVzVQNq/rbTbopXXDlP9v04IuZfPdahXU88wQOAcrL6angzDyO7FbNpMT3U/r8d+IoMQ9u4x3PuPBm4dFYry71SZVFvcAI5yYq6iT6roAZzQ80pk13s+i+3HuD/TFi5Gcv+a+bTj2mNtHG2Bvctin3zD2pm7jttnIxsGJOXoOBA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1754873372;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=0Tb/rAbCLPWTr4mCwUuhZK5oJw4n1wEh7gOYvWxHnOA=;
-	b=D5HLT61fJQU3k2R2bz9Sn+EPPC5UavsU2azW5hcZcLQp3zwWZL89L7WiiIkF4FwY
-	DBaPtZjWtw3HzMf59AewCkKr9YAlW7y8t5lexxc3TqzxgXVsWxaPY9Qmw+eI7Pq4lAN
-	LhbpOyty2MY0Atns3yogumdm3yfCy4Ttdf3tg3Kw=
-Received: by mx.zohomail.com with SMTPS id 1754873370723666.3021283578192;
-	Sun, 10 Aug 2025 17:49:30 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045E43D76;
+	Mon, 11 Aug 2025 02:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754878369; cv=none; b=euAOLexRH9hTEayMB9XKtRqwxSzSoTFM2h9kEWXBwhprVJpyw7k3Ccbj7FbsaJOCbQKjFEiZtN76VZ3rF2HvI/nbtnp40p7qiZb2cwlCN+hje0mttGmxR6ToA+7rRPnu6ABi4w8dS6ldLNV3cixSr2i/kLpvrImYG3sR6Eh2tWU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754878369; c=relaxed/simple;
+	bh=+ehj0RQSQc9PkfBwo3f2W9owJEDgwxSozOoQrdlpYpo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=r8eqq5bZIsk2d3PNRC6JiXQCEwP47N9ur8NFBc56pZuZWEBZ4Pki9YxS/KKq2dx5d6zxdkTmi6tMtjdTi+EVXHbaAOayUYgwjIZareIcT2362JRWiskc2w962nuEC0NzWeZoB1ElnCRMs87xD7+8vnQtLauBR523yFMrpYYdQTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com; spf=pass smtp.mailfrom=h-partners.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4c0dTw4b6Pz2YPms;
+	Mon, 11 Aug 2025 10:13:40 +0800 (CST)
+Received: from kwepemo100013.china.huawei.com (unknown [7.202.195.244])
+	by mail.maildlp.com (Postfix) with ESMTPS id 03ADE140143;
+	Mon, 11 Aug 2025 10:12:37 +0800 (CST)
+Received: from [10.67.120.83] (10.67.120.83) by kwepemo100013.china.huawei.com
+ (7.202.195.244) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 11 Aug
+ 2025 10:12:36 +0800
+Message-ID: <9e3047e5-a6a2-4a56-967b-4dddbd3d1b43@h-partners.com>
+Date: Mon, 11 Aug 2025 10:12:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH] rust: irq: add &Device<Bound> argument to irq callbacks
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <CAH5fLghRi-QAqGdxOhPPdp6bMyGSuDifnxMFBn3a3NWzN4G4vQ@mail.gmail.com>
-Date: Sun, 10 Aug 2025 21:49:14 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Benno Lossin <lossin@kernel.org>,
- Dirk Behme <dirk.behme@gmail.com>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- linux-pci@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0303C763-76CC-456D-AB76-215DF253560C@collabora.com>
-References: <20250721-irq-bound-device-v1-1-4fb2af418a63@google.com>
- <DCBBFAC5-A4B4-41BA-8732-32FA96EDE28E@collabora.com>
- <CAH5fLghRi-QAqGdxOhPPdp6bMyGSuDifnxMFBn3a3NWzN4G4vQ@mail.gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] sysfs: duplicate resource file creation during PCIe rescan
+From: moubingquan <moubingquan@h-partners.com>
+To: <bhelgaas@google.com>
+CC: <ilpo.jarvinen@linux.intel.com>, <lukas@wunner.de>, linux-arm
+	<linux-arm-kernel@lists.infradead.org>, linux-kernl
+	<linux-kernel@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>,
+	fanghao <fanghao11@huawei.com>, gaozhihao <gaozhihao6@h-partners.com>,
+	lujunhua <lujunhua7@h-partners.com>, shenyang <shenyang39@huawei.com>,
+	wushanping <wushanping@huawei.com>, zengtao <prime.zeng@hisilicon.com>,
+	<jonathan.cameron@huawei.com>
+References: <b51519d6-ce45-4b6d-8135-c70169bd110e@h-partners.com>
+Content-Language: en-US
+In-Reply-To: <b51519d6-ce45-4b6d-8135-c70169bd110e@h-partners.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemo100013.china.huawei.com (7.202.195.244)
 
+Hello everyone, does anyone have any ideas on how to approach this problem。
 
-
-> On 21 Jul 2025, at 16:33, Alice Ryhl <aliceryhl@google.com> wrote:
->=20
-> On Mon, Jul 21, 2025 at 9:14=E2=80=AFPM Daniel Almeida
-> <daniel.almeida@collabora.com> wrote:
->>=20
->> Alice,
->>=20
->>> On 21 Jul 2025, at 11:38, Alice Ryhl <aliceryhl@google.com> wrote:
->>>=20
->>> When working with a bus device, many operations are only possible =
-while
->>> the device is still bound. The &Device<Bound> type represents a =
-proof in
->>> the type system that you are in a scope where the device is =
-guaranteed
->>> to still be bound. Since we deregister irq callbacks when unbinding =
-a
->>> device, if an irq callback is running, that implies that the device =
-has
->>> not yet been unbound.
->>>=20
->>> To allow drivers to take advantage of that, add an additional =
-argument
->>> to irq callbacks.
->>>=20
->>> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
->>> ---
->>> This patch is a follow-up to Daniel's irq series [1] that adds a
->>> &Device<Bound> argument to all irq callbacks. This allows you to use
->>> operations that are only safe on a bound device inside an irq =
-callback.
->>>=20
->>> The patch is otherwise based on top of driver-core-next.
->>>=20
->>> [1]: =
-https://lore.kernel.org/r/20250715-topics-tyr-request_irq2-v7-0-d469c0f37c=
-07@collabora.com
->>=20
->> I am having a hard time applying this locally.
->=20
-> Your irq series currently doesn't apply cleanly on top of
-> driver-core-next and requires resolving a minor conflict. You can find
-> the commits here:
-> =
-https://github.com/Darksonn/linux/commits/sent/20250721-irq-bound-device-c=
-9fdbfdd8cd9-v1/
-
-Ah, we=E2=80=99ve already discussed this, it seems.
-
->=20
->>> ///
->>> /// This function should be only used as the callback in =
-`request_irq`.
->>> unsafe extern "C" fn handle_irq_callback<T: Handler>(_irq: i32, ptr: =
-*mut c_void) -> c_uint {
->>> -    // SAFETY: `ptr` is a pointer to T set in `Registration::new`
->>> -    let handler =3D unsafe { &*(ptr as *const T) };
->>> -    T::handle(handler) as c_uint
->>> +    // SAFETY: `ptr` is a pointer to `Registration<T>` set in =
-`Registration::new`
->>> +    let registration =3D unsafe { &*(ptr as *const Registration<T>) =
-};
->>> +    // SAFETY: The irq callback is removed before the device is =
-unbound, so the fact that the irq
->>> +    // callback is running implies that the device has not yet been =
-unbound.
->>> +    let device =3D unsafe { registration.inner.device().as_bound() =
-};
->>=20
->> Where was this function introduced? i.e. I am missing the change that =
-brought
->> in RegistrationInner::device(), or maybe some Deref impl that would =
-make this
->> possible?
->=20
-> In this series:
-> https://lore.kernel.org/all/20250713182737.64448-2-dakr@kernel.org/
->=20
->> Also, I wonder if we can't make the scope of this unsafe block =
-smaller?
->=20
-> I guess we could with an extra `let` statement.
->=20
-> Alice
-
+On 7/29/2025 9:13 AM, moubingquan wrote:
+> Hi all,
+> 
+> When uninstalling the driver on the ARM64 platform and invoking `sriov_disable()`,
+> another thread simultaneously performed `echo 1 > /sys/bus/pci/rescan`,
+> which resulted in a call trace error (`sysfs: cannot create duplicate filename`) when subsequently loading the driver.
+> 
+> Under certain multi-threaded scenarios (e.g. VF teardown + PCI rescan triggered in parallel),
+> The following sequence may result in files appearing in sysfs that should not exist:
+> 
+> 1. sriov_disable() uninstalls VFs and removes the corresponding VF files in sysfs.
+> 2.At the same time, when rescan_store() rescan the entire PCI device tree,
+> there is a possibility that VF files that should have been deleted are added back,
+> resulting in VF files in sysfs that should have been removed but were not.
+> 
+> Tested on:
+> - Kernel version: Linux version 6.15.0-rc4+ (phisik3@10-50-163-153-ARM-openEuler22-3)
+> - Platform: ARM64 (Huawei Kunpeng920)
+> - Repro steps:
+> 1.Thread A unloads the driver and VF (requires calling sriov_disable()).
+> 2.Thread B calls `echo 1 > /sys/bus/pci/rescan `
+> 
+> The system will report a call trace as follows:
+> 
+> sysfs: cannot create duplicate filename '/devices/pci0000:3c/0000:3c:01.0/0000:3e:00.2/resource2'
+> CPU: 138 UID: 0 PID: 11067 Comm: sh Kdump: loaded Tainted: G      D W  O        6.15.0-rc4+ #1 PREEMPT
+> Tainted: [D]=DIE, [W]=WARN, [O]=OOT_MODULE
+> Call trace:
+>   show_stack+0x20/0x38 (C)
+>   dump_stack_lvl+0x80/0xf8
+>   dump_stack+0x18/0x28
+>   sysfs_warn_dup+0x6c/0x90
+>   sysfs_add_bin_file_mode_ns+0x12c/0x178
+>   sysfs_create_bin_file+0x7c/0xb8
+>   pci_create_attr+0x104/0x1b0
+>   pci_create_resource_files.part.0+0x50/0xd0
+>   pci_create_sysfs_dev_files+0x30/0x50
+>   pci_bus_add_device+0x40/0x120
+>   pci_bus_add_devices+0x40/0x98
+>   pci_bus_add_devices+0x6c/0x98
+>   pci_rescan_bus+0x38/0x58
+>   rescan_store+0x80/0xb0
+>   bus_attr_store+0x2c/0x48
+>   sysfs_kf_write+0x84/0xa8
+>   kernfs_fop_write_iter+0x120/0x1b8
+>   vfs_write+0x338/0x3f8
+>   ksys_write+0x70/0x110
+>   __arm64_sys_write+0x24/0x38
+>   invoke_syscall+0x50/0x120
+>   el0_svc_common.constprop.0+0xc8/0xf0
+>   do_el0_svc+0x24/0x38
+>   el0_svc+0x34/0xf0
+>   el0t_64_sync_handler+0xc8/0xd0
+>   el0t_64_sync+0x1ac/0x1b0
+> 
+> The general analysis and corresponding code are as follows:
+> 
+> drivers/pci/iov.c
+> 
+> 736 static void sriov_disable(struct pci_dev *dev)
+> 737 {
+> 738         struct pci_sriov *iov = dev->sriov;
+> 739
+> 740         if (!iov->num_VFs)
+> 741                 return;
+> 742
+> 743         sriov_del_vfs(dev);
+> 744         iov->ctrl &= ~(PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE);
+> 745         pci_cfg_access_lock(dev);
+> 746         pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, iov->ctrl);
+> 747         ssleep(1);
+> 748         pci_cfg_access_unlock(dev);
+> 749
+> 750         pcibios_sriov_disable(dev);
+> 751
+> 752         if (iov->link != dev->devfn)
+> 753                 sysfs_remove_link(&dev->dev.kobj, "dep_link");
+> 754
+> 755         iov->num_VFs = 0;
+> 756         pci_iov_set_numvfs(dev, 0);
+> 757 }
+> 
+> sriov_disable() will unload the VF and remove its files from sysfs.
+> 
+> drivers/pci/pci-sysfs.c
+> 
+>   435 static ssize_t rescan_store(const struct bus_type *bus, const char *buf, size_t count)
+>   436 {
+>   437         unsigned long val;
+>   438         struct pci_bus *b = NULL;
+>   439
+>   440         if (kstrtoul(buf, 0, &val) < 0)
+>   441                 return -EINVAL;
+>   442
+>   443         if (val) {
+>   444                 pci_lock_rescan_remove();
+>   445                 while ((b = pci_find_next_bus(b)) != NULL)
+>   446                         pci_rescan_bus(b);
+>   447                 pci_unlock_rescan_remove();
+>   448         }
+>   449         return count;
+>   450 }
+>   451 static BUS_ATTR_WO(rescan);
+> 
+> The `rescan_store()` function will scan the entire PCI bus, including the relevant sysfs files for the aforementioned VFs.
+> 
+> Initially, it seemed that directly adding the pci_lock_rescan_remove() lock to sriov_disable() could solve the problem.
+> However, it was later discovered that this might lead to a deadlock issue (because the remove_store() function would call sriov_disable(), causing a deadlock).
+> 
+> drivers/pci/pci-sysfs.c
+> 
+>   487 static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+>   488                             const char *buf, size_t count)
+>   489 {
+>   490         unsigned long val;
+>   491
+>   492         if (kstrtoul(buf, 0, &val) < 0)
+>   493                 return -EINVAL;
+>   494
+>   495         if (val && device_remove_file_self(dev, attr))
+>   496
+>          //Subsequently, sriov_disable() will be invoked.
+>                  pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+>   497         return count;
+>   498 }
+>   499 static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL,
+>   500                                   remove_store);
+> 
+> The function `pci_stop_and_remove_bus_device_locked()` acquires the `pci_lock_rescan_remove()` lock and subsequently calls `sriov_disable()`.
+> If the lock is added within `sriov_disable()`, it could lead to a deadlock.
+> 
+> Should we add a new lock to address this issue, or are there any other ideas? I would like to consult and discuss this with everyone.
+> 
+> Thanks,
+> Bingquan Mou <moubingquan@h-partners.com>
 
 
