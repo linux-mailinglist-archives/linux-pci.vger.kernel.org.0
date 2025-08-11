@@ -1,119 +1,102 @@
-Return-Path: <linux-pci+bounces-33779-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33780-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDC22B213BF
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 19:58:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82AE1B214C2
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 20:46:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 06938188C426
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 17:58:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4363862845E
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 18:46:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0D132D3ED2;
-	Mon, 11 Aug 2025 17:57:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D5852E7F21;
+	Mon, 11 Aug 2025 18:41:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KVuIKbzh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="do8kYorp"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793C729BD8E;
-	Mon, 11 Aug 2025 17:57:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30AAC2E7F19;
+	Mon, 11 Aug 2025 18:41:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754935079; cv=none; b=C7RwzLG8GO2+Ks28bM3VTGFMChldLC+1u0PAjQ9HRsJeTIthFHN+YUT4QJ38DDNrwVYiXdGUHfP0mgNFr5+nj53iz/2PWf/ah/wSuE8g/s2YkbcQTYOnc9OkD0uX8wQCZ84uvOH+tpidtFCBZ2N15yhbIUA/43LADgVxrj00imA=
+	t=1754937692; cv=none; b=AATWFjXslCi+xpqXSEiy21KTQ3Jkt0Z1jjT0PicpnmM9Fymod1soiOvJOV/Ltn2Cp4ZPQJ90LqQeDlwaA8osSPpQdCTrF+hiceReJDzkjqkuBNyrl5VArDwsQpUNzfxAmnjgXRs+kxM5TINrtEuydAkYL9LbPQPGj8FkBPxsAuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754935079; c=relaxed/simple;
-	bh=KbGUxirDtI9Kf68XjvOl3ppeB/LXHzVpRLMz2spyTb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VWg0eQ/h5WlE/nKjER0ufQhWsoW6wSEN00V/qxXcLI9ardazDdzHF6KVkTzQ6Dztze4b0aNlKVSSD5j6+IjJgIti41MdTFnojzblFtfhWm7lVGGGmgHmNDWaXcJ935HckXw86Q3CPqDT+w3jf+qTdLypaXBMfT9jV5PZZxHIXBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KVuIKbzh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC404C4CEED;
-	Mon, 11 Aug 2025 17:57:58 +0000 (UTC)
+	s=arc-20240116; t=1754937692; c=relaxed/simple;
+	bh=COI84o40coP9gqyrgy3EfpXZhcX5MQJ1jz4hmJxZrLU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pXZJfNSotvKy52BF8kQp6kh6ThmlSlwFPWsot0GYo12HfKp5R3a5b98ujfNHAhIJqU/ikhRMm0ArpVy1RyrYG3G49USUpXOkFOk1ma0CilM5qoRKknK7SAYJD75MSZOU+T+m9xCIqHdCC1C0r0qrVa097CMJjp7Ve1R9HzdXq0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=do8kYorp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F902C4CEFB;
+	Mon, 11 Aug 2025 18:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754935079;
-	bh=KbGUxirDtI9Kf68XjvOl3ppeB/LXHzVpRLMz2spyTb4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KVuIKbzhtlF6OI9V/9kf/kvds8f25VeYa/vZWvIcf0ONaWhw7Wuk1dk9BjuXTHEir
-	 VhTzK3zrzG06kDp83jwIIup4O6mFFXHabztuhzC+t4u89OGThqmhOJZuQTLDqag3t5
-	 OrGcOxUzqgczU6hCXnjfj3+eOB9SEiSwMKRCcrd1UIRw3faBbwau8wZsEeuQCfMLH6
-	 XAVRguj6Y4J5Brp1cQV5979z2yz/d/Yh+CMUgFZ7+kgjTDhXzObxFklbmOsm0gSjE4
-	 z/701wFvNHkrrs5zTfZmS2OuFBpd7uZ6C+BUw0cS6oA4CeED3IqdKEC0Zt1p9hMLWp
-	 tbX+vKXiVPGxQ==
-Received: by pali.im (Postfix)
-	id 68C69730; Mon, 11 Aug 2025 19:57:56 +0200 (CEST)
-Date: Mon, 11 Aug 2025 19:57:56 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Rostyslav Khudolii <ros@qtec.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Yazen Ghannam <yazen.ghannam@amd.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Filip =?utf-8?B?xaB0xJtkcm9uc2vDvQ==?= <p@regnarg.cz>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: PCI IO ECS access is no longer possible for AMD family 17h
-Message-ID: <20250811175756.kqtbnlrmzphpj2lm@pali>
-References: <20241219112125.GAZ2QBteug3I1Sb46q@fat_crate.local>
- <20241219164408.GA1454146@yaz-khff2.amd.com>
- <CAJDH93vm0buJn5vZEz9k9GRC3Kr6H7=0MSJpFtdpy_dSsUMDCQ@mail.gmail.com>
- <Z78uOaPESGXWN46M@gmail.com>
- <CAJDH93uE+foFfRAXVJ48-PYvEUsbpEu_-BVoG-5HsDG66yY7AQ@mail.gmail.com>
- <20250621145015.v7vrlckn6jqtfnb3@pali>
- <CAJDH93vTBkk7a5D0nOgNfBEjGfMhKbFnUWaQ1r6NDLqm0j3kOA@mail.gmail.com>
- <20250715170637.mtplp7s73zwdbjay@pali>
- <CAJDH93uXuR8cWSnUgOWwi=JNuS543mHLPJb9UUac2g=K4bFMSQ@mail.gmail.com>
- <20250716181320.rhhcdymjy26kg7rq@pali>
+	s=k20201202; t=1754937692;
+	bh=COI84o40coP9gqyrgy3EfpXZhcX5MQJ1jz4hmJxZrLU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=do8kYorp+yE9fXkBH0f34e4Fd1D6nMcKXJYLJFKuv86ZgHGExVC4XQBW5zgIVEg+2
+	 H+/U2K3zGXKs7ga3Da1teaf6rrQ2kdY5gCRy4A0RhF20EMsXsyDceGvaJ0K6jn78eb
+	 9RuuC4sIADlq6psBZHg+Fh4ca89muvxNBUM44huLNa4SfCgRIV2xKW/RCeV5Ybj4Ry
+	 94mR9oT/SQjd2YzRhJDrL+xL8O8wIZjlwH4u/xSMzBPteGJZ4zEYuCAsutpiUT30YZ
+	 tcrL2HVZcGNh0Tn5SCPL2FUHP8My9jy76MZCGVrWXSpOFN1uwIp0mzDsw6Oo1XaazH
+	 L0b5Q6vPN+HAg==
+From: Bjorn Andersson <andersson@kernel.org>
+To: konradybcio@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	jingoohan1@gmail.com,
+	mani@kernel.org,
+	lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	bhelgaas@google.com,
+	johan+linaro@kernel.org,
+	vkoul@kernel.org,
+	kishon@kernel.org,
+	neil.armstrong@linaro.org,
+	abel.vesa@linaro.org,
+	Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	qiang.yu@oss.qualcomm.com,
+	quic_krichai@quicinc.com,
+	quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v9 0/2] pci: qcom: Add QCS615 PCIe support
+Date: Mon, 11 Aug 2025 13:41:10 -0500
+Message-ID: <175493766101.138281.16774900398360513894.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250725112346.614316-1-ziyue.zhang@oss.qualcomm.com>
+References: <20250725112346.614316-1-ziyue.zhang@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250716181320.rhhcdymjy26kg7rq@pali>
-User-Agent: NeoMutt/20180716
 
-Hello Rostyslav, I would like to remind the previous email.
-I still do not know which bit in D18F4x044 represents the
-EnableCF8ExtCfg config.
 
-On Wednesday 16 July 2025 20:13:20 Pali Rohár wrote:
-> On Wednesday 16 July 2025 10:03:40 Rostyslav Khudolii wrote:
-> > > Hello, thank you for information.
-> > >
-> > > Just I would like to know, where did you find information that the
-> > > EnableCF8ExtCfg register was moved to D18F4x044? It is documented in
-> > > some AMD specification?
-> > >
-> > > I did not find anything regarding this change.
-> > 
-> > I mentioned the exact specification in my first message. It's under
-> > NDA, unfortunately.
+On Fri, 25 Jul 2025 19:23:44 +0800, Ziyue Zhang wrote:
+> This series adds document, phy, configs support for PCIe in QCS615.
 > 
-> Do you know if this applies only for AMD family 17? Or also for later
-> fam 18, 19 and 1a?
-> 
-> And for confirmation, which bit represent the EnableCF8ExtCfg in PCI
-> config space register D18F4x044? It is still 14th bit like in family 16h?
+> This series depend on the dt-bindings change
+> https://lore.kernel.org/all/20250521-topic-8150_pcie_drop_clocks-v1-0-3d42e84f6453@oss.qualcomm.com/
 > 
 > 
-> Just for explanation, in your first message you wrote:
-> 
->   "register still exists but is now located at a different address (see
->   the "Processor Programming Reference (PPR) for AMD Family 17h", Section 2.1.8)."
-> 
-> Document named "Processor Programming Reference (PPR) for AMD Family 17h
-> Models 01h,08h, Revision B2 Processors" with revision information
-> "54945 Rev 3.03 - Jun 14, 2019" is publicly available at AMD web:
-> 
-> https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/programmer-references/54945-ppr-family-17h-models-00h-0fh-processors.zip
-> 
-> I looked into that document into section 2.1.8 "PCI Configuration Legacy Access"
-> and there is not related to EnableCF8ExtCfg.
-> 
-> So I was somehow confused to which section / document you are referring.
-> And now if I understand correctly, you have NDA documentation with the
-> same title as the above public one, but with the different content, right?
+
+Applied, thanks!
+
+[1/2] arm64: dts: qcom: qcs615: enable pcie
+      commit: 718cc7542a000e2911c8d18878ba2eac5f29e744
+[2/2] arm64: dts: qcom: qcs615-ride: Enable PCIe interface
+      commit: 414be2b5a79de8694db1e26a3ea63a2aee5957ad
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
 
