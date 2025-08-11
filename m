@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-33784-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33785-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03C1EB215A5
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 21:41:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F7A2B215A8
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 21:41:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5BB66190810A
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 19:41:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E7E081908339
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 19:42:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 742132D9EE2;
-	Mon, 11 Aug 2025 19:41:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8C7C2E11DE;
+	Mon, 11 Aug 2025 19:41:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MhQyYrQi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ab0NlJoX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4191F2BD580;
-	Mon, 11 Aug 2025 19:41:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D062BD580;
+	Mon, 11 Aug 2025 19:41:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754941273; cv=none; b=IOO8c6smXm1v0VhiOxuxL+3+7+LkzuDGvvTu3XLDGI9fyDmeXYNiPHVWslAStMvOd+0BHkx5oEoDrOvRnVAuBoDDtsVp+wMUEbPu/30x0git+DVD5YeC+bcbJnygYjgRkJfbMzXylwsSjOOW8Ku99CuhwHE9FpvSfFn6VHtackc=
+	t=1754941275; cv=none; b=F4QvwNacocvyrZ0iSRkByEcdXKPKXgAXv5JayCOUsIgyFq90IUr6nksW9Z40/P4BvfxAefpnRQnLi3+uxDjzC8EXSOYnTdxLkfZ1j100z9Tm96KBEVLxDNqOuwb89YzHopKPuKi52L0tr8/p0BeZv95Gv3LHOIN5se3BQB9b6WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754941273; c=relaxed/simple;
-	bh=nP9n5VGF2FskJeZ1oNEb2BbawXh/NPFp8tsiOD47chk=;
+	s=arc-20240116; t=1754941275; c=relaxed/simple;
+	bh=0L8ILI5VlxDH9DgDwEiUXlzII6qULtClGxRZoPNq2oQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Dm/e66T+ecqafainBjQMVS4h6aNUuZzeTF7v6dSA7toXq4FI1ab3izLep7Bco0GIH1lRndgZpt7P62FS4LYh3NVB6hcASPxZz7Yuney8WNhVI5CM6HCDiJtwGfG9mtkbRlUEypw3eEsrXNkMX1RVOu5gaxHIx4xhYYpt/uEMEJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MhQyYrQi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7352C4CEF7;
-	Mon, 11 Aug 2025 19:41:10 +0000 (UTC)
+	 MIME-Version; b=kjCVq7rei007HvsSVKxwsbgSWoM2OtDPkzKX1n9vZ0JcAwfCtVh2Mf6hwu+ooeJqeBajz7f115SIR92yd8Cfd34ZTNrtd4fKjN3+1ZmcV+yLwj6Kl+nGZ0lJAnp4o7t3qmi3Azn5yb4pjYz0PdyHpywHyYx+d2GD7Kjvu9X577M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ab0NlJoX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E69CC4CEF6;
+	Mon, 11 Aug 2025 19:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754941272;
-	bh=nP9n5VGF2FskJeZ1oNEb2BbawXh/NPFp8tsiOD47chk=;
+	s=k20201202; t=1754941275;
+	bh=0L8ILI5VlxDH9DgDwEiUXlzII6qULtClGxRZoPNq2oQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MhQyYrQigt3OL6Zz1HRengUExhq4vCXulgBVfZ/yv+evmV/L9bbmFhvXsDhwdq3cO
-	 Fguj6CyvunoXuvDmg6/dbWNW0G+trkddAm2Q1YvGSKJ3ML76l2DNQAr4WL1WCF1mdL
-	 EmlXLV0NKPuMYvmco8glPTcEZshIJ/sJLZIKRqlquy+vrfUpoIv9+bShxrDYridzlQ
-	 5pHfEbQDE2/b8gSXv8Bdf9C/hmOv3xPdye+8V9Xl5QeCko+B9s7v/7VrNv2Ce6WmfI
-	 XP0sUf8Jv6HHEO+zIw6rlbkbqPzCzf1FN5cY3DCBSiLtVrgh+CV4gxZTuL5pbP90Ng
-	 Mr0dI33vIggXg==
+	b=ab0NlJoXBfYciB8ekCwVl3p63Ad0qow/dGnB7GivnFrgy+sbD0jVVYZvnTJAKnOb9
+	 Vhp6kiL7Q6lwIbrMvNykUjlSnChXsgCKmYZm/QRE+4cf+Yg2mVRQeVaAWhB05swYrZ
+	 fSNtjdwC7OT2uMDasW/qIWnHwWBtLCzhtrlNygaNPA99ABwxKnoCLWNmHBqdxCnBlt
+	 r42rFWzr98AARfMnLoYu/BfKHiUV6+3RZ3BLkhmaHkgJ/0u75HMgFe06Ra3V96Pjc8
+	 CG13OaxAmDvv0znxJekABY6xdn3JZujuxTeplRkbQfMyfQDLuHG/cwSYC7qNyM1GCm
+	 MKmNaHReBkfBQ==
 From: "Mario Limonciello (AMD)" <superm1@kernel.org>
 To: "Rafael J . Wysocki" <rafael@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>
@@ -65,9 +65,9 @@ Cc: Pavel Machek <pavel@kernel.org>,
 	=?UTF-8?q?Merthan=20Karaka=C5=9F?= <m3rthn.k@gmail.com>,
 	Eric Naim <dnaim@cachyos.org>,
 	"Mario Limonciello (AMD)" <superm1@kernel.org>
-Subject: [PATCH v5 02/11] scsi: Add PM_EVENT_POWEROFF into suspend callbacks
-Date: Mon, 11 Aug 2025 14:40:53 -0500
-Message-ID: <20250811194102.864225-3-superm1@kernel.org>
+Subject: [PATCH v5 03/11] usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
+Date: Mon, 11 Aug 2025 14:40:54 -0500
+Message-ID: <20250811194102.864225-4-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250811194102.864225-1-superm1@kernel.org>
 References: <20250811194102.864225-1-superm1@kernel.org>
@@ -88,37 +88,25 @@ Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
 ---
 v5:
  * Re-order
+ * Add tags
 v4:
  * https://lore.kernel.org/linux-pci/20250616175019.3471583-1-superm1@kernel.org/
 ---
- drivers/scsi/mesh.c | 1 +
- drivers/scsi/stex.c | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/usb/host/sl811-hcd.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/mesh.c b/drivers/scsi/mesh.c
-index 1c15cac41d805..768b85eecc8fd 100644
---- a/drivers/scsi/mesh.c
-+++ b/drivers/scsi/mesh.c
-@@ -1762,6 +1762,7 @@ static int mesh_suspend(struct macio_dev *mdev, pm_message_t mesg)
- 	case PM_EVENT_SUSPEND:
- 	case PM_EVENT_HIBERNATE:
- 	case PM_EVENT_FREEZE:
-+	case PM_EVENT_POWEROFF:
+diff --git a/drivers/usb/host/sl811-hcd.c b/drivers/usb/host/sl811-hcd.c
+index ea3cab99c5d40..5d6dba681e503 100644
+--- a/drivers/usb/host/sl811-hcd.c
++++ b/drivers/usb/host/sl811-hcd.c
+@@ -1748,6 +1748,7 @@ sl811h_suspend(struct platform_device *dev, pm_message_t state)
  		break;
- 	default:
- 		return 0;
-diff --git a/drivers/scsi/stex.c b/drivers/scsi/stex.c
-index 63ed7f9aaa937..ee9372e1f7f07 100644
---- a/drivers/scsi/stex.c
-+++ b/drivers/scsi/stex.c
-@@ -1965,6 +1965,7 @@ static int stex_choice_sleep_mic(struct st_hba *hba, pm_message_t state)
  	case PM_EVENT_SUSPEND:
- 		return ST_S3;
  	case PM_EVENT_HIBERNATE:
 +	case PM_EVENT_POWEROFF:
- 		hba->msi_lock = 0;
- 		return ST_S4;
- 	default:
+ 	case PM_EVENT_PRETHAW:		/* explicitly discard hw state */
+ 		port_power(sl811, 0);
+ 		break;
 -- 
 2.43.0
 
