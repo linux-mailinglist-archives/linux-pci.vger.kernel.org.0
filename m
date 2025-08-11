@@ -1,101 +1,123 @@
-Return-Path: <linux-pci+bounces-33689-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33690-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0FE9B1FE8C
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 07:28:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 099D5B1FEB4
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 07:39:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7A7A189919D
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 05:28:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3911118993C8
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 05:40:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F380B263C9F;
-	Mon, 11 Aug 2025 05:28:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26F9E26B098;
+	Mon, 11 Aug 2025 05:39:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wOc5kP3n"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b9iGjgcf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b6TAgw11"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E221922FB;
-	Mon, 11 Aug 2025 05:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390621DF98F;
+	Mon, 11 Aug 2025 05:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754890105; cv=none; b=toEW7MOY+EHvZrSi478saakexssXXMXfsi5Otv2G374D9u8Usr89TmPD/5cNU77vmP/eya9QHs2yHubxU17Y3u3oH2IRvDQljkpHg1fA2QkhRczfyk2bv/8yEuAI4QC2ZM46pGIzmLqJHvxl3RadHj1/N3x3OviE4Ni9GsrVfck=
+	t=1754890794; cv=none; b=LaZgVpVqd745mKJnn+APL9WcFGLYs3to+sO6iF2+yc5L+kK4bW0sIN9eKxiKaSdWWjZa075egOeGeP9Ebfx/Km6Yn/JH/6uzf/ssjcaBrK1xhycgmYAv8vfVeklMM5lYM9wYQDkdAdsZLJYS6A3o6VJV4fWVGM9vL8LQA+/xQbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754890105; c=relaxed/simple;
-	bh=cpaSvl6SsSfs7gOlt6S9ri9UH97CzFJnhSJf+CPOD2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kzoqkTWXQoO8f4haYVt5gUO0nZYyOrLb1q8aJadf9lX+SwPJV2E9m4hfVXogtqKdL5tJi/zj+DxvcwyKTGvQO3GUGGuLL1Ye95n6XkVIH7nncD3+7LQRMI0Y+TuMflllpToROavT6TMdm7xaf9J57cKGe9rCGtI7G3iBOqaBJtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wOc5kP3n; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B86B7C4CEED;
-	Mon, 11 Aug 2025 05:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1754890104;
-	bh=cpaSvl6SsSfs7gOlt6S9ri9UH97CzFJnhSJf+CPOD2I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wOc5kP3nhg4yFQ4BSsI0N73wpKDhxKPsla46GlOZlDL9HCb3ZbgupbGDxlyKZc4u7
-	 tXweOq/HTKdMP0YeohRqtqQD7rslTrc2bB3OWrphE+xgRI6h6YGzhTMKzIuCCqRPKu
-	 R1ZNcbQvsDB9aRiV55o5qUnXNOGP2E5E3kRqqAEk=
-Date: Mon, 11 Aug 2025 07:28:21 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Mario Limonciello <superm1@kernel.org>,
-	"Rangoju, Raju" <raju.rangoju@amd.com>, linux-usb@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	andreas.noever@gmail.com, michael.jamet@intel.com,
-	westeri@kernel.org, YehezkelShB@gmail.com, bhelgaas@google.com,
-	Sanath.S@amd.com
-Subject: Re: [PATCH 0/3] thunderbolt: Update XDomain vendor properties
- dynamically
-Message-ID: <2025081128-cartwheel-grandly-a9be@gregkh>
-References: <20250806150024.GF476609@black.igk.intel.com>
- <2025080628-viral-untruth-4811@gregkh>
- <20250807051533.GG476609@black.igk.intel.com>
- <2025080758-supervise-craftily-9b7f@gregkh>
- <17ed42fe-9d8d-46da-8434-f508ec5932fa@kernel.org>
- <20250808044538.GK476609@black.igk.intel.com>
- <2025080822-cardboard-aloha-3c5d@gregkh>
- <20250808091313.GN476609@black.igk.intel.com>
- <2025080832-poker-rectal-0895@gregkh>
- <20250811045307.GP476609@black.igk.intel.com>
+	s=arc-20240116; t=1754890794; c=relaxed/simple;
+	bh=pnbyQwhaH5zwVvUKdyPprRrHHy4L1oKq2FZOE5FNDD8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QXd0nB4bc4d6/cnSXyyxOAZZ4K+/1xaRoxLCqu01wVkSsRj2AaRHtNRwEeBORiBJLIe2A50gFPCu3YTbu14AEvqzaggL8fmw9iTBCJSCc3UfhgzctKfUq5Ch/IXDUxPjjAkVSykCYBWmG3UT/ad4znj6MS01ZlaonegqbgG7+hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=b9iGjgcf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=b6TAgw11; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1754890784;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MJIhtkGvgAsmM0h4kM8I7PSa6klKjzmZORs6f49BmYA=;
+	b=b9iGjgcfDGPemL2W21lMxlQ0pwOKRMzP6HOZtjtKaJGuj1P+bAZPwqaD8JLrFLcRGfqvE8
+	QbBSWyeSTCO2dRw1E69MPv1amJ4gBapfzM+jXDNemNsiVvgpFVNxJS+6M44HwE92JTR7D5
+	9MKdCgr73WGlqFeLXIYKQgRNqcee/EeWPiljIEaDfFi/IeZBq0rO4FVxgCKXw105z5d7xG
+	7BJmeoMCZlc66ZtB5hXtM3ngtdsA0+jwr7Cq70cJBxsQP2660h6zSCfbOt7HKcK34qWuk3
+	gcLsAIuO0hjzxQdsJUbRh/JDAmePvVN8z9C+KaRGAP2Xk+V2IXkTl4z1KWTbwg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1754890784;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MJIhtkGvgAsmM0h4kM8I7PSa6klKjzmZORs6f49BmYA=;
+	b=b6TAgw11vXrgWxBP584McGUlXhGR77xJbrjdfKRvFu/GWNKM7Ovmgh3pkvLZ3m0UHcSt7R
+	jFkNqkyBjETbAaDA==
+To: Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>,
+	Ammar Faizi <ammarfaizi2@gnuweeb.org>
+Subject: [PATCH] PCI: vmd: Remove MSI-X check on child devices
+Date: Mon, 11 Aug 2025 07:39:35 +0200
+Message-Id: <20250811053935.4049211-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250811045307.GP476609@black.igk.intel.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 11, 2025 at 06:53:07AM +0200, Mika Westerberg wrote:
-> On Fri, Aug 08, 2025 at 04:13:28PM +0100, Greg KH wrote:
-> > > 0004 USB4
-> > > 
-> > > sounds good to me. In USB4 there is no "root hub". It's called host router
-> > > (but we do have device routers that are called USB4 hubs for added
-> > > confusion ;-).
-> > > 
-> > > But I'm fine with other numbers too, does not matter if you want to save it
-> > > for some future USB variant.
-> > 
-> > Ok, use 0004 for this.  But what should I use for the text string here
-> > in the usb.ids file?
-> 
-> Thanks! I'll cook up a patch changing these.
-> 
-> I don't think it should be in usb.ids because it is not visible anywhere
-> except over USB4 link (between hosts). You don't see this through USB 2.x
-> or 3.x.
+Commit d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()")
+added a WARN_ON sanity check that child devices support MSI-X, because VMD
+document says [1]:
 
-It goes in usb.ids as that is what I use to keep track of all of the
-assigned product ids for this vendor :)
+    "Intel VMD only supports MSIx Interrupts from child devices and
+    therefore the BIOS must enable PCIe Hot Plug and MSIx interrups [sic]."
 
-So, should I use "USB 4.0 host link" or something else?
+However, on Ammar's machine, a PCIe port below VMD does not support MSI-X,
+triggering this WARN_ON.
 
-thanks,
+This inconsistency between the document and reality should be investigated
+further. For now, remove the MSI-X check.
 
-greg k-h
+Allowing child devices without MSI-X despite what the document says does
+sound suspicious, but that's what the driver had been doing before the
+WARN_ON is added.
+
+Fixes: d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()")
+Link: https://cdrdv2-public.intel.com/776857/VMD_White_Paper.pdf [1]
+Reported-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+Closes: https://lore.kernel.org/linux-pci/aJXYhfc%2F6DfcqfqF@linux.gnuweeb.=
+org/
+Tested-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+ drivers/pci/controller/vmd.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index b679c7f28f51..1bd5bf4a6097 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -306,9 +306,6 @@ static bool vmd_init_dev_msi_info(struct device *dev, s=
+truct irq_domain *domain,
+ 				  struct irq_domain *real_parent,
+ 				  struct msi_domain_info *info)
+ {
+-	if (WARN_ON_ONCE(info->bus_token !=3D DOMAIN_BUS_PCI_DEVICE_MSIX))
+-		return false;
+-
+ 	if (!msi_lib_init_dev_msi_info(dev, domain, real_parent, info))
+ 		return false;
+=20
+--=20
+2.39.5
+
 
