@@ -1,99 +1,109 @@
-Return-Path: <linux-pci+bounces-33713-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33714-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4B1CB205EF
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 12:43:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B85C4B20605
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 12:46:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EEA9317FCE2
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 10:43:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B278B188FF06
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 10:46:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06FE825A2C3;
-	Mon, 11 Aug 2025 10:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFFC324468C;
+	Mon, 11 Aug 2025 10:46:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="D+1VAEJL"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UCTMxnrd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B9E24293B
-	for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 10:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BEAD2253A7
+	for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 10:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754908994; cv=none; b=CwRKaZiL+OE4DpoUhXgWRePklatmVojCjCJiMVZwDL0WMDTkXzZt2ZN5D6B08Y1oY2FqW8wtWC2VJGdyLEy4xK9j+uROuqy1LLCQAt170S3BS5MzpROy8m6pEjKKj5byddYVeSkoGSDZ10Wok7VErurY0wGw8kJTzgjJ8RPJTiw=
+	t=1754909183; cv=none; b=iPH1JF9w8EEvgh195qY9eyD4y7UlUSqGi9ACCKxmpLOzISJ2hHgdjeJ6gllm84rh6f9KbnOf9+aNzjzseSeaY507DRQYwVNvkzTInlgXZdoB/5pE6Mxqg2MzzKtZQ6Lyphc3cYVyB5y8xaWyAMQ62gnVZ7OZBb3chP4QqyqGm3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754908994; c=relaxed/simple;
-	bh=uI1qlE8mNwl+7U/Zq89lRtEDqXY5odccHvrk8H31t3g=;
+	s=arc-20240116; t=1754909183; c=relaxed/simple;
+	bh=hIpIhI+Dq782DmocD1dRgsqRHVmepVB9EO1vCQZPW14=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=UUCIQ6WMFKCytSw0Xg+dO/4kjGf2WOQ0AlAtaxEqoQQdeoMsiBvjYGFscToaxj7VbMWwmqShR8qDN8NBVppFcJEQzhzQcu1dCjKNZgO68YxHM+ry8pW1lAUbT/9BnVUrmTUxHNDu56FeTp/A7hMISC9OUQuJ0Il8QvRfAMRvfIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=D+1VAEJL; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=A5c6oaqo/i3CzdZ6Y2MXV/h3nNLUKlyDauVqeg+9naDcprA3HoH6HR6v6strNclEY9D2mavhSzZdkV4LiAuQwcsIHAhK9euUKfq0g6h38tyG++awpikESHEhv8w8WhuVu+yK38jaSDJiJP1isAN7W7GJXdO4yfeZU2MJjvSUVtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UCTMxnrd; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57B9d9r8019056
-	for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 10:43:12 GMT
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57B9dKNM018331
+	for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 10:46:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8zYECM9evko8+4kaPfkHLKf4WdgTATPIrfOBTW6QamI=; b=D+1VAEJLDSNUiaTo
-	TLFhVViWnLmEST1vj1Xzy96kl2T27LjhJhhVnZAViKjqTdZSUCPr5BGHsB4nYLLf
-	IFp1ZE1v6KL1K8DbFx9M3op/z6nzgeTor3XV7hFr3fw9yS/7IO/E6f41vtPEQOg9
-	tJoDO6IUa++JKBGS9Hj5twnTDx0y5iLmCs/nEm66+O+nCfXn2yqyv7smtbvLqA63
-	TTC2rA5JuWCDIDXPAhkXqYPpS9WReKGzeE25d1UOoMVC1QJB3DMAypcrMyg9g8kF
-	qtPu+u65t4+1Xu9O5NGBUpvxPRUvET9d99zFMJNSTcDm4I88YbgAo7neelsjXZIf
-	HRhVzA==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48dxduv1cb-1
+	f8htCJxgK9LamUpOqKUewYZZ+4H90QWTRJft0U76ZI4=; b=UCTMxnrd6/16AUhy
+	XLcrUIybjNmdTrEQtLxEjTdW4kVnAemCiLZq1Mb4vvfvnAmsCNlcAJQG3gQSUDMs
+	IOSmdOxRgDiuVv7zveTixoNo/0Qaz5OKOCf5D6/jESnWnMLkbMBJP/eupYp7dpzJ
+	/TtzQn2IELXKMB3PbjaKubG6Ii02IgISs8x/crwXGbZ87WBvK9EUkMlqMBFV1o4L
+	zV05exbfyrflL0Cs9+jwTuCnT4czWbvzB40Kvu/l/EWqR1yw6kV5pSSUu2bDq0Uh
+	8aSFkWOFNUA+63BXErWgWMMawYjQ9uVeN7u1LlZwIcx+TDfyQkNSF8TzMvTeut4j
+	fdpHfg==
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48dy3g41eg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 10:43:12 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-23fed1492f6so64336795ad.2
-        for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 03:43:12 -0700 (PDT)
+	for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 10:46:21 +0000 (GMT)
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-76be0be9ee1so4306186b3a.2
+        for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 03:46:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754908991; x=1755513791;
+        d=1e100.net; s=20230601; t=1754909181; x=1755513981;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8zYECM9evko8+4kaPfkHLKf4WdgTATPIrfOBTW6QamI=;
-        b=tWWqzbMzjyP8oejVe2VlpE7N1cp+HgGZxWgy7SSwkEYcaxOoxQYNlCBaFH7Fs/yr69
-         sUizeo8wTgBp+vYgerAqxZyiKVmKJvj8qTWDmV4BuTRFedYV+QSb1h6PfSFRk8b5Vlkn
-         xZIM3LWCZ/lE1+mI7FPir6suO+Qkqf87x9q19JQt2EknMA92ZWDgn0B7oNNsfBW+D9PS
-         oLCyb6jw4/polQ4zT/SONx3IFfdTvmaV+ZKA1npf8yCfhIuFd6AvjuBREfus7tSigw/l
-         WmB5m6vnlaxpC0qPePGzyDtyG7D+ZQtuum7ThXUpdzMpWaxI4UHfW0AcWn/8EkRpuX6P
-         Ac7w==
-X-Gm-Message-State: AOJu0Yw+izP5gHCgi/FL584CRS4Vi3iryCpIDCQtNbF9xVMXa7zT2HeX
-	i7wS0GLZI5nNr32nsgW0EUnTcYb5qOQWY6/ECos4yXiximyCF0HjEOQAyPY8ZBR0D+XU8ILCFXp
-	I7TLbXDmdskc0PfDQoDLlX1BLUEQ54XIWF7lGr4YwwhBvsxqliQ6QQvmQ2Env0YA=
-X-Gm-Gg: ASbGnctzIjdXTdDPbKqpsSb6O2nturIZTzNA4RX9zOtexQE54yr/wC09PcqSs24D0Da
-	jJN3h24UvUnsGMpNzYitCt9ghO/mtHXnHjgtH7k8UnIE22uAvdY/cFdUi/dDdOJozNFQPxSW566
-	RZm9vhdNjyV1FgqK/pY2w4xpbshOlVyIcTpEUiLcV1gKAZ/sAOZf25HDpr0EVfmMT2YSRePUK5g
-	GUGKn5nGS3vEkSiNECS6QP3lcwKzb4XnJxPb4KbP3omo/ZpjH/bPUPm0HZ7x2uY17NB86dpmkXY
-	Yrmfxso8pnZoh3rlHEtnP7HO2YyXx5ju1y/k+A32
-X-Received: by 2002:a17:903:2391:b0:240:96a:b81d with SMTP id d9443c01a7336-242c20703ebmr149368715ad.5.1754908991086;
-        Mon, 11 Aug 2025 03:43:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHlsLmB/Pp/RBYg+2IKrGsD7TxooswoCU4sh8Et/J0LGapHBMCtkeQm+I0Y4vEDJ1kjwbVqjQ==
-X-Received: by 2002:a17:903:2391:b0:240:96a:b81d with SMTP id d9443c01a7336-242c20703ebmr149368575ad.5.1754908990693;
-        Mon, 11 Aug 2025 03:43:10 -0700 (PDT)
+        bh=f8htCJxgK9LamUpOqKUewYZZ+4H90QWTRJft0U76ZI4=;
+        b=LlsYnPPvGmYCLSN1QucrcYuqhxHa961lCrtGQwqemmHl/VQ7UAqVRkpoU+r46k1X0z
+         nEFJ0lCnS1XwczLRPu4k2kw8qr8DBzS9yzEeTLMCsZchTyGnateFYGSUCC5ghuWXiwnS
+         ubd2p8Ha2mB3c5z4sHtOVIAk9KKnYgJc7+sG1vImof3/6Ipjd5h381oF5cysp2pefgV+
+         /S+TDIklYlaQ24bNXQvUmaoNSH/pE86BbReY+pr6md624BAPFzmRUpQjwAUi1Qj/Z0+B
+         PB5HTqby3aY/9WtHEhoWLDbfeN7Q/57qU1S5ODX3W0MQ3NOQ4l/3BNS4W6S+v1wc0UZG
+         Mw0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXGA2NhZCbbBfhIDjMiAbUPCXRdiNDsRykRPuDiUdtiJV/1+cJuJ3pGc2YZwG5Gakh17QkqKpU9vTY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2XcjwU2zhhoNslVD8+4x2DAw0TZu9soQTIH5I/HmwEKX8LS+N
+	69P1YeP+HqY91A36UCcN7yZr/0GeIci2hr8aI2e4c+DywzXrMIxpp4StV9Md91GbW2P5S5G6DeH
+	2D/i/3raYskzpPwyIMJxAUMiPUCqBP3ptpBZqngMEDlM5669kK0ODn9p78VExAkA=
+X-Gm-Gg: ASbGnct7x38aKGJ4EMPUw//Te97MD2PEWRnoFZuoPwjH0or805TBjHfpWpwKWSBZ3VL
+	5zDDi/VtFW4FE448Xh8Tx6zYWK44cVyCXP+FXlytQxGAwtqNt4O12tJuw2VUUEjPCzfsScyIkAw
+	lQoKspyVEzYD6jgASpria3rctede5wYXy5vtDX4+G2WIFd+TW24BuJp+auijNmjxpwaAY7LChzV
+	6uNMOR15kUbp2ytfW3SUBLjW91FFz7yP27DD82ULrVw7+9d7zi1V6cFGym7FqYcLhYpb5lgcuWe
+	0DVqtGahc+715Sai2ej3ibVfjTaXBg3Doi6nj3hs
+X-Received: by 2002:a05:6a00:b54:b0:746:27fc:fea9 with SMTP id d2e1a72fcca58-76c46199f56mr16736324b3a.11.1754909180974;
+        Mon, 11 Aug 2025 03:46:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpgDICoR0/7ZRQgRFsc5NvAq3BwKQx1UQi1crXpDDjlFgdgbPP/mebGYu7Qi81XEuYnSVitw==
+X-Received: by 2002:a05:6a00:b54:b0:746:27fc:fea9 with SMTP id d2e1a72fcca58-76c46199f56mr16736282b3a.11.1754909180581;
+        Mon, 11 Aug 2025 03:46:20 -0700 (PDT)
 Received: from [192.168.68.106] ([36.255.17.227])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e8976cbdsm271590415ad.75.2025.08.11.03.43.06
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76bcce8960dsm26421523b3a.34.2025.08.11.03.46.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 03:43:10 -0700 (PDT)
+        Mon, 11 Aug 2025 03:46:20 -0700 (PDT)
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
-To: bhelgaas@google.com, lpieralisi@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, cassel@kernel.org,
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Sai Krishna Musham <sai.krishna.musham@amd.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, michal.simek@amd.com,
-        bharat.kumar.gogada@amd.com, thippeswamy.havalige@amd.com
-In-Reply-To: <20250807074019.811672-1-sai.krishna.musham@amd.com>
-References: <20250807074019.811672-1-sai.krishna.musham@amd.com>
-Subject: Re: [PATCH v7 0/2] Add support for AMD Versal Gen 2 MDB PCIe RP
- PERST#
-Message-Id: <175490898683.10214.13460972543852737432.b4-ty@kernel.org>
-Date: Mon, 11 Aug 2025 16:13:06 +0530
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Ray Jui <ray.jui@broadcom.com>, Scott Branden <scott.branden@broadcom.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250801200728.3252036-2-robh@kernel.org>
+References: <20250801200728.3252036-2-robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: PCI: Add missing "#address-cells" to
+ interrupt controllers
+Message-Id: <175490917553.10504.5537940155167451079.b4-ty@kernel.org>
+Date: Mon, 11 Aug 2025 16:16:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -103,47 +113,40 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
-X-Authority-Analysis: v=2.4 cv=IuYecK/g c=1 sm=1 tr=0 ts=6899c940 cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=tivzXH558BYE5qsfyb1zSA==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=PQAuWm2BogaHsNf8J6gA:9
- a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
-X-Proofpoint-ORIG-GUID: aAvnT_wEDrMt0W9_aaRvtjjc-7rd2-Mc
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA5MDAyNSBTYWx0ZWRfXwiu1Urvaa6ck
- luWgLNQVkOQpEKC077o94c/NWdw6T/rrvUWOm8R3tvx0xeoORfPkCLGbqkV2AL9stsYXFhpEf1Z
- QfuTXLjaFewxWVcwKp3an8bFOMxDU3bL205wmnkM5Q85s9uNg0KBYeBPv6eCwK8c2DIKDIab+Rm
- uiCv1KSaC5r471og4GOYtR37Hx+KCn+8B0q24fnUYXIkcF+cgBomP192eQFPavQNMKt+OxdxtQl
- tEMImAS0C/BJX6JTkwCIGlxa6OfA+u8GlBTfz+LJnfXdDm3eXa4ZQzsR7GbD+Y7KAt+q+1dT99A
- z3TEGry845RVLlfKIxOC03ZFJ+Wk5FyBUJI6vjzr6g2HLNhDJ8OmXTUMr6jzmXLh4iA58xLHGSt
- FX1c+/QS
-X-Proofpoint-GUID: aAvnT_wEDrMt0W9_aaRvtjjc-7rd2-Mc
+X-Authority-Analysis: v=2.4 cv=X4lSKHTe c=1 sm=1 tr=0 ts=6899c9fe cx=c_pps
+ a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=tivzXH558BYE5qsfyb1zSA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=PmVlpWcjQJIy8_mLsCIA:9
+ a=QEXdDO2ut3YA:10 a=IoOABgeZipijB_acs4fv:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA5MDAzMSBTYWx0ZWRfX/r5DB9lk0HNV
+ F61gSGTnA5VBI4c0xgZd2LBpLBdiiR7qluk1VPv6e9ghjlk89BxULGVPR63YHyee+orFqdOeYgX
+ x2SXMFPIvNxFYyhyvPWz0CYJNW9Lx95SBUS4zsC/poQLqTKJzVhJ2/qaFU9mj7wqlDvJerjksUj
+ FDf54nXGoDqMsEWq/JVskqpsnFRFCefExhzxvCMI5OjCMcIqrk3ztmVqqoIsjZB8lKBh2HUWTmX
+ uVu3L2wDjLVbsshwRQztbKbXxlG60NSRql/XmDKZaWvkLNRJJEyu765J5Z1NmKC9nDoFJX4Ss1r
+ rEcgceDkcgBsbMJRh5aAQw87pz0y0pDq9aMeZrbjU/PD7kRZyoV2pkNUMo2w5b0tvpmPExpI0gP
+ CYHuder7
+X-Proofpoint-GUID: -dJHThJxUNFhiiP1ZrIWSP4ROxZaCPMP
+X-Proofpoint-ORIG-GUID: -dJHThJxUNFhiiP1ZrIWSP4ROxZaCPMP
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-08-11_01,2025-08-06_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 malwarescore=0 spamscore=0 priorityscore=1501 adultscore=0
- clxscore=1015 phishscore=0 suspectscore=0 bulkscore=0 classifier=typeunknown
+ phishscore=0 priorityscore=1501 clxscore=1015 malwarescore=0 adultscore=0
+ spamscore=0 bulkscore=0 suspectscore=0 impostorscore=0 classifier=typeunknown
  authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2508090025
+ engine=8.19.0-2507300000 definitions=main-2508090031
 
 
-On Thu, 07 Aug 2025 13:10:17 +0530, Sai Krishna Musham wrote:
-> Add example usage of reset-gpios for PCIe RP PERST#
+On Fri, 01 Aug 2025 15:07:27 -0500, Rob Herring (Arm) wrote:
+> An interrupt-controller node which is the parent provider for
+> "interrupt-map" needs an "#address-cells" property. This fixes
+> "interrupt_map" warnings in new dtc.
 > 
-> Add support for PCIe Root Port PERST# signal handling
 > 
-> Sai Krishna Musham (2):
->   dt-bindings: PCI: amd-mdb: Add example usage of reset-gpios for PCIe
->     RP PERST#
->   PCI: amd-mdb: Add support for PCIe RP PERST# signal handling
-> 
-> [...]
 
 Applied, thanks!
 
-[1/2] dt-bindings: PCI: amd-mdb: Add example usage of reset-gpios for PCIe RP PERST#
-      commit: 0b9275edc3543d0d2d03313a7c8de5157d61b189
-[2/2] PCI: amd-mdb: Add support for PCIe RP PERST# signal handling
-      commit: 1d0156c8b230ca74272708a3206684e6d6157302
+[1/1] dt-bindings: PCI: Add missing "#address-cells" to interrupt controllers
+      commit: ddb81c5c911227f0c2ef4cc94a106ebfb3cb2d56
 
 Best regards,
 -- 
