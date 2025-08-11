@@ -1,187 +1,109 @@
-Return-Path: <linux-pci+bounces-33768-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33769-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 662D5B21247
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 18:39:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBD0EB21222
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 18:36:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 35FF23E5B8B
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 16:27:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F23B77A3763
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 16:34:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A773529BD92;
-	Mon, 11 Aug 2025 16:26:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD7EA296BDF;
+	Mon, 11 Aug 2025 16:35:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JA8t82pJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PebfqRMX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80317296BD2;
-	Mon, 11 Aug 2025 16:26:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A668B296BB3;
+	Mon, 11 Aug 2025 16:35:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754929579; cv=none; b=mi6Zn8u2bZFjp+6xR4svV1bUhXKTJ0ovw7NMqImZiCt7QxDfdKwlLr9OcZuVAkZGlH1HVT/kYja1aSO0v6ToSIEr5peIJktbQ8N3qWC2ESltxcA0Em97NbxlkUyADOM4KLJr7m3LLmkvELjHolFJjzZFKEAtgqTlbER/3s72cVc=
+	t=1754930113; cv=none; b=UPkA4Qo2aDKKo7PBP88VXn/5WTi4jUhiIOGlSWRpkh8dPUHmbJmv45hX72pQxoiyPpIpr57RCTBPf7We/ffR/u12BXtOif+CUBZrBZhixFB3IOxLxmzZ8hz7b2cHk8pAXnkD9teNnurIR8o7h8S6S3NAGyX6b2gKXEYD+jTkKNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754929579; c=relaxed/simple;
-	bh=8oRjOADqIdvBLd9hq9nnySSZk2IXEYoBELHbgdaVSds=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lbFD8mPfWfJEobJryZ6cp0sELGU05bo4OFuf8h+35K+hygeCyUi/WiuMROWMYQCPJK92tWQY++qetwnn9YTjsfchiLu2pi1APTUX7PzkbsYI0/G5fies2j4wXSDe9p3+jfB/GTs+Pk3+ANpMqInwSZXQeqphiJKYkfdiycdfPRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JA8t82pJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD920C4CEF5;
-	Mon, 11 Aug 2025 16:26:16 +0000 (UTC)
+	s=arc-20240116; t=1754930113; c=relaxed/simple;
+	bh=m+o8XltTupvNOF4f9Ds1w9GcVyeTQlv0L4YJYKj6Rmo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kabHHfQWvAmtBMWgdkJbvhPEx133GPtjSnxeFkfvnrgF7kN7c8iE8F+tpIvsa89e4Nd+NaoFBDSkQ0Ee99FAkzfg+sXihWmwwF70t8Cr+AgT+tyU+a1JRj05dG3vSrpX/wZXGQ9S2fA50JbtMH60Z77/8SP3fA8Nk5enLZdx3YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PebfqRMX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73070C4CEED;
+	Mon, 11 Aug 2025 16:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754929578;
-	bh=8oRjOADqIdvBLd9hq9nnySSZk2IXEYoBELHbgdaVSds=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JA8t82pJkPjKwB+BlXaucrt1METmOINHLzIeCi5xMpoqQNjpu407Y4+1s1PVvGv2V
-	 LNyfzFvh9geK+9rERIb7bSQ0nja/LGjn9o+0grASJUUUkVWHORObFrmNYRMpYwqpYH
-	 xvEbIAxj0YmfIow5lZPs/mH5fvq/62BdgqocYSzg2ofgoN3YmefAAlj1PUGXp+1GZc
-	 OthtooKItDvn584oVD62xdZ5LVZYkeAqk1Sk8k9HJxDbM7OheAEODvrZjd9bt//ZNT
-	 OdlC5VBSSB3H/H8aA5PfwXNJPEA4dl/f4sUeCZEZZkGhd7uaDVjlLX8G6xozUJjEgV
-	 KcKLzbiFqD56Q==
+	s=k20201202; t=1754930113;
+	bh=m+o8XltTupvNOF4f9Ds1w9GcVyeTQlv0L4YJYKj6Rmo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PebfqRMXYgfh501NSxBuRxqtKF8uX+YLR1WHUzUgLtc7fjTJrooZ0e4DDyMnxdR/i
+	 0qJbJ3s0y5iKl3c9t17yH6R8crkkULN31ZUdizdSYTzsvyYM+BebFkmQy4Lhj1s9uf
+	 71WcY3NkcNPIQtVFTy0oFesEJ1voz/hR4wRpNNCcqGjMRm+pA/y7Obkr//7swF2h62
+	 Il6WzSmnIpYRZy928ohlCeWpbr4AqzgYZ8iJbbwQSeiRYAWjzMrHz6HCKBqBaY1JDq
+	 Ll5gu6YUaos6UW0/iFRvBNjKQXuhr42KpiLYZN0hkxQQQVhZX8YIYwFCYDigy6wjwn
+	 x3VotoF3CRYsg==
 From: "Mario Limonciello (AMD)" <superm1@kernel.org>
-To: David Airlie <airlied@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-kernel@vger.kernel.org (open list),
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	Daniel Dadap <ddadap@nvidia.com>,
-	"Mario Limonciello (AMD)" <superm1@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>
-Subject: [PATCH v10 4/4] DRM: Add a new 'boot_display' attribute
-Date: Mon, 11 Aug 2025 11:26:06 -0500
-Message-ID: <20250811162606.587759-5-superm1@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM)
+Cc: linux-pm@vger.kernel.org,
+	"Rafael J . Wysocki" <rjw@rjwysocki.net>,
+	Mario Limonciello <superm1@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Subject: [PATCH v6] PCI/PM: Skip resuming to D0 if disconnected
+Date: Mon, 11 Aug 2025 11:35:10 -0500
+Message-ID: <20250811163510.601103-1-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250811162606.587759-1-superm1@kernel.org>
-References: <20250811162606.587759-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On systems with multiple GPUs there can be uncertainty which GPU is the
-primary one used to drive the display at bootup. In some desktop
-environments this can lead to increased power consumption because
-secondary GPUs may be used for rendering and never go to a low power
-state. In order to disambiguate this add a new sysfs attribute
-'boot_display' that uses the output of video_is_primary_device() to
-populate whether the PCI device was used for driving the display.
+When a USB4 dock is unplugged the PCIe bridge it's connected to will
+issue a "Link Down" and "Card not detected event". The PCI core will
+treat this as a surprise hotplug event and unconfigure all downstream
+devices. This involves setting the device error state to
+`pci_channel_io_perm_failure` which pci_dev_is_disconnected() will check.
 
-Suggested-by: Manivannan Sadhasivam <mani@kernel.org>
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
-Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/issues/23
+It doesn't make sense to runtime resume disconnected devices to D0 and
+report the (expected) error, so bail early.
+
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
 ---
-v10:
- * Rebase on 6.17-rc1
- * Drop Thomas' tag, as this is now in a totally different subsystem
-   (although same code)
- * Squash "Adjust visibility of boot_display attribute instead of creation"
- * Squash "PCI: Move boot display attribute to DRM"
+v6:
+ * rebase on v6.17-rc1
+v5:
+ * Pick up tags, rebase on linux-next
+ * https://lore.kernel.org/linux-pci/20250709205948.3888045-1-superm1@kernel.org/T/#mbd784f786c50a3d1b5ab1833520995c01eae2fd2
 ---
- Documentation/ABI/testing/sysfs-class-drm |  8 +++++
- drivers/gpu/drm/drm_sysfs.c               | 41 +++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-drm
+ drivers/pci/pci.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-drm b/Documentation/ABI/testing/sysfs-class-drm
-new file mode 100644
-index 0000000000000..d23fed5e29a74
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-drm
-@@ -0,0 +1,8 @@
-+What:		/sys/class/drm/.../boot_display
-+Date:		January 2026
-+Contact:	Linux DRI developers <dri-devel@vger.kernel.org>
-+Description:
-+		This file indicates that displays connected to the device were
-+		used to display the boot sequence.  If a display connected to
-+		the device was used to display the boot sequence the file will
-+		be present and contain "1".
-diff --git a/drivers/gpu/drm/drm_sysfs.c b/drivers/gpu/drm/drm_sysfs.c
-index a455c56dbbeb7..b01ffa4d65098 100644
---- a/drivers/gpu/drm/drm_sysfs.c
-+++ b/drivers/gpu/drm/drm_sysfs.c
-@@ -18,6 +18,7 @@
- #include <linux/gfp.h>
- #include <linux/i2c.h>
- #include <linux/kdev_t.h>
-+#include <linux/pci.h>
- #include <linux/property.h>
- #include <linux/slab.h>
- 
-@@ -30,6 +31,8 @@
- #include <drm/drm_property.h>
- #include <drm/drm_sysfs.h>
- 
-+#include <asm/video.h>
-+
- #include "drm_internal.h"
- #include "drm_crtc_internal.h"
- 
-@@ -508,6 +511,43 @@ void drm_sysfs_connector_property_event(struct drm_connector *connector,
- }
- EXPORT_SYMBOL(drm_sysfs_connector_property_event);
- 
-+static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
-+				 char *buf)
-+{
-+	return sysfs_emit(buf, "1\n");
-+}
-+static DEVICE_ATTR_RO(boot_display);
-+
-+static struct attribute *display_attrs[] = {
-+	&dev_attr_boot_display.attr,
-+	NULL
-+};
-+
-+static umode_t boot_display_visible(struct kobject *kobj,
-+				    struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj)->parent;
-+
-+	if (dev_is_pci(dev)) {
-+		struct pci_dev *pdev = to_pci_dev(dev);
-+
-+		if (video_is_primary_device(&pdev->dev))
-+			return a->mode;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct attribute_group display_attr_group = {
-+	.attrs = display_attrs,
-+	.is_visible = boot_display_visible,
-+};
-+
-+static const struct attribute_group *card_dev_groups[] = {
-+	&display_attr_group,
-+	NULL
-+};
-+
- struct device *drm_sysfs_minor_alloc(struct drm_minor *minor)
- {
- 	const char *minor_str;
-@@ -531,6 +571,7 @@ struct device *drm_sysfs_minor_alloc(struct drm_minor *minor)
- 
- 		kdev->devt = MKDEV(DRM_MAJOR, minor->index);
- 		kdev->class = drm_class;
-+		kdev->groups = card_dev_groups;
- 		kdev->type = &drm_sysfs_device_minor;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b0f4d98036cdd..036511f5b2625 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1374,6 +1374,11 @@ int pci_power_up(struct pci_dev *dev)
+ 		return -EIO;
  	}
  
++	if (pci_dev_is_disconnected(dev)) {
++		dev->current_state = PCI_D3cold;
++		return -EIO;
++	}
++
+ 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+ 	if (PCI_POSSIBLE_ERROR(pmcsr)) {
+ 		pci_err(dev, "Unable to change power state from %s to D0, device inaccessible\n",
+
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
 -- 
 2.43.0
 
