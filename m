@@ -1,179 +1,144 @@
-Return-Path: <linux-pci+bounces-33682-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33683-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E695B1FD53
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 02:34:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5FD3B1FD58
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 02:40:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A203F176A9F
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 00:34:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A9F03B81A8
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 00:40:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C04601E493C;
-	Mon, 11 Aug 2025 00:33:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09BB582866;
+	Mon, 11 Aug 2025 00:40:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="dZbh67sa"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="UII5RW0Y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C297A19CC3E;
-	Mon, 11 Aug 2025 00:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754872398; cv=none; b=lUklFjywjx1XYQfL1OUiyJYmi+RibF+LhLpV4OtWwm84aU4UItLVhzF3DW7soniIKyCaCx7gG+V8b9xZKgYtW/XvMWvYLdCM2rlJJFhCH8JwSAKHNS668s8f71hddoin+J2qQF0rHJjqqzlrUt+tbij7H8B8YkqnqGUHhM60224=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754872398; c=relaxed/simple;
-	bh=CYOapTVPSDx9GSpWtaaFifCskH311+ECf5s+Y9qoPqg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ip2xxoN+sFUk0Bwgz7paMERtD4j2uCOwAV6dhuhc0dqbi9tJXo/XlYXzdROvnzZ2xzz+s5hmbGA80YCQV32gSLpXymTRIY2grxsCzqE8HN1aAkg0DXWvL9stfeTb5HqdQEkjMIqB6/JK3BsC2hWzPJhHn+QC+Mi/9MT1c4C1sys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=dZbh67sa; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A85A14AA9;
+	Mon, 11 Aug 2025 00:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754872829; cv=pass; b=oKl/CzWSi6+qZAbKycG7dk06Ao7Q+8oNblzB0AyDXTGSVznbErZauSAU4lntUyYt6K1jq91FwLbH0CwWA0M9EX52EAHog+5YkBqmixB4m0XlLbziY5BgZBlpQ547NT3rwzshOdbSeukZqEbTkZrRMPaU2qR9PPzOz9kyW80p9KY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754872829; c=relaxed/simple;
+	bh=A0ipEN40Au2x9JCuDrOO0F3Npvwn1/7h3yZR3/tVfZA=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=qjiR9LOtjPSba3IFZ8JFmG4GDTH5vL7PfCWsc9TILFk/HERpzvu5OiDWMO05JEykWO2cSOpwaaYHbD1dhiRQwSF14G6dDjch10fo1SFozyzVarxBusU8ck7iK5EHKrBsOVZ5GOY1OjTsU7mA/fRY7RN1t9MmAnzyyAdhg0MPdjU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=UII5RW0Y; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1754872395;
-	bh=CYOapTVPSDx9GSpWtaaFifCskH311+ECf5s+Y9qoPqg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=dZbh67saU8PuWrTKFkVLS6iRHRyuIh0bfFPC4xW2Pfj6tXCZ6AknpNyHA6OYvAuGE
-	 eJgTmC1mtbX7MhFQLm4fwioTRRqc5tIj8rEeTz/z/IBNTEl6Rr5oxQCgtYP7UI7xmE
-	 DKWTJvsVR1jAq6+qPKN1PJsYDkxmVlqOwGYRPh3MTyA1UJTh8KDZxz3l7CtxnYscPd
-	 eMAK/xqBwXAhAoIW4cFtfP7ub6MrKFLBFs7UTUPgmISUy+z0scyB8B8nKljX8vFKH/
-	 JQy6160rjZwKMQ5RW2rUvIoBcdCl53n8MbW3D6FLH6EU6ivL6jBS+7fBJBZSlHdNcC
-	 GqxTlJvWmE79A==
-Received: from [192.168.0.23] (unknown [IPv6:2804:14d:72b4:82f6:67c:16ff:fe57:b5a3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dwlsalmeida)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 37A6E17E0B8C;
-	Mon, 11 Aug 2025 02:33:10 +0200 (CEST)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-Date: Sun, 10 Aug 2025 21:32:19 -0300
-Subject: [PATCH v8 6/6] rust: pci: add irq accessors
+ARC-Seal: i=1; a=rsa-sha256; t=1754872792; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=CMccxIfR8xB8llNrPnl2fxtzW+q/9moGWgHMOwsIZNdpJzZiwGmoGXSJrf9Jxsr+YYcaA5Zk8K3aOSnGCZEPP3oNS2BQxiqm+X70P+ajC57Cb3YdZ+xI/VAGEnhHY9NgHH/EGP+jOVRRs8cPBNwTpd9lVOKXSHBiFrJNlgxaW2k=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1754872792; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=A0ipEN40Au2x9JCuDrOO0F3Npvwn1/7h3yZR3/tVfZA=; 
+	b=DbjfOtzrXc2axDg9EUX466BEMBF59bMWceeS+fY74HDZMkiUM/1Qar81HJrJksCgUWfojIZf2g1bVuQXap5ZO9JsWxYX8UGiQ8CZPSnIuLQZEx9V9gcO5HV2Ngx5+hqRw9wZhS4CTNa409gvj4Lo+mNconFkX/I/WNnkh84VM6A=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1754872792;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=A0ipEN40Au2x9JCuDrOO0F3Npvwn1/7h3yZR3/tVfZA=;
+	b=UII5RW0Y+IiT05LlztfQ1TsaYM/PELzwtMDiZso/XWwoM2PpLxcBStVNPUBuBTRo
+	dA6PQXhH6ZLbkRcrceTZtkv8xL4Sz23cVliPx58N8amE/nKyN6aPPGpRXXZQeqGdT55
+	yCnwvdjg6tA4kuyET6Y4Pt02zGCVXqONR/BD341E=
+Received: by mx.zohomail.com with SMTPS id 1754872790323302.60131062492883;
+	Sun, 10 Aug 2025 17:39:50 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250810-topics-tyr-request_irq2-v8-6-8163f4c4c3a6@collabora.com>
-References: <20250810-topics-tyr-request_irq2-v8-0-8163f4c4c3a6@collabora.com>
-In-Reply-To: <20250810-topics-tyr-request_irq2-v8-0-8163f4c4c3a6@collabora.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Benno Lossin <lossin@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- linux-pci@vger.kernel.org, Joel Fernandes <joelagnelf@nvidia.com>, 
- Dirk Behme <dirk.behme@de.bosch.com>, 
- Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: b4 0.14.2
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH] rust: irq: add &Device<Bound> argument to irq callbacks
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250721-irq-bound-device-v1-1-4fb2af418a63@google.com>
+Date: Sun, 10 Aug 2025 21:39:34 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Benno Lossin <lossin@kernel.org>,
+ Dirk Behme <dirk.behme@gmail.com>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7FF68E31-94B8-4DD4-8A2D-A6FB44444110@collabora.com>
+References: <20250721-irq-bound-device-v1-1-4fb2af418a63@google.com>
+To: Alice Ryhl <aliceryhl@google.com>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-These accessors can be used to retrieve a irq::Registration or a
-irq::ThreadedRegistration from a pci device. Alternatively, drivers can
-retrieve an IrqRequest from a bound PCI device for later use.
+Hi Alice,
 
-These accessors ensure that only valid IRQ lines can ever be registered.
+> On 21 Jul 2025, at 11:38, Alice Ryhl <aliceryhl@google.com> wrote:
+>=20
+> When working with a bus device, many operations are only possible =
+while
+> the device is still bound. The &Device<Bound> type represents a proof =
+in
+> the type system that you are in a scope where the device is guaranteed
+> to still be bound. Since we deregister irq callbacks when unbinding a
+> device, if an irq callback is running, that implies that the device =
+has
+> not yet been unbound.
+>=20
+> To allow drivers to take advantage of that, add an additional argument
+> to irq callbacks.
+>=20
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+> This patch is a follow-up to Daniel's irq series [1] that adds a
+> &Device<Bound> argument to all irq callbacks. This allows you to use
+> operations that are only safe on a bound device inside an irq =
+callback.
+>=20
+> The patch is otherwise based on top of driver-core-next.
+>=20
+> [1]: =
+https://lore.kernel.org/r/20250715-topics-tyr-request_irq2-v7-0-d469c0f37c=
+07@collabora.com
+> ---
+>=20
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Tested-by: Joel Fernandes <joelagnelf@nvidia.com>
-Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
-Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
----
- rust/helpers/pci.c |  8 ++++++++
- rust/kernel/pci.rs | 45 +++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 51 insertions(+), 2 deletions(-)
+I tried to rebase this so we could send it together with v8 of the =
+request_irq
+series. However, is it me or this doesn't apply on v7?
 
-diff --git a/rust/helpers/pci.c b/rust/helpers/pci.c
-index ef9cb38c81a6a5375f72c3676cd9730aad17757b..5bf56004478c6945dc3e1a394fcd787c656d8b2a 100644
---- a/rust/helpers/pci.c
-+++ b/rust/helpers/pci.c
-@@ -11,3 +11,11 @@ bool rust_helper_dev_is_pci(const struct device *dev)
- {
- 	return dev_is_pci(dev);
- }
-+
-+#ifndef CONFIG_PCI_MSI
-+int rust_helper_pci_irq_vector(struct pci_dev *pdev, unsigned int nvec)
-+{
-+	return pci_irq_vector(pdev, nvec);
-+}
-+
-+#endif
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 887ee611b55310e7edbd512f9017b708ff9d7bd8..d84ebabb8d04a932e68e48d40fef667dcda25ded 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -10,8 +10,8 @@
-     devres::Devres,
-     driver,
-     error::{from_result, to_result, Result},
--    io::Io,
--    io::IoRaw,
-+    io::{Io, IoRaw},
-+    irq::{self, IrqRequest},
-     str::CStr,
-     types::{ARef, Opaque},
-     ThisModule,
-@@ -431,6 +431,47 @@ pub fn iomap_region<'a>(
-     ) -> impl PinInit<Devres<Bar>, Error> + 'a {
-         self.iomap_region_sized::<0>(bar, name)
-     }
-+
-+    /// Returns an [`IrqRequest`] for the IRQ vector at the given index, if any.
-+    pub fn irq_vector(&self, index: u32) -> Result<IrqRequest<'_>> {
-+        // SAFETY: `self.as_raw` returns a valid pointer to a `struct pci_dev`.
-+        let irq = unsafe { crate::bindings::pci_irq_vector(self.as_raw(), index) };
-+        if irq < 0 {
-+            return Err(crate::error::Error::from_errno(irq));
-+        }
-+        // SAFETY: `irq` is guaranteed to be a valid IRQ number for `&self`.
-+        Ok(unsafe { IrqRequest::new(self.as_ref(), irq as u32) })
-+    }
-+
-+    /// Returns a [`kernel::irq::Registration`] for the IRQ vector at the given
-+    /// index.
-+    pub fn request_irq<'a, T: crate::irq::Handler + 'static>(
-+        &'a self,
-+        index: u32,
-+        flags: irq::flags::Flags,
-+        name: &'static CStr,
-+        handler: impl PinInit<T, Error> + 'a,
-+    ) -> Result<impl PinInit<irq::Registration<T>, Error> + 'a> {
-+        let request = self.irq_vector(index)?;
-+
-+        Ok(irq::Registration::<T>::new(request, flags, name, handler))
-+    }
-+
-+    /// Returns a [`kernel::irq::ThreadedRegistration`] for the IRQ vector at
-+    /// the given index.
-+    pub fn request_threaded_irq<'a, T: crate::irq::ThreadedHandler + 'static>(
-+        &'a self,
-+        index: u32,
-+        flags: irq::flags::Flags,
-+        name: &'static CStr,
-+        handler: impl PinInit<T, Error> + 'a,
-+    ) -> Result<impl PinInit<irq::ThreadedRegistration<T>, Error> + 'a> {
-+        let request = self.irq_vector(index)?;
-+
-+        Ok(irq::ThreadedRegistration::<T>::new(
-+            request, flags, name, handler,
-+        ))
-+    }
- }
- 
- impl Device<device::Core> {
+> ---
+> base-commit: d860d29e91be18de62b0f441edee7d00f6cb4972
 
--- 
-2.50.1
+Yeah, I couldn=E2=80=99t find this, sorry.
+
+> change-id: 20250721-irq-bound-device-c9fdbfdd8cd9
+>=20
+> Best regards,
+> --=20
+> Alice Ryhl <aliceryhl@google.com>
+>=20
+>=20
+
+
+My apologies.
+
+=E2=80=94 Daniel
 
 
