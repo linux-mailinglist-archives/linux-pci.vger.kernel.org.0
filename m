@@ -1,181 +1,157 @@
-Return-Path: <linux-pci+bounces-33721-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33722-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43B3FB206C4
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 13:02:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D5FDB206E7
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 13:09:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A39D72A147A
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 11:02:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F4DF18C2077
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 11:09:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9868E2BE7AD;
-	Mon, 11 Aug 2025 11:02:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD0D22BE65A;
+	Mon, 11 Aug 2025 11:09:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q4NDh5La"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VjwbmNXY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8062BE65A
-	for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 11:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB382475CB;
+	Mon, 11 Aug 2025 11:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754910153; cv=none; b=Qjo7itcjzKL8KRi2f8PI22RlwLvxqSSu/8m4VyS318J4bLHIVwFgmJpGS1hL7SrKwjXEoFO1tHSVKJ2hvYI/fNA0PnVL9fKsK1fVLw3CbNOHhkeMhCVVf1AQ/cpyyrd//o/5i8amix0s34PJsaP1KFjOEDF7wzLnjia+yjwBk0o=
+	t=1754910543; cv=none; b=VVS9f+gyU4z1lv1yv3BMlqut4vaAAQ5JQhk/idoYib6kK6JIiMW3Knl6/YdSCPFrUvcuLOItIWkMhmtTPoJP4tWGhGx+f0k7pt6Eip4HuRtpU8/YG57WpLAbJNro3uDcspKAWpsUvT305NhO3mh8jnqLm/qQp90C66mmXmAy3QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754910153; c=relaxed/simple;
-	bh=PZvpmMGKZoBLVkqYrM3rKvbs5tN16syyK8pG0HEe30E=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nn+m4fxZJTnxaSkIKhYovS23OBtQ/w9UlJhrOx8J3YygzcTZDQsEpm2jd4CbvNIo3GzXMZVhPClyf4eCG893CMBaQhc+XRGeLAMKtkLG4dAvGmakYAw+JPcfK2n81S0SNe1UyI0XkB5ZEQYOZMop/pYK5uFZHo0Q087W9cI5ikE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q4NDh5La; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-451d3f03b74so24217455e9.3
-        for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 04:02:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754910149; x=1755514949; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XoFLgAaU3dTMlkB3ivuNiJh7YAxvoPGHMa/b1QxLM0U=;
-        b=q4NDh5Latt5zJ/bzhTzRV3KKeCBgd40ySBv5apIR4hMVMPIGRbT80C5QupvbSq3vEc
-         WlJt0AhlF9IBFWwVF3Z76EyLrCpqSWKMa0JSPwbUNGZSPunKLL/1zinw3oJyTZf0dPef
-         nhyigFjmRhWVh3P95UhwW2jfZqOLZEZ2i82H0Zl4qF0BgCrUFlKE5r6qZ+KrBLtbr58U
-         2J9FbkEIYLa8fOFnWjamOJUuqH6OYJQWEHzTsLznt4toYX560yL7/53oSGK+GYfShXvv
-         RQxEYQrmAYgzFK542LL6JHUxMOcQ5OdMYo/nsve9tscUxy+spFW48OgK/9Ko9O6DKKa+
-         OXqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754910149; x=1755514949;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XoFLgAaU3dTMlkB3ivuNiJh7YAxvoPGHMa/b1QxLM0U=;
-        b=XJLa+wp5MCZJepj3iOCP23QClUlaSghbiOBuM4EEYCUIu6Hc5DN8ybM6l5MyWF6sJU
-         aublDvnE/MdbSlfJ2E1lOzvCKZWq4TUEFAsq4K9FHRHfP7SAE5as+nl0DgmVWYymiTH+
-         Nqh2379Fim2y4YMsFu5FDnCecmaxtSrDYbaK+iSOt9oH1wdrb7cAWEaP05MShG/PuIlx
-         yojZiX8ejyKG2B6mhqUhYZPDlpuWZ3sheGEf+JNsyJpOWw0lK5+bFv7kxQ2xRo6nFVIS
-         QRYAGtjc6Rio3pdYF8O1bzyPNOK90zXOcn8tg2698E2cheJsAkYHyIojtTdf2DKeFgaj
-         cLPg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGYidNxI24+2Y9rqY72hbojceOs3ts5mVsnJKpu48qCDOyzad4Dfa3z3TO1hg1RA5VjW5j+7EyVGI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxqk4wlUpu0oYFY97DCq7IlXdqg8x57r87UWr3T3Rd4nb3zXqT2
-	ZeUsI1NUWyHk/IlKpCfl31/wgRgjcjU1rHWIfT8PtTktaakVK9uNrQ5E5opa0yXY4HC3jWolDkx
-	NSAZ6m5VxIMZPcwskCQ==
-X-Google-Smtp-Source: AGHT+IEHj90/RHzHpvJsu5QjMlw4g2edIeCdvOyz1s9R5fzcMKzgwi4o+H+e3XIfZKtOyXsp93grjLNDgnKyY0Q=
-X-Received: from wmbay18.prod.google.com ([2002:a05:600c:1e12:b0:459:e01c:3d6d])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:15d1:b0:459:e025:8c5b with SMTP id 5b1f17b1804b1-459f60d2211mr79186135e9.30.1754910149427;
- Mon, 11 Aug 2025 04:02:29 -0700 (PDT)
-Date: Mon, 11 Aug 2025 11:02:28 +0000
-In-Reply-To: <20250810-topics-tyr-request_irq2-v8-4-8163f4c4c3a6@collabora.com>
+	s=arc-20240116; t=1754910543; c=relaxed/simple;
+	bh=vQ/78/xRoqbHmZQW6yVVodcoGbPz2PE+TBn4gCY5Tb8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Otmm37eAxHwvWwDxCWx/8T07hTSpO8hG0nKZkWKRysBFUDSf00VCb3SV9tSLrCV6ojgqZeBorMd1jRKStrJk1PtKUrZngH2aeygFKJeM66lFobEutDO4WsTpVBKtMY1WuOPSrhxYXStgbLIF8BlrfmlAmUYHXkdji26teglWWLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VjwbmNXY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4CE8C4CEED;
+	Mon, 11 Aug 2025 11:08:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754910542;
+	bh=vQ/78/xRoqbHmZQW6yVVodcoGbPz2PE+TBn4gCY5Tb8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VjwbmNXYgAulL3kDFxGzfjc6CNNR7HaePtpYVhggBoXksbHEd3YRMYIM61FfZ3Per
+	 fgBSDxYmBdsy44y05VCV2zywR1Gqvtvo6WDAGt94GUdL/orUewJak81pfsDX9hNuFb
+	 RkOm/Ax05eATClpK49jgojGz+QpSppXOEhdPVAsZA9k6G9g4Kd8Z+inlkhjz1/aXYO
+	 s7swLBHOPKNVp0H7Ey71dzQQhbcckmRKXwsM6ithWyLYnUs0Ex0Q/Jg+uL8GxU2KjW
+	 YgwYodxwwac5dPmN8jg+Clzi9o9QmamouBbSC51k8pxiaNokSD4IrkwBbGys2/G42Z
+	 ZmJT8yKSzxRLw==
+Message-ID: <78c678c2-5f81-4e9b-88c4-365905f85702@kernel.org>
+Date: Mon, 11 Aug 2025 13:08:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250810-topics-tyr-request_irq2-v8-0-8163f4c4c3a6@collabora.com> <20250810-topics-tyr-request_irq2-v8-4-8163f4c4c3a6@collabora.com>
-Message-ID: <aJnNxMmWarz9MWKH@google.com>
-Subject: Re: [PATCH v8 4/6] rust: irq: add support for threaded IRQs and handlers
-From: Alice Ryhl <aliceryhl@google.com>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, 
-	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org, 
-	Joel Fernandes <joelagnelf@nvidia.com>, Dirk Behme <dirk.behme@de.bosch.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] arm64: dts: qcom: sm8750: Add PCIe PHY and controller
+ node
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+References: <20250809-pakala-v1-0-abf1c416dbaa@oss.qualcomm.com>
+ <20250809-pakala-v1-4-abf1c416dbaa@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250809-pakala-v1-4-abf1c416dbaa@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Aug 10, 2025 at 09:32:17PM -0300, Daniel Almeida wrote:
-> This patch adds support for threaded IRQs and handlers through
-> irq::ThreadedRegistration and the irq::ThreadedHandler trait.
+On 09/08/2025 11:59, Krishna Chaitanya Chundru wrote:
+> Add PCIe controller and PHY nodes which supports data rates of 8GT/s
+> and x2 lane.
 > 
-> Threaded interrupts are more permissive in the sense that further
-> processing is possible in a kthread. This means that said execution takes
-> place outside of interrupt context, which is rather restrictive in many
-> ways.
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8750.dtsi | 174 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 173 insertions(+), 1 deletion(-)
 > 
-> Registering a threaded irq is dependent upon having an IrqRequest that
-> was previously allocated by a given device. This will be introduced in
-> subsequent patches.
-> 
-> Tested-by: Joel Fernandes <joelagnelf@nvidia.com>
-> Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> index 4643705021c6ca095a16d8d7cc3adac920b21e82..866c1eb8729953f6cb27c7cf995a1a8d55140e40 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> @@ -631,7 +631,7 @@ gcc: clock-controller@100000 {
+>  			clocks = <&bi_tcxo_div2>,
+>  				 <0>,
+>  				 <&sleep_clk>,
+> -				 <0>,
+> +				 <&pcie0_phy>,
+>  				 <0>,
+>  				 <0>,
+>  				 <0>,
+> @@ -3304,6 +3304,178 @@ gic_its: msi-controller@16040000 {
+>  			};
+>  		};
+>  
+> +		pcie0: pcie@1c00000 {
+> +			device_type = "pci";
+> +			compatible = "qcom,pcie-sm8750", "qcom,pcie-sm8550";
+> +			reg = <0 0x01c00000 0 0x3000>,
+> +			      <0 0x40000000 0 0xf1d>,
+> +			      <0 0x40000f20 0 0xa8>,
+> +			      <0 0x40001000 0 0x1000>,
+> +			      <0 0x40100000 0 0x100000>;
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
-> +/// # Examples
-> +///
-> +/// The following is an example of using [`ThreadedRegistration`]. It uses a
-> +/// [`Mutex`](kernel::sync::Mutex) to provide interior mutability.
-> +///
-> +/// ```
-> +/// # use kernel::c_str;
-> +/// # use kernel::device::Bound;
-> +/// # use kernel::irq::{
-> +/// #   self, Flags, IrqRequest, IrqReturn, ThreadedHandler, ThreadedIrqReturn,
-> +/// #   ThreadedRegistration,
-> +/// # };
-> +/// # use kernel::prelude::*;
-> +/// # use kernel::sync::{Arc, Mutex};
+Look at rest of the code - it's hex everywhere. Keep consistent style.
 
-I would probably remove the # and keep imports visible in the example.
-
-> +/// // Declare a struct that will be passed in when the interrupt fires. The u32
-> +/// // merely serves as an example of some internal data.
-> +/// //
-> +/// // [`irq::ThreadedHandler::handle`] takes `&self`. This example
-> +/// // illustrates how interior mutability can be used when sharing the data
-> +/// // between process context and IRQ context.
-> +/// struct Data {
-> +///     value: Mutex<u32>,
-> +/// }
-
-This example struct should use #[pin_data].
-
-> +///
-> +/// type Handler = Data;
-
-I think the type alias is confusing in this example. I'd either rename
-the struct or use "Data" everywhere.
-
-> +/// impl ThreadedHandler for Handler {
-> +///     // This will run (in a separate kthread) if and only if
-> +///     // [`ThreadedHandler::handle`] returns [`WakeThread`], which it does by
-> +///     // default.
-> +///     fn handle_threaded(&self) -> IrqReturn {
-> +///         let mut data = self.value.lock();
-> +///         *data += 1;
-> +///         IrqReturn::Handled
-> +///     }
-> +/// }
-> +///
-> +/// // Registers a threaded IRQ handler for the given [`IrqRequest`].
-> +/// //
-> +/// // This is executing in process context and assumes that `request` was
-> +/// // previously acquired from a device.
-> +/// fn register_threaded_irq(
-> +///     handler: impl PinInit<Handler, Error>,
-> +///     request: IrqRequest<'_>,
-> +/// ) -> Result<Arc<ThreadedRegistration<Handler>>> {
-> +///     let registration =
-> +///         ThreadedRegistration::new(request, Flags::SHARED, c_str!("my_device"), handler);
-> +///
-> +///     let registration = Arc::pin_init(registration, GFP_KERNEL)?;
-> +///
-> +///     {
-> +///         // The data can be accessed from process context too.
-> +///         let mut data = registration.handler().value.lock();
-> +///         *data += 1;
-> +///     }
-> +///
-> +///     Ok(registration)
-> +/// }
-> +/// # Ok::<(), Error>(())
-> +/// ```
-
-Alice
+Best regards,
+Krzysztof
 
