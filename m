@@ -1,93 +1,94 @@
-Return-Path: <linux-pci+bounces-33797-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33798-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0CD6B2187B
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 00:37:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC113B2187E
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 00:38:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E21DD188CC9C
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 22:37:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0989B4640E2
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 22:38:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6B7D227B8E;
-	Mon, 11 Aug 2025 22:37:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6EFE226CF9;
+	Mon, 11 Aug 2025 22:38:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cd7Z01q+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EYdWfxaF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF13C1534EC;
-	Mon, 11 Aug 2025 22:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EBB1862;
+	Mon, 11 Aug 2025 22:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754951832; cv=none; b=i7QwblNCLBm6zrF2eGVyyhCLyE7BIYkK/4WY6UrdvxtgwKCsIR2fEilJzf6A460/80lHZDDaM/K35GsD12ZPSzbk/qBxBRDtgOHFhPrtI91cLmlu7bwySR807EBrDmDSnHGCtm1Ev3yy9CyHW8qdPKFmRY4nq7QjgxtaDwpy7Z4=
+	t=1754951907; cv=none; b=FxIosMVfvmGlG+Y/lFut3CAtW1xLhN/HkpkpcP2G1eVjTDm9G5fvFY3wCOVv3PG6rpP4AUjy4f4YrNr9XdAdZ6RrcH/m5MfPA/KR29p7D4v9FTsv5l+VkvzKSQmu78FSoe0dVh+i8Vy/kt3rF8UNwC1V6/r4141lPKB+ckPE/rU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754951832; c=relaxed/simple;
-	bh=BHC2PaOipQkOGJeNqMzGGbEYJmtGfbmzKcpLNaqKa4M=;
+	s=arc-20240116; t=1754951907; c=relaxed/simple;
+	bh=3T6rK8dP7+nl9lbiUQwqHRAdyHzrzjx6FJiiI7+hkjc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fO3L1PG0zLUMOEyrtLblVGt12DTr5olHXKKg74+RiwUGl22GEA83uessUchDE1ofGJB9KWMaLaykBMg51OeDZ07TQTV8QDu0+UZgY0/7bg/X4bHjbolkj8RwwIP6rEihAdLDE9FxojS496MH3EZPezgLCYXUI1JmMEGL0tvyUEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cd7Z01q+; arc=none smtp.client-ip=209.85.167.53
+	 Content-Type:Content-Disposition:In-Reply-To; b=amYMFE8cZg7xPsZDkMLu0zPbFnsKKibLT7N3hmhFxeAEVuQydPInEOAKahcca+xk9ZplbrNjgLOvQ6S5F/ua4AyV4FuhysOIGvgRqxu09o9gDTQXEHyEf7QeLXYZ1yjWZvxHZaVz3FMLxcjAviEJpApuASKHnqP7jRgqPuIhLJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EYdWfxaF; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-55b9a23d633so5255130e87.1;
-        Mon, 11 Aug 2025 15:37:10 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-333a17be4e0so30985501fa.1;
+        Mon, 11 Aug 2025 15:38:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754951829; x=1755556629; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1754951904; x=1755556704; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VEuotSwqWZ/MkjucAhLMiVpBxJcWCdl28iP05ia7lo8=;
-        b=Cd7Z01q+n/wN2LTgrph1PozAfLrleqonBHsT3UMIfJDOSEePa5TTKPzs/8JCm2HwOt
-         hDQgqohWcaWgQ1CGEB8XRb173tkQZmQWUDOQ/1y8T/KwGJ1hF6huSeNtAd9pYvl9CJB4
-         TyESaIgSOGxuM29E3anRldC9Pjww1H9PZQqoC/7yAaJ/u7p8raE5P2d9kFddK1ixHRP0
-         kFCN3klJMbK1OGP56+J3ghSrGn3sP7PB1CNqidUYnZmxebKQVZHSDnPeQ0GiwnpvTYSr
-         FKISdA9xUWRP0zezIA1IwFcskD0ytBd3YDDYnjxZ2BuLYcEGZuHqzhnodsoqxmFjmuuK
-         SrIQ==
+        bh=TZiLjA/1KUaDSHD0207KvcHCt6eMEroHNgq+uatTRoA=;
+        b=EYdWfxaFzClSOz1G3jF20uUfRb92vwSRvp38sVx5F82lxxk1Akx8W8NjjTE65HQN3T
+         inx5lCIyYtuXvwlftPsXdwXEbCWesp1PAkpxRq5RaiK+zwNq9zSLBf2GuOp/rMcRPv/n
+         LQ4Fqam7nrI2DKnTZfgORXuDsXVcNFAY6F6GpTlvo5Bkvn6txA8Wk/h4P2i+k+0xGL4L
+         Drep8wn/WAJzFaSYbjJDGGm10DJW3v8SQcYKpdePkxlkTHAhHcjUCh1Sm3hgcUNqVcus
+         dePSByUxVcSsx6BibMN/xiSfwnErxwG62TQPYJNXD/qlYMYaDDAVd7jGXnHFksv4nIlZ
+         cqPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754951829; x=1755556629;
+        d=1e100.net; s=20230601; t=1754951904; x=1755556704;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VEuotSwqWZ/MkjucAhLMiVpBxJcWCdl28iP05ia7lo8=;
-        b=jc/EqV++32zk1eRcGZ9jAacOJHry3x+05cv5uClZWZiDcxuYjvpr7+akjJNpBnyDuI
-         AX1A5k1YliOHE7ISrjDY8xgrxNugqzr2udVSpeRbIub2ml2h/7dlhySD9PzRfy4Ro9qb
-         uz50rhnVfxyOQbiJZI4J/j0fHUGxyTCkPPLavXsXcdO67F2ENlesKS6YjM3sef2HBDdO
-         9vGR6gb8HZgU/dE8L9G/F11VKzeGlxf/QTu89jf2fy90oRrmPgfxqEb+Zlyw2kzvtjl7
-         OGd6mFNKYOrb/nIaBTUvdyvMPlkTEDacF/0SyRVdAcgGzTWhl3vXO2HpIs49peRHZUnm
-         8f+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW+JwRKlS4b95Hdr0Fac3eCc+tRI0ppOq04GPWB/fb29YYO7bjsbnmRrrQjzH5nYPlyOlHoVuB3Apw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0E6XcUvKMchv7Na9haqXtNzMoRvMK/G9lLSUVDp6L9+SG2CHq
-	ZdHvM40kVT4Y9cJ5GlF0tv0qw+AC7qn3xEMfr3bMDMa6pAPrrbCmsGkB
-X-Gm-Gg: ASbGncveFyZIjp8DpjG84MHKSuGXjsp+vjV6l94atUxnAg9QK7SJKfNOFN1Kg2deZ0/
-	K6/lh5XpxIWd5+Jf+m5oH+hc9+mWYrGhi/SrRlaosZBzF3DPSsswot5INf6E4YjbPpHceVqPjKI
-	hCK2Ulqy512vjO2RzZ30PI8HbC4VhI9IEwCcwifz6p5jCbLdqq6Vzt3s6OpO0dsIwQH1lPT4MDb
-	GTFcp8iFAaUn+qkuhm7rJboiEgBud9U7dQMnB7hOdX0neiXeF2VjjBxM4DTt14Ki7Qj8gasQDnU
-	NembBpFxF8P3RivHDa5iARKbZufFlH0HIcS7RAbwoxM1Z0uBVcapFXmx7hQ6XODCBe1ckrvDA5p
-	tMeXqF63gszi3FREpzpuk0g==
-X-Google-Smtp-Source: AGHT+IG7o8c1sMrDu/4k1FVO6jnMSQcLHiH19xx1OuiiqRQ3hrO+0JzqkSZ6kgjh/tKd6cNT1qzImQ==
-X-Received: by 2002:a05:6512:2313:b0:55b:81cb:538e with SMTP id 2adb3069b0e04-55cd8c45f0bmr345642e87.26.1754951828682;
-        Mon, 11 Aug 2025 15:37:08 -0700 (PDT)
+        bh=TZiLjA/1KUaDSHD0207KvcHCt6eMEroHNgq+uatTRoA=;
+        b=mZmufoMO2q1A0Y5dXoOBdeEaAulcRbEaI8BsW5yI1oALLHoWu6o0rJC7CzvogmpVay
+         akWE7+ncwmT0wXj5ZovK8NCsLc7fvXRn4CN0y1vCftiZipEzQCNYnqxTobvY5MD2xAwf
+         +hvdgDjd0EGtZmaU/Mku3iiolkB/LWRzjqSUIvtMr4MUTL2qa02LUAcXV1q3V81p0/W3
+         PbIKtgM3xZ0mUlt1PQHK+i1XBFZ4v2OjAvHUrn4HiqbX38pnhPeVZWx8/PP6D/rreubC
+         a79n1tIvqT5ay3wf9/Qt7Qhe0yisqz71m3weOhb3iGa95UTvHP7wmcz6zDv8d/hXCwJ6
+         8QMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWpku9e34X/L0VSExehDIL3hWiMno6+cZLEapZGgDSzrcWuePmL5vIVidLEFGoBrHHn0zKjkVM1ZClJ@vger.kernel.org, AJvYcCX8eGoC+aYmyos0qBxhiu0IW7W0IuguTzaMDMyyRFdJVopIN7xNNXos27gR3h7gPqjV+8cc8Hsp4KNlxqU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFy61z2WvHNcQ1lJesKRkXfhYQhj+LyOeo8obymFP5OS7e0lt1
+	OioUkRq/7fGiqd/4r3kx8i3tGG7OjoBeu8XAeBZtNK1eoxuiINHEDkm3
+X-Gm-Gg: ASbGncszS8cU/nASPMxHNux0Z4wvC5/VI+diGHEISeANuIgU45yXD2Bm8XySnD1qKTK
+	kwAnyQMIalv8qr3ekizdMkIKAhsAMkcdJYhWyNdN0pVyGuPmzo9HbcLZIthRpvMC6LcG2fG7cCg
+	5Q0jGzQwmaZrb5AuwX7p0ssNneS2XnlqEAnXNZlfYwemf6vaaCxjRUY7BownW6dbKBGiW5xk7xE
+	0ohfzjhRXZEdSVtNrOsuKGvDuH02UWDNPnQ3qJ1ncl9J9WgZFdNz3dKeYAbank4CEg4fnfvx/zP
+	y+JrIsCoZnZX0YNQcsvMdv67iC2PxyJc+3dcVOdM1WuRNzdiRFY4z2wHrb6gpB9cwsQELtYOVLk
+	GD3jnXEkoYmTDwJwlNVDPrA==
+X-Google-Smtp-Source: AGHT+IGoxiueWFiizy/DVtBkp9FATBbjiY/ita0NtieQ295l2YCVTx+aNvlaqdPYYgOqP8MPUGJqdA==
+X-Received: by 2002:a2e:8449:0:b0:32f:41a4:5584 with SMTP id 38308e7fff4ca-333d7ba6e24mr2743451fa.27.1754951904238;
+        Mon, 11 Aug 2025 15:38:24 -0700 (PDT)
 Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-55b88caf0ebsm4477529e87.154.2025.08.11.15.37.07
+        by smtp.gmail.com with UTF8SMTPSA id 38308e7fff4ca-333a6ff9789sm13761581fa.50.2025.08.11.15.38.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 15:37:08 -0700 (PDT)
-Date: Tue, 12 Aug 2025 06:36:20 +0800
+        Mon, 11 Aug 2025 15:38:23 -0700 (PDT)
+Date: Tue, 12 Aug 2025 06:37:35 +0800
 From: Inochi Amaoto <inochiama@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>, 
-	Inochi Amaoto <inochiama@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Marc Zyngier <maz@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Saurabh Sengar <ssengar@linux.microsoft.com>, Shradha Gupta <shradhagupta@linux.microsoft.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>, Nicolin Chen <nicolinc@nvidia.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Chen Wang <unicorn_wang@outlook.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH 4/4] irqchip/sg2042-msi: Set MSI_FLAG_MULTI_PCI_MSI flags
- for SG2044
-Message-ID: <h6sz4hsvajq5pbcd6m2byctdpg6yhjhwbecsqc4o3npieswxov@u3myntmq2xwa>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	Inochi Amaoto <inochiama@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <maz@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Saurabh Sengar <ssengar@linux.microsoft.com>, 
+	Shradha Gupta <shradhagupta@linux.microsoft.com>, Jonathan Cameron <Jonathan.Cameron@huwei.com>, 
+	Nicolin Chen <nicolinc@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Chen Wang <unicorn_wang@outlook.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>, 
+	Han Gao <rabenda.cn@gmail.com>
+Subject: Re: [PATCH 3/4] irqchip/sg2042-msi: Fix broken affinity setting
+Message-ID: <gnk4w7lmgvgwh3kdu3fn4c3frcyivkeukxrq63s223v4t7khcw@ft26odg7qtu6>
 References: <20250807112326.748740-1-inochiama@gmail.com>
- <20250807112326.748740-5-inochiama@gmail.com>
- <87349y7wt9.ffs@tglx>
+ <20250807112326.748740-4-inochiama@gmail.com>
+ <aJoBdHlV6ZKcFry5@black.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,30 +97,61 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87349y7wt9.ffs@tglx>
+In-Reply-To: <aJoBdHlV6ZKcFry5@black.igk.intel.com>
 
-On Mon, Aug 11, 2025 at 04:33:06PM +0200, Thomas Gleixner wrote:
-> On Thu, Aug 07 2025 at 19:23, Inochi Amaoto wrote:
+On Mon, Aug 11, 2025 at 04:43:00PM +0200, Andy Shevchenko wrote:
+> On Thu, Aug 07, 2025 at 07:23:24PM +0800, Inochi Amaoto wrote:
+> > When using NVME on SG2044, the NVME always complains "I/O tag XXX
+> > (XXX) QID XX timeout, completion polled", which is caused by the
+> > broken handler of the sg2042-msi driver.
+> > 
+> > As PLIC driver can only setting affinity when enabling, the sg2042-msi
+> > does not properly handled affinity setting previously and enable irq in
+> > an unexpected executing path.
+> > 
+> > Since the PCI template domain supports irq_startup/irq_shutdown, set
+> > irq_chip_[startup/shutdown]_parent for irq_startup/irq_shutdown. So
+> > the irq can be started properly.
 > 
-> > The MSI controller on SG2044 has the ability to allocate
-> > multiple PCI MSI interrupt if the controller supports it.
+> > Fixes: e96b93a97c90 ("irqchip/sg2042-msi: Add the Sophgo SG2044 MSI interrupt controller")
+> > Reported-by: Han Gao <rabenda.cn@gmail.com>
 > 
-> interrupts ...
-> 
-> Which controller?
-> 
-> if the PCI device supports multi MSI.
+> Closes ?
 > 
 
-The PCIe controller, in detail, the Synopsys DesignWare PCIe controller.
-I will update the comment.
+I got a direct private email from Han, so I think there is no pulic
+Closes.
 
-> > Add the missing flag so the controller can make full use
-> > of it.
+> > Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
 > 
-> Again, the controller does not make use of it. The controller supports
-> it and the device driver can use it if both the PCI device and the
-> underlying MSI controller support it.
+> ...
+> 
+> >  #define SG2042_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS |	\
+> > -				   MSI_FLAG_USE_DEF_CHIP_OPS)
+> > +				   MSI_FLAG_USE_DEF_CHIP_OPS |	\
+> > +				   MSI_FLAG_PCI_MSI_MASK_PARENT |\
+> 
+> Can we indent \ to be on the same column (using TABs)?
+> 
+
+Yeah, of course
+
+> > +				   MSI_FLAG_PCI_MSI_STARTUP_PARENT)
+> 
+> ...
+> 
+> >  #define SG2044_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS |	\
+> > -				   MSI_FLAG_USE_DEF_CHIP_OPS)
+> > +				   MSI_FLAG_USE_DEF_CHIP_OPS |	\
+> > +				   MSI_FLAG_PCI_MSI_MASK_PARENT |\
+> > +				   MSI_FLAG_PCI_MSI_STARTUP_PARENT)
+> 
+> Ditto.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 > 
 > 
 
