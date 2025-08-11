@@ -1,136 +1,101 @@
-Return-Path: <linux-pci+bounces-33808-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33809-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ECA0B21914
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 01:16:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45AC5B21952
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 01:30:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D91C16596D
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 23:16:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 467454627E2
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Aug 2025 23:30:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A97E61AA7BF;
-	Mon, 11 Aug 2025 23:16:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3419284B2E;
+	Mon, 11 Aug 2025 23:27:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fUZPBtEV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AIRicPH5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428B313AC1;
-	Mon, 11 Aug 2025 23:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58AE284686;
+	Mon, 11 Aug 2025 23:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754954161; cv=none; b=CnxGXUtiR6BwXW2DRC4NPA4Eux4MNJT1nA7BZH1hNfICTGJS5OZftnCTb4Pw+eqZZ6v0cqDOPsjMQLZM+DN1+szOxdpsur22kbgAKXY/iD9kzgsZ0Pu6TmX+NcoeeSgqguKC0ayVYm18KJQOK+2dqz+0yJloCq3vXRUO/4fXk/Y=
+	t=1754954855; cv=none; b=to+xyFqk5d/qxZMavIL6WBIgQ71OhHRWMSDfYgJVQuRYiAh9c7X/QslJVzXo7N5PpZCRgB/9F0TkCaaADV0H9iIU1bWKkttmqdO4Vj6bFE9cthuRwTdpNlfxY5OCS+sjlIAeI+KWyeR892CQltcZmlLw0Cmh0P9Zps4dFHnlZ/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754954161; c=relaxed/simple;
-	bh=h90aWAdN6kmjnGhh/YsBA0AsA2ycY3NyAX0WocPdISE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pXaQsSHv2wDQQxUzeQPYvozqfLrAX78uLkm7JTxZSIqeZ2Y3rHapaHu8bY822zgVhMfUKq/XSOlUZ+PdwnSHx3rqjbNcL88BFtSHhulv+XN0rDf0n679W1lT5lP16B25wnY2LWfAGvWXxBg0md7ib2RhChA6rDvVoNN+Z8Ax5zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fUZPBtEV; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2407235722bso48786245ad.1;
-        Mon, 11 Aug 2025 16:16:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754954159; x=1755558959; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GlitkVcXNHjzG7603fa784xq4aGVvZndeBw1vHOtobs=;
-        b=fUZPBtEVzjzMqN8sINGCXqC9oGWJOQ8yxI44i8SNPAATwM8ASv1JsZWnSuiPgN7sJD
-         jwGCUXJ0kuxWW/juzpFkZ2GJpQ656+fzmj+wdDCJx+5Xqt/qzQaLXiWh6E0/U6bPZSpz
-         5tjNxiZuO83ArzRkCvDEuPjPXEsK4p4YGmo9fpOvJ39t49XEngHGTDADwyql485mSXzy
-         7wRDsGcG/mW+nMddv4biiAvlxcVYp3/nkpH8unLlJyLsG5MjIqxpZze8YncBKWYz1/HA
-         qzFVx+ctnwQOMJGFMfunnE+EtYlJ9A1gHmu8C/SK62YEnWCFlCyCGEdWuwAtS2xGpsfN
-         morQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754954159; x=1755558959;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GlitkVcXNHjzG7603fa784xq4aGVvZndeBw1vHOtobs=;
-        b=e/I7Zu8RB3sDRhH5PxdTOmMzS92PRUjYBSvuDLY2qwrVIH1SbQHY3xLhDmvvKf8JKk
-         INUY9q3rGnEfgtewc/1QXDuQN11ijJN3zLUb0R/oiKGfdLiZJ/gvPTIkhobE41ViyoW6
-         I6P34t//Ui/Vid5oBWZ0KjLPnzNNH0JfGPifJVSf8vuSTD7yzOx4YHb/N33IsTG2EkYo
-         TEM/vkArhrSwOL9i7suifv4mqqC8qBehR+wLIgcgvNhsMefpcMdfXI94SXP+dRZhNyK4
-         DMTxe3fhHT8Gy6L2sGZXrCmbYvoPSgQJ1cAZDpRB+mz9mAmbHP79WDk45JEAQpcmN92L
-         HQ9g==
-X-Forwarded-Encrypted: i=1; AJvYcCXny4nQVOoOHU3UFPZWl/sbY0uonzkj+M8SKXxfP4rSV1pyjJQbFd4M7s51PbBcNfN7ljeFrAJq2WM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyhyzp6cxWrbh3+dl9328Wq+XFOD2RyPNIuFCvt2nslA8IvjLSY
-	My3WElUEIjpvIv7LXoTdT93Sry3VqFqFlb5p8DBpTqlCi4hWV33pDsF/ALmWvMEzWFs=
-X-Gm-Gg: ASbGncvcCLZkKz6qebN5Pyoa4knM23AHNDeV93IqRJ0qdnrvqsVTA1nZ4FO0x5lKZ5l
-	4zXKA7ZW8/tAYbL9NyIDmRaINPEwbf03FJL9B1hpPm1mZhT0ksdn9CVkld/Tt3dLWWOLbBvJicR
-	4Oy35Hpu9eLzGYL34BokO/O8ym+hJc8cUg3tGtubodKpgt4oXuq1QMxA/i/6D28jmUnlyT0NRuv
-	zvCiLQ+PmFYgrWZjLBs2EixJ10TpF56rLqvRkfQduNnKaa5Ngobh/daxBUUDv7dvNOGRQrgh3aC
-	4OlfgJvtusf5YdS7C0b6TzOlzlKNWyY2JhTq+XnLhXXAfXnx7jfQgsqXK8kNW+ojr+sZvxET98x
-	nZud2sauN0w44ypewNqkiKw==
-X-Google-Smtp-Source: AGHT+IGUqazPIKjPwjnFPJ6FlGGUuqv9MKNPOxv010O/xVi21OdnHwb5rqneZD1omgJ2A8dQEuUPBg==
-X-Received: by 2002:a17:903:2447:b0:242:a0b0:3c39 with SMTP id d9443c01a7336-242fc372b29mr18282745ad.54.1754954159413;
-        Mon, 11 Aug 2025 16:15:59 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-241e8aa8e0esm285891505ad.151.2025.08.11.16.15.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 16:15:59 -0700 (PDT)
-Date: Tue, 12 Aug 2025 07:15:10 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>, 
-	Inochi Amaoto <inochiama@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Marc Zyngier <maz@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Saurabh Sengar <ssengar@linux.microsoft.com>, Shradha Gupta <shradhagupta@linux.microsoft.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>, Nicolin Chen <nicolinc@nvidia.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Chen Wang <unicorn_wang@outlook.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH 4/4] irqchip/sg2042-msi: Set MSI_FLAG_MULTI_PCI_MSI flags
- for SG2044
-Message-ID: <fxwrkdaipw7sgr34wtgrh2m757xiras6bfaaugcgopuaxe2e5n@3ipw3t5hg5i7>
-References: <20250807112326.748740-1-inochiama@gmail.com>
- <20250807112326.748740-5-inochiama@gmail.com>
- <87349y7wt9.ffs@tglx>
- <h6sz4hsvajq5pbcd6m2byctdpg6yhjhwbecsqc4o3npieswxov@u3myntmq2xwa>
+	s=arc-20240116; t=1754954855; c=relaxed/simple;
+	bh=ebiOdG+AaxQ0l6i+TRzVcBvO0u65lAmEEixNAiiAm8Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JCqyYuqtYwFIDve/MFrOKIh/IEDUPYqz658JsBwWjEFLJNLzDKChORTNSPFj7IQMNvPOps/1IdbiKKrkvk7bJtr99zXpnh07luQXYCBUOd3f5z87FTW/Vp1UH1u2VZONKavqDcfOfOvZbJLZPjYFx9JDB0fKp4VkoNHt6pK+g5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AIRicPH5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54C84C4AF0C;
+	Mon, 11 Aug 2025 23:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754954855;
+	bh=ebiOdG+AaxQ0l6i+TRzVcBvO0u65lAmEEixNAiiAm8Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AIRicPH5IC2xu123l78VbKLpGIjxOG5qvhWWXarvFo4pBBhb09Gl0G0nKulLM1CDk
+	 DVnpcRG9tQw3ok0XaqvJH6cnYEFqC0WzbvHV0QfTVrZXU11vb2uo+AF0bjxvLGwg5e
+	 EMFv0Cd1BeRbLvLHkPH4WF8sb6n1/k57QO+qb2f4dK3kbX+79YgSJiM23oZpOA+kDy
+	 y3lz1mM51shhQSS13wSNj09lJSSvJ9Cpiis7bORXZq9LMabHfV5Ar9ZydEsBGhx53m
+	 2taX99ez7cQAMI3pyTYxty2Nb8Ia70IzVqrAaPtw2/3QDjffvgh8h2z9xzzD3SgdyT
+	 uF36YEeMD1nZA==
+From: Bjorn Andersson <andersson@kernel.org>
+To: lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	mani@kernel.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	sfr@canb.auug.org.au,
+	qiang.yu@oss.qualcomm.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	konradybcio@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Wenbin Yao <quic_wenbyao@quicinc.com>
+Cc: krishna.chundru@oss.qualcomm.com,
+	quic_vbadigan@quicinc.com,
+	quic_mrana@quicinc.com,
+	quic_cang@quicinc.com
+Subject: Re: (subset) [PATCH v5 0/3] arm64: qcom: x1e80100-qcp: Add power supply and sideband signals for PCIe RC
+Date: Mon, 11 Aug 2025 18:27:07 -0500
+Message-ID: <175495482431.157244.8781382660149123331.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250722091151.1423332-1-quic_wenbyao@quicinc.com>
+References: <20250722091151.1423332-1-quic_wenbyao@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <h6sz4hsvajq5pbcd6m2byctdpg6yhjhwbecsqc4o3npieswxov@u3myntmq2xwa>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 12, 2025 at 06:36:20AM +0800, Inochi Amaoto wrote:
-> On Mon, Aug 11, 2025 at 04:33:06PM +0200, Thomas Gleixner wrote:
-> > On Thu, Aug 07 2025 at 19:23, Inochi Amaoto wrote:
-> > 
-> > > The MSI controller on SG2044 has the ability to allocate
-> > > multiple PCI MSI interrupt if the controller supports it.
-> > 
-> > interrupts ...
-> > 
-> > Which controller?
-> > 
-> > if the PCI device supports multi MSI.
-> > 
+
+On Tue, 22 Jul 2025 17:11:48 +0800, Wenbin Yao wrote:
+> The first patch enables the PCI Power Control driver to control the power
+> state of PCI slots. The second patch adds the bus topology of PCIe domain 3
+> on x1e80100 platform. The third patch adds perst, wake and clkreq sideband
+> signals, and describe the regulators powering the rails of the PCI slots in
+> the devicetree for PCIe3 controller and PHY device.
 > 
-> The PCIe controller, in detail, the Synopsys DesignWare PCIe controller.
-> I will update the comment.
-
-This is still too short, I mean if the PCIe controller also supports 
-this feature, so the MSI controller and the PCIe device driver can
-negotiate and then use this feature.
-
+> The patchset has been modified based on comments and suggestions.
 > 
-> > > Add the missing flag so the controller can make full use
-> > > of it.
-> > 
-> > Again, the controller does not make use of it. The controller supports
-> > it and the device driver can use it if both the PCI device and the
-> > underlying MSI controller support it.
-> > 
+> [...]
 
-Yeah, this does thing I want to describe.
+Applied, thanks!
 
-Regards,
-Inochi
+[2/3] arm64: dts: qcom: x1e80100: add bus topology for PCIe domain 3
+      commit: 6facfaff0fe3b4d5903bed6164eb5e60ee6cdb8f
+[3/3] arm64: dts: qcom: x1e80100-qcp: enable pcie3 x8 slot for X1E80100-QCP
+      commit: df758a868dbc90cae98044d52a9d753575f50cfa
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
 
