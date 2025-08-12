@@ -1,207 +1,117 @@
-Return-Path: <linux-pci+bounces-33859-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33860-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 273F0B22837
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 15:20:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3721BB22841
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 15:22:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 100C83A3B72
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 13:14:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 497DE3A4417
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 13:16:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 068A525F796;
-	Tue, 12 Aug 2025 13:14:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CC4227932D;
+	Tue, 12 Aug 2025 13:16:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qAYzFzJp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xz4nTBbZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67296BB5B
-	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 13:14:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DDF32727E6;
+	Tue, 12 Aug 2025 13:16:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755004475; cv=none; b=AAJ+hoL/MGIcPVCG7Z1V0FKx75qpO4K7tn2pjZ8itMcvG2GZPMfKZAv5IG7bHvMtmCAYeO4GNYRBY02gFRPRSI3f8DxUcHmVrdIRhk3K4deNhqQUXoEEATf+E+vbCj3qOeRNowv3FeQ19fj6QuMC1niiNizDSAux8DumTEoLgNo=
+	t=1755004612; cv=none; b=AmTrQfXHnwOf7aeDD1TqkeRE0/0W9+TpZuCmEreAc4qRfkYA+BIeWh4HE0hw5ADScYbJLnT0GCoqEWkjFk0QvyaTh+z3w3a4HasBb+5kfwV34wFymwtW9LJF5vadz9pWKDvtMYPWKmSj2VNZMl51sZoSmph8iadFt/OQc29WVgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755004475; c=relaxed/simple;
-	bh=N31Jk7sk2wXqUWlbJqfBRZI21Hu0ZuXuWWLfYwq5Akw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XPyyR4bVRTeLiPoLujWWwEgQ2sMY2qlbTSYsfcUBb5TwQhoKr/WZdROYJehpqLeZw3TESYz+UFWnBmLucmIe9rt4MvRyRyf7skR/q/ucYbWEE+yrj/ok1CYLXWmumbU5zHWPQ+OfLie9vJDjkQdgEeqmHQU7XpoIE/xOZn2bwIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qAYzFzJp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 672C2C4CEF5;
-	Tue, 12 Aug 2025 13:14:34 +0000 (UTC)
+	s=arc-20240116; t=1755004612; c=relaxed/simple;
+	bh=3I4/6rSY3BH0T9rdZqBCmXxrvG5EfYLBX+MERG/7QnA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m50fPgneK4dH65aBXfTKtwUvFOXeVtYOnM84/UwiOqKQbVl9kga1WqWdC/daBtbFG7twpKCIHRw3Kvb9gU7BFwQ/6IzzGn7eyQAwDQYzmnTKmubvUHDQXZu4Urfh+TiIlDBoqlrhN+wr0swQhXAU7rg6YcfkiSJ6+LjziQ5Rrjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xz4nTBbZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C90BDC4CEF6;
+	Tue, 12 Aug 2025 13:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755004474;
-	bh=N31Jk7sk2wXqUWlbJqfBRZI21Hu0ZuXuWWLfYwq5Akw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qAYzFzJpb3+GWjgjuiff8vRWHltE0MgI/+D0MvqHcg/E1fJs4QZopkMhyCS7HaxGn
-	 Tj4yzWtlKEYCepLwpucu+QKKbxfRC6wLiL6S3fJTcYFZsn9tr4BmiTpaUleocDfcf0
-	 S3jJ201CYCcMLcVeBe968r5kcxlrewbjbmSllG6wL8MqvQaGXG7OsbznGCi8QVH6Ny
-	 /ZOxgeKakz/XJgtWLdWt8nR7w7jfUmR4lColyUe4x8YVmeWz1KReHFt0ozjwFlGUmS
-	 UEYyYgWvRS/JL5e0kg4PZaEqKyWazZ4WRWFhpUj06dJft9qlkoNAgNZ09YRR+8X+h1
-	 qH2EUD6DHPqew==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1ulope-006gas-Mr;
-	Tue, 12 Aug 2025 14:14:26 +0100
-Date: Tue, 12 Aug 2025 14:14:25 +0100
-Message-ID: <86ldno8yxa.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Coiby Xu <coxu@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	kexec@lists.infradead.org
-Subject: Re: [Regression] kdump fails to get DHCP address unless booting with pci=nomsi or without nr_cpus=1
-In-Reply-To: <gec2yl5wx6vvt67smx5emhcoifvtp4orw6sub24b2nrqwryhp2@i4h7qbtwjo3r>
-References: <x5dwuzyddiasdkxozpjvh3usd7b5zdgim2ancrcbccfjxq7qwn@i6b24w22sy6s>
-	<87bjom8106.ffs@tglx>
-	<878qjq80yu.ffs@tglx>
-	<86v7mt9ai3.wl-maz@kernel.org>
-	<i2l2ujhqjd6akzosvzj4njv2vemsfuvywz4gsnj2nwo3fwyjyz@cfhekxpartf2>
-	<86ms84974v.wl-maz@kernel.org>
-	<gec2yl5wx6vvt67smx5emhcoifvtp4orw6sub24b2nrqwryhp2@i4h7qbtwjo3r>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1755004611;
+	bh=3I4/6rSY3BH0T9rdZqBCmXxrvG5EfYLBX+MERG/7QnA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Xz4nTBbZHXJL3miuxpLiIHff1UkIzFCVnyExiIQIkGFdGStmVQtRntxFTusfaPVEh
+	 j1b3lIo5y6Jr22FEuwVJiojt+WW+QLdpJ2qC/uQrHmt1ERitEHiLUnfLdVMwFmoqfm
+	 HUWCqCl4B2CxSTc75ej7hWVzZe3VT++LU1cPcVB4GNeGgWOCCOTAcpsMkTrz8/Irv+
+	 rP1GmdE8LNUgsmAqLLV7RqUcpOxYd7an7dHjIP0/PfZQ80l7Pshosnr0cE+6sTXhyt
+	 p7JWcrDKlxZjo2mrs0gPGjokl4F8+G9b8gxgZrrG4+t3dLbTmM7SNXz4K03fvzdvDS
+	 oMbDdADY91fjg==
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-741b8c26fc3so4511534a34.1;
+        Tue, 12 Aug 2025 06:16:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU1R2J3DhKKmSKTME22Acs1jTEUOLWmGlzAMX9l2z+3HTEFpgdKlQjrtVfKaVqhEBeA0Cmc2ETQ5pkh@vger.kernel.org, AJvYcCUu7XCZt/K7LijkZa879nYub+Gh0YDvotYHrS1RvMug0IgSVbnIvR8l9uUqa5jxrQCpjw7OYGGEBep9/wXC@vger.kernel.org, AJvYcCXP093uoGTY8w0YiuEozp3MlUP+IImVXit3cfEPhKiV+soaQ1DXiC7YDAI6Q44y82JSxwtH6w4jiMAr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEyq6uU1iv8GAfJJc0dCXorbG+wUcQ6+856NVqwZSbrmBBCDTJ
+	p3J/e99+raJApQVUMDVA1Rd55us/LS/xM7Sxvdm/hgv6yS/HlEoTYqB4vnSBH8OsSghNl63MeCE
+	rT0PhIuAzaokLe0T1ettttA6L8bmkYvg=
+X-Google-Smtp-Source: AGHT+IEfq1ext6EYDCouxq3ABr2rZT7IgagaWXGMqeYGVjXnrCVE0lgDoj8A+4W9+qPH5iWTbbvwam/QiUkPanmSRN0=
+X-Received: by 2002:a05:6830:7192:b0:741:9157:7179 with SMTP id
+ 46e09a7af769-74366c549d2mr3151105a34.21.1755004611125; Tue, 12 Aug 2025
+ 06:16:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: coxu@redhat.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20250811082223.377017-1-liaoyuanhong@vivo.com>
+In-Reply-To: <20250811082223.377017-1-liaoyuanhong@vivo.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 12 Aug 2025 15:16:40 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0irjA9sXjA_arW8QWueJ-C3OJHX7yDwU6TT=EAM7hjq3A@mail.gmail.com>
+X-Gm-Features: Ac12FXxftdbuk568xipLP2ndtRkLURx3wxGwC4Ftfcqq9ocGTfw4SdBpIkz59jg
+Message-ID: <CAJZ5v0irjA9sXjA_arW8QWueJ-C3OJHX7yDwU6TT=EAM7hjq3A@mail.gmail.com>
+Subject: Re: [PATCH] PCI: acpiphp_ibm: Using kmemdup() to simplify code
+To: Liao Yuanhong <liaoyuanhong@vivo.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, "open list:ACPI" <linux-acpi@vger.kernel.org>, 
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 12 Aug 2025 12:07:56 +0100,
-Coiby Xu <coxu@redhat.com> wrote:
-> 
-> On Tue, Aug 12, 2025 at 11:17:04AM +0100, Marc Zyngier wrote:
-> > On Tue, 12 Aug 2025 11:09:12 +0100,
-> > Coiby Xu <coxu@redhat.com> wrote:
-> >> 
-> >> On Mon, Aug 11, 2025 at 03:52:04PM +0100, Marc Zyngier wrote:
-> >> > On Mon, 11 Aug 2025 14:03:21 +0100,
-> >> > Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> >>
-> >> >> On Mon, Aug 11 2025 at 15:02, Thomas Gleixner wrote:
-> >> >>
-> >> >> CC+ Marc
-> >> >>
-> >> >> > On Mon, Aug 11 2025 at 11:23, Coiby Xu wrote:
-> >> >> >> Recently I met an issue that on certain virtual machines, the kdump
-> >> >> >> kernel fails to get DHCP IP address most of times starting from
-> >> >> >> 6.11-rc2. git bisection shows commit b5712bf89b4b ("irqchip/gic-v3-its:
-> >> >> >> Provide MSI parent for PCI/MSI[-X]") is the 1st bad commit,
-> >> >> >>
-> >> >> >>      # good: [7d189c77106ed6df09829f7a419e35ada67b2bd0] PCI/MSI: Provide
-> >> >> >>      # MSI_FLAG_PCI_MSI_MASK_PARENT
-> >> >> >>      git bisect good 7d189c77106ed6df09829f7a419e35ada67b2bd0
-> >> >> >>      # good: [48f71d56e2b87839052d2a2ec32fc97a79c3e264] irqchip/gic-v3-its:
-> >> >> >>      # Provide MSI parent infrastructure
-> >> >> >>      git bisect good 48f71d56e2b87839052d2a2ec32fc97a79c3e264
-> >> >> >>      # good: [8c41ccec839c622b2d1be769a95405e4e9a4cb20] irqchip/irq-msi-lib:
-> >> >> >>      # Prepare for PCI MSI/MSIX
-> >> >> >>      git bisect good 8c41ccec839c622b2d1be769a95405e4e9a4cb20
-> >> >> >>      # first bad commit: [b5712bf89b4bbc5bcc9ebde8753ad222f1f68296]
-> >> >> >>      # irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]
-> >> >> >
-> >> >> > There were follow up fixes on this, so isolating this one is not really
-> >> >> > conclusive.
-> >> >> >
-> >> >> > Is the problem still there on v6.16 and v6.17-rc1?
-> >> >
-> >> > Yeah, there are way too many things that have been addressed since.
-> >> > kdump is also a particularly nasty case, as it tends to rely on the
-> >> > redistributor tables programmed by the previous kernel.
-> >> 
-> >> Thanks for providing a clue. This may also explain explain why I fails
-> >> to reproduce this issue against 1st kernel even with the same cmdline of
-> >> the kdump kernel.
-> > 
-> > I'm not sure that's a clue. It's only an indication that things are
-> > not necessarily easy to spot.
-> > 
-> > Has it ever been reproduced on bare metal? Have you tried v6.16 as
-> > instructed?
-> 
-> Thanks for replying so quickly!
-> 
-> No, I haven't reproduced it on a bare metal machine and our QE engineers
-> haven't noticed this issue on any bare metal machine either. 
-> And I can confirm this issue still happens to 6.16.0-200.fc42.aarch64
-> and 6.17.0-0.rc1.17.fc43.aarch64 on the type of KVM VMS (QEMU PnP device
-> PNP0c02) where the issue was found.
+On Mon, Aug 11, 2025 at 10:22=E2=80=AFAM Liao Yuanhong <liaoyuanhong@vivo.c=
+om> wrote:
+>
+> Use kmemdup() to replace the original code's allocate-and-copy operations=
+.
+> It enhances code readability and simplifies nested conditionals.
+>
+> Signed-off-by: Liao Yuanhong <liaoyuanhong@vivo.com>
+> ---
+>  drivers/pci/hotplug/acpiphp_ibm.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pci/hotplug/acpiphp_ibm.c b/drivers/pci/hotplug/acpi=
+php_ibm.c
+> index 18e01cd55a8e..6a16c8e8238f 100644
+> --- a/drivers/pci/hotplug/acpiphp_ibm.c
+> +++ b/drivers/pci/hotplug/acpiphp_ibm.c
+> @@ -140,11 +140,8 @@ static union apci_descriptor *ibm_slot_from_id(int i=
+d)
+>                 ret =3D des;
+>
+>  ibm_slot_done:
+> -       if (ret) {
+> -               ret =3D kmalloc(sizeof(union apci_descriptor), GFP_KERNEL=
+);
+> -               if (ret)
+> -                       memcpy(ret, des, sizeof(union apci_descriptor));
+> -       }
+> +       if (ret)
+> +               ret =3D kmemdup(des, sizeof(union apci_descriptor), GFP_K=
+ERNEL);
 
-What is that device? Is that the emulated PCI bridge?
+Maybe do
 
-> >> > Also, this says "virtual machines". What's the hypervisor?
-> >> 
-> >> I'll contact the lab administrator. What kinds of info I should collect
-> >> to help you narrow down the issue?
-> > 
-> > Surely you know what hypervisor you're running on, right?
-> 
-> Yes, the hypervisor is KVM. Sorry, I thought merely providing the
-> hypervisor info isn't sufficient and also misunderstood your request as
-> providing more details on the host machine.
+        ret =3D kmemdup(des, sizeof(*des), GFP_KERNEL);
 
-Well, knowing that it is KVM is definitely relevant, given that this
-is my own turf.
+while at it?
 
-> >> > How hard is it to reproduce?
-> >> 
-> >> It can be reproduced reliably on certain machines. But as of writing I
-> >> haven't reproduced it on other KVM virtual machines on three different
-> >> host machines.
-> > 
-> > Which machines? I'm sorry, but if you want help on this, you'll have
-> > to provide actual information.
-> 
-> Sorry, I didn't mean to be vague. I thought you question is on how
-> reproducible this issue is and there is no need to provide the details
-> on the machines where I can't reproduce this issue. Since you explicitly
-> request it, I'll be glad to share the details.
-> 
-> I just grabbed three arbitrary bare metal machines having Fedora-42
-> installed and launched some KVM VMs to see if this issue can be
-> reproduced easily. Two host machines are as follows (sorry I can't find
-> the info of the 3rd one)
-> - GIGABYTE PnP device PNP0c02, ARMv8 (M128-30)
-> - LTHPCSR112 (01234567890123456789AB), ARMv8 (Q80-30)
-
-Are these both Ampere Altra boxes?
-
-> The virtual machine image is downloaded from
-> https://download.fedoraproject.org/pub/fedora/linux/releases/42/Cloud/aarch64/images/Fedora-Cloud-Base-Generic-42-1.1.aarch64.qcow2.
-> I tried different vCPUs (2, 4), different RAM (4G, 35G) and also two
-> different UEFI firmware (the default one and one from edk2-experimental
-> package) but haven't reproduced this issue so far.
-
-Hold on. Above, you say that you have reproduced it with
-6.16.0-200.fc42.aarch64. So have you, or have you not reproduced it?
-
-Can you at the very least share:
-
-- the boot log of the guest on its first kernel
-
-- the boot log of the guest running kdump
-
-- the content of /sys/kernel/debug/kvm/$PID-xx/vgic*state* when
-  running both kernels
-
-- the QEMU command-line to get to run the whole thing
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+>         kfree(table);
+>         return ret;
+>  }
+> --
 
