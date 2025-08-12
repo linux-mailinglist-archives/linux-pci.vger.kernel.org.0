@@ -1,186 +1,142 @@
-Return-Path: <linux-pci+bounces-33871-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33872-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20F75B22E31
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 18:50:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85894B22E74
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 19:02:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9359316A32C
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 16:45:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 06EFF1A260E3
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 16:59:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CE292FD1C7;
-	Tue, 12 Aug 2025 16:43:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A74382FA0FD;
+	Tue, 12 Aug 2025 16:59:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bs7GHP/z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLcPmm4F"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555B4305E08;
-	Tue, 12 Aug 2025 16:43:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE512882AB;
+	Tue, 12 Aug 2025 16:59:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755017037; cv=none; b=F4VeiSfjskYPSZguINa/I4Qg7ABEZWfds0DWMmunrMM23B34iMeFqo9hAxU98ZeH2W/ijW9n7s8A5qibQXfeUQQjt7h1Sk3qP29aOaGYwbin824M1Ub2nCrzyG2t1yqM1mM3W5hv1YRFXYdtMQ7t6TzcX2Z8oOzhOsgWAdokcH4=
+	t=1755017960; cv=none; b=Ow+v+WQ8DAb69Ael6jZatqIMoxJl7JXaGeJ9Hh0cLT00QnkZ4Dk3BCe6VAS37YxELGeXeIHVOUF2VtMlbJ+n3XxBIBy6sSXCZZVjCChF4YYBLqQAmhQob81C4V+SeLe7F28ap3J4Xzb8A7eQREHKDqPrA4sCtm1iocjRG8i5mVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755017037; c=relaxed/simple;
-	bh=AAG3OKaWicsbt/OyMFmGSnBXL0juwmhtawXjWSgR1/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i5HC4eQfXDWACvGcfCq/q8d8iC0Hiuz/bfBD5x5/qI96iQJm0QHPRSxnIsVQxkv4JHObQrVVXl0Ul/VnXQG8/bJOlxK7Mv7KZcWgbpxlA4Kbor8OL0vdcDGLPdENK0Ms2nVEvngHI0ZpdZz2NjM0Hh8q4vlf1povECHo7SzMy38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bs7GHP/z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F6B1C4CEF1;
-	Tue, 12 Aug 2025 16:43:49 +0000 (UTC)
+	s=arc-20240116; t=1755017960; c=relaxed/simple;
+	bh=QG7yl+OjilKldnfrLrCLthek8RiczM5eXczR66KP9Ig=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uiTBuP+m5Scluye3ylYLKzdMWsV+vS+QM3/f3k6fxWjrXIb7NfL8wFiz+9VOn+Rrtu/xi326jlqKcdp5EDJLZWRDAFM4Eqb7NTqrkH8EHo0UFq7VtBEZ3Kgk+5yXqnR8GLBXj/JydvK6ekGlS4YaNPTLQON0wHefU6KtMw/LxxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLcPmm4F; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09EB0C4CEF6;
+	Tue, 12 Aug 2025 16:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755017037;
-	bh=AAG3OKaWicsbt/OyMFmGSnBXL0juwmhtawXjWSgR1/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Bs7GHP/zuzsqtlCcIJpSXRwExwMr58CJ+BMrS0SN2juA30n2B8IU/NRqaOSx/zEiy
-	 2N1nVGTyAmMu9AWE0aE95H/h2irS3N1uLmDWRAH3rEb/flh0lHTC0MEC4GFRZPxz2l
-	 ansDfnZAh/jcIqQFfb/yKJOkOuvzylC0FCVnSRkMI7ZBmqsccbMwSOGG9tfsBJb3vE
-	 rJenh0FjLvkiGm7857w0+yyk+D8OuQRUmCs9jR03c03Vn6uQZkIcO37b0+1/tSiQdi
-	 3gu/EUHclTSMGe97NJTOREJlk9icMeaShCJzRUDGmUKIY4jF844xcufsUKfyQ0zedw
-	 RRvwtlgZXQksA==
-Date: Tue, 12 Aug 2025 22:13:45 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	mhi@lists.linux.dev, linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
-	qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com, quic_vpernami@quicinc.com, 
-	quic_mrana@quicinc.com, Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Subject: Re: [PATCH v4 02/11] PCI/bwctrl: Add support to scale bandwidth
- before & after link re-training
-Message-ID: <ycbh6zfwae3q4s6lfxepmxoq32jaqu5i7csa2ayuqaanwbvzvi@id4prmhl3yvh>
-References: <20250711213602.GA2307197@bhelgaas>
- <55fc3ae6-ba04-4739-9b89-0356c3e0930c@oss.qualcomm.com>
- <d4078b6c-1921-4195-9022-755845cdb432@oss.qualcomm.com>
- <68a78904-e2c7-4d4d-853d-d9cd6413760e@oss.qualcomm.com>
+	s=k20201202; t=1755017960;
+	bh=QG7yl+OjilKldnfrLrCLthek8RiczM5eXczR66KP9Ig=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LLcPmm4FxuZN9IuO5Mm3ufQP8b+kubAPSbN+GqlLnKUS/+IZgSxgiK/N5TIrELyvb
+	 oRy+bMXzHKnDSNST/BjkfnjLChHLjJGEqWaaq2H4VTPX5Xm4za4mOh0TAbbHFbjiFf
+	 pXDIvOQlrIeq/TF4k2Zoy44DRqmop4FqMn93QWw+ikf02SoY/s6xKdpoKh1orGRz+s
+	 KCre5hg+zd0pswPZCrvyUJ4QxFYDxEc9dSvjVG0xYIv91APJ2sZMPjKmt92Y2fyI55
+	 IR0gx2ab+w4mrBMvqif9lWG3dO8CXl3RBY4F/S99aSD7DifCKsDLvYfXe0FHF3KY8l
+	 UAYoDP+k64SqQ==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6152faff57eso8981078a12.1;
+        Tue, 12 Aug 2025 09:59:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUSq6MeEOl3rTaTJffO4hO+971b7DKvw6RBuAf6CcF89WHgNVeZty4Ocfc1E9XpKOLMW41v5pdjRp6+@vger.kernel.org, AJvYcCUeaHtOp7Jj0vLqkFI+7b+94PJh+2XpuNMS3hXU/J+gG4n8DYSqXUyWxL0ZLmXN7eBsJ0XulNk/6HWVTZSf@vger.kernel.org, AJvYcCWTQ9vvS5urJ5avGJodl/cNTun0Wh50eOFk5QnEoJ17WUE4YwsNIptfvjLil6RWYrLCHenENakzy4zN@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSbvBwGPSgqDmAbnPRo8a175806s9gmwlR9TVvou7fmWINuEAq
+	oun174viUqJuulCqbtDWJeGTbZ63RLzKfZLEApJUizPvWvtpjIsY0kZ/pikSFno1mS3Q6LH6QJZ
+	jPQ6mLk/yV/2pFz61pApe5Z1K2RySAA==
+X-Google-Smtp-Source: AGHT+IF1rFMvLqTw0zhBnEbF/24oh+pXC7Cyhcry2T0uiCBMH7+QMKcaZshDTGiUzXOGycYjeiwyJQZcWXyjV2prnqU=
+X-Received: by 2002:a17:907:2d1e:b0:ad8:9257:573a with SMTP id
+ a640c23a62f3a-afca4cba79emr5530366b.5.1755017958559; Tue, 12 Aug 2025
+ 09:59:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <68a78904-e2c7-4d4d-853d-d9cd6413760e@oss.qualcomm.com>
+References: <aJms+YT8TnpzpCY8@lpieralisi> <c627564a-ccc3-9404-ba87-078fb8d10fea@amd.com>
+ <aJrwgKUNh68Dx1Fo@lpieralisi> <e15ebb26-15ac-ef7a-c91b-28112f44db55@amd.com>
+In-Reply-To: <e15ebb26-15ac-ef7a-c91b-28112f44db55@amd.com>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 12 Aug 2025 11:59:06 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJF6s8GsGe1w6KEkeECab956YiBSFbdbHOiiCv2+v3MAA@mail.gmail.com>
+X-Gm-Features: Ac12FXwQ-VolqLcu_Kk_NoubrTpWU2JGnruO8pHHND6fvG1ZgFz7YpsckQnOIjA
+Message-ID: <CAL_JsqJF6s8GsGe1w6KEkeECab956YiBSFbdbHOiiCv2+v3MAA@mail.gmail.com>
+Subject: Re: Issues with OF_DYNAMIC PCI bridge node generation
+ (kmemleak/interrupt-map IC reg property)
+To: Lizhi Hou <lizhi.hou@amd.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, maz@kernel.org, devicetree@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 12, 2025 at 09:35:46AM GMT, Krishna Chaitanya Chundru wrote:
-> 
-> 
-> On 7/22/2025 4:33 PM, Krishna Chaitanya Chundru wrote:
-> > 
-> > 
-> > On 7/12/2025 4:36 AM, Krishna Chaitanya Chundru wrote:
-> > > 
-> > > 
-> > > On 7/12/2025 3:06 AM, Bjorn Helgaas wrote:
-> > > > On Mon, Jun 09, 2025 at 04:21:23PM +0530, Krishna Chaitanya
-> > > > Chundru wrote:
-> > > > > If the driver wants to move to higher data rate/speed than
-> > > > > the current data
-> > > > > rate then the controller driver may need to change certain
-> > > > > votes so that
-> > > > > link may come up at requested data rate/speed like QCOM PCIe
-> > > > > controllers
-> > > > > need to change their RPMh (Resource Power Manager-hardened) state. Once
-> > > > > link retraining is done controller drivers needs to adjust their votes
-> > > > > based on the final data rate.
-> > > > > 
-> > > > > Some controllers also may need to update their bandwidth voting like
-> > > > > ICC BW votings etc.
-> > > > > 
-> > > > > So, add pre_link_speed_change() & post_link_speed_change() op to call
-> > > > > before & after the link re-train. There is no explicit
-> > > > > locking mechanisms
-> > > > > as these are called by a single client Endpoint driver.
-> > > > > 
-> > > > > In case of PCIe switch, if there is a request to change
-> > > > > target speed for a
-> > > > > downstream port then no need to call these function ops as these are
-> > > > > outside the scope of the controller drivers.
-> > > > 
-> > > > > +++ b/include/linux/pci.h
-> > > > > @@ -599,6 +599,24 @@ struct pci_host_bridge {
-> > > > >       void (*release_fn)(struct pci_host_bridge *);
-> > > > >       int (*enable_device)(struct pci_host_bridge *bridge,
-> > > > > struct pci_dev *dev);
-> > > > >       void (*disable_device)(struct pci_host_bridge *bridge,
-> > > > > struct pci_dev *dev);
-> > > > > +    /*
-> > > > > +     * Callback to the host bridge drivers to update ICC BW
-> > > > > votes, clock
-> > > > > +     * frequencies etc.. for the link re-train to come up
-> > > > > in targeted speed.
-> > > > > +     * These are intended to be called by devices directly
-> > > > > attached to the
-> > > > > +     * Root Port. These are called by a single client
-> > > > > Endpoint driver, so
-> > > > > +     * there is no need for explicit locking mechanisms.
-> > > > > +     */
-> > > > > +    int (*pre_link_speed_change)(struct pci_host_bridge *bridge,
-> > > > > +                     struct pci_dev *dev, int speed);
-> > > > > +    /*
-> > > > > +     * Callback to the host bridge drivers to adjust ICC BW
-> > > > > votes, clock
-> > > > > +     * frequencies etc.. to the updated speed after link
-> > > > > re-train. These
-> > > > > +     * are intended to be called by devices directly attached to the
-> > > > > +     * Root Port. These are called by a single client Endpoint driver,
-> > > > > +     * so there is no need for explicit locking mechanisms.
-> > > > 
-> > > > No need to repeat the entire comment.  s/.././
-> > > > 
-> > > > These pointers feel awfully specific for being in struct
-> > > > pci_host_bridge, since we only need them for a questionable QCOM
-> > > > controller.  I think this needs to be pushed down into qcom somehow as
-> > > > some kind of quirk.
-> > > > 
-> > > Currently these are needed by QCOM controllers, but it may also needed
-> > > by other controllers may also need these for updating ICC votes, any
-> > > system level votes, clock frequencies etc.
-> > > QCOM controllers is also doing one extra step in these functions to
-> > > disable and enable ASPM only as it cannot link speed change support
-> > > with ASPM enabled.
-> > > 
-> > Bjorn, can you check this.
-> > 
-> > For QCOM devices we need to update the RPMh vote i.e a power source
-> > votes for the link to come up in required speed. and also we need
-> > to update interconnect votes also. This will be applicable for
-> > other vendors also.
-> > 
-> > If this is not correct place I can add them in the pci_ops.
-> Bjorn,
-> 
-> Can you please comment on this.
-> 
-> Is this fine to move these to the pci_ops of the bridge.
-> Again these are not specific to QCOM, any controller driver which
-> needs to change their clock rates, ICC bw votes etc needs to have
-> these.
-> 
+On Tue, Aug 12, 2025 at 10:53=E2=80=AFAM Lizhi Hou <lizhi.hou@amd.com> wrot=
+e:
+>
+>
+> On 8/12/25 00:42, Lorenzo Pieralisi wrote:
+> > On Mon, Aug 11, 2025 at 08:26:11PM -0700, Lizhi Hou wrote:
+> >> On 8/11/25 01:42, Lorenzo Pieralisi wrote:
+> >>
+> >>> Hi Lizhi, Rob,
+> >>>
+> >>> while debugging something unrelated I noticed two issues
+> >>> (related) caused by the automatic generation of device nodes
+> >>> for PCI bridges.
+> >>>
+> >>> GICv5 interrupt controller DT top level node [1] does not have a "reg=
+"
+> >>> property, because it represents the top level node, children (IRSes a=
+nd ITSs)
+> >>> are nested.
+> >>>
+> >>> It does provide #address-cells since it has child nodes, so it has to
+> >>> have a "ranges" property as well.
+> >>>
+> >>> You have added code to automatically generate properties for PCI brid=
+ges
+> >>> and in particular this code [2] creates an interrupt-map property for
+> >>> the PCI bridges (other than the host bridge if it has got an OF node
+> >>> already).
+> >>>
+> >>> That code fails on GICv5, because the interrupt controller node does =
+not
+> >>> have a "reg" property (and AFAIU it does not have to - as a matter of
+> >>> fact, INTx mapping works on GICv5 with the interrupt-map in the
+> >>> host bridge node containing zeros in the parent unit interrupt
+> >>> specifier #address-cells).
+> >> Does GICv5 have 'interrupt-controller' but not 'interrupt-map'? I thin=
+k
+> >> of_irq_parse_raw will not check its parent in this case.
+> > But that's not the problem. GICv5 does not have an interrupt-map,
+> > the issue here is that GICv5 _is_ the parent and does not have
+> > a "reg" property. Why does the code in [2] check the reg property
+> > for the parent node while building the interrupt-map property for
+> > the PCI bridge ?
+>
+> Based on the document, if #address-cells is not zero, it needs to get
+> parent unit address. Maybe there is way to get the parent unit address
+> other than read 'reg'?  Or maybe zero should be used as parent unit
+> address if 'reg' does not exist?
+>
+> Rob, Could you give us some advise on this?
 
-No, moving to 'pci_ops' is terrible than having it in 'pci_host_bridge' IMO. If
-we want to get rid of these ops, we can introduce a quirk flag in
-'pci_host_bridge' and when set, the bwctrl code can disable/enable ASPM
-before/after link retrain. This clearly states that the controller is quirky and
-we need to disable/enable ASPM.
+If there's no 'reg', then 'ranges' parent address can be used. If
+'ranges' is boolean (i.e. 1:1), then shrug. Just use 0. Probably, 0
+should just always be used because I don't think it ever matters.
 
-For setting OPP, you can have a separate callback in 'pci_host_bridge' that just
-allows setting OPP *after* retrain, like 'pci_host_bridge:link_change_notify()'.
-I don't think you really need to set OPP before retrain though. As even if you
-do it pre and post link retrain, there is still a small window where the link
-will operate without adequate vote.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+From my read of the kernel's interrupt parsing code, only the original
+device's node (i.e. the one with 'interrupts') address is ever used in
+the parsing and matching. So the values in the parent's address cells
+don't matter. If a subsequent 'interrupt-map' is the parent, then the
+code would compare the original address with the parent's
+interrupt-map entries (if not masked). That kind of seems wrong to me,
+but also unlikely to ever occur if it hasn't already. And that code is
+something I don't want to touch because we tend to break platforms
+when we do. The addresses are intertwined with the interrupt
+translating because interrupts used to be part of the buses (e.g ISA).
+That hasn't been the case for any h/w in the last 20 years.
 
