@@ -1,343 +1,195 @@
-Return-Path: <linux-pci+bounces-33843-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33844-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31704B21FB6
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 09:41:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75950B21FBC
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 09:43:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1EEB04E2F95
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 07:41:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1EA0162740E
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 07:43:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A04091FBE87;
-	Tue, 12 Aug 2025 07:41:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF4082D7803;
+	Tue, 12 Aug 2025 07:43:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwZ+GeQ/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ia5ubWtV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978FC1A9F99
-	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 07:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B941A9F99;
+	Tue, 12 Aug 2025 07:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754984510; cv=none; b=KmxpihTuLDVmOVZuafXp7Q/5ciX7HDx8vlctTvljwCwBFldp2Fdc+AI+kBI1Lan9ji0UJKOSj2L5PLqGiuKftb725dVKG8+Phezdo2cLQnvCsh6aDYmC1mMDZvSlue69Mg2+c9rUC03k9iP2m2VwGbbDPC6JlREtIVpaShGmW38=
+	t=1754984581; cv=none; b=hX5pf39nrtGKRGqeDFH2J9STxopW3wv7kO3B/3zsUsPlHXXxrjaHoiFAbxIHLNi3WMohSqRwDQEYFxVeYgWE38UKkNCUMU+JpCFq/dc5DRhmhNttN4zxJDYowPsr1te7Iv2q4+QAztQk8zUyrgbPk+KNH4JehrLwaCt1MBipyx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754984510; c=relaxed/simple;
-	bh=uyJ4u7Z0fiJl33l4ZHZKW9Vq1h282ZXEvvOqHvfCC3M=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=p/WV+fsBE3fd46yUkZMnr/+yell33zioU1c4zHJGm9nQBxbUGmI8i8coG1Bu9mqWom7WWkdhIQIgpU7UBfl43SOvD9ce4eT1gLfrOJ7F73d5ORoVp+IIP3WDoEBkJ6U1bOB2X/b6h4b3lfhIAHBH8v/DS+e/oUePPEsZ/SzOVPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwZ+GeQ/; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754984508; x=1786520508;
-  h=date:from:to:cc:subject:message-id;
-  bh=uyJ4u7Z0fiJl33l4ZHZKW9Vq1h282ZXEvvOqHvfCC3M=;
-  b=bwZ+GeQ/Yl/bh0wpLF/HcKFfuFCVwEBLTJItfLAVybswmJJgoWlOL7Bg
-   /owa0vvyKa46pSL/XjtpsTztdhd9e41nvT7cCtHkRwvpmRy0Ju34N1FLm
-   6Udq7RhXuwv+LWMSEEl3ebYBHwYnMGQ0Kk1YB3njYAfG7Cs1H836lhAT+
-   LiOV9CXl/rFBc2b6R8/8ONv+wAjJ+b7+t8+Qgb+E1pF6JNN9K6MfrEqKW
-   Ghlu6OXevuLqV1abWpxwg2HzodXse3D8wWx2NyW5DlvZ2ISqWyLfr/9sS
-   bHYBxhQfTU7nlzDlBm8kw9KzslX2qAAV5c92oQLai4Fy5ZLCeazlU3b8+
-   w==;
-X-CSE-ConnectionGUID: 7XTUJCsQRZeq2Ouiju37cQ==
-X-CSE-MsgGUID: B3WnN2S+TV2co8fw9H75og==
-X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="59865137"
-X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="59865137"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 00:41:48 -0700
-X-CSE-ConnectionGUID: iXv6qOQ2QQqPqJbm+CihpQ==
-X-CSE-MsgGUID: /kjClSGwSsuQWwuyrckzpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="170332776"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 12 Aug 2025 00:41:47 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uljdS-0006WA-2O;
-	Tue, 12 Aug 2025 07:41:36 +0000
-Date: Tue, 12 Aug 2025 15:39:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/xgene-msi] BUILD SUCCESS
- b26fc701a25195134ff0327709a0421767c4c7b2
-Message-ID: <202508121521.rFBZ1LRB-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1754984581; c=relaxed/simple;
+	bh=6SKWaPVqjTRIWpOZveIQwPd0ps/h4mv/dHVafQ5rf1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IPcM08muv8FJRQpDMxVwvpdKEZu3KpyMY1YOLWOe9nqSlOkv/ktCrtYBKn3Sl6VmCnZKPgRrzPyomeuibKEzkg0bduqgFkuz10KFb8uN9ktkP7lHNUdX9b+Z2wP0SEBT0Nay11plc249XjbKNc5xwDj8MklIkCdTXcUtEHf6/mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ia5ubWtV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70771C4CEF1;
+	Tue, 12 Aug 2025 07:42:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754984581;
+	bh=6SKWaPVqjTRIWpOZveIQwPd0ps/h4mv/dHVafQ5rf1Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ia5ubWtVGD9uVI3I8+5zJjfn5jo+rAqrnjPtJRuoKlVkGWvBn7HTITZtou7V86NDm
+	 rhPZlsgE0bfc9mD67yD25137PElf64vB0iM+6LjWdl+xZk1KIAP4Id9O7ew2MdXL8J
+	 dLe57ix9tVdX0HBN9Aj0lLkUS1/oQ6XF6kgULY3v8b7MK882keB3ap2aKOJV1GZNRI
+	 xd8HK0azfyFomH467KeyqfvUg0lxqsyJ1u0/3c+gSp2FaOvz1IZATaf7xPsk8m0gFa
+	 kowtk8luLibYGppdFeu+cIToyVBAVUI9VlvqQ7Xf6UiyAEt4CPnsYebr+KtwXIlIgr
+	 52ooBM728L7LA==
+Date: Tue, 12 Aug 2025 09:42:56 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Lizhi Hou <lizhi.hou@amd.com>
+Cc: Rob Herring <robh@kernel.org>, maz@kernel.org,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Issues with OF_DYNAMIC PCI bridge node generation
+ (kmemleak/interrupt-map IC reg property)
+Message-ID: <aJrwgKUNh68Dx1Fo@lpieralisi>
+References: <aJms+YT8TnpzpCY8@lpieralisi>
+ <c627564a-ccc3-9404-ba87-078fb8d10fea@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c627564a-ccc3-9404-ba87-078fb8d10fea@amd.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/xgene-msi
-branch HEAD: b26fc701a25195134ff0327709a0421767c4c7b2  PCI: xgene-msi: Return negative -EINVAL in xgene_msi_handler_setup()
+On Mon, Aug 11, 2025 at 08:26:11PM -0700, Lizhi Hou wrote:
+> On 8/11/25 01:42, Lorenzo Pieralisi wrote:
+> 
+> > Hi Lizhi, Rob,
+> > 
+> > while debugging something unrelated I noticed two issues
+> > (related) caused by the automatic generation of device nodes
+> > for PCI bridges.
+> > 
+> > GICv5 interrupt controller DT top level node [1] does not have a "reg"
+> > property, because it represents the top level node, children (IRSes and ITSs)
+> > are nested.
+> > 
+> > It does provide #address-cells since it has child nodes, so it has to
+> > have a "ranges" property as well.
+> > 
+> > You have added code to automatically generate properties for PCI bridges
+> > and in particular this code [2] creates an interrupt-map property for
+> > the PCI bridges (other than the host bridge if it has got an OF node
+> > already).
+> > 
+> > That code fails on GICv5, because the interrupt controller node does not
+> > have a "reg" property (and AFAIU it does not have to - as a matter of
+> > fact, INTx mapping works on GICv5 with the interrupt-map in the
+> > host bridge node containing zeros in the parent unit interrupt
+> > specifier #address-cells).
+> Does GICv5 have 'interrupt-controller' but not 'interrupt-map'? I think
+> of_irq_parse_raw will not check its parent in this case.
 
-elapsed time: 1212m
+But that's not the problem. GICv5 does not have an interrupt-map,
+the issue here is that GICv5 _is_ the parent and does not have
+a "reg" property. Why does the code in [2] check the reg property
+for the parent node while building the interrupt-map property for
+the PCI bridge ?
 
-configs tested: 250
-configs skipped: 7
+> > It is not clear to me why, to create an interrupt-map property, we
+> > are reading the "reg" value of the parent IC node to create the
+> > interrupt-map unit interrupt specifier address bits (could not we
+> > just copy the address in the parent unit interrupt specifier reported
+> > in the host bridge interrupt-map property ?).
+> > 
+> > - #address-cells of the parent describes the number of address cells of
+> >    parent's child nodes not the parent itself, again, AFAIK, so parsing "reg"
+> >    using #address-cells of the parent node is not entirely correct, is it ?
+> > - It is unclear to me, from an OF spec perspective what the address value
+> >    in the parent unit interrupt specifier ought to be. I think that, at
+> >    least for dts including a GICv3 IC, the address values are always 0,
+> >    regardless of the GICv3 reg property.
+> > 
+> > I need your feedback on this because the automatic generation must
+> > work seamlessly for GICv5 as well (as well as all other ICs with no "reg"
+> > property) and I could not find anything in the OF specs describing
+> > how the address cells in the unit interrupt specifier must be computed.
+> 
+> Please see: https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html
+> 
+> 2.4.3.1 mentions:
+> 
+> "Both the child node and the interrupt parent node are required to have
+> #address-cells and #interrupt-cells properties defined. If a unit address
+> component is not required, #address-cells shall be explicitly defined to be
+> zero."
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Yes, but again, that's not what I am asking. GICv5 requires
+#address-cells (2.3.5 - link above - it has child nodes and it
+has to define "ranges") but it does not require a "reg" property,
+code in [2] fails.
 
-tested configs:
-alpha                             allnoconfig    clang-22
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    clang-19
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    clang-19
-arc                              allmodconfig    clang-19
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    clang-22
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    clang-19
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    clang-19
-arc                   randconfig-001-20250811    gcc-8.5.0
-arc                   randconfig-001-20250812    gcc-14.3.0
-arc                   randconfig-002-20250811    gcc-10.5.0
-arc                   randconfig-002-20250812    gcc-14.3.0
-arm                              allmodconfig    clang-19
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    clang-19
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-19
-arm                           omap1_defconfig    clang-22
-arm                   randconfig-001-20250811    gcc-10.5.0
-arm                   randconfig-001-20250812    gcc-14.3.0
-arm                   randconfig-002-20250811    gcc-13.4.0
-arm                   randconfig-002-20250812    gcc-14.3.0
-arm                   randconfig-003-20250811    clang-22
-arm                   randconfig-003-20250812    gcc-14.3.0
-arm                   randconfig-004-20250811    gcc-10.5.0
-arm                   randconfig-004-20250812    gcc-14.3.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    clang-22
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    clang-19
-arm64                               defconfig    clang-22
-arm64                 randconfig-001-20250811    clang-22
-arm64                 randconfig-001-20250812    gcc-14.3.0
-arm64                 randconfig-002-20250811    clang-19
-arm64                 randconfig-002-20250812    gcc-14.3.0
-arm64                 randconfig-003-20250811    clang-20
-arm64                 randconfig-003-20250812    gcc-14.3.0
-arm64                 randconfig-004-20250811    clang-22
-arm64                 randconfig-004-20250812    gcc-14.3.0
-csky                              allnoconfig    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    clang-19
-csky                  randconfig-001-20250811    gcc-15.1.0
-csky                  randconfig-001-20250812    gcc-12.5.0
-csky                  randconfig-002-20250811    gcc-15.1.0
-csky                  randconfig-002-20250812    gcc-12.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-19
-hexagon                          allyesconfig    clang-22
-hexagon                             defconfig    clang-19
-hexagon               randconfig-001-20250811    clang-17
-hexagon               randconfig-001-20250812    gcc-12.5.0
-hexagon               randconfig-002-20250811    clang-16
-hexagon               randconfig-002-20250812    gcc-12.5.0
-i386                             allmodconfig    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    clang-20
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-20
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250811    clang-20
-i386        buildonly-randconfig-001-20250812    gcc-12
-i386        buildonly-randconfig-002-20250811    clang-20
-i386        buildonly-randconfig-002-20250812    gcc-12
-i386        buildonly-randconfig-003-20250811    gcc-12
-i386        buildonly-randconfig-003-20250812    gcc-12
-i386        buildonly-randconfig-004-20250811    gcc-12
-i386        buildonly-randconfig-004-20250812    gcc-12
-i386        buildonly-randconfig-005-20250811    gcc-12
-i386        buildonly-randconfig-005-20250812    gcc-12
-i386        buildonly-randconfig-006-20250811    gcc-12
-i386        buildonly-randconfig-006-20250812    gcc-12
-i386                                defconfig    clang-20
-i386                  randconfig-001-20250812    clang-20
-i386                  randconfig-002-20250812    clang-20
-i386                  randconfig-003-20250812    clang-20
-i386                  randconfig-004-20250812    clang-20
-i386                  randconfig-005-20250812    clang-20
-i386                  randconfig-006-20250812    clang-20
-i386                  randconfig-007-20250812    clang-20
-i386                  randconfig-011-20250812    gcc-12
-i386                  randconfig-012-20250812    gcc-12
-i386                  randconfig-013-20250812    gcc-12
-i386                  randconfig-014-20250812    gcc-12
-i386                  randconfig-015-20250812    gcc-12
-i386                  randconfig-016-20250812    gcc-12
-i386                  randconfig-017-20250812    gcc-12
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20250811    gcc-15.1.0
-loongarch             randconfig-001-20250812    gcc-12.5.0
-loongarch             randconfig-002-20250811    gcc-12.5.0
-loongarch             randconfig-002-20250812    gcc-12.5.0
-m68k                             allmodconfig    clang-19
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    clang-19
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    clang-19
-microblaze                       allmodconfig    clang-19
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    clang-19
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                      maltaaprp_defconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-15.1.0
-nios2                               defconfig    gcc-11.5.0
-nios2                               defconfig    gcc-15.1.0
-nios2                 randconfig-001-20250811    gcc-10.5.0
-nios2                 randconfig-001-20250812    gcc-12.5.0
-nios2                 randconfig-002-20250811    gcc-11.5.0
-nios2                 randconfig-002-20250812    gcc-12.5.0
-openrisc                          allnoconfig    clang-22
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    clang-22
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250811    gcc-9.5.0
-parisc                randconfig-001-20250812    gcc-12.5.0
-parisc                randconfig-002-20250811    gcc-14.3.0
-parisc                randconfig-002-20250812    gcc-12.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-22
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc                      katmai_defconfig    clang-22
-powerpc               randconfig-001-20250811    gcc-13.4.0
-powerpc               randconfig-001-20250812    gcc-12.5.0
-powerpc               randconfig-002-20250811    clang-22
-powerpc               randconfig-002-20250812    gcc-12.5.0
-powerpc               randconfig-003-20250811    gcc-13.4.0
-powerpc               randconfig-003-20250812    gcc-12.5.0
-powerpc64             randconfig-001-20250811    clang-22
-powerpc64             randconfig-001-20250812    gcc-12.5.0
-powerpc64             randconfig-002-20250811    clang-22
-powerpc64             randconfig-002-20250812    gcc-12.5.0
-powerpc64             randconfig-003-20250811    gcc-14.3.0
-powerpc64             randconfig-003-20250812    gcc-12.5.0
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250811    gcc-8.5.0
-riscv                 randconfig-001-20250812    clang-18
-riscv                 randconfig-002-20250811    clang-22
-riscv                 randconfig-002-20250812    clang-18
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250811    gcc-8.5.0
-s390                  randconfig-001-20250812    clang-18
-s390                  randconfig-002-20250811    clang-17
-s390                  randconfig-002-20250812    clang-18
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-12
-sh                          r7780mp_defconfig    clang-22
-sh                    randconfig-001-20250811    gcc-15.1.0
-sh                    randconfig-001-20250812    clang-18
-sh                    randconfig-002-20250811    gcc-15.1.0
-sh                    randconfig-002-20250812    clang-18
-sh                             sh03_defconfig    clang-22
-sh                     sh7710voipgw_defconfig    clang-22
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250811    gcc-8.5.0
-sparc                 randconfig-001-20250812    clang-18
-sparc                 randconfig-002-20250811    gcc-8.5.0
-sparc                 randconfig-002-20250812    clang-18
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250811    clang-22
-sparc64               randconfig-001-20250812    clang-18
-sparc64               randconfig-002-20250811    gcc-14.3.0
-sparc64               randconfig-002-20250812    clang-18
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-12
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250811    clang-18
-um                    randconfig-001-20250812    clang-18
-um                    randconfig-002-20250811    clang-22
-um                    randconfig-002-20250812    clang-18
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250811    gcc-12
-x86_64      buildonly-randconfig-001-20250812    gcc-12
-x86_64      buildonly-randconfig-002-20250811    clang-20
-x86_64      buildonly-randconfig-002-20250812    gcc-12
-x86_64      buildonly-randconfig-003-20250811    clang-20
-x86_64      buildonly-randconfig-003-20250812    gcc-12
-x86_64      buildonly-randconfig-004-20250811    clang-20
-x86_64      buildonly-randconfig-004-20250812    gcc-12
-x86_64      buildonly-randconfig-005-20250811    clang-20
-x86_64      buildonly-randconfig-005-20250812    gcc-12
-x86_64      buildonly-randconfig-006-20250811    clang-20
-x86_64      buildonly-randconfig-006-20250812    gcc-12
-x86_64                              defconfig    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20250812    gcc-11
-x86_64                randconfig-002-20250812    gcc-11
-x86_64                randconfig-003-20250812    gcc-11
-x86_64                randconfig-004-20250812    gcc-11
-x86_64                randconfig-005-20250812    gcc-11
-x86_64                randconfig-006-20250812    gcc-11
-x86_64                randconfig-007-20250812    gcc-11
-x86_64                randconfig-008-20250812    gcc-11
-x86_64                randconfig-071-20250812    clang-20
-x86_64                randconfig-072-20250812    clang-20
-x86_64                randconfig-073-20250812    clang-20
-x86_64                randconfig-074-20250812    clang-20
-x86_64                randconfig-075-20250812    clang-20
-x86_64                randconfig-076-20250812    clang-20
-x86_64                randconfig-077-20250812    clang-20
-x86_64                randconfig-078-20250812    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-12
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-12
-x86_64                           rhel-9.4-ltp    gcc-12
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250811    gcc-9.5.0
-xtensa                randconfig-001-20250812    clang-18
-xtensa                randconfig-002-20250811    gcc-9.5.0
-xtensa                randconfig-002-20250812    clang-18
+That boils down to what does "a unit address component is not required"
+means.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Why does the code in [2] read "reg" to build the parent unit interrupt
+specifier (with #address-cells size of the parent, which, again, I
+don't think it is correct) ?
+
+> > I found this [3] link where in section 7 there is an interrupt mapping
+> > algorithm; I don't understand it fully and I think it is possibly misleading.
+> > 
+> > Now, the failure in [2] (caused by the lack of a "reg" property in the
+> > IC node) triggers an interrupt-map property generation failure for PCI
+> > bridges that are upstream devices that need INTx swizzling.
+> > 
+> > In turn, that leads to a kmemleak detection:
+> > 
+> > unreferenced object 0xffff000800368780 (size 128):
+> >    comm "swapper/0", pid 1, jiffies 4294892824
+> >    hex dump (first 32 bytes):
+> >      f0 b8 34 00 08 00 ff ff 04 00 00 00 00 00 00 00  ..4.............
+> >      70 c2 30 00 08 00 ff ff 00 00 00 00 00 00 00 00  p.0.............
+> >    backtrace (crc 1652b62a):
+> >      kmemleak_alloc+0x30/0x3c
+> >      __kmalloc_cache_noprof+0x1fc/0x360
+> >      __of_prop_dup+0x68/0x110
+> >      of_changeset_add_prop_helper+0x28/0xac
+> >      of_changeset_add_prop_string+0x74/0xa4
+> >      of_pci_add_properties+0xa0/0x4e0
+> >      of_pci_make_dev_node+0x198/0x230
+> >      pci_bus_add_device+0x44/0x13c
+> >      pci_bus_add_devices+0x40/0x80
+> >      pci_host_probe+0x138/0x1b0
+> >      pci_host_common_probe+0x8c/0xb0
+> >      platform_probe+0x5c/0x9c
+> >      really_probe+0x134/0x2d8
+> >      __driver_probe_device+0x98/0xd0
+> >      driver_probe_device+0x3c/0x1f8
+> >      __driver_attach+0xd8/0x1a0
+> > 
+> > I have not grokked it yet but it seems genuine, so whatever we decide
+> > in relation to "reg" above, this ought to be addressed too, if it
+> > is indeed a memleak.
+> 
+> Not sure what is the leak. I will look into more.
+
+Thanks,
+Lorenzo
+
+> 
+> 
+> Lizhi
+> 
+> > 
+> > Please let me know if something is unclear I can provide further
+> > details.
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5.yaml?h=v6.17-rc1
+> > [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/of_property.c?h=v6.17-rc1#n283
+> > [3] https://www.devicetree.org/open-firmware/practice/imap/imap0_9d.html
 
