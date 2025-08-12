@@ -1,138 +1,210 @@
-Return-Path: <linux-pci+bounces-33815-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33816-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32CCEB21BAA
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 05:32:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37962B21BD0
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 05:50:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7158C1902F7A
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 03:32:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3C1BB46089B
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 03:50:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C6CD214204;
-	Tue, 12 Aug 2025 03:31:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB4112DAFA2;
+	Tue, 12 Aug 2025 03:49:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPyQDdNg"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mfEjVlTj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC901A76DE;
-	Tue, 12 Aug 2025 03:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6904A2D29C2
+	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 03:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754969518; cv=none; b=m1zW029zuJf3RUBBtPikeTIWWBbW0j0ee3RuEUVmAXl47l6tiL3sZnw7maGDSJlxAs6MsFZ9ZClDovycmuu+oiv9xeEgb9iCowwL874d2qDAz0klZcJ3nx3O5iOAKGlF0IaEK3GBxrE2ntma0T8q4z9hhC2YLadnpqrwxeP5Ax4=
+	t=1754970596; cv=none; b=Nhjf9gOzrEQloMPVCEc05epFjPNfaystveJpmxNjcNY1VOOQIq0o8vCImRUzov5aFzGWMYC/kCNisX5RdQhTt1DcUz9QFhDQOyeHD5I3Q2OSKUC667Hn88bTJgmyJMBGTOTM0xhpFRC1wjk6GyQwnggNWy7v4wKKTwCvDRj/LXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754969518; c=relaxed/simple;
-	bh=vfyvdPP9L3lM7kDtAuquN+RNsdO/iJpXaQt7vqW3n8M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Asi4Qd+abt4gz158WN5bwUyG58atGeyWNXmqpCp4ftOW2jJG697afFSQxyOAsBI75CDgCnsgSquvHUDxNDKzPKVez5gio4ZP2nTsRkpHqDcZ+OukPrX0bhKGuW8U6Nnu6nM2zNNxF+TemJ3J0d4rFuOg5+x0W5GGjAOGz0hAtdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fPyQDdNg; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-76bc68cc9e4so5181221b3a.2;
-        Mon, 11 Aug 2025 20:31:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754969517; x=1755574317; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8S+no+XL5nD240u8M1Zin3Q7p8a0DhzQRaJrnzy39J8=;
-        b=fPyQDdNgrcheSyoXSezabg11clLUa1V/CD2BLx/PZlbtDO95kR3YLfJl6w69YmB5CG
-         ySGUJj5pLPAcC+qGV8kqEJW4GRP/p/tvYc+ticOdn0xNQi4hpQjRnQiVqysA/diyt+uf
-         8AnKeqayQyn/HiR8SGOVCXWTOLFwB51kAzhbusqOs9a4sRUkvSnvGW8Ucgm62gWE7O71
-         6VXLeOjx2x3wJK5ownFrusUaiowIujcm9zue0PIIaT1psJ7sB3oBrDU/lg9nwT2ZYnim
-         Gbh+sggva7+cIVyD8dGzNPQcXlcFFbTrV9UHfWEUdpseE7gghMi8Ag87Z6arbuJNK4mB
-         rKBQ==
+	s=arc-20240116; t=1754970596; c=relaxed/simple;
+	bh=87OsKUWhd93bhH0mOSNgVS47foXOTSCk7LBABDEo+cI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fEH+BKw+n6HpQGso2dWUTfmF68/S3ua4lLCQ1cpruCIauQgLbgsx8cU+1mNJ/XO+CL4BfnMqjcOffrcQiCDMK8YKJVYyco47W6ud5KPDrNFYHhrEtXXxOsUPzUAmI0gzrMJgqy1CGVpmB3/RsvSOJwC8kWs8hTRPdjnC7BelFRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mfEjVlTj; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57BG74Ma028828
+	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 03:49:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	5TV846db6f3LjcIYa6Gb2G9q0zV9dsFXUpYfVhL1rCU=; b=mfEjVlTjeyFm0qHS
+	zFnOX5AD3U5UGq89NvX7+yyyR38LA2xb0dTSWn/ysP4ngFic0Vm8c+Lh5tHZzAo8
+	VoEHkp22Ayv1c5+t7D7v6RoUGG+TTIvJgehpN1JToIC2FOErWsNkJ7S0WKViXnnU
+	eXUl2UJqqEmSOKfNiJcyJOP3gdsV4wAbptMvxk2ei60AJ9b4A0MrIrIQ89kEVhax
+	92F/LjJP9eSnH55wPr52b75DAzLpNclov+8Q3JSYhD4p65Qx7+2z95HrjSfNABRd
+	kLLQ2DpJ9STUu65cbphDurT0z90ULGec0IDyWf2MqaHyjTB+KOL5F4NRcpRian87
+	qlJuug==
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48dw9sptu9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 03:49:54 +0000 (GMT)
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-b4310451ae4so6696027a12.3
+        for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 20:49:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754969517; x=1755574317;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8S+no+XL5nD240u8M1Zin3Q7p8a0DhzQRaJrnzy39J8=;
-        b=CmAxWDipjnmkoiLB809F2HTI4SyfhBYHRmB61cas1wSLAs7XQINl+QjQCQvqhzPASe
-         u0n2n5qfCT1n5yOJWn9dA/ODpksru1wxJVqmdt64QbUhXNhEWY8Fm7JtCgY0APu7iGF+
-         k7QWa8AaZdG/f6arP1z8Rc4LOkX2OxP7VseTtTrhXpeaL1WTWVf51CT7c1F7svWI4t55
-         RL347d3eGnUM4dtU4IOADTV1/piDOcJK7x6uP8tiX03ex4UpgmNWGk27cKiRp4eVe7r1
-         XK3tyBJcoENXw+JPlyoPK1CV8L6Ul7cd6AEEnruEM2Z3+V5fdihiKYMtUpaVWP7m6NKf
-         1Ieg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2iE1+TljOGbyMGNZ9YDRsy6k112QrdwIw2JEIgpNJc7gCCCbuaJ338TET5U3KVAocuewha7jQ/nC410I=@vger.kernel.org, AJvYcCVmEyZiotBztGplWpn0MV4IvSYdgZQVHF8Cp9RvJjVlcBiMMoUqJT27Qz/RB4U3bAqzFIMTknDGDtkxaL040IA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygURdaehVc8jp+t2cKaxvzenRG3ARN4WUIlT5e/i1VDidzTpmB
-	BXv+I6Q53WgwApGSdGAiD+iyf8pIcwELsD6T/i09aoVaOjJ9rT6PcUBj
-X-Gm-Gg: ASbGnctmNgOeiaamRz9YJdX8+KA9fSSsMGxNj+PnFvPhvWiYpYmZKFddXLZjTCfs1/x
-	+FhG3jEaQ1RoJrXPCvxZ6zW3Ci3XztQsQnwfZLMwkTi5OyUiSPJCCjruLdZarQpAWz8mRnIfq/7
-	/HNtqPAjXiN76DkpBnUz/JIQmiPp9knpnV+sHd0N3v5wxDqdrAfJxod/0E58esKAGtRcWKkJ7nF
-	kVKnFcoDSRe+41X2OJJC7wpz9eq0q6wRP9VoNAn/lxUxKtJ1vbjSgFgIyRPc3u35ajnTLqn4cGS
-	4FObskxdH5K7KQ233Saum3gUswPEXxuBPxR6/wPkqBIJbm6IuPT2Gx8ecyT7S8aIuaAZM5ut+Sj
-	3ca7I7/brFFzkqIYAUWUrKIps
-X-Google-Smtp-Source: AGHT+IGiXvUO7CJi9ioOHnbz+EgEKBNFp1mg+EhD1KSh2unYYVRsummizomz+JScV+I7SUjWg8KgEQ==
-X-Received: by 2002:a05:6a20:72ac:b0:240:1b99:1595 with SMTP id adf61e73a8af0-2409a8bcf16mr3360034637.17.1754969516602;
-        Mon, 11 Aug 2025 20:31:56 -0700 (PDT)
-Received: from pop-os.. ([2401:4900:91d5:9edd:11bb:d389:5e47:9179])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b46e5074e87sm3091824a12.54.2025.08.11.20.31.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 20:31:56 -0700 (PDT)
-From: herculoxz <abhinav.ogl@gmail.com>
-To: dakr@kernel.org,
-	bhelgaas@google.com,
-	kwilczynski@kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu
-Cc: linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Abhinav Ananthu <abhinav.ogl@gmail.com>
-Subject: [PATCH v3 1/1] rust: pci: use c_* types via kernel prelude
-Date: Tue, 12 Aug 2025 09:01:02 +0530
-Message-Id: <20250812033101.5257-1-abhinav.ogl@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1754970593; x=1755575393;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5TV846db6f3LjcIYa6Gb2G9q0zV9dsFXUpYfVhL1rCU=;
+        b=tPfpZaisx6ZHBqpqEm8TqY3sn1M3pLnfNaBfuvV/lkm49+tnVdRmK98nuEk/JeCqSk
+         b3fKla+PVf2yERQmogIpP9gfW9REFbS1MnNg3+aDjsvkCIc+E6KNriMQ8tPIEnfAdTCz
+         RdZSufBIyWdvjqr0DA4IQIfKPypSUR1q1a10hvoJESLNI1vmkbSTYLNhLGcuXoi6/VAF
+         /dwzxhhs84uo5mzeroYgTBk8m6OauQzDeJeIa/JFJTztrnvCUlk0tqi9TxIfRvgpJj/O
+         E2GyTHU36cdoxqWcp0O4HyuM80ZdNbM1IUxQFqNV7asv29OlRB0Jsu5NJd3KvcLJR/NE
+         hv+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVJy5LYJdgF9b81dENfR2dI6TefW3bZF+DLkrGEFvt0jFEL9/ykfhDErheBZhwTKAe0SivtnFemAvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTdG3rtPD6k/XtOVvjlBnY8wXURM63IVlLIdFxSZoz9BzRtv7N
+	FIcG9lo05kc3gA9UY3nafrnVWslvSbdBaju46Kw8MEgQaySAYrha78jRAISWJwFFhLm0UmvdJuY
+	1LVwHKMdzPxpErqHUtPriYxClwOuddrG2/WDbERDU4M6NUG5t3+XK2CyXcGZVt7s=
+X-Gm-Gg: ASbGncslemR8xbNOcdE3kQB52hlvA3b1COBeeOkDJT7nN/TRWrftgZ3xH0vO97j9FOR
+	/ct3sUhsHFhrn2oeq+n8bKs70voyRG5u/KOIdReOR1kek5oI/MFreYug+a4/82o48cYkJiO7cza
+	KHr8NDdzhYDAtN4dVOtGPRqgi1LLRPFdkgyQfe7msXG5d6FDuQTIM4s+tlC/l1mEHKMD2mceQs7
+	tlqgsTz/5Byhe1OLXtsFAHcG/dsYDOHQ5SprsaVr/zeg3i9LXdOiL+4uEnGEGdp1okyxZ9mscnM
+	BU7qpQTuxU8baxJ+64kuYKP6RaZdLpST0jZSzU6cARQeZl6Jz2h4DmGxpUG0dDc1PZJjlhusJA=
+	=
+X-Received: by 2002:a05:6a20:3945:b0:238:351a:6437 with SMTP id adf61e73a8af0-2409a9b57f1mr3209074637.43.1754970593597;
+        Mon, 11 Aug 2025 20:49:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHP375zTdK8Lz8GD2GdflxZl60YmZFoMKeDDEAaMpk+lohW3i3wGJFGZRlHt70eEG4IIaUe0w==
+X-Received: by 2002:a05:6a20:3945:b0:238:351a:6437 with SMTP id adf61e73a8af0-2409a9b57f1mr3209046637.43.1754970593156;
+        Mon, 11 Aug 2025 20:49:53 -0700 (PDT)
+Received: from [10.218.42.132] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76bccfbce56sm28275963b3a.82.2025.08.11.20.49.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Aug 2025 20:49:52 -0700 (PDT)
+Message-ID: <f21f6fd0-9d58-4eee-9676-e6e9543cf7f6@oss.qualcomm.com>
+Date: Tue, 12 Aug 2025 09:19:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] arm64: dts: qcom: sc7280: Add wake GPIO
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki"
+ <rafael@kernel.org>,
+        Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
+        Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>,
+        Danilo Krummrich <dakr@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
+        quic_mrana@quicinc.com, sherry.sun@nxp.com, linux-pm@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Manivannan Sadhasivam <mani@kernel.org>
+References: <20250801-wake_irq_support-v4-0-6b6639013a1a@oss.qualcomm.com>
+ <20250801-wake_irq_support-v4-1-6b6639013a1a@oss.qualcomm.com>
+ <u4zedngig2jsraq27h2gc5ksp5swgypl2k3sy44znrhndtljpp@r4jb3wibkf3q>
+Content-Language: en-US
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <u4zedngig2jsraq27h2gc5ksp5swgypl2k3sy44znrhndtljpp@r4jb3wibkf3q>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=J+Wq7BnS c=1 sm=1 tr=0 ts=689ab9e2 cx=c_pps
+ a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8
+ a=Ztk8bZVGPGJlfjIOV0sA:9 a=QEXdDO2ut3YA:10 a=_Vgx9l1VpLgwpw_dHYaR:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: zz2EnkAXtfLdBBF-ImwQIoj2FQNaHCUu
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA5MDAxNSBTYWx0ZWRfX8iFPkMheYRcU
+ yukjJ49ppHFsp7KXZSM3dei/aR1oEmTRcptQpEtJDK6nsmoVAPoE44X6xSL5uWObAK7Uax1rqPE
+ 2rE1Ep+GZATJwnlErZrMk3vELgecjq3cEuozsJHRmlw0JGh/bqOugs9nMmuGxmrL3OkK27eqKBH
+ qtW+FNZ9bERydC2abY+9TKfeXqATySbJlcVDzG7a4ULy7Gdm2HQhPtCQHnO9O9waaJ28f1HHQh5
+ zhCTM+fl+Vdhc2ZgWTTjFezw3n912caVU13VmSHoOCGGM35cB+UG6M74yIDyB9VP2onA0StjfGe
+ 2xo8DmkGAnv/QK3su2RW9QNSAwX77jQtpcioZwda4mRrrGrNEC8SElT2KyAq7xhDFsaIndJ2Dak
+ lzuhSyHB
+X-Proofpoint-GUID: zz2EnkAXtfLdBBF-ImwQIoj2FQNaHCUu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-12_01,2025-08-11_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 adultscore=0 malwarescore=0 impostorscore=0 bulkscore=0
+ phishscore=0 suspectscore=0 spamscore=0 clxscore=1015 classifier=typeunknown
+ authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2507300000 definitions=main-2508090015
 
-From: Abhinav Ananthu <abhinav.ogl@gmail.com>
 
-Update PCI FFI callback signatures to use `c_` from the prelude,
-instead of accessing it via `kernel::ffi::`.
 
-Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
----
- rust/kernel/pci.rs | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 8/11/2025 10:06 PM, Bjorn Andersson wrote:
+> On Fri, Aug 01, 2025 at 04:29:42PM +0530, Krishna Chaitanya Chundru wrote:
+>> Add WAKE# gpio which is needed to bring PCIe device state
+>> from D3cold to D0.
+>>
+> 
+> What tree did you base this on? None of these boards has pcieport1
+> defined in the upstream kernel.
+> 
+Sorry I forgot to add dependencies to dependencies to one more series.
+I will add the dependencies in the next series.
 
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 5ce07999168e..fbeeaec4e044 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -61,7 +61,7 @@ impl<T: Driver + 'static> Adapter<T> {
-     extern "C" fn probe_callback(
-         pdev: *mut bindings::pci_dev,
-         id: *const bindings::pci_device_id,
--    ) -> kernel::ffi::c_int {
-+    ) -> c_int {
-         // SAFETY: The PCI bus only ever calls the probe callback with a valid pointer to a
-         // `struct pci_dev`.
-         //
-@@ -333,7 +333,7 @@ unsafe fn do_release(pdev: &Device, ioptr: usize, num: i32) {
-         // `ioptr` is valid by the safety requirements.
-         // `num` is valid by the safety requirements.
-         unsafe {
--            bindings::pci_iounmap(pdev.as_raw(), ioptr as *mut kernel::ffi::c_void);
-+            bindings::pci_iounmap(pdev.as_raw(), ioptr as *mut c_void);
-             bindings::pci_release_region(pdev.as_raw(), num);
-         }
-     }
--- 
-2.34.1
-
+- Krishna Chaitanya.
+> Regards,
+> Bjorn
+> 
+>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts   | 1 +
+>>   arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi | 1 +
+>>   arch/arm64/boot/dts/qcom/sc7280-idp.dtsi       | 1 +
+>>   3 files changed, 3 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> index 10c152ac03c874df5f1dc386d9079d3db1c55362..a4d85772f86955ad061433b138581fa9d81110a4 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> @@ -810,6 +810,7 @@ &mdss_edp_phy {
+>>   
+>>   &pcieport1 {
+>>   	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>> +	wake-gpios = <&tlmm 3 GPIO_ACTIVE_HIGH>;
+>>   };
+>>   
+>>   &pcie1 {
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+>> index 60b3cf50ea1d61dd5e8b573b5f1c6faa1c291eee..5e73060771329cade097bf1a71056a456a7937d7 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+>> @@ -477,6 +477,7 @@ &pcie1 {
+>>   
+>>   &pcieport1 {
+>>   	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>> +	wake-gpios = <&tlmm 3 GPIO_ACTIVE_HIGH>;
+>>   };
+>>   
+>>   &pm8350c_pwm {
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+>> index 0b0212b670797a364d7f0e7a458fc73245fff8db..240513774612fb2bfcdb951e5a5a77c49f49eb82 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+>> @@ -418,6 +418,7 @@ &lpass_va_macro {
+>>   
+>>   &pcieport1 {
+>>   	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>> +	wake-gpios = <&tlmm 3 GPIO_ACTIVE_HIGH>;
+>>   };
+>>   
+>>   &pcie1 {
+>>
+>> -- 
+>> 2.34.1
+>>
 
