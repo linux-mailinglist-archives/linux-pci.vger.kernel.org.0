@@ -1,152 +1,163 @@
-Return-Path: <linux-pci+bounces-33873-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33874-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B605B22E88
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 19:06:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B588B22EAF
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 19:13:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2005B18882AC
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 17:05:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 46B811A24B2F
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 17:12:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E83AA2F8BF8;
-	Tue, 12 Aug 2025 17:05:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 493572F83D8;
+	Tue, 12 Aug 2025 17:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFvvjqsy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXx9gseD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C961A76DE;
-	Tue, 12 Aug 2025 17:05:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF72286D61;
+	Tue, 12 Aug 2025 17:12:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755018303; cv=none; b=K2Fh6o8y18H+iOhRgsoBpsOMiFeiiPO/H5398kwT4UiPAQ0/NdA0DD2ajACW3IKIFTdeWuR6WfjrZonS7EQpLVkPu5+BzHPy2Al1HBcZ1kKot9d9YUvRrlS+ZhswCluQznYylAR1LompE2zQ/ScFkOrYtvOiyqno2qKQFCIJT3Y=
+	t=1755018748; cv=none; b=GoK7lavrVcrPZ1McQ/GQPpP+i0P9YbjSeo3GtPSKyaP1iHkUr5azqC2cLmpTcU6+lxkHaFvOrtdm1lFkQ0n3OUvbayoaStn7VtpaRHlcX+LqaLkWEqZuZsu2g3XBFmBb3MBR9G9/hbUF/jzhz8l1mrnx1/MWx7ytFCqV/m5Ffrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755018303; c=relaxed/simple;
-	bh=tTm/T4JRN/HERZIZ3VLZ5EgeyXpLsz7VKH4O9wed3sk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TCNoTEDIn5kjOlM3D1+mCkWd26csH4YhkIrV0uHXYK4eY1f9I7tUE3d8Nw0WAhHcc963KjE/mVFwAGpHTkeYszF+gKv7MjX3MNThkwbI/GeVJCHSKwSQXMN+7Iu6nBkDqGmxGVUgV9qfTaea1JFPtpcP8bzlhM/1ska8xsRuxN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFvvjqsy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32EA9C4CEF7;
-	Tue, 12 Aug 2025 17:05:03 +0000 (UTC)
+	s=arc-20240116; t=1755018748; c=relaxed/simple;
+	bh=sbkCPKwftTrUkZdiXc/EE3AJ3jJBcpouENbdl33Fz34=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tqP1T4AcejwfOEHWbQIcFtST9FsaVABNxY3lL/lZLMAYuAxJtGPEpwYnmppoCC9C2L+pZOXmJS8FNvNk5QFZ6vIoo2vm1FILHHa63OZBPmn7ksS2dvy2tZmcy8opVX1bIBMaXA06Czlp7NaMPTXNH+ANoDN22h//hKdUavg4jpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXx9gseD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B54C4CEF0;
+	Tue, 12 Aug 2025 17:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755018303;
-	bh=tTm/T4JRN/HERZIZ3VLZ5EgeyXpLsz7VKH4O9wed3sk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RFvvjqsyso8V5LN31kOLuBTnmSe+jxVxPUb9ANpeq3wgfgOTUcuDqELcIsLcyB2/E
-	 2p/tfOI3TcatjuRglbUIr03JKTcuv6Bzp9OJQ+v3kya0swhfWvrJcZXZkKIHngCviS
-	 5YnjjVXqBVRyURAfKozHHzAf0PNMo040AWhyn2C//wheXn+vcYDAFviTgaSYs8vr2G
-	 Ms9Fvosp5m8g0N2Mv8zmPk6zsexopoy5UrqNLYlltdJqqgzU2agv9IauBlTJbruA4D
-	 EE5mzus1tD7oBXD84NQ0zRwPHkVvNuMCd7PBnjYAoJX4Ua1wXOvs0pCcnfhZAhywnZ
-	 HrBYxBt2Ht6pw==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-af98b77d2f0so1065096166b.3;
-        Tue, 12 Aug 2025 10:05:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV++s5dKZsciXRzEy5ux5zs3CwH61a4hsYvAcDxpEGEgdOCbdoAAIEP02OYpVCdg4eBS/qHaFVAV/Aj@vger.kernel.org, AJvYcCXWvzgliFnk3hpIHMglqJG59KkLKw3167Nec6u4qgQmYbHySlD2JoLXwq/FatmoV14kVPx75mBjpSIV@vger.kernel.org, AJvYcCXnsMzrTh0alxpkcf3rNMg03L1V3UpdiWabu7e0ddGDJBMG+VHpalp3iIHsAMo+5jU70T+96XdtaVBJxFz/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXCk8E6eLNXsbQRcXPUCCyLwFbmpdPFbdtkrq3SDT0ShBsR92l
-	mALTgiuucGcJ1+j+zFpr87Yopyj+BOAPHHIThcB+qMdQuXvtDFcua3QtKIEejhAA4xvPFT9Dsj3
-	AnlG9PnLsRh08pg2eJevs1f1J2Ib+tg==
-X-Google-Smtp-Source: AGHT+IFEoa4tlba107KUcmaKXIp6JOYHjwYjuPSz8H4SqTYk9RgSva5MazUnhA1P/IoiGLfpqgZnuyxmnoxsj1Dgv1g=
-X-Received: by 2002:a17:907:97c4:b0:ade:44f8:569 with SMTP id
- a640c23a62f3a-afca4ec18dfmr3291466b.42.1755018301768; Tue, 12 Aug 2025
- 10:05:01 -0700 (PDT)
+	s=k20201202; t=1755018747;
+	bh=sbkCPKwftTrUkZdiXc/EE3AJ3jJBcpouENbdl33Fz34=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oXx9gseDXKIuFwtIIhveZDwIf2HCNERDvQcwjBm11f0IoKqQfl16vACxSWboPJ2vT
+	 ZmlgdaRgw2T11JvWC+MrugfTSEOKkcNF6de6dcUu4+7+L2XiA8dzz/DTpkF2wbxSA8
+	 lkFScCz4E8iTgYebg9Uvan5h7Z/NOnpSGCtwdsN1BDbSHMdaCbpCpJjwICJEJ4llkX
+	 EJhhnU+PAyYoGwX31zZaNUjgy+DQ15n0nZ014YLlUciPnPdD39h5neAMEZfxyd2jQU
+	 Q1BvJaIxYpI3gnnUvezXBXr07frMKY7rYXSIBnp81Og5N/djbx+PnhKikvjnmYK88/
+	 LeHLfMA/8TgsA==
+Date: Tue, 12 Aug 2025 22:42:17 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, shawnguo@kernel.org, 
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: imx6: Enable the vpcie regulator when fetch it
+Message-ID: <zl6ie74kyeen2oudt3l2hv6ba5fwjsuiqlpdgaao5l7al7zjwu@bsj3agyukypn>
+References: <20250619072438.125921-1-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aJms+YT8TnpzpCY8@lpieralisi> <c627564a-ccc3-9404-ba87-078fb8d10fea@amd.com>
- <aJrwgKUNh68Dx1Fo@lpieralisi> <e15ebb26-15ac-ef7a-c91b-28112f44db55@amd.com> <aJtpJEPjrEq8Z78F@lpieralisi>
-In-Reply-To: <aJtpJEPjrEq8Z78F@lpieralisi>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 12 Aug 2025 12:04:49 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+tPM7+W9u1k6Gf9_vzB2na_0kBMxN4O3FtTxub7GK_xw@mail.gmail.com>
-X-Gm-Features: Ac12FXyQ-pfmrPqnZ0AOuFGYZ4csB3TC-QnSiCqdO5VXcnUBg2ZInOknVt5umAo
-Message-ID: <CAL_Jsq+tPM7+W9u1k6Gf9_vzB2na_0kBMxN4O3FtTxub7GK_xw@mail.gmail.com>
-Subject: Re: Issues with OF_DYNAMIC PCI bridge node generation
- (kmemleak/interrupt-map IC reg property)
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Lizhi Hou <lizhi.hou@amd.com>, maz@kernel.org, devicetree@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250619072438.125921-1-hongxing.zhu@nxp.com>
 
-On Tue, Aug 12, 2025 at 11:17=E2=80=AFAM Lorenzo Pieralisi
-<lpieralisi@kernel.org> wrote:
->
-> On Tue, Aug 12, 2025 at 08:53:06AM -0700, Lizhi Hou wrote:
-> >
-> > On 8/12/25 00:42, Lorenzo Pieralisi wrote:
-> > > On Mon, Aug 11, 2025 at 08:26:11PM -0700, Lizhi Hou wrote:
-> > > > On 8/11/25 01:42, Lorenzo Pieralisi wrote:
-> > > >
-> > > > > Hi Lizhi, Rob,
-> > > > >
-> > > > > while debugging something unrelated I noticed two issues
-> > > > > (related) caused by the automatic generation of device nodes
-> > > > > for PCI bridges.
-> > > > >
-> > > > > GICv5 interrupt controller DT top level node [1] does not have a =
-"reg"
-> > > > > property, because it represents the top level node, children (IRS=
-es and ITSs)
-> > > > > are nested.
-> > > > >
-> > > > > It does provide #address-cells since it has child nodes, so it ha=
-s to
-> > > > > have a "ranges" property as well.
-> > > > >
-> > > > > You have added code to automatically generate properties for PCI =
-bridges
-> > > > > and in particular this code [2] creates an interrupt-map property=
- for
-> > > > > the PCI bridges (other than the host bridge if it has got an OF n=
-ode
-> > > > > already).
-> > > > >
-> > > > > That code fails on GICv5, because the interrupt controller node d=
-oes not
-> > > > > have a "reg" property (and AFAIU it does not have to - as a matte=
-r of
-> > > > > fact, INTx mapping works on GICv5 with the interrupt-map in the
-> > > > > host bridge node containing zeros in the parent unit interrupt
-> > > > > specifier #address-cells).
-> > > > Does GICv5 have 'interrupt-controller' but not 'interrupt-map'? I t=
-hink
-> > > > of_irq_parse_raw will not check its parent in this case.
-> > > But that's not the problem. GICv5 does not have an interrupt-map,
-> > > the issue here is that GICv5 _is_ the parent and does not have
-> > > a "reg" property. Why does the code in [2] check the reg property
-> > > for the parent node while building the interrupt-map property for
-> > > the PCI bridge ?
-> >
-> > Based on the document, if #address-cells is not zero, it needs to get p=
-arent
-> > unit address. Maybe there is way to get the parent unit address other t=
-han
-> > read 'reg'?
->
-> Reading the parent "reg" using the parent #address-cells as address size =
-does
-> not seem correct to me anyway.
+On Thu, Jun 19, 2025 at 03:24:38PM GMT, Richard Zhu wrote:
+> Enable the vpcie regulator at probe time and keep it enabled for the
+> entire PCIe controller lifecycle. This ensures support for outbound
+> wake-up mechanism such as WAKE# signaling.
 
-Right, the parent #address-cells applies to reg/ranges(parent addr) in
-the child node.
+I'm not sure about this part. For supporting WAKE#, Vaux supply has to be
+supplied to the endpoint. But here, 'vpcie' looks like the main 3.3V supply. So
+keeping it always on to support WAKE#, sounds to me that the component never
+enters the D3Cold state. So no WAKE# is required.
 
-> > Or maybe zero should be used as parent unit address if 'reg' does not
-> > exist?
->
-> zeros are used for eg GICv3 interrupt-map properties, I suppose that's
-> a wild card to say "any device in the interrupt-controller bus",
-> whatever that means.
->
-> Just my interpretation, I don't know the history behind this.
+- Mani
 
-They should be zero simply because a device's address never has any
-influence with a device's interrupt connection to a GIC (or any SoC
-interrupt controller).
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 27 ++++-----------------------
+>  1 file changed, 4 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 5a38cfaf989b..7cab4bcfae56 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -159,7 +159,6 @@ struct imx_pcie {
+>  	u32			tx_deemph_gen2_6db;
+>  	u32			tx_swing_full;
+>  	u32			tx_swing_low;
+> -	struct regulator	*vpcie;
+>  	struct regulator	*vph;
+>  	void __iomem		*phy_base;
+>  
+> @@ -1198,15 +1197,6 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
+>  	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
+>  	int ret;
+>  
+> -	if (imx_pcie->vpcie) {
+> -		ret = regulator_enable(imx_pcie->vpcie);
+> -		if (ret) {
+> -			dev_err(dev, "failed to enable vpcie regulator: %d\n",
+> -				ret);
+> -			return ret;
+> -		}
+> -	}
+> -
+>  	if (pp->bridge && imx_check_flag(imx_pcie, IMX_PCIE_FLAG_HAS_LUT)) {
+>  		pp->bridge->enable_device = imx_pcie_enable_device;
+>  		pp->bridge->disable_device = imx_pcie_disable_device;
+> @@ -1222,7 +1212,7 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
+>  	ret = imx_pcie_clk_enable(imx_pcie);
+>  	if (ret) {
+>  		dev_err(dev, "unable to enable pcie clocks: %d\n", ret);
+> -		goto err_reg_disable;
+> +		return ret;
+>  	}
+>  
+>  	if (imx_pcie->phy) {
+> @@ -1269,9 +1259,6 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
+>  	phy_exit(imx_pcie->phy);
+>  err_clk_disable:
+>  	imx_pcie_clk_disable(imx_pcie);
+> -err_reg_disable:
+> -	if (imx_pcie->vpcie)
+> -		regulator_disable(imx_pcie->vpcie);
+>  	return ret;
+>  }
+>  
+> @@ -1286,9 +1273,6 @@ static void imx_pcie_host_exit(struct dw_pcie_rp *pp)
+>  		phy_exit(imx_pcie->phy);
+>  	}
+>  	imx_pcie_clk_disable(imx_pcie);
+> -
+> -	if (imx_pcie->vpcie)
+> -		regulator_disable(imx_pcie->vpcie);
+>  }
+>  
+>  static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
+> @@ -1739,12 +1723,9 @@ static int imx_pcie_probe(struct platform_device *pdev)
+>  	pci->max_link_speed = 1;
+>  	of_property_read_u32(node, "fsl,max-link-speed", &pci->max_link_speed);
+>  
+> -	imx_pcie->vpcie = devm_regulator_get_optional(&pdev->dev, "vpcie");
+> -	if (IS_ERR(imx_pcie->vpcie)) {
+> -		if (PTR_ERR(imx_pcie->vpcie) != -ENODEV)
+> -			return PTR_ERR(imx_pcie->vpcie);
+> -		imx_pcie->vpcie = NULL;
+> -	}
+> +	ret = devm_regulator_get_enable_optional(&pdev->dev, "vpcie");
+> +	if (ret < 0 && ret != -ENODEV)
+> +		return dev_err_probe(dev, ret, "failed to enable vpcie");
+>  
+>  	imx_pcie->vph = devm_regulator_get_optional(&pdev->dev, "vph");
+>  	if (IS_ERR(imx_pcie->vph)) {
+> -- 
+> 2.37.1
+> 
 
-Rob
+-- 
+மணிவண்ணன் சதாசிவம்
 
