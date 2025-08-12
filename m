@@ -1,130 +1,112 @@
-Return-Path: <linux-pci+bounces-33877-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33878-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1AD5B23158
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 20:04:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EF4DB23332
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 20:26:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C43181688F1
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 18:01:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 43C1A179919
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 18:22:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32EB42FFDD7;
-	Tue, 12 Aug 2025 18:00:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87F852DFA3E;
+	Tue, 12 Aug 2025 18:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W0PJU9Y0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WvQmd9lb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63802FE566;
-	Tue, 12 Aug 2025 18:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94081EBFE0;
+	Tue, 12 Aug 2025 18:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755021637; cv=none; b=RY2lkj3HL4KRjttvWoKoeuYh6x/IPvDZBBZDd37+uQNlaee76HSL+m5VjQoLdCI7g0ZY3qLTVjCG9ofFJhGtzgXQyBnavhaa7XworD80RqoMZxZvCGNaMB43aEGxybPy6fLycYoiQMLWgiq0kxk0eMgu3uUrwEtMw+PSjGhgcfE=
+	t=1755022947; cv=none; b=oqBeTwFVaXJTVUSk+oNEHF9IS4/Cp7snm9/lEPszOAJBdXkALGpSMRI6eeMZaetAlLRbR1San2qc3+nu4YpHWJ3Y/dtbHO/Dy0H+pvKgBKss4MWKQ++pz2aT+lxIoK9WL0zmy9Be2VIaCdUdXzom7Rwki8kSYsVZ+D52Rcj7uGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755021637; c=relaxed/simple;
-	bh=s5HtP8zgPfB8LKfRkpw96pL5pDbdt4mOdR/STsv8WgQ=;
+	s=arc-20240116; t=1755022947; c=relaxed/simple;
+	bh=p/3UD5jav3q32TaAM30o1fI04zVNZZyMfypSSa78HPM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zu0KCDSGoD1sbG0mmFb2RirhVY0Lq0SbLy6xBISVEnkKhrFoppRhJFnwsiN0peD9quJLKe7aKv//Tm6lyKLyMAxp86f4E0YyV4TKE5ofhx01l1+sKrW0/nhuiLRZ7egyPYpyrd6AaQg8VoT1smrg5nSrxlKW9nebLOnY2yz4GcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3219ffcada9so2026050a91.3;
-        Tue, 12 Aug 2025 11:00:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755021635; x=1755626435;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w5Ko3ZCMWMZkG6/L2zPaHNNIdKij+I5lWVdC3qk6HiI=;
-        b=qstecwPQrfz85+lAgls+ZmKcyHSasIQ99+GQxUKifMhCR3bEy0/xPvfUF8pg0/qWVc
-         qErMLspqAWcwLw/7DkGnvZ2Y5EYhYs+sHXm6xVnwDaVVy/iGK+B3vn2waewodSh+NgXD
-         ch++cxOB5L/VE/z5QgtR7McoWqWYSIws2KZXnCCp7wKLfRRgf9kYRM5Dpj3xt0ruXo1d
-         baUjB+brYSixopVPMChZLY3zOr/pCdPhe9Tc+8h65mbscISO5zHLq3vOhYg3EnWAgpVE
-         z6i5XavgE1D83VMk6LPvOJM+GU7XLLHwOU0hqAQV06NJ50Ok6dwky4WOowhdGth6YVwR
-         pRow==
-X-Forwarded-Encrypted: i=1; AJvYcCX01WBq8E1KTHnUKK5pDOQAoX+g4Txrteypre5MBggWl/9LoW269ijOSYxRgEL+hRTHXBo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywodcgq4q364d7Be3KN04DoJ52ZzN/RZm96E3/IPjLBj45q/8OQ
-	M/Zuhyp632g4lRkUoSDmSX2y8O2fMMw7o780wPQMNqnJdPuvkBfvngJuuiaJHpU2
-X-Gm-Gg: ASbGnctmw7XxC4SwjR0y2Tr62uSuCoLP3spGBjsidkYK4+QgPf8O6nc4VbQJnKiVvHM
-	zwjwjA7iheKDJ89c5BDct7kxmiRBUUrkH4QbHlsDVN9f7GU0Ay8CNHU7NSatIfZsT2AjTahNUa1
-	mdjLQBgJenpmtUFASs8fxyGPvv1azpT32iytliUUaSZS6Gyo6UxfdNggm6PFQ4YtiPtN2szr6YG
-	CiMfzbZ2e51jx8sgeh4mM2OfZo/erhWXX+CkhvjNl53NYK9fWWsp8lJ1FwNBc0NDLuiuNVzmZMA
-	rQ78dipypqfMvJbfn5z8h7X+XDhermSOKTh+D1f6XHeiASLAP7lTyThXy7ni6MPQkNweggmPMN2
-	cE1vxXbtidjdnHmWJnE0/h4iSACv5TN659cr/jB9b0R7xz8ZygSxwV6vGwQ==
-X-Google-Smtp-Source: AGHT+IGUwKjcxYIQjXRjsgyfhPfJbPlIzcS8JQODwmaqlP1k+KdKPRhYL2FuhDCZiKF95kOWUmZ07w==
-X-Received: by 2002:a17:90b:5543:b0:312:e9bd:5d37 with SMTP id 98e67ed59e1d1-321d0d6719bmr718a91.6.1755021630632;
-        Tue, 12 Aug 2025 11:00:30 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-32161259329sm17810958a91.17.2025.08.12.11.00.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Aug 2025 11:00:30 -0700 (PDT)
-Date: Wed, 13 Aug 2025 03:00:28 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Linux PCI <linux-pci@vger.kernel.org>,
-	Linux IOMMU <iommu@lists.linux.dev>,
-	Linux KVM <kvm@vger.kernel.org>
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?B?SsO2cmc=?= Roedel <joro@8bytes.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: Re: The VFIO/IOMMU/PCI MC at LPC 2025 - Call for Papers
-Message-ID: <20250812180028.GA4020767@rocinante>
-References: <20250812174506.GA3633156@rocinante>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mQOEJLMJRj5opximw7nMneyVybL31LvdICgl7nav0sVa+/AHQEDzxydqIoqqur6Xdbbcs7bgMxAOGrEWd9AxN3B0gsKovBtOBeKottBLbG2GAe/irdZY+iVWDRjL5Ky//TZLdymPx/1NVaOiPY667aH6NttKjpnX3aMVH05B7RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W0PJU9Y0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WvQmd9lb; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Tue, 12 Aug 2025 20:22:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1755022943;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jxlU+znl/JTn8im/jrvMANP+QmBATT55GjJL6MNB2U0=;
+	b=W0PJU9Y0mwFXzoNEYmmWJ9DEaVd18sk5xZhfL5P6+SPy/UiH96Z3lwfGfxX0XukryhTCCt
+	BZqnOOBlkpLfNKaJgsY+2/RQYhMJlBV6VyncN5syQGvRjC50tBBIL7xXB5c8qNnPUF1nor
+	DrzE/x1ETcN9nIlroHk2RBBiVJMRkWhgffdXx+WJSs46rdW8MCwnDTmHmitymuhHMXcy+S
+	yclwkc14SY9Xnzf0hJ+tWOqgfn0Bo+xF6LA8rATGOK9vR+KCkMTPemRJKE+stAu/RslAHi
+	eMtDvREiZqr/88kERqWShhUBJWbFgjK8zWbpl5yiYq5casOfpD1trpkH++Hx6A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1755022943;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jxlU+znl/JTn8im/jrvMANP+QmBATT55GjJL6MNB2U0=;
+	b=WvQmd9lbZTxISl3kvoyVzLH6spl7ILIfdAMDjJgeJRmHAqvHS2BR7rQ9CXzOO4ofU3Kwnh
+	lXe4Kxy5BgpumeCg==
+From: Nam Cao <namcao@linutronix.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Keith Busch <kbusch@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?iso-8859-1?Q?Wilczy=B4nski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Ammar Faizi <ammarfaizi2@gnuweeb.org>
+Subject: Re: [PATCH] PCI: vmd: Remove MSI-X check on child devices
+Message-ID: <20250812182209.c31roKpC@linutronix.de>
+References: <aJtUjnuWr1S31jhX@kbusch-mbp>
+ <20250812163015.GA194338@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250812174506.GA3633156@rocinante>
+In-Reply-To: <20250812163015.GA194338@bhelgaas>
 
-Hello everyone,
+On Tue, Aug 12, 2025 at 11:30:15AM -0500, Bjorn Helgaas wrote:
+> On Tue, Aug 12, 2025 at 08:49:50AM -0600, Keith Busch wrote:
+> > The doc you linked is riddled with errors. The original vmd commit
+> > message is more accurate: VMD domains support child devices with MSI and
+> > MSI-x interrupts. The VMD device can't even tell the difference which
+> > one the device is using. It just manipulates messages sent to the usual
+> > APIC address 0xfeeXXXXX.
+> 
+> Thanks, Keith!  I updated the commit log like this:
+> 
+>   d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()") added a
+>   WARN_ON sanity check that child devices support MSI-X, because VMD document
+>   says [1]:
+> 
+>     Intel VMD only supports MSIx Interrupts from child devices and therefore
+>     the BIOS must enable PCIe Hot Plug and MSIx interrups [sic].
+> 
+>   However, the VMD device can't even tell the difference between a child
+>   device using MSI and one using MSI-X.  Per 185a383ada2e ("x86/PCI: Add
+>   driver for Intel Volume Management Device (VMD)"), VMD does not support
+>   INTx interrupts, but does support child devices using either MSI or MSI-X.
+> 
+>   Remove the sanity check to avoid the unnecessary WARN_ON reported by Ammar.
 
-Adding Jörg using his new e-mail address...
+Minor correction, it is not just an unnecessary WARN_ON, but child devices'
+drivers couldn't enable MSI at all.
 
-> On behalf of the PCI subsystem maintainers, I would like to invite everyone
-> to join our VFIO/IOMMU/PCI MC (micro-conference) this year, which will be
-> held at the Linux Plumbers Conference (LPC) 2025!
-> 
-> The LPC conference itself will be held this year on 11th, 12th and 13th of
-> December this year in Tokyo, Japan.  Both in-person and remote attendees
-> are welcome.  See the https://lpc.events web page for more details and
-> latest updates.
-> 
-> You can find the complete MC proposal at:
-> 
->   https://lpc.events/event/19/contributions/1993
-> 
-> Plus, as a PDF document attached to this e-mail.
-> 
-> If you are interested in participating in our MC and have topics to propose,
-> please use the official Call for Proposals (CfP) process available at:
-> 
->   https://lpc.events/event/19/abstracts
-> 
-> The deadline for proposal submissions is late September (2025-09-30).
-> 
-> Make sure to select the "VFIO/IOMMU/PCI MC" in the Track drop down menu to
-> submit the proposal against the correct track.
-> 
-> Remember: you can submit the proposal early and refine it later; there will
-> be time.  So, don't hesitate!
-> 
-> As always, please get in touch with me directly, or with any other
-> organisers, if you need any assistance or have any questions.
-> 
-> Looking forward to seeing you all there, either in Tokyo in-person or
-> virtually!
-> 
-> Thank you!
-> 
->           Alex, Bjorn, Jörg, Lorenzo and Krzysztof
+So perhaps something like "Remove the sanity check to allow child devices
+which only support MSI".
 
-Sorry about this Jörg!
-
-	Krzysztof
+Thank you both,
+Nam
 
