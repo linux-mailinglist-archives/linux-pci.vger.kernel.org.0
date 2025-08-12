@@ -1,56 +1,56 @@
-Return-Path: <linux-pci+bounces-33872-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33873-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85894B22E74
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 19:02:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B605B22E88
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 19:06:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 06EFF1A260E3
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 16:59:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2005B18882AC
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 17:05:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A74382FA0FD;
-	Tue, 12 Aug 2025 16:59:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E83AA2F8BF8;
+	Tue, 12 Aug 2025 17:05:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLcPmm4F"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFvvjqsy"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE512882AB;
-	Tue, 12 Aug 2025 16:59:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C961A76DE;
+	Tue, 12 Aug 2025 17:05:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755017960; cv=none; b=Ow+v+WQ8DAb69Ael6jZatqIMoxJl7JXaGeJ9Hh0cLT00QnkZ4Dk3BCe6VAS37YxELGeXeIHVOUF2VtMlbJ+n3XxBIBy6sSXCZZVjCChF4YYBLqQAmhQob81C4V+SeLe7F28ap3J4Xzb8A7eQREHKDqPrA4sCtm1iocjRG8i5mVo=
+	t=1755018303; cv=none; b=K2Fh6o8y18H+iOhRgsoBpsOMiFeiiPO/H5398kwT4UiPAQ0/NdA0DD2ajACW3IKIFTdeWuR6WfjrZonS7EQpLVkPu5+BzHPy2Al1HBcZ1kKot9d9YUvRrlS+ZhswCluQznYylAR1LompE2zQ/ScFkOrYtvOiyqno2qKQFCIJT3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755017960; c=relaxed/simple;
-	bh=QG7yl+OjilKldnfrLrCLthek8RiczM5eXczR66KP9Ig=;
+	s=arc-20240116; t=1755018303; c=relaxed/simple;
+	bh=tTm/T4JRN/HERZIZ3VLZ5EgeyXpLsz7VKH4O9wed3sk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uiTBuP+m5Scluye3ylYLKzdMWsV+vS+QM3/f3k6fxWjrXIb7NfL8wFiz+9VOn+Rrtu/xi326jlqKcdp5EDJLZWRDAFM4Eqb7NTqrkH8EHo0UFq7VtBEZ3Kgk+5yXqnR8GLBXj/JydvK6ekGlS4YaNPTLQON0wHefU6KtMw/LxxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLcPmm4F; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09EB0C4CEF6;
-	Tue, 12 Aug 2025 16:59:20 +0000 (UTC)
+	 To:Cc:Content-Type; b=TCNoTEDIn5kjOlM3D1+mCkWd26csH4YhkIrV0uHXYK4eY1f9I7tUE3d8Nw0WAhHcc963KjE/mVFwAGpHTkeYszF+gKv7MjX3MNThkwbI/GeVJCHSKwSQXMN+7Iu6nBkDqGmxGVUgV9qfTaea1JFPtpcP8bzlhM/1ska8xsRuxN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFvvjqsy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32EA9C4CEF7;
+	Tue, 12 Aug 2025 17:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755017960;
-	bh=QG7yl+OjilKldnfrLrCLthek8RiczM5eXczR66KP9Ig=;
+	s=k20201202; t=1755018303;
+	bh=tTm/T4JRN/HERZIZ3VLZ5EgeyXpLsz7VKH4O9wed3sk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LLcPmm4FxuZN9IuO5Mm3ufQP8b+kubAPSbN+GqlLnKUS/+IZgSxgiK/N5TIrELyvb
-	 oRy+bMXzHKnDSNST/BjkfnjLChHLjJGEqWaaq2H4VTPX5Xm4za4mOh0TAbbHFbjiFf
-	 pXDIvOQlrIeq/TF4k2Zoy44DRqmop4FqMn93QWw+ikf02SoY/s6xKdpoKh1orGRz+s
-	 KCre5hg+zd0pswPZCrvyUJ4QxFYDxEc9dSvjVG0xYIv91APJ2sZMPjKmt92Y2fyI55
-	 IR0gx2ab+w4mrBMvqif9lWG3dO8CXl3RBY4F/S99aSD7DifCKsDLvYfXe0FHF3KY8l
-	 UAYoDP+k64SqQ==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6152faff57eso8981078a12.1;
-        Tue, 12 Aug 2025 09:59:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUSq6MeEOl3rTaTJffO4hO+971b7DKvw6RBuAf6CcF89WHgNVeZty4Ocfc1E9XpKOLMW41v5pdjRp6+@vger.kernel.org, AJvYcCUeaHtOp7Jj0vLqkFI+7b+94PJh+2XpuNMS3hXU/J+gG4n8DYSqXUyWxL0ZLmXN7eBsJ0XulNk/6HWVTZSf@vger.kernel.org, AJvYcCWTQ9vvS5urJ5avGJodl/cNTun0Wh50eOFk5QnEoJ17WUE4YwsNIptfvjLil6RWYrLCHenENakzy4zN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSbvBwGPSgqDmAbnPRo8a175806s9gmwlR9TVvou7fmWINuEAq
-	oun174viUqJuulCqbtDWJeGTbZ63RLzKfZLEApJUizPvWvtpjIsY0kZ/pikSFno1mS3Q6LH6QJZ
-	jPQ6mLk/yV/2pFz61pApe5Z1K2RySAA==
-X-Google-Smtp-Source: AGHT+IF1rFMvLqTw0zhBnEbF/24oh+pXC7Cyhcry2T0uiCBMH7+QMKcaZshDTGiUzXOGycYjeiwyJQZcWXyjV2prnqU=
-X-Received: by 2002:a17:907:2d1e:b0:ad8:9257:573a with SMTP id
- a640c23a62f3a-afca4cba79emr5530366b.5.1755017958559; Tue, 12 Aug 2025
- 09:59:18 -0700 (PDT)
+	b=RFvvjqsyso8V5LN31kOLuBTnmSe+jxVxPUb9ANpeq3wgfgOTUcuDqELcIsLcyB2/E
+	 2p/tfOI3TcatjuRglbUIr03JKTcuv6Bzp9OJQ+v3kya0swhfWvrJcZXZkKIHngCviS
+	 5YnjjVXqBVRyURAfKozHHzAf0PNMo040AWhyn2C//wheXn+vcYDAFviTgaSYs8vr2G
+	 Ms9Fvosp5m8g0N2Mv8zmPk6zsexopoy5UrqNLYlltdJqqgzU2agv9IauBlTJbruA4D
+	 EE5mzus1tD7oBXD84NQ0zRwPHkVvNuMCd7PBnjYAoJX4Ua1wXOvs0pCcnfhZAhywnZ
+	 HrBYxBt2Ht6pw==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-af98b77d2f0so1065096166b.3;
+        Tue, 12 Aug 2025 10:05:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV++s5dKZsciXRzEy5ux5zs3CwH61a4hsYvAcDxpEGEgdOCbdoAAIEP02OYpVCdg4eBS/qHaFVAV/Aj@vger.kernel.org, AJvYcCXWvzgliFnk3hpIHMglqJG59KkLKw3167Nec6u4qgQmYbHySlD2JoLXwq/FatmoV14kVPx75mBjpSIV@vger.kernel.org, AJvYcCXnsMzrTh0alxpkcf3rNMg03L1V3UpdiWabu7e0ddGDJBMG+VHpalp3iIHsAMo+5jU70T+96XdtaVBJxFz/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXCk8E6eLNXsbQRcXPUCCyLwFbmpdPFbdtkrq3SDT0ShBsR92l
+	mALTgiuucGcJ1+j+zFpr87Yopyj+BOAPHHIThcB+qMdQuXvtDFcua3QtKIEejhAA4xvPFT9Dsj3
+	AnlG9PnLsRh08pg2eJevs1f1J2Ib+tg==
+X-Google-Smtp-Source: AGHT+IFEoa4tlba107KUcmaKXIp6JOYHjwYjuPSz8H4SqTYk9RgSva5MazUnhA1P/IoiGLfpqgZnuyxmnoxsj1Dgv1g=
+X-Received: by 2002:a17:907:97c4:b0:ade:44f8:569 with SMTP id
+ a640c23a62f3a-afca4ec18dfmr3291466b.42.1755018301768; Tue, 12 Aug 2025
+ 10:05:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,85 +58,95 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <aJms+YT8TnpzpCY8@lpieralisi> <c627564a-ccc3-9404-ba87-078fb8d10fea@amd.com>
- <aJrwgKUNh68Dx1Fo@lpieralisi> <e15ebb26-15ac-ef7a-c91b-28112f44db55@amd.com>
-In-Reply-To: <e15ebb26-15ac-ef7a-c91b-28112f44db55@amd.com>
+ <aJrwgKUNh68Dx1Fo@lpieralisi> <e15ebb26-15ac-ef7a-c91b-28112f44db55@amd.com> <aJtpJEPjrEq8Z78F@lpieralisi>
+In-Reply-To: <aJtpJEPjrEq8Z78F@lpieralisi>
 From: Rob Herring <robh@kernel.org>
-Date: Tue, 12 Aug 2025 11:59:06 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJF6s8GsGe1w6KEkeECab956YiBSFbdbHOiiCv2+v3MAA@mail.gmail.com>
-X-Gm-Features: Ac12FXwQ-VolqLcu_Kk_NoubrTpWU2JGnruO8pHHND6fvG1ZgFz7YpsckQnOIjA
-Message-ID: <CAL_JsqJF6s8GsGe1w6KEkeECab956YiBSFbdbHOiiCv2+v3MAA@mail.gmail.com>
+Date: Tue, 12 Aug 2025 12:04:49 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+tPM7+W9u1k6Gf9_vzB2na_0kBMxN4O3FtTxub7GK_xw@mail.gmail.com>
+X-Gm-Features: Ac12FXyQ-pfmrPqnZ0AOuFGYZ4csB3TC-QnSiCqdO5VXcnUBg2ZInOknVt5umAo
+Message-ID: <CAL_Jsq+tPM7+W9u1k6Gf9_vzB2na_0kBMxN4O3FtTxub7GK_xw@mail.gmail.com>
 Subject: Re: Issues with OF_DYNAMIC PCI bridge node generation
  (kmemleak/interrupt-map IC reg property)
-To: Lizhi Hou <lizhi.hou@amd.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, maz@kernel.org, devicetree@vger.kernel.org, 
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Lizhi Hou <lizhi.hou@amd.com>, maz@kernel.org, devicetree@vger.kernel.org, 
 	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 12, 2025 at 10:53=E2=80=AFAM Lizhi Hou <lizhi.hou@amd.com> wrot=
-e:
+On Tue, Aug 12, 2025 at 11:17=E2=80=AFAM Lorenzo Pieralisi
+<lpieralisi@kernel.org> wrote:
 >
+> On Tue, Aug 12, 2025 at 08:53:06AM -0700, Lizhi Hou wrote:
+> >
+> > On 8/12/25 00:42, Lorenzo Pieralisi wrote:
+> > > On Mon, Aug 11, 2025 at 08:26:11PM -0700, Lizhi Hou wrote:
+> > > > On 8/11/25 01:42, Lorenzo Pieralisi wrote:
+> > > >
+> > > > > Hi Lizhi, Rob,
+> > > > >
+> > > > > while debugging something unrelated I noticed two issues
+> > > > > (related) caused by the automatic generation of device nodes
+> > > > > for PCI bridges.
+> > > > >
+> > > > > GICv5 interrupt controller DT top level node [1] does not have a =
+"reg"
+> > > > > property, because it represents the top level node, children (IRS=
+es and ITSs)
+> > > > > are nested.
+> > > > >
+> > > > > It does provide #address-cells since it has child nodes, so it ha=
+s to
+> > > > > have a "ranges" property as well.
+> > > > >
+> > > > > You have added code to automatically generate properties for PCI =
+bridges
+> > > > > and in particular this code [2] creates an interrupt-map property=
+ for
+> > > > > the PCI bridges (other than the host bridge if it has got an OF n=
+ode
+> > > > > already).
+> > > > >
+> > > > > That code fails on GICv5, because the interrupt controller node d=
+oes not
+> > > > > have a "reg" property (and AFAIU it does not have to - as a matte=
+r of
+> > > > > fact, INTx mapping works on GICv5 with the interrupt-map in the
+> > > > > host bridge node containing zeros in the parent unit interrupt
+> > > > > specifier #address-cells).
+> > > > Does GICv5 have 'interrupt-controller' but not 'interrupt-map'? I t=
+hink
+> > > > of_irq_parse_raw will not check its parent in this case.
+> > > But that's not the problem. GICv5 does not have an interrupt-map,
+> > > the issue here is that GICv5 _is_ the parent and does not have
+> > > a "reg" property. Why does the code in [2] check the reg property
+> > > for the parent node while building the interrupt-map property for
+> > > the PCI bridge ?
+> >
+> > Based on the document, if #address-cells is not zero, it needs to get p=
+arent
+> > unit address. Maybe there is way to get the parent unit address other t=
+han
+> > read 'reg'?
 >
-> On 8/12/25 00:42, Lorenzo Pieralisi wrote:
-> > On Mon, Aug 11, 2025 at 08:26:11PM -0700, Lizhi Hou wrote:
-> >> On 8/11/25 01:42, Lorenzo Pieralisi wrote:
-> >>
-> >>> Hi Lizhi, Rob,
-> >>>
-> >>> while debugging something unrelated I noticed two issues
-> >>> (related) caused by the automatic generation of device nodes
-> >>> for PCI bridges.
-> >>>
-> >>> GICv5 interrupt controller DT top level node [1] does not have a "reg=
-"
-> >>> property, because it represents the top level node, children (IRSes a=
-nd ITSs)
-> >>> are nested.
-> >>>
-> >>> It does provide #address-cells since it has child nodes, so it has to
-> >>> have a "ranges" property as well.
-> >>>
-> >>> You have added code to automatically generate properties for PCI brid=
-ges
-> >>> and in particular this code [2] creates an interrupt-map property for
-> >>> the PCI bridges (other than the host bridge if it has got an OF node
-> >>> already).
-> >>>
-> >>> That code fails on GICv5, because the interrupt controller node does =
-not
-> >>> have a "reg" property (and AFAIU it does not have to - as a matter of
-> >>> fact, INTx mapping works on GICv5 with the interrupt-map in the
-> >>> host bridge node containing zeros in the parent unit interrupt
-> >>> specifier #address-cells).
-> >> Does GICv5 have 'interrupt-controller' but not 'interrupt-map'? I thin=
-k
-> >> of_irq_parse_raw will not check its parent in this case.
-> > But that's not the problem. GICv5 does not have an interrupt-map,
-> > the issue here is that GICv5 _is_ the parent and does not have
-> > a "reg" property. Why does the code in [2] check the reg property
-> > for the parent node while building the interrupt-map property for
-> > the PCI bridge ?
->
-> Based on the document, if #address-cells is not zero, it needs to get
-> parent unit address. Maybe there is way to get the parent unit address
-> other than read 'reg'?  Or maybe zero should be used as parent unit
-> address if 'reg' does not exist?
->
-> Rob, Could you give us some advise on this?
+> Reading the parent "reg" using the parent #address-cells as address size =
+does
+> not seem correct to me anyway.
 
-If there's no 'reg', then 'ranges' parent address can be used. If
-'ranges' is boolean (i.e. 1:1), then shrug. Just use 0. Probably, 0
-should just always be used because I don't think it ever matters.
+Right, the parent #address-cells applies to reg/ranges(parent addr) in
+the child node.
 
-From my read of the kernel's interrupt parsing code, only the original
-device's node (i.e. the one with 'interrupts') address is ever used in
-the parsing and matching. So the values in the parent's address cells
-don't matter. If a subsequent 'interrupt-map' is the parent, then the
-code would compare the original address with the parent's
-interrupt-map entries (if not masked). That kind of seems wrong to me,
-but also unlikely to ever occur if it hasn't already. And that code is
-something I don't want to touch because we tend to break platforms
-when we do. The addresses are intertwined with the interrupt
-translating because interrupts used to be part of the buses (e.g ISA).
-That hasn't been the case for any h/w in the last 20 years.
+> > Or maybe zero should be used as parent unit address if 'reg' does not
+> > exist?
+>
+> zeros are used for eg GICv3 interrupt-map properties, I suppose that's
+> a wild card to say "any device in the interrupt-controller bus",
+> whatever that means.
+>
+> Just my interpretation, I don't know the history behind this.
+
+They should be zero simply because a device's address never has any
+influence with a device's interrupt connection to a GIC (or any SoC
+interrupt controller).
+
+Rob
 
