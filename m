@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-33842-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33843-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D525FB21F7A
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 09:27:32 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31704B21FB6
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 09:41:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C942E7B1BF7
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 07:25:59 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1EEB04E2F95
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 07:41:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9150C271A7B;
-	Tue, 12 Aug 2025 07:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A04091FBE87;
+	Tue, 12 Aug 2025 07:41:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J7QTsC+1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwZ+GeQ/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C6A1EA6F
-	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 07:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978FC1A9F99
+	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 07:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754983646; cv=none; b=oieJJZZgDUkRtPpkG9ShR+wG9OSrw6/o3ItvBWpS4nD0Zn2gAiL18kGXhFOSwsaOzsr567HQ7t/kvKh6PguRznEFsslyBNOIdS9CvOyjM2x8ycoGuon+H810MBSFrDJ0o7yvgAdVEtJ69KxlvrgDxzoI5NGAFPQVdU/w3irmfrA=
+	t=1754984510; cv=none; b=KmxpihTuLDVmOVZuafXp7Q/5ciX7HDx8vlctTvljwCwBFldp2Fdc+AI+kBI1Lan9ji0UJKOSj2L5PLqGiuKftb725dVKG8+Phezdo2cLQnvCsh6aDYmC1mMDZvSlue69Mg2+c9rUC03k9iP2m2VwGbbDPC6JlREtIVpaShGmW38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754983646; c=relaxed/simple;
-	bh=XD68l8k3aGFkKI6rgdZ8Deh4vqo7T8q9eVh7Uzp+9lI=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=gOmIL/51Mf9Y5jt+ZR4yObiWFtE8+Ho8J4dsNWLjcYASNwJGrpWcPDZzWu054HY19Ik9cxe1SXdLjtkwGd/edB0ryvzj3uXxVB0ueXNim1r6oKOR+z/Fjb1LCQzP1TiOP33bL3wZdkUDUNBiUNY3L3F2CaujQ7ImoN7mEMVTUjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J7QTsC+1; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1754984510; c=relaxed/simple;
+	bh=uyJ4u7Z0fiJl33l4ZHZKW9Vq1h282ZXEvvOqHvfCC3M=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=p/WV+fsBE3fd46yUkZMnr/+yell33zioU1c4zHJGm9nQBxbUGmI8i8coG1Bu9mqWom7WWkdhIQIgpU7UBfl43SOvD9ce4eT1gLfrOJ7F73d5ORoVp+IIP3WDoEBkJ6U1bOB2X/b6h4b3lfhIAHBH8v/DS+e/oUePPEsZ/SzOVPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwZ+GeQ/; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754983645; x=1786519645;
+  t=1754984508; x=1786520508;
   h=date:from:to:cc:subject:message-id;
-  bh=XD68l8k3aGFkKI6rgdZ8Deh4vqo7T8q9eVh7Uzp+9lI=;
-  b=J7QTsC+1vsmk7f/iztWyJoGIC3SlLh/sFwSn5dNIzgEJ5Hf9lTVrUW6+
-   6tEBor1fK73JvmzNBJAX1Yb5HyMoxg9EcW0IA3LVc/lDcac8Ad7QBVgu9
-   e1cPTENM1ZDH0RFJPWW8Lb2Z1hszDZlxWCgNFwx9VFIlq30bxFhbF7Bbd
-   Yl7XzTVenk3SEVZERfeIzFrD/f+UB2NpTqUYbWyIsv0IHi/rDfWuyMqSE
-   u9aXmkfz4xAhftq84YblVvLqsCg0UIg60wibj/fOS+NGrB/z/012d69xj
-   bAHkjD3hub9s20Ml0M7uqaV+UXyrBxoR7N8WznTnXeMg949YhAhGrM/RA
-   g==;
-X-CSE-ConnectionGUID: SKO05GalQbKwWgNQcU/RKw==
-X-CSE-MsgGUID: XDqBHxXASAasx1Qs0ELvKA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="57152210"
+  bh=uyJ4u7Z0fiJl33l4ZHZKW9Vq1h282ZXEvvOqHvfCC3M=;
+  b=bwZ+GeQ/Yl/bh0wpLF/HcKFfuFCVwEBLTJItfLAVybswmJJgoWlOL7Bg
+   /owa0vvyKa46pSL/XjtpsTztdhd9e41nvT7cCtHkRwvpmRy0Ju34N1FLm
+   6Udq7RhXuwv+LWMSEEl3ebYBHwYnMGQ0Kk1YB3njYAfG7Cs1H836lhAT+
+   LiOV9CXl/rFBc2b6R8/8ONv+wAjJ+b7+t8+Qgb+E1pF6JNN9K6MfrEqKW
+   Ghlu6OXevuLqV1abWpxwg2HzodXse3D8wWx2NyW5DlvZ2ISqWyLfr/9sS
+   bHYBxhQfTU7nlzDlBm8kw9KzslX2qAAV5c92oQLai4Fy5ZLCeazlU3b8+
+   w==;
+X-CSE-ConnectionGUID: 7XTUJCsQRZeq2Ouiju37cQ==
+X-CSE-MsgGUID: B3WnN2S+TV2co8fw9H75og==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="59865137"
 X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="57152210"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 00:27:24 -0700
-X-CSE-ConnectionGUID: PFvO+hMrSVeGlnKFQLSj0Q==
-X-CSE-MsgGUID: Ay52kR+5R2KUGJRAT+fRKg==
+   d="scan'208";a="59865137"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 00:41:48 -0700
+X-CSE-ConnectionGUID: iXv6qOQ2QQqPqJbm+CihpQ==
+X-CSE-MsgGUID: /kjClSGwSsuQWwuyrckzpA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="197127582"
+   d="scan'208";a="170332776"
 Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 12 Aug 2025 00:27:23 -0700
+  by orviesa003.jf.intel.com with ESMTP; 12 Aug 2025 00:41:47 -0700
 Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uljPk-0006V6-2a;
-	Tue, 12 Aug 2025 07:27:20 +0000
-Date: Tue, 12 Aug 2025 15:26:07 +0800
+	id 1uljdS-0006WA-2O;
+	Tue, 12 Aug 2025 07:41:36 +0000
+Date: Tue, 12 Aug 2025 15:39:27 +0800
 From: kernel test robot <lkp@intel.com>
 To: Manivannan Sadhasivam <mani@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/rcar-gen4] BUILD SUCCESS
- d96ac5bdc52b271b4f8ac0670a203913666b8758
-Message-ID: <202508121501.JZCMT83L-lkp@intel.com>
+Subject: [pci:controller/xgene-msi] BUILD SUCCESS
+ b26fc701a25195134ff0327709a0421767c4c7b2
+Message-ID: <202508121521.rFBZ1LRB-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -74,24 +74,26 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rcar-gen4
-branch HEAD: d96ac5bdc52b271b4f8ac0670a203913666b8758  PCI: rcar-gen4: Fix PHY initialization
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/xgene-msi
+branch HEAD: b26fc701a25195134ff0327709a0421767c4c7b2  PCI: xgene-msi: Return negative -EINVAL in xgene_msi_handler_setup()
 
-elapsed time: 1199m
+elapsed time: 1212m
 
-configs tested: 247
-configs skipped: 5
+configs tested: 250
+configs skipped: 7
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
 
 tested configs:
+alpha                             allnoconfig    clang-22
 alpha                             allnoconfig    gcc-15.1.0
 alpha                            allyesconfig    clang-19
 alpha                            allyesconfig    gcc-15.1.0
 alpha                               defconfig    clang-19
 arc                              allmodconfig    clang-19
 arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    clang-22
 arc                               allnoconfig    gcc-15.1.0
 arc                              allyesconfig    clang-19
 arc                              allyesconfig    gcc-15.1.0
@@ -116,6 +118,7 @@ arm                   randconfig-003-20250812    gcc-14.3.0
 arm                   randconfig-004-20250811    gcc-10.5.0
 arm                   randconfig-004-20250812    gcc-14.3.0
 arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    clang-22
 arm64                             allnoconfig    gcc-15.1.0
 arm64                               defconfig    clang-19
 arm64                               defconfig    clang-22
@@ -127,6 +130,7 @@ arm64                 randconfig-003-20250811    clang-20
 arm64                 randconfig-003-20250812    gcc-14.3.0
 arm64                 randconfig-004-20250811    clang-22
 arm64                 randconfig-004-20250812    gcc-14.3.0
+csky                              allnoconfig    clang-22
 csky                              allnoconfig    gcc-15.1.0
 csky                                defconfig    clang-19
 csky                  randconfig-001-20250811    gcc-15.1.0
@@ -190,7 +194,6 @@ m68k                             allyesconfig    clang-19
 m68k                             allyesconfig    gcc-15.1.0
 m68k                                defconfig    clang-19
 microblaze                       allmodconfig    clang-19
-microblaze                       allmodconfig    gcc-15.1.0
 microblaze                        allnoconfig    gcc-15.1.0
 microblaze                       allyesconfig    clang-19
 microblaze                       allyesconfig    gcc-15.1.0
