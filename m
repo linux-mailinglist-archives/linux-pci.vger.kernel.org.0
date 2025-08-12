@@ -1,209 +1,146 @@
-Return-Path: <linux-pci+bounces-33848-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33849-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31D55B22188
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 10:45:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FDD5B2222A
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 10:59:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21EDD6E53CA
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 08:38:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78FF9723B9F
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 08:50:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6608C2EAD1C;
-	Tue, 12 Aug 2025 08:33:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C10182E719A;
+	Tue, 12 Aug 2025 08:48:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NYv7Wg0f"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cYazT4E0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF542E62C7;
-	Tue, 12 Aug 2025 08:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4F22E62B5
+	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 08:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754987589; cv=none; b=kRGd9InF05h3GwhXbhQnO54UEQKDDQIuLTwI36slWLhmNxMmUvPkQIwuAgaNCwTYRY2lvLsbsHmmG72KiKAHYbBGu3T5AXTsrREj6eIgs75Doi8Zj+6LN95/JpNb1B9o6IMwy3vUA7m9cB3SIxr/DxkSHFY6t+13jY4++X8PX3c=
+	t=1754988534; cv=none; b=S1H+y37yfHs8sveFauHQ0P3cbA49fZW0lLwXyW2DAcxzK+9K2y9t/sL/NJ6FJvr2PQUjejEKzRVjxNElOyI7TcNaQ0dN0PxiHhCOHwH2CI8Kv9XkyE2Y3uaiQS3KolBsrQQieKKSuJbILF5reT9IUlRqQNU2oXULYHMwmo17mRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754987589; c=relaxed/simple;
-	bh=YTp57RwAZl2gMOX6rbpz35pqyOCWuvVFAOg2wJZqtns=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bvVxD8YBysStLZmDLTSFkvuA8tZzYUiFHUpMAZwmbwuF4+gSuhqIi+jQ/V9O25GjOhlBxd7MZN6Bm2qRGmA2e+BOHkd9+948W2xU2Ox8fltsOxQlCB8sMX4Kcti5dXMemx0ELzb/x44BEY/ulbvHB2datwihfDJyRdVfbdTxgCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NYv7Wg0f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38F0BC4CEF0;
-	Tue, 12 Aug 2025 08:33:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754987588;
-	bh=YTp57RwAZl2gMOX6rbpz35pqyOCWuvVFAOg2wJZqtns=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NYv7Wg0fKqQewm3TnpIoJrDG90CPeYErfup9E1VdEqjHgARUh7h83Ode75ZLPOVqX
-	 27S+Hj2KxWcHN/Pqg45vjUkOGSwPjc3brChZFtIDxABN+ZQHkVeKfCZMOlvaja2MLO
-	 Hobusvef46rti8dM0gAEvoDcX/MZ5NwBh2MNlD7Gz7uw9AWTq88OkB1QHdkM9j8zaS
-	 OjLDNKwZ/4WZq4pSiQ60Unq6kvDv6/b7Z2PjhLa8viixZ39vdPOIU6htovRG6kqYk9
-	 cZussY+bQCQZedTzX54kmmR6VbFyQNR9Pc6Fk4ohzV+1u3kbrjyYQyAkMuJ5tABA/w
-	 YUK4v+Y5Z4UNg==
-Message-ID: <2b4fd0fb-ecab-4a10-bead-c78fa5e6d436@kernel.org>
-Date: Tue, 12 Aug 2025 10:33:00 +0200
+	s=arc-20240116; t=1754988534; c=relaxed/simple;
+	bh=aFBF5dW26m6Z+lOf9QzPL7466+Foa5N95p4seNu5zUk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sJvL4CUmE9/GQ16SyhyVCjYDK+5KcjLpd7ATHfzUQwdCH7d+JrpHtMzTpDk9uu+Zg+AS/3UTajx8+2Z+1K78/nmrTguuXZyMN4btJJs5x77n/4DwCLAytABlJBFk2kz+/GaweRo9H4VAKMLq2eNg2ucdn2cuuOA27cq4C7drEzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cYazT4E0; arc=none smtp.client-ip=209.85.208.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-61568fbed16so8154992a12.3
+        for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 01:48:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1754988530; x=1755593330; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l0CFpq1HCuyeYFLbDR8k9bWBZ4oNvj1i296rXTBH/70=;
+        b=cYazT4E0MMtqGBX9s2zmIqO4LOH0HheT/sseXh61GRUfUAkg2Lv3E++8t3vqWpIxfb
+         Ku7FPCSh/4S7MsTXFqiVvlh2c9cNy39fDHjLD/6AX4MrvPU6KV7WQcsNl7dbgZwPalvN
+         oPJ25Je98xpZ35PsTYvxugW0OQ7DyObwXgtU9Aapuu61/rfv1Hf1aG6bGEMjoE/sUnP3
+         Z6/MqCh7UFQWVoZQkSpzLWCZFQAMYoFa9qYzU8CpKBGf2n22/wrThWduWnD427yDZLMF
+         JW5kkgKkU2txC8kwvFFlRDgdmv5vYhFA8MrHlUg8Kd9vHb4qfX2Oo8iGrMzYmOXvqMg2
+         dNBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754988530; x=1755593330;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l0CFpq1HCuyeYFLbDR8k9bWBZ4oNvj1i296rXTBH/70=;
+        b=rqo9ShLncOA8QmQl3AThTjjWqAefNC99yJe9WlBjJipO/q4Yk+VbDhTF9ND9FNQBYN
+         1R8bweGKzlZ9kNUqtVb2QX05GRG9ypyGZEdolnI3HTV5cVoqmsnxDvbPPYpW3x6JP2mc
+         otRjoKrb3F/9ulRwA66GEqoaJ4saabsQo1Oc+lgZLLzUlU11DTdAqt6pifDSuKBx0jwy
+         6YfZUcxHbFMhqo/IeXVf1ByT5gwrSppgcU6UdC9bN7YjeA1sRePFGAORRXtdd3yOEOdg
+         jsoTekkIt36KOJAiPkKTia1UMuDkljKDnOlUCVfOqV7qPY6cPLQS8U8CCGFmu4Mn3yM3
+         EboQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVexQ/AV70N5BNyUnoAHb4C7FDeXkRocEv+YRd6ue+HzUyjm3DyLuE+Jrb5OCDJPOhA9TeEcWK/9MY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeJUgJ8/wdNfce1Yk+aTMx4SgFTlCF+vBAje660DYCzd6b4Gn1
+	pp1siWHnqwEKememlpYOphGHYMTYW/JfTaR3t2eeTo0GNGyIKkdv0kFroo/AHhQwQm0=
+X-Gm-Gg: ASbGncsp8NEnoJ/Pbt78cZaKHoxk/xi2O1QxuOZ8mgJkZphHU2IBYK8HpV8O6Or1H27
+	JKMAbhsqqBYL0oJwzWupH4YNi7lSFiQVNVK9CHtB77gm+YT4aprTuwdmtuJTnk9W0lISiMBzIAT
+	nXg0bKtRYvyoCtYSQJIa/SZlw+JX2nYFo/7JpIjp7tPYkQRSfGx02pmXmoLoL2DJcRBBHNcUrVk
+	2mn5bGSeS8l5ZQe12GutKIqq30zhnidWLYa3FmSd4C9fui2pLOhD20AEc5v9/9hNQ5vkdtrfV0b
+	7Q1d5OdvgBAmx9rLfHjceYAh71J+QOJRxMpdTy/VkgX41+gqjy0QxtqPCEzCVdAGnuidsdAvYRM
+	MvqaWvbIO3wMk5kni78q1PjSkw3IlPx2a6ROlQUiZobR2O95p4Bo7JGgMmD1xU7v12g==
+X-Google-Smtp-Source: AGHT+IHtFs8w0fVJyzS1M1cginNB7x2BJdFDZRxDj5MXgzQYeyqcq0scZCRhd7hs7865IgJzSU8QUg==
+X-Received: by 2002:a05:6402:3111:b0:614:fead:3d56 with SMTP id 4fb4d7f45d1cf-617e2e8fc4amr8958140a12.32.1754988530010;
+        Tue, 12 Aug 2025 01:48:50 -0700 (PDT)
+Received: from localhost (host-79-44-170-80.retail.telecomitalia.it. [79.44.170.80])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-617df37d061sm7754871a12.40.2025.08.12.01.48.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Aug 2025 01:48:49 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Jim Quinlan <jim2101024@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	kwilczynski@kernel.org,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	iivanov@suse.de,
+	svarbanov@suse.de,
+	mbrugger@suse.com,
+	Jonathan Bell <jonathan@raspberrypi.com>,
+	Phil Elwell <phil@raspberrypi.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] dt-bindings: pci: brcmstb: Add rp1-nexus node to fix DTC warning
+Date: Tue, 12 Aug 2025 10:50:37 +0200
+Message-ID: <20250812085037.13517-1-andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 0/5] pci: qcom: Add QCS8300 PCIe support
-To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>, andersson@kernel.org,
- konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, jingoohan1@gmail.com, mani@kernel.org,
- lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
- johan+linaro@kernel.org, vkoul@kernel.org, kishon@kernel.org,
- neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
- quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
- Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-References: <20250811071131.982983-1-ziyue.zhang@oss.qualcomm.com>
- <dc3dda22-34d3-4254-ba60-9037f3ccb368@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <dc3dda22-34d3-4254-ba60-9037f3ccb368@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 12/08/2025 10:30, Ziyue Zhang wrote:
-> 
-> On 8/11/2025 3:11 PM, Ziyue Zhang wrote:
->> This series depend on the sa8775p gcc_aux_clock and link_down reset change
->> https://lore.kernel.org/all/20250725102231.3608298-2-ziyue.zhang@oss.qualcomm.com/
->>
->> This series adds document, phy, configs support for PCIe in QCS8300.
->> It also adds 'link_down' reset for sa8775p.
->>
->> Have follwing changes:
->> 	- Add dedicated schema for the PCIe controllers found on QCS8300.
->> 	- Add compatible for qcs8300 platform.
->> 	- Add configurations in devicetree for PCIe0, including registers, clocks, interrupts and phy setting sequence.
->> 	- Add configurations in devicetree for PCIe1, including registers, clocks, interrupts and phy setting sequence.
->>
->> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
->> ---
->> Changes in v10:
->> - Update PHY max_items (Johan)
->> - Link to v9: https://lore.kernel.org/all/20250725104037.4054070-1-ziyue.zhang@oss.qualcomm.com/
->>
->> Changes in v9:
->> - Fix DTB error (Vinod)
->> - Link to v8: https://lore.kernel.org/all/20250714081529.3847385-1-ziyue.zhang@oss.qualcomm.com/
->>
->> Changes in v8:
->> - rebase sc8280xp-qmp-pcie-phy change to solve conflicts.
->> - Add Fixes tag to phy change (Johan)
->> - Link to v7: https://lore.kernel.org/all/20250625092539.762075-1-quic_ziyuzhan@quicinc.com/
->>
->> Changes in v7:
->> - rebase qcs8300-ride.dtsi change to solve conflicts.
->> - Link to v6: https://lore.kernel.org/all/20250529035635.4162149-1-quic_ziyuzhan@quicinc.com/
->>
->> Changes in v6:
->> - move the qcs8300 and sa8775p phy compatibility entry into the list of PHYs that require six clocks
->> - Update QCS8300 and sa8775p phy dt, remove aux clock.
->> - Fixed compile error found by kernel test robot
->> - Link to v5: https://lore.kernel.org/all/20250507031019.4080541-1-quic_ziyuzhan@quicinc.com/
->>
->> Changes in v5:
->> - Add QCOM PCIe controller version in commit msg (Mani)
->> - Modify platform dts change subject (Dmitry)
->> - Fixed compile error found by kernel test robot
->> - Link to v4: https://lore.kernel.org/linux-phy/20241220055239.2744024-1-quic_ziyuzhan@quicinc.com/
->>
->> Changes in v4:
->> - Add received tag
->> - Fixed compile error found by kernel test robot
->> - Link to v3: https://lore.kernel.org/lkml/202412211301.bQO6vXpo-lkp@intel.com/T/#mdd63e5be39acbf879218aef91c87b12d4540e0f7
->>
->> Changes in v3:
->> - Add received tag(Rob & Dmitry)
->> - Update pcie_phy in gcc node to soc dtsi(Dmitry & Konrad)
->> - remove pcieprot0 node(Konrad & Mani)
->> - Fix format comments(Konrad)
->> - Update base-commit to tag: next-20241213(Bjorn)
->> - Corrected of_device_id.data from 1.9.0 to 1.34.0.
->> - Link to v2: https://lore.kernel.org/all/20241128081056.1361739-1-quic_ziyuzhan@quicinc.com/
->>
->> Changes in v2:
->> - Fix some format comments and match the style in x1e80100(Konrad)
->> - Add global interrupt for PCIe0 and PCIe1(Konrad)
->> - split the soc dtsi and the platform dts into two changes(Konrad)
->> - Link to v1: https://lore.kernel.org/all/20241114095409.2682558-1-quic_ziyuzhan@quicinc.com/
->>
->> Ziyue Zhang (5):
->>    dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
->>      for qcs8300
->>    arm64: dts: qcom: qcs8300: enable pcie0
->>    arm64: dts: qcom: qcs8300-ride: enable pcie0 interface
->>    arm64: dts: qcom: qcs8300: enable pcie1
->>    arm64: dts: qcom: qcs8300-ride: enable pcie1 interface
->>
->>   .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |  17 +-
->>   arch/arm64/boot/dts/qcom/qcs8300-ride.dts     |  80 +++++
->>   arch/arm64/boot/dts/qcom/qcs8300.dtsi         | 296 +++++++++++++++++-
->>   3 files changed, 376 insertions(+), 17 deletions(-)
->>
->>
->> base-commit: e2622a23e8405644c7188af39d4c1bd2b405bb27
-> Hi Maintainers,
-> 
-> It seems the patches get reviewed tag for a long time, can you give this
-> 
-> series further comment or help me to merge them ?
-> Thanks very much.
+The devicetree compiler is complaining as follows:
 
-Can you NOT ping after one day? It is not really acceptable.
+arch/arm64/boot/dts/broadcom/rp1-nexus.dtsi:3.11-14.3: Warning (unit_address_vs_reg): /axi/pcie@1000120000/rp1_nexus: node has a reg or ranges property, but no unit name
+/home/andrea/linux-torvalds/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@1000120000: Unevaluated properties are not allowed ('rp1_nexus' was unexpected)
 
-Best regards,
-Krzysztof
+Add the optional node that fix this to the DT binding.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202506041952.baJDYBT4-lkp@intel.com/
+Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+---
+ Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+index 812ef5957cfc..7d8ba920b652 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+@@ -126,6 +126,15 @@ required:
+ allOf:
+   - $ref: /schemas/pci/pci-host-bridge.yaml#
+   - $ref: /schemas/interrupt-controller/msi-controller.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: brcm,bcm2712-pcie
++    then:
++      properties:
++        rp1_nexus:
++          $ref: /schemas/misc/pci1de4,1.yaml
+   - if:
+       properties:
+         compatible:
+-- 
+2.35.3
+
 
