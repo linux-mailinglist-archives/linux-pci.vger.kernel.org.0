@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-33839-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33840-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96D09B21E71
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 08:37:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D20CCB21E85
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 08:43:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8C7C117F052
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 06:37:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D589E5047D8
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 06:43:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99F7C26A09B;
-	Tue, 12 Aug 2025 06:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B97D82D4804;
+	Tue, 12 Aug 2025 06:43:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gph698/U"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gt9H/8j5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5665420C001;
-	Tue, 12 Aug 2025 06:37:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86710DDC3;
+	Tue, 12 Aug 2025 06:43:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754980630; cv=none; b=mlSGMCRYpa8HvJTGp3zcKpVQW2ey8E62r/Rxt5vNyju+1mBdBub8fIZLOjhOuO2NQzpx0GX05PW1mU9BYP2mxYKmHAwSBOF62dQX2oDzIg0FGuxuaWWK7mWkmeXeIcKeHaaKTgcYhOEC7iaraEDecuwatBMM1HDscxXPPkf8+Gs=
+	t=1754981030; cv=none; b=FAHJcQim4z8D1vQpydxCG5T066BzZ2Jo5VRBFO6xM6b85fqFj2ae3cJVW0JmfpbgxCzvCrMEJoyEYFrpaVYuzZAnvc7WKv3/M4oXSEBP1T5UjGUPVnPWW+JGoqT1dGaRfXRPdgXm0CRkH3EQnB6hJL4YC20DQnuDHfd9doLgLag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754980630; c=relaxed/simple;
-	bh=DN6AGEd04LkeapvqxKCW4A0HOrkg6SVHzX1aPEHJMg4=;
+	s=arc-20240116; t=1754981030; c=relaxed/simple;
+	bh=zlYzkb/SmH9Pk9yM1sbdACMWIhS2Nn4oAnRI4PYr55o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eY+ZmlY+v+hMUd3jl0lko7QuyrOCSWk6ZdqAzncyGxytQB9q7NIBNWaahfxvZqorHmPm1cpfdXL035y4h0h9K79TiEdW8rq9lCYhlKEImbiPEHa9ZwCYCUXZDYLJumOPa8Y3FKAjkJox29OdKqxJpnjIfjldUjrBykmLCxecNwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gph698/U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD51C4CEF6;
-	Tue, 12 Aug 2025 06:37:03 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=iY2AcfcsbkUuQ9jarKpjuf0D2KiAI0su65ZMvtgaKSjv3D6hP3DipuRO1mQLBq4dgJ230rLVoLyZ2WuB4mv8t069wDxs9uAjOakkPlOZfvDrFOCjK3/ulkkbujP0KwKuSlDPZHFC4+018XRRwidEQqKqktRgXFkybE0coIUP3nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gt9H/8j5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27E4AC4CEF0;
+	Tue, 12 Aug 2025 06:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754980629;
-	bh=DN6AGEd04LkeapvqxKCW4A0HOrkg6SVHzX1aPEHJMg4=;
+	s=k20201202; t=1754981030;
+	bh=zlYzkb/SmH9Pk9yM1sbdACMWIhS2Nn4oAnRI4PYr55o=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Gph698/U/m7daZax4mS3+51vt1C9rQ9Mamx5EA5uZCz7i4FjgS1W1yAHXO1f+DUuY
-	 lKd09pCOkuV2Zq6yb34rbDJhqrgcf6I8RibJK2BTg6HBI5X88G6OU2zYsa9F6FBOE+
-	 Fgu9YgiZ5HAJP7uxJHA/6GS05BOfQSPxH5Gs6kD1ChExQ0yZzn3TVgT2Zpw2cGLj+5
-	 C+//TlTmtstVLyEDsnGy/R5CSouGaRTFONYT99GkQHp9PFRbXQCD0cCOUotpnqN2xA
-	 GAF0a6YIMfZZCdULb05B6MYayw25wL4sQ6KO/iY+is0j5tOT7kAw0pl+O0xgmFbC5M
-	 BoCkxKBH/IMgw==
-Message-ID: <9e065582-9349-4f39-88b5-048d333ab8d7@kernel.org>
-Date: Tue, 12 Aug 2025 08:37:02 +0200
+	b=gt9H/8j53mklQi6Pcs7jwIZCJb/5anOjXpGqUFxbiJY8BQvFK3Dg4zwNg9uWRtqGr
+	 e39P/sb0M+46fdSHQ8VA6J4qIzV2QJWiAA1aVMUSWIkOz20zC1HjvFozuVlvWDQNKT
+	 1yJ8n3gcjNqxC7wGMoF+aAKdAMNprk/si94lfuyH455Mb1X+j+pj9ujow3eN4NmLWF
+	 q5Ne3wVAC6OIk1gIleMudsJjP3GvrQ21ZxpkZ3d6qDUbn147mMxdOJdMaHtfRMzM+E
+	 mCk73ccZorNuGbd9/5mDvcjZznrX/wSgbDWavtM+za9gFMtOMPmM1ZtNfly5mX0Ymf
+	 VlPwB8h9WsZNg==
+Message-ID: <b22f9381-1835-463a-8daa-97835b159f78@kernel.org>
+Date: Tue, 12 Aug 2025 08:43:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/12] dt-bindings: PCI: Add support for Tesla FSD SoC
+Subject: Re: [PATCH v3 12/12] arm64: dts: fsd: Add PCIe support for Tesla FSD
+ SoC
 To: Shradha Todi <shradha.t@samsung.com>, linux-pci@vger.kernel.org,
  devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -61,8 +62,8 @@ Cc: mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
  vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de,
  m.szyprowski@samsung.com, jh80.chung@samsung.com, pankaj.dubey@samsung.com
 References: <20250811154638.95732-1-shradha.t@samsung.com>
- <CGME20250811154725epcas5p428fa3370a32bc2b664a4fd8260078097@epcas5p4.samsung.com>
- <20250811154638.95732-8-shradha.t@samsung.com>
+ <CGME20250811154746epcas5p261ba0c811f9dd8748f8f241b76be6525@epcas5p2.samsung.com>
+ <20250811154638.95732-13-shradha.t@samsung.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -108,170 +109,67 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250811154638.95732-8-shradha.t@samsung.com>
+In-Reply-To: <20250811154638.95732-13-shradha.t@samsung.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 11/08/2025 17:46, Shradha Todi wrote:
+> Add the support for PCIe controller driver and phy driver for Tesla FSD.
+> It includes support for both RC and EP.
+> 
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+> ---
+>  arch/arm64/boot/dts/tesla/fsd-evb.dts      |  34 +++++
+>  arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi |  65 +++++++++
+>  arch/arm64/boot/dts/tesla/fsd.dtsi         | 147 +++++++++++++++++++++
+>  3 files changed, 246 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/tesla/fsd-evb.dts b/arch/arm64/boot/dts/tesla/fsd-evb.dts
+> index 9ff22e1c8723..1b63c5d72d19 100644
+> --- a/arch/arm64/boot/dts/tesla/fsd-evb.dts
+> +++ b/arch/arm64/boot/dts/tesla/fsd-evb.dts
+> @@ -130,3 +130,37 @@ &serial_0 {
+>  &ufs {
+>  	status = "okay";
+>  };
 > +
-> +  clocks:
-> +    maxItems: 4
+> +&pcierc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie1_clkreq>, <&pcie1_wake>, <&pcie1_preset>,
+> +			<&pcie0_slot1>;
+> +};
 > +
-> +  clock-names:
-> +    items:
-> +      - const: aux
-> +      - const: dbi
-> +      - const: mstr
-> +      - const: slv
+> +&pcieep2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie1_clkreq>, <&pcie1_wake>, <&pcie1_preset>,
+> +			<&pcie0_slot1>;
+> +};
 > +
-> +  num-lanes:
-> +    maximum: 4
+> +&pcierc0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie0_clkreq>, <&pcie0_wake0>, <&pcie0_preset0>,
+> +			 <&pcie0_slot0>;
+> +};
 > +
-> +  phys:
-> +    maxItems: 1
+> +&pcieep0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie0_clkreq>, <&pcie0_wake0>, <&pcie0_preset0>,
+> +			 <&pcie0_slot0>;
+> +};
 > +
-> +  samsung,syscon-pcie:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: phandle for system control registers, used to
-> +                 control signals at system level
+> +&pcierc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie0_clkreq>, <&pcie0_wake1>, <&pcie0_preset0>;
+> +};
+> +
+> +&pcieep1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie0_clkreq>, <&pcie0_wake1>, <&pcie0_preset0>;
 
-What is "system level"? and what are these "signals" being controlled?
 
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +  - clock-names
-> +  - num-lanes
-> +  - phys
-> +  - samsung,syscon-pcie
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/fsd-clk.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +        pcieep0: pcie-ep@16a00000 {
-> +            compatible = "tesla,fsd-pcie-ep";
-> +            reg = <0x0 0x168b0000 0x0 0x1000>,
-> +                  <0x0 0x16a00000 0x0 0x2000>,
-> +                  <0x0 0x16a01000 0x0 0x80>,
-> +                  <0x0 0x17000000 0x0 0xff0000>;
-> +            reg-names = "elbi", "dbi", "dbi2", "addr_space";
-> +            clocks = <&clock_fsys1 PCIE_LINK0_IPCLKPORT_AUX_ACLK>,
-> +                     <&clock_fsys1 PCIE_LINK0_IPCLKPORT_DBI_ACLK>,
-> +                     <&clock_fsys1 PCIE_LINK0_IPCLKPORT_MSTR_ACLK>,
-> +                     <&clock_fsys1 PCIE_LINK0_IPCLKPORT_SLV_ACLK>;
-> +            clock-names = "aux", "dbi", "mstr", "slv";
-> +            num-lanes = <4>;
-> +            phys = <&pciephy1>;
-> +            samsung,syscon-pcie = <&sysreg_fsys1 0x50c>;
-> +        };
-> +    };
-> +...
-> diff --git a/Documentation/devicetree/bindings/pci/tesla,fsd-pcie.yaml b/Documentation/devicetree/bindings/pci/tesla,fsd-pcie.yaml
-> new file mode 100644
-> index 000000000000..533870ab1d73
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/tesla,fsd-pcie.yaml
-> @@ -0,0 +1,77 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/tesla,fsd-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Tesla FSD SoC series PCIe Host Controller
-> +
-> +maintainers:
-> +  - Shradha Todi <shradha.t@samsung.com>
-> +
-> +description:
-> +  Tesla FSD SoCs PCIe host controller inherits all the common
-> +  properties defined in samsung,exynos-pcie.yaml
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/samsung,exynos-pcie.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: tesla,fsd-pcie
-> +
-> +  clocks:
-> +    maxItems: 4
-> +
-> +  clock-names:
-> +    items:
-> +      - const: aux
-> +      - const: dbi
-> +      - const: mstr
-> +      - const: slv
-> +
-> +  num-lanes:
-> +    maximum: 4
-> +
-> +  samsung,syscon-pcie:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: phandle for system control registers, used to
-> +                 control signals at system level
-> +
-> +required:
-> +  - samsung,syscon-pcie
-
-clocks are required, compatible as well.
-
-Missing supplies, both as properties and required. PCI devices do not
-work without power.
-
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/fsd-clk.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        pcierc1: pcie@16b00000 {
-> +            compatible = "tesla,fsd-pcie";
-> +            reg = <0x0 0x16b00000 0x0 0x2000>,
-> +                  <0x0 0x168c0000 0x0 0x1000>,
-> +                  <0x0 0x18000000 0x0 0x1000>;
-> +            reg-names = "dbi", "elbi", "config";
-> +            ranges =  <0x82000000 0x0 0x18001000 0x0 0x18001000 0x0 0xffefff>;
-
-Misaligned. Follow closely DTS coding style.
-
-> +            clocks = <&clock_fsys1 PCIE_LINK1_IPCLKPORT_AUX_ACLK>,
-> +                     <&clock_fsys1 PCIE_LINK1_IPCLKPORT_DBI_ACLK>,
-> +                     <&clock_fsys1 PCIE_LINK1_IPCLKPORT_MSTR_ACLK>,
-> +                     <&clock_fsys1 PCIE_LINK1_IPCLKPORT_SLV_ACLK>;
-> +            clock-names = "aux", "dbi", "mstr", "slv";
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +            dma-coherent;
-> +            device_type = "pci";
-> +            interrupts = <GIC_SPI 117 IRQ_TYPE_EDGE_RISING>;
-> +            num-lanes = <4>;
-> +            phys = <&pciephy1>;
-> +            samsung,syscon-pcie = <&sysreg_fsys1 0x510>;
-
-Incomplete, missing supplies.
-
-> +        };
-> +    };
-> +...
-
+All these are pointless, because the node is disabled. The board level
+should be complete, so also supplies and enabling the device.
 
 Best regards,
 Krzysztof
