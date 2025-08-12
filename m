@@ -1,109 +1,98 @@
-Return-Path: <linux-pci+bounces-33869-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33870-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32399B22DD6
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 18:38:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 223B7B22E14
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 18:47:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A61F250543F
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 16:30:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 87FE53B2AB0
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 16:41:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B05F2279DDD;
-	Tue, 12 Aug 2025 16:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F17EB2FAC1F;
+	Tue, 12 Aug 2025 16:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/OEfawe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDGo2CNW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ED71A9F8B;
-	Tue, 12 Aug 2025 16:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA3C2FA0FA;
+	Tue, 12 Aug 2025 16:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755016217; cv=none; b=F/HVkOhvpbE/0dCyxsQISRrRWyzwVjZ0C/hEpP99EuJcny9pU5FKc+HOOF05+Iw7W9xycrH8ZBNH+Uk5AWlecQXJHOhbvajsDIjCPTazoKp9mlT6Mc53VM0oHOAmHxBCuPL2nY1JY2QACMUqALLpdltOFTz/RdrY387jBsF+8rA=
+	t=1755016834; cv=none; b=SzVof/Fbj5ITX7NCgOCJlOZRSM6ReLIje8WEPYgtHu2YoxTrYEdCQFO6qEmSKTaJ/ccrI6PRstrCqMNelodRfLO/+Gpdu5NYfTDwjnuH2Z5gmL/HxWYMoufZCU+ZDq2tk86IJhAxnDmZLNXpd81C5FFbSuZS1IskHtj0RUWYsKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755016217; c=relaxed/simple;
-	bh=4vdLYj8onEuvH/MXXLnAQFBePXxWY8yQZFRDfo+p5Ec=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=sAfiTe6PXM9BWp2xJjZBgbCCb8y0SuiStBL/LkG+TdD9CjhEcJsQyMoYYPzYLABjhk/5aXfqIdiIxZiBA7xIdsigpprzSALtNJHOnTS/tGJ8v+aOK6xSbhvHVOLSnRdgTLpM6v3waMb5YyQVMpuHuevFyCkKlf60ob538Z1jwJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/OEfawe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC9F9C4CEF0;
-	Tue, 12 Aug 2025 16:30:16 +0000 (UTC)
+	s=arc-20240116; t=1755016834; c=relaxed/simple;
+	bh=c0imZ72TUJ70OzV/83zxsZL4bXqGEF0O9JOXyLfWMgY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Vaf3XKZri+8BALFvZ9qF92tc2kGonhe3exqirCG545m8EuLh1Mt4hplrmKQ6X0rbBttUxIezqdzzn/iyA8tDCqPvnnroaKwEUtlmbydwNnMONFpYpfzQEajUZwBtfUtEQ98Nw6Bvuojjte3Lcv4Chq9T48SZPN8Wo5s/UfqURhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDGo2CNW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 318FAC4CEF0;
+	Tue, 12 Aug 2025 16:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755016217;
-	bh=4vdLYj8onEuvH/MXXLnAQFBePXxWY8yQZFRDfo+p5Ec=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=S/OEfawesxF6JiuSKpEmq5yRCtAAgnY5wHQJGqqMuoYS7JLV20eHNHUjOKqC3+Zh4
-	 U2mLFIn+iaIXjxxV3o6MPIN1ZVr0ph88GZ8b8E8QfdvfwyUx/j6XFagmNpL1RDNu4V
-	 GgDgmlmWp8Rp2V4uB6RjLuIV828KGm06dSKt1hRKwLoG0NBZw3EmBlmUTreD5f10sT
-	 fdZwtu4mtGbT2gZT5cjSLSHQo98pbZu4iAgfq7qR4Th001IdGotmrL89N7Zd9Ix9Rm
-	 nR45CRI7RJf0x9J4G1AzAOTRrLQVGhJZA15R/d6kKwebJeF2znCEJcAZyLvT6mKEbu
-	 p9er2rUyIl7cQ==
-Date: Tue, 12 Aug 2025 11:30:15 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Nam Cao <namcao@linutronix.de>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C2=B4nski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Ammar Faizi <ammarfaizi2@gnuweeb.org>
-Subject: Re: [PATCH] PCI: vmd: Remove MSI-X check on child devices
-Message-ID: <20250812163015.GA194338@bhelgaas>
+	s=k20201202; t=1755016834;
+	bh=c0imZ72TUJ70OzV/83zxsZL4bXqGEF0O9JOXyLfWMgY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=WDGo2CNWD1Bi+gY3wt+qreis05jO5RimzwXEGs3acdX6RAtHFtlQuV4lEyAZSyS/R
+	 zWRqi351ysteb4BfND75gZkKyRcItV6BvEoGa9/2FsjIYm5/YnhXeach63vNJiw1Z6
+	 F74DVKTxRMMSOh3qWAEKeaywAzVPYCHjZSW7h4VV8YBgry5Xh9lf+pVoGT/M06o8LW
+	 LHmDOyKO9JjG7AHaXNSj10nUs9NeGTypfiqLeARh4qs4V/tg8Hlhw8MH+JMTJjJaAA
+	 o3z/VQ3staVVr1j3uNMC7IW43prPdg6aJk53cS/lGek5OOFtu8DwtdUgM2IaqcXI+8
+	 OL1elNUz5QZ9g==
+From: Vinod Koul <vkoul@kernel.org>
+To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
+ krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com, 
+ mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org, 
+ bhelgaas@google.com, johan+linaro@kernel.org, kishon@kernel.org, 
+ neil.armstrong@linaro.org, abel.vesa@linaro.org, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+ linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com, 
+ quic_krichai@quicinc.com, quic_vbadigan@quicinc.com, 
+ Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+In-Reply-To: <20250725102231.3608298-1-ziyue.zhang@oss.qualcomm.com>
+References: <20250725102231.3608298-1-ziyue.zhang@oss.qualcomm.com>
+Subject: Re: (subset) [PATCH v7 0/3] pci: qcom: drop unrelated clock and
+ add link_down reset for sa8775p
+Message-Id: <175501682675.633066.14367700051268770361.b4-ty@kernel.org>
+Date: Tue, 12 Aug 2025 22:10:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aJtUjnuWr1S31jhX@kbusch-mbp>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Tue, Aug 12, 2025 at 08:49:50AM -0600, Keith Busch wrote:
-> On Tue, Aug 12, 2025 at 08:27:15AM +0200, Nam Cao wrote:
-> > On Mon, Aug 11, 2025 at 05:46:59PM -0500, Bjorn Helgaas wrote:
-> > > On Mon, Aug 11, 2025 at 07:39:35AM +0200, Nam Cao wrote:
-> > > > Commit d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()")
-> > > > added a WARN_ON sanity check that child devices support MSI-X, because VMD
-> > > > document says [1]:
-> > > > 
-> > > >     "Intel VMD only supports MSIx Interrupts from child devices and
-> > > >     therefore the BIOS must enable PCIe Hot Plug and MSIx interrups [sic]."
-> > > 
-> > > Can VMD tell the difference between an incoming MSI MWr transaction
-> > > and an MSI-X MWr?
-> > > 
-> > > I wonder if "MSIx" was meant to mean "VMD only supports MSI or MSI-X
-> > > interrupts, not INTx interrupts, from child devices"?
-> > 
-> > I don't know, sorry. I am hoping that the VMD maintainers can help us here.
+
+On Fri, 25 Jul 2025 18:22:28 +0800, Ziyue Zhang wrote:
+> This series drop gcc_aux_clock in pcie phy, the pcie aux clock should
+> be gcc_phy_aux_clock. And sa8775p platform support link_down reset in
+> hardware, so add it for both pcie0 and pcie1 to provide a better user
+> experience.
 > 
-> The doc you linked is riddled with errors. The original vmd commit
-> message is more accurate: VMD domains support child devices with MSI and
-> MSI-x interrupts. The VMD device can't even tell the difference which
-> one the device is using. It just manipulates messages sent to the usual
-> APIC address 0xfeeXXXXX.
+> Have follwing changes:
+>   - Update pcie phy bindings for sa8775p.
+>   - Document link_down reset.
+>   - Remove aux clock from pcie phy.
+>   - Add link_down reset for pcie.
+> 
+> [...]
 
-Thanks, Keith!  I updated the commit log like this:
+Applied, thanks!
 
-  d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()") added a
-  WARN_ON sanity check that child devices support MSI-X, because VMD document
-  says [1]:
+[1/3] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
+      commit: aac1256a41cfbbaca12d6c0a5753d1e3b8d2d8bf
 
-    Intel VMD only supports MSIx Interrupts from child devices and therefore
-    the BIOS must enable PCIe Hot Plug and MSIx interrups [sic].
+Best regards,
+-- 
+~Vinod
 
-  However, the VMD device can't even tell the difference between a child
-  device using MSI and one using MSI-X.  Per 185a383ada2e ("x86/PCI: Add
-  driver for Intel Volume Management Device (VMD)"), VMD does not support
-  INTx interrupts, but does support child devices using either MSI or MSI-X.
-
-  Remove the sanity check to avoid the unnecessary WARN_ON reported by Ammar.
 
 
