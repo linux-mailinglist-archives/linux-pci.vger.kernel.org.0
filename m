@@ -1,249 +1,227 @@
-Return-Path: <linux-pci+bounces-33852-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33853-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4527AB2234A
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 11:35:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B56EB2236C
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 11:41:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 492F31886BC8
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 09:32:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D4D61AA426E
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 09:40:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EE572E8DF1;
-	Tue, 12 Aug 2025 09:32:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 215A12E54A3;
+	Tue, 12 Aug 2025 09:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VRwOt31B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DJCr+2d0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA482E88AA
-	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 09:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4B22E7BAB
+	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 09:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754991154; cv=none; b=I++L0dudQQE4UpxTH/0aR4a4CnAXqcAe58Ar2q8HVSeOszZmcD8ex+6nzmT8WpaWnsEMxzKR7HUCqB5rCI18vZ7ahxifJWtqg13YgSeq17P5eNZy7yjBX2kyIhLA/JB4zMHleqctbY8hWfOz10SSbCK4D91NsxYQdFv0+nvvn2Q=
+	t=1754991634; cv=none; b=OevGG9UO/QhOA1hpfUS41IAabheOrN3Qiw3PcAjOGyIEzxQ5C00sEowW5G5TJMpDn16/Y4AXR2kFYqGcsJQWtP1dLDwJG8eMBJhgbYMBvqtquzla8LtzVdxJqa/2KU9rXvIh24J0ppOqyKpGVQyKdJrbvqH8fFenB+fisYobGuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754991154; c=relaxed/simple;
-	bh=KBltDy1VlOm6vly3kEqikeo37kbO/rgKlf8mjUJGwKc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FoOmmMt2g0KkDd3gp4BfIWjhD60MmdTXiidj97PecZW1B7tu4v7PHj8Qql7lOqEt3OvzB5XLTIF8zxZAFnethbAR/sAfmi/p9nP184khKB6LzwCq/rclNwpSvRpjTU4Mwj2csFDcLlOEV3QHzN1/C1pUx5yvXVeCocDDEDUVS88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VRwOt31B; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57C5XPAg005212
-	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 09:32:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7n24b5y09554bTu/Veo3VDRFW4pPHKlo+XBhAE2yofU=; b=VRwOt31B+kdwV4Lc
-	HbCkN4bGsdbKDoq6E9J/tAgN+Siin1Fd5VRPjlzYzVehmkdAJsl4h6iSzOSXrgo9
-	fVmKvsD1M38R6Cf/xtch0CCyZiiUg2QfsrfigToFbGgw99XNnMb2lT1A5/5ZiSF1
-	bkzG7EqGv0nNhebOYPUwO1otY1USFEl06+cs+uTGRl0vvmjaGjPvkO+oSivykrk4
-	GTaJgm1F7gaVZBYrDbOgrPrP7SzmpiM9tSizkHUmxlQiR5mJrmmaeF6YMPeYe5w2
-	3TYEikwPLlve3n2zyT8jNU3143grbvJyoQau1KqR3zY6vB84F442EBSE4RSfu6ia
-	ZvSSGw==
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48eqhx5snx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 09:32:31 +0000 (GMT)
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b42f03d50a9so2769035a12.0
-        for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 02:32:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754991150; x=1755595950;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7n24b5y09554bTu/Veo3VDRFW4pPHKlo+XBhAE2yofU=;
-        b=mApyT8SAT9EzPjpTqlPT23HuV3/C4cwSDuw4rdfl48em/81EQReTxB3Cqre8WbbQN8
-         /ya3PVB162SvmFrjUqk5+aXDCI5cLXHvsTJtZ/VU60mY3Y7rm5WKHHQAjVRQ+rj5MlwM
-         dA7eOeoibZYmClh++w/CFz1Utacekkw9yyz72Kx8MqDR5C+JkQEsGYLqstvYX9+TJQuK
-         zbBe4bx7bh2yeIvW3eQ57Pq13QhyoNNa2O7W14TYnIJ3+YmiJYf0aoFEYku/FSqXKAh5
-         PmJScIVnb7C820VUGaS3BSZYgE8MlOKKlMq7A7/rVB9QiYdXagPWoLD7nTR5gD6Ie4Hy
-         BSAA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+BdD0mgWwfCKE6MKRqb1MiE4taF/2U0vfcHae8LMy6Vo0+MtV+YKCNuFLmYvTODJm0swqk+60VFw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLtzG7ZssonzM0Q8JS0uz0jj+SgjfC4jyChktKiw9LsgQLPqfx
-	/VlRdgY7u7LwAnUWcWcS3zrsjaic1txRqAeODF4/9YR16ghfNdpUBrMjZs/oJN9fluJjA4itlW8
-	jpn4rLzUha0ZCoUBhkOUZTaTEb5uGfpq4GU70as7GxxEvJtemamMDEtNXd7PQZNQ=
-X-Gm-Gg: ASbGnctnl2a1BhrRkRYqJDVhb1DYFskpumssZJwnAlSnw3qQHzta8WL81/3QXz/W+dF
-	AfSev/Wsm4izuMMPW7iBmBiLm+evlVwtAMtGDWZmH7o6UIT/bQTQ7fcamlC0NrwMswqwWD/YURy
-	91LTrh3wHVD4exLFhZ2L8GNCwvwCK+5oL0/Ulle12AtlhdqzZyekUQL47mGSFN64fkCw8jTSaQY
-	TgUcroYBkWhWBRoH+JPSy2GxuLga4rVptGHN3PxGulnKfmMZeswaTZRAExcPsLBgu5sgTXOL+xD
-	SKJgVO3Oh+Xg6YEYRkeFHi4ihvs2AQ6pI1eUemkunFGQ4AoSH2IInN+yC+YNjd1wTWNJusJC4w=
-	=
-X-Received: by 2002:a17:902:ef07:b0:243:485:269d with SMTP id d9443c01a7336-24304852b18mr13228325ad.31.1754991150183;
-        Tue, 12 Aug 2025 02:32:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG9kdodTnnV+PESNDgF1+JEyc7nLGF4AcUeaMfke5Rq0BxrIP5ikbInr31f30kDeqp4lDDApQ==
-X-Received: by 2002:a17:902:ef07:b0:243:485:269d with SMTP id d9443c01a7336-24304852b18mr13227695ad.31.1754991149647;
-        Tue, 12 Aug 2025 02:32:29 -0700 (PDT)
-Received: from [10.218.42.132] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e8aa9055sm296829815ad.150.2025.08.12.02.32.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Aug 2025 02:32:29 -0700 (PDT)
-Message-ID: <5dbd782a-1d52-4614-9e7e-3b7d9dfd099f@oss.qualcomm.com>
-Date: Tue, 12 Aug 2025 15:02:18 +0530
+	s=arc-20240116; t=1754991634; c=relaxed/simple;
+	bh=+27Nl5xMe6OI2jt1z9XNa+pd/z3DL3nL0o++0f6pyso=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=OKFXDPuTv0Xi/UFGGjFbyQ6R81gct982kb/cai7X1G6yPG8H3CN6zrHoifzzf6BxbbHz00a/GvJmVUAfSh7fAuPmTEiXlPI0pbugMKqcqoDh7WKbRv2OiIJFKms++AC7gpCkUfeVJ7ALxS+qvBBG+mS7pRFgW1xLEEYuQBs4keY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DJCr+2d0; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754991632; x=1786527632;
+  h=date:from:to:cc:subject:message-id;
+  bh=+27Nl5xMe6OI2jt1z9XNa+pd/z3DL3nL0o++0f6pyso=;
+  b=DJCr+2d0Oi7RWbJMEEkBBfvMNosejJh1pEVCY9qsyR1lrf9D0gxZ6I02
+   RTeG+qSdc7E8KqJJkPrzzqOD1C8j5hscF9QHs2Vv7rqVBkkaMXbl/4t3r
+   DbbPHAoeh9XLxb7aUBgz9Z7oyWMHTgxBgfri2+84bQJajq3WZrF5kTVm4
+   OoDXlGkn/nbUj7v5/5KQWqan64XgbYN01Kz8kpwPbDHkvFuWyUtrB83E7
+   zX/p0imNU8NFdWD3Np39Ctv5UuajqCBKkRsElFfDATrTbqGqcFzOXZhzw
+   lUUePRhddh2fBmZEQ+XAHpJ/v7vMhPU21QWSPjx4mJMmHRcE0j7fMY07z
+   A==;
+X-CSE-ConnectionGUID: rrIjMHzCSye7mZT8KoK7nQ==
+X-CSE-MsgGUID: PDqz0KunRCKUfCirLxuKBA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="67525128"
+X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
+   d="scan'208";a="67525128"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 02:40:32 -0700
+X-CSE-ConnectionGUID: fF/Xk198TZy+TDpkhnEhIQ==
+X-CSE-MsgGUID: XzENfNU9RY2Z0urG4rwyXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
+   d="scan'208";a="165341364"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by orviesa006.jf.intel.com with ESMTP; 12 Aug 2025 02:40:31 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ullUa-0006dZ-1o;
+	Tue, 12 Aug 2025 09:40:28 +0000
+Date: Tue, 12 Aug 2025 17:39:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:dt-bindings] BUILD SUCCESS
+ ddb81c5c911227f0c2ef4cc94a106ebfb3cb2d56
+Message-ID: <202508121711.WHIalFfe-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/11] PCI/bwctrl: Add support to scale bandwidth
- before & after link re-training
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi
- <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
-        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-        qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com,
-        quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-References: <20250711213602.GA2307197@bhelgaas>
- <55fc3ae6-ba04-4739-9b89-0356c3e0930c@oss.qualcomm.com>
- <d4078b6c-1921-4195-9022-755845cdb432@oss.qualcomm.com>
- <68a78904-e2c7-4d4d-853d-d9cd6413760e@oss.qualcomm.com>
- <3939605c-7335-4401-ba32-b88ee900f1d5@oss.qualcomm.com>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <3939605c-7335-4401-ba32-b88ee900f1d5@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEwMDA1NyBTYWx0ZWRfXwL5Fv1aDSSbD
- LuQajRUoCtXlQEOtSaBAiXgLOE2XRsjZ2YiJVHgWC8yglZN73tGSv8AYRgYuvvaxHgiyz1+R6NV
- Puo1YcuJOvROxQSQB1bGaif+D6CbMOqIUEwBtGApTE1yqWfa3DMiOgnaF765b9UaVoJ3706NDKw
- THC+xIDpEmDt4S6z5va+ky+8MMtqPIkGlDb1GGzHNvXJQMjIKSKJJFZqu5gv388khdmUggirdbD
- WLromyqm92cVdqyKnVZgih8D3ZCHrJt9msJXbV/zLYlyZdbGD49OkwzFsv+/Ckl5ivmMKQk/tWI
- NVuxKBtYuR5PflRK+4WoIpPL7wO6lJNGz+KDAys5bGhu2LkX+y4LhZc7WuzUXM8OytAow075Kh8
- r86Ab/N6
-X-Proofpoint-GUID: 4JcBayJWUz_Vu3o8hK2wHkzNN7DLgJhw
-X-Authority-Analysis: v=2.4 cv=aYNhnQot c=1 sm=1 tr=0 ts=689b0a2f cx=c_pps
- a=rz3CxIlbcmazkYymdCej/Q==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=Jnfc8Lo_MkJUCzdN-ZEA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=bFCP_H2QrGi7Okbo017w:22
-X-Proofpoint-ORIG-GUID: 4JcBayJWUz_Vu3o8hK2wHkzNN7DLgJhw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-12_04,2025-08-11_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 adultscore=0 priorityscore=1501 suspectscore=0 phishscore=0
- impostorscore=0 bulkscore=0 malwarescore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508100057
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
+branch HEAD: ddb81c5c911227f0c2ef4cc94a106ebfb3cb2d56  dt-bindings: PCI: Add missing "#address-cells" to interrupt controllers
 
+elapsed time: 1332m
 
-On 8/12/2025 2:57 PM, Konrad Dybcio wrote:
-> On 8/12/25 6:05 AM, Krishna Chaitanya Chundru wrote:
->>
->>
->> On 7/22/2025 4:33 PM, Krishna Chaitanya Chundru wrote:
->>>
->>>
->>> On 7/12/2025 4:36 AM, Krishna Chaitanya Chundru wrote:
->>>>
->>>>
->>>> On 7/12/2025 3:06 AM, Bjorn Helgaas wrote:
->>>>> On Mon, Jun 09, 2025 at 04:21:23PM +0530, Krishna Chaitanya Chundru wrote:
->>>>>> If the driver wants to move to higher data rate/speed than the current data
->>>>>> rate then the controller driver may need to change certain votes so that
->>>>>> link may come up at requested data rate/speed like QCOM PCIe controllers
->>>>>> need to change their RPMh (Resource Power Manager-hardened) state. Once
->>>>>> link retraining is done controller drivers needs to adjust their votes
->>>>>> based on the final data rate.
->>>>>>
->>>>>> Some controllers also may need to update their bandwidth voting like
->>>>>> ICC BW votings etc.
->>>>>>
->>>>>> So, add pre_link_speed_change() & post_link_speed_change() op to call
->>>>>> before & after the link re-train. There is no explicit locking mechanisms
->>>>>> as these are called by a single client Endpoint driver.
->>>>>>
->>>>>> In case of PCIe switch, if there is a request to change target speed for a
->>>>>> downstream port then no need to call these function ops as these are
->>>>>> outside the scope of the controller drivers.
->>>>>
->>>>>> +++ b/include/linux/pci.h
->>>>>> @@ -599,6 +599,24 @@ struct pci_host_bridge {
->>>>>>        void (*release_fn)(struct pci_host_bridge *);
->>>>>>        int (*enable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
->>>>>>        void (*disable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
->>>>>> +    /*
->>>>>> +     * Callback to the host bridge drivers to update ICC BW votes, clock
->>>>>> +     * frequencies etc.. for the link re-train to come up in targeted speed.
->>>>>> +     * These are intended to be called by devices directly attached to the
->>>>>> +     * Root Port. These are called by a single client Endpoint driver, so
->>>>>> +     * there is no need for explicit locking mechanisms.
->>>>>> +     */
->>>>>> +    int (*pre_link_speed_change)(struct pci_host_bridge *bridge,
->>>>>> +                     struct pci_dev *dev, int speed);
->>>>>> +    /*
->>>>>> +     * Callback to the host bridge drivers to adjust ICC BW votes, clock
->>>>>> +     * frequencies etc.. to the updated speed after link re-train. These
->>>>>> +     * are intended to be called by devices directly attached to the
->>>>>> +     * Root Port. These are called by a single client Endpoint driver,
->>>>>> +     * so there is no need for explicit locking mechanisms.
->>>>>
->>>>> No need to repeat the entire comment.  s/.././
->>>>>
->>>>> These pointers feel awfully specific for being in struct
->>>>> pci_host_bridge, since we only need them for a questionable QCOM
->>>>> controller.  I think this needs to be pushed down into qcom somehow as
->>>>> some kind of quirk.
->>>>>
->>>> Currently these are needed by QCOM controllers, but it may also needed
->>>> by other controllers may also need these for updating ICC votes, any
->>>> system level votes, clock frequencies etc.
->>>> QCOM controllers is also doing one extra step in these functions to
->>>> disable and enable ASPM only as it cannot link speed change support
->>>> with ASPM enabled.
->>>>
->>> Bjorn, can you check this.
->>>
->>> For QCOM devices we need to update the RPMh vote i.e a power source
->>> votes for the link to come up in required speed. and also we need
->>> to update interconnect votes also. This will be applicable for
->>> other vendors also.
->>>
->>> If this is not correct place I can add them in the pci_ops.
->> Bjorn,
->>
->> Can you please comment on this.
->>
->> Is this fine to move these to the pci_ops of the bridge.
->> Again these are not specific to QCOM, any controller driver which
->> needs to change their clock rates, ICC bw votes etc needs to have
->> these.
-> 
-> Do you even need to set the OPP explicitly? The global irq handler
-> already does so on linkup, and you seem to toggle the link state in
-> the newly introduced helpers
-> 
-> Now not all DTs currently have a global interrupt, but that's a mass
-> fixup to be done anyway..
-> 
-Konrad,
+configs tested: 134
+configs skipped: 3
 
-global IRQ in the qcom controllers will only come in only on initial
-linkup, and later on link speed change through bwctrl driver we will
-not get global IRQ.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-For QCOM controllers we need to change the RPMH vote for example if
-we want to update the PCIe data rate from 5 GT/s to 8 GT/s we might
-need to update the RPMh vote from low_svs to NOM corner before we
-initiate link up. for that reason we are introducing pre & post
-link_speed_change function pointer.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20250811    gcc-8.5.0
+arc                   randconfig-002-20250811    gcc-10.5.0
+arc                           tb10x_defconfig    gcc-15.1.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    clang-22
+arm                        keystone_defconfig    gcc-15.1.0
+arm                   randconfig-001-20250811    gcc-10.5.0
+arm                   randconfig-002-20250811    gcc-13.4.0
+arm                   randconfig-003-20250811    clang-22
+arm                   randconfig-004-20250811    gcc-10.5.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250811    clang-22
+arm64                 randconfig-002-20250811    clang-19
+arm64                 randconfig-003-20250811    clang-20
+arm64                 randconfig-004-20250811    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250811    gcc-15.1.0
+csky                  randconfig-002-20250811    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-22
+hexagon                             defconfig    clang-22
+hexagon               randconfig-001-20250811    clang-17
+hexagon               randconfig-002-20250811    clang-16
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250811    clang-20
+i386        buildonly-randconfig-002-20250811    clang-20
+i386        buildonly-randconfig-003-20250811    gcc-12
+i386        buildonly-randconfig-004-20250811    gcc-12
+i386        buildonly-randconfig-005-20250811    gcc-12
+i386        buildonly-randconfig-006-20250811    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20250811    gcc-15.1.0
+loongarch             randconfig-002-20250811    gcc-12.5.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                          ath25_defconfig    clang-22
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20250811    gcc-10.5.0
+nios2                 randconfig-002-20250811    gcc-11.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250811    gcc-9.5.0
+parisc                randconfig-002-20250811    gcc-14.3.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-22
+powerpc                      bamboo_defconfig    clang-22
+powerpc               randconfig-001-20250811    gcc-13.4.0
+powerpc               randconfig-002-20250811    clang-22
+powerpc               randconfig-003-20250811    gcc-13.4.0
+powerpc64             randconfig-001-20250811    clang-22
+powerpc64             randconfig-002-20250811    clang-22
+powerpc64             randconfig-003-20250811    gcc-14.3.0
+riscv                            alldefconfig    gcc-15.1.0
+riscv                            allmodconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-22
+riscv                 randconfig-001-20250811    gcc-8.5.0
+riscv                 randconfig-002-20250811    clang-22
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-22
+s390                  randconfig-001-20250811    gcc-8.5.0
+s390                  randconfig-002-20250811    clang-17
+s390                       zfcpdump_defconfig    clang-22
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                    randconfig-001-20250811    gcc-15.1.0
+sh                    randconfig-002-20250811    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250811    gcc-8.5.0
+sparc                 randconfig-002-20250811    gcc-8.5.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20250811    clang-22
+sparc64               randconfig-002-20250811    gcc-14.3.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-22
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250811    clang-18
+um                    randconfig-002-20250811    clang-22
+um                           x86_64_defconfig    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250811    gcc-12
+x86_64      buildonly-randconfig-002-20250811    clang-20
+x86_64      buildonly-randconfig-003-20250811    clang-20
+x86_64      buildonly-randconfig-004-20250811    clang-20
+x86_64      buildonly-randconfig-005-20250811    clang-20
+x86_64      buildonly-randconfig-006-20250811    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250811    gcc-9.5.0
+xtensa                randconfig-002-20250811    gcc-9.5.0
 
-- Krishna Chaitanya.
-> Konrad
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
