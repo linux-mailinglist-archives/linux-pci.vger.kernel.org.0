@@ -1,139 +1,138 @@
-Return-Path: <linux-pci+bounces-33814-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33815-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F1F8B21BA8
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 05:31:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32CCEB21BAA
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 05:32:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C44E1902F39
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 03:31:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7158C1902F7A
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 03:32:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6549D1EE7C6;
-	Tue, 12 Aug 2025 03:30:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C6CD214204;
+	Tue, 12 Aug 2025 03:31:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yntf1LEc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPyQDdNg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C8F1AF0AF
-	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 03:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC901A76DE;
+	Tue, 12 Aug 2025 03:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754969458; cv=none; b=GQeUmglFhTW9tb9nQsXpU0ZCjg+DJuffp2AWGgTDGh8s3poO6x1R46yPob5JOm+Fh4V0tcbQYiHWMt+JQB2IAEewek8BUNWk5D5ONRM2xcnwYH4HsblCNATls2OvtWptDTQik9d1D0EnYfsmyui/J9P/CFdC62ltGc5jXnwG9NA=
+	t=1754969518; cv=none; b=m1zW029zuJf3RUBBtPikeTIWWBbW0j0ee3RuEUVmAXl47l6tiL3sZnw7maGDSJlxAs6MsFZ9ZClDovycmuu+oiv9xeEgb9iCowwL874d2qDAz0klZcJ3nx3O5iOAKGlF0IaEK3GBxrE2ntma0T8q4z9hhC2YLadnpqrwxeP5Ax4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754969458; c=relaxed/simple;
-	bh=4A5GvYmCMYexOZkBKI2kDUpNI/x2h7DTH+2Psyf/9ug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=isYmwzGe0hS1cGos7Sw4gk0kvccZ6GFTGqq7/Kj9R0XfgUd0OwCtImPGRCvfqZWZmkt9KCp2/1p/ldBDFbqiQIB+Izv9zWwUchtxKETDOpW46GSLwGUP2ldHCBJJnwoSOPMmH2N4tt4z5AU5QqbBd6QWcAlIPdMrSHF+SohpqmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yntf1LEc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1754969454;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XCkvxp64xxUOSuPCfrC7oiW0+5JFJ8BJc57BUtN/nPg=;
-	b=Yntf1LEcgIK+pPuWQmuihuwSsj/FfKcXoF6HaCKoG9P6hC8xcvF5CacdyzQHNeV3Fpa9Pc
-	iTW7mGjVceIuKJQAtaw64L0xwTBcjxeOvzrdCZQ/yxuNXcHkV5Y4BlInwAloTCL10N2J/y
-	AKBPF6pgFkLynTxy5eXvCeChK8xuoxo=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-619-Xyz_b2cSOUeXnU5DmSCi3g-1; Mon, 11 Aug 2025 23:30:53 -0400
-X-MC-Unique: Xyz_b2cSOUeXnU5DmSCi3g-1
-X-Mimecast-MFC-AGG-ID: Xyz_b2cSOUeXnU5DmSCi3g_1754969452
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-23fe26e5a33so76202985ad.3
-        for <linux-pci@vger.kernel.org>; Mon, 11 Aug 2025 20:30:52 -0700 (PDT)
+	s=arc-20240116; t=1754969518; c=relaxed/simple;
+	bh=vfyvdPP9L3lM7kDtAuquN+RNsdO/iJpXaQt7vqW3n8M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Asi4Qd+abt4gz158WN5bwUyG58atGeyWNXmqpCp4ftOW2jJG697afFSQxyOAsBI75CDgCnsgSquvHUDxNDKzPKVez5gio4ZP2nTsRkpHqDcZ+OukPrX0bhKGuW8U6Nnu6nM2zNNxF+TemJ3J0d4rFuOg5+x0W5GGjAOGz0hAtdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fPyQDdNg; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-76bc68cc9e4so5181221b3a.2;
+        Mon, 11 Aug 2025 20:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754969517; x=1755574317; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8S+no+XL5nD240u8M1Zin3Q7p8a0DhzQRaJrnzy39J8=;
+        b=fPyQDdNgrcheSyoXSezabg11clLUa1V/CD2BLx/PZlbtDO95kR3YLfJl6w69YmB5CG
+         ySGUJj5pLPAcC+qGV8kqEJW4GRP/p/tvYc+ticOdn0xNQi4hpQjRnQiVqysA/diyt+uf
+         8AnKeqayQyn/HiR8SGOVCXWTOLFwB51kAzhbusqOs9a4sRUkvSnvGW8Ucgm62gWE7O71
+         6VXLeOjx2x3wJK5ownFrusUaiowIujcm9zue0PIIaT1psJ7sB3oBrDU/lg9nwT2ZYnim
+         Gbh+sggva7+cIVyD8dGzNPQcXlcFFbTrV9UHfWEUdpseE7gghMi8Ag87Z6arbuJNK4mB
+         rKBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754969452; x=1755574252;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XCkvxp64xxUOSuPCfrC7oiW0+5JFJ8BJc57BUtN/nPg=;
-        b=JG3viqIv1F0yio7xpy3YSbcCRbwoyiAp60yCKCVriVM4k2hqOaSfEa3OZYGjBYGMkU
-         gJUpDnauZ/U1Li49JXGng14OWOOK0EJDxN/uG+cTf1KTrlH+HEm3d3U5tHgsAJnpxj6O
-         a6TTolAJdJbH0OS5M8CVC2qhIkKYlGM6rbYfx+WFVh5qH1MUE2lItL9RWOw6wrc04cUR
-         P1HfrZX8V+vSlUm2P6thQM2yTnae1fwx2bY0mBE8w6IWrg7y2hJvznyr+NJG+vikHKbW
-         Ku66HAnKUfWgWb1sgNWIychSff4pawkX1HU29D/EMUGst87OR4BRBAuMR6IY5E7nN6GI
-         tvAw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8KrUcRy5weHdPZmn1CWd45GjP0rNuEnb71qACeZlhyPeYCqNMe2TRLFTT8VqIep+m1AQ4Npax+eI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSf5RAKSSQ++bSdWkDi2vGE1OHhuQ/jO4uScqx2ApBDJBx+fMR
-	VzCCXlQxYb7OLOEAEmC4QQEP42T/1cwCYTUJyfruTlZt1r4vFXq1I1dAmxNdLsB3Zj6+yxG68gL
-	SxmCK5BCKk9RJGxjwPcPhIqgYnnYRqG6UQEOT4FRoUZ+xRmqDTCHfFj4+HA+qNj4U3YVO2dofkx
-	E=
-X-Gm-Gg: ASbGncvhMvM7c8pjMcChS4q65Ie8OV34t3dulv+LL+R5EjrVO2Cps59hGiFCt0lx1u8
-	71I/pLnBqyQl+iN1OrwZrQ/Ur1B26JikbFh9862SCYGi4pULi73snau8f8juh/0XKPMKf8q4fmY
-	30hSucIn8mQyPwNG2L979pUCZn9/U6uD/BNK0yGaeE+4EB15xm7mCDV+be9BzsniuDxEh7mnQSh
-	J2W9iE3v3WR4Ygiea4kXqT1VjJq1HIunGeyIeMLJWoiE77TiOwS7gADuvEg+yfiLpiBlT9hHtjQ
-	PGvt5EbiiH3YVDV8mDf19CjML6+3trc=
-X-Received: by 2002:a17:902:f70f:b0:240:640a:b2e4 with SMTP id d9443c01a7336-242fc3683a8mr27219705ad.49.1754969451818;
-        Mon, 11 Aug 2025 20:30:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFsNcl0XLPCCner9/NUZ+yEfhqQUGBX8BpPGrFeFAmrdynsST1rXFBZLTyWU5C4N4/jD4ci1Q==
-X-Received: by 2002:a17:902:f70f:b0:240:640a:b2e4 with SMTP id d9443c01a7336-242fc3683a8mr27219305ad.49.1754969451410;
-        Mon, 11 Aug 2025 20:30:51 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3216129c8cfsm16030963a91.34.2025.08.11.20.30.49
+        d=1e100.net; s=20230601; t=1754969517; x=1755574317;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8S+no+XL5nD240u8M1Zin3Q7p8a0DhzQRaJrnzy39J8=;
+        b=CmAxWDipjnmkoiLB809F2HTI4SyfhBYHRmB61cas1wSLAs7XQINl+QjQCQvqhzPASe
+         u0n2n5qfCT1n5yOJWn9dA/ODpksru1wxJVqmdt64QbUhXNhEWY8Fm7JtCgY0APu7iGF+
+         k7QWa8AaZdG/f6arP1z8Rc4LOkX2OxP7VseTtTrhXpeaL1WTWVf51CT7c1F7svWI4t55
+         RL347d3eGnUM4dtU4IOADTV1/piDOcJK7x6uP8tiX03ex4UpgmNWGk27cKiRp4eVe7r1
+         XK3tyBJcoENXw+JPlyoPK1CV8L6Ul7cd6AEEnruEM2Z3+V5fdihiKYMtUpaVWP7m6NKf
+         1Ieg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2iE1+TljOGbyMGNZ9YDRsy6k112QrdwIw2JEIgpNJc7gCCCbuaJ338TET5U3KVAocuewha7jQ/nC410I=@vger.kernel.org, AJvYcCVmEyZiotBztGplWpn0MV4IvSYdgZQVHF8Cp9RvJjVlcBiMMoUqJT27Qz/RB4U3bAqzFIMTknDGDtkxaL040IA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygURdaehVc8jp+t2cKaxvzenRG3ARN4WUIlT5e/i1VDidzTpmB
+	BXv+I6Q53WgwApGSdGAiD+iyf8pIcwELsD6T/i09aoVaOjJ9rT6PcUBj
+X-Gm-Gg: ASbGnctmNgOeiaamRz9YJdX8+KA9fSSsMGxNj+PnFvPhvWiYpYmZKFddXLZjTCfs1/x
+	+FhG3jEaQ1RoJrXPCvxZ6zW3Ci3XztQsQnwfZLMwkTi5OyUiSPJCCjruLdZarQpAWz8mRnIfq/7
+	/HNtqPAjXiN76DkpBnUz/JIQmiPp9knpnV+sHd0N3v5wxDqdrAfJxod/0E58esKAGtRcWKkJ7nF
+	kVKnFcoDSRe+41X2OJJC7wpz9eq0q6wRP9VoNAn/lxUxKtJ1vbjSgFgIyRPc3u35ajnTLqn4cGS
+	4FObskxdH5K7KQ233Saum3gUswPEXxuBPxR6/wPkqBIJbm6IuPT2Gx8ecyT7S8aIuaAZM5ut+Sj
+	3ca7I7/brFFzkqIYAUWUrKIps
+X-Google-Smtp-Source: AGHT+IGiXvUO7CJi9ioOHnbz+EgEKBNFp1mg+EhD1KSh2unYYVRsummizomz+JScV+I7SUjWg8KgEQ==
+X-Received: by 2002:a05:6a20:72ac:b0:240:1b99:1595 with SMTP id adf61e73a8af0-2409a8bcf16mr3360034637.17.1754969516602;
+        Mon, 11 Aug 2025 20:31:56 -0700 (PDT)
+Received: from pop-os.. ([2401:4900:91d5:9edd:11bb:d389:5e47:9179])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b46e5074e87sm3091824a12.54.2025.08.11.20.31.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 20:30:51 -0700 (PDT)
-Date: Tue, 12 Aug 2025 11:29:54 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	kexec@lists.infradead.org
-Subject: Re: [Regression] kdump fails to get DHCP address unless booting with
- pci=nomsi or without nr_cpus=1
-Message-ID: <ovyxlf7aw4y4bsxlkvjaxd5zs7jw5rnta3gyfmroazesm4m7mi@ebgu3frfd2bb>
-References: <x5dwuzyddiasdkxozpjvh3usd7b5zdgim2ancrcbccfjxq7qwn@i6b24w22sy6s>
- <87bjom8106.ffs@tglx>
+        Mon, 11 Aug 2025 20:31:56 -0700 (PDT)
+From: herculoxz <abhinav.ogl@gmail.com>
+To: dakr@kernel.org,
+	bhelgaas@google.com,
+	kwilczynski@kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu
+Cc: linux-pci@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Abhinav Ananthu <abhinav.ogl@gmail.com>
+Subject: [PATCH v3 1/1] rust: pci: use c_* types via kernel prelude
+Date: Tue, 12 Aug 2025 09:01:02 +0530
+Message-Id: <20250812033101.5257-1-abhinav.ogl@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <87bjom8106.ffs@tglx>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 11, 2025 at 03:02:33PM +0200, Thomas Gleixner wrote:
->On Mon, Aug 11 2025 at 11:23, Coiby Xu wrote:
->> Recently I met an issue that on certain virtual machines, the kdump
->> kernel fails to get DHCP IP address most of times starting from
->> 6.11-rc2. git bisection shows commit b5712bf89b4b ("irqchip/gic-v3-its:
->> Provide MSI parent for PCI/MSI[-X]") is the 1st bad commit,
->>
->>      # good: [7d189c77106ed6df09829f7a419e35ada67b2bd0] PCI/MSI: Provide
->>      # MSI_FLAG_PCI_MSI_MASK_PARENT
->>      git bisect good 7d189c77106ed6df09829f7a419e35ada67b2bd0
->>      # good: [48f71d56e2b87839052d2a2ec32fc97a79c3e264] irqchip/gic-v3-its:
->>      # Provide MSI parent infrastructure
->>      git bisect good 48f71d56e2b87839052d2a2ec32fc97a79c3e264
->>      # good: [8c41ccec839c622b2d1be769a95405e4e9a4cb20] irqchip/irq-msi-lib:
->>      # Prepare for PCI MSI/MSIX
->>      git bisect good 8c41ccec839c622b2d1be769a95405e4e9a4cb20
->>      # first bad commit: [b5712bf89b4bbc5bcc9ebde8753ad222f1f68296]
->>      # irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]
->
->There were follow up fixes on this, so isolating this one is not really
->conclusive.
->
->Is the problem still there on v6.16 and v6.17-rc1?
+From: Abhinav Ananthu <abhinav.ogl@gmail.com>
 
-Thanks for the reply! Yes, I can confirm it still happens to
-6.16.0-200.fc42.aarch64 and 6.17.0-0.rc1.17.fc43.aarch64.
+Update PCI FFI callback signatures to use `c_` from the prelude,
+instead of accessing it via `kernel::ffi::`.
 
->
->Thanks,
->
->        tglx
->
+Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
+---
+ rust/kernel/pci.rs | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 5ce07999168e..fbeeaec4e044 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -61,7 +61,7 @@ impl<T: Driver + 'static> Adapter<T> {
+     extern "C" fn probe_callback(
+         pdev: *mut bindings::pci_dev,
+         id: *const bindings::pci_device_id,
+-    ) -> kernel::ffi::c_int {
++    ) -> c_int {
+         // SAFETY: The PCI bus only ever calls the probe callback with a valid pointer to a
+         // `struct pci_dev`.
+         //
+@@ -333,7 +333,7 @@ unsafe fn do_release(pdev: &Device, ioptr: usize, num: i32) {
+         // `ioptr` is valid by the safety requirements.
+         // `num` is valid by the safety requirements.
+         unsafe {
+-            bindings::pci_iounmap(pdev.as_raw(), ioptr as *mut kernel::ffi::c_void);
++            bindings::pci_iounmap(pdev.as_raw(), ioptr as *mut c_void);
+             bindings::pci_release_region(pdev.as_raw(), num);
+         }
+     }
 -- 
-Best regards,
-Coiby
+2.34.1
 
 
