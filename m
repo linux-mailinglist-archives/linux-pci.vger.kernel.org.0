@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-33834-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33835-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4AF4B21CD7
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 07:24:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22057B21DC0
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 07:59:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D31BF4673BD
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 05:24:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9EAA61903661
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Aug 2025 05:58:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 642F6311C34;
-	Tue, 12 Aug 2025 05:24:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 138C929BD97;
+	Tue, 12 Aug 2025 05:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Oka7R82l"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E9UUwlUL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE3B145A05
-	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 05:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E4A2882D3
+	for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 05:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754976289; cv=none; b=JloDJvEdw9Gq4iL8OHeg3qzFSKRNZyExOnOJyouAJHGbb0yVTitQYIv9lPzN+mG2+vL+kzR8P4IGMheOQkmyx2zl2SR5ftopLXJ81xRZmnH5TtZ1LBdFXGlD2HX2fGGskCTdgxnwd8+9a/+SQEFpeTCZoGlcN/uJZ3adTQWF9rY=
+	t=1754978305; cv=none; b=nWATI3aXK7bX7780wuL/gQ9ADFqwm9GEdfg2w9+Co1ectvQS8MPYqvSjpsYJQAYRTIuXNzzhIdxM6vkTij7cj2GR5oqr1kjB1WEAhqBANZzFLI4Zm7rnCLGF7GVvyJWDlw0RbIvaenKEVS9pPWSu1BbFqbaVJlaHlq66OcvGPNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754976289; c=relaxed/simple;
-	bh=Ci+rBnrVUnlt6XLcjC+eInQ0vDlesiNKwnv7/kH5bc4=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=UxtEutd7026dy/J1urvTwzXWGRbvVZUSYisy9Gphf7p8nNWH2y/gp4+9E/AsjClwDpqM263u8BzzHGhl8f/LG6PaAzky3uNdJWis0kacBFF+kP/0jIvsDBxosTa/UOeu4R4Kax7DsbHO/P5O+bHYlMeODmW1E6Za5AuJwO1SGIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Oka7R82l; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1754978305; c=relaxed/simple;
+	bh=MyTkbvLfHIO2qHk8lxsby4u8OP9pTm9ANIHAA5ClNfo=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=YYgFejD0Yu911JyhWuqnRnAJMprJTVM7ecBNAO/fWAefM1igcoWDr15Yn295RMBdWE8O557p7dnMUNwdFaCsGSX8ZHumVoi7o1gNAMwZwZ8QgkVpAap6+2l9tH4qP2DolOhTDXmqBdbu/1tPzASGoyr+5fsQCXG8Y7LLS5+1Fe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E9UUwlUL; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754976287; x=1786512287;
+  t=1754978303; x=1786514303;
   h=date:from:to:cc:subject:message-id;
-  bh=Ci+rBnrVUnlt6XLcjC+eInQ0vDlesiNKwnv7/kH5bc4=;
-  b=Oka7R82lt85K7dq4Wn72wbDjtblqPkr3gdyosprNZw5K8arOm0pm3Ug4
-   Rh37QkoioT1Tgd0Ooo89LodTIT8Jim7qg3zOGyAVHuo0AXqN9Nhd+/NQi
-   +oHi2tQPLYPh4R/pX2l8tXhGtTi8O4SFrAmS2VrHmlAIJfOCKmI1Qw+ef
-   iblIA0HkYI1SzuiNqm1pIXFSwrAsmE5G6QYQxHDTfB7dNwMCqMdWmTSh5
-   xq6/3rAUS1zZWUizAXQ8afRytSaQsePkj47OTv2691EQT9lqOOXipP5Mq
-   x+bV72risOgTAOUeFvLTg6VrwTmK/9PWYs4T8NrVKH471NSTWdfh48BBP
+  bh=MyTkbvLfHIO2qHk8lxsby4u8OP9pTm9ANIHAA5ClNfo=;
+  b=E9UUwlUL9NPNemZMYCEIBiraILpApC/4aVXV4wH53BGNgocc8USAO7cV
+   wMihBM/efyIRdxX5vrnv43deXhAXy+dMuwvSq8LTDW0RfJ4VC+da7wBVw
+   KVvJ5n88w77xQrymWeOQXdJccFJwz3LeWoTdLBDU7E1hTOuJdJKJZnPZT
+   s4hjAoLy94raMCjBKlClTgE+M9JnbFvBf4qrHMOAACwF+KDYOOqP3RXzB
+   AQ4pgwO529/aQHagvhSdIrby85r+H4ktpw6qnlH7UR8rEDKXStY2x8wMd
+   dYrAQEioDFtVmhwB4HZFcmjfV+BrqceyQzkjyQEg3sgoZv4wjtoGTzivR
    g==;
-X-CSE-ConnectionGUID: kmbc46HgQeuhiFCZOrK4UQ==
-X-CSE-MsgGUID: pwl/0uvBQy6QyA8dN6wo7g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="61039822"
+X-CSE-ConnectionGUID: wY7NEpHVRnKb1ysAhI+Bmw==
+X-CSE-MsgGUID: 4APW3w+5S0y6wG7Tnb2QkQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="57163981"
 X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="61039822"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 22:24:46 -0700
-X-CSE-ConnectionGUID: 1MWEYEKqQ8WM4pXr/ZXEzA==
-X-CSE-MsgGUID: Benkg4nkTIize4wXlBlMmg==
+   d="scan'208";a="57163981"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 22:58:22 -0700
+X-CSE-ConnectionGUID: wL+OHP6LSXqRchuFvhiIXA==
+X-CSE-MsgGUID: KUTaFYXaQhWHR22fsrA+Zg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="165601880"
+   d="scan'208";a="166904250"
 Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by fmviesa007.fm.intel.com with ESMTP; 11 Aug 2025 22:24:46 -0700
+  by fmviesa010.fm.intel.com with ESMTP; 11 Aug 2025 22:58:22 -0700
 Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1ulhV5-0006R2-12;
-	Tue, 12 Aug 2025 05:24:43 +0000
-Date: Tue, 12 Aug 2025 13:24:33 +0800
+	id 1uli1b-0006S9-25;
+	Tue, 12 Aug 2025 05:58:19 +0000
+Date: Tue, 12 Aug 2025 13:58:03 +0800
 From: kernel test robot <lkp@intel.com>
 To: Manivannan Sadhasivam <mani@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:misc-endpoint] BUILD SUCCESS
- 799639e03fcfd943c7d1cc7330f248c2d017686e
-Message-ID: <202508121327.4MdI5wsz-lkp@intel.com>
+Subject: [pci:controller/amd-mdb] BUILD SUCCESS
+ 1d0156c8b230ca74272708a3206684e6d6157302
+Message-ID: <202508121357.IlKDZV8F-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -74,13 +74,13 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc-endpoint
-branch HEAD: 799639e03fcfd943c7d1cc7330f248c2d017686e  misc: pci_endpoint_test: Fix array underflow in pci_endpoint_test_ioctl()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/amd-mdb
+branch HEAD: 1d0156c8b230ca74272708a3206684e6d6157302  PCI: amd-mdb: Add support for PCIe RP PERST# signal handling
 
-elapsed time: 1077m
+elapsed time: 1111m
 
-configs tested: 242
-configs skipped: 6
+configs tested: 243
+configs skipped: 5
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -190,6 +190,7 @@ m68k                             allyesconfig    clang-19
 m68k                             allyesconfig    gcc-15.1.0
 m68k                                defconfig    clang-19
 microblaze                       allmodconfig    clang-19
+microblaze                       allmodconfig    gcc-15.1.0
 microblaze                        allnoconfig    gcc-15.1.0
 microblaze                       allyesconfig    clang-19
 microblaze                       allyesconfig    gcc-15.1.0
@@ -197,8 +198,8 @@ microblaze                          defconfig    gcc-15.1.0
 mips                              allnoconfig    gcc-15.1.0
 mips                      maltaaprp_defconfig    clang-22
 nios2                             allnoconfig    gcc-11.5.0
+nios2                             allnoconfig    gcc-15.1.0
 nios2                               defconfig    gcc-11.5.0
-nios2                               defconfig    gcc-15.1.0
 nios2                 randconfig-001-20250811    gcc-10.5.0
 nios2                 randconfig-001-20250812    gcc-12.5.0
 nios2                 randconfig-002-20250811    gcc-11.5.0
