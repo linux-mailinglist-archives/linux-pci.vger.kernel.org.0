@@ -1,295 +1,446 @@
-Return-Path: <linux-pci+bounces-34002-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34008-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 291ADB25784
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 01:29:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 395DFB257AE
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 01:43:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA8B65A7C38
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 23:29:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A9362A862D
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 23:43:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BA0B2FB980;
-	Wed, 13 Aug 2025 23:29:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E6A52F2910;
+	Wed, 13 Aug 2025 23:43:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jtAWmxKB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mf3gVVL5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2050.outbound.protection.outlook.com [40.107.94.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88462D0C80;
-	Wed, 13 Aug 2025 23:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755127752; cv=fail; b=ahlkf6vSrmzcrTtvmkgDTkyj4YWUUjUkHgrMosbifuQjiTQbEjTKcO1zkjbEtsAlyYqL6Q+3w3aV7k2QGPEPiw53jKirmR2pxdRVJpv8i1fkRbn55GlwZtyAvvY4UV8CnqQMb4cslBIdU3Mzu3JxzmmYt7cpVMtb2C4chIEE4DM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755127752; c=relaxed/simple;
-	bh=3caN8gwVBREgNKDTn1YYCWuiZCKZGWgqUhzyDdqSjBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=XPHuoWBzi+bHiMVXsnE6XZRmY2dpkABdaTgza+OI2d9WxCLCWYwDv4Fjo7nwxvZIw4YreBu9vAsJE2AmqLX1elduRSOx5ZL0gyM3nulgrwp+Tz5A8tr6wa7z7q4ZZKPP00kdkUGTBXYncf5joEwMgL0hCV+yzpPlaqD1HpyZLBw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jtAWmxKB; arc=fail smtp.client-ip=40.107.94.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=unp5PIM9byZjHbjeIgym1RCbRmFNm4jHkjWO0H6M8DaRLe86HpVIkjJlYWKhq8xSpMFt/gcFzOhVxglRBfLQ+RVmjMar/CyZGwg2fDW7ai2st6IkBEVIOK2vMlxzOyKPpjKcRa7ixWhaOELxHFMVM36t4giJpQqyg0RxX5cHA/gv4IVcSLpY/onxMSVza1eEpjTQEI1yAevtF+ng/phcMd82pT3czETwmvQvseKUoCwCRKRvIlkHBl5b0dcpTxYFSH1zpAYQX+5pXz9ILcTT4utF2l0foejhH0+P8iR3FuW5guMkZM2TGW6Zlt828pd27E7W6miXrtjKdfRt4mGQpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2fR8nqfwuJ6h4HToJEsohu4TFxwylO5/4mzACJaFXck=;
- b=spF00JoeLqGyadQU5Kmpk4MStxMXFztLWDkSgXX+80TuZMNC7a/jBelYFZpdXxM/PmCB4bNID+0sK5vbLZMVMqVzoOux0ufnSsc7fCgYpNwFnnx967WRaOTjLJ7ktNImiWZIFkNqCLbyPZKrnqYTf/d+jECBb8hRuhburGUjUCZveAgIuexs5xghYcNLI8NKGu2j8YwEhF+WToCTsB33jM9KVdYKIe0aaoDUAquo7bgQSQWKSmORr3rGD+iQCIqvJCH8E2xqCon+fZgxFb0Cta5GLTwSk4IEQ+ZfKlBo1i5GbeRjAlKZDL4cjRlHtRcEHRy7NgXBYLJHTgXjoJMWpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2fR8nqfwuJ6h4HToJEsohu4TFxwylO5/4mzACJaFXck=;
- b=jtAWmxKBperM0f4vL4bTwQgqUrA90XFxZX4o6KFjz5wACqvRjZqErDAzUGqesTWe9eEFfJMucy/I9w5MOrNLvkfkzb+sL8ir/cHG1hu6tpl3HJptO4litEu4Qdx1TV74YJDyy/UMaWyhg4bEkDddRUFg1DmEgn23QYMRfkZ/s1k8RyvwUCkG2bptA8W410xI5u+nYbcfAZ6MEuO51K9PILS1TQuWt5EvjYxXhjp4YSVdXPbkJsh5aiD/oV6khL0dBKc7YCfkjak/wm0B3fWPCh3oWD9P3aoFUgh1qifxibrQPGjnQFCNNCqO/tmnGInji1Mg/5Rd0awZpuhqRo5Gbg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5968.namprd12.prod.outlook.com (2603:10b6:408:14f::7)
- by PH7PR12MB7019.namprd12.prod.outlook.com (2603:10b6:510:1b9::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.22; Wed, 13 Aug
- 2025 23:29:06 +0000
-Received: from LV2PR12MB5968.namprd12.prod.outlook.com
- ([fe80::e6dd:1206:6677:f9c4]) by LV2PR12MB5968.namprd12.prod.outlook.com
- ([fe80::e6dd:1206:6677:f9c4%7]) with mapi id 15.20.9009.017; Wed, 13 Aug 2025
- 23:29:06 +0000
-From: John Hubbard <jhubbard@nvidia.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Alexandre Courbot <acourbot@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	nouveau@lists.freedesktop.org,
-	linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH] gpu: nova-core: avoid probing non-display/compute PCI functions
-Date: Wed, 13 Aug 2025 16:28:59 -0700
-Message-ID: <20250813232859.224316-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.50.1
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR05CA0043.namprd05.prod.outlook.com
- (2603:10b6:a03:74::20) To LV2PR12MB5968.namprd12.prod.outlook.com
- (2603:10b6:408:14f::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92872F60A3;
+	Wed, 13 Aug 2025 23:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755128622; cv=none; b=LbvSPxHgXjA61hT0lRV8wK/nAwzOMPWwQCrQKM+gvdd2yep88sGub9uOzi9WPRCxcIVW3+kzIHsXtAvbnhh5xMXVpBI/J5nH04leSdV5My5AdwGYkAW6odK01SkIF+VyMCrZSm8gwQM+HJRCsvaT1CkbXaQ1G/a24RReIF3uHEs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755128622; c=relaxed/simple;
+	bh=WUD+5LHRgd0cb5qv3B4qv6yYvMfh5Md8/8sWpd8KB2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FtB+Wex0mLTRcir2CG5VvBqU0sglXP92yqAdaq4ElCDuCauoOv72vd0GwAo6GeBlFq3liQ2otQxVv7E+M49xmzrrPUSP8GOZvwqg/vUNMgCvR8KGjAaRivfSmsJqfyffaZvQXN+3wV179WybKcR3SVff+A3aUats53IY4ulIqTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mf3gVVL5; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-76e2ea94c7dso722244b3a.2;
+        Wed, 13 Aug 2025 16:43:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755128620; x=1755733420; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IK1UDAHqrS6Wwx5cnSreU+fQQkZ3UY1M1lvt1651jyo=;
+        b=mf3gVVL5a3bsd76hRquf4M/zDJudjuO6mpnBXdY/WXxBHFs8uCYhAp2PikRyuCrq/q
+         ley4aGMcQPjEJyZ50ozG2/xhTWIWxD5s/XBGsfGRn6r0wHW0EbCBRgAMiH2kT5H7A0Ko
+         +3zP9kF/hDUUWCw1WpfefCAsvMErHS+At5arCrxPbgmQOxOkx3KZihYdj1bgomhd+P6n
+         jaYBPDQvnLmuOVBTd/X+OZt69SHu16IO1j22xT2zBm5epw1lxzvW32Z1zW+PuctoGxXR
+         BcoaOL+ka8wIk2IQgWTRQNgx660ofX2/YCaMW+CNFPug+u2oBHbUTPHzeVuACsMVxsDB
+         kO+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755128620; x=1755733420;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IK1UDAHqrS6Wwx5cnSreU+fQQkZ3UY1M1lvt1651jyo=;
+        b=M7bQ6NLSkvUauCTjNWkNrCLyDGB+An54qWx82rXFd6PSWhmatjM0gTXK6+FPTGgocg
+         oG6jcKW5Q3zp3Jcrbm+RaGLLoxZi5JL4q7l2aX+34J43iLreF82Fj37AkWVuBIW0dIWu
+         S0cfw/gQJnMzGW1x8sVMOoyRieinhVI2TvGy6OD+CHxynnmW7aEqaXS4UeqR3kgsN4Vt
+         lRqNOOlw/0xE0BVjV8NZJsI2KF8RZUAI7G5W+UopIeiEoSQUP/kQbMpV05Y1XTL27q1W
+         wFw9tz2WjBioVRug7GOKLRqy5BB5X7g0SGtMZkdaYHr5Mqdf38Hipjml0qEM4l0et9yj
+         5S7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUAX4aO3BFmbMetsuAGm6wgU+H61HSkpJ8QLBR8sl7aNK7FlSkhRdt0zjRerwneKqjS4KIWa/Dww9A4@vger.kernel.org, AJvYcCVoV99fCkTzBhgR9vuT3ZHCVcmGL3qvhBXJp30NgtexWbhU1OHQEMJeepwzrM1/F8Z0WD6qppoHLtPmoFzn@vger.kernel.org, AJvYcCXtT45KdqM5xwXqQqhXYcSfTzNexm3LkO7nMzZqEJKXWsfpXa62tubM0MKCY0Qnbju9q/CsKv96RBNm@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpD+7dbSuFGLpjeqfsmT6OwJXGcFXRud8JIeMkmhRzVvKQD5So
+	eeXI4ChRSZyxfi5H2bulqcvF3CpeBefbcDkIUivjKkuYnqTfXz4f+GoD
+X-Gm-Gg: ASbGnctNEIQW7OvHwar6iS+LAj1Jj9pITGH1SEcTAoEXHZJJ9zvpwQUVnPRfjW8RHoH
+	NjFv016StZqQUryQix6/z+flLqRCTflVgzFic7qqts05ZBGVOEKUo77/oaWYVWgD8eK75B2XxKt
+	WZU5u+2f8kWyp3hevxTz4R87eXxhk8vHJXvQY2mQ+ikuFsabyLXTTcpeEvs9Nr1Rd2wSHXpD8+4
+	1w7kA/Oy35zhsFgUKVnKP76sIfsNDqt/vhVYN1T3voQ/OToK6qZIL6znc9PlDjYD3/F+MWAazkw
+	iMcOPZngRPKW1q2DBh0c63dsBf9rOxzbVPzJH1BCZT7e5YUHu95LTy0Ssp4poQxPrDel6JoBhWN
+	CKJ6LX7yW+dwGk9Zs0h5f/g==
+X-Google-Smtp-Source: AGHT+IFHE6Y9GCZJmlkIBg9XHe8uvOA+KyOLQ6/iXAbyBbilyGyOB9TjvMRcZT/9gWJGKiyaE/2RvQ==
+X-Received: by 2002:a05:6a00:1995:b0:76b:e144:1d91 with SMTP id d2e1a72fcca58-76e2fd72ca2mr1422050b3a.16.1755128619716;
+        Wed, 13 Aug 2025 16:43:39 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-76bccfbce4bsm32612704b3a.77.2025.08.13.16.43.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Aug 2025 16:43:38 -0700 (PDT)
+Date: Thu, 14 Aug 2025 07:42:48 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Alex Elder <elder@riscstar.com>, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, bhelgaas@google.com, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org
+Cc: dlan@gentoo.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, alex@ghiti.fr, p.zabel@pengutronix.de, tglx@linutronix.de, 
+	johan+linaro@kernel.org, thippeswamy.havalige@amd.com, namcao@linutronix.de, 
+	mayank.rana@oss.qualcomm.com, shradha.t@samsung.com, inochiama@gmail.com, 
+	quic_schintav@quicinc.com, fan.ni@samsung.com, devicetree@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, spacemit@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Junzhong Pan <panjunzhong@linux.spacemit.com>
+Subject: Re: [PATCH 4/6] phy: spacemit: introduce PCIe/combo PHY
+Message-ID: <valmrbddij2dn4fjxefr46zud2u6eco2isyaa62sd66d27foyl@4hrhafqftgb5>
+References: <20250813184701.2444372-1-elder@riscstar.com>
+ <20250813184701.2444372-5-elder@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5968:EE_|PH7PR12MB7019:EE_
-X-MS-Office365-Filtering-Correlation-Id: 930f4077-a465-4afe-6df6-08dddac13253
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?dfJYzBrFpoLdeVE785Dk+2i5MTsDrO/DesAY01ptrXipZ12uDxacksHaaZHo?=
- =?us-ascii?Q?p2FvMZLQaULqwYAc4y6R0Xgpcli6TUAfwNBfcA9GmNxAp6RAVSkKxkiqgkvc?=
- =?us-ascii?Q?0PzONQsVVMznzpr+0hR2Gjze2oFSP3jx2vmct/jwqnR6AbWRGjzsEx6QzFXD?=
- =?us-ascii?Q?7gw8L23p7a/AlbF2NYxLKIZvl4P31/vxwN3+juDB34qnkTLBfGzgl38vfBno?=
- =?us-ascii?Q?oXdLyCkV1mL7lxMByYzTXYoUjaeseg3di0OZWu89o0lfQBOcKlv1W5AZv8Uc?=
- =?us-ascii?Q?Czsu5/SRBZ3J8h7dXfbXkNCbN2RlO9qnM8KpZcMWgWNqK58h1/wybyYr7Q3n?=
- =?us-ascii?Q?4RNz5MLqh/6v4butp603axgr8HNeSS96+tKYgRHXqdYqzyQz0aQdmSKRQxB+?=
- =?us-ascii?Q?5bRqdMQf7qZvFpOIfFNl1rCD4xsuGIIKXqSeZmDNVRudXkZDgnJ2wfzEoXiR?=
- =?us-ascii?Q?IwCXFT1MmmfDk2aEBJJxLwH70b6BFqefFrdRJJ7GTVODIRPOKwbZxqGWHjac?=
- =?us-ascii?Q?1ykY6ciSrRDlKpH6S2qEoMxIFHZCoSnM1kPolcMR93PkmFVJQuorwzRiJirG?=
- =?us-ascii?Q?xTZWtMHF40DSNK7+UX61e1uO5T7j/IK6Y9rwciMFyXDR6i2JbYyxjZmaWpTM?=
- =?us-ascii?Q?Exyl56TTM71qYTl5a29Gi+MjJklR8OJoSv6bc8pfEYnUNkSUxgkJJ4W/mw36?=
- =?us-ascii?Q?e6oIn4kiuGIT4UHRF6lsI+HN9A/aDPgRN65n7aasRAR07snhqUXe2JhLpEH4?=
- =?us-ascii?Q?ujakchfV+3Tzwev+FBrJHtKs/rQxp21eqlAuOHgxnktV4stfIcKFyktGAemL?=
- =?us-ascii?Q?xdaCCuQCKRwf/0toIc1QkKzC1iCA5C1157nhlYlsLOjCAFvDafSI1V4YEAdN?=
- =?us-ascii?Q?2ScpJuentpEjb595DT30Knc8jJ8bY2P7WCiji9Vw9L2LX38u9EGs65j/pqyM?=
- =?us-ascii?Q?RiNri8UzGzM0iLT72P8EirqB2EdaSDmU6O0aP5iW/cHe1UD/CKub9MSxQ+kz?=
- =?us-ascii?Q?GQunCuy4gYv9hzuMfKZH8tKNCSsnZi3Sav+RRd+Mk6zgmXbFuw53CjSRdJw0?=
- =?us-ascii?Q?zUE08TU2NYam+O56UDtg4toGzJ5Usck98YsrFmbFitEyfowb/tf5VG4xjVtS?=
- =?us-ascii?Q?jOoIVEuOLEGni0oG0P/IMNkCdNNJHxvAhQnwO9vJ3ijf5edMK/cYmJlWw2Kj?=
- =?us-ascii?Q?evYizw6RZukJ1+LK/kOF+A/PKXJLnhf4i4fIDBohn60GkksNYghNn7SvTdku?=
- =?us-ascii?Q?icHECsLc7H8M0NFL06exeLHPUMFYaBricQwVe+w240dRiDQqjMFXo57DWC/G?=
- =?us-ascii?Q?p6PJnJvGdj0dxT15+FV9/x8tWQLcAt5qPJWTtqljm6hjpwPJ8Njj+J0Uug1b?=
- =?us-ascii?Q?I7CFBhU9x//0ZLpHMQvebryfJuEADsBZFbBxVJfxjiJ2lmHN+ctlnef3JETG?=
- =?us-ascii?Q?UYgExr4hRJg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5968.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?k1gbTumFMkVu/MPLEYnuI9xTjweGEwe9D2foBSH13FofR+UfIbgnmClSt+v2?=
- =?us-ascii?Q?4QbOeKCpHYztHUNisBHQrXRidfUqGxkFHdxBshrSK4Texb/o6b/f03M0BOt2?=
- =?us-ascii?Q?t79Stw2zp6DtJkaYgtFBcZHHpgayKVjYRH3BXg8CRTzudIoPGuTWrrIQmOkq?=
- =?us-ascii?Q?+jgN05RCuzkG76wfnIFJAOHU/tUd2eeZ2AdE/tJJWtl+eDk6FeEM0Rqhh0mt?=
- =?us-ascii?Q?5JZs9eCmA5KEgQjqjl6IncMjwL4VMIQwKH5Nt+9oCe4P9W/gSXdZiWtJrOrd?=
- =?us-ascii?Q?kPJG6QqKlxKySoN6lSsxsr0cJmpj24O7E6SJSYiEyKs7h4sZYjE4rWs+7156?=
- =?us-ascii?Q?bUoA8aBPjPKQJSvDLJCkXcdixSmB9KTHVFQ4yDgyCR6JATkgq8ylHjyOqIWs?=
- =?us-ascii?Q?8s/L+6sNR7k9nMJAWMyfMM8YI5o4ZX8t0Sk55AKyPRoxlZUxTt3mD1TgXrpn?=
- =?us-ascii?Q?Hg5GTqvi5O/IwiOccl7GmeTCaI+YlnlY+GxE/aT/djne9otTG+AfvADSqviC?=
- =?us-ascii?Q?JFjZA3F5RGBmdE8cNl6wFNdVk4rCTMpukW94Ef+a42u5zpMgruIgMveyiHXx?=
- =?us-ascii?Q?Xl/XEpMSdqwF253/mtWCF8813yS+YmxJp8HBgmpyuqcqaHWp64cmOMD5Amx2?=
- =?us-ascii?Q?XXCj5mTJwcgsY47GC3gnBXl96BP083DRKWlyEMtDpzDa9MnLkZlA1I6IBuRB?=
- =?us-ascii?Q?lMMq+LPDVEEWDCk7ZM6RfWzv/Lcw5NDCRa3RnyNaSgMVueg3LzcPabnck55D?=
- =?us-ascii?Q?CEpnITGqvqAqoAWUXuWf+POBS2zS3ywLsbWnGpcRnLBiOWSizitoRusln8p9?=
- =?us-ascii?Q?kg02zNrU/UjRILPG+LfiW4ZJ0lFk0XuIofVRdq/ZtjZYVWxgHCwpr/lXOjWh?=
- =?us-ascii?Q?zB33C/+IP6/X5sEnt7wF3rPsMe1i01iLXvX13pxHqj35UMgMCxWL8IkVNUfb?=
- =?us-ascii?Q?bHLtn9kqx3Um3DGjHpQHdvPBi1xeuqu2ntSZPgK9PHq2XML7XQW5i1VHayhG?=
- =?us-ascii?Q?crJmZ/xirzN6o+YCXiNL3Ua4SKLJQDElgHi42E0u39y4cdLl2WoHEsLfzrcg?=
- =?us-ascii?Q?MxK0zeQOeOnPFzgOd7RCyEBMFPIluBypG5Y1piVKQnXxL+cpPTrpeZ6BEGX6?=
- =?us-ascii?Q?spldFV12hSQuDbQsHFMUJ92BT+j6aYEQ9qVyuk/R0Vaa5e+W+/lRfCYECsP4?=
- =?us-ascii?Q?yFjNyxqrBSEw9nsjMyAKyOdJZaBP/0jUxml3r0dJQDpl7PwRkFEmLfdKAfmF?=
- =?us-ascii?Q?eFO92If8V2+d+E6BmCprMI34kJxIBl8EAbhqF4pePtEmoXWmcMmghNHLr5bS?=
- =?us-ascii?Q?/oCc+igBexc9B8BBCENsDBUDNY1x2YxyJvGYS5QOObt8/w48YdQHIRQIochl?=
- =?us-ascii?Q?1N0qBMFks5Vx68927EMNQ2/9uIH7rB16vLyzPGFnFDpirYSQ+mxOcTQXC0HJ?=
- =?us-ascii?Q?C+buptO4Ym4603udeWF7ybWpIOUoNJevApg58aylvuHKAna6kLdYd5A4m6Ts?=
- =?us-ascii?Q?yUNFRFliJn/XG9DYaOSQlFdrwsm/2ExLmBEYJNxLqlHOZz9YdFr/CUZ+NAPs?=
- =?us-ascii?Q?kscOqcen1hGXKyv3wS088yBpfgHDJ6PgwQ4CZZto?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 930f4077-a465-4afe-6df6-08dddac13253
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5968.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2025 23:29:06.5928
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hF8hnnnhbk2Fq18dacdOuNDUqSGGL/X7nKK4WycrU0Era/Y8QXzFol5nZKO28JPqKYLkEFh9brJcF2gPojp4cQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7019
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250813184701.2444372-5-elder@riscstar.com>
 
-This avoids a kernel crash that reliably happens 100% of the time on my
-particular hardware (x86 with Ampere or Blackwell GPUs installed).
+On Wed, Aug 13, 2025 at 01:46:58PM -0500, Alex Elder wrote:
+> Introduce a driver that supports three PHYs found on the SpacemiT
+> K1 SoC.  The first PHY is a combo PHY that can be configured for
+> use for either USB 3 or PCIe.  The other two PHYs support PCIe
+> only.
+> 
+> All three PHYs must be programmed with an 8 bit receiver termination
+> value, which must be determined dynamically; only the combo PHY is
+> able to determine this value.  The combo PHY performs a special
+> calibration step at probe time to discover this, and that value is
+> used to program each PHY that operates in PCIe mode.  The combo
+> PHY must therefore be probed--first--if either of the PCIe-only
+> PHYs will be used.
+> 
+> During normal operation, the USB or PCIe driver using the PHY must
+> ensure clocks and resets are set up properly.  However clocks are
+> enabled and resets are de-asserted temporarily by this driver to
+> perform the calibration step on the combo PHY.
+> 
+> Tested-by: Junzhong Pan <panjunzhong@linux.spacemit.com>
+> Signed-off-by: Alex Elder <elder@riscstar.com>
+> ---
+>  drivers/phy/Kconfig                |  11 +
+>  drivers/phy/Makefile               |   1 +
+>  drivers/phy/phy-spacemit-k1-pcie.c | 639 +++++++++++++++++++++++++++++
+>  3 files changed, 651 insertions(+)
+>  create mode 100644 drivers/phy/phy-spacemit-k1-pcie.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 58c911e1b2d20..0fa343203f289 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -101,6 +101,17 @@ config PHY_NXP_PTN3222
+>  	  schemes. It supports all three USB 2.0 data rates: Low Speed, Full
+>  	  Speed and High Speed.
+>  
+> +config PHY_SPACEMIT_K1_PCIE
+> +	tristate "PCIe and combo PHY driver for the SpacemiT K1 SoC"
+> +	depends on ARCH_SPACEMIT || COMPILE_TEST
+> +	depends on HAS_IOMEM
+> +	depends on OF
+> +	select GENERIC_PHY
+> +	default ARCH_SPACEMIT
+> +	help
+> +	  Enable support for the PCIe and USB 3 combo PHY and two
+> +	  PCIe-only PHYs used in the SpacemiT K1 SoC.
+> +
+>  source "drivers/phy/allwinner/Kconfig"
+>  source "drivers/phy/amlogic/Kconfig"
+>  source "drivers/phy/broadcom/Kconfig"
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index c670a8dac4680..20f0078e543c7 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_PHY_SNPS_EUSB2)		+= phy-snps-eusb2.o
+>  obj-$(CONFIG_USB_LGM_PHY)		+= phy-lgm-usb.o
+>  obj-$(CONFIG_PHY_AIROHA_PCIE)		+= phy-airoha-pcie.o
+>  obj-$(CONFIG_PHY_NXP_PTN3222)		+= phy-nxp-ptn3222.o
+> +obj-$(CONFIG_PHY_SPACEMIT_K1_PCIE)	+= phy-spacemit-k1-pcie.o
+>  obj-y					+= allwinner/	\
+>  					   amlogic/	\
+>  					   broadcom/	\
+> diff --git a/drivers/phy/phy-spacemit-k1-pcie.c b/drivers/phy/phy-spacemit-k1-pcie.c
+> new file mode 100644
+> index 0000000000000..32dce53170fbb
+> --- /dev/null
+> +++ b/drivers/phy/phy-spacemit-k1-pcie.c
+> @@ -0,0 +1,639 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * SpacemiT K1 PCIe and PCIe/USB 3 combo PHY driver
+> + *
+> + * Copyright (C) 2025 by RISCstar Solutions Corporation.  All rights reserved.
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +
+> +#include <dt-bindings/phy/phy.h>
+> +
+> +/*
+> + * Three PCIe ports are supported in the SpacemiT K1 SoC, and this driver
+> + * supports their PHYs.
+> + *
+> + * The PHY for PCIe port A is different from the PHYs for ports B and C:
+> + * - It has one lane, while ports B and C have two
+> + * - It is a combo PHY can be used for PCIe or USB 3
+> + * - It can automatically calibrate PCIe TX and RX termination settings
+> + *
+> + * The PHY functionality for PCIe ports B and C is identical:
+> + * - They have two PCIe lanes (but can be restricted to 1 via Device Tree)
+> + * - They are used for PCIe only
+> + * - They are configured using TX and RX values computed for port A
+> + *
+> + * A given board is designed to use the combo PHY for either PCIe or USB 3.
+> + * Whether the combo PHY is configured for PCIe or USB 3 is specified in
+> + * Device Tree using a phandle plus an argument.  The argument indicates
+> + * the type (either PHY_TYPE_PCIE or PHY_TYPE_USB3).
+> + *
+> + * Each PHY depends on clocks and resets provided by the controller
+> + * hardware (PCIe or USB) it is associated with.  The controller drivers
+> + * are required to enable any clocks and de-assert any resets that affect
+> + * PHY operation.
+> + *
+> + * PCIe PHYs must be programmed with RX and TX calibration values.  The
+> + * combo PHY is the only one that can determine these values.  They are
+> + * determined by temporarily enabling the combo PHY in PCIe mode at probe
+> + * time (if necessary).  This calibration only needs to be done once, and
+> + * when it has completed the TX and RX values are saved.
+> + *
+> + * To allow the combo PHY to be enabled for calibration, the resets and
+> + * clocks it uses in PCIe mode must be supplied.
+> + */
+> +
+> +struct k1_pcie_phy {
+> +	struct device *dev;		/* PHY provider device */
+> +	struct phy *phy;
+> +	void __iomem *regs;
+> +	u32 pcie_lanes;			/* Max unless limited by DT */
+> +	/* The remaining fields are only used for the combo PHY */
+> +	u32 type;			/* PHY_TYPE_PCIE or PHY_TYPE_USB3 */
+> +	struct regmap *pmu;
+> +};
+> +
+> +#define CALIBRATION_TIMEOUT		500000	/* microseconds */
+> +#define PLL_TIMEOUT			500000	/* microseconds */
+> +#define POLL_DELAY			500	/* microseconds */
+> +
+> +/* Selecting the combo PHY operating mode requires PMU regmap access */
+> +#define SYSCON_PMU			"spacemit,syscon-pmu"
+> +
+> +/* PMU space, for selecting between PCIe and USB3 mode on the combo PHY */
+> +
+> +#define PMUA_USB_PHY_CTRL0			0x0110
+> +#define COMBO_PHY_SEL			BIT(3)	/* 0: PCIe; 1: USB3 */
+> +
+> +#define PCIE_CLK_RES_CTRL			0x03cc
+> +#define PCIE_APP_HOLD_PHY_RST		BIT(30)
+> +
+> +/* PHY register space */
+> +
+> +/* Offset between lane 0 and lane 1 registers when there are two */
+> +#define PHY_LANE_OFFSET				0x0400
+> +
+> +#define PCIE_PU_ADDR_CLK_CFG			0x0008
+> +#define PLL_READY			BIT(0)		/* read-only */
+> +#define CFG_RXCLK_EN			BIT(3)
+> +#define CFG_TXCLK_EN			BIT(4)
+> +#define CFG_PCLK_EN			BIT(5)
+> +#define CFG_PIPE_PCLK_EN		BIT(6)
+> +#define CFG_INTERNAL_TIMER_ADJ		GENMASK(10, 7)
+> +#define TIMER_ADJ_USB		0x2
+> +#define TIMER_ADJ_PCIE		0x6
+> +#define CFG_SW_PHY_INIT_DONE		BIT(11)	/* We set after PLL config */
+> +
+> +#define PCIE_RC_DONE_STATUS			0x0018
+> +#define CFG_FORCE_RCV_RETRY		BIT(10)
+> +
+> +#define PCIE_RC_CAL_REG2			0x0020
+> +#define RC_CAL_TOGGLE			BIT(22)
+> +#define CLKSEL				GENMASK(31, 29)
+> +#define CLKSEL_24M		0x3
+> +
+> +#define PCIE_PU_PLL_1				0x0048
+> +#define REF_100_WSSC			BIT(12)	/* 1: input is 100MHz, SSC */
+> +#define FREF_SEL			GENMASK(15, 13)
+> +#define FREF_24M		0x1
+> +#define SSC_DEP_SEL			GENMASK(19, 16)
+> +#define SSC_DEP_NONE		0x0
+> +#define SSC_DEP_5000PPM		0xa
+> +#define SSC_MODE			GENMASK(21, 20)
+> +#define SSC_MODE_DOWN_SPREAD	0x3
+> +#define SSC_OFFSET			GENMASK(23, 22)
+> +#define SSC_OFFSET_0_PPM	0x0
+> +
+> +#define PCIE_PU_PLL_2				0x004c
+> +#define GEN_REF100			BIT(4)	/* 1: generate 100MHz clk */
+> +
+> +#define PCIE_RX_REG1				0x0050
+> +#define EN_RTERM			BIT(3)
+> +#define AFE_RTERM_REG			GENMASK(11, 8)
+> +
+> +#define PCIE_RX_REG2				0x0054
+> +#define RX_RTERM_SEL			BIT(5)	/* 0: use AFE_RTERM_REG value */
+> +
+> +#define PCIE_LTSSM_DIS_ENTRY			0x005c
+> +#define CFG_REFCLK_MODE			GENMASK(9, 8)
+> +#define RFCLK_MODE_DRIVER	0x1
+> +#define OVRD_REFCLK_MODE		BIT(10)	/* 1: use CFG_RFCLK_MODE */
+> +
+> +#define PCIE_TX_REG1				0x0064
+> +#define TX_RTERM_REG			GENMASK(15, 12)
+> +#define TX_RTERM_SEL			BIT(25)	/* 1: use TX_RTERM_REG */
+> +
+> +#define USB3_TEST_CTRL				0x0068
+> +
+> +#define PCIE_RCAL_RESULT			0x0084	/* Port A PHY only */
+> +#define RTERM_VALUE_RX			GENMASK(3, 0)
+> +#define RTERM_VALUE_TX			GENMASK(7, 4)
+> +#define R_TUNE_DONE			BIT(10)
+> +
+> +static u32 k1_phy_rterm = ~0;     /* Invalid initial value */
+> +
+> +/* Save the RX and TX receiver termination values */
+> +static void k1_phy_rterm_set(u32 val)
+> +{
+> +	k1_phy_rterm = val & (RTERM_VALUE_RX | RTERM_VALUE_TX);
+> +}
+> +
+> +static bool k1_phy_rterm_valid(void)
+> +{
+> +	/* Valid if no bits outside those we care about are set */
+> +	return !(k1_phy_rterm & ~(RTERM_VALUE_RX | RTERM_VALUE_TX));
+> +}
+> +
+> +static u32 k1_phy_rterm_rx(void)
+> +{
+> +	return FIELD_GET(RTERM_VALUE_RX, k1_phy_rterm);
+> +}
+> +
+> +static u32 k1_phy_rterm_tx(void)
+> +{
+> +	return FIELD_GET(RTERM_VALUE_TX, k1_phy_rterm);
+> +}
+> +
+> +/* Only the combo PHY has a PMU pointer defined */
+> +static bool k1_phy_port_a(struct k1_pcie_phy *k1_phy)
+> +{
+> +	return !!k1_phy->pmu;
+> +}
+> +
+> +/*
+> + * Select PCIe or USB 3 mode for the combo PHY.  Return 1 if the bit
+> + * was changed, 0 if it was not, or a negative error value otherwise.
+> + */
+> +static int k1_combo_phy_sel(struct k1_pcie_phy *k1_phy, bool usb3)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_test_bits(k1_phy->pmu, PMUA_USB_PHY_CTRL0, COMBO_PHY_SEL);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* If it's already in the desired state, we're done */
+> +	if (!!ret == usb3)
+> +		return 0;
+> +
+> +	/* Change the bit */
+> +	ret = regmap_assign_bits(k1_phy->pmu, PMUA_USB_PHY_CTRL0,
+> +				 COMBO_PHY_SEL, usb3);
+> +
+> +	return ret < 0 ? ret : 1;
+> +}
+> +
 
-The problem is that NovaCore has so far been very sloppy about figuring
-out if probe() has found a supported PCI PF (Physical Function). By that
-I mean: probe() sets up BAR0 (which involves a lot of very careful
-devres and Device<Bound> details behind the scenes). And then if it is
-handling a non-supported device such as the .1 audio PF on many GPUs, it
-fails out due to an unexpected BAR0 size. We have been fortunate that
-the BAR0 sizes are different.
+> +static void k1_pcie_phy_init_pll(struct k1_pcie_phy *k1_phy,
+> +				 void __iomem *regs, bool pcie)
+> +{
+> +	void __iomem *virt;
+> +	u32 timer_adj;
+> +	u32 ssc_dep;
+> +	u32 val;
+> +
+> +	if (pcie) {
+> +		timer_adj = TIMER_ADJ_PCIE;
+> +		ssc_dep = SSC_DEP_NONE;
+> +	} else {
+> +		timer_adj = TIMER_ADJ_USB;
+> +		ssc_dep = SSC_DEP_5000PPM;
+> +	}
+> +
+> +	/*
+> +	 * Disable 100 MHz input reference with spread-spectrum
+> +	 * clocking and select the 24 MHz clock input frequency
+> +	 */
+> +	virt = k1_phy->regs + PCIE_PU_PLL_1;
+> +	val = readl(virt);
+> +	val &= ~REF_100_WSSC;
+> +
+> +	val &= ~FREF_SEL;
+> +	val |= FIELD_PREP(FREF_SEL, FREF_24M);
+> +
+> +	val &= ~SSC_DEP_SEL;
+> +	val |= FIELD_PREP(SSC_DEP_SEL, ssc_dep);
+> +
+> +	val &= ~SSC_MODE;
+> +	val |= FIELD_PREP(SSC_MODE, SSC_MODE_DOWN_SPREAD);
+> +
+> +	val &= ~SSC_OFFSET;
+> +	val |= FIELD_PREP(SSC_OFFSET, SSC_OFFSET_0_PPM);
+> +	writel(val, virt);
+> +
+> +	if (pcie) {
+> +		virt = regs + PCIE_PU_PLL_2;
+> +		val = readl(virt);
+> +		val |= GEN_REF100;	/* Enable 100 MHz PLL output clock */
+> +		writel(val, virt);
+> +	}
+> +
+> +	/* Enable clocks and mark PLL initialization done */
+> +	virt = regs + PCIE_PU_ADDR_CLK_CFG;
+> +	val = readl(virt);
+> +	val |= CFG_RXCLK_EN;
+> +	val |= CFG_TXCLK_EN;
+> +	val |= CFG_PCLK_EN;
+> +	val |= CFG_PIPE_PCLK_EN;
+> +
+> +	val &= ~CFG_INTERNAL_TIMER_ADJ;
+> +	val |= FIELD_PREP(CFG_INTERNAL_TIMER_ADJ, timer_adj);
+> +
+> +	val |= CFG_SW_PHY_INIT_DONE;
+> +	writel(val, virt);
+> +}
+> +
+> +static int k1_pcie_pll_lock(struct k1_pcie_phy *k1_phy, bool pcie)
+> +{
+> +	u32 val = pcie ? CFG_FORCE_RCV_RETRY : 0;
+> +	void __iomem *virt;
+> +
+> +	writel(val, k1_phy->regs + PCIE_RC_DONE_STATUS);
+> +
+> +	/*
+> +	 * Wait for indication the PHY PLL is locked.  Lanes for ports
+> +	 * B and C share a PLL, so it's enough to sample just lane 0.
+> +	 */
+> +	virt = k1_phy->regs + PCIE_PU_ADDR_CLK_CFG;	/* Lane 0 */
+> +
+> +	return readl_poll_timeout(virt, val, val & PLL_READY,
+> +				  POLL_DELAY, PLL_TIMEOUT);
+> +}
+> +
 
-Really, we should be filtering on PCI class ID instead. These days I
-think we can confidently pick out Nova's supported PF's via PCI class
-ID. And if not, then we'll revisit.
+Can we use standard clk_ops and clk_mux to normalize this process?
 
-There *might* also be a deeper problem involving devres_release_all()
-teardown, but on the other hand, it could also be a difference of
-opinion about how early it is supposed to be droppable. Because failing
-later in the probe() path works just fine.
-
-So instead of digging into devres lifetimes that are already correct
-when used carefully, just stop stress-testing that subsystem via
-inaccurate behavior in the first place:
-
-a) Expose the PCI Device class (available during probe()) to Rust.
-
-b) Use the PCI Device class to filter out non-display, non-compute PFs.
-
-Relevant excerpts of the crash are shown below.
-
-...
-NovaCore 0000:c1:00.0: GPU instance built
-NovaCore 0000:c1:00.1: Probe Nova Core GPU driver.
-NovaCore 0000:c1:00.1: enabling device (0000 -> 0002)
-NovaCore 0000:c1:00.1: probe with driver NovaCore failed with error -22
-...
-Bad IO access at port 0x0 ()
-WARNING: CPU: 26 PID: 748 at lib/iomap.c:45 pci_iounmap+0x3f/0x50
-...
-<kernel::devres::Devres<kernel::pci::Bar<16777216>>>::devres_callback+0x2c/0x70 [nova_core]
-devres_release_all+0xa8/0xf0
-really_probe+0x30f/0x420
-__driver_probe_device+0x77/0xf0
-driver_probe_device+0x22/0x1b0
-__driver_attach+0x118/0x250
-bus_for_each_dev+0x105/0x130
-bus_add_driver+0x163/0x2a0
-driver_register+0x5d/0xf0
-init_module+0x6d/0x1000 [nova_core]
-do_one_initcall+0xde/0x380
-do_init_module+0x60/0x250
-
-...and then:
-BUG: kernel NULL pointer dereference, address: 0000000000000538
-RIP: 0010:pci_release_region+0x10/0x60
-...
-<kernel::devres::Devres<kernel::pci::Bar<16777216>>>::devres_callback+0x36/0x70 [nova_core]
-devres_release_all+0xa8/0xf0
-really_probe+0x30f/0x420
-__driver_probe_device+0x77/0xf0
-driver_probe_device+0x22/0x1b0
-__driver_attach+0x118/0x250
-bus_for_each_dev+0x105/0x130
-bus_add_driver+0x163/0x2a0
-driver_register+0x5d/0xf0
-init_module+0x6d/0x1000 [nova_core]
-do_one_initcall+0xde/0x380
-do_init_module+0x60/0x250
-
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- drivers/gpu/nova-core/driver.rs | 13 +++++++++++++
- rust/kernel/pci.rs              |  6 ++++++
- 2 files changed, 19 insertions(+)
-
-diff --git a/drivers/gpu/nova-core/driver.rs b/drivers/gpu/nova-core/driver.rs
-index 274989ea1fb4..4e0e6f5338e9 100644
---- a/drivers/gpu/nova-core/driver.rs
-+++ b/drivers/gpu/nova-core/driver.rs
-@@ -31,6 +31,19 @@ impl pci::Driver for NovaCore {
-     fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> Result<Pin<KBox<Self>>> {
-         dev_dbg!(pdev.as_ref(), "Probe Nova Core GPU driver.\n");
- 
-+        let class_code = pdev.class();
-+
-+        if class_code != bindings::PCI_CLASS_DISPLAY_VGA
-+            && class_code != bindings::PCI_CLASS_DISPLAY_3D
-+        {
-+            dev_dbg!(
-+                pdev.as_ref(),
-+                "Skipping non-display NVIDIA device with class 0x{:04x}\n",
-+                class_code
-+            );
-+            return Err(kernel::error::code::ENODEV);
-+        }
-+
-         pdev.enable_device_mem()?;
-         pdev.set_master();
- 
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 887ee611b553..b6416fe7bdfd 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -399,6 +399,12 @@ pub fn device_id(&self) -> u16 {
-         unsafe { (*self.as_raw()).device }
-     }
- 
-+    /// Returns the PCI class code (class and subclass).
-+    pub fn class(&self) -> u32 {
-+        // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev`.
-+        unsafe { (*self.as_raw()).class >> 8 }
-+    }
-+
-     /// Returns the size of the given PCI bar resource.
-     pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
-         if !Bar::index_is_valid(bar) {
-
-base-commit: dfc0f6373094dd88e1eaf76c44f2ff01b65db851
--- 
-2.50.1
-
+Regards,
+Inochi
 
