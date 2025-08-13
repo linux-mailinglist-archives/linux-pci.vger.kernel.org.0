@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-33984-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33985-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 167F5B253C4
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 21:15:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66727B253C5
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 21:16:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AE331C2277D
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 19:14:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8CFA51C8113C
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 19:16:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46633309DC3;
-	Wed, 13 Aug 2025 19:14:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAB0E23B63F;
+	Wed, 13 Aug 2025 19:16:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIoA4XqU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GYjpt2o4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CBA302CC9;
-	Wed, 13 Aug 2025 19:14:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E40A1DA61B;
+	Wed, 13 Aug 2025 19:16:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755112472; cv=none; b=YGmP8WU89oAtlajAv5XqKyN56L3JUB8mOpjY0C9asQIaW2pld8xJx85UDitE/KvJZxLBHSNc9ArGTZQhv/B/bh8+SOQQeZ4TLyQ20j0KBXiNEgzZX6uCBrS1GlQ11UgOuEdy8v+ovXkDJofhUpOhDi1odNLwdHGJ/Kx38lRPDKQ=
+	t=1755112581; cv=none; b=oFHC2tLwr0AkFXHqZKWC2lgwi5sBfSWzPQ0yzjd8eiuh/T20vGybzWoq33q+ucyJ3QAyXa3i30Yiv79i4jDBHDtM2ThBIJj8HbGFcslvp0gknbaZGihmylAEyzzmNxRebkob3bFlayRY3mKgWjnUK0Y7qL7ZvimOQ3y14ukYGTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755112472; c=relaxed/simple;
-	bh=nUClwhJtYwKNTD3BTsheIIfynM23uke2nnMDKR/dw/U=;
+	s=arc-20240116; t=1755112581; c=relaxed/simple;
+	bh=SrD7w4wNZc71J2evr6YFzbwB0L5seN4I2VncGYN8LX8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jsqx6Z2FzYPYjoBxh4pcmLcTn282L3Fq7hzetHLA7aJ+kN5or0iJR40KVp2zQAJ6xHQQ3Yue0Ae/SldKCBB6hI5/VlmQ2jL0/vwRrmMmxsZLwFBoaALGRB2zPdQ3sQ/ZqP6ZNBSckueCbaHIZENrN7U9/uJ3WMtKbRVcOdlToXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIoA4XqU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1816C4CEEB;
-	Wed, 13 Aug 2025 19:14:26 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=CK5gkGN+KDHbIrbvg/5pQFb5T1B11whPhLzNkcTZfwD/9iPPQ1FgFCbnXxRiV5bDBbaux/OM1h75LqUdNRp53Nvf0GMtmaNUgQotMbvcfLb83lkg296ACVA0IBgzVI+7KdeHCrG9wHN2M4WBesNcMA4TGOg4p1hKYWrcMPjN1Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GYjpt2o4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2FC0C4CEEB;
+	Wed, 13 Aug 2025 19:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755112470;
-	bh=nUClwhJtYwKNTD3BTsheIIfynM23uke2nnMDKR/dw/U=;
+	s=k20201202; t=1755112580;
+	bh=SrD7w4wNZc71J2evr6YFzbwB0L5seN4I2VncGYN8LX8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YIoA4XqUTpNXnhExVqrRUPly6tQOKOqKHcG8aMyooQ5oKHr6J3Zwu8qFjaArX6zRk
-	 krLSk8qYhwTEerYES5U/cRYpaHtAPNK12j/HB9WkmdRbPeVp1zXLOCA4VXidKjD7RQ
-	 xpoLw/lRqD0sGZ0p2wEZ5wG/FqbmQh6Nxr7C6CPQzvtf29Zv1T8QFV7Q55URl6e56W
-	 QUPSGfCHgrYchLeQbi2HFtvQJTiaclLJO0B8MD+nMnVLdInQUffigozt20Y62qdgLE
-	 eJwOKoQZXBwEagDHf/7KJQseI+FjAQqKBIYha532TQwaLKAh1hsjBGXx0RdwX06mYX
-	 ua34sV6YCgnFw==
-Message-ID: <cc4f69b3-4d9b-4a6f-a296-61ab5ffb9565@kernel.org>
-Date: Wed, 13 Aug 2025 21:14:24 +0200
+	b=GYjpt2o4qCbBWFY3ZOXdIeuqaUF2+X41Jx4IL0FkPmwGsbYTIOm6GygE/0hpmLz2u
+	 bKsOWiO/i/EV0jg3kupQj/8UsETyx3IjublE7dBokT+2IEtBgzLZRiXH9n0UfdTJxt
+	 IZ3sT4CATuC/Xf5O02ufFp1YtkOQ4Vmc28XhkBLyiomnPA02Dyi67J0/dYi9VLZUYh
+	 ZqnL57SIYcpnzkuGO5KbicLaGwwp8HK5oISfBgIDJ/+HKF+MXAQKSVYvhgjW+cUN33
+	 gbP5iS5pdmy7mwQBESX+fbPKi9EucrNjcHp+d4QdgMxn8t2tlJ1Qeb8f9T4D2Gex9/
+	 tFPNgCuBtGmMw==
+Message-ID: <beaa6802-8abe-4cc7-a852-8ecbd60a536c@kernel.org>
+Date: Wed, 13 Aug 2025 21:16:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/13] Enhance the PCIe controller driver for next
- generation controllers
+Subject: Re: [PATCH v7 10/13] PCI: sky1: Add PCIe host support for CIX Sky1
 To: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
  kw@linux.com, mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
  krzk+dt@kernel.org, conor+dt@kernel.org
@@ -60,6 +59,7 @@ Cc: mpillai@cadence.com, fugang.duan@cixtech.com, guoyin.chen@cixtech.com,
  linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20250813042331.1258272-1-hans.zhang@cixtech.com>
+ <20250813042331.1258272-11-hans.zhang@cixtech.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -105,56 +105,223 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250813042331.1258272-1-hans.zhang@cixtech.com>
+In-Reply-To: <20250813042331.1258272-11-hans.zhang@cixtech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 13/08/2025 06:23, hans.zhang@cixtech.com wrote:
-> From: Hans Zhang <hans.zhang@cixtech.com>
-> 
-> ---
-> Dear Maintainers,
-> 
-> This series is Cadence's HPA PCIe IP and the Root Port driver of our
-> CIX sky1. Please help review. Thank you very much.
-> ---
-> 
-> Enhances the exiting Cadence PCIe controller drivers to support
-> HPA (High Performance Architecture) Cadence PCIe controllers.
-> 
-> The patch set enhances the Cadence PCIe driver for HPA support.
-> The header files are separated out for legacy and high performance
-> register maps, register address and bit definitions. The driver
-> read register and write register functions for HPA take the
-> updated offset stored from the platform driver to access the registers.
-> As part of refactoring of the code, few new files are added to the
-> driver by splitting the existing files.
-> This helps SoC vendor who change the address map within PCIe controller
-> in their designs. Setting the menuconfig appropriately will allow
-> selection between RP and/or EP PCIe controller support. The support
-> will include Legacy and HPA for the selected configuration.
-> 
-> The TI SoC continues to be supported with the changes incorporated.
-> 
-> The changes address the review comments in the previous patches where
-> the need to move away from "ops" pointers used in current implementation
-> and separate out the Legacy and HPA driver implementation was stressed.
-> 
-> The scripts/checkpatch.pl has been run on the patches with and without
-> --strict. With the --strict option, 4 checks are generated on 2 patch,
-> which can be ignored. There are no code fixes required for these checks.
-> All other checks generated by ./scripts/checkpatch.pl --strict can be 
-> ignored.
-> 
-> ---
-> Changes for v7
->         - Rebase to v6.17-rc1.
->         - Fixed the error issue of cix,sky1-pcie-host.yaml make dt_binding_check.
->         - CIX SKY1 Root Port driver compilation error issue: Add header
->           file, Kconfig select PCI_ECAM.
-> 
+> +static int sky1_pcie_parse_mem(struct sky1_pcie *pcie)
+> +{
+> +	struct device *dev = pcie->dev;
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	int ret = 0;
+> +
+> +	base = devm_platform_ioremap_resource_byname(pdev, "reg");
+> +	if (IS_ERR(base)) {
+> +		dev_err(dev, "Parse \"reg\" resource err\n");
 
-Where are lore links to all previous versions?
+Syntax is return dev_err_probe, and without \" so grepping works
+correctly (see coding style).
+
+> +		return PTR_ERR(base);
+> +	}
+> +	pcie->reg_base = base;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+> +	if (!res) {
+> +		dev_err(dev, "Parse \"cfg\" resource err\n");
+> +		return -ENXIO;
+> +	}
+> +	pcie->cfg_res = res;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rcsu");
+> +	if (!res) {
+> +		dev_err(dev, "Parse \"rcsu\" resource err\n");
+> +		return -ENXIO;
+> +	}
+> +	pcie->rcsu_base = devm_ioremap(dev, res->start, resource_size(res));
+
+Why aren't you using wrapper over get_resource and ioremap? Isn't
+devm_platform_ioremap_resource_byname exactly what you want?
+
+And if argument from previous versions was - you need to backport it for
+ancient 3.10 kernel - then it would be a no go.
+
+> +	if (!pcie->rcsu_base) {
+> +		dev_err(dev, "ioremap failed for resource %pR\n", res);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "msg");
+> +	if (!res) {
+> +		dev_err(dev, "Parse \"msg\" resource err\n");
+> +		return -ENXIO;
+> +	}
+> +	pcie->msg_res = res;
+> +	pcie->msg_base = devm_ioremap(dev, res->start, resource_size(res));
+> +	if (!pcie->msg_base) {
+> +		dev_err(dev, "ioremap failed for resource %pR\n", res);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int sky1_pcie_parse_property(struct platform_device *pdev,
+> +				    struct sky1_pcie *pcie)
+> +{
+> +	int ret = 0;
+> +
+> +	ret = sky1_pcie_parse_mem(pcie);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	sky1_pcie_init_bases(pcie);
+> +
+> +	return ret;
+> +}
+> +
+> +static int sky1_pcie_start_link(struct cdns_pcie *cdns_pcie)
+> +{
+> +	struct sky1_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
+> +
+> +	sky1_pcie_clear_and_set_dword(pcie->strap_base + STRAP_REG(1),
+> +				      0, LINK_TRAINING_ENABLE);
+> +
+> +	return 0;
+> +}
+> +
+> +static void sky1_pcie_stop_link(struct cdns_pcie *cdns_pcie)
+> +{
+> +	struct sky1_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
+> +
+> +	sky1_pcie_clear_and_set_dword(pcie->strap_base + STRAP_REG(1),
+> +				      LINK_TRAINING_ENABLE, 0);
+> +}
+> +
+> +
+> +static bool sky1_pcie_link_up(struct cdns_pcie *cdns_pcie)
+> +{
+> +	u32 val;
+> +
+> +	val = cdns_pcie_hpa_readl(cdns_pcie, REG_BANK_IP_REG,
+> +				  IP_REG_I_DBG_STS_0);
+> +	return val & LINK_COMPLETE;
+> +}
+> +
+> +static const struct cdns_pcie_ops sky1_pcie_ops = {
+> +	.start_link = sky1_pcie_start_link,
+> +	.stop_link = sky1_pcie_stop_link,
+> +	.link_up = sky1_pcie_link_up,
+> +};
+> +
+> +static int sky1_pcie_probe(struct platform_device *pdev)
+> +{
+> +	const struct sky1_pcie_data *data;
+> +	struct device *dev = &pdev->dev;
+> +	struct pci_host_bridge *bridge;
+> +	struct cdns_pcie *cdns_pcie;
+> +	struct resource_entry *bus;
+> +	struct cdns_pcie_rc *rc;
+> +	struct sky1_pcie *pcie;
+> +	int ret;
+> +
+> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> +	if (!pcie)
+> +		return -ENOMEM;
+> +
+> +	data = of_device_get_match_data(dev);
+> +	if (!data)
+> +		return -EINVAL;
+> +
+> +	pcie->data = data;
+> +	pcie->dev = dev;
+> +	dev_set_drvdata(dev, pcie);
+> +
+> +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
+> +	if (!bridge)
+> +		return -ENOMEM;
+> +
+> +	bus = resource_list_first_type(&bridge->windows, IORESOURCE_BUS);
+> +	if (!bus)
+> +		return -ENODEV;
+> +
+> +	ret = sky1_pcie_parse_property(pdev, pcie);
+> +	if (ret < 0)
+> +		return -ENXIO;
+> +
+> +	pcie->cfg = pci_ecam_create(dev, pcie->cfg_res, bus->res,
+> +				    &pci_generic_ecam_ops);
+> +	if (IS_ERR(pcie->cfg))
+> +		return PTR_ERR(pcie->cfg);
+> +
+> +	bridge->ops = (struct pci_ops *)&pci_generic_ecam_ops.pci_ops;
+> +	rc = pci_host_bridge_priv(bridge);
+> +	rc->ecam_support_flag = 1;
+> +	rc->cfg_base = pcie->cfg->win;
+> +	rc->cfg_res = &pcie->cfg->res;
+> +
+> +	cdns_pcie = &rc->pcie;
+> +	cdns_pcie->dev = dev;
+> +	cdns_pcie->ops = &sky1_pcie_ops;
+> +	cdns_pcie->reg_base = pcie->reg_base;
+> +	cdns_pcie->msg_res = pcie->msg_res;
+> +	cdns_pcie->cdns_pcie_reg_offsets = &data->reg_off;
+> +	cdns_pcie->is_rc = data->reg_off.is_rc;
+> +
+> +	pcie->cdns_pcie = cdns_pcie;
+> +	pcie->cdns_pcie_rc = rc;
+> +	pcie->cfg_base = rc->cfg_base;
+> +	bridge->sysdata = pcie->cfg;
+> +
+> +	if (data->soc_type == CIX_SKY1) {
+
+
+Dead code or rather if (true) code. Don't do it, it's more difficult to
+read.
+
+> +		rc->vendor_id = PCI_VENDOR_ID_CIX;
+> +		rc->device_id = PCI_DEVICE_ID_CIX_SKY1;
+> +		rc->no_inbound_flag = 1;
+> +	}
+> +
+> +	ret = cdns_pcie_hpa_host_setup(rc);
+> +	if (ret < 0) {
+> +		pci_ecam_free(pcie->cfg);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct sky1_pcie_data sky1_pcie_rc_data = {
+> +	.reg_off = {
+> +		.is_rc = true,
+> +		.ip_reg_bank_offset = SKY1_IP_REG_BANK_OFFSET,
+> +		.ip_cfg_ctrl_reg_offset = SKY1_IP_CFG_CTRL_REG_BANK_OFFSET,
+> +		.axi_mstr_common_offset = SKY1_IP_AXI_MASTER_COMMON_OFFSET,
+> +		.axi_slave_offset = SKY1_AXI_SLAVE_OFFSET,
+> +		.axi_master_offset = SKY1_AXI_MASTER_OFFSET,
+> +		.axi_hls_offset = SKY1_AXI_HLS_REGISTERS_OFFSET,
+> +		.axi_ras_offset = SKY1_AXI_RAS_REGISTERS_OFFSET,
+> +		.axi_dti_offset = SKY1_DTI_REGISTERS_OFFSET,
+> +	},
+> +	.soc_type = CIX_SKY1,
+
+You have only one device variant, so this entire pcie_data feels redundant.
+
+> +};
+> +
+> +static const struct of_device_id of_sky1_pcie_match[] = {
+> +	{
+> +		.compatible = "cix,sky1-pcie-host",
+> +		.data = &sky1_pcie_rc_data,
+> +	},
+> +	{},
+
+
 
 Best regards,
 Krzysztof
