@@ -1,157 +1,139 @@
-Return-Path: <linux-pci+bounces-33992-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33993-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77A48B2553E
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 23:22:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 62770B25541
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 23:23:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B41C5C11EC
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 21:22:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7C6516A6D9
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 21:22:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F4CC303C8A;
-	Wed, 13 Aug 2025 21:21:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D09A52D47F7;
+	Wed, 13 Aug 2025 21:22:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="scy86vsP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hom5yvlZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40492EB5CA
-	for <linux-pci@vger.kernel.org>; Wed, 13 Aug 2025 21:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1195286D6B;
+	Wed, 13 Aug 2025 21:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755120091; cv=none; b=Md6HJQ3pXOEz0VJWWxSJ3qWXUEi56muMa5INCbHU20AQhCK5Vqos2LXVmOnReHHrqWoZDlch4Ha50Bo60HeOQm1vNrfAzDYPK75C2F5Y2TYct+ey5glE6Sx0yjxpfY5N+nQ6KLHq+RQkUABNlY6unpUKNuW6A8T40IKfEmlUr2Y=
+	t=1755120141; cv=none; b=swxG4WD9xX6XRvnu7hBLmfw5d9x7OPgX9c9aq9+/TpHks/BuXxP+8NpqwMgws7jDWonsYV2N7+P8PFQXLGXTwpESk0ALbclEcNE/BGxA29EsA9lga5St1TUSmv2OV4hYZYixDKGuQom9ZQB/k8gPMCTHBi2kmE/7JtVGZTAwF1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755120091; c=relaxed/simple;
-	bh=YRF7PXYqA5mGk0XIeuHC4a/zpxBzNwCOY5dVKL1K3Bk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HPK+TINskfdzkAaSKTxmtE3cuSBM8TY6QAvxvgIkSb0+WPQZIInHuExjdSaPud9GZ1d3HyOZMxt0sHi8yIDekuvjPgeCFR9vFhY+1qpnMooowhUtxMoT4mox8ofEUJBE9lC1sHbJ7JKOC9GgmOEA0JzS49uZ5HiSEtPEirJdfNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=scy86vsP; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3e571d400e0so462355ab.1
-        for <linux-pci@vger.kernel.org>; Wed, 13 Aug 2025 14:21:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1755120089; x=1755724889; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xQFA3sAGjQq+4OU7ujcZ9yGUOwCjhbmi0pcUP6tFJ2k=;
-        b=scy86vsPNOx7G+VU/Q3Y7dhjM2zIKjB5bzPRtNuHQ0/vCm2rHg/M0HyaGMf8AmO2nR
-         a2q4/8Cg79H3WNksAohV08r5iKTHNPcBcKl+kNlJWvIrcM5AfxVOJzWjy7g0tQpG7xIh
-         IeX/BshpEHnOU9Vel2jopuFPYIcBZOskbNdMChTDPIJ+4Akhe7TRZ0CX7/YYNC2bkq60
-         z8HWAwnszbIxAQ1jkeJjt00T4VMGntwXN9yHSq197rQ1/mpjrbsaRqyfYtSlDrjW83Kr
-         4eOC+ezNlM7VZjqyz3FHyfZ2wnCcUoPNeL4cEQaNdeCZ2I2GPejgRQvHp3/fZWnV1i7f
-         +TgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755120089; x=1755724889;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xQFA3sAGjQq+4OU7ujcZ9yGUOwCjhbmi0pcUP6tFJ2k=;
-        b=gHiOSxPj7+TJWSNVePxzLia1u0FscXKWt/lBh6/T0fW9QaBviQ64WDgUYZUgd++2rW
-         8Wxlr/g+cWjThF2kUhjsRP2FFrRTHJZHYK7MxsulvZJ2S1Qc5S/WA4EF0GI1ZIu8J6VL
-         aU12cKqq65+FyWYv5etHgFwFkb9oIIJPuCsMN1/hw7qyb9jVdCc6K6Uq8VLI2IavkfnU
-         juZYrsSJIVwxfMR3EZtEPklJbgCo69j675/QohHKFzC8bp0eBKUcNf8VHJziStHp9cRP
-         ll+AWZw1RpQvbSrW48T8jikI75JofPBuM782xXrRaJb7fUPcf0uTReof2IU3ZBgYnpjh
-         NIgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXwy23Seq6xXSkNouewE1zG2YOa0b9Z4RNdmLMcZ3sCnBYkE4iqgSR/QBPIFEBsvmy1rZOiuIYdX9g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYyC8BJzupi8RHHTZNP3u6A7grTGlfjmJs9ojyC5attCS0qx5Z
-	lb0ATHkHctRcjj0CNfe76BfBHjkUYSo2u1E5ladIkNydBktzso2a3EBBFIQO6qfk4To=
-X-Gm-Gg: ASbGnct6Sx9IWKPQEnaUfyHk/0XB2+8AYHXLmcRANsaBh1/88Kb4MI/qicTG2S+IH6o
-	3t95FJfFBDX69SmN0QRckRtZlBaXWvodJG2kjGGdwHCyYfOgqPsQWECGscdEeJavEjq2ow0hDjO
-	JyHhnH9X92GgpUAUmTs+JxVxBjQ/wg4yja2BKZEDQEdBebRsNnSw6CINWhfezALKh+7NTWY4UaC
-	ZwfvOIbLxmvGvsJbpBjBKiZ+U6PpVJDLNSpHEVUNN7mSLhZ8PDgBCYqO/AOm0q/ox6x84rqxPka
-	QtPfFx8GQuGqzVIdJaP4jHT9wFngdjZO7BZCQtHjSf7OPAqXJoIeKDSW9+mDzb51Wnw9MDdvbpi
-	NhhK6ZrBlFqXOFYpy3xrO763z7IIpyHL95FaS6wlqC+GM/nzwaocHVPbKj/Qto6M1a1AmpUrZ
-X-Google-Smtp-Source: AGHT+IE/IGDUbFdQagnAGSx2I8HtgwdLHjigGbzbwJHyQIwj+Wi68+UGSe/1cR20+rAO3AtGn9HtGg==
-X-Received: by 2002:a05:6e02:1c0e:b0:3e5:4351:ad0a with SMTP id e9e14a558f8ab-3e57078c28amr12232635ab.7.1755120085109;
-        Wed, 13 Aug 2025 14:21:25 -0700 (PDT)
-Received: from [172.22.22.28] (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3e5418db19csm46937395ab.2.2025.08.13.14.21.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Aug 2025 14:21:24 -0700 (PDT)
-Message-ID: <8ebc466c-1b9f-4ba3-a38e-bda6007c5b97@riscstar.com>
-Date: Wed, 13 Aug 2025 16:21:22 -0500
+	s=arc-20240116; t=1755120141; c=relaxed/simple;
+	bh=jOyMn9dtqvh/9ep6s+bvq0jUruv1N2SPd6/+nQzCeFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=UC3qjth0euG1Ym9lUPz3M4eSdgDwi/wno2I3XWGArLE+DxvCbVYChZ0C7v1/Kj82XNW7BMpFxuMvHgr1HwWjMlAXuRghtQIgwgD6xLC+qFFadeP0KJ8gd+FXxKCrmBNG/VA3yQD09NWaeNDjmfMwn6haGuIUK7UatD9iA/Itx2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hom5yvlZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03AD0C4CEEB;
+	Wed, 13 Aug 2025 21:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755120141;
+	bh=jOyMn9dtqvh/9ep6s+bvq0jUruv1N2SPd6/+nQzCeFs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=hom5yvlZtVVD3nCZUEXH0Z98bLXFdGzwRvl/ETxGqpXkfdL8sLWcB735nkfn8dp/I
+	 5h5jst3Dppot5DcWTitHbMczp85JgskbTDJczbb18BIAAUUiE9LaqwUaJ6sM4AdBuN
+	 VlreHRRzSYB92KzUjg8b1+5KPXSh3akG2bUa/gshp/Gz+9z6J84oCwsqhHAgFYdAL4
+	 IaowqSOXnvDM3RxaXV9xOp7allA3vRJxXZ/U9nL7dcQK3WOERfCNi2YA1V6vMimm0G
+	 RlYoT73E7Tgb5T1QzsnZDJd7Pn8vrHHVa/fhVVinCuA/x4DRzjSqZRGOwqfXTrRU0b
+	 hlSR1tqJJXsWw==
+Date: Wed, 13 Aug 2025 16:22:19 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alex Elder <elder@riscstar.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
+	dlan@gentoo.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, p.zabel@pengutronix.de,
+	tglx@linutronix.de, johan+linaro@kernel.org,
+	thippeswamy.havalige@amd.com, namcao@linutronix.de,
+	mayank.rana@oss.qualcomm.com, shradha.t@samsung.com,
+	inochiama@gmail.com, quic_schintav@quicinc.com, fan.ni@samsung.com,
+	devicetree@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] PCI: spacemit: introduce SpacemiT PCIe host driver
+Message-ID: <20250813212219.GA294849@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/6] dt-bindings: phy: spacemit: introduce PCIe root
- complex
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: lpieralisi@kernel.org, quic_schintav@quicinc.com,
- devicetree@vger.kernel.org, conor+dt@kernel.org, krzk+dt@kernel.org,
- p.zabel@pengutronix.de, linux-kernel@vger.kernel.org, inochiama@gmail.com,
- fan.ni@samsung.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- palmer@dabbelt.com, paul.walmsley@sifive.com, spacemit@lists.linux.dev,
- thippeswamy.havalige@amd.com, namcao@linutronix.de,
- linux-pci@vger.kernel.org, shradha.t@samsung.com, vkoul@kernel.org,
- dlan@gentoo.org, johan+linaro@kernel.org, kishon@kernel.org,
- mani@kernel.org, mayank.rana@oss.qualcomm.com, tglx@linutronix.de,
- bhelgaas@google.com, linux-phy@lists.infradead.org, kwilczynski@kernel.org,
- linux-riscv@lists.infradead.org
-References: <20250813184701.2444372-1-elder@riscstar.com>
- <20250813184701.2444372-4-elder@riscstar.com>
- <175511815210.798605.10564052572461813362.robh@kernel.org>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <175511815210.798605.10564052572461813362.robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250813184701.2444372-6-elder@riscstar.com>
 
-On 8/13/25 3:49 PM, Rob Herring (Arm) wrote:
-> 
-> On Wed, 13 Aug 2025 13:46:57 -0500, Alex Elder wrote:
->> Add the Device Tree binding for the PCIe root complex found on the
->> SpacemiT K1 SoC.  This device is derived from the Synopsys Designware
->> PCIe IP.  It supports up to three PCIe ports operating at PCIe gen 2
->> link speeds (5 GT/sec).  One of the ports uses a combo PHY, which is
->> typically used to support a USB 3 port.
->>
->> Signed-off-by: Alex Elder <elder@riscstar.com>
->> ---
->>   .../bindings/pci/spacemit,k1-pcie-rc.yaml     | 141 ++++++++++++++++++
->>   1 file changed, 141 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/spacemit,k1-pcie-rc.yaml
->>
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
+On Wed, Aug 13, 2025 at 01:46:59PM -0500, Alex Elder wrote:
+> Introduce a driver for the PCIe root complex found in the SpacemiT
+> K1 SoC.  The hardware is derived from the Synopsys DesignWare PCIe IP.
+> The driver supports three PCIe ports that operate at PCIe v2 transfer
+> rates (5 GT/sec).  The first port uses a combo PHY, which may be
+> configured for use for USB 3 instead.
 
-Mine didn't for some reason, so I must be doing something wrong.
+I assume "PCIe v2" means what most people call "PCIe gen2", but the
+spec encourages avoidance "genX" because it's ambiguous.
 
-Simple inspection shows my compatible string contains ".yaml"!
+> +config PCIE_K1
+> +	bool "SpacemiT K1 host mode PCIe controller"
 
-I'll fix in a new version.  Sorry I missed this.
+Style of nearby entries is:
 
-					-Alex
+  "SpacemiT K1 PCIe controller (host mode)"
 
-> yamllint warnings/errors:
-> 
-> dtschema/dtc warnings/errors:
-> Documentation/devicetree/bindings/pci/spacemit,k1-pcie-rc.example.dtb: /example-0/pcie@ca000000: failed to match any schema with compatible: ['spacemit,k1-pcie-rc']
-> 
-> doc reference errors (make refcheckdocs):
-> 
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250813184701.2444372-4-elder@riscstar.com
-> 
-> The base for the series is generally the latest rc1. A different dependency
-> should be noted in *this* patch.
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
-> 
-> pip3 install dtschema --upgrade
-> 
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your schema.
-> 
+Please alphabetize by the company name ("SpacemiT") in the menu entry.
 
+> +#define K1_PCIE_VENDOR_ID	0x201f
+> +#define K1_PCIE_DEVICE_ID	0x0001
+
+I assume this (0x201f) has been reserved by the PCI-SIG?  I don't see
+it at:
+
+  https://pcisig.com/membership/member-companies?combine=0x201f
+
+Possibly rename this to PCI_VENDOR_ID_K1 (or maybe
+PCI_VENDOR_ID_SPACEMIT?) to match the usual format in
+include/linux/pci_ids.h, since it seems likely to end up there
+eventually.
+
+> +#define PCIE_RC_PERST			BIT(12)	/* 0: PERST# high; 1: low */
+
+Maybe avoid confusion by describing as "1: assert PERST#" or similar?
+
+> +	/* Wait the PCIe-mandated 100 msec before deasserting PERST# */
+> +	mdelay(100);
+
+I think this is PCIE_T_PVPERL_MS.  Comment is superfluous then.
+
+> +static int k1_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct dw_pcie_rp *pp;
+> +	struct dw_pcie *pci;
+> +	struct k1_pcie *k1;
+> +	int ret;
+> +
+> +	k1 = devm_kzalloc(dev, sizeof(*k1), GFP_KERNEL);
+> +	if (!k1)
+> +		return -ENOMEM;
+> +	dev_set_drvdata(dev, k1);
+
+Most neighboring drivers use platform_set_drvdata().  Personally, I
+would set drvdata after initializing k1 because I don't like to
+advertise pointers to uninitialized things.
+
+> +static void k1_pcie_remove(struct platform_device *pdev)
+> +{
+> +	struct k1_pcie *k1 = dev_get_drvdata(&pdev->dev);
+
+Neighbors use platform_get_drvdata().
+
+> +	struct dw_pcie_rp *pp = &k1->pci.pp;
+> +
+> +	dw_pcie_host_deinit(pp);
+> +}
 
