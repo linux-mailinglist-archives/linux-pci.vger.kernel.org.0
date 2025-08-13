@@ -1,86 +1,61 @@
-Return-Path: <linux-pci+bounces-33941-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33942-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80AE0B249E8
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 14:56:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E051CB24C3B
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 16:43:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C57F18932AC
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 12:55:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 221281724AD
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 14:40:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A39CF2DCF5F;
-	Wed, 13 Aug 2025 12:54:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D785C1BD01D;
+	Wed, 13 Aug 2025 14:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IY0ZZqgD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sn3ZmcwL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CC727602D;
-	Wed, 13 Aug 2025 12:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9BE157493;
+	Wed, 13 Aug 2025 14:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755089691; cv=none; b=BVJjzaXIqlk3Gu97YWPLxYJOk0tU84kTIqDtsVlvmakQj5StGZUWvz5y7WAQmcvG9N23RxEvfpzca9GfhydlAQFZomMeDmA/0dLQonWLweaJblE+czTSos7QGXlCpXq/Qkhzyt2uJhDW4FzImJNeqic6QKWIxI0KWqwFsu6j+/0=
+	t=1755095992; cv=none; b=OSizzk/OE+1fUhpm+U2m84MSTEugrhvcLrnG9RXVykQ9ZyIHH6lK66d9enyld2akV+lDLBf2Ff3vktDURtK4LzKP2rRpppUoTPRGUFxIFLEZHnTpH1jjbe1JkQgH4YJNlQMkJKVWPxZfKbz1NkcVDjV8NMYD+f9932D5GNiCAVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755089691; c=relaxed/simple;
-	bh=yX64wkEiRVLBeyc3qQ2oLgH4oEtjcIE2idzHItV67io=;
+	s=arc-20240116; t=1755095992; c=relaxed/simple;
+	bh=sKtxvRLZlfNykdA1sXixrsDKjg9EgHaPHu6i+WxZogk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BszXXg72WjXmXU6bARSyO4o/oDUGNo8m4lXav2vkqOFEdTBRCloixz4dYS6/3/RnlsPbLl9R0QRZJnJIsyb21cCpf95eTEJtaGcdZ8hJB7eigD+iv1vEWVzSzfes+LSD+6U6O+B+Ou2ow0JlBGlYB4uwAWtOpD5nJB0KYVaOiNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IY0ZZqgD; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755089690; x=1786625690;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yX64wkEiRVLBeyc3qQ2oLgH4oEtjcIE2idzHItV67io=;
-  b=IY0ZZqgDKJnFOxRyMGaOSbVVZfym9usp4AROXpK+Wcur4y2mb7CWQksa
-   eEdboSgyiugYoWDs+rz07U/JsWLTfF//gepJ5R+HI2RPYT/jeAB8Z8eEd
-   tcM6/vIEjhaGdYVCQOFoqscob+rgemD9FA6cWlRjVuBhh+4TnO3zGsNQM
-   vY+CZWfTKmG0B5sN7i+Mmoe2pijB7d3pVJOYlIloWlF0g+oGz1FJ9IBQ3
-   vE57Pq456sVEKetnKIY9QF7QItQN9XbPETUukkSz/wttIoBy18T2kKS1E
-   JYnXU2uotowwkLrFfeGTe4PbzUFNYyFwjUpHc+j5tG/SojjYZqoNwS8Wb
-   Q==;
-X-CSE-ConnectionGUID: kTGicZcnRZSF4v2lUPuD0Q==
-X-CSE-MsgGUID: sBU2tfXKSbOu+0OhOBaSlw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="61183331"
-X-IronPort-AV: E=Sophos;i="6.17,285,1747724400"; 
-   d="scan'208";a="61183331"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 05:54:47 -0700
-X-CSE-ConnectionGUID: FTG1wQLORl2/VJ7Xu2vX0Q==
-X-CSE-MsgGUID: Pe2i+pe8SfKTU/fIlRrLCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,285,1747724400"; 
-   d="scan'208";a="166729068"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 05:54:43 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1umB04-00000005RGW-1CDD;
-	Wed, 13 Aug 2025 15:54:40 +0300
-Date: Wed, 13 Aug 2025 15:54:40 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <maz@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=T8g/pyJxLjJnHZT9/ir/YNGYOyzrS7a4/7CZTlIBVctsOP3ZMnrl5SKBigmdXAjCX8Atxm8f7fZVozBW/U4Hrjw7zE2+8E77aXnHTZ5rZ0p7h/Zgdq6+FG+mLIo2TKlMVeS9ksLgx2v3SwLOeDk4IrqqEJBgdmFFg3hiTIkfMFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sn3ZmcwL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 401F8C4CEEB;
+	Wed, 13 Aug 2025 14:39:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755095992;
+	bh=sKtxvRLZlfNykdA1sXixrsDKjg9EgHaPHu6i+WxZogk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sn3ZmcwLvpi+0nTqSMR3ClCS0YudIhve68GxcRTs/LNz99NzYDg1x3vHc6EcuY0cX
+	 ZD91WxzeFL1QyVpp0V6fyNOf/XPBYrnuAHQe5xPaRX3dY2dozqYAbB0Kxk6QQsCASw
+	 fm7Bu9MP6cOxtIGMKwhXYQ9soJf0Gqs1+A/3msQv1d2A2bLqd6qSQZatt/3JKMqEOi
+	 kBnCzusc31hdJNGX+R9r020mQvAPeE0U428jNws8znPLz2sXdxkbbiOgJoCCXyVvBT
+	 gIX924EceE9/Md5jGecABxkHqDtTisFonN0SDHPECwBQD+esTAnn6BTMry8O0BtcJE
+	 fu+ICP9YBVGWg==
+Date: Wed, 13 Aug 2025 14:39:50 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Nicolin Chen <nicolinc@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Chen Wang <unicorn_wang@outlook.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>, Han Gao <rabenda.cn@gmail.com>
-Subject: Re: [PATCH 3/4] irqchip/sg2042-msi: Fix broken affinity setting
-Message-ID: <aJyLEManKJ2P8HYV@smile.fi.intel.com>
-References: <20250807112326.748740-1-inochiama@gmail.com>
- <20250807112326.748740-4-inochiama@gmail.com>
- <aJoBdHlV6ZKcFry5@black.igk.intel.com>
- <gnk4w7lmgvgwh3kdu3fn4c3frcyivkeukxrq63s223v4t7khcw@ft26odg7qtu6>
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: hv: Remove unused parameter of hv_msi_free()
+Message-ID: <aJyjtvNabuXc1xhX@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <20250813055350.1670245-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -89,43 +64,56 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <gnk4w7lmgvgwh3kdu3fn4c3frcyivkeukxrq63s223v4t7khcw@ft26odg7qtu6>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250813055350.1670245-1-namcao@linutronix.de>
 
-On Tue, Aug 12, 2025 at 06:37:35AM +0800, Inochi Amaoto wrote:
-> On Mon, Aug 11, 2025 at 04:43:00PM +0200, Andy Shevchenko wrote:
-> > On Thu, Aug 07, 2025 at 07:23:24PM +0800, Inochi Amaoto wrote:
-> > > When using NVME on SG2044, the NVME always complains "I/O tag XXX
-> > > (XXX) QID XX timeout, completion polled", which is caused by the
-> > > broken handler of the sg2042-msi driver.
-> > > 
-> > > As PLIC driver can only setting affinity when enabling, the sg2042-msi
-> > > does not properly handled affinity setting previously and enable irq in
-> > > an unexpected executing path.
-> > > 
-> > > Since the PCI template domain supports irq_startup/irq_shutdown, set
-> > > irq_chip_[startup/shutdown]_parent for irq_startup/irq_shutdown. So
-> > > the irq can be started properly.
-> > 
-> > > Fixes: e96b93a97c90 ("irqchip/sg2042-msi: Add the Sophgo SG2044 MSI interrupt controller")
-> > > Reported-by: Han Gao <rabenda.cn@gmail.com>
-> > 
-> > Closes ?
+On Wed, Aug 13, 2025 at 07:53:50AM +0200, Nam Cao wrote:
+> The 'info' parameter of hv_msi_free() is unused. Delete it.
 > 
-> I got a direct private email from Han, so I think there is no pulic
-> Closes.
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
 
-It's better to follow current practise (by at least some of the fix code
-authors) to make this as a comment in the patch (text, that goes after '---'
-but before actual diff).
+Acked-by: Wei Liu <wei.liu@kernel.org>
 
-No need to resent just for that, as you basically explained it here.
-(but it seems we will have a new version anyway)
+I assume this will go through the PCI tree.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index d2b7e8ea710b..146b43981b27 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1680,7 +1680,6 @@ static void hv_int_desc_free(struct hv_pci_dev *hpdev,
+>  /**
+>   * hv_msi_free() - Free the MSI.
+>   * @domain:	The interrupt domain pointer
+> - * @info:	Extra MSI-related context
+>   * @irq:	Identifies the IRQ.
+>   *
+>   * The Hyper-V parent partition and hypervisor are tracking the
+> @@ -1688,8 +1687,7 @@ static void hv_int_desc_free(struct hv_pci_dev *hpdev,
+>   * table up to date.  This callback sends a message that frees
+>   * the IRT entry and related tracking nonsense.
+>   */
+> -static void hv_msi_free(struct irq_domain *domain, struct msi_domain_info *info,
+> -			unsigned int irq)
+> +static void hv_msi_free(struct irq_domain *domain, unsigned int irq)
+>  {
+>  	struct hv_pcibus_device *hbus;
+>  	struct hv_pci_dev *hpdev;
+> @@ -2181,10 +2179,8 @@ static int hv_pcie_domain_alloc(struct irq_domain *d, unsigned int virq, unsigne
+>  
+>  static void hv_pcie_domain_free(struct irq_domain *d, unsigned int virq, unsigned int nr_irqs)
+>  {
+> -	struct msi_domain_info *info = d->host_data;
+> -
+>  	for (int i = 0; i < nr_irqs; i++)
+> -		hv_msi_free(d, info, virq + i);
+> +		hv_msi_free(d, virq + i);
+>  
+>  	irq_domain_free_irqs_top(d, virq, nr_irqs);
+>  }
+> -- 
+> 2.39.5
+> 
 
