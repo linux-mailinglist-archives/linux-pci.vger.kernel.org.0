@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-33983-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33984-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A85BB253AF
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 21:10:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 167F5B253C4
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 21:15:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D796D3B9AC3
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 19:08:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AE331C2277D
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 19:14:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A17A23074AF;
-	Wed, 13 Aug 2025 19:08:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46633309DC3;
+	Wed, 13 Aug 2025 19:14:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/RGujXK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIoA4XqU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745FE2FE57D;
-	Wed, 13 Aug 2025 19:08:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CBA302CC9;
+	Wed, 13 Aug 2025 19:14:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755112094; cv=none; b=r43sh0J1C5iT2bG2dxJn42NMwdnQ09CVP2rcdRn82dFVDiwHDb+M58aZgT/1SmrytVqZ08Xd4VMQ1wE4BKmD07tQAZHIqfsSB79S5QPma2TYetKjXy8a42ycj7HfRxk1PufQoeGmJTPyaeyowwAB0+BbHmK6ua+omfUdedO13Ec=
+	t=1755112472; cv=none; b=YGmP8WU89oAtlajAv5XqKyN56L3JUB8mOpjY0C9asQIaW2pld8xJx85UDitE/KvJZxLBHSNc9ArGTZQhv/B/bh8+SOQQeZ4TLyQ20j0KBXiNEgzZX6uCBrS1GlQ11UgOuEdy8v+ovXkDJofhUpOhDi1odNLwdHGJ/Kx38lRPDKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755112094; c=relaxed/simple;
-	bh=tf+fBgdGF78nfZsbyxQBaJxws/RIuTyASP2kXUFMJ0A=;
+	s=arc-20240116; t=1755112472; c=relaxed/simple;
+	bh=nUClwhJtYwKNTD3BTsheIIfynM23uke2nnMDKR/dw/U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a6fjycmlSnmog6vUCd2NYnX+I/X5I/h9sFZ/t8u+s3j4uKSAhR5L1sc606u2wMS4QRAjfzX8ST2f/RP2gTCSmiWfonzXsy/CpNQzDuv+/Q1SRCRl+4QxBhz8xHFKvQHzebo1uNbURd/1YJEvqaKHv4IVZ+Q9Yag+/sHUFYD4ttc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/RGujXK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A091C4CEEB;
-	Wed, 13 Aug 2025 19:08:09 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Jsqx6Z2FzYPYjoBxh4pcmLcTn282L3Fq7hzetHLA7aJ+kN5or0iJR40KVp2zQAJ6xHQQ3Yue0Ae/SldKCBB6hI5/VlmQ2jL0/vwRrmMmxsZLwFBoaALGRB2zPdQ3sQ/ZqP6ZNBSckueCbaHIZENrN7U9/uJ3WMtKbRVcOdlToXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIoA4XqU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1816C4CEEB;
+	Wed, 13 Aug 2025 19:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755112094;
-	bh=tf+fBgdGF78nfZsbyxQBaJxws/RIuTyASP2kXUFMJ0A=;
+	s=k20201202; t=1755112470;
+	bh=nUClwhJtYwKNTD3BTsheIIfynM23uke2nnMDKR/dw/U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j/RGujXKM9vvBW9SNkB8cEsxs5w1n1GJtmk1KyIo7iArt2pTFdF6qLZ1m9ZakjJEW
-	 4IdxZRBJGaDd9vbXbubPfkzAHL7mSRjy6FPEZoO91k6bsoedWSWxkGTZEupgpvjw1t
-	 qDmzXoIaQeeGQAjIdr/VK5KvVBM31it0vIo4oyTcRn/LwtWhq9JW2O19GNfP4Rv1sl
-	 A6Elsf2hUDO6kSHHPBZUfJa53jw1qAz1mdmmM/6lqk/ttGgjH53DtHRNJ2zsJGlVsc
-	 eSdQZ6yNyKTLoCWKUyRfXYazsn+xaq9WXDQ531K5iPfIL8jIBa6K1haryXFoJBudQH
-	 BrGJkBPvT8kwQ==
-Message-ID: <bc185397-2588-4dec-8bca-c4ebd34919eb@kernel.org>
-Date: Wed, 13 Aug 2025 21:08:08 +0200
+	b=YIoA4XqUTpNXnhExVqrRUPly6tQOKOqKHcG8aMyooQ5oKHr6J3Zwu8qFjaArX6zRk
+	 krLSk8qYhwTEerYES5U/cRYpaHtAPNK12j/HB9WkmdRbPeVp1zXLOCA4VXidKjD7RQ
+	 xpoLw/lRqD0sGZ0p2wEZ5wG/FqbmQh6Nxr7C6CPQzvtf29Zv1T8QFV7Q55URl6e56W
+	 QUPSGfCHgrYchLeQbi2HFtvQJTiaclLJO0B8MD+nMnVLdInQUffigozt20Y62qdgLE
+	 eJwOKoQZXBwEagDHf/7KJQseI+FjAQqKBIYha532TQwaLKAh1hsjBGXx0RdwX06mYX
+	 ua34sV6YCgnFw==
+Message-ID: <cc4f69b3-4d9b-4a6f-a296-61ab5ffb9565@kernel.org>
+Date: Wed, 13 Aug 2025 21:14:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,19 +50,16 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 08/13] dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex
- bindings
-To: Hans Zhang <hans.zhang@cixtech.com>, "Rob Herring (Arm)" <robh@kernel.org>
-Cc: mpillai@cadence.com, cix-kernel-upstream@cixtech.com,
- lpieralisi@kernel.org, bhelgaas@google.com, devicetree@vger.kernel.org,
- conor+dt@kernel.org, linux-pci@vger.kernel.org, mani@kernel.org,
- kw@linux.com, kwilczynski@kernel.org, krzk+dt@kernel.org,
- fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
+Subject: Re: [PATCH v7 00/13] Enhance the PCIe controller driver for next
+ generation controllers
+To: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
+ kw@linux.com, mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: mpillai@cadence.com, fugang.duan@cixtech.com, guoyin.chen@cixtech.com,
+ peter.chen@cixtech.com, cix-kernel-upstream@cixtech.com,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20250813042331.1258272-1-hans.zhang@cixtech.com>
- <20250813042331.1258272-9-hans.zhang@cixtech.com>
- <175507391391.3310343.12670862270884103729.robh@kernel.org>
- <cb35dfbd-2fa4-4125-bd87-9f86405983eb@cixtech.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -108,69 +105,56 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <cb35dfbd-2fa4-4125-bd87-9f86405983eb@cixtech.com>
+In-Reply-To: <20250813042331.1258272-1-hans.zhang@cixtech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 13/08/2025 11:12, Hans Zhang wrote:
+On 13/08/2025 06:23, hans.zhang@cixtech.com wrote:
+> From: Hans Zhang <hans.zhang@cixtech.com>
 > 
+> ---
+> Dear Maintainers,
 > 
-> On 2025/8/13 16:31, Rob Herring (Arm) wrote:
->> EXTERNAL EMAIL
->>
->> On Wed, 13 Aug 2025 12:23:26 +0800, hans.zhang@cixtech.com wrote:
->>> From: Hans Zhang <hans.zhang@cixtech.com>
->>>
->>> Document the bindings for CIX Sky1 PCIe Controller configured in
->>> root complex mode with five root port.
->>>
->>> Supports 4 INTx, MSI and MSI-x interrupts from the ARM GICv3 controller.
->>>
->>> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
->>> ---
->>>   .../bindings/pci/cix,sky1-pcie-host.yaml      | 79 +++++++++++++++++++
->>>   1 file changed, 79 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
->>>
->>
->> My bot found errors running 'make dt_binding_check' on your patch:
->>
->> yamllint warnings/errors:
->>
->> dtschema/dtc warnings/errors:
->> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.example.dtb: /: 'compatible' is a required property
->>          from schema $id: http://devicetree.org/schemas/root-node.yaml#
->> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.example.dtb: /: 'model' is a required property
->>          from schema $id: http://devicetree.org/schemas/root-node.yaml#
->>
->> doc reference errors (make refcheckdocs):
->>
->> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250813042331.1258272-9-hans.zhang@cixtech.com
->>
->> The base for the series is generally the latest rc1. A different dependency
->> should be noted in *this* patch.
->>
->> If you already ran 'make dt_binding_check' and didn't see the above
->> error(s), then make sure 'yamllint' is installed and dt-schema is up to
->> date:
->>
->> pip3 install dtschema --upgrade
->>
->> Please check and re-submit after running the above command yourself. Note
->> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
->> your schema. However, it must be unset to test all examples with your schema.
->>
+> This series is Cadence's HPA PCIe IP and the Root Port driver of our
+> CIX sky1. Please help review. Thank you very much.
+> ---
 > 
-> Dear Rob,
+> Enhances the exiting Cadence PCIe controller drivers to support
+> HPA (High Performance Architecture) Cadence PCIe controllers.
 > 
-> I'm very sorry. No errors were detected on my PC. I'll check my local 
-> environment and fix this issue in the next version.
+> The patch set enhances the Cadence PCIe driver for HPA support.
+> The header files are separated out for legacy and high performance
+> register maps, register address and bit definitions. The driver
+> read register and write register functions for HPA take the
+> updated offset stored from the platform driver to access the registers.
+> As part of refactoring of the code, few new files are added to the
+> driver by splitting the existing files.
+> This helps SoC vendor who change the address map within PCIe controller
+> in their designs. Setting the menuconfig appropriately will allow
+> selection between RP and/or EP PCIe controller support. The support
+> will include Legacy and HPA for the selected configuration.
 > 
-> If I have done anything wrong, please remind me.
+> The TI SoC continues to be supported with the changes incorporated.
+> 
+> The changes address the review comments in the previous patches where
+> the need to move away from "ops" pointers used in current implementation
+> and separate out the Legacy and HPA driver implementation was stressed.
+> 
+> The scripts/checkpatch.pl has been run on the patches with and without
+> --strict. With the --strict option, 4 checks are generated on 2 patch,
+> which can be ignored. There are no code fixes required for these checks.
+> All other checks generated by ./scripts/checkpatch.pl --strict can be 
+> ignored.
+> 
+> ---
+> Changes for v7
+>         - Rebase to v6.17-rc1.
+>         - Fixed the error issue of cix,sky1-pcie-host.yaml make dt_binding_check.
+>         - CIX SKY1 Root Port driver compilation error issue: Add header
+>           file, Kconfig select PCI_ECAM.
+> 
 
-Your code is not correct. You are not supposed to have there root node.
-Please open ANY (most recent preferably) other binding and look how it
-is done there.
+Where are lore links to all previous versions?
 
 Best regards,
 Krzysztof
