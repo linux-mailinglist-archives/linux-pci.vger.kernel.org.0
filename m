@@ -1,76 +1,78 @@
-Return-Path: <linux-pci+bounces-34003-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34004-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6D1FB25787
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 01:29:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C5208B25789
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 01:29:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A828B5A7C8C
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 23:29:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B4DEF5A7C09
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 23:29:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29C44283695;
-	Wed, 13 Aug 2025 23:29:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A56FF2FC875;
+	Wed, 13 Aug 2025 23:29:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBvhMnW7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aF+mJyYD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C8E30146B;
-	Wed, 13 Aug 2025 23:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70F02FC89A;
+	Wed, 13 Aug 2025 23:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755127772; cv=none; b=my0vqv4E+tYhIarha686D1XPjbLNKnHBKAfFO/TUofgQ7g5xkCuH4aV2UmWsyz7tQUhIu8FqGcSgVt1qljAKWFDp05BvkRJZF56dHWN7DmBhdbOKEyuOCp5/XpQkO1UxUNJM5RvUJjvxhdpqSWHSjf5D9so0HEinJjmThmyNa7s=
+	t=1755127777; cv=none; b=kJtWck31xeHYFA9Q40yPQRi2Ct+vUanS/KSedtcQ1Ya789s5l1O2hzb1Zgj80GIWNyDvpEqfyo5EeTvanLEFIAvPdlg47OcaZgYg2qMiOJZ/Wh2JXtAj4FLCvEkg5vq5wI4hSbgOKhECAoIRX8agONo7ua6q48leKeRH5AtgeyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755127772; c=relaxed/simple;
-	bh=ed3arknTW4S1DxdT7tAxpumGNo7mNYDrUWMNAZEVL3o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KHykq6SORS6P2KsZOkHAaKQHwOgdFlBS4Er5KdVMDa7cDQaQtcjlGqZZyPtsZwlEFGbZAPW0LKiBC6bXXE7yhhWf5TCPwjgrlj8vUrFLh7u9pnRoY/HsnIBkcdi8iZwwXaa7NJnS/Ny0CKeBfTApJG1r2aCP7iMR8x3DddHJYlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FBvhMnW7; arc=none smtp.client-ip=209.85.167.42
+	s=arc-20240116; t=1755127777; c=relaxed/simple;
+	bh=2MmKPQRRLLDGsp3Wq8ECREZn7dai/L6RAFeAckRn+sQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=l9G+nIXrp2eaZbox7IonehWL9hmV6tAUs33yzlqXIRppip7TtlTa5tEt46azEZCGutHbt32tbZaw9uoUXSaI5uJOVGv/tP7jLxNP/rmAr+QtDDZjaI5iIdDOwPjVlI1q9XLdKBBlCSNEkptBOLXmfEYOfIgTyJrwpvsuoFPlCD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aF+mJyYD; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-55ce5277b8eso327672e87.2;
-        Wed, 13 Aug 2025 16:29:30 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55ce521f77bso325872e87.1;
+        Wed, 13 Aug 2025 16:29:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755127768; x=1755732568; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=azItONdasKBb+zhr8mY+bP2pgb1alO7DSpf9mIconrk=;
-        b=FBvhMnW716FRyOpqBZbpAUJooNacp8vrTD6knjnPd3n2e+2VbU4sdVFRMY6uQXZ63/
-         dUo+Ko2Pin6WLGPG2hCcNTGWqT5EA7LfKHqpC+h8nfPDFWHZJUTaY0X6K8N+E4MNHtOD
-         5lCjYasBbUt0NR9qLlcVLKq/XsITOHmPDzgjwpSn999BVnZo/6WIL4otCciEjnHujO8e
-         IDWl3oc1J4434JfyaNbZ8+DChS/efVjDzODkIJkbofVIgdaX8qDTBevFQXHQzY/FXMVe
-         f/MZUy5rSWW4l194G5zyCYgUvilulFCKVZmTOi739J7cXzVNdYXiKZGsQ+4jBupyyKrs
-         m3Iw==
+        d=gmail.com; s=20230601; t=1755127773; x=1755732573; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vu9NW93raMKYIDH7OJ5SABXxZXwUbKYAWJtRYayncyA=;
+        b=aF+mJyYDm4olgk8sKXr+UH3/P9UL9it/fdUp1H/zOloq7p3IfXHiLCJPIo2HQIqw2g
+         asYJQ8HzbJRNEm7tfQupt+AHXFUXh+sGufAegokvoRnjYMM2YAsqjQE5+a5vrguKREDY
+         W2sPsvC6KK/YNRD72LIwzDnKR0+cYq5PuKaTtf5WqhLa6YhtuffWbVI+dgLzYy+uYvze
+         Q/ju/uQk4DCMrwQwNlTlwq877QL6yWjtu3rZC0pbMGeK/QTXQIAtaL3egl3MsAFzxfGJ
+         NW8416988Db2Z01uZ2CYS+q4DXDpdI7fZX25wECfkExVlm8Rp2FcQtPc9jmuf0Gk9BxG
+         EsGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755127768; x=1755732568;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=azItONdasKBb+zhr8mY+bP2pgb1alO7DSpf9mIconrk=;
-        b=JwdGqkKKMGWYOLtG3bcG1VMq1Rk81bjUwOowFMJiRoKJgNxRtI4HfVqS+98W5wKDBz
-         NjLEYQZJxBpJXnS2AIsRqyYcdA2w08E0TOXf/qmrB4rGeyklOMqTcxwA4mBkJBluzD/n
-         Z7qIDt5Q2Fc6BKpbxXA7IpYqdFgWEoRJsfHef5f7vjCHuQdoWZj03Oj/NvPJHlK8NRk+
-         woVVJabH1Fv/NtXxWveb17xJ67EPqlqn9M15MXByElL+20+Ai/wL+DE9IestC0b+HoMn
-         MOylb4SBzJMNmF6mxVEQlcIJ6ihH+ERBRmXSnZEYtZpJMSlSadvF2gavlIAoTkf0Hnyf
-         0TtA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkE3wsSIi09JyJGi2aK3U6TrwewUtz1yan6Zlb66H0wSNnc/upSqxUqoSIWtNuxAfvuwGiYt3XOA8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxshhk6WYdl9BoU92dJYyo5PXAJhAX/3FFQ3kVUUwd59z5yGbQN
-	Z9A9HToCdzst7eGBrv5SMvEWVVUc+ccHQAvBZtVj6A6cMGm68fJJR+y/gByVAP8B
-X-Gm-Gg: ASbGncu3JTyiWnmzSxbCJcCjo8OZ2cOJILf/RRQ94HaagM0Qy6tXdte7mFTz2ym+5Wv
-	aeNBKDpRzBWFXZHnhiPoCVBiPFEWrH9OzJ0qxyEzEeaMj7M1GRAfs18GM/xk0TZliX40tU1/H+m
-	F1VkPaUB4LYSj+7I8i5enGKuBVpRn6aZAhUZtgWXU659uC5/s2VKXAl4uxuWsGQ6pe/3xOKUkbe
-	LxVP00+mgbYgAfIrbhntcjCklc1559PC9O7jpBOxYUwWdnqF4ymHYDa37aMgQoexvGdBPzpPfd8
-	LMPHQBpkTbxEOOwIZ6XWZqgF8vH2cRMArZ/QffTc6q7Q+MHhKPnSw8imXmL1Jj/DXvATfIIDG3u
-	ghG98N6EmfOAPmBAYRiU5rzuKbDIopdji
-X-Google-Smtp-Source: AGHT+IEKKlvZP1xwv1HEMJur5csvxWIycSq+wMsxuKO3H+3kW9A5/TeAFVl8Nhii4m0V+mWcJfiyBQ==
-X-Received: by 2002:a05:6512:3347:b0:553:da39:37d with SMTP id 2adb3069b0e04-55ce4ffd488mr324077e87.1.1755127768121;
-        Wed, 13 Aug 2025 16:29:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755127773; x=1755732573;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vu9NW93raMKYIDH7OJ5SABXxZXwUbKYAWJtRYayncyA=;
+        b=s/kiVWh+hscmsQyNPJUz/yM4Fr1IJ8MlD/cLTeYl3PzeME2MLvCR8+Qz+xpPIzvZI7
+         Ktf7FXmqvEVylpjFc7QxBABKP8XhFYMfnAsEiazBhRjif41ej94VMWfBovLCyJFexsLk
+         qdTluWhiKKUjrvPud4G2u06RDjfEzXR/yPQk4H2PgtU0807PyGERRMscWV7C3qB6IULy
+         qidEVV9sZZrUSjoP1DtJhNaA94zRo5fKQGO0268vtjOIbGOaTP/jCCHmDln533RKclip
+         uOg2h2h5O2L1qFQT+4ENgEsISKOV6CvSmw7Y3jO7Q1rDrPZ+p+HdYNCdKBlN7SLw38lc
+         bGzw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2uiZo70mIRr4apMgsZp752Lp+bteJY3TfXclpeqTT6gCabCowGgxS/Hjv2AB94rX/7SYFH3U1MQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTctBukzeParG0+wXMZv+ZBYyEl93WNjvj4qEgaVC9vViJ9Y4Y
+	N+ZZOQ81QeNbTY5Guut1xGIZDsmR1xKfH7jXUgPX8ItFlgEOcv7Jq5nD
+X-Gm-Gg: ASbGncsBX5djh+brojr59OXO1Audqucu2GJIdkS4ooT9Txf1vg7tiaIsxQw9yKGKhmA
+	vPjPWKnTN9uVIod3oqRZ0it5dZshSlA7cQgSW0DX934LhAg/6vQfrE9nRV/BZkHMlWrJQ6fetnn
+	vDghRsJOZWMUSpHRPJ52+X0GV7WfYM5ojKiyHyK4HRtPApszZL4soZPnOg3F8yQN2Upurig9t4q
+	F7tYXTTg0mR0qQioKDUKVfgQvlYnFDyaPWcObcRVLOAVsU6B+Xc6rGx3/jI2IuTXZfWdQ/Ycu1Z
+	RUn0hEIA2LfsJoI2N7osQ5wRng1LFqdfh09qE7yelaZN0HSbB44E1JPG7YLUkLgKQJ1Qhauct5R
+	BZn74qT0M9givBYXW3ne9DBgQUrPzDTWc
+X-Google-Smtp-Source: AGHT+IFk82gtySYMZ78b1QobGTryGttVWJif+BbfnvegmfDV65YkOKAt+gDBnxKxaghEsxr4CCNZMg==
+X-Received: by 2002:a05:6512:318b:b0:55b:87a8:6021 with SMTP id 2adb3069b0e04-55ce631732emr157843e87.37.1755127773132;
+        Wed, 13 Aug 2025 16:29:33 -0700 (PDT)
 Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-55b88c9aeafsm5315459e87.109.2025.08.13.16.29.26
+        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-55b8898bfdcsm5527992e87.1.2025.08.13.16.29.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Aug 2025 16:29:27 -0700 (PDT)
+        Wed, 13 Aug 2025 16:29:32 -0700 (PDT)
 From: Inochi Amaoto <inochiama@gmail.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -88,10 +90,12 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Yixun Lan <dlan@gentoo.org>,
 	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH v2 0/4] irqchip/sg2042-msi: Fix broken affinity setting
-Date: Thu, 14 Aug 2025 07:28:30 +0800
-Message-ID: <20250813232835.43458-1-inochiama@gmail.com>
+Subject: [PATCH v2 1/4] genirq: Add irq_chip_(startup/shutdown)_parent()
+Date: Thu, 14 Aug 2025 07:28:31 +0800
+Message-ID: <20250813232835.43458-2-inochiama@gmail.com>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20250813232835.43458-1-inochiama@gmail.com>
+References: <20250813232835.43458-1-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -100,43 +104,86 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When using NVME on SG2044, the NVME always complains "I/O tag XXX
-(XXX) QID XX timeout, completion polled", which is caused by the
-broken handler of the sg2042-msi driver.
+As the MSI controller on SG2044 uses PLIC as the underlying interrupt
+controller, it needs to call the irq_enable() and irq_disable() to
+startup/shutdown irqs. Otherwise, the MSI interrupt can not be startup
+correctly and will not respond any incoming interrupt.
 
-As PLIC driver can only setting affinity when enabling, the sg2042-msi
-does not properly handled affinity setting previously and enable irq in
-an unexpected executing path.
+Introduce helper irq_chip_startup_parent() and irq_chip_shutdown_parent()
+to allow the interrupt controller to call the irq_startup() or
+irq_shutdown() of the parent interrupt chip. In case irq_startup() or
+irq_shutdown() is not implemented for the parent interrupt chip, which
+will fallback to irq_chip_enable_parent() or irq_chip_disable_parent().
 
-Add irq_startup/irq_shutdown support to the PCI template domain,
-then set irq_chip_[startup/shutdown]_parent for irq_startup/
-irq_shutdown of the sg2042-msi driver. So the irq can be started
-properly.
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+---
+ include/linux/irq.h |  2 ++
+ kernel/irq/chip.c   | 37 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
-Change from v1:
-1. patch 1: Fix comment format problem, and structure the changelog.
-2. patch 2: Improve the comment title and body, add describtion about
-            the fact the PLIC is used as parent chip.
-3. patch 2: Remove __always_inline for cond_[shutdown/startup]_parent().
-4. patch 3: Update the align of the "XXX_MSI_FLAGS_XXX" macro.
-5. patch 4: Claim the fact that the added flag is used by the negotiation
-            of MSI controller driver and PCIe device driver, and can be
-	    only used when both of them support this flag.
-
-Inochi Amaoto (4):
-  genirq: Add irq_chip_(startup/shutdown)_parent()
-  PCI/MSI: Add startup/shutdown for per device domains
-  irqchip/sg2042-msi: Fix broken affinity setting
-  irqchip/sg2042-msi: Set MSI_FLAG_MULTI_PCI_MSI flags for SG2044
-
- drivers/irqchip/irq-sg2042-msi.c | 19 +++++++++---
- drivers/pci/msi/irqdomain.c      | 52 ++++++++++++++++++++++++++++++++
- include/linux/irq.h              |  2 ++
- include/linux/msi.h              |  2 ++
- kernel/irq/chip.c                | 37 +++++++++++++++++++++++
- 5 files changed, 107 insertions(+), 5 deletions(-)
-
---
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 1d6b606a81ef..890e1371f5d4 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -669,6 +669,8 @@ extern int irq_chip_set_parent_state(struct irq_data *data,
+ extern int irq_chip_get_parent_state(struct irq_data *data,
+ 				     enum irqchip_irq_state which,
+ 				     bool *state);
++extern void irq_chip_shutdown_parent(struct irq_data *data);
++extern unsigned int irq_chip_startup_parent(struct irq_data *data);
+ extern void irq_chip_enable_parent(struct irq_data *data);
+ extern void irq_chip_disable_parent(struct irq_data *data);
+ extern void irq_chip_ack_parent(struct irq_data *data);
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 0d0276378c70..3ffa0d80ddd1 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -1259,6 +1259,43 @@ int irq_chip_get_parent_state(struct irq_data *data,
+ }
+ EXPORT_SYMBOL_GPL(irq_chip_get_parent_state);
+ 
++/**
++ * irq_chip_shutdown_parent - Shutdown the parent interrupt
++ * @data:	Pointer to interrupt specific data
++ *
++ * Invokes the irq_shutdown() callback of the parent if available or falls
++ * back to irq_chip_disable_parent().
++ */
++void irq_chip_shutdown_parent(struct irq_data *data)
++{
++	struct irq_data *parent = data->parent_data;
++
++	if (parent->chip->irq_shutdown)
++		parent->chip->irq_shutdown(parent);
++	else
++		irq_chip_disable_parent(data);
++}
++EXPORT_SYMBOL_GPL(irq_chip_shutdown_parent);
++
++/**
++ * irq_chip_startup_parent - Startup the parent interrupt
++ * @data:	Pointer to interrupt specific data
++ *
++ * Invokes the irq_startup() callback of the parent if available or falls
++ * back to irq_chip_enable_parent().
++ */
++unsigned int irq_chip_startup_parent(struct irq_data *data)
++{
++	struct irq_data *parent = data->parent_data;
++
++	if (parent->chip->irq_startup)
++		return parent->chip->irq_startup(parent);
++
++	irq_chip_enable_parent(data);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(irq_chip_startup_parent);
++
+ /**
+  * irq_chip_enable_parent - Enable the parent interrupt (defaults to unmask if
+  * NULL)
+-- 
 2.50.1
 
 
