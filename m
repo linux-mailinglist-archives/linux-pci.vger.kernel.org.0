@@ -1,200 +1,158 @@
-Return-Path: <linux-pci+bounces-33894-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33895-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38D3DB23D4A
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 02:42:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D697B23DB3
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 03:31:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 809AD3ABB20
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 00:41:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3DD393A8338
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 01:31:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 630551B808;
-	Wed, 13 Aug 2025 00:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 088E919992C;
+	Wed, 13 Aug 2025 01:31:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJ2ozjWN"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IiB6wOPv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334494685;
-	Wed, 13 Aug 2025 00:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813EC17578
+	for <linux-pci@vger.kernel.org>; Wed, 13 Aug 2025 01:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755045682; cv=none; b=lvRL13G2xSmx8G/BLpak14c9ailqxJi/gmCj0faPZuaAM//ZdMJ6vodPCx7KwuQmW235I66zgBeNdVQJlaiXVTD97amWfGUtRkm27Vnzkdti5U/s/WkCYXZPzg178AbQTqs7fyAH+djlD9k/8oHFrLk7uD7WKfCfROy1aJf3jdA=
+	t=1755048707; cv=none; b=YHYyTwL/FfolXl2PFyX/l9nQXPLnCchKrAg9JMnaqfxqb3zWzBHKMEuVbb811OHPtZe8Fhq13NfV9Nc6+Lvz+34eWJt9miphuArfCLNMigncbJcU38qSSTQTwwkfMAhd2RJTiBt+jp85Lx1pEDlyziaX1BDpv/zVPxmKZFwpAk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755045682; c=relaxed/simple;
-	bh=Asl961UA0vCD59+9K43qgi5UO6CxgMvHPUzfukUNK24=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Om9OxuIk++tU38ug3SFRPGCnn2FeNoIjGcTu7UhNY+s9mlpF3mgbcerr0DkGDF4YMjckXaMATmf0ufZxKadsjSpG5oksgXD6FJpNYq3NFGskVVQUPDAl57VlhSwChLzbBTKBszRSZ6F9+IBaM8Sed3qzmDuG2zrhKrqzoaQ+sEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJ2ozjWN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6494EC4CEF0;
-	Wed, 13 Aug 2025 00:41:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755045681;
-	bh=Asl961UA0vCD59+9K43qgi5UO6CxgMvHPUzfukUNK24=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vJ2ozjWNphL/gaj64VX0kduHHYvtCg2wG0Qn1q3Eo0znTTQEWAb7/AOGep3z0Afpo
-	 2Ay2/hE0Eat3ioXCuCl6mg+l4mPD5Cdm0nZWz3GD/hCRYkKNDZ3rljqXggql5iwbZf
-	 1hVf5D8ri+rTQP5fZazAfYv5ekrFw2AU7VisIoC6uXj9LfRbm97O2FG/TVyUsrrHr7
-	 JWeqWldHB6kDW/RJtaDuAj31lbtkfzSWJNwsnsiXTgEnUDo+ByfLSY8/uvfv7rq9R4
-	 aopPNxNNxDvb0DHs9jVxWOn/+cn01wb99WAyxwjslCZNBsa7DAx1/mdum2jyEiUTvE
-	 4dlMG1OOwjRSw==
-Date: Wed, 13 Aug 2025 00:41:20 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, lpieralisi@kernel.org, kw@linux.com, mani@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de, x86@kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH v4 2/7] x86/hyperv: Use hv_setup_*() to set up hypercall
- arguments -- part 1
-Message-ID: <aJvfMN5BhyO5Ap5m@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250718045545.517620-1-mhklinux@outlook.com>
- <20250718045545.517620-3-mhklinux@outlook.com>
- <252e58be-4377-49b7-a572-0d40f54993d1@linux.microsoft.com>
+	s=arc-20240116; t=1755048707; c=relaxed/simple;
+	bh=MvPb3zCS9Grc/PvA90a/i9WK+vFW2rPw8r2AYE0gtqI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZmC/CQj/23obtM99fD8tDilquphvhc0qeTjVViRcp91RQR5R/ix9XJk1XU9kk//4KRfqHyJ7H2zuq/c38ojMuzWZiDGWDjMlcnLC/gzjEZJWhmsqTqkpon3e6rZB7bGn5foao0EHRqDyEmUjDDIl/tYQldzDgBP1xwrf51LucyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IiB6wOPv; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57CLOH8O012907
+	for <linux-pci@vger.kernel.org>; Wed, 13 Aug 2025 01:31:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	MvPb3zCS9Grc/PvA90a/i9WK+vFW2rPw8r2AYE0gtqI=; b=IiB6wOPvYXwAKf4H
+	3/5ujJyGZpMq2KmwJJ8MUDUMPmhOg6LTMPvJY+5VQRhRUBcG2HSGxdyrIg9wFCyn
+	JWlCSeL39kioCp1HNWSG2J8g6n1yRorLsefD+ozoJY1q2CE3Du1/5az7l3Br4bLb
+	Kxa2n+GhYeTjn7h8jKjky4mhvKFzr4ATAp0MgU0xlwy3LnOqpm5AOUR5BxPZYAMf
+	cB+flLbu68MCm8sxnUiRmzmegr6up+BHxPQXJ6DGkaOcIeUfm9kc7N/RQQ7cIaa+
+	Nm5fPdevV650KCEApjTTlFYQruZu6AJ9Zdl9Xt22agft7PMGOFHZNl29HAFN8N2s
+	Lx5XWQ==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48fjxbd6ej-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Wed, 13 Aug 2025 01:31:45 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2400499ab2fso54066505ad.0
+        for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 18:31:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755048705; x=1755653505;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MvPb3zCS9Grc/PvA90a/i9WK+vFW2rPw8r2AYE0gtqI=;
+        b=Ofv87o3qOH3mCMv6uv+HT7FYjPqBHCCzcET6BYfMQPuf/PKstOfZtYuo8SFGICkJ9+
+         REsYvuhoCsK8PyTxJ9G+1AxtZ28xl7GQjim3/xdmaMUP6rts12N9xCnA2wHAgjLrLnZn
+         en6bB/12FXHBgaJM1SA+/nULws1Fr4FZ0ErZMZzPsQaXpjBP3ryANlJIIdcy32FaD4rd
+         qk5JBc155EFLMjHDqGbKUM+Ug7ZTBhpuMiPHD7ukTQeSKrjv9x4qw7NIj08NrhpO6vTs
+         nZLxkgHG9+eUei8hsUoQzl3quyVucpR1Zx0id63Ax94KcFWx1gQ0mmvI46VIzo3PsMXN
+         92iw==
+X-Forwarded-Encrypted: i=1; AJvYcCWyslea/GAyuyPMowjfMfjpXKRUm7hmzbTauKzPSvyNQyts8J/brwVPZkJDbQXGP4KA4A+7vmyCViE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGi8zlyohBY0UBxbU8gHyldpBoxx0nTC0FwIvFz1yfu2HSOo69
+	mumYh244grH4q61gm+twPq6Ujq1/RFY5BxpV8p939OYmaPszQ5l1yY+LYnxPpRGpz402mOOejHu
+	wC6aOT5ClBrwkc9vqV1mIoM0ODHmNE1eSHoy/VuJCz3UOfYee3VeiCn2uAOprGKI=
+X-Gm-Gg: ASbGncu5dAm1IbZ6DsmQT4YMtoWOnZdB/IEaUZeVbatHp5b/AWKhDjQDmMSiM958xnG
+	QOdXVrDuKwAJ30P5XIgh1+bHV6yYtUCbowWPqAWoSsQKl0O7N15F4A5VG7cXmY4W5mJchmhD/+i
+	eNdLU5RoJSQLqAlWmAeXGY1DYiQrQOflDMdPYUlqu/ZjPv/PLzlzYScQb7P/1z+mqHdOPOU7TAX
+	30PaaZIQgQFPrYBujotnCyn50Vq/K49Me//ZXChfbf1NCkjKTd3SI3K3GsfY7+9ThjCVPqTTbG0
+	YiTnzjmGP+CtydARRNScsAKsEcxFAr2ZoWDNWbtx4gBjA2wECiYhlwvyDPWT/lJehLzQf9PSRDc
+	5QP1C35WtF6f4UeMKOSvgKnn3dT1b
+X-Received: by 2002:a17:903:3c2c:b0:240:bf59:26bb with SMTP id d9443c01a7336-2430d105d69mr17783295ad.19.1755048704787;
+        Tue, 12 Aug 2025 18:31:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGdQ1DXAaDzxKmVvrKlv5h38m6LWfzDz/yLj0/n0px8bSRgCo+HiXsqzUIOas6zP/ZN2Hi6dg==
+X-Received: by 2002:a17:903:3c2c:b0:240:bf59:26bb with SMTP id d9443c01a7336-2430d105d69mr17782695ad.19.1755048704225;
+        Tue, 12 Aug 2025 18:31:44 -0700 (PDT)
+Received: from [10.133.33.58] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241d1ef83f3sm310234365ad.28.2025.08.12.18.31.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Aug 2025 18:31:43 -0700 (PDT)
+Message-ID: <cef1da96-f584-4100-a97d-640fa24e5f54@oss.qualcomm.com>
+Date: Wed, 13 Aug 2025 09:31:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <252e58be-4377-49b7-a572-0d40f54993d1@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 1/5] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
+ Update pcie phy bindings for qcs8300
+To: Vinod Koul <vkoul@kernel.org>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
+        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+        bhelgaas@google.com, johan+linaro@kernel.org, kishon@kernel.org,
+        neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
+References: <20250811071131.982983-1-ziyue.zhang@oss.qualcomm.com>
+ <20250811071131.982983-2-ziyue.zhang@oss.qualcomm.com>
+ <aJsYd7tAi4CdOfZ9@vaman>
+Content-Language: en-US
+From: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+In-Reply-To: <aJsYd7tAi4CdOfZ9@vaman>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=G6EcE8k5 c=1 sm=1 tr=0 ts=689beb01 cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=buFmA9CyAF0SDTxNqVIA:9
+ a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODExMDA5NyBTYWx0ZWRfX/Z3UolrsOtra
+ cGCRKNAJdY5jPi8a1eHW7tmS1aA7+nqIyNKkeWIqX1MwtUkX4MJfcCdZw2Hgcc4xtWJXSRDzcWH
+ VT7vIRvCDjlZE87bAdUocD5mBTSygZC0bQW1QaFducFBAec5ZclKedpmJOE19j5M2DElGIJ7aRU
+ +tFxdw2xirS0icfO169JsGIMm9daKrBk8Hh+r4NKtOcIsJM3JS3HkNN+DaS8Mh8A51BFYsuHBbJ
+ XDLidVoRvzW+m992nsv+yB1Src0ROdjZ8dEMFA82WrK8CL4M2KLRTWIZYdmcqwWWsED7kIcSTjD
+ j7oFJn091KC1HNcEa+hbuWfsyGVwD7Zu7IH0iLYh1eA4Dca5gMpa+dx7qzrlUSMs6ZhpNCz2uZu
+ HKGMOtbM
+X-Proofpoint-ORIG-GUID: DQw6PHiOaRKklZwsOi3lwJOVFKpHEfDj
+X-Proofpoint-GUID: DQw6PHiOaRKklZwsOi3lwJOVFKpHEfDj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-12_08,2025-08-11_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 priorityscore=1501 bulkscore=0 spamscore=0 phishscore=0
+ malwarescore=0 adultscore=0 impostorscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508110097
 
-On Tue, Aug 12, 2025 at 05:22:29PM -0700, Nuno Das Neves wrote:
-> On 7/17/2025 11:55 PM, mhkelley58@gmail.com wrote:
-> > From: Michael Kelley <mhklinux@outlook.com>
-> > 
-> > Update hypercall call sites to use the new hv_setup_*() functions
-> > to set up hypercall arguments. Since these functions zero the
-> > fixed portion of input memory, remove now redundant calls to memset()
-> > and explicit zero'ing of input fields.
-> > 
-> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> > Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> > ---
-> > 
-> > Notes:
-> >     Changes in v4:
-> >     * Rename hv_hvcall_*() functions to hv_setup_*() [Easwar Hariharan]
-> >     * Rename hv_hvcall_in_batch_size() to hv_get_input_batch_size()
-> >       [Easwar Hariharan]
-> >     
-> >     Changes in v2:
-> >     * Fixed get_vtl() and hv_vtl_apicid_to_vp_id() to properly treat the input
-> >       and output arguments as arrays [Nuno Das Neves]
-> >     * Enhanced __send_ipi_mask_ex() and hv_map_interrupt() to check the number
-> >       of computed banks in the hv_vpset against the batch_size. Since an
-> >       hv_vpset currently represents a maximum of 4096 CPUs, the hv_vpset size
-> >       does not exceed 512 bytes and there should always be sufficent space. But
-> >       do the check just in case something changes. [Nuno Das Neves]
-> > 
-> 
-> <snip>
-> 
-> > diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
-> > index 090f5ac9f492..87ebe43f58cf 100644
-> > --- a/arch/x86/hyperv/irqdomain.c
-> > +++ b/arch/x86/hyperv/irqdomain.c
-> > @@ -21,15 +21,15 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
-> >  	struct hv_device_interrupt_descriptor *intr_desc;
-> >  	unsigned long flags;
-> >  	u64 status;
-> > -	int nr_bank, var_size;
-> > +	int batch_size, nr_bank, var_size;
-> >  
-> >  	local_irq_save(flags);
-> >  
-> > -	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> > -	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
-> > +	batch_size = hv_setup_inout_array(&input, sizeof(*input),
-> > +			sizeof(input->interrupt_descriptor.target.vp_set.bank_contents[0]),
-> > +			&output, sizeof(*output), 0);
-> >  
-> 
-> Hi Michael, I finally managed to test this series on (nested) root
-> partition and encountered an issue when I applied this patch.
-> 
-> With the above change, I saw HV_STATUS_INVALID_ALIGNMENT from this
-> hypercall. I printed out the addresses and sizes and everything looked
-> correct. The output seemed to be correctly placed at the end of the
-> percpu page. E.g. if input was allocated at an address ending in 0x3000,
-> output would be at 0x3ff0, because hv_output_map_device_interrupt is
-> 0x10 bytes in size.
-> 
-> But it turns out, the definition for hv_output_map_device_interrupt
-> is out of date (or was never correct)! It should be:
-> 
-> struct hv_output_map_device_interrupt {
-> 	struct hv_interrupt_entry interrupt_entry;
-> 	u64 extended_status_deprecated[5];
-> } __packed;
-> 
-> (The "extended_status_deprecated" field is missing in the current code.)
-> 
-> Due to this, when the hypervisor validates the hypercall input/output,
-> it sees that output is going across a page boundary, because it knows
-> sizeof(hv_output_map_device_interrupt) is actually 0x58.
-> 
-> I confirmed that adding the "extended_status_deprecated" field fixes the
-> issue. That should be fixed either as part of this patch or an additional
-> one.
 
-Thanks for testing this, Nuno. In that case, can you please submit a
-patch for hv_output_map_device_interrupt? That can go in via the fixes
-tree.
+On 8/12/2025 6:33 PM, Vinod Koul wrote:
+> On 11-08-25, 15:11, Ziyue Zhang wrote:
+>> The gcc_aux_clk is not required by the PCIe PHY on qcs8300 and is not
+>> specified in the device tree node. Hence, move the qcs8300 phy
+>> compatibility entry into the list of PHYs that require six clocks.
+>>
+>> Removed the phy_aux clock from the PCIe PHY binding as it is no longer
+>> used by any instance.
+> This does not apply on phy tree, please rebase
 
-Thanks,
-Wei
+Hi Vinod
 
-> 
-> Nuno
-> 
-> PS. I have yet to test the mshv driver changes in patch 6, I'll try to
-> do so this week.
-> 
-> >  	intr_desc = &input->interrupt_descriptor;
-> > -	memset(input, 0, sizeof(*input));
-> >  	input->partition_id = hv_current_partition_id;
-> >  	input->device_id = device_id.as_uint64;
-> >  	intr_desc->interrupt_type = HV_X64_INTERRUPT_TYPE_FIXED;
-> > @@ -41,7 +41,6 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
-> >  	else
-> >  		intr_desc->trigger_mode = HV_INTERRUPT_TRIGGER_MODE_EDGE;
-> >  
-> > -	intr_desc->target.vp_set.valid_bank_mask = 0;
-> >  	intr_desc->target.vp_set.format = HV_GENERIC_SET_SPARSE_4K;
-> >  	nr_bank = cpumask_to_vpset(&(intr_desc->target.vp_set), cpumask_of(cpu));
-> >  	if (nr_bank < 0) {
-> > @@ -49,6 +48,11 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
-> >  		pr_err("%s: unable to generate VP set\n", __func__);
-> >  		return -EINVAL;
-> >  	}
-> > +	if (nr_bank > batch_size) {
-> > +		local_irq_restore(flags);
-> > +		pr_err("%s: nr_bank too large\n", __func__);
-> > +		return -EINVAL;
-> > +	}
-> >  	intr_desc->target.flags = HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET;
-> >  
-> >  	/*
-> > @@ -78,9 +82,8 @@ static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *old_entry)
-> >  	u64 status;
-> >  
-> >  	local_irq_save(flags);
-> > -	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> >  
-> > -	memset(input, 0, sizeof(*input));
-> > +	hv_setup_in(&input, sizeof(*input));
-> >  	intr_entry = &input->interrupt_entry;
-> >  	input->partition_id = hv_current_partition_id;
-> >  	input->device_id = id;
-> 
-> 
+This patch based on the patch you applied in 8.12.
+
+dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
+commit: aac1256a41cfbbaca12d6c0a5753d1e3b8d2d8bf
+
+Can you try to apply it again ? Thanks
+
+BRs
+Ziyue
+
 
