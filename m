@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-34006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6831B25792
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 01:30:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7500AB25791
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 01:30:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16F0D1C851F0
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 23:30:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34BBC9A5424
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 23:30:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C45B2FC890;
-	Wed, 13 Aug 2025 23:29:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 671602FE051;
+	Wed, 13 Aug 2025 23:29:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hw2sBCr7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvabDMgN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C852930E826;
-	Wed, 13 Aug 2025 23:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A580C2FC880;
+	Wed, 13 Aug 2025 23:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755127788; cv=none; b=DpmspkVgq0NQ74eJQJMy5bnQly3E83gGE2oqPemDxf4GZo0jWY21m5XaNTylCGoI2ZTnJzCo36ePlEfQXCfl75srFvXg1BwzCvgYwdXrex209py9AdoNQi7p4+3crUrnc8hNVbVA9hHdtSeZbQ9kFwEwPlwVtsE1axOetkcng68=
+	t=1755127794; cv=none; b=V1wB7E5mgpPVBCSSWOV05VwOjzJ923VujVPAbhX3fW6o9AuxU2n04fVvGsbGLIdy1fZlK7r1qUGySL7OziyBGwZZsViMzxmQmYrenTyrX3XeN7fOQoGpvsKsAiqTSIQAfC7wqs42XQR4xleSJNtkjpQl8PEqhuc9Qvv8akNqJJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755127788; c=relaxed/simple;
-	bh=2LK5W+JZSZmPkHrP4b6a8f3jOPsZqtbjLW2yPXpAuN0=;
+	s=arc-20240116; t=1755127794; c=relaxed/simple;
+	bh=piMWvycnEdu70/fVFMAzrewIeeN8YHNbChA5Pe9yc7g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QYnHdNrkvXWwCRgP9hi5VpKDVgIuyi0CP6OGYoUVNFkWIEhcMAptK0/rhpxdUH3RFFbuXDGN4IG8GCNB9LiiozYxLc6lDyNwmKT3tWva831S/cil4eP6fSdvwf3IHrHxe4jx7g34gqLBCHtB4DBHrQgkTJg3/XYkVkp4EhdFy6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hw2sBCr7; arc=none smtp.client-ip=209.85.167.47
+	 MIME-Version; b=MvrrdDEkGl3mm6TeIYRV6b5eceU9W6EeuaXzYG56Fi1Kz0FgI96zuFLpNlkFx9uJFVGEi3O/crcXMY0tUYQKIxGPtwmQ5ppYuWLiHNgz66fa5b4LAtVF9S7eJF2z138X5QlgSr0MQsIkhC1c2DchaGg2hDfz5W5QKR0JBD/tWec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fvabDMgN; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55ce5253adcso333043e87.2;
-        Wed, 13 Aug 2025 16:29:46 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55ce520caf9so367434e87.1;
+        Wed, 13 Aug 2025 16:29:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755127785; x=1755732585; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1755127791; x=1755732591; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Foq/OUZ4KFe7Zsy/GjghiiTzgbU+KXnHb7Hj/cCODdI=;
-        b=Hw2sBCr73mctnHPJO331KsAesnuq6gxoIr6GNCmTY5lTYDZoliNBEzyyJ95sn3wdHB
-         wc7F3rZrk2wNQpGXj5CDE0VNd9EgMf0ubEiHbqY/8Oi1vcABNYLnpdaOx7Lax9ZgD0Bp
-         i6K8T/NGzcAoCWRoVUCMbUMhGVWD8es2S7huRv0w9eL8o5s55uHpQsZs0Bjt1QfyruOC
-         YXFbduTWm/vESJq9BM1GOyzUnqC8m1z3wEkS9zAKacOPpvie3SzUQZglrRYc6L1pt7ul
-         5iJj4ibia8PUeCM8E1+TnL2HZt72WoVV1M4AggHABLLJ8LuFL8IULglsackKmnhMFZZk
-         VdDg==
+        bh=5xcrFSa1CYMVvWw2HSy0jSP8tcoIqOypycqASfeKb+8=;
+        b=fvabDMgNuexNxovVsVXUto3UOtmzjdb9SxRDP3pp2c1TPBgLu+kEyWFbFFynBHJiGl
+         0338IySBBPAx8WxlGUzQacWN0gO7AKEQd0bA90JRFzYJvB4ppsQHweNSVIp3kTKzczPe
+         xmroKpfzCHzqeGGHcjxoxLEdiunS+CD6zahh6Oe8uI2Q58M6GuGkB5BBHYJOMNi2E0nJ
+         jGUyvuzQukAL9x0whLLBEohIa7AC/wtSE9Mug50a3Tsy/tKo+VksFwF/C+hNSRtqhpWv
+         qygzdN0EHE8UwWsYd914SHm8RAy3FS3f9Bg4YxU0wmAGLHKGTh9IyzRmV5STE1FrP191
+         ZXRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755127785; x=1755732585;
+        d=1e100.net; s=20230601; t=1755127791; x=1755732591;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Foq/OUZ4KFe7Zsy/GjghiiTzgbU+KXnHb7Hj/cCODdI=;
-        b=SzUtmgMMl8pvkR7SY28ggPGl+64aJGDmrRzKCp868gEg/61Te3P0n7dhIZG03Xr7VL
-         JM8M260TzAEvbijdBQnCc9n7YWs2f50u/zJytkkcsAzikdnAJgHb5AmvnXcvT4wO2zkm
-         l8Fe88opSLe73iQX4ATI3waKbSeceCAGTXz3p5ZbdCkJjSi0Cg3A+NUUQf9qU79FPNm+
-         f56y3geIjI47RPEl0dRQ8d4QmebtoW75Aub7c0HjAhZaMXt1IaxfzUTSG8fK53I2v9wu
-         g9yUpgoDNceCAceN19i5JcE6jGiifMM+RQaMcU7FrWJnyZtNXLoMy2aVTjv/bcPCdnFe
-         8Khw==
-X-Forwarded-Encrypted: i=1; AJvYcCVagKYIOuPrBuN5AQ0NcbE9K9A8z5Q00Md2YFYNNvU1nmQdx3fw6UG0tl7Bss7oTE+KyiyYDuEAFZs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzD6+rNaubgSxwHUKI29iBRlmi0YV8+F8iDtjU49z7VOwxqhoH
-	KX3/wIJKHB9BniSvs9r29FW8xJCOxA3STJJezIpXhckhXuDrzon5/Fdq
-X-Gm-Gg: ASbGncsg1uxZB/5NF69Tru9jIrfv5Ruwq6kLxT3+5HRmRj9AYWwe4EzTptOWar3BqX5
-	TyGPFISqhbNr5iqimo4PEEfLAomWx7zgurVV50HRGzehGnapNi6TifSw2XnlN5AV4XwYCSFAnnr
-	eG/hPbg826D+S2lR4jQ013mHmd635/dKuObdrUYOnPEpzgjMIBEZB5pU64bmcC/e5Afxr/3XRrY
-	3Gtg13V729NWftdjx9Xxpcq4CC4+XYQ5LUCNxTWkE933Gw7ii/u0rgUl0GzMzhBolegHmwYLbtk
-	0c9lQvFokKbFO7wIhCvYh9gaMJbngyliAQlRC6yUGsMUd6HkZPaC3cr/zvaHDbY5zDw8UB9yWWt
-	5BfZCWtvVreHjbW5v8sbr6A==
-X-Google-Smtp-Source: AGHT+IEwedvQm4abSTCNAeN61p8SIiGsZtxfvvAm/wZPYZpEYGFLbijTSP2QjyT1iABcQdhZ5qS3ag==
-X-Received: by 2002:a05:6512:3b2c:b0:55c:c971:2250 with SMTP id 2adb3069b0e04-55ce5072199mr302500e87.28.1755127784373;
-        Wed, 13 Aug 2025 16:29:44 -0700 (PDT)
+        bh=5xcrFSa1CYMVvWw2HSy0jSP8tcoIqOypycqASfeKb+8=;
+        b=KIX4HtwMkM0leFGw4vGbi4VgJ0Cf9eE7kVhBWtl8TD2GdgUqQ5fXQxIxREdegF/xnH
+         iCsc8fFOn3fVFcql3LV8OiZrsJvRCYbeUoVu4SRoG3TbcMO2Zl/qRGQv26/6XDX6+tDq
+         9bNSFga8oL9Jw9ux6o46JIqENmMEw0AErkuaALjpV5n5dng1NTJHeC7sdC3qCIDIc/42
+         VOCChngpsae25ej09I2ALZE5WlB6QjoSyYBpyGVJWPt3jwjq2Iky67vrQgT4HNuhcNU3
+         Vps3wh0wlafDMChfycoIQuqXlk4hFXcjkg/vDeqfqrqBO8DdGEKP8XF/f5AjdlYlKt47
+         hF/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV6HW7YT4k1m3aDYIwYZB/7/Q7Tk4kPFN5i14m5cB9QuPg4T41alMBn3dpiWCebDryfOy0Yk3gF8iM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEzCethdcl289Ac5A3c5C5iq08S8W56lBzwezeek88Hwy9lClf
+	SKwhMhrwj9WUgimw5ts/QVIJalfGV/d/oeEAiV7ItjgAZe7PQzE69GOfG8IBYGaH4cs=
+X-Gm-Gg: ASbGncvSVmxvSJUvyXmmB0GyVFYU475+1/A6DupF6JC0QWSKbtlwmH//+aftCRDXeFi
+	c1Dux2fQgYiZTjhz/+8WY3cDjUmDKOiBzOo/1ch886zYIyOG7Ob827OYm7LO4q0YtUvW9LSpp/W
+	G10zv3Nmt+zR1DO1a2IF6tq1ZZKOeScTSbVSeDirbm/4Byu4DI91h8NQeELY8Wa5G++Eemh2hMz
+	CI6k2JHJAggwDE2x4NsJPaHHcvi2Flwi+IZGox1Zwty8R1n6aV6mj2pZE4mHv21oyVxrI1ZbU5R
+	ZpGmFoKVdT1RlS/lCfyWrJk2Z/kethbVH0KLdq9x2Trw2JdtPOcv26YBqHvmA8WBwcvQvsIyp+K
+	wH2QBcnFUEOIfCiM5AkeX2w==
+X-Google-Smtp-Source: AGHT+IH1sstAEYrZUE3/jW4348pTT71ciYB/Gp7Yz4EG8a/pEaDmYG81yi7mFTAFrfnk/H2scM8zDg==
+X-Received: by 2002:a05:6512:6cf:b0:55b:940d:896f with SMTP id 2adb3069b0e04-55ce50b89a2mr279443e87.55.1755127790619;
+        Wed, 13 Aug 2025 16:29:50 -0700 (PDT)
 Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-55b88cb8d88sm5401345e87.173.2025.08.13.16.29.41
+        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-55b8898bf90sm5539497e87.26.2025.08.13.16.29.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Aug 2025 16:29:42 -0700 (PDT)
+        Wed, 13 Aug 2025 16:29:50 -0700 (PDT)
 From: Inochi Amaoto <inochiama@gmail.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -89,11 +89,10 @@ To: Thomas Gleixner <tglx@linutronix.de>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>,
-	Han Gao <rabenda.cn@gmail.com>
-Subject: [PATCH v2 3/4] irqchip/sg2042-msi: Fix broken affinity setting
-Date: Thu, 14 Aug 2025 07:28:33 +0800
-Message-ID: <20250813232835.43458-4-inochiama@gmail.com>
+	Longbin Li <looong.bin@gmail.com>
+Subject: [PATCH v2 4/4] irqchip/sg2042-msi: Set MSI_FLAG_MULTI_PCI_MSI flags for SG2044
+Date: Thu, 14 Aug 2025 07:28:34 +0800
+Message-ID: <20250813232835.43458-5-inochiama@gmail.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250813232835.43458-1-inochiama@gmail.com>
 References: <20250813232835.43458-1-inochiama@gmail.com>
@@ -105,74 +104,28 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When using NVME on SG2044, the NVME always complains "I/O tag XXX
-(XXX) QID XX timeout, completion polled", which is caused by the
-broken handler of the sg2042-msi driver.
+The MSI controller on SG2044 has the ability to allocate multiple
+PCI MSI interrupts. So the PCIe controller driver can use this
+feature if it also supports multiple PCI MSI interrupts.
 
-As PLIC driver can only set affinity when enabling, the sg2042-msi
-does not properly handled affinity setting previously and enables
-irq in an unexpected executing path.
+Add MSI_FLAG_MULTI_PCI_MSI flag for the supported_flags of
+SG2044 msi_parent_ops so the PCIe controller driver can use
+this feature if it also supports this feature.
 
-Since the PCI template domain supports irq_startup()/irq_shutdown(),
-set irq_chip_[startup/shutdown]_parent() for irq_startup() and
-irq_shutdown(). So the irq can be started properly.
-
-Fixes: e96b93a97c90 ("irqchip/sg2042-msi: Add the Sophgo SG2044 MSI interrupt controller")
-Reported-by: Han Gao <rabenda.cn@gmail.com>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
 ---
- drivers/irqchip/irq-sg2042-msi.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ drivers/irqchip/irq-sg2042-msi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/irqchip/irq-sg2042-msi.c b/drivers/irqchip/irq-sg2042-msi.c
-index bcfddc51bc6a..2fd4d94f9bd7 100644
+index 2fd4d94f9bd7..3b13dbbfdb51 100644
 --- a/drivers/irqchip/irq-sg2042-msi.c
 +++ b/drivers/irqchip/irq-sg2042-msi.c
-@@ -85,6 +85,8 @@ static void sg2042_msi_irq_compose_msi_msg(struct irq_data *d, struct msi_msg *m
+@@ -212,6 +212,7 @@ static const struct msi_parent_ops sg2042_msi_parent_ops = {
+ 				   MSI_FLAG_PCI_MSI_STARTUP_PARENT)
  
- static const struct irq_chip sg2042_msi_middle_irq_chip = {
- 	.name			= "SG2042 MSI",
-+	.irq_startup		= irq_chip_startup_parent,
-+	.irq_shutdown		= irq_chip_shutdown_parent,
- 	.irq_ack		= sg2042_msi_irq_ack,
- 	.irq_mask		= irq_chip_mask_parent,
- 	.irq_unmask		= irq_chip_unmask_parent,
-@@ -114,6 +116,8 @@ static void sg2044_msi_irq_compose_msi_msg(struct irq_data *d, struct msi_msg *m
- 
- static struct irq_chip sg2044_msi_middle_irq_chip = {
- 	.name			= "SG2044 MSI",
-+	.irq_startup		= irq_chip_startup_parent,
-+	.irq_shutdown		= irq_chip_shutdown_parent,
- 	.irq_ack		= sg2044_msi_irq_ack,
- 	.irq_mask		= irq_chip_mask_parent,
- 	.irq_unmask		= irq_chip_unmask_parent,
-@@ -185,8 +189,10 @@ static const struct irq_domain_ops sg204x_msi_middle_domain_ops = {
- 	.select	= msi_lib_irq_domain_select,
- };
- 
--#define SG2042_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS |	\
--				   MSI_FLAG_USE_DEF_CHIP_OPS)
-+#define SG2042_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS |		\
-+				   MSI_FLAG_USE_DEF_CHIP_OPS |		\
-+				   MSI_FLAG_PCI_MSI_MASK_PARENT |	\
-+				   MSI_FLAG_PCI_MSI_STARTUP_PARENT)
- 
- #define SG2042_MSI_FLAGS_SUPPORTED MSI_GENERIC_FLAGS_MASK
- 
-@@ -200,10 +206,12 @@ static const struct msi_parent_ops sg2042_msi_parent_ops = {
- 	.init_dev_msi_info	= msi_lib_init_dev_msi_info,
- };
- 
--#define SG2044_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS |	\
--				   MSI_FLAG_USE_DEF_CHIP_OPS)
-+#define SG2044_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS |		\
-+				   MSI_FLAG_USE_DEF_CHIP_OPS |		\
-+				   MSI_FLAG_PCI_MSI_MASK_PARENT |	\
-+				   MSI_FLAG_PCI_MSI_STARTUP_PARENT)
- 
--#define SG2044_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK |	\
-+#define SG2044_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK |		\
+ #define SG2044_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK |		\
++				    MSI_FLAG_MULTI_PCI_MSI |		\
  				    MSI_FLAG_PCI_MSIX)
  
  static const struct msi_parent_ops sg2044_msi_parent_ops = {
