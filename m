@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-33998-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33999-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81B46B25727
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 01:01:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1D88B25732
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 01:05:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C329C1885AC2
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 23:02:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6022172661A
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 23:05:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DCB530146B;
-	Wed, 13 Aug 2025 23:01:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2160326AEC;
+	Wed, 13 Aug 2025 23:05:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T09MuAme"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XBSSFvvO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551F2301463
-	for <linux-pci@vger.kernel.org>; Wed, 13 Aug 2025 23:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CF72EA16E
+	for <linux-pci@vger.kernel.org>; Wed, 13 Aug 2025 23:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755126113; cv=none; b=JKSz7QAm2mOlmm8xrhDrNwV7LlWtM3DDtedVEjxK16BM2H0JUXGEJl6q5t5HcXV3gZcJcmwbCRXlXSFlMAjiqMRNPCpzLa2lX5x4ifXeWrCJRnAWp0SIHfbD3fxWppKguSrE3uYAxo/q2ubztwQYLXXTDrDZ6R/K64HBPe8fCEI=
+	t=1755126312; cv=none; b=s3VxeiejJ9Lylu8G5irQXeO6ui+X+0Yw0GFJt839TEKJBZ13LBt/cu6blOHW7rPkCJvteB5TL1htECtJemPEVd5CMyataN8cktfC/SzAy0vrWWPFtmEQFpuTcDgVCa58yLjQjYOp3YM9PHzXPJJMNnsSQoNpD9HBSWkhCVOAQzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755126113; c=relaxed/simple;
-	bh=W2L9yzRV2c5O9B7IEtrjF8WUFbxs5s8QKfHx3/oiOIQ=;
+	s=arc-20240116; t=1755126312; c=relaxed/simple;
+	bh=af2+KlDj0FItWaW81qBzp26/u+4WmaVEH6tIL/ZZkSo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IRzAQSJFn4dkumiw/KsJ6BMvmFkrKj5GGJCx32bLRh5hNfKg5+7pxpwlaeOELyqQdjMXXdB4Pu1BBmaGJewOk2nILo+M1J4RI14GIPHG3qFHrp3Z0BRUxRDEVncjO2WdbAOv0kWhNyNRRa2flHEg1wDNrxZNPBCgmTw2UGsRrYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T09MuAme; arc=none smtp.client-ip=198.175.65.19
+	 In-Reply-To:Content-Type; b=PC2zRo3zKt0/cspAk5o4B5dItGTZtCWYPolz2pfxx3yglwNLO2EDiOsHaoLb/lrCdS19BE3EU3ESU2MJ6a4u5hCYVNZdOpPeujPuvmDnOfsqc4Yp85zs2GolIqf1Jm+xIu3F0SCsB3hNnL6A7yv/gfGBe4GFcfzzkLGl8jdXE7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XBSSFvvO; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755126111; x=1786662111;
+  t=1755126311; x=1786662311;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=W2L9yzRV2c5O9B7IEtrjF8WUFbxs5s8QKfHx3/oiOIQ=;
-  b=T09MuAmeENTUDkaSVeGpHloNVRdgDSkCLywYtjNRwKAhAE94fPTPxDFG
-   WPiagJ21I0GZVv/K2BwHXt5yVwlm/AbZMmMdxRPYSVrQJmF4egDmcmvpU
-   APdl1qjSzrdWPYagQSuRlqd0OXIFIogleanjwq1xVjAMAlpBtbqXXlin8
-   Xl+F9geORijVJ0aWrIcqQmbWDI5QNAh0+0LVyEzgmVcLzKNq1DHKI44BZ
-   pQBjHBm6NVh9NyCkFf5DMWcqehBVckiB3nXmPdN1pERpwMG2UEpu6CklG
-   A6O6Tt3K8hiGcmgSWV4KS3TaeSK0/Cdozx22iLw8SitRZdEqhxvTjN432
-   Q==;
-X-CSE-ConnectionGUID: jYk4MZCMQG6nWi1rgMldaw==
-X-CSE-MsgGUID: /7uBtEBzSXqD7pW+oQQazg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="57304147"
+  bh=af2+KlDj0FItWaW81qBzp26/u+4WmaVEH6tIL/ZZkSo=;
+  b=XBSSFvvO8jOcyqMEFTxcoUhbG+VqfTwSBskF696al6JkxFs0ZMQnWEI4
+   PDnHAj7EFqwyhtuYlOAzu2jx/KaIjjsxCJb4HK5WBaj7ZNdkw4hGOGpGD
+   1NYdl0nJTbiP9j7tAEm1m+PamgCYKlCU/+r1DSC56RFcLyQiB/1FSnk7J
+   RZSBBTSIKcvcdviG+H3fKtfnbGYByB8o6VRkuRhM+9aSaQp57RjcMV1OF
+   wD9wtFUIMtYM1CwrwQ2Z9hPu61ggjHPL1xW64jig1seEB9F53ymmG9mXc
+   QKxXiTDK/3pePAoA7PtTPo3RVI26GDfs8njn98wRlKKMGDYsnqCoWY+q9
+   g==;
+X-CSE-ConnectionGUID: lrpDj8DKT4mJvavo00BGbw==
+X-CSE-MsgGUID: U/WThom3QPu+4/xRsSC8qw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="57515385"
 X-IronPort-AV: E=Sophos;i="6.17,287,1747724400"; 
-   d="scan'208";a="57304147"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 16:01:51 -0700
-X-CSE-ConnectionGUID: sl5NCfc+T2iQoqPkdGLMHQ==
-X-CSE-MsgGUID: vjLDRcRHTk2RnazkJtkl1Q==
+   d="scan'208";a="57515385"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 16:05:07 -0700
+X-CSE-ConnectionGUID: CTU1+4FHTLihCfthokJ0jg==
+X-CSE-MsgGUID: LFytUysMRLCmbqBI/wZ6JQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,287,1747724400"; 
-   d="scan'208";a="166245339"
+   d="scan'208";a="170736148"
 Received: from linux.intel.com ([10.54.29.200])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 16:01:50 -0700
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 16:05:06 -0700
 Received: from [10.124.222.231] (unknown [10.124.222.231])
-	by linux.intel.com (Postfix) with ESMTP id EE6C020B571C;
-	Wed, 13 Aug 2025 16:01:48 -0700 (PDT)
-Message-ID: <f0b59604-ae4d-4afe-8522-a8fbe5568e96@linux.intel.com>
-Date: Wed, 13 Aug 2025 16:01:43 -0700
+	by linux.intel.com (Postfix) with ESMTP id B97FC20B5720;
+	Wed, 13 Aug 2025 16:05:05 -0700 (PDT)
+Message-ID: <fa9f42ab-bced-4c7f-9977-c0b611e92e2e@linux.intel.com>
+Date: Wed, 13 Aug 2025 16:05:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] PCI/ERR: Fix uevent on failure to recover
+Subject: Re: [PATCH 3/5] PCI/ERR: Notify drivers on failure to recover
 To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
 Cc: Riana Tauro <riana.tauro@intel.com>,
  Aravind Iddamsetty <aravind.iddamsetty@linux.intel.com>,
@@ -82,66 +82,73 @@ Cc: Riana Tauro <riana.tauro@intel.com>,
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
  linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
 References: <cover.1755008151.git.lukas@wunner.de>
- <68fc527a380821b5d861dd554d2ce42cb739591c.1755008151.git.lukas@wunner.de>
+ <ec212d4d4f5c65d29349df33acdc9768ff8279d1.1755008151.git.lukas@wunner.de>
 Content-Language: en-US
 From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <68fc527a380821b5d861dd554d2ce42cb739591c.1755008151.git.lukas@wunner.de>
+In-Reply-To: <ec212d4d4f5c65d29349df33acdc9768ff8279d1.1755008151.git.lukas@wunner.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 On 8/12/25 10:11 PM, Lukas Wunner wrote:
-> Upon failure to recover from a PCIe error through AER, DPC or EDR, a
-> uevent is sent to inform user space about disconnection of the bridge
-> whose subordinate devices failed to recover.
+> According to Documentation/PCI/pci-error-recovery.rst, the following shall
+> occur on failure to recover from a PCIe Uncorrectable Error:
 >
-> However the bridge itself is not disconnected.  Instead, a uevent should
-> be sent for each of the subordinate devices.
+>    STEP 6: Permanent Failure
+>    -------------------------
+>    A "permanent failure" has occurred, and the platform cannot recover
+>    the device.  The platform will call error_detected() with a
+>    pci_channel_state_t value of pci_channel_io_perm_failure.
 >
-> Only if the "bridge" happens to be a Root Complex Event Collector or
-> Integrated Endpoint does it make sense to send a uevent for it (because
-> there are no subordinate devices).
+>    The device driver should, at this point, assume the worst. It should
+>    cancel all pending I/O, refuse all new I/O, returning -EIO to
+>    higher layers. The device driver should then clean up all of its
+>    memory and remove itself from kernel operations, much as it would
+>    during system shutdown.
 >
-> Right now if there is a mix of subordinate devices with and without
-> pci_error_handlers, a BEGIN_RECOVERY event is sent for those with
-> pci_error_handlers but no FAILED_RECOVERY event is ever sent for them
-> afterwards.  Fix it.
+> Sathya notes that AER does not call error_detected() on failure and thus
+> deviates from the document (as well as EEH, for which the document was
+> originally added).
 >
-> Fixes: 856e1eb9bdd4 ("PCI/AER: Add uevents in AER and EEH error/resume")
+> Most drivers do nothing on permanent failure, but the SCSI drivers and a
+> number of Ethernet drivers do take advantage of the notification to flush
+> queues and give up resources.
+>
+> Amend AER to notify such drivers and align with the documentation and EEH.
+>
+> Link: https://lore.kernel.org/r/f496fc0f-64d7-46a4-8562-dba74e31a956@linux.intel.com/
+> Suggested-by: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
 > Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: stable@vger.kernel.org  # v4.16+
 > ---
 
 Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
->   drivers/pci/pcie/err.c | 8 +++++++-
->   1 file changed, 7 insertions(+), 1 deletion(-)
+>   drivers/pci/pcie/err.c | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
 >
 > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index e795e5ae6b03..21d554359fb1 100644
+> index 21d554359fb1..930bb60fb761 100644
 > --- a/drivers/pci/pcie/err.c
 > +++ b/drivers/pci/pcie/err.c
-> @@ -108,6 +108,12 @@ static int report_normal_detected(struct pci_dev *dev, void *data)
->   	return report_error_detected(dev, pci_channel_io_normal, data);
->   }
+> @@ -110,7 +110,19 @@ static int report_normal_detected(struct pci_dev *dev, void *data)
 >   
-> +static int report_perm_failure_detected(struct pci_dev *dev, void *data)
-> +{
-> +	pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
-> +	return 0;
-> +}
-> +
->   static int report_mmio_enabled(struct pci_dev *dev, void *data)
+>   static int report_perm_failure_detected(struct pci_dev *dev, void *data)
 >   {
->   	struct pci_driver *pdrv;
-> @@ -272,7 +278,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->   failed:
->   	pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
->   
-> -	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
-> +	pci_walk_bridge(bridge, report_perm_failure_detected, NULL);
->   
->   	pci_info(bridge, "device recovery failed\n");
+> +	struct pci_driver *pdrv;
+> +	const struct pci_error_handlers *err_handler;
+> +
+> +	device_lock(&dev->dev);
+> +	pdrv = dev->driver;
+> +	if (!pdrv || !pdrv->err_handler || !pdrv->err_handler->error_detected)
+> +		goto out;
+> +
+> +	err_handler = pdrv->err_handler;
+> +	err_handler->error_detected(dev, pci_channel_io_perm_failure);
+> +out:
+>   	pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
+> +	device_unlock(&dev->dev);
+>   	return 0;
+>   }
 >   
 
 -- 
