@@ -1,265 +1,309 @@
-Return-Path: <linux-pci+bounces-33897-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33903-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 682F8B23F33
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 05:57:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 57875B23F8B
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 06:27:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 572FF1B67766
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 03:56:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 764C81AA3D2F
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 04:28:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BFD729DB6A;
-	Wed, 13 Aug 2025 03:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MzoMEIEP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C16C92BEFEB;
+	Wed, 13 Aug 2025 04:27:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022084.outbound.protection.outlook.com [40.107.75.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC422BE050
-	for <linux-pci@vger.kernel.org>; Wed, 13 Aug 2025 03:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755057314; cv=none; b=iIVhEQcCTkvsVvlgaZWFMQxUbEa+qeM+PWYPGMS93VEeMWj4I3/ez9EFV+NaZjwws+rCEjMGHmnnLBA2xl7T8y2hK6tJRvtlXojCDuTaamUQiO6DySE6U41VMa+RO4bLSrqWRHXHeggMlTXFjJcw7UFomMO5xjIL+HwXcKwYyWU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755057314; c=relaxed/simple;
-	bh=dnz52Dgxeba8OreSCFoW8AzKahq6NE+sYCZabA34LQo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GvcavoSmPoEQB9i4xiF4fxNyOIcAKerU/OpxATWDpwKaheoFVFQJMbr8hDisitMl6yg3HVjacnhXZUSoYDG3qjCaZ5B7j3gKwBFAy+pzgx3g8E3JP7IIUN17xWnVapwyYIEl2H8vR23d3EQnDsIcNhhV1/rA1yS/P/+DLF88wJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MzoMEIEP; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57D3nX8I006736
-	for <linux-pci@vger.kernel.org>; Wed, 13 Aug 2025 03:55:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	nL73GNJKLk9gxYhZAyNJw/OghTTtC6l/WSrfhqhdCug=; b=MzoMEIEPMWSVoNUJ
-	3sk0aj2VjkqD3b8AyFo6WpEwt8aIVsj4ufroqT3KgThb9nUcDLnfknXUywqb0bif
-	jmlCYgJduTOO2IfnHo+PtlO9nwL3z8Xylhf2EFCrE9e0+Ik/45GhJihZqtBptd7S
-	LEHKIewo8ZpbSfIiDVo7LcWkaaFump4j4z1DiqqCHuPNexgS0bMwWB8VHS5i9IuH
-	1ltASY2fCZ9XrwK9+PDBJc+gFLL4G6yHyxjSirc5jqwrA9c54IBNnVw+hvf1cluq
-	bNN9c4oLcG3HtzWd2t1y0ArTQG+4b2mHkhFcPTRalnIJK+8SaTDBn8y+E6TtYFVD
-	O+LvzA==
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48g9q9se61-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Wed, 13 Aug 2025 03:55:12 +0000 (GMT)
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-31f65d519d3so11650985a91.2
-        for <linux-pci@vger.kernel.org>; Tue, 12 Aug 2025 20:55:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755057311; x=1755662111;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nL73GNJKLk9gxYhZAyNJw/OghTTtC6l/WSrfhqhdCug=;
-        b=O9KpAY+VSDf5QxhdSWl9s/ZP+VRfnxTJUHpwsX8ngRCYAxudnqjztao/XktVYvqJ/m
-         i/giiEXxsMH8RNVdeIxVVxKxRtSzAj0Q4CYkOmK2kMj5imzHDYJO4ANVtekSMsy1V4Ej
-         oYASOkirY+7a3PCSc2n2AcL5kZsh1j8sW83spZXvU+dNjpvI2qNyw5TOJG0SDG4pKrMF
-         y28wB5qej5N1QkaY/clOjkOIj96CsiPHucSG5BQDeY6WVkroROyAtkViiCqCZvlxkcKV
-         dsFzHrP/z1LwaBHxyyD9cFoVxfKs6ZQKVSlUqeRTjkhB4RF2mFUg5rInVQy1CckhfUsp
-         k8ag==
-X-Forwarded-Encrypted: i=1; AJvYcCU8tEWAA+tuRoAH73vRctL8OhUSjy8KA3DZUS5GFYfPnxfUvl/IZJW/vmj3scLTFxnYuFM7Pq5+Kds=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuobNJU4pwkPjY37+HNbLdAjoih0Cm8EKS0p2n0sJq6JIV7bw5
-	ReorsDGReZcbkz/n8+zeGE7Xf4HAUvqs/bO8M4Cy69MF+jdtvS14amfVgRvPm2t++BjqjtteJeR
-	xEvKDHwO5Lk8elEHj+LRFVFApSndRuV1yycErtUbORe/3d3kWNE8HVywOZbdO/28=
-X-Gm-Gg: ASbGnct8lGTzvfWIKNmmRHlDhOJ9pdwZOdvnVUeppMg5o0w/jkx43YEgIXVk6Ee71hg
-	f2gQ7u90YZNPnxTnQqr0roKKttOA7cO+j35ut2vsxA74RwsqoPCPVkOTMkwh4bVxTUBvIBdulRr
-	ho6oxg4Ay24QfMsk3kaERacKIR61iPFf1h9acRp5CJ8RQEx3dXQnB0VqKPEKEd1pz2C9W4jsv+A
-	xnL9JO41oLU+CX2oiIw37Nn4TAZ1ZeThIFluIEYvT6DSOjC4x2jquH880K7DPJm7j0WFKa81A9h
-	jPC6k3r6gcRGTcH7r0ZBNjQBKAGPNOG63hjwHcU7pSu4kr7qSzxqYvDjt7LUIG0brVd4jPoj8A=
-	=
-X-Received: by 2002:a17:90b:2808:b0:311:a4d6:30f8 with SMTP id 98e67ed59e1d1-321d0da48c2mr1826576a91.13.1755057311370;
-        Tue, 12 Aug 2025 20:55:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH6DBH2kfzGflZ64cNW7+2CaKUESotFcZzef6cAyZ1L/M83j5cwOGYdfHt9J3/vXq3xPUnICQ==
-X-Received: by 2002:a17:90b:2808:b0:311:a4d6:30f8 with SMTP id 98e67ed59e1d1-321d0da48c2mr1826528a91.13.1755057310792;
-        Tue, 12 Aug 2025 20:55:10 -0700 (PDT)
-Received: from [10.218.42.132] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-321d1db5da0sm668773a91.16.2025.08.12.20.55.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Aug 2025 20:55:10 -0700 (PDT)
-Message-ID: <ec0e3b33-76f4-4ad5-8497-5c8c8b42f67e@oss.qualcomm.com>
-Date: Wed, 13 Aug 2025 09:25:03 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6D528D828;
+	Wed, 13 Aug 2025 04:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755059236; cv=fail; b=Gz0dvDXQq8H+aQepxdsuorMTqtarOiZgjCI5IhaSs7PDTtOIUtto5BkeJhC1HZUXiy3Mi4ygtZKVUIuH0RqFUa8bRWia6o5IbsjsH9NLrh8rwXo9xSSEQwpFd4ngZgt3EaUeiDJ7FV+AGgfeesCrtGa4oCiDU3GMtM10jt4ZwZ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755059236; c=relaxed/simple;
+	bh=DkDsODTKJcwrQK1kJbSNW4xRQ5bE8A6A2ag3skAmrSQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BXASjHq3RCNckYCQ9CiawQZt51A6Nxk+te63srxm03o5Wj70yCe4YjWGH6j4mzAkQnC2mMIagQVy4n9Q+heIk/elLRxj8ZH9WVQyDKZ2FBj/KFwHECjE90AeNFYJc7JQMQVTS0dVQEd/DacZvIUD263MOeWBJR7Sa3LZWaAJHU0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QLP4JlE3vmC8X1Pj+vb0pYYX6cmAdUQPXxYK/gP4BzHV9QHjGoNgP7yztQKd+ySEgpl09C/6qwoXvC1SRA1TK4y8+7BE9dfk13VnfrHziR32jCxTqJO2uSskeBZIuSkoSrZ183KDI9Vd5oGQ9XY0jFMwnrCdVwm8M4CLu5VV6MR57/Bzi6/WpasJQMS0ZVAIutU8yaCM2wW+ZqAI6pdZNG2MTJHjBSioMTS4Ro2hlvzZ2VzwkqYcHTSu6Pb+AeTyyOrP3TnUMlir8YO60mOnzba2ciDhuDV35+e2cc0XNjRrw0Ga5dT/eyU+i5jPZYVi21rkOG1E+2M7uWdvs5IMrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=V0C/KassDP8CikJZj28nR8A+zX4uTOtkbKJ6E0WJRXw=;
+ b=HNmYDkUgXqFmwjC3HgZYd5RIkrYmrtyUJDyftQW5SPoM1592AuwZrB3/iLujAjgcBQKiox+uNssSYSWM6VRfOC5XaoIT5f2HDnPgGOye8iMpc7jnP6Cgw3b2owXs/NMka7ItifhRQSFvAB5g5VADWOVk3N1+hCth6y7SgDEYye6Vkt6SQlfpaIqppVGf5Lp9GULmmxVvGb5eXjnTLavbHnayk4gw7ZU45+y5wElql7aa+Q5AqsEnf/E54uY4gmJI1bTh8qfMtcEzDEgl3u4Fgm8gCLEqWYo7wrHfmLpD2yizn/33vjvlFsETfI0CYZWmsA0lOVJ8paRes+m8Cy9AIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from TYAPR01CA0080.jpnprd01.prod.outlook.com (2603:1096:404:2c::20)
+ by KL1PR0601MB5536.apcprd06.prod.outlook.com (2603:1096:820:bd::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.14; Wed, 13 Aug
+ 2025 04:27:08 +0000
+Received: from OSA0EPF000000CA.apcprd02.prod.outlook.com
+ (2603:1096:404:2c:cafe::e3) by TYAPR01CA0080.outlook.office365.com
+ (2603:1096:404:2c::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9031.15 via Frontend Transport; Wed,
+ 13 Aug 2025 04:27:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ OSA0EPF000000CA.mail.protection.outlook.com (10.167.240.56) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9031.11 via Frontend Transport; Wed, 13 Aug 2025 04:27:07 +0000
+Received: from hans.. (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 6E68644C3CBA;
+	Wed, 13 Aug 2025 12:27:04 +0800 (CST)
+From: hans.zhang@cixtech.com
+To: bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	mani@kernel.org,
+	robh@kernel.org,
+	kwilczynski@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: mpillai@cadence.com,
+	fugang.duan@cixtech.com,
+	guoyin.chen@cixtech.com,
+	peter.chen@cixtech.com,
+	cix-kernel-upstream@cixtech.com,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <hans.zhang@cixtech.com>
+Subject: [PATCH v7 00/13] Enhance the PCIe controller driver for next generation controllers
+Date: Wed, 13 Aug 2025 12:23:18 +0800
+Message-ID: <20250813042331.1258272-1-hans.zhang@cixtech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/11] PCI/bwctrl: Add support to scale bandwidth
- before & after link re-training
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi
- <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
-        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-        qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com,
-        quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-References: <20250711213602.GA2307197@bhelgaas>
- <55fc3ae6-ba04-4739-9b89-0356c3e0930c@oss.qualcomm.com>
- <d4078b6c-1921-4195-9022-755845cdb432@oss.qualcomm.com>
- <68a78904-e2c7-4d4d-853d-d9cd6413760e@oss.qualcomm.com>
- <ycbh6zfwae3q4s6lfxepmxoq32jaqu5i7csa2ayuqaanwbvzvi@id4prmhl3yvh>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <ycbh6zfwae3q4s6lfxepmxoq32jaqu5i7csa2ayuqaanwbvzvi@id4prmhl3yvh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=CNMqXQrD c=1 sm=1 tr=0 ts=689c0ca0 cx=c_pps
- a=0uOsjrqzRL749jD1oC5vDA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=Rc7TGh9G46w0mRT8ouYA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=mQ_c8vxmzFEMiUWkPHU9:22
-X-Proofpoint-GUID: _qmTP06uMYoRoDQoqueWTlxfx6QmxQBH
-X-Proofpoint-ORIG-GUID: _qmTP06uMYoRoDQoqueWTlxfx6QmxQBH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEyMDE2NCBTYWx0ZWRfXznrMNs6zuEr3
- jO1uyHTJFXX4ftan1ukmDxSc86AYcVF5F/czDeT3lTiplphdIbsdIZq6ySDNda0GxoNQ9aEuBjQ
- rGxATUwWehqXJedRC9jFsdi18ZTPHsfC2r8FVUC7NoGtCiAng0P/N6sXxqgYJQl+r3nlRSj382e
- Ek9aObNhRJcvSsTIql+twSmTTQ1u/yLQ7Uo0+cPCDUjxeCFJAmaqeHqsZJFPUNhAa7lAJEHXSvh
- iJ4o75zyylVFmXa9MVP5DUA4JdlDaB+m7EViqQD9JiA59LdHglTBqjMubGHLjkfRyV9Lni15j3T
- T4nZQ7G8eHT/EVddmzOyEcLmsKVzHVic5GU1oBNHGJN95LsU6/5FsdNOlJ7uXQ7GZT14pa2dqsD
- xV/XGwjz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-12_08,2025-08-11_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 adultscore=0 phishscore=0 bulkscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 priorityscore=1501 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508120164
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OSA0EPF000000CA:EE_|KL1PR0601MB5536:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 15e16e9d-dfd8-41c9-25d0-08ddda21a9cd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?nM+whYMbCr0CWK9oIBACPfdOR5IBAfCW9wlkOqQPSs+PDSRh3323a54wRSmT?=
+ =?us-ascii?Q?+RFAS3ihDRPt5jHFRFs++khtAIlHK/aPW92shSsm0bqTo7pJylhKok7QHh9x?=
+ =?us-ascii?Q?vswhhuq+ysVMash7JJqC/Wqeqq3vpWx9a/+gh40O+SjdHo3j7PP6cvzCfoEM?=
+ =?us-ascii?Q?2T10iMnfRPKDeIZmQo8Am/kNQBGPB9BJQ5aUIOqs4DY4vKPpMS3VRFcVCH2q?=
+ =?us-ascii?Q?+FMIJWK/pnAUHGjpzjFo5A2O5+gapsBpiMYNpWWEUxuaKY3LyTOip/Xq3epQ?=
+ =?us-ascii?Q?JWh9k+OQ43456z/jrrYl2t36lOZizQV6Iq483evBWhKUQcBzbZjgl5SqFM7z?=
+ =?us-ascii?Q?97qfn4r/Y+7JZHUls0CSyxDXuyFZ/JLU6ph18W7qYBsfVP6CODqpHZd+npv0?=
+ =?us-ascii?Q?+Ol5oBTs3W1h2LDN1nCmKaltokRmVo5LX9XHmq9t1F6KpA0VdEGgu/4CyOt0?=
+ =?us-ascii?Q?dJ8SQJP5SheYKghwZQskBLtwxF6vQjuGDTmgmatzF2OmB+f978sneg2DQHA7?=
+ =?us-ascii?Q?FVNLmJ2MMlYtrVAZchlby7eWWEe2kHqqQ77rHyUnHFg7wAZzFyvooDdI1eaq?=
+ =?us-ascii?Q?4ZqQjBPLAljWTtjkFFTirJXEP3GhwsmDqtoctPyw9z/WmcM87zbenJL+EQhm?=
+ =?us-ascii?Q?+HxRl2k22gpNCNazpmyqviwYotOs1TY09HD5uBUHJq4+OcSM1yKMzY3WDJQy?=
+ =?us-ascii?Q?emDpDpIC/9gG4HfKmTjjx21lC6HEBlV5F0z3k2SccMcFFgdb4m+pJoFWvyPc?=
+ =?us-ascii?Q?jizNboLGcxLLnwwkrJPVJWpFexuiIYqTf5Xn7MCRX/SMQNMY0kU5zBTHw/JY?=
+ =?us-ascii?Q?8tWOCAgLUC8gW9GYCJwpvtHk6hV9wtsH/2oyx5LpDqPyfmhdEzlOrJbzavGw?=
+ =?us-ascii?Q?9CUEb+Lvrl87/hyrV7c5XGee3douhkuiPfYV8HZ7uJze16t4/S4Od3o6thL3?=
+ =?us-ascii?Q?k82U0zurFE6Z2rkXkwstk+9iH05fkHUkIy2vCux2sm0J3bl2wMr2ewVoAjvf?=
+ =?us-ascii?Q?/wssatZbnF3SNgwxQ86X0Jst4R7SrdcIVX9qdKTv4CkbYoepxtkusgdbsFeU?=
+ =?us-ascii?Q?T8qy4IRYwYrX8ximPe5mVjRT7UvpUfsGZJUs0Vn09yoYx16a4EfpsgijaqDm?=
+ =?us-ascii?Q?85LpYZZCsyidfIqdkafrBNhudatSPzPy/S/jLLh/VAMB5dtfXzR3hZn++ZsM?=
+ =?us-ascii?Q?Qn8BWiXxwQtR92feDjZhgshD1FliqJ9G3RuDPBavgD4/PJ97HtQ2ELfmcD7+?=
+ =?us-ascii?Q?+3ctWvPQ0felvEcU7ZxBiSbHOSqNcxZaD8g15B6mS3Y91hpXbwReZpWG4mgB?=
+ =?us-ascii?Q?/hIIXqDudh9SoodWjBzajSdl74EbTg4pQx9duFOTzkwuxtruSUrsHaxqydTL?=
+ =?us-ascii?Q?aIH/9UX5yDtpCclC7EF9/4CFtU/0QpeiY1Dg610pVGgTLhAcELa+/O+wpBc7?=
+ =?us-ascii?Q?fhhJkHQY6aeWI+EJc9+V0jlFsUxDzCvdxMI33aIjc6cfNp2xxr1gCZDU35kg?=
+ =?us-ascii?Q?AFfqgZavQhVQSwDJLxfsqLSePt7TdOsS/uWHUub+uONrDlmTtcgXiQli0Q?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2025 04:27:07.1838
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15e16e9d-dfd8-41c9-25d0-08ddda21a9cd
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	OSA0EPF000000CA.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR0601MB5536
+
+From: Hans Zhang <hans.zhang@cixtech.com>
+
+---
+Dear Maintainers,
+
+This series is Cadence's HPA PCIe IP and the Root Port driver of our
+CIX sky1. Please help review. Thank you very much.
+---
+
+Enhances the exiting Cadence PCIe controller drivers to support
+HPA (High Performance Architecture) Cadence PCIe controllers.
+
+The patch set enhances the Cadence PCIe driver for HPA support.
+The header files are separated out for legacy and high performance
+register maps, register address and bit definitions. The driver
+read register and write register functions for HPA take the
+updated offset stored from the platform driver to access the registers.
+As part of refactoring of the code, few new files are added to the
+driver by splitting the existing files.
+This helps SoC vendor who change the address map within PCIe controller
+in their designs. Setting the menuconfig appropriately will allow
+selection between RP and/or EP PCIe controller support. The support
+will include Legacy and HPA for the selected configuration.
+
+The TI SoC continues to be supported with the changes incorporated.
+
+The changes address the review comments in the previous patches where
+the need to move away from "ops" pointers used in current implementation
+and separate out the Legacy and HPA driver implementation was stressed.
+
+The scripts/checkpatch.pl has been run on the patches with and without
+--strict. With the --strict option, 4 checks are generated on 2 patch,
+which can be ignored. There are no code fixes required for these checks.
+All other checks generated by ./scripts/checkpatch.pl --strict can be 
+ignored.
+
+---
+Changes for v7
+        - Rebase to v6.17-rc1.
+        - Fixed the error issue of cix,sky1-pcie-host.yaml make dt_binding_check.
+        - CIX SKY1 Root Port driver compilation error issue: Add header
+          file, Kconfig select PCI_ECAM.
+
+Changes for v6
+        - Based on the latest linux master branch.
+        - The IP level DTS changes for HPA have been removed as the SoC
+          level DTS is added
+        - Virtual FPGA platform is also removed as the CiX SoC support is
+          added
+        - Fix the issue of dt bindings
+        - Modify the order of PCIe node attributes in sky1-orion-o6.dts
+          and delete unnecessary attributes.
+        - Continue to simplify the RC driver.
+        - The patch of the Cix Sky1 platform has been accepted and merged into the linux master branch.
+        https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250721144500.302202-1-peter.chen@cixtech.com/
+
+Changes for v5
+        - Header and code files separated for library functions(common
+          functions used by both architectures) and Legacy and HPA.
+        - Few new files added as part of refactoring
+        - No checks for "is_hpa" as the functions have been separated
+          out
+        - Review comments from previous patches have been addressed
+        - Add region 0 for ECAM and region 1 for message.
+        - Add CIX sky1 PCIe drivers. Submissions based on the following v9 patches:
+        https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250609031627.1605851-1-peter.chen@cixtech.com/
+
+        Cix Sky1 base dts review link to show its review status:
+        https://lore.kernel.org/all/20250609031627.1605851-9-peter.chen@cixtech.com/
+
+        The test log on the Orion O6 board is as follows:
+        root@cix-localhost:~# lspci
+        0000:c0:00.0 PCI bridge: Device 1f6c:0001
+        0000:c1:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
+        0001:90:00.0 PCI bridge: Device 1f6c:0001
+        0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller PM9A1/PM9A3/980PRO
+        0002:60:00.0 PCI bridge: Device 1f6c:0001
+        0002:61:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11ax Wireless Network Controller
+        0003:00:00.0 PCI bridge: Device 1f6c:0001
+        0003:01:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
+        0004:30:00.0 PCI bridge: Device 1f6c:0001
+        0004:31:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
+        root@cix-localhost:~# uname -a
+        Linux cix-localhost 6.16.0-rc1-00023-gbaa962a95a28 #138 SMP PREEMPT Fri Jun 27 16:43:41 CST 2025 aarch64 GNU/Linux
+        root@cix-localhost:~# cat /etc/issue
+        Debian GNU/Linux 12 \n \l
+ 
+Changes for v4
+        - Add header file bitfield.h to pcie-cadence.h
+        - Addressed the following review comments
+                Merged the TI patch as it
+                Removed initialization of struct variables to '0'
+
+Changes for v3
+        - Patch version v3 added to the subject
+        - Use HPA tag for architecture descriptions
+        - Remove bug related changes to be submitted later as a separate
+          patch
+        - Two patches merged from the last series to ensure readability to
+          address the review comments
+        - Fix several description related issues, coding style issues and
+          some misleading comments
+        - Remove cpu_addr_fixup() functions
+---
+
+Hans Zhang (6):
+  dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex bindings
+  PCI: Add Cix Technology Vendor and Device ID
+  PCI: sky1: Add PCIe host support for CIX Sky1
+  MAINTAINERS: add entry for CIX Sky1 PCIe driver
+  arm64: dts: cix: Add PCIe Root Complex on sky1
+  arm64: dts: cix: Enable PCIe on the Orion O6 board
+
+Manikandan K Pillai (7):
+  PCI: cadence: Add support for modules for cadence controller builds
+  PCI: cadence: Split PCIe controller header file
+  PCI: cadence: Add register definitions for HPA(High Perf Architecture)
+  PCI: cadence: Split PCIe EP support into common and specific functions
+  PCI: cadence: Split PCIe RP support into common and specific functions
+  PCI: cadence: Split the common functions for PCIe controller support
+  PCI: cadence: Add support for High Performance Arch(HPA) controller
+
+ .../bindings/pci/cix,sky1-pcie-host.yaml      |  79 +++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/boot/dts/cix/sky1-orion-o6.dts     |  20 +
+ arch/arm64/boot/dts/cix/sky1.dtsi             | 121 ++++
+ drivers/pci/controller/cadence/Kconfig        |  19 +-
+ drivers/pci/controller/cadence/Makefile       |  11 +-
+ drivers/pci/controller/cadence/pci-sky1.c     | 294 +++++++++
+ .../controller/cadence/pcie-cadence-common.c  | 142 +++++
+ .../cadence/pcie-cadence-ep-common.c          | 252 ++++++++
+ .../cadence/pcie-cadence-ep-common.h          |  36 ++
+ .../controller/cadence/pcie-cadence-ep-hpa.c  | 528 ++++++++++++++++
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 243 +-------
+ .../cadence/pcie-cadence-host-common.c        | 181 ++++++
+ .../cadence/pcie-cadence-host-common.h        |  25 +
+ .../cadence/pcie-cadence-host-hpa.c           | 586 ++++++++++++++++++
+ .../controller/cadence/pcie-cadence-host.c    | 156 +----
+ .../cadence/pcie-cadence-hpa-regs.h           | 212 +++++++
+ .../pci/controller/cadence/pcie-cadence-hpa.c | 207 +++++++
+ .../cadence/pcie-cadence-lga-regs.h           | 228 +++++++
+ .../controller/cadence/pcie-cadence-plat.c    |  28 +-
+ drivers/pci/controller/cadence/pcie-cadence.c | 139 +----
+ drivers/pci/controller/cadence/pcie-cadence.h | 436 ++++++-------
+ include/linux/pci_ids.h                       |   3 +
+ 23 files changed, 3174 insertions(+), 779 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
+ create mode 100644 drivers/pci/controller/cadence/pci-sky1.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-common.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-ep-common.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-ep-common.h
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-ep-hpa.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-host-common.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-host-common.h
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-host-hpa.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-hpa-regs.h
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-hpa.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-lga-regs.h
 
 
+base-commit: 8742b2d8935f476449ef37e263bc4da3295c7b58
+-- 
+2.49.0
 
-On 8/12/2025 10:13 PM, Manivannan Sadhasivam wrote:
-> On Tue, Aug 12, 2025 at 09:35:46AM GMT, Krishna Chaitanya Chundru wrote:
->>
->>
->> On 7/22/2025 4:33 PM, Krishna Chaitanya Chundru wrote:
->>>
->>>
->>> On 7/12/2025 4:36 AM, Krishna Chaitanya Chundru wrote:
->>>>
->>>>
->>>> On 7/12/2025 3:06 AM, Bjorn Helgaas wrote:
->>>>> On Mon, Jun 09, 2025 at 04:21:23PM +0530, Krishna Chaitanya
->>>>> Chundru wrote:
->>>>>> If the driver wants to move to higher data rate/speed than
->>>>>> the current data
->>>>>> rate then the controller driver may need to change certain
->>>>>> votes so that
->>>>>> link may come up at requested data rate/speed like QCOM PCIe
->>>>>> controllers
->>>>>> need to change their RPMh (Resource Power Manager-hardened) state. Once
->>>>>> link retraining is done controller drivers needs to adjust their votes
->>>>>> based on the final data rate.
->>>>>>
->>>>>> Some controllers also may need to update their bandwidth voting like
->>>>>> ICC BW votings etc.
->>>>>>
->>>>>> So, add pre_link_speed_change() & post_link_speed_change() op to call
->>>>>> before & after the link re-train. There is no explicit
->>>>>> locking mechanisms
->>>>>> as these are called by a single client Endpoint driver.
->>>>>>
->>>>>> In case of PCIe switch, if there is a request to change
->>>>>> target speed for a
->>>>>> downstream port then no need to call these function ops as these are
->>>>>> outside the scope of the controller drivers.
->>>>>
->>>>>> +++ b/include/linux/pci.h
->>>>>> @@ -599,6 +599,24 @@ struct pci_host_bridge {
->>>>>>        void (*release_fn)(struct pci_host_bridge *);
->>>>>>        int (*enable_device)(struct pci_host_bridge *bridge,
->>>>>> struct pci_dev *dev);
->>>>>>        void (*disable_device)(struct pci_host_bridge *bridge,
->>>>>> struct pci_dev *dev);
->>>>>> +    /*
->>>>>> +     * Callback to the host bridge drivers to update ICC BW
->>>>>> votes, clock
->>>>>> +     * frequencies etc.. for the link re-train to come up
->>>>>> in targeted speed.
->>>>>> +     * These are intended to be called by devices directly
->>>>>> attached to the
->>>>>> +     * Root Port. These are called by a single client
->>>>>> Endpoint driver, so
->>>>>> +     * there is no need for explicit locking mechanisms.
->>>>>> +     */
->>>>>> +    int (*pre_link_speed_change)(struct pci_host_bridge *bridge,
->>>>>> +                     struct pci_dev *dev, int speed);
->>>>>> +    /*
->>>>>> +     * Callback to the host bridge drivers to adjust ICC BW
->>>>>> votes, clock
->>>>>> +     * frequencies etc.. to the updated speed after link
->>>>>> re-train. These
->>>>>> +     * are intended to be called by devices directly attached to the
->>>>>> +     * Root Port. These are called by a single client Endpoint driver,
->>>>>> +     * so there is no need for explicit locking mechanisms.
->>>>>
->>>>> No need to repeat the entire comment.  s/.././
->>>>>
->>>>> These pointers feel awfully specific for being in struct
->>>>> pci_host_bridge, since we only need them for a questionable QCOM
->>>>> controller.  I think this needs to be pushed down into qcom somehow as
->>>>> some kind of quirk.
->>>>>
->>>> Currently these are needed by QCOM controllers, but it may also needed
->>>> by other controllers may also need these for updating ICC votes, any
->>>> system level votes, clock frequencies etc.
->>>> QCOM controllers is also doing one extra step in these functions to
->>>> disable and enable ASPM only as it cannot link speed change support
->>>> with ASPM enabled.
->>>>
->>> Bjorn, can you check this.
->>>
->>> For QCOM devices we need to update the RPMh vote i.e a power source
->>> votes for the link to come up in required speed. and also we need
->>> to update interconnect votes also. This will be applicable for
->>> other vendors also.
->>>
->>> If this is not correct place I can add them in the pci_ops.
->> Bjorn,
->>
->> Can you please comment on this.
->>
->> Is this fine to move these to the pci_ops of the bridge.
->> Again these are not specific to QCOM, any controller driver which
->> needs to change their clock rates, ICC bw votes etc needs to have
->> these.
->>
-> 
-> No, moving to 'pci_ops' is terrible than having it in 'pci_host_bridge' IMO. If
-> we want to get rid of these ops, we can introduce a quirk flag in
-> 'pci_host_bridge' and when set, the bwctrl code can disable/enable ASPM
-> before/after link retrain. This clearly states that the controller is quirky and
-> we need to disable/enable ASPM.
-> 
-> For setting OPP, you can have a separate callback in 'pci_host_bridge' that just
-> allows setting OPP *after* retrain, like 'pci_host_bridge:link_change_notify()'.
-> I don't think you really need to set OPP before retrain though. As even if you
-> do it pre and post link retrain, there is still a small window where the link
-> will operate without adequate vote.
-> 
-Hi Mani,
-
-we need to update the OPP votes before link retrain, for example if
-there is request  to change data rate from 5 GT/s to 8 GT/s on some
-platforms we need to update RPMh votes from low_svs to NOM corner
-without this clocks will not scale for data rates 8 GT/s and link
-retrain will fail. For that reason we are trying to add pre and post
-callbacks.
-
-- Krishna Chaitanya.
-> - Mani
-> 
 
