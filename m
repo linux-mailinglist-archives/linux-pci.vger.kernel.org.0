@@ -1,65 +1,63 @@
-Return-Path: <linux-pci+bounces-33950-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-33951-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A357B24D5F
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 17:30:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 611CAB24E18
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 17:50:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF9151B60655
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 15:27:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DDD03B61336
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Aug 2025 15:48:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C564E23B63C;
-	Wed, 13 Aug 2025 15:26:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5563D286D72;
+	Wed, 13 Aug 2025 15:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LumCyFXF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTXqYtgr"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC2923B636;
-	Wed, 13 Aug 2025 15:26:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2932A285C85;
+	Wed, 13 Aug 2025 15:43:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755098796; cv=none; b=ROdRyGcTUIvyqpEKRJ3+hclFiY3uGl8ky8CWU2lMyxqb0hlt2hFdviQWmO0bOeNa652i637tcS23dyDPP+2B/cGcyMPE12R2Ey9VET3Y21MDETaGkBndxXq4peFJZcGqeQ9cUBIuWbI+139wgkcgntFk67LbcTxDjjatbl6wbwM=
+	t=1755099810; cv=none; b=ol6YlF/mMrLcEs//2z3kOEU0JJNI8Hy5LPp0KsCis7N1Azz7GZNLAAUmLUazOaTT/ZYmQM7vFSQtGnT+pQhy2jmHmUhxlBY5mHJ3Hqr8ifbwaMvYgKDlsV2k+6bRM+Z+iEyBn2L5kWkYGACtNihBKmpMjzyPUMHJUb1M8wVbEm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755098796; c=relaxed/simple;
-	bh=r4yT008gulIsZaIB1+4+La/4aOXP2WFeEeTPwlUCmRQ=;
+	s=arc-20240116; t=1755099810; c=relaxed/simple;
+	bh=OCVS1nKCZktGk9eJd0qFRaW2McBTaTP8gAMmGlBkVBo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RNJd6kqlBHd8PtTvKUiYtZUWERykqhXdHdL7JwF+zJRBUjQW4Gd4etE37qMdY1Qo2QM2Etrwavk48sFkPL+nr2ECbNDu7GOqz1AHBt6PuhqWh0Ty/yMHE1nh3LMPS9Vu3C4M85m+1ZE2eJncq5xeyGZ/qZu612z4bLJAOK+nAJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LumCyFXF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF15C4CEEB;
-	Wed, 13 Aug 2025 15:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1755098795;
-	bh=r4yT008gulIsZaIB1+4+La/4aOXP2WFeEeTPwlUCmRQ=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=LieJ4hmV9+DrIap7ztfYjTMnsFW3WhEEQx0mAms5Ihh9NtSVw2kg+PZDnci0H/tGSUHi2wggVotohmjd2BbIIFtXHfug6jnRQkMH8Wt9oru1e/3TAvvtobEqM/avm8B0XoPayjYTjMT9WVm/1f27kGu023+VMwbEkKYI7+RZ3LU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTXqYtgr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C6E2C4CEEB;
+	Wed, 13 Aug 2025 15:43:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755099809;
+	bh=OCVS1nKCZktGk9eJd0qFRaW2McBTaTP8gAMmGlBkVBo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LumCyFXF25pdCtl3r5ZNUtIynR5FWAE1U81Corkq5Vxv8e8o5ny54H1BWTY0gUN7U
-	 +jwtMtGBBD5N6kATFgqSa44INfkCZ3d2PLD+6gnuUHTbQn5t1pw0HP3BpDQto07XMA
-	 fFeOPoqzivDGhZGxiDpVNweI5MqOBp7H0OSEoRm8=
-Date: Wed, 13 Aug 2025 17:26:31 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Mario Limonciello <superm1@kernel.org>,
-	"Rangoju, Raju" <raju.rangoju@amd.com>, linux-usb@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	andreas.noever@gmail.com, michael.jamet@intel.com,
-	westeri@kernel.org, YehezkelShB@gmail.com, bhelgaas@google.com,
-	Sanath.S@amd.com
-Subject: Re: [PATCH 0/3] thunderbolt: Update XDomain vendor properties
- dynamically
-Message-ID: <2025081320-payroll-skydiver-51e5@gregkh>
-References: <2025080628-viral-untruth-4811@gregkh>
- <20250807051533.GG476609@black.igk.intel.com>
- <2025080758-supervise-craftily-9b7f@gregkh>
- <17ed42fe-9d8d-46da-8434-f508ec5932fa@kernel.org>
- <20250808044538.GK476609@black.igk.intel.com>
- <2025080822-cardboard-aloha-3c5d@gregkh>
- <20250808091313.GN476609@black.igk.intel.com>
- <2025080832-poker-rectal-0895@gregkh>
- <20250811045307.GP476609@black.igk.intel.com>
- <20250811052555.GQ476609@black.igk.intel.com>
+	b=lTXqYtgrHymg/AgcfavetFeRIi6t1/wDE/vuxDqfjs4YOmWgeFk0hf74GfTDM95OC
+	 LQFw7XNNNJzDu0qor+FdRRSnYwqa2uxCq0dNYAHa/ypyIsHib/q43+7Ucnd5gEeHrc
+	 qUmFm79ztubtjOhtbbkfJFce0/P7FEFHn4l6NWdBgflJxuquSE1kk4ghkxvlpk/PVe
+	 BAPNkE4lvKncGYxeOSKktRFWmysZ+9C4aG8J+3VIRgxCwc9Zex4ApPTj/Zn/Zzy9D+
+	 sV7VjCPAYowhmmJkbskc2fnVfAnclYfGrxLKE8EIGE+U54UiwVwbnGfDRoMpGxEm4i
+	 67iAE+Zd+v2GQ==
+Date: Wed, 13 Aug 2025 10:43:28 -0500
+From: Rob Herring <robh@kernel.org>
+To: Hans Zhang <hans.zhang@cixtech.com>
+Cc: mpillai@cadence.com, cix-kernel-upstream@cixtech.com,
+	lpieralisi@kernel.org, bhelgaas@google.com,
+	devicetree@vger.kernel.org, conor+dt@kernel.org,
+	linux-pci@vger.kernel.org, mani@kernel.org, kw@linux.com,
+	kwilczynski@kernel.org, krzk+dt@kernel.org, fugang.duan@cixtech.com,
+	guoyin.chen@cixtech.com, peter.chen@cixtech.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 08/13] dt-bindings: PCI: Add CIX Sky1 PCIe Root
+ Complex bindings
+Message-ID: <20250813154328.GA114155-robh@kernel.org>
+References: <20250813042331.1258272-1-hans.zhang@cixtech.com>
+ <20250813042331.1258272-9-hans.zhang@cixtech.com>
+ <175507391391.3310343.12670862270884103729.robh@kernel.org>
+ <cb35dfbd-2fa4-4125-bd87-9f86405983eb@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,35 +66,81 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250811052555.GQ476609@black.igk.intel.com>
+In-Reply-To: <cb35dfbd-2fa4-4125-bd87-9f86405983eb@cixtech.com>
 
-On Mon, Aug 11, 2025 at 07:25:55AM +0200, Mika Westerberg wrote:
-> On Mon, Aug 11, 2025 at 06:53:07AM +0200, Mika Westerberg wrote:
-> > On Fri, Aug 08, 2025 at 04:13:28PM +0100, Greg KH wrote:
-> > > > 0004 USB4
-> > > > 
-> > > > sounds good to me. In USB4 there is no "root hub". It's called host router
-> > > > (but we do have device routers that are called USB4 hubs for added
-> > > > confusion ;-).
-> > > > 
-> > > > But I'm fine with other numbers too, does not matter if you want to save it
-> > > > for some future USB variant.
+On Wed, Aug 13, 2025 at 05:12:57PM +0800, Hans Zhang wrote:
+> 
+> 
+> On 2025/8/13 16:31, Rob Herring (Arm) wrote:
+> > EXTERNAL EMAIL
+> > 
+> > On Wed, 13 Aug 2025 12:23:26 +0800, hans.zhang@cixtech.com wrote:
+> > > From: Hans Zhang <hans.zhang@cixtech.com>
 > > > 
-> > > Ok, use 0004 for this.  But what should I use for the text string here
-> > > in the usb.ids file?
+> > > Document the bindings for CIX Sky1 PCIe Controller configured in
+> > > root complex mode with five root port.
+> > > 
+> > > Supports 4 INTx, MSI and MSI-x interrupts from the ARM GICv3 controller.
+> > > 
+> > > Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+> > > ---
+> > >   .../bindings/pci/cix,sky1-pcie-host.yaml      | 79 +++++++++++++++++++
+> > >   1 file changed, 79 insertions(+)
+> > >   create mode 100644 Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
+> > > 
 > > 
-> > Thanks! I'll cook up a patch changing these.
+> > My bot found errors running 'make dt_binding_check' on your patch:
 > > 
-> > I don't think it should be in usb.ids because it is not visible anywhere
-> > except over USB4 link (between hosts). You don't see this through USB 2.x
-> > or 3.x.
+> > yamllint warnings/errors:
+> > 
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.example.dtb: /: 'compatible' is a required property
+> >          from schema $id: http://devicetree.org/schemas/root-node.yaml#
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.example.dtb: /: 'model' is a required property
+> >          from schema $id: http://devicetree.org/schemas/root-node.yaml#
+> > 
+> > doc reference errors (make refcheckdocs):
+> > 
+> > See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250813042331.1258272-9-hans.zhang@cixtech.com
+> > 
+> > The base for the series is generally the latest rc1. A different dependency
+> > should be noted in *this* patch.
+> > 
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> > date:
+> > 
+> > pip3 install dtschema --upgrade
+> > 
+> > Please check and re-submit after running the above command yourself. Note
+> > that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> > your schema. However, it must be unset to test all examples with your schema.
+> > 
 > 
-> Of course for documentation purposes it could be:
+> Dear Rob,
 > 
->     0004 Linux USB4 Connection Manager
+> I'm very sorry. No errors were detected on my PC. I'll check my local
+> environment and fix this issue in the next version.
 > 
+> If I have done anything wrong, please remind me.
+> 
+> 
+> 
+> hans@hans:~/code/kernel_org/linux$ export CROSS_COMPILE=/home/hans/cix/bringup_master/tools/gcc/arm-gnu-toolchain-12.3.rel1-x86_64-aarch64-none-linux-gnu/arm-gnu-toolchain-12.3.rel1-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-
+> hans@hans:~/code/kernel_org/linux$ export ARCH=arm64
+> hans@hans:~/code/kernel_org/linux$ make dt_binding_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>   CHKDT   ./Documentation/devicetree/bindings
+>   LINT    ./Documentation/devicetree/bindings
+>   DTEX Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.example.dts
+>   DTC [C]
+> Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.example.dtb
+> hans@hans:~/code/kernel_org/linux$ make W=1 dt_binding_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
 
-Now updated, thanks!
+DT_SCHEMA_FILES limits testing to only the matching pattern. 
+Ultimately, you have to test without it.
 
-greg k-h
+Rob
 
