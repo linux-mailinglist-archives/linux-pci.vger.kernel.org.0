@@ -1,132 +1,215 @@
-Return-Path: <linux-pci+bounces-34038-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34040-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AF69B26078
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 11:15:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98A4DB26167
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 11:49:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 091A95E0333
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 09:10:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C2D343A714C
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 09:44:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CE812F60AE;
-	Thu, 14 Aug 2025 09:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xf8P/+q7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DBB82E92AC;
+	Thu, 14 Aug 2025 09:44:35 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0AC2EAD0D;
-	Thu, 14 Aug 2025 09:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBB72E92DD
+	for <linux-pci@vger.kernel.org>; Thu, 14 Aug 2025 09:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755162458; cv=none; b=tas6mO3ZA3tLpnYP10BhaedqODzEiQejs49esWTvt7yrRcfYcYkeshENuljoHUfBqJ+KIg3ymyyE92+kHXH3/M5tn/18Axu3Rx6zJVQqL9nHPYmrNC/SrQe6ud143fKSLAtzMv0LImSFpJvwVjkPSbzawVGk9mFtPfTtA8qweeg=
+	t=1755164675; cv=none; b=t3nsDaNeTOBpAjqHE9CtHw/soxSxdCrMky13/92qhQjlHiq1pzBwy8OGUwUcje8Orp6KcA4DpRvkQmKjofXZMKDQCR3wdpeLYl+7HULQIlb2uXy5EKpJoQ7mSf7bpG+jFgfE1hdpZaQuNbUYqpG2on5PJmI/gqbpGRS3TvjAVCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755162458; c=relaxed/simple;
-	bh=w8hCbPXfmihu7zR72JNGg3vbfSeuvBM7obhn0s4J7IU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KsgTihtT+eq8SXnymtHhw9hHT8Zg25T9G7R97Isd5tUEygr5UF7zHki3daTGozDYLPyVZrhAwrkyU1jWPOO9hxC0SkLfzprSqpfhT+T8BOMPsYQ9JifkTOxS+79ez3JzQXqEL+BmKbm+9nakEtxGv/DCChmiOkUlxNxLazKw3hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xf8P/+q7; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b4717006ea9so75049a12.0;
-        Thu, 14 Aug 2025 02:07:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755162455; x=1755767255; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L58BGBn53CdEaQI/pHX66dG5GkpXtAAIQcYXknidNg4=;
-        b=Xf8P/+q7FP7Sj6wUfRijJLt6MHzwIgFGKK3Hy+/iaRBWNmJuKnEgp6Q4heqzKmy/ns
-         CbI6us6t0QerSP9xU4HCyBAnFO47uXNHXmDTEWFDE4aFl3F5tw1EMXrHhwaSP+Q94Yle
-         hUbYVGt33Rl4FUjof+vKYA3XEAGntJgIiKneoa6py0QbM1xesztFcO0PJlfLO/KPayfk
-         KbzFIZVWKytOYTo70RHDQFLmhTYeuaKaxxOkBZxC70kMplRE79PdCvYuqPa8Hq/oyrDP
-         ieTWI3j8jVmZRD9aRu9AZuZL+UhL997ePMlnNvAUIbatTYk+36efO+YO7O0aq6Vs8DaZ
-         7qxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755162455; x=1755767255;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L58BGBn53CdEaQI/pHX66dG5GkpXtAAIQcYXknidNg4=;
-        b=S1DHe7qi75DsfyW67moRz6bTP62osfv4ZupVGK66+/6oRl/PSBBrpxouOA3s0CK+/J
-         eVeuQ1mNW+ATUkgbrOub/RJu5cMNsZuFZI2O2s01GlVIudT15VlPvi31NoSysrV0I/os
-         aVYTDNLR8S3lb7pSeDeQD1Y4n5d82Sb6ASiJ8HH9C+AgCUMz/yZuOQyTSR2XsVIWAvkT
-         1tfHA2IIUyf7STmWmv5VCsH0unkXUZrLNgzaVI/RBKtSQ2XqptqYMHuv1EtcxLTj0nXV
-         Nr3ERjmLyxOCGWQ2sOEZaekqoFppCx2c1336nLoWSXz6WSP4N+InZTmzBoBl5l4qO17R
-         La1w==
-X-Forwarded-Encrypted: i=1; AJvYcCU2AkLqzX62Vycq+X6usAtf/cvgf3AuXGjPMkTI5weB5qRSez+BRbQPp0VwlXAi8l6t6j5XcN6i@vger.kernel.org, AJvYcCUwuph8ybeUT2N+0zvQDwO/H6dav7+g/3s7KdJDGD4tHT73X+tE+FVegC8zuKNl182WSqoaLbPtQjI=@vger.kernel.org, AJvYcCV10rheNuYpNIv9Osg6EBPwerim/bHVHpgLsdwESRLoMhXEXTYw3Io03QZozPaa+nRh+WYL+3hoX80D@vger.kernel.org, AJvYcCVwLNHl+ID6/Mk6+JKZ3yCFOn5nOsH7AfmBmJybSY1PXDzdUTPH/dVuvZ036iQnRjUFqnHiwu3BFaPpDFL6@vger.kernel.org, AJvYcCWU64E2Bp0aS+//LKch0vW1UXHMSEz6PgT8bo77hg7nGHusEgUdCYOp4WqjVpmDmrVSGSl9wQN6LXE8PTZzXhG+@vger.kernel.org, AJvYcCWdbDoZ13ifKjijbNra1QB+3WrB9S7KIM3u7yTRScbvEWDRq5R5A/ySrT9+wgKeLQMo1WtBVxdQAJJwyw==@vger.kernel.org, AJvYcCX445xNq7eU4zuJA/nSWvEm96C59lCZYfvEIUslFz8g4O8hivF2aQ0VWYkKENKl2/90MdduNfdC33C5@vger.kernel.org, AJvYcCXDrwJ8uyybzhIeAp2qlzh0mixgbHHjA9WAqkaFZmBkGgDrf0QyPf6JONV3+Y/HKmq4mupee4IslTmAYfGCXto=@vger.kernel.org, AJvYcCXfV82ubBzNsUdCdy60J2WTzXOtVfNtxdObhOckteiU0awOI7UNKhP/w/7Ds2KXNuiCEi5+9Jtya9bnx1W67A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YypINaXScbYWu7AGqasYGV8fdyR3+x9hPlk+3U2Vr5IEgIvclm8
-	TFzwmHPLFMzEx3AggrVZ99bzcKxt2fjFBRfTRbQewEezlSqj6NnVPkWqnjD/lUMDNgUmSe3GZSF
-	lykirKCdz7P7+z8jZZE+LKaVYuYSSCMf78Th3BwE=
-X-Gm-Gg: ASbGncvc/qynT4YZKqaP9Sy1oQaLptA0kKszFqn87yqjhQVN1bnzA5BpLAQtpKgyJxv
-	DNf6bsK2GhoDrE2MqVcHfNhoyX9mM9xiDFQLIJN6MYP4WIWtzgsaihTxUhWYtMpqW++OdzckXGL
-	arntGWRa5tL8xRO6g7m32YglmVjV7rPn7awFAh53Z28pQXssmWj0nmaGr8wApLqHwNurFUA/gkV
-	f6a
-X-Google-Smtp-Source: AGHT+IGz6bvQQDm0FDjw3b6Z4zK6LWUctdhJrkeBml6MEiQLxKVKVm/2E3KeNDssnbiZd1rTjK+/reiEgrFQf4jGtow=
-X-Received: by 2002:a17:902:ec8d:b0:240:5c13:979a with SMTP id
- d9443c01a7336-2430d22a83dmr44771485ad.9.1755162454741; Thu, 14 Aug 2025
- 02:07:34 -0700 (PDT)
+	s=arc-20240116; t=1755164675; c=relaxed/simple;
+	bh=q5wigNdlKWpshxODenayDU6LV5AhFkwU+dBvzf+2Z6M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RV/oT6YbJcJeI6ohuqf6HqE8fWfb4FV+1kN3Jb95N5Wk8fR8hPCXJkLGPjzBT2FDNtURvWgydTTFMtP1utw90QyIRGStAkIT0dQm/IE30Hg6dj58WmULS+rljGMoroVFzdQUgdSyJPgA0gL3aTONqsYOUaqFIA4Wb7w2BayhSbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 194C620091AD;
+	Thu, 14 Aug 2025 11:36:20 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 0702EB1D0F; Thu, 14 Aug 2025 11:36:20 +0200 (CEST)
+Date: Thu, 14 Aug 2025 11:36:19 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Riana Tauro <riana.tauro@intel.com>,
+	Aravind Iddamsetty <aravind.iddamsetty@linux.intel.com>,
+	"Sean C. Dardis" <sean.c.dardis@intel.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Linas Vepstas <linasvepstas@gmail.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver OHalloran <oohall@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/5] PCI/AER: Allow drivers to opt in to Bus Reset on
+ Non-Fatal Errors
+Message-ID: <aJ2uE6v46Zib30Jh@wunner.de>
+References: <cover.1755008151.git.lukas@wunner.de>
+ <28fd805043bb57af390168d05abb30898cf4fc58.1755008151.git.lukas@wunner.de>
+ <7c545fff40629b612267501c0c74bc40c3df29e2.camel@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250813-core-cstr-cstrings-v2-0-00be80fc541b@gmail.com>
- <34d384af-6123-4602-bde0-85ca3d14fe09@sirena.org.uk> <aJ2dST9C8QLUcftA@google.com>
-In-Reply-To: <aJ2dST9C8QLUcftA@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 14 Aug 2025 11:07:23 +0200
-X-Gm-Features: Ac12FXw9McZU8Dlo3fmof7Lor15J3uB_TM7gEYyMiiYtjURPvTaxggH_LYJAg0o
-Message-ID: <CANiq72nnXG8mzGD5ydu1pMpaBAHTWvfQWSo0w38xefu=1JSURA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/19] rust: replace `kernel::c_str!` with C-Strings
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Mark Brown <broonie@debian.org>, Tamir Duberstein <tamird@gmail.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Breno Leitao <leitao@debian.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
-	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Jens Axboe <axboe@kernel.dk>, 
-	Alexandre Courbot <acourbot@nvidia.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Liam Girdwood <lgirdwood@gmail.com>, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c545fff40629b612267501c0c74bc40c3df29e2.camel@linux.ibm.com>
 
-On Thu, Aug 14, 2025 at 10:24=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> =
-wrote:
->
-> Tamir mentioned to me that he ran into a daily limit on the number of
-> emails he could send.
+On Thu, Aug 14, 2025 at 09:56:09AM +0200, Niklas Schnelle wrote:
+> On Wed, 2025-08-13 at 07:11 +0200, Lukas Wunner wrote:
+> > +++ b/drivers/pci/pcie/err.c
+> > @@ -217,15 +217,10 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> >  	pci_walk_bridge(bridge, pci_pm_runtime_get_sync, NULL);
+> >  
+> >  	pci_dbg(bridge, "broadcast error_detected message\n");
+> > -	if (state == pci_channel_io_frozen) {
+> > +	if (state == pci_channel_io_frozen)
+> >  		pci_walk_bridge(bridge, report_frozen_detected, &status);
+> > -		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
+> > -			pci_warn(bridge, "subordinate device reset failed\n");
+> > -			goto failed;
+> > -		}
+> > -	} else {
+> > +	else
+> >  		pci_walk_bridge(bridge, report_normal_detected, &status);
+> > -	}
+> >  
+> >  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+> >  		status = PCI_ERS_RESULT_RECOVERED;
+> 
+> On s390 PCI errors leave the device with MMIO blocked until either the
+> error state is cleared or we reset via the firmware interface. With
+> this change and the pci_channel_io_frozen case AER would now do the
+> report_mmio_enabled() before the reset with nothing happening between
+> report_frozen_detected() and report_mmio_enabled() is MMIO enabled at
+> this point?
 
-He is posting the updates around the migration in Zulip:
+Yes, MMIO access is controlled through the Memory Space Enable and
+Bus Master Enable bits in the Command Register (PCIe r7.0 sec 7.5.1.1.3).
+Drivers generally set those bits on probe and they're not automatically
+cleared by hardware upon an Uncorrectable Error.
 
-    https://rust-for-linux.zulipchat.com/#narrow/channel/288089-General/top=
-ic/CStr.20migration/near/527957336
+EEH and s390 blocking MMIO access likely serves the purpose of preventing
+corrupted data being propagated upstream.  AER doesn't support that
+(or at least doesn't mandate that -- certain implementations might
+be capable of blocking poisoned data).
 
-Cheers,
-Miguel
+Thus with AER, MMIO access is usually possible already in ->error_detected().
+The only reason why drivers shouldn't be doing that and instead defer
+MMIO access to ->mmio_enabled() is to be compatible with EEH and s390.
+
+There are exceptions to this rule:  E.g. if the Uncorrectable Error
+was "Surprise Down", the link to the device is down and MMIO access
+isn't possible, neither in ->error_detected() nor ->mmio_enabled().
+Drivers should check whether an MMIO read results in an "all ones"
+response (PCI_POSSIBLE_ERROR()), which is usually what the host bridge
+fabricates upon a Completion Timeout caused by the link being down
+and the Endpoint being inaccessible.
+
+(There's a list of all the errors with default severity etc in PCIe r7.0
+sec 6.2.7.)
+
+I believe DPC was added to the PCIe Base Specification to prevent
+propagating corrupted data upstream, similarly to EEH and s390.
+DPC brings down the link immediately upon an Uncorrectable Error
+(the Linux driver confines this to Fatal Errors), but as a side
+effect this results in a Hot Reset being propagated down the
+hierarchy, making it impossible to access the device in the
+faulting state to retrieve debug information etc.  After the link
+has been brought up again, the device is in post-reset state.
+So DPC doesn't allow for reset-less recovery.
+
+With the ordering change introduced by this commit, ->mmio_enabled()
+will no longer be able to access MMIO space in the DPC case because
+the link hasn't been brought back up until ->slot_reset().  But as
+explained in the commit message, I only found two drivers affected
+by this.  One seems to be EEH-specific (drivers/scsi/ipr.c).
+And the other one (drivers/scsi/sym53c8xx_2/sym_glue.c) dumps debug
+registers in ->mmio_enabled() and I'm arguing that with this commit
+it's dumping "all ones", but right now it's dumping the post-reset
+state of the device, which isn't any more useful.
+
+> I think this callback really only makes sense if you have
+> an equivalent to s390's clearing of the error state that enables MMIO
+> but doesn't otherwise reset. Similarly EEH has eeh_pci_enable(pe,
+> EEH_OPT_THAW_MMIO).
+
+Right.
+
+> > @@ -233,6 +228,14 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> >  		pci_walk_bridge(bridge, report_mmio_enabled, &status);
+> >  	}
+> >  
+> > +	if (status == PCI_ERS_RESULT_NEED_RESET ||
+> > +	    state == pci_channel_io_frozen) {
+> > +		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
+> > +			pci_warn(bridge, "subordinate device reset failed\n");
+> > +			goto failed;
+> > +		}
+> > +	}
+> > +
+> >  	if (status == PCI_ERS_RESULT_NEED_RESET) {
+> >  		/*
+> >  		 * TODO: Should call platform-specific
+> 
+> I wonder if it might make sense to merge the reset into the above
+> existing if.
+
+There are drivers such as drivers/bus/mhi/host/pci_generic.c which
+return PCI_ERS_RESULT_RECOVERED from ->error_detected().  So they
+fall through directly to the ->resume() stage.  They're doing this
+even in the pci_channel_io_frozen case (i.e. for Fatal Errors).
+
+But for DPC we must call reset_subordinates() to bring the link back up.
+And for Fatal Errors, Documentation/PCI/pcieaer-howto.rst suggests that
+we must likewise call it because the link may be unreliable.
+
+Hence the if-condition must use a boolean OR, i.e.:
+
+	if (status == PCI_ERS_RESULT_NEED_RESET ||
+	    state == pci_channel_io_frozen) {
+
+... whereas if I would move the invocation of reset_subordinates() inside
+the existing "if (status == PCI_ERS_RESULT_NEED_RESET)", it would be
+equivalent to a boolean AND.
+
+I would have to amend drivers such as drivers/bus/mhi/host/pci_generic.c
+to work with the changed logic and I figured that it's simpler to only
+change pcie_do_recovery() rather than touching all affected drivers.
+I don't have any of that hardware and so it seems risky touching all
+those drivers.
+
+> I'm a bit confused by that TODO comment and
+> anyway, it asks for a platform-specific reset to be added bu
+> reset_subordinate() already seems to allow platform specific behavior,
+> so maybe the moved reset should replace the TODO?
+
+Manivannan has a patch pending which removes the TODO:
+
+https://lore.kernel.org/all/20250715-pci-port-reset-v6-1-6f9cce94e7bb@oss.qualcomm.com/
+
+> Also I think for the
+> kind of broken case where the state is pci_channel_io_frozen but the
+> drivers just reports PCI_ERS_RESULT_CAN_RECOVER it looks like there
+> would be a reset but no calls to ->slot_reset().
+
+Right, but that's what AER is currently doing and drivers such as
+drivers/bus/mhi/host/pci_generic.c are written to work with the
+existing flow.
+
+Thanks,
+
+Lukas
 
