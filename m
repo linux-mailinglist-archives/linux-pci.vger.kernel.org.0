@@ -1,80 +1,45 @@
-Return-Path: <linux-pci+bounces-34043-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34045-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C977B26564
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 14:31:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD858B26A5E
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 17:03:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 11AB14E1097
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 12:31:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7BAD5A02453
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 14:52:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2855B2DECD3;
-	Thu, 14 Aug 2025 12:30:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D59D1E520B;
+	Thu, 14 Aug 2025 14:52:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="lCFuXntZ"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Ywh0rKA+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD432727FC
-	for <linux-pci@vger.kernel.org>; Thu, 14 Aug 2025 12:30:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64D711D8E10;
+	Thu, 14 Aug 2025 14:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755174658; cv=none; b=sh58rk/XJNYxhf4lLZ5+VaxfmG2d39XV/JMTcgG52I+IyYcS8HPdXB+CLilB0WsfQ9vw5MXx750IRTVMpGsRM4Dh4fahMlfWM2QGdd9Bv/YuU3KAncfgbK63wGrXGh5k6bjtCusAx/m3DL+BH0y3y+zRpy4HGs3X87vB3OqAj3Y=
+	t=1755183142; cv=none; b=L45R8snJ2+IjCt+vEyeHHxdXAl9qPxZ1eleb73cJl/BtOaWdGbYPitfUBTpU/0dpughLUCJVx0FQqQfEK4jSomInp5dybvEzUI/TU8eAuP3e8dC3cr9gcXotH6ATpsPNnAGxl+32qgp0c22Nnhc9qIJUtnJEcwQzuJg7cyvAw6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755174658; c=relaxed/simple;
-	bh=ehYxh88qbynkJXrnR7yfu3EhZJI6SZZ9KH93azTco3k=;
+	s=arc-20240116; t=1755183142; c=relaxed/simple;
+	bh=A/1Dx+EmXGmCUQMBqX5c4h2Fh46t8yiSdNxyKXOPqLI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MZKlLsrB/y2yTktLSKmfagY/0Nr+vRzec0Ca6TOfJeAAbECznsrzqkzbHh/BPiNUVT/wyUwrEzpIzYNs2KvCbJYKPhDayvv2moZsxQKHuYR8m5LnUHaJ7QOxPehOIrBsTu5FKuN+qoWGE1+phIizkgNmIjRUrLXmWl7ah4pY3UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=lCFuXntZ; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-74382027898so481476a34.3
-        for <linux-pci@vger.kernel.org>; Thu, 14 Aug 2025 05:30:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1755174655; x=1755779455; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ywvq4778+XMT9D9uuqrnqBrIL1jeEJwzcsXhXKprWOg=;
-        b=lCFuXntZ24gff8ibR4J05GPO/qhl9PwWRUcg/yQX0PC7Py0mCS7IVpTUyqIL/Kc3Qd
-         6EUJmyiIHvUv74m+J9DuhrWDrQOPIypKbX5Gq5iXEuuPueu+QfuYuaYf0cNA3ilYJxHG
-         yhx5H00rNzjIg+GGBl/vVOMl/pxqQg177HF3IRXElXuxwvAmc35uhJRmHuU0WdRUlLXH
-         qClhev5rX1TOfc4DnODEIXixz7auGrYqKp9HEeoJdgX4pXot8C1X1NTV/SdR9LIEkIar
-         p/qhCI7k8odMBj8teZmnbvtNoYBKsds43oB8yKynMwhSbPUVC7Yf3AeMrHmZY6k9j/Dd
-         pOzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755174655; x=1755779455;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ywvq4778+XMT9D9uuqrnqBrIL1jeEJwzcsXhXKprWOg=;
-        b=sDLNSjK8/jMi4xXj+7VYg6p/N85pOPlcgLaPZFCNWHvl5sZ5gEFcGb++gPDnxrPiNY
-         4/gyy9OMnCDijucGFoR0yVSRCECRHcMbgjAMXle9zr9OchyirhHEiNtlsXdWMbavHsC4
-         qumF5DtAC+f/vR5jKpmb/vIXYIuBhFfumKtniQbmiQ//iHsjqBrvnVlR3hlCEX8tX7iI
-         hr5JLOC83kjyJEYkZWhMD7TDoEP0gRzY8bETyK94aqfoL/5/SOz+iC5grVFlqp/0C9uz
-         Y9IGRiLjFnY1qL2XdDHTMqTc1a+2imVBEfJy0JJpg9EDcKaSfRHIK+CRqiqDdmXAtGhF
-         +sxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWjh6r1hCjfLQ2MjiVOGoHfW/VDKFdMNrDmMnq3EYBSdlPa9OF4zNJm4dSmZk88VzHqDiZZjF9WvnM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhR1VXfMQ/8Nst4Ky5O2BFDWzJjrAhLqkZr77fVgcDihiAs3eD
-	GLkL1gvCBZ56+4i6C3/AFxncUNSRWTqUjTfW9CoSh2nzRreFfDQjWr6aIDirOxT2Pfg=
-X-Gm-Gg: ASbGncvxiUl6yi0c7Tg699xsQpUbbn39C50q4euGrlOOkPffC+Zb9Ust9fn54HeqbiC
-	ItJixXD9HbOJ++gwlPs6itpOUDSB8gVFg+Lr3f8+5/foxm6h+4CxEG0av2eUq0ybxLUOn65V7H2
-	tI23pZM8kBddW7l95+zcHeG5+RkiQkVuoMBZzbvdz7Met3jLaXWkCDU+sM7Ehobe8DWHRd6JRjh
-	hiMt9uxDpdlGVj7pdZiLHYKGOeUNxa/4gLc05NVEbojN4XWuUaPwvkKg0uOWzWAsuTHNwbw1554
-	SZsE4KeAPBquxQzMSm/Hj7wBcRsQBSRE8KMuUaC1q0Yw9IMBuVMdi28yKX6ooSCJpeuMM8JZR5o
-	3WNoo6sRq61IDpG00iysfLODfxzdwtWDF9KQnhi2ElHr7JA280ogMSQzGsiYFlg==
-X-Google-Smtp-Source: AGHT+IHBzdCRrljPnkfDW8jmr3rpPTUxAN1tCDdoZAzws2zd3haB25jvZwxqllCVG7gPmDZID86wtg==
-X-Received: by 2002:a05:6830:3497:b0:727:3439:5bdf with SMTP id 46e09a7af769-74382bc3f86mr1632907a34.13.1755174655075;
-        Thu, 14 Aug 2025 05:30:55 -0700 (PDT)
-Received: from [172.22.22.28] (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50ae997ea9fsm4538196173.17.2025.08.14.05.30.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Aug 2025 05:30:54 -0700 (PDT)
-Message-ID: <8f7bac84-623b-47dc-bc58-dc0013a85877@riscstar.com>
-Date: Thu, 14 Aug 2025 07:30:52 -0500
+	 In-Reply-To:Content-Type; b=cb0Oc81l8fl8E1HU5rKxYtkNwVpI08TCTD9d2fnmdeazoQB+/sC/eLe49+n9nLtnuptkEZp5Upv86cJSDWXQ6wIYQzz5QLveo9H8vFh2zcJXHRcZZpoyQhfT+XadDrlUaL0ruunohkeHmgOpSma7SW9I8XFMl47sAbpEC3Y2oGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Ywh0rKA+; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=yNBxAsOW8EbclsTwkaYfdFQhFlRaLddS/ekeHmhtBUE=;
+	b=Ywh0rKA++bgZFaDeK2MD9ryc4ggoet6HezmoyjzYJenQydha8n6SmzTg6izXDs
+	/NdHaoj+Vyl54Vp+PrAHPv+R4Pv/sTrUWOTqUHjr7hnfI7uj9nmuYe2uvfY/Ensv
+	skIigoXiEH91WE8rGqUZFq1+7OpTUxewigsX+S6XVZOzY=
+Received: from [IPV6:240e:b8f:919b:3100:3980:6173:5059:2d2a] (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDnH4zm951o0bLmBw--.49739S2;
+	Thu, 14 Aug 2025 22:51:19 +0800 (CST)
+Message-ID: <215953a5-658d-4cb2-ab02-57be3ac72697@163.com>
+Date: Thu, 14 Aug 2025 22:51:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,119 +47,86 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] dt-bindings: phy: spacemit: add SpacemiT PCIe/combo
- PHY
-To: Yao Zi <ziyao@disroot.org>, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
- mani@kernel.org, bhelgaas@google.com, vkoul@kernel.org, kishon@kernel.org
-Cc: dlan@gentoo.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, alex@ghiti.fr, p.zabel@pengutronix.de,
- tglx@linutronix.de, johan+linaro@kernel.org, thippeswamy.havalige@amd.com,
- namcao@linutronix.de, mayank.rana@oss.qualcomm.com, shradha.t@samsung.com,
- inochiama@gmail.com, quic_schintav@quicinc.com, fan.ni@samsung.com,
- devicetree@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, spacemit@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250813184701.2444372-1-elder@riscstar.com>
- <20250813184701.2444372-2-elder@riscstar.com> <aJ1PJBax-Pj983OZ@pie>
+Subject: Re: [PATCH v15 0/6] Refactor capability search into common macros
+To: Niklas Schnelle <schnelle@linux.ibm.com>, lpieralisi@kernel.org,
+ kwilczynski@kernel.org, bhelgaas@google.com, helgaas@kernel.org,
+ jingoohan1@gmail.com, mani@kernel.org
+Cc: robh@kernel.org, ilpo.jarvinen@linux.intel.com, gbayer@linux.ibm.com,
+ lukas@wunner.de, arnd@kernel.org, geert@linux-m68k.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250813144529.303548-1-18255117159@163.com>
+ <39e654cfcce848d57671cbd5d7038f2f9667789a.camel@linux.ibm.com>
 Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <aJ1PJBax-Pj983OZ@pie>
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <39e654cfcce848d57671cbd5d7038f2f9667789a.camel@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wDnH4zm951o0bLmBw--.49739S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Ary3CrW5urWxKr1DuF48WFg_yoW8tFyxpa
+	4kA3ZIyayUJFy7C3Wvqa1IvFyYqF92y343J3s8G345XF9I9FyUXryftw4F9F9rGr4293WI
+	vrW2qa48ZFn8AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U5nYwUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxGpo2id9ecyeAAAst
 
-On 8/13/25 9:52 PM, Yao Zi wrote:
-> On Wed, Aug 13, 2025 at 01:46:55PM -0500, Alex Elder wrote:
->> Add the Device Tree binding for the PCIe/USB 3.0 combo PHY found in
->> the SpacemiT K1 SoC.  This is one of three PCIe PHYs, and is unusual
->> in that only the combo PHY can perform a calibration step needed to
->> determine settings used by the other two PCIe PHYs.
+
+
+On 2025/8/14 16:32, Niklas Schnelle wrote:
+> On Wed, 2025-08-13 at 22:45 +0800, Hans Zhang wrote:
+>> Dear Maintainers,
 >>
->> Calibration must be done with the combo PHY in PCIe mode, and to allow
->> this to occur independent of the eventual use for the PHY (PCIe or USB)
->> some PCIe-related properties must be supplied: clocks; resets; and a
->> syscon phandle.
+>> This patch series addresses long-standing code duplication in PCI
+>> capability discovery logic across the PCI core and controller drivers.
+>> The existing implementation ties capability search to fully initialized
+>> PCI device structures, limiting its usability during early controller
+>> initialization phases where device/bus structures may not yet be
+>> available.
 >>
->> Signed-off-by: Alex Elder <elder@riscstar.com>
+>> The primary goal is to decouple capability discovery from PCI device
+>> dependencies by introducing a unified framework using config space
+>> accessor-based macros. This enables:
+>>
+>> 1. Early Capability Discovery: Host controllers (e.g., Cadence, DWC)
+>> can now perform capability searches during pre-initialization stages
+>> using their native config accessors.
+>>
+>> 2. Code Consolidation: Common logic for standard and extended capability
+>> searches is refactored into shared macros (`PCI_FIND_NEXT_CAP` and
+>> `PCI_FIND_NEXT_EXT_CAP`), eliminating redundant implementations.
+>>
+>> 3. Safety and Maintainability: TTL checks are centralized within the
+>> macros to prevent infinite loops, while hardcoded offsets in drivers
+>> are replaced with dynamic discovery, reducing fragility.
+>>
+>> Key improvements include:
+>> - Driver Conversions: DesignWare and Cadence drivers are migrated to
+>>    use the new macros, removing device-specific assumptions and ensuring
+>>    consistent error handling.
+>>
+>> - Enhanced Readability: Magic numbers are replaced with symbolic
+>>    constants, and config space accessors are standardized for clarity.
+>>
+>> - Backward Compatibility: Existing PCI core behavior remains unchanged.
+>>
 >> ---
->>   .../bindings/phy/spacemit,k1-combo-phy.yaml   | 110 ++++++++++++++++++
->>   1 file changed, 110 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml
+>> Dear Niklas and Gerd,
 >>
->> diff --git a/Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml b/Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml
->> new file mode 100644
->> index 0000000000000..ed78083a53231
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml
+>> Can you test this series of patches on the s390?
+>>
+>> Thank you very much.
 > 
-> ...
+> Hi Hans, I gave this series a try on top of v6.17-rc1 on s390
+> and a bunch of PCI devices including the mlx5 cards that Gerd we
+> originally saw issues with. All looks well now. So feel free to
+> add as appropriate:
 > 
->> +  spacemit,syscon-pmu:
->> +    description:
->> +      PHandle that refers to the APMU system controller, whose
->> +      regmap is used in setting the mode
->> +    $ref: /schemas/types.yaml#/definitions/phandle
+> Tested-by: Niklas Schnelle <schnelle@linux.ibm.com>
 > 
-> Clock controllers and ethernet controllers all use spacemit,apmu to
-> refer the APMU system controller. Do you think it's better to keep them
-> aligned?
 
-I do think it's better to keep them aligned.
+Hi Niklas,
 
-And I appreciate your noticing this.  I don't see anything
-that's accepted upstream that defines properties like this,
-but I now see this:
-  
-https://lore.kernel.org/lkml/20250812-net-k1-emac-v5-2-dd17c4905f49@iscas.ac.cn/
+Thank you very much for your test. Let's see what others think.
 
-I did a quick scan for what others do when a property's
-value is a phandle, and other than just "syscon" it seems
-that word is omitted.
-
-So unless someone else suggests otherwise, I'll use
-"spacemit,apmu" for this property in my next version.
-
-> ...
-> 
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/spacemit,k1-syscon.h>
->> +    combo_phy: phy@c0b10000 {
-> 
-> This label is unnecessary.
-
-OK.  I used it when testing USB but we can add the label
-back when that driver gets reviewed.
-
->> +        compatible = "spacemit,k1-combo-phy";
->> +        reg = <0xc0b10000 0x1000>;
->> +        clocks = <&syscon_apmu CLK_PCIE0_DBI>,
->> +                 <&syscon_apmu CLK_PCIE0_MASTER>,
->> +                 <&syscon_apmu CLK_PCIE0_SLAVE>;
->> +        clock-names = "dbi",
->> +                      "mstr",
->> +                      "slv";
->> +        resets = <&syscon_apmu RESET_PCIE0_DBI>,
->> +                 <&syscon_apmu RESET_PCIE0_MASTER>,
->> +                 <&syscon_apmu RESET_PCIE0_SLAVE>,
->> +                 <&syscon_apmu RESET_PCIE0_GLOBAL>;
->> +        reset-names = "dbi",
->> +                      "mstr",
->> +                      "slv",
->> +                      "global";
->> +        spacemit,syscon-pmu = <&syscon_apmu>;
->> +        #phy-cells = <1>;
->> +        status = "disabled";
->> +    };
-> 
-> Best regards,
-> Yao Zi
-
-Thanks a lot.
-
-					-Alex
+Best regards,
+Hans
 
 
