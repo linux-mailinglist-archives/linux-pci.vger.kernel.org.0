@@ -1,82 +1,83 @@
-Return-Path: <linux-pci+bounces-34027-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34028-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E854FB25CB0
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 09:09:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E58D9B25E25
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 09:58:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 324271698B1
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 07:08:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E947917A24A
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 07:56:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B8DA25A659;
-	Thu, 14 Aug 2025 07:08:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4F0B26FA46;
+	Thu, 14 Aug 2025 07:56:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DW7zp/64"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mI0qBzxi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9522A13EFE3
-	for <linux-pci@vger.kernel.org>; Thu, 14 Aug 2025 07:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D59F2DF68
+	for <linux-pci@vger.kernel.org>; Thu, 14 Aug 2025 07:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755155315; cv=none; b=ujhEbRi/rp159zP0YhcbjHPVDlDbowUBQbrMjUlL3QxIXcnJTM4Vauf1MVb2AtS572+3EIQMzoXIqyu/2iQInfULXXOwna71jWKoDCUl8UG/iqqWy9D+EJX7HdiruQPUWYDTqoyhusTA1illJXs0DNn/Xt0EseDqwMUZIaZEi2Q=
+	t=1755158192; cv=none; b=IA3WCoRo4HLIgCxUZZ+8ZMwZVxp+pis5gJyBynqeTPIsMdCGaLfhPzapMVuLx5UjHqP/hj1JnB7Ds1kmId4/k1oVayysmqT8pqDweJOX9k/Ufjh6Q+NbqQZNwa70MqAi2uLJ9GtjN/3I1+J1wN8ZhIcu9KID+NJBqBEg9V0kgjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755155315; c=relaxed/simple;
-	bh=pGwnRcZu+X4jrVO2K7vT7m5ZrxOpLjNyUuibvmIid2M=;
+	s=arc-20240116; t=1755158192; c=relaxed/simple;
+	bh=xmxOEdCnJsaVHqbJzbBfL1peU22eSO7U1M2WLRPalX0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=L0N6Hw+wWT3zu/WjKQ7iVKKcn55zaplpG7AfLOx1KMQGXPFQM/+m8wzPo8JFoWbU6CyVy45BIz4pzdcjNHU8AmuT/g5Yx9f+7mQ+w5d5ZR6cuaEtEovpP2d8XdLOFdL0oeeyuaKT8non8JyKFVQ1ARK+CCBn13niagw0O7e6Boc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DW7zp/64; arc=none smtp.client-ip=148.163.158.5
+	 Content-Type:MIME-Version; b=jGeTQHyOUqOKVissJ/0a/aXzyB0o7faYUJnojJq75AIWCOieenj3zFQCYF4ionbEaIgVDZZL715RhfHiVQJ4Yjo+nmfrWl/dT45Gr4Li0GIsynSjRsiwkoWoYoOI/Si2SHn9Dawi/97asue3OicGPgCv2zvSma1Jp4+up67WQ3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mI0qBzxi; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57DKxKPr017125;
-	Thu, 14 Aug 2025 07:08:15 GMT
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57E73pSa015507;
+	Thu, 14 Aug 2025 07:56:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=YMb0kq
-	rtFP2/Ff7/GRW7Vj/peR9PaMhQIIeDEXlYCjk=; b=DW7zp/64aNBXTmDGMYWbQj
-	EbBaxP/8D6brafV2yPAoWL2GS8Zi42hAOfecPat19P3daqCgiKuL5Z6oVeDYS2/V
-	SaBhl5e2qJkMQX2dYIUYgRa7PI4G8A/OPAAMenwalqYfz4v7ettLItfKrE/CZ0hK
-	uhibHgdxYiJh465E9Ncgkx1MgOn5T9rRt8r53X8s0BnfpxuyxDZxO5d3QxckqSix
-	dA65hQ+fyUKdZ00XCom5ITfKx8YpGFEvY6L1zRyZRKYCLowhwqOrdiie/XZUkC5G
-	KGfZ5Ws/lX8Jgn74NUiRKadJfrWNxYNPo2GYy2uCJnrABPl19+s4TzyoYXludLiA
+	:message-id:mime-version:references:subject:to; s=pp1; bh=6VlQ7y
+	Q/ntyE8LoypGX6lnf9UKkcOkIank9t78ITRpE=; b=mI0qBzxi/PCUaBwoch40kw
+	wj0vt8TuBMr4xvuFue3JAm9NOsTC6f+IrHzr3165XAxJX6TkzVxcbY06Z0thpL0r
+	5Luw0mB3rKl6dD8bRqsO/eIslt562jdXon6HD10z+wdywo7S5XDMUGYPo61OUNJN
+	4Lf+edAmdT8Iy1RtaEdEvl2gED6TFoGkR4bGljtzulvl472hk8Yq9CF/YbnZg2az
+	M0/SVx2hd15tP5zbTmQl4hUDabkQDUH3cu98RxaHsAYr14d9ROzZMOqnrSmZMogc
+	fQgwfuax2GTX7/8naCC9OQpTeFc90wxoqBLZGt9c/Pn9WBc7sCR6PiXYNggrsq2Q
 	==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48dvrp8f6f-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48gypeatbc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Aug 2025 07:08:15 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57E70NrZ017019;
-	Thu, 14 Aug 2025 07:08:14 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48dvrp8f6c-1
+	Thu, 14 Aug 2025 07:56:15 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57E7pc1H009355;
+	Thu, 14 Aug 2025 07:56:14 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48gypeatb9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Aug 2025 07:08:14 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57E43iVi026302;
-	Thu, 14 Aug 2025 07:08:13 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 48eh21b7q9-1
+	Thu, 14 Aug 2025 07:56:14 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57E6Q200017594;
+	Thu, 14 Aug 2025 07:56:13 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 48ekc3tva5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Aug 2025 07:08:13 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57E78DZK61931958
+	Thu, 14 Aug 2025 07:56:13 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57E7uCuX28377682
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 14 Aug 2025 07:08:13 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 41D8258057;
-	Thu, 14 Aug 2025 07:08:13 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BD97158066;
-	Thu, 14 Aug 2025 07:08:10 +0000 (GMT)
+	Thu, 14 Aug 2025 07:56:13 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D052E58058;
+	Thu, 14 Aug 2025 07:56:12 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4D9405805C;
+	Thu, 14 Aug 2025 07:56:10 +0000 (GMT)
 Received: from [9.87.142.31] (unknown [9.87.142.31])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 14 Aug 2025 07:08:10 +0000 (GMT)
-Message-ID: <a4419480c3d494a5940e87fea0c7b9864dc3e85b.camel@linux.ibm.com>
-Subject: Re: [PATCH 2/5] PCI/ERR: Fix uevent on failure to recover
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 14 Aug 2025 07:56:10 +0000 (GMT)
+Message-ID: <7c545fff40629b612267501c0c74bc40c3df29e2.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/5] PCI/AER: Allow drivers to opt in to Bus Reset on
+ Non-Fatal Errors
 From: Niklas Schnelle <schnelle@linux.ibm.com>
 To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
 Cc: Riana Tauro <riana.tauro@intel.com>,
@@ -93,10 +94,10 @@ Cc: Riana Tauro <riana.tauro@intel.com>,
         Manivannan
  Sadhasivam	 <manivannan.sadhasivam@oss.qualcomm.com>,
         linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
-Date: Thu, 14 Aug 2025 09:08:10 +0200
-In-Reply-To: <68fc527a380821b5d861dd554d2ce42cb739591c.1755008151.git.lukas@wunner.de>
+Date: Thu, 14 Aug 2025 09:56:09 +0200
+In-Reply-To: <28fd805043bb57af390168d05abb30898cf4fc58.1755008151.git.lukas@wunner.de>
 References: <cover.1755008151.git.lukas@wunner.de>
-	 <68fc527a380821b5d861dd554d2ce42cb739591c.1755008151.git.lukas@wunner.de>
+	 <28fd805043bb57af390168d05abb30898cf4fc58.1755008151.git.lukas@wunner.de>
 Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
  keydata=mQINBGHm3M8BEAC+MIQkfoPIAKdjjk84OSQ8erd2OICj98+GdhMQpIjHXn/RJdCZLa58k
  /ay5x0xIHkWzx1JJOm4Lki7WEzRbYDexQEJP0xUia0U+4Yg7PJL4Dg/W4Ho28dRBROoJjgJSLSHwc
@@ -162,75 +163,103 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEyMDIxOSBTYWx0ZWRfXzCjD85fVrwHC
- OvPCNnXbwBtnBcIhfSt1fArdsY4V+93oP2bcnwIKCpODlCHkJuAs2311t+nL3qRGaoG2qubDIss
- /aM5YdewYFK7wfaIZhv7yWFZVe68ne5A+pSQfu+tQxrnjgOb5UiJqDwsnZAnmU3TQFmoaXX5eBV
- hWvuRdAx8SFzLULaoGmFCNZxda74ShVcbvYRSMJozS35UpTJhDZbIecU/dhV820+fA9C4qfLKcm
- gvSIF7+cQ7TFaoaK6prRNASQNV4e2puc9BllmHOqJPysYmKLSrJiqQehlVXTnpYUWRLUx7ypZGW
- T3ll8xx7Ltk0mie3pAoTFujaRxa4jugdsMIljU8h9UZS8Ct4udRVd+CnEbCVUdWvF4cMOt33sIo
- nNr0GVf1
-X-Authority-Analysis: v=2.4 cv=GrpC+l1C c=1 sm=1 tr=0 ts=689d8b5f cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=_iJSEG23MTSNU4P7Lo0A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: xQvjil14qSW233uYrqC95IWLpydKclx-
-X-Proofpoint-ORIG-GUID: l-qCMCI6wzS9Gl4rbnnJuOd8OzI3j5Tx
+X-Authority-Analysis: v=2.4 cv=eaU9f6EH c=1 sm=1 tr=0 ts=689d969f cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=qOJ_l1y5zSr8rzLU:21 a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10
+ a=pu2xdbaM_LAGYbC3j-cA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: KhfcdkLCJ8KTlOV5TKINN-UFD5PXtsKP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEzMDE2NyBTYWx0ZWRfX5GQBPs9Vir6j
+ bTDfm/VWeDYLFmfvI06OYrq34axmfR1aHZxMH4KcSZRH5FHDfpf68EMR7igheEXXt4lrxCFI8AJ
+ 3vmT2ALc1g/JBCCaFh/xnozaS2ZEE88YtmuHTevggiE5yk9ArEgrFczhMB/HxZ/aIuxMSjbFWVP
+ uovsa2K/KHZ6ygaReEizcHVb1xGM1AtiyOD88Vh1FIIGcj1Agnnp3hKwQNPQF0iqrFstqR/YSEP
+ KF49Q4Di82Ys3boVjUiR42kKdTrorQHFYR1MWuWj7QQQL08Oh+kZn6B7/kVoJCIwyUc8SAnFG0W
+ 0+7ATm+ZQnBE1NbQlwNInZVBa/hTlTrrT7QYUlBQ3Is9T1+/40u5ShRTIoO8WQPQXv10EtnnF5P
+ GdI2lebk
+X-Proofpoint-ORIG-GUID: h9H5WDMxPVjZNe8_LwXax2PQFe0_ui5c
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-08-13_02,2025-08-11_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 adultscore=0 spamscore=0 impostorscore=0 suspectscore=0
- phishscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 clxscore=1015 priorityscore=1501 spamscore=0
+ bulkscore=0 malwarescore=0 adultscore=0 impostorscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508120219
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508130167
 
 On Wed, 2025-08-13 at 07:11 +0200, Lukas Wunner wrote:
-> Upon failure to recover from a PCIe error through AER, DPC or EDR, a
-> uevent is sent to inform user space about disconnection of the bridge
-> whose subordinate devices failed to recover.
+> When Advanced Error Reporting was introduced in September 2006 by commit
+> 6c2b374d7485 ("PCI-Express AER implemetation: AER core and aerdriver"), i=
+t
+> sought to adhere to the recovery flow and callbacks specified in
+> Documentation/PCI/pci-error-recovery.rst.
 >=20
-> However the bridge itself is not disconnected.  Instead, a uevent should
-> be sent for each of the subordinate devices.
->=20
-> Only if the "bridge" happens to be a Root Complex Event Collector or
-> Integrated Endpoint does it make sense to send a uevent for it (because
-> there are no subordinate devices).
->=20
-> Right now if there is a mix of subordinate devices with and without
-> pci_error_handlers, a BEGIN_RECOVERY event is sent for those with
-> pci_error_handlers but no FAILED_RECOVERY event is ever sent for them
-> afterwards.  Fix it.
->=20
-> Fixes: 856e1eb9bdd4 ("PCI/AER: Add uevents in AER and EEH error/resume")
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: stable@vger.kernel.org  # v4.16+
-> ---
 --- snip ---
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> ---
+>  drivers/pci/pcie/err.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
 >=20
-> +static int report_perm_failure_detected(struct pci_dev *dev, void *data)
-> +{
-> +	pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
-> +	return 0;
-> +}
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index de6381c690f5..e795e5ae6b03 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -217,15 +217,10 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *d=
+ev,
+>  	pci_walk_bridge(bridge, pci_pm_runtime_get_sync, NULL);
+> =20
+>  	pci_dbg(bridge, "broadcast error_detected message\n");
+> -	if (state =3D=3D pci_channel_io_frozen) {
+> +	if (state =3D=3D pci_channel_io_frozen)
+>  		pci_walk_bridge(bridge, report_frozen_detected, &status);
+> -		if (reset_subordinates(bridge) !=3D PCI_ERS_RESULT_RECOVERED) {
+> -			pci_warn(bridge, "subordinate device reset failed\n");
+> -			goto failed;
+> -		}
+> -	} else {
+> +	else
+>  		pci_walk_bridge(bridge, report_normal_detected, &status);
+> -	}
+> =20
+>  	if (status =3D=3D PCI_ERS_RESULT_CAN_RECOVER) {
+>  		status =3D PCI_ERS_RESULT_RECOVERED;
+
+On s390 PCI errors leave the device with MMIO blocked until either the
+error state is cleared or we reset via the firmware interface. With
+this change and the pci_channel_io_frozen case AER would now do the
+report_mmio_enabled() before the reset with nothing happening between
+report_frozen_detected() and report_mmio_enabled() is MMIO enabled at
+this point? I think this callback really only makes sense if you have
+an equivalent to s390's clearing of the error state that enables MMIO
+but doesn't otherwise reset. Similarly EEH has eeh_pci_enable(pe,
+EEH_OPT_THAW_MMIO).
+
+> @@ -233,6 +228,14 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *de=
+v,
+>  		pci_walk_bridge(bridge, report_mmio_enabled, &status);
+>  	}
+> =20
+> +	if (status =3D=3D PCI_ERS_RESULT_NEED_RESET ||
+> +	    state =3D=3D pci_channel_io_frozen) {
+> +		if (reset_subordinates(bridge) !=3D PCI_ERS_RESULT_RECOVERED) {
+> +			pci_warn(bridge, "subordinate device reset failed\n");
+> +			goto failed;
+> +		}
+> +	}
 > +
->  static int report_mmio_enabled(struct pci_dev *dev, void *data)
->  {
->  	struct pci_driver *pdrv;
-> @@ -272,7 +278,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev=
-,
->  failed:
->  	pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
-> =20
-> -	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
-> +	pci_walk_bridge(bridge, report_perm_failure_detected, NULL);
-> =20
->  	pci_info(bridge, "device recovery failed\n");
-> =20
+>  	if (status =3D=3D PCI_ERS_RESULT_NEED_RESET) {
+>  		/*
+>  		 * TODO: Should call platform-specific
 
-Thanks for catching this during review of my other error recovery
-uevent fix! Looks good and I like that you kept the report_*_detected()
-naming which makes the mismatched symmetry of the existing code quite
-easy to see.
+I wonder if it might make sense to merge the reset into the above
+existing if. That would also work well with Sathyanarayanan's
+suggestion to have state =3D=3D pci_channel_io_frozen upgrade to
+PCI_ERS_RESULT_NEED_RESET. I'm a bit confused by that TODO comment and
+anyway, it asks for a platform-specific reset to be added bu
+reset_subordinate() already seems to allow platform specific behavior,
+so maybe the moved reset should replace the TODO? Also I think for the
+kind of broken case where the state is pci_channel_io_frozen but the
+drivers just reports PCI_ERS_RESULT_CAN_RECOVER it looks like there
+would be a reset but no calls to ->slot_reset().
 
-Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Thanks,
+Niklas
 
