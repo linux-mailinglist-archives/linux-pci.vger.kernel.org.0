@@ -1,224 +1,192 @@
-Return-Path: <linux-pci+bounces-34033-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34034-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4367B25F62
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 10:45:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8876BB26022
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 11:07:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA59C9E6B80
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 08:44:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 821A1162A04
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 09:05:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED5D72E7BB8;
-	Thu, 14 Aug 2025 08:44:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EB0D2EAB8A;
+	Thu, 14 Aug 2025 09:00:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="G6IDlHkf"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="m1nehHrC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012026.outbound.protection.outlook.com [52.101.66.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B631A317D;
-	Thu, 14 Aug 2025 08:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755161065; cv=none; b=VnTK9e2HHikrbbk6vtQy+omDm3wVn04812979PAH0XOXzofinYpf6p+JXTGaRdhwUIE5YcrcYf6qwQSNz+/REpJpO3nSBGJ47CvysvdEMQpdV3QtPmGM8wzRRfG4RDCQyIFU9HO3VGXrRMUEPvmV4M+lngWpWsIsabDoEpsS7qY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755161065; c=relaxed/simple;
-	bh=T9KgQgoXxc/qzmgJl8c7Zy/bIg4ZAk+Kv3uqGnOvTMo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TpZAjf8YmWdEbezP/8FYl64suWbYa3TQU5323Not00KDkPPXY0Czce4pPvo0bHS4+h+D9sGreK23XETpqkq7J/xDpQmLMaqvq0e5+0KkHcQEhnXcQRBqprYeb4fpw20Hh4D3pewDzHY2Ihdeye0GBh1pTlrtJ93W/PNtI5ZnlBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=G6IDlHkf; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57E7rgpV015981;
-	Thu, 14 Aug 2025 08:44:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=T9KgQg
-	oXxc/qzmgJl8c7Zy/bIg4ZAk+Kv3uqGnOvTMo=; b=G6IDlHkfnl2wQxC8WFcXD5
-	D04EvIuZjyiDutIpSz9Z8YKLKYVwJmDqY9Z3u3Ykv76Igd0VFA8NLoTOjFENbsYt
-	tLTEwIOrrLefGnsDIwFCmYlGL637+r6oFQUu2CB6+0Nj5PPOkcHHmQDUhjDygob4
-	j6bEZbwjvlBn0+nKyEdrzWb8VD/MyDyO0jgXmReZ4bV6LnC6gqWoCGoaJOc1+GLv
-	3dhnvBKJKMmvUB7jyfviYTW6yHqbbGL/Mu9T5sI05WDp8Zvk/YC8wVMvxRbXUBI5
-	7R8n6lcdjtdWWfRZ2zHhCCXCVUGsu9H5+ScJEIzRce/kUlFt0MfV54Ie9lCf97JA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48dx14s2ey-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Aug 2025 08:44:15 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57E846Kc004938;
-	Thu, 14 Aug 2025 08:44:14 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48dx14s2ex-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Aug 2025 08:44:14 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57E5Kra5028585;
-	Thu, 14 Aug 2025 08:44:13 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 48ej5nb9k1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Aug 2025 08:44:13 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57E8iBQ133555028
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 14 Aug 2025 08:44:11 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 788C058059;
-	Thu, 14 Aug 2025 08:44:11 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A10EA58043;
-	Thu, 14 Aug 2025 08:44:07 +0000 (GMT)
-Received: from [9.87.142.31] (unknown [9.87.142.31])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 14 Aug 2025 08:44:07 +0000 (GMT)
-Message-ID: <ba0ecfe5df379f6e14c4df655b90695041a616f4.camel@linux.ibm.com>
-Subject: Re: [PATCH v5 0/3] PCI/ERR: s390/pci: Use pci_uevent_ers() in PCI
- recovery
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-        Mahesh J Salgaonkar
-	 <mahesh@linux.ibm.com>
-Cc: Linas Vepstas <linasvepstas@gmail.com>,
-        Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
-	 <ilpo.jarvinen@linux.intel.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens
- <hca@linux.ibm.com>,
-        Vasily Gorbik	 <gor@linux.ibm.com>,
-        Alexander Gordeev
- <agordeev@linux.ibm.com>,
-        Christian Borntraeger
- <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Peter
- Oberparleiter	 <oberpar@linux.ibm.com>,
-        Matthew Rosato
- <mjrosato@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>, Sinan Kaya
- <okaya@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>
-Date: Thu, 14 Aug 2025 10:44:06 +0200
-In-Reply-To: <20250807-add_err_uevents-v5-0-adf85b0620b0@linux.ibm.com>
-References: <20250807-add_err_uevents-v5-0-adf85b0620b0@linux.ibm.com>
-Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04B92E9ED9;
+	Thu, 14 Aug 2025 09:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755162006; cv=fail; b=C9AXJc9tRypIT6eawRaj+RwnkEcGRLi7A7DenCMcY8LXVPAOrHh+P48tzo8/jS61Ss1ssQdhYsGxVB+2SsrXZQU6jNipL4HtG5hN3KD99y2fgCI5tULQ36KZyJLsQc5na224JIqjR1YdMhoNO6gMq7/6j9THHbCMsYhp8KgdzGM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755162006; c=relaxed/simple;
+	bh=QJEw0wFvuWTFk5LC+1S1mRnqexQ/UZ823A2JtqSI7WA=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=TfmVl/3x3B28SDgp1nIJEcKgR5dqItEo3blgxuMXlSBO8R1UEbpp/OsB1d6AT2Ts2xqPSZA/OLxdotK+4IKEtNQiN6IJQQqKvX9wMAOee0tFZxLBbTg0wa7fsOcer1wR7nvX99VpVfI2oiZqCtnTnrm2j/rmbufAL+8GIImOSAE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=m1nehHrC; arc=fail smtp.client-ip=52.101.66.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Dc+g6P1snm1BeVva8eOG6emScID4bamMcqaGuF/rwbU4nTtaOVUN3+nsB4mtAlgWTqS3MHyjx1DIrkGmOP2uA5RhLvuw9d5klp+XiQHqHtkJqZ9oQ0teLmxshM09XmZdVqMQiAKYSTrJGtCLRixgmNvSQlEcLiYME9OR13fjza2eErABrD4i87vNvD/rVkPa/LwQVV6ydjJy9cAVgbkL4Xp52Ac5wXJN0wSFxgr/jwZzVoCVLYSmSHEvLDvi2uGIOEQ+sryBL1NTeJQ1UHJd3gRdnOPdWZA7hUhNI+u66YZUfpW7188yarPB9g38zOmcsbQBvxgMZzOW/F5TMfyGpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d0gb00LyZoAZOA75YtXXJqNnknW6FtN+rIWRKloEKwc=;
+ b=fVNcNFWL6oE03JBctP+rUFU6WdpMl/jfVLHObBbPx1V/m81PJzLak59IkVUNyRMXFaecfDpSsR3k0ruBBWgXKrh3e1cF5y1KxWQ+05WM7PDoSSXbmRDzCkcmgnIQ6qrr3Rvd8JHdORfkXMtrgbjZR0AFzq8mm62cqO6xGi8eaz5t+nnUjgyiTNFHXuDo4Njv186A+VjEpswf3GLqEYBLSma5pxrgb2BINZLsPxB0xlgz5gG4gbiZEhW1bRvEJbUw5iShrVmE9Z52iHCcZE7NooQQemTwKS5LxtOMQ08O+cUFQ2Gxf7C7QafEqoNNJqNb+tPfOJsXLE+uwJA9FtXv1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d0gb00LyZoAZOA75YtXXJqNnknW6FtN+rIWRKloEKwc=;
+ b=m1nehHrCRRW5xKySFG6qTo+0wBJVJ9G2514XtAVMHQMnwQyml0nuhmPpbWGjPtk+fAgqCZ9U7rYDs0Hf2Z7tw6lV6UgquHJh2oldXw/C/OLH0dXVWUSZo3V8BWfPUoBolKiQk1BgbZeybtex0MVYMWeaJXxxWWbg7Fi6dSTxxxfV8y1C9Ehpf8EmIqt4hyMaM8mp7luXcVybzPxKlI2y3KKnSUPzu6MYRkQa22eTJn1TsnOjTVJ4i80pbTJ5x0MoI/ANIwUC+ccmEKhpylkN/vCmbfPzu2dMr/dftgNFSWzG6QN1ovDCqjm1qQhlNOP+4ix+qdQ+WKPGlPGASodnTg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8833.eurprd04.prod.outlook.com (2603:10a6:20b:42c::19)
+ by VI2PR04MB10905.eurprd04.prod.outlook.com (2603:10a6:800:272::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.15; Thu, 14 Aug
+ 2025 08:59:59 +0000
+Received: from AS8PR04MB8833.eurprd04.prod.outlook.com
+ ([fe80::209c:44e4:a205:8e86]) by AS8PR04MB8833.eurprd04.prod.outlook.com
+ ([fe80::209c:44e4:a205:8e86%4]) with mapi id 15.20.9031.014; Thu, 14 Aug 2025
+ 08:59:59 +0000
+From: Richard Zhu <hongxing.zhu@nxp.com>
+To: frank.li@nxp.com,
+	l.stach@pengutronix.de,
+	lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	mani@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	bhelgaas@google.com,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com
+Cc: linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v0 0/2] PCI: imx6: Enable the vaux regulator when fetch it
+Date: Thu, 14 Aug 2025 16:59:18 +0800
+Message-Id: <20250814085920.590101-1-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0028.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::6) To AS8PR04MB8833.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42c::19)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: XfD33j5vxQrXWyRVjtJJvqxHMuEGAtkJ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEyMDIyNCBTYWx0ZWRfX1KUFzCVRppKk
- NmVvvF0LShF+sgkJMp8+HIr52z3BR8Zux5zbDHsvEwFAQcY2UhMLjXFJrjhml2IZ90TJqEcopcN
- v0kNG26giWQVdf54FELjFIfr06xNnoxk0xXcYfON3gG3T/q7EvXdYwaYMkrEcLAUyMvV8qkbtEX
- OxVbeemfx59r9FbhHGgHceZeYLRUqrVr2/LoQETNIf3Aw5QgKVhvN+1Z2B9WJ5JmyXBivm9d5mW
- bC1XjdfsjY1wqTVdd1mi64r4PfwbFqUubEAm86dKEN7zoLlIoG6sGDmSRd1FSsSlDisw1TEYdbh
- hX/sPeV/4T6XxwWpnNCB9ya79MsBcWuAFDbyC3/c4OtfriFXvqxFC32VXeq2GuZv+zN8c8NPJbH
- 476rI6Hd
-X-Proofpoint-GUID: s5iVgtwjJFBeAGD1Uou8os76O7-FPLNX
-X-Authority-Analysis: v=2.4 cv=fLg53Yae c=1 sm=1 tr=0 ts=689da1e0 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=99k3b_FDGDTT4Z58m1sA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-13_02,2025-08-11_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 clxscore=1015 spamscore=0 priorityscore=1501 impostorscore=0
- phishscore=0 malwarescore=0 bulkscore=0 suspectscore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2508120224
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8833:EE_|VI2PR04MB10905:EE_
+X-MS-Office365-Filtering-Correlation-Id: aa02d05c-f506-4d67-8997-08dddb10f25c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|19092799006|7416014|52116014|366016|376014|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?rRgnkO/54lx/gRMl3Odf35pA/UT3mc0CYOILSNnbkkDkm/9ONi55nVSHH5cc?=
+ =?us-ascii?Q?89bPc1bLv96PcPmOF9NaF8bGDX3pqs53QTZr+PfCSdp2VXDhb+DuIUcvDz3y?=
+ =?us-ascii?Q?fWSc10GARWg+iMMYfY+RfNG512SNUPb+XDHEfXdpDCGYAa+GOaNphuJnRD9X?=
+ =?us-ascii?Q?OH88ZG03EHCuNt/92zgFW0Vw5nfENEGn1iRXkindTMtPwjj0o8C0aqbIBqg+?=
+ =?us-ascii?Q?WxQMgU9LCwpj0wa17TB/De3JF9zCbegGGrpH0M7ijBYqVB5TkqYsaByp7Ncw?=
+ =?us-ascii?Q?XTxCpuf5H0MlFPcpFM14KGkqv/YQKayN8Fpg6oFpF7nTeVJuSXecFvOskk8E?=
+ =?us-ascii?Q?ZWNhIpRittItKVenASrszLoXAN6xtrqZ4PmasNffjnvzgryVY7wFiSdi3sFU?=
+ =?us-ascii?Q?LlIfNQalMoioEVpaJ8CJKFXj3rbzXBKRW98oeRzbSzgS9bnl/F3tp00ObnZc?=
+ =?us-ascii?Q?J/Y61yd/wnFJkLMYulX/5J5L7/8CHO47QkapAVSld8SWVMPBUPY6oKTO1gWY?=
+ =?us-ascii?Q?X/y0YpauQgmenUjkb8Y4n4IxqxVrDVuAjwrfW6hkPItqq+qRHw4y9h7UGSnn?=
+ =?us-ascii?Q?lRqG96ZcAB/dUqL480LI3hpNpuxxLD2TJVdyTh1ElgyAXqLn+BO4nfeZmT18?=
+ =?us-ascii?Q?2B78K2VMQ2cEIXkmkRqJQ3ydSyV9OB+dKUXlmp/q+byBhI7PATctV/sWWtZm?=
+ =?us-ascii?Q?ur/W8WSx53nHzq3+pH8SMcPrK33Izkx6YYlHH7ruf91lWnMioiM0XnL6/K+X?=
+ =?us-ascii?Q?3+bOJi/Fp0ckaRC5qf4iJVkZlU+EuCUf2MMZH2HRnLWS5DF6qbdpNHt/fY7v?=
+ =?us-ascii?Q?APHPgMh8PLi5PvyoJWOddlkksAGg1BxhV6kcbjjZH21sEh8rzx8ReCjTEnv9?=
+ =?us-ascii?Q?z2g6mbc4LUUFZN7r2+P/vkQrI5c/ZgCoyYrSj5+x5dB0ily7GELvVBIEmtrc?=
+ =?us-ascii?Q?avV5IAvowASTfNpu2PrEh3BAsGpmWcDSS+sHvxF2dDbIrTrGvx22gnNM2KJG?=
+ =?us-ascii?Q?Ew72XpyvB6RjJ2p9M2UEe3nEDT+8l/SlGSk5vntAoQazq30EZ7fBWABpTBR0?=
+ =?us-ascii?Q?TY/BsBhyE4as/QD9AxxRKBTtQZ6lsMyDODW/cKwKHEFbXyhymiqqphvBzElx?=
+ =?us-ascii?Q?Bi2RE483Jh3BYoP/aNZNJ6pOch9BvVr2IiXlZvRbqMHLBv2HwyU03FA0EM0A?=
+ =?us-ascii?Q?BxyuFjK8KqayZQzOYY+OFbOyI0s/OlEH5Lvqi/jSFJDh1ZNGit6VSZ0ZrhsV?=
+ =?us-ascii?Q?0NaXSScorGtBg/7vBtB5/roroIUNgg4NbRZI5908rW/ee0tWLo1iLIGGoDdZ?=
+ =?us-ascii?Q?5ZoSoWK3Z94bQAQ2xpU0ZUF5BnW6Tr7gXRpuYAPB6aF5nRI6FMg3yiDUYE/e?=
+ =?us-ascii?Q?0WZni7uvhFDU8D7YyygFUi3oZspU1ihGmXJ1NHzlLoZDW858OVEpiOpKch5N?=
+ =?us-ascii?Q?H447iI8AN8mzQ4UCiDturtiPNjM7VKb2rvGvKrVFqoFaeohVEVolG+1wpKdj?=
+ =?us-ascii?Q?tkuTMPO4IVE6VTQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8833.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(19092799006)(7416014)(52116014)(366016)(376014)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ORBaMWG2gmcSGdcwB0uwCXTDArpcrwEycOsyh1HgLClQFSUh+m04VnKTxwpT?=
+ =?us-ascii?Q?f8upHbcreq/1idKD1txLCr9XsCewbl2rA/oJdqA44M2MGBFrB2WWh6Tea8xK?=
+ =?us-ascii?Q?13j4ASPWpbfPet6Y/lsh3ZQ9I3LNpFx8VyKqtORTx3gcR9C2xGp467/Zxrqg?=
+ =?us-ascii?Q?NXS4KGuv6hAjnziHykVJJLzSYPnGky1loHpf08KInQCYzV4fNa4Z84+S1XyM?=
+ =?us-ascii?Q?8ko/RVXhbCaSYiFETTDvpe4G1rfXvdVVra2w/YdFlMAJZbFHMBYozn77Ih/7?=
+ =?us-ascii?Q?NhTw2X4tRZ425ywkFH6R4Kq5wKQZPTB0PhHf712q29VNLjQHm1xv/4Iqqsy1?=
+ =?us-ascii?Q?rQmo22PYQj8/cDJFdp2coRnvM5hjQZxdfFYNPjplkyomCCXHe+y7ZrjEKZ/O?=
+ =?us-ascii?Q?uPVrtT6imeXVMIGxcAmRtj+1s4WoSgPVPkgp/NRkCO/8lJpT6Bqv6QlPu3rY?=
+ =?us-ascii?Q?UBQT8NphGW0i9f0mFBaElHbtw+0QZ84eokTFO6C8X1bJfjdQVSjSpMIXpjiE?=
+ =?us-ascii?Q?M3RHtRjD7IAd0w+5qgXgyaelfD6pvMrJJDVHmLn7I6VxLRmOkI+mMeUwiV0U?=
+ =?us-ascii?Q?QZV9KymLhhlbxmjaptcIkWfdcy4deG69egEauGlZyK3q6XVHv3HB7sFYnRw/?=
+ =?us-ascii?Q?simzi/EZmIjcT3ILTgUG4559+dPmZvPZXJna6voO3KSKNyL0ZCzzswrw7OZg?=
+ =?us-ascii?Q?D9TlK3jLkTuHOZ4LxqE9a+koob/QzQ2WUS3tMYriMtuGCwzXcQ50xgGT0LcY?=
+ =?us-ascii?Q?TlG58IS/og/iP+4cEOtXkItzPs30tZoFatjz8TdfimCypUM990KU2dJNK+U7?=
+ =?us-ascii?Q?5QMt2K7nIZu/9fDDhvLeV4ZWzHhV/Tx9pRjQRDpD6WeFA3rUIAQmuMkyTB19?=
+ =?us-ascii?Q?bcfB8tM5FjvWSMb7gSo+O3Q9um1wpZZLE5Tk0xGBR049dw3f4mIu3B3nc5nR?=
+ =?us-ascii?Q?BlyuQdQjK3LC8/07a1PqMzJdGPwQMwCLEbe7qNubPPP7ES6VePPbZVCOKwDc?=
+ =?us-ascii?Q?EtQZHOQfc4jgMIdGtWNQ6Pc81stkJHFrRo1NkrXiN/2gpvnpuH4FPBbbRq5x?=
+ =?us-ascii?Q?6ZkeEp/KgUEcoC8Ph7VQyZL/RPbtyI1uKjHexJ6kQeuNsYsdCD13B8XESXL8?=
+ =?us-ascii?Q?zi7oStREaoyOv9fhd+Y7GhPyczhEdflN3ZNlKdvE83jsdhElsDHABo99QHaq?=
+ =?us-ascii?Q?DJPRCKLQWpw+g8DbCjMIr5vYhtvxN7D7rBqeEWF+/eyh5XoCGtHjzHLg5ACM?=
+ =?us-ascii?Q?qC6k8Z6oVCpnR+NH83NxUZ9y19+GeUl3Nrl6p78M8VKi7jJPMg12EFDOJsp4?=
+ =?us-ascii?Q?zaIDSK+H69RvOAVHtzGFqb2FejkfGNQddOiT0gKT2y1r9Xux/Ake0CdmfaxA?=
+ =?us-ascii?Q?wcAHfcxKXQdakcEVeXxS0ooFKRPUoc2KL4HefzqRwsNQYGD23DMEVKUcWelm?=
+ =?us-ascii?Q?oTqMtUR+OqzYxugovlE3cYSwTX8c5MEKDF4FA5hYztXqhmeY028RfkTAr82E?=
+ =?us-ascii?Q?+3j/ImUkXnz9ckPa46HGaHvQdDkjBDRcalXBZjgTCg5MwEMDy3VMKEt7M4mF?=
+ =?us-ascii?Q?2/5iqta+rPIe0GKerSQytFMwva8PjM2vCcvsQXWc?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa02d05c-f506-4d67-8997-08dddb10f25c
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8833.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2025 08:59:59.3185
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ShkMXGxFZgL0VxzDVyBaI0l+u0VlpuTHnFArMUJv29vPGqqeFaBffvkkvi8wgtFQ9D3RYsKWDKX/uFlstAumwQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10905
 
-On Thu, 2025-08-07 at 15:55 +0200, Niklas Schnelle wrote:
-> Hi Bjorn, Lukas, Mahesh,
->=20
-> This series adds issuing of uevents during PCI recovery on s390. In
-> developing this I noticed that pci_uevent_ers() ignores
-> PCI_ERS_RESULT_NEED_RESET. I think this will result in AER not generating=
- a uevent
-> at the beginning of recovery if drivers request a reset via the voting
-> on error_detected() returns. This is fixed in the first patch and relied
-> upon by the s390 recovery code as it also uses the result of
-> error_detected() though with one device/driver at a time.
->=20
-> Thanks,
-> Niklas
->=20
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> ---
+Refer to PCIe CEM r6.0, sec 2.3 WAKE# Singal, WAKE# signal is only
+asserted by the Add-in Card when all its functions are in D3Cold state
+and at least one of its functions is enabled for wakeup generation. The
+3.3V auxiliary power (+3.3Vaux) must be present and used for wakeup
+process. Since the main power supply would be gated off to let Add-in
+Card to be in D3Cold, get the vaux and keep it enabled to power up WAKE#
+circuit for the entire PCIe controller lifecycle when it's present.
 
-Hi Bjorn,
+v3 changes:
+Add a new vaux power supply used to specify the regulator powered up the
+WAKE# circuit on the connector when WAKE# is supported.
 
-as you just picked up Lukas' "PCI: Reduce AER / EEH deviations" series
-for pci/aer, I think it would make sense to take this via that tree
-also. If you prefer and provide an ack for the first patch this could
-also go via s390 of course.
+v2 changes:
+Update the commit message, and add reviewed-by from Frank.
+https://patchwork.kernel.org/project/linux-pci/patch/20250619072438.125921-1-hongxing.zhu@nxp.com/
 
-Thanks,
-Niklas
+[PATCH v3 1/2] dt-bindings: PCI: fsl,imx6q-pcie: Add vaux for i.MX
+[PATCH v3 2/2] PCI: imx6: Enable the vaux regulator when fetch it
+
+Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml |  6 ++++++
+drivers/pci/controller/dwc/pci-imx6.c                            | 15 +++++++++++++++
+2 files changed, 21 insertions(+)
+
 
