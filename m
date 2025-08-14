@@ -1,324 +1,332 @@
-Return-Path: <linux-pci+bounces-34080-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34081-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 663E0B27110
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 23:49:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4518B27176
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 00:12:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26952A203CE
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 21:49:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC23317C44F
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 22:11:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0694B27AC32;
-	Thu, 14 Aug 2025 21:48:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41DEA259C87;
+	Thu, 14 Aug 2025 22:11:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="vkOQpKgT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fYxr4J1L"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3DC279DC5
-	for <linux-pci@vger.kernel.org>; Thu, 14 Aug 2025 21:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B3820A5EA
+	for <linux-pci@vger.kernel.org>; Thu, 14 Aug 2025 22:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755208135; cv=none; b=Nbqi5hLF8VU5GCxFzMxCNJ4nfqTwQNJYiz/ANBf+cDmEL2tBpJLl34C2p5FSijn7YEL/WFEEOhoX7mvSirhKO0LQo3gQgBYDZW4SUbJh/DbMlJCvlXzw9oDoXhsgjvAQZDgepmcL/nZ2NXXnKnUJv2KOn9MGAXWPeS8NlM5j8OU=
+	t=1755209513; cv=none; b=XrAGXjbGywnQm+45apN6U/t1pkTgq4KCI9eEpQOJcqLTHXEFGhWUuyMrVr9ol9vKBbP8Cds+kbgd9ct3c5476l2lXU+66EofjFNfZvDG/UeJfb1lXHzOzh/30N0Gnh7CcnstjILKFJMn6l1InXV0bCWOcM576JzOUm9CnAMaou0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755208135; c=relaxed/simple;
-	bh=aeCT1ChAfnxrV4QBH+I+d7ZQyWZZMGksEWhBzA5kDbg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nUSb0CChZH7rgCKTtPtnS9OY0zYbLRvvXjFRFMRXXH7Noa5kMHUW0V95W/LOHq7eT2QvXzi7OK8gTToQR9tUCQoijZ1vdrTmrOA6JnCXN7QkNnAsnddY/URXrvfpItyZ5+rczdrdEoEwjOw9s+IFgsWE7bAGwS3aTOCUqh8mWSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=vkOQpKgT; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3e56ff09ea3so8505275ab.0
-        for <linux-pci@vger.kernel.org>; Thu, 14 Aug 2025 14:48:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1755208132; x=1755812932; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XCt+/c8MTw4m0fkTKSEjZUjQW40svl96k4sq8RtcJzA=;
-        b=vkOQpKgT+BPApKwxS5X8TyBvF5j26rqE1h1nQdq7NRERcZM7hCM2wbcX+sZ1Ly25Y1
-         K3cU2souPuDI8/OpAtwBeaakb58xqcRH4TymECwD+FiLhznEgZB1DmkBNc6cMS8/pHuG
-         KQTGPjz9LZf2VxPXiiewrqBokwGHNhupBWqn192OzGBODgkkoYu9ZrDNiXm1z8gGL6s7
-         j3cErejIRZFyA1ncN1CsOo8d7s+Tp5LAA8nQCu4rFBLZE4xTeNSWiGI8YvT/u++pcvg/
-         VsjJwzkqQCxtbV4Caw8zalSyArrLJ/gHYm8OtcnyVnzHnvzL5YqHBdsYpFuR7nkeidJ7
-         1GTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755208132; x=1755812932;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XCt+/c8MTw4m0fkTKSEjZUjQW40svl96k4sq8RtcJzA=;
-        b=wXvhxEaRcgbiowqc8L84Y4KH7Ui86bjIenlK3iWu7jE8wvD3O0h2phPlER5r8i6mm9
-         dokGgWSuM7HjVCEFPuskcMl6hHRcXmdtR481M0zx5kWX1MlM8M+sEX60eHCJBO2uMTC3
-         Nh9J1oGWq/ZJvJOWPrU5fh3RCxOq/uROujCRfmaYvzWl7xTXuNjXPWgO7+Vg673COXRT
-         Iloclq5v7RXzeuB/+4srVDeZsKiq71FInVlki37y1SoPgS3JTOVsb/qoT+CEQq7pmpTE
-         Yh9RF2tp8ozjtsdjXHQoZbS9B0b7CgZPkGjUvj/9iZaXVB9B+wS8+uscfAHMfS6HaGzq
-         hC2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUQJHbGzgRSC5pE48vArr5dKnUoBch31gSs6bF/SMH3b026nyPhY0l9UWJ3HuRbe+6azJFd93eSl6A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyZwHQvMM76P4J/U/0jas/xhFI+DaPMdXMUtYqS6/aHqw5KhsN
-	FIq3KGM+iRpZCePqHKK3nH1Xi7ufaM582tWqL6qAtNFzXTVYom8hfPJ1/vgnm+sonJg=
-X-Gm-Gg: ASbGncvqWmgGqqbvgeCu1Av2DYhi2QY+zdCNDyk/oBkUuiIruWs0NJqSDnrK6PZas6+
-	A1Yu2J5tnDeVYJYRHd3HN4trzOS9UMuLCIDjlQvslZQS83GOBadMIU4mh0ykzHOlHwaTdu1NikK
-	O73DHC5Es4pmnW1msoXge2RpWQb5psQ6S37Ik+wfM6JIdDvXAZKDUPtbsVSJnSP83Kiu/y5setH
-	2NTGAJRW4Y8FJ61FQ/ckJT/W0wPmLVel0rByps5o5BF7PgKXBt/2HPm5MV+/9E2YcylbAoI7i4V
-	grB//SJK1xlSQ62/QNSwNIxrplAB37/+qy9LoCDh9fx0MwDo1/5VFTQA9rQWpVo+OLwROvgIgxV
-	w1ZVzvF3g+ISMl/sooykZvXqd2OKyIqYC9VpteSVFNIxo5Wyh/Tok3upaNw/8MQ==
-X-Google-Smtp-Source: AGHT+IFztpZaPjE0ea4cNoutzDsxWfnWI0H8yYAAWojxd3NMEw8UDJycdrDTch6nLLHh52NEA2N7Sw==
-X-Received: by 2002:a92:cd8c:0:b0:3e5:4eb2:73e3 with SMTP id e9e14a558f8ab-3e57ba5c53emr13235285ab.16.1755208131603;
-        Thu, 14 Aug 2025 14:48:51 -0700 (PDT)
-Received: from [172.22.22.28] (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50ae9bd3291sm4605468173.63.2025.08.14.14.48.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Aug 2025 14:48:51 -0700 (PDT)
-Message-ID: <bc6975bd-cc1a-41ff-887c-0509bc8f03c3@riscstar.com>
-Date: Thu, 14 Aug 2025 16:48:48 -0500
+	s=arc-20240116; t=1755209513; c=relaxed/simple;
+	bh=2a+/9cvykQA0mI6PC5Qg1QqVpytWx+EK6UlETscJxc0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=eNBEtCsbEGAVsfhItmwG3f5LmV5NOW+wLy6xgy5YaJWBWgFkukjaZpv0GqNne5nOAdY/0jm6559hhNjbSCU2SbGaurwDrg5NVXRMpDj6hTuUdhwM9AlPR+gl/spQgJTp1mxbaBWwDwpBWirQyaDPhmA0RIm0o3HMGKBI7VyPy/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fYxr4J1L; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755209512; x=1786745512;
+  h=date:from:to:cc:subject:message-id;
+  bh=2a+/9cvykQA0mI6PC5Qg1QqVpytWx+EK6UlETscJxc0=;
+  b=fYxr4J1L/BzNpLh70NGLia8Z5KHLB8JIBNPjEnBtr/7weR+t4jLNzc2J
+   fIzZRXGOtnjW2uxFCZY+mgUIr/ox4nw40nMOR4RN596WsKvSWrO3OTRMy
+   U4Fdow8lvQ44T2vhl/21gBY7cp9jjvkhg9uWuZlDmIrW94IOInJbN8YOD
+   qRvfPVWw++E5FAoY+HAXYQnJjP/hMiAHs5Mj8m85GdheH6vk+LPRPXYf1
+   JVZqGe79kNd2mZDuYI8eWkMT5mRFjCcQmZ/T5aRynxcpcRK4TroJyw2b1
+   GlCWndETJXTQ/fTp1HOKGeZCmymEzEYxlRgeCnwOuv7UejHGTaZgrv4Vj
+   Q==;
+X-CSE-ConnectionGUID: rjp8erfkThC0VZT8LHcRJQ==
+X-CSE-MsgGUID: ZWp2hmZzRWqhFiOh2FN+Gg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11522"; a="57615664"
+X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
+   d="scan'208";a="57615664"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 15:11:50 -0700
+X-CSE-ConnectionGUID: vo7+itAbSQ+rPIbbTlTkBw==
+X-CSE-MsgGUID: t64UZW76SoiIYSfEqDtFKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
+   d="scan'208";a="167224880"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 14 Aug 2025 15:11:49 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1umgAk-000BM4-2t;
+	Thu, 14 Aug 2025 22:11:46 +0000
+Date: Fri, 15 Aug 2025 06:11:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ 5aa0b8883749f0ae3b2f80f35536aae542c3d604
+Message-ID: <202508150603.6psqZ2Jr-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] dt-bindings: phy: spacemit: add SpacemiT PCIe/combo
- PHY
-To: Rob Herring <robh@kernel.org>
-Cc: krzk+dt@kernel.org, conor+dt@kernel.org, lpieralisi@kernel.org,
- kwilczynski@kernel.org, mani@kernel.org, bhelgaas@google.com,
- vkoul@kernel.org, kishon@kernel.org, dlan@gentoo.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, p.zabel@pengutronix.de, tglx@linutronix.de,
- johan+linaro@kernel.org, thippeswamy.havalige@amd.com, namcao@linutronix.de,
- mayank.rana@oss.qualcomm.com, shradha.t@samsung.com, inochiama@gmail.com,
- quic_schintav@quicinc.com, fan.ni@samsung.com, devicetree@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
- spacemit@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250813184701.2444372-1-elder@riscstar.com>
- <20250813184701.2444372-2-elder@riscstar.com>
- <20250814205128.GA3873683-robh@kernel.org>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <20250814205128.GA3873683-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 8/14/25 3:51 PM, Rob Herring wrote:
-> On Wed, Aug 13, 2025 at 01:46:55PM -0500, Alex Elder wrote:
->> Add the Device Tree binding for the PCIe/USB 3.0 combo PHY found in
->> the SpacemiT K1 SoC.  This is one of three PCIe PHYs, and is unusual
->> in that only the combo PHY can perform a calibration step needed to
->> determine settings used by the other two PCIe PHYs.
->>
->> Calibration must be done with the combo PHY in PCIe mode, and to allow
->> this to occur independent of the eventual use for the PHY (PCIe or USB)
->> some PCIe-related properties must be supplied: clocks; resets; and a
->> syscon phandle.
->>
->> Signed-off-by: Alex Elder <elder@riscstar.com>
->> ---
->>   .../bindings/phy/spacemit,k1-combo-phy.yaml   | 110 ++++++++++++++++++
->>   1 file changed, 110 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml b/Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml
->> new file mode 100644
->> index 0000000000000..ed78083a53231
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml
->> @@ -0,0 +1,110 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/phy/spacemit,k1-combo-phy.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: SpacemiT K1 PCIe/USB3 Combo PHY
->> +
->> +maintainers:
->> +  - Alex Elder <elder@riscstar.com>
->> +
->> +description:
-> 
-> You need a '>' or the paragraphs formatting will not be maintained
-> (should we ever render docs from this).
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 5aa0b8883749f0ae3b2f80f35536aae542c3d604  Merge branch 'pci/misc'
 
-OK.
+elapsed time: 1451m
 
->> +  Of the three PHYs on the SpacemiT K1 SoC capable of being used for
->> +  PCIe, one is a combo PHY that can also be configured for use by a
->> +  USB 3 controller.  Using PCIe or USB 3 is a board design decision.
->> +
->> +  The combo PHY is also the only PCIe PHY that is able to determine
->> +  PCIe calibration values to use, and this must be determined before
->> +  the other two PCIe PHYs can be used.  This calibration must be
->> +  performed with the combo PHY in PCIe mode, and is this is done
->> +  when the combo PHY is probed.
->> +
->> +  During normal operation, the PCIe or USB port driver is responsible
->> +  for ensuring all clocks needed by a PHY are enabled, and all resets
->> +  affecting the PHY are deasserted.  However, for the combo PHY to
->> +  perform calibration independent of whether it's later used for
->> +  PCIe or USB, all PCIe mode clocks and resets must be defined.
->> +
->> +properties:
->> +  compatible:
->> +    const: spacemit,k1-combo-phy
->> +
->> +  reg:
->> +    items:
->> +      - description: PHY control registers
->> +
->> +  clocks:
->> +    items:
->> +      - description: DWC PCIe Data Bus Interface (DBI) clock
->> +      - description: DWC PCIe application AXI-bus Master interface clock
->> +      - description: DWC PCIe application AXI-bus Slave interface clock.
-> 
-> End with a period or don't. Just be consistent.
+configs tested: 239
+configs skipped: 6
 
-OK.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> You need DWC PCIe clocks for your PHY? A ref clock would make sense, but
-> these? I've never seen a PHY with a AXI master interface.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    clang-19
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    clang-19
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    clang-19
+arc                     haps_hs_smp_defconfig    gcc-15.1.0
+arc                   randconfig-001-20250814    gcc-12.5.0
+arc                   randconfig-001-20250815    clang-22
+arc                   randconfig-002-20250814    gcc-13.4.0
+arc                   randconfig-002-20250815    clang-22
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    clang-19
+arm                      footbridge_defconfig    gcc-15.1.0
+arm                        mvebu_v5_defconfig    gcc-15.1.0
+arm                       omap2plus_defconfig    gcc-15.1.0
+arm                   randconfig-001-20250814    clang-22
+arm                   randconfig-001-20250815    clang-22
+arm                   randconfig-002-20250814    clang-22
+arm                   randconfig-002-20250815    clang-22
+arm                   randconfig-003-20250814    gcc-10.5.0
+arm                   randconfig-003-20250815    clang-22
+arm                   randconfig-004-20250814    gcc-8.5.0
+arm                   randconfig-004-20250815    clang-22
+arm                        vexpress_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    clang-19
+arm64                 randconfig-001-20250814    clang-17
+arm64                 randconfig-001-20250815    clang-22
+arm64                 randconfig-002-20250814    gcc-8.5.0
+arm64                 randconfig-002-20250815    clang-22
+arm64                 randconfig-003-20250814    gcc-10.5.0
+arm64                 randconfig-003-20250815    clang-22
+arm64                 randconfig-004-20250814    gcc-13.4.0
+arm64                 randconfig-004-20250815    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    clang-19
+csky                  randconfig-001-20250814    gcc-15.1.0
+csky                  randconfig-001-20250815    gcc-11.5.0
+csky                  randconfig-002-20250814    gcc-15.1.0
+csky                  randconfig-002-20250815    gcc-11.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-19
+hexagon                          allyesconfig    clang-22
+hexagon                             defconfig    clang-19
+hexagon               randconfig-001-20250814    clang-20
+hexagon               randconfig-001-20250815    gcc-11.5.0
+hexagon               randconfig-002-20250814    clang-22
+hexagon               randconfig-002-20250815    gcc-11.5.0
+i386                             allmodconfig    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250814    clang-20
+i386        buildonly-randconfig-001-20250815    gcc-12
+i386        buildonly-randconfig-002-20250814    gcc-12
+i386        buildonly-randconfig-002-20250815    gcc-12
+i386        buildonly-randconfig-003-20250814    gcc-12
+i386        buildonly-randconfig-003-20250815    gcc-12
+i386        buildonly-randconfig-004-20250814    clang-20
+i386        buildonly-randconfig-004-20250815    gcc-12
+i386        buildonly-randconfig-005-20250814    gcc-12
+i386        buildonly-randconfig-005-20250815    gcc-12
+i386        buildonly-randconfig-006-20250814    gcc-12
+i386        buildonly-randconfig-006-20250815    gcc-12
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250815    gcc-12
+i386                  randconfig-002-20250815    gcc-12
+i386                  randconfig-003-20250815    gcc-12
+i386                  randconfig-004-20250815    gcc-12
+i386                  randconfig-005-20250815    gcc-12
+i386                  randconfig-006-20250815    gcc-12
+i386                  randconfig-007-20250815    gcc-12
+i386                  randconfig-011-20250815    gcc-12
+i386                  randconfig-012-20250815    gcc-12
+i386                  randconfig-013-20250815    gcc-12
+i386                  randconfig-014-20250815    gcc-12
+i386                  randconfig-015-20250815    gcc-12
+i386                  randconfig-016-20250815    gcc-12
+i386                  randconfig-017-20250815    gcc-12
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20250814    clang-22
+loongarch             randconfig-001-20250815    gcc-11.5.0
+loongarch             randconfig-002-20250814    gcc-15.1.0
+loongarch             randconfig-002-20250815    gcc-11.5.0
+m68k                             allmodconfig    clang-19
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    clang-19
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    clang-19
+microblaze                       allmodconfig    clang-19
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    clang-19
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                        qi_lb60_defconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                             allnoconfig    gcc-15.1.0
+nios2                               defconfig    gcc-11.5.0
+nios2                               defconfig    gcc-15.1.0
+nios2                 randconfig-001-20250814    gcc-10.5.0
+nios2                 randconfig-001-20250815    gcc-11.5.0
+nios2                 randconfig-002-20250814    gcc-9.5.0
+nios2                 randconfig-002-20250815    gcc-11.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250814    gcc-10.5.0
+parisc                randconfig-001-20250815    gcc-11.5.0
+parisc                randconfig-002-20250814    gcc-13.4.0
+parisc                randconfig-002-20250815    gcc-11.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    gcc-15.1.0
+powerpc               randconfig-001-20250814    gcc-8.5.0
+powerpc               randconfig-001-20250815    gcc-11.5.0
+powerpc               randconfig-002-20250814    gcc-8.5.0
+powerpc               randconfig-002-20250815    gcc-11.5.0
+powerpc               randconfig-003-20250814    gcc-10.5.0
+powerpc               randconfig-003-20250815    gcc-11.5.0
+powerpc64             randconfig-001-20250814    clang-22
+powerpc64             randconfig-001-20250815    gcc-11.5.0
+powerpc64             randconfig-002-20250814    clang-22
+powerpc64             randconfig-002-20250815    gcc-11.5.0
+powerpc64             randconfig-003-20250814    clang-22
+powerpc64             randconfig-003-20250815    gcc-11.5.0
+riscv                            allmodconfig    gcc-15.1.0
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    gcc-15.1.0
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250814    clang-22
+riscv                 randconfig-001-20250815    gcc-8.5.0
+riscv                 randconfig-002-20250814    clang-22
+riscv                 randconfig-002-20250815    gcc-8.5.0
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250814    clang-22
+s390                  randconfig-001-20250815    gcc-8.5.0
+s390                  randconfig-002-20250814    gcc-8.5.0
+s390                  randconfig-002-20250815    gcc-8.5.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-12
+sh                    randconfig-001-20250814    gcc-9.5.0
+sh                    randconfig-001-20250815    gcc-8.5.0
+sh                    randconfig-002-20250814    gcc-15.1.0
+sh                    randconfig-002-20250815    gcc-8.5.0
+sh                             shx3_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250814    gcc-14.3.0
+sparc                 randconfig-001-20250815    gcc-8.5.0
+sparc                 randconfig-002-20250814    gcc-12.5.0
+sparc                 randconfig-002-20250815    gcc-8.5.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250814    clang-22
+sparc64               randconfig-001-20250815    gcc-8.5.0
+sparc64               randconfig-002-20250814    gcc-8.5.0
+sparc64               randconfig-002-20250815    gcc-8.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    clang-19
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250814    clang-22
+um                    randconfig-001-20250815    gcc-8.5.0
+um                    randconfig-002-20250814    clang-22
+um                    randconfig-002-20250815    gcc-8.5.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250814    clang-20
+x86_64      buildonly-randconfig-001-20250815    gcc-12
+x86_64      buildonly-randconfig-002-20250814    clang-20
+x86_64      buildonly-randconfig-002-20250815    gcc-12
+x86_64      buildonly-randconfig-003-20250814    gcc-12
+x86_64      buildonly-randconfig-003-20250815    gcc-12
+x86_64      buildonly-randconfig-004-20250814    clang-20
+x86_64      buildonly-randconfig-004-20250815    gcc-12
+x86_64      buildonly-randconfig-005-20250814    gcc-12
+x86_64      buildonly-randconfig-005-20250815    gcc-12
+x86_64      buildonly-randconfig-006-20250814    gcc-12
+x86_64      buildonly-randconfig-006-20250815    gcc-12
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250815    gcc-12
+x86_64                randconfig-002-20250815    gcc-12
+x86_64                randconfig-003-20250815    gcc-12
+x86_64                randconfig-004-20250815    gcc-12
+x86_64                randconfig-005-20250815    gcc-12
+x86_64                randconfig-006-20250815    gcc-12
+x86_64                randconfig-007-20250815    gcc-12
+x86_64                randconfig-008-20250815    gcc-12
+x86_64                randconfig-071-20250815    clang-20
+x86_64                randconfig-072-20250815    clang-20
+x86_64                randconfig-073-20250815    clang-20
+x86_64                randconfig-074-20250815    clang-20
+x86_64                randconfig-075-20250815    clang-20
+x86_64                randconfig-076-20250815    clang-20
+x86_64                randconfig-077-20250815    clang-20
+x86_64                randconfig-078-20250815    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                          rhel-9.4-func    clang-20
+x86_64                    rhel-9.4-kselftests    clang-20
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250814    gcc-8.5.0
+xtensa                randconfig-001-20250815    gcc-8.5.0
+xtensa                randconfig-002-20250814    gcc-10.5.0
+xtensa                randconfig-002-20250815    gcc-8.5.0
 
-*This* is what I was waiting for.  I explained it briefly in
-the patch headers and elsewhere but I expected questions.
-
-This is needed to support USB mode, while also supporting the other
-PCIe interfaces.
-
-The SpacemiT IP requires its PCIe interfaces to have 4-bit RX and TX
-receiver termination values be configured during initialization.  The
-values to use must be determined dynamically by doing a calibration
-step, then reading a (PCIe) register that contains the values to use.
-
-Only the combo PHY is able to perform this calibration. and the
-configuration values it determines must then be used to configure
-the other two PCIe (only) PHYs.
-
-This means that to calibrate, the combo PHY must be started (clocks
-enabled, resets de-asserted) in PCIe mode.
-
-If the combo PHY were going to be used for PCIe, this could be done
-when it is initialized, because the PCIe driver would ensure the
-clocks and resets were set up properly.
-
-But if the combo PHY is going to be used for USB, the PCIe
-calibration step would (otherwise) never be done, and that
-means the other two PCIe interfaces could not be used.
-
-So my solution is to move this calibration step into the PHY.
-The combo PHY performs the calibration step when it is probed,
-and to do that the driver needs to use its PCIe clocks and resets.
-Once the calibration values are known, the clocks and resets
-are essentially forgotten, and the PHY is available for use (by
-either PCIe or USB 3).
-
-The other two PCIe interfaces cannot probe (-EPROBE_DEFER) until
-the calibration values are known, which means they might have to
-wait until after the combo PHY has probed successfully.
-
-I asked SpacemiT about this a lot, but their answer is that the
-combo PHY is the only one that can determine these values, and
-they must be determined each time the hardware is powered up.
-
-I think this approach is less ugly than some alternatives.
-
-Is this clear?  Can you think of a different way of handling it?
-
->> +
->> +  clock-names:
->> +    items:
->> +      - const: dbi
->> +      - const: mstr
->> +      - const: slv
->> +
->> +  resets:
->> +    items:
->> +      - description: DWC PCIe Data Bus Interface (DBI) reset
->> +      - description: DWC PCIe application AXI-bus Master interface reset
->> +      - description: DWC PCIe application AXI-bus Slave interface reset.
-> 
-> Same here (on both points).
-
-I will remove the period on the third one.
-
-> 
->> +      - description: Global reset; must be deasserted for PHY to function
->> +
->> +  reset-names:
->> +    items:
->> +      - const: dbi
->> +      - const: mstr
->> +      - const: slv
->> +      - const: global
->> +
->> +  spacemit,syscon-pmu:
->> +    description:
->> +      PHandle that refers to the APMU system controller, whose
->> +      regmap is used in setting the mode
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +
->> +  "#phy-cells":
->> +    const: 1
->> +    description:
->> +      The argument value (PHY_TYPE_PCIE or PHY_TYPE_USB3) determines
->> +      whether the PHY operates in PCIe or USB3 mode.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - resets
->> +  - reset-names
->> +  - spacemit,syscon-pmu
->> +  - "#phy-cells"
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/spacemit,k1-syscon.h>
->> +    combo_phy: phy@c0b10000 {
-> 
-> Drop unused labels.
-
-OK.
-
->> +        compatible = "spacemit,k1-combo-phy";
->> +        reg = <0xc0b10000 0x1000>;
->> +        clocks = <&syscon_apmu CLK_PCIE0_DBI>,
->> +                 <&syscon_apmu CLK_PCIE0_MASTER>,
->> +                 <&syscon_apmu CLK_PCIE0_SLAVE>;
->> +        clock-names = "dbi",
->> +                      "mstr",
->> +                      "slv";
->> +        resets = <&syscon_apmu RESET_PCIE0_DBI>,
->> +                 <&syscon_apmu RESET_PCIE0_MASTER>,
->> +                 <&syscon_apmu RESET_PCIE0_SLAVE>,
->> +                 <&syscon_apmu RESET_PCIE0_GLOBAL>;
->> +        reset-names = "dbi",
->> +                      "mstr",
->> +                      "slv",
->> +                      "global";
->> +        spacemit,syscon-pmu = <&syscon_apmu>;
->> +        #phy-cells = <1>;
->> +        status = "disabled";
-
-Krzysztof also pointed out that I can't disable it so I'll drop
-the above line as well.
-
-Thanks for the review.
-
-					-Alex
-
->> +    };
->> -- 
->> 2.48.1
->>
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
