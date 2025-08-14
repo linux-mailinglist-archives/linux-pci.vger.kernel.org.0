@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-34025-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34026-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0C72B25B9E
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 08:11:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 396FCB25BB0
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 08:17:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 923035A2610
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 06:11:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E9521C84933
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 06:18:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 071F323770A;
-	Thu, 14 Aug 2025 06:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD472199FBA;
+	Thu, 14 Aug 2025 06:17:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oolw18pA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocClVtY7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C781A2248BE;
-	Thu, 14 Aug 2025 06:11:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C02B665;
+	Thu, 14 Aug 2025 06:17:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755151894; cv=none; b=Xztf4lGAGuJlqwYRLdCBx8Vvh5qTGJ5ESIaewNMJb+0Fs3mScHKYebGmIi8QSN2VWh13wzIhDeprvQQt7CU+EQJDQ7QzYKzJNY1GBkxHvHMbmUnUQDs97mnBj5DwfnmRZiFzhesj4geor1F+MoWehienGEgFyCqGcagM1/hMn7I=
+	t=1755152258; cv=none; b=Vv4fZvQLFEeiiUWvi8rlYW5jUpvIRiCWOq15SKaJ/KEhrRrmZvj850eVW5lL+pqel03nx3l8TGMdorfZ/p3jNiD7494YZIvQz9ASZkZ+2Mg4ihEChILsLRI6diKecCpy/wAEsQ9GWmcFI1CVDRFcrH7Rj8WztQmKUw3RCzMf3ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755151894; c=relaxed/simple;
-	bh=AjyQa8y9UfBgjQMOC+7KWvV2R22HtBSn7C/+oY4QT5c=;
+	s=arc-20240116; t=1755152258; c=relaxed/simple;
+	bh=zNG9Nu3Wh8t0MKtdRA10J2MqMnwX4xIXhtIIrfXTNa0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ewSElEl5nJGk2yNTxgU8tCJBWSRXWSPDYVFVSiTw0p18lMZoL1b0H2e9C0CiOuS4e6UKoYdTuBWmvSJAsXZ4pGMwPR1qvZWNJN8JZveVkOeA9qcAs066AGhJN8j/p5/yOUukfAP2yX92pmtVZODMjWKIXK6j7nitR7GGGLLr4nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oolw18pA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A59AC4CEEF;
-	Thu, 14 Aug 2025 06:11:26 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=gmfWWQDP+Vmk/gKDzwus19bKl6AlncTfBKa/TuR7zC1jviCPLUONFSbwO13owmhR3YBFPFz2rAijY1wp8gsLdcv03sZbG6gYq/mIQYKFK+9pkZJLNFhOKN9yDGszClCp0zv9953a5PLshkyWxNdxjtNCLcN/dxefHPT3wzu8qp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocClVtY7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FA53C4CEEF;
+	Thu, 14 Aug 2025 06:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755151894;
-	bh=AjyQa8y9UfBgjQMOC+7KWvV2R22HtBSn7C/+oY4QT5c=;
+	s=k20201202; t=1755152256;
+	bh=zNG9Nu3Wh8t0MKtdRA10J2MqMnwX4xIXhtIIrfXTNa0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oolw18pAKDaCqEejn9ERIeMvz53RDfGyoVui4G0KZzslIFUtl3vZqA1f7MprbyDox
-	 CP1sgLOqiPhMDi5L1VZKiwaDLhfjIlxjicqgh7JcnD1NnnM4YiF6+Y6pJXBmw2UYqw
-	 qYHYuVWcvLVD5OJ9GWCi3FqJmSZA6o1HIxdDdDBMMZ2DH0yud6b+IdEpNR+ApTF3EJ
-	 4eb3GAzmlfB71DELb/DkUuWvszxGglQaNL0Qw9kqaD7h+QC2zVKdajHFAjhRD/ezVa
-	 Ut3CF0OYwAhLOg9PrDz8X7xgNCTu4nquw6HVdzCPPGqgTlrzgmEfRHWFDH8Uf1AF0/
-	 rQZLG/e9Yc6uQ==
-Message-ID: <22bd5b5b-ca06-4499-b21f-22c2ff202167@kernel.org>
-Date: Thu, 14 Aug 2025 08:11:24 +0200
+	b=ocClVtY7tl5nu1Ssc93Ga/baNkQ3LtLSkkb4JdLo2Nm5h8LQZmUYtpivjLB6LOGQ7
+	 yNrY1ELToFhkAS/dC+h46ks0c8hj6bLMXT0VrOy0SB94DmxvlpQLk78VzIuimsIl2m
+	 fIDNsRT0WqxwwIQpVURA9NzDdMFhKjvvHM51BeQlEINaKpKkqguSbPnPHaVNU5cKD+
+	 790ewLK+UGq4UMwRYxQhsOgFVBPhMtZetTHhhbxJAjCq1oOBg9YxVWfMq3gwgflEki
+	 FrzZMUVWfORzmxw2jABPZPJAmswLurI8Ly3vFKZpdh8iUYzDqAYYv/o10KcLHUnrN8
+	 m3SKXMIAw6bvQ==
+Message-ID: <ab151314-c504-4a26-9ca2-685ab57b8fe9@kernel.org>
+Date: Thu, 14 Aug 2025 08:17:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] dt-bindings: phy: spacemit: add SpacemiT PCIe/combo
- PHY
+Subject: Re: [PATCH 2/6] dt-bindings: phy: spacemit: introduce PCIe PHY
 To: Alex Elder <elder@riscstar.com>, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
  mani@kernel.org, bhelgaas@google.com, vkoul@kernel.org, kishon@kernel.org
@@ -64,7 +63,7 @@ Cc: dlan@gentoo.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
  linux-pci@vger.kernel.org, spacemit@lists.linux.dev,
  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20250813184701.2444372-1-elder@riscstar.com>
- <20250813184701.2444372-2-elder@riscstar.com>
+ <20250813184701.2444372-3-elder@riscstar.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -110,23 +109,28 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250813184701.2444372-2-elder@riscstar.com>
+In-Reply-To: <20250813184701.2444372-3-elder@riscstar.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 13/08/2025 20:46, Alex Elder wrote:
-> +                      "mstr",
-> +                      "slv",
-> +                      "global";
-> +        spacemit,syscon-pmu = <&syscon_apmu>;
-> +        #phy-cells = <1>;
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#phy-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/spacemit,k1-syscon.h>
+> +    pcie1_phy: phy@c0c10000 {
+> +        compatible = "spacemit,k1-pcie-phy";
+> +        reg = <0xc0c10000 0x1000>;
+> +        #phy-cells = <0>;
 > +        status = "disabled";
-
-You cannot have disabled examples. This also means it could not be
-checked/tested.
-
-> +    };
-
+Same problem here.
 
 Best regards,
 Krzysztof
