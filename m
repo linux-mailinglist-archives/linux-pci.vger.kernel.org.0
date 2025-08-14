@@ -1,265 +1,170 @@
-Return-Path: <linux-pci+bounces-34028-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34029-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E58D9B25E25
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 09:58:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35988B25E34
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 10:00:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E947917A24A
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 07:56:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7BBEB1885C50
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 07:59:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4F0B26FA46;
-	Thu, 14 Aug 2025 07:56:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A29529BD8B;
+	Thu, 14 Aug 2025 07:59:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mI0qBzxi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mz1/mLef"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D59F2DF68
-	for <linux-pci@vger.kernel.org>; Thu, 14 Aug 2025 07:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA05253920;
+	Thu, 14 Aug 2025 07:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755158192; cv=none; b=IA3WCoRo4HLIgCxUZZ+8ZMwZVxp+pis5gJyBynqeTPIsMdCGaLfhPzapMVuLx5UjHqP/hj1JnB7Ds1kmId4/k1oVayysmqT8pqDweJOX9k/Ufjh6Q+NbqQZNwa70MqAi2uLJ9GtjN/3I1+J1wN8ZhIcu9KID+NJBqBEg9V0kgjU=
+	t=1755158349; cv=none; b=cMZ+5C/7lb5kZWnymjpabPUQyK6emD0nGyx/SDvss7buuNEicWEjRtCbIxw1CAv5LgfCz9MoiLtUyYZYOgt0RLk4t+bgAQKtUG7FEOp5RWq4cA2MdThIjNoCK4By2EAmnyXJQC16fnlkh+TiKlVT0CkW1iyU+w7nnJkKjELiTKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755158192; c=relaxed/simple;
-	bh=xmxOEdCnJsaVHqbJzbBfL1peU22eSO7U1M2WLRPalX0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jGeTQHyOUqOKVissJ/0a/aXzyB0o7faYUJnojJq75AIWCOieenj3zFQCYF4ionbEaIgVDZZL715RhfHiVQJ4Yjo+nmfrWl/dT45Gr4Li0GIsynSjRsiwkoWoYoOI/Si2SHn9Dawi/97asue3OicGPgCv2zvSma1Jp4+up67WQ3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mI0qBzxi; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57E73pSa015507;
-	Thu, 14 Aug 2025 07:56:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=6VlQ7y
-	Q/ntyE8LoypGX6lnf9UKkcOkIank9t78ITRpE=; b=mI0qBzxi/PCUaBwoch40kw
-	wj0vt8TuBMr4xvuFue3JAm9NOsTC6f+IrHzr3165XAxJX6TkzVxcbY06Z0thpL0r
-	5Luw0mB3rKl6dD8bRqsO/eIslt562jdXon6HD10z+wdywo7S5XDMUGYPo61OUNJN
-	4Lf+edAmdT8Iy1RtaEdEvl2gED6TFoGkR4bGljtzulvl472hk8Yq9CF/YbnZg2az
-	M0/SVx2hd15tP5zbTmQl4hUDabkQDUH3cu98RxaHsAYr14d9ROzZMOqnrSmZMogc
-	fQgwfuax2GTX7/8naCC9OQpTeFc90wxoqBLZGt9c/Pn9WBc7sCR6PiXYNggrsq2Q
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48gypeatbc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Aug 2025 07:56:15 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57E7pc1H009355;
-	Thu, 14 Aug 2025 07:56:14 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48gypeatb9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Aug 2025 07:56:14 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57E6Q200017594;
-	Thu, 14 Aug 2025 07:56:13 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 48ekc3tva5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Aug 2025 07:56:13 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57E7uCuX28377682
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 14 Aug 2025 07:56:13 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D052E58058;
-	Thu, 14 Aug 2025 07:56:12 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4D9405805C;
-	Thu, 14 Aug 2025 07:56:10 +0000 (GMT)
-Received: from [9.87.142.31] (unknown [9.87.142.31])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 14 Aug 2025 07:56:10 +0000 (GMT)
-Message-ID: <7c545fff40629b612267501c0c74bc40c3df29e2.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/5] PCI/AER: Allow drivers to opt in to Bus Reset on
- Non-Fatal Errors
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: Riana Tauro <riana.tauro@intel.com>,
-        Aravind Iddamsetty	
- <aravind.iddamsetty@linux.intel.com>,
-        "Sean C. Dardis"
- <sean.c.dardis@intel.com>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Linas Vepstas <linasvepstas@gmail.com>,
-        Mahesh J Salgaonkar
- <mahesh@linux.ibm.com>,
-        Oliver OHalloran	 <oohall@gmail.com>,
-        Manivannan
- Sadhasivam	 <manivannan.sadhasivam@oss.qualcomm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
-Date: Thu, 14 Aug 2025 09:56:09 +0200
-In-Reply-To: <28fd805043bb57af390168d05abb30898cf4fc58.1755008151.git.lukas@wunner.de>
-References: <cover.1755008151.git.lukas@wunner.de>
-	 <28fd805043bb57af390168d05abb30898cf4fc58.1755008151.git.lukas@wunner.de>
-Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1755158349; c=relaxed/simple;
+	bh=zoZ7WUquG8cMMyU1NBK2nNB+7xnTYVek1voJ48AoqJ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vsk4mwWbQPoetLtkaA2yGh7J9LRcXr1czd0UajHJZcR00y24SNkolOX3X3Kl3grLg6VgiWw71oJDWCurenapm3n0BLfCcTYxytpVwe8P9xCpsr21au85EuBaAz1eg9nH8C0BfGBxGyodeA3fruUKkvUcloT0AfJTgPC+X0crfeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mz1/mLef; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b4716f46a2eso414057a12.0;
+        Thu, 14 Aug 2025 00:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755158346; x=1755763146; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zoZ7WUquG8cMMyU1NBK2nNB+7xnTYVek1voJ48AoqJ8=;
+        b=mz1/mLef7yphnGaDGhRRk6mxUsc5fbrNWTCmlPf/mq9RJjj16mmrsIcXwBLBhzbHdJ
+         ixcxH/awi2SnJkCp6kaoeJLFBn5/qf27wiugnJdzFgABCfqTWk4Fn/BjlrO8ow4jcBqf
+         J2Yqd6yYN6W3/rccMCHCypeESxtzdQSfXsMx92cR3PWOAmpciqjIAjAtwSO8Jj9/QcM0
+         +jffiz2ff0AQ0yHLnw4EhZT9V4C4KWMZggFRdgjb+diibCrtkIyRa67P+LcAqBPVerZG
+         HF3fciBe1MIg9wkTtjppDb2gtFqxcUHpFWHEm/VZMrj5s4n3z7DLM8SbmZlUArRFjhUX
+         MjbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755158346; x=1755763146;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zoZ7WUquG8cMMyU1NBK2nNB+7xnTYVek1voJ48AoqJ8=;
+        b=VMmentwGGnafqSFpiq17tayQEzEHOCQKHk2P6Kna1jGqPh93BZH8phqrYfaDhnucCj
+         B7aF5/Oc+JjiyGA31sh2hMpt7B1FmXNbTnEA+97Qj22UT7Fcr57jtDw2i4x58nwaMJZt
+         Y+FWS2D/6FoVM4Sb6Ea2GuoXBrjH3XW9DQoLjhLM8Bbg1w7IbpSMemmKuTBus2t6PLG9
+         sSg9yjtoTIHft77pRFxRELI+JvGqr6Qao2Zqa06d0lpg1opXjIs4CmVSKNNMNoM3zUS+
+         JARxGwXjvmivPWAx8QqspAJZTW/QrIuEO5myiEjMYl2rBvqh7GmTK8JYQGLfmVNyE2OK
+         J2BQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7TzxjO3ITZtCFoEREPpRMZ+P+QdaWMAhOOyYlTIQtpBAYoOvWPoawqU8u7OCEkD2vdRkwUZk9pUl2c9le@vger.kernel.org, AJvYcCUjk/PDKBCEvdUAgwthMrK5xDAxXsuKXruF2nH/2M/BTthDgt5Rqz0QrshGMwluhlCSnAblsdpldfkqrLWj@vger.kernel.org, AJvYcCUn3yxj1S29RzvU/WY3raTpyJwxymcYIZsiX2R48MOudaZ927EJzm60DOGmNTxd3F8gzW+zvXeCwF8V@vger.kernel.org, AJvYcCWxfFTBzIm5OM1BRoOVWMpjL6HSqT6MD8bGw79biC4r4ZWbl/QCNGskLyRCLDyk/LLiK5/Dezvjk9Ml@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgpOHnXK6gLNpc9+OR/0UowkIaLnqpZRcwb+Ph+OYwEHw1QhRE
+	399+zHPyloIazQwxEtV6bpHvhj3NL96OP9y8eOB8XF4UbWxzWGfPomnrRV1CiZC1XES8G8dIW5E
+	OziBDcAlQASHZPzLYYW/z1Tysl2nnmjhHHPW1GaM=
+X-Gm-Gg: ASbGncvO7jVa8CINOzNTEYTfa+m3Ep75FHWJhwyBIHzhT7d8g7gtJ+m9luVOnl8zcLR
+	nSjva6qXVqUHCRKs1BTfj9MrbaaJ+sT0bHmHNpRDrrWN9rMP97UikSDGi4L/k4fWVM1YMOMC7Pr
+	laXso61EKLyUi0UJSywJsfKwt7pKITiTufRciAQnLJZHX+wh48iAg8NtvM1n8G13tgG0YRgHxaY
+	3fbcIpFGw==
+X-Google-Smtp-Source: AGHT+IEQbGhvLjbk/PZuRzmUAAbKmg5zyek9g1zSctsavo1Plx+EvyZnlkXlE79ToNcU1q9KIzOPCpQOjM4oqgmqIUc=
+X-Received: by 2002:a17:903:288:b0:23f:b112:2eaa with SMTP id
+ d9443c01a7336-244586d1e0emr29323375ad.41.1755158345945; Thu, 14 Aug 2025
+ 00:59:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=eaU9f6EH c=1 sm=1 tr=0 ts=689d969f cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=qOJ_l1y5zSr8rzLU:21 a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10
- a=pu2xdbaM_LAGYbC3j-cA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: KhfcdkLCJ8KTlOV5TKINN-UFD5PXtsKP
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEzMDE2NyBTYWx0ZWRfX5GQBPs9Vir6j
- bTDfm/VWeDYLFmfvI06OYrq34axmfR1aHZxMH4KcSZRH5FHDfpf68EMR7igheEXXt4lrxCFI8AJ
- 3vmT2ALc1g/JBCCaFh/xnozaS2ZEE88YtmuHTevggiE5yk9ArEgrFczhMB/HxZ/aIuxMSjbFWVP
- uovsa2K/KHZ6ygaReEizcHVb1xGM1AtiyOD88Vh1FIIGcj1Agnnp3hKwQNPQF0iqrFstqR/YSEP
- KF49Q4Di82Ys3boVjUiR42kKdTrorQHFYR1MWuWj7QQQL08Oh+kZn6B7/kVoJCIwyUc8SAnFG0W
- 0+7ATm+ZQnBE1NbQlwNInZVBa/hTlTrrT7QYUlBQ3Is9T1+/40u5ShRTIoO8WQPQXv10EtnnF5P
- GdI2lebk
-X-Proofpoint-ORIG-GUID: h9H5WDMxPVjZNe8_LwXax2PQFe0_ui5c
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-13_02,2025-08-11_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 clxscore=1015 priorityscore=1501 spamscore=0
- bulkscore=0 malwarescore=0 adultscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508130167
+References: <20250718045545.517620-1-mhklinux@outlook.com> <20250718045545.517620-2-mhklinux@outlook.com>
+In-Reply-To: <20250718045545.517620-2-mhklinux@outlook.com>
+From: Tianyu Lan <ltykernel@gmail.com>
+Date: Thu, 14 Aug 2025 15:58:28 +0800
+X-Gm-Features: Ac12FXwvr78CteVVQOMblTNIWydAz9zx3iAXMtyYSKDeoJxC3p3jC9XRhyn1SE4
+Message-ID: <CAMvTesCFzy_Yt01Xz-GrG68_JGWf+yJzn2Nx7UJo2hLMarYJrQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] Drivers: hv: Introduce hv_setup_*() functions for
+ hypercall arguments
+To: mhklinux@outlook.com
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
+	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, lpieralisi@kernel.org, 
+	kw@linux.com, mani@kernel.org, robh@kernel.org, bhelgaas@google.com, 
+	arnd@arndb.de, x86@kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2025-08-13 at 07:11 +0200, Lukas Wunner wrote:
-> When Advanced Error Reporting was introduced in September 2006 by commit
-> 6c2b374d7485 ("PCI-Express AER implemetation: AER core and aerdriver"), i=
-t
-> sought to adhere to the recovery flow and callbacks specified in
-> Documentation/PCI/pci-error-recovery.rst.
->=20
---- snip ---
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+On Fri, Jul 18, 2025 at 12:56=E2=80=AFPM <mhkelley58@gmail.com> wrote:
+>
+> From: Michael Kelley <mhklinux@outlook.com>
+>
+> Current code allocates the "hyperv_pcpu_input_arg", and in
+> some configurations, the "hyperv_pcpu_output_arg". Each is a 4 KiB
+> page of memory allocated per-vCPU. A hypercall call site disables
+> interrupts, then uses this memory to set up the input parameters for
+> the hypercall, read the output results after hypercall execution, and
+> re-enable interrupts. The open coding of these steps leads to
+> inconsistencies, and in some cases, violation of the generic
+> requirements for the hypercall input and output as described in the
+> Hyper-V Top Level Functional Spec (TLFS)[1].
+>
+> To reduce these kinds of problems, introduce a family of inline
+> functions to replace the open coding. The functions provide a new way
+> to manage the use of this per-vCPU memory that is usually the input and
+> output arguments to Hyper-V hypercalls. The functions encapsulate
+> key aspects of the usage and ensure that the TLFS requirements are
+> met (max size of 1 page each for input and output, no overlap of
+> input and output, aligned to 8 bytes, etc.). Conceptually, there
+> is no longer a difference between the "per-vCPU input page" and
+> "per-vCPU output page". Only a single per-vCPU page is allocated, and
+> it provides both hypercall input and output memory. All current
+> hypercalls can fit their input and output within that single page,
+> though the new code allows easy changing to two pages should a future
+> hypercall require a full page for each of the input and output.
+>
+> The new functions always zero the fixed-size portion of the hypercall
+> input area so that uninitialized memory is not inadvertently passed
+> to the hypercall. Current open-coded hypercall call sites are
+> inconsistent on this point, and use of the new functions addresses
+> that inconsistency. The output area is not zero'ed by the new code
+> as it is Hyper-V's responsibility to provide legal output.
+>
+> When the input or output (or both) contain an array, the new functions
+> calculate and return how many array entries fit within the per-vCPU
+> memory page, which is effectively the "batch size" for the hypercall
+> processing multiple entries. This batch size can then be used in the
+> hypercall control word to specify the repetition count. This
+> calculation of the batch size replaces current open coding of the
+> batch size, which is prone to errors. Note that the array portion of
+> the input area is *not* zero'ed. The arrays are almost always 64-bit
+> GPAs or something similar, and zero'ing that much memory seems
+> wasteful at runtime when it will all be overwritten. The hypercall
+> call site is responsible for ensuring that no part of the array is
+> left uninitialized (just as with current code).
+>
+> The new functions are realized as a single inline function that
+> handles the most complex case, which is a hypercall with input
+> and output, both of which contain arrays. Simpler cases are mapped to
+> this most complex case with #define wrappers that provide zero or NULL
+> for some arguments. Several of the arguments to this new function
+> must be compile-time constants generated by "sizeof()"
+> expressions. As such, most of the code in the new function can be
+> evaluated by the compiler, with the result that the code paths are
+> no longer than with the current open coding. The one exception is
+> new code generated to zero the fixed-size portion of the input area
+> in cases where it is not currently done.
+>
+> [1] https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/t=
+lfs/tlfs
+>
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 > ---
->  drivers/pci/pcie/err.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index de6381c690f5..e795e5ae6b03 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -217,15 +217,10 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *d=
-ev,
->  	pci_walk_bridge(bridge, pci_pm_runtime_get_sync, NULL);
-> =20
->  	pci_dbg(bridge, "broadcast error_detected message\n");
-> -	if (state =3D=3D pci_channel_io_frozen) {
-> +	if (state =3D=3D pci_channel_io_frozen)
->  		pci_walk_bridge(bridge, report_frozen_detected, &status);
-> -		if (reset_subordinates(bridge) !=3D PCI_ERS_RESULT_RECOVERED) {
-> -			pci_warn(bridge, "subordinate device reset failed\n");
-> -			goto failed;
-> -		}
-> -	} else {
-> +	else
->  		pci_walk_bridge(bridge, report_normal_detected, &status);
-> -	}
-> =20
->  	if (status =3D=3D PCI_ERS_RESULT_CAN_RECOVER) {
->  		status =3D PCI_ERS_RESULT_RECOVERED;
+>
 
-On s390 PCI errors leave the device with MMIO blocked until either the
-error state is cleared or we reset via the firmware interface. With
-this change and the pci_channel_io_frozen case AER would now do the
-report_mmio_enabled() before the reset with nothing happening between
-report_frozen_detected() and report_mmio_enabled() is MMIO enabled at
-this point? I think this callback really only makes sense if you have
-an equivalent to s390's clearing of the error state that enables MMIO
-but doesn't otherwise reset. Similarly EEH has eeh_pci_enable(pe,
-EEH_OPT_THAW_MMIO).
+Reviewed-by: Tianyu Lan <tiala@microsoft.com>
 
-> @@ -233,6 +228,14 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *de=
-v,
->  		pci_walk_bridge(bridge, report_mmio_enabled, &status);
->  	}
-> =20
-> +	if (status =3D=3D PCI_ERS_RESULT_NEED_RESET ||
-> +	    state =3D=3D pci_channel_io_frozen) {
-> +		if (reset_subordinates(bridge) !=3D PCI_ERS_RESULT_RECOVERED) {
-> +			pci_warn(bridge, "subordinate device reset failed\n");
-> +			goto failed;
-> +		}
-> +	}
-> +
->  	if (status =3D=3D PCI_ERS_RESULT_NEED_RESET) {
->  		/*
->  		 * TODO: Should call platform-specific
-
-I wonder if it might make sense to merge the reset into the above
-existing if. That would also work well with Sathyanarayanan's
-suggestion to have state =3D=3D pci_channel_io_frozen upgrade to
-PCI_ERS_RESULT_NEED_RESET. I'm a bit confused by that TODO comment and
-anyway, it asks for a platform-specific reset to be added bu
-reset_subordinate() already seems to allow platform specific behavior,
-so maybe the moved reset should replace the TODO? Also I think for the
-kind of broken case where the state is pci_channel_io_frozen but the
-drivers just reports PCI_ERS_RESULT_CAN_RECOVER it looks like there
-would be a reset but no calls to ->slot_reset().
-
-Thanks,
-Niklas
+--=20
+Thanks
+Tianyu Lan
 
