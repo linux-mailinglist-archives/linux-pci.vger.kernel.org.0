@@ -1,92 +1,112 @@
-Return-Path: <linux-pci+bounces-34032-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34033-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4E55B25F07
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 10:37:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4367B25F62
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 10:45:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EA4BE7BE718
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 08:32:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA59C9E6B80
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 08:44:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78CB02E92AC;
-	Thu, 14 Aug 2025 08:32:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED5D72E7BB8;
+	Thu, 14 Aug 2025 08:44:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oJACemna"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="G6IDlHkf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF927264A76;
-	Thu, 14 Aug 2025 08:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B631A317D;
+	Thu, 14 Aug 2025 08:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755160335; cv=none; b=QW1livtVee+y+QERLVaTz8niaLIRpJ34FF8ziIqt5kvfL2geH622j8/Yyrzb7TGAOnIZ9yi66e/X9YIK2Jx7GmsE9D+0wslWPBRmsUfQvR9Dn9ITwxkSZLlLCubf67jHIRyOALP5FNFdzWsPoUucZqrq9xzvTcNSxe12JI0oM0c=
+	t=1755161065; cv=none; b=VnTK9e2HHikrbbk6vtQy+omDm3wVn04812979PAH0XOXzofinYpf6p+JXTGaRdhwUIE5YcrcYf6qwQSNz+/REpJpO3nSBGJ47CvysvdEMQpdV3QtPmGM8wzRRfG4RDCQyIFU9HO3VGXrRMUEPvmV4M+lngWpWsIsabDoEpsS7qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755160335; c=relaxed/simple;
-	bh=1VclcqfkWk+K5PrKAVxtg/h/A/bde8jWduxMV+ejsJ4=;
+	s=arc-20240116; t=1755161065; c=relaxed/simple;
+	bh=T9KgQgoXxc/qzmgJl8c7Zy/bIg4ZAk+Kv3uqGnOvTMo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Q+XeH9exwV5EW3pUgCehVLVnolIdvpP8d8THjqR9Zhq7nGIXnoFmmsFuZlWcLMn1Ok0rTBRqoguCTIsYdU9n4ueaB+92BJ0Y00ABnW8cuSktBSI1g/JNXHz6gvAlHDgLLjRfqcGHvVDgpncv2dhAaFT2HRTWCEv06NaNurjPS2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oJACemna; arc=none smtp.client-ip=148.163.158.5
+	 Content-Type:MIME-Version; b=TpZAjf8YmWdEbezP/8FYl64suWbYa3TQU5323Not00KDkPPXY0Czce4pPvo0bHS4+h+D9sGreK23XETpqkq7J/xDpQmLMaqvq0e5+0KkHcQEhnXcQRBqprYeb4fpw20Hh4D3pewDzHY2Ihdeye0GBh1pTlrtJ93W/PNtI5ZnlBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=G6IDlHkf; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57E7jsgO025800;
-	Thu, 14 Aug 2025 08:32:07 GMT
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57E7rgpV015981;
+	Thu, 14 Aug 2025 08:44:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=UwzjXz
-	JfwemVi24TaBRnWn+t+rQ/5E8ePZK04ZyIjlU=; b=oJACemna856Nkv8h8+jTVc
-	aWfDtg4P3yymaIGK11j/QsaXFiyGYXUPMuyrTZY0I38bS0ZLHHO9XsuXver/cZAH
-	x3RlrzvX+u1JHQOm8pt7PN6GYWKLqUAxvlasBIRGmh1+Z5eEYRA7YFe7eSN7pnrv
-	nqIDWArwZxzzBvGUe23kQ4cNRPY6lQKP0CqYylnmqonHSRuE/x+skvux5qlad7w2
-	VNtH54ORy8raRSGm0DxfMIBDeAOsL32IUCqnwGCbJntpBNNR+VaNeJuAspojoZTL
-	8mEjhGrJjSTp/1FQUwllFN9Ibd+AYVaS51h037uTTEkrzfWiSWCgDDLS542kPteg
+	:message-id:mime-version:references:subject:to; s=pp1; bh=T9KgQg
+	oXxc/qzmgJl8c7Zy/bIg4ZAk+Kv3uqGnOvTMo=; b=G6IDlHkfnl2wQxC8WFcXD5
+	D04EvIuZjyiDutIpSz9Z8YKLKYVwJmDqY9Z3u3Ykv76Igd0VFA8NLoTOjFENbsYt
+	tLTEwIOrrLefGnsDIwFCmYlGL637+r6oFQUu2CB6+0Nj5PPOkcHHmQDUhjDygob4
+	j6bEZbwjvlBn0+nKyEdrzWb8VD/MyDyO0jgXmReZ4bV6LnC6gqWoCGoaJOc1+GLv
+	3dhnvBKJKMmvUB7jyfviYTW6yHqbbGL/Mu9T5sI05WDp8Zvk/YC8wVMvxRbXUBI5
+	7R8n6lcdjtdWWfRZ2zHhCCXCVUGsu9H5+ScJEIzRce/kUlFt0MfV54Ie9lCf97JA
 	==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48ehaad9au-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48dx14s2ey-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Aug 2025 08:32:07 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57E8PEVg004668;
-	Thu, 14 Aug 2025 08:32:06 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48ehaad9ar-1
+	Thu, 14 Aug 2025 08:44:15 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57E846Kc004938;
+	Thu, 14 Aug 2025 08:44:14 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48dx14s2ex-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Aug 2025 08:32:06 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57E8NHDv010835;
-	Thu, 14 Aug 2025 08:32:05 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 48egnuujkh-1
+	Thu, 14 Aug 2025 08:44:14 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57E5Kra5028585;
+	Thu, 14 Aug 2025 08:44:13 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 48ej5nb9k1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Aug 2025 08:32:05 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57E8W5Lx8848808
+	Thu, 14 Aug 2025 08:44:13 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57E8iBQ133555028
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 14 Aug 2025 08:32:05 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 34A4B58059;
-	Thu, 14 Aug 2025 08:32:05 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DFA0858043;
-	Thu, 14 Aug 2025 08:32:02 +0000 (GMT)
+	Thu, 14 Aug 2025 08:44:11 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 788C058059;
+	Thu, 14 Aug 2025 08:44:11 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A10EA58043;
+	Thu, 14 Aug 2025 08:44:07 +0000 (GMT)
 Received: from [9.87.142.31] (unknown [9.87.142.31])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 14 Aug 2025 08:32:02 +0000 (GMT)
-Message-ID: <39e654cfcce848d57671cbd5d7038f2f9667789a.camel@linux.ibm.com>
-Subject: Re: [PATCH v15 0/6] Refactor capability search into common macros
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 14 Aug 2025 08:44:07 +0000 (GMT)
+Message-ID: <ba0ecfe5df379f6e14c4df655b90695041a616f4.camel@linux.ibm.com>
+Subject: Re: [PATCH v5 0/3] PCI/ERR: s390/pci: Use pci_uevent_ers() in PCI
+ recovery
 From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
-        kwilczynski@kernel.org, bhelgaas@google.com, helgaas@kernel.org,
-        jingoohan1@gmail.com, mani@kernel.org
-Cc: robh@kernel.org, ilpo.jarvinen@linux.intel.com, gbayer@linux.ibm.com,
-        lukas@wunner.de, arnd@kernel.org, geert@linux-m68k.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 14 Aug 2025 10:32:02 +0200
-In-Reply-To: <20250813144529.303548-1-18255117159@163.com>
-References: <20250813144529.303548-1-18255117159@163.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+        Mahesh J Salgaonkar
+	 <mahesh@linux.ibm.com>
+Cc: Linas Vepstas <linasvepstas@gmail.com>,
+        Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+	 <ilpo.jarvinen@linux.intel.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens
+ <hca@linux.ibm.com>,
+        Vasily Gorbik	 <gor@linux.ibm.com>,
+        Alexander Gordeev
+ <agordeev@linux.ibm.com>,
+        Christian Borntraeger
+ <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Peter
+ Oberparleiter	 <oberpar@linux.ibm.com>,
+        Matthew Rosato
+ <mjrosato@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>, Sinan Kaya
+ <okaya@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Keith Busch <kbusch@kernel.org>
+Date: Thu, 14 Aug 2025 10:44:06 +0200
+In-Reply-To: <20250807-add_err_uevents-v5-0-adf85b0620b0@linux.ibm.com>
+References: <20250807-add_err_uevents-v5-0-adf85b0620b0@linux.ibm.com>
 Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
  keydata=mQINBGHm3M8BEAC+MIQkfoPIAKdjjk84OSQ8erd2OICj98+GdhMQpIjHXn/RJdCZLa58k
  /ay5x0xIHkWzx1JJOm4Lki7WEzRbYDexQEJP0xUia0U+4Yg7PJL4Dg/W4Ho28dRBROoJjgJSLSHwc
@@ -152,77 +172,52 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=KPRaDEFo c=1 sm=1 tr=0 ts=689d9f07 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=6-NR3gJOg-QBa0eNMoMA:9
+X-Proofpoint-ORIG-GUID: XfD33j5vxQrXWyRVjtJJvqxHMuEGAtkJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEyMDIyNCBTYWx0ZWRfX1KUFzCVRppKk
+ NmVvvF0LShF+sgkJMp8+HIr52z3BR8Zux5zbDHsvEwFAQcY2UhMLjXFJrjhml2IZ90TJqEcopcN
+ v0kNG26giWQVdf54FELjFIfr06xNnoxk0xXcYfON3gG3T/q7EvXdYwaYMkrEcLAUyMvV8qkbtEX
+ OxVbeemfx59r9FbhHGgHceZeYLRUqrVr2/LoQETNIf3Aw5QgKVhvN+1Z2B9WJ5JmyXBivm9d5mW
+ bC1XjdfsjY1wqTVdd1mi64r4PfwbFqUubEAm86dKEN7zoLlIoG6sGDmSRd1FSsSlDisw1TEYdbh
+ hX/sPeV/4T6XxwWpnNCB9ya79MsBcWuAFDbyC3/c4OtfriFXvqxFC32VXeq2GuZv+zN8c8NPJbH
+ 476rI6Hd
+X-Proofpoint-GUID: s5iVgtwjJFBeAGD1Uou8os76O7-FPLNX
+X-Authority-Analysis: v=2.4 cv=fLg53Yae c=1 sm=1 tr=0 ts=689da1e0 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=99k3b_FDGDTT4Z58m1sA:9
  a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: -9T7J2Gs3QLAbUG_NUwHiEVw65rCSzfq
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEyMDIyNCBTYWx0ZWRfX5aT9NtrjkObK
- D2Fybx+iw5qyoUdqlcOW1f5WC4dfgFzYXRXoT0XUErQAZBJBmsFWBr4KeOm7JimQHmoHKR8e/OY
- YQnVO+keO5TwlkJG9Dd1ockZ5GiVH8de3JR6RVu7eIgrmto9r6LnFD9zSrCz/NkNnLSJFMSqyoh
- qT1M3aWTFuCWAyKVWdCIXj6W7xpHEfZHiou5L6fHmHx64qxGDZ2dSxvMaBiMF60stkXWXNo6LhM
- hi3/ohMVvjwv1gr8949kM3zqf4hPCeHOBi2Si+R+Mmk42MMSVgBfwaUt3LznKFTM9RfiaMOGuVi
- ibhoVG3NoTQMYeVKMX1Z76CQb7LDzy/dTGY7/vXD+m03f9Y4ltE2wxG3wmYHpMwtiADo96rExOv
- luAIN4w0
-X-Proofpoint-GUID: 0vTMROrnefqM3TzT0uBd6jihuVkLb6g3
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-08-13_02,2025-08-11_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 impostorscore=0 bulkscore=0 adultscore=0 priorityscore=1501
- malwarescore=0 spamscore=0 clxscore=1015 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508120224
+ adultscore=0 clxscore=1015 spamscore=0 priorityscore=1501 impostorscore=0
+ phishscore=0 malwarescore=0 bulkscore=0 suspectscore=0 classifier=typeunknown
+ authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2507300000 definitions=main-2508120224
 
-On Wed, 2025-08-13 at 22:45 +0800, Hans Zhang wrote:
-> Dear Maintainers,
+On Thu, 2025-08-07 at 15:55 +0200, Niklas Schnelle wrote:
+> Hi Bjorn, Lukas, Mahesh,
 >=20
-> This patch series addresses long-standing code duplication in PCI
-> capability discovery logic across the PCI core and controller drivers.
-> The existing implementation ties capability search to fully initialized
-> PCI device structures, limiting its usability during early controller
-> initialization phases where device/bus structures may not yet be
-> available.
+> This series adds issuing of uevents during PCI recovery on s390. In
+> developing this I noticed that pci_uevent_ers() ignores
+> PCI_ERS_RESULT_NEED_RESET. I think this will result in AER not generating=
+ a uevent
+> at the beginning of recovery if drivers request a reset via the voting
+> on error_detected() returns. This is fixed in the first patch and relied
+> upon by the s390 recovery code as it also uses the result of
+> error_detected() though with one device/driver at a time.
 >=20
-> The primary goal is to decouple capability discovery from PCI device
-> dependencies by introducing a unified framework using config space
-> accessor-based macros. This enables:
+> Thanks,
+> Niklas
 >=20
-> 1. Early Capability Discovery: Host controllers (e.g., Cadence, DWC)
-> can now perform capability searches during pre-initialization stages
-> using their native config accessors.
->=20
-> 2. Code Consolidation: Common logic for standard and extended capability
-> searches is refactored into shared macros (`PCI_FIND_NEXT_CAP` and
-> `PCI_FIND_NEXT_EXT_CAP`), eliminating redundant implementations.
->=20
-> 3. Safety and Maintainability: TTL checks are centralized within the
-> macros to prevent infinite loops, while hardcoded offsets in drivers
-> are replaced with dynamic discovery, reducing fragility.
->=20
-> Key improvements include: =20
-> - Driver Conversions: DesignWare and Cadence drivers are migrated to
->   use the new macros, removing device-specific assumptions and ensuring
->   consistent error handling.
->=20
-> - Enhanced Readability: Magic numbers are replaced with symbolic
->   constants, and config space accessors are standardized for clarity.
->=20
-> - Backward Compatibility: Existing PCI core behavior remains unchanged.
->=20
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 > ---
-> Dear Niklas and Gerd,
->=20
-> Can you test this series of patches on the s390?
->=20
-> Thank you very much.
 
-Hi Hans, I gave this series a try on top of v6.17-rc1 on s390
-and a bunch of PCI devices including the mlx5 cards that Gerd we
-originally saw issues with. All looks well now. So feel free to
-add as appropriate:
+Hi Bjorn,
 
-Tested-by: Niklas Schnelle <schnelle@linux.ibm.com>
+as you just picked up Lukas' "PCI: Reduce AER / EEH deviations" series
+for pci/aer, I think it would make sense to take this via that tree
+also. If you prefer and provide an ack for the first patch this could
+also go via s390 of course.
 
 Thanks,
 Niklas
