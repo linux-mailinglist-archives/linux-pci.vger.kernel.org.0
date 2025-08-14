@@ -1,96 +1,110 @@
-Return-Path: <linux-pci+bounces-34060-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34061-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEF61B26AF5
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 17:28:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 41E5EB26AFD
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 17:30:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFBD25E2D7F
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 15:22:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B121A179F60
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 15:24:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9B1421B9FE;
-	Thu, 14 Aug 2025 15:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADc/SI9Q"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A74D72040A8;
+	Thu, 14 Aug 2025 15:24:49 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23DC21B8F8;
-	Thu, 14 Aug 2025 15:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31AB9188000;
+	Thu, 14 Aug 2025 15:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755184945; cv=none; b=FELCA+8+ycKjej30vbfppdnkX5WMbzO/eOZdfzhWIjrRNjqcg/FFFKgMFmcA5xNcx4ZN6mm1SoZX2ym3LbO5IDnzctXQf7fg9APyXXbFQ/nK6ndMMuTTlQG4vTIVgrQCFmGmkKmLNPhG9QCmE8r7GdTmSCjzVUUm3WPmK1sJ3Dw=
+	t=1755185089; cv=none; b=AbVuB0khUFwAJsqA7avHmBpcBQE0oREBbte8cjvg5xfnG4PQVzU4bpaiXzQ0n8BavfuhXKx/pZLgihyxc+0T6IEzMyrpLqNHpwu4nTLFlI3w4T1I0ArtJeniXRtvqwKwtXzMwJGn2mKBVP3q0tBKW4AN8C/hy22imqtRT8VFTXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755184945; c=relaxed/simple;
-	bh=+1gG3qlmSkwGj/oU7QDjRpIhc3oEnnm/tmA6uBQL3RM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cs1wWXAEuPNmup7uIxyGeAhkTgYN8QnweHD10xjpvwDCb9+g+x6k36rhbmZyESfeSMqgLuu54HuNb31OZZwMJTuUdfucNBu1MFZqY51IAjSZdgGy6+LxgHEBw1jULu4gludpLa3e2X1FEgtgS0RnmpNYEdai46LODuXu8PgqPtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADc/SI9Q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D6F4C4CEED;
-	Thu, 14 Aug 2025 15:22:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755184945;
-	bh=+1gG3qlmSkwGj/oU7QDjRpIhc3oEnnm/tmA6uBQL3RM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ADc/SI9Q0CYssF6iFsm297aNyk1X6W440Rz5x0B4uZTlf+1C9/uPnCAOGKoLVtNx8
-	 BXgqtIH5mtJ2x1DVi7VOHNwN0OXGRKGYDuxxqXu1FrRjkPZBSoFxyTFwahAIuClCPl
-	 P+rmyyNu73fEtq/Sln4AvPPzuoOjXqEjiiGcXgLVPTgBecTMUrANB5meFaQ2eOpu/T
-	 iseg9h80RM7Gcxj4KW4NSx6IiFoMGYQypKzhbOpPoN/4EtYNfNJyuIdf/lwTn8A8QI
-	 sfTNB3+B5xqYGoLB8BWBjsstV/B7JwE/sZji54A4TQitt1NhVOlaoTtyj5BC51pUKA
-	 rO0m5xEihJbEQ==
-From: Niklas Cassel <cassel@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>
-Cc: Niklas Cassel <cassel@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: [PATCH 13/13] PCI: tegra194: Drop superfluous pci_epc_features initialization
-Date: Thu, 14 Aug 2025 17:21:32 +0200
-Message-ID: <20250814152119.1562063-28-cassel@kernel.org>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250814152119.1562063-15-cassel@kernel.org>
-References: <20250814152119.1562063-15-cassel@kernel.org>
+	s=arc-20240116; t=1755185089; c=relaxed/simple;
+	bh=5DZpdaxvf/xRii7FUNVA1jTQJH3GeudWV805p9bguHA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=loPiS8r7H+XEbJ0JGQvm8yL7Q2GaZ/3/31u4mJWiNasFKuvNkMhGynX9Jd4G2VH+I7O5x+tCfunnc9nUqY5xkrRLquDY+Tqoufl0NO+z1EuSQy4hpArUXEhlzb0shD+I/xlDAJvM0mNZmIOndoaPK7jXz3I8cf2KP8lH/fcnm1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-53b17552198so356105e0c.3;
+        Thu, 14 Aug 2025 08:24:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755185087; x=1755789887;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m6yPJNZcfaJ7QT7pxBe0aq8ErHvI9RgNKMxqHKrxf9s=;
+        b=Cfsk9ekNDacDBmCZ71ayDonlfoKNfwxSVBvWRsKbeWh0gBFF6PLctlkTPWsYzChtQw
+         t2ceQW9045P4/Zr0eXNS0ct9lTxMh/VCrrfoYkIajEdOorPA7raZlwvqVTcjFqxyrvbe
+         ndXh1IwUvujI5UODpum24QwW71ez23Xsk8TqYyjtMM7oq1s1oDyJBq6YVVLFX13VobI3
+         6eQ18Ng0EysGGSLYxkJL9eGIV2Vcp5HxFg4c/alaxZdyZ9/bqqEJ0QRTHpYGywEXcwdZ
+         5IX+AfHQZNxm1pU+pYLawg5RThpcGsxhhKW24okfE58sSjQxNae6T6yuRU8svH41ntW/
+         1I1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUUyo0Nf+4a8kb58AM+hRqHJF4oQwEPpga24l3iaf04vZ4rcIBN9EdH0S7AAl0t8bEXedH9di0dViE=@vger.kernel.org, AJvYcCXQZ3xTCMuVp7RkLQ6deFtA7lQw5TNJcfxezs5aB0uKpMZlRWO3XZtalFDF3iF4MZZIuN8HJVolyO8vnQmRYOJfJ2c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcU5rtFeDy5guBo64h/mWsIMnRaP4rAe4PYbdQ3tXWdC9OtOzD
+	3AdiPCwenXIKlkYi8jOjDw5tte/WYz4xpKAHae1UN7xpGYEgBtjtqPDdfi88Qbwm
+X-Gm-Gg: ASbGnct+0CaZDrIrKxC/76+eIUezCYpDLZJBDoPRw4txz3fThWE1Y2BWQXMGS20t2fI
+	K72b0enBaRGZrmy8nOD57aaNCHnDr4oWHRwfL+xRwb+aM0v6nCnFczFR79D2QkQqirOtVVCggGs
+	GKmKG2W6mmnlwkhlVayA5K8EbBgtC6fBhMwYswweXTCYflkn+3YKRwUtgrw4qu1PiEpAFWOVcrk
+	Tvzy+jcv7nD1mFU/+lNUuf3KWf8TEGUF9FmAy4X4PYoortYTDclARXRDG92zsqvE1rBn9MCrxqk
+	g+x9DTzrpfX88vBxCxCoXkumAlI7XCZB0EKnrFD4xzVQx4niVIbkHc/ab3rIFEgCDhSoVJNRGgi
+	fokoHJrbxCLLDXLrHz9lIeI/3NKCCF2eQJNVljdFzlmbK+SlJMpqCpaBBARmx
+X-Google-Smtp-Source: AGHT+IEWSOXV9r3jgZ1evFIc1Y7Y/uNylZfGp3G2SdHTXTE6y55O+0FgM8d5eFScNOIOqNy1eNBifQ==
+X-Received: by 2002:a05:6122:3c55:b0:531:4041:c4c7 with SMTP id 71dfb90a1353d-53b190a492emr1122213e0c.7.1755185086201;
+        Thu, 14 Aug 2025 08:24:46 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-539b02a1d78sm4559379e0c.25.2025.08.14.08.24.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Aug 2025 08:24:46 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-50f890e3df6so326537137.1;
+        Thu, 14 Aug 2025 08:24:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWYKtk73KtYSGl9mbDJ+vQWfKV2e6JbbjRxrisynHVKIQi0cBNmSEceC4+4zh9I24pBV+J1BXjInAJ2uo9H0MViz1c=@vger.kernel.org, AJvYcCXF4C1xoLWoPIMED0/Zf6NTMb9lHzjVNNLtwJCGMScndiCJ0koSLf+Om4n30tQEAqED9vHY/79elvs=@vger.kernel.org
+X-Received: by 2002:a05:6102:3a07:b0:4f6:25fd:7ed3 with SMTP id
+ ada2fe7eead31-5100292cbc6mr1148823137.22.1755185085609; Thu, 14 Aug 2025
+ 08:24:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=945; i=cassel@kernel.org; h=from:subject; bh=+1gG3qlmSkwGj/oU7QDjRpIhc3oEnnm/tmA6uBQL3RM=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDLm/vspwigcseZin6jWJ7uQY9pGZuJ1gs+D3h7U8ohhi O6deeVuRykLgxgXg6yYIovvD5f9xd3uU44r3rGBmcPKBDKEgYtTACayuIHhf47pCY/PK3O0OSrE sh7MlVs6IbBxzvfpy3gP+XEYGrrYijIyLLJZ8iQ0iVt5e8xOA+PPAlP3H3NalLQ6f7v9rjMqkbX vuAE=
-X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
-Content-Transfer-Encoding: 8bit
+References: <20250814152119.1562063-15-cassel@kernel.org> <20250814152119.1562063-17-cassel@kernel.org>
+In-Reply-To: <20250814152119.1562063-17-cassel@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 14 Aug 2025 17:24:34 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU2z8ZmUGNZ=81UoSmufp4K8yVhTJq0H6R0UvwB5Ke-Vg@mail.gmail.com>
+X-Gm-Features: Ac12FXzLZlNOPJRw6_tV30FRN7vwIBtgsRTCT-SbGuu8yOO7JUbsNEQpGmoSTE4
+Message-ID: <CAMuHMdU2z8ZmUGNZ=81UoSmufp4K8yVhTJq0H6R0UvwB5Ke-Vg@mail.gmail.com>
+Subject: Re: [PATCH 02/13] PCI: rcar-ep: Drop superfluous pci_epc_features initialization
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-struct pci_epc_features has static storage duration, so all struct members
-are zero initialized implicitly. Thus, remove explicit zero initialization
-of struct members.
+On Thu, 14 Aug 2025 at 17:21, Niklas Cassel <cassel@kernel.org> wrote:
+> struct pci_epc_features has static storage duration, so all struct members
+> are zero initialized implicitly. Thus, remove explicit zero initialization
+> of struct members.
+>
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
 
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
----
- drivers/pci/controller/dwc/pcie-tegra194.c | 2 --
- 1 file changed, 2 deletions(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 4f26086f25da..0e413857649f 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -1998,8 +1998,6 @@ static int tegra_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
- 
- static const struct pci_epc_features tegra_pcie_epc_features = {
- 	.linkup_notifier = true,
--	.msi_capable = false,
--	.msix_capable = false,
- 	.bar[BAR_0] = { .type = BAR_FIXED, .fixed_size = SZ_1M,
- 			.only_64bit = true, },
- 	.bar[BAR_1] = { .type = BAR_RESERVED, },
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.50.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
