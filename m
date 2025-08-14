@@ -1,250 +1,203 @@
-Return-Path: <linux-pci+bounces-34067-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34068-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A607B26FAC
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 21:29:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99B1AB27024
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 22:25:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B52607AECBA
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 19:28:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 408D0A249C4
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 20:25:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9315D23D7D6;
-	Thu, 14 Aug 2025 19:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 126A0259C98;
+	Thu, 14 Aug 2025 20:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PmfvYTwU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OD9Bx9iM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8753423D2A3
-	for <linux-pci@vger.kernel.org>; Thu, 14 Aug 2025 19:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAB3258CF7;
+	Thu, 14 Aug 2025 20:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755199776; cv=none; b=M2jEXIDLSwKBaNiHuCVMh7rwYk6IPsJ30uqc7+QVuYY1Hn2DstaNfF/tGCxp59NeDDfYrwHVhFqctuRhBW/J4jMzr5hLS+LjbCdeKXKBlawx93TakB/37iPhv4eVUBjy39DS+TDNQuoM8/qJaUdclLyzATJpU/fS3xv6JLO8M+c=
+	t=1755203122; cv=none; b=iVMp3ddptsa4DN+rZ+QTtg/fvWHgCsBcCWpeSJ0IJJQ/eCxS0Zk0hYOAanKBG8nmysY8FHPVDIZTXje7iWUUOQ6LlMVyjLXYZy7fd777coaRzuAgVvhY6cA4zPeqRHIO6UUiIcPb6URmhu+uIv7FZKfnmvvYPJ/IGGZcYCsiTkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755199776; c=relaxed/simple;
-	bh=C722KyueZgnml44yiZSKGL6Emhwa8sk1grG/A7G7Xiw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tVWTOmMQ5rypBMlIrC+HiI52rvfgJY8EMb8f8Jz6p0X5qrGJLTbQLz2AQCLDQMSUdHu36L8ZG7kcdFEk38EyJMVrTK9M7k+UMEHPoIJ1pQZWdaRqpIMbQ4q/XCmOUidz6aXjkw7RdZD9dTQ00gzR1hbdPp7M0wtYC2TBXXIIqnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PmfvYTwU; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755199775; x=1786735775;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=C722KyueZgnml44yiZSKGL6Emhwa8sk1grG/A7G7Xiw=;
-  b=PmfvYTwU2spLH4w7pG55EjAUAy8CVMKrMyy6pC5AKUl5R4rlCo33WK5r
-   cGJAKI1UPMdOVRMmu+pC7/DEH5Blf77jtHWtIcYYoLtWO3W6goUW42so5
-   dZsjrKCf/AGqn9vUr/2ltPk4Y1JyYKD/EXEYFg/ZcbvfyXvRlvbTiswh0
-   /TT6O6T1aBFIjfY6gP2yeYEN9uAYnovIylCval13l4VpSefplcabVF3Fx
-   qPW1Ce0c3M+bRwbYqHCtvwgF4Ig3daSV93j15fsTj112UOZ3WUbSuJGqS
-   83ect/NdyvHkZOAP/kH9Dylf00eInUxkTy3liFBsTkiM6uYCj2hXuATk1
-   w==;
-X-CSE-ConnectionGUID: ec+pJcC1R7WN7hNMJOQqDQ==
-X-CSE-MsgGUID: qA8J6T0TSGSxNC7dR2H+cg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11522"; a="75096423"
-X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="75096423"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 12:29:34 -0700
-X-CSE-ConnectionGUID: vx0X23xmR8+w93glgb0cww==
-X-CSE-MsgGUID: C81WM5VmTFmlpBHRfeABtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="166055654"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 12:29:34 -0700
-Received: from [10.124.223.17] (unknown [10.124.223.17])
-	by linux.intel.com (Postfix) with ESMTP id E9B1420B571C;
-	Thu, 14 Aug 2025 12:29:32 -0700 (PDT)
-Message-ID: <eec85830-e024-4801-bbc8-5cfa60048932@linux.intel.com>
-Date: Thu, 14 Aug 2025 12:29:25 -0700
+	s=arc-20240116; t=1755203122; c=relaxed/simple;
+	bh=UZ5iOE/FwivBm/rIFSOlAgOmXTo+j4bV2ld3eUuQQsw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=WSX3P+kHix7y6yW9Fm05k3vMwkmOCYPHyG7YOWZ5iRc96BKo1A+aN94JNggMs7gBFad6wqbe3EbbjwGb0uvrqN/kXR2BQZ4uKGqi04yX0T0Y7KNWWHCb+ZPV4Enqya1lcrEU23dLJlMfR3GZVO/JQHD+q2ttGOvBn+JBCG84cXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OD9Bx9iM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E01BC4CEED;
+	Thu, 14 Aug 2025 20:25:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755203121;
+	bh=UZ5iOE/FwivBm/rIFSOlAgOmXTo+j4bV2ld3eUuQQsw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=OD9Bx9iM9M/reeKNAm+jKAfDbKgkmLbMQ4cE6d4UZlzzF3B2UlhTIK8DyinVRIlmG
+	 mBNq/I16fGciXq+pCKpVvoeuyXvmUSdZU1paAHA3pUcS9Nmd5BtQdem8MqmyBQ24Vn
+	 k6dRo7qOCv5U1ibGGNNiK4Scy1iEGkfmdBBGql3FJUHIa+slCUW6y0LvJSFQfbhRh6
+	 69JJ8wt9/iGLYY8SpYY1TNc8/HYRb3XEUs8w9S11XOVNsqjL2key5xXQX1eDLmTLNq
+	 xSNkt1IPSCp8YrFbQZBASvQVnD14uEZvDE7lP4B6t3HqQAc7tIzCebnmuBP2V+tG7T
+	 SdTl20E4N3q/w==
+Date: Thu, 14 Aug 2025 15:25:19 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	jingoohan1@gmail.com, mani@kernel.org, robh@kernel.org,
+	ilpo.jarvinen@linux.intel.com, schnelle@linux.ibm.com,
+	gbayer@linux.ibm.com, lukas@wunner.de, arnd@kernel.org,
+	geert@linux-m68k.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v15 0/6] Refactor capability search into common macros
+Message-ID: <20250814202519.GA344690@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] PCI/AER: Allow drivers to opt in to Bus Reset on
- Non-Fatal Errors
-To: Lukas Wunner <lukas@wunner.de>, Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Riana Tauro <riana.tauro@intel.com>,
- Aravind Iddamsetty <aravind.iddamsetty@linux.intel.com>,
- "Sean C. Dardis" <sean.c.dardis@intel.com>,
- Terry Bowman <terry.bowman@amd.com>, Linas Vepstas <linasvepstas@gmail.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver OHalloran <oohall@gmail.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
- linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
-References: <cover.1755008151.git.lukas@wunner.de>
- <28fd805043bb57af390168d05abb30898cf4fc58.1755008151.git.lukas@wunner.de>
- <7c545fff40629b612267501c0c74bc40c3df29e2.camel@linux.ibm.com>
- <aJ2uE6v46Zib30Jh@wunner.de>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <aJ2uE6v46Zib30Jh@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250813144529.303548-1-18255117159@163.com>
 
+On Wed, Aug 13, 2025 at 10:45:23PM +0800, Hans Zhang wrote:
+> Dear Maintainers,
+> 
+> This patch series addresses long-standing code duplication in PCI
+> capability discovery logic across the PCI core and controller drivers.
+> The existing implementation ties capability search to fully initialized
+> PCI device structures, limiting its usability during early controller
+> initialization phases where device/bus structures may not yet be
+> available.
+> 
+> The primary goal is to decouple capability discovery from PCI device
+> dependencies by introducing a unified framework using config space
+> accessor-based macros. This enables:
+> 
+> 1. Early Capability Discovery: Host controllers (e.g., Cadence, DWC)
+> can now perform capability searches during pre-initialization stages
+> using their native config accessors.
+> 
+> 2. Code Consolidation: Common logic for standard and extended capability
+> searches is refactored into shared macros (`PCI_FIND_NEXT_CAP` and
+> `PCI_FIND_NEXT_EXT_CAP`), eliminating redundant implementations.
+> 
+> 3. Safety and Maintainability: TTL checks are centralized within the
+> macros to prevent infinite loops, while hardcoded offsets in drivers
+> are replaced with dynamic discovery, reducing fragility.
+> 
+> Key improvements include:  
+> - Driver Conversions: DesignWare and Cadence drivers are migrated to
+>   use the new macros, removing device-specific assumptions and ensuring
+>   consistent error handling.
+> 
+> - Enhanced Readability: Magic numbers are replaced with symbolic
+>   constants, and config space accessors are standardized for clarity.
+> 
+> - Backward Compatibility: Existing PCI core behavior remains unchanged.
+> 
+> ---
+> Dear Niklas and Gerd,
+> 
+> Can you test this series of patches on the s390?
+> 
+> Thank you very much.
+> ---
+> 
+> ---
+> Changes since v14:
+> - Delete the first patch in the v14 series.
+> - The functions that can obtain the values of the registers u8/u16/u32 are
+>   directly called in PCI_FIND_NEXT_CAP() and PCI_FIND_NEXT_EXT_CAP().
+>   Use the pci_bus_read_config_byte/word/dword function directly.
+> - Delete dw_pcie_read_cfg and redefine three functions: dw_pcie_read_cfg_byte/word/dword.
+> - Delete cdns_pcie_read_cfg and redefine three functions: cdns_pcie_read_cfg_byte/word/dword.
+> 
+> Changes since v13:
+> - Split patch 3/6 into two patches for searching standard and extended capability. (Bjorn)
+> - Optimize the code based on the review comments from Bjorn.
+> - Patch 5/7 and 6/7 use simplified macro definitions: PCI_FIND_NEXT_CAP(), PCI_FIND_NEXT_EXT_CAP().
+> - The other patches have not been modified.
+> 
+> Changes since v12:
+> - Modify some commit messages, code format issues, and optimize the function return values.
+> 
+> Changes since v11:
+> - Resolved some compilation warning.
+> - Add some include.
+> - Add the *** BLURB HERE *** description(Corrected by Mani and Krzysztof).
+> 
+> Changes since v10:
+> - The patch [v10 2/6] remove #include <uapi/linux/pci_regs.h> and add macro definition comments.
+> - The patch [v10 3/6] remove #include <uapi/linux/pci_regs.h> and commit message were modified.
+> - The other patches have not been modified.
+> 
+> Changes since v9:
+> - Resolved [v9 4/6] compilation error.
+>   The latest 6.15 rc1 merge __dw_pcie_find_vsec_capability, which uses 
+>   dw_pcie_find_next_ext_capability.
+> - The other patches have not been modified.
+> 
+> Changes since v8:
+> - Split patch.
+> - The patch commit message were modified.
+> - Other patches(4/6, 5/6, 6/6) are unchanged.
+> 
+> Changes since v7:
+> - Patch 2/5 and 3/5 compilation error resolved.
+> - Other patches are unchanged.
+> 
+> Changes since v6:
+> - Refactor capability search into common macros.
+> - Delete pci-host-helpers.c and MAINTAINERS.
+> 
+> Changes since v5:
+> - If you put the helpers in drivers/pci/pci.c, they unnecessarily enlarge
+>   the kernel's .text section even if it's known already at compile time
+>   that they're never going to be used (e.g. on x86).
+> - Move the API for find capabilitys to a new file called
+>   pci-host-helpers.c.
+> - Add new patch for MAINTAINERS.
+> 
+> Changes since v4:
+> - Resolved [v4 1/4] compilation warning.
+> - The patch subject and commit message were modified.
+> 
+> Changes since v3:
+> - Resolved [v3 1/4] compilation error.
+> - Other patches are not modified.
+> 
+> Changes since v2:
+> - Add and split into a series of patches.
+> ---
+> 
+> Hans Zhang (6):
+>   PCI: Clean up __pci_find_next_cap_ttl() readability
+>   PCI: Refactor capability search into PCI_FIND_NEXT_CAP()
+>   PCI: Refactor extended capability search into PCI_FIND_NEXT_EXT_CAP()
+>   PCI: dwc: Use PCI core APIs to find capabilities
+>   PCI: cadence: Use PCI core APIs to find capabilities
+>   PCI: cadence: Use cdns_pcie_find_*capability() to avoid hardcoding
+>     offsets
+> 
+>  .../pci/controller/cadence/pcie-cadence-ep.c  | 38 +++++----
+>  drivers/pci/controller/cadence/pcie-cadence.c | 14 +++
+>  drivers/pci/controller/cadence/pcie-cadence.h | 39 +++++++--
+>  drivers/pci/controller/dwc/pcie-designware.c  | 77 ++---------------
+>  drivers/pci/controller/dwc/pcie-designware.h  | 21 +++++
+>  drivers/pci/pci.c                             | 76 +++--------------
+>  drivers/pci/pci.h                             | 85 +++++++++++++++++++
+>  include/uapi/linux/pci_regs.h                 |  3 +
+>  8 files changed, 194 insertions(+), 159 deletions(-)
 
-On 8/14/25 2:36 AM, Lukas Wunner wrote:
-> On Thu, Aug 14, 2025 at 09:56:09AM +0200, Niklas Schnelle wrote:
->> On Wed, 2025-08-13 at 07:11 +0200, Lukas Wunner wrote:
->>> +++ b/drivers/pci/pcie/err.c
->>> @@ -217,15 +217,10 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>>   	pci_walk_bridge(bridge, pci_pm_runtime_get_sync, NULL);
->>>   
->>>   	pci_dbg(bridge, "broadcast error_detected message\n");
->>> -	if (state == pci_channel_io_frozen) {
->>> +	if (state == pci_channel_io_frozen)
->>>   		pci_walk_bridge(bridge, report_frozen_detected, &status);
->>> -		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
->>> -			pci_warn(bridge, "subordinate device reset failed\n");
->>> -			goto failed;
->>> -		}
->>> -	} else {
->>> +	else
->>>   		pci_walk_bridge(bridge, report_normal_detected, &status);
->>> -	}
->>>   
->>>   	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->>>   		status = PCI_ERS_RESULT_RECOVERED;
->> On s390 PCI errors leave the device with MMIO blocked until either the
->> error state is cleared or we reset via the firmware interface. With
->> this change and the pci_channel_io_frozen case AER would now do the
->> report_mmio_enabled() before the reset with nothing happening between
->> report_frozen_detected() and report_mmio_enabled() is MMIO enabled at
->> this point?
-> Yes, MMIO access is controlled through the Memory Space Enable and
-> Bus Master Enable bits in the Command Register (PCIe r7.0 sec 7.5.1.1.3).
-> Drivers generally set those bits on probe and they're not automatically
-> cleared by hardware upon an Uncorrectable Error.
->
-> EEH and s390 blocking MMIO access likely serves the purpose of preventing
-> corrupted data being propagated upstream.  AER doesn't support that
-> (or at least doesn't mandate that -- certain implementations might
-> be capable of blocking poisoned data).
->
-> Thus with AER, MMIO access is usually possible already in ->error_detected().
-> The only reason why drivers shouldn't be doing that and instead defer
-> MMIO access to ->mmio_enabled() is to be compatible with EEH and s390.
->
-> There are exceptions to this rule:  E.g. if the Uncorrectable Error
-> was "Surprise Down", the link to the device is down and MMIO access
-> isn't possible, neither in ->error_detected() nor ->mmio_enabled().
-> Drivers should check whether an MMIO read results in an "all ones"
-> response (PCI_POSSIBLE_ERROR()), which is usually what the host bridge
-> fabricates upon a Completion Timeout caused by the link being down
-> and the Endpoint being inaccessible.
->
-> (There's a list of all the errors with default severity etc in PCIe r7.0
-> sec 6.2.7.)
->
-> I believe DPC was added to the PCIe Base Specification to prevent
-> propagating corrupted data upstream, similarly to EEH and s390.
-> DPC brings down the link immediately upon an Uncorrectable Error
-> (the Linux driver confines this to Fatal Errors), but as a side
-> effect this results in a Hot Reset being propagated down the
-> hierarchy, making it impossible to access the device in the
-> faulting state to retrieve debug information etc.  After the link
-> has been brought up again, the device is in post-reset state.
-> So DPC doesn't allow for reset-less recovery.
->
-> With the ordering change introduced by this commit, ->mmio_enabled()
-> will no longer be able to access MMIO space in the DPC case because
-> the link hasn't been brought back up until ->slot_reset().  But as
-> explained in the commit message, I only found two drivers affected
-> by this.  One seems to be EEH-specific (drivers/scsi/ipr.c).
-> And the other one (drivers/scsi/sym53c8xx_2/sym_glue.c) dumps debug
-> registers in ->mmio_enabled() and I'm arguing that with this commit
-> it's dumping "all ones", but right now it's dumping the post-reset
-> state of the device, which isn't any more useful.
->
->> I think this callback really only makes sense if you have
->> an equivalent to s390's clearing of the error state that enables MMIO
->> but doesn't otherwise reset. Similarly EEH has eeh_pci_enable(pe,
->> EEH_OPT_THAW_MMIO).
-> Right.
->
->>> @@ -233,6 +228,14 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>>   		pci_walk_bridge(bridge, report_mmio_enabled, &status);
->>>   	}
->>>   
->>> +	if (status == PCI_ERS_RESULT_NEED_RESET ||
->>> +	    state == pci_channel_io_frozen) {
->>> +		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
->>> +			pci_warn(bridge, "subordinate device reset failed\n");
->>> +			goto failed;
->>> +		}
->>> +	}
->>> +
->>>   	if (status == PCI_ERS_RESULT_NEED_RESET) {
->>>   		/*
->>>   		 * TODO: Should call platform-specific
->> I wonder if it might make sense to merge the reset into the above
->> existing if.
-> There are drivers such as drivers/bus/mhi/host/pci_generic.c which
-> return PCI_ERS_RESULT_RECOVERED from ->error_detected().  So they
-> fall through directly to the ->resume() stage.  They're doing this
-> even in the pci_channel_io_frozen case (i.e. for Fatal Errors).
->
-> But for DPC we must call reset_subordinates() to bring the link back up.
-> And for Fatal Errors, Documentation/PCI/pcieaer-howto.rst suggests that
-> we must likewise call it because the link may be unreliable.
+I applied this on pci/capability-search for v6.18, thanks!
 
-For fatal errors, since we already ignore the value returned by
-->error_detected() (by calling reset_subordinates() unconditionally), why
-not update status accordingly in report_frozen_detected() and notify the
-driver about the reset?
+Niklas, I added your Tested-by, omitting the dwc and cadence patches
+because I think you tested s390 and probably didn't exercise dwc or
+cadence.  Thanks very much to you and Gerd for finding the issue and
+testing the resolution!
 
-That way, the reset logic could be unified under a single if
-(status == PCI_ERS_RESULT_NEED_RESET) condition.
-
-Checking the drivers/bus/mhi/host/pci_generic.c implementation, it looks
-like calling slot_reset callback looks harmless.
->
-> Hence the if-condition must use a boolean OR, i.e.:
->
-> 	if (status == PCI_ERS_RESULT_NEED_RESET ||
-> 	    state == pci_channel_io_frozen) {
->
-> ... whereas if I would move the invocation of reset_subordinates() inside
-> the existing "if (status == PCI_ERS_RESULT_NEED_RESET)", it would be
-> equivalent to a boolean AND.
->
-> I would have to amend drivers such as drivers/bus/mhi/host/pci_generic.c
-> to work with the changed logic and I figured that it's simpler to only
-> change pcie_do_recovery() rather than touching all affected drivers.
-> I don't have any of that hardware and so it seems risky touching all
-> those drivers.
->
->> I'm a bit confused by that TODO comment and
->> anyway, it asks for a platform-specific reset to be added bu
->> reset_subordinate() already seems to allow platform specific behavior,
->> so maybe the moved reset should replace the TODO?
-> Manivannan has a patch pending which removes the TODO:
->
-> https://lore.kernel.org/all/20250715-pci-port-reset-v6-1-6f9cce94e7bb@oss.qualcomm.com/
->
->> Also I think for the
->> kind of broken case where the state is pci_channel_io_frozen but the
->> drivers just reports PCI_ERS_RESULT_CAN_RECOVER it looks like there
->> would be a reset but no calls to ->slot_reset().
-> Right, but that's what AER is currently doing and drivers such as
-> drivers/bus/mhi/host/pci_generic.c are written to work with the
-> existing flow.
->
-> Thanks,
->
-> Lukas
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+Bjorn
 
