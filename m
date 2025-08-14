@@ -1,57 +1,59 @@
-Return-Path: <linux-pci+bounces-34053-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34054-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C02E5B26AE6
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 17:27:27 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA5A2B26ABE
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 17:22:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 86BCB1C841E0
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 15:22:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 849377BF309
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Aug 2025 15:20:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489A82746C;
-	Thu, 14 Aug 2025 15:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45C6F8F49;
+	Thu, 14 Aug 2025 15:22:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EMpUwMcV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHoEDBQw"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22922E555
-	for <linux-pci@vger.kernel.org>; Thu, 14 Aug 2025 15:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F4FE555
+	for <linux-pci@vger.kernel.org>; Thu, 14 Aug 2025 15:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755184926; cv=none; b=XwECDML5VxJZSAmdyUCRLGE/VCQ/CQXblybhmaDsmdiYu/w5SNxnb44a6niSld9SZS+HJYJyu7H87IjDReFTVtDOVHD7sMqGhXTtQfuZkMce+HLcIUqIdUnuSj4g+gVbTacp1RhqSKT+ONXBs0fVH4CSG5+GU+trWlX22lDzsVU=
+	t=1755184929; cv=none; b=iJmweLX8YkjkkP9ihy4T9iLojvek+Afs2xM1JvY3e0lnty8k1KDWkomTrbj5lOedG1aPQbNdqfJ7vVC2gqIFYpxondQ3hTxcCA2BxFs98PJzi8kI1G/XQF0iD0I5eiwSiuoOK+MsPM0REH4lRlbZKeuFSKG+nNmv0kqHgRigu1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755184926; c=relaxed/simple;
-	bh=Mrw/Omdl7B46BjK1PSjfRP4lzsXHNv539FayxUs8LQ0=;
+	s=arc-20240116; t=1755184929; c=relaxed/simple;
+	bh=HFPdE8RGsgZmliQvNziBIgCuKtYN0HKbgHHj17R8310=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jj+X5P5suV3jk0GvgkudCGhGFon7B3/oS8PkE1iJPgE+/9kEvbBLPQk6EvBPU+9Rk8orP/7J+Leld7jlevbmETmy6DUxB/NLrU0W8touvb6+4WYJQw4T3j6Y2zC0fPdrEXt+lxfYungdUBNKKPfo0MqnbKMIZ26MpSvEVt7u+Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EMpUwMcV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 488E0C4CEEF;
-	Thu, 14 Aug 2025 15:22:04 +0000 (UTC)
+	 MIME-Version; b=pGDoBlXa7ozvnpgAgDmfoxaaY1qJZDEdtYz/bEcuJJv1iVpy1ZzNTarR50dxAlhVu6Mqnb2n1Po0aYnaO2xUyG6DURO/jhSIM7ATYphuDfHIJmjeP1hXshuBIQRobyqLU0fLSXgB6rOqB2JdRf9m2A79qpx9kSyv4dUsWUzr7Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHoEDBQw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAD85C4CEF7;
+	Thu, 14 Aug 2025 15:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755184926;
-	bh=Mrw/Omdl7B46BjK1PSjfRP4lzsXHNv539FayxUs8LQ0=;
+	s=k20201202; t=1755184928;
+	bh=HFPdE8RGsgZmliQvNziBIgCuKtYN0HKbgHHj17R8310=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EMpUwMcV/yeo52u6iBPQQnuvQTFeB7y0FAvkS/77yG3jLZVyrzo1W92QCgQqCXK5r
-	 onqwyTsXoN1jykLiTnMeOtfmWv2KnknSxH9NFQ7SyHLF/Aaeb0bQcNfrrJmx/NsJnL
-	 +iDYDS4C9VmW6FPhzzGLS4S8ea1M83VB0x0r7GhOass2/zkbRaNbgDNuSzPqCfw2E9
-	 lyiaNy5rJ/FLLHUP6RlA1focSpx9M5UDv/Qc5MyPg4T8/zOx3vY3x1Vw4GrfG/gC4x
-	 beDeEjEcyDAOtFsPJz02wXmkk7jaTRLfwmfymSB8lQKLnUImlEg7Z8b/YRpg0H/M+p
-	 zWa7RlzrRqbKA==
+	b=aHoEDBQwLJbN/YNr9g+2t6GhNoiML0SonQnAu2Z134RHDbmrZn8ybjw4imQFmD5zP
+	 Pjp0Ht/45gysuH/dsn+/1UJCAPHFLdIgaNGvbsiEFPHYz6JFgB5yZ1IK7Z1XbxCaqz
+	 U0XA5F4XugfaFPQFxyXmLtEMjDmT0fs1Zaa61JpR3Ew4CXgHeFMxVdLYq1OeZJeglp
+	 0KIrnsZgBYAHhg9llVRpQER9sKalhi479OLT21BkexLeFUreRdBrLchGkbkRMD9gyY
+	 1Rot4k6YJSktv9ycs+wnkqKkGVURV37NbxhvvVt1nG7nZnIwA8o0PLaBzcfO25VU7i
+	 1OJxip9bIst5g==
 From: Niklas Cassel <cassel@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+To: Jesper Nilsson <jesper.nilsson@axis.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Manivannan Sadhasivam <mani@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>
 Cc: Niklas Cassel <cassel@kernel.org>,
+	linux-arm-kernel@axis.com,
 	linux-pci@vger.kernel.org
-Subject: [PATCH 06/13] PCI: keystone: Drop superfluous pci_epc_features initialization
-Date: Thu, 14 Aug 2025 17:21:25 +0200
-Message-ID: <20250814152119.1562063-21-cassel@kernel.org>
+Subject: [PATCH 07/13] PCI: artpec6: Drop superfluous pci_epc_features initialization
+Date: Thu, 14 Aug 2025 17:21:26 +0200
+Message-ID: <20250814152119.1562063-22-cassel@kernel.org>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250814152119.1562063-15-cassel@kernel.org>
 References: <20250814152119.1562063-15-cassel@kernel.org>
@@ -61,7 +63,7 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=855; i=cassel@kernel.org; h=from:subject; bh=Mrw/Omdl7B46BjK1PSjfRP4lzsXHNv539FayxUs8LQ0=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDLm/vteuF41YP8VG93behlbnpxZcMs/YJKTttaXx3wP1 oWm8Ozq6ShlYRDjYpAVU2Tx/eGyv7jbfcpxxTs2MHNYmUCGMHBxCsBEEjsZGV6U9nBmfJ7RpP7Z +a68Wq7FY84Ez6MKSQ+LrD6q3FHR/MHI8PIe//F1j3wuxqz/MN351mTneFadA+nP5j5c+jV213q dQB4A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=861; i=cassel@kernel.org; h=from:subject; bh=HFPdE8RGsgZmliQvNziBIgCuKtYN0HKbgHHj17R8310=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDLm/vt++vKTTwtj/l/6yP5unrbsPxbD50snXZd8d4Tv7 J1TvvIOXR2lLAxiXAyyYoosvj9c9hd3u085rnjHBmYOKxPIEAYuTgGYiEY2w/8w69b72eprr2uZ t8ccX3HWYeqlm013Py+dpcOSY/X1fRgjI8Mc9bK+VRsvB70v/utszaVsVeZ/J/efffPK98scmIq WRLMAAA==
 X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
@@ -71,21 +73,23 @@ of struct members.
 
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-artpec6.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 2b2632e513b5..7d7aede54ed3 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -960,7 +960,6 @@ static int ks_pcie_am654_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
+index 234c8cbcae3a..f4a136ee2daf 100644
+--- a/drivers/pci/controller/dwc/pcie-artpec6.c
++++ b/drivers/pci/controller/dwc/pcie-artpec6.c
+@@ -370,9 +370,7 @@ static int artpec6_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
  }
  
- static const struct pci_epc_features ks_pcie_am654_epc_features = {
+ static const struct pci_epc_features artpec6_pcie_epc_features = {
 -	.linkup_notifier = false,
  	.msi_capable = true,
- 	.msix_capable = true,
- 	.bar[BAR_0] = { .type = BAR_RESERVED, },
+-	.msix_capable = false,
+ };
+ 
+ static const struct pci_epc_features *
 -- 
 2.50.1
 
