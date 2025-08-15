@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-34093-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34094-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE765B27871
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 07:30:25 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8836B278A8
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 07:52:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA59E1892307
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 05:30:44 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C043B4E23C2
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 05:52:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1A9729B78D;
-	Fri, 15 Aug 2025 05:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68CD81F4703;
+	Fri, 15 Aug 2025 05:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HTvHZwL4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ji7Uiblo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E5825A32C;
-	Fri, 15 Aug 2025 05:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724721C5499;
+	Fri, 15 Aug 2025 05:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755235817; cv=none; b=jSz0amgfpWaPNlO3J+sMcmpOh/P5Wrhx7Wvj9cXvSTC3l8YHBLtD80vQdJoew/svvYbIIdsCMR7ucV5KAl3rXJ/L3t982QSxQlMxmMenAJnqlQN4MMMUsD/Vl5/iExE5UXGDC71dmJTbDmgWAZnbYrNk9aiiCfd82jQ/WEIiC8s=
+	t=1755237131; cv=none; b=sDqjBi90ks0UsTRfFJKVkzdyeweR13Jk99bPCa53mY3K3087nMIt5PU4Vp7xr2fcIMaVB8f1tAenw0J+BODakDy23eJQhTQUCI3jOPZ6Zi0+fDNFFxvD9qMNJepvzDTJwC3XIMhQywdPU/8uIdywMlZ5J+a5cHuv3SE9KuBJJIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755235817; c=relaxed/simple;
-	bh=y0xyaJyPtcDPNLHhbPevkPLJ5VRQZj0+f0qVNL2ihWc=;
+	s=arc-20240116; t=1755237131; c=relaxed/simple;
+	bh=0vH1jDcgJGA2Wn7lpJdojReOpMDMj8xScxd5knXRY9g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BQ8dEV1R/t+Plulya+WP7oAabE+WGg1bg+wpF/Fm0pIYP+p8lT+LJh2qwgDI1Tkm64Ln0QJwUC8PQSnPVya2KlF6gqiJPg3srZ9/CJP4ZpEqqVD3CvkmWGTf7idSXPBIMlQXbfvRUYAqQHNn0bKfHMo6s1CXWCPPSyrdICH0DsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HTvHZwL4; arc=none smtp.client-ip=192.198.163.7
+	 In-Reply-To:Content-Type; b=CjUWlXT8eEBd99sq+CbGGQaf9uG+pSGwDQ6okBDEfd7FbiWhE/lP/u5yU/msGiqWZ+afrCdDuGlOmsk28WbV+h5WklD7dMC8YEYsj9adU0QUJMpYxTl6EtHInI+GyZdB8FTVrg7oB03WvEprsiuSi28Ffq6V2sJdUiKuiMKtI6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ji7Uiblo; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755235817; x=1786771817;
+  t=1755237129; x=1786773129;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=y0xyaJyPtcDPNLHhbPevkPLJ5VRQZj0+f0qVNL2ihWc=;
-  b=HTvHZwL45+KtXDJ45o+AG3CJZ4UW52eqxcfL67DmmoI+Lev6gofkSV++
-   uGbKZFSk7u3Pv41dr0KfbvIPa2YchRC9jo2y01xQZy5GBfwqPLcc/Aacj
-   9ac7KzoxhkoERBSLWKsIvwSWp2q7rW14p6Bq2Mou6JOwzwpNt84p5G/LW
-   ZLwijLe0oUtR7E5jPozk34MIP16XIpYR7h0xpwYPARLxgYbQ26WIlS0Hd
-   RRlqPVkMWYQ9X7jn24ev43Zva/d3iU/dZHPNoy7H9JVU5bdQQkR3yDfyD
-   L5CrKKmHhcmFqq1sExwAOIAwIvuAXKEqQ14k1N6IRugy1zcDKCgq2Y8EU
-   A==;
-X-CSE-ConnectionGUID: FSuL+xs/Q6ySAaxV7am/0w==
-X-CSE-MsgGUID: 47aJqn6SSXKXyplPyuwQkQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11522"; a="82994979"
+  bh=0vH1jDcgJGA2Wn7lpJdojReOpMDMj8xScxd5knXRY9g=;
+  b=Ji7UiblozActEAkL70BbJGEbUkWCmtpJrArnuh6KLX9nW2fbEnOV+wVX
+   96cBP0Sdc6HVO0tNqe8PMIb2P4gcPmVi2knLV3IIPPHN2JO0pYunTvACP
+   WLkHayimyojogFqFe6DszUWC48mfb9338qEp5MTXgPinWTkWMCj7FyuhB
+   U8a24I1STdMKy94QIhZBghvqNrhJQRc03Ti6X+BafL5m0683WGuXjB9pJ
+   oa46AsLizcIIVRH1zMyRO6XuT/vBdcnv6uv+uDqQ8HwnnYo5zdiRFb4Gy
+   TbmhO0zdXktsPNMXzO951R+IHnJdeGgQ75wcUh6eXWZD3QyxyzG12O8+/
+   w==;
+X-CSE-ConnectionGUID: YNjJIK5ZTpKChDUbmzbtig==
+X-CSE-MsgGUID: u3n/Q2EkTlW31reNfDGY4g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11522"; a="57488198"
 X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="82994979"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 22:30:15 -0700
-X-CSE-ConnectionGUID: RseyzJmKT36kWr3vroMtQg==
-X-CSE-MsgGUID: a9/KIfTrTBati7fQxiXAIQ==
+   d="scan'208";a="57488198"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 22:52:08 -0700
+X-CSE-ConnectionGUID: QsCBNTNzS2uKIJOGMmnTTA==
+X-CSE-MsgGUID: wssFlJjGSga9ENc1rcVaxg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="166914870"
+   d="scan'208";a="197937723"
 Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 22:30:08 -0700
-Message-ID: <aeb04f91-ffce-4092-8dbc-17d116cd7c7e@linux.intel.com>
-Date: Fri, 15 Aug 2025 13:28:02 +0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 22:52:02 -0700
+Message-ID: <7b8d8bfa-ca6b-4a07-8a4d-a30d8993c7c7@linux.intel.com>
+Date: Fri, 15 Aug 2025 13:49:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,8 +67,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] iommu: Add iommu_get_domain_for_dev_locked()
- helper
+Subject: Re: [PATCH v3 4/5] iommu: Introduce iommu_dev_reset_prepare() and
+ iommu_dev_reset_done()
 To: Nicolin Chen <nicolinc@nvidia.com>, robin.murphy@arm.com,
  joro@8bytes.org, bhelgaas@google.com, jgg@nvidia.com
 Cc: will@kernel.org, robin.clark@oss.qualcomm.com, yong.wu@mediatek.com,
@@ -82,63 +82,50 @@ Cc: will@kernel.org, robin.clark@oss.qualcomm.com, yong.wu@mediatek.com,
  linux-pci@vger.kernel.org, patches@lists.linux.dev, pjaroszynski@nvidia.com,
  vsethi@nvidia.com, helgaas@kernel.org, etzhao1900@gmail.com
 References: <cover.1754952762.git.nicolinc@nvidia.com>
- <a69557026b7e2353bae67104bbe6a88f0682305e.1754952762.git.nicolinc@nvidia.com>
+ <5ba556fc54777853c499186f494f3411d7a4a5a9.1754952762.git.nicolinc@nvidia.com>
 Content-Language: en-US
 From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <a69557026b7e2353bae67104bbe6a88f0682305e.1754952762.git.nicolinc@nvidia.com>
+In-Reply-To: <5ba556fc54777853c499186f494f3411d7a4a5a9.1754952762.git.nicolinc@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 8/12/25 06:59, Nicolin Chen wrote:
-> There is a need to attach a PCI device that's under a reset to temporally
-> the blocked domain (i.e. detach it from its previously attached domain),
-> and then to reattach it back to its previous domain (i.e. detach it from
-> the blocked domain) after reset.
+> PCIe permits a device to ignore ATS invalidation TLPs, while processing a
+> reset. This creates a problem visible to the OS where an ATS invalidation
+> command will time out: e.g. an SVA domain will have no coordination with a
+> reset event and can racily issue ATS invalidations to a resetting device.
 > 
-> During the reset stage, there can be races from other attach/detachment.
-> To solve this, a per-gdev reset flag will be introduced so that all the
-> attach functions will bypass the driver-level attach_dev callbacks, but
-> only update the group->domain pointer. The reset recovery procedure will
-> attach directly to the cached pointer so things will be back to normal.
+> The OS should do something to mitigate this as we do not want production
+> systems to be reporting critical ATS failures, especially in a hypervisor
+> environment. Broadly, OS could arrange to ignore the timeouts, block page
+> table mutations to prevent invalidations, or disable and block ATS.
 > 
-> On the other hand, the iommu_get_domain_for_dev() API always returns the
-> group->domain pointer, and several IOMMMU drivers call this API in their
-> attach_dev callback functions to get the currently attached domain for a
-> device, which will be broken for the recovery case mentioned above:
->   1. core asks the driver to attach dev from blocked to group->domain
->   2. driver attaches dev from group->domain to group->domain
+> The PCIe spec in sec 10.3.1 IMPLEMENTATION NOTE recommends to disable and
+> block ATS before initiating a Function Level Reset. It also mentions that
+> other reset methods could have the same vulnerability as well.
 > 
-> So, iommu_get_domain_for_dev() should check the gdev flag and return the
-> blocked domain if the flag is set. But the caller of this API could hold
-> the group->mutex already or not, making it difficult to add the lock.
-> 
-> Introduce a new iommu_get_domain_for_dev_locked() helper to be used by
-> those drivers in a context that is already under the protection of the
-> group->mutex, e.g. those attach_dev callback functions. And roll out the
-> new helper to all the existing IOMMU drivers.
+> Provide a callback from the PCI subsystem that will enclose the reset and
+> have the iommu core temporarily change all the attached domain to BLOCKED.
+> After attaching a BLOCKED domain, IOMMU drivers should fence any incoming
 
-Given that iommu_group->mutex is transparent to the iommu driver, how
-about
+Nit, my understanding is that it's not the "IOMMU drivers" but the
+"IOMMU hardware" that fences any further incoming translation requests,
+right?
 
-/*
-  * Called only by iommu drivers in the callback context where
-  * group->mutex has already been held by the core.
-  */
-struct iommu_domain *iommu_get_domain_for_dev_internal(struct device *dev)
-{
-	...
-	lockdep_assert_held(&group->mutex);
-	...
-}
-
-?
-
+> ATS queries, synchronously stop issuing new ATS invalidations, and wait
+> for all ATS invalidations to complete. This can avoid any ATS invaliation
+> timeouts.
 > 
-> Add a lockdep_assert_not_held to the existing iommu_get_domain_for_dev()
-> to note that it would be only used outside the group->mutex.
+> However, if there is a domain attachment/replacement happening during an
+> ongoing reset, ATS routines may be re-activated between the two function
+> calls. So, introduce a new pending_reset flag in group_device to defer an
+> attachment during a reset, allowing iommu core to cache target domains in
+> the SW level while bypassing the driver. The iommu_dev_reset_done() will
+> re-attach these soft-attached domains, once the device reset is finished.
 > 
 > Signed-off-by: Nicolin Chen<nicolinc@nvidia.com>
 
-Thanks,
-baolu
+The code looks good to me:
+
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
