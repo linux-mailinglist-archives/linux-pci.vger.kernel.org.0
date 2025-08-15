@@ -1,125 +1,106 @@
-Return-Path: <linux-pci+bounces-34110-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34111-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5D05B28190
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 16:23:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2F37B281AC
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 16:29:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A13E1D03E51
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 14:23:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D77663A29A8
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 14:27:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5C9221C9ED;
-	Fri, 15 Aug 2025 14:23:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E93A224244;
+	Fri, 15 Aug 2025 14:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQz0qflA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TxVRc+Ly"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E92321C16E;
-	Fri, 15 Aug 2025 14:23:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53ADB1E230E;
+	Fri, 15 Aug 2025 14:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755267782; cv=none; b=Y6KCMnmV3z7aC8sNk/kcbf/nR1GRifRgfuSbgwW1+LjOQuET5e78wu6ZUxl3hwMwPQ36kzMDUhR8H1EZwYXO0dPDPD2mBNj2BiPvIdhlmRLuI44zSxTNYYQ5EJYD9gN8JihErCn6fvlsXj5vTSbSr6tGDTaP5ySfN+Rgg8/sxXY=
+	t=1755268028; cv=none; b=lAbNLA50pVvmndoPvJiG2RIngLA3NzQxViFVgv2oGP6W7pAE2fsbWGZoZDrJT4s4T6EVqBEDZc/npUWIHypN6EntVNNmodiVdi72YxtNugV8u68kW6WkqNNixBurFGMFY2oPu1qnvDp2MpmzyZWAn4KMxoqDeaCSiuJ/Sp+6K78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755267782; c=relaxed/simple;
-	bh=pA72tSZ0MvRZhPFqZswVy3id+67WfOj9Us119elURao=;
+	s=arc-20240116; t=1755268028; c=relaxed/simple;
+	bh=f/FObD14MZnJGN6cgRXbXsf/Fjw092bO8WlijOgdNQk=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=M1Z60o5i8YqvHy3SOl3HGzLJ25cFeGkQUASCLYt1GC1NXRzFagWSkEKbH7yOMfjIPaYKFkdpPMzHGhyUh7mKL0v/Gp0wpVnEH6CefgycVfZmyae3zr9Gx3mLttGoi1KKTFDHqbTwzLySkAN5LL9JNSSA78Vf5Rj5uar83eOcBBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQz0qflA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD49BC4CEEB;
-	Fri, 15 Aug 2025 14:23:01 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=qhrpkA0DgI8A/WzYmxfMlZ90QLpWLEUAKFGmT3gXKwrQFTroaanClxAVScMyRL3M4gpur0n258HDDEJIoktyteCCoIzkRq/3HjiARN2ur/4G0QKMetcazELPtMlxB06O2svdubgopmm7vdVmiCxgZnT1QRnRhdf3s8zklbGZmGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TxVRc+Ly; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9442C4CEEB;
+	Fri, 15 Aug 2025 14:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755267782;
-	bh=pA72tSZ0MvRZhPFqZswVy3id+67WfOj9Us119elURao=;
+	s=k20201202; t=1755268028;
+	bh=f/FObD14MZnJGN6cgRXbXsf/Fjw092bO8WlijOgdNQk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=aQz0qflA24dLjwdNsJ7x0Su++t+8kNiBV7Pjb4AySIAO6M4+fNyPhtiVW8Wbt1/BT
-	 9OVDnj8Abu38x482aV8rvW7UR8HfAxfQoBNWjrCiz83KJV+EDtbYibuqQCYQ3F0sIc
-	 0vRkD/aMjVdMLw4lHe2W4BLE8Kl73Wv6UYPqa48yGXk/vUvfX5tfqQhL8hCH9fzQVP
-	 TXuZcYZ3dnQarvqSZNVSMHjRF7pQgMoNL57/M7g/xKvx1nycq5ggl7UupdIwlAYOxg
-	 K9qaDWtZkQTN15eKlnAwOKdETtrQrchsD7nW4WjW1i3ljR97ThGW8dJ3FBYo4+1zUL
-	 F/KCsHVtI+kTA==
-Date: Fri, 15 Aug 2025 09:22:58 -0500
+	b=TxVRc+Ly1mGAqKDvCpOj1Y4DFYb38GAULO4jVR95X25PQ9VTLrRYLyt1OWDI70Z0P
+	 kGQizxtT+oOuzw2+gUeonREFJ4wdG/sAiJJkQbn07LIooTvCKx9uvghdP+FGihK7x9
+	 0CFWNQHAJCulBU85ytmx/uri/F3XWSKfti48VdUHr98VQxYQhdcFhNRrXO5JhlahWx
+	 mbuRLDVtDgiJHSB29zzAZYy++inJiZWn3MCBX5WS+iDtTIgz+1G04oDWfYGl7z2nSL
+	 SWdxMPn9qYCPrc+LPPHqCQIZIiy9dI3hrDs58iQ3eg1g8HQKI9bNiBGZo9P9O1uI1b
+	 K6S4N9bFFgfhw==
+Date: Fri, 15 Aug 2025 09:27:05 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: "He, Rui" <Rui.He@windriver.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Chikhalkar, Prashant" <Prashant.Chikhalkar@windriver.com>,
-	"Xiao, Jiguang" <Jiguang.Xiao@windriver.com>
-Subject: Re: [PATCH 1/1] pci: Add subordinate check before pci_add_new_bus()
-Message-ID: <20250815142258.GA377110@bhelgaas>
+To: Peter Chen <peter.chen@cixtech.com>
+Cc: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
+	kw@linux.com, mani@kernel.org, robh@kernel.org,
+	kwilczynski@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	mpillai@cadence.com, fugang.duan@cixtech.com,
+	guoyin.chen@cixtech.com, cix-kernel-upstream@cixtech.com,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 09/13] PCI: Add Cix Technology Vendor and Device ID
+Message-ID: <20250815142705.GA377241@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DS4PPFD24E991EC6BCD98A674667D0D7AB39634A@DS4PPFD24E991EC.namprd11.prod.outlook.com>
+In-Reply-To: <aJ6qTdA1f21SAr_l@nchen-desktop>
 
-On Fri, Aug 15, 2025 at 02:31:31AM +0000, He, Rui wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: 2025年8月15日 4:36
-> > To: He, Rui <Rui.He@windriver.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>; linux-pci@vger.kernel.org;
-> > linux-kernel@vger.kernel.org; Chikhalkar, Prashant
-> > <Prashant.Chikhalkar@windriver.com>; Xiao, Jiguang
-> > <Jiguang.Xiao@windriver.com>
-> > Subject: Re: [PATCH 1/1] pci: Add subordinate check before
-> > pci_add_new_bus()
+On Fri, Aug 15, 2025 at 11:32:29AM +0800, Peter Chen wrote:
+> On 25-08-14 17:23:58, Bjorn Helgaas wrote:
+> > On Wed, Aug 13, 2025 at 12:23:27PM +0800, hans.zhang@cixtech.com wrote:
+> > > From: Hans Zhang <hans.zhang@cixtech.com>
+> > >
+> > > Add Cixtech P1 (internal name sky1) as a vendor and device ID for PCI
+> > > devices. This ID will be used by the CIX Sky1 PCIe host controller driver.
+> > >
+> > > Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+> > > ---
+> > >  include/linux/pci_ids.h | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > > index 92ffc4373f6d..24b04d085920 100644
+> > > --- a/include/linux/pci_ids.h
+> > > +++ b/include/linux/pci_ids.h
+> > > @@ -2631,6 +2631,9 @@
+> > >
+> > >  #define PCI_VENDOR_ID_CXL            0x1e98
+> > >
+> > > +#define PCI_VENDOR_ID_CIX            0x1f6c
+> > > +#define PCI_DEVICE_ID_CIX_SKY1               0x0001
 > > 
-> > CAUTION: This email comes from a non Wind River email account!
-> > Do not click links or open attachments unless you recognize the sender and
-> > know the content is safe.
+> > I only see these used once in this series, so they probably should be
+> > defined in the file that uses them, per the comment at the top of this
+> > file.
 > > 
-> > On Thu, Aug 14, 2025 at 05:39:37PM +0800, Rui He wrote:
-> > > For preconfigured PCI bridge, child bus created on the first scan.
-> > > While for some reasons(e.g register mutation), the secondary, and
-> > > subordiante register reset to 0 on the second scan, which caused to
-> > > create PCI bus twice for the same PCI device.
-> > 
-> > I don't quite follow this.  Do you mean something is changing the
-> > bridge configuration between the first and second scans?
+> > Also, https://pcisig.com/membership/member-companies?combine=0x1f6c
+> > doesn't show 0x1f6c as assigned to CIX.  That database often seems
+> > incomplete, but please double check to make sure the ID is actually
+> > reserved.
 > 
-> I'm not sure what changed the bridge configuration, but the
-> secondary and subordinate is indeed 0 on the second scan as [bus
-> 0e-10] created for 0000:0b:01.0.
-> 
-> In my opinion, it might be an invalid communication or register
-> mutation in PCI bridge.
+> Would you please check below:
+> https://pcisig.com/membership/member-companies?combine=1f6c
 
-> > > Following is the related log:
-> > > [Wed May 28 20:38:36 CST 2025] pci 0000:0b:01.0: PCI bridge to [bus
-> > > 0d] [Wed May 28 20:38:36 CST 2025] pci 0000:0b:05.0: bridge
-> > > configuration invalid ([bus 00-00]), reconfiguring [Wed May 28
-> > > 20:38:36 CST 2025] pci 0000:0b:01.0: PCI bridge to [bus 0e-10] [Wed
-> > > May 28 20:38:36 CST 2025] pci 0000:0b:05.0: PCI bridge to [bus 0f-10]
-
-> > > Here PCI device 000:0b:01.0 assigend to bus 0d and 0e.
-> > 
-> > It looks like the [bus 0f-10] range is assigned to both bridges
-> > (0b:01.0 and 0b:05.0), which would definitely be a problem.
-> > 
-> > I'm surprised that we haven't tripped over this before, and I'm
-> > curious about how we got here.  Can you set
-> > CONFIG_DYNAMIC_DEBUG=y, boot with the dyndbg="file drivers/pci/*
-> > +p" kernel parameter, and collect the complete dmesg log?
-> 
-> Sorry, as this is a individual issue, and cannot be reproduced, I
-> cannot offer more detailed logs.
-
-Do you have the complete dmesg log from this one time you saw the
-problem?
-
-As-is, I don't think there's quite enough here to move forward with
-this.  I think we need some more detailed analysis to figure out how
-this happens.
+Thanks, sorry if I've asked this before.  Searching that pcisig
+database always seems a little hit and miss.
 
 Bjorn
 
