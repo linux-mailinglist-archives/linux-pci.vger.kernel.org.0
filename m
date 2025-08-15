@@ -1,239 +1,231 @@
-Return-Path: <linux-pci+bounces-34098-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34099-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42F05B27AF6
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 10:29:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53D0AB27BBB
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 10:54:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D55C5C5FAD
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 08:29:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 363B31891DF1
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 08:51:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5019C246798;
-	Fri, 15 Aug 2025 08:29:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB96618B12;
+	Fri, 15 Aug 2025 08:51:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ImXPYrlU"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VVsM8c/2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C62810E0;
-	Fri, 15 Aug 2025 08:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755246551; cv=fail; b=uiVbBwidj+G+nXlYvDDg76jbrCB0dbbBa6XLrUtAqwj4YPQQ8IS41Rni2pw3qNTZAy3bt/ThlX0SNbriaX2rLoFjPjJ5jmqOBXm7kGNUuPd68XlKWJQYJAeX330y8paE0QW5nsBaCasuMuum9Z209h6ocM62Zs1ZJz26uhG/wmo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755246551; c=relaxed/simple;
-	bh=+2ryWvnpPHtaLQi3NvCI+F/O39G+5tNez7owrfTsv78=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=myOeY0VTJGwhYncwMpZPmYcaTkxQsi3JPFCK585KomvBE3MQ/7RJdbio/CHwldTKQXzwCayoOCybu8CYtBUiDzW0R7MtD44xJj3R/HvBkFLrkW9OTQE/VToSXU8xJqnJg/X9y3H/ijS+qPKf9hEe0fgtEbt8mu1rjuYLHIzQKLU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ImXPYrlU; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755246550; x=1786782550;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=+2ryWvnpPHtaLQi3NvCI+F/O39G+5tNez7owrfTsv78=;
-  b=ImXPYrlUnRCJRY4NMkPp+erJmHBl/klsdnISH7s/dBy9zEAKOxdFQTkv
-   2mffsRMmbHVLfh5EC3DtvkrgrOr4Bko2VewRVgKhQZ1q8QWVmbfzcTzYr
-   p4xDjnFAQ5nfDAFj/D3J3n8tvXPJLUDFP8eYZdUCs4zUIa3K5Y8Hm7VRU
-   WSZ4MC94ob8sr+eNwT6jMVxnrx+ywumbdhoPmtuN/xWKpYrLAQD8zwTl2
-   RBW0f5WacDdhGDfglj4bxbwnIUlXRlxvEUusR02vTtT5rzrUsGFKXTr92
-   8U6jd1x99CwVp/NTs8aaFGKJewZ0Sk3c32ZBfLnSGQCW3YBB6SzBuhwYu
-   A==;
-X-CSE-ConnectionGUID: Y+ZenGesQeWcMVSyHJItJw==
-X-CSE-MsgGUID: UfCsj4oJSxOL2htgEhTAfA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11522"; a="57720560"
-X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="57720560"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2025 01:29:09 -0700
-X-CSE-ConnectionGUID: ptfm7YqJSomWer9SbOEaig==
-X-CSE-MsgGUID: 384GYf+hQwqVGHC7cAirJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="172305887"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2025 01:29:09 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Fri, 15 Aug 2025 01:29:08 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Fri, 15 Aug 2025 01:29:08 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.82)
- by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Fri, 15 Aug 2025 01:29:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iP/njBRQhlvEnbRVGOnPT72Wki/NHnq+C/D8ypiG6kAcqi+nJqjT9U/tqp1+uElYCQ4g0BVdE9rbkOuiEKmE0pN8JqrqMsd1e/zQ1sHEM0XBp/fMqxO4MEF5KxewnTAsfytAA0cDbhwFfj+0dax+8D+CoilQ24R5yPfsx4JEDtQTjYuJsF4JHgWOZU0AGMw8BDibp4wJJrg5cqSrxwiTswjNkoJmZFU2f/9K9JLvsqxQdQNdOmiNP/OlqXOGEtp2Ikej8CZfNauwzY3asr5ZFWm+n4VvV16Reo43GaCzznqGj0HA2x4zXiY3JhwLid77J0mZab66RRbxISZiivcj8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+2ryWvnpPHtaLQi3NvCI+F/O39G+5tNez7owrfTsv78=;
- b=Y+YCavSX/lfVGGFqxrAIe8seG7bI85OY0LA2gUCBz5Q2VToV17gcWUGzuPy5gkT/xXUKskhr0fBFDrB8cUp3hI4S30oSCGSSuDcvSha1uvoihkvdJ4irRIfyq1u5SnS2qLyLGUN/8aMRdZqGDqj2Vn82Od44QNC59DBbvf+JeQWA2kdaK7qoPJ/VeOVE3svO0euy9XAcV0oLUax1yzDoK6jXkKWYHE8/5T7whz45anws4DuSoXlL9A9K2L6HOjPvccGkdAJXHxLInNn3HDz7fFCMefmIzN15/rtaO9C9FlQ7TviGcxb2vLcf4qXcbte2rUp5u3s9Aw4PPPoHaWI33g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by DS7PR11MB6246.namprd11.prod.outlook.com (2603:10b6:8:99::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.15; Fri, 15 Aug
- 2025 08:29:00 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1%4]) with mapi id 15.20.9031.014; Fri, 15 Aug 2025
- 08:29:00 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: Nicolin Chen <nicolinc@nvidia.com>, "robin.murphy@arm.com"
-	<robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>, "jgg@nvidia.com"
-	<jgg@nvidia.com>
-CC: "will@kernel.org" <will@kernel.org>, "robin.clark@oss.qualcomm.com"
-	<robin.clark@oss.qualcomm.com>, "yong.wu@mediatek.com"
-	<yong.wu@mediatek.com>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"angelogioacchino.delregno@collabora.com"
-	<angelogioacchino.delregno@collabora.com>, "thierry.reding@gmail.com"
-	<thierry.reding@gmail.com>, "vdumpa@nvidia.com" <vdumpa@nvidia.com>,
-	"jonathanh@nvidia.com" <jonathanh@nvidia.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>, "Liu, Yi L"
-	<yi.l.liu@intel.com>, "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
-	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org"
-	<linux-arm-msm@vger.kernel.org>, "linux-mediatek@lists.infradead.org"
-	<linux-mediatek@lists.infradead.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>, "Jaroszynski, Piotr" <pjaroszynski@nvidia.com>,
-	"Sethi, Vikram" <vsethi@nvidia.com>, "helgaas@kernel.org"
-	<helgaas@kernel.org>, "etzhao1900@gmail.com" <etzhao1900@gmail.com>
-Subject: RE: [PATCH v3 2/5] iommu: Pass in gdev to __iommu_device_set_domain
-Thread-Topic: [PATCH v3 2/5] iommu: Pass in gdev to __iommu_device_set_domain
-Thread-Index: AQHcCxPQvqjgRKFT5U6u66Wlt4r+YrRjZvxg
-Date: Fri, 15 Aug 2025 08:29:00 +0000
-Message-ID: <BN9PR11MB52764B5E98E099651EE4A7318C34A@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <cover.1754952762.git.nicolinc@nvidia.com>
- <b07a15780fd5a8c688f1ae6285438a112a9b9478.1754952762.git.nicolinc@nvidia.com>
-In-Reply-To: <b07a15780fd5a8c688f1ae6285438a112a9b9478.1754952762.git.nicolinc@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|DS7PR11MB6246:EE_
-x-ms-office365-filtering-correlation-id: b3340bdb-cc19-4fe4-39b1-08dddbd5c94c
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?JsFPQ3B3GegG17eEJ9kyYi79BhCwHodsgvnnRIDVkaHiT8lkoHTyBrs/7mLS?=
- =?us-ascii?Q?unU5nEENmh8eFHi2tUZEXlOoel4PcRDJH3juaGHwco7CqssqzP8uCuV1VFzu?=
- =?us-ascii?Q?DqeQ2vBH8DHfAXtEkMvSIGkWc5pUU7rxstyEZWEZwUh+YDmDGbteLpjSuAUK?=
- =?us-ascii?Q?OefQcEYZ5TRiE9Nn3EKgtK5A+yhjtw0QQ2Fna89rw2oTuj/WfCClVwTZGU4n?=
- =?us-ascii?Q?nlHxc2Qkl0/eNXJFclfGUNHnljOGthyjuZZ0RtVgxVhLf2y/8XarTYicincm?=
- =?us-ascii?Q?stUj2S4GdqQjjUOS3qgjrV60t2mmMMiNalQuhYQoPavqboiPFyPkUgCBPxJE?=
- =?us-ascii?Q?mOKvBFCC9dcV8TluPz+6WKexkYGDDbSRwN7ZvNwnyHTfCsGI1BgIa+VDhTSz?=
- =?us-ascii?Q?ejsCE8xX3kE1OaZruYk6UpMPwlSIjCyVgzt6cfNpVWR1A8HHrkZvjwFZvTqk?=
- =?us-ascii?Q?pBd95p6rgJE9h6HTm0+0pThwc+r8QPYJtEnrqKwXO1jOUPSvZ8sB7D+sPYMH?=
- =?us-ascii?Q?Ov6ZNBjUY6Apy6+i1IggAoCFHO72YHOF1MtSZ0kW/Nyk2kHTBbMBg8lSnqlp?=
- =?us-ascii?Q?YyEGVyKXF5nSfuKXsBmrK1iAtKNNkCulGnA5hwajL9cMMqNYU2nv/v06bTmk?=
- =?us-ascii?Q?xeLWAb+UAkTRHcwQ5ZmodwTEeoFVSraOPpw4H70etsFXS0g5YzNIBbgs/wGV?=
- =?us-ascii?Q?n1hSs0q93ak4v3e7d2hqoq/RKBl1sBwrw2PK8ttx6olQRtY3eo5Q5d+Lm11E?=
- =?us-ascii?Q?18i1D4K7lbK/+eLDHqJrPZYzlpsHzulYLrUdEnySTzeEh8g+xJb80DhcQpLi?=
- =?us-ascii?Q?W/vlQhdGsuOb7b5KI9SklN2SP0H4UdLxlBJK/KbW6CrDnGWa34fKx6G6aA+L?=
- =?us-ascii?Q?wVRjaINmTYmR+xoqQmmHMm2mONo0NsEUOtpVE3Hyv84+B8S9YN7csPlyt3Bh?=
- =?us-ascii?Q?cnuPvqRAyAvNIVBEsYYpAqPrU65K5yprJPFHR1t6D1x2VmymkKzlHqwsa+qv?=
- =?us-ascii?Q?KQKlY1sxn0c9FIUvphF6bQR0ahAsn3crVCkVL06qpVRupxBDSG4kvb9exagn?=
- =?us-ascii?Q?isZhczjBBd/uMXGCaL/37NvJ+9KGPVyXjzVzm+fajyBUC+YdnbGQUclN6zi0?=
- =?us-ascii?Q?l5AlTPJ+GSIqJrk5mokAMEaYoOBgLeTBMli8CAfK7x5OSAF2IcmaESXyVe9P?=
- =?us-ascii?Q?VzPvqsWnfosyVKWomnxA4RYRuNwmrUzUSxlK6dPiQiBBOhvzWFUiHqXMMDKC?=
- =?us-ascii?Q?JAhczSyDhpN85r3xZFGxQ2KLvFiMlmBwLT6RFrVT65yZHDMcAI/erZNiaWyk?=
- =?us-ascii?Q?h8dnOgc8rRwKxLOtC/dWqMjyWNxQSEih4+sDecfrzKDF4VNCdrsI2w8sWgzk?=
- =?us-ascii?Q?Xg7Qmnwlby+d8TYpxxTzSjeHSD7g2N0gfPsCWM0si5X+eiG0Z7M59EMWyntD?=
- =?us-ascii?Q?C1J2F8ZyM0H0TclM/+FZX9AO9gLzCneEjQFIhr2+VFhcrA19mH8sLA=3D=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Rb9r3Frd50b0CZfPLlTLiTZMndlCxS7RlAp2sXVzTa8g/dQ8DYWnUnmc2Y4Q?=
- =?us-ascii?Q?Rvf6Oa8e1rrk34cewnKaZ+WxDTS7l9MDzXfPwXRnMxTAfVuSAe5iQ0FkE/ua?=
- =?us-ascii?Q?NPmmpr5BwNM+V3QRgoForvSBxdUVe5XsbSZAaT1TYM1Nr5J+o67Q2QuI/Oig?=
- =?us-ascii?Q?/JggsP9Di8wRcnr/HiSkW62OnqVhC4YVprJYwWHKkDfFiUFXWF0wjkjGmxOa?=
- =?us-ascii?Q?Q9ObHLOBHGT3902Wr1yIQgQPol6fh6xHfSQ6KaK9VVuQ3MAJ2M+jveQMDY1C?=
- =?us-ascii?Q?RZG9fcE6CZEObk7b7R7ytf663z4qvnSGDuwUZlOJ87JKpCz/1d+HWxI5d0PO?=
- =?us-ascii?Q?NtF75lCvneDUhj2oeWXFZR3vgjCQboBec0mZiKZQsae9qVwXcaF6jN2Kp0vF?=
- =?us-ascii?Q?vn/51+eZZZs5ZDGXLKjUxX0qXB4Pp7hyvhiYr/xoUinHLA1CJX/1p3/z8WqT?=
- =?us-ascii?Q?DpVgt44wSkb0Wy46KRsR93wfKzkAXsF0+SZudTxpEsBRtRktA94qsw4cqu/P?=
- =?us-ascii?Q?6t88F9/lDGbo3I3nWN3dRhmPUdh6i4WELfzSTAm7pExSdprVlYXhZ6+yzUXV?=
- =?us-ascii?Q?d/S8IFehM1d+TlkRAAA2RvQdQstPjK6+CLrfKb2Qfuh005Q7q2FSPh8Wto7c?=
- =?us-ascii?Q?UkdzYtkf8BH2VNV4F4qBNfnx9qjDswxgjRkR+T3ECodDAL4Ey4Q9rNhl9GCC?=
- =?us-ascii?Q?Wv2+FvQ900lT+BQke5sAsumFojAC4jqNYnowqwnZua0SuzAkylvrTYI10uFq?=
- =?us-ascii?Q?uHeM5gSkNlzgu8caGjekFXrhYLzUsh7fhrROqJveMsOy2cChp+d66jir4UBt?=
- =?us-ascii?Q?aN40ZS05ozKndqLM9es+5MahxqvdrOBTYjA4h024OJXlbNpZgb8qrcE2mSQO?=
- =?us-ascii?Q?0LcHrK14rq+PRZiQ9IvgLceB199Cjd4GRdI0+IeJ8qLeWCbTJQLZj2QP41k+?=
- =?us-ascii?Q?U/ShAJnwoZ2dZ+TS3lKmR65GiMM+X/7dFwBOcew9EnZkIMitiGkA8NThQkzi?=
- =?us-ascii?Q?kKMRJkjmesVctnOOXpuoW5pbTNozieN6okHn8CcoPtl6X0H5+rYytYFBrHeL?=
- =?us-ascii?Q?VjClBjb4yhrFqPZ/e3Ljli8PVLi9jdSVXas/EWOj1EdgGonRk4kdm1YaSSpP?=
- =?us-ascii?Q?s4UbVssO0HW5k9Mo7T2D3uOoy+0f8Yy1jXRL73tpQ2VCWsmFK1YTVoykaJm5?=
- =?us-ascii?Q?n9XSZ0c2YLczI/UuvZK1aHNszJEApHJ34FEqbYEkyNSJInieGrw5wHGOmGgD?=
- =?us-ascii?Q?D9oktyl20T0af5W5W2v3yRA1+NEJf+BIUoCpEEIQK9GQ3o6V1leIPruaIWKt?=
- =?us-ascii?Q?1XICtMQshEbsJfhMe/KoMn4gtPM/v9z5h/T+Nv0yp6BGY5829HARptXg5Q95?=
- =?us-ascii?Q?okYg01vcuJH2LmncXPUoE0AH+N1VAmMkzydBpNU3geJTOy+GNyVHgK/eND8d?=
- =?us-ascii?Q?DAT69fSIsXFJvsuG4ULfsGlhX0PCKmPq87cuWQeZL2DuSJAha0zXCz0O6ZwS?=
- =?us-ascii?Q?9PoM3OguFzNy9KqFKLV9V3xWNpKsdU5FTFlLPF4JaMbFuNV1hq2RUJcUAiaI?=
- =?us-ascii?Q?TN0B2PIztXxTZrCnSGaHWSINoUdEXUODrEefN7vH?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D77720A5F3
+	for <linux-pci@vger.kernel.org>; Fri, 15 Aug 2025 08:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755247893; cv=none; b=RelFd7ue/ptX3d2Haovp1MVEOmCOinT5F4Ips5NgXxigk/Qw06W9wGfCMHBtWtRaPYof9E1B96uqEQqvhm4ym+wr5mIqQyygxRhw7LG9z/YKx4U2NGHdo/JjS8a+0nmhWmyi1fMlY0dGPVs4cCkjPQGA2T7iydrQfS9CHEJ6lhQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755247893; c=relaxed/simple;
+	bh=UF5qyNpTXdoXNJ7pnDXzfEVK9jteDAQF6rVcXALvFwY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gvBEiq3a4GeW3Kv/D5qsfgU6QyvUDnElIiINPJ2Z6ZuU4RNjPcFGPDENYOG6GxMjDIFYO5m/880efvMplAdXEJ2nZ+xF0uyJSOE4ZQMNWA2JOpYb+PGiyzclsgHC1i0M3Lt/1P1UAeoihQC8iBGwp+OdOnU55COf3sxqQ1Eu0HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VVsM8c/2; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57F8gAF8011435
+	for <linux-pci@vger.kernel.org>; Fri, 15 Aug 2025 08:51:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	viA0ftgPjs8CYNz5BU9g3zq8XF4gr1cHoqz5uG+TLmk=; b=VVsM8c/2HJspZpHO
+	88q0sMUufJIP/OZqja2CN8vMlHuCxsOdYbW9mMkkd8VefDLfmoolFz+n6u8TlqQl
+	VvxnrOK3eJP1CtPqTTCfg9Ckq3/4mbgj6b3Q7wqWBq7C6wf1+Z67yavWodqNxClk
+	qPdlvRmvFEvX8RmO0IrN7mYqxZOOdDPv11GgXTQ1SJ8uBoWV/Z0m+AX1Et7YdLDM
+	vEKoAj7hjqe1wtjFa8nnFxjc4BNtTBYaSFTCl7OIZQX6ZYezBifgIx1sMUwUFCL3
+	QdYVLhRB8zfiuG73916yBy7gDgbUdZIL6Mu3UreaOy7do9KGBCr+D4qfAg9oZx8s
+	nc/Yfw==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48g9qa1mrn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 15 Aug 2025 08:51:31 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2445823e49fso18069795ad.3
+        for <linux-pci@vger.kernel.org>; Fri, 15 Aug 2025 01:51:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755247890; x=1755852690;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=viA0ftgPjs8CYNz5BU9g3zq8XF4gr1cHoqz5uG+TLmk=;
+        b=sM61Tt1XXzRuQYvBp46CEb+m3cXjrQElJtH7ubWsFwnkLd2+p5GV2ClEcx+PcsYYvi
+         512VRCHGX2+W6fhOa4zmmOtR+jzgg7dR8gF+0YExD03uiwVJfC/3XeTntIUB4DTXigqo
+         NH9xpGjhD8rWuOaRdBPjSFDHnf9lV8k1oF84HGO1zf1eyhMCkqXFQO6w9pUll23Xde8g
+         I73r+AfczCcdN9QE7Y71uWIQTFDtAlekG/GdGFVkEvvFnkLXss3gnQgJQcZaQh0PNvUq
+         ZMtSSG5E7+ax+ksgITFTZ1LAg1y6n20dbo+tEeBF8DgnfmB/PTzICMckHf+4Mf9Pmc8B
+         rBig==
+X-Forwarded-Encrypted: i=1; AJvYcCWvQ2rOMj1w0P0mPbU4xi3vjxyKvoFToLPH1HLSTj4AybUnSzPOla3Q0Mt+PJe1FWF5toqABW1/rco=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwurbgHNrT/euYV0C5IrPzw9+7odjax6joRKpSIslV2cfyAJI2K
+	Q+5SLq68KCCVonV8rNKc3x4k8YImsVnuLEuMGVER4wqtCP7MQQ+5w1Lswszvhj7UXCgxhBeMPDN
+	oRl5T3OfyN2wcVdlSl0EduMhzWF1chCFstim3E/9/DKa2v5WkNkNWacoxeG287xQ=
+X-Gm-Gg: ASbGncvgIaU1DXpu4z8IiCxI9nvsfftZeqF3asiryRjmD0tEVXeTE1WLiQsbcAC+7kb
+	neBPTdRchgimedNPcvLCYNnBFq6lY2R6cvHqpyeYhezZ0cbBxVLLnuTj3Q+D8TZd1beN+U/+4qh
+	kUh+P8e+H3qglr4ylhxzVnuY3zRiCi767TtcbLov+QCjYmcNPg3FUVlBB64g/eLkCfsEvoNUyul
+	uXXmPpqtP11u7GBJKRK5mxQO5VU+n26IjhDIIf0400GJIz8nfIxjr/RtvRg/bcGm5jVHp6Dry5w
+	2mSHoeQvnUZnUa1ti9vibt24NgCHl9FHHzVgHPhpboG4d1oobjl0cp+cbLnI8DWsUm+7biaXzqN
+	bTuWfUImDZJ43ZqEAYHbdGkKhiro1
+X-Received: by 2002:a17:902:cece:b0:234:b41e:37a4 with SMTP id d9443c01a7336-2446d5af49bmr20126895ad.6.1755247890327;
+        Fri, 15 Aug 2025 01:51:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFRZ3xoE0Z01Gar2LyZr8un5sb4pG+FITKlhbiCZfOjE53dG11yImWKgWB0zMbX+CcHUtPEvw==
+X-Received: by 2002:a17:902:cece:b0:234:b41e:37a4 with SMTP id d9443c01a7336-2446d5af49bmr20126405ad.6.1755247889823;
+        Fri, 15 Aug 2025 01:51:29 -0700 (PDT)
+Received: from [10.133.33.31] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446d55035fsm9240305ad.132.2025.08.15.01.51.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Aug 2025 01:51:29 -0700 (PDT)
+Message-ID: <c931bbc5-f246-4d34-9280-0c1a551a1e7e@oss.qualcomm.com>
+Date: Fri, 15 Aug 2025 16:51:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3340bdb-cc19-4fe4-39b1-08dddbd5c94c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2025 08:29:00.8131
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CAmiASOGcFKBshrZheoCrIwG95OT/I/BpS4sEyLKD0rGmaKpaWphHYrDXvjmrdYdaUe8ZAu2Ao2ipEx0HiSzdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6246
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 0/5] pci: qcom: Add QCS8300 PCIe support
+To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
+        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
+        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+        kw@linux.com
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+References: <20250811071131.982983-1-ziyue.zhang@oss.qualcomm.com>
+Content-Language: en-US
+From: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+In-Reply-To: <20250811071131.982983-1-ziyue.zhang@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=CNMqXQrD c=1 sm=1 tr=0 ts=689ef513 cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=COk6AnOGAAAA:8 a=QyXUC8HyAAAA:8 a=IHEL40AIkIxnPEiLsFYA:9 a=QEXdDO2ut3YA:10
+ a=GvdueXVYPmCkWapjIL-Q:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: HBI2BfR9167Z93PN1BuSNO9Dtrytghio
+X-Proofpoint-ORIG-GUID: HBI2BfR9167Z93PN1BuSNO9Dtrytghio
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEyMDE2NCBTYWx0ZWRfX4D+cSYjjwODe
+ npTX/qs5Uqr2MJCU0EpufjfKUaUTzfT3KMExKbE3zPL9rIbNas8DpG51/QN3BL2EthOi68/yhI9
+ GvRafa6d1w1YbwYUtt8l3QP77Wb3LA46mVcyiMLHMnlC7NsiuJdmD3JBMQ3L+kXfrIeTsiDtI/F
+ FvQ8L/RincnpSVY+kFPK1tx6j2FfLZhYLvC1H1BF/ezzhbL4KSRNE4UsTfL6KTIAwU5hHV6yvqk
+ trQTtpwdmPr/DkSNVHgK6JBAvTk9PeS8O8DYoByA4DMeQ/UCpen3jF6+XdYmt/uVtm4vO4QwQ9+
+ ppH8m/YvxpipzhQN37vIB3SzTeQWTUaSEDv8oywRdt5phyw8N/oKrvLOUPEA+j2BRwCLtOKJGzf
+ 1yDfSCua
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-15_03,2025-08-14_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 adultscore=0 phishscore=0 bulkscore=0 clxscore=1015
+ malwarescore=0 impostorscore=0 priorityscore=1501 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508120164
 
-> From: Nicolin Chen <nicolinc@nvidia.com>
-> Sent: Tuesday, August 12, 2025 6:59 AM
->=20
-> The device under the reset will be attached to a blocked domain, while no=
-t
-> updating the group->domain pointer. So there needs to be a per-device fla=
-g
-> to indicate the reset state, for other iommu core functions to check so a=
-s
-> not to shift the attached domain during the reset state.
->=20
-> The regular device pointer can't store any private any private iommu flag=
-.
-> So, the flag has to be in the gdev structure.
 
-duplicated "any private"
+On 8/11/2025 3:11 PM, Ziyue Zhang wrote:
+> This series depend on the sa8775p gcc_aux_clock and link_down reset change
+> https://lore.kernel.org/all/20250725102231.3608298-2-ziyue.zhang@oss.qualcomm.com/
+>
+> This series adds document, phy, configs support for PCIe in QCS8300.
+> It also adds 'link_down' reset for sa8775p.
+>
+> Have follwing changes:
+> 	- Add dedicated schema for the PCIe controllers found on QCS8300.
+> 	- Add compatible for qcs8300 platform.
+> 	- Add configurations in devicetree for PCIe0, including registers, clocks, interrupts and phy setting sequence.
+> 	- Add configurations in devicetree for PCIe1, including registers, clocks, interrupts and phy setting sequence.
+>
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> ---
+> Changes in v10:
+> - Update PHY max_items (Johan)
+> - Link to v9: https://lore.kernel.org/all/20250725104037.4054070-1-ziyue.zhang@oss.qualcomm.com/
+>
+> Changes in v9:
+> - Fix DTB error (Vinod)
+> - Link to v8: https://lore.kernel.org/all/20250714081529.3847385-1-ziyue.zhang@oss.qualcomm.com/
+>
+> Changes in v8:
+> - rebase sc8280xp-qmp-pcie-phy change to solve conflicts.
+> - Add Fixes tag to phy change (Johan)
+> - Link to v7: https://lore.kernel.org/all/20250625092539.762075-1-quic_ziyuzhan@quicinc.com/
+>
+> Changes in v7:
+> - rebase qcs8300-ride.dtsi change to solve conflicts.
+> - Link to v6: https://lore.kernel.org/all/20250529035635.4162149-1-quic_ziyuzhan@quicinc.com/
+>
+> Changes in v6:
+> - move the qcs8300 and sa8775p phy compatibility entry into the list of PHYs that require six clocks
+> - Update QCS8300 and sa8775p phy dt, remove aux clock.
+> - Fixed compile error found by kernel test robot
+> - Link to v5: https://lore.kernel.org/all/20250507031019.4080541-1-quic_ziyuzhan@quicinc.com/
+>
+> Changes in v5:
+> - Add QCOM PCIe controller version in commit msg (Mani)
+> - Modify platform dts change subject (Dmitry)
+> - Fixed compile error found by kernel test robot
+> - Link to v4: https://lore.kernel.org/linux-phy/20241220055239.2744024-1-quic_ziyuzhan@quicinc.com/
+>
+> Changes in v4:
+> - Add received tag
+> - Fixed compile error found by kernel test robot
+> - Link to v3: https://lore.kernel.org/lkml/202412211301.bQO6vXpo-lkp@intel.com/T/#mdd63e5be39acbf879218aef91c87b12d4540e0f7
+>
+> Changes in v3:
+> - Add received tag(Rob & Dmitry)
+> - Update pcie_phy in gcc node to soc dtsi(Dmitry & Konrad)
+> - remove pcieprot0 node(Konrad & Mani)
+> - Fix format comments(Konrad)
+> - Update base-commit to tag: next-20241213(Bjorn)
+> - Corrected of_device_id.data from 1.9.0 to 1.34.0.
+> - Link to v2: https://lore.kernel.org/all/20241128081056.1361739-1-quic_ziyuzhan@quicinc.com/
+>
+> Changes in v2:
+> - Fix some format comments and match the style in x1e80100(Konrad)
+> - Add global interrupt for PCIe0 and PCIe1(Konrad)
+> - split the soc dtsi and the platform dts into two changes(Konrad)
+> - Link to v1: https://lore.kernel.org/all/20241114095409.2682558-1-quic_ziyuzhan@quicinc.com/
+>
+> Ziyue Zhang (5):
+>    dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
+>      for qcs8300
+>    arm64: dts: qcom: qcs8300: enable pcie0
+>    arm64: dts: qcom: qcs8300-ride: enable pcie0 interface
+>    arm64: dts: qcom: qcs8300: enable pcie1
+>    arm64: dts: qcom: qcs8300-ride: enable pcie1 interface
+>
+>   .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |  17 +-
+>   arch/arm64/boot/dts/qcom/qcs8300-ride.dts     |  80 +++++
+>   arch/arm64/boot/dts/qcom/qcs8300.dtsi         | 296 +++++++++++++++++-
+>   3 files changed, 376 insertions(+), 17 deletions(-)
+>
+>
+> base-commit: e2622a23e8405644c7188af39d4c1bd2b405bb27
+Hi Maintainers,
 
->=20
-> Pass in the gdev pointer instead to the functions that will check that pe=
-r
-> device flag.
->=20
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+It seems the patches get reviewed tag for a long time, can you give this
 
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+series further comment or help me to merge them ?
+
+Thanks very much.
+
+The phy binding's dependency is merged, the patch do not need to rebase.
+
+dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
+commit: aac1256a41cfbbaca12d6c0a5753d1e3b8d2d8bf
+
+
+BRs
+Ziyue
 
