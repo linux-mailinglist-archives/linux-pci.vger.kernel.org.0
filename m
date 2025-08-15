@@ -1,200 +1,231 @@
-Return-Path: <linux-pci+bounces-34105-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34106-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A4F9B27F43
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 13:34:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A76BFB27FB5
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 14:08:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EE461CE5208
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 11:34:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C9183B97E6
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Aug 2025 12:07:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B0AE286D49;
-	Fri, 15 Aug 2025 11:34:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A38B29C346;
+	Fri, 15 Aug 2025 12:07:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ij4GhNQL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYw4H6xW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FE53A1D2
-	for <linux-pci@vger.kernel.org>; Fri, 15 Aug 2025 11:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0EBB28C2D1;
+	Fri, 15 Aug 2025 12:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755257666; cv=none; b=V6oaCuzwoYJWv56njsJ7g5XxZB2NP7dez2sFjOWE0XJA3m24iFmQvU9MVXoQNrlZfqpuOGlaIbL3wDYbeWkvyXP8Zg8N4PATue5OWS6Wpanrl8Iep4rxZbOWrMyqYVq+IPV0wzn9reR2xbEV3dSVKHsiBLs4aqOFEH5aWqepMN4=
+	t=1755259667; cv=none; b=psYuKKAzQRDWkw5M+r1ck7V7qQ2tXe1n/uEmyJy5A64y/037v7s5p+h4bGbUXcXZouXiY5x+uJFs//5hnIbe38/XhTkRsp91oWUr/qqdzmHfx5ky1N/AqwyJojWvHJ9cWCE4t+vxiy6a/Tj/SE1pcjJNtnl6rruRMR96ZkFGrvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755257666; c=relaxed/simple;
-	bh=15YUpnSqR5CHWe13jq+0aLlM2+5PCbRq7+ua7Fc/dgs=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=axPhW9qmmX5/Hl1p5fIfV/Vv2LZqsTYFp6DWAEiHMph3eeOLxV9zY+Pi9+f13IZhiQBV1AfDTubaN/jSN8B7oJSNDpp5sp5CJKLcIbmoKpwjpRw4oqoCgQW07dJ9eYOx7tZlRr50KItgsM2WH7XStcQ38VFIMD2bSiHcZYnhfeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ij4GhNQL; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755257664; x=1786793664;
-  h=date:from:to:cc:subject:message-id;
-  bh=15YUpnSqR5CHWe13jq+0aLlM2+5PCbRq7+ua7Fc/dgs=;
-  b=ij4GhNQLmnMpdJOjr2zbUjQVLGT9J7ix7ud1LjjXtJDbbGwuGQtK+eqg
-   PvmP7MQ8Me8SDnaKYoeXsLPJnd7bcdwFJVESMt907xzUZj2w9QULhpkHr
-   CGWNmsN0lxJ/tCaHY7Ob6PhpiUnJCS8JJOnACkt649z3AGM8GEp4fEtJp
-   044CxMpoSMwAFJMM97ARVlQFLGeZ0jQfQ4eh+dv4dSr8aqGvKATzJfFlJ
-   aKO3sCnvF3biEyYoP7PzZwH6qLnsGej0bVS+kYf3b6o+NwAYqW4WZ0+d+
-   werflITHQLzVgHXcvORPOE/D0FocB1Y10E4QT6HUQc1jG9du8gjcJU8yT
-   Q==;
-X-CSE-ConnectionGUID: H+/HuSGHS+qDyn1iGB9UaQ==
-X-CSE-MsgGUID: 8t4Pv7mrS/ClERKAkBaFmA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11522"; a="61418884"
-X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="61418884"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2025 04:34:24 -0700
-X-CSE-ConnectionGUID: gUvLrpfiQ4mf3O+gUm0eMg==
-X-CSE-MsgGUID: ZdmETPK1RYaVeoYkYbMpfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="204178412"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 15 Aug 2025 04:34:23 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1umshR-000Bv8-0D;
-	Fri, 15 Aug 2025 11:34:21 +0000
-Date: Fri, 15 Aug 2025 19:33:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:endpoint] BUILD SUCCESS
- 27fce9e8c6f031b526bf471e1076abca31473464
-Message-ID: <202508151933.QTss82JS-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1755259667; c=relaxed/simple;
+	bh=+zK6FWDvXXZlff+02xUXRsfbnd6zM/7GQBlYSioRBcU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NV5L1vRhEfl/AiC7/JiWmW65+fczbMDgRPEz8IxSSfzlWJ2J1jBfXZI+qte9x+AE3irdhMVfIrqfe08GdkIQZH7x3RS0tfNefkiQVDuC4dDcAklOqhiX/eQWny1EWt3wK0KBD4xoEhujtks/Ot8R0LrGetwrVwF7t7K9YIQ/4Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bYw4H6xW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF91C4CEEB;
+	Fri, 15 Aug 2025 12:07:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755259667;
+	bh=+zK6FWDvXXZlff+02xUXRsfbnd6zM/7GQBlYSioRBcU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=bYw4H6xWsoJO4pHYknubTtwVz1nXe5VvLf/vem/wB9vql1uVcLjbvYMyHhxJ1Se5a
+	 VXHAs9wT6Cl8rpaESkwaNKoySvsH60j8iW5kGOHG7Y9FHtt40GXqFHCX0KjeVK06tM
+	 Wj2UPX3h+uSGlLkrDMLEWRMZNRDLoxw3tOpI1Jwqnn1atxjkY5DXIbU/Lr3dhTlNTP
+	 nF/xx87bWyZTOELLA99uNgtAMhyQchaGtit1ouBts7HrLCBLQXuzjeu1BSSC0CPbff
+	 VluuhMv6rt9QQmGm5EvCqtSSeLeom/fGKxx282V5s8QFUshnlJlNENf1s6CToNyziU
+	 MAsGVBHGBYkOA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>, Miguel Ojeda
+ <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
+ <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn?=
+ Roy Baron
+ <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor
+ Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas
+ <bhelgaas@google.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>,
+ Benno Lossin <lossin@kernel.org>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-pci@vger.kernel.org, Joel Fernandes <joelagnelf@nvidia.com>, Dirk
+ Behme <dirk.behme@de.bosch.com>, Daniel Almeida
+ <daniel.almeida@collabora.com>
+Subject: Re: [PATCH v9 2/7] rust: irq: add flags module
+In-Reply-To: <20250811-topics-tyr-request_irq2-v9-2-0485dcd9bcbf@collabora.com>
+References: <20250811-topics-tyr-request_irq2-v9-0-0485dcd9bcbf@collabora.com>
+ <jjFmLoNIrT4EPz7LdN97j6uH8O6tsBHwC7-j9YfE6wdzydDFNRGMiVFcv5GI4waWhs_jdhILALP1ObzX7GEzzQ==@protonmail.internalid>
+ <20250811-topics-tyr-request_irq2-v9-2-0485dcd9bcbf@collabora.com>
+Date: Fri, 15 Aug 2025 14:02:36 +0200
+Message-ID: <87349seqsj.fsf@t14s.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint
-branch HEAD: 27fce9e8c6f031b526bf471e1076abca31473464  PCI: endpoint: Drop superfluous pci_epc_features initialization
+"Daniel Almeida" <daniel.almeida@collabora.com> writes:
 
-elapsed time: 1150m
+> Manipulating IRQ flags (i.e.: IRQF_*) will soon be necessary, specially to
+> register IRQ handlers through bindings::request_irq().
+>
+> Add a kernel::irq::Flags for that purpose.
+>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Tested-by: Joel Fernandes <joelagnelf@nvidia.com>
+> Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
+> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+> ---
+>  rust/kernel/irq.rs       |   5 ++
+>  rust/kernel/irq/flags.rs | 124 +++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 129 insertions(+)
+>
+> diff --git a/rust/kernel/irq.rs b/rust/kernel/irq.rs
+> index fae7b15effc80c936d6bffbd5b4150000d6c2898..068df2fea31de51115c30344f7ebdb4da4ad86cc 100644
+> --- a/rust/kernel/irq.rs
+> +++ b/rust/kernel/irq.rs
+> @@ -9,3 +9,8 @@
+>  //! drivers to register a handler for a given IRQ line.
+>  //!
+>  //! C header: [`include/linux/device.h`](srctree/include/linux/interrupt.h)
+> +
+> +/// Flags to be used when registering IRQ handlers.
+> +mod flags;
+> +
+> +pub use flags::Flags;
+> diff --git a/rust/kernel/irq/flags.rs b/rust/kernel/irq/flags.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e62820ea67755123b4f96e4331244bbb4fbcfd9d
+> --- /dev/null
+> +++ b/rust/kernel/irq/flags.rs
+> @@ -0,0 +1,124 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// SPDX-FileCopyrightText: Copyright 2025 Collabora ltd.
+> +
+> +use crate::bindings;
+> +use crate::prelude::*;
+> +
+> +/// Flags to be used when registering IRQ handlers.
+> +///
+> +/// Flags can be used to request specific behaviors when registering an IRQ
+> +/// handler, and can be combined using the `|`, `&`, and `!` operators to
+> +/// further control the system's behavior.
+> +///
+> +/// A common use case is to register a shared interrupt, as sharing the line
+> +/// between devices is increasingly common in modern systems and is even
+> +/// required for some buses. This requires setting [`Flags::SHARED`] when
+> +/// requesting the interrupt. Other use cases include setting the trigger type
+> +/// through `Flags::TRIGGER_*`, which determines when the interrupt fires, or
+> +/// controlling whether the interrupt is masked after the handler runs by using
+> +/// [`Flags::ONESHOT`].
+> +///
+> +/// If an invalid combination of flags is provided, the system will refuse to
+> +/// register the handler, and lower layers will enforce certain flags when
+> +/// necessary. This means, for example, that all the
+> +/// [`crate::irq::Registration`] for a shared interrupt have to agree on
 
-configs tested: 107
-configs skipped: 8
+`rustdoc` will complain about this being undefined.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> +/// [`Flags::SHARED`] and on the same trigger type, if set.
+> +#[derive(Clone, Copy, PartialEq, Eq)]
+> +pub struct Flags(c_ulong);
+> +
+> +impl Flags {
+> +    /// Use the interrupt line as already configured.
+> +    pub const TRIGGER_NONE: Flags = Flags::new(bindings::IRQF_TRIGGER_NONE);
+> +
+> +    /// The interrupt is triggered when the signal goes from low to high.
+> +    pub const TRIGGER_RISING: Flags = Flags::new(bindings::IRQF_TRIGGER_RISING);
+> +
+> +    /// The interrupt is triggered when the signal goes from high to low.
+> +    pub const TRIGGER_FALLING: Flags = Flags::new(bindings::IRQF_TRIGGER_FALLING);
+> +
+> +    /// The interrupt is triggered while the signal is held high.
+> +    pub const TRIGGER_HIGH: Flags = Flags::new(bindings::IRQF_TRIGGER_HIGH);
+> +
+> +    /// The interrupt is triggered while the signal is held low.
+> +    pub const TRIGGER_LOW: Flags = Flags::new(bindings::IRQF_TRIGGER_LOW);
+> +
+> +    /// Allow sharing the IRQ among several devices.
+> +    pub const SHARED: Flags = Flags::new(bindings::IRQF_SHARED);
+> +
+> +    /// Set by callers when they expect sharing mismatches to occur.
+> +    pub const PROBE_SHARED: Flags = Flags::new(bindings::IRQF_PROBE_SHARED);
+> +
+> +    /// Flag to mark this interrupt as timer interrupt.
+> +    pub const TIMER: Flags = Flags::new(bindings::IRQF_TIMER);
+> +
+> +    /// Interrupt is per CPU.
+> +    pub const PERCPU: Flags = Flags::new(bindings::IRQF_PERCPU);
+> +
+> +    /// Flag to exclude this interrupt from irq balancing.
+> +    pub const NOBALANCING: Flags = Flags::new(bindings::IRQF_NOBALANCING);
+> +
+> +    /// Interrupt is used for polling (only the interrupt that is registered
+> +    /// first in a shared interrupt is considered for performance reasons).
+> +    pub const IRQPOLL: Flags = Flags::new(bindings::IRQF_IRQPOLL);
+> +
+> +    /// Interrupt is not reenabled after the hardirq handler finished. Used by
+> +    /// threaded interrupts which need to keep the irq line disabled until the
+> +    /// threaded handler has been run.
+> +    pub const ONESHOT: Flags = Flags::new(bindings::IRQF_ONESHOT);
+> +
+> +    /// Do not disable this IRQ during suspend. Does not guarantee that this
+> +    /// interrupt will wake the system from a suspended state.
+> +    pub const NO_SUSPEND: Flags = Flags::new(bindings::IRQF_NO_SUSPEND);
+> +
+> +    /// Force enable it on resume even if [`Flags::NO_SUSPEND`] is set.
+> +    pub const FORCE_RESUME: Flags = Flags::new(bindings::IRQF_FORCE_RESUME);
+> +
+> +    /// Interrupt cannot be threaded.
+> +    pub const NO_THREAD: Flags = Flags::new(bindings::IRQF_NO_THREAD);
+> +
+> +    /// Resume IRQ early during syscore instead of at device resume time.
+> +    pub const EARLY_RESUME: Flags = Flags::new(bindings::IRQF_EARLY_RESUME);
+> +
+> +    /// If the IRQ is shared with a [`Flags::NO_SUSPEND`] user, execute this
+> +    /// interrupt handler after suspending interrupts. For system wakeup devices
+> +    /// users need to implement wakeup detection in their interrupt handlers.
+> +    pub const COND_SUSPEND: Flags = Flags::new(bindings::IRQF_COND_SUSPEND);
+> +
+> +    /// Don't enable IRQ or NMI automatically when users request it. Users will
+> +    /// enable it explicitly by `enable_irq` or `enable_nmi` later.
+> +    pub const NO_AUTOEN: Flags = Flags::new(bindings::IRQF_NO_AUTOEN);
+> +
+> +    /// Exclude from runnaway detection for IPI and similar handlers, depends on
+> +    /// `PERCPU`.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250815    gcc-8.5.0
-arc                   randconfig-002-20250815    gcc-9.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                   randconfig-001-20250815    clang-16
-arm                   randconfig-002-20250815    clang-18
-arm                   randconfig-003-20250815    gcc-14.3.0
-arm                   randconfig-004-20250815    gcc-8.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250815    gcc-8.5.0
-arm64                 randconfig-002-20250815    gcc-8.5.0
-arm64                 randconfig-003-20250815    clang-22
-arm64                 randconfig-004-20250815    gcc-15.1.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250815    gcc-15.1.0
-csky                  randconfig-002-20250815    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250815    clang-22
-hexagon               randconfig-002-20250815    clang-22
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250815    gcc-12
-i386        buildonly-randconfig-002-20250815    clang-20
-i386        buildonly-randconfig-003-20250815    clang-20
-i386        buildonly-randconfig-004-20250815    clang-20
-i386        buildonly-randconfig-005-20250815    clang-20
-i386        buildonly-randconfig-006-20250815    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20250815    clang-22
-loongarch             randconfig-002-20250815    clang-20
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250815    gcc-11.5.0
-nios2                 randconfig-002-20250815    gcc-11.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250815    gcc-8.5.0
-parisc                randconfig-002-20250815    gcc-14.3.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc               randconfig-001-20250815    gcc-11.5.0
-powerpc               randconfig-002-20250815    clang-19
-powerpc               randconfig-003-20250815    gcc-11.5.0
-powerpc64             randconfig-001-20250815    gcc-14.3.0
-powerpc64             randconfig-002-20250815    gcc-10.5.0
-powerpc64             randconfig-003-20250815    clang-22
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250815    gcc-12.5.0
-riscv                 randconfig-002-20250815    gcc-8.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250815    gcc-8.5.0
-s390                  randconfig-002-20250815    clang-22
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                    randconfig-001-20250815    gcc-11.5.0
-sh                    randconfig-002-20250815    gcc-12.5.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250815    gcc-11.5.0
-sparc                 randconfig-002-20250815    gcc-13.4.0
-sparc64               randconfig-001-20250815    clang-22
-sparc64               randconfig-002-20250815    gcc-15.1.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250815    gcc-12
-um                    randconfig-002-20250815    clang-19
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-003-20250815    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250815    gcc-8.5.0
-xtensa                randconfig-002-20250815    gcc-15.1.0
+Should we link `PERCPU` here?
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +    pub const NO_DEBUG: Flags = Flags::new(bindings::IRQF_NO_DEBUG);
+> +
+> +    pub(crate) fn into_inner(self) -> c_ulong {
+
+You need `#[expect(dead_code)]` here.
+
+> +        self.0
+> +    }
+> +
+> +    const fn new(value: u32) -> Self {
+> +        build_assert!(value as u64 <= c_ulong::MAX as u64);
+
+I am curious about this line. Can you add a short explanation?
+
+I would think this can never assert. That would require c_ulong to be
+less than 32 bits, right? Are there any configurations where that is the case?
+
+
+Best regards,
+Andreas Hindborg
+
+
+
 
