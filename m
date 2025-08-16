@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-34129-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34130-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27325B28F47
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Aug 2025 17:54:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 110ECB28F50
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Aug 2025 18:05:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9962D1C23692
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Aug 2025 15:54:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4EADAC1B34
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Aug 2025 16:05:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23F311B21BD;
-	Sat, 16 Aug 2025 15:54:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AC621D8E01;
+	Sat, 16 Aug 2025 16:05:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="O74Nt/oT"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="HAleAEvw"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0086319DFAB;
-	Sat, 16 Aug 2025 15:54:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F19D170A37;
+	Sat, 16 Aug 2025 16:05:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755359662; cv=none; b=re5BDeg2geOHQG7+NlvFT1LwTSrYgl7I5BmOhU6eOBstDnk+QxSh8kaIi5f0ZIfRlXuwZaSGxSKoVxpjyrGASE1MBitx/nAzce0EjH3HMIg/yzry3HxEqHxcS6hvlfYi7epaauBMYZ/4tOcc9OlSv/ni7VhuhZTlZCWwyNtOvRM=
+	t=1755360348; cv=none; b=kCICAIJm18no27lp7qMiqK7k5BEWCW/lSOYklD3vQNUqEd/tWgohE0C2YN/PFo9IK+6ob9VfJ7jZFEa1n0fYqv/lGbVxIC9HxAuUMaEmNvpYeJk+f9bVpqVGjw3Dszjp3fUpBQ2sqmBH4w/Hm5sR6vLlHWiTN8fF8MYmfrQ79h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755359662; c=relaxed/simple;
-	bh=0wK3rB9helm3Z65kOsxIJGvDNRT3d2q87PtWtDOkxEc=;
+	s=arc-20240116; t=1755360348; c=relaxed/simple;
+	bh=UvLeR1cYc057w10eRLP8ciPQMZDMUaBMqNmqYiFGrZU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t1JrJxpCY1dlHPlVY9yC3fsQCuop9egn7uo1WqadzYVZsg8s/4LpoccmVzyKgVFZItrYpkU3d89vLUDtEwsW9Bk0Xmc1qFd8nFVjCrXHoK+nM0oNd8XBoMH1ukLAj8v88vgBuEdOosAsC5/sF4tRmEmfXOASdkUuF5gOXJ4hhu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=O74Nt/oT; arc=none smtp.client-ip=117.135.210.2
+	 In-Reply-To:Content-Type; b=i2fLaJPm54fBO3vgqAsDlsbp8iysVUk4QIEZEpNXMn1BMGhMI785csTkYwGH8MmTALywL5AuN7fyVyr1Touhpm1bD5pVrDozIkHLtLzv+H8HdnBBzioPdJUyMQFzxVgjAbGB1MY12RPXTjOkTzwc2oHI/0ZfmceBkP3PHHvg4pQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=HAleAEvw; arc=none smtp.client-ip=117.135.210.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
 	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=cRmkhgClkwi8F4qHCHtaVyztulnF5HFvw137U0WVuQY=;
-	b=O74Nt/oTFCwSCXFCjB7DodpKQ18RkcuRYIj0+AzdNPJHzo37m07jvUsSFQXvbi
-	SghYC82/UFwmVlm7mSaB4q65gXn8e8N83O3OMhxWkoHHniu1ZICih9YUW0Tjex/t
-	Fnffl17qxwzI+Jd6Hc6jjH0eU8veIkj2kfzRuRzYjRJk4=
+	Content-Type; bh=XDYawLrhkzFBHKzvw5+ydZUpT3fCgm/tuXskrC+yzB4=;
+	b=HAleAEvwYL4g8I5qxYQVKEBYmAzOPfGPIg+9mxzOJ/kjnISF0FA3/AVhN1cpI8
+	bTprfPbli/3ytNCfw1/FfKgjiG5twkPesA5N42FRZfqtmdsgDUw7yjp9av12ECoh
+	vAX5VPBEx3s31/LSupph5kJA3aBsCc2viufjqRth4A2vI=
 Received: from [IPV6:240e:b8f:919b:3100:3980:6173:5059:2d2a] (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wBnbdGaqaBoqQzDCQ--.44799S2;
-	Sat, 16 Aug 2025 23:54:03 +0800 (CST)
-Message-ID: <d5d12494-aa17-4012-8265-3c91981611c4@163.com>
-Date: Sat, 16 Aug 2025 23:54:02 +0800
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgAnQJ09rKBoZ+W+AQ--.1722S2;
+	Sun, 17 Aug 2025 00:05:17 +0800 (CST)
+Message-ID: <953620e7-8873-481d-b235-8cbefcb08172@163.com>
+Date: Sun, 17 Aug 2025 00:05:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -47,120 +47,56 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Remove redundant TTL variable initialization
-To: bhelgaas@google.com
-Cc: ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250616152414.966218-1-18255117159@163.com>
+Subject: Re: [PATCH v2 3/3] PCI: of: Relax max-link-speed check to support
+ PCIe Gen5/Gen6
+To: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org, conor+dt@kernel.org
+Cc: robh@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250529021026.475861-1-18255117159@163.com>
+ <20250529021026.475861-4-18255117159@163.com>
 Content-Language: en-US
 From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250616152414.966218-1-18255117159@163.com>
+In-Reply-To: <20250529021026.475861-4-18255117159@163.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wBnbdGaqaBoqQzDCQ--.44799S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAFy3Gw17Ary7tFW8ur1DGFg_yoW5tFyDpF
-	W5uF1YyrWrWFy8XanFqF4UCFy2v3W8J3yI9FykG34avF1DCF98tFySkF1FvFn7JrZxCr4x
-	XwnI9r97Gayqvw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zippBfUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxmro2ignM3xWAADs5
+X-CM-TRANSID:QCgvCgAnQJ09rKBoZ+W+AQ--.1722S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZr43XF47XF1fuw17Kry8Zrb_yoWDWrgE9F
+	17XrZ3Gr4FkFyYkr1ayrWavrn0v3yrWw4UXryFyw1xAa4rCa4DZFn3uFy5Aa93Aa13JF18
+	JF98Gr1jkrnFkjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUaFAJUUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQw6ro2igp4JksAAAs8
 
 Dear Bjorn,
 
-Because of this series, you have accepted it.
-https://patchwork.kernel.org/project/linux-pci/cover/20250813144529.303548-1-18255117159@163.com/
-
-It is already in the following branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=capability-search
-
-
-But I saw the status of patch as "Not Applicable". Is it necessary for 
-me to remake the v2 version based on v6.17-rc1? Or is this patch 
-unreasonable?
+Gentle ping.
 
 Best regards,
 Hans
 
-On 2025/6/16 23:24, Hans Zhang wrote:
-> The local variables `ttl` were initialized to PCI_FIND_CAP_TTL but never
-> actually used. The loop termination condition is inherently controlled
-> by the TTL mechanism inside the PCI_FIND_NEXT_CAP_TTL macro, which already
-> ensures protection against infinite loops.
-> 
-> Remove these redundant operations to simplify the code and eliminate
-> potential logical ambiguities. This change does not affect functionality,
-> as the TTL safeguard is properly implemented within the macro.
+On 2025/5/29 10:10, Hans Zhang wrote:
+> The existing code restricted `max-link-speed` to values 1~4 (Gen1~Gen4),
+> but current SOCs using Synopsys/Cadence IP may require Gen5/Gen6 support.
+> This patch updates the validation in `of_pci_get_max_link_speed` to allow
+> values up to 6, ensuring compatibility with newer PCIe generations.
 > 
 > Signed-off-by: Hans Zhang <18255117159@163.com>
 > ---
-> - Submissions based on the following patches:
-> https://patchwork.kernel.org/project/linux-pci/patch/20250607161405.808585-1-18255117159@163.com/
+>   drivers/pci/of.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Recently, I checked the code and found that there are still some areas that can be further optimized.
-> The above series of patches has been around for a long time, so I'm sending this one out for review
-> as a separate patch.
-> ---
->   drivers/pci/quirks.c | 17 ++++++++---------
->   1 file changed, 8 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index d7f4ee634263..50d0f193e4a3 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -2742,10 +2742,10 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x9601, quirk_amd_780_apc_msi);
->    */
->   static int msi_ht_cap_enabled(struct pci_dev *dev)
->   {
-> -	int pos, ttl = PCI_FIND_CAP_TTL;
-> +	int pos;
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index ab7a8252bf41..379d90913937 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -890,7 +890,7 @@ int of_pci_get_max_link_speed(struct device_node *node)
+>   	u32 max_link_speed;
 >   
->   	pos = pci_find_ht_capability(dev, HT_CAPTYPE_MSI_MAPPING);
-> -	while (pos && ttl--) {
-> +	while (pos) {
->   		u8 flags;
+>   	if (of_property_read_u32(node, "max-link-speed", &max_link_speed) ||
+> -	    max_link_speed == 0 || max_link_speed > 4)
+> +	    max_link_speed == 0 || max_link_speed > 6)
+>   		return -EINVAL;
 >   
->   		if (pci_read_config_byte(dev, pos + HT_MSI_FLAGS,
-> @@ -2796,10 +2796,10 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_DEVICE_ID_NVIDIA_CK804_PCIE,
->   /* Force enable MSI mapping capability on HT bridges */
->   static void ht_enable_msi_mapping(struct pci_dev *dev)
->   {
-> -	int pos, ttl = PCI_FIND_CAP_TTL;
-> +	int pos;
->   
->   	pos = pci_find_ht_capability(dev, HT_CAPTYPE_MSI_MAPPING);
-> -	while (pos && ttl--) {
-> +	while (pos) {
->   		u8 flags;
->   
->   		if (pci_read_config_byte(dev, pos + HT_MSI_FLAGS,
-> @@ -2935,12 +2935,11 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA,
->   
->   static int ht_check_msi_mapping(struct pci_dev *dev)
->   {
-> -	int pos, ttl = PCI_FIND_CAP_TTL;
-> -	int found = 0;
-> +	int pos, found = 0;
->   
->   	/* Check if there is HT MSI cap or enabled on this device */
->   	pos = pci_find_ht_capability(dev, HT_CAPTYPE_MSI_MAPPING);
-> -	while (pos && ttl--) {
-> +	while (pos) {
->   		u8 flags;
->   
->   		if (found < 1)
-> @@ -3060,10 +3059,10 @@ static void nv_ht_enable_msi_mapping(struct pci_dev *dev)
->   
->   static void ht_disable_msi_mapping(struct pci_dev *dev)
->   {
-> -	int pos, ttl = PCI_FIND_CAP_TTL;
-> +	int pos;
->   
->   	pos = pci_find_ht_capability(dev, HT_CAPTYPE_MSI_MAPPING);
-> -	while (pos && ttl--) {
-> +	while (pos) {
->   		u8 flags;
->   
->   		if (pci_read_config_byte(dev, pos + HT_MSI_FLAGS,
-> 
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+>   	return max_link_speed;
 
 
