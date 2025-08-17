@@ -1,140 +1,136 @@
-Return-Path: <linux-pci+bounces-34137-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34138-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F7CEB29272
-	for <lists+linux-pci@lfdr.de>; Sun, 17 Aug 2025 11:38:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A490B29288
+	for <lists+linux-pci@lfdr.de>; Sun, 17 Aug 2025 11:54:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3ADF1B2109A
-	for <lists+linux-pci@lfdr.de>; Sun, 17 Aug 2025 09:38:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4C8697A3824
+	for <lists+linux-pci@lfdr.de>; Sun, 17 Aug 2025 09:52:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22B341B424F;
-	Sun, 17 Aug 2025 09:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDJk5aZ7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 792E9221FC4;
+	Sun, 17 Aug 2025 09:54:03 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992D71D6BB;
-	Sun, 17 Aug 2025 09:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EBA1B0F33;
+	Sun, 17 Aug 2025 09:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755423515; cv=none; b=MS82D4PSnb9uDmfjXtJVxSpDRpisWHa6n2EIfWVrEK8keYDO/N6w7rNubeGiUrAErz9U/4JzQWMn27B39sZ5SXsiVRriC3EQVqOAg6LnMBE91wDgEYyo5vwyGTYbZhtgwFDcyxSFTPBF3aV0aL+Jkmo/kUdPvbo+5HC7wnRPD78=
+	t=1755424443; cv=none; b=dZXeyg2gIemgaa4N/pfOeJgZeGIACQxWSZpq9yIEbs7+51rqBiD9sNP2sjikdFgsjbAkaZTX/Z2D3srh6JDwiiDci17Gi3AzJU4KfNAHS3Px1KBrj4DVuJmZlGzeN3Mn3RfkSCQVqQQbrAwG9oW0s+jsCy8jTSdBdeDNtmmmzAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755423515; c=relaxed/simple;
-	bh=c8YRrckfoSfijJ8+9Yeqa5yV4ks/1VCihLQAEoIt5LM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=aW06BeHyPzutQrv7+SuAF9gpmAqwSZACcamvXOZAYYXWr7b3P/+7vGilkWeJ2g8B9RVPWYDEGcQ89/tbpPqlnROvmwoNXJ1D1kUNQb4mXA+FY/riM0HFZwFeXkXT6Cf9nF+XT5l5wJ0/WaEhKoWdr1saAvyRSc3sfFBXW4Ix0GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FDJk5aZ7; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-24456f3f669so31185495ad.1;
-        Sun, 17 Aug 2025 02:38:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755423513; x=1756028313; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=V+glvcUxBNLETyj4EbzaF6Mcl14MmSj24IXXGqr4BWU=;
-        b=FDJk5aZ7IDQGla/M8atFp6I2vlUA25wSdhpURbZp0L39pDptwxJAqMqFMQ7PF74RfV
-         txBTx5SPrP/yoslhdlGQRhk1xG9ALUOXkisNlXaHqg5CaY/+Oac0ifcEvuPbV01PwhKc
-         fFZtjguOcXRr+tWo8141HDd945eEMKMML3cfYr9v/BlfKASTlaOefjRYn4FBvDMlLUgT
-         g8Ldsk5AoXe0uuT7uzDGuACieCxToFMiIUw/Y15NkwqTXYVx2IYCAfDtoFC5xjDKjxGK
-         ryegQ/o2Hz2T33hS2d0gwhdV4IpRCFALNI0m0LlE+t5jnL9waJTgZHxrlIgHl16R/vJB
-         ofyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755423513; x=1756028313;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V+glvcUxBNLETyj4EbzaF6Mcl14MmSj24IXXGqr4BWU=;
-        b=gyouzOTv0w5uiDLU9QrjdgaSi84h8Cguf7kxnBWVrvO9EGclDEb8gRuKCNEu1W+9jV
-         NTDPo86CAoOcpq2yru2dMVAb5nAnI3iOpvSrNXZaP007/7u/kFj7RGTDuNmOmAOvA52f
-         yp48DnjE6NyDkbh1ZRkPl4zOpPB6LIZwmu+rEuTh03xU4yz1Nb9hrNMc+6Hm7fz0f6oM
-         3erZ1ennEwyaP9qWNlNVdgUlxWX9kUi1KHtCmpWNuMAqH38dN/Tu/T0DgDHqd+2GT9HE
-         rNUavvj2dxlF0DAHq5J2IWwXLIrKwJcu1vFo3RP8u1//U8m/KW6Jdl0X/l9PyOMA2FGr
-         tGjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUb1nqblZsT2oYBOpwa8L+nJhS3jOUmrxNfslkZk3VpcfyeLLcwfuakEtzAWPb2LYFUchz/jfqA@vger.kernel.org, AJvYcCVoc40OAZFBxXqoC4TKM1vvAo0SF72V4LGcECkgDgYu1h+GbYelMHDeTjfAHWa+vdtZiGACWAJdBWVylKp95b8=@vger.kernel.org, AJvYcCXkPWLBN0RweAs1hCW1RbiNkPEw/U+ALCFBXBKlNOvCXXIDNwL2dVpz5AfEz5FoL2cBLNCNCcgImYj4@vger.kernel.org, AJvYcCXs5tW9MxIb60DdceIphpFwtn9WrMLbC2T68VZL5lyGhtp1zL8NKOsPtfwTVCgbZHJONeTmSscXeEEL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmbfdiP9KxQZodKPnfo/dBaDrzKz9HMl2XoKUO3RAb18dNaMD0
-	uaGhctPXTCW3htiwfWpkW4NUMl+7swauSMjsNHhXdL4ns9xZjZ/8DOTLcsfOVGrbnH8=
-X-Gm-Gg: ASbGncv7q/aBqq98QQQGozmt9Ffi72XeasehPZODvUl7vziOqxL1+F6Op/dxJz/vWJC
-	owZX8Frm9Mc7VyPsJhIT86V11xu5p3YEeB6Q53R4xUe1geNt2HxG1lizuW6pu1WoU4sAMmLjcmU
-	uCQeGBn0dtW6GJhHq+JlwzgfG1zSzwesXQFBmYdhsx6uCkq7jJmgKKIN/rK4UNjTv39hdx++vHZ
-	Cp+vngYJekk3tqcklfpgDLRUmheYnJZAWwR8m9H7Tt8SEbDT/afU80zxzJYl/jOK11v/tRENDb0
-	PIJPFJhnu9Hr6P77Edg9dVCScGWKsKFZuZYf+AVUs0ZbxuWKAoKtxNk1l5hl1DrTYhPNRYiOCMC
-	x0ZoddmeV079vWbu4UyblpAi6yLVUpp/sPw1lmOrZXteANewAZylPBIL4
-X-Google-Smtp-Source: AGHT+IHkGdbvw5mBqyT/2JEfiXA/xt9ZKA48sqXHZkrOlalPiagbZZCBEljY1VqxFuyOzhpXRp8Wcw==
-X-Received: by 2002:a17:902:da82:b0:242:b138:8119 with SMTP id d9443c01a7336-2445988787emr180301885ad.26.1755423512654;
-        Sun, 17 Aug 2025 02:38:32 -0700 (PDT)
-Received: from [192.168.0.218] ([116.206.223.216])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446ca9d02csm51916845ad.7.2025.08.17.02.38.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 Aug 2025 02:38:32 -0700 (PDT)
-Message-ID: <db9749a0-9c6a-4781-b5fd-82eb129a9c36@gmail.com>
-Date: Sun, 17 Aug 2025 15:08:27 +0530
+	s=arc-20240116; t=1755424443; c=relaxed/simple;
+	bh=eRfsKNbBkxnUUsP07pC1a2kBKCNH/1l/vzUSBUvQwwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gmJ7H7qge9hFbYI2/YeVQC1vULGUJcsAc1wNFjAPZ7RjoBh4Fdee21gUazvVZczPv+jYM/MhuBqX+klWROyKmGDjerOtl2ytEOCBFUzD3TXH8fjQ92xO2SYBxI3B0hfuJPsu8WNLNqKa7jBPaDzTiI6ptSZJxjvzfQvD2Vvap54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 5889A2C000BF;
+	Sun, 17 Aug 2025 11:45:17 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 3BF804A8C7; Sun, 17 Aug 2025 11:45:17 +0200 (CEST)
+Date: Sun, 17 Aug 2025 11:45:17 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Tomita Moeko <tomitamoeko@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] x86/pci: Check signature before assigning shadow
+ ROM
+Message-ID: <aKGkrSWUA8BTYniZ@wunner.de>
+References: <20250815162041.14826-1-tomitamoeko@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH TEST] ath10k: Testing Mani's ASPM patch (QCA9377, v6.16-rc1)
-From: Bandhan Pramanik <bandhanpramanik06.foss@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
- Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org,
- linux-acpi@vger.kernel.org, ath10k@lists.infradead.org,
- linux-wireless@vger.kernel.org, stable@vger.kernel.org
-References: <FB546B0D-2209-4FA0-9DC9-A75C0BC9FA4F@gmail.com>
- <20250711163645.GA2294895@bhelgaas>
- <CAEmM+QiSZBoJV2n6944tYU7fcrzKRTUgsKRdqwDEkKkZiPVCMw@mail.gmail.com>
- <04489490-aca2-4e67-8eb2-e95f223ead3c@gmail.com>
-Content-Language: en-US
-In-Reply-To: <04489490-aca2-4e67-8eb2-e95f223ead3c@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250815162041.14826-1-tomitamoeko@gmail.com>
 
-Hello everyone,
+On Sat, Aug 16, 2025 at 12:20:41AM +0800, Tomita Moeko wrote:
+> Modern platforms without VBIOS or UEFI CSM support do not contain
+> VGA ROM at 0xC0000, this is observed on Intel Ice Lake and later
+> systems. Check whether the VGA ROM region is a valid PCI option ROM
+> with 0xAA55 signature before assigning the shadow ROM to device.
 
-I was actually trying to build a kernel for someone else using build 
-automation scripts. They still didn't compile. (Here's the relevant 
-thread I'm referring to: 
-https://lore.kernel.org/ath10k/176B76BC-6801-4C3F-A774-9611B43ED4AF@gmail.com/T/#t) 
+Which spec is the 0xAA55 magic number coming from?
 
-Regardless, I tested the patches by Mani 
-(https://lore.kernel.org/r/20250716-ath-aspm-fix-v1-0-dd3e62c1b692@oss.qualcomm.com).
+Could you add a spec reference for it in a code comment and the
+commit message?
 
-Here are the logs:
+I note that arch/x86/kernel/probe_roms.c contains ...
 
-Without pcie_aspm=off (did not work): 
-https://gist.github.com/BandhanPramanik/ddb0cb23eca03ca2ea43a1d832a16180/raw/84edf89740919e3cba2ac33e567110b14e2d3627/patch-dmesg
+  #define ROMSIGNATURE 0xaa55
 
-With pcie_aspm=off (worked, no issues observed): 
-https://gist.github.com/BandhanPramanik/ddb0cb23eca03ca2ea43a1d832a16180/raw/84edf89740919e3cba2ac33e567110b14e2d3627/patch-dmesg-pcie_aspm_off
+... and a function romsignature() to check the signature.
+I'm wondering why that existing check isn't sufficient?
+Why is it necessary to check again elsewhere?
 
-I'm not fully sure what the logs imply, but thanks, it did work even 
-after playing YouTube videos for two hours (might not even work in the 
-future, cannot be certain). Earlier, my laptop had its Wi-Fi turning off 
-within minutes because of IRQ #16 being flooded, in every kernel I 
-tested so far. Now, it does work.
+> +++ b/arch/x86/pci/fixup.c
+> @@ -317,6 +317,7 @@ static void pci_fixup_video(struct pci_dev *pdev)
+>  	struct pci_bus *bus;
+>  	u16 config;
+>  	struct resource *res;
+> +	void __iomem *rom;
+>  
+>  	/* Is VGA routed to us? */
+>  	bus = pdev->bus;
+> @@ -338,9 +339,12 @@ static void pci_fixup_video(struct pci_dev *pdev)
+>  		}
+>  		bus = bus->parent;
+>  	}
+> -	if (!vga_default_device() || pdev == vga_default_device()) {
+> +
+> +	rom = ioremap(0xC0000, 0x20000);
 
-There can be seen certain stuff in the second log, where it took some 
-time to connect to Wi-Fi, but I think it is mostly fine.
+There's a code comment preceding pci_fixup_video() which says that
+"BIOS [is] copied to 0xC0000 in system RAM".  So this isn't MMIO,
+it's system memory and you can use memremap() instead if ioremap().
 
-Thanks to those who have prepared the patches and those who did bear 
-with me, but there's one request I still need to make.
+Since you're only interested in the first two bytes, you don't need
+to map the whole 0x20000 bytes.
 
-For anyone who has built patched kernels for Ubuntu and exported in DEB 
-files, I would appreciate any guidance or pointers on how to do the 
-same, as my efforts to use "make deb-pkg" have been futile: 
-https://github.com/BandhanPramanik/ath10k-patched-kernel-ppa/actions/runs/16975573959/job/48123563881
+Instead of amending the if-condition ...
 
+> +	if (rom && (!vga_default_device() || pdev == vga_default_device())) {
+>  		pci_read_config_word(pdev, PCI_COMMAND, &config);
+> -		if (config & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
+> +		if ((config & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) &&
+> +		    (readw(rom) == 0xAA55)) {
+>  			res = &pdev->resource[PCI_ROM_RESOURCE];
 
-Bandhan Pramanik
-বন্ধন প্রামাণিক
+... you could just return on failure to find a valid signature, i.e.:
 
++	rom = memremap(0xC0000, sizeof(sig), MEMREMAP_WB);
++	if (!rom)
++		return;
++
++	memcpy(&sig, rom, sizeof(sig));
++	memunmap(rom);
++	if (sig != 0xAA55)
++		return;
+
+May want to emit an error on failure to memremap().
+
+Amending the if-condition makes it messier to find an offending commit
+with "git blame" (more iterations needed).  And returning early reduces
+indentation levels per section 1 of Documentation/process/coding-style.rst.
+
+Thanks,
+
+Lukas
 
