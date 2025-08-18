@@ -1,190 +1,216 @@
-Return-Path: <linux-pci+bounces-34228-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34229-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8A03B2B48D
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 01:18:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 325D8B2B4FB
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 01:44:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 553284E6544
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 23:18:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 65F08188E4BA
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 23:44:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 956FB1A3166;
-	Mon, 18 Aug 2025 23:18:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E397C27FB21;
+	Mon, 18 Aug 2025 23:42:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JBT5oOXw"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="F8P+w2gU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2084.outbound.protection.outlook.com [40.107.243.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BC21A238F
-	for <linux-pci@vger.kernel.org>; Mon, 18 Aug 2025 23:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755559085; cv=none; b=q5OzEH3cYXcvEYlVJ7c0sF6ltmtYiFJVMD3ova9BUsvv3P6aWcRITeWhGOmmZ7c2+kD3YvxiN9iGL1PvVl+/gAkwIuyjf1DmHxsX4ptoY15neW/d+2raLoKpp8aoOmlPfeiK0fcpeClwLFwZi+PWir3Pk0iLkVn93YaFC5UyL5o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755559085; c=relaxed/simple;
-	bh=MGOEOcxzrBqz3r/IMrJzjzXdp0k9ipI6eK6vqi+FzqQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OA7neZf7mhzzFBlUzHFP1onkgbw0J3lttu7mwZ0E0QSkisOIZ3gvgi0UfJcTuPUSRglp3LRDVUazczwF5gIILzhNIR3cXtfHlou8Ah54Lo23ZYu620IE819RKF6DERN4BLFLjj7JW5digHC13yzxsnELDx++XetUEzvpsk3I/qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JBT5oOXw; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-61bd4e24ac7so1513062eaf.2
-        for <linux-pci@vger.kernel.org>; Mon, 18 Aug 2025 16:18:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755559083; x=1756163883; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1b+2mp/yigIIHVfdgVDB2QpdrFZcohdIV7tToHX2gNY=;
-        b=JBT5oOXwQLhh4+hg3XlGSLJCPWYvTClZMxbGWoWtrBX6xSZsTl7xwgT9xVLHTCE3JP
-         Juj+I4HVav8j2V4YKdExHJn1zKhT3YUnhblbkkD6LtZjNbz3xud21eLVJrFvPIsx8Mm8
-         qPnEcyCyTIWZPjvTvszpwf7I03794utV3cmZbMrWeVp3nJmUMvFzi5rFqxkON9BK3nxY
-         ETD5IhUPgtbl39jOJRhWN+sKLyG/vhZEkv1Z51H9/VCp4n1sM96XvEyIixst2Ud1WUi3
-         FKEJnsbvF1ABcbEdl+xe7hnV05/PqKYNXH1FkSbNCYNgfTfimueNQIcAvafh2e4tf/Wg
-         MBug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755559083; x=1756163883;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1b+2mp/yigIIHVfdgVDB2QpdrFZcohdIV7tToHX2gNY=;
-        b=b8UbvGfVkMcYYt+mwQCSOORzw4vz+Wmlblh6nFZmtHVPxPRocJrQBIRabIbhRdyBFz
-         P8zLhU1dnLry1ZoVOEV9zwEtYA0to08sgJYWgjRQaqpIwjOoVkt82ARhn83a/2x9oobG
-         vI+sde7kA7yHJj9+YjxaMjnxCDQ+SW67WCRhGvA8G1qDij3C36iLRcIoUi3v8UGjt79Q
-         4OCU7E4RWlwLi/S54Gb4FW1uW6RBs166S6bNeNwhoCuprFyznxmFD3CZPTOgzsU+LjV3
-         6+wAaqtKfddUsXrOHWUTFaPN6b+/mslSP5oLuaNLqm2nZpYZJmrGFQ3ZS//f5UFuWFGY
-         dlQA==
-X-Forwarded-Encrypted: i=1; AJvYcCX5cc7XzBuSMhmQTBjEKk9lbBlfwjzB9cLps6YtxTm+RUiMq6USFiDnteeSIML81tfTobU84wyumwo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywk4TpMXVcs6gUvpYdTuxXbN0qCO1H+HD+6+t5UxZUnlZ4F9KVc
-	rXU9hpsNUQlJTHc06g3XjoyDIm8D91NJgBCXTLFQy9LHdOytW56e5M9YVo4e7XOK1O6wTr52pzN
-	72vMkarRmhb0WhMz+AD0NrRklOwDwZOxUVA==
-X-Gm-Gg: ASbGncs3gx6pQp4yqJw6UCojmeyRiFgvMVykWGaNXITEOeLePx3NRrfY5CmBV1J2+rS
-	PfKuzzMAtc8MXjmLTH10W86Iw6NhyGYN+i0rv2xW+YIF9PpFL/ZsR7bd9aZHFJs8JhlXnPyZyDU
-	XRlt1buRR3bmiS9tkM85KFZdjMZb4AodxNijcLhdg+pFhFmHCRhvjv/LjafMkbb4/bcxcJYIc6h
-	ppsXPvQ79W5IaKm
-X-Google-Smtp-Source: AGHT+IGRJXLntANEfq69fBWLU4IJo5Sovp0hsSpwPWXOm4Y8/hfOeFbowvnUWBRIYgeHJZFRZ4J33wlV1SVvt6TELAY=
-X-Received: by 2002:a05:6808:3c44:b0:435:f7a2:8ff with SMTP id
- 5614622812f47-436cdc938f8mr381698b6e.12.1755559082607; Mon, 18 Aug 2025
- 16:18:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C26C278E7C;
+	Mon, 18 Aug 2025 23:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755560568; cv=fail; b=CooDSkAlnbg/a/kxA8EpEIgIBXjHV/piIiMcIZ6TAYeGeKdRKwry+RvEb/yfLuB+ctc0/YgAd5k2Zi17avyPpxH0jfYyha6DxikXp9k3nl394g0HqY1fwxEkAb+ttwcWlaYuz8nHz3VPvM6ea63kIFr4db1KV8teztS/BfLGhKk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755560568; c=relaxed/simple;
+	bh=C27v+rdtf35BbDOJx8XQ6EeIaNjH+WwCBl7c1GL6CbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=qYMegrbtJSpeh+9RgZ8R8iqJrwIbP6tXvZCh82OfgXQZAwXeyRNrtEJ8DdifLiHz+EZXMtUwbc1/GwMXeXXjN3lioWFyjxmZyIHS3fLMHW83DN4rO2D8KxnLsFGCNsIXqPB11ep5fbysbcXfOSIact6KUpiCPLIhiC9UPK/LHT8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=F8P+w2gU; arc=fail smtp.client-ip=40.107.243.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mVvdfSRqFMVOMosKPIDBHUBK8AZw1ovCP1ke23E6qLqniYXYjEpB8UMu6l81qXHW+L+qRM6TBeO4l9vbfxtuu4MTv3dsrkeqSK61fQOGJs8ifSL+9YMvjB8olfAszDsJaLL2m0sCUrnp1bQyiojvni96GPXg5M+Uuehv4W8kq7rBPyICyW0yQ0H4MgJtv8PHRoFejJhOKEJPqwOTYp82+keXKrCYRapiVVQJ/zceqfAge5Oo0kBgn0hb+f8lMFZyjNyPfDWjZAf3ZaSEkegjvlSO4Xrn8yZZ7GYknpKx4KreIuvolO3RJZIYy+TASVuAxmh4ensY1Lg07sEhcqd2Bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5je7JVJvPAueLhLaeeTVFXe1YUqzaamlGOAHEFv38Nw=;
+ b=lIurzqqKUyk4pnhoziJumdb7NPMXqVQyO6BUuIdgJFYPOgSQ+KxtxXSuAzeGmjYUeRB777ZKonbeI4uq4Sxx/VL61qDImLbgS58pgKP0p4bLI6HUuJ0dsZQ5MMfvDY2xtvsqY/W6p75ckvu+K13dV9nBM3X9LUttJRKuM+DPJz7C4tJFfHLXbznPz2vEsZF3XoSOk9SUNXuPMvheJcvm4s8Qw/6gukXwAnHqhDmt/Fm8uBfvnM1jUNVUp4YH5LB0vcu9jqz+VhIQbtcNwFwutDCrkrL8mCUyvFHUXMxxYzhJNhv2LGjNHO6fkOfBtKiBaonqqi+5kFrK6v2cjfmodg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5je7JVJvPAueLhLaeeTVFXe1YUqzaamlGOAHEFv38Nw=;
+ b=F8P+w2gUF68hU0B6RVPwLqsFQLYpQ8SQUyCORzdZ9fWhi1SxFohM1n2AY1feD6q121aXZl7R/K8UAhmwnKfcBs3sXAQ6fcmehD0VEnUksTXJuR10s1UGx0Gwb/5zi/hs7rzGWqiCbLGrd9QG/qAGX8rjS8IHrbETBmH9SwOT+QUtCA4czoa7NWSlbS1D5cm9o8wpyrgzDH2/ja6aMX8g891aiCOg3G0T6XFfSeSojgvKRcu2rer+PAzLtAHqyRopS4CL2Dm7/v1DSk4BV2xO04ZB0rlaz/Mz2vOFPIiRWGLGnGjcGbxc88UhjgGG8kMi7XuD86LyAfgiH4abKYx4kA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.24; Mon, 18 Aug
+ 2025 23:42:43 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.9031.023; Mon, 18 Aug 2025
+ 23:42:43 +0000
+Date: Mon, 18 Aug 2025 20:42:41 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: robin.murphy@arm.com, joro@8bytes.org, bhelgaas@google.com,
+	will@kernel.org, robin.clark@oss.qualcomm.com, yong.wu@mediatek.com,
+	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	rafael@kernel.org, lenb@kernel.org, kevin.tian@intel.com,
+	yi.l.liu@intel.com, baolu.lu@linux.intel.com,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+	patches@lists.linux.dev, pjaroszynski@nvidia.com, vsethi@nvidia.com,
+	helgaas@kernel.org, etzhao1900@gmail.com
+Subject: Re: [PATCH v3 3/5] iommu: Add iommu_get_domain_for_dev_locked()
+ helper
+Message-ID: <20250818234241.GF802098@nvidia.com>
+References: <cover.1754952762.git.nicolinc@nvidia.com>
+ <a69557026b7e2353bae67104bbe6a88f0682305e.1754952762.git.nicolinc@nvidia.com>
+ <20250818143949.GO802098@nvidia.com>
+ <aKNhIr08fK+xIYcg@Asurada-Nvidia>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aKNhIr08fK+xIYcg@Asurada-Nvidia>
+X-ClientProxiedBy: SA0PR11CA0170.namprd11.prod.outlook.com
+ (2603:10b6:806:1bb::25) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1755008151.git.lukas@wunner.de> <28fd805043bb57af390168d05abb30898cf4fc58.1755008151.git.lukas@wunner.de>
- <7c545fff40629b612267501c0c74bc40c3df29e2.camel@linux.ibm.com>
-In-Reply-To: <7c545fff40629b612267501c0c74bc40c3df29e2.camel@linux.ibm.com>
-Reply-To: linasvepstas@gmail.com
-From: Linas Vepstas <linasvepstas@gmail.com>
-Date: Mon, 18 Aug 2025 18:17:49 -0500
-X-Gm-Features: Ac12FXwvCNef1lGTrHQMtgrxrH734r9DdIijklrZKJzvHuzfvTB-RsjbXGpXUJU
-Message-ID: <CAHrUA37+0UBYDNzwsU1p8xYCpRypt_e_=ASC2e5QxT1z+D=YJQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] PCI/AER: Allow drivers to opt in to Bus Reset on
- Non-Fatal Errors
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Riana Tauro <riana.tauro@intel.com>, 
-	Aravind Iddamsetty <aravind.iddamsetty@linux.intel.com>, 
-	"Sean C. Dardis" <sean.c.dardis@intel.com>, Terry Bowman <terry.bowman@amd.com>, 
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver OHalloran <oohall@gmail.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, linuxppc-dev@lists.ozlabs.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM4PR12MB6085:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7423265a-7a59-4c6f-a6ad-08dddeb0ed71
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?WBF6ZWstJIcwMt4kZ0k11PVnDHXilKye5y3igKggikGxuIASqHvhwA6nbnWv?=
+ =?us-ascii?Q?v0BpW/V+JdqoTWR2wQSUh6VkRVtWTGD/mh6A4ucmk2QclG05L0+trsykciEy?=
+ =?us-ascii?Q?rNMAH39VJ8+kHnJ6ac4iwx0765gi221B3BCeZQroWx5Jc8mmjXOQjKT9TvTw?=
+ =?us-ascii?Q?+jXdWz4elztwBzFAjSFY2hCbB8PHQoHk/Uz+7i2ws95XUlpjUslqkf6KzZvN?=
+ =?us-ascii?Q?L5X3s9vuSPNlrxv5fpiBBbi5+BfAfeZ2v/EvSmBW3B9nyv3CBHaB+7qqiWgY?=
+ =?us-ascii?Q?9s8DFEWkFooECXpL5MvEiaWGg20+R2FSQ1eidEO+zTBjov7p3W9sn1JDh1lg?=
+ =?us-ascii?Q?Rbd+ER0sm+oeXCv/6E4dsslQUzZVmuNUpcYOi7uXf0DP4U19l/qAJlWPw2XV?=
+ =?us-ascii?Q?N8SUuSqQzUdGZxjwkwhB/OiJq8C/7uWYgog5j0SjMJT91jwyWRzMYJf7y2CD?=
+ =?us-ascii?Q?U92mXE5nQIzSP5uZkMtYuu5vxr540phoWEdQWRuIYQKZPTFXcCYOEJkIVllc?=
+ =?us-ascii?Q?91Q093KkwdExcGvdPgqques7KPbOXrdZaM1H2hHkN/N8CahQ6nzKCdSl1Sx9?=
+ =?us-ascii?Q?Hlwo7qzu/dfK27efB+5oJEs6VBX+XoG6LqKkucZ3T4CMwIzJmLgFrcslDZBt?=
+ =?us-ascii?Q?BddIXHa5ZNh2e5TqVQO0tlsTNptw83/oSPwS/7kxNJuNHEOZO47goZd4Guy3?=
+ =?us-ascii?Q?N7BXYMV4aPgGCc/3h6MB+nqzvkJAsYn7vpUNLuae3ca43LdJlGHfO1kRN+yd?=
+ =?us-ascii?Q?fv42H3dtVI97zKXSUyxJ8gc2MtWztM0aT8GE0IbOeAQB1YuGQdb4Tv03FXrc?=
+ =?us-ascii?Q?BuwzsAdJGJ14udcdvoN9wWDFDYWYtdymqAZTr0u05oZq4e05rwJ1RcMz1zn1?=
+ =?us-ascii?Q?i3lDK/hNO+dCYFsdxqcVd2thMJABmY2amwyy8jxMWRaQ2g9XHpatVMzf6Wnp?=
+ =?us-ascii?Q?D0Nyy3or15Tp1nkGmTu6zq9WPBGSufpUKfjc7+6yiefW3RLW4IvuxtpBoFBr?=
+ =?us-ascii?Q?e6CiwQ9bjHl4plJHbbQglwKusgzqhTi+ts1sREHr2NfS16qkrLnqxmU7p2Yi?=
+ =?us-ascii?Q?lplmaHYTQ7z2zH4e3U+/aOHwkoNXhYgpbU86xpPNXwMHtmPn7uL1ubnrQ18k?=
+ =?us-ascii?Q?b5SSWe+m/UdjVDwUG/BDMqINZ76nIpL7MTiuOgP101e1cp+ir951iiLdJ2Uk?=
+ =?us-ascii?Q?bFLMekqY6bAhQj6VnYShIz89bHopv5kfxi7Y9rYwL/i8HOWAjGk+Eob4g1/c?=
+ =?us-ascii?Q?mOAzny/UmfOIA1tmYZfno6bafZldECgIvcX2h2G65aVELt7UNZpm635bHkx2?=
+ =?us-ascii?Q?sfqIlcuu1j7T5yJqSagiRG09j5xZ3UnIDKORm+z9HRyns/wKrPvY0JbICbNx?=
+ =?us-ascii?Q?+36/ughmj4Jr0f7JOD6LfF8AupYnS+fPVtCbroNhg1ahswdriTzrWhk917gI?=
+ =?us-ascii?Q?8vrPFFpGZTY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?AezlHu2bkpQnm3PkFYUwCt4EtuzMFL9vd6epv7asPoo9ZnEay1PdnZnR6j1W?=
+ =?us-ascii?Q?ii9Md4fSq9W3UC2cUarivZb1xp1rUsADO/rw0i6EGmO8HB+FAeWKyuX7XZQV?=
+ =?us-ascii?Q?tVVzkHemqXvYTuZJmCIkN11uVod5/8U6bgPT+rbBAXKYetIsciDbsRFyCCW8?=
+ =?us-ascii?Q?amRpdzFqN8Alp6UT1C1xgCrpYYeAp+UaunB2HLGKXgFrVb5qzTJttBHYTUqm?=
+ =?us-ascii?Q?EGd5ECBwZeRTFIhItsrRhIHUMs72XBF6FdPlztE9HxSMVEuB500nIE/IE0it?=
+ =?us-ascii?Q?iDsccMwKwNebQHi+PaEVAX27gm9zR2Asd1ZoXm40hTRh0kf8Bgf9IogtQz5n?=
+ =?us-ascii?Q?bCSiScR6Zg4KyHjYEJXrdOrH/0SpPW+59KS/9y4JN/OK79qdmnyfNtViZYZj?=
+ =?us-ascii?Q?TJgBQZk3AXA+HIVAKu+NAjkTDA5CkR3bkgSQb5YMFb8u2ukytcyTLwQdocGy?=
+ =?us-ascii?Q?b7UpxySjKjw5JXasymiL/RWTR/+/aEMvDE6tHjB4DzFsV/6RVvgEOGIwsPT7?=
+ =?us-ascii?Q?IwH5xEF5aLzl6jOn7PviE2GbUo3Z3CsEpP/XnGHrXzRkGe2jXuBXnI0WkfTb?=
+ =?us-ascii?Q?3VdSOyBseAKqL2LdpiaGScHJGoP5CnVudvRqr95DOcLAECdTKZ4zhfDbpDW5?=
+ =?us-ascii?Q?/BLHZ6v1TFgSI2j5FKrZA6y4HO8YRDCevdo09149pTXNpdpzfli/ulCQaQbq?=
+ =?us-ascii?Q?hLz5K9dUcrWJKmpEGi2vbh7vIj8b3Rd+Wz4RLR2x7lr3sSwsFN4DpyzWUDpt?=
+ =?us-ascii?Q?Ys8zsq7YnY0NlUSAqJRfeZvvH9EqLog0tvBahWYhEGzc6ZqLphaH1EAKa4Dx?=
+ =?us-ascii?Q?L6fvuK6RWUplaq7X8EvFBHZ4z8apZNQ2YwlVzVskwua4ulF3X5sZ7cs3Fs7i?=
+ =?us-ascii?Q?kmYKXqm+p63OAT61m9032b+g4ryEz6Y72erc3Q8rR/0MoxV9AFY0TkW3uCtg?=
+ =?us-ascii?Q?9knEoTTNlCIVzaueMgIKCzeOcN6b+xcc52umtGSzpaeUp6UkZ+RtlUF55gyo?=
+ =?us-ascii?Q?pPPXdVo0cPietFE1KiNAlYsRgwl+ieVXV6F5bEgZF67wlTSrqLlM/hWu3lRK?=
+ =?us-ascii?Q?12+y34TId7sDBzb8zMheqdwpisi0YakpeyxCwgkYqBQRpSrznIRxH8kV/0DW?=
+ =?us-ascii?Q?4aO0F4EQ0Vc5kEnmcp4dAN1HMZCGUO4/thsTjvzW0bIzR+jp+RpQ6qwTfkd1?=
+ =?us-ascii?Q?a6+6VcXIA48zj/w0KldaarYPrgPzYUUMwAAzTex2JVkRV31uvbK0ML0fwYGq?=
+ =?us-ascii?Q?b+bdPV9wCIZV8Nvkb97uh/c5O/AHGfNhPAWRCLc55xKmlZIAeibDiH0w2ZqH?=
+ =?us-ascii?Q?6zZmOcq7gn2D6SHZ8spfGw5wKhsrGGyWVlQDblYfrs1/FhoYAZOB9dKKj0HL?=
+ =?us-ascii?Q?Ou+0vP2uQNEDC1b/AOpedR8gi/6KHXvM2QnjtqqMju+sYB2hG2ikJttUP5N0?=
+ =?us-ascii?Q?rDudXklf7QXcynbQtskuU6u00RP7rqwnqKXgfhfpfbRKICFpKASRknDuM2Vr?=
+ =?us-ascii?Q?s+tp590FA7bYI42gdf/HaJwFkKkD4o78mTSlhQcNvVOIi5BskK3txD0/Swia?=
+ =?us-ascii?Q?QgyjS+EyNBUNXXKs5bOw7imUCrxfR/RhYAf/gdIB?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7423265a-7a59-4c6f-a6ad-08dddeb0ed71
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2025 23:42:43.7291
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z33DAptqq0QHaCYNyOt+tgd2RqOYXNcprSdmI/hNIGUKuIRNteQtz0pvPiKCun/m
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6085
 
-On Thu, Aug 14, 2025 at 2:56=E2=80=AFAM Niklas Schnelle <schnelle@linux.ibm=
-.com> wrote:
->
-> On Wed, 2025-08-13 at 07:11 +0200, Lukas Wunner wrote:
-> > When Advanced Error Reporting was introduced in September 2006 by commi=
-t
-> > 6c2b374d7485 ("PCI-Express AER implemetation: AER core and aerdriver"),=
- it
-> > sought to adhere to the recovery flow and callbacks specified in
-> > Documentation/PCI/pci-error-recovery.rst.
-> >
-> --- snip ---
-> > Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> > ---
-> >  drivers/pci/pcie/err.c | 17 ++++++++++-------
-> >  1 file changed, 10 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> > index de6381c690f5..e795e5ae6b03 100644
-> > --- a/drivers/pci/pcie/err.c
-> > +++ b/drivers/pci/pcie/err.c
-> > @@ -217,15 +217,10 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev =
-*dev,
-> >       pci_walk_bridge(bridge, pci_pm_runtime_get_sync, NULL);
-> >
-> >       pci_dbg(bridge, "broadcast error_detected message\n");
-> > -     if (state =3D=3D pci_channel_io_frozen) {
-> > +     if (state =3D=3D pci_channel_io_frozen)
-> >               pci_walk_bridge(bridge, report_frozen_detected, &status);
-> > -             if (reset_subordinates(bridge) !=3D PCI_ERS_RESULT_RECOVE=
-RED) {
-> > -                     pci_warn(bridge, "subordinate device reset failed=
-\n");
-> > -                     goto failed;
-> > -             }
-> > -     } else {
-> > +     else
-> >               pci_walk_bridge(bridge, report_normal_detected, &status);
-> > -     }
-> >
-> >       if (status =3D=3D PCI_ERS_RESULT_CAN_RECOVER) {
-> >               status =3D PCI_ERS_RESULT_RECOVERED;
->
-> On s390 PCI errors leave the device with MMIO blocked until either the
-> error state is cleared or we reset via the firmware interface. With
-> this change and the pci_channel_io_frozen case AER would now do the
-> report_mmio_enabled() before the reset with nothing happening between
-> report_frozen_detected() and report_mmio_enabled() is MMIO enabled at
-> this point? I think this callback really only makes sense if you have
-> an equivalent to s390's clearing of the error state that enables MMIO
-> but doesn't otherwise reset. Similarly EEH has eeh_pci_enable(pe,
-> EEH_OPT_THAW_MMIO).
+On Mon, Aug 18, 2025 at 10:22:52AM -0700, Nicolin Chen wrote:
+> > Because this is a very common pattern in drivers.
+> > 
+> > Once that is done we can see what calls to iommu_get_domain_for_dev()
+> > are even left,
+> 
+> ... I found that in SMMUv3 driver, iommu_get_domain_for_dev() is
+> used to get the RID domain for an SVA domain:
+>     arm_smmu_set_pasid()
+>     arm_smmu_blocking_set_dev_pasid()
+> 
+> These two are already given an "old" (SVA) domain pointer, FWIW.
+> 
+> So, we may change to passing in the old domain as you suggested,
+> yet we still have to fix the iommu_get_domain_for_dev() in order
+> to reflect the RID domain correctly for the driver that calls it
+> (or even potentially) in some group->mutex locked context where
+> the RID domain might not be naturally passed in.
 
-The original intent was that if the channel locked up e.g. due to some
-uncorrectable ECC error or some transient errors due to electrical
-problems on the bus (bad reflection of some pulse off some poorly
-terminated connector) then such an error would almost surely be
-transient and very very unlikely to repeat.
+It could probably be avoided by keeping track of more information in
+the master, but also it is not so bad to use a _locked version here.
 
-Thus it would be OK to re-enable the MMIO (without otherwise resetting
-any channel controller state) and let the device driver examine the PCI
-config registers. If they all look good, don't contain any scrambled addrs
-or bitflags, then completely normal operations could be resumed without
-any further messing around, resetting, invalidating etc.
+> > arguably we should be trying to eliminate this badly
+> > locked thing...
+> 
+> Any suggestion?
 
-But first, the device driver needs to examine the config registers and
-that cannot be done unless MMIO is enabled.  If MMIO is enabled,
-and the PCI config regs appear to contain garbage, then that garbage
-can be logged in some error report or crash dump. After this
-got done, the device driver would invalidate any pending i/o (for example,
-half-finished blocks in some s390 orb, irb, schib, ioccw, whatever)
-make sure that assorted channel subsystems are actually halted,
-and then attempt  a reset of the bus, the bus controllers (390 channel
-or subchannel) and probably the device as well. If that reset succeeds,
-then the device driver can restart with a fresh, clean device and a working
-channel.  And maybe, if we're lucky, start handling any pending i/o request=
-s.
+Bit by bit.. I counted 58 by grep
 
-In practice, this worked great for network adapters. However, if the affect=
-ed
-device was some storage controller for e.g. some mounted filesystem then
-(way back when) it was hopeless, because the Linux block subsystem did
-not know how to deal with transient errors like this.  Trying to figure out=
- how
-to unscramble the block subsystem, and keep mounted filesystems shielded
-from this chaos was the one thing I couldn't figure out how to solve.  It s=
-eemed
-important.  But we've come a long way since then, so I dunno.
+Changing attach will get rid of alot of them
 
--- Linas
+Then there is stuff like this:
+
+        domain = iommu_get_domain_for_dev(emu->card->dev);
+        if (!domain || domain->type == IOMMU_DOMAIN_IDENTITY)
+                return;
+
+Which should be more like 
+   if (iommu_get_translation_mode(dev) == IDENTITY)
+
+With sensible internal locking
+
+So that is another bunch. Not sure what will be left after.
+
+Not saying to do all that here, just prefer we move toward that direction.
+
+Jason
 
