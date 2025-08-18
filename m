@@ -1,122 +1,127 @@
-Return-Path: <linux-pci+bounces-34206-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34207-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ED76B2AD4B
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 17:51:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98379B2ADBD
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 18:06:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 32F9018A632D
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 15:48:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 945C4567369
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 16:06:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92D6B30F524;
-	Mon, 18 Aug 2025 15:48:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC6FF322DDE;
+	Mon, 18 Aug 2025 16:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rIyUtouv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLhkO/I5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687EC319844;
-	Mon, 18 Aug 2025 15:48:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE3F322C93;
+	Mon, 18 Aug 2025 16:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755532115; cv=none; b=eLTobjut0ogU7hTjGvK58ydLKUOVl6fCNidqoEj+jcvkM7BF+5TcVdA0Bv09wC/Nw4KkTNjKcXfVRrF9+0qXZXn2rNrBpSmcNoXseZfyTfFOBFIYoQp/xxM4TKzcnuaK/08SifqvCRTJ7oHilHN5Fz+4RLWaf974287qXeFY7K8=
+	t=1755533208; cv=none; b=niozqpDCejFzGV7iFhgkshWe1SDqCJtSEot8Ca2vq3FkKE9PVt2uX+7bhJHc2sPiUyulhXGLeMQD5SP0vq4kce5X8vjCFRfNJwS09zBOdSkzYPr8864X26GvlIxeDVY7WjdtJfuXvQmOIthK5RTjbMBx4uR7RFzwtvXt+Rmm/rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755532115; c=relaxed/simple;
-	bh=SD+YffITOfZAo6Ivx+38x0kP3WuI7A8ZqDwATXhXXAk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=kNlO9/q3N2dCoqFdfARb8esUXn9mZvd59Enk3LoCDz71qtQN1Bj681K3AI9O38N3kx+UekcB6ne905V+c+qLVtD3ZYkRecgouY3qb4eqlW9z3YQAxxtRen3u+eo5EkxJ3iaZqsXTOBO15qG/ZH4K5d5ldP+g0juvvI2BNguuDO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rIyUtouv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA63DC4CEEB;
-	Mon, 18 Aug 2025 15:48:34 +0000 (UTC)
+	s=arc-20240116; t=1755533208; c=relaxed/simple;
+	bh=8v0DGj5nN7LXQV4s3kH37ZEpxqadMxuWtRA9XKaDv9Y=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=mKbauO4SyZTHlp4sCByrIhm+FUZV2ttSWKNFYiJ28SnvKii5fEYgetITU+5Svzh2KcBH51T958RPJNhJRNO3bopG8Z5Hv1j6VL5Wdmv0XkQdaHNScSYWDLi8VhQY7DcvNxrTrHFjumjPgPUH/tt1mAIEeQHbLc+QwGiYnlwmsqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLhkO/I5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06318C4CEEB;
+	Mon, 18 Aug 2025 16:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755532115;
-	bh=SD+YffITOfZAo6Ivx+38x0kP3WuI7A8ZqDwATXhXXAk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rIyUtouvTqSQc8bVuEm61JYDwdCLFA+/97Yamt591o3sfsa8/GSMX85ag89CZO1FZ
-	 v1D4Ow4jXJvA7pihd+zjhI07g2ZLM2FQPzV731bIuYu+9IN4WnYcKZAgb6ftVnoSkL
-	 N9fiyUUXq32WzdvUDkgZ/NEZtlJGux/7XbfS11rWvZTna6AtjN9gYDmZpsKv51MOod
-	 Z2YODUPQQ6yqbesk5Pnpi/mLaMI8IZvsSV8qOLXleFdbWlZgCtoMMDvag0sF3b1xot
-	 gbiXzPWL93C5e+vRzRCRRD+1JV/a+47ZeCmhit58trvxI4B2Bn8Ek6TgR4INmDDDGU
-	 snoJGHTF31DYg==
-Date: Mon, 18 Aug 2025 10:48:33 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: frank.li@nxp.com, jingoohan1@gmail.com, l.stach@pengutronix.de,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND v3 1/5] PCI: dwc: Don't poll L2 if QUIRK_NOL2POLL_IN_PM
- is existing in suspend
-Message-ID: <20250818154833.GA528281@bhelgaas>
+	s=k20201202; t=1755533208;
+	bh=8v0DGj5nN7LXQV4s3kH37ZEpxqadMxuWtRA9XKaDv9Y=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=nLhkO/I5LOKz8LcXkJw6s406OXNSXyb2a8ICLRCrn0YxIbTmVUchl9L0VOnJ1hNzm
+	 h+UKxqH0PksQediircWskG1IV4nc3tC4Tiq4BRaP9Tvjg0OeTS0o4M4zg5HcNNp5el
+	 chwhjTzmvI//dfy5Y1A+B41xCDfte+A6e+4ZXH8JzMTLmI4PeWMWms3UvQsSrt+y36
+	 33dFrnFPfHFZiAHxD5NVSVt+sQCfUjJNcLOo1ChgIuHgJdaqVXo2oXSe3VmZKgbVEw
+	 SGqBH9NzwKYyGE/DWsLuRBEqnkmKRvE5bBj4HNMszv9S/0UdGUGbU8TZi/rQQGYQQk
+	 DMdojNV4K+e2w==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250818073205.1412507-2-hongxing.zhu@nxp.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 18 Aug 2025 18:06:42 +0200
+Message-Id: <DC5OKZHPTDWC.L6YD327Z0WJN@kernel.org>
+Subject: Re: [PATCH v2 3/3] rust: pci: provide access to PCI Vendor values
+Cc: "Alexandre Courbot" <acourbot@nvidia.com>, "Joel Fernandes"
+ <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>, "Alistair Popple"
+ <apopple@nvidia.com>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
+ <simona@ffwll.ch>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Miguel
+ Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
+ Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
+ Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ <nouveau@lists.freedesktop.org>, <linux-pci@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>
+To: "John Hubbard" <jhubbard@nvidia.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20250818013305.1089446-1-jhubbard@nvidia.com>
+ <20250818013305.1089446-4-jhubbard@nvidia.com>
+In-Reply-To: <20250818013305.1089446-4-jhubbard@nvidia.com>
 
-On Mon, Aug 18, 2025 at 03:32:01PM +0800, Richard Zhu wrote:
-> Refer to PCIe r6.0, sec 5.2, fig 5-1 Link Power Management State Flow
-> Diagram. Both L0 and L2/L3 Ready can be transferred to LDn directly.
-> 
-> It's harmless to let dw_pcie_suspend_noirq() proceed suspend after the
-> PME_Turn_Off is sent out, whatever the LTSSM state is in L2 or L3 after
-> a recommended 10ms max wait refer to PCIe r6.0, sec 5.3.3.2.1 PME
-> Synchronization.
-> 
-> The LTSSM states are inaccessible on i.MX6QP and i.MX7D after the
-> PME_Turn_Off is sent out.
-> 
-> To support this case, don't poll L2 state and apply a simple delay of
-> PCIE_PME_TO_L2_TIMEOUT_US(10ms) if the QUIRK_NOL2POLL_IN_PM flag is set
-> in suspend.
-> 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../pci/controller/dwc/pcie-designware-host.c | 31 +++++++++++++------
->  drivers/pci/controller/dwc/pcie-designware.h  |  4 +++
->  2 files changed, 25 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 952f8594b5012..20a7f827babbf 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -1007,7 +1007,7 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
->  {
->  	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->  	u32 val;
-> -	int ret;
-> +	int ret = 0;
->  
->       /*
->        * If L1SS is supported, then do not put the link into L2 as some
-         * devices such as NVMe expect low resume latency.
-         */
-         if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
-                return 0;
+On Mon Aug 18, 2025 at 3:33 AM CEST, John Hubbard wrote:
+> +            /// Create a `Vendor` from the raw vendor ID value, or `None=
+` if the value doesn't
+> +            /// match any known vendor.
+> +            pub fn from_u32(value: u32) -> Option<Self> {
+> +                match value {
+> +                    $(x if x =3D=3D Self::$variant.0 =3D> Some(Self::$va=
+riant),)+
+> +                    _ =3D> None,
+> +                }
+> +            }
 
-You didn't change it in this patch (the L1SS test was added by
-4774faf854f5 ("PCI: dwc: Implement generic suspend/resume
-functionality")), but this L1SS check is an encapsulation problem.
-The ASPM configuration shouldn't leak out here in such an ad hoc way.
+Same here, I think this should be `impl TryFrom<u32> for Vendor`.
 
-*All* drivers, not just NVMe, would prefer low resume latency.
+> +
+> +            /// Get the raw 16-bit vendor ID value.
+> +            pub const fn as_u32(self) -> u32 {
+> +                self.0
+> +            }
+> +        }
+> +    };
+> +}
 
-How do we deal with this in other host controller drivers?  If any
-other driver puts links in L2, I suppose they would have the same
-issue?  Maybe DWC is the only one that puts the link in L2?
+>  /// An adapter for the registration of PCI drivers.
+>  pub struct Adapter<T: Driver>(T);
+> =20
+> @@ -335,9 +656,9 @@ pub const fn from_class(class: u32, class_mask: u32) =
+-> Self {
+>      ///
+>      /// This is more targeted than [`DeviceId::from_class`]: in addition=
+ to matching by Vendor, it
+>      /// also matches the PCI Class (up to the entire 24 bits, depending =
+on the mask).
+> -    pub const fn from_class_and_vendor(class: Class, class_mask: u32, ve=
+ndor: u32) -> Self {
+> +    pub const fn from_class_and_vendor(class: Class, class_mask: u32, ve=
+ndor: Vendor) -> Self {
+>          Self(bindings::pci_device_id {
+> -            vendor,
+> +            vendor: vendor.as_u32(),
+>              device: DeviceId::PCI_ANY_ID,
+>              subvendor: DeviceId::PCI_ANY_ID,
+>              subdevice: DeviceId::PCI_ANY_ID,
+> @@ -396,7 +717,7 @@ macro_rules! pci_device_table {
+>  ///     <MyDriver as pci::Driver>::IdInfo,
+>  ///     [
+>  ///         (
+> -///             pci::DeviceId::from_id(bindings::PCI_VENDOR_ID_REDHAT, b=
+indings::PCI_ANY_ID as u32),
+> +///             pci::DeviceId::from_id(pci::Vendor::REDHAT.as_u32(), bin=
+dings::PCI_ANY_ID as u32),
 
-What happens when we add a new driver that puts links in L2?  I guess
-we'll be debugging some NVMe issue again?
-
-Bjorn
+We should change DeviceId::from_id() to consume a pci::Vendor value directl=
+y.
 
