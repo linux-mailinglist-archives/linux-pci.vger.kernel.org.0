@@ -1,154 +1,199 @@
-Return-Path: <linux-pci+bounces-34163-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34164-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50DD0B297A4
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 06:07:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A40E1B298D8
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 07:21:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF95E196152B
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 04:07:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 712E54E3BDE
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 05:21:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9D61214228;
-	Mon, 18 Aug 2025 04:07:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 120C3202F9F;
+	Mon, 18 Aug 2025 05:21:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="RftjdtLK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tZOZ3Nhh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108632066DE
-	for <linux-pci@vger.kernel.org>; Mon, 18 Aug 2025 04:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE8C1EF38F;
+	Mon, 18 Aug 2025 05:21:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755490034; cv=none; b=SAFCVhJqoG8J1bzs5T0qyodOSNJrzl7nZZrWpVm5LhuhtRLZP3HShXBdCE6fV9e6dbXTQnQ+jAG584NArEH2iEN33Q7ZRd3JOXsoYS7jemArzMHxvk3nuU7oUPwmq446eSAxvIFgCMDismynqBrdkIv+sw6wQBTXBUTSgyogzaw=
+	t=1755494489; cv=none; b=OVTYuixngFKZflyuRdBJOwI4b76V4zgRcnuEbrpBTHDXaOlngM3h9yeHBXPqE6lTQf96upAEeIQThpsNpiYSUIoGhMPDZZJLc6LPkuzO6ZZfQosH8TIaM9w0+iZuzHQj2Djx9lLuR4DCAjEUiKrYjOiBYl/AzXAxVQdDUvS+IWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755490034; c=relaxed/simple;
-	bh=UhK3/h7zjxpWLOG+ZUmKO7GSfph+AtWarSJZHEm6tSk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vy6MNDV/svGysgkDNjYyrMiVdm9BOd4gWHlIUMhyy2mlH+bPs5KcXXC4MWvtMTIBCbL9CcRa25vllaThvyho2pY40TPPlx0GzjJzz1fROedGdaQ2Jg//vVAamitBT88AJj5yw/HTRhqU08aPTrn9lqxSMW6HKcyS1Wd5/LtVt44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=RftjdtLK; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1755490021; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=jyE5TcjJDv7rrpurDbRa3duhU7P1XhjP7PJm2SP9BaQ=;
-	b=RftjdtLKczbIV//H30JR9hLiaNkHBH+6tCWh+bufk5QI61mUWATDBavIPP/vDp7xSMurwvUyq+6Rco1OliuZe2RET6SfFA/CJz2fjMb+WpTT65rdpMkfymQTtXG5Pvtyrwqk4v6dSOtzPmv6QgNEsjFRGYGdqMFwkyrtLX97fBY=
-Received: from VM20241011-104.tbsite.net(mailfrom:guanghuifeng@linux.alibaba.com fp:SMTPD_---0WlvFQK8_1755490001 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 18 Aug 2025 12:07:01 +0800
-From: Guanghui Feng <guanghuifeng@linux.alibaba.com>
-To: bhelgaas@google.com
-Cc: alikernel-developer@linux.alibaba.com,
-	linux-pci@vger.kernel.org
-Subject: [PATCH] [RFC] PCI: fix pcie secondary bus reset readiness check
-Date: Mon, 18 Aug 2025 12:06:40 +0800
-Message-ID: <20250818040641.3848174-1-guanghuifeng@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.7
+	s=arc-20240116; t=1755494489; c=relaxed/simple;
+	bh=HApxKvm284DacfzNAPVw61LznOvwguaK6IzEWAXgmVA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jh/BO/ULRJ+Vnn8kNAksWN5sCnbfOvliUOCWn5x90r/U7JpMn28RTpwJeDpGrntAOfoEy2gMqxiYgbxpJrTLDr5ErBs9WZVkbsDJPf6od58ECEgeGOoM0I6KHFhBYwF44qNUiHBeiQWKpvyn62Aip0vBDlYH+KvqQa7laeUwHrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tZOZ3Nhh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71984C4CEEB;
+	Mon, 18 Aug 2025 05:21:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755494488;
+	bh=HApxKvm284DacfzNAPVw61LznOvwguaK6IzEWAXgmVA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tZOZ3NhhyhQxyKUX5tQoNazkynSZPioocRJV3Sw58sOqOqA/fBJ/h+mIa0+kMv0np
+	 M0+tIKt4TZsomSYtEbk+QnrOGjFczejUhUGtkQlfX/Nwv0raiBoeNvQLBirN+PNQ/P
+	 JXubaOmyM4TtfUmcsQwh+uYvrLf32ybWXDxwiv/ioJFgKnjya0ZUDFVwitAqM8d+yv
+	 zp/UnD32ErIkUe8hU4f/qXAVOR+R61eRMFmjKYToRfO7zAxu0xMLl1bTXJhjZASUJI
+	 0LFuEwlZN+sCP7gnKUxUb+cJ6laPZSL8UywJHagX2uQgtpbkTI2yuOHziRPuzghXDH
+	 9O7U8z1UbD6fg==
+Date: Mon, 18 Aug 2025 10:51:19 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: Lukas Wunner <lukas@wunner.de>, bhelgaas@google.com, 
+	lpieralisi@kernel.org, kw@linux.com, kwilczynski@kernel.org, 
+	ilpo.jarvinen@linux.intel.com, jingoohan1@gmail.com, robh@kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] PCI/bwctrl: Replace legacy speed conversion with
+ shared macro
+Message-ID: <cm35xzxgdepgxe3swq3q7pu6ikj7oqn7oihooldaj6dehzozng@ddyr7q3q55d2>
+References: <20250816154633.338653-1-18255117159@163.com>
+ <20250816154633.338653-4-18255117159@163.com>
+ <aKDmW6l6uxZGr1Wl@wunner.de>
+ <35f6d6f3-b857-48cc-b3cb-11a27675adfd@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <35f6d6f3-b857-48cc-b3cb-11a27675adfd@163.com>
 
-When executing a secondary bus reset on a bridge downstream port, all
-downstream devices and switches will be reseted. Before
-pci_bridge_secondary_bus_reset returns, ensure that all available
-devices have completed reset and initialization. Otherwise, using a
-device before initialization completed will result in errors or even
-device offline.
+On Sun, Aug 17, 2025 at 11:02:10PM GMT, Hans Zhang wrote:
+> 
+> 
+> On 2025/8/17 04:13, Lukas Wunner wrote:
+> > On Sat, Aug 16, 2025 at 11:46:33PM +0800, Hans Zhang wrote:
+> > > Remove obsolete pci_bus_speed2lnkctl2() function and utilize the common
+> > > PCIE_SPEED2LNKCTL2_TLS() macro instead.
+> > [...]
+> > > +++ b/drivers/pci/pcie/bwctrl.c
+> > > @@ -53,23 +53,6 @@ static bool pcie_valid_speed(enum pci_bus_speed speed)
+> > >   	return (speed >= PCIE_SPEED_2_5GT) && (speed <= PCIE_SPEED_64_0GT);
+> > >   }
+> > > -static u16 pci_bus_speed2lnkctl2(enum pci_bus_speed speed)
+> > > -{
+> > > -	static const u8 speed_conv[] = {
+> > > -		[PCIE_SPEED_2_5GT] = PCI_EXP_LNKCTL2_TLS_2_5GT,
+> > > -		[PCIE_SPEED_5_0GT] = PCI_EXP_LNKCTL2_TLS_5_0GT,
+> > > -		[PCIE_SPEED_8_0GT] = PCI_EXP_LNKCTL2_TLS_8_0GT,
+> > > -		[PCIE_SPEED_16_0GT] = PCI_EXP_LNKCTL2_TLS_16_0GT,
+> > > -		[PCIE_SPEED_32_0GT] = PCI_EXP_LNKCTL2_TLS_32_0GT,
+> > > -		[PCIE_SPEED_64_0GT] = PCI_EXP_LNKCTL2_TLS_64_0GT,
+> > > -	};
+> > > -
+> > > -	if (WARN_ON_ONCE(!pcie_valid_speed(speed)))
+> > > -		return 0;
+> > > -
+> > > -	return speed_conv[speed];
+> > > -}
+> > > -
+> > >   static inline u16 pcie_supported_speeds2target_speed(u8 supported_speeds)
+> > >   {
+> > >   	return __fls(supported_speeds);
+> > > @@ -91,7 +74,7 @@ static u16 pcie_bwctrl_select_speed(struct pci_dev *port, enum pci_bus_speed spe
+> > >   	u8 desired_speeds, supported_speeds;
+> > >   	struct pci_dev *dev;
+> > > -	desired_speeds = GENMASK(pci_bus_speed2lnkctl2(speed_req),
+> > > +	desired_speeds = GENMASK(PCIE_SPEED2LNKCTL2_TLS(speed_req),
+> > >   				 __fls(PCI_EXP_LNKCAP2_SLS_2_5GB));
+> > 
+> > No, that's not good.  The function you're removing above,
+> > pci_bus_speed2lnkctl2(), uses an array to look up the speed.
+> > That's an O(1) operation, it doesn't get any more efficient
+> > than that.  It was a deliberate design decision to do this
+> > when the bandwidth controller was created.
+> > 
+> > Whereas the function you're using instead uses a series
+> > of ternary operators.  That's no longer an O(1) operation,
+> > the compiler translates it into a series of conditional
+> > branches, so essentially an O(n) lookup (where n is the
+> > number of speeds).  So it's less efficient and less elegant.
+> > 
+> > Please come up with an approach that doesn't make this
+> > worse than before.
+> 
+> 
+> Dear Lukas,
+> 
+> Thank you very much for your reply.
+> 
+> I think the original static array will waste some memory space. Originally,
+> we only needed a size of 6 bytes, but in reality, the size of this array is
+> 26 bytes.
+> 
 
-Note: If this modification is resonable, I will modify
-the patch to address issues such as the long-term lock
-occupation of pci_walk_bus.
+This is just one time allocation as the array is a 'static const', which is not
+a big deal.
 
-Signed-off-by: Guanghui Feng <guanghuifeng@linux.alibaba.com>
----
- drivers/pci/pci.c | 31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+> static const u8 speed_conv[] = {
+> 	[PCIE_SPEED_2_5GT] = PCI_EXP_LNKCTL2_TLS_2_5GT,
+> 	[PCIE_SPEED_5_0GT] = PCI_EXP_LNKCTL2_TLS_5_0GT,
+> 	[PCIE_SPEED_8_0GT] = PCI_EXP_LNKCTL2_TLS_8_0GT,
+> 	[PCIE_SPEED_16_0GT] = PCI_EXP_LNKCTL2_TLS_16_0GT,
+> 	[PCIE_SPEED_32_0GT] = PCI_EXP_LNKCTL2_TLS_32_0GT,
+> 	[PCIE_SPEED_64_0GT] = PCI_EXP_LNKCTL2_TLS_64_0GT,
+> };
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b0f4d98036cd..c1544f650719 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4839,6 +4839,18 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
- 	return max(min_delay, max_delay);
- }
- 
-+struct pci_bridge_rst {
-+	int ret;
-+	int timeout;
-+	char *reset_type;
-+};
-+
-+static int pci_bridge_rst_wait_dev(struct pci_dev *dev, void *data)
-+{
-+	struct pci_bridge_rst *d = data;
-+	return d->ret = pci_dev_wait(dev, d->reset_type, d->timeout);
-+}
-+
- /**
-  * pci_bridge_wait_for_secondary_bus - Wait for secondary bus to be accessible
-  * @dev: PCI bridge
-@@ -4857,8 +4869,8 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
-  */
- int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- {
--	struct pci_dev *child __free(pci_dev_put) = NULL;
- 	int delay;
-+	struct pci_bridge_rst data = {.reset_type = reset_type};
- 
- 	if (pci_dev_is_disconnected(dev))
- 		return 0;
-@@ -4885,9 +4897,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 		up_read(&pci_bus_sem);
- 		return 0;
- 	}
--
--	child = pci_dev_get(list_first_entry(&dev->subordinate->devices,
--					     struct pci_dev, bus_list));
- 	up_read(&pci_bus_sem);
- 
- 	/*
-@@ -4924,7 +4933,9 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
- 		msleep(delay);
- 
--		if (!pci_dev_wait(child, reset_type, PCI_RESET_WAIT - delay))
-+		data.timeout = PCI_RESET_WAIT - delay;
-+		pci_walk_bus(dev->subordinate, pci_bridge_rst_wait_dev, &data);
-+		if (!data.ret)
- 			return 0;
- 
- 		/*
-@@ -4939,8 +4950,9 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 		if (!(status & PCI_EXP_LNKSTA_DLLLA))
- 			return -ENOTTY;
- 
--		return pci_dev_wait(child, reset_type,
--				    PCIE_RESET_READY_POLL_MS - PCI_RESET_WAIT);
-+		data.timeout = PCIE_RESET_READY_POLL_MS - PCI_RESET_WAIT;
-+		pci_walk_bus(dev->subordinate, pci_bridge_rst_wait_dev, &data);
-+		return data.ret;
- 	}
- 
- 	pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
-@@ -4951,8 +4963,9 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 		return -ENOTTY;
- 	}
- 
--	return pci_dev_wait(child, reset_type,
--			    PCIE_RESET_READY_POLL_MS - delay);
-+	data.timeout = PCIE_RESET_READY_POLL_MS - delay;
-+	pci_walk_bus(dev->subordinate, pci_bridge_rst_wait_dev, &data);
-+	return data.ret;
- }
- 
- void pci_reset_secondary_bus(struct pci_dev *dev)
+[...]
+
+> drivers/pci/pci.h
+> #define PCIE_LNKCAP_SLS2SPEED(lnkcap)					\
+> ({									\
+> 	u32 lnkcap_sls = (lnkcap) & PCI_EXP_LNKCAP_SLS;			\
+> 									\
+> 	(lnkcap_sls == PCI_EXP_LNKCAP_SLS_64_0GB ? PCIE_SPEED_64_0GT :	\
+> 	 lnkcap_sls == PCI_EXP_LNKCAP_SLS_32_0GB ? PCIE_SPEED_32_0GT :	\
+> 	 lnkcap_sls == PCI_EXP_LNKCAP_SLS_16_0GB ? PCIE_SPEED_16_0GT :	\
+> 	 lnkcap_sls == PCI_EXP_LNKCAP_SLS_8_0GB ? PCIE_SPEED_8_0GT :	\
+> 	 lnkcap_sls == PCI_EXP_LNKCAP_SLS_5_0GB ? PCIE_SPEED_5_0GT :	\
+> 	 lnkcap_sls == PCI_EXP_LNKCAP_SLS_2_5GB ? PCIE_SPEED_2_5GT :	\
+> 	 PCI_SPEED_UNKNOWN);						\
+> })
+> 
+> /* PCIe link information from Link Capabilities 2 */
+> #define PCIE_LNKCAP2_SLS2SPEED(lnkcap2) \
+> 	((lnkcap2) & PCI_EXP_LNKCAP2_SLS_64_0GB ? PCIE_SPEED_64_0GT : \
+> 	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_32_0GB ? PCIE_SPEED_32_0GT : \
+> 	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_16_0GB ? PCIE_SPEED_16_0GT : \
+> 	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_8_0GB ? PCIE_SPEED_8_0GT : \
+> 	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_5_0GB ? PCIE_SPEED_5_0GT : \
+> 	 (lnkcap2) & PCI_EXP_LNKCAP2_SLS_2_5GB ? PCIE_SPEED_2_5GT : \
+> 	 PCI_SPEED_UNKNOWN)
+> 
+> #define PCIE_LNKCTL2_TLS2SPEED(lnkctl2) \
+> ({									\
+> 	u16 lnkctl2_tls = (lnkctl2) & PCI_EXP_LNKCTL2_TLS;		\
+> 									\
+> 	(lnkctl2_tls == PCI_EXP_LNKCTL2_TLS_64_0GT ? PCIE_SPEED_64_0GT :	\
+> 	 lnkctl2_tls == PCI_EXP_LNKCTL2_TLS_32_0GT ? PCIE_SPEED_32_0GT :	\
+> 	 lnkctl2_tls == PCI_EXP_LNKCTL2_TLS_16_0GT ? PCIE_SPEED_16_0GT :	\
+> 	 lnkctl2_tls == PCI_EXP_LNKCTL2_TLS_8_0GT ? PCIE_SPEED_8_0GT :	\
+> 	 lnkctl2_tls == PCI_EXP_LNKCTL2_TLS_5_0GT ? PCIE_SPEED_5_0GT :	\
+> 	 lnkctl2_tls == PCI_EXP_LNKCTL2_TLS_2_5GT ? PCIE_SPEED_2_5GT :	\
+> 	 PCI_SPEED_UNKNOWN);						\
+> })
+
+No, these macros are terrible. They generate more assembly code than needed for
+a simple array based lookup. So in the end, they increase the binary size and
+also doesn't provide any improvement other than the unification in the textual
+form.
+
+I have to take my Acked-by back as I sort of overlooked these factors. As Lukas
+rightly said, the pci_bus_speed2lnkctl2() does lookup in O(1), which is what we
+want here.
+
+Code refactoring shouldn't come at the expense of the runtime overhead.
+
+- Mani
+
 -- 
-2.32.0.3.gf3a3e56d6
-
+மணிவண்ணன் சதாசிவம்
 
