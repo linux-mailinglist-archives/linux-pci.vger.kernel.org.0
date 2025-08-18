@@ -1,86 +1,138 @@
-Return-Path: <linux-pci+bounces-34201-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34202-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C079DB2ABBC
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 16:55:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F16BCB2AC17
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 17:07:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0C5E17B0E1B
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 14:53:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 56FEA685B45
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 14:57:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8307A233707;
-	Mon, 18 Aug 2025 14:54:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBED7238D54;
+	Mon, 18 Aug 2025 14:57:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNlWJ/O/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o961xHW1"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4937F23505E;
-	Mon, 18 Aug 2025 14:54:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A985535A2B9;
+	Mon, 18 Aug 2025 14:57:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755528891; cv=none; b=ppJdnZW7wmkg2G3l3BvHrZQA6Sb7oHyROu+kd1nvkdhzolU2q9m4s8/nptg/N4SVpbQfeFjLx6P644tv6PqpcCri3QC43E5Q8uqqMXXOYr6fO/982nJEkej11B1udiTcvX6INx8D2E7tVGCVOGRrdiA3g5VT+5zHSuoyJClOC/4=
+	t=1755529065; cv=none; b=Hv9Gf6jhP7OU6ZgV64tS5Iezc7SuO5Y3AV+qVl/XH9N1O+PpJMkHPamKVK3ckFCuRo6TWoSsSg+afBgbvBx4ln0goYTd/60yhQeI0V/4IgGxcldHMcFviLwukSGaYaev2d+jCa2eSmT6HkYuQlJhvbmkyym5fkAB8Gb3o1Z35DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755528891; c=relaxed/simple;
-	bh=cuZ1pa9bmDYPYfV+jIPPjvIT7gQMFovHPkrwyoJxtVs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BQM/7rVIZWavOZTf5gaKukf+6+5F7VMma0Zm7ejPaCvVC6QZNbPDKfGMXug9LfO9m4rTdATHXQdZDfazejmsA41+r/wy4m668Zftjbi3vhONXvt/94+HOtDmv3UffkXzLozWDcBH6Mqokc1TcCmiLIclKO7EanUPt2c6D2WT4/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNlWJ/O/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED5DEC4CEEB;
-	Mon, 18 Aug 2025 14:54:50 +0000 (UTC)
+	s=arc-20240116; t=1755529065; c=relaxed/simple;
+	bh=fxjpl7asl8KgiwlfZoIW1bbJhs+WMizR72o5Nm2FTt4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=m7eUY1Wb0xYrp+ITXgRs7bi1B/NL7J8KNVH4VF4GYbYN49xUz4FnpjDgoXkp+t3erLYIpFySj5V6kBT360YW7hlq9q8zmMQPu/KdLE56GKh4AuidaKfORUTbg8tUwcpxDLHHMGvvEve5OI+PtuW8OM3os0AsS7DfqJIuyh1PGi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o961xHW1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DA8FC4CEEB;
+	Mon, 18 Aug 2025 14:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755528891;
-	bh=cuZ1pa9bmDYPYfV+jIPPjvIT7gQMFovHPkrwyoJxtVs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GNlWJ/O/Q9mNZZxVdOxN36kc2Wb8xQlyD8sQdQMc9boQzjkddfNyqDREgvi82T4WE
-	 Y/NXGhdUdvQ2L+f2gKz9zYAyTtR2F66evnQ1o3DmM7dn63trsb+5DrEfiek+CJTwmG
-	 WtKT039P9KdoARyi/NrvQywbZcpbRcLmuQVUnqsGPhGRkH8wjdRsHDQ5puS2DPqaY8
-	 4p9MgLtMn/8HJhXZIw2W/d2iuziRosoQYwkayfF/QwmuVODvoJXZ7dptIyeifcAWzj
-	 Zlf4YKlr6kBP5Fp9xmqmh8SbHmFOoPpaXXLM/R760Si+3dU8wKDdt+9tDGhl0KwFDS
-	 n2Mm2ZpfseCRg==
-Date: Mon, 18 Aug 2025 09:54:50 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>, linux-pci@vger.kernel.org,
-	linux-phy@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>, devicetree@vger.kernel.org,
-	quic_vbadigan@quicinc.com, linux-kernel@vger.kernel.org,
-	quic_mrana@quicinc.com, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 3/4] dt-bindings: PCI: qcom,pcie-sm8550: Add SM8750
- compatible
-Message-ID: <175552888940.1212051.15924500632335799397.robh@kernel.org>
-References: <20250809-pakala-v1-0-abf1c416dbaa@oss.qualcomm.com>
- <20250809-pakala-v1-3-abf1c416dbaa@oss.qualcomm.com>
+	s=k20201202; t=1755529063;
+	bh=fxjpl7asl8KgiwlfZoIW1bbJhs+WMizR72o5Nm2FTt4=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=o961xHW1StP2YxwSH+foXj9a462Mbib7uaamtopiOykiFOo8Lqp488gNnQZiKVOra
+	 MM0uwwNLsx0nxoqW+9XrItJcOQShnLNMM5CnNYTmZ6qPu8lWkaMCIcYzh/E/r+CYzN
+	 mdOqIvq7SF83SDYQiHe33rkzRhC3h/y0kGHaCVMzVXawtgokZlj4DrARzFfVcMu85Y
+	 +/NWuIiWY7r52y57iLA8HnB7JsoGMmwdJ+EcUkLzV6LS+WN1qzAK9k7nzwy1dVoSrz
+	 U6N54yRdCXkvq0k5nchDsBqn3z00X7VeHgKxyBB7zrwuT3D6Z6rMKN4fXJOtQxO63F
+	 HRVE5SWhU0zTA==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250809-pakala-v1-3-abf1c416dbaa@oss.qualcomm.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 18 Aug 2025 16:57:37 +0200
+Message-Id: <DC5N439ZNA6E.34LSQ3K5366P7@kernel.org>
+Subject: Re: [PATCH v2 1/3] rust: pci: provide access to PCI Class,
+ subclass, implementation values
+Cc: "Alexandre Courbot" <acourbot@nvidia.com>, "Joel Fernandes"
+ <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>, "Alistair Popple"
+ <apopple@nvidia.com>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
+ <simona@ffwll.ch>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Miguel
+ Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
+ Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
+ Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ <nouveau@lists.freedesktop.org>, <linux-pci@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>
+To: "John Hubbard" <jhubbard@nvidia.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20250818013305.1089446-1-jhubbard@nvidia.com>
+ <20250818013305.1089446-2-jhubbard@nvidia.com>
+In-Reply-To: <20250818013305.1089446-2-jhubbard@nvidia.com>
 
+On Mon Aug 18, 2025 at 3:33 AM CEST, John Hubbard wrote:
+> +            /// Create a `Class` from the raw class code value, or `None=
+` if the value doesn't
+> +            /// match any known class.
+> +            pub fn from_u32(value: u32) -> Option<Self> {
+> +                match value {
+> +                    $(x if x =3D=3D Self::$variant.0 =3D> Some(Self::$va=
+riant),)+
+> +                    _ =3D> None,
+> +                }
+> +            }
 
-On Sat, 09 Aug 2025 15:29:18 +0530, Krishna Chaitanya Chundru wrote:
-> On the Qualcomm SM8750 platform the PCIe host is compatible with the
-> DWC controller present on the SM8550 platorm.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie-sm8550.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Additional to the comments from Alex, I think one should be
+`impl TryFrom<u32> for Class`.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> +
+> +    /// Create a new `pci::DeviceId` from a class number, mask, and spec=
+ific vendor.
+> +    ///
+> +    /// This is more targeted than [`DeviceId::from_class`]: in addition=
+ to matching by Vendor, it
+> +    /// also matches the PCI Class (up to the entire 24 bits, depending =
+on the mask).
+> +    pub const fn from_class_and_vendor(class: Class, class_mask: u32, ve=
+ndor: u32) -> Self {
+> +        Self(bindings::pci_device_id {
+> +            vendor,
+> +            device: DeviceId::PCI_ANY_ID,
+> +            subvendor: DeviceId::PCI_ANY_ID,
+> +            subdevice: DeviceId::PCI_ANY_ID,
+> +            class: class.as_u32(),
+> +            class_mask,
+> +            driver_data: 0,
+> +            override_only: 0,
+> +        })
+> +    }
+>  }
+> =20
+>  // SAFETY: `DeviceId` is a `#[repr(transparent)]` wrapper of `pci_device=
+_id` and does not add
+> @@ -410,6 +600,18 @@ pub fn resource_len(&self, bar: u32) -> Result<bindi=
+ngs::resource_size_t> {
+>          // - by its type invariant `self.as_raw` is always a valid point=
+er to a `struct pci_dev`.
+>          Ok(unsafe { bindings::pci_resource_len(self.as_raw(), bar.try_in=
+to()?) })
+>      }
+> +
+> +    /// Returns the full 24-bit PCI class code as stored in hardware.
+> +    /// This includes base class, subclass, and programming interface.
+> +    pub fn class_code_raw(&self) -> u32 {
+> +        // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev=
+`.
+> +        unsafe { (*self.as_raw()).class }
+> +    }
+> +
+> +    /// Returns the PCI class as a `Class` struct, or `None` if the clas=
+s code is invalid.
+> +    pub fn class_enum(&self) -> Option<Class> {
+> +        Class::from_u32(self.class_code_raw())
+> +    }
 
+I don't think we have struct pci_dev instances without a valid class code,
+can we? Maybe we should convert infallibly here.
 
