@@ -1,85 +1,51 @@
-Return-Path: <linux-pci+bounces-34162-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34163-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D7B9B29712
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 04:32:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50DD0B297A4
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 06:07:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 17F5C201C0E
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 02:32:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF95E196152B
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Aug 2025 04:07:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D19B6246BC6;
-	Mon, 18 Aug 2025 02:32:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9D61214228;
+	Mon, 18 Aug 2025 04:07:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wflwj3zW"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="RftjdtLK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277C925392A
-	for <linux-pci@vger.kernel.org>; Mon, 18 Aug 2025 02:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108632066DE
+	for <linux-pci@vger.kernel.org>; Mon, 18 Aug 2025 04:07:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755484335; cv=none; b=tuQnOqVSPQpF+gkoWFdGQ480sgEzvuunizWxXFsI+WTHDJ2pzncRWhpiPGvto4dPoBZpXqjDRMKaOsbicHZojKK1xbvGOK7gUSTP/f6tDFes64PgE37ikSAt+Ipe6sWyYNv2VqGzhgeaMzZk+FFpg63f4iLeJwMDXcPToJBZkHw=
+	t=1755490034; cv=none; b=SAFCVhJqoG8J1bzs5T0qyodOSNJrzl7nZZrWpVm5LhuhtRLZP3HShXBdCE6fV9e6dbXTQnQ+jAG584NArEH2iEN33Q7ZRd3JOXsoYS7jemArzMHxvk3nuU7oUPwmq446eSAxvIFgCMDismynqBrdkIv+sw6wQBTXBUTSgyogzaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755484335; c=relaxed/simple;
-	bh=KxsWPiE4A9EKKiVKLLnhyfUqEqnG6HN8RlVxs6EVaFQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a3uytXLyp+LO3hsLlNMAYXf7K2AoA26BQTOhr1IbDxScKkU+ck7KV5dTiqtkzkU+/dXlHpXWYqHeicoo+VSgJhI9Iha0kxDLhU+N9GTc1oe+uHQFSfGbA+IwnaDFKKdWzR27+1/VM1GNEGOatH2MsUXoObpONdcC0ZUUJwohbJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wflwj3zW; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45a1b0b42d5so24445795e9.2
-        for <linux-pci@vger.kernel.org>; Sun, 17 Aug 2025 19:32:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755484332; x=1756089132; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=j9/GXTnQWluh20kRW0SelAKcbnkoiHYkMpsSrIAn/78=;
-        b=Wflwj3zWi425Rh8wJ6XQ9OVhu5khgPxYThmoLKfChVDjEDEzf0Tl+QXL77p/6QcMzf
-         2pD85FL/jvDaetnqRHSOqmvgNKf6YCWaAyFhL7hIa29fvyK4TOXzt+ds9Nq3wGeS/Jm6
-         hpSuepQIuwdoRhVkzoq783rhatzIMNti+yPHWxEY31Ye8CUx/8jp/tHTRPLDp6HfZLSp
-         Gqw6dfaVEK/xI08brBjSQsAjVgCIQuG10ndtWet6zgtUQgy+60H8CjRsDbocvrDlVIgN
-         SJIjPsMfymIGAWitbz7yrZ6NhDXuV44bOPKbFTRP9lk+C6FZ2PgAlMnrVECo5Y5cXgfb
-         liFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755484332; x=1756089132;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j9/GXTnQWluh20kRW0SelAKcbnkoiHYkMpsSrIAn/78=;
-        b=TJwDdi59OAajKum1W1tpRkG3xn/zi2zWQ1xUksjLHXaze4zw813LzzkEC526MZnCce
-         AiQ9Am1RqlNIE/qP4kBCIwCKZ0J5P0/LHvAg5J7z9bjgWUA+bFrXEb5kIUf/JLroa9cR
-         zFLq0/8C2uVJ7LKioX0BupEjTfCcbOSTijpG8Hk7CD5znOCJkZMYEDi1orI6L25Zhkto
-         /J4HIA5kEh6E3WIeOUIXmPVdBTjyKrK/81kaLoum4gDJctV2nDTnwvDwkL1DHa06f+jK
-         6Cy6qQgiAruT6kJd5VKYbLWN3k2JgxRE/xB4ZoPzATZAX471aJadUnWUQfZx/b25c8HP
-         +IEA==
-X-Gm-Message-State: AOJu0YxMcWmC3eoElvIK0PvB5fIE/KAfuHnCXugV8gyQUK82Pr6vn8Lq
-	L6kg8zPkfjTn8gytWVTZh9BlhULvdgu8emSTqtWLSpwEhcA5SVuZu3F7//0IO53k
-X-Gm-Gg: ASbGnctEOoXJsbGAgN1w5RTmYGmkDswqcU5WKoZqhtxL3mLKGa7L6cyhgK9vjCwx2fX
-	9dbBcQMQJ9eRImyqBf6TfSTetVyai4i21KLI9A0A7d3iv+yrRDbNAEw1lhX/jvSHebm1qACJZ6j
-	c2L/VgXqeDpHKobs8ar9/v4/ET4r9P76CB8lexBmRjSxoFk0cNQ33wRrJURv7R8c81fM8HxBuaT
-	9dz03Zui9nhfixNV+3ouiDz5UoEigiuuPCcSjw1mWptSJPjvWNRXTp+QtJXiAy/TM1HS2JRd3p6
-	ZGgZ8JsE+Z7Z+uCXnhbUkl8BzuhR8S6C1uZSMpEbsYf0keW4NB00vQRtPpj8l36GLaa76tGP/Eh
-	GJTvLjGhDqB5qSS61r3LckQ==
-X-Google-Smtp-Source: AGHT+IFUcC+980UfecVr8z3TgORZJbRklmTv6v0jQ00Xkj2vuw4sEMwU9hvuaDZd+IuFDaIx/7CxJA==
-X-Received: by 2002:a05:600c:4746:b0:459:dfde:3329 with SMTP id 5b1f17b1804b1-45a2186db62mr83586215e9.31.1755484332202;
-        Sun, 17 Aug 2025 19:32:12 -0700 (PDT)
-Received: from vivobook-s-14 ([5.224.242.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a223197fbsm115694905e9.8.2025.08.17.19.32.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Aug 2025 19:32:11 -0700 (PDT)
-From: Emilio Perez <emiliopeju@gmail.com>
-To: bhelgaas@google.com,
-	corbet@lwn.net
-Cc: linux-pci@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	Emilio Perez <emiliopeju@gmail.com>
-Subject: [PATCH] Documentation: pci: Use term requester ID as per standard
-Date: Mon, 18 Aug 2025 03:31:21 +0100
-Message-ID: <20250818023121.33427-1-emiliopeju@gmail.com>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1755490034; c=relaxed/simple;
+	bh=UhK3/h7zjxpWLOG+ZUmKO7GSfph+AtWarSJZHEm6tSk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vy6MNDV/svGysgkDNjYyrMiVdm9BOd4gWHlIUMhyy2mlH+bPs5KcXXC4MWvtMTIBCbL9CcRa25vllaThvyho2pY40TPPlx0GzjJzz1fROedGdaQ2Jg//vVAamitBT88AJj5yw/HTRhqU08aPTrn9lqxSMW6HKcyS1Wd5/LtVt44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=RftjdtLK; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1755490021; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=jyE5TcjJDv7rrpurDbRa3duhU7P1XhjP7PJm2SP9BaQ=;
+	b=RftjdtLKczbIV//H30JR9hLiaNkHBH+6tCWh+bufk5QI61mUWATDBavIPP/vDp7xSMurwvUyq+6Rco1OliuZe2RET6SfFA/CJz2fjMb+WpTT65rdpMkfymQTtXG5Pvtyrwqk4v6dSOtzPmv6QgNEsjFRGYGdqMFwkyrtLX97fBY=
+Received: from VM20241011-104.tbsite.net(mailfrom:guanghuifeng@linux.alibaba.com fp:SMTPD_---0WlvFQK8_1755490001 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 18 Aug 2025 12:07:01 +0800
+From: Guanghui Feng <guanghuifeng@linux.alibaba.com>
+To: bhelgaas@google.com
+Cc: alikernel-developer@linux.alibaba.com,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] [RFC] PCI: fix pcie secondary bus reset readiness check
+Date: Mon, 18 Aug 2025 12:06:40 +0800
+Message-ID: <20250818040641.3848174-1-guanghuifeng@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,28 +54,101 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The PCIe standard never use the term requestor ID and therefore it might
-lead to confusion.
+When executing a secondary bus reset on a bridge downstream port, all
+downstream devices and switches will be reseted. Before
+pci_bridge_secondary_bus_reset returns, ensure that all available
+devices have completed reset and initialization. Otherwise, using a
+device before initialization completed will result in errors or even
+device offline.
 
-Signed-off-by: Emilio Perez <emiliopeju@gmail.com>
+Note: If this modification is resonable, I will modify
+the patch to address issues such as the long-term lock
+occupation of pci_walk_bus.
+
+Signed-off-by: Guanghui Feng <guanghuifeng@linux.alibaba.com>
 ---
- Documentation/PCI/pcieaer-howto.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pci.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
-index 4b71e2f43ca7..7b30598b4fde 100644
---- a/Documentation/PCI/pcieaer-howto.rst
-+++ b/Documentation/PCI/pcieaer-howto.rst
-@@ -138,7 +138,7 @@ error message to the Root Port above it when it captures
- an error. The Root Port, upon receiving an error reporting message,
- internally processes and logs the error message in its AER
- Capability structure. Error information being logged includes storing
--the error reporting agent's requestor ID into the Error Source
-+the error reporting agent's requester ID into the Error Source
- Identification Registers and setting the error bits of the Root Error
- Status Register accordingly. If AER error reporting is enabled in the Root
- Error Command Register, the Root Port generates an interrupt when an
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b0f4d98036cd..c1544f650719 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4839,6 +4839,18 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
+ 	return max(min_delay, max_delay);
+ }
+ 
++struct pci_bridge_rst {
++	int ret;
++	int timeout;
++	char *reset_type;
++};
++
++static int pci_bridge_rst_wait_dev(struct pci_dev *dev, void *data)
++{
++	struct pci_bridge_rst *d = data;
++	return d->ret = pci_dev_wait(dev, d->reset_type, d->timeout);
++}
++
+ /**
+  * pci_bridge_wait_for_secondary_bus - Wait for secondary bus to be accessible
+  * @dev: PCI bridge
+@@ -4857,8 +4869,8 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
+  */
+ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+ {
+-	struct pci_dev *child __free(pci_dev_put) = NULL;
+ 	int delay;
++	struct pci_bridge_rst data = {.reset_type = reset_type};
+ 
+ 	if (pci_dev_is_disconnected(dev))
+ 		return 0;
+@@ -4885,9 +4897,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+ 		up_read(&pci_bus_sem);
+ 		return 0;
+ 	}
+-
+-	child = pci_dev_get(list_first_entry(&dev->subordinate->devices,
+-					     struct pci_dev, bus_list));
+ 	up_read(&pci_bus_sem);
+ 
+ 	/*
+@@ -4924,7 +4933,9 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+ 		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
+ 		msleep(delay);
+ 
+-		if (!pci_dev_wait(child, reset_type, PCI_RESET_WAIT - delay))
++		data.timeout = PCI_RESET_WAIT - delay;
++		pci_walk_bus(dev->subordinate, pci_bridge_rst_wait_dev, &data);
++		if (!data.ret)
+ 			return 0;
+ 
+ 		/*
+@@ -4939,8 +4950,9 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+ 		if (!(status & PCI_EXP_LNKSTA_DLLLA))
+ 			return -ENOTTY;
+ 
+-		return pci_dev_wait(child, reset_type,
+-				    PCIE_RESET_READY_POLL_MS - PCI_RESET_WAIT);
++		data.timeout = PCIE_RESET_READY_POLL_MS - PCI_RESET_WAIT;
++		pci_walk_bus(dev->subordinate, pci_bridge_rst_wait_dev, &data);
++		return data.ret;
+ 	}
+ 
+ 	pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
+@@ -4951,8 +4963,9 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+ 		return -ENOTTY;
+ 	}
+ 
+-	return pci_dev_wait(child, reset_type,
+-			    PCIE_RESET_READY_POLL_MS - delay);
++	data.timeout = PCIE_RESET_READY_POLL_MS - delay;
++	pci_walk_bus(dev->subordinate, pci_bridge_rst_wait_dev, &data);
++	return data.ret;
+ }
+ 
+ void pci_reset_secondary_bus(struct pci_dev *dev)
 -- 
-2.50.1
+2.32.0.3.gf3a3e56d6
 
 
