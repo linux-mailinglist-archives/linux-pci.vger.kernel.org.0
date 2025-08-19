@@ -1,202 +1,217 @@
-Return-Path: <linux-pci+bounces-34298-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34299-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 848F5B2C43F
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 14:54:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FCDCB2C4B2
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 15:09:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8FA1F188846E
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 12:53:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6607189F537
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 13:06:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B415335BC4;
-	Tue, 19 Aug 2025 12:52:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21A1C33CEBC;
+	Tue, 19 Aug 2025 13:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="UNuL3mmT"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="FyPgthmi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2046.outbound.protection.outlook.com [40.107.237.46])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0D11DF74F;
-	Tue, 19 Aug 2025 12:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755607977; cv=fail; b=cbvM4rqvYmlFr3B7sNq2JQMhcLdjcrT0HNAMMIR4CYCQ34PTKTx4zkeJiAc+zhzi+SWGRM1zRtIGkdELA/P1vj55UXRBsuitG5A2Of5QkjvxQzfCHfogNmwZn5hFOBvOA2eAKBhk9BQL0HqOmVEm12BtmiHSmtFxroBAgHbWNik=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755607977; c=relaxed/simple;
-	bh=46maVMNXvRZJmPfmszn0giMe/9RIsKyKdGmdLwFBhJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=J53TSAuZOE4nQXJ4e+sYv0de13xiEHh1ggQ+wReC0Q5noThazfrOy23oZcWPGf8xqUNwJq5WuSHpUhu9iVZfRRsDj+/sXymMz7onV+X0hS9JoYWDqWgmWGnhvlhIEslmf1ek9jZ6SEWqk2GhGoXiK2gNUcni/LNkwA4Eco4aWKU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=UNuL3mmT; arc=fail smtp.client-ip=40.107.237.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OoEBxnDK+TRilACrrG35cvQuw1k2nS1Vodi38SY3d/UmRR/Wh+NSkghxWVJqaVsVMXpzUS+LpN4QURp78h09ehbL0EvPDGd1JfnoqNG+alnFkIhLenBMyWhpFLXy2YiFQ1KlFV7eFpXZHlRJRmT20zoouSgoisP62mV/hRkJ+ujeqxvAe5xt5ZVb246w01Fe0+ZIntr9S2H7DoWBaEC1xpENeyuCRF+kweMwC1D5QfKl4WZm0XDGk45eP/Xzfr9cTtaj/JNOGHo9yqQlQVtYUu2GDQoZAfwub7DaSHoh9SnNUafrNdO7PKLlvKhPexHTQYiRgJPXR8WO/p47nvuoWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G0WYBkpfTmAQ0ngXdQSeH11u9Ngezm98mFsxEeWTqnM=;
- b=olGRQpN3z03oyHV69TVNThaOx0eZZKXZJ1cT0xgaUkfKTVyJEba4gEpcjf3wI69dNez9gkjEm8CY4WNS3f/mHCqza29QV9h1D65d3H7/XBKAg6xInQoLS/LEke/O07tpEij7ImR9d4jbd2545JxrZKzHSqDLGTwwInB9fieM/sNu5w6xXOP0M0gPBxSUFScaL6nHa9w1Tc9jD+GXaIsjSpoeNoSVA6/veil0jP2PefvXvuJUAxqv/CWH5U1bl9lqUMuDM4ykic6IFGxLr74WgdmNOzGPtOSL0TTr8rflSuLIsAO9I3Tw9OsjQkbWv/FLabIdsPj2eH9cN8Yac6CNYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G0WYBkpfTmAQ0ngXdQSeH11u9Ngezm98mFsxEeWTqnM=;
- b=UNuL3mmTL7yBbvocaZ+fU12Eft8djdt1L7zMcKh+iak8APo2M7Sw+DUyXu88QjvS6dQ1yNq6Psa9e+tGn22AahjpLHdy2J947VURyOchWzP9ypq8hZc7wzb6Fb3FRE3lRI5mAexgXIbjN2TKAnEcRidXCxK2VY7jC2HD9hGBKQ5AyA9S2fLYpskOK6qjNlB72Lb15+mFjJBpC0ens6OiSDCxDKVO9PihrHPVhevYfMdwpH6GLyRV2V4z1do0FeJqxjW+Ld5LVDYUQDqbuZrFJKOL1vRXE24dmerbmPkUSo3YO5E9BKYjrLtUZYQEfx6TQc4/g4DYoyXvjap5DqMoYA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by DS2PR12MB9614.namprd12.prod.outlook.com (2603:10b6:8:276::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.24; Tue, 19 Aug
- 2025 12:52:52 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.9031.024; Tue, 19 Aug 2025
- 12:52:52 +0000
-Date: Tue, 19 Aug 2025 09:52:49 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: robin.murphy@arm.com, joro@8bytes.org, bhelgaas@google.com,
-	will@kernel.org, robin.clark@oss.qualcomm.com, yong.wu@mediatek.com,
-	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	rafael@kernel.org, lenb@kernel.org, kevin.tian@intel.com,
-	yi.l.liu@intel.com, baolu.lu@linux.intel.com,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-	patches@lists.linux.dev, pjaroszynski@nvidia.com, vsethi@nvidia.com,
-	helgaas@kernel.org, etzhao1900@gmail.com
-Subject: Re: [PATCH v3 3/5] iommu: Add iommu_get_domain_for_dev_locked()
- helper
-Message-ID: <20250819125249.GG802098@nvidia.com>
-References: <cover.1754952762.git.nicolinc@nvidia.com>
- <a69557026b7e2353bae67104bbe6a88f0682305e.1754952762.git.nicolinc@nvidia.com>
- <20250818143949.GO802098@nvidia.com>
- <aKNhIr08fK+xIYcg@Asurada-Nvidia>
- <20250818234241.GF802098@nvidia.com>
- <aKQG9/skig6F8LdQ@Asurada-Nvidia>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aKQG9/skig6F8LdQ@Asurada-Nvidia>
-X-ClientProxiedBy: PH8P220CA0032.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:348::10) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3851D311591;
+	Tue, 19 Aug 2025 13:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755608676; cv=none; b=CsAQ3Xnml7rnFKOaoebcZptb4iJej3mvf3LsuwSn+Y+tM4UiJeLMC1qF4oQ2arueUhJlHyvrhg0d49wAzZ9hU8asyzDpZEJXqT3lR1CpPb5eU10fon/FxHsmxqjO2UF+z2b3kIPItr6tbizpr8Id5yyDSVWKuB8R0U/ac3RacBM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755608676; c=relaxed/simple;
+	bh=GbEwBLJzY6m1yDq2YJdnYKFYDeDJzKc3fip3/5SmN8k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=odqWkylhOHjPGKe1WKawC/tNfFeNb7DzfmIczLxcDH5SPHqB5rEAwiuSpQd72x18YweMGCQCqRLkfTa3QQhD+3+JMfI1N3HG6L3JMlH5hoKu9p3BftMy3IYQFJK0rw0o8mqWzocrP+QDcuha+FDJNedyxOgeyHGZtNW6iVzMQzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=FyPgthmi; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57JCSGSN012057;
+	Tue, 19 Aug 2025 15:04:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	B5/JMhWo4ZzMPAZvRSmDPpdAXcoSjfAWCTz8Sm3x4C4=; b=FyPgthmiWo9+DudW
+	GJ90H1/03fOgkzJIK383NJue+3iyW/7dzMWaBLvnqOp2jgPSnqF4pRVNUWa5HaGu
+	s83UOWm/+9ykVM9Px3t64MMLgB6rB6NkuEqeNLK4UPFh3BEzJ//i/M4I81TF6MOe
+	nu9FO1LKGQULP97HOC7LMLI2OGJ0ugA6H5luk7GykeooXveXCSq0+s+X0crxLKLB
+	w5Tbt3e1Iqx8LS/ZA5vYI/rIpODn2DgtZ/cB0I+NxBPaMyrZCrdir6UCHDyGc+pY
+	jHzwabQtXB8zbvudu7H0VJAMA28qnwtO67nbF0SibXTfmX4sps+Yr+JfCxWIg0zZ
+	goxU8w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 48jhb1u2k7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Aug 2025 15:04:01 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0225940045;
+	Tue, 19 Aug 2025 15:02:26 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C4A80727AF0;
+	Tue, 19 Aug 2025 15:01:04 +0200 (CEST)
+Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 19 Aug
+ 2025 15:01:03 +0200
+Message-ID: <8ac3ad85-9ab8-4044-9118-69dd78333c45@foss.st.com>
+Date: Tue, 19 Aug 2025 15:01:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DS2PR12MB9614:EE_
-X-MS-Office365-Filtering-Correlation-Id: 50076d52-c356-4847-cda9-08dddf1f4ef9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9pOSJPylLQBfCOoBjDhtfIVpS56vFOUudv2OanJHLM1ERwS3434jVgafRVow?=
- =?us-ascii?Q?PJnrzWZvjLqNn+C3N0WB/uodI18o7ak+s7jSczDV2q6AK71WC6Ppzd/tZE/9?=
- =?us-ascii?Q?Mr071ytzOOLEoY23TEsSiBkqb6wMYPSh4jDBYWp8BiZ8xFLH9nyAXQIQyEMJ?=
- =?us-ascii?Q?CGeXY52oSEP6+5DGGwpFUgt7n3v+8SK9/AfMaNGgyhZ4g/rCoWxKTjHNGuCU?=
- =?us-ascii?Q?I9TZwrvIdMlEVIxQ/Q2vAhgC6dDWlCKAxwOYEWwAowCaNTitc+/sXv0PwR4E?=
- =?us-ascii?Q?QeE0jF14MuV00Hm87QzNUmVuiubCTVwuWqDsGmNZWCf8GrWySupzP2Nj+VvO?=
- =?us-ascii?Q?Fg7YNv9y7OTPf+WOKtKnEAq+r4iE9rKgI+vlywo3WT5DvkD6QjegZZWxgAHe?=
- =?us-ascii?Q?N8qqY06H8SRWRxVM4xtbM6jYQlihdE/ZlWRZN14KJ3yc0gKysU8BWNqEsx6+?=
- =?us-ascii?Q?gnMCBUwtzumWIgM6D94UGcJKHmXTHgXMO7ZPhDA8CpYLlin/p/a/50gf0Bo3?=
- =?us-ascii?Q?HAedMUPj5UCsIu/9uc80/vtxBOHl407AOPpE7obS9/zuW3IU5sUEmW7nxk9h?=
- =?us-ascii?Q?BjufX0or3Y/jb+vZk0wmNZsDSyGBNUh5PG7dfq0SzHT8xN+O2s5KwKn7kGm2?=
- =?us-ascii?Q?JshyirMGoWTxlqPR06zdiAHY9WLCD96osmNH630bAsbuROT4BWFnbx4sOy24?=
- =?us-ascii?Q?Y5dmXeO0rDbXqsvdtRsXGDwT61XayPwTBW5kMSuhVBHUBqzKoUFFgKYDKaA0?=
- =?us-ascii?Q?LvuK7z7g/MY8iyvrP0kDvUy/9XOFF9gpLRjytRqGgMu0cumrY2Yz77EitweY?=
- =?us-ascii?Q?qu+huJwOWEcPlujzCInmHmaXz+6CFekxEdrmvhfJIHBCdRCJIVIkOiJuwLnd?=
- =?us-ascii?Q?mM5IqEYnjnlnhbylwNrLnbcMJ+dL3gPmJBGwAkcuj1l9uyFsSFHxKpAyedlg?=
- =?us-ascii?Q?/Vem6ehQmBsLxvSvgpKkCpaWW5kaB/7Mj+ieNJ+az2855EliyUxZE4Vr35fG?=
- =?us-ascii?Q?vPMS6Wjc6/k9R01OXPeokIsY2B4IlVOnw5fk8p7L74BkeRjgHY2JFU7ddDq8?=
- =?us-ascii?Q?O40Cz5I8giIuaJWPZ1ndgt4uzVNFgj4IGYKNzm6MzMl8eNau0GMG+3sRvv+r?=
- =?us-ascii?Q?bLjIAR67rUPL5bolACZanfgLoaKKotJj2MeH9SBEGU8ilZgXOuiyK/yjdorr?=
- =?us-ascii?Q?lD0jvzp6VkHBkO2oUnnHXT6oKWTnxH/eqben+s1DJIt9tn5sv7aI5i7fPRKo?=
- =?us-ascii?Q?S4JbJDSeWK8s3To84YbWFXTLIdX95sjGM9b4hTiXfX4ITm/5lKzZM354Xu0q?=
- =?us-ascii?Q?yFSOc5hxAdz6AivMhYXSQ95fjiaVqwAigFBlSXC2a8qvwQeWlU3uzZrZXHGN?=
- =?us-ascii?Q?Rou4RZiPOIjoMQ8IFdixqelv5blO/rJAN4FT0IcFKPpA3AqbuP2dVnqzyKCp?=
- =?us-ascii?Q?uzgzxj82gHk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VKG4/eAtNwg1Z7t97i40t8n/smI/1PrARTvORRZXCqs+7/0jlT8GBUKOVXRP?=
- =?us-ascii?Q?tI1mnYc5s+95cCkH4lmSjE5pXKtXyyIUd/ZjLtEyxSP93izDnYGx8PeSLfpe?=
- =?us-ascii?Q?0yxy/5nz63Di7KurRhNFT5quBVHRwJcRUWowzqHZ25c5W+ibTm+H1pqjqlOc?=
- =?us-ascii?Q?RemRCJgrsgGqaRbTLMCZhZs8Vwzms5QFWKVpa790G8F+5Af92uiHxaxwgWp5?=
- =?us-ascii?Q?q0XZKEMnK75NBZ2t8A44YbvwKpbPI732eLNrwI336E3ZNOeWdl9XdlYDpz3D?=
- =?us-ascii?Q?2ZTN+BmwLMetGAhobUpvATYvwlTZ4ET+72Aob/mGY5pkn10WLL3fzmNFuGLu?=
- =?us-ascii?Q?JZD3dgciYSEbbq8wqt6ghrn3Ibe+I8mAJazCgKHRkJ4ueLN23TheOs2E1a/D?=
- =?us-ascii?Q?orkUIghZf+b18O8mn+kfcG8fD4UBZ4n9WmPb5gFkYhjumefISzzdzGNMagbc?=
- =?us-ascii?Q?hxJCOTtGinzeV7Frz4uprbTUV8t8H7/e8gvmjzHo+iGdO63x3ph9pE1iWRt0?=
- =?us-ascii?Q?fVS470NleSoo+urMHnha0lwGVxkgR2wTAXnw+a8vH2FiKJoVCDbcjxwBVgHl?=
- =?us-ascii?Q?Idp4ytvEx7DljMZYz4QsZjNACYsD2ehmH/AsTs3y83aaVaiwAAwqSBzL/90y?=
- =?us-ascii?Q?OFCPZ8C/pM9ajJ7uXNsVQz+JLxpFkrDHPvkDXnQhkm6x69zL9xy/eXf4jVM9?=
- =?us-ascii?Q?i/cEYWcm68L/qIKRZCyxzU5obL0cVmTf6n9PumnmIlTudseG4jgBYI2t6OFD?=
- =?us-ascii?Q?KmxUV/DjyQmUOCVk8lvKateixKtPqPf/oKAB9hzbgJ/b/hSrKVykPOzvsZd2?=
- =?us-ascii?Q?shbfjHPtTBNFRKodrYAxoX1Yd7qRD4Fd/gmZLlq3TVI7TkCchWfAzBj7SE5C?=
- =?us-ascii?Q?Przivws5BLRtQRbyQX4pyt/jkz0cbJKHfNkd1hdDVtZLScdzkGXpcSuYqFHK?=
- =?us-ascii?Q?gA9mHEKlHOksAHTOSCRdCj4zciV1MxYglI/HbmrI1BbcXJoGfYUB7N8vMxho?=
- =?us-ascii?Q?iS03buqxrX8e3bEf9nLJI9FSMvVuhoODjQ6WxuYl6I1xxF68NIyNMI3f8oy4?=
- =?us-ascii?Q?PJ2SKCPA351IwGkWLjOZQyy6XRA2QdxgeXZrCJYw/Laxudw4MIGUR0BKr4iE?=
- =?us-ascii?Q?JWx9A5/DHJmqkh0M6MIbV5C8tX1ri7wfCRzgfIGtDp5ePk5n0JKDbtq6oVgj?=
- =?us-ascii?Q?Edk3aNESiVb3XPiOW5D7j95rvpVabKDANFENj3oHNP56XQCbsi5EpH3V9Iab?=
- =?us-ascii?Q?7P4vlnVu6YLE4MgsLvdGxi/DNCQXmEsutADplvwWppNb6ykxwzMRhdABptMa?=
- =?us-ascii?Q?zXFktKCbL0LkI310Z5FzfRcDB1PTWlKIZJ2J+XcQW//1uQs7F5zUy9t5Spg9?=
- =?us-ascii?Q?tr2sdK3SnHHQUWI/VC/d9IhemSr3ING+5MKJJykAU/anfOM9bOb4E0F4BC+E?=
- =?us-ascii?Q?ORAqp3sHaEqi5hN7rAUryit3tHm9g0pOjwxSJq3wipQhJepHAvd4tVNjX3GQ?=
- =?us-ascii?Q?ihSPTpIImWmaYwfq/rvT4nVc+YCd7bZiCn+37lKB9cBeY0bsOf1NBX0J+9sZ?=
- =?us-ascii?Q?uCSMjVKhi/h5fE401sSKz1C6Z5sPL33r2TrkgH1z?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50076d52-c356-4847-cda9-08dddf1f4ef9
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2025 12:52:52.0638
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IRv0RDvpt3B+ij8GgxSQ6V2kiIDVaCmmBqgI2zQZjgWs2ovKjOu6Fsa/rX7xYAy+
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS2PR12MB9614
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 2/9] PCI: stm32: Add PCIe host support for STM32MP25
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@foss.st.com>, <p.zabel@pengutronix.de>,
+        <johan+linaro@kernel.org>, <cassel@kernel.org>,
+        <shradha.t@samsung.com>, <thippeswamy.havalige@amd.com>,
+        <quic_schintav@quicinc.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>
+References: <20250818230640.GA560877@bhelgaas>
+From: Christian Bruel <christian.bruel@foss.st.com>
+Content-Language: en-US
+In-Reply-To: <20250818230640.GA560877@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-19_02,2025-08-14_01,2025-03-28_01
 
-On Mon, Aug 18, 2025 at 10:09:11PM -0700, Nicolin Chen wrote:
-> Yes, I've thought about that. The concern is that some other place
-> someday may want to use iommu_get_domain_for_dev() in similar cases
-> but would find that it doesn't work. So it would have to duplicate
-> the domain pointer in its "master" structure.
+
+
+On 8/19/25 01:06, Bjorn Helgaas wrote:
+> [+cc Linus]
 > 
-> Overall, having a _locked version feels cleaner to me.
-
-We probably need the locked version, but it just shouldn't be called very
-much..
-
-> > With sensible internal locking
+> On Mon, Aug 18, 2025 at 12:50:19PM +0200, Christian Bruel wrote:
+>> On 8/13/25 21:29, Bjorn Helgaas wrote:
+>>> On Tue, Jun 10, 2025 at 11:07:07AM +0200, Christian Bruel wrote:
+>>>> Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
+>>>> controller based on the DesignWare PCIe core.
+>>>> ...
 > 
-> Hmm, I feel this iommu_get_translation_mode() is somewhat the same
-> as the current iommu_get_domain_for_dev(). It would just return the
-> group->domain->type v.s. group->domain, right?
+>>>> +static int stm32_pcie_resume_noirq(struct device *dev)
+>>>> +{
+>>>> +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
+>>>> +	int ret;
+>>>> +
+>>>> +	/*
+>>>> +	 * The core clock is gated with CLKREQ# from the COMBOPHY REFCLK,
+>>>> +	 * thus if no device is present, must force it low with an init pinmux
+>>>> +	 * to be able to access the DBI registers.
+>>>
+>>> What happens on initial probe if no device is present?  I assume we
+>>> access DBI registers in the dw_pcie_host_init() path, and it seems
+>>> like we'd have the same issue with DBI not being accessible when no
+>>> device is present.
+>>
+>> Correct, same issue. The magic happens with the PINCTRL init state that is
+>> automatically called before probe. As I tried to explain in the
+>> Documentation in the pinctrl patch:
+>>
+>> - if ``init`` and ``default`` are defined in the device tree, the "init"
+>>    state is selected before the driver probe and the "default" state is
+>>    selected after the driver probe.
 > 
-> This doesn't have any UAF concern though.
-
-Yes, no UAF concern is the point
-
-> > So that is another bunch. Not sure what will be left after.
+> OK, thanks for that reminder!
 > 
-> I recall that some of the drivers manages their own domains, e.g.
->     drivers/gpu/drm/tegra/drm.c
+> The fact that the pinctrl init state is set implicitly before .probe(),
+> but we have to do it explicitly in .stm32_pcie_resume_noirq() seems a
+> *little* bit weird and makes the driver harder to review.  But ... I
+> guess that's out of scope for this series.
 > 
-> So, they would want more out of the domain pointer than just type.
+> I see that Linus has given his approval to merge the new
+> pinctrl_pm_select_init_state() along with this series.  Would you mind
+> pulling those changes [1] and the use [2] into a v13 of this series?
+> That way I won't have to collect up all the pieces and risk missing
+> something.
 
-This looks like it wants an 'is currently attached' operation
+sure, I will rebase and re-spin with squashed last bits.
 
-Jason
+> 
+> BTW, I noticed a s/platformm/platform/ typo in the "[PATCH v1 2/2]
+> pinctrl: Add pinctrl_pm_select_init_state helper function" patch.
+
+thank you,
+
+> 
+>>>> +	if (!IS_ERR(dev->pins->init_state))
+>>>> +		ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
+>>>> +	else
+>>>> +		ret = pinctrl_pm_select_default_state(dev);
+>>>> +
+>>>> +	if (ret) {
+>>>> +		dev_err(dev, "Failed to activate pinctrl pm state: %d\n", ret);
+>>>> +		return ret;
+>>>> +	}
+> 
+>>>> +static int stm32_add_pcie_port(struct stm32_pcie *stm32_pcie)
+>>>> +{
+>>>> +	struct device *dev = stm32_pcie->pci.dev;
+>>>> +	unsigned int wake_irq;
+>>>> +	int ret;
+>>>> +
+>>>> +	/* Start to enable resources with PERST# asserted */
+>>>
+>>> I guess if device tree doesn't describe PERST#, we assume PERST# is
+>>> actually *deasserted* already at this point (because
+>>> stm32_pcie_deassert_perst() does nothing other than the delay)?
+>>
+>> yes, this also implies that PV is stable
+> 
+> Maybe we could update the comment somehow?  Or maybe even just remove
+> it, since we actually don't know the state of PERST# at this point?
+
+
+> 
+> It sounds like we don't know the PERST# state until after we call
+> stm32_pcie_deassert_perst() 
+
+If perst_gpio is defined in the DT, PERST# is asserted (GPIOD_OUT_HIGH) 
+in stm32_pcie_parse_port().
+If it is not, we must assume PERST# was already started de-asserted from 
+the environment along with the REFCLK
+
+So locally I agree, we don't know the PERST# state.
+I will remove this useless ambiguous comment
+
+Christian
+
+> 
+>>>> +	ret = phy_set_mode(stm32_pcie->phy, PHY_MODE_PCIE);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>> +
+>>>> +	ret = phy_init(stm32_pcie->phy);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>> +
+>>>> +	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+>>>> +				 STM32MP25_PCIECR_TYPE_MASK,
+>>>> +				 STM32MP25_PCIECR_RC);
+>>>> +	if (ret)
+>>>> +		goto err_phy_exit;
+>>>> +
+>>>> +	stm32_pcie_deassert_perst(stm32_pcie);
+> 
+> Bjorn
+> 
+> [1] https://lore.kernel.org/r/20250813081139.93201-1-christian.bruel@foss.st.com
+> [2] https://lore.kernel.org/r/20250813115319.212721-1-christian.bruel@foss.st.com
+> 
+
 
