@@ -1,55 +1,54 @@
-Return-Path: <linux-pci+bounces-34285-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34294-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D391B2C265
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 13:57:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E0DCB2C25B
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 13:56:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C99986222ED
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 11:55:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 379661885E66
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 11:56:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CBCE3314B4;
-	Tue, 19 Aug 2025 11:55:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFF823314AF;
+	Tue, 19 Aug 2025 11:55:19 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022120.outbound.protection.outlook.com [52.101.126.120])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022085.outbound.protection.outlook.com [40.107.75.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929BD32C33B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DB232C313;
 	Tue, 19 Aug 2025 11:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.120
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.85
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755604518; cv=fail; b=SwLGhrQ6mofv0WfkJtanyaXzr0TpKGabZuFqpi3x2Py3XmqGCsdioToK0NKd1chElGW7AjMmnp/EN1OnSuz9v9lXwv8eh5hgn2pdHHvTeWsdESgJEK49TDyKGAn6qWHGXiQa+lEO+cKb9dukA4pmvteMNiTQDGpy8mFM7a7tb7w=
+	t=1755604519; cv=fail; b=nC+tAB4/w4pPke07EhtSAUCEVs+VB+CUNr3M8IkYc1g7isyJUXLh3k4sKAZLi1E7AN3y49AyHO5h5cCyvPkWloG6xwUj8nQltIsFAnPWCIYhwK7qUt/7svlge4uDh3UY0nxUQ2MDrTZNMBnn7HOuOGxsppzocua3E9NzvixWn6k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755604518; c=relaxed/simple;
-	bh=jxMNDQ9cuKoWY4oPkSGosWIUDpYyiMxVn5y8Cjp+1J8=;
+	s=arc-20240116; t=1755604519; c=relaxed/simple;
+	bh=DHKNDskRPu7/NLeCWmhugpRvp8+tNVJtJs1FrGuMm3s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rwkpC/idkRADdBHvc9FtNzUQHZt7yvhc880ztW8Q1HRR5REUXMIyyyKXH8wUvPpyAJ6RP3qfSs9nzR1yIgywzK2WL5CCRrIYorHK+28Lho7oJoxD1s2cyaeWzyd19oAsuk7LBRJZEx4bKf+kw0biutMqyhImXZVBkxfOdtjtuU4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.126.120
+	 MIME-Version:Content-Type; b=DEiLHF8STUtn2lFgVuUfXbMxCKJ2KXRoNRUsFBbQrRIG0Lh9GJ6LMyFKD6/oarESv5ef8n62/FqID63R9oaiCnt/nUhfVE7Sr4LlpIyDYeNIYzYf3U3ghzzjUFFeLwpHyESMqQoRNGTEPMOA18fmX44RCgtHLJUmaF+igC+0y7g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.85
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xRAXjk843NZhQdJapVKvoBibzj4+dRm4pXlcJnJ3rmKRfYmHQPHiqyd1d38M73inrKjUf+OD3dOpauBNOLmsFD+K9IlAQBuQ9KXSHB9h8i6vaA2WTiIEGSs/HG6QoHqAGL6O8IBcIVZS/4SA9EbQPHiWEBWOntNI7/+fV7AQ37MoK7ma1a14Srz1iHstF1Cj74RpB4UCLYGRm9hobl75n1elqa/R4HxpHhF4+hXs8nNQknjANAE1zpu8FRztSUGaA/8szvlRyGBIgITm70Z8mgE3fhY4R/rrkKag1/5yUdkT+MCBH0dy6GN4TG35npB2IEs5s9NiUZ620o0maluI2g==
+ b=aILIjFVaSqMdQzeWpAoBVtJo4WU0V2YWHhHWdFgnv4Bd8g+AteqJtDtCl+NwT5U6sVldE+wStPNUYbx/08B93fUlxwnJiKsxvRir55WuH877IGKIDiC5t4yOV9nycl5IIxmCurHi0QzpJlLD0UOYTOKCDwO3c/YwrSF1z8czk7lS9cRmqYdPdfwEvKgAqPi4h+BHuMUEyefFvlfWjE5RrXXRIFLs8FzBHMAVix3XBwhWoL817KbfW2fHeD7+hcWyWVjO21cG9Sd5wP29jyOr4K2/5tN0Eir/WcUc7fojrX3QLD40uERDX8m5uC1/YRqu8rUKzCEfcmIYVXn/dkAKEQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3zQ51HG0ICc+pFIk0HZjm4xwAk4d0jkYiojau6hhquw=;
- b=tu6NXROtUzXJn7wVUgeqyayLzcEU7WeIw7310urr82XnjsF+DYk5D/gKz07EWlBfZQMBxw5g5Xb7NbuGoUfaaAl17g6jm+EsvmMOHFv/Xrsn6W8UMqnXVMQ0QUQwVq78yX8vA+RXBv6jQqDcwy3VyT/mVsnsf2ZHQbzM2Ib6UmXoxn2ihr3LrOirVsudOqhjuSKNTJh76Uo5G8VHZmwRGra2lR5ZBFsDoruaiRjPjQJzO7zMYXdd7HpGRiGhKZbF2oXvo1r83oOjeLQS7buS1Et+ZT+dSByNUaKWYcde9voidBX5bvTldjdXJXRqKvkKxt7WiGidgmIL/npX+nv3Ew==
+ bh=4NEmnshQEVL9mon/o+RCd+ZRG7V7v5Q9QB68O1nVUD8=;
+ b=uk0WTg9GxjTO5iRwk68Z3lCXfZ9xGdAVVF+vLaAMLTjhvpqC5USSzqFvMOqtfG92/1xXTWY6GUAk2MgpXvu3Gl8MLwJbwby8qWlM4azAjotSYuzkBxM2kKbJ1KbV6zv+7PkpX72UqUJGa3ZOQmy0D5zcp/diFL3ObAEXtq9Vnsm9V6gJmt8t1zSfmesgbB2SfaR7D5UoPyL9udeh6SkDnQtggQT3FTsZzuwIAeupt7peoChZbH6GiLh9KUEXrugsSMXV1s5CzUCeZmzsO1VXVj4AU+IKGnJwY/7RUAcRnM63mreXkSEiyPrsTV0vvJBzrGnnk62GtyzbNISPLhBONw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
  dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
  not signed); arc=none (0)
-Received: from TY2PR06CA0042.apcprd06.prod.outlook.com (2603:1096:404:2e::30)
- by TYSPR06MB7068.apcprd06.prod.outlook.com (2603:1096:400:466::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.24; Tue, 19 Aug
- 2025 11:55:12 +0000
-Received: from OSA0EPF000000C7.apcprd02.prod.outlook.com
- (2603:1096:404:2e:cafe::cb) by TY2PR06CA0042.outlook.office365.com
- (2603:1096:404:2e::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9031.22 via Frontend Transport; Tue,
- 19 Aug 2025 11:55:12 +0000
+Received: from SG2PR02CA0088.apcprd02.prod.outlook.com (2603:1096:4:90::28) by
+ TYZPR06MB6697.apcprd06.prod.outlook.com (2603:1096:400:451::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9031.24; Tue, 19 Aug 2025 11:55:12 +0000
+Received: from SG1PEPF000082E7.apcprd02.prod.outlook.com
+ (2603:1096:4:90:cafe::de) by SG2PR02CA0088.outlook.office365.com
+ (2603:1096:4:90::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9031.20 via Frontend Transport; Tue,
+ 19 Aug 2025 11:55:11 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
  smtp.mailfrom=cixtech.com; dkim=none (message not signed)
  header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
@@ -57,11 +56,11 @@ Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
  222.71.101.198 as permitted sender) receiver=protection.outlook.com;
  client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
 Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- OSA0EPF000000C7.mail.protection.outlook.com (10.167.240.53) with Microsoft
+ SG1PEPF000082E7.mail.protection.outlook.com (10.167.240.10) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9052.8 via Frontend Transport; Tue, 19 Aug 2025 11:55:11 +0000
+ 15.20.9052.8 via Frontend Transport; Tue, 19 Aug 2025 11:55:10 +0000
 Received: from hans.. (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 8E26D41604E7;
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 9E59841604E9;
 	Tue, 19 Aug 2025 19:55:09 +0800 (CST)
 From: hans.zhang@cixtech.com
 To: bhelgaas@google.com,
@@ -81,9 +80,9 @@ Cc: mpillai@cadence.com,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <hans.zhang@cixtech.com>
-Subject: [PATCH v8 04/15] PCI: cadence: Add helper functions for supporting High Perf Architecture (HPA)
-Date: Tue, 19 Aug 2025 19:52:28 +0800
-Message-ID: <20250819115239.4170604-5-hans.zhang@cixtech.com>
+Subject: [PATCH v8 05/15] PCI: cadence: Move PCIe EP common functions to a separate file
+Date: Tue, 19 Aug 2025 19:52:29 +0800
+Message-ID: <20250819115239.4170604-6-hans.zhang@cixtech.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250819115239.4170604-1-hans.zhang@cixtech.com>
 References: <20250819115239.4170604-1-hans.zhang@cixtech.com>
@@ -96,235 +95,648 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OSA0EPF000000C7:EE_|TYSPR06MB7068:EE_
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E7:EE_|TYZPR06MB6697:EE_
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 2dfaae86-30c9-4ae9-e064-08dddf174088
+X-MS-Office365-Filtering-Correlation-Id: 743ee4cd-3ab0-430f-a7aa-08dddf173fcd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|7416014|36860700013|376014|7053199007;
+	BCL:0;ARA:13230040|36860700013|7416014|82310400026|376014|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UJU4xm16hH/JEwxxiPrcGq48SxcSZ4Wc1LJsIgeUhoqdx9Qjjl7w/nCGBeDS?=
- =?us-ascii?Q?+Wt+UVnFrHBa9WndGzn93oo+dLDN+XhHhgOdXZqEDr5Bwd4d7VNYx9sjMOjA?=
- =?us-ascii?Q?HtYIHPED31V3IhsI/qGhs6ltBBPhhjv6HK9fHYRB2u/c5EembJqXvtpd8ewg?=
- =?us-ascii?Q?dirzFwmu4EsFXf4H78Zvv0RQSwyfDyJkota5An8IcwrZTpbpDW/PiBp1D0PO?=
- =?us-ascii?Q?/g/fxCx8ZpkuRESjUt9UpVkuQKXbdIrrVLvseYWcz2/1fZOqgmiyoKoCZO2G?=
- =?us-ascii?Q?BLbMhD8ptZ5ZSgz26UEaABRVHL2EtmiNewCqn5SKnforjZ5n9imwZMGWYSXc?=
- =?us-ascii?Q?ollQs5Q+eGWVn6DqdxBDuXQG96d96EUAMJ0VGqgevgt+5Gjh9gwJet0/6XEm?=
- =?us-ascii?Q?ppa874ukAf3wIZQrXQaaaC+hd0hNTVl7gIPgMU7q4DSxa6+s8sEgP3rFVv9t?=
- =?us-ascii?Q?gx3IeaAJB9Ciuf2PSq2DC4C3LMpRCNSrWFwXhKl35sGs2A0GhqzjvQDYzx/t?=
- =?us-ascii?Q?AYbCmHRyVAp8YQ2vQr7j7AiXxXNdboLTSPiipyR6bnyD1TKjsZsT5MleTGUq?=
- =?us-ascii?Q?iNrlblJWtUOT43rnpr3ABuNqwBJlJwkDgCbbIqxsq3UAfItnATkv3pIHRbOY?=
- =?us-ascii?Q?7NYln78rwb8g3GFW0DzHCXM4pR26KL/VDSxOnlhMYmNCxcC6I5TqECpcsgVi?=
- =?us-ascii?Q?//8IFnqrarCJ5PsnwRxYBywYzSWyk9W0mg9NSe5D/On+oHj7P4EtBdYjIEKD?=
- =?us-ascii?Q?E+WwWWj1DxVolYVViopmZblf67Utc0ZhGjYrrMTkztwHzPuu/GAnvxpUthER?=
- =?us-ascii?Q?K5ClLxWVNaWwICBXraQd9s3jy+envIoyfW8KNs76MJm/cl1j2g76P98wXcim?=
- =?us-ascii?Q?12An+I6vuEHc/z1VaFQT3MGgYB/kj5EnD1EMiPiiOD5pIXcOzjrxlgZW6JxT?=
- =?us-ascii?Q?8lQUfIb878QQxaiCTVJgMBZhES0Bur4+pd65EnLgGs8YeiNELWg5yg5uyF6b?=
- =?us-ascii?Q?fVHE73lYuMiiNKDmKTskXcgQofsfmaSkbBEiOrgO4vRqT+j7CEvRm1wzm4XO?=
- =?us-ascii?Q?2/mwd7pHTpsE4g3FsxXY57Ej1fvk9C3tNcMMnS2SiKo3duuxCg2oTxRSw3CN?=
- =?us-ascii?Q?lgug7qIaAO5F/vq5+et4lHfZ8EoBD5wd5pcZ7B2sgeH2r6E5nkG9AQYke30b?=
- =?us-ascii?Q?OJteQxqQZpP1XsRJ5n4NfoLqjfOXpN7z6TzcIeAscs5y0Wiqws7Nuq+prIfT?=
- =?us-ascii?Q?Cofsy4OJ2kmnXLxqnWj8mvZcdMnuKrX40QXXI7RC+4cN58vr/DgFvedqcSzy?=
- =?us-ascii?Q?ZzMVULPKihIqnA/yRmBA/wTy8KF0GL8xsbvcyA5jqHmGe3NYGRUKk1d92cIi?=
- =?us-ascii?Q?qluYo0Fwig5k0gqXSU66ErUERlNntNSQszoKXbbNifIReHs92Y3SxO2EqSjF?=
- =?us-ascii?Q?bW8EyXTknz6QeQFrCJGUy41omF9gVlrMa5cv8PhHE0yuXhaNCBGCWPEmXFHG?=
- =?us-ascii?Q?oKrenWPheksYx2aL2AlqsImqFPZLYGbh3lyv?=
+	=?us-ascii?Q?yUz8POsrxqHM10P6ikd1PHXcmgY0GjPz51pkMDkbNAax9dcjUfnkh1mHOWbP?=
+ =?us-ascii?Q?Xy8XRBvVCepL1I4aMXYU7r3aOb44LXgDwkzoSE+m/csx5HWMTuAi0TH0ZjGU?=
+ =?us-ascii?Q?LVEDxc8cwn2HiFQNiuVLzS1TIcF6Gf2z7aYb+EOW1MYeAolTNBES7b7HhHBQ?=
+ =?us-ascii?Q?R5Hnb8BaslPxhe+IvykbtEKPpEf1F3KJpiA0veYHg+qfMLbY8sqYWrrwfdww?=
+ =?us-ascii?Q?27MEz4ynMA8IGqr5LTiWB2kqZLVpprymY6CDrs59x99fdgjdX1cXitzIj2Fa?=
+ =?us-ascii?Q?lFs76g1SrlLuVA3us+IBtDpzBhVjcR4iy0l36OX3Ngzyf4/jEzJnuFWghQlp?=
+ =?us-ascii?Q?Z/WCLw/Ga4tzlDQpEO4tqfOS+rVIK2dNB+V2ZvPo3Z8LBXzyEvt2WnaKRm/3?=
+ =?us-ascii?Q?rrxQmYyBTF8msHsVRBUaWWpXRmWDgEMLisfs4gZ/X2RxI8mdoh712c6+ojZh?=
+ =?us-ascii?Q?9qkd9NMwTreoip78eihVRb80+NZESTN7OEw82ng7QiSZob5CGOqQXs+0bLvY?=
+ =?us-ascii?Q?MrdRZ0VH6G7K02YVBrKUHnKlBqELXNKIa2ghk5rq/ZE/IM+UrUDI0ZeIwFV/?=
+ =?us-ascii?Q?HljJV0SEqHstI0Sz7gUwaieJxcS4QlVnVXRaFa6hgwN4kaDYxPJbFSU/l/M6?=
+ =?us-ascii?Q?RzwrLA7/m7xwdYC0ckV5Xr3tp79Kk8U0SeuQWuXffHaVRY52/Da3OvW8sNZY?=
+ =?us-ascii?Q?Q2cF4pl9sCvkNuV0N5pL6EzM+Iq9F54w0eqBvHpxlnHBvd7SeRITEyvOMl4S?=
+ =?us-ascii?Q?hTbO1fLqcnhpvW8tGM+oVBs96RaQN/LC5ZooS6Jo2hro4TYpi9bi1n1LKNpC?=
+ =?us-ascii?Q?kyOn1Ebzlprw50ePxA1cwqPV1teXQ1DKG0c1syXidhoBEu8s77F/oHbi14am?=
+ =?us-ascii?Q?xozI8Y4SJ+Kr3Kvy8Mphkwo3mcio6w/3ADWRq+UgtpIYZEPgP9/dOw3G9ZHL?=
+ =?us-ascii?Q?Y5w+roOSXZRkKXd0oS1EG3PQRSF0WzPMPdjz/RtfZeB6f8P61A+UaYDP+wKC?=
+ =?us-ascii?Q?3SXVeSiraCVir/ukDz3jY/he0QMvnSdqxPDj4+7J9i7H26unBOid7GZlL6pr?=
+ =?us-ascii?Q?tWn4o1MXKgs9yGOfBCrNuHcp5bi14EIha3F3OQV1i2JZnrvRf2WOlPnvwYVH?=
+ =?us-ascii?Q?KPASmtdt79/miLpof+uqL/ovpa5WUbfHWj0w60LJLnvNc5nPW3ofA/byRkhH?=
+ =?us-ascii?Q?ey8dTtY0wRAnl4S/akOjjhU922LmhXpLvExzLeR8Tr3w3F6FDqpXB/J5m4mH?=
+ =?us-ascii?Q?FBHmvTlEka4JPRwuJWqYIN/U73350gVcpQbYYJr1hc0AcaPPJAUxL7pqndqg?=
+ =?us-ascii?Q?E6tZC696CtBkXf1Aa3bcccdjdvE7MJ/sZp3WqmDtcJI9ZPk4UKthV6oiKwn6?=
+ =?us-ascii?Q?UnwNw/WMfplBLwlUoo3+FuYzeRg0XwgCbrxnlrGtbG3kT4dgrkUAUNqotSSQ?=
+ =?us-ascii?Q?ZXusiVyVNxZPZpEWNb2m45p21hSLweBaWeKN03Hzsk1+kwL2iKXrKNteANBM?=
+ =?us-ascii?Q?ZNSlR4j+SOLtBRwYI/NooGEn/UsHWBz1ypns?=
 X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(36860700013)(376014)(7053199007);DIR:OUT;SFP:1102;
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(82310400026)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1102;
 X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2025 11:55:11.4272
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2025 11:55:10.2316
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2dfaae86-30c9-4ae9-e064-08dddf174088
+X-MS-Exchange-CrossTenant-Network-Message-Id: 743ee4cd-3ab0-430f-a7aa-08dddf173fcd
 X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	OSA0EPF000000C7.apcprd02.prod.outlook.com
+	SG1PEPF000082E7.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB7068
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB6697
 
 From: Manikandan K Pillai <mpillai@cadence.com>
 
-Add helper functions, register read, register write functions and update
-platform data structures for supporting High Performance Architecture
-(HPA) PCIe controllers from Cadence.
+Move the Cadence PCIe controller EP common functions into a separate
+file. The common library functions are split from legacy PCIe EP controller
+functions.
 
 Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
 Co-developed-by: Hans Zhang <hans.zhang@cixtech.com>
 Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
 ---
- .../controller/cadence/pcie-cadence-plat.c    |   4 -
- drivers/pci/controller/cadence/pcie-cadence.h | 111 ++++++++++++++++--
- 2 files changed, 103 insertions(+), 12 deletions(-)
+ drivers/pci/controller/cadence/Makefile       |   2 +-
+ .../cadence/pcie-cadence-ep-common.c          | 251 ++++++++++++++++++
+ .../cadence/pcie-cadence-ep-common.h          |  36 +++
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 233 +---------------
+ 4 files changed, 289 insertions(+), 233 deletions(-)
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-ep-common.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-ep-common.h
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-plat.c b/drivers/pci/controller/cadence/pcie-cadence-plat.c
-index ebd5c3afdfcd..b067a3296dd3 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-plat.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-plat.c
-@@ -22,10 +22,6 @@ struct cdns_plat_pcie {
- 	struct cdns_pcie        *pcie;
- };
- 
--struct cdns_plat_pcie_of_data {
--	bool is_rc;
--};
--
- static const struct of_device_id cdns_plat_pcie_of_match[];
- 
- static u64 cdns_plat_cpu_addr_fixup(struct cdns_pcie *pcie, u64 cpu_addr)
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index ddfc44f8d3ef..1174cf597bb0 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -26,6 +26,20 @@ struct cdns_pcie_rp_ib_bar {
- };
- 
- struct cdns_pcie;
-+struct cdns_pcie_rc;
+diff --git a/drivers/pci/controller/cadence/Makefile b/drivers/pci/controller/cadence/Makefile
+index 9bac5fb2f13d..80c1c4be7e80 100644
+--- a/drivers/pci/controller/cadence/Makefile
++++ b/drivers/pci/controller/cadence/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
+ obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
+-obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
++obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep-common.o pcie-cadence-ep.o
+ obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
+ obj-$(CONFIG_PCI_J721E) += pci-j721e.o
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep-common.c b/drivers/pci/controller/cadence/pcie-cadence-ep-common.c
+new file mode 100644
+index 000000000000..2a3f01aacc46
+--- /dev/null
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep-common.c
+@@ -0,0 +1,251 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2017 Cadence
++// Cadence PCIe endpoint controller driver common
++// Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
 +
-+enum cdns_pcie_reg_bank {
-+	REG_BANK_RP,
-+	REG_BANK_IP_REG,
-+	REG_BANK_IP_CFG_CTRL_REG,
-+	REG_BANK_AXI_MASTER_COMMON,
-+	REG_BANK_AXI_MASTER,
-+	REG_BANK_AXI_SLAVE,
-+	REG_BANK_AXI_HLS,
-+	REG_BANK_AXI_RAS,
-+	REG_BANK_AXI_DTI,
-+	REG_BANKS_MAX,
-+};
- 
- struct cdns_pcie_ops {
- 	int	(*start_link)(struct cdns_pcie *pcie);
-@@ -34,6 +48,30 @@ struct cdns_pcie_ops {
- 	u64     (*cpu_addr_fixup)(struct cdns_pcie *pcie, u64 cpu_addr);
- };
- 
-+/**
-+ * struct cdns_plat_pcie_of_data - Register bank offset for a platform
-+ * @is_rc: controller is a RC
-+ * @ip_reg_bank_offset: ip register bank start offset
-+ * @ip_cfg_ctrl_reg_offset: ip config control register start offset
-+ * @axi_mstr_common_offset: AXI master common register start offset
-+ * @axi_slave_offset: AXI slave start offset
-+ * @axi_master_offset: AXI master start offset
-+ * @axi_hls_offset: AXI HLS offset start
-+ * @axi_ras_offset: AXI RAS offset
-+ * @axi_dti_offset: AXI DTI offset
-+ */
-+struct cdns_plat_pcie_of_data {
-+	u32 is_rc:1;
-+	u32 ip_reg_bank_offset;
-+	u32 ip_cfg_ctrl_reg_offset;
-+	u32 axi_mstr_common_offset;
-+	u32 axi_slave_offset;
-+	u32 axi_master_offset;
-+	u32 axi_hls_offset;
-+	u32 axi_ras_offset;
-+	u32 axi_dti_offset;
-+};
++#include <linux/bitfield.h>
++#include <linux/delay.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/sizes.h>
 +
- /**
-  * struct cdns_pcie - private data for Cadence PCIe controller drivers
-  * @reg_base: IO mapped register base
-@@ -45,16 +83,18 @@ struct cdns_pcie_ops {
-  * @link: list of pointers to corresponding device link representations
-  * @ops: Platform-specific ops to control various inputs from Cadence PCIe
-  *       wrapper
-+ * @cdns_pcie_reg_offsets: Register bank offsets for different SoC
-  */
- struct cdns_pcie {
--	void __iomem		*reg_base;
--	struct resource		*mem_res;
--	struct device		*dev;
--	bool			is_rc;
--	int			phy_count;
--	struct phy		**phy;
--	struct device_link	**link;
--	const struct cdns_pcie_ops *ops;
-+	void __iomem		             *reg_base;
-+	struct resource		             *mem_res;
-+	struct device		             *dev;
-+	bool			             is_rc;
-+	int			             phy_count;
-+	struct phy		             **phy;
-+	struct device_link	             **link;
-+	const  struct cdns_pcie_ops          *ops;
-+	const  struct cdns_plat_pcie_of_data *cdns_pcie_reg_offsets;
- };
- 
- /**
-@@ -132,6 +172,40 @@ struct cdns_pcie_ep {
- 	unsigned int		quirk_disable_flr:1;
- };
- 
-+static inline u32 cdns_reg_bank_to_off(struct cdns_pcie *pcie, enum cdns_pcie_reg_bank bank)
++#include "pcie-cadence.h"
++#include "pcie-cadence-ep-common.h"
++
++u8 cdns_pcie_get_fn_from_vfn(struct cdns_pcie *pcie, u8 fn, u8 vfn)
 +{
-+	u32 offset = 0x0;
++	u32 cap = CDNS_PCIE_EP_FUNC_SRIOV_CAP_OFFSET;
++	u32 first_vf_offset, stride;
 +
-+	switch (bank) {
-+	case REG_BANK_IP_REG:
-+		offset = pcie->cdns_pcie_reg_offsets->ip_reg_bank_offset;
-+		break;
-+	case REG_BANK_IP_CFG_CTRL_REG:
-+		offset = pcie->cdns_pcie_reg_offsets->ip_cfg_ctrl_reg_offset;
-+		break;
-+	case REG_BANK_AXI_MASTER_COMMON:
-+		offset = pcie->cdns_pcie_reg_offsets->axi_mstr_common_offset;
-+		break;
-+	case REG_BANK_AXI_MASTER:
-+		offset = pcie->cdns_pcie_reg_offsets->axi_master_offset;
-+		break;
-+	case REG_BANK_AXI_SLAVE:
-+		offset = pcie->cdns_pcie_reg_offsets->axi_slave_offset;
-+		break;
-+	case REG_BANK_AXI_HLS:
-+		offset = pcie->cdns_pcie_reg_offsets->axi_hls_offset;
-+		break;
-+	case REG_BANK_AXI_RAS:
-+		offset = pcie->cdns_pcie_reg_offsets->axi_ras_offset;
-+		break;
-+	case REG_BANK_AXI_DTI:
-+		offset = pcie->cdns_pcie_reg_offsets->axi_dti_offset;
-+		break;
-+	default:
-+		break;
-+	};
-+	return offset;
++	if (vfn == 0)
++		return fn;
++
++	first_vf_offset = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_SRIOV_VF_OFFSET);
++	stride = cdns_pcie_ep_fn_readw(pcie, fn, cap +  PCI_SRIOV_VF_STRIDE);
++	fn = fn + first_vf_offset + ((vfn - 1) * stride);
++
++	return fn;
 +}
++EXPORT_SYMBOL_GPL(cdns_pcie_get_fn_from_vfn);
++
++int cdns_pcie_ep_write_header(struct pci_epc *epc, u8 fn, u8 vfn,
++			      struct pci_epf_header *hdr)
++{
++	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
++	u32 cap = CDNS_PCIE_EP_FUNC_SRIOV_CAP_OFFSET;
++	struct cdns_pcie *pcie = &ep->pcie;
++	u32 reg;
++
++	if (vfn > 1) {
++		dev_err(&epc->dev, "Only Virtual Function #1 has deviceID\n");
++		return -EINVAL;
++	} else if (vfn == 1) {
++		reg = cap + PCI_SRIOV_VF_DID;
++		cdns_pcie_ep_fn_writew(pcie, fn, reg, hdr->deviceid);
++		return 0;
++	}
++
++	cdns_pcie_ep_fn_writew(pcie, fn, PCI_DEVICE_ID, hdr->deviceid);
++	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_REVISION_ID, hdr->revid);
++	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_CLASS_PROG, hdr->progif_code);
++	cdns_pcie_ep_fn_writew(pcie, fn, PCI_CLASS_DEVICE,
++			       hdr->subclass_code | hdr->baseclass_code << 8);
++	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_CACHE_LINE_SIZE,
++			       hdr->cache_line_size);
++	cdns_pcie_ep_fn_writew(pcie, fn, PCI_SUBSYSTEM_ID, hdr->subsys_id);
++	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_INTERRUPT_PIN, hdr->interrupt_pin);
++
++	/*
++	 * Vendor ID can only be modified from function 0, all other functions
++	 * use the same vendor ID as function 0.
++	 */
++	if (fn == 0) {
++		/* Update the vendor IDs. */
++		u32 id = CDNS_PCIE_LM_ID_VENDOR(hdr->vendorid) |
++			 CDNS_PCIE_LM_ID_SUBSYS(hdr->subsys_vendor_id);
++
++		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_ep_write_header);
++
++int cdns_pcie_ep_set_msi(struct pci_epc *epc, u8 fn, u8 vfn, u8 mmc)
++{
++	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
++	struct cdns_pcie *pcie = &ep->pcie;
++	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
++	u16 flags;
++
++	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
++
++	/*
++	 * Set the Multiple Message Capable bitfield into the Message Control
++	 * register.
++	 */
++	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
++	flags = (flags & ~PCI_MSI_FLAGS_QMASK) | (mmc << 1);
++	flags |= PCI_MSI_FLAGS_64BIT;
++	flags &= ~PCI_MSI_FLAGS_MASKBIT;
++	cdns_pcie_ep_fn_writew(pcie, fn, cap + PCI_MSI_FLAGS, flags);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_ep_set_msi);
++
++int cdns_pcie_ep_get_msi(struct pci_epc *epc, u8 fn, u8 vfn)
++{
++	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
++	struct cdns_pcie *pcie = &ep->pcie;
++	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
++	u16 flags, mme;
++
++	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
++
++	/* Validate that the MSI feature is actually enabled. */
++	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
++	if (!(flags & PCI_MSI_FLAGS_ENABLE))
++		return -EINVAL;
++
++	/*
++	 * Get the Multiple Message Enable bitfield from the Message Control
++	 * register.
++	 */
++	mme = FIELD_GET(PCI_MSI_FLAGS_QSIZE, flags);
++
++	return mme;
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_ep_get_msi);
++
++int cdns_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
++{
++	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
++	struct cdns_pcie *pcie = &ep->pcie;
++	u32 cap = CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET;
++	u32 val, reg;
++
++	func_no = cdns_pcie_get_fn_from_vfn(pcie, func_no, vfunc_no);
++
++	reg = cap + PCI_MSIX_FLAGS;
++	val = cdns_pcie_ep_fn_readw(pcie, func_no, reg);
++	if (!(val & PCI_MSIX_FLAGS_ENABLE))
++		return -EINVAL;
++
++	val &= PCI_MSIX_FLAGS_QSIZE;
++
++	return val;
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_ep_get_msix);
++
++int cdns_pcie_ep_set_msix(struct pci_epc *epc, u8 fn, u8 vfn,
++			  u16 interrupts, enum pci_barno bir,
++			  u32 offset)
++{
++	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
++	struct cdns_pcie *pcie = &ep->pcie;
++	u32 cap = CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET;
++	u32 val, reg;
++
++	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
++
++	reg = cap + PCI_MSIX_FLAGS;
++	val = cdns_pcie_ep_fn_readw(pcie, fn, reg);
++	val &= ~PCI_MSIX_FLAGS_QSIZE;
++	val |= interrupts;
++	cdns_pcie_ep_fn_writew(pcie, fn, reg, val);
++
++	/* Set MSI-X BAR and offset */
++	reg = cap + PCI_MSIX_TABLE;
++	val = offset | bir;
++	cdns_pcie_ep_fn_writel(pcie, fn, reg, val);
++
++	/* Set PBA BAR and offset.  BAR must match MSI-X BAR */
++	reg = cap + PCI_MSIX_PBA;
++	val = (offset + (interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
++	cdns_pcie_ep_fn_writel(pcie, fn, reg, val);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_ep_set_msix);
++
++int cdns_pcie_ep_map_msi_irq(struct pci_epc *epc, u8 fn, u8 vfn,
++			     phys_addr_t addr, u8 interrupt_num,
++			     u32 entry_size, u32 *msi_data,
++			     u32 *msi_addr_offset)
++{
++	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
++	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
++	struct cdns_pcie *pcie = &ep->pcie;
++	u64 pci_addr, pci_addr_mask = 0xff;
++	u16 flags, mme, data, data_mask;
++	u8 msi_count;
++	int ret;
++	int i;
++
++	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
++
++	/* Check whether the MSI feature has been enabled by the PCI host. */
++	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
++	if (!(flags & PCI_MSI_FLAGS_ENABLE))
++		return -EINVAL;
++
++	/* Get the number of enabled MSIs */
++	mme = FIELD_GET(PCI_MSI_FLAGS_QSIZE, flags);
++	msi_count = 1 << mme;
++	if (!interrupt_num || interrupt_num > msi_count)
++		return -EINVAL;
++
++	/* Compute the data value to be written. */
++	data_mask = msi_count - 1;
++	data = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_DATA_64);
++	data = data & ~data_mask;
++
++	/* Get the PCI address where to write the data into. */
++	pci_addr = cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_HI);
++	pci_addr <<= 32;
++	pci_addr |= cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_LO);
++	pci_addr &= GENMASK_ULL(63, 2);
++
++	for (i = 0; i < interrupt_num; i++) {
++		ret = epc->ops->map_addr(epc, fn, vfn, addr,
++					 pci_addr & ~pci_addr_mask,
++					 entry_size);
++		if (ret)
++			return ret;
++		addr = addr + entry_size;
++	}
++
++	*msi_data = data;
++	*msi_addr_offset = pci_addr & pci_addr_mask;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_ep_map_msi_irq);
++
++static const struct pci_epc_features cdns_pcie_epc_vf_features = {
++	.linkup_notifier = false,
++	.msi_capable = true,
++	.msix_capable = true,
++	.align = 65536,
++};
++
++static const struct pci_epc_features cdns_pcie_epc_features = {
++	.linkup_notifier = false,
++	.msi_capable = true,
++	.msix_capable = true,
++	.align = 256,
++};
++
++const struct pci_epc_features*
++cdns_pcie_ep_get_features(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
++{
++	if (!vfunc_no)
++		return &cdns_pcie_epc_features;
++
++	return &cdns_pcie_epc_vf_features;
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_ep_get_features);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("Cadence PCIe controller driver");
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep-common.h b/drivers/pci/controller/cadence/pcie-cadence-ep-common.h
+new file mode 100644
+index 000000000000..9bc9f4b52427
+--- /dev/null
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep-common.h
+@@ -0,0 +1,36 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++// Copyright (c) 2017 Cadence
++// Cadence PCIe Endpoint controller driver
++// Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
++
++#ifndef _PCIE_CADENCE_EP_COMMON_H
++#define _PCIE_CADENCE_EP_COMMON_H
++
++#include <linux/kernel.h>
++#include <linux/pci.h>
++#include <linux/pci-epf.h>
++#include <linux/pci-epc.h>
++#include "../../pci.h"
++
++#define CDNS_PCIE_EP_MIN_APERTURE		128	/* 128 bytes */
++#define CDNS_PCIE_EP_IRQ_PCI_ADDR_NONE		0x1
++#define CDNS_PCIE_EP_IRQ_PCI_ADDR_LEGACY	0x3
++
++u8 cdns_pcie_get_fn_from_vfn(struct cdns_pcie *pcie, u8 fn, u8 vfn);
++int cdns_pcie_ep_write_header(struct pci_epc *epc, u8 fn, u8 vfn,
++			      struct pci_epf_header *hdr);
++int cdns_pcie_ep_set_msi(struct pci_epc *epc, u8 fn, u8 vfn, u8 mmc);
++int cdns_pcie_ep_get_msi(struct pci_epc *epc, u8 fn, u8 vfn);
++int cdns_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
++int cdns_pcie_ep_set_msix(struct pci_epc *epc, u8 fn, u8 vfn,
++			  u16 interrupts, enum pci_barno bir,
++			  u32 offset);
++int cdns_pcie_ep_map_msi_irq(struct pci_epc *epc, u8 fn, u8 vfn,
++			     phys_addr_t addr, u8 interrupt_num,
++			     u32 entry_size, u32 *msi_data,
++			     u32 *msi_addr_offset);
++const struct pci_epc_features *cdns_pcie_ep_get_features(struct pci_epc *epc,
++							 u8 func_no,
++							 u8 vfunc_no);
++
++#endif /* _PCIE_CADENCE_EP_COMMON_H */
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+index 77c5a19b2ab1..747d83ed2ad3 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+@@ -13,68 +13,7 @@
+ #include <linux/sizes.h>
  
- /* Register access */
- static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
-@@ -144,6 +218,27 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
- 	return readl(pcie->reg_base + reg);
+ #include "pcie-cadence.h"
+-#include "../../pci.h"
+-
+-#define CDNS_PCIE_EP_MIN_APERTURE		128	/* 128 bytes */
+-#define CDNS_PCIE_EP_IRQ_PCI_ADDR_NONE		0x1
+-#define CDNS_PCIE_EP_IRQ_PCI_ADDR_LEGACY	0x3
+-
+-static u8 cdns_pcie_get_fn_from_vfn(struct cdns_pcie *pcie, u8 fn, u8 vfn)
+-{
+-	u32 cap = CDNS_PCIE_EP_FUNC_SRIOV_CAP_OFFSET;
+-	u32 first_vf_offset, stride;
+-
+-	if (vfn == 0)
+-		return fn;
+-
+-	first_vf_offset = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_SRIOV_VF_OFFSET);
+-	stride = cdns_pcie_ep_fn_readw(pcie, fn, cap +  PCI_SRIOV_VF_STRIDE);
+-	fn = fn + first_vf_offset + ((vfn - 1) * stride);
+-
+-	return fn;
+-}
+-
+-static int cdns_pcie_ep_write_header(struct pci_epc *epc, u8 fn, u8 vfn,
+-				     struct pci_epf_header *hdr)
+-{
+-	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+-	u32 cap = CDNS_PCIE_EP_FUNC_SRIOV_CAP_OFFSET;
+-	struct cdns_pcie *pcie = &ep->pcie;
+-	u32 reg;
+-
+-	if (vfn > 1) {
+-		dev_err(&epc->dev, "Only Virtual Function #1 has deviceID\n");
+-		return -EINVAL;
+-	} else if (vfn == 1) {
+-		reg = cap + PCI_SRIOV_VF_DID;
+-		cdns_pcie_ep_fn_writew(pcie, fn, reg, hdr->deviceid);
+-		return 0;
+-	}
+-
+-	cdns_pcie_ep_fn_writew(pcie, fn, PCI_DEVICE_ID, hdr->deviceid);
+-	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_REVISION_ID, hdr->revid);
+-	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_CLASS_PROG, hdr->progif_code);
+-	cdns_pcie_ep_fn_writew(pcie, fn, PCI_CLASS_DEVICE,
+-			       hdr->subclass_code | hdr->baseclass_code << 8);
+-	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_CACHE_LINE_SIZE,
+-			       hdr->cache_line_size);
+-	cdns_pcie_ep_fn_writew(pcie, fn, PCI_SUBSYSTEM_ID, hdr->subsys_id);
+-	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_INTERRUPT_PIN, hdr->interrupt_pin);
+-
+-	/*
+-	 * Vendor ID can only be modified from function 0, all other functions
+-	 * use the same vendor ID as function 0.
+-	 */
+-	if (fn == 0) {
+-		/* Update the vendor IDs. */
+-		u32 id = CDNS_PCIE_LM_ID_VENDOR(hdr->vendorid) |
+-			 CDNS_PCIE_LM_ID_SUBSYS(hdr->subsys_vendor_id);
+-
+-		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
+-	}
+-
+-	return 0;
+-}
++#include "pcie-cadence-ep-common.h"
+ 
+ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn, u8 vfn,
+ 				struct pci_epf_bar *epf_bar)
+@@ -222,100 +161,6 @@ static void cdns_pcie_ep_unmap_addr(struct pci_epc *epc, u8 fn, u8 vfn,
+ 	clear_bit(r, &ep->ob_region_map);
  }
  
-+static inline void cdns_pcie_hpa_writel(struct cdns_pcie *pcie,
-+					enum cdns_pcie_reg_bank bank,
-+					u32 reg,
-+					u32 value)
-+{
-+	u32 offset = cdns_reg_bank_to_off(pcie, bank);
-+
-+	reg += offset;
-+	writel(value, pcie->reg_base + reg);
-+}
-+
-+static inline u32 cdns_pcie_hpa_readl(struct cdns_pcie *pcie,
-+				      enum cdns_pcie_reg_bank bank,
-+				      u32 reg)
-+{
-+	u32 offset = cdns_reg_bank_to_off(pcie, bank);
-+
-+	reg += offset;
-+	return readl(pcie->reg_base + reg);
-+}
-+
- static inline u32 cdns_pcie_read_sz(void __iomem *addr, int size)
+-static int cdns_pcie_ep_set_msi(struct pci_epc *epc, u8 fn, u8 vfn, u8 nr_irqs)
+-{
+-	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+-	struct cdns_pcie *pcie = &ep->pcie;
+-	u8 mmc = order_base_2(nr_irqs);
+-	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+-	u16 flags;
+-
+-	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
+-
+-	/*
+-	 * Set the Multiple Message Capable bitfield into the Message Control
+-	 * register.
+-	 */
+-	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
+-	flags = (flags & ~PCI_MSI_FLAGS_QMASK) | (mmc << 1);
+-	flags |= PCI_MSI_FLAGS_64BIT;
+-	flags &= ~PCI_MSI_FLAGS_MASKBIT;
+-	cdns_pcie_ep_fn_writew(pcie, fn, cap + PCI_MSI_FLAGS, flags);
+-
+-	return 0;
+-}
+-
+-static int cdns_pcie_ep_get_msi(struct pci_epc *epc, u8 fn, u8 vfn)
+-{
+-	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+-	struct cdns_pcie *pcie = &ep->pcie;
+-	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+-	u16 flags, mme;
+-
+-	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
+-
+-	/* Validate that the MSI feature is actually enabled. */
+-	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
+-	if (!(flags & PCI_MSI_FLAGS_ENABLE))
+-		return -EINVAL;
+-
+-	/*
+-	 * Get the Multiple Message Enable bitfield from the Message Control
+-	 * register.
+-	 */
+-	mme = FIELD_GET(PCI_MSI_FLAGS_QSIZE, flags);
+-
+-	return 1 << mme;
+-}
+-
+-static int cdns_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
+-{
+-	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+-	struct cdns_pcie *pcie = &ep->pcie;
+-	u32 cap = CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET;
+-	u32 val, reg;
+-
+-	func_no = cdns_pcie_get_fn_from_vfn(pcie, func_no, vfunc_no);
+-
+-	reg = cap + PCI_MSIX_FLAGS;
+-	val = cdns_pcie_ep_fn_readw(pcie, func_no, reg);
+-	if (!(val & PCI_MSIX_FLAGS_ENABLE))
+-		return -EINVAL;
+-
+-	val &= PCI_MSIX_FLAGS_QSIZE;
+-
+-	return val + 1;
+-}
+-
+-static int cdns_pcie_ep_set_msix(struct pci_epc *epc, u8 fn, u8 vfn,
+-				 u16 nr_irqs, enum pci_barno bir, u32 offset)
+-{
+-	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+-	struct cdns_pcie *pcie = &ep->pcie;
+-	u32 cap = CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET;
+-	u32 val, reg;
+-
+-	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
+-
+-	reg = cap + PCI_MSIX_FLAGS;
+-	val = cdns_pcie_ep_fn_readw(pcie, fn, reg);
+-	val &= ~PCI_MSIX_FLAGS_QSIZE;
+-	val |= nr_irqs - 1; /* encoded as N-1 */
+-	cdns_pcie_ep_fn_writew(pcie, fn, reg, val);
+-
+-	/* Set MSI-X BAR and offset */
+-	reg = cap + PCI_MSIX_TABLE;
+-	val = offset | bir;
+-	cdns_pcie_ep_fn_writel(pcie, fn, reg, val);
+-
+-	/* Set PBA BAR and offset.  BAR must match MSI-X BAR */
+-	reg = cap + PCI_MSIX_PBA;
+-	val = (offset + (nr_irqs * PCI_MSIX_ENTRY_SIZE)) | bir;
+-	cdns_pcie_ep_fn_writel(pcie, fn, reg, val);
+-
+-	return 0;
+-}
+-
+ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
+ 				     bool is_asserted)
  {
- 	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
+@@ -426,59 +271,6 @@ static int cdns_pcie_ep_send_msi_irq(struct cdns_pcie_ep *ep, u8 fn, u8 vfn,
+ 	return 0;
+ }
+ 
+-static int cdns_pcie_ep_map_msi_irq(struct pci_epc *epc, u8 fn, u8 vfn,
+-				    phys_addr_t addr, u8 interrupt_num,
+-				    u32 entry_size, u32 *msi_data,
+-				    u32 *msi_addr_offset)
+-{
+-	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+-	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+-	struct cdns_pcie *pcie = &ep->pcie;
+-	u64 pci_addr, pci_addr_mask = 0xff;
+-	u16 flags, mme, data, data_mask;
+-	u8 msi_count;
+-	int ret;
+-	int i;
+-
+-	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
+-
+-	/* Check whether the MSI feature has been enabled by the PCI host. */
+-	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
+-	if (!(flags & PCI_MSI_FLAGS_ENABLE))
+-		return -EINVAL;
+-
+-	/* Get the number of enabled MSIs */
+-	mme = FIELD_GET(PCI_MSI_FLAGS_QSIZE, flags);
+-	msi_count = 1 << mme;
+-	if (!interrupt_num || interrupt_num > msi_count)
+-		return -EINVAL;
+-
+-	/* Compute the data value to be written. */
+-	data_mask = msi_count - 1;
+-	data = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_DATA_64);
+-	data = data & ~data_mask;
+-
+-	/* Get the PCI address where to write the data into. */
+-	pci_addr = cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_HI);
+-	pci_addr <<= 32;
+-	pci_addr |= cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_LO);
+-	pci_addr &= GENMASK_ULL(63, 2);
+-
+-	for (i = 0; i < interrupt_num; i++) {
+-		ret = cdns_pcie_ep_map_addr(epc, fn, vfn, addr,
+-					    pci_addr & ~pci_addr_mask,
+-					    entry_size);
+-		if (ret)
+-			return ret;
+-		addr = addr + entry_size;
+-	}
+-
+-	*msi_data = data;
+-	*msi_addr_offset = pci_addr & pci_addr_mask;
+-
+-	return 0;
+-}
+-
+ static int cdns_pcie_ep_send_msix_irq(struct cdns_pcie_ep *ep, u8 fn, u8 vfn,
+ 				      u16 interrupt_num)
+ {
+@@ -607,29 +399,6 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+ 	return 0;
+ }
+ 
+-static const struct pci_epc_features cdns_pcie_epc_vf_features = {
+-	.linkup_notifier = false,
+-	.msi_capable = true,
+-	.msix_capable = true,
+-	.align = 65536,
+-};
+-
+-static const struct pci_epc_features cdns_pcie_epc_features = {
+-	.linkup_notifier = false,
+-	.msi_capable = true,
+-	.msix_capable = true,
+-	.align = 256,
+-};
+-
+-static const struct pci_epc_features*
+-cdns_pcie_ep_get_features(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
+-{
+-	if (!vfunc_no)
+-		return &cdns_pcie_epc_features;
+-
+-	return &cdns_pcie_epc_vf_features;
+-}
+-
+ static const struct pci_epc_ops cdns_pcie_epc_ops = {
+ 	.write_header	= cdns_pcie_ep_write_header,
+ 	.set_bar	= cdns_pcie_ep_set_bar,
 -- 
 2.49.0
 
