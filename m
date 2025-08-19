@@ -1,53 +1,52 @@
-Return-Path: <linux-pci+bounces-34248-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34249-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3BC2B2BA66
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 09:18:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DE80B2BA5A
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 09:16:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 846687B1863
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 07:14:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E4211BC0521
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 07:16:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F4D428489A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7555B28489E;
 	Tue, 19 Aug 2025 07:15:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VYLek3Vk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oej8+q7Q"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CAD26CE12;
-	Tue, 19 Aug 2025 07:14:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D2526E165;
+	Tue, 19 Aug 2025 07:15:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755587700; cv=none; b=e2QgZsVU9s0xwv6au4BoesNIJy0UgzE/WAO8Ty+N8Ca7O5Oxo7atazMhLbLKSnNKaYT/cz6yc/H+nXoaqdxXcDmvrJ78ndv27ItPGKbd6nZny1GK+s2xg6FnlKbPvS24kPgokUmP75t7Iu7jdXuwIsK7CWXWhFHZepH4xlPiOgw=
+	t=1755587700; cv=none; b=Lvnkpxr7U5dZbWIGR2VTaDBX2Yvx7v53wfQ3Th9gd0wCRSQJlNHWZxNV3lNj/ivfSqyk07GC+dOsSv4Mbf6tDljM79aSb0Sje2KqiS12QFEWwUhd8q6Eed4LNnbH6O7+urvaXGx9ENgiStcPe6QCG7uCcXTsteazjQSUBQ3QwKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1755587700; c=relaxed/simple;
-	bh=w8gq1jN0KiRRbkHHXaDjSTc4CGx+3z84B6Oc0xZb3Z4=;
+	bh=3Yzrll35ovlysQTqMRm/+PchNYub3AF+TCnxQaJ2Cwk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Wx55lGwmdU20Fd6afLgPklX6BsKjqpfsgREj04+f3wbcfMN0/sJ/zIOyEKOMi32dEnLtrCOPoHzJCg/82kj1inWgV7WEooAD4BO2cb5gJPwveD1qSp0Jsc/xcf4Aj9uTAryOJYbqdNa6ZfLUJeuO6odREJgHqawLr3N4/ToObsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VYLek3Vk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D02D1C4CEF4;
+	 In-Reply-To:To:Cc; b=fkd/y7RS+y6LJs+GM9e321ZKPrCuyr8KvyFC3YHcAX/wAGQ+MIIg6AM/a6igLrIGAaJZNrzMCMIa3WIWgX0G0t8GboD8NhrWxRdexR1/86xZwltqy4PkXe0f1J9VXOqHnJEu/MMvVt+AZRGAmAqBQTjlqlP6ThHROnljy23dTFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oej8+q7Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DD32EC19421;
 	Tue, 19 Aug 2025 07:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1755587699;
-	bh=w8gq1jN0KiRRbkHHXaDjSTc4CGx+3z84B6Oc0xZb3Z4=;
+	bh=3Yzrll35ovlysQTqMRm/+PchNYub3AF+TCnxQaJ2Cwk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=VYLek3Vk2rdCqp7d0jAFGMLTam9oq/giUaplgVJku+w/9uEazdmbopTR+wbzB/fT8
-	 rNgVciqVXRO93tvs86mScsCyuJYw19opzatzrtgd4/UXwkhtjkB63ztqnM9XgECTlX
-	 PveUSLDHglI/yEh5OCGPjxsSH8KsEy98EGwtLYm/KyxUEPxI3Vklpn97aZaefWYWe4
-	 ZiYSY1y7KclqwOmH7eHbo7ub72FnZMN9In0OfeG6v6rTVIo/f6mDyFEMp+AIJcnFoa
-	 EX+frPfQjvdtv9MlAISFB/OVCn9kg7nYbfIw0xxQECTHHTyzGPTfEhdt0J3qIpoHIj
-	 aM5W51zUJin3g==
+	b=Oej8+q7Q7upCxk6MKa1fOteSmMwQ3M/vCG51CRjcNPQgDvo1Z4DHhBcagO/1XmI1a
+	 EUEDA+xdR7kT0sqJn5ZNMjhmHpznMbfNC6HWMQV9dS/67gsVw0jCJeVNGVJpUVqcDs
+	 5d/lhbon7zeONpG8JUg1BjD4rSYfz6hRtIUPP4CL0FCyFvh4oJTmFNgw5AO2q/8bkz
+	 0GtVYGqDUVrKvU7SFN4RUyZQjUOC4m5Maayi0GC2aVeHe2Ig5ZyKp9moNFqn5ZQ4UA
+	 4CzF6mXXt/eS4En0Nuj7qtT9EkjRc3/+oD8Ub05o0FT1kk82S3bAHcGJAFxruYnD0w
+	 ngSxjVLdU1LBg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E01CA0EF5;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D431ECA0EE9;
 	Tue, 19 Aug 2025 07:14:59 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Tue, 19 Aug 2025 12:44:51 +0530
-Subject: [PATCH 2/6] PCI/pwrctrl: Move pci_pwrctrl_init() before turning ON
- the supplies
+Date: Tue, 19 Aug 2025 12:44:52 +0530
+Subject: [PATCH 3/6] PCI/pwrctrl: Add support for toggling PERST#
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250819-pci-pwrctrl-perst-v1-2-4b74978d2007@oss.qualcomm.com>
+Message-Id: <20250819-pci-pwrctrl-perst-v1-3-4b74978d2007@oss.qualcomm.com>
 References: <20250819-pci-pwrctrl-perst-v1-0-4b74978d2007@oss.qualcomm.com>
 In-Reply-To: <20250819-pci-pwrctrl-perst-v1-0-4b74978d2007@oss.qualcomm.com>
 To: Manivannan Sadhasivam <mani@kernel.org>, 
@@ -68,19 +67,18 @@ Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
  Brian Norris <briannorris@chromium.org>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2110;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4162;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=R+1x069ihDCZtvKq09JWHM41uYbGfvNk9pQz/Px8wHE=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBopCRwWISsLEKBCJ//ZxObCZSQPRynr8EU/ahBG
- ZI3wrnYgNSJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaKQkcAAKCRBVnxHm/pHO
- 9Uu/CACOo+9U0xKUKbd/DVRPzA8CPx7kVN2ETJZoSPycSzIiwn8AyUSaB/qvCNuC8VcXLm+eIik
- kDtSfeqY4a1C5kJCdFy2kfb+KbZwAEYjrTT6u1JZAndVIU6H/sPKT4dFiVDBu/aNfXq8YAdOynq
- F5RFG7R5KRCoBJeLuKdoZJ8gSHiqYD8QYP5ofRE4LGtE2lnvT19sZcA7XC9KsioDPlpYyD/znfF
- CwAqZ/OciBf7Ebq32/BnL+riknmV4xmE2emeC92GvU4QYbnwr/yhgjjeFgnKK41+iEhME6BEBwG
- VfBV0gwZ/wyJNsYo8zKMMTxy1tKMyjHuXW06fF688/ztq8Qg
+ bh=Wl5F/VP41j+Wmr7pvHDX4DYYUQnHnskIua9yaeDLHHk=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBopCRwnUvKL5HtXBIOusGiiiGgtA+7zzQqxPXeO
+ X+c98wnPJGJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaKQkcAAKCRBVnxHm/pHO
+ 9UO0B/9lsxc/zKK0A+23UPDwqBeUsj4J1XE8hhyQ7TAOH5CHfY4SCDEpfZZJsPwNL/xfEWAXjVm
+ z0Ulm0Zr+16hIqZcOmtDY1S367/5z8S8ZhvrLzS7cPrFXK6NBuTgD1gKqDANIf0RU/erGkLNeDt
+ M/g/D3eU6mI3swFsZUz0tPUXmwkfmnPHG9hHM09ta0z15yyIVBd2357WDB13qJV68Sg9MIsBTGN
+ avhjScUy5fKW5f3vVSiuNd9N1qrAFeKwcusbqrynGYWsLJ76MuEuuzeB5woOfqok0+ACPcCLeYi
+ JZeKv+mF+lheYsZpXRJVtVmAfOlYs/a3nAdfgkLLeMfUEkmn
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -90,60 +88,105 @@ Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-To allow pwrctrl core to parse the generic resources such as PERST# GPIO
-before turning on the supplies.
+As per PCIe spec r6.0, sec 6.6.1, PERST# is an auxiliary signal provided by
+the system to a component as a Fundamental Reset. This signal if available,
+should conform to the rules defined by the electromechanical form factor
+specifications like PCIe CEM spec r4.0, sec 2.2.
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Since pwrctrl driver is meant to control the power supplies, it should also
+control the PERST# signal if available. But traditionally, the host bridge
+(controller) drivers are the ones parsing and controlling the PERST#
+signal. They also sometimes need to assert PERST# during their own hardware
+initialization. So it is not possible to move the PERST# control away from
+the controller drivers and it must be shared logically.
+
+Hence, add a new callback 'pci_host_bridge::toggle_perst', that allows the
+pwrctrl core to toggle PERST# with the help of the controller drivers. But
+care must be taken care by the controller drivers to not deassert the
+PERST# signal if this callback is populated.
+
+This callback if available, will be called by the pwrctrl core during the
+device power up and power down scenarios. Controller drivers should
+identify the device using the 'struct device_node' passed during the
+callback and toggle PERST# accordingly.
+
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c | 4 ++--
- drivers/pci/pwrctrl/slot.c               | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/pci/pwrctrl/core.c | 27 +++++++++++++++++++++++++++
+ include/linux/pci.h        |  1 +
+ 2 files changed, 28 insertions(+)
 
-diff --git a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-index 4e664e7b8dd23f592c0392efbf6728fc5bf9093f..b65955adc7bd44030593e8c49d60db0f39b03d03 100644
---- a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-+++ b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-@@ -80,6 +80,8 @@ static int pci_pwrctrl_pwrseq_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
+diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
+index 6bdbfed584d6d79ce28ba9e384a596b065ca69a4..8a26f432436d064acb7ebbbc9ce8fc339909fbe9 100644
+--- a/drivers/pci/pwrctrl/core.c
++++ b/drivers/pci/pwrctrl/core.c
+@@ -6,6 +6,7 @@
+ #include <linux/device.h>
+ #include <linux/export.h>
+ #include <linux/kernel.h>
++#include <linux/of.h>
+ #include <linux/pci.h>
+ #include <linux/pci-pwrctrl.h>
+ #include <linux/property.h>
+@@ -61,6 +62,28 @@ void pci_pwrctrl_init(struct pci_pwrctrl *pwrctrl, struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(pci_pwrctrl_init);
  
-+	pci_pwrctrl_init(&data->ctx, dev);
++static void pci_pwrctrl_perst_deassert(struct pci_pwrctrl *pwrctrl)
++{
++	struct pci_host_bridge *host_bridge = to_pci_host_bridge(pwrctrl->dev->parent);
++	struct device_node *np = dev_of_node(pwrctrl->dev);
 +
- 	data->pwrseq = devm_pwrseq_get(dev, pdata->target);
- 	if (IS_ERR(data->pwrseq))
- 		return dev_err_probe(dev, PTR_ERR(data->pwrseq),
-@@ -95,8 +97,6 @@ static int pci_pwrctrl_pwrseq_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	pci_pwrctrl_init(&data->ctx, dev);
--
- 	ret = devm_pci_pwrctrl_device_set_ready(dev, &data->ctx);
- 	if (ret)
- 		return dev_err_probe(dev, ret,
-diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
-index 6e138310b45b9f7e930b6814e0a24f7111d25fee..b68406a6b027e4d9f853e86d4340e0ab267b6126 100644
---- a/drivers/pci/pwrctrl/slot.c
-+++ b/drivers/pci/pwrctrl/slot.c
-@@ -38,6 +38,8 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
- 	if (!slot)
- 		return -ENOMEM;
- 
-+	pci_pwrctrl_init(&slot->ctx, dev);
++	if (!host_bridge->toggle_perst)
++		return;
 +
- 	ret = of_regulator_bulk_get_all(dev, dev_of_node(dev),
- 					&slot->supplies);
- 	if (ret < 0) {
-@@ -63,8 +65,6 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
- 				     "Failed to enable slot clock\n");
- 	}
++	host_bridge->toggle_perst(host_bridge, np, false);
++}
++
++static void pci_pwrctrl_perst_assert(struct pci_pwrctrl *pwrctrl)
++{
++	struct pci_host_bridge *host_bridge = to_pci_host_bridge(pwrctrl->dev->parent);
++	struct device_node *np = dev_of_node(pwrctrl->dev);
++
++	if (!host_bridge->toggle_perst)
++		return;
++
++	host_bridge->toggle_perst(host_bridge, np, true);
++}
++
+ /**
+  * pci_pwrctrl_device_set_ready() - Notify the pwrctrl subsystem that the PCI
+  * device is powered-up and ready to be detected.
+@@ -82,6 +105,8 @@ int pci_pwrctrl_device_set_ready(struct pci_pwrctrl *pwrctrl)
+ 	if (!pwrctrl->dev)
+ 		return -ENODEV;
  
--	pci_pwrctrl_init(&slot->ctx, dev);
--
- 	ret = devm_pci_pwrctrl_device_set_ready(dev, &slot->ctx);
++	pci_pwrctrl_perst_deassert(pwrctrl);
++
+ 	pwrctrl->nb.notifier_call = pci_pwrctrl_notify;
+ 	ret = bus_register_notifier(&pci_bus_type, &pwrctrl->nb);
  	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to register pwrctrl driver\n");
+@@ -103,6 +128,8 @@ void pci_pwrctrl_device_unset_ready(struct pci_pwrctrl *pwrctrl)
+ {
+ 	cancel_work_sync(&pwrctrl->work);
+ 
++	pci_pwrctrl_perst_assert(pwrctrl);
++
+ 	/*
+ 	 * We don't have to delete the link here. Typically, this function
+ 	 * is only called when the power control device is being detached. If
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 59876de13860dbe50ee6c207cd57e54f51a11079..9eeee84d550bb9f15a90b5db9da03fccef8097ee 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -605,6 +605,7 @@ struct pci_host_bridge {
+ 	void (*release_fn)(struct pci_host_bridge *);
+ 	int (*enable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
+ 	void (*disable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
++	void (*toggle_perst)(struct pci_host_bridge *bridge, struct device_node *np, bool assert);
+ 	void		*release_data;
+ 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
+ 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
 
 -- 
 2.45.2
