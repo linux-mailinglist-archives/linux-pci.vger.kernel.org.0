@@ -1,58 +1,74 @@
-Return-Path: <linux-pci+bounces-34310-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34311-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAA48B2C7F7
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 17:07:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCC3CB2C804
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 17:08:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 02C4E17DB02
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 15:01:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 026EB3B91F4
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 15:04:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF964285058;
-	Tue, 19 Aug 2025 15:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A28F7263C7F;
+	Tue, 19 Aug 2025 15:04:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="S6N69x24"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="b5VQ9xd6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C296283FE5;
-	Tue, 19 Aug 2025 14:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F79253B43;
+	Tue, 19 Aug 2025 15:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755615603; cv=none; b=bTJvVKDX8lo6OEoi49tSuQa4Yrj1n0Wx3NFKwlAzuTyi+wngaXl9R02t639AqL2e9w/YV/HsF2b5gVnhVtjzhVM93zt6V4plcS52yOiDJ30WZRUiSmWzVN2Iv/nLo9G4XnT5rearRPRDSP8ZO7QrADXK41G+8AK1XQlzp9LNQPQ=
+	t=1755615896; cv=none; b=f6kfMfpdbdIMeNAxW5wCaqvA4eJOrxfOfdl+0z+r4FbANoaX0Qlj32ysSvIDuhTguXUs3GVRcLExQZxfWCRid3ogctmd0yQZ7keh5lV3IWNGCZKnr+MaUPnp/0ChSZdDi191ZNHYssi9CqWdwoha5MqhyP+OSAgWpyi8ea2c4mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755615603; c=relaxed/simple;
-	bh=Yilw6ElsTDFQFS4yTwUVO0/7TFBEDVN4P9FjnT8mZzw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VCxRjps0CPcDWWY7/raDZOhFxWqG8jFI13h9j74NgXYsb/XaYW5R+zXMc9UhaKkeTJi1C8GvkoET3iHmmwkN/8rRvdF7sN99ldWAn+Uhbvg5cW0uG4C4AfViaWlruF+igioINPD2D14jjhE9QS6myFZKT+xHcJzp7uu6sQSe9xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=S6N69x24; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=gg
-	anK5XliHOL41hQafEOQM8fWffCn/9NgkkF0q9Hvcc=; b=S6N69x24wdJFm26087
-	aJ5Vb7hF7UILjl9b634kjHPAInPIl09wsmIHnPqCYHrO8bnyPx2M4R6+ZiIXZjSS
-	vF74REBj/weynrm/wvKC3dmvVd45TVUwk0LBeNKi9jt88Z/eCask6wlhpNrfcDC9
-	OiTfwCKcwZKiBO2jLscCnQcao=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wD31+UVkaRoey7yCw--.24652S2;
-	Tue, 19 Aug 2025 22:58:30 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	bhelgaas@google.com,
-	helgaas@kernel.org,
-	jingoohan1@gmail.com,
-	mani@kernel.org
-Cc: robh@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v2] PCI: endpoint: Implement capability search using PCI core APIs
-Date: Tue, 19 Aug 2025 22:58:28 +0800
-Message-Id: <20250819145828.438541-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1755615896; c=relaxed/simple;
+	bh=ILPotQqZ85MxrbibnWJjp1VU8yBCgoUBh7O0xDtRAQI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OKbLMpQZC8cI5uwEuAsme+bcfFfBFwg3JlExfcIna0HaEZ0vfbm935BafjfgVKZ5Yk7AMw1+pd8hMtZFLDNiDfKZrvgNFRsffpM69FcYc7N/pPQYLW35SppTfbtrES6sT4p/QviWNDhfcb2onsIQQYW+wjm3pqptvH08peA5xP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=b5VQ9xd6; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57JDiwT3029537;
+	Tue, 19 Aug 2025 15:04:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=6lO4ci5ORzCJ3X9hQWjZfIn59t+ff
+	am7eIKMx47CEIQ=; b=b5VQ9xd6XBlvQWU7eejWavd0SKtcvr/+59b2HtFDf2Sva
+	Gl+oykszGorzP8OjsP2/IvPfVL0s/dAAGOMyeRcAAlOXg9NKrBraPu3angC/hnvQ
+	ReGBjInNGJC6yHOCB4jds6eBjrCZgJRQsxiBYJSYSFMdG2vDkCOGaIC4NXanGijb
+	ynpyIck4BDDNDG4crX6TxISpg+QjzKlG0VpsUH87Fxj0TCrgYa3vh/WGRnNtexp/
+	wx5qgWkAfzgAGThUCNczaJ6Ujyc5TIc+H1Zlp5/TGipgsVudwxXQHM2PA7pU6fYr
+	5d4RkBgSI5TzCzvrsitmDGcH0Hz/p2QNZrDIKUKYw==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 48jjhwwj13-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 19 Aug 2025 15:04:44 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 57JEYnx6037155;
+	Tue, 19 Aug 2025 15:04:43 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 48jgeb2cha-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 19 Aug 2025 15:04:43 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 57JF4g23006487;
+	Tue, 19 Aug 2025 15:04:43 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 48jgeb2cgj-1;
+	Tue, 19 Aug 2025 15:04:42 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: thierry.reding@gmail.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+        mani@kernel.org, robh@kernel.org, bhelgaas@google.com,
+        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: tegra: fix devm_kcalloc argument order for port->phys allocation
+Date: Tue, 19 Aug 2025 08:04:08 -0700
+Message-ID: <20250819150436.3105973-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,111 +76,51 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD31+UVkaRoey7yCw--.24652S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCr4ftw1fZw48uw45ArW5ZFb_yoW5urWrpa
-	yrXFyakr4UtF1Yq3ZIvan8Ary5XFn8AFy5C39xG3WSvF17ZrWUW348CFW5try7Kr4jgryr
-	Kr42qFZ5Wr13Ga7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piAR67UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgGuo2ikjXoP8wABsw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-19_02,2025-08-14_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=0
+ adultscore=0 bulkscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2507300000
+ definitions=main-2508190140
+X-Proofpoint-GUID: viilppAg9P98f_t09kS6ZO04SU-0_wrc
+X-Proofpoint-ORIG-GUID: viilppAg9P98f_t09kS6ZO04SU-0_wrc
+X-Authority-Analysis: v=2.4 cv=G4wcE8k5 c=1 sm=1 tr=0 ts=68a4928c b=1 cx=c_pps
+ a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
+ a=2OwXVqhp2XgA:10 a=yPCof4ZbAAAA:8 a=Rk0mUcj0OZC_4IGjiYgA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE5MDE0MCBTYWx0ZWRfX9crAVmjNTpx+
+ xMg2tSaHiVCM95yUklPxOgZMs72pTkf2vogjSKgb0C7cm6DnFZsj4cSvuCw2LH8Kyvx/yyk6dMg
+ OTFgkYodsNUjQYdGJaKgqDObPHGINQCU1ASI8Rqsl1XTLDpB5YAcMPQV5ULVRfcm4G2fYzrn5fQ
+ Y1Jz6x7jOqoUHcnOP++Uw06tEfIoGoYlF7g0Yv+9kK/a2/27y0Ik8u1SZqH2mCEjAD3DjhF1yv+
+ PNXdOvtp98I41BQOYrjxQYzVyuR5BH7yGAyA5QDXBXUjE6u2MJdbIYNWOiZAWRP2bfQq8ti2n6q
+ iSYcTVy1zuAmL3WRxToMnDiDnMtl0RoKEVBQPSy6HLTnm+jS/k/9i5SjvqAQ7OhkVS752iD671s
+ 717vT3IaINjuADIs3gguIEpor3YuaKpiZP95v1Fz01IQWexL9x2MQAeUX9lKpN8P+LG0dXAR
 
-The PCI core now provides generic PCI_FIND_NEXT_CAP() macros to search
-for PCI capabilities, using config accessors we supply.
+Fix incorrect argument order in devm_kcalloc() when allocating
+port->phys, The original call used sizeof(phy) as the number of
+elements and port->lanes as the element size, which is reversed.
+While this happens to produce the correct total allocation size with
+current pointer size and lane counts, the argument order is wrong.
 
-Use them in the DWC EP driver to implement dw_pcie_ep_find_capability()
-instead of duplicating the algorithm.
-
-Signed-off-by: Hans Zhang <18255117159@163.com>
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 ---
-Changes for v2:
-https://patchwork.kernel.org/project/linux-pci/patch/20250616152515.966480-1-18255117159@163.com/
-- Rebase to v6.17-rc1.
+ drivers/pci/controller/pci-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- Based on the following branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=capability-search
----
- .../pci/controller/dwc/pcie-designware-ep.c   | 31 ++-----------------
- drivers/pci/controller/dwc/pcie-designware.h  | 21 +++++++++++++
- 2 files changed, 23 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 0ae54a94809b..7f2112c2fb21 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -69,37 +69,10 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
- }
- EXPORT_SYMBOL_GPL(dw_pcie_ep_reset_bar);
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 467ddc701adc..bb88767a3797 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -1344,7 +1344,7 @@ static int tegra_pcie_port_get_phys(struct tegra_pcie_port *port)
+ 	unsigned int i;
+ 	int err;
  
--static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie_ep *ep, u8 func_no,
--				     u8 cap_ptr, u8 cap)
--{
--	u8 cap_id, next_cap_ptr;
--	u16 reg;
--
--	if (!cap_ptr)
--		return 0;
--
--	reg = dw_pcie_ep_readw_dbi(ep, func_no, cap_ptr);
--	cap_id = (reg & 0x00ff);
--
--	if (cap_id > PCI_CAP_ID_MAX)
--		return 0;
--
--	if (cap_id == cap)
--		return cap_ptr;
--
--	next_cap_ptr = (reg & 0xff00) >> 8;
--	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
--}
--
- static u8 dw_pcie_ep_find_capability(struct dw_pcie_ep *ep, u8 func_no, u8 cap)
- {
--	u8 next_cap_ptr;
--	u16 reg;
--
--	reg = dw_pcie_ep_readw_dbi(ep, func_no, PCI_CAPABILITY_LIST);
--	next_cap_ptr = (reg & 0x00ff);
--
--	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
-+	return PCI_FIND_NEXT_CAP(dw_pcie_ep_read_cfg, PCI_CAPABILITY_LIST,
-+				 cap, ep, func_no);
- }
+-	port->phys = devm_kcalloc(dev, sizeof(phy), port->lanes, GFP_KERNEL);
++	port->phys = devm_kcalloc(dev, port->lanes, sizeof(phy), GFP_KERNEL);
+ 	if (!port->phys)
+ 		return -ENOMEM;
  
- /**
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index b5e7e18138a6..a44f2113925d 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -695,6 +695,27 @@ static inline u8 dw_pcie_ep_readb_dbi(struct dw_pcie_ep *ep, u8 func_no,
- 	return dw_pcie_ep_read_dbi(ep, func_no, reg, 0x1);
- }
- 
-+static inline int dw_pcie_ep_read_cfg_byte(struct dw_pcie_ep *ep, u8 func_no,
-+					   int where, u8 *val)
-+{
-+	*val = dw_pcie_ep_readb_dbi(ep, func_no, where);
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static inline int dw_pcie_ep_read_cfg_word(struct dw_pcie_ep *ep, u8 func_no,
-+					   int where, u16 *val)
-+{
-+	*val = dw_pcie_ep_readw_dbi(ep, func_no, where);
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static inline int dw_pcie_ep_read_cfg_dword(struct dw_pcie_ep *ep, u8 func_no,
-+					    int where, u32 *val)
-+{
-+	*val = dw_pcie_ep_readl_dbi(ep, func_no, where);
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
- static inline unsigned int dw_pcie_ep_get_dbi2_offset(struct dw_pcie_ep *ep,
- 						      u8 func_no)
- {
-
-base-commit: 8742b2d8935f476449ef37e263bc4da3295c7b58
 -- 
-2.25.1
+2.50.1
 
 
