@@ -1,211 +1,261 @@
-Return-Path: <linux-pci+bounces-34314-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34315-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AFD4B2C98C
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 18:27:04 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4E17B2CA70
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 19:22:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99BB9621EB5
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 16:23:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8C8E7A2145
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 17:21:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF8F3248F42;
-	Tue, 19 Aug 2025 16:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64BE4302CB9;
+	Tue, 19 Aug 2025 17:22:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z49I23YB"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="K1xux7em"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2086.outbound.protection.outlook.com [40.107.236.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53EE244661;
-	Tue, 19 Aug 2025 16:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755620600; cv=none; b=bNNv7YfBZNtpDG2k7b1mvxqCsYTl/S0LzbszOd2I7436JrkawtQw4sl9RBIDiW9gH77Tjoy+Xr5E1BeTv/T6zvq0l9C3syC8L5sCi0BvpYRscXQetScY6i8LIkDFPhCuDTNvrbzoNBgv77QXMhWUETpnVzJTpXm+0ev2N7msaqs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755620600; c=relaxed/simple;
-	bh=TG5mF2gjBHDGc+RyikyQdTbwl4JX+eFWd/654sv2CnA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GDvuc5W0PExYmo09QL5yvkI603rnXvaYThHM28HQi20gwmmi6UL17UB4HJK/mo1901L8BDTtZfTp4VpjRyWLlN75RM0mUiLHf70ilWDb67f1YTCnsEhhgdf4vcYfzNvfWWpENuaV/b4WHly+PtxX8CgNZvwrGerpDxKYN2N/EKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z49I23YB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8B6DC4CEF1;
-	Tue, 19 Aug 2025 16:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755620600;
-	bh=TG5mF2gjBHDGc+RyikyQdTbwl4JX+eFWd/654sv2CnA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z49I23YBEcE6OODH3koS1wODoZghGgpRhOfO6tYy5rGLdr/3RC82LDPQVokBwBnWp
-	 ggAntLrGmehOlk7JiHw7h6X8HN0ecTeXZoWVdBgzLHgLP94n6w7QgAyXemsS9LTbWk
-	 lJ1q+3qNOFtmpN8HegpxeG7oX6SC9k3wAPllJqoj1CxtsD4C810YWlfKXEHJnS2pY8
-	 UtBaXvUfQ4j4I2KSYXF/mkXl7vYXpXkeN/Qzw5Hkvp7S1eMzp4/DOWZ1BeJFaD7mxG
-	 Lc5Nvw5qtNM1+HgGhDsTBnoAayiZu6RyksBiSwm7d+tT1zoymTfZA6bQD/syxPJK6/
-	 DuPSl0cyo7Chg==
-Date: Tue, 19 Aug 2025 21:53:11 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	Cyril Brulebois <kibi@debian.org>, bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] PCI: brcmstb: Add panic/die handler to driver
-Message-ID: <on7eajzjb7bb5ut4jiwxgi4gckhspar4eztmvzfslemoohr6kr@ccffktlzlpcn>
-References: <20250807221513.1439407-1-james.quinlan@broadcom.com>
- <20250807221513.1439407-3-james.quinlan@broadcom.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1031F8733;
+	Tue, 19 Aug 2025 17:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755624161; cv=fail; b=osdfAecj53W7cf6Z+/XJNbFCShKgn2jhvUJ+f9l7W7Tz4iUJbL/2xt2KfdfYLXOXxBnB6JJZMdTzEkbHvrVC9i5gEU4OMf8Td1jsTBiHauZB3Mnv2pKSEKfXH8871wi5RyrtZceaCJSN19wvL/2HixTO3AvMtsDCh0hfhn4Fx94=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755624161; c=relaxed/simple;
+	bh=gYWaPTS4YdSg0wP8oMIFzHhyVqz0GtylpFIaOeR3h88=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=twDbJmJJegB1ChWV2K01JFnc8pFjyCp3LmVpCB3GRuxJnNbQD8of+mU+Q1oHL0onBlzuCLShlKX02YH29719/F32MTOy60pS614lPeA8uwCZCcnPsucmcGMkahCbwpluBki0bEAdRJ0PetfbTsxomhAMTM7x+JhhIAwLg2KfEZI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=K1xux7em; arc=fail smtp.client-ip=40.107.236.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Eu6949MSJmIEEDkP9qwY64DEf13t6MFD/mhXDJ2j51Z7KfSqClgy2QokedllU5jNXYyMILxQzqMoL3emN2atj5qE+E/xsBRved52fxJisfVPPW4WH+jnrvhgxQBkWNPsPR6DH1JU7h0tbcC5R9pSdCCXeYOFgJdL46cPfeixRbeP4tt6VhoYS5XAuz6mImMLNgC5EQxIYzno0SfrxCagFXyH+XcTDtwHlz+66UYSgX6BJvHOCD/WcLKK0WdsKHj9fxVDzeegtxjaDvLwVHGxjWEnZs27AHqU+QzyjkvrZjTdzQ3J2Oso5XeOlO7uvnHpSR/sM4Z1fnF2zOOGcThs5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ys1gH2e5j8xiZRvGCwTNRL2yYA1Sfu6NnXvCiYNcMQ4=;
+ b=JyUASeB7okbhaJquVZB4+3ngCTrx4U8Fafm9xYhD7twGyt0vfxjQr/ZjthngJztLWDZBkGHVcjU3lVvCVRoJxkqnFGX1yiudhWJVpdTJFgT4M9HgrzcGjqVUj711zuNDcSb/grQ1/HIijgTWc9xGrZVUm1K9bQo9ts3U076OoLm+eVB8OKM59vbHDbr2ID64wkePQlBgiI12kTN1hgS2biBR+ICH3hGl5uSaI28vnMTciR8xPio8F3q59ULFAwN98tjfmygdAR1Yh9BsfqYdWswCVk41iqWzvX0V6iAgN+yI2b/tkfCu1aYW/CyIHT/j6YK8hFoaL6KaQa+0w1cNAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ys1gH2e5j8xiZRvGCwTNRL2yYA1Sfu6NnXvCiYNcMQ4=;
+ b=K1xux7emZOHeeE+GMUaqhIWbe2GvN2szzxVYGeNJRINCQbW6nAZjM9f1UWlcxl7RsFLhn16FzJigmRNquwp5xB6+BsdAnOx10ZhsZhpM8o0AsAZmjKij9oEgbNLbHxQJyPDaatCorXO8V6ufw2Br/4w1Ix4CQ5YeIXto++L804cfaiaQMuU3iJyoKynq3/RL1VlNy8bfAGxpQMjJ7NPH8cjiQIfDOwbc+c+VeelMyYTgdP1zmTzyoudJmIMKD8ZFp8S//9qzsnYFGTX7LS273L1wdZHVJB+N3EgBnsa7A4kugZlCC2o7NJHQne037ITFXD1CDqaZok2YRGRFNmwZ4Q==
+Received: from BN0PR03CA0033.namprd03.prod.outlook.com (2603:10b6:408:e7::8)
+ by SA5PPF530AE3851.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8c9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.24; Tue, 19 Aug
+ 2025 17:22:35 +0000
+Received: from BN1PEPF00004689.namprd05.prod.outlook.com
+ (2603:10b6:408:e7:cafe::75) by BN0PR03CA0033.outlook.office365.com
+ (2603:10b6:408:e7::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9031.20 via Frontend Transport; Tue,
+ 19 Aug 2025 17:22:34 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ BN1PEPF00004689.mail.protection.outlook.com (10.167.243.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9052.8 via Frontend Transport; Tue, 19 Aug 2025 17:22:34 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 19 Aug
+ 2025 10:22:23 -0700
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 19 Aug 2025 10:22:23 -0700
+Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Tue, 19 Aug 2025 10:22:21 -0700
+Date: Tue, 19 Aug 2025 10:22:20 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: <robin.murphy@arm.com>, <joro@8bytes.org>, <bhelgaas@google.com>,
+	<will@kernel.org>, <robin.clark@oss.qualcomm.com>, <yong.wu@mediatek.com>,
+	<matthias.bgg@gmail.com>, <angelogioacchino.delregno@collabora.com>,
+	<thierry.reding@gmail.com>, <vdumpa@nvidia.com>, <jonathanh@nvidia.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <kevin.tian@intel.com>,
+	<yi.l.liu@intel.com>, <baolu.lu@linux.intel.com>,
+	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<patches@lists.linux.dev>, <pjaroszynski@nvidia.com>, <vsethi@nvidia.com>,
+	<helgaas@kernel.org>, <etzhao1900@gmail.com>
+Subject: Re: [PATCH v3 3/5] iommu: Add iommu_get_domain_for_dev_locked()
+ helper
+Message-ID: <aKSyzI9Xz3J0nhfk@Asurada-Nvidia>
+References: <cover.1754952762.git.nicolinc@nvidia.com>
+ <a69557026b7e2353bae67104bbe6a88f0682305e.1754952762.git.nicolinc@nvidia.com>
+ <20250818143949.GO802098@nvidia.com>
+ <aKNhIr08fK+xIYcg@Asurada-Nvidia>
+ <20250818234241.GF802098@nvidia.com>
+ <aKQG9/skig6F8LdQ@Asurada-Nvidia>
+ <20250819125249.GG802098@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250807221513.1439407-3-james.quinlan@broadcom.com>
+In-Reply-To: <20250819125249.GG802098@nvidia.com>
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00004689:EE_|SA5PPF530AE3851:EE_
+X-MS-Office365-Filtering-Correlation-Id: 585e9789-a4a4-47ac-9913-08dddf44fcdd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?JSV2/NcBFWPYEo3I8e3g0fijZi57fj+q4pWrCPKY+6Sc60z3T4oZyX1K+v4t?=
+ =?us-ascii?Q?T10oDq9RsMlVIx1iJlCMK+VGlTQIdaa0Pmn7IVHPspk2Oc3PQ1KpOXOEUbs9?=
+ =?us-ascii?Q?Jutlqp44pHbjnTMAcOaII38J80ax9pzt2E+saO+wmnheimml7comXRN4To67?=
+ =?us-ascii?Q?tBzhwgpfPgV5T9FBMJxMpXVHMzEpnrKpWsP5kJwYXd3gYb+8YBFeXfesK/zV?=
+ =?us-ascii?Q?ENMLgcwGFkXJa9jGhmbRcpc8Wnmefys71rqF3xWN4SjV7EQ+zCVh0oBhakHv?=
+ =?us-ascii?Q?0ogaL/tF52RcUnKhZbZmOGgws3qx9BNA0qkUAjNfw4PdamznVnWZkFOnqsd5?=
+ =?us-ascii?Q?YqCWASFHd4PdX9j1pCJwo2TuXohFWxO+Y91swJPoLNlxrPvD4LiKMubsvHqN?=
+ =?us-ascii?Q?X4JP3xTUbiJy2Uz+ZDn8yp2jJ2o11SCt0GLw20EJVy6bO2zVdTJzRlHduDoA?=
+ =?us-ascii?Q?pPimEX/KLk3gNmGDeB/Ry6Ftz03brssXuunW+AoKr1ArThh6z9Uc1foDTCYx?=
+ =?us-ascii?Q?f7ffwrPLATaE2oi6uXNTy55bfepAzG/L+JwLpRtpAWD5yxMMQUg1TWro981a?=
+ =?us-ascii?Q?m0jGwjYd0IW1jz2YuL5i3YgshoOn6uqp8GS2neGPwnX10+c5Dl/72Lf2yYyP?=
+ =?us-ascii?Q?eSse8pS35fUqLfl1uuXlQ7bNBtKerpip8+5YILhx8cQFWer8emXZnAPhWlgr?=
+ =?us-ascii?Q?G3JfyUoUGQWN0C6mOlBfBOVAlPKkFP9ykgA3YaNt+yt5JPNcajY13EUNIKop?=
+ =?us-ascii?Q?aXrqDhjrAzaMbhV4oAeo+OB9Ym1B60JgLsNNlx+K7loSNafVRzJnh8HVJH3L?=
+ =?us-ascii?Q?Ma4a42FyoeMrN0dMFKoE0FHeymT5D4JgrtBJo4UkZCYcwJylY+uKqDiFzN5P?=
+ =?us-ascii?Q?Th6ets1H/5YfGX6zqbWYPvs6NBvHLAhGHuW34yVlXyKRqkyuLl/pQjLSiedY?=
+ =?us-ascii?Q?lxno4WB6h4aIX7jCYU6WTaqW7CxxrxE8baFETZGrZ6MPkoHoRcW4FLpPUnKR?=
+ =?us-ascii?Q?zzxIJQ0Gh5rIeld+a1ZepZtB7IavC/tAqYVU7OKaI8qjfPBOnCzDM18DZX/q?=
+ =?us-ascii?Q?91elMigZZ3+EIIyfYTZ/o/s8E+xlzo8ONvyEuU+4TEfjWKH4BvC5FHmB0ycs?=
+ =?us-ascii?Q?i2KTZR/3jEBIf0RWZt20WO+ot9QXwAkaXJOgR6ANLDRJmDPRUnGMA2vH+lZ6?=
+ =?us-ascii?Q?LFU6DC1jOSzf2nfJcmZ8X7w+TZKrUg4ZZElbA5rz+9hEL6kEJmDriFFilqO6?=
+ =?us-ascii?Q?XMYDnFfxorwUlOKc0Mu8J9EUb5ozx3FI64mL1quzix85olBvxWrEKngJ7cfu?=
+ =?us-ascii?Q?YHlYAS0nvbeDa8W9DHyMWbJ1MGJmrDiKh0knr/FSvtc0v2h9oc8OjpkUDNXO?=
+ =?us-ascii?Q?boPRn99oOW0jRMgcMvBjUcivYRS5OtY2wR42ytBYoaAy2Y5bN4aIQFVQhWA8?=
+ =?us-ascii?Q?N4up/mJsZDJk/TdTIS0pE5FHNiWT4iCjZAz/CyNo+UzUg0U14KrURpdtgyjg?=
+ =?us-ascii?Q?pkH/wRSSnv9GU9uduuUPJOx0ceRZ2X56yVGB?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2025 17:22:34.7852
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 585e9789-a4a4-47ac-9913-08dddf44fcdd
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00004689.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPF530AE3851
 
-On Thu, Aug 07, 2025 at 06:15:13PM GMT, Jim Quinlan wrote:
-> Whereas most PCIe HW returns 0xffffffff on illegal accesses and the like,
-> by default Broadcom's STB PCIe controller effects an abort.  Some SoCs --
-> 7216 and its descendants -- have new HW that identifies error details.
+On Tue, Aug 19, 2025 at 09:52:49AM -0300, Jason Gunthorpe wrote:
+> On Mon, Aug 18, 2025 at 10:09:11PM -0700, Nicolin Chen wrote:
+> > Yes, I've thought about that. The concern is that some other place
+> > someday may want to use iommu_get_domain_for_dev() in similar cases
+> > but would find that it doesn't work. So it would have to duplicate
+> > the domain pointer in its "master" structure.
+> > 
+> > Overall, having a _locked version feels cleaner to me.
 > 
-> This simple handler determines if the PCIe controller was the cause of the
-> abort and if so, prints out diagnostic info.  Unfortunately, an abort still
-> occurs.
-> 
-> Care is taken to read the error registers only when the PCIe bridge is
-> active and the PCIe registers are acceptable.  Otherwise, a "die" event
-> caused by something other than the PCIe could cause an abort if the PCIe
-> "die" handler tried to access registers when the bridge is off.
-> 
-> Example error output:
->   brcm-pcie 8b20000.pcie: Error: Mem Acc: 32bit, Read, @0x38000000
->   brcm-pcie 8b20000.pcie:  Type: TO=0 Abt=0 UnspReq=1 AccDsble=0 BadAddr=0
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 155 +++++++++++++++++++++++++-
->  1 file changed, 154 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index ceb431a252b7..43c4ada3de07 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -14,15 +14,18 @@
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/irqchip/irq-msi-lib.h>
->  #include <linux/irqdomain.h>
-> +#include <linux/kdebug.h>
->  #include <linux/kernel.h>
->  #include <linux/list.h>
->  #include <linux/log2.h>
->  #include <linux/module.h>
->  #include <linux/msi.h>
-> +#include <linux/notifier.h>
->  #include <linux/of_address.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_pci.h>
->  #include <linux/of_platform.h>
-> +#include <linux/panic_notifier.h>
->  #include <linux/pci.h>
->  #include <linux/pci-ecam.h>
->  #include <linux/printk.h>
-> @@ -156,6 +159,39 @@
->  #define  MSI_INT_MASK_SET		0x10
->  #define  MSI_INT_MASK_CLR		0x14
->  
-> +/* Error report registers */
-> +#define PCIE_OUTB_ERR_TREAT				0x6000
-> +#define  PCIE_OUTB_ERR_TREAT_CONFIG_MASK		0x1
-> +#define  PCIE_OUTB_ERR_TREAT_MEM_MASK			0x2
-> +#define PCIE_OUTB_ERR_VALID				0x6004
-> +#define PCIE_OUTB_ERR_CLEAR				0x6008
-> +#define PCIE_OUTB_ERR_ACC_INFO				0x600c
-> +#define  PCIE_OUTB_ERR_ACC_INFO_CFG_ERR_MASK		0x01
-> +#define  PCIE_OUTB_ERR_ACC_INFO_MEM_ERR_MASK		0x02
-> +#define  PCIE_OUTB_ERR_ACC_INFO_TYPE_64_MASK		0x04
-> +#define  PCIE_OUTB_ERR_ACC_INFO_DIR_WRITE_MASK		0x10
-> +#define  PCIE_OUTB_ERR_ACC_INFO_BYTE_LANES_MASK		0xff00
-> +#define PCIE_OUTB_ERR_ACC_ADDR				0x6010
-> +#define PCIE_OUTB_ERR_ACC_ADDR_BUS_MASK			0xff00000
-> +#define PCIE_OUTB_ERR_ACC_ADDR_DEV_MASK			0xf8000
-> +#define PCIE_OUTB_ERR_ACC_ADDR_FUNC_MASK		0x7000
-> +#define PCIE_OUTB_ERR_ACC_ADDR_REG_MASK			0xfff
-> +#define PCIE_OUTB_ERR_CFG_CAUSE				0x6014
-> +#define  PCIE_OUTB_ERR_CFG_CAUSE_TIMEOUT_MASK		0x40
-> +#define  PCIE_OUTB_ERR_CFG_CAUSE_ABORT_MASK		0x20
-> +#define  PCIE_OUTB_ERR_CFG_CAUSE_UNSUPP_REQ_MASK	0x10
-> +#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_TIMEOUT_MASK	0x4
-> +#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_DISABLED_MASK	0x2
-> +#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_64BIT__MASK	0x1
-> +#define PCIE_OUTB_ERR_MEM_ADDR_LO			0x6018
-> +#define PCIE_OUTB_ERR_MEM_ADDR_HI			0x601c
-> +#define PCIE_OUTB_ERR_MEM_CAUSE				0x6020
-> +#define  PCIE_OUTB_ERR_MEM_CAUSE_TIMEOUT_MASK		0x40
-> +#define  PCIE_OUTB_ERR_MEM_CAUSE_ABORT_MASK		0x20
-> +#define  PCIE_OUTB_ERR_MEM_CAUSE_UNSUPP_REQ_MASK	0x10
-> +#define  PCIE_OUTB_ERR_MEM_CAUSE_ACC_DISABLED_MASK	0x2
-> +#define  PCIE_OUTB_ERR_MEM_CAUSE_BAD_ADDR_MASK		0x1
-> +
->  #define  PCIE_RGR1_SW_INIT_1_PERST_MASK			0x1
->  #define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT		0x0
->  
-> @@ -305,6 +341,8 @@ struct brcm_pcie {
->  	struct subdev_regulators *sr;
->  	bool			ep_wakeup_capable;
->  	const struct pcie_cfg_data	*cfg;
-> +	struct notifier_block	die_notifier;
-> +	struct notifier_block	panic_notifier;
->  	bool			bridge_on;
->  	spinlock_t		bridge_lock;
->  };
-> @@ -1730,6 +1768,115 @@ static int brcm_pcie_resume_noirq(struct device *dev)
->  	return ret;
->  }
->  
-> +/* Dump out PCIe errors on die or panic */
-> +static int _brcm_pcie_dump_err(struct brcm_pcie *pcie,
-> +			       const char *type)
-> +{
-> +	void __iomem *base = pcie->base;
-> +	int i, is_cfg_err, is_mem_err, lanes;
-> +	char *width_str, *direction_str, lanes_str[9];
-> +	u32 info, cfg_addr, cfg_cause, mem_cause, lo, hi;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&pcie->bridge_lock, flags);
-> +	/* Don't access registers when the bridge is off */
-> +	if (!pcie->bridge_on || readl(base + PCIE_OUTB_ERR_VALID) == 0) {
-> +		spin_unlock_irqrestore(&pcie->bridge_lock, flags);
-> +		return NOTIFY_DONE;
-> +	}
-> +
-> +	/* Read all necessary registers so we can release the spinlock ASAP */
-> +	info = readl(base + PCIE_OUTB_ERR_ACC_INFO);
-> +	is_cfg_err = !!(info & PCIE_OUTB_ERR_ACC_INFO_CFG_ERR_MASK);
-> +	is_mem_err = !!(info & PCIE_OUTB_ERR_ACC_INFO_MEM_ERR_MASK);
-> +	if (is_cfg_err) {
-> +		cfg_addr = readl(base + PCIE_OUTB_ERR_ACC_ADDR);
-> +		cfg_cause = readl(base + PCIE_OUTB_ERR_CFG_CAUSE);
-> +	}
-> +	if (is_mem_err) {
-> +		mem_cause = readl(base + PCIE_OUTB_ERR_MEM_CAUSE);
-> +		lo = readl(base + PCIE_OUTB_ERR_MEM_ADDR_LO);
-> +		hi = readl(base + PCIE_OUTB_ERR_MEM_ADDR_HI);
-> +	}
-> +	/* We've got all of the info, clear the error */
-> +	writel(1, base + PCIE_OUTB_ERR_CLEAR);
-> +	spin_unlock_irqrestore(&pcie->bridge_lock, flags);
-> +
-> +	dev_err(pcie->dev, "handling %s error notification\n", type);
+> We probably need the locked version, but it just shouldn't be called very
+> much..
 
-You are not *handling* the error, but just dumping the registers due to the
-error. So this error message is misleading.
+OK. Let's have one patch upgrading the attach_dev to pass in the
+old domain pointer (aligning with the SVA version of attach_dev),
+and another patch adding the _locked version that then will have
+very limited callers.
 
-- Mani
+> > > With sensible internal locking
+> > 
+> > Hmm, I feel this iommu_get_translation_mode() is somewhat the same
+> > as the current iommu_get_domain_for_dev(). It would just return the
+> > group->domain->type v.s. group->domain, right?
+> > 
+> > This doesn't have any UAF concern though.
+> 
+> Yes, no UAF concern is the point
 
--- 
-மணிவண்ணன் சதாசிவம்
+I see.
+
+> > > So that is another bunch. Not sure what will be left after.
+> > 
+> > I recall that some of the drivers manages their own domains, e.g.
+> >     drivers/gpu/drm/tegra/drm.c
+> > 
+> > So, they would want more out of the domain pointer than just type.
+> 
+> This looks like it wants an 'is currently attached' operation
+
+That's certainly one of the wide use cases. And I think we could
+have an IOMMU_DOMAIN_NONE to fit that into the type helper.
+
+Yet, I also see some other cases that cannot be helped with the
+type function. Just listing a few:
+
+1) domain matching (and type)
+drivers/gpu/drm/tegra/drm.c:965:        if (domain && domain->type != IOMMU_DOMAIN_IDENTITY &&
+drivers/gpu/drm/tegra/drm.c:966:            domain != tegra->domain)
+drivers/gpu/drm/tegra/drm.c-967-                return 0;
+
+2) page size
+drivers/gpu/drm/arm/malidp_planes.c:307:	mmu_dom = iommu_get_domain_for_dev(mp->base.dev->dev);
+drivers/gpu/drm/arm/malidp_planes.c-308-	if (mmu_dom)
+drivers/gpu/drm/arm/malidp_planes.c-309-		return mmu_dom->pgsize_bitmap;
+
+3) iommu_iova_to_phys
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c:2597:	dom = iommu_get_domain_for_dev(adev->dev);
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c-2598-
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c-2599-	while (size) {
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c-2600-		phys_addr_t addr = *pos & PAGE_MASK;
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c-2601-		loff_t off = *pos & ~PAGE_MASK;
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c-2602-		size_t bytes = PAGE_SIZE - off;
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c-2603-		unsigned long pfn;
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c-2604-		struct page *p;
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c-2605-		void *ptr;
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c-2606-
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c-2607-		bytes = min(bytes, size);
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c-2608-
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c:2609:		addr = dom ? iommu_iova_to_phys(dom, addr) : addr;
+
+4) map/unmap
+drivers/net/ipa/ipa_mem.c:465:  domain = iommu_get_domain_for_dev(dev);
+drivers/net/ipa/ipa_mem.c-466-  if (!domain) {
+drivers/net/ipa/ipa_mem.c-467-          dev_err(dev, "no IOMMU domain found for IMEM\n");
+drivers/net/ipa/ipa_mem.c-468-          return -EINVAL;
+drivers/net/ipa/ipa_mem.c-469-  }
+drivers/net/ipa/ipa_mem.c-470-
+drivers/net/ipa/ipa_mem.c-471-  /* Align the address down and the size up to page boundaries */
+drivers/net/ipa/ipa_mem.c-472-  phys = addr & PAGE_MASK;
+drivers/net/ipa/ipa_mem.c-473-  size = PAGE_ALIGN(size + addr - phys);
+drivers/net/ipa/ipa_mem.c-474-  iova = phys;    /* We just want a direct mapping */
+drivers/net/ipa/ipa_mem.c-475-
+drivers/net/ipa/ipa_mem.c-476-  ret = iommu_map(domain, iova, phys, size, IOMMU_READ | IOMMU_WRITE,
+...
+drivers/net/ipa/ipa_mem.c:495:  domain = iommu_get_domain_for_dev(dev);
+drivers/net/ipa/ipa_mem.c-496-  if (domain) {
+drivers/net/ipa/ipa_mem.c-497-          size_t size;
+drivers/net/ipa/ipa_mem.c-498-
+drivers/net/ipa/ipa_mem.c-499-          size = iommu_unmap(domain, ipa->imem_iova, ipa->imem_size);
+
+
+We could probably invent something for case 1-3. But for case 4,
+it feels that iommu_get_domain_for_dev() is the only helper..
+
+Thanks
+Nicolin
 
