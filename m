@@ -1,54 +1,53 @@
-Return-Path: <linux-pci+bounces-34280-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34283-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A590AB2C25F
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 13:56:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 050CEB2C24D
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 13:55:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 76B205E579C
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 11:55:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27C741966DF3
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Aug 2025 11:55:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06D703314CA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79077334727;
 	Tue, 19 Aug 2025 11:55:18 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023076.outbound.protection.outlook.com [40.107.44.76])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023084.outbound.protection.outlook.com [52.101.127.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B199326D63;
-	Tue, 19 Aug 2025 11:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602113451C8;
+	Tue, 19 Aug 2025 11:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.84
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755604517; cv=fail; b=EgN4RhOETtqmiZP0Fz3miLXAQ7Ij2/E7rEwRcUk4jS9xcgwAfOSwVfy8KWF2Q9XdWw2fam/9ijigdZyu/eC2kxhNRH0W4WT290FgzSFNrzWGQsiNe8316oZOK03G1eLGtklnXfFFtENuBy9OIWWSMS1jTE8/qPgDZ260w4LwT8c=
+	t=1755604518; cv=fail; b=dpD/SarKX6fZEfJgi55n9MF37WoXJ5pN3QVYCHxAnYgYPZ07PQ76VcYzaEMqnAsAMHx35a2OxkZXPU4aqj9hdBNxGZpTMTDW+tflEZk6ikPVk0C9Z6OmIvSA7Vfe9qJRCw4ZlAL6WlY19XY9OnBl6xsJTiqzDbJ8tZr8LcDTTmk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755604517; c=relaxed/simple;
-	bh=xB7s/L11s8XafWLm3UDOCd4o5qOzY6amgd4eu1x2OSU=;
+	s=arc-20240116; t=1755604518; c=relaxed/simple;
+	bh=r4tUCOH3hAD0cI01zaClLN8o0B6ogXErrjJKZNV67GI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ATESMJqbvC6wPW4REL6TllSOmiwyKPWWFD/T5j5T86itCspAP7iSsgtInCTmUiUm2smhUu+fd9V8NYAbgdHI4TEZHVxJ6a1Wg/+HfY2dm9+4Bqky+7lU4ro1uzbsi1mCKhxwXhrjXtMJponMeY3pgSyGKmyJAwTAgp0CuHJDmWc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.76
+	 MIME-Version:Content-Type; b=YuhyEcL9Aobh22LKy2iLeNraU5i7Kh4BgR5kVueiCCwgqcU/O9seieXI7vU6d4hWjtyOD7qxalOUBQvw7ou5sml+7E/eCn/RF6qkC87GzVHdWnBpiI10yF2L6gNCqWq011EU4KnKSAn4j2WuAJ7Cwljawtkg8bdx1tV2+Gd3ofM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.127.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SJxttdF/hsgI6+jhhhCLNQzTxFkFaFhWlGTU2NtIerlBTEdwt2++FZFYTA1Y1PLwa3KOg5c4/ImuwSOurxoMDsCrnS2TFJa9DngmW7qvbb89+bI+9rOVdvXp2b8PPTNDR/msoxD9j/nFuWNczTdItR3WhtoG68sXxroxFq+m5q/Vw0OKSxdUrCujPsPwSY407kfuAqN8ief04Kr+L2HE2592ryTUVerpJOYHbitAOM2O0PTmSoSrQ7D3FWZiWhOKf2AKN/PvCNyK1ozB79FXn6ss9Ld4Nbyvq68/bDZ9VDn9Ne/QA5iaQpyBxPKmP0BEaTDaqhWIJd9oHJbjrfAzWg==
+ b=yD/M1HD0EngHGqHyY7dtCRB4pqKvRqCsnQVmS8usLwpDAd371M64vwc6M+f8hvX1nVEx69q0HXbtZsRNidvAFO+Cfi2SSu/ct0LZdiOZ3UzFSLLrrJqgSQfqDFq62FwKAqBbbrOfGbKvQAebGLgf3X6kUXjd+DCMftEiZo2e+9VPxJhNKMNKHoF3bavLqLj78gM8+9Y2pWfQLwubDme7wD8Y+AEyV495VuvjfTr6UWukI9MupO2k6oayB9tQeAEyGGQXzQM+FPpi7z3+sR/v0te8nche0RgXowr4wXYNMLgd5YioYg8xOtfmqi4e0nmuBpHYX7vEyEbxCSlR0KGBWQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w1Q++zcAAE1nO+mh6fN6kkVO0qzaDUud0SsrxRUwW9w=;
- b=IY7/AyvgtBwTrKboabe2uQhKngmxbGbSdKDnxv2LJPNKpyEJoLmAGA6GdxbAO3bYDRSg/AXKTLlovaiEozPcYEuyfq2FmmnT3MRemMkheeGCGfWAtPOXLpw+NwyIxvwNhOvvTf5VajmoMf8yPYwMypZjVvr4yvcin44jaMviJ0LwgYeDqM8VP3yMJ0ZyCvhjesHkdibSUeyQ3iGOx9Mta2UjKF6L26hTDan15NEIafbmT2oQZLHsiKySV3UPQrdzVpSAv+VzadR9u0+yqRdRHxuuI4HTiqY1YnPq+tPl88Ye0s/MBjdzzqz6JoX7V4T7Q0wzxwuRzNifxJfhvhIxyg==
+ bh=PWvXuryKSADQqShKfPnpjrHHlbIY+cpXWE0YVCtJr4k=;
+ b=Vn7WScrHg9um+CH9ZhYsw7OyseczLJm1UWJbJGLY5om+Ckob6zs5R7+hLuegenSf+1NWUOwQO6Pg45eaOX6dwSxhaXTworl6WRLhNuP6fIg+FpSzFvKjJGTkNOWcCh0BWE0ESN2lQKWQZ6y99BBgELCnUFJt8YXUTnQAxWtoFIJdcmxaYgj0216NiIRnfR49sq+c2K/Qqe8EGOS76t4pJDyGgFUJEAF1kx8y3Kkt05R35evKkM8A3cU2+TMnWPseFgQx+CEEZkMHpKMoAe4pN2qHQWE6o7tUglbk/uhlQN5o6Zat3IC/sUY4w0ncNZ25IXfruWutI8pCQ1Z+K0ZX6Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
  dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
  not signed); arc=none (0)
-Received: from SG2PR02CA0073.apcprd02.prod.outlook.com (2603:1096:4:90::13) by
- TYZPR06MB5805.apcprd06.prod.outlook.com (2603:1096:400:26a::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.24; Tue, 19 Aug
- 2025 11:55:12 +0000
-Received: from SG1PEPF000082E7.apcprd02.prod.outlook.com
- (2603:1096:4:90:cafe::fb) by SG2PR02CA0073.outlook.office365.com
- (2603:1096:4:90::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9031.20 via Frontend Transport; Tue,
+Received: from SG2P153CA0021.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c7::8) by
+ TYZPR06MB5843.apcprd06.prod.outlook.com (2603:1096:400:285::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9031.24; Tue, 19 Aug 2025 11:55:12 +0000
+Received: from SG1PEPF000082E1.apcprd02.prod.outlook.com
+ (2603:1096:4:c7:cafe::40) by SG2P153CA0021.outlook.office365.com
+ (2603:1096:4:c7::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9073.2 via Frontend Transport; Tue,
  19 Aug 2025 11:55:11 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
  smtp.mailfrom=cixtech.com; dkim=none (message not signed)
@@ -57,11 +56,11 @@ Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
  222.71.101.198 as permitted sender) receiver=protection.outlook.com;
  client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
 Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG1PEPF000082E7.mail.protection.outlook.com (10.167.240.10) with Microsoft
+ SG1PEPF000082E1.mail.protection.outlook.com (10.167.240.4) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.20.9052.8 via Frontend Transport; Tue, 19 Aug 2025 11:55:10 +0000
 Received: from hans.. (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id BE1EB41604F1;
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id CD9D941604F2;
 	Tue, 19 Aug 2025 19:55:09 +0800 (CST)
 From: hans.zhang@cixtech.com
 To: bhelgaas@google.com,
@@ -81,9 +80,9 @@ Cc: mpillai@cadence.com,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <hans.zhang@cixtech.com>
-Subject: [PATCH v8 09/15] PCI: cadence: Update PCIe platform to use register offsets passed
-Date: Tue, 19 Aug 2025 19:52:33 +0800
-Message-ID: <20250819115239.4170604-10-hans.zhang@cixtech.com>
+Subject: [PATCH v8 10/15] dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex bindings
+Date: Tue, 19 Aug 2025 19:52:34 +0800
+Message-ID: <20250819115239.4170604-11-hans.zhang@cixtech.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250819115239.4170604-1-hans.zhang@cixtech.com>
 References: <20250819115239.4170604-1-hans.zhang@cixtech.com>
@@ -96,102 +95,159 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG1PEPF000082E7:EE_|TYZPR06MB5805:EE_
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E1:EE_|TYZPR06MB5843:EE_
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 71a39d6c-ee79-4194-9358-08dddf173fde
+X-MS-Office365-Filtering-Correlation-Id: a1e0304d-308b-4f97-96ce-08dddf173fe7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|7416014|1800799024|7053199007;
+	BCL:0;ARA:13230040|376014|82310400026|7416014|36860700013|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?tyYIJdM18VcdAGDp6ICfELybQFaEN4E0LPduzk9eTbjHwtMLkdz08mlswTW7?=
- =?us-ascii?Q?1eYTH1Ep0amEKDo1lcUnxYx/Kp6+YNAYHhwgeA1vLve7cJyGH//ctBL6m3b3?=
- =?us-ascii?Q?SYDZPhwc9dfnXEobQArAPc9Nqzyy11kb+3onSRThTuHfQYWf0JgaushVOCJO?=
- =?us-ascii?Q?CDvXXrM3FRJbBFUnfc5XjGvktuRtRbFbMtN/Ajzebdmxaa0ShNiYii0n5Vc/?=
- =?us-ascii?Q?l5B6Ppc2DG4A4lEEOFXxfOSN3b4aU9aV1x4aKm9TKw5tFXARA7d/H/I07/4e?=
- =?us-ascii?Q?Y9Gz/BEaLdtpi5W5JYsM3mNKEJEW36sykAFvK8D/GcBRWZV12qEtqFHcgogY?=
- =?us-ascii?Q?EH/OI+xTVW6PzDR9tcGHIg2vqs6Eeh5VHOhduCNwbs54tO9IOYSuAwOq/WD9?=
- =?us-ascii?Q?1oyNN+EvNJRiS4kknVqC68W9sFbky0jWby/w5/K/XcM44CQDVX8J6/ETsz8N?=
- =?us-ascii?Q?e1RCs/cf0qk1aE9gOCsLWKUDNpK7asRMPd0DPglFxcwlrfG8aQaNI4ipjAtl?=
- =?us-ascii?Q?rK0nj6rR8+/ahEqozBF6aaLy1Z0PeyVU9UqQjXc2wX4dXzSeIMfOzQP+sgk2?=
- =?us-ascii?Q?Nd/qSh0KRdQ90agP2zSIl82G/T/39G4JY1ZMUyel3mh75cELf6/wRlRGq5hw?=
- =?us-ascii?Q?02tA/mqPRHNvEIQjfBTFNo+VKkwFTkdigDiSs2XCWoMe8hIJaQMYTaEiZAoE?=
- =?us-ascii?Q?8SFEdjtOtISP4JYX4poxtA329eV/BU6EEXKUAdEIAm1llVmWQm4Vv7Wfj0lC?=
- =?us-ascii?Q?wTwGmq93fy4kYsrQXtgPYbUc6TUvN4pKI5aqbtx/D0PVb8rUf3EQ3L5lrzLO?=
- =?us-ascii?Q?suV3PgQYX6tpKwf+/KYdUBRhQn/dNU7eRwCMpcc/22jVRpxG5szZMT7xan6X?=
- =?us-ascii?Q?nlCceLlKZj6bwgcqqX5CQkEhP038e34MH+mHO7xsdrTyjox7Rl6NTmySv5Xx?=
- =?us-ascii?Q?Hk5YIOZdykzM2yItnRQ/bU9CZYYCKYvNo5ennXzVevRtBM2YImJTIyFsyIaa?=
- =?us-ascii?Q?P8pzJo0aFJn6B04F+VWUQlbzvPN5K0OUHZ+Lma2pyKuauVELEqlPS4J95cmD?=
- =?us-ascii?Q?RR0HI8TVobAy87K0fIgRCHKyMiC5ZYR3J16D95R9D07w++yiO9eM1gQru88X?=
- =?us-ascii?Q?HgtX3u5IZKTsdFwT47lMm+yzBFrO+NVbMkidNy6tmucvyX3ucAUlAPJtn8q6?=
- =?us-ascii?Q?CRy6og9QktUio48G/V+FzxgXA10xVHsXTRjTJXueVobjo5unQhV5JTDZtJLc?=
- =?us-ascii?Q?mTAkDVEdL2AbO8J9FyDn8a4cKuNepOWIYUhQo6iOMrRY9JWp79gpO4MmODm4?=
- =?us-ascii?Q?VDdsCzTM9+LExct0A4rXJi/V2QiIEjaEJBi4/e++SHyf5UUyfHtWqnctPG18?=
- =?us-ascii?Q?vgmIIz1D5BarTnV1fKPv1uCmiHKIkaL1nmI+NBiJyMIZcBcjPy/TRu3cGDOq?=
- =?us-ascii?Q?zliq8+ezCRMylLOtt6dB4llIaPffMa7J7QY/j+/DrSCRMPqZ6QZoyk06BAy7?=
- =?us-ascii?Q?RN2fZ+HrTN7Sw5uwWr26Us0dm/gVOQaiSJTc?=
+	=?us-ascii?Q?ZPnsBIEz5yXHM5wBj5hFsxzqHif32rRa9r1JWsEcrnaW93EFQylC8BvHX4YL?=
+ =?us-ascii?Q?q0CFBwugd6akSFJEcitCoeOhjHf+4DNYk2NsQSGpoPnaVtH3uulb49C1ANJb?=
+ =?us-ascii?Q?xJPaejnMpWhmvJGmtcs3h5U33HVACK1o76jSe+AaR6lQpF3sbWOSmDhD2CkL?=
+ =?us-ascii?Q?xFOHFXv1WaKfryiv5JnxWqUWF2hLGr942M376T/T0gsI1ec18wI4oGCgbrsf?=
+ =?us-ascii?Q?/1gOueqCLK2s5I4h0FcKUTIwr4odL7LFyO1BxxdVKUMqQ3aQTeL27WzKZEOm?=
+ =?us-ascii?Q?W1SXsCQ08qxLN399bIJaRydZhsGqsOdHF2R9wE/rorjOSim3lMPaFYcsHEGy?=
+ =?us-ascii?Q?1GKZcNTWjEWbCrV+BInRSMYhwXuEct6gWlSnAfDLNuQ9KCaUmCIoCkaanj8X?=
+ =?us-ascii?Q?RG/FS0C6zPNlPmWxFJ+1K6gpo1iclYn9Bq+U2lzsnmIkKWExgRE6k96mtXlg?=
+ =?us-ascii?Q?8xn0MXwYMxyMi7batGaQbUoAXkU6YMnWI2qeGEAl+ACirInMlf0ceeoqBWP9?=
+ =?us-ascii?Q?OydAZmBg0Sg5AHellx4bjVTjTH4ilR0RCbGKphxIq49k8MpBA0giHowtOgwQ?=
+ =?us-ascii?Q?/xaLeOzCgq7G0esZVKgVJl+zxKFavQBFDiUJigtqdupGTAOYXtAAo5OXtsnW?=
+ =?us-ascii?Q?LwLCgoUTB58dYKORbqlBYIRs+BFF+pd3T6QR9tnS8dmT+SdIJ36EhdKUiTT4?=
+ =?us-ascii?Q?BgI8i+BTVNcfKgZRBI927D/6NaxIu9WmFOMuNp32TQCRcOhj+AjSRgnZfhP2?=
+ =?us-ascii?Q?DFAm941x6giqDBCD0ELXmoVnJ9INISDDVHd6TBkE551kO1cDH/L4zsdtUxvw?=
+ =?us-ascii?Q?uxUnpcZEtmtP4y5LsxGwCe+2izciWBvCf+c3SrHCKAWpjgF/3XhZRLVB5aNG?=
+ =?us-ascii?Q?5edE0O34ea1fQrRIThdcHfCZxbDvHVZkUqYmWvgC/lD6cOxovnAx9Os/5GHH?=
+ =?us-ascii?Q?FF0o77GjABrE9wzmrZfiiSDZcj81vw3nS4R4C0ZtoK4y2Z968fOjQspID8EP?=
+ =?us-ascii?Q?GcYixnk0gNCaUzhAL7+EgBex4oY0HAzxyAlJ9LRDtZ42lzzvaAH0rxOTQrsU?=
+ =?us-ascii?Q?RgQRall0xtsfffrHDoyGetDaxX5+p0kojhPB/wdBx+MVac/NSkcVWGNW5/z7?=
+ =?us-ascii?Q?MmPm9QIRDvbGVW8jtfejYILQS5RzOegvi84vxQB1nf6fOE8HKGnd093FBzWA?=
+ =?us-ascii?Q?SJunq22K7ZhLrCxZ7lunPT/bxZVTetP0ZNVwK+0dXrHNJjHVnRnyCfaT1ePO?=
+ =?us-ascii?Q?89N6cABoTL2L1fsx8weTArvo6VJPqasjc4E8eZ6jIVyzOJhnFfO7gPW7Upo/?=
+ =?us-ascii?Q?T7MmNxaUM9/Kc6DuCgsvCsa50MPToda+Dcxqv49or0+eAlnB/6vQ+2HRvhZL?=
+ =?us-ascii?Q?I98IF+IH1PPxyRSuKZiZdh1/OIAVo5+yij4IEwCShgKeFnT2nD3kwkSVoGTO?=
+ =?us-ascii?Q?Ptv030ica9bPFD1zPOYGHuHshbxpcgZAmTzpZLdR/3kvhwVXOxhBqA=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1102;
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(7416014)(36860700013)(1800799024);DIR:OUT;SFP:1102;
 X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2025 11:55:10.3568
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2025 11:55:10.4163
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71a39d6c-ee79-4194-9358-08dddf173fde
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1e0304d-308b-4f97-96ce-08dddf173fe7
 X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SG1PEPF000082E7.apcprd02.prod.outlook.com
+	SG1PEPF000082E1.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5805
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5843
 
-From: Manikandan K Pillai <mpillai@cadence.com>
+From: Hans Zhang <hans.zhang@cixtech.com>
 
-Update the PCIe Cadence platform to use register offsets that
-are passed during probe of the platform.
+Document the bindings for CIX Sky1 PCIe Controller configured in
+root complex mode with five root port.
 
-Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
-Co-developed-by: Hans Zhang <hans.zhang@cixtech.com>
+Supports 4 INTx, MSI and MSI-x interrupts from the ARM GICv3 controller.
+
 Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
 ---
- drivers/pci/controller/cadence/pcie-cadence-plat.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Changes for v8:
+- Fixed the error issue of DT binding. (Rob and Krzysztof)
+- The rcsu register is split into two parts: rcsu_strap and rcsu_status.
+---
+ .../bindings/pci/cix,sky1-pcie-host.yaml      | 83 +++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-plat.c b/drivers/pci/controller/cadence/pcie-cadence-plat.c
-index b067a3296dd3..927ab5b8477c 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-plat.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-plat.c
-@@ -31,6 +31,7 @@ static u64 cdns_plat_cpu_addr_fixup(struct cdns_pcie *pcie, u64 cpu_addr)
- 
- static const struct cdns_pcie_ops cdns_plat_ops = {
- 	.cpu_addr_fixup = cdns_plat_cpu_addr_fixup,
-+	.link_up = cdns_pcie_linkup,
- };
- 
- static int cdns_plat_pcie_probe(struct platform_device *pdev)
-@@ -68,6 +69,11 @@ static int cdns_plat_pcie_probe(struct platform_device *pdev)
- 		rc = pci_host_bridge_priv(bridge);
- 		rc->pcie.dev = dev;
- 		rc->pcie.ops = &cdns_plat_ops;
-+		rc->pcie.is_rc = data->is_rc;
+diff --git a/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
+new file mode 100644
+index 000000000000..b910a42e0843
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/cix,sky1-pcie-host.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+		/* Store the register bank offsets pointer */
-+		rc->pcie.cdns_pcie_reg_offsets = data;
++title: CIX Sky1 PCIe Root Complex
 +
- 		cdns_plat_pcie->pcie = &rc->pcie;
- 
- 		ret = cdns_pcie_init_phy(dev, cdns_plat_pcie->pcie);
-@@ -95,6 +101,11 @@ static int cdns_plat_pcie_probe(struct platform_device *pdev)
- 
- 		ep->pcie.dev = dev;
- 		ep->pcie.ops = &cdns_plat_ops;
-+		ep->pcie.is_rc = data->is_rc;
++maintainers:
++  - Hans Zhang <hans.zhang@cixtech.com>
 +
-+		/* Store the register bank offset pointer */
-+		ep->pcie.cdns_pcie_reg_offsets = data;
++description:
++  PCIe root complex controller based on the Cadence PCIe core.
 +
- 		cdns_plat_pcie->pcie = &ep->pcie;
- 
- 		ret = cdns_pcie_init_phy(dev, cdns_plat_pcie->pcie);
++allOf:
++  - $ref: /schemas/pci/pci-host-bridge.yaml#
++
++properties:
++  compatible:
++    const: cix,sky1-pcie-host
++
++  reg:
++    items:
++      - description: PCIe controller registers.
++      - description: ECAM registers.
++      - description: Remote CIX System Unit strap registers.
++      - description: Remote CIX System Unit status registers.
++      - description: Region for sending messages registers.
++
++  reg-names:
++    items:
++      - const: reg
++      - const: cfg
++      - const: rcsu_strap
++      - const: rcsu_status
++      - const: msg
++
++  ranges:
++    maxItems: 3
++
++required:
++  - compatible
++  - ranges
++  - bus-range
++  - device_type
++  - interrupt-map
++  - interrupt-map-mask
++  - msi-map
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        pcie@a010000 {
++            compatible = "cix,sky1-pcie-host";
++            reg = <0x00 0x0a010000 0x00 0x10000>,
++                  <0x00 0x2c000000 0x00 0x4000000>,
++                  <0x00 0x0a000300 0x00 0x100>,
++                  <0x00 0x0a000400 0x00 0x100>,
++                  <0x00 0x60000000 0x00 0x00100000>;
++            reg-names = "reg", "cfg", "rcsu_strap", "rcsu_status", "msg";
++            ranges = <0x01000000 0x00 0x60100000 0x00 0x60100000 0x00 0x00100000>,
++                     <0x02000000 0x00 0x60200000 0x00 0x60200000 0x00 0x1fe00000>,
++                     <0x43000000 0x18 0x00000000 0x18 0x00000000 0x04 0x00000000>;
++            #address-cells = <3>;
++            #size-cells = <2>;
++            bus-range = <0xc0 0xff>;
++            device_type = "pci";
++            #interrupt-cells = <1>;
++            interrupt-map-mask = <0 0 0 0x7>;
++            interrupt-map = <0 0 0 1 &gic 0 0 GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH 0>,
++                            <0 0 0 2 &gic 0 0 GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH 0>,
++                            <0 0 0 3 &gic 0 0 GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH 0>,
++                            <0 0 0 4 &gic 0 0 GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH 0>;
++            msi-map = <0xc000 &gic_its 0xc000 0x4000>;
++        };
++    };
 -- 
 2.49.0
 
