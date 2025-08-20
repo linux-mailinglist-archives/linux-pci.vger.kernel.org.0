@@ -1,88 +1,88 @@
-Return-Path: <linux-pci+bounces-34340-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34341-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22DADB2D2F2
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 06:28:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BDF0B2D3F4
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 08:18:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E2B2C586964
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 04:28:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F072E5861B5
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 06:18:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E107C24293B;
-	Wed, 20 Aug 2025 04:27:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 294A823A9AD;
+	Wed, 20 Aug 2025 06:17:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MppeNeDm"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pPBJM4Ik"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17774353364
-	for <linux-pci@vger.kernel.org>; Wed, 20 Aug 2025 04:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A105E1494A8
+	for <linux-pci@vger.kernel.org>; Wed, 20 Aug 2025 06:17:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755664076; cv=none; b=UtPAnO9jWLOq5ZONL+ITXIU4iZogQDQEDl0nuYv9UIFapmQNMeP2tZL64hlMwBS6B0wb02/EccqN/JYL89lP4OCTsaz2gYXNxxQFeC3rCT53mCGTl6of6lteGt5lCvACOHJBsr2z0BWnlbWLJr+MZi2DFIyPdgx1dUK5DWLKlaI=
+	t=1755670676; cv=none; b=SJ23QBO+Xa6fk41a6h+mIx2/i8NLQQZ84+H4vVbwSa+eQIWCG8ZR/H9vqxDcfE+O7tgtH2p8tDB20f0YgPesBgeNMwThVj9pru3cxU7e8vltN3IDOhd45lxA90oBzpMzSj9GpBMsjWFdmn6hvdU+xmVWyba4JGZl/ATst8X6rgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755664076; c=relaxed/simple;
-	bh=IGnA1FXv1f8tKEdqJvkn6S/E7oLAVWuQedEUjt4GafM=;
+	s=arc-20240116; t=1755670676; c=relaxed/simple;
+	bh=acxMMGd2x/HKWGU/E/B1l2IvWsTnQwauMXyl3r65/5k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QkpTx3Mgs6afY6ImrJqEC4/Cxbu+//QubnjFBHBJMS1mdBAceVfo/2CdcVdg9lhElnlgJOevnL4wAX6J2KUDeQuAhHc2fSNds4P7UeulJ3HpDJJTBuCi+/gFAjPoDK01v+zNijkRcInoCuRQ+ioSJ8Bcx31aeYRqVqQcjmiyVgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MppeNeDm; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=u0wJDn2PFzntloKF4yqhnDA3O62se+0b6s6SGszMWnWysQU0TrYrZXq9/WiAje15gKKsa3W1FpwVGK78cQ93w/2ccXur187KdSrL+OYm8m7tUHj9dq8s1baTgtIp+IOThKjc9eudHLHqYzE7m5ixHS2cVup6vKd9fYyZOAe6WwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pPBJM4Ik; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57K1oddd008771
-	for <linux-pci@vger.kernel.org>; Wed, 20 Aug 2025 04:27:54 GMT
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57K1oqBG025884
+	for <linux-pci@vger.kernel.org>; Wed, 20 Aug 2025 06:17:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hAK0xru7GDJ8nMhMtlK0GPrXNKZ4lF18AzZoweZOXc8=; b=MppeNeDmQW3zgxHH
-	znkuQMlORXHaKNmWH7c1g3NaJ6BGvfqpa01qdsXLiwpBXrigzdaSXd0jvQCTp9iT
-	+PWJ7KW2/EFMU8UKKMLC+WrsRyBxar+0PTcdbfnIlNPPSnAVUuCToKanZSh6e1lF
-	pujYr99B6NDid+CSRpAuvM+8zvh7c2QPaRm1OjRUsmrNfY+DaXA5NQndbt9Rz6VU
-	QM7ZqrEwMOkAQ731Ix75CNABdpzWFM8va1/Lv2rxltSgstvmGWIQwg+oBlEbUh4N
-	pLaHfQg65QS8bOnt1w0y71+3GwG+CEp/Mdhfp5xOvEMKrC2gRIUOvGf9zwc3epol
-	9GgYiw==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48n52a0c1b-1
+	/bkq+cHdJt1KbvcxQfB2RcSUjegt/SMBaHSxlr5BbPY=; b=pPBJM4IkUCc7AjW7
+	5WE+DTBsliH63oe2SkgY7IWE7ea6YBExexcpAEv4g2cxsh5z440YLP5GHikjCcRH
+	sP78jWNxVbTnLOJNOYQJhHFwuLhbrNmWlEN3o4P76SDKg60VgeEDWN+6hfzRN9+R
+	UDRivJivIbkejr8DpPcpRM4SK9Pg8fE+qJK7K5VCfy4wXVcBiKqZtni0wlqiGL2H
+	Vt8SFuYzPGFv/ikxQrF2ToxtUpmv+bwgfSmXUs7hP5efZA9JD/pJTu7BINgSdaTw
+	utACXgdJXiUw6cxSSPQZZ7pnZejbW65wLVwVY8c9qt2Di5ZzuokdOyuGxdn+lOQg
+	KyXKCw==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48n52a8m32-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Wed, 20 Aug 2025 04:27:54 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-76e2eb47455so12326197b3a.3
-        for <linux-pci@vger.kernel.org>; Tue, 19 Aug 2025 21:27:54 -0700 (PDT)
+	for <linux-pci@vger.kernel.org>; Wed, 20 Aug 2025 06:17:53 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-24457f440f0so68364085ad.0
+        for <linux-pci@vger.kernel.org>; Tue, 19 Aug 2025 23:17:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755664073; x=1756268873;
+        d=1e100.net; s=20230601; t=1755670673; x=1756275473;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hAK0xru7GDJ8nMhMtlK0GPrXNKZ4lF18AzZoweZOXc8=;
-        b=SQ9gDMA+YWY0zp9Zb7sPvSo06TzlBcBq0zYYEowY/QgBAlDflW9m4HcKZJTNiygly/
-         uIp9ZmQufs2GkZ+se8z76vGANHRR07UMtpaFI6VNXMjSfvefpSW0/5Ork6qlRROqMIyd
-         PECoI75lVYzPE9QG3j7EP+eGL6RoYH4nyboksY28zZ/fiVRnK0ol0yRsSQ/6zXdUKQjG
-         mgjfITEFWWOk2VU4xweeuaFL6jYUxC53BzoVb3VyKjW24C4XU2k/BkTRGNwOcCxjb9mM
-         QSig3qRTulGF7CsY/0m5H3yRlqbHkLuFjwWtmw/ZoZTVSrrxGG8F/BYEKb/7hAJ9DhA/
-         hSDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUs/dLo5dNZOUf8JucSPZlQb7FgA0RchEbufRDvv331p/QLC6zjTPY0mq4gHt3D5WBmiIARB0uTDRY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpxM+kycoEUVZMD3qMYAJOS+pOed1Uemq5vJivDmveLNbCqp89
-	d9NnnKzLwvM5ToWe1ILn4Zl5gQ66woShPbe1oF58OWW3+XzOXR/HBjDmwCVCs0ctWXpp17roO5k
-	LgqrPs3gepKouEbHjVo4UB1MW6G6lesRMr2q2Q+rVUvAF1YdfZX/A1tt+FRAGheE=
-X-Gm-Gg: ASbGncuaL7KE5jVFMEsRktcXG9W+2/jc/W0DRCr1/x3jW3ThWLn1O5f9gumiqk4ADnG
-	KbAUjWBQOAKzo8AFSohZxwhZmLvjg72wAfM2VlSBQCwZSFjtPP469da4DkqKL+DSZkZ4dK0d6Dc
-	hjkh+BLXGfK0qzTDFAEv+f5z8iZHmNF0pci298ftVJjFOa7MdUtatOk4iTFegeQRvhzdWaE5p63
-	nYmtlsI07LEOmPlK07VbBGZkbjmNd7yFmN/ZfDvc6kCLCQi42pSJ2iysw2/yVEZQ9RBTM5Uy8Lu
-	8pHeClLqIs5WG+64KYzXLccppcenBOvDBFX6l/xb7F1yflv8Yavb3kSshpuu4wZhtmRj9CFrJg=
-	=
-X-Received: by 2002:a05:6a00:3e11:b0:748:3385:a4a with SMTP id d2e1a72fcca58-76e8dd5c0f8mr1714845b3a.23.1755664073253;
-        Tue, 19 Aug 2025 21:27:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEcUojZeMUSbe1pEWZytu3vdN7AWQXRbXfhsjIC+2+iyfPG1ah4/TK6T5StHV+fx+cuygIhdQ==
-X-Received: by 2002:a05:6a00:3e11:b0:748:3385:a4a with SMTP id d2e1a72fcca58-76e8dd5c0f8mr1714803b3a.23.1755664072690;
-        Tue, 19 Aug 2025 21:27:52 -0700 (PDT)
-Received: from [10.218.42.132] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76e7d13ac60sm4006778b3a.48.2025.08.19.21.27.47
+        bh=/bkq+cHdJt1KbvcxQfB2RcSUjegt/SMBaHSxlr5BbPY=;
+        b=i94NNdb5mcRc92O2gS8fYHD7biPGIbv0EEUMs2uKTRRqtGVfKtQ6Q87UMIJrH3X5Lb
+         vX+b9VcaJiAUNFdbGik/YSmQHb0xGhycGjRCAeH4mkfiLmpWKRAvehsf3q+dH0gz7/UY
+         w5RYzPAxcKW6VadDmQ7ajs39eWUyr1QnZoXEEnW2mGyMVkjjRTfNIZIsMaJiPhdUNPrI
+         XvIIMvwK380d3p+sW6f51k7ccFqCyG4V5Od+BpVLzc3/7Z2/8DARpIfpWTpl/POMJi3Y
+         +6NkVgSQVIg9d2xvfwSM7jAvwV+A389WQmuzJJslnIBjiXKrWHtKhI1qATz37ozMTEmV
+         WPZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ5WAudZVnFZSB5pDpD8+Z3tTJ854QJSZkMCwXHFPOZSIVMAg4OI3tyoKw3HpyDMKm4wo6Wa5hKVw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPfFfTVlG90Q+1CZP+33SF8MTuqVg6JFP3X4T/DlAHZeUi/P+x
+	g6ovvTlLSZSAh7gqRC2eFxBqc3LTBcW98EXq/inUG3150GT2fDzsbau6GUglq4DVQPm/WAquJt6
+	rLYGuyQfk6Alpjq1XyLRU6eWa8jEbDqvHE5YhJMppHr+4d1SIxbGtO0yJz57sP8k=
+X-Gm-Gg: ASbGnctzxgoVOgJYRJ3opCf39UhwynzzhywCFq5O2qyHwPoNXmVa3R2o+pYj/jgn7Te
+	n2ioOd7zfw0h9MBWC8pDL+otmNw0YR6hcNYPk6VEa6/Fo7G+qAP+DBsC6JMSZIw/WCLQ4JPXalR
+	D/32ru75QXObQUEU3yTR617vWv4hHyWi1MnEQAOPYLkyB7Ipko3NR4F3k8ilY+K/QmjzoMBEUyB
+	psPRW5VAKfnGZOCv2AXMmJm7prk3L2r2Y35qK1D/9eYVdEaD6AM2DOSRg1TjwYPFNfg9uPRLEar
+	KJtyxMXYZ6fA2iR3xFQXkk+/MlzuqTxlAACWOFamXFQiEIHRrLBGI4FNa+d/zr0V/s58pAY2JhC
+	8S0duMCC5chKtvjPmpwh/lWx0JSAMnA==
+X-Received: by 2002:a17:902:db11:b0:244:99aa:5484 with SMTP id d9443c01a7336-245ef22750bmr21232915ad.33.1755670672776;
+        Tue, 19 Aug 2025 23:17:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEsKwESvuXAmKPzOJGduohtMXI7XkJlUbHq5xijCZfUS3+Y+d26WTnyjnHki+tQuTQXR8vTwA==
+X-Received: by 2002:a17:902:db11:b0:244:99aa:5484 with SMTP id d9443c01a7336-245ef22750bmr21232595ad.33.1755670672285;
+        Tue, 19 Aug 2025 23:17:52 -0700 (PDT)
+Received: from [10.249.96.170] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76e8ab7b2dfsm2046761b3a.38.2025.08.19.23.17.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Aug 2025 21:27:52 -0700 (PDT)
-Message-ID: <54d71bb6-27bb-494f-8f63-710e0e4148e7@oss.qualcomm.com>
-Date: Wed, 20 Aug 2025 09:57:44 +0530
+        Tue, 19 Aug 2025 23:17:51 -0700 (PDT)
+Message-ID: <33468410-69e5-4144-88e0-cc34a736c0e4@oss.qualcomm.com>
+Date: Wed, 20 Aug 2025 14:17:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,289 +90,142 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] OPP: Add support to find OPP for a set of keys
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
+Subject: Re: [PATCH 4/4] phy: qcom: qmp-pcie: Add support for Glymur PCIe
+ Gen5x4 PHY
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Conor Dooley
- <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
+ <conor+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250819-opp_pcie-v3-0-f8bd7e05ce41@oss.qualcomm.com>
- <20250819-opp_pcie-v3-1-f8bd7e05ce41@oss.qualcomm.com>
- <20250819081859.kz7c27d6c77oy2gv@vireshk-i7>
+        konrad.dybcio@oss.qualcomm.com, qiang.yu@oss.qualcomm.com,
+        Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+References: <20250819-glymur_pcie5-v1-0-2ea09f83cbb0@oss.qualcomm.com>
+ <20250819-glymur_pcie5-v1-4-2ea09f83cbb0@oss.qualcomm.com>
+ <6zlydkdgmowqg7cv5eeoaf7mrpnhzokyvhh5xasvznqaxnhdji@xol3jiz2lzld>
 Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <20250819081859.kz7c27d6c77oy2gv@vireshk-i7>
+From: "Wenbin Yao (Consultant)" <wenbin.yao@oss.qualcomm.com>
+In-Reply-To: <6zlydkdgmowqg7cv5eeoaf7mrpnhzokyvhh5xasvznqaxnhdji@xol3jiz2lzld>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=feD0C0QF c=1 sm=1 tr=0 ts=68a54eca cx=c_pps
- a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=76l3OPsZB85xAofE:21 a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10
- a=6WgZcX-rmC49gpfAgPcA:9 a=QEXdDO2ut3YA:10 a=IoOABgeZipijB_acs4fv:22
-X-Proofpoint-ORIG-GUID: I6uQBNhgjtGxUGlA_-pZjc400b7xESWl
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIwMDAxMyBTYWx0ZWRfX7EjoWSu7ePMd
- T4fLE9iETTgBjQ6Wn9OFPK1vxZmiFb4R1mR7GBlGfW+f1EiZlCq9kQhA6PqYsJ9A/qcULRr0JCU
- 7yw3GjGQc7DV/+gozZ9ng+dkXcgZvt+tH7rjZMdYipI1+tTqpfm+qmfCtwx8Icyapsy7kpRBHGd
- GESLtjWME0u2DzSD99BcrOupQdrZSgW8YEou2/419WNIGeSbwHyCshU2jMRdJA/Ncb9a/Zq5EGA
- hh2wsdFEP+xWDoCEvk3+goQ6uJdWV8/4Ssk/1qyROM4GdXrg+Jy3/axhmU0HRSOklal35V4tX9q
- D09G2NhOtiH36Nu8+cqcAVUS9SFU9nlOzbJhkINTlf1Ipodn3+CWO+0lIaZsXmmWmlFYHJhO+Sh
- nUxqJTbWuWicFp6ezz187YKlBdRk3w==
-X-Proofpoint-GUID: I6uQBNhgjtGxUGlA_-pZjc400b7xESWl
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: j9RgO5d7xwguK0QnJpBmhEpuARP5bMix
+X-Authority-Analysis: v=2.4 cv=B83gEOtM c=1 sm=1 tr=0 ts=68a56891 cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
+ a=sH0VmbEyIx9rPeTW6gYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=324X-CrmTo6CU4MGRt3R:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: j9RgO5d7xwguK0QnJpBmhEpuARP5bMix
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIwMDAxMyBTYWx0ZWRfXxpMPFCKdSSJw
+ htf7rIciDlt0qvoBMfRZMEokF2TCLi8D88bCBvlIeqyRGaTZcCwSy9JG5AaYKQgSZgQOhl6PSzV
+ iE6uJ2Q1ZZqE47ZTxwA9c0S57qcKo5eWccIayxHcgp/yXErn24yVo3sAcO/N22MlVMYMSOJ3p5n
+ tnA8gg53kWVNUObryLiz2uxh0w9v0YRz6puskR8AU3n3tdV2GtF1OGWGiCrY5C4PZewpehsEBH0
+ ySTnvAtgMv4vEJ4Q8LWvy7JO3rEsi2z0hAGKYEeBr3jrVIITDzsGgjfKj4CohES1Q41OaRZ6z4X
+ 35+8ssThrheg0Q493bAE7VD+W87ZuTHcQB9YkXs/1UMpju7q7mMX8AG2qQgGQr0d/HVjDnzfq6q
+ HCjplcDRSavK+JrsbwNJzjVuzLFXjQ==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-08-20_02,2025-08-14_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 phishscore=0 adultscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 impostorscore=0 suspectscore=0 clxscore=1015
+ phishscore=0 bulkscore=0 priorityscore=1501 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 impostorscore=0 clxscore=1015 spamscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.19.0-2508110000 definitions=main-2508200013
 
-
-
-On 8/19/2025 1:48 PM, Viresh Kumar wrote:
-> On 19-08-25, 11:04, Krishna Chaitanya Chundru wrote:
->> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
->> index edbd60501cf00dfd1957f7d19b228d1c61bbbdcc..ce359a3d444b0b7099cdd2421ab1019963d05d9f 100644
->> --- a/drivers/opp/core.c
->> +++ b/drivers/opp/core.c
->> @@ -461,6 +461,15 @@ int dev_pm_opp_get_opp_count(struct device *dev)
->>   EXPORT_SYMBOL_GPL(dev_pm_opp_get_opp_count);
->>   
->>   /* Helpers to read keys */
->> +static unsigned long _read_opp_key(struct dev_pm_opp *opp, int index, struct dev_pm_opp_key *key)
-> 
-> Move this to the end of the list, after _read_bw() i.e.
-> 
-ack
->> +{
->> +	key->bandwidth = opp->bandwidth ? opp->bandwidth[index].peak : 0;
->> +	key->freq = opp->rates[index];
->> +	key->level = opp->level;
->> +
->> +	return true;
->> +}
->> +
->>   static unsigned long _read_freq(struct dev_pm_opp *opp, int index)
->>   {
->>   	return opp->rates[index];
->> @@ -488,6 +497,23 @@ static bool _compare_exact(struct dev_pm_opp **opp, struct dev_pm_opp *temp_opp,
->>   	return false;
->>   }
->>   
->> +static bool _compare_opp_key_exact(struct dev_pm_opp **opp, struct dev_pm_opp *temp_opp,
->> +				   struct dev_pm_opp_key opp_key, struct dev_pm_opp_key key)
->> +{
-> 
-> And this after _compare_floor().
-> 
-ack
->> +	bool level_match = (opp_key.level == OPP_LEVEL_UNSET ||
-> 
-> Why are we still checking this ? You removed this from freq check but
-> not level and bandwidth ?
-> 
-ok I will change for level and bw also similar to freq.
->> +			    key.level == OPP_LEVEL_UNSET || opp_key.level == key.level);
->> +	bool bw_match = (opp_key.bandwidth == 0 ||
->> +			 key.bandwidth == 0 || opp_key.bandwidth == key.bandwidth);
->> +	bool freq_match = (key.freq == 0 || opp_key.freq == key.freq);
->> +
->> +	if (freq_match && level_match && bw_match) {
->> +		*opp = temp_opp;
->> +		return true;
->> +	}
->> +
->> +	return false;
->> +}
->> +
->>   static bool _compare_ceil(struct dev_pm_opp **opp, struct dev_pm_opp *temp_opp,
->>   			  unsigned long opp_key, unsigned long key)
->>   {
->> @@ -541,6 +567,40 @@ static struct dev_pm_opp *_opp_table_find_key(struct opp_table *opp_table,
->>   	return opp;
->>   }
->>   
->> +static struct dev_pm_opp *_opp_table_find_opp_key(struct opp_table *opp_table,
->> +		struct dev_pm_opp_key *key, int index, bool available,
->> +		unsigned long (*read)(struct dev_pm_opp *opp, int index,
->> +				      struct dev_pm_opp_key *key),
->> +		bool (*compare)(struct dev_pm_opp **opp, struct dev_pm_opp *temp_opp,
->> +				struct dev_pm_opp_key opp_key, struct dev_pm_opp_key key),
->> +		bool (*assert)(struct opp_table *opp_table, unsigned int index))
->> +{
->> +	struct dev_pm_opp *temp_opp, *opp = ERR_PTR(-ERANGE);
->> +	struct dev_pm_opp_key temp_key;
->> +
->> +	/* Assert that the requirement is met */
->> +	if (assert && !assert(opp_table, index))
-> 
-> Just drop the `assert` check, it isn't optional. Make the same change
-> in _opp_table_find_key() too in a separate patch if you can.
-> 
-ack
->> +		return ERR_PTR(-EINVAL);
->> +
->> +	guard(mutex)(&opp_table->lock);
->> +
->> +	list_for_each_entry(temp_opp, &opp_table->opp_list, node) {
->> +		if (temp_opp->available == available) {
->> +			read(temp_opp, index, &temp_key);
->> +			if (compare(&opp, temp_opp, temp_key, *key))
-> 
-> Update *key and do dev_pm_opp_get() here itself. And same in
-> _opp_table_find_key().
-> 
-ack
->> +				break;
->> +		}
->> +	}
->> +
->> +	/* Increment the reference count of OPP */
->> +	if (!IS_ERR(opp)) {
->> +		*key = temp_key;
->> +		dev_pm_opp_get(opp);
->> +	}
->> +
->> +	return opp;
->> +}
->> +
->>   static struct dev_pm_opp *
->>   _find_key(struct device *dev, unsigned long *key, int index, bool available,
->>   	  unsigned long (*read)(struct dev_pm_opp *opp, int index),
->> @@ -632,6 +692,46 @@ struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
->>   }
->>   EXPORT_SYMBOL_GPL(dev_pm_opp_find_freq_exact);
->>   
->> +/**
->> + * dev_pm_opp_find_key_exact() - Search for an exact OPP key
->> + * @dev:                Device for which the OPP is being searched
->> + * @key:                OPP key to match
->> + * @available:          true/false - match for available OPP
->> + *
->> + * Return: Searches for an exact match the OPP key in the OPP table and returns
-> 
-> The `Return` section should only talk about the returned values. The
-> above line for example should be present as a standalone line before
-> the `Return` section.
-> 
-ack
->> + * pointer to the  matching opp if found, else returns ERR_PTR  in case of error
->> + * and should  be handled using IS_ERR. Error return values can be:
->> + * EINVAL:      for bad pointer
->> + * ERANGE:      no match found for search
->> + * ENODEV:      if device not found in list of registered devices
->> + *
->> + * Note: available is a modifier for the search. if available=true, then the
->> + * match is for exact matching key and is available in the stored OPP
->> + * table. if false, the match is for exact key which is not available.
->> + *
->> + * This provides a mechanism to enable an opp which is not available currently
->> + * or the opposite as well.
->> + *
->> + * The callers are required to call dev_pm_opp_put() for the returned OPP after
->> + * use.
-> 
-> There are various minor issues in the text here, like double spaces,
-> not starting with a capital letter after a full stop, etc. Also put
-> arguments in `` block, like `available`.
-> 
-ack
->> + */
->> +struct dev_pm_opp *dev_pm_opp_find_key_exact(struct device *dev,
->> +					     struct dev_pm_opp_key key,
->> +					     bool available)
->> +{
->> +	struct opp_table *opp_table __free(put_opp_table) = _find_opp_table(dev);
->> +
->> +	if (IS_ERR(opp_table)) {
->> +		dev_err(dev, "%s: OPP table not found (%ld)\n", __func__,
->> +			PTR_ERR(opp_table));
->> +		return ERR_CAST(opp_table);
->> +	}
->> +
->> +	return _opp_table_find_opp_key(opp_table, &key, 0, available, _read_opp_key,
->> +				       _compare_opp_key_exact, assert_single_clk);
-> 
-> Since the only user doesn't use `index` for now, I wonder if that
-> should be added at all in all these functions.
-> 
-ok I will remove it.
->> +}
->> +EXPORT_SYMBOL_GPL(dev_pm_opp_find_key_exact);
->> +
->>   /**
->>    * dev_pm_opp_find_freq_exact_indexed() - Search for an exact freq for the
->>    *					 clock corresponding to the index
->> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
->> index cf477beae4bbede88223566df5f43d85adc5a816..53e02098129d215970d0854b1f8ffaf4499f2bd4 100644
->> --- a/include/linux/pm_opp.h
->> +++ b/include/linux/pm_opp.h
->> @@ -98,6 +98,18 @@ struct dev_pm_opp_data {
->>   	unsigned long u_volt;
+On 8/20/2025 2:43 AM, Dmitry Baryshkov wrote:
+> On Tue, Aug 19, 2025 at 02:52:08AM -0700, Wenbin Yao wrote:
+>> From: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+>>
+>> Add support for Gen5 x4 PCIe QMP PHY found on Glymur platform.
+>>
+>> Signed-off-by: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+>> Signed-off-by: Wenbin Yao <wenbin.yao@oss.qualcomm.com>
+>> ---
+>>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 29 +++++++++++++++++++++++++++++
+>>   1 file changed, 29 insertions(+)
+>>
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+>> index 95830dcfdec9b1f68fd55d1cc3c102985cfafcc1..e422cf6932d261074ed3419ed8806e9ed212c26c 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+>> @@ -93,6 +93,12 @@ static const unsigned int pciephy_v6_regs_layout[QPHY_LAYOUT_SIZE] = {
+>>   	[QPHY_PCS_POWER_DOWN_CONTROL]	= QPHY_V6_PCS_POWER_DOWN_CONTROL,
 >>   };
 >>   
->> +/**
->> + * struct dev_pm_opp_key - Key used to identify OPP entries
->> + * @freq:       Frequency in Hz
->> + * @level:      Performance level associated with the OPP entry
->> + * @bandwidth:  Bandwidth associated with the OPP entry
-> 
-> Also mention the NOP value of all these keys, i.e. what the user must
-> fill them with if that key is not supposed to be matched.
-> 
-ack
->> + */
->> +struct dev_pm_opp_key {
->> +	unsigned long freq;
->> +	unsigned int level;
->> +	u32 bandwidth;
-> 
-> Maybe use `bw` here like in other APIs.
-> 
-ack.
-
-- Krishna Chaitanya.
+>> +static const unsigned int pciephy_v8_50_regs_layout[QPHY_LAYOUT_SIZE] = {
+>> +	[QPHY_START_CTRL]		= QPHY_V8_50_PCS_START_CONTROL,
+>> +	[QPHY_PCS_STATUS]		= QPHY_V8_50_PCS_STATUS1,
+>> +	[QPHY_PCS_POWER_DOWN_CONTROL]   = QPHY_V8_50_PCS_POWER_DOWN_CONTROL,
 >> +};
 >> +
->>   #if defined(CONFIG_PM_OPP)
+>>   static const struct qmp_phy_init_tbl msm8998_pcie_serdes_tbl[] = {
+>>   	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN, 0x14),
+>>   	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x30),
+>> @@ -3229,6 +3235,10 @@ static const struct qmp_pcie_offsets qmp_pcie_offsets_v6_30 = {
+>>   	.ln_shrd	= 0x8000,
+>>   };
 >>   
->>   struct opp_table *dev_pm_opp_get_opp_table(struct device *dev);
->> @@ -131,6 +143,10 @@ struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
->>   					      unsigned long freq,
->>   					      bool available);
->>   
->> +struct dev_pm_opp *dev_pm_opp_find_key_exact(struct device *dev,
->> +					     struct dev_pm_opp_key key,
->> +					     bool available);
+>> +static const struct qmp_pcie_offsets qmp_pcie_offsets_v8_50 = {
+>> +	.pcs        = 0x9000,
+> Even if the driver uses only PCS regs for 8.50 currently, I'd suggest
+> describing the whole picture here. Otherwise it might backfire later, if
+> we add offsets for other blocks later and they won't match the ones used
+> for Glymur.
+
+OK，will add them.
+
+>
+>> +};
 >> +
->>   struct dev_pm_opp *
->>   dev_pm_opp_find_freq_exact_indexed(struct device *dev, unsigned long freq,
->>   				   u32 index, bool available);
->> @@ -289,6 +305,13 @@ static inline struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
->>   	return ERR_PTR(-EOPNOTSUPP);
->>   }
+>>   static const struct qmp_phy_cfg ipq8074_pciephy_cfg = {
+>>   	.lanes			= 1,
 >>   
->> +static inline struct dev_pm_opp *dev_pm_opp_find_key_exact(struct device *dev,
->> +							   struct dev_pm_opp_key key,
->> +							   bool available)
->> +{
->> +	return ERR_PTR(-EOPNOTSUPP);
->> +}
+>> @@ -4258,6 +4268,22 @@ static const struct qmp_phy_cfg qmp_v6_gen4x4_pciephy_cfg = {
+>>   	.phy_status             = PHYSTATUS_4_20,
+>>   };
+>>   
+>> +static const struct qmp_phy_cfg glymur_qmp_gen5x4_pciephy_cfg = {
+>> +	.lanes = 4,
 >> +
->>   static inline struct dev_pm_opp *
->>   dev_pm_opp_find_freq_exact_indexed(struct device *dev, unsigned long freq,
->>   				   u32 index, bool available)
+>> +	.offsets        = &qmp_pcie_offsets_v8_50,
+>> +
+>> +	.reset_list     = sdm845_pciephy_reset_l,
+>> +	.num_resets     = ARRAY_SIZE(sdm845_pciephy_reset_l),
+>> +	.vreg_list      = sm8550_qmp_phy_vreg_l,
+>> +	.num_vregs      = ARRAY_SIZE(sm8550_qmp_phy_vreg_l),
+>> +
+>> +	.regs           = pciephy_v8_50_regs_layout,
+>> +
+>> +	.pwrdn_ctrl     = SW_PWRDN | REFCLK_DRV_DSBL,
+>> +	.phy_status     = PHYSTATUS_4_20,
+>> +};
+>> +
+>>   static void qmp_pcie_init_port_b(struct qmp_pcie *qmp, const struct qmp_phy_cfg_tbls *tbls)
+>>   {
+>>   	const struct qmp_phy_cfg *cfg = qmp->cfg;
+>> @@ -5114,6 +5140,9 @@ static const struct of_device_id qmp_pcie_of_match_table[] = {
+>>   	}, {
+>>   		.compatible = "qcom,x1p42100-qmp-gen4x4-pcie-phy",
+>>   		.data = &qmp_v6_gen4x4_pciephy_cfg,
+>> +	}, {
+>> +		.compatible = "qcom,glymur-qmp-gen5x4-pcie-phy",
+>> +		.data = &glymur_qmp_gen5x4_pciephy_cfg,
+>>   	},
+>>   	{ },
+>>   };
 >>
 >> -- 
 >> 2.34.1
-> 
+>>
+-- 
+With best wishes
+Wenbin
+
 
