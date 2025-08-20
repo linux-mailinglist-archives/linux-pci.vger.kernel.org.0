@@ -1,196 +1,222 @@
-Return-Path: <linux-pci+bounces-34401-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34402-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79F6CB2E3F8
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 19:34:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3358AB2E462
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 19:50:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 972371C8593D
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 17:29:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26A9C3BDB05
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 17:47:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC94E3375BD;
-	Wed, 20 Aug 2025 17:26:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8015526CE28;
+	Wed, 20 Aug 2025 17:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YMEQ6+o2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cGfgqJgv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C5C1E7C12
-	for <linux-pci@vger.kernel.org>; Wed, 20 Aug 2025 17:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4469A2629F;
+	Wed, 20 Aug 2025 17:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755710800; cv=none; b=JiMRAyPw3g5nqvUxryFEWeNgy58ezM7AZbn4NiM2x6/jD57jlwOFA5sH31AxZmLKytihyQEE/XoNvVfL6jBOaQwHo8W0WJpNFvDvd+N2CVJEKYIo/1Vwt5ERr0wP6mhEjyDiNXk+Ix2EDAs9c8QyJG+yFiU4pyLBITUBTXLai34=
+	t=1755712070; cv=none; b=aHK0lq5pZJL+Bz7Zh56fmwcM8POH90tQ8wzYbDRshsvHg+iz+CnxSqOQDfd4HbCG9lpimKEcWcLE1+OslOhB9O/4QxA5DM8mmWcC0KAQXryAtQUce7tyrm6J5B2NLwuP6hUsRzCv53VGckeFdkuqn9bT6WmBdO0+KyaG96DE8/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755710800; c=relaxed/simple;
-	bh=Q/jdaiM+kgJ5R5FKhEvQDUDNp4Rjp1tV7zovBjIkSS4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lOStOC+/P/bKAh8Db+5+HR4OF8XrzxFBI+27G8Oko3CD2XwaMxhN5CJH1EHd4lLVaoZYw/jep7F+fBHw1MF+n6ERWxVZcGHIyDk92guCeklgZJoIXdYNjivOGH9QCF9LACtP4dYhcbbhSQA3R5FU1FYeEWhcHcs6F491wqdmYNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YMEQ6+o2; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-76e563b25c4so148305b3a.0
-        for <linux-pci@vger.kernel.org>; Wed, 20 Aug 2025 10:26:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1755710798; x=1756315598; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1JeiRrdVegjLxsA+/HodUZYtkAW20pYDME1GTqkfc9k=;
-        b=YMEQ6+o2XklB6VOsup27KmJHRRiaYJqpp/CN5nAKdczf3kaBVp6QddLLc/p9dI5jRS
-         Fdmd2USEUzhr7s2qWbU4x1jxQUwj8ixeHCBBXIqRsr18zNJ5trZaOVcAmrC9cXppp8SB
-         ziorirC0tfty4x0UstQqCRaT9vBKHCXexXdZw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755710798; x=1756315598;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1JeiRrdVegjLxsA+/HodUZYtkAW20pYDME1GTqkfc9k=;
-        b=be/6z8pBqJOw06SXjbnhhrGeCL0Tbm9QBPcV6F72X6Uo7aIuY8fmzKMFHUp18KYXLx
-         lzJ0toa7ruJWGLi4tS3C03pi8dI1aWi41T8IjTXhvTLz7ZuxFDukGlruElVqWSnZyL3X
-         xwzmWC85JSHx2LyBTbXiOFSSGdzSmeK1oCTKH/rH/FVfPZJfKOVNgXfFUqmf9PUArTxf
-         KPCLuOZShR5QNUYWmRXlYrON9gp/RuhQTCamonvJJKunKF98DUUXUmmt9cUTX3NFMx4J
-         UW7F+TFlUVVAz29K0ANuwVwHkfQ7+YYtfS0nwqa4Xx0INZ8ZhvsYEQEwvqFD4tvqZGK1
-         sWPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUesjDTYAgTCJiFaEwgEvzu8WD/4M4wykgjo+tMf0xgZeJA3pN0LRmYgReh40bd6jDflUKrNeJUKaY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPjy3E6ICMmduL1FcBDdIcPVibXD2ppF8ADl7q/6SSW4MJtfiL
-	31jT9KLwXGhMdjR8wyAdHR0RocoUTMj27dVuhHia9SL3mLygzROZ2lxVLE+obio+ow==
-X-Gm-Gg: ASbGncutnmXsYTLaiw/4Yrf/PtOGQmAQl09WdDdaOPVzQ5z2RfneCY2nqdNIFKM7y9m
-	tz7GrVaX1m1pPJRu+T+QWwfoGQUIYsteUTW8AbV6MubgxfFOK2Ku8UkAEUIc9aGDKRt9dYVJBby
-	gWPklzjeua0h53Hew+zlad5Nz1rcLDHNKGFQkagwBIjV7zzqaoX2+NgqQxUzbpO9vBrwkj13MaZ
-	FEdIhn/waxXuQ777BVzZGZ/TE/j0BO5VMNW4bwzLBMlP5c8Qa/bZuzLWT5B+sfnOXVTBUhG9H3a
-	KoiDwoXwXryxjDH0hMExfhcBtF9EUUnbu58Rgmdv5KbyC46k/o6EmsgWjbcdSD7B6H3IgP/b8uq
-	7H9mzTKMypRUfJwXfdtlKpbl5KTQ3TxjuhxUWJKirE7cXbDdUuBgl9P9R+jDn
-X-Google-Smtp-Source: AGHT+IETJ+xPBqhU4+maX5eUwNiVCa9GIut+/TM1ucGF0aqZzfLGdLF7Hth81w5j8Rptxhmmo/r1xA==
-X-Received: by 2002:a05:6a20:7f8e:b0:243:78a:8284 with SMTP id adf61e73a8af0-2431ba55cb3mr6389305637.60.1755710798151;
-        Wed, 20 Aug 2025 10:26:38 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:635f:74c7:be17:bd29])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b4763fe3047sm2735821a12.17.2025.08.20.10.26.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Aug 2025 10:26:37 -0700 (PDT)
-From: Brian Norris <briannorris@chromium.org>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Brian Norris <briannorris@google.com>,
-	stable@vger.kernel.org,
-	Brian Norris <briannorris@chromium.org>
-Subject: [PATCH] PCI/sysfs: Ensure devices are powered for config reads
-Date: Wed, 20 Aug 2025 10:26:08 -0700
-Message-ID: <20250820102607.1.Ibb5b6ca1e2c059e04ec53140cd98a44f2684c668@changeid>
-X-Mailer: git-send-email 2.51.0.rc1.193.gad69d77794-goog
+	s=arc-20240116; t=1755712070; c=relaxed/simple;
+	bh=+LT24B6nqcidaacLuQ1/YF/caYmrsYm6FwAYLXqEPO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KQnTyq1k9lx2WgEXWTOhEKrW+tvg0qVAGjwHFjStf+0KBbFmjtkTByCUa6CyJZDmMsfcLXYJtJhQtjI2JQ8u4zzVBzHKpeEUeBmjj2nJuLrdHa4ShamxfQV4O2w14Vzw2ReFfnKtkkslmOEXPjbPC+mbndn1SnP0fWb509+bHLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cGfgqJgv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52B7EC4CEE7;
+	Wed, 20 Aug 2025 17:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755712069;
+	bh=+LT24B6nqcidaacLuQ1/YF/caYmrsYm6FwAYLXqEPO8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cGfgqJgvrbi0zV1kwHYzxbXXJaIzYhoUFz2CSLBnMyRYL6ysG7dz8r+YTY4tp0/7e
+	 8hTD/KfoIYxXv8p+n5NzZZn/bVxt4wifzpDA2ERiFb40jnNfEArkddbUSn8XtrX86q
+	 N9c0FgJgxq/F8KL7SUSDJ1+xINq/wH2ixyUBhNszXwpvnlPZ/mRPFu5Uw0iWCa4Idt
+	 DFOLdGd8ER2vYoDgIFQow3Zzh+++QJa3RJKAzBmKW2iIrYV3sUngWGhs1lTt6oXsMb
+	 7ji8XG0nKmqqj2ehoFJg0BHUv8dfXOQe5Y6CTcllIHACTMMb7a4unufQfj9DVRkoPC
+	 MCj+DE8fbLJCQ==
+Date: Wed, 20 Aug 2025 23:17:30 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, geert+renesas@glider.be, 
+	magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org, 
+	mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de, lizhi.hou@amd.com, 
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v3 3/9] PCI: of_property: Restore the arguments of the
+ next level parent
+Message-ID: <7wmpgldjvznbllotblv6ufybd2qqzb2ole2nhvbx4xiavyqa2b@ezaqwghxmbve>
+References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250704161410.3931884-4-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250704161410.3931884-4-claudiu.beznea.uj@bp.renesas.com>
 
-From: Brian Norris <briannorris@google.com>
+On Fri, Jul 04, 2025 at 07:14:03PM GMT, Claudiu wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> of_pci_make_dev_node() creates a device tree node for the PCIe bridge it
+> detects. The node name follows the format: pci_type@pci_slot,pci_func. If
+> such a node already exists in the current device tree, a new one is not
+> created.
+> 
+> When the node is created, its contents are populated with information from
+> the parent node. In the case of root complex nodes described in the device
+> tree, the created node duplicates the interrupt-map property. However, the
+> duplicated interrupt-map property does not correctly point to the next
+> interrupt controller.
+> 
+> For example, in the case of the Renesas RZ/G3S SoC, the resulting device
+> tree node is as follows (only relevant DT properties are shown):
+> 
+> pcie@11e40000 {
+> 
+>     // ...
+> 
+>     interrupt-map = <0x00 0x00 0x00 0x01 0x1f 0x00 0x00 0x00 0x00
+>                      0x00 0x00 0x00 0x02 0x1f 0x00 0x00 0x00 0x01
+>                      0x00 0x00 0x00 0x03 0x1f 0x00 0x00 0x00 0x02
+>                      0x00 0x00 0x00 0x04 0x1f 0x00 0x00 0x00 0x03>;
+>     interrupt-map-mask = <0x00 0x00 0x00 0x07>;
+>     interrupt-controller;
+>     #interrupt-cells = <0x01>;
+> 
+>     #address-cells = <0x03>;
+>     #size-cells = <0x02>;
+> 
+>     phandle = <0x1f>;
+> 
+>     // ...
+> 
+>     pci@0,0 {
+>         reg = <0x00 0x00 0x00 0x00 0x00>;
+>         interrupt-map = <0x10000 0x00 0x00 0x01 0x1f 0x00 0x11e40000 0x00 0x00
+>                          0x10000 0x00 0x00 0x02 0x1f 0x00 0x11e40000 0x00 0x01
+>                          0x10000 0x00 0x00 0x03 0x1f 0x00 0x11e40000 0x00 0x02
+>                          0x10000 0x00 0x00 0x04 0x1f 0x00 0x11e40000 0x00 0x03>;
+>         interrupt-map-mask = <0xffff00 0x00 0x00 0x07>;
+>         #interrupt-cells = <0x01>;
+> 
+>         #address-cells = <0x03>;
+>         #size-cells = <0x02>;
+> 
+>         // ...
+>     };
+> };
+> 
+> With this pci@0,0 node, the interrupt-map parsing code behaves as follows:
+> 
+> When a PCIe endpoint is enumerated and it requests to map a legacy
+> interrupt, of_irq_parse_raw() is called requesting the interrupt from
+> pci@0,0. If INTA is requested, of_irq_parse_raw() first matches:
+> 
+> interrupt-map = <0x10000 0x00 0x00 0x01 0x1f 0x00 0x11e40000 0x00 0x00>
+> 
+> from the pci@0,0 node. It then follows the phandle 0x1f to the interrupt
+> parent, looking for a mapping for interrupt ID 0x00
+> (0x00 0x11e40000 0x00 0x00). However, the root complex node does not
+> provide this mapping in its interrupt-map property, causing the interrupt
+> request to fail.
+> 
 
-max_link_speed, max_link_width, current_link_speed, current_link_width,
-secondary_bus_number, and subordinate_bus_number all access config
-registers, but they don't check the runtime PM state. If the device is
-in D3cold, we may see -EINVAL or even bogus values.
+Are you trying to say that the generated bridge node incorrectly uses Root
+Complex node as the interrupt parent?
 
-Wrap these access in pci_config_pm_runtime_{get,put}() like most of the
-rest of the similar sysfs attributes.
+I'm getting confused since your example above shows '0x1f' as the interrupt
+parent phandle for both Root Complex and bridge nodes. But I don't know to which
+node this phandle corresponds to.
 
-Fixes: 56c1af4606f0 ("PCI: Add sysfs max_link_speed/width, current_link_speed/width, etc")
-Cc: stable@vger.kernel.org
-Signed-off-by: Brian Norris <briannorris@google.com>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
+In any case, since this seems to be an independent fix, please send it
+separately.
 
- drivers/pci/pci-sysfs.c | 32 +++++++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
+- Mani
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 5eea14c1f7f5..160df897dc5e 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -191,9 +191,16 @@ static ssize_t max_link_speed_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
-+	ssize_t ret;
-+
-+	pci_config_pm_runtime_get(pdev);
- 
--	return sysfs_emit(buf, "%s\n",
--			  pci_speed_string(pcie_get_speed_cap(pdev)));
-+	ret = sysfs_emit(buf, "%s\n",
-+			 pci_speed_string(pcie_get_speed_cap(pdev)));
-+
-+	pci_config_pm_runtime_put(pdev);
-+
-+	return ret;
- }
- static DEVICE_ATTR_RO(max_link_speed);
- 
-@@ -201,8 +208,15 @@ static ssize_t max_link_width_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
-+	ssize_t ret;
-+
-+	pci_config_pm_runtime_get(pdev);
-+
-+	ret = sysfs_emit(buf, "%u\n", pcie_get_width_cap(pdev));
- 
--	return sysfs_emit(buf, "%u\n", pcie_get_width_cap(pdev));
-+	pci_config_pm_runtime_put(pdev);
-+
-+	return ret;
- }
- static DEVICE_ATTR_RO(max_link_width);
- 
-@@ -214,7 +228,10 @@ static ssize_t current_link_speed_show(struct device *dev,
- 	int err;
- 	enum pci_bus_speed speed;
- 
-+	pci_config_pm_runtime_get(pci_dev);
- 	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
-+	pci_config_pm_runtime_put(pci_dev);
-+
- 	if (err)
- 		return -EINVAL;
- 
-@@ -231,7 +248,10 @@ static ssize_t current_link_width_show(struct device *dev,
- 	u16 linkstat;
- 	int err;
- 
-+	pci_config_pm_runtime_get(pci_dev);
- 	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
-+	pci_config_pm_runtime_put(pci_dev);
-+
- 	if (err)
- 		return -EINVAL;
- 
-@@ -247,7 +267,10 @@ static ssize_t secondary_bus_number_show(struct device *dev,
- 	u8 sec_bus;
- 	int err;
- 
-+	pci_config_pm_runtime_get(pci_dev);
- 	err = pci_read_config_byte(pci_dev, PCI_SECONDARY_BUS, &sec_bus);
-+	pci_config_pm_runtime_put(pci_dev);
-+
- 	if (err)
- 		return -EINVAL;
- 
-@@ -263,7 +286,10 @@ static ssize_t subordinate_bus_number_show(struct device *dev,
- 	u8 sub_bus;
- 	int err;
- 
-+	pci_config_pm_runtime_get(pci_dev);
- 	err = pci_read_config_byte(pci_dev, PCI_SUBORDINATE_BUS, &sub_bus);
-+	pci_config_pm_runtime_put(pci_dev);
-+
- 	if (err)
- 		return -EINVAL;
- 
+> To avoid this, in the interrupt-map property of the nodes generated by
+> of_pci_make_dev_node() map legacy interrupts to entries that are valid in
+> the next level interrupt controller in the interrupt mapping tree.
+> 
+> With this, the generated pci@0,0 node and its parent look as follows:
+> 
+> pcie@11e40000 {
+>     // ...
+> 
+>     interrupt-map = <0x00 0x00 0x00 0x01 0x1f 0x00 0x00 0x00 0x00
+>                      0x00 0x00 0x00 0x02 0x1f 0x00 0x00 0x00 0x01
+>                      0x00 0x00 0x00 0x03 0x1f 0x00 0x00 0x00 0x02
+>                      0x00 0x00 0x00 0x04 0x1f 0x00 0x00 0x00 0x03>;
+>     interrupt-map-mask = <0x00 0x00 0x00 0x07>;
+>     interrupt-controller;
+>     #interrupt-cells = <0x01>;
+> 
+>     #address-cells = <0x03>;
+>     #size-cells = <0x02>;
+> 
+>     phandle = <0x1f>;
+> 
+>     // ...
+> 
+>     pci@0,0 {
+>         reg = <0x00 0x00 0x00 0x00 0x00>;
+>         interrupt-map = <0x10000 0x00 0x00 0x01 0x1f 0x00 0x11e40000 0x00 0x01
+>                          0x10000 0x00 0x00 0x02 0x1f 0x00 0x11e40000 0x00 0x02
+>                          0x10000 0x00 0x00 0x03 0x1f 0x00 0x11e40000 0x00 0x03
+>                          0x10000 0x00 0x00 0x04 0x1f 0x00 0x11e40000 0x00 0x04>;
+>         interrupt-map-mask = <0xffff00 0x00 0x00 0x07>;
+>         #interrupt-cells = <0x01>;
+> 
+>         #address-cells = <0x03>;
+>         #size-cells = <0x02>;
+>     };
+> };
+> 
+> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> ---
+> 
+> Changes in v3:
+> - none; this patch is new
+> 
+>  drivers/pci/of_property.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
+> index 506fcd507113..8dfed096326f 100644
+> --- a/drivers/pci/of_property.c
+> +++ b/drivers/pci/of_property.c
+> @@ -243,6 +243,14 @@ static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
+>  		}
+>  		of_property_read_u32(out_irq[i].np, "#address-cells",
+>  				     &addr_sz[i]);
+> +
+> +		/*
+> +		 * Restore the arguments of the next level parent if a map
+> +		 * was found.
+> +		 */
+> +		out_irq[i].np = pnode;
+> +		out_irq[i].args_count = 1;
+> +		out_irq[i].args[0] = pin;
+>  	}
+>  
+>  	list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
+> -- 
+> 2.43.0
+> 
+
 -- 
-2.51.0.rc1.193.gad69d77794-goog
-
+மணிவண்ணன் சதாசிவம்
 
