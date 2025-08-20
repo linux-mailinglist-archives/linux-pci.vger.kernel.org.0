@@ -1,62 +1,62 @@
-Return-Path: <linux-pci+bounces-34333-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34334-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC6C8B2D24D
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 05:09:20 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA8EBB2D251
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 05:09:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5DFD91C230B1
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 03:09:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 294197B42E3
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 03:07:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 221E7258ECA;
-	Wed, 20 Aug 2025 03:09:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA34F26F295;
+	Wed, 20 Aug 2025 03:09:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="VkS2BHaQ"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="B72gnx0O"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2076.outbound.protection.outlook.com [40.107.223.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2887E2343B6;
-	Wed, 20 Aug 2025 03:09:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDCD259C93;
+	Wed, 20 Aug 2025 03:09:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.76
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755659350; cv=fail; b=mLJaupV7WKG35NrLkCHJUvoeD6wWP3cBz/xx3gXw1IGJSD+nFgw44avym58kwjZpY+5niKyGvNO2NvKHqBLQ7H4x2co5SsB3Kx9j0D5xAByTMeG3wMHVRgjlk1Dih0Ywf/OB+dktN9dY+Yo2rvTWcbcOx2Bq/8gavZdjalutIMc=
+	t=1755659351; cv=fail; b=rV+EVlmJukuMPwHI/Q1aq2wJF5uK/V7JaMny4PbgRzat6JjHW280VLHGu2eJ0jZfVU5QDt6ga9eWbNo9DrXUN6UTSxOeRhC7rwBa5OmxbUTa3iLUiGKZKHZBbHXDOBzsuYF1nyy4HnPzSGJ60Tg/eur8+gArnIVxb0cDTiXJ8r0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755659350; c=relaxed/simple;
-	bh=SZhFc+jfoD5ZLur0hN23X8Y5vuLFdsr0dPlja9/5rSg=;
+	s=arc-20240116; t=1755659351; c=relaxed/simple;
+	bh=eBaFvvQdc38+PuLa6+IGAJmT7CuPmoXfC0rhp6fELiA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=t5O7eBJzB/4Q55mtkXZ1bkg6cmbKiwjJNTJ9lF+unYqm6NJF5D7Q/2cW6Ajc7duQ9Xnwxeg5UChI4PFGxFGyQ5XhtwmUFDmQeG2gIXWSGwe65r0HzuXMGU6FUUkhLgYTWvBh+iifkdA/6BvqUauvilP/1lAaozmZK6xQ9U/L8go=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=VkS2BHaQ; arc=fail smtp.client-ip=40.107.223.76
+	 Content-Type:MIME-Version; b=bm4komdgNb8r1+Tlw+2jFjsHzxfMGzcGdx/fnUmL00DyPlfOfu5kCdIY1Z0nLL1fCYBtQp8b8JBzsi4QtlXJRyVaHjrdMPF1+COKIIIf6EMcl25QRmsILQxqS9LGnP8mHRoA19jkz8JxjSHjuUb3eww+Ebe+0YtkxXMuwYLf7l0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=B72gnx0O; arc=fail smtp.client-ip=40.107.223.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gqDVf9CGvWh5Xr/WdTS+3jI08Ta+96SSV93gek38kcA/ChuxH4Wm6MQnfAiBjkuCWAmk3oglk3yyO5FPqfoLexVsI/rnQTcqvJA6sK6MJFzUYBP5pcoKCd6Wekhz6k3PqvFn0q5hRDBgglqsUiFy6x2OuqXFpcQd4Ap4UcQdUXHvqzy62vyFmSlsKeQ/RPjoXv+alw+0R8HWNsmuuVVfmkE7KYt0b2o5FetLB2b+p8aQ7TIjdmzKOlrnc2w4GyqpNWIjXwlpOzwVF3hI7oImR3DskBEJ6FUt+IEIhdl0GexP9Wo8IC3ECq3KqvUQXqWfKJOnc6rH9sBrDoxBNB85fQ==
+ b=I/IkYXyYHYan8bOJ/Klf503KHlyWtgpjHUvi3bSnbicv66WZYqNsziPmms8QxdbPGfGzCtlhTwo7mMVWGsO20qQUegiKnO105N3jdzzP2gfGbvA0XlnI0r3vkX11x7NUH7BL8/6sdNwDZGoTVVjG23LZMuVZGOqlhOJjtdH/xHhS58ckh7r57MRwKj+yM69jHT3uc3i+kk/gZKAZZ1fb1ZlJx9ktpKH79cKkQ2rH2FgNq/69Pjz8q5ssr2K5SohIoVz5KAdZs71Kv9qi1h79e+MUu1GtSzUyhXHvm+UFWnKySCrGF1Sk72yb2Ui2Qk7NnR59g6HaWOrsbVwAo48Zow==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B+tAtpH9W+mNwk6c+yjINj+L3HKp0ZsZo64XgEt20/A=;
- b=NGiWZ5OKE8MAorGFOwCyz+idD9RdBgI/0sjj7AoawlbYolxbGFMj94+jNl2aK5VsqWYdBilxkbOUSMPyPKhgC5SvkcLU/LVde8Hm8mNdHRawbafnFKNqMmANZkiT/CF7fiColX/fKzIcTWo1uuTUsjBRRLh5PJM/Ts/+ztgSyvLyJurRbqRZVCh/5fyIi8HynSHG1U8TIB79ONyvWXwvyD0Z1b8wUzUQdwZdY3kZusnaO7xOa8xX1qhcHRqdMg3T/Lt+jAcmRawcz72pG9w997vCSFdjUJCsI0N7gphgPlPpjvXv1PD9a7E1lEHbUaR20Kjh9age8OzUM+7NkzpaYg==
+ bh=TgwQa6nEHdcBRHpXUcKe/Gq+vjlI9jTIgkB/2zraMos=;
+ b=NDdOJlGkplYq58BN6SRoewGl0zLHbfYcGya9deGP9YcHRFXx+J/aeL+BGN8k41h4Peqs02NrvO6BND8vy2pAfYUEB5XaVnyRQIYof9sxG429iHe+ordOIDYjuHApk6eQ2Ng2vtL4YVd4yeUnLMJds1i7OOHknSndWUhbo61qIhQjTqj+eK36HgSyjc1qz0iTW/pN0KM4E2Q8ta+K46P9Yd5rZtdv7TjOZ1PwAp/pk8uQVbCMUliTJ5a8xiyO9cTqPgY49/kNWxsUH2h5bOtwMHZOQMcA/AbB4gh7fYkYXZYWK20lm4mlWqL0+YTWxdGORe1DSvSWHbSWvxlmobTkjg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B+tAtpH9W+mNwk6c+yjINj+L3HKp0ZsZo64XgEt20/A=;
- b=VkS2BHaQIrEeCdHIPW/EpaYwd1V+S1RO8O4I1cGuFwPWROZltKSe+uFf4VaTsGxgv0UCvWtzMdAMRu99ab/3tFhyuHa/7BxtRttakLuZbmB0IvQT5AiHOptp+9TBHNm0iAfK5CLAp48GUDPDOmxxG8UcHYGwWA0cQGKPDlxm9VUIxLjrVUUmCF/5iJbHzHtJbKgKVOjKuVB138prBzH347GLMqSfScjqA8bTZ33/MWc2DcIziwANZ/ZX6t9+iNkf9JahKADT9EnaHJB0fkrfzAsjiUuM1CAbd9WaZCayXVMYScGoXbh/Cg8shkQNbIJzy82mHZCCL8bYOMCJpDN92Q==
+ bh=TgwQa6nEHdcBRHpXUcKe/Gq+vjlI9jTIgkB/2zraMos=;
+ b=B72gnx0Otn0wx/QHxjgM9u3HAmB/pLn/fu/3E3zvLEAuzm/L9k2dYKyz3dt+1EAiJ4XHCdYSLLi054AwxTQK5BrAnfOaidkJbYGKiXVKiIe86dip7GS1AnK/JAm3NjaOebEkbwM7faQ/7t0iyqVLX2RswxcY1nyP6U6/LRn4cCjUA9gzBHqAWVZcDuq1mUxoBXnZfEIGU0J2bc3/bjgytcmoZ8RIVlBk0IGFsDos7rtyAdq1vFboMPiUF57ecfdzE6YWZSCJe5+erD+JuaXcZcA/D35y1k05mEDh6h3IcdBfUrgY3zDAIOXGvqrPUMe+1ZiPDosrdxVupZn+kFUtMg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from LV2PR12MB5968.namprd12.prod.outlook.com (2603:10b6:408:14f::7)
  by SA1PR12MB7174.namprd12.prod.outlook.com (2603:10b6:806:2b1::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.14; Wed, 20 Aug
- 2025 03:09:04 +0000
+ 2025 03:09:06 +0000
 Received: from LV2PR12MB5968.namprd12.prod.outlook.com
  ([fe80::e6dd:1206:6677:f9c4]) by LV2PR12MB5968.namprd12.prod.outlook.com
  ([fe80::e6dd:1206:6677:f9c4%6]) with mapi id 15.20.9031.023; Wed, 20 Aug 2025
- 03:09:04 +0000
+ 03:09:06 +0000
 From: John Hubbard <jhubbard@nvidia.com>
 To: Danilo Krummrich <dakr@kernel.org>
 Cc: Alexandre Courbot <acourbot@nvidia.com>,
@@ -81,17 +81,17 @@ Cc: Alexandre Courbot <acourbot@nvidia.com>,
 	rust-for-linux@vger.kernel.org,
 	LKML <linux-kernel@vger.kernel.org>,
 	John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v4 1/3] rust: pci: provide access to PCI Class and Class-related items
-Date: Tue, 19 Aug 2025 20:08:57 -0700
-Message-ID: <20250820030859.6446-2-jhubbard@nvidia.com>
+Subject: [PATCH v4 2/3] gpu: nova-core: avoid probing non-display/compute PCI functions
+Date: Tue, 19 Aug 2025 20:08:58 -0700
+Message-ID: <20250820030859.6446-3-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250820030859.6446-1-jhubbard@nvidia.com>
 References: <20250820030859.6446-1-jhubbard@nvidia.com>
 X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BY5PR17CA0025.namprd17.prod.outlook.com
- (2603:10b6:a03:1b8::38) To LV2PR12MB5968.namprd12.prod.outlook.com
+X-ClientProxiedBy: BY5PR17CA0015.namprd17.prod.outlook.com
+ (2603:10b6:a03:1b8::28) To LV2PR12MB5968.namprd12.prod.outlook.com
  (2603:10b6:408:14f::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -101,406 +101,147 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: LV2PR12MB5968:EE_|SA1PR12MB7174:EE_
-X-MS-Office365-Filtering-Correlation-Id: a73ce9ab-9cb0-4af2-85ed-08dddf96eb42
+X-MS-Office365-Filtering-Correlation-Id: 50dd86a2-5c5b-400d-ebe0-08dddf96ec3f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|376014|1800799024|7416014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5kAD7KJ9nIYY1dJ5gKQUaJhI0NNTVh0WYiD3trld70YwpY2VWCIJRJB1JRjU?=
- =?us-ascii?Q?XFX2/0Co8S9rse3skxVzlltzf2qgnjo0/3NmVnGoJxuDPN6jaqgO5XIEnKPY?=
- =?us-ascii?Q?wJ2rTc8UxV30v4KzEkn/P+KR3c8NIt/aLAxWaVWwWrDHbruU4Z6pMC9Davn9?=
- =?us-ascii?Q?9f6JoSqTJDbbsPXM8YbotBXxHjYhOmyrdFbLFtwcQ1YMh8bfEjUZO5vn0YLO?=
- =?us-ascii?Q?atgUUJeSmAKdiW2MZUBn0qcZpt0XoaQ+QuZ3kA/LPRkR1aKAez8GEvkHi3h2?=
- =?us-ascii?Q?VEfGRRKUAXFJME/hbJUezj0eVdzHCYsZ4gZhSRZ4bl18QbrXoSsDO0G+JjyA?=
- =?us-ascii?Q?ofvDIscOQXCzNH1pgtbSTVamisizgbhnD7szHD0CFq9lw9owb8ODFAldHlHv?=
- =?us-ascii?Q?FOWzc2YjC22sHh8KyW5vl2vhvHJ0izFK/btU5yyl28CVnTWDBZqZXvWkPOwe?=
- =?us-ascii?Q?rpudmiiTPWyl/ZbZ/guCUjwe57ktnxnPl9JCEMSxjohlNDP2Pngg3gbVUikL?=
- =?us-ascii?Q?f0ug/wpwSFfKWX61QIdh2dy0PTpveZLGuzOXe/t6jYGcU7XDkDINL5NquGG4?=
- =?us-ascii?Q?ztpM22WANpFGL6rJ2v3r9aPhmSb4NiwRKcncOnVuds5ozpTg9AoR6f8Kw1h/?=
- =?us-ascii?Q?WN+LHDMxMQoVj2hcEGh2Ya/7gEWYn2vH8wnaa4XvMlpydiY5nb2F35NbBUla?=
- =?us-ascii?Q?DOZ2daAAcHhOxKkhzXHNg6qQ3E5m4qJIhr+eTH6LvdrcNrJ1+pPz8mHCGEWp?=
- =?us-ascii?Q?dC/b+vpslVowRxaGnSI7FvIfEBLgPj05vE2oHYkg7lh7dbJh3BUijZQjOV9m?=
- =?us-ascii?Q?UhpeazXY+b/qco2t7KoOdETLq4EXiWHkoJxCJUaezzLNxbwWjg/BZSlCV7/V?=
- =?us-ascii?Q?/wFONlyuSOMnMJqrwLkgoyd0ujQddkTXrLt2d+2c9LHQTAqvH2TF6YQHBEDK?=
- =?us-ascii?Q?DhWmWTXsHkB8tHxgBRdf1faol1vGGTnctRcTwV09bHM/C+pE0cOMo7G82iNk?=
- =?us-ascii?Q?nSg0h4EX15QfpDxuc/aGr58nqzb+BzAhCWrV1uJ1p/Z0kNpy4MtlvzPkng+N?=
- =?us-ascii?Q?y8Zf/tlM0oj8bDdZDEAAJNuTHZzZcS/tVTFuc6V35U/31VyuFGxo578Tb2Ii?=
- =?us-ascii?Q?BiEoFeDLzmP0albLQpMxmMvrnVZIDOQ+KeBWeGXI79dAwnZ5nPozZ2Imli5R?=
- =?us-ascii?Q?azZOZ98VuoQwKHcwKi5eiJb3wxFZJjc4Nsuisjr5vp2Fby3rXOZQbMoOqB3O?=
- =?us-ascii?Q?bZBgeAP7Mlmodft0LBvaVcn6uCRMYfRVmN5Lj46jC8rrkRcPY9Tw3P14HkVA?=
- =?us-ascii?Q?1X9iFHuraZaD7QsRNMQQxRec8c6fzjJDD1Axp3Qy+nGQcjraUEWfYbZ16FPg?=
- =?us-ascii?Q?QrhawjWphd5VAfFxEZTi5vFYVBQOYQa7T26kzYdGnx0Iky1TMJtgu16Z5uqS?=
- =?us-ascii?Q?cLumDnIVfoo=3D?=
+	=?us-ascii?Q?a8nwsInR1wj85axdGlMGxojiac0DtEfo8Eb1DZBvUSMltb/0uFJWGZPg21ST?=
+ =?us-ascii?Q?SSIO5O8mEYg0gR0cr52WmpRuUcXxP3+TZ4EZwYM/gJT9JsY13h5BhUm18hfb?=
+ =?us-ascii?Q?WBY9+8aKeiIjKdxSL4XWdSUpwzghTJrjcpItcW/1IUjV3GczZdvjSck978/w?=
+ =?us-ascii?Q?1DTob9gFvI9vYccjNEYVXgGMMw+344AE/r7QWJZYUrB6RGiWjl0ZMWbfBZj0?=
+ =?us-ascii?Q?flRbnh4wnSF1pIzjo+DHa8cHCX8c8UlujEHLrF2F8nJ1oQjIr8qsAnTVj2Ld?=
+ =?us-ascii?Q?GvQpztMXpYbOYUThDcl3WZsG3SVQY9/JFFA2SzuPwtPe2xzn/QXqbJQqXgWb?=
+ =?us-ascii?Q?ZQ30i2dlUzaEyiNOc5vozcEpivZW1qCClMeim8AzXkgpBD19UgBuuVHh4YcO?=
+ =?us-ascii?Q?AJHXJ7REnAqP8Eo19/sh5oOVH7fJRuT5ZFQCMR8YzBZgMrQHgkskoAwt3Bvk?=
+ =?us-ascii?Q?HDX69NLhlHnNEVwlOJ0WqfMXRsRoxv8qQpvf4A4spR1te0KnMtLVwAeVpEch?=
+ =?us-ascii?Q?8lsqbOqD3PzzD09DnCTqExByu+LOfOnZTiDgjLhUy+LiCg7x98smcgAsstoF?=
+ =?us-ascii?Q?nE/RtNcGigW7D//gWQQApVkbecPrUDv4znxbBisu6n6d4D/QZdADARFn6vZD?=
+ =?us-ascii?Q?2kTv5ygY60ZStm42Aq2NAVEVWni5rHlrd7IeU9P7iZaxlrQ36ZFXTavUnAGs?=
+ =?us-ascii?Q?z+HLyZLlDjP2gwTsJWXJ4yDb8HSW9crHZpFmKb2ypJi1XL5jX6en90KK+hHS?=
+ =?us-ascii?Q?VjkOpIobLk0X2XzRpHiTnkcGYo5nqJR/E2ldHAlNDvcNyOYeQMFkG9tKpmQG?=
+ =?us-ascii?Q?shXGcQogwHvUCylK78Fvyv+42Vj6rFDrC+nZxbp1FeOuVNwKtq1qZepJy6qC?=
+ =?us-ascii?Q?yKPXqxE8oLHNHVctGZTkhIQBLHFITIrU2vyv0j4gGWOuSp2cxdvz40McosPp?=
+ =?us-ascii?Q?vQVHtW4619Kcrpxh3Xi1E+soa10095GzDRhygDdAEpXCMAiif4/jMlwkG7EM?=
+ =?us-ascii?Q?yn8jkI/S9+rSPFxH8gmdDINOKDaZ2uEauvHCtZ3wVANAO8qCd8Fr52z/GRRl?=
+ =?us-ascii?Q?yYRAq6r68SX7oEzu03HAi9CUKzCrD3xynuEEFpXQCdDLyvBYKCkTykoR9E43?=
+ =?us-ascii?Q?HEu3XoDaMXOW30iPm0lZKVd0wi8FeFlbBrHmfeZgfgOmrWAaXASwqYwLxmQq?=
+ =?us-ascii?Q?oGgTRvyAIysl/62aLF0RkHOnWvnTbYcOYXWepXiiLbHGoaJYvA5wgvoEZiVU?=
+ =?us-ascii?Q?WbsJaYvhpJ8WarlHkCf39mGldlV6iRkkYVpLF+6uaMulHVfRmMV4ZVJiSZop?=
+ =?us-ascii?Q?NQ8z0oh/rngJ4C4TTeNDkW9mKMD0/FmUmJNo7lXdrOYT1yzzfaABCi75ei0Z?=
+ =?us-ascii?Q?OJgc6ck6U69eH+P3uQOn6J8szkdS9EgUhyHfKbKItX126rQHY12Q2qmtUR1F?=
+ =?us-ascii?Q?w2fmyJ2Rz+g=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5968.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?UY6p06Hbwmdkwz6oFm7h8+P09E9FPSc28FDBtzFhi0ylD6Pdmn0cTJCGJ730?=
- =?us-ascii?Q?welculKTlptf/6UMmv3HS2HLlCPshinGiILgpu92cm5Qu7qEWn4elx5sTBcm?=
- =?us-ascii?Q?vdXHEfg6vR9lqXZAp27pFVUeW/x0gCddlNwt0dDu9Fgtz08Su0BI8atJ5Jqf?=
- =?us-ascii?Q?ofXJTB5pzsME9qtsgzKj5DSAv051Y+Jnae+c3yPkNVNZVcvZ/Y5XTHXpnPBb?=
- =?us-ascii?Q?BtuKZ9nCLyanU9OZYMVXihhRmesULcg8IZ9yHwambvAV4NW1KpB+lNAyyaHX?=
- =?us-ascii?Q?E3cihICI322IwsalIHr7+MEweRYhu0OKhygpM1H0cYa4+e36aMbvSYY7Dy/c?=
- =?us-ascii?Q?lmZXMNWaYTQJ/lf7diF1QnkWV0eztdKAUghIf8Y6Fd3oDjtHSFS22e5HZgc2?=
- =?us-ascii?Q?hVm6as/9Qtp8M+DAPbEbpI6uBnWa8QpgKeix3o/jF+5OIlx9fzj8rxbDzhku?=
- =?us-ascii?Q?3NVfEQ59MG8IJyMFSWRkj7ZkVxMQR3GPM19fTE3aKCK0xF9HQxsQr38pNzVl?=
- =?us-ascii?Q?DL1+nhqgWnvyrUvTKb7zufXFkz09xBuM4wA1WtYYrZ4q1UFOP44jahLiSLCk?=
- =?us-ascii?Q?5GwNimeFNKL4DJYlUK5IHnOpmC13ilHGLhYip4dOZXRWL/lefnjmKxE6kTI1?=
- =?us-ascii?Q?rosXgxh6Mwxw5YaYxMCfLLfhxn4h+LZ1JYLrMpeQ3ZcUwGzRgfgvLjdfQcoK?=
- =?us-ascii?Q?4U9h+WsYTh9oxZD5/Ku2ij+CTJtWWbwoKe7rFpfCvqVDGt5tIkD2OrmvwlV5?=
- =?us-ascii?Q?/b3RFMjV2WB2GwwZ5a1IkMjCoeTalQdmqrU8VSTvv3Ie+zdlCLfwQ+1HGRCg?=
- =?us-ascii?Q?7dN+dplVFoaE3clSndHko6DvmgTTVpZ2bSwd/Z3nSVmgFK5nKI2rCtr4CZgI?=
- =?us-ascii?Q?UtBY3i2AKPBRPRT2BC4qX49BDdgh66LFWb4E0YIJWTcUTeWVzOT/S9kkYGKK?=
- =?us-ascii?Q?HKAgqtvGORDmhMYGP8tgtNt0N1cPV41DNINo+jxA8Zc+WZcckQnW/aM7IxQo?=
- =?us-ascii?Q?bpS5zuzJ/ApJEYOiVf9hxymrvjM3Nd/0qcNM+mg3CeQO+N7ApKeubSuzm7kG?=
- =?us-ascii?Q?WWxPjo7rabBMBxhxTWRyHalBLypcPIipREatPr9GqsPg9n8T6nZvfMlr8m+i?=
- =?us-ascii?Q?FnUnRPo71DULoEQibPlDfjtYVmu02JW6mdUHDoHPqKFf6qOwGbyLqCzwTZPZ?=
- =?us-ascii?Q?73ubsZre+5HrRzAHUFtT48fhFgQKtdxtMMaXfiMAzVNaunM8jcG3gL2k6AXB?=
- =?us-ascii?Q?ueiug+Q26Sk/tKYOLaE+DuV8El25igeM9bs+cv0qYI6wvLNI7CgkfBsUE0HW?=
- =?us-ascii?Q?Y8jbGUcx5NpuI3zvr9iIGRexV9n7fHxTuXdaxpRDbZaAZN4RVebX7QfUh+oY?=
- =?us-ascii?Q?HZZm5zJ/6XWsSReFgquKfy75p9H4hBNZIuZGElck165xfMQL7xzxixnI65mR?=
- =?us-ascii?Q?1hQ8NwAyGbPyjMsOY03hr1CtfLyimpZT/SvOyB2UblvnBZe5HEF4JMQk9u3z?=
- =?us-ascii?Q?6fPjpBHmBDkKKGSZsbzgDMgIVu84Q9z54cJfNZx4TsPbuqZdbmJ29pKSv5dw?=
- =?us-ascii?Q?EsbIAm/WsaZe4Cfk5b08W3IXaqq8PYsnwbxCLoeA?=
+	=?us-ascii?Q?jLcUasNCee6YCVAhWVGm13cT0R5jf+u+Wd1tGU8DN2ykS46humQlBbjxoEYh?=
+ =?us-ascii?Q?9xN5uJpScoRUZKpxopBaNY2L3l9sjyOFvJlXbDAiCWH0t+3OX6i5TpvzwkDk?=
+ =?us-ascii?Q?xZ8vqQcYf8NaLLK4E3F62aFz0kX3ccYQYvyvjv/J82XhYf5MZwPSMoa2+FOO?=
+ =?us-ascii?Q?B7d2cmTAQ848ri4x2RKRNcE0Ur88G4hqa2qzzD4XNB98s97+TEZQXkQC7pJ7?=
+ =?us-ascii?Q?bdZVageO0FQydRv/zRA1DuNmqj3IIx8hxg56SZE2cQ/A9sNW1/NuYcRkUD+m?=
+ =?us-ascii?Q?BRaRz3O5fpULHfQ04Kvg9Oq8bNOtHaoa5XHa4wUe7nzoVG4Fl7/e1YKiccNs?=
+ =?us-ascii?Q?Ao8RKC3PmQQJ18q8axi5ZPmdkFxV2SO/R9BL94wznPo66q3872GVpBP1ek8O?=
+ =?us-ascii?Q?Ii7bUBELn/GzM41/LHmmi54FX4pATjDbA0hdPkCdkdq1LL8N9Df/+YrJYvUc?=
+ =?us-ascii?Q?1y63J6YV+s1eBFMvoXngWTDBcTVEn/oTVdUtpImx/YaHl/U+H/gIWr2zrhgd?=
+ =?us-ascii?Q?DDM96upcdLHF7duR9G+GT+qtx3ZNQ9SUHO2O3D5CvCRQaKmXYZ2Ckii/rnQN?=
+ =?us-ascii?Q?PZPjgVEBncgbolj926lpySdtY78u6c3y2K2X7CqT2czkg6HtCOjHy5sJLSZC?=
+ =?us-ascii?Q?9kXG3u4d5d+30hLt/X3Fjlc8iyDwSjB+3pvb6Qbi2O1d8z4Yhoi04uwELzvf?=
+ =?us-ascii?Q?LgeMTIuVyDoFu1fTzvNi9g6wHs1ttOqGXluCxK9dda/B7A7hdVBQzfSelGsh?=
+ =?us-ascii?Q?QdKbXY9xF8dOvSgEXh7dfJRCs8peeuPWiDTp0ytdmEuR2ztAWSiIJmpApPf2?=
+ =?us-ascii?Q?CltXrQlo5CKhD75iysxVTcsv0vPPu/b/cGWtdbaJLAtAhnkK2W9RjaO+MUUq?=
+ =?us-ascii?Q?sTn1TX3ZfwgNc0c0AqHWZcEHXGZps3Un3ROVpBh8xQpc6QM4Rg2br9fMy0qf?=
+ =?us-ascii?Q?FVrFSZ9feSopVUf2lyOv/LQmHlOv8/n/cktHDkGZ1t61el0MEV+KU4wLCLg4?=
+ =?us-ascii?Q?0m+kIKcGkTZagqDo1te+DHYM+JnbL9pKVxGG5pwfcXRcoDsaNEbeU4Unycq9?=
+ =?us-ascii?Q?ur2r+TP1WkMMQBnEsDqaXK1Gcz6dFw05YBfgQWNZTCDiphdkemIShpAK2D6W?=
+ =?us-ascii?Q?chbRGuDLFphoiZtQknr2Gmm1vfkEG9bVGROEY5epYjOqVUBrGXT5u6JCjiMe?=
+ =?us-ascii?Q?C2KObgtlfetO9MrsPHgd4MC44lWhm8MemGJojOvepr19ooWB4xfyMkylr7a9?=
+ =?us-ascii?Q?pUV83ZdAdBJwrX7Lw893WQQmsg4MQqa0daKJfF6uLUGYeMC7FecNjivNBVaj?=
+ =?us-ascii?Q?+6krd3LTXqbJ7DNdTeYdE+5HUCIn2oFI/UDt4wLcpEfs7iSLH2/o4EBWO2SH?=
+ =?us-ascii?Q?FyGKQw6BymhyppJKxeJkz0ITwWEj4AdTk5qbLUJ14TuzfkgvUOgE2fMMV1NF?=
+ =?us-ascii?Q?Qn5CRPnHUTjzUwy9zxUzjic24ZKwL9iUYUmqQBCxTZjY8J3v2RLhtvUVjV/Q?=
+ =?us-ascii?Q?CQgIT0z8FAVTfGeqvzG3zKHpypJfboLnfdGTJNfPIarxIqbUbNvNgzdxOEiU?=
+ =?us-ascii?Q?eWV0MSYeIpWh19bZtk+rm6FQHSjmeLXYN2sV8F3z?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a73ce9ab-9cb0-4af2-85ed-08dddf96eb42
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50dd86a2-5c5b-400d-ebe0-08dddf96ec3f
 X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5968.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2025 03:09:04.2863
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2025 03:09:05.9281
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7p3oDArMR5FcK32CXNFB0bRK5ZoGHNGx1k9flVTIF/xMj/cVjnd497zLerJg2eA3Bzi1h+ZKwuhzhetcCVzy0g==
+X-MS-Exchange-CrossTenant-UserPrincipalName: Gm1HpbVPNpzQhplVDdlUeczBMhvpvGfc5uOfQbvDFIGJjlf6FTEH+BAqDCJm0qTxkmTGiYLmpu6Ke905GwUv7Q==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7174
 
-Allow callers to write Class::STORAGE_SCSI instead of
-bindings::PCI_CLASS_STORAGE_SCSI, for example.
+NovaCore has so far been too imprecise about figuring out if .probe()
+has found a supported PCI PF (Physical Function). By that I mean:
+.probe() sets up BAR0 (which involves a lot of very careful devres and
+Device<Bound> details behind the scenes). And then if it is dealing with
+a non-supported device such as the .1 audio PF on many GPUs, it fails
+out due to an unexpected BAR0 size. We have been fortunate that the BAR0
+sizes are different.
 
-New APIs:
-    Class::STORAGE_SCSI, Class::NETWORK_ETHERNET, etc.
-    Class::as_raw()
-    Class: TryFrom<u32> for Class
-    ClassMask: Full, ClassSubclass
-    DeviceId::from_class_and_vendor()
-    Device::pci_class()
+Really, we should be filtering on PCI class ID instead. These days I
+think we can confidently pick out Nova's supported PF's via PCI class
+ID. And if not, then we'll revisit.
+
+The approach here is to filter on "Display VGA" or "Display 3D", which
+is how PCI class IDs express "this is a modern GPU's PF".
 
 Cc: Danilo Krummrich <dakr@kernel.org>
 Cc: Alexandre Courbot <acourbot@nvidia.com>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- rust/kernel/pci.rs    |  28 +++++
- rust/kernel/pci/id.rs | 247 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 275 insertions(+)
- create mode 100644 rust/kernel/pci/id.rs
+ drivers/gpu/nova-core/driver.rs | 28 +++++++++++++++++++++++-----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
 
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 887ee611b553..ee887d616320 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -23,6 +23,10 @@
- };
- use kernel::prelude::*;
+diff --git a/drivers/gpu/nova-core/driver.rs b/drivers/gpu/nova-core/driver.rs
+index 274989ea1fb4..b60c9defa9d1 100644
+--- a/drivers/gpu/nova-core/driver.rs
++++ b/drivers/gpu/nova-core/driver.rs
+@@ -1,6 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
  
-+mod id;
-+
-+pub use self::id::{Class, ClassMask};
-+
- /// An adapter for the registration of PCI drivers.
- pub struct Adapter<T: Driver>(T);
- 
-@@ -157,6 +161,23 @@ pub const fn from_class(class: u32, class_mask: u32) -> Self {
-             override_only: 0,
-         })
-     }
-+
-+    /// Create a new `pci::DeviceId` from a class number, mask, and specific vendor.
-+    ///
-+    /// This is more targeted than [`DeviceId::from_class`]: in addition to matching by Vendor, it
-+    /// also matches the PCI Class (up to the entire 24 bits, depending on the mask).
-+    pub const fn from_class_and_vendor(class: Class, class_mask: ClassMask, vendor: u32) -> Self {
-+        Self(bindings::pci_device_id {
-+            vendor,
-+            device: DeviceId::PCI_ANY_ID,
-+            subvendor: DeviceId::PCI_ANY_ID,
-+            subdevice: DeviceId::PCI_ANY_ID,
-+            class: class.as_raw(),
-+            class_mask: class_mask.as_raw(),
-+            driver_data: 0,
-+            override_only: 0,
-+        })
-+    }
- }
- 
- // SAFETY: `DeviceId` is a `#[repr(transparent)]` wrapper of `pci_device_id` and does not add
-@@ -410,6 +431,13 @@ pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
-         // - by its type invariant `self.as_raw` is always a valid pointer to a `struct pci_dev`.
-         Ok(unsafe { bindings::pci_resource_len(self.as_raw(), bar.try_into()?) })
-     }
-+
-+    /// Returns the PCI class as a `Class` struct.
-+    /// Returns an error if the class code is not recognized.
-+    pub fn pci_class(&self) -> Result<Class> {
-+        // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev`.
-+        Class::new(unsafe { (*self.as_raw()).class })
-+    }
- }
- 
- impl Device<device::Bound> {
-diff --git a/rust/kernel/pci/id.rs b/rust/kernel/pci/id.rs
-new file mode 100644
-index 000000000000..ed241af07dee
---- /dev/null
-+++ b/rust/kernel/pci/id.rs
-@@ -0,0 +1,247 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! PCI device identifiers and related types.
-+//!
-+//! This module contains PCI class codes and supporting types.
-+
-+use crate::{
-+    bindings,
-+    error::code::{EINVAL, ENODEV},
-+    error::Error,
-+    prelude::*,
+-use kernel::{auxiliary, bindings, c_str, device::Core, pci, prelude::*, sizes::SZ_16M, sync::Arc};
++use kernel::{
++    auxiliary, bindings, c_str, device::Core, pci, pci::Class, pci::ClassMask, prelude::*,
++    sizes::SZ_16M, sync::Arc,
 +};
-+use core::fmt;
-+
-+/// PCI device class codes. Each entry contains the full 24-bit PCI
-+/// class code (base class in bits 23-16, subclass in bits 15-8,
-+/// programming interface in bits 7-0).
-+///
-+/// # Examples
-+///
-+/// ```
-+/// # use kernel::{device::Core, pci::{self, Class}, prelude::*};
-+/// fn probe_device(pdev: &pci::Device<Core>) -> Result<()> {
-+///     // Get the PCI class for this device
-+///     let pci_class = pdev.pci_class()?;
-+///     dev_info!(
-+///         pdev.as_ref(),
-+///         "Detected PCI class: {}\n",
-+///         pci_class
-+///     );
-+///     Ok(())
-+/// }
-+/// ```
-+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-+#[repr(transparent)]
-+pub struct Class(u32);
-+
-+/// PCI class mask constants for matching class codes.
-+#[repr(u32)]
-+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-+pub enum ClassMask {
-+    /// Match the full 24-bit class code.
-+    Full = 0xffffff,
-+    /// Match the upper 16 bits of the class code (base class and subclass only)
-+    ClassSubclass = 0xffff00,
-+}
-+
-+macro_rules! define_all_pci_classes {
-+    (
-+        $($variant:ident = $binding:expr,)+
-+    ) => {
-+
-+        impl Class {
-+            $(
-+                #[allow(missing_docs)]
-+                pub const $variant: Self = Self(Self::to_24bit_class($binding));
-+            )+
-+        }
-+
-+        /// Try to convert a raw 24-bit class code value to a `Class` enum.
-+        /// Returns `ENODEV` if the value doesn't match any known class.
-+        impl TryFrom<u32> for Class {
-+            type Error = Error;
-+
-+            fn try_from(value: u32) -> Result<Self, Self::Error> {
-+                match value {
-+                    $(x if x == Self::$variant.0 => Ok(Self::$variant),)+
-+                    _ => Err(ENODEV),
-+                }
-+            }
-+        }
-+    };
-+}
-+
-+/// Once constructed, a `Class` contains a valid PCI Class code.
-+impl Class {
-+    /// Create a new Class from a raw 24-bit class code.
-+    /// Returns an error if the class code is not recognized.
-+    pub fn new(class_code: u32) -> Result<Self> {
-+        Self::try_from(class_code)
-+    }
-+
-+    /// Get the raw 24-bit class code value.
-+    pub const fn as_raw(self) -> u32 {
-+        self.0
-+    }
-+
-+    // Converts a PCI class constant to 24-bit format.
-+    //
-+    // Many device drivers use only the upper 16 bits (base class and subclass), but some
-+    // use the full 24 bits. In order to support both cases, store the class code as a 24-bit
-+    // value, where 16-bit values are shifted up 8 bits.
-+    const fn to_24bit_class(val: u32) -> u32 {
-+        if val > 0xFFFF {
-+            val
-+        } else {
-+            val << 8
-+        }
-+    }
-+}
-+
-+impl fmt::Display for Class {
-+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-+        write!(f, "0x{:06x}", self.0)
-+    }
-+}
-+
-+impl ClassMask {
-+    /// Get the raw mask value.
-+    pub const fn as_raw(self) -> u32 {
-+        self as u32
-+    }
-+}
-+
-+impl TryFrom<u32> for ClassMask {
-+    type Error = Error;
-+
-+    fn try_from(value: u32) -> Result<Self, Self::Error> {
-+        match value {
-+            0xffffff => Ok(ClassMask::Full),
-+            0xffff00 => Ok(ClassMask::ClassSubclass),
-+            _ => Err(EINVAL),
-+        }
-+    }
-+}
-+
-+define_all_pci_classes! {
-+    NOT_DEFINED                = bindings::PCI_CLASS_NOT_DEFINED,                // 0x000000
-+    NOT_DEFINED_VGA            = bindings::PCI_CLASS_NOT_DEFINED_VGA,            // 0x000100
-+
-+    STORAGE_SCSI               = bindings::PCI_CLASS_STORAGE_SCSI,               // 0x010000
-+    STORAGE_IDE                = bindings::PCI_CLASS_STORAGE_IDE,                // 0x010100
-+    STORAGE_FLOPPY             = bindings::PCI_CLASS_STORAGE_FLOPPY,             // 0x010200
-+    STORAGE_IPI                = bindings::PCI_CLASS_STORAGE_IPI,                // 0x010300
-+    STORAGE_RAID               = bindings::PCI_CLASS_STORAGE_RAID,               // 0x010400
-+    STORAGE_SATA               = bindings::PCI_CLASS_STORAGE_SATA,               // 0x010600
-+    STORAGE_SATA_AHCI          = bindings::PCI_CLASS_STORAGE_SATA_AHCI,          // 0x010601
-+    STORAGE_SAS                = bindings::PCI_CLASS_STORAGE_SAS,                // 0x010700
-+    STORAGE_EXPRESS            = bindings::PCI_CLASS_STORAGE_EXPRESS,            // 0x010802
-+    STORAGE_OTHER              = bindings::PCI_CLASS_STORAGE_OTHER,              // 0x018000
-+
-+    NETWORK_ETHERNET           = bindings::PCI_CLASS_NETWORK_ETHERNET,           // 0x020000
-+    NETWORK_TOKEN_RING         = bindings::PCI_CLASS_NETWORK_TOKEN_RING,         // 0x020100
-+    NETWORK_FDDI               = bindings::PCI_CLASS_NETWORK_FDDI,               // 0x020200
-+    NETWORK_ATM                = bindings::PCI_CLASS_NETWORK_ATM,                // 0x020300
-+    NETWORK_OTHER              = bindings::PCI_CLASS_NETWORK_OTHER,              // 0x028000
-+
-+    DISPLAY_VGA                = bindings::PCI_CLASS_DISPLAY_VGA,                // 0x030000
-+    DISPLAY_XGA                = bindings::PCI_CLASS_DISPLAY_XGA,                // 0x030100
-+    DISPLAY_3D                 = bindings::PCI_CLASS_DISPLAY_3D,                 // 0x030200
-+    DISPLAY_OTHER              = bindings::PCI_CLASS_DISPLAY_OTHER,              // 0x038000
-+
-+    MULTIMEDIA_VIDEO           = bindings::PCI_CLASS_MULTIMEDIA_VIDEO,           // 0x040000
-+    MULTIMEDIA_AUDIO           = bindings::PCI_CLASS_MULTIMEDIA_AUDIO,           // 0x040100
-+    MULTIMEDIA_PHONE           = bindings::PCI_CLASS_MULTIMEDIA_PHONE,           // 0x040200
-+    MULTIMEDIA_HD_AUDIO        = bindings::PCI_CLASS_MULTIMEDIA_HD_AUDIO,        // 0x040300
-+    MULTIMEDIA_OTHER           = bindings::PCI_CLASS_MULTIMEDIA_OTHER,           // 0x048000
-+
-+    MEMORY_RAM                 = bindings::PCI_CLASS_MEMORY_RAM,                 // 0x050000
-+    MEMORY_FLASH               = bindings::PCI_CLASS_MEMORY_FLASH,               // 0x050100
-+    MEMORY_CXL                 = bindings::PCI_CLASS_MEMORY_CXL,                 // 0x050200
-+    MEMORY_OTHER               = bindings::PCI_CLASS_MEMORY_OTHER,               // 0x058000
-+
-+    BRIDGE_HOST                = bindings::PCI_CLASS_BRIDGE_HOST,                // 0x060000
-+    BRIDGE_ISA                 = bindings::PCI_CLASS_BRIDGE_ISA,                 // 0x060100
-+    BRIDGE_EISA                = bindings::PCI_CLASS_BRIDGE_EISA,                // 0x060200
-+    BRIDGE_MC                  = bindings::PCI_CLASS_BRIDGE_MC,                  // 0x060300
-+    BRIDGE_PCI_NORMAL          = bindings::PCI_CLASS_BRIDGE_PCI_NORMAL,          // 0x060400
-+    BRIDGE_PCI_SUBTRACTIVE     = bindings::PCI_CLASS_BRIDGE_PCI_SUBTRACTIVE,     // 0x060401
-+    BRIDGE_PCMCIA              = bindings::PCI_CLASS_BRIDGE_PCMCIA,              // 0x060500
-+    BRIDGE_NUBUS               = bindings::PCI_CLASS_BRIDGE_NUBUS,               // 0x060600
-+    BRIDGE_CARDBUS             = bindings::PCI_CLASS_BRIDGE_CARDBUS,             // 0x060700
-+    BRIDGE_RACEWAY             = bindings::PCI_CLASS_BRIDGE_RACEWAY,             // 0x060800
-+    BRIDGE_OTHER               = bindings::PCI_CLASS_BRIDGE_OTHER,               // 0x068000
-+
-+    COMMUNICATION_SERIAL       = bindings::PCI_CLASS_COMMUNICATION_SERIAL,       // 0x070000
-+    COMMUNICATION_PARALLEL     = bindings::PCI_CLASS_COMMUNICATION_PARALLEL,     // 0x070100
-+    COMMUNICATION_MULTISERIAL  = bindings::PCI_CLASS_COMMUNICATION_MULTISERIAL,  // 0x070200
-+    COMMUNICATION_MODEM        = bindings::PCI_CLASS_COMMUNICATION_MODEM,        // 0x070300
-+    COMMUNICATION_OTHER        = bindings::PCI_CLASS_COMMUNICATION_OTHER,        // 0x078000
-+
-+    SYSTEM_PIC                 = bindings::PCI_CLASS_SYSTEM_PIC,                 // 0x080000
-+    SYSTEM_PIC_IOAPIC          = bindings::PCI_CLASS_SYSTEM_PIC_IOAPIC,          // 0x080010
-+    SYSTEM_PIC_IOXAPIC         = bindings::PCI_CLASS_SYSTEM_PIC_IOXAPIC,         // 0x080020
-+    SYSTEM_DMA                 = bindings::PCI_CLASS_SYSTEM_DMA,                 // 0x080100
-+    SYSTEM_TIMER               = bindings::PCI_CLASS_SYSTEM_TIMER,               // 0x080200
-+    SYSTEM_RTC                 = bindings::PCI_CLASS_SYSTEM_RTC,                 // 0x080300
-+    SYSTEM_PCI_HOTPLUG         = bindings::PCI_CLASS_SYSTEM_PCI_HOTPLUG,         // 0x080400
-+    SYSTEM_SDHCI               = bindings::PCI_CLASS_SYSTEM_SDHCI,               // 0x080500
-+    SYSTEM_RCEC                = bindings::PCI_CLASS_SYSTEM_RCEC,                // 0x080700
-+    SYSTEM_OTHER               = bindings::PCI_CLASS_SYSTEM_OTHER,               // 0x088000
-+
-+    INPUT_KEYBOARD             = bindings::PCI_CLASS_INPUT_KEYBOARD,             // 0x090000
-+    INPUT_PEN                  = bindings::PCI_CLASS_INPUT_PEN,                  // 0x090100
-+    INPUT_MOUSE                = bindings::PCI_CLASS_INPUT_MOUSE,                // 0x090200
-+    INPUT_SCANNER              = bindings::PCI_CLASS_INPUT_SCANNER,              // 0x090300
-+    INPUT_GAMEPORT             = bindings::PCI_CLASS_INPUT_GAMEPORT,             // 0x090400
-+    INPUT_OTHER                = bindings::PCI_CLASS_INPUT_OTHER,                // 0x098000
-+
-+    DOCKING_GENERIC            = bindings::PCI_CLASS_DOCKING_GENERIC,            // 0x0a0000
-+    DOCKING_OTHER              = bindings::PCI_CLASS_DOCKING_OTHER,              // 0x0a8000
-+
-+    PROCESSOR_386              = bindings::PCI_CLASS_PROCESSOR_386,              // 0x0b0000
-+    PROCESSOR_486              = bindings::PCI_CLASS_PROCESSOR_486,              // 0x0b0100
-+    PROCESSOR_PENTIUM          = bindings::PCI_CLASS_PROCESSOR_PENTIUM,          // 0x0b0200
-+    PROCESSOR_ALPHA            = bindings::PCI_CLASS_PROCESSOR_ALPHA,            // 0x0b1000
-+    PROCESSOR_POWERPC          = bindings::PCI_CLASS_PROCESSOR_POWERPC,          // 0x0b2000
-+    PROCESSOR_MIPS             = bindings::PCI_CLASS_PROCESSOR_MIPS,             // 0x0b3000
-+    PROCESSOR_CO               = bindings::PCI_CLASS_PROCESSOR_CO,               // 0x0b4000
-+
-+    SERIAL_FIREWIRE            = bindings::PCI_CLASS_SERIAL_FIREWIRE,            // 0x0c0000
-+    SERIAL_FIREWIRE_OHCI       = bindings::PCI_CLASS_SERIAL_FIREWIRE_OHCI,       // 0x0c0010
-+    SERIAL_ACCESS              = bindings::PCI_CLASS_SERIAL_ACCESS,              // 0x0c0100
-+    SERIAL_SSA                 = bindings::PCI_CLASS_SERIAL_SSA,                 // 0x0c0200
-+    SERIAL_USB_UHCI            = bindings::PCI_CLASS_SERIAL_USB_UHCI,            // 0x0c0300
-+    SERIAL_USB_OHCI            = bindings::PCI_CLASS_SERIAL_USB_OHCI,            // 0x0c0310
-+    SERIAL_USB_EHCI            = bindings::PCI_CLASS_SERIAL_USB_EHCI,            // 0x0c0320
-+    SERIAL_USB_XHCI            = bindings::PCI_CLASS_SERIAL_USB_XHCI,            // 0x0c0330
-+    SERIAL_USB_CDNS            = bindings::PCI_CLASS_SERIAL_USB_CDNS,            // 0x0c0380
-+    SERIAL_USB_DEVICE          = bindings::PCI_CLASS_SERIAL_USB_DEVICE,          // 0x0c03fe
-+    SERIAL_FIBER               = bindings::PCI_CLASS_SERIAL_FIBER,               // 0x0c0400
-+    SERIAL_SMBUS               = bindings::PCI_CLASS_SERIAL_SMBUS,               // 0x0c0500
-+    SERIAL_IPMI_SMIC           = bindings::PCI_CLASS_SERIAL_IPMI_SMIC,           // 0x0c0700
-+    SERIAL_IPMI_KCS            = bindings::PCI_CLASS_SERIAL_IPMI_KCS,            // 0x0c0701
-+    SERIAL_IPMI_BT             = bindings::PCI_CLASS_SERIAL_IPMI_BT,             // 0x0c0702
-+
-+    WIRELESS_RF_CONTROLLER     = bindings::PCI_CLASS_WIRELESS_RF_CONTROLLER,     // 0x0d1000
-+    WIRELESS_WHCI              = bindings::PCI_CLASS_WIRELESS_WHCI,              // 0x0d1010
-+
-+    INTELLIGENT_I2O            = bindings::PCI_CLASS_INTELLIGENT_I2O,            // 0x0e0000
-+
-+    SATELLITE_TV               = bindings::PCI_CLASS_SATELLITE_TV,               // 0x0f0000
-+    SATELLITE_AUDIO            = bindings::PCI_CLASS_SATELLITE_AUDIO,            // 0x0f0100
-+    SATELLITE_VOICE            = bindings::PCI_CLASS_SATELLITE_VOICE,            // 0x0f0300
-+    SATELLITE_DATA             = bindings::PCI_CLASS_SATELLITE_DATA,             // 0x0f0400
-+
-+    CRYPT_NETWORK              = bindings::PCI_CLASS_CRYPT_NETWORK,              // 0x100000
-+    CRYPT_ENTERTAINMENT        = bindings::PCI_CLASS_CRYPT_ENTERTAINMENT,        // 0x100100
-+    CRYPT_OTHER                = bindings::PCI_CLASS_CRYPT_OTHER,                // 0x108000
-+
-+    SP_DPIO                    = bindings::PCI_CLASS_SP_DPIO,                    // 0x110000
-+    SP_OTHER                   = bindings::PCI_CLASS_SP_OTHER,                   // 0x118000
-+
-+    ACCELERATOR_PROCESSING     = bindings::PCI_CLASS_ACCELERATOR_PROCESSING,     // 0x120000
-+
-+    OTHERS                     = bindings::PCI_CLASS_OTHERS,                     // 0xff0000
-+}
+ 
+ use crate::gpu::Gpu;
+ 
+@@ -18,10 +21,25 @@ pub(crate) struct NovaCore {
+     PCI_TABLE,
+     MODULE_PCI_TABLE,
+     <NovaCore as pci::Driver>::IdInfo,
+-    [(
+-        pci::DeviceId::from_id(bindings::PCI_VENDOR_ID_NVIDIA, bindings::PCI_ANY_ID as u32),
+-        ()
+-    )]
++    [
++        // Modern NVIDIA GPUs will show up as either VGA or 3D controllers.
++        (
++            pci::DeviceId::from_class_and_vendor(
++                Class::DISPLAY_VGA,
++                ClassMask::ClassSubclass,
++                bindings::PCI_VENDOR_ID_NVIDIA
++            ),
++            ()
++        ),
++        (
++            pci::DeviceId::from_class_and_vendor(
++                Class::DISPLAY_3D,
++                ClassMask::ClassSubclass,
++                bindings::PCI_VENDOR_ID_NVIDIA
++            ),
++            ()
++        ),
++    ]
+ );
+ 
+ impl pci::Driver for NovaCore {
 -- 
 2.50.1
 
