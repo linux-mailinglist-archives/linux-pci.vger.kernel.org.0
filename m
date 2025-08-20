@@ -1,54 +1,83 @@
-Return-Path: <linux-pci+bounces-34372-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34373-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1EC0B2D9F5
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 12:23:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6E10B2DA67
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 12:58:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 050E01C218DE
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 10:22:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8335C726A7D
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 10:58:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEB602C235B;
-	Wed, 20 Aug 2025 10:22:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 589802E2DF7;
+	Wed, 20 Aug 2025 10:58:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GKUD28Sd"
+	dkim=pass (1024-bit key) header.d=furiosa.ai header.i=@furiosa.ai header.b="Pt60TgNB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B4E191
-	for <linux-pci@vger.kernel.org>; Wed, 20 Aug 2025 10:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95F02E2DF2
+	for <linux-pci@vger.kernel.org>; Wed, 20 Aug 2025 10:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755685325; cv=none; b=RIyDqr8Ucm3x7bPwYTLhOTt2KCTYfTEKJ1Q1uWktQJuShrt5EIpveMB8QiNk3JpWPWnG9x8/FSDnsCz1aKM72ANL4tTvPSue6ZCg90LQChRPChAOj5EAkYqdo/5sK1EJD0OP0taRDTluCnU9s7h77C6L2GbxWCsSRN+Ifpf0Ob4=
+	t=1755687503; cv=none; b=NbXyFBG2D8bSSTBkYml88rKLllkcydG26cG8I/CmLP9ZQsuQf1RCIQU5J75/gDnQ+PAIct6KalD+eXJcshQtlYGO2HYtwSebcbd+cVlpz7k5BvNETUSBHhouiGvqDuoYkkpt3dfkEsrVG8aF6fr/aR7SNZg6FRzeZoTjJDuWiQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755685325; c=relaxed/simple;
-	bh=yPmx2NpBFo/eQiaZItuCSTDGjoPBXIBBgjdLKtn25ks=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f9Av+KISypWaV6jdIB5mLnul4IiCtW8eviXS7mIBdYTYhNKU7jL58Gfh4jFeNHtmtaNv0zhn1AUehACBJI7FAgwaXgRJK8/bi8YGpIMPfsOavcVcByY0++cdDyi69qXejYH8UXTIqDk6budnJgsNHkYLmDXtozqG9oig6C279lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GKUD28Sd; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1755685317;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=v1LgTQHA3Xhf/L11p5n5Wj5Gb0sAQMkBeBHPrqYHHMk=;
-	b=GKUD28SdH7tZnCYITZ7dAjfgQ/NJhfPXbPhoZ0lyVgFro/MgASXLI91gcJwHhNYuklJj56
-	6unNyZMaYhvJm+sF5EdqmpO38Ec7CTvug2Jc84wB6LcNk1qRoANcUphg6VT2ODvQ/hJpUy
-	yX3kj6wzWNV6PV9bHRfw1Vnf7FZnkx0=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	s=arc-20240116; t=1755687503; c=relaxed/simple;
+	bh=mtlpc6Oc+bVnprxHO+2QT0a74MUtF4l1ORTauJCNdSI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dj04pwlp3BDxTkAvHkvhUCuSXqR4nGEd3p+0Bv8ndw/DTHde8GRQHJlqc/lf+Kt6Y/puch/DYVeLc70Ao/5KkH1WzIupFNuVMpczu4Z2yGx0ax/w+oC39TFpREdy1h3ZGAp4QMId2fZjXb4wz+QDRcVvBk/RcT53JwE3U0aAxJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=furiosa.ai; spf=none smtp.mailfrom=furiosa.ai; dkim=pass (1024-bit key) header.d=furiosa.ai header.i=@furiosa.ai header.b=Pt60TgNB; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=furiosa.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=furiosa.ai
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-24458272c00so63687935ad.3
+        for <linux-pci@vger.kernel.org>; Wed, 20 Aug 2025 03:58:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=furiosa.ai; s=google; t=1755687501; x=1756292301; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oIY9o+m++demIvDBObElDKuuFPYxQeni8PVpK/3jLZU=;
+        b=Pt60TgNBs4Zb/fJqrI3XuwXKPY5f83eedsdPLNt0qfTth0owgN0EmZNIRK34UO9rD0
+         KEusiXfAPrEN1IT9Bo5iDnEcuigPb49ndhBvuIzvabnJiEz2vUHfyVcSx5s+JbrlBomw
+         r8ol7QJokS0bBzd0/i0WOkIEu8H3u6ZiBfC8E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755687501; x=1756292301;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oIY9o+m++demIvDBObElDKuuFPYxQeni8PVpK/3jLZU=;
+        b=N2Iul9VBB1ahkcfoE8xx4VNLGyCAa7MJ0BssoZbNqSTAfr2NbS/9SLCsi/w9w68++D
+         6k0V1blzxt+65p5hO0iCH7lIVbuPrViz4oBHuiOm/kXvfR4X5+CL8iyvOLE+hxUYE59Q
+         UcbxA3BxoWX0rAYk1lgXlGURrByom0P+BeSB39hLZu4ZfE4wuc6gEYDZCIG19Zb7PW5S
+         Ji7nMY9p2Qo2lfLr5Zbz9smMXk6xOfDovZ+Df4qUYkXMm1LZZvdLU+Ea6+79ZLgdgxrm
+         y5KAb3wYdqm2EOXX/oIwqD8wSoat7d3R91Ow6OwiW1KDrL8t89Mn2BKWQX4m0o15saRB
+         igfw==
+X-Forwarded-Encrypted: i=1; AJvYcCXiEsP+B+ovL0SjGclih8/MxNwxWBB9X1YpG0iyct9NBC9WC5d94/+wQwPtLHUobcVTHeeIHhE5M9I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvNKj3xez6a642zRrzxn88vbzphfsL8raECG+X4eHCH67ltKCY
+	F7TcGNQMOMG/KdwG1ZrqOqnmp+qapem+R2oreujCpGeHdpODPX9NVN9iQEa8yz2IbVs=
+X-Gm-Gg: ASbGncu7wBB/hZVxs8fL1aYhJ80J4lspQazWxLVU6mT/UORrGexnuVL+VZaiaOSjIqa
+	YNi9mHoPqt5LrRLqb/4mv0MUHENumetEgU5Zy8uiCaJ8bjyOqOxhD5pGzXh3Tg+nTcY6X47gEdb
+	dDtZyIv6M1mKnnGTqZ2rkXmxuq2xWu7YiPP7x6OjxBIffEtegtdPSDoNIYLzIwcYuttmTcS25k2
+	WbqiSFUEk9oIeS3WwkLLEd4iXcPSccamAe3nnMFnHOLV57zGpL6RqpkX9eIbHMpRB/4SPw1C/Mb
+	Qx0+GxmpXcb+Qq200XeBivuSqMe001K+e+/oefaoN7kyXMggujIoCH0q64tKizfJi8jWb0Qnd37
+	Gzpy0A2hV3gVyyiW1LiEZXNM7POP3VTsuiCkxvNKGHSa7ZNK5nk2nvOz1uX4Z8OSWu2hi
+X-Google-Smtp-Source: AGHT+IEQsLcQ+eFDszAlGFwsAowRxUaCxUv86qiKlXCfj7VzA6LxtPPB0hvfbvTQ1V8Am1CNcEPsjg==
+X-Received: by 2002:a17:903:1b07:b0:240:38f8:ed05 with SMTP id d9443c01a7336-245ef226760mr31487095ad.36.1755687500953;
+        Wed, 20 Aug 2025 03:58:20 -0700 (PDT)
+Received: from furiosa-sungho.sungho.kim.office.furiosa.vpn ([221.149.27.193])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-245ed4f6a84sm23212435ad.118.2025.08.20.03.58.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Aug 2025 03:58:19 -0700 (PDT)
+From: Sungho Kim <sungho.kim@furiosa.ai>
+To: bhelgaas@google.com
+Cc: logang@deltatee.com,
 	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dw-xdata: Use str_write_read() in dw_xdata_start() and dw_xdata_perf()
-Date: Wed, 20 Aug 2025 12:21:09 +0200
-Message-ID: <20250820102108.760382-2-thorsten.blum@linux.dev>
+	linux-kernel@vger.kernel.org,
+	Sungho Kim <sungho.kim@furiosa.ai>
+Subject: [PATCH] PCI: p2pdma: Fix incorrect pointer usage in devm_kfree() call
+Date: Wed, 20 Aug 2025 19:57:14 +0900
+Message-ID: <20250820105714.2939896-1-sungho.kim@furiosa.ai>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,51 +85,37 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Remove hard-coded strings by using the str_write_read() helper function
-and silence the following two Coccinelle/coccicheck warnings reported by
-string_choices.cocci:
+The error handling path in the P2P DMA resource setup function contains
+a bug in its `pgmap_free` label.
 
-  opportunity for str_write_read(write)
-  opportunity for str_write_read(write)
+Memory is allocated for the `p2p_pgmap` struct, and the pointer is stored
+in the `p2p_pgmap` variable. However, the error path attempts to call
+devm_kfree() using the `pgmap` variable, which is a pointer to a member
+field within the `p2p_pgmap` struct, not the base pointer of the allocation.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+This patch corrects the bug by passing the correct base pointer,
+`p2p_pgmap`, to the devm_kfree() function.
+
+Signed-off-by: Sungho Kim <sungho.kim@furiosa.ai>
 ---
- drivers/misc/dw-xdata-pcie.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pci/p2pdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/dw-xdata-pcie.c b/drivers/misc/dw-xdata-pcie.c
-index efd0ca8cc925..a604c0e9c038 100644
---- a/drivers/misc/dw-xdata-pcie.c
-+++ b/drivers/misc/dw-xdata-pcie.c
-@@ -16,6 +16,7 @@
- #include <linux/mutex.h>
- #include <linux/delay.h>
- #include <linux/pci.h>
-+#include <linux/string_choices.h>
- 
- #define DW_XDATA_DRIVER_NAME		"dw-xdata-pcie"
- 
-@@ -132,7 +133,7 @@ static void dw_xdata_start(struct dw_xdata *dw, bool write)
- 
- 	if (!(status & STATUS_DONE))
- 		dev_dbg(dev, "xData: started %s direction\n",
--			write ? "write" : "read");
-+			str_write_read(write));
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index da5657a02..1cb5e423e 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -360,7 +360,7 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+ pages_free:
+ 	devm_memunmap_pages(&pdev->dev, pgmap);
+ pgmap_free:
+-	devm_kfree(&pdev->dev, pgmap);
++	devm_kfree(&pdev->dev, p2p_pgmap);
+ 	return error;
  }
- 
- static void dw_xdata_perf_meas(struct dw_xdata *dw, u64 *data, bool write)
-@@ -195,7 +196,7 @@ static void dw_xdata_perf(struct dw_xdata *dw, u64 *rate, bool write)
- 	mutex_unlock(&dw->mutex);
- 
- 	dev_dbg(dev, "xData: time=%llu us, %s=%llu MB/s\n",
--		diff, write ? "write" : "read", *rate);
-+		diff, str_write_read(write), *rate);
- }
- 
- static struct dw_xdata *misc_dev_to_dw(struct miscdevice *misc_dev)
+ EXPORT_SYMBOL_GPL(pci_p2pdma_add_resource);
 -- 
-2.50.1
+2.48.1
 
 
