@@ -1,152 +1,209 @@
-Return-Path: <linux-pci+bounces-34370-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34371-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BE21B2D760
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 11:00:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20BB1B2D827
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 11:28:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36E71582A72
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 08:57:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 47BC2721CBA
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 09:24:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFF302877D2;
-	Wed, 20 Aug 2025 08:57:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 791102DFA38;
+	Wed, 20 Aug 2025 09:19:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pmkTE9jJ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ohtYdNEQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9CE24339D
-	for <linux-pci@vger.kernel.org>; Wed, 20 Aug 2025 08:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B1922579E;
+	Wed, 20 Aug 2025 09:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755680221; cv=none; b=IT+3WD1iq/3jJW+WARR9saZgXLFvQsSNUheI1us8c8qcDv0SfWRQ8yoXhlTy8/mcQkS3sBvO+pXYgRQbGeFLXXtmtrPS1kr3O/u3pLRhq0jm46Of+wbS0PVYungb30eFv4CUh+4jIhLKgZZPVrw1nPG98+jidB3tUpTmvkoeItU=
+	t=1755681560; cv=none; b=bgGP4xI+UZkzVsQvn4wJrYUTWEj2rbKzw6zGdHblxYOaEKTyWYwvk7Q1BCARmLcxi7fF3mdlAbnNL4vVsWauOFwjZDggeme4qiwE8npqHvECHltKrjh7IBrOVoW+BUxO1gdtvaDl38r2+3rTVY6bQWxltVXzsfNfz33bZPbS7TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755680221; c=relaxed/simple;
-	bh=BHwPoKTEj91/GJKNcfj8Dutl5ARN4HeFYrbIABszgyQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Oc3y/N/+hZI+94FwU8QynXgeHP8G6FSJ3dGsLxl8yfof5UpVVl6luSGSZPSRnLPsbO51XbKX8yx4MNtR582cwWK9EkN0DPOhoKfcZiq1ckxSaL1cUGoDHfpml5fvMye7FNnpmp1a+VHxHxVZeqgQxDTtAnjKexWxSX5lWARAo74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pmkTE9jJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC50C4CEEB;
-	Wed, 20 Aug 2025 08:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755680221;
-	bh=BHwPoKTEj91/GJKNcfj8Dutl5ARN4HeFYrbIABszgyQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pmkTE9jJU5lk0aBrpb6xdBQ7V52EGOI29RmwuHE5yHKLH0xwOCUQaQKWx9/0GdZ/l
-	 tFk0G1SBDkN5s5yzpqY3VRLBIB+pVY5RmTRk8OOQSRzb2phI6twM3XkwlqrHHW2WQV
-	 C00qSxkC/Yrf2nNmAI/bvRlhOJsrf/EmT1PgBWBk+Spb6yRE63tzcezinWzYPrC89h
-	 /GjRy669yXDIWKNKM5eCBxk63FGSO6RTV2HB4Ij2p+lFdXQUQeZdwFRnCW0jKrj8Dc
-	 u5PscMpxtfG4SG0wQCN4sCneBYdRiZZG9RDKXg0SM5/DDd6LUquXN2/brmRI9s5a/j
-	 ckawFDNrAy/xw==
-Received: from host86-149-246-145.range86-149.btcentralplus.com ([86.149.246.145] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uoecl-009Gtj-19;
-	Wed, 20 Aug 2025 09:56:51 +0100
-Date: Wed, 20 Aug 2025 09:56:50 +0100
-Message-ID: <87qzx6jrql.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Coiby Xu <coxu@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	kexec@lists.infradead.org
-Subject: Re: [Regression] kdump fails to get DHCP address unless booting with pci=nomsi or without nr_cpus=1
-In-Reply-To: <j4atkwhumotioe2nhu6esrb3yrvwsoz2eyqeopwmr7o6iw65ga@wdkvgahnyhln>
-References: <x5dwuzyddiasdkxozpjvh3usd7b5zdgim2ancrcbccfjxq7qwn@i6b24w22sy6s>
-	<87bjom8106.ffs@tglx>
-	<878qjq80yu.ffs@tglx>
-	<86v7mt9ai3.wl-maz@kernel.org>
-	<i2l2ujhqjd6akzosvzj4njv2vemsfuvywz4gsnj2nwo3fwyjyz@cfhekxpartf2>
-	<86ms84974v.wl-maz@kernel.org>
-	<gec2yl5wx6vvt67smx5emhcoifvtp4orw6sub24b2nrqwryhp2@i4h7qbtwjo3r>
-	<86ldno8yxa.wl-maz@kernel.org>
-	<yweverlt7onyse3rbm7phxzwrwfk4pq2dipzdjenrx4onrak6r@dsm4ra3x3gv6>
-	<j4atkwhumotioe2nhu6esrb3yrvwsoz2eyqeopwmr7o6iw65ga@wdkvgahnyhln>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1755681560; c=relaxed/simple;
+	bh=yxaIXoKVYeelx227mioum5SrmxAfhHL8SyrI78nxSEE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jVrjf4yVk1CfeiazbJ2R6cY9TY7ZEClGalcoG1vs9ANpRZLFmlkTNm7uKNJEBABWNYvsogUcQ9y/4E2mDcNl4i/LQDwfKWYVpZflXpJXnegQbZhglaPMz9CZRRGV6lg8ofor3C4RD+PojpW/iKAFvas/DoCVMv2mhmnV4fPfzDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ohtYdNEQ; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57JNm6je011904;
+	Wed, 20 Aug 2025 09:19:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=B6uijq
+	u3UzW9BI2Ce+LrWvtBEqM5lN9mu+9SVFUyuuQ=; b=ohtYdNEQUj4pYJoR4Cs5nM
+	jQTzsrru0lUGGgiHf6x87ws9nlVQDaBglZX1ccrjCJWUS9ixcfkhSSYGh0xT+x55
+	hdjZQ9zcCqs+W8vDkngKSupAmQBNiWnFG+B4K08VcZAQNzAFVILfZZpZ2/eFaFxq
+	lVNcDST5JcCuu1xCkwYuC5j58sk3+wTstLVTDT0y27+XMlHLTStomSd4SUypXbxR
+	P/irSBeD2gcloj5ARUS4lzLkFCX9pbNox5/+b1aXPnw0A4VLdH0c07eM1Ix4aaCO
+	zHmxnv5C+aW/1exQM+ERineMN0ubqIdYibNGSiK2SRdNHFt46FyZeK+XAclyuNuA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48n38va2js-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Aug 2025 09:19:11 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57K9JA8C014557;
+	Wed, 20 Aug 2025 09:19:10 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48n38va2jr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Aug 2025 09:19:10 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57K505TG016018;
+	Wed, 20 Aug 2025 09:19:09 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 48my422m3n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Aug 2025 09:19:09 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57K9J7dO48693666
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 20 Aug 2025 09:19:08 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DDF9120049;
+	Wed, 20 Aug 2025 09:19:07 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AF04520040;
+	Wed, 20 Aug 2025 09:19:07 +0000 (GMT)
+Received: from [9.152.224.87] (unknown [9.152.224.87])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 20 Aug 2025 09:19:07 +0000 (GMT)
+Message-ID: <353d1dc7e3c4e9b5f127ac9177a863d8a8cde39f.camel@linux.ibm.com>
+Subject: Re: [PATCH v15 1/6] PCI: Clean up __pci_find_next_cap_ttl()
+ readability
+From: Gerd Bayer <gbayer@linux.ibm.com>
+To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
+        kwilczynski@kernel.org, bhelgaas@google.com, helgaas@kernel.org,
+        jingoohan1@gmail.com, mani@kernel.org
+Cc: robh@kernel.org, ilpo.jarvinen@linux.intel.com, schnelle@linux.ibm.com,
+        lukas@wunner.de, arnd@kernel.org, geert@linux-m68k.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 20 Aug 2025 11:19:07 +0200
+In-Reply-To: <20250813144529.303548-2-18255117159@163.com>
+References: <20250813144529.303548-1-18255117159@163.com>
+	 <20250813144529.303548-2-18255117159@163.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 86.149.246.145
-X-SA-Exim-Rcpt-To: coxu@redhat.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: jNvYtlxzmnSVTPRMRPIh6Oau072Cl6SZ
+X-Authority-Analysis: v=2.4 cv=IrhHsL/g c=1 sm=1 tr=0 ts=68a5930f cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=Byx-y9mGAAAA:8 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=BGCEjKcQT-SkztS5gqMA:9 a=QEXdDO2ut3YA:10
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE5MDIyMiBTYWx0ZWRfX40yHxzNV/pv2
+ 4HcAvQ3jHti8C0rDaf71tPBrB5WxfmHQAmigkzLeK3jFzseO3P2OZfzzkqtVrcpzYlMEPO+NRBc
+ c2v14I089Opn18wlBoF9ecYqGxvBo8dZCmiaPHAgbuJILBQJS8wad99RWCTYqVNhp/V4cf5ZdLk
+ yDLQ+S+6+KIubMr1SUddB2gUQjICAN0AlhrLkPV6j20UZ30i/tV29XjAl/Pwk6bivskT7zFXFa6
+ N5tNBjWkaNMDkZ8yPbUq9xaZnYLTGJT3IxupoaOqEwDgJXIrUXBAvJEfj2Q3RGJWf+ixhC4WZ3O
+ uB7nBwEu75lZtBMVWym0pl/v47fEuZBE6kBC4tHu8zzxtpJJTfiUDM4q1I/uCuqqqd/k+DHBQ3N
+ XJcACgmMnbZVvuKcM4TSkNbTZQGzkA==
+X-Proofpoint-ORIG-GUID: f2tGAf0Lm2ajHpvep3oaoeiMdfCXOSDx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-20_03,2025-08-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 malwarescore=0 bulkscore=0 suspectscore=0 spamscore=0
+ lowpriorityscore=0 impostorscore=0 adultscore=0 priorityscore=1501
+ clxscore=1011 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2508110000
+ definitions=main-2508190222
 
-On Wed, 20 Aug 2025 00:30:12 +0100,
-Coiby Xu <coxu@redhat.com> wrote:
-> 
-> On Wed, Aug 13, 2025 at 08:08:28PM +0800, Coiby Xu wrote:
-> > On Tue, Aug 12, 2025 at 02:14:25PM +0100, Marc Zyngier wrote:
-> [...]
-> >> 
-> >> Can you at the very least share:
-> 
-> Thanks for your patience! I've attached a zip file with the info you
-> need. Additionally I've included the dmidecode of guest
-> (dmidecode_guest), host machine (dmidecode_host) and the domain info
-> of guest (libvirt.xml) in case they may be helpful. If you need further
-> info or any experiment I need to do, feel free to let me know! Now I
-> have access to the host machine so I can respond much faster.
-> 
-> >> 
-> >> - the boot log of the guest on its first kernel
-> 
-> Please check file boot_log_1st_kernel
+On Wed, 2025-08-13 at 22:45 +0800, Hans Zhang wrote:
+> Refactor the __pci_find_next_cap_ttl() to improve code clarity:
+> - Replace magic number 0x40 with PCI_STD_HEADER_SIZEOF.
+> - Use ALIGN_DOWN() for position alignment instead of manual bitmask.
+> - Extract PCI capability fields via FIELD_GET() with standardized masks.
+> - Add necessary headers (linux/align.h).
+>=20
+> No functional changes intended.
+>=20
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+> ---
+>  drivers/pci/pci.c             | 9 +++++----
+>  include/uapi/linux/pci_regs.h | 3 +++
+>  2 files changed, 8 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b0f4d98036cd..40a5c87d9a6b 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -9,6 +9,7 @@
+>   */
+> =20
+>  #include <linux/acpi.h>
+> +#include <linux/align.h>
+>  #include <linux/kernel.h>
+>  #include <linux/delay.h>
+>  #include <linux/dmi.h>
+> @@ -432,17 +433,17 @@ static u8 __pci_find_next_cap_ttl(struct pci_bus *b=
+us, unsigned int devfn,
+>  	pci_bus_read_config_byte(bus, devfn, pos, &pos);
+> =20
+>  	while ((*ttl)--) {
+> -		if (pos < 0x40)
+> +		if (pos < PCI_STD_HEADER_SIZEOF)
+>  			break;
+> -		pos &=3D ~3;
+> +		pos =3D ALIGN_DOWN(pos, 4);
+>  		pci_bus_read_config_word(bus, devfn, pos, &ent);
+> =20
+> -		id =3D ent & 0xff;
+> +		id =3D FIELD_GET(PCI_CAP_ID_MASK, ent);
+>  		if (id =3D=3D 0xff)
+>  			break;
+>  		if (id =3D=3D cap)
+>  			return pos;
+> -		pos =3D (ent >> 8);
+> +		pos =3D FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
+>  	}
+>  	return 0;
+>  }
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.=
+h
+> index f5b17745de60..1bba99b46227 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -207,6 +207,9 @@
+> =20
+>  /* Capability lists */
+> =20
+> +#define PCI_CAP_ID_MASK		0x00ff	/* Capability ID mask */
+> +#define PCI_CAP_LIST_NEXT_MASK	0xff00	/* Next Capability Pointer mask */
+> +
+>  #define PCI_CAP_LIST_ID		0	/* Capability ID */
+>  #define  PCI_CAP_ID_PM		0x01	/* Power Management */
+>  #define  PCI_CAP_ID_AGP		0x02	/* Accelerated Graphics Port */
 
-Old kernel. It would have been better to use a vanilla v6.16, so that
-we know exactly what you are running. I have zero interest in finding
-out what 6.15.9-201.fc42.aarch64 corresponds to in real life.
+Hi Hans,
 
-> >> - the boot log of the guest running kdump
-> 
-> boot_log_2nd_kernel
+I like your approach to replace the magic numbers here. If you went
+further to replace the single pci_bus_read_config_word() with two
+single-byte reads at the appropriate places - for CAP_ID and
+CAP_LIST_NEXT - you could even go with the already existing offset
+defines PCI_CAP_LIST_ID and PCI_CAP_LIST_NEXT from pci_regs.h.
 
-Same thing.
+But that might be a more intricate change and involves more HW accesses
+than what it's worth.
 
-> 
-> >> 
-> >> - the content of /sys/kernel/debug/kvm/$PID-xx/vgic*state* when
-> >> running both kernels
-> 
-> vgic-state_{1st,2nd}_kernel
-
-What is the host running? It also looks like a pre-6.16 kernel, which
-lacks important information.
-
-> 
-> >> 
-> >> - the QEMU command-line to get to run the whole thing
-> 
-> qemu_cmdline
-
-I'm sorry, but that doesn't look like a command line as I know it. I
-certainly cannot feed this to QEMU and reproduce your findings.
-
-Now, there is *one* thing that is interesting:
-
-The second vgic_state dump indicates that LPI 8225 is routed to
-vcpu-3. Given that your guest boots into the second kernel on vcpu-0,
-and that this is the only online vcpu at this stage, the LPI will
-never be presented to the CPU (and the vgic has it as pending, which
-is what I'd expect).
-
-I'd suggest you instrument the second kernel to try and see why this
-affinity is not changed.
+So feel free to add my
+Reviewed-by: Gerd Bayer <gbayer@linux.ibm.com>
 
 Thanks,
-
-	M.
-
--- 
-Jazz isn't dead. It just smells funny.
+Gerd
 
