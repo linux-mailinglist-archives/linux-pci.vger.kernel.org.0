@@ -1,94 +1,140 @@
-Return-Path: <linux-pci+bounces-34393-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34394-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B508B2E211
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 18:15:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D592AB2E20E
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 18:14:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3214C3A588D
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 16:09:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEC1E1888DC3
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Aug 2025 16:10:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BB2A2E0938;
-	Wed, 20 Aug 2025 16:09:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF9DC31CA72;
+	Wed, 20 Aug 2025 16:10:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="SyOdm294"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="i5Y24KXK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4CC28D83D;
-	Wed, 20 Aug 2025 16:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BFFD322765;
+	Wed, 20 Aug 2025 16:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755706180; cv=none; b=h0sd+xBFxgLsh9HUd3QwCaTGoDJ7He6A5sjAQR8x6BpA26zRCGaqwh8Ck8KkL87fp8wcemunYvSmWjmL5nZknwbNATji8Or97DH9G4zh30P7WUCFX/zwD6hbi8a+qWxYn+YYURLbY0zaCOVBdz4mmnqKYg2KVSOTM3cLeEx1nq8=
+	t=1755706210; cv=none; b=Cb6fFdrxMcGbjxrCYmpXbwgLVoGwpDmDILmMjmqcY+azDnRfHSUpKNYo1SElCeClXTL/+ScZbmLwsMWZ0A7+GlcIGah/fCxsTM/+sbLBZ3hHDjXLqa2zzI3uMkUF7uD7CB70snUYoflBla7QbHtBTXZGErZpOOOgudjZy49xup8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755706180; c=relaxed/simple;
-	bh=ouqmhsE9bC406TCIYBE/h1ew2IiR6n0ZI9bCj+xK8Z8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=PorBIUSXCBKXdGALTkNuOlsB3lEs4mh3wnea3L0PseuDOo6GZ39bbpQi0OA3ugEdCITdliTIz2pLEqpB+aRqoDD/MPOkYhrNr2Dvvj7tkl+Y74XxCwVCJwXxFCH5USxjSt2K+2x/g6hOLDll7FJlFYU1SZ93bMSxi4vE/s0/N4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=SyOdm294; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=4t7CV04NIwriNXLsYNy7+twj6GP21ECFduAyURtliLg=; b=SyOdm294VkdNWthcCiERrfTGsU
-	orZElZjcIpCfcguzYbiXqWOyDTbovGGzaeA93sIV4juPnBpXeOqL2/ffA/jWBbQWbmntl6d3r2X3t
-	NDr8iUx7TQLSqEVoHFfQhzm4F4PI6l9VFRnWU+KUK2IkVSjCO+mzfLQU5/vDjHEuin2aDys2gJjRy
-	C4N/c1Tn71j6XyRwCmcM6IJbGAdACPLEJEhPj/wBAOjLXudSrviaVZgvZY3W3OPeZo4PZbvgS+dox
-	Rj/yTClGFdhtQ+agAIOnR6rcG3ZJIovO4lTEO3lBOXgJOsiXAcsMsKGXqqyFYgnGMGra6qn8GpO3E
-	8CeQmjYg==;
-Received: from d172-219-145-75.abhsia.telus.net ([172.219.145.75] helo=[192.168.11.155])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <logang@deltatee.com>)
-	id 1uolNU-001ZHp-2v;
-	Wed, 20 Aug 2025 10:09:31 -0600
-Message-ID: <d413619a-8218-4039-8efe-bf9274499de7@deltatee.com>
-Date: Wed, 20 Aug 2025 10:09:30 -0600
+	s=arc-20240116; t=1755706210; c=relaxed/simple;
+	bh=NTou8EmjTbUR8n6aiqTmtX7rT7XqprHS+AiGXm1HlU4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A66wu4KpIvDRBnyG3fByzWXLmgySmlYNmtwjjnlRRmtaTjxEJdnF5lJSPWZNJcY+x53dhFM2wUREnZk0x8LXtEKHVI/hpQjakga9NwqXZFU9s5CvUNReT53DCYF+taPxqkb2fVY4XqjS2DRYjEHpg0I3GEOZWscTNw/22Wm5Gxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=i5Y24KXK; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=0w
+	lj+lHSrPL3rr7FK3/SFmDrvWcbFBtlQDjjoWbFa/E=; b=i5Y24KXKBdHS/H8mlS
+	YxM52iacLuBbcjo7ve9PGKqwJlwi2eBe4ThNhbN/KZ3Jfm1zcWYYO6HRQTblVtMJ
+	lyDckqMbj5+G60e+pfotfrg07m/C7TSisCMi8CwmI9uZwaxLpJXOn6wHoovfOXKG
+	dI/mtcg1F6jylBcfJIa5onDuA=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wAXjAhK86Vo_3zUDA--.17615S2;
+	Thu, 21 Aug 2025 00:09:46 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: bhelgaas@google.com,
+	helgaas@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Hans Zhang <18255117159@163.com>
+Subject: [PATCH] PCI: Replace msleep(2) with usleep_range() for precise delay
+Date: Thu, 21 Aug 2025 00:09:44 +0800
+Message-Id: <20250820160944.489061-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Sungho Kim <sungho.kim@furiosa.ai>, bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250820105714.2939896-1-sungho.kim@furiosa.ai>
-Content-Language: en-US
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20250820105714.2939896-1-sungho.kim@furiosa.ai>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.219.145.75
-X-SA-Exim-Rcpt-To: sungho.kim@furiosa.ai, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH] PCI: p2pdma: Fix incorrect pointer usage in devm_kfree()
- call
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAXjAhK86Vo_3zUDA--.17615S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGr48WrW5AF1DWr47Aw4DCFg_yoW5Cr4Upa
+	yrCw1jyF1rJrnxXrs8Ja1xCrn8CFnrZrW8Zayku345ua4a9w4xKr4SkFW5Xr13Zr4kA34Y
+	q3WYyr43ZF48Zr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRJCzXUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhuvo2il7UG7hgAAsx
+
+The msleep(2) may sleep up to 20ms due to timer granularity, which can
+cause unnecessary delays. According to PCI spec v3.0 7.6.4.2, the minimum
+Trst is 1ms and we doubled that to 2ms to meet the requirement. Using
+usleep_range(2000, 2001) provides a more precise delay of exactly 2ms.
+
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+Dear maintainers,
+
+During the development process, I often check whether the file encoding meets the
+basic rules. A warning appears when checking the following files:
+
+./scripts/checkpatch.pl --no-tree --show-types --ignore EMAIL_SUBJECT,FILE_PATH_CHANGES,\
+GERRIT_CHANGE_ID,UNDOCUMENTED_DT_STRING,TYPO_SPELLING -f drivers/pci/pci.c
+
+WARNING:MSLEEP: msleep < 20ms can sleep for up to 20ms; see function description of msleep().
+#4914: FILE: drivers/pci/pci.c:4914:
++	msleep(2);
 
 
+In addition, I also found that the following documents all have similar problems.
+Here, I'll first submit a patch to ask everyone. If it's necessary, I'll continue
+to submit related patches later. If not, please ignore it.
 
-On 2025-08-20 04:57, Sungho Kim wrote:
-> The error handling path in the P2P DMA resource setup function contains
-> a bug in its `pgmap_free` label.
-> 
-> Memory is allocated for the `p2p_pgmap` struct, and the pointer is stored
-> in the `p2p_pgmap` variable. However, the error path attempts to call
-> devm_kfree() using the `pgmap` variable, which is a pointer to a member
-> field within the `p2p_pgmap` struct, not the base pointer of the allocation.
-> 
-> This patch corrects the bug by passing the correct base pointer,
-> `p2p_pgmap`, to the devm_kfree() function.
-> 
-> Signed-off-by: Sungho Kim <sungho.kim@furiosa.ai>
+WARNING:MSLEEP: msleep < 20ms can sleep for up to 20ms; see function description of msleep().
+#4630: FILE: drivers/pci/pci.c:4630:
++		msleep(1);
 
-Good catch, thank you.
+WARNING:MSLEEP: msleep < 20ms can sleep for up to 20ms; see function description of msleep().
+#342: FILE: drivers/pci/controller/pcie-rcar-host.c:342:
++		msleep(1);
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+WARNING:MSLEEP: msleep < 20ms can sleep for up to 20ms; see function description of msleep().
+#1368: FILE: drivers/pci/controller/pcie-brcmstb.c:1368:
++		msleep(5);
+
+WARNING:MSLEEP: msleep < 20ms can sleep for up to 20ms; see function description of msleep().
+#42: FILE: drivers/pci/controller/pcie-rcar.c:42:
++		msleep(5);
+
+WARNING:MSLEEP: msleep < 20ms can sleep for up to 20ms; see function description of msleep().
+#106: FILE: drivers/pci/hotplug/pciehp_hpc.c:106:
++		msleep(10);
+WARNING:MSLEEP: msleep < 20ms can sleep for up to 20ms; see function description of msleep().
+#286: FILE: drivers/pci/hotplug/pciehp_hpc.c:286:
++		msleep(10);
+
+WARNING:MSLEEP: msleep < 20ms can sleep for up to 20ms; see function description of msleep().
+#138: FILE: drivers/pci/pcie/dpc.c:138:
++		msleep(10);
+
+WARNING:MSLEEP: msleep < 20ms can sleep for up to 20ms; see function description of msleep().
+#3970: FILE: drivers/pci/quirks.c:3970:
++		msleep(10);
+---
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b0f4d98036cd..ffe491635144 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4967,7 +4967,7 @@ void pci_reset_secondary_bus(struct pci_dev *dev)
+ 	 * PCI spec v3.0 7.6.4.2 requires minimum Trst of 1ms.  Double
+ 	 * this to 2ms to ensure that we meet the minimum requirement.
+ 	 */
+-	msleep(2);
++	usleep_range(2000, 2001);
+ 
+ 	ctrl &= ~PCI_BRIDGE_CTL_BUS_RESET;
+ 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
+
+base-commit: b19a97d57c15643494ac8bfaaa35e3ee472d41da
+-- 
+2.25.1
+
 
