@@ -1,186 +1,134 @@
-Return-Path: <linux-pci+bounces-34462-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34463-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08B23B2FDB5
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 17:05:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF330B2FE08
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 17:16:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F01B21CE3F81
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 14:59:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F8E51772C0
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 15:10:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D99D2FABF2;
-	Thu, 21 Aug 2025 14:59:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7853287503;
+	Thu, 21 Aug 2025 15:10:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dsIK0u11"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TP4Sc0qT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895632F6193
-	for <linux-pci@vger.kernel.org>; Thu, 21 Aug 2025 14:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB49D2874F5;
+	Thu, 21 Aug 2025 15:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755788341; cv=none; b=hDQWFGKXmcImg4asGdAlifQKVXiqYBqhDM7uODwEu91SAlMjS9QDZLo6mAd8VmKRTDnIhoAwP9/ELyiMS8cuXTZ2+qH/VIG3fb1nV3UKeOimxi/1PaYlgU4qGL/dWizAiWK8o/I86w501zZSXdJS6n4PkjQTUZoUjfRxEiKSHD4=
+	t=1755789036; cv=none; b=AMKc51DyI4xiOMbUnW9AGsh6w+8Qp6jH/Fw6ahttEoU1YKNFBzCY3Xs1m5ExZXAM7FrFZ+iTiAGgdIo4An/3zwEzZEQftaUMpAeBLNUcUMzUoV/vuq79IwV7+gHo5ZQQb/0b4zwFsLU0bpr+fHn4/Wtywtv8tlclaKTdH9CnTZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755788341; c=relaxed/simple;
-	bh=Tz/VZwFoOgQ0Y4zvdRFkegcxdyj0tPL1i1gvMWA7+7Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N1J/utW/F7JPnEupfFGusnWIqOdnMWGGac1s4Jgb4077pKh7lE95fiVhaASf5/0RKKDcNHaLhcxvW7WoGSXiW3a0PgrjHaNkGzNrB/AYkwBAkQ0XG6Py5rT8M7GcbGrV/02wsNbviq9F5lTJJt9DCpU2Z7q/tB+IbhX3WLs94+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dsIK0u11; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b4746fd4793so927472a12.1
-        for <linux-pci@vger.kernel.org>; Thu, 21 Aug 2025 07:58:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1755788339; x=1756393139; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aaLinSTBsg2Heqd5n/Y8HcIpri3LMWuuwE5FV81Iuv8=;
-        b=dsIK0u11Uj2shhL/rM82sHsgOs/rTJuf7U4i6Kw/NZ8/E4cl4wQD1yLrHaQ9XGISGH
-         OEn9H+qpR5Y9JniVagCZSBGmOoOO6LIoVMd/7lGT8VLhnzWXmxrRTVmhO02hFuMqn75o
-         bIfH5DLdHzk6EegT9kMohlQENMXNSInMHb2sI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755788339; x=1756393139;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aaLinSTBsg2Heqd5n/Y8HcIpri3LMWuuwE5FV81Iuv8=;
-        b=w2YzUxleSucKuC1tMP3rjepO8i3IlxubFXfPxVtvWD1Zp4pdoLOUro5hNJW29OvkiY
-         Hxih2ydpsWOG3dJQPDJ04dJOZ9cxbIpfJJ/qeg9izeSlQoTI7Ik+jNynY7t3Mx0hTEzJ
-         vhT/0aw16/JCRQDc4LnOasfBCIsCWMYT0dFPPJ2Nd8tsTUg+xtz2I5IfnYWt60mP5Cas
-         DyE6k0cUzXbIprrTwdvOPWA2488E/juVAKYsHSoG/N/tuA+ccDlM15FQd39FNH8Nv/W9
-         Wzm1CQRqX11f9upqpuSJqAXnsTKpyxtzCD9C7AzRaRZAbPHf4FQjZRbyPdOf3LWRvqT/
-         omHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXbKQRx4cgm1YK6PZHvpIl8gedl9DAe/EIP0ANQsCltv8PpkhoxjwDILqtIinkOm2CxHf+3a472Q20=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCmcSTiWGCuvCsrh1aeSb/MdomrbgqSlVqet01MLocHAq7qxyc
-	kE8YfkDJcYOPj8LO6HSUglyvmtj2vdsaOHN1B6nlFAuSJyJChljZZRE2XotIREUd7euLTVcl84z
-	rJt8=
-X-Gm-Gg: ASbGncuoHIIkTLV8pUVZHnbtFlmY1ozlEvY+z2zrKG40ibbv964DfYYo3doVglDd1Ih
-	xRrTSN4CDzTELN2d+80lnnl0IkNeYkUR+pReP4IcufVZwGc9ZOowhUcoWa2w2OGJEcqKIR/ShY0
-	JpfPtschcfQwC9ezWXKYDPPLtS/hZ4v7GU2OaKG3AQu8HYMshfZSVoYmByfHyH1oxwcRE/G8HZg
-	LgLbgCVBtOjSXWpfudBdCxLzyVPch6pkfm7RyKhvTbw825a0658VxDpPPbEVB0DAfWKRAHqpg7e
-	ArxsSlxM2W71JSpEyaJ80cgyMGP4u/beGtabIwBNLRdHj9ViYZaQn5eLUEK/m7rhTT0go/U4wHg
-	GtIX1arxGTgH1Ti2kQh3zmx3ju5O2SWwnO+pemNC1vVtBgbqprMUaAnnTIddK1jZRfl2E2jg=
-X-Google-Smtp-Source: AGHT+IF5jd207eAHYlWkozFvV4W7rHhk80wb+yRJAbAhw3XVWRLn8xbVDIiu2vgUdgY7fOZrtSdwdQ==
-X-Received: by 2002:a17:902:d4cd:b0:246:571:4b21 with SMTP id d9443c01a7336-24605714c9dmr35347695ad.58.1755788338577;
-        Thu, 21 Aug 2025 07:58:58 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:2283:604f:d403:4841])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-245ed33aa3esm58509915ad.24.2025.08.21.07.58.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Aug 2025 07:58:58 -0700 (PDT)
-From: Brian Norris <briannorris@chromium.org>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Brian Norris <briannorris@google.com>,
-	stable@vger.kernel.org,
-	Brian Norris <briannorris@chromium.org>
-Subject: [PATCH] PCI/PM: Ensure power-up succeeded before restoring MMIO state
-Date: Thu, 21 Aug 2025 07:58:12 -0700
-Message-ID: <20250821075812.1.I2dbf483156c328bc4a89085816b453e436c06eb5@changeid>
-X-Mailer: git-send-email 2.51.0.rc1.193.gad69d77794-goog
+	s=arc-20240116; t=1755789036; c=relaxed/simple;
+	bh=KOujws6yZ+fxbp80saJb/gh64MlmouP1oh4UgzwtmBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=HJVz2FOZl1j68N4Jpd308AZ8qHd5m7XxwEEJl1DEE8W/hphWYUCsQx5sApZzo4ucVVYTxSsc4LTnSwkB7CD6dQQuWcGoJRwoPVIVe7yLDmLO2O62qHueL6QPAuVfyyWdbN7kSmtOb5aKH9UujFTxJLsJI2wamoWMu1iAeosG6FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TP4Sc0qT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 772DAC4CEEB;
+	Thu, 21 Aug 2025 15:10:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755789036;
+	bh=KOujws6yZ+fxbp80saJb/gh64MlmouP1oh4UgzwtmBg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=TP4Sc0qTaHew6YZ17l1M+m3kWQTlVlUqH3fO1WOyL+67IcfgKPogXIyN6YkLA+agX
+	 uwZkjo5PqR3oCOlfpkBY7Y8PXsJ+473MRTGkppoE2fICjU+G127b61kWrZO/qhvjkw
+	 7Nzn3lIgwoitC6DGgPMYBNoBLTfezbqcjels7/a/78AoKbPY8xxD0ob9hd4kuULO15
+	 /Y3L6kcjeDcy3JTbsiDTAYcZNADFZOLAuEjqzqwMfH4VUdCaMfeB7rOerjGXptDy3K
+	 M2lESZ5XAUBQJZKKqoqXbRXt7y+H92LdPeQjVTGpefkxI4Ro6UC1VZ5LuFsoAgpIt6
+	 SwDZ5xDpR3kEQ==
+Date: Thu, 21 Aug 2025 10:10:35 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>, Rio <rio@r26.me>,
+	D Scott Phillips <scott@os.amperecomputing.com>,
+	linux-kernel@vger.kernel.org,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] PCI: Relaxed tail alignment should never increase
+ min_align
+Message-ID: <20250821151035.GA674429@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250630142641.3516-2-ilpo.jarvinen@linux.intel.com>
 
-From: Brian Norris <briannorris@google.com>
+On Mon, Jun 30, 2025 at 05:26:39PM +0300, Ilpo Järvinen wrote:
+> When using relaxed tail alignment for the bridge window,
+> pbus_size_mem() also tries to minimize min_align, which can under
+> certain scenarios end up increasing min_align from that found by
+> calculate_mem_align().
+> 
+> Ensure min_align is not increased by the relaxed tail alignment.
+> 
+> Eventually, it would be better to add calculate_relaxed_head_align()
+> similar to calculate_mem_align() which finds out what alignment can be
+> used for the head without introducing any gaps into the bridge window
+> to give flexibility on head address too. But that looks relatively
+> complex algorithm so it requires much more testing than fixing the
+> immediate problem causing a regression.
+> 
+> Fixes: 67f9085596ee ("PCI: Allow relaxed bridge window tail sizing for optional resources")
+> Reported-by: Rio <rio@r26.me>
 
-As the comments in pci_pm_thaw_noirq() suggest, pci_restore_state() may
-need to restore MSI-X state in MMIO space. This is only possible if we
-reach D0; if we failed to power up, this might produce a fatal error
-when touching memory space.
+Was there a regression report URL we could include here?
 
-Check for errors (as the "verify" in "pci_pm_power_up_and_verify_state"
-implies), and skip restoring if it fails.
-
-This mitigates errors seen during resume_noirq, for example, when the
-platform did not resume the link properly.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Brian Norris <briannorris@google.com>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
-
- drivers/pci/pci-driver.c | 12 +++++++++---
- drivers/pci/pci.c        | 13 +++++++++++--
- drivers/pci/pci.h        |  2 +-
- 3 files changed, 21 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 302d61783f6c..d66d95bd0ca2 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -557,7 +557,13 @@ static void pci_pm_default_resume(struct pci_dev *pci_dev)
- 
- static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
- {
--	pci_pm_power_up_and_verify_state(pci_dev);
-+	/*
-+	 * If we failed to reach D0, we'd better not touch MSI-X state in MMIO
-+	 * space.
-+	 */
-+	if (pci_pm_power_up_and_verify_state(pci_dev))
-+		return;
-+
- 	pci_restore_state(pci_dev);
- 	pci_pme_restore(pci_dev);
- }
-@@ -1101,8 +1107,8 @@ static int pci_pm_thaw_noirq(struct device *dev)
- 	 * in case the driver's "freeze" callbacks put it into a low-power
- 	 * state.
- 	 */
--	pci_pm_power_up_and_verify_state(pci_dev);
--	pci_restore_state(pci_dev);
-+	if (!pci_pm_power_up_and_verify_state(pci_dev))
-+		pci_restore_state(pci_dev);
- 
- 	if (pci_has_legacy_pm_support(pci_dev))
- 		return 0;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e698278229f2..c75fec3b094f 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3144,10 +3144,19 @@ void pci_d3cold_disable(struct pci_dev *dev)
- }
- EXPORT_SYMBOL_GPL(pci_d3cold_disable);
- 
--void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev)
-+int pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev)
- {
--	pci_power_up(pci_dev);
-+	int ret;
-+
-+	ret = pci_power_up(pci_dev);
- 	pci_update_current_state(pci_dev, PCI_D0);
-+
-+	if (ret < 0 && pci_dev->current_state == PCI_D3cold) {
-+		dev_err(&pci_dev->dev, "Failed to power up device: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
- }
- 
- /**
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 1c48bc447f58..87ad201417d5 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -233,7 +233,7 @@ void pci_dev_adjust_pme(struct pci_dev *dev);
- void pci_dev_complete_resume(struct pci_dev *pci_dev);
- void pci_config_pm_runtime_get(struct pci_dev *dev);
- void pci_config_pm_runtime_put(struct pci_dev *dev);
--void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev);
-+int pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev);
- void pci_pm_init(struct pci_dev *dev);
- void pci_ea_init(struct pci_dev *dev);
- void pci_msi_init(struct pci_dev *dev);
--- 
-2.51.0.rc1.193.gad69d77794-goog
-
+> Tested-by: Rio <rio@r26.me>
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: <stable@vger.kernel.org>
+> ---
+>  drivers/pci/setup-bus.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 07c3d021a47e..f90d49cd07da 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1169,6 +1169,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+>  	resource_size_t children_add_size = 0;
+>  	resource_size_t children_add_align = 0;
+>  	resource_size_t add_align = 0;
+> +	resource_size_t relaxed_align;
+>  
+>  	if (!b_res)
+>  		return -ENOSPC;
+> @@ -1246,8 +1247,9 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+>  	if (bus->self && size0 &&
+>  	    !pbus_upstream_space_available(bus, mask | IORESOURCE_PREFETCH, type,
+>  					   size0, min_align)) {
+> -		min_align = 1ULL << (max_order + __ffs(SZ_1M));
+> -		min_align = max(min_align, win_align);
+> +		relaxed_align = 1ULL << (max_order + __ffs(SZ_1M));
+> +		relaxed_align = max(relaxed_align, win_align);
+> +		min_align = min(min_align, relaxed_align);
+>  		size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res), win_align);
+>  		pci_info(bus->self, "bridge window %pR to %pR requires relaxed alignment rules\n",
+>  			 b_res, &bus->busn_res);
+> @@ -1261,8 +1263,9 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+>  		if (bus->self && size1 &&
+>  		    !pbus_upstream_space_available(bus, mask | IORESOURCE_PREFETCH, type,
+>  						   size1, add_align)) {
+> -			min_align = 1ULL << (max_order + __ffs(SZ_1M));
+> -			min_align = max(min_align, win_align);
+> +			relaxed_align = 1ULL << (max_order + __ffs(SZ_1M));
+> +			relaxed_align = max(min_align, win_align);
+> +			min_align = min(min_align, relaxed_align);
+>  			size1 = calculate_memsize(size, min_size, add_size, children_add_size,
+>  						  resource_size(b_res), win_align);
+>  			pci_info(bus->self,
+> -- 
+> 2.39.5
+> 
 
