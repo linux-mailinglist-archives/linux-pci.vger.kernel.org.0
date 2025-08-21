@@ -1,174 +1,155 @@
-Return-Path: <linux-pci+bounces-34475-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34476-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36947B30001
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 18:28:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D89B5B30053
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 18:44:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B8BBA7B6372
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 16:27:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DA66AC6032
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 16:40:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 653342DE6FC;
-	Thu, 21 Aug 2025 16:28:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A47502E0418;
+	Thu, 21 Aug 2025 16:39:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Zl0crzTy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ft3NZvYn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06FAD531;
-	Thu, 21 Aug 2025 16:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8078E2E03F8
+	for <linux-pci@vger.kernel.org>; Thu, 21 Aug 2025 16:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755793724; cv=none; b=DfbF81JuE3owNUY94wmI0IM09qS9qV4fXlJzaoLxrTkgXVNzEeBPUwQuLYI9AKIqpqNILvLxufY9ortmhttyIehtJeuR62sF+3CC5MpowOVgZIT6glPYD2qkT1YNTFOXVJLJuYajgd0RSJlNxvGi+g1QosXLxZASEbIFvJYSnQY=
+	t=1755794378; cv=none; b=ixQu77sDpmGXvzpMpvbPnKPpIx6JowN56icDsxkHZmDSzaLQYpkznPw2uL074OkabiPtBAC46NQFmH/24aToH6kOAMKUhLaoM6n3e7ajPsSIB8I0LDufwS6r0Q16Nqsk3ULnbWiCZz96i5oyjK0J4XmVIEtjfNjfJp2duxMd8Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755793724; c=relaxed/simple;
-	bh=JfN8TfAsyHLHOGMuyTjHdkvdm59TUSIUpHOUS6OfRTs=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=OhProDHLGpTUk/g1pRLKdkHhdeCE7NmMBsom7BTLry7w5pzbUHMDUEDcoD09Qaxkl6/pgeH9BmK8lIJ1G0lZ+DBURJW88Z333atV6q3CxA+0etf9nq8vochBcCoVJ4LIAVWKE53feaLHgrhB3cazvxgPqBxR9iZwDkZX5czoP2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Zl0crzTy; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1755793696; x=1756398496; i=markus.elfring@web.de;
-	bh=6LltK9z+nCNBEFNTg2yyniOSi1uYpMwAe1Nicq+ev70=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Zl0crzTyUovjV/NccYNGuGKqkmiyRMiqh2lwJ2U5vpnKlMiA3VtJiqK7CIfXd8ry
-	 /JRwivKNkBwVB7PzSMcGbUiOXL8I2c5zRmtonB08Kv/0te1sEdiqXz5mTa/hxTU2M
-	 +2lnOPxulsnZ1oyFDeLpoiYJtENuOYhISRZjRg1Ng1XLEtGuTOPBbK+Ee3O2PnMNQ
-	 ZWXrGCRWYTKqDLMzXTmkTczaXO0HwWBIGTQENJis0kdcZsPh5I44kKZf7ttNdAnxM
-	 YwKjD3SCG7LAGn32iiKw1QQKZm3SG/lHoiCSX3KUDb/+AIMfD7tgUGVi3oA+X5MER
-	 Ud9sb5LpOlQFGe42BQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.92.249]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N7QQD-1uU4YX2Qdp-014k95; Thu, 21
- Aug 2025 18:28:16 +0200
-Message-ID: <8e9936e5-d720-4ded-8961-b9475aeb2ac7@web.de>
-Date: Thu, 21 Aug 2025 18:28:14 +0200
+	s=arc-20240116; t=1755794378; c=relaxed/simple;
+	bh=cmZWp00zfeqbRmxA1bdQFwu6WLZptUjpd1SS6ibFJh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=EVF3mgsazreREac8OoqvaTsFVkc7C0sNi7tBQ3GInvxbDS2RcDcDVZTLJUmQ3witP73e1OU1z52XsVQeYpF6b5QEPdNdPhjz9w0fumChOGUNJHfJOft94HVp2v2LeyIwLYdDaBDjmMgP9covs2fSusseBK2IOTmfBUiWSoRm1Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ft3NZvYn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA2A2C4CEEB;
+	Thu, 21 Aug 2025 16:39:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755794378;
+	bh=cmZWp00zfeqbRmxA1bdQFwu6WLZptUjpd1SS6ibFJh4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ft3NZvYnK4XGVrHCAHK2Er3MU1zoWWuYzmdDOq4ieqYupC7rrgc8QEhgRRspHFY/s
+	 R07eoQ10IuZ3eqKrjssWFiJ9/9dSqYboYPDyjQqwVBeTSLcaltGVGkh8/JqnIvf2RL
+	 uHnC/9QCKpf78My2Ro22O1RFid2LIc7zZ14CArFStfm1yYi82w/VMmh6EHFSyhcIA6
+	 xrSwhBMzXZ2eBv+2o+vJHT4eaQF7OuQZIDIx1RO35sGbAblGgBRpkyzXj7JZLaZyvV
+	 DuJ7ZTwlEX+WArJOHAL+3vbzwEEg8szBTZCM/HFpN3BRIIbytegTZBqWFWx6hbGtTl
+	 klHgP2Bkyq3Aw==
+Date: Thu, 21 Aug 2025 11:39:36 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Hui Wang <hui.wang@canonical.com>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
+	raphael.norwitz@nutanix.com, alay.shah@nutanix.com,
+	suresh.gumpula@nutanix.com, ilpo.jarvinen@linux.intel.com,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
+	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Subject: Re: [PATCH] PCI: Disable RRS polling for Intel SSDPE2KX020T8 nvme
+Message-ID: <20250821163936.GA681451@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Cc: stable@vger.kernel.org, tudor.ambarus@linaro.org,
- LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- D Scott Phillips <scott@os.amperecomputing.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, Rio Liu <rio@r26.me>
-References: <20250630142641.3516-2-ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH v2 1/3] PCI: Relaxed tail alignment should never increase
- min_align
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250630142641.3516-2-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:HaKdWwNlulyboQI/pkApWr/ExEd1Y349nlGm3GQKQ+lw9Bj6Inj
- ttcKnmNP2GNAhrB/6lSYfoAGJE2SiSiW/AL/Te71SmYOASXanUtEzwLnZgpNu7Yn+MMmB4c
- RRnkAPm2PULIbnnEp/YV1kqC8XVzi6bp4YrEYa4plmHMjdJ0ACognRS6IR/FZvrYbSVNvgF
- ev7+hZgaKSj0aQ1wYJhHQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:JcGtOXNErk8=;wfrWdYUjEENO9quxak0kYXNBIP7
- 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
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <eae31738-5d5d-4c74-af1c-66168c36ead5@canonical.com>
 
-=E2=80=A6
-> Ensure min_align is not increased by the relaxed tail alignment.
-=E2=80=A6
+On Thu, Jul 03, 2025 at 08:05:05AM +0800, Hui Wang wrote:
+> On 7/2/25 17:43, Hui Wang wrote:
+> > On 7/2/25 07:23, Bjorn Helgaas wrote:
+> > > On Tue, Jun 24, 2025 at 08:58:57AM +0800, Hui Wang wrote:
+> > > > Sorry for late response, I was OOO the past week.
+> > > > 
+> > > > This is the log after applied your patch:
+> > > > https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/comments/61
+> > > > 
+> > > > 
+> > > > Looks like the "retry" makes the nvme work.
+> > > Thank you!  It seems like we get 0xffffffff (probably PCIe error) for
+> > > a long time after we think the device should be able to respond with
+> > > RRS.
+> > > 
+> > > I always thought the spec required that after the delays, a device
+> > > should respond with RRS if it's not ready, but now I guess I'm not
+> > > 100% sure.  Maybe it's allowed to just do nothing, which would lead to
+> > > the Root Port timing out and logging an Unsupported Request error.
+> > > 
+> > > Can I trouble you to try the patch below?  I think we might have to
+> > > start explicitly checking for that error.  That probably would require
+> > > some setup to enable the error, check for it, and clear it.  I hacked
+> > > in some of that here, but ultimately some of it should go elsewhere.
+> > 
+> > OK, built a testing kernel, wait for bug reporter to test it and collect
+> > the log.
+> > 
+> This is the testing result and log.
+> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/comments/65
 
+Thanks!  This looks like an Intel S2600WFT, and I assume it has a BMC
+that maintains a System Event Log.  Any chance you check or keep that
+log?
 
-=E2=80=A6
-+++ b/drivers/pci/setup-bus.c
-=E2=80=A6
-@@ -1261,8 +1263,9 @@ static int pbus_size_mem(struct pci_bus *bus, unsign=
-ed long mask,
- 		if (bus->self && size1 &&
- 		    !pbus_upstream_space_available(bus, mask | IORESOURCE_PREFETCH, typ=
-e,
- 						   size1, add_align)) {
--			min_align =3D 1ULL << (max_order + __ffs(SZ_1M));
--			min_align =3D max(min_align, win_align);
-+			relaxed_align =3D 1ULL << (max_order + __ffs(SZ_1M));
-+			relaxed_align =3D max(min_align, win_align);
-=E2=80=A6
+> > > @@ -1305,14 +1321,33 @@ static int pci_dev_wait(struct pci_dev *dev,
+> > > char *reset_type, int timeout)
+> > >             if (root && root->config_rrs_sv) {
+> > >               pci_read_config_dword(dev, PCI_VENDOR_ID, &id);
+> > > -            if (!pci_bus_rrs_vendor_id(id))
+> > > -                break;
+> > > +
+> > > +            if (pci_bus_rrs_vendor_id(id)) {
+> > > +                pci_info(dev, "%s: read %#06x (RRS)\n",
+> > > +                     __func__, id);
+> > > +                goto retry;
+> > > +            }
+> > > +
+> > > +            if (PCI_POSSIBLE_ERROR(id)) {
+> > > +                pcie_capability_read_word(root, PCI_EXP_DEVSTA,
+> > > +                              &devsta);
+> > > +                if (devsta & PCI_EXP_DEVSTA_URD)
+> > > +                    pcie_capability_write_word(root,
+> > > +                                PCI_EXP_DEVSTA,
+> > > +                                PCI_EXP_DEVSTA_URD);
+> > > +                pci_info(root, "%s: read %#06x DEVSTA %#06x\n",
+> > > +                     __func__, id, devsta);
 
-I wonder why a variable content would be overwritten here
-without using the previous value.
-https://cwe.mitre.org/data/definitions/563.html
+We're waiting for 01:00.0, and we're seeing the poll message for about
+375 ms:
 
-Regards,
-Markus
+  [   10.334786] pci 10000:01:00.0: pci_dev_wait: VF- bus reset timeout 59900
+  [   10.334792] pci 10000:00:02.0: pci_dev_wait: read 0xffffffff DEVSTA 0x0000
+  ...
+  [   10.708367] pci 10000:00:02.0: pci_dev_wait: read 0xffffffff DEVSTA 0x0000
+
+The 00:02.0 Root Port has RRS enabled, but the config reads of the
+01:00.0 Vendor ID did not return the RRS value (0x0001).  Instead,
+they returned 0xffffffff, which typically means an error on PCIe.
+
+If an error occurred, I think it *should* set one of the Error
+Detected bits in the Device Status register, but we always see 0
+there.
+
+I think the platform enabled firmware-first error handling and
+declined to give Linux control of AER, so I'm wondering if BIOS is
+capturing and clearing those errors before Linux would see them, hence
+my question about the SEL.
+
+  [    6.565996] GHES: APEI firmware first mode is enabled by APEI bit and WHEA _OSC.
+  [    6.702329] acpi PNP0A08:00: _OSC: platform does not support [SHPCHotplug AER LTR DPC]
+  [    6.702463] acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME PCIeCapability]
+
+Even if this is the case and the SEL has error info, I don't know how
+that would help us, other than maybe to understand why Linux doesn't
+see the errors.
+
+Bjorn
 
