@@ -1,140 +1,212 @@
-Return-Path: <linux-pci+bounces-34472-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34473-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E9D1B2FEAE
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 17:40:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D96DB2FEF9
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 17:47:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAD715C23C7
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 15:30:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B3A3464530E
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 15:33:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 536532F6199;
-	Thu, 21 Aug 2025 15:24:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDEFB270EA5;
+	Thu, 21 Aug 2025 15:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bCLeEp0b"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NCS8pazb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C866D292910;
-	Thu, 21 Aug 2025 15:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3C427702B
+	for <linux-pci@vger.kernel.org>; Thu, 21 Aug 2025 15:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755789862; cv=none; b=HbGcKkMlMnH3OwyRNZHilPIyMFpPxo3gj4v+2eKr2gEehmiIAk78SKSm4pJzFCICUHwh/95u/Vx/cBSZKp971heFRz1t7ok1ONhfuBp2gHoR8jejFlWYi1GdqT96qrQOkxANIrqB+TvunxZsTq0V2gLoh5rh0tDxg/Sdrb4LW5M=
+	t=1755790099; cv=none; b=RUq1UmP55DSMF7vc4ldkmrg1eSgg0M4saUgInhm6WrtsiXUHnqBzwoEWmwvwJ7Vi7HVlDobhMnJFhwo2xJmtV90KpGZ7hLqBHVKh1fyVFQnYkz2HUwW7RqCXhQ/y0lIrLqAJ6m49IxZIQ5OHEiBJ5sYizbqL+OHK/+1BBmRegY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755789862; c=relaxed/simple;
-	bh=TbPhT0fJ9UVY2GpBFgSYAMdfwE7Jlo8AQrRMPKTTskE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hsuHV/xStsmpsS9U3hbgKOLAOswYdN8o07MOFFJ013hUTV63+EgiwJOVcOq6GfX7DVKlqeVfluBiGKqV3oq/7YbyyjyEGlEITbkwzt++5xvV7j1LuKYLNLB1y8E7OPyiqsFMf7tQS3iG/5jl7QdjU1FMYUzrsYy9ZT3gg/KDWFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bCLeEp0b; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755789861; x=1787325861;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=TbPhT0fJ9UVY2GpBFgSYAMdfwE7Jlo8AQrRMPKTTskE=;
-  b=bCLeEp0b6IPKGYhx1ubdmDRlnp4Z49njn0Z/LZofhmuoosz5X9IUdpbL
-   NOt5GMdlH/ZYOhKD8snDvDppOCnLY6RDLbPCxJdzgxkMPmsG01vEP4YNK
-   JXLsLFARnhyvnYstAh26K6e4IK23y3+OQYtISDY7wL2NaPF6hPdbtugQV
-   RwvsJPGROlB5RpylSUC5edquCVCWBIADK6NFq82dPn0tnQ8b0fIm4QYlX
-   v8ICdE3n1OPg7EYIm8JMGpoCH5QNZNG6Ah9ioH3j/398hW5pa/z2lg6lU
-   cDlSJe+Y9ryzlzCvmOiy7ypnCLRrK8ydy40g0XrzN3BWVsmK8HmM+2cVl
-   g==;
-X-CSE-ConnectionGUID: P+nR0csaQw66tb1whkidBQ==
-X-CSE-MsgGUID: 175Y5JuHQM+/RdYGFJUftw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="61914411"
-X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
-   d="scan'208";a="61914411"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 08:24:21 -0700
-X-CSE-ConnectionGUID: vpOrtkQEQoOVTERqkbMzcA==
-X-CSE-MsgGUID: 7tf6eHjQQ7KIXWNVlkyxMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
-   d="scan'208";a="168803584"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.192])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 08:24:16 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 21 Aug 2025 18:24:12 +0300 (EEST)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Tudor Ambarus <tudor.ambarus@linaro.org>, Rio <rio@r26.me>, 
-    D Scott Phillips <scott@os.amperecomputing.com>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
-    stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] PCI: Relaxed tail alignment should never increase
- min_align
-In-Reply-To: <3ded51ff-6265-da0a-d8a1-ecf788e99d31@linux.intel.com>
-Message-ID: <b3018c24-7626-d406-2487-67ea32bd2712@linux.intel.com>
-References: <20250821151035.GA674429@bhelgaas> <3ded51ff-6265-da0a-d8a1-ecf788e99d31@linux.intel.com>
+	s=arc-20240116; t=1755790099; c=relaxed/simple;
+	bh=aA8zhseHSQmMzMmSITma/zwDunvdaaGfLi5Z+fx4Wts=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cSUXFMZVE4Xh/RjmnjdEzpriwuGqC0vy8NZ1ybgNiz4F4a9hRr0+Ll9eZxySyke5vCU8OdW/JyMk3K0gpDwUUDOTbA2b8lL1OCdV2wljsW8Dbc6Hp7sG84IARCe8EulaAnMEguwNsw+0vIKaivBohQ6UJO0ayCIJ0kkYnGexkkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NCS8pazb; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-32326df0e75so984323a91.2
+        for <linux-pci@vger.kernel.org>; Thu, 21 Aug 2025 08:28:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1755790097; x=1756394897; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nd2HlIcK0+2BltYNtEvCp8FEJ4wH2rjWi5MC5TG9XRU=;
+        b=NCS8pazb1+vxxDoL/gev9piRpsniiZGAMO5rlYsJvQioQKlSg2gi5jwA+lzmoj5DC8
+         TvjJhl5GhZBqxCwaO100+gaZlxXgiod3gA5CQz9xVH/X4uiM0I6iPNiY4/piZUXpiG0k
+         I9cER91RwU4L6SA6AX7ss73sWfYgYnW+snIgE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755790097; x=1756394897;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nd2HlIcK0+2BltYNtEvCp8FEJ4wH2rjWi5MC5TG9XRU=;
+        b=ckQhrPbx+DItwX3c0waZij9mWUzvPFAcy25MIMDhlC0d7Bl+PNgFiIoX99Se/DLicQ
+         daRAVQMSe1Vqa4/XgEZ/XccV2StCQBRw5FwtpOQvXwxjJTN8/N6Jg+eWGt/v10qOyIFm
+         JTsWKfAhi1yfuRuZYrFeQihlS5r9MpTbA4E38EunKEsc1UO84052mu+qe7EYhWMO/fly
+         ZPvD0h9aAr++VgYvfEwSagw7FzAMdLSOK0xPLqGcRg5+XcoHeBxj2/NkoTQfOTceGAdW
+         FxmZhdayJrm6x1AsGPskUI4MVmdNsqOwMJbOLeaofKw4IaIxRqqY/I0shM5F6yRRBeMD
+         0Baw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+/Zs4kABVJr+w3Eg1sG2Le8NhVcyrNin96mZEdqdxek9H+KLO7I55uY0tprm6PV8r061s3zN5zWY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr5cYw6cf7Vcl/TzllC0GWR+AB0/2RkIZyOpd5y2DFdFbAAuxS
+	rAa0LAeCtnSDqssch3xZut98fRUlOgytJ1dleSFfLZc5Th6zL9U8DKkDl1RJf7V/0A==
+X-Gm-Gg: ASbGncsnTgxlHRPt4dRJ9EYevQOFE4xHWBjbC0FmiWjlNo4CABQ7VMokddeFeow7HtP
+	ZmcYZBcTm6UYnxLlnT30yCctHetSVPsX4L9YnJJpf5LfvfUdXui3/U8QQ3i2syB9fehX5LHBM71
+	EksMTCh5iPkBq9YfA4vbiPKMhDFyeRG6Cu0zxS+Gcc/C7sRIrMWxiI3e24cv9yyvmelt1vu1t2g
+	1MV69BKjJ3CzMZZhGH5YJb2CP0TXDHxilqlks+LYh+V5IzLVoQWIEf2EW9xdQrTlDISZw0cQy+2
+	kistemKqXizY2OTPCRPIuIncZwd846IQIzSaRHERiKLsst4Nikg3IJnpjyw+GtQS5YWb0q4erU1
+	wYW+ml8nTf1mZ9ZWktx+L7amI3OyzVq6E45fMn1kYjm1WQMWnPaxnd0pOXlDQ
+X-Google-Smtp-Source: AGHT+IHVhDdHs5f4ka0iZ1LeCPqSFllDs1FhR8dhlw5b1WPArLSHElp5qXfJNzyGqc66nfXe2M/+eA==
+X-Received: by 2002:a17:90b:2744:b0:31e:e88b:ee0d with SMTP id 98e67ed59e1d1-324ed0977f0mr3779233a91.9.1755790097274;
+        Thu, 21 Aug 2025 08:28:17 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:2283:604f:d403:4841])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-324fb2fee00sm826075a91.9.2025.08.21.08.28.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Aug 2025 08:28:16 -0700 (PDT)
+Date: Thu, 21 Aug 2025 08:28:15 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Ethan Zhao <etzhao1900@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] PCI/sysfs: Ensure devices are powered for config reads
+Message-ID: <aKc7D78owL_op3Ei@google.com>
+References: <20250820102607.1.Ibb5b6ca1e2c059e04ec53140cd98a44f2684c668@changeid>
+ <dfdc655e-1e06-42df-918f-7d56f26a7473@gmail.com>
+ <aKaK4WS0pY0Nb2yi@google.com>
+ <048bd3c4-887c-4d17-9636-354cc626afa3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1727549204-1755789852=:933"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <048bd3c4-887c-4d17-9636-354cc626afa3@gmail.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Ethan,
 
---8323328-1727549204-1755789852=:933
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Note: I'm having a hard time reading your emails sometimes, because you
+aren't really adding in appropriate newlines that separate your reply
+from quoted text. So your own sentences just run together with parts of
+my sentences at times. I've tried to resolve this as best I can.
 
-On Thu, 21 Aug 2025, Ilpo J=C3=A4rvinen wrote:
+On Thu, Aug 21, 2025 at 08:41:28PM +0800, Ethan Zhao wrote:
+> 
+> 
+> On 8/21/2025 10:56 AM, Brian Norris wrote:
+> > On Thu, Aug 21, 2025 at 08:54:52AM +0800, Ethan Zhao wrote:
+> > > On 8/21/2025 1:26 AM, Brian Norris wrote:
+> > > > From: Brian Norris <briannorris@google.com>
+> > > > 
+> > > > max_link_speed, max_link_width, current_link_speed, current_link_width,
+> > > > secondary_bus_number, and subordinate_bus_number all access config
+> > > > registers, but they don't check the runtime PM state. If the device is
+> > > > in D3cold, we may see -EINVAL or even bogus values.
+> > > My understanding, if your device is in D3cold, returning of -EINVAL is
+> > > the right behavior.
+> > 
+> > That's not the guaranteed result though. Some hosts don't properly
+> > return PCIBIOS_DEVICE_NOT_FOUND, for one. But also, it's racy -- because
+> > we don't even try to hold a pm_runtime reference, the device could
+> > possibly enter D3cold while we're in the middle of reading from it. If
+> > you're lucky, that'll get you a completion timeout and an all-1's
+> > result, and we'll return a garbage result.
+> > 
+> > So if we want to purposely not resume the device and retain "I can't
+> > give you what you asked for" behavior, we'd at least need a
+> > pm_runtime_get_noresume() or similar.
+> I understand you just want the stable result of these caps,
 
-> On Thu, 21 Aug 2025, Bjorn Helgaas wrote:
->=20
-> > On Mon, Jun 30, 2025 at 05:26:39PM +0300, Ilpo J=C3=A4rvinen wrote:
-> > > When using relaxed tail alignment for the bridge window,
-> > > pbus_size_mem() also tries to minimize min_align, which can under
-> > > certain scenarios end up increasing min_align from that found by
-> > > calculate_mem_align().
-> > >=20
-> > > Ensure min_align is not increased by the relaxed tail alignment.
-> > >=20
-> > > Eventually, it would be better to add calculate_relaxed_head_align()
-> > > similar to calculate_mem_align() which finds out what alignment can b=
-e
-> > > used for the head without introducing any gaps into the bridge window
-> > > to give flexibility on head address too. But that looks relatively
-> > > complex algorithm so it requires much more testing than fixing the
-> > > immediate problem causing a regression.
-> > >=20
-> > > Fixes: 67f9085596ee ("PCI: Allow relaxed bridge window tail sizing fo=
-r optional resources")
-> > > Reported-by: Rio <rio@r26.me>
-> >=20
-> > Was there a regression report URL we could include here?
->=20
-> There's the Lore thread only:
->=20
-> https://lore.kernel.org/all/o2bL8MtD_40-lf8GlslTw-AZpUPzm8nmfCnJKvS8RQ3NO=
-zOW1uq1dVCEfRpUjJ2i7G2WjfQhk2IWZ7oGp-7G-jXN4qOdtnyOcjRR0PZWK5I=3D@r26.me/
->=20
-> (It's so far back that if there was something else, I've forgotten them=
-=20
-> by now but looking at the exchanges in the thread, it doesn't look like=
-=20
-> bugzilla entry or so made out of it.)
+Yes, I'd like a valid result, not EINVAL. Why would I check this file if
+I didn't want the result?
 
-Making it "official" tag in case that's easier for you to handle=20
-automatically...
+> meanwhile
+> you don't want the side effect either.
 
-Link: https://lore.kernel.org/all/o2bL8MtD_40-lf8GlslTw-AZpUPzm8nmfCnJKvS8R=
-Q3NOzOW1uq1dVCEfRpUjJ2i7G2WjfQhk2IWZ7oGp-7G-jXN4qOdtnyOcjRR0PZWK5I=3D@r26.m=
-e/
+Personally, I think side effect is completely fine. Or, it's just as
+fine as it is for the 'config' attribute or for 'resource_N_size'
+attributes that already do the same.
 
+> > > > Wrap these access in pci_config_pm_runtime_{get,put}() like most of the
+> > > > rest of the similar sysfs attributes.
+> > > > 
+> > > > Fixes: 56c1af4606f0 ("PCI: Add sysfs max_link_speed/width, current_link_speed/width, etc")
+> > > > Cc: stable@vger.kernel.org
+> > > > Signed-off-by: Brian Norris <briannorris@google.com>
+> > > > Signed-off-by: Brian Norris <briannorris@chromium.org>
+> > > > ---
+> > > > 
+> > > >    drivers/pci/pci-sysfs.c | 32 +++++++++++++++++++++++++++++---
+> > > >    1 file changed, 29 insertions(+), 3 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > > > index 5eea14c1f7f5..160df897dc5e 100644
+> > > > --- a/drivers/pci/pci-sysfs.c
+> > > > +++ b/drivers/pci/pci-sysfs.c
+> > > > @@ -191,9 +191,16 @@ static ssize_t max_link_speed_show(struct device *dev,
+> > > >    				   struct device_attribute *attr, char *buf)
+> > > >    {
+> > > >    	struct pci_dev *pdev = to_pci_dev(dev);
+> > > > +	ssize_t ret;
+> > > > +
+> > > > +	pci_config_pm_runtime_get(pdev);
+> > > This function would potentially change the power state of device,
+> > > that would be a complex process, beyond the meaning of
+> > > max_link_speed_show(), given the semantics of these functions (
+> > > max_link_speed_show()/max_link_width_show()/current_link_speed_show()/
+> > > ....),
+> > > this cannot be done !
+> > 
+> > What makes this different than the 'config' attribute (i.e., "read
+> > config register")? Why shouldn't that just return -EINVAL? I don't
+> > really buy your reasoning -- "it's a complex process" is not a reason
+> It is a reason to know there is side effect to be taken into account.
 
---=20
- i.
+OK, agreed, there's a side effect. I don't think you've convinced me the
+side effect is bad though.
 
---8323328-1727549204-1755789852=:933--
+> > not
+> > to do something. The user asked for the link speed; why not give it?
+> > If the user wanted to know if the device was powered, they could check
+> > the 'power_state' attribute instead.
+> > 
+> > (Side note: these attributes don't show up anywhere in Documentation/,
+> > so it's also a bit hard to declare "best" semantics for them.)
+> > 
+> > To flip this question around a bit: if I have a system that aggressively
+> > suspends devices when there's no recent activity, how am I supposed to
+> > check what the link speed is? Probabilistically hammer the file while
+> > hoping some other activity wakes the device, so I can find the small
+> > windows of time where it's RPM_ACTIVE? Disable runtime_pm for the device
+> > while I check?
+> Hold a PM reference by pci_config_pm_runtime_get() and then write some
+> data to the PCIe config space, no objection.
+> 
+> To know about the linkspeed etc capabilities/not status, how about
+> creating a cached version of these caps, no need to change their
+> power state.
+
+For static values like the "max" attributes, maybe that's fine.
+
+But Linux is not always the one changing the link speed. I've seen PCI
+devices that autonomously request link-speed changes, and AFAICT, the
+only way we'd know in host software is to go reread the config
+registers. So caching just produces cache invalidation problems.
+
+> If there is aggressive power saving requirement, and the polling
+> of these caps will make up wakeup/poweron bugs.
+
+If you're worried about wakeup frequency, I think that's a matter of
+user space / system administraction to decide -- if it doesn't want to
+potentially wake up the link, it shouldn't be poking at config-based
+sysfs attributes.
+
+Brian
 
