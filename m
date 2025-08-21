@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-34449-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34450-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3688B2F518
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 12:20:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32BFCB2F521
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 12:22:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 706A07B97A1
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 10:18:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7242C1BA74D5
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 10:20:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B24802F49FE;
-	Thu, 21 Aug 2025 10:19:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0A5926F476;
+	Thu, 21 Aug 2025 10:19:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="BultrdNB"
+	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="Xaev/zgv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtpout6.mo534.mail-out.ovh.net (smtpout6.mo534.mail-out.ovh.net [54.36.140.177])
+Received: from 5.mo533.mail-out.ovh.net (5.mo533.mail-out.ovh.net [54.36.140.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D5C2EB5DE;
-	Thu, 21 Aug 2025 10:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.36.140.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED7F7263A
+	for <linux-pci@vger.kernel.org>; Thu, 21 Aug 2025 10:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.36.140.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755771594; cv=none; b=EXn3/T0CfZT4ptPAxGhL8bfId6VwjneIpNHgwinFHsoXczI8JlAEhjL+FM85kER+g3cYXYTeBYRQG5LRJgqz6ssb9PJBFSiR/l7Qs4P8dxCNpTGEw8s2KddrzjGWnYdnasWayDp+Ewag59SajB+NwOXg8v2Zc9Aoy8J+1amIry0=
+	t=1755771599; cv=none; b=OgPuVG577XB1T5IqhPz7Gt7hKmYaEv8j5tYZIgCbn7EK+nJkpq+vfThYPWEcQ3Pq2MOi3gCNlFzHFFvw00t5U+rOime43SAqmldKHatxZyX80NT63c5YyItbF02AIfldfYbQL5NHryO0WvdvxZuCI/c3u4f96EVjRhc3at+Y0NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755771594; c=relaxed/simple;
-	bh=NqQf9Jc+3SbRrfRkJ4AYKg+XmoSQqCNl3ADyalX/KvQ=;
+	s=arc-20240116; t=1755771599; c=relaxed/simple;
+	bh=QE6s/0lAW6AiPaa0sSBUwamHMoawMGEWdM9hqsudp50=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WsZLBa8zTIknYO/YuRwUBHSXSfInw3b56ups/Pg/VXTFlN6Wo76mfPdLs3u5L6O8/iCMoApy5bDXiUwhiTDBH2YmZRYI4wADyFGUgQNh5f5jVT1pOFm4w7qraXsi9uAqFCCvzU/ByEO6QtPVYuaqSxMCV/+RG6LIkKnUYV+ovRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=BultrdNB; arc=none smtp.client-ip=54.36.140.177
+	 MIME-Version; b=PCMbCoi8yLN695VCifnkj2tVQYIFbRs2tymG1HZiuoaTOqchOaTVnsV1Pb//+6/09Jpu7wAzb8mEGcuo61Yz+Am5/YSmJ3l9WWoYdXYXhwGPwOv+iLLuAYUYCbqGXKhmrEvSqCcrffV64AjAOHCViDuJkmGaS8KQUMf+MTZRuss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=Xaev/zgv; arc=none smtp.client-ip=54.36.140.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
 Received: from director2.derp.mail-out.ovh.net (director2.derp.mail-out.ovh.net [79.137.60.36])
-	by mo534.mail-out.ovh.net (Postfix) with ESMTPS id 4c6zp91RMjz6BJy;
-	Thu, 21 Aug 2025 10:19:45 +0000 (UTC)
+	by mo533.mail-out.ovh.net (Postfix) with ESMTPS id 4c6zpG2kb8z5x0H;
+	Thu, 21 Aug 2025 10:19:50 +0000 (UTC)
 Received: from director2.derp.mail-out.ovh.net (director2.derp.mail-out.ovh.net. [127.0.0.1])
         by director2.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
-        for <brgl@bgdev.pl>; Thu, 21 Aug 2025 10:19:45 +0000 (UTC)
-Received: from mta7.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.37.222])
-	by director2.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4c6zp90Qbkz1xnh;
-	Thu, 21 Aug 2025 10:19:45 +0000 (UTC)
+        for <brgl@bgdev.pl>; Thu, 21 Aug 2025 10:19:50 +0000 (UTC)
+Received: from mta7.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.109.254.198])
+	by director2.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4c6zpG1Z2nz1xnd;
+	Thu, 21 Aug 2025 10:19:50 +0000 (UTC)
 Received: from orca.pet (unknown [10.1.6.9])
-	by mta7.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id 07D81B832BF;
-	Thu, 21 Aug 2025 10:19:43 +0000 (UTC)
-Authentication-Results:garm.ovh; auth=pass (GARM-97G002b6cf9774-3ea7-46e3-8327-10b8b50bb1ac,
+	by mta7.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id 23DE0B832BF;
+	Thu, 21 Aug 2025 10:19:49 +0000 (UTC)
+Authentication-Results:garm.ovh; auth=pass (GARM-97G0025494fe06-fc45-4a28-81e9-f834ace860e6,
                     684E78C7C579463DAB27E2CA1F9C4E28A39E1181) smtp.auth=marcos@orca.pet
 X-OVh-ClientIp:147.156.42.5
 From: Marcos Del Sol Vives <marcos@orca.pet>
@@ -56,9 +56,9 @@ Cc: Marcos Del Sol Vives <marcos@orca.pet>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	linux-gpio@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH v3 2/3] gpio: vortex: add new GPIO device driver
-Date: Thu, 21 Aug 2025 12:18:58 +0200
-Message-Id: <20250821101902.626329-3-marcos@orca.pet>
+Subject: [PATCH v3 3/3] mfd: vortex: implement new driver for Vortex southbridges
+Date: Thu, 21 Aug 2025 12:18:59 +0200
+Message-Id: <20250821101902.626329-4-marcos@orca.pet>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250821101902.626329-1-marcos@orca.pet>
 References: <20250821101902.626329-1-marcos@orca.pet>
@@ -69,207 +69,176 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 17492262431657055846
+X-Ovh-Tracer-Id: 17493669805666293350
 X-VR-SPAMSTATE: OK
 X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduiedtleekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhgtohhsucffvghlucfuohhlucggihhvvghsuceomhgrrhgtohhssehorhgtrgdrphgvtheqnecuggftrfgrthhtvghrnhepkeevudelhfdvvdekjeehgffhheetjeefhfevgffhfefhgfdvlefgtefhgeduhefgnecuffhomhgrihhnpegumhhprdgtohhmrdhtfienucfkphepuddvjedrtddrtddruddpudegjedrudehiedrgedvrdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehmrghrtghoshesohhrtggrrdhpvghtpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhifrghllhgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehmrghrtghoshesohhrtggrrdhpvghtpdhrtghpthhtoheplhhinhhugi
- dqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-DKIM-Signature: a=rsa-sha256; bh=JiNSSypzdmcdGwO4MzvY7/7N/cIlsyO551KqNqoZdhU=;
- c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1755771585;
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduiedtleekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhgtohhsucffvghlucfuohhlucggihhvvghsuceomhgrrhgtohhssehorhgtrgdrphgvtheqnecuggftrfgrthhtvghrnhepudffudeutdejudeffeeugeehveevgfefiefgueejueejheevtefgtdffvddukeelnecukfhppeduvdejrddtrddtrddupddugeejrdduheeirdegvddrheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhgrrhgtohhssehorhgtrgdrphgvthdpnhgspghrtghpthhtohepledprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepmhgrrhgtohhssehorhgtrgdrphgvthdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdroh
+ hrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+DKIM-Signature: a=rsa-sha256; bh=X/42sBBdS5U7O2cvVD41aAwhluwIH1nuwQLgzreoPFM=;
+ c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1755771590;
  v=1;
- b=BultrdNBYhvdi669Qga+DOJa1f8TR4W8fJUcJgoICU0Nozw7GoaGy8p9djdfFhDzInV+Y0bS
- p777+2mquBuaFC1UUBNeawhFUhaRMOz1Qw/GrWkWqbMhIUp9oELzf1Bfkge92Qrbk3JgfJ5RQNE
- WwM8p8TaI0qSmsWH58UcbjjYwi8ingC5v+ZxvffJTxWeHTYNW+7VljM/a9MMMNX8jDdwNYQtJKO
- YUEv/J0k2qTlVtWVCxuSxDwlSEJWJZykMp3RIIbcyC1TF9qxuwDO3DC946Qoeu6C8AeozTNfIRj
- WAQddxr+dQuijWHywzx7soBj2HmWSnMttaQTA+D/phMkA==
+ b=Xaev/zgvZj+ULtrtrlK/R/tTC2D6mgvOYWpZjKg5b5JK6xFzDWKLG7oR3Rd1GNcubedOEan7
+ HHVCVqJDniLBJwdte3hq66CsyHSvmFz1LKUfA3c0VKfhrhhIWUEZjFT+XiobJof9VtH4GhbVYnM
+ 0gJGfB/K9NtSQD3DriVbiMfQy1rV4cnxgiHoZPW1/jo2kwcF7fhuZj0A4I+6otH+m/WQSu36Cie
+ qAJmT5jjy/JVEh3Yf5doDe5BLx+oQSWzC92g4CnjYqubROTgyw9CVQADkf5YpC5RAIJcb68ufI4
+ ypLjuExxIYxw+Rkpgfdbd/vfJhjbmTDHHtfYOq1PHAT5Q==
 
-Add a new simple GPIO device driver for Vortex86 lines of SoCs,
-implemented according to their programming reference manual [1].
-
-This is required for detecting the status of the poweroff button and
-performing the poweroff sequence on ICOP eBox computers.
-
-IRQs are not implemented, as they are only available for ports 0 and 1,
-none which are accessible on my test machine (an EBOX-3352-GLW).
-
-[1]:
-http://www.dmp.com.tw/tech/DMP_Vortex86_Series_Software_Programming_Reference_091216.pdf
+This new driver loads resources related to southbridges available in DM&P
+Vortex devices, currently only the GPIO pins.
 
 Signed-off-by: Marcos Del Sol Vives <marcos@orca.pet>
 ---
- MAINTAINERS                |   5 ++
- drivers/gpio/Kconfig       |  11 ++++
- drivers/gpio/Makefile      |   1 +
- drivers/gpio/gpio-vortex.c | 110 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 127 insertions(+)
- create mode 100644 drivers/gpio/gpio-vortex.c
+ MAINTAINERS             |  1 +
+ drivers/mfd/Kconfig     |  9 +++++
+ drivers/mfd/Makefile    |  1 +
+ drivers/mfd/vortex-sb.c | 81 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci_ids.h |  1 +
+ 5 files changed, 93 insertions(+)
+ create mode 100644 drivers/mfd/vortex-sb.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index daf520a13bdf..8c3098a39411 100644
+index 8c3098a39411..bc0c541309dd 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -26953,6 +26953,11 @@ VOLTAGE AND CURRENT REGULATOR IRQ HELPERS
- R:	Matti Vaittinen <mazziesaccount@gmail.com>
- F:	drivers/regulator/irq_helpers.c
+@@ -26957,6 +26957,7 @@ VORTEX HARDWARE SUPPORT
+ R:	Marcos Del Sol Vives <marcos@orca.pet>
+ S:	Maintained
+ F:	drivers/gpio/gpio-vortex.c
++F:	drivers/mfd/vortex-sb.c
  
-+VORTEX HARDWARE SUPPORT
-+R:	Marcos Del Sol Vives <marcos@orca.pet>
-+S:	Maintained
-+F:	drivers/gpio/gpio-vortex.c
-+
  VRF
  M:	David Ahern <dsahern@kernel.org>
- L:	netdev@vger.kernel.org
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index e43abb322fa6..cd2b1e105908 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1077,6 +1077,17 @@ config GPIO_TS5500
- 	  blocks of the TS-5500: DIO1, DIO2 and the LCD port, and the TS-5600
- 	  LCD port.
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 425c5fba6cb1..fe54bb22687d 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -2008,6 +2008,15 @@ config MFD_VX855
+ 	  VIA VX855/VX875 south bridge. You will need to enable the vx855_spi
+ 	  and/or vx855_gpio drivers for this to do anything useful.
  
-+config GPIO_VORTEX
-+	tristate "Vortex SoC GPIO support"
-+	select REGMAP_MMIO
-+	select GPIO_REGMAP
++config MFD_VORTEX_SB
++	tristate "Vortex southbridge"
++	select MFD_CORE
++	depends on PCI
 +	help
-+	  Driver to access the five 8-bit bidirectional GPIO ports present on
-+	  all DM&P Vortex SoCs.
++	  Say yes here if you want to have support for the southbridge
++	  present on Vortex SoCs. You will need to enable the vortex-gpio
++	  driver for this to do anything useful.
 +
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called gpio-vortex.
-+
- config GPIO_WINBOND
- 	tristate "Winbond Super I/O GPIO support"
- 	select ISA_BUS_API
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 379f55e9ed1e..7b8626c9bd75 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -197,6 +197,7 @@ obj-$(CONFIG_GPIO_VIPERBOARD)		+= gpio-viperboard.o
- obj-$(CONFIG_GPIO_VIRTUSER)		+= gpio-virtuser.o
- obj-$(CONFIG_GPIO_VIRTIO)		+= gpio-virtio.o
- obj-$(CONFIG_GPIO_VISCONTI)		+= gpio-visconti.o
-+obj-$(CONFIG_GPIO_VORTEX)		+= gpio-vortex.o
- obj-$(CONFIG_GPIO_VX855)		+= gpio-vx855.o
- obj-$(CONFIG_GPIO_WCD934X)		+= gpio-wcd934x.o
- obj-$(CONFIG_GPIO_WHISKEY_COVE)		+= gpio-wcove.o
-diff --git a/drivers/gpio/gpio-vortex.c b/drivers/gpio/gpio-vortex.c
+ config MFD_ARIZONA
+ 	select REGMAP
+ 	select REGMAP_IRQ
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index f7bdedd5a66d..2504ba311f1a 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -202,6 +202,7 @@ obj-$(CONFIG_MFD_JANZ_CMODIO)	+= janz-cmodio.o
+ obj-$(CONFIG_MFD_TPS6586X)	+= tps6586x.o
+ obj-$(CONFIG_MFD_VX855)		+= vx855.o
+ obj-$(CONFIG_MFD_WL1273_CORE)	+= wl1273-core.o
++obj-$(CONFIG_MFD_VORTEX_SB)	+= vortex-sb.o
+ 
+ si476x-core-y := si476x-cmd.o si476x-prop.o si476x-i2c.o
+ obj-$(CONFIG_MFD_SI476X_CORE)	+= si476x-core.o
+diff --git a/drivers/mfd/vortex-sb.c b/drivers/mfd/vortex-sb.c
 new file mode 100644
-index 000000000000..6fc184942e7f
+index 000000000000..ef9bbe2d3870
 --- /dev/null
-+++ b/drivers/gpio/gpio-vortex.c
-@@ -0,0 +1,110 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/drivers/mfd/vortex-sb.c
+@@ -0,0 +1,81 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ *  GPIO driver for Vortex86 SoCs
++ *  MFD southbridge driver for Vortex SoCs
 + *
 + *  Author: Marcos Del Sol Vives <marcos@orca.pet>
++ *
++ *  Based on the RDC321x MFD driver by Florian Fainelli and Bernhard Loos
 + */
 +
-+#include <linux/types.h>
-+#include <linux/errno.h>
 +#include <linux/module.h>
-+#include <linux/ioport.h>
-+#include <linux/spinlock.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/gpio/regmap.h>
-+#include <linux/regmap.h>
-+#include <linux/ioport.h>
-+#include <linux/types.h>
++#include <linux/kernel.h>
 +#include <linux/platform_device.h>
++#include <linux/pci.h>
++#include <linux/mfd/core.h>
 +
-+#define DAT_RANGE 0
-+#define DIR_RANGE 1
-+
-+struct vortex_gpio {
-+	struct regmap_range ranges[2];
-+	struct regmap_access_table access_table;
++static const struct resource vortex_gpio_resources[] = {
++	{
++		.name	= "dat",
++		.start	= 0x78,
++		.end	= 0x7C,
++		.flags	= IORESOURCE_IO,
++	}, {
++		.name	= "dir",
++		.start	= 0x98,
++		.end	= 0x9C,
++		.flags	= IORESOURCE_IO,
++	}
 +};
 +
-+static int vortex_gpio_probe(struct platform_device *pdev)
++static const struct mfd_cell vortex_sb_cells[] = {
++	{
++		.name		= "vortex-gpio",
++		.resources	= vortex_gpio_resources,
++		.num_resources	= ARRAY_SIZE(vortex_gpio_resources),
++	},
++};
++
++static int vortex_sb_probe(struct pci_dev *pdev,
++					const struct pci_device_id *ent)
 +{
-+	struct gpio_regmap_config gpiocfg = {};
-+	struct resource *dat_res, *dir_res;
-+	struct device *dev = &pdev->dev;
-+	struct regmap_config rmcfg = {};
-+	unsigned long io_start, io_end;
-+	struct vortex_gpio *priv;
-+	struct regmap *map;
-+	void __iomem *regs;
++	int err;
 +
-+	dat_res = platform_get_resource_byname(pdev, IORESOURCE_IO, "dat");
-+	if (unlikely(!dat_res)) {
-+		dev_err(dev, "failed to get data register\n");
++	/*
++	 * In the Vortex86DX3, the southbridge appears twice (on both 00:07.0
++	 * and 00:07.1). Register only once for .0.
++	 *
++	 * Other Vortex boards (eg Vortex86MX+) have the southbridge exposed
++	 * only once, also at 00:07.0.
++	 */
++	if (PCI_FUNC(pdev->devfn) != 0)
 +		return -ENODEV;
++
++	err = pci_enable_device(pdev);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable device\n");
++		return err;
 +	}
 +
-+	dir_res = platform_get_resource_byname(pdev, IORESOURCE_IO, "dir");
-+	if (unlikely(!dir_res)) {
-+		dev_err(dev, "failed to get direction register\n");
-+		return -ENODEV;
-+	}
-+
-+	if (unlikely(resource_size(dat_res) != resource_size(dir_res))) {
-+		dev_err(dev, "data and direction size mismatch\n");
-+		return -EINVAL;
-+	}
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(struct vortex_gpio),
-+			    GFP_KERNEL);
-+	if (unlikely(!priv))
-+		return -ENOMEM;
-+	pdev->dev.driver_data = priv;
-+
-+	/* Map an I/O window that covers both data and direction */
-+	io_start = min(dat_res->start, dir_res->start);
-+	io_end = max(dat_res->end, dir_res->end);
-+	regs = devm_ioport_map(dev, io_start, io_end - io_start + 1);
-+	if (unlikely(!regs))
-+		return -ENOMEM;
-+
-+	/* Dynamically build access table from gpiocfg */
-+	priv->ranges[DAT_RANGE].range_min = dat_res->start - io_start;
-+	priv->ranges[DAT_RANGE].range_max = dat_res->end - io_start;
-+	priv->ranges[DIR_RANGE].range_min = dir_res->start - io_start;
-+	priv->ranges[DIR_RANGE].range_max = dir_res->end - io_start;
-+	priv->access_table.n_yes_ranges = ARRAY_SIZE(priv->ranges);
-+	priv->access_table.yes_ranges = priv->ranges;
-+
-+	rmcfg.reg_bits = 8;
-+	rmcfg.val_bits = 8;
-+	rmcfg.io_port = true;
-+	rmcfg.wr_table = &priv->access_table;
-+	rmcfg.rd_table = &priv->access_table;
-+
-+	map = devm_regmap_init_mmio(dev, regs, &rmcfg);
-+	if (unlikely(IS_ERR(map)))
-+		return dev_err_probe(dev, PTR_ERR(map),
-+				     "Unable to initialize register map\n");
-+
-+	gpiocfg.parent = dev;
-+	gpiocfg.regmap = map;
-+	gpiocfg.ngpio = 8 * resource_size(dat_res);
-+	gpiocfg.ngpio_per_reg = 8;
-+	gpiocfg.reg_dat_base = GPIO_REGMAP_ADDR(priv->ranges[DAT_RANGE].range_min);
-+	gpiocfg.reg_set_base = GPIO_REGMAP_ADDR(priv->ranges[DAT_RANGE].range_min);
-+	gpiocfg.reg_dir_out_base = GPIO_REGMAP_ADDR(priv->ranges[DIR_RANGE].range_min);
-+	gpiocfg.flags = GPIO_REGMAP_DIR_BEFORE_SET;
-+
-+	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpiocfg));
++	return devm_mfd_add_devices(&pdev->dev, -1,
++				    vortex_sb_cells,
++				    ARRAY_SIZE(vortex_sb_cells),
++				    NULL, 0, NULL);
 +}
 +
-+static struct platform_driver vortex_gpio_driver = {
-+	.driver.name = "vortex-gpio",
-+	.probe = vortex_gpio_probe,
++static const struct pci_device_id vortex_sb_table[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_RDC, PCI_DEVICE_ID_RDC_R6035) },
++	{}
++};
++MODULE_DEVICE_TABLE(pci, vortex_sb_table);
++
++static struct pci_driver vortex_sb_driver = {
++	.name		= "vortex-sb",
++	.id_table	= vortex_sb_table,
++	.probe		= vortex_sb_probe,
 +};
 +
-+module_platform_driver(vortex_gpio_driver);
++module_pci_driver(vortex_sb_driver);
 +
 +MODULE_AUTHOR("Marcos Del Sol Vives <marcos@orca.pet>");
-+MODULE_DESCRIPTION("GPIO driver for Vortex86 SoCs");
 +MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:vortex-gpio");
++MODULE_DESCRIPTION("Vortex MFD southbridge driver");
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 92ffc4373f6d..2ff8a593ef72 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2412,6 +2412,7 @@
+ #define PCI_VENDOR_ID_RDC		0x17f3
+ #define PCI_DEVICE_ID_RDC_R6020		0x6020
+ #define PCI_DEVICE_ID_RDC_R6030		0x6030
++#define PCI_DEVICE_ID_RDC_R6035		0x6035
+ #define PCI_DEVICE_ID_RDC_R6040		0x6040
+ #define PCI_DEVICE_ID_RDC_R6060		0x6060
+ #define PCI_DEVICE_ID_RDC_R6061		0x6061
 -- 
 2.34.1
 
