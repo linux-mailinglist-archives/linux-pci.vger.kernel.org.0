@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-34451-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34452-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 230DDB2F5AB
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 12:52:16 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C93BAB2F5AD
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 12:52:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 884251CC5E8B
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 10:51:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6F1B67A5C89
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 10:51:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEC733090C1;
-	Thu, 21 Aug 2025 10:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B7EB3090D3;
+	Thu, 21 Aug 2025 10:52:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IB04F8o0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZiMedDg"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5882308F11;
-	Thu, 21 Aug 2025 10:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22E13090CC;
+	Thu, 21 Aug 2025 10:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755773492; cv=none; b=pxlEQSvnScYX4PmS1DsUPCO37FLGOVFY8We6dwGjL0TtScPBc/890+RtrPmh0wSaJ/mCMBZN1iDZFbvOXhscs60oisNcIMJ2LOVimJfVQ1o7MHe/hPvAOWOqRIifI+CwmCrWw/s94gR30Y36nhg5loivS4M9IJ/nKP3i0vjC89E=
+	t=1755773565; cv=none; b=XGHc9z04xxhsDYuxMbQ044f8uVh3i/oam+oAAscEAUUamPEg7h8YPjPhUZR+OUE09yC9xYSBff5z5DoAz9WCb5GT+PbcrMkFdRCwNRCrAvHRBU9ngfPzFqYb7n04rNrykFV8w4VAKBZf1oO3rPYFsYBxgCj+ZKe6n5PaQ0z5Ar4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755773492; c=relaxed/simple;
-	bh=cMytUFE1fmlfUaGX9cWvvFMAHcz0yzHNBDICGtrf7sk=;
+	s=arc-20240116; t=1755773565; c=relaxed/simple;
+	bh=R1V1AwRna/S8N/EhSnIaw17FsINeg5f7DVVQw8h2ON4=;
 	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=PpA5ZONW2jL18+xXW7JPqhxSz4WFXcmxmbx37zBD/xcBu+gWhHpk0hHaZBL8wIaYos/ExlTY0RKo8blnRyG6wuxtCb1geuDbq2AKyyKswOVjVFXmF10rp6qLzm8o2BH+1Ryv0q6T5IbglbDDAk+f2ZtF+5xBp14ODDP0sevTzFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IB04F8o0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D22FC4CEEB;
-	Thu, 21 Aug 2025 10:51:28 +0000 (UTC)
+	 References:In-Reply-To; b=kipHYkNHldB3l7r/BHWLIRKJ9/XKEbL/O8pnXOS5Z92Os7tgJlhUoyYgHu1U9XUijaPKE+OPmVGP+Z953LfIoJlWYd+cAgYJSoAqJRv2lziwcn/7xYmPWsPvRDovX5DDASYrDVm5TaRd0TLQM+2LquD1FfXEcJRWbNQnwFPQwrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZiMedDg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42508C4CEED;
+	Thu, 21 Aug 2025 10:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755773492;
-	bh=cMytUFE1fmlfUaGX9cWvvFMAHcz0yzHNBDICGtrf7sk=;
+	s=k20201202; t=1755773564;
+	bh=R1V1AwRna/S8N/EhSnIaw17FsINeg5f7DVVQw8h2ON4=;
 	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=IB04F8o0JStewSEpV2ymvEO/zxxGwgvH1bK6Jr2UUPMiahi7qVV2NkjTaCjC00iZ8
-	 BBv36c6YLtgB7Dl5ddxh3qtB0JFm6HgEoUG78aRRQBArXGRHlUeFJ7V4dB28g/tNaO
-	 1RkdVuZSm6ueWKFtwQAZ1s4JKLRHKOv+Tz4P6B0FsR0YMycztEt2sDxfITlSvhYjdi
-	 4Q1zdq6f3oz9kqvLBfDD4gEidTRkppcS8ClTsTQX+n80DKy8I/WXLW1UUn3HC+REU8
-	 d5vKL5tMXNFT4vtyCuWzJ+2lyDJDiuGGwYdk+dLjbAwiL98bFT3qfLjmo/rHNFVv/i
-	 iS7H8QZ8pfwAA==
+	b=cZiMedDgUMqwW3c+r9YzeXcJDpQqFJYlJ78w2zvhV9OUFIDzp56Gb1oMLnNNJYyz/
+	 AhsjENOCWk4xjaeuNqrxJdVNOmuOwmbygmsyKgM1eV3nLDHQg902o4M+KWuLNekYGi
+	 K6Avk/aw0OdBeQIGOqjAuqbS0OXHXsCiEWCXsx9l4Dv+IOsKkJW8duuI0PSYdGK2nw
+	 E9AFbwyanXElhVNV34z2bpjdcJCh3vcDVfJEcCPCYkh3LgLnDSVb4fxgojqTGrD73v
+	 BZ86KcW+d1VwgjHPXCDOGXdvQuK3hwdxrDobRO877jYn9kAe338WWnL1ZoiENoegu2
+	 OmJb8j7tECFrg==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -49,10 +49,10 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 21 Aug 2025 12:51:26 +0200
-Message-Id: <DC81R8RHTHTC.3J58ODZD3UQLQ@kernel.org>
-Subject: Re: [PATCH v5 1/4] rust: pci: provide access to PCI Class and
- Class-related items
+Date: Thu, 21 Aug 2025 12:52:38 +0200
+Message-Id: <DC81S5SN8N76.YH4323TLNHJK@kernel.org>
+Subject: Re: [PATCH v5 3/4] gpu: nova-core: avoid probing
+ non-display/compute PCI functions
 Cc: "Alexandre Courbot" <acourbot@nvidia.com>, "Joel Fernandes"
  <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>, "Alistair Popple"
  <apopple@nvidia.com>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
@@ -69,32 +69,34 @@ Cc: "Alexandre Courbot" <acourbot@nvidia.com>, "Joel Fernandes"
 To: "John Hubbard" <jhubbard@nvidia.com>
 From: "Danilo Krummrich" <dakr@kernel.org>
 References: <20250821044207.3732-1-jhubbard@nvidia.com>
- <20250821044207.3732-2-jhubbard@nvidia.com>
-In-Reply-To: <20250821044207.3732-2-jhubbard@nvidia.com>
+ <20250821044207.3732-4-jhubbard@nvidia.com>
+In-Reply-To: <20250821044207.3732-4-jhubbard@nvidia.com>
 
 On Thu Aug 21, 2025 at 6:42 AM CEST, John Hubbard wrote:
-> Allow callers to write Class::STORAGE_SCSI instead of
-> bindings::PCI_CLASS_STORAGE_SCSI, for example.
+> NovaCore has so far been too imprecise about figuring out if .probe()
+> has found a supported PCI PF (Physical Function). By that I mean:
+> .probe() sets up BAR0 (which involves a lot of very careful devres and
+> Device<Bound> details behind the scenes). And then if it is dealing with
+> a non-supported device such as the .1 audio PF on many GPUs, it fails
+> out due to an unexpected BAR0 size. We have been fortunate that the BAR0
+> sizes are different.
 >
-> New APIs:
->     Class::STORAGE_SCSI, Class::NETWORK_ETHERNET, etc.
->     Class::as_raw()
->     Class: From<u32> for Class
->     ClassMask: Full, ClassSubclass
->     Device::pci_class()
+> Really, we should be filtering on PCI class ID instead. These days I
+> think we can confidently pick out Nova's supported PF's via PCI class
+> ID. And if not, then we'll revisit.
+>
+> The approach here is to filter on "Display VGA" or "Display 3D", which
+> is how PCI class IDs express "this is a modern GPU's PF".
 >
 > Cc: Danilo Krummrich <dakr@kernel.org>
 > Cc: Alexandre Courbot <acourbot@nvidia.com>
 > Cc: Elle Rhumsaa <elle@weathered-steel.dev>
 > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 > ---
->  rust/kernel/pci.rs    |  10 ++
->  rust/kernel/pci/id.rs | 239 ++++++++++++++++++++++++++++++++++++++++++
+>  drivers/gpu/nova-core/driver.rs | 33 ++++++++++++++++++++++++++++-----
+>  rust/kernel/pci.rs              | 21 +++++++++++++++++++++
 
-Please add rust/kernel/pci/ to the maintainers entry.
+Can you please split this one up in two patches?
 
-(Would have done on apply, but I have another comment on patch 3.)
-
->  2 files changed, 249 insertions(+)
->  create mode 100644 rust/kernel/pci/id.rs
+>  2 files changed, 49 insertions(+), 5 deletions(-)
 
