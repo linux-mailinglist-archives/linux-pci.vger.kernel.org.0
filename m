@@ -1,175 +1,128 @@
-Return-Path: <linux-pci+bounces-34458-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34459-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A799B2FD38
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 16:48:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 605D8B2FD24
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 16:45:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D42F41BC14C4
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 14:34:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9D006261E9
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Aug 2025 14:37:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6635A2E3B0E;
-	Thu, 21 Aug 2025 14:32:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D3351DED47;
+	Thu, 21 Aug 2025 14:36:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l8esBDFW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6iu2OSG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E9D2E040A;
-	Thu, 21 Aug 2025 14:32:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D8515990C;
+	Thu, 21 Aug 2025 14:36:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755786742; cv=none; b=npiozC/no/Tg4ANXG0AlcMf9+z48XLG67Y4erMiyyX8IUhXC6p8BZr2hVVQ14to64Myxyv3aKvuNzVz05EYH1qCXkuVUbKxud8idoZNwjvQqQjTy1jwFaZLyN5bqdXOnXR+SdSCody1dsGX6CR7yXC8Z5OQsYxXs51j04H3nfLM=
+	t=1755787002; cv=none; b=asAlG0foKIH0tuF1k0ze1PdmTXTXSB6AD7aBZ1gV+RvhclcGRd2BhLOeaTXOUehPcO5nwjmU30ntBS2+UPxic7z9BVNqjqgUc6PtLrrUhFvUiMTmlIdtOQmgVkaWquj9Kpv8cPxIZonMB7I4nt7q33wVCUGtwnuh9BYpopdz7Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755786742; c=relaxed/simple;
-	bh=n+5U3Ajo9CPdPYE9OkkNwNh9TdRRM7/xm0O4mUb7XA0=;
+	s=arc-20240116; t=1755787002; c=relaxed/simple;
+	bh=mslOxpgPXJUH1lPNo77g9hu/LctQ1v616V6U+vFUEuw=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MdvTyNQHpBqSnBV5T0o2fSzx4A2e7S0ioAuYswioBTX0Nq9ft91MuxDYeVif96tS+EZbqI8fhYVJWXTIv2CWl/mzuqE9p8hTim1+qEcs0Nv13tl23OvulPl0c083J8D02nnIhWu2ZBFHpVQBv2yFJsnaCuB/i3QOKH+mwoK3zVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l8esBDFW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A558C4CEEB;
-	Thu, 21 Aug 2025 14:32:21 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=os3HuXvjXyUQEVR4Svf1Cr5tzZuCelb6Utu6xdG7oZaWnpbF7Na7NXzUW6Q5sg1WqunMj9uuKbVnlwx6YdGX4sDV9K/1BboVBOVGr+2PYRRheECG2WzWhj6nKJkhFaRkZJjooF6r1nsoKGoaKVGPp8GY8OfAMP8pBdF3HaSIKI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6iu2OSG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 555F0C4CEF4;
+	Thu, 21 Aug 2025 14:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755786741;
-	bh=n+5U3Ajo9CPdPYE9OkkNwNh9TdRRM7/xm0O4mUb7XA0=;
+	s=k20201202; t=1755787002;
+	bh=mslOxpgPXJUH1lPNo77g9hu/LctQ1v616V6U+vFUEuw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=l8esBDFWkdo5FMXizHgOaA3Pu7BewNIy2MTdYBeGm+MekBPAlKM5dIurjSb8oXLUi
-	 rN3C9gvxyyZkApNaGMjka/oS3F/Af1eoBfVgKbDt3KRK9eVOQu8CymbkjIl1MY+Ixk
-	 2L5g5qJ3PMa8zbxaXBEwc1QhQr9O2Kmj81bs59s/DEMQLxxoaxaZC5ES2Q45spxFec
-	 Pc0zsYrd6P3EFpyHZZLYixYbwDgoahmiE90lHEJC2jFnmRwKfyqbJNsrOq4Ypp7829
-	 uqADlwavkWuTHZa7rCDnNd1Lw6Xq9vrD775tja73LnF5L4HNRUnZuJKs4N/z8ccrtm
-	 FjfktkxYnX7hg==
-Date: Thu, 21 Aug 2025 09:32:20 -0500
+	b=A6iu2OSGmM5F1jb5AqsqgYWlPZCfFqiYce5lrehvWxbBEyzLtTugwCQ4UGIpAtGeH
+	 mtXyP9+eEm+EFKT4gEUFyaIoCIDv5XNhwDCOa3jvLtDuDZYg33VdJX7b7Yl8kmLZ9u
+	 iLbs+755oUD1UrtOUrRlDUwrVxTj8IkR69l7289qRT5MJA0eBuREIH/L6CVrmsdp0T
+	 mLLjoVacNl46v5K1/5ChCpVyJucsu7GcEhhimHvKynGX/OCfZQkyq28l5Du8EYubRz
+	 p4BICIvF1YIdMPBefiXzoc/4IDuhp9H9xTmQUHegAg23odDaBn5/W1j5TSv2jquBSt
+	 et6DDYaC4EjkA==
+Date: Thu, 21 Aug 2025 09:36:41 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Marcos Del Sol Vives <marcos@orca.pet>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Michael Walle <mwalle@kernel.org>, Lee Jones <lee@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] gpio: gpio-regmap: add flags to control some
- behaviour
-Message-ID: <20250821143220.GA672670@bhelgaas>
+To: Hongxing Zhu <hongxing.zhu@nxp.com>
+Cc: Frank Li <frank.li@nxp.com>,
+	"jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+	"l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RESEND v3 4/5] PCI: dwc: Skip PME_Turn_Off message if there is
+ no endpoint connected
+Message-ID: <20250821143641.GA672933@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250821101902.626329-2-marcos@orca.pet>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AS8PR04MB88334A22726CF287D41775DC8C32A@AS8PR04MB8833.eurprd04.prod.outlook.com>
 
-Not my area, but consider making the subject more specific, e.g.,
-"add flag to set direction before value"
-
-On Thu, Aug 21, 2025 at 12:18:57PM +0200, Marcos Del Sol Vives wrote:
-> The Vortex86 family of SoCs need the direction set before the value, else
-> writes to the DATA ports are ignored.
+On Thu, Aug 21, 2025 at 05:44:00AM +0000, Hongxing Zhu wrote:
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: 2025年8月20日 3:07
+> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > Cc: Frank Li <frank.li@nxp.com>; jingoohan1@gmail.com;
+> > l.stach@pengutronix.de; lpieralisi@kernel.org; kwilczynski@kernel.org;
+> > mani@kernel.org; robh@kernel.org; bhelgaas@google.com;
+> > shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
+> > festevam@gmail.com; linux-pci@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; imx@lists.linux.dev;
+> > linux-kernel@vger.kernel.org
+> > Subject: Re: [RESEND v3 4/5] PCI: dwc: Skip PME_Turn_Off message if there is
+> > no endpoint connected
+> >
+> > On Mon, Aug 18, 2025 at 03:32:04PM +0800, Richard Zhu wrote:
+> > > Skip PME_Turn_Off message if there is no endpoint connected.
+> >
+> > What's the value of doing this?  Is this to make something faster?  If so,
+> > what and by how much?
+> >
+> > Or does it fix something that's currently broken?
+> >
+> > Seems like the discussion at
+> > https://lore.kern/
+> > el.org%2Flinux-pci%2F20241107084455.3623576-1-hongxing.zhu%40nxp.com%
+> > 2Ft%2F%23u&data=05%7C02%7Chongxing.zhu%40nxp.com%7Ced46fe10aeb74
+> > 21c88a508dddf53a24f%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7
+> > C638912272493755203%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOn
+> > RydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%
+> > 3D%3D%7C0%7C%7C%7C&sdata=lIE7%2FlS5jiGxGPGVm5Hr5efpMbT19CLqrwu
+> > YNvAEdLY%3D&reserved=0
+> > might be relevant.
+> >
+> > This commit log only restates what the code does.  In my opinion we need
+> > actual justification for making this change.
+> Hi Bjorn:
+> Thanks for your comments.
+> This commit is mainly used to fix suspend/resume broken on i.MX7D PCIe.
+> A chip freeze is observed on i.MX7D when PCIe RC kicks off the PM_PME message
+> and no any devices are connected on the port.
 > 
-> This commit adds a new "flags" field plus a flag to change the default
-> behaviour, which is to set first the direction and then the value.
-
-This sounds like the default behavior is to set direction, then value.
-But from the patch, it looks like:
-
-  - default: set value, then direction
-
-  - with GPIO_REGMAP_DIR_BEFORE_SET: set direction, then value
-
-> Signed-off-by: Marcos Del Sol Vives <marcos@orca.pet>
-> ---
->  drivers/gpio/gpio-regmap.c  | 17 ++++++++++++++++-
->  include/linux/gpio/regmap.h | 17 +++++++++++++++++
->  2 files changed, 33 insertions(+), 1 deletion(-)
+> Because i.MX7D is a very old design, and out of IP design technical support.
+>  I don't know what's going on inside the PCIe IP design when kick off the
+>  PM_PME message.
 > 
-> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-> index e8a32dfebdcb..24cefbd57637 100644
-> --- a/drivers/gpio/gpio-regmap.c
-> +++ b/drivers/gpio/gpio-regmap.c
-> @@ -31,6 +31,7 @@ struct gpio_regmap {
->  	unsigned int reg_clr_base;
->  	unsigned int reg_dir_in_base;
->  	unsigned int reg_dir_out_base;
-> +	unsigned int flags;
->  
->  	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
->  			      unsigned int offset, unsigned int *reg,
-> @@ -196,7 +197,20 @@ static int gpio_regmap_direction_input(struct gpio_chip *chip,
->  static int gpio_regmap_direction_output(struct gpio_chip *chip,
->  					unsigned int offset, int value)
->  {
-> -	gpio_regmap_set(chip, offset, value);
-> +	struct gpio_regmap *gpio = gpiochip_get_data(chip);
-> +	int ret;
-> +
-> +	if (gpio->flags & GPIO_REGMAP_DIR_BEFORE_SET) {
-> +		ret = gpio_regmap_set_direction(chip, offset, true);
-> +		if (ret)
-> +			return ret;
-> +
-> +		return gpio_regmap_set(chip, offset, value);
-> +	}
-> +
-> +	ret = gpio_regmap_set(chip, offset, value);
-> +	if (ret)
-> +		return ret;
->  
->  	return gpio_regmap_set_direction(chip, offset, true);
->  }
-> @@ -247,6 +261,7 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
->  	gpio->reg_clr_base = config->reg_clr_base;
->  	gpio->reg_dir_in_base = config->reg_dir_in_base;
->  	gpio->reg_dir_out_base = config->reg_dir_out_base;
-> +	gpio->flags = config->flags;
->  
->  	chip = &gpio->gpio_chip;
->  	chip->parent = config->parent;
-> diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-> index c722c67668c6..aea107e71fec 100644
-> --- a/include/linux/gpio/regmap.h
-> +++ b/include/linux/gpio/regmap.h
-> @@ -12,6 +12,20 @@ struct regmap;
->  #define GPIO_REGMAP_ADDR_ZERO ((unsigned int)(-1))
->  #define GPIO_REGMAP_ADDR(addr) ((addr) ? : GPIO_REGMAP_ADDR_ZERO)
->  
-> +
-> +/**
-> + * enum gpio_regmap_flags - flags to control GPIO operation
-> + */
-> +enum gpio_regmap_flags {
-> +	/**
-> +	 * @GPIO_REGMAP_DIR_BEFORE_SET: when setting a pin as an output, set
-> +	 * its direction before the value. The output value will be undefined
-> +	 * for a short time which may have unwanted side effects, but some
-> +	 * hardware requires this.
-> +	 */
-> +	GPIO_REGMAP_DIR_BEFORE_SET	= BIT(0),
-> +};
-> +
->  /**
->   * struct gpio_regmap_config - Description of a generic regmap gpio_chip.
->   * @parent:		The parent device
-> @@ -23,6 +37,8 @@ struct regmap;
->   *			If not given, the name of the device is used.
->   * @ngpio:		(Optional) Number of GPIOs
->   * @names:		(Optional) Array of names for gpios
-> + * @flags:		(Optional) A bitmask of flags from
-> + * 			&enum gpio_regmap_flags
->   * @reg_dat_base:	(Optional) (in) register base address
->   * @reg_set_base:	(Optional) set register base address
->   * @reg_clr_base:	(Optional) clear register base address
-> @@ -68,6 +84,7 @@ struct gpio_regmap_config {
->  	const char *label;
->  	int ngpio;
->  	const char *const *names;
-> +	unsigned int flags;
->  
->  	unsigned int reg_dat_base;
->  	unsigned int reg_set_base;
-> -- 
-> 2.34.1
-> 
+> From SW perspective view, what I can do is to find out a quirk method to
+>  workaround this broken. Hope this can clear up your confusions.
+
+OK, will look for some of this background in the commit log of the
+next version.
 
