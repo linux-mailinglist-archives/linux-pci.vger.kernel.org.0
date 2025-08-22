@@ -1,230 +1,170 @@
-Return-Path: <linux-pci+bounces-34529-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34530-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92CE6B3114E
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 10:12:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59B85B311A5
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 10:24:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B61303B16A4
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 08:07:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F35C1CC0D35
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 08:20:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2777A2EAB8D;
-	Fri, 22 Aug 2025 08:06:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 536272EBB8C;
+	Fri, 22 Aug 2025 08:19:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EUr9GDfD"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="j6JP2Gcc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7FE125A640;
-	Fri, 22 Aug 2025 08:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6963C26656D;
+	Fri, 22 Aug 2025 08:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755850001; cv=none; b=AegmDU7xDZED7/VuaOe4MMc4HdnXTb74r8szdQIf0tHkkxQuaL5rC2XPfcvrWNWWhNH0sDWmEbgy/X4QF4E8ZK20RXGlXeonxtak9/p37NBQZYzz7UzPCmMJ1LDl9IcG0KQrXzIFEfj+0g2iuK0PbQnWEY3CxkOw3KGd/usaVtY=
+	t=1755850793; cv=none; b=R59TkpTyHoZqA5ntmsH3Qpd1bwi5+Ykhpovzp+GhflFZrWaD2+e0o8PZ7H1ww9+01jkkN2RNFkNLn9L0WAOONqEFuc42N5+2M+2UmLfGwZguwZqZckiey8Bat3UUzT1PQMK8cRigs9wk4v7YallqiA9idShLgJT9fEMUmMfce8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755850001; c=relaxed/simple;
-	bh=h+QAsLHcHphnO5GHj6GjYLiZ/feVrj2o6O4fk/onQb8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pBj4klmyY6L3LpIgIzJoQdwNlVyKUZXWcEwpglEmJighw4zBiUrwnhqZueop/c97Sj+negZYv112VB+q98ywVF9sgNB0jTL+yqce201aDkWBWUYEWyH8opuGgaN0gj7L9TQN7dhBv0Lo95YHdCG9lcdZg5RxJsmbalj1IvVQ6sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EUr9GDfD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78C23C4CEF1;
-	Fri, 22 Aug 2025 08:06:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755850000;
-	bh=h+QAsLHcHphnO5GHj6GjYLiZ/feVrj2o6O4fk/onQb8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EUr9GDfD8Z2950nOET7InqJEUXnuDGDPMhoubseAdozACiGlBK9WLmCcMw0riNAya
-	 eJbMRl4Na+cluvsk6Qp4rq4LrLT/z4vNyMErnuxoTVVUv4pzP9pgnGSimpBWXLGc4D
-	 1iHa3t0ihZVXmRNtyPBaXrt7opCcjmsKh6FIcDggpQ2oYAyJaRs+/A5EaKKmnEquRS
-	 xKdwzcZjlspSypdDJlP4aUlD0F0eh4uccQ8oiZ/mQQ0K25BrhCCiUC1DOKc3XuH2jj
-	 8uCxJcjFV1VzZflj0phVSvaRaP1lMICpLjU+5wigQuGrHQMYv6rFpj/yc5xZcMGC1m
-	 HO/xN2j5kiaKA==
-Date: Fri, 22 Aug 2025 13:36:23 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org, 
-	kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com, 
-	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v5 1/3] PCI: qcom: Add equalization settings for 8.0 GT/s
- and 32.0 GT/s
-Message-ID: <z54p5x5u56u7dprrlv3obzhxotjgimbufa2spajoqvnlrevgdd@4dejnkmiegrh>
-References: <20250819071649.1531437-1-ziyue.zhang@oss.qualcomm.com>
- <20250819071649.1531437-2-ziyue.zhang@oss.qualcomm.com>
+	s=arc-20240116; t=1755850793; c=relaxed/simple;
+	bh=60ouIOMZNI4fWnOHSbMHCMjtcFdSJqT/Ab/afS1Y3Mw=;
+	h=Message-ID:Date:MIME-Version:From:Subject:References:To:Cc:
+	 In-Reply-To:Content-Type; b=ZXyN+ubhp0EzMFsackww4xhJLrqpTht5z6C01IOnPVfz8QBskrUSmTsJM7V/z0JXusKr51qz4+VaVRxs41P72eBUsUqWtDig7ftjhxB0ohnLtDC0F685TAcSelfwsuF91RMYx9adMSxKjNkVB0JSo6G9VBRBpvjCs8/6BqmpmPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=j6JP2Gcc; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1755850760;
+	bh=W7YCuvCPw9irUhaTiH73c5zU7lbnLuDOyxSvUUqMIn4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To;
+	b=j6JP2GccDJteZxnoJt9uQbF0ew89mYn7uGfGLdsCKIa9Ga/e349GLYwEU0lG2SnVj
+	 cf80nbV/ESwbgtIOFrdjec6HKpNsry8D6z7Rp/csxKKpZapDPXfujCmiaduc4+SwW1
+	 nRBc/aGRl9FavqWIZjrXszaWBWe3vdE7X20HfRkY=
+X-QQ-mid: esmtpgz16t1755850751t6f1767cb
+X-QQ-Originating-IP: YQyxchHu0ua4Ds3I/SkKn4MXnSly7xSc9+Jbp9oLNbs=
+Received: from [198.18.0.1] ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 22 Aug 2025 16:18:53 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 18263725170358339871
+EX-QQ-RecipientCnt: 10
+Message-ID: <A6EC60FB84292EDF+4c8a74f7-6a65-47ee-bc0b-01ba77065ee8@uniontech.com>
+Date: Fri, 22 Aug 2025 16:18:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250819071649.1531437-2-ziyue.zhang@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+From: Zi Yao <liziyao@uniontech.com>
+Subject: [PATCH] PCI: Override PCIe bridge supported speeds for older Loongson
+ 3C6000 series steppings
+References: <>
+Content-Language: en-US
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, loongarch@lists.linux.dev,
+ =?UTF-8?B?6IGC6K+a?= <niecheng1@uniontech.com>,
+ Jun Zhan <zhanjun@uniontech.com>, linux-kernel@vger.kernel.org,
+ Lain Fearyncess Yang <fsf@live.com>, Mingcong Bai <baimingcong@aosc.io>,
+ Ayden Meng <aydenmeng@yeah.net>, Guan Wentao <guanwentao@uniontech.com>
+In-Reply-To: <>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3a-0
+X-QQ-XMAILINFO: NbLMjDNEDlGtK6XyVh+w8Wy8MdGiMW/Z9wqOYiE/7jZ0zd/gS0FSJPI2
+	+UxcphMSOh2+xEKggFcgFQ9fYpAkDm2b0GO8wuRyx218By/M3CZS74NO0VnCtzK/fFhOEdq
+	3Z1lO0YWHC/fAJsaCZbklFxiIAA1zHFMgH7JzzLnoJ6FFQDdq6MGW4LQQCFPoamV+eXJFEY
+	N2WpP3fR7zqaoq9NnDbtmHgiUMFwUbKG2cJWEwF0leeFPqUwynmlWt0LbsJP9np7IZW9nl8
+	mDpA/O+WqGaClFj4OV5l4LfKH+6NNh6HdK5zPjd5P4lETERqWSxV0Rw+DRn5WeiuUa3ni4q
+	rK0dQJ+lSq2t6eY/BFA6YJUebpSKq5Xk6Gb5hxFjWG+6i3+acsFPdAwQcUqhumS25ibHXzt
+	7pUiT0niu/s9+7M/9DsJ9LB/mO1O142uvGOmp03lxh7GdSlOapMFDlp+9c8pUMq7cGZKn3D
+	/sLDBfY82dOI74kIH5hoxw0HWx80ejNHlnDxnimcylRbGwUTWymPpMO5rqdYHlWZKaqVpN+
+	qtXcaIyZQc2+J4brQDJXmfF27ukthztu4UsRCZPyRPPZJlzdwBIlFDQAeAOnjjwb9ptOwZi
+	gOP+RN5Yls+R/0NBYX1hnlwNK/DyyWHt7x2ibNn0OIGvY59e6E4se3e/985JCit9/EEo21v
+	Ga4Dn8uJfW/G+waJBu7lkJL6Y7AbAIpxcBq4U2zIH5OAjXXbrIZWm9jBZ598KXfjD8pPjRx
+	TGMOG0gSYCzEbOaMxxHqAqrDy89mzKOuxtDDliDSsAhXyklp+STQUpu2gweB/hVtu9DuPUB
+	/+La3t48Ljhwan23YGdESEWNQhWogTVrvrBkgtRYgCPl7tEopjlLhkepAjFKRNB5S2H0WdJ
+	6xd7J+8ZK3QuQXJlUOLxLsfPNZPeK9qufEHx+iuJ7yHFS0TCkHba/E+f+EBDyZGwiHe+VUT
+	4ktrmW13++2km2r+PuvbO5WXRsVrSlDE30hTO4h3NTX3/r/AEMGc90N3Pu2xMXzXLyYuqrm
+	l4U9aLoqynhYD0NpOjk/L2sDVEjMRD5wcHs3jZMlz+sSo2drEYDp9Ex91F2Zk=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
-On Tue, Aug 19, 2025 at 03:16:46PM GMT, Ziyue Zhang wrote:
-> Add lane equalization setting for 8.0 GT/s and 32.0 GT/s to enhance link
-> stability and avoid AER Correctable Errors reported on some platforms
-> (eg. SA8775P).
-> 
 
-So this is fixing an issue, right? Then you should add relevant Fixes tag. I
-guess the tag here would be the commit that added SA8775p.
+Older steppings of the Loongson 3C6000 series incorrectly report the
+supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
+only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
+up to 16 GT/s.
 
-> 8.0 GT/s, 16.0 GT/s and 32.0 GT/s require the same equalization setting.
-> This setting is programmed into a group of shadow registers, which can be
-> switched to configure equalization for different speeds by writing 00b,
-> 01b and 10b to `RATE_SHADOW_SEL`.
-> 
-> Hence program equalization registers in a loop using link speed as index,
-> so that equalization setting can be programmed for 8.0 GT/s, 16.0 GT/s
-> and 32.0 GT/s.
-> 
-> Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.h  |  1 -
->  drivers/pci/controller/dwc/pcie-qcom-common.c | 58 +++++++++++--------
->  drivers/pci/controller/dwc/pcie-qcom-common.h |  2 +-
->  drivers/pci/controller/dwc/pcie-qcom-ep.c     |  6 +-
->  drivers/pci/controller/dwc/pcie-qcom.c        |  6 +-
->  5 files changed, 41 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index b5e7e18138a6..11de844428e5 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -123,7 +123,6 @@
->  #define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
->  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
->  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
-> -#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT	0x1
->  
->  #define GEN3_EQ_CONTROL_OFF			0x8A8
->  #define GEN3_EQ_CONTROL_OFF_FB_MODE		GENMASK(3, 0)
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
-> index 3aad19b56da8..cb98e66d81d9 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-common.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
-> @@ -8,9 +8,11 @@
->  #include "pcie-designware.h"
->  #include "pcie-qcom-common.h"
->  
-> -void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
-> +void qcom_pcie_common_set_equalization(struct dw_pcie *pci)
->  {
->  	u32 reg;
-> +	u16 speed;
-> +	struct device *dev = pci->dev;
+As a result, certain PCIe devices would be incorrectly probed as a Gen1-
+only, even if higher link speeds are supported, harming performance and
+prevents dynamic link speed functionality from being enabled in drivers
+such as amdgpu.
 
-Reverse Xmas order please.
+Manually override the `supported_speeds` field for affected PCIe bridges
+with those found on the upstream bus to correctly reflect the supported
+link speeds.
 
->  
->  	/*
->  	 * GEN3_RELATED_OFF register is repurposed to apply equalization
-> @@ -19,32 +21,40 @@ void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
->  	 * determines the data rate for which these equalization settings are
->  	 * applied.
->  	 */
-> -	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
-> -	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
-> -	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
-> -	reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
-> -			  GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT);
-> -	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
->  
-> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
-> -	reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
-> -		GEN3_EQ_FMDC_N_EVALS |
-> -		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
-> -		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
-> -	reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
-> -		FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
-> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
-> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
-> -	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
-> +	for (speed = PCIE_SPEED_8_0GT; speed <= pcie_link_speed[pci->max_link_speed]; ++speed) {
-> +		if (speed > PCIE_SPEED_32_0GT) {
-> +			dev_warn(dev, "Skipped equalization settings for speeds higher than 32.0 GT/s\n");
-> +			break;
-> +		}
->  
-> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
-> -	reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
-> -		GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
-> -		GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
-> -		GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
-> -	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
-> +		reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
-> +		reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
-> +		reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
-> +		reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
-> +			  speed - PCIE_SPEED_8_0GT);
-> +		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
-> +
-> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
-> +		reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
-> +			GEN3_EQ_FMDC_N_EVALS |
-> +			GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
-> +			GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
-> +		reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
-> +			FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
-> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
-> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
-> +		dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
-> +
-> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
-> +		reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
-> +			GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
-> +			GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
-> +			GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
-> +		dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
-> +	}
->  }
-> -EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_equalization);
-> +EXPORT_SYMBOL_GPL(qcom_pcie_common_set_equalization);
->  
->  void qcom_pcie_common_set_16gt_lane_margining(struct dw_pcie *pci)
->  {
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.h b/drivers/pci/controller/dwc/pcie-qcom-common.h
-> index 7d88d29e4766..7f5ca2fd9a72 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-common.h
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.h
-> @@ -8,7 +8,7 @@
->  
->  struct dw_pcie;
->  
-> -void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci);
-> +void qcom_pcie_common_set_equalization(struct dw_pcie *pci);
->  void qcom_pcie_common_set_16gt_lane_margining(struct dw_pcie *pci);
->  
->  #endif
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> index 60afb4d0134c..aeb166f68d55 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> @@ -511,10 +511,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
->  		goto err_disable_resources;
->  	}
->  
-> -	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT) {
-> -		qcom_pcie_common_set_16gt_equalization(pci);
-> +	qcom_pcie_common_set_equalization(pci);
-> +
-> +	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT)
+This patch is found from AOSC OS[1].
 
-This condition has existed even before this patch, but just noticing this
-possible issue. So if 'max_link_speed' is > 16 GT/s, we do not need to set lane
-margining? We used the same logic to set equalization setting earlier also.
+Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
+Tested-by: Lain Fearyncess Yang <fsf@live.com>
+Tested-by: Mingcong Bai <baimingcong@aosc.io>
+Tested-by: Ayden Meng <aydenmeng@yeah.net>
+Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
+Signed-off-by: Zi Yao <liziyao@uniontech.com>
+---
+  drivers/pci/quirks.c | 24 ++++++++++++++++++++++++
+  1 file changed, 24 insertions(+)
 
-- Mani
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 
+d97335a401930fe8204e7ca91a8474b6b02554c1..8d29b130f45854d2bff8c47e6529a41a3231221e 
+100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -1956,6 +1956,30 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 
+PCI_DEVICE_ID_INTEL_E7525_MCH,	quir
+   DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_HUAWEI, 0x1610, 
+PCI_CLASS_BRIDGE_PCI, 8, quirk_pcie_mch);
+  +/*
++ * Older steppings of the Loongson 3C6000 series incorrectly report the
++ * supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
++ * only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
++ * up to 16 GT/s.
++ */
++static void quirk_loongson_pci_bridge_supported_speeds(struct pci_dev 
+*pdev)
++{
++	switch (pdev->bus->max_bus_speed) {
++	case PCIE_SPEED_16_0GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_16_0GB;
++	case PCIE_SPEED_8_0GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_8_0GB;
++	case PCIE_SPEED_5_0GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_5_0GB;
++	case PCIE_SPEED_2_5GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_2_5GB;
++	default:
++		break;
++	}
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19, 
+quirk_loongson_secondary_bridge_supported_speeds);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29, 
+quirk_loongson_secondary_bridge_supported_speeds);
++
+  /*
+   * HiSilicon KunPeng920 and KunPeng930 have devices appear as PCI but are
+   * actually on the AMBA bus. These fake PCI devices can support SVA via
 
+---
+base-commit: 3957a5720157264dcc41415fbec7c51c4000fc2d
+change-id: 20250822-loongson-pci-0cca9e050843
+
+Best regards,
 -- 
-மணிவண்ணன் சதாசிவம்
+Zi Yao <liziyao@uniontech.com>
+
 
