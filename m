@@ -1,152 +1,122 @@
-Return-Path: <linux-pci+bounces-34527-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34528-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 872E6B310B0
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 09:44:13 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 892D1B310B2
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 09:44:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FB03604760
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 07:44:01 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7C3D94E0F07
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 07:44:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 223A92E8E1E;
-	Fri, 22 Aug 2025 07:43:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A28732E8E1C;
+	Fri, 22 Aug 2025 07:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AxiAkC/U"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gEAf/wWt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E133F2E762C;
-	Fri, 22 Aug 2025 07:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDD32E7BB1
+	for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 07:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755848633; cv=none; b=QviTQSiseoCFhCqcIzEDzNJFncw39S3oZS4EM4+jrQj90Hn3/XomeHRJNoScrjvwLFzJo/0x6j+6sSTxQhwIHXptlIN9Mt45wZfGZTEp1cl+6FoR/YOqFsJaSjRWbijcg4dXWmf9KdZMdOCndLcDjNPUVvOSv1pkCoGipDeRGh4=
+	t=1755848691; cv=none; b=FhkFqcoDY3Ui7mERccXjaGDJpO6tY14FwvOTxOTpewKOHcyXKI4IouIxEQWgZ7NturHSydChwTE2b8enVwGObXPisH0CbqAXulKgvdT1Ed3510dCO+ASLjmXEQTdjACssvEjl+ng7TDQsvQCr6nUXpgBM5Nc7XZlrsCoTPZgsM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755848633; c=relaxed/simple;
-	bh=Vo6lGk3lJxWzkqjBHldERuXljqaYSDMJvGkWXAsvEMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VTV6bbfHDOnpy/kL3Z7lZWx/psRHztB3awbvbdFrYYfygEHXhllkbkD5Nbs9qX5VSuomiQUIsr2PVU8Qr7jRwa3GOgd0u3wXXY7JjZJ+iPMmmHZIA+YJM8Ecl/7qFoBFWenSYDfAX00a7ohxGqpNSfg6v9qodnU/YCLbCRQj9UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AxiAkC/U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1DE9C4CEF1;
-	Fri, 22 Aug 2025 07:43:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755848632;
-	bh=Vo6lGk3lJxWzkqjBHldERuXljqaYSDMJvGkWXAsvEMo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AxiAkC/Uq6DTFLdpAeDazGexMQGwo5OAzT25VbIPq9h6cbk0g0Pm7aCBXH6ge/K5C
-	 Eysk+65rDgz5DuULeiQrGXivwHmnMScNXYLo4t0JddFrhKJu+qBi4fgQf/tVFiEC/Y
-	 rLQPLfHYHHMVNInaLRPmXOw3ptp0oIjfpZFHFvL7kis+M+kblYA+h8SKZ84ZOOi4Ps
-	 sxyPYn3S0UVY7XkexvvOtghovEAhd0nIP4e2NjMa0SqUJo4ovTO5WSEfL6mkH1r3P2
-	 pBK8ElcKSfqeNpjB8PbtH9btw1TsE59bJA7PGnvhcZtnPkkAIk504Ngbk9BZ7f00gO
-	 8pqIqcIqWfA0A==
-Date: Fri, 22 Aug 2025 13:13:34 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org, 
-	kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com, 
-	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v10 3/5] arm64: dts: qcom: qcs8300-ride: enable pcie0
- interface
-Message-ID: <wwpdqg3tqq252emsbhu3lvpq5eefgbzk7bpgr2gu3hekokoqob@76fcww4fm3yg>
-References: <20250811071131.982983-1-ziyue.zhang@oss.qualcomm.com>
- <20250811071131.982983-4-ziyue.zhang@oss.qualcomm.com>
+	s=arc-20240116; t=1755848691; c=relaxed/simple;
+	bh=faSEfiTpREL/ys4OdLzvhf7bAeARCS9tt3rUMIAif24=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b3jUdHnEGkF/FlMLk2hkpAVZ7EPNROdsk/1R5XQwi77FrK5ohHWcTT0xypCBxlQO73eiwAFjTjt6oiwL5fKCx9fhiEkTqzuDFjWE/9UFxhLHmgyteW4EyOgPww4r1cH3//Zeji5sWtXqT06RFGINWoVIvl8oMfG9kbJ0wADiReo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gEAf/wWt; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3b9e413a219so1255166f8f.3
+        for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 00:44:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1755848688; x=1756453488; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g2G2vICsXO8f0ArDyQQPFAnFMYMmrHOiPk4MQY+POTA=;
+        b=gEAf/wWta32pNHA4IE8oJ00dAqxUG/ZYX8oqYITQ/rJmDtVfB+/QzVWStHoch1KGLL
+         c4MuTqszr8Zim4FHilnzmT/TpoclBVb9a+MJ1LHPhZ4fQ/ijNPo3DcnjBvK9SjKYQ4FF
+         5UeTKO+Eae8qMyHnERnqlRxouJRYjPUt16z2TOWVWHFzTspCKGeeF86ZT9OW9MK9Pql1
+         BcfwrdnwcEfX2xz0rQKvkt5OMQVW2pKfE0DcdCBnES+VVRUGO17SV8TDXL/aqdS7NXWD
+         GUWjvLU8XNgSl42EL26SU4cNgwBv2aUk+sMh9CCePrTVaBcMIyk9LETgPVAf108Mr722
+         9EXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755848688; x=1756453488;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g2G2vICsXO8f0ArDyQQPFAnFMYMmrHOiPk4MQY+POTA=;
+        b=tyvQyT289QADnNM1TSvbWVsZJcMvQYKWMPql4ieGlaG3/Izy3ucEE76hUDTjG0+G8u
+         gokBu2IgbXn3FVNoHXgiufD4+qhNFY1BD6E/kWl6I6qaq8UTaCPVnkWKMRug3Aa4Xixh
+         jnvupgWNGAH7Znge103pdNcDg2zmcPtWRVRZfOTfgOC84k6O+QGLV4m11XWIGaeIrfIi
+         Hr3dlGHKcoXmevC+wZFdDtSbwtemUwYiHM2yk0TqsB9D5f3KlnbfsjISHXOGxQAIgqYL
+         X+OfCxZkL3hi02IbWnGCQk4nMZyPPDCbz6yp4R9glFQa3F4+LLlw/LiJdZwOCr/v7BxW
+         3wWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTfNG84XQtEuNfjVpW9pjA30tiaWKubdTQ9vdgwYLLpTNSTIrlSUjrt9Xitr9utCntHc3VDSKFRYo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDOVda7IHrTdVrslmuFdiWLiHWh0X3n3As0T4nL4VgyplIl/S2
+	SGw8Df1sYT2GGNb7owHObEFL9+Uhu0kGq3OcBvKAzUJzzU98ATwZWqZvuVNL9u3/B2l1SdHGOhC
+	BHUXiGr2b3dTersMg96HkDDtPkOfp7w3rPX3zRQ5t
+X-Gm-Gg: ASbGncuXAqt3bB0lo0c8msF3q/opyH32krCGfUBFAVF2eBYHKRWmrtXazuC2FBAQ2vn
+	u0fp0vpC1Hz2Hn2j8mSt61cje75cYfuQYWYFYL2dbz19IkucIf/NvcHlSKjuNHaCz8pQ5ACNsZe
+	ac8ILzK79hdQf38TyEpahqi09tKtxOpLFR9jAVSOVXvPdKKPTnDrVFNSWMYc7aZ8FWqrPKm2rNh
+	FxQA/XKQiuA4IZCtq2ud5lYApHNEBStbDx5A3z3x84hgX5mzVsjkrSCI5MKzmIvasqywQCPirkL
+X-Google-Smtp-Source: AGHT+IEoadB/lkuSJqNlo/SILQdpicC+7QYyIGD5rL1L8rNRHfY2sXck2SdaIgLT0kyeAavUOWBzZ7civMIWG5FymAw=
+X-Received: by 2002:a05:6000:420f:b0:3b7:8c98:2f4c with SMTP id
+ ffacd0b85a97d-3c5dcdfd718mr1520148f8f.33.1755848688089; Fri, 22 Aug 2025
+ 00:44:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250811071131.982983-4-ziyue.zhang@oss.qualcomm.com>
+References: <20250822041313.1410510-1-apopple@nvidia.com>
+In-Reply-To: <20250822041313.1410510-1-apopple@nvidia.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 22 Aug 2025 09:44:36 +0200
+X-Gm-Features: Ac12FXz0SxebOQqcLm-97q0sd3X8rsVm5aDZCUPIyZPEj1aHLk_XWZ8qmb8qzgM
+Message-ID: <CAH5fLgiYy-9DfjL+0NoYzwD=8tTSBrFMhJveZktRncJE9czkrA@mail.gmail.com>
+Subject: Re: [PATCH] rust: Update PCI resource_start()/len() to return ResourceSize
+To: Alistair Popple <apopple@nvidia.com>
+Cc: rust-for-linux@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	John Hubbard <jhubbard@nvidia.com>, Alexandre Courbot <acourbot@nvidia.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Danilo Krummrich <dakr@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 11, 2025 at 03:11:29PM GMT, Ziyue Zhang wrote:
-> Add configurations in devicetree for PCIe0, board related gpios,
-> PMIC regulators, etc for qcs8300-ride board.
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 40 +++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-> index 8c166ead912c..e8e382db2b99 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-> @@ -308,6 +308,23 @@ &iris {
->  	status = "okay";
->  };
->  
-> +&pcie0 {
-> +	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
-> +	wake-gpios = <&tlmm 0 GPIO_ACTIVE_HIGH>;
+On Fri, Aug 22, 2025 at 6:13=E2=80=AFAM Alistair Popple <apopple@nvidia.com=
+> wrote:
+>
+> It's nicer to return native Rust types rather than the FFI bindings to a
+> type so update the PCI resource bindings to return ResourceSize.
+>
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> Suggested-by: Danilo Krummrich <dakr@kernel.org>
 
-Since we have deprecated these properties in host bridge node recently, please
-move these properties to PCI bridge node.
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
-- Mani
+>  rust/kernel/pci.rs | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+> index cae4e274f7766..ef949ff10a10a 100644
+> --- a/rust/kernel/pci.rs
+> +++ b/rust/kernel/pci.rs
+> @@ -10,7 +10,7 @@
+>      devres::Devres,
+>      driver,
+>      error::{from_result, to_result, Result},
+> -    io::{Io, IoRaw},
+> +    io::{resource::ResourceSize, Io, IoRaw},
 
-> +
-> +	pinctrl-0 = <&pcie0_default_state>;
-> +	pinctrl-names = "default";
-> +
-> +	status = "okay";
-> +};
-> +
-> +&pcie0_phy {
-> +	vdda-phy-supply = <&vreg_l6a>;
-> +	vdda-pll-supply = <&vreg_l5a>;
-> +
-> +	status = "okay";
-> +};
-> +
->  &qupv3_id_0 {
->  	status = "okay";
->  };
-> @@ -348,6 +365,29 @@ ethernet0_mdio: ethernet0-mdio-pins {
->  			bias-pull-up;
->  		};
->  	};
-> +
-> +	pcie0_default_state: pcie0-default-state {
-> +		wake-pins {
-> +			pins = "gpio0";
-> +			function = "gpio";
-> +			drive-strength = <2>;
-> +			bias-pull-up;
-> +		};
-> +
-> +		clkreq-pins {
-> +			pins = "gpio1";
-> +			function = "pcie0_clkreq";
-> +			drive-strength = <2>;
-> +			bias-pull-up;
-> +		};
-> +
-> +		perst-pins {
-> +			pins = "gpio2";
-> +			function = "gpio";
-> +			drive-strength = <2>;
-> +			bias-pull-down;
-> +		};
-> +	};
->  };
->  
->  &uart7 {
-> -- 
-> 2.43.0
-> 
+Maybe we want ResourceSize re-exported from kernel::io to make this simpler=
+?
 
--- 
-மணிவண்ணன் சதாசிவம்
+Alice
 
