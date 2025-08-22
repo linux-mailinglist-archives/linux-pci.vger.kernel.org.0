@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-34572-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34573-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 070F5B31CED
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 16:57:17 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7054DB31CEE
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 16:57:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E36107B3B32
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 14:55:41 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5D72C4E32DB
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 14:57:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42BC31282C;
-	Fri, 22 Aug 2025 14:56:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA98D313542;
+	Fri, 22 Aug 2025 14:56:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QLSl+Rxb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YnyEMerB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9C4296BBA;
-	Fri, 22 Aug 2025 14:56:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBF827932D;
+	Fri, 22 Aug 2025 14:56:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755874606; cv=none; b=lBBBw3eCxYH2ramkyp50RqherEV6H4BD3QDykNcs+0Q7RfqHjR3u49rzxTu+umgy/IuRwAaqC7TWtau14TtHy/0/ehnlUZ48UMSUebsR2N2+8cwJNvVKQCOLgwFU6WEarSUtXp4C/HNvddI++Tk7/AKy1+Vl3FVqXenz4q5e0l0=
+	t=1755874615; cv=none; b=d0aWPrZNJHzKTtt79ooQkGAYtMm6TPCCby5OWGc3SAwNdmn6z3OQxdxv85wC7hfKNp7m/DUaFNc+GcvuGgqToFxlE5x+/tCXeACZs9S/W0pecfmTyZlPWC8o1ncAlpLbAHhlhG4yioYHI1bOlcvY1GAFnJKHpo4p7aZeys0HxEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755874606; c=relaxed/simple;
-	bh=jBXSW/HvE/oTFKPyIiL0xTmEeLPgXFT+lohCoGdRapA=;
+	s=arc-20240116; t=1755874615; c=relaxed/simple;
+	bh=qAXdsDQW9N/Uavlh8yIRORIBMsvqG965+7HiERcw2Bc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S50rr7pmcqdn6LBWeLq1Fx4hf+08J49YoGt8RaVtIUE49Dz5XvA6WNa5JZsOJv3IdFf7VKElZB6qT1v+mdCqw0BifhndP+M2MD83dItXkAQrbkFPYcDmlhMUJgNHuocDuiRHINkgjPch7GzgeRflmQK9y/H/pJTMXm9UibFylNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QLSl+Rxb; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=eIuGbbjmD9hiTc8oPixgXzSximDGQcNI9Oe8qXdjL+/lzEKF/1Xtio1dEOwo/EMnEh7EfyRnouJwAhhmtZNzhuTVEbVgYeiWsSz6K3X0RZI1d6Ezmzk7kkrQlze/xu9UXfSEeB2SD3VOvrZe5Vt1vWIBbDb0kTFzPFEB64CzU5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YnyEMerB; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755874605; x=1787410605;
+  t=1755874614; x=1787410614;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jBXSW/HvE/oTFKPyIiL0xTmEeLPgXFT+lohCoGdRapA=;
-  b=QLSl+RxbnrFjAbYJPYO6BN5GS7HWHQtGTgm7y4cGWGwUl0t9ef9txcL1
-   O7iu8qzKZX5g47lPqc19GcNM+LsCfdGRmHnvtJZTYKA3J6wu4Fu4z8kCs
-   oPPhJkD0NmZ0Kc7zzR4sbMY35GRpq89/grwafHQaRotBYHEuZIiPo+/2M
-   lhF1aMsGg0jTA4GC0BlJJveBeWxDnsq0WBd9kBZw5aEBs4lnYXr2GNEMF
-   011M/g5k+SkWxHQhSTpQyl8ft7ZjxGb2kInSwoEc6ewCE91VDgauDFkyk
-   T7DVuW1JLbYVG7t+hFzodKCgsU3uIZsQEGCWZwmnV0W3sBGh3jjXHiAPo
-   Q==;
-X-CSE-ConnectionGUID: oCnHBOs6QBWq+NesGVlJkw==
-X-CSE-MsgGUID: cjFlEEcUQgmSYmgCAa4Yrg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="62015777"
+  bh=qAXdsDQW9N/Uavlh8yIRORIBMsvqG965+7HiERcw2Bc=;
+  b=YnyEMerBNyD/4gckm2MVWTFOs5AMuXXv8Wau9F73CAahRlt35PDeHx9I
+   Px3AM4ocW9tA/3qjyNU9bd95lhG2+Vh2jhOmHhkfhpQkrW8VgkVAcykRw
+   nsxV3ILroXjzFmmkX2ZeRfGmNTNaA5sXN2oTEpY2wpgpKLk/5iVCJcBmq
+   eh+VJDApefXCQUjbJddmcJJIrN8WgcGEdtPb4zwNfJEk1wHPdXAoeCVgz
+   faMXYBI99DilYEojClYM9IYT/TcM6lXZtfiyk0Q8wWxO61tjdob0+mNlh
+   3vMIW/RYF1agdstDSjTZGkahsftBGQRMCuA2UYmbjosJVBD+wPhqbxzX8
+   A==;
+X-CSE-ConnectionGUID: rIEsbMO6S62om6g/4qIuQQ==
+X-CSE-MsgGUID: 5mKEKGASTRSbz241p1wslg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="62015793"
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="62015777"
+   d="scan'208";a="62015793"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:56:45 -0700
-X-CSE-ConnectionGUID: ixYcXxcpSP2pUy6rUGsbsQ==
-X-CSE-MsgGUID: FOhRjr0IQkSfd3SUorEZlw==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:56:54 -0700
+X-CSE-ConnectionGUID: lzEm3K2FR72KwstWyYHG9Q==
+X-CSE-MsgGUID: TakxZF6vRGWLwfxTYMc+bA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="173994552"
+   d="scan'208";a="173994571"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.115])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:56:39 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:56:49 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Andreas Larsson <andreas@gaisler.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -79,9 +79,9 @@ To: Andreas Larsson <andreas@gaisler.com>,
 Cc: =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
 	linuxppc-dev@lists.ozlabs.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 03/24] MIPS: PCI: Use pci_enable_resources()
-Date: Fri, 22 Aug 2025 17:55:44 +0300
-Message-Id: <20250822145605.18172-4-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 04/24] PCI: Move find_bus_resource_of_type() earlier
+Date: Fri, 22 Aug 2025 17:55:45 +0300
+Message-Id: <20250822145605.18172-5-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
 References: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
@@ -94,75 +94,88 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-pci-legacy.c under MIPS has a copy of pci_enable_resources() named as
-pcibios_enable_resources(). Having own copy of same functionality could
-lead to inconsistencies in behavior, especially now as
-pci_enable_resources() and the bridge window resource flags behavior
-are going to be altered by upcoming changes.
-
-The check for !r->start && r->end is already covered by the more
-generic checks done in pci_enable_resources().
-
-Call pci_enable_resources() from MIPS's pcibios_enable_device() and
-remove pcibios_enable_resources().
+Move find_bus_resource_of_type() earlier in setup-bus.c to be able to
+call it in upcoming changes.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- arch/mips/pci/pci-legacy.c | 38 ++------------------------------------
- 1 file changed, 2 insertions(+), 36 deletions(-)
+ drivers/pci/setup-bus.c | 56 ++++++++++++++++++++---------------------
+ 1 file changed, 28 insertions(+), 28 deletions(-)
 
-diff --git a/arch/mips/pci/pci-legacy.c b/arch/mips/pci/pci-legacy.c
-index 66898fd182dc..d04b7c1294b6 100644
---- a/arch/mips/pci/pci-legacy.c
-+++ b/arch/mips/pci/pci-legacy.c
-@@ -249,45 +249,11 @@ static int __init pcibios_init(void)
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index def29506700e..4097d8703b8f 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -140,6 +140,34 @@ static void restore_dev_resource(struct pci_dev_resource *dev_res)
+ 	res->flags = dev_res->flags;
+ }
  
- subsys_initcall(pcibios_init);
++/*
++ * Helper function for sizing routines.  Assigned resources have non-NULL
++ * parent resource.
++ *
++ * Return first unassigned resource of the correct type.  If there is none,
++ * return first assigned resource of the correct type.  If none of the
++ * above, return NULL.
++ *
++ * Returning an assigned resource of the correct type allows the caller to
++ * distinguish between already assigned and no resource of the correct type.
++ */
++static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
++						  unsigned long type_mask,
++						  unsigned long type)
++{
++	struct resource *r, *r_assigned = NULL;
++
++	pci_bus_for_each_resource(bus, r) {
++		if (r == &ioport_resource || r == &iomem_resource)
++			continue;
++		if (r && (r->flags & type_mask) == type && !r->parent)
++			return r;
++		if (r && (r->flags & type_mask) == type && !r_assigned)
++			r_assigned = r;
++	}
++	return r_assigned;
++}
++
+ static bool pdev_resources_assignable(struct pci_dev *dev)
+ {
+ 	u16 class = dev->class >> 8, command;
+@@ -876,34 +904,6 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
+ 	}
+ }
  
--static int pcibios_enable_resources(struct pci_dev *dev, int mask)
+-/*
+- * Helper function for sizing routines.  Assigned resources have non-NULL
+- * parent resource.
+- *
+- * Return first unassigned resource of the correct type.  If there is none,
+- * return first assigned resource of the correct type.  If none of the
+- * above, return NULL.
+- *
+- * Returning an assigned resource of the correct type allows the caller to
+- * distinguish between already assigned and no resource of the correct type.
+- */
+-static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
+-						  unsigned long type_mask,
+-						  unsigned long type)
 -{
--	u16 cmd, old_cmd;
--	int idx;
--	struct resource *r;
+-	struct resource *r, *r_assigned = NULL;
 -
--	pci_read_config_word(dev, PCI_COMMAND, &cmd);
--	old_cmd = cmd;
--	pci_dev_for_each_resource(dev, r, idx) {
--		/* Only set up the requested stuff */
--		if (!(mask & (1<<idx)))
+-	pci_bus_for_each_resource(bus, r) {
+-		if (r == &ioport_resource || r == &iomem_resource)
 -			continue;
--
--		if (!(r->flags & (IORESOURCE_IO | IORESOURCE_MEM)))
--			continue;
--		if ((idx == PCI_ROM_RESOURCE) &&
--				(!(r->flags & IORESOURCE_ROM_ENABLE)))
--			continue;
--		if (!r->start && r->end) {
--			pci_err(dev,
--				"can't enable device: resource collisions\n");
--			return -EINVAL;
--		}
--		if (r->flags & IORESOURCE_IO)
--			cmd |= PCI_COMMAND_IO;
--		if (r->flags & IORESOURCE_MEM)
--			cmd |= PCI_COMMAND_MEMORY;
+-		if (r && (r->flags & type_mask) == type && !r->parent)
+-			return r;
+-		if (r && (r->flags & type_mask) == type && !r_assigned)
+-			r_assigned = r;
 -	}
--	if (cmd != old_cmd) {
--		pci_info(dev, "enabling device (%04x -> %04x)\n", old_cmd, cmd);
--		pci_write_config_word(dev, PCI_COMMAND, cmd);
--	}
--	return 0;
+-	return r_assigned;
 -}
 -
- int pcibios_enable_device(struct pci_dev *dev, int mask)
- {
--	int err = pcibios_enable_resources(dev, mask);
-+	int err;
- 
-+	err = pci_enable_resources(dev, mask);
- 	if (err < 0)
- 		return err;
- 
+ static resource_size_t calculate_iosize(resource_size_t size,
+ 					resource_size_t min_size,
+ 					resource_size_t size1,
 -- 
 2.39.5
 
