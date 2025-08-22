@@ -1,249 +1,204 @@
-Return-Path: <linux-pci+bounces-34517-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34518-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8E94B30DD5
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 07:10:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EEA6B30DD9
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 07:11:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 98A5A5E7EF0
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 05:10:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA616A0658B
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 05:11:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B39628A3EF;
-	Fri, 22 Aug 2025 05:10:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C200728A1D5;
+	Fri, 22 Aug 2025 05:11:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="GGzV5MK2"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OsCBn8KX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2071.outbound.protection.outlook.com [40.107.236.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFF0289E08;
-	Fri, 22 Aug 2025 05:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755839421; cv=none; b=dccdf5e7QwOBT9BddYi9FKi2ngRJhy8Fj8JB7gKYOBneOfDfHlsL0mPRy8A+Lu8waB0Ej0R0r+4uXcHY0PzY5CphtqEJyl6HAv5T6lJz2L+xMAXqUYQ0BmgY0o3mEb02lX3of8DpQZ1WA2vlbIeEe2D7Xg3C3HpB4e1NTvGN0d4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755839421; c=relaxed/simple;
-	bh=u78+GWVaWnaMGY0TMJxjyP+RnBFR/HtfMv9mXJtHIPM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jSjLdyCVueZKpJbhUz5jH0FPNZfJ4ArDPsmch1zIDHuJIpad0kH/ELvxEfi50g1avUjUtugFZgUTlM7Z/qzbeT6wVbV4YkiT/Qix3iZxvfU/wTDzJ6vmwya1nl2Tl7WDENj4H9/dd7ohNge9zsgfJcJKmgOahqHxwKFI61BOuMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=GGzV5MK2; arc=none smtp.client-ip=166.84.1.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
-Received: from [192.168.55.30] (ip174-65-98-148.sd.sd.cox.net [174.65.98.148])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4c7StZ0PK8z4cdw;
-	Fri, 22 Aug 2025 01:10:13 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1755839415; bh=u78+GWVaWnaMGY0TMJxjyP+RnBFR/HtfMv9mXJtHIPM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=GGzV5MK2YYYhiABfNPRq4mkRg7WgQujJRu2i9HqgF8NJxxUjpAz/MO3d0PJnGRxgm
-	 L87+NHtR97X701jEtXLK9gbDzR+r/yY5bGQXINtLSZwZmAZMR2HXHbbOMz0+bNpo3e
-	 an6Nyrb56E1yTLmWILaQPDjwmpdvCOY29E7M9q8Q=
-Message-ID: <202d3647-ecc0-41a5-b481-28de45a5bb33@panix.com>
-Date: Thu, 21 Aug 2025 22:10:12 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CC91917D6;
+	Fri, 22 Aug 2025 05:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755839507; cv=fail; b=AXBCH0/+TuLLe8wRo5DAeaMVDY4ezgdrXeHg2AvtpOxhMDd0gfho5AVmerW2Lfao5CJqJVRSiINRZ8avs8fii6OV0T3QiyUCuVAP0AI6cQfeGqD3Lva/FyK/GSQQ5nCGV1hcfPvVUsnubH3z9+dH3i+oDHA8oTi1GUyJOBIRHwg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755839507; c=relaxed/simple;
+	bh=fAWN6SQg5lPMkh1v5siKEL6NGroPZx83SZ2bBpG7nB0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bn54K5W0YAJHEDJZm1s1cN5GnsOKSvZQi2usu1qW0llmLFeUWv+siwjYGPJWqifHGXJy/Fbfw9hPkkM693tJwwguDRuHp1Hf/5fCIjV+Fr6ubc9wGx/0b87WEiHzKnpr9X17/y6upUN3c8xp6Gm/RYtXD8BDcVyST+RUPWDRTXw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OsCBn8KX; arc=fail smtp.client-ip=40.107.236.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AVsYzvzDDNOZQtSzeJ2FMw3sb+UQd2iHadyW3r/OLm6hwYBFW4ckL2wIwPRK8ldrrC7ubh3dJtdis1Gn/p8AfqfVGP7C4jtz5omgoyMe66LEi++709tOi747pnuPT+aGGfe3noqP+Dyw+HmwToWW1dmDJN+sCJr4I0/DlaZ0wxx/6q02WWCl7OMBROPgcVKzVyRV4Uk+rM8D4z12A1Q2gAi/JSv5Er+qag2LvQ/ajtLqtHZ9X6cgWy8b7Kq0bJwXrYXE424QFZyM/Wsbpp3dqVMW4IA1NUIIAwqChOT2iBGcuo3XPpu3GjYRV0Agr2I5KM9AEUIQIy+v/iTR1vx9+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BpIpCP4uEJEkXPDzjwAmYmnsbZihBAoiaiozj7nDRJw=;
+ b=JuqcZTyqevJlAj4S+tUhNAwsQX3S5gHZ9Hkw/aF1fN7r51cRwLpoad7R0GCDOwAKlb8iU7jBkHgmHPlXRLhqpTRyUXZN9mFNNvwElDQDz32ZmKIIsmoPG9lKfFDkLrC5cZ7eulW3jmkPFNjmR7oPfcbLFBKo8LIHSXHjyG/JfYf6gRtwFz/qiIIiv45zGP3xw/mouA4Bn5BsrV2bsdxUw5sKJPT50JJSYqd9thCIuYGzed6GipaXp09fuQg6ORZ6k76xyV6uH+ZWeNKyZLXDAkv775ueKwXrPx6pvbcyirF10eD38Hl66EpPEPq/zwm4n08L/GakgnNF84n0GRKFJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BpIpCP4uEJEkXPDzjwAmYmnsbZihBAoiaiozj7nDRJw=;
+ b=OsCBn8KXcf3+Jqy6nTa3BjBHMbv9AQxS4nx7KXbq+GDi/jUun0mBHL8l3bhYdTKk9OvFqdQfN1b8bWQ4eA1ytG9y76WkQBKWsfCoGzeVdE3MdwEHhzKtHf//9lo9ABYDAn8qdWddc4W1tVN4TJggnf0Yu3XTL7tTjrRDG9kJF1QpvBd2sI67kgOedk2Cn2LzrdgqcpS2Oa7i3O4IyJq1sYDjAbEu2k2qFqYk3Bz/zdEVXS67RbeZrM7kgTOYaWY3jSW/VrSdseBZs7oyLUo4DBMv21geCcU8Gp12zKrAXzjpIQ5JUAqGOr3gy/TxgxJLXbsQVyLSVpcuIOv/6+VMCQ==
+Received: from IA4P220CA0004.NAMP220.PROD.OUTLOOK.COM (2603:10b6:208:558::8)
+ by IA1PR12MB7759.namprd12.prod.outlook.com (2603:10b6:208:420::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.15; Fri, 22 Aug
+ 2025 05:11:40 +0000
+Received: from BL02EPF00029929.namprd02.prod.outlook.com
+ (2603:10b6:208:558:cafe::bb) by IA4P220CA0004.outlook.office365.com
+ (2603:10b6:208:558::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9052.17 via Frontend Transport; Fri,
+ 22 Aug 2025 05:11:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ BL02EPF00029929.mail.protection.outlook.com (10.167.249.54) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9052.8 via Frontend Transport; Fri, 22 Aug 2025 05:11:40 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 21 Aug
+ 2025 22:11:27 -0700
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 21 Aug
+ 2025 22:11:27 -0700
+Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.6)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Thu, 21 Aug 2025 22:11:26 -0700
+Date: Thu, 21 Aug 2025 22:11:24 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: <robin.murphy@arm.com>, <joro@8bytes.org>, <bhelgaas@google.com>,
+	<will@kernel.org>, <robin.clark@oss.qualcomm.com>, <yong.wu@mediatek.com>,
+	<matthias.bgg@gmail.com>, <angelogioacchino.delregno@collabora.com>,
+	<thierry.reding@gmail.com>, <vdumpa@nvidia.com>, <jonathanh@nvidia.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <kevin.tian@intel.com>,
+	<yi.l.liu@intel.com>, <baolu.lu@linux.intel.com>,
+	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<patches@lists.linux.dev>, <pjaroszynski@nvidia.com>, <vsethi@nvidia.com>,
+	<helgaas@kernel.org>, <etzhao1900@gmail.com>
+Subject: Re: [PATCH v3 3/5] iommu: Add iommu_get_domain_for_dev_locked()
+ helper
+Message-ID: <aKf7/Fk/dT6UZWb9@Asurada-Nvidia>
+References: <a69557026b7e2353bae67104bbe6a88f0682305e.1754952762.git.nicolinc@nvidia.com>
+ <20250818143949.GO802098@nvidia.com>
+ <aKNhIr08fK+xIYcg@Asurada-Nvidia>
+ <20250818234241.GF802098@nvidia.com>
+ <aKQG9/skig6F8LdQ@Asurada-Nvidia>
+ <20250819125249.GG802098@nvidia.com>
+ <aKSyzI9Xz3J0nhfk@Asurada-Nvidia>
+ <20250821131304.GM802098@nvidia.com>
+ <aKc5niDWTwaCInH2@Asurada-Nvidia>
+ <20250821183704.GP802098@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/2] PCI/ASPM: Add host-bridge API to override default
- ASPM/CLKPM link state
-To: "David E. Box" <david.e.box@linux.intel.com>, rafael@kernel.org,
- bhelgaas@google.com, vicamo.yang@canonical.com,
- ilpo.jarvinen@linux.intel.com, nirmal.patel@linux.intel.com, mani@kernel.org
-Cc: linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, Me <kenny@panix.com>
-References: <20250822031159.4005529-1-david.e.box@linux.intel.com>
-Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <20250822031159.4005529-1-david.e.box@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250821183704.GP802098@nvidia.com>
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF00029929:EE_|IA1PR12MB7759:EE_
+X-MS-Office365-Filtering-Correlation-Id: 66b59cdb-8784-4321-6367-08dde13a60d2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|7416014|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PX08El9zB/iKwWcqDTmB5sNCDCRqqq42VGvhf1D8fWaBzr/5uhBB0haUloEQ?=
+ =?us-ascii?Q?8tvbMV74P2TlEvLCF4f80zleGgMVlhitMKeXYhJw65oc9ukSLvRNHXD7uf24?=
+ =?us-ascii?Q?J4NU3/DNBhF8hjfj2l4tU1Lb6OdjJjSXHPSwJRBqESMi5LBsKg68dK+l44jW?=
+ =?us-ascii?Q?DpUVIQjUaaH3NIeCA0AlrMJS/RuBAY5PLBqj+qYwv5ebXSt6YtgbjVuLwyzd?=
+ =?us-ascii?Q?2UdRo4d5IjfhyZFZYvTGhQ0REpTyBbHzQHCjnCsBRU5Rm+LapxEAW9D6y64k?=
+ =?us-ascii?Q?oFRnrUDTS7Z04BUy1gsANouEAR5ym9jC+zgzo/TbedejgCG5J2CvnucImkye?=
+ =?us-ascii?Q?ZolsM/fRdL+aYEKK5EPq61rN5Jk8kiSO2HzdXUpv4W1VT+k+YC8FaYqp40fU?=
+ =?us-ascii?Q?g7/9qKIWVwxt4yd/oXwMe694JU7bC5MBPuZfqDwwsD2IaU9ZROpWeYAM6da9?=
+ =?us-ascii?Q?YYbAhEViISM8Gy0tofmbDyufwOKqxRZF3V7WzHxhiLxqysKuzNa3lsdH5sAz?=
+ =?us-ascii?Q?y/ehDaCuWb64yFsaAmi8d2dw9nj1K51U+j5V2k72EeeZHkFCA1uk0IZ/X+jw?=
+ =?us-ascii?Q?0SsyrstqoXxKS3fQ2ew6POBQSABKRw/8sOZjXnKq4eXeaak4PwSE05IvsNs4?=
+ =?us-ascii?Q?jf4ljOhnYsJe0cZfbDg7iFfCtdt97iOFeS1juh3CsX9ebE7ER1V09pYpwK8Y?=
+ =?us-ascii?Q?NJ6KpF3xEsj2QaFblH7dly02fwJVHUbqRRsG1dxEeFdd6BoWJGtr64VyU6/+?=
+ =?us-ascii?Q?JHLjGmJWZpw9udICwDnDo4XkrSyiEYU2sGpdGdfVC3fdXmcM/Ufl8XMjb13E?=
+ =?us-ascii?Q?vWumPqefq0iDLiJJvpbu8RMpl0WekUB+DZ4kD8EEPKZZ0oIvMxnjVaXs4rtQ?=
+ =?us-ascii?Q?2UBWHnv4/5EfLgE5DvCrGYQ0c0FEBZJ3+EnIkthf18F6J3lH+/ugcXsBR9Gm?=
+ =?us-ascii?Q?z2Oxox5bYSo4XxvaJaxUticE2wB42AgyteitTpeb9eAssf7KEtXKFEqIF2zm?=
+ =?us-ascii?Q?Ez0Fy1gvTnUvb3pdUIo4/2JykwPNBm9t42+cimnwcJ1InhQ5r04I879wZkew?=
+ =?us-ascii?Q?Nor+XYEks3UcGNhrO/pRFL5tjcPf8Wr9OaJSvXvf2IksfWJoCBJvYvjoU9wX?=
+ =?us-ascii?Q?5M7NAh7MXmz+oWXvNeCY5aWuoCamxBuWKo6w2bLAft3FPhR6I84aCpuMhugU?=
+ =?us-ascii?Q?EAgAe3fWGtb1L5qTH1HFJIWWwjcLuQRaejctt590v06G+qx1DEQZc9WPAwkY?=
+ =?us-ascii?Q?gv1cQQoOh8BfIqUnGSD4gLasbYHBMdWB7RT7eS0HwL+x4bcy/hlbGforofV1?=
+ =?us-ascii?Q?/TU25Rgt3osU4AgpCv7a4HxsFFb3s3yaRBY7szAmj7BymWrusiP4cJo6Y0zD?=
+ =?us-ascii?Q?SntLMcE2u7NC/x19JGYGiC57RGd3VonZrLUhDb5nEV+z/UbEo8Td6Az7tNQA?=
+ =?us-ascii?Q?j2+2qv1Hey7zMLQGGvC/magf+7Av/t/8dTMfhzknExiA7WCI9YDANks/mXnH?=
+ =?us-ascii?Q?KTd3hdA0ferBdwU4xQhiir98AC4rJLHNoxjW?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(376014)(7416014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2025 05:11:40.3324
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66b59cdb-8784-4321-6367-08dde13a60d2
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00029929.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7759
 
+On Thu, Aug 21, 2025 at 03:37:04PM -0300, Jason Gunthorpe wrote:
+> On Thu, Aug 21, 2025 at 08:22:06AM -0700, Nicolin Chen wrote:
+> > I should have pasted the full piece:
+> > drivers/gpu/drm/tegra/drm.c-960-	/*
+> > drivers/gpu/drm/tegra/drm.c:961:	 * If the host1x client is already attached to an IOMMU domain that is
+> > drivers/gpu/drm/tegra/drm.c-962-	 * not the shared IOMMU domain, don't try to attach it to a different
+> > drivers/gpu/drm/tegra/drm.c-963-	 * domain. This allows using the IOMMU-backed DMA API.
+> > drivers/gpu/drm/tegra/drm.c-964-	 */
+> > drivers/gpu/drm/tegra/drm.c-965-	if (domain && domain->type != IOMMU_DOMAIN_IDENTITY &&
+> > drivers/gpu/drm/tegra/drm.c-966-	    domain != tegra->domain)
+> > 
+> > So, the check is two-fold:
+> > 1) is attached
+> > 2) is the shared IOMMU domain (tegra->domain?)
+> 
+> Yea
+> 
+>  iommu_is_domain_currently_attached(dev, tegra->domain)
 
-Tested-By: Kenneth R. Crudup <kenny@panix.com>
+Ah, yea.
 
-----
-Bzy_MHz C1E%    C10%    CPU%c7  PkgTmp  GFX%rc6 GFXMHz  CPUGFX% Pkg%pc8 
-Pk%pc10 CPU%LPI SYS%LPI PkgWatt CorWatt GFXWatt
-909     1.37    98.28   42.74   45      99.79   300     0.15    21.61 
-47.17   47.24   38.78   1.07    0.19    0.00
-1788    3.86    95.43   42.24   46      99.84   300     0.14    23.97 
-32.84   32.89   26.52   1.80    0.68    0.00
-1014    0.01    99.70   42.74   45      99.84   300     0.12    26.23 
-59.45   59.54   48.82   0.59    0.12    0.00
-1887    0.86    98.41   42.25   45      99.83   300     0.13    24.62 
-47.84   47.92   40.02   1.42    0.63    0.00
-951     0.01    99.70   42.74   46      99.83   300     0.13    27.87 
-56.99   57.08   46.82   0.63    0.12    0.00
-Bzy_MHz C1E%    C10%    CPU%c7  PkgTmp  GFX%rc6 GFXMHz  CPUGFX% Pkg%pc8 
-Pk%pc10 CPU%LPI SYS%LPI PkgWatt CorWatt GFXWatt
-1814    4.11    95.08   42.26   46      99.81   300     0.14    18.76 
-37.64   37.70   30.90   1.93    0.77    0.00
-1009    0.30    99.41   42.73   45      99.89   300     0.13    27.08 
-55.32   55.42   45.56   0.70    0.13    0.00
-1896    2.06    97.25   42.25   46      99.82   300     0.13    20.58 
-41.54   41.61   35.22   1.66    0.67    0.00
-972     0.01    99.69   42.74   45      99.86   300     0.14    28.82 
-56.29   56.38   47.29   0.59    0.11    0.00
-1859    1.66    97.61   42.24   45      99.86   300     0.12    22.99 
-40.33   40.40   33.22   1.69    0.71    0.00
-----
+> > Overall, I feel this would be a big project yet arguably for a low
+> > reward..
+> 
+> Indeed, we can drop a FIXME comment there and leave it as the last
+> user or something perhaps
 
-(Hope I've done that properly!)
+I see. We could keep it in the library but discourage new callers.
 
--K
+I will start with the internal cleanup as we discussed, as a part
+of this PCI reset series. Then, I will try adding those new helper
+functions that we've listed here, as a separate series.
 
-On 8/21/25 20:11, David E. Box wrote:
-> Synthetic PCIe hierarchies, such as those created by Intel VMD, are not
-> enumerated by firmware and do not receive BIOS-provided ASPM or CLKPM
-> defaults. Devices in such domains may therefore run without the intended
-> power management.
-> 
-> Add a host-bridge mechanism that lets controller drivers supply their own
-> defaults. A new aspm_default_link_state field in struct pci_host_bridge is
-> set via pci_host_set_default_pcie_link_state(). During link initialization,
-> if this field is non-zero, ASPM and CLKPM defaults come from it instead of
-> BIOS.
-> 
-> This enables drivers like VMD to align link power management with platform
-> expectations and avoids embedding controller-specific quirks in ASPM core
-> logic.
-> 
-> Link: https://patchwork.ozlabs.org/project/linux-pci/patch/20250720190140.2639200-1-david.e.box%40linux.intel.com/
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
-> 
-> Changes in V1 from RFC:
-> 
->    -- Rename field to aspm_dflt_link_state since it stores
->       PCIE_LINK_STATE_XXX flags, not a policy enum.
->    -- Move the field to struct pci_host_bridge since it's being applied to
->       the entire host bridge per Mani's suggestion.
->    -- During testing noticed that clkpm remained disabled and this was
->       also handled by the formerly used pci_enable_link_state(). Add a
->       check in pcie_clkpm_cap_init() as well to enable clkpm during init.
-> 
-> Changes in V2:
-> 
->    -- Host field name changed to aspm_default_link_state.
->    -- Added get/set functions for aspm_default_link_state. Only the
->       setter is exported. Added a kernel-doc describing usage and
->       particulars around meaning of 0.
-> 
->   drivers/pci/pcie/aspm.c | 42 +++++++++++++++++++++++++++++++++++++++--
->   include/linux/pci.h     |  9 +++++++++
->   2 files changed, 49 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 919a05b97647..b4f0b4805a35 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -373,6 +373,39 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
->   	pcie_set_clkpm_nocheck(link, enable);
->   }
->   
-> +/**
-> + * pci_host_set_default_pcie_link_state - set controller-provided default ASPM/CLKPM mask
-> + * @host: host bridge on which to apply the defaults
-> + * @state: PCIE_LINK_STATE_XXX flags
-> + *
-> + * Allows a PCIe controller driver to specify the default ASPM and/or
-> + * Clock Power Management (CLKPM) link state mask that will be used
-> + * for links under this host bridge during ASPM/CLKPM capability init.
-> + *
-> + * The value is consumed in pcie_aspm_cap_init() and pcie_clkpm_cap_init()
-> + * to override the firmware-discovered defaults.
-> + *
-> + * Interpretation of aspm_default_link_state:
-> + *   - Nonzero: bitmask of PCIE_LINK_STATE_* values to be used as defaults
-> + *   - Zero:    no override provided; ASPM/CLKPM defaults fall back to
-> + *              values discovered in hardware/firmware
-> + *
-> + * Note: zero is always treated as "unset", not as "force ASPM/CLKPM off".
-> + */
-> +void pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
-> +					  unsigned int state)
-> +{
-> +	host->aspm_default_link_state = state;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_host_set_default_pcie_link_state);
-> +
-> +static u32 pci_host_get_default_pcie_link_state(struct pci_dev *parent)
-> +{
-> +	struct pci_host_bridge *host = pci_find_host_bridge(parent->bus);
-> +
-> +	return host ? host->aspm_default_link_state : 0;
-> +}
-> +
->   static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
->   {
->   	int capable = 1, enabled = 1;
-> @@ -394,7 +427,10 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
->   			enabled = 0;
->   	}
->   	link->clkpm_enabled = enabled;
-> -	link->clkpm_default = enabled;
-> +	if (pci_host_get_default_pcie_link_state(link->pdev) & PCIE_LINK_STATE_CLKPM)
-> +		link->clkpm_default = 1;
-> +	else
-> +		link->clkpm_default = enabled;
->   	link->clkpm_capable = capable;
->   	link->clkpm_disable = blacklist ? 1 : 0;
->   }
-> @@ -866,7 +902,9 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
->   	}
->   
->   	/* Save default state */
-> -	link->aspm_default = link->aspm_enabled;
-> +	link->aspm_default = pci_host_get_default_pcie_link_state(parent);
-> +	if (!link->aspm_default)
-> +		link->aspm_default = link->aspm_enabled;
->   
->   	/* Setup initial capable state. Will be updated later */
->   	link->aspm_capable = link->aspm_support;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 59876de13860..8947cbaf9fa6 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -620,6 +620,10 @@ struct pci_host_bridge {
->   	unsigned int	size_windows:1;		/* Enable root bus sizing */
->   	unsigned int	msi_domain:1;		/* Bridge wants MSI domain */
->   
-> +#ifdef CONFIG_PCIEASPM
-> +	unsigned int	aspm_default_link_state;	/* Controller-provided default */
-> +#endif
-> +
->   	/* Resource alignment requirements */
->   	resource_size_t (*align_resource)(struct pci_dev *dev,
->   			const struct resource *res,
-> @@ -1849,6 +1853,8 @@ int pci_disable_link_state(struct pci_dev *pdev, int state);
->   int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
->   int pci_enable_link_state(struct pci_dev *pdev, int state);
->   int pci_enable_link_state_locked(struct pci_dev *pdev, int state);
-> +void pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
-> +					  unsigned int state);
->   void pcie_no_aspm(void);
->   bool pcie_aspm_support_enabled(void);
->   bool pcie_aspm_enabled(struct pci_dev *pdev);
-> @@ -1861,6 +1867,9 @@ static inline int pci_enable_link_state(struct pci_dev *pdev, int state)
->   { return 0; }
->   static inline int pci_enable_link_state_locked(struct pci_dev *pdev, int state)
->   { return 0; }
-> +static inline void
-> +pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
-> +				     unsigned int state) { }
->   static inline void pcie_no_aspm(void) { }
->   static inline bool pcie_aspm_support_enabled(void) { return false; }
->   static inline bool pcie_aspm_enabled(struct pci_dev *pdev) { return false; }
-> 
-> base-commit: c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9
-
--- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
-
+Thanks
+Nicolin
 
