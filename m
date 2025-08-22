@@ -1,309 +1,437 @@
-Return-Path: <linux-pci+bounces-34548-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34549-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E55A3B314AF
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 12:05:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F446B314E5
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 12:15:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B16677A1FBB
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 10:03:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BCA77AC12F1
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 10:11:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 345212877E9;
-	Fri, 22 Aug 2025 10:05:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E446629BD82;
+	Fri, 22 Aug 2025 10:11:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gFOV+fWL"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3XEZYApX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2056.outbound.protection.outlook.com [40.107.243.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684A227EFF1
-	for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 10:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755857120; cv=none; b=oBChxVagFTqsAxJXWXJA7R3VuHdUUm7ykzl7D4kW5uJir3e9C3q9w50dDwrtmEUS2glVHmxpPQBdCNBEErVJEXJUvqgTgDZKmX/EF/wG20vk1A6bOXILUKY5hdzEMg0GOyhpcLFxrPmAPDAwnvxijAbhRHlFalkpfBdYGZ2rvEQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755857120; c=relaxed/simple;
-	bh=KivU5RnfA0zCwbsH7zhExGKtReC3rbkiFiOi0NUu8JU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tQCQUMP8OjUNu6OzdkDbXtavEf4ANzp06U8rslrOygyGnoh4Dcey5iXPgxjQAmiVzPvfZ0bn2N9DJIz+4f04EVszZqkJUDte7SsgPF8LWjtT3RLpZOzRLpLgVM7maIgvPQGOmdrbPM4nAJ+NvVIYM2A1ApHcYgh82XEJpPK4iF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gFOV+fWL; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57M8UWh1006750
-	for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 10:05:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	NCvb4E87MdnkwFWFQpgaGoK+/UWKLd0ckk9/uB8fxpI=; b=gFOV+fWLijaslLma
-	A9XqpoRAKL4OPj1l1BTVvFvigN6fQ/5oXcLvh1AkfQ1phE5QY85wqYHzG3EUAO4o
-	AajQcO5PCy9VAtP4uI/4dGv0ZzShI8AsgTwfq1xwFCLv/0LPmynBt5Smv/E3+R9D
-	SC6GYK/YDOPW+OTy2JbKDmuDNtfu4AjSbimMahTTqAJsOuW6oHxOg36wdINf/KxP
-	pnmCJMkgL+aSBAZ64BwF6mGNz9Dewgrjw1tD3EQG9HZYTq8C8kxbz9X49B4KgEpc
-	6tnGmO/fv9ZNLQwM1hTOwLEys2rXsFWep8nI6/TS1t/VKrN0Wg2O8kwkW9D38ykj
-	GV/MlA==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48n5290t5s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 10:05:17 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-24458264c5aso22801625ad.3
-        for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 03:05:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755857115; x=1756461915;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NCvb4E87MdnkwFWFQpgaGoK+/UWKLd0ckk9/uB8fxpI=;
-        b=ohWlQzsNb2jVbmJEzhOWQ0+lJz8FSu3wQFYl7w9X7KrnRMOcxvJlRRhzQctEsDX1Id
-         SIP3GaTBV2wyjjvzOJHBTMJ0v2EVRDZE9tNwbnZDOxw/xERQR/mTi9v7J/JI2CvGreuj
-         awwSZaM0J8DtaD5413Am2F5/AHrfchI+dQyRxyFtdfKwGH+v6Qo7TZgCTNy2iynZbx8n
-         58dk3LK09zRFuW4pWZw7IvZfbCqdPjMzQGMjWDhLMtCRSzHRBfmq/YR6UWSDlk7WQ9+N
-         bMGMy2Gs0vfnQ7OlztM3TI/jebwpxz+/tJiBgOS0a7n5+FPmywUA0y+1vHsOeiAf6Qdl
-         bQSg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdsYKnqpPwKQLFHXQfB1Z9NTLr06Jn/RwR7l3CM/Ah19BLX/PjeCdHc9mIkihpMcYTbeWksnrGo+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjWQK43EiURqbWSKeBjGxYc5Uc0A/AQPD8m+BNio/EXglj0FVm
-	0I9kYfzyKRJlnXY1oE2cvm1uGzqhLEX4zut15U4P/SpgmZfu4xHnnmWE3GbIFYT3QydxBQnCBFl
-	86oNDyuwobOxQc2c2rfJSpFhA7XPx1O39SD+pJlXkyYm1oBEpIRy8RUvcyku0Xb0=
-X-Gm-Gg: ASbGnctghru/Z0J0tDV3FIDy2fHhPGltruwDMlZz/RPFlNL67JUsJ0BQEcgipN5MNxv
-	V0OtkzSrRPUwULdwZLhi9mr5+fSy/Di3LBAtTHjWKzwKP5vqjzOoZ2zgZkJgTqDS9LtPqAFgT/k
-	eIfMS+2EUicaNWhHjKBPsGmp+/LiD/aVsft58/vmjE/qAd1C0w2jC/Hu2N2KR78HVm4kKdOvd7u
-	2fJVc4BaJciUsKGRRK4zZNu8NBilAeUtucUUm1pK9W88PlnsLLDHidBujnzgoHqUKip2QUHt4Un
-	20Pbm2mvVOhmxqeXJKPYGYWaaQ5AOjedDIbVdS7qvuBbG2tOI40C5wcdVrwFh3vwcsnkEYfopr2
-	brDUGF+69DEXbDjTFRVqwDM0XiVXPOJo=
-X-Received: by 2002:a17:903:22cc:b0:240:640a:c57b with SMTP id d9443c01a7336-2462ef1f7bamr36120125ad.37.1755857114845;
-        Fri, 22 Aug 2025 03:05:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHShlcLRCyxd3es3abUH//R1uFG+bwmxmXbbL+TYec1DVJUwY5M/qqhUXum/j4nkYom6lZREg==
-X-Received: by 2002:a17:903:22cc:b0:240:640a:c57b with SMTP id d9443c01a7336-2462ef1f7bamr36119655ad.37.1755857114355;
-        Fri, 22 Aug 2025 03:05:14 -0700 (PDT)
-Received: from [10.133.33.128] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32513902819sm2098106a91.14.2025.08.22.03.05.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Aug 2025 03:05:13 -0700 (PDT)
-Message-ID: <b43382fc-a2c3-4c6b-b462-0cabf7a2103d@oss.qualcomm.com>
-Date: Fri, 22 Aug 2025 18:05:04 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D946322DF9E;
+	Fri, 22 Aug 2025 10:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755857482; cv=fail; b=B9gpEZB7MC3j304ExwoD9BKFJPwIbumVFGKA9JB1g5Yr91KF0BVzledqrTvCIdLUecK8kTbXiBRjWizR5FMK8AX7CP/VEe3/h3OjfeMevfei+TgAYGzArhZup3t2eZbdzAh9wwfjnGGd2/ol9iY85OAuI4feMBRthiMry7F7N78=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755857482; c=relaxed/simple;
+	bh=GWihUWcNu+mnpgxlbhhuBih22fqGtcxu4Wf5d0fAzJM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=OXk3GP7S4IW31ofVCjHRjh1PjvJkIus9c29zojrrnYIVQO+39iQNfDiyjdrALEOJUxxtJCyt+93zjC+Ofv1HYbZ4R5o0TqUgF5s2eISLOI4sR2CBa3ne0xE7XImbXzBHvPmw+fOWdiTOkphIOOvevao7iK9bhE3Ao2GtcBoFeyA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3XEZYApX; arc=fail smtp.client-ip=40.107.243.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WxJEU4u0joJTzPgDd8RsWsf66aEVmnr7BXJyRC8ASSGXGt4ixtEB+RoDbnOYh0Yf6zKY1wbULr1ExMVRQO86RtTyma3dkEy/E6JwlvMAHbDnOSj63BLFxDvcAMAclFi8ONOFCV+q7PhM/IwAZtzn88Q7Nb37FB0d6pRg/qd+UZRxUcu9Z0LnwHkMpfDiXdS6iCiHWfFC+1bh0JuY0GGo/Ybr0LryqsMReEnbXNDJUx0dJgFatLQ+FU+r2vwHCX/uwrRgOvDw7Cffsz4wKY3guMmnx1iZ9+NUQpV8j3tNiWMSG8AjqxLrjHURTUpqXcTtOlxV1haIsnQy1j8VD6Pc1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oKYJO/SNAhz/YsAwtcW4p8a4J2g1pzoM4Zs7/Lvhxac=;
+ b=OP7FY3spd85SjK6/BkQP1kXnow+tL4dArCQFlQDwT1MFeg9pHjdA0JepvCvD5OP4o00Wec4FIvO8ToHxP23ME8rE6+S7LYqonuVoKlVRw8LKznGj8W/He+iBZrIMPW8dkiGNF6685S3uzMtqVG5fkx5IA2xR+wpBkaKpy3HcJBnjXOL37o+kOcyNdzMKUK303iYHgjvnQzkba4tva8M9O03dqAGyEo75rWFSIMqYQyZD/vdkIlJv2941yKXnTvfLlo+NXo5M6ociCzVPp0ML9Nimhkry363cehWHKOB0dalMnESIm6DC0hjNCC3KT9sUjgFJkVViolOEEAoerlD+7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oKYJO/SNAhz/YsAwtcW4p8a4J2g1pzoM4Zs7/Lvhxac=;
+ b=3XEZYApXKPBS3rcPGPfLkCtzIPIESRjto5ASaJdh6cvC2qLM0SXAenI0mkXv/zg/3qvp88HRu/quOyDFK3UXRySwCkZPSUuupSaWsmbMV2mW0Dq4sm/H45fwHKQx46U78n8VMWQfpHoWCtdRSvjQNHVl7JWO7krIq31z59+h8s8=
+Received: from DM4PR12MB6158.namprd12.prod.outlook.com (2603:10b6:8:a9::20) by
+ DS0PR12MB8525.namprd12.prod.outlook.com (2603:10b6:8:159::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9052.17; Fri, 22 Aug 2025 10:11:16 +0000
+Received: from DM4PR12MB6158.namprd12.prod.outlook.com
+ ([fe80::b639:7db5:e0cc:be5e]) by DM4PR12MB6158.namprd12.prod.outlook.com
+ ([fe80::b639:7db5:e0cc:be5e%6]) with mapi id 15.20.9052.017; Fri, 22 Aug 2025
+ 10:11:16 +0000
+From: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "mani@kernel.org"
+	<mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"cassel@kernel.org" <cassel@kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Simek, Michal" <michal.simek@amd.com>,
+	"Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>, "Havalige, Thippeswamy"
+	<thippeswamy.havalige@amd.com>
+Subject: RE: [PATCH v7 2/2] PCI: amd-mdb: Add support for PCIe RP PERST#
+ signal handling
+Thread-Topic: [PATCH v7 2/2] PCI: amd-mdb: Add support for PCIe RP PERST#
+ signal handling
+Thread-Index: AQHcB26ZvUF4V0XCuUS3aC3lVOW8NLRfc0GAgA8VSHA=
+Date: Fri, 22 Aug 2025 10:11:16 +0000
+Message-ID:
+ <DM4PR12MB6158961BAA5D9A3F56102901CD3DA@DM4PR12MB6158.namprd12.prod.outlook.com>
+References: <20250807074019.811672-3-sai.krishna.musham@amd.com>
+ <20250812194113.GA199940@bhelgaas>
+In-Reply-To: <20250812194113.GA199940@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-08-22T10:01:16.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM4PR12MB6158:EE_|DS0PR12MB8525:EE_
+x-ms-office365-filtering-correlation-id: eaedaa3e-b1e9-4168-4233-08dde1643b80
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?em/BQF5MjQ6nvi50PJHqDiQrW+9q/oc/D+3IGnWON01EA4Wuy3pkLliuh8lG?=
+ =?us-ascii?Q?rGTZSoDlH9q4anATuMYnB77E0SPzC3SZn+sOLI1WhRcagKZrlc3i485fUK2t?=
+ =?us-ascii?Q?moU0LOJ698tSwt7klLls/wP6VaNAdbZDoQCQxrBF+YJRMdRwq4c639K96djX?=
+ =?us-ascii?Q?Nwqj8SyDE0H+aH8K1UGWBPXeEwxRDjuLtQH/VNKwvnxJRy5jvt6jd1oNJ6Mw?=
+ =?us-ascii?Q?26epJDIT0bJ5N48EwSVhN/gwsSo+Z5iv6DOaO/3Z/JiYc1rtcquZ/T54quU+?=
+ =?us-ascii?Q?pgWGPV1NO5SciCyFE6nfuz6ZbUKgCHTmWdLZc86qNx3rhOdzJ9QpOLXQs+ZI?=
+ =?us-ascii?Q?LHUn3SosdBdN/QidlEGLizgsL1NVB3CUlmj9I5v2fKzpPQaBife4+llCol3L?=
+ =?us-ascii?Q?H1aSs/hDS+Ha5olGqsDpprIFGyzlbUpf+BoLsTXOHpraI5mvTYAmhDmGZtIe?=
+ =?us-ascii?Q?A6pixVALKXqTS38WIaI+r9l4CeYQ8AYGP8tuFKVakuftleDp3oy4ccaTMa6v?=
+ =?us-ascii?Q?ej6YawdhPX6/59JaCZkkjGgJ9rvWExTXONLl5LOSKwnV0R+2cMyX9Z51qvLu?=
+ =?us-ascii?Q?x62+DC+AJeXIWxs4mLrvEStCq9DWrGGqK+r42EsMVsT4esHA/PIrxxq2VdEw?=
+ =?us-ascii?Q?MlHaul00+DfynpwaHsQY+spg6eCSyUxE5TnvzBy/YhA0bL+pzX1ljaNTNNYl?=
+ =?us-ascii?Q?Oz//SeefzzcDw0jeSCihBlFcQUTUgNODND0KQx+to/raNLszdEnBAzrsmn2I?=
+ =?us-ascii?Q?kqDRRXYm6EmoAbQkp+BtsHRqeuoIe5DumXJX6Wec5GB1tQdMpOcT/9dKp197?=
+ =?us-ascii?Q?t9SkmCwr/+KzDJLSh1Z4GsrTRVoOon7CWszINWXdGFOLHvd4M9snZUP/GNAT?=
+ =?us-ascii?Q?UylLiSTxsXolnv4Whsc3nob1vbRVsDEcJ7GiUf+RqQf+JNlGg9vN95o4BE9I?=
+ =?us-ascii?Q?J7B1hip/TFeDgGbDylPFU0hp5e12FW+Ln4lru59JYy4c05l/w88y1x/kX/gp?=
+ =?us-ascii?Q?j3Vv9vl4YbDFLQCQp6BM9ISPJ4yADvZHA2MkO7mi6ZznrOS+iTiuM+RJjiWv?=
+ =?us-ascii?Q?lWTL9fFZNbIkMwQuk3y0UwO/RU1IbogZSswBJndrB8RVUzPUHfnqHRAloMy3?=
+ =?us-ascii?Q?5BaVc1RpT3+5hi/017wm68O3ZSX4NK9aEe4JUY6g8AAmy1ax7SIY8ENOgtef?=
+ =?us-ascii?Q?GxBpDNfzsG8htpoXzYj8QmmcZEyfrJX3xzqo1F/UjP2nUFUM1mrovkmOw0Ki?=
+ =?us-ascii?Q?g6GJgWHEKVD2PO43aT82Zlgx+/vPr/G1XqlzP6m9cpdyNQCKFFhn/zNQjjNn?=
+ =?us-ascii?Q?q4L2y5x3zS74sn6efSMlX+9lkhL4bYo/TA2VUO92S6gA5uQiis0aLMHhOF2P?=
+ =?us-ascii?Q?S9+wevWSOTbPlTO/oqGiNh+O+u0X3YjgKesfNmFqkqUHbn1JwcnV2SeBcXXy?=
+ =?us-ascii?Q?PSzGqhao3jpTJ4wvY30HVYmh4s0vX2SUbpW223hgOazccXycF55Smm+kIT2X?=
+ =?us-ascii?Q?NBi+yyc0hnnHc7Y=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6158.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?xDJ6CdMhVYizmQFxhwwy3B7Fik1fTTrz4OeNrG8qz0oeQt3gUseJxhSmoUoC?=
+ =?us-ascii?Q?TSSAnAD2YDCfxIE6d99VZZtMzJ83QlwtLSKZS6gq5BGSW3FnzCp1t88trPv3?=
+ =?us-ascii?Q?osNV1sw7kfZjY+lR6QHJuU9vihUlmI2eoCkfezzYwOmtu5/N78IdHqKntnOd?=
+ =?us-ascii?Q?/wK6HB7EZtWOGe/F6L+zUWWOeVa2Wu9yYMJlNRofYpMQ8rtvC1ZzQc62bD+C?=
+ =?us-ascii?Q?22GeW6L9ct3Twn+hBWO/77MJXsrsL2CvynlN0mbjsJ7vjA+/UoVrmdbgVrKy?=
+ =?us-ascii?Q?8+T7w11e1wH/CVTi2j3tbnA3lfjJz72cUnQan7eiOFVpvnaQPcSaH2oY8CTr?=
+ =?us-ascii?Q?u8M7QP0E43FgrjilSBPuIrBErO04DFGHrcbq2mJUbH4Fj7OFd1sFpKsLM0L8?=
+ =?us-ascii?Q?EWFMBU2y+JgkUoDIxixyJn+D/5lz2MJn7Tj531lqEYqdJE1lqHjjtX59vr3t?=
+ =?us-ascii?Q?YzD0MGcpA13iAlm5vFbUHrELtTvJU3BGsTq3UPZmF628QEX+QYqMFwgCaieP?=
+ =?us-ascii?Q?zQdIeYsNM/nGRBho3VwiVhuyOghsfyizfE1jr5kR5clQ6UBNYSAil0juc6it?=
+ =?us-ascii?Q?ZPLB/TDL5jwkt6he9uszNMVedycz4NuFkTsEdMFUo3fOlcnly15+U2Do6WcV?=
+ =?us-ascii?Q?MYSW7ZUiFovDVtWhG/MlwYcV5zQBPl2p7+xSq3E8pefLaFQsIx96jvu5unxl?=
+ =?us-ascii?Q?hRqoc9CXXGDHma4Y7ytL+Xhp5MrI9zLH85GKNoMyYZsX9VpN+5AJXYf6rLBl?=
+ =?us-ascii?Q?lIfEuSlhGkpFRTSJfxjdBSMyaf84YEvwws59OYjcX91n54Bn2YamFl+UVeW1?=
+ =?us-ascii?Q?4fFMwvl+uR4cSpejglDF3YJWNajOG3UYrpRPYmUOT2+u+AWrFcWacvWS88d3?=
+ =?us-ascii?Q?Zpq+KQ6Gs0ZFiS/hqTdKhvk3gMAuoaCs4W71ECTGYRYz8QccWPS3h+1NvdIV?=
+ =?us-ascii?Q?Msd48mCd5xlY19es9XOh7FPCplEgEWu8f7aG2saf83IWIQ24PjQ1rNZtS7AB?=
+ =?us-ascii?Q?ic3ne2N+8uBtvpJB3zmpvKSvoM1W5l/a22wxNLgjGtU8BdQ7nz3i9tvTVuVV?=
+ =?us-ascii?Q?xrqzrxbT3eEBSPAf7exfaRACYu34g8taNQpJI8G0BIu/ziUTavXt0P/JmsPQ?=
+ =?us-ascii?Q?YYJMntBsBoZRHWiUVwEA65pRETZ2Sk2Lirvj59yUbtPBdbQmyxrd6CQFMkYd?=
+ =?us-ascii?Q?G2oOpDDGNE28ltnJ4tq04oc0MyYgtKweAXrmFnlczfCFUWm4MXs6s/gJigD+?=
+ =?us-ascii?Q?D6nPIo1+LgCLl+0l1OHhOVtL5ywt+zaBDxMEVgNezz4d1gzoNaB7ndafavUy?=
+ =?us-ascii?Q?LJPiuDkvHGJ+Oa4ElUhiCDIBOrWOHDugoB/Zqwk1aZeBMLECQzmzy15ZGJ31?=
+ =?us-ascii?Q?wFOCQAgcEFoDIy5CiehM+PY7twoT/GvdPnuZVzMzLNJkJHoB3sNUJ38ggf23?=
+ =?us-ascii?Q?DRJHN+SP8KCRKSdFBO3hAijhd+eOd7cdER9S0Otb4/bfl/l/7X51d7CHz6su?=
+ =?us-ascii?Q?7lWOSUqy7Miv2/WpCDSCjAP2gPWJW5mwo5mpeGbfwKT811hgmj4eqmGLVw53?=
+ =?us-ascii?Q?ONSj6fOBBILE+2Fl+Pw=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/3] PCI: qcom: Add equalization settings for 8.0 GT/s
- and 32.0 GT/s
-To: Manivannan Sadhasivam <mani@kernel.org>,
-        Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
-        lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-        johan+linaro@kernel.org, vkoul@kernel.org, kishon@kernel.org,
-        neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, quic_krichai@quicinc.com,
-        quic_vbadigan@quicinc.com
-References: <20250819071649.1531437-1-ziyue.zhang@oss.qualcomm.com>
- <20250819071649.1531437-2-ziyue.zhang@oss.qualcomm.com>
- <z54p5x5u56u7dprrlv3obzhxotjgimbufa2spajoqvnlrevgdd@4dejnkmiegrh>
-Content-Language: en-US
-From: Qiang Yu <qiang.yu@oss.qualcomm.com>
-In-Reply-To: <z54p5x5u56u7dprrlv3obzhxotjgimbufa2spajoqvnlrevgdd@4dejnkmiegrh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=fpOFpF4f c=1 sm=1 tr=0 ts=68a840dd cx=c_pps
- a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=EUspDBNiAAAA:8 a=uZ_Y6Hf0VBP1xoXJwNUA:9
- a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22
-X-Proofpoint-GUID: eIOwMAqvET171_sN28nduGJbMcMX_nSb
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIwMDAxMyBTYWx0ZWRfX3VfUNzKfjPtW
- LvvYval6zm7uW8qRqPUuSvy0RLax4ayyfplP15kS/V+QSe/oUwPeLzJD5i+h6an2/KNDAJnJDj9
- hMG7tOiWnDu4uYgQDHUp+xpsom5l7zIYoMegALqShW5tH5qXziqk073ia7PcgYtLgtRQXRwqw8A
- Tquj1WYIwbZEvjGpy9vCGljxBG15RAABttHY6NDK5F0dY56Q33q7u/8HNTV2cfFirJJsSsg2gPX
- r4/d6yC+Ps9+FzWlyZq1xM4+1p2+F4N282FI/F4s9DPT6T4U9Foc3r3QcKGPwtbkvq1Z2OZ3pKx
- 71pCZPtKTSGQwy87aaYalmaKhMrknEm9dhOUmVjZX7BJ/J41zJ0EWsZOxhUtDgwgadeMNdzzZr8
- 6IHScPWp9saOLwR/G6ck5fdUbmcCnw==
-X-Proofpoint-ORIG-GUID: eIOwMAqvET171_sN28nduGJbMcMX_nSb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-22_03,2025-08-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 spamscore=0 clxscore=1015 adultscore=0
- suspectscore=0 bulkscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2508110000 definitions=main-2508200013
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6158.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eaedaa3e-b1e9-4168-4233-08dde1643b80
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2025 10:11:16.7502
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0Ve/mZXWBns++uHSv056QLJJies6bUycaLoaOsyYfY7I8vGQfNxIjVr1Lc63RwLdLeM/xZz5kgu2s3u5b0cEOg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8525
 
+[AMD Official Use Only - AMD Internal Distribution Only]
 
+Hi Bjorn,
 
-On 8/22/2025 4:06 PM, Manivannan Sadhasivam wrote:
-> On Tue, Aug 19, 2025 at 03:16:46PM GMT, Ziyue Zhang wrote:
->> Add lane equalization setting for 8.0 GT/s and 32.0 GT/s to enhance link
->> stability and avoid AER Correctable Errors reported on some platforms
->> (eg. SA8775P).
->>
-> 
-> So this is fixing an issue, right? Then you should add relevant Fixes tag. I
-> guess the tag here would be the commit that added SA8775p.
-> 
->> 8.0 GT/s, 16.0 GT/s and 32.0 GT/s require the same equalization setting.
->> This setting is programmed into a group of shadow registers, which can be
->> switched to configure equalization for different speeds by writing 00b,
->> 01b and 10b to `RATE_SHADOW_SEL`.
->>
->> Hence program equalization registers in a loop using link speed as index,
->> so that equalization setting can be programmed for 8.0 GT/s, 16.0 GT/s
->> and 32.0 GT/s.
->>
->> Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
->> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
->> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-designware.h  |  1 -
->>   drivers/pci/controller/dwc/pcie-qcom-common.c | 58 +++++++++++--------
->>   drivers/pci/controller/dwc/pcie-qcom-common.h |  2 +-
->>   drivers/pci/controller/dwc/pcie-qcom-ep.c     |  6 +-
->>   drivers/pci/controller/dwc/pcie-qcom.c        |  6 +-
->>   5 files changed, 41 insertions(+), 32 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index b5e7e18138a6..11de844428e5 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -123,7 +123,6 @@
->>   #define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
->>   #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
->>   #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
->> -#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT	0x1
->>   
->>   #define GEN3_EQ_CONTROL_OFF			0x8A8
->>   #define GEN3_EQ_CONTROL_OFF_FB_MODE		GENMASK(3, 0)
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
->> index 3aad19b56da8..cb98e66d81d9 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom-common.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
->> @@ -8,9 +8,11 @@
->>   #include "pcie-designware.h"
->>   #include "pcie-qcom-common.h"
->>   
->> -void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
->> +void qcom_pcie_common_set_equalization(struct dw_pcie *pci)
->>   {
->>   	u32 reg;
->> +	u16 speed;
->> +	struct device *dev = pci->dev;
-> 
-> Reverse Xmas order please.
-> 
->>   
->>   	/*
->>   	 * GEN3_RELATED_OFF register is repurposed to apply equalization
->> @@ -19,32 +21,40 @@ void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
->>   	 * determines the data rate for which these equalization settings are
->>   	 * applied.
->>   	 */
->> -	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
->> -	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
->> -	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
->> -	reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
->> -			  GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT);
->> -	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
->>   
->> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
->> -	reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
->> -		GEN3_EQ_FMDC_N_EVALS |
->> -		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
->> -		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
->> -	reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
->> -		FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
->> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
->> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
->> -	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
->> +	for (speed = PCIE_SPEED_8_0GT; speed <= pcie_link_speed[pci->max_link_speed]; ++speed) {
->> +		if (speed > PCIE_SPEED_32_0GT) {
->> +			dev_warn(dev, "Skipped equalization settings for speeds higher than 32.0 GT/s\n");
->> +			break;
->> +		}
->>   
->> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
->> -	reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
->> -		GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
->> -		GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
->> -		GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
->> -	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
->> +		reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
->> +		reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
->> +		reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
->> +		reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
->> +			  speed - PCIE_SPEED_8_0GT);
->> +		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
->> +
->> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
->> +		reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
->> +			GEN3_EQ_FMDC_N_EVALS |
->> +			GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
->> +			GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
->> +		reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
->> +			FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
->> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
->> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
->> +		dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
->> +
->> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
->> +		reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
->> +			GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
->> +			GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
->> +			GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
->> +		dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
->> +	}
->>   }
->> -EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_equalization);
->> +EXPORT_SYMBOL_GPL(qcom_pcie_common_set_equalization);
->>   
->>   void qcom_pcie_common_set_16gt_lane_margining(struct dw_pcie *pci)
->>   {
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.h b/drivers/pci/controller/dwc/pcie-qcom-common.h
->> index 7d88d29e4766..7f5ca2fd9a72 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom-common.h
->> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.h
->> @@ -8,7 +8,7 @@
->>   
->>   struct dw_pcie;
->>   
->> -void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci);
->> +void qcom_pcie_common_set_equalization(struct dw_pcie *pci);
->>   void qcom_pcie_common_set_16gt_lane_margining(struct dw_pcie *pci);
->>   
->>   #endif
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> index 60afb4d0134c..aeb166f68d55 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> @@ -511,10 +511,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
->>   		goto err_disable_resources;
->>   	}
->>   
->> -	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT) {
->> -		qcom_pcie_common_set_16gt_equalization(pci);
->> +	qcom_pcie_common_set_equalization(pci);
->> +
->> +	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT)
-> 
-> This condition has existed even before this patch, but just noticing this
-> possible issue. So if 'max_link_speed' is > 16 GT/s, we do not need to set lane
-> margining? We used the same logic to set equalization setting earlier also.
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Wednesday, August 13, 2025 1:11 AM
+> To: Musham, Sai Krishna <sai.krishna.musham@amd.com>
+> Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com; mani@kernel=
+.org;
+> robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org; cassel@kernel.o=
+rg;
+> linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>; Gogada, Bha=
+rat
+> Kumar <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
+> <thippeswamy.havalige@amd.com>
+> Subject: Re: [PATCH v7 2/2] PCI: amd-mdb: Add support for PCIe RP PERST#
+> signal handling
+>
+> Caution: This message originated from an External Source. Use proper caut=
+ion
+> when opening attachments, clicking links, or responding.
+>
+>
+> On Thu, Aug 07, 2025 at 01:10:19PM +0530, Sai Krishna Musham wrote:
+> > Add support for handling the AMD Versal Gen 2 MDB PCIe Root Port PERST#
+> > signal via a GPIO by parsing the new PCIe bridge node to acquire the
+> > reset GPIO. If the bridge node is not found, fall back to acquiring it
+> > from the PCIe host bridge node.
+> >
+> > As part of this, update the interrupt controller node parsing to use
+> > of_get_child_by_name() instead of of_get_next_child(), since the PCIe
+> > host bridge node now has multiple children. This ensures the correct
+> > node is selected during initialization.
+> >
+> > Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
+> > ---
+> > Changes in v7:
+> > - Use for_each_child_of_node_with_prefix() to iterate through PCIe
+> >   Bridge nodes.
+> >
+> > Changes in v6:
+> > - Simplified error checking condition logic.
+> > - Removed unnecessary fallback message.
+> >
+> > Changes in v5:
+> > - Add fall back mechanism to acquire reset GPIO from PCIe node when PCI=
+e
+> Bridge
+> > node is not present.
+> >
+> > Changes in v4:
+> > - Resolve kernel test robot warning.
+> > https://lore.kernel.org/oe-kbuild-all/202506241020.rPD1a2Vr-lkp@intel.c=
+om/
+> > - Update commit message.
+> >
+> > Changes in v3:
+> > - Implement amd_mdb_parse_pcie_port to parse bridge node for reset-gpio=
+s
+> property.
+> >
+> > Changes in v2:
+> > - Change delay to PCIE_T_PVPERL_MS
+> >
+> > v6 https://lore.kernel.org/all/20250719030951.3616385-1-
+> sai.krishna.musham@amd.com/
+> > v5 https://lore.kernel.org/all/20250711052357.3859719-1-
+> sai.krishna.musham@amd.com/
+> > v4 https://lore.kernel.org/all/20250626054906.3277029-1-
+> sai.krishna.musham@amd.com/
+> > v3 https://lore.kernel.org/r/20250618080931.2472366-1-
+> sai.krishna.musham@amd.com/
+> > v2 https://lore.kernel.org/r/20250429090046.1512000-1-
+> sai.krishna.musham@amd.com/
+> > v1 https://lore.kernel.org/r/20250326041507.98232-1-
+> sai.krishna.musham@amd.com/
+> > ---
+> >  drivers/pci/controller/dwc/pcie-amd-mdb.c | 52 ++++++++++++++++++++++-
+> >  1 file changed, 51 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-amd-mdb.c
+> b/drivers/pci/controller/dwc/pcie-amd-mdb.c
+> > index 9f7251a16d32..3c6e837465bb 100644
+> > --- a/drivers/pci/controller/dwc/pcie-amd-mdb.c
+> > +++ b/drivers/pci/controller/dwc/pcie-amd-mdb.c
+> > @@ -18,6 +18,7 @@
+> >  #include <linux/resource.h>
+> >  #include <linux/types.h>
+> >
+> > +#include "../../pci.h"
+> >  #include "pcie-designware.h"
+> >
+> >  #define AMD_MDB_TLP_IR_STATUS_MISC           0x4C0
+> > @@ -56,6 +57,7 @@
+> >   * @slcr: MDB System Level Control and Status Register (SLCR) base
+> >   * @intx_domain: INTx IRQ domain pointer
+> >   * @mdb_domain: MDB IRQ domain pointer
+> > + * @perst_gpio: GPIO descriptor for PERST# signal handling
+> >   * @intx_irq: INTx IRQ interrupt number
+> >   */
+> >  struct amd_mdb_pcie {
+> > @@ -63,6 +65,7 @@ struct amd_mdb_pcie {
+> >       void __iomem                    *slcr;
+> >       struct irq_domain               *intx_domain;
+> >       struct irq_domain               *mdb_domain;
+> > +     struct gpio_desc                *perst_gpio;
+> >       int                             intx_irq;
+> >  };
+> >
+> > @@ -284,7 +287,7 @@ static int amd_mdb_pcie_init_irq_domains(struct
+> amd_mdb_pcie *pcie,
+> >       struct device_node *pcie_intc_node;
+> >       int err;
+> >
+> > -     pcie_intc_node =3D of_get_next_child(node, NULL);
+> > +     pcie_intc_node =3D of_get_child_by_name(node, "interrupt-controll=
+er");
+> >       if (!pcie_intc_node) {
+> >               dev_err(dev, "No PCIe Intc node found\n");
+> >               return -ENODEV;
+> > @@ -402,6 +405,28 @@ static int amd_mdb_setup_irq(struct amd_mdb_pcie
+> *pcie,
+> >       return 0;
+> >  }
+> >
+> > +static int amd_mdb_parse_pcie_port(struct amd_mdb_pcie *pcie)
+> > +{
+> > +     struct device *dev =3D pcie->pci.dev;
+> > +     struct device_node *pcie_port_node __maybe_unused;
+> > +
+> > +     /*
+> > +      * This platform currently supports only one Root Port, so the lo=
+op
+> > +      * will execute only once.
+> > +      * TODO: Enhance the driver to handle multiple Root Ports in the =
+future.
+> > +      */
+> > +     for_each_child_of_node_with_prefix(dev->of_node, pcie_port_node, =
+"pcie") {
+>
+> This is only the second user of for_each_child_of_node_with_prefix()
+> in the whole tree.  Also the only use of "__maybe_unused" in
+> drivers/pci/controller/.
+>
+> Most of the PCI controller drivers use
+> for_each_available_child_of_node_scoped(); can we do the same here?
+>
+> The apple, kirin, mt7621, mtk, and qcom drivers are examples.  I think
+> the qcom structure is pretty good, and it has a similar fallback path
+> for DTs without Root Port nodes (qcom_pcie_parse_legacy_binding()):
+>
+>   qcom_pcie_probe
+>     ret =3D qcom_pcie_parse_ports
+>       for_each_available_child_of_node_scoped(dev->of_node, of_port)
+>         qcom_pcie_parse_port(of_port)
+>           reset =3D devm_fwnode_gpiod_get(..., "reset", ...)
+>     if (ret)
+>       qcom_pcie_parse_legacy_binding
+>
+> IIUC the current amd-mdb hardware only supports a single Root Port, so
+> I don't think you need a TODO, since there's no point in that
+> enhancement until hardware supports multiple RPs.
+>
+> But I probably *would* add a check here so that if we run the current
+> driver on future hardware that does have multiple Root Ports with
+> separate resets for each RP, there's at least a chance that the first
+> RP will work.  E.g.,
+>
+>   amd_mdb_parse_pcie_port(...)
+>   {
+>     if (pcie->perst_gpio) {
+>       dev_warn("Ignoring extra Root Port\n");
+>       return 0;
+>     }
+>
+>     pcie->perst_gpio =3D devm_fwnode_gpiod_get(...);
+>
 
-Lane margining is supported for 16 GT/s and 32 GT/s. The settings are
-dependent on phy design. For a specific phy, they have same settings
-for 16 GT/s and 32 GT/s. Perhaps we can get the settings from devicetree
-and program them in a loop.
+Thanks for the feedback. I'll switch to using for_each_available_child_of_n=
+ode_scoped()
+and send it as a separate patch.
 
-But I'm not sure why we need to program it. It will no affect singal
-quality and only required when user wants to collect margining info.
-
-- Qiang Yu
-
-> 
-> - Mani
-> 
-
+> > +             pcie->perst_gpio =3D devm_fwnode_gpiod_get(dev,
+> of_fwnode_handle(pcie_port_node),
+> > +                                                      "reset", GPIOD_O=
+UT_HIGH, NULL);
+> > +             if (IS_ERR(pcie->perst_gpio))
+> > +                     return dev_err_probe(dev, PTR_ERR(pcie->perst_gpi=
+o),
+> > +                                          "Failed to request reset GPI=
+O\n");
+> > +             return 0;
+> > +     }
+> > +
+> > +     return -ENODEV;
+> > +}
+> > +
+> >  static int amd_mdb_add_pcie_port(struct amd_mdb_pcie *pcie,
+> >                                struct platform_device *pdev)
+> >  {
+> > @@ -426,6 +451,12 @@ static int amd_mdb_add_pcie_port(struct
+> amd_mdb_pcie *pcie,
+> >
+> >       pp->ops =3D &amd_mdb_pcie_host_ops;
+> >
+> > +     if (pcie->perst_gpio) {
+> > +             mdelay(PCIE_T_PVPERL_MS);
+> > +             gpiod_set_value_cansleep(pcie->perst_gpio, 0);
+> > +             mdelay(PCIE_RESET_CONFIG_WAIT_MS);
+> > +     }
+> > +
+> >       err =3D dw_pcie_host_init(pp);
+> >       if (err) {
+> >               dev_err(dev, "Failed to initialize host, err=3D%d\n", err=
+);
+> > @@ -444,6 +475,7 @@ static int amd_mdb_pcie_probe(struct platform_devic=
+e
+> *pdev)
+> >       struct device *dev =3D &pdev->dev;
+> >       struct amd_mdb_pcie *pcie;
+> >       struct dw_pcie *pci;
+> > +     int ret;
+> >
+> >       pcie =3D devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> >       if (!pcie)
+> > @@ -454,6 +486,24 @@ static int amd_mdb_pcie_probe(struct platform_devi=
+ce
+> *pdev)
+> >
+> >       platform_set_drvdata(pdev, pcie);
+> >
+> > +     ret =3D amd_mdb_parse_pcie_port(pcie);
+> > +     /*
+> > +      * If amd_mdb_parse_pcie_port returns -ENODEV, it indicates that =
+the
+> > +      * PCIe Bridge node was not found in the device tree. This is not
+> > +      * considered a fatal error and will trigger a fallback where the
+> > +      * reset GPIO is acquired directly from the PCIe Host Bridge node=
+.
+> > +      */
+> > +     if (ret) {
+> > +             if (ret !=3D -ENODEV)
+> > +                     return ret;
+> > +
+> > +             pcie->perst_gpio =3D devm_gpiod_get_optional(dev, "reset"=
+,
+> > +                                                        GPIOD_OUT_HIGH=
+);
+> > +             if (IS_ERR(pcie->perst_gpio))
+> > +                     return dev_err_probe(dev, PTR_ERR(pcie->perst_gpi=
+o),
+> > +                                          "Failed to request reset GPI=
+O\n");
+> > +     }
+> > +
+> >       return amd_mdb_add_pcie_port(pcie, pdev);
+> >  }
+> >
+> > --
+> > 2.43.0
+> >
 
