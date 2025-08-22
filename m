@@ -1,104 +1,101 @@
-Return-Path: <linux-pci+bounces-34608-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34609-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A7E9B3203C
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 18:14:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E90B0B320BA
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 18:49:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 482E2189CA93
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 16:09:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80B60622468
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 16:46:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C3502405E1;
-	Fri, 22 Aug 2025 16:08:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D14A285C8C;
+	Fri, 22 Aug 2025 16:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="R5ErbakN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITh/XnKa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from 10.mo533.mail-out.ovh.net (10.mo533.mail-out.ovh.net [46.105.72.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4479258ECD
-	for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 16:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.72.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1245121858D;
+	Fri, 22 Aug 2025 16:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755878924; cv=none; b=F8zl7G/7SHkuCoUWN2b7xkHEVhRaCXJTyEDelpmaAA/nftqBb8r20f2EXlSqo7IejaR6sRzJ9QmpGyKjWXeRRXmuywSN54yxLeufN8PiwfEPmSPVx3LphdcTcMecWAA5UXqFRaYtp4IuvjTyf/4zqGxgCrj82tnPFzAD5VREjKQ=
+	t=1755881201; cv=none; b=RkImi+FBmgIjXtgfU0uGIcLQn9L7HkGVaBNbaaqUmHge42QDeTto3xx177CI8pzMrsDXAKNy8ZXd1wLYY8SBU5NKo3bV0ScR+JdQzruYa46CbPRyu+ANx+iHeAA9mX0I8vX1bkKaABzE0s6uAOIDscXg/qShAxHqMFUI2o+Gwk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755878924; c=relaxed/simple;
-	bh=Muy7A70ZsK2eQRnxqNVYMyvIfA2QXop/Nofswsm16qQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cjotmde/CBNgZz8a8QPskzz3Uf/iONBM63xZ8Ep8ZhN3lqz3KdkrXsUrPTdvc79qXRttTn2wMwYmg14th1muWbQKu3UaotsZodxDlYiWaBzUo9OtZTAmYmzjprVnfXK4tReAq+WkFOwamOZkMdsg2ItzEsl/fu0/hDozcy3XgrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=R5ErbakN; arc=none smtp.client-ip=46.105.72.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
-Received: from director1.derp.mail-out.ovh.net (director1.derp.mail-out.ovh.net [51.68.80.175])
-	by mo533.mail-out.ovh.net (Postfix) with ESMTPS id 4c7lVG4bgsz5y8b;
-	Fri, 22 Aug 2025 16:08:38 +0000 (UTC)
-Received: from director1.derp.mail-out.ovh.net (director1.derp.mail-out.ovh.net. [127.0.0.1])
-        by director1.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
-        for <brgl@bgdev.pl>; Fri, 22 Aug 2025 16:08:38 +0000 (UTC)
-Received: from mta6.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.118.160])
-	by director1.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4c7lVG00x4z5xT3;
-	Fri, 22 Aug 2025 16:08:37 +0000 (UTC)
-Received: from orca.pet (unknown [10.1.6.6])
-	by mta6.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id BB32A8E32EC;
-	Fri, 22 Aug 2025 16:08:36 +0000 (UTC)
-Authentication-Results:garm.ovh; auth=pass (GARM-101G00461199434-89d8-4298-bfef-9cf54b1e3b55,
-                    ADC0680FE15BB91110492B9A34CE42AA242C155A) smtp.auth=marcos@orca.pet
-X-OVh-ClientIp:79.117.22.109
-Message-ID: <7c325631-c209-4df9-a259-4b9c4e545f87@orca.pet>
-Date: Fri, 22 Aug 2025 18:08:36 +0200
+	s=arc-20240116; t=1755881201; c=relaxed/simple;
+	bh=dPxj/m4CZ5Tj5I+499kIt/zRVHwkfdttODzZjZjbop0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JnfdqOg97IReyPnmA3zHgnI9v6wHDao9WG5kHT5bPDGqpxeAinOKUIUqE4nK3oDNBEgBJ+YXAc9WG7Bs8mxQzRNSbz6wzoskoyKF4Cx9TCR2Gz0HVUTB3fBfpy01gGfSF//i5x5vdUiG4uRy1175VWHg8ALJod0E6/dDyLsbSag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITh/XnKa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63763C4CEED;
+	Fri, 22 Aug 2025 16:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755881200;
+	bh=dPxj/m4CZ5Tj5I+499kIt/zRVHwkfdttODzZjZjbop0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ITh/XnKaeS2UpNYSnqVV1/mAJPnzHT2RTwOpKQj7KPzwefdqyxSExAwrOCmvLUDTQ
+	 /MGYLQcBCta9hcsfd3XbIDoPrgbVnWz/WVY0qzAYNkNFPmHYzMZsrmGyxSg+iL27LM
+	 SE8OYZBeoZkireZdjlNrxkw1JaDYWiESlLdQ9Bw9NSS24X1YonMPACKRtDPNm/KOw3
+	 WRdKdzowVUapWvs6XAlwopRdZfrtG1FSV3SvFwOm+TDk/4lb+yU8jKiWi2CotCn2YC
+	 dZySaUBJuS4A9atNiUN+9VeI4oTvJGyMBqELRhN77Oc7HUGQpNoq9x0CC9SVAm6Abt
+	 TNCSoNnLrhFjA==
+Date: Fri, 22 Aug 2025 11:46:38 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] PCI: Replace short msleep() calls with more
+ precise delay functions
+Message-ID: <20250822164638.GA687302@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] gpio: vortex: add new GPIO device driver
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Michael Walle <mwalle@kernel.org>,
- Lee Jones <lee@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250822154903.GA685390@bhelgaas>
-Content-Language: es-ES
-From: Marcos Del Sol Vives <marcos@orca.pet>
-In-Reply-To: <20250822154903.GA685390@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 10810327957363381862
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduieegvddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeforghrtghoshcuffgvlhcuufholhcugghivhgvshcuoehmrghrtghoshesohhrtggrrdhpvghtqeenucggtffrrghtthgvrhhnpedtgedugfeiudfgkeduhfelgfejgfeuvdejffeiveegteejvddviefhiedujedvheenucfkphepuddvjedrtddrtddruddpjeelrdduudejrddvvddruddtleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhgrrhgtohhssehorhgtrgdrphgvthdpnhgspghrtghpthhtohepledprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrh
- hnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-DKIM-Signature: a=rsa-sha256; bh=AGiF7sh4zThSv7GNcqRgASdL2+wKj6I58TlLd/g5bR4=;
- c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1755878918;
- v=1;
- b=R5ErbakNFYd4tWQVZSxIMyxRTfyYn4y75LTbQiiwt5NlZbGebT3sZFj3d33tv51gPQoxxOP5
- ZtGifOwJsAawg4EFc934hyUEa+qbtuk1o+15vzN6BIoGb1hrmdvhlir1uR/3IGFaWE6TugxbOaK
- EBWpqiLO/ATW9nHM/tfdiPR50BP2VvDM2jwCIRW3e7xlhGAdQUbDKsBsRbtq49z0Kja2H97YiK4
- MRV/w4MrP4TVrFBdXjUp6QOUc+KRmQa8Tm7JkFiQgVVBZ1M2ukg/3cx291pun39qqY+olxIYy0P
- H1D18nF3mwfhNCVCFkAbaRKwHMlRXqfFRqUUXFjpJ097g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250822155908.625553-1-18255117159@163.com>
 
-El 22/08/2025 a las 17:49, Bjorn Helgaas escribió:
-> On Fri, Aug 22, 2025 at 10:47:20AM -0500, Bjorn Helgaas wrote:
->> I'm not the person to merge this, but my advice is to wait a few days
->> and post a v4 that cleans up the includes and updates the commit
->> messages.  It makes the process cleaner if the patch you post is the
->> same as the one that gets merged.
+On Fri, Aug 22, 2025 at 11:59:01PM +0800, Hans Zhang wrote:
+> This series replaces short msleep() calls (less than 20ms) with more
+> precise delay functions (fsleep() and usleep_range()) throughout the
+> PCI subsystem.
 > 
-> Sorry for the noise, should have read farther through my email :)
+> The msleep() function with small values can sleep longer than intended
+> due to timer granularity, which can cause unnecessary delays in PCI
+> operations such as link status checking, reset handling, and hotplug
+> operations.
+> 
+> These changes:
+> - Use fsleep() for delays that require precise timing (1-2ms).
+> - Use usleep_range() for delays that can benefit from a small range.
+> - Add #defines for all delay values with references to PCIe specifications.
+> - Update comments to reference the latest PCIe r7.0 specification.
+> 
+> This improves the responsiveness of PCI operations while maintaining
+> compliance with PCIe specifications.
 
-No problem, thanks for clarifying!
+I would split this a little differently:
 
-I would've waited for a couple days more to give more time for review
-before the v4 if it was just minor styling details, but I found a nasty
-surprise yesterday in the DX3 programming manual (I was using the SX/MX/DX
-manual before): it has two discontinuous ranges for data and two
-discontinuous ranges for direction, and the icing on top is that
-*all four ranges have different sizes*.
+  - Add #defines for values from PCIe base spec.  Make the #define
+    value match the spec value.  If there's adjustment, e.g.,
+    doubling, do it at the sleep site.  Adjustment like this seems a
+    little paranoid since the spec should already have some margin
+    built into it.
 
-So as it was a pretty big change I wanted to have a new one with support
-for that for review asap :)
+  - Change to fsleep() (or usleep_range()) in separate patch.  There
+    might be discussion about these changes, but the #defines are
+    desirable regardless.
+
+I'm personally dubious about the places you used usleep_range().
+These are low-frequency paths (rcar PHY ready, brcmstb link up,
+hotplug command completion, DPC recover) that don't seem critical.  I
+think they're all using made-up delays that don't come from any spec
+or hardware requirement anyway.  I think it's hard to make an argument
+for precision here.
+
+Bjorn
 
