@@ -1,220 +1,235 @@
-Return-Path: <linux-pci+bounces-34568-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34569-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8E57B31C9D
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 16:49:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BE2A5B31D14
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 16:59:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A37FB1C85DA0
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 14:44:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E40E1C24317
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 14:56:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BC73433B3;
-	Fri, 22 Aug 2025 14:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80D492E5B01;
+	Fri, 22 Aug 2025 14:56:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AgIV408Y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Di4xZ6rU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD8C27AC43;
-	Fri, 22 Aug 2025 14:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726F73128B1;
+	Fri, 22 Aug 2025 14:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755873807; cv=none; b=K/u5h4XFtwA6ly5EdIHcqWSF+JtZUnY5QiEBM0+erb5VZrcEYlj3NACAFqJF4c/bVdNC2LlFBEt/FzoSYuVaubuJ72aM20yx7PLIIp3ULcPauxcC7dR45Bc6kP4+duBjDJXOSaQhVb8oTsUEc7PxUnzFwJAr/NjwZ/W5uA1Iaa8=
+	t=1755874580; cv=none; b=DKUw0TTN3pltMWELBQijrDDl2k6B/rpxoRvkE09AwdwM+zu1/FchqJLS3YeYRmc+3xXWw3vQkTJIg/fVACg/YXFasDS9eEtpkzzwHvK/9748cH1R/6qnINa8UMRHuRIQQcIM4pXM9r2s3YMBL9SzvIbLfJKXfnCegGwRhzRFnTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755873807; c=relaxed/simple;
-	bh=aJmcsGN8BNa/tNJe2eZFXgcKJYUFPdHxa1A61ZsD6xg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qYKYb97N+WAtwuTznqFfJpRpX86SXsNHRgVCu5YaOc3rtNY/kUfklR/3qEv4YIbZlAs+IvZth09Ttl+LYpctxf+gcWJJy2rzMXoXmjebI2aRZ0EKT2/ly5PWN5QXnjiT4D19FyhLMWTub622ttuH8Bi6uUfEEiKLKWVIN7nRxS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AgIV408Y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05818C113D0;
-	Fri, 22 Aug 2025 14:43:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755873806;
-	bh=aJmcsGN8BNa/tNJe2eZFXgcKJYUFPdHxa1A61ZsD6xg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AgIV408YiX70Yvmpn/dkEuMMBqa7MVIekJp7NZYcCrvawgA1Xt0jwsK3Jsro+Av+U
-	 jxrfwlyZrBDO+uY7WAR/0qAWyIFAa1F53TY5h7q2mDh2RlTvxVXdDeBhdKRKV8dgX6
-	 XSedRhZ6ZSd3AGg7m2zuX8UuLMQ0z4DQX1rGoBLd8eWAsFvIH+OHF/WUWa0XVElW/U
-	 DFoW2oze4UcaeDg/NGgQfyF69QujXednRQtFTrtipMXVIpyeWudqCtCg7t6qFvzPn4
-	 tNp/LMk0nAg4Dr3GGD8xv5Ih4YXvdrGGjnLx35P3TwgxzGlmv2eZhsRahYgqJYucbj
-	 /HrMOsqommSAA==
-Date: Fri, 22 Aug 2025 20:13:13 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: rafael@kernel.org, bhelgaas@google.com, vicamo.yang@canonical.com, 
-	kenny@panix.com, ilpo.jarvinen@linux.intel.com, nirmal.patel@linux.intel.com, 
-	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] PCI/ASPM: Add host-bridge API to override default
- ASPM/CLKPM link state
-Message-ID: <twjakydamuhlisykt62szrcor3exidl5htldped424gmdqifwj@jhuvg5rkvptn>
-References: <20250822031159.4005529-1-david.e.box@linux.intel.com>
+	s=arc-20240116; t=1755874580; c=relaxed/simple;
+	bh=RvRkItUYJ0ETFE5CancMO5F68qXMPOtLToh8/qa/woA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=NZU1bsKf6yyLv6IeZIfovvTYyP2RVflTXf1ZvawBqu1SvLJWRhQ68jAQmKSCm/Xlf4/tV+h4i7/1SCLaDa0+wgqXQu1/zqrMLUQCXcrflPqXsUudSkVxewD/tUqs9qz0AadboGZpWALYDlrpwB+u4QX4IB6LDXJ2MK4AvPjpvfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Di4xZ6rU; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755874579; x=1787410579;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=RvRkItUYJ0ETFE5CancMO5F68qXMPOtLToh8/qa/woA=;
+  b=Di4xZ6rUk0uNQSxjD8w/qt3PV0TX3UBA/I/Et1ysCF/cF/XYeacyZwMW
+   +zFPyp15LNfF9KPq0rp1A4EB16F7I9SnGjnGBSeDUwVCPpmHVLrBbnwX+
+   QiWRjGevZEdX2JD/twqBCKJ0O6jb5INZ0F9vZUrSGIh46h4iV0Y1neDnd
+   mYQbR3lG/x5iKJQnqBleVWaguklfLfF17M5HigNjdsSqHT0kKoMzXNBKV
+   IddLpktg2cfFc658FCmJfAHwT5cSXFPfRqReYHVMGnV7qr80dmqLL7Fuh
+   7bW5fWmtCUzKHQk4Tk/9tffoBhVTAlM7WSd4gXlfqRYHwz/ppirJXioue
+   w==;
+X-CSE-ConnectionGUID: mPLE1BxTS8qWYtXakDpVCw==
+X-CSE-MsgGUID: 8ey9AF37SY+GjFuPndTksQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="69552247"
+X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
+   d="scan'208";a="69552247"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:56:17 -0700
+X-CSE-ConnectionGUID: xkRYlbZZQ0K+NwgRSu7KdQ==
+X-CSE-MsgGUID: 8+r9yxO9Rjy+vpGvbZE8yQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
+   d="scan'208";a="167956179"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.115])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:56:12 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Andreas Larsson <andreas@gaisler.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Yinghai Lu <yinghai@kernel.org>,
+	Igor Mammedov <imammedo@redhat.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc: linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 00/24] PCI: Bridge window selection improvements
+Date: Fri, 22 Aug 2025 17:55:41 +0300
+Message-Id: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250822031159.4005529-1-david.e.box@linux.intel.com>
 
-On Thu, Aug 21, 2025 at 08:11:57PM GMT, David E. Box wrote:
-> Synthetic PCIe hierarchies, such as those created by Intel VMD, are not
-> enumerated by firmware and do not receive BIOS-provided ASPM or CLKPM
-> defaults. Devices in such domains may therefore run without the intended
-> power management.
-> 
-> Add a host-bridge mechanism that lets controller drivers supply their own
-> defaults. A new aspm_default_link_state field in struct pci_host_bridge is
-> set via pci_host_set_default_pcie_link_state(). During link initialization,
-> if this field is non-zero, ASPM and CLKPM defaults come from it instead of
-> BIOS.
-> 
-> This enables drivers like VMD to align link power management with platform
-> expectations and avoids embedding controller-specific quirks in ASPM core
-> logic.
-> 
-> Link: https://patchwork.ozlabs.org/project/linux-pci/patch/20250720190140.2639200-1-david.e.box%40linux.intel.com/
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+This series is based on top of the three resource fitting and
+assignment algorithm fixes (v3).
 
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+PCI resource fitting and assignment code needs to find the bridge
+window a resource belongs to in multiple places, yet, no common
+function for that exists. Thus, each site has its own version of
+the decision, each with their own corner cases, misbehaviors, and
+some resulting in complex interfaces between internal functions.
 
-- Mani
+This series tries to rectify the situation by adding two new functions
+to select the bridge window. To support these functions, bridge windows
+must always contain their type information in flags which requires
+modifying the flags behavior for bridge window resources.
 
-> ---
-> 
-> Changes in V1 from RFC:
-> 
->   -- Rename field to aspm_dflt_link_state since it stores
->      PCIE_LINK_STATE_XXX flags, not a policy enum.
->   -- Move the field to struct pci_host_bridge since it's being applied to
->      the entire host bridge per Mani's suggestion.
->   -- During testing noticed that clkpm remained disabled and this was
->      also handled by the formerly used pci_enable_link_state(). Add a
->      check in pcie_clkpm_cap_init() as well to enable clkpm during init.
-> 
-> Changes in V2:
-> 
->   -- Host field name changed to aspm_default_link_state.
->   -- Added get/set functions for aspm_default_link_state. Only the
->      setter is exported. Added a kernel-doc describing usage and
->      particulars around meaning of 0.
-> 
->  drivers/pci/pcie/aspm.c | 42 +++++++++++++++++++++++++++++++++++++++--
->  include/linux/pci.h     |  9 +++++++++
->  2 files changed, 49 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 919a05b97647..b4f0b4805a35 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -373,6 +373,39 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
->  	pcie_set_clkpm_nocheck(link, enable);
->  }
->  
-> +/**
-> + * pci_host_set_default_pcie_link_state - set controller-provided default ASPM/CLKPM mask
-> + * @host: host bridge on which to apply the defaults
-> + * @state: PCIE_LINK_STATE_XXX flags
-> + *
-> + * Allows a PCIe controller driver to specify the default ASPM and/or
-> + * Clock Power Management (CLKPM) link state mask that will be used
-> + * for links under this host bridge during ASPM/CLKPM capability init.
-> + *
-> + * The value is consumed in pcie_aspm_cap_init() and pcie_clkpm_cap_init()
-> + * to override the firmware-discovered defaults.
-> + *
-> + * Interpretation of aspm_default_link_state:
-> + *   - Nonzero: bitmask of PCIE_LINK_STATE_* values to be used as defaults
-> + *   - Zero:    no override provided; ASPM/CLKPM defaults fall back to
-> + *              values discovered in hardware/firmware
-> + *
-> + * Note: zero is always treated as "unset", not as "force ASPM/CLKPM off".
-> + */
-> +void pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
-> +					  unsigned int state)
-> +{
-> +	host->aspm_default_link_state = state;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_host_set_default_pcie_link_state);
-> +
-> +static u32 pci_host_get_default_pcie_link_state(struct pci_dev *parent)
-> +{
-> +	struct pci_host_bridge *host = pci_find_host_bridge(parent->bus);
-> +
-> +	return host ? host->aspm_default_link_state : 0;
-> +}
-> +
->  static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
->  {
->  	int capable = 1, enabled = 1;
-> @@ -394,7 +427,10 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
->  			enabled = 0;
->  	}
->  	link->clkpm_enabled = enabled;
-> -	link->clkpm_default = enabled;
-> +	if (pci_host_get_default_pcie_link_state(link->pdev) & PCIE_LINK_STATE_CLKPM)
-> +		link->clkpm_default = 1;
-> +	else
-> +		link->clkpm_default = enabled;
->  	link->clkpm_capable = capable;
->  	link->clkpm_disable = blacklist ? 1 : 0;
->  }
-> @@ -866,7 +902,9 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
->  	}
->  
->  	/* Save default state */
-> -	link->aspm_default = link->aspm_enabled;
-> +	link->aspm_default = pci_host_get_default_pcie_link_state(parent);
-> +	if (!link->aspm_default)
-> +		link->aspm_default = link->aspm_enabled;
->  
->  	/* Setup initial capable state. Will be updated later */
->  	link->aspm_capable = link->aspm_support;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 59876de13860..8947cbaf9fa6 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -620,6 +620,10 @@ struct pci_host_bridge {
->  	unsigned int	size_windows:1;		/* Enable root bus sizing */
->  	unsigned int	msi_domain:1;		/* Bridge wants MSI domain */
->  
-> +#ifdef CONFIG_PCIEASPM
-> +	unsigned int	aspm_default_link_state;	/* Controller-provided default */
-> +#endif
-> +
->  	/* Resource alignment requirements */
->  	resource_size_t (*align_resource)(struct pci_dev *dev,
->  			const struct resource *res,
-> @@ -1849,6 +1853,8 @@ int pci_disable_link_state(struct pci_dev *pdev, int state);
->  int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
->  int pci_enable_link_state(struct pci_dev *pdev, int state);
->  int pci_enable_link_state_locked(struct pci_dev *pdev, int state);
-> +void pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
-> +					  unsigned int state);
->  void pcie_no_aspm(void);
->  bool pcie_aspm_support_enabled(void);
->  bool pcie_aspm_enabled(struct pci_dev *pdev);
-> @@ -1861,6 +1867,9 @@ static inline int pci_enable_link_state(struct pci_dev *pdev, int state)
->  { return 0; }
->  static inline int pci_enable_link_state_locked(struct pci_dev *pdev, int state)
->  { return 0; }
-> +static inline void
-> +pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
-> +				     unsigned int state) { }
->  static inline void pcie_no_aspm(void) { }
->  static inline bool pcie_aspm_support_enabled(void) { return false; }
->  static inline bool pcie_aspm_enabled(struct pci_dev *pdev) { return false; }
-> 
-> base-commit: c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9
-> -- 
-> 2.43.0
-> 
+I've hit problems related to zeroed resource flags so many times by now
+that I've already lost count which has highlighted over and over again
+that clearing type information is not a good idea. As also proven by
+some changes of this series, retaining the flags for bridge windows
+ended up fixing existing issues (although kernel ended up recovering
+from the worst problem graciously and the other just results in dormant
+code).
 
+This series only changes resource flags behavior for bridge windows.
+The sensible direction is to make a similar change for the other
+resources as well eventually but making that change involves more
+uncertainty and is not strictly necessary yet. Driver code outside of
+PCI core could have assumptions about the flags, whereas bridge windows
+are mostly internal to PCI core code (or should be, sane endpoint
+drivers shouldn't be messing with the bridge windows). Thus, limiting
+the flags behavior changes to bridge windows for now is safer than
+attempting full behavioral change in a single step.
+
+
+I've tried to look out for any trouble that code under arch/ could
+cause after the flags start to behave differently and therefore ended
+up consolidating arch/ code to use pci_enable_resources(). My
+impression is that strictly speaking only the MIPS code would break
+similar to PCI core's copy of pci_enable_resources(), the others were
+much more lax in checking so they'd likely keep working but
+consolidation seemed still the best approach there as the enable checks
+seemed diverging for no apparent reason.
+
+Most sites are converted by this change. There are three known places
+that are not yet converted:
+
+  - fail_type based logic in __assign_resources_sorted():
+    I'm expecting to cover this along with the resizable BAR
+    changes as I need to change the fallback logic anyway (one
+    of the motivators what got me started with this series,
+    I need an easy way to acquire the bridge window during
+    retries/fallbacks if maximum sized BARs do not fit, which
+    is what this series provides).
+
+  - Failure detection after BAR resize: Keeps using the type
+    based heuristic for failure detection. It isn't very clear how
+    to decide which assignment failures should be counted and which
+    not. There could be pre-existing failures that keep happening
+    that end up blocking BAR resize but that's no worse than behavior
+    before this series. How to identify the relevant failures does
+    not look straightforward given the current structures. This
+    clearly needs more thought before coding any solution.
+
+  - resource assignment itself: This is a very complex change
+    due to bus and kernel resources abstractions and might not be
+    realistic any time soon.
+
+I'd have wanted to also get rid of pci_bridge_check_ranges() that
+(re)adds type information which seemed now unnecessary. It turns out,
+however, that root windows still require so it will have to wait for
+now.
+
+This change has been tested on a large number of machine I've access to
+which come with heterogeneous PCI configurations. Some resources
+retained their original addresses now also with pci=realloc because
+this series fixed the unnecessary release(+assign) of those resources.
+Other than that, nothing worth of note from that testing.
+
+
+My test coverage is x86 centric unfortunately so I'd appreciate if
+somebody with access to non-x86 archs takes the effort to test this
+series.
+
+Info for potential testers:
+
+Usually, it's enough to gather lspci -vvv pre and post the series, and
+use diff to see whether the resources remained the same and also check
+that the same drivers are still bound to the devices to confirm that
+devices got properly enabled (also shown by lspci -vvv). I normally
+test both with and without pci=realloc. In case of a trouble, besides
+lspci -vvv output, providing pre and post dmesg and /proc/iomem
+contents would be helpful, please take the dmesg with dyndbg="file
+drivers/pci/*.c +p" on the kernel cmdline.
+
+Ilpo Järvinen (24):
+  m68k/PCI: Use pci_enable_resources() in pcibios_enable_device()
+  sparc/PCI: Remove pcibios_enable_device() as they do nothing extra
+  MIPS: PCI: Use pci_enable_resources()
+  PCI: Move find_bus_resource_of_type() earlier
+  PCI: Refactor find_bus_resource_of_type() logic checks
+  PCI: Always claim bridge window before its setup
+  PCI: Disable non-claimed bridge window
+  PCI: Use pci_release_resource() instead of release_resource()
+  PCI: Enable bridge even if bridge window fails to assign
+  PCI: Preserve bridge window resource type flags
+  PCI: Add defines for bridge window indexing
+  PCI: Add bridge window selection functions
+  PCI: Fix finding bridge window in pci_reassign_bridge_resources()
+  PCI: Warn if bridge window cannot be released when resizing BAR
+  PCI: Use pbus_select_window() during BAR resize
+  PCI: Use pbus_select_window_for_type() during IO window sizing
+  PCI: Rename resource variable from r to res
+  PCI: Use pbus_select_window() in space available checker
+  PCI: Use pbus_select_window_for_type() during mem window sizing
+  PCI: Refactor distributing available memory to use loops
+  PCI: Refactor remove_dev_resources() to use pbus_select_window()
+  PCI: Add pci_setup_one_bridge_window()
+  PCI: Pass bridge window to pci_bus_release_bridge_resources()
+  PCI: Alter misleading recursion to pci_bus_release_bridge_resources()
+
+ arch/m68k/kernel/pcibios.c   |  39 +-
+ arch/mips/pci/pci-legacy.c   |  38 +-
+ arch/sparc/kernel/leon_pci.c |  27 --
+ arch/sparc/kernel/pci.c      |  27 --
+ arch/sparc/kernel/pcic.c     |  27 --
+ drivers/pci/bus.c            |   3 +
+ drivers/pci/pci-sysfs.c      |  27 +-
+ drivers/pci/pci.h            |   8 +-
+ drivers/pci/probe.c          |  35 +-
+ drivers/pci/setup-bus.c      | 798 ++++++++++++++++++-----------------
+ drivers/pci/setup-res.c      |  46 +-
+ include/linux/pci.h          |   5 +-
+ 12 files changed, 504 insertions(+), 576 deletions(-)
+
+
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+prerequisite-patch-id: 801e8dd3aa9847d4945cb7d8958574a6006004ab
+prerequisite-patch-id: 0233311f04e3ea013676b6cc00626410bbe11e41
+prerequisite-patch-id: 9841faf37d56c1acf1167559613e862ef62e509d
 -- 
-மணிவண்ணன் சதாசிவம்
+2.39.5
+
 
