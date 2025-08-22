@@ -1,187 +1,242 @@
-Return-Path: <linux-pci+bounces-34512-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34513-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A145BB30C5F
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 05:14:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21CE9B30C91
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 05:29:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C27013AB4E0
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 03:12:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2FD611C88046
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 03:29:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92FFF280A3B;
-	Fri, 22 Aug 2025 03:12:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF4D228A73A;
+	Fri, 22 Aug 2025 03:29:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oHUXoF7W"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h5v/vvGF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E9F27FD7D;
-	Fri, 22 Aug 2025 03:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CE1289E21;
+	Fri, 22 Aug 2025 03:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755832331; cv=none; b=DSM/8CwJElQMznKe1jR578npxpU5S8qkhb1Y7iQPOp/qRjzdsquUp1IeT1P0bJzXtiulbUrUFDxE3EUJVVzF8Dzlw0Ijz74mZJ6sWZ2nwmsOQ8d6otBwpjP239wTmV008w6wrq0Rd8CtvbItEa3Ty+3VErXVyqY/v21yPF7nHqI=
+	t=1755833345; cv=none; b=bfpNmtRL/b9vSMooThXK/AnQXkQYKwYfISTHq8dsJo6b+7Meh3/ZcY5QNr3FbUcaAsBxgqA3rX0FP1uF5QVeXecZGy93dwTluSb3up7wbSH5L+xA0zdHPam7bngPt9IuYfrNuykATLTuae8RL+h0c0MdgCn/XOB3aGIQCRZOth4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755832331; c=relaxed/simple;
-	bh=dzlqa+5rz7zLNbwgKVmH/0yIcaGBtdw6VXx3JofaAlU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JocSsUlYNOeSswd6gHiIjrISFGDCLWHYBiSxckpzDL9Z1WqrhThZfJ0bG9W0ws5dt3NMoTb+GhdhNgh3C6bmogKPfCJGkpZna8YAjnQv4snxPfM903UJyWPWYBsfclROZDrrhvt1At6fzRRYSR8TA1iuPKewCuYljB90Iy1hwdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oHUXoF7W; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1755833345; c=relaxed/simple;
+	bh=4g+NOdWwaTNFdwMM6/vbTTgDQgvH1CGzNnjQxHwcBQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=irwqx36rwPyRNeJkf9PqOP4HIjrXbQVkIPfssYtZsdCV2mrWS5WlTl1EazXtlhu4MWYJ/8I3zuJY4bHQjNStCb6E7FFWWz2UVbMbzOuhddcGMNfQq3LGZ61znkjfHEIT9vAtgZ1qvdKGxF8Hr0jL4tU+lYLoYtlQ4Z5VsfmLul0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h5v/vvGF; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755832330; x=1787368330;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=dzlqa+5rz7zLNbwgKVmH/0yIcaGBtdw6VXx3JofaAlU=;
-  b=oHUXoF7Wz4kcBjCuzflCeTvGZdrJ5hQck3MwbxE9JWsw1wxInRQRZTd0
-   1ceq4dN4ZqKE4qmTD8MocDSOyBZTNvmyvTcZZcNIxd3VlQPZlRnSya+iP
-   nwmRIv8MBifcI1TPR6Gh7gjaCLbqH9DZsdX7j6IznMxNv4eApfYmCresn
-   r5z1SOloQeUobGMqe6yY09IcMumzxMgpYVM0941vAoUBB8c/U3Y25rwAt
-   Xri5fSniKd8xgFN/LjcuVk+d/uzTOO0FaGfHCvfgTT5SVlhJ6va2IslCj
-   4pUb5yI/6y0gKSHF8k109Ffgai883EgDPvJytzMlXoBAxOjPQcbiwrbNU
-   g==;
-X-CSE-ConnectionGUID: qe5PdUJnRe+g+7Vwibbqgg==
-X-CSE-MsgGUID: aElwpcUFRfW6ZaBsbrPBNQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="45703266"
+  t=1755833344; x=1787369344;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4g+NOdWwaTNFdwMM6/vbTTgDQgvH1CGzNnjQxHwcBQg=;
+  b=h5v/vvGF0yPb3ZlzxICNZ4iSXBs5EEBrL0kVdw9HUJ6Fvud7i7EMvKHD
+   9+J6mlNAkoHwamzpOv8NTQqnq39lf0XiLVnCgReF2i0ujud+SiPiBUTOm
+   I7qpuBXwECMUbASKqqZSJ2e5Q1ev8GSQ/8/b/ubP4xnhlqUyMRhJDJB40
+   4N/h2LH/45XF43v6RweH31T/D0gyE+GnwhUxaxi8h7O4a+0Xay3fawXDG
+   3WxpY3zfpJbzhUMwAvAUva3RGCsu/PaMLdU3/+JDJCJnclIokq8LOeq++
+   xcoRt6kiXvJSuoWk172hIPDkofGW+PtL1jo31zL2gbQW/qai57XQ+SNpI
+   A==;
+X-CSE-ConnectionGUID: gkzudP81Q2a3/Izx1fl6MA==
+X-CSE-MsgGUID: DqbZOzOdT+yjxjmFbTRayw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="69575023"
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="45703266"
+   d="scan'208";a="69575023"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 20:12:10 -0700
-X-CSE-ConnectionGUID: vlz1/d64RDmJPID7ENvaRQ==
-X-CSE-MsgGUID: mM4usX8gTBygnDC1QK/bMQ==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 20:29:03 -0700
+X-CSE-ConnectionGUID: 0GUAmjcMR3u1FdznOpBq/g==
+X-CSE-MsgGUID: l+1pqG1rTImOpTAfJ8Xm/w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="168493631"
-Received: from mjruhl-desk.amr.corp.intel.com (HELO debox1-desk4.hsd1.or.comcast.net) ([10.124.221.244])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 20:12:09 -0700
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: rafael@kernel.org,
-	bhelgaas@google.com,
-	vicamo.yang@canonical.com,
-	kenny@panix.com,
-	ilpo.jarvinen@linux.intel.com,
-	nirmal.patel@linux.intel.com,
-	mani@kernel.org
-Cc: "David E. Box" <david.e.box@linux.intel.com>,
-	linux-pm@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V2 2/2] PCI: vmd: Use pci_host_set_default_pcie_link_state() to set ASPM defaults
-Date: Thu, 21 Aug 2025 20:11:58 -0700
-Message-ID: <20250822031159.4005529-2-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250822031159.4005529-1-david.e.box@linux.intel.com>
-References: <20250822031159.4005529-1-david.e.box@linux.intel.com>
+   d="scan'208";a="168496106"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa006.fm.intel.com with ESMTP; 21 Aug 2025 20:29:00 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1upISY-000KsD-0k;
+	Fri, 22 Aug 2025 03:28:58 +0000
+Date: Fri, 22 Aug 2025 11:27:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Marcos Del Sol Vives <marcos@orca.pet>, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Marcos Del Sol Vives <marcos@orca.pet>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Michael Walle <mwalle@kernel.org>, Lee Jones <lee@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] gpio: gpio-regmap: add flags to control some
+ behaviour
+Message-ID: <202508221142.ETxcEpjA-lkp@intel.com>
+References: <20250821101902.626329-2-marcos@orca.pet>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250821101902.626329-2-marcos@orca.pet>
 
-Now that pci_host_set_default_pcie_link_state() exists, set the VMD child
-domain with PCIE_LINK_STATE_ALL at bridge creation so core ASPM uses those
-defaults during ASPM and CLKPM capability init.
+Hi Marcos,
 
-Also remove the unneeded pci_set_power_state_locked(pdev, PCI_D0) and
-pci_enable_link_state_locked() calls now that the links are configured
-during enumeration.
+kernel test robot noticed the following build errors:
 
-This aligns VMD behavior with platform expectations without per-controller
-ASPM tweaks at runtime.
+[auto build test ERROR on brgl/gpio/for-next]
+[also build test ERROR on lee-mfd/for-mfd-next lee-mfd/for-mfd-fixes pci/next pci/for-linus linus/master v6.17-rc2 next-20250821]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
-Changes in V2:
+url:    https://github.com/intel-lab-lkp/linux/commits/Marcos-Del-Sol-Vives/gpio-gpio-regmap-add-flags-to-control-some-behaviour/20250821-182416
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20250821101902.626329-2-marcos%40orca.pet
+patch subject: [PATCH v3 1/3] gpio: gpio-regmap: add flags to control some behaviour
+config: x86_64-buildonly-randconfig-001-20250822 (https://download.01.org/0day-ci/archive/20250822/202508221142.ETxcEpjA-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250822/202508221142.ETxcEpjA-lkp@intel.com/reproduce)
 
-  -- Separated VMD changes into new patch.
-  -- Changed comment for VMD_FEAT_BIOS_PM_QUIRK to remove ASPM
-  -- Removed pci_set_power_state() and pci_enable_link_state_locked()
-     calls in vmd_pm_enable_quirk()
-  -- Use pci_host_set_default_pcie_link_state()
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508221142.ETxcEpjA-lkp@intel.com/
 
- drivers/pci/controller/vmd.c | 22 ++++++++--------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
+All errors (new ones prefixed by >>):
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index b679c7f28f51..b99e01a57ddb 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -71,10 +71,9 @@ enum vmd_features {
- 	VMD_FEAT_CAN_BYPASS_MSI_REMAP		=3D (1 << 4),
-=20
- 	/*
--	 * Enable ASPM on the PCIE root ports and set the default LTR of the
--	 * storage devices on platforms where these values are not configured by
--	 * BIOS. This is needed for laptops, which require these settings for
--	 * proper power management of the SoC.
-+	 * Program default LTR values for storage devices on platforms where
-+	 * firmware did not. Required on many laptops for proper SoC power
-+	 * management.
- 	 */
- 	VMD_FEAT_BIOS_PM_QUIRK		=3D (1 << 5),
- };
-@@ -733,7 +732,7 @@ static void vmd_copy_host_bridge_flags(struct pci_host_=
-bridge *root_bridge,
- }
-=20
- /*
-- * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
-+ * Enable LTR settings on devices that aren't configured by BIOS.
-  */
- static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
- {
-@@ -747,7 +746,7 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, vo=
-id *userdata)
-=20
- 	pos =3D pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
- 	if (!pos)
--		goto out_state_change;
-+		return 0;
-=20
- 	/*
- 	 * Skip if the max snoop LTR is non-zero, indicating BIOS has set it
-@@ -755,7 +754,7 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, vo=
-id *userdata)
- 	 */
- 	pci_read_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, &ltr_reg);
- 	if (!!(ltr_reg & (PCI_LTR_VALUE_MASK | PCI_LTR_SCALE_MASK)))
--		goto out_state_change;
-+		return 0;
-=20
- 	/*
- 	 * Set the default values to the maximum required by the platform to
-@@ -767,13 +766,6 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, v=
-oid *userdata)
- 	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
- 	pci_info(pdev, "VMD: Default LTR value set by driver\n");
-=20
--out_state_change:
--	/*
--	 * Ensure devices are in D0 before enabling PCI-PM L1 PM Substates, per
--	 * PCIe r6.0, sec 5.5.4.
--	 */
--	pci_set_power_state_locked(pdev, PCI_D0);
--	pci_enable_link_state_locked(pdev, PCIE_LINK_STATE_ALL);
- 	return 0;
- }
-=20
-@@ -921,6 +913,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsig=
-ned long features)
- 	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
- 			       "domain"), "Can't create symlink to domain\n");
-=20
-+	pci_host_set_default_pcie_link_state(to_pci_host_bridge(vmd->bus->bridge),
-+					     PCIE_LINK_STATE_ALL);
- 	vmd_acpi_begin();
-=20
- 	pci_scan_child_bus(vmd->bus);
---=20
-2.43.0
+   In file included from drivers/gpio/gpio-fxl6408.c:11:
+>> include/linux/gpio/regmap.h:26:31: error: call to undeclared function 'BIT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+      26 |         GPIO_REGMAP_DIR_BEFORE_SET      = BIT(0),
+         |                                           ^
+>> include/linux/gpio/regmap.h:26:31: error: expression is not an integer constant expression
+      26 |         GPIO_REGMAP_DIR_BEFORE_SET      = BIT(0),
+         |                                           ^~~~~~
+   In file included from drivers/gpio/gpio-fxl6408.c:12:
+   In file included from include/linux/i2c.h:13:
+   In file included from include/linux/acpi.h:14:
+   In file included from include/linux/device.h:32:
+   In file included from include/linux/device/driver.h:21:
+   In file included from include/linux/module.h:20:
+   In file included from include/linux/elf.h:6:
+   In file included from arch/x86/include/asm/elf.h:10:
+   In file included from arch/x86/include/asm/ia32.h:7:
+   In file included from include/linux/compat.h:17:
+   In file included from include/linux/fs.h:34:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:98:11: warning: array index 3 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
+      98 |                 return (set->sig[3] | set->sig[2] |
+         |                         ^        ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+      24 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from drivers/gpio/gpio-fxl6408.c:12:
+   In file included from include/linux/i2c.h:13:
+   In file included from include/linux/acpi.h:14:
+   In file included from include/linux/device.h:32:
+   In file included from include/linux/device/driver.h:21:
+   In file included from include/linux/module.h:20:
+   In file included from include/linux/elf.h:6:
+   In file included from arch/x86/include/asm/elf.h:10:
+   In file included from arch/x86/include/asm/ia32.h:7:
+   In file included from include/linux/compat.h:17:
+   In file included from include/linux/fs.h:34:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:98:25: warning: array index 2 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
+      98 |                 return (set->sig[3] | set->sig[2] |
+         |                                       ^        ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+      24 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from drivers/gpio/gpio-fxl6408.c:12:
+   In file included from include/linux/i2c.h:13:
+   In file included from include/linux/acpi.h:14:
+   In file included from include/linux/device.h:32:
+   In file included from include/linux/device/driver.h:21:
+   In file included from include/linux/module.h:20:
+   In file included from include/linux/elf.h:6:
+   In file included from arch/x86/include/asm/elf.h:10:
+   In file included from arch/x86/include/asm/ia32.h:7:
+   In file included from include/linux/compat.h:17:
+   In file included from include/linux/fs.h:34:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:99:4: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
+      99 |                         set->sig[1] | set->sig[0]) == 0;
+         |                         ^        ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+      24 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from drivers/gpio/gpio-fxl6408.c:12:
+   In file included from include/linux/i2c.h:13:
+   In file included from include/linux/acpi.h:14:
+   In file included from include/linux/device.h:32:
+   In file included from include/linux/device/driver.h:21:
+   In file included from include/linux/module.h:20:
+   In file included from include/linux/elf.h:6:
+   In file included from arch/x86/include/asm/elf.h:10:
+   In file included from arch/x86/include/asm/ia32.h:7:
+   In file included from include/linux/compat.h:17:
+   In file included from include/linux/fs.h:34:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:101:11: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
+     101 |                 return (set->sig[1] | set->sig[0]) == 0;
+         |                         ^        ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+      24 |         unsigned long sig[_NSIG_WORDS];
+         |         ^
+   In file included from drivers/gpio/gpio-fxl6408.c:12:
+   In file included from include/linux/i2c.h:13:
+   In file included from include/linux/acpi.h:14:
+   In file included from include/linux/device.h:32:
+   In file included from include/linux/device/driver.h:21:
+   In file included from include/linux/module.h:20:
+   In file included from include/linux/elf.h:6:
+   In file included from arch/x86/include/asm/elf.h:10:
+   In file included from arch/x86/include/asm/ia32.h:7:
+   In file included from include/linux/compat.h:17:
+   In file included from include/linux/fs.h:34:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:114:11: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
+     114 |                 return  (set1->sig[3] == set2->sig[3]) &&
+         |                          ^         ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
 
+
+vim +/BIT +26 include/linux/gpio/regmap.h
+
+    14	
+    15	
+    16	/**
+    17	 * enum gpio_regmap_flags - flags to control GPIO operation
+    18	 */
+    19	enum gpio_regmap_flags {
+    20		/**
+    21		 * @GPIO_REGMAP_DIR_BEFORE_SET: when setting a pin as an output, set
+    22		 * its direction before the value. The output value will be undefined
+    23		 * for a short time which may have unwanted side effects, but some
+    24		 * hardware requires this.
+    25		 */
+  > 26		GPIO_REGMAP_DIR_BEFORE_SET	= BIT(0),
+    27	};
+    28	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
