@@ -1,123 +1,117 @@
-Return-Path: <linux-pci+bounces-34599-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34601-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00A4CB31FE3
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 18:01:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93E3CB3202E
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 18:10:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 067AF685F1F
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 15:53:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 154CF605856
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 16:05:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EAA73207;
-	Fri, 22 Aug 2025 15:53:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E02672EBDC8;
+	Fri, 22 Aug 2025 16:03:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="l7xrQHdp"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WkAsXT6K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 318E46FBF;
-	Fri, 22 Aug 2025 15:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70D592E54D2;
+	Fri, 22 Aug 2025 16:03:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755878018; cv=none; b=ozzESMSHgPLzObPAc7gFPXf603Qgi2T9th9Z8L/BKNAZWe9svNdzvKtwczkz0dHTQk0nwnorzZM6gSnRWBSd7dMW22/79k6Hulw/IyPnVUeBYdpf0Ayye302uzru5+8T1y7jsEF23EUfWHpWrqBxwd0zwfrdJD5lOBId3taUXrM=
+	t=1755878588; cv=none; b=Q/sAx8M91h0XfnTHHEj9yfT1QUlWS+SeyizB3VWMpTG7znD/ZvzUCn/X6vMzc76bVwuNUImOB5qDps0KzlotMO2O4d+pmBlrp06kkIvH7d7nEc0XLzuD0qtXqziySu+BilewGOsbBsn+Is54Z2UxR4ZsJDRyauqU3nvLKxUTdzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755878018; c=relaxed/simple;
-	bh=U+03gEcGnhbmwEIWYOsCA/gAQzaOeGwJAlax+uCxNgU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lMEFqAOVwKa2pciWT30ifpxFX6KJNyiEzFe92p3ZrSULNK6NM4MaFKHAbLWEBF39ErsAatbSjk0z9M5uIqkfVTP7f68ra04uoB+28TBQjFtzI/leZ9PWNID7x+dEQNRsubGFTGm6Hort3rnVWaAr+un6G25K4BzTQbinM4baX6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=l7xrQHdp; arc=none smtp.client-ip=117.135.210.5
+	s=arc-20240116; t=1755878588; c=relaxed/simple;
+	bh=SFx+xEXCps/MEjk6e6nCLSHOmv+Tx0NtwGUdwnZG4Ww=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lETXTeIRvdHGvB6pLmL5RKLKTepbwk+/Vp6gn/Xvd/ABjT00TTyoh2cHIxTXYKP6juH9A5n+bnDZDCLq9tbz1DrmJR3RseUcxcoZPkWgaVb3z3E5mnKQ4y26XFncSoVbDEixsJI6qMtIKZPGAmHfgFPzGn5Thb88mPMetZFMN/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WkAsXT6K; arc=none smtp.client-ip=220.197.31.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=AcGCWcu7W/vQZ3k6aJxHhigNgbLUrJBaOFG5K5UXqtU=;
-	b=l7xrQHdpFN24m73ohlNLcFzio4wacaGl1plqPQuRI2Jx04skPm6w65EWwL07mm
-	GfmSrWu1Z6NDZuBtiuCy6IIgM1XsYN9/QJgV2/Q+VeGIm3Vmr8kl4VeESoNFnjP/
-	NY7lH4SXcW1DLh5ZH23Inke86sgvPFtVsMgoAR/vIrk+A=
-Received: from [IPV6:240e:b8f:919b:3100:3980:6173:5059:2d2a] (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgC3lTZwkqhoBOrNAA--.31090S2;
-	Fri, 22 Aug 2025 23:53:21 +0800 (CST)
-Message-ID: <4002ce40-56bc-4a89-a4bf-7da28c94f7db@163.com>
-Date: Fri, 22 Aug 2025 23:53:20 +0800
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Z4
+	lofPLCVpT9yH9KN2N7Nz+nTKVn7B8LeP9A7V7D8Gg=; b=WkAsXT6K8HUPo0RHJd
+	cnaXt0d/uhHQMna4r1hmRCwT0b+4bPevy9FnnhERoS1RMoVuXIKmiC7n/IJe62Ry
+	EkX86UW55Lx1Fr9hsT+kocFPRsvaqCE18IZl3q3urq1aQlo2DwSXYgX5QziAKUEK
+	mGyLOL05SJReBik/+hn0rpdiU=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgBnxDaplKho3jnHAA--.18200S2;
+	Sat, 23 Aug 2025 00:02:50 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: bhelgaas@google.com,
+	helgaas@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Hans Zhang <18255117159@163.com>
+Subject: [PATCH v2 0/7] PCI: Replace short msleep() calls with more precise delay functions
+Date: Fri, 22 Aug 2025 23:59:01 +0800
+Message-Id: <20250822155908.625553-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Replace msleep(2) with usleep_range() for precise
- delay
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250820180651.GA631082@bhelgaas>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250820180651.GA631082@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PSgvCgC3lTZwkqhoBOrNAA--.31090S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7KrykAF1kurW7GFyfGrWfXwb_yoW8ZFWxpF
-	WkGr1jyr4rJrW3Jr4xAa1xZas5Ca4xXF4rAF95W34q9ayYqa4IgFyxCFWYqr1UZr4kA342
-	qan0yrs3Aa1qvFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0ziLvtNUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxOxo2iokSoZSwAAsz
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PygvCgBnxDaplKho3jnHAA--.18200S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tFW7AFyruryUWFWDGFW3Jrb_yoW8ur47pa
+	98GFs0yF1xJFZ8ua17Za1IvFn09Fn7AFWj9F9xWasrXas8Aw1UGF4ftF1rWr12qrW0qw1U
+	Xa45Ja1rGay8AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pixhliUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwWxo2iokSpKrwAAsS
 
-Dear Bjorn,
+This series replaces short msleep() calls (less than 20ms) with more
+precise delay functions (fsleep() and usleep_range()) throughout the
+PCI subsystem.
 
-Thank you very much for your reply. I'll try to understand your meaning 
-and then submit the next version.
+The msleep() function with small values can sleep longer than intended
+due to timer granularity, which can cause unnecessary delays in PCI
+operations such as link status checking, reset handling, and hotplug
+operations.
 
-If I haven't fully understood your meaning yet, please continue to help
-correct the mistakes.
+These changes:
+- Use fsleep() for delays that require precise timing (1-2ms).
+- Use usleep_range() for delays that can benefit from a small range.
+- Add #defines for all delay values with references to PCIe specifications.
+- Update comments to reference the latest PCIe r7.0 specification.
 
-Best regards,
-Hans
+This improves the responsiveness of PCI operations while maintaining
+compliance with PCIe specifications.
 
-On 2025/8/21 02:06, Bjorn Helgaas wrote:
-> On Thu, Aug 21, 2025 at 12:09:44AM +0800, Hans Zhang wrote:
->> The msleep(2) may sleep up to 20ms due to timer granularity, which can
->> cause unnecessary delays. According to PCI spec v3.0 7.6.4.2, the minimum
->> Trst is 1ms and we doubled that to 2ms to meet the requirement. Using
->> usleep_range(2000, 2001) provides a more precise delay of exactly 2ms.
->> ...
-> 
-> Please cite a recent spec version, i.e., r7.0.  I see this probably
-> came from the comment at the change; I wouldn't object to updating
-> the comment, too.
-> 
->> WARNING:MSLEEP: msleep < 20ms can sleep for up to 20ms; see function description of msleep().
->> #4630: FILE: drivers/pci/pci.c:4630:
->> +		msleep(1);
->> ...
->> WARNING:MSLEEP: msleep < 20ms can sleep for up to 20ms; see function description of msleep().
->> #3970: FILE: drivers/pci/quirks.c:3970:
->> +		msleep(10);
-> 
->> +++ b/drivers/pci/pci.c
->> @@ -4967,7 +4967,7 @@ void pci_reset_secondary_bus(struct pci_dev *dev)
->>   	 * PCI spec v3.0 7.6.4.2 requires minimum Trst of 1ms.  Double
->>   	 * this to 2ms to ensure that we meet the minimum requirement.
->>   	 */
->> -	msleep(2);
->> +	usleep_range(2000, 2001);
-> 
-> IMO the most valuable thing here would be to replace the hard-coded
-> "2" with some kind of #define explicitly tied to the spec.  Similarly
-> for the other cases.
-> 
-> There is some concern [1] about places that say "msleep(1)" but
-> actually rely on the current behavior of a longer sleep.
-> 
-> Apart from that concern, I think fsleep() would be my first choice.
-> usleep_range(x, x+1) defeats the purpose of the range, which is to
-> reduce interrupts; see 5e7f5a178bba ("timer: Added usleep_range
-> timer").
-> 
-> Bjorn
-> 
-> [1] https://lore.kernel.org/all/20070809001640.ec2f3bfb.akpm@linux-foundation.org/
+---
+Changes for v2:
+https://patchwork.kernel.org/project/linux-pci/patch/20250820160944.489061-1-18255117159@163.com/
+
+- According to the Maintainer's suggestion, it was modified to fsleep,
+  usleep_range, and macro definitions were used instead of hard code. (Bjorn)
+---
+
+Hans Zhang (7):
+  PCI: Replace msleep(2) with fsleep() for precise delay
+  PCI: Replace msleep(1) with fsleep() for precise link status checking
+  PCI: rcar-host: Replace msleep(1) with fsleep() for precise speed
+    change monitoring
+  PCI: brcmstb: Replace msleep(5) with usleep_range() for precise link
+    up checking
+  PCI: rcar: Replace msleep(5) with usleep_range() for precise PHY ready
+    checking
+  PCI: pciehp: Replace msleep(10) with usleep_range() for precise delays
+  PCI/DPC: Replace msleep(10) with usleep_range() for precise RP busy
+    checking
+
+ drivers/pci/controller/pcie-brcmstb.c   | 5 ++++-
+ drivers/pci/controller/pcie-rcar-host.c | 4 +++-
+ drivers/pci/controller/pcie-rcar.c      | 4 +++-
+ drivers/pci/hotplug/pciehp_hpc.c        | 6 +++++-
+ drivers/pci/pci.c                       | 9 +++------
+ drivers/pci/pci.h                       | 7 +++++++
+ drivers/pci/pcie/dpc.c                  | 5 ++++-
+ 7 files changed, 29 insertions(+), 11 deletions(-)
+
+
+base-commit: b19a97d57c15643494ac8bfaaa35e3ee472d41da
+-- 
+2.25.1
 
 
