@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-34573-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34574-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7054DB31CEE
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 16:57:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96597B31D4A
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 17:05:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5D72C4E32DB
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 14:57:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B372AA4976
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 14:57:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA98D313542;
-	Fri, 22 Aug 2025 14:56:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE6713126B6;
+	Fri, 22 Aug 2025 14:57:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YnyEMerB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ho0rXgx2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBF827932D;
-	Fri, 22 Aug 2025 14:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9CD239E88;
+	Fri, 22 Aug 2025 14:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755874615; cv=none; b=d0aWPrZNJHzKTtt79ooQkGAYtMm6TPCCby5OWGc3SAwNdmn6z3OQxdxv85wC7hfKNp7m/DUaFNc+GcvuGgqToFxlE5x+/tCXeACZs9S/W0pecfmTyZlPWC8o1ncAlpLbAHhlhG4yioYHI1bOlcvY1GAFnJKHpo4p7aZeys0HxEE=
+	t=1755874624; cv=none; b=MagKWGPRUqoc/LFpnaBOhAdiNA2+UsSsTu8PJQ0D/Eor8dWAj2R6IUoBUVF67gvL+bqXuo83mAYjlTJZyd/MG/p0Lm/yTHCjLzHFAOPBsfr4+ESxMJ9FXZ0NH1xldsMiC+HGUr+5bG0jM5lEsv+8z7xDK/7/j4+yJ4RbnC3sxUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755874615; c=relaxed/simple;
-	bh=qAXdsDQW9N/Uavlh8yIRORIBMsvqG965+7HiERcw2Bc=;
+	s=arc-20240116; t=1755874624; c=relaxed/simple;
+	bh=wPDvnWZ5n/ZzruRde5Pq3zT/XPnm5sbjNx2qOymBYfE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eIuGbbjmD9hiTc8oPixgXzSximDGQcNI9Oe8qXdjL+/lzEKF/1Xtio1dEOwo/EMnEh7EfyRnouJwAhhmtZNzhuTVEbVgYeiWsSz6K3X0RZI1d6Ezmzk7kkrQlze/xu9UXfSEeB2SD3VOvrZe5Vt1vWIBbDb0kTFzPFEB64CzU5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YnyEMerB; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=j8EKpllvKm0543kTpfOq+ZWdBd9iVLKI8EWjvOEMNbpecJG0ivHYrF/P1uqaQk7N0iCxyuX7RM3j22jv+vdI3Uq/YnUOltBnfX0hhoU6Mfv3wrrNa29Nw32ZD/SQr2Ls/mEPJGuUjUBy4LfwkDBG8PEV1QMvIiBNDBaXqctx9qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ho0rXgx2; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755874614; x=1787410614;
+  t=1755874623; x=1787410623;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=qAXdsDQW9N/Uavlh8yIRORIBMsvqG965+7HiERcw2Bc=;
-  b=YnyEMerBNyD/4gckm2MVWTFOs5AMuXXv8Wau9F73CAahRlt35PDeHx9I
-   Px3AM4ocW9tA/3qjyNU9bd95lhG2+Vh2jhOmHhkfhpQkrW8VgkVAcykRw
-   nsxV3ILroXjzFmmkX2ZeRfGmNTNaA5sXN2oTEpY2wpgpKLk/5iVCJcBmq
-   eh+VJDApefXCQUjbJddmcJJIrN8WgcGEdtPb4zwNfJEk1wHPdXAoeCVgz
-   faMXYBI99DilYEojClYM9IYT/TcM6lXZtfiyk0Q8wWxO61tjdob0+mNlh
-   3vMIW/RYF1agdstDSjTZGkahsftBGQRMCuA2UYmbjosJVBD+wPhqbxzX8
+  bh=wPDvnWZ5n/ZzruRde5Pq3zT/XPnm5sbjNx2qOymBYfE=;
+  b=Ho0rXgx25tzf4cple4tEoHtQOM2hSyWpyVbRQ7QhnDZUbiActgyHRhwl
+   lc49e0x+wFkNsZJZgbxf9GquJ2z6nAheXIGKMPQ3etnZw5Aiy1QhMXlt9
+   i5sJd9IqC5c8PSGFxBQ4gd5i4w6fDUlUdEdrqWhWunE/Y3tRlNQUIRHmD
+   GMsk646mAkZpJpoEshakqHWYXl6kppnP3t0hyoTIlhscNgoXwPLQvXnom
+   nbCCFoYTaKduFnZoE9Q6O/vA4qY5GxO249Asu5l8NHt5PK9gZzwzZrXI1
+   hn0SfO3G0pUBJFxTTQaRhMyid68KOpzf0cz5GYnpAGMWg5nq7vla272JK
    A==;
-X-CSE-ConnectionGUID: rIEsbMO6S62om6g/4qIuQQ==
-X-CSE-MsgGUID: 5mKEKGASTRSbz241p1wslg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="62015793"
+X-CSE-ConnectionGUID: o7rmB9oBR7STnKGbiilYiA==
+X-CSE-MsgGUID: DeGJ2uogTMKkI0IedVuMhg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="69283117"
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="62015793"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:56:54 -0700
-X-CSE-ConnectionGUID: lzEm3K2FR72KwstWyYHG9Q==
-X-CSE-MsgGUID: TakxZF6vRGWLwfxTYMc+bA==
+   d="scan'208";a="69283117"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:57:03 -0700
+X-CSE-ConnectionGUID: qiJ59XlaQtqa4e+Z9uM3dw==
+X-CSE-MsgGUID: tW3R/pfDT4eAbXWbFFh3og==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="173994571"
+   d="scan'208";a="169547004"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.115])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:56:49 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:56:58 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Andreas Larsson <andreas@gaisler.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -79,9 +79,9 @@ To: Andreas Larsson <andreas@gaisler.com>,
 Cc: =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
 	linuxppc-dev@lists.ozlabs.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 04/24] PCI: Move find_bus_resource_of_type() earlier
-Date: Fri, 22 Aug 2025 17:55:45 +0300
-Message-Id: <20250822145605.18172-5-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 05/24] PCI: Refactor find_bus_resource_of_type() logic checks
+Date: Fri, 22 Aug 2025 17:55:46 +0300
+Message-Id: <20250822145605.18172-6-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
 References: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
@@ -94,88 +94,37 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Move find_bus_resource_of_type() earlier in setup-bus.c to be able to
-call it in upcoming changes.
+The logic checks can be simplified in find_bus_resource_of_type() by
+reordering them.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/setup-bus.c | 56 ++++++++++++++++++++---------------------
- 1 file changed, 28 insertions(+), 28 deletions(-)
+ drivers/pci/setup-bus.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index def29506700e..4097d8703b8f 100644
+index 4097d8703b8f..c5fc4e2825be 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -140,6 +140,34 @@ static void restore_dev_resource(struct pci_dev_resource *dev_res)
- 	res->flags = dev_res->flags;
- }
+@@ -158,11 +158,15 @@ static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
+ 	struct resource *r, *r_assigned = NULL;
  
-+/*
-+ * Helper function for sizing routines.  Assigned resources have non-NULL
-+ * parent resource.
-+ *
-+ * Return first unassigned resource of the correct type.  If there is none,
-+ * return first assigned resource of the correct type.  If none of the
-+ * above, return NULL.
-+ *
-+ * Returning an assigned resource of the correct type allows the caller to
-+ * distinguish between already assigned and no resource of the correct type.
-+ */
-+static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
-+						  unsigned long type_mask,
-+						  unsigned long type)
-+{
-+	struct resource *r, *r_assigned = NULL;
-+
-+	pci_bus_for_each_resource(bus, r) {
-+		if (r == &ioport_resource || r == &iomem_resource)
-+			continue;
-+		if (r && (r->flags & type_mask) == type && !r->parent)
-+			return r;
-+		if (r && (r->flags & type_mask) == type && !r_assigned)
-+			r_assigned = r;
-+	}
-+	return r_assigned;
-+}
-+
- static bool pdev_resources_assignable(struct pci_dev *dev)
- {
- 	u16 class = dev->class >> 8, command;
-@@ -876,34 +904,6 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
- 	}
- }
- 
--/*
-- * Helper function for sizing routines.  Assigned resources have non-NULL
-- * parent resource.
-- *
-- * Return first unassigned resource of the correct type.  If there is none,
-- * return first assigned resource of the correct type.  If none of the
-- * above, return NULL.
-- *
-- * Returning an assigned resource of the correct type allows the caller to
-- * distinguish between already assigned and no resource of the correct type.
-- */
--static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
--						  unsigned long type_mask,
--						  unsigned long type)
--{
--	struct resource *r, *r_assigned = NULL;
--
--	pci_bus_for_each_resource(bus, r) {
+ 	pci_bus_for_each_resource(bus, r) {
 -		if (r == &ioport_resource || r == &iomem_resource)
--			continue;
++		if (!r || r == &ioport_resource || r == &iomem_resource)
+ 			continue;
 -		if (r && (r->flags & type_mask) == type && !r->parent)
--			return r;
++
++		if ((r->flags & type_mask) != type)
++			continue;
++
++		if (!r->parent)
+ 			return r;
 -		if (r && (r->flags & type_mask) == type && !r_assigned)
--			r_assigned = r;
--	}
--	return r_assigned;
--}
--
- static resource_size_t calculate_iosize(resource_size_t size,
- 					resource_size_t min_size,
- 					resource_size_t size1,
++		if (!r_assigned)
+ 			r_assigned = r;
+ 	}
+ 	return r_assigned;
 -- 
 2.39.5
 
