@@ -1,275 +1,309 @@
-Return-Path: <linux-pci+bounces-34547-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34548-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08755B3145D
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 11:56:20 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E55A3B314AF
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 12:05:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF9A01CC2247
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 09:52:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B16677A1FBB
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 10:03:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 300842F5320;
-	Fri, 22 Aug 2025 09:45:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 345212877E9;
+	Fri, 22 Aug 2025 10:05:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ceq+XVXc"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gFOV+fWL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381312882CA;
-	Fri, 22 Aug 2025 09:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755855939; cv=fail; b=ltl2xp39pAwYvNWH5uSP35J9Ey7pZl+j/OgEi1q/PJ6bAzdHRUK0zAYsxckuTvrHs8eMNBfhB7fDUL0gzCiDzkYsnrwrsd+XUXOZ3J+q3KTaD6ABSZn/7LGjg2vOK+7NCbGvW/4gfvJvQVHhLlj2AiwME0LHZMtQ/h0E9G6Rnq4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755855939; c=relaxed/simple;
-	bh=Mxv+f2AZIagljhUT0zt8U7K6yBDZCw8jx6zi3wX2kbM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=cxS5YoPstDNKjw9p8z+mOp2sXDlogtzRXDiIVVart2rQOco8UZiNJskl80uJZWWee0ZA6GHCJofrw3mlsjgDF9e5Y2KMOCqLreTDEC/W7ugM6wXGVt3HAILN0C0cd0EgGJtr06gCggatqPb8WtYHyD3WZp6XT+tTkd2o+v+9qdY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ceq+XVXc; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755855938; x=1787391938;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Mxv+f2AZIagljhUT0zt8U7K6yBDZCw8jx6zi3wX2kbM=;
-  b=Ceq+XVXcH1DN2G6AGNf94CxpAUBzGYyyjn+ZX88DAGE8VpEVCYAAAaGR
-   AoM6dXXa88hgvRawU6IRGu2Kz+bUUlv6S3h55ZDGXhZX84idodJQndSum
-   ZYFQOgW4UfZmhwvhee7icx/TpOIYsVbG7mO1yd+zitHYSPnOjQHMeXdCd
-   ZTNtYjIwKPX+NYbs3Ojo6+1tI/NvzrIWvYoBoak5Yx05w4P/y4zouBk0+
-   D4fsHZgnXmmnEPG2mukpLp278xAEncGF+7ZG1TQXdzaZHVQLVb0C6voN6
-   bAuZL6T3wPFNu84ZLuva8DKOAkCvRS3n/1LdbWFyOYPVW1SCaw67TsdP5
-   Q==;
-X-CSE-ConnectionGUID: 3vCP1g3XRB+gKF17Uis5Aw==
-X-CSE-MsgGUID: njeuxzGpSYmnW/Eg4W0AdA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="80760999"
-X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="80760999"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 02:45:35 -0700
-X-CSE-ConnectionGUID: Gmx24MozSTqzEOsRYc3uLg==
-X-CSE-MsgGUID: rsp6JAzgSdiwcJV6Tg4iPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="169492525"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 02:45:34 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Fri, 22 Aug 2025 02:45:33 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Fri, 22 Aug 2025 02:45:33 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.49)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Fri, 22 Aug 2025 02:45:31 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lSKw0LWH/dEL4AM3DPIFKkowsRrdMm2QRdBG9Y4y2yjbwJQzObUz4YXdTpNUuT0NF7GsFtdfZDJG4M/JWRnNBBLGUoa35xK+qlwQO3tyF2T2e+zykUyzjyHrIHzi/0uyU0Vdv5+nhOCB8GYSRaL0s5IJjOEJyG3PdwKVhFstUmajVKQVYj0wBGABrN1+5fAv+ehYQ/wEuYqHdn+/FKGVHlnZOCXzmizLj0Xk5RJkPFSpHvFQhv+RR3V/qanF3i6ZPDtg6bGwgOLTJRQZI1+Cv4vPDpxNEnZGZX3+0m2/Rjbdwv/rbYDPWCXDXavrICwonCXjagRssYLf5N2cvQ6ZrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yPDytkuc2lzn8xRfExCsev7qCehNqrqXNyOfhH/CTVk=;
- b=Q2/mgI28mLSZL7gjFZUPtTlLfpLJDo/shQWfr6TpkE4J5kHAzzWD4tPGUypgC++g998IZXRWGS9nq3Ia5ZADENpoBGlnVIZBVfPnVDJ7oYuikS6szQ6UW5mm/pZkMHpEHRfA+AxnYSUODyQ5mDyva19kPhj6fKVEtCg0zHXDj4TTpw7b5s1SA8g4tzGldbUh0JIdCwJ7JJAv+SBB7t+s0YX9o8gMNpZT07opNRm5RmsFkE3IDMV1Bpotac4pmSMLbLI9GA0IEK+/YpidiQ2oQeGNndNYdE8dzxrcUlQP+vzDg1wiAceI+ZmHdbNymZKKYsFbcnVVfes3gD248F8wkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by DM4PR11MB7280.namprd11.prod.outlook.com (2603:10b6:8:108::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.17; Fri, 22 Aug
- 2025 09:45:29 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1%4]) with mapi id 15.20.9031.023; Fri, 22 Aug 2025
- 09:45:28 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: Nicolin Chen <nicolinc@nvidia.com>, "robin.murphy@arm.com"
-	<robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>, "will@kernel.org"
-	<will@kernel.org>, "robin.clark@oss.qualcomm.com"
-	<robin.clark@oss.qualcomm.com>, "yong.wu@mediatek.com"
-	<yong.wu@mediatek.com>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"angelogioacchino.delregno@collabora.com"
-	<angelogioacchino.delregno@collabora.com>, "thierry.reding@gmail.com"
-	<thierry.reding@gmail.com>, "vdumpa@nvidia.com" <vdumpa@nvidia.com>,
-	"jonathanh@nvidia.com" <jonathanh@nvidia.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>, "Liu, Yi L"
-	<yi.l.liu@intel.com>, "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
-	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org"
-	<linux-arm-msm@vger.kernel.org>, "linux-mediatek@lists.infradead.org"
-	<linux-mediatek@lists.infradead.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>, "Jaroszynski, Piotr" <pjaroszynski@nvidia.com>,
-	"Sethi, Vikram" <vsethi@nvidia.com>, "helgaas@kernel.org"
-	<helgaas@kernel.org>, "etzhao1900@gmail.com" <etzhao1900@gmail.com>
-Subject: RE: [PATCH v3 3/5] iommu: Add iommu_get_domain_for_dev_locked()
- helper
-Thread-Topic: [PATCH v3 3/5] iommu: Add iommu_get_domain_for_dev_locked()
- helper
-Thread-Index: AQHcCxPRj0zb6W5cHUaGmJqSwKG0krRohb6AgAAtjgCABBvC0IAAVdMAgAFVcqA=
-Date: Fri, 22 Aug 2025 09:45:28 +0000
-Message-ID: <BN9PR11MB5276A95E69D761271953E9F38C3DA@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <cover.1754952762.git.nicolinc@nvidia.com>
- <a69557026b7e2353bae67104bbe6a88f0682305e.1754952762.git.nicolinc@nvidia.com>
- <20250818143949.GO802098@nvidia.com> <aKNhIr08fK+xIYcg@Asurada-Nvidia>
- <BN9PR11MB5276262E1925E2CD8AE037EF8C32A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20250821131426.GN802098@nvidia.com>
-In-Reply-To: <20250821131426.GN802098@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|DM4PR11MB7280:EE_
-x-ms-office365-filtering-correlation-id: f440f4da-1274-451a-047a-08dde160a0e8
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?UVTlMcHFNWKNJeavkvedrHGdDCLa7lk0xdz2QDKRmWLYEJVD0o4wD1cQc9ok?=
- =?us-ascii?Q?pStGZCGia6Kqe9V2+sZXGV+8ehILuZr3Us+O8HpGAZVpn4UJSslr7LBbp9ND?=
- =?us-ascii?Q?/54A4DgqNmXuB/2oXnj+xHH0nYXrX9C0t+Z4hwu1UtaTNm31CxiV7AAVTlIP?=
- =?us-ascii?Q?T+RauE56odVDCpx0+g94vbROzftdcNgxHoBHKS7K0a0GKP3j0yjutIxn3qaO?=
- =?us-ascii?Q?3dfb2PigUfJLBPFUlhTIR2M6jYt/C4kCIbbvqVjeehB4v74fbJ4vlRCVdzVQ?=
- =?us-ascii?Q?49ziJkDBET+Tlc0cvRjykmcQJry0V/emd3ojOivJodQ4reVqbWNH2gIxkKu6?=
- =?us-ascii?Q?rIuputsON1oiWic+am69qzmYNpZFcKnTmvdX7bbBooWRZ+ZRVSCthbD200mD?=
- =?us-ascii?Q?umtZcX0ch1NI7M4P8S9SwvioUOkLCkxR1Xri7kEn3lu+XwiltA0tvNBmSAU0?=
- =?us-ascii?Q?2HUYXmbfSud0y2o9daKosDCIlsocxXL4Me5EgOdDGCWn719ihFLn+KUxbZHC?=
- =?us-ascii?Q?bc+zd77HEwclvlD6JWaGB9IUMOQi8+pyNjDhS3IqEmnLokmugnP52lGjr4GO?=
- =?us-ascii?Q?M2x8wEoRQy4kqq2GxlJDPkgxk/S0iH0NysmV0Jpj4o3PpSCJd5+W1CJ0r/9M?=
- =?us-ascii?Q?Yld5XIpS/13gKnWujOLkC6G6SN7ylxxMAR7zr86dSMPbc2nZRhgIcUCyBzRl?=
- =?us-ascii?Q?OdHU8IQQZft+1mxrqCUmbbA+gFGTUF5oO04dQanF9/SZCcwCrSOofebsHgkK?=
- =?us-ascii?Q?tsslu8w/4LCNcwXC5aNhZJGCJ67yUmySoGGVf2UJt9iljPj2VMxnou8YfnpD?=
- =?us-ascii?Q?COBRGbmsANz96r4g4StvXoJBmN+Gze/ENXLzRsb3f8LDPam1NNhsR6AXmpQW?=
- =?us-ascii?Q?14qeUrIhBxVLBD3sNqOYQwLjpWOiP1Tw94zNFLUVzs7iV9y/Z6mwbMEutG5L?=
- =?us-ascii?Q?HEl8St/GBR7wUOodBN/wDUhcqIELteEr656Rpf6zamPX6QPoSbyLOCyXcoP7?=
- =?us-ascii?Q?Jgv91sveFOMiCJgSAUjzcQiShkL+X+CQ+eWDCWZku7gjO7oaRNlAmqXqrurF?=
- =?us-ascii?Q?/1JNZwyMPYc6bUXbVfeZUlUu5w3ZU9yjqMi6FkIv+CRJz1SIvqy/s5UCo62T?=
- =?us-ascii?Q?01Mtj/uQLt5yp6Si2D6ynqqHnCCTa/pXY0hKCQ+oMWpAAMZEy1z0bkNeoxnS?=
- =?us-ascii?Q?1O6y1c+eAx9kiXYHghpZ2RGjII46tjHimJYwRyI/n28h5NLbIAAqwQl46lkC?=
- =?us-ascii?Q?ASqhCk1gYYdnR6MALvm2UkrS9TFcY5vaNVtyYrV/KKXHZiLbs4gc4w+ogJJN?=
- =?us-ascii?Q?SBRc9lM7KGsNnn4tFUxW5KmjmSPjFQyxw+8YYy+zyi42U9zODS9OJUMd+fKK?=
- =?us-ascii?Q?Zo7oP8Bb2A0u6UP7Ss2jLQC6K+Gu8rmrpNZlu8ioJPbAG9tb7zHS1tF+XTmd?=
- =?us-ascii?Q?ovq/JV8wbVzEHebrZp0T4tfWMZzR2eY6ZxacvAcKlaVW5hLDMXNJoQ=3D=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?6Hy2VARVM7MChO3ALZ2g+BuXvtfFLBUWEESU4pR+m3+YArsm2R+lWwwj9zLx?=
- =?us-ascii?Q?edRJDJ2mUvWFsNtb7N26ynSqdNKzaiLdiarDlR0TgkjvTewq6Lzmp1j1xXHA?=
- =?us-ascii?Q?CBNVdPVoDxpy1XIsbgGGqwhodVARYNxXuoSpffaHdnYDWAgDPruxAisiU+Kp?=
- =?us-ascii?Q?XoS+rkfsH9rpFQYxkhtX0GkJzLtrntgksFwyYq6Ya0Cgys2Or9P6WuK8aE86?=
- =?us-ascii?Q?yvdfL1Jo9e0S6LKB9VGqpEuZj1xx/vUCj09ZkpeFjdMzeqiqZEoHX/+KRe51?=
- =?us-ascii?Q?jExhEf5pVyeGhfTBY++31btK6CPc1bDpK8QqWPf6RZUr/kaNclrhetS5t82i?=
- =?us-ascii?Q?a59J/V3afFV5T71bvON0UPgfILupbYk13uRE1T2rAdaB/xHCJ21uHDzrCoPa?=
- =?us-ascii?Q?QVhapzRk6h2ErOql1j1716fCGwTjOfl45vNZq2+6fsazP7YfYqkTxH8BRV1D?=
- =?us-ascii?Q?DlZ2NoV7ArIZn4VOGIc2gzcR02zEiIIlXsjMydi5a79hCJJAiL4xDqULqrFD?=
- =?us-ascii?Q?Xc60MPX6LUhfGG306HBZ9Rz5D5ZCicurZZ0JqLZ9YNKoVWKc31608aPkppWL?=
- =?us-ascii?Q?pCaPYAEIJ0MbLQjyWoNZ6fGJWhX3kW9cQfarxFNIxdMYLOEkoVXeGfy6nngz?=
- =?us-ascii?Q?AQnnz6TVSg7GpltyvCAkdxNWeUVB0L7psSylasRdVpWjliM1SvJX62UQYL+B?=
- =?us-ascii?Q?6IkGmPvj1A8nPJlQrZAxrJl82xMZAyK949k2Zv9eE7hLEoD9PwFmqP98fpmE?=
- =?us-ascii?Q?Sk1orU4Ih6Xc+VHUMAdypPPMVD9M5HsbyL2QOOjzAwh0eS/+uhMWvPyeUysO?=
- =?us-ascii?Q?spgPjB87nevMpfOnNcZUf1I7IXNKVJzfac6LLYO6kqJJGcEj9crdDsgF7sS3?=
- =?us-ascii?Q?mAuqq8L2yntFhIgH08pyjQ4v1XBFZKewCjx6Txz1I0RJ32gBZ0rQx49EhyZE?=
- =?us-ascii?Q?e0Y49eUaSbbXskUFB7TXYZPC8yVmmHpaR46cDukZtgbJlJqMwPwWkuM5XGAp?=
- =?us-ascii?Q?osb6w8HabfyVw2klASQlgnHuaqHCbQnhpBCMNURDulqp94Rd9FFBebxtXFEe?=
- =?us-ascii?Q?l4cVKL/yJeBKnzr+HAYh5L9VrBxbrbLkq/CVl5DUD73kyyirENneMyj+AiVk?=
- =?us-ascii?Q?Wcwxcf5E9EzfiAjZ90RrK55DnUK3uwF9di5cTdyf7OH512SEW8Bo2IaB03ip?=
- =?us-ascii?Q?rUsPgY6n9ausHUcGJUEiWo4VCMHrZQC6seRuBXI7Wt80USJIZKQwYJ41soj8?=
- =?us-ascii?Q?Oilb8+6iPo8zU4mFGWNgG5M69d+L6TglaOHzgZWP71UQyIqodJ8dCTfUuJU1?=
- =?us-ascii?Q?BIZONtNwyGGBwlmD8CQbpOHeC5jLJVbGdNeT4TRZPgSUSisfz2JAEWbNmfZW?=
- =?us-ascii?Q?4Sv40FQKXRE+L/jKsALT5XPPbG7RkkeTKV5zJQh6jeuPjXLLtRbxb8uhsRZa?=
- =?us-ascii?Q?fGfwPAry+AgCawiM8MujFis6GW8w8aPBmW3h1CS9hsD7zoHq304oJva9v9dX?=
- =?us-ascii?Q?+SwKCioc70dM3sN5o0n5noORvHVR+ca4/hPAuoVuV88TiDnD8u0R5zb8mGCB?=
- =?us-ascii?Q?QnWDbH080VJAC1AAs9mUIxkGexUNrhtBhKpgeoW/?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684A227EFF1
+	for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 10:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755857120; cv=none; b=oBChxVagFTqsAxJXWXJA7R3VuHdUUm7ykzl7D4kW5uJir3e9C3q9w50dDwrtmEUS2glVHmxpPQBdCNBEErVJEXJUvqgTgDZKmX/EF/wG20vk1A6bOXILUKY5hdzEMg0GOyhpcLFxrPmAPDAwnvxijAbhRHlFalkpfBdYGZ2rvEQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755857120; c=relaxed/simple;
+	bh=KivU5RnfA0zCwbsH7zhExGKtReC3rbkiFiOi0NUu8JU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tQCQUMP8OjUNu6OzdkDbXtavEf4ANzp06U8rslrOygyGnoh4Dcey5iXPgxjQAmiVzPvfZ0bn2N9DJIz+4f04EVszZqkJUDte7SsgPF8LWjtT3RLpZOzRLpLgVM7maIgvPQGOmdrbPM4nAJ+NvVIYM2A1ApHcYgh82XEJpPK4iF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gFOV+fWL; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57M8UWh1006750
+	for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 10:05:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	NCvb4E87MdnkwFWFQpgaGoK+/UWKLd0ckk9/uB8fxpI=; b=gFOV+fWLijaslLma
+	A9XqpoRAKL4OPj1l1BTVvFvigN6fQ/5oXcLvh1AkfQ1phE5QY85wqYHzG3EUAO4o
+	AajQcO5PCy9VAtP4uI/4dGv0ZzShI8AsgTwfq1xwFCLv/0LPmynBt5Smv/E3+R9D
+	SC6GYK/YDOPW+OTy2JbKDmuDNtfu4AjSbimMahTTqAJsOuW6oHxOg36wdINf/KxP
+	pnmCJMkgL+aSBAZ64BwF6mGNz9Dewgrjw1tD3EQG9HZYTq8C8kxbz9X49B4KgEpc
+	6tnGmO/fv9ZNLQwM1hTOwLEys2rXsFWep8nI6/TS1t/VKrN0Wg2O8kwkW9D38ykj
+	GV/MlA==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48n5290t5s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 10:05:17 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-24458264c5aso22801625ad.3
+        for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 03:05:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755857115; x=1756461915;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NCvb4E87MdnkwFWFQpgaGoK+/UWKLd0ckk9/uB8fxpI=;
+        b=ohWlQzsNb2jVbmJEzhOWQ0+lJz8FSu3wQFYl7w9X7KrnRMOcxvJlRRhzQctEsDX1Id
+         SIP3GaTBV2wyjjvzOJHBTMJ0v2EVRDZE9tNwbnZDOxw/xERQR/mTi9v7J/JI2CvGreuj
+         awwSZaM0J8DtaD5413Am2F5/AHrfchI+dQyRxyFtdfKwGH+v6Qo7TZgCTNy2iynZbx8n
+         58dk3LK09zRFuW4pWZw7IvZfbCqdPjMzQGMjWDhLMtCRSzHRBfmq/YR6UWSDlk7WQ9+N
+         bMGMy2Gs0vfnQ7OlztM3TI/jebwpxz+/tJiBgOS0a7n5+FPmywUA0y+1vHsOeiAf6Qdl
+         bQSg==
+X-Forwarded-Encrypted: i=1; AJvYcCWdsYKnqpPwKQLFHXQfB1Z9NTLr06Jn/RwR7l3CM/Ah19BLX/PjeCdHc9mIkihpMcYTbeWksnrGo+w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjWQK43EiURqbWSKeBjGxYc5Uc0A/AQPD8m+BNio/EXglj0FVm
+	0I9kYfzyKRJlnXY1oE2cvm1uGzqhLEX4zut15U4P/SpgmZfu4xHnnmWE3GbIFYT3QydxBQnCBFl
+	86oNDyuwobOxQc2c2rfJSpFhA7XPx1O39SD+pJlXkyYm1oBEpIRy8RUvcyku0Xb0=
+X-Gm-Gg: ASbGnctghru/Z0J0tDV3FIDy2fHhPGltruwDMlZz/RPFlNL67JUsJ0BQEcgipN5MNxv
+	V0OtkzSrRPUwULdwZLhi9mr5+fSy/Di3LBAtTHjWKzwKP5vqjzOoZ2zgZkJgTqDS9LtPqAFgT/k
+	eIfMS+2EUicaNWhHjKBPsGmp+/LiD/aVsft58/vmjE/qAd1C0w2jC/Hu2N2KR78HVm4kKdOvd7u
+	2fJVc4BaJciUsKGRRK4zZNu8NBilAeUtucUUm1pK9W88PlnsLLDHidBujnzgoHqUKip2QUHt4Un
+	20Pbm2mvVOhmxqeXJKPYGYWaaQ5AOjedDIbVdS7qvuBbG2tOI40C5wcdVrwFh3vwcsnkEYfopr2
+	brDUGF+69DEXbDjTFRVqwDM0XiVXPOJo=
+X-Received: by 2002:a17:903:22cc:b0:240:640a:c57b with SMTP id d9443c01a7336-2462ef1f7bamr36120125ad.37.1755857114845;
+        Fri, 22 Aug 2025 03:05:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHShlcLRCyxd3es3abUH//R1uFG+bwmxmXbbL+TYec1DVJUwY5M/qqhUXum/j4nkYom6lZREg==
+X-Received: by 2002:a17:903:22cc:b0:240:640a:c57b with SMTP id d9443c01a7336-2462ef1f7bamr36119655ad.37.1755857114355;
+        Fri, 22 Aug 2025 03:05:14 -0700 (PDT)
+Received: from [10.133.33.128] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32513902819sm2098106a91.14.2025.08.22.03.05.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Aug 2025 03:05:13 -0700 (PDT)
+Message-ID: <b43382fc-a2c3-4c6b-b462-0cabf7a2103d@oss.qualcomm.com>
+Date: Fri, 22 Aug 2025 18:05:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f440f4da-1274-451a-047a-08dde160a0e8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2025 09:45:28.8606
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cK+R9C6A6EhgMaAHPENsOVWiIdjqxuNtbgp8m4R6RJTyDx6LzK/QcxwUfxsD6UpExTP8/XEI5eiVgpx4e7cn3w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB7280
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/3] PCI: qcom: Add equalization settings for 8.0 GT/s
+ and 32.0 GT/s
+To: Manivannan Sadhasivam <mani@kernel.org>,
+        Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
+        lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+        johan+linaro@kernel.org, vkoul@kernel.org, kishon@kernel.org,
+        neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, quic_krichai@quicinc.com,
+        quic_vbadigan@quicinc.com
+References: <20250819071649.1531437-1-ziyue.zhang@oss.qualcomm.com>
+ <20250819071649.1531437-2-ziyue.zhang@oss.qualcomm.com>
+ <z54p5x5u56u7dprrlv3obzhxotjgimbufa2spajoqvnlrevgdd@4dejnkmiegrh>
+Content-Language: en-US
+From: Qiang Yu <qiang.yu@oss.qualcomm.com>
+In-Reply-To: <z54p5x5u56u7dprrlv3obzhxotjgimbufa2spajoqvnlrevgdd@4dejnkmiegrh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=fpOFpF4f c=1 sm=1 tr=0 ts=68a840dd cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=EUspDBNiAAAA:8 a=uZ_Y6Hf0VBP1xoXJwNUA:9
+ a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22
+X-Proofpoint-GUID: eIOwMAqvET171_sN28nduGJbMcMX_nSb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIwMDAxMyBTYWx0ZWRfX3VfUNzKfjPtW
+ LvvYval6zm7uW8qRqPUuSvy0RLax4ayyfplP15kS/V+QSe/oUwPeLzJD5i+h6an2/KNDAJnJDj9
+ hMG7tOiWnDu4uYgQDHUp+xpsom5l7zIYoMegALqShW5tH5qXziqk073ia7PcgYtLgtRQXRwqw8A
+ Tquj1WYIwbZEvjGpy9vCGljxBG15RAABttHY6NDK5F0dY56Q33q7u/8HNTV2cfFirJJsSsg2gPX
+ r4/d6yC+Ps9+FzWlyZq1xM4+1p2+F4N282FI/F4s9DPT6T4U9Foc3r3QcKGPwtbkvq1Z2OZ3pKx
+ 71pCZPtKTSGQwy87aaYalmaKhMrknEm9dhOUmVjZX7BJ/J41zJ0EWsZOxhUtDgwgadeMNdzzZr8
+ 6IHScPWp9saOLwR/G6ck5fdUbmcCnw==
+X-Proofpoint-ORIG-GUID: eIOwMAqvET171_sN28nduGJbMcMX_nSb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-22_03,2025-08-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 priorityscore=1501 spamscore=0 clxscore=1015 adultscore=0
+ suspectscore=0 bulkscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2508110000 definitions=main-2508200013
 
-> From: Jason Gunthorpe <jgg@nvidia.com>
-> Sent: Thursday, August 21, 2025 9:14 PM
->=20
-> On Thu, Aug 21, 2025 at 08:11:05AM +0000, Tian, Kevin wrote:
-> > > From: Nicolin Chen <nicolinc@nvidia.com>
-> > > Sent: Tuesday, August 19, 2025 1:23 AM
-> > >
-> > > ... I found that in SMMUv3 driver, iommu_get_domain_for_dev() is
-> > > used to get the RID domain for an SVA domain:
-> > >     arm_smmu_set_pasid()
-> > >     arm_smmu_blocking_set_dev_pasid()
-> > >
-> > > These two are already given an "old" (SVA) domain pointer, FWIW.
-> > >
-> > > So, we may change to passing in the old domain as you suggested,
-> > > yet we still have to fix the iommu_get_domain_for_dev() in order
-> > > to reflect the RID domain correctly for the driver that calls it
-> > > (or even potentially) in some group->mutex locked context where
-> > > the RID domain might not be naturally passed in.
-> > >
-> >
-> > Out of curiosity.
-> >
-> > arm_smmu_blocking_set_dev_pasid()
-> >
-> > 	/*
-> > 	 * When the last user of the CD table goes away downgrade the STE
-> back
-> > 	 * to a non-cd_table one.
-> > 	 */
-> > 	if (!arm_smmu_ssids_in_use(&master->cd_table)) {
-> > 		struct iommu_domain *sid_domain =3D
-> > 			iommu_get_domain_for_dev(master->dev);
-> >
-> > 		if (sid_domain->type =3D=3D IOMMU_DOMAIN_IDENTITY ||
-> > 		   sid_domain->type =3D=3D IOMMU_DOMAIN_BLOCKED)
-> > 			sid_domain->ops->attach_dev(sid_domain, dev);
-> > 	}
-> >
-> > why cannot downgrade apply to the case where the RID is attached to
-> > a DMA domain?
->=20
-> If the RID is a PAGING domain then it must be a S1 paging domain and ther=
-e
-> is
-> no downgrade possible.
->=20
-> It is impossible for the RID to be a S2 paging domain while ssids are
-> in use.
->=20
 
-Thanks for the background. btw is it technically impossible or just
-not worth of the extra software complexity for no value? e.g. if
-maintaining two page tables (S1/S2 formats) with exact same mappings,
-does SMMU allow smooth transition between two modes w/o breaking
-in-fly DMAs? but probably keeping two page tables in-sync in transition
-is already a problem w/o proper locking in map/unmap...=20
+
+On 8/22/2025 4:06 PM, Manivannan Sadhasivam wrote:
+> On Tue, Aug 19, 2025 at 03:16:46PM GMT, Ziyue Zhang wrote:
+>> Add lane equalization setting for 8.0 GT/s and 32.0 GT/s to enhance link
+>> stability and avoid AER Correctable Errors reported on some platforms
+>> (eg. SA8775P).
+>>
+> 
+> So this is fixing an issue, right? Then you should add relevant Fixes tag. I
+> guess the tag here would be the commit that added SA8775p.
+> 
+>> 8.0 GT/s, 16.0 GT/s and 32.0 GT/s require the same equalization setting.
+>> This setting is programmed into a group of shadow registers, which can be
+>> switched to configure equalization for different speeds by writing 00b,
+>> 01b and 10b to `RATE_SHADOW_SEL`.
+>>
+>> Hence program equalization registers in a loop using link speed as index,
+>> so that equalization setting can be programmed for 8.0 GT/s, 16.0 GT/s
+>> and 32.0 GT/s.
+>>
+>> Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+>> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+>> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-designware.h  |  1 -
+>>   drivers/pci/controller/dwc/pcie-qcom-common.c | 58 +++++++++++--------
+>>   drivers/pci/controller/dwc/pcie-qcom-common.h |  2 +-
+>>   drivers/pci/controller/dwc/pcie-qcom-ep.c     |  6 +-
+>>   drivers/pci/controller/dwc/pcie-qcom.c        |  6 +-
+>>   5 files changed, 41 insertions(+), 32 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index b5e7e18138a6..11de844428e5 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -123,7 +123,6 @@
+>>   #define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
+>>   #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
+>>   #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
+>> -#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT	0x1
+>>   
+>>   #define GEN3_EQ_CONTROL_OFF			0x8A8
+>>   #define GEN3_EQ_CONTROL_OFF_FB_MODE		GENMASK(3, 0)
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
+>> index 3aad19b56da8..cb98e66d81d9 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom-common.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
+>> @@ -8,9 +8,11 @@
+>>   #include "pcie-designware.h"
+>>   #include "pcie-qcom-common.h"
+>>   
+>> -void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
+>> +void qcom_pcie_common_set_equalization(struct dw_pcie *pci)
+>>   {
+>>   	u32 reg;
+>> +	u16 speed;
+>> +	struct device *dev = pci->dev;
+> 
+> Reverse Xmas order please.
+> 
+>>   
+>>   	/*
+>>   	 * GEN3_RELATED_OFF register is repurposed to apply equalization
+>> @@ -19,32 +21,40 @@ void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci)
+>>   	 * determines the data rate for which these equalization settings are
+>>   	 * applied.
+>>   	 */
+>> -	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+>> -	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
+>> -	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
+>> -	reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
+>> -			  GEN3_RELATED_OFF_RATE_SHADOW_SEL_16_0GT);
+>> -	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
+>>   
+>> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
+>> -	reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
+>> -		GEN3_EQ_FMDC_N_EVALS |
+>> -		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
+>> -		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
+>> -	reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
+>> -		FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
+>> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
+>> -		FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
+>> -	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
+>> +	for (speed = PCIE_SPEED_8_0GT; speed <= pcie_link_speed[pci->max_link_speed]; ++speed) {
+>> +		if (speed > PCIE_SPEED_32_0GT) {
+>> +			dev_warn(dev, "Skipped equalization settings for speeds higher than 32.0 GT/s\n");
+>> +			break;
+>> +		}
+>>   
+>> -	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
+>> -	reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
+>> -		GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
+>> -		GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
+>> -		GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
+>> -	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
+>> +		reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+>> +		reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
+>> +		reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
+>> +		reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
+>> +			  speed - PCIE_SPEED_8_0GT);
+>> +		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
+>> +
+>> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
+>> +		reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
+>> +			GEN3_EQ_FMDC_N_EVALS |
+>> +			GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
+>> +			GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
+>> +		reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
+>> +			FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
+>> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
+>> +			FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
+>> +		dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
+>> +
+>> +		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
+>> +		reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
+>> +			GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
+>> +			GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
+>> +			GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
+>> +		dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
+>> +	}
+>>   }
+>> -EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_equalization);
+>> +EXPORT_SYMBOL_GPL(qcom_pcie_common_set_equalization);
+>>   
+>>   void qcom_pcie_common_set_16gt_lane_margining(struct dw_pcie *pci)
+>>   {
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.h b/drivers/pci/controller/dwc/pcie-qcom-common.h
+>> index 7d88d29e4766..7f5ca2fd9a72 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom-common.h
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.h
+>> @@ -8,7 +8,7 @@
+>>   
+>>   struct dw_pcie;
+>>   
+>> -void qcom_pcie_common_set_16gt_equalization(struct dw_pcie *pci);
+>> +void qcom_pcie_common_set_equalization(struct dw_pcie *pci);
+>>   void qcom_pcie_common_set_16gt_lane_margining(struct dw_pcie *pci);
+>>   
+>>   #endif
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+>> index 60afb4d0134c..aeb166f68d55 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+>> @@ -511,10 +511,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
+>>   		goto err_disable_resources;
+>>   	}
+>>   
+>> -	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT) {
+>> -		qcom_pcie_common_set_16gt_equalization(pci);
+>> +	qcom_pcie_common_set_equalization(pci);
+>> +
+>> +	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT)
+> 
+> This condition has existed even before this patch, but just noticing this
+> possible issue. So if 'max_link_speed' is > 16 GT/s, we do not need to set lane
+> margining? We used the same logic to set equalization setting earlier also.
+
+Lane margining is supported for 16 GT/s and 32 GT/s. The settings are
+dependent on phy design. For a specific phy, they have same settings
+for 16 GT/s and 32 GT/s. Perhaps we can get the settings from devicetree
+and program them in a loop.
+
+But I'm not sure why we need to program it. It will no affect singal
+quality and only required when user wants to collect margining info.
+
+- Qiang Yu
+
+> 
+> - Mani
+> 
+
 
