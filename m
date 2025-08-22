@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-34590-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34591-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FFFCB31DC0
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 17:13:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54B2EB31D75
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 17:08:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF0E73B0DF9
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 15:02:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0BD081C84B9A
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 15:03:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D568B31355E;
-	Fri, 22 Aug 2025 14:59:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC9703451CE;
+	Fri, 22 Aug 2025 14:59:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KLi+cj+2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="egxSwexT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643C6227B88;
-	Fri, 22 Aug 2025 14:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76405343D98;
+	Fri, 22 Aug 2025 14:59:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755874775; cv=none; b=K5L9xVdx52KL7ay9Zv4PC5AUHrB1emlDYZn+itEBytnx8k5PVIId40TPhei0aWWpTqGBGUGIsudmsIZ+S4zm508AxTdh3ZWCJ5i6dAvFiuspmPa6qSrwPVHDspiOJM2oPTklppLD3NDig25G8hdMdrvwBEYwTVdGm9HBY1j/rH0=
+	t=1755874784; cv=none; b=IjJs9DKyXbYFKWvQjzzEIcdQhBOdlEqknTsHv/1/138VqA/Sc6zt4/HiR/JPgGkrkiWCKUkZxhwN8yhw2qdzhHZteZieQhjGQizG4yNu5y+zT39H1wJOYVmlVI4DULKbuOJS53PgiI6eDF8EDI/yR4rGSLq9oTt8bhF9b1InF/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755874775; c=relaxed/simple;
-	bh=FRfssbwFVOeTRuS2nCD7Ynmj6Ps7cVzti/WfWUW/SwQ=;
+	s=arc-20240116; t=1755874784; c=relaxed/simple;
+	bh=HTxHAiNuvyuD34kLb+03Rz07JtALaQ3E9pcuMeDZoEE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aTbPv6pf8xFymJ03NCybLB5s5J13inMX1+WeI7xBLcXqfkOTpVdm3umrXnnv2UeiHfOFOR+2nUZPMCboG0ztql1hZvhGRXVwRhnlrDdQcaUmFK3Fbs1/CAoj1KyyqGtgHPRPzmW5tvYpSphf5OiAIPxIcCt6LF37+/Ip40u1I88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KLi+cj+2; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=sLz/8dUF4NmDoiM26s6SIkADUKJMr+wMPn5sZr7aBSLY8+POhRGCd8c79Y6/ZVJ6cIdwXp4mFA9x9fVgRkHJX9FCmtSww2StBI9cFsd+PQ7Zcjcly9fZ1RnG9ROlefk7D36EwjBc3Vjv6iSWi7kwYpFQZo0K2bt0m6hpIVWRlKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=egxSwexT; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755874775; x=1787410775;
+  t=1755874784; x=1787410784;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=FRfssbwFVOeTRuS2nCD7Ynmj6Ps7cVzti/WfWUW/SwQ=;
-  b=KLi+cj+2Gw4b84vymRsQP+iuUjqInzEzez8ucpAI/eBk3ZKWjfn6A53b
-   bg3/VRF0S5bD7AEBJ/r2Q08oztXiUGjlEvsnvVaec0+ZVKJmbavryX+3I
-   U60SwC5668IS05r6Zrsxw4JNTI8MLTMjDmIcs1B2lAAJx0PhPsyYOJ41f
-   dO+ynnPKuaZy7MrmEGIjG3lspkpmxnKkWkXf8G954ZQ8rmODNPebHTZFU
-   2ufIs5+Ko6gjwtYv88nKFtsdatjO6YJGOztgiDSeFrDgLNtemDa8DN5TP
-   NdM3zq2gzZzAJChGAwzRf+0XXDgDFgdSz6E4xm46oOvMOhclVDf7a0yAa
-   w==;
-X-CSE-ConnectionGUID: Lul5mvyQQ0GQDhSRgJYezA==
-X-CSE-MsgGUID: sr8csa7zRP+a/n/2Bs9bCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="75640712"
+  bh=HTxHAiNuvyuD34kLb+03Rz07JtALaQ3E9pcuMeDZoEE=;
+  b=egxSwexTshS15NVuSKQ7h9aupKsw6nWFFQyvpaV2ADiF721uWhW3NI7l
+   nnUmZdPwBUe0MjVbuB7I+vDIc/6fJO++WvqC/pTLczr4G+UO/N9gcUTBv
+   Vc3Rm/WvKOPdWoOP6xoSaEnx5ckH2AjfcjGTZ51NZdbQDy9lW++PkOwTN
+   XX5NS23RLkWSmZJkXhRwhJM+aD8iBZ3EqQT3Md/dagwqSmViwzPDhyU99
+   aYwTiXrYI4PD2mFYIBBAqlub/QH1/oufYpgJoqV4xxAgFt/BSs3EEgv+x
+   3GpFl3UyN+VeWlBvAGa+NZynjzQm71nC+cVmzNePdAcAp9SNqiyFwNUYc
+   A==;
+X-CSE-ConnectionGUID: eGRF8F5DQ6WqOVMbGfPwJg==
+X-CSE-MsgGUID: raz9YQbWQiyr5TYICPpJcw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="75640737"
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="75640712"
+   d="scan'208";a="75640737"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:59:34 -0700
-X-CSE-ConnectionGUID: 7HgkGi3zQqKRPBeZCM3JIw==
-X-CSE-MsgGUID: FNeyO842RAq2qXrusEvxbg==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:59:44 -0700
+X-CSE-ConnectionGUID: iZNsZnZnSe2zaHcSW5F1PA==
+X-CSE-MsgGUID: s8iZ9QfNSsyPmEDxoDG8qA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="172986945"
+   d="scan'208";a="172986954"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.115])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:59:29 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:59:38 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Andreas Larsson <andreas@gaisler.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -79,9 +79,9 @@ To: Andreas Larsson <andreas@gaisler.com>,
 Cc: =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
 	linuxppc-dev@lists.ozlabs.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 21/24] PCI: Refactor remove_dev_resources() to use pbus_select_window()
-Date: Fri, 22 Aug 2025 17:56:02 +0300
-Message-Id: <20250822145605.18172-22-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 22/24] PCI: Add pci_setup_one_bridge_window()
+Date: Fri, 22 Aug 2025 17:56:03 +0300
+Message-Id: <20250822145605.18172-23-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
 References: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
@@ -94,63 +94,78 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Convert remove_dev_resources() to use pbus_select_window(). As
-'available' is not the real resources, the index has to be adjusted as
-only bridge resource counterparts are present in the 'available' array.
+pci_bridge_release_resources() contains a resource type hack to work
+around the unsuitable __pci_setup_bridge() interface. Extract the
+switch statement that picks the correct bridge window setup function
+from pci_claim_bridge_resource() into pci_setup_one_bridge_window() and
+use it also in pci_bridge_release_resources().
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/setup-bus.c | 34 +++++++++-------------------------
- 1 file changed, 9 insertions(+), 25 deletions(-)
+ drivers/pci/setup-bus.c | 36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index ee2f2c78d8c9..ece533181ff1 100644
+index ece533181ff1..f5b0274bde0a 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -2061,34 +2061,18 @@ static void remove_dev_resource(struct resource *avail, struct pci_dev *dev,
- static void remove_dev_resources(struct pci_dev *dev,
- 				 struct resource available[PCI_P2P_BRIDGE_RESOURCE_NUM])
- {
--	struct resource *mmio_pref = &available[PCI_BUS_BRIDGE_PREF_MEM_WINDOW];
--	struct resource *res;
-+	struct resource *res, *b_win;
-+	int idx;
- 
- 	pci_dev_for_each_resource(dev, res) {
--		if (resource_type(res) == IORESOURCE_IO) {
--			remove_dev_resource(&available[PCI_BUS_BRIDGE_IO_WINDOW],
--					    dev, res);
--		} else if (resource_type(res) == IORESOURCE_MEM) {
-+		b_win = pbus_select_window(dev->bus, res);
-+		if (!b_win)
-+			continue;
- 
--			/*
--			 * Make sure prefetchable memory is reduced from
--			 * the correct resource. Specifically we put 32-bit
--			 * prefetchable memory in non-prefetchable window
--			 * if there is a 64-bit prefetchable window.
--			 *
--			 * See comments in __pci_bus_size_bridges() for
--			 * more information.
--			 */
--			if ((res->flags & IORESOURCE_PREFETCH) &&
--			    ((res->flags & IORESOURCE_MEM_64) ==
--			     (mmio_pref->flags & IORESOURCE_MEM_64))) {
--				remove_dev_resource(&available[PCI_BUS_BRIDGE_PREF_MEM_WINDOW],
--						    dev, res);
--			} else {
--				remove_dev_resource(&available[PCI_BUS_BRIDGE_MEM_WINDOW],
--						    dev, res);
--			}
--		}
-+		idx = pci_resource_num(dev->bus->self, b_win);
-+		idx -= PCI_BRIDGE_RESOURCES;
-+
-+		remove_dev_resource(&available[idx], dev, res);
- 	}
+@@ -953,6 +953,23 @@ static void __pci_setup_bridge(struct pci_bus *bus, unsigned long type)
+ 	pci_write_config_word(bridge, PCI_BRIDGE_CONTROL, bus->bridge_ctl);
  }
  
++static void pci_setup_one_bridge_window(struct pci_dev *bridge, int resno)
++{
++	switch (resno) {
++	case PCI_BRIDGE_IO_WINDOW:
++		pci_setup_bridge_io(bridge);
++		break;
++	case PCI_BRIDGE_MEM_WINDOW:
++		pci_setup_bridge_mmio(bridge);
++		break;
++	case PCI_BRIDGE_PREF_MEM_WINDOW:
++		pci_setup_bridge_mmio_pref(bridge);
++		break;
++	default:
++		return;
++	}
++}
++
+ void __weak pcibios_setup_bridge(struct pci_bus *bus, unsigned long type)
+ {
+ }
+@@ -987,19 +1004,7 @@ int pci_claim_bridge_resource(struct pci_dev *bridge, int i)
+ 	if (pci_bus_clip_resource(bridge, i))
+ 		ret = pci_claim_resource(bridge, i);
+ 
+-	switch (i) {
+-	case PCI_BRIDGE_IO_WINDOW:
+-		pci_setup_bridge_io(bridge);
+-		break;
+-	case PCI_BRIDGE_MEM_WINDOW:
+-		pci_setup_bridge_mmio(bridge);
+-		break;
+-	case PCI_BRIDGE_PREF_MEM_WINDOW:
+-		pci_setup_bridge_mmio_pref(bridge);
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
++	pci_setup_one_bridge_window(bridge, i);
+ 
+ 	return ret;
+ }
+@@ -1839,10 +1844,7 @@ static void pci_bridge_release_resources(struct pci_bus *bus,
+ 	if (ret)
+ 		return;
+ 
+-	/* Avoiding touch the one without PREF */
+-	if (type & IORESOURCE_PREFETCH)
+-		type = IORESOURCE_PREFETCH;
+-	__pci_setup_bridge(bus, type);
++	pci_setup_one_bridge_window(dev, PCI_BRIDGE_RESOURCES + idx);
+ }
+ 
+ enum release_type {
 -- 
 2.39.5
 
