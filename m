@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-34585-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34586-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F51FB31DA5
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 17:11:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59A17B31D26
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 17:02:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B562EB2440D
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 15:01:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 635B87BFFFB
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 15:00:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D5B831352A;
-	Fri, 22 Aug 2025 14:58:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4732F32276E;
+	Fri, 22 Aug 2025 14:58:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oB2jR3Yl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ljkyL/av"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4912A23ABBF;
-	Fri, 22 Aug 2025 14:58:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD12322A0C;
+	Fri, 22 Aug 2025 14:58:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755874728; cv=none; b=AhzAv5sb5xXXkuArtpGTukSLhUJomlzSpH+rNMR7J5SczUgypanZ5e7Z+MSG3RV6RNfeyH/caMpVF80jYIUqEx7IydiPNEiF76PT/5jS66RRuKEOzle06eWWKBgZSQ9JzwpR1vbx6c8Pk5sHsqkubEHbtYBwS2eBqC4kdLB4jhk=
+	t=1755874737; cv=none; b=mE7GAPccMUt87mkBv0r9UeARzTRorUEZ/tvAfPP3D3ROpiXkNvj9K7FvGGPMFR9snbda1/lqmWigtlBRMOxXIJ912accw7yWykym2rQnFqWYCLth8B+TPIh+YP6Rig/SNZMENKig8BYfw2BFOsKwmLo3NTIL9lEuKpvnajy6cXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755874728; c=relaxed/simple;
-	bh=hKKkyDwuMgQSuHsgEQCnHOBtmnEIBd1H4fruJqqsGtc=;
+	s=arc-20240116; t=1755874737; c=relaxed/simple;
+	bh=X8NhfOVVPeUuaZ7xzX5xjJ3Kbd+6Ye2qksEkgXo7VC8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l2g5ba8uZf1x/z8covKjrIzdE7/oTpvjSlHu90ZX/U6ZejmNqOJwsTvizoSw1ssEkKmHlMG70dOsmkhpB55xemLyJOafSVucBouqMEK7Yno3OSwHQu5QRvuLzxLpBFF/BbZVM7WK2bTx3CRA4rvqFgLuhZicap4uMDflTqHkGJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oB2jR3Yl; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version:Content-Type; b=EnGH6QkrvjpCooR58a4bY2DMRZDKx6ukCu72a+LH9r1p4+Iy05cBWTVtT/VK6X2Xu4PeqvvaqhebZK3X6ot14rQO4iOYBbM3KWr0Le9lFrsJny2mVnTFpB/EBURhQXxa2bjB125NWLSrn2ZW2pL8InVwNxTLq9XJm3EHZy8bvu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ljkyL/av; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755874726; x=1787410726;
+  t=1755874735; x=1787410735;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=hKKkyDwuMgQSuHsgEQCnHOBtmnEIBd1H4fruJqqsGtc=;
-  b=oB2jR3Yly6iZar15hvXG6H4104C/22UAS5cqR3tmnbhuJ87wnDpZky0Z
-   TUcZvuMeNd6mkqWuJlOcjiCdTO1ElE3+YBh5eI9cHecOIHiyxH4EW1B+N
-   IlzzV5GwGQt3mesx8/QnVvmXobcKtHNma6b/iOJAX1Y66RQrgWo8UBCnZ
-   uZKBmVMk0D3vjN8UrmNpxGwvyuqGcEFaRrP+cnEdp4dZCCubE9vbFA9kS
-   xaf0B8VQRxi0mwQr8L8KMpF+w8buLjzUr9KWu80/41hp73F5Fkba8mDUY
-   /xaxh3oisFqmbrSPcyS+g6hwL4MDPxbd4wjmc8cH6wuXj4H4veXsju8y9
-   g==;
-X-CSE-ConnectionGUID: 6T7UJMQiQ4uX4s1mUbV/Cw==
-X-CSE-MsgGUID: yr9p7X2cQ3G58o0+AAM6pA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="57201505"
+  bh=X8NhfOVVPeUuaZ7xzX5xjJ3Kbd+6Ye2qksEkgXo7VC8=;
+  b=ljkyL/avL3bBDEWsQSQkqYlBk+MznR03gTl1/KttzBonuMXdqhRbT/k1
+   eyOrv4bQRtHiPJ+Qb5+IGmNFOzItX6EnDw5rbUbkKo2ZA+LyiNojRGjZt
+   rDVp3xaQuqOqsMfX28qwutZu/e1K2sd+lVrSwYeKqSFio3wDaRAMGvSOb
+   FpvkpPTdZW8q+opDQ11gWyaGuJ7e1o5OPLaa/TSXG6RMmCyo1R04bJvWk
+   XtfwLAm+MQyOnC6Eu10B5blf3UPybOaJQUL+NjJyhBRKaTwWlPcE/en/Y
+   Qrw1kctucEpLeSw0WKpFQLUsjwbhh32gx4s0QcAFoJWHWowSa1rfjThKQ
+   Q==;
+X-CSE-ConnectionGUID: ayN0EGOqQwSyjkFQsSc+2g==
+X-CSE-MsgGUID: +Sahd3PtTbiL7EIqPcdzXA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="57201519"
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="57201505"
+   d="scan'208";a="57201519"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:58:45 -0700
-X-CSE-ConnectionGUID: oPGWRSQbROyBWCGWWqNJgg==
-X-CSE-MsgGUID: SJBAxeC5SDOdrWApIXnu9g==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:58:55 -0700
+X-CSE-ConnectionGUID: czktQPQuQrqYykt9N0PyQQ==
+X-CSE-MsgGUID: P1NLfDMUSq2nPtJmAVVs0g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="199695252"
+   d="scan'208";a="199695258"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.115])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:58:40 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:58:50 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Andreas Larsson <andreas@gaisler.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -79,9 +79,9 @@ To: Andreas Larsson <andreas@gaisler.com>,
 Cc: =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
 	linuxppc-dev@lists.ozlabs.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 16/24] PCI: Use pbus_select_window_for_type() during IO window sizing
-Date: Fri, 22 Aug 2025 17:55:57 +0300
-Message-Id: <20250822145605.18172-17-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 17/24] PCI: Rename resource variable from r to res
+Date: Fri, 22 Aug 2025 17:55:58 +0300
+Message-Id: <20250822145605.18172-18-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
 References: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
@@ -94,27 +94,61 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Convert pbus_size_io() to use pbus_select_window_for_type().
+Resource is going to be passed in as argument aften an upcoming change.
+Rename the struct resource variable from "r" to "res" to avoid using
+one letter variable name in a function argument.
+
+This rename is made separately to reduce churn in the upcoming change.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/setup-bus.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pci/setup-bus.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 55289cd58e2c..3f2776f7a1b2 100644
+index 3f2776f7a1b2..dac0f0f0360b 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -1122,8 +1122,7 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
- 			 struct list_head *realloc_head)
- {
- 	struct pci_dev *dev;
--	struct resource *b_res = find_bus_resource_of_type(bus, IORESOURCE_IO,
--							   IORESOURCE_IO);
-+	struct resource *b_res = pbus_select_window_for_type(bus, IORESOURCE_IO);
- 	resource_size_t size = 0, size0 = 0, size1 = 0;
- 	resource_size_t children_add_size = 0;
- 	resource_size_t min_align, align;
+@@ -1241,24 +1241,24 @@ static bool pbus_upstream_space_available(struct pci_bus *bus, unsigned long mas
+ 		.align = align,
+ 	};
+ 	struct pci_bus *downstream = bus;
+-	struct resource *r;
++	struct resource *res;
+ 
+ 	while ((bus = bus->parent)) {
+ 		if (pci_is_root_bus(bus))
+ 			break;
+ 
+-		pci_bus_for_each_resource(bus, r) {
+-			if (!r || !r->parent || (r->flags & mask) != type)
++		pci_bus_for_each_resource(bus, res) {
++			if (!res || !res->parent || (res->flags & mask) != type)
+ 				continue;
+ 
+-			if (resource_size(r) >= size) {
++			if (resource_size(res) >= size) {
+ 				struct resource gap = {};
+ 
+-				if (find_resource_space(r, &gap, size, &constraint) == 0) {
++				if (find_resource_space(res, &gap, size, &constraint) == 0) {
+ 					gap.flags = type;
+ 					pci_dbg(bus->self,
+ 						"Assigned bridge window %pR to %pR free space at %pR\n",
+-						r, &bus->busn_res, &gap);
++						res, &bus->busn_res, &gap);
+ 					return true;
+ 				}
+ 			}
+@@ -1266,7 +1266,7 @@ static bool pbus_upstream_space_available(struct pci_bus *bus, unsigned long mas
+ 			if (bus->self) {
+ 				pci_info(bus->self,
+ 					 "Assigned bridge window %pR to %pR cannot fit 0x%llx required for %s bridging to %pR\n",
+-					 r, &bus->busn_res,
++					 res, &bus->busn_res,
+ 					 (unsigned long long)size,
+ 					 pci_name(downstream->self),
+ 					 &downstream->busn_res);
 -- 
 2.39.5
 
