@@ -1,54 +1,83 @@
-Return-Path: <linux-pci+bounces-34530-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34531-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59B85B311A5
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 10:24:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCCB8B31190
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 10:20:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F35C1CC0D35
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 08:20:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E92CB7B3A38
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 08:18:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 536272EBB8C;
-	Fri, 22 Aug 2025 08:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 294D12EBBB1;
+	Fri, 22 Aug 2025 08:19:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="j6JP2Gcc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y/fef6QA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6963C26656D;
-	Fri, 22 Aug 2025 08:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3489F2EBB84
+	for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 08:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755850793; cv=none; b=R59TkpTyHoZqA5ntmsH3Qpd1bwi5+Ykhpovzp+GhflFZrWaD2+e0o8PZ7H1ww9+01jkkN2RNFkNLn9L0WAOONqEFuc42N5+2M+2UmLfGwZguwZqZckiey8Bat3UUzT1PQMK8cRigs9wk4v7YallqiA9idShLgJT9fEMUmMfce8Y=
+	t=1755850795; cv=none; b=FzFsAFoSG+Amym6WuEZYZDec5sPzPMRdk/jzBNLqSKxaRaztWNbl853G/TyAiyvDw721bhaiPgx3+T2juUFdF5mQLhA6ScJlEfVaGp3DgZeSdOtqXwGh1vGPW8ywVrvCiot0Q9juKCfiqgW0JEBtrS1gX0v7JOgsHc/rpan+xrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755850793; c=relaxed/simple;
-	bh=60ouIOMZNI4fWnOHSbMHCMjtcFdSJqT/Ab/afS1Y3Mw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:References:To:Cc:
-	 In-Reply-To:Content-Type; b=ZXyN+ubhp0EzMFsackww4xhJLrqpTht5z6C01IOnPVfz8QBskrUSmTsJM7V/z0JXusKr51qz4+VaVRxs41P72eBUsUqWtDig7ftjhxB0ohnLtDC0F685TAcSelfwsuF91RMYx9adMSxKjNkVB0JSo6G9VBRBpvjCs8/6BqmpmPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=j6JP2Gcc; arc=none smtp.client-ip=54.92.39.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1755850760;
-	bh=W7YCuvCPw9irUhaTiH73c5zU7lbnLuDOyxSvUUqMIn4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To;
-	b=j6JP2GccDJteZxnoJt9uQbF0ew89mYn7uGfGLdsCKIa9Ga/e349GLYwEU0lG2SnVj
-	 cf80nbV/ESwbgtIOFrdjec6HKpNsry8D6z7Rp/csxKKpZapDPXfujCmiaduc4+SwW1
-	 nRBc/aGRl9FavqWIZjrXszaWBWe3vdE7X20HfRkY=
-X-QQ-mid: esmtpgz16t1755850751t6f1767cb
-X-QQ-Originating-IP: YQyxchHu0ua4Ds3I/SkKn4MXnSly7xSc9+Jbp9oLNbs=
-Received: from [198.18.0.1] ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 22 Aug 2025 16:18:53 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 18263725170358339871
-EX-QQ-RecipientCnt: 10
-Message-ID: <A6EC60FB84292EDF+4c8a74f7-6a65-47ee-bc0b-01ba77065ee8@uniontech.com>
-Date: Fri, 22 Aug 2025 16:18:53 +0800
+	s=arc-20240116; t=1755850795; c=relaxed/simple;
+	bh=fYJrd2g7WFm6z4yIUHs2tmTEfH/IBYpwGIudE8DUI2Y=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=iavECjIhaX0j3iCcMCNN45nUb9Kzax+QQA0fIcLIODVzCSoZYRr7QG6kut3Ar2OY5UDEMy+0i/XKyx4BdjxDTNvj0pNLfsbsFFrTElAf3NWxVtdydRA55VPNUguuAqcOHXeYuXwNj+LUhkpAay1ZJd0yIdD4FLJ+J5WFdtWK7mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y/fef6QA; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-45a1b0d231eso9952415e9.3
+        for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 01:19:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1755850791; x=1756455591; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kUBU+j8H4Ay/gKzx2DefRsd/tOgGE+9a4/c58V+37VI=;
+        b=Y/fef6QABrfGRX3Tzi6SfVBjJpwLlA94wyNI7c55UJP0hzQWUqER0vWa0NIlK0CDaz
+         tbVHKGv1EjH2LZSfmZBQ59SZMKkQg8XsvbWbagCZx0LtSmd5+XlorW/CQHoLv7HAAH5h
+         6KcK5DmT07e1/S2VpAZR0CRx0XWQBhDRXaN0kwciNoRIwvYglJoHYiyh8n0zR2Zs9whZ
+         8YQ7WbvDdvD0usqVT9pCBrbPpUNwri2/MtQXle3QAxtnX7yGfG4qFepBiFO+zeL6W96A
+         EUmCbNbZ0ghIlil6vpB9NEVw0EEBMxWrhTz2QHoxC3pZO9BJ5cBrlSguzP+cY+2gCh/x
+         KYQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755850791; x=1756455591;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kUBU+j8H4Ay/gKzx2DefRsd/tOgGE+9a4/c58V+37VI=;
+        b=EjhLBpSz6eXHdRAmb3hy7eKlFCxQDLV22Wt68lG1ei5Qt1ojuMDh06fCUIHVvWs1AW
+         GvblzrvNn32TFnVwC3tdvbKkWFtx/26qwLEJhdcPVC2K6BrIc3/vjO6zhP7MjutbnOIG
+         nxvYN5Aj469Qt617Qcid2MTjwnykNrJOriirJFzUXsVAuIMgflqWgmbCHh9Kd8KFa7Ix
+         HIUd5xOI2ABtLdMBTOeiDBTZELGUVOSd7EIGT+PhjYYQ1PgOah0+v4LdvOtjA+T6/ORM
+         h+rVIqX7nRVHkB4LerKkBTv9HnRGQ7YrSymbX3un3N/M0veqyp+R3K01VNiAgu6jvICM
+         gjWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhg5ISuKXHf7yaJ9P5QRfS46o3yDBexSZjds6O9kqEqpc0J02U02X2KO0xSoYrFU6+JPcrlXQgZ1M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc4tLhSWgVrUtKXMaylRMu4uFgLbMqrYAjPzMvfX7iGfY2MCPL
+	GnEtiCx7bWXgYQ7XaIBWiHhXkco/Ft+2RQLbBNhJZp/6EUDIPW8T7ZAbA0bOgsBwewY=
+X-Gm-Gg: ASbGnctd184KBJqsq3nWmMUKPRO1g/zmo7NR+g//pWAnBuu4lo7vl2+n6kNzy7g7Jy6
+	ai9b1g03Bvnp86XI/pBDw6jDl424eynFDHYQXcAz34RhREWIfcHN0SgziamikboZhuIc/DKrDjj
+	MAcE/cfcvdd18tApu9tg0kuv8A0qdQBI2+z4T+YplLK3tX/OmT1PPAxyqhCPlTPcW7o1psEi3j0
+	CSiyZk7eioxugU2dMqgKtKoKihOjQKvXgPaxFHI+tmQbv5+N+p3YY9/j2SDwtfu4q9KcpCaWL+2
+	BWroGpx4DzIX5IULvFYpFPKgBV9Jf3m/DPVTSAWuz7m4AAMZFyMXEX5IrbMAmq15/d99huJg+k+
+	XsCs0Zl/aNQyWOZDsNcg8jdou+T3oUylaKcJVhmtjMaw9Ffg+ocv5jcOjyVKxisg+eLqjFJLN8/
+	c=
+X-Google-Smtp-Source: AGHT+IGYmXDHANFL2t0O6/z4GzQMDxxubZ0LRneoCclAPeF8j5bCmO9Z2rmiq6pSYn1hXjYdeBI8dA==
+X-Received: by 2002:a05:600c:3b18:b0:459:d6a6:792 with SMTP id 5b1f17b1804b1-45b517cfb65mr14663365e9.29.1755850791427;
+        Fri, 22 Aug 2025 01:19:51 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:3dd7:7361:c101:6a77? ([2a01:e0a:3d9:2080:3dd7:7361:c101:6a77])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b50dc41dbsm27816145e9.5.2025.08.22.01.19.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Aug 2025 01:19:51 -0700 (PDT)
+Message-ID: <b4456929-cfd8-4e8e-9def-f7ce0a02d240@linaro.org>
+Date: Fri, 22 Aug 2025 10:19:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,115 +85,95 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Zi Yao <liziyao@uniontech.com>
-Subject: [PATCH] PCI: Override PCIe bridge supported speeds for older Loongson
- 3C6000 series steppings
-References: <>
-Content-Language: en-US
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, loongarch@lists.linux.dev,
- =?UTF-8?B?6IGC6K+a?= <niecheng1@uniontech.com>,
- Jun Zhan <zhanjun@uniontech.com>, linux-kernel@vger.kernel.org,
- Lain Fearyncess Yang <fsf@live.com>, Mingcong Bai <baimingcong@aosc.io>,
- Ayden Meng <aydenmeng@yeah.net>, Guan Wentao <guanwentao@uniontech.com>
-In-Reply-To: <>
+From: neil.armstrong@linaro.org
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v5 3/3] arm64: dts: qcom: lemans: Add PCIe lane
+ equalization preset properties
+To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>, andersson@kernel.org,
+ konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, jingoohan1@gmail.com, mani@kernel.org,
+ lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+ johan+linaro@kernel.org, vkoul@kernel.org, kishon@kernel.org,
+ abel.vesa@linaro.org, kw@linux.com
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
+ quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250819071649.1531437-1-ziyue.zhang@oss.qualcomm.com>
+ <20250819071649.1531437-4-ziyue.zhang@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250819071649.1531437-4-ziyue.zhang@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3a-0
-X-QQ-XMAILINFO: NbLMjDNEDlGtK6XyVh+w8Wy8MdGiMW/Z9wqOYiE/7jZ0zd/gS0FSJPI2
-	+UxcphMSOh2+xEKggFcgFQ9fYpAkDm2b0GO8wuRyx218By/M3CZS74NO0VnCtzK/fFhOEdq
-	3Z1lO0YWHC/fAJsaCZbklFxiIAA1zHFMgH7JzzLnoJ6FFQDdq6MGW4LQQCFPoamV+eXJFEY
-	N2WpP3fR7zqaoq9NnDbtmHgiUMFwUbKG2cJWEwF0leeFPqUwynmlWt0LbsJP9np7IZW9nl8
-	mDpA/O+WqGaClFj4OV5l4LfKH+6NNh6HdK5zPjd5P4lETERqWSxV0Rw+DRn5WeiuUa3ni4q
-	rK0dQJ+lSq2t6eY/BFA6YJUebpSKq5Xk6Gb5hxFjWG+6i3+acsFPdAwQcUqhumS25ibHXzt
-	7pUiT0niu/s9+7M/9DsJ9LB/mO1O142uvGOmp03lxh7GdSlOapMFDlp+9c8pUMq7cGZKn3D
-	/sLDBfY82dOI74kIH5hoxw0HWx80ejNHlnDxnimcylRbGwUTWymPpMO5rqdYHlWZKaqVpN+
-	qtXcaIyZQc2+J4brQDJXmfF27ukthztu4UsRCZPyRPPZJlzdwBIlFDQAeAOnjjwb9ptOwZi
-	gOP+RN5Yls+R/0NBYX1hnlwNK/DyyWHt7x2ibNn0OIGvY59e6E4se3e/985JCit9/EEo21v
-	Ga4Dn8uJfW/G+waJBu7lkJL6Y7AbAIpxcBq4U2zIH5OAjXXbrIZWm9jBZ598KXfjD8pPjRx
-	TGMOG0gSYCzEbOaMxxHqAqrDy89mzKOuxtDDliDSsAhXyklp+STQUpu2gweB/hVtu9DuPUB
-	/+La3t48Ljhwan23YGdESEWNQhWogTVrvrBkgtRYgCPl7tEopjlLhkepAjFKRNB5S2H0WdJ
-	6xd7J+8ZK3QuQXJlUOLxLsfPNZPeK9qufEHx+iuJ7yHFS0TCkHba/E+f+EBDyZGwiHe+VUT
-	4ktrmW13++2km2r+PuvbO5WXRsVrSlDE30hTO4h3NTX3/r/AEMGc90N3Pu2xMXzXLyYuqrm
-	l4U9aLoqynhYD0NpOjk/L2sDVEjMRD5wcHs3jZMlz+sSo2drEYDp9Ex91F2Zk=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
 
+On 19/08/2025 09:16, Ziyue Zhang wrote:
+> Add PCIe lane equalization preset properties with all values set to 5 for
+> 8.0 GT/s and 16.0 GT/s data rates to enhance link stability.
+> 
+> Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+> ---
+>   arch/arm64/boot/dts/qcom/lemans.dtsi | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/lemans.dtsi b/arch/arm64/boot/dts/qcom/lemans.dtsi
+> index 64f5378c6a47..c7a09c3605a7 100644
+> --- a/arch/arm64/boot/dts/qcom/lemans.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/lemans.dtsi
+> @@ -7657,6 +7657,10 @@ pcie0: pcie@1c00000 {
+>   		phys = <&pcie0_phy>;
+>   		phy-names = "pciephy";
+>   
+> +		eq-presets-8gts = /bits/ 16 <0x5555 0x5555>;
+> +		eq-presets-16gts = /bits/ 8 <0x55 0x55>;
+> +
+> +
 
-Older steppings of the Loongson 3C6000 series incorrectly report the
-supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
-only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
-up to 16 GT/s.
+Please drop this empty line.
 
-As a result, certain PCIe devices would be incorrectly probed as a Gen1-
-only, even if higher link speeds are supported, harming performance and
-prevents dynamic link speed functionality from being enabled in drivers
-such as amdgpu.
+Neil
 
-Manually override the `supported_speeds` field for affected PCIe bridges
-with those found on the upstream bus to correctly reflect the supported
-link speeds.
-
-This patch is found from AOSC OS[1].
-
-Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
-Tested-by: Lain Fearyncess Yang <fsf@live.com>
-Tested-by: Mingcong Bai <baimingcong@aosc.io>
-Tested-by: Ayden Meng <aydenmeng@yeah.net>
-Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
-Signed-off-by: Zi Yao <liziyao@uniontech.com>
----
-  drivers/pci/quirks.c | 24 ++++++++++++++++++++++++
-  1 file changed, 24 insertions(+)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 
-d97335a401930fe8204e7ca91a8474b6b02554c1..8d29b130f45854d2bff8c47e6529a41a3231221e 
-100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1956,6 +1956,30 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 
-PCI_DEVICE_ID_INTEL_E7525_MCH,	quir
-   DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_HUAWEI, 0x1610, 
-PCI_CLASS_BRIDGE_PCI, 8, quirk_pcie_mch);
-  +/*
-+ * Older steppings of the Loongson 3C6000 series incorrectly report the
-+ * supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
-+ * only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
-+ * up to 16 GT/s.
-+ */
-+static void quirk_loongson_pci_bridge_supported_speeds(struct pci_dev 
-*pdev)
-+{
-+	switch (pdev->bus->max_bus_speed) {
-+	case PCIE_SPEED_16_0GT:
-+		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_16_0GB;
-+	case PCIE_SPEED_8_0GT:
-+		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_8_0GB;
-+	case PCIE_SPEED_5_0GT:
-+		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_5_0GB;
-+	case PCIE_SPEED_2_5GT:
-+		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_2_5GB;
-+	default:
-+		break;
-+	}
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19, 
-quirk_loongson_secondary_bridge_supported_speeds);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29, 
-quirk_loongson_secondary_bridge_supported_speeds);
-+
-  /*
-   * HiSilicon KunPeng920 and KunPeng930 have devices appear as PCI but are
-   * actually on the AMBA bus. These fake PCI devices can support SVA via
-
----
-base-commit: 3957a5720157264dcc41415fbec7c51c4000fc2d
-change-id: 20250822-loongson-pci-0cca9e050843
-
-Best regards,
--- 
-Zi Yao <liziyao@uniontech.com>
+>   		status = "disabled";
+>   
+>   		pcieport0: pcie@0 {
+> @@ -7827,6 +7831,9 @@ pcie1: pcie@1c10000 {
+>   		phys = <&pcie1_phy>;
+>   		phy-names = "pciephy";
+>   
+> +		eq-presets-8gts = /bits/ 16 <0x5555 0x5555 0x5555 0x5555>;
+> +		eq-presets-16gts = /bits/ 8 <0x55 0x55 0x55 0x55>;
+> +
+>   		status = "disabled";
+>   
+>   		pcie@0 {
 
 
