@@ -1,54 +1,89 @@
-Return-Path: <linux-pci+bounces-34609-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34610-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E90B0B320BA
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 18:49:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FC06B320CD
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 18:52:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80B60622468
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 16:46:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BE66172BE9
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 16:51:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D14A285C8C;
-	Fri, 22 Aug 2025 16:46:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0557730DEC5;
+	Fri, 22 Aug 2025 16:51:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITh/XnKa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOldZ6P4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1245121858D;
-	Fri, 22 Aug 2025 16:46:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA5A307ACD;
+	Fri, 22 Aug 2025 16:51:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755881201; cv=none; b=RkImi+FBmgIjXtgfU0uGIcLQn9L7HkGVaBNbaaqUmHge42QDeTto3xx177CI8pzMrsDXAKNy8ZXd1wLYY8SBU5NKo3bV0ScR+JdQzruYa46CbPRyu+ANx+iHeAA9mX0I8vX1bkKaABzE0s6uAOIDscXg/qShAxHqMFUI2o+Gwk0=
+	t=1755881475; cv=none; b=gRlRg+MjupceW/WT+z8guFZxGUinttJXNpSQ3Xx8nGCbGMRcnVr7hM+/qvRcR71iU7hZLUAcW8JRG+7MMbvCGcF+BXbulmxap/c7f04N2Vve95Sm4GPJZg3p34nT47AZ8ptvnORadiuSgkkdE/Of8URx+p1f/rxXrrwWzr08LWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755881201; c=relaxed/simple;
-	bh=dPxj/m4CZ5Tj5I+499kIt/zRVHwkfdttODzZjZjbop0=;
+	s=arc-20240116; t=1755881475; c=relaxed/simple;
+	bh=ZN1/GSSsUnr11TA2ChLgQXw36yoz98xor8JyYYUMooQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JnfdqOg97IReyPnmA3zHgnI9v6wHDao9WG5kHT5bPDGqpxeAinOKUIUqE4nK3oDNBEgBJ+YXAc9WG7Bs8mxQzRNSbz6wzoskoyKF4Cx9TCR2Gz0HVUTB3fBfpy01gGfSF//i5x5vdUiG4uRy1175VWHg8ALJod0E6/dDyLsbSag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITh/XnKa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63763C4CEED;
-	Fri, 22 Aug 2025 16:46:40 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Jtl/J3BnYQir1ajBt0Nf5+LzYprrQnu2tD6Qm1zuVz4wMUdvJEJj0CgPMoHAVK6tljGMMhTnClcv8zPTKYFBSgYeckcqcDmvKP8Gamfo9bjuU315FTvG3N9wCG4gJmJROrlqSfwLoU4kmJHTqsZaYBtFSovOuFIy4jFsvVooQus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOldZ6P4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E68FDC4CEED;
+	Fri, 22 Aug 2025 16:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755881200;
-	bh=dPxj/m4CZ5Tj5I+499kIt/zRVHwkfdttODzZjZjbop0=;
+	s=k20201202; t=1755881475;
+	bh=ZN1/GSSsUnr11TA2ChLgQXw36yoz98xor8JyYYUMooQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ITh/XnKaeS2UpNYSnqVV1/mAJPnzHT2RTwOpKQj7KPzwefdqyxSExAwrOCmvLUDTQ
-	 /MGYLQcBCta9hcsfd3XbIDoPrgbVnWz/WVY0qzAYNkNFPmHYzMZsrmGyxSg+iL27LM
-	 SE8OYZBeoZkireZdjlNrxkw1JaDYWiESlLdQ9Bw9NSS24X1YonMPACKRtDPNm/KOw3
-	 WRdKdzowVUapWvs6XAlwopRdZfrtG1FSV3SvFwOm+TDk/4lb+yU8jKiWi2CotCn2YC
-	 dZySaUBJuS4A9atNiUN+9VeI4oTvJGyMBqELRhN77Oc7HUGQpNoq9x0CC9SVAm6Abt
-	 TNCSoNnLrhFjA==
-Date: Fri, 22 Aug 2025 11:46:38 -0500
+	b=TOldZ6P4XjDi8geWUHI4dDlTT6CJl79l8sxl1DywRr/cP9kB878+0JkMA/VKU4RXH
+	 0/0bkecaXvUt55YZXuEbcOHw0QQEAL1sp9aA5eSUXoQNTKa+vwliCqVYL132XwqGYX
+	 jOyAVQR7WyYfW21GVtx8cGUCtlMYTOf2rrGtTRMmP3JH/EUTBqXjGU16IcKqKz7gzU
+	 ii4KkNruWP1ZjXjkv4hjXC3g1ALdUqATnnaexhDPwrJkflTfRAVA//GsLljIjaCxjq
+	 C5TibyaJM2cpWRRjFBbRv2JHLBft3EPEvwjfn3TexdNBE3CTT4r1jCt/Xf9RETQSvX
+	 CWUdvouXz1saw==
+Date: Fri, 22 Aug 2025 11:51:12 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] PCI: Replace short msleep() calls with more
- precise delay functions
-Message-ID: <20250822164638.GA687302@bhelgaas>
+To: "Duan, Zhenzhong" <zhenzhong.duan@intel.com>
+Cc: "Carlis, Matthew" <mattc@purestorage.com>,
+	"Smita.KoralahalliChannabasappa@amd.com" <Smita.KoralahalliChannabasappa@amd.com>,
+	"Preble, Adam C" <adam.c.preble@intel.com>,
+	"Schofield, Alison" <alison.schofield@intel.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"Peng, Chao P" <chao.p.peng@intel.com>,
+	"Williams, Dan J" <dan.j.williams@intel.com>,
+	"Jiang, Dave" <dave.jiang@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>,
+	"erwin.tsaur@intel.com" <erwin.tsaur@intel.com>,
+	"Wanyan, Feiting" <feiting.wanyan@intel.com>,
+	"Weiny, Ira" <ira.weiny@intel.com>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	"lenb@kernel.org" <lenb@kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"lukas@wunner.de" <lukas@wunner.de>,
+	"mahesh@linux.ibm.com" <mahesh@linux.ibm.com>,
+	"oohall@gmail.com" <oohall@gmail.com>,
+	"qingshun.wang@linux.intel.com" <qingshun.wang@linux.intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"rrichter@amd.com" <rrichter@amd.com>,
+	"Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
+	"Luck, Tony" <tony.luck@intel.com>,
+	"Verma, Vishal L" <vishal.l.verma@intel.com>,
+	"Wang, Yudong" <yudong.wang@intel.com>,
+	"Saggi, Meeta" <msaggi@purestorage.com>,
+	"sconnor@purestorage.com" <sconnor@purestorage.com>,
+	"Karkare, Ashish" <ashishk@purestorage.com>,
+	"rhan@purestorage.com" <rhan@purestorage.com>,
+	"Rangi, Jasjeet" <jrangi@purestorage.com>,
+	"Govindjee, Arjun" <agovindjee@purestorage.com>,
+	"Amstadt, Bob" <bamstadt@purestorage.com>
+Subject: Re: [PATCH v5 0/2] PCI/AER: Handle Advisory Non-Fatal error
+Message-ID: <20250822165112.GA688464@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,45 +92,33 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250822155908.625553-1-18255117159@163.com>
+In-Reply-To: <IA3PR11MB9136FCB8C778B0AE08BF8DB5923DA@IA3PR11MB9136.namprd11.prod.outlook.com>
 
-On Fri, Aug 22, 2025 at 11:59:01PM +0800, Hans Zhang wrote:
-> This series replaces short msleep() calls (less than 20ms) with more
-> precise delay functions (fsleep() and usleep_range()) throughout the
-> PCI subsystem.
+On Fri, Aug 22, 2025 at 01:45:30AM +0000, Duan, Zhenzhong wrote:
+> Hi Matthew,
 > 
-> The msleep() function with small values can sleep longer than intended
-> due to timer granularity, which can cause unnecessary delays in PCI
-> operations such as link status checking, reset handling, and hotplug
-> operations.
-> 
-> These changes:
-> - Use fsleep() for delays that require precise timing (1-2ms).
-> - Use usleep_range() for delays that can benefit from a small range.
-> - Add #defines for all delay values with references to PCIe specifications.
-> - Update comments to reference the latest PCIe r7.0 specification.
-> 
-> This improves the responsiveness of PCI operations while maintaining
-> compliance with PCIe specifications.
+> Feel free to take it over if you are interested. Maintainer didn't
+> respond to this series, perhaps he expects some improvement in the
+> series.
 
-I would split this a little differently:
-
-  - Add #defines for values from PCIe base spec.  Make the #define
-    value match the spec value.  If there's adjustment, e.g.,
-    doubling, do it at the sleep site.  Adjustment like this seems a
-    little paranoid since the spec should already have some margin
-    built into it.
-
-  - Change to fsleep() (or usleep_range()) in separate patch.  There
-    might be discussion about these changes, but the #defines are
-    desirable regardless.
-
-I'm personally dubious about the places you used usleep_range().
-These are low-frequency paths (rcar PHY ready, brcmstb link up,
-hotplug command completion, DPC recover) that don't seem critical.  I
-think they're all using made-up delays that don't come from any spec
-or hardware requirement anyway.  I think it's hard to make an argument
-for precision here.
+I'm terribly sorry, this is my fault.  It just fell off my list for no
+good reason.  Matthew, if you are able to test and/or provide a
+Reviewed-by, that would be the best thing you can do to move this
+forward (although neither is actually necessary).
 
 Bjorn
+
+> >-----Original Message-----
+> >From: Matthew W Carlis <mattc@purestorage.com>
+> >Subject: [PATCH v5 0/2] PCI/AER: Handle Advisory Non-Fatal error
+> >
+> >Hello. My team had independently started to make a change similar to this
+> >before realizing that someone had already taken a stab at it. It is highly
+> >desirable in my mind to have an improved handling of Advisory Errors in
+> >the upstream kernel. Is there anything we can do to help move this effort
+> >along? Perhaps testing? We have a decent variety of system configurations &
+> >are able to inject various kinds of errors via special devices/commands etc.
+> >
+> >Thanks,
+> >-Matt
 
