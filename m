@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-34574-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34575-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96597B31D4A
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 17:05:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8306BB31D4F
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 17:06:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B372AA4976
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 14:57:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21B3BAA5619
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 14:57:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE6713126B6;
-	Fri, 22 Aug 2025 14:57:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7FB6214232;
+	Fri, 22 Aug 2025 14:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ho0rXgx2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WhByaq4c"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9CD239E88;
-	Fri, 22 Aug 2025 14:57:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF96310624;
+	Fri, 22 Aug 2025 14:57:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755874624; cv=none; b=MagKWGPRUqoc/LFpnaBOhAdiNA2+UsSsTu8PJQ0D/Eor8dWAj2R6IUoBUVF67gvL+bqXuo83mAYjlTJZyd/MG/p0Lm/yTHCjLzHFAOPBsfr4+ESxMJ9FXZ0NH1xldsMiC+HGUr+5bG0jM5lEsv+8z7xDK/7/j4+yJ4RbnC3sxUE=
+	t=1755874633; cv=none; b=REHjdP8TASU1rIw7VXvQqw1PMNrI8U4M626/bC/wgAICloouxDcdnjLaR/4jI3fBMN8cfSH7AZjNxwzVR8LQZRtY3vcZCYeyYivplx3A9+/cdf1v4e/EAYqbYlAXOyhsUG2o/WVv+LmIFmzNZCiLGC2bKceIxJU0rvRuwX8OsIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755874624; c=relaxed/simple;
-	bh=wPDvnWZ5n/ZzruRde5Pq3zT/XPnm5sbjNx2qOymBYfE=;
+	s=arc-20240116; t=1755874633; c=relaxed/simple;
+	bh=ee6ivqpcnefQPqKlLb6mSNrXVqSqgxwUEWQuLhjZ8qY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j8EKpllvKm0543kTpfOq+ZWdBd9iVLKI8EWjvOEMNbpecJG0ivHYrF/P1uqaQk7N0iCxyuX7RM3j22jv+vdI3Uq/YnUOltBnfX0hhoU6Mfv3wrrNa29Nw32ZD/SQr2Ls/mEPJGuUjUBy4LfwkDBG8PEV1QMvIiBNDBaXqctx9qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ho0rXgx2; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=fbRQcbWtNaG0MKx1CKS9g3OmW/Ws70hy/wMZWMJ4vdCKTGdXZgsmq/wGkk4PWgVNFr/ogs9VXB6OAZ90leN1GBHjLi9Cw3r0CBLIdM/fwOIYsiav86wquIBE4aaSUEyGgHCy+7klj9L3rI0ABcuUB9TFa2eiMhX2skWL9vZmEag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WhByaq4c; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755874623; x=1787410623;
+  t=1755874632; x=1787410632;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wPDvnWZ5n/ZzruRde5Pq3zT/XPnm5sbjNx2qOymBYfE=;
-  b=Ho0rXgx25tzf4cple4tEoHtQOM2hSyWpyVbRQ7QhnDZUbiActgyHRhwl
-   lc49e0x+wFkNsZJZgbxf9GquJ2z6nAheXIGKMPQ3etnZw5Aiy1QhMXlt9
-   i5sJd9IqC5c8PSGFxBQ4gd5i4w6fDUlUdEdrqWhWunE/Y3tRlNQUIRHmD
-   GMsk646mAkZpJpoEshakqHWYXl6kppnP3t0hyoTIlhscNgoXwPLQvXnom
-   nbCCFoYTaKduFnZoE9Q6O/vA4qY5GxO249Asu5l8NHt5PK9gZzwzZrXI1
-   hn0SfO3G0pUBJFxTTQaRhMyid68KOpzf0cz5GYnpAGMWg5nq7vla272JK
+  bh=ee6ivqpcnefQPqKlLb6mSNrXVqSqgxwUEWQuLhjZ8qY=;
+  b=WhByaq4clo2Ag+fGhbswuzOUD1SweoCiYjGVJ6ewtS+LOoxJ/U7bWbpQ
+   BLkvwuJ9FgQO/+0yKaE2Cq7bR+MJ5DrsKX47oyf6S2yhDMeHq1FB5vhs/
+   pjNxYxQ/vfDyaVwTj26OCD/eTLiMlK2WWUqk9fKLBjajZf88xM3mfql2S
+   vTILsE8QPx8ROBxYzaTNTP0V1DgR0NFtVys0Q/FbKgRXbj/Zff2hTJEq8
+   T3sl/3Bjff0neiFUA33iXDaNpLuQwf7JsYv8ZCuGkVc+FA0y0I3URnWSf
+   KZRp/PtC0MGqaFRa6dT/KVi/ja8iY+0eg21oy5G5o7h8rWc2vDj+7B4iO
    A==;
-X-CSE-ConnectionGUID: o7rmB9oBR7STnKGbiilYiA==
-X-CSE-MsgGUID: DeGJ2uogTMKkI0IedVuMhg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="69283117"
+X-CSE-ConnectionGUID: c1CqQ8IzTwO5CEeJCP4HNA==
+X-CSE-MsgGUID: ocHR2MOMTpGS3i3XfamfqQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="69283127"
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="69283117"
+   d="scan'208";a="69283127"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:57:03 -0700
-X-CSE-ConnectionGUID: qiJ59XlaQtqa4e+Z9uM3dw==
-X-CSE-MsgGUID: tW3R/pfDT4eAbXWbFFh3og==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:57:11 -0700
+X-CSE-ConnectionGUID: MCHsPL/ZRuqfR30RXNcprQ==
+X-CSE-MsgGUID: LlCQKywETQWGsfuL1uTiAQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="169547004"
+   d="scan'208";a="169547072"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.115])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:56:58 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:57:07 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Andreas Larsson <andreas@gaisler.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -79,9 +79,9 @@ To: Andreas Larsson <andreas@gaisler.com>,
 Cc: =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
 	linuxppc-dev@lists.ozlabs.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 05/24] PCI: Refactor find_bus_resource_of_type() logic checks
-Date: Fri, 22 Aug 2025 17:55:46 +0300
-Message-Id: <20250822145605.18172-6-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 06/24] PCI: Always claim bridge window before its setup
+Date: Fri, 22 Aug 2025 17:55:47 +0300
+Message-Id: <20250822145605.18172-7-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
 References: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
@@ -94,37 +94,63 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The logic checks can be simplified in find_bus_resource_of_type() by
-reordering them.
+When the claim of a resource fails for the full range in
+pci_claim_bridge_resource(), clipping the resource to a smaller size is
+attempted. If the clipping successful, the new bridge window is
+programmed and only as the last step the code attempts to claim the
+resource again. The order of the last two steps is slightly illogical
+and inconsistent with the assignment call chains.
+
+If claiming the bridge window after clipping fails, the bridge window
+that was setup is left in place.
+
+Rework the logic such that the bridge window is claimed before calling
+the relevant bridge setup function. This make the behavior consistent
+with resource fitting call chains that always assign the bridge window
+before programming it.
+
+If claiming the bridge window fails, the clipped bridge window is no
+longer setup but pci_claim_bridge_resource() returns without writing
+the bridge window at all.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/setup-bus.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/pci/setup-bus.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 4097d8703b8f..c5fc4e2825be 100644
+index c5fc4e2825be..b477f68b236c 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -158,11 +158,15 @@ static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
- 	struct resource *r, *r_assigned = NULL;
+@@ -857,9 +857,16 @@ int pci_claim_bridge_resource(struct pci_dev *bridge, int i)
+ 	if ((bridge->class >> 8) != PCI_CLASS_BRIDGE_PCI)
+ 		return 0;
  
- 	pci_bus_for_each_resource(bus, r) {
--		if (r == &ioport_resource || r == &iomem_resource)
-+		if (!r || r == &ioport_resource || r == &iomem_resource)
- 			continue;
--		if (r && (r->flags & type_mask) == type && !r->parent)
++	if (i > PCI_BRIDGE_PREF_MEM_WINDOW)
++		return -EINVAL;
 +
-+		if ((r->flags & type_mask) != type)
-+			continue;
++	/* Try to clip the resource and claim the smaller window */
+ 	if (!pci_bus_clip_resource(bridge, i))
+ 		return -EINVAL;	/* Clipping didn't change anything */
+ 
++	if (!pci_claim_resource(bridge, i))
++		return -EINVAL;
 +
-+		if (!r->parent)
- 			return r;
--		if (r && (r->flags & type_mask) == type && !r_assigned)
-+		if (!r_assigned)
- 			r_assigned = r;
+ 	switch (i) {
+ 	case PCI_BRIDGE_IO_WINDOW:
+ 		pci_setup_bridge_io(bridge);
+@@ -874,10 +881,7 @@ int pci_claim_bridge_resource(struct pci_dev *bridge, int i)
+ 		return -EINVAL;
  	}
- 	return r_assigned;
+ 
+-	if (pci_claim_resource(bridge, i) == 0)
+-		return 0;	/* Claimed a smaller window */
+-
+-	return -EINVAL;
++	return 0;
+ }
+ 
+ /*
 -- 
 2.39.5
 
