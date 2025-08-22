@@ -1,96 +1,123 @@
-Return-Path: <linux-pci+bounces-34598-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34599-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66E56B31FC8
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 17:58:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 00A4CB31FE3
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 18:01:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C95DB608CA
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 15:51:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 067AF685F1F
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 15:53:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 834BD25A324;
-	Fri, 22 Aug 2025 15:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EAA73207;
+	Fri, 22 Aug 2025 15:53:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FiThWL99"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="l7xrQHdp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5641C258ED5;
-	Fri, 22 Aug 2025 15:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 318E46FBF;
+	Fri, 22 Aug 2025 15:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755877746; cv=none; b=X6KttMrys29eAaIhkgTrUljOBygVPdxOzVIo+5FEqMz3t7uOupSANGHSMbCSQePq0cPR8LjjV/1JSjxnLxFoMdamqAxcWRVnDYrJtOhqPh7iupPiHOfUzWGJTmIt+WHNXLTIEW9/0IjgbR5TfdPtv68JRI6zSvqOosbEuiWs3aM=
+	t=1755878018; cv=none; b=ozzESMSHgPLzObPAc7gFPXf603Qgi2T9th9Z8L/BKNAZWe9svNdzvKtwczkz0dHTQk0nwnorzZM6gSnRWBSd7dMW22/79k6Hulw/IyPnVUeBYdpf0Ayye302uzru5+8T1y7jsEF23EUfWHpWrqBxwd0zwfrdJD5lOBId3taUXrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755877746; c=relaxed/simple;
-	bh=yuxymuE1CpcsqC2aHIQQ3HS4dI9volr5U+I0T5CKNIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ak2HZhBDdQhgUDbPj/uFNNFyFkyYFPEgUTl46LGdRTWEqwg/JE+fRk+22CQoxPI2RqrG66rZGq7yDrRvZrBjlMig/4wHvrzGEFRG8eo0FIs9rHkm+RSua4bsdCkJsWwn48uZb4FWxI9Z8UyJ6aAhmjdGbO2Q57E1D6k9Vl8QITE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FiThWL99; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A25C4CEF4;
-	Fri, 22 Aug 2025 15:49:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755877745;
-	bh=yuxymuE1CpcsqC2aHIQQ3HS4dI9volr5U+I0T5CKNIw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=FiThWL99EkSv54dHRwvX8V81cKrxpo7ylEndvX8neUCv2wMCQyP4HJt1zDIegyOKx
-	 gxwTitvuN6DjhNeLIFs8j95VQRHC+CUpwlMdmAPMLGXm9Roo/l7bzfx9hATS1Gq6Ml
-	 nw0gzvr25MXrDIECKcnNOyPK8mJ8sJ1ATWjnFqpZmhiw4oME6yCRgxEYjy4eqXk2aY
-	 0dMGXH6viNnoJ1V1FUN5U5ePv2JCgyTlqPaK4JK3zmfZP4XrPhR4T1YVPvQCcoY3gt
-	 85tz19w6bW4AdWRi8KEoBVLnqePhcnDStzS1/FuqZ2XCXJUGvz7kt85EpdpSreQBce
-	 AlHe3zPkTCvvg==
-Date: Fri, 22 Aug 2025 10:49:03 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Marcos Del Sol Vives <marcos@orca.pet>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Michael Walle <mwalle@kernel.org>, Lee Jones <lee@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] gpio: vortex: add new GPIO device driver
-Message-ID: <20250822154903.GA685390@bhelgaas>
+	s=arc-20240116; t=1755878018; c=relaxed/simple;
+	bh=U+03gEcGnhbmwEIWYOsCA/gAQzaOeGwJAlax+uCxNgU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lMEFqAOVwKa2pciWT30ifpxFX6KJNyiEzFe92p3ZrSULNK6NM4MaFKHAbLWEBF39ErsAatbSjk0z9M5uIqkfVTP7f68ra04uoB+28TBQjFtzI/leZ9PWNID7x+dEQNRsubGFTGm6Hort3rnVWaAr+un6G25K4BzTQbinM4baX6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=l7xrQHdp; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=AcGCWcu7W/vQZ3k6aJxHhigNgbLUrJBaOFG5K5UXqtU=;
+	b=l7xrQHdpFN24m73ohlNLcFzio4wacaGl1plqPQuRI2Jx04skPm6w65EWwL07mm
+	GfmSrWu1Z6NDZuBtiuCy6IIgM1XsYN9/QJgV2/Q+VeGIm3Vmr8kl4VeESoNFnjP/
+	NY7lH4SXcW1DLh5ZH23Inke86sgvPFtVsMgoAR/vIrk+A=
+Received: from [IPV6:240e:b8f:919b:3100:3980:6173:5059:2d2a] (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgC3lTZwkqhoBOrNAA--.31090S2;
+	Fri, 22 Aug 2025 23:53:21 +0800 (CST)
+Message-ID: <4002ce40-56bc-4a89-a4bf-7da28c94f7db@163.com>
+Date: Fri, 22 Aug 2025 23:53:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250822154718.GA685150@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: Replace msleep(2) with usleep_range() for precise
+ delay
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250820180651.GA631082@bhelgaas>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250820180651.GA631082@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PSgvCgC3lTZwkqhoBOrNAA--.31090S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7KrykAF1kurW7GFyfGrWfXwb_yoW8ZFWxpF
+	WkGr1jyr4rJrW3Jr4xAa1xZas5Ca4xXF4rAF95W34q9ayYqa4IgFyxCFWYqr1UZr4kA342
+	qan0yrs3Aa1qvFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0ziLvtNUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxOxo2iokSoZSwAAsz
 
-On Fri, Aug 22, 2025 at 10:47:20AM -0500, Bjorn Helgaas wrote:
-> On Thu, Aug 21, 2025 at 07:05:16PM +0200, Marcos Del Sol Vives wrote:
-> > El 21/08/2025 a las 12:18, Marcos Del Sol Vives escribió:
-> > > +#include <linux/types.h>
-> > > +#include <linux/errno.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/ioport.h>
-> > > +#include <linux/spinlock.h>
-> > > +#include <linux/gpio/driver.h>
-> > > +#include <linux/gpio/regmap.h>
-> > > +#include <linux/regmap.h>
-> > > +#include <linux/ioport.h>
-> > > +#include <linux/types.h>
-> > > +#include <linux/platform_device.h>
-> > 
-> > I realized now that, despite checking over and over the patches before
-> > sending to the mailing list, I forgot to clean up leftover includes from
-> > previous versions of the driver.
-> > 
-> > I am fairly new to this procedure of merging patches. Should I later, after
-> > a send a sensible amount of time has passed to let everyone voice their
-> > opinion, send a new v4 version of the patch to fix these (and also clarify
-> > the commit message on the regmap-gpio, as requested in another email),
-> > or if accepted would maybe the person merging it sort this out?
+Dear Bjorn,
+
+Thank you very much for your reply. I'll try to understand your meaning 
+and then submit the next version.
+
+If I haven't fully understood your meaning yet, please continue to help
+correct the mistakes.
+
+Best regards,
+Hans
+
+On 2025/8/21 02:06, Bjorn Helgaas wrote:
+> On Thu, Aug 21, 2025 at 12:09:44AM +0800, Hans Zhang wrote:
+>> The msleep(2) may sleep up to 20ms due to timer granularity, which can
+>> cause unnecessary delays. According to PCI spec v3.0 7.6.4.2, the minimum
+>> Trst is 1ms and we doubled that to 2ms to meet the requirement. Using
+>> usleep_range(2000, 2001) provides a more precise delay of exactly 2ms.
+>> ...
 > 
-> I'm not the person to merge this, but my advice is to wait a few days
-> and post a v4 that cleans up the includes and updates the commit
-> messages.  It makes the process cleaner if the patch you post is the
-> same as the one that gets merged.
+> Please cite a recent spec version, i.e., r7.0.  I see this probably
+> came from the comment at the change; I wouldn't object to updating
+> the comment, too.
+> 
+>> WARNING:MSLEEP: msleep < 20ms can sleep for up to 20ms; see function description of msleep().
+>> #4630: FILE: drivers/pci/pci.c:4630:
+>> +		msleep(1);
+>> ...
+>> WARNING:MSLEEP: msleep < 20ms can sleep for up to 20ms; see function description of msleep().
+>> #3970: FILE: drivers/pci/quirks.c:3970:
+>> +		msleep(10);
+> 
+>> +++ b/drivers/pci/pci.c
+>> @@ -4967,7 +4967,7 @@ void pci_reset_secondary_bus(struct pci_dev *dev)
+>>   	 * PCI spec v3.0 7.6.4.2 requires minimum Trst of 1ms.  Double
+>>   	 * this to 2ms to ensure that we meet the minimum requirement.
+>>   	 */
+>> -	msleep(2);
+>> +	usleep_range(2000, 2001);
+> 
+> IMO the most valuable thing here would be to replace the hard-coded
+> "2" with some kind of #define explicitly tied to the spec.  Similarly
+> for the other cases.
+> 
+> There is some concern [1] about places that say "msleep(1)" but
+> actually rely on the current behavior of a longer sleep.
+> 
+> Apart from that concern, I think fsleep() would be my first choice.
+> usleep_range(x, x+1) defeats the purpose of the range, which is to
+> reduce interrupts; see 5e7f5a178bba ("timer: Added usleep_range
+> timer").
+> 
+> Bjorn
+> 
+> [1] https://lore.kernel.org/all/20070809001640.ec2f3bfb.akpm@linux-foundation.org/
 
-Sorry for the noise, should have read farther through my email :)
 
