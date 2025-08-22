@@ -1,149 +1,144 @@
-Return-Path: <linux-pci+bounces-34613-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34614-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEF7AB3217D
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 19:27:34 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47D0EB3222B
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 20:15:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6FC61C2757E
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 17:27:54 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 16F394E4207
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 18:15:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFBD92820C7;
-	Fri, 22 Aug 2025 17:27:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD3022BEC21;
+	Fri, 22 Aug 2025 18:15:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYIJREYc"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="LBwwXIJ0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D731096F;
-	Fri, 22 Aug 2025 17:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B23126E17F
+	for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 18:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755883649; cv=none; b=tAY+ugRqKo31hReuRYPcYF8Ifj4rji2IcNs4aAUnHexG6d5l3EfhnY1W9pPKpSC+YpFPLUeCw/PRo7TYfetAwM/1qHRq89FFkOXSVbVhdrxIA41ZM3muWlCQsIwWlv0rzifkPaQGAO189bFcl7rg4Mm01Ix5DOIGoNYN8wN7AOI=
+	t=1755886535; cv=none; b=SwfxL+9RP8Ag/bbH01b96ysMgNqc56/vPzts6f++Lq8df3RUtkpfL+d1XlgS0QAEq6WYCblI6hC2ElWcxOuKTW6BJrUZ0ODtAhevBmAOeiMcIXTXDQiOLZOpSr6FhRzNfoERkYUA9gl7JDEOjPq39lyuyf8juAk22f9CfJuyO1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755883649; c=relaxed/simple;
-	bh=G7KtXL3SjzTkHJuJOjwYNF1lYEbXJj7RSBitEc7W8Zw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=SGvj2fz5RAMfHXpO/c2CKb+nZsrqMWVSY7PoBC1kqdP76w219bqOg4QJSHYBothfK1yuiUrfcScSDCC45DpGV71INVRFz5OjQtZPwrD+DziL8NiLgAaGEpOVWljYcHnppJkCsDAg3pqLhcyOhz1xKEKh8izCYdsAAjKLE6CQxkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYIJREYc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFA3CC4CEED;
-	Fri, 22 Aug 2025 17:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755883649;
-	bh=G7KtXL3SjzTkHJuJOjwYNF1lYEbXJj7RSBitEc7W8Zw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=JYIJREYc3SZvg4o7EQpPH98l0K7aQf2+DyQbIFgiot+v5EJ++MLXdULNEx4PVxR+A
-	 zC9ma60qFBdp2XnPeijvRm+wVOkoqzpt15MRz/yn/5n90QBS6uVUiSvHE7AEGt90uP
-	 zSFIO0Xy/X66608SXg7/eEo6+mUpBp71po7Vv9MaQmOSSGXObn/Nx1LXxYvbhJEDZy
-	 Wfzz4nJy1B0TR7/QOJO21Mw90TDV4FtTIOkbi0JkC2H8HctU/SLT75H3DjYoeheL0r
-	 66HNIRe+xb/XdQWmpdkEZ2WP+bLIrTOdXnMid5nXxcXP+UNe1eUbxB+l+xxkeCBO0s
-	 Xw/eo9rSGhsig==
-Date: Fri, 22 Aug 2025 12:27:27 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Zhenzhong Duan <zhenzhong.duan@intel.com>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, mahesh@linux.ibm.com,
-	oohall@gmail.com, linuxppc-dev@lists.ozlabs.org,
-	linux-acpi@vger.kernel.org, rafael@kernel.org, lenb@kernel.org,
-	james.morse@arm.com, tony.luck@intel.com, bp@alien8.de,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com, linmiaohe@huawei.com,
-	shiju.jose@huawei.com, adam.c.preble@intel.com, lukas@wunner.de,
-	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
-	linux-cxl@vger.kernel.org, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, erwin.tsaur@intel.com,
-	sathyanarayanan.kuppuswamy@intel.com, dan.j.williams@intel.com,
-	feiting.wanyan@intel.com, yudong.wang@intel.com,
-	chao.p.peng@intel.com, qingshun.wang@linux.intel.com,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v5 2/2] PCI/AER: Print UNCOR_STATUS bits that might be
- ANFE
-Message-ID: <20250822172727.GA690123@bhelgaas>
+	s=arc-20240116; t=1755886535; c=relaxed/simple;
+	bh=V94dfA16La60dmKehf08TTEBcoaCXjBACbj1AhKkruU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HtfO5ayeMQTDsTI5uXEGqwgayUQEkEnnz+TmlNnzoYvSoHDagOpBkGibV0pUovEvV+W+912cKOAjnQfQuVNKvj3OfchgTqRucx/P59tletXediNBxeY4Z9FCG1RYnMYZVKJJ4D2581oMDg3mxmoGbBEckb39fjlvHsr3jaXMfkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=LBwwXIJ0; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-afcb78fb04cso320214766b.1
+        for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 11:15:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1755886532; x=1756491332; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qYWGWVCN0O70uGnBCPPQFCaIo3hbXhoMScsfqxRs/Kc=;
+        b=LBwwXIJ0UcKfsZ6Fn4z7xbi0+AkXaoPoT8WJHBeVUngWegUr8qwNsXZ8FtEJghznX5
+         Qi/K2L5EogfbxdnzItAPc9qh4Z9zDbTZjfnUAc3JJ3ysTq/OW+N9Lm/cEwshCBkJ8KgF
+         aI0xJdoD6vfoPvKXk0Ztl2JLMMEpXXFPiZdKAkKcmaD0kKJ/zZF8KBJQa3GLqFgcIMZF
+         FyBjQJbu4gjGx7Bmj7xoCMqOohmb1v7Tc5+0vno5kYGkEOREWvyoz6U3jmG0njuxeHbE
+         n8ojF8pvjXjzpRzSzwHCfiADF/uVH/mOUUj+syX6OpDqbuTx10pi2pRmyot4qbKahSy6
+         NUDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755886532; x=1756491332;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qYWGWVCN0O70uGnBCPPQFCaIo3hbXhoMScsfqxRs/Kc=;
+        b=AWq+FCR1QS5fhg+y6WFUcAJwHU0CdNhiBMVYiSbzkFvr7xYL2cha7IuMArbIBUSV5+
+         Z8iYAbUpP66HyDJHoNIa+oXqjPZtUNxORNxOY1YR+X0dpetLEK+V5bD32/XPas+GT+nG
+         BE9K58iEzvHa0MRHGzJgXKGC9JMArqkP9eMiT+kgaHIe9nUpvoaspQDInBZzp+0WN7+l
+         Eg8M8+ObPU4vWQer+igrORDciR/lQKT+2Xb5T1HURKH1D0sgCwvT+FasvG5n3W/GIJob
+         cRkY/O/w3yJ/g/mswysdwv6tRxLdyGsfIeh4QmBDtnykM21wSDlZ0S7p4Qge60CD8Mg1
+         THpA==
+X-Forwarded-Encrypted: i=1; AJvYcCW2jWbMmtsfOzbFaRqWKHkm++L/J07PJrh6K3SmEpizp+B4Lh51v44Y7fHb+WJNfcmaQ0n6FD86zNI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/xOzK2qRe2i+pH25CB5lUO1TZ/UvT5nMIPopz1bojso+qybwV
+	0edI05Rz2Yc63WwegwiyJf77sXyvpczrtFBXfSEkGkcYmRZlZhu+3+NYyHEHpManGkI=
+X-Gm-Gg: ASbGnctXhV5W4JRG6cIH371eN2x045HvPiwL4ALceQCGLAroPlo69K2SF2VI8EuDjQm
+	sfofVG3dgvZtcSulhDJhIsdLN/cHK/hZISBrNdpy0qchdelFadKvdQ7ZesljU5NA9qAWWhlkrR3
+	vcfQQ28iyMY3Q79TP9o8PRfNPmvLJO7KJlzLe0WXh8GDM3c4pNrFhT2sHXHbAmDm4fJy1ZqSQhB
+	fjs6UjhHIZ9EljL3/iWubqsGR5j+RRvPwWI5Xb1zqsC+Mvy9FHTFCtGgIRlhwikbk8f8ePS+D34
+	RKD9QnStsyXj05PjFUKNQXjym0Gr6SxHSbBYdkFLBHMzeciZKrb8vQNtA10BinWdb1ru9MkN4pq
+	79QY+/dehTO+knCTq8YReZXbf+K7KQetHsz2A/13qFA5ge6zd1HSbABRjy9Y=
+X-Google-Smtp-Source: AGHT+IFi/UqB7Uldrm+9VbwlcvS/K9grf+HFQGwUPWY0Y+SNRhjWVo0c6zi2HNxzYpUPo9jAOLRO3A==
+X-Received: by 2002:a17:907:7213:b0:ae0:d798:2ebd with SMTP id a640c23a62f3a-afe295c0e07mr334350266b.35.1755886532255;
+        Fri, 22 Aug 2025 11:15:32 -0700 (PDT)
+Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-afe49314f63sm16474966b.97.2025.08.22.11.15.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Aug 2025 11:15:31 -0700 (PDT)
+From: Matthew W Carlis <mattc@purestorage.com>
+To: helgaas@kernel.org
+Cc: Smita.KoralahalliChannabasappa@amd.com,
+	adam.c.preble@intel.com,
+	agovindjee@purestorage.com,
+	alison.schofield@intel.com,
+	ashishk@purestorage.com,
+	bamstadt@purestorage.com,
+	bhelgaas@google.com,
+	bp@alien8.de,
+	chao.p.peng@intel.com,
+	dan.j.williams@intel.com,
+	dave.jiang@intel.com,
+	dave@stgolabs.net,
+	erwin.tsaur@intel.com,
+	feiting.wanyan@intel.com,
+	ira.weiny@intel.com,
+	james.morse@arm.com,
+	jrangi@purestorage.com,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	lukas@wunner.de,
+	mahesh@linux.ibm.com,
+	mattc@purestorage.com,
+	msaggi@purestorage.com,
+	oohall@gmail.com,
+	qingshun.wang@linux.intel.com,
+	rafael@kernel.org,
+	rhan@purestorage.com,
+	rrichter@amd.com,
+	sathyanarayanan.kuppuswamy@intel.com,
+	sconnor@purestorage.com,
+	tony.luck@intel.com,
+	vishal.l.verma@intel.com,
+	yudong.wang@intel.com,
+	zhenzhong.duan@intel.com
+Subject: [PATCH v5 0/2] PCI/AER: Handle Advisory Non-Fatal error
+Date: Fri, 22 Aug 2025 12:15:20 -0600
+Message-ID: <20250822181520.12394-1-mattc@purestorage.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250822165112.GA688464@bhelgaas>
+References: <20250822165112.GA688464@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240620025857.206647-3-zhenzhong.duan@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 20, 2024 at 10:58:57AM +0800, Zhenzhong Duan wrote:
-> When an Advisory Non-Fatal error(ANFE) triggers, both correctable error(CE)
-> status and ANFE related uncorrectable error(UE) status will be printed:
-> 
->   AER: Correctable error message received from 0000:b7:02.0
->   PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
->     device [8086:0db0] error status/mask=00002000/00000000
->      [13] NonFatalErr
->     Uncorrectable errors that may cause Advisory Non-Fatal:
->      [12] TLP
+On Fri, 22 Aug 2025 11:51:12 -0500, Bjorn Helgaas wrote 
+> I'm terribly sorry, this is my fault.  It just fell off my list for no
+> good reason.  Matthew, if you are able to test and/or provide a
+> Reviewed-by, that would be the best thing you can do to move this
+> forward (although neither is actually necessary).
 
-Forgot to mention on other patch, but please add spaces between the
-spelled-out terms and the "()" abbreviation, e.g., "Correctable Error
-(CE)".
+It seems for pci there is always a massive list of things in flight..
+Difficult for any mortal to keep up with. We pulled the patch into our
+kernel & have started testing it. I'll sync-up with my team internally to
+see exactly what the plan is & how long we think it will take.
 
-Also, can you update this commit log to say what the patch does?  It's
-OK if it repeats and/or expands on the subject.
-
-> Tested-by: Yudong Wang <yudong.wang@intel.com>
-> Co-developed-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-> Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/pcie/aer.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 3dcfa0191169..ba3a54092f2c 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -681,6 +681,7 @@ static void __aer_print_error(struct pci_dev *dev,
->  {
->  	const char **strings;
->  	unsigned long status = info->status & ~info->mask;
-> +	unsigned long anfe_status = info->anfe_status;
->  	const char *level, *errmsg;
->  	int i;
->  
-> @@ -701,6 +702,20 @@ static void __aer_print_error(struct pci_dev *dev,
->  				info->first_error == i ? " (First)" : "");
->  	}
->  	pci_dev_aer_stats_incr(dev, info);
-> +
-> +	if (!anfe_status)
-> +		return;
-> +
-> +	strings = aer_uncorrectable_error_string;
-> +	pci_printk(level, dev, "Uncorrectable errors that may cause Advisory Non-Fatal:\n");
-
-Will have to look at the spec more, but I don't think "may cause" is
-quite the right wording here.  It's not that an Uncorrectable Error
-causes a separate Advisory Non-Fatal Error; IIUC there's only a single
-error and it's just *treated* and signaled differently.
-
-> +
-> +	for_each_set_bit(i, &anfe_status, 32) {
-> +		errmsg = strings[i];
-> +		if (!errmsg)
-> +			errmsg = "Unknown Error Bit";
-> +
-> +		pci_printk(level, dev, "   [%2d] %s\n", i, errmsg);
-
-I think we might have removed pci_printk() recently, so this might
-need adjustment.
-
-> +	}
->  }
->  
->  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
-> -- 
-> 2.34.1
-> 
+Cheers!
+-Matt
 
