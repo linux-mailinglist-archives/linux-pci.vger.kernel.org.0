@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-34577-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34578-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8992FB31D6A
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 17:07:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 294BDB31D66
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 17:07:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C7168604226
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 14:58:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 657D6AA7193
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 14:58:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17CE3313523;
-	Fri, 22 Aug 2025 14:57:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CBB23126B6;
+	Fri, 22 Aug 2025 14:57:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cwCDtz23"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="buEQ7sMt"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D582ED16D;
-	Fri, 22 Aug 2025 14:57:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85882ED16D;
+	Fri, 22 Aug 2025 14:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755874653; cv=none; b=F0662uHGdph9rNegv/PXBZx6KEvUQtPQQ20TKrKQ6Q4jb9Jv8vuBQCi7TtPgjjiMGL75O6w/20wUu/alQnPBbZwCSq5iiE15JOVTtByJgDH8f5zIlmtQMh7w2F2AAnjHlAvrbLTjzjetOWvZqoMdBdg9Ps6IW7O1LP3r/4x4bRI=
+	t=1755874662; cv=none; b=Q9qd9tkNoUd3NK9q6pd0XxlQFkbotnX8gzN4a6k7xg+Lt3d/mdbpkNVYoUtTZF3yIF8tm3gfUc3ii1ySB4L4wrWBxhqn96vNzhE5M1Iu+8yx6DoOPmyce4DvwwwXP3pa12e4R/yyQj4Fh0T/tjpzM5pP9RNjj12vNERn846toG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755874653; c=relaxed/simple;
-	bh=h9rOaKJ78cwvTMGhAeaZehjm2lm9CqbJUu56YHFbep4=;
+	s=arc-20240116; t=1755874662; c=relaxed/simple;
+	bh=F2R5lm6B0zlfTPYSGNsRRvyNW/8MTuBWGQgTQj1Brew=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WIPNrCoKAVh/TClcIMlJQhskmqOA0ZrUhVoj+3VViTSiBlyQ4EQV7AHDu5FSbYH98InGXcT+igqRMlHE7jEVWj07fzs+RG/7FGOseMnHqy9gGGNaOLlUEHVbiPCbsFtTkd7GirknuhywUiJc+NehB0EaGZMBk3l66GmSEunK7tA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cwCDtz23; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version:Content-Type; b=ZYaH2isDi79af8Of+dUUOgXQqXy3SuMz61oY7ajM48rpiq0NPpjXeIhWq4UeiEFPssr2WZq4Vv/dg0skDA11lmtaNgdJSCQRX9FVPiEejNDnOv+AuogfP6tELgnH5Ds29RcuGT1I9DpRmpT5e/IFbGnbmEQuw4WtmQvQix0Z86o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=buEQ7sMt; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755874651; x=1787410651;
+  t=1755874660; x=1787410660;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=h9rOaKJ78cwvTMGhAeaZehjm2lm9CqbJUu56YHFbep4=;
-  b=cwCDtz23B2HsGWC0bZSi5BP4sm9veq7h1ZmYvkeiPlE4Vxqxp6jRtmtc
-   flKYv7XIfiY95eIefy6KmaLg+sA8ltGRSHCDOSiPtVfNnKNecIaLCf22B
-   N4gCYe9JqGvFQs1qtuqgJL9fkWjD9heEAaZG0hx78b4g/e+R3EHsbU+jS
-   aIiMDDfDJR9I45T873ttaOw+1HDrYoqjBZYpGMr9ZtV9oSWIg6sBAMb5e
-   wrV3BpJaNFaRjaiCb+ojIKnC1K/aS0P8DLJedf5JuGjyQ2Oapp2ECFz8t
-   1VG/pjmFaDszMkizIFSwqzQn+Ntz1Gfnh5+JlZ/MVtpLsU4U9owvjOEaa
-   A==;
-X-CSE-ConnectionGUID: aR5OBHtlRdyV/cqjr8rjQw==
-X-CSE-MsgGUID: I7pMgB7cTC6ix7xKIEoOeQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="57201334"
+  bh=F2R5lm6B0zlfTPYSGNsRRvyNW/8MTuBWGQgTQj1Brew=;
+  b=buEQ7sMtIV/r84bq81VEFcsJ7J2TTlMpMBQmGF4R+zvhiPVY/dCOYTJ0
+   Tm72AlPmo0d4wjokc439/4DHA5jxuaH2EbTRhDoMxZgc3wPdU3iJo8ABf
+   e1AnYWKp3dhOSnjONTh7q19PBmKqW0z1RQf2Mel2jNtN0vGIHIvMVYkSF
+   wH26eUZvl6gZ6EjTN28zweDlg+d8jqSZF2+PJ7C8m0lXk6hWa+6fSk5r2
+   EAtMY6wufAuwoUuHBrBOc+uenf1KZ3JI51FJFgCDYLbr9MRd3f+3jsSLP
+   +j3sX5lEhD//AfuaagKMH/lodnj1ZrRXUcBrjJ51tPmpda1XBOjdmuQO9
+   w==;
+X-CSE-ConnectionGUID: PSCsNVHoShiTP/NO8DTxng==
+X-CSE-MsgGUID: GXbMmo6PTV2vt9XNrZCuxQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="57201364"
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="57201334"
+   d="scan'208";a="57201364"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:57:30 -0700
-X-CSE-ConnectionGUID: DvVLJoVkQxS29oGAHEDBlA==
-X-CSE-MsgGUID: Ujk0XRTPSUO4HfTmYVIn9Q==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:57:40 -0700
+X-CSE-ConnectionGUID: dUvSFF9VS1qy+pJdy3UIkw==
+X-CSE-MsgGUID: wzKVwqaETQWyVrIJW+JaKQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="168920472"
+   d="scan'208";a="168920509"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.115])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:57:25 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:57:35 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Andreas Larsson <andreas@gaisler.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -79,9 +79,9 @@ To: Andreas Larsson <andreas@gaisler.com>,
 Cc: =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
 	linuxppc-dev@lists.ozlabs.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 08/24] PCI: Use pci_release_resource() instead of release_resource()
-Date: Fri, 22 Aug 2025 17:55:49 +0300
-Message-Id: <20250822145605.18172-9-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 09/24] PCI: Enable bridge even if bridge window fails to assign
+Date: Fri, 22 Aug 2025 17:55:50 +0300
+Message-Id: <20250822145605.18172-10-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
 References: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
@@ -94,166 +94,98 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-A few places in setup-bus.c call release_resource() directly and
-end up duplicating functionality from pci_release_resource() such
-as parent check, logging, and clearing the resource. Worse yet,
-the way the resource is cleared is inconsistent between different
-sites.
+A normal PCI bridge has multiple bridge windows and not all of them are
+always required by devices underneath the bridge. If Root Port or
+bridge does not have a device underneath, no bridge windows get
+assigned. Yet, pci_enable_resources() is set to fail indiscriminantly
+on any resource assignment failure if the resource is not known to be
+optional.
 
-Convert release_resource() calls into pci_release_resource() to remove
-code duplication. The will also make the resource start, end, and flags
-behavior consistent, ie., start address is cleared, and only
-IORESOURCE_UNSET is asserted for the resource.
+In practice, the code in pci_enable_resources() is currently largely
+dormant. The kernel sets resource flags to zero for any unused bridge
+window and resets flags to zero in case of an resource assignment
+failure, which short-circuits pci_enable_resources() because of this
+check:
 
-While at it, eliminate the unnecessary initialization of idx variable in
-pci_bridge_release_resources().
+	if (!(r->flags & (IORESOURCE_IO | IORESOURCE_MEM)))
+		continue;
+
+However, an upcoming change to resource flags will alter how bridge
+window flags resource flags behave activating these long dormants
+checks in pci_enable_resources().
+
+While complex logic could be built to selectively enable a bridge only
+under some conditions, a few versions of such logic were tried during
+development of this change and none of them worked satisfactorily.
+Thus, I just gave up and decided to enable any bridge regardless of the
+bridge windows as there seems to be no clear benefit from not enabling
+it but a major downside as pcieport will not be probed for the bridge
+if it's not enabled.
+
+Therefore, change pci_enable_resources() to not check if bridge window
+resources remain unassigned. Resource assignment failures are pretty
+noisy already so there is no need to log that for bridge windows in
+pci_enable_resources().
+
+Ignoring bridge window failures hopefully prevents an obvious sources
+of regressions when the upcoming change that no longer clears resource
+flags for bridge windows is enacted. I've hit this problem even during
+my own testing on multiple occassions so I expect it to be a quite
+common problem.
+
+This can always be revisited later if somebody thinks the enable check
+for bridges is not strict enough, but expect a mind-boggling number of
+regressions from such a change.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/setup-bus.c | 46 +++++++++++++----------------------------
- drivers/pci/setup-res.c | 11 +++++++---
- include/linux/pci.h     |  2 +-
- 3 files changed, 23 insertions(+), 36 deletions(-)
+ drivers/pci/setup-res.c | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 6bdc1af887da..b62465665abc 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -473,8 +473,6 @@ static void __assign_resources_sorted(struct list_head *head,
- 	struct pci_dev_resource *dev_res, *tmp_res, *dev_res2;
- 	struct resource *res;
- 	struct pci_dev *dev;
--	const char *res_name;
--	int idx;
- 	unsigned long fail_type;
- 	resource_size_t add_align, align;
- 
-@@ -582,14 +580,7 @@ static void __assign_resources_sorted(struct list_head *head,
- 		res = dev_res->res;
- 		dev = dev_res->dev;
- 
--		if (!res->parent)
--			continue;
--
--		idx = pci_resource_num(dev, res);
--		res_name = pci_resource_name(dev, idx);
--		pci_dbg(dev, "%s %pR: releasing\n", res_name, res);
--
--		release_resource(res);
-+		pci_release_resource(dev, pci_resource_num(dev, res));
- 		restore_dev_resource(dev_res);
- 	}
- 	/* Restore start/end/flags from saved list */
-@@ -1732,7 +1723,7 @@ static void pci_bridge_release_resources(struct pci_bus *bus,
- 	struct resource *r;
- 	unsigned int old_flags;
- 	struct resource *b_res;
--	int idx = 1;
-+	int idx, ret;
- 
- 	b_res = &dev->resource[PCI_BRIDGE_RESOURCES];
- 
-@@ -1766,21 +1757,18 @@ static void pci_bridge_release_resources(struct pci_bus *bus,
- 
- 	/* If there are children, release them all */
- 	release_child_resources(r);
--	if (!release_resource(r)) {
--		type = old_flags = r->flags & PCI_RES_TYPE_MASK;
--		pci_info(dev, "resource %d %pR released\n",
--			 PCI_BRIDGE_RESOURCES + idx, r);
--		/* Keep the old size */
--		resource_set_range(r, 0, resource_size(r));
--		r->flags = 0;
- 
--		/* Avoiding touch the one without PREF */
--		if (type & IORESOURCE_PREFETCH)
--			type = IORESOURCE_PREFETCH;
--		__pci_setup_bridge(bus, type);
--		/* For next child res under same bridge */
--		r->flags = old_flags;
--	}
-+	type = old_flags = r->flags & PCI_RES_TYPE_MASK;
-+	ret = pci_release_resource(dev, PCI_BRIDGE_RESOURCES + idx);
-+	if (ret)
-+		return;
-+
-+	/* Avoiding touch the one without PREF */
-+	if (type & IORESOURCE_PREFETCH)
-+		type = IORESOURCE_PREFETCH;
-+	__pci_setup_bridge(bus, type);
-+	/* For next child res under same bridge */
-+	r->flags = old_flags;
- }
- 
- enum release_type {
-@@ -2425,7 +2413,6 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
- 		for (i = PCI_BRIDGE_RESOURCES; i < PCI_BRIDGE_RESOURCE_END;
- 		     i++) {
- 			struct resource *res = &bridge->resource[i];
--			const char *res_name = pci_resource_name(bridge, i);
- 
- 			if ((res->flags ^ type) & PCI_RES_TYPE_MASK)
- 				continue;
-@@ -2438,12 +2425,7 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
- 			if (ret)
- 				goto cleanup;
- 
--			pci_info(bridge, "%s %pR: releasing\n", res_name, res);
--
--			if (res->parent)
--				release_resource(res);
--			res->start = 0;
--			res->end = 0;
-+			pci_release_resource(bridge, i);
- 			break;
- 		}
- 		if (i == PCI_BRIDGE_RESOURCE_END)
 diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index d2b3ed51e880..0468c058b598 100644
+index 0468c058b598..4e0e60256f04 100644
 --- a/drivers/pci/setup-res.c
 +++ b/drivers/pci/setup-res.c
-@@ -406,20 +406,25 @@ int pci_reassign_resource(struct pci_dev *dev, int resno,
- 	return 0;
- }
+@@ -527,22 +527,26 @@ int pci_enable_resources(struct pci_dev *dev, int mask)
+ 		if (pci_resource_is_optional(dev, i))
+ 			continue;
  
--void pci_release_resource(struct pci_dev *dev, int resno)
-+int pci_release_resource(struct pci_dev *dev, int resno)
- {
- 	struct resource *res = pci_resource_n(dev, resno);
- 	const char *res_name = pci_resource_name(dev, resno);
-+	int ret;
- 
- 	if (!res->parent)
--		return;
-+		return 0;
- 
- 	pci_info(dev, "%s %pR: releasing\n", res_name, res);
- 
--	release_resource(res);
-+	ret = release_resource(res);
-+	if (ret)
-+		return ret;
- 	res->end = resource_size(res) - 1;
- 	res->start = 0;
- 	res->flags |= IORESOURCE_UNSET;
+-		if (r->flags & IORESOURCE_UNSET) {
+-			pci_err(dev, "%s %pR: not assigned; can't enable device\n",
+-				r_name, r);
+-			return -EINVAL;
++		if (i < PCI_BRIDGE_RESOURCES) {
++			if (r->flags & IORESOURCE_UNSET) {
++				pci_err(dev, "%s %pR: not assigned; can't enable device\n",
++					r_name, r);
++				return -EINVAL;
++			}
 +
-+	return 0;
- }
- EXPORT_SYMBOL(pci_release_resource);
++			if (!r->parent) {
++				pci_err(dev, "%s %pR: not claimed; can't enable device\n",
++					r_name, r);
++				return -EINVAL;
++			}
+ 		}
  
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 59876de13860..275df4058767 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1417,7 +1417,7 @@ void pci_reset_secondary_bus(struct pci_dev *dev);
- void pcibios_reset_secondary_bus(struct pci_dev *dev);
- void pci_update_resource(struct pci_dev *dev, int resno);
- int __must_check pci_assign_resource(struct pci_dev *dev, int i);
--void pci_release_resource(struct pci_dev *dev, int resno);
-+int pci_release_resource(struct pci_dev *dev, int resno);
- static inline int pci_rebar_bytes_to_size(u64 bytes)
- {
- 	bytes = roundup_pow_of_two(bytes);
+-		if (!r->parent) {
+-			pci_err(dev, "%s %pR: not claimed; can't enable device\n",
+-				r_name, r);
+-			return -EINVAL;
++		if (r->parent) {
++			if (r->flags & IORESOURCE_IO)
++				cmd |= PCI_COMMAND_IO;
++			if (r->flags & IORESOURCE_MEM)
++				cmd |= PCI_COMMAND_MEMORY;
+ 		}
+-
+-		if (r->flags & IORESOURCE_IO)
+-			cmd |= PCI_COMMAND_IO;
+-		if (r->flags & IORESOURCE_MEM)
+-			cmd |= PCI_COMMAND_MEMORY;
+ 	}
+ 
+ 	if (cmd != old_cmd) {
 -- 
 2.39.5
 
