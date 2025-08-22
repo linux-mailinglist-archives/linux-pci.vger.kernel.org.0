@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-34581-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34582-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB5F5B31D8D
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 17:10:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7990B31D5F
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 17:07:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73340AC216C
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 14:59:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 250C7189803D
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 15:00:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36A8D3128D3;
-	Fri, 22 Aug 2025 14:58:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A044321433;
+	Fri, 22 Aug 2025 14:58:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hBpMbgiF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OMZkx94f"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897F02E611B;
-	Fri, 22 Aug 2025 14:58:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37DB2E611B;
+	Fri, 22 Aug 2025 14:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755874691; cv=none; b=iLOxOjbsDf+cp/C54WDR8bD/n2g9Gf5DwFB7do1VeayG4vCeAoTjU8d7/w3DKEAueld9vuSic+SeSwLL5LladAD4Y9hU4/9aLImnbCK1InVcGRo7xtn4Tut+lzXSm1IVuTz3JkZFl6VRCMgVI4BJvb1FJzFK3PmIFujeHZjGG1k=
+	t=1755874700; cv=none; b=oV7IYFCBrtqtDgUeJiCJL9Dy0EDHGWlJxWSSPu+i6nhqFfZmWcY1Yl/i2+eEQTc0BtXjSjxSnYrbltxVfuwtTqcwVqAvN6demcoae1+h+hiaek5edUsu18t91i2L+qpSV1MO6kMW+sYZvI/JCaseLZNjXofkZtJhliBvFU7mTBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755874691; c=relaxed/simple;
-	bh=HvowNzzh/OD6cGrbG0ubHIxVA4Lk6Q820KCMwB+uzto=;
+	s=arc-20240116; t=1755874700; c=relaxed/simple;
+	bh=9B/2/rkIoDBIm4IVMedT6yw/8fy5XFXgmUft891BmJg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZtgYrHgmNnB7JKbTykdrjC2ELb1fEFwSnlqmWyotSIrKO43FlNgqtuPZ/AiOgq8DbJ5jf4Jp/OTWP5Khpo0QGC0B89lomdnp6ev9lzer+SiXR6siagUZ407UivDyTI9A46tsgPAvln67rF2kntkpNCxDwRZPmGZG0q61i6TcMhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hBpMbgiF; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version:Content-Type; b=DPQDKbnD8aF0g80SSc0AQepbTYdz5S812iAt89Gp/ZJRtVbgWK5s8T2OWVzsTQ33QRSy/ZRKIiY2XbBB2s3q9d6tL0VaFQGsn1HFMK6WkWZMJ5ZuLFYdjdM0oShAezQYaU9N+hqYwXmwJsXtgQ3YaCNjLTd/JZbKnwFIgQyVB8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OMZkx94f; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755874690; x=1787410690;
+  t=1755874699; x=1787410699;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=HvowNzzh/OD6cGrbG0ubHIxVA4Lk6Q820KCMwB+uzto=;
-  b=hBpMbgiFltyZDFtoRu85exQHvYgheKm4OkCHJ7zbr81BrBbjsdADYDOb
-   7liHLA8H6+MA52TLi6s8uV9vkD9JdKo+b2geK7eWz3WCcPbCqdoJduGBV
-   kpM9iFw2/o9Zs9BtLzlDvgjpTWJDF5uizHnzu+9sYG3cFJTxvJgsUw5LR
-   hpz2exdO2UFLWMmYYCDmuCINmiCE2fsMOUDff3i+q/gACkKZ7Z2E+WShR
-   dOhb93Q+gvwoYjikFWgM0daZueJBR8PzjrjpWmuxODqAelgMZoRIHmSd4
-   Wml9/fVGlz0GACk0XYTEjhdrcP80j6WHkdXDDWoP9P9Gr21QRQxoQ/kYM
+  bh=9B/2/rkIoDBIm4IVMedT6yw/8fy5XFXgmUft891BmJg=;
+  b=OMZkx94fJB9ypdyn02w5C2Fx8y7jx0hu6K6WQmq+3XXcVxPGy7uQ1WnE
+   PIZZJ/G9yoEoKhIUszCu51PSs0QgzqugNFoj+0wpRNaMeBa9ycH0qNq2U
+   vlSwcmGH/5uYrvzbPOcvaXtwfVyBbyiLhnGvnC5I0nw8AaCgjZ+shAUsZ
+   JvF0qEeZCzsKn0cRZxTIMc3rqS8ivwT6KTu7nsHAf9gkT7ch9JkS7Igop
+   4TNAvWkyy2oe4/9cH7Wz3QQwMPl7gSApjyNZgGq5m1jzIAH75EjGu3h5p
+   SWR/eOsl47YEO1qkHqaAVbVG+AbNIJxkHtULSHabNcSFkE0g+ThBml2gN
    g==;
-X-CSE-ConnectionGUID: OnTuXDQnQzCAaf/ZMHES/Q==
-X-CSE-MsgGUID: tpd9cpTNROS7sbE1mGlP9Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="80780518"
+X-CSE-ConnectionGUID: UR79IiTET8eJq50oEGpj9A==
+X-CSE-MsgGUID: VFuzZDyOTzSQxV03XJjZlA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="80780548"
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="80780518"
+   d="scan'208";a="80780548"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:58:09 -0700
-X-CSE-ConnectionGUID: vlviQhsgTCG2Kd8H61AzWw==
-X-CSE-MsgGUID: h4VZ9g4tQ6e8L99bQN0BOA==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:58:19 -0700
+X-CSE-ConnectionGUID: wIvH4dl9SZ6yJbAG3Hjt8Q==
+X-CSE-MsgGUID: w6Fs+Ad5RZ62WfjHUtvaog==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="168232306"
+   d="scan'208";a="168232369"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.115])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:58:04 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 07:58:13 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Andreas Larsson <andreas@gaisler.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -79,9 +79,9 @@ To: Andreas Larsson <andreas@gaisler.com>,
 Cc: =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
 	linuxppc-dev@lists.ozlabs.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 12/24] PCI: Add bridge window selection functions
-Date: Fri, 22 Aug 2025 17:55:53 +0300
-Message-Id: <20250822145605.18172-13-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 13/24] PCI: Fix finding bridge window in pci_reassign_bridge_resources()
+Date: Fri, 22 Aug 2025 17:55:54 +0300
+Message-Id: <20250822145605.18172-14-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
 References: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
@@ -94,150 +94,132 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Various places in the PCI core code make independently a decision into
-which bridge window a child resource should be placed to. It is hard to
-see whether these decisions always end up into agreement, especially in
-the corner cases, and in some places it requires complex logic to pass
-multiple resource types and/or bridge windows around.
+pci_reassign_bridge_resources() walks upwards in the PCI bus hierarchy,
+locates the relevant bridge window on each level using flags check, and
+attempts to release the bridge window. The flags-based check is fragile
+due to various fallbacks bridge window selection logic might use. As
+such, the algorithm might not locate the correct bridge window.
 
-Add pbus_select_window() and pbus_select_window_for_type() for case
-where the former cannot be used so that eventually the same helper can
-be used to select the bridge window everywhere. Using the same function
-ensures the selected bridge window remains always the same and it can
-be easily recalculated in-situ allowing simplifying the interfaces
-between internal functions in upcoming changes.
+Refactor pci_reassign_bridge_resources() to determine the correct
+bridge window using pbus_select_window() that contains logic to handle
+all fallback cases correctly. Change function prefix to pbus as it now
+inputs struct bus and resource for which to locate the bridge window.
 
+The main purpose of this change is to make bridge window selection
+logic consistent across the entire PCI core (one step at a time). While
+this technically also fixes the commit 8bb705e3e79d ("PCI: Add
+pci_resize_resource() for resizing BARs") making the bridge window walk
+algorithm more robust, The normal setup having a 64-bit resizable BAR
+underneath bridge(s) with 64-bit prefetchable windows does not need to
+use any fallbacks. As such, the practical impact is low (requiring BAR
+resize use case and a non-typical bridge device).
+
+The way to detect if unrelated resource failed again is left to use the
+type based approximation which should not behave worse than before.
+
+Fixes: 8bb705e3e79d ("PCI: Add pci_resize_resource() for resizing BARs")
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/pci.h       |   2 +
- drivers/pci/setup-bus.c | 101 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 103 insertions(+)
+ drivers/pci/pci.h       |  2 +-
+ drivers/pci/setup-bus.c | 40 ++++++++++++++++++++--------------------
+ drivers/pci/setup-res.c |  2 +-
+ 3 files changed, 22 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 1dc8a8066761..cbd40f05c39c 100644
+index cbd40f05c39c..0d96a9141227 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -385,6 +385,8 @@ static inline int pci_resource_num(const struct pci_dev *dev,
- 	return resno;
- }
+@@ -334,7 +334,7 @@ struct device *pci_get_host_bridge_device(struct pci_dev *dev);
+ void pci_put_host_bridge_device(struct device *dev);
  
-+struct resource *pbus_select_window(struct pci_bus *bus,
-+				    const struct resource *res);
- void pci_reassigndev_resource_alignment(struct pci_dev *dev);
- void pci_disable_bridge_window(struct pci_dev *dev);
- struct pci_bus *pci_bus_get(struct pci_bus *bus);
+ unsigned int pci_rescan_bus_bridge_resize(struct pci_dev *bridge);
+-int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type);
++int pbus_reassign_bridge_resources(struct pci_bus *bus, struct resource *res);
+ int __must_check pci_reassign_resource(struct pci_dev *dev, int i, resource_size_t add_size, resource_size_t align);
+ 
+ int pci_configure_extended_tags(struct pci_dev *dev, void *ign);
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 223f0e025407..0c0872b85762 100644
+index 0c0872b85762..5ef6362b5166 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -172,6 +172,107 @@ static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
- 	return r_assigned;
+@@ -2521,10 +2521,17 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
  }
+ EXPORT_SYMBOL_GPL(pci_assign_unassigned_bridge_resources);
  
-+/**
-+ * pbus_select_window_for_type - Select bridge window for a resource type
-+ * @bus: PCI bus
-+ * @type: Resource type (resource flags can be passed as is)
-+ *
-+ * Selects the bridge window based on a resource @type.
-+ *
-+ * For memory resources, the selection is done as follows:
-+ *
-+ * Any non-prefetchable resource is put into the non-prefetchable window.
-+ *
-+ * If there is no prefetchable MMIO window, put all memory resources into the
-+ * non-prefetchable window.
-+ *
-+ * If there's a 64-bit prefetchable MMIO window, put all 64-bit prefetchable
-+ * resources into it and place 32-bit prefetchable memory into the
-+ * non-prefetchable window.
-+ *
-+ * Otherwise, put all prefetchable resources into the prefetchable window.
-+ *
-+ * Return: the bridge window resource or NULL if no bridge window is found.
+-int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
++/*
++ * Walk to the root hub, find the bridge window relevant for @res and
++ * releasing it when possible. If the bridge window contains assigned
++ * resources, it cannot be released.
 + */
-+static struct resource *pbus_select_window_for_type(struct pci_bus *bus,
-+						    unsigned long type)
-+{
-+	int iores_type = type & IORESOURCE_TYPE_BITS;	/* w/o 64bit & pref */
-+	struct resource *mmio, *mmio_pref, *win;
-+
-+	type &= PCI_RES_TYPE_MASK;			/* with 64bit & pref */
-+
-+	if ((iores_type != IORESOURCE_IO) && (iores_type != IORESOURCE_MEM))
-+		return NULL;
-+
-+	if (pci_is_root_bus(bus)) {
-+		win = find_bus_resource_of_type(bus, type, type);
-+		if (win)
-+			return win;
-+
-+		type &= ~IORESOURCE_MEM_64;
-+		win = find_bus_resource_of_type(bus, type, type);
-+		if (win)
-+			return win;
-+
-+		type &= ~IORESOURCE_PREFETCH;
-+		return find_bus_resource_of_type(bus, type, type);
-+	}
-+
-+	switch (iores_type) {
-+	case IORESOURCE_IO:
-+		return pci_bus_resource_n(bus, PCI_BUS_BRIDGE_IO_WINDOW);
-+
-+	case IORESOURCE_MEM:
-+		mmio = pci_bus_resource_n(bus, PCI_BUS_BRIDGE_MEM_WINDOW);
-+		mmio_pref = pci_bus_resource_n(bus, PCI_BUS_BRIDGE_PREF_MEM_WINDOW);
-+
-+		if (!(type & IORESOURCE_PREFETCH) ||
-+		    !(mmio_pref->flags & IORESOURCE_MEM))
-+			return mmio;
-+
-+		if ((type & IORESOURCE_MEM_64) ||
-+		    !(mmio_pref->flags & IORESOURCE_MEM_64))
-+			return mmio_pref;
-+
-+		return mmio;
-+	default:
-+		return NULL;
-+	}
-+}
-+
-+/**
-+ * pbus_select_window - Select bridge window for a resource
-+ * @bus: PCI bus
-+ * @res: Resource
-+ *
-+ * Selects the bridge window for @res. If the resource is already assigned,
-+ * the current bridge window is returned.
-+ *
-+ * For memory resources, the selection is done as follows:
-+ *
-+ * Any non-prefetchable resource is put into the non-prefetchable window.
-+ *
-+ * If there is no prefetchable MMIO window, put all memory resources into the
-+ * non-prefetchable window.
-+ *
-+ * If there's a 64-bit prefetchable MMIO window, put all 64-bit prefetchable
-+ * resources into it and place 32-bit prefetchable memory into the
-+ * non-prefetchable window.
-+ *
-+ * Otherwise, put all prefetchable resources into the prefetchable window.
-+ *
-+ * Return: the bridge window resource or NULL if no bridge window is found.
-+ */
-+struct resource *pbus_select_window(struct pci_bus *bus,
-+				    const struct resource *res)
-+{
-+	if (res->parent)
-+		return res->parent;
-+
-+	return pbus_select_window_for_type(bus, res->flags);
-+}
-+
- static bool pdev_resources_assignable(struct pci_dev *dev)
++int pbus_reassign_bridge_resources(struct pci_bus *bus, struct resource *res)
  {
- 	u16 class = dev->class >> 8, command;
++	unsigned long type = res->flags;
+ 	struct pci_dev_resource *dev_res;
+-	struct pci_dev *next;
++	struct pci_dev *bridge;
++	const char *res_name;
+ 	LIST_HEAD(saved);
+ 	LIST_HEAD(added);
+ 	LIST_HEAD(failed);
+@@ -2533,33 +2540,26 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
+ 
+ 	down_read(&pci_bus_sem);
+ 
+-	/* Walk to the root hub, releasing bridge BARs when possible */
+-	next = bridge;
+-	do {
+-		bridge = next;
+-		for (i = PCI_BRIDGE_RESOURCES; i < PCI_BRIDGE_RESOURCE_END;
+-		     i++) {
+-			struct resource *res = &bridge->resource[i];
+-
+-			if ((res->flags ^ type) & PCI_RES_TYPE_MASK)
+-				continue;
++	while (!pci_is_root_bus(bus)) {
++		bridge = bus->self;
++		res = pbus_select_window(bus, res);
++		if (!res)
++			break;
+ 
+-			/* Ignore BARs which are still in use */
+-			if (res->child)
+-				continue;
++		i = pci_resource_num(bridge, res);
++		res_name = pci_resource_name(bridge, i);
+ 
++		/* Ignore BARs which are still in use */
++		if (!res->child) {
+ 			ret = add_to_list(&saved, bridge, res, 0, 0);
+ 			if (ret)
+ 				goto cleanup;
+ 
+ 			pci_release_resource(bridge, i);
+-			break;
+ 		}
+-		if (i == PCI_BRIDGE_RESOURCE_END)
+-			break;
+ 
+-		next = bridge->bus ? bridge->bus->self : NULL;
+-	} while (next);
++		bus = bus->parent;
++	}
+ 
+ 	if (list_empty(&saved)) {
+ 		up_read(&pci_bus_sem);
+diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+index 21f77e5c647c..c3ba4ccecd43 100644
+--- a/drivers/pci/setup-res.c
++++ b/drivers/pci/setup-res.c
+@@ -496,7 +496,7 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
+ 
+ 	/* Check if the new config works by trying to assign everything. */
+ 	if (dev->bus->self) {
+-		ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
++		ret = pbus_reassign_bridge_resources(dev->bus, res);
+ 		if (ret)
+ 			goto error_resize;
+ 	}
 -- 
 2.39.5
 
