@@ -1,214 +1,252 @@
-Return-Path: <linux-pci+bounces-34521-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34522-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5831B30F8C
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 08:51:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF002B30F89
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 08:50:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E63EC1BC3549
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 06:50:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A6476587801
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 06:50:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1981A262FC2;
-	Fri, 22 Aug 2025 06:50:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68E482E6124;
+	Fri, 22 Aug 2025 06:50:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KuPRzbtX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MX/sGEZf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFB44A1A;
-	Fri, 22 Aug 2025 06:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D062E610B
+	for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 06:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755845425; cv=none; b=WlrZtWYSv6ygG6730QyI5N9yBiVK7C6cpmM5b51xR3VyDXv/DmHmrlaEZ2br5j/ao4RNzrnfqo8ZSkDh+bFjzej1+Q0GC/9LN4iV52w8O1e4Y34c3azk8J/8qgY9dRRUmynXDvU/fggqCavXY1h4Jh8ucYltgzIjyeIaHOusUws=
+	t=1755845432; cv=none; b=W04UmNXGvTXCSFTF3NkmgfUUmWQv3Ett/ANhlmorBKoIYQAnD8cYfFzvKitdVpMe9A7k2Da7C0u0uPcIwNgwSTG5anJV4lcYZCSJRLTYGfkqpSvM15f23uSNQstGjfcaSbBk5pFtT95pGc5+81TpYrwr05tX85Q0pgyY0VEym60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755845425; c=relaxed/simple;
-	bh=fE6O0DX19/nGzBYHCylohxJrltte2YRGoNjaD4F+RAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c2Jn/yEkwQsK8X8yBBhDPTrtQfWhOhFUK/5n5WU2m+XnoMySWfunOUItG9vV1vcbBd4CV8xBe1P0p5kLuUALU/9neK9yjVqJVa3B/RiP5X3BwwgQtKvpjrUy5WTU4hwvPBoFbfJ8ipYVFLFRbzJbrqBj0gr70y4qIKZiyaVZ8q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KuPRzbtX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67AA3C4CEF1;
-	Fri, 22 Aug 2025 06:50:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755845424;
-	bh=fE6O0DX19/nGzBYHCylohxJrltte2YRGoNjaD4F+RAI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KuPRzbtXXJ44Jl+lMFwqfKJkd61CM5D00QUrOlJcDgJesMG4hjjExByi0qx4Cr9lW
-	 HtJCgez45YDOQ8cIY7wSLGYCmeMrD/+QqdKv57cftqo8oXlD2JHsxGnzuDTLPSbrfB
-	 j6QvxWdRlMgl/Y0fsdvlWfwileVl+wEwabtwJEZlYHaM8teEHaZ4/ZjBlOy5NfC1zu
-	 InGMef5bY4Uzs0yNe6sFVCCNWpZgvK5rqkG+l29ZumXQNmC/LkVGJRNLM97PJ0w2WY
-	 +DL9k8HGG+9NskRCRTu87XhWo+s9LOfbylkuSYXqMhrepBx4Kw7FazS2Qh/OAuBb+d
-	 cVvSOtrOcy1xg==
-Message-ID: <e7875f70-2b79-48e0-a63b-caf6f1fd287b@kernel.org>
-Date: Fri, 22 Aug 2025 08:50:17 +0200
+	s=arc-20240116; t=1755845432; c=relaxed/simple;
+	bh=DuqjwUZ0I0wbqeZg4eSLBetmOHd1tcp0S+RZur3J6SU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MKHmNMoFaouCOUwwvCTv08OXcyJ5t5YSz/ZX7ASmgQwzPeSDIyn/2Iu94+Pqxxskfz2MovgkejqoxOt/jS8vsMwCFhxYLRXxttO9r4TcYTC3le5i3dLPpRwLtspGdHhUFgs/tA+HrpnUl46LWP9pin6+WhbZVX7ZcwNZEbJx/90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MX/sGEZf; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b476c67c5easo1228318a12.0
+        for <linux-pci@vger.kernel.org>; Thu, 21 Aug 2025 23:50:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1755845430; x=1756450230; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ac9oBg+zAj6kXtu216Jjjabie+kjofFUW2rsHnH5Bqk=;
+        b=MX/sGEZfNy9iQcvjl7FFBF1vsjt8G6QeSkTRRHFyMssJtFS3fwWqYNAB4hqoi7wnil
+         /ePRZXcTc4PPbpNcazpUzo3T9llgN5AXyyG3lo4buW0/UE5HxJxNZqGrgt83KKhCM66V
+         1OUrvBF7EwH5HNXZcWer4EGeaVvBZ1NvQXjFDZynTrCEr7M7pYjbQTdMjVBkVDCCEZ42
+         o26jdkQnQDDe8RhdGJP0y2ekKfMIvmI/KszLzrmDP02WfHDbC//yl3R0gY1Cf7OAvxsJ
+         zuEys1rTKqi8BMyazR8gG7bRZyekxK7kxeWPdUVYEpFhzK7OdhcDcFpSg6GhhSAkbHnm
+         uA1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755845430; x=1756450230;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ac9oBg+zAj6kXtu216Jjjabie+kjofFUW2rsHnH5Bqk=;
+        b=EUSoJfSD9jrxurY26Zo6NHlkR4kvtghBM08Hjp0N+74anjC7dYWhHP6+NndFTvUrBb
+         349H2dh/X30D5J8puj+IcltUmKmWayKRVppnh0F9TkfZuwVCaHFPMCTU65ttVgDNTBFy
+         llQIYrTv2zOZBOY44F8qmdGOf/fMrALDSGjNniqTC3Ve5qvuF8+qKjqhO/qt4Zz79gCz
+         dK1OOptgImjeMt+V60xNklwmeY/hI3daJP3k9MbxzT7xbCozu4fv+VjC52DmrwQiYS6s
+         tUfSdhzSQxLSiMENI5201ehJ1dKJ9UhQox6qG2dpptuZpkw6QClBh02WpsDFdxyVAET9
+         K2fw==
+X-Forwarded-Encrypted: i=1; AJvYcCVtIBMUN9GxyO43yE9GYCknbnq/phyobwRdUgLi0IbVAhX8YTBOaVyIUvEvq8SwPc362In6soDjs5g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd/o+5tbSQR/EIb/1vPzPYr6g3wUPpG6guzx24bHjzCMF14KtP
+	N/rorqsY2q+aXjNMEUwLtIFMa6tfV05sLwOJ2rBhm4/h3W2XGGAW6YpYuSiB2UzWHWQ=
+X-Gm-Gg: ASbGnctjAwNoafT8ryjM/izJ5gZDCmllnBTziXbz4/LEssnSxGozOMc75HbuWwkXfxA
+	S9u3sAnsqibhM55ysM/Q+2OC/5kbRRsz5cRXr6tr8d1FakdLGvlwQvTmR+zIRUmO5MjLoSNpjs2
+	ByPc2HD+EM6LUGynziqNOGofJTXZ3bbgez3FBQJbn3OnI1mjCU1O9Dpp4dPpnZqr2MmRH1vjb7R
+	ix51Qwq84W9uklomJ19gnQ+vQiNqwxFczrzuJcFWRLD0xeQE4xc8bOapKqTIJcNMpMd6tMnM9Or
+	0HqHH3h3GQGPkncsUqaSNSJ/g8wAtax2uPr3JuAL83dXO9GA2cLvCrDsqOmHTaJedQf7X/h+1+a
+	zsLwOpAwjzt7tSkEZmRTykjMD
+X-Google-Smtp-Source: AGHT+IHgwZxe9A1mdJuJEAilKFh6/5WCjKikIYsvxCBNTe/vWqdxRw/EgUKt2pMsNi1wJJYtqOnVBA==
+X-Received: by 2002:a17:902:e888:b0:240:4d19:8774 with SMTP id d9443c01a7336-24633d6a31amr23345995ad.24.1755845429661;
+        Thu, 21 Aug 2025 23:50:29 -0700 (PDT)
+Received: from localhost ([122.172.87.165])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-245ed33df68sm74340735ad.21.2025.08.21.23.50.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Aug 2025 23:50:29 -0700 (PDT)
+Date: Fri, 22 Aug 2025 12:20:26 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/7] OPP: Add support to find OPP for a set of keys
+Message-ID: <20250822065026.2ve2uscdjfismm7v@vireshk-i7>
+References: <20250820-opp_pcie-v4-0-273b8944eed0@oss.qualcomm.com>
+ <20250820-opp_pcie-v4-1-273b8944eed0@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: pci: brcmstb: Add rp1-nexus node to fix DTC
- warning
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Jim Quinlan <jim2101024@gmail.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- kwilczynski@kernel.org, Manivannan Sadhasivam <mani@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, iivanov@suse.de,
- svarbanov@suse.de, mbrugger@suse.com,
- Jonathan Bell <jonathan@raspberrypi.com>, Phil Elwell
- <phil@raspberrypi.com>, kernel test robot <lkp@intel.com>
-References: <20250812085037.13517-1-andrea.porta@suse.com>
- <4fee3870-f9d5-48e3-a5be-6df581d3e296@kernel.org>
- <aKc5nMT1xXpY03ip@apocalypse>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <aKc5nMT1xXpY03ip@apocalypse>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250820-opp_pcie-v4-1-273b8944eed0@oss.qualcomm.com>
 
-On 21/08/2025 17:22, Andrea della Porta wrote:
-> Hi Krzysztof,
+On 20-08-25, 13:58, Krishna Chaitanya Chundru wrote:
+> Some clients, such as PCIe, may operate at the same clock frequency
+> across different data rates by varying link width. In such cases,
+> frequency alone is not sufficient to uniquely identify an OPP.
+> To support these scenarios, introduce a new API
+> dev_pm_opp_find_key_exact() that allows OPP lookup with different
+> set of keys like freq, level & bandwidth.
 > 
-> On 10:55 Tue 12 Aug     , Krzysztof Kozlowski wrote:
->> On 12/08/2025 10:50, Andrea della Porta wrote:
->>> The devicetree compiler is complaining as follows:
->>>
->>> arch/arm64/boot/dts/broadcom/rp1-nexus.dtsi:3.11-14.3: Warning (unit_address_vs_reg): /axi/pcie@1000120000/rp1_nexus: node has a reg or ranges property, but no unit name
->>> /home/andrea/linux-torvalds/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@1000120000: Unevaluated properties are not allowed ('rp1_nexus' was unexpected)
->>
->> Please trim the paths.
-> 
-> Ack.
-> 
->>
->>>
->>> Add the optional node that fix this to the DT binding.
->>>
->>> Reported-by: kernel test robot <lkp@intel.com>
->>> Closes: https://lore.kernel.org/oe-kbuild-all/202506041952.baJDYBT4-lkp@intel.com/
->>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
->>> ---
->>>  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 9 +++++++++
->>>  1 file changed, 9 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>> index 812ef5957cfc..7d8ba920b652 100644
->>> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>> @@ -126,6 +126,15 @@ required:
->>>  allOf:
->>>    - $ref: /schemas/pci/pci-host-bridge.yaml#
->>>    - $ref: /schemas/interrupt-controller/msi-controller.yaml#
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            const: brcm,bcm2712-pcie
->>> +    then:
->>> +      properties:
->>> +        rp1_nexus:
->>
->> No, you cannot document post-factum... This does not follow DTS coding
->> style.
-> 
-> I think I didn't catch what you mean here: would that mean that
-> we cannot resolve that warning since we cannot add anything to the
-> binding?
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  drivers/opp/core.c     | 97 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_opp.h | 30 ++++++++++++++++
+>  2 files changed, 127 insertions(+)
 
-I meant, you cannot use a warning from the code you recently introduced
-as a reason to use incorrect style.
+Applied with this diff:
 
-Fixing warning is of course fine and correct, but for the code recently
-introduced and which bypassed ABI review it is basically like new review
-of new ABI.
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index a36c3daac39c..bba4f7daff8c 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -476,7 +476,8 @@ static unsigned long _read_bw(struct dev_pm_opp *opp, int index)
+        return opp->bandwidth[index].peak;
+ }
 
-This needs standard review practice, so you need to document WHY you
-need such node. Warning is not the reason here why you are doing. If
-this was part of original patchset, like it should have been, you would
-not use some imaginary warning as reason, right?
+-static unsigned long _read_opp_key(struct dev_pm_opp *opp, int index, struct dev_pm_opp_key *key)
++static unsigned long _read_opp_key(struct dev_pm_opp *opp, int index,
++                                  struct dev_pm_opp_key *key)
+ {
+        key->bw = opp->bandwidth ? opp->bandwidth[index].peak : 0;
+        key->freq = opp->rates[index];
+@@ -518,12 +519,13 @@ static bool _compare_floor(struct dev_pm_opp **opp, struct dev_pm_opp *temp_opp,
+        return false;
+ }
 
-So provide reason why you need here this dedicated child, what is that
-child representing.
+-static bool _compare_opp_key_exact(struct dev_pm_opp **opp, struct dev_pm_opp *temp_opp,
+-                                  struct dev_pm_opp_key opp_key, struct dev_pm_opp_key key)
++static bool _compare_opp_key_exact(struct dev_pm_opp **opp,
++               struct dev_pm_opp *temp_opp, struct dev_pm_opp_key *opp_key,
++               struct dev_pm_opp_key *key)
+ {
+-       bool level_match = (key.level == OPP_LEVEL_UNSET || opp_key.level == key.level);
+-       bool freq_match = (key.freq == 0 || opp_key.freq == key.freq);
+-       bool bw_match = (key.bw == 0 || opp_key.bw == key.bw);
++       bool level_match = (key->level == OPP_LEVEL_UNSET || opp_key->level == key->level);
++       bool freq_match = (key->freq == 0 || opp_key->freq == key->freq);
++       bool bw_match = (key->bw == 0 || opp_key->bw == key->bw);
 
-Otherwise I can suggest: drop the child and DTSO, this also solves the
-warning...
+        if (freq_match && level_match && bw_match) {
+                *opp = temp_opp;
+@@ -570,7 +572,7 @@ static struct dev_pm_opp *_opp_table_find_opp_key(struct opp_table *opp_table,
+                unsigned long (*read)(struct dev_pm_opp *opp, int index,
+                                      struct dev_pm_opp_key *key),
+                bool (*compare)(struct dev_pm_opp **opp, struct dev_pm_opp *temp_opp,
+-                               struct dev_pm_opp_key opp_key, struct dev_pm_opp_key key),
++                               struct dev_pm_opp_key *opp_key, struct dev_pm_opp_key *key),
+                bool (*assert)(struct opp_table *opp_table, unsigned int index))
+ {
+        struct dev_pm_opp *temp_opp, *opp = ERR_PTR(-ERANGE);
+@@ -585,9 +587,8 @@ static struct dev_pm_opp *_opp_table_find_opp_key(struct opp_table *opp_table,
+        list_for_each_entry(temp_opp, &opp_table->opp_list, node) {
+                if (temp_opp->available == available) {
+                        read(temp_opp, 0, &temp_key);
+-                       if (compare(&opp, temp_opp, temp_key, *key)) {
++                       if (compare(&opp, temp_opp, &temp_key, key)) {
+                                /* Increment the reference count of OPP */
+-                               *key = temp_key;
+                                dev_pm_opp_get(opp);
+                                break;
+                        }
+@@ -689,20 +690,20 @@ struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
+ EXPORT_SYMBOL_GPL(dev_pm_opp_find_freq_exact);
 
-> 
-> Regarding rp1_nexus, you're right I guess it should be
-> rp1-nexus as per DTS coding style.
-> 
->>
->> Also:
->>
->> Node names should be generic. See also an explanation and list of
->> examples (not exhaustive) in DT specification:
->> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-> 
-> In this case it could be difficult: we need to search for a DT node
+ /**
+- * dev_pm_opp_find_key_exact() - Search for an exact OPP key
+- * @dev:                Device for which the OPP is being searched
+- * @key:                OPP key to match
+- * @available:          true/false - match for available OPP
++ * dev_pm_opp_find_key_exact() - Search for an OPP with exact key set
++ * @dev:               Device for which the OPP is being searched
++ * @key:               OPP key set to match
++ * @available:         true/false - match for available OPP
+  *
+- * Search for an exact match the OPP key in the OPP table.
++ * Search for an exact match of the key set in the OPP table.
+  *
+- * Return: matching *opp, else returns ERR_PTR in case of error and should
+- * be using IS_ERR. Error return values can be:
+- * EINVAL:      for bad pointer
+- * ERANGE:      no match found for search
+- * ENODEV:      if device not found in list of registered devices
++ * Return: A matching opp on success, else ERR_PTR in case of error.
++ * Possible error values:
++ * EINVAL:     for bad pointers
++ * ERANGE:     no match found for search
++ * ENODEV:     if device not found in list of registered devices
+  *
+- * Note: 'available' is a modifier for the search. If 'available'=true,
++ * Note: 'available' is a modifier for the search. If 'available' == true,
+  * then the match is for exact matching key and is available in the stored
+  * OPP table. If false, the match is for exact key which is not available.
+  *
+@@ -713,7 +714,7 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_find_freq_exact);
+  * use.
+  */
+ struct dev_pm_opp *dev_pm_opp_find_key_exact(struct device *dev,
+-                                            struct dev_pm_opp_key key,
++                                            struct dev_pm_opp_key *key,
+                                             bool available)
+ {
+        struct opp_table *opp_table __free(put_opp_table) = _find_opp_table(dev);
+@@ -724,8 +725,9 @@ struct dev_pm_opp *dev_pm_opp_find_key_exact(struct device *dev,
+                return ERR_CAST(opp_table);
+        }
 
-Search like in driver? That's wrong, you should be searching by compatible.
+-       return _opp_table_find_opp_key(opp_table, &key, available, _read_opp_key,
+-                                      _compare_opp_key_exact, assert_single_clk);
++       return _opp_table_find_opp_key(opp_table, key, available,
++                                      _read_opp_key, _compare_opp_key_exact,
++                                      assert_single_clk);
+ }
+ EXPORT_SYMBOL_GPL(dev_pm_opp_find_key_exact);
 
-> starting from the DT root and using generic names like pci@0,0 or
-> dev@0,0 could possibly led to conflicts with other peripherals.
-> That's why I chose a specific name.
+diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+index 5d244bf97489..789406d95e69 100644
+--- a/include/linux/pm_opp.h
++++ b/include/linux/pm_opp.h
+@@ -151,7 +151,7 @@ struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
+                                              bool available);
 
-Dunno, depends what can be there, but you do not get a specific
-(non-generic) device node name for a generic PCI device or endpoint.
+ struct dev_pm_opp *dev_pm_opp_find_key_exact(struct device *dev,
+-                                            struct dev_pm_opp_key key,
++                                            struct dev_pm_opp_key *key,
+                                             bool available);
 
+ struct dev_pm_opp *
+@@ -313,7 +313,7 @@ static inline struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
+ }
 
+ static inline struct dev_pm_opp *dev_pm_opp_find_key_exact(struct device *dev,
+-                                                          struct dev_pm_opp_key key,
++                                                          struct dev_pm_opp_key *key,
+                                                           bool available)
+ {
+        return ERR_PTR(-EOPNOTSUPP);
 
-Best regards,
-Krzysztof
+-- 
+viresh
 
