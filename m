@@ -1,601 +1,236 @@
-Return-Path: <linux-pci+bounces-34619-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34620-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E625FB324BE
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 23:54:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D8C1FB32672
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Aug 2025 04:25:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A00DEB01E75
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Aug 2025 21:54:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C056B3B2650
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Aug 2025 02:25:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8749627057D;
-	Fri, 22 Aug 2025 21:54:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D2981FE47B;
+	Sat, 23 Aug 2025 02:25:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="JqhENhGu"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GjVLRSsK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F42C239E8A
-	for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 21:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E4001A5B8D;
+	Sat, 23 Aug 2025 02:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755899640; cv=none; b=F/GQyi2yI8RratM58PTa9uhjvudpSbhccgnqig0q6wHf6IYIeWsvaPwFaiIDN85J3R/x8P2FU0Kk49RbCJaV9xmdcX5cD2gpaO42x6Vnh0rhyhvbhPtAPvXNiPKweGVkYz957B5aYOn7qFHpYmw5Hrf9Z2wQ0x+FCmQLH9HsLC4=
+	t=1755915920; cv=none; b=Vs+s4Cv4dz+yAz2MKCmHy4nUPnxTVTmTvQGuHuOQJPmXnbUz/ozNMwRb7w1JR671ZZ4rMEnateJKznz7HxG9GAags0e/VLMwngjqBtEOOZebTENA0V5oc2sE2IICQ/163kI1vS0EsTQEWC1K5KA2M7YqdKrj/RyKwUs7XBY/q30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755899640; c=relaxed/simple;
-	bh=x5KMzwVFQDVQkxjB1n5nWMjhuHTK19ZjWPtHl3XuouY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZbbutFzSSmO8bF2xk2NXYfq5s8URrllbXw8jlpEiwD4T+RRTQf9+ZZD3bh2DynvKuZgDdZ96XbjtVXfL/HPcTL2r0K4Oz+JnY+xltNOHbZopWLOyQc9lnkWtBfij+QzJBv210X7UyfTCSfG9jTjirVHdNLwj42r/Fge5/7kAG8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=JqhENhGu; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-30cceb382d1so2164101fac.2
-        for <linux-pci@vger.kernel.org>; Fri, 22 Aug 2025 14:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1755899637; x=1756504437; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kraZQwgGsqActCzVMqrdt2pTEU4/LJMkbYTSib4v1/0=;
-        b=JqhENhGukBmHalcP8aXt09D3Pne9WHUmC5rXmwt1P+5KxeBKztWAJVQMo7nDXiG8Rv
-         cVSgKmKmNPGh/hZ6KgqK6nrFDjgr70qRyO+BEJ/PzwhXncy4qpU5rs7TYw2yCYlLZYP2
-         LR4WFYif5dM2HJswwdmSZy0fF+VGuxaI2qhb/QxyuFFbvzJfAw5zwf7CjOgfyjR6Do4A
-         W2DGsUKcqaQq7DCFOoNwtQhg9ZuKE54myZFXtyU8RzTuTeZh6lOe6H26f62s/sz9oarq
-         Y89HjSKNraFUcopzpVssVO4TsX4gRrppxukzNnkrGxm6s/L8aGJAWQaJYUGs/TTvo5iB
-         QpFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755899637; x=1756504437;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kraZQwgGsqActCzVMqrdt2pTEU4/LJMkbYTSib4v1/0=;
-        b=imskmjVklFLaowozJ2csiYtWM8U25c8eFBLYs5qSpaQgr35F3r1KDd9cGpDeO/5NbN
-         UHnsKVwxq+fbvKnnwEzdW7iT88DV7q3MFVS04n5gJXt/Wg/Z5CKEST78/Ye71imbvz9x
-         qNHb9Liuv0EspLKqca1GLl3x8kulb2sFVuDxlOr/e4NETHn96D0NLQ7fiobN8XjzCtZA
-         6fFKYFc7FhB+rtpBaLEk15TDgH2wAJExLszL36mV25ha09nDHLrAyEtshShZ1DgfR8Hh
-         x+9kBZkE5P4kry5WMEjZni4pCI22GZFHORd/M4c1RgK2erk8t3l9U0VzNu9sIqJaHUNE
-         d8Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhDsbRD/zyCOkzjChAhFgKO2CY7LuGDEiuuVpZHxcmWEoLg4N2WSCzKBzkdbYAaBJRW5f29sewSuU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBOf43WPKKhJBoTCLXJWyeWf+DoDeQloVSyS69LAr7FY3/83fa
-	B69SASTfhHHndYwrYxZYu9ujlvZ70Mll2SYwvxLB2Jz9D6H5hDwmnTW8Y072C9sahwc=
-X-Gm-Gg: ASbGncsYAB9ZBYiAfeInprs2XcGkWRmWp+RY1peY3F/fWL//NwOHBP6n0JG/s1nht8r
-	YPxqbvdcaXhdFeAz5qV8usimfpIEydLrMCN6jQiQFZhZlzq/1euNc70OlbFczsI7lFj328ZZDsK
-	NFh7vjolZ2eNDvrJjQyAnAAqZSSFh7746AQjf9l+UENXliZKrxv1Iwj0j5nldAwDUF+NW95Q9XA
-	QDnmu2Uix92qv5SjIlMEFv8GcmU34e1iCVjD2k+Kiy0T55Sjtt5HQNDns1Uf42CXOtt9kTry7py
-	JtGn0ThFNZOMBRvNoKvX/Cqvux+p0ln4Lw6RLCuWeB51o/DJWXw5GDTaoD+QthIUqHs5JVdQ2pw
-	g8NKO/oQ7uOnUdjq3MLULxJOdEg==
-X-Google-Smtp-Source: AGHT+IGle2jw1xd8dLQ862DWWobTWUfXHknafLz25LxA22r/5hTCow0Z0ePt+9doHwWtGNnn7+KGwQ==
-X-Received: by 2002:a05:6871:7a16:b0:30b:ae56:576d with SMTP id 586e51a60fabf-314dce737c0mr2423251fac.29.1755899637328;
-        Fri, 22 Aug 2025 14:53:57 -0700 (PDT)
-Received: from mail.minyard.net ([2001:470:b8f6:1b:fb40:1612:1e27:b18a])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-314f7a24047sm186723fac.9.2025.08.22.14.53.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Aug 2025 14:53:55 -0700 (PDT)
-Date: Fri, 22 Aug 2025 16:53:50 -0500
-From: Corey Minyard <corey@minyard.net>
-To: Tony Hutter <hutter2@llnl.gov>
-Cc: alok.a.tiwari@oracle.com, Bjorn Helgaas <helgaas@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>, mariusz.tkaczyk@linux.intel.com,
-	minyard@acm.org, linux-pci@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] PCI: Introduce Cray ClusterStor E1000 NVMe slot LED
- driver
-Message-ID: <aKjm7mBDQ6VR8kWl@mail.minyard.net>
-Reply-To: corey@minyard.net
-References: <e5a6290a-7dc4-43b1-838d-bf43edae1faa@llnl.gov>
+	s=arc-20240116; t=1755915920; c=relaxed/simple;
+	bh=PM7cD9nTxySnbUQZGscpBUeIv/ats1aD5ukPOJqDbZw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PbuKwgSN7HxBl8S/IIqsaJH1rHVRdZPimXPdVkJ42BsaFFqctvnboCs6VQdaPpXBcfG+s9Fq6rUuY/o2ALHL7iGt3rmSTyajJoRsLMTrMjzQMclV4T5/RMdajbVS412XtnA0Fzotv4MOi+ptP8MCKZrlVOpFTIltjZZw2PXhh8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GjVLRSsK; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.93.192.3] (unknown [40.118.131.60])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E4847211A290;
+	Fri, 22 Aug 2025 19:25:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E4847211A290
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1755915910;
+	bh=4y5QZ5oFZhp2SJvVoX6O4b6evTpheMhZ02f8/B45KnY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GjVLRSsKRMfVHbq/xQ970m7p4avf+00bZS1RAkr0uceT5HHlLG3+G5uWmSXlf+gZa
+	 dl8L5veqyG/O4AMtu+QdvFgaLRSKgOIv803vQUwbApnz0whx6+59oAh83MOSBPWn8k
+	 G7d3+W4Fs/ZU+8iK834Lx57vBG732bsLqXxKeF0Y=
+Message-ID: <d6e63ef3-bdd2-f185-f065-76b333dd1fc3@linux.microsoft.com>
+Date: Fri, 22 Aug 2025 19:25:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e5a6290a-7dc4-43b1-838d-bf43edae1faa@llnl.gov>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v3 1/7] Drivers: hv: Introduce hv_hvcall_*() functions for
+ hypercall arguments
+Content-Language: en-US
+To: Michael Kelley <mhklinux@outlook.com>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>
+Cc: "x86@kernel.org" <x86@kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+References: <20250415180728.1789-1-mhklinux@outlook.com>
+ <20250415180728.1789-2-mhklinux@outlook.com>
+ <f711d4ad-87a8-9cb3-aabc-a493ff18986a@linux.microsoft.com>
+ <33b59cc4-2834-b6c7-5ffd-7b9d620a4ce5@linux.microsoft.com>
+ <SN6PR02MB4157376DD06C1DC2E28A76B7D432A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <833a0c96-470f-acff-72e7-cc82995fbc2f@linux.microsoft.com>
+ <SN6PR02MB4157875C0979EFF29626A18CD43DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157875C0979EFF29626A18CD43DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Aug 22, 2025 at 02:36:34PM -0700, Tony Hutter wrote:
-> Add driver to control the NVMe slot LEDs on the Cray ClusterStor E1000.
-> The driver provides hotplug attention status callbacks for the 24 NVMe
-> slots on the E1000.  This allows users to access the E1000's locate and
-> fault LEDs via the normal /sys/bus/pci/slots/<slot>/attention sysfs
-> entries.  This driver uses IPMI to communicate with the E1000 controller
-> to toggle the LEDs.
+On 8/21/25 19:10, Michael Kelley wrote:
+> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Thursday, August 21, 2025 1:50 PM
+>>
+>> On 8/21/25 12:24, Michael Kelley wrote:
+>>> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Wednesday, August 20, 2025
+>> 7:58 PM
+>>>>
+>>>> On 8/20/25 17:31, Mukesh R wrote:
+>>>>> On 4/15/25 11:07, mhkelley58@gmail.com wrote:
+>>>>>> From: Michael Kelley <mhklinux@outlook.com>
+>>>>>>
+>>>>>>
+>> <snip>
+>>>>>
+>>>>>
+>>>>> IMHO, this is unnecessary change that just obfuscates code. With status quo
+>>>>> one has the advantage of seeing what exactly is going on, one can use the
+>>>>> args any which way, change batch size any which way, and is thus flexible.
+>>>
+>>> I started this patch set in response to some errors in open coding the
+>>> use of hyperv_pcpu_input/output_arg, to see if helper functions could
+>>> regularize the usage and reduce the likelihood of future errors. Balancing
+>>> the pluses and minuses of the result, in my view the helper functions are
+>>> an improvement, though not overwhelmingly so. Others may see the
+>>> tradeoffs differently, and as such I would not go to the mat in arguing the
+>>> patches must be taken. But if we don't take them, we need to go back and
+>>> clean up minor errors and inconsistencies in the open coding at some
+>>> existing hypercall call sites.
+>>
+>> Yes, definitely. Assuming Nuno knows what issues you are referring to,
+>> I'll work with him to get them addressed asap. Thanks for noticing them.
+>> If Nuno is not aware, I'll ping you for more info.
+>>
+>>
+>>>>> With time these functions only get more complicated and error prone. The
+>>>>> saving of ram is very minimal, this makes analyzing crash dumps harder,
+>>>>> and in some cases like in your patch 3/7 disables unnecessarily in error case:
+>>>>>
+>>>>> - if (count > HV_MAX_MODIFY_GPA_REP_COUNT) {
+>>>>> -  pr_err("Hyper-V: GPA count:%d exceeds supported:%lu\n", count,
+>>>>> -   HV_MAX_MODIFY_GPA_REP_COUNT);
+>>>>> + local_irq_save(flags);      <<<<<<<
+>>>>> ...
+>>>
+>>> FWIW, this error case is not disabled. It is checked a few lines further down as:
+>>
+>> I meant disabled interrupts. The check moves after disabling interrupts, so
+>> it runs "disabled" in traditional OS terminology :).
 > 
-> Signed-off-by: Tony Hutter <hutter2@llnl.gov>
-> ---
-> Changes in v4:
->  - Fix typo in Kconfig: "is it" ->  "it is"
->  - Rename some #defines to CRAYE1K_SUBCMD_*
->  - Use IS_ERR() check in craye1k_debugfs_init()
->  - Return -EIO instead of -EINVAL when LED value check fails
+> Got it. But why is it problem to make this check with interrupts disabled?
+
+You are creating disabling overhead where that overhead previously
+did not exist.
+
+
+> The check is just for robustness and should never be true since
+> hv_mark_gpa_visiblity() is called from only one place that already ensures
+> the PFN count won't overflow a single page.
 > 
-> Changes in v3:
->  - Add 'attention' values in Documentation/ABI/testing/sysfs-bus-pci.
->  - Remove ACPI_PCI_SLOT dependency.
->  - Cleanup craye1k_do_message() error checking.
->  - Skip unneeded memcpy() on failure in __craye1k_do_command().
->  - Merge craye1k_do_command_and_netfn() code into craye1k_do_command().
->  - Make craye1k_is_primary() return boolean.
->  - Return negative error code on failure in craye1k_set_primary().
+>>
+>>>
+>>> +       if (count > batch_size) {
+>>> +               pr_err("Hyper-V: GPA count:%d exceeds supported:%u\n", count,
+>>> +                      batch_size);
+>>>
+>>>>>
+>>>>> So, this is a nak from me. sorry.
+>>>>>
+>>>>
+>>>> Furthermore, this makes us lose the ability to permanently map
+>>>> input/output pages in the hypervisor. So, Wei kindly undo.
+>>>>
+>>>
+>>> Could you elaborate on "lose the ability to permanently map
+>>> input/output pages in the hypervisor"? What specifically can't be
+>>> done and why?
+>>
+>> Input and output are mapped at fixed GPA/SPA always to avoid hyp
+>> having to map/unmap every time.
 > 
-> Changes in v2:
->  - Integrated E1000 code into the pciehp driver as an built-in
->    extention rather than as a standalone module.
->  - Moved debug tunables and counters to debugfs.
->  - Removed forward declarations.
->  - Kept the /sys/bus/pci/slots/<slot>/attention interface rather
->    than using NPEM/_DSM or led_classdev as suggested.  The "attention"
->    interface is more beneficial for our site, since it allows us to
->    control the NVMe slot LEDs agnostically across different enclosure
->    vendors and kernel versions using the same scripts.  It is also
->    nice to use the same /sys/bus/pci/slots/<slot>/ sysfs directory for
->    both slot LED toggling ("attention") and slot power control
->    ("power").
-> ---
->  Documentation/ABI/testing/sysfs-bus-pci |  21 +
->  MAINTAINERS                             |   5 +
->  drivers/pci/hotplug/Kconfig             |  10 +
->  drivers/pci/hotplug/Makefile            |   3 +
->  drivers/pci/hotplug/pciehp.h            |   7 +
->  drivers/pci/hotplug/pciehp_core.c       |  12 +
->  drivers/pci/hotplug/pciehp_craye1k.c    | 659 ++++++++++++++++++++++++
->  7 files changed, 717 insertions(+)
->  create mode 100644 drivers/pci/hotplug/pciehp_craye1k.c
+> OK. But how does this patch set impede doing a fixed mapping?
+
+The output address can be varied depending on the hypercall, instead
+of it being fixed always at fixed address:
+
+          *(void **)output = space + offset; <<<<<<
+
+> Wouldn't that fixed mapping be done at the time the page or pages
+> are allocated, and then be transparent to hypercall call sites?
 > 
-...snip
-> diff --git a/drivers/pci/hotplug/pciehp_craye1k.c b/drivers/pci/hotplug/pciehp_craye1k.c
-> new file mode 100644
-> index 000000000000..72c636ceb976
-> --- /dev/null
-> +++ b/drivers/pci/hotplug/pciehp_craye1k.c
-> @@ -0,0 +1,659 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2022-2024 Lawrence Livermore National Security, LLC
-> + */
-> +/*
-> + * Cray ClusterStor E1000 hotplug slot LED driver extensions
-> + *
-> + * This driver controls the NVMe slot LEDs on the Cray ClusterStore E1000.
-> + * It provides hotplug attention status callbacks for the 24 NVMe slots on
-> + * the E1000.  This allows users to access the E1000's locate and fault
-> + * LEDs via the normal /sys/bus/pci/slots/<slot>/attention sysfs entries.
-> + * This driver uses IPMI to communicate with the E1000 controller to toggle
-> + * the LEDs.
-> + *
-> + * This driver is based off of ibmpex.c
-> + */
-> +
-> +#include <linux/debugfs.h>
-> +#include <linux/delay.h>
-> +#include <linux/errno.h>
-> +#include <linux/dmi.h>
-> +#include <linux/ipmi.h>
-> +#include <linux/ipmi_smi.h>
+>>
+>>> <snip>
+>>>
+>>>>>
+>>>>>> +/*
+>>>>>> + * Allocate one page that is shared between input and output args, which is
+>>>>>> + * sufficient for all current hypercalls. If a future hypercall requires
+>>>>>
+>>>>> That is incorrect. We've iommu map hypercalls that will use up entire page
+>>>>> for input. More coming as we implement ram withdrawl from the hypervisor.
+>>>
+>>> At least some form of ram withdrawal is already implemented upstream as
+>>> hv_call_withdraw_memory(). The hypercall has a very small input using the
+>>> hv_setup_in() helper, but the output list of PFNs must go to a separately
+>>> allocated page so it can be retained with interrupts enabled while
+>>> __free_page() is called. The use of this separate output page predates the
+>>> introduction of the hv_setup_in() helper.
+>>
+>> Yeah, I am talking about hyp memory that loader gives it, and during the
+>> lifetime it accumulates for VMs. We are opening the flood gates, so you
+>> will see lots patches very soon.
+>>
+>>
+>>> For iommu map hypercalls, what do the input and output look like? Is the
+>>> paradigm different from the typical small fixed portion plus a variable size
+>>> array of values that are fed into a rep hypercall? Is there also a large amount
+>>> of output from the hypercall? Just curious if there's a case that's fundamentally
+>>> different from the current set of hypercalls.
+>>
+>> Patches coming soon, but at high level, hypercall includes list of SPAs
+>> that hypevisor will map into the iommu. These can get large. We will be
+>> exploring what we can do better to pass them, perhaps multiple pages, not
+>> sure yet, but for now it's single page.
+> 
+> To be clear, if the iommu hypercall does not produce any output, this patch
+> set uses the entire per-cpu hypercall arg page for input. For example,
 
-You shouldn't need to include ipmi_smi.h.  If you do, that's a bug on my
-part.
+Good
 
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/pci_hotplug.h>
-> +#include <linux/random.h>
-> +#include "pciehp.h"
-> +
-...snip
-> +/*
-> + * craye1k_send_message() - Send the message already setup in 'craye1k'
-> + *
-> + * Context: craye1k->lock is already held.
-> + * Return: 0 on success, non-zero on error.
-> + */
-> +static int craye1k_send_message(struct craye1k *craye1k)
-> +{
-> +	int rc;
-> +
-> +	rc = ipmi_validate_addr(&craye1k->address, sizeof(craye1k->address));
-> +	if (rc) {
-> +		dev_err_ratelimited(craye1k->dev, "validate_addr() = %d\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	craye1k->tx_msg_id++;
-> +
-> +	rc = ipmi_request_settime(craye1k->user, &craye1k->address,
-> +				  craye1k->tx_msg_id, &craye1k->tx_msg, craye1k,
-> +				  0, craye1k->ipmi_retries,
-> +				  craye1k->ipmi_timeout_ms);
-> +
-> +	if (rc) {
-> +		craye1k->request_failed++;
-> +		return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * craye1k_do_message() - Send the message in 'craye1k' and wait for a response
-> + *
-> + * Context: craye1k->lock is already held.
-> + * Return: 0 on success, non-zero on error.
-> + */
-> +static int craye1k_do_message(struct craye1k *craye1k)
-> +{
-> +	int rc;
-> +	struct completion *read_complete = &craye1k->read_complete;
-> +	unsigned long tout = msecs_to_jiffies(craye1k->completion_timeout_ms);
+> hv_mark_gpa_visibility() uses the entire page for input, which is mostly an
+> array of PFNs.
+> 
+> Using multiple input pages is definitely a new paradigm, on both the
+> hypervisor and guest sides, and that will need additional infrastructure,
+> with or without this patch set.
 
-I don't see anything that will prevent multiple messages from being sent
-at one time.  What happens if two things send a message at the same time
-here?
+Right. With this patch set, every hcall is affected rather than just one
+when code is modified to support that. That means one must test every
+hypercall.
 
--corey
+> I'm just trying to understand where there are real technical blockers vs.
+> concern about the style and the encapsulation the helpers impose.
 
-> +
-> +	rc = craye1k_send_message(craye1k);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = wait_for_completion_killable_timeout(read_complete, tout);
-> +	if (rc == 0) {
-> +		/* timed out */
-> +		craye1k->completion_timeout++;
-> +		return -ETIME;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * __craye1k_do_command() - Do an IPMI command
-> + *
-> + * Send a command with optional data bytes, and read back response bytes.
-> + * Context: craye1k->lock is already held.
-> + * Returns: 0 on success, non-zero on error.
-> + */
-> +static int __craye1k_do_command(struct craye1k *craye1k, u8 netfn, u8 cmd,
-> +				u8 *send_data, u8 send_data_len, u8 *recv_data,
-> +				u8 recv_data_len)
-> +{
-> +	int rc;
-> +
-> +	craye1k->tx_msg.netfn = netfn;
-> +	craye1k->tx_msg.cmd = cmd;
-> +
-> +	if (send_data) {
-> +		memcpy(&craye1k->tx_msg_data[0], send_data, send_data_len);
-> +		craye1k->tx_msg.data_len = send_data_len;
-> +	} else {
-> +		craye1k->tx_msg_data[0] = 0;
-> +		craye1k->tx_msg.data_len = 0;
-> +	}
-> +
-> +	rc = craye1k_do_message(craye1k);
-> +	if (rc == 0)
-> +		memcpy(recv_data, craye1k->rx_msg_data, recv_data_len);
-> +
-> +	return rc;
-> +}
-> +
-> +/*
-> + * craye1k_do_command() - Do a Cray E1000 specific IPMI command.
-> + * @cmd: Cray E1000 specific command
-> + * @send_data:  Data to send after the command
-> + * @send_data_len: Data length
-> + *
-> + * Context: craye1k->lock is already held.
-> + * Returns: the last byte from the response or 0 if response had no response
-> + * data bytes, else -1 on error.
-> + */
-> +static int craye1k_do_command(struct craye1k *craye1k, u8 cmd, u8 *send_data,
-> +			      u8 send_data_len)
-> +{
-> +	int rc;
-> +
-> +	rc = __craye1k_do_command(craye1k, CRAYE1K_CMD_NETFN, cmd, send_data,
-> +				  send_data_len, NULL, 0);
-> +	if (rc != 0) {
-> +		/* Error attempting command */
-> +		return -1;
-> +	}
-> +
-> +	if (craye1k->tx_msg.data_len == 0)
-> +		return 0;
-> +
-> +	/* Return last received byte value */
-> +	return craye1k->rx_msg_data[craye1k->rx_msg_len - 1];
-> +}
-> +
-> +/*
-> + * __craye1k_set_primary() - Tell the BMC we want to be the primary server
-> + *
-> + * An E1000 board has two physical servers on it.  In order to set a slot
-> + * NVMe LED, this server needs to first tell the BMC that it's the primary
-> + * server.
-> + *
-> + * Returns: 0 on success, non-zero on error.
-> + */
-> +static int __craye1k_set_primary(struct craye1k *craye1k)
-> +{
-> +	u8 bytes[2] = {CRAYE1K_SUBCMD_SET_PRIMARY, 1};	/* set primary to 1 */
-> +
-> +	craye1k->set_primary++;
-> +	return craye1k_do_command(craye1k, CRAYE1K_CMD_PRIMARY, bytes, 2);
-> +}
-> +
-> +/*
-> + * craye1k_is_primary() - Are we the primary server?
-> + *
-> + * Returns: true if we are the primary server, false otherwise.
-> + */
-> +static bool craye1k_is_primary(struct craye1k *craye1k)
-> +{
-> +	u8 byte = 0;
-> +	int rc;
-> +
-> +	/* Response byte is 0x1 on success */
-> +	rc = craye1k_do_command(craye1k, CRAYE1K_CMD_PRIMARY, &byte, 1);
-> +	craye1k->check_primary++;
-> +	if (rc == 0x1)
-> +		return true;   /* success */
-> +
-> +	craye1k->check_primary_failed++;
-> +	return false;   /* We are not the primary server node */
-> +}
-> +
-> +/*
-> + * craye1k_set_primary() - Attempt to set ourselves as the primary server
-> + *
-> + * Returns: 0 on success, -1 otherwise.
-> + */
-> +static int craye1k_set_primary(struct craye1k *craye1k)
-> +{
-> +	int tries = 10;
-> +
-> +	if (craye1k_is_primary(craye1k)) {
-> +		craye1k->was_already_primary++;
-> +		return 0;
-> +	}
-> +	craye1k->was_not_already_primary++;
-> +
-> +	/* delay found through experimentation */
-> +	msleep(300);
-> +
-> +	if (__craye1k_set_primary(craye1k) != 0) {
-> +		craye1k->set_initial_primary_failed++;
-> +		return -1;	/* error */
-> +	}
-> +
-> +	/*
-> +	 * It can take 2 to 3 seconds after setting primary for the controller
-> +	 * to report that it is the primary.
-> +	 */
-> +	while (tries--) {
-> +		msleep(500);
-> +		if (craye1k_is_primary(craye1k))
-> +			break;
-> +	}
-> +
-> +	if (tries == 0) {
-> +		craye1k->set_primary_failed++;
-> +		return -1;	/* never reported that it's primary */
-> +	}
-> +
-> +	/* Wait for primary switch to finish */
-> +	msleep(1500);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * craye1k_get_slot_led() - Get slot LED value
-> + * @slot: Slot number (1-24)
-> + * @is_locate_led: 0 = get fault LED value, 1 = get locate LED value
-> + *
-> + * Returns: slot value on success, -1 on failure.
-> + */
-> +static int craye1k_get_slot_led(struct craye1k *craye1k, unsigned char slot,
-> +				bool is_locate_led)
-> +{
-> +	u8 bytes[2];
-> +	u8 cmd;
-> +
-> +	bytes[0] = CRAYE1K_SUBCMD_GET_LED;
-> +	bytes[1] = slot;
-> +
-> +	cmd = is_locate_led ? CRAYE1K_CMD_LOCATE_LED : CRAYE1K_CMD_FAULT_LED;
-> +
-> +	return craye1k_do_command(craye1k, cmd, bytes, 2);
-> +}
-> +
-> +/*
-> + * craye1k_set_slot_led() - Attempt to set the locate/fault LED to a value
-> + * @slot: Slot number (1-24)
-> + * @is_locate_led: 0 = use fault LED, 1 = use locate LED
-> + * @value: Value to set (0 or 1)
-> + *
-> + * Check the LED value after calling this function to ensure it has been set
-> + * properly.
-> + *
-> + * Returns: 0 on success, non-zero on failure.
-> + */
-> +static int craye1k_set_slot_led(struct craye1k *craye1k, unsigned char slot,
-> +				unsigned char is_locate_led,
-> +				unsigned char value)
-> +{
-> +	u8 bytes[3];
-> +	u8 cmd;
-> +
-> +	bytes[0] = CRAYE1K_SUBCMD_SET_LED;
-> +	bytes[1] = slot;
-> +	bytes[2] = value;
-> +
-> +	cmd = is_locate_led ? CRAYE1K_CMD_LOCATE_LED : CRAYE1K_CMD_FAULT_LED;
-> +
-> +	return craye1k_do_command(craye1k, cmd, bytes, 3);
-> +}
-> +
-> +static int __craye1k_get_attention_status(struct hotplug_slot *hotplug_slot,
-> +					  u8 *status, bool set_primary)
-> +{
-> +	unsigned char slot;
-> +	int locate, fault;
-> +	struct craye1k *craye1k;
-> +
-> +	craye1k = craye1k_global;
-> +	slot = PSN(to_ctrl(hotplug_slot));
-> +
-> +	if (set_primary) {
-> +		if (craye1k_set_primary(craye1k) != 0) {
-> +			craye1k->get_led_failed++;
-> +			return -EIO;
-> +		}
-> +	}
-> +
-> +	locate = craye1k_get_slot_led(craye1k, slot, true);
-> +	if (locate == -1) {
-> +		craye1k->get_led_failed++;
-> +		return -EIO;
-> +	}
-> +	msleep(CRAYE1K_POST_CMD_WAIT_MS);
-> +
-> +	fault = craye1k_get_slot_led(craye1k, slot, false);
-> +	if (fault == -1) {
-> +		craye1k->get_led_failed++;
-> +		return -EIO;
-> +	}
-> +	msleep(CRAYE1K_POST_CMD_WAIT_MS);
-> +
-> +	*status = locate << 1 | fault;
-> +
-> +	return 0;
-> +}
-> +
-> +int craye1k_get_attention_status(struct hotplug_slot *hotplug_slot,
-> +				 u8 *status)
-> +{
-> +	int rc;
-> +	struct craye1k *craye1k;
-> +
-> +	craye1k = craye1k_global;
-> +
-> +	if (mutex_lock_interruptible(&craye1k->lock) != 0)
-> +		return -EINTR;
-> +
-> +	rc =  __craye1k_get_attention_status(hotplug_slot, status, true);
-> +
-> +	mutex_unlock(&craye1k->lock);
-> +	return rc;
-> +}
-> +
-> +int craye1k_set_attention_status(struct hotplug_slot *hotplug_slot,
-> +				 u8 status)
-> +{
-> +	unsigned char slot;
-> +	int tries = 4;
-> +	int rc;
-> +	u8 new_status;
-> +	struct craye1k *craye1k;
-> +	bool locate, fault;
-> +
-> +	craye1k = craye1k_global;
-> +
-> +	slot = PSN(to_ctrl(hotplug_slot));
-> +
-> +	if (mutex_lock_interruptible(&craye1k->lock) != 0)
-> +		return -EINTR;
-> +
-> +	/* Retry to ensure all LEDs are set */
-> +	while (tries--) {
-> +		/*
-> +		 * The node must first set itself to be the primary node before
-> +		 * setting the slot LEDs (each board has two nodes, or
-> +		 * "servers" as they're called by the manufacturer).  This can
-> +		 * lead to contention if both nodes are trying to set the LEDs
-> +		 * at the same time.
-> +		 */
-> +		rc = craye1k_set_primary(craye1k);
-> +		if (rc != 0) {
-> +			/* Could not set as primary node.  Just retry again. */
-> +			continue;
-> +		}
-> +
-> +		/* Write value twice to increase success rate */
-> +		locate = (status & 0x2) >> 1;
-> +		craye1k_set_slot_led(craye1k, slot, 1, locate);
-> +		if (craye1k_set_slot_led(craye1k, slot, 1, locate) != 0) {
-> +			craye1k->set_led_locate_failed++;
-> +			continue;	/* fail, retry */
-> +		}
-> +
-> +		msleep(CRAYE1K_POST_CMD_WAIT_MS);
-> +
-> +		fault = status & 0x1;
-> +		craye1k_set_slot_led(craye1k, slot, 0, fault);
-> +		if (craye1k_set_slot_led(craye1k, slot, 0, fault) != 0) {
-> +			craye1k->set_led_fault_failed++;
-> +			continue;	/* fail, retry */
-> +		}
-> +
-> +		msleep(CRAYE1K_POST_CMD_WAIT_MS);
-> +
-> +		rc = __craye1k_get_attention_status(hotplug_slot, &new_status,
-> +						    false);
-> +
-> +		msleep(CRAYE1K_POST_CMD_WAIT_MS);
-> +
-> +		if (rc == 0 && new_status == status)
-> +			break;	/* success */
-> +
-> +		craye1k->set_led_readback_failed++;
-> +
-> +		/*
-> +		 * At this point we weren't successful in setting the LED and
-> +		 * need to try again.
-> +		 *
-> +		 * Do a random back-off to reduce contention with other server
-> +		 * node in the unlikely case that both server nodes are trying to
-> +		 * trying to set a LED at the same time.
-> +		 *
-> +		 * The 500ms minimum in the back-off reduced the chance of this
-> +		 * whole retry loop failing from 1 in 700 to none in 10000.
-> +		 */
-> +		msleep(500 + (get_random_long() % 500));
-> +	}
-> +	mutex_unlock(&craye1k->lock);
-> +	if (tries == 0) {
-> +		craye1k->set_led_failed++;
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static bool is_craye1k_board(void)
-> +{
-> +	return dmi_match(DMI_PRODUCT_NAME, "VSSEP1EC");
-> +}
-> +
-> +bool is_craye1k_slot(struct controller *ctrl)
-> +{
-> +	return (PSN(ctrl) >= 1 && PSN(ctrl) <= 24 && is_craye1k_board());
-> +}
-> +
-> +int craye1k_init(void)
-> +{
-> +	if (!is_craye1k_board())
-> +		return 0;
-> +
-> +	return ipmi_smi_watcher_register(&craye1k_smi_watcher);
-> +}
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Tony Hutter <hutter2@llnl.gov>");
-> +MODULE_DESCRIPTION("Cray E1000 NVMe Slot LED driver");
-> -- 
-> 2.43.7
+Well no technical blockers that can't be resolved, but style and obfuscation
+that helpers impose are big concern.
+
+Thanks,
+-Mukesh
+
 
