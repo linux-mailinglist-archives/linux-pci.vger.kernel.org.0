@@ -1,145 +1,245 @@
-Return-Path: <linux-pci+bounces-34680-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34681-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0ABCFB34C01
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 22:31:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 430B6B34C21
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 22:35:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 611795E7A20
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 20:31:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A45418891CC
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 20:36:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37FD328726C;
-	Mon, 25 Aug 2025 20:30:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7769828688E;
+	Mon, 25 Aug 2025 20:35:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tF4bIDmM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WXl/ArVY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B578143C61;
-	Mon, 25 Aug 2025 20:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01801EDA0B;
+	Mon, 25 Aug 2025 20:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756153853; cv=none; b=PbXMmvfiGtxBWhsm+htiy3paNTh50pr/JXDaLxT9CKFcVb4rimsPIYp35pSkGwR52yDEiRMmknbm8Gd3mwzb3IVEKX1q8K7/sfld5LFRksR4gp0C620a4uBz0EwISxT+BfJizxXzmNuC1VVree4yu0saZgzNFhFM9zcKX2BT7O0=
+	t=1756154151; cv=none; b=LCkr/09VogjVbQxsPJzU0C1ucfA8h3roV+460ce87U08kMbTfXT7qbbmux/l5tqG2OuDGx8v3E5WNkTDr7gvBynXPCHND0/A8pjg+sszNoIHvwuK/Xdoio7NhHTe4CAIP/0ELJxvy+/kEeovFnP1I96P3J/P4FKmmtfxsQmDHyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756153853; c=relaxed/simple;
-	bh=8UDkz5+NJHjlqMVM+f8LGxpXdVjoPt8deai+stcazdA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=D6xoyKo/Vp++EL/u5VaHCsc5PmH5UqLVeqz0EH+6BaWiQlc736ACJUmLwpvlSLsI/ss8yFjD0jzeCqiAUsTxttmAi/DOCcXHfNZRusiVG77zmGdwdex+L+QmCQwuZktnz7rocrcZqH3oLX3i5r1eDS8nIHNNlsipfAke0MmWm2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tF4bIDmM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6827CC4CEED;
-	Mon, 25 Aug 2025 20:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756153852;
-	bh=8UDkz5+NJHjlqMVM+f8LGxpXdVjoPt8deai+stcazdA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=tF4bIDmMrI43+36ns282EzHgvHkI1i4YU+8BiDurmsJWEvkIFY9tKfNWG7zi+5mEi
-	 mDj8DCkKcqIgvxoY4k5kGBu2IHL0cJNNjj1gNRllclvDGlVxUbxrxck30YkO8OhAg1
-	 YijnnsbnnRY8DQM2+QLc9Qt1p9Sn35QY/NTdncXDbhFeSzPfG3WtaYLwpmS0deC/tN
-	 PN8ARJ7M1uzf8j8gK6Ymr1BMDqvy7dfy4m9KTi7ILTRvaTmqzmx2d/eA3+8GSq5Khb
-	 pu98XSpDRMOh1iRkMceIUz2IDK0Sr+spT+Z9fMI1w3TgOyQ0F3sj6E5lZkLpQROCLL
-	 HJ8rJD+TbgFQA==
-Date: Mon, 25 Aug 2025 15:30:51 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1756154151; c=relaxed/simple;
+	bh=rybuWV56WOsHDYEx/o918h0eQxDHc9tHDekuS0uJEV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CXR01tJU4Pt/y2mtlpwyU4n3jICi2o5Qr+IFPA5LleZy1pL61F4caiI2WKtm2FxXOTA+1/CILbAtOh/8BNCwyb4NriKUddXM+C3JJqkFDuu+xdfWkre+IufCgghoIJ6cg2vSBVJI4zyAXNbzXd2daFgjuv5SjW1SXjpUNtYOYLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WXl/ArVY; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756154148; x=1787690148;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rybuWV56WOsHDYEx/o918h0eQxDHc9tHDekuS0uJEV0=;
+  b=WXl/ArVYAuErcXTI6BdXXDNd8a2uYeH3Pf7dVn3V42oCfS+H4vIxqvyi
+   se/mrJW6901F9Eo2Zhmu9/xv+c0Nk6vNXFq8RQEbYqtZMQV4PQDuISBu4
+   d2efgSKnhgcUXrLMeRSotDpX4tNR30tzdeBT8siVvxtd61GjxjLfwPUFY
+   KOrQdbN03jhfUzfVUCwq60XSMNqAgDKRiCU87cnMTDU7HTue+pU7w5h9y
+   Q3rzVZHpXvsjEjwoL+7yxOSowDIb/gv8zsn2AJmvS1IwhO1UGsMKCw9He
+   /ajkPi85H/LxNs+/QQnT2P8fj/d3NHd2LaJPuuQDZlAhvFPvi+zp2Rzje
+   w==;
+X-CSE-ConnectionGUID: CDlVLZoASdWejnDS6gzPYQ==
+X-CSE-MsgGUID: bx4E4QzyQDiHBp64VFjG7A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11533"; a="57394810"
+X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
+   d="scan'208";a="57394810"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 13:35:47 -0700
+X-CSE-ConnectionGUID: MDRUwMczTISPCUW+TVSkWA==
+X-CSE-MsgGUID: l1BYhZxFRSWz2hC0offuZQ==
+X-ExtLoop1: 1
+Received: from sramkris-mobl1.amr.corp.intel.com (HELO debox1-desk4.hsd1.or.comcast.net) ([10.124.222.235])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 13:35:47 -0700
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: rafael@kernel.org,
+	bhelgaas@google.com,
+	vicamo.yang@canonical.com,
+	kenny@panix.com,
+	ilpo.jarvinen@linux.intel.com,
+	nirmal.patel@linux.intel.com,
+	mani@kernel.org
+Cc: "David E. Box" <david.e.box@linux.intel.com>,
+	linux-pm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] PCI: Replace short msleep() calls with more
- precise delay functions
-Message-ID: <20250825203051.GA781401@bhelgaas>
+Subject: [PATCH V3 1/2] PCI/ASPM: Add host-bridge API to override default ASPM/CLKPM link state
+Date: Mon, 25 Aug 2025 13:35:22 -0700
+Message-ID: <20250825203542.3502368-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155f9f4f-45e4-45ea-85c2-de67115bd12c@163.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 25, 2025 at 12:05:26AM +0800, Hans Zhang wrote:
-> On 2025/8/23 00:46, Bjorn Helgaas wrote:
-> > On Fri, Aug 22, 2025 at 11:59:01PM +0800, Hans Zhang wrote:
-> > > This series replaces short msleep() calls (less than 20ms) with more
-> > > precise delay functions (fsleep() and usleep_range()) throughout the
-> > > PCI subsystem.
-> > > 
-> > > The msleep() function with small values can sleep longer than intended
-> > > due to timer granularity, which can cause unnecessary delays in PCI
-> > > operations such as link status checking, reset handling, and hotplug
-> > > operations.
+Synthetic PCIe hierarchies, such as those created by Intel VMD, are not
+enumerated by firmware and do not receive BIOS-provided ASPM or CLKPM
+defaults. Devices in such domains may therefore run without the intended
+power management.
 
-> > I would split this a little differently:
-> > 
-> >    - Add #defines for values from PCIe base spec.  Make the #define
-> >      value match the spec value.  If there's adjustment, e.g.,
-> >      doubling, do it at the sleep site.  Adjustment like this seems a
-> >      little paranoid since the spec should already have some margin
-> >      built into it.
+Add a host-bridge mechanism that lets controller drivers supply their own
+defaults. A new aspm_default_link_state field in struct pci_host_bridge is
+set via pci_host_set_default_pcie_link_state(). During link initialization,
+if this field is non-zero, ASPM and CLKPM defaults come from it instead of
+BIOS.
 
-> patch 0001 I intend to modify it as follows:
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b0f4d98036cd..fb4aff520f64 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4963,11 +4963,8 @@ void pci_reset_secondary_bus(struct pci_dev *dev)
->         ctrl |= PCI_BRIDGE_CTL_BUS_RESET;
->         pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
-> 
-> -       /*
-> -        * PCI spec v3.0 7.6.4.2 requires minimum Trst of 1ms.  Double
-> -        * this to 2ms to ensure that we meet the minimum requirement.
-> -        */
-> -       msleep(2);
-> +       /* Wait for the reset to take effect */
-> +       fsleep(PCI_T_RST_SEC_BUS_DELAY_US);
+This enables drivers like VMD to align link power management with platform
+expectations and avoids embedding controller-specific quirks in ASPM core
+logic.
 
-This mixes 3 changes:
+Link: https://patchwork.ozlabs.org/project/linux-pci/patch/20250720190140.2=
+639200-1-david.e.box%40linux.intel.com/
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Tested-by: Manivannan Sadhasivam <mani@kernel.org>
+Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+---
+Changes in V3:
+  -- Changed pci_host_get_default_pcie_link_state() argument name from
+     parent to dev.
+  -- Applied changelog tags
 
-  1) Add #define PCI_T_RST_SEC_BUS_DELAY_US
+Changes in V2:
 
-  2) Reduce overall delay from 2ms to 1ms
+  -- Host field name changed to aspm_default_link_state.
+  -- Added get/set functions for aspm_default_link_state. Only the
+     setter is exported. Added a kernel-doc describing usage and
+     particulars around meaning of 0.
 
-  3) Convert msleep() to fsleep()
+Changes in V1 from RFC:
 
-There's no issue at all with 1), and I don't know if it's really worth
-doing 2), so I would do this:
+  -- Rename field to aspm_dflt_link_state since it stores
+     PCIE_LINK_STATE_XXX flags, not a policy enum.
+  -- Move the field to struct pci_host_bridge since it's being applied to
+     the entire host bridge per Mani's suggestion.
+  -- During testing noticed that clkpm remained disabled and this was
+     also handled by the formerly used pci_enable_link_state(). Add a
+     check in pcie_clkpm_cap_init() as well to enable clkpm during init.
 
-  - msleep(2);
-  + msleep(2 * PCI_T_RST_SEC_BUS_DELAY_MS);
+ drivers/pci/pcie/aspm.c | 42 +++++++++++++++++++++++++++++++++++++++--
+ include/linux/pci.h     |  9 +++++++++
+ 2 files changed, 49 insertions(+), 2 deletions(-)
 
-Then we can consider the question of whether "msleep(2)" is misleading
-to the reader because the actual delay is always > 20ms.  If that's
-the case, I would consider a separate patch like this:
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 919a05b97647..851ca3d68e55 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -373,6 +373,39 @@ static void pcie_set_clkpm(struct pcie_link_state *lin=
+k, int enable)
+ 	pcie_set_clkpm_nocheck(link, enable);
+ }
+=20
++/**
++ * pci_host_set_default_pcie_link_state - set controller-provided default =
+ASPM/CLKPM mask
++ * @host: host bridge on which to apply the defaults
++ * @state: PCIE_LINK_STATE_XXX flags
++ *
++ * Allows a PCIe controller driver to specify the default ASPM and/or
++ * Clock Power Management (CLKPM) link state mask that will be used
++ * for links under this host bridge during ASPM/CLKPM capability init.
++ *
++ * The value is consumed in pcie_aspm_cap_init() and pcie_clkpm_cap_init()
++ * to override the firmware-discovered defaults.
++ *
++ * Interpretation of aspm_default_link_state:
++ *   - Nonzero: bitmask of PCIE_LINK_STATE_* values to be used as defaults
++ *   - Zero:    no override provided; ASPM/CLKPM defaults fall back to
++ *              values discovered in hardware/firmware
++ *
++ * Note: zero is always treated as "unset", not as "force ASPM/CLKPM off".
++ */
++void pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
++					  unsigned int state)
++{
++	host->aspm_default_link_state =3D state;
++}
++EXPORT_SYMBOL_GPL(pci_host_set_default_pcie_link_state);
++
++static u32 pci_host_get_default_pcie_link_state(struct pci_dev *dev)
++{
++	struct pci_host_bridge *host =3D pci_find_host_bridge(dev->bus);
++
++	return host ? host->aspm_default_link_state : 0;
++}
++
+ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklis=
+t)
+ {
+ 	int capable =3D 1, enabled =3D 1;
+@@ -394,7 +427,10 @@ static void pcie_clkpm_cap_init(struct pcie_link_state=
+ *link, int blacklist)
+ 			enabled =3D 0;
+ 	}
+ 	link->clkpm_enabled =3D enabled;
+-	link->clkpm_default =3D enabled;
++	if (pci_host_get_default_pcie_link_state(link->pdev) & PCIE_LINK_STATE_CL=
+KPM)
++		link->clkpm_default =3D 1;
++	else
++		link->clkpm_default =3D enabled;
+ 	link->clkpm_capable =3D capable;
+ 	link->clkpm_disable =3D blacklist ? 1 : 0;
+ }
+@@ -866,7 +902,9 @@ static void pcie_aspm_cap_init(struct pcie_link_state *=
+link, int blacklist)
+ 	}
+=20
+ 	/* Save default state */
+-	link->aspm_default =3D link->aspm_enabled;
++	link->aspm_default =3D pci_host_get_default_pcie_link_state(parent);
++	if (!link->aspm_default)
++		link->aspm_default =3D link->aspm_enabled;
+=20
+ 	/* Setup initial capable state. Will be updated later */
+ 	link->aspm_capable =3D link->aspm_support;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 59876de13860..8947cbaf9fa6 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -620,6 +620,10 @@ struct pci_host_bridge {
+ 	unsigned int	size_windows:1;		/* Enable root bus sizing */
+ 	unsigned int	msi_domain:1;		/* Bridge wants MSI domain */
+=20
++#ifdef CONFIG_PCIEASPM
++	unsigned int	aspm_default_link_state;	/* Controller-provided default */
++#endif
++
+ 	/* Resource alignment requirements */
+ 	resource_size_t (*align_resource)(struct pci_dev *dev,
+ 			const struct resource *res,
+@@ -1849,6 +1853,8 @@ int pci_disable_link_state(struct pci_dev *pdev, int =
+state);
+ int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
+ int pci_enable_link_state(struct pci_dev *pdev, int state);
+ int pci_enable_link_state_locked(struct pci_dev *pdev, int state);
++void pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
++					  unsigned int state);
+ void pcie_no_aspm(void);
+ bool pcie_aspm_support_enabled(void);
+ bool pcie_aspm_enabled(struct pci_dev *pdev);
+@@ -1861,6 +1867,9 @@ static inline int pci_enable_link_state(struct pci_de=
+v *pdev, int state)
+ { return 0; }
+ static inline int pci_enable_link_state_locked(struct pci_dev *pdev, int s=
+tate)
+ { return 0; }
++static inline void
++pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
++				     unsigned int state) { }
+ static inline void pcie_no_aspm(void) { }
+ static inline bool pcie_aspm_support_enabled(void) { return false; }
+ static inline bool pcie_aspm_enabled(struct pci_dev *pdev) { return false;=
+ }
 
-  - msleep(2 * PCI_T_RST_SEC_BUS_DELAY_MS);
-  + fsleep(2 * PCI_T_RST_SEC_BUS_DELAY_US);
+base-commit: c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9
+--=20
+2.43.0
 
-to make the stated intent of the code closer to the actual behavior.
-If we do this, the commit log should include concrete details about
-why short msleep() doesn't work as advertised.
-
-> > I'm personally dubious about the places you used usleep_range().
-> > These are low-frequency paths (rcar PHY ready, brcmstb link up,
-> > hotplug command completion, DPC recover) that don't seem critical.  I
-> > think they're all using made-up delays that don't come from any spec
-> > or hardware requirement anyway.  I think it's hard to make an argument
-> > for precision here.
-> 
-> My initial understanding was the same. There was no need for such precision
-> here. Then msleep will be retained, but only modified to #defines?
-
-The #defines are useful when (1) the value comes from a spec or (2) we
-want to use the same value several places.  Otherwise, the value is
-minimal.
-
-For rcar PHY ready, brcmstb link up, hotplug command completion, DPC
-recover, I don't think either applies, so personally I would probably
-leave them alone (or, if we think short msleep() is just misleading in
-principle, convert them to fsleep()).
-
-Bjorn
 
