@@ -1,60 +1,60 @@
-Return-Path: <linux-pci+bounces-34649-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34650-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8503B3395C
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 10:37:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F111DB33954
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 10:37:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1C0607A1FFC
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 08:35:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC2B4189A6F5
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 08:37:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D4602D0C69;
-	Mon, 25 Aug 2025 08:33:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C8E62BDC1E;
+	Mon, 25 Aug 2025 08:33:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="dzsZvwiD"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="P7TuEx/U"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239302BEC52;
-	Mon, 25 Aug 2025 08:33:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708FE29E0E8;
+	Mon, 25 Aug 2025 08:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756110793; cv=pass; b=LvI1zwFKC/7FShv285sTKegdPb+c63JacyY1fCAuvyj0bF26sJLSgZd9r4nNSeFhasM75TtpdkRomq3ia9Jglaqp/V9h4QpzVEesvVaMRUyQJl6A56KX5J+DmyItsWdlp7TbCReiuyZ9ABSTS7Bd21QabYxCewXu4Xj2r9956uQ=
+	t=1756110813; cv=pass; b=kopo+R82XhxEtj09C4O8PV3MqfQHZxWfsR/3RXPnka2dElBK2cZOXx/UqFK9bdy/eqgqWpunTCCc7Sxy8YPYEb8ta8ufp0pN1+t4zPCwyYdAYlMz3lTb7ev8XpuAndLCo6/KkthWB/5P08/Df9ru0clwVur/tP/5iVisi/eQYDI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756110793; c=relaxed/simple;
-	bh=od9wfamfSfjA8/RtMBFgdzTligJlEja9vy+KmYwWd5E=;
+	s=arc-20240116; t=1756110813; c=relaxed/simple;
+	bh=qLbDNkhT4Jc8+LGEt2Nkh/QbLYdTIrfYRf8Qu2COsjI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Kb21Mb0XnH92CXjWow2+FLoVkUPDkGJt9uVywV4KtnW/eZVRHVuvKLgBAXXxK2ifjnAGBEFvkIHIk2CoGeUaYYn/UnfqyG+pCJsSozC4euNLC91UPw1uKopNMFICNZXZm4s/XV2fTS/lm69C25Ch7S8yg/IURh8LJwgcTAaGQ+M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=dzsZvwiD; arc=pass smtp.client-ip=136.143.188.12
+	 In-Reply-To:To:Cc; b=t2LYQFON0wXxo+0j0xKAOd2KclM1ZVx+lwZOTcDJW3ODwFDakCQLXJ8NcUlb6alKbl3zPjTz66DMZXIWmrhIJCHWUTbxbSGQ2M0EcotVA8tINjH5Tv3RVhL9eRXHsVLgp8FFMsYAWBbRWMOYcZcgeviPObqkq90z+SjJSZeIQf4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=P7TuEx/U; arc=pass smtp.client-ip=136.143.188.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1756110735; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1756110750; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=nirw6HnPbWMaLjFjTLKAktwt+myX4S/gTpPs7t2VqUyNYsuV2W1NCJ0Y60gYJUjb6loIWS3SOt30uJFNuimN16MxgQG/lzguRRkrzPP3c93WwhsoaNntGjvTGg3flruyDCiwMMQdT9llWPM49Su2qX72qveTgesOI9evz+hWrnw=
+	b=CXyTKlt6pZ2nseKenhkB5b8hdvvwAae1SOMca72O66Q3cJj3T4OK/t0aR6s3qUHEXjgj4hKg4VhWTrUrP5nlT4nFr9DTFtA1AD6MO8FtYNmPq53M5UbXW/Wkif6IKyidBDi+kBMJChBM4WboMZRa7TeHNRdqwht/7MmliImVOD4=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1756110735; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=AMqnk8SndHwLzKZVWVbsYcdtLpb4Roz2oizYk5WSuo0=; 
-	b=JMC77CWm9ClrAbOkp/OP1WUAb4eRo3UAq3HoajZlrzgomqvDCQAexWSa2wSGtICDNxA0K4BhsNJmof3lCNoGjf717Z3M8CRkXkRtVWTTikQQGfwRiSmfUxgYW/843O9N36efzvDA6gzCI7YJ8D3ngwakwaea4v4aL7fMIBYHARk=
+	t=1756110750; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=YPAtusKlN6eqdYG3bgmczV1EypJC/IejzFNhAelA5Kk=; 
+	b=VwqPwxS5SV+h4mYyQqNi/XGd3oPOLDuceCJ5aydMVdtL5+99BJhNN7Sm88JDFJP1vBFL/PbPxR+eWwLALSr7vqZtKyJd5x9fRWA8NB58wncqazVekJ7wGHCooxUIJp7yFZjkaN6TV1wFlPtBuy1MkwK26/edC5yGpDUU8TezcTI=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1756110735;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1756110750;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=AMqnk8SndHwLzKZVWVbsYcdtLpb4Roz2oizYk5WSuo0=;
-	b=dzsZvwiD77A5lVrfk1pDkLtu6hnTOrZ9UEnKjPuYZBJU6v1xoeLLFqPoFie91NFv
-	GlWS4rtNwwcXmtlwZF28OG2PCYZAg2OuchMwXi2y06jTI/le420dt4ikfWnezvS0prV
-	xp7G9dgYcL+nkd902oNGXhKfIHwdFjJgSciaimWU=
-Received: by mx.zohomail.com with SMTPS id 1756110734776695.4405993030838;
-	Mon, 25 Aug 2025 01:32:14 -0700 (PDT)
+	bh=YPAtusKlN6eqdYG3bgmczV1EypJC/IejzFNhAelA5Kk=;
+	b=P7TuEx/Uqi+3S53TlXs35nOePsIHr6ObIdXv5VmrVT7iOSW6Q/iJ7yll//p0oa7O
+	4DWqDcEfDPrlW9ldGpngBSWYHhDCimJiOB9DojHeJKUqberyBV26y48mjUO+Q8ipvQH
+	JF7Q7wXkkGMe1ryTxdqsKHe1SkWEpJRxkYbkqC/Q=
+Received: by mx.zohomail.com with SMTPS id 1756110748821283.62188569936666;
+	Mon, 25 Aug 2025 01:32:28 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Mon, 25 Aug 2025 10:28:34 +0200
-Subject: [PATCH v3 14/20] ASoC: rockchip: i2s-tdm: switch to
- FIELD_PREP_WM16_CONST macro
+Date: Mon, 25 Aug 2025 10:28:35 +0200
+Subject: [PATCH v3 15/20] net: stmmac: dwmac-rk: switch to FIELD_PREP_WM16
+ macro
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250825-byeword-update-v3-14-947b841cdb29@collabora.com>
+Message-Id: <20250825-byeword-update-v3-15-947b841cdb29@collabora.com>
 References: <20250825-byeword-update-v3-0-947b841cdb29@collabora.com>
 In-Reply-To: <20250825-byeword-update-v3-0-947b841cdb29@collabora.com>
 To: Yury Norov <yury.norov@gmail.com>, 
@@ -109,41 +109,45 @@ X-Mailer: b4 0.14.2
 The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
 drivers that use constant masks.
 
-Replace the implementation of this driver's HIWORD_UPDATE macro with an
-instance of FIELD_PREP_WM16_CONST. The const variant is chosen here
-because some of the header defines are then used in initializers.
+Like many other Rockchip drivers, dwmac-rk has its own HIWORD_UPDATE
+macro. Its semantics allow us to redefine it as a wrapper to the shared
+hw_bitfield.h FIELD_PREP_WM16 macros though.
 
-This gives us some compile-time error checking, while keeping the diff
-very small and easy to review.
+Replace the implementation of this driver's very own HIWORD_UPDATE macro
+with an instance of FIELD_PREP_WM16 from hw_bitfield.h. This keeps the
+diff easily reviewable, while giving us more compile-time error
+checking.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+The related GRF_BIT macro is left alone for now; any attempt to rework
+the code to not use its own solution here would likely end up harder to
+review and less pretty for the time being.
+
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- sound/soc/rockchip/rockchip_i2s_tdm.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/rockchip/rockchip_i2s_tdm.h b/sound/soc/rockchip/rockchip_i2s_tdm.h
-index 0aa1c6da1e2c0ebb70473b1bcd1f6e0c1fb90df3..0171e05ee886cdd35f8202db20a313f226958918 100644
---- a/sound/soc/rockchip/rockchip_i2s_tdm.h
-+++ b/sound/soc/rockchip/rockchip_i2s_tdm.h
-@@ -10,6 +10,8 @@
- #ifndef _ROCKCHIP_I2S_TDM_H
- #define _ROCKCHIP_I2S_TDM_H
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+index 9fc41207cc459313e575a2b00236b82611ad9603..c500194de3cc303f68fdd8a2466a81a63d4601d8 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+@@ -8,6 +8,7 @@
+  */
  
+ #include <linux/stmmac.h>
 +#include <linux/hw_bitfield.h>
-+
- /*
-  * TXCR
-  * transmit operation control register
-@@ -285,7 +287,7 @@ enum {
- #define I2S_TDM_RXCR	(0x0034)
- #define I2S_CLKDIV	(0x0038)
+ #include <linux/bitops.h>
+ #include <linux/clk.h>
+ #include <linux/phy.h>
+@@ -149,7 +150,7 @@ static int rk_set_clk_mac_speed(struct rk_priv_data *bsp_priv,
+ }
  
--#define HIWORD_UPDATE(v, h, l)	(((v) << (l)) | (GENMASK((h), (l)) << 16))
-+#define HIWORD_UPDATE(v, h, l)	(FIELD_PREP_WM16_CONST(GENMASK((h), (l)), (v)))
+ #define HIWORD_UPDATE(val, mask, shift) \
+-		((val) << (shift) | (mask) << ((shift) + 16))
++		(FIELD_PREP_WM16((mask) << (shift), (val)))
  
- /* PX30 GRF CONFIGS */
- #define PX30_I2S0_CLK_IN_SRC_FROM_TX		HIWORD_UPDATE(1, 13, 12)
+ #define GRF_BIT(nr)	(BIT(nr) | BIT(nr+16))
+ #define GRF_CLR_BIT(nr)	(BIT(nr+16))
 
 -- 
 2.51.0
