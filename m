@@ -1,60 +1,59 @@
-Return-Path: <linux-pci+bounces-34650-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34651-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F111DB33954
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 10:37:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C2CAB3395A
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 10:37:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC2B4189A6F5
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 08:37:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 463AD189C897
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 08:37:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C8E62BDC1E;
-	Mon, 25 Aug 2025 08:33:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4B702BE037;
+	Mon, 25 Aug 2025 08:33:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="P7TuEx/U"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="YFojpnys"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708FE29E0E8;
-	Mon, 25 Aug 2025 08:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9892129C33F;
+	Mon, 25 Aug 2025 08:33:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756110813; cv=pass; b=kopo+R82XhxEtj09C4O8PV3MqfQHZxWfsR/3RXPnka2dElBK2cZOXx/UqFK9bdy/eqgqWpunTCCc7Sxy8YPYEb8ta8ufp0pN1+t4zPCwyYdAYlMz3lTb7ev8XpuAndLCo6/KkthWB/5P08/Df9ru0clwVur/tP/5iVisi/eQYDI=
+	t=1756110824; cv=pass; b=D4LBRIIiSQ4y2I49AfUE5oWcvAUKmjZrr47SoMQfTbeJeuQFU162ZgSFsigxSKXLjYR47FZDzU+eb9SeaGzKeCNVUYQlSOLy/GghDtkZRC8V1fUF0pM7Wm5CufcEl673LNy/MruwLIgb1llP2MdjkMNN/w8+ncqadnAHxovifk0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756110813; c=relaxed/simple;
-	bh=qLbDNkhT4Jc8+LGEt2Nkh/QbLYdTIrfYRf8Qu2COsjI=;
+	s=arc-20240116; t=1756110824; c=relaxed/simple;
+	bh=QS6w+RyegCtjpfk1G2oWva/8Us2ddxB4UBQZJimG/aA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=t2LYQFON0wXxo+0j0xKAOd2KclM1ZVx+lwZOTcDJW3ODwFDakCQLXJ8NcUlb6alKbl3zPjTz66DMZXIWmrhIJCHWUTbxbSGQ2M0EcotVA8tINjH5Tv3RVhL9eRXHsVLgp8FFMsYAWBbRWMOYcZcgeviPObqkq90z+SjJSZeIQf4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=P7TuEx/U; arc=pass smtp.client-ip=136.143.188.12
+	 In-Reply-To:To:Cc; b=Rqn2bh7OHJwddlFoVf9a09ZgTFBVNMwofdSExuJkTsBKVWyxYCxIcmQpCDbiNDC6QJ5tBbcJs6h3Pj2CZ6J+YRWsPTc66rtmaLf6xuoNy666kvuTecBWLOFAD0pAS9/boF0bE1A7XuUw8BdridKnAoTKzvnIerxMBDUUYb/sxVw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=YFojpnys; arc=pass smtp.client-ip=136.143.188.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1756110750; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1756110764; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=CXyTKlt6pZ2nseKenhkB5b8hdvvwAae1SOMca72O66Q3cJj3T4OK/t0aR6s3qUHEXjgj4hKg4VhWTrUrP5nlT4nFr9DTFtA1AD6MO8FtYNmPq53M5UbXW/Wkif6IKyidBDi+kBMJChBM4WboMZRa7TeHNRdqwht/7MmliImVOD4=
+	b=kTMmXLlHWeI675VeqekD7vXC+t4fMmn7jLk1NYxdGU5BC4uNsKOCfcSuXamUuxjfdjJYYAbLV/LwlooDWcYBQhlnLQdXke2eX5g3NXC4iYHlwmP2ehpyg0qE6dlxP+EVr3ES8ozjaXOOuCcW5fi1lBCel4ODwGryyJsyLDjrrvY=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1756110750; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=YPAtusKlN6eqdYG3bgmczV1EypJC/IejzFNhAelA5Kk=; 
-	b=VwqPwxS5SV+h4mYyQqNi/XGd3oPOLDuceCJ5aydMVdtL5+99BJhNN7Sm88JDFJP1vBFL/PbPxR+eWwLALSr7vqZtKyJd5x9fRWA8NB58wncqazVekJ7wGHCooxUIJp7yFZjkaN6TV1wFlPtBuy1MkwK26/edC5yGpDUU8TezcTI=
+	t=1756110764; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ZsbXUJR6MfF1epvff0gLOK9X/43yG7Ki5VmTbs9QBuM=; 
+	b=V2Gvaf7zHZrvxMPGxT+e4IyRb5l/A6x2vs7jFDC1vGUeGVGiUm9m7kT/GNl2bBDXqnQUs4y7HTDeyAt4lA8HN2sLIYeHvUAzfDn/6uIZNFGnjVXKfshlsABmrt6T2sIIR5nKeOCrslCZ7G/1H6DEToKezhAC3ZXVaBKuDnEEV4U=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1756110750;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1756110764;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=YPAtusKlN6eqdYG3bgmczV1EypJC/IejzFNhAelA5Kk=;
-	b=P7TuEx/Uqi+3S53TlXs35nOePsIHr6ObIdXv5VmrVT7iOSW6Q/iJ7yll//p0oa7O
-	4DWqDcEfDPrlW9ldGpngBSWYHhDCimJiOB9DojHeJKUqberyBV26y48mjUO+Q8ipvQH
-	JF7Q7wXkkGMe1ryTxdqsKHe1SkWEpJRxkYbkqC/Q=
-Received: by mx.zohomail.com with SMTPS id 1756110748821283.62188569936666;
-	Mon, 25 Aug 2025 01:32:28 -0700 (PDT)
+	bh=ZsbXUJR6MfF1epvff0gLOK9X/43yG7Ki5VmTbs9QBuM=;
+	b=YFojpnysCPQhfARz6PrsrbJjbfmBu+rqnl+DB3m8Dgk2kYK97kTACquI7W6hY6dN
+	hPwyNGN0b7sKSRxVPqUjlBNeegTXTdQw8kDxN2eLYKDVldmBwbr/cVpbzV5iQEDdcMY
+	KTMZQ0w6J9EnoB0r517lNA2YGrwszAWuUUvCp7t0=
+Received: by mx.zohomail.com with SMTPS id 1756110762879601.7323474914235;
+	Mon, 25 Aug 2025 01:32:42 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Mon, 25 Aug 2025 10:28:35 +0200
-Subject: [PATCH v3 15/20] net: stmmac: dwmac-rk: switch to FIELD_PREP_WM16
- macro
+Date: Mon, 25 Aug 2025 10:28:36 +0200
+Subject: [PATCH v3 16/20] PCI: rockchip: Switch to FIELD_PREP_WM16* macros
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,7 +62,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250825-byeword-update-v3-15-947b841cdb29@collabora.com>
+Message-Id: <20250825-byeword-update-v3-16-947b841cdb29@collabora.com>
 References: <20250825-byeword-update-v3-0-947b841cdb29@collabora.com>
 In-Reply-To: <20250825-byeword-update-v3-0-947b841cdb29@collabora.com>
 To: Yury Norov <yury.norov@gmail.com>, 
@@ -109,45 +108,92 @@ X-Mailer: b4 0.14.2
 The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
 drivers that use constant masks.
 
-Like many other Rockchip drivers, dwmac-rk has its own HIWORD_UPDATE
-macro. Its semantics allow us to redefine it as a wrapper to the shared
-hw_bitfield.h FIELD_PREP_WM16 macros though.
+The Rockchip PCI driver, like many other Rockchip drivers, has its very
+own definition of HIWORD_UPDATE.
 
-Replace the implementation of this driver's very own HIWORD_UPDATE macro
-with an instance of FIELD_PREP_WM16 from hw_bitfield.h. This keeps the
-diff easily reviewable, while giving us more compile-time error
-checking.
+Remove it, and replace its usage with either FIELD_PREP_WM16, or two new
+header local macros for setting/clearing a bit with the high mask, which
+use FIELD_PREP_WM16_CONST internally. In the process, ENCODE_LANES
+needed to be adjusted, as FIELD_PREP_WM16* shifts the value for us.
 
-The related GRF_BIT macro is left alone for now; any attempt to rework
-the code to not use its own solution here would likely end up harder to
-review and less pretty for the time being.
+That this is equivalent was verified by first making all FIELD_PREP_WM16
+instances FIELD_PREP_WM16_CONST, then doing a static_assert() comparing
+it to the old macro (and for those with parameters, static_asserting for
+the full range of possible values with the old encode macro).
 
+What we get out of this is compile time error checking to make sure the
+value actually fits in the mask, and that the mask fits in the register,
+and also generally less icky code that writes shifted values when it
+actually just meant to set and clear a handful of bits.
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pcie-rockchip.h | 35 +++++++++++++++++-----------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-index 9fc41207cc459313e575a2b00236b82611ad9603..c500194de3cc303f68fdd8a2466a81a63d4601d8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -8,6 +8,7 @@
-  */
+diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+index 72a2c045f6fe95cb43f01a2841a5ca0f597c85d4..3e82a69b9c006e52d134278651c5a420a1f195c2 100644
+--- a/drivers/pci/controller/pcie-rockchip.h
++++ b/drivers/pci/controller/pcie-rockchip.h
+@@ -12,6 +12,7 @@
+ #define _PCIE_ROCKCHIP_H
  
- #include <linux/stmmac.h>
-+#include <linux/hw_bitfield.h>
- #include <linux/bitops.h>
  #include <linux/clk.h>
- #include <linux/phy.h>
-@@ -149,7 +150,7 @@ static int rk_set_clk_mac_speed(struct rk_priv_data *bsp_priv,
- }
++#include <linux/hw_bitfield.h>
+ #include <linux/kernel.h>
+ #include <linux/pci.h>
+ #include <linux/pci-ecam.h>
+@@ -21,10 +22,10 @@
+  * The upper 16 bits of PCIE_CLIENT_CONFIG are a write mask for the lower 16
+  * bits.  This allows atomic updates of the register without locking.
+  */
+-#define HIWORD_UPDATE(mask, val)	(((mask) << 16) | (val))
+-#define HIWORD_UPDATE_BIT(val)		HIWORD_UPDATE(val, val)
++#define HWORD_SET_BIT(val)		(FIELD_PREP_WM16_CONST((val), 1))
++#define HWORD_CLR_BIT(val)		(FIELD_PREP_WM16_CONST((val), 0))
  
- #define HIWORD_UPDATE(val, mask, shift) \
--		((val) << (shift) | (mask) << ((shift) + 16))
-+		(FIELD_PREP_WM16((mask) << (shift), (val)))
+-#define ENCODE_LANES(x)			((((x) >> 1) & 3) << 4)
++#define ENCODE_LANES(x)			((((x) >> 1) & 3))
+ #define MAX_LANE_NUM			4
+ #define MAX_REGION_LIMIT		32
+ #define MIN_EP_APERTURE			28
+@@ -32,21 +33,21 @@
  
- #define GRF_BIT(nr)	(BIT(nr) | BIT(nr+16))
- #define GRF_CLR_BIT(nr)	(BIT(nr+16))
+ #define PCIE_CLIENT_BASE		0x0
+ #define PCIE_CLIENT_CONFIG		(PCIE_CLIENT_BASE + 0x00)
+-#define   PCIE_CLIENT_CONF_ENABLE	  HIWORD_UPDATE_BIT(0x0001)
+-#define   PCIE_CLIENT_CONF_DISABLE       HIWORD_UPDATE(0x0001, 0)
+-#define   PCIE_CLIENT_LINK_TRAIN_ENABLE	  HIWORD_UPDATE_BIT(0x0002)
+-#define   PCIE_CLIENT_LINK_TRAIN_DISABLE  HIWORD_UPDATE(0x0002, 0)
+-#define   PCIE_CLIENT_ARI_ENABLE	  HIWORD_UPDATE_BIT(0x0008)
+-#define   PCIE_CLIENT_CONF_LANE_NUM(x)	  HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
+-#define   PCIE_CLIENT_MODE_RC		  HIWORD_UPDATE_BIT(0x0040)
+-#define   PCIE_CLIENT_MODE_EP            HIWORD_UPDATE(0x0040, 0)
+-#define   PCIE_CLIENT_GEN_SEL_1		  HIWORD_UPDATE(0x0080, 0)
+-#define   PCIE_CLIENT_GEN_SEL_2		  HIWORD_UPDATE_BIT(0x0080)
++#define   PCIE_CLIENT_CONF_ENABLE		HWORD_SET_BIT(0x0001)
++#define   PCIE_CLIENT_CONF_DISABLE		HWORD_CLR_BIT(0x0001)
++#define   PCIE_CLIENT_LINK_TRAIN_ENABLE		HWORD_SET_BIT(0x0002)
++#define   PCIE_CLIENT_LINK_TRAIN_DISABLE	HWORD_CLR_BIT(0x0002)
++#define   PCIE_CLIENT_ARI_ENABLE		HWORD_SET_BIT(0x0008)
++#define   PCIE_CLIENT_CONF_LANE_NUM(x)		FIELD_PREP_WM16(0x0030, ENCODE_LANES(x))
++#define   PCIE_CLIENT_MODE_RC			HWORD_SET_BIT(0x0040)
++#define   PCIE_CLIENT_MODE_EP			HWORD_CLR_BIT(0x0040)
++#define   PCIE_CLIENT_GEN_SEL_1			HWORD_CLR_BIT(0x0080)
++#define   PCIE_CLIENT_GEN_SEL_2			HWORD_SET_BIT(0x0080)
+ #define PCIE_CLIENT_LEGACY_INT_CTRL	(PCIE_CLIENT_BASE + 0x0c)
+-#define   PCIE_CLIENT_INT_IN_ASSERT		HIWORD_UPDATE_BIT(0x0002)
+-#define   PCIE_CLIENT_INT_IN_DEASSERT		HIWORD_UPDATE(0x0002, 0)
+-#define   PCIE_CLIENT_INT_PEND_ST_PEND		HIWORD_UPDATE_BIT(0x0001)
+-#define   PCIE_CLIENT_INT_PEND_ST_NORMAL	HIWORD_UPDATE(0x0001, 0)
++#define   PCIE_CLIENT_INT_IN_ASSERT		HWORD_SET_BIT(0x0002)
++#define   PCIE_CLIENT_INT_IN_DEASSERT		HWORD_CLR_BIT(0x0002)
++#define   PCIE_CLIENT_INT_PEND_ST_PEND		HWORD_SET_BIT(0x0001)
++#define   PCIE_CLIENT_INT_PEND_ST_NORMAL	HWORD_CLR_BIT(0x0001)
+ #define PCIE_CLIENT_SIDE_BAND_STATUS	(PCIE_CLIENT_BASE + 0x20)
+ #define   PCIE_CLIENT_PHY_ST			BIT(12)
+ #define PCIE_CLIENT_DEBUG_OUT_0		(PCIE_CLIENT_BASE + 0x3c)
 
 -- 
 2.51.0
