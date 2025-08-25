@@ -1,60 +1,60 @@
-Return-Path: <linux-pci+bounces-34643-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34644-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22FB2B33922
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 10:33:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01DE3B33926
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 10:34:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2FF917BDA7
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 08:33:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D4D451B2372F
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Aug 2025 08:34:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2F4429E112;
-	Mon, 25 Aug 2025 08:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE2862BF3CA;
+	Mon, 25 Aug 2025 08:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="cWmepJ5/"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="AUD3zR5a"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1C123AB8B;
-	Mon, 25 Aug 2025 08:31:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F6F2BE02C;
+	Mon, 25 Aug 2025 08:32:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756110713; cv=pass; b=U+U9pXakhdUjdYa09FNcDRafcsMazvG3OUVSslE7Cw8mxxaJYWu+WXBTnwh3X5XeEESUQav5PF6JEsEPWQHinxWD6MgxV47xF7E13c658NEZr2TVKqzpuzUPeJr9VpDLyy5JI/tOtuXqm0uHLON4f9kP/cB4MX2f+gvq3qDmXts=
+	t=1756110724; cv=pass; b=DcoWqaTnI8PFYDf3CF81eg5P2fXK20i7toplZyVFxECeKO8NZkE7K5fbRcwe8rC6epz9Cn3AiK4sQGnMzzJPBclRjCygnVu+MMAW987U1It2wkT8utkzmuqhln7JAK3/r8RtM7EyTg8URsAsGwEClwSNXKzxh24APyHFq1PhIYg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756110713; c=relaxed/simple;
-	bh=1QfSaKM8ECDVnke2dKM6Zoke25Fp/xA51LemwRgrn24=;
+	s=arc-20240116; t=1756110724; c=relaxed/simple;
+	bh=P0TJnBl06k6/inD631UvdxjaoPGmS2puuKOgZipiRyU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kBQYlfCNlEUIBlOPOUOdRxpVPF8oWJu3AVXg8eKLhw5EXcmxJfqYUwTc2rhtrbPhc3nHLYy4Z7YOtmZ4mIyhGT497CKDjHDJcTDr3LMLGRU2h9nd0nTjQNJP85vxz2jy5eMqCJq+EU4KtmeLZedqhbYw+xAXTv9+AqmLBfv86nI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=cWmepJ5/; arc=pass smtp.client-ip=136.143.188.12
+	 In-Reply-To:To:Cc; b=OFfwXFSCbiXaKNEJFL+6CohKPSHt0BoNOd9lece2kwC44FmVeg3EGSohf74OUH27CYLjd9ja0VBBnoKz6++O+C5KUSh+wDuyM9A6hJCbh8mQoOolA0oHv9BFMrZmvYX9eF3x3F2oiRPmGGWMz2PrFdCPljdRH2E8tTbbFtxmpsY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=AUD3zR5a; arc=pass smtp.client-ip=136.143.188.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1756110651; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1756110665; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=LLBZJNShM/scNbNd2FBGDgo/l8Vy6SGWp/z1oZFxe4pKUxxNm9W5Jsb3/QnmN6H0GxcDbNG0izhIDixr0s8yFI63AsdEFZHcE0WfetHT5IU7fLn7mtfCsGGIFzK9LlHdkWNEwQsFbUzt6T4zQvg/uC/1jhu3Cw7vwe5qAsGoO88=
+	b=jhiNG0lFtaTWQuU9JeWX1zIXjZ6RHIx1bvICoaRkHo1gwIpV2wpS8R8wzCRTjNWMCRijPkv0bVf5xRvBdiFG5HYFKGjysT1AmdrDywlID0aZrze9x1bz0dnrh4nm/F8JoNt/upjxPB04PEUuM1FvsKZi+NJqcf2GZndsRV3BNAk=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1756110651; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Km6AYdZ3WI+Rp52C1yBfbDSZEmIVJgexAgpXKrteI14=; 
-	b=l7iCv194zYVQ20Y+MDFtkP5zVOvU6M8AwOMbev9sRh8kP67Q8qNUVdMgxrmpE5r6NF6zwrGX0j84/NFEdn1cgMIpj7Jd25nnePw8GkRdmJrWBpiWMSEKAK1uHEKFKtUIuOqnHIIfFlirLUOw+hhrKXaJJZ4rhwxMGsz4G4kaTxc=
+	t=1756110665; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=oXdzLyDjy1en1noSqIeHf800Rfe5SrEuKJcIvmzNwtg=; 
+	b=H3g64UWR30We/tL1i7zs1vG+5eMKeZdySDgx3wak8vWVSxEkKhL8Zy9lBVHzYiQLraJSvcdjKHrNvfyBbda4aHfS/MW3d/Hr2Q2btlQpSXp75QXeHfKZUxJPbVkuT5/eqXHLPrX6NHWtVxAi5lJTi2qbrzWvpX3R55KeXc1TtBI=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1756110651;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1756110665;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=Km6AYdZ3WI+Rp52C1yBfbDSZEmIVJgexAgpXKrteI14=;
-	b=cWmepJ5/uJCSY2WSAzlcCM8KbtvbvnNTdkH+4qBIhXTVRp2wD2f8gOaEufHUbi4K
-	ruQLCt1bL/Y3M4kxOs6s7pD7aD5fdBSXrpCo1TT4sCIS0zyzc2HyuwaPDa+bb57k2zO
-	UYqi/MqDwRusj5Rny9+wmJbm72pV4S/Jan2PVVGg=
-Received: by mx.zohomail.com with SMTPS id 1756110648569933.3258387690506;
-	Mon, 25 Aug 2025 01:30:48 -0700 (PDT)
+	bh=oXdzLyDjy1en1noSqIeHf800Rfe5SrEuKJcIvmzNwtg=;
+	b=AUD3zR5a6iPxgl4dKh4u88Zi1MAzoglpkZplQ3LJNp7W0TbrAVG2KkNU+qtEON4Y
+	9LnHGc9bSYgon+ZN7ZQRqwYGBhDcpIwBhum32bzZasHL3ZXUdwZLnG1pen/c5YTI8NM
+	xu2xTZHsIKbj63Joe1E3NU1oOevn3xVN7w2PPLOo=
+Received: by mx.zohomail.com with SMTPS id 1756110662866130.9136658227335;
+	Mon, 25 Aug 2025 01:31:02 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Mon, 25 Aug 2025 10:28:28 +0200
-Subject: [PATCH v3 08/20] drm/rockchip: vop2: switch to FIELD_PREP_WM16
- macro
+Date: Mon, 25 Aug 2025 10:28:29 +0200
+Subject: [PATCH v3 09/20] phy: rockchip-samsung-dcphy: switch to
+ FIELD_PREP_WM16 macro
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250825-byeword-update-v3-8-947b841cdb29@collabora.com>
+Message-Id: <20250825-byeword-update-v3-9-947b841cdb29@collabora.com>
 References: <20250825-byeword-update-v3-0-947b841cdb29@collabora.com>
 In-Reply-To: <20250825-byeword-update-v3-0-947b841cdb29@collabora.com>
 To: Yury Norov <yury.norov@gmail.com>, 
@@ -103,92 +103,62 @@ Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
  linux-sound@vger.kernel.org, netdev@vger.kernel.org, 
  linux-stm32@st-md-mailman.stormreply.com, linux-pci@vger.kernel.org, 
  linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 X-Mailer: b4 0.14.2
 
 The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
 drivers that use constant masks.
 
-Remove VOP2's HIWORD_UPDATE macro from the vop2 header file, and replace
-all instances in rockchip_vop2_reg.c (the only user of this particular
-HIWORD_UPDATE definition) with equivalent FIELD_PREP_WM16 instances. This
-gives us better error checking.
+phy-rockchip-samsung-dcphy is actually an exemplary example, where the
+similarities to FIELD_PREP were spotted and the driver local macro has
+the same semantics as the new FIELD_PREP_WM16 hw_bitfield.h macro.
 
-Reviewed-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Tested-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Still, get rid of FIELD_PREP_HIWORD now that a shared implementation
+exists, replacing the two instances of it with FIELD_PREP_WM16. This
+gives us slightly better error checking; the value is now checked to fit
+in 16 bits.
+
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- drivers/gpu/drm/rockchip/rockchip_drm_vop2.h |  1 -
- drivers/gpu/drm/rockchip/rockchip_vop2_reg.c | 15 +++++++++------
- 2 files changed, 9 insertions(+), 7 deletions(-)
+ drivers/phy/rockchip/phy-rockchip-samsung-dcphy.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
-index fa5c56f16047e3493e82fbedaced221459696dcc..9124191899baca764e4e362f86bbc2bb1f319577 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.h
-@@ -33,7 +33,6 @@
- #define WIN_FEATURE_AFBDC		BIT(0)
- #define WIN_FEATURE_CLUSTER		BIT(1)
- 
--#define HIWORD_UPDATE(v, h, l)  ((GENMASK(h, l) << 16) | ((v) << (l)))
- /*
-  *  the delay number of a window in different mode.
-  */
-diff --git a/drivers/gpu/drm/rockchip/rockchip_vop2_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop2_reg.c
-index 45c5e39878133163ee05c25a6a99004313f5ed19..38c49030c7ab6416c4af6b5c7be7b241e3c9db18 100644
---- a/drivers/gpu/drm/rockchip/rockchip_vop2_reg.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_vop2_reg.c
-@@ -7,6 +7,7 @@
+diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-dcphy.c b/drivers/phy/rockchip/phy-rockchip-samsung-dcphy.c
+index 28a052e17366516d5a99988bec9a52e3f0f09101..4508a314727232473e90fd1649ec0f2829b65c49 100644
+--- a/drivers/phy/rockchip/phy-rockchip-samsung-dcphy.c
++++ b/drivers/phy/rockchip/phy-rockchip-samsung-dcphy.c
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/phy/phy.h>
  #include <linux/bitfield.h>
- #include <linux/kernel.h>
- #include <linux/component.h>
+ #include <linux/clk.h>
 +#include <linux/hw_bitfield.h>
- #include <linux/mod_devicetable.h>
- #include <linux/platform_device.h>
- #include <linux/of.h>
-@@ -1695,8 +1696,9 @@ static unsigned long rk3588_set_intf_mux(struct vop2_video_port *vp, int id, u32
- 		die |= RK3588_SYS_DSP_INFACE_EN_HDMI0 |
- 			    FIELD_PREP(RK3588_SYS_DSP_INFACE_EN_EDP_HDMI0_MUX, vp->id);
- 		val = rk3588_get_hdmi_pol(polflags);
--		regmap_write(vop2->vop_grf, RK3588_GRF_VOP_CON2, HIWORD_UPDATE(1, 1, 1));
--		regmap_write(vop2->vo1_grf, RK3588_GRF_VO1_CON0, HIWORD_UPDATE(val, 6, 5));
-+		regmap_write(vop2->vop_grf, RK3588_GRF_VOP_CON2, FIELD_PREP_WM16(BIT(1), 1));
-+		regmap_write(vop2->vo1_grf, RK3588_GRF_VO1_CON0,
-+			     FIELD_PREP_WM16(GENMASK(6, 5), val));
- 		break;
- 	case ROCKCHIP_VOP2_EP_HDMI1:
- 		div &= ~RK3588_DSP_IF_EDP_HDMI1_DCLK_DIV;
-@@ -1707,8 +1709,9 @@ static unsigned long rk3588_set_intf_mux(struct vop2_video_port *vp, int id, u32
- 		die |= RK3588_SYS_DSP_INFACE_EN_HDMI1 |
- 			    FIELD_PREP(RK3588_SYS_DSP_INFACE_EN_EDP_HDMI1_MUX, vp->id);
- 		val = rk3588_get_hdmi_pol(polflags);
--		regmap_write(vop2->vop_grf, RK3588_GRF_VOP_CON2, HIWORD_UPDATE(1, 4, 4));
--		regmap_write(vop2->vo1_grf, RK3588_GRF_VO1_CON0, HIWORD_UPDATE(val, 8, 7));
-+		regmap_write(vop2->vop_grf, RK3588_GRF_VOP_CON2, FIELD_PREP_WM16(BIT(4), 1));
-+		regmap_write(vop2->vo1_grf, RK3588_GRF_VO1_CON0,
-+			     FIELD_PREP_WM16(GENMASK(8, 7), val));
- 		break;
- 	case ROCKCHIP_VOP2_EP_EDP0:
- 		div &= ~RK3588_DSP_IF_EDP_HDMI0_DCLK_DIV;
-@@ -1718,7 +1721,7 @@ static unsigned long rk3588_set_intf_mux(struct vop2_video_port *vp, int id, u32
- 		die &= ~RK3588_SYS_DSP_INFACE_EN_EDP_HDMI0_MUX;
- 		die |= RK3588_SYS_DSP_INFACE_EN_EDP0 |
- 			   FIELD_PREP(RK3588_SYS_DSP_INFACE_EN_EDP_HDMI0_MUX, vp->id);
--		regmap_write(vop2->vop_grf, RK3588_GRF_VOP_CON2, HIWORD_UPDATE(1, 0, 0));
-+		regmap_write(vop2->vop_grf, RK3588_GRF_VOP_CON2, FIELD_PREP_WM16(BIT(0), 1));
- 		break;
- 	case ROCKCHIP_VOP2_EP_EDP1:
- 		div &= ~RK3588_DSP_IF_EDP_HDMI1_DCLK_DIV;
-@@ -1728,7 +1731,7 @@ static unsigned long rk3588_set_intf_mux(struct vop2_video_port *vp, int id, u32
- 		die &= ~RK3588_SYS_DSP_INFACE_EN_EDP_HDMI1_MUX;
- 		die |= RK3588_SYS_DSP_INFACE_EN_EDP1 |
- 			   FIELD_PREP(RK3588_SYS_DSP_INFACE_EN_EDP_HDMI1_MUX, vp->id);
--		regmap_write(vop2->vop_grf, RK3588_GRF_VOP_CON2, HIWORD_UPDATE(1, 3, 3));
-+		regmap_write(vop2->vop_grf, RK3588_GRF_VOP_CON2, FIELD_PREP_WM16(BIT(3), 1));
- 		break;
- 	case ROCKCHIP_VOP2_EP_MIPI0:
- 		div &= ~RK3588_DSP_IF_MIPI0_PCLK_DIV;
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/mfd/syscon.h>
+@@ -20,12 +21,6 @@
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
+ 
+-#define FIELD_PREP_HIWORD(_mask, _val)		\
+-	(					\
+-		FIELD_PREP((_mask), (_val)) |	\
+-		((_mask) << 16)			\
+-	)
+-
+ #define BIAS_CON0		0x0000
+ #define I_RES_CNTL_MASK		GENMASK(6, 4)
+ #define I_RES_CNTL(x)		FIELD_PREP(I_RES_CNTL_MASK, x)
+@@ -252,8 +247,8 @@
+ 
+ /* MIPI_CDPHY_GRF registers */
+ #define MIPI_DCPHY_GRF_CON0		0x0000
+-#define S_CPHY_MODE			FIELD_PREP_HIWORD(BIT(3), 1)
+-#define M_CPHY_MODE			FIELD_PREP_HIWORD(BIT(0), 1)
++#define S_CPHY_MODE			FIELD_PREP_WM16(BIT(3), 1)
++#define M_CPHY_MODE			FIELD_PREP_WM16(BIT(0), 1)
+ 
+ enum hs_drv_res_ohm {
+ 	STRENGTH_30_OHM = 0x8,
 
 -- 
 2.51.0
