@@ -1,238 +1,162 @@
-Return-Path: <linux-pci+bounces-34796-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34797-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C16FB3745A
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 23:24:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A708B374C6
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 00:10:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2CF26204569
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 21:24:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 511D81BA378F
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 22:10:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A030D2FE04B;
-	Tue, 26 Aug 2025 21:24:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18F8C285418;
+	Tue, 26 Aug 2025 22:10:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EPLGG/7V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJk+3Sxv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC9D28151E;
-	Tue, 26 Aug 2025 21:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEAB26CE0A;
+	Tue, 26 Aug 2025 22:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756243450; cv=none; b=C3r6buO2OnCWnlWwLFbYf2IUejAnRHWtYNNKb9nJMkxsEbgmKE/FEsqOXGiOMn/4IkqTOoqCsMxpqryGCVsio+kB+85vP++UuU0c/VSlOkFn0R6oFsnYVZIANBp6QNsLnoUOE2elqjGdXbrH2SqeQm+u5GGqmbQnaZWTvZitfKU=
+	t=1756246207; cv=none; b=WrZZY6I61qJBZ+IbIs+9TIZRU5lXCEDCykF4FdNyNDZwLyaWn2rh3AauK+kPRPfwkullgqB9TfOzkiDogROmGlCz+l3VrqFfHOd0a5eS4GChcBfZrk3JHVh0bfLZ4nh/nrVazxgJos+MgoYFfPTBfluwmfOgstUVEt8on7jk3TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756243450; c=relaxed/simple;
-	bh=l883/XMWp2sJPEUKA3Wy082jQu7V8ivTJMDHeeXauTU=;
+	s=arc-20240116; t=1756246207; c=relaxed/simple;
+	bh=fioVeqhXNB9Fxx0/JBG7Xt/edyDhgxPlIFy5Og5p0OA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dHbM8VkbkfBjPs1FN5cLJryPP/2JG+8VbetcHsPDaqHAZz9xzDXKcPiOlRsY5bvjZNiS/o88TivvH9OPoi2eOixtO6QkAEcMi64Bp9bRycBXR4mkzNVui16eRIf306ydDn8NAkQPbx/DB9tIp4y4Qf555ORVkhMgN2pGnTrHWc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EPLGG/7V; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756243449; x=1787779449;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=l883/XMWp2sJPEUKA3Wy082jQu7V8ivTJMDHeeXauTU=;
-  b=EPLGG/7V18wNdYewZSMWBjdnxb+DRe71eo3L4m3/+31Y1FFNomap68tU
-   NQMLT2tA9RiVCJ1+azuuKb4eJxkNFO5xu+oTrzujPYjMcMbs0QHg6q946
-   /uhfuafpy2f7QiqD6mbQ11zQvjm2IVRdM7XQiVT5Tzsbwv/9vedKjOuhU
-   QuPNPznunH0CGIs5kCQvi9btNeo/B8PEQKX6jG1BQT50Kqc75IjJm4cmo
-   soVIvbXiLcm0AFafXdxGpSilib/dSSTtT33FH3YvScUU5RMP2cNlCcFPV
-   ByB6H3mZhuQj4FsrU0/lAjAMlIrxiUcfPWMxzXDKouV+mixk6tqGDiWwU
-   w==;
-X-CSE-ConnectionGUID: 2o0t4PlyTgWVBuaH9n42qQ==
-X-CSE-MsgGUID: vUNrkn//SnGI9Y4jeIu7ww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11534"; a="58644683"
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="58644683"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2025 14:24:08 -0700
-X-CSE-ConnectionGUID: FL09nxxnRhaPH9mjGQ3DxQ==
-X-CSE-MsgGUID: ojYl6mGmTkKBIEZtGn/+eg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="200632650"
-Received: from mgerlach-mobl1.amr.corp.intel.com (HELO localhost) ([10.124.223.116])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2025 14:24:07 -0700
-Date: Tue, 26 Aug 2025 14:24:05 -0700
-From: David Box <david.e.box@linux.intel.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Nirmal Patel <nirmal.patel@linux.intel.com>, 
-	Jonathan Derrick <jonathan.derrick@linux.dev>, Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	ath12k@lists.infradead.org, ath11k@lists.infradead.org, ath10k@lists.infradead.org, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v2 2/8] PCI/ASPM: Fix the behavior of
- pci_enable_link_state*() APIs
-Message-ID: <qfw7nv53hmy6whxnf4zqfdtvjzkdxkvxn7eghuxzuuojmvxl34@sxw2jvxze4wm>
-References: <20250825-ath-aspm-fix-v2-0-61b2f2db7d89@oss.qualcomm.com>
- <20250825-ath-aspm-fix-v2-2-61b2f2db7d89@oss.qualcomm.com>
- <f644fc83-31cc-1f0e-58cf-7c007e6173e4@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KmRkDgEeu61e1KhE1KMcNzNQg5/CUa8NS4NrFr3h9qyPLbpUq7SWMibZDkoXSZQBBLInujrFto/y6wdo/y1qKIeH4gudQSRyuZ8NuhYCTNg7Pj0GatbStFUL9SK9fKruZqnulpg5CNtpb8eGfoox1DsPUoIn14PEm7B816ycEfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJk+3Sxv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21115C4CEF1;
+	Tue, 26 Aug 2025 22:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756246206;
+	bh=fioVeqhXNB9Fxx0/JBG7Xt/edyDhgxPlIFy5Og5p0OA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UJk+3Sxv/gNM9s2ymXEAgMEo/4Q6+p9e9IZExcg2d6IvBe/d10vPtfqIgwgQv70FH
+	 ED5m9jC4xK0JecdtQKVWffqWrXcw737m5QStsQdU2rkJxJyFKxvYlDar5Y/hP0Ubec
+	 C6YWhDP53rmMgiiSHlVTt3rUS4hBBDDHTdZ0ipqienuCu7Hc7vKR7KeTIV/fkdn1vb
+	 x3kI9lSjfYQ75pPPSFxkKZq0yluEn5A22/f3dWQ+4pFt7LHxgy5yVXxKT85c4ylMvK
+	 MQz9dhkZInJK/lZ+/WAqXz8CmeQ/SdMUvrhzvYTXIsTw4n6NF1y1km0BQ7IEc3U8zx
+	 jmcanHhP74vtA==
+Date: Tue, 26 Aug 2025 15:09:59 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Anders Roxell <anders.roxell@linaro.org>
+Cc: Inochi Amaoto <inochiama@gmail.com>, regressions@lists.linux.dev,
+	linux-next@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <maz@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Juergen Gross <jgross@suse.com>, Nicolin Chen <nicolinc@nvidia.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Chen Wang <unicorn_wang@outlook.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>, arnd@arndb.de,
+	dan.carpenter@linaro.org, naresh.kamboju@linaro.org,
+	benjamin.copeland@linaro.org
+Subject: Re: [PATCH v2 2/4] PCI/MSI: Add startup/shutdown for per device
+ domains
+Message-ID: <20250826220959.GA4119563@ax162>
+References: <20250813232835.43458-1-inochiama@gmail.com>
+ <20250813232835.43458-3-inochiama@gmail.com>
+ <aK4O7Hl8NCVEMznB@monster>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f644fc83-31cc-1f0e-58cf-7c007e6173e4@linux.intel.com>
+In-Reply-To: <aK4O7Hl8NCVEMznB@monster>
 
-On Tue, Aug 26, 2025 at 03:55:42PM +0300, Ilpo Järvinen wrote:
-> +David
+On Tue, Aug 26, 2025 at 09:45:48PM +0200, Anders Roxell wrote:
+> Regressions found while booting the Linux next-20250826 on the
+> qemu-arm64, qemu-armv7 due to following kernel log.
 > 
-> On Mon, 25 Aug 2025, Manivannan Sadhasivam via B4 Relay wrote:
+> Bisection identified this commit as the cause of the regression.
 > 
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > 
-> > pci_enable_link_state() and pci_enable_link_state_locked() APIs are
-> > supposed to be symmectric with pci_disable_link_state() and
-> > pci_disable_link_state_locked() APIs.
-> > 
-> > But unfortunately, they are not symmetric. This behavior was mentioned in
-> > the kernel-doc of these APIs:
-> > 
-> > " Clear and set the default device link state..."
-> > 
-> > and
-> > 
-> > "Also note that this does not enable states disabled by
-> > pci_disable_link_state()"
-> > 
-> > These APIs won't enable all the states specified by the 'state' parameter,
-> > but only enable the ones not previously disabled by the
-> > pci_disable_link_state*() APIs. But this behavior doesn't align with the
-> > naming of these APIs, as they give the impression that these APIs will
-> > enable all the specified states.
-> > 
-> > To resolve this ambiguity, allow these APIs to enable the specified states,
-> > regardeless of whether they were previously disabled or not. This is
-> > accomplished by clearing the previously disabled states from the
-> > 'link::aspm_disable' parameter in __pci_enable_link_state() helper. Also,
-> > reword the kernel-doc to reflect this behavior.
-> > 
-> > The current callers of pci_enable_link_state_locked() APIs (vmd and
-> > pcie-qcom) did not disable the ASPM states before calling this API. So it
-> > is evident that they do not depend on the previous behavior of this API and
-> > intend to enable all the specified states.
+> Regression Analysis:
+> - New regression? Yes
+> - Reproducible? Yes
 > 
-> While it might be "safe" in the sense that ->aspm_disable is not set by 
-> anything, I'm still not sure if overloading this function for two 
-> different use cases is a good idea.
+> First seen on the next-20250826
+> Good: next-20250825
+> Bad: next-20250826
 > 
-> I'd like to hear David's opinion on this as he grasps the ->aspm_default 
-> vs ->aspm_disable thing much better than I do.
+> Test regression: next-20250826 gcc-13 boot failed on qemu-arm64 and
+> qemu-armv7.
+> 
+> Expected behavior: System should boot normally and virtio block devices
+> should be detected and initialized immediately.
+> 
+> Actual behavior: System hangs for ~30 seconds during virtio block device
+> initialization before showing scheduler deadline replenish errors and
+> failing to complete boot.
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> [...]
+> <6>[    1.369038] virtio-pci 0000:00:01.0: enabling device (0000 ->
+> 0003)
+> <6>[    1.420097] Serial: 8250/16550 driver, 4 ports, IRQ sharing
+> enabled
+> <6>[    1.450858] msm_serial: driver initialized
+> <6>[    1.454489] SuperH (H)SCI(F) driver initialized
+> <6>[    1.456056] STM32 USART driver initialized
+> <6>[    1.513325] loop: module loaded
+> <6>[    1.515744] virtio_blk virtio0: 2/0/0 default/read/poll queues
+> <5>[    1.527859] virtio_blk virtio0: [vda] 5397504 512-byte logical
+> blocks (2.76 GB/2.57 GiB)
+> <4>[   29.761219] sched: DL replenish lagged too much
+> [here it hangs]
 
-The concern I see is that this would override the init-time blacklist which is
-set in pcie_aspm_sanity_check() and only consulted during initialization.
-__pci_disable_link_state() doesn't do this. It ORs in bits to aspm_disable.  By
-contrast, this change would clear bits from aspm_disable in the enable path,
-which allows ASPM to be enabled on links that pcie_aspm_sanity_check()
-determined should be disabled.
+FWIW, I am also seeing this on real arm64 hardware (an LX2160A board and
+an Ampere Altra one) but with my NVMe drives failing to be recognized.
+In somewhat ironic fashion, I am seeing the message from cover letter
+repeating.
 
-But I noticed the sysfs path, aspm_attr_store_common(), already permits this
-override. That may be unintentional though since the comment in
-pcie_aspm_sanity_check() implies the blacklist can only be overridden with
-pcie_aspm=force. At minimum, that needs to be clarified.
+  nvme nvme0: I/O tag 8 (1008) QID 0 timeout, completion polled
+  [  125.810062] dracut-initqueue[640]: Timed out while waiting for udev queue to empty.
+  nvme nvme0: I/O tag 9 (1009) QID 0 timeout, completion polled
 
-David
+I am happy to test patches or provide information.
 
-> 
-> > And the other API, pci_enable_link_state() doesn't have a caller for now,
-> > but will be used by the 'atheros' WLAN drivers in the subsequent commits.
-> > 
-> > Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> 
-> This tag sound like I'm endorsing this approach which is not the case. I'd 
-> prefer separate functions for each use case, setting aspm_default and 
-> another for the enable state.
-> 
-> -- 
->  i.
-> 
-> > Co-developed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > ---
-> >  drivers/pci/pcie/aspm.c | 33 ++++++++++++++++++---------------
-> >  1 file changed, 18 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > index be9bd272057c3472f3e31dc9568340b19d52012a..fac46113a90c7fac6c97125e6a7e385045780005 100644
-> > --- a/drivers/pci/pcie/aspm.c
-> > +++ b/drivers/pci/pcie/aspm.c
-> > @@ -1459,6 +1459,7 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
-> >  		down_read(&pci_bus_sem);
-> >  	mutex_lock(&aspm_lock);
-> >  	link->aspm_default = pci_calc_aspm_enable_mask(state);
-> > +	link->aspm_disable &= ~state;
-> >  	pcie_config_aspm_link(link, policy_to_aspm_state(link));
-> >  
-> >  	link->clkpm_default = (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
-> > @@ -1471,17 +1472,18 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
-> >  }
-> >  
-> >  /**
-> > - * pci_enable_link_state - Clear and set the default device link state so that
-> > - * the link may be allowed to enter the specified states. Note that if the
-> > - * BIOS didn't grant ASPM control to the OS, this does nothing because we can't
-> > - * touch the LNKCTL register. Also note that this does not enable states
-> > - * disabled by pci_disable_link_state(). Return 0 or a negative errno.
-> > + * pci_enable_link_state - Enable device's link state
-> > + * @pdev: PCI device
-> > + * @state: Mask of ASPM link states to enable
-> > + *
-> > + * Enable device's link state, so the link will enter the specified states.
-> > + * Note that if the BIOS didn't grant ASPM control to the OS, this does
-> > + * nothing because we can't touch the LNKCTL register.
-> >   *
-> >   * Note: Ensure devices are in D0 before enabling PCI-PM L1 PM Substates, per
-> >   * PCIe r6.0, sec 5.5.4.
-> >   *
-> > - * @pdev: PCI device
-> > - * @state: Mask of ASPM link states to enable
-> > + * Return: 0 on success, a negative errno otherwise.
-> >   */
-> >  int pci_enable_link_state(struct pci_dev *pdev, int state)
-> >  {
-> > @@ -1490,19 +1492,20 @@ int pci_enable_link_state(struct pci_dev *pdev, int state)
-> >  EXPORT_SYMBOL(pci_enable_link_state);
-> >  
-> >  /**
-> > - * pci_enable_link_state_locked - Clear and set the default device link state
-> > - * so that the link may be allowed to enter the specified states. Note that if
-> > - * the BIOS didn't grant ASPM control to the OS, this does nothing because we
-> > - * can't touch the LNKCTL register. Also note that this does not enable states
-> > - * disabled by pci_disable_link_state(). Return 0 or a negative errno.
-> > + * pci_enable_link_state_locked - Enable device's link state
-> > + * @pdev: PCI device
-> > + * @state: Mask of ASPM link states to enable
-> > + *
-> > + * Enable device's link state, so the link will enter the specified states.
-> > + * Note that if the BIOS didn't grant ASPM control to the OS, this does
-> > + * nothing because we can't touch the LNKCTL register.
-> >   *
-> >   * Note: Ensure devices are in D0 before enabling PCI-PM L1 PM Substates, per
-> >   * PCIe r6.0, sec 5.5.4.
-> >   *
-> > - * @pdev: PCI device
-> > - * @state: Mask of ASPM link states to enable
-> > - *
-> >   * Context: Caller holds pci_bus_sem read lock.
-> > + *
-> > + * Return: 0 on success, a negative errno otherwise.
-> >   */
-> >  int pci_enable_link_state_locked(struct pci_dev *pdev, int state)
-> >  {
-> > 
-> > 
+Cheers,
+Nathan
 
+# bad: [d0630b758e593506126e8eda6c3d56097d1847c5] Add linux-next specific files for 20250826
+# good: [b6add54ba61890450fa54fd9327d10fdfd653439] Merge tag 'pinctrl-v6.17-2' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
+git bisect start 'd0630b758e593506126e8eda6c3d56097d1847c5' 'b6add54ba61890450fa54fd9327d10fdfd653439'
+# good: [968d16786392f6e047329f5eff66acc131636019] Merge branch 'for-next' of https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git
+git bisect good 968d16786392f6e047329f5eff66acc131636019
+# good: [042e9f528d5362c499b5d8e2716cf6f64ca53add] Merge branch 'for-next' of https://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git
+git bisect good 042e9f528d5362c499b5d8e2716cf6f64ca53add
+# bad: [beebb75399dc36e7c244db0a08426053b4581ecc] Merge branch 'for-next' of https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git
+git bisect bad beebb75399dc36e7c244db0a08426053b4581ecc
+# good: [62df8fb299358a45a915381de09025cf5e6a4a8f] Merge branch 'for-next' of https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+git bisect good 62df8fb299358a45a915381de09025cf5e6a4a8f
+# bad: [1e6d2dcb13c8d94b56de1eff60235ca90587046b] Merge branch 'master' of https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+git bisect bad 1e6d2dcb13c8d94b56de1eff60235ca90587046b
+# bad: [a0daa9e939dbcd7767090151771d94ade75a4fd5] Merge branch into tip/master: 'x86/build'
+git bisect bad a0daa9e939dbcd7767090151771d94ade75a4fd5
+# bad: [d147a3db0dfa15c8e460f007128bd0fe2e1b877f] Merge branch into tip/master: 'perf/core'
+git bisect bad d147a3db0dfa15c8e460f007128bd0fe2e1b877f
+# good: [be5697d7136525a91e7f30fdca2e7de737d9a8ed] Merge branch into tip/master: 'irq/core'
+git bisect good be5697d7136525a91e7f30fdca2e7de737d9a8ed
+# good: [5d299897f1e36025400ca84fd36c15925a383b03] perf: Split out the RB allocation
+git bisect good 5d299897f1e36025400ca84fd36c15925a383b03
+# bad: [7fb83eb664e9b3a0438dd28859e9f0fd49d4c165] irqchip/loongson-eiointc: Route interrupt parsed from bios table
+git bisect bad 7fb83eb664e9b3a0438dd28859e9f0fd49d4c165
+# bad: [7ee4a5a2ec3748facfb4ca96e4cce6cabbdecab2] irqchip/sg2042-msi: Set MSI_FLAG_MULTI_PCI_MSI flags for SG2044
+git bisect bad 7ee4a5a2ec3748facfb4ca96e4cce6cabbdecab2
+# bad: [9d8c41816bac518b4824f83b346ae30a1be83f68] irqchip/sg2042-msi: Fix broken affinity setting
+git bisect bad 9d8c41816bac518b4824f83b346ae30a1be83f68
+# bad: [54f45a30c0d0153d2be091ba2d683ab6db6d1d5b] PCI/MSI: Add startup/shutdown for per device domains
+git bisect bad 54f45a30c0d0153d2be091ba2d683ab6db6d1d5b
+# first bad commit: [54f45a30c0d0153d2be091ba2d683ab6db6d1d5b] PCI/MSI: Add startup/shutdown for per device domains
 
