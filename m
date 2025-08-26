@@ -1,99 +1,122 @@
-Return-Path: <linux-pci+bounces-34777-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34778-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D254CB370EB
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 19:05:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 46301B370F9
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 19:07:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46B7A8E4162
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 17:05:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD2C48E4442
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 17:07:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C26636C06E;
-	Tue, 26 Aug 2025 17:04:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11E1427991C;
+	Tue, 26 Aug 2025 17:07:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hu/amXSM"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YkKe68Vp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5CBC2E1C6B;
-	Tue, 26 Aug 2025 17:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9275C2DC35F;
+	Tue, 26 Aug 2025 17:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756227846; cv=none; b=scfXp8gJuYUHtgkb4CPoEOMHY8nv31/z4T9c8GkNWdVLc/NS3FzH5Jn10He3NOx/pCmaRLSZIjA3hBpwnkxfat2yxgsD5sWkv2reLx7cYIOmh/hkEB3T4g+FulKNM6LE8Ca70hZu4yJIAY6pgnj4/uUnIma0GucGiVfIHwc0EwI=
+	t=1756228058; cv=none; b=fbWmKIt+pvJ5RX/N9bVUKCQ26EP2dBTfSOtlszhqGiN/smF4S1V7cih27PmUA6sXZkzd+3uGc7mmxcRN5Ws8Paft8sFly3+RAYZRaJq/OQ1i6Jb00+v0Fhluuz/QxVPKtqN+D9D1IHuAqu0AWLrj3RUuN614rAxktb1bS86TC5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756227846; c=relaxed/simple;
-	bh=RxbC6PRS5UWfVRhBWgHNMi2OVDBcE6RBrjCc4GiojgM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LbuL0z01oZrTeBr+OYWO7rwxqp1evxfubyQsgbyNfb2l6f5hnYIONGjgTwacX2t0PcvfQtJPpMJrSFollLSB/+uhB0BdDmlO7rg5zqHgFC6qtlyZRqjuWx2v+wcLwqpv7mK1L8U1AkVMeI5g0316jLLSRRZzwh6Ot5mXX/1dopk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hu/amXSM; arc=none smtp.client-ip=220.197.31.5
+	s=arc-20240116; t=1756228058; c=relaxed/simple;
+	bh=3k8cO5OzLzkuErIIYdeaZZpOurRtdMlnBzr/II5vUtY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YErtZOTGmUBPbm4EDG0ohYJB6fzbpM0WY8UzbQnGAM46Wr2xICB+nFT3L2P8rBGKtzEXMHN7/WblMtqChGGU6oPtB5NFeEgdSO+5bHutOQBH3ycQYTFn3wuHSP7rdzTOk54Dxznv+fFXEC/Uj0ilv6J/21Dd4BNE2apiyPFl/es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YkKe68Vp; arc=none smtp.client-ip=117.135.210.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Uo
-	wts4zfhr1/6N6PWGm/8Hg/npgCEGN+e6f6uoDvA5c=; b=hu/amXSM7XLdQPpe7l
-	i+P+6dog+H2WCavBl60be1kawaf193WAkTdk28pVOiztE7/0kUCk3jXfUuvubFvc
-	YVDBf+FsgvoX8CToIx9YVTnJChoWRdr/MrmiXDKKWOWrvtMEYaMxGlcQHbrZ1Kt1
-	5rIPolhigc+gGNdkRRtwdX8uE=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAH5Svt6K1o9DIiEg--.25085S10;
-	Wed, 27 Aug 2025 01:03:45 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: bhelgaas@google.com,
-	helgaas@kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Hans Zhang <18255117159@163.com>
-Subject: [PATCH v3 8/8] PCI/DPC: Add macro for RP busy check delay
-Date: Wed, 27 Aug 2025 01:03:15 +0800
-Message-Id: <20250826170315.721551-9-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250826170315.721551-1-18255117159@163.com>
-References: <20250826170315.721551-1-18255117159@163.com>
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=I563Bbo31n6nV/SklVskiKt8QsN4DGg0bHSFCTqvWAA=;
+	b=YkKe68VpI+78K70I0zwMocD8Rzx0QIwkcC/C9+gdJXJ7mNoIfhn9rQCqkdxTxp
+	jvjXNoqRrawBb1gK5ayFGmq8X0QCoFML6JDC7gX3wpwRhsiUyo1M2lKVWK3n4kgb
+	5XZ9kuMyibDPZlxdKBcHSxUj8v2yfOzCKFAqQnus/3Lp0=
+Received: from [IPV6:240e:b8f:919b:3100:3980:6173:5059:2d2a] (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wCnC4_L6a1orcehEg--.60535S2;
+	Wed, 27 Aug 2025 01:07:24 +0800 (CST)
+Message-ID: <c6efb55c-8ab9-4ccf-84c4-9a2a50102d15@163.com>
+Date: Wed, 27 Aug 2025 01:07:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAH5Svt6K1o9DIiEg--.25085S10
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKrykKrW8CF4UZF18Kw17Jrb_yoWkAwb_uF
-	yFvryIyrW5CF97C3yYv3ySy34UA3Z7Zr1xWa1FyFWfZr17trnrJrZ2vw15trZ8W3y5XFy5
-	Aw4DJ34Yyr9rGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sR_wvtJUUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgC1o2it5y8lTQABsI
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/7] PCI: Replace short msleep() calls with more
+ precise delay functions
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250822164638.GA687302@bhelgaas>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250822164638.GA687302@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wCnC4_L6a1orcehEg--.60535S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kr1xZw4kAryDWw17Jr1xGrg_yoW8Zryxpa
+	y5Wr1qyw4UJ390kw12va1YkFykKayktayrtry5W34kJr98XrySyF4F9r4j9ryUXrZYya40
+	qayUta95uayYvF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRi0eXUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQwW1o2it56YxAAAAsl
 
-Add PCIE_EXP_DPC_BUSY_CHECK_MS macro for RP busy check delay.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/pcie/dpc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index fc18349614d7..bd5e8cd9e43e 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -21,6 +21,8 @@
- #define PCI_EXP_DPC_CTL_EN_MASK	(PCI_EXP_DPC_CTL_EN_FATAL | \
- 				 PCI_EXP_DPC_CTL_EN_NONFATAL)
- 
-+#define PCIE_EXP_DPC_BUSY_CHECK_MS	10
-+
- static const char * const rp_pio_error_string[] = {
- 	"Configuration Request received UR Completion",	 /* Bit Position 0  */
- 	"Configuration Request received CA Completion",	 /* Bit Position 1  */
-@@ -135,7 +137,7 @@ static int dpc_wait_rp_inactive(struct pci_dev *pdev)
- 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
- 	while (status & PCI_EXP_DPC_RP_BUSY &&
- 					!time_after(jiffies, timeout)) {
--		msleep(10);
-+		msleep(PCIE_EXP_DPC_BUSY_CHECK_MS);
- 		pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
- 	}
- 	if (status & PCI_EXP_DPC_RP_BUSY) {
--- 
-2.25.1
+On 2025/8/23 00:46, Bjorn Helgaas wrote:
+> On Fri, Aug 22, 2025 at 11:59:01PM +0800, Hans Zhang wrote:
+>> This series replaces short msleep() calls (less than 20ms) with more
+>> precise delay functions (fsleep() and usleep_range()) throughout the
+>> PCI subsystem.
+>>
+>> The msleep() function with small values can sleep longer than intended
+>> due to timer granularity, which can cause unnecessary delays in PCI
+>> operations such as link status checking, reset handling, and hotplug
+>> operations.
+>>
+>> These changes:
+>> - Use fsleep() for delays that require precise timing (1-2ms).
+>> - Use usleep_range() for delays that can benefit from a small range.
+>> - Add #defines for all delay values with references to PCIe specifications.
+>> - Update comments to reference the latest PCIe r7.0 specification.
+>>
+>> This improves the responsiveness of PCI operations while maintaining
+>> compliance with PCIe specifications.
+> 
+> I would split this a little differently:
+> 
+>    - Add #defines for values from PCIe base spec.  Make the #define
+>      value match the spec value.  If there's adjustment, e.g.,
+>      doubling, do it at the sleep site.  Adjustment like this seems a
+>      little paranoid since the spec should already have some margin
+>      built into it.
+> 
+>    - Change to fsleep() (or usleep_range()) in separate patch.  There
+>      might be discussion about these changes, but the #defines are
+>      desirable regardless.
+> 
+> I'm personally dubious about the places you used usleep_range().
+> These are low-frequency paths (rcar PHY ready, brcmstb link up,
+> hotplug command completion, DPC recover) that don't seem critical.  I
+> think they're all using made-up delays that don't come from any spec
+> or hardware requirement anyway.  I think it's hard to make an argument
+> for precision here.
+> 
+
+Dear Bjorn,
+
+Thank you very much for your reply.
+
+I have revised version v3 based on your review comments. Please continue 
+your review. Thank you very much.
+
+Best regards,
+Hans
+
+> Bjorn
 
 
