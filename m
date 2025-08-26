@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-34704-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34705-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 143E4B35398
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 07:54:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D178B353A6
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 07:57:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D1C6324498C
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 05:54:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6089F1892746
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 05:57:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 061F22F1FDF;
-	Tue, 26 Aug 2025 05:54:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A10DB2F39C8;
+	Tue, 26 Aug 2025 05:57:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XdCfstlY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ln9gUA1G"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC690284678;
-	Tue, 26 Aug 2025 05:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF042EF64A;
+	Tue, 26 Aug 2025 05:57:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756187678; cv=none; b=ntOqgBlReNyheX8lz+BVNq7XA7PVoK8iZ6GYBvYPi6WC2inanDjlQvLoftu+BaUBY+OEccdGccAjBWjvL7zLPxuN07pfMbUUyAz3zCkROr4vN5+yEKP7JnlZlMLmBTkEQYck816LyFn6HXvRahBGKYofcslE7S4yfPDue4GZEzU=
+	t=1756187848; cv=none; b=Zp9YdvavQm4ZBJ1Gu1Jq4cRX9Watz4M/M0Ktk9IUxaA6GWfoamuPZjJYChLDvFQrooV4KJKoFtsRz0/bMJHXDhMeW5C1RufMokuqsk8jEAfUb3J4OsQ9hj9aXaavubjeQA5iqSfEHlHA+NRENupIZuAeOv5qtPMU78A5OH0zyug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756187678; c=relaxed/simple;
-	bh=mDCo2e5iajiOGDQorlkOT7JbhHy60rx+m/owKkvEKkM=;
+	s=arc-20240116; t=1756187848; c=relaxed/simple;
+	bh=kKNH8NUIKhO94RwCUn5nWlFEWU6qfkkFMbDLyS0gX0Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iaeEy7gWEFGs8+dhEc/ThkYKliHXSr8fTCvGe2EHhOTl/FeUZZ3FXivB7DicG4QHIeSG5T3oo8UJNred4/J4ePbYxr7UlA4kGNVlEJgfDHcAx/CjirYxJMGGZV0xIGYjUNpgq7dnvXNcvrFxBo81saGsShQqvPrkzTbvNpDUmWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XdCfstlY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B66BC4CEF1;
-	Tue, 26 Aug 2025 05:54:32 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ri4XUoBaWJCZEHICFjYiWzDyfE1meuCFLqge7VzE5vUT1U4TqwcXEygyXw5OL0P0bYPIgoY7MpL6yyjzQPOezElZXo4//+yp7xRsIT8TbdIxnyu4Gkj+AGdFm01pchIo1px7pEbwlK7EKZ3SLsMzj1249nwbgnaQnrPi+5Kk+Fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ln9gUA1G; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC04AC4CEF1;
+	Tue, 26 Aug 2025 05:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756187678;
-	bh=mDCo2e5iajiOGDQorlkOT7JbhHy60rx+m/owKkvEKkM=;
+	s=k20201202; t=1756187847;
+	bh=kKNH8NUIKhO94RwCUn5nWlFEWU6qfkkFMbDLyS0gX0Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XdCfstlYzoWuk+eqzBYLbfMOWOEgtpETEheP4R+ALiWMSS88MUkEedmPpWaqlYAFu
-	 8lfYQSf9pN1cblwV7SEqEWwq5GqRGppe7QcVlXwD4ZQj1MkRQdLdmqWm6RSOwWoQ3N
-	 Ry3OEFb5NUhkxwus/ZOWMChNTrMq/ioVvGELxHW7fawdwwtvqgRtTIW0GFbDyzIJTj
-	 jk3zFdQG2oF9vlhJUtx9aIFqHut9x2Ky2lMSNvNEnB5TCEcJHMkVroA5e/XwvVeMQx
-	 cXP1Cax+e+TjnPIQ943ZQ8CEACKAwa57XpzBimqumZJERFdVic1Tr1zkTx2NVAk6H1
-	 z20cVNXZtvchQ==
-Date: Tue, 26 Aug 2025 11:24:22 +0530
+	b=ln9gUA1G06fZktO8IE1FEsVV3ABrBpoEvWvmBLz2mWUJIu1k7gwHVtEwna4XoA9g/
+	 V9EpMnEOF8H7QyGHxgr7eck3KTr0lYbav+9YwjJcGdeh6iohVzfUJXhT0GRMOy+ejc
+	 g2AXVc0668NFypwEHhVGnGoKy1/YUvMgkVVFWbymrUN713HNWZRQznBlNm5Fr6Oqn/
+	 FBPmpKrvsoieRxEuuQp9lu4V6vKNEjYYUw9gfxFAAjRYufUivmMOVvpGl0aXwwSw56
+	 YBVmEvDnkFgoFQ9WvB4hI8B64Bh4pcP00U3D40cGQvgZ/iVvL853IvAFxLDja/ht70
+	 aqNFoO4SZ4OaQ==
+Date: Tue, 26 Aug 2025 11:27:11 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, 
@@ -52,11 +52,11 @@ Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
 	devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 7/7] PCI: qcom: Use frequency and level based OPP
- lookup
-Message-ID: <wuavhpbdx6onb6m7xxkztifyigcmhjevzs5ihjof75zksk7rui@4nixiuioyqeb>
+Subject: Re: [PATCH v4 3/7] arm64: dts: qcom: sm8450: Add opp-level to
+ indicate PCIe data rates
+Message-ID: <6nwss6gl3d47zer4pai23xcu4weok7m3ptyuptvu5oli7u7ads@zzhbw67hnhz5>
 References: <20250820-opp_pcie-v4-0-273b8944eed0@oss.qualcomm.com>
- <20250820-opp_pcie-v4-7-273b8944eed0@oss.qualcomm.com>
+ <20250820-opp_pcie-v4-3-273b8944eed0@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,53 +66,136 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250820-opp_pcie-v4-7-273b8944eed0@oss.qualcomm.com>
+In-Reply-To: <20250820-opp_pcie-v4-3-273b8944eed0@oss.qualcomm.com>
 
-On Wed, Aug 20, 2025 at 01:58:53PM GMT, Krishna Chaitanya Chundru wrote:
-> PCIe supports multiple data rates that may operate at the same clock
-> frequency by varying the link width. In such cases, frequency alone
-> is insufficient to identify the correct OPP. 
-
-You need to reword the description. It mostly sounds like you want to select OPP
-based on freq and link width instead of freq and data rate due to that fact that
-you used 'link width' as the differentiating factor in the first sentence.
-
->Use the newly introduced
-> dev_pm_opp_find_key_exact() API to match both frequency and
-> level when selecting an OPP, here level indicates PCIe data rate.
+On Wed, Aug 20, 2025 at 01:58:49PM GMT, Krishna Chaitanya Chundru wrote:
+> Add opp-level to indicate PCIe data rates and also define OPP enteries
+> for each link width and data rate. Append the opp level to name of the
+> opp node to indicate both frequency and level.
 > 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 294babe1816e4d0c2b2343fe22d89af72afcd6cd..4f40fc7b828483419b87057c53e2f754811bdda0 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1555,6 +1555,7 @@ static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
->  {
->  	u32 offset, status, width, speed;
->  	struct dw_pcie *pci = pcie->pci;
-> +	struct dev_pm_opp_key key;
->  	unsigned long freq_kbps;
->  	struct dev_pm_opp *opp;
->  	int ret, freq_mbps;
-> @@ -1582,8 +1583,10 @@ static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
->  			return;
->  
->  		freq_kbps = freq_mbps * KILO;
-> -		opp = dev_pm_opp_find_freq_exact(pci->dev, freq_kbps * width,
-> -						 true);
-> +		key.freq = freq_kbps * width;
-> +		key.level = speed;
-> +		key.bw = 0;
-> +		opp = dev_pm_opp_find_key_exact(pci->dev, key, true);
 
-As Neil said, this needs to work with older DTs too where there were no 'level'
-properties.
+First define the problem statement of why this change is needed. You've
+mentioned it in the cover letter, but that won't be preserved in git history.
+Then you need to justify the change and make it clear that *this* platform
+doesn't suffer the issue but you are doing it for the unification.
+
+This needs to be done for all DTS patches.
 
 - Mani
+
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8450.dtsi | 41 +++++++++++++++++++++++++++++-------
+>  1 file changed, 33 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> index 33574ad706b915136546c7f92c7cd0b8a0d62b7e..d7f8706ca4949e253a4102474c92b393a345262f 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> @@ -2052,6 +2052,7 @@ opp-2500000 {
+>  					opp-hz = /bits/ 64 <2500000>;
+>  					required-opps = <&rpmhpd_opp_low_svs>;
+>  					opp-peak-kBps = <250000 1>;
+> +					opp-level = <1>;
+>  				};
+>  
+>  				/* GEN 2 x1 */
+> @@ -2059,6 +2060,7 @@ opp-5000000 {
+>  					opp-hz = /bits/ 64 <5000000>;
+>  					required-opps = <&rpmhpd_opp_low_svs>;
+>  					opp-peak-kBps = <500000 1>;
+> +					opp-level = <2>;
+>  				};
+>  
+>  				/* GEN 3 x1 */
+> @@ -2066,6 +2068,7 @@ opp-8000000 {
+>  					opp-hz = /bits/ 64 <8000000>;
+>  					required-opps = <&rpmhpd_opp_nom>;
+>  					opp-peak-kBps = <984500 1>;
+> +					opp-level = <3>;
+>  				};
+>  			};
+>  
+> @@ -2210,45 +2213,67 @@ pcie1_opp_table: opp-table {
+>  				compatible = "operating-points-v2";
+>  
+>  				/* GEN 1 x1 */
+> -				opp-2500000 {
+> +				opp-2500000-1 {
+>  					opp-hz = /bits/ 64 <2500000>;
+>  					required-opps = <&rpmhpd_opp_low_svs>;
+>  					opp-peak-kBps = <250000 1>;
+> +					opp-level = <1>;
+>  				};
+>  
+> -				/* GEN 1 x2 and GEN 2 x1 */
+> -				opp-5000000 {
+> +				/* GEN 1 x2 */
+> +				opp-5000000-1 {
+> +					opp-hz = /bits/ 64 <5000000>;
+> +					required-opps = <&rpmhpd_opp_low_svs>;
+> +					opp-peak-kBps = <500000 1>;
+> +					opp-level = <1>;
+> +				};
+> +
+> +				/* GEN 2 x1 */
+> +				opp-5000000-2 {
+>  					opp-hz = /bits/ 64 <5000000>;
+>  					required-opps = <&rpmhpd_opp_low_svs>;
+>  					opp-peak-kBps = <500000 1>;
+> +					opp-level = <2>;
+>  				};
+>  
+>  				/* GEN 2 x2 */
+> -				opp-10000000 {
+> +				opp-10000000-2 {
+>  					opp-hz = /bits/ 64 <10000000>;
+>  					required-opps = <&rpmhpd_opp_low_svs>;
+>  					opp-peak-kBps = <1000000 1>;
+> +					opp-level = <2>;
+>  				};
+>  
+>  				/* GEN 3 x1 */
+> -				opp-8000000 {
+> +				opp-8000000-3 {
+>  					opp-hz = /bits/ 64 <8000000>;
+>  					required-opps = <&rpmhpd_opp_nom>;
+>  					opp-peak-kBps = <984500 1>;
+> +					opp-level = <3>;
+> +				};
+> +
+> +				/* GEN 3 x2 */
+> +				opp-16000000-3 {
+> +					opp-hz = /bits/ 64 <16000000>;
+> +					required-opps = <&rpmhpd_opp_nom>;
+> +					opp-peak-kBps = <1969000 1>;
+> +					opp-level = <3>;
+>  				};
+>  
+> -				/* GEN 3 x2 and GEN 4 x1 */
+> -				opp-16000000 {
+> +				/* GEN 4 x1 */
+> +				opp-16000000-4 {
+>  					opp-hz = /bits/ 64 <16000000>;
+>  					required-opps = <&rpmhpd_opp_nom>;
+>  					opp-peak-kBps = <1969000 1>;
+> +					opp-level = <4>;
+>  				};
+>  
+>  				/* GEN 4 x2 */
+> -				opp-32000000 {
+> +				opp-32000000-4 {
+>  					opp-hz = /bits/ 64 <32000000>;
+>  					required-opps = <&rpmhpd_opp_nom>;
+>  					opp-peak-kBps = <3938000 1>;
+> +					opp-level = <4>;
+>  				};
+>  			};
+>  
+> 
+> -- 
+> 2.34.1
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
