@@ -1,126 +1,153 @@
-Return-Path: <linux-pci+bounces-34757-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34758-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4C1BB3620F
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 15:15:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DF75B367A0
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 16:08:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2DFD57BB3A8
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 13:13:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D1B88E772E
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 13:58:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A39129D29D;
-	Tue, 26 Aug 2025 13:13:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0267352FC6;
+	Tue, 26 Aug 2025 13:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WSOiBNlX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qVuy7TuI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75B8238C07;
-	Tue, 26 Aug 2025 13:13:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE4C35209D;
+	Tue, 26 Aug 2025 13:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756213987; cv=none; b=U5N+Xf3mL0CgsA/fX9yNPrvj3uT2HUeXI+xZlN45aVfNohGPjBp28r4WlpJcilKkRgHZpQpB0EuEbMj0OQTEGwFshgTCHUySrd8JRd7oLld1T3PfOvgW+adYrl2B3AhFaUTgaO9IxcMDWEFS6jnb2rvL1WnJHHfS6/OgqPBYmPU=
+	t=1756216606; cv=none; b=Su94pPr4wg7E58m6D5qN+8kyCsAgDlfKAvX77gbZmtqDYhbfd/zNubawONSg37KjCeANXa4L+mbyFUzoy1uzDbYiBHvUmVQ1dFuu0ENF5E/yxkZ7NvhLN3uUmnFQCGNywe8upCnl3OJxythqb9rsCMMX3viasuobsvpW7XBhteQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756213987; c=relaxed/simple;
-	bh=8Rs/KzG7jvMwItcdJJ435ArPOcL2peqcV5PN2CbYxgk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fV6iO4x7bpKJksNSL1IbjH22VBfiETUya/00EEI7mLYE12Xydxhz5RHJ50qXRnIXyg1IhbaxVfjThoBAl/hfDVhnLeM1L53KPC0qD0OmbgI6swKnuXw0Za1Rzs6mATJXQGC75wwl8+DKoCDfxbx4kfRIDTMs91ZaWn6JoaXRt8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WSOiBNlX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DBBDC116B1;
-	Tue, 26 Aug 2025 13:13:06 +0000 (UTC)
+	s=arc-20240116; t=1756216606; c=relaxed/simple;
+	bh=nd3CQ34Xe56IKG456UFoWEYOWYvtYcS68YFfQ7k9gS4=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=HTUzxl6+jMo2PfTujejVFTm8pL5jdNX0HexBEGcRS6R9MleqtQPkYvuseRgqtKkyikidnCZKR/hLNr1Bh2DXi9M4KWyKmbjClgYp0ai8FdtEKglWOYvGjZukwm25W9T3cwCa8hEQxs7jLZvUVQQIXCT0gdHiRaQaA8v/FyP/sT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qVuy7TuI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49EC4C116D0;
+	Tue, 26 Aug 2025 13:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756213986;
-	bh=8Rs/KzG7jvMwItcdJJ435ArPOcL2peqcV5PN2CbYxgk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WSOiBNlXpfNmbPywKaLsen/Ln/zE8ONmRBy0PtiQ4zh0R6guZtV7c4sdr0cCaP4p9
-	 VPHR3oDdCNFCo6AuQKm4mIUg435tWL2+/MXXtiHxmx9pKvBApGO8mexxEi5MN/mgtK
-	 GsCktvGa8zmPcqlvUwQLANujXJuwGWUTvhNlwuegUeK/2AWaMOvLau+yO/TiADFhh2
-	 2w5pLkBcMw2v5j8URfSNPbxKm8iUPvCStz364vDBrNcNDsYriNCUp6mbjQ+hYbn5YQ
-	 z1gI31TDmc4SahracFGzdAnf6OwZ1exX0HCwkfCv5DN+Vyf2BOarPgA5Bpmo4HW/zl
-	 193NvIAIIYPPA==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-afcb7ae6ed0so752851166b.3;
-        Tue, 26 Aug 2025 06:13:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVCWE59ZZYAdDc4a1G2rTyyiTkErnN6Uoh4dRkIj0lMqlZuOAyzeQYivMxxg+UeB4sdXqACrGvMXRAQ@vger.kernel.org, AJvYcCVSC4RvvQSj6FJ46WHMdoT7cmhxogntOu/3zIiADdGAUcI2eib6O/kWj3wHPJLS7CbFm/zm0LvBru/4wCMbZA==@vger.kernel.org, AJvYcCWOVs8IlLQvzkk/QvmZXkYA2JPQpaBSjfeQE0pqJmRdPfGrYMpIb4BjqsewJDhX5B2uxSGwN+Oq/T5WRAlG@vger.kernel.org, AJvYcCWvda/rNxmG3pp15kYVIVgryD+EdiN7hrMJbzad2Jo6TMgorQAIZ2lfMZ1/RhSvuG/MDKLYfX8NS6kH@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaGEyuhenI1V5z5WMYY8boWOEJ9sTHfz2rZHsA/j9udkIG30Sm
-	OQWFrGC+jbg9Ox3jXNM/BrRJk3QBOhAN2FKpGmoghixXf/G4ZuEjGmeqT5YTN5KZPfRmBYLwpzz
-	7KSdQYg893TXZYBiOaiC/fiw1UVRRqw==
-X-Google-Smtp-Source: AGHT+IEG2XbEkRO5xnZYxC56oap2ApeXeEn+LTG8K4z8muNIvEWp3ReM3dmSHzLIW6gJLBWm5QfqGvxzSUrQ+JA/O+Y=
-X-Received: by 2002:a17:907:6e8e:b0:af1:f259:254d with SMTP id
- a640c23a62f3a-afe28ec450fmr1281173366b.8.1756213985031; Tue, 26 Aug 2025
- 06:13:05 -0700 (PDT)
+	s=k20201202; t=1756216606;
+	bh=nd3CQ34Xe56IKG456UFoWEYOWYvtYcS68YFfQ7k9gS4=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=qVuy7TuI+FdrXztlovmBpOGsaAom9wXQu6e5lKGHnE8ZgzN/haS5Lo/w42R29V0R8
+	 pUDqSzC1vxWsTOiUEkD5axNIEyd/Akx7tK+/UT6sHor2e7wSX9Vq2+/qRsSTJSg0pj
+	 gsnpiRwfF6X5i69r8FWY7Bt/FCBYAJ1lO8xqXjD50GY7TYQkXdGBK4NFS/r6200MYY
+	 L9YLxZxf6cR4yT/WMwThvUEKkJHp6lhi5pxkKT3V03d7RmEb4lBpG9Z1kg3u93dam0
+	 R9Gaw+9+2VvaNH7V0AsVWH8WNZWh85RtA1gY6tKRVF8ssanZbiYavvyidubDPOCxI6
+	 Z49zDNDEbMpkw==
+Date: Tue, 26 Aug 2025 08:56:45 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250819-pci-pwrctrl-perst-v1-0-4b74978d2007@oss.qualcomm.com>
- <20250819-pci-pwrctrl-perst-v1-4-4b74978d2007@oss.qualcomm.com>
- <20250822135147.GA3480664-robh@kernel.org> <nphfnyl4ps7y76ra4bvlyhl2rwcaal42zyrspzlmeqqksqa5bi@zzpiolboiomp>
- <20250825224315.GA771834-robh@kernel.org> <jqgvw3u6lkewaz2ycjkozcfqrmdln5gacgrog4lhioazhvk5yz@3ph2z25zwqvj>
-In-Reply-To: <jqgvw3u6lkewaz2ycjkozcfqrmdln5gacgrog4lhioazhvk5yz@3ph2z25zwqvj>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 26 Aug 2025 08:12:53 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+66jVM33oBCbCFjcZdd+veA-QKQRtG9iD6PP+8Bq7-Ug@mail.gmail.com>
-X-Gm-Features: Ac12FXyxotUWYc0bYXHsCja7WJm4ZP4Tm5g0ZrX-FWoxMbdfgQ46x7AXHUeWNgE
-Message-ID: <CAL_Jsq+66jVM33oBCbCFjcZdd+veA-QKQRtG9iD6PP+8Bq7-Ug@mail.gmail.com>
-Subject: Re: [PATCH 4/6] PCI: of: Add an API to get the BDF for the device node
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Saravana Kannan <saravanak@google.com>, linux-pci@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, Brian Norris <briannorris@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ linux-arm-msm@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, linux-pci@vger.kernel.org, 
+ devicetree@vger.kernel.org, Manivannan Sadhasivam <mani@kernel.org>, 
+ linux-phy@lists.infradead.org, quic_mrana@quicinc.com, 
+ quic_vbadigan@quicinc.com, linux-kernel@vger.kernel.org, 
+ Bjorn Helgaas <bhelgaas@google.com>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <20250826-pakala-v3-0-721627bd5bb0@oss.qualcomm.com>
+References: <20250826-pakala-v3-0-721627bd5bb0@oss.qualcomm.com>
+Message-Id: <175621649862.159548.14099860400165270689.robh@kernel.org>
+Subject: Re: [PATCH v3 0/3] arm64: dts: qcom: Add PCIe Support for sm8750
 
-On Tue, Aug 26, 2025 at 2:15=E2=80=AFAM Manivannan Sadhasivam <mani@kernel.=
-org> wrote:
->
-> On Mon, Aug 25, 2025 at 05:43:15PM GMT, Rob Herring wrote:
-> > On Fri, Aug 22, 2025 at 07:57:41PM +0530, Manivannan Sadhasivam wrote:
-> > > On Fri, Aug 22, 2025 at 08:51:47AM GMT, Rob Herring wrote:
-> > > > On Tue, Aug 19, 2025 at 12:44:53PM +0530, Manivannan Sadhasivam wro=
-te:
-> > > > > Bus:Device:Function (BDF) numbers are used to uniquely identify a
-> > > > > device/function on a PCI bus. Hence, add an API to get the BDF fr=
-om the
-> > > > > devicetree node of a device.
-> > > >
-> > > > For FDT, the bus should always be 0. It doesn't make sense for FDT.=
- The
-> > > > bus number in DT reflects how firmware configured the PCI buses, bu=
-t
-> > > > there's no firmware configuration of PCI for FDT.
-> > >
-> > > This API is targeted for DT platforms only, where it is used to uniqu=
-ely
-> > > identify a devfn. What should I do to make it DT specific and not FDT=
-?
-> >
-> > I don't understand. There are FDT and OF (actual OpenFirmware)
-> > platforms. I'm pretty sure you don't care about the latter.
-> >
->
-> Sorry, I mixed the terminologies. Yes, I did refer the platforms making u=
-se of
-> the FDT binary and not OF platforms.
->
-> In the DTS, we do use bus number to differentiate between devices, not ju=
-st
-> devfn. But I get your point, bus no other than 0 are not fixed and alloca=
-ted by
-> the OS during runtime or by the firmware.
->
-> So how should we uniquely identify a PCIe node here, if not by BDF?
 
-By path. Which is consistent since there is also no bus num in the unit-add=
-ress.
+On Tue, 26 Aug 2025 16:32:52 +0530, Krishna Chaitanya Chundru wrote:
+> Describe PCIe controller and PHY. Also add required system resources like
+> regulators, clocks, interrupts and registers configuration for PCIe.
+> 
+> The qcom_pcie_parse_ports() function currently iterates over all available
+> child nodes of the PCIe controller's device tree node. This includes
+> unrelated nodes such as OPP (Operating Performance Points) nodes, which do
+> not contain the expected 'reset' and 'phy' properties. As a result, parsing
+> fails and the driver falls back to the legacy method of parsing the
+> controller node directly. However, this fallback also fails when properties
+> are shifted to the root port, leading to probe failure.
+> 
+> Fix this by restricting the parsing logic to only consider child nodes with
+> device_type = "pci", which is the expected and required property for PCIe
+> ports as defined in pci-bus-common.yaml.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+> Changes in v3:
+> - Use device_type to find pci node or not instead of node name.
+> - Link to v2: https://lore.kernel.org/r/20250826-pakala-v2-0-74f1f60676c6@oss.qualcomm.com
+> 
+> Changes in v2:
+> - Follow the x1e80100.dtsi pcie node description (Konrad).
+> - define phy & perst, wake in port node as per latest bindings.
+> - Add check in the driver to parse only pcie child nodes.
+> - Added acked by tag(Rob).
+> - Removed dtbinding and phy driver patches as they got applied.
+> - Link to v1: https://lore.kernel.org/r/20250809-pakala-v1-0-abf1c416dbaa@oss.qualcomm.com
+> 
+> ---
+> Krishna Chaitanya Chundru (3):
+>       dt-bindings: PCI: qcom,pcie-sm8550: Add SM8750 compatible
+>       arm64: dts: qcom: sm8750: Add PCIe PHY and controller node
+>       PCI: qcom: Restrict port parsing only to pci child nodes
+> 
+>  .../devicetree/bindings/pci/qcom,pcie-sm8550.yaml  |   1 +
+>  arch/arm64/boot/dts/qcom/sm8750.dtsi               | 180 ++++++++++++++++++++-
+>  drivers/pci/controller/dwc/pcie-qcom.c             |   2 +
+>  3 files changed, 182 insertions(+), 1 deletion(-)
+> ---
+> base-commit: b6add54ba61890450fa54fd9327d10fdfd653439
+> change-id: 20250809-pakala-25a7c1ddba85
+> 
+> Best regards,
+> --
+> Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> 
+> 
+> 
 
-Rob
+
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: using specified base-commit b6add54ba61890450fa54fd9327d10fdfd653439
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250826-pakala-v3-0-721627bd5bb0@oss.qualcomm.com:
+
+arch/arm64/boot/dts/qcom/sm8750-mtp.dtb: /soc@0/phy@1c06000: failed to match any schema with compatible: ['qcom,sm8750-qmp-gen3x2-pcie-phy']
+arch/arm64/boot/dts/qcom/sm8750-qrd.dtb: /soc@0/phy@1c06000: failed to match any schema with compatible: ['qcom,sm8750-qmp-gen3x2-pcie-phy']
+
+
+
+
+
 
