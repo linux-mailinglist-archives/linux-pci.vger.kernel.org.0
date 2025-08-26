@@ -1,104 +1,133 @@
-Return-Path: <linux-pci+bounces-34720-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34721-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A4B6B35515
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 09:15:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E630B3559B
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 09:27:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF3633B6CC9
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 07:15:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 788D33A7B5E
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 07:26:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21FD22F6571;
-	Tue, 26 Aug 2025 07:15:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 111FA2F658F;
+	Tue, 26 Aug 2025 07:26:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X1A0r4b0"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Vmk/4byl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE02927EFFE;
-	Tue, 26 Aug 2025 07:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AEB9279DB6
+	for <linux-pci@vger.kernel.org>; Tue, 26 Aug 2025 07:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756192518; cv=none; b=r1HiWD/MHrR9DAzfOqeogM/95mo5TxrmOJR7gXhJyQkI8zPVlL8osA+06JuIyhkuZz3B7inuQl/+cqrYB1Es2LwHVDbxI8Hb/sL9fO37g11CVXCism0m4kT/tMPzdtub6vl2HeE9yKkh4u0arqFmBUorSHq6s32Z5dys9T+QJx8=
+	t=1756193179; cv=none; b=iMiRyR2sX0sMD9DsZXWeSg/D4s3x0KJ9TYOb4slgdt47Ght5h3yPChF/dCcWYLqd9Ai7wkBsHTDhyrQc7x8rRCECCWrQGeVnxsBqZLGDGvsIz6VbrYKRWgBuvA7j+vYPMSuI6ASXxBizB1zn6Rh6YmKr1go0OzxyrTwfJCkO28s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756192518; c=relaxed/simple;
-	bh=aYIVm+aKRLtltfxrMsj38OhXw3B6ZTzRaFrq3NQzEIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jz5puSip5YqG2AcQ7VM2YOlBgHByAMHFplkeOg661WraJ2fi+QXilhl8Nr59Z6SuuNumeWcKsaJ9LtUKrHivqTCO02DPpjVuGtbSz7i8BtxLpPctIYpEIitDxnzFEJHzZnIvlcu2Mrk2cK+ZIBU+zGu33tYKlELsWFVN9xLOxtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X1A0r4b0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B064C4CEF1;
-	Tue, 26 Aug 2025 07:15:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756192517;
-	bh=aYIVm+aKRLtltfxrMsj38OhXw3B6ZTzRaFrq3NQzEIY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X1A0r4b0I+6n4uHTHmN33PPcN7L5aYBEDvRXzT8XnmI/npegDJXUUigz7LeUBLHsJ
-	 hDRMf0fefK23a2r4GBcTOVRCtUewX4llg5ocpVwB3CAtV8t8ELmpVwnAg8se1xj+mV
-	 PUAB6GAnaGHLye/UFCcydpZo65ZtQb9/9Wc5vrkaQ0WOuyf5rl5G4nDAFvQhHR7NB+
-	 F8/cfgR2IxPZHk/1/I2AmI+sWEvi/CkNVFllayOtYcClDLc0UT9QFNVe6XNk0M8dOo
-	 XroksPuMgDwyU+Hl03PiXe79AGYVX/oN4Pv/iLnbqWS4GBy+y+XrGNVt0g5hpB3Jss
-	 X7zfhbyXG6XsA==
-Date: Tue, 26 Aug 2025 12:45:03 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Saravana Kannan <saravanak@google.com>, linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 4/6] PCI: of: Add an API to get the BDF for the device
- node
-Message-ID: <jqgvw3u6lkewaz2ycjkozcfqrmdln5gacgrog4lhioazhvk5yz@3ph2z25zwqvj>
-References: <20250819-pci-pwrctrl-perst-v1-0-4b74978d2007@oss.qualcomm.com>
- <20250819-pci-pwrctrl-perst-v1-4-4b74978d2007@oss.qualcomm.com>
- <20250822135147.GA3480664-robh@kernel.org>
- <nphfnyl4ps7y76ra4bvlyhl2rwcaal42zyrspzlmeqqksqa5bi@zzpiolboiomp>
- <20250825224315.GA771834-robh@kernel.org>
+	s=arc-20240116; t=1756193179; c=relaxed/simple;
+	bh=DcMpv+3mgF8aZDoDXRSQ/IQVeWP92JqyekiKkdCx2mQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=tV/RFG1yvwJmyGPk7RXzQJ4g9nOEdiQP2ejYbnB+j0MxCXWtEEgFo3p8V7Oli++QwZNDXw4kjix4ryVw9H7Zo25qpL1Pw/CKcXtvx4QjrGtEQQMLuj+t+vXR3fIA7mKxOsA6sqWFNreNP/MpXgoQzx6+Cn+662eY9fTTbRxyL7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Vmk/4byl; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250826072610euoutp01596a22e70783898fb1280802cbee5f7e~fQGIqbChk1705617056euoutp01X
+	for <linux-pci@vger.kernel.org>; Tue, 26 Aug 2025 07:26:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250826072610euoutp01596a22e70783898fb1280802cbee5f7e~fQGIqbChk1705617056euoutp01X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1756193170;
+	bh=9i5p2LxvgZLund35hCqkpCnzys4/u1z+zSXgl9PoA5s=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=Vmk/4bylMbV/wtYHG7M1xjRGAt+Lhv3D9zWse1vOVtbeAo5MtxIFj5y/MhBMRbGHg
+	 mC8qDI9JSMhI5zC5p9Xrv0fQidPif8c+fXYbBR2ttKUgtGKmlvRfxJyBWu5gtjHnBV
+	 hVP4BkVJFcvdaK/K2gKsWUaP0Vax20+8zYs8aHoU=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250826072609eucas1p184dfb0642e07f6b843172d9974f16b7f~fQGII8nK-2890728907eucas1p1Z;
+	Tue, 26 Aug 2025 07:26:09 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250826072607eusmtip1479a4e682590dd94ab45dd1f1689d810~fQGGRvVEr1983919839eusmtip12;
+	Tue, 26 Aug 2025 07:26:07 +0000 (GMT)
+Message-ID: <d8599b11-66dd-486b-89e4-52b82d90f04e@samsung.com>
+Date: Tue, 26 Aug 2025 09:26:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH v4 2/7] OPP: Move refcount and key update for
+ readability in _opp_table_find_key()
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, Viresh
+	Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd
+	<sboyd@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Manivannan
+	Sadhasivam <mani@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring
+	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Bjorn Andersson
+	<andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Krzysztof
+	Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20250826060647.7eerg5blx3xho27p@vireshk-i7>
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250825224315.GA771834-robh@kernel.org>
+X-CMS-MailID: 20250826072609eucas1p184dfb0642e07f6b843172d9974f16b7f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250825135939eucas1p206b6e2b5ba115f51618c773a1f37939c
+X-EPHeader: CA
+X-CMS-RootMailID: 20250825135939eucas1p206b6e2b5ba115f51618c773a1f37939c
+References: <20250820-opp_pcie-v4-0-273b8944eed0@oss.qualcomm.com>
+	<20250820-opp_pcie-v4-2-273b8944eed0@oss.qualcomm.com>
+	<CGME20250825135939eucas1p206b6e2b5ba115f51618c773a1f37939c@eucas1p2.samsung.com>
+	<4066c0b4-807f-401e-baaa-25f4891f10ac@samsung.com>
+	<20250826060647.7eerg5blx3xho27p@vireshk-i7>
 
-On Mon, Aug 25, 2025 at 05:43:15PM GMT, Rob Herring wrote:
-> On Fri, Aug 22, 2025 at 07:57:41PM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Aug 22, 2025 at 08:51:47AM GMT, Rob Herring wrote:
-> > > On Tue, Aug 19, 2025 at 12:44:53PM +0530, Manivannan Sadhasivam wrote:
-> > > > Bus:Device:Function (BDF) numbers are used to uniquely identify a
-> > > > device/function on a PCI bus. Hence, add an API to get the BDF from the
-> > > > devicetree node of a device.
-> > > 
-> > > For FDT, the bus should always be 0. It doesn't make sense for FDT. The 
-> > > bus number in DT reflects how firmware configured the PCI buses, but 
-> > > there's no firmware configuration of PCI for FDT.
-> > 
-> > This API is targeted for DT platforms only, where it is used to uniquely
-> > identify a devfn. What should I do to make it DT specific and not FDT?
-> 
-> I don't understand. There are FDT and OF (actual OpenFirmware) 
-> platforms. I'm pretty sure you don't care about the latter.
-> 
+On 26.08.2025 08:06, Viresh Kumar wrote:
+> Marek,
+>
+> Thanks for the detailed logs. I would need a little more help from
+> you.
+>
+> Can you give this a try over your failing branch (I have already
+> dropped the patch from my tree for now):
+>
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 81fb7dd7f323..5b24255733b5 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -554,10 +554,10 @@ static struct dev_pm_opp *_opp_table_find_key(struct opp_table *opp_table,
+>          list_for_each_entry(temp_opp, &opp_table->opp_list, node) {
+>                  if (temp_opp->available == available) {
+>                          if (compare(&opp, temp_opp, read(temp_opp, index), *key)) {
+> -                               *key = read(opp, index);
+> -
+> -                               /* Increment the reference count of OPP */
+> -                               dev_pm_opp_get(opp);
+> +                               if (!IS_ERR(opp)) {
+> +                                       *key = read(opp, index);
+> +                                       dev_pm_opp_get(opp);
+> +                               }
+>                                  break;
+>                          }
+>                  }
 
-Sorry, I mixed the terminologies. Yes, I did refer the platforms making use of
-the FDT binary and not OF platforms.
+This doesn't help. I've stared a bit at that code and did some tests 
+and it looks that the issue is caused by _opp_table_find_key() returning 
+the last opp from opp_list without updating the *key and calling 
+opp_get() for it (happens when compare() returns false).
 
-In the DTS, we do use bus number to differentiate between devices, not just
-devfn. But I get your point, bus no other than 0 are not fixed and allocated by
-the OS during runtime or by the firmware.
+> ...
 
-So how should we uniquely identify a PCIe node here, if not by BDF?
-
-- Mani
-
+Best regards
 -- 
-மணிவண்ணன் சதாசிவம்
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
 
