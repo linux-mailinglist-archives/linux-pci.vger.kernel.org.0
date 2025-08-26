@@ -1,42 +1,42 @@
-Return-Path: <linux-pci+bounces-34773-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34777-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 169B2B370E3
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 19:04:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D254CB370EB
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 19:05:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3C26D3672A2
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 17:04:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46B7A8E4162
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 17:05:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99AC52E1C63;
-	Tue, 26 Aug 2025 17:04:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C26636C06E;
+	Tue, 26 Aug 2025 17:04:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="b2+jd8If"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hu/amXSM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C4152E1723;
-	Tue, 26 Aug 2025 17:04:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5CBC2E1C6B;
+	Tue, 26 Aug 2025 17:04:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756227843; cv=none; b=Xb4u6RKqmjJGHxHISxt6CsNGROyGnWItvWWsOr65hqo/tr0ZQOouKxyWhQIGYn5WVlxtNyrJINUEu/yir/TVm4+b+rbs7eDAK1+dMFduuYKRERweRCiCvR3v1IEiAbp3srgHDhFKrCSnJfq35fcCCfJjkrV8o2gbWxuLfBHr9AY=
+	t=1756227846; cv=none; b=scfXp8gJuYUHtgkb4CPoEOMHY8nv31/z4T9c8GkNWdVLc/NS3FzH5Jn10He3NOx/pCmaRLSZIjA3hBpwnkxfat2yxgsD5sWkv2reLx7cYIOmh/hkEB3T4g+FulKNM6LE8Ca70hZu4yJIAY6pgnj4/uUnIma0GucGiVfIHwc0EwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756227843; c=relaxed/simple;
-	bh=4SI0MJ5mgxVQkPAkeiebRKJQyIwK0f+4OTRw8yrlbwE=;
+	s=arc-20240116; t=1756227846; c=relaxed/simple;
+	bh=RxbC6PRS5UWfVRhBWgHNMi2OVDBcE6RBrjCc4GiojgM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ouwgdp3KuMtY5zHsGWbxeKQOvtumH2zDbcSaJ21lrovK5BRzUbm0FZZRC2FNImLKZ1lGo/LnJUbWqIm0AJ5VWCPcnnWsxrK443scsVBipigKUI5ybk0He/ymZpB9Wa9GgZ7BMwcz3bVXJ1zN71YzzmjNQxoCQeVZ63lTjck7vrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=b2+jd8If; arc=none smtp.client-ip=220.197.31.5
+	 MIME-Version; b=LbuL0z01oZrTeBr+OYWO7rwxqp1evxfubyQsgbyNfb2l6f5hnYIONGjgTwacX2t0PcvfQtJPpMJrSFollLSB/+uhB0BdDmlO7rg5zqHgFC6qtlyZRqjuWx2v+wcLwqpv7mK1L8U1AkVMeI5g0316jLLSRRZzwh6Ot5mXX/1dopk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hu/amXSM; arc=none smtp.client-ip=220.197.31.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=nw
-	yxpltjqOypW6UJIjeruKh1/jVz4ohv3HjBGe7Vdm4=; b=b2+jd8IfT7Z1JFajmQ
-	NFf+n5lAESsSiu8ybAwY+PYHutfU8/1AJBO6wwCBNRHwHGQ/22Q1osG3UupVGung
-	dfmWeJTpR66b8X01QT9RWYYYFQZ9meFvxuAWRk1cuWHbKoTzmcgVhRr/CVVGgHoZ
-	pylr6TJRgOyG4jjYgn36g0WgI=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Uo
+	wts4zfhr1/6N6PWGm/8Hg/npgCEGN+e6f6uoDvA5c=; b=hu/amXSM7XLdQPpe7l
+	i+P+6dog+H2WCavBl60be1kawaf193WAkTdk28pVOiztE7/0kUCk3jXfUuvubFvc
+	YVDBf+FsgvoX8CToIx9YVTnJChoWRdr/MrmiXDKKWOWrvtMEYaMxGlcQHbrZ1Kt1
+	5rIPolhigc+gGNdkRRtwdX8uE=
 Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAH5Svt6K1o9DIiEg--.25085S9;
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAH5Svt6K1o9DIiEg--.25085S10;
 	Wed, 27 Aug 2025 01:03:45 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: bhelgaas@google.com,
@@ -44,9 +44,9 @@ To: bhelgaas@google.com,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Hans Zhang <18255117159@163.com>
-Subject: [PATCH v3 7/8] PCI: pciehp: Add macros for hotplug operation delays
-Date: Wed, 27 Aug 2025 01:03:14 +0800
-Message-Id: <20250826170315.721551-8-18255117159@163.com>
+Subject: [PATCH v3 8/8] PCI/DPC: Add macro for RP busy check delay
+Date: Wed, 27 Aug 2025 01:03:15 +0800
+Message-Id: <20250826170315.721551-9-18255117159@163.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250826170315.721551-1-18255117159@163.com>
 References: <20250826170315.721551-1-18255117159@163.com>
@@ -57,53 +57,42 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAH5Svt6K1o9DIiEg--.25085S9
-X-Coremail-Antispam: 1Uf129KBjvJXoW7trWrZr1ruw17Ar4kJr4UCFg_yoW8JFW7p3
-	yxArWUtF1rKrs8Cws5Za1DWr98CasxCrZrCrWUu3s3ZF97Aw4DA3WfKa4jqFy3ArW5Cr15
-	WFWrAFy5Ja1UAr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zM2NtgUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgC1o2it5y8lTQAAsJ
+X-CM-TRANSID:_____wAH5Svt6K1o9DIiEg--.25085S10
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKrykKrW8CF4UZF18Kw17Jrb_yoWkAwb_uF
+	yFvryIyrW5CF97C3yYv3ySy34UA3Z7Zr1xWa1FyFWfZr17trnrJrZ2vw15trZ8W3y5XFy5
+	Aw4DJ34Yyr9rGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sR_wvtJUUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgC1o2it5y8lTQABsI
 
-Add WAIT_PDS_TIMEOUT_MS and POLL_CMD_TIMEOUT_MS macros for hotplug
-operation delays to improve code readability.
+Add PCIE_EXP_DPC_BUSY_CHECK_MS macro for RP busy check delay.
 
 Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
- drivers/pci/hotplug/pciehp_hpc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/pci/pcie/dpc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index bcc51b26d03d..15b09c6a8d6b 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -28,6 +28,9 @@
- #include "../pci.h"
- #include "pciehp.h"
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index fc18349614d7..bd5e8cd9e43e 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -21,6 +21,8 @@
+ #define PCI_EXP_DPC_CTL_EN_MASK	(PCI_EXP_DPC_CTL_EN_FATAL | \
+ 				 PCI_EXP_DPC_CTL_EN_NONFATAL)
  
-+#define WAIT_PDS_TIMEOUT_MS	10
-+#define POLL_CMD_TIMEOUT_MS	10
++#define PCIE_EXP_DPC_BUSY_CHECK_MS	10
 +
- static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
- 	/*
- 	 * Match all Dell systems, as some Dell systems have inband
-@@ -103,7 +106,7 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
- 			smp_mb();
- 			return 1;
- 		}
+ static const char * const rp_pio_error_string[] = {
+ 	"Configuration Request received UR Completion",	 /* Bit Position 0  */
+ 	"Configuration Request received CA Completion",	 /* Bit Position 1  */
+@@ -135,7 +137,7 @@ static int dpc_wait_rp_inactive(struct pci_dev *pdev)
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+ 	while (status & PCI_EXP_DPC_RP_BUSY &&
+ 					!time_after(jiffies, timeout)) {
 -		msleep(10);
-+		msleep(POLL_CMD_TIMEOUT_MS);
- 		timeout -= 10;
- 	} while (timeout >= 0);
- 	return 0;	/* timeout */
-@@ -283,7 +286,7 @@ static void pcie_wait_for_presence(struct pci_dev *pdev)
- 		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
- 		if (slot_status & PCI_EXP_SLTSTA_PDS)
- 			return;
--		msleep(10);
-+		msleep(WAIT_PDS_TIMEOUT_MS);
- 		timeout -= 10;
- 	} while (timeout > 0);
- }
++		msleep(PCIE_EXP_DPC_BUSY_CHECK_MS);
+ 		pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+ 	}
+ 	if (status & PCI_EXP_DPC_RP_BUSY) {
 -- 
 2.25.1
 
