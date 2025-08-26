@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-34725-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34726-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA468B356D9
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 10:29:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8B16B356EB
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 10:32:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1DE7A3BEE1A
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 08:29:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B3AF171EDD
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 08:32:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E467B2F9982;
-	Tue, 26 Aug 2025 08:28:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B66DC2F83B2;
+	Tue, 26 Aug 2025 08:32:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qw2OL372"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZwsZyw7D"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E4B14A8B;
-	Tue, 26 Aug 2025 08:28:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840B822E004;
+	Tue, 26 Aug 2025 08:32:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756196937; cv=none; b=LZj6g5N2lFBvI6ov8tPq5eCew8Sc1mU04sXqSRBPZpcWqKQZNbSQzAmda0hJZgj5H//xnKVYpclHpku24JXbjeFA/7wapM4cDiLLAca1t1uRI282OB7cZvIgg0FWp1L71kLQ3RmRP3LHvAqpjPWoZzrJL4MLDXHJ5i73gvvH2hs=
+	t=1756197160; cv=none; b=T2dtQ70mFxeZW/KqgoVaOI3EC0C90VbX9bfLhDCLpoMch4gffLbx3ahUvkG3NatTTcuQ7uQ7jksV8xOHIy+ZvYXaShsCsg+qVZL9+rgEV95xyYqIMvaP5PoymHRl9Ww72+zFMVwRnE4TNlyOtJ08rHAB/QLbvDYGSpoR4ufPZa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756196937; c=relaxed/simple;
-	bh=H/+xOOPobOyisuzLpgDl2c4ijJlhDYN2Akg6+M82WQs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hK8tBMi8cOvW1tzCGGrRN56OEIpaji8WcBSwSlHGzbZlINsZhw5RN5a4CfazNEmu91mYdMWD8N5GDY5xQiqkq/IQKolJOYUuO9e69hBmWPEEvlN9MZeQwFb5DHh3doStKa+6fA7+ilsTLPIhwoy6ZxBs9Oxfql6CY+8WmGH2Vsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qw2OL372; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5944AC4CEF1;
-	Tue, 26 Aug 2025 08:28:53 +0000 (UTC)
+	s=arc-20240116; t=1756197160; c=relaxed/simple;
+	bh=MiuO8q0JoSZFbPyzgfQF+TG3+O5EemEXxvBCwfx+rM0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=DQlSzgFW3SDwMnee+8hIZ1+Yq4rQHqwd94w9SKxxXILv8GU5ks+cnE2uRBTKJVtwKnIxPmLdDU2mr8G/pLMsiG0mj6D/a5fVgIJgIMhS2UWnrclwNJ5lAWiDyQD7ptFNhwWDFgi5oMBhOvRl8YNVZl87ofe3rwvuQsSHaU1+9co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZwsZyw7D; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F7A0C4CEF1;
+	Tue, 26 Aug 2025 08:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756196937;
-	bh=H/+xOOPobOyisuzLpgDl2c4ijJlhDYN2Akg6+M82WQs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qw2OL372Ar4H4hS6V4uv8OGbcHMyllFs9gvEypuCAXgrMoOAPFtl4Oq7SFFgneLOl
-	 sBEfkvCDnpr+EXrRvTv5RuQuvoXt1UcK5Z7HWA0/kViqg9ZuHW9jLgcGTATiOnj9ro
-	 YdBPZR9yd1KPtrPwqhL4KKucthdGkk8GmZOsRYifA0FWTkerKw/H0djaT4rloriNKG
-	 Oo3np8l2p5CNJG8kbjj5GVGh/eyqPtUzAJvBVt5E364g+ZVABvhaMJXGwvrCUmf5ha
-	 wI+j9gPcixtZ4vQqpF0r1ybSn4ybQ/A3ZnaMunW7UQOlD6aCREjysjQIA330uXTfCK
-	 6IVdY5DCxnWQg==
-Message-ID: <b7529529-9677-4713-920f-bf36863459ca@kernel.org>
-Date: Tue, 26 Aug 2025 10:28:51 +0200
+	s=k20201202; t=1756197160;
+	bh=MiuO8q0JoSZFbPyzgfQF+TG3+O5EemEXxvBCwfx+rM0=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=ZwsZyw7Ds2D9OVtPOcmn1MFBADbTyMvLwoD8X/opb6+AkmPLh3a36Cu+rdsmv3opN
+	 W0wnSessFB4o4QuvzgUUnyNlBO55IbEzhZgj3r+YJt7ffihxSeDKsTx/P8363HX6Qu
+	 seUl/cZIzPqfkSeq5nl42mHrRDHuEByUeuwRy3r9dvnhqot7Q/TZ9t/RHtNrt3vYw4
+	 ajrdFX9tXuu4OsaS1ixGNfPEfdl4idJtiLPwhnusZMg5P578KAZmoHOWAXGEatZsg2
+	 h9nPvJ861wb30ZKBnbkZ/pNmM7QpGyr/9D9ffb/FZy7CVYWAGAeYhgIE1bVn/BfY9u
+	 plTzuXjsfutvg==
+Message-ID: <0c732ac6-2d1a-4341-94d4-dc6734bfb959@kernel.org>
+Date: Tue, 26 Aug 2025 10:32:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,22 +52,21 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 3/3] PCI: qcom: Restrict port parsing only to pci child
  nodes
-To: Manivannan Sadhasivam <mani@kernel.org>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
  Bjorn Helgaas <bhelgaas@google.com>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
 References: <20250826-pakala-v2-0-74f1f60676c6@oss.qualcomm.com>
  <20250826-pakala-v2-3-74f1f60676c6@oss.qualcomm.com>
- <rurdrz3buvb7paqgjjr7ethzvaeyvylezexcwshpj73xf7yeec@i52bla6r5tx7>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <4583bf66-737d-4029-8f14-ce6d6a75def6@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -112,27 +111,21 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <rurdrz3buvb7paqgjjr7ethzvaeyvylezexcwshpj73xf7yeec@i52bla6r5tx7>
+In-Reply-To: <4583bf66-737d-4029-8f14-ce6d6a75def6@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26/08/2025 08:17, Manivannan Sadhasivam wrote:
-> On Tue, Aug 26, 2025 at 10:48:19AM GMT, Krishna Chaitanya Chundru wrote:
+On 26/08/2025 10:27, Krzysztof Kozlowski wrote:
+> On 26/08/2025 07:18, Krishna Chaitanya Chundru wrote:
 >> The qcom_pcie_parse_ports() function currently iterates over all available
 >> child nodes of the PCIe controller's device tree node. This can lead to
 >> attempts to parse unrelated nodes like OPP nodes, resulting in unnecessary
 >> errors or misconfiguration.
 >>
-> 
-> What errors? Errors you are seeing on your setup or you envision?
-> 
 >> Restrict the parsing logic to only consider child nodes named "pcie" or
 >> "pci", which are the expected node names for PCIe ports.
 >>
 >> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> 
-> Since this is a fix, 'Fixes' tag is needed.
-> 
 >> ---
 >>  drivers/pci/controller/dwc/pcie-qcom.c | 2 ++
 >>  1 file changed, 2 insertions(+)
@@ -147,12 +140,17 @@ On 26/08/2025 08:17, Manivannan Sadhasivam wrote:
 >>  	for_each_available_child_of_node_scoped(dev->of_node, of_port) {
 >> +		if (!(of_node_name_eq(of_port, "pcie") || of_node_name_eq(of_port, "pci")))
 > 
-> May I know which platform has 'pci' as the node name for the bridge node? AFAIK,
-> all platforms defining bridge nodes have 'pcie' as the node name.
+> 
+> Huh? Where is this ABI documented?
 
-It does not matter. If I name my node name as "pc" it stops working?
+I see it actually might be documented, but you did not mention it at
+all. I doubt you even checked.
 
-No, Qualcomm cannot introduce such hidden ABI.
+Please reference exactly where is the ABI, so reviewing will be easier.
+
+I still think though that it is wrong - we don't want device node names
+to be the ABI if we already have compatibles and the children here
+should have them, right?
 Best regards,
 Krzysztof
 
