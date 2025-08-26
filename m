@@ -1,131 +1,206 @@
-Return-Path: <linux-pci+bounces-34765-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34766-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59093B36F7A
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 18:07:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 887F6B3702B
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 18:25:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 634784639E2
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 16:01:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 47CF516D4FA
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Aug 2025 16:25:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D2493164CF;
-	Tue, 26 Aug 2025 16:00:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AF812F6597;
+	Tue, 26 Aug 2025 16:25:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q9ZTeb6I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aM7d+4rl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C280E30FC3E;
-	Tue, 26 Aug 2025 16:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DC82C3278;
+	Tue, 26 Aug 2025 16:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756224043; cv=none; b=MpQUUb1fe3y+/OljInHVGhHEEwYqBt4LVpBp6OKXGMERH+AfzT+i7OvYM2/zPlEY2STBND2Z5KzzkFOoifdwVSyNKfMB+yfPYNXgeexLaoG+FbvG7zKPer1A63oz4P3Ui4CZX04TtwCuT21LZqVktWyER2u2chDexxweyoXhK4A=
+	t=1756225524; cv=none; b=m9Zffixz1V2XY0/sJ+3kUtayjRiv+FSOiJ5s3NIUuhXdOqwvLE4enJaxGJr720zfSNBxBTVcnw24ekuGKcIClIGf54pUpZNgaJLCvSzbYNpaAJ0KiapSm9n49MJAY12X7FKFPPJMaTdUFjASI4POMFeyVOzIqn7plmyIqTK724U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756224043; c=relaxed/simple;
-	bh=MvazfRK55Y+YfphRl006UAxhYW9WAxvC/vVYPiYdSR4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=GvdFX+DOaYgRbmzCYdqjIesPaXJtCcJ7Z7ciZSMMEoXwRig/jp3ZvPEW5IadoGtqPcWqvvO89cwVLdRKse09Aacx+cOWVc84zb8JaVDzK2vcQvaINrCBpjwJMuOLo+w6oXDGKa8cD70DBfYw1NaPmjd+1uE2rVx2zj6JejA8S3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q9ZTeb6I; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756224042; x=1787760042;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=MvazfRK55Y+YfphRl006UAxhYW9WAxvC/vVYPiYdSR4=;
-  b=Q9ZTeb6I4ya61jsZXZMsSmBKNN0A0HE5a5ywSSr6VIvkca3zjazxIJ3P
-   rE6rLRec7H0IQ8aPj9Wrx2nRG2d3tNFz691DT4uHfpyGgNwYas1gjrlJ9
-   dkrNdYn5w1B2QKXiD/ctOya6aZH/c9Wvp2DfHoN/BZ6tUv6mXxA/9Pkvd
-   aMTrr5fZru/1L8/iuKB79LYfUFiVKlJScA5cwrq8rP5n3zHZB186ebPAj
-   taCHqWCTXRJ5sxPxZ41J/YQ6Rq1aTm86L0XN0nItrMQGPdnMxIDGQkDO7
-   B8X17gb52tSzEP/2MeNJlqbGd3UGioBlWlsT1ySGNpWj633TAS3HE417V
-   w==;
-X-CSE-ConnectionGUID: MO0TTCxlT/uRxa7XDxz2vw==
-X-CSE-MsgGUID: pv8PHRpeTQKqBBvtIaaJ7Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11534"; a="61099302"
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="61099302"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2025 09:00:41 -0700
-X-CSE-ConnectionGUID: zv1x8OSWQXeJW9G/Mr2ptw==
-X-CSE-MsgGUID: saIygWOLRJWUlK7H39/AOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="169519770"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.4])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2025 09:00:29 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 26 Aug 2025 19:00:25 +0300 (EEST)
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-cc: manivannan.sadhasivam@oss.qualcomm.com, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    Manivannan Sadhasivam <mani@kernel.org>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, 
-    Rob Herring <robh@kernel.org>, Nirmal Patel <nirmal.patel@linux.intel.com>, 
-    Jonathan Derrick <jonathan.derrick@linux.dev>, 
-    Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, 
-    linux-wireless@vger.kernel.org, ath12k@lists.infradead.org, 
-    ath11k@lists.infradead.org, ath10k@lists.infradead.org, 
-    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-    Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, 
-    Qiang Yu <qiang.yu@oss.qualcomm.com>
-Subject: Re: [PATCH v2 6/8] wifi: ath12k: Use pci_{enable/disable}_link_state()
- APIs to enable/disable ASPM states
-In-Reply-To: <2fab10a7-8758-4a5c-95ff-2bb9a6dea6bf@oss.qualcomm.com>
-Message-ID: <705a4fe5-658e-25ac-9e4d-6b8089abca46@linux.intel.com>
-References: <20250825-ath-aspm-fix-v2-0-61b2f2db7d89@oss.qualcomm.com> <20250825-ath-aspm-fix-v2-6-61b2f2db7d89@oss.qualcomm.com> <2fab10a7-8758-4a5c-95ff-2bb9a6dea6bf@oss.qualcomm.com>
+	s=arc-20240116; t=1756225524; c=relaxed/simple;
+	bh=Q6IHYAMgei2pEyNfmCbLP4K8NmP9Ho6aNvuLdeoEVXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=EQsjynN4CCKMke8ZsMzOu0LMhsrwpHlOyzRecRdDBv288I24+VVvcX9EHvT3dInYSamxAE4xubAZ+nu6BXbEGogVvyE066ElCdptNY1lkfQQgByqTPAl22gTRmtp6o6rwjsgBu3FzOKMYfdusSrFh1vWSvNezaCUM1cQIGVHYZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aM7d+4rl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C2D4C4CEF1;
+	Tue, 26 Aug 2025 16:25:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756225523;
+	bh=Q6IHYAMgei2pEyNfmCbLP4K8NmP9Ho6aNvuLdeoEVXU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=aM7d+4rl6vYiELbgEEZ4eolEksgc7jUn+xSN6tqdc7+YRA3jIhHLy9jv7uGh9cnOw
+	 zE5+2Y+ZesxPlMXjDitNAGXEQeuLFw8T3h5ExNngBmQizdaUXJAUJ0i+MrhoWxUNhm
+	 xeHbCXD4UkzGtV6HMQWXVxxXUXSyErPLfRP8qU0CwSGx4g3V0sjrgU4vxDUp/t6eYz
+	 PIeKwox6onrZjenLCdAQy/fZNMgLOteWlbu3DWvBQHgTX/gFJN9shyzojUAwrFTJAo
+	 UGdpe9W6DSvFbExHjaEw/W0AXI/zAKbdI/KZ22SPNrkLz02E17AWYL6ncnqo7qNFeL
+	 WOfrNo8OhzDPA==
+Date: Tue, 26 Aug 2025 11:25:22 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	"open list:PCIE DRIVER FOR HISILICON STB" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] PCI: dwc: histb: Simplify clock handling by using
+ clk_bulk*() functions
+Message-ID: <20250826162522.GA838733@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250826114245.112472-2-linux.amoon@gmail.com>
 
-On Tue, 26 Aug 2025, Jeff Johnson wrote:
+In subject, remove "dwc: " to follow historical convention.  (See
+"git log --oneline")
 
-> On 8/25/2025 10:44 AM, Manivannan Sadhasivam via B4 Relay wrote:
-> > --- a/drivers/net/wireless/ath/ath12k/Kconfig
-> > +++ b/drivers/net/wireless/ath/ath12k/Kconfig
-> > @@ -1,7 +1,7 @@
-> >  # SPDX-License-Identifier: BSD-3-Clause-Clear
-> >  config ATH12K
-> >  	tristate "Qualcomm Technologies Wi-Fi 7 support (ath12k)"
-> > -	depends on MAC80211 && HAS_DMA && PCI
-> > +	depends on MAC80211 && HAS_DMA && PCI && PCIEASPM
+On Tue, Aug 26, 2025 at 05:12:40PM +0530, Anand Moon wrote:
+> Currently, the driver acquires clocks and prepare/enable/disable/unprepare
+> the clocks individually thereby making the driver complex to read.
 > 
-> As you point out in patch 1/8, PCIEASPM is protected by EXPERT.
+> The driver can be simplified by using the clk_bulk*() APIs.
 > 
-> Won't this prevent the driver from being built (or even showing up in
-> menuconfig) if EXPERT is not enabled?
+> Use:
+>   - devm_clk_bulk_get_all() API to acquire all the clocks
+>   - clk_bulk_prepare_enable() to prepare/enable clocks
+>   - clk_bulk_disable_unprepare() APIs to disable/unprepare them in bulk
 
-It doesn't work that way, PCIEASPM defaults to y:
+I assume this means the order in which we prepare/enable and
+disable/unprepare will now depend on the order the clocks appear in
+the device tree instead of the order in the code?  If so, please
+mention that here and verify that all upstream device trees have the
+correct order.
 
-$ sed -i -e 's|CONFIG_PCIEASPM=y|CONFIG_PCIEASPM=n|g' .config && make oldconfig && grep -e 'CONFIG_EXPERT ' -e 'CONFIG_PCIEASPM=' .config
-#
-# configuration written to .config
-#
-# CONFIG_EXPERT is not set
-CONFIG_PCIEASPM=y
-
-> Should we consider having a separate CONFIG item that is used to protect just
-> the PCI ASPM interfaces? And then we could split out the ath12k_pci_aspm
-> functions into a separate file that is conditionally built based upon that
-> config item?
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-histb.c | 70 ++++---------------------
+>  1 file changed, 11 insertions(+), 59 deletions(-)
 > 
-> Or am I too paranoid since everyone enables EXPERT?
-
-One just cannot control PCIEASPM value if EXPERT is not set. ASPM is 
-expected to be enabled, or "experts" get to keep the pieces.
-
--- 
- i.
-
+> diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
+> index a52071589377..4022349e85d2 100644
+> --- a/drivers/pci/controller/dwc/pcie-histb.c
+> +++ b/drivers/pci/controller/dwc/pcie-histb.c
+> @@ -51,10 +51,8 @@
+>  
+>  struct histb_pcie {
+>  	struct dw_pcie *pci;
+> -	struct clk *aux_clk;
+> -	struct clk *pipe_clk;
+> -	struct clk *sys_clk;
+> -	struct clk *bus_clk;
+> +	struct  clk_bulk_data *clks;
+> +	int     num_clks;
+>  	struct phy *phy;
+>  	struct reset_control *soft_reset;
+>  	struct reset_control *sys_reset;
+> @@ -204,10 +202,7 @@ static void histb_pcie_host_disable(struct histb_pcie *hipcie)
+>  	reset_control_assert(hipcie->sys_reset);
+>  	reset_control_assert(hipcie->bus_reset);
+>  
+> -	clk_disable_unprepare(hipcie->aux_clk);
+> -	clk_disable_unprepare(hipcie->pipe_clk);
+> -	clk_disable_unprepare(hipcie->sys_clk);
+> -	clk_disable_unprepare(hipcie->bus_clk);
+> +	clk_bulk_disable_unprepare(hipcie->num_clks, hipcie->clks);
+>  
+>  	if (hipcie->reset_gpio)
+>  		gpiod_set_value_cansleep(hipcie->reset_gpio, 1);
+> @@ -235,28 +230,10 @@ static int histb_pcie_host_enable(struct dw_pcie_rp *pp)
+>  	if (hipcie->reset_gpio)
+>  		gpiod_set_value_cansleep(hipcie->reset_gpio, 0);
+>  
+> -	ret = clk_prepare_enable(hipcie->bus_clk);
+> +	ret = clk_bulk_prepare_enable(hipcie->num_clks, hipcie->clks);
+>  	if (ret) {
+> -		dev_err(dev, "cannot prepare/enable bus clk\n");
+> -		goto err_bus_clk;
+> -	}
+> -
+> -	ret = clk_prepare_enable(hipcie->sys_clk);
+> -	if (ret) {
+> -		dev_err(dev, "cannot prepare/enable sys clk\n");
+> -		goto err_sys_clk;
+> -	}
+> -
+> -	ret = clk_prepare_enable(hipcie->pipe_clk);
+> -	if (ret) {
+> -		dev_err(dev, "cannot prepare/enable pipe clk\n");
+> -		goto err_pipe_clk;
+> -	}
+> -
+> -	ret = clk_prepare_enable(hipcie->aux_clk);
+> -	if (ret) {
+> -		dev_err(dev, "cannot prepare/enable aux clk\n");
+> -		goto err_aux_clk;
+> +		ret = dev_err_probe(dev, ret, "failed to enable clocks\n");
+> +		goto reg_dis;
+>  	}
+>  
+>  	reset_control_assert(hipcie->soft_reset);
+> @@ -270,13 +247,7 @@ static int histb_pcie_host_enable(struct dw_pcie_rp *pp)
+>  
+>  	return 0;
+>  
+> -err_aux_clk:
+> -	clk_disable_unprepare(hipcie->pipe_clk);
+> -err_pipe_clk:
+> -	clk_disable_unprepare(hipcie->sys_clk);
+> -err_sys_clk:
+> -	clk_disable_unprepare(hipcie->bus_clk);
+> -err_bus_clk:
+> +reg_dis:
+>  	if (hipcie->vpcie)
+>  		regulator_disable(hipcie->vpcie);
+>  
+> @@ -345,29 +316,10 @@ static int histb_pcie_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	hipcie->aux_clk = devm_clk_get(dev, "aux");
+> -	if (IS_ERR(hipcie->aux_clk)) {
+> -		dev_err(dev, "Failed to get PCIe aux clk\n");
+> -		return PTR_ERR(hipcie->aux_clk);
+> -	}
+> -
+> -	hipcie->pipe_clk = devm_clk_get(dev, "pipe");
+> -	if (IS_ERR(hipcie->pipe_clk)) {
+> -		dev_err(dev, "Failed to get PCIe pipe clk\n");
+> -		return PTR_ERR(hipcie->pipe_clk);
+> -	}
+> -
+> -	hipcie->sys_clk = devm_clk_get(dev, "sys");
+> -	if (IS_ERR(hipcie->sys_clk)) {
+> -		dev_err(dev, "Failed to get PCIEe sys clk\n");
+> -		return PTR_ERR(hipcie->sys_clk);
+> -	}
+> -
+> -	hipcie->bus_clk = devm_clk_get(dev, "bus");
+> -	if (IS_ERR(hipcie->bus_clk)) {
+> -		dev_err(dev, "Failed to get PCIe bus clk\n");
+> -		return PTR_ERR(hipcie->bus_clk);
+> -	}
+> +	hipcie->num_clks = devm_clk_bulk_get_all(dev, &hipcie->clks);
+> +	if (hipcie->num_clks < 0)
+> +		return dev_err_probe(dev, hipcie->num_clks,
+> +				     "failed to get clocks\n");
+>  
+>  	hipcie->soft_reset = devm_reset_control_get(dev, "soft");
+>  	if (IS_ERR(hipcie->soft_reset)) {
+> -- 
+> 2.50.1
+> 
 
