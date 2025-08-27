@@ -1,123 +1,232 @@
-Return-Path: <linux-pci+bounces-34911-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34912-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8690B37FF1
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 12:33:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C614DB381CA
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 13:55:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7026D3B9BD1
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 10:33:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C55691BA25D1
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 11:56:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2781527605A;
-	Wed, 27 Aug 2025 10:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bOnMdSV3"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9869A2F39B8;
+	Wed, 27 Aug 2025 11:55:47 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB90F72610;
-	Wed, 27 Aug 2025 10:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDC31EDA09;
+	Wed, 27 Aug 2025 11:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756290817; cv=none; b=BLv3Mf8q8QEJfm2ghtuhRMIK5iQRnegFoHuFBzFElw2vHQ9/uNmski4YDAoiEuh5mEGj/Sl0U5nDZlHLYmrki7m3Gnzbr6v1fKvGRN8jlFrjSmj6EfFx2Z4L1iVC7pE9FWXSxm45YJG+ZgT4BOwb1bPCb2ZMwwqzDt4f51DcMIA=
+	t=1756295747; cv=none; b=Ky1xXpqk1vLWRXVb/24kXIdL1JHlmfxvlDxY3u/kpUqwSpqlgsCq0ESkL9ZVfWpOshLqTOSSf6FOoseJnt5eKjKHcZPSX6L6yPrO2g8A3py6iYUrNtJVRJhXJA3u6Nkc3esmzOSKP7FTiAR9Wqrjczu8Rsf9Q0LP2H2RViXOvdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756290817; c=relaxed/simple;
-	bh=9QsnH71YbkSyX/7fRAS+Fy/72P1UW6IJD9KrB9U0euc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W+zBHTI9ua3bYZMuMpKcxOURlf+JTsK8ybxBngEdoO4rs1P2H0ueWO+XWs9Tqmp+4EDzIzwoYWbaO0a08SkMG7IZKPBZFCati2kAjV70OPBToxdpc6EQNFdkTRKEOw1NIaz2vQHNi+twz7WBX2zV/t3FYFtR16YPaGV39IKxNOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bOnMdSV3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BD46C4CEEB;
-	Wed, 27 Aug 2025 10:33:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756290816;
-	bh=9QsnH71YbkSyX/7fRAS+Fy/72P1UW6IJD9KrB9U0euc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bOnMdSV3araDsoInT7APCgqwtFtYPjVxUS2hKgZDZGdHyWpqpXLV76YSCGzK6kEZ0
-	 FjDmGzfiIkOelOs/qHpOJeytAxYVP+ddMm29P1nQVNwV+CAODnwR5Q8z1cHDPVhEss
-	 Wozpklupd8uTwA2VB9wX3QzHlpyzfUEJed0dA3RmC2MevNGOAknS9s31L+MOFmnZi6
-	 xBwEeodGCPPXYGHJiu1gl6BIXpcrEmJUpjM79xdS+tlg9QG+qkEqzZB8NMGZLUKi9k
-	 5wDeAi6VSdo15cqHrRqpg45+1uylaLt6PifnEGQHyyJlsqLbpWv9fd7j+vX6PSJtT6
-	 yyRb0l98iiKbw==
-Date: Wed, 27 Aug 2025 11:33:29 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Anders Roxell <anders.roxell@linaro.org>,
-	Inochi Amaoto <inochiama@gmail.com>, regressions@lists.linux.dev,
-	linux-next@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <maz@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Juergen Gross <jgross@suse.com>, Nicolin Chen <nicolinc@nvidia.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Chen Wang <unicorn_wang@outlook.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>, arnd@arndb.de,
-	dan.carpenter@linaro.org, naresh.kamboju@linaro.org,
-	benjamin.copeland@linaro.org
-Subject: Re: [PATCH v2 2/4] PCI/MSI: Add startup/shutdown for per device
- domains
-Message-ID: <91a9db15-8e3c-4b49-a34f-61e043040de9@sirena.org.uk>
-References: <20250813232835.43458-1-inochiama@gmail.com>
- <20250813232835.43458-3-inochiama@gmail.com>
- <aK4O7Hl8NCVEMznB@monster>
- <20250826220959.GA4119563@ax162>
+	s=arc-20240116; t=1756295747; c=relaxed/simple;
+	bh=KhQXv86kQVKGJw8aszaxAC/gVymxYsSpQh5L+SZFkl8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LjKiheZ/a9vEEguLh99YF+APf13j0AYLnzcu+AIFZhYcD5B4kXXQGqIYREHMbjrStfcpfU4aps6Ux24g2aLUWrsZ0hmEvaeGmutGsJmC0lcFIs0EX7fUyPbvhaXakfiNhPdUmnOCm6pYEGFKPrLB0G8ryc4SLbQ8T4EDyj2VPXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cBjbR5kl2z6M5BG;
+	Wed, 27 Aug 2025 19:53:23 +0800 (CST)
+Received: from frapeml100008.china.huawei.com (unknown [7.182.85.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 354791400D3;
+	Wed, 27 Aug 2025 19:55:41 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100008.china.huawei.com (7.182.85.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 27 Aug 2025 13:55:40 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Wed, 27 Aug 2025 13:55:40 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>, "dave@stgolabs.net"
+	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"ming.li@zohomail.com" <ming.li@zohomail.com>,
+	"Smita.KoralahalliChannabasappa@amd.com"
+	<Smita.KoralahalliChannabasappa@amd.com>, "rrichter@amd.com"
+	<rrichter@amd.com>, "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
+	"PradeepVineshReddy.Kodamati@amd.com" <PradeepVineshReddy.Kodamati@amd.com>,
+	"lukas@wunner.de" <lukas@wunner.de>, "Benjamin.Cheatham@amd.com"
+	<Benjamin.Cheatham@amd.com>, "sathyanarayanan.kuppuswamy@linux.intel.com"
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "alucerop@amd.com" <alucerop@amd.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: RE: [PATCH v11 13/23] cxl/pci: Unify CXL trace logging for CXL
+ Endpoints and CXL Ports
+Thread-Topic: [PATCH v11 13/23] cxl/pci: Unify CXL trace logging for CXL
+ Endpoints and CXL Ports
+Thread-Index: AQHcFvNHxFodFG2mWkCAduI7aP/bW7R2YxYg
+Date: Wed, 27 Aug 2025 11:55:40 +0000
+Message-ID: <159c6313b9da45d58d83ca9af8dc9a17@huawei.com>
+References: <20250827013539.903682-1-terry.bowman@amd.com>
+ <20250827013539.903682-14-terry.bowman@amd.com>
+In-Reply-To: <20250827013539.903682-14-terry.bowman@amd.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="X6vJ3MJZfuQb9wf/"
-Content-Disposition: inline
-In-Reply-To: <20250826220959.GA4119563@ax162>
-X-Cookie: Keep out of the sunlight.
 
+>-----Original Message-----
+>From: Terry Bowman <terry.bowman@amd.com>
+>Sent: 27 August 2025 02:35
+>To: dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
+>dave.jiang@intel.com; alison.schofield@intel.com; dan.j.williams@intel.com=
+;
+>bhelgaas@google.com; Shiju Jose <shiju.jose@huawei.com>;
+>ming.li@zohomail.com; Smita.KoralahalliChannabasappa@amd.com;
+>rrichter@amd.com; dan.carpenter@linaro.org;
+>PradeepVineshReddy.Kodamati@amd.com; lukas@wunner.de;
+>Benjamin.Cheatham@amd.com;
+>sathyanarayanan.kuppuswamy@linux.intel.com; linux-cxl@vger.kernel.org;
+>alucerop@amd.com; ira.weiny@intel.com
+>Cc: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org
+>Subject: [PATCH v11 13/23] cxl/pci: Unify CXL trace logging for CXL Endpoi=
+nts
+>and CXL Ports
+>
+>CXL currently has separate trace routines for CXL Port errors and CXL Endp=
+oint
+>errors. This is inconvenient for the user because they must enable
+>2 sets of trace routines. Make updates to the trace logging such that a si=
+ngle
+>trace routine logs both CXL Endpoint and CXL Port protocol errors.
+>
+>Keep the trace log fields 'memdev' and 'host'. While these are not accurat=
+e for
+>non-Endpoints the fields will remain as-is to prevent breaking userspace R=
+AS
+>trace consumers.
+>
+>Add serial number parameter to the trace logging. This is used for EPs and=
+ 0 is
+>provided for CXL port devices without a serial number.
+>
+>Leave the correctable and uncorrectable trace routines' TP_STRUCT__entry()
+>unchanged with respect to member data types and order.
+>
+>Below is output of correctable and uncorrectable protocol error logging.
+>CXL Root Port and CXL Endpoint examples are included below.
+>
+>Root Port:
+>cxl_aer_correctable_error: memdev=3D0000:0c:00.0 host=3Dpci0000:0c serial:=
+ 0
+>status=3D'CRC Threshold Hit'
+>cxl_aer_uncorrectable_error: memdev=3D0000:0c:00.0 host=3Dpci0000:0c seria=
+l: 0
+>status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable P=
+arity
+>Error'
+>
+>Endpoint:
+>cxl_aer_correctable_error: memdev=3Dmem3 host=3D0000:0f:00.0 serial=3D0
+>status=3D'CRC Threshold Hit'
+>cxl_aer_uncorrectable_error: memdev=3Dmem3 host=3D0000:0f:00.0 serial: 0 s=
+tatus:
+>'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Er=
+ror'
+>
+>Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 
---X6vJ3MJZfuQb9wf/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Shiju Jose <shiju.jose@huawei.com>,
+apart from one error below.
 
-On Tue, Aug 26, 2025 at 03:09:59PM -0700, Nathan Chancellor wrote:
-> On Tue, Aug 26, 2025 at 09:45:48PM +0200, Anders Roxell wrote:
+>
+>---
+>Changes in v10->v11:
+>- Updated CE and UCE trace routines to maintain consistent TP_Struct ABI a=
+nd
+>unchanged TP_printk() logging.
+>---
+> drivers/cxl/core/ras.c   | 35 +++++++++++----------
+> drivers/cxl/core/trace.h | 68 +++++++---------------------------------
+> 2 files changed, 30 insertions(+), 73 deletions(-)
+>
+>diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c index
+>3454cf1a118d..fda3b0a64dab 100644
+>--- a/drivers/cxl/core/ras.c
+>+++ b/drivers/cxl/core/ras.c
+>@@ -13,7 +13,7 @@ static void cxl_cper_trace_corr_port_prot_err(struct
+>pci_dev *pdev,  {
+> 	u32 status =3D ras_cap.cor_status & ~ras_cap.cor_mask;
+>
+>-	trace_cxl_port_aer_correctable_error(&pdev->dev, status);
+>+	trace_cxl_aer_correctable_error(&pdev->dev, status, 0);
+> }
+>
+> static void cxl_cper_trace_uncorr_port_prot_err(struct pci_dev *pdev, @@ =
+-
+>28,8 +28,8 @@ static void cxl_cper_trace_uncorr_port_prot_err(struct pci_d=
+ev
+>*pdev,
+> 	else
+> 		fe =3D status;
+>
+>-	trace_cxl_port_aer_uncorrectable_error(&pdev->dev, status, fe,
+>-					       ras_cap.header_log);
+>+	trace_cxl_aer_uncorrectable_error(&pdev->dev, status, fe,
+>+					  ras_cap.header_log, 0);
+> }
+>
+> static void cxl_cper_trace_corr_prot_err(struct cxl_memdev *cxlmd, @@ -37=
+,7
+>+37,8 @@ static void cxl_cper_trace_corr_prot_err(struct cxl_memdev *cxlmd=
+,
+>{
+> 	u32 status =3D ras_cap.cor_status & ~ras_cap.cor_mask;
+>
+>-	trace_cxl_aer_correctable_error(cxlmd, status);
+>+	trace_cxl_aer_correctable_error(&cxlmd->dev, cxlmd->cxlds->serial,
+>+					status);
+Please correct to=20
+             trace_cxl_aer_correctable_error(&cxlmd->dev,  status,=20
+					cxlmd->cxlds->serial);
+> }
+>
+> static void
+[...]
+>-
+> TRACE_EVENT(cxl_aer_correctable_error,
+>-	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status),
+>-	TP_ARGS(cxlmd, status),
+>+	TP_PROTO(const struct device *cxlmd, u32 status, u64 serial),
+>+	TP_ARGS(cxlmd, status, serial),
+> 	TP_STRUCT__entry(
+>-		__string(memdev, dev_name(&cxlmd->dev))
+>-		__string(host, dev_name(cxlmd->dev.parent))
+>+		__string(memdev, dev_name(cxlmd))
+>+		__string(host, dev_name(cxlmd->parent))
+> 		__field(u64, serial)
+> 		__field(u32, status)
+> 	),
+> 	TP_fast_assign(
+> 		__assign_str(memdev);
+> 		__assign_str(host);
+>-		__entry->serial =3D cxlmd->cxlds->serial;
+>+		__entry->serial =3D serial;
+> 		__entry->status =3D status;
+> 	),
+> 	TP_printk("memdev=3D%s host=3D%s serial=3D%lld: status: '%s'",
+>--
+>2.51.0.rc2.21.ge5ab6b3e5a
 
-> > <5>[    1.527859] virtio_blk virtio0: [vda] 5397504 512-byte logical
-> > blocks (2.76 GB/2.57 GiB)
-> > <4>[   29.761219] sched: DL replenish lagged too much
-> > [here it hangs]
+Thanks,
+Shiju
 
-> FWIW, I am also seeing this on real arm64 hardware (an LX2160A board and
-> an Ampere Altra one) but with my NVMe drives failing to be recognized.
-> In somewhat ironic fashion, I am seeing the message from cover letter
-> repeating.
-
->   nvme nvme0: I/O tag 8 (1008) QID 0 timeout, completion polled
->   [  125.810062] dracut-initqueue[640]: Timed out while waiting for udev queue to empty.
->   nvme nvme0: I/O tag 9 (1009) QID 0 timeout, completion polled
-
-> I am happy to test patches or provide information.
-
-Same here, it's breaking at least Orion O6.
-
---X6vJ3MJZfuQb9wf/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmiu3vgACgkQJNaLcl1U
-h9CdeAf402KdhbaIwGLMVW/ZufuvG6tLwjEE10wBQg5laZZvUvnIyvGFbVKu7435
-ZNGuRRz+vrtWUELyalj8weCiMypGRn/0cwcQMNwqRojfxNP0H7bX4sbnbJ2p+XlL
-URDc8VRdIm5T7i4OuF+hd3vb3Bz4DCmLf2mnGS0FXKmq1LKywbufDgNqFLAO5QT3
-X5aa8E2n5SvTMUI600g6dAc/t2qBEiwaHoj/qsME/i2LpqddFZnziad+OKQlroOa
-3Ib4vOfVAKoX19X8FhiEubukWrpA14cQgM3QHz/53sM67fl+nizB+Va4+MopqxXc
-KfuEuADsssk2u1Hu2+lDnBvZBKV2
-=FiXm
------END PGP SIGNATURE-----
-
---X6vJ3MJZfuQb9wf/--
 
