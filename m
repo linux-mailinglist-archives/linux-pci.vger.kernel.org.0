@@ -1,106 +1,163 @@
-Return-Path: <linux-pci+bounces-34920-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34921-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BF40B383DD
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 15:41:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 897DEB38418
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 15:52:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 708791896A77
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 13:41:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B36C51B6213C
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 13:52:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7630F2FE052;
-	Wed, 27 Aug 2025 13:41:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E98BE302CDE;
+	Wed, 27 Aug 2025 13:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+pCKIeV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D0ECA5A
-	for <linux-pci@vger.kernel.org>; Wed, 27 Aug 2025 13:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF1928F1;
+	Wed, 27 Aug 2025 13:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756302079; cv=none; b=nFlDsVykBzhvNi26vyXz4eKvLnBeeLYZcFabl8yQsL+AJkR6WLaSc+3GkK5NRuoWqWaQzCpnhNKSCJBZTGC6U/Z5KMipAmPS27doNJfs708XtHYVNeZTqBYyBGEkXpo3PdunuQsrHBDlJMpZYFYsP8NmZx236McNmbstpQ2EtOE=
+	t=1756302717; cv=none; b=upS+2Ft52UuOwvCKR2FGY7t5WUKUahc43m+HN+mJRqKysBIcPyQ9ci8yiRVQ02wTITDMh0DPIqYwdhjRbnWoihFeZVGH+A+O7/nJ0kECiuN620XHvrh/BpeBdkQeXRln6hX1KrCIqEM4DpbLrHx0GAZck9llyIdcoTqlaU2u2AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756302079; c=relaxed/simple;
-	bh=M/OrQMvhUpo2MGfUDksa5lR5FmhDadvQTqrwbH1OUKQ=;
-	h=Message-Id:From:Date:Subject:To:Cc; b=cglRnu2P1WcrL3F88dBjccMjX18OZmh+tsJYqCL3ZgS+hc/2a5gjMy85jjX+5i3miFFrSrjctJzo2isbLSbSs6xhoKsScQhp1BIlxETC819kw+rIvWt4y1FITs9WwiOX2n3OTZY+rISUZfTACMBDgv7JvzWEHPg0ljS6bEo+Vfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id E24FC2009195;
-	Wed, 27 Aug 2025 15:41:12 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id CCCE34E5500; Wed, 27 Aug 2025 15:41:12 +0200 (CEST)
-Message-Id: <21f1875b18d4078c99353378f37dcd6b994f6d4e.1756301211.git.lukas@wunner.de>
-From: Lukas Wunner <lukas@wunner.de>
-Date: Wed, 27 Aug 2025 15:41:09 +0200
-Subject: [PATCH] PCI/AER: Support errors introduced by PCIe r6.0
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, "Mahesh J Salgaonkar" <mahesh@linux.ibm.com>, Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
+	s=arc-20240116; t=1756302717; c=relaxed/simple;
+	bh=bDGV7GGXaBIBhhu9ubPKd1YOpjVPci+GfwgdUO3lnmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A1LYZuCAsV9V2foN82X3frgaa7AM2AIdnJD8lX7h76F1Vt9JWbKwa+tGQgBfYiTya5/iMqQ72448g+walths53PogSN9ZdCJpcqT6bxQLg01jdVxDgVXeol/hJwVcTucdHaKUYOQ7YAELilTqOGmZX24PGkds8zlU9ATU4uIt1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r+pCKIeV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C852DC4CEEB;
+	Wed, 27 Aug 2025 13:51:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756302717;
+	bh=bDGV7GGXaBIBhhu9ubPKd1YOpjVPci+GfwgdUO3lnmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r+pCKIeVMtH32tdBaOxBO3TvACFgMOTkkgxI5e7y2Bb8GGOVFE/Uj+8U+IPU+tuVc
+	 4yavSlf4bFtz9Qmyb8P8qmAhvOPiqlW08Hz2AWuhg0ZKsoDEza5JsHTgt7dK8558zx
+	 aljn3hilRsdK9PpmF1n7jBvSbf8uwqV9px8qCH4HVyRUy59wXmpeLaOVZHFaTaJCBj
+	 3l8RQTIwhlnkozB/Y2H1LQB+6K7T/ba7ABMRefkHtm4/1pH3S048T7bLyPKDy5sgTp
+	 Csq4mr0zFqr8V7Fd32c2uyIl6fEm4vM2qtBhAazEmMtDufUE234MBCnj1/dt6eEFXZ
+	 LXASUBpudX/7A==
+Date: Wed, 27 Aug 2025 19:21:51 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, 
+	robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 02/13] PCI: dwc: Refactor code by using
+ dw_pcie_clear_and_set_dword()
+Message-ID: <wi2mylqrf6szc5iluncle2lj373aoxu46lyy7d2gaqx4dv3abq@sja5aj5mwv3j>
+References: <20250813044531.180411-1-18255117159@163.com>
+ <20250813044531.180411-3-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250813044531.180411-3-18255117159@163.com>
 
-PCIe r6.0 defined five additional errors in the Uncorrectable Error
-Status, Mask and Severity Registers (PCIe r7.0 sec 7.8.4.2ff).
+On Wed, Aug 13, 2025 at 12:45:20PM GMT, Hans Zhang wrote:
+> DesignWare core modules contain multiple instances of manual
+> read-modify-write operations for register bit manipulation.
+> These patterns duplicate functionality now provided by
+> dw_pcie_clear_and_set_dword(), particularly in debugfs, endpoint,
+> host, and core initialization paths.
+> 
+> Replace open-coded bit manipulation sequences with calls to
+> dw_pcie_clear_and_set_dword(). Affected areas include debugfs register
+> control, endpoint capability configuration, host setup routines, and
+> core link initialization logic. The changes simplify power management
+> handling, capability masking, and feature configuration.
+> 
+> Standardizing on the helper function reduces code duplication by ~140
+> lines across core modules while improving readability. The refactoring
+> also ensures consistent error handling for register operations and
+> provides a single point of control for future bit manipulation logi
+> updates.
+> 
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  .../controller/dwc/pcie-designware-debugfs.c  | 66 +++++++---------
+>  .../pci/controller/dwc/pcie-designware-ep.c   | 20 +++--
+>  .../pci/controller/dwc/pcie-designware-host.c | 26 +++----
+>  drivers/pci/controller/dwc/pcie-designware.c  | 75 +++++++------------
+>  drivers/pci/controller/dwc/pcie-designware.h  | 18 +----
+>  5 files changed, 76 insertions(+), 129 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> index 0fbf86c0b97e..ff185b8977f3 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> @@ -213,10 +213,8 @@ static ssize_t lane_detect_write(struct file *file, const char __user *buf,
+>  	if (val)
+>  		return val;
+>  
+> -	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + SD_STATUS_L1LANE_REG);
+> -	val &= ~(LANE_SELECT);
+> -	val |= FIELD_PREP(LANE_SELECT, lane);
+> -	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + SD_STATUS_L1LANE_REG, val);
+> +	dw_pcie_clear_and_set_dword(pci, rinfo->ras_cap_offset + SD_STATUS_L1LANE_REG,
+> +				    LANE_SELECT, FIELD_PREP(LANE_SELECT, lane));
+>  
+>  	return count;
+>  }
+> @@ -309,12 +307,11 @@ static void set_event_number(struct dwc_pcie_rasdes_priv *pdata,
+>  {
+>  	u32 val;
+>  
+> -	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
+> -	val &= ~EVENT_COUNTER_ENABLE;
+> -	val &= ~(EVENT_COUNTER_GROUP_SELECT | EVENT_COUNTER_EVENT_SELECT);
+> -	val |= FIELD_PREP(EVENT_COUNTER_GROUP_SELECT, event_list[pdata->idx].group_no);
+> +	val = FIELD_PREP(EVENT_COUNTER_GROUP_SELECT, event_list[pdata->idx].group_no);
+>  	val |= FIELD_PREP(EVENT_COUNTER_EVENT_SELECT, event_list[pdata->idx].event_no);
+> -	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG, val);
+> +	dw_pcie_clear_and_set_dword(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG,
+> +				    EVENT_COUNTER_ENABLE | EVENT_COUNTER_GROUP_SELECT |
+> +				    EVENT_COUNTER_EVENT_SELECT, val);
+>  }
+>  
+>  static ssize_t counter_enable_read(struct file *file, char __user *buf,
+> @@ -354,13 +351,10 @@ static ssize_t counter_enable_write(struct file *file, const char __user *buf,
+>  
+>  	mutex_lock(&rinfo->reg_event_lock);
+>  	set_event_number(pdata, pci, rinfo);
+> -	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
+> -	if (enable)
+> -		val |= FIELD_PREP(EVENT_COUNTER_ENABLE, PER_EVENT_ON);
+> -	else
+> -		val |= FIELD_PREP(EVENT_COUNTER_ENABLE, PER_EVENT_OFF);
+>  
+> -	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG, val);
+> +	val |= FIELD_PREP(EVENT_COUNTER_ENABLE, enable ? PER_EVENT_ON : PER_EVENT_OFF);
 
-lspci has been supporting them since commit 144b0911cc0b ("ls-ecaps:
-extend decode support for more fields for AER CE and UE status"):
+So you just added the bitfields to the existing 'val' variable which was storing
+the return value of kstrtou32_from_user().
 
-https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/commit/?id=144b0911cc0b
+What makes me nervous about this series is these kind of subtle bugs. It is
+really hard to spot all with too many drivers/changes :/
 
-Amend the AER driver to recognize them as well, instead of logging them as
-"Unknown Error Bit".
+I would suggest you to just convert whatever drivers you can test with and leave
+the rest to platforms maintainers to convert later. I do not want to regress
+platforms for cleanups.
 
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org
----
-Last amendment of aer_uncorrectable_error_string[] was in 2019 for an
-error introduced in PCIe r3.1, see commit 6458b438ebc1 ("PCI/AER: Add
-PoisonTLPBlocked to Uncorrectable error counters").
+> +	dw_pcie_clear_and_set_dword(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG,
+> +				    0, val);
 
- drivers/pci/pcie/aer.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Similar to what Lukas suggested here: https://lore.kernel.org/linux-pci/aKDpIeQgt7I9Ts8F@wunner.de
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index e286c19..15ed541 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -43,7 +43,7 @@
- #define AER_ERROR_SOURCES_MAX		128
- 
- #define AER_MAX_TYPEOF_COR_ERRS		16	/* as per PCI_ERR_COR_STATUS */
--#define AER_MAX_TYPEOF_UNCOR_ERRS	27	/* as per PCI_ERR_UNCOR_STATUS*/
-+#define AER_MAX_TYPEOF_UNCOR_ERRS	32	/* as per PCI_ERR_UNCOR_STATUS*/
- 
- struct aer_err_source {
- 	u32 status;			/* PCI_ERR_ROOT_STATUS */
-@@ -525,11 +525,11 @@ void pci_aer_exit(struct pci_dev *dev)
- 	"AtomicOpBlocked",		/* Bit Position 24	*/
- 	"TLPBlockedErr",		/* Bit Position 25	*/
- 	"PoisonTLPBlocked",		/* Bit Position 26	*/
--	NULL,				/* Bit Position 27	*/
--	NULL,				/* Bit Position 28	*/
--	NULL,				/* Bit Position 29	*/
--	NULL,				/* Bit Position 30	*/
--	NULL,				/* Bit Position 31	*/
-+	"DMWrReqBlocked",		/* Bit Position 27	*/
-+	"IDECheck",			/* Bit Position 28	*/
-+	"MisIDETLP",			/* Bit Position 29	*/
-+	"PCRC_CHECK",			/* Bit Position 30	*/
-+	"TLPXlatBlocked",		/* Bit Position 31	*/
- };
- 
- static const char *aer_agent_string[] = {
+Please use separate API for just setting the word instead of passing 0 to this
+API.
+
+- Mani
+
 -- 
-2.47.2
-
+மணிவண்ணன் சதாசிவம்
 
