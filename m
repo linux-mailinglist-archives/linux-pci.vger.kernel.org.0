@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-34875-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34876-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72603B37B42
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 09:09:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E24CB37B4E
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 09:13:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8CE247AA15D
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 07:08:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA6BF3BB3F1
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 07:13:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81D802D9499;
-	Wed, 27 Aug 2025 07:09:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A32DA314A63;
+	Wed, 27 Aug 2025 07:13:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="by6Re0uT"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="f87tkpfp"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86911C4609;
-	Wed, 27 Aug 2025 07:09:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB6A29CB48;
+	Wed, 27 Aug 2025 07:13:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756278588; cv=none; b=SwQv/lcaDOL26Vc/Rlk40WqjJpUg+RUmEnkYXIO48palrIugtcTfB0LfsP2oVH8yqPHlh3JqeXiiS/Fi83O5RGPpwCJj8PGQtI4garzXvKcFm0FZe2ExGc4uLzqhU6zK3COU1TvHQGUm3+tLJ569hYb1ZLM7/SLDOrTnjUoFryM=
+	t=1756278833; cv=none; b=fg81Xf2q4fsCLVkCJVCNshUKeu24ZY34sjpz/E/PAfJDlX9YrrFCQ4tEaZPlChKIuhMMPJM2muwaiyyrkxkR4oMCAXl8ikFasiPqWuR11YaTEwY29gAu7zw5+5DoLp/1v14z/uRJVTnVxl5Lr60EPdq95gezkKR1XgXqCMmRLg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756278588; c=relaxed/simple;
-	bh=OmO05LJBkK0VrGYLqc/MT3KB8ZkvEJ+xP3RyLaJt5iE=;
+	s=arc-20240116; t=1756278833; c=relaxed/simple;
+	bh=K0bQQpsDzeY/Y26tMD08d+PjvNTQF08RYzop/82EMok=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tqdZxhBONhHhPHELZLpG/N56Lm7GvbViL9g3+BQ4ZAbbUBY9TJiAnlYsqGlqYVw+b5cE+rv4CpbigW7dSCKzKAXvdLdjW7jX9DwSXRUsJs0gcwZX0REr7gz+mzXZivWRmUQ8BT4mr7eQrSltKTJ+CejAQp6sG82s18fKzLGDt6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=by6Re0uT; arc=none smtp.client-ip=185.11.138.130
+	 MIME-Version:Content-Type; b=aJBx1zzrulZJbRlRIBEMbkoNUBSkM1j+kHuBv0Prp0x+6LYmm0K8nuqLYLQEeVPOcUeGVRP0xMzvWoSO967CLV64lj1Yxq1uCI7Cvr1ue/thHsgGCv+IFyxdeIfr0NU+x4R7ewFyq6iExQit+FpXX+IxcqAebrTg2lVpwHB9KpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=f87tkpfp; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
 	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=OmO05LJBkK0VrGYLqc/MT3KB8ZkvEJ+xP3RyLaJt5iE=; b=by6Re0uTbU4AS3jjeZaVJBwLWw
-	yOyntwSn/5Tr1y3ElBygHBgL3YfgUrpqZHKDr2vJhvO6tT0sYoIVz0lKzlBpAWVbaPU8enrdbrwCz
-	S9fInrtadiZitoedzjyGxZz9CpEJZpbi9oFSvlsFE2BGrXYg8kWzxg9r6MbubHSvs32wwRPaAHlvI
-	Gr8YuS8sfln8I6W2kTbuQ1vzlhd4J3kKSxgL+THbQYOMj41zk6IZFfgBY+aUfTcihKpJdTVPxHR22
-	J8g8ZlRWAAEhpQgJFzcVVkcMqmlU3VahRSRtLYMdSy8XBg/hBvLg53F0gr4XcPJdn1QZbuzy1zbr6
-	H/aqb7Bw==;
+	bh=K0bQQpsDzeY/Y26tMD08d+PjvNTQF08RYzop/82EMok=; b=f87tkpfpVxZrRViMoRI4d1CeNZ
+	8kgIuN7oxH9O0wqnPTCRHKcal3QmoH2sNRFm8kzVA0dBaxO/xTgrAnG98dBu4cMlnWqLvWGlgqea4
+	NfNGd2f6Q1bvhz596vb9/7BU+93Up+/Ue9FOv+GapwhELYQiBKPa2GrmunCDcjo9MH47g6KJAWNJ1
+	JwBlcinp6eoLNgtYnTn+zvXwO7dI7mKgfBZNw1h5r4OSRXhSFCR9bVck4P1C7ZO4CzxWb1tdTIcHA
+	dhkdnLYvhksEDxzgNsPRLh5jHPGi2kMi53E7XKn2Qmw9xpWa/o3wlL7supWIZRrx/dfvHuRrnGdNt
+	Z3xESJfg==;
 Received: from [213.244.170.152] (helo=phil.localnet)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1urAHR-0007yj-9C; Wed, 27 Aug 2025 09:09:13 +0200
+	id 1urALS-0001of-9v; Wed, 27 Aug 2025 09:13:22 +0200
 From: Heiko Stuebner <heiko@sntech.de>
 To: Yury Norov <yury.norov@gmail.com>,
  Rasmus Villemoes <linux@rasmusvillemoes.dk>,
@@ -84,13 +84,13 @@ Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
  linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 Subject:
- Re: [PATCH v3 05/20] drm/rockchip: lvds: switch to FIELD_PREP_WM16 macro
-Date: Wed, 27 Aug 2025 09:09:12 +0200
-Message-ID: <5226092.Mh6RI2rZIc@phil>
-In-Reply-To: <20250825-byeword-update-v3-5-947b841cdb29@collabora.com>
+ Re: [PATCH v3 06/20] phy: rockchip-emmc: switch to FIELD_PREP_WM16 macro
+Date: Wed, 27 Aug 2025 09:13:18 +0200
+Message-ID: <6820610.MHq7AAxBmi@phil>
+In-Reply-To: <20250825-byeword-update-v3-6-947b841cdb29@collabora.com>
 References:
  <20250825-byeword-update-v3-0-947b841cdb29@collabora.com>
- <20250825-byeword-update-v3-5-947b841cdb29@collabora.com>
+ <20250825-byeword-update-v3-6-947b841cdb29@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -100,22 +100,18 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-Am Montag, 25. August 2025, 10:28:25 Mitteleurop=C3=A4ische Sommerzeit schr=
+Am Montag, 25. August 2025, 10:28:26 Mitteleurop=C3=A4ische Sommerzeit schr=
 ieb Nicolas Frattaroli:
 > The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
 > drivers that use constant masks.
 >=20
-> Remove rockchip_lvds.h's own HIWORD_UPDATE macro, and replace all
-> instances of it with hw_bitfield.h's FIELD_PREP_WM16 macro, which gives
-> us more error checking.
->=20
-> For the slightly-less-trivial case of the 2-bit width instance, the
-> results were checked during development to match all possible input
-> values (0 to 3, inclusive).
+> Replace the implementation of the rockchip eMMC PHY driver's
+> HIWORD_UPDATE macro with hw_bitfield.h's FIELD_PREP_WM16. This makes the
+> change more easily reviewable.
 >=20
 > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Heiko Stuebner <heiko@sntech.de>
 
 
 
