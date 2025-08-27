@@ -1,103 +1,103 @@
-Return-Path: <linux-pci+bounces-34860-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34857-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDE2FB378E4
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 05:53:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 202D5B378E1
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 05:53:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B94C1B67C32
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 03:53:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23C141B6719C
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 03:53:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88D8630DEA9;
-	Wed, 27 Aug 2025 03:53:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08B7C30CDA0;
+	Wed, 27 Aug 2025 03:53:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VMNZA7j8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CDY4ArcW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D1830BF55
-	for <linux-pci@vger.kernel.org>; Wed, 27 Aug 2025 03:53:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DF3185B67
+	for <linux-pci@vger.kernel.org>; Wed, 27 Aug 2025 03:53:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756266792; cv=fail; b=u4rC2l/KFdd/ARIQKlKG0FWFylzjxoM/dpC/K4mezpVVrYCFmcgGWfSHvImzq8YEcxpWvkoQ0IrtFQQiPINnso0DvFLxRHgDYyE4Yn9nJlRjUIxaGmfoxXvtAr6+0h5f3sRoDK8jFsS8rR0Xd4m1RL8B25mZ17sN8VjTrZWbUVE=
+	t=1756266788; cv=fail; b=T0TrZlH7ATYJrfXyut9qSJIcWkIKBBI82LzyA9p0sv6QF+q1vibLSj1Fllopug65AGNw9/TIBm2lHrnkigupubr8KwayWUSXe6ER/L88fhN9tY8+XWxRPGbX10lYVuceweKf19QDtk1QvbrtpUgrp2uIBIQ9XCj5vNGzbKW34Vg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756266792; c=relaxed/simple;
-	bh=9VK1PqkheHtgGAFbRmaykRNgO6tdvxyK03lPWQRcxPY=;
+	s=arc-20240116; t=1756266788; c=relaxed/simple;
+	bh=a5p9Rx8+fR/34SPsnBEbHbVvg0P2HSXjFx5Si23VNH4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JGVp0LJBfwDmDuvfL5aTElPWDABbgnLPAlQaekjVskx6lkza5v2L8SNskSWRt9JUzNce/IVlSEb96wQV+sOOkTOrNw3sxfXJITOPFQGtjDqulVDtfx3tiTw9O7fQAA6xR/GkfjbLDXYoWPYnD8XovspEyjxk6ZGuWl0lmdM6Lb0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VMNZA7j8; arc=fail smtp.client-ip=192.198.163.13
+	 Content-Type:MIME-Version; b=ADDKhmwv7fm1a+WPG41KcAPMa8tHk3ItwOTD+V6u1vwd/O+sGulpnufQD872/URjZQztujzjhBrmN+Tz3VyYQHX1u1f3Jpvm+4gAAfUSAKrFIBQADX/g1mj9z0CyDiIdOPvy+CvimmNSI2y0Gjrj6bQKTPyyEZ6L/PR7q0X9Duw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CDY4ArcW; arc=fail smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756266791; x=1787802791;
+  t=1756266787; x=1787802787;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:content-transfer-encoding:mime-version;
-  bh=9VK1PqkheHtgGAFbRmaykRNgO6tdvxyK03lPWQRcxPY=;
-  b=VMNZA7j8ybv3LbbvTC9l4pEnnEzWevIZ+OZvvcQ32hyXrQX7fg3kq6ye
-   LxtJmMrqFfyeJ/noFf2r/viVuaJ3CbN8ukpteiHz9ZXQjoK7AhOZNjgXB
-   L62aWNOVLRbU2CReigNoHqAla9my2M8TRrpfQoro2EhcGvqdXSnPtenxj
-   WzF3+qChV6w6f/GT4fdauXJPSdnJbg5pmgWPaQtaBGCsD/3a/0ijN8V3k
-   4xzuO0ft0K/57NvDI1mXbSyrOA4baZ/zTUHhQgdqjmHbctAptHlP9ISJ3
-   Q09t6frQgKc1CsZXEa0NO+5vFVFQlJFZAMyxSmZQlCsVx6HcxVg2SvVyf
+  bh=a5p9Rx8+fR/34SPsnBEbHbVvg0P2HSXjFx5Si23VNH4=;
+  b=CDY4ArcWxMt1YEG1IT/K3ZTpLm3NXf++vvK+dDmQWklwY7NWN29bQ/Cz
+   75ezrMebOj11bglIyg3WwfIzNC3wfLT4xAEb+mHoyIbvSxCOYxtRPkq0r
+   7zhsPLwYCvlfVLH0ApAdBbHdz1EJjvPm6pAhAZhSzItUlGwgjku5wTaC+
+   BBlhLogDFPhyn1aYB09OVmwTp2Z7Y7TjOuVcICH4RMiHj7o0/+sEkap4Y
+   JcCNdhLA8VelRko6A6vMzGVd4WJ1zM5ez9HuMXeXVdh8VTyJ7567iXTsp
+   Y7L6damovti+/O2O9bVkdXEzEZcDa7aF+tPRtaCb+9G7WjmGlGet2FEJc
    Q==;
-X-CSE-ConnectionGUID: A+s3jZVKRxy/GQMOrudr9g==
-X-CSE-MsgGUID: cTPI2N3+SAq2cRROgSxhjw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11534"; a="61150979"
+X-CSE-ConnectionGUID: Ao3HXQ7TTcyvf5DspafMgQ==
+X-CSE-MsgGUID: ATAHaWsKR9u91Jw/Km1wzQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11534"; a="61150967"
 X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="61150979"
+   d="scan'208";a="61150967"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2025 20:53:10 -0700
-X-CSE-ConnectionGUID: 85J60CBIQ4+HLSG/yFDkzQ==
-X-CSE-MsgGUID: KBYkK7GDSZ+nT11VXwkZwQ==
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2025 20:53:06 -0700
+X-CSE-ConnectionGUID: JtH4tCGrT3KIWEoJXABQeQ==
+X-CSE-MsgGUID: rJGby+tFT3aVsx//KRRAGw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="175043344"
+   d="scan'208";a="175043332"
 Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2025 20:53:10 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2025 20:53:07 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
  fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Tue, 26 Aug 2025 20:53:09 -0700
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ 15.2.2562.17; Tue, 26 Aug 2025 20:53:05 -0700
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Tue, 26 Aug 2025 20:53:09 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.79)
- by edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
+ 15.2.2562.17 via Frontend Transport; Tue, 26 Aug 2025 20:53:05 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.60)
+ by edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Tue, 26 Aug 2025 20:53:09 -0700
+ 15.2.2562.17; Tue, 26 Aug 2025 20:53:05 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dR2mu1Wl4M5UGSx11iaVcI7ceUBwAtNP6AXumGpn+4cpjkXfDNq2RPQXfavll0P7ezB6hldZYd4Reh0cpEJO14/r4VQApY8Xdz3Qy1aIZqH6gmDl1TFIS0JfpEt1Ibzfi70IZja5AmuNVGZpPiRO4+8P+rbxecYxYccgtXjK7jd27LnizCIR48EI+5LV9XCHzoto6yaDqnErZqM7HNrQtzNH1qV2+Bpc/ltUVkL714cMzLxGyhvVxtwqYL1j2GQvy8PsElQEy1iEGbxXWe4iqFAaf8HIyUpVF9YVMqCyToc81Xa2Ngrtr4ohnrV6KxjPlVfQWgAYh9fHc7H//vDdeQ==
+ b=bEbczq0ccZHkllJ0gpwO/nSevyLVqBHgMAH/zFlskCjhLadAPHkcf/1P09hlEZyxqm84AmE/iVERjEHfkcEgj2kzD60vYz3DGuMV8jXq6M+XlnhMRIkfiFFUuWKDp781TePX7sCkmo5l8mdh5lI+kQVpg3nQ2AQ+x3jmQ3BV5QITgQANjCcSIPo7qldmLoZpuLtFVWne0jFJh171bUp+0k/W1mN5uJGUVgjOo1iZmwc2YQ9iuAabdwnvXy9F13Naw6QN3dTdgm6pDrTL6jGvmlrOj9KQxRJcBuJy08y49R7bWOAHNmz6cwvkweouBF8viskxP3rzIywiUlP4NfIcRQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U53aRon291NCt+9bVuqw/8MGdshvFADTewyi6EH8604=;
- b=ah/qXH73lZre9blqyfxYKi0JFMZCEt6D+19aVvmWCd+sugEDjSkn1Q7vA+bywk93LWGzGED2pvJZf6b6LEtIjWRFoR4JWdn9sLaWX6lQYZhllbwU3LnxLrp57ZIyXK9iPcm1FdakqPuc3XufYuAU11Atf1sHhknRoiIsQvsyyE7XeOVzfg0SKkgNfaOQ4BznMTFkgX7mdtNohH2qS/G+7p5QIbEK9z3Hd+dSojuek4IHiPInHakv3VPBsP2Bg0WYjXkot6NIHQFuVukqF+AU0ejqiTxo8lLSnviIEvHTScqDyDWlntCewhJ9DsMB0p5h+aWjlubbSoDY0HFf4BS/NQ==
+ bh=3Hu0YlEDOmjgwGceTvhjoyxQ63vwpEw6c0eTx8ZIu+g=;
+ b=lUA5gmEnmuK+nFWMDIlhR68VV27CwMNRd0DlbJT1Lf2zbY9qELy/W8XYZcsE2dzPLl0xPF4XEvq4vldMBO4dWMnaDvpuKj1X9XCJ5mMQi9stfaHFxMeTBGuMlkyFH1nuFtFNe36C2bnJv/6M6XxilKJEIyZ4SgUsm2Bdv6I03ZZOw7I0ffo2h/ojlTeUb8jZcgJzP+9xiGoIeAas4G1npmEPhaSYy1f+2X2TE0P9nH+jA8GKUCp+MfnFmhR2e14g8IfRDWSlhe4Ucw7uqCBOR9UWU91OEL8ED3A6+guLaIwY2Q/TdHaU2WspLjDt+ip1h3zyXqQDOzV2SqW/4+X/XQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA0PR11MB8335.namprd11.prod.outlook.com (2603:10b6:208:493::6) with
+ by IA1PR11MB6170.namprd11.prod.outlook.com (2603:10b6:208:3ea::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.20; Wed, 27 Aug
- 2025 03:53:02 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.21; Wed, 27 Aug
+ 2025 03:53:03 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8%2]) with mapi id 15.20.9052.019; Wed, 27 Aug 2025
- 03:53:02 +0000
+ 03:53:03 +0000
 From: Dan Williams <dan.j.williams@intel.com>
 To: <linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>
 CC: <gregkh@linuxfoundation.org>, <bhelgaas@google.com>,
 	<yilun.xu@linux.intel.com>, <aneesh.kumar@kernel.org>, <aik@amd.com>
-Subject: [PATCH 1/7] PCI/TSM: Add pci_tsm_{bind,unbind}() methods for instantiating TDIs
-Date: Tue, 26 Aug 2025 20:52:53 -0700
-Message-ID: <20250827035259.1356758-2-dan.j.williams@intel.com>
+Subject: [PATCH 2/7] PCI/TSM: Add pci_tsm_guest_req() for managing TDIs
+Date: Tue, 26 Aug 2025 20:52:54 -0700
+Message-ID: <20250827035259.1356758-3-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250827035259.1356758-1-dan.j.williams@intel.com>
 References: <20250827035259.1356758-1-dan.j.williams@intel.com>
@@ -113,308 +113,270 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA0PR11MB8335:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3ba687e8-4039-41d4-5c90-08dde51d3887
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA1PR11MB6170:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9ba12c5a-e9fd-4c69-8494-08dde51d38fd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?ClVHLB7oFE5zKrKKN73PCirreNBJakvnB0CdzIQov5Smi6YThfnoBKYicDOw?=
- =?us-ascii?Q?+v/dNNvFPG+xxoOV008DqNREl0WhpP69KjxSj+2gdMPcHXXuBjs2Z9oS+2ja?=
- =?us-ascii?Q?Ku6Yd0mXJdIlp6jCg/B9sktnMX7qM/OL96hZYH8EXvpZeFEsFcHqUlnDpT8E?=
- =?us-ascii?Q?yiJgMNSY1vKEJnGrJpVOzHAEqkRsnarzRkvEzuDqM1wijL/NChAWH38hsPLx?=
- =?us-ascii?Q?OQZdwgORIdUQyQwKX3LI/O5A1HMKclsho4IeowQW2J4aQmZx2IBZnk9SSC5t?=
- =?us-ascii?Q?i84w0lYilMmYz1yvFZG9b9T3KM96Z3H4TcivsVJIXqUR9x2yjHPTDKC/6Bv4?=
- =?us-ascii?Q?PxI8j7F1XqlN2bIopeBQ+PRHTL/iUeGoyT7ZkP4GB/AkYQ+3G9Vlg+z1s/WS?=
- =?us-ascii?Q?RLuXO5sAHqkaBZF7CNrxdG8CqHfedFMMJI4ch90KxgPoczyBNqNtBRnMle/2?=
- =?us-ascii?Q?+T7IMFZEOtmE0DBVM07EPbSrCqOFBG3cL9wP0glHpVM9esg3jI9uauQP43Dq?=
- =?us-ascii?Q?C72TOIgpxL4L2zQ3hMpvp3LCd3HxVSCjsoaiD6I/9hJb54gp+fzLxyY3OMq+?=
- =?us-ascii?Q?/skdlwR4l1s3pyp+21IExrVU+9zyE1s/Pm1iP0LQE1FRkMXSNRRLONHQpxM0?=
- =?us-ascii?Q?1QLfW/iE5HFkz6u1MdMPygYeGr0x6SlCuE7DTEXxmpBHOu1lU83jyUbIcbN6?=
- =?us-ascii?Q?8FC0GVVZOUFfXehgqYJbluPZpbK+AOtZSoE6abUGl7yUWISL/0/DbbURHsa4?=
- =?us-ascii?Q?PUr1+aqdTm5DQ0WKuy/U3F/lW6Zz6NM4GSdRceJF57awTr/tWAI/IXs558/D?=
- =?us-ascii?Q?cBfqMIAIcBeuc9aBNrHT4phccFkF6mT5h/1ABHyjthJprCwnrMXqFVvVOodR?=
- =?us-ascii?Q?hy2BI8b8FU3XczKgqyIo19VG7znmwELJKp2QSaaKSN8GFdmwnuGnVDUQyqZE?=
- =?us-ascii?Q?kgj6nkzIkhuAz4IU6b3bGMwKCUPTWIjLw3UB0uQEiXDoGvbrsVjrxZA6jxPv?=
- =?us-ascii?Q?kv2fmBIh8PR4rB3/cJwNG2xwjDG/ahbB9Bb/7j9cWDChWCYTvHkiFqm3WtEL?=
- =?us-ascii?Q?TE/uTZF5UZLASvfcKN9y8X7fQK3+u93MVUfpF7sKY+avhEAcA6G6S7qul4hH?=
- =?us-ascii?Q?JKBCAzll5P05s00d2VcFDLD0Ob/lZMYSH+ymoZuBvLa5+6yjUeiud1IqQtDt?=
- =?us-ascii?Q?Jn10hAdfUx+6S+QiQHcIujTu7wBcY0ns8YQOW4AU333E5hg0IcynOx2OVorr?=
- =?us-ascii?Q?+0IyRKPJnaNtyK7JqkMvw/lc8a3IOSvcKqbYEZhhLBU9K8UYLcG60E9M6CoN?=
- =?us-ascii?Q?c+wHL6ty1gsc9zInZV/O1/U9STqDxEiTCGCuUvkTzdFV5bDDeQ6Un70Ed2ZT?=
- =?us-ascii?Q?tOWfwcfahWIg4lhfECph33nb6EcCcYnuWDnXqvSykLzt+X+s4sMQupkf93Lb?=
- =?us-ascii?Q?VcVswSp9//A=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?pYJmAMWzyHbc3Y+Lm7OH3aMYJ9GexBrDytRV3B+W4+TcKHSFHVKBNdKtZvzK?=
+ =?us-ascii?Q?GKBWagQmBpZa8A4wPoeUXvJlDalNCjzz0Bl7ftDXTV728aM5OKCmrE2Kaujn?=
+ =?us-ascii?Q?zid1fQJ16cugxWdisMJ9nkyA8kC7YbW7j98ElDILvRpSoPSOS3x0rPFKLZ1c?=
+ =?us-ascii?Q?EEh4W9QZGZof6qS9+obfcn1p3EXOX08elIOILqpzG0DbA0PuZcO0AhkC1vrP?=
+ =?us-ascii?Q?Ta5myySl/A+5EyvEZEWI6kaDcri4qBcbc6fWklIFbGr9rW8ThjHYWHAjla4q?=
+ =?us-ascii?Q?0GD/KjeP2ky+OTf263wA4ML4XLLZ9LNYJGoVmbDzsveRlDWQSBdHlOmUendZ?=
+ =?us-ascii?Q?uRnlKQEM79ehRUsxMlu6NUYIrplJJ5L/W60UIrZL12Mh+XGSfqhESluCeCH1?=
+ =?us-ascii?Q?z84sneOwqJu8pVe+1LzaBx8gkBclAcMhe7xvnQMSSh7gHqcvGzQl3k6TXVAh?=
+ =?us-ascii?Q?seK8MygIX4l9umE5o9n03QQeOecEg1LWkwMmX2d9Sa7k/6LPne/KzkDvWQPt?=
+ =?us-ascii?Q?hdyH59ul7H9KwO1pT5+oJVSmp2qQN3Qi0X40wiisvFm+m9p0+DJSxSALj+eQ?=
+ =?us-ascii?Q?2tZASGv+TW17IiIOh9PGmAAEXMU6rTQLWEVdzDVevVvC7nQUJA/7XSwDry95?=
+ =?us-ascii?Q?WwURbxZDOMs9vuICnNBlMJuDwMqZZidkVgJGIjblD9ypn/TmJghM6G+3nrZG?=
+ =?us-ascii?Q?8c546qz8vpeiqlF42G0c/gFzQVUhyGYc1iWqS4g6y5GUep83uF0zB5Yg8HfU?=
+ =?us-ascii?Q?3nUvh9IwZ+3dOUnA3oBBb1ykFcDD+9v0jVjcuLCwJFj+uBNes08WYrr1k3O+?=
+ =?us-ascii?Q?3bb0quIjsyHmQ/6E3U7uX5uyIXvE561jD76nvV4prLIhqMMG/cp1SfSGudVA?=
+ =?us-ascii?Q?D9YmRQ/LzkgffBcSHIr0oXU4jrJe7OORZfodGllRUAZM+Rdobogb5lihqGE2?=
+ =?us-ascii?Q?ZM+UPmazIDu8gE9o+i7RjcX1GmWXTt5X6p7oFyXvnYOC1XUkiPGr4YuSLGd1?=
+ =?us-ascii?Q?G81VJG/pXPumwrwO0Q21Ktoc3GtMCdZ9/+Nysw8K0QfyJ7YmcUdjU3LJ5ObF?=
+ =?us-ascii?Q?ekt1MdItLxL1HskcHtUxQRjIT7cROLG44xdeZtn83NE84ux1OoOJdWPTINJC?=
+ =?us-ascii?Q?4N+AXFNc00xqcggBD6siGKYcfkScZo23tMOyb3yh6ufka8wHuw8jhkELNTcQ?=
+ =?us-ascii?Q?uTUWK/7FLSwoLSZemJgzqC6YTnm6QgVvzkiCHqV6AuNv9XGyQ0c/LKz6YHS6?=
+ =?us-ascii?Q?6Uq8q/Nlz9/qk1ZZMYnutKG7Kd8EhJEOQ+liKGdoTUUh3xzz/Jxb/qnwecGL?=
+ =?us-ascii?Q?xw+TBMR2JbtxNetCCMHFasazlZUS3tPwqs9rSSqcoPDDj5jXJDL375YtyL7X?=
+ =?us-ascii?Q?KjQkUCnl7sqLDbQPCjRRcFQDDRb5rZDdy6j1XSPilNje+2r8KivlS4d+D4Q0?=
+ =?us-ascii?Q?mhhsY0RG3Ls=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DNSIlGus80o1B7IRmLl3qCddr/6Fe51MH78C8LsvLE/BVHR3TYYKKpowbSZ9?=
- =?us-ascii?Q?Bev+XS0uvK/TcIW6ok6jG95egOURq72zYOgLbRKfds2/17OSJ+yv4fWD/0/X?=
- =?us-ascii?Q?FxnZNIF3OEwrvJnYsiIgOX3QMDrRLzZ/+eSR+SRcS8vIkEWbgBgBV0sW3LxV?=
- =?us-ascii?Q?/Sy5uWg1f914/r6MBjDND5ta0L0NmegNXzcIjjvDvm6l9jS+37TU7gtPNv44?=
- =?us-ascii?Q?joNozm6Gfn4rtY57fB6Y06NWiE/fu6Ucskt2qR8bHiYi5amYccqQtaYomi5x?=
- =?us-ascii?Q?NeHQT8ziS5mjGuzWPnfW1G0UCvivBJlmXnIDAQMk7XxKMqGOkaFNhSd/1ohA?=
- =?us-ascii?Q?bqPUXKnez7Z9orLs/63eSlIys0y7N1jWQ2xVh3gZarH6n91XRE8+ajAul9wu?=
- =?us-ascii?Q?GR3ztlPxm8n7lVTVGOhkOCLh1+iiwnhMMB4Zp1Oe7apcxa6FS9sa2FfPfiWe?=
- =?us-ascii?Q?cONw+H/wVi4ssaryjYJ10PlBK/7iP/W8PteU3k5fP/tiTEy33f7fOQiJLBfW?=
- =?us-ascii?Q?4eseG5jSrX3CSJp/DcShci2lVFmFc2F/m9DOo3J0Phw710jmxi083Hb8Ukdh?=
- =?us-ascii?Q?8ejIbxs+V3QOhcmNPfhwt194Nv+Dngqlhm7AFsOug85mDz7hNGY5sFNZL+jv?=
- =?us-ascii?Q?xDeWNOafYIXgGKMPtwNnwA2rxquHex64vhya2sofMvEy01CbuZpN2dy5ahsg?=
- =?us-ascii?Q?WSSPM9hLtUnHVqxUlW6jpNS3bD3vx7lBgNztigNdcv/UDs4uYOzDGivRVmbg?=
- =?us-ascii?Q?L/XI5FAHlDU+WLfG1gh5GxjzmL3rOdJT1m0nxyqTqKeBRBG6tQ3hWU7P5g5D?=
- =?us-ascii?Q?9dHjbrE9egTUwVRZmB1vSVilATUgpC3p7sq4YpK+iI0FBRxmbNQhQoj0Sxhx?=
- =?us-ascii?Q?Ev1Obx2TJ8DFys9rnlthxlSDSV1bdk8GoQMB4Pq36kinHtao1SblJBRnfDWh?=
- =?us-ascii?Q?HP5XaMVp0GEAEVwt+2JtZNBLCxD52+lnwPdDy40OlutPKJRAl45b7BKsX98k?=
- =?us-ascii?Q?Nl/riouFDMSSwSDg7NRkNgR00r5FnJKq8l3WIQp/yR+ODGbpKx54d2cUOJLM?=
- =?us-ascii?Q?JnIhewQbdpWksNEkU+gAttFXEfezeexAa2A4VI4YA/ueighursmYOGFz6xgq?=
- =?us-ascii?Q?1Bv/sUdRkw5ryosBRhq8EviacPrRAAoZ7uZA7wJrPeQ6b3c+mPnFO769ReCE?=
- =?us-ascii?Q?lvxIQ2uk4V564ymT7HgP9LSim+ho6Sb6V4hJzsRqQB2wHqS74cm2zqbUozBa?=
- =?us-ascii?Q?UUrGqFVWKi+drua69QccRcJsFtmBRyxk+75H5cMuQvtCqsCNyhe9NwuPgmdp?=
- =?us-ascii?Q?Jas72bJJhBVUUZi/4VGGZeSFsT885lS008nUEqaOaKRk5rTcbxa/lKP6NNNj?=
- =?us-ascii?Q?QPfqUc+uftowkPvLXHmuqYvkvDcYYf89ENVQXnYGnoJZyCYNrFATC9vKqzRj?=
- =?us-ascii?Q?uPugHsyUd0sWdhvk3CF4GOChi/yEH8JQpGJX5Is661P9TDA5kMoBd96/GN6l?=
- =?us-ascii?Q?uGBk4BgszYRIyA/47M+kEyyNBeb0ZV5MgGijSDiqYp1qFzVdKUzUPws3Tkan?=
- =?us-ascii?Q?z8ho+HzcGURs5F/A//io3U9bvIASMRGC87bDaYkRbgnK7w1jClZwW5hhSAF/?=
- =?us-ascii?Q?5A=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ba687e8-4039-41d4-5c90-08dde51d3887
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KQTvwQy7fquIeKkMZUfNQv35gK9WSx3dV/O/Qv3iQSKcTWj5TBa3ZS1kB/Fz?=
+ =?us-ascii?Q?B5ZFFrCNT+Z7zsT2E0SO9DEiQtnWjYqQG5OqM8kei6L4zF/2VAVbqOAQx/AL?=
+ =?us-ascii?Q?ORpcSDtF3WtKHOnO5UbnkAX/D5yPhGC0w2qZSre1zA+SRY9OWvq6RXjzLnn6?=
+ =?us-ascii?Q?Ojy1lt2EmavqsBPC97aRtQ4JstD285r/+2DxZY6E0ZkpvGGqzC25ok9oRKx5?=
+ =?us-ascii?Q?aTfFXEBC2hhqfvc4Z0Mpb0Jurm55XnT5XumS6DJjJYHXblr62vPPDOKzQx32?=
+ =?us-ascii?Q?4EpCgLxh5PnBbZeeq0qRhnPorwGhnWtvWLdNJMHhmcTTUWU+kVd8eap+Jw0Q?=
+ =?us-ascii?Q?pTsgBJST3n23RSH9bSdgjhbsOF/xyaPopa9PRCffym+Bg/wrXT23YpC5pOQt?=
+ =?us-ascii?Q?qtOWKs/uwHhwbdeaZumKMs7lS7apEMtiVZDXMDyKPy2WfA6+/4C+Vm3pNSxY?=
+ =?us-ascii?Q?0sPoofYAqTJtVXBIji6qTY85SU4zQOsVqZ60Kgzs2yR7EURaW9f/eYKt/ZMY?=
+ =?us-ascii?Q?Oa+Hp4ZB+C4UgWiqGjo2bWfeDbkWFPTwP+OFMGNvlVx6fifExRPbaM2Mzc3x?=
+ =?us-ascii?Q?3w3jo3o0gtRX4TTFOwhMA0agfjnpSqfUVkyDDyfUOdi2Wgqe6nTxlkKfymq3?=
+ =?us-ascii?Q?linLlff/7+7fe7uSAXO/hSYnLkQU/9C6W6Q4as/P+miXKUnylkNp9qKNspwM?=
+ =?us-ascii?Q?DtDcqUuT/eVdd3agrd/P1bIzkNheigMLfm9RXjmr+vLl7jqTjPbw5n0n1l8q?=
+ =?us-ascii?Q?sndbyFa9w2sdPvl9F/dfa8CUDU/OSKP4W/RENBf/lWsA3sdfNCC7l8vS4xVb?=
+ =?us-ascii?Q?oMYVGvMHVpTiS763zuCeE0LYwuO910zRsgj+lt6gjagpxMqXyVjrVs9QvdLi?=
+ =?us-ascii?Q?fHN4EG/Jl6y2T5EZO8BLXKFVhL6XPgLM3H+lysnRSxEY4QZhONkAD1WP+VIG?=
+ =?us-ascii?Q?qOlsiKkrFNLLwOhkwxUIBHhocvIXLUIy4axeJ6VjqFMOY4WKG7vrQnae5cbF?=
+ =?us-ascii?Q?Lj9Drt7AcVuiQI9JXFIR8mDRs0+VABLOCvnapPfpW8/t8AMtSRcaaBN55iWr?=
+ =?us-ascii?Q?TXyfX7enJFVakN3mqAOTqpIKt24CSj0xmPuQwwf3CtYrTy2f0EAUWOSVBOF4?=
+ =?us-ascii?Q?SewSscFlywsfbEo+ssYS++oJcMTxcfrN1coe6W7oleSzsajn4+TzxqO9p9hH?=
+ =?us-ascii?Q?qU1zJtGYkjYDH1EwEwqUryK0xk9nXNUNGsZ+71jxbr6D+p7vzejPSfW9iOwV?=
+ =?us-ascii?Q?yXc0bTX2HBm5wYhns21MiO63+bQEeOIO1ZalhPVSZdC2KwW2wiGugmlS/IlJ?=
+ =?us-ascii?Q?kFq6xCcCWgOW5I8vZIDX0PqF0FJjybSGQBsBf6PhwH3UcuU3T9WissT8+7aK?=
+ =?us-ascii?Q?/XrZzYJGtVYJv/bSW4N+Zgj6n4zjuu6ZJnrppOcybKBeL9Dl7J2hsB7cINzF?=
+ =?us-ascii?Q?wSY+c9daA0szDfPrPlhhgfWV7Pxq+w9+RL21UDgta511we9h2P00ij2QRMBY?=
+ =?us-ascii?Q?YDb4p0NLCcDoavxLYRU6geH+kWjny6DE+CTNMdelRqLvcAQQdberCO4/Pa0k?=
+ =?us-ascii?Q?np1rlOExMpF7r+vjnXaW3/47VsLRWv85M5stWdMvb0C9GN3iJ1ujxxWd5M3s?=
+ =?us-ascii?Q?Gg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ba12c5a-e9fd-4c69-8494-08dde51d38fd
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2025 03:53:02.2966
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2025 03:53:03.0864
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: feQaN+id3FcX8l2OdEdRcLPzxg3VuD2hdBbS5Q+SnpYUqmN2ZiWKEoBPdKEkQka53hypeR4kbV7iIkOQxP2iu+4Rrwan7kIseu20y9JujPw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB8335
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4A8acj+X/8f1Axdjs8itnmtutjUgQPwwPgA+qf4CP2C9Vycjj3X29WX8i4LrfSdYQGNEdS2H4F6kbDjP00z60A5MdFjuAVVNGWw+768+LHU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6170
 X-OriginatorOrg: intel.com
 
-After a PCIe device has established a secure link and session between a TEE
-Security Manager (TSM) and its local Device Security Manager (DSM), the
-device or its subfunctions are candidates to be bound to a private memory
-context, a TVM. A PCIe device function interface assigned to a TVM is a TEE
-Device Interface (TDI).
+A PCIe device function interface assigned to a TVM is a TEE Device
+Interface (TDI). A TDI instantiated by pci_tsm_bind() needs additional
+steps to be accepted by a TVM and transitioned to the RUN state.
 
-The pci_tsm_bind() requests the low-level TSM driver to associate the
-device with private MMIO and private IOMMU context resources of a given TVM
-represented by a @kvm argument. A device in the bound state corresponds to
-the TDISP protocol LOCKED state and awaits validation by the TVM. It is a
-'struct pci_tsm_link_ops' operation because, similar to IDE establishment,
-it involves host side resource establishment and context setup on behalf of
-the guest. It is also expected to be performed lazily to allow for
-operation of the device in non-confidential "shared" context for pre-lock
-configuration.
+pci_tsm_guest_req() is a channel for the guest to request TDISP collateral,
+like Device Interface Reports, and effect TDISP state changes, like
+LOCKED->RUN transititions. Similar to IDE establishment and pci_tsm_bind(),
+these are long running operations involving SPDM message passing via the
+DOE mailbox, i.e. another 'struct pci_tsm_link_ops' operation.
+
+The path for a guest to invoke pci_tsm_guest_request() is either via a kvm
+handle_exit() or an ioctl() when an exit reason is serviced by a userspace
+VMM.
 
 Co-developed-by: Xu Yilun <yilun.xu@linux.intel.com>
 Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/pci/tsm.c       | 95 +++++++++++++++++++++++++++++++++++++++++
- include/linux/pci-tsm.h | 30 +++++++++++++
- 2 files changed, 125 insertions(+)
+ drivers/pci/tsm.c       | 60 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci-tsm.h | 55 +++++++++++++++++++++++++++++++++++--
+ 2 files changed, 113 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
-index 092e81c5208c..302a974f3632 100644
+index 302a974f3632..3143558373e3 100644
 --- a/drivers/pci/tsm.c
 +++ b/drivers/pci/tsm.c
-@@ -251,6 +251,99 @@ static int remove_fn(struct pci_dev *pdev, void *data)
- 	return 0;
+@@ -338,6 +338,66 @@ int pci_tsm_bind(struct pci_dev *pdev, struct kvm *kvm, u32 tdi_id)
  }
+ EXPORT_SYMBOL_GPL(pci_tsm_bind);
  
-+/*
-+ * Note, this helper only returns an error code and takes an argument for
-+ * compatibility with the pci_walk_bus() callback prototype. pci_tsm_unbind()
-+ * always succeeds.
-+ */
-+static int __pci_tsm_unbind(struct pci_dev *pdev, void *data)
-+{
-+	struct pci_tdi *tdi;
-+	struct pci_tsm_pf0 *tsm_pf0;
-+
-+	lockdep_assert_held(&pci_tsm_rwsem);
-+
-+	if (!pdev->tsm)
-+		return 0;
-+
-+	tsm_pf0 = to_pci_tsm_pf0(pdev->tsm);
-+	guard(mutex)(&tsm_pf0->lock);
-+
-+	tdi = pdev->tsm->tdi;
-+	if (!tdi)
-+		return 0;
-+
-+	pdev->tsm->ops->unbind(tdi);
-+	pdev->tsm->tdi = NULL;
-+
-+	return 0;
-+}
-+
-+void pci_tsm_unbind(struct pci_dev *pdev)
-+{
-+	guard(rwsem_read)(&pci_tsm_rwsem);
-+	__pci_tsm_unbind(pdev, NULL);
-+}
-+EXPORT_SYMBOL_GPL(pci_tsm_unbind);
-+
 +/**
-+ * pci_tsm_bind() - Bind @pdev as a TDI for @kvm
-+ * @pdev: PCI device function to bind
-+ * @kvm: Private memory attach context
-+ * @tdi_id: Identifier (virtual BDF) for the TDI as referenced by the TSM and DSM
++ * pci_tsm_guest_req() - helper to marshal guest requests to the TSM driver
++ * @pdev: @pdev representing a bound tdi
++ * @scope: security model scope for the TVM request
++ * @req_in: Input payload forwarded from the guest
++ * @in_len: Length of @req_in
++ * @out_len: Output length of the returned response payload
 + *
-+ * Returns 0 on success, or a negative error code on failure.
++ * This is a common entry point for KVM service handlers in userspace responding
++ * to TDI information or state change requests. The scope parameter limits
++ * requests to TDISP state management, or limited debug.
 + *
-+ * Context: Caller is responsible for constraining the bind lifetime to the
-+ * registered state of the device. For example, pci_tsm_bind() /
-+ * pci_tsm_unbind() limited to the VFIO driver bound state of the device.
++ * Returns a pointer to the response payload on success, @req_in if there is no
++ * response to a successful request, or an ERR_PTR() on failure.
++ *
++ * Caller is responsible for kvfree() on the result when @ret != @req_in and
++ * !IS_ERR_OR_NULL(@ret).
++ *
++ * Context: Caller is responsible for calling this within the pci_tsm_bind()
++ * state of the TDI.
 + */
-+int pci_tsm_bind(struct pci_dev *pdev, struct kvm *kvm, u32 tdi_id)
++void *pci_tsm_guest_req(struct pci_dev *pdev, enum pci_tsm_req_scope scope,
++			void *req_in, size_t in_len, size_t *out_len)
 +{
 +	const struct pci_tsm_ops *ops;
 +	struct pci_tsm_pf0 *tsm_pf0;
 +	struct pci_tdi *tdi;
++	int rc;
 +
-+	if (!kvm)
-+		return -EINVAL;
++	/*
++	 * Forbid requests that are not directly related to TDISP
++	 * operations
++	 */
++	if (scope > PCI_TSM_REQ_STATE_CHANGE)
++		return ERR_PTR(-EINVAL);
 +
-+	guard(rwsem_read)(&pci_tsm_rwsem);
++	ACQUIRE(rwsem_read_intr, lock)(&pci_tsm_rwsem);
++	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &lock)))
++		return ERR_PTR(rc);
 +
 +	if (!pdev->tsm)
-+		return -EINVAL;
++		return ERR_PTR(-ENXIO);
 +
 +	ops = pdev->tsm->ops;
 +
 +	if (!is_link_tsm(ops->owner))
-+		return -ENXIO;
++		return ERR_PTR(-ENXIO);
 +
 +	tsm_pf0 = to_pci_tsm_pf0(pdev->tsm);
-+	guard(mutex)(&tsm_pf0->lock);
++	ACQUIRE(mutex_intr, ops_lock)(&tsm_pf0->lock);
++	if ((rc = ACQUIRE_ERR(mutex_intr, &ops_lock)))
++		return ERR_PTR(rc);
 +
-+	/* Resolve races to bind a TDI */
-+	if (pdev->tsm->tdi) {
-+		if (pdev->tsm->tdi->kvm == kvm)
-+			return 0;
-+		else
-+			return -EBUSY;
-+	}
-+
-+	tdi = ops->bind(pdev, kvm, tdi_id);
-+	if (IS_ERR(tdi))
-+		return PTR_ERR(tdi);
-+
-+	pdev->tsm->tdi = tdi;
-+
-+	return 0;
++	tdi = pdev->tsm->tdi;
++	if (!tdi)
++		return ERR_PTR(-ENXIO);
++	return ops->guest_req(pdev, scope, req_in, in_len, out_len);
 +}
-+EXPORT_SYMBOL_GPL(pci_tsm_bind);
++EXPORT_SYMBOL_GPL(pci_tsm_guest_req);
 +
-+static void pci_tsm_unbind_all(struct pci_dev *pdev)
-+{
-+	pci_tsm_walk_fns_reverse(pdev, __pci_tsm_unbind, NULL);
-+	__pci_tsm_unbind(pdev, NULL);
-+}
-+
- static void __pci_tsm_disconnect(struct pci_dev *pdev)
+ static void pci_tsm_unbind_all(struct pci_dev *pdev)
  {
- 	struct pci_tsm_pf0 *tsm_pf0 = to_pci_tsm_pf0(pdev->tsm);
-@@ -259,6 +352,8 @@ static void __pci_tsm_disconnect(struct pci_dev *pdev)
- 	/* disconnect() mutually exclusive with subfunction pci_tsm_init() */
- 	lockdep_assert_held_write(&pci_tsm_rwsem);
- 
-+	pci_tsm_unbind_all(pdev);
-+
- 	/*
- 	 * disconnect() is uninterruptible as it may be called for device
- 	 * teardown
+ 	pci_tsm_walk_fns_reverse(pdev, __pci_tsm_unbind, NULL);
 diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
-index e4f9ea4a54a9..337b566adfc5 100644
+index 337b566adfc5..5b61aac2e9f7 100644
 --- a/include/linux/pci-tsm.h
 +++ b/include/linux/pci-tsm.h
-@@ -5,6 +5,8 @@
- #include <linux/pci.h>
- 
- struct pci_tsm;
-+struct kvm;
-+enum pci_tsm_req_scope;
- 
- /*
-  * struct pci_tsm_ops - manage confidential links and security state
-@@ -29,18 +31,25 @@ struct pci_tsm_ops {
- 	 * @connect: establish / validate a secure connection (e.g. IDE)
- 	 *	     with the device
+@@ -33,14 +33,15 @@ struct pci_tsm_ops {
  	 * @disconnect: teardown the secure link
-+	 * @bind: bind a TDI in preparation for it to be accepted by a TVM
-+	 * @unbind: remove a TDI from secure operation with a TVM
+ 	 * @bind: bind a TDI in preparation for it to be accepted by a TVM
+ 	 * @unbind: remove a TDI from secure operation with a TVM
++	 * @guest_req: marshal TVM information and state change requests
  	 *
  	 * Context: @probe, @remove, @connect, and @disconnect run under
  	 * pci_tsm_rwsem held for write to sync with TSM unregistration and
  	 * mutual exclusion of @connect and @disconnect. @connect and
  	 * @disconnect additionally run under the DSM lock (struct
  	 * pci_tsm_pf0::lock) as well as @probe and @remove of the subfunctions.
-+	 * @bind and @unbind run under pci_tsm_rwsem held for read and the DSM
-+	 * lock.
+-	 * @bind and @unbind run under pci_tsm_rwsem held for read and the DSM
+-	 * lock.
++	 * @bind, @unbind, and @guest_req run under pci_tsm_rwsem held for read
++	 * and the DSM lock.
  	 */
  	struct_group_tagged(pci_tsm_link_ops, link_ops,
  		struct pci_tsm *(*probe)(struct pci_dev *pdev);
- 		void (*remove)(struct pci_tsm *tsm);
- 		int (*connect)(struct pci_dev *pdev);
- 		void (*disconnect)(struct pci_dev *pdev);
-+		struct pci_tdi *(*bind)(struct pci_dev *pdev,
-+					struct kvm *kvm, u32 tdi_id);
-+		void (*unbind)(struct pci_tdi *tdi);
+@@ -50,6 +51,9 @@ struct pci_tsm_ops {
+ 		struct pci_tdi *(*bind)(struct pci_dev *pdev,
+ 					struct kvm *kvm, u32 tdi_id);
+ 		void (*unbind)(struct pci_tdi *tdi);
++		void *(*guest_req)(struct pci_dev *pdev,
++				   enum pci_tsm_req_scope scope, void *req_in,
++				   size_t in_len, size_t *out_len);
  	);
  
  	/*
-@@ -58,10 +67,21 @@ struct pci_tsm_ops {
- 	struct tsm_dev *owner;
- };
+@@ -143,6 +147,44 @@ static inline bool is_pci_tsm_pf0(struct pci_dev *pdev)
+ 	return PCI_FUNC(pdev->devfn) == 0;
+ }
  
 +/**
-+ * struct pci_tdi - Core TEE I/O Device Interface (TDI) context
-+ * @pdev: host side representation of guest-side TDI
-+ * @kvm: TEE VM context of bound TDI
++ * enum pci_tsm_req_scope - Scope of guest requests to be validated by TSM
++ *
++ * Guest requests are a transport for a TVM to communicate with a TSM + DSM for
++ * a given TDI. A TSM driver is responsible for maintaining the kernel security
++ * model and limit commands that may affect the host, or are otherwise outside
++ * the typical TDISP operational model.
 + */
-+struct pci_tdi {
-+	struct pci_dev *pdev;
-+	struct kvm *kvm;
++enum pci_tsm_req_scope {
++	/**
++	 * @PCI_TSM_REQ_INFO: Read-only, without side effects, request for
++	 * typical TDISP collateral information like Device Interface Reports.
++	 * No device secrets are permitted, and no device state is changed.
++	 */
++	PCI_TSM_REQ_INFO = 0,
++	/**
++	 * @PCI_TSM_REQ_STATE_CHANGE: Request to change the TDISP state from
++	 * UNLOCKED->LOCKED, LOCKED->RUN. No any other device state,
++	 * configuration, or data change is permitted.
++	 */
++	PCI_TSM_REQ_STATE_CHANGE = 1,
++	/**
++	 * @PCI_TSM_REQ_DEBUG_READ: Read-only request for debug information
++	 *
++	 * A method to facilitate TVM information retrieval outside of typical
++	 * TDISP operational requirements. No device secrets are permitted.
++	 */
++	PCI_TSM_REQ_DEBUG_READ = 2,
++	/**
++	 * @PCI_TSM_REQ_DEBUG_WRITE: Device state changes for debug purposes
++	 *
++	 * The request may affect the operational state of the device outside of
++	 * the TDISP operational model. If allowed, requires CAP_SYS_RAW_IO, and
++	 * will taint the kernel.
++	 */
++	PCI_TSM_REQ_DEBUG_WRITE = 3,
 +};
 +
- /**
-  * struct pci_tsm - Core TSM context for a given PCIe endpoint
-  * @pdev: Back ref to device function, distinguishes type of pci_tsm context
-  * @dsm: PCI Device Security Manager for link operations on @pdev
-+ * @tdi: TDI context established by the @bind link operation
-  * @ops: Link Confidentiality or Device Function Security operations
-  *
-  * This structure is wrapped by low level TSM driver data and returned by
-@@ -77,6 +97,7 @@ struct pci_tsm_ops {
- struct pci_tsm {
- 	struct pci_dev *pdev;
- 	struct pci_dev *dsm;
-+	struct pci_tdi *tdi;
- 	const struct pci_tsm_ops *ops;
- };
- 
-@@ -131,6 +152,8 @@ int pci_tsm_link_constructor(struct pci_dev *pdev, struct pci_tsm *tsm,
- int pci_tsm_pf0_constructor(struct pci_dev *pdev, struct pci_tsm_pf0 *tsm,
- 			    const struct pci_tsm_ops *ops);
+ #ifdef CONFIG_PCI_TSM
+ struct tsm_dev;
+ int pci_tsm_register(struct tsm_dev *tsm_dev);
+@@ -154,6 +196,8 @@ int pci_tsm_pf0_constructor(struct pci_dev *pdev, struct pci_tsm_pf0 *tsm,
  void pci_tsm_pf0_destructor(struct pci_tsm_pf0 *tsm);
-+int pci_tsm_bind(struct pci_dev *pdev, struct kvm *kvm, u32 tdi_id);
-+void pci_tsm_unbind(struct pci_dev *pdev);
+ int pci_tsm_bind(struct pci_dev *pdev, struct kvm *kvm, u32 tdi_id);
+ void pci_tsm_unbind(struct pci_dev *pdev);
++void *pci_tsm_guest_req(struct pci_dev *pdev, enum pci_tsm_req_scope scope,
++			void *req_in, size_t in_len, size_t *out_len);
  #else
  static inline int pci_tsm_register(struct tsm_dev *tsm_dev)
  {
-@@ -139,5 +162,12 @@ static inline int pci_tsm_register(struct tsm_dev *tsm_dev)
- static inline void pci_tsm_unregister(struct tsm_dev *tsm_dev)
+@@ -169,5 +213,12 @@ static inline int pci_tsm_bind(struct pci_dev *pdev, struct kvm *kvm, u64 tdi_id
+ static inline void pci_tsm_unbind(struct pci_dev *pdev)
  {
  }
-+static inline int pci_tsm_bind(struct pci_dev *pdev, struct kvm *kvm, u64 tdi_id)
++static inline void *pci_tsm_guest_req(struct pci_dev *pdev,
++				      enum pci_tsm_req_scope scope,
++				      void *req_in, size_t in_len,
++				      size_t *out_len)
 +{
-+	return -ENXIO;
-+}
-+static inline void pci_tsm_unbind(struct pci_dev *pdev)
-+{
++	return ERR_PTR(-ENXIO);
 +}
  #endif
  #endif /*__PCI_TSM_H */
-
-base-commit: 4de43c0eb5d83004edf891b974371572e3815126
 -- 
 2.50.1
 
