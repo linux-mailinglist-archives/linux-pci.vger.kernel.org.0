@@ -1,167 +1,204 @@
-Return-Path: <linux-pci+bounces-34842-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34843-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A16F1B37782
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 04:04:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05081B37872
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 05:08:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A10DC7A42AF
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 02:03:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE0E81744BC
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 03:08:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3297D1A3172;
-	Wed, 27 Aug 2025 02:04:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6185C3009F8;
+	Wed, 27 Aug 2025 03:08:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kdZ+lvMF"
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="MNljSEI6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023098.outbound.protection.outlook.com [52.101.127.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829DC1C84D0
-	for <linux-pci@vger.kernel.org>; Wed, 27 Aug 2025 02:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756260275; cv=none; b=QlrAAUxJqDNJSEA8EBCp8o473SGBNqj+4fO4BV6/74gdHb3qI7SfEWjXABhKVHrS7LVvxQGmdhVa4ZfzEIwA+dHWJ325aCq2r1g9WiEQRfK39eIwlRAH0lGzVnQJGXrB6XZ1YkIVdf8fGOLb5DuXi9S19hpZAhjLFS+eqUSDcnA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756260275; c=relaxed/simple;
-	bh=xBwZrzP8Omw+QgnrS8FgZIeYp1/6MXYyssSSiI8n24Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mZJ/TTOg85yQ/gZ7coEh+qjL8e1a8f7pzwTjqUrHxGa5ollUrub08kHqRgaHCcTkJou+sgkVE6BpSwyBCR/IP/IA4/vtj9dr65PKnkhV6eHcQ+pbcbJHVAuwmPBQldqlzBx1f1PGZonGi1dtO1Hk/hlCqdcV5zwaNnJdkQcoxYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kdZ+lvMF; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756260274; x=1787796274;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=xBwZrzP8Omw+QgnrS8FgZIeYp1/6MXYyssSSiI8n24Q=;
-  b=kdZ+lvMFM0x7DHqnML0/NH6vaohQDbuvbKTgMxJcFs3iCPbHLjX88Ygn
-   gryXcsMaY7K+7UBsfgYqLPoirvUGDKyC1Ppc5NmKDXYL1oRaEqNHX+jkP
-   xhll+M1LxsJRLnfxv12NfsNNTqYDGZoYCf7NgJMC6sqjT3q+vq/8G9RaL
-   RrAavwhmN1kraWvC/Hp+/eCoWROgNtMSfuRYvWUS/dUPoDneveXNZGE5r
-   09boq4ZJ3P0pUbYlST6l7m0nSA3xPWvxRIQp2uwoIjdkm8Oph6/arfqOR
-   tlPPprjLIsGe15tOCK1QPm5mK4HDBtX4qjod3OQSHdXS9R2+QCbMKqx4m
-   g==;
-X-CSE-ConnectionGUID: kBfhw1J0RimKnecrYzf8Xg==
-X-CSE-MsgGUID: MtbfQqHKR3WhSl5DHNqz5w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11534"; a="69878193"
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="69878193"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2025 19:04:31 -0700
-X-CSE-ConnectionGUID: McjJGXyWQmCGlhbKa1Xzww==
-X-CSE-MsgGUID: Blkgh0nOS0CwwdUflhNByA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="193373716"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 26 Aug 2025 19:04:29 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ur5WV-000SZj-1X;
-	Wed, 27 Aug 2025 02:04:27 +0000
-Date: Wed, 27 Aug 2025 10:03:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	"Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Subject: [pci:wip/2508-david-aspm-api 1/2] include/linux/pci.h:1870:56:
- error: two or more data types in declaration specifiers
-Message-ID: <202508270921.b1XgvRZo-lkp@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81331D5CEA;
+	Wed, 27 Aug 2025 03:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.98
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756264095; cv=fail; b=A5h71smG1SERBssaZO2W658rJJHSYQuCT/K9SWFWHpySI7r9km2zZfASbnqhUDeRQQiEEsCxAmTUTpjx6GLqjLkuO6D4uUIEnbYKoFypjUSW9AMAeP5/ofNmTT3SfvyaKFSMzPZazZWLlICpgyMyIGEN/YBGgo3GDz1uI/cSYFA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756264095; c=relaxed/simple;
+	bh=OpEUc17VqVklO6t9o2AEv5UCbgiRQ0q1LQLAgdQIFjw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=mOmntPEDFB1EbqloY3ZMSMmqqevcRsNvDIXoTAc3/Y7+1r3f+VzCVuI7MrNJCk1Y/caZLEyZD5OqdsbnVhwXEzMJUbBpzRPeTWMqAyxTQdVJ0n1MnLGKghCCIHWrOklEE0v9X27U1yuxp3EyWv0o+IlQWkgxVyHdGzTOXE9z+l0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=MNljSEI6; arc=fail smtp.client-ip=52.101.127.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oYje04uQFO2Bwz6nLdAoBjri5xPjk2jO0RqMe+37GVzx6gWQZGOrLiUfNto67bpL2wpSB3se0GbcHwpKg0X2jDiknHmuFcH7JaNmxiHFO2pWehe3uoDmzaYwXKaYWN7Vlnl5lnb3v9lLPXNecykc3HZkZCdkDWiTANhsjKuHazdkAGTrz7QAh2UpkbjC19gDqVPTY6Prpcuzbwvn0/E7LKbyBHOdRXmJmYfW8BZsy649XcZdtMZNdLhe6HeY+ltUTPUdRDU91D1tdB84rXVf7SPHC+wymCPaLW7APhZDI2QDcYXdloRktcYnDSKGQOGnjR3t++VdSHpx+hCv6kNMmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OpEUc17VqVklO6t9o2AEv5UCbgiRQ0q1LQLAgdQIFjw=;
+ b=KMtMMx2w7hDbeW/TsbNty7OjekIMc8cMZycPU41jgdn5V+CsJK9p+PASuxSAznlsImcNPWIRXWK9dgPnlrrqdxQzgeiWZ6jvYI3RFJWqEU3s/4lfhJqWetJuW21wlqsSoylx1tx/WR2Zy5b71ptkU4zIMQGOKsZ5mITVCPdfxp4me2ansO0k4OgQgWenXLHc6Oz/lai8MWK0QmTMRItAI+YuYeQa+LFzS9/L7O2QR6UNYU0KMuvQQTbZphdsiYcX1BsK0uQehvUt6AzNhd+Qds+EtHM8vbovscVdx0yUIQr8DdC9qhpwhxMCFXydvkyZAEiAl2AjrJipsQibqq4blw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OpEUc17VqVklO6t9o2AEv5UCbgiRQ0q1LQLAgdQIFjw=;
+ b=MNljSEI6KGW2REJsVhkuVag3/PAQKxCSvUYS9+qlpap3bK4f4V+Vv56Pw/GWne5mpy1GG0xw/X/INtpD9ZyRESsEVWFw0Xg5mF+BPJsunW/UQSyxNF0MX/FXVRL572wwgWdgd7U+MhOjKIdFGsAbAZp7hnqkwtB6GxSK46GV9TRGYl66nbhLaRQ6ZhQ00Vy/oGcZ1/e1IqgrWmkHbRoHUEaJDOB0Ve7QeM9KokYLxlvd7XC4nSh2R/JMCorIk6pKBtTDhiHNTDrhVuTxtJh1++/9lUjns+20hnCMK5MgZCC+o/iE9AZYVTsvLFUoczSOvjebqJ04dpVMuWLPHPk5lQ==
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
+ by SEZPR06MB5880.apcprd06.prod.outlook.com (2603:1096:101:e9::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.21; Wed, 27 Aug
+ 2025 03:08:09 +0000
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28%7]) with mapi id 15.20.9052.019; Wed, 27 Aug 2025
+ 03:08:09 +0000
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "joel@jms.id.au" <joel@jms.id.au>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "openbmc@lists.ozlabs.org"
+	<openbmc@lists.ozlabs.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "p.zabel@pengutronix.de"
+	<p.zabel@pengutronix.de>
+Subject: [PATCH v2 07/10] pinctrl: aspeed-g6: Add PCIe RC PERST pin group
+Thread-Topic: [PATCH v2 07/10] pinctrl: aspeed-g6: Add PCIe RC PERST pin group
+Thread-Index: AQHb9TqkZIPjABfTrEyMyLl2n5mCDrQ/neKAgDZ1WqA=
+Date: Wed, 27 Aug 2025 03:08:08 +0000
+Message-ID:
+ <SEYPR06MB513491FF4398138F8A52A5469D38A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+References: <20250715034320.2553837-1-jacky_chou@aspeedtech.com>
+ <20250715034320.2553837-8-jacky_chou@aspeedtech.com>
+ <CACRpkdarn16N9637dL=Qo8X8o==7T=wBfHdXPczU=Rv3b270KQ@mail.gmail.com>
+In-Reply-To:
+ <CACRpkdarn16N9637dL=Qo8X8o==7T=wBfHdXPczU=Rv3b270KQ@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|SEZPR06MB5880:EE_
+x-ms-office365-filtering-correlation-id: c06b22f7-b7dd-491a-cfa7-08dde516f35a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?dzBjVHlSSng3V21EcXROM0ZDaXQ3djR0Szh1cm1KdHp2QWEwb1JXWEc5WXQ4?=
+ =?utf-8?B?RmRWRVJYNzVCL2UyMHF6a2JWRzkrUlZQUzl0dW5HdlFSeXoyTUNDS2h2ak85?=
+ =?utf-8?B?SWRZT3hBZ1dCbTJOT3FxVHZhdjZVcTQrMjZGNmNzaEVPc1RxZ2VIbC9memVm?=
+ =?utf-8?B?SXB1RHNOcXNjVkJqa1RyZG4xelp2UDBmTzI2WGFveC9ocnQ2UFdDMEtXeTZx?=
+ =?utf-8?B?dTgxUHpUckhJQTVuYzFHK3RET3R4R25tVHhjZEdweUd2ZHZzWWZYbUFFTUE5?=
+ =?utf-8?B?QjY1Sk0xSW5aTW1QSnVPSFZVM2RGVmxiR2tBODl6K1YvQ1dYRXdtakVCTEVJ?=
+ =?utf-8?B?Ym1JSE1CbXNhS1B6N3RBcVV2M1praEFRN3JKMnhjZFJpbmhFK3JRaFpXcmNZ?=
+ =?utf-8?B?dE1GUjdSLy9uQ3Z5aVdUT2xPVTF2TlVROHVSWXlWVXVGeWVMc3lUTTdWck8v?=
+ =?utf-8?B?OUd1ZTJqWmIzdEs2UlhuRnNoMk9Ua3FPY3JQMldFcklldEdZQm9zeWxVM1Zu?=
+ =?utf-8?B?dEViR1c0azI5bE9HdW51WnlFWjJDMSs2eVFFMlZ2Z1hSTWEzcjkvR1JVSk5E?=
+ =?utf-8?B?bkZnSHA5KytER1FRWlU2a2cwUTRPUjZkWFgrLytKZkxtQUIvN3BhejdZTGN5?=
+ =?utf-8?B?cUdYa1I0VmFlKzYxeGNsU1V4Vkd2QUtuZEJRbmNtWXo0VDZkc203ekpFU0J4?=
+ =?utf-8?B?ZjBCYVNsUlVXbVJISmNrMWllUEV4dW9idi84L1J5dlZGRXFmZjh4RU51Tnp4?=
+ =?utf-8?B?elIvWkJXOHc4K0ZVTHphbVdIcFFoeWYxNGFqajgzVDlsWElXcU9PeGlQbjk0?=
+ =?utf-8?B?Q3hZMlRDSXJBSXFFeFV2d3ZZaS9uWmZPLzdJaGVvMHBKSHprL0doM0tVblRz?=
+ =?utf-8?B?bjFGSUZBS2tGRi9oZFFMSm1WNmd4T3pLMVoyQjBWbmlacU5JQUc2Qk5keS95?=
+ =?utf-8?B?ZDhnckxiSU1HeGc3SFR6Qnh0Y3EySzZEeksrVjBrZkV2Mit3WlR4WVNUYWRK?=
+ =?utf-8?B?YW5UWUtLd0ZJc0tCMktpMXBLVjhLeFUweWtCYkxzUG1wM3hITGtMY0o2SDRT?=
+ =?utf-8?B?clVKR05YRnJEWXF4dk9vbmRKY0IzYUVSdy9SSVVaTGduSEVEKytFQWhzZnNz?=
+ =?utf-8?B?ZlUwZHl1VGNOSkNNbktWYXhIK0dvMnd5QlE1LzhDOXlXZHE4a2RZK3N5UFBT?=
+ =?utf-8?B?WmYwdWRVMjdGdEpCWVh5NDMyQlpVNG9ONk5jeWR2Q0w0VTBlL0tCNmFDVU5v?=
+ =?utf-8?B?MzJIcHZjZnUzRUZuWmNYUGQ0WG14ZjVoYXJuZ2VIdDNQM0hSSFJ2M3RjSXQx?=
+ =?utf-8?B?OEMvWCtiRlhMbGJ0bUdhODlKSmVqdXZSYXZRaGFwK1YySWZWdHozeXpWRndE?=
+ =?utf-8?B?aEZVbitFVFA4YXRON2YzSlcwcmdLTHltTFVoSy9DVC83NG56SlJHeE1qNFFR?=
+ =?utf-8?B?Q3ROejMybERKU3ZidzczWllaYXlUS0MvVmgzNmRnNzk5RlMwRDhuV2dibXAw?=
+ =?utf-8?B?RENMdzBjRUpNdE1CTVRFSmpLT2s5bU1tTlQyckxZMHpsdElaZ0IyMXlBL0My?=
+ =?utf-8?B?WGJwQ1dyT0htNlZmS0hFb0tRajdjTGZYbFJCM08rbmRlNUJ2T0NwSy9HTnB0?=
+ =?utf-8?B?aXB6MWhjSm90YTk2SzA1UEFlTkY1VmhFazhEamdqZEdHd3Z3bzFnVUxob01v?=
+ =?utf-8?B?djFCR0tFaTd0NVZEQUhDTmRNbjdDR1ZFWjdyWEM3aWZ2UHJrRWlxbWtVTitp?=
+ =?utf-8?B?bStBSVFid2tqSkw2TVFQcEo4Z1p3dkZzWTVmajh6MTBWZkNHRzVaU0VxUUJN?=
+ =?utf-8?B?ZElZZG8rVkxWNmhLSmhCMTlxZXJ4ejNqK3ExUmF2MXhQN3drUnpEMis3NldH?=
+ =?utf-8?B?QVd1TnNIZmVmemJmRWlsQWZHcVN5cG1lYUVDSTlXL2F1UG5ZOTZxd1ZyTERZ?=
+ =?utf-8?B?SnRkQWUrQXpNYndQU3FtVWpPR2ZFeVByRWtnalVNUERPSEtmU0RKVGdoMjBY?=
+ =?utf-8?B?NFVFNU8wNm1nPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?eHg2WkdGTUlOS1g2cXJTalBLdmJxMHBqUjFWOG53bGVCWHBEZjViZ2ZHek14?=
+ =?utf-8?B?RURJc1JMR1MvRS9Ja2lKcWpuM1NUYTRVWGlOZGo0WTZkdS9RbWR0bG1jbUpL?=
+ =?utf-8?B?aU9JM2FPdmVZMDhScXNLUFZmMC8yM2IvSWRWLzN4Ky96cTl5cFRoVVpTdGcw?=
+ =?utf-8?B?Yjd3clBsNm8wS2tMbDdORnVhM083QlBURzUrME1pMkV4K3hSOTJvYm5oS3Rv?=
+ =?utf-8?B?STQ5aUJzbTJ6a0s1MTVPaXBRTWJ1VmYwb2h2SVRrM0EzcE5LQzR4bUtJL0ti?=
+ =?utf-8?B?cmRraEcrZ1JlbkFycEwya1FGeGt6YXVWdXhNb3A2WDE0a0VGSkFIeHNhQmt1?=
+ =?utf-8?B?eGZ0VFU0d3RyeVIwK1k2UlVZUlZXeWF5OE1hckJJdVloSjRxZVZDRGR4V3dl?=
+ =?utf-8?B?c3Q3TlA2S1lDMW5Cc2pJOFgxVG1FdENpNmtCR1R2dmk5SUpjc0Z3Rmx4ckpX?=
+ =?utf-8?B?eTJ5RUhaMk0rZnZPWDV0ZkE3RjdCVE1Rd3ZRMHFtdW9LbXY2RHp3aTZUQU5K?=
+ =?utf-8?B?ZFRJMmVqUTMvc1lkV1RzVGxtVzR5VzB4ek1PNG1XN2dIWjFOTEhRd3V6b0Zn?=
+ =?utf-8?B?SHhYSnp4YlhxZWtHcVFWeGltVmJBUnVtODliNmhTakFIcnZya05haU1Xa2xl?=
+ =?utf-8?B?Ly9aNGFFcHErOEY2WHFGWHZMNlNLSjBDZEFUeVRFRUZDcW5YdDl0dTFXUWha?=
+ =?utf-8?B?dm5BYk1sa0ZDaVFmcVp6YlQ3WXkza01OdzVWbjJjRTZ4TVlWOGVVNUt6QjdK?=
+ =?utf-8?B?cS9wdnIwb0N2NWpjOEZmVWVXZXhYV3ZVbFFUTi9wb2F5aUZEaWpiV3dHUk4z?=
+ =?utf-8?B?RGJwY25FSHhJYm52NyswcVRjMEJKQW5wenZVNXE5ZzlwTnlDNmVydTlGaFk0?=
+ =?utf-8?B?aWRUU1VBOXkzYUxYYzE0anBSdlc2ZnNaMjBKakt3bk11NzJlcnQ2NVgyZThJ?=
+ =?utf-8?B?eW96YXhWazZoL3UyeHI5ekp4RmVMVlhmT1B0Y3VIMytFcW1nRUlheDVXMG51?=
+ =?utf-8?B?OU1waXRxa0VjVjNRZWUxU2FSV3IxaU1vQkV0S2NHdU1RRVNoeVFpRWJIQ2R2?=
+ =?utf-8?B?UEZBNEc5OVc4S2NIT1NMRzE3N00vbFkwMUY5VGpGVFZiTURhcWVOVEIrUFBD?=
+ =?utf-8?B?RjRDc1BwaXl6REdaeE5jd2Yva3I1Z1YwQm84UFdSTE84N2N6TEJSaFFUWTNL?=
+ =?utf-8?B?V2lsSVlINDVjOHhvbzRtT3JtandpN2EvUTZkL051ZldtL0RIdXVFTk9FRS9M?=
+ =?utf-8?B?WTJwQm9wdFlhODVPdXdiTjJzcWcvNkFTSERRYXNJallBbHRGc3I1US9vcGRi?=
+ =?utf-8?B?T0Fya3FpRk9hTEpsYnJkdUxoQ0p5TGhiZ1Z4UDE1cElIZFJwZEdMRHFNSUxx?=
+ =?utf-8?B?ZTVIc3MzcGdqY1J3aXkyd3hMZ3UybWFtM0xYa0VYUFVMdFdNY2gveExlQnRr?=
+ =?utf-8?B?MCtlZ2hhZUphOTVEWFNEU2xISVVYZzdXVys2YkpSMVU3Q1dOdS9kNm96d0hl?=
+ =?utf-8?B?cllLblBwWWRUdkx4bGNyRTJDSFJHRlRUNU1rUlRWeE1qa1B2Sm9hZTJGZkZN?=
+ =?utf-8?B?UkZNeWp3RDVrVDRKV1ljOEtsdlRNUHlOdjJHN2l2eVB0ZjhBa2d3WGdJc1V5?=
+ =?utf-8?B?LzZuSFFTaHVSQTAycmhBb2JTS1JNY25jVVNuNWtiVGVMV3dPK3p2akdiSjRI?=
+ =?utf-8?B?SFhxZ05HdEY5SzE0N0dkR0pxS3B1YkVHOGJaRm03dldxYS93U01UZHFTTnUw?=
+ =?utf-8?B?YzZ4dUFUbU5LVnpmMHF0WGQ5SGtSZGhWNUx1b0k1VllibUVHMnhLZDRyVnNk?=
+ =?utf-8?B?NVVxZUhTZUtYeXJWNTVRUjVPVXVLbE1uOEhLMjVZeGJ6Zmsza0tnYlhrNGlI?=
+ =?utf-8?B?amViMkgxVUxUMHBkcFFaWTdJU2t3ZlgrUXpQMlI0RENSMnRQZ00zaHk2Z0hN?=
+ =?utf-8?B?dHNSK1RaaElJSEtBY2JsTlMrY01BZUNkVDlrNFlUcjJMR1MweC8wQnVSNU5Y?=
+ =?utf-8?B?Q2J2NUlmVTl0WVpNMUowTzYwdkxLR3VwdHlqVlU5REhmM3ZtMDFqeUU1N1I2?=
+ =?utf-8?B?OXBreVRLek5TM3RzQ2g3ejBzNkdHUk1xQkIreWdTWWFRdUJ6R1RjNjVlNGxF?=
+ =?utf-8?B?a1oxWHRSMUwrdUJkVTJ0b2htbVY3aXVQYjNZTkl3R1hVT1NSV0ZBMDdDejRK?=
+ =?utf-8?B?bXc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c06b22f7-b7dd-491a-cfa7-08dde516f35a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2025 03:08:08.9776
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: szVCwI0YC24lbJQsQky8jf2DXwIiRhZ4ZvYd/uu2GTvGaII9ZCF7nSpEylJQaHRwMMhs9H7BKJx+dspzFYOam8Tm/qVc80AwaRlXC1QoRME=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB5880
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git wip/2508-david-aspm-api
-head:   a373462082599403e030c605ff260fd45429fe66
-commit: 5ea26ba40d978b9f34faec2ca92c60e6d9db11c5 [1/2] PCI/ASPM: Add pci_host_set_default_pcie_link_state()
-config: x86_64-buildonly-randconfig-003-20250827 (https://download.01.org/0day-ci/archive/20250827/202508270921.b1XgvRZo-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250827/202508270921.b1XgvRZo-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508270921.b1XgvRZo-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/char/applicom.c:32:
->> include/linux/pci.h:1870:56: error: two or more data types in declaration specifiers
-    1870 |                                                    u32 int state) { }
-         |                                                        ^~~
-   drivers/char/applicom.c: In function 'ac_register_board':
-   drivers/char/applicom.c:130:32: warning: variable 'byte_reset_it' set but not used [-Wunused-but-set-variable]
-     130 |         volatile unsigned char byte_reset_it;
-         |                                ^~~~~~~~~~~~~
-   drivers/char/applicom.c: In function 'ac_read':
-   drivers/char/applicom.c:542:13: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-     542 |         int ret = 0;
-         |             ^~~
-   drivers/char/applicom.c: In function 'ac_ioctl':
-   drivers/char/applicom.c:705:32: warning: variable 'byte_reset_it' set but not used [-Wunused-but-set-variable]
-     705 |         volatile unsigned char byte_reset_it;
-         |                                ^~~~~~~~~~~~~
---
-   In file included from drivers/char/hw_random/intel-rng.c:31:
->> include/linux/pci.h:1870:56: error: two or more data types in declaration specifiers
-    1870 |                                                    u32 int state) { }
-         |                                                        ^~~
-
-
-vim +1870 include/linux/pci.h
-
-  1834	
-  1835	#define PCIE_LINK_STATE_L0S		(BIT(0) | BIT(1)) /* Upstr/dwnstr L0s */
-  1836	#define PCIE_LINK_STATE_L1		BIT(2)	/* L1 state */
-  1837	#define PCIE_LINK_STATE_L1_1		BIT(3)	/* ASPM L1.1 state */
-  1838	#define PCIE_LINK_STATE_L1_2		BIT(4)	/* ASPM L1.2 state */
-  1839	#define PCIE_LINK_STATE_L1_1_PCIPM	BIT(5)	/* PCI-PM L1.1 state */
-  1840	#define PCIE_LINK_STATE_L1_2_PCIPM	BIT(6)	/* PCI-PM L1.2 state */
-  1841	#define PCIE_LINK_STATE_ASPM_ALL	(PCIE_LINK_STATE_L0S		|\
-  1842						 PCIE_LINK_STATE_L1		|\
-  1843						 PCIE_LINK_STATE_L1_1		|\
-  1844						 PCIE_LINK_STATE_L1_2		|\
-  1845						 PCIE_LINK_STATE_L1_1_PCIPM	|\
-  1846						 PCIE_LINK_STATE_L1_2_PCIPM)
-  1847	#define PCIE_LINK_STATE_CLKPM		BIT(7)
-  1848	#define PCIE_LINK_STATE_ALL		(PCIE_LINK_STATE_ASPM_ALL	|\
-  1849						 PCIE_LINK_STATE_CLKPM)
-  1850	
-  1851	#ifdef CONFIG_PCIEASPM
-  1852	int pci_disable_link_state(struct pci_dev *pdev, int state);
-  1853	int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
-  1854	int pci_enable_link_state(struct pci_dev *pdev, int state);
-  1855	int pci_enable_link_state_locked(struct pci_dev *pdev, int state);
-  1856	void pci_host_set_default_link_state(struct pci_host_bridge *host, u32 state);
-  1857	void pcie_no_aspm(void);
-  1858	bool pcie_aspm_support_enabled(void);
-  1859	bool pcie_aspm_enabled(struct pci_dev *pdev);
-  1860	#else
-  1861	static inline int pci_disable_link_state(struct pci_dev *pdev, int state)
-  1862	{ return 0; }
-  1863	static inline int pci_disable_link_state_locked(struct pci_dev *pdev, int state)
-  1864	{ return 0; }
-  1865	static inline int pci_enable_link_state(struct pci_dev *pdev, int state)
-  1866	{ return 0; }
-  1867	static inline int pci_enable_link_state_locked(struct pci_dev *pdev, int state)
-  1868	{ return 0; }
-  1869	static inline void pci_host_set_default_link_state(struct pci_host_bridge *host,
-> 1870							   u32 int state) { }
-  1871	static inline void pcie_no_aspm(void) { }
-  1872	static inline bool pcie_aspm_support_enabled(void) { return false; }
-  1873	static inline bool pcie_aspm_enabled(struct pci_dev *pdev) { return false; }
-  1874	#endif
-  1875	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+SGkgTGludXMsDQoNClRoYW5rIHlvdSBmb3IgeW91ciByZXBseS4NCg0KPiA+IFRoZSBQQ0llIFJD
+IFBFUlNUIHVzZXMgU1NQUlNUIyBhcyBQRVJTVCMgIGFuZCBlbmFibGUgdGhpcyBwaW4gdG8NCj4g
+PiBvdXRwdXQuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBKYWNreSBDaG91IDxqYWNreV9jaG91
+QGFzcGVlZHRlY2guY29tPg0KPiANCj4gVGhpcyBwYXRjaCA3LzEwIGFwcGxpZWQgdG8gdGhlIHBp
+bmN0cmwgdHJlZSwgd2h5IG5vdC4NCj4gDQoNClNvcnJ5LiBJJ20gbGF0ZSBpbiByZXBseWluZyB0
+byB5b3UuDQpJIG1pc3MgdGhlIHBhdGNoIGZvciByZXBseWluZyB0byB5b3Ugb24gdmVyc2lvbiAx
+Lg0KVGhhbmtzLCB0aGlzIHBhdGNoIGNhbiBhcHBseSB0byB0aGUgcGluY3RybCB0cmVlLg0KTWF5
+IEkgcmVtb3ZlIHRoaXMgcGF0Y2ggaW4gdGhlIG5leHQgdmVyc2lvbiBvZiB0aGlzIHNlcmllcz8N
+Cg0KVGhhbmtzLA0KSmFja3kNCg0K
 
