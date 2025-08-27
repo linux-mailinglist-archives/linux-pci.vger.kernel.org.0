@@ -1,87 +1,114 @@
-Return-Path: <linux-pci+bounces-34890-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34891-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8198AB37C4B
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 09:55:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24D24B37C57
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 09:56:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A6AC1B642D3
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 07:56:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D1FE116EF55
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 07:56:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49E35319862;
-	Wed, 27 Aug 2025 07:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JQoC+uIq"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E46931CA7D;
+	Wed, 27 Aug 2025 07:56:52 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C01B4C6C;
-	Wed, 27 Aug 2025 07:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7BF2BE7DF;
+	Wed, 27 Aug 2025 07:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756281338; cv=none; b=L8nrdAwdmICvQM/qOyxumv32GP+EvaFbXyLY0yrHMdFEhrKJs3E7cLUUkHSGSp6ZXjnDlbVGXFGLM5qezvCmaH6np1epgKjn5fFq1zO1J83MW/C2S4gRVLF1xm9uYoDoE0nib/AtQNqQQ5qptt5IhxchWNOaQBcpgNi3WfsMFVs=
+	t=1756281411; cv=none; b=XkJyKXqA67E453vQDMTGCwcEE8jK5YpZLPnZJQmIspVyWlG9QKPtuTXz44s+vrRqqnm0xr5dZVOwJkta+rPA1z0fsGzcwAR1d7BF56AhStLWo5HkR40SJnrLx+aWHlSnPoRS3L+Z2ucJUBW+tZ3xOi1aKi8Uu6dhFCy4b0hHz30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756281338; c=relaxed/simple;
-	bh=S5ES48XRkwpB74ejxYCgrfQGaAkor94Qfa1G7gy7vTk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RWJVLRnONjYu7Z+Bp8MSfpSFo2nge/ODeD1rCP9MWaNpCm4baKCporTDAnEum52LwqeBryAgzn3GHZUnBySCeatuywTGb6+PaQBdIQRVm6bxLZS1400t0XKhuG+SFA+wK34pc1i4Lai5nISJrfNm9vDiUMQcUuQFfPnMx6XNFbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JQoC+uIq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24E95C4CEEB;
-	Wed, 27 Aug 2025 07:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756281337;
-	bh=S5ES48XRkwpB74ejxYCgrfQGaAkor94Qfa1G7gy7vTk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JQoC+uIqPzlaO+KNrOOjvjFjdW1qCfyGTKcJAGSKB/epdwmpvWeoS/bmNn5Sa58tv
-	 ef4j6CgizahE2x4LzFfLpTEJ4p6A7/zNNbGL5BmOE1lcQoX+iFEN+kH1qPuVa5dgat
-	 bP010ZLKyPzCc9oM3EFY+3d7k9992aXgQYZppOD68nv++4Xq/XiArxog2NpIIWOTSh
-	 0TQO8Qk9tXqNUbPqzUfCN8gKQtrHLYU2jOyxlcTlcsjLSeAa+jRAkwIhIsEmCvES5D
-	 aK4w/Rk2b95zhJLwmMHiNCc++l+SxwtJ6wavydkT/12rgZU980M/iFb9omW0XCOOyT
-	 QMPEV7D2PTSYQ==
-Message-ID: <9e30442a-85eb-4577-b81f-89ea68d4ad97@kernel.org>
-Date: Wed, 27 Aug 2025 09:55:32 +0200
+	s=arc-20240116; t=1756281411; c=relaxed/simple;
+	bh=alOHmHFAdNLHR6AutQnNHqwWpzPsi4QUibhzMjyyG44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U8fJdWqEnRz1w3PaZbCWtkjkqvyir/IsLS5sRAF/uj8qeGDf4UA+7d/kwwqpplfrI51BL5RX3Tt+s2DAocIfUI1q4/B3ltu5TUXdLHtCuUcVHrv876t+dIKIh7nrRx3Uohbt0MF7qawJfN01zVaAQl6RnyfAVJSFojgX1a5Xhq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 8EFD22C056A3;
+	Wed, 27 Aug 2025 09:56:41 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 671B531BB1F; Wed, 27 Aug 2025 09:56:41 +0200 (CEST)
+Date: Wed, 27 Aug 2025 09:56:41 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, dan.j.williams@intel.com,
+	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
+	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+	Benjamin.Cheatham@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v11 17/23] CXL/AER: Introduce cxl_aer.c into AER driver
+ for forwarding CXL errors
+Message-ID: <aK66OcdL4Meb0wFt@wunner.de>
+References: <20250827013539.903682-1-terry.bowman@amd.com>
+ <20250827013539.903682-18-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 3/7] rust: irq: add support for non-threaded IRQs and
- handlers
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org,
- Joel Fernandes <joelagnelf@nvidia.com>, Dirk Behme <dirk.behme@de.bosch.com>
-References: <20250811-topics-tyr-request_irq2-v9-0-0485dcd9bcbf@collabora.com>
- <ZBiGWoEXSxAUvEwNj8vzyDa5L6KvqTuKBTKz3mzyhMGBAja6PJsMtIiSdAUKDmn_FumrmDYuOk4PKlXRW055Qw==@protonmail.internalid>
- <20250811-topics-tyr-request_irq2-v9-3-0485dcd9bcbf@collabora.com>
- <87wm71cahd.fsf@t14s.mail-host-address-is-not-set>
- <AEwfSACv6dV1KuKmY7ufNvpYacRoT4xbJRGQJP7zfeV2GfeKcNpXZqsOQJw_w4lqbjqIsMjt-NZqp4OqBeIFpA==@protonmail.internalid>
- <9A068CEC-E45F-44B1-9D16-D550835503F9@collabora.com>
- <87zfblurtj.fsf@t14s.mail-host-address-is-not-set>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <87zfblurtj.fsf@t14s.mail-host-address-is-not-set>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250827013539.903682-18-terry.bowman@amd.com>
 
-On 8/27/25 9:50 AM, Andreas Hindborg wrote:
-> I would suggest (next time, since this is applied) not linking the
-> symbol in this patch and then adding the link in the patch that adds the
-> link target.
+On Tue, Aug 26, 2025 at 08:35:32PM -0500, Terry Bowman wrote:
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1092,51 +1092,6 @@ static bool find_source_device(struct pci_dev *parent,
+>  	return true;
+>  }
+>  
+> -#ifdef CONFIG_CXL_RAS
+> -
+> -/**
+> - * pci_aer_unmask_internal_errors - unmask internal errors
+> - * @dev: pointer to the pci_dev data structure
+> - *
+> - * Unmask internal errors in the Uncorrectable and Correctable Error
+> - * Mask registers.
+> - *
+> - * Note: AER must be enabled and supported by the device which must be
+> - * checked in advance, e.g. with pcie_aer_is_native().
+> - */
+> -void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+> -{
+> -	int aer = dev->aer_cap;
+> -	u32 mask;
+> -
+> -	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
+> -	mask &= ~PCI_ERR_UNC_INTN;
+> -	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
+> -
+> -	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
+> -	mask &= ~PCI_ERR_COR_INTERNAL;
+> -	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
+> -}
+> -EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, "CXL");
 
-That's what I did on apply. :)
+PCI device drivers may have a need to unmask internal errors if they know
+that the device is capable of signaling them and their pci_error_handlers
+can take care of them.
+
+Hence I'm in favor of keeping pci_aer_unmask_internal_errors() as a helper
+in drivers/pci/pcie/aer.c which PCI device drivers may call.
+
+In particular, the "xe" driver would be a potential future user of this
+helper.
+
+Thanks,
+
+Lukas
 
