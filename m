@@ -1,225 +1,196 @@
-Return-Path: <linux-pci+bounces-34900-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34906-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0225B37E00
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 10:41:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3331AB37F72
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 12:00:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB67F1BA36AA
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 08:41:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E8908206AC0
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 10:00:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB47433CEB0;
-	Wed, 27 Aug 2025 08:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC0272F9C38;
+	Wed, 27 Aug 2025 10:00:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fAZ+iZt3"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Jpwupz7O"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013070.outbound.protection.outlook.com [52.101.83.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935BE3376BC;
-	Wed, 27 Aug 2025 08:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756284085; cv=none; b=nNnYOPxeFD+4deumSuBX2RXxbfoo+X1d2/lhJRZ/xhLRRBZZGw+xYTyivdIe1Vy+apZkS8nmENvGtkeonVTX4c4v6l7h8YnZqMiHRyhs4bTAZgLK75TNgFhr6Lj+Yg8fOop5cXhDkJimIT1nJlpSUC/yAovXufC/G/G+IH0FdOo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756284085; c=relaxed/simple;
-	bh=aNyPWbzsSzvyBDB/astu2zd7SVQV+FS0EAaYM7QOCtU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jbj7qtlVVF9PQNIluIjJ43US9IGSyO6VAwHcq5pc+XUPa96baS3vMjci514hS7TrRfuzUOdJNXV4SmljkcD7T1lpZaYnzfiVm98lIM1/GJM7kTeE3isMpDZQK7sa41vYBCxIAHCysAGOhyfV/HYzFgPwruh2rk/+s4Itp2G1LNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fAZ+iZt3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88695C4CEEB;
-	Wed, 27 Aug 2025 08:41:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756284085;
-	bh=aNyPWbzsSzvyBDB/astu2zd7SVQV+FS0EAaYM7QOCtU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fAZ+iZt3FOp+nYVGlq4TtcevcnBFQ5INkR4cy8at54zQ1dPKQRxLOtc4nU6+fXVGb
-	 b9Jjr4792CNY7cgsmUtoMh2N0Bt4ytGOyv5/0MIlELPRnOIvyYdoHeub8XYISbcWOr
-	 B88JYjqoMKZpITvD8OgX2vMkTaEhe2gA27cpWEQzyW3w4LSz7onHRbs8wNs8aaD9kn
-	 6eRvLrHcf7vidhCz3TGdPCUll9hdpcqb0d950N2lxyx4bwHLem8oGT8KP+ahj9qr15
-	 dqMhUFZiWW/CrPJi6BsB9leYAgQ7wWxw0G2WX0bCRlvRB41xQ0C/c6twNeTz1q3pyv
-	 uAtGwZ2GQteRw==
-Date: Wed, 27 Aug 2025 14:11:18 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: liu.xuemei1@zte.com.cn
-Cc: kishon@kernel.org, liu.song13@zte.com.cn, linux-pci@vger.kernel.org, 
-	kwilczynski@kernel.org, bhelgaas@google.com, lpieralisi@kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] PCI: endpoint: Avoid creating sub-groups
- asynchronously
-Message-ID: <sjrrx3sof3cc3erhwqutaoloyizbedfgeh3rbh63lek7buwqal@kof6hm4pui6n>
-References: <20250710143845409gLM6JdlwPhlHG9iX3F6jK@zte.com.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF6219E975;
+	Wed, 27 Aug 2025 10:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756288811; cv=fail; b=uZB/Jg8H/FGotnGtyVhK8Wi/25AYFjDe0/wz1bxtxelpucjQ2un+dVZPPpdIUsDGV3lA1KKcyGUrCmQErkJkwZQD/Vr3fUshmPSJ84kORjJ5N63S4JpHC/LJhtkgtBnFo0l4O6I9RH5wPLqIIJTUMNhaqcPUN0VnBIJ+5U8BFB4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756288811; c=relaxed/simple;
+	bh=210//JJnZcLWJ9i9fo7kNbyDAiWF4HmAARnA/2WOveg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rY1QWG95ewWgFHVUy8wlbZKB0eO/IUzVCdGs9vB7aTBptuhbEL1j3tPHHXRdjjEIDFYxehtA98bTTs/BKQnClIORB3FTbN/Rm7BPEo5TSK+DL/78w1gz8MQ3A648hi/PpnoCrXopvVuXr98JDgUOJRTxabVvHeTanX3r70k8qw0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Jpwupz7O; arc=fail smtp.client-ip=52.101.83.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GF4dM+nuMoa/fC3kY8OazbSFnnHWZmMdLt3tTWa2yxsNITDCG6Yd+OUpP5KVcl7csfLDcQMpCyQsI5abEX/p6cOKul59GLz3JOq2gu7HwfnNVkL47Cn68PuVjGNIKkAZoOvICs4VOPzYkKE1DPF6JF5/ECfAyGbUnB6ktwdQsZhwf1kX1Ji7Tn1GkytmWCAzZx7El2VUuudKXncWDLnQzth0HQ0BYcKLlaTc2loWW3sQqw93TpqN2xxw2TqUqgRxa5pRjAG+b0+Qncyd6dd3v0uh7jqJMY0Uowfl4ZWy4mutxHZWkwSrK9/qfBMKDcSZoS802UbKBPXf0ORzrcgTvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zXHaGC7RC2zU14CI1SS+z8QHmh0+tDZD7OtEX+I4dlg=;
+ b=DyvrS8QbcimZosPJmZGGW1huuXfIWSGY6gZEk1zc1oVTZ0UbwUpgIWm5J+8J3EaAesx4qSjvwYETIRLYFY+S7GaHmq7cuCEUN6j9JcDHRaC4Ne9Rz+gbnm5tgyRk6YvoDR75tcWp3gCotoi0KYMGjOPTyhM6ERYyYqIJcay7Lh3qyZ+IF+k8VTLahqQ1BMZcOYO3RQDJM6riNCuM4rlOakH9izkRvHxf90R9vODWOriWPFBJqOHpac1CNviarhH2NkFHntW28+BmkIPxYfj4pSccsrRANVGvczVpLPkMYlHgQYs9o5p6JHYJndd4NdJoO/6Se9WgomuIGGaIUAzORw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zXHaGC7RC2zU14CI1SS+z8QHmh0+tDZD7OtEX+I4dlg=;
+ b=Jpwupz7OlAWYPV1Q0glHb2dgdpAzSv4SDnWulgKQ3UWN4i2vZfotUe2VtshWRhQeWeADFOJ/ZpU3U6MuCN1GIoPX5HoDRCcJz4hMpl9+8glrIHz42poKuHo5Ahuv8N7C7ijdR9Ac/y4Oe6z7lNS1LF4PVZrcCDlJj2cgRXWdmuc038lgAi3tVNIE2Jt2Des9pXeS2AeAzW5XrQoQSYXL2zFxl3DsoRF3Jjg5VORGIE4dbQ3xtqq/FaGFTjAiv62xvlAYmyaNsyZEhwM6IUahsbFF1CuGYe7/bhFYJRsH24jayLrxWS3CxqOBoE6oYPmYC7As3cexKmVY5GTsZaQdSw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+ by AS8PR04MB8754.eurprd04.prod.outlook.com (2603:10a6:20b:42d::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.12; Wed, 27 Aug
+ 2025 10:00:03 +0000
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.9073.010; Wed, 27 Aug 2025
+ 10:00:03 +0000
+From: Wei Fang <wei.fang@nxp.com>
+To: inochiama@gmail.com
+Cc: Jonathan.Cameron@huwei.com,
+	bhelgaas@google.com,
+	dlan@gentoo.org,
+	haiyangz@microsoft.com,
+	jgg@ziepe.ca,
+	jgross@suse.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	looong.bin@gmail.com,
+	lpieralisi@kernel.org,
+	maz@kernel.org,
+	nicolinc@nvidia.com,
+	shradhagupta@linux.microsoft.com,
+	tglx@linutronix.de,
+	unicorn_wang@outlook.com
+Subject: [PATCH v2 2/4] PCI/MSI: Add startup/shutdown for per device domains
+Date: Wed, 27 Aug 2025 17:39:11 +0800
+Message-Id: <20250827093911.1218640-1-wei.fang@nxp.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250813232835.43458-3-inochiama@gmail.com>
+References: <20250813232835.43458-3-inochiama@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR02CA0018.apcprd02.prod.outlook.com
+ (2603:1096:4:194::18) To PAXPR04MB8510.eurprd04.prod.outlook.com
+ (2603:10a6:102:211::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250710143845409gLM6JdlwPhlHG9iX3F6jK@zte.com.cn>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8510:EE_|AS8PR04MB8754:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1230bbf6-6c18-4354-c673-08dde5507dca
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|19092799006|376014|52116014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?EcctPLSss24zCkCXUcJTdiizO8mRhljv1qWUZb3R9W62A+BJY8V0KNcnoHbH?=
+ =?us-ascii?Q?yucBbkc7MX72lQnndxHLb9OIaXDs7RYQYWdCyBj9sHTTCGNyXfZFlEeI1qjJ?=
+ =?us-ascii?Q?ziEFyu0bCis+1sotn/iDnSvAZMJacPwVMfw7mAOOSBt3E3og0BTzLp9Ecl6m?=
+ =?us-ascii?Q?v/rWHvHnEGINWxAAL3m8IZ5FJ+7FoMD2wNQaKEM7K7sZWJu5c+xp5vULTO1V?=
+ =?us-ascii?Q?EZ6GMtrRDPiZWg28RBsp+1Sa2MyuKebUG1zMU0oP6UKOxXOeDSIMr2afDmWr?=
+ =?us-ascii?Q?HXMh1FAlhrRzSJlsrswzDtXjMO/LAPSgsSThM5cgFjAlUP8bacGWUOe0LY6y?=
+ =?us-ascii?Q?4IBB/Zxco9IMq/16tMVwHoGPUEB4sJ/67I0gi3Gfj+vxv8QKQ8jySSNGaGbw?=
+ =?us-ascii?Q?kFGPlszXs+V7YR+IlbFZJogh5RunXsK4CZvAZ96mce4EQzpPN+Qefm64uY+c?=
+ =?us-ascii?Q?/LmMiW1opLMA7J3qT+QiQlY9W4zEYjyw55wJDQfr/dci5eDB7cuDEtZg9UJb?=
+ =?us-ascii?Q?gmoJmF4YjyWvIol1/2VNWLQ8RlRcLawL8EPZlCRdxesp2kOmbtSFc4/bElnv?=
+ =?us-ascii?Q?QH6lKYJ6QO/aYhk1G3TxNOO8q38y0pI9JrSOu8RcAFs4qSHP6s4gaQmA49Tc?=
+ =?us-ascii?Q?1x8vK3u3c4aye0FbizJQ/RESu/8npeUAGno2Q0Ckds0P5nE4UAViVn3blFxh?=
+ =?us-ascii?Q?7DbT45Mjemi82auKL8aFSUdp3Wdz/kb8TRWisb043WR4rZDzBtDyPBH9vxRY?=
+ =?us-ascii?Q?DUUTbCZOr6hw+7dNd762Wx2zsiIaTuAjI3oOI2UhI5Jzfh5GsJ8bjYLhETTX?=
+ =?us-ascii?Q?lKvhQUX8HoUaDH2JasR7CaDfI0s7hYTivt/edYUQu/uZdiP9tq1xmBXzMCP+?=
+ =?us-ascii?Q?D3scgW6zlTbyk6M+cbegc4X7BaPd9R9sD80mmjF1LbhpGSNj37DxhPlL3b1u?=
+ =?us-ascii?Q?a7H0pwubDHGmISTtRY9IsGMiSMkRZmwTb0/IwTR983ZExB8/umAp1nbx/t1t?=
+ =?us-ascii?Q?6K/G+h2Ea9Kx8Z9gvMPXdxJii1p2EmzhXRrqb6nPE7yBFWAEl3U7DOwSj05j?=
+ =?us-ascii?Q?rhnFJX1ILcCdOmYbgpagnwNzCTfBJNkdfOKLs0Z9Xnx6DXCYvQoQFchmkPZX?=
+ =?us-ascii?Q?Ft/rx1HkOz/93QWTZWmMAU+RTtENlp+oevpoJBOkd/bOv2AUcUGCtKBkJj+F?=
+ =?us-ascii?Q?WBczO8H9CaIQjIa+2490o0mE0btAnoB5y40Fry5BQAp8CfGjKUxDTtEM6cqQ?=
+ =?us-ascii?Q?PoKQduoJM9XbL8GKeEBCJIW2nojB/UGm9LbcNaFxzed0fGZ3BvkyK26yb9gO?=
+ =?us-ascii?Q?CpO/aTIz3rntnkNXIdk4MF8qI7Vb8nFlDCsP6yMlGVEvkB0svKpywNIHvVho?=
+ =?us-ascii?Q?d6B+0NSIz9keA5YOxpaGpuhrDKUZENnhI/iX8HBSmoxyp7VqJ6icKIebNq+M?=
+ =?us-ascii?Q?hDicjZosPqEK+GFnMPc4XR0lTtWee/HewRRrekjsNWN7Qs0+8l992A=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(19092799006)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?QZRggGAtg9xlVRpQdeMIqJURBj30X90Jhv4wPzicZbyLkhqVe7Yi068W+mDU?=
+ =?us-ascii?Q?s83+n1qqIbXRnRyxdSLCl3TzdUaPB9J+esR34Qu5sFcYUTKXrDQd17X2LLQ0?=
+ =?us-ascii?Q?lM1R/NBmn/IpFFQ0Z6WteQXQiKeQbIu+eyX3ieoJPHimjgdK97B+zydaDLPI?=
+ =?us-ascii?Q?2yb1udc1nW0hixnjtgA4uzJSKNi68veg4Wau6qy+2A4rlLJm1D4PwQKU7aos?=
+ =?us-ascii?Q?WFDVzzAztttHFbybmE0SpWT+51nXOsq2zz0yhzpzWqfPvl2bnwHMAQvlK96h?=
+ =?us-ascii?Q?edcl98aoYOKmNe7lTG+9RkS+7taQXnQy+Iiekef/Vm39mdOea6vh+jRl1gLt?=
+ =?us-ascii?Q?g+ZvMBwBhcpmWsfmHsQsIutkp+UFxp6gZi2UyvJPs2wICrUhYblmvHVJZu02?=
+ =?us-ascii?Q?2SIznK3w2y44eDOlylZz3qqYVyaJxkMRaRA6z5gn/pGmWaKYf073sjAmMPaN?=
+ =?us-ascii?Q?uvPWGsNU3RTG5oQBJC3T9YFzl5G0Ui9gOkOta72d4yRa+91lILQGbtC66Z89?=
+ =?us-ascii?Q?eygRMTZpSGF2q5Tuq4bJVll3TTWy+9fvd/e8YFYmRbRILSuGq0ZJ4AaP8YnN?=
+ =?us-ascii?Q?n+sIgQkZORaRn9vlmDDtlEc7sY1FZDLMcLuncIz/fRIcxSNyfXcE8bA1qeqj?=
+ =?us-ascii?Q?+EimB33rSJUN7YBNwdD1Hz/clgBKwSZ0yes34OrIQCao2cbnVQrJKu3Dste0?=
+ =?us-ascii?Q?i4IL7oHJMLLMZAezb4poUXBMIcTQ1EJvtvFPnXENFi8pfp45p+K/5gzvfCRJ?=
+ =?us-ascii?Q?D7PflF8qmyZj/14t/SRIe33Scd4kvYbDpno8VUkMkEPGMnV3B7zCs713Co84?=
+ =?us-ascii?Q?4fZHnVgMCTKLGeEHh72x+zIzvrIT+Qf5o+TY4SFao/NcD6fOqUA2DRr39vON?=
+ =?us-ascii?Q?XiTX+T5WLRvHZfsmRQd0E2g7p618IghLglWDYmFHAy74Dc0Hy5qxDS9C929V?=
+ =?us-ascii?Q?dcvlbXqCPV8971fdNuznFyjtGNwcBGNHDHbpIbH7Niy3NFDk7SXQkGl4rt36?=
+ =?us-ascii?Q?yKU2wqg69yhMYvOzP9TLQuCPMzAx2h0MEL26/PwHmZsd4cPOe2Z/lHMs5tg7?=
+ =?us-ascii?Q?rLADHUQsl+zYRWFljnvYjQBMH4XezbCbA+Tnm0k4ts+l3oC6eAGpTrU/TeYg?=
+ =?us-ascii?Q?+G+ZDZtS7ZRJJm3NZvpuVS/K/FHCSy5/feIAg2P64UfJtCuO5mB7YwFQqHFB?=
+ =?us-ascii?Q?w+kEnQkg9MfWVYIoRdWuyFU66Ug8eZQ8gviv3X3wK0ZxX0GAxVhDeU0OcG5F?=
+ =?us-ascii?Q?Xl5LhHG6ZpwE2Rjh537qkQ2gdxIFn2AxqwJLdRefRiDvEGmEP882S5yfguhu?=
+ =?us-ascii?Q?2AIdk6M+7dtHenDn0P+We3JFECpEo+2LjoJBK2rdttRgZ+tmY05tcWe+3umn?=
+ =?us-ascii?Q?EOqmtx/vOHOCSrQasubLuVpc6PfOKLKPrd7Lu6OODt+AZK+MvbwSLHHtKgys?=
+ =?us-ascii?Q?Oa+QhEa4ENj0QxEQsBPgBmbXtUHb2Gg6X8QPA4Pufd1pPS1qbz6VfiLkSmoc?=
+ =?us-ascii?Q?vWiwciSzZzs2Wksw/txaIyJNsIZkvjSxyxZq2xscKO1ZPemxNK9myhnxlEfe?=
+ =?us-ascii?Q?t2WrjwFstEKhxv4obrIMrj6RuaGRpSNlRbzGgTRV?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1230bbf6-6c18-4354-c673-08dde5507dca
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2025 10:00:03.1182
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JmhyggNlxB1FG8QYHt3W7eiHQQf78Q0R7QLlZ1Bjm7VZo6yyo3EyMj72+aQHe/Z4AzkPzUFSoF5kCd27O06eeA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8754
 
-On Thu, Jul 10, 2025 at 02:38:45PM GMT, liu.xuemei1@zte.com.cn wrote:
-> From: Liu Song <liu.song13@zte.com.cn>
->=20
-> The asynchronous creation of sub-groups by a delayed work could lead to an
-> null-pointer-dereference exception when the driver directory gets
-> removed before the work completes.
->=20
-> The crash can be easily reproduced with the following commands.
->=20
->  # mkdir test && rmdir test
->=20
+We found an issue that the ENETC network port of our i.MX95 platform
+(arm64) does not work based the latest linux-next tree. According to
+my observation, the MSI-X interrupts statistics from
+"cat /proc/interrupts" are all 0.
 
-Could you please share more info on repro? Where did you execute above comm=
-ands?
-I see that you used QEMU, so I'm curious to repro the issue.
+root@imx95evk:~# cat /proc/interrupts | grep eth0
+123:          0          0          0          0          0          0 ITS-PCI-MSIX-0002:00:00.0   1 Edge      eth0-rxtx0
+124:          0          0          0          0          0          0 ITS-PCI-MSIX-0002:00:00.0   2 Edge      eth0-rxtx1
+125:          0          0          0          0          0          0 ITS-PCI-MSIX-0002:00:00.0   3 Edge      eth0-rxtx2
+126:          0          0          0          0          0          0 ITS-PCI-MSIX-0002:00:00.0   4 Edge      eth0-rxtx3
+127:          0          0          0          0          0          0 ITS-PCI-MSIX-0002:00:00.0   5 Edge      eth0-rxtx4
+128:          0          0          0          0          0          0 ITS-PCI-MSIX-0002:00:00.0   6 Edge      eth0-rxtx5
 
-- Mani
 
-> Fixes this by using configfs_add_default_group() which does not have the
-> deadlock problem as configfs_register_group().
->=20
-> Backtraces of the crash:
->  BUG: kernel NULL pointer dereference, address: 0000000000000088
->  #PF: supervisor write access in kernel mode
->  #PF: error_code(0x0002) - not-present page
->  PGD 0
->  Oops: Oops: 0002 [#1] SMP NOPTI
->  CPU: 4 UID: 0 PID: 371 Comm: kworker/4:1 Kdump: loaded Tainted: G       =
-     E       6.16.0-rc3 #2 PREEMPT(lazy)
->  Tainted: [E]=3DUNSIGNED_MODULE
->  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
->  Workqueue: events pci_epf_cfs_work
->  RIP: 0010:mutex_lock+0x1c/0x30
->  Code: 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 =
-00 53 48 89 fb 2e 2e 2e 31 c0 65 48 8b 15 5e 4c 29 02 31 c0 <f0> 48 0f b1 1=
-3 75 06 5b e9 97 8a 00 00 48 89 df 5b eb b1 90 90 90
->  RSP: 0018:ff64babb4111fdf0 EFLAGS: 00010246
->  RAX: 0000000000000000 RBX: 0000000000000088 RCX: 0000000000000000
->  RDX: ff2de9c80f5d3080 RSI: ffffffffb9e58559 RDI: 0000000000000088
->  RBP: ff2de9c8269df9c0 R08: 0000000000000040 R09: 0000000000000000
->  R10: ff64babb4111fdf0 R11: 00000000ffffffff R12: ff2de9c80f753e88
->  R13: ff2de9c80f753e00 R14: 0000000000000000 R15: ff2de9c80f753f98
->  FS:  0000000000000000(0000) GS:ff2de9d78069f000(0000) knlGS:000000000000=
-0000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 0000000000000088 CR3: 0000000ac782c003 CR4: 0000000000773ef0
->  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->  PKRU: 55555554
->  Call Trace:
->   <TASK>
->   configfs_register_group+0x3d/0x190
->   pci_epf_cfs_work+0x41/0x110
->   process_one_work+0x18f/0x350
->   worker_thread+0x25a/0x3a0
->   ? __pfx_worker_thread+0x10/0x10
->   kthread+0xfc/0x240
->   ? __pfx_kthread+0x10/0x10
->   ? __pfx_kthread+0x10/0x10
->   ret_from_fork+0x14f/0x180
->   ? __pfx_kthread+0x10/0x10
->   ret_from_fork_asm+0x1a/0x30
->   </TASK>
->  Modules linked in: pci_epf_test(E) nft_fib_inet(E) nft_fib_ipv4(E) nft_f=
-ib_ipv6(E) nft_fib(E) nft_reject_inet(E) nf_reject_ipv4(E) nf_reject_ipv6(E=
-) nft_reject(E) nft_ct(E) nft_chain_nat(E) nf_nat(E) nf_conntrack(E) nf_def=
-rag_ipv6(E) nf_defrag_ipv4(E) rfkill(E) ip_set(E) nf_tables(E) intel_rapl_m=
-sr(E) intel_rapl_common(E) intel_uncore_frequency_common(E) qrtr(E) isst_if=
-_common(E) skx_edac_common(E) nfit(E) libnvdimm(E) sunrpc(E) kvm_intel(E) v=
-fat(E) fat(E) kvm(E) irqbypass(E) rapl(E) iTCO_wdt(E) 8139too(E) intel_pmc_=
-bxt(E) iTCO_vendor_support(E) 8139cp(E) virtio_gpu(E) mii(E) virtio_input(E=
-) virtio_dma_buf(E) i2c_i801(E) pcspkr(E) lpc_ich(E) i2c_smbus(E) virtio_ba=
-lloon(E) joydev(E) loop(E) dm_multipath(E) nfnetlink(E) vsock_loopback(E) v=
-mw_vsock_virtio_transport_common(E) vmw_vsock_vmci_transport(E) vsock(E) zr=
-am(E) lz4hc_compress(E) vmw_vmci(E) lz4_compress(E) xfs(E) polyval_clmulni(=
-E) ghash_clmulni_intel(E) sha512_ssse3(E) sha1_ssse3(E) serio_raw(E) scsi_d=
-h_rdac(E) scsi_dh_emc(E)=20
->  scsi_dh_alua(E) fuse(E)
->   qemu_fw_cfg(E)
->  Unloaded tainted modules: intel_uncore_frequency(E):1 i10nm_edac(E):1 in=
-tel_cstate(E):1 intel_uncore(E):1 hv_vmbus(E):1
->  CR2: 0000000000000088
->  ---[ end trace 0000000000000000 ]---
->=20
-> Fixes: e85a2d783762 ("PCI: endpoint: Add support in configfs to associate=
- two EPCs with EPF")
-> Signed-off-by: Liu Song <liu.song13@zte.com.cn>
-> ---
->  drivers/pci/endpoint/pci-ep-cfs.c | 15 +++++----------
->  1 file changed, 5 insertions(+), 10 deletions(-)
->=20
-> diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci=
--ep-cfs.c
-> index ef50c82e647f..43feb6139fa3 100644
-> --- a/drivers/pci/endpoint/pci-ep-cfs.c
-> +++ b/drivers/pci/endpoint/pci-ep-cfs.c
-> @@ -23,7 +23,6 @@ struct pci_epf_group {
->  	struct config_group group;
->  	struct config_group primary_epc_group;
->  	struct config_group secondary_epc_group;
-> -	struct delayed_work cfs_work;
->  	struct pci_epf *epf;
->  	int index;
->  };
-> @@ -103,7 +102,7 @@ static struct config_group
->  	secondary_epc_group =3D &epf_group->secondary_epc_group;
->  	config_group_init_type_name(secondary_epc_group, "secondary",
->  				    &pci_secondary_epc_type);
-> -	configfs_register_group(&epf_group->group, secondary_epc_group);
-> +	configfs_add_default_group(secondary_epc_group, &epf_group->group);
->=20
->  	return secondary_epc_group;
->  }
-> @@ -166,7 +165,7 @@ static struct config_group
->=20
->  	config_group_init_type_name(primary_epc_group, "primary",
->  				    &pci_primary_epc_type);
-> -	configfs_register_group(&epf_group->group, primary_epc_group);
-> +	configfs_add_default_group(primary_epc_group, &epf_group->group);
->=20
->  	return primary_epc_group;
->  }
-> @@ -570,15 +569,13 @@ static void pci_ep_cfs_add_type_group(struct pci_ep=
-f_group *epf_group)
->  		return;
->  	}
->=20
-> -	configfs_register_group(&epf_group->group, group);
-> +	configfs_add_default_group(group, &epf_group->group);
->  }
->=20
-> -static void pci_epf_cfs_work(struct work_struct *work)
-> +static void pci_epf_cfs_add_sub_groups(struct pci_epf_group *epf_group)
->  {
-> -	struct pci_epf_group *epf_group;
->  	struct config_group *group;
->=20
-> -	epf_group =3D container_of(work, struct pci_epf_group, cfs_work.work);
->  	group =3D pci_ep_cfs_add_primary_group(epf_group);
->  	if (IS_ERR(group)) {
->  		pr_err("failed to create 'primary' EPC interface\n");
-> @@ -637,9 +634,7 @@ static struct config_group *pci_epf_make(struct confi=
-g_group *group,
->=20
->  	kfree(epf_name);
->=20
-> -	INIT_DELAYED_WORK(&epf_group->cfs_work, pci_epf_cfs_work);
-> -	queue_delayed_work(system_wq, &epf_group->cfs_work,
-> -			   msecs_to_jiffies(1));
-> +	pci_epf_cfs_add_sub_groups(epf_group);
->=20
->  	return &epf_group->group;
->=20
-> --=20
-> 2.27.0
+So I reverted this patch and then the MSI-X interrupts return to normal. 
 
---=20
-=E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=E0=
-=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=E0=
-=AF=8D
+root@imx95evk:~# cat /proc/interrupts | grep eth0
+123:       4365          0          0          0          0          0 ITS-PCI-MSIX-0002:00:00.0   1 Edge      eth0-rxtx0
+124:          0        194          0          0          0          0 ITS-PCI-MSIX-0002:00:00.0   2 Edge      eth0-rxtx1
+125:          0          0        227          0          0          0 ITS-PCI-MSIX-0002:00:00.0   3 Edge      eth0-rxtx2
+126:          0          0          0        219          0          0 ITS-PCI-MSIX-0002:00:00.0   4 Edge      eth0-rxtx3
+127:          0          0          0          0        176          0 ITS-PCI-MSIX-0002:00:00.0   5 Edge      eth0-rxtx4
+128:          0          0          0          0          0        233 ITS-PCI-MSIX-0002:00:00.0   6 Edge      eth0-rxtx5
+
+It looks like that this patch causes this issue, but I don't know about
+the PCI MSI driver, so please help investigate this issue, thanks.
+
 
