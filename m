@@ -1,333 +1,234 @@
-Return-Path: <linux-pci+bounces-34865-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34866-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB5D7B378EE
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 06:01:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AF454B37933
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 06:45:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 870F2161E59
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 04:01:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58887365175
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 04:45:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96E8822333B;
-	Wed, 27 Aug 2025 04:01:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E15A02D0C7B;
+	Wed, 27 Aug 2025 04:45:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="njwAZa/R"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xW2Dkme0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2088.outbound.protection.outlook.com [40.107.236.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20B81E5201
-	for <linux-pci@vger.kernel.org>; Wed, 27 Aug 2025 04:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756267270; cv=none; b=MmHLgzq1KJnuTp8i4+Empbf6WfdAItv1bv4ezvd9BXVcg/XHwc1Tm1UnAXZ456AirdFEYGfY+u3gl6ra+MVXDz9WJ3HWSpGzPvDsUZ+gUtkGurjpwh1h3ymmnWqdwUc7ov1eFp/3tLgS0hf+5lOdzijKDF+sSZnjjBEuOVDhhkU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756267270; c=relaxed/simple;
-	bh=QVZUnBo6S/jr5oYJAZZGMDSYWFQ5Xa6spw2g+AgNIlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Gnukw2IdIfJYOqbLh7CF3C1JDguXuGsbquTHhJBns1gN7tzh09eBZVesTOr9IdU1FWJnA42RIrG7eR4ug6oBFwn7pQ5aWsjFckBTvAaliOUCGxfQo5l0PesP5w3a+rSkboYecL5QnBH+Mwh1G8kFALPja/GGH8qYDNtghvVWDWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=njwAZa/R; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756267269; x=1787803269;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=QVZUnBo6S/jr5oYJAZZGMDSYWFQ5Xa6spw2g+AgNIlw=;
-  b=njwAZa/RQG/D17eF/9eVjdYqucJyviPE0tdbvImmCtW3bJcXAzjFO+2U
-   8Zar4pOsyXKMZvFZErdPQDovbPvNudnIP3ejErwVwIFyfSpNQIPBxH15a
-   SvN76bz3uNHIqHrMJIGMrjAeH6zAZ8Xi1cK7Tho3NAMpf9pmrM6G6mElH
-   qC0ilqqaiKGGrelzqU+pWNTLOD8Nm17EMkp2ZJ2DzVr8o0pbNmLc9+lDW
-   4A60TrEbsZqZn5dzSpRXxNg+SX+hCE4pXKzIpDh2YrCG3P+1or7leP+RA
-   1dRT/ZAOAYtjMryrNhbop28iJrDEqRI8lArsW1bYsRVPL6ZUTPAmSJEnB
-   Q==;
-X-CSE-ConnectionGUID: 8t/FQDiOQd+0Z+4/ooqjeA==
-X-CSE-MsgGUID: 4rW8+o2tT1aujd9MDFRqaQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11534"; a="62330021"
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="62330021"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2025 21:01:08 -0700
-X-CSE-ConnectionGUID: iotR0nxLSKGLxJ3Ahh1kJQ==
-X-CSE-MsgGUID: wiQEy1v2RfaRTmwjg0IKBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="169652730"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 26 Aug 2025 21:01:06 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ur7K6-000SeR-10;
-	Wed, 27 Aug 2025 04:00:14 +0000
-Date: Wed, 27 Aug 2025 11:59:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-	"Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Subject: [pci:wip/2508-david-aspm-api 1/2] drivers/firewire/ohci.c:745:36:
- warning: implicit conversion from 'unsigned long' to '__u16' (aka 'unsigned
- short') changes value from 65536 to 0
-Message-ID: <202508271142.h1iibk0C-lkp@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1635F2C0F9C
+	for <linux-pci@vger.kernel.org>; Wed, 27 Aug 2025 04:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756269911; cv=fail; b=Kbitqp3CXrYvLBxwCLiWxIyeMFyl45osj5cckPbRUALtWAOa/ueV/3CVz8NYKScEc81UKh7isni1d22fjb/DPjr6EQJX3jgeSdadBhyCYKSVSkdg0A4LCjo9z1TuP54u//ixysS9/pWcGSTiavUTvpzLP4YTmf+o3XXurxnKK9A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756269911; c=relaxed/simple;
+	bh=gd9pvKuHojJgkK3Kav/5ah+taDLhiniGvp3/355ltWw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=XQSCrvvgi9QpTDokQz9Yj5d4yvWwBpBqli39ih4MPJ8PBBnLmEEmDAe+Z/OMCgTYNEU2915h4CjZviPop3icc7bbTPhuWXDS0K0oGJQkFFAdAUJTLDDc0N9Ch7iHlymQH0OLQuVWRkx7vywaW0yccsjA7AesEfH8JEUneFTipT4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xW2Dkme0; arc=fail smtp.client-ip=40.107.236.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KyF4W+zYj2Fv1RbAjngigAapgSBND9WSEioJuSlNC0d8+kMqyms1SulWqCTFNccdQiGMfUiCu4vMJbjRVe1zMaWNPNDaG179fKSHKIGodASp+sVHq2TWGblIbWBiC08jfEJR/XmZZlMQLY8efPUf4JHKNjP6+DEczGt/9la8uQeUA47K2SOyWgFItV3NpCPlnnYduB99ePwTirHZASl6+DQEGpxqrwJYXlA1u17traeryPCAEgzcUd46wqxIv092Hwov837KV/CA8V6UK+V5ooInoT0otbvVEzpZ5MKmBJ9BJNtnAhbLW5JLpxxII7ZTDJDUb/OcaZz04SHqdIuYvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vtWG/sBMLpEoC4uhSTgEjscQzh4J2MD5fHd47DzfJpQ=;
+ b=QJEWBP9s/n+YdL60OSgKmm8Hfz/PoZyMbIho9qzChQDI9BYk1CSOvp1BNm5iPB31qys0j94ceDXt7p+m4YQ7P3wnhSmG29VPcexnkl6qKyN5/LkI2sftOLLiU2AFDedR5WiZiquJnbTCV1syxByf+7PVQRntZHi0iX/55OdeiQzS82HrneME0FO31dtqUJrD0mgQtN2/kosY1hYS9JydDGvd0tbHAfmZnOw46mfHzV0NF8hQt/aD6IsGIy1Qbuw89F71yF0h5boudk2o1FtgKopXUIJKN7KMM1XyTSfqMJU0U3QRreOPzHg6wrE8+uMQtPpVno7qM25wtssKGyEUTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vtWG/sBMLpEoC4uhSTgEjscQzh4J2MD5fHd47DzfJpQ=;
+ b=xW2Dkme0zzmoHq5pNoRKix8yiJDKWtJvfrmDBgHgTSb2yZH/8oKT/yUywArYibh3oZfWQ9Q1ovF5Fgg9FSDt/PzbzfaxP1Rn27uMulrLy0vf0VFBdAJVmhaMV5uBBwedQUHQuS+cvHz7LpV1kbjiVO5iSYl/fiomSVNgYcvxWOU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by PH8PR12MB6723.namprd12.prod.outlook.com (2603:10b6:510:1ce::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.21; Wed, 27 Aug
+ 2025 04:45:06 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.9052.021; Wed, 27 Aug 2025
+ 04:45:05 +0000
+Message-ID: <e35667f8-f1bf-4cd4-bb2c-b854c8f59d0e@amd.com>
+Date: Wed, 27 Aug 2025 14:44:59 +1000
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v3 03/13] PCI/TSM: Authenticate devices via platform TSM
+To: dan.j.williams@intel.com, linux-coco@lists.linux.dev,
+ linux-pci@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, lukas@wunner.de, aneesh.kumar@kernel.org,
+ suzuki.poulose@arm.com, sameo@rivosinc.com, jgg@nvidia.com, zhiw@nvidia.com,
+ Bjorn Helgaas <bhelgaas@google.com>, Xu Yilun <yilun.xu@linux.intel.com>
+References: <20250516054732.2055093-1-dan.j.williams@intel.com>
+ <20250516054732.2055093-4-dan.j.williams@intel.com>
+ <849c12a9-f801-46f8-8fff-09fbc259843e@amd.com>
+ <68ae491e1348a_75db10072@dwillia2-mobl4.notmuch>
+From: Alexey Kardashevskiy <aik@amd.com>
+Content-Language: en-US
+In-Reply-To: <68ae491e1348a_75db10072@dwillia2-mobl4.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SY5P282CA0102.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:204::18) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git wip/2508-david-aspm-api
-head:   a373462082599403e030c605ff260fd45429fe66
-commit: 5ea26ba40d978b9f34faec2ca92c60e6d9db11c5 [1/2] PCI/ASPM: Add pci_host_set_default_pcie_link_state()
-config: arm64-randconfig-003-20250827 (https://download.01.org/0day-ci/archive/20250827/202508271142.h1iibk0C-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project d26ea02060b1c9db751d188b2edb0059a9eb273d)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250827/202508271142.h1iibk0C-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508271142.h1iibk0C-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from include/linux/ftrace.h:23:
-   In file included from arch/arm64/include/asm/ftrace.h:41:
-   include/linux/compat.h:454:10: warning: array index 7 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     454 |         case 4: v.sig[7] = (set->sig[3] >> 32); v.sig[6] = set->sig[3];
-         |                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:454:42: warning: array index 6 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     454 |         case 4: v.sig[7] = (set->sig[3] >> 32); v.sig[6] = set->sig[3];
-         |                                                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:454:53: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     454 |         case 4: v.sig[7] = (set->sig[3] >> 32); v.sig[6] = set->sig[3];
-         |                                                            ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/firewire/ohci.c:51:
-   In file included from include/trace/events/firewire_ohci.h:101:
-   In file included from include/trace/define_trace.h:132:
-   In file included from include/trace/trace_events.h:21:
-   In file included from include/linux/trace_events.h:10:
-   In file included from include/linux/perf_event.h:43:
-   In file included from include/linux/ftrace.h:23:
-   In file included from arch/arm64/include/asm/ftrace.h:41:
-   include/linux/compat.h:456:22: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     456 |         case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-         |                             ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/firewire/ohci.c:51:
-   In file included from include/trace/events/firewire_ohci.h:101:
-   In file included from include/trace/define_trace.h:132:
-   In file included from include/trace/trace_events.h:21:
-   In file included from include/linux/trace_events.h:10:
-   In file included from include/linux/perf_event.h:43:
-   In file included from include/linux/ftrace.h:23:
-   In file included from arch/arm64/include/asm/ftrace.h:41:
-   include/linux/compat.h:456:10: warning: array index 5 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     456 |         case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-         |                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:456:42: warning: array index 4 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     456 |         case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-         |                                                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:456:53: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     456 |         case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-         |                                                            ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/firewire/ohci.c:51:
-   In file included from include/trace/events/firewire_ohci.h:101:
-   In file included from include/trace/define_trace.h:132:
-   In file included from include/trace/trace_events.h:21:
-   In file included from include/linux/trace_events.h:10:
-   In file included from include/linux/perf_event.h:43:
-   In file included from include/linux/ftrace.h:23:
-   In file included from arch/arm64/include/asm/ftrace.h:41:
-   include/linux/compat.h:458:22: warning: array index 1 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     458 |         case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-         |                             ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from drivers/firewire/ohci.c:51:
-   In file included from include/trace/events/firewire_ohci.h:101:
-   In file included from include/trace/define_trace.h:132:
-   In file included from include/trace/trace_events.h:21:
-   In file included from include/linux/trace_events.h:10:
-   In file included from include/linux/perf_event.h:43:
-   In file included from include/linux/ftrace.h:23:
-   In file included from arch/arm64/include/asm/ftrace.h:41:
-   include/linux/compat.h:458:10: warning: array index 3 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     458 |         case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-         |                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:458:42: warning: array index 2 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-     458 |         case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-         |                                                 ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-     130 |         compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-         |         ^
-   include/linux/compat.h:458:53: warning: array index 1 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     458 |         case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-         |                                                            ^        ~
-   include/uapi/asm-generic/signal.h:62:2: note: array 'sig' declared here
-      62 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
->> drivers/firewire/ohci.c:745:36: warning: implicit conversion from 'unsigned long' to '__u16' (aka 'unsigned short') changes value from 65536 to 0 [-Wconstant-conversion]
-     745 |         d->res_count       =  cpu_to_le16(PAGE_SIZE);
-         |                               ~~~~~~~~~~~~^~~~~~~~~~
-   include/vdso/page.h:15:30: note: expanded from macro 'PAGE_SIZE'
-      15 | #define PAGE_SIZE       (_AC(1,UL) << CONFIG_PAGE_SHIFT)
-         |                                    ^
-   include/uapi/linux/byteorder/big_endian.h:36:53: note: expanded from macro '__cpu_to_le16'
-      36 | #define __cpu_to_le16(x) ((__force __le16)__swab16((x)))
-         |                                           ~~~~~~~~~~^~~
-   include/uapi/linux/swab.h:107:12: note: expanded from macro '__swab16'
-     107 |         __fswab16(x))
-         |         ~~~~~~~~~ ^
-   drivers/firewire/ohci.c:821:37: warning: implicit conversion from 'unsigned long' to '__u16' (aka 'unsigned short') changes value from 65536 to 0 [-Wconstant-conversion]
-     821 |                 if (next_res_count == cpu_to_le16(PAGE_SIZE)) {
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-   include/vdso/page.h:15:30: note: expanded from macro 'PAGE_SIZE'
-      15 | #define PAGE_SIZE       (_AC(1,UL) << CONFIG_PAGE_SHIFT)
-         |                                    ^
-   include/uapi/linux/byteorder/big_endian.h:36:53: note: expanded from macro '__cpu_to_le16'
-      36 | #define __cpu_to_le16(x) ((__force __le16)__swab16((x)))
-         |                                           ~~~~~~~~~~^~~
-   include/uapi/linux/swab.h:107:12: note: expanded from macro '__swab16'
-     107 |         __fswab16(x))
-         |         ~~~~~~~~~ ^
-   include/linux/compiler.h:55:47: note: expanded from macro 'if'
-      55 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
-         |                            ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler.h:57:86: note: expanded from macro '__trace_if_var'
-      57 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
-         |                                                                     ~~~~~~~~~~~~~~~~~^~~~~
-   include/linux/compiler.h:68:3: note: expanded from macro '__trace_if_value'
-      68 |         (cond) ?                                        \
-         |          ^~~~
-   drivers/firewire/ohci.c:821:37: warning: implicit conversion from 'unsigned long' to '__u16' (aka 'unsigned short') changes value from 65536 to 0 [-Wconstant-conversion]
-     821 |                 if (next_res_count == cpu_to_le16(PAGE_SIZE)) {
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-   include/vdso/page.h:15:30: note: expanded from macro 'PAGE_SIZE'
-      15 | #define PAGE_SIZE       (_AC(1,UL) << CONFIG_PAGE_SHIFT)
-         |                                    ^
-   include/uapi/linux/byteorder/big_endian.h:36:53: note: expanded from macro '__cpu_to_le16'
-      36 | #define __cpu_to_le16(x) ((__force __le16)__swab16((x)))
-         |                                           ~~~~~~~~~~^~~
-   include/uapi/linux/swab.h:107:12: note: expanded from macro '__swab16'
-     107 |         __fswab16(x))
-         |         ~~~~~~~~~ ^
-   include/linux/compiler.h:55:47: note: expanded from macro 'if'
-      55 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
-         |                            ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler.h:57:52: note: expanded from macro '__trace_if_var'
-      57 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
-         |                                                    ^~~~
-   drivers/firewire/ohci.c:821:37: warning: implicit conversion from 'unsigned long' to '__u16' (aka 'unsigned short') changes value from 65536 to 0 [-Wconstant-conversion]
-     821 |                 if (next_res_count == cpu_to_le16(PAGE_SIZE)) {
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-   include/vdso/page.h:15:30: note: expanded from macro 'PAGE_SIZE'
-      15 | #define PAGE_SIZE       (_AC(1,UL) << CONFIG_PAGE_SHIFT)
-         |                                    ^
-   include/uapi/linux/byteorder/big_endian.h:36:53: note: expanded from macro '__cpu_to_le16'
-      36 | #define __cpu_to_le16(x) ((__force __le16)__swab16((x)))
-         |                                           ~~~~~~~~~~^~~
-   include/uapi/linux/swab.h:107:12: note: expanded from macro '__swab16'
-     107 |         __fswab16(x))
-         |         ~~~~~~~~~ ^
-   include/linux/compiler.h:55:47: note: expanded from macro 'if'
-      55 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
-         |                            ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler.h:57:61: note: expanded from macro '__trace_if_var'
-      57 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
-         |                                                             ^~~~
-   drivers/firewire/ohci.c:833:39: warning: implicit conversion from 'unsigned long' to '__u16' (aka 'unsigned short') changes value from 65536 to 0 [-Wconstant-conversion]
-     833 |                                 if (next_res_count != cpu_to_le16(PAGE_SIZE))
-         |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-   include/vdso/page.h:15:30: note: expanded from macro 'PAGE_SIZE'
-      15 | #define PAGE_SIZE       (_AC(1,UL) << CONFIG_PAGE_SHIFT)
-         |                                    ^
-   include/uapi/linux/byteorder/big_endian.h:36:53: note: expanded from macro '__cpu_to_le16'
-      36 | #define __cpu_to_le16(x) ((__force __le16)__swab16((x)))
-         |                                           ~~~~~~~~~~^~~
-   include/uapi/linux/swab.h:107:12: note: expanded from macro '__swab16'
-     107 |         __fswab16(x))
-         |         ~~~~~~~~~ ^
-   include/linux/compiler.h:55:47: note: expanded from macro 'if'
-      55 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
-         |                            ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler.h:57:86: note: expanded from macro '__trace_if_var'
-      57 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
-         |                                                                     ~~~~~~~~~~~~~~~~~^~~~~
-   include/linux/compiler.h:68:3: note: expanded from macro '__trace_if_value'
-      68 |         (cond) ?                                        \
-         |          ^~~~
-   drivers/firewire/ohci.c:833:39: warning: implicit conversion from 'unsigned long' to '__u16' (aka 'unsigned short') changes value from 65536 to 0 [-Wconstant-conversion]
-     833 |                                 if (next_res_count != cpu_to_le16(PAGE_SIZE))
-         |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-   include/vdso/page.h:15:30: note: expanded from macro 'PAGE_SIZE'
-      15 | #define PAGE_SIZE       (_AC(1,UL) << CONFIG_PAGE_SHIFT)
-         |                                    ^
-   include/uapi/linux/byteorder/big_endian.h:36:53: note: expanded from macro '__cpu_to_le16'
-      36 | #define __cpu_to_le16(x) ((__force __le16)__swab16((x)))
-         |                                           ~~~~~~~~~~^~~
-   include/uapi/linux/swab.h:107:12: note: expanded from macro '__swab16'
-     107 |         __fswab16(x))
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|PH8PR12MB6723:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3f592f03-ea8a-42c5-ebd8-08dde5247e35
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|1800799024|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OFNTdmplNDV2Z0xWVTZMMjE1Q0E4eCsrdFFROVBKSko0OGVxT2NjTnlDTGxL?=
+ =?utf-8?B?WUdwb25rb2xiT2RsRjBNWUtQTi9vVUVEd01XSVZrNGlvcEdYYWh3UG5HQXQ0?=
+ =?utf-8?B?bU1VRm1CbkZwQm5qZHlhS1lPNHp5S1BJSDQrTGhaT1RTUTRLSzY1VVU4bjVL?=
+ =?utf-8?B?UnBmREtOVHFNR1JicTFGbEpSQm5UZ3NoS2tBdUlxbmtOQTdjSGRBSnlEcUJx?=
+ =?utf-8?B?TDd1QmZwVWZpbGxMRFZTTzJZcmdBQUh1YzlLdUhuWjJVOFFsWXlaeFRUSGlQ?=
+ =?utf-8?B?TWZRbTA4T0JpRU9Wd1hBVk1sNFhpZlNGQTVFTWludDR1bFFoSGRPc2FLN3FI?=
+ =?utf-8?B?aTczRGZLQUkxeHVHeTRpVUJVcEVvYlAxb1k5cldSdGxPTktnREMzd1drZjRl?=
+ =?utf-8?B?RGRINXlvMFIyY0NDRjRzTzdhREtkcG40VzBsT0Ivb1V0Ty84blIxL2tNV1ZJ?=
+ =?utf-8?B?NXlSQzhxYjVtM0x1dzJpM3h6V2p3WkpxMFFvVHd0OXNZMDFLaUV5UFIrVmsr?=
+ =?utf-8?B?QXJ2MW8yZC93VjF0RDFJUUg2cEFac1FBNlJNZTBMRHFlczNhNE5LYXZXcnpV?=
+ =?utf-8?B?MTc2Qjd5cnBsZk5wcWZISDRqRk8zN24xMHpZNlBLWkR4NEF0QlZJSXRuRFZq?=
+ =?utf-8?B?Y3c2eG42Q1A5eTdIeGx3K1dZRVhuejhxQk5PL3VIbTk0SDUrUXNqQ0VITFVR?=
+ =?utf-8?B?RkRaakIzeFptRlFQYlFkSi92dFZMclNhRGY1ME44RGk4d1ByTFJYcndTN0Nq?=
+ =?utf-8?B?bUVnb1BtSm9rUCs3WFo3ZlY1d0lUc2Y5WDhHQkVOaC9VaklSeW4wUVhQUExy?=
+ =?utf-8?B?bGk2U2MvOWZGbmRjZEMxTmlQTjZnNkxQS0xyQjk2eTJLd2drb3VlWE91cjhL?=
+ =?utf-8?B?VEZEMzg1Q09hckVyUnJIZWxwZEhmZFhYVlpVRnhRY3JBRmJ0c3BPWkg5cnFH?=
+ =?utf-8?B?Tnl5bXVpeUVrbnB4YXVCUEN1ZnpLNE82MVhUVFZ3SDBTN2gydTRGSzh5NDNH?=
+ =?utf-8?B?clRhd2x4TU8rWlpROUhoQnExQlZRVmNsQ3RiZjhBN3BaUnk1YzZWVVlTcTJC?=
+ =?utf-8?B?ZFFvZ0lrVTllc1ZCdDcvWWp5ZXMrQ1lkdEVRcXptZEM4RzFFZEs2aU9uUXdm?=
+ =?utf-8?B?UC82RGFFdUFwclMyV3RvbHZqMXFPVS9MUkMzZHFZL2w1cEJXcUI0QWpKb0Y3?=
+ =?utf-8?B?KzZUWGcxS0p4WXJRUGlHNGZ5azFUWHMxVHlZbGh0bDFpdmg4bXlaRVkwRUFz?=
+ =?utf-8?B?R3pheG1XNlJzbmhFOE5XT3JKdzNkbWhKaU9kQUN1SWhsS1g3NTFBNE5xTGU3?=
+ =?utf-8?B?SmV6STlXWmYydEN0MnJxd3pCSW5JNEVyMGI3MUpMdlkrVE5ON1hPbTBoVS9O?=
+ =?utf-8?B?a3RnckNMMnljWlpyNjh2cThXaWNCRjRuODNaZ201TzBOT0VsS0JQN3Y2RnEy?=
+ =?utf-8?B?RmllYjNkREIyUlVIUGM3RkhremlPN0hBbExZc2gweUxpUmc5RE5hckgvbktr?=
+ =?utf-8?B?M1VjenpkREdnMVZwSklKbW9YVkxtTzRyaTNZSlkyN2JrVzJIZ0QrRTdINlE0?=
+ =?utf-8?B?V2Qrb09tQm5oWnpleDBQUkZjUCsxZFBpZ01weC94TWlXSlNxbGZmdC8wTXQv?=
+ =?utf-8?B?N3RaeGZWSlhwVHZpaElxRmZSd3pFU2VEUzZDSWNld3B0K1A0ajFsL2QvRTFR?=
+ =?utf-8?B?RCtNNFNYV1duN2xvRHZlK1RRcWpVRkx6M3RIVUFvd0hSVGtvTDNYb3hrc1ZR?=
+ =?utf-8?B?eEdmUFRBb0NwOUpuQUlOakZyUkVEdDBOTGgrSXdLOTRIMnB4cjNHaC8rSkRS?=
+ =?utf-8?B?U3MxL0hXVWZzVDNoZXM0Y2dZTDlianZrWkw3NktpbjlObTAyZGwzRHJlN2pm?=
+ =?utf-8?B?UUVIYlNMTUJjUkR3L0hoWlBYNFhRYmxXdnRUbE9FRGo1amdKcVZMbUVleWNk?=
+ =?utf-8?Q?OF0dk00/oeo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?akVVcEtlRjRUYUhZMXRITC9VMWFjRlBKTVlyN2Qrb2R2MW83Y3UzNzl5WFN6?=
+ =?utf-8?B?U29iQ3N4SzgwbGlKcm5EMHd6Q3Rzc0N3NWhyWlFDM0JWMjI2UWhuaExhSFRO?=
+ =?utf-8?B?R2hBZXY1ZlI3WFVqWURyTDI5MDJsWWxTQVlvVk1hNGRJd1ZXZzl4Y0F4dEVy?=
+ =?utf-8?B?SllwdkVRMzkwanZjZzNqYjI3eVJRbk1uMENUUjhBRnkvSUJFNHczWGNSYmJ5?=
+ =?utf-8?B?aEE0ZUI4bTErTFBxRHpyTDZVajNNNUd4TEVqRmZ5bFVzSTJpSmFhakJNb1Br?=
+ =?utf-8?B?QVBUR0VGVDJYKzFHMHJJKzNRMlZsV1FrNnk5cDdkM29vNjl3UEFrMWk0cDJh?=
+ =?utf-8?B?Tm1wWmFERWs3YzIvVjFua0dqUE4xL1NkSm9XTUtXVFg0eXBBcm50YVBQZG9C?=
+ =?utf-8?B?WVZvMytvcFMyLzdMTkpxc1FnM0l4eGFBMmNteStxcHhSdlVpeURCc1NhNHFx?=
+ =?utf-8?B?ZFJIS2FrcXJyTFkrSVFXdW9mRXRPY2s2bCt1ZTA2OE9YRWxVTmNvdjRRdW1D?=
+ =?utf-8?B?RXhjRjErRUVsYjZMVnpQaFlFUTlwREp4ZFJtRXhZa2grNjNPMjUrSzFzN2Zq?=
+ =?utf-8?B?NGhzS0l1cTBxU1RQc1NOclNmbHljRHJ2SmRaTTdYclQ3a1VaakQzeHN4Yk1S?=
+ =?utf-8?B?dTlsd2g1THpTaklQb0QxZVFOQzhoS1RMeDV0V3JMM3RndWIyTjZWaHZEWVNI?=
+ =?utf-8?B?VUxYeVllM3VqakFrOWl4MW9oWWUvRjRNa292bEdMTWRBZnVPOHVBYmw3ellk?=
+ =?utf-8?B?dE1rSWpuR21lck5kYWs0Z0wzZDZmZjlnaGNLbGEwOGcxUk5vTjdkREJjWkVB?=
+ =?utf-8?B?amMwc1ByTDRMaW4wbVRKZWh6ZXdxL0pRUGpSZjRvQ3o3MC91dmdVTFNrOUhm?=
+ =?utf-8?B?RDhnRzlCb0hyVUlTbE0venM2cHFFbFFLSW0wQ0lLcjVhc2M5WmFCdTRXcWpI?=
+ =?utf-8?B?LzdqV3JnQkExTUVqbHpJaGtHSXF1SWlUM1hQUVBXeHRMNzJ2L2FkQ1I1cDdn?=
+ =?utf-8?B?VTQ2THgrbXVRN00rZTBwUnB6RWtxZEZHSGNsMGNJN0FRWE83eEV1bWRqVndU?=
+ =?utf-8?B?aysyUjc5azFTWjN0bkZ5ZUE2V0pCTFBsQlI3aHR3OFBpdVdnSVZLdThqbHI3?=
+ =?utf-8?B?UUtZTnRFMUJ1OXRYa29yUmV3eitGQVU3SWZMSktaTTJ2ZWptT0xmVEp2MUMz?=
+ =?utf-8?B?bE5YZmtGYmgrcmFNYTVhdDNjWmZpaEpBdWNwTkwrN2ZobzZTdUVtQVc2NXV4?=
+ =?utf-8?B?MjJLZjlVUVJKUkhiME9OZVpTeFpWZllYVmFVSTV5amdCS1FkUDFsTEJjUVpi?=
+ =?utf-8?B?VmNmMmVvVm1sYU82Z0VQWlJZSXpJM1ozZ2ZlaFllaXNCcmJ5OGlaQ010R3E2?=
+ =?utf-8?B?UUxiN3RvQnNoT043VWl4TzgySWR0SVh3cGk3N1BKM2Q1WEViOExtVlJiWVZy?=
+ =?utf-8?B?RVdlU2x5cDFBWHM3MU5EMVJuZU5rK0Z0NzNWc1BCM2RTWjUvRVVsSE9lai9M?=
+ =?utf-8?B?VlNCVC9WU0p1dFlLcmxoTVBsbUtpS0ZVZDJTUVZ6ek4xTnVNZ3J0aUdxTGpr?=
+ =?utf-8?B?bC9kNE5wWTJCQ2pBYkloY1poVjdEUzFVZEw5cGplL3o4OVFsblQ5eUZWV1pC?=
+ =?utf-8?B?NGNNdktRMHpxalFDZkpER0l0OC9SdHUvN285L2JpcVQ3bDZUdlY2S0VRQUgr?=
+ =?utf-8?B?ZjVFNG1Fb3FSejFSVm9sSXFKMVdxUU4vUU5FSjdOMi9CMHg4SEFyZDMrM2xI?=
+ =?utf-8?B?Nmh2d0ZGa2ZpYXU1cHBXVkMwSS9FdXV6Nm1YY3NrNnM0NGlIMzZJQW5KMGdu?=
+ =?utf-8?B?Vm9XVXlNSk5oLzlEaTBZWjh2b0FMbzZYUEE0dlVhRlRWeGcxc1Q3djVFTXIw?=
+ =?utf-8?B?ZXpnMEpQZUlMcEhsMW9Xb3NJaVhxeSt6VzQ3QjFZbnU0NlJlcWFrR25SeGpW?=
+ =?utf-8?B?NUp4TzhaRkVia0d6UExnczJRdHRQVzRoMldFTzJQNFV1b3N4eGdRbWZaWTVC?=
+ =?utf-8?B?dmRWZHdoNFlVRVpmMGREMUVlQWZjYlZ1SFNJUFo5QzFGZ1l1VHZpdElIVW85?=
+ =?utf-8?B?eW8xeHNqQnRjOHF3RjREcThCc256SGRzVlpBUmw1cW9FU0h3WktvcEVLcTl4?=
+ =?utf-8?Q?wHSq8ILqPJJEGZs9R+fqFHJeK?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f592f03-ea8a-42c5-ebd8-08dde5247e35
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2025 04:45:05.8699
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MpSA4VbhtsEirrun1+BeMT8DLuZozdxcX+sk4nOZKXGprI6Ig5+sJo3qPE55z22qFU8qbdrp1aiNo+l5mDNrnQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6723
 
 
-vim +745 drivers/firewire/ohci.c
 
-32b46093a07698 drivers/firewire/fw-ohci.c Kristian H¯gsberg 2007-02-06  738  
-7a39d8b8216546 drivers/firewire/ohci.c    Clemens Ladisch   2010-11-26  739  static void ar_context_link_page(struct ar_context *ctx, unsigned int index)
-7a39d8b8216546 drivers/firewire/ohci.c    Clemens Ladisch   2010-11-26  740  {
-7a39d8b8216546 drivers/firewire/ohci.c    Clemens Ladisch   2010-11-26  741  	struct descriptor *d;
-7a39d8b8216546 drivers/firewire/ohci.c    Clemens Ladisch   2010-11-26  742  
-7a39d8b8216546 drivers/firewire/ohci.c    Clemens Ladisch   2010-11-26  743  	d = &ctx->descriptors[index];
-7a39d8b8216546 drivers/firewire/ohci.c    Clemens Ladisch   2010-11-26  744  	d->branch_address  &= cpu_to_le32(~0xf);
-7a39d8b8216546 drivers/firewire/ohci.c    Clemens Ladisch   2010-11-26 @745  	d->res_count       =  cpu_to_le16(PAGE_SIZE);
-7a39d8b8216546 drivers/firewire/ohci.c    Clemens Ladisch   2010-11-26  746  	d->transfer_status =  0;
-32b46093a07698 drivers/firewire/fw-ohci.c Kristian H¯gsberg 2007-02-06  747  
-071595ebdc66d7 drivers/firewire/ohci.c    Stefan Richter    2010-07-27  748  	wmb(); /* finish init of new descriptors before branch_address update */
-7a39d8b8216546 drivers/firewire/ohci.c    Clemens Ladisch   2010-11-26  749  	d = &ctx->descriptors[ctx->last_buffer_index];
-7a39d8b8216546 drivers/firewire/ohci.c    Clemens Ladisch   2010-11-26  750  	d->branch_address  |= cpu_to_le32(1);
-7a39d8b8216546 drivers/firewire/ohci.c    Clemens Ladisch   2010-11-26  751  
-7a39d8b8216546 drivers/firewire/ohci.c    Clemens Ladisch   2010-11-26  752  	ctx->last_buffer_index = index;
-32b46093a07698 drivers/firewire/fw-ohci.c Kristian H¯gsberg 2007-02-06  753  
-a77754a75d58d5 drivers/firewire/fw-ohci.c Kristian H¯gsberg 2007-05-07  754  	reg_write(ctx->ohci, CONTROL_SET(ctx->regs), CONTEXT_WAKE);
-837596a61ba8f9 drivers/firewire/ohci.c    Clemens Ladisch   2010-10-25  755  }
-837596a61ba8f9 drivers/firewire/ohci.c    Clemens Ladisch   2010-10-25  756  
+On 27/8/25 09:54, dan.j.williams@intel.com wrote:
+> Alexey Kardashevskiy wrote:
+> [..]
+> [trim multiple pages of uncommented context, please trim your replies]
+> 
+>>> +/**
+>>> + * pci_tsm_pf0_initialize() - common 'struct pci_tsm_pf0' initialization
+>>> + * @pdev: Physical Function 0 PCI device
+>>> + * @tsm: context to initialize
+>>> + */
+>>> +int pci_tsm_pf0_initialize(struct pci_dev *pdev, struct pci_tsm_pf0 *tsm)
+>>
+>> Here it is: struct pci_tsm_pf0 *tsm  (it is really a "dsm")
+> 
+> All of the context returned by the TSM driver is a "tsm" context, the
+> only time use "dsm" is in referring to the actual pci_dev that runs the
+> SPDM session.
 
-:::::: The code at line 745 was first introduced by commit
-:::::: 7a39d8b82165462729d09066bddb395a19025acd firewire: ohci: Asynchronous Reception rewrite
+ah ok. Just seems a bit counterintuitive to use a short "tsm" acronym for something else than the actual TSM as defined in the PCI spec and in this case - it is the opposite to the spec's "TSM" - it is a DSM, the other end of trust chain. And if I wanted to reference the actual TSM in the same function - that would be "tsm_dev".‚Å†‚Å†‚Å†‚Å†‚Å† And the actual DSM pci_dev is barely used, it is mostly "struct pci_tsm_pf0".
 
-:::::: TO: Clemens Ladisch <clemens@ladisch.de>
-:::::: CC: Stefan Richter <stefanr@s5r6.in-berlin.de>
+
+>> In pci_tsm: struct pci_dev *dsm (alright)
+>>
+>> May be we need some distinction between PF0's pci_dev and pci_tsm_pf0 but still these are DSMs.
+>>
+>> In pci_tsm_pf0 it is: struct pci_tsm tsm, imho "base" is less confusing (I keep catching myself thinking it is a pointer to tsm_dev).
+> 
+> Ok, I can change it to base.
+> 
+>> "tsm" would be what you call "tsm_dev" which is ok but seeing short "tsm" used as "dsm" or "TSM data for this pci_dev" is confusing.
+>>
+>> s/pci_tsm/pci_tsm_ctx/ and s/tsm/tsm_ctx/ ? Thanks,
+> 
+> What is a tsm_ctx? The s/pci_tsm/pci_tsm_ctx/ rename is not adding more
+> clarity for me.
+
+TSM-related attributes of a PCI device. Not the best name, true.
+
+> If Aneesh or Yilun also find that rename clarifying I
+> will switch. For v5 I will stick with 'struct pci_tsm' as the PCI object
+> that wraps TSM driver produced objects.
+yeah, if it is just me, then never mind, I'll get used to it.
+
+> The reason I do not think of "pci_tsm" as a "tsm_dev" is because PCI is
+> always a consumer of an outside of PCI TSM service provided, PCI does
+> not have a TSM concept internal to it.
+"struct pci_dev" describes a PCI device, "struct pci_ide" - a PCI IDE stream but "struct pci_tsm" does not describe PCI TSM... Hm. Thanks,
+
+
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Alexey
+
 
