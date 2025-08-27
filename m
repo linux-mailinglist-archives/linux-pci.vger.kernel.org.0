@@ -1,161 +1,213 @@
-Return-Path: <linux-pci+bounces-34949-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34950-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D56DB38EF5
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 01:11:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0B18B38F28
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 01:23:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 70C847AD749
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 23:09:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC9979805B7
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 23:23:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34F4930F935;
-	Wed, 27 Aug 2025 23:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83ED4301006;
+	Wed, 27 Aug 2025 23:23:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SvxspZqQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cadKE462"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA112F067F;
-	Wed, 27 Aug 2025 23:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08162F83D7
+	for <linux-pci@vger.kernel.org>; Wed, 27 Aug 2025 23:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756336253; cv=none; b=pXgLzL2XAkIOiODzIGap7Q46DlyYaYtgX6nluQ+/AUpFOYwv2RzXjo1ozYLr0qCKANdOi+/SfPwD0V5Mcy3NOdKNGEc1gschHihrptHkrLJWbcvWAy2Wgh8/vOTuhePJRvLGTKBLdTDCVBuaeWmOAwZL2BvhrqRMvgM28CyDs6Y=
+	t=1756337032; cv=none; b=tkv9Wl5KS6raq3njXC3eL9ox/E3QfWA+KOw2hCFEh+7cmjfL1bzRpOPk2hq0R9SjRDumy5g0Pl7FqmQ5WKfpyNtO1OSTM0DxsDpr0Eik66QK69JjifMXRW2qHLb6LilGM7piFL3xsHneBVoXx7esdtcLy0ovCJT83FlKRacn3Fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756336253; c=relaxed/simple;
-	bh=D1uBYeI6yyHG//TIoDOYhr9aTlJxFP7mh06RYuz+MwM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tiD3V88qvFYevoYgQXG4wtco3gIBR8coMDmuslMSU7+nKDGFUq/xXlcw9t0YLxkmcSydOiiaZ80N/6FzHDxQdIkg61+6EdAWWdAk2pnos9tCvw5lXP9DOl2TPRcueay6tkN8VeggjHZhEuAk7bOv1e52eT8G0epX60ylIZyS6NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SvxspZqQ; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b47175d02dcso361087a12.3;
-        Wed, 27 Aug 2025 16:10:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756336251; x=1756941051; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hpTGX6D+zEWo2TDoU/huOakyARg4JVK9BfIYOBFF8Fo=;
-        b=SvxspZqQeXxL+hI0FLdUOBM6A7NaO6pMsTxHo5xveRJ1iSiWPWxHlHBlA2gIVPKJbi
-         GuOryZGRAtTIhMo8on4cfIMj6rQ4VsXRnbOEM7YUqgQmfJ0bx4bidz8ir+595xsxoSzL
-         2ULuTQlC6qOELRfDyEfe2IRvwJlmdmxXJECv6aX69pZPylfVxj+oY8sQjv+M0G69jbNl
-         REQrTlbmSkojyFAkf50TnHBusz8FMFHZZAOErk3Vv4D2DfXg1ZAI4huzYXueo8Ldx/BP
-         LzROzcpmig7BC4y3qV6jzCsFb/OEzLmiZH8g3IIQbBn5z3mIpMck7ZMoIh28AnOJHry3
-         TuFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756336251; x=1756941051;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hpTGX6D+zEWo2TDoU/huOakyARg4JVK9BfIYOBFF8Fo=;
-        b=sJEuW3Z8iC0KHj7Jj8KvZEsCH5Y1oUe66cCMyDYzX/rKAD1ZwsqbwRKsfuZTQYNl7s
-         japYuJZEtJwWbrlz7XxatLF/lmxDAK/ysXsX6pwqkSiNI9Uiuc4uWOUsLlWsBgv7GbG/
-         eq0u3gZ5EVsIvTcNhV8NGJY9nnyhWqYXsx5WT83WON6YFoHPWIh92rgy6gTEF5jm6A9d
-         Yoe0GRLvRK7gooSq46XLTb2UWYz0QCHBdFgJfmEnX42RRipTe6M94hmk0Gymy9Ax6Y8u
-         M9r3GusCht8speTtWfW0oCyYVMnTXsSb5h20zCrJvSRSDoOoim+kyPMvrQydNBWdHIK8
-         MiAg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsyJTYLCEF+kI2viv3Iny20iXmZqt2v9tkGLiJfAtF6ylmxK73IPb5IyBzo6A3fxZItiGAsRx/SqFfECI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzW8fybucuonKS8pMtJo+G7r+KoPPBSLNspxOVMmi2SOqPUDmC5
-	US5kQPF07W9kzhFsZJnptHt0zbxr6NbzPyjP48ckY1mp0uw6FPXwmE9u
-X-Gm-Gg: ASbGncuofRBka4S9OIQefEshSUJsoP2pfGKXr2i3N3nCkHssQhqlDuufiOYks6PAYzj
-	bXd7u1VVZ6SjeTfEusxGjippGw4oxEsRvvHQPs0/mtzvkPslwyS39VRTXP4hR98yxXbd9nBWKHH
-	KYN8Gto8FDRrExZUG/0N9LHBRV+cpApIPsPDrdnh+8pO31iZWAUOtk8G6pf7uBJabxU/0kzNkyG
-	0IYp5dGvAH61DzV4T2l2V5/rpspH0iwgCFKJLSkJko1LlnbNkJCjnR7nUblK0bonUVCau8YohTL
-	4uJxLMVcsP94TNEql7SUUv2VPB+xIj375Fn/UgJ0H/qGz7ncgRZ1qDvP8TWoDWKTmqByQQSuqXl
-	mt6sjmIgS3vuxuxFDFuBefF3ohb/0GVxe
-X-Google-Smtp-Source: AGHT+IHxryo3kJsFVbI54HWkyx4jlhELnk+fiqRoyjgbrqoKw8bic27qXRHW7BIUKUhVzP25dhDVqQ==
-X-Received: by 2002:a17:90b:4c02:b0:31e:ec02:229b with SMTP id 98e67ed59e1d1-32515eabb9bmr27912917a91.20.1756336250903;
-        Wed, 27 Aug 2025 16:10:50 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-327ab0dbeecsm332644a91.19.2025.08.27.16.10.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Aug 2025 16:10:50 -0700 (PDT)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Marc Zyngier <maz@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Chen Wang <unicorn_wang@outlook.com>
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>,
-	Linux Kernel Functional Testing <lkft@linaro.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Wei Fang <wei.fang@nxp.com>,
-	Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH v2] PCI/MSI: Check MSI_FLAG_PCI_MSI_MASK_PARENT in cond_[startup|shutdown]_parent()
-Date: Thu, 28 Aug 2025 07:09:42 +0800
-Message-ID: <20250827230943.17829-1-inochiama@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1756337032; c=relaxed/simple;
+	bh=6Nk7Fv6yCGO3AWps9c3VR6wV0Psq47tJ6ki7MUXdg34=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=t/cNOLVTHsJ+NB22Vzdvm6u1w3kq3MSBlj4coLM9MbE8Hg9DkoEv3DGhCDznC3U/CAPBPfyBSZHD+zES+pFUW0ESC555Iix6xiCKwsIY5LrTnc5XJIFNpAymsWUUEbFSKKejYLkDvkq1x3rq8S6pezAqjoGAMdl7t2MeAWru1r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cadKE462; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756337031; x=1787873031;
+  h=date:from:to:cc:subject:message-id;
+  bh=6Nk7Fv6yCGO3AWps9c3VR6wV0Psq47tJ6ki7MUXdg34=;
+  b=cadKE4628rsP5hT6T7RhhmmyBt1EfKffmclwcyBWO9kfFOFw0lPFo4JM
+   Jem9dnmVw/SIJCeAyUAdy7lqMS6JyUs+r1j9Wpf0VWLNuespglE7LKWGr
+   1sxfLKpAtcaUqriKyWh02AggG87sVK4dpPKGus0Ija1XcpiMdweGC/eA2
+   0MbJkm22Wj277bENknWZruK0MVZqpINHar8bCasEVwkSZ98lqVlXOZOzd
+   3CJjk+eGvRAOyrheTgMYXXR1ESOhTeIBV4sCeL59myEI/qVsg/4VLxaGy
+   E8dMPZUXtvfoSsNmaDlYOjuNKWDELbSthnE+R/odiahZsKIpVxbPqs3dK
+   w==;
+X-CSE-ConnectionGUID: ZZf78TIbTgG0byPPNL7Rrw==
+X-CSE-MsgGUID: PXn4qRLWTvGguH6rmRmyJQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11535"; a="58665957"
+X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
+   d="scan'208";a="58665957"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2025 16:23:50 -0700
+X-CSE-ConnectionGUID: MNW7qPx1Q+OPzasG9tTm8w==
+X-CSE-MsgGUID: h3athY4TQFudgHs4refW7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
+   d="scan'208";a="193612897"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 27 Aug 2025 16:23:49 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1urPUI-000TGx-1O;
+	Wed, 27 Aug 2025 23:23:38 +0000
+Date: Thu, 28 Aug 2025 07:22:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/rcar-host] BUILD SUCCESS
+ d3fee10e40a938331e2aae34348691136db31304
+Message-ID: <202508280732.bEWv1ZGB-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-For msi controller that only supports MSI_FLAG_PCI_MSI_MASK_PARENT,
-the newly added callback irq_startup() and irq_shutdown() for
-pci_msi[x]_template will not unmask/mask the interrupt when startup/
-shutdown the interrupt. This will prevent the interrupt from being
-enabled/disabled normally.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rcar-host
+branch HEAD: d3fee10e40a938331e2aae34348691136db31304  PCI: rcar-host: Pass proper IRQ domain to generic_handle_domain_irq()
 
-Add the missing check for MSI_FLAG_PCI_MSI_MASK_PARENT in the
-cond_[startup|shutdown]_parent(). So the interrupt can be normally
-unmasked/masked if it does not support MSI_FLAG_PCI_MSI_MASK_PARENT.
+elapsed time: 886m
 
-Fixes: 54f45a30c0d0 ("PCI/MSI: Add startup/shutdown for per device domains")
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-Closes: https://lore.kernel.org/regressions/aK4O7Hl8NCVEMznB@monster/
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Closes: https://lore.kernel.org/regressions/20250826220959.GA4119563@ax162/
-Reported-by: Wei Fang <wei.fang@nxp.com>
-Closes: https://lore.kernel.org/all/20250827093911.1218640-1-wei.fang@nxp.com/
-Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-Tested-by: Nathan Chancellor <nathan@kernel.org>
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
-Change from v1:
-- https://lore.kernel.org/all/20250827062911.203106-1-inochiama@gmail.com/
-1. Apply Tested-by, Reported-by and Tested-by from original post [1].
-2. update mistake in the comments.
+configs tested: 120
+configs skipped: 4
 
-[1] https://lore.kernel.org/regressions/aK4O7Hl8NCVEMznB@monster/
----
- drivers/pci/msi/irqdomain.c | 5 +++++
- 1 file changed, 5 insertions(+)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
-index e0a800f918e8..b11b7f63f0d6 100644
---- a/drivers/pci/msi/irqdomain.c
-+++ b/drivers/pci/msi/irqdomain.c
-@@ -154,6 +154,8 @@ static void cond_shutdown_parent(struct irq_data *data)
-
- 	if (unlikely(info->flags & MSI_FLAG_PCI_MSI_STARTUP_PARENT))
- 		irq_chip_shutdown_parent(data);
-+	else if (unlikely(info->flags & MSI_FLAG_PCI_MSI_MASK_PARENT))
-+		irq_chip_mask_parent(data);
- }
-
- static unsigned int cond_startup_parent(struct irq_data *data)
-@@ -162,6 +164,9 @@ static unsigned int cond_startup_parent(struct irq_data *data)
-
- 	if (unlikely(info->flags & MSI_FLAG_PCI_MSI_STARTUP_PARENT))
- 		return irq_chip_startup_parent(data);
-+	else if (unlikely(info->flags & MSI_FLAG_PCI_MSI_MASK_PARENT))
-+		irq_chip_unmask_parent(data);
-+
- 	return 0;
- }
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                   randconfig-001-20250827    gcc-12.5.0
+arc                   randconfig-002-20250827    gcc-8.5.0
+arc                        vdk_hs38_defconfig    gcc-15.1.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    gcc-15.1.0
+arm                   randconfig-001-20250827    clang-22
+arm                   randconfig-002-20250827    clang-22
+arm                   randconfig-003-20250827    clang-22
+arm                   randconfig-004-20250827    clang-22
+arm                           u8500_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250827    gcc-11.5.0
+arm64                 randconfig-002-20250827    gcc-8.5.0
+arm64                 randconfig-003-20250827    clang-22
+arm64                 randconfig-004-20250827    gcc-9.5.0
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250827    gcc-10.5.0
+csky                  randconfig-002-20250827    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-22
+hexagon               randconfig-001-20250827    clang-22
+hexagon               randconfig-002-20250827    clang-22
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250827    clang-20
+i386        buildonly-randconfig-002-20250827    clang-20
+i386        buildonly-randconfig-003-20250827    clang-20
+i386        buildonly-randconfig-004-20250827    clang-20
+i386        buildonly-randconfig-005-20250827    clang-20
+i386        buildonly-randconfig-006-20250827    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch             randconfig-001-20250827    gcc-15.1.0
+loongarch             randconfig-002-20250827    clang-22
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20250827    gcc-8.5.0
+nios2                 randconfig-002-20250827    gcc-11.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250827    gcc-12.5.0
+parisc                randconfig-002-20250827    gcc-8.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                    adder875_defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-22
+powerpc               randconfig-001-20250827    clang-22
+powerpc               randconfig-002-20250827    clang-22
+powerpc               randconfig-003-20250827    clang-22
+powerpc                     tqm8541_defconfig    clang-22
+powerpc                        warp_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20250827    gcc-11.5.0
+powerpc64             randconfig-002-20250827    gcc-11.5.0
+powerpc64             randconfig-003-20250827    gcc-13.4.0
+riscv                            allmodconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                 randconfig-001-20250827    clang-19
+riscv                 randconfig-002-20250827    clang-22
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                  randconfig-001-20250827    gcc-13.4.0
+s390                  randconfig-002-20250827    gcc-8.5.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                    randconfig-001-20250827    gcc-15.1.0
+sh                    randconfig-002-20250827    gcc-9.5.0
+sh                          rsk7264_defconfig    gcc-15.1.0
+sh                           se7721_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250827    gcc-15.1.0
+sparc                 randconfig-002-20250827    gcc-15.1.0
+sparc64               randconfig-001-20250827    gcc-11.5.0
+sparc64               randconfig-002-20250827    gcc-8.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250827    gcc-12
+um                    randconfig-002-20250827    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250827    clang-20
+x86_64      buildonly-randconfig-002-20250827    clang-20
+x86_64      buildonly-randconfig-003-20250827    gcc-12
+x86_64      buildonly-randconfig-004-20250827    gcc-12
+x86_64      buildonly-randconfig-005-20250827    clang-20
+x86_64      buildonly-randconfig-006-20250827    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250827    gcc-10.5.0
+xtensa                randconfig-002-20250827    gcc-10.5.0
 
 --
-2.51.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
