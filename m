@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-34871-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34872-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A77DB37ACB
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 08:51:39 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36622B37AD8
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 08:54:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 446353624C5
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 06:51:39 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DD30B4E20C5
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 06:54:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24E083128C6;
-	Wed, 27 Aug 2025 06:51:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 187AE313526;
+	Wed, 27 Aug 2025 06:53:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="noD4En54"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="g4xji6wp"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88459C133;
-	Wed, 27 Aug 2025 06:51:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB0C1A2381;
+	Wed, 27 Aug 2025 06:53:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756277494; cv=none; b=hUO9X5gDHOF0SuksHDXuDhVZNyNHEMkBZOXirsl2/ZzPojXnHRGCdgde1tlbZHRmMRZ0IwnhGdBDM/rE8DtJfKwlm67f5wLutdmn41tMbPbJDDbPcxOwOjeRGvZxidMsfVNl9KONMYnst17ThXnmHRRiXP8ItwLxvUioZljo5UI=
+	t=1756277639; cv=none; b=PiE0u6JbM+hh8swNd1wVkHnuEJ8Zi17KYahI0L37AaCH+vh4hDs1qr1HwpOIXByDYF1gU6acSAjszGgYsPNi2eWagU10w6Sj94/VnEkr5p7MJknSgeFwQvCzmgxbAYNH6FeJ+apu3tk/2F2F/qZaFls7eLDpIlO20BbSL+x2nzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756277494; c=relaxed/simple;
-	bh=6n/bITa6vrmP6YxQjYpYAvl0pURUaNYm8xkK9JCAWa8=;
+	s=arc-20240116; t=1756277639; c=relaxed/simple;
+	bh=1qMQE0AACesegxwD6tXbPfTg4SMY0l9zyrdfzQoBDKA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=igsb6r6SMzmgygpw9SXboPfAichMZeUCD61X7Kz1dW+dFxFJA+o6qXQbywbF/8X5FZS8MgPacfWplniQCuxNVfPS3mjYCB3kNBTujs2z23NgfTClzdDDLXC7yZbbQaUvnL9CRkU7VfLVgaUPrcG9RzGM7K0qsNHik/5CD/6/4bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=noD4En54; arc=none smtp.client-ip=185.11.138.130
+	 MIME-Version:Content-Type; b=RxRwPLiQANFODnr/GfqyLB4YAzg2og6tTxw2sQIhFYyLNXCIIK36WvfcfqEC3EvTPfelg5f5hYIJTcofQenqNsF2hqmvYgONcFEB7bZpaqvWLcbcmLrkoGUj7q3GIBBjzqUHbFjNJN670c95e2KfUvZhvJ1GKBSogKDNkiTb0+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=g4xji6wp; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
 	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=6n/bITa6vrmP6YxQjYpYAvl0pURUaNYm8xkK9JCAWa8=; b=noD4En545Nt/MdX0PP6isfTCIm
-	nzzsDKAnZVdX0JQAaI/cY0hmmj4qQ34OFnMnfj7gzvR749DUPsZVAeEENOUrNf8dKgsSdc1dL40yU
-	+d0TrjSv0RRgNY4vGdZsMDDw25760fIzo77/LhnS574eAc0b5k+ORFfbAiN0RQPdenFMW+P8Z1X9w
-	5GFOcifgnTV1kJ/hZzz9Wlnp5vsuXy09PlBO/bUJw83SEhZ8NgZ7fQnv+H1Wb5sUceVheNheVV1RY
-	MjHOsf+fHlCaRlT+ByUybYdRFVjjL0KSbnpcQBFbT7Qz3xhL8DPpssadKJbxiZpdtux/aYJKbb+4B
-	VxCNnEnw==;
+	bh=1qMQE0AACesegxwD6tXbPfTg4SMY0l9zyrdfzQoBDKA=; b=g4xji6wpbNe/TG5eTCWf6MYz1S
+	/QMkTOxFom1u0/Ny8jUGeXn4R9YPeXCbz6rEBErq2Pzmz39E2dG31l/n29Ccr+BelAsdFS/Fi1WpK
+	X95Qd3LE1C3RHHZAHEy7GqKM47plFruYhf3c9nPgBOjO8vN2/1LDpw6JKFNdmzbxUe2aE05Fe7K/c
+	8uT6d63ZGlAMAIVyXcdSApCDlIqpCxhWId3+AHnWLfibcJ7pSQeyjbvocrP1MSLYGWvusKKVazBEP
+	5MjGRiO8Ngxe0awqQk/0q2J2G6ApUTzeO+RJLXbOlXOgxxg3eMlPkrYviqKCfwRwfnhFuqCLCrxi9
+	AQofBN2A==;
 Received: from [213.244.170.152] (helo=phil.localnet)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1ur9ze-0005xU-Cd; Wed, 27 Aug 2025 08:50:50 +0200
+	id 1urA28-0007N1-BG; Wed, 27 Aug 2025 08:53:24 +0200
 From: Heiko Stuebner <heiko@sntech.de>
 To: Yury Norov <yury.norov@gmail.com>,
  Rasmus Villemoes <linux@rasmusvillemoes.dk>,
@@ -84,13 +84,13 @@ Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
  linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, llvm@lists.linux.dev,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 Subject:
- Re: [PATCH v3 01/20] bitmap: introduce hardware-specific bitfield operations
-Date: Wed, 27 Aug 2025 08:50:49 +0200
-Message-ID: <9063025.MhkbZ0Pkbq@phil>
-In-Reply-To: <20250825-byeword-update-v3-1-947b841cdb29@collabora.com>
+ Re: [PATCH v3 02/20] mmc: dw_mmc-rockchip: switch to FIELD_PREP_WM16 macro
+Date: Wed, 27 Aug 2025 08:53:23 +0200
+Message-ID: <11595144.NyiUUSuA9g@phil>
+In-Reply-To: <20250825-byeword-update-v3-2-947b841cdb29@collabora.com>
 References:
  <20250825-byeword-update-v3-0-947b841cdb29@collabora.com>
- <20250825-byeword-update-v3-1-947b841cdb29@collabora.com>
+ <20250825-byeword-update-v3-2-947b841cdb29@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -100,34 +100,22 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-Am Montag, 25. August 2025, 10:28:21 Mitteleurop=C3=A4ische Sommerzeit schr=
+Am Montag, 25. August 2025, 10:28:22 Mitteleurop=C3=A4ische Sommerzeit schr=
 ieb Nicolas Frattaroli:
-> Hardware of various vendors, but very notably Rockchip, often uses
-> 32-bit registers where the upper 16-bit half of the register is a
-> write-enable mask for the lower half.
+> The era of hand-rolled HIWORD_UPDATE macros is over, at least for those
+> drivers that use constant masks.
 >=20
-> This type of hardware setup allows for more granular concurrent register
-> write access.
+> Switch to the new FIELD_PREP_WM16 macro in hw_bitfield.h, which has
+> error checking. Instead of redefining the driver's HIWORD_UPDATE macro
+> in this case, replace the two only instances of it with the new macro,
+> as I could test that they result in an equivalent value.
 >=20
-> Over the years, many drivers have hand-rolled their own version of this
-> macro, usually without any checks, often called something like
-> HIWORD_UPDATE or FIELD_PREP_HIWORD, commonly with slightly different
-> semantics between them.
->=20
-> Clearly there is a demand for such a macro, and thus the demand should
-> be satisfied in a common header file. As this is a convention that spans
-> across multiple vendors, and similar conventions may also have
-> cross-vendor adoption, it's best if it lives in a vendor-agnostic header
-> file that can be expanded over time.
->=20
-> Add hw_bitfield.h with two macros: FIELD_PREP_WM16, and
-> FIELD_PREP_WM16_CONST. The latter is a version that can be used in
-> initializers, like FIELD_PREP_CONST.
->=20
-> Suggested-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+> Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-Acked-by: Heiko Stuebner <heiko@sntech.de>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
+and going from $random-hex-value to GENMASK is a nice added benefit
 
 
 
