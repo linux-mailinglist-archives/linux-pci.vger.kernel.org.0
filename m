@@ -1,150 +1,122 @@
-Return-Path: <linux-pci+bounces-34941-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-34942-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4238B38A8F
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 21:57:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DC13B38E86
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 00:36:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 83691364AA4
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 19:57:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8FD3B160EF1
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Aug 2025 22:36:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6824F2E7BDA;
-	Wed, 27 Aug 2025 19:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A124304BB2;
+	Wed, 27 Aug 2025 22:36:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WdO7UUwv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUpxeAZt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B289C2D24B2
-	for <linux-pci@vger.kernel.org>; Wed, 27 Aug 2025 19:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3704438B;
+	Wed, 27 Aug 2025 22:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756324646; cv=none; b=gN5inD37b85c2Pqjd2LlPJI2ELuPPsZ8NOgTfv4gKVRo7qMF46c2QwAkb9CjLK80Da7NLZBiUw19B/P5xGfwM0iYZXs2PIoadcr/l7SE3sc4y8Q1f97bKNHVbgegdu17RCJyE79pIxgS810BualPNjiMdLrccpy5KPLDqVz7GMc=
+	t=1756334169; cv=none; b=QDggZiLqi8kJNimMoCLdNCDFT6jgIhCcST7tCPT4a+i9cYs1Pks/oT3Fd+qt4aThe93oOGE663bV1ezvbt3RPLD0SxeejvlxyWXXXFH2/1ULrsnYoW1wE1rx2Iaxm982WortLHTmebSaKPY7lEGMsfJINZz4VbgaG8zw8fnL2J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756324646; c=relaxed/simple;
-	bh=dN/0LGTTO2mIMuv5CAHk8QNgW0R0zS/JdxacWvuYn5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qf0u3CS/186oAmHiElLPVjG6k1wFS4WfMyxy15VWYO2QRF3n/lAeO7aSFINzIgUTFJgBto1SCIYyCQsFI8/Ro7lzkiLOKVaDtJyW9srh5kTwzmmMaCTc9Iq35V2cwS/5ZcBI82IEFs8PSd99u2149Nd0wAWM7CUtx+jDdGx3dfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WdO7UUwv; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756324645; x=1787860645;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dN/0LGTTO2mIMuv5CAHk8QNgW0R0zS/JdxacWvuYn5s=;
-  b=WdO7UUwvKx2qwdbTR5HL22oPjBJM7836MoghbV+DXwSmERznqQMpXyVP
-   UdD6225m3WnodA4m3ot1wxWXN6/ICbRQUF8VGh8zWxh2bX4n0eY2FCQO2
-   lKw6ufcfSR8un/ad7zrdzeIr2enDFDbphMUSm0yzOMy7CFW9GtVKXbO+9
-   I5imXNo5iY7AQtQcbaqpxIdiL5Ik/juX+hdgNGvjyEZgOMR5Tn9xTHB5i
-   ZRv9Eb+XKRI1A9MhQy/sB9s3Sfp+bcEvAtYCYVdoGIp0B5aHuIH+YDryz
-   6PRcblsZ34Xo988Ef3LQy1Xk90sYo1fzH5StMAl/3U48/SGkf3pFTthF9
-   Q==;
-X-CSE-ConnectionGUID: 1Zdhjlm9Sh6rJLlzYopScA==
-X-CSE-MsgGUID: RJyRlp7zQRi+fgdjKz8v0g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11535"; a="62229476"
-X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
-   d="scan'208";a="62229476"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2025 12:57:24 -0700
-X-CSE-ConnectionGUID: s2dnWLKURQGgaASzRZRyYQ==
-X-CSE-MsgGUID: MvZNH5TnRHeDmqnNozbKUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
-   d="scan'208";a="200820932"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2025 12:57:23 -0700
-Received: from [10.124.223.227] (unknown [10.124.223.227])
-	by linux.intel.com (Postfix) with ESMTP id 8CC2820B571C;
-	Wed, 27 Aug 2025 12:57:22 -0700 (PDT)
-Message-ID: <64a661bd-cb64-4850-90d8-f34de9457173@linux.intel.com>
-Date: Wed, 27 Aug 2025 12:56:41 -0700
+	s=arc-20240116; t=1756334169; c=relaxed/simple;
+	bh=SuvtG9zPU1paS6zdtAQLH1EmQzS92Y488uepGCslfWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=FANBEHsYc+JZAcAgVqyNA+ReDGEuKt0Ah7/hf+bqGxWM7BpFfzRTvZgQr14mz6fAfvRX08wUyjgEmxB5Vy0+nsxhxKjn+LAS/m8WxQ3Y4gR11WV0iaGWqhAUFDNEGTm3Sw486jybZDpMsHrwDRcueNuKi/3FfmjgNXF24HbV2K0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DUpxeAZt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C3EBC4CEEB;
+	Wed, 27 Aug 2025 22:36:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756334168;
+	bh=SuvtG9zPU1paS6zdtAQLH1EmQzS92Y488uepGCslfWI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DUpxeAZt3sd2SF+CHF9cOy/FaqwBpkfO3QmQLN4WtjqYJww1JgdN330EJgtOo7awf
+	 xyWVC65Ik9s82mLjd16u/fsvSuu23dv4M1YBxCe8bO6CXWEgzoRLhpV3WDHPmP25aY
+	 MN84rM34MoHWDkORX0/iiQ1n3JoUADeR5wXKbBAovlj1sAMI5uZeJDeOfTYi0lz+zn
+	 V5/DUusNTXr35xQCbizoSyjKjZgXsropAj0Da/2jC4EKIm5VEVn251opw5aNwUVvou
+	 RRsuPYOe7vPF9M/TvmOxlhhB1X2T3hVX9lRk7L3x0iNPNnhqbMmQokcb4oci+E0njx
+	 QPfbX1CvuOzSQ==
+Date: Wed, 27 Aug 2025 17:36:06 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Andreas Larsson <andreas@gaisler.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-pci@vger.kernel.org, sparclinux@vger.kernel.org,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Yinghai Lu <yinghai@kernel.org>,
+	Igor Mammedov <imammedo@redhat.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-kernel@vger.kernel.org,
+	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 00/24] PCI: Bridge window selection improvements
+Message-ID: <20250827223606.GA915856@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI/AER: Support errors introduced by PCIe r6.0
-To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org
-References: <21f1875b18d4078c99353378f37dcd6b994f6d4e.1756301211.git.lukas@wunner.de>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <21f1875b18d4078c99353378f37dcd6b994f6d4e.1756301211.git.lukas@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250822145605.18172-1-ilpo.jarvinen@linux.intel.com>
 
+On Fri, Aug 22, 2025 at 05:55:41PM +0300, Ilpo Järvinen wrote:
+> This series is based on top of the three resource fitting and
+> assignment algorithm fixes (v3).
+> 
+> PCI resource fitting and assignment code needs to find the bridge
+> window a resource belongs to in multiple places, yet, no common
+> function for that exists. Thus, each site has its own version of
+> the decision, each with their own corner cases, misbehaviors, and
+> some resulting in complex interfaces between internal functions.
+> ...
 
-On 8/27/25 6:41 AM, Lukas Wunner wrote:
-> PCIe r6.0 defined five additional errors in the Uncorrectable Error
-> Status, Mask and Severity Registers (PCIe r7.0 sec 7.8.4.2ff).
+> I've tried to look out for any trouble that code under arch/ could
+> cause after the flags start to behave differently and therefore ended
+> up consolidating arch/ code to use pci_enable_resources(). My
+> impression is that strictly speaking only the MIPS code would break
+> similar to PCI core's copy of pci_enable_resources(), the others were
+> much more lax in checking so they'd likely keep working but
+> consolidation seemed still the best approach there as the enable checks
+> seemed diverging for no apparent reason.
+> ...
 
-is 2ff a typo ?
+>   m68k/PCI: Use pci_enable_resources() in pcibios_enable_device()
+>   sparc/PCI: Remove pcibios_enable_device() as they do nothing extra
+>   MIPS: PCI: Use pci_enable_resources()
+> ...
 
->
-> lspci has been supporting them since commit 144b0911cc0b ("ls-ecaps:
-> extend decode support for more fields for AER CE and UE status"):
->
-> https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/commit/?id=144b0911cc0b
->
-> Amend the AER driver to recognize them as well, instead of logging them as
-> "Unknown Error Bit".
->
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: stable@vger.kernel.org
-> ---
+>  arch/m68k/kernel/pcibios.c   |  39 +-
+>  arch/mips/pci/pci-legacy.c   |  38 +-
+>  arch/sparc/kernel/leon_pci.c |  27 --
+>  arch/sparc/kernel/pci.c      |  27 --
+>  arch/sparc/kernel/pcic.c     |  27 --
+> ...
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+I love the fact that you're doing so much cleanup.  Thanks for all the
+work in this!
 
-> Last amendment of aer_uncorrectable_error_string[] was in 2019 for an
-> error introduced in PCIe r3.1, see commit 6458b438ebc1 ("PCI/AER: Add
-> PoisonTLPBlocked to Uncorrectable error counters").
->
->   drivers/pci/pcie/aer.c | 12 ++++++------
->   1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index e286c19..15ed541 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -43,7 +43,7 @@
->   #define AER_ERROR_SOURCES_MAX		128
->   
->   #define AER_MAX_TYPEOF_COR_ERRS		16	/* as per PCI_ERR_COR_STATUS */
-> -#define AER_MAX_TYPEOF_UNCOR_ERRS	27	/* as per PCI_ERR_UNCOR_STATUS*/
-> +#define AER_MAX_TYPEOF_UNCOR_ERRS	32	/* as per PCI_ERR_UNCOR_STATUS*/
->   
->   struct aer_err_source {
->   	u32 status;			/* PCI_ERR_ROOT_STATUS */
-> @@ -525,11 +525,11 @@ void pci_aer_exit(struct pci_dev *dev)
->   	"AtomicOpBlocked",		/* Bit Position 24	*/
->   	"TLPBlockedErr",		/* Bit Position 25	*/
->   	"PoisonTLPBlocked",		/* Bit Position 26	*/
-> -	NULL,				/* Bit Position 27	*/
-> -	NULL,				/* Bit Position 28	*/
-> -	NULL,				/* Bit Position 29	*/
-> -	NULL,				/* Bit Position 30	*/
-> -	NULL,				/* Bit Position 31	*/
-> +	"DMWrReqBlocked",		/* Bit Position 27	*/
-> +	"IDECheck",			/* Bit Position 28	*/
-> +	"MisIDETLP",			/* Bit Position 29	*/
-> +	"PCRC_CHECK",			/* Bit Position 30	*/
-> +	"TLPXlatBlocked",		/* Bit Position 31	*/
->   };
->   
->   static const char *aer_agent_string[] = {
+Obviously all this code is quite sensitive, so I put it on
+pci/resource to get more exposure in -next.  If it turns out that we
+trip over things or just don't feel comfortable yet for v6.18, we can
+always defer this part until the next cycle.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+I will also watch for acks from the m68k, mips, and sparc maintainers
+for those pieces.
 
+Bjorn
 
