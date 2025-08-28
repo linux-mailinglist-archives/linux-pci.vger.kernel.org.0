@@ -1,106 +1,119 @@
-Return-Path: <linux-pci+bounces-35060-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35061-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4AA3B3ABDE
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 22:44:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1059AB3ABE6
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 22:47:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8B0E07AA59F
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 20:43:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C93B73A591A
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 20:47:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 809BB29BD82;
-	Thu, 28 Aug 2025 20:44:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38F4028506A;
+	Thu, 28 Aug 2025 20:47:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sMgXG6c5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="duuC6gdi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5603629B8CE;
-	Thu, 28 Aug 2025 20:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7536C27702F
+	for <linux-pci@vger.kernel.org>; Thu, 28 Aug 2025 20:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756413867; cv=none; b=rJsDvggg1T6FdN7F6Yj8NRFZc+4hMIalwy9pT/PR/fMt7o1sB7BofU/8mSBiDNkaAK9T6/aAcrNCv9YtEAcFIgoFsmoUk8YbYl+6N4Ott9GRU0/3eWDJVYNWZiqHHR8+241WDBK/oCXbk3Ns3a/FB8f2NBdyOue+VLTDq/BzZ8E=
+	t=1756414028; cv=none; b=ePmKNMAgniA5is3VlM756+i4AuZol6n1Lz7qnWyJIkDQkXtzeS+en8DdioVLYUCTDES1I4K/1M583XcKY5bglqFXW7CK83L84Zjq0oe8EoLlRgoe35mtTMOsj7DN8uFc9jck7mLdvLz+uljQT90jgawHKRD4OTA2EK7WyUezJHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756413867; c=relaxed/simple;
-	bh=A9xfoMdjSlzEQbmFLxGNICyxTXVOKwf8U9SEBOi7zxY=;
+	s=arc-20240116; t=1756414028; c=relaxed/simple;
+	bh=yypyaBN746HsDrUzE1kCYfLJaG9FQJercS2A7aMVfV4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=anDQRyj/BpTodTiPgC6oxFf2bdH37hsJLvxy6xXDrtMcWAsejZJmR8sd/Z+rFBe4ryRW8BdjfmfdyNlIusEdk9lSZCJdPIW7vqOAQy4TkZmrSJBtHYg8LBlH0ZnOvRygMOxkO0TAM2sT4Qmg/ctV9kUCXN7ON6Yp0YCFjviH8gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sMgXG6c5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB829C4CEF8;
-	Thu, 28 Aug 2025 20:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756413866;
-	bh=A9xfoMdjSlzEQbmFLxGNICyxTXVOKwf8U9SEBOi7zxY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sMgXG6c5r0F2j6uHbAxUEXg/Iwjpuhdsp6LNd5Ay6Zv9W0brGD5gfn6FPjIp+3DhJ
-	 YR5VLpJ6lfIwZUAIId3v31Rct4ZZHkFUCoHUyL2jCaaUsxcIpgKz6/AM3f0QSpBiP3
-	 Vn0e1Umw7u8TDr426GhX5Y3lNIK9regzoDgEkXxiH0EFtwi1KNULIfWP0oUhIMfzG4
-	 +qVbNoECgOkA8phdPnSiJV81viuvC1m2mqvxnkq21X4Md+mcRzHEswYHD46s0gymiA
-	 SeHEfKOzjytyy6HzyVIKCg0+2A0yO5pAAHyC/K5GRMdvsb8aFRSF2Ak5LY6qUhkFy/
-	 zR+WiGGXikRPg==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-61c51f57224so2031443a12.2;
-        Thu, 28 Aug 2025 13:44:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV2FegJCDY1xpLX52R25TzSbGgbraV72Fo5KcNAia/kfn2LoXv08vihyjfwDUX9z0TKuVF82nVSdSZL@vger.kernel.org, AJvYcCXc0CzhMce/VfMHWqFJ4cdaj3K9CrtqPvUvEiKq/zV+fIxG/GuvBYMw7AmAfU0gKiNFpp/QpaX7vd5tAVY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR7tGo6KjwEDXHM0D5C+vgCduf2sSS2V4LKVNOHBSmzD/3aMHD
-	19jx0wMMiHGDTTBq+xC2NV5mQgstDtjLrIwQE/WpCQ3vt/FlMgpH48hXWqQ7Tw++3A10ElEShu+
-	eDh6QorjVA6hKOWLgoP33YJr/qqH6jA==
-X-Google-Smtp-Source: AGHT+IHmaHsGzXsqZXLP072B8v9yXmczlE7ISXk6+PoY7QHyc5iqZ1e6HF7CJWcJn32gURZBOWNTew9u7ZvU1rpm47w=
-X-Received: by 2002:a05:6402:50ce:b0:61c:45bb:18f9 with SMTP id
- 4fb4d7f45d1cf-61c45bb2065mr14665701a12.38.1756413865474; Thu, 28 Aug 2025
- 13:44:25 -0700 (PDT)
+	 To:Cc:Content-Type; b=gtCX1BN8H+3AqPmtO8bCtf0qt03kHSkmV8iN7TjjFluNL36NAtykSHTDCtUCLRiMqqa2L4HpfJdwdWGJBDLsspeDUW5C10ptz8dWG7BH/Z4NxLiHCuGmaJa/NRC1b7SkIgvKK75QDdS21YRqmXx/+VD/A9Ghnc0f5UKNng8Wjqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=duuC6gdi; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3366ce6889bso9892861fa.0
+        for <linux-pci@vger.kernel.org>; Thu, 28 Aug 2025 13:47:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756414024; x=1757018824; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yypyaBN746HsDrUzE1kCYfLJaG9FQJercS2A7aMVfV4=;
+        b=duuC6gdiDFxj9zSs7kJC5i30idcZkpCgXs3RsvTPLn41WIrZiLyjg47iKXVgDp0fGy
+         sR1Ykp9kakPLjsqHqgAhVFhbv0MJWFPX7+pp+j8qDVg8p3yorBM7KzMIzdrCtrwfybW1
+         o01WRpxJ90KqhKvZoQJJZ1i49LoC3j6DIjaxxgSUalbD83CnnK/OMUPPX1R2VkjF9EJm
+         Fk5hvnS9St196MU70qE6Hm+tZ7nVCmBFILCDK0S7awwxLZAt9vNPeb/KWS6HLNT8iS/R
+         KZfT7vTv1YgLyn6coGjbr57UB3adlC6qzvmLRus9O1SIvmDkWsV+8bN4ho9ZEdC7M9BF
+         7sXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756414024; x=1757018824;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yypyaBN746HsDrUzE1kCYfLJaG9FQJercS2A7aMVfV4=;
+        b=uYQJu03AyHiPXHqBSWvldh5y2hDEJRBiQsqp0dzVF8x2LJEI7zjpZleNTBIFcrz7G8
+         5MGAhPcDKN+7QWod+Y5s+4rje30cXXCjk1xlSMsZdumJ0gYEbTJkmFGZd7F6117QNfl4
+         kqtpi7iq8/qUnjieYocus8SrC5liGpGRWV6rHneNSnzQIbIuPmriav3aSjdvmIBEgb5g
+         3tLq8ZqJVHp8GTNrZ8z04I8IgN/j6yL1zpEHzUr7NSTWwq+l8P1wXHBm9f2I01U+Vko0
+         +uTNZnA2mbuwQGZtqXnNaSC/4J5atZtgV0bx7aGeK2Wd5kCTvTt9K0fx3Hni0QMvrhwN
+         291Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVuocWR4rLxVxLd11gzFTkEoy4V2vhjKAPVbE+5E3Jp9fkcAc63PcDGbtn1OnwBd7NRRpULCqotxu8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzgd+RDQKL6vayapIPbGOPYV96iAYIJZotVj3WToFludZNrj4B2
+	qgmRTvJH7LE8OVAtuQ8oZ2XEUEOfNdBOCwh2Bv6TxLiaGNFGlHyq/n53X7F1bVU7BUFLFGU39Jg
+	fsma0/npfLJxRiiBaiWpXTneZP+ZbdTXd0Bu0gd41zA==
+X-Gm-Gg: ASbGncsN7acUfRHqCxVxInygR5ks8lvK3DLOgOhR/cx+QN7k0+axR20S8PgodXj5gd6
+	SyqXVEm0/Kwgam0jAuprd6UGcQLNyJHf/rtsVO3Ie+yQM0pEgwynTC+OpEy7rThusAQifNzHkl5
+	BGSYgqYUvcbjLcurlmePehy/byX6FeaSfTpI5wG3AVetYgGmkrJT1x26RuM4Tesah6kkR7W4jwM
+	T71Dsg=
+X-Google-Smtp-Source: AGHT+IE2uWhuibXcObFZ5VTNIy6zlok6JnK2MWtwL7cqbL+/SAGd1n7jHXQKxLY98v4CVTQiyLHeR0E2ooltz4RMmZg=
+X-Received: by 2002:a05:651c:23d2:10b0:333:f086:3092 with SMTP id
+ 38308e7fff4ca-33650e704femr56328661fa.11.1756414024499; Thu, 28 Aug 2025
+ 13:47:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250828135951.758100-1-18255117159@163.com>
-In-Reply-To: <20250828135951.758100-1-18255117159@163.com>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 28 Aug 2025 15:44:14 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ0cXB4bz+DAUq25V5suS0D-CHnujh0UyxA66UjajJO-g@mail.gmail.com>
-X-Gm-Features: Ac12FXyKWvd7egVBT8QtrvjiQm0FJq9Mat_qcB8tOL6kSDNTTls_deGOK1a5IJ8
-Message-ID: <CAL_JsqJ0cXB4bz+DAUq25V5suS0D-CHnujh0UyxA66UjajJO-g@mail.gmail.com>
-Subject: Re: [PATCH v5 00/13] PCI: dwc: Refactor register access with
- dw_pcie_*_dword helper
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, mani@kernel.org, 
-	kwilczynski@kernel.org, jingoohan1@gmail.com, cassel@kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Hans Zhang <hans.zhang@cixtech.com>
+References: <20250715034320.2553837-1-jacky_chou@aspeedtech.com>
+ <20250715034320.2553837-8-jacky_chou@aspeedtech.com> <CACRpkdarn16N9637dL=Qo8X8o==7T=wBfHdXPczU=Rv3b270KQ@mail.gmail.com>
+ <SEYPR06MB513491FF4398138F8A52A5469D38A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+In-Reply-To: <SEYPR06MB513491FF4398138F8A52A5469D38A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 28 Aug 2025 22:46:53 +0200
+X-Gm-Features: Ac12FXzlvTJpPFPcU9uQ_fN2isTkkss2_BjIEzvxJnxhjmRwD11F1FNpCNVPGsc
+Message-ID: <CACRpkdbmRpH1+HtW+vbK7rVk6OCEve54BxTAxrUhX631a2KP1w@mail.gmail.com>
+Subject: Re: [PATCH v2 07/10] pinctrl: aspeed-g6: Add PCIe RC PERST pin group
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>, "mani@kernel.org" <mani@kernel.org>, 
+	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "joel@jms.id.au" <joel@jms.id.au>, 
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>, 
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 28, 2025 at 9:00=E2=80=AFAM Hans Zhang <18255117159@163.com> wr=
-ote:
->
-> From: Hans Zhang <hans.zhang@cixtech.com>
->
-> Register bit manipulation in DesignWare PCIe controllers currently
-> uses repetitive read-modify-write sequences across multiple drivers.
-> This pattern leads to code duplication and increases maintenance
-> complexity as each driver implements similar logic with minor variations.
->
-> This series introduces dw_pcie_*_dword() to centralize atomic
-> register modification. The helper performs read-clear-set-write operation=
-s
-> in a single function, replacing open-coded implementations. Subsequent
-> patches refactor individual drivers to use this helper, eliminating
-> redundant code and ensuring consistent bit handling.
->
-> The change reduces overall code size by ~350 lines while improving
-> maintainability. Each controller driver is updated in a separate
-> patch to preserve bisectability and simplify review.
+On Wed, Aug 27, 2025 at 5:08=E2=80=AFAM Jacky Chou <jacky_chou@aspeedtech.c=
+om> wrote:
 
-If RMW functions are an improvement, then they should go in io.h. I
-don't think they are because they obfuscate the exact register
-modifications and the possible need for locking. With common API,
-anyone that understands kernel APIs will know what's going on. With a
-driver specific API, then you have to go lookup what the API does
-exactly. So I don't think this is an improvement.
+> May I remove this patch in the next version of this series?
 
-Rob
+Yes, and in fact it could have been sent separately from the
+rest as well, no need to keep things in a big bundle, it's
+easier to merge in small pieces.
+
+The only upside with the big bundles is to help developers
+develop all in one place and have a "big branch" to test.
+But it doesn't really help the Linux subsystem maintainers.
+
+Yours,
+Linus Walleij
 
