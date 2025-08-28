@@ -1,69 +1,58 @@
-Return-Path: <linux-pci+bounces-35011-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35012-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77BD8B39DF4
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 15:00:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E16A5B39E04
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 15:03:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 21A7618947AD
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 13:00:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 24F881896038
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 13:03:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 811BE30F950;
-	Thu, 28 Aug 2025 13:00:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83C552E093F;
+	Thu, 28 Aug 2025 13:03:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GrHdgpmx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5j+dL3z"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E43D86337;
-	Thu, 28 Aug 2025 13:00:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD3A1990A7;
+	Thu, 28 Aug 2025 13:03:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756386012; cv=none; b=s8T6e5W5PBkiY6j9XX+k1KzrVL84MtCdRmzoYqBKLroRpkkR34zCKpREyW7Q16Bzitge75nLa9mlIqUG0UX+X6Gyb7iOnS2X1iWdlKzWpSACNIemdnsRvsbQpG8dz/1DHxw43kJxB6OkyXubfZ0pRTZx/7FD8+b4RVnKFoqxCOM=
+	t=1756386194; cv=none; b=E2uH317IyPiiuMviwIU5XEJpPOkNx0b+a6s9UttTXK6ZulD91WVyit9Txt6tURF9p8Plu9fnFRZKJ7ahF1n0C0RLjWzWlOqCm/Rmaw91mvts/V27t4QOIS0bEY0e0woF2QpDMQZfU3Dnibdfzh/z5bvlwZhyJq+C6pKUKvDOXi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756386012; c=relaxed/simple;
-	bh=rX0j8rIu7l1wKKVnMUgdtQN5WgVXsm2ecMpja6Lgwos=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NO8qxoE/rhV1pG1blCeceqf0OFBWcO4KoV7aP4l7E3Vww3ZG+rvqb7c2q1bve9gPM0BK5i346tdUuedHAcFnPvNRhiOYSJ2twpqIGnibwSFMmmG50QZQMRZjyJgAlq2nAFRLQShVcSpExnjvBtZUw0jpoWd6cYcJb7moEMTiLpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GrHdgpmx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42F0EC4CEF5;
-	Thu, 28 Aug 2025 13:00:04 +0000 (UTC)
+	s=arc-20240116; t=1756386194; c=relaxed/simple;
+	bh=UqGgExGSmmczCApYtSEd4+hLi+6rKVLvaHJaF8/jUQM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gvwKE3yckqc8q9IpTfPiTyUkW8CLEDWvojAorWZF5gSU1+rHxbbXyPmwQ4ZbSfTwlPWsNbZdabJnP3SydHkdFSKVCGahxzhs9DbDDKihkOmytmKs5cISg/AYQzThlG7lQnAFbvnRk7a+NsQkUVf1WgVVYk/KYqi5egkevFvepxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5j+dL3z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D16BBC4CEF5;
+	Thu, 28 Aug 2025 13:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756386011;
-	bh=rX0j8rIu7l1wKKVnMUgdtQN5WgVXsm2ecMpja6Lgwos=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GrHdgpmxiEiN799FqNTj74ysbOc87fJ3Jd97uGB8oKnEXqJR4K+cmLP0lwF/NktKQ
-	 ORQ4m7i57lSYQZvbvfZEpQUHptwdYHXlOKTOfAEuvqHnKaSRQmWIrADPICVvfnW/zm
-	 J8koj+uCjYo9XzRA5Bm7tphKL9k/EyA7jOrxaEG3IgS/9qV11iGXSmo2hWCM15JN8G
-	 ffHQK57wBNPG0liccYzGGyrgOQBUoFteB13Jq0Whnw5n4Z6XEaLyjISincIwW4E67J
-	 fTvQFuNOlDZ0Urab+n3NeVEzvRK6emPQFghhXw9cp0Az6jZdDS+TB9yFckTJzwNciY
-	 P53urWk7SYuAA==
-Date: Thu, 28 Aug 2025 18:30:00 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Lukas Wunner <lukas@wunner.de>, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	chaitanya chundru <quic_krichai@quicinc.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
-	Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Krzysztof Wilczy??ski <kwilczynski@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, quic_vbadigan@quicnic.com, amitk@kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com, 
-	linux-arm-kernel@lists.infradead.org, Dmitry Baryshkov <lumag@kernel.org>, 
-	Shawn Anastasio <sanastasio@raptorengineering.com>, Timothy Pearson <tpearson@raptorengineering.com>
-Subject: Re: [PATCH v6 7/9] PCI: Add pcie_link_is_active() to determine if
- the link is active
-Message-ID: <zzrgt2dgkyap2dacmh4afg7yf2jrwohg3qkocgep3shehnzpli@4jggy6ged6pe>
-References: <20250828-qps615_v4_1-v6-0-985f90a7dd03@oss.qualcomm.com>
- <20250828-qps615_v4_1-v6-7-985f90a7dd03@oss.qualcomm.com>
- <aLBMdeZbsplpPIsX@wunner.de>
- <r2bhgghyunfcy5ppjcvxm746kzh7vyhsnbphlw4pj52wxtuxru@qzy7earmlnjf>
+	s=k20201202; t=1756386193;
+	bh=UqGgExGSmmczCApYtSEd4+hLi+6rKVLvaHJaF8/jUQM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=m5j+dL3zcHSC9249V7PVPQ1WI3yOkJZSJgrUMRnek5Q1CwrkNogjU2ohpHwb5vnY3
+	 aitvmovpyLcVRN2BtS4O9zUNat7v2W+E/Q5SnOzCRovyqHDKITN2drokLrnZPosN7i
+	 szsBLBzfNHx1gfYi3NANX1ZdeMBSp5rcN0trj6R+AO3YML71s+fJ3GFZ2ASRyASe5/
+	 oQ61NtxH6/VUeZ3IGkMei9L/iwtBs6F4/EpweOl8fOEJNCxM8ebfznXA7KmnCoT3lO
+	 bPV2Pjkk7e6oEQ/uJo2kxjdWXQpsEt9D1tat18434/E6rHhiG+eFS2EAAEiMIPdJhG
+	 wnCmXjPv+oJrw==
+X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	linux-pci@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, bhelgaas@google.com, yilun.xu@linux.intel.com,
+	aik@amd.com
+Subject: Re: [PATCH 2/7] PCI/TSM: Add pci_tsm_guest_req() for managing TDIs
+In-Reply-To: <20250827035259.1356758-3-dan.j.williams@intel.com>
+References: <20250827035259.1356758-1-dan.j.williams@intel.com>
+ <20250827035259.1356758-3-dan.j.williams@intel.com>
+Date: Thu, 28 Aug 2025 18:32:59 +0530
+Message-ID: <yq5awm6nppj0.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,38 +60,66 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <r2bhgghyunfcy5ppjcvxm746kzh7vyhsnbphlw4pj52wxtuxru@qzy7earmlnjf>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 28, 2025 at 03:48:26PM GMT, Dmitry Baryshkov wrote:
-> On Thu, Aug 28, 2025 at 02:32:53PM +0200, Lukas Wunner wrote:
-> > On Thu, Aug 28, 2025 at 05:39:04PM +0530, Krishna Chaitanya Chundru wrote:
-> > > Add pcie_link_is_active() a common API to check if the PCIe link is active,
-> > > replacing duplicate code in multiple locations.
-> > > 
-> > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > > Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
-> > > Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
-> > 
-> > I think the submitter of the patch (who will become the git commit author)
-> > needs to come last in the Signed-off-by chain.
-> 
-> Not quite... The git commit author is the author of the commit and
-> usually the _first_ person in the SoB list. Then the patch is being
-> handled by several other people which leave their SoBs. The final SoB is
-> usually an entry from the maintainer who applied the patch to the Git.
-> 
+Dan Williams <dan.j.williams@intel.com> writes:
 
-Still, the submitter's s-o-b should come last to clearly represent the history.
-This patch was initially authored by Krishna, submitted by two other folks, and
-now Krishna is again submitting it again.
+> +/**=20
+> + * enum pci_tsm_req_scope - Scope of guest requests to be validated by T=
+SM
+> + *
+> + * Guest requests are a transport for a TVM to communicate with a TSM + =
+DSM for
+> + * a given TDI. A TSM driver is responsible for maintaining the kernel s=
+ecurity
+> + * model and limit commands that may affect the host, or are otherwise o=
+utside
+> + * the typical TDISP operational model.
+> + */
+> +enum pci_tsm_req_scope {
+> +	/**
+> +	 * @PCI_TSM_REQ_INFO: Read-only, without side effects, request for
+> +	 * typical TDISP collateral information like Device Interface Reports.
+> +	 * No device secrets are permitted, and no device state is changed.
+> +	 */
+> +	PCI_TSM_REQ_INFO =3D 0,
+> +	/**
+> +	 * @PCI_TSM_REQ_STATE_CHANGE: Request to change the TDISP state from
+> +	 * UNLOCKED->LOCKED, LOCKED->RUN. No any other device state,
+> +	 * configuration, or data change is permitted.
+> +	 */
+> +	PCI_TSM_REQ_STATE_CHANGE =3D 1,
+> +	/**
+> +	 * @PCI_TSM_REQ_DEBUG_READ: Read-only request for debug information
+> +	 *
+> +	 * A method to facilitate TVM information retrieval outside of typical
+> +	 * TDISP operational requirements. No device secrets are permitted.
+> +	 */
+> +	PCI_TSM_REQ_DEBUG_READ =3D 2,
+> +	/**
+> +	 * @PCI_TSM_REQ_DEBUG_WRITE: Device state changes for debug purposes
+> +	 *
+> +	 * The request may affect the operational state of the device outside of
+> +	 * the TDISP operational model. If allowed, requires CAP_SYS_RAW_IO, and
+> +	 * will taint the kernel.
+> +	 */
+> +	PCI_TSM_REQ_DEBUG_WRITE =3D 3,
+> +};
+> +
 
-So even if it results in dual s-o-b tag, I think it would be canonically
-correct.
+Will all architectures need to support all the above pci_tsm_req_scope
+values?
 
-- Mani
+For example, on ARM, I=E2=80=99ve implemented a simpler approach [1] by usi=
+ng an
+architecture-specific pci_tsm_req_scope / type. This simplifies
+the implementation, as I can access `info->req` and `info->resp`
+directly within the same callback, without needing an additional
+structure to carry arch-specific request types like
+`ARM_CCA_DA_OBJECT_SIZE` or `ARM_CCA_DA_OBJECT_READ`.
 
--- 
-மணிவண்ணன் சதாசிவம்
+[1] https://git.gitlab.arm.com/linux-arm/linux-cca/-/commit/ae6e667a6426fde=
+ff9cdf9f6807acb8a5d5d601f
+
+-aneesh
 
