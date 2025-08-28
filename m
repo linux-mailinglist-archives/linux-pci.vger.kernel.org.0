@@ -1,65 +1,53 @@
-Return-Path: <linux-pci+bounces-35036-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35037-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A91A9B3A46A
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 17:29:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A09AB3A477
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 17:31:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50D4D466537
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 15:28:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DABDC1C83B88
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 15:31:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4A9A22CBCB;
-	Thu, 28 Aug 2025 15:28:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 347DC224B14;
+	Thu, 28 Aug 2025 15:30:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cIH9V08N"
+	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="I9rzgNVJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C4022B584;
-	Thu, 28 Aug 2025 15:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974FA212B3D;
+	Thu, 28 Aug 2025 15:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756394908; cv=none; b=ItGTBGS308tbPMm1+f+/1KQvvdfj2shqQflvs7nzx9nVFbMk2xxAwOgtffdjQaYR1f77nduof1nZ9IB+suPvxoC0d4VcZ5d5R9Hi8MZkaEmQZhnfeEG6UIUPsjMHotet403ZCSRtHdM8m903t6HSRJVnRKFwsbylPV8iBap5WEY=
+	t=1756395043; cv=none; b=gr/ZvWTaT7QMF/SXVKFZjbtrpMr6HLrtdqdvcApN8egGfwreI8vIWp6AYkX/8+nalpg1Lh93JwNIZR6ExCI4OpSmlRYWLkTmto6LkMKXSOwmdIXVqsiH2Cl8dsTIZSSdqL020j2QVpXGJYb/Qg9Y2cvF0W17H0vEa6geBN/Hiy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756394908; c=relaxed/simple;
-	bh=iClcbCa9JB2d1027k7WRKvCy1HhhhYYbblhgnKX/53o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZhvwEcc7AeY7x+yfVrriwLvl8TXbkuaK/V35KDAChwbC+4adseTbx8GNmNP06TTcHhztgJaGC/vvecT98BhOh4bzR/5rfruwIi0h8rtYr+f/GMgR3PaCmzozAMiiKYggcCFN/tN8wCeXvbHWcPqwIXZwQJdkRJjNmgkZGIDrGCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cIH9V08N; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756394907; x=1787930907;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=iClcbCa9JB2d1027k7WRKvCy1HhhhYYbblhgnKX/53o=;
-  b=cIH9V08NsIilhhWMIKCfOPJrL/ab2r10PAOUIbSrrKbVspeVjzhSElCE
-   pvZMRGKl61DDEF6Ll/hdFbgIFGO7bXTD65TN+TP/0iy29dVfZ5Ws78BOm
-   0/M+94fHgd7JBD/mEwlP81puagzmItodHXJ/61dUASMFT3TnA1eaWxin6
-   PpKTw8YeLCZpzo2HldWVINMQ5AMhG+VaWw7n6MeRjutd5tX/pELNk5UK1
-   oII1kyPx52DNcbKX/JpKa6dX+bhJLDhcixVoCybJocAsDNJ07G1n5Txjr
-   RmlKu/hfMh8AjoV0ucGaPGlrTBQ092bUzlCJGsODodlvv1fNM+FUZDyDH
-   w==;
-X-CSE-ConnectionGUID: Xgbcxg6uSla/aU87yIf32A==
-X-CSE-MsgGUID: AMWUVBXLRfGG5+V5zYwrmw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11536"; a="76269003"
-X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
-   d="scan'208";a="76269003"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 08:28:26 -0700
-X-CSE-ConnectionGUID: YTVs03eDQjmSDgE/qvpC6Q==
-X-CSE-MsgGUID: cC1wVzf6SayOIlRWoutfLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
-   d="scan'208";a="170317184"
-Received: from anmitta2-mobl4.gar.corp.intel.com (HELO [10.247.118.49]) ([10.247.118.49])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 08:28:15 -0700
-Message-ID: <6e0f0a5e-38a8-47d6-aa56-63c5313fdf64@intel.com>
-Date: Thu, 28 Aug 2025 08:28:10 -0700
+	s=arc-20240116; t=1756395043; c=relaxed/simple;
+	bh=D+JfpppeHZ1C8yo8ivhBtE7YLsWzyAKpWZYW+10lhR8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Subject; b=NP9OSA77Vw9BV9Tk8Hq7l1GaNDy3BqjItGoLU09z5Klio4fwdhsQmJ5HrgBeww7GkmYwhd2rmfOqub6iJNoLIogw93cKHI3Uy1VPduT0M54a1vVF6wP+WkokM7+ui5YvVCAM3AvdafUUXW1lCm7lNeVnfbYnks8lNNf3zewvfo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=I9rzgNVJ; arc=none smtp.client-ip=204.191.154.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+	MIME-Version:Date:Message-ID:content-disposition;
+	bh=8wwntsh07I8G4apS4KKKdzc7kvaw5ntZiBPOIZD7YDM=; b=I9rzgNVJLrEUcO+No1a+J5d4KC
+	kgEZF9AI+vmzB3708cCepfbdyyzb6L8FgQtCFEQQFKsBcV4AAmmb69NEPB0IlPgfjnkTLL2cIcXCv
+	s0JayE282zt876ZqzX7lmHUlUJFHrGRuTgO4r2uuvZPc7x3LD511PvCtX0DeXYKIhUa/dVaSHWTUQ
+	7xr23qBBadu9FdlquygYJK923Gemyn3v8IesDqU15K94OelFSfVlYV6JIBqmpJ2iRqmOHyoXcamJj
+	rQDWy6X3Par7PBVRNc0GhwMcpwihQj73dFDOQ/nwobfL8P2bJc/LGI+KcWzECkvUNjPZTbnO2fIwK
+	O1hRrO1Q==;
+Received: from d104-157-31-28.abhsia.telus.net ([104.157.31.28] helo=[192.168.1.250])
+	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <logang@deltatee.com>)
+	id 1ureZq-007kQ3-1n;
+	Thu, 28 Aug 2025 09:30:13 -0600
+Message-ID: <51a1571e-bd20-4d1c-90c5-0b94d53fbd3a@deltatee.com>
+Date: Thu, 28 Aug 2025 09:30:09 -0600
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,123 +55,35 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 03/23] cxl/pci: Remove unnecessary CXL Endpoint
- handling helper functions
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
- ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
- rrichter@amd.com, dan.carpenter@linaro.org,
- PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
- Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250827013539.903682-1-terry.bowman@amd.com>
- <20250827013539.903682-4-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250827013539.903682-4-terry.bowman@amd.com>
+To: Erick Karanja <karanja99erick@gmail.com>, kurt.schwemmer@microsemi.com,
+ bhelgaas@google.com
+Cc: julia.lawall@inria.fr, kelvin.cao@microchip.com,
+ wesley.sheng@microchip.com, stephen.bates@microsemi.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250828093556.810911-1-karanja99erick@gmail.com>
+Content-Language: en-CA
+From: Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20250828093556.810911-1-karanja99erick@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 104.157.31.28
+X-SA-Exim-Rcpt-To: karanja99erick@gmail.com, kurt.schwemmer@microsemi.com, bhelgaas@google.com, julia.lawall@inria.fr, kelvin.cao@microchip.com, wesley.sheng@microchip.com, stephen.bates@microsemi.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Level: 
+Subject: Re: [PATCH] PCI: switchtec: Replace manual locks with guard
+X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
 
 
-On 8/26/25 6:35 PM, Terry Bowman wrote:
-> The CXL driver's cxl_handle_endpoint_cor_ras()/cxl_handle_endpoint_ras()
-> are unnecessary helper functions used only for Endpoints. Remove these
-> functions as they are not common for all CXL devices and do not provide
-> value for EP handling.
+On 2025-08-28 03:35, Erick Karanja wrote:
+> Replace lock/unlock pairs with guards to simplify and tidy up the code
 > 
-> Rename __cxl_handle_ras to cxl_handle_ras() and __cxl_handle_cor_ras()
-> to cxl_handle_cor_ras().
+> Generated-by: Coccinelle SmPL
 > 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
 
-> 
-> ---
-> 
-> Changes in v10->v11:
-> - None
-> ---
->  drivers/cxl/core/ras.c | 22 ++++++----------------
->  1 file changed, 6 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index c4f0fa7e40aa..544a0d8773fa 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -200,7 +200,7 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
->  
-> -static void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base)
-> +static void cxl_handle_cor_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base)
->  {
->  	void __iomem *addr;
->  	u32 status;
-> @@ -236,14 +236,14 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
->  static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
->  				      struct cxl_dport *dport)
->  {
-> -	return __cxl_handle_cor_ras(cxlds, dport->regs.ras);
-> +	return cxl_handle_cor_ras(cxlds, dport->regs.ras);
->  }
->  
->  /*
->   * Log the state of the RAS status registers and prepare them to log the
->   * next error status. Return 1 if reset needed.
->   */
-> -static bool __cxl_handle_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base)
-> +static bool cxl_handle_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base)
->  {
->  	u32 hl[CXL_HEADERLOG_SIZE_U32];
->  	void __iomem *addr;
-> @@ -279,7 +279,7 @@ static bool __cxl_handle_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base
->  static bool cxl_handle_rdport_ras(struct cxl_dev_state *cxlds,
->  				  struct cxl_dport *dport)
->  {
-> -	return __cxl_handle_ras(cxlds, dport->regs.ras);
-> +	return cxl_handle_ras(cxlds, dport->regs.ras);
->  }
->  
->  /*
-> @@ -355,16 +355,6 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
->  		cxl_handle_rdport_ras(cxlds, dport);
->  }
->  
-> -static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
-> -{
-> -	return __cxl_handle_cor_ras(cxlds, cxlds->regs.ras);
-> -}
-> -
-> -static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
-> -{
-> -	return __cxl_handle_ras(cxlds, cxlds->regs.ras);
-> -}
-> -
->  void cxl_cor_error_detected(struct pci_dev *pdev)
->  {
->  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> @@ -381,7 +371,7 @@ void cxl_cor_error_detected(struct pci_dev *pdev)
->  		if (cxlds->rcd)
->  			cxl_handle_rdport_errors(cxlds);
->  
-> -		cxl_handle_endpoint_cor_ras(cxlds);
-> +		cxl_handle_cor_ras(cxlds, cxlds->regs.ras);
->  	}
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_cor_error_detected, "CXL");
-> @@ -410,7 +400,7 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
->  		 * chance the situation is recoverable dump the status of the RAS
->  		 * capability registers and bounce the active state of the memdev.
->  		 */
-> -		ue = cxl_handle_endpoint_ras(cxlds);
-> +		ue = cxl_handle_ras(cxlds, cxlds->regs.ras);
->  	}
->  
->  
+Looks good to me, thanks!
 
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
