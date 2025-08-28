@@ -1,45 +1,48 @@
-Return-Path: <linux-pci+bounces-35017-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35018-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2514B39F4C
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 15:47:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98A8DB39F83
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 15:59:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 97CE04E2827
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 13:47:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4210A3637E7
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 13:59:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDD101BD9CE;
-	Thu, 28 Aug 2025 13:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0525430F817;
+	Thu, 28 Aug 2025 13:59:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MeWDqhk5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hk71lSfC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6824518C034;
-	Thu, 28 Aug 2025 13:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0E830F7EA;
+	Thu, 28 Aug 2025 13:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756388877; cv=none; b=gWG/1YrHne5D8emPAOZPvsTuqo3nP69sSdbL7avQ7W5ITD79HSHU04rJSN43yMD0cbxAipll4MbjR/QGeA0O9u94nH7KmN2KZGUkzD6pKaiznCWYT7pFQ/VHzR8ywkjNKtgCHemn7JvhrC7KWD7fC0QJ9X4NgMuoDPaPCvyM2sw=
+	t=1756389555; cv=none; b=IomWvVFFSFFNNgAeVtr1unIic16t1zQaV3bpQuTbT1WLchD7tilOWfa7B16iMVUGYj6WbplLJhg9pIC+BDtaYiGNdFv9uu+pKfNq3CsOY1PIP0YJRKnFJ9C1XEuVkhlKrCNmIgNSKfXu6xOT4rVmvyfgr+DrZspl4dOIzN4mE1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756388877; c=relaxed/simple;
-	bh=o/X3XZ/6OBB1rmQze8OxBiOeqqr0Dre1xoe+LWKp95Q=;
+	s=arc-20240116; t=1756389555; c=relaxed/simple;
+	bh=WEtI0/FN3xpSJ6agHNJuplApkchRGtOGLb1rARd7JN4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PbdeZe8iZYfxHrK3OlYw7IVKL1jYTxCGYtEvIFwhSuNFDB603SxJQZjolSutSSStfZeFzYBCgpWkLTxEGggkyzBd2XwdrAQ5argNF029r+H+sxZKcixI2dY4MdZs1OZ3zeSSaQ8PKqW20i5gdWcddPnaWIvgtMOOMf1lVnsxcrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MeWDqhk5; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=xBLLsiAN4pe0CURXmH4j6QXps7YJcvxVYiQNA1fD854=;
-	b=MeWDqhk5KhLlLe2aTBEIY695V5QM9x2oN65e+kMLlKIUyz4CckPDEIDy/ZhrJf
-	aunUKL8M/3rB2nZB643dgdLD305F0TeXIdZQ924RX2frylg9aWeXE5yaJ6fy021Y
-	c8V7VFH+fbPyrXDOuSJRCeOzeM6IOyzwk8GZ5aTvc/jvY=
-Received: from [IPV6:240e:b8f:919b:3100:3980:6173:5059:2d2a] (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wAH1Ef0XbBogl2wEg--.36208S2;
-	Thu, 28 Aug 2025 21:47:32 +0800 (CST)
-Message-ID: <6aaafcce-0dc4-45b1-aef5-9004f84fd207@163.com>
-Date: Thu, 28 Aug 2025 21:47:32 +0800
+	 In-Reply-To:Content-Type; b=gFCnYbwmqjTvxpeYYAYTSUVC2QAVaTeBSAbvb182dmOkG3ZyPxgCANJ005c80CFNjUtxwyyrNOTr7tWUYnylYipQltckN8pXf/MiF5dRuo4OubBvZiSTVNCa6KYhOzwGXoEsb8Mh3aMGt2N1W8bZVfhWONvVPPBWJb1QDCDhmU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hk71lSfC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBDDFC4CEED;
+	Thu, 28 Aug 2025 13:59:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756389555;
+	bh=WEtI0/FN3xpSJ6agHNJuplApkchRGtOGLb1rARd7JN4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Hk71lSfCh0+8Gp8mDS+rJtbB16TzpROCk59jFIJkk8xGS3HPEjWs7IyU+hvCHsDyX
+	 3WXeUuz+1EJlJfLab3Hoz3YfNT7H4smxqUWZEMhb4wkPS8aQlUhYLfVxbKLFQp7Nhw
+	 exXrt10hund93QkYlyiCZ6bEK++oMBaRJtZ392vGe7x9IpNoJlbYSH5GTsK4jQ5Owz
+	 5GdfouP7S1kClIv/VeZv7H6WCLAa9eAudFg45QTbKm8TBPqUPZkhZpJ0waSFaxGOet
+	 RijKqRrBTkbT5vOT8Mp8SDuWvwhxEdPGvthIyALhqiG1yNbtaDZlYn94J8ioQ23jW7
+	 jRzI8aXCNxLYg==
+Message-ID: <4b525afa-1031-4f99-a1ab-e89af77616eb@kernel.org>
+Date: Thu, 28 Aug 2025 15:59:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -47,144 +50,66 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/13] PCI: dwc: Refactor code by using
- dw_pcie_clear_and_set_dword()
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org,
- robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250813044531.180411-1-18255117159@163.com>
- <20250813044531.180411-3-18255117159@163.com>
- <wi2mylqrf6szc5iluncle2lj373aoxu46lyy7d2gaqx4dv3abq@sja5aj5mwv3j>
+Subject: Re: [PATCH v7 5/6] rust: pci: use pci::Vendor instead of
+ bindings::PCI_VENDOR_ID_*
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: John Hubbard <jhubbard@nvidia.com>, Joel Fernandes
+ <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
+ Alistair Popple <apopple@nvidia.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Bjorn Helgaas <bhelgaas@google.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Elle Rhumsaa <elle@weathered-steel.dev>
+References: <20250826231224.1241349-1-jhubbard@nvidia.com>
+ <20250826231224.1241349-6-jhubbard@nvidia.com>
+ <DCE3EV79EX7N.DCIT9JWFGXGG@nvidia.com>
+From: Danilo Krummrich <dakr@kernel.org>
 Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <wi2mylqrf6szc5iluncle2lj373aoxu46lyy7d2gaqx4dv3abq@sja5aj5mwv3j>
+In-Reply-To: <DCE3EV79EX7N.DCIT9JWFGXGG@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wAH1Ef0XbBogl2wEg--.36208S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3AF1DurWfKw1rGw15Aw17Awb_yoW7Aw48pa
-	9xAF4akF45JFnxuw4kZa4kZw1rZws5AFZxGwsrC34xuF9Ivr92qFyjg34YyFWxJrWIqw45
-	Kw4Utasrurn8AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UIoGdUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQxu3o2iwWuYqaAABsr
 
-
-
-On 2025/8/27 21:51, Manivannan Sadhasivam wrote:
-> On Wed, Aug 13, 2025 at 12:45:20PM GMT, Hans Zhang wrote:
->> DesignWare core modules contain multiple instances of manual
->> read-modify-write operations for register bit manipulation.
->> These patterns duplicate functionality now provided by
->> dw_pcie_clear_and_set_dword(), particularly in debugfs, endpoint,
->> host, and core initialization paths.
->>
->> Replace open-coded bit manipulation sequences with calls to
->> dw_pcie_clear_and_set_dword(). Affected areas include debugfs register
->> control, endpoint capability configuration, host setup routines, and
->> core link initialization logic. The changes simplify power management
->> handling, capability masking, and feature configuration.
->>
->> Standardizing on the helper function reduces code duplication by ~140
->> lines across core modules while improving readability. The refactoring
->> also ensures consistent error handling for register operations and
->> provides a single point of control for future bit manipulation logi
->> updates.
->>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
->> ---
->>   .../controller/dwc/pcie-designware-debugfs.c  | 66 +++++++---------
->>   .../pci/controller/dwc/pcie-designware-ep.c   | 20 +++--
->>   .../pci/controller/dwc/pcie-designware-host.c | 26 +++----
->>   drivers/pci/controller/dwc/pcie-designware.c  | 75 +++++++------------
->>   drivers/pci/controller/dwc/pcie-designware.h  | 18 +----
->>   5 files changed, 76 insertions(+), 129 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
->> index 0fbf86c0b97e..ff185b8977f3 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
->> @@ -213,10 +213,8 @@ static ssize_t lane_detect_write(struct file *file, const char __user *buf,
->>   	if (val)
->>   		return val;
->>   
->> -	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + SD_STATUS_L1LANE_REG);
->> -	val &= ~(LANE_SELECT);
->> -	val |= FIELD_PREP(LANE_SELECT, lane);
->> -	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + SD_STATUS_L1LANE_REG, val);
->> +	dw_pcie_clear_and_set_dword(pci, rinfo->ras_cap_offset + SD_STATUS_L1LANE_REG,
->> +				    LANE_SELECT, FIELD_PREP(LANE_SELECT, lane));
->>   
->>   	return count;
->>   }
->> @@ -309,12 +307,11 @@ static void set_event_number(struct dwc_pcie_rasdes_priv *pdata,
->>   {
->>   	u32 val;
->>   
->> -	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
->> -	val &= ~EVENT_COUNTER_ENABLE;
->> -	val &= ~(EVENT_COUNTER_GROUP_SELECT | EVENT_COUNTER_EVENT_SELECT);
->> -	val |= FIELD_PREP(EVENT_COUNTER_GROUP_SELECT, event_list[pdata->idx].group_no);
->> +	val = FIELD_PREP(EVENT_COUNTER_GROUP_SELECT, event_list[pdata->idx].group_no);
->>   	val |= FIELD_PREP(EVENT_COUNTER_EVENT_SELECT, event_list[pdata->idx].event_no);
->> -	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG, val);
->> +	dw_pcie_clear_and_set_dword(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG,
->> +				    EVENT_COUNTER_ENABLE | EVENT_COUNTER_GROUP_SELECT |
->> +				    EVENT_COUNTER_EVENT_SELECT, val);
->>   }
->>   
->>   static ssize_t counter_enable_read(struct file *file, char __user *buf,
->> @@ -354,13 +351,10 @@ static ssize_t counter_enable_write(struct file *file, const char __user *buf,
->>   
->>   	mutex_lock(&rinfo->reg_event_lock);
->>   	set_event_number(pdata, pci, rinfo);
->> -	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
->> -	if (enable)
->> -		val |= FIELD_PREP(EVENT_COUNTER_ENABLE, PER_EVENT_ON);
->> -	else
->> -		val |= FIELD_PREP(EVENT_COUNTER_ENABLE, PER_EVENT_OFF);
->>   
->> -	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG, val);
->> +	val |= FIELD_PREP(EVENT_COUNTER_ENABLE, enable ? PER_EVENT_ON : PER_EVENT_OFF);
+On 8/28/25 3:25 PM, Alexandre Courbot wrote:
+> On Wed Aug 27, 2025 at 8:12 AM JST, John Hubbard wrote:
+> <snip>
+>> diff --git a/rust/kernel/pci/id.rs b/rust/kernel/pci/id.rs
+>> index 4b0ad8d4edc6..fd7a789e3015 100644
+>> --- a/rust/kernel/pci/id.rs
+>> +++ b/rust/kernel/pci/id.rs
+>> @@ -118,15 +118,14 @@ fn try_from(value: u32) -> Result<Self, Self::Error> {
+>>   /// ```
+>>   /// # use kernel::{device::Core, pci::{self, Vendor}, prelude::*};
+>>   /// fn log_device_info(pdev: &pci::Device<Core>) -> Result<()> {
+>> -///     // Compare raw vendor ID with known vendor constant
+>> -///     let vendor_id = pdev.vendor_id();
+>> -///     if vendor_id == Vendor::NVIDIA.as_raw() {
+>> -///         dev_info!(
+>> -///             pdev.as_ref(),
+>> -///             "Found NVIDIA device: 0x{:x}\n",
+>> -///             pdev.device_id()
+>> -///         );
+>> -///     }
+>> +///     // Get the validated PCI vendor ID
+>> +///     let vendor = pdev.vendor_id();
+>> +///     dev_info!(
+>> +///         pdev.as_ref(),
+>> +///         "Device: Vendor={}, Device=0x{:x}\n",
+>> +///         vendor,
+>> +///         pdev.device_id()
+>> +///     );
 > 
-> So you just added the bitfields to the existing 'val' variable which was storing
-> the return value of kstrtou32_from_user().
-> 
+> Why not use this new example starting from patch 2, which introduced the
+> previous code that this patch removes?
 
-Dear Mani,
+I think that's because in v2 vendor_id() still returns the raw value. I think it
+makes a little more sense if this patch simply introduces the example as an
+example for vendor_id() itself.
 
-Thank you very much for your reply and for taking the time to point out 
-the problem. I double-checked today, identified the problem and will fix 
-it in the next version.
-
-
-> What makes me nervous about this series is these kind of subtle bugs. It is
-> really hard to spot all with too many drivers/changes :/
-> 
-> I would suggest you to just convert whatever drivers you can test with and leave
-> the rest to platforms maintainers to convert later. I do not want to regress
-> platforms for cleanups.
-
-My original intention was to hope that the code would become 
-increasingly concise and that a lot of repetitive code would be removed. 
-I also believe it will provide convenience for the subsequent 
-development. I hope there won't be any problems with my next version.
-
-> 
->> +	dw_pcie_clear_and_set_dword(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG,
->> +				    0, val);
-> 
-> Similar to what Lukas suggested here: https://lore.kernel.org/linux-pci/aKDpIeQgt7I9Ts8F@wunner.de
-> 
-> Please use separate API for just setting the word instead of passing 0 to this
-> API.
-> 
-
-Will add dw_pcie_clear_dword and dw_pcie_set_dword.
-
-Best regards,
-Hans
-
-> - Mani
-> 
-
+I think struct Vendor does not necessarily need an example by itself.
 
