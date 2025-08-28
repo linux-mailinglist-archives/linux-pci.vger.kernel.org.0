@@ -1,179 +1,109 @@
-Return-Path: <linux-pci+bounces-35006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 716FEB39D3D
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 14:26:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 254E0B39D57
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 14:33:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AF8D1C25D78
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 12:26:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD968171824
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 12:33:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AC0430F547;
-	Thu, 28 Aug 2025 12:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="jenCrInA"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C3B130C605;
+	Thu, 28 Aug 2025 12:33:06 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11013019.outbound.protection.outlook.com [40.107.44.19])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E5626AAA3;
-	Thu, 28 Aug 2025 12:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756383974; cv=fail; b=KO3lRx7vPxts9dUSvcXyVy8AVjgZlFtoCbUz84iEKW2DzW6QlmZt67jtcg0fo+G/9lMyUncEuXyaFa9nW0CcV81pxyyToiKkb031w1heru1u3QEMQCzPIYrKF67MFTY27z3/NtPzRxuGLQBBX/hMa4TPVcl0DzcOI8/xWhVjA04=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756383974; c=relaxed/simple;
-	bh=ziE0Ii//wEWZdQvIegbD2lg2ZGLTWhGNLdN8255ZkMY=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=pG128s9bqNX50dNTl+hNCsjhxCPLoKINxWtkhtfpATRHAyvr24vurn236Z66MgLZev6UjArXsyGUVs+i/Q/tkPqKMJZY/gewqIyAaeUNPzlEBw7591jlQV+pAzbt1smbUxGHi852VILiMbj2p7eWymwa2ahW/cTPn1FbSjI3z3k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=jenCrInA; arc=fail smtp.client-ip=40.107.44.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aovzHbif5Jse01/jKCVK5pZCJ/MYkGWx/AHZVtjbXRCPHuH6NVLjeI7zJ8vNjdPrkzp7kMfiN0ZaKjyG6AvweWIuEzV8BnvG8vvnxgs7gqEyw9KaXhdRZpTuApawZxV+NuTN7ucaMr42UUIfDucRB61AjugOfKr1U9P990KOGH7sqdPTO3XWrhxKBlkcSHwz0U17Za+3z948SQ3curmjvyS4LyLXljzOGhPPA+CMaoUd5dLXGJtiOnpdT/sEYScNemwRAa/RezabYUiyCN2SVppcMyzH4XHM47w6+/R/lAfuNEXejKuM4OQKSmu7ekgtAUYqGNEQlAPoiaUfjLQRMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C2wAUDXWJgkQtl4kIpjWBeqKIRUuVdSCKdV/19OsfFk=;
- b=gQru261D4kVF8VW2cT3aZYokndznjso3OVuz25WDP8tINA6YH73nEz1fGhdflsrz9oGtekLDylGMpYGrYafjiQKXpaFjhbF15GOt/pqvM/vXZxoCPI/66Y3HQR3zqd/dYzVozSUGe8Noyoi8XFLr04FEMa6kv0XbL/WRY6GG1kCxqWRajGk9w1m6NfzBLkfB+NUT5B+CqgGhg9p1D3Aob7qY54DvqrYPj5Y8amgi6aVuGsNso+9Q8SIkzw+NDCc1INo0liTy5pazg7b5Ds3B/1J/CtBH5/FSwnVFsYPVAqavN5+7dnCpY/OmvIA8gjSo1Uu9bJsahASM1nzGseSUbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C2wAUDXWJgkQtl4kIpjWBeqKIRUuVdSCKdV/19OsfFk=;
- b=jenCrInAWiza/4D8MmZFoJfcPDrTVqz6O0oFdWcgyWP+Vc+YKcZF8v/2jooCTJZ0HhGiLcYJEhfZYB67hVNjEXyxtKnkKBHYYcTv+YEDddSNA2bhdXDF0cbbipnMMInjC5kA53rtZJaBePg0ETzxGk9SamYCok4Pcz9H7kJXDiGeATgKjxATNsewUOYM0kK38jEKpK7N/n2nlJn6Sq8um7LKczhLaZu5E8QA7J+/1fHsYlT9XNcSfd74Kh1XPtGytaSu1+HyCCCDdFJAsb1naaaiNdi+DlXwz1q3pUdRcjX7JeY99bUvmtIsORMYT1FSSH6oyJ3MU7KrewMRGxVR4A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5576.apcprd06.prod.outlook.com (2603:1096:101:c9::14)
- by KL1PR06MB7287.apcprd06.prod.outlook.com (2603:1096:820:143::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.15; Thu, 28 Aug
- 2025 12:26:08 +0000
-Received: from SEZPR06MB5576.apcprd06.prod.outlook.com
- ([fe80::5c0a:2748:6a72:99b6]) by SEZPR06MB5576.apcprd06.prod.outlook.com
- ([fe80::5c0a:2748:6a72:99b6%7]) with mapi id 15.20.9073.014; Thu, 28 Aug 2025
- 12:26:07 +0000
-From: Liao Yuanhong <liaoyuanhong@vivo.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Liao Yuanhong <liaoyuanhong@vivo.com>
-Subject: [PATCH] PCI/VGA: Remove redundant ternary operators
-Date: Thu, 28 Aug 2025 20:25:56 +0800
-Message-Id: <20250828122557.35025-1-liaoyuanhong@vivo.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0248.apcprd06.prod.outlook.com
- (2603:1096:4:ac::32) To SEZPR06MB5576.apcprd06.prod.outlook.com
- (2603:1096:101:c9::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE3F145B16;
+	Thu, 28 Aug 2025 12:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756384386; cv=none; b=KdLaT6cLC9/0JyQrPU2IVGMiTjXeCsNj6jBWhV7cdIxW0ihe4OElPePrXNppDoc2C06iNQhFE3TNtMcIbH7QaOnR7EIqONBcHK/M2VumzY3NdrlO3GjA1Md/AbDL3d29d2sjJmanwHgsmdG4NxwR8l+VENBWGME641AcPQ+UfBo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756384386; c=relaxed/simple;
+	bh=4+KJ+Kkm+a9h5spaJ5UWIVT2oZP76H7I8YbeBR+5ZUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=umjDUl3/izrSO3DI1zk0Xxq2Ewf6TLvCov5BDgZXL9TZR4/0HUbmCKcFk/dxmM9dwON4b64O98K2ubx8fORvITS3DjVOLNh2yszyj3cHvKqu2Ndnqvjh0kUfPm6x6b+NpbkXm/4+nXtsbqzN0QRvw5xQ7TA2yIUWoJRUS1INyU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 23AC82C051CD;
+	Thu, 28 Aug 2025 14:32:54 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id F2EB14E6B25; Thu, 28 Aug 2025 14:32:53 +0200 (CEST)
+Date: Thu, 28 Aug 2025 14:32:53 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	chaitanya chundru <quic_krichai@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Wilczy??ski <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, quic_vbadigan@quicnic.com,
+	amitk@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com,
+	linux-arm-kernel@lists.infradead.org,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Shawn Anastasio <sanastasio@raptorengineering.com>,
+	Timothy Pearson <tpearson@raptorengineering.com>
+Subject: Re: [PATCH v6 7/9] PCI: Add pcie_link_is_active() to determine if
+ the link is active
+Message-ID: <aLBMdeZbsplpPIsX@wunner.de>
+References: <20250828-qps615_v4_1-v6-0-985f90a7dd03@oss.qualcomm.com>
+ <20250828-qps615_v4_1-v6-7-985f90a7dd03@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5576:EE_|KL1PR06MB7287:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6a569911-9805-4a24-c972-08dde62e1081
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZaQNYvWUIhK+ikic6PpBLKxPSkhPGhNTsZ5Tt92n5WzMaJots81ycSbWsZgA?=
- =?us-ascii?Q?nR1jKzv1m5g28TL7+jj2RBzLQSvZ7CGJAmMPC6UDG4aC3TsvPym8/A6CUryH?=
- =?us-ascii?Q?MXGxs5RH9JMn7VAgP4RPImP/f1bne7xzlZ5QtajaeYDLS3TOh+VMSmCyLPqg?=
- =?us-ascii?Q?obDQ8oLNo+oC2V7Xg11zCopeM53t02eisFnHYJzM1nMA3zMhZbnMXI+Ls1XL?=
- =?us-ascii?Q?5Cm+9us8jgve+BYX66NvJYfYIOP1pxosgNaDTluszmVG/GEvjIfAQrayi/jl?=
- =?us-ascii?Q?yTY+3BRMY4+XmU8Lh5attM5EgXokJj5TNhzZHPvrdakJfeRr6L/zv/BI0Xc1?=
- =?us-ascii?Q?gXKbygHsZuiaGHyopBZqRqn9Xv0Q5i+SPbruPs5383MhC5VgZPzmN5g0V1SU?=
- =?us-ascii?Q?0w4GecJKogpE7r+k6gB4uKjxRZ95NEiCdyE6GkXmy7FfmPo7fk04YB9F5XxM?=
- =?us-ascii?Q?Z93aEyTU9sQaVxpurDtepbqLax7EaUnUJ6f7VsFkzecPYeze0LYRSBoRHX+2?=
- =?us-ascii?Q?mccCJ9V61t0sqkNhpXcqFFnSC1KGLZYkekLCXVFrUVZUmLyA3sNM/z5CMj+6?=
- =?us-ascii?Q?tUzVPv59A2nqFkkN6G0yqHEh7usKmo70vR48mQsf9GdGlom9pPeMzcdxTdeK?=
- =?us-ascii?Q?cIQ7VS47jZwaCGceDfluU0ey1XgZ9ui4eFzc9WJo78jjXWy3+i653Brrf+fw?=
- =?us-ascii?Q?RflFIerOp/mjuZKm46kHqJG/YI8047wznYiSx3/GAaCwJ8tdiE6w6siqOo9r?=
- =?us-ascii?Q?3eoK0U6q9NmCld4x2LAz8V/n95SMk+0RRNvK7c8FENnM+VaJfDY5YbE/PfgN?=
- =?us-ascii?Q?20Aq635J/G0jUEd692SpFUgMzy2mKcefMtY6UfYQDh+jbhQLtq17UqGgboxI?=
- =?us-ascii?Q?tpzgTO4hs7jYIBw7Svcwu2XhHoHqiDloZkRPxVN1H4undxmJIrql/7DzrIZz?=
- =?us-ascii?Q?utpIZMPMHlget4JvaF73MGBKMG4o4UhN4Dc7a91titd5+afmobXNObRJgDrJ?=
- =?us-ascii?Q?OQp14//sAjt8MJRHuK+nO0aeutO7iKKfLrrJV9chGrRNu4ASGXSgAcN7XQlg?=
- =?us-ascii?Q?VIyXjaEWcPCfMshmI3B3TTghnZUll+bS+2+AeTwNvXW0gVkbzJxKA/aQWHAw?=
- =?us-ascii?Q?+iLKpiwGTnyxWdL37O5DXMojXWXwp5xO34z/KDg57ZAeyU0Nc+yLxNIOk09f?=
- =?us-ascii?Q?u62s0X9PbwEHuL92Fj8QLEhE/AYokl4zVOiWwehXKaelBXO1so61GpbHmCnK?=
- =?us-ascii?Q?sZ/n1kkTOgzwl2YEV4+tvjTCuc3Ct6rhEMX4BVlvDT0SGg24VtjapdIeKhdi?=
- =?us-ascii?Q?rCbYAYals8WaBTjmfel8oaHkW4SeF2AbdneKvhxr2XGbVuywzVIx++fjzxpY?=
- =?us-ascii?Q?nf0byyxhV5J7YwfX87J8Gx7N48yKUe/ULj4fQq7ih8sPuP7B8/dlOmCcjNFy?=
- =?us-ascii?Q?/HtTGMbgvcdcLGeSO/qKOEdreXN4QiSh9a1T8ZJB6VuhZvNLUmu/Qw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5576.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SqaUp97HipAu9M74+yOIF6eFT1vQF6aINyoFgmsIh8MjbJIzcHLiQB9+KwOi?=
- =?us-ascii?Q?AzY4Y1clPh9PG0za1Drh0eqJnCoLqJPXY+UH1Ks9REFnUksEV+VAfz/y58/V?=
- =?us-ascii?Q?MzAndUsrfTYTuxOv9mOYykYMrsSg2J9gVKK2uWMv7nRzub5k7Xlqu7yeKlIf?=
- =?us-ascii?Q?Jq/vcPFUCt4/AQlqnlH+0CVNFfy3GLVS2nrZUobTs7KB/KdKC20H2aoP3057?=
- =?us-ascii?Q?OeYmZD2H13BGXDz0LtNtzarqXOS9DlAH3gwRBXBGrjVuArxerDFpfKhH1Qvc?=
- =?us-ascii?Q?mxK4X9hnoV7hM/1cO7X8W/xEqI1tjqlQcJZwLcdZNttKtWSIpQLnbyzOxH0m?=
- =?us-ascii?Q?aCi75DkczmEqECh+Q96a3PoTUWuDm5BfukKqUnHsPYHIIji7TTU5rX+5b6SH?=
- =?us-ascii?Q?5OzEInxx+eIdksD1ys24ek19ERlgqvuFM00Ph4rlNlR0lQzlxQLZPxqpF2/B?=
- =?us-ascii?Q?DmxstGvAP2eZZJya/0ntYZmM+mRGwF0NnSL3ALALwcLLT52mip7fpiIWbajl?=
- =?us-ascii?Q?KB7l+Tc6cvg8rYQogVbIr2JXaZ5uovZo9SHfuZwpOMcMxzgGPM4OZsYWdy5M?=
- =?us-ascii?Q?DlZPQPZ179MWUteio+5Cc8pnaL3mEWqAQmWuQSOQ3XFRf6/e1JVCcXN6jh/W?=
- =?us-ascii?Q?1I9kLCSMHBHCniax2wN84Lu1HDur4ttRIZP4lgucWzppgwCK9tv/zWZ5Jxc7?=
- =?us-ascii?Q?Py7Wg0KFRFMyRVWxha1silyiN6PEr/4fDQDhj/31TJeZeazbO+H1ptTLmcFM?=
- =?us-ascii?Q?H2L/WDC4vGEG8kTZlYkArWOeYM3nT99dmKB0356jVaT+rRgL9KIXyA2hir7X?=
- =?us-ascii?Q?kl03DARFTatDzHSiiElhGHOZrotepKJ3EeyHbtq9n1Hc5d+QqMF+tyemh3t3?=
- =?us-ascii?Q?HI0k/ljJQuaEs/CujfXn2SvH7hzuTnoI7gQhDBwPXPyBUcf2XELDBbaYX1tW?=
- =?us-ascii?Q?g1oaoChIBV9IM9Cirxon4NW0fLjNWknTF6A+89djNbfIMpSoVGX7SRUVIcn7?=
- =?us-ascii?Q?Y+cohsF+9gY7JpyK3vVC99Qqys/pUO8goK6c1A8gH3b00igzEw18/QEipKgR?=
- =?us-ascii?Q?EL1r2ZmyHqbvCSJU349hrJGrpRb/AbWYItuuj22Gymfhph0/ckxl8xyfpFy6?=
- =?us-ascii?Q?S5aK0kcGmQ2uacka1iTQXstHMQ3PL8O4PaZQr/n1M8MGzFrFA2lkIRM7BijO?=
- =?us-ascii?Q?3bN3W2PUFJC4rOu2PVj0keMzVsIKkkqE6bW+paqFeU4cIOCUYHD084ghm/JC?=
- =?us-ascii?Q?grRFG3vWKFdQ2McaZaJ3QFt1U2MVVoaYwiBbddhl7KImM2qcfS2RPZNvlZJJ?=
- =?us-ascii?Q?zPPsIftEDmFzREv32ozoq3a60mapPAmP4c7ylHsELnSDALaZwwUfV8ag3LdM?=
- =?us-ascii?Q?7N5FgID0ZuDLT1gW4zwusQECYl25qMKWI/c9Df8yNAWeqcco+z26SNtIHGTS?=
- =?us-ascii?Q?WP3rMtJRAfM3M5ry3VkJuMLVIUJ61GY1kyL4rF7ZhM6OxouXEWsDuiVzL0pA?=
- =?us-ascii?Q?9pBojLvGvB2qEVwH6MCAbXrNt8b0K09tlQIEHDWJF0cSdSxHTTZHaKFWyn7i?=
- =?us-ascii?Q?xzDgztsnTKMDR6xTDNte2UavC4p6njsJXmeU7gJ5?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a569911-9805-4a24-c972-08dde62e1081
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5576.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2025 12:26:07.8396
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ewKSQbc3/SSbQL/gfe/g2tjQ+OgxiVOuIysUvowWMHWrfEeqOlKT17++DjiDN0h9fEzrjUrKQOGNuvKb47tP3g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB7287
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250828-qps615_v4_1-v6-7-985f90a7dd03@oss.qualcomm.com>
 
-For ternary operators in the form of "a ? true : false", if 'a' itself
-returns a boolean result, the ternary operator can be omitted. Remove
-redundant ternary operators to clean up the code.
+On Thu, Aug 28, 2025 at 05:39:04PM +0530, Krishna Chaitanya Chundru wrote:
+> Add pcie_link_is_active() a common API to check if the PCIe link is active,
+> replacing duplicate code in multiple locations.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
+> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
 
-Signed-off-by: Liao Yuanhong <liaoyuanhong@vivo.com>
----
- drivers/pci/vgaarb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think the submitter of the patch (who will become the git commit author)
+needs to come last in the Signed-off-by chain.
 
-diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-index 78748e8d2dba..abc84ef35397 100644
---- a/drivers/pci/vgaarb.c
-+++ b/drivers/pci/vgaarb.c
-@@ -1477,7 +1477,7 @@ static void vga_arbiter_notify_clients(void)
- 	if (!vga_arbiter_used)
- 		return;
- 
--	new_state = (vga_count > 1) ? false : true;
-+	new_state = vga_count <= 1;
- 
- 	spin_lock_irqsave(&vga_lock, flags);
- 	list_for_each_entry(vgadev, &vga_list, list) {
--- 
-2.34.1
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -614,8 +587,8 @@ static void pciehp_ignore_link_change(struct controller *ctrl,
+>  	 * Synthesize it to ensure that it is acted on.
+>  	 */
+>  	down_read_nested(&ctrl->reset_lock, ctrl->depth);
+> -	if (!pciehp_check_link_active(ctrl) || pciehp_device_replaced(ctrl))
+> -		pciehp_request(ctrl, ignored_events);
+> +	if (!pcie_link_is_active(ctrl_dev(ctrl)) || pciehp_device_replaced(ctrl))
+> +		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
+>  	up_read(&ctrl->reset_lock);
+>  }
 
+You can just use "pdev" instead of "ctrl_dev(ctrl)" as argument to
+pcie_link_is_active() to shorten the line.
+
+With that addressed,
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
 
