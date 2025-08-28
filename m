@@ -1,207 +1,219 @@
-Return-Path: <linux-pci+bounces-35057-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35058-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF7EEB3AB4D
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 22:10:15 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDB40B3AB98
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 22:25:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 883C2204C75
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 20:10:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 331AB7B1FC8
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 20:23:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBD6427CCC4;
-	Thu, 28 Aug 2025 20:10:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1EFD285C96;
+	Thu, 28 Aug 2025 20:25:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JJvOyOiy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SM5oRAPd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C54B27054A
-	for <linux-pci@vger.kernel.org>; Thu, 28 Aug 2025 20:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D00284B41
+	for <linux-pci@vger.kernel.org>; Thu, 28 Aug 2025 20:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756411811; cv=none; b=k5xe6tO/Gx5OYv2N0hdDWdJeFqzsBhHX1l7kQKZER33wOY8Cug//aPQgQwL+Kw7iACzax2WskE/9odBo29O4XlFfHBM9+oskHWxgEYQaUAsC7tHVP4Qh2vqOU7Cpr4yx0iqo7pXttu2YbpbB7Cur1V1rQxz0UUn4hqEv8PUdNgA=
+	t=1756412717; cv=none; b=fgpUIv33m55Z/m82jm2X9mLWZMW5myWi3+g7WjRgss/pdENY5JOEwEejDJl2GhI+Mua91ROqc98Sj5k2rt/m1r0gn+fanjdJ8xIKG5fyl2Pif/NcUTMm+C4BLlxXY5ldZ65jBJZ2KZR98zkBKG9Td7EiAw4LJlVNzinlEnwTwX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756411811; c=relaxed/simple;
-	bh=kDAfZvC01u6gJzkYO2WZzxnHP4ZbiGyQfXyRLMAyXd4=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=UXIebJkRgPLIk3/fwe9TmvOxXKlozGepZPT00jJLtlLPSRFr+8WUvGtO4yI54Zf3QR12zLb2MHCmBZtLd9rJ8iLXLoeDPQZ68c/hBjmR5ApwT+AiQUJ9iUODh+hpxUrV3hIU8zJS1Xt55drrG88AUblWhPjj9upZfBYNNTjddsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JJvOyOiy; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756411810; x=1787947810;
-  h=date:from:to:cc:subject:message-id;
-  bh=kDAfZvC01u6gJzkYO2WZzxnHP4ZbiGyQfXyRLMAyXd4=;
-  b=JJvOyOiyz5+BguL0yhfqKGoV3286U8chFWBhb369Odoi3/TfFMuIW3pf
-   2UwL2YVGskEZBjOnPbqW+6/3FNEyyUl9XVwZHGA8W/R/Ck8t3nwDGYVg1
-   xu0H/7sLmNaRf1jTszTV4bg9mOKUzx3m622y0od8MyjYpFLDC51Eon0ZA
-   sIaKw2cWK5ajSmprgmlIhZekc0iNusH9NyOxfDVrGP+326KRWDVfV+rET
-   KiDGr3VetaQLLfZtgee5phceTgumQiCAehNSK9tJ+Vka3b3a/IFCUDhiG
-   ZaL6ocZj1Zc92JmXlsB2RqWS7TnsiHxm5U0qYqkA7COtM2lXX5eEpPvWH
-   Q==;
-X-CSE-ConnectionGUID: +FqHIc6ATxasVcyL12H+iQ==
-X-CSE-MsgGUID: 8V5IK3s1ROSXJUMqH8V0Bw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11536"; a="70067602"
-X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
-   d="scan'208";a="70067602"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 13:10:09 -0700
-X-CSE-ConnectionGUID: Z1Jw7MRqSYuYXmVuScC07Q==
-X-CSE-MsgGUID: S89wxOJjQ7uIWYC5IpnkJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
-   d="scan'208";a="169789559"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 28 Aug 2025 13:10:09 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uriwW-000U1z-02;
-	Thu, 28 Aug 2025 20:09:59 +0000
-Date: Fri, 29 Aug 2025 04:08:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 2b94e3bde67474e6290cfa911860d5587b6aabed
-Message-ID: <202508290417.Y0xwSkWI-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1756412717; c=relaxed/simple;
+	bh=fJ/sO78lvastRjtDt7P/8+A5rUoYFt5ky/4sBRhvjzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U24WS5OvIJMrnVzF22NI5Y7pUbGta5gcAGYc+Q/+HuCqs3CzlmCzAR7hKVyplualjR2tdZh5iTcRnMbCDLJwiynQorXEN9VLcAix//5JtFQvW7f8wZfiUvTytsE+lVhUTlEi44TLtSkOG0hxfCYJteZEpKyN2RNi3pKD8XmxslU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SM5oRAPd; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2487a60d649so16331355ad.2
+        for <linux-pci@vger.kernel.org>; Thu, 28 Aug 2025 13:25:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1756412715; x=1757017515; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=526DZvOdfFdWnRr7VLIYoJ9rOuKdtRXZH6VtJYFQMAI=;
+        b=SM5oRAPdb4N9ZyuqKMIikJgwuts6HrgJOAhatf62APCwHaHn2B5aYfVH54w8jWl2pu
+         sxyG8JNWKe7wWJuOpF2J9g5rnbDmlM9z8W7pKAbm+BTaVYPl3xCIZkAMyFRB7VDG4TZo
+         FgLfGE782LrJUPPCk0sD1bOfOdXa/DCiDLPg0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756412715; x=1757017515;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=526DZvOdfFdWnRr7VLIYoJ9rOuKdtRXZH6VtJYFQMAI=;
+        b=CTTl8YYXN0LqNRXD4RlC2P6fJ7HCgm8MRPzo64SD8ViUFbPDulIkbtaZaRaG5BSGzJ
+         9T6nKhhC64PfXcpGtjtVhjniOyZ8CD5zsiHFKTB2EusUXIdteIYUkua/silodZzgZdeG
+         J2gM0ieRj4Eb1OPdKK9sAPcuFNKztG5BZHK2IWQAd3P5YyggPGkQGhT1JSa4smOcHYZj
+         Eiqt2zkqDxx9oljaXQekGZONJFODEcff1tzvnT8Auo6q1P9RSXnCuTbgXM76GMvphaH1
+         kTMKiCbxsMrupwbHP3e3ph0KRXsB8ddoojVl7VTKQl2+ekgK9cMFAxKpq0tr8VH+s3M9
+         tOnA==
+X-Forwarded-Encrypted: i=1; AJvYcCVAjN8iakNCOvyCsRDMJzXTbB3moJNhua20u56vE4/10GYWREc3tCSLbJ2TC9C2H8WEnOY/tAB+xsk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw85WXcv3pBA5BfFkLg0cWDuGzZpDmDfF052ZFxMylgUaFW+7W2
+	JkIA524FuNH1v2GWEUN3s6WeV31EK1yJb+xML5QVwSADSOlf244DmYlqXUiqLjWazA==
+X-Gm-Gg: ASbGnct7A54Mz4auSU4CEHXCFTlGE8HGhO/GrtRHOal9Zr+A98dqVbIS1ehsnVhzzpu
+	JyM9913gkQ4NMkWpuLwCUqiN/ZEPKUbU3vuaRWrlCj8z5c3uvZnxaUELacw7/KL1cQ2YYBSVRxJ
+	xobcWuB9fRK5kXLakn+iWnkXarfBLX2KCLspP8hW7OWJE3wcqA7Umrdowz4Rtq54iQFxaI+r7Xl
+	JttE+lQxOzN/O27Q8C+WzC/9bUCHlI7kGKa4s+4aCViNQPFw4bWgSobPworD3OAFv3aTOkrFbRe
+	NCAebLv0oNFR75viH/B5/dy5QoRUmPv7wIPxBRvTVacXH59wlnoNCq6rTy8R0Ikf4jD5EOeckaC
+	NLLki+sqUFZEYwjf9RZsP5IprZXQNM9MBqx1hAIxhH+gBLp5xvfZHLms7eJTeQrh/g/4A7+I=
+X-Google-Smtp-Source: AGHT+IGZpPB1acpeu6npCjJnCfSo43c/nVfDcPN4PgeohagoMI2YXoVU4nxMTi/b5qaB6M6hyplRlg==
+X-Received: by 2002:a17:903:1b65:b0:246:b1fd:2968 with SMTP id d9443c01a7336-246b1fd2ab8mr192079555ad.9.1756412715244;
+        Thu, 28 Aug 2025 13:25:15 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:2893:df0f:26ec:df00])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-24905bb28d4sm3845375ad.92.2025.08.28.13.25.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Aug 2025 13:25:14 -0700 (PDT)
+Date: Thu, 28 Aug 2025 13:25:12 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>, Will Deacon <will@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Niklas Cassel <cassel@kernel.org>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v6 2/4] PCI: host-common: Add link down handling for Root
+ Ports
+Message-ID: <aLC7KIoi-LoH2en4@google.com>
+References: <20250715-pci-port-reset-v6-0-6f9cce94e7bb@oss.qualcomm.com>
+ <20250715-pci-port-reset-v6-2-6f9cce94e7bb@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250715-pci-port-reset-v6-2-6f9cce94e7bb@oss.qualcomm.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 2b94e3bde67474e6290cfa911860d5587b6aabed  Merge branch 'pci/misc'
+Hi,
 
-elapsed time: 1244m
+I've been testing this out with various endpoints (both upstream and
+not...), and I have a question that intersects with this area:
 
-configs tested: 114
-configs skipped: 12
+On Tue, Jul 15, 2025 at 07:51:05PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> From: Manivannan Sadhasivam <mani@kernel.org>
+> 
+> The PCI link, when down, needs to be recovered to bring it back. But on
+> some platforms, that cannot be done in a generic way as link recovery
+> procedure is platform specific. So add a new API
+> pci_host_handle_link_down() that could be called by the host bridge drivers
+> for a specific Root Port when the link goes down.
+> 
+> The API accepts the 'pci_dev' corresponding to the Root Port which observed
+> the link down event. If CONFIG_PCIEAER is enabled, the API calls
+> pcie_do_recovery() function with 'pci_channel_io_frozen' as the state. This
+> will result in the execution of the AER Fatal error handling code. Since
+> the link down recovery is pretty much the same as AER Fatal error handling,
+> pcie_do_recovery() helper is reused here. First, the AER error_detected()
+> callback will be triggered for the bridge and then for the downstream
+> devices.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I've been trying to understand what exactly the .error_detected()
+involvement should be here (and what it actually does, despite the
+docs), and especially around its return codes.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250828    gcc-8.5.0
-arc                   randconfig-002-20250828    gcc-14.3.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                   randconfig-001-20250828    gcc-14.3.0
-arm                   randconfig-002-20250828    gcc-10.5.0
-arm                   randconfig-003-20250828    clang-22
-arm                   randconfig-004-20250828    gcc-8.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250828    clang-22
-arm64                 randconfig-002-20250828    clang-22
-arm64                 randconfig-003-20250828    gcc-15.1.0
-arm64                 randconfig-004-20250828    gcc-15.1.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250828    gcc-15.1.0
-csky                  randconfig-002-20250828    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250828    clang-22
-hexagon               randconfig-002-20250828    clang-22
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250828    gcc-12
-i386        buildonly-randconfig-002-20250828    gcc-12
-i386        buildonly-randconfig-003-20250828    gcc-12
-i386        buildonly-randconfig-004-20250828    gcc-12
-i386        buildonly-randconfig-005-20250828    gcc-12
-i386        buildonly-randconfig-006-20250828    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20250828    clang-22
-loongarch             randconfig-002-20250828    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250828    gcc-8.5.0
-nios2                 randconfig-002-20250828    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250828    gcc-13.4.0
-parisc                randconfig-002-20250828    gcc-13.4.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc               randconfig-001-20250828    clang-22
-powerpc               randconfig-002-20250828    gcc-8.5.0
-powerpc               randconfig-003-20250828    gcc-8.5.0
-powerpc64             randconfig-001-20250828    gcc-10.5.0
-powerpc64             randconfig-003-20250828    gcc-15.1.0
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20250828    clang-22
-riscv                 randconfig-002-20250828    gcc-8.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250828    clang-18
-s390                  randconfig-002-20250828    clang-19
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20250828    gcc-12.5.0
-sh                    randconfig-002-20250828    gcc-14.3.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250828    gcc-8.5.0
-sparc                 randconfig-002-20250828    gcc-12.5.0
-sparc64               randconfig-001-20250828    gcc-8.5.0
-sparc64               randconfig-002-20250828    clang-20
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250828    clang-19
-um                    randconfig-002-20250828    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250828    gcc-12
-x86_64      buildonly-randconfig-002-20250828    gcc-12
-x86_64      buildonly-randconfig-003-20250828    clang-20
-x86_64      buildonly-randconfig-004-20250828    gcc-12
-x86_64      buildonly-randconfig-005-20250828    gcc-12
-x86_64      buildonly-randconfig-006-20250828    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250828    gcc-8.5.0
-xtensa                randconfig-002-20250828    gcc-14.3.0
+Specifically, I'm trying to see what's supposed to happen with
+PCI_ERS_RESULT_CAN_RECOVER. I see that for pci_channel_io_frozen, almost
+all endpoint drivers return PCI_ERS_RESULT_NEED_RESET, but if drivers
+actually return PCI_ERS_RESULT_CAN_RECOVER, it's unclear what should
+happen.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Today, we don't actually respect it; pcie_do_recovery() just calls
+reset_subordinates() (pci_host_reset_root_port()) unconditionally. The
+only thing that return code affects is whether we call
+report_mmio_enabled() vs report_slot_reset() afterward. This seems odd.
+
+It also doesn't totally match the docs:
+
+https://docs.kernel.org/PCI/pcieaer-howto.html#non-correctable-non-fatal-and-fatal-errors
+https://docs.kernel.org/PCI/pci-error-recovery.html
+
+e.g., "PCI_ERS_RESULT_CAN_RECOVER
+Driver returns this if it thinks it might be able to recover the HW by
+just banging IOs or if it wants to be given a chance to extract some
+diagnostic information (see mmio_enable, below)."
+
+I've seen drivers that think they want to handle stuff on their own --
+for example, if they have a handle to an external PMIC, they may try to
+reset things that way -- and so they return PCI_ERS_RESULT_CAN_RECOVER
+even for io_frozen. I'm not convinced that's a great idea, but I'm also
+not sure what to say about the docs.
+
+On the flip side: it's not clear
+PCI_ERS_RESULT_NEED_RESET+pci_channel_io_normal works as documented
+either. An endpoint might think it's requesting a slot reset, but
+pcie_do_recovery() will ignore that and skip reset_subordinates()
+(pci_host_reset_root_port()).
+
+All in all, the docs sound like endpoints _should_ have control over
+whether we exercise a full port/slot reset for all types of errors. But
+in practice, we do not actually give it that control. i.e., your commit
+message is correct, and the docs are not.
+
+I have half a mind to suggest the appended change, so the behavior
+matches (some of) the docs a little better [1].
+
+Brian
+
+> Finally, pci_host_reset_root_port() will be called for the Root
+> Port, which will reset the Root Port using 'reset_root_port' callback to
+> recover the link. Once that's done, resume message will be broadcasted to
+> the bridge and the downstream devices, indicating successful link recovery.
+> 
+> But if CONFIG_PCIEAER is not enabled in the kernel, only
+> pci_host_reset_root_port() API will be called, which will in turn call
+> pci_bus_error_reset() to just reset the Root Port as there is no way we
+> could inform the drivers about link recovery.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+
+[1]
+
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -219,13 +219,10 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	pci_dbg(bridge, "broadcast error_detected message\n");
+ 	if (state == pci_channel_io_frozen) {
+ 		pci_walk_bridge(bridge, report_frozen_detected, &status);
+-		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
+-			pci_warn(bridge, "subordinate device reset failed\n");
+-			goto failed;
+-		}
+ 	} else {
+ 		pci_walk_bridge(bridge, report_normal_detected, &status);
+ 	}
++	pci_dbg(bridge, "error_detected result: %d\n", status);
+ 
+ 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+ 		status = PCI_ERS_RESULT_RECOVERED;
+@@ -234,6 +231,11 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	}
+ 
+ 	if (status == PCI_ERS_RESULT_NEED_RESET) {
++		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
++			pci_warn(bridge, "subordinate device reset failed\n");
++			goto failed;
++		}
++
+ 		status = PCI_ERS_RESULT_RECOVERED;
+ 		pci_dbg(bridge, "broadcast slot_reset message\n");
+ 		pci_walk_bridge(bridge, report_slot_reset, &status);
 
