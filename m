@@ -1,103 +1,152 @@
-Return-Path: <linux-pci+bounces-35043-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35044-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EBE8B3A823
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 19:31:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AF626B3A82C
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 19:33:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0AD823AABAC
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 17:31:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6985C3AB334
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Aug 2025 17:33:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B6B83375BA;
-	Thu, 28 Aug 2025 17:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DB9E32BF20;
+	Thu, 28 Aug 2025 17:33:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nm8QlKSU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iyZ707Hp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5A423ABBD;
-	Thu, 28 Aug 2025 17:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094251E502;
+	Thu, 28 Aug 2025 17:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756402313; cv=none; b=BiIA1QV5TjQ85v/+eQrbCHJQpLLZgD74nGK15mzaWJldCMYA0iTrPxi0hPKoIi4/NCrdZqyDvQsHB0i3HUpG22bt0a29cNTWoRmxZdUmd17gb8YG/Ploe8N4/ysSHhYwycMFDbkTMv2LHnloR26O4ZO1OZbExLp/Q2/8tc3mWnU=
+	t=1756402392; cv=none; b=l2BJ1nUbz2dVTQtbALBplA8HRwTp/S6DaYz1K7Y5bum3YKz6UmplhUbC92LWRaFDijg6HNwqi/mxs+1VoQ6dvd1sN/TcsP62gMYM6ckZ3AauZ9SNnG7hsVI9PtG4GTV+DxLW1aPi6kQMDvnAwELSSWzxxvcAHZd/AWbKiu1NVM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756402313; c=relaxed/simple;
-	bh=vl9K/umacKTfK8n27M0KwHBfAPbKCprrGgu7yc+VISM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=gB/uz38hofrgGWY9zM2+iTrdF290/tAwP/LUe3jZi4i2UszBTlx4vmAqHNys15L994D2rFUmzWXDpHAQOxaWEtGkzQ9DPAB0PV2szEXBzE1BRKgL2VzKvSj0Q2I3rZ9EqNTLW6KRb3vwBGZmTNuvy9Nx1/5Xx4dLEjqiLdEPVLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nm8QlKSU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DAD3C4CEEB;
-	Thu, 28 Aug 2025 17:31:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756402312;
-	bh=vl9K/umacKTfK8n27M0KwHBfAPbKCprrGgu7yc+VISM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Nm8QlKSUyPe3Gf+UCV04JeGw8KneAP2RaHR1A4YbseNmdkgRMIY3thPtQ/OAYQiqm
-	 rp3ocwBxMk/z+rHqd3B3InJvp1jblMILJ8F44Ut8sekeJqhuMCpm+VVbun3jgnT//q
-	 q0lW/PAxNv/v+VJ6n0eT+l5UxBBHcIAWlsXm/8Q5IroJBUY9QpO12Xnvn9FXHPslGE
-	 sHC5eDUO0UKs2FOZh0vS5hlguumDWK8S8lyFXrZ9svJWpBcdmUBMxo7iH7EljoSAk4
-	 QTHLNxoCXsQjUo/wNZpIa9zzlYtq6gjBnxsDClXPPdwPYrbU2icH59w927cENgcDjw
-	 K4izz/zKsSrjw==
-Date: Thu, 28 Aug 2025 12:31:51 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Andreas Larsson <andreas@gaisler.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-pci@vger.kernel.org, sparclinux@vger.kernel.org,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Yinghai Lu <yinghai@kernel.org>,
-	Igor Mammedov <imammedo@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
-	linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 00/24] PCI: Bridge window selection improvements
-Message-ID: <20250828173151.GA950809@bhelgaas>
+	s=arc-20240116; t=1756402392; c=relaxed/simple;
+	bh=PAyB9KGs5Ltk6f45VQNODlFyLGsLWrYIJfa0PPsi3V4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mm2FWdCtVWBWE+lBjzoifZ0AtZHSBDX4AAJZgV8o1TDO4lxVkIgCz5sY+QT1CxBieRqNosEBWEhiSi8uw2chi8ay4/di5a8Y7UUcATeb1umJwiVCt3xPHxIicQT6sXAAfjLCI9oMsIRPn4fzEhAxkn0IKgKQGF1PM4P8L+FdjW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iyZ707Hp; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756402390; x=1787938390;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PAyB9KGs5Ltk6f45VQNODlFyLGsLWrYIJfa0PPsi3V4=;
+  b=iyZ707HpaWE+jafhNAa52/s79yiJPugANkZ3a7KSbq68c6W/hIDmIN6g
+   ZFRJZgB4gBch5ErzJmC8zmHT3fkodCz0Dr36G8j45SQ32SlAJ8E335n+N
+   UKthw4cXxNYkZ0oObyjKvPKCSxdxVwjsjIOApqu+NkmmMHZoKIjrRkoMY
+   EaWP2mnJM3a9HFfgW+6d50hqHIyXBF0VR11HLbNlI8AYtSSGzETCsijgf
+   lJbXFoGPQTDD33AL7PL7V6a2F6EqzNPauh6fWNt0yQGKVjr9exXGKs1Mq
+   6TykbwZGl0NGrnQNno0vRIQGb4C9MqkYkbx+Wn2vLBHFug/0k+DctxzEB
+   g==;
+X-CSE-ConnectionGUID: yh0Du+L+RnOOlttr8oMYlA==
+X-CSE-MsgGUID: ftwQ7mlITKWvjmdQx27Xvw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="81274070"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="81274070"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 10:33:09 -0700
+X-CSE-ConnectionGUID: +GxJnzhAQR6QdfQiwOqIyA==
+X-CSE-MsgGUID: 01lRZJ04QIStC/z5vPVh1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,220,1751266800"; 
+   d="scan'208";a="170343066"
+Received: from anmitta2-mobl4.gar.corp.intel.com (HELO [10.247.118.49]) ([10.247.118.49])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 10:32:59 -0700
+Message-ID: <1f2f0156-b320-4962-838d-b907aaf37044@intel.com>
+Date: Thu, 28 Aug 2025 10:32:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d209c08a-56df-5aac-869d-7c6c548c0614@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 04/23] cxl/pci: Remove unnecessary CXL RCH handling
+ helper functions
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250827013539.903682-1-terry.bowman@amd.com>
+ <20250827013539.903682-5-terry.bowman@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250827013539.903682-5-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Aug 28, 2025 at 07:47:06PM +0300, Ilpo Järvinen wrote:
-> On Wed, 27 Aug 2025, Bjorn Helgaas wrote:
-> > On Fri, Aug 22, 2025 at 05:55:41PM +0300, Ilpo Järvinen wrote:
-> > > This series is based on top of the three resource fitting and
-> > > assignment algorithm fixes (v3).
-> > > 
-> > > PCI resource fitting and assignment code needs to find the bridge
-> > > window a resource belongs to in multiple places, yet, no common
-> > > function for that exists. Thus, each site has its own version of
-> > > the decision, each with their own corner cases, misbehaviors, and
-> > > some resulting in complex interfaces between internal functions.
-> > > ...
 
-> I'll need to do minor corrections into a few intermediate patches though 
-> to ensure bisectability, we really want to make this as bisectable as 
-> possible. In other words, I've found 2 relatively small issues in them 
-> which won't change the end result when the whole series is complete and 
-> fixed some small grammar errors in the changelogs.
+
+On 8/26/25 6:35 PM, Terry Bowman wrote:
+> cxl_handle_rdport_cor_ras() and cxl_handle_rdport_ras() are specific
+> to Restricted CXL Host (RCH) handling. Improve readability and
+> maintainability by replacing these and instead using the common
+> cxl_handle_cor_ras() and cxl_handle_ras() functions.
 > 
-> I see you made some corrections so I'm not sure what's the best course of 
-> action here to update them. Should I just send v2 normally and you deal 
-> with your changes while replacing v1 with v2?
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 
-That would work for me.  Or if you picked the patches from
-pci/resource and posted a v2 based on them, that would be even easier
-for me.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> 
+> ---
+> 
+> Changes in v10->v11:
+> - New patch
+> ---
+>  drivers/cxl/core/ras.c | 16 ++--------------
+>  1 file changed, 2 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index 544a0d8773fa..0875ce8116ff 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -233,12 +233,6 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
+>  	}
+>  }
+>  
+> -static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
+> -				      struct cxl_dport *dport)
+> -{
+> -	return cxl_handle_cor_ras(cxlds, dport->regs.ras);
+> -}
+> -
+>  /*
+>   * Log the state of the RAS status registers and prepare them to log the
+>   * next error status. Return 1 if reset needed.
+> @@ -276,12 +270,6 @@ static bool cxl_handle_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base)
+>  	return true;
+>  }
+>  
+> -static bool cxl_handle_rdport_ras(struct cxl_dev_state *cxlds,
+> -				  struct cxl_dport *dport)
+> -{
+> -	return cxl_handle_ras(cxlds, dport->regs.ras);
+> -}
+> -
+>  /*
+>   * Copy the AER capability registers using 32 bit read accesses.
+>   * This is necessary because RCRB AER capability is MMIO mapped. Clear the
+> @@ -350,9 +338,9 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
+>  
+>  	pci_print_aer(pdev, severity, &aer_regs);
+>  	if (severity == AER_CORRECTABLE)
+> -		cxl_handle_rdport_cor_ras(cxlds, dport);
+> +		cxl_handle_cor_ras(cxlds, dport->regs.ras);
+>  	else
+> -		cxl_handle_rdport_ras(cxlds, dport);
+> +		cxl_handle_ras(cxlds, dport->regs.ras);
+>  }
+>  
+>  void cxl_cor_error_detected(struct pci_dev *pdev)
+
 
