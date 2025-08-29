@@ -1,494 +1,159 @@
-Return-Path: <linux-pci+bounces-35091-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35092-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC2B7B3B5F2
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 10:24:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D990B3B611
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 10:35:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13E4B1C85A96
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 08:24:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C0AF3B20DE
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 08:35:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A27B6286402;
-	Fri, 29 Aug 2025 08:24:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D5A92853EF;
+	Fri, 29 Aug 2025 08:35:25 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net (zg8tmja5ljk3lje4mi4ymjia.icoremail.net [209.97.182.222])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A5B427CCE2;
-	Fri, 29 Aug 2025 08:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.182.222
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FD6261B6D;
+	Fri, 29 Aug 2025 08:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756455871; cv=none; b=Q80aOHkr/u5DcT71D067Y3lduZDl9XBfWUASiN2mLMTjoqWzdH8SmaL97kzIfkwREXQbi+2PKNovr+ZuOJdX1A7vSR6IOP7T39wshBaaHBxnds58K4r4PJx0genKZCbx/yYlu2Pa+Dkf0GifruOSFK+zytfQT/AtHmChXxgAJz8=
+	t=1756456525; cv=none; b=laVSc2+QfcrTZXUBjBg/gl9hfmCpnYlxoBAuTsvr9HjUc23QEH144tHRrgjEPmq/MCObaOTjagy4tykCsNe+Dy66EfhR1ve9YMJcXks9/ZNW6/cOnPxh1h1rfrmBdDsR6ak7C2gWGWvBfAtGgySx3J7rTgUvHNyOy1Ggv0aUn7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756455871; c=relaxed/simple;
-	bh=HuRBr4DeKf4h0ZHdI9uVOEumW9yYIUjlHyYdC1c6pqc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gQrFG7z/zXyzW8bBdUQFpYEF10qtIDfAmyseGtbqywadBc7CF/+yiCkSh1m1yVQvTek01TsVSvBvX5U27zzw+gB7UQgZ9iZ5hr16h7Fk+jVmTgwmHsuvGkiE0KdHuL1E4B3JGI6hK6lvCokPp2R/ZpkLgpITeEx8MRr0gTpZUMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=209.97.182.222
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0004758DT.eswin.cn (unknown [10.12.96.83])
-	by app2 (Coremail) with SMTP id TQJkCgBnBpWoY7FooQfFAA--.41052S2;
-	Fri, 29 Aug 2025 16:24:10 +0800 (CST)
-From: zhangsenchuan@eswincomputing.com
-To: bhelgaas@google.com,
-	lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	mani@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	p.zabel@pengutronix.de,
-	johan+linaro@kernel.org,
-	quic_schintav@quicinc.com,
-	shradha.t@samsung.com,
-	cassel@kernel.org,
-	thippeswamy.havalige@amd.com,
-	mayank.rana@oss.qualcomm.com,
-	inochiama@gmail.com
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com,
-	Senchuan Zhang <zhangsenchuan@eswincomputing.com>
-Subject: [PATCH v2 2/2] PCI: eic7700: Add Eswin eic7700 PCIe host controller driver
-Date: Fri, 29 Aug 2025 16:24:05 +0800
-Message-ID: <20250829082405.1203-1-zhangsenchuan@eswincomputing.com>
-X-Mailer: git-send-email 2.49.0.windows.1
-In-Reply-To: <20250829082021.49-1-zhangsenchuan@eswincomputing.com>
-References: <20250829082021.49-1-zhangsenchuan@eswincomputing.com>
+	s=arc-20240116; t=1756456525; c=relaxed/simple;
+	bh=zhFUw5FTo/Ejp3wHfGNYEMRD/5WGxpxHaIqzXWPclzo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=puSBbknJ6J4Wj5CfVQUBHpNQYy7NaTRwfROXEQgGod7RIGf8mAnk/cipRL+zLMkn6SK88hhp4nAGWwYWY9AcHIXRYCEJH4kG9/aS35z0454qug3JobVqGqnSXts7P9XQkV0lYt99bL4KpAFGDH2vR8ZUyG/D/CFJbY/GsFUHods=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 98F5D2C09E19;
+	Fri, 29 Aug 2025 10:35:20 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 6A41242A4F0; Fri, 29 Aug 2025 10:35:20 +0200 (CEST)
+Date: Fri, 29 Aug 2025 10:35:20 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Brian Norris <briannorris@chromium.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>, Will Deacon <will@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Niklas Cassel <cassel@kernel.org>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: Re: [PATCH v6 2/4] PCI: host-common: Add link down handling for Root
+ Ports
+Message-ID: <aLFmSFe5iyYDrIjt@wunner.de>
+References: <20250715-pci-port-reset-v6-0-6f9cce94e7bb@oss.qualcomm.com>
+ <20250715-pci-port-reset-v6-2-6f9cce94e7bb@oss.qualcomm.com>
+ <aLC7KIoi-LoH2en4@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgBnBpWoY7FooQfFAA--.41052S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3Kw4kCrWrtF15KryxurWkCrg_yoWktFyfpa
-	1UJayYyF48JrW3Wa13AF95uF4avFnxua4UJ39agan7uay3J34kWr1ftry3tF97Cr4kury3
-	J3WUta4xCF43JwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBm14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r4a6rW5MxkIecxEwVCm-wCF04
-	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
-	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr4
-	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1U
-	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
-	8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRNSdgDUUUU
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aLC7KIoi-LoH2en4@google.com>
 
-From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+On Thu, Aug 28, 2025 at 01:25:12PM -0700, Brian Norris wrote:
+> On the flip side: it's not clear
+> PCI_ERS_RESULT_NEED_RESET+pci_channel_io_normal works as documented
+> either. An endpoint might think it's requesting a slot reset, but
+> pcie_do_recovery() will ignore that and skip reset_subordinates()
+> (pci_host_reset_root_port()).
+> 
+> All in all, the docs sound like endpoints _should_ have control over
+> whether we exercise a full port/slot reset for all types of errors. But
+> in practice, we do not actually give it that control. i.e., your commit
+> message is correct, and the docs are not.
+> 
+> I have half a mind to suggest the appended change, so the behavior
+> matches (some of) the docs a little better [1].
 
-Add driver for the Eswin EIC7700 PCIe host controller.
-The controller is based on the DesignWare PCIe core.
+A change similar to the one you're proposing is already queued on the
+pci/aer topic branch for v6.18:
 
-Signed-off-by: Yu Ning <ningyu@eswincomputing.com>
-Signed-off-by: Senchuan Zhang<zhangsenchuan@eswincomputing.com>
----
- drivers/pci/controller/dwc/Kconfig        |  12 +
- drivers/pci/controller/dwc/Makefile       |   1 +
- drivers/pci/controller/dwc/pcie-eic7700.c | 350 ++++++++++++++++++++++
- 3 files changed, 363 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-eic7700.c
+https://git.kernel.org/pci/pci/c/d0a2dee7d458
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index ff6b6d9e18ec..1c4063107a8a 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -492,4 +492,16 @@ config PCIE_VISCONTI_HOST
- 	  Say Y here if you want PCIe controller support on Toshiba Visconti SoC.
- 	  This driver supports TMPV7708 SoC.
+Here's the corresponding cover letter:
 
-+config PCIE_EIC7700
-+	tristate "ESWIN PCIe host controller"
-+	depends on PCI_MSI
-+	depends on ARCH_ESWIN || COMPILE_TEST
-+	select PCIE_DW_HOST
-+	help
-+	  Enables support for the PCIe controller in the Eswin SoC
-+	  The PCI controller on Eswin is based on DesignWare hardware
-+	  It is a high-speed hardware bus standard used to connect
-+	  processors with external devices. Say Y here if you want
-+	  PCIe controller support for the ESWIN.
-+
- endmenu
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index 6919d27798d1..0717fe73a2a9 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -31,6 +31,7 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
- obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
- obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
- obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
-+obj-$(CONFIG_PCIE_EIC7700) += pcie-eic7700.o
+https://lore.kernel.org/r/cover.1755008151.git.lukas@wunner.de
 
- # The following drivers are for devices that use the generic ACPI
- # pci_root.c driver but don't support standard ECAM config access.
-diff --git a/drivers/pci/controller/dwc/pcie-eic7700.c b/drivers/pci/controller/dwc/pcie-eic7700.c
-new file mode 100644
-index 000000000000..bf942154d971
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-eic7700.c
-@@ -0,0 +1,350 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ESWIN PCIe root complex driver
-+ *
-+ * Copyright 2025, Beijing ESWIN Computing Technology Co., Ltd.
-+ *
-+ * Authors: Yu Ning <ningyu@eswincomputing.com>
-+ *          Senchuan Zhang <zhangsenchuan@eswincomputing.com>
-+ */
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/resource.h>
-+#include <linux/types.h>
-+#include <linux/interrupt.h>
-+#include <linux/iopoll.h>
-+#include <linux/reset.h>
-+#include <linux/pm_runtime.h>
-+
-+#include "pcie-designware.h"
-+
-+struct eswin_pcie {
-+	struct dw_pcie pci;
-+	void __iomem *mgmt_base;
-+	struct clk_bulk_data *clks;
-+	struct reset_control *powerup_rst;
-+	struct reset_control *cfg_rst;
-+	struct reset_control *perst;
-+
-+	int num_clks;
-+};
-+
-+#define PCIE_PM_SEL_AUX_CLK BIT(16)
-+#define PCIEMGMT_APP_LTSSM_ENABLE BIT(5)
-+
-+#define PCIEMGMT_CTRL0_OFFSET 0x0
-+#define PCIEMGMT_STATUS0_OFFSET 0x100
-+
-+#define PCIE_TYPE_DEV_VEND_ID 0x0
-+#define PCIE_DSP_PF0_MSI_CAP 0x50
-+#define PCIE_NEXT_CAP_PTR 0x70
-+#define DEVICE_CONTROL_DEVICE_STATUS 0x78
-+
-+#define PCIE_MSI_MULTIPLE_MSG_32 (0x5 << 17)
-+#define PCIE_MSI_MULTIPLE_MSG_MASK (0x7 << 17)
-+
-+#define PCIEMGMT_LINKUP_STATE_VALIDATE ((0x11 << 2) | 0x3)
-+#define PCIEMGMT_LINKUP_STATE_MASK 0xff
-+
-+static int eswin_pcie_start_link(struct dw_pcie *pci)
-+{
-+	struct device *dev = pci->dev;
-+	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-+	u32 val;
-+
-+	/* Enable LTSSM */
-+	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-+	val |= PCIEMGMT_APP_LTSSM_ENABLE;
-+	writel_relaxed(val, pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-+
-+	return 0;
-+}
-+
-+static bool eswin_pcie_link_up(struct dw_pcie *pci)
-+{
-+	struct device *dev = pci->dev;
-+	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-+	u32 val;
-+
-+	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_STATUS0_OFFSET);
-+
-+	return ((val & PCIEMGMT_LINKUP_STATE_MASK) ==
-+		     PCIEMGMT_LINKUP_STATE_VALIDATE);
-+}
-+
-+static int eswin_pcie_power_on(struct eswin_pcie *pcie)
-+{
-+	int ret = 0;
-+
-+	/* pciet_cfg_rstn */
-+	ret = reset_control_deassert(pcie->cfg_rst);
-+	if (ret) {
-+		dev_err(pcie->pci.dev, "cfg signal is invalid");
-+		return ret;
-+	}
-+
-+	/* pciet_powerup_rstn */
-+	ret = reset_control_deassert(pcie->powerup_rst);
-+	if (ret) {
-+		dev_err(pcie->pci.dev, "powerup signal is invalid");
-+		goto err_deassert_powerup;
-+	}
-+
-+	return ret;
-+
-+err_deassert_powerup:
-+	reset_control_assert(pcie->cfg_rst);
-+
-+	return ret;
-+}
-+
-+static void eswin_pcie_power_off(struct eswin_pcie *eswin_pcie)
-+{
-+	reset_control_assert(eswin_pcie->powerup_rst);
-+	reset_control_assert(eswin_pcie->cfg_rst);
-+}
-+
-+static int eswin_pcie_host_init(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct eswin_pcie *pcie = dev_get_drvdata(pci->dev);
-+	int ret;
-+	u32 val;
-+	u32 retries;
-+
-+	/* Fetch clocks */
-+	pcie->num_clks = devm_clk_bulk_get_all_enabled(pci->dev, &pcie->clks);
-+	if (pcie->num_clks < 0)
-+		return dev_err_probe(pci->dev, pcie->num_clks,
-+				     "failed to get pcie clocks\n");
-+
-+	ret = eswin_pcie_power_on(pcie);
-+	if (ret)
-+		return ret;
-+
-+	/* set device type : rc */
-+	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-+	val &= 0xfffffff0;
-+	writel_relaxed(val | 0x4, pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-+
-+	ret = reset_control_assert(pcie->perst);
-+	if (ret) {
-+		dev_err(pci->dev, "perst assert signal is invalid");
-+		goto err_perst;
-+	}
-+	msleep(100);
-+	ret = reset_control_deassert(pcie->perst);
-+	if (ret) {
-+		dev_err(pci->dev, "perst deassert signal is invalid");
-+		goto err_perst;
-+	}
-+
-+	/* app_hold_phy_rst */
-+	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-+	val &= ~(0x40);
-+	writel_relaxed(val, pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-+
-+	/*
-+	 * It takes at least 20ms to wait for the pcie
-+	 * status register to be 0.
-+	 */
-+	retries = 30;
-+	do {
-+		val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_STATUS0_OFFSET);
-+		if (!(val & PCIE_PM_SEL_AUX_CLK))
-+			break;
-+		usleep_range(1000, 1100);
-+		retries--;
-+	} while (retries);
-+
-+	if (!retries) {
-+		dev_err(pci->dev, "No clock exist.\n");
-+		ret = -ENODEV;
-+		goto err_clock;
-+	}
-+
-+	/* config eswin vendor id and eic7700 device id */
-+	dw_pcie_writel_dbi(pci, PCIE_TYPE_DEV_VEND_ID, 0x20301fe1);
-+
-+	/* lane fix config, real driver NOT need, default x4 */
-+	val = dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
-+	val &= 0xffffff80;
-+	val |= 0x44;
-+	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL, val);
-+
-+	val = dw_pcie_readl_dbi(pci, DEVICE_CONTROL_DEVICE_STATUS);
-+	val &= ~(0x7 << 5);
-+	val |= (0x2 << 5);
-+	dw_pcie_writel_dbi(pci, DEVICE_CONTROL_DEVICE_STATUS, val);
-+
-+	/*  config support 32 msi vectors */
-+	val = dw_pcie_readl_dbi(pci, PCIE_DSP_PF0_MSI_CAP);
-+	val &= ~PCIE_MSI_MULTIPLE_MSG_MASK;
-+	val |= PCIE_MSI_MULTIPLE_MSG_32;
-+	dw_pcie_writel_dbi(pci, PCIE_DSP_PF0_MSI_CAP, val);
-+
-+	/* disable msix cap */
-+	val = dw_pcie_readl_dbi(pci, PCIE_NEXT_CAP_PTR);
-+	val &= 0xffff00ff;
-+	dw_pcie_writel_dbi(pci, PCIE_NEXT_CAP_PTR, val);
-+
-+	return 0;
-+
-+err_clock:
-+	reset_control_assert(pcie->perst);
-+err_perst:
-+	eswin_pcie_power_off(pcie);
-+	return ret;
-+}
-+
-+static const struct dw_pcie_host_ops eswin_pcie_host_ops = {
-+	.init = eswin_pcie_host_init,
-+};
-+
-+static const struct dw_pcie_ops dw_pcie_ops = {
-+	.start_link = eswin_pcie_start_link,
-+	.link_up = eswin_pcie_link_up,
-+};
-+
-+static int eswin_pcie_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct dw_pcie *pci;
-+	struct eswin_pcie *pcie;
-+	int ret;
-+
-+	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-+	if (!pcie)
-+		return -ENOMEM;
-+
-+	pci = &pcie->pci;
-+	pci->dev = dev;
-+	pci->ops = &dw_pcie_ops;
-+	pci->pp.ops = &eswin_pcie_host_ops;
-+
-+	/* SiFive specific region: mgmt */
-+	pcie->mgmt_base = devm_platform_ioremap_resource_byname(pdev, "mgmt");
-+	if (IS_ERR(pcie->mgmt_base))
-+		return dev_err_probe(dev, PTR_ERR(pcie->mgmt_base),
-+				     "failed to map mgmt memory\n");
-+
-+	/* Fetch reset */
-+	pcie->powerup_rst = devm_reset_control_get_optional(&pdev->dev,
-+							    "powerup");
-+	if (IS_ERR_OR_NULL(pcie->powerup_rst))
-+		return dev_err_probe(dev, PTR_ERR(pcie->powerup_rst),
-+				     "unable to get powerup reset\n");
-+
-+	pcie->cfg_rst = devm_reset_control_get_optional(&pdev->dev, "cfg");
-+	if (IS_ERR_OR_NULL(pcie->cfg_rst))
-+		return dev_err_probe(dev, PTR_ERR(pcie->cfg_rst),
-+				     "unable to get cfg reset\n");
-+
-+	pcie->perst = devm_reset_control_get_optional(&pdev->dev, "pwren");
-+	if (IS_ERR_OR_NULL(pcie->perst))
-+		return dev_err_probe(dev, PTR_ERR(pcie->perst),
-+				     "unable to get perst reset\n");
-+
-+	platform_set_drvdata(pdev, pcie);
-+
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "pm_runtime_get_sync failed: %d\n", ret);
-+		goto err_get_sync;
-+	}
-+
-+	ret = dw_pcie_host_init(&pci->pp);
-+	if (ret) {
-+		dev_err(dev, "failed to initialize host: %d\n", ret);
-+		goto err_host_init;
-+	}
-+
-+	return ret;
-+
-+err_host_init:
-+	pm_runtime_put_sync(dev);
-+err_get_sync:
-+	pm_runtime_disable(dev);
-+	return ret;
-+}
-+
-+static void eswin_pcie_remove(struct platform_device *pdev)
-+{
-+	struct eswin_pcie *pcie = platform_get_drvdata(pdev);
-+
-+	dw_pcie_host_deinit(&pcie->pci.pp);
-+	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+
-+	reset_control_assert(pcie->perst);
-+	eswin_pcie_power_off(pcie);
-+}
-+
-+static void eswin_pcie_shutdown(struct platform_device *pdev)
-+{
-+	struct eswin_pcie *pcie = platform_get_drvdata(pdev);
-+
-+	/* Bring down link, so bootloader gets clean state in case of reboot */
-+	reset_control_assert(pcie->perst);
-+}
-+
-+static int eswin_pcie_suspend(struct device *dev)
-+{
-+	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-+
-+	reset_control_assert(pcie->perst);
-+	eswin_pcie_power_off(pcie);
-+	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
-+
-+	return 0;
-+}
-+
-+static int eswin_pcie_resume(struct device *dev)
-+{
-+	int ret;
-+	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-+
-+	ret = eswin_pcie_host_init(&pcie->pci.pp);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to init host: %d\n", ret);
-+		return ret;
-+	}
-+
-+	dw_pcie_setup_rc(&pcie->pci.pp);
-+	eswin_pcie_start_link(&pcie->pci);
-+	dw_pcie_wait_for_link(&pcie->pci);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops eswin_pcie_pm_ops = {
-+	NOIRQ_SYSTEM_SLEEP_PM_OPS(eswin_pcie_suspend, eswin_pcie_resume)
-+};
-+
-+static const struct of_device_id eswin_pcie_of_match[] = {
-+	{ .compatible = "eswin,eic7700-pcie" },
-+	{},
-+};
-+
-+static struct platform_driver eswin_pcie_driver = {
-+	.driver = {
-+		.name = "eic7700-pcie",
-+		.of_match_table = eswin_pcie_of_match,
-+		.suppress_bind_attrs = true,
-+		.pm = &eswin_pcie_pm_ops,
-+	},
-+	.probe = eswin_pcie_probe,
-+	.remove = eswin_pcie_remove,
-+	.shutdown = eswin_pcie_shutdown,
-+};
-+
-+module_platform_driver(eswin_pcie_driver);
-+
-+MODULE_DEVICE_TABLE(of, eswin_pcie_of_match);
-+MODULE_DESCRIPTION("PCIe host controller driver for eic7700 SoCs");
-+MODULE_AUTHOR("Yu Ning <ningyu@eswincomputing.com>");
-+MODULE_AUTHOR("Senchuan Zhang <zhangsenchuan@eswincomputing.com>");
-+MODULE_LICENSE("GPL");
---
-2.25.1
+There was a discussion why I didn't take the exact same approach you're
+proposing, but only a similar one:
 
+https://lore.kernel.org/r/aJ2uE6v46Zib30Jh@wunner.de
+https://lore.kernel.org/r/aKHWf3L0NCl_CET5@wunner.de
+
+
+> Specifically, I'm trying to see what's supposed to happen with
+> PCI_ERS_RESULT_CAN_RECOVER. I see that for pci_channel_io_frozen, almost
+> all endpoint drivers return PCI_ERS_RESULT_NEED_RESET, but if drivers
+> actually return PCI_ERS_RESULT_CAN_RECOVER, it's unclear what should
+> happen.
+> 
+> Today, we don't actually respect it; pcie_do_recovery() just calls
+> reset_subordinates() (pci_host_reset_root_port()) unconditionally. The
+> only thing that return code affects is whether we call
+> report_mmio_enabled() vs report_slot_reset() afterward. This seems odd.
+
+In the series queued on pci/aer, I've only allowed drivers to opt in
+to a reset on Non-Fatal Errors.  I didn't dare also letting them opt
+out of a reset on Fatal Errors.
+
+These changes of behavior are always risky, so it seemed prudent to not
+introduce too many changes at once.  There was no urgent need to also
+change behavior for Fatal Errors for the use case at hand (the xe graphics
+driver).  I went through all drivers with pci_error_handlers to avoid
+breaking any of them.  It's very tedious work, takes weeks.  It would
+be necessary to do that again when changing behavior for Fatal Errors.
+
+pcieaer-howto.rst justifies the unconditional reset on Fatal Errors by
+saying that the link is unreliable and that a reset is thus required.
+
+On the other hand, pci-error-recovery.rst (which is a few months older
+than pcieaer-howto.rst) says in section "STEP 3: Link Reset":
+"This is a PCIe specific step and is done whenever a fatal error has been
+detected"
+
+I'm wondering if the authors of pcieaer-howto.rst took that at face value
+and thought they'd *have* to reset the link on Fatal Errors.
+
+Looking through the Fatal Errors in PCIe r7.0 sec 6.2.7, I think a reset
+is justified for some of them, but optional for others.  Which leads me
+to believe that the AER driver should actually enforce a reset only for
+certain Fatal Errors, not all of them.  So this seems like something
+worth revisiting in the future.
+
+
+> All in all, the docs sound like endpoints _should_ have control over
+> whether we exercise a full port/slot reset for all types of errors. But
+> in practice, we do not actually give it that control. i.e., your commit
+> message is correct, and the docs are not.
+
+Indeed the documentation is no longer in sync with the code.  I've just
+submitted a series to rectify that and cc'ed you:
+
+https://lore.kernel.org/r/cover.1756451884.git.lukas@wunner.de
+
+Thanks,
+
+Lukas
 
