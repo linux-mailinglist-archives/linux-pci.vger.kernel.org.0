@@ -1,449 +1,150 @@
-Return-Path: <linux-pci+bounces-35096-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35097-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 668A2B3B79E
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 11:41:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E05D7B3BC09
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 15:11:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5121A175C66
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 09:41:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FAA51890731
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 13:11:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCB623043B4;
-	Fri, 29 Aug 2025 09:41:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97C462EB869;
+	Fri, 29 Aug 2025 13:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bEn+vtKS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560C71E3769
-	for <linux-pci@vger.kernel.org>; Fri, 29 Aug 2025 09:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B485333F3;
+	Fri, 29 Aug 2025 13:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756460500; cv=none; b=R3LsdU7cv2K/5JvFkrGBspSn+h8BwVrWgyQja75R0TRENN6zKnLL3IjV4g6S1lwSnm344TPJgKkx9+LXgYtmPUnY+ljwCxeD5A+2yX5TkIBFFOiwU8dc4MVYFyM3BidYJAQY11W+0cXVPqF7KAfYPVEcU/el9+Psr19N7QxSPh8=
+	t=1756473086; cv=none; b=tXUWmJV4Q2F1B04a2ybmrJHgWJ0992t22VY61H8K2951APJT/mZophLttLkRvxRINW/oCkv5dcVMRY11Xsz4hkZthi7xUlCTDeDPn4lmwbESVfMxs6Wki7q/bVnZKGSDgc+STQjCb+3+2clJmg9AogJXoYi3htrkHCU4Qq6Bqpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756460500; c=relaxed/simple;
-	bh=t+TFWm6otbID15MWhnAjbovaJXHGpS3+IAex8FR+uyo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T8EpwgYHsa1RTgUNspT9w0ogzQApC7BpqCWpURZRkYIYY/ma1MHO6HomDudG0+r42kuUX7bd488N+SmaU2XclVc6/OaVMuYyLWz+lYDslS4oLNXkj1sIIOgAjcoaDjGAcnWgdlM8d+85qa3/7YyCBvyg2pBPGZxCwJ7WArs0gAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
-	by Atcsqr.andestech.com with ESMTPS id 57T9fM8j093685
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 29 Aug 2025 17:41:22 +0800 (+08)
-	(envelope-from randolph@andestech.com)
-Received: from atctrx.andestech.com (10.0.15.173) by ATCPCS31.andestech.com
- (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Fri, 29 Aug 2025
- 17:41:22 +0800
-Date: Fri, 29 Aug 2025 17:41:17 +0800
-From: Randolph Lin <randolph@andestech.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <ben717@andestech.com>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-        <aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <jingoohan1@gmail.com>,
-        <mani@kernel.org>, <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
-        <bhelgaas@google.com>, <randolph.sklin@gmail.com>,
-        <tim609@andestech.com>
-Subject: Re: [PATCH 5/6] PCI: andes: Add Andes QiLai SoC PCIe host driver
- support
-Message-ID: <aLF0-0u38hKC7JcP@atctrx.andestech.com>
-References: <20250820111843.811481-6-randolph@andestech.com>
- <20250820155444.GA627080@bhelgaas>
+	s=arc-20240116; t=1756473086; c=relaxed/simple;
+	bh=6MKDfUnRhY6hfFmnDtD7dFoQMyonLl3m8ha2jnhnSWk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=to0mH09268A+8GYP7rXCGArQ+1tifu/RyaBprEp2uEmnedP4DcKWbzF7/tKK3X82ppwWHLeKJ6rUrNAaYYPl0UpYoUmCs2t+qkb0u+0PtYId8lzvwb6S7frF2ZiNz4BJQyNjKebqmPZYXgj36lwKToahk+oVF3xkXiXh9xhQgjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bEn+vtKS; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756473085; x=1788009085;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6MKDfUnRhY6hfFmnDtD7dFoQMyonLl3m8ha2jnhnSWk=;
+  b=bEn+vtKSrFk1THQaAe9jm+QUzpAGv5fjvOUQK3ns/18cG0i8ITEyAatV
+   VL5NjCZLnQ9N/+RBQqjQTD7EXV7qMyJLZTk0zNXQHmP8TrLnbYKiy82fY
+   ZF+J2MID6ie1bOUKB8zjqL1II+NTZhLcyrKsS/02sNMWAi4/+1ACygexF
+   tDAmw2727ZKIqxHFqPcR4XcgmZfbG8cYYcFDSA4wLmfb90eb2SsIlAp1y
+   uMR3ewarv5K1c+PfmnwWRRCEXNBNiT41oKZid5ODbgXcKYa+7GWJYVP5c
+   HqiQMaayGGSKPyCU+XHrrqoLDteiXM6U0Klj7o10V/hkMMHYYZL2Y7CXf
+   w==;
+X-CSE-ConnectionGUID: dsr7DY3FQ7+IdDTf/tfxSg==
+X-CSE-MsgGUID: 7APJvEgWS3KWCm9Pm1R5Gg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11536"; a="58687479"
+X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
+   d="scan'208";a="58687479"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 06:11:24 -0700
+X-CSE-ConnectionGUID: PztaruqKTTGTV9qsMIMQqQ==
+X-CSE-MsgGUID: ItUXWdWHR26EesRk9+WzIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
+   d="scan'208";a="174550832"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 06:11:22 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 00/24] PCI: Bridge window selection improvements
+Date: Fri, 29 Aug 2025 16:10:49 +0300
+Message-Id: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250820155444.GA627080@bhelgaas>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 57T9fM8j093685
 
-Hi Bjorn Helgaas,
+This series is based on top of the three resource fitting and assignment
+algorithm fixes already in the pci/resource branch. I've tried to compare
+these patch with the commits in the pci/resource branch to retain the minor
+spelling/grammar corrections Bjorn made while applying v1.
 
-Thank you for the feedback. I will update the changes accordingly.
+v2 is just to fix two small issues within the series intermediate patches.
+These corrections attempt to ensure this series is bisectable if
+troubleshooting requires that in the future.
 
-Rn Wed, Aug 20, 2025 at 10:54:44AM -0500, Bjorn Helgaas wrote:
-> [EXTERNAL MAIL]
-> 
-> On Wed, Aug 20, 2025 at 07:18:42PM +0800, Randolph Lin wrote:
-> > Add driver support for DesignWare based PCIe controller in Andes
-> > QiLai SoC. The driver only supports the Root Complex mode.
-> >
-> > Signed-off-by: Randolph Lin <randolph@andestech.com>
-> > ---
-> >  drivers/pci/controller/dwc/Kconfig            |  13 +
-> >  drivers/pci/controller/dwc/Makefile           |   1 +
-> >  drivers/pci/controller/dwc/pcie-andes-qilai.c | 227 ++++++++++++++++++
-> >  3 files changed, 241 insertions(+)
-> >  create mode 100644 drivers/pci/controller/dwc/pcie-andes-qilai.c
-> >
-> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > index ff6b6d9e18ec..a9c5a43f648b 100644
-> > --- a/drivers/pci/controller/dwc/Kconfig
-> > +++ b/drivers/pci/controller/dwc/Kconfig
-> > @@ -49,6 +49,19 @@ config PCIE_AMD_MDB
-> >         DesignWare IP and therefore the driver re-uses the DesignWare
-> >         core functions to implement the driver.
-> >
-> > +config PCIE_ANDES_QILAI
-> > +     bool "ANDES QiLai PCIe controller"
-> > +     depends on OF && (RISCV || COMPILE_TEST)
-> > +     depends on PCI_MSI
-> > +     depends on ARCH_ANDES
-> > +     select PCIE_DW_HOST
-> > +     default y if ARCH_ANDES
-> > +     help
-> > +       Say Y here if you want to enable PCIe controller support on Andes
-> > +       QiLai SoCs. The Andes QiLai SoCs PCIe controller is based on
-> > +       DesignWare IP and therefore the driver re-uses the DesignWare
-> > +       core functions to implement the driver.
-> > +
-> >  config PCI_MESON
-> >       tristate "Amlogic Meson PCIe controller"
-> >       default m if ARCH_MESON
-> > diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> > index 6919d27798d1..de9583cbd675 100644
-> > --- a/drivers/pci/controller/dwc/Makefile
-> > +++ b/drivers/pci/controller/dwc/Makefile
-> > @@ -5,6 +5,7 @@ obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
-> >  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
-> >  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
-> >  obj-$(CONFIG_PCIE_AMD_MDB) += pcie-amd-mdb.o
-> > +obj-$(CONFIG_PCIE_ANDES_QILAI) += pcie-andes-qilai.o
-> >  obj-$(CONFIG_PCIE_BT1) += pcie-bt1.o
-> >  obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
-> >  obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
-> > diff --git a/drivers/pci/controller/dwc/pcie-andes-qilai.c b/drivers/pci/controller/dwc/pcie-andes-qilai.c
-> > new file mode 100644
-> > index 000000000000..dd06eee82cac
-> > --- /dev/null
-> > +++ b/drivers/pci/controller/dwc/pcie-andes-qilai.c
-> > @@ -0,0 +1,227 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Driver for the PCIe Controller in QiLai from Andes
-> > + *
-> > + * Copyright (C) 2025 Andes Technology Corporation
-> > + */
-> > +
-> > +#include <linux/bitfield.h>
-> > +#include <linux/bits.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/types.h>
-> > +
-> > +#include "pcie-designware.h"
-> > +
-> > +#define PCIE_INTR_CONTROL1                   0x15c
-> > +#define PCIE_MSI_CTRL_INT_EN                 BIT(28)
-> > +
-> > +#define PCIE_LOGIC_COHERENCY_CONTROL3                0x8e8
-> > +/* Write-Back, Read and Write Allocate */
-> > +#define IOCP_ARCACHE                         0xf
-> > +/* Write-Back, Read and Write Allocate */
-> > +#define IOCP_AWCACHE                         0xf
-> 
-> Are IOCP_ARCACHE and IOCP_AWCACHE supposed to be identical values with
-> identical comments?
-> 
-> > +#define PCIE_CFG_MSTR_ARCACHE_MODE           GENMASK(6, 3)
-> > +#define PCIE_CFG_MSTR_AWCACHE_MODE           GENMASK(14, 11)
-> > +#define PCIE_CFG_MSTR_ARCACHE_VALUE          GENMASK(22, 19)
-> > +#define PCIE_CFG_MSTR_AWCACHE_VALUE          GENMASK(30, 27)
-> > +
-> > +#define PCIE_GEN_CONTROL2                    0x54
-> > +#define PCIE_CFG_LTSSM_EN                    BIT(0)
-> > +
-> > +#define PCIE_REGS_PCIE_SII_PM_STATE          0xc0
-> > +#define SMLH_LINK_UP                         BIT(6)
-> > +#define RDLH_LINK_UP                         BIT(7)
-> > +#define PCIE_REGS_PCIE_SII_LINK_UP           (SMLH_LINK_UP | RDLH_LINK_UP)
-> > +
-> > +struct qilai_pcie {
-> > +     struct dw_pcie dw;
-> > +     struct platform_device *pdev;
-> > +     void __iomem *apb_base;
-> > +};
-> > +
-> > +#define to_qilai_pcie(_dw) container_of(_dw, struct qilai_pcie, dw)
-> > +
-> > +static u64 qilai_pcie_cpu_addr_fixup(struct dw_pcie *pci, u64 cpu_addr)
-> > +{
-> > +     struct dw_pcie_rp *pp = &pci->pp;
-> > +
-> > +     return cpu_addr - pp->cfg0_base;
-> 
-> Sorry, we can't do this.  We're removing .cpu_addr_fixup() because
-> it's a workaround for defects in the DT description.  See these
-> commits, for example:
-> 
->     befc86a0b354 ("PCI: dwc: Use parent_bus_offset to remove need for .cpu_addr_fixup()")
->     b9812179f601 ("PCI: imx6: Remove imx_pcie_cpu_addr_fixup()")
->     07ae413e169d ("PCI: intel-gw: Remove intel_pcie_cpu_addr()")
-> 
+In addition, a few corrections to changelog texts were made.
 
-I’m a bit confused about the following question:
-After removing cpu_addr_fixup, should we use pci->parent_bus_offset to store the
-offset value, or should pci->parent_bus_offset remain 0?
+I'm left to wonder though if the added double spaces after some stops
+within the commit messages in the pci/resource branch were intentional or
+not (I did remove them for v2).
 
-In the commit message:
-befc86a0b354 ("PCI: dwc: Use parent_bus_offset to remove need for .cpu_addr_fixup()")
-    We know the parent_bus_offset, either computed from a DT reg property (the
-    offset is the CPU physical addr - the 'config'/'addr_space' address on the
-    parent bus) or from a .cpu_addr_fixup() (which may have used a host bridge
-    window offset).
+As the changes are very minimal, I'm only sending this to lists and Bjorn
+to spare people's inboxes. If somebody provides a Tested-by tag for v1, it
+should be counted in for this v2 (v1 vs v2 difference does not matter if
+testing the entire series).
 
-We know that "the offset is the CPU physical addr - the 'config'/'addr_space'
-address on the parent bus".
+v2:
+- In pci_bridge_release_resources():
+    - Keep type assignment in until removing the type hack.
+    - Introduce res_name in the patch it is used avoid compiler warning
+      about unused variable. Place it into the block that needs it.
+- Minor corrections to changelog texts
 
-However, in dw_pcie_host_get_resources(), it passes pp->cfg0_base, which is
-parsed from the device tree using "config", as the cpu_phys_addr parameter to
-dw_pcie_parent_bus_offset(). It also passes "config" as the 2nd parameter to
-dw_pcie_parent_bus_offset().
+Ilpo Järvinen (24):
+  m68k/PCI: Use pci_enable_resources() in pcibios_enable_device()
+  sparc/PCI: Remove pcibios_enable_device() as they do nothing extra
+  MIPS: PCI: Use pci_enable_resources()
+  PCI: Move find_bus_resource_of_type() earlier
+  PCI: Refactor find_bus_resource_of_type() logic checks
+  PCI: Always claim bridge window before its setup
+  PCI: Disable non-claimed bridge window
+  PCI: Use pci_release_resource() instead of release_resource()
+  PCI: Enable bridge even if bridge window fails to assign
+  PCI: Preserve bridge window resource type flags
+  PCI: Add defines for bridge window indexing
+  PCI: Add bridge window selection functions
+  PCI: Fix finding bridge window in pci_reassign_bridge_resources()
+  PCI: Warn if bridge window cannot be released when resizing BAR
+  PCI: Use pbus_select_window() during BAR resize
+  PCI: Use pbus_select_window_for_type() during IO window sizing
+  PCI: Rename resource variable from r to res
+  PCI: Use pbus_select_window() in space available checker
+  PCI: Use pbus_select_window_for_type() during mem window sizing
+  PCI: Refactor distributing available memory to use loops
+  PCI: Refactor remove_dev_resources() to use pbus_select_window()
+  PCI: Add pci_setup_one_bridge_window()
+  PCI: Pass bridge window to pci_bus_release_bridge_resources()
+  PCI: Alter misleading recursion to pci_bus_release_bridge_resources()
 
-In dw_pcie_parent_bus_offset(), the 2nd parameter is used to get the index
-from the devicetree "reg-names" field, and the result is used as the
-'config'/'addr_space' address. 
+ arch/m68k/kernel/pcibios.c   |  39 +-
+ arch/mips/pci/pci-legacy.c   |  38 +-
+ arch/sparc/kernel/leon_pci.c |  27 --
+ arch/sparc/kernel/pci.c      |  27 --
+ arch/sparc/kernel/pcic.c     |  27 --
+ drivers/pci/bus.c            |   3 +
+ drivers/pci/pci-sysfs.c      |  27 +-
+ drivers/pci/pci.h            |   8 +-
+ drivers/pci/probe.c          |  35 +-
+ drivers/pci/setup-bus.c      | 798 ++++++++++++++++++-----------------
+ drivers/pci/setup-res.c      |  46 +-
+ include/linux/pci.h          |   5 +-
+ 12 files changed, 504 insertions(+), 576 deletions(-)
 
-It seems that the same value is being obtained through a different method,
-and the return value appears to be 0.
-Could I be misunderstanding something?
 
-> > +}
-> > +
-> > +static u32 qilai_pcie_outbound_atu_check(struct dw_pcie *pci,
-> > +                                      const struct dw_pcie_ob_atu_cfg *atu,
-> > +                                      u64 *limit_addr)
-> > +{
-> > +     u64 parent_bus_addr = atu->parent_bus_addr;
-> > +
-> > +     *limit_addr = parent_bus_addr + atu->size - 1;
-> > +
-> > +     /*
-> > +      * Addresses below 4 GB are not 1:1 mapped; therefore, range checks
-> > +      * only need to ensure addresses below 4 GB match pci->region_limit.
-> > +      */
-> > +     if (lower_32_bits(*limit_addr & ~pci->region_limit) !=
-> > +         lower_32_bits(parent_bus_addr & ~pci->region_limit) ||
-> > +         !IS_ALIGNED(parent_bus_addr, pci->region_align) ||
-> > +         !IS_ALIGNED(atu->pci_addr, pci->region_align) || !atu->size)
-> > +             return -EINVAL;
-> > +     else
-> > +             return 0;
-> 
-> I'm a little dubious about this because the knowledge about 1:1
-> mapping feels like something we should know from devicetree.  But I'm
-> not an expert in this area.
-> 
-> If you do need this, write it like this, which I think is slightly
-> simpler than the if/else:
-> 
->   if (...)
->     return -EINVAL;
-> 
->   return 0;
-> 
-> > +}
-> > +
-> > +static bool qilai_pcie_link_up(struct dw_pcie *pci)
-> > +{
-> > +     struct qilai_pcie *qlpci = to_qilai_pcie(pci);
-> 
-> Suggest using "pcie" as the name for "struct qilai_pcie *" pointers
-> because that's a common pattern in other drivers.
-> 
-> > +     u32 val;
-> > +
-> > +     /* Read smlh & rdlh link up by checking debug port */
-> > +     dw_pcie_read(qlpci->apb_base + PCIE_REGS_PCIE_SII_PM_STATE, 0x4, &val);
-> > +
-> > +     return (val & PCIE_REGS_PCIE_SII_LINK_UP) == PCIE_REGS_PCIE_SII_LINK_UP;
-> > +}
-> > +
-> > +static int qilai_pcie_start_link(struct dw_pcie *pci)
-> > +{
-> > +     struct qilai_pcie *qlpci = to_qilai_pcie(pci);
-> > +     u32 val;
-> > +
-> > +     /* Do phy link up */
-> > +     dw_pcie_read(qlpci->apb_base + PCIE_GEN_CONTROL2, 0x4, &val);
-> > +     val |= PCIE_CFG_LTSSM_EN;
-> > +     dw_pcie_write(qlpci->apb_base + PCIE_GEN_CONTROL2, 0x4, val);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct dw_pcie_ops qilai_pcie_ops = {
-> > +     .cpu_addr_fixup = qilai_pcie_cpu_addr_fixup,
-> > +     .outbound_atu_check = qilai_pcie_outbound_atu_check,
-> > +     .link_up = qilai_pcie_link_up,
-> > +     .start_link = qilai_pcie_start_link,
-> > +};
-> > +
-> > +static struct qilai_pcie *qilai_pcie_create_data(struct platform_device *pdev)
-> > +{
-> > +     struct qilai_pcie *qlpci;
-> > +
-> > +     qlpci = devm_kzalloc(&pdev->dev, sizeof(*qlpci), GFP_KERNEL);
-> > +     if (!qlpci)
-> > +             return ERR_PTR(-ENOMEM);
-> > +
-> > +     qlpci->pdev = pdev;
-> > +     platform_set_drvdata(pdev, qlpci);
-> > +
-> > +     return qlpci;
-> 
-> Doesn't seem worth a separate function to me.  I see this is copied
-> from bt1_pcie_create_data(), and kudos for paying attention to how
-> other drivers do things.  But I don't think it's really worth it
-> there, either, and it's the only driver that does that.
-> 
-> Most drivers do it directly in *_pcie_probe(), which also makes it
-> possible to delay the platform_set_drvdata() until after qlpci is
-> initialized (and also makes it obvious that you do the
-> platform_set_drvdata() *twice* :)).
-> 
-> > +}
-> > +
-> > +/*
-> > + * Setup the Qilai PCIe IOCP (IO Coherence Port) Read/Write Behaviors to the
-> > + * Write-Back, Read and Write Allocate mode.
-> > + */
-> > +static void qilai_pcie_iocp_cache_setup(struct dw_pcie_rp *pp)
-> > +{
-> > +     struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > +     u32 val;
-> > +
-> > +     dw_pcie_dbi_ro_wr_en(pci);
-> > +
-> > +     dw_pcie_read(pci->dbi_base + PCIE_LOGIC_COHERENCY_CONTROL3,
-> > +                  sizeof(val), &val);
-> > +     val |= FIELD_PREP(PCIE_CFG_MSTR_ARCACHE_MODE, IOCP_ARCACHE);
-> > +     val |= FIELD_PREP(PCIE_CFG_MSTR_AWCACHE_MODE, IOCP_AWCACHE);
-> > +     val |= FIELD_PREP(PCIE_CFG_MSTR_ARCACHE_VALUE, IOCP_ARCACHE);
-> > +     val |= FIELD_PREP(PCIE_CFG_MSTR_AWCACHE_VALUE, IOCP_AWCACHE);
-> 
-> Since you never clear anything in "val", it looks like this assumes
-> the value you read from PCIE_LOGIC_COHERENCY_CONTROL3 contains zeroes
-> where you insert the new values.  Possibly use FIELD_MODIFY() instead?
-> 
-> > +     dw_pcie_write(pci->dbi_base + PCIE_LOGIC_COHERENCY_CONTROL3,
-> > +                   sizeof(val), val);
-> > +
-> > +     dw_pcie_dbi_ro_wr_dis(pci);
-> > +}
-> > +
-> > +static void qilai_pcie_enable_msi(struct qilai_pcie *qlpci)
-> > +{
-> > +     u32 val;
-> > +
-> > +     dw_pcie_read(qlpci->apb_base + PCIE_INTR_CONTROL1,
-> > +                  sizeof(val), &val);
-> > +     val |= PCIE_MSI_CTRL_INT_EN;
-> > +     dw_pcie_write(qlpci->apb_base + PCIE_INTR_CONTROL1,
-> > +                   sizeof(val), val);
-> 
-> Apparently you don't need dw_pcie_dbi_ro_wr_en() and
-> dw_pcie_dbi_ro_wr_dis() around this?  Or maybe this relies on the DWC
-> core taking care of this, I dunno.
-> 
+base-commit: 295524c65d8b4850efbb809f12176eb1262a5aba
+-- 
+2.39.5
 
-Maybe these are not the DBI registers. 
-I think the API is wrong, that's why you confused.
-I will use readl() and writel() to instead of it. 
-
-> > +}
-> > +
-> > +static int qilai_pcie_host_init(struct dw_pcie_rp *pp)
-> > +{
-> > +     struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > +     struct qilai_pcie *qlpci = to_qilai_pcie(pci);
-> > +
-> > +     qilai_pcie_enable_msi(qlpci);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct dw_pcie_host_ops qilai_pcie_host_ops = {
-> > +     .init = qilai_pcie_host_init,
-> > +};
-> > +
-> > +static int qilai_pcie_add_port(struct qilai_pcie *qlpci)
-> > +{
-> > +     struct device *dev = &qlpci->pdev->dev;
-> > +     struct platform_device *pdev = qlpci->pdev;
-> > +     int ret;
-> > +
-> > +     qlpci->dw.dev = dev;
-> > +     qlpci->dw.ops = &qilai_pcie_ops;
-> > +     qlpci->dw.pp.num_vectors = MAX_MSI_IRQS;
-> > +     qlpci->dw.pp.ops = &qilai_pcie_host_ops;
-> > +
-> > +     dw_pcie_cap_set(&qlpci->dw, REQ_RES);
-> > +
-> > +     qlpci->apb_base = devm_platform_ioremap_resource_byname(pdev, "apb");
-> > +     if (IS_ERR(qlpci->apb_base))
-> > +             return PTR_ERR(qlpci->apb_base);
-> > +
-> > +     ret = dw_pcie_host_init(&qlpci->dw.pp);
-> > +     if (ret) {
-> > +             dev_err_probe(dev, ret, "Failed to initialize PCIe host\n");
-> > +             return ret;
-> > +     }
-> > +
-> > +     qilai_pcie_iocp_cache_setup(&qlpci->dw.pp);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int qilai_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +     struct qilai_pcie *qlpci;
-> > +
-> > +     qlpci = qilai_pcie_create_data(pdev);
-> > +     if (IS_ERR(qlpci))
-> > +             return PTR_ERR(qlpci);
-> > +
-> > +     platform_set_drvdata(pdev, qlpci);
-> > +
-> > +     return qilai_pcie_add_port(qlpci);
-> > +}
-> > +
-> > +static const struct of_device_id qilai_pcie_of_match[] = {
-> > +     { .compatible = "andestech,qilai-pcie" },
-> > +     {},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, qilai_pcie_of_match);
-> > +
-> > +static struct platform_driver qilai_pcie_driver = {
-> > +     .probe = qilai_pcie_probe,
-> > +     .driver = {
-> > +             .name   = "qilai-pcie",
-> > +             .of_match_table = qilai_pcie_of_match,
-> > +     },
-> > +};
-> > +
-> > +module_platform_driver(qilai_pcie_driver);
-> > +
-> > +MODULE_AUTHOR("Randolph Lin <randolph@andestech.com>");
-> > +MODULE_DESCRIPTION("Andes Qilai PCIe driver");
-> > +MODULE_LICENSE("GPL");
-> > --
-> > 2.34.1
-> >
-
-Sincerely,
-Randolph Lin
 
