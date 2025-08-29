@@ -1,304 +1,297 @@
-Return-Path: <linux-pci+bounces-35152-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35153-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40109B3C4A6
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 00:08:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C65EB3C4F2
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 00:36:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 092A45A4DBF
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 22:08:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D7971BA1798
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 22:37:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D52B52652B0;
-	Fri, 29 Aug 2025 22:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41F402874F6;
+	Fri, 29 Aug 2025 22:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BbH2h1GJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2051.outbound.protection.outlook.com [40.107.243.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321BE233721;
-	Fri, 29 Aug 2025 22:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756505278; cv=none; b=KmMxTlgYGoD+5/PWkN87qhxBhRZVWDpa0kH8d4zf3nr6cVDTSWE8f6q9+lfGQ2ELsirGKkB4/trgN1IkxxSsoy0mlOVU7lWmWJOZONtfhcIatt7x8hsvECP4GtE4SVvVQ4Y0JwvcJ/Gjh0EbTD6Wjco/WW8HvxlmunKgQ11YpnU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756505278; c=relaxed/simple;
-	bh=o/ANWIQzV3hpjUYFa2eFxVaUuI95NcX2Yn+ZHq77pYQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oNXV34FRG8zhkoFgO5lQFjvZO3mCogOu924/4pmdFyBx8yBhpNLZfA0g67RqOVGPxNqigO59o3MmXassEoxmVdauDTv0R33cB6P6J2aJYHYS1KaUjh1FqxYB9sToYYdy29hpz1tJuc/oMrxzPnKW3WSsXYwoIEMbdazO/ygyKT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.192] (ip5f5af7a9.dynamic.kabel-deutschland.de [95.90.247.169])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id BC786602019A1;
-	Sat, 30 Aug 2025 00:07:26 +0200 (CEST)
-Message-ID: <857bf36b-6bc7-44f8-bb5e-7c9460e4ef1c@molgen.mpg.de>
-Date: Sat, 30 Aug 2025 00:07:26 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D12C1D61BB;
+	Fri, 29 Aug 2025 22:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756507004; cv=fail; b=WeWEcg+1FuNauWn2suRF2y6gcShhO5QmNsJZ8xKi71p2QDwbpx9Xu4JPDEaKjxfzuHpQnW2iIa2aN7PMJyORnT0zTZk+H/HVTgzhpJ0+Ty2i1D4fxOyS/ugz5rcm4Exan2Ye5gUECnKltCD8YMiPHgzN67UAbOIB/uqCM6FIn+4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756507004; c=relaxed/simple;
+	bh=yffmH6pT5Y5y1Ho/Yy/zk1hAmk7xHd72dF/T88df2SI=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=c5BJGySxT2fft3Kux3iwR61cJ6MOHEhAcXVh+KbFSYsqQvqMt37N3I00WxAy1e1hQ3zSKfU5wXIPodu+Z+d4MI0NrRpzFy2G5uZnHORWyr3Gv2GwCCHlS1NVRfcp4rEqIIZgJ3it8FbqRJaAPWpydJpCYigsOYwF/cPiKHYRufM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BbH2h1GJ; arc=fail smtp.client-ip=40.107.243.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vJLd02OnGBN+VrKYXB0klSE9vvHjI66ycAoOBnB2NGzjaeHtNVq/MO9YS+ZFkEOrdQZRiyabOWTMbnxzoBMDnSaJox0t0q7ydN5zwtFnd7yPr7K76xxDps0ixFl5hPlPvSTGQquAT/4B+kjWm73LT05p0FnWG3utHqyGdw+UBOVu21PsXjXYVujE6vMFJl4q7HiA79jYvjk8RIQca0Lm2xdT8YOokCNXwD3FsckK0QyduXDDBbHoTj5BtM1b2eEhhuB9ynhiDaSA+KLoYx6NAoFl+te0STUMYvey1eSX6FqQigSgOxbqGuB3DJrjgjesHXtVI7bDj9OuSXt4OgIEvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nf8Lpi3kcKHoTUiYk0wnXz71dMFwssfOGGqQA+NoOBU=;
+ b=t0QRpSQyy4sAHTMotSpFYkaPA8dTFlwiJOWingEcdjyF4tD3oY7ZjdMafTED0Td905MT4FLwJL2EMtrY4fuGsG39kRVky7AeDzz+bwSQlBeVOtdWU/BecFpfG3u84uDLFCrbdYy4z4npk8oxm1vuwYWHa/qsVnsTanWJy/MJpmz7GWC0wDsox+cOjbYfTfX3Doq/4XWsUDPRRFLsaE6Ih+RXIgKW2uK4ibry/mE92rNsP5vcMChu3+Zrp1hO5AOIbc9ftGXLzVJmQNPV5Qy2LJUMNa/h1TMP0PXLFJhOLYRvuvvr746MTcUldAYf+WRl+lG+r/15lPPySBirnrRdEg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nf8Lpi3kcKHoTUiYk0wnXz71dMFwssfOGGqQA+NoOBU=;
+ b=BbH2h1GJIha+PnZZaTdu9RIItwv8iN3o4jTqyWsmCk29DNO/pVCk2zOG5CkoZmADBp8eoCXNqQjeXSAUGfXpK9k40kxVwY8gctnpeyCXmb0xswkMlHSGuhesGT5aFPI11W+SjYTbzPIIcTcP+yuQAEUAbRDQ+fzbXv3US8bbZzTRGWih1PBcyAOkqJoLXmqMEqjxSGRC2miGgt01ahgDgIb+Nh5t4SLKCSFCcKbSrrvZJmEuDQ6nbGv5UJZqBwtSWRSp1lY8/EtsdhqHAVbJ58WLvP9phznekVaq5Tsvk2bBXF8Wet0ayhAnQ08v297mmAzGNLGNMFWiSKBDmVyS0Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5968.namprd12.prod.outlook.com (2603:10b6:408:14f::7)
+ by PH8PR12MB6963.namprd12.prod.outlook.com (2603:10b6:510:1be::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.15; Fri, 29 Aug
+ 2025 22:36:34 +0000
+Received: from LV2PR12MB5968.namprd12.prod.outlook.com
+ ([fe80::e6dd:1206:6677:f9c4]) by LV2PR12MB5968.namprd12.prod.outlook.com
+ ([fe80::e6dd:1206:6677:f9c4%6]) with mapi id 15.20.9073.021; Fri, 29 Aug 2025
+ 22:36:34 +0000
+From: John Hubbard <jhubbard@nvidia.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Alexandre Courbot <acourbot@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	nouveau@lists.freedesktop.org,
+	linux-pci@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Elle Rhumsaa <elle@weathered-steel.dev>
+Subject: [PATCH v8 0/6] rust, nova-core: PCI Class, Vendor support
+Date: Fri, 29 Aug 2025 15:36:26 -0700
+Message-ID: <20250829223632.144030-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.51.0
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR06CA0030.namprd06.prod.outlook.com
+ (2603:10b6:a03:d4::43) To LV2PR12MB5968.namprd12.prod.outlook.com
+ (2603:10b6:408:14f::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH net-next v3] idpf: add support for IDPF
- PCI programming interface
-To: Madhu Chittim <madhu.chittim@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- horms@kernel.org, linux-pci@vger.kernel.org
-References: <20250829172453.2059973-1-madhu.chittim@intel.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20250829172453.2059973-1-madhu.chittim@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5968:EE_|PH8PR12MB6963:EE_
+X-MS-Office365-Filtering-Correlation-Id: 88be195a-669e-4391-487a-08dde74c81ff
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?QSMuBS0Mof4AP8P1yNOrHVNTQik4UWBK1FMUdY4tNcxSbTTdmgo07dQWcFvJ?=
+ =?us-ascii?Q?pnABA6825vKqG4GV911SIe0lf4Tj2h0pi8Z9lO5rIqOIkDwUrs2VPzSOIMcx?=
+ =?us-ascii?Q?+hrjXOUllHVw69RUwroLuIttJC2KU8jkknq91rCyfR3HUWmRgOa5t5bwi2xi?=
+ =?us-ascii?Q?tie7mmJej7P0a1F0L8JiqiKMy/Ib3lFIu8lEZLQIfmHx76LVnaPZGVfDTHPE?=
+ =?us-ascii?Q?g6sjI3IJiC2FlSdktsI6bzncw4SqdPPj1xOQZnc3izM4u4v4/riyvgAMadFK?=
+ =?us-ascii?Q?yxcSKcguaQmkfGT0JbE2ua1yrD4g2yZOuByoPuP6aO0/kv5oMM7zaCFguLhz?=
+ =?us-ascii?Q?kQ77g4gljeJwOfog0lFnRxNZkqHDj9ceXsSoAqYhdz3Xk0pKFYMzhQsPcLuP?=
+ =?us-ascii?Q?pBGVQ678uDqtcwzURtPnmublqgBLMbi268dPE/RKRpCUqw2EiC9x/clO/acY?=
+ =?us-ascii?Q?6idVjPyvlBiANcEZjoaLg/TkSKzRO2UZcthl9P2L5PHeChK4MsEj0vPtS8mR?=
+ =?us-ascii?Q?zZw6TA2F9qgR3kG1lHMt138/yuhCAo+jVtJ6NLmTpd0iZK4a4u4f/kUOTZPK?=
+ =?us-ascii?Q?dlARuFJMYKvkCupDsmXvEudVVz9wSLDsLhNtqD9gTNSYc9U9TKygRZzUSPaJ?=
+ =?us-ascii?Q?HjJL7cqiIfeehLrpFYGRPzlPykBcJiLdropXagC7pF3zD0tLYmDEagnZSHsT?=
+ =?us-ascii?Q?3uleJUQ66Vh7Sdn705BuolD1vGXBYwmaX1dE47vG9Tf6vZ6GCGj3cKVsuJFS?=
+ =?us-ascii?Q?EHc4/9Cdf8Yxi/+nzbpGbZM9OiP2OIschHGJkl5vcx4aBtzQLXE7G2zxaPYL?=
+ =?us-ascii?Q?7A34jpXQnrMjYSUMZSUKykKByJ2vgRZmTnqpKKYaIyBwS69hKZZO/mxbBvbx?=
+ =?us-ascii?Q?fJUEM3ceTLi2XHbrdBRseLrs+cpHCv9ls9xEcI758wW+asGNwkhuHCUDXjgH?=
+ =?us-ascii?Q?l2vG+4qw5Nu5+I6s99svvXNiOqTvA7cB7LTjwJpnnBfcNPASl3D9EYuA4Ef3?=
+ =?us-ascii?Q?vKe+pN+e1rfnlXovJfd5HW+Y/fbIaOlu95B7STabEpKzPuZvpZ7uBirf/pmy?=
+ =?us-ascii?Q?0Ic2TMkiMzXyWM8WGQ7FU1h1huvzRITTKK2WRfikIcEKa7oVzKwq7sREJyQk?=
+ =?us-ascii?Q?X5OnsxuC9m2M4czlKqcIewzFnIy9vXH2+/ypLhglyQoyi6FiUdVD0q/vpAiZ?=
+ =?us-ascii?Q?yRuADHhQp6feljOSDxgHpVxG0Gj6Rmn/Zj5CG2lcMJ4vs00stmXJUjC3tivS?=
+ =?us-ascii?Q?KUsspK1QhYy2wk4WGXm35EFLSy8rLR5bwLTjmWhHhoibTr2AYyvOfO2+COoa?=
+ =?us-ascii?Q?PZpiZ3AaIXWmyGGXit6TZzeROecYD4FRd50szNQSP/tfOrwM+jTp1oXhaehr?=
+ =?us-ascii?Q?gKRjWoOpJ5dnMUuUwqCH/UigBV8NejVetaAhPNHCKBznoGFBuxG8MFmbq5ju?=
+ =?us-ascii?Q?Qk3XO6o1Wgk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5968.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?N3o/ktozoP6daEE3bQ4PP9aUOAmxZk4tOSWY+v8f3Jsx7l5QGcGbbt8W3e+m?=
+ =?us-ascii?Q?EAAqA9RitCAP93y6mJruHO/ExKpYaJlp+vnLmP4ztjS/kb3TbWZEKLJ8jVO3?=
+ =?us-ascii?Q?PKz/4ubG/NmzbWZBviWrw33XJcn4ShgOISsbe9g/t1FTLbI3jEqTkxKXo//j?=
+ =?us-ascii?Q?kL0enBKQDDIq5pa/QJ0+RbK9joXy5R/JAZNUCpMfHVWtSNJjtKlC34MWe5Bj?=
+ =?us-ascii?Q?3y1OtIRlIzTCdyKrWyAG9o9UDdWkK5qVKIh8OeP+Us5deQgNGqGJed1vt/LO?=
+ =?us-ascii?Q?ge1fiKZiSwdwB+ZvNsyR24zc0vsIAyCuBQSJsa5Tzuq3uFjeUD3GTOpHKfbr?=
+ =?us-ascii?Q?79HjVNFobTQBLFQS1ysdXYzRJEw0TncTAQR2XjBMIkS577W482uSzsn9newV?=
+ =?us-ascii?Q?2ESKv9gtBSmmxBV7Vq2gHr1NcN2TzH3Sesj64295uop3uoKutVqoCmpzA2rm?=
+ =?us-ascii?Q?BcB742k/OSUGUKit2kM8n7TecPzqf/gsxFB/HfON/qhMXhyVrWqUQdYzl3XW?=
+ =?us-ascii?Q?+fM/rizZENwwNJTuqorCwY1/QQJ4Qv6vA1mIFw+waIhaCy/Q8kVKDBlv6/HK?=
+ =?us-ascii?Q?/xFma1hVDnvvF6FeNDzViKFYNsUiuwG6LcpNm7KwluBgUcURGy4gOLs7GnGI?=
+ =?us-ascii?Q?ldvU7+qi3AMSeclFqa7ktq/7IRlF+3s1TwZHg2LBQ7Cr7Vq6pV5KMFNKBeyB?=
+ =?us-ascii?Q?ns1fT3OtiqvXLKx52yBFm+gkmDb+HCgivCaMbZr3c28VG8E9nHur/iY+Ph8o?=
+ =?us-ascii?Q?uZp3gnK9UWBhdjrnw682uQ2ZqX4q5vaKSSixS4QFGq48rz3LVHt+GpidfDUr?=
+ =?us-ascii?Q?QpBBnSJxEsFYh0FmcsfN0TWtWcSeMD+sn5AimDi6WUeA5aKQ+bHBRcYMiJcj?=
+ =?us-ascii?Q?maO4ZEP4mQlSEqk3FmpCpT89eWniFqu6Jzr2cf7NBXPtWBybMcshPBWMwte8?=
+ =?us-ascii?Q?TFORT0routZSqh8t8D5jD3hy2otp+/HBPIuMfCRxXNEtswHxyk3YFlXWu1B6?=
+ =?us-ascii?Q?UYes5S5PVFblcXFcw9YxjGOxLlb8l+yF/GUZ+j22a1Ucco8hdhTqOp1s7B3/?=
+ =?us-ascii?Q?GWNBC1jY4VKK5ZTSICtNR4QjJdeUcjg5MHiTmOTR2P3A/sghbCMGGGJol8Ea?=
+ =?us-ascii?Q?TWdE3/v9YyAw4m42J8Pscjm5N2OaJg/1ORrvp8lMp6o22YW1Leh9hMKGc/y2?=
+ =?us-ascii?Q?Hq9TIPs+J/va/aYiXSeLTWytsLUZGEehcEApGmMJr12En0KfLEoetgRyn22k?=
+ =?us-ascii?Q?WhRyI5YJO6JsdvF6Bb8fBWLHIio0qhw3QFq0lkoPuaATQflHetYy6Zgwqsgt?=
+ =?us-ascii?Q?u5jAnsA3xJWXZ8vOngsCFqfd6lwN0PZYDNuAocTjm4ZVQoFIgKsECgyE2SUu?=
+ =?us-ascii?Q?b8yfGfhJ3PpoOKlGXmADNQq1jJYSeeGdLTKZPHHwKGuQEwzYlo79FtoEZ1SE?=
+ =?us-ascii?Q?u/TYa1zKJL/eRRvS37HBzc/exLcGIX/Vo1T9BM0K+aV4sxdC8wsgatKYYtLv?=
+ =?us-ascii?Q?CaO+5gzQnVpcxRMieICTfi0bFf+rRQVPT3YQKpF8NXM9jLHDkVVb4Bj7SKVX?=
+ =?us-ascii?Q?Necje3XBW9v1g1Gk7fuZ7M72yueDE2eznQ3acPIe?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88be195a-669e-4391-487a-08dde74c81ff
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5968.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2025 22:36:34.2991
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bqYRfBJCSfIIDu/tIaO7jGxAQ/Xv65ucVz1RIpe7OgqkXrNs4VEzvJUmU7tnyBtIoV4I3aBAgBhss9prO7OFTg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6963
 
-[Cc: +linux-pci@vger.kernel.org]
+Changes since v7:
 
-Dear Madhu, dear Pavan,
+* Applied changes from Danilo's and Alex's and reviews (thanks!):
+    * Removed a blank line, one each, from the Class and Vendor macros.
+    * Moved example code location from struct Vendor, to vendor_id(),
+      and introduced it in a later commit, in its final form.
+    * Applied Alex's Reviewed-by tag to the series.
 
+Changes since v6:
 
-Thank you for the patch.
+* Applied changes from Danilo's and Alex's and Elle's reviews (thanks!):
+    * Rebased onto driver-core-next, which is here:
+          https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
+    * Changed pci::Vendor to be a u16, instead of a u32.
+    * Inlined all of the tiniest functions.
+    * Changed from Class/Vendor new(), to from_raw().
+    * Made from_raw() only accessible to super, which in this case is
+      the pci module.
+    * Restored infallible operations. That causes Alex's request for the
+      following reasonable behavior to work once again:
 
+          from_raw(0x10de).as_raw() == 0x10de
 
-Am 29.08.25 um 19:24 schrieb Madhu Chittim:
-> From: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
-> 
-> At present IDPF supports only 0x1452 and 0x145C as PF and VF device IDs
-> on our current generation hardware. Future hardware exposes a new set of
-> device IDs for each generation. To avoid adding a new device ID for each
-> generation and to make the driver forward and backward compatible,
-> make use of the IDPF PCI programming interface to load the driver.
-> 
-> Write and read the VF_ARQBAL mailbox register to find if the current
-> device is a PF or a VF.
-> 
-> PCI SIG allocated a new programming interface for the IDPF compliant
-> ethernet network controller devices. It can be found at:
-> https://members.pcisig.com/wg/PCI-SIG/document/20113
-> with the document titled as 'PCI Code and ID Assignment Revision 1.16'
-> or any latest revisions.
+    * Added a new patch, to inline the remaining PCI operations. This
+      provides consistent inline choices throughout pci.rs.
 
-Could you please add some information, how you tested this?
+Changes since v5:
+* Applied changes from Danilo's review (thanks!):
+    * Split the nova-core patch into two patches, for nova and pci.
+    * Added rust/kernel/pci/ to MAINTAINERS.
 
-> Reviewed-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
-> Signed-off-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
-> Signed-off-by: Madhu Chittim <madhu.chittim@intel.com>
-> 
-> ---
-> v3:
-> - reworked logic to avoid gotos
-> 
-> v2:
-> - replace *u8 with *bool in idpf_is_vf_device function parameter
-> - use ~0 instead of 0xffffff in PCI_DEVICE_CLASS parameter
-> 
-> ---
-> 
-> Signed-off-by: Madhu Chittim <madhu.chittim@intel.com>
+Changes since v4:
+* Applied changes from Danilo's and Alex's review (thanks!):
+    * Reorganized the patches so that the Nova changes consume the
+      results of Class and Vendor upgrades, all in one shot.
 
-This looks like a stray line, but will probably be ignored, when applied.
+    * Made Class and Vendor types get constructed infallibly.
 
-> ---
->   drivers/net/ethernet/intel/idpf/idpf.h        |  1 +
->   drivers/net/ethernet/intel/idpf/idpf_main.c   | 73 ++++++++++++++-----
->   drivers/net/ethernet/intel/idpf/idpf_vf_dev.c | 37 ++++++++++
->   3 files changed, 94 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/idpf/idpf.h b/drivers/net/ethernet/intel/idpf/idpf.h
-> index c56abf8b4c92..4a16e481faf7 100644
-> --- a/drivers/net/ethernet/intel/idpf/idpf.h
-> +++ b/drivers/net/ethernet/intel/idpf/idpf.h
-> @@ -1041,6 +1041,7 @@ void idpf_mbx_task(struct work_struct *work);
->   void idpf_vc_event_task(struct work_struct *work);
->   void idpf_dev_ops_init(struct idpf_adapter *adapter);
->   void idpf_vf_dev_ops_init(struct idpf_adapter *adapter);
-> +int idpf_is_vf_device(struct pci_dev *pdev, bool *is_vf);
->   int idpf_intr_req(struct idpf_adapter *adapter);
->   void idpf_intr_rel(struct idpf_adapter *adapter);
->   u16 idpf_get_max_tx_hdr_size(struct idpf_adapter *adapter);
-> diff --git a/drivers/net/ethernet/intel/idpf/idpf_main.c b/drivers/net/ethernet/intel/idpf/idpf_main.c
-> index 8c46481d2e1f..493604d50143 100644
-> --- a/drivers/net/ethernet/intel/idpf/idpf_main.c
-> +++ b/drivers/net/ethernet/intel/idpf/idpf_main.c
-> @@ -7,11 +7,57 @@
->   
->   #define DRV_SUMMARY	"Intel(R) Infrastructure Data Path Function Linux Driver"
->   
-> +#define IDPF_NETWORK_ETHERNET_PROGIF				0x01
-> +#define IDPF_CLASS_NETWORK_ETHERNET_PROGIF			\
-> +	(PCI_CLASS_NETWORK_ETHERNET << 8 | IDPF_NETWORK_ETHERNET_PROGIF)
-> +
->   MODULE_DESCRIPTION(DRV_SUMMARY);
->   MODULE_IMPORT_NS("LIBETH");
->   MODULE_IMPORT_NS("LIBETH_XDP");
->   MODULE_LICENSE("GPL");
->   
-> +/**
-> + * idpf_dev_init - Initialize device specific parameters
-> + * @adapter: adapter to initialize
-> + * @ent: entry in idpf_pci_tbl
-> + *
-> + * Return: %0 on success, -%errno on failure.
-> + */
-> +static int idpf_dev_init(struct idpf_adapter *adapter,
-> +			 const struct pci_device_id *ent)
-> +{
-> +	bool is_vf = false;
-> +	int err;
-> +
-> +	if (ent->class == IDPF_CLASS_NETWORK_ETHERNET_PROGIF) {
-> +		err = idpf_is_vf_device(adapter->pdev, &is_vf);
-> +		if (err)
-> +			return err;
-> +		if (is_vf) {
-> +			idpf_vf_dev_ops_init(adapter);
-> +			adapter->crc_enable = true;
-> +		} else {
-> +			idpf_dev_ops_init(adapter);
-> +		}
-> +
-> +		return 0;
-> +	}
-> +
-> +	switch (ent->device) {
-> +	case IDPF_DEV_ID_PF:
-> +		idpf_dev_ops_init(adapter);
-> +		break;
-> +	case IDPF_DEV_ID_VF:
-> +		idpf_vf_dev_ops_init(adapter);
-> +		adapter->crc_enable = true;
-> +		break;
-> +	default:
-> +		return -ENODEV;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   /**
->    * idpf_remove - Device removal routine
->    * @pdev: PCI device information struct
-> @@ -165,21 +211,6 @@ static int idpf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->   	adapter->req_tx_splitq = true;
->   	adapter->req_rx_splitq = true;
->   
-> -	switch (ent->device) {
-> -	case IDPF_DEV_ID_PF:
-> -		idpf_dev_ops_init(adapter);
-> -		break;
-> -	case IDPF_DEV_ID_VF:
-> -		idpf_vf_dev_ops_init(adapter);
-> -		adapter->crc_enable = true;
-> -		break;
-> -	default:
-> -		err = -ENODEV;
-> -		dev_err(&pdev->dev, "Unexpected dev ID 0x%x in idpf probe\n",
-> -			ent->device);
-> -		goto err_free;
-> -	}
-> -
->   	adapter->pdev = pdev;
->   	err = pcim_enable_device(pdev);
->   	if (err)
-> @@ -259,11 +290,18 @@ static int idpf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->   	/* setup msglvl */
->   	adapter->msg_enable = netif_msg_init(-1, IDPF_AVAIL_NETIF_M);
->   
-> +	err = idpf_dev_init(adapter, ent);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "Unexpected dev ID 0x%x in idpf probe\n",
-> +			ent->device);
-> +		goto destroy_vc_event_wq;
-> +	}
-> +
->   	err = idpf_cfg_hw(adapter);
->   	if (err) {
->   		dev_err(dev, "Failed to configure HW structure for adapter: %d\n",
->   			err);
-> -		goto err_cfg_hw;
-> +		goto destroy_vc_event_wq;
->   	}
->   
->   	mutex_init(&adapter->vport_ctrl_lock);
-> @@ -284,7 +322,7 @@ static int idpf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->   
->   	return 0;
->   
-> -err_cfg_hw:
-> +destroy_vc_event_wq:
->   	destroy_workqueue(adapter->vc_event_wq);
->   err_vc_event_wq_alloc:
->   	destroy_workqueue(adapter->stats_wq);
-> @@ -304,6 +342,7 @@ static int idpf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->   static const struct pci_device_id idpf_pci_tbl[] = {
->   	{ PCI_VDEVICE(INTEL, IDPF_DEV_ID_PF)},
->   	{ PCI_VDEVICE(INTEL, IDPF_DEV_ID_VF)},
-> +	{ PCI_DEVICE_CLASS(IDPF_CLASS_NETWORK_ETHERNET_PROGIF, ~0)},
->   	{ /* Sentinel */ }
->   };
->   MODULE_DEVICE_TABLE(pci, idpf_pci_tbl);
-> diff --git a/drivers/net/ethernet/intel/idpf/idpf_vf_dev.c b/drivers/net/ethernet/intel/idpf/idpf_vf_dev.c
-> index 7527b967e2e7..09cccdf45b50 100644
-> --- a/drivers/net/ethernet/intel/idpf/idpf_vf_dev.c
-> +++ b/drivers/net/ethernet/intel/idpf/idpf_vf_dev.c
-> @@ -7,6 +7,43 @@
->   
->   #define IDPF_VF_ITR_IDX_SPACING		0x40
->   
-> +#define IDPF_VF_TEST_VAL		0xFEED0000
-> +
-> +/**
-> + * idpf_is_vf_device - Helper to find if it is a VF device
-> + * @pdev: PCI device information struct
-> + * @is_vf: used to update VF device status
-> + *
-> + * Return: %0 on success, -%errno on failure.
-> + */
-> +int idpf_is_vf_device(struct pci_dev *pdev, bool *is_vf)
-> +{
-> +	struct resource mbx_region;
-> +	resource_size_t mbx_start;
-> +	void __iomem *mbx_addr;
-> +	long len;
+    * This was all somewhat disruptive, and also required one more patch
+      in order to properly separate the various steps. But I think it is
+      all correct now. And CLIPPY=1 builds cleanly too.
 
-Use size_t?
+* Elle Rhumsaa provided a Reviewed-by for v4 (thanks!), but due to the
+  churn in v5 here, I thought it best to not add that tag to v5 yet.
+  Instead, I have directly Cc'd Elle on the patches for now.
 
-     include/linux/ioport.h:static inline resource_size_t 
-resource_size(const struct resource *res)
+Changes since v3:
+* Applied changes from Danilo's review (thanks!):
+
+    * Moved Class and Vendor to a new pci/id.rs file.
+    * Added ClassMask, to constrain callers to use only the two valid
+      masks.
+    * Removed pci_class_code_raw()
+    * Changed Class and Vendor .as_u32() to .as_raw(), because after
+      Danilo's comment I looked around rust/kernel and learned that
+      .as_raw() is the overwhelmingly used convention.
+    * Changed vendor_id() to return a Vendor instance directly.
+        * Also, validated Vendor during construction, just as is done
+          with Class. Both of these items are expected to match known
+          values, even for new devices, so that's a reasonable move.
 
 
-> +
-> +	resource_set_range(&mbx_region,	VF_BASE, IDPF_VF_MBX_REGION_SZ);
-> +
-> +	mbx_start = pci_resource_start(pdev, 0) + mbx_region.start;
-> +	len = resource_size(&mbx_region);
-> +
-> +	mbx_addr = ioremap(mbx_start, len);
-> +	if (!mbx_addr)
-> +		return -EIO;
+Changes since v2:
 
-Should some kind of error be printed with a hint, what the user could do?
+* Applied changes from Danilo's and Alex's review (thanks!):
 
-> +
-> +	writel(IDPF_VF_TEST_VAL, mbx_addr + VF_ARQBAL - VF_BASE);
-> +
-> +	/* Force memory write to complete before reading it back */
-> +	wmb();
-> +
-> +	*is_vf = readl(mbx_addr + VF_ARQBAL - VF_BASE) == IDPF_VF_TEST_VAL;
-> +
-> +	iounmap(mbx_addr);
-> +
-> +	return 0;
-> +}
-> +
->   /**
->    * idpf_vf_ctlq_reg_init - initialize default mailbox registers
->    * @adapter: adapter structure
+    * Moved everything possible out of the new define_all_pci_classes!()
+      and define_all_pci_vendors!() macros.
+    * Used "impl TryFrom<u32> for Class/Vendor", instead of .from_u32().
+    * Made the new DeviceId methods infallible.
+    * Upgraded DeviceId::from_id() to accept a Vendor struct.
+
+* Changed the names to be a little clearer:
+    * class_code_raw() --> pci_class_code_raw()
+    * class_enum() --> pci_class()
+
+* Added doctests for the items that are not yet used in real drivers.
+
+v2 is here:
+    https://lore.kernel.org/20250818013305.1089446-1-jhubbard@nvidia.com
+
+Changes since v1:
+
+1) Use the pci_device_table for filtering, instead of open-coding
+   filters in the .probe() callback.
+
+2) Add PCI Class (class, subclass, implementation) and PCI Vendor to
+   Rust for Linux.
+
+3) Rebased onto the latest nova-next branch, which is here:
+    https://gitlab.freedesktop.org/drm/nova.git
+
+v1 is here:
+    https://lore.kernel.org/20250813232859.224316-1-jhubbard@nvidia.com
+
+Cc: Danilo Krummrich <dakr@kernel.org>
+Cc: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Elle Rhumsaa <elle@weathered-steel.dev>
+
+John Hubbard (6):
+  rust: pci: provide access to PCI Class and Class-related items
+  rust: pci: provide access to PCI Vendor values
+  rust: pci: add DeviceId::from_class_and_vendor() method
+  gpu: nova-core: avoid probing non-display/compute PCI functions
+  rust: pci: use pci::Vendor instead of bindings::PCI_VENDOR_ID_*
+  rust: pci: inline several tiny functions
+
+ MAINTAINERS                           |   1 +
+ drivers/gpu/nova-core/driver.rs       |  33 +-
+ rust/kernel/pci.rs                    |  72 +++-
+ rust/kernel/pci/id.rs                 | 558 ++++++++++++++++++++++++++
+ samples/rust/rust_dma.rs              |   6 +-
+ samples/rust/rust_driver_auxiliary.rs |  12 +-
+ samples/rust/rust_driver_pci.rs       |   9 +-
+ 7 files changed, 663 insertions(+), 28 deletions(-)
+ create mode 100644 rust/kernel/pci/id.rs
+
+
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+-- 
+2.51.0
 
 
