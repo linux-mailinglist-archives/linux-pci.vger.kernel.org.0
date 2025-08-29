@@ -1,344 +1,207 @@
-Return-Path: <linux-pci+bounces-35161-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35162-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18132B3C59E
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 01:35:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB56FB3C5DB
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 01:59:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB8733A889E
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 23:35:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5BB227A5A55
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 23:57:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F64B26B2AD;
-	Fri, 29 Aug 2025 23:35:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CB1F309DB5;
+	Fri, 29 Aug 2025 23:58:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="LH5Oo+2h"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QwpIW/gI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2062.outbound.protection.outlook.com [40.107.236.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7125B225417
-	for <linux-pci@vger.kernel.org>; Fri, 29 Aug 2025 23:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756510504; cv=fail; b=cRezl7MdDC6KC4myllmYSuU6407c7yjYOksfTupS49CebAtfObEsjP0RuDhKfbgD/hmSvxlLtTLhE3nZGW2C40wp7V28bYOGOkHT2no4TolezdoxTjXBcY7MZ9LSRuSOdobzW12eHVjMDxv22jtVRdbfnAo9MqmGWVLjAjDKtYU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756510504; c=relaxed/simple;
-	bh=lOB1BI25XuWZvJUgxfZaiD2Lv97uEvOqeTX9WZCdQaQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=t1NbsfRwrkUuBqdLOlWapC4dZPF7DY+T+HsSDyki5B1F0ollcAdFG5mLOnrsx+jq15gByUGARHNT+nQ6KmiUW5fkRZkQ5LzRfRAY0iz0cW6/BegWY5xSVrvA+MpueGGf68JpK9osRpVY30PcL2e4Tf/u9G/EM4CBoQVu+GowdP0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=LH5Oo+2h; arc=fail smtp.client-ip=40.107.236.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wtwFReymfXAHQw2BRN76hLU6ut93M0PAk0TgLgqzZNE3+RzPctOFYPmqXqUzsHHNudKtSEb2NyGPwLg2y3aTDqTZFlB8lfmk7gv3tRJcLUd66L5skYFSLRB2OPOKjyRCLXgQh7BmqJCHhLlmZ7X8VMcT8pCW3Ek2hMDQ8i3rOLnLCY1EFNCFo0dSDhOVkhGuckw7AOgiwUSurm0PL3XQSsv9PlsXjG/u/Io2XzFccheIMepnr/4StWBRfGq6VO3RQq2w6uzRYS2TztZeMoTu73tfqeo66HpgZJg+3uovhnNl9rPxYfzm3njEnOpF8+rdmGI2LdvIfTmtsyW/vEdjBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IC/a4ETOqXY12ocx1Bqhom8VqJrLZcHpAdx5kx3RXQE=;
- b=JetCOqtqtx+4m28r7UNyJfWYbfPZHimZOZbj/P3OkyFP4bteRakr6Z1ZRht/E0K0lN7mFD0aB0x4q9nuyNEG6a/NExgYBtV23l7UCdviz4F+2VmcEvbczJUVWa/nrsZoIbfhBt1tJYZmX9ZmwxqjMpsi8gGaWTiq7YUbnU5yiKMzGG7hrlump5SL3mk0k2MbuKPsAeRFHyfAcT8IfX9Vct49zWhejx5rTaNLB6aQnhZ2rx7qJB06R26luo8wOunQY+CjHWypIkEsKjD+sUZvuR01mSnV4zpjDio7W7X2+PQQkeMVo0ZNM2SGoLYBbUdT4MlB6wuL3pS5cdGUdq1PQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IC/a4ETOqXY12ocx1Bqhom8VqJrLZcHpAdx5kx3RXQE=;
- b=LH5Oo+2hfu1b3yRydKjhYi6L0WiEHS7HaM4ffGSDPLOvL6SQdlQ+NgGUAUsijQCwWQQQKSG2qsFiY4C4Vq3okG2/ZIdNXrKPfDs8XzIULapgdtI7UtzSaMCeHtTvFCAylUY8eJn/KHCW+fuK++HGt8gEF33fjaPIBhJtmjJ6B0lfzYAkmmgOBCOfJ1llTcIVW6DEhFa//prJ1aoXKmhVAb3Hj8pbPlX4oHILifJVUnh8xYjcVuweH6xFedH1Y1sVXOZcZmkQsb6kbNZfACS4clus82T/mm9IQX22/ScszdUDD02tAU2GbuoqMCQsDwoId9bJGmfa3BI9FBHVw1izbg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by DM6PR12MB4465.namprd12.prod.outlook.com (2603:10b6:5:28f::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.20; Fri, 29 Aug
- 2025 23:34:55 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.9073.021; Fri, 29 Aug 2025
- 23:34:55 +0000
-Date: Fri, 29 Aug 2025 20:34:53 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: dan.j.williams@intel.com
-Cc: linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
-	gregkh@linuxfoundation.org, bhelgaas@google.com,
-	yilun.xu@linux.intel.com, aneesh.kumar@kernel.org, aik@amd.com
-Subject: Re: [PATCH 6/7] samples/devsec: Introduce a "Device Security TSM"
- sample driver
-Message-ID: <20250829233453.GJ79520@nvidia.com>
-References: <20250827035259.1356758-1-dan.j.williams@intel.com>
- <20250827035259.1356758-7-dan.j.williams@intel.com>
- <20250827123924.GA2186489@nvidia.com>
- <68b0cc4632fc5_75db10074@dwillia2-mobl4.notmuch>
- <20250829160217.GL7333@nvidia.com>
- <68b206c9e3f43_75db100e4@dwillia2-mobl4.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68b206c9e3f43_75db100e4@dwillia2-mobl4.notmuch>
-X-ClientProxiedBy: BN0PR08CA0006.namprd08.prod.outlook.com
- (2603:10b6:408:142::26) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A6A35CEA3
+	for <linux-pci@vger.kernel.org>; Fri, 29 Aug 2025 23:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756511909; cv=none; b=lONVlDyk8mt6DgIi2/Wk/RoT6hz5qYVU5j+GpwbIegbFhNZoF7vMwgGjFw5U9QDOL6/SfyPNDtyYiYADMa9scEmUkqwsittYgJLwhUmQ9djrKfCl/xJ198A3kkjnHGtyakAStI3BW4KNEexnQqu8p+z06azBv0oG5wK6DAxtHVU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756511909; c=relaxed/simple;
+	bh=8itxN2CvlAYGgXC2jkdop3/WfWUI/Yu8r0UJfeNgHxc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g0NAiy1qW0VIf87z18h6MNLYdhHQS2Q6E6zDgYFTJSv3uzWcBRPTwacSoLUKRbYAoY8CjoIJg9EZzJu7yfs6+cQ/ygflAC95DefC+wQ1Jzbhv6nKmwa1xyhPcIRKEeegmVVo8yfnj4JkPkmqPNvwsbrp2vz/7lY4xgUFnGftlGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QwpIW/gI; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-248cb0b37dfso25125175ad.3
+        for <linux-pci@vger.kernel.org>; Fri, 29 Aug 2025 16:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1756511907; x=1757116707; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4ZkOb/hPcVe8gnDPdefZkpPuz6ZACFjeMAIL1vSEcE4=;
+        b=QwpIW/gIhYlW+ZpPfejRKNhjd/ujxeMTbooCX4wz3WvJjglfFIruZN+Qqr9JE7X9Qe
+         9nwYwpkLyV36JGb2Y/FchHTTEBkpb9/OTNYOVADjImUtwuSnmXVS1nVgAfoo2AAAJD1g
+         CnCnuMb+z7rlnyZ2xd02AVjcceyCAS9CXRLzQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756511907; x=1757116707;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4ZkOb/hPcVe8gnDPdefZkpPuz6ZACFjeMAIL1vSEcE4=;
+        b=HI8NDemd33TbJRJI3PB2NJVN6+F1W+FTz7SpJFIjhH9HtpHrL8kiY7BmhDePNebw1t
+         DBfp7ClpQ2psSCcj4C9/7sCE5Mx6YIavz1fc89XzxGpj1BrYmQTxRDsh2C22jb4rThjI
+         IN1mXUojJiYsZXt2ktO9H33Avg1ZiN055EIppA3VqU7g9Hfd9VJCuhAsHAq3vPYRFw39
+         7mzYWMciO2g+YsMvC57xIm72d+cBdBTTXBxlEjBUQYkKcL5ejw+0hxq2iQM5CtNMHLwD
+         D83rtsAQNoIP3o12rG4MULSEjVTUPscQfu8MBCgE64FQFiJq5bqgmSXojqQ+MlpA/Kj9
+         7cXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXNy+t7bO/SoItNfSEPw8FdM78zc3g/vmloqv/oVrddCQ88Sd54HU0VnC5ABOgs5Kl0gl6WLwT8eCQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2QYdq7pbxhbLFiGDnSXB1oRUQhzudQd/XEjnsNQUXoZZTFo13
+	fhMx4liUV0Vh9yHUzjIhjAmUdhk+AnXVuaKmJ3yzGlhO1YAt34cQC7Pgm9EhvKT/Ow==
+X-Gm-Gg: ASbGnctoBUhEFnfeOZCUZPuIleTRmArhlXXs7tWMI1qSGfFsVgmbKXR7n7c291Nwrow
+	jqWgY5B8Rg6XBv8ttNW2waIflZBee2Rgq2qGxB4MLDV2M15/4G062QP0aOZF2pXsGuvtEQtY1W6
+	Nu1z/CieHYf51Fa14ZnnYTrw1HwUrJoHxyh2R+a0KaYne4L43zMAHoLD2QfN2f65n+tQi1BklZJ
+	MmRUqlpmX8NjRf8xFjN0UIDdfPl7IRfx+KKLSkJrkUiHVxQpBk1ALyoAEKNBhmObCAUkdA1gd46
+	OuYfnJ7q3fVsFtZX/CiYZlEW4mVoDTDUr45S8EX1UKVD8dGOopYVmIj24/hW+RD05OGeCeqywbU
+	Kbb4oIDNNtYRt0CzD2m8YUK9yBt+17mmcvc/YN2IrGPh/CRZIlBV8ZAkImDND
+X-Google-Smtp-Source: AGHT+IFvZvVbN+tcqDt9IuyuJa1uB30zy62FBhMsBU2d4G2xup0DO7jJDkNE7M+ZQIjDPW8i5FxZDw==
+X-Received: by 2002:a17:903:2308:b0:249:33da:b3a with SMTP id d9443c01a7336-249448ad928mr5527165ad.14.1756511906811;
+        Fri, 29 Aug 2025 16:58:26 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:1d4b:87a6:eef4:9438])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-24906390e6bsm36386045ad.96.2025.08.29.16.58.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Aug 2025 16:58:25 -0700 (PDT)
+Date: Fri, 29 Aug 2025 16:58:24 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: manivannan.sadhasivam@oss.qualcomm.com,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>, Will Deacon <will@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Niklas Cassel <cassel@kernel.org>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: Re: [PATCH v6 2/4] PCI: host-common: Add link down handling for Root
+ Ports
+Message-ID: <aLI-oKWVJHFfst-i@google.com>
+References: <20250715-pci-port-reset-v6-0-6f9cce94e7bb@oss.qualcomm.com>
+ <20250715-pci-port-reset-v6-2-6f9cce94e7bb@oss.qualcomm.com>
+ <aLC7KIoi-LoH2en4@google.com>
+ <aLFmSFe5iyYDrIjt@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM6PR12MB4465:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a972797-1852-47ae-66f8-08dde754a875
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Sc48oTvBlIawnnAzInjBbFh4QC4UWh0sg57d29t62I0wHXlphwGDtnEN8Z8P?=
- =?us-ascii?Q?w2+WhTvkzcpaAP2tqHDKCXHKle/MzDCPvuhCtR/mocIhB7nS8BlA7k74uaGe?=
- =?us-ascii?Q?XM8fVUyGLnPeg6vm1n95DBNSJiRzU24n0bn0+dDA5DTS1ASDbUFAJr+jQ3PD?=
- =?us-ascii?Q?AE/m3A5PJN5p97ykk9bmlpybv8cJ662bcRw2POIyxFSqBSX05D1ARj87opA/?=
- =?us-ascii?Q?IycmT29/U0iju2Sn12Sy+SoxE6vPIDbPxW5lcp/OV2fA8WFlnLZ5ERjVJM1g?=
- =?us-ascii?Q?uvNE+KI0rkqsjXd9tMEVclHCy+la2j/xMvbpDK6OXV8zacWjjmiIDBvjYjKl?=
- =?us-ascii?Q?8OvvgqczAcm/mlWp0d4tk4anha33U1u32O7h/X9ba5bEXR4e/vMCxaCFRMV/?=
- =?us-ascii?Q?/SgWqqd8+aAo5fKwCWlJ/Mmr2WiNzwgk1CoWGjvD1jILsEeeEI2/Dzu9bQBN?=
- =?us-ascii?Q?IcsRyBv0Ergz8ObBU0pHPRFoL+zQEpkoP2BgMwr5q/WSjYrCuUahjHk3Ph8c?=
- =?us-ascii?Q?r//mcdB3Rra+R6zR8FmOowkVs8z8QIThblbbAaddbJzx5zLVlnUmDie9FmcF?=
- =?us-ascii?Q?UmP0iYIrQnvfTumO1VUf+fPthtNhgWB1wumGWu8iXhTsfK3aVJZGtduO3MBK?=
- =?us-ascii?Q?DW3Z+VnExuB+awBP52AOScwMtYFc6gAmcOS/fYu3J4AuT0mz/RtKmAcQoSvX?=
- =?us-ascii?Q?4CYG5SeEdO6rs0lWeACiiwWVbnHzWbLsK2w+5LBHoiBGwpgLButP6zWqWVJr?=
- =?us-ascii?Q?OIgsJ/Bt4jtMSfMXMrhjHJzpVd2iscm/MIrV2Ibc1HZkWm59Av4ln9/arhyI?=
- =?us-ascii?Q?cUMP0V3/sgiuiMQzLnubnQugZfHZUtA490eIm3NBuSC9xd0ZizLzJ/bAvR+U?=
- =?us-ascii?Q?HosXKbM+Do4kA3Jrj+yg2BklaTJYmT+Q972SmdYiS8H4d/xpnaKIcYposMqB?=
- =?us-ascii?Q?l7GTpkBwvd7ztSeDl6/c+2hkRjvVaS36W9GAodeDvGhEwWIN+gR1PtV6AYiN?=
- =?us-ascii?Q?qnxXPeMhYNlvrLdW1tP2juEst8iuCqM27D3RnWIHG+6yZwBn5WtsXcptRPYW?=
- =?us-ascii?Q?Jnp2z2RkhK91RnniMHHbv+RNp9Sz0td+L2w8yp01GiNI/RaZ80sph64lsAaW?=
- =?us-ascii?Q?1sLW344hqviTOEGKnU+X1fQ/QGlegTEpd/S824JVzQFRN4RipVQNfCMUsOGj?=
- =?us-ascii?Q?+Nj9wZ4/855FO5IFNIZYyVw3qwoJK6HrQxU/Egii9KQYpGHNOj3JRmss/WMZ?=
- =?us-ascii?Q?fZ2KUyNkhw6fuUDYXgRugg4buJqUyrw2xSZSmfMnQkpRLmj5vy6lbKR1vTVN?=
- =?us-ascii?Q?fDJ2m0iHbkcNJvMfAtDAQ0Viox5HFGRfEci7pPjzZ+/BU/juHddpvThk3hC6?=
- =?us-ascii?Q?S9OJRKiNhkGoYMbUraLG6o/AGU1jIjJEVtHyqQ0Ue0633GY+OCY7+Ke8UyAn?=
- =?us-ascii?Q?L7psgvbPk5M=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Dyz+lvMFLlAa5oXcpkdqVhjNDGcwZ0QzA/pu5HC4GUvAN+q2BTBFu0gOXsfM?=
- =?us-ascii?Q?KA7jcv6xggL1H+IXP8GJRqaecN7CYtCjg4sS6FFVYmDCVMlV/lKlT7fRe7wJ?=
- =?us-ascii?Q?5NkoOFtriBvv56NJlH8oqRuckxVsl9Zquftn2D3qENtOlSXsj9btCONnRL8f?=
- =?us-ascii?Q?fdh6tJU41ybUAAy2pSMNWOi3eDW0XvvxESYrdv2EigMBvCAh53kVuau76QU2?=
- =?us-ascii?Q?0FYQjZ9NtO6N4qqRPPiQjWz6PBmYWSHcM6dutZ9U3erQcCx9S91lygJiouJ1?=
- =?us-ascii?Q?rZp6GiXFRdaogYkcZqdkX9PISdXrjuLm1pTtUWuLhDyRsE9pE2fgqvSaB/We?=
- =?us-ascii?Q?HVQ2DgoOHEKX1On0ZUn5JPvc/N0hUOzfkUaRZimNZVDw0hwsiAWk4CyjdtpU?=
- =?us-ascii?Q?AMMaZubmBVuGiKRKiREm88aycmZ86S3Rj/gWKbjyA9wj6B0Lj6Bq9We8k+QF?=
- =?us-ascii?Q?kIiNk3APmJtj/8BtgHJRAy6cJM+X0899bd01E1yfjIlAQDuvOafb875SVH9/?=
- =?us-ascii?Q?cXdrx/5du5n/qt4YPR4zi1rXwFiD5TvoBYCW5v1AUI14EgorzAm/abRecADh?=
- =?us-ascii?Q?T9QtT24G3WIfhYKP/XvAHvKxuVF32NosKNSGvDs/+T/YRp5XRlaDGZ7h3hEa?=
- =?us-ascii?Q?NMJDjqJvlDNwb/woq3fowwGRRTRyIQIyc6nXv+c6mlgxstNvVtsa/mdngS9D?=
- =?us-ascii?Q?v1y52I4565kYM43XOqWzTHKviat2J71qKH//O0MYhNCFLR/KQBKvlvdO65ZV?=
- =?us-ascii?Q?NbUc7ARy/juGa//jTCkW2I/jbF0/Iiyo+qkPo97rkFRKA+Sr0Vax3L5UGKWz?=
- =?us-ascii?Q?/WYLsikMprZbzYEd07aJtu8LMX44f/su0Gbmf94VBjD0Q7t4AYy69yStbGDP?=
- =?us-ascii?Q?fmA+u2vfwem7aZypURgTqtxH7T4wLcg0g4zhHitNxUSvzOm3dvhptQzQ1A0i?=
- =?us-ascii?Q?jz6UfWT1opyxB6Iic7cb6qDare2KigLfage73uQ29/pV0TSPukA/o0BqYJz/?=
- =?us-ascii?Q?iHF73DG0upNJowi8x9h2mctofR4RGcJtBpT5roG1LZS+X0x/ntTdbGVB1045?=
- =?us-ascii?Q?7/Z18EP2DMZggwoF+SlDpYKZ1doIErpAIYWY8jqgpOO/KlxrX7adPDl7wyQM?=
- =?us-ascii?Q?0fD/uFZJDiMjInd17h728+ZOEegL1mi4UPTRSakVTogTGd/eSquflHOdxSja?=
- =?us-ascii?Q?w3fuaXadqQI8H5DIfO1gNuoPLIixUyH3Wa9YurWNaGYeb0zvsdiouWCaeao2?=
- =?us-ascii?Q?Ig2ftKFjwkPIHsGfct+36/3HY3bLlS4vRxwrMdC1M62XORb1Gqckfx08OB8F?=
- =?us-ascii?Q?IuImmA1gJ5s9L27BHerhsykvayJDLFSsks1bbwoMGBAr/m5pstsREVcQTBom?=
- =?us-ascii?Q?CiZ1la+t9PeWxHVZ7yFufkfH8oRBai6U6sExj8GnPOHLUcug8gqKoyX0Djz8?=
- =?us-ascii?Q?E1AxYsIfYy5Rn5+vGiMmyYSW4SPB6vGDDn5sYqrvlpuYjrEoqWp7VgnghyVC?=
- =?us-ascii?Q?Xlq/GObOinctUDDPSnnCHkOF3P7ZFa3yILpAclVrv/8w+Hk0+W1Uc1XAevrL?=
- =?us-ascii?Q?HUpdBGjeEvb+86+uuI2/rf4CsUwc258Iy7WlnYe/?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a972797-1852-47ae-66f8-08dde754a875
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2025 23:34:54.9844
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tgnykLX5KKxIkS90V8uhAbCP6FYbYcjMCboRRGfI3nBHDZAN+lZqRyIWfCMfkwY1
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4465
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aLFmSFe5iyYDrIjt@wunner.de>
 
-On Fri, Aug 29, 2025 at 01:00:09PM -0700, dan.j.williams@intel.com wrote:
-> Jason Gunthorpe wrote:
-> > On Thu, Aug 28, 2025 at 02:38:14PM -0700, dan.j.williams@intel.com wrote:
-> > > > device_cc_probe() doesn't save anything, doesn't this just get into an
-> > > > endless loop of EPROBE_DEFER? Usually the kernel will retry these
-> > > > things during booting?
-> > > 
-> > > Hmm, no, deferred probing retriggers after a one-time boot timeout
-> > > (extended by driver registration events) and after any device
-> > > successfully completes probe.
+Hi Lukas,
+
+On Fri, Aug 29, 2025 at 10:35:20AM +0200, Lukas Wunner wrote:
+> On Thu, Aug 28, 2025 at 01:25:12PM -0700, Brian Norris wrote:
+> > On the flip side: it's not clear
+> > PCI_ERS_RESULT_NEED_RESET+pci_channel_io_normal works as documented
+> > either. An endpoint might think it's requesting a slot reset, but
+> > pcie_do_recovery() will ignore that and skip reset_subordinates()
+> > (pci_host_reset_root_port()).
 > > 
-> > So it is not "endless" but it is also not "single probe then wait till
-> > accept". I'm not keen on using this mechanism, I think the things
-> > people want to do in the T=0 mode are going to be time consuming and
-> > repeatedly doing that time consuming step is not a good idea.
+> > All in all, the docs sound like endpoints _should_ have control over
+> > whether we exercise a full port/slot reset for all types of errors. But
+> > in practice, we do not actually give it that control. i.e., your commit
+> > message is correct, and the docs are not.
+> > 
+> > I have half a mind to suggest the appended change, so the behavior
+> > matches (some of) the docs a little better [1].
 > 
-> It would only ever run multiple times if the driver is built-in or
-> loaded early, which is also mitigated by disabling autoprobe like you
-> have below. So that problem is manageable.
-
-There can be many tdisp devices loading after boot so it could be many
-times while all the booting happens. I'm imagining around 8-15 TDISP
-devices as what we may see in some real systems.
-
-> In the past this idea has been met with "but but typical distro kernels
-> have lots of built-in drivers that *may* be unsafe", and the answer is
-> "yes, a VM image with a CC aware / specific kernel config is a
-> requirement".
-
-Yeah, possibly that is where this is going. Or at least someone on the
-distro side is well teed up to propose some kind of pre-initrd
-mechanism to mitigate this down the road and get back to single kernel
-build.
-
-> >    Maybe we also need a small kernel change to allow userspace to make
-> >    drivers_autoprobe false for all future busses too.
+> A change similar to the one you're proposing is already queued on the
+> pci/aer topic branch for v6.18:
 > 
-> I do think we need a mechanism to say, "no more dynamic device
-> enumeration", but a coarse and future promise "no autoprobe of any bus"
-> I fear is going to have a long tail of problems especially with design
-> patterns like "faux_device" and "auxiliary_device".
+> https://git.kernel.org/pci/pci/c/d0a2dee7d458
 
-For the moment I would probably just have userspace special case
-those and automatically run the userspace probing sequence.
+Wow, nice coincidence. It's a reminder I should work off the maintainer
+/ -next branch, instead of just mainline...
 
-> As far as I understand, these CC environments do not immediately have
-> secrets to protect at launch. Also, not sure how many are ready to
-> validate the launch state of the TVM that early. 
-
-It is not about secrets, it is about protecting the integrity of the
-kernel - the software you intend to load secrets into. mlx5 is a 300k
-LOC driver. I fully believe that an attacker prentending to be the
-device can attack the driver and insert hostile code into the kernel
-using this driver.
-
-As such an attack would escape measurement it is completely
-invisible. The only prevntion is to control what parts of the kernel
-the VMM side can reach to attack by denying driver binding.
-
-If the kernel now running hostile code gets secrets released the
-hostile kernel code can ex-filtrate them back to the VMM.
-
-It is the same argument we see MS making about secure boot, you have
-to take steps to ensure that unmeasured code is never injected into
-the system before you complete the boot and release the secrets.
-
-From this view point any compromise that allows unmeasured code into
-the boot chain is a security issue.
-
-The same argument is made for T=1 devices.. I imagine an attack where
-the VM accepts a T=1 device, and it instantly DMAs all over the kernel
-and effectively makes itself invisible to the verifier. Hopefully this
-is prevented by measurements made by the TSM, but IDK, seems scary.
-
-However, I know there are alternative views. For instance that CC VM
-users should just trust the CSP, trust their boot flow, trust their
-provided VM kernels, trust their verfiers, and if you are already
-agreeing to that trust then defending against a hostile VMM is silly.
-
-IMHO I don't know where the industry will end up, I see people on both
-sides of this debate pushing for their perspective. I'd like the
-kernel to be happy with a userspace that wants to trust the VMM and a
-userspace that is untrusting and very paranoid.
-
-> I think it is more a case of allow everything by default to start
-> (whatever is in ACPI, and T=0 PCI devices). Later the relying party
-> either says "no, you have enumerated devices that should not be
-> there", or "yes, launch state looks good, lock device topology,
-> proceed with the performance enhancement of converting some PCI
-> TDISP devices to T=1 operation, here are your secrets".
-
-This is really the above "we trust the VMM" sort of view point, and
-from a kernel perspective I think it is fine so long as userspace is
-the one making the decision to work like that. I don't want to see the
-kernel force the weakest security option onto the userspace.
-
-IMHO the minimal issue here is what should the kernel do with a T=0
-device that has TDISP capability..
-
-We don't really want the kernel to autobind a driver in T=0 mode, that
-is wasteful if we are going to unbind it, lock/run and then bind it
-again.
-
-So, IMHO, the bare minimum would be for the kernel to disable auto
-binding for TDISP capable devices only and shoot out a udev event
-signaling that userspace has to bind the device instead.
-
-Let udev take it from there, and udev can then do whatever dance we
-define.
-
-Then we can have everything from a minimal security posture to a very
-tight drivers_autoprobe situation, based on what userspace wants to
-do.
-
-> >      mlx5 is allowed to bind to a RUN device after measuring and
-> >      verifying it, and never otherwise.
+> Here's the corresponding cover letter:
 > 
-> ...and if userspace binds mlx5 pre-RUN that is not the kernel's problem.
-> I state that explicitly not for you, but because of the rejection of the
-> "device filter" in-kernel mechanism previously.
-
-Right. I am stating the system level goal, expecting that userspace is
-in control and conforming to it. The kernel just has to not bypass the
-policy choices userspace is making.
-
-> >    Basically userspace policy is entirely in control if a device is
-> >    "accepted" by the ccVM or not. The kernel won't auto bind
-> >    a driver to a physical device. It would be driven off of
-> >    uevents, I guess through new CC focused features in udev.
+> https://lore.kernel.org/r/cover.1755008151.git.lukas@wunner.de
 > 
-> Yes, the only quibble is whether that "kernel won't bind" is more a
-> "userspace shall lock and validate device topology" at a certain point
-> in the boot flow. Userspace may need to be prepared for some unaccepted
-> devices to bind before that point.
-
-My argument is "lock and validate" is a fine option, but kernel should
-be designed to allow the more secure option of "approve every single
-driver bind". Userspace can pick, but kernel should be desigend to do
-both.
-
-> The kernel problems to solve are "accepted" flag and maybe documenting
-> to driver writers / udev developers strategies to handle the "prepare"
-> problem.
-
-Yes, and maybe some small less-critical kernel items:
-
- - modules.alias includes the driver name
- - A way to default off drivers_autoprobe
- - A way for userspace to tell which busses are discovered from
-   HW vs internal to the kernel (aux, fuax)
- - ccprepare_ drivers
- - A way to restrict built in drivers at initrd creation time
-
-But I think each of these topics can be its own independent thing, and
-I would send them along side RFC patches for udev if that is how
-things are going to go.
-
-> For RAS I do still like the property of a driver that will field errors
-> also having everything it needs to take a device from reset back to the
-> ready-to-accept state. That can be solved later, and maybe the outcome 
-> is "cc_prepare" is incompatible with "recovery".
-
-Yeah, probably.
-
-> > Sure, I think you shold drop this patch from this series and have this
-> > series focus only on creating an accepted struct device environment
-> > that a driver can bind to and operate.
+> There was a discussion why I didn't take the exact same approach you're
+> proposing, but only a similar one:
 > 
-> You mean drop the device_cc_probe() piece. The rest of patch is starting
-> the work of a "accepted struct device environment" with a single flag
-> that MMIO and DMA infrastructure can reference.
+> https://lore.kernel.org/r/aJ2uE6v46Zib30Jh@wunner.de
+> https://lore.kernel.org/r/aKHWf3L0NCl_CET5@wunner.de
 
-Yes, sorry, I forgot which patch this was: :)
- 
-> It is trivial for a driver to open code EPROBE_DEFER so
-> device_cc_probe() is not putting any burden on the kernel besides
-> documentation, but I will drop it for now.
+Wow, that's a ton of great background and explanation. Thanks!
 
-Sort of, it also establishes a kind of uAPI that I think is best
-avoided until things are a bit more mature..
+> > Specifically, I'm trying to see what's supposed to happen with
+> > PCI_ERS_RESULT_CAN_RECOVER. I see that for pci_channel_io_frozen, almost
+> > all endpoint drivers return PCI_ERS_RESULT_NEED_RESET, but if drivers
+> > actually return PCI_ERS_RESULT_CAN_RECOVER, it's unclear what should
+> > happen.
+> > 
+> > Today, we don't actually respect it; pcie_do_recovery() just calls
+> > reset_subordinates() (pci_host_reset_root_port()) unconditionally. The
+> > only thing that return code affects is whether we call
+> > report_mmio_enabled() vs report_slot_reset() afterward. This seems odd.
+> 
+> In the series queued on pci/aer, I've only allowed drivers to opt in
+> to a reset on Non-Fatal Errors.  I didn't dare also letting them opt
+> out of a reset on Fatal Errors.
 
-Jason
+Right, I can see where the latter is risky. Frankly, while I have
+endpoint drivers suggesting they should be able to do this, I'm not sure
+that's a great idea. Or at least, I can see how it would potentially
+break other clients, as you explain.
+
+> These changes of behavior are always risky, so it seemed prudent to not
+> introduce too many changes at once.  There was no urgent need to also
+> change behavior for Fatal Errors for the use case at hand (the xe graphics
+> driver).  I went through all drivers with pci_error_handlers to avoid
+> breaking any of them.  It's very tedious work, takes weeks.  It would
+> be necessary to do that again when changing behavior for Fatal Errors.
+> 
+> pcieaer-howto.rst justifies the unconditional reset on Fatal Errors by
+> saying that the link is unreliable and that a reset is thus required.
+> 
+> On the other hand, pci-error-recovery.rst (which is a few months older
+> than pcieaer-howto.rst) says in section "STEP 3: Link Reset":
+> "This is a PCIe specific step and is done whenever a fatal error has been
+> detected"
+> 
+> I'm wondering if the authors of pcieaer-howto.rst took that at face value
+> and thought they'd *have* to reset the link on Fatal Errors.
+> 
+> Looking through the Fatal Errors in PCIe r7.0 sec 6.2.7, I think a reset
+> is justified for some of them, but optional for others.  Which leads me
+> to believe that the AER driver should actually enforce a reset only for
+> certain Fatal Errors, not all of them.  So this seems like something
+> worth revisiting in the future.
+
+Hmm, possibly. I haven't looked so closely at the details on all Fatal
+Errors, but I may have a look eventually.
+
+> > All in all, the docs sound like endpoints _should_ have control over
+> > whether we exercise a full port/slot reset for all types of errors. But
+> > in practice, we do not actually give it that control. i.e., your commit
+> > message is correct, and the docs are not.
+> 
+> Indeed the documentation is no longer in sync with the code.  I've just
+> submitted a series to rectify that and cc'ed you:
+> 
+> https://lore.kernel.org/r/cover.1756451884.git.lukas@wunner.de
+
+Thanks! I'll try to take a pass at reviewing, but it may not be prompt.
+
+Thanks again for all the info and work here.
+
+Brian
 
