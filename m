@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-35126-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35127-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D3EDB3BFB1
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 17:45:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17905B3BFC8
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 17:49:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 328E81C24E63
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 15:43:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC5AF3AEE6C
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 15:47:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79C7432C32A;
-	Fri, 29 Aug 2025 15:42:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A37392236E5;
+	Fri, 29 Aug 2025 15:47:35 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1995132C30C;
-	Fri, 29 Aug 2025 15:42:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689151FDA8E;
+	Fri, 29 Aug 2025 15:47:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756482130; cv=none; b=JF3enBLzJZ5euzxX33qEDyhXASBqjjctwVWDwxzqNeB9KPgZdkvZXqY6L5F8mC2OfO0pg0xvtyJ5kDU0ZSvRBJpWCE3dFisXpBXGGY1ZNPB7NRgJKGN/Pp45Lqf+CdsqRKpQK30GpNVDG6pjMbic4rPgmt4l+s9siXgBuYb8zkM=
+	t=1756482455; cv=none; b=b6QRqza4XYiHQndCN3DezjsJZzfLu1YfITVlSQKpXQhDzFwFGFa3gSq35tSZmI9nxYVYCR0q8TTZwLXmf2qEdUwR4B1EE7oukxo3xPRAJ1Oqtd1/Q2yPV6kA0yxdZOLhkIM2fEacOLTvbGaJRkUsDRDYAeeV0GYFbH4f5pDGdis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756482130; c=relaxed/simple;
-	bh=eYjsxP4CtdFD112YUmWcX956VSfxQ8Mc5PddTXb+cKc=;
+	s=arc-20240116; t=1756482455; c=relaxed/simple;
+	bh=nWH1E+8SRzunXLKT1X0dDOrORgycPjOh4GuZcsujFBQ=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hbxCeewc6aGLKZPJQ6TWZoE5AxU16rWRr5bosjZHobDY+0G73xr6VbcyB3ZBDygrme51TZauHl0tQ+7mSrBGNrjaqosKv43Dxuhwcc4djGlrZtoZkixZT4yk01YqhL5yXhvb5MfXW6nS1OaCf8hDV65v2i7LhEA0jkqvoyDyXbE=
+	 MIME-Version:Content-Type; b=sLxh6/bgwX5oJRbPWYEtr2uALxE1p28Fslr2kc049iR0Aia/7JhQoQXNjrRYtlrhoctoJM+f59841RoG0HNdCkR9M4I+E2SdsR1vt6xNGJYE8F4/m/IHWYVnp9Uy2B7l0mzq8W7S96e6eC9cF2ifdVynHvRTwVGKCT5AAAjYVE8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cD2Wj0pQfz6GFK4;
-	Fri, 29 Aug 2025 23:39:45 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cD2cY43R0z6L508;
+	Fri, 29 Aug 2025 23:43:57 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id BD87314033F;
-	Fri, 29 Aug 2025 23:42:05 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 8D227140370;
+	Fri, 29 Aug 2025 23:47:29 +0800 (CST)
 Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 29 Aug
- 2025 17:42:04 +0200
-Date: Fri, 29 Aug 2025 16:42:03 +0100
+ 2025 17:47:28 +0200
+Date: Fri, 29 Aug 2025 16:47:27 +0100
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: Lukas Wunner <lukas@wunner.de>
 CC: Terry Bowman <terry.bowman@amd.com>, <dave@stgolabs.net>,
@@ -50,10 +50,10 @@ CC: Terry Bowman <terry.bowman@amd.com>, <dave@stgolabs.net>,
 	<PradeepVineshReddy.Kodamati@amd.com>, <Benjamin.Cheatham@amd.com>,
 	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
 	<alucerop@amd.com>, <ira.weiny@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
+	<linux-pci@vger.kernel.org>, <shiju.jose@huawei.com>
 Subject: Re: [PATCH v11 07/23] CXL/PCI: Move CXL DVSEC definitions into
  uapi/linux/pci_regs.h
-Message-ID: <20250829164203.00005381@huawei.com>
+Message-ID: <20250829164727.00004d18@huawei.com>
 In-Reply-To: <aK8bY0epS6OStdfr@wunner.de>
 References: <20250827013539.903682-1-terry.bowman@amd.com>
 	<20250827013539.903682-8-terry.bowman@amd.com>
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
 On Wed, 27 Aug 2025 16:51:15 +0200
@@ -119,6 +119,22 @@ Lukas Wunner <lukas@wunner.de> wrote:
 > We've only allowed use of GENMASK() in uapi headers since 2023 with
 > commit 3c7a8e190bc5 ("uapi: introduce uapi-friendly macros for GENMASK").
 > 
+
+I was curious, so went looking at that series.
+There was a second patch that has what we need here
+https://lore.kernel.org/all/20240131225010.2872733-3-pbonzini@redhat.com/
+
+So upshot is we should use _BITUL() for user space headers defined in
+uapi/linux/const.h, also should be using  __GENMASK() not GENMASK()
+in uapi/cxl/features.h
+
+Anyhow fancy fixing up the existing cxl headers?  I'll get to it maybe but
+will be a while as have a massive review backlog.
+
+Jonathan
+
+
+
 > But there is no uapi header in the kernel tree defining BIT().
 > 
 > I note that include/uapi/cxl/features.h has plenty of occurrences of BIT()
@@ -132,13 +148,6 @@ Lukas Wunner <lukas@wunner.de> wrote:
 > However existing user space applications including <linux/pci_regs.h>
 > may not have a BIT() definition and I suspect your change above will
 > break the build of those applications.
-
-Probably not breaking existing code, as it would have to actually use the
-define to run into problems.  However, it's still a an excellent point
-as adding register definitions that can't be used is not helpful.
-
-Jonathan
- 
 > 
 > Thanks,
 > 
