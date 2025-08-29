@@ -1,138 +1,125 @@
-Return-Path: <linux-pci+bounces-35088-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35086-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5799BB3B4B9
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 09:51:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7879B3B48B
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 09:42:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D5221C84D76
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 07:51:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8CB5617FFF9
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 07:42:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAFB126158C;
-	Fri, 29 Aug 2025 07:51:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D891527A907;
+	Fri, 29 Aug 2025 07:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G4p/Uwuk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56EF10F2;
-	Fri, 29 Aug 2025 07:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2F72512FF
+	for <linux-pci@vger.kernel.org>; Fri, 29 Aug 2025 07:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756453863; cv=none; b=bF5TIxBF8ZYUFEtjfchkNPRtLC6sjhGkXdf6wySlAWcrrjlZOLC/EQxYWkwJiDT99eJp7G7Awurplih6X0wR79R5/XU5m7yFCK8/K3BPho6gPLn5W+s+YnGBEgbAkWoCjTwGyHWi5SsMekGVxw1c0bkfMoIT6bARUvcOf5QYKPw=
+	t=1756453321; cv=none; b=dPmABW/aEgXUy7mq24/xJy873r4dIHbCSUgmPSXrIZRmlf5Wv2l2c0FU6FjNUloOfmeU2wPhKiDizt/S/qDoUWflENOWPerkBcVYAc6QemRKihM5by6xCP7D9f/PgSlxOq6ai/z3cd3coMd12XIKiPQ+X/sXg3y4rkHr3uUrty0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756453863; c=relaxed/simple;
-	bh=MadAWZ3EmTpt4X17hWUBy43zI9NrdvHbyfp/Xrizb/o=;
-	h=Message-ID:In-Reply-To:References:From:Date:Subject:To:Cc; b=Mmhlx9GCvzgxV2U+WlnwWL9XiD3PziPmaLIh7c9MKcMZPk49Cy5FE5v0jlVerHc8mfjdcHiekmHsUXnAM0BRrTmU68yp93AD2hSoYPJu5IwcMtnZQk/70AwV3xepamVhJqFyjqZ42LBq6Y0DaT5cIT8xmq7rYAVudSGGQOLKFbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by mailout2.hostsharing.net (Postfix) with UTF8SMTPS id E76592C1E673;
-	Fri, 29 Aug 2025 09:50:59 +0200 (CEST)
-Received: from localhost (unknown [89.246.108.87])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by h08.hostsharing.net (Postfix) with UTF8SMTPSA id BB388600AD9B;
-	Fri, 29 Aug 2025 09:50:59 +0200 (CEST)
-X-Mailbox-Line: From 3d6f5aa8634bd4d13f28b7ec6b1b8d8d474e3c69 Mon Sep 17 00:00:00 2001
-Message-ID: <3d6f5aa8634bd4d13f28b7ec6b1b8d8d474e3c69.1756451884.git.lukas@wunner.de>
-In-Reply-To: <cover.1756451884.git.lukas@wunner.de>
-References: <cover.1756451884.git.lukas@wunner.de>
-From: Lukas Wunner <lukas@wunner.de>
-Date: Fri, 29 Aug 2025 09:25:04 +0200
-Subject: [PATCH 4/4] PCI/ERR: Tidy documentation's PCIe nomenclature
-To: Bjorn Helgaas <helgaas@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: Terry Bowman <terry.bowman@amd.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Linas Vepstas <linasvepstas@gmail.com>, "Mahesh J Salgaonkar" <mahesh@linux.ibm.com>, "Oliver OHalloran" <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, Brian Norris <briannorris@chromium.org>
+	s=arc-20240116; t=1756453321; c=relaxed/simple;
+	bh=knOwTdhp1w71JACd9L7vianR106YfJXB591UpbwL2nY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JCwWDXDF5Ul2m/1eQQjp5cOJVPuJGv892vL/FMWTnO/r++zYnI39HfWzTk/ska82ue1BDuh7gsAB2smfh8Y6Cgb1aiF6NdEybbXIoG9cL1bDRLYFqvDiOoPIkGCgqLoOtFabZgR95+xc0SQ9FELlSaX6SSM3o5d0TjAf1/QeomY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G4p/Uwuk; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b474d0f1d5eso1346258a12.2
+        for <linux-pci@vger.kernel.org>; Fri, 29 Aug 2025 00:42:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756453319; x=1757058119; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=knOwTdhp1w71JACd9L7vianR106YfJXB591UpbwL2nY=;
+        b=G4p/UwukEyldIQg2YYha/zQ2wQZlHT/NNQft+eOty3jGx5mQHRFy/Pz4+gWYLggtFA
+         pkY0FtPsnXoB91POJNosGl2F7XWu6ln7mpY+DKFBk8OAhiEPNBpOpMA+h+U5cmnTbEWb
+         l0is/SMnOrmblgYpy5wbl/NF5p/oKeotYZIrs1agXjSSmILnVzLwZUYOnC2nRI6dQ0dr
+         o9piNNw7vaHvBFSKpECU6jMcUo4cyKqdubj2INLb1fvzd7s/O2IdijFFkYzx8DkLrjrw
+         8aHesg+HpNzbpIKqFdLVOjeWEvWBYIpU3e+5gYw+vhBV0TLr46LprDftuUacil+xHHIC
+         Y9Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756453319; x=1757058119;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=knOwTdhp1w71JACd9L7vianR106YfJXB591UpbwL2nY=;
+        b=QCKCkzXpVFm6DOftgm44k3KpyDyAvNR8Jqw4ElyRz8c7OCBskhosC+D+IogpurCiJ/
+         bQCukQtPJy8Nc2YmkLdiiMOmK3ica7DLvyHoFJZJF1XRu09JjQNgZhdw1hwxfCds5C2J
+         LU88kQd2edR3U8HP7krzxKp1m/RAuNEHahE/Gh0q3BdPUh6bvJw+ECKdU8WNp3YCT1mR
+         KynRNIvOPT/Cih/14mS9z59oj2CFAdPmol7ZEbqHnHzCLYxWlWAeFAISCWbFv0TDzDTm
+         ELyWKeXj6amJWjTyvIn0DYhXYkr367N2GLfhzn9vwMY+JivPg03rMu9JuOHSWeiphLl/
+         5+XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5f26qSg30TEN/P64B6NcELiKAl/9gheMf5CIAYOxdsCueKK/bFsICiDUqYIi1SjiIOIoL+N5sn+U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXh0zt4v0ZlS2T2jY167LYEnpStcg58G/YSNKPF/jMjKAJw0JE
+	AIolDkmas3f1F1nP3v8GJxnILr7K6lrGFZudRzOnj+GiA1ZbF6oolCXv5Q3i0ZHjbLo=
+X-Gm-Gg: ASbGncscFNlVNgmQ3rNADOGrAjuxOS/dOYUrbUp4SQzGWUSNkkW91cgX+zpm0EVVw0m
+	B4bkFCULRJel2CrXneGxRRK04z9nWsxGuT64YJk9SnZCWrsHNhXi58pOWjxgIX9MODxt8UKX37u
+	6pIMjNswHLqBGlr1BS09qIobDPIrqNQRsamzSGuzoARY2h1yWqzbm+nA2JWTpgA7eItZqeRGUtU
+	fgoWVKcl3s35YtzuR+stjZicQeYap9vOviGs6sSJPHdPldZ7Um3PvHiN9iymDpTyEA7Wb7yMFL/
+	i/NIiZX2z1pm/nRNeCx6iA5rCpGgxxpBfBx26nAwnFipc9drjbNdCE4h6/zbq1EweImr+WuG2hg
+	6j0d246hCDxBTJgTvsFnjHHugUzSd9A==
+X-Google-Smtp-Source: AGHT+IETAkMl/+/yPU+PyfRIWy19cUVq/UQ3leWcZvK0ONU/TNvkUzax0K+V6T4TRMooRP7D0B6SNg==
+X-Received: by 2002:a17:902:ce0b:b0:248:9c98:2cf4 with SMTP id d9443c01a7336-2489c982ed7mr129967845ad.46.1756453319511;
+        Fri, 29 Aug 2025 00:41:59 -0700 (PDT)
+Received: from localhost ([2405:201:c00c:2854:f8d7:f98b:c2ca:420e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-249037285b9sm16627095ad.44.2025.08.29.00.41.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Aug 2025 00:41:58 -0700 (PDT)
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+To: inochiama@gmail.com
+Cc: anders.roxell@linaro.org,
+	bhelgaas@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lkft@linaro.org,
+	looong.bin@gmail.com,
+	lpieralisi@kernel.org,
+	maz@kernel.org,
+	nathan@kernel.org,
+	shradhagupta@linux.microsoft.com,
+	tglx@linutronix.de
+Subject: [PATCH] PCI/MSI: Check MSI_FLAG_PCI_MSI_MASK_PARENT in cond_[startup|shutdown]_parent()
+Date: Fri, 29 Aug 2025 13:11:51 +0530
+Message-ID: <20250829074152.337221-1-naresh.kamboju@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250827062911.203106-1-inochiama@gmail.com>
+References: <20250827062911.203106-1-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Commit 11502feab423 ("Documentation: PCI: Tidy AER documentation")
-replaced the terms "PCI-E", "PCI-Express" and "PCI Express" with "PCIe"
-in the AER documentation.
+On Wed, 27 Aug 2025 at 06:17, Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> On Wed, Aug 27, 2025 at 07:28:46AM +0800, Inochi Amaoto wrote:
+> > OK, I guess I know why: I have missed one condition for startup.
+> >
+> > Could you test the following patch? If worked, I will send it as
+> > a fix.
+>
+> Yes, that appears to resolve the issue on one system. I cannot test the
+> other at the moment since it is under load.
 
-Do the same in the documentation on PCI error recovery.  While at it,
-add a missing period and a missing blank.
+I have built on top of Linux next-20250826 tag and the qemu-arm64 boot test
+pass and LTP smoke test also pass.
 
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
- Documentation/PCI/pci-error-recovery.rst | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
-index c88c304b2103..500d4e9b2143 100644
---- a/Documentation/PCI/pci-error-recovery.rst
-+++ b/Documentation/PCI/pci-error-recovery.rst
-@@ -13,7 +13,7 @@ PCI Error Recovery
- Many PCI bus controllers are able to detect a variety of hardware
- PCI errors on the bus, such as parity errors on the data and address
- buses, as well as SERR and PERR errors.  Some of the more advanced
--chipsets are able to deal with these errors; these include PCI-E chipsets,
-+chipsets are able to deal with these errors; these include PCIe chipsets,
- and the PCI-host bridges found on IBM Power4, Power5 and Power6-based
- pSeries boxes. A typical action taken is to disconnect the affected device,
- halting all I/O to it.  The goal of a disconnection is to avoid system
-@@ -206,7 +206,7 @@ reset or some such, but not restart operations. This callback is made if
- all drivers on a segment agree that they can try to recover and if no automatic
- link reset was performed by the HW. If the platform can't just re-enable IOs
- without a slot reset or a link reset, it will not call this callback, and
--instead will have gone directly to STEP 3 (Link Reset) or STEP 4 (Slot Reset)
-+instead will have gone directly to STEP 3 (Link Reset) or STEP 4 (Slot Reset).
- 
- .. note::
- 
-@@ -258,14 +258,14 @@ The driver should return one of the following result codes:
- 
- The next step taken depends on the results returned by the drivers.
- If all drivers returned PCI_ERS_RESULT_RECOVERED, then the platform
--proceeds to either STEP3 (Link Reset) or to STEP 5 (Resume Operations).
-+proceeds to either STEP 3 (Link Reset) or to STEP 5 (Resume Operations).
- 
- If any driver returned PCI_ERS_RESULT_NEED_RESET, then the platform
- proceeds to STEP 4 (Slot Reset)
- 
- STEP 3: Link Reset
- ------------------
--The platform resets the link.  This is a PCI-Express specific step
-+The platform resets the link.  This is a PCIe specific step
- and is done whenever a fatal error has been detected that can be
- "solved" by resetting the link.
- 
-@@ -287,13 +287,13 @@ that is equivalent to what it would be after a fresh system
- power-on followed by power-on BIOS/system firmware initialization.
- Soft reset is also known as hot-reset.
- 
--Powerpc fundamental reset is supported by PCI Express cards only
-+Powerpc fundamental reset is supported by PCIe cards only
- and results in device's state machines, hardware logic, port states and
- configuration registers to initialize to their default conditions.
- 
- For most PCI devices, a soft reset will be sufficient for recovery.
- Optional fundamental reset is provided to support a limited number
--of PCI Express devices for which a soft reset is not sufficient
-+of PCIe devices for which a soft reset is not sufficient
- for recovery.
- 
- If the platform supports PCI hotplug, then the reset might be
-@@ -337,7 +337,7 @@ Result codes:
- 	- PCI_ERS_RESULT_DISCONNECT
- 	  Same as above.
- 
--Drivers for PCI Express cards that require a fundamental reset must
-+Drivers for PCIe cards that require a fundamental reset must
- set the needs_freset bit in the pci_dev structure in their probe function.
- For example, the QLogic qla2xxx driver sets the needs_freset bit for certain
- PCI card types::
--- 
-2.47.2
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
+--
+Linaro LKFT
+https://lkft.linaro.org
 
