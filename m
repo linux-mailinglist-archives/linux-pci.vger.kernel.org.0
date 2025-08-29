@@ -1,47 +1,65 @@
-Return-Path: <linux-pci+bounces-35073-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35074-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B570B3AF48
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 02:29:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D18D1B3AFEC
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 02:44:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9751C1C28575
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 00:29:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C9913AA874
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 00:43:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C98A21684AC;
-	Fri, 29 Aug 2025 00:29:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE51413B7A3;
+	Fri, 29 Aug 2025 00:43:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="poRzDjXW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X8oJ6Gth"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F256533F3;
-	Fri, 29 Aug 2025 00:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D23D1FDA;
+	Fri, 29 Aug 2025 00:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756427360; cv=none; b=JK2QLEBALbR4oiRy5Oa8g35NpP0qGmseE5DgBB7wH/rVh12K3lsYIpLsaXmakgYExzH224IkS+23tcs7ySHm5v60XFdQg56L+NK6N9qvvKJwajTrYh47qKwEIOybFVXJmkGQvSgoBm32lqSFBZ8q73KybVib7XYC7AHbQy3Es1E=
+	t=1756428230; cv=none; b=ZKPXaYoDKx2eOQhcKebwdkDaIDsn5XeBXtoq1IkyPqHnI+uLVPUMY4dD8EQO0G6lGJdAXMCkljp2jiuOXcgIbjfIWvhB5IU7oCtWlF1bU08/z1rcr31ZDHLop0mxmHrQ9HXFXcmWbPLxrkM/vbodUkUK1vCWQtI0crqN5+rB/EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756427360; c=relaxed/simple;
-	bh=ot+2HrtyJInU0ZA8JMHPx+dOY9PU6YtQ3mFvDFCoH7s=;
+	s=arc-20240116; t=1756428230; c=relaxed/simple;
+	bh=HMZc9RcsAPYD5lqXAglT75h0GVT5vN+vvUgGqJeGZ28=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RIxvUR3DbNQIhA70+AkWz2otQX4i07araYZK2eBBVHHd4jZPigqe9rcShhXvZCEl3Q1mHs5ZKsTRe3a+ZMeZTReSzUu67NOOeNKTfN2AF8Fu3n8T4fDgt/zpbnGTNi9FXUCsbniiFduCfgvdPd2LkM4Qyf6cCiUI6dKvtwjeHCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=poRzDjXW; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.128.219] (unknown [20.236.10.129])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3777F2110812;
-	Thu, 28 Aug 2025 17:29:17 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3777F2110812
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1756427357;
-	bh=lN42qcmFwBXn/PPaiN936XEpQO05ChrgbLHgB+gVPCM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=poRzDjXWcBGz/dgzPSyW1ppmtP825pJeqPejDqwKNVGb33ej7TTJ+3Ach1tMOgmXf
-	 UfstC1uq7Eb3h0PplNHv8x1bjse//kq4B740aQWslp8GjShWZNxIaZLDOPMvR3Jfdk
-	 hMvBIf3bJYfTGBVb0bkjZCmb6awBBsX0yDMrYaQ0=
-Message-ID: <5003d5e8-a025-4827-b8a0-6fe11877421b@linux.microsoft.com>
-Date: Thu, 28 Aug 2025 17:29:16 -0700
+	 In-Reply-To:Content-Type; b=N38ROHZQcQ1OeeOHfgSu/Wx0R8u9ilT017a1qlDf3oXSCknhYFCJX8J/ZuF+eVk+p619TUZ649OrtaeXfUNTj91vW3sReYT6gbhaa5fnsp2ITDYd5O5Y5C7l3g3iATFxGidJvEUgXSdxs47aGApDCLvF8gd+tHcbuxXBLQpErs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X8oJ6Gth; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756428229; x=1787964229;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HMZc9RcsAPYD5lqXAglT75h0GVT5vN+vvUgGqJeGZ28=;
+  b=X8oJ6Gthl9qhdX0UQAFplyKDTSdn+IgTs6Y6RYx3j49HgYRzDxfKNpHK
+   rDa/nwlhebKZ75bXQLRkjMRvfRluWp6yNAUo9D8cSQ87+4gsv3Bwh9+eV
+   xKzkLSOaCbrLATUrEBaVmVttdgetzMi/MCMH+hdgv5NmtSXWSIx+N5ouF
+   6obBxdiBTsaLW5lpYEXITt5mc8H/OjlG5elNs5j5B8wqCU2FbcXwntAsK
+   2qBAWWGe6b5x9t21WXWfhXUT20YD2HNgK3R9g1Jz3Dr3o76UlufXKbz2Y
+   J5GYCplj7TvIQ36CZoS8VKLYtInF+6V8NPwaP4OtPA3QflU02FwORsUjX
+   Q==;
+X-CSE-ConnectionGUID: WAyW0t0jSOmqkBMfVWc2sw==
+X-CSE-MsgGUID: OpKzfqiBTouKLgezUYLnSg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11536"; a="58775921"
+X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
+   d="scan'208";a="58775921"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 17:43:47 -0700
+X-CSE-ConnectionGUID: rCZc4IfLQ4Gii4y1lR5HsA==
+X-CSE-MsgGUID: qo8uxVKjQNC3kL6WBay3uA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
+   d="scan'208";a="174422570"
+Received: from anmitta2-mobl4.gar.corp.intel.com (HELO [10.247.118.49]) ([10.247.118.49])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 17:43:37 -0700
+Message-ID: <2312cd83-9faa-458b-9960-72760c769101@intel.com>
+Date: Thu, 28 Aug 2025 17:43:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -49,273 +67,286 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V0 1/2] hyper-v: Add CONFIG_HYPERV_VMBUS option
-To: Mukesh Rathor <mrathor@linux.microsoft.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
- linux-arch@vger.kernel.org, virtualization@lists.linux.dev
-Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, jikos@kernel.org,
- bentiss@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com, dmitry.torokhov@gmail.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, bhelgaas@google.com,
- James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
- gregkh@linuxfoundation.org, deller@gmx.de, arnd@arndb.de,
- sgarzare@redhat.com, horms@kernel.org
-References: <20250828005952.884343-1-mrathor@linux.microsoft.com>
- <20250828005952.884343-2-mrathor@linux.microsoft.com>
+Subject: Re: [PATCH v11 18/23] PCI/AER: Dequeue forwarded CXL error
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250827013539.903682-1-terry.bowman@amd.com>
+ <20250827013539.903682-19-terry.bowman@amd.com>
 Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20250828005952.884343-2-mrathor@linux.microsoft.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250827013539.903682-19-terry.bowman@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 8/27/2025 5:59 PM, Mukesh Rathor wrote:
-> Somehow vmbus driver is hinged on CONFIG_HYPERV. It appears this is initial
-> code that did not get addressed when the scope of CONFIG_HYPERV went beyond
-> vmbus. This commit creates a fine grained HYPERV_VMBUS option and updates
-> drivers that depend on VMBUS.
+
+
+On 8/26/25 6:35 PM, Terry Bowman wrote:
+> The AER driver is now designed to forward CXL protocol errors to the CXL
+
+I would rephrase it to:
+The AER driver enqueues the CXL protocol error info to the created kfifo for the CXL driver to consume.
+ 
+> driver. Update the CXL driver with functionality to dequeue the forwarded
+> CXL error from the kfifo. Also, update the CXL driver to begin the protocol
+> error handling processing using the work received from the FIFO.
 > 
-
-The commit message can be improved. The docs are helpful here:
-https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
-
-In particular, some clearer reasons for the change.
-e.g.
-- CONFIG_HYPERV encompasses too much right now. It's not always clear what
-  depends on builtin hyperv code and what depends on vmbus.
-
-- Since there is so much builtin hyperv code, building CONFIG_HYPERV as a
-  module doesn't make intuitive sense. Building vmbus support as a module does.
-
-- There are actually some real scenarios someone may want to compile with
-  CONFIG_HYPERV but without vmbus, like baremetal root partition.
-
-FWIW I think it's a good idea, interested to hear what others think.
-
-Nuno
-
-> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+> Update function cxl_proto_err_work_fn() to dequeue work forwarded by the
+> AER service driver. This will begin the CXL protocol error processing with
+> a call to cxl_handle_proto_error().
+> 
+> Introduce logic to take the SBDF values from 'struct cxl_proto_error_info'
+> and use in discovering the erring PCI device. The call to pci_get_domain_bus_and_slot()
+> will return a reference counted 'struct pci_dev *'. This will serve as
+> reference count to prevent releasing the CXL Endpoint's mapped RAS while
+> handling the error. Use scope base __free() to put the reference count.
+> This will change when adding support for CXL port devices in the future.
+> 
+> Implement cxl_handle_proto_error() to differentiate between Restricted CXL
+> Host (RCH) protocol errors and CXL virtual host (VH) protocol errors.
+> Maintain the existing RCH handling. Export the AER driver's pcie_walk_rcec()
+> allowing the CXL driver to walk the RCEC's secondary bus.
+> 
+> VH correctable error (CE) processing will call the CXL CE handler. VH
+> uncorrectable errors (UCE) will call cxl_do_recovery(), implemented as a
+> stub for now and to be updated in future patch. Export pci_aer_clean_fatal_status()
+> and pci_clean_device_status() used to clean up AER status after handling.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
 > ---
->  drivers/gpu/drm/Kconfig        |  2 +-
->  drivers/hid/Kconfig            |  2 +-
->  drivers/hv/Kconfig             | 12 +++++++++---
->  drivers/hv/Makefile            |  2 +-
->  drivers/input/serio/Kconfig    |  4 ++--
->  drivers/net/hyperv/Kconfig     |  2 +-
->  drivers/pci/Kconfig            |  2 +-
->  drivers/scsi/Kconfig           |  2 +-
->  drivers/uio/Kconfig            |  2 +-
->  drivers/video/fbdev/Kconfig    |  2 +-
->  include/asm-generic/mshyperv.h |  8 +++++---
->  net/vmw_vsock/Kconfig          |  2 +-
->  12 files changed, 25 insertions(+), 17 deletions(-)
+> Changes in v10->v11:
+> - Reword patch commit message to remove RCiEP details (Jonathan)
+> - Add #include <linux/bitfield.h> (Terry)
+> - is_cxl_rcd() - Fix short comment message wrap  (Jonathan)
+> - is_cxl_rcd() - Combine return calls into 1  (Jonathan)
+> - cxl_handle_proto_error() - Move comment earlier  (Jonathan)
+> - Usse FIELD_GET() in discovering class code (Jonathan)
+> - Remove BDF from cxl_proto_err_work_data. Use 'struct pci_dev *' (Dan)
+> ---
+>  drivers/cxl/core/ras.c  | 68 ++++++++++++++++++++++++++++++++++-------
+>  drivers/pci/pci.c       |  1 +
+>  drivers/pci/pci.h       |  7 -----
+>  drivers/pci/pcie/aer.c  |  1 +
+>  drivers/pci/pcie/rcec.c |  1 +
+>  include/linux/aer.h     |  2 ++
+>  include/linux/pci.h     | 10 ++++++
+>  7 files changed, 72 insertions(+), 18 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index f7ea8e895c0c..58f34da061c6 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -398,7 +398,7 @@ source "drivers/gpu/drm/imagination/Kconfig"
->  
->  config DRM_HYPERV
->  	tristate "DRM Support for Hyper-V synthetic video device"
-> -	depends on DRM && PCI && HYPERV
-> +	depends on DRM && PCI && HYPERV_VMBUS
->  	select DRM_CLIENT_SELECTION
->  	select DRM_KMS_HELPER
->  	select DRM_GEM_SHMEM_HELPER
-> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-> index a57901203aeb..fe3dc8c0db99 100644
-> --- a/drivers/hid/Kconfig
-> +++ b/drivers/hid/Kconfig
-> @@ -1162,7 +1162,7 @@ config GREENASIA_FF
->  
->  config HID_HYPERV_MOUSE
->  	tristate "Microsoft Hyper-V mouse driver"
-> -	depends on HYPERV
-> +	depends on HYPERV_VMBUS
->  	help
->  	Select this option to enable the Hyper-V mouse driver.
->  
-> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> index 2e8df09db599..08c4ed005137 100644
-> --- a/drivers/hv/Kconfig
-> +++ b/drivers/hv/Kconfig
-> @@ -44,18 +44,24 @@ config HYPERV_TIMER
->  
->  config HYPERV_UTILS
->  	tristate "Microsoft Hyper-V Utilities driver"
-> -	depends on HYPERV && CONNECTOR && NLS
-> +	depends on HYPERV_VMBUS && CONNECTOR && NLS
->  	depends on PTP_1588_CLOCK_OPTIONAL
->  	help
->  	  Select this option to enable the Hyper-V Utilities.
->  
->  config HYPERV_BALLOON
->  	tristate "Microsoft Hyper-V Balloon driver"
-> -	depends on HYPERV
-> +	depends on HYPERV_VMBUS
->  	select PAGE_REPORTING
->  	help
->  	  Select this option to enable Hyper-V Balloon driver.
->  
-> +config HYPERV_VMBUS
-> +	tristate "Microsoft Hyper-V Vmbus driver"
-> +	depends on HYPERV
-> +	help
-> +	  Select this option to enable Hyper-V Vmbus driver.
-> +
->  config MSHV_ROOT
->  	tristate "Microsoft Hyper-V root partition support"
->  	depends on HYPERV && (X86_64 || ARM64)
-> @@ -75,7 +81,7 @@ config MSHV_ROOT
->  
->  config MSHV_VTL
->  	tristate "Microsoft Hyper-V VTL driver"
-> -	depends on X86_64 && HYPERV_VTL_MODE
-> +	depends on X86_64 && HYPERV_VTL_MODE && HYPERV_VMBUS
->  	# Mapping VTL0 memory to a userspace process in VTL2 is supported in OpenHCL.
->  	# VTL2 for OpenHCL makes use of Huge Pages to improve performance on VMs,
->  	# specially with large memory requirements.
-> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-> index c53a0df746b7..050517756a82 100644
-> --- a/drivers/hv/Makefile
-> +++ b/drivers/hv/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -obj-$(CONFIG_HYPERV)		+= hv_vmbus.o
-> +obj-$(CONFIG_HYPERV_VMBUS)	+= hv_vmbus.o
->  obj-$(CONFIG_HYPERV_UTILS)	+= hv_utils.o
->  obj-$(CONFIG_HYPERV_BALLOON)	+= hv_balloon.o
->  obj-$(CONFIG_MSHV_ROOT)		+= mshv_root.o
-> diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
-> index 17edc1597446..c7ef347a4dff 100644
-> --- a/drivers/input/serio/Kconfig
-> +++ b/drivers/input/serio/Kconfig
-> @@ -276,8 +276,8 @@ config SERIO_OLPC_APSP
->  
->  config HYPERV_KEYBOARD
->  	tristate "Microsoft Synthetic Keyboard driver"
-> -	depends on HYPERV
-> -	default HYPERV
-> +	depends on HYPERV_VMBUS
-> +	default HYPERV_VMBUS
->  	help
->  	  Select this option to enable the Hyper-V Keyboard driver.
->  
-> diff --git a/drivers/net/hyperv/Kconfig b/drivers/net/hyperv/Kconfig
-> index c8cbd85adcf9..982964c1a9fb 100644
-> --- a/drivers/net/hyperv/Kconfig
-> +++ b/drivers/net/hyperv/Kconfig
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  config HYPERV_NET
->  	tristate "Microsoft Hyper-V virtual network driver"
-> -	depends on HYPERV
-> +	depends on HYPERV_VMBUS
->  	select UCS2_STRING
->  	select NLS
->  	help
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 9a249c65aedc..7065a8e5f9b1 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -221,7 +221,7 @@ config PCI_LABEL
->  
->  config PCI_HYPERV
->  	tristate "Hyper-V PCI Frontend"
-> -	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI && SYSFS
-> +	depends on ((X86 && X86_64) || ARM64) && HYPERV_VMBUS && PCI_MSI && SYSFS
->  	select PCI_HYPERV_INTERFACE
->  	select IRQ_MSI_LIB
->  	help
-> diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-> index 5522310bab8d..19d0884479a2 100644
-> --- a/drivers/scsi/Kconfig
-> +++ b/drivers/scsi/Kconfig
-> @@ -589,7 +589,7 @@ config XEN_SCSI_FRONTEND
->  
->  config HYPERV_STORAGE
->  	tristate "Microsoft Hyper-V virtual storage driver"
-> -	depends on SCSI && HYPERV
-> +	depends on SCSI && HYPERV_VMBUS
->  	depends on m || SCSI_FC_ATTRS != m
->  	default HYPERV
->  	help
-> diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
-> index b060dcd7c635..6f86a61231e6 100644
-> --- a/drivers/uio/Kconfig
-> +++ b/drivers/uio/Kconfig
-> @@ -140,7 +140,7 @@ config UIO_MF624
->  
->  config UIO_HV_GENERIC
->  	tristate "Generic driver for Hyper-V VMBus"
-> -	depends on HYPERV
-> +	depends on HYPERV_VMBUS
->  	help
->  	  Generic driver that you can bind, dynamically, to any
->  	  Hyper-V VMBus device. It is useful to provide direct access
-> diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
-> index c21484d15f0c..72c63eaeb983 100644
-> --- a/drivers/video/fbdev/Kconfig
-> +++ b/drivers/video/fbdev/Kconfig
-> @@ -1774,7 +1774,7 @@ config FB_BROADSHEET
->  
->  config FB_HYPERV
->  	tristate "Microsoft Hyper-V Synthetic Video support"
-> -	depends on FB && HYPERV
-> +	depends on FB && HYPERV_VMBUS
->  	select DMA_CMA if HAVE_DMA_CONTIGUOUS && CMA
->  	select FB_IOMEM_HELPERS_DEFERRED
->  	help
-> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-> index 1d2ad1304ad4..66c58c91b530 100644
-> --- a/include/asm-generic/mshyperv.h
-> +++ b/include/asm-generic/mshyperv.h
-> @@ -165,6 +165,7 @@ static inline u64 hv_generate_guest_id(u64 kernel_version)
->  
->  void __init hv_mark_resources(void);
->  
-> +#if IS_ENABLED(CONFIG_HYPERV_VMBUS)
->  /* Free the message slot and signal end-of-message if required */
->  static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
->  {
-> @@ -200,6 +201,10 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
->  	}
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index b285448c2d9c..a2e95c49f965 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -118,17 +118,6 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
 >  }
+>  static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
 >  
-> +extern int vmbus_interrupt;
-> +extern int vmbus_irq;
-> +#endif /* CONFIG_HYPERV_VMBUS */
-> +
->  int hv_get_hypervisor_version(union hv_hypervisor_version_info *info);
->  
->  void hv_setup_vmbus_handler(void (*handler)(void));
-> @@ -213,9 +218,6 @@ void hv_setup_crash_handler(void (*handler)(struct pt_regs *regs));
->  void hv_remove_crash_handler(void);
->  void hv_setup_mshv_handler(void (*handler)(void));
->  
-> -extern int vmbus_interrupt;
-> -extern int vmbus_irq;
+> -int cxl_ras_init(void)
+> -{
+> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+> -}
 > -
->  #if IS_ENABLED(CONFIG_HYPERV)
->  /*
->   * Hypervisor's notion of virtual processor ID is different from
-> diff --git a/net/vmw_vsock/Kconfig b/net/vmw_vsock/Kconfig
-> index 56356d2980c8..8e803c4828c4 100644
-> --- a/net/vmw_vsock/Kconfig
-> +++ b/net/vmw_vsock/Kconfig
-> @@ -72,7 +72,7 @@ config VIRTIO_VSOCKETS_COMMON
+> -void cxl_ras_exit(void)
+> -{
+> -	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
+> -	cancel_work_sync(&cxl_cper_prot_err_work);
+> -}
+> -
+>  static pci_ers_result_t cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base);
+>  static void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base);
 >  
->  config HYPERV_VSOCKETS
->  	tristate "Hyper-V transport for Virtual Sockets"
-> -	depends on VSOCKETS && HYPERV
-> +	depends on VSOCKETS && HYPERV_VMBUS
->  	help
->  	  This module implements a Hyper-V transport for Virtual Sockets.
+> @@ -331,6 +320,10 @@ void cxl_endpoint_port_init_ras(struct cxl_port *ep)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_port_init_ras, "CXL");
 >  
+> +static void cxl_do_recovery(struct device *dev)
+> +{
+> +}
+> +
+>  static void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base)
+>  {
+>  	void __iomem *addr;
+> @@ -472,3 +465,56 @@ pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
+>  	return rc;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(pci_error_detected, "CXL");
+> +
+> +static void cxl_handle_proto_error(struct cxl_proto_err_work_data *err_info)
+> +{
+> +	struct pci_dev *pdev = err_info->pdev;
+> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+
+So this function is called from the workqueue thread to consume data from the kfifo right? Do we need to take the device lock of the pdev to ensure that a driver is bound to the device before we attempt to retrieve the data? And do we also need to verify that the driver bound is the cxl_pci driver (and not something like vfio_pci)? Otherwise I think assuming the drv data is cxl_dev_state may cause crash.
+
+DJ
+
+> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> +	struct device *host_dev __free(put_device) = get_device(&cxlmd->dev);
+> +> +	if (err_info->severity == AER_CORRECTABLE) {
+> +		int aer = pdev->aer_cap;
+> +
+> +		if (aer)
+> +			pci_clear_and_set_config_dword(pdev,
+> +						       aer + PCI_ERR_COR_STATUS,
+> +						       0, PCI_ERR_COR_INTERNAL);
+> +
+> +		cxl_cor_error_detected(&cxlmd->dev);
+> +
+> +		pcie_clear_device_status(pdev);
+> +	} else {
+> +		cxl_do_recovery(&cxlmd->dev);
+> +	}
+> +}
+> +
+> +static void cxl_proto_err_work_fn(struct work_struct *work)
+> +{
+> +	struct cxl_proto_err_work_data wd;
+> +
+> +	while (cxl_proto_err_kfifo_get(&wd))
+> +		cxl_handle_proto_error(&wd);
+> +}
+> +
+> +static struct work_struct cxl_proto_err_work;
+> +static DECLARE_WORK(cxl_proto_err_work, cxl_proto_err_work_fn);
+> +
+> +int cxl_ras_init(void)
+> +{
+> +	if (cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work))
+> +		pr_err("Failed to initialize CXL RAS CPER\n");
+> +
+> +	cxl_register_proto_err_work(&cxl_proto_err_work);
+> +
+> +	return 0;
+> +}
+> +
+> +void cxl_ras_exit(void)
+> +{
+> +	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
+> +	cancel_work_sync(&cxl_cper_prot_err_work);
+> +
+> +	cxl_unregister_proto_err_work();
+> +	cancel_work_sync(&cxl_proto_err_work);
+> +}
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d775ed37a79b..2c9827690cb3 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -2328,6 +2328,7 @@ void pcie_clear_device_status(struct pci_dev *dev)
+>  	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &sta);
+>  	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
+>  }
+> +EXPORT_SYMBOL_NS_GPL(pcie_clear_device_status, "CXL");
+>  #endif
+>  
+>  /**
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index cfa75903dd3f..69ff7c2d214f 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -671,16 +671,10 @@ static inline bool pci_dpc_recovered(struct pci_dev *pdev) { return false; }
+>  void pci_rcec_init(struct pci_dev *dev);
+>  void pci_rcec_exit(struct pci_dev *dev);
+>  void pcie_link_rcec(struct pci_dev *rcec);
+> -void pcie_walk_rcec(struct pci_dev *rcec,
+> -		    int (*cb)(struct pci_dev *, void *),
+> -		    void *userdata);
+>  #else
+>  static inline void pci_rcec_init(struct pci_dev *dev) { }
+>  static inline void pci_rcec_exit(struct pci_dev *dev) { }
+>  static inline void pcie_link_rcec(struct pci_dev *rcec) { }
+> -static inline void pcie_walk_rcec(struct pci_dev *rcec,
+> -				  int (*cb)(struct pci_dev *, void *),
+> -				  void *userdata) { }
+>  #endif
+>  
+>  #ifdef CONFIG_PCI_ATS
+> @@ -1022,7 +1016,6 @@ void pci_restore_aer_state(struct pci_dev *dev);
+>  static inline void pci_no_aer(void) { }
+>  static inline void pci_aer_init(struct pci_dev *d) { }
+>  static inline void pci_aer_exit(struct pci_dev *d) { }
+> -static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
+>  static inline int pci_aer_clear_status(struct pci_dev *dev) { return -EINVAL; }
+>  static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
+>  static inline void pci_save_aer_state(struct pci_dev *dev) { }
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 627d89ccea9c..45abe1622316 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -288,6 +288,7 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
+>  	if (status)
+>  		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
+>  }
+> +EXPORT_SYMBOL_GPL(pci_aer_clear_fatal_status);
+>  
+>  /**
+>   * pci_aer_raw_clear_status - Clear AER error registers.
+> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
+> index d0bcd141ac9c..fb6cf6449a1d 100644
+> --- a/drivers/pci/pcie/rcec.c
+> +++ b/drivers/pci/pcie/rcec.c
+> @@ -145,6 +145,7 @@ void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
+>  
+>  	walk_rcec(walk_rcec_helper, &rcec_data);
+>  }
+> +EXPORT_SYMBOL_NS_GPL(pcie_walk_rcec, "CXL");
+>  
+>  void pci_rcec_init(struct pci_dev *dev)
+>  {
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index f8eb32805957..1f79f0be4bf7 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -66,12 +66,14 @@ struct cxl_proto_err_work_data {
+>  
+>  #if defined(CONFIG_PCIEAER)
+>  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+> +void pci_aer_clear_fatal_status(struct pci_dev *dev);
+>  int pcie_aer_is_native(struct pci_dev *dev);
+>  #else
+>  static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>  {
+>  	return -EINVAL;
+>  }
+> +static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
+>  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+>  #endif
+>  
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 3dcab36c437f..3407d687459d 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1804,6 +1804,9 @@ extern bool pcie_ports_native;
+>  
+>  int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
+>  			  bool use_lt);
+> +void pcie_walk_rcec(struct pci_dev *rcec,
+> +		    int (*cb)(struct pci_dev *, void *),
+> +		    void *userdata);
+>  #else
+>  #define pcie_ports_disabled	true
+>  #define pcie_ports_native	false
+> @@ -1814,8 +1817,15 @@ static inline int pcie_set_target_speed(struct pci_dev *port,
+>  {
+>  	return -EOPNOTSUPP;
+>  }
+> +
+> +static inline void pcie_walk_rcec(struct pci_dev *rcec,
+> +				  int (*cb)(struct pci_dev *, void *),
+> +				  void *userdata) { }
+> +
+>  #endif
+>  
+> +void pcie_clear_device_status(struct pci_dev *dev);
+> +
+>  #define PCIE_LINK_STATE_L0S		(BIT(0) | BIT(1)) /* Upstr/dwnstr L0s */
+>  #define PCIE_LINK_STATE_L1		BIT(2)	/* L1 state */
+>  #define PCIE_LINK_STATE_L1_1		BIT(3)	/* ASPM L1.1 state */
 
 
