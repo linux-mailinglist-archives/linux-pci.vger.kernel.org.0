@@ -1,71 +1,71 @@
-Return-Path: <linux-pci+bounces-35116-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35117-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A8C9B3BC3E
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 15:17:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19EA1B3BC40
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 15:17:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 409621CC2CD8
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 13:16:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0740E7B7DD2
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 13:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDAD631B105;
-	Fri, 29 Aug 2025 13:13:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA0B731DDBC;
+	Fri, 29 Aug 2025 13:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I1bYRDkd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y0jm239z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A67A31A57B;
-	Fri, 29 Aug 2025 13:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB3A322527;
+	Fri, 29 Aug 2025 13:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756473224; cv=none; b=DXMbliuOodhgBP1H/rf1tRXrymzhWNyk+JGSPRsHnnYTduKrH6CZ/uu2uGg/y/m0v4q4uE6vXHqIF2v0dtZLncOgWUVZHRDGzlBpF5/WkErRqn/rxPIAYo3pU9YSodb2YP5MkLzk/bkIuEpkvkkRbBlDg1Fm3WYAcU/5bXRpak0=
+	t=1756473232; cv=none; b=Y05KloWJq6v5BzMEeOVqUPN9ZOd+evmoPjBn5xYIaIW7XHw3RfrmWBxAEWLWjexwC9LCVFJIUSfSeqUUMX4ABKsQ0fiVWEsMO8IR8PQvkGHTxvxEJoZF9mvjCEg8d0+uYxU5zhK2pYnjAxxsit9TPEazk9rGp3HeFkZOXCt/M54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756473224; c=relaxed/simple;
-	bh=+NtJ+Uue6BNbxIbx+lobKHWr+5pQ6wDU3MkHBfUh5N8=;
+	s=arc-20240116; t=1756473232; c=relaxed/simple;
+	bh=wMCUuHF+XjaAwSmSStybioIny5+bMniscZLMz7OWBZQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EnVCNfjIezzMDK05H4uZFC+RgNQStsBOIzwi7FN0J42+EAnJpLIM1IwHAwbYN6l7DJQy9n7Q/lgG59n7JrY+ul3nKfDMDD1ar1y12DYa7wlhWd52IlMEXeX+E4FL40oaCXVsvkykUlmCrIMhMjJMXbPmgTEzrCHlfBBVc86ius8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I1bYRDkd; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=g69p4Zmdh+Pv7eQnCswWIvBMcdBY+ZUMAiU4FvW1mZKk9o785C6YeoYd1j0Ha7TqLFtx8p6CTWuHB7IuukCGv+sJluEoeOy1pf0FvWLmY9S3prpfNp5mtari3frLgGDDvOzE18hIdKzxw86Fk9JUk3fXtcJu+yxujRdHHIApfrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y0jm239z; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756473224; x=1788009224;
+  t=1756473231; x=1788009231;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=+NtJ+Uue6BNbxIbx+lobKHWr+5pQ6wDU3MkHBfUh5N8=;
-  b=I1bYRDkdqQrSqcm+TttNlykJBS0CuAJPAqkJVzsikAutYGoLDwez3ThW
-   E8YontTSgUlW5uJS1IX+KkEcL6NhEAms83vYZAYGdcMa2pt01Z6jbdxT7
-   iHUmFhlue1LM+hkzXjQ6MV8iGIo2EaaBDv7Tg8VKqXlh8mhxXmEZBpJeJ
-   tm8P7nud/yrUwPghX45WtwMUMbRRi7iXV5SZI8zfas82A/aAV5sXrmB3Y
-   TXjT8U2pjfuTLAJcTCWpJsidOnUOYCMupb+lRHxDwlRK/LSTXx/JORuvM
-   2Zh0xdf0YiGOJ75PHCBizbG9OKYEwTQ1KHS5in1tNCjZdHYz/8+EnoU+P
-   Q==;
-X-CSE-ConnectionGUID: 3NjHi6PbQdeydb/yOatrDg==
-X-CSE-MsgGUID: /HHRxUd8SdO8JEZ9L1pRMQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="62587510"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="62587510"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 06:13:43 -0700
-X-CSE-ConnectionGUID: oX/DVL9AQDqqfbd2c6dOOg==
-X-CSE-MsgGUID: N/3i7VQ1SZGIaa4UX+LucA==
+  bh=wMCUuHF+XjaAwSmSStybioIny5+bMniscZLMz7OWBZQ=;
+  b=Y0jm239z1uNihN9TTkY4DCTtCgcinWwDp5sVdYLjZjwcJdQA0aVknJsT
+   9ucMqU3jWW+monQMQYKPIbkny3AMiLnhvXxXunYtRPgqyI6kVKchjHFQP
+   rPBASi8I+uC+k18fhsxRJgQPGAa3PukadurTNwSEL5EbSIja26FAphGpm
+   LP2WFg7lcp5cviH3a3g2AhjHLdxSNfQqAHlYLzZ0hKhcB22Eas4e5vu8K
+   v39LYmKtI80sv96HrBSbx0wx27LEW5ggQ55IqVNJje4n7ozNyb/Gw2lQm
+   82aaqBQbWEzbcsuIrOByckzTcWl4cmYxDT+NMWr7iQZ1b/z1H491ElSYd
+   g==;
+X-CSE-ConnectionGUID: gcAw+5TNRGqX6fBf4tYghA==
+X-CSE-MsgGUID: BfgMHNASRvShy2sBYMLdNA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11536"; a="58905330"
+X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
+   d="scan'208";a="58905330"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 06:13:50 -0700
+X-CSE-ConnectionGUID: jgv4njJmT6qvSCIJxIvMgQ==
+X-CSE-MsgGUID: vRV1fTn5S1exJFWAKAD8WA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
-   d="scan'208";a="175656793"
+   d="scan'208";a="169680036"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 06:13:40 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 06:13:48 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-pci@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 19/24] PCI: Use pbus_select_window_for_type() during mem window sizing
-Date: Fri, 29 Aug 2025 16:11:08 +0300
-Message-Id: <20250829131113.36754-20-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 20/24] PCI: Refactor distributing available memory to use loops
+Date: Fri, 29 Aug 2025 16:11:09 +0300
+Message-Id: <20250829131113.36754-21-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com>
 References: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com>
@@ -78,206 +78,279 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-__pci_bus_size_bridges() goes to great lengths of helping pbus_size_mem()
-in which types it should put into a particular bridge window, requiring
-passing up to three resource type into pbus_size_mem().
+pci_bus_distribute_available_resources() and
+pci_bridge_distribute_available_resources() retain bridge window resources
+and related data needed for distributing the available window in
+independent variables for io, memory, and prefetchable memory windows. The
+code is essentially the same for all of them and therefore repeated three
+times with different variable names.
 
-Instead of having complex logic in __pci_bus_size_bridges() and a
-non-straightforward interface between those functions, use
-pbus_select_window_for_type() and pbus_select_window() to find the correct
-bridge window and compare if the resources belong to that window.
+Refactor pci_bus_distribute_available_resources() to take an array. This
+is complicated slightly by the function taking advantage of passing the
+struct as value, which cannot be done for arrays in C. Therefore, copy the
+data into a local array in the stack in the first loop.
+
+Variable names are (hopefully) improved slightly as well.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/setup-bus.c | 111 +++++++++-------------------------------
- 1 file changed, 24 insertions(+), 87 deletions(-)
+ drivers/pci/setup-bus.c | 162 ++++++++++++++++++----------------------
+ include/linux/pci.h     |   3 +-
+ 2 files changed, 74 insertions(+), 91 deletions(-)
 
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 865bacae9cac..720159bca54d 100644
+index 720159bca54d..3bc329b1b923 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -1284,24 +1284,22 @@ static bool pbus_upstream_space_available(struct pci_bus *bus,
-  * pbus_size_mem() - Size the memory window of a given bus
-  *
-  * @bus:		The bus
-- * @mask:		Mask the resource flag, then compare it with type
-- * @type:		The type of free resource from bridge
-- * @type2:		Second match type
-- * @type3:		Third match type
-+ * @type:		The type of bridge resource
-  * @min_size:		The minimum memory window that must be allocated
-  * @add_size:		Additional optional memory window
-  * @realloc_head:	Track the additional memory window on this list
-  *
-- * Calculate the size of the bus and minimal alignment which guarantees
-- * that all child resources fit in this size.
-+ * Calculate the size of the bus resource for @type and minimal alignment
-+ * which guarantees that all child resources fit in this size.
-  *
-- * Return -ENOSPC if there's no available bus resource of the desired
-- * type.  Otherwise, set the bus resource start/end to indicate the
-- * required size, add things to realloc_head (if supplied), and return 0.
-+ * Set the bus resource start/end to indicate the required size if there an
-+ * available unassigned bus resource of the desired @type.
-+ *
-+ * Add optional resource requests to the @realloc_head list if it is
-+ * supplied.
-  */
--static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
--			 unsigned long type, unsigned long type2,
--			 unsigned long type3, resource_size_t min_size,
-+static void pbus_size_mem(struct pci_bus *bus, unsigned long type,
-+			 resource_size_t min_size,
- 			 resource_size_t add_size,
- 			 struct list_head *realloc_head)
- {
-@@ -1309,19 +1307,18 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 	resource_size_t min_align, win_align, align, size, size0, size1 = 0;
- 	resource_size_t aligns[28]; /* Alignments from 1MB to 128TB */
- 	int order, max_order;
--	struct resource *b_res = find_bus_resource_of_type(bus,
--					mask | IORESOURCE_PREFETCH, type);
-+	struct resource *b_res = pbus_select_window_for_type(bus, type);
- 	resource_size_t children_add_size = 0;
- 	resource_size_t children_add_align = 0;
- 	resource_size_t add_align = 0;
- 	resource_size_t relaxed_align;
- 
- 	if (!b_res)
--		return -ENOSPC;
-+		return;
- 
- 	/* If resource is already assigned, nothing more to do */
- 	if (b_res->parent)
--		return 0;
-+		return;
- 
- 	memset(aligns, 0, sizeof(aligns));
- 	max_order = 0;
-@@ -1338,11 +1335,9 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 			if (!pdev_resources_assignable(dev) ||
- 			    !pdev_resource_should_fit(dev, r))
- 				continue;
--
--			if ((r->flags & mask) != type &&
--			    (r->flags & mask) != type2 &&
--			    (r->flags & mask) != type3)
-+			if (b_res != pbus_select_window(bus, r))
- 				continue;
-+
- 			r_size = resource_size(r);
- 
- 			/* Put SRIOV requested res to the optional list */
-@@ -1428,7 +1423,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 			pci_info(bus->self, "disabling bridge window %pR to %pR (unused)\n",
- 				 b_res, &bus->busn_res);
- 		b_res->flags |= IORESOURCE_DISABLED;
--		return 0;
-+		return;
- 	}
- 
- 	resource_set_range(b_res, min_align, size0);
-@@ -1441,7 +1436,6 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 			   (unsigned long long) (size1 - size0),
- 			   (unsigned long long) add_align);
- 	}
--	return 0;
+@@ -2059,15 +2059,16 @@ static void remove_dev_resource(struct resource *avail, struct pci_dev *dev,
+ 	avail->start = min(avail->start + tmp, avail->end + 1);
  }
  
- unsigned long pci_cardbus_resource_alignment(struct resource *res)
-@@ -1546,12 +1540,11 @@ static void pci_bus_size_cardbus(struct pci_bus *bus,
- void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+-static void remove_dev_resources(struct pci_dev *dev, struct resource *io,
+-				 struct resource *mmio,
+-				 struct resource *mmio_pref)
++static void remove_dev_resources(struct pci_dev *dev,
++				 struct resource available[PCI_P2P_BRIDGE_RESOURCE_NUM])
  {
- 	struct pci_dev *dev;
--	unsigned long mask, prefmask, type2 = 0, type3 = 0;
- 	resource_size_t additional_io_size = 0, additional_mmio_size = 0,
- 			additional_mmio_pref_size = 0;
- 	struct resource *pref;
- 	struct pci_host_bridge *host;
--	int hdr_type, ret;
-+	int hdr_type;
++	struct resource *mmio_pref = &available[PCI_BUS_BRIDGE_PREF_MEM_WINDOW];
+ 	struct resource *res;
  
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
- 		struct pci_bus *b = dev->subordinate;
-@@ -1601,71 +1594,15 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		pbus_size_io(bus, realloc_head ? 0 : additional_io_size,
- 			     additional_io_size, realloc_head);
+ 	pci_dev_for_each_resource(dev, res) {
+ 		if (resource_type(res) == IORESOURCE_IO) {
+-			remove_dev_resource(io, dev, res);
++			remove_dev_resource(&available[PCI_BUS_BRIDGE_IO_WINDOW],
++					    dev, res);
+ 		} else if (resource_type(res) == IORESOURCE_MEM) {
  
--		/*
--		 * If there's a 64-bit prefetchable MMIO window, compute
--		 * the size required to put all 64-bit prefetchable
--		 * resources in it.
--		 */
--		mask = IORESOURCE_MEM;
--		prefmask = IORESOURCE_MEM | IORESOURCE_PREFETCH;
--		if (pref && (pref->flags & IORESOURCE_MEM_64)) {
--			prefmask |= IORESOURCE_MEM_64;
--			ret = pbus_size_mem(bus, prefmask, prefmask,
--				prefmask, prefmask,
--				realloc_head ? 0 : additional_mmio_pref_size,
--				additional_mmio_pref_size, realloc_head);
--
--			/*
--			 * If successful, all non-prefetchable resources
--			 * and any 32-bit prefetchable resources will go in
--			 * the non-prefetchable window.
--			 */
--			if (ret == 0) {
--				mask = prefmask;
--				type2 = prefmask & ~IORESOURCE_MEM_64;
--				type3 = prefmask & ~IORESOURCE_PREFETCH;
--			}
--		}
--
--		/*
--		 * If there is no 64-bit prefetchable window, compute the
--		 * size required to put all prefetchable resources in the
--		 * 32-bit prefetchable window (if there is one).
--		 */
--		if (!type2) {
--			prefmask &= ~IORESOURCE_MEM_64;
--			ret = pbus_size_mem(bus, prefmask, prefmask,
--				prefmask, prefmask,
--				realloc_head ? 0 : additional_mmio_pref_size,
--				additional_mmio_pref_size, realloc_head);
--
--			/*
--			 * If successful, only non-prefetchable resources
--			 * will go in the non-prefetchable window.
--			 */
--			if (ret == 0)
--				mask = prefmask;
+ 			/*
+@@ -2081,10 +2082,13 @@ static void remove_dev_resources(struct pci_dev *dev, struct resource *io,
+ 			 */
+ 			if ((res->flags & IORESOURCE_PREFETCH) &&
+ 			    ((res->flags & IORESOURCE_MEM_64) ==
+-			     (mmio_pref->flags & IORESOURCE_MEM_64)))
+-				remove_dev_resource(mmio_pref, dev, res);
 -			else
--				additional_mmio_size += additional_mmio_pref_size;
--
--			type2 = type3 = IORESOURCE_MEM;
-+		if (pref) {
-+			pbus_size_mem(bus,
-+				      IORESOURCE_MEM | IORESOURCE_PREFETCH |
-+				      (pref->flags & IORESOURCE_MEM_64),
-+				      realloc_head ? 0 : additional_mmio_pref_size,
-+				      additional_mmio_pref_size, realloc_head);
+-				remove_dev_resource(mmio, dev, res);
++			     (mmio_pref->flags & IORESOURCE_MEM_64))) {
++				remove_dev_resource(&available[PCI_BUS_BRIDGE_PREF_MEM_WINDOW],
++						    dev, res);
++			} else {
++				remove_dev_resource(&available[PCI_BUS_BRIDGE_MEM_WINDOW],
++						    dev, res);
++			}
  		}
+ 	}
+ }
+@@ -2099,45 +2103,39 @@ static void remove_dev_resources(struct pci_dev *dev, struct resource *io,
+  * shared with the bridges.
+  */
+ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+-					    struct list_head *add_list,
+-					    struct resource io,
+-					    struct resource mmio,
+-					    struct resource mmio_pref)
++		    struct list_head *add_list,
++		    struct resource available_in[PCI_P2P_BRIDGE_RESOURCE_NUM])
+ {
++	struct resource available[PCI_P2P_BRIDGE_RESOURCE_NUM];
+ 	unsigned int normal_bridges = 0, hotplug_bridges = 0;
+-	struct resource *io_res, *mmio_res, *mmio_pref_res;
+ 	struct pci_dev *dev, *bridge = bus->self;
+-	resource_size_t io_per_b, mmio_per_b, mmio_pref_per_b, align;
++	resource_size_t per_bridge[PCI_P2P_BRIDGE_RESOURCE_NUM];
++	resource_size_t align;
++	int i;
+ 
+-	io_res = &bridge->resource[PCI_BRIDGE_IO_WINDOW];
+-	mmio_res = &bridge->resource[PCI_BRIDGE_MEM_WINDOW];
+-	mmio_pref_res = &bridge->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
++	for (i = 0; i < PCI_P2P_BRIDGE_RESOURCE_NUM; i++) {
++		struct resource *res = pci_bus_resource_n(bus, i);
+ 
+-	/*
+-	 * The alignment of this bridge is yet to be considered, hence it must
+-	 * be done now before extending its bridge window.
+-	 */
+-	align = pci_resource_alignment(bridge, io_res);
+-	if (!io_res->parent && align)
+-		io.start = min(ALIGN(io.start, align), io.end + 1);
+-
+-	align = pci_resource_alignment(bridge, mmio_res);
+-	if (!mmio_res->parent && align)
+-		mmio.start = min(ALIGN(mmio.start, align), mmio.end + 1);
++		available[i] = available_in[i];
+ 
+-	align = pci_resource_alignment(bridge, mmio_pref_res);
+-	if (!mmio_pref_res->parent && align)
+-		mmio_pref.start = min(ALIGN(mmio_pref.start, align),
+-			mmio_pref.end + 1);
++		/*
++		 * The alignment of this bridge is yet to be considered,
++		 * hence it must be done now before extending its bridge
++		 * window.
++		 */
++		align = pci_resource_alignment(bridge, res);
++		if (!res->parent && align)
++			available[i].start = min(ALIGN(available[i].start, align),
++						 available[i].end + 1);
+ 
+-	/*
+-	 * Now that we have adjusted for alignment, update the bridge window
+-	 * resources to fill as much remaining resource space as possible.
+-	 */
+-	adjust_bridge_window(bridge, io_res, add_list, resource_size(&io));
+-	adjust_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
+-	adjust_bridge_window(bridge, mmio_pref_res, add_list,
+-			     resource_size(&mmio_pref));
++		/*
++		 * Now that we have adjusted for alignment, update the
++		 * bridge window resources to fill as much remaining
++		 * resource space as possible.
++		 */
++		adjust_bridge_window(bridge, res, add_list,
++				     resource_size(&available[i]));
++	}
+ 
+ 	/*
+ 	 * Calculate how many hotplug bridges and normal bridges there
+@@ -2161,7 +2159,7 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 	 */
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+ 		if (!dev->is_virtfn)
+-			remove_dev_resources(dev, &io, &mmio, &mmio_pref);
++			remove_dev_resources(dev, available);
+ 	}
+ 
+ 	/*
+@@ -2173,16 +2171,9 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 	 * split between non-hotplug bridges. This is to allow possible
+ 	 * hotplug bridges below them to get the extra space as well.
+ 	 */
+-	if (hotplug_bridges) {
+-		io_per_b = div64_ul(resource_size(&io), hotplug_bridges);
+-		mmio_per_b = div64_ul(resource_size(&mmio), hotplug_bridges);
+-		mmio_pref_per_b = div64_ul(resource_size(&mmio_pref),
+-					   hotplug_bridges);
+-	} else {
+-		io_per_b = div64_ul(resource_size(&io), normal_bridges);
+-		mmio_per_b = div64_ul(resource_size(&mmio), normal_bridges);
+-		mmio_pref_per_b = div64_ul(resource_size(&mmio_pref),
+-					   normal_bridges);
++	for (i = 0; i < PCI_P2P_BRIDGE_RESOURCE_NUM; i++) {
++		per_bridge[i] = div64_ul(resource_size(&available[i]),
++					 hotplug_bridges ?: normal_bridges);
+ 	}
+ 
+ 	for_each_pci_bridge(dev, bus) {
+@@ -2195,49 +2186,41 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 		if (hotplug_bridges && !dev->is_hotplug_bridge)
+ 			continue;
+ 
+-		res = &dev->resource[PCI_BRIDGE_IO_WINDOW];
++		for (i = 0; i < PCI_P2P_BRIDGE_RESOURCE_NUM; i++) {
++			res = pci_bus_resource_n(bus, i);
  
 -		/*
--		 * Compute the size required to put everything else in the
--		 * non-prefetchable window. This includes:
--		 *
--		 *   - all non-prefetchable resources
--		 *   - 32-bit prefetchable resources if there's a 64-bit
--		 *     prefetchable window or no prefetchable window at all
--		 *   - 64-bit prefetchable resources if there's no prefetchable
--		 *     window at all
--		 *
--		 * Note that the strategy in __pci_assign_resource() must match
--		 * that used here. Specifically, we cannot put a 32-bit
--		 * prefetchable resource in a 64-bit prefetchable window.
+-		 * Make sure the split resource space is properly aligned
+-		 * for bridge windows (align it down to avoid going above
+-		 * what is available).
 -		 */
--		pbus_size_mem(bus, mask, IORESOURCE_MEM, type2, type3,
-+		pbus_size_mem(bus, IORESOURCE_MEM,
- 			      realloc_head ? 0 : additional_mmio_size,
- 			      additional_mmio_size, realloc_head);
- 		break;
+-		align = pci_resource_alignment(dev, res);
+-		resource_set_size(&io, ALIGN_DOWN_IF_NONZERO(io_per_b, align));
+-
+-		/*
+-		 * The x_per_b holds the extra resource space that can be
+-		 * added for each bridge but there is the minimal already
+-		 * reserved as well so adjust x.start down accordingly to
+-		 * cover the whole space.
+-		 */
+-		io.start -= resource_size(res);
+-
+-		res = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
+-		align = pci_resource_alignment(dev, res);
+-		resource_set_size(&mmio,
+-				  ALIGN_DOWN_IF_NONZERO(mmio_per_b,align));
+-		mmio.start -= resource_size(res);
++			/*
++			 * Make sure the split resource space is properly
++			 * aligned for bridge windows (align it down to
++			 * avoid going above what is available).
++			 */
++			align = pci_resource_alignment(dev, res);
++			resource_set_size(&available[i],
++					  ALIGN_DOWN_IF_NONZERO(per_bridge[i],
++								align));
+ 
+-		res = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+-		align = pci_resource_alignment(dev, res);
+-		resource_set_size(&mmio_pref,
+-				  ALIGN_DOWN_IF_NONZERO(mmio_pref_per_b, align));
+-		mmio_pref.start -= resource_size(res);
++			/*
++			 * The per_bridge holds the extra resource space
++			 * that can be added for each bridge but there is
++			 * the minimal already reserved as well so adjust
++			 * x.start down accordingly to cover the whole
++			 * space.
++			 */
++			available[i].start -= resource_size(res);
++		}
+ 
+-		pci_bus_distribute_available_resources(b, add_list, io, mmio,
+-						       mmio_pref);
++		pci_bus_distribute_available_resources(b, add_list, available);
+ 
+-		io.start += io.end + 1;
+-		mmio.start += mmio.end + 1;
+-		mmio_pref.start += mmio_pref.end + 1;
++		for (i = 0; i < PCI_P2P_BRIDGE_RESOURCE_NUM; i++)
++			available[i].start += available[i].end + 1;
+ 	}
+ }
+ 
+ static void pci_bridge_distribute_available_resources(struct pci_dev *bridge,
+ 						      struct list_head *add_list)
+ {
+-	struct resource available_io, available_mmio, available_mmio_pref;
++	struct resource *res, available[PCI_P2P_BRIDGE_RESOURCE_NUM];
++	unsigned int i;
+ 
+ 	if (!bridge->is_hotplug_bridge)
+ 		return;
+@@ -2245,14 +2228,13 @@ static void pci_bridge_distribute_available_resources(struct pci_dev *bridge,
+ 	pci_dbg(bridge, "distributing available resources\n");
+ 
+ 	/* Take the initial extra resources from the hotplug port */
+-	available_io = bridge->resource[PCI_BRIDGE_IO_WINDOW];
+-	available_mmio = bridge->resource[PCI_BRIDGE_MEM_WINDOW];
+-	available_mmio_pref = bridge->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
++	for (i = 0; i < PCI_P2P_BRIDGE_RESOURCE_NUM; i++) {
++		res = pci_resource_n(bridge, PCI_BRIDGE_RESOURCES + i);
++		available[i] = *res;
++	}
+ 
+ 	pci_bus_distribute_available_resources(bridge->subordinate,
+-					       add_list, available_io,
+-					       available_mmio,
+-					       available_mmio_pref);
++					       add_list, available);
+ }
+ 
+ static bool pci_bridge_resources_not_assigned(struct pci_dev *dev)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 275df4058767..723e9cede69d 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -119,7 +119,8 @@ enum {
+ #define PCI_CB_BRIDGE_MEM_1_WINDOW	(PCI_BRIDGE_RESOURCES + 3)
+ 
+ /* Total number of bridge resources for P2P and CardBus */
+-#define PCI_BRIDGE_RESOURCE_NUM 4
++#define PCI_P2P_BRIDGE_RESOURCE_NUM	3
++#define PCI_BRIDGE_RESOURCE_NUM		4
+ 
+ 	/* Resources assigned to buses behind the bridge */
+ 	PCI_BRIDGE_RESOURCES,
 -- 
 2.39.5
 
