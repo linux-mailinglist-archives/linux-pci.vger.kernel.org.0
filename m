@@ -1,71 +1,71 @@
-Return-Path: <linux-pci+bounces-35098-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35099-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97B36B3BC0C
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 15:11:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCF53B3BC12
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 15:12:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F2C561C23362
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C2186205CAA
 	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 13:12:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A2F82EBDF4;
-	Fri, 29 Aug 2025 13:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B33731A550;
+	Fri, 29 Aug 2025 13:11:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kacLKW3j"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TJq1H0QL"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9166C2E7BDA;
-	Fri, 29 Aug 2025 13:11:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED002F83B7;
+	Fri, 29 Aug 2025 13:11:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756473093; cv=none; b=FYgqEzEZ1UPuiNTyE1SeyFwRqFy6VmlY9tmYQGd26eRrMqDcAB7cjW9AvdQ6CI72AQ1WD/mk6uW+nF8kaY/scLTt/JaWUSz0hqJ9R7nXnrdtke0qrZFxc6GcwsfrE7ScYSJfL6s8IKlDtYsF5axC12NYH0EIKMjWwQ072PBN5dg=
+	t=1756473101; cv=none; b=XoxYo3hkyAn1Y+Bh8Afgr9cJ/hBaILOsJfR89nfx4pu9taIYY0NXmm1H436p+5rzAInIEBNxvvkpNkVgHnWWmM9DOkyKj7gkYc2JW810JTd7l6mKWQsTP5g5po1HqZ6RROO8/C8lrxdyNTo3J9q4BDGA0QcavFm2dJi5iZvCnsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756473093; c=relaxed/simple;
-	bh=3/KqAj6SPENBeMHK838Xzt1epcWPtBMI4CsY0Xu62D0=;
+	s=arc-20240116; t=1756473101; c=relaxed/simple;
+	bh=6CmIUrioSfaBP4/6EQqT9N+5TC9MVCQT9GnbpIvI7Tc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AGeiiozPumfWrbbdtFl8IhQ7XtOjj3AqBUSQU8ov1OC4kZAMhrntvmqeptNPonwVNLsoPDEfaEqTs5drRyuCg4QCnXMXnbcpfXCnnTyQQSgwcsng6r3MRLxznCqKSPqZJt2OhZZY3GqLCZ8wdrS2/0tvGGHN4s+lHy8xB0FL8e8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kacLKW3j; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=IV7QkJlsHEo7lbXuMwgQjG2Vf/od4VsWiTgdYFjhqGl5U2+phmFrR/lH1FGN/0utB6bmoILNdKEqXuwgdTfmT4/d4zLwLKcjY/wzXSPH6MRabr/Hw534aXJINNCLslEbRQ3hSxylxCKA/NDuvQ4aqvJ5B+8ZBOibA973/hmnaak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TJq1H0QL; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756473091; x=1788009091;
+  t=1756473099; x=1788009099;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=3/KqAj6SPENBeMHK838Xzt1epcWPtBMI4CsY0Xu62D0=;
-  b=kacLKW3jfIUaWx3HtbOo9myspSHo3rUGtEFIpNyqX+zCqqLXdtAxL50V
-   O0uZ1w/S8rMl+ihCYJsd5DsCx+b+xNpmkDKUatcj09JUl76shnywFoOPK
-   jAYcwXVSSXZKc6ntcCidsdzvwazBiHnCl4mz5yzk0tTLqMtZJ+2zRbNUi
-   0QgNNNNGHWGx+vPblyRQ/x9RjFBCgkk5LVD2NZ02GI+RMravmgTQbzXOZ
-   vKXr5AUWqOmlVXSb93mPqrVNGqjFDYMpNqdnxhj4VPfmGONIoSxWx7s56
-   uYTXkJBXWWVqOFIM6AVmXG7qhleFVpDdvEHso5mcfWAw+1hHub4+QgV4A
-   g==;
-X-CSE-ConnectionGUID: p3l2oRxnRnGLBeuHrj1DVQ==
-X-CSE-MsgGUID: l2ICkCFyT6yv06QtidcoxQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11536"; a="58687483"
+  bh=6CmIUrioSfaBP4/6EQqT9N+5TC9MVCQT9GnbpIvI7Tc=;
+  b=TJq1H0QLf9X9XQBB5a+s12ixUnKCGlTz/2UBYujA/P9LXjMA0vd34/hC
+   R0eUl+0yyrVhHtp1Rp2+m/oIXRZ2QvmV8434GaZXMnOWgVfNhGiZJ7TvS
+   zTgCp/3uiIx3pjy0U7GIqT03uES0or3vwGRdYwQc2TISZU7ZOGJPt+Vl+
+   STDyjE77GFKEii/Q+BsBFj97zWZqwnXtXpw/i5Bif4QCzm/APjpKwmMJH
+   q+tmvEjCgpCKYg8UPjJswAxnqWiAyE1YHf4QeGKwaSU8EityeaH7fqzvF
+   fwTs5fa9d9OvmGs1s+mh/US/pxS8NT2cRcIrWKRtn579GNUfZn22eQGGw
+   Q==;
+X-CSE-ConnectionGUID: dP4me6xuTS6c9RZ+FUKtLw==
+X-CSE-MsgGUID: 8rSVzG/DQtmXNs1oxk6x+w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11536"; a="58687488"
 X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
-   d="scan'208";a="58687483"
+   d="scan'208";a="58687488"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 06:11:31 -0700
-X-CSE-ConnectionGUID: m1i8cZgXRqiu9WFN10Odcg==
-X-CSE-MsgGUID: obssSdZoRrmCqw2eLD7bFQ==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 06:11:38 -0700
+X-CSE-ConnectionGUID: JnLYhS0yS7OPZkWUIsP1cw==
+X-CSE-MsgGUID: dSv00wODTY6Hb56C5tdNNw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
-   d="scan'208";a="174550835"
+   d="scan'208";a="174550837"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 06:11:29 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 06:11:36 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-pci@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 01/24] m68k/PCI: Use pci_enable_resources() in pcibios_enable_device()
-Date: Fri, 29 Aug 2025 16:10:50 +0300
-Message-Id: <20250829131113.36754-2-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 02/24] sparc/PCI: Remove pcibios_enable_device() as they do nothing extra
+Date: Fri, 29 Aug 2025 16:10:51 +0300
+Message-Id: <20250829131113.36754-3-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com>
 References: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com>
@@ -78,88 +78,134 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-m68k has a resource enable (check) loop in its pcibios_enable_device()
-which for some reason differs from pci_enable_resources(). This could lead
-to inconsistencies in behavior, especially now as pci_enable_resources()
-and the bridge window resource flags behavior are going to be altered by
-upcoming changes.
+Under arch/sparc/ there are multiple copies of pcibios_enable_device() but
+none of those seem to do anything extra beyond what pci_enable_resources()
+is supposed to do. These functions could lead to inconsistencies in
+behavior, especially now as pci_enable_resources() and the bridge window
+resource flags behavior are going to be altered by upcoming changes.
 
-The check for !r->start && r->end is already covered by the more generic
-checks done in pci_enable_resources().
-
-The entire pcibios_enable_device() suspiciously looks copy-paste from some
-other arch as also indicated by the preceding comment. However, it also
-enables PCI_COMMAND_IO | PCI_COMMAND_MEMORY always for bridges. It is not
-clear why that is being done as the commit e93a6bbeb5a5 ("m68k: common PCI
-support definitions and code") introducing this code states "Nothing
-specific to any PCI implementation in any m68k class CPU hardware yet".
-
-Replace the resource enable loop with a call to pci_enable_resources() and
-adjust the Command Register afterwards as it's unclear if that is necessary
-or not so keep it for now.
+Remove all pcibios_enable_device() from arch/sparc/ so that PCI core can
+simply call into pci_enable_resources() instead using its __weak version
+of pcibios_enable_device().
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- arch/m68k/kernel/pcibios.c | 39 +++++++++++---------------------------
- 1 file changed, 11 insertions(+), 28 deletions(-)
+ arch/sparc/kernel/leon_pci.c | 27 ---------------------------
+ arch/sparc/kernel/pci.c      | 27 ---------------------------
+ arch/sparc/kernel/pcic.c     | 27 ---------------------------
+ 3 files changed, 81 deletions(-)
 
-diff --git a/arch/m68k/kernel/pcibios.c b/arch/m68k/kernel/pcibios.c
-index 9504eb19d73a..e6ab3f9ff5d8 100644
---- a/arch/m68k/kernel/pcibios.c
-+++ b/arch/m68k/kernel/pcibios.c
-@@ -44,41 +44,24 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
-  */
- int pcibios_enable_device(struct pci_dev *dev, int mask)
- {
--	struct resource *r;
- 	u16 cmd, newcmd;
--	int idx;
-+	int ret;
- 
--	pci_read_config_word(dev, PCI_COMMAND, &cmd);
--	newcmd = cmd;
+diff --git a/arch/sparc/kernel/leon_pci.c b/arch/sparc/kernel/leon_pci.c
+index 8de6646e9ce8..10934dfa987a 100644
+--- a/arch/sparc/kernel/leon_pci.c
++++ b/arch/sparc/kernel/leon_pci.c
+@@ -60,30 +60,3 @@ void leon_pci_init(struct platform_device *ofdev, struct leon_pci_info *info)
+ 	pci_assign_unassigned_resources();
+ 	pci_bus_add_devices(root_bus);
+ }
 -
--	for (idx = 0; idx < 6; idx++) {
+-int pcibios_enable_device(struct pci_dev *dev, int mask)
+-{
+-	struct resource *res;
+-	u16 cmd, oldcmd;
+-	int i;
+-
+-	pci_read_config_word(dev, PCI_COMMAND, &cmd);
+-	oldcmd = cmd;
+-
+-	pci_dev_for_each_resource(dev, res, i) {
 -		/* Only set up the requested stuff */
--		if (!(mask & (1 << idx)))
+-		if (!(mask & (1<<i)))
 -			continue;
 -
--		r = dev->resource + idx;
--		if (!r->start && r->end) {
--			pr_err("PCI: Device %s not available because of resource collisions\n",
--				pci_name(dev));
--			return -EINVAL;
--		}
--		if (r->flags & IORESOURCE_IO)
--			newcmd |= PCI_COMMAND_IO;
--		if (r->flags & IORESOURCE_MEM)
--			newcmd |= PCI_COMMAND_MEMORY;
+-		if (res->flags & IORESOURCE_IO)
+-			cmd |= PCI_COMMAND_IO;
+-		if (res->flags & IORESOURCE_MEM)
+-			cmd |= PCI_COMMAND_MEMORY;
 -	}
-+	ret = pci_enable_resources(dev, mask);
-+	if (ret < 0)
-+		return ret;
- 
- 	/*
- 	 * Bridges (eg, cardbus bridges) need to be fully enabled
- 	 */
--	if ((dev->class >> 16) == PCI_BASE_CLASS_BRIDGE)
-+	if ((dev->class >> 16) == PCI_BASE_CLASS_BRIDGE) {
-+		pci_read_config_word(dev, PCI_COMMAND, &cmd);
- 		newcmd |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY;
 -
--
--	if (newcmd != cmd) {
--		pr_info("PCI: enabling device %s (0x%04x -> 0x%04x)\n",
--			pci_name(dev), cmd, newcmd);
--		pci_write_config_word(dev, PCI_COMMAND, newcmd);
-+		if (newcmd != cmd) {
-+			pr_info("PCI: enabling bridge %s (0x%04x -> 0x%04x)\n",
-+				pci_name(dev), cmd, newcmd);
-+			pci_write_config_word(dev, PCI_COMMAND, newcmd);
-+		}
- 	}
- 	return 0;
+-	if (cmd != oldcmd) {
+-		pci_info(dev, "enabling device (%04x -> %04x)\n", oldcmd, cmd);
+-		pci_write_config_word(dev, PCI_COMMAND, cmd);
+-	}
+-	return 0;
+-}
+diff --git a/arch/sparc/kernel/pci.c b/arch/sparc/kernel/pci.c
+index ddac216a2aff..a9448088e762 100644
+--- a/arch/sparc/kernel/pci.c
++++ b/arch/sparc/kernel/pci.c
+@@ -722,33 +722,6 @@ struct pci_bus *pci_scan_one_pbm(struct pci_pbm_info *pbm,
+ 	return bus;
  }
+ 
+-int pcibios_enable_device(struct pci_dev *dev, int mask)
+-{
+-	struct resource *res;
+-	u16 cmd, oldcmd;
+-	int i;
+-
+-	pci_read_config_word(dev, PCI_COMMAND, &cmd);
+-	oldcmd = cmd;
+-
+-	pci_dev_for_each_resource(dev, res, i) {
+-		/* Only set up the requested stuff */
+-		if (!(mask & (1<<i)))
+-			continue;
+-
+-		if (res->flags & IORESOURCE_IO)
+-			cmd |= PCI_COMMAND_IO;
+-		if (res->flags & IORESOURCE_MEM)
+-			cmd |= PCI_COMMAND_MEMORY;
+-	}
+-
+-	if (cmd != oldcmd) {
+-		pci_info(dev, "enabling device (%04x -> %04x)\n", oldcmd, cmd);
+-		pci_write_config_word(dev, PCI_COMMAND, cmd);
+-	}
+-	return 0;
+-}
+-
+ /* Platform support for /proc/bus/pci/X/Y mmap()s. */
+ int pci_iobar_pfn(struct pci_dev *pdev, int bar, struct vm_area_struct *vma)
+ {
+diff --git a/arch/sparc/kernel/pcic.c b/arch/sparc/kernel/pcic.c
+index 25fe0a061732..3d54ad5656a4 100644
+--- a/arch/sparc/kernel/pcic.c
++++ b/arch/sparc/kernel/pcic.c
+@@ -641,33 +641,6 @@ void pcibios_fixup_bus(struct pci_bus *bus)
+ 	}
+ }
+ 
+-int pcibios_enable_device(struct pci_dev *dev, int mask)
+-{
+-	struct resource *res;
+-	u16 cmd, oldcmd;
+-	int i;
+-
+-	pci_read_config_word(dev, PCI_COMMAND, &cmd);
+-	oldcmd = cmd;
+-
+-	pci_dev_for_each_resource(dev, res, i) {
+-		/* Only set up the requested stuff */
+-		if (!(mask & (1<<i)))
+-			continue;
+-
+-		if (res->flags & IORESOURCE_IO)
+-			cmd |= PCI_COMMAND_IO;
+-		if (res->flags & IORESOURCE_MEM)
+-			cmd |= PCI_COMMAND_MEMORY;
+-	}
+-
+-	if (cmd != oldcmd) {
+-		pci_info(dev, "enabling device (%04x -> %04x)\n", oldcmd, cmd);
+-		pci_write_config_word(dev, PCI_COMMAND, cmd);
+-	}
+-	return 0;
+-}
+-
+ /* Makes compiler happy */
+ static volatile int pcic_timer_dummy;
+ 
 -- 
 2.39.5
 
