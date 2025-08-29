@@ -1,411 +1,332 @@
-Return-Path: <linux-pci+bounces-35144-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35145-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0FF1B3C386
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 22:00:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2721AB3C401
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 22:59:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 70F9BA01A28
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 20:00:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3917E188AAB8
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 21:00:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0200D20B7F4;
-	Fri, 29 Aug 2025 20:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 021C9346A0E;
+	Fri, 29 Aug 2025 20:59:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lSYLyYcs"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dESvnRAv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1755B233721
-	for <linux-pci@vger.kernel.org>; Fri, 29 Aug 2025 20:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756497622; cv=fail; b=WBB7kDzTGVmkJS3zT7qmnuao3vlO0g3oMkfhse4r2K1BXR9XKmONbQ7df+ud60pvBjiid8KJwu1rdJmCMj41KnE6wK7ufTcSdUygQ7DERu1D4y0tapHgIQbP6ZKulM8XqL68P0ISZ9A/QKgIjyuoJ+asYJmdIDdi5/rHd06ubCM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756497622; c=relaxed/simple;
-	bh=BZMbMW/uOclEm2CIZ3xXWDq6h/ECf24hdSEyzMU5JpE=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=eO1mUB0KU9vellNNmv9JqDx1/9WyfZGSHXVnoan/2Xa0RUESAs8rXxRHl+vLw6erZWc7MuWxhmm1jKTDFaG/sTplgHfpM1Utpc+JPGI3OJPhI6L1DIJS9up/47n17ctUyyiDM2UGuTvFOdpqY631ksnHwDr1RrGt4xf9WS+VnTU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lSYLyYcs; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756497621; x=1788033621;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=BZMbMW/uOclEm2CIZ3xXWDq6h/ECf24hdSEyzMU5JpE=;
-  b=lSYLyYcsdeZDKZB7R2CHRGs3SmRpjJPA/I0kxuQ1JkyNl0i3u6jG4am+
-   wJUiZzdIBUx9mEUsIJYA9E6qEsXgFwRsfqxAKibzxHxGW8KWIa43j+H9P
-   NWTmqkdtckCgNBbbqUDCiXveXP4i9yjzIp0MoVpgR9B7yKiIlInQnvZ6u
-   5r0SyLG6pD7Kr7/Jm2KzESohLGwPVddarg3KSDSJSKWByP2AmE9dxpd4n
-   NZ2T0MopL+MoHiyN8l74ZqAxxjQ6FZKDr3NxoOhSt0fpBPK78GFyyELCN
-   SEPoP/nfTuKMhnBAhaqIgfTVqfCf7tq2M3mS3AaBTTLvOVx7ufiHOoCuD
-   A==;
-X-CSE-ConnectionGUID: wWa12ktNR1OJmn2lB+KHwQ==
-X-CSE-MsgGUID: lZD2YC1rTw2PvhiQ2T/wNg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11537"; a="84197715"
-X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
-   d="scan'208";a="84197715"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 13:00:21 -0700
-X-CSE-ConnectionGUID: Z3dhisMMTSO+qn3lEt6Xog==
-X-CSE-MsgGUID: K+HCcoYkSFiGs/AdTLbCnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
-   d="scan'208";a="170849611"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 13:00:20 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Fri, 29 Aug 2025 13:00:19 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Fri, 29 Aug 2025 13:00:19 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.59)
- by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Fri, 29 Aug 2025 13:00:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=r2vz1p1y+VfQZXXk1cxTdedIleLYGE1m9MaTPOx9lugK8zidmGpxPRk9LWldU7zyuYNYEOAUfYfN8bx/ukM8AChBEAErtLnjRNRUec6Bgget5qTuOusKGjlf8EQBBMu1mvtKWO97cZxOB+mQVNI5MRNxMqCkkU+EdrtA7D/XTmgz8Z0zS3XVd5pthic9xpbsLY2KAltUySOJjrXJ2g5Hz0fkhSPyWJg2t30/61qhRKWCvMZysjS8gBLklDfqBM7dPzKTkTknLK9ghBtm32UjG8Jy+vIBGb9SOHyLCpLlRo5pX9cWwKVSoh1Euj2ENtTLWka8TOsqdzWolSKKNBmNUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DL9K+Lqbk+FwL9Orckz/Sf+bSnd0RHNYVq+ORXaMKCI=;
- b=LvPVPxjMDy1/6P7aIZl7ILYha2XlJFw+9xMyOTiI1vWtnFX2/R866kvOp04na4+o8lJSphWUededB+o1fl9FBrKZuvOmFR8uoxeAzvSgtj3ZKjBkraJFTSltmMMLhL/BunJ3sJ10bjiztAAiI9WRwG0csfG5sy+MwB7OGUGzaDU8jmBrdni0fiSdB/5mVT1bOoqVPxWuNTVDzJA6IYudC468OyZeDdYKOKWzP6tmjCZXKPuVJ5vjVeZDy+KWAuUm+hN4JIcjyxKaSitUda1JkyrkGAIUoDmbl/sWP0NMrT8RPR42j0aVYcZIDJxfNF04kRfXktha1zaFu/j08f5VWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com (2603:10b6:806:2f1::13)
- by SJ0PR11MB5102.namprd11.prod.outlook.com (2603:10b6:a03:2ac::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.20; Fri, 29 Aug
- 2025 20:00:12 +0000
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::c4e2:f07:bdaa:21ec]) by SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::c4e2:f07:bdaa:21ec%4]) with mapi id 15.20.9052.019; Fri, 29 Aug 2025
- 20:00:11 +0000
-From: <dan.j.williams@intel.com>
-Date: Fri, 29 Aug 2025 13:00:09 -0700
-To: Jason Gunthorpe <jgg@nvidia.com>, <dan.j.williams@intel.com>
-CC: <linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>,
-	<gregkh@linuxfoundation.org>, <bhelgaas@google.com>,
-	<yilun.xu@linux.intel.com>, <aneesh.kumar@kernel.org>, <aik@amd.com>
-Message-ID: <68b206c9e3f43_75db100e4@dwillia2-mobl4.notmuch>
-In-Reply-To: <20250829160217.GL7333@nvidia.com>
-References: <20250827035259.1356758-1-dan.j.williams@intel.com>
- <20250827035259.1356758-7-dan.j.williams@intel.com>
- <20250827123924.GA2186489@nvidia.com>
- <68b0cc4632fc5_75db10074@dwillia2-mobl4.notmuch>
- <20250829160217.GL7333@nvidia.com>
-Subject: Re: [PATCH 6/7] samples/devsec: Introduce a "Device Security TSM"
- sample driver
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR20CA0025.namprd20.prod.outlook.com
- (2603:10b6:a03:1f4::38) To SA3PR11MB8118.namprd11.prod.outlook.com
- (2603:10b6:806:2f1::13)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0950122B594;
+	Fri, 29 Aug 2025 20:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756501180; cv=none; b=isIZRD5OoIYWWQzC5Fyqlx/SqXLuQZjUF6VYg4w0jhRkyk/d/ohBTbkyO+NPyLYnn8/z60l8LZBZzSE0kR/s9Dbb0KsoZj0V2ohVYlcAa3r5u66dx71xL2IhtWCj44PRe6fQTB+OKkU89HvhzIsuDmss687fxkFdgH22RQSv7m8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756501180; c=relaxed/simple;
+	bh=+2BW0UEG49SU/o/955BEv69wInYx4DfrQgnHNrBDmdc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tt7rTCT6H0/q5rEPXyru7MC5eFsIjG/bz7YGFum1277tNWrf3tT0fTYLKc3XvF/VJbk5EXCp/PF/PIOPCg259Sjl/albHlHrqn/RGTQkk8OgjXArJ5x6GeBdQGCCCSKBYDAqgRegSOASZYQhsQ7irnHf8T0kSPBZq4XT+zsK5WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=dESvnRAv; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4CA79211627B;
+	Fri, 29 Aug 2025 13:59:36 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4CA79211627B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1756501177;
+	bh=JFWDwi8WW+5cmq8k1iafkjchsEZ4XvNd8Q16Wo9KAu8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dESvnRAvmpVLr0VYBZnRRYhqqZR3B639/FohGqaKD2D5bP/9Yrve21Irvr3nS9rb6
+	 oV0XKAIHOKvPIy3mqCdHpdb+o4CglUZTuulng4cFfFX5xmNa+/8oCUYPlxUGlvaNbr
+	 67e3J3ZlD0dwqiTzzvQCWTMikVloz4heqlFWTFCA=
+Message-ID: <0b9ea4e8-3751-0286-4bd9-fe09035dd22d@linux.microsoft.com>
+Date: Fri, 29 Aug 2025 13:59:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR11MB8118:EE_|SJ0PR11MB5102:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5a75a8e3-2e9d-4945-5f6e-08dde736a99f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?V2xVQ3JrTjBoMnRyL2g1RmREK2ZQQ0FoY2FralRmNVo2QjhkU2FoY2dPcnVI?=
- =?utf-8?B?eW5qcnA0VWN4N1B5aGc3YnFnblNYSGRLZ1FRcUZScytMYWhzcEltMVNqY3RC?=
- =?utf-8?B?NlRXOXpwd3BESXJvZTI5cTdDOE1oaXNTRzFLTll2YTZ2NC9xMTB6VktyS2hF?=
- =?utf-8?B?VGJ0WEx3MVRpMWY5aHRFa24reGhna2NtR3FxRUpKRXFaSGZSMUdidXNhcWx5?=
- =?utf-8?B?OG05M1RSUGh0Y2hZdHNsT0xNUGNWOWlBcnFhbUVBZ1JGUnBKNURockxKeEcr?=
- =?utf-8?B?UHpDcWdHOE5pTHFsSHQveVQzWjNHbzM1ejA5a2hlNUJRbGVvdExpM2U2ejBy?=
- =?utf-8?B?MllsRkRyMjdnVXFrbDVlZWswRHBTK2hjZjlJNGsvZE9UWmZiSFMzZ21MM3Vs?=
- =?utf-8?B?amFObHp1dHo3bHJIdi93aS9pem1oU0NubEQzOUVPQ1RUcVNMQUIwK2l4RjJo?=
- =?utf-8?B?VXVadlpsT2xidXk5eFV4RmZjV040WHZSamtVN2o3SWRyQm56cHN4Z3pWNjFB?=
- =?utf-8?B?S0FhV0hjd1BFTzNNUy9tSVhJa1krcHpudjFRYjdXUlkrQlFCS0ZqVHlrOEts?=
- =?utf-8?B?ZWNiNHRUMURhTUpQOS92ZVVHWHJWUS81c3hTNE1JZGdWVVpGSk9CRWtWWFlo?=
- =?utf-8?B?VWdodVUrdFJsZER1VzJhTXltaUc2UWdlWFhyOHNSdHdGaHc1WWNiT1ZrL0pa?=
- =?utf-8?B?T0pZMC9OYkxxMVZuckFDQnFldDEyYkhaWnBMNjNSdjNhTGpSdkkwcVZjOFhT?=
- =?utf-8?B?d2N5Q3YrN2VHZjhFdUJ4R3ppRjNjczE0U2dtNWQrcUJ3UGtUOCtoWkI2Nzlu?=
- =?utf-8?B?N2pwczk4ZS9mQXpITkxzNlNhVlgvUDRrVUJUR3FDYzhaNXAwVXdzNi9UMjEv?=
- =?utf-8?B?SmRDM1dmN1RONlJjS0pwS0J4Y3pDL2grSUcxUGE2WXpKQ0g3WWc4WDRaTldC?=
- =?utf-8?B?QzFwQnRrbW1GUDdJNlJVWU8xRC9mU1FpcjNxZXd6TVowMlVvQ2NvbGpCUitP?=
- =?utf-8?B?Z0dKYkEydWpLbmlpM3lzL05GWlRaK1QrNGFZaUpYSTc0Qm84NERmN0F6U1JK?=
- =?utf-8?B?eDVVWVY5VmpsMHFxbTR5dEFlb3p4RmJFVzVFbWJ4ZlprbDk0R3VnZENPWEdC?=
- =?utf-8?B?L1ZvejRRc1ZTbC9MejNpUjZ4VmFKeTJjQlJxOVZjS1BRb25DY3J2Szc3SWpQ?=
- =?utf-8?B?d2dlbWh6aCtJcmtxMjhsVWhoL2pNcjg0WnVzVDR5TXl6V1BGejYvd2pVb2Zx?=
- =?utf-8?B?N0MwT1ZhVnhnOUlLcWhsNUZ2cnVBU3hmaVlCWGIxQ0NkdmdnWnhXY0g5REdD?=
- =?utf-8?B?eEtoSm5Da215czZHMFdEQ2RIL1FsZGMrZ3VFNHJrMUF1OEVwL1BieUJySXRS?=
- =?utf-8?B?SlRjRDcrTzN0NUxoa0RCSDlIQzYrY3VYTE8ySjlLVGpnV1RMb2FITG5aSmdG?=
- =?utf-8?B?NGFLSzRVVWpXNFJPZDFQb0N5UVlCT3lwOE1MZ2xoM3FHbzFKQ0QzQ2JONlJk?=
- =?utf-8?B?b2ExaDVKa2t4K29tQ28xclo4N3FGTmt0aDBXUWlGdGFDbFcvdklmdTB0S25r?=
- =?utf-8?B?eGRESXJqazdqcUR5d1JxZHczaGdGUnRHUXBiR0FtNU9UL3lQMHh3RkZJM1pv?=
- =?utf-8?B?bGRHbytRa0Y0bERMN0dyeGkxTFBRNmQyKzBiMnF0UFVQMWZLQS8rN01pOVVh?=
- =?utf-8?B?K09CK0dLaHFKcHp4eDFTbUU5ak1RRElKaGlCY285L1JsOUREMmVOOWcvdW9L?=
- =?utf-8?B?bThsODNHZ2Zod0h1eXY1UHc4QUR6NGlPQVQ0aCtxTEZ4VXpiYUphWHAyVjE5?=
- =?utf-8?B?RTJhQXlHUVpPVWdrSDhXdEJrbFJxalVqS2VQeWliWVZIcFBUN0lsSFVBUUNX?=
- =?utf-8?B?clRPOEtlS2g2c3JXc2tSV2E5THk1azdHMStndnMxSS9OM3VsbDNaRnhiaWQ2?=
- =?utf-8?Q?TTgcLsm7LkM=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB8118.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ekRHSWlSbjhENlNVZUpuaEdJRlZiWVZIM1VNQUpGL3lhdUh5b1dVbldwL2Rq?=
- =?utf-8?B?YkZObjU2Y0lDdm94SmVVL1lIZzRSelRUZ3pIZlFMaWo1Y09JSE15ek5iRm1B?=
- =?utf-8?B?RzZvaGhzSWFjc1pVeTR2Nzh2Rzg3b0RFeTBiSUhPLzBFZlpxSkVFdzNQVUNR?=
- =?utf-8?B?cGtHR0ZObEh5OU0vYjdoeHlYZURJeEVqM3Y0Q2xyd1UxekN3UG0xY2ZLMi9L?=
- =?utf-8?B?Q2ZtQjhDcFF2OUc3eE9Nb3FGUm5wWkxIZ3lwTTJad29kSndJWlM2cDR2UkVt?=
- =?utf-8?B?ZDgwQzNNK0VDcmVkWVJMeDQ3UWdnNUN6eEpoZWpISEMxME4wRldOeFYyWDFF?=
- =?utf-8?B?di9RL3F2TXN6M3I2Z01JcUFHME9jWnY3MWZ3d0pWOHF2UHZHbmIycFNEU2lL?=
- =?utf-8?B?cXl3L21Rb3VsZW81eVlmQjhZY0hmY2RHUit6akN3VDdnOGtSVzZQNWN0K01B?=
- =?utf-8?B?ZkNJWTFNUXRPVkNiQUZ6eWZvTC9ubnFDL0EvcWJhTTZkRVNMV3ZwODFmZGtB?=
- =?utf-8?B?dzY2aHNWS1RyY1ZqYjJWaXhyUFh3Q1U2VDZ0dmhnTW9tamg1RGE3b1QvMlY5?=
- =?utf-8?B?WVgwZWFqaXYxcU5qb0tKNUhQTi9nTVpGUWhzaE9hbnc4S2xpMXZuMnVRT0Jn?=
- =?utf-8?B?eXhsaVZEVkxKRUNyb3VBbEt1bGN0Ym5NeHk4ZU9QVjB0bGFudlVlTnpVcFJD?=
- =?utf-8?B?T2lSa3Fwem53ejJqUW9hZk1UK0ZrTlF3N1c1ZkdZSjRCelZBRXZjWFcydFZ0?=
- =?utf-8?B?dmZrZXVnMlB0SE5JNFRBNUZtZTdYWW5SUmpsNGQ2N2ovVFEvd1lvRTBVUlJM?=
- =?utf-8?B?dktNNWRjK2w5MWJLVEtWZGhwN3JRM2JnRmd1RCtMQ3gwcElHOXpjUk1MSlZK?=
- =?utf-8?B?bW5jdTNrNHQ4UWJ3OWV3VGZGdnJORjZFNmlnTWQ2UDVHRGdTTEV4VUl0TzBv?=
- =?utf-8?B?YTQ3OUh6UVU2Q2s4U0Z1ZmhGS2pCTldjRTc3elp4OEFSdkl0U2xOdk9WTnpy?=
- =?utf-8?B?NlUrTUJwV1E0SkZmTnRWNjU2cjYrQk5DMENXczQrUWJQeDFuRkdidXVibUEz?=
- =?utf-8?B?Z2Y5S1NXcEZIVytpMGhwNVF3VUZQSEs5V2JmUTltSDd1cGR1MmR5VWwzZjRa?=
- =?utf-8?B?TkIzZmh4Mjg0QXFOQkZMa3Q1dFkxY0FnZU5YenMzaGpQRzNVRkpJc1FxRFlm?=
- =?utf-8?B?T3V4TUpPMFhQb0JpNC9hd1dmQ01EN1RUbmMvb2VIZjZrNXRFMWtnYU0wemxL?=
- =?utf-8?B?RmlGemNiYnRBUFE4MjhRTDNKajNGeUVPSnI2K1o1ZEJxRzcvMTVuUEdlWW5k?=
- =?utf-8?B?cGRkZ2Q3cnBBWDRzQXd5VmNGKzdnQVZUNTRycGVCY0g5Qjg2YlVFc2s4ZFoz?=
- =?utf-8?B?WHEwZ1NSZE1pa2svbzFMaW5Ec2xaRVhJQ05oa3RNZGNzMEh2T0tzYVJLZ3A4?=
- =?utf-8?B?SWlIV1VoVzY1cjlnRG95cVozYmQxRGEzWDZScUpaOE9xb1g0TDRGbzFxREFl?=
- =?utf-8?B?L3ZMaU1OcXczblBoYnZpRnZCTVRtRHUzV1E4UTExa0QvNTJ2SnhHQWRTaFpT?=
- =?utf-8?B?bEhjeWxKZ2FlMTFDaWpjeHo0L245QnhxZjNtcWlsVWNHRHdua0FnbHl0cjRk?=
- =?utf-8?B?eVBsZTFNK2FGMW0vNnRmZEFTcGRuYkVIUnRDUzZOeUJaMllDZGZ1aVpTZVo0?=
- =?utf-8?B?TVh0WXhKZE96Um4wdzNldlRpZEh5MnlGcG1pR1UwQmJEeWZTQ0MyRVRxck9n?=
- =?utf-8?B?bWFqZEVaMWNoc3N3dUVGQmZBSmxaS3JOTkpmSi9mSS9ZWTI0Ui9IMGNiejhi?=
- =?utf-8?B?ZmF0TC9mNSs3U294TU1FS05DVWQ0N2RZQTYxMDdMaVd6Q0VjbEVMWk16Uk9G?=
- =?utf-8?B?c3Vpb1dibWVOVlUxWkY5VzFoUWpSeUprOXg1NHpLWi8xOWNKbHFEOWZIaTRu?=
- =?utf-8?B?QThiZEgycGhWcmdOU1VCTHNUQ2pXOEZJRFBJN0hCOXJZR1Vod0t6NGdHaFVQ?=
- =?utf-8?B?djliOXVIcUJRT3NSNU1jL20vMkZTc3UyRUp2eSs0K254MDNtaVBGNURmY21j?=
- =?utf-8?B?RUw4WmxjVUxkZTNOTkVNdjBuVkpsY0hZMGdTcm5Zc2lodk9keXdsWnBRaU9N?=
- =?utf-8?B?VlVQVEVkcWZiQklUT0I3dXpIQjQ5cm5SL1I3VlRuWmlick5JNktJc3Nhcjln?=
- =?utf-8?B?SHc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a75a8e3-2e9d-4945-5f6e-08dde736a99f
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB8118.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2025 20:00:11.8728
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /8AeopbGT66ZauZKf7/cIEggIResFkMIZbzvTHwJ+Ro3ZuYJZk3lLisBGFvadumoRyRcFdZ0gEcA73jXf+qzpNZKQPoXr1WtFFI8xX1TojI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5102
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH V0 1/2] hyper-v: Add CONFIG_HYPERV_VMBUS option
+Content-Language: en-US
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ linux-arch@vger.kernel.org, virtualization@lists.linux.dev
+Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, jikos@kernel.org,
+ bentiss@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, dmitry.torokhov@gmail.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, bhelgaas@google.com,
+ James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+ gregkh@linuxfoundation.org, deller@gmx.de, arnd@arndb.de,
+ sgarzare@redhat.com, horms@kernel.org
+References: <20250828005952.884343-1-mrathor@linux.microsoft.com>
+ <20250828005952.884343-2-mrathor@linux.microsoft.com>
+ <5003d5e8-a025-4827-b8a0-6fe11877421b@linux.microsoft.com>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <5003d5e8-a025-4827-b8a0-6fe11877421b@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Jason Gunthorpe wrote:
-> On Thu, Aug 28, 2025 at 02:38:14PM -0700, dan.j.williams@intel.com wrote:
-> > > device_cc_probe() doesn't save anything, doesn't this just get into an
-> > > endless loop of EPROBE_DEFER? Usually the kernel will retry these
-> > > things during booting?
-> > 
-> > Hmm, no, deferred probing retriggers after a one-time boot timeout
-> > (extended by driver registration events) and after any device
-> > successfully completes probe.
+On 8/28/25 17:29, Nuno Das Neves wrote:
+> On 8/27/2025 5:59 PM, Mukesh Rathor wrote:
+>> Somehow vmbus driver is hinged on CONFIG_HYPERV. It appears this is initial
+>> code that did not get addressed when the scope of CONFIG_HYPERV went beyond
+>> vmbus. This commit creates a fine grained HYPERV_VMBUS option and updates
+>> drivers that depend on VMBUS.
+>>
 > 
-> So it is not "endless" but it is also not "single probe then wait till
-> accept". I'm not keen on using this mechanism, I think the things
-> people want to do in the T=0 mode are going to be time consuming and
-> repeatedly doing that time consuming step is not a good idea.
-
-It would only ever run multiple times if the driver is built-in or
-loaded early, which is also mitigated by disabling autoprobe like you
-have below. So that problem is manageable.
-
-Now, I do think it is worth exploring a convention for "cc_prepare"
-drivers, but as long as userspace is prepared to rebind post accept it
-does not really matter if it got to that point by cc_prepare driver,
-probe deferral of enlightened driver, or plain probe error plus retry.
-
-> How about this instead:
+> The commit message can be improved. The docs are helpful here:
+> https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
 > 
-> 1) Drivers compiled into the kernel are "safe" and can freely bind
->    at will during early boot
-
-Agree.
-
-In the past this idea has been met with "but but typical distro kernels
-have lots of built-in drivers that *may* be unsafe", and the answer is
-"yes, a VM image with a CC aware / specific kernel config is a
-requirement".
-
-> 2) The first thing the initrd does is set
->    /sys/bus/*/drivers_autoprobe to false.
->    This stops all kernel driver autobinding.
-
-Makes sense for the buses userspace is prepared to manage.
-
->    Maybe we also need a small kernel change to allow userspace to make
->    drivers_autoprobe false for all future busses too.
-
-I do think we need a mechanism to say, "no more dynamic device
-enumeration", but a coarse and future promise "no autoprobe of any bus"
-I fear is going to have a long tail of problems especially with design
-patterns like "faux_device" and "auxiliary_device".
-
-As far as I understand, these CC environments do not immediately have
-secrets to protect at launch. Also, not sure how many are ready to
-validate the launch state of the TVM that early. I think it is more a
-case of allow everything by default to start (whatever is in ACPI, and
-T=0 PCI devices). Later the relying party either says "no, you have
-enumerated devices that should not be there", or "yes, launch state
-looks good, lock device topology, proceed with the performance
-enhancement of converting some PCI TDISP devices to T=1 operation, here
-are your secrets".
-
-That post validate model saves us from a long tail of fixes for
-subsystems that may be surprised by a new userspace acceptance loop. It
-is userspace responsibility to validate device topology relative to
-relying party expectations, and likely for the device topology to be
-static for the duration of secrets deployment.
-
-> 3) Userspace then evaluates what devices are present, checks its
->    policy, loads modules and issues /sys/.../bind operations.
+> In particular, some clearer reasons for the change.
+> e.g.
+> - CONFIG_HYPERV encompasses too much right now. It's not always clear what
+>   depends on builtin hyperv code and what depends on vmbus.
 > 
->    We need to close the general security gap I gave earlier, userspace
->    policy should be able to implement the statement:
-
-The gap is present when secrets are deployed and if secrets are deployed
-pre-accept the TCB is already broken.
-
->      mlx5 is allowed to bind to a RUN device after measuring and
->      verifying it, and never otherwise.
-
-...and if userspace binds mlx5 pre-RUN that is not the kernel's problem.
-I state that explicitly not for you, but because of the rejection of the
-"device filter" in-kernel mechanism previously.
-
->    a) For non-TDISP devices userspace checks if a driver is "trusted"
->       before binding it, a fancier CC only deny list stored in the
->       initrd.
-
-Yes, necessary.
-
->    b) For TDISP devices userspace runs through the
->       prepare/measure/lock/run sequence then binds the final
->       driver.
->    c) Something something RAS driver restart
+> - Since there is so much builtin hyperv code, building CONFIG_HYPERV as a
+>   module doesn't make intuitive sense. Building vmbus support as a module does.
 > 
->    Basically userspace policy is entirely in control if a device is
->    "accepted" by the ccVM or not. The kernel won't auto bind
->    a driver to a physical device. It would be driven off of
->    uevents, I guess through new CC focused features in udev.
-
-Yes, the only quibble is whether that "kernel won't bind" is more a
-"userspace shall lock and validate device topology" at a certain point
-in the boot flow. Userspace may need to be prepared for some unaccepted
-devices to bind before that point.
-
->    I think the needed kernel support is already here, the main gap I
->    see is that the modules.alias does not include the driver names, it
->    just has the module names. We ran into this with vfio (see below)
->    so it would be nice to fix, though it can be worked around like
->    VFIO did by making the driver name == module name.
-
-Yes, I think that is reasonable. Multi-driver modules are not the norm.
-
-The kernel problems to solve are "accepted" flag and maybe documenting
-to driver writers / udev developers strategies to handle the "prepare"
-problem.
-
-> 4) Userspace sequences the special "prepare" pre-T=0 drivers, perhaps
->    discovered through modinfo matching similar to VFIO:
+> - There are actually some real scenarios someone may want to compile with
+>   CONFIG_HYPERV but without vmbus, like baremetal root partition.
 > 
->    $ grep vfio /lib/modules/`uname -r`/modules.alias
->    alias vfio_pci:v000015B3d0000101Esv*sd*bc*sc*i* mlx5_vfio_pci
->          ^^^^^^
->    PCI driver but special for VFIO usage. So I imagine a
->    ccprepare_pci:... driver variation.
+> FWIW I think it's a good idea, interested to hear what others think.
 
-Novel!
+Sorry, you had mentioned it and I expanded the cover letter and forgot the
+commit message here. You said it better than I could above, so I can just use
+that in V1 next week if no other comments.
 
->    Userspace can inspect the modules.alias, find if the device's
->    modalias has a ccprepare_pci: match and if so it will bind/unbind
->    that driver before going to locked/run. When it reaches run it will
->    find the pci: match and bind that driver which is the operating
->    driver.
+Thanks,
+-Mukesh
+
+
+> Nuno
 > 
->    Policy if the ccprepare device should even be permitted is also
->    controlled by userspace.
-> 
->    Userspace sequences all of this based on its policy to accept a
->    device and push it to RUN, not the kernel, again probably
->    through some new CC features in udev.
-> 
->    The kernel side of this is a commit like cc6711b0bf36 ("PCI / VFIO:
->    Add 'override_only' support for VFIO PCI sub system")
+>> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+>> ---
+>>  drivers/gpu/drm/Kconfig        |  2 +-
+>>  drivers/hid/Kconfig            |  2 +-
+>>  drivers/hv/Kconfig             | 12 +++++++++---
+>>  drivers/hv/Makefile            |  2 +-
+>>  drivers/input/serio/Kconfig    |  4 ++--
+>>  drivers/net/hyperv/Kconfig     |  2 +-
+>>  drivers/pci/Kconfig            |  2 +-
+>>  drivers/scsi/Kconfig           |  2 +-
+>>  drivers/uio/Kconfig            |  2 +-
+>>  drivers/video/fbdev/Kconfig    |  2 +-
+>>  include/asm-generic/mshyperv.h |  8 +++++---
+>>  net/vmw_vsock/Kconfig          |  2 +-
+>>  12 files changed, 25 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+>> index f7ea8e895c0c..58f34da061c6 100644
+>> --- a/drivers/gpu/drm/Kconfig
+>> +++ b/drivers/gpu/drm/Kconfig
+>> @@ -398,7 +398,7 @@ source "drivers/gpu/drm/imagination/Kconfig"
+>>  
+>>  config DRM_HYPERV
+>>  	tristate "DRM Support for Hyper-V synthetic video device"
+>> -	depends on DRM && PCI && HYPERV
+>> +	depends on DRM && PCI && HYPERV_VMBUS
+>>  	select DRM_CLIENT_SELECTION
+>>  	select DRM_KMS_HELPER
+>>  	select DRM_GEM_SHMEM_HELPER
+>> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+>> index a57901203aeb..fe3dc8c0db99 100644
+>> --- a/drivers/hid/Kconfig
+>> +++ b/drivers/hid/Kconfig
+>> @@ -1162,7 +1162,7 @@ config GREENASIA_FF
+>>  
+>>  config HID_HYPERV_MOUSE
+>>  	tristate "Microsoft Hyper-V mouse driver"
+>> -	depends on HYPERV
+>> +	depends on HYPERV_VMBUS
+>>  	help
+>>  	Select this option to enable the Hyper-V mouse driver.
+>>  
+>> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+>> index 2e8df09db599..08c4ed005137 100644
+>> --- a/drivers/hv/Kconfig
+>> +++ b/drivers/hv/Kconfig
+>> @@ -44,18 +44,24 @@ config HYPERV_TIMER
+>>  
+>>  config HYPERV_UTILS
+>>  	tristate "Microsoft Hyper-V Utilities driver"
+>> -	depends on HYPERV && CONNECTOR && NLS
+>> +	depends on HYPERV_VMBUS && CONNECTOR && NLS
+>>  	depends on PTP_1588_CLOCK_OPTIONAL
+>>  	help
+>>  	  Select this option to enable the Hyper-V Utilities.
+>>  
+>>  config HYPERV_BALLOON
+>>  	tristate "Microsoft Hyper-V Balloon driver"
+>> -	depends on HYPERV
+>> +	depends on HYPERV_VMBUS
+>>  	select PAGE_REPORTING
+>>  	help
+>>  	  Select this option to enable Hyper-V Balloon driver.
+>>  
+>> +config HYPERV_VMBUS
+>> +	tristate "Microsoft Hyper-V Vmbus driver"
+>> +	depends on HYPERV
+>> +	help
+>> +	  Select this option to enable Hyper-V Vmbus driver.
+>> +
+>>  config MSHV_ROOT
+>>  	tristate "Microsoft Hyper-V root partition support"
+>>  	depends on HYPERV && (X86_64 || ARM64)
+>> @@ -75,7 +81,7 @@ config MSHV_ROOT
+>>  
+>>  config MSHV_VTL
+>>  	tristate "Microsoft Hyper-V VTL driver"
+>> -	depends on X86_64 && HYPERV_VTL_MODE
+>> +	depends on X86_64 && HYPERV_VTL_MODE && HYPERV_VMBUS
+>>  	# Mapping VTL0 memory to a userspace process in VTL2 is supported in OpenHCL.
+>>  	# VTL2 for OpenHCL makes use of Huge Pages to improve performance on VMs,
+>>  	# specially with large memory requirements.
+>> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+>> index c53a0df746b7..050517756a82 100644
+>> --- a/drivers/hv/Makefile
+>> +++ b/drivers/hv/Makefile
+>> @@ -1,5 +1,5 @@
+>>  # SPDX-License-Identifier: GPL-2.0
+>> -obj-$(CONFIG_HYPERV)		+= hv_vmbus.o
+>> +obj-$(CONFIG_HYPERV_VMBUS)	+= hv_vmbus.o
+>>  obj-$(CONFIG_HYPERV_UTILS)	+= hv_utils.o
+>>  obj-$(CONFIG_HYPERV_BALLOON)	+= hv_balloon.o
+>>  obj-$(CONFIG_MSHV_ROOT)		+= mshv_root.o
+>> diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
+>> index 17edc1597446..c7ef347a4dff 100644
+>> --- a/drivers/input/serio/Kconfig
+>> +++ b/drivers/input/serio/Kconfig
+>> @@ -276,8 +276,8 @@ config SERIO_OLPC_APSP
+>>  
+>>  config HYPERV_KEYBOARD
+>>  	tristate "Microsoft Synthetic Keyboard driver"
+>> -	depends on HYPERV
+>> -	default HYPERV
+>> +	depends on HYPERV_VMBUS
+>> +	default HYPERV_VMBUS
+>>  	help
+>>  	  Select this option to enable the Hyper-V Keyboard driver.
+>>  
+>> diff --git a/drivers/net/hyperv/Kconfig b/drivers/net/hyperv/Kconfig
+>> index c8cbd85adcf9..982964c1a9fb 100644
+>> --- a/drivers/net/hyperv/Kconfig
+>> +++ b/drivers/net/hyperv/Kconfig
+>> @@ -1,7 +1,7 @@
+>>  # SPDX-License-Identifier: GPL-2.0-only
+>>  config HYPERV_NET
+>>  	tristate "Microsoft Hyper-V virtual network driver"
+>> -	depends on HYPERV
+>> +	depends on HYPERV_VMBUS
+>>  	select UCS2_STRING
+>>  	select NLS
+>>  	help
+>> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+>> index 9a249c65aedc..7065a8e5f9b1 100644
+>> --- a/drivers/pci/Kconfig
+>> +++ b/drivers/pci/Kconfig
+>> @@ -221,7 +221,7 @@ config PCI_LABEL
+>>  
+>>  config PCI_HYPERV
+>>  	tristate "Hyper-V PCI Frontend"
+>> -	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI && SYSFS
+>> +	depends on ((X86 && X86_64) || ARM64) && HYPERV_VMBUS && PCI_MSI && SYSFS
+>>  	select PCI_HYPERV_INTERFACE
+>>  	select IRQ_MSI_LIB
+>>  	help
+>> diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+>> index 5522310bab8d..19d0884479a2 100644
+>> --- a/drivers/scsi/Kconfig
+>> +++ b/drivers/scsi/Kconfig
+>> @@ -589,7 +589,7 @@ config XEN_SCSI_FRONTEND
+>>  
+>>  config HYPERV_STORAGE
+>>  	tristate "Microsoft Hyper-V virtual storage driver"
+>> -	depends on SCSI && HYPERV
+>> +	depends on SCSI && HYPERV_VMBUS
+>>  	depends on m || SCSI_FC_ATTRS != m
+>>  	default HYPERV
+>>  	help
+>> diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
+>> index b060dcd7c635..6f86a61231e6 100644
+>> --- a/drivers/uio/Kconfig
+>> +++ b/drivers/uio/Kconfig
+>> @@ -140,7 +140,7 @@ config UIO_MF624
+>>  
+>>  config UIO_HV_GENERIC
+>>  	tristate "Generic driver for Hyper-V VMBus"
+>> -	depends on HYPERV
+>> +	depends on HYPERV_VMBUS
+>>  	help
+>>  	  Generic driver that you can bind, dynamically, to any
+>>  	  Hyper-V VMBus device. It is useful to provide direct access
+>> diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+>> index c21484d15f0c..72c63eaeb983 100644
+>> --- a/drivers/video/fbdev/Kconfig
+>> +++ b/drivers/video/fbdev/Kconfig
+>> @@ -1774,7 +1774,7 @@ config FB_BROADSHEET
+>>  
+>>  config FB_HYPERV
+>>  	tristate "Microsoft Hyper-V Synthetic Video support"
+>> -	depends on FB && HYPERV
+>> +	depends on FB && HYPERV_VMBUS
+>>  	select DMA_CMA if HAVE_DMA_CONTIGUOUS && CMA
+>>  	select FB_IOMEM_HELPERS_DEFERRED
+>>  	help
+>> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+>> index 1d2ad1304ad4..66c58c91b530 100644
+>> --- a/include/asm-generic/mshyperv.h
+>> +++ b/include/asm-generic/mshyperv.h
+>> @@ -165,6 +165,7 @@ static inline u64 hv_generate_guest_id(u64 kernel_version)
+>>  
+>>  void __init hv_mark_resources(void);
+>>  
+>> +#if IS_ENABLED(CONFIG_HYPERV_VMBUS)
+>>  /* Free the message slot and signal end-of-message if required */
+>>  static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
+>>  {
+>> @@ -200,6 +201,10 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
+>>  	}
+>>  }
+>>  
+>> +extern int vmbus_interrupt;
+>> +extern int vmbus_irq;
+>> +#endif /* CONFIG_HYPERV_VMBUS */
+>> +
+>>  int hv_get_hypervisor_version(union hv_hypervisor_version_info *info);
+>>  
+>>  void hv_setup_vmbus_handler(void (*handler)(void));
+>> @@ -213,9 +218,6 @@ void hv_setup_crash_handler(void (*handler)(struct pt_regs *regs));
+>>  void hv_remove_crash_handler(void);
+>>  void hv_setup_mshv_handler(void (*handler)(void));
+>>  
+>> -extern int vmbus_interrupt;
+>> -extern int vmbus_irq;
+>> -
+>>  #if IS_ENABLED(CONFIG_HYPERV)
+>>  /*
+>>   * Hypervisor's notion of virtual processor ID is different from
+>> diff --git a/net/vmw_vsock/Kconfig b/net/vmw_vsock/Kconfig
+>> index 56356d2980c8..8e803c4828c4 100644
+>> --- a/net/vmw_vsock/Kconfig
+>> +++ b/net/vmw_vsock/Kconfig
+>> @@ -72,7 +72,7 @@ config VIRTIO_VSOCKETS_COMMON
+>>  
+>>  config HYPERV_VSOCKETS
+>>  	tristate "Hyper-V transport for Virtual Sockets"
+>> -	depends on VSOCKETS && HYPERV
+>> +	depends on VSOCKETS && HYPERV_VMBUS
+>>  	help
+>>  	  This module implements a Hyper-V transport for Virtual Sockets.
+>>  
 
-Yeah, that looks like a viable option for these complicated drivers.
-
-For RAS I do still like the property of a driver that will field errors
-also having everything it needs to take a device from reset back to the
-ready-to-accept state. That can be solved later, and maybe the outcome 
-is "cc_prepare" is incompatible with "recovery".
-
-> This is much less kernel change and gives the big thing CC needs -
-> driver binding policy decisions in userspace.
-> 
-> > > As we discussed in the prior chain we need to have a policy decision
-> > > before auto-binding drivers at all in a CC environment, I don't see
-> > > that in the code though the cover letter talked about it??
-> > 
-> > The aim was for the "'struct device' has an acceptance flag" discussion
-> > to settle before starting a "device-core policy for unaccepted devices"
-> > discussion. I am ok to put more logs on the fire if there is an appetite
-> > for that.
-> 
-> Sure, I think you shold drop this patch from this series and have this
-> series focus only on creating an accepted struct device environment
-> that a driver can bind to and operate.
-
-You mean drop the device_cc_probe() piece. The rest of patch is starting
-the work of a "accepted struct device environment" with a single flag
-that MMIO and DMA infrastructure can reference.
-
-> This is a long journey already, once this basic support is landed we
-> still need to do all the arch support to enable DMA/IOMMU/etc as many
-> followup series.
-> 
-> The questions about when and what drivers are probed can be left to a
-> different series, at this point it will be usable for development but
-> not secure like it should be.
-
-Agree. Especially because attestation interfaces are not part of this
-series yet.
-
-> The device_cc_probe() type issue should be solved in yet another
-> series, IMHO, and that should come with a really strong justification
-> why the kernel needs to do anything at all, vs just rely on userspace
-> as I outline above.
-
-It is trivial for a driver to open code EPROBE_DEFER so
-device_cc_probe() is not putting any burden on the kernel besides
-documentation, but I will drop it for now.
-
-> > I was hoping to put the onus of that on the vendors that think they need
-> > this Enlightened driver path. The path of least resistance for device
-> > vendors is design the hardware so that it can be locked without needing
-> > a driver to take any configuration action ahead of time. Otherwise,
-> > explain to users that they need to adjust/replace the eventual udev
-> > sysfs script that does:
-> 
-> So if we already imagine changing udev, lets imagine the above
-> instead?
-
-That's the whole discussion, what are the udev requirements relative to
-the secrets deployment event.
 
