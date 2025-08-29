@@ -1,62 +1,62 @@
-Return-Path: <linux-pci+bounces-35158-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35159-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46297B3C500
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 00:37:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26D04B3C501
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 00:38:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FB5D1BA2229
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 22:38:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CAAD1BA3049
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 22:38:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54C292D8379;
-	Fri, 29 Aug 2025 22:36:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFF0E2BE03E;
+	Fri, 29 Aug 2025 22:36:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DM9DqaL1"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lxfh//ky"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2083.outbound.protection.outlook.com [40.107.220.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689612D481C;
-	Fri, 29 Aug 2025 22:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E0E2D8381;
+	Fri, 29 Aug 2025 22:36:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.83
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756507013; cv=fail; b=QMbt2o5svbPq1SXNt8XiJNTSBIoz5n4KkJBvoOzVZgRopyGanJ9If42vBr1v2zLCvKlSaq0HFGwr2kL2oGyF8KbUvJTbPA4SnuegVkoY1OwIIXKh3Z63pMyEBOEYTOcu9v+JfW7LrzWpNJLvKCLtU+hWaZRBQ6zcNoy7dBzYVnw=
+	t=1756507015; cv=fail; b=dsAF2+RukBNkzMnyWAFGdCzMw5YEZqRE15diFCX5tJuZk2FgOmN6UxXtAfc+1B/TfUNNWapcNEfv4GdgZ1WucNm7JM9acpB88wZIZhATO+Jd41rNG8uLKhuLcwmWL4O/QWMRtAX1rl0B7IqzXfJ5aKYKVk6R0ZMZOR507kTAgoM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756507013; c=relaxed/simple;
-	bh=WMLul84FVN+7/CzXJMqmGeO44W/cVfDB+00F8u8TeKs=;
+	s=arc-20240116; t=1756507015; c=relaxed/simple;
+	bh=L2oH7cfYUjGiH5dR3AX0M6VGlGLH59NJN995F0gNpUo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XVM6UYBSflgmkVofsjSpkAoyJg3fAfG2eTaMRbxToqN16Jru7vnDCRlFdkOy/Dlv7YBn+s/oGjLBALgUBY6/tmsWFbbINVbxAOoy/L/n6MK2NmokcdxBRIdvs8goJ7gH7LEVOEgIgZAgH/BP+vjSNtWTaJCt12IaVG4fab0m6Lw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DM9DqaL1; arc=fail smtp.client-ip=40.107.220.83
+	 Content-Type:MIME-Version; b=L+YqzbQK8lqL1hXyaERb1Yn7UZaNDgcMPBL+dagHdrVmaIqrP4Qps6tfKUVY9hsO4Cq9Uj49aoRmS+7kWvVpRzvsk8KIxjMQIuVp2GXGhhwEmraJfqwn1T7n+5QaOAzdCRM79sWkvqsW8GafJvd3EXYt+Ok+deODws1xLJXK4tg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lxfh//ky; arc=fail smtp.client-ip=40.107.220.83
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=W1F31/OZtwYomefrAmBye7IQ2giH1H5mBs9Sd7n9w23WJViUWTg8vIjF0J4DDeSwMKXwmokxVJNvA/c1tK/02ZwSy0+JNzdihIQYHXemiusfA8Qe7szn3t2qs2mlOGnqE7pCmKPPD7s6wwwsUBmAbUtkdcICmO1l7/a6BcS/x9zKm4KK2aP4reycIxNK0cQOLhhzV/LX71V/Vi6SMYfyPsABnSejV+3nYCCJPSXwJmtoeF963zn+GY9lGu/dcLzVfGwHe/BYP1wo5h4Jcy876SQtORcBKegC/R96ToBm82B69dOfpieiEkC8udpESDC5BVEtFpteYg+Mf7tgPyaX4Q==
+ b=rFupSXP3yuAcxAKYF9Y0SKEpqDgVackyQUmAVXUEWzpU78wJeqpAO6mjW0rDAr2Ml/GULSedcG+OOl2gqfF9fcw2y2cPANcHnw6Gho7Ru4neLe4QWq0VCNzPqv0hM71nqrvaXACfpGqTh3KIB5p8macFwlRfFVlzHXoIgc6Nr9HUytN4iwGjY2D8vLb7Got1O4hUuG1ZNxSml5gDqQwrtMyRj5LCqIRqfshxChOXgTclUsvvWqxN5Dh8xJpX2tpFN9sIMeE5j40sLlFiRkhjVm14DRlGZC0/lMg7RZ//4hG/sZrTii/aAf2Hf80E4JJhXJe4yLWoh8mp5lqPnyXP8w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ky2Qo6dSKY4Ga+SaDGuMbOKGnAFyvTfBbPZDhDe6EB8=;
- b=HdiqoG8mHd50EJZdGzEDTZwvQWfbPBYZUkzvWKdPZgtCdbi6bhopXNYRDU7xzKNjHZtpUvuRUfCipOxXK/GYKBKJ3aftXtubBxD5wLBEmEhwBwfMc1V9f7opMwaqExSXqhmSMVGJUGkNi+kgxlCX5DZwXi7bPDdT6mnqTmLxsKgBw2VGBBBEwHfpBvj/pZ0NO1NMCL0oxKcZoAx88tFUpGsCtY4HxwNGUwqfSnmrl3DP3dLjw1LRz6b+gPfnl8Dn1BaJvPwEhY86a3VT93d5/cpjYF0+gsPyO7T9VVTF2iO5tqrnCyHs2U8e2O1/MiSYcZzujBnfVCtaHQnMP413Ow==
+ bh=/A0WuTr2Jl3IgdH5wFnQbNZS7jPnOjnxwJvKnDv6OsA=;
+ b=lCfQ4Lu/7nYiLWWyBY3YchNs6OucB0CTxLsiHHLrDM47rnyZlehwppm5MaoFhAyxT9VK4undWkh/iTRYcJ8TNpFst/nnbQzibAAruvSRaoguqawGBvl89vuiy0htTST+NuZevUu+zV2B4qjlzmJq5vbyGFUCM3Sn5gIZSDvQ+blvLxzr/eBfxrt23Vu4AHilluqGXN1gESegIqydlrBnFUcw60WO58GFnR0zZcKLIBr6b49gB01qRbc1hVJHjbR4XvSXZS4CLRwC1bzSEEY5fSFj2v/J7+8kCSO3DO99njUYmJjskRHPsPndrO7t3znTznZFq18xc8eE6OZ/uDDQvg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ky2Qo6dSKY4Ga+SaDGuMbOKGnAFyvTfBbPZDhDe6EB8=;
- b=DM9DqaL1qWy4qecadVldcucEliKvZC3qX8tiVSLPIVBndGuc+d02FdlO+JPwr8W9Z8/n4jN9uDfYPFY7DAIKUmGmQiN2PFKzeXT8ErESrVFLu2uNS8mC6RkUfGXZKQZPNbuFgai1hiqjTYp3flVRSdK/KA11bgkb/1FmenIPqbRwgRRdI77omZ2qbuSmqNiCRW5p7lMc1gH9PrCF5XFcZi/aaeW6BYEOxXCx8vC6484SuV6iqNEMFSeKnZ6/AVUnrp+TFaVV7WmEepMUhgeFM2ZrqzBpV4BLJV7OAW6Z/wnoSxkGOWpBVQ65+7m/DpW57vIPlAofujMCezlj1rab2w==
+ bh=/A0WuTr2Jl3IgdH5wFnQbNZS7jPnOjnxwJvKnDv6OsA=;
+ b=lxfh//kynKxhCo2IlcTVbIf+8f8cftLjqvYfLOW243IgvX7PqrvgDgoXS6WINzVBAXxz97s6Y/l5lfiAlCSz1ifX63Fo0fsjEh47+BzKF3qOSBhlyHXtyJ9WkgQMHVrrEDHwnv7p10f8szTZoBlt7yuCHXQ91hNl2EWLpXA9hAPazAf4OUlIssphXN2y4rdONAhyuDhQSS+2M02GQZpTGugop3vKbEN9wXMutQFdBNQAa5Hj0ckqMrLxskfygRpAxpzwLqMqwuM1Yj2tu5HFpKkBbP4HjO0Ig9EeWixsUeaZGbwd6W05ch16akBjrwqXm3YckX2Fo3WT58BfFbaPOA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from LV2PR12MB5968.namprd12.prod.outlook.com (2603:10b6:408:14f::7)
  by BN7PPF0D942FA9A.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6c7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.13; Fri, 29 Aug
- 2025 22:36:43 +0000
+ 2025 22:36:44 +0000
 Received: from LV2PR12MB5968.namprd12.prod.outlook.com
  ([fe80::e6dd:1206:6677:f9c4]) by LV2PR12MB5968.namprd12.prod.outlook.com
  ([fe80::e6dd:1206:6677:f9c4%6]) with mapi id 15.20.9073.021; Fri, 29 Aug 2025
- 22:36:43 +0000
+ 22:36:44 +0000
 From: John Hubbard <jhubbard@nvidia.com>
 To: Danilo Krummrich <dakr@kernel.org>
 Cc: Alexandre Courbot <acourbot@nvidia.com>,
@@ -82,17 +82,17 @@ Cc: Alexandre Courbot <acourbot@nvidia.com>,
 	LKML <linux-kernel@vger.kernel.org>,
 	John Hubbard <jhubbard@nvidia.com>,
 	Elle Rhumsaa <elle@weathered-steel.dev>
-Subject: [PATCH v8 5/6] rust: pci: use pci::Vendor instead of bindings::PCI_VENDOR_ID_*
-Date: Fri, 29 Aug 2025 15:36:31 -0700
-Message-ID: <20250829223632.144030-6-jhubbard@nvidia.com>
+Subject: [PATCH v8 6/6] rust: pci: inline several tiny functions
+Date: Fri, 29 Aug 2025 15:36:32 -0700
+Message-ID: <20250829223632.144030-7-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250829223632.144030-1-jhubbard@nvidia.com>
 References: <20250829223632.144030-1-jhubbard@nvidia.com>
 X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BYAPR06CA0027.namprd06.prod.outlook.com
- (2603:10b6:a03:d4::40) To LV2PR12MB5968.namprd12.prod.outlook.com
+X-ClientProxiedBy: SJ0PR05CA0046.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f::21) To LV2PR12MB5968.namprd12.prod.outlook.com
  (2603:10b6:408:14f::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -102,275 +102,145 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: LV2PR12MB5968:EE_|BN7PPF0D942FA9A:EE_
-X-MS-Office365-Filtering-Correlation-Id: 44c14e52-faaa-4fb2-05dc-08dde74c871c
+X-MS-Office365-Filtering-Correlation-Id: 5e8faeb5-861b-4ce7-8fcc-08dde74c8839
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZBGVf1yn8A5HSGn3gXZJdtSqs+AMeYray+g0Tpi9ZP1WFWPkf8nXzSAlPFx3?=
- =?us-ascii?Q?ZekVAhylVC7lV4+Zsw1isytraqCFTPtkb4hbVSM5puX1mcFBZvGVvl0+AN4Y?=
- =?us-ascii?Q?wMxQ8M21lO1Em0R+r2Gin6wc4JinNdpF32HgEH0cHrQrwuMDAwajDvuvlvyl?=
- =?us-ascii?Q?qmj6ePUBdOiP7qUYQYW5JMGZCxcHqgIz8vnyZ1C365g3dVgW7U1487iOh0k/?=
- =?us-ascii?Q?xbMSUDhCcMhYoVlcZZrXh1rGJtSZOIzZ0CJlzNixSFrubL3LBf9reLsy8odY?=
- =?us-ascii?Q?I85Y0/0FsbM8aw0i53WyxTV2XZ+jrlAhiP+MJ9z3qBdhO6UDLZcMeTBRuJKk?=
- =?us-ascii?Q?/66vcW+BgnUBFzLmK8EVcJAEHKqNdnvnWVdTJAgj50pkze1mpS3qKfAk7YjS?=
- =?us-ascii?Q?oBSCSDja1PR2mh+36OaOGtM/E9+ykAgpD7AmpKHAuTD42FOvSvpTvzzexlq/?=
- =?us-ascii?Q?msmP+tWt77E3CYGBEE+iQIuQUCaQYU+p/AvxO6wFhRwjb2KrgqGNRNOzByy+?=
- =?us-ascii?Q?qzR8Sc7AXzWzTx38oZTHTGwZfs5tjG4LeEADntDbtNjqJQR1zSRtFrmC25MO?=
- =?us-ascii?Q?blnw77A7Cs5fd5MkXqRVHiG2qYOg2b7yQUvmbYWvxhV3TI679FSIrUte/0gH?=
- =?us-ascii?Q?sytMK54KeYLJ54gdPcnFJYJ3VS6y1890NNUw0CVnA6FCtFn1FEuDhv2k3wQd?=
- =?us-ascii?Q?X/K5IgBb/PPKiWhcwwMPQLn0XURfyD+IHZ0ctim4fbp78UOn/3qT2Thm97BT?=
- =?us-ascii?Q?RzMcW3CWp0Gwi40J+DDiHNDSoDRTx2Zfhva53EzH8fQaOG9Okvv0+greqgZU?=
- =?us-ascii?Q?k4CPsCl3Ah38YlxowmjeRhoNVdSj7TYR3ljIPDE/tE8NWCfHjdZtMO5Io3ce?=
- =?us-ascii?Q?9HzqF23e3SjbSYEj0qP43Y497tliPAS96adz5v/6at3+VGIfL7c/4f/RMs2u?=
- =?us-ascii?Q?lBnXy7TiKMrzyO0cCBMrM+m3hxFEX8ZrXvzO4eAAQAGDB+GDAAFV6FRx/yn9?=
- =?us-ascii?Q?CMdIE1HW9P4+mHyc512qvtr12+qLH+1QeHmtS+OjtHMOd78ZEVJs29AWVatS?=
- =?us-ascii?Q?85n+7jDdsc++J0l6U+RaU1H//3KVd7e3pM5IX7xPKGToD6uGxWVHNGtvGDhe?=
- =?us-ascii?Q?260LnlYi6tqoSVF8vFXK0L0ZJi6MGrsj+tKSqXOh274xP3NvwYz+vkizWwtT?=
- =?us-ascii?Q?n0mDNOxTj8PjsRD5E2h6P68OLlAuqeRmkDIyPF2ejMp+T6gU+nWRuC1I+OyC?=
- =?us-ascii?Q?McpzNx3hkCjdXhYhejQ5/E+zfGCJIMwNvr4vobEM5B+QJFXAKzC0Xo58UTm/?=
- =?us-ascii?Q?ckMjKkH1Vwx5leTDcwzu14oYcA/jG8y5IqcRsWn+RxqrTbvuudjcXGKK0S2Z?=
- =?us-ascii?Q?KYsA1xpy7j99u33OnPiFkiWKPIMVJUmaEyVI0zoJIrficVXL1vL5bmtLYqw4?=
- =?us-ascii?Q?6E6X9zAD5+U=3D?=
+	=?us-ascii?Q?T2r6KCfw+xguYBeQAGf2zQIsSOvuJvYzabDYXxGvOQoYZwn2nqzUMNVPT0w5?=
+ =?us-ascii?Q?+HMeF1QMtO3o4m7V6VqiJ3eYydMMDE2eukfC/6xht9W4n10kxMlcZa4ej+IY?=
+ =?us-ascii?Q?WM32BIN8K6EnEWvEaTAMSYzpwxjDoxgSVbziM3EHec6xe5t67liUazroiFlo?=
+ =?us-ascii?Q?0DCJLdQW+qJIir7jgw+hdYrTgIyWvEYrR2tAhf9f4i5Bb3PVy3Vfi4Kuz1BF?=
+ =?us-ascii?Q?s0MOOcwXlsuArrktaACcmtrWoNJ+VHWqKknigHDBST3Pbca7eHPKgdaNsHga?=
+ =?us-ascii?Q?vcabOneeQV1zNKmxFuQZPbHDqjeeGv/kYhe6ObcmNXKlebX6KCEYBBcrdMw7?=
+ =?us-ascii?Q?SFKQ5H/OlGu7H50GRFnK0AtYwYV0upYYVQyCUckMALJJNiC3rYWfBDjawSL8?=
+ =?us-ascii?Q?APbVPtaxZK6kREs3MagLEa9t9vFxGgN+6tQqYWdBvL1+4M9hwLCEt9h3+cuh?=
+ =?us-ascii?Q?hAXRFCbhFWG4H7w2OaZcnvdNRAArDA+cwxp47JYBurmdB7F8ZeIs0Y+ozvkV?=
+ =?us-ascii?Q?Vqcc05uhS6uOjfrf8PWNTu9NgSOf5XFucaEdHVLwlOHFLDoyKlCa5QxVx/3R?=
+ =?us-ascii?Q?EuqjDjGnelGAYcO+mYD71obeZ/8b0+uXQY0mpS8Tv011Q2q6qHE9GXKG7xDY?=
+ =?us-ascii?Q?xM1J0AkddLkvaaCJg3xTSAP2fuGogu79B8X2vBM/rAlr22WbaRWCQwlYFsEG?=
+ =?us-ascii?Q?ietigIXIxMZuVh/ElKXGBfoAWi+2sBc4GssldG0wxNEqDUMlARgcol7BhgOq?=
+ =?us-ascii?Q?J99gBBitvPzmGkHoLPFhS/wC00MtL+zCyPx7gXRwO6anqtRJjWv8OhsGnX1f?=
+ =?us-ascii?Q?jIKnMsuErWT22MQbWL33aVTBNQ9ivejiKrYy/CSXFdKhy8TkEJdpARPzSBiY?=
+ =?us-ascii?Q?Rvix7LczNuFpGNjfqY6AUn9LOG++3o6pNSOjeEKsDZOm8UH2n/fnvlDxg+WG?=
+ =?us-ascii?Q?3USLl1lgfcA1eaavUXPKNYmIns6SuI302cG93hF/hWC9VfS0WKrYABqAfPIl?=
+ =?us-ascii?Q?MfZ03AJYgCh5sl2hR+1ErNEVPuYnLmb7E09jaJNCL2eIJHkhUrjaLCab2MaP?=
+ =?us-ascii?Q?SkX4DpDjfDdRPIxzLCzYnj2n2wHKH3TJPmGAO8BatDUN715sw57Cz+vnLkqS?=
+ =?us-ascii?Q?plpiXXt1ZeDs+bW5/yUx/xEFMWX/At5lqPJBBfxVLZSQT9tFIJQdATBtVk8W?=
+ =?us-ascii?Q?ciPBMQKP7SVhpR9F++8d84xBQiPsrPi9KZ7xpZtAOl12FbYd5HFt5f3Ptjm+?=
+ =?us-ascii?Q?iSZbRfb/q/rydPu7w1k8Qn4y8UEkZqleDW3VVAemhoemEhxKY99WJ8zXy4ym?=
+ =?us-ascii?Q?UDPyjnshqMI43CCN28K12lGFW/c2cz8lN/2rsNwYCHp+qhNda5jIcZCs80+2?=
+ =?us-ascii?Q?Oj4BpEOyPMFCjY6w+WtEoK2bH6oLXjn3QQ4UQFG/4pecpGi3IejV02vW+kQB?=
+ =?us-ascii?Q?17j6V1RGrwM=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5968.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Ys4Vlm6oTwuN71G8lMTZKibmYuov9PkWEXsdfl921QiuRC8gDZyX49anoDtA?=
- =?us-ascii?Q?0xka+CnMECc+07Iof7zaCjzDiaHU0ssNVPKw9/4VwATXhYgk+LD+bYNDsFWH?=
- =?us-ascii?Q?PjJZ+hFHo4AppdqTnQvzcG0RVqoIEJVxnF78feHc0I49vdWfXo2RhyTRS2iS?=
- =?us-ascii?Q?1cYJ08izX2FrJ2At3GcRKTaZajJgzydBV3VNAgFPGKW+/sQ62CAJQ9dO+gNN?=
- =?us-ascii?Q?5Hrt0bp2KCSaadDnQIi1ihpQDMjLQsDTdu7a5443jEjUp4+dOPS/owa8Oy6M?=
- =?us-ascii?Q?8UUf7Yy+2aKmKKuTvyfA0sg/81ZCA4rsJ7sgTAUGZ+vqcQqYkxLGALR8+SYC?=
- =?us-ascii?Q?Zz2JBw2uWNIpV794JH6n/OQuBhI55yW7KqVQr98yxv9Kq/55wu4pt4oz4+I2?=
- =?us-ascii?Q?T4cdqD5EJ/b/1al/R4XPezXhKlKgg8N5YbOJyF7noJagi/h0YwZKWNAFSqIi?=
- =?us-ascii?Q?7OaKmQDgOr8wnhm2wHHHWyL312kvGQxq+ZG2gSBYSVCBLaqNwaSFpbzpkHSF?=
- =?us-ascii?Q?ue5XSKjN7XaGVt61iGr7HoJp/FgcSsS9YjQAXRP1W6HUhBysd3Nczk+w2XDN?=
- =?us-ascii?Q?VG4Q/lEl9Q9xnF/MbtuG50gXbmdzVRK62gYzlVZEwM+NB7GovDXcru0YwWm4?=
- =?us-ascii?Q?LKZCRxlfGE3jSe3WKJrPpiaI/UC3gmEaGeubQXUiLEUDuE3L9VwFJe2hvpCU?=
- =?us-ascii?Q?DbHs/C+uTtFYzQAXDTtYeqW/hzoEasgNn42qhLfdjnTqmR56aQ9fZvQ18Ymh?=
- =?us-ascii?Q?Vw4uhdavrud7rlMObA0okAUQEfdSgdg1Evk1g5bxU3XL2kjw4FREQrCTJSlY?=
- =?us-ascii?Q?y0kjiMLM3G/fv4jFlUj/8Ol+wGtG3Id9wGM9rDS8lnRRtq5Xpx/GSs0BNyOK?=
- =?us-ascii?Q?FGle+xnsYQxJvSqa4VaL8SK73HAMTxbx0bloDtrbnXhXWvHlETb3NrBzO3u+?=
- =?us-ascii?Q?W5k7kowFukceTJNXdew8jGzeNQJWNciIvv6Y5kB1+O2IB7WcQ4RA/W4W/B2t?=
- =?us-ascii?Q?lp9tGqnNlaFIu7foySExD3Xx/BzmHW48FTanR+9kntfuM/AzoUJ3AkupGpwN?=
- =?us-ascii?Q?Bs4RpSGiY+8rdkBjcKqPDPTE37hBB8+nob3uin6sb9Z72SFXr+4WrRcttOa2?=
- =?us-ascii?Q?lPLuFGAVpR0uD/Az8rf7g8671cXxyhbD3MhzQ/e0jJJnILbJRpzi7SNrR3yL?=
- =?us-ascii?Q?D91KrUwRDNogb4EnbhM0TeNlsIWq3C/+e4EPLqKMz5l0CitLyIlP7t5AVzjG?=
- =?us-ascii?Q?z8FvJTHtxJbSzJZ+elm2934m0BCvl7Jllr9acSKWBWShVjKlAA0MABlYqWry?=
- =?us-ascii?Q?Y9nPe61a3+LWsmO5uZn47gRkAhlCPAytWN66d5aLkoX0Uvohq6HKmqNuIDeU?=
- =?us-ascii?Q?VhO7rXW0zalCZWaf7+PQW9Lojg143DnDyk5RXlEPH024OlOUnYX9OkPUXVP3?=
- =?us-ascii?Q?6aPNJaLUAROF5r6Eo7Rr/vUd1QZT3AjZo7O9hpHXFFw55bByJaLKNKr4ofcZ?=
- =?us-ascii?Q?lu+i6pQ8IS1n3FOxAsHSTTguSFTt6Dk02Am9H8pGbBheTE4gTPW79wk0bOjk?=
- =?us-ascii?Q?rwI/D9daHqjQywdjAiJxEjL3O32xr36HraBcqLDI?=
+	=?us-ascii?Q?UwMH7jFUjCLndb4k37CGQ110liavmcHe4upQgRZ2dQzAUElY6EivTL6fou+F?=
+ =?us-ascii?Q?0BmbkPGctSumXXDp9FGIt9tab8OrqUBE24ecEUFsRewty3GMD3IVO3srYlga?=
+ =?us-ascii?Q?FTzIJNICzrEAaDjgJXxgLTPcJk/9EwT03WZ7r0M0RfKqiAAy4GE6nR+RmDqf?=
+ =?us-ascii?Q?vjopOOSB7vFTlQhSsSU/vwTV+k4cHstgZTzz5Iqw5o3BRGVPabCcXJ8b8IQi?=
+ =?us-ascii?Q?kekSLlaWvO16WTaGNCHAT6FO5dSJ02cM/tuZ+KZHIu4UWglhk1k3Qbx+CrtN?=
+ =?us-ascii?Q?S/ePL1bjqkCOzj6AClPCUHvmin1qbXN073e8h94fWIhINgIhgS+OtOxHi42l?=
+ =?us-ascii?Q?3rF6H6c1c3ArfrpEeiWVw3z4jT7DxKyh54hIhKtrHEyV8GL1Ml7p+XRS/uvG?=
+ =?us-ascii?Q?rqni04dtH1BsHxS1szXuvSKq+LRJNq+/mnJp/03OhhiiXBnJUs3mefCZachm?=
+ =?us-ascii?Q?HGD+Bsp0jeacBmoLRr2+PDshq8VAywE2N9qjNYs0B/+k48Ni4aPI3K6jmA43?=
+ =?us-ascii?Q?yY2DJMPV71K3PzeHYurTLjmm3vczJCZEQeiIAyPNOArcwTk/HXBWdb2jc/hE?=
+ =?us-ascii?Q?rZVte0NNDD6RMooaRt9OGc6ezRuLj6G9RPQshenhlhilI1aKBH6Fli28Clrx?=
+ =?us-ascii?Q?1w6hWpRxxIfAwWot6tDKlsrK0xP00wSjpTUR3ppUAN1NNpFiudBPboFPl8Bm?=
+ =?us-ascii?Q?5073CBEMlcQtWNV1d9NgttAdaeKQYStCq0lOXbfZYgrU75exnE8WjSqpke/m?=
+ =?us-ascii?Q?jMkWlU29pTkrvxwLifMpaa1DGweZ5wKwNQkcHx0zTf6J+5DkOwqRTNeXsKH4?=
+ =?us-ascii?Q?WFKVMbUPAK84AJ78wLncMxLGYF0IP4fFZ4Q570HXRqbZso+6aiLGS1vno9l8?=
+ =?us-ascii?Q?D5AOfS+xwyGBkLry8zDumh/ArqiExcyZSdQBMMIXu+OYD7Zdyy+a8xvk9a6Q?=
+ =?us-ascii?Q?NF31rXdCfxMSRM78koOfI8HGgUrIIgyIGpInZLHk6nQxuzly7P5mgmAVvBoD?=
+ =?us-ascii?Q?yKSmT9An6K/hSFnMpu68SO9wADo4jPRBrHrava/v4q5MNVU3gL9Y8UWG+w/g?=
+ =?us-ascii?Q?z5QiwVg19CGWCw/j7xVMSxFLYpH+Zeoz/8j/Ns/GH3F2iYW7Szg9D+O6xj/F?=
+ =?us-ascii?Q?hcSXqGArH8YynJ/tyFa5d6JL5kjQqGefHG9OCr9p7OfzIh338NEBpsRJ58Fr?=
+ =?us-ascii?Q?0Uoe/CD8YS0VuEi19U9+PbmFdhZ70gLKCNgBZ5dA6bAfy5Bb23DlEgo7vq0H?=
+ =?us-ascii?Q?1II03bqt+lGEtUXKdXyBKp0m9tybHt7M3tDjs3Tj4C2bnfmlZe1rTiacR9/c?=
+ =?us-ascii?Q?UeZcoEP6B0abU2+Gjn99+WtaXUykV9kx2Vg3GToOsnH/khGPXNe0/YbnT2+S?=
+ =?us-ascii?Q?NEaFwpwpEYSxo/mE+ZtSQy/OA1ZetIX6ku83vbjdy9QGEp5xUy+4skDgQhNO?=
+ =?us-ascii?Q?qxBTaURepGsi9LDjcJrCD9Iy0da47/vKaVu8BPcShCZ8+selbD/YUFuT0oKw?=
+ =?us-ascii?Q?kBXZAj6tdGquC710+eF4/xG+IxReW40t9MrL1Cjxg6J/ec4fyftJEh6gta/B?=
+ =?us-ascii?Q?X/wnMwjENA6qUFWNXutj9FbYJJY40y2KN9pniDsp?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44c14e52-faaa-4fb2-05dc-08dde74c871c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e8faeb5-861b-4ce7-8fcc-08dde74c8839
 X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5968.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2025 22:36:42.9331
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2025 22:36:44.7151
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6NLjfCJ9lDAImmfAfcu23vQHJJL3xDgMppAQu6RzsnisBt+Ye8wXZMrBKpKbtDjTdyDZG3vXtVA/wRgUs2rNZw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: dVEGBL7cR96Jvg3Jriqnjqly5y2UUdCo96xlCVrbtwDgmaPdSARyGTC7z/CnyJ/oOhoI3zXpZn4vpPTnsdclYA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPF0D942FA9A
 
-Change Device::vendor_id() to return a Vendor type, and change
-DeviceId::from_id() to accept a Vendor type.
-
-Use the new pci::Vendor in the various Rust for Linux callers who were
-previously using bindings::PCI_VENDOR_ID_*.
-
-Doing so also allows removing "use kernel::bindings" entirely from most
-of the affected files here.
-
-Also, mark vendor_id() as inline.
+Several previous commits added Vendor and Class functionality. As part
+of that, the new functions were inlined where appropriate. But that left
+this file with inconsistent use of inlining. Fix that by inlining the
+remaining items that should be.
 
 Cc: Danilo Krummrich <dakr@kernel.org>
 Cc: Elle Rhumsaa <elle@weathered-steel.dev>
 Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- rust/kernel/pci.rs                    | 33 +++++++++++++++++++++------
- rust/kernel/pci/id.rs                 |  1 -
- samples/rust/rust_dma.rs              |  6 +----
- samples/rust/rust_driver_auxiliary.rs | 12 ++++------
- samples/rust/rust_driver_pci.rs       |  9 ++++----
- 5 files changed, 37 insertions(+), 24 deletions(-)
+ rust/kernel/pci.rs | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 26974cae4a22..39a152da297c 100644
+index 39a152da297c..f683af938628 100644
 --- a/rust/kernel/pci.rs
 +++ b/rust/kernel/pci.rs
-@@ -132,10 +132,10 @@ impl DeviceId {
- 
+@@ -133,6 +133,7 @@ impl DeviceId {
      /// Equivalent to C's `PCI_DEVICE` macro.
      ///
--    /// Create a new `pci::DeviceId` from a vendor and device ID number.
--    pub const fn from_id(vendor: u32, device: u32) -> Self {
-+    /// Create a new `pci::DeviceId` from a vendor and device ID.
-+    pub const fn from_id(vendor: Vendor, device: u32) -> Self {
+     /// Create a new `pci::DeviceId` from a vendor and device ID.
++    #[inline]
+     pub const fn from_id(vendor: Vendor, device: u32) -> Self {
          Self(bindings::pci_device_id {
--            vendor,
-+            vendor: vendor.as_raw() as u32,
-             device,
-             subvendor: DeviceId::PCI_ANY_ID,
-             subdevice: DeviceId::PCI_ANY_ID,
-@@ -232,7 +232,7 @@ macro_rules! pci_device_table {
- ///     <MyDriver as pci::Driver>::IdInfo,
- ///     [
- ///         (
--///             pci::DeviceId::from_id(bindings::PCI_VENDOR_ID_REDHAT, bindings::PCI_ANY_ID as u32),
-+///             pci::DeviceId::from_id(pci::Vendor::REDHAT, bindings::PCI_ANY_ID as u32),
- ///             (),
- ///         )
- ///     ]
-@@ -413,10 +413,29 @@ fn as_raw(&self) -> *mut bindings::pci_dev {
+             vendor: vendor.as_raw() as u32,
+@@ -149,6 +150,7 @@ pub const fn from_id(vendor: Vendor, device: u32) -> Self {
+     /// Equivalent to C's `PCI_DEVICE_CLASS` macro.
+     ///
+     /// Create a new `pci::DeviceId` from a class number and mask.
++    #[inline]
+     pub const fn from_class(class: u32, class_mask: u32) -> Self {
+         Self(bindings::pci_device_id {
+             vendor: DeviceId::PCI_ANY_ID,
+@@ -385,6 +387,7 @@ fn release(&self) {
  }
  
- impl Device {
--    /// Returns the PCI vendor ID.
--    pub fn vendor_id(&self) -> u16 {
-+    /// Returns the PCI vendor ID as a validated Vendor.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// # use kernel::{device::Core, pci::{self, Vendor}, prelude::*};
-+    /// fn log_device_info(pdev: &pci::Device<Core>) -> Result<()> {
-+    ///     // Get the validated PCI vendor ID
-+    ///     let vendor = pdev.vendor_id();
-+    ///     dev_info!(
-+    ///         pdev.as_ref(),
-+    ///         "Device: Vendor={}, Device=0x{:x}\n",
-+    ///         vendor,
-+    ///         pdev.device_id()
-+    ///     );
-+    ///     Ok(())
-+    /// }
-+    /// ```
+ impl Bar {
 +    #[inline]
-+    pub fn vendor_id(&self) -> Vendor {
-         // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev`.
--        unsafe { (*self.as_raw()).vendor }
-+        let vendor_id = unsafe { (*self.as_raw()).vendor };
-+        Vendor::from_raw(vendor_id)
+     fn index_is_valid(index: u32) -> bool {
+         // A `struct pci_dev` owns an array of resources with at most `PCI_NUM_RESOURCES` entries.
+         index < bindings::PCI_NUM_RESOURCES
+@@ -407,6 +410,7 @@ fn deref(&self) -> &Self::Target {
+ }
+ 
+ impl<Ctx: device::DeviceContext> Device<Ctx> {
++    #[inline]
+     fn as_raw(&self) -> *mut bindings::pci_dev {
+         self.0.get()
+     }
+@@ -439,6 +443,7 @@ pub fn vendor_id(&self) -> Vendor {
      }
  
      /// Returns the PCI device ID.
-diff --git a/rust/kernel/pci/id.rs b/rust/kernel/pci/id.rs
-index a7712df1fc43..47a3595e75be 100644
---- a/rust/kernel/pci/id.rs
-+++ b/rust/kernel/pci/id.rs
-@@ -132,7 +132,6 @@ impl Vendor {
- impl Vendor {
-     /// Create a Vendor from a raw 16-bit vendor ID.
-     /// Only accessible from the parent pci module.
--    #[expect(dead_code)]
-     #[inline]
-     pub(super) fn from_raw(vendor_id: u16) -> Self {
-         Self(vendor_id)
-diff --git a/samples/rust/rust_dma.rs b/samples/rust/rust_dma.rs
-index c5e7cce68654..f3385c4a7e5b 100644
---- a/samples/rust/rust_dma.rs
-+++ b/samples/rust/rust_dma.rs
-@@ -5,7 +5,6 @@
- //! To make this driver probe, QEMU must be run with `-device pci-testdev`.
++    #[inline]
+     pub fn device_id(&self) -> u16 {
+         // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev`.
+         unsafe { (*self.as_raw()).device }
+@@ -493,6 +498,7 @@ pub fn enable_device_mem(&self) -> Result {
+     }
  
- use kernel::{
--    bindings,
-     device::Core,
-     dma::{CoherentAllocation, Device, DmaMask},
-     pci,
-@@ -45,10 +44,7 @@ unsafe impl kernel::transmute::FromBytes for MyStruct {}
-     PCI_TABLE,
-     MODULE_PCI_TABLE,
-     <DmaSampleDriver as pci::Driver>::IdInfo,
--    [(
--        pci::DeviceId::from_id(bindings::PCI_VENDOR_ID_REDHAT, 0x5),
--        ()
--    )]
-+    [(pci::DeviceId::from_id(pci::Vendor::REDHAT, 0x5), ())]
- );
- 
- impl pci::Driver for DmaSampleDriver {
-diff --git a/samples/rust/rust_driver_auxiliary.rs b/samples/rust/rust_driver_auxiliary.rs
-index f2a820683fc3..55ece336ee45 100644
---- a/samples/rust/rust_driver_auxiliary.rs
-+++ b/samples/rust/rust_driver_auxiliary.rs
-@@ -5,7 +5,7 @@
- //! To make this driver probe, QEMU must be run with `-device pci-testdev`.
- 
- use kernel::{
--    auxiliary, bindings, c_str, device::Core, driver, error::Error, pci, prelude::*, InPlaceModule,
-+    auxiliary, c_str, device::Core, driver, error::Error, pci, prelude::*, InPlaceModule,
- };
- 
- use pin_init::PinInit;
-@@ -50,10 +50,7 @@ struct ParentDriver {
-     PCI_TABLE,
-     MODULE_PCI_TABLE,
-     <ParentDriver as pci::Driver>::IdInfo,
--    [(
--        pci::DeviceId::from_id(bindings::PCI_VENDOR_ID_REDHAT, 0x5),
--        ()
--    )]
-+    [(pci::DeviceId::from_id(pci::Vendor::REDHAT, 0x5), ())]
- );
- 
- impl pci::Driver for ParentDriver {
-@@ -81,11 +78,12 @@ fn connect(adev: &auxiliary::Device) -> Result<()> {
-         let parent = adev.parent().ok_or(EINVAL)?;
-         let pdev: &pci::Device = parent.try_into()?;
- 
-+        let vendor = pdev.vendor_id();
-         dev_info!(
-             adev.as_ref(),
--            "Connect auxiliary {} with parent: VendorID={:#x}, DeviceID={:#x}\n",
-+            "Connect auxiliary {} with parent: VendorID={}, DeviceID={:#x}\n",
-             adev.id(),
--            pdev.vendor_id(),
-+            vendor,
-             pdev.device_id()
-         );
- 
-diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
-index 606946ff4d7f..f3819ac4bad6 100644
---- a/samples/rust/rust_driver_pci.rs
-+++ b/samples/rust/rust_driver_pci.rs
-@@ -4,7 +4,7 @@
- //!
- //! To make this driver probe, QEMU must be run with `-device pci-testdev`.
- 
--use kernel::{bindings, c_str, device::Core, devres::Devres, pci, prelude::*, types::ARef};
-+use kernel::{c_str, device::Core, devres::Devres, pci, prelude::*, types::ARef};
- 
- struct Regs;
- 
-@@ -38,7 +38,7 @@ struct SampleDriver {
-     MODULE_PCI_TABLE,
-     <SampleDriver as pci::Driver>::IdInfo,
-     [(
--        pci::DeviceId::from_id(bindings::PCI_VENDOR_ID_REDHAT, 0x5),
-+        pci::DeviceId::from_id(pci::Vendor::REDHAT, 0x5),
-         TestIndex::NO_EVENTFD
-     )]
- );
-@@ -66,10 +66,11 @@ impl pci::Driver for SampleDriver {
-     const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
- 
-     fn probe(pdev: &pci::Device<Core>, info: &Self::IdInfo) -> Result<Pin<KBox<Self>>> {
-+        let vendor = pdev.vendor_id();
-         dev_dbg!(
-             pdev.as_ref(),
--            "Probe Rust PCI driver sample (PCI ID: 0x{:x}, 0x{:x}).\n",
--            pdev.vendor_id(),
-+            "Probe Rust PCI driver sample (PCI ID: {}, 0x{:x}).\n",
-+            vendor,
-             pdev.device_id()
-         );
- 
+     /// Enable bus-mastering for this device.
++    #[inline]
+     pub fn set_master(&self) {
+         // SAFETY: `self.as_raw` is guaranteed to be a pointer to a valid `struct pci_dev`.
+         unsafe { bindings::pci_set_master(self.as_raw()) };
 -- 
 2.51.0
 
