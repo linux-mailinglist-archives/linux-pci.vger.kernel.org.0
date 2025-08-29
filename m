@@ -1,157 +1,176 @@
-Return-Path: <linux-pci+bounces-35127-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35128-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17905B3BFC8
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 17:49:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50011B3BFC6
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 17:49:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC5AF3AEE6C
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 15:47:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D358217C13A
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 15:48:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A37392236E5;
-	Fri, 29 Aug 2025 15:47:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 671C1326D7A;
+	Fri, 29 Aug 2025 15:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LIZDY4St"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689151FDA8E;
-	Fri, 29 Aug 2025 15:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F422326D6E;
+	Fri, 29 Aug 2025 15:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756482455; cv=none; b=b6QRqza4XYiHQndCN3DezjsJZzfLu1YfITVlSQKpXQhDzFwFGFa3gSq35tSZmI9nxYVYCR0q8TTZwLXmf2qEdUwR4B1EE7oukxo3xPRAJ1Oqtd1/Q2yPV6kA0yxdZOLhkIM2fEacOLTvbGaJRkUsDRDYAeeV0GYFbH4f5pDGdis=
+	t=1756482506; cv=none; b=hcSnGMc4iJ8O6s9bMhGU2kyt68bvg/MiIVF2r2MArtAq0oNoNePeMbbSoeVaY25g/GvCKA6DA0utplmxw+ncYImmckFNAibTHicqK+t3+myczKDhB0WSVJc1zHfs/8FEhlN6zoSn+tJe3IL7F4HYPwABI+6eW7I48/BHemZYtJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756482455; c=relaxed/simple;
-	bh=nWH1E+8SRzunXLKT1X0dDOrORgycPjOh4GuZcsujFBQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sLxh6/bgwX5oJRbPWYEtr2uALxE1p28Fslr2kc049iR0Aia/7JhQoQXNjrRYtlrhoctoJM+f59841RoG0HNdCkR9M4I+E2SdsR1vt6xNGJYE8F4/m/IHWYVnp9Uy2B7l0mzq8W7S96e6eC9cF2ifdVynHvRTwVGKCT5AAAjYVE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cD2cY43R0z6L508;
-	Fri, 29 Aug 2025 23:43:57 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8D227140370;
-	Fri, 29 Aug 2025 23:47:29 +0800 (CST)
-Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 29 Aug
- 2025 17:47:28 +0200
-Date: Fri, 29 Aug 2025 16:47:27 +0100
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Lukas Wunner <lukas@wunner.de>
-CC: Terry Bowman <terry.bowman@amd.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <Benjamin.Cheatham@amd.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
-	<alucerop@amd.com>, <ira.weiny@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <shiju.jose@huawei.com>
-Subject: Re: [PATCH v11 07/23] CXL/PCI: Move CXL DVSEC definitions into
- uapi/linux/pci_regs.h
-Message-ID: <20250829164727.00004d18@huawei.com>
-In-Reply-To: <aK8bY0epS6OStdfr@wunner.de>
-References: <20250827013539.903682-1-terry.bowman@amd.com>
-	<20250827013539.903682-8-terry.bowman@amd.com>
-	<aK8bY0epS6OStdfr@wunner.de>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1756482506; c=relaxed/simple;
+	bh=SuR/4PvyX3AQ13jiY8VYnneI4pJyFeidjVrUVvNAUMQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lhjZKnvgdMeLfwG3FW9tT0WqXcVyUueLUOGy2UYsLth4a1/ngQNpbsWXvPOxdkOR0K6MMnrqAgVE0TDBcdzYHpoLf9PnXBT5blnyh85PhmQAreZtDk7qF/4MJmmYOx0Uvs52usGfhUfgCyVFREAG4/WOMzC4/6KugZoORofjRBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LIZDY4St; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E01CC4CEF7;
+	Fri, 29 Aug 2025 15:48:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756482505;
+	bh=SuR/4PvyX3AQ13jiY8VYnneI4pJyFeidjVrUVvNAUMQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LIZDY4StLXVa/LB5d9TsXGTHLSuUzB04YE5nCWjZ/7J6S/WvboX0d3QndN9OcCQVu
+	 b2qvGly3nZnPQ2KS+LiPs5Gm+BG5nEp1o05HyNvGbJRTgLfN4fDbcEW2Wk+vIsB21t
+	 8jdEC59wBRKTAAW8ItIIqBMzLw/MquU4IJN0tDHei2eSs8AsGV7Fm7XZZKo8Jh6Uaf
+	 Xypbie2z45y0uYQ4z4ZfuK4bQOisvTaDlPuIxtx/Dao7AqMxTwlRF2RAObSQflYDGj
+	 hCKr2J7EqQFBFEu5z6URC1OexkAmkg76LhVY/kPYY5J+pv7S+6V7tF6y7V9VtlYBJh
+	 +cU35ODJSZQkA==
+From: Frederic Weisbecker <frederic@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tejun Heo <tj@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Waiman Long <longman@redhat.com>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH 02/33] PCI: Protect against concurrent change of housekeeping cpumask
+Date: Fri, 29 Aug 2025 17:47:43 +0200
+Message-ID: <20250829154814.47015-3-frederic@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250829154814.47015-1-frederic@kernel.org>
+References: <20250829154814.47015-1-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Wed, 27 Aug 2025 16:51:15 +0200
-Lukas Wunner <lukas@wunner.de> wrote:
+HK_TYPE_DOMAIN will soon integrate cpuset isolated partitions and
+therefore be made modifyable at runtime. Synchronize against the cpumask
+update using RCU.
 
-> On Tue, Aug 26, 2025 at 08:35:22PM -0500, Terry Bowman wrote:
-> > The CXL DVSECs are currently defined in cxl/core/cxlpci.h. These are not
-> > accessible to other subsystems.
-> > 
-> > Change DVSEC name formatting to follow the existing PCI format in
-> > pci_regs.h. The current format uses CXL_DVSEC_XYZ. Change to be PCI_DVSEC_CXL_XYZ.  
-> [...]
-> > +++ b/include/uapi/linux/pci_regs.h
-> > @@ -1225,9 +1225,61 @@
-> >  /* Deprecated old name, replaced with PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE */
-> >  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE
-> >  
-> > -/* Compute Express Link (CXL r3.1, sec 8.1.5) */
-> > -#define PCI_DVSEC_CXL_PORT				3
-> > -#define PCI_DVSEC_CXL_PORT_CTL				0x0c
-> > -#define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
-> > +/* Compute Express Link (CXL r3.2, sec 8.1)
-> > + *
-> > + * Note that CXL DVSEC id 3 and 7 to be ignored when the CXL link state
-> > + * is "disconnected" (CXL r3.2, sec 9.12.3). Re-enumerate these
-> > + * registers on downstream link-up events.
-> > + */
-> > +
-> > +#define PCI_DVSEC_HEADER1_LENGTH_MASK  GENMASK(31, 20)
-> > +
-> > +/* CXL 3.2 8.1.3: PCIe DVSEC for CXL Device */
-> > +#define PCI_DVSEC_CXL_DEVICE					0
-> > +#define	  PCI_DVSEC_CXL_CAP_OFFSET	       0xA
-> > +#define	    PCI_DVSEC_CXL_MEM_CAPABLE	       BIT(2)
-> > +#define	    PCI_DVSEC_CXL_HDM_COUNT_MASK       GENMASK(5, 4)
-> > +#define	  PCI_DVSEC_CXL_CTRL_OFFSET	       0xC
-> > +#define	    PCI_DVSEC_CXL_MEM_ENABLE	       BIT(2)
-> > +#define	  PCI_DVSEC_CXL_RANGE_SIZE_HIGH(i)     (0x18 + (i * 0x10))
-> > +#define	  PCI_DVSEC_CXL_RANGE_SIZE_LOW(i)      (0x1C + (i * 0x10))
-> > +#define	    PCI_DVSEC_CXL_MEM_INFO_VALID       BIT(0)
-> > +#define	    PCI_DVSEC_CXL_MEM_ACTIVE	       BIT(1)
-> > +#define	    PCI_DVSEC_CXL_MEM_SIZE_LOW_MASK    GENMASK(31, 28)
-> > +#define	  PCI_DVSEC_CXL_RANGE_BASE_HIGH(i)     (0x20 + (i * 0x10))
-> > +#define	  PCI_DVSEC_CXL_RANGE_BASE_LOW(i)      (0x24 + (i * 0x10))
-> > +#define	    PCI_DVSEC_CXL_MEM_BASE_LOW_MASK    GENMASK(31, 28)  
-> 
-> Is it legal to use BIT() in a uapi header?
-> 
-> We've only allowed use of GENMASK() in uapi headers since 2023 with
-> commit 3c7a8e190bc5 ("uapi: introduce uapi-friendly macros for GENMASK").
-> 
+The RCU locked section includes both the housekeeping CPU target
+election for the PCI probe work and the work enqueue.
 
-I was curious, so went looking at that series.
-There was a second patch that has what we need here
-https://lore.kernel.org/all/20240131225010.2872733-3-pbonzini@redhat.com/
+This way the housekeeping update side will simply need to flush the
+pending related works after updating the housekeeping mask in order to
+make sure that no PCI work ever executes on an isolated CPU.
 
-So upshot is we should use _BITUL() for user space headers defined in
-uapi/linux/const.h, also should be using  __GENMASK() not GENMASK()
-in uapi/cxl/features.h
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+---
+ drivers/pci/pci-driver.c | 40 +++++++++++++++++++++++++++++++---------
+ 1 file changed, 31 insertions(+), 9 deletions(-)
 
-Anyhow fancy fixing up the existing cxl headers?  I'll get to it maybe but
-will be a while as have a massive review backlog.
-
-Jonathan
-
-
-
-> But there is no uapi header in the kernel tree defining BIT().
-> 
-> I note that include/uapi/cxl/features.h has plenty of occurrences of BIT()
-> since commit 9b8e73cdb141 ("cxl: Move cxl feature command structs to user
-> header"), which went into v6.15.
-> 
-> ndctl contains a bitmap.h header defining BIT(), I guess that's why this
-> wasn't perceived as a problem so far:
-> https://github.com/pmem/ndctl/raw/main/util/bitmap.h
-> 
-> However existing user space applications including <linux/pci_regs.h>
-> may not have a BIT() definition and I suspect your change above will
-> break the build of those applications.
-> 
-> Thanks,
-> 
-> Lukas
-> 
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 63665240ae87..cf2b83004886 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -302,9 +302,8 @@ struct drv_dev_and_id {
+ 	const struct pci_device_id *id;
+ };
+ 
+-static long local_pci_probe(void *_ddi)
++static int local_pci_probe(struct drv_dev_and_id *ddi)
+ {
+-	struct drv_dev_and_id *ddi = _ddi;
+ 	struct pci_dev *pci_dev = ddi->dev;
+ 	struct pci_driver *pci_drv = ddi->drv;
+ 	struct device *dev = &pci_dev->dev;
+@@ -338,6 +337,19 @@ static long local_pci_probe(void *_ddi)
+ 	return 0;
+ }
+ 
++struct pci_probe_arg {
++	struct drv_dev_and_id *ddi;
++	struct work_struct work;
++	int ret;
++};
++
++static void local_pci_probe_callback(struct work_struct *work)
++{
++	struct pci_probe_arg *arg = container_of(work, struct pci_probe_arg, work);
++
++	arg->ret = local_pci_probe(arg->ddi);
++}
++
+ static bool pci_physfn_is_probed(struct pci_dev *dev)
+ {
+ #ifdef CONFIG_PCI_IOV
+@@ -362,34 +374,44 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
+ 	dev->is_probed = 1;
+ 
+ 	cpu_hotplug_disable();
+-
+ 	/*
+ 	 * Prevent nesting work_on_cpu() for the case where a Virtual Function
+ 	 * device is probed from work_on_cpu() of the Physical device.
+ 	 */
+ 	if (node < 0 || node >= MAX_NUMNODES || !node_online(node) ||
+ 	    pci_physfn_is_probed(dev)) {
+-		cpu = nr_cpu_ids;
++		error = local_pci_probe(&ddi);
+ 	} else {
+ 		cpumask_var_t wq_domain_mask;
++		struct pci_probe_arg arg = { .ddi = &ddi };
++
++		INIT_WORK_ONSTACK(&arg.work, local_pci_probe_callback);
+ 
+ 		if (!zalloc_cpumask_var(&wq_domain_mask, GFP_KERNEL)) {
+ 			error = -ENOMEM;
+ 			goto out;
+ 		}
++
++		rcu_read_lock();
+ 		cpumask_and(wq_domain_mask,
+ 			    housekeeping_cpumask(HK_TYPE_WQ),
+ 			    housekeeping_cpumask(HK_TYPE_DOMAIN));
+ 
+ 		cpu = cpumask_any_and(cpumask_of_node(node),
+ 				      wq_domain_mask);
++		if (cpu < nr_cpu_ids) {
++			schedule_work_on(cpu, &arg.work);
++			rcu_read_unlock();
++			flush_work(&arg.work);
++			error = arg.ret;
++		} else {
++			rcu_read_unlock();
++			error = local_pci_probe(&ddi);
++		}
++
+ 		free_cpumask_var(wq_domain_mask);
++		destroy_work_on_stack(&arg.work);
+ 	}
+-
+-	if (cpu < nr_cpu_ids)
+-		error = work_on_cpu(cpu, local_pci_probe, &ddi);
+-	else
+-		error = local_pci_probe(&ddi);
+ out:
+ 	dev->is_probed = 0;
+ 	cpu_hotplug_enable();
+-- 
+2.51.0
 
 
