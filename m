@@ -1,195 +1,293 @@
-Return-Path: <linux-pci+bounces-35142-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35143-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B784B3C26A
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 20:30:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C7C3B3C367
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 21:54:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23FE8584334
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 18:30:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5C0FF7B7DAA
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 19:52:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76A7E1F4192;
-	Fri, 29 Aug 2025 18:30:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82DD622D4F1;
+	Fri, 29 Aug 2025 19:54:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DVvGhHIH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IlGoXjak"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABE515E5D4
-	for <linux-pci@vger.kernel.org>; Fri, 29 Aug 2025 18:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B092566;
+	Fri, 29 Aug 2025 19:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756492232; cv=none; b=Pgby0aybI7Yv6/WQjRjYUgYobon4SZvQbe4q+v9ne+3g0W7sdv8S/vEHc0O0a1ujlTSRPIJf2TeEhZL5sVHpvwceGSBEeb49LXRWCKeayVNFWCnga5CuPA1En8y+lNBZGc0SaMxpAnHTGwKsW2k/ZLiiLzr3H/4+P6q97Tp+59Q=
+	t=1756497264; cv=none; b=qWaUcFQ9wtB1bEaEz5XMGS5LJH3B943GfQ0X8RCRKtk9M/sPufBhQIqo3dF+t1zHoGnujRki6HTzgdaf9WJnmedvDD34wFY27XR4sPztP28A0u+/ce0YAzIbHXVbg30/lwkCd5yrm+cOhNIyOiUnkFefQUzyfT0zNI0GoRDFEeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756492232; c=relaxed/simple;
-	bh=OEW5E12Pb0jECMsXIzz+j4OujEE6zBqovp+qr5kgmrw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=k8ogJTjeUvsQEwz+agFHSVzffD3L+58Y7s53MDCsPtVUDFWfN5kFJWC5IbylJQfTM7Ru5iCgU1wiWftw3XNRPgROO5Znm8hl+5f0yRZPrL6tXJyLpgXAocHj/iy9HxoWT1fKQfZhsOAUpCjmCIfPn4ARkbw17VNZQFrTMYGks38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DVvGhHIH; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1756497264; c=relaxed/simple;
+	bh=T3UBBOZlqKJig0jZysKSF3BxzvTAu4H/69urY0rfYOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eLmzb8kD7F6YVQ+tVnVcn0oqVvpHngHzuzx8L8tFzGEyMv0kJVespCofmpnzVDiTw0fTz7YamT8EEZ/HLtjJkAEReKUx7SeoDlrahAApy/iqUpWkzv41G9cBvvewJ0hHsi7B1FIyC1gPZchq25T9odj1KtjoSd/WMKXttpVF/Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IlGoXjak; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756492231; x=1788028231;
-  h=date:from:to:cc:subject:message-id;
-  bh=OEW5E12Pb0jECMsXIzz+j4OujEE6zBqovp+qr5kgmrw=;
-  b=DVvGhHIH5izJRNV/e7sK5c+rtiGsCL73lugKwFHXEG6BJU1wnHoDkWAK
-   sGVPC4+oUVGIPGM7OG78JPtPLQaLktT7mzIh9tJPswqHgHhflzH63EXiR
-   SDTySc1CrHKqfnSFizwYd/6wYr1kFWCDMQl4+T5vcRCsOSIFIDtBudAat
-   LD2EMiPwvfMJd1XqrT3RLE/oSjzFTRk7v8KKCCXOB/HEzzTXkuXq/dWuS
-   58rSj+HTvgJJb4tflBuLKyqZTSUhAWzfCgJLTvenw7szj5iJMb6OVn7d5
-   4aYdKInhevihyKRyu+S4CZFGDDwBzS8d8I+gt5lXuynDp7tPEaF7cEXro
-   A==;
-X-CSE-ConnectionGUID: As+NfAIBQ3CpHSvs8dAvBg==
-X-CSE-MsgGUID: lBdLGGeWSDKCKtpccsLB5Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11537"; a="76384553"
-X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
-   d="scan'208";a="76384553"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 11:30:30 -0700
-X-CSE-ConnectionGUID: 66wJIZqsQEe7nNNuE0raqw==
-X-CSE-MsgGUID: WTO/QskfSNqZ0J6cnSxd8g==
+  t=1756497263; x=1788033263;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=T3UBBOZlqKJig0jZysKSF3BxzvTAu4H/69urY0rfYOo=;
+  b=IlGoXjakLVBBaNbB4FBgxVmIwKottaCSOJoBmEGvTsdZ4PZcKHOdA6yx
+   hSVZQD0ZSwVycqWNnOvKysrhwo+UwX+dDI8uJStC4I4ET0ZecVwG1Q3Zh
+   6wrlKUHQwsisDF6ZoTdWUxuzDHNCL8VmRHy6shLMa2WAEVu3lWQ7Ffyps
+   i44HdVV36BYQsEUr3NPwykJiqwNSfxGKqlY+ofeJhz2Wi9fVx7puzF/oi
+   ja8Or/jvgu5Q0efpsB2IV6ayh9H17rilErTWftRzoPrbYmafTDP2/cZ/q
+   3OX67JAEO+T/pvvBKqCkUr1h+rQfjFG46/CyUU80gNMwI1MKWmeMLWBdJ
+   w==;
+X-CSE-ConnectionGUID: f5sqf0NxSMSwZ9sLlt3jLA==
+X-CSE-MsgGUID: 9EFVoDBNRKuSufiSWoxVTw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="81383561"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="81383561"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 12:54:22 -0700
+X-CSE-ConnectionGUID: G2Uf9fqxQVexfUAEWEPS0Q==
+X-CSE-MsgGUID: RfFZ+qHsTjuTFAC2qX1Gxw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
-   d="scan'208";a="170612314"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 29 Aug 2025 11:30:28 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1us3rm-000Urm-24;
-	Fri, 29 Aug 2025 18:30:26 +0000
-Date: Sat, 30 Aug 2025 02:27:39 +0800
-From: kernel test robot <lkp@intel.com>
+Received: from rfrazer-mobl3.amr.corp.intel.com (HELO localhost) ([10.124.220.169])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 12:54:21 -0700
+Date: Fri, 29 Aug 2025 12:54:20 -0700
+From: David Box <david.e.box@linux.intel.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:resource] BUILD SUCCESS
- d6f264fca58c9d2bc8fb7bd0e0ba52335f34f6a9
-Message-ID: <202508300230.Nh5jYdx6-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Cc: rafael@kernel.org, bhelgaas@google.com, vicamo.yang@canonical.com, 
+	kenny@panix.com, ilpo.jarvinen@linux.intel.com, nirmal.patel@linux.intel.com, 
+	mani@kernel.org, linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 1/2] PCI/ASPM: Add host-bridge API to override default
+ ASPM/CLKPM link state
+Message-ID: <ng67s7imjpj7i5ym7unvmewzhyk4ybgpkgw5aizicfs423vsxh@hvpfmk32ooe4>
+References: <20250825203542.3502368-1-david.e.box@linux.intel.com>
+ <20250828204345.GA958461@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250828204345.GA958461@bhelgaas>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git resource
-branch HEAD: d6f264fca58c9d2bc8fb7bd0e0ba52335f34f6a9  PCI: Alter misleading recursion to pci_bus_release_bridge_resources()
+On Thu, Aug 28, 2025 at 03:43:45PM -0500, Bjorn Helgaas wrote:
+> On Mon, Aug 25, 2025 at 01:35:22PM -0700, David E. Box wrote:
+> > Synthetic PCIe hierarchies, such as those created by Intel VMD, are not
+> > enumerated by firmware and do not receive BIOS-provided ASPM or CLKPM
+> > defaults. Devices in such domains may therefore run without the intended
+> > power management.
+> > 
+> > Add a host-bridge mechanism that lets controller drivers supply their own
+> > defaults. A new aspm_default_link_state field in struct pci_host_bridge is
+> > set via pci_host_set_default_pcie_link_state(). During link initialization,
+> > if this field is non-zero, ASPM and CLKPM defaults come from it instead of
+> > BIOS.
+> > 
+> > This enables drivers like VMD to align link power management with platform
+> > expectations and avoids embedding controller-specific quirks in ASPM core
+> > logic.
+> 
+> I think this kind of sidesteps the real issue.  Drivers for host
+> controllers or PCI devices should tell us about *broken* things, but
+> not about things advertised by the hardware and available for use.
 
-elapsed time: 1455m
+I agree with the principle. The intent isn’t for VMD (or any controller) to
+override valid platform policy. It’s to handle synthetic domains where the
+platform doesn’t provide any policy path (no effective _OSC/FADT for the child
+hierarchy). In those cases, the controller is the only agent that knows the
+topology and can supply sane defaults.
 
-configs tested: 102
-configs skipped: 4
+I’m happy to tighten the patch to explicitly cover synthetic domains only.
+Instead of an API, we could have a boolean flag 'aspm_synthetic_domain'. When
+set by the controller, we can do:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+    if (host_bridge->aspm_synthetic_domain)
+            link->aspm_default = PCIE_LINK_STATE_ALL;
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250829    gcc-8.5.0
-arc                   randconfig-002-20250829    gcc-10.5.0
-arc                        vdk_hs38_defconfig    gcc-15.1.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                      jornada720_defconfig    clang-22
-arm                   randconfig-001-20250829    gcc-10.5.0
-arm                   randconfig-002-20250829    clang-22
-arm                   randconfig-003-20250829    clang-22
-arm                   randconfig-004-20250829    clang-22
-arm                             rpc_defconfig    clang-18
-arm                           sama5_defconfig    gcc-15.1.0
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250829    clang-22
-arm64                 randconfig-002-20250829    gcc-12.5.0
-arm64                 randconfig-003-20250829    clang-22
-arm64                 randconfig-004-20250829    gcc-9.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250829    gcc-9.5.0
-csky                  randconfig-002-20250829    gcc-10.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250829    clang-22
-hexagon               randconfig-002-20250829    clang-22
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386        buildonly-randconfig-001-20250829    gcc-12
-i386        buildonly-randconfig-002-20250829    clang-20
-i386        buildonly-randconfig-003-20250829    clang-20
-i386        buildonly-randconfig-004-20250829    clang-20
-i386        buildonly-randconfig-005-20250829    gcc-12
-i386        buildonly-randconfig-006-20250829    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20250829    clang-22
-loongarch             randconfig-002-20250829    clang-22
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250829    gcc-11.5.0
-nios2                 randconfig-002-20250829    gcc-11.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250829    gcc-14.3.0
-parisc                randconfig-002-20250829    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                    amigaone_defconfig    gcc-15.1.0
-powerpc                    mvme5100_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20250829    gcc-13.4.0
-powerpc               randconfig-002-20250829    clang-22
-powerpc               randconfig-003-20250829    gcc-12.5.0
-powerpc64             randconfig-001-20250829    clang-22
-powerpc64             randconfig-002-20250829    clang-22
-powerpc64             randconfig-003-20250829    gcc-8.5.0
-riscv                             allnoconfig    gcc-15.1.0
-riscv                 randconfig-001-20250830    gcc-8.5.0
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250830    clang-22
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                  sh7785lcr_32bit_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250829    gcc-11
-x86_64      buildonly-randconfig-002-20250829    gcc-11
-x86_64      buildonly-randconfig-003-20250829    gcc-12
-x86_64      buildonly-randconfig-004-20250829    clang-20
-x86_64      buildonly-randconfig-005-20250829    clang-20
-x86_64      buildonly-randconfig-006-20250829    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
+This at least addresses your concern about policy decision, leaving it to the
+core to determine how these domains are handled rather than an ABI that lets
+domains set policy.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> The only documented policy controls I'm aware of for ASPM are:
+> 
+>   - FADT "PCIe ASPM Controls" bit ("if set, OS must not enable ASPM
+>     control on this platform")
+> 
+>   - _OSC negotiation for control of the PCIe Capability (OS is only
+>     allowed to write PCI_EXP_LNKCTL if platform has granted control to
+>     the OS)
+> 
+> I think what we *should* be doing is enabling ASPM when it's
+> advertised, subject to those platform policy controls and user choices
+> like CONFIG_PCIEASPM_PERFORMANCE/POWERSAVE/etc and sysfs attributes.
+> 
+> So basically I think link->aspm_default should be PCIE_LINK_STATE_ALL
+> without drivers doing anything at all.  Maybe we have to carve out
+> exceptions, e.g., "VMD hierarchies are exempt from _OSC," or "devices
+> on x86 systems before 2026 can't enable more ASPM than BIOS did," or
+> whatever.  Is there any baby step we can make in that direction?
+> 
+> This feels a little scary, so feel free to convince me it can't be
+> done :)
+
+I understand your direction of enabling all advertised states by default
+(subject to FADT/_OSC and user settings). To explore that, I’ll send an RFC in
+parallel with this patch that proposes a baby step, e.g.  add instrumentation so
+we can see where BIOS left capabilities unused, and make it opt-in via a boot
+param so we can evaluate impact safely.
+
+So this series will handle the VMD gap directly, and the RFC can kick off the
+wider discussion about defaults on ACPI-managed hosts. Does that sound like a
+reasonable approach and split?
+
+David
+
+> 
+> > Link: https://patchwork.ozlabs.org/project/linux-pci/patch/20250720190140.2639200-1-david.e.box%40linux.intel.com/
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > Tested-by: Manivannan Sadhasivam <mani@kernel.org>
+> > Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+> > ---
+> > Changes in V3:
+> >   -- Changed pci_host_get_default_pcie_link_state() argument name from
+> >      parent to dev.
+> >   -- Applied changelog tags
+> > 
+> > Changes in V2:
+> > 
+> >   -- Host field name changed to aspm_default_link_state.
+> >   -- Added get/set functions for aspm_default_link_state. Only the
+> >      setter is exported. Added a kernel-doc describing usage and
+> >      particulars around meaning of 0.
+> > 
+> > Changes in V1 from RFC:
+> > 
+> >   -- Rename field to aspm_dflt_link_state since it stores
+> >      PCIE_LINK_STATE_XXX flags, not a policy enum.
+> >   -- Move the field to struct pci_host_bridge since it's being applied to
+> >      the entire host bridge per Mani's suggestion.
+> >   -- During testing noticed that clkpm remained disabled and this was
+> >      also handled by the formerly used pci_enable_link_state(). Add a
+> >      check in pcie_clkpm_cap_init() as well to enable clkpm during init.
+> > 
+> >  drivers/pci/pcie/aspm.c | 42 +++++++++++++++++++++++++++++++++++++++--
+> >  include/linux/pci.h     |  9 +++++++++
+> >  2 files changed, 49 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index 919a05b97647..851ca3d68e55 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -373,6 +373,39 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+> >  	pcie_set_clkpm_nocheck(link, enable);
+> >  }
+> >  
+> > +/**
+> > + * pci_host_set_default_pcie_link_state - set controller-provided default ASPM/CLKPM mask
+> > + * @host: host bridge on which to apply the defaults
+> > + * @state: PCIE_LINK_STATE_XXX flags
+> > + *
+> > + * Allows a PCIe controller driver to specify the default ASPM and/or
+> > + * Clock Power Management (CLKPM) link state mask that will be used
+> > + * for links under this host bridge during ASPM/CLKPM capability init.
+> > + *
+> > + * The value is consumed in pcie_aspm_cap_init() and pcie_clkpm_cap_init()
+> > + * to override the firmware-discovered defaults.
+> > + *
+> > + * Interpretation of aspm_default_link_state:
+> > + *   - Nonzero: bitmask of PCIE_LINK_STATE_* values to be used as defaults
+> > + *   - Zero:    no override provided; ASPM/CLKPM defaults fall back to
+> > + *              values discovered in hardware/firmware
+> > + *
+> > + * Note: zero is always treated as "unset", not as "force ASPM/CLKPM off".
+> > + */
+> > +void pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
+> > +					  unsigned int state)
+> > +{
+> > +	host->aspm_default_link_state = state;
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_host_set_default_pcie_link_state);
+> > +
+> > +static u32 pci_host_get_default_pcie_link_state(struct pci_dev *dev)
+> > +{
+> > +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> > +
+> > +	return host ? host->aspm_default_link_state : 0;
+> > +}
+> > +
+> >  static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+> >  {
+> >  	int capable = 1, enabled = 1;
+> > @@ -394,7 +427,10 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+> >  			enabled = 0;
+> >  	}
+> >  	link->clkpm_enabled = enabled;
+> > -	link->clkpm_default = enabled;
+> > +	if (pci_host_get_default_pcie_link_state(link->pdev) & PCIE_LINK_STATE_CLKPM)
+> > +		link->clkpm_default = 1;
+> > +	else
+> > +		link->clkpm_default = enabled;
+> >  	link->clkpm_capable = capable;
+> >  	link->clkpm_disable = blacklist ? 1 : 0;
+> >  }
+> > @@ -866,7 +902,9 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+> >  	}
+> >  
+> >  	/* Save default state */
+> > -	link->aspm_default = link->aspm_enabled;
+> > +	link->aspm_default = pci_host_get_default_pcie_link_state(parent);
+> > +	if (!link->aspm_default)
+> > +		link->aspm_default = link->aspm_enabled;
+> >  
+> >  	/* Setup initial capable state. Will be updated later */
+> >  	link->aspm_capable = link->aspm_support;
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 59876de13860..8947cbaf9fa6 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -620,6 +620,10 @@ struct pci_host_bridge {
+> >  	unsigned int	size_windows:1;		/* Enable root bus sizing */
+> >  	unsigned int	msi_domain:1;		/* Bridge wants MSI domain */
+> >  
+> > +#ifdef CONFIG_PCIEASPM
+> > +	unsigned int	aspm_default_link_state;	/* Controller-provided default */
+> > +#endif
+> > +
+> >  	/* Resource alignment requirements */
+> >  	resource_size_t (*align_resource)(struct pci_dev *dev,
+> >  			const struct resource *res,
+> > @@ -1849,6 +1853,8 @@ int pci_disable_link_state(struct pci_dev *pdev, int state);
+> >  int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
+> >  int pci_enable_link_state(struct pci_dev *pdev, int state);
+> >  int pci_enable_link_state_locked(struct pci_dev *pdev, int state);
+> > +void pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
+> > +					  unsigned int state);
+> >  void pcie_no_aspm(void);
+> >  bool pcie_aspm_support_enabled(void);
+> >  bool pcie_aspm_enabled(struct pci_dev *pdev);
+> > @@ -1861,6 +1867,9 @@ static inline int pci_enable_link_state(struct pci_dev *pdev, int state)
+> >  { return 0; }
+> >  static inline int pci_enable_link_state_locked(struct pci_dev *pdev, int state)
+> >  { return 0; }
+> > +static inline void
+> > +pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
+> > +				     unsigned int state) { }
+> >  static inline void pcie_no_aspm(void) { }
+> >  static inline bool pcie_aspm_support_enabled(void) { return false; }
+> >  static inline bool pcie_aspm_enabled(struct pci_dev *pdev) { return false; }
+> > 
+> > base-commit: c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9
+> > -- 
+> > 2.43.0
+> > 
 
