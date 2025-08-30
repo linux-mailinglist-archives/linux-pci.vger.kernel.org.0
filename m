@@ -1,207 +1,411 @@
-Return-Path: <linux-pci+bounces-35162-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35163-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB56FB3C5DB
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 01:59:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 135C1B3C610
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 02:17:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5BB227A5A55
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Aug 2025 23:57:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C52245A3FE7
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 00:17:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CB1F309DB5;
-	Fri, 29 Aug 2025 23:58:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DDA7208A7;
+	Sat, 30 Aug 2025 00:17:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QwpIW/gI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ar+b33xL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A6A35CEA3
-	for <linux-pci@vger.kernel.org>; Fri, 29 Aug 2025 23:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28554A01;
+	Sat, 30 Aug 2025 00:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756511909; cv=none; b=lONVlDyk8mt6DgIi2/Wk/RoT6hz5qYVU5j+GpwbIegbFhNZoF7vMwgGjFw5U9QDOL6/SfyPNDtyYiYADMa9scEmUkqwsittYgJLwhUmQ9djrKfCl/xJ198A3kkjnHGtyakAStI3BW4KNEexnQqu8p+z06azBv0oG5wK6DAxtHVU=
+	t=1756513049; cv=none; b=EUA15BZSVl7YfA7fkDOIJ9Wa24Vt2NcJKDGdtnbfIB7bZrHE4ednBAY2a0/+BlCR/UEGgzMmZ6bWAU+uYaOQ6667OEmmQAYtMSwUMbFfyDYjv9RuJt7wVttvRaC+R9I0EwN9Kt2QiqY92DCj6qZa8ZBKcgmpti9XqON8vh5m430=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756511909; c=relaxed/simple;
-	bh=8itxN2CvlAYGgXC2jkdop3/WfWUI/Yu8r0UJfeNgHxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g0NAiy1qW0VIf87z18h6MNLYdhHQS2Q6E6zDgYFTJSv3uzWcBRPTwacSoLUKRbYAoY8CjoIJg9EZzJu7yfs6+cQ/ygflAC95DefC+wQ1Jzbhv6nKmwa1xyhPcIRKEeegmVVo8yfnj4JkPkmqPNvwsbrp2vz/7lY4xgUFnGftlGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QwpIW/gI; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-248cb0b37dfso25125175ad.3
-        for <linux-pci@vger.kernel.org>; Fri, 29 Aug 2025 16:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1756511907; x=1757116707; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4ZkOb/hPcVe8gnDPdefZkpPuz6ZACFjeMAIL1vSEcE4=;
-        b=QwpIW/gIhYlW+ZpPfejRKNhjd/ujxeMTbooCX4wz3WvJjglfFIruZN+Qqr9JE7X9Qe
-         9nwYwpkLyV36JGb2Y/FchHTTEBkpb9/OTNYOVADjImUtwuSnmXVS1nVgAfoo2AAAJD1g
-         CnCnuMb+z7rlnyZ2xd02AVjcceyCAS9CXRLzQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756511907; x=1757116707;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4ZkOb/hPcVe8gnDPdefZkpPuz6ZACFjeMAIL1vSEcE4=;
-        b=HI8NDemd33TbJRJI3PB2NJVN6+F1W+FTz7SpJFIjhH9HtpHrL8kiY7BmhDePNebw1t
-         DBfp7ClpQ2psSCcj4C9/7sCE5Mx6YIavz1fc89XzxGpj1BrYmQTxRDsh2C22jb4rThjI
-         IN1mXUojJiYsZXt2ktO9H33Avg1ZiN055EIppA3VqU7g9Hfd9VJCuhAsHAq3vPYRFw39
-         7mzYWMciO2g+YsMvC57xIm72d+cBdBTTXBxlEjBUQYkKcL5ejw+0hxq2iQM5CtNMHLwD
-         D83rtsAQNoIP3o12rG4MULSEjVTUPscQfu8MBCgE64FQFiJq5bqgmSXojqQ+MlpA/Kj9
-         7cXw==
-X-Forwarded-Encrypted: i=1; AJvYcCXNy+t7bO/SoItNfSEPw8FdM78zc3g/vmloqv/oVrddCQ88Sd54HU0VnC5ABOgs5Kl0gl6WLwT8eCQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2QYdq7pbxhbLFiGDnSXB1oRUQhzudQd/XEjnsNQUXoZZTFo13
-	fhMx4liUV0Vh9yHUzjIhjAmUdhk+AnXVuaKmJ3yzGlhO1YAt34cQC7Pgm9EhvKT/Ow==
-X-Gm-Gg: ASbGnctoBUhEFnfeOZCUZPuIleTRmArhlXXs7tWMI1qSGfFsVgmbKXR7n7c291Nwrow
-	jqWgY5B8Rg6XBv8ttNW2waIflZBee2Rgq2qGxB4MLDV2M15/4G062QP0aOZF2pXsGuvtEQtY1W6
-	Nu1z/CieHYf51Fa14ZnnYTrw1HwUrJoHxyh2R+a0KaYne4L43zMAHoLD2QfN2f65n+tQi1BklZJ
-	MmRUqlpmX8NjRf8xFjN0UIDdfPl7IRfx+KKLSkJrkUiHVxQpBk1ALyoAEKNBhmObCAUkdA1gd46
-	OuYfnJ7q3fVsFtZX/CiYZlEW4mVoDTDUr45S8EX1UKVD8dGOopYVmIj24/hW+RD05OGeCeqywbU
-	Kbb4oIDNNtYRt0CzD2m8YUK9yBt+17mmcvc/YN2IrGPh/CRZIlBV8ZAkImDND
-X-Google-Smtp-Source: AGHT+IFvZvVbN+tcqDt9IuyuJa1uB30zy62FBhMsBU2d4G2xup0DO7jJDkNE7M+ZQIjDPW8i5FxZDw==
-X-Received: by 2002:a17:903:2308:b0:249:33da:b3a with SMTP id d9443c01a7336-249448ad928mr5527165ad.14.1756511906811;
-        Fri, 29 Aug 2025 16:58:26 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:1d4b:87a6:eef4:9438])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-24906390e6bsm36386045ad.96.2025.08.29.16.58.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Aug 2025 16:58:25 -0700 (PDT)
-Date: Fri, 29 Aug 2025 16:58:24 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: manivannan.sadhasivam@oss.qualcomm.com,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>, Will Deacon <will@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Niklas Cassel <cassel@kernel.org>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: Re: [PATCH v6 2/4] PCI: host-common: Add link down handling for Root
- Ports
-Message-ID: <aLI-oKWVJHFfst-i@google.com>
-References: <20250715-pci-port-reset-v6-0-6f9cce94e7bb@oss.qualcomm.com>
- <20250715-pci-port-reset-v6-2-6f9cce94e7bb@oss.qualcomm.com>
- <aLC7KIoi-LoH2en4@google.com>
- <aLFmSFe5iyYDrIjt@wunner.de>
+	s=arc-20240116; t=1756513049; c=relaxed/simple;
+	bh=7+XIWx8GPk+ely0gvld70sdQiq4ArEbDJmpyXpbiUJw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qBIE03wEQJjq8/7K27YlBBItXPf8HQ8CfCUhIT2kCPhKqH9KmLmSVjYlN8JW1PEf62lJsDAi7Ntf6FGuWjaRYmFgnsVcCJx4p46GOzRtgNRD82oc5QC4pPXDDPy9R3KUg1qhvCDMrq6Cvemlbp0kX/coaDdDUPCeQDbyjmggBG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ar+b33xL; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756513048; x=1788049048;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7+XIWx8GPk+ely0gvld70sdQiq4ArEbDJmpyXpbiUJw=;
+  b=Ar+b33xL3DWCEWVkIW/noRbo5/5svGMGT56fMT++GWxGKYm6QtNpufde
+   ULRQq3E4zUJX0lNPAh8pcp+sdoidmpy7TgZ6fykfDCKU0KCVmbf+86F7f
+   5RH+o8g1FRLm5M15i3b7Vss76zMAQBOcYJfu+MGGOJfGA5k5O1ZhIi+ma
+   EVglbowDaDGz+9fXkDGtkGFEDrlOW+zEepx+EtmuP+cTgtkbYYiMpbVBu
+   a2U7rWhl+QzdXk4CEv86jGAjEAxINBO6w6szYEH371fOPtjpNMSHxcMTo
+   ILpybjMVmErAdKQSCgbYLVADvwwLiG2hiCm/yjiurI9q1joNa428xIMNU
+   w==;
+X-CSE-ConnectionGUID: 1BpzqoGuQ1yQGA9D22Audw==
+X-CSE-MsgGUID: kPwv5DjiTGaN4XtKkMbn+w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11537"; a="69907533"
+X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
+   d="scan'208";a="69907533"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 17:17:28 -0700
+X-CSE-ConnectionGUID: 99TnGo17TEe7ZGUlg52iWA==
+X-CSE-MsgGUID: 2erQC3sVSKa2Pe50vlMYXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
+   d="scan'208";a="207648615"
+Received: from anmitta2-mobl4.gar.corp.intel.com (HELO [10.247.118.59]) ([10.247.118.59])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 17:17:18 -0700
+Message-ID: <b61a163d-5d5f-437d-95de-b0b57769a6ce@intel.com>
+Date: Fri, 29 Aug 2025 17:17:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aLFmSFe5iyYDrIjt@wunner.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 19/23] CXL/PCI: Introduce CXL Port protocol error
+ handlers
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250827013539.903682-1-terry.bowman@amd.com>
+ <20250827013539.903682-20-terry.bowman@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250827013539.903682-20-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Lukas,
 
-On Fri, Aug 29, 2025 at 10:35:20AM +0200, Lukas Wunner wrote:
-> On Thu, Aug 28, 2025 at 01:25:12PM -0700, Brian Norris wrote:
-> > On the flip side: it's not clear
-> > PCI_ERS_RESULT_NEED_RESET+pci_channel_io_normal works as documented
-> > either. An endpoint might think it's requesting a slot reset, but
-> > pcie_do_recovery() will ignore that and skip reset_subordinates()
-> > (pci_host_reset_root_port()).
-> > 
-> > All in all, the docs sound like endpoints _should_ have control over
-> > whether we exercise a full port/slot reset for all types of errors. But
-> > in practice, we do not actually give it that control. i.e., your commit
-> > message is correct, and the docs are not.
-> > 
-> > I have half a mind to suggest the appended change, so the behavior
-> > matches (some of) the docs a little better [1].
+
+On 8/26/25 6:35 PM, Terry Bowman wrote:
+> Introduce CXL error handlers for CXL Port devices.
 > 
-> A change similar to the one you're proposing is already queued on the
-> pci/aer topic branch for v6.18:
+> Add functions cxl_port_cor_error_detected() and cxl_port_error_detected().
+> These will serve as the handlers for all CXL Port devices. Introduce
+> cxl_get_ras_base() to provide the RAS base address needed by the handlers.
 > 
-> https://git.kernel.org/pci/pci/c/d0a2dee7d458
-
-Wow, nice coincidence. It's a reminder I should work off the maintainer
-/ -next branch, instead of just mainline...
-
-> Here's the corresponding cover letter:
+> Update cxl_handle_proto_error() to call the CXL Port or CXL Endpoint
+> handler depending on which CXL device reports the error.
 > 
-> https://lore.kernel.org/r/cover.1755008151.git.lukas@wunner.de
+> Implement cxl_get_ras_base() to return the cached RAS register address of a
+> CXL Root Port, CXL Downstream Port, or CXL Upstream Port.
 > 
-> There was a discussion why I didn't take the exact same approach you're
-> proposing, but only a similar one:
+> Introduce get_pci_cxl_host_dev() to return the host responsible for
+> releasing the RAS mapped resources. CXL endpoints do not use a host to
+> manage its resources, allow for NULL in the case of an EP. Use reference
+> count increment on the host to prevent resource release. Make the caller
+> responsible for the reference decrement.
 > 
-> https://lore.kernel.org/r/aJ2uE6v46Zib30Jh@wunner.de
-> https://lore.kernel.org/r/aKHWf3L0NCl_CET5@wunner.de
-
-Wow, that's a ton of great background and explanation. Thanks!
-
-> > Specifically, I'm trying to see what's supposed to happen with
-> > PCI_ERS_RESULT_CAN_RECOVER. I see that for pci_channel_io_frozen, almost
-> > all endpoint drivers return PCI_ERS_RESULT_NEED_RESET, but if drivers
-> > actually return PCI_ERS_RESULT_CAN_RECOVER, it's unclear what should
-> > happen.
-> > 
-> > Today, we don't actually respect it; pcie_do_recovery() just calls
-> > reset_subordinates() (pci_host_reset_root_port()) unconditionally. The
-> > only thing that return code affects is whether we call
-> > report_mmio_enabled() vs report_slot_reset() afterward. This seems odd.
+> Update the AER driver's is_cxl_error() PCI type check because CXL Port
+> devices are now supported.
 > 
-> In the series queued on pci/aer, I've only allowed drivers to opt in
-> to a reset on Non-Fatal Errors.  I didn't dare also letting them opt
-> out of a reset on Fatal Errors.
-
-Right, I can see where the latter is risky. Frankly, while I have
-endpoint drivers suggesting they should be able to do this, I'm not sure
-that's a great idea. Or at least, I can see how it would potentially
-break other clients, as you explain.
-
-> These changes of behavior are always risky, so it seemed prudent to not
-> introduce too many changes at once.  There was no urgent need to also
-> change behavior for Fatal Errors for the use case at hand (the xe graphics
-> driver).  I went through all drivers with pci_error_handlers to avoid
-> breaking any of them.  It's very tedious work, takes weeks.  It would
-> be necessary to do that again when changing behavior for Fatal Errors.
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> pcieaer-howto.rst justifies the unconditional reset on Fatal Errors by
-> saying that the link is unreliable and that a reset is thus required.
+> ---
+> Changes in v10->v11:
+> - None
+> ---
+>  drivers/cxl/core/core.h    |   9 ++
+>  drivers/cxl/core/port.c    |   4 +-
+>  drivers/cxl/core/ras.c     | 176 +++++++++++++++++++++++++++++++++++--
+>  drivers/pci/pcie/cxl_aer.c |   5 +-
+>  4 files changed, 186 insertions(+), 8 deletions(-)
 > 
-> On the other hand, pci-error-recovery.rst (which is a few months older
-> than pcieaer-howto.rst) says in section "STEP 3: Link Reset":
-> "This is a PCIe specific step and is done whenever a fatal error has been
-> detected"
-> 
-> I'm wondering if the authors of pcieaer-howto.rst took that at face value
-> and thought they'd *have* to reset the link on Fatal Errors.
-> 
-> Looking through the Fatal Errors in PCIe r7.0 sec 6.2.7, I think a reset
-> is justified for some of them, but optional for others.  Which leads me
-> to believe that the AER driver should actually enforce a reset only for
-> certain Fatal Errors, not all of them.  So this seems like something
-> worth revisiting in the future.
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 6e3e7f2e0e2d..7e66fbb07b8a 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -155,6 +155,8 @@ pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
+>  void pci_cor_error_detected(struct pci_dev *pdev);
+>  void cxl_cor_error_detected(struct device *dev);
+>  pci_ers_result_t cxl_error_detected(struct device *dev);
+> +void cxl_port_cor_error_detected(struct device *dev);
+> +pci_ers_result_t cxl_port_error_detected(struct device *dev);
+>  #else
+>  static inline int cxl_ras_init(void)
+>  {
+> @@ -179,9 +181,16 @@ static inline pci_ers_result_t cxl_error_detected(struct device *dev)
+>  {
+>  	return PCI_ERS_RESULT_NONE;
+>  }
+> +static inline void cxl_port_cor_error_detected(struct device *dev) { }
+> +static inline pci_ers_result_t cxl_port_error_detected(struct device *dev)
+> +{
+> +	return PCI_ERS_RESULT_NONE;
+> +}
+>  #endif // CONFIG_CXL_RAS
+>  
+>  int cxl_gpf_port_setup(struct cxl_dport *dport);
+> +struct cxl_port *find_cxl_port(struct device *dport_dev,
+> +			       struct cxl_dport **dport);
+>  
+>  #ifdef CONFIG_CXL_FEATURES
+>  struct cxl_feat_entry *
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 29197376b18e..758fb73374c1 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1335,8 +1335,8 @@ static struct cxl_port *__find_cxl_port(struct cxl_find_port_ctx *ctx)
+>  	return NULL;
+>  }
+>  
+> -static struct cxl_port *find_cxl_port(struct device *dport_dev,
+> -				      struct cxl_dport **dport)
+> +struct cxl_port *find_cxl_port(struct device *dport_dev,
+> +			       struct cxl_dport **dport)
+>  {
+>  	struct cxl_find_port_ctx ctx = {
+>  		.dport_dev = dport_dev,
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index a2e95c49f965..536ca9c815ce 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -251,6 +251,154 @@ static void cxl_dport_map_ras(struct cxl_dport *dport)
+>  		dev_dbg(dev, "Failed to map RAS capability.\n");
+>  }
+>  
+> +static int match_uport(struct device *dev, const void *data)
+> +{
+> +	const struct device *uport_dev = data;
+> +	struct cxl_port *port;
+> +
+> +	if (!is_cxl_port(dev))
+> +		return 0;
+> +
+> +	port = to_cxl_port(dev);
+> +
+> +	return port->uport_dev == uport_dev;
+> +}
 
-Hmm, possibly. I haven't looked so closely at the details on all Fatal
-Errors, but I may have a look eventually.
+Just heads up, there's a find_cxl_port_by_uport() coming with the deferred dport init series that you can use instead. Just FYI.
 
-> > All in all, the docs sound like endpoints _should_ have control over
-> > whether we exercise a full port/slot reset for all types of errors. But
-> > in practice, we do not actually give it that control. i.e., your commit
-> > message is correct, and the docs are not.
-> 
-> Indeed the documentation is no longer in sync with the code.  I've just
-> submitted a series to rectify that and cc'ed you:
-> 
-> https://lore.kernel.org/r/cover.1756451884.git.lukas@wunner.de
+> +
+> +static void __iomem *cxl_get_ras_base(struct device *dev)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	switch (pci_pcie_type(pdev)) {
+> +	case PCI_EXP_TYPE_ROOT_PORT:
+> +	case PCI_EXP_TYPE_DOWNSTREAM:
+> +	{
+> +		struct cxl_dport *dport = NULL;
+> +		struct cxl_port *port __free(put_cxl_port) = find_cxl_port(&pdev->dev, &dport);
+> +
+> +		if (!dport || !dport->dport_dev) {
+> +			pci_err(pdev, "Failed to find the CXL device");
+> +			return NULL;
+> +		}
+> +
+> +		if (!dport)
+> +			return NULL;
+> +
+> +		return dport->regs.ras;
+> +	}
+> +	case PCI_EXP_TYPE_UPSTREAM:
+> +	{
+> +		struct cxl_port *port;
+> +		struct device *port_dev __free(put_device) =
+> +			bus_find_device(&cxl_bus_type, NULL,
+> +					&pdev->dev, match_uport);
+> +
+> +		if (!port_dev || !is_cxl_port(port_dev)) {
+> +			pci_err(pdev, "Failed to find the CXL device");
+> +			return NULL;
+> +		}
+> +
+> +		port = to_cxl_port(port_dev);
+> +		if (!port)
+> +			return NULL;
+> +
+> +		return port->uport_regs.ras;
+> +	}
+> +	}
+> +
+> +	dev_warn_once(dev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
+> +	return NULL;
+> +}
+> +
+> +static struct device *pci_to_cxl_dev(struct pci_dev *pdev)
+> +{
+> +	switch (pci_pcie_type(pdev)) {
+> +	case PCI_EXP_TYPE_ROOT_PORT:
+> +	case PCI_EXP_TYPE_DOWNSTREAM:
+> +	{
+> +		struct cxl_dport *dport = NULL;
+> +		struct cxl_port *port __free(put_cxl_port) =
+> +			find_cxl_port(&pdev->dev, &dport);
+> +
+> +		if (!dport) {
+I think you can just check 'port' here right? and then you don't need to set dport to NULL.
 
-Thanks! I'll try to take a pass at reviewing, but it may not be prompt.
+> +			pci_err(pdev, "Failed to find the CXL device");
+> +			return NULL;
+> +		}
+> +
+> +		return dport->dport_dev;
+> +	}
+> +	case PCI_EXP_TYPE_UPSTREAM:
+> +	{
+> +		struct cxl_port *port;
+> +		struct device *port_dev __free(put_device) =
+> +			bus_find_device(&cxl_bus_type, NULL,
+> +					&pdev->dev, match_uport);
+> +
+> +		if (!port_dev || !is_cxl_port(port_dev)) {
+> +			pci_err(pdev, "Failed to find the CXL device");
+> +			return NULL;
+> +		}
+> +
+> +		port = to_cxl_port(port_dev);
+> +		if (!port)
+> +			return NULL;
+> +
+> +		return port->uport_dev;
+> +	}
+> +	case PCI_EXP_TYPE_ENDPOINT:
+> +	{
+> +		struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
 
-Thanks again for all the info and work here.
+With this function called through cxl_proto_err_work_fn() and not the AER handling stack, I have concerns of if a driver is bound to the endpoint, and if the pci driver bound to the endpoint is cxl_pci for cxlds to be valid.
 
-Brian
+> +
+> +		return cxlds->dev;
+> +	}
+> +	}
+> +
+> +	pci_warn_once(pdev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
+> +	return NULL;
+> +}
+> +
+> +
+> +/*
+> + * Return 'struct device *' responsible for freeing pdev's CXL resources.
+> + * Caller is responsible for reference count decrementing the return
+> + * 'struct device *'.
+> + *
+> + * dev: Find the host of this dev
+> + */
+> +static struct device *get_cxl_host_dev(struct device *dev)
+> +{> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	switch (pci_pcie_type(pdev)) {
+> +	case PCI_EXP_TYPE_ROOT_PORT:
+> +	case PCI_EXP_TYPE_DOWNSTREAM:
+> +	{
+> +		struct cxl_dport *dport = NULL;
+
+No need to set to NULL. dport not used.
+
+DJ
+
+> +		struct cxl_port *port = find_cxl_port(&pdev->dev, &dport);
+> +
+> +		if (!port)
+> +			return NULL;
+> +
+> +		return &port->dev;
+> +	}> +	case PCI_EXP_TYPE_UPSTREAM:
+> +	{
+> +		struct device *port_dev = bus_find_device(&cxl_bus_type, NULL,
+> +							  &pdev->dev, match_uport);
+> +
+> +		if (!port_dev || !is_cxl_port(port_dev))
+> +			return NULL;
+> +
+> +		return port_dev;
+> +	}
+> +	/* Endpoint resources are managed by endpoint itself */
+> +	case PCI_EXP_TYPE_ENDPOINT:
+> +		return NULL;
+> +	}
+> +
+> +	dev_warn_once(dev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
+> +	return NULL;
+> +}
+> +
+>  /**
+>   * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
+>   * @dport: the cxl_dport that needs to be initialized
+> @@ -399,6 +547,22 @@ static pci_ers_result_t cxl_handle_ras(struct device *dev, u64 serial, void __io
+>  	return PCI_ERS_RESULT_PANIC;
+>  }
+>  
+> +void cxl_port_cor_error_detected(struct device *dev)
+> +{
+> +	void __iomem *ras_base = cxl_get_ras_base(dev);
+> +
+> +	cxl_handle_cor_ras(dev, 0, ras_base);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_port_cor_error_detected, "CXL");
+> +
+> +pci_ers_result_t cxl_port_error_detected(struct device *dev)
+> +{
+> +	void __iomem *ras_base = cxl_get_ras_base(dev);
+> +
+> +	return cxl_handle_ras(dev, 0, ras_base);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_port_error_detected, "CXL");
+> +
+>  void cxl_cor_error_detected(struct device *dev)
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+> @@ -469,9 +633,8 @@ EXPORT_SYMBOL_NS_GPL(pci_error_detected, "CXL");
+>  static void cxl_handle_proto_error(struct cxl_proto_err_work_data *err_info)
+>  {
+>  	struct pci_dev *pdev = err_info->pdev;
+> -	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> -	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> -	struct device *host_dev __free(put_device) = get_device(&cxlmd->dev);
+> +	struct device *dev = pci_to_cxl_dev(pdev);
+> +	struct device *host_dev __free(put_device) = get_cxl_host_dev(&pdev->dev);
+>  
+>  	if (err_info->severity == AER_CORRECTABLE) {
+>  		int aer = pdev->aer_cap;
+> @@ -481,11 +644,14 @@ static void cxl_handle_proto_error(struct cxl_proto_err_work_data *err_info)
+>  						       aer + PCI_ERR_COR_STATUS,
+>  						       0, PCI_ERR_COR_INTERNAL);
+>  
+> -		cxl_cor_error_detected(&cxlmd->dev);
+> +		if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ENDPOINT)
+> +			cxl_error_detected(&pdev->dev);
+> +		else
+> +			cxl_port_cor_error_detected(dev);
+>  
+>  		pcie_clear_device_status(pdev);
+>  	} else {
+> -		cxl_do_recovery(&cxlmd->dev);
+> +		cxl_do_recovery(dev);
+>  	}
+>  }
+>  
+> diff --git a/drivers/pci/pcie/cxl_aer.c b/drivers/pci/pcie/cxl_aer.c
+> index 74e6d2d04ab6..6eeff0b78b47 100644
+> --- a/drivers/pci/pcie/cxl_aer.c
+> +++ b/drivers/pci/pcie/cxl_aer.c
+> @@ -68,7 +68,10 @@ bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info)
+>  	if (!info || !info->is_cxl)
+>  		return false;
+>  
+> -	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
+> +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
+> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT) &&
+> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_UPSTREAM) &&
+> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM))
+>  		return false;
+>  
+>  	return is_internal_error(info);
+
 
