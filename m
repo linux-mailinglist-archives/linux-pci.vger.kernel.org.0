@@ -1,212 +1,150 @@
-Return-Path: <linux-pci+bounces-35166-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35167-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EC2BB3C78D
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 05:10:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A6AAB3C793
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 05:22:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 02A327C52C4
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 03:10:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D9EFCA05B7F
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 03:22:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E051246BB6;
-	Sat, 30 Aug 2025 03:10:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 650E72737FB;
+	Sat, 30 Aug 2025 03:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bvEbtI1y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187FB215075;
-	Sat, 30 Aug 2025 03:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FDA6F06B;
+	Sat, 30 Aug 2025 03:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756523455; cv=none; b=LOf/j+ID9ICJVLxRaO1h8CzV5NxbaidDx7xTh+W3beMkQ9alJrVD/AOe8rNmt3mG+3OfM93h0sAfIrtp6NlW2jL1cwctAqWkBh0WQgwhR3VW4kC4hZee52eiyZSVI9KgKJGFzGuIScOGcsYpa3hFgZbOKnX8Xm8gyHQ/25625xg=
+	t=1756524121; cv=none; b=QZLArUEivmJTxhAdE0JB3J2Kv1IZ6tG6d6PuXQ4h7FVGf9550Zyl9DU0T/rNJN7+E4kh6ok1PX/Jd+Fc15W8AV4PXx4LL6KWxk9Cc3dX2gFQAAszV1ZP4hM44jU3onPCkFkYpRaYQiKyQrtrFSNsVswgHHTGQ2KDLZJDIsCC7uM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756523455; c=relaxed/simple;
-	bh=d50Y3+pjzHc8XYM9XV2VuyXsJJdhUBbcyeV8YF0u1SM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=R6Gw2lfhZbPs7kEyPqgBh6ZT5+mJ+pqfbwxKBXjS+iLOmCNaT8WFWJKKXLnBoWwfomRNPLeyFNnLUTImSm6J9erkIhX6oVVwk8CJyRSHEjyzIvjPlW7HbTLzyT2VKN4/FuRypprS2RKm1I76a8/utyiBzZuUnNYjJaFydyN/qkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com; spf=pass smtp.mailfrom=h-partners.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4cDKrn30S9z14Mdq;
-	Sat, 30 Aug 2025 11:10:33 +0800 (CST)
-Received: from kwepemo100013.china.huawei.com (unknown [7.202.195.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8AA25180491;
-	Sat, 30 Aug 2025 11:10:41 +0800 (CST)
-Received: from [10.67.120.83] (10.67.120.83) by kwepemo100013.china.huawei.com
- (7.202.195.244) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 30 Aug
- 2025 11:10:40 +0800
-Message-ID: <142957c5-64c2-47cd-846f-6ff0654aa3b7@h-partners.com>
-Date: Sat, 30 Aug 2025 11:10:40 +0800
+	s=arc-20240116; t=1756524121; c=relaxed/simple;
+	bh=uJCWLg8Xr/0C+/8ZRu6677VYEHkkf5iwokGEhBnGEiE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=smHQng6mmcFfIxZ5qaUfM6+vco3yO9Yv0co0VOs58tz1kmgHusV7cQ9nGHswQQmoAu7lmqQO21nPuMEto0H/P786fc2xM8Lx49EDtqQ3PKQ7asFmKLgCCIUfMRMuFUrAqgecrz6larrheLaDi7IjoegP1DkRmnY4Oarnwno7ljY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bvEbtI1y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAA81C4CEF0;
+	Sat, 30 Aug 2025 03:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756524120;
+	bh=uJCWLg8Xr/0C+/8ZRu6677VYEHkkf5iwokGEhBnGEiE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bvEbtI1ytCwUwam3rCM76cmTxjzFL004GOrQNw0nOxG3e7xUMl0Y2Xb3LISngBCrs
+	 quhz/Siq8fyNOa/n5vOlMC3BsLo51jbgRMXLqI0YqhKBgre2UOyFzcPdhbS/qcovLu
+	 ULPkFdUuWHYFvAJIaN6F9kSnNRSlb/E5rTnwOFLO6av/oInj11Jdu3KrdRK8pUeE+S
+	 nYN2IvDhE6/pkaf4KBQWwLTMkFerx+2QWl9GeGBy5ltBDg0k+zps5rAIy01sNB+eSM
+	 QuL2KyC9IMQc5gj/0iUdovvDdJ6or4DypUQ9GwZvEkJg7FLl4I+CtMDzx5A7Q6lQF9
+	 hD8I6wodAF2yg==
+Date: Sat, 30 Aug 2025 08:51:51 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: 'Krzysztof Kozlowski' <krzk@kernel.org>, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
+	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, 
+	jingoohan1@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com, 
+	vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de, m.szyprowski@samsung.com, 
+	jh80.chung@samsung.com, pankaj.dubey@samsung.com
+Subject: Re: [PATCH v3 07/12] dt-bindings: PCI: Add support for Tesla FSD SoC
+Message-ID: <3eykohfvqgkbvwirzx63bx65d5uv774gib65bcyjlpphrssfjp@74bqakxvnkmh>
+References: <20250811154638.95732-1-shradha.t@samsung.com>
+ <CGME20250811154725epcas5p428fa3370a32bc2b664a4fd8260078097@epcas5p4.samsung.com>
+ <20250811154638.95732-8-shradha.t@samsung.com>
+ <9e065582-9349-4f39-88b5-048d333ab8d7@kernel.org>
+ <000901dc101c$917bf160$b473d420$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] sysfs: duplicate resource file creation during PCIe rescan
-From: moubingquan <moubingquan@h-partners.com>
-To: <bhelgaas@google.com>
-CC: <ilpo.jarvinen@linux.intel.com>, <lukas@wunner.de>, linux-arm
-	<linux-arm-kernel@lists.infradead.org>, linux-kernl
-	<linux-kernel@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>,
-	fanghao <fanghao11@huawei.com>, gaozhihao <gaozhihao6@h-partners.com>,
-	lujunhua <lujunhua7@h-partners.com>, shenyang <shenyang39@huawei.com>,
-	wushanping <wushanping@huawei.com>, zengtao <prime.zeng@hisilicon.com>,
-	<jonathan.cameron@huawei.com>
-References: <b51519d6-ce45-4b6d-8135-c70169bd110e@h-partners.com>
- <9e3047e5-a6a2-4a56-967b-4dddbd3d1b43@h-partners.com>
-Content-Language: en-US
-In-Reply-To: <9e3047e5-a6a2-4a56-967b-4dddbd3d1b43@h-partners.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemo100013.china.huawei.com (7.202.195.244)
+In-Reply-To: <000901dc101c$917bf160$b473d420$@samsung.com>
 
-Friendly ping ...
-
-On 8/11/2025 10:12 AM, moubingquan wrote:
-> Hello everyone, does anyone have any ideas on how to approach this problem。
+On Mon, Aug 18, 2025 at 02:16:16PM GMT, Shradha Todi wrote:
+> > > +
+> > > +  phys:
+> > > +    maxItems: 1
+> > > +
+> > > +  samsung,syscon-pcie:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > > +    description: phandle for system control registers, used to
+> > > +                 control signals at system level
+> > 
+> > What is "system level"? and what are these "signals" being controlled?
+> > 
 > 
-> On 7/29/2025 9:13 AM, moubingquan wrote:
->> Hi all,
->>
->> When uninstalling the driver on the ARM64 platform and invoking `sriov_disable()`,
->> another thread simultaneously performed `echo 1 > /sys/bus/pci/rescan`,
->> which resulted in a call trace error (`sysfs: cannot create duplicate filename`) when subsequently loading the driver.
->>
->> Under certain multi-threaded scenarios (e.g. VF teardown + PCI rescan triggered in parallel),
->> The following sequence may result in files appearing in sysfs that should not exist:
->>
->> 1. sriov_disable() uninstalls VFs and removes the corresponding VF files in sysfs.
->> 2.At the same time, when rescan_store() rescan the entire PCI device tree,
->> there is a possibility that VF files that should have been deleted are added back,
->> resulting in VF files in sysfs that should have been removed but were not.
->>
->> Tested on:
->> - Kernel version: Linux version 6.15.0-rc4+ (phisik3@10-50-163-153-ARM-openEuler22-3)
->> - Platform: ARM64 (Huawei Kunpeng920)
->> - Repro steps:
->> 1.Thread A unloads the driver and VF (requires calling sriov_disable()).
->> 2.Thread B calls `echo 1 > /sys/bus/pci/rescan `
->>
->> The system will report a call trace as follows:
->>
->> sysfs: cannot create duplicate filename '/devices/pci0000:3c/0000:3c:01.0/0000:3e:00.2/resource2'
->> CPU: 138 UID: 0 PID: 11067 Comm: sh Kdump: loaded Tainted: G      D W  O        6.15.0-rc4+ #1 PREEMPT
->> Tainted: [D]=DIE, [W]=WARN, [O]=OOT_MODULE
->> Call trace:
->>   show_stack+0x20/0x38 (C)
->>   dump_stack_lvl+0x80/0xf8
->>   dump_stack+0x18/0x28
->>   sysfs_warn_dup+0x6c/0x90
->>   sysfs_add_bin_file_mode_ns+0x12c/0x178
->>   sysfs_create_bin_file+0x7c/0xb8
->>   pci_create_attr+0x104/0x1b0
->>   pci_create_resource_files.part.0+0x50/0xd0
->>   pci_create_sysfs_dev_files+0x30/0x50
->>   pci_bus_add_device+0x40/0x120
->>   pci_bus_add_devices+0x40/0x98
->>   pci_bus_add_devices+0x6c/0x98
->>   pci_rescan_bus+0x38/0x58
->>   rescan_store+0x80/0xb0
->>   bus_attr_store+0x2c/0x48
->>   sysfs_kf_write+0x84/0xa8
->>   kernfs_fop_write_iter+0x120/0x1b8
->>   vfs_write+0x338/0x3f8
->>   ksys_write+0x70/0x110
->>   __arm64_sys_write+0x24/0x38
->>   invoke_syscall+0x50/0x120
->>   el0_svc_common.constprop.0+0xc8/0xf0
->>   do_el0_svc+0x24/0x38
->>   el0_svc+0x34/0xf0
->>   el0t_64_sync_handler+0xc8/0xd0
->>   el0t_64_sync+0x1ac/0x1b0
->>
->> The general analysis and corresponding code are as follows:
->>
->> drivers/pci/iov.c
->>
->> 736 static void sriov_disable(struct pci_dev *dev)
->> 737 {
->> 738         struct pci_sriov *iov = dev->sriov;
->> 739
->> 740         if (!iov->num_VFs)
->> 741                 return;
->> 742
->> 743         sriov_del_vfs(dev);
->> 744         iov->ctrl &= ~(PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE);
->> 745         pci_cfg_access_lock(dev);
->> 746         pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, iov->ctrl);
->> 747         ssleep(1);
->> 748         pci_cfg_access_unlock(dev);
->> 749
->> 750         pcibios_sriov_disable(dev);
->> 751
->> 752         if (iov->link != dev->devfn)
->> 753                 sysfs_remove_link(&dev->dev.kobj, "dep_link");
->> 754
->> 755         iov->num_VFs = 0;
->> 756         pci_iov_set_numvfs(dev, 0);
->> 757 }
->>
->> sriov_disable() will unload the VF and remove its files from sysfs.
->>
->> drivers/pci/pci-sysfs.c
->>
->>   435 static ssize_t rescan_store(const struct bus_type *bus, const char *buf, size_t count)
->>   436 {
->>   437         unsigned long val;
->>   438         struct pci_bus *b = NULL;
->>   439
->>   440         if (kstrtoul(buf, 0, &val) < 0)
->>   441                 return -EINVAL;
->>   442
->>   443         if (val) {
->>   444                 pci_lock_rescan_remove();
->>   445                 while ((b = pci_find_next_bus(b)) != NULL)
->>   446                         pci_rescan_bus(b);
->>   447                 pci_unlock_rescan_remove();
->>   448         }
->>   449         return count;
->>   450 }
->>   451 static BUS_ATTR_WO(rescan);
->>
->> The `rescan_store()` function will scan the entire PCI bus, including the relevant sysfs files for the aforementioned VFs.
->>
->> Initially, it seemed that directly adding the pci_lock_rescan_remove() lock to sriov_disable() could solve the problem.
->> However, it was later discovered that this might lead to a deadlock issue (because the remove_store() function would call sriov_disable(), causing a deadlock).
->>
->> drivers/pci/pci-sysfs.c
->>
->>   487 static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
->>   488                             const char *buf, size_t count)
->>   489 {
->>   490         unsigned long val;
->>   491
->>   492         if (kstrtoul(buf, 0, &val) < 0)
->>   493                 return -EINVAL;
->>   494
->>   495         if (val && device_remove_file_self(dev, attr))
->>   496
->>          //Subsequently, sriov_disable() will be invoked.
->>                  pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
->>   497         return count;
->>   498 }
->>   499 static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL,
->>   500                                   remove_store);
->>
->> The function `pci_stop_and_remove_bus_device_locked()` acquires the `pci_lock_rescan_remove()` lock and subsequently calls `sriov_disable()`.
->> If the lock is added within `sriov_disable()`, it could lead to a deadlock.
->>
->> Should we add a new lock to address this issue, or are there any other ideas? I would like to consult and discuss this with everyone.
->>
->> Thanks,
->> Bingquan Mou <moubingquan@h-partners.com>
+> I will add a more detailed description for why the syscon is being used
+> 
+> > 
+> > > +title: Tesla FSD SoC series PCIe Host Controller
+> > > +
+> > > +maintainers:
+> > > +  - Shradha Todi <shradha.t@samsung.com>
+> > > +
+> > > +description:
+> > > +  Tesla FSD SoCs PCIe host controller inherits all the common
+> > > +  properties defined in samsung,exynos-pcie.yaml
+> > > +
+> > > +allOf:
+> > > +  - $ref: /schemas/pci/samsung,exynos-pcie.yaml#
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: tesla,fsd-pcie
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 4
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: aux
+> > > +      - const: dbi
+> > > +      - const: mstr
+> > > +      - const: slv
+> > > +
+> > > +  num-lanes:
+> > > +    maximum: 4
+> > > +
+> > > +  samsung,syscon-pcie:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > > +    description: phandle for system control registers, used to
+> > > +                 control signals at system level
+> > > +
+> > > +required:
+> > > +  - samsung,syscon-pcie
+> > 
+> > clocks are required, compatible as well.
+> > 
+> 
+> Since this was inheriting the common exynos yaml file and that had these properties
+> under required, I did not mention again. Will take care in next version.
 > 
 
+dma-coherent needs to be a required property as well since this binding is
+supporting only one controller, that seem to have cache coherent DMA.
+
+> > Missing supplies, both as properties and required. PCI devices do not
+> > work without power.
+> > 
+> 
+> According to the HW design of FSD SoC, the control to manage PCIe power is given to
+> a separate CPU where custom firmware runs. Therefore, the Linux side does not control
+> the PCIe power supplies directly and are hence not included in the device tree.
+
+What do you mean by 'PCIe power'? Supply to the PCIe controller/bus or the
+devices connected to the bus?
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
