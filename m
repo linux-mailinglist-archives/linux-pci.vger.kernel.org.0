@@ -1,129 +1,101 @@
-Return-Path: <linux-pci+bounces-35191-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35192-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B3A8B3D242
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Aug 2025 12:51:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75118B3D275
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Aug 2025 13:20:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 94B44189E675
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Aug 2025 10:52:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF402189D3D3
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Aug 2025 11:20:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7349D2512E6;
-	Sun, 31 Aug 2025 10:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AEE61FC7C5;
+	Sun, 31 Aug 2025 11:20:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lngdPUcw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JY8jpMau"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F420F24DD15
-	for <linux-pci@vger.kernel.org>; Sun, 31 Aug 2025 10:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C27E1B2186;
+	Sun, 31 Aug 2025 11:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756637506; cv=none; b=hXhDlkSkwKgVleUTZIu1AARPxL4vWKxVaUq4PujC8vPyEw1KZON2E8sFW3M6FB+jqeokw/N2DGm8wqFsm7wfgsx7Ufm9cFn3Dpluhb6wEMBtudbWmiZuWmzurA4dicLBvFhP6J897A5xoO6Ytpw9954HKYf2ehghQ4WOJDbMP0M=
+	t=1756639216; cv=none; b=DWtatc2NbCXQU8Xv8s0U5y/CtD43jon/Qzz8laW7BBv/W7RlwevkUWjIRSgvP5QUvpnoQJIDGarkjYUtW0fLSSInZYffKWWIP8FFQ/bW9z5aApV8p3g6rhJM0aUYpaQC3vejKQVatPW9Z69uq3u0KCfRdv9AMb+8pAffu+cy1tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756637506; c=relaxed/simple;
-	bh=5TQBlMcKz99l61oDupwcQxaI/ZfZHvjKjIfnG5PuYb0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=VHpfRpC2HtNfXYYtqTkBBf0uoijKFAvPX21KUe4T9TCqbYlesCm0p7qhLT70fNNFxS9zjeKNZ0RU33w/xB/tLx7zo8j6Kc70E/NgF6zGeSXQzU5KQuAdN+sgNL82iv7kLHZJn14R7aRtG/tJUtkuhNkFFwH2G7wiX11/Ud7a9V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lngdPUcw; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-327d8df861dso1481797a91.2
-        for <linux-pci@vger.kernel.org>; Sun, 31 Aug 2025 03:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756637504; x=1757242304; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5TQBlMcKz99l61oDupwcQxaI/ZfZHvjKjIfnG5PuYb0=;
-        b=lngdPUcwJ9JqXEKmO4gI9PvC3T31n2DtIAetnrcVtHDKdvw5V+tSI9ey++H8uZlp1J
-         1zqOpquw2/wW5FQi97A9/NEgbT8Ss3U4gtN3JSpZCyswS4mFKEiDLs4+qE1CXkR0Zolq
-         1Lb+U1EFnd6FThxNz+f3a9beggAEN+6+4zMitt8c2D0+pobLtBTtqjPup6P7lraUoJ0r
-         TPTjVWTNJV2MghDtA17LBMrsIKW1OPNC083+ia7pgebUQUNdWPBSxJgjPj+XIHPHyjrY
-         1v04qdmHVd9JnA9KZjymV22mKPfHZh0Nom0UBHVC7NhwAKXJFxqElVLWrrnrU8ZEDSba
-         7qLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756637504; x=1757242304;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5TQBlMcKz99l61oDupwcQxaI/ZfZHvjKjIfnG5PuYb0=;
-        b=Lzhgsrj7OsoP6z8hHfq7IHil0+Hws2v0+Us6XVpdX+mVCNQqYWZWfJ7kbXXAoLmH5d
-         /yIWzF7Pg/hFHW9NecTyuOPJ7KLG72PbjPD5+r7YfRbDRyDsmySZrMwNrhooTjFlojiE
-         3XME+SVkO0IIm3tkgt7EsvhTd4rIRNDJb9sXWfncgf+FCTs9IJNGhuBUwnGBzxxNEvPq
-         corrynCYzK6DdmUVuQ5iGflWjZyEdQYiPfHpogvt6HNAia7wV9MCbWfwFVW0+leQjH1V
-         ++XQS8LQRJAGMeUmCdcXAjajXKNgM/NOS0ra6bm/l2xoqtpnZSVQBFNqR9HI/pNCYKsM
-         95iA==
-X-Gm-Message-State: AOJu0YzDNh1JLJA+KZpVWjlZoxjg34kM/KV46ELSyLIfni2g07VsWxU3
-	hTlSEPFGQsQYbSs3wZJ5De9kqGeJgFwinnx2JXnapxFT2+/v/5a9tIbuud8/lIWl+9ToB2MbJeO
-	E1tJ9nM3rRaISfkYhmpWkHz7Qi37Mj3jmsV+c
-X-Gm-Gg: ASbGncsgedj8J0i/pxatV4i60aB9J0hW8NZxWFPqymhIy0s5jSh39rgDLrP8RDWyROD
-	v9pvjUFN2FmXFl2FtaSmRC/LUTJHyMD0vou7xfRwgnJ4+tw6s8S0ic7jeq1Nn16pQu3BFA1NF2k
-	OGCR207DwdxbQKXLon8Kzo59YApTyeyYSBGdqIR4e0S8rliS8ytGnKx3kvtUpSnMFbbA0s+pEU3
-	/37Bw==
-X-Google-Smtp-Source: AGHT+IFyJAOz6s1+nD+y8bAcFUirAGrDKgMy1sEwpQV7K2TV0Tvb+K/cnHqWBwgY+1q4I63gYS1YjnFQ6kYYVM+aQv0=
-X-Received: by 2002:a17:90b:3ec8:b0:327:9735:542b with SMTP id
- 98e67ed59e1d1-328156e57b1mr7125173a91.35.1756637503963; Sun, 31 Aug 2025
- 03:51:43 -0700 (PDT)
+	s=arc-20240116; t=1756639216; c=relaxed/simple;
+	bh=UzT7xj/bbfHi7nArp4mCwWSZ0oHnfBIV0P7CWeu148E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UM33bIjGYy2h6730cqzaGwO0izjhdI22TFjLhB7UYmnexzNvqvDSBWIlKdu0/E6mjSAz6hlzDaXTm2TJKpzW1jB5GMjSs3OK45EYr/1dfPqEW1tga1weebhjlvE3T6EenbfmaHdKp66/GpsB/jwcO9aZk26DHdzZGQKH/zIjSjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JY8jpMau; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0C5AC4CEED;
+	Sun, 31 Aug 2025 11:20:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756639215;
+	bh=UzT7xj/bbfHi7nArp4mCwWSZ0oHnfBIV0P7CWeu148E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JY8jpMauZ2GUkGBm/jlBC3gW6URueV8ERNKm6dOcTyqlfCj9pEMXTTduwcsXTlIFw
+	 +rmoD54zD092QEYtjJfyN9WTf99pYpp2moBhg9pyC5tDMGf30/UNzpCyd5riLdFTUk
+	 Jpm8QPkolPUYmSpdHBcmy1Mc6LCdHHPx1mUmS2/ovG9ZUVdzTNC31c3IQCeM19+/Z/
+	 G9JFo+3YRrzKDnAWVHKKfOTdu/HnZjD7c3agKnh8B3htu+mEsq6FnvMv0tS9Pkaqqt
+	 HD5kDR+JPMVXWrQoM28CPqAbgoMtY84olz/l2e3QlV/2+AOkKy2wAcuT+EO6sAdS7Y
+	 EaPfM6AIQCimg==
+Date: Sun, 31 Aug 2025 16:50:09 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Alok Tiwari <alok.a.tiwari@oracle.com>
+Cc: thierry.reding@gmail.com, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, jonathanh@nvidia.com, 
+	linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: fix devm_kcalloc argument order for
+ port->phys allocation
+Message-ID: <6yaka4sjghyq727gyhlf3usu24amj3q46ckh24ukvx4kuffmfm@d3nwn34zwijt>
+References: <20250819150436.3105973-1-alok.a.tiwari@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Steve Oswald <stevepeter.oswald@gmail.com>
-Date: Sun, 31 Aug 2025 13:51:32 +0300
-X-Gm-Features: Ac12FXxQaf3i69zPWBaCq1KyIcdQrr3jTXxtLIaJp-Pebx3ZDNn20qf2W7S8his
-Message-ID: <CAN95MYEaO8QYYL=5cN19nv_qDGuuP5QOD17pD_ed6a7UqFVZ-g@mail.gmail.com>
-Subject: [BUG] Thunderbolt eGPU PCI BARs incorrectly assigned, fails to assign memory
-To: linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250819150436.3105973-1-alok.a.tiwari@oracle.com>
 
-Hello,
+On Tue, Aug 19, 2025 at 08:04:08AM GMT, Alok Tiwari wrote:
+> Fix incorrect argument order in devm_kcalloc() when allocating
+> port->phys, The original call used sizeof(phy) as the number of
+> elements and port->lanes as the element size, which is reversed.
+> While this happens to produce the correct total allocation size with
+> current pointer size and lane counts, the argument order is wrong.
+> 
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 
-I=E2=80=99ve encountered an issue with Thunderbolt eGPU (externally connect=
-ed
-gpu via thunderbolt 4). The change from kernel 6.10.14 to 6.11.0 broke
-the pci memory assignment of the external pcie device. I figured out
-which version broke it by using ubuntu 25.04 and downgrading the
-kernel (https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.sh/=
-master/ubuntu-mainline-kernel.sh).
+Missing Fixes tag. I'll add it while applying.
 
-From the dmesg output, on the broken 6.11.0 I see 'failed to assign'.
-The issue occurs (almost never) on previous kernel version 6.10.14.
-Using pci=3Drealloc did not change the behavior (I can produce the dmesg
-output if necessary).
+- Mani
 
-The issue was tested with 2 egpus (Radeon Instinct MI50 32GB, NVIDIA
-3080 10GB). Both the amd and the nvidia driver fail to initialize the
-device because they cannot write the pcie messages.
+> ---
+>  drivers/pci/controller/pci-tegra.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index 467ddc701adc..bb88767a3797 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -1344,7 +1344,7 @@ static int tegra_pcie_port_get_phys(struct tegra_pcie_port *port)
+>  	unsigned int i;
+>  	int err;
+>  
+> -	port->phys = devm_kcalloc(dev, sizeof(phy), port->lanes, GFP_KERNEL);
+> +	port->phys = devm_kcalloc(dev, port->lanes, sizeof(phy), GFP_KERNEL);
+>  	if (!port->phys)
+>  		return -ENOMEM;
+>  
+> -- 
+> 2.50.1
+> 
 
-System details:
-- Kernel: Linux 6.10.14-061014-generic (Ubuntu build) > 6.11.0-061100
-- Laptop: TUXEDO InfinityBook Pro 16 - Gen8 with Thunderbolt 4
-- eGPU: Radeon Instinct MI50 32GB, NVIDIA 3080 10GB
-
-Steps to reproduce:
-1. Boot the system with the eGPU.
-2. Observe PCI BAR message in `dmesg`.
-
-Logs:
-both kernel messages, lspci can be found here:
-https://gist.github.com/stepeos/cd060c7d66ab195f51ab4d5675b4e4af
-raw files:
-- dmesg_linux_6.11.0.log
-https://gist.githubusercontent.com/stepeos/cd060c7d66ab195f51ab4d5675b4e4af=
-/raw/f9470a06ff929d386c50ec6b5d07e0ff3f053dcf/dmesg_linux_6.11.0.log
-- dmesg_linux_6.10.14.log
-https://gist.githubusercontent.com/stepeos/cd060c7d66ab195f51ab4d5675b4e4af=
-/raw/f9470a06ff929d386c50ec6b5d07e0ff3f053dcf/dmesg_linux_6.10.14.log
-
-If additional info is needed, I'm happy to help.
-
-
-Cheers,
-
-Steve
+-- 
+மணிவண்ணன் சதாசிவம்
 
