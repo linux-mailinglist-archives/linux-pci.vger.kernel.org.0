@@ -1,58 +1,63 @@
-Return-Path: <linux-pci+bounces-35187-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35188-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AD60B3CC2F
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 17:44:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF2D2B3D0DF
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Aug 2025 06:07:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9890018933DB
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Aug 2025 15:45:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 798AB3BBB30
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Aug 2025 04:07:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A486248F62;
-	Sat, 30 Aug 2025 15:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F5D6212566;
+	Sun, 31 Aug 2025 04:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcVdAa8k"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LbFk+MFW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF40216DEB1;
-	Sat, 30 Aug 2025 15:44:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61965433B3;
+	Sun, 31 Aug 2025 04:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756568690; cv=none; b=TN7UO7Vv/Ew/yO5J3sbivmmgdWvVaV+QBkwZyBRA4gIdSk6ra1kwyDqHneDiVAf1FuDXwcpKo75vhxrH3yCMhGW8fRf/tOCQSO8+9Ck6GyaJsnvoQfqK4YVhsTYwv0ViLktvCWd6/P0pdgE84m0GWuyOIegdiUMCdrtHCsSWNnA=
+	t=1756613248; cv=none; b=PiJT/8RqrGv8gHo+FouVUMIJKJw/bPP9GBB34v64TyX+5vsGSdh3QmxAnzkbM+w+Ci6NF6ihsgQoplwXvVRHlJnAE2HOqi9w/S5P6bqfokiadl7/jFYlmRirvAWlm52uE1Da781RzeJb2FWfsUjc+c1vLGgDHXvj7nkhi66ubds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756568690; c=relaxed/simple;
-	bh=upWvzEwUjdMOVCbvYz/tRccUO5GEwW+mcBy+qoXGoIc=;
+	s=arc-20240116; t=1756613248; c=relaxed/simple;
+	bh=LptXLD1zwFlWZSHFVxFcX1U/UXwMN65+JMNh3/oeSoI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vFjpqIMJUVpXoggmgy+jsjQF/Tf5dvdOkDBTZ4vraMOdE5VoCxXYuaDa31c12YpP1lSEee1exibQ44kjLFjkrKx7729jpnOiS6am/W/34yuWTjyR9BIsMgiAmgIa9mL0aApuE77fEuwwIkqj8ilqmRxmdOdsJgiVCNfG2igOnAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcVdAa8k; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C5A8C4CEEB;
-	Sat, 30 Aug 2025 15:44:47 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ju2AaBttehZSOk1AbzSfGVJMK1Lt88bx1SpRACNhjtkqbg6X6gRBzM3YbC4d5FMpKYOc5BVAktRakKX7OlHQqX+iXij5qEEd6Lga5BuWEIr+r444X8kzR2JCizk6TP4m+8jNVY5jnxSRIRSaoAiyVEUvc5V0v1sWnD57UojqBRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LbFk+MFW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BFE8C4CEED;
+	Sun, 31 Aug 2025 04:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756568690;
-	bh=upWvzEwUjdMOVCbvYz/tRccUO5GEwW+mcBy+qoXGoIc=;
+	s=k20201202; t=1756613247;
+	bh=LptXLD1zwFlWZSHFVxFcX1U/UXwMN65+JMNh3/oeSoI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fcVdAa8kWXt0ZQVP5kq8pfxnbumxysM4FyT9osJ4MCbeB0QC+j7/c9avCQ5TDO0in
-	 3lcx70wmcSHl6J85RHMtHF79CGntyBi9C0guFDN/hGYV/Jv5/lAPTknjUdWCwffq19
-	 J0b6/cGRaLQ2IExJRgk6mpUsrhxCxRax7PKI8n3B6IPUd83snbdg/IC8/v/l6KzXkv
-	 mB2L0GFwGIHhlGyPlSCyo0St72CGWU6AbFa1mxZLOgTqOERrx/94LbGPRLPjT2dKbP
-	 Zc4MPrmGxLz8FuOwvrpirhD2w6OuVwmi6uFUwGZtFOL6V9CpT35XiXRrzQ0wBYhc3p
-	 9GzrBaeweEb5w==
-Date: Sat, 30 Aug 2025 21:14:43 +0530
+	b=LbFk+MFWyECQgwWN/R2B7l0hcZN7hA2vUQVDt1Z3vI+4xJ3whKk9FXHuOSLrhh68P
+	 HgDKzytxI9JEgGTqLShXuxO5gzSXveAhj/0L+tAk3KhXz+RWTt4YyXJeDE3WTswKVQ
+	 AqyW+cv2P79nBkjorkKxY8lhHwuLTsXTNYrIOvJWNTT8hLKaVaG/JT0Buj1ZluwEGZ
+	 0T9Z0g99KxMdPVAJcY7C+z1Oy0MCGyqXkXjNLTAsLMbeJ2bxsyknjvLi81LciN82+c
+	 uFx/JoVnTWTTtlvAqGEvpG+08cvISOMgCy7Y7MTumCDyV7Fg+QKPdRJyqiN3KXtr1Q
+	 QzC86xUv46DfQ==
+Date: Sun, 31 Aug 2025 09:37:17 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>, 
-	Allen Hubbe <allenbh@gmail.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ntb@lists.linux.dev
-Subject: Re: [PATCH 2/2] PCI: endpoint: pci-epf-vntb: Add MSI doorbell support
-Message-ID: <gkgdzbbq2ykim4gfrkw5qnimdyyxcs3efkt3lot3bh7jmi57he@wxsxp3m3eg6k>
-References: <20250815-vntb_msi_doorbell-v1-0-32df6c4bf96c@nxp.com>
- <20250815-vntb_msi_doorbell-v1-2-32df6c4bf96c@nxp.com>
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, geert+renesas@glider.be, 
+	magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org, 
+	mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de, lizhi.hou@amd.com, 
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v3 5/9] PCI: rzg3s-host: Add Initial PCIe Host Driver for
+ Renesas RZ/G3S SoC
+Message-ID: <zsgncwvhykw4ja3bbqaxwupppjsqq4pcrdgrsduahokmt72xsm@twekpse6uzzh>
+References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250704161410.3931884-6-claudiu.beznea.uj@bp.renesas.com>
+ <ddxayjj5wcuuish4kvyluzrujkes5seo7zlusmomyjfjcgzcyj@xe3zzzmy2zaj>
+ <8ef466aa-b470-4dcb-9024-0a9c36eb9a6a@tuxon.dev>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,146 +67,301 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250815-vntb_msi_doorbell-v1-2-32df6c4bf96c@nxp.com>
+In-Reply-To: <8ef466aa-b470-4dcb-9024-0a9c36eb9a6a@tuxon.dev>
 
-On Fri, Aug 15, 2025 at 06:20:54PM GMT, Frank Li wrote:
-> Add MSI doorbell support to reduce latency between PCI host and EP.
+On Sat, Aug 30, 2025 at 02:22:45PM GMT, Claudiu Beznea wrote:
 > 
-> Before this change:
->   ping 169.254.172.137
->   64 bytes from 169.254.172.137: icmp_seq=1 ttl=64 time=0.575 ms
->   64 bytes from 169.254.172.137: icmp_seq=2 ttl=64 time=1.80 ms
->   64 bytes from 169.254.172.137: icmp_seq=3 ttl=64 time=8.19 ms
->   64 bytes from 169.254.172.137: icmp_seq=4 ttl=64 time=2.00 ms
 > 
-> After this change:
->   ping 169.254.144.71
->   64 bytes from 169.254.144.71: icmp_seq=1 ttl=64 time=0.215 ms
->   64 bytes from 169.254.144.71: icmp_seq=2 ttl=64 time=0.456 ms
->   64 bytes from 169.254.144.71: icmp_seq=3 ttl=64 time=0.448 ms
+> On 30.08.2025 09:59, Manivannan Sadhasivam wrote:
+> > On Fri, Jul 04, 2025 at 07:14:05PM GMT, Claudiu wrote:
+> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>
+> >> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+> >> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+> >> only as a root complex, with a single-lane (x1) configuration. The
+> >> controller includes Type 1 configuration registers, as well as IP
+> >> specific registers (called AXI registers) required for various adjustments.
+> >>
+> >> Hardware manual can be downloaded from the address in the "Link" section.
+> >> The following steps should be followed to access the manual:
+> >> 1/ Click the "User Manual" button
+> >> 2/ Click "Confirm"; this will start downloading an archive
+> >> 3/ Open the downloaded archive
+> >> 4/ Navigate to r01uh1014ej*-rzg3s-users-manual-hardware -> Deliverables
+> >> 5/ Open the file r01uh1014ej*-rzg3s.pdf
+> >>
+> >> Link: https://www.renesas.com/en/products/rz-g3s?queryID=695cc067c2d89e3f271d43656ede4d12
+> >> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >> ---
+> >>
+> > 
+> > [...]
+> > 
+> >> +static bool rzg3s_pcie_child_issue_request(struct rzg3s_pcie_host *host)
+> >> +{
+> >> +	u32 val;
+> >> +	int ret;
+> >> +
+> >> +	rzg3s_pcie_update_bits(host->axi, RZG3S_PCI_REQISS,
+> >> +			       RZG3S_PCI_REQISS_REQ_ISSUE,
+> >> +			       RZG3S_PCI_REQISS_REQ_ISSUE);
+> >> +	ret = readl_poll_timeout_atomic(host->axi + RZG3S_PCI_REQISS, val,
+> >> +					!(val & RZG3S_PCI_REQISS_REQ_ISSUE),
+> >> +					5, RZG3S_REQ_ISSUE_TIMEOUT_US);
+> >> +
+> >> +	return !!ret || (val & RZG3S_PCI_REQISS_MOR_STATUS);
+> > 
+> > You don't need to do !!ret as the C11 standard guarantees that any scalar type
+> > stored as bool will have the value of 0 or 1.
 > 
-> Change u64 db to atomic_64 because difference doorbell may happen at the
-> same time.
+> OK, will drop it anyway as suggested in another thread.
+> 
+> > 
+> >> +}
+> >> +
+> > 
+> > [...]
+> > 
+> >> +static void __iomem *rzg3s_pcie_root_map_bus(struct pci_bus *bus,
+> >> +					     unsigned int devfn,
+> >> +					     int where)
+> >> +{
+> >> +	struct rzg3s_pcie_host *host = bus->sysdata;
+> >> +
+> >> +	if (devfn)
+> >> +		return NULL;
+> > 
+> > Is it really possible to have devfn as non-zero for a root bus?
+> 
+> I will drop it.
+> 
+> > 
+> >> +
+> >> +	return host->pcie + where;
+> >> +}
+> >> +
+> > 
+> > [...]
+> > 
+> >> +static int rzg3s_pcie_msi_setup(struct rzg3s_pcie_host *host)
+> >> +{
+> >> +	size_t size = RZG3S_PCI_MSI_INT_NR * sizeof(u32);
+> >> +	struct rzg3s_pcie_msi *msi = &host->msi;
+> >> +	struct device *dev = host->dev;
+> >> +	int id, ret;
+> >> +
+> >> +	msi->pages = __get_free_pages(GFP_KERNEL | GFP_DMA, 0);
+> >> +	if (!msi->pages)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	msi->dma_addr = dma_map_single(dev, (void *)msi->pages, size * 2,
+> >> +				       DMA_BIDIRECTIONAL);
+> >> +	if (dma_mapping_error(dev, msi->dma_addr)) {
+> >> +		ret = -ENOMEM;
+> >> +		goto free_pages;
+> >> +	}
+> >> +
+> >> +	/*
+> >> +	 * According to the RZ/G3S HW manual (Rev.1.10, section 34.4.5.2 Setting
+> >> +	 * the MSI Window) the MSI window need to be within any AXI window. Find
+> >> +	 * an AXI window to setup the MSI window.
+> > 
+> > Are you really finding the AXI window or just making sure that the MSI window
+> > falls into one of the AXI window?
+> 
+> I'm making sure the MSI windows falls into one of the enabled AXI windows.
 > 
 
-Only the atomicity of db variable is enough?
+Then you need to reword the comment as such. Currently, it is not clear.
 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-vntb.c | 153 +++++++++++++++++++++++---
->  1 file changed, 136 insertions(+), 17 deletions(-)
+> > 
+> > And I believe it is OK to have more than one MSI window within an AXI window.
 > 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> index 83e9ab10f9c4fc2b485d5463faa2172500f12999..1c586205835fe9c7c5352e74819bccb4ece84438 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> @@ -36,11 +36,13 @@
->   * PCIe Root Port                        PCI EP
->   */
->  
-> +#include <linux/atomic.h>
->  #include <linux/delay.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
->  
-> +#include <linux/pci-ep-msi.h>
->  #include <linux/pci-epc.h>
->  #include <linux/pci-epf.h>
->  #include <linux/ntb.h>
-> @@ -126,12 +128,13 @@ struct epf_ntb {
->  	u32 db_count;
->  	u32 spad_count;
->  	u64 mws_size[MAX_MW];
-> -	u64 db;
-> +	atomic64_t db;
->  	u32 vbus_number;
->  	u16 vntb_pid;
->  	u16 vntb_vid;
->  
->  	bool linkup;
-> +	bool msi_doorbell;
->  	u32 spad_size;
->  
->  	enum pci_barno epf_ntb_bar[VNTB_BAR_NUM];
-> @@ -258,9 +261,9 @@ static void epf_ntb_cmd_handler(struct work_struct *work)
->  
->  	ntb = container_of(work, struct epf_ntb, cmd_handler.work);
->  
-> -	for (i = 1; i < ntb->db_count; i++) {
-> +	for (i = 1; i < ntb->db_count && !ntb->msi_doorbell; i++) {
->  		if (ntb->epf_db[i]) {
-> -			ntb->db |= 1 << (i - 1);
-> +			atomic64_or(1 << (i - 1), &ntb->db);
->  			ntb_db_event(&ntb->ntb, i);
->  			ntb->epf_db[i] = 0;
->  		}
-> @@ -319,7 +322,24 @@ static void epf_ntb_cmd_handler(struct work_struct *work)
->  
->  reset_handler:
->  	queue_delayed_work(kpcintb_workqueue, &ntb->cmd_handler,
-> -			   msecs_to_jiffies(5));
-> +			   ntb->msi_doorbell ? msecs_to_jiffies(500) : msecs_to_jiffies(5));
-> +}
-> +
-> +static irqreturn_t epf_ntb_doorbell_handler(int irq, void *data)
-> +{
-> +	struct epf_ntb *ntb = data;
-> +	int i = 0;
-> +
-> +	for (i = 1; i < ntb->db_count; i++)
-> +		if (irq == ntb->epf->db_msg[i].virq) {
-> +			atomic64_or(1 << (i - 1), &ntb->db);
-> +			ntb_db_event(&ntb->ntb, i);
-> +		}
-> +
-> +	if (irq == ntb->epf->db_msg[0].virq)
-> +		queue_delayed_work(kpcintb_workqueue, &ntb->cmd_handler, 0);
-> +
-> +	return IRQ_HANDLED;
->  }
->  
->  /**
-> @@ -500,6 +520,90 @@ static int epf_ntb_configure_interrupt(struct epf_ntb *ntb)
->  	return 0;
->  }
->  
-> +static int epf_ntb_db_bar_init_msi_doorbell(struct epf_ntb *ntb,
-> +					    struct pci_epf_bar *db_bar,
-> +					    const struct pci_epc_features *epc_features,
-> +					    enum pci_barno barno)
-> +{
-> +	struct pci_epf *epf = ntb->epf;
-> +	dma_addr_t low, high;
-> +	struct msi_msg *msg;
-> +	size_t sz;
-> +	int ret;
-> +	int i;
-> +
-> +	ret = pci_epf_alloc_doorbell(epf,  ntb->db_count);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < ntb->db_count; i++) {
-> +		ret = request_irq(epf->db_msg[i].virq, epf_ntb_doorbell_handler,
-> +				  0, "vntb_db", ntb);
-> +
-> +		if (ret) {
-> +			dev_err(&epf->dev,
-> +				"Failed to request doorbell IRQ: %d\n",
-> +				epf->db_msg[i].virq);
-> +			goto err_request_irq;
-> +		}
-> +	}
-> +
-> +	msg = &epf->db_msg[0].msg;
-> +
-> +	high = 0;
-> +	low = (u64)msg->address_hi << 32 | msg->address_lo;
+> This IP supports a single MSI window that need to fit into one of the
+> enabled AXI windows.
+> 
 
-Can you remind me when the 'address_{hi/lo}' pairs are set?
+[...]
 
-Rest looks OK to me.
+> >> +
+> >> +	/* Update vendor ID and device ID */
+> > 
+> > Are you really updating it or setting it? If you are updating it, are the
+> > default IDs invalid?
+> 
+> Default IDs are valid (at least on RZ/G3S) but Renesas specific. Renesas
+> wants to let individual users to set their own IDs.
+> 
+
+So they are optional then? But the binding treats them as required, which should
+be changed if the default IDs are valid.
+
+> > 
+> >> +	writew(host->vendor_id, host->pcie + PCI_VENDOR_ID);
+> >> +	writew(host->device_id, host->pcie + PCI_DEVICE_ID);
+> >> +
+> >> +	/* HW manual recommends to write 0xffffffff on initialization */
+> >> +	writel(0xffffffff, host->pcie + RZG3S_PCI_CFG_BARMSK00L);
+> >> +	writel(0xffffffff, host->pcie + RZG3S_PCI_CFG_BARMSK00U);
+> >> +
+> >> +	/* Update bus info. */
+> >> +	writeb(primary_bus, host->pcie + PCI_PRIMARY_BUS);
+> >> +	writeb(secondary_bus, host->pcie + PCI_SECONDARY_BUS);
+> >> +	writeb(subordinate_bus, host->pcie + PCI_SUBORDINATE_BUS);
+> >> +
+> >> +	/* Disable access control to the CFGU */
+> >> +	writel(0, host->axi + RZG3S_PCI_PERM);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> > 
+> > [...]
+> > 
+> >> +static int rzg3s_pcie_host_init(struct rzg3s_pcie_host *host, bool probe)
+> >> +{
+> >> +	u32 val;
+> >> +	int ret;
+> >> +
+> >> +	/* Initialize the PCIe related registers */
+> >> +	ret = rzg3s_pcie_config_init(host);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	/* Initialize the interrupts */
+> >> +	rzg3s_pcie_irq_init(host);
+> >> +
+> >> +	ret = reset_control_bulk_deassert(host->data->num_cfg_resets,
+> >> +					  host->cfg_resets);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	/* Wait for link up */
+> >> +	ret = readl_poll_timeout(host->axi + RZG3S_PCI_PCSTAT1, val,
+> >> +				 !(val & RZG3S_PCI_PCSTAT1_DL_DOWN_STS),
+> >> +				 PCIE_LINK_WAIT_SLEEP_MS,
+> >> +				 PCIE_LINK_WAIT_SLEEP_MS *
+> >> +				 PCIE_LINK_WAIT_MAX_RETRIES * MILLI);
+> >> +	if (ret) {
+> >> +		reset_control_bulk_assert(host->data->num_cfg_resets,
+> >> +					  host->cfg_resets);
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	val = readl(host->axi + RZG3S_PCI_PCSTAT2);
+> >> +	dev_info(host->dev, "PCIe link status [0x%x]\n", val);
+> >> +
+> >> +	val = FIELD_GET(RZG3S_PCI_PCSTAT2_STATE_RX_DETECT, val);
+> >> +	dev_info(host->dev, "PCIe x%d: link up\n", hweight32(val));
+> >> +
+> >> +	if (probe) {
+> >> +		ret = devm_add_action_or_reset(host->dev,
+> >> +					       rzg3s_pcie_cfg_resets_action,
+> >> +					       host);
+> > 
+> > Oh well, this gets ugly. Now the devm_add_action_or_reset() is sprinkled
+> > throughout the driver :/
+> > 
+> > As I said earlier, there are concerns in unloading the driver if it implements
+> > an irqchip. So if you change the module_platform_driver() to
+> > builtin_platform_driver() for this driver, these devm_add_action_or_reset()
+> > calls become unused.
+> 
+> They can still be useful in case the probe fails. As the initialization
+> path is complicated, having actions or resets looks to me that makes the
+> code cleaner as the rest of devm_* helpers.
+> 
+> I can drop it and replace with gotos and dedicated functions but this will
+> complicate the code, AFAICT.
+> 
+> Please let me know how would you like me to proceed.
+> 
+
+It is generally preferred to cleanup the resources in err path using goto
+labels.
+
+> > 
+> >> +	}
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+
+[...]
+
+> >> +	ret = pm_runtime_resume_and_get(dev);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> > 
+> > Do you really need to do resume_and_get()? If not, you should do:
+> 
+> It it's needed to enable the clock PM domain the device is part of.
+> 
+
+I've replied below.
+
+> > 
+> > 	pm_runtime_set_active()
+> > 	pm_runtime_no_callbacks()
+> > 	devm_pm_runtime_enable()
+> > 
+> >> +	ret = devm_add_action_or_reset(dev, rzg3s_pcie_pm_runtime_put, dev);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	raw_spin_lock_init(&host->hw_lock);
+> >> +
+> >> +	ret = rzg3s_pcie_host_setup(host, rzg3s_pcie_intx_setup,
+> >> +				    rzg3s_pcie_msi_enable, true);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	msleep(PCIE_RESET_CONFIG_WAIT_MS);
+> >> +
+> >> +	bridge->sysdata = host;
+> >> +	bridge->ops = &rzg3s_pcie_root_ops;
+> >> +	bridge->child_ops = &rzg3s_pcie_child_ops;
+> >> +	ret = pci_host_probe(bridge);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	return devm_add_action_or_reset(dev, rzg3s_pcie_host_remove_action,
+> >> +					host);
+> >> +}
+> >> +
+> >> +static int rzg3s_pcie_suspend_noirq(struct device *dev)
+> >> +{
+> >> +	struct rzg3s_pcie_host *host = dev_get_drvdata(dev);
+> >> +	const struct rzg3s_pcie_soc_data *data = host->data;
+> >> +	struct regmap *sysc = host->sysc;
+> >> +	int ret;
+> >> +
+> >> +	ret = pm_runtime_put_sync(dev);
+> >> +	if (ret)
+> >> +		return ret;
+> > 
+> > Since there are no runtime callbacks present, managing runtime PM in the driver
+> > makes no sense.
+> 
+> The PCIe device is part of a clock power domain. Dropping
+> pm_runtime_enable()/pm_runtime_put_sync() in this driver will lead to this
+> IP failing to work as its clocks will not be enabled/disabled. If you don't
+> like the pm_runtime_* approach that could be replaced with:
+> 
+> devm_clk_get_enabled() in probe and clk_disable()/clk_enable() on
+> suspend/resume. W/o clocks the IP can't work.
+> 
+
+Yes, you should explicitly handle clocks in the driver. Runtime PM makes sense
+if you have a power domain attached to the IP, which you also do as I see now.
+So to conclude, you should enable/disable the clocks explicitly for managing
+clocks and use runtime PM APIs for managing the power domain associated with
+clock controller.
+
+But please add a comment above pm_runtime_resume_and_get() to make it clear as
+most of the controller drivers are calling it for no reason.
 
 - Mani
 
