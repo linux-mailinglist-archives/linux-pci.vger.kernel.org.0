@@ -1,109 +1,123 @@
-Return-Path: <linux-pci+bounces-35197-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35198-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BED7B3D3B7
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Aug 2025 15:43:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C0355B3D4C5
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Aug 2025 21:01:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EEF861899004
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Aug 2025 13:44:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FFEE18983F3
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Aug 2025 19:01:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17FE12144CF;
-	Sun, 31 Aug 2025 13:43:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37C6C21772A;
+	Sun, 31 Aug 2025 19:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhQi2lmJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F194D1D6AA
-	for <linux-pci@vger.kernel.org>; Sun, 31 Aug 2025 13:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8AF45029;
+	Sun, 31 Aug 2025 19:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756647828; cv=none; b=n4dMV54DTzZgxn5LBdXuHMHXUoV4yMoorJKaUDtXY4KElpLsk1jngT9gybHh+re8xUpXQRfEmRcJ19s/er/FS1Hf50YA6IkxvKoBx/UJWnr02RNX46aEieT5Chn6H24Qx2tzkSgIRxsTH49NlWVREa1y+bxHekundFXTpupKlb4=
+	t=1756666865; cv=none; b=LODkv0MP1tdZJW8tIeEKE5Ob+InmmPHCiJnREdzy6wrnG/EDve90aTBEB/ArytIZOGIo3cAIRjM3Q8bZLO35KE/f+8JL9GoRaSkiqtp6B3rn46P3GKbzV8tGNUBbSBo4EXEbLz2+tEkhCtcjPg18Nl84KpXVtNEQuLrtFwkgtP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756647828; c=relaxed/simple;
-	bh=8L/eQK6LS+QIySnxRZ4qS7iUmHeFu80S7wgbp1wm690=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T+AvVoRtF5WaTUcI4M6cYggrArmFIqtkqtGBvB7AitNiKQSS8MeBIsgg3KQS2xLm2omPwrl/e0a3oYbuS7Sw9zcgYLFoVeE852T8JsOHngbmMpEfaLglaHYbCoAlSa/SFUUKFAksWTHP/acNADpNJN/xwR9rRCPGsoQyEO7NVCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id A84F7201D1B7;
-	Sun, 31 Aug 2025 15:43:35 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 9D18954C6B; Sun, 31 Aug 2025 15:43:35 +0200 (CEST)
-Date: Sun, 31 Aug 2025 15:43:35 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Keith Busch <kbusch@meta.com>
-Cc: linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH] pciehp: sync interrupts for bus resets
-Message-ID: <aLRRh_4YhAZjWeEW@wunner.de>
-References: <20250827224514.3162098-1-kbusch@meta.com>
+	s=arc-20240116; t=1756666865; c=relaxed/simple;
+	bh=x9x4yAjQdc9OshEv6rCBbv0t6jvRuV9OYkiqBmKru68=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MCtuFXA/8cqEHofB3R6wuvDwVcWz6MAy3vTdUVj3vf/YQWMsXhnIST1aCxSQjg5WbNG0aYGpgv7PlqjgfUv29SqXq9hpLlDTAeJaE4terAUNbNhvaJOu993jRHXbSAk+35S7+yQN2D6vUcGJFxYS/hrKmLZK+DesBb9Xk/TsD2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YhQi2lmJ; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-321cfa7ad29so3557938a91.1;
+        Sun, 31 Aug 2025 12:01:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756666863; x=1757271663; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vrYs9YxYEtBoI7/YEgRrxmn25mpmua4Qc6VJAZZuAA0=;
+        b=YhQi2lmJQDCH8UQxKKjh7XDj6nsUhRrWdwZc1/PM8z8EZaE87lbX0rgJ/LFTQ6pM8X
+         ZPJT8fq0mqynHuAM0jpXepuUFDY30GUo1nhPywFpA504jMQKaQLhcMq6tSBsIohSlTWP
+         fNJGKb8LJ7UrHzPpqfrUznv6iXvQzW98rWpurOeF5wLCnOtohQ0LiFgP+N3IsRank4m1
+         3jrArrGc5rdbUdwHdBD00qJ1arzqBJNpUXq8ddGysJQMmd6YNZMHbOPuMc6IFxtKOAUx
+         VUx+jLYHgfaNO5pZ3UjFZ4Hmp+OJgvl3siQmUbV4jlH5T0kWwV+BgDroiSAOSBEz9v3x
+         6vYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756666863; x=1757271663;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vrYs9YxYEtBoI7/YEgRrxmn25mpmua4Qc6VJAZZuAA0=;
+        b=C6TwWlZP3wHmzL891Kiq0P7ZfOoiZlmqEoHcZntyXNk+8FaVLDi7CTDgaglI01/+gd
+         P4AVfyHJpEJ0J21CUcuAlfmuaU5Wp0+lWIb43LaxgjNv1R4r+z8zKvbOBinzvLBNJ8zb
+         YGGFdxerJM+kJrRsrjEqTeBmr/EdHzmphZhm12mGY2Vc5I4PG9eaifYEhTy2pDUCzwuT
+         HccAzbvigk3eDi6vc3g9r7Qsiso4SsLfJnofDt2HXO7SCvKxOMskOcrCCz625AjrSlX/
+         rfU3wfvGGV9EFQlN7KrbmE0tzotC9MtVLHI1/n2lmoRxxNVU9Tf4gINkIeADCDOzIaJM
+         lM8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUsozHyldltb3uFBIJGR2VO7bBsxV3tAb/bExDBdz3th+Li97ZsXJYa+tzGkvc3cNF2H7DnnSywCeX99jc=@vger.kernel.org, AJvYcCWK/quMDd8uivkfV60Kh+SV6W4euQKZdP3EBxwIXy/moaIASDUG/n3EnQR29kpS+SNAUHEnFXYaFI/3Hts=@vger.kernel.org, AJvYcCWd/LL8d2TeI00tVYavv2GQhOzmvNv/DnoFQysCHaNn3GRSi+sgMT5vm4eyPiTqJwCRC/+3hnkC/vgc@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNMCXVT1LaHa68JWfVBSDPbmfW+z+UagXlKpPWod+fuX25dgIm
+	gwQxuvyxFq2D2zjRODZiMgHvzdEjDc1J0936BDsWQTT+GQvZ8sdWgdbm
+X-Gm-Gg: ASbGnctYKVRTRPQZ0ClF4smBmsyXfMR2Djhm5l3j6Ni8NFwNAbrDIUAIyLf5EUnx0Wg
+	L5cz1Eah5R+qc3rB5r81llnDVOW5z2WkXKN12HjgHrgevTEuuxk6595ni+MPEPLkzdp65cJBu2k
+	lW42Q/g5fJIQwr62mjY9wII3PUKJPpM+nX6SrAN+Y964acP4NlCTjR/gXwjDxksTEaAT+LhGbny
+	fJW4r6f8nBRYfb3VCAVj6fRQOSXoLbBBU+4IumzseHH0eHi9jO0AWEwj5+c6nqgNrIjhA58x1LL
+	t17RmNoGIp4qITsCQJiD5tUw/cUOVigGEBIznVje5hCm1Uu8A724gaOiKBHDb7J2Is/9flCqgVc
+	YDWsEZrfrPj89YjGddjbA
+X-Google-Smtp-Source: AGHT+IEcNVi2o7VXme1/DBaqQT0UJas35BqIHk2Q4/LySdHxKGnn+iZMqV4YwVhzoo0U97CVXz6YIA==
+X-Received: by 2002:a17:902:c406:b0:231:d0da:5e1f with SMTP id d9443c01a7336-24944aefe1dmr60484695ad.21.1756666862940;
+        Sun, 31 Aug 2025 12:01:02 -0700 (PDT)
+Received: from rockpi-5b ([45.112.0.216])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2490372723fsm81118355ad.39.2025.08.31.12.00.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 Aug 2025 12:01:02 -0700 (PDT)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Thierry Reding <thierry.reding@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	linux-tegra@vger.kernel.org (open list:PCI DRIVER FOR NVIDIA TEGRA),
+	linux-pci@vger.kernel.org (open list:PCI DRIVER FOR NVIDIA TEGRA),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Anand Moon <linux.amoon@gmail.com>
+Subject: [RFC v1 0/2] PCI: tegra: A couple of cleanups
+Date: Mon,  1 Sep 2025 00:30:49 +0530
+Message-ID: <20250831190055.7952-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250827224514.3162098-1-kbusch@meta.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 27, 2025 at 03:45:14PM -0700, Keith Busch wrote:
-> Synchronize the interrupt to ensure the reset isn't going to disrupt a
-> previously pending handler from igoring the reset's link flap. Back to
-> back secondary bus resets create a window when the previous reset
-> proceeds with DLLLA, waking the pending pciehp interrupt thread, but the
-> subsequent reset tears it down while the irq thread tries to confirm the
-> link is active, triggering unexpected re-enumeration.
+Hi All,
 
-Help me understand this:
+This small series provides two cleanup patches for the Tegra PCIe driver. 
+The overall goal is to replace custom, open-coded logic with standard
+kernel helper functions.
 
-I think what you mean is that pciehp_reset_slot() runs and the
-Secondary Bus Reset causes a spurious link change. So pciehp_ist() runs,
-waits for the reset to finish with pci_hp_spurious_link_change(),
-then calls pciehp_ignore_link_change(), which tests whether the link
-is active again by calling pciehp_check_link_active().
+These changes improve the driver's readability and maintainability by 
+everaging modern, well-tested APIs for clock management and register
+polling.
 
-And you're saying that at the same time, pciehp_reset_slot() runs,
-performs a Secondary Bus Reset, thus brings down the link,
-confusing the concurrent pciehp_check_link_active().
-Did I understand that correctly?
+Thanks
+-Anand 
 
-I don't quite see how this can happen, given pciehp_reset_slot()
-acquires ctrl->reset_lock for writing and the same lock is held
-for reading for the call to pciehp_check_link_active().
+Anand Moon (2):
+  PCI: tegra: Simplify clock handling by using clk_bulk*() functions
+  PCI: tegra: Use readl_poll_timeout() for link status polling
 
-Moreover pciehp_ist() ignores the link flap in the first iteration
-(it clears the flags in the local variable "events") and if
-pciehp_check_link_active() would indeed fail, then the bits would
-only be set in ctrl->pending_events and a rerun of pciehp_ist()
-would be triggered.  That second iteration of pciehp_ist() would
-then find the PCI_LINK_CHANGED flag set and ignore the link change
-(again).
+ drivers/pci/controller/pci-tegra.c | 109 +++++++----------------------
+ 1 file changed, 27 insertions(+), 82 deletions(-)
 
-So this should all work fine.
 
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -946,6 +946,7 @@ int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, bool probe)
->  
->  	down_write_nested(&ctrl->reset_lock, ctrl->depth);
->  
-> +	synchronize_irq(ctrl->pcie->irq);
->  	pci_hp_ignore_link_change(pdev);
->  
->  	rc = pci_bridge_secondary_bus_reset(ctrl->pcie->port);
+base-commit: 5c3b3264e5858813632031ba58bcd6e1eeb3b214
+-- 
+2.50.1
 
-This will deadlock because it waits for pciehp_ist() to finish
-but pciehp_ist() may wait for ctrl->reset_lock, which is held here.
-
-Thanks,
-
-Lukas
 
