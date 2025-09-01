@@ -1,232 +1,198 @@
-Return-Path: <linux-pci+bounces-35258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35261-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BA3FB3DE58
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 11:26:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6650B3DE74
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 11:29:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF3DA1892E37
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 09:26:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF86D1A80D2D
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 09:29:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D966530E839;
-	Mon,  1 Sep 2025 09:21:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DF3030DEB4;
+	Mon,  1 Sep 2025 09:25:47 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023073.outbound.protection.outlook.com [40.107.44.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF59630F558;
-	Mon,  1 Sep 2025 09:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756718479; cv=fail; b=gI8HsNgabb2zcgQ7cKfqnI5CCepTVrGdFOELBUotkVOlhFYQGxtOdepRo8vA6I37SU3cjFDCEm4bPSRJPP4czp4yCt/Xwx4eKNt0cREOdoKdultBYX9vBS0AZ2HHSNucysSB4B6m737ikSiJARQ4341pzWVQdKLvBugehYWi0zA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756718479; c=relaxed/simple;
-	bh=iBxSvoUnPoBU2EyNQCKIX8gULd/ZDM2MqMSMXOlNsb0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bVIJJW/JkTMO7ecGqC7wOEycOtjAUXRUS2e5e3dyc8zmLaET+rM2tQABDMKYOJiFWoKrYMWe7EL+AgdV15rWTZKS+z9mKuiNJlVFFbfJzXnZdMQSzy2wrbAdws9GrUM7BCkTZNERPRlu+9sQJgXC1lO3l1UPxDbgnFF2TFakdGI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mCX3EUJAvRSYFPKzygsID8qJ1OVxOX/Tsi6ADVWAUBqJxW8nDIejUfxrLtecCRGSxjqXAe1uBaGoClINx2DtPRRDbPgzFgT8otLpfQjpXAlVbdy3kPJe3WKlutuLX/0VdoyoDpSGOCMoVZavyz90GNbJYVFEW/yAwfBN8s0IdfJSgeCk8wWRIuJeSbpCzThLabyO1Z7askeQ6HnqV0WQFUaJj6scbBQZkgrBameVCpboxAw0kalSn1GQ2BVXrLZUqL1ZdQ1ZhoOJ4BEbDTyZUDPFykzyG+ZmPnbTk+AS4lPsJ80S5DmGqmOfbS2H1EkUcBWPqMv0e5JGW/OyiTZPiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6Gq6gbY7jZXNWd/1l+ZBzTZUHx4fNNkL0ZGeuTeLAeI=;
- b=rHv2cxS8ae4gzuj8i2N+Ck25ixaGFspLPNTWV8pdvw+2LONtqWWR5A+TZY2tZ9iMM8FBkV3xC1Gj5OpLZuEPyKR41bA5/VUxoc/nNQ9O1nMLHrMP5iN9gxPmw51/45JbEwGEDGAUEF4D9LaO7c9Ifa4PbtGuOo3i3bxcGweIqb4cUlrGpbjjzrXMZD9DWkw77+tuC/ru19AjV4V3Q7U9+lHGlWkBFm8y3XJgGvpRYg+FbDpX7c3oFylrZba3ymnPVqlvTnQfZfMTFapnwOQ62afyxybMWFAjU1GHpZjEY58tKpPlEmFzvbCjD3Ex1cG3UHPZtVMQHfT8yHwl1/Y6Gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SEWP216CA0020.KORP216.PROD.OUTLOOK.COM (2603:1096:101:2b6::12)
- by JH0PR06MB6293.apcprd06.prod.outlook.com (2603:1096:990:10::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Mon, 1 Sep
- 2025 09:21:12 +0000
-Received: from TY2PEPF0000AB88.apcprd03.prod.outlook.com
- (2603:1096:101:2b6:cafe::83) by SEWP216CA0020.outlook.office365.com
- (2603:1096:101:2b6::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9073.26 via Frontend Transport; Mon,
- 1 Sep 2025 09:21:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- TY2PEPF0000AB88.mail.protection.outlook.com (10.167.253.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9094.14 via Frontend Transport; Mon, 1 Sep 2025 09:21:10 +0000
-Received: from hans.. (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 976E941604F1;
-	Mon,  1 Sep 2025 17:21:05 +0800 (CST)
-From: hans.zhang@cixtech.com
-To: bhelgaas@google.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	mani@kernel.org,
-	robh@kernel.org,
-	kwilczynski@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: mpillai@cadence.com,
-	fugang.duan@cixtech.com,
-	guoyin.chen@cixtech.com,
-	peter.chen@cixtech.com,
-	cix-kernel-upstream@cixtech.com,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <hans.zhang@cixtech.com>
-Subject: [PATCH v9 14/14] arm64: dts: cix: Enable PCIe on the Orion O6 board
-Date: Mon,  1 Sep 2025 17:20:52 +0800
-Message-ID: <20250901092052.4051018-15-hans.zhang@cixtech.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250901092052.4051018-1-hans.zhang@cixtech.com>
-References: <20250901092052.4051018-1-hans.zhang@cixtech.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1370A30DD08;
+	Mon,  1 Sep 2025 09:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756718747; cv=none; b=RMZ20SvivNOTKLNOKJhuxQ4wzm/WC5hgtOrkf/OD7RrKUMYx2vJgs6G0/1Qy52So2AHjlJo1eiYZWL+U60+MD3mgAb6cZnje+ZpwK4XXHyTT2fM4pLpC0XAT5SbKsp83S8bvI85BCxCXq0yKONimrfxjW9tfv+CtS90Pj56jpQE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756718747; c=relaxed/simple;
+	bh=FtS6/YGhG772uhtJjhh1cI6qQRFds88d9VVWLUCe/LU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZTuCxbUbWgK5PWZ7/n1wlTrhhYPhcsWVYaHPeRRxe1wbgYzsR6+fBZbwbAVKtWhACk6wNqdPnaUbaeTWXD+rgJpMx4v+fNfCeiSlf4Lvc1ytbZCgCst3O2YB4/ng4zzH0KjstTnqr89E58dCj9McJbInUAUbK/ArR7bvzrkv3YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-890190c7912so792272241.2;
+        Mon, 01 Sep 2025 02:25:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756718743; x=1757323543;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=srcQe2QCCiAwB7DGCqKHSCUVph+K4Lh5idtVMweUwUM=;
+        b=TdokbKKrYamwXTcDb6r/+LvRc6XC7hbHenl5949FejxF7rBKD6ap4kE/V9x+ePe1Ao
+         LIW4oqOSjEexrFZc2fO10WIb5hdZu5Q7PUR4JrNQ/0jKnHhidGZhwQoPH+a2QA3kRaql
+         2AkBRnd/Mv/YWd9EbInOzwfUWnqZoqcuv7F2BlM9mTLwJCmKVJrCLM7YeOuTP+r4BenF
+         fc10hnC/WuzK59dw43/xgWVvP+86gBRyw+NleOeSt4cEDDFKXLvcXBA28NCBaTxTtamh
+         moKdJzyjf9Iyfzxn0tyjM+KQwh1gThIdQb5VNnyl+kMeXrMnzT973LkDqa86RMs0CnRZ
+         x0XA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHcvlXyVqzcKsAAJvFfyWwnEdD/KTJg/M2HHiKRQz2dIh3jYv0rsbMNwNhY2EY7qS2n1nlreK9YZpLfH4w@vger.kernel.org, AJvYcCUTiq+vRCpods4J/0bB4jzeh5GjDdDSYq1PJnlKXKGWq1Bft1XYa3mQhpYwEnlJBvIIOosQy9fN080Q@vger.kernel.org, AJvYcCVs4Fcm/JpYN2JiLhVCBTNTjIXfzbQ6KhXbfyVvyPV+WEElnB7nwTBN/+MNFViugXENL9Wg1+IPJrIC@vger.kernel.org, AJvYcCWktEZ8KgkuBn9+X1sr/jAQMamxQ7VmCdCHkWLx3wFlmpHYTSDGkpMPzfVsWIe+nOpYqZ2k6tf3WG+y@vger.kernel.org, AJvYcCXNpyaFAfcfbTkSo6FBMtsQgx+DFsnvu9hTjAsQ1p54xfwqrQ5mdoH2tNT2EvanEl6xXGQEY+ayE0iGCbIhAscSzmY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzP2tDEMuhZzD/nIsRwtqSyyzJmTbnd4aJrWqaH8bHnNnWXIAvz
+	H3rduQ7JxKcVRcBubM2f1nnXXfmcvjYdP1EHCxJ0aQbhz5x7Ax8nZOZR+zL0cn4f
+X-Gm-Gg: ASbGncshGOnonQgJ2ChXoz0hlQ5hizS2zNPcF8M0YEXphWNKgF2kILH2faxQP/TVm91
+	uIStSqOIwnY23WwTWduCMLZgFAd/xxNRY33HRAJQPvPiUrlrbS+8cjQYDXpGPGdQQ0GBz6ISWcR
+	ZVLFnON1vhY4/ikS6G7fHu5eAx3mzgu3ZRAA/2hdyLBN1tXKm3rovj4IebZOvWRZphS+uLSK3Ze
+	O42NHEqgguoBJGmhN7HFGFHp6Q0/luIFZt1DqeaDMqflawbx1t6Mye0fopH5roLWPUNLqKTf1yy
+	AvV/2WXNnYedbv+blw254hTpijzMRg6CP2ADkuIMf+XyOGFH1rZg9TrZSAVSyGdG3Yohszri8IN
+	47bd2OqxXrF5BZGkgMQldG+uSmtOxhQV353/ZVKEfasl7fz0wPb0Qa54rUuR9Z9a94fpF3u4=
+X-Google-Smtp-Source: AGHT+IGqf6EtLyLcAcpjD1/RLp1f7DTHd9E5zyZ1/lm08oNAsUeVcprQH1/n7LqtiHVqxWRM4AC9Bg==
+X-Received: by 2002:a05:6102:5809:b0:527:8b63:78e1 with SMTP id ada2fe7eead31-52b19532b98mr1679443137.1.1756718743326;
+        Mon, 01 Sep 2025 02:25:43 -0700 (PDT)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-52af1e3381asm2968389137.13.2025.09.01.02.25.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Sep 2025 02:25:42 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-52a80b778e7so615912137.1;
+        Mon, 01 Sep 2025 02:25:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU+8JqyQX8IeAkP4gQHH5ciJbdGbZoDvJDS6Rde5ma8x7wzvVunfFB20ksdRX5pMRd2BWLFCMfj9ZkCGOrA@vger.kernel.org, AJvYcCU+YVh72qa05ETnfQP7trxXfWAyuYx88GL0Xt3e5337gyi2EFbYSvOfk+/J/VcCFiMRERw7bkvV9x1C@vger.kernel.org, AJvYcCUom1rjLcSO0mqEX56L8FGyl4paoKG/TZp9wuPhgu3JHIiUjBIWWnrVa8URF33Ikfl7J4/OnTM/o54lcESyGwSURuA=@vger.kernel.org, AJvYcCVbcgZN0opcSdtQ07Xr2KFoZtYZwjdtiEylovrJfROpP8dg4mcGDBS1B1vdCBrWiYJf+wF0Cb6pT+Lt@vger.kernel.org, AJvYcCXrte3oOBN99iW1nxkj2pxHuBKOIIhgMMSOIxAV23Lh1UxTXztN/CbkYCDoyx1UUJ+JpDszGkY3Z/rK@vger.kernel.org
+X-Received: by 2002:a05:6102:c51:b0:527:4113:6ad6 with SMTP id
+ ada2fe7eead31-52b19a54877mr1662294137.9.1756718741912; Mon, 01 Sep 2025
+ 02:25:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB88:EE_|JH0PR06MB6293:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 3a169766-0c59-45d9-8709-08dde938e3c6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Nrmbq8sjwtoXIumZN1PZzkrJsz/K4433PXE7GOcY39ISYAMZRkj5kOXA+Cjb?=
- =?us-ascii?Q?Bdb7S+Nun827vH3JkQX81U4gmv8juCASZcB0+tfrPuHHxSr1MOd1jhxBFpPT?=
- =?us-ascii?Q?mCbLKkj7hgsyqepvLf8U9lzlEnw6tgREzNuUyJc+BXP1Ld0lfKHK4zqK5cvq?=
- =?us-ascii?Q?bXCiEVspIZQ85eBnfRGKVSokVDa7WDXV5eLJgAZrdCW5PH/rKSvXPldX5CGz?=
- =?us-ascii?Q?1XnRjW6hvCOADV2yaXAU360laLAT7jRI/keh+G+WttuXPf2PpJb/+QLeCDGH?=
- =?us-ascii?Q?cH8Ql0O8ed3fqGRTTJMHCP/twU8sIpEfTdGr8bVWf9+wY0dlQK91o5ZVDFgO?=
- =?us-ascii?Q?DRDfrVng+zP34QNxMzBZcU/i90rUVTlf1e2TWqqUFV1HzLS+9HnUYRL7KvWq?=
- =?us-ascii?Q?gpLig5COrtJhuCjaI/DCr+Seagb52VOrkj1HmD/iPJRc/kU+y7pj6FaANpDW?=
- =?us-ascii?Q?PmD9rjC+p1zCWai0QFD1V7Ri7F4OnT3ls5Oy9lCmsFDZv4ud9hB4sBsUW7mp?=
- =?us-ascii?Q?Fx5xfAvJgSh1jbIO3XeAZK7HNifHT4DH3WixDkvXWk3Onqryku4LBAmBymnl?=
- =?us-ascii?Q?u4k5aSyOjiF5q/+LIr5wDozfxEtVmIiUvSc4MqA8DVmrEwZoVLuTskGzcqru?=
- =?us-ascii?Q?G4Ekla5kiDfxOi6aNAuzmKf8UcadwvT4RHVBlge3Kj3677qFSYlV31Bq9wWu?=
- =?us-ascii?Q?KzM4G2JR3R/6EWmXP57Q88zKUcsatUszurcoyL7ulVRVQtbYJBZdZsT1/3JR?=
- =?us-ascii?Q?hsUSf5gXE2Gi0wv8z9WMIk9/vgeMBqnidqfCbyJuqIMq5BrW6dng+BR1ks9+?=
- =?us-ascii?Q?Aj9JKhFJ0T+SSLIyeV8otBCglsImyPvnnMTBNAiyVRPcTMOICWGLLoYBxzRE?=
- =?us-ascii?Q?4N1U5sc4K50OgF4mQVIC3O4K4zUfososjMQqg7Eeif3BfrTmef+qr5uansN5?=
- =?us-ascii?Q?UpPAgDYO55u8zpBV0UL7xxMur02Iejmn16pWa7ron9uNv7XimKoKZ9qMEDyl?=
- =?us-ascii?Q?fJXy3ST7AXEcqbb6pXb9vFjk6K8QSzJjbEgPuvzcTvlDCT0hz2AnxZj8Kfc4?=
- =?us-ascii?Q?qJpg0PLlM8f4M8kJ86yKoXn48b22rDe2WiadC1Rp4MBMwsdf7ee6Bf3lF7de?=
- =?us-ascii?Q?LTTdCx2M1MpGPj8eBZgf/XmD0j34Ltf68xx+0vB2UBO2dTOZVi2fvwTGE0fE?=
- =?us-ascii?Q?U4+VEXysfm2xBO2bj+J+4Gc0zZ8KgZ1zqQIfzrmPqlSQh/WekTc4fxA7/FSU?=
- =?us-ascii?Q?MQBdqKXsYusr6ZC5UFaFsQ0uo4CyF4aMaKPKLQfMsDYzqKyKG3mW4B38YE4p?=
- =?us-ascii?Q?bblMxMDiRJfsg+3lzhvMwT+3Hhaa7d5sRI8iM5iP4qpjJr4Uy+M5MhWAJ96c?=
- =?us-ascii?Q?yVBFvdQfxB7/IcMF9cjYUQyc5LTvUhEXwB6hM0KxE/gdiM7BQx+9T5bvJGlg?=
- =?us-ascii?Q?D9AyVBj4ufOTtTMEbH/EmwOSskhcK1WRiI44ak1lLO5RGZI2LR+adAmmK2Gh?=
- =?us-ascii?Q?eKcupT9Y8t6p4vcnh3RJKTpPmuJ3BR3Z/Ddt?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2025 09:21:10.2923
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a169766-0c59-45d9-8709-08dde938e3c6
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	TY2PEPF0000AB88.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB6293
+References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250704161410.3931884-6-claudiu.beznea.uj@bp.renesas.com>
+ <ddxayjj5wcuuish4kvyluzrujkes5seo7zlusmomyjfjcgzcyj@xe3zzzmy2zaj>
+ <8ef466aa-b470-4dcb-9024-0a9c36eb9a6a@tuxon.dev> <zsgncwvhykw4ja3bbqaxwupppjsqq4pcrdgrsduahokmt72xsm@twekpse6uzzh>
+In-Reply-To: <zsgncwvhykw4ja3bbqaxwupppjsqq4pcrdgrsduahokmt72xsm@twekpse6uzzh>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 1 Sep 2025 11:25:30 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUu0uXBJndcwWoZp8NNyBJox5dZw4aoB8Ex50vBDDtP7g@mail.gmail.com>
+X-Gm-Features: Ac12FXz8RcNX144qqXwdTyVaOdBuKNMLkMT1y2uQFu-Wa0Ecb0dTxg5TkCmB8Xs
+Message-ID: <CAMuHMdUu0uXBJndcwWoZp8NNyBJox5dZw4aoB8Ex50vBDDtP7g@mail.gmail.com>
+Subject: Re: [PATCH v3 5/9] PCI: rzg3s-host: Add Initial PCIe Host Driver for
+ Renesas RZ/G3S SoC
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>, bhelgaas@google.com, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com, 
+	catalin.marinas@arm.com, will@kernel.org, mturquette@baylibre.com, 
+	sboyd@kernel.org, p.zabel@pengutronix.de, lizhi.hou@amd.com, 
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Hans Zhang <hans.zhang@cixtech.com>
+Hi Mani,
 
-Add PCIe RC support on Orion O6 board.
+On Sun, 31 Aug 2025 at 06:07, Manivannan Sadhasivam <mani@kernel.org> wrote:
+> On Sat, Aug 30, 2025 at 02:22:45PM GMT, Claudiu Beznea wrote:
+> > On 30.08.2025 09:59, Manivannan Sadhasivam wrote:
+> > > On Fri, Jul 04, 2025 at 07:14:05PM GMT, Claudiu wrote:
+> > >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> > >>
+> > >> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+> > >> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+> > >> only as a root complex, with a single-lane (x1) configuration. The
+> > >> controller includes Type 1 configuration registers, as well as IP
+> > >> specific registers (called AXI registers) required for various adjustments.
+> > >>
+> > >> Hardware manual can be downloaded from the address in the "Link" section.
+> > >> The following steps should be followed to access the manual:
+> > >> 1/ Click the "User Manual" button
+> > >> 2/ Click "Confirm"; this will start downloading an archive
+> > >> 3/ Open the downloaded archive
+> > >> 4/ Navigate to r01uh1014ej*-rzg3s-users-manual-hardware -> Deliverables
+> > >> 5/ Open the file r01uh1014ej*-rzg3s.pdf
+> > >>
+> > >> Link: https://www.renesas.com/en/products/rz-g3s?queryID=695cc067c2d89e3f271d43656ede4d12
+> > >> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-The Orion O6 board includes multiple PCIe root complexes. The current
-device tree configuration enables detection and basic operation of PCIe
-endpoints on this platform.
+> > >> +  ret = pm_runtime_resume_and_get(dev);
+> > >> +  if (ret)
+> > >> +          return ret;
+> > >> +
+> > >
+> > > Do you really need to do resume_and_get()? If not, you should do:
+> >
+> > It it's needed to enable the clock PM domain the device is part of.
+> >
+>
+> I've replied below.
+>
+> > >
+> > >     pm_runtime_set_active()
+> > >     pm_runtime_no_callbacks()
+> > >     devm_pm_runtime_enable()
 
-GPIO and pinctrl subsystems for this platform are not yet ready for
-upstream inclusion. Consequently, attributes such as reset-gpios and
-pinctrl configurations are temporarily omitted from the PCIe node
-definitions.
+> > >> +static int rzg3s_pcie_suspend_noirq(struct device *dev)
+> > >> +{
+> > >> +  struct rzg3s_pcie_host *host = dev_get_drvdata(dev);
+> > >> +  const struct rzg3s_pcie_soc_data *data = host->data;
+> > >> +  struct regmap *sysc = host->sysc;
+> > >> +  int ret;
+> > >> +
+> > >> +  ret = pm_runtime_put_sync(dev);
+> > >> +  if (ret)
+> > >> +          return ret;
+> > >
+> > > Since there are no runtime callbacks present, managing runtime PM in the driver
+> > > makes no sense.
+> >
+> > The PCIe device is part of a clock power domain. Dropping
+> > pm_runtime_enable()/pm_runtime_put_sync() in this driver will lead to this
+> > IP failing to work as its clocks will not be enabled/disabled. If you don't
+> > like the pm_runtime_* approach that could be replaced with:
+> >
+> > devm_clk_get_enabled() in probe and clk_disable()/clk_enable() on
+> > suspend/resume. W/o clocks the IP can't work.
+>
+> Yes, you should explicitly handle clocks in the driver. Runtime PM makes sense
+> if you have a power domain attached to the IP, which you also do as I see now.
+> So to conclude, you should enable/disable the clocks explicitly for managing
+> clocks and use runtime PM APIs for managing the power domain associated with
+> clock controller.
 
-Endpoint detection and functionality are confirmed to be operational with
-this basic configuration. The missing GPIO and pinctrl support will be
-added incrementally in future patches as the dependent subsystems become
-available upstream.
+Why? For the past decade, we've been trying to get rid of explicit
+module clock handling for all devices that are always part of a
+clock domain.
 
-Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
----
-Dear Krzysztof and Mani,
+The Linux PM Domain abstraction is meant for both power and clock
+domains.  This is especially useful when a device is present on multiple
+SoCs, on some also part of a power domain,  and the number of module
+clocks that needs to be enabled for it to function is not the same on
+all SoCs.  In such cases, the PM Domain abstraction takes care of many
+of the integration-specific differences.
 
-Due to the fact that the GPIO, PINCTRL and other modules of our platform are
-not yet ready for upstream. Attributes that PCIe depends on, such as reset-gpios
-and pinctrl*, have not been added for the time being. It will be added gradually
-in the future.
+> But please add a comment above pm_runtime_resume_and_get() to make it clear as
+> most of the controller drivers are calling it for no reason.
 
-The following are Arnd's previous comments. We can go to upsteam separately.
-https://lore.kernel.org/all/422deb4d-db29-48c1-b0c9-7915951df500@app.fastmail.com/
+Note that any child device that uses Runtime PM depends on all
+its parents in the hierarchy to call pm_runtime_enable() and
+pm_runtime_resume_and_get().
 
+Gr{oetje,eeting}s,
 
-The following are the situations of five PCIe controller enumeration devices.
+                        Geert
 
-root@cix-localhost:~# lspci
-0000:c0:00.0 PCI bridge: Device 1f6c:0001
-0000:c1:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
-0001:90:00.0 PCI bridge: Device 1f6c:0001
-0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller S4LV008[Pascal]
-0002:60:00.0 PCI bridge: Device 1f6c:0001
-0002:61:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11ax Wireless Network Controller
-0003:00:00.0 PCI bridge: Device 1f6c:0001
-0003:01:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
-0004:30:00.0 PCI bridge: Device 1f6c:0001
-0004:31:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
-root@cix-localhost:~#
-root@cix-localhost:~# uname -a
-Linux cix-localhost 6.17.0-rc4-00014-g9549fcfa35ad #204 SMP PREEMPT Mon Sep  1 16:18:41 CST 2025 aarch64 GNU/Linux
----
- arch/arm64/boot/dts/cix/sky1-orion-o6.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/cix/sky1-orion-o6.dts b/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
-index d74964d53c3b..be3ec4f5d11e 100644
---- a/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
-+++ b/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
-@@ -34,6 +34,26 @@ linux,cma {
- 
- };
- 
-+&pcie_x8_rc {
-+	status = "okay";
-+};
-+
-+&pcie_x4_rc {
-+	status = "okay";
-+};
-+
-+&pcie_x2_rc {
-+	status = "okay";
-+};
-+
-+&pcie_x1_0_rc {
-+	status = "okay";
-+};
-+
-+&pcie_x1_1_rc {
-+	status = "okay";
-+};
-+
- &uart2 {
- 	status = "okay";
- };
 -- 
-2.49.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
