@@ -1,61 +1,66 @@
-Return-Path: <linux-pci+bounces-35274-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35275-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13E05B3E620
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 15:52:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00EEEB3E690
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 16:04:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C79573B4EB4
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 13:52:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A7FF1883010
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 14:04:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50BEA338F44;
-	Mon,  1 Sep 2025 13:52:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 666DF2F069D;
+	Mon,  1 Sep 2025 14:04:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/oc0JM0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ON7rfcZr"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE171C27;
-	Mon,  1 Sep 2025 13:52:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3325F1B3930;
+	Mon,  1 Sep 2025 14:04:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756734771; cv=none; b=mnD51KusPD3isbpwKvWpjtOnmB3BXhFyjeXbwnHViauvZA3IOWJssjlgO5KzyB5gDqURKAIipLOf5MwVoLCNkZCtoXOi1tYDLXHgt3zEYhWFo8bvjZomtbs2XLj8oljCqkK722ntnS360jzd74VbbAXfCMLbhkM1rOrjo+ADV6Y=
+	t=1756735444; cv=none; b=NmN60OYGhc7XqvqURoHxtT51Xdg/Lopw516xbx0LP64Ea2sJSRwUE/NT616EOQQdJC2HU4XxpkIAcWV9euHa86YGOOsMH1QJvaAndHBlZBPm50GyToL9X/IsnUFZVE9mOlGtUrqDU/Wc7La+OGCsReE9sdUki2XOuL3V2oSoN4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756734771; c=relaxed/simple;
-	bh=1Sg3rEDoWH1KaBimTkP2BT3g0Ey6+WD6VuLXedDw65k=;
+	s=arc-20240116; t=1756735444; c=relaxed/simple;
+	bh=0I395bScAfXDaELxzjx7kkUg8Yab6NEvTHxGLJFKH38=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C5UgiMoCL37U8fvpQjTVKRAw19UGkaQIqVeCZpcd2HruW5dKniuPSIxoZE6NR82Lyy4z8VXjwysYgfhnLpvQ+tTujjsKUOCPiuRyMr7wUPGGdenb0FELPY6d1cj4oITdxRMOxVVJ1UddGxGMV7/dVtiJAKSFSZ+IYrptBaBUDL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/oc0JM0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BAC1C4CEF0;
-	Mon,  1 Sep 2025 13:52:44 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=TeL5zpWtB2tX/zToDFxRl8nRvvH0oJw7/yY/0pzGf7nGxOXN63qDtWrYykzwtDGb9tNoOuOZFLGoZj2lTb41S639V7uL4TRXNT29olBnWdiq9kn6psem8aKS66a/JtKmScnnHlsnAPcKc8YPkNpIbLgLawfDCThqirXTnrDQikM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ON7rfcZr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25E63C4CEF0;
+	Mon,  1 Sep 2025 14:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756734770;
-	bh=1Sg3rEDoWH1KaBimTkP2BT3g0Ey6+WD6VuLXedDw65k=;
+	s=k20201202; t=1756735443;
+	bh=0I395bScAfXDaELxzjx7kkUg8Yab6NEvTHxGLJFKH38=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M/oc0JM0tTl36NdYr+audgnhtIlSV9TinPArKRXNuXe+nTDoaoPDXyX1fa0yle0Hb
-	 Nrdy0UpyFr65t2jpQrS/EEnyQ51+hdjwruZgDSVgLdhEju20IEAlJWbTIjdjwTNPQr
-	 6urywwJlXvO/DAUDt+kTeS/ZChAxe+qddCYrH8WhXnYNvjacdMVu15JBVb875ceWdm
-	 HwNxKLDwC5OZDwxVf/uW7qk1vtkPxVTaoY7Fw29bHuL71KljseqHG4rPEfEsJzIcpP
-	 X8EiL26zXxkx62ZYSVfvcr/7HyoviK6tJLul5vpqYOfrqDPXC5ZhQdGjND5ct8PK0v
-	 EUxjtuldSxGiw==
-Date: Mon, 1 Sep 2025 19:22:40 +0530
+	b=ON7rfcZrWkVmBjYtjlMhkKpQek1xpm3hU1TZGbJ6OOaING+Vrn9QuQ1ZfeI48TsG8
+	 BA3Z9dKoifyKhxyV2JV1zAIVeDE8xdfc/P6cEA/ZUVM4SHjFbbaRRwnpd4bLlInZET
+	 +SC9ca9otIPB3FTcRoLSoSQMimq8sw3dBcUXN/BKE6bJu4Z1brMcww598dC/ghhGPl
+	 9CnMioU4rvmGR8TbEc2JzA69sCv9U8D7ogozmHtweIaiqWtWbfH3/BIjRLdPf5QxXo
+	 tt3zFsHlWpUU/jpm4bGVq+8TjoE9xfHIx+6Uxr0xgk9Xvs3Vwd9n5loRXhVYywkWvk
+	 /mmn9n/bmgjDg==
+Date: Mon, 1 Sep 2025 19:33:51 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: cros-qcom-dts-watchers@chromium.org, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com, 
-	quic_mrana@quicinc.com, quic_vpernami@quicinc.com, mmareddy@quicinc.com
-Subject: Re: [PATCH v8 4/5] PCI: dwc: Add ECAM support with iATU configuration
-Message-ID: <camqcq72cy774st365jtodvckqvohzlu2fsklsgpfrgaxzz6re@yk6rvt6vq5y5>
-References: <20250828-ecam_v4-v8-0-92a30e0fa02d@oss.qualcomm.com>
- <20250828-ecam_v4-v8-4-92a30e0fa02d@oss.qualcomm.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>, bhelgaas@google.com, 
+	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com, 
+	catalin.marinas@arm.com, will@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
+	p.zabel@pengutronix.de, lizhi.hou@amd.com, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v3 5/9] PCI: rzg3s-host: Add Initial PCIe Host Driver for
+ Renesas RZ/G3S SoC
+Message-ID: <6f2hpdkonomgrfzqoupcex2rpqtlhql4lmsqm7hqk25qakp7ax@bfrzflghmnev>
+References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250704161410.3931884-6-claudiu.beznea.uj@bp.renesas.com>
+ <ddxayjj5wcuuish4kvyluzrujkes5seo7zlusmomyjfjcgzcyj@xe3zzzmy2zaj>
+ <8ef466aa-b470-4dcb-9024-0a9c36eb9a6a@tuxon.dev>
+ <zsgncwvhykw4ja3bbqaxwupppjsqq4pcrdgrsduahokmt72xsm@twekpse6uzzh>
+ <CAMuHMdUu0uXBJndcwWoZp8NNyBJox5dZw4aoB8Ex50vBDDtP7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,157 +70,119 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250828-ecam_v4-v8-4-92a30e0fa02d@oss.qualcomm.com>
+In-Reply-To: <CAMuHMdUu0uXBJndcwWoZp8NNyBJox5dZw4aoB8Ex50vBDDtP7g@mail.gmail.com>
 
-On Thu, Aug 28, 2025 at 01:04:25PM GMT, Krishna Chaitanya Chundru wrote:
-> The current implementation requires iATU for every configuration
-> space access which increases latency & cpu utilization.
+On Mon, Sep 01, 2025 at 11:25:30AM GMT, Geert Uytterhoeven wrote:
+> Hi Mani,
 > 
-> Designware databook 5.20a, section 3.10.10.3 says about CFG Shift Feature,
-> which shifts/maps the BDF (bits [31:16] of the third header DWORD, which
-> would be matched against the Base and Limit addresses) of the incoming
-> CfgRd0/CfgWr0 down to bits[27:12]of the translated address.
+> On Sun, 31 Aug 2025 at 06:07, Manivannan Sadhasivam <mani@kernel.org> wrote:
+> > On Sat, Aug 30, 2025 at 02:22:45PM GMT, Claudiu Beznea wrote:
+> > > On 30.08.2025 09:59, Manivannan Sadhasivam wrote:
+> > > > On Fri, Jul 04, 2025 at 07:14:05PM GMT, Claudiu wrote:
+> > > >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> > > >>
+> > > >> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+> > > >> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+> > > >> only as a root complex, with a single-lane (x1) configuration. The
+> > > >> controller includes Type 1 configuration registers, as well as IP
+> > > >> specific registers (called AXI registers) required for various adjustments.
+> > > >>
+> > > >> Hardware manual can be downloaded from the address in the "Link" section.
+> > > >> The following steps should be followed to access the manual:
+> > > >> 1/ Click the "User Manual" button
+> > > >> 2/ Click "Confirm"; this will start downloading an archive
+> > > >> 3/ Open the downloaded archive
+> > > >> 4/ Navigate to r01uh1014ej*-rzg3s-users-manual-hardware -> Deliverables
+> > > >> 5/ Open the file r01uh1014ej*-rzg3s.pdf
+> > > >>
+> > > >> Link: https://www.renesas.com/en/products/rz-g3s?queryID=695cc067c2d89e3f271d43656ede4d12
+> > > >> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > > >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > 
-> Configuring iATU in config shift feature enables ECAM feature to access the
-> config space, which avoids iATU configuration for every config access.
+> > > >> +  ret = pm_runtime_resume_and_get(dev);
+> > > >> +  if (ret)
+> > > >> +          return ret;
+> > > >> +
+> > > >
+> > > > Do you really need to do resume_and_get()? If not, you should do:
+> > >
+> > > It it's needed to enable the clock PM domain the device is part of.
+> > >
+> >
+> > I've replied below.
+> >
+> > > >
+> > > >     pm_runtime_set_active()
+> > > >     pm_runtime_no_callbacks()
+> > > >     devm_pm_runtime_enable()
 > 
-> Add "ctrl2" into struct dw_pcie_ob_atu_cfg  to enable config shift feature.
+> > > >> +static int rzg3s_pcie_suspend_noirq(struct device *dev)
+> > > >> +{
+> > > >> +  struct rzg3s_pcie_host *host = dev_get_drvdata(dev);
+> > > >> +  const struct rzg3s_pcie_soc_data *data = host->data;
+> > > >> +  struct regmap *sysc = host->sysc;
+> > > >> +  int ret;
+> > > >> +
+> > > >> +  ret = pm_runtime_put_sync(dev);
+> > > >> +  if (ret)
+> > > >> +          return ret;
+> > > >
+> > > > Since there are no runtime callbacks present, managing runtime PM in the driver
+> > > > makes no sense.
+> > >
+> > > The PCIe device is part of a clock power domain. Dropping
+> > > pm_runtime_enable()/pm_runtime_put_sync() in this driver will lead to this
+> > > IP failing to work as its clocks will not be enabled/disabled. If you don't
+> > > like the pm_runtime_* approach that could be replaced with:
+> > >
+> > > devm_clk_get_enabled() in probe and clk_disable()/clk_enable() on
+> > > suspend/resume. W/o clocks the IP can't work.
+> >
+> > Yes, you should explicitly handle clocks in the driver. Runtime PM makes sense
+> > if you have a power domain attached to the IP, which you also do as I see now.
+> > So to conclude, you should enable/disable the clocks explicitly for managing
+> > clocks and use runtime PM APIs for managing the power domain associated with
+> > clock controller.
 > 
-> As DBI comes under config space, this avoids remapping of DBI space
-> separately. Instead, it uses the mapped config space address returned from
-> ECAM initialization. Change the order of dw_pcie_get_resources() execution
-> to achieve this.
+> Why? For the past decade, we've been trying to get rid of explicit
+> module clock handling for all devices that are always part of a
+> clock domain.
 > 
-> Enable the ECAM feature if the config space size is equal to size required
-> to represent number of buses in the bus range property.
+> The Linux PM Domain abstraction is meant for both power and clock
+> domains.  This is especially useful when a device is present on multiple
+> SoCs, on some also part of a power domain,  and the number of module
+> clocks that needs to be enabled for it to function is not the same on
+> all SoCs.  In such cases, the PM Domain abstraction takes care of many
+> of the integration-specific differences.
 > 
-> As per PCIe spec 6, sec 7.2.2 the memory should be aligned to 256MB for
-> ECAM. The synopsys iATU also uses bits [27:12] to form BDF, so the base
-> address must be 256MB aligned. Add a check to ensure the configuration
-> space base address is 256MB aligned before enabling ECAM.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig                |   1 +
->  drivers/pci/controller/dwc/pcie-designware-host.c | 145 +++++++++++++++++++---
->  drivers/pci/controller/dwc/pcie-designware.c      |   2 +-
->  drivers/pci/controller/dwc/pcie-designware.h      |   5 +
->  4 files changed, 138 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index ff6b6d9e18ecfa44273e87931551f9e63fbe3cba..a0e7ad3fb5afec63b0f919732a50147229623186 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -20,6 +20,7 @@ config PCIE_DW_HOST
->  	bool
->  	select PCIE_DW
->  	select IRQ_MSI_LIB
-> +	select PCI_HOST_COMMON
->  
->  config PCIE_DW_EP
->  	bool
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 952f8594b501254d2b2de5d5e056e16d2aa8d4b7..eda7affcdcb2075d07ba6eeab70e41b6548a4b18 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -8,6 +8,7 @@
->   * Author: Jingoo Han <jg1.han@samsung.com>
->   */
->  
-> +#include <linux/align.h>
->  #include <linux/iopoll.h>
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/irqchip/irq-msi-lib.h>
-> @@ -32,6 +33,8 @@ static struct pci_ops dw_child_pcie_ops;
->  				     MSI_FLAG_PCI_MSIX			| \
->  				     MSI_GENERIC_FLAGS_MASK)
->  
-> +#define IS_256MB_ALIGNED(x) IS_ALIGNED(x, SZ_256M)
-> +
->  static const struct msi_parent_ops dw_pcie_msi_parent_ops = {
->  	.required_flags		= DW_PCIE_MSI_FLAGS_REQUIRED,
->  	.supported_flags	= DW_PCIE_MSI_FLAGS_SUPPORTED,
-> @@ -413,6 +416,92 @@ static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
->  	}
->  }
->  
-> +static int dw_pcie_config_ecam_iatu(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct dw_pcie_ob_atu_cfg atu = {0};
-> +	resource_size_t bus_range_max;
-> +	struct resource_entry *bus;
-> +	int ret;
-> +
-> +	bus = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS);
-> +
-> +	/*
-> +	 * Root bus under the host bridge doesn't require any iATU configuration
-> +	 * as DBI region will be used to access root bus config space.
-> +	 * Immediate bus under Root Bus, needs type 0 iATU configuration and
-> +	 * remaining buses need type 1 iATU configuration.
-> +	 */
-> +	atu.index = 0;
-> +	atu.type = PCIE_ATU_TYPE_CFG0;
-> +	atu.parent_bus_addr = pp->cfg0_base + SZ_1M;
-> +	/* 1MiB is to cover 1 (bus) * 32 (devices) * 8 (functions) */
-> +	atu.size = SZ_1M;
-> +	atu.ctrl2 = PCIE_ATU_CFG_SHIFT_MODE_ENABLE;
-> +	ret = dw_pcie_prog_outbound_atu(pci, &atu);
-> +	if (ret)
-> +		return ret;
-> +
-> +	bus_range_max = resource_size(bus->res);
-> +
-> +	if (bus_range_max < 2)
-> +		return 0;
-> +
-> +	/* Configure remaining buses in type 1 iATU configuration */
-> +	atu.index = 1;
-> +	atu.type = PCIE_ATU_TYPE_CFG1;
-> +	atu.parent_bus_addr = pp->cfg0_base + SZ_2M;
-> +	atu.size = (SZ_1M * bus_range_max) - SZ_2M;
-> +	atu.ctrl2 = PCIE_ATU_CFG_SHIFT_MODE_ENABLE;
-> +
-> +	return dw_pcie_prog_outbound_atu(pci, &atu);
-> +}
-> +
-> +static int dw_pcie_create_ecam_window(struct dw_pcie_rp *pp, struct resource *res)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct device *dev = pci->dev;
-> +	struct resource_entry *bus;
-> +
-> +	bus = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS);
-> +	if (!bus)
-> +		return -ENODEV;
-> +
-> +	pp->cfg = pci_ecam_create(dev, res, bus->res, &pci_generic_ecam_ops);
-> +	if (IS_ERR(pp->cfg))
-> +		return PTR_ERR(pp->cfg);
-> +
-> +	pci->dbi_base = pp->cfg->win;
-> +	pci->dbi_phys_addr = res->start;
-> +
-> +	return 0;
-> +}
-> +
-> +static bool dw_pcie_ecam_enabled(struct dw_pcie_rp *pp, struct resource *config_res)
-> +{
-> +	struct resource *bus_range;
-> +	u64 nr_buses;
-> +
-> +	/*
-> +	 * 256MB alignment is required for Enhanced Configuration Address Mapping (ECAM),
-> +	 * as per PCIe Spec 6, Sec 7.2.2. It ensures proper mapping of memory addresses
-> +	 * to Bus-Device-Function (BDF) fields in config TLPs.
-> +	 *
-> +	 * The synopsys iATU also uses bits [27:12] to form BDF, so the base address must
-> +	 * be 256MB aligned.
 
-I've reworded the comment and description to clarify that the alignment
-requirement comes from the PCIe spec, but the 256 MiB requirement comes from DWC
-implementation since DWC always uses 8 bits for representing PCIe buses.
+Hmm, my understanding was that we need to explicitly handle clocks from the
+consumer drivers. But that maybe because, the client drivers I've dealt with
+requires configuring the clocks (like setting the rate, re-parenting etc...) on
+their own. But if there is no such requirement, then I guess it is OK to rely on
+the PM core and clock controller drivers.
+
+Thanks for clarifying.
+
+> > But please add a comment above pm_runtime_resume_and_get() to make it clear as
+> > most of the controller drivers are calling it for no reason.
+> 
+> Note that any child device that uses Runtime PM depends on all
+> its parents in the hierarchy to call pm_runtime_enable() and
+> pm_runtime_resume_and_get().
+> 
+
+Two things to note from your statement:
+
+1. 'child device that uses runtime PM' - Not all child drivers are doing
+runtime PM on their own. So there is no need to do pm_runtime_resume_and_get()
+unless they depend on the parent for resource enablement as below.
+
+2. 'child devices depending on parents in the hierarchy' - Again, not all
+child drivers require their parent to enable the resources. In those cases, they
+can just call pm_runtime_set_active() and pm_runtime_enable() in their probe.
+There is absolutely no need to do pm_runtime_resume_and_get() AFAIK (correct me
+if I'm wrong).
 
 - Mani
 
