@@ -1,31 +1,31 @@
-Return-Path: <linux-pci+bounces-35228-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35229-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BF1EB3D939
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 08:00:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02CB2B3D93F
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 08:00:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C337188CC00
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 06:00:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFEFE179C42
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 06:00:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 179E8259CA1;
-	Mon,  1 Sep 2025 05:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDDFB25C6F9;
+	Mon,  1 Sep 2025 05:59:35 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1FB258EC1;
-	Mon,  1 Sep 2025 05:59:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC4625A2B5;
+	Mon,  1 Sep 2025 05:59:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756706374; cv=none; b=Y/KkjhYq41SunAfPHDaiVnujOWMltU/O/QfnILYULEOgcsM/x1ZzLiqe960vaqPlZHmcRmi/jErds4ja4JX6etOmST6JC9ZaNwkA7cFPnzR0REAl2LlkfnDHypQNWQSs1omYNFij6sYIOEflk8GJ9IQiPm8Fu4jC0ZZdz3rXmls=
+	t=1756706375; cv=none; b=AkRSphQvm5EwHiaXI8yqEzGYxw1TWSMbW212aclmxPBKm8HtXiX+FBPX+MlkDZdT7tDaux3DuL0qlJZL96fvHbtFlVTn0lgLcxBSrowXT7EVzWo5uiVdBiAUQ0aX8nFlFrZKVtvEKye90dC9epm0jfLMhFu2+AiwT1mQILXohJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756706374; c=relaxed/simple;
-	bh=ECQvAOjA0DGalnuBqlDoOWOaq5CsUoGL13+0ZROQxEE=;
+	s=arc-20240116; t=1756706375; c=relaxed/simple;
+	bh=RqjotwS+RxLBGQqfKYO247rq44b0pwn5qtigHjVvh8k=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HSiZunEdQN7xswwJMB9LQZT8bOdZff16NkO+1tGIXLMQRrjRLm/eAyvoGUHAG9+vzJ0ficicL2iNSUifno0EbtnaX3KNhXgwr8rKJTygr76VBqXHcM/OVILFdSbaC7HzNkyfpRcUXAytkI836OudyyT74LAxDpxAkrXKDswy9NY=
+	 MIME-Version:Content-Type; b=h4wyYBRQ35/yxnKHU6kcuA12B2P5HHAlPwVtx31tmkel6hBqkosS9k7faQUEj8cH5Zx2Bh8u9kkTygVcpvrEULPg5bEdfGfQi6c5NJhBpM1cXbj1Ozh0wPSgZ5dNufs3k+PKwvGJ+Gib2fiuSxv/PTvjHxNs9KKeezUDGSPm+r0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
@@ -47,9 +47,9 @@ To: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-phy@lists.infradead.org>, <openbmc@lists.ozlabs.org>,
 	<linux-gpio@vger.kernel.org>
 CC: <jacky_chou@aspeedtech.com>
-Subject: [PATCH v3 04/10] dt-bindings: pinctrl: aspeed,ast2600-pinctrl: Add PCIe RC PERST# group
-Date: Mon, 1 Sep 2025 13:59:16 +0800
-Message-ID: <20250901055922.1553550-5-jacky_chou@aspeedtech.com>
+Subject: [PATCH v3 05/10] ARM: dts: aspeed-g6: Add AST2600 PCIe RC PERST#
+Date: Mon, 1 Sep 2025 13:59:17 +0800
+Message-ID: <20250901055922.1553550-6-jacky_chou@aspeedtech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250901055922.1553550-1-jacky_chou@aspeedtech.com>
 References: <20250901055922.1553550-1-jacky_chou@aspeedtech.com>
@@ -62,33 +62,29 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Add PCIe PERST# group to support for PCIe RC.
+Add pinctrl support for PCIe RC PERST#.
 
 Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
 ---
- .../devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml     | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-index 80974c46f3ef..af8979af9b45 100644
---- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-@@ -141,6 +141,7 @@ additionalProperties:
-         - NRTS3
-         - NRTS4
-         - OSCCLK
-+        - PCIERC1
-         - PEWAKE
-         - PWM0
-         - PWM1
-@@ -369,6 +370,7 @@ additionalProperties:
-         - NRTS3
-         - NRTS4
-         - OSCCLK
-+        - PCIERC1
-         - PEWAKE
-         - PWM0
-         - PWM1
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi b/arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi
+index 289668f051eb..ea879f086c25 100644
+--- a/arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi
++++ b/arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi
+@@ -2,6 +2,11 @@
+ // Copyright 2019 IBM Corp.
+ 
+ &pinctrl {
++	pinctrl_pcierc1_default: pcierc1-default {
++		function = "PCIERC1";
++		groups = "PCIERC1";
++	};
++
+ 	pinctrl_adc0_default: adc0_default {
+ 		function = "ADC0";
+ 		groups = "ADC0";
 -- 
 2.43.0
 
