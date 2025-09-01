@@ -1,198 +1,231 @@
-Return-Path: <linux-pci+bounces-35261-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35262-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6650B3DE74
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 11:29:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF72AB3E159
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 13:20:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF86D1A80D2D
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 09:29:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 302521A81260
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 11:20:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DF3030DEB4;
-	Mon,  1 Sep 2025 09:25:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C36FE313E2F;
+	Mon,  1 Sep 2025 11:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="toRBMDb5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1370A30DD08;
-	Mon,  1 Sep 2025 09:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAF7242D72;
+	Mon,  1 Sep 2025 11:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756718747; cv=none; b=RMZ20SvivNOTKLNOKJhuxQ4wzm/WC5hgtOrkf/OD7RrKUMYx2vJgs6G0/1Qy52So2AHjlJo1eiYZWL+U60+MD3mgAb6cZnje+ZpwK4XXHyTT2fM4pLpC0XAT5SbKsp83S8bvI85BCxCXq0yKONimrfxjW9tfv+CtS90Pj56jpQE=
+	t=1756725616; cv=none; b=XPTQJdC7iR+mGrFvvQTRJQEKHfZIBzgFZZmkrWEC5WFQ47u/ei3w4Zi6OB7rkE6y9YuWmWbJb4zjRGs2i1TEQ1KhBTOyz0Uxn9mTbNfgNsEfAi5ja4UIWcfNYuOJj7S00nDCiVdNsdqD5V1xhn/+L8IB6K5Kq3UzUqvV39YRRSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756718747; c=relaxed/simple;
-	bh=FtS6/YGhG772uhtJjhh1cI6qQRFds88d9VVWLUCe/LU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZTuCxbUbWgK5PWZ7/n1wlTrhhYPhcsWVYaHPeRRxe1wbgYzsR6+fBZbwbAVKtWhACk6wNqdPnaUbaeTWXD+rgJpMx4v+fNfCeiSlf4Lvc1ytbZCgCst3O2YB4/ng4zzH0KjstTnqr89E58dCj9McJbInUAUbK/ArR7bvzrkv3YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-890190c7912so792272241.2;
-        Mon, 01 Sep 2025 02:25:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756718743; x=1757323543;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=srcQe2QCCiAwB7DGCqKHSCUVph+K4Lh5idtVMweUwUM=;
-        b=TdokbKKrYamwXTcDb6r/+LvRc6XC7hbHenl5949FejxF7rBKD6ap4kE/V9x+ePe1Ao
-         LIW4oqOSjEexrFZc2fO10WIb5hdZu5Q7PUR4JrNQ/0jKnHhidGZhwQoPH+a2QA3kRaql
-         2AkBRnd/Mv/YWd9EbInOzwfUWnqZoqcuv7F2BlM9mTLwJCmKVJrCLM7YeOuTP+r4BenF
-         fc10hnC/WuzK59dw43/xgWVvP+86gBRyw+NleOeSt4cEDDFKXLvcXBA28NCBaTxTtamh
-         moKdJzyjf9Iyfzxn0tyjM+KQwh1gThIdQb5VNnyl+kMeXrMnzT973LkDqa86RMs0CnRZ
-         x0XA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHcvlXyVqzcKsAAJvFfyWwnEdD/KTJg/M2HHiKRQz2dIh3jYv0rsbMNwNhY2EY7qS2n1nlreK9YZpLfH4w@vger.kernel.org, AJvYcCUTiq+vRCpods4J/0bB4jzeh5GjDdDSYq1PJnlKXKGWq1Bft1XYa3mQhpYwEnlJBvIIOosQy9fN080Q@vger.kernel.org, AJvYcCVs4Fcm/JpYN2JiLhVCBTNTjIXfzbQ6KhXbfyVvyPV+WEElnB7nwTBN/+MNFViugXENL9Wg1+IPJrIC@vger.kernel.org, AJvYcCWktEZ8KgkuBn9+X1sr/jAQMamxQ7VmCdCHkWLx3wFlmpHYTSDGkpMPzfVsWIe+nOpYqZ2k6tf3WG+y@vger.kernel.org, AJvYcCXNpyaFAfcfbTkSo6FBMtsQgx+DFsnvu9hTjAsQ1p54xfwqrQ5mdoH2tNT2EvanEl6xXGQEY+ayE0iGCbIhAscSzmY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP2tDEMuhZzD/nIsRwtqSyyzJmTbnd4aJrWqaH8bHnNnWXIAvz
-	H3rduQ7JxKcVRcBubM2f1nnXXfmcvjYdP1EHCxJ0aQbhz5x7Ax8nZOZR+zL0cn4f
-X-Gm-Gg: ASbGncshGOnonQgJ2ChXoz0hlQ5hizS2zNPcF8M0YEXphWNKgF2kILH2faxQP/TVm91
-	uIStSqOIwnY23WwTWduCMLZgFAd/xxNRY33HRAJQPvPiUrlrbS+8cjQYDXpGPGdQQ0GBz6ISWcR
-	ZVLFnON1vhY4/ikS6G7fHu5eAx3mzgu3ZRAA/2hdyLBN1tXKm3rovj4IebZOvWRZphS+uLSK3Ze
-	O42NHEqgguoBJGmhN7HFGFHp6Q0/luIFZt1DqeaDMqflawbx1t6Mye0fopH5roLWPUNLqKTf1yy
-	AvV/2WXNnYedbv+blw254hTpijzMRg6CP2ADkuIMf+XyOGFH1rZg9TrZSAVSyGdG3Yohszri8IN
-	47bd2OqxXrF5BZGkgMQldG+uSmtOxhQV353/ZVKEfasl7fz0wPb0Qa54rUuR9Z9a94fpF3u4=
-X-Google-Smtp-Source: AGHT+IGqf6EtLyLcAcpjD1/RLp1f7DTHd9E5zyZ1/lm08oNAsUeVcprQH1/n7LqtiHVqxWRM4AC9Bg==
-X-Received: by 2002:a05:6102:5809:b0:527:8b63:78e1 with SMTP id ada2fe7eead31-52b19532b98mr1679443137.1.1756718743326;
-        Mon, 01 Sep 2025 02:25:43 -0700 (PDT)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-52af1e3381asm2968389137.13.2025.09.01.02.25.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Sep 2025 02:25:42 -0700 (PDT)
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-52a80b778e7so615912137.1;
-        Mon, 01 Sep 2025 02:25:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+8JqyQX8IeAkP4gQHH5ciJbdGbZoDvJDS6Rde5ma8x7wzvVunfFB20ksdRX5pMRd2BWLFCMfj9ZkCGOrA@vger.kernel.org, AJvYcCU+YVh72qa05ETnfQP7trxXfWAyuYx88GL0Xt3e5337gyi2EFbYSvOfk+/J/VcCFiMRERw7bkvV9x1C@vger.kernel.org, AJvYcCUom1rjLcSO0mqEX56L8FGyl4paoKG/TZp9wuPhgu3JHIiUjBIWWnrVa8URF33Ikfl7J4/OnTM/o54lcESyGwSURuA=@vger.kernel.org, AJvYcCVbcgZN0opcSdtQ07Xr2KFoZtYZwjdtiEylovrJfROpP8dg4mcGDBS1B1vdCBrWiYJf+wF0Cb6pT+Lt@vger.kernel.org, AJvYcCXrte3oOBN99iW1nxkj2pxHuBKOIIhgMMSOIxAV23Lh1UxTXztN/CbkYCDoyx1UUJ+JpDszGkY3Z/rK@vger.kernel.org
-X-Received: by 2002:a05:6102:c51:b0:527:4113:6ad6 with SMTP id
- ada2fe7eead31-52b19a54877mr1662294137.9.1756718741912; Mon, 01 Sep 2025
- 02:25:41 -0700 (PDT)
+	s=arc-20240116; t=1756725616; c=relaxed/simple;
+	bh=1FoA9Bobi7dQfWRXWJ0vsiOuwP1xN5/YuFESRs3cHHA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fT2cXEWHZWaFbsud0TQB02PKlUqAFlZoFL+jJWomQwAEMfwvrCVIF1lWAhYTq5Qz51w9QZyL0dtezMhlcymDgsRWuu6kW8nhWW+XKlm8Tn9SMj6SDT2OSdU/R1gu/MEOTsEGzkpQ5BHUIEtzjUmb2ZNZojcM6AWgUzPl4Y6zw5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=toRBMDb5; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 581BK4oI2795916;
+	Mon, 1 Sep 2025 06:20:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1756725604;
+	bh=+iZ8MmCCQxNn7JJJ2JVsdMX74JFKS2INmkF2wJx8RyE=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=toRBMDb5ogTWkr0FtS/Qulh3bMM4iUThgURHskyzcHgbNbNmBG6RlusJE2mMM5GsD
+	 DId21QBzXITHvMFsgGycEWdWTP28zeOxEUZiYvajT1MOtyQF5OmtLDzsIQyXF7Y6fN
+	 9lwJjBdDoH/cBfhnUw2CM++wbe4ckppigFxYGWTQ=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 581BK4IS2688665
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 1 Sep 2025 06:20:04 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 1
+ Sep 2025 06:20:03 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Mon, 1 Sep 2025 06:20:03 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.231.84])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 581BK2oL2408054;
+	Mon, 1 Sep 2025 06:20:03 -0500
+Date: Mon, 1 Sep 2025 16:50:02 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <kwilczynski@kernel.org>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <helgaas@kernel.org>, <kishon@kernel.org>, <vigneshr@ti.com>,
+        <stable@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
+Subject: Re: [PATCH v3] PCI: j721e: Fix programming sequence of "strap"
+ settings
+Message-ID: <9d2bba15-52e4-432a-8f7f-a0f5d7c2e4ad@ti.com>
+References: <20250829091707.2990211-1-s-vadapalli@ti.com>
+ <oztilfun77apxtjxumx4tydkcd2gsalsak4m2rvsry2oooqjna@2yvcx6cnuemm>
+ <b2fb9252-6bfc-45da-973a-31cdfcc86b3d@ti.com>
+ <z3ubracmtlq23yicbrhqjgnzrfoqheffm6cvhfnawlvbu4cmmp@ddu2o7xhw5tz>
+ <48e9d897-2cd3-48ef-b46a-635ae75f5ac6@ti.com>
+ <3wc3t6y5gzzspgfeklsqo3bupfp6gsfy6mls6t66hflcqlqsfk@cu26wv3sow4y>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
- <20250704161410.3931884-6-claudiu.beznea.uj@bp.renesas.com>
- <ddxayjj5wcuuish4kvyluzrujkes5seo7zlusmomyjfjcgzcyj@xe3zzzmy2zaj>
- <8ef466aa-b470-4dcb-9024-0a9c36eb9a6a@tuxon.dev> <zsgncwvhykw4ja3bbqaxwupppjsqq4pcrdgrsduahokmt72xsm@twekpse6uzzh>
-In-Reply-To: <zsgncwvhykw4ja3bbqaxwupppjsqq4pcrdgrsduahokmt72xsm@twekpse6uzzh>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 1 Sep 2025 11:25:30 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUu0uXBJndcwWoZp8NNyBJox5dZw4aoB8Ex50vBDDtP7g@mail.gmail.com>
-X-Gm-Features: Ac12FXz8RcNX144qqXwdTyVaOdBuKNMLkMT1y2uQFu-Wa0Ecb0dTxg5TkCmB8Xs
-Message-ID: <CAMuHMdUu0uXBJndcwWoZp8NNyBJox5dZw4aoB8Ex50vBDDtP7g@mail.gmail.com>
-Subject: Re: [PATCH v3 5/9] PCI: rzg3s-host: Add Initial PCIe Host Driver for
- Renesas RZ/G3S SoC
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>, bhelgaas@google.com, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com, 
-	catalin.marinas@arm.com, will@kernel.org, mturquette@baylibre.com, 
-	sboyd@kernel.org, p.zabel@pengutronix.de, lizhi.hou@amd.com, 
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <3wc3t6y5gzzspgfeklsqo3bupfp6gsfy6mls6t66hflcqlqsfk@cu26wv3sow4y>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Mani,
+On Mon, Sep 01, 2025 at 12:14:51PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Sep 01, 2025 at 11:51:33AM GMT, Siddharth Vadapalli wrote:
+> > On Mon, Sep 01, 2025 at 11:18:23AM +0530, Manivannan Sadhasivam wrote:
+> > > On Mon, Sep 01, 2025 at 10:27:51AM GMT, Siddharth Vadapalli wrote:
+> > > > On Sun, Aug 31, 2025 at 06:15:13PM +0530, Manivannan Sadhasivam wrote:
+> > > > 
+> > > > Hello Mani,
+> > > > 
+> > > > > On Fri, Aug 29, 2025 at 02:46:28PM GMT, Siddharth Vadapalli wrote:
+> > 
+> > [...]
+> > 
+> > > > > > +	/*
+> > > > > > +	 * The PCIe Controller's registers have different "reset-values"
+> > > > > > +	 * depending on the "strap" settings programmed into the PCIEn_CTRL
+> > > > > > +	 * register within the CTRL_MMR memory-mapped register space.
+> > > > > > +	 * The registers latch onto a "reset-value" based on the "strap"
+> > > > > > +	 * settings sampled after the PCIe Controller is powered on.
+> > > > > > +	 * To ensure that the "reset-values" are sampled accurately, power
+> > > > > > +	 * off the PCIe Controller before programming the "strap" settings
+> > > > > > +	 * and power it on after that.
+> > > > > > +	 */
+> > > > > > +	ret = pm_runtime_put_sync(dev);
+> > > > > > +	if (ret < 0) {
+> > > > > > +		dev_err(dev, "Failed to power off PCIe Controller\n");
+> > > > > > +		return ret;
+> > > > > > +	}
+> > > > > 
+> > > > > How does the controller gets powered off after pm_runtime_put_sync() since you
+> > > > > do not have runtime PM callbacks? I believe the parent is turning off the power
+> > > > > domain?
+> > > > 
+> > > > By invoking 'pm_runtime_put_sync(dev)', the ref-count is being
+> > > > decremented and it results in the device being powered off. I have
+> > > > verified it by printing the power domain index within the functions for
+> > > > powering off and powering on devices on the J7200 SoC. Logs:
+> > > > 
+> > > > 	root@j7200-evm:~# modprobe pci_j721e
+> > > > 	[   25.231675] [Powering On]: 240
+> > > > 	[   25.234848] j721e-pcie 2910000.pcie: host bridge /bus@100000/pcie@2910000 ranges:
+> > > > 	[   25.242378] j721e-pcie 2910000.pcie:       IO 0x4100001000..0x4100100fff -> 0x0000001000
+> > > > 	[   25.250496] j721e-pcie 2910000.pcie:      MEM 0x4100101000..0x41ffffffff -> 0x0000101000
+> > > > 	[   25.258588] j721e-pcie 2910000.pcie:   IB MEM 0x0000000000..0xffffffffffff -> 0x0000000000
+> > > > 	[   25.267098] [Powering Off]: 240
+> > > > 	[   25.270318] [Powering On]: 240
+> > > > 	[   25.273511] [Powering On]: 187
+> > > > 	[   26.372361] j721e-pcie 2910000.pcie: PCI host bridge to bus 0000:00
+> > > > 	[   26.378666] pci_bus 0000:00: root bus resource [bus 00-ff]
+> > > > 	[   26.384156] pci_bus 0000:00: root bus resource [io  0x0000-0xfffff] (bus address [0x1000-0x100fff])
+> > > > 	[   26.393197] pci_bus 0000:00: root bus resource [mem 0x4100101000-0x41ffffffff] (bus address [0x00101000-0xffffffff])
+> > > > 	[   26.403728] pci 0000:00:00.0: [104c:b00f] type 01 class 0x060400 PCIe Root Port
+> > > > 	[   26.411044] pci 0000:00:00.0: PCI bridge to [bus 00]
+> > > > 	[   26.416009] pci 0000:00:00.0:   bridge window [io  0x0000-0x0fff]
+> > > > 	[   26.422091] pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
+> > > > 	[   26.428874] pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+> > > > 	[   26.436676] pci 0000:00:00.0: supports D1
+> > > > 	[   26.440699] pci 0000:00:00.0: PME# supported from D0 D1 D3hot
+> > > > 	[   26.448064] pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+> > > > 	[   26.456274] pci_bus 0000:01: busn_res: [bus 01-ff] end is updated to 01
+> > > > 	[   26.462923] pci 0000:00:00.0: PCI bridge to [bus 01]
+> > > > 	[   26.467933] pci_bus 0000:00: resource 4 [io  0x0000-0xfffff]
+> > > > 	[   26.473595] pci_bus 0000:00: resource 5 [mem 0x4100101000-0x41ffffffff]
+> > > > 	[   26.480337] pcieport 0000:00:00.0: of_irq_parse_pci: failed with rc=-22
+> > > > 	[   26.487479] pcieport 0000:00:00.0: PME: Signaling with IRQ 701
+> > > > 	[   26.493909] pcieport 0000:00:00.0: AER: enabled with IRQ 701
+> > > > 
+> > > > In the above logs, '240' is the Power Domain Index for the PCIe
+> > > > Controller on J7200 SoC. It is powered on initially before the driver is
+> > > > probed.
+> > > 
+> > > In that case, the driver should not call pm_runtime_get_sync() in its probe.
+> > > What it should do is:
+> > > 
+> > > 	pm_runtime_set_active()
+> > > 	pm_runtime_enable()
+> > 
+> > If I understand correctly, are you suggesting the following?
+> > 
+> > j721e_pcie_probe()
+> > 	pm_runtime_set_active()
+> > 	pm_runtime_enable()
+> > 	ret = j721e_pcie_ctrl_init(pcie);
+> > 		/*
+> > 		 * PCIe Controller should be powered off here, but is there
+> > 		 * a way to ensure that it has been powered off?
+> > 		 */
+> > 		=> Program the strap settings and return to
+> > 		j721e_pcie_probe()
+> > 	/* Power on the PCIe Controller now */
+> > 	ret = pm_runtime_get_sync(dev);
+> 
+> This pm_runtime_get_sync() should be part of j721e_pcie_ctrl_init() where you
+> do power off, program strap and power on.
+> 
+> This should not be part of probe() as by that time, controller is already
+> powered on. So pm_runtime_set_active() and pm_runtime_enable() should be enough
+> to convey the state of the device to PM core.
 
-On Sun, 31 Aug 2025 at 06:07, Manivannan Sadhasivam <mani@kernel.org> wrote:
-> On Sat, Aug 30, 2025 at 02:22:45PM GMT, Claudiu Beznea wrote:
-> > On 30.08.2025 09:59, Manivannan Sadhasivam wrote:
-> > > On Fri, Jul 04, 2025 at 07:14:05PM GMT, Claudiu wrote:
-> > >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > >>
-> > >> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
-> > >> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
-> > >> only as a root complex, with a single-lane (x1) configuration. The
-> > >> controller includes Type 1 configuration registers, as well as IP
-> > >> specific registers (called AXI registers) required for various adjustments.
-> > >>
-> > >> Hardware manual can be downloaded from the address in the "Link" section.
-> > >> The following steps should be followed to access the manual:
-> > >> 1/ Click the "User Manual" button
-> > >> 2/ Click "Confirm"; this will start downloading an archive
-> > >> 3/ Open the downloaded archive
-> > >> 4/ Navigate to r01uh1014ej*-rzg3s-users-manual-hardware -> Deliverables
-> > >> 5/ Open the file r01uh1014ej*-rzg3s.pdf
-> > >>
-> > >> Link: https://www.renesas.com/en/products/rz-g3s?queryID=695cc067c2d89e3f271d43656ede4d12
-> > >> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+I have tried out the suggestion in the following manner:
 
-> > >> +  ret = pm_runtime_resume_and_get(dev);
-> > >> +  if (ret)
-> > >> +          return ret;
-> > >> +
-> > >
-> > > Do you really need to do resume_and_get()? If not, you should do:
-> >
-> > It it's needed to enable the clock PM domain the device is part of.
-> >
->
-> I've replied below.
->
-> > >
-> > >     pm_runtime_set_active()
-> > >     pm_runtime_no_callbacks()
-> > >     devm_pm_runtime_enable()
+	j721e_pcie_probe()
+		...
+		pm_runtime_set_active(dev);
+		pm_runtime_enable(dev);
+		ret = j721e_pcie_ctrl_init(pcie);
+			... within j721e_pcie_ctrl_init()
+			ret = pm_runtime_put_sync(dev);
+			/* Program Strap Settings */
+			ret = pm_runtime_get_sync(dev);
+			...
+		...
+		exit probe
 
-> > >> +static int rzg3s_pcie_suspend_noirq(struct device *dev)
-> > >> +{
-> > >> +  struct rzg3s_pcie_host *host = dev_get_drvdata(dev);
-> > >> +  const struct rzg3s_pcie_soc_data *data = host->data;
-> > >> +  struct regmap *sysc = host->sysc;
-> > >> +  int ret;
-> > >> +
-> > >> +  ret = pm_runtime_put_sync(dev);
-> > >> +  if (ret)
-> > >> +          return ret;
-> > >
-> > > Since there are no runtime callbacks present, managing runtime PM in the driver
-> > > makes no sense.
-> >
-> > The PCIe device is part of a clock power domain. Dropping
-> > pm_runtime_enable()/pm_runtime_put_sync() in this driver will lead to this
-> > IP failing to work as its clocks will not be enabled/disabled. If you don't
-> > like the pm_runtime_* approach that could be replaced with:
-> >
-> > devm_clk_get_enabled() in probe and clk_disable()/clk_enable() on
-> > suspend/resume. W/o clocks the IP can't work.
->
-> Yes, you should explicitly handle clocks in the driver. Runtime PM makes sense
-> if you have a power domain attached to the IP, which you also do as I see now.
-> So to conclude, you should enable/disable the clocks explicitly for managing
-> clocks and use runtime PM APIs for managing the power domain associated with
-> clock controller.
+Since a 'pm_runtime_get_sync()' hasn't yet been invoked prior to the
+section where 'pm_runtime_put_sync()' is invoked, it leads to a ref-count
+underflow error at runtime. Please let me know if I am missing
+something.
 
-Why? For the past decade, we've been trying to get rid of explicit
-module clock handling for all devices that are always part of a
-clock domain.
+The following is the working implementation from the current patch:
 
-The Linux PM Domain abstraction is meant for both power and clock
-domains.  This is especially useful when a device is present on multiple
-SoCs, on some also part of a power domain,  and the number of module
-clocks that needs to be enabled for it to function is not the same on
-all SoCs.  In such cases, the PM Domain abstraction takes care of many
-of the integration-specific differences.
+	j721e_pcie_probe()
+		...
+		/*
+		 * The following two lines are identical to the existing
+		 * driver code
+		 */
+		pm_runtime_enable(dev);
+		ret = pm_runtime_get_sync(dev);
+		...
+		ret = j721e_pcie_ctrl_init(pcie);
+			... within j721e_pcie_ctrl_init()
+			ret = pm_runtime_put_sync(dev);
+			...
+			/* PCIe Controller is now powered off */
+			/* Program the strap settings */
+			...
+			ret = pm_runtime_get_sync(dev);
+			...
+		...
+		exit probe
 
-> But please add a comment above pm_runtime_resume_and_get() to make it clear as
-> most of the controller drivers are calling it for no reason.
-
-Note that any child device that uses Runtime PM depends on all
-its parents in the hierarchy to call pm_runtime_enable() and
-pm_runtime_resume_and_get().
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Siddharth.
 
