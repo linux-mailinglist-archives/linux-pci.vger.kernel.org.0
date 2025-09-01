@@ -1,30 +1,31 @@
-Return-Path: <linux-pci+bounces-35224-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35225-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9714DB3D926
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 07:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 947DAB3D92A
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 07:59:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B75937A92B6
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 05:57:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E1E647AAB87
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 05:58:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B56B8239E8A;
-	Mon,  1 Sep 2025 05:59:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8715224BBEE;
+	Mon,  1 Sep 2025 05:59:28 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A8E145355;
-	Mon,  1 Sep 2025 05:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D688E245028;
+	Mon,  1 Sep 2025 05:59:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756706366; cv=none; b=irK087UNhP+xKGalfw1NJajF5su4l06AQYl5mMN4WeR0xbbWOWr7PUDT5odSjrz35rYYOTv9/n8AJWBF7fdiS09lt379yOEWKBHUi4aKzpYhwcgodpwQDjW6ToXDuCrDpqzct6tEAOzIeTCYUSOE3eX19QCkvyGuMFloZjn3tdM=
+	t=1756706368; cv=none; b=cwrzOjxp55vobVCoSWzrnGblPnIPnEv0R7C3sYSHXeM2e+C15mtZRFhm+onK/J7DP0fl7sDJ2HKbzKTTFmfJv/902t7u1bQqe/CVU8Wbe8tHnncz4I4wyKa1/S4PH7dPfvS+ZPJNY8/oX5wMwrg+GEOkWbZ+4gC6jHFMFqOqyF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756706366; c=relaxed/simple;
-	bh=wLiM9nosk3p2z406tp4z8uPFX5uJmOynNM4NmY2fO7g=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nwqQmSAvT+Qsx7Lo02VN7MQZ+jp5xoxnpSZSny9fGwDL/JbBttCwwxzdaNbOHTDRvlUIdDnNTMHns3irqQLEDHkJpM52WQhS8AdWLoilz/qIsbp/6TRefkjC0CqYDBWsJzNXseGozsL/z3sVn+R2XiMO8NRkB+cVQXxe/iijxHY=
+	s=arc-20240116; t=1756706368; c=relaxed/simple;
+	bh=Sy0T29EIjJ0Zm/h/DvmXiOeLHZxY0FrkAieF793ApFE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dstEFZGwowh4dlmab9TCCQ93G4L26H8Vg0LY2PY2yjVkAPBiRc3RUoC1cL+NwasFLqd5T8D1KimZ154v++JTz5oKSQkUvyIj9uDwGVWMIpLu/rOBmoYO8402JEOm9/M/qrCAN8S8o0ARMERVJK2CvLtd8MK5oFLIYyRMigf10MA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
@@ -46,10 +47,12 @@ To: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-phy@lists.infradead.org>, <openbmc@lists.ozlabs.org>,
 	<linux-gpio@vger.kernel.org>
 CC: <jacky_chou@aspeedtech.com>
-Subject: [PATCH v3 00/10] Add ASPEED PCIe Root Complex support
-Date: Mon, 1 Sep 2025 13:59:12 +0800
-Message-ID: <20250901055922.1553550-1-jacky_chou@aspeedtech.com>
+Subject: [PATCH v3 01/10] dt-bindings: soc: aspeed: Add ASPEED PCIe Config
+Date: Mon, 1 Sep 2025 13:59:13 +0800
+Message-ID: <20250901055922.1553550-2-jacky_chou@aspeedtech.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250901055922.1553550-1-jacky_chou@aspeedtech.com>
+References: <20250901055922.1553550-1-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,83 +62,69 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-This patch series adds support for the ASPEED PCIe Root Complex,
-including device tree bindings, pinctrl support, and the PCIe host controller
-driver. The patches introduce the necessary device tree nodes, pinmux groups,
-and driver implementation to enable PCIe functionality on ASPEED platforms.
-Currently, the ASPEED PCIe Root Complex only supports a single port.
+Add the ASPEED PCIe configuration syscon block. This shared register
+space is used by multiple PCIe-related devices to coordinate and manage
+common PCIe settings. The binding describes the required compatible
+strings and register space for the configuration node.
 
-Summary of changes:
-- Add device tree binding documents for ASPEED PCIe PHY, PCIe Config, and PCIe RC
-- Update MAINTAINERS for new bindings and driver
-- Add PCIe RC node and PERST control pin to aspeed-g6 device tree
-- Implement ASPEED PCIe PHY driver
-- Implement ASPEED PCIe Root Complex host controller driver
-
-This series has been tested on AST2600/AST2700 platforms and enables PCIe device
-enumeration and operation.
-
-Jacky Chou (10):
-  dt-bindings: soc: aspeed: Add ASPEED PCIe Config
-  dt-bindings: phy: aspeed: Add ASPEED PCIe PHY
-  dt-bindings: PCI: Add ASPEED PCIe RC support
-  dt-bindings: pinctrl: aspeed,ast2600-pinctrl: Add PCIe RC PERST# group
-  ARM: dts: aspeed-g6: Add AST2600 PCIe RC PERST#
-  ARM: dts: aspeed-g6: Add PCIe RC and PCIe PHY node
-  PHY: aspeed: Add ASPEED PCIe PHY driver
-  PCI: Add FMT and TYPE definition for TLP header
-  PCI: aspeed: Add ASPEED PCIe RC driver
-  MAINTAINERS: Add ASPEED PCIe RC driver
-
- .../bindings/pci/aspeed,ast2600-pcie.yaml     |  179 +++
- .../bindings/phy/aspeed,ast2600-pcie-phy.yaml |   42 +
- .../pinctrl/aspeed,ast2600-pinctrl.yaml       |    2 +
- .../soc/aspeed/aspeed,ast2700-pcie-cfg.yaml   |   46 +
- MAINTAINERS                                   |   11 +
- .../boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |    5 +
- arch/arm/boot/dts/aspeed/aspeed-g6.dtsi       |   56 +
- drivers/pci/controller/Kconfig                |   16 +
- drivers/pci/controller/Makefile               |    1 +
- drivers/pci/controller/pcie-aspeed.c          | 1137 +++++++++++++++++
- drivers/pci/pci.h                             |   12 +
- drivers/phy/Kconfig                           |    1 +
- drivers/phy/Makefile                          |    1 +
- drivers/phy/aspeed/Kconfig                    |   15 +
- drivers/phy/aspeed/Makefile                   |    2 +
- drivers/phy/aspeed/phy-aspeed-pcie.c          |  209 +++
- 16 files changed, 1735 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/aspeed,ast2600-pcie.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/aspeed,ast2600-pcie-phy.yaml
+Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+---
+ .../soc/aspeed/aspeed,ast2700-pcie-cfg.yaml   | 46 +++++++++++++++++++
+ 1 file changed, 46 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/soc/aspeed/aspeed,ast2700-pcie-cfg.yaml
- create mode 100644 drivers/pci/controller/pcie-aspeed.c
- create mode 100644 drivers/phy/aspeed/Kconfig
- create mode 100644 drivers/phy/aspeed/Makefile
- create mode 100644 drivers/phy/aspeed/phy-aspeed-pcie.c
 
----
-v3:
- - Add ASPEED PCIe PHY driver
- - Remove the aspeed,pciecfg property from AST2600 RC node, merged into RC node
- - Update the binding doc for aspeed,ast2700-pcie-cfg to reflect the changes
- - Update the binding doc for aspeed,ast2600-pcie to reflect the changes
- - Update the binding doc for aspeed,ast2600-pinctrl to reflect the changes
- - Update the device tree source to reflect the changes
- - Adjusted the use of mutex in RC drivers to use GRAND
- - Updated from reviewer comments
-
-v2:
- - Moved ASPEED PCIe PHY yaml binding to `soc/aspeed` directory and
-   changed it as syscon
- - Added `MAINTAINERS` entry for the new PCIe RC driver
- - Updated device tree bindings to reflect the new structure
- - Refactored configuration read and write functions to main bus and
-   child bus ops
- - Refactored initialization to implement multiple ports support
- - Added PCIe FMT and TYPE definitions for TLP header in
-   `include/uapi/linux/pci_regs.h`
- - Updated from reviewer comments
----
-
+diff --git a/Documentation/devicetree/bindings/soc/aspeed/aspeed,ast2700-pcie-cfg.yaml b/Documentation/devicetree/bindings/soc/aspeed/aspeed,ast2700-pcie-cfg.yaml
+new file mode 100644
+index 000000000000..c1a90bb6a785
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/aspeed/aspeed,ast2700-pcie-cfg.yaml
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/aspeed/aspeed,ast2700-pcie-cfg.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ASPEED PCIe Configuration
++
++maintainers:
++  - Jacky Chou <jacky_chou@aspeedtech.com>
++
++description:
++  The ASPEED PCIe configuration syscon block provides a set of registers shared
++  by multiple PCIe-related devices within the SoC. This node represents the
++  common configuration space that allows these devices to coordinate and manage
++  shared PCIe settings, including address mapping, control, and status
++  registers. The syscon interface enables for various PCIe devices to access
++  and modify these shared registers in a consistent and centralized manner.
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - aspeed,ast2700-pcie-cfg
++      - const: syscon
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    soc0 {
++      #address-cells = <2>;
++      #size-cells = <1>;
++
++      syscon@12c02a00 {
++        compatible = "aspeed,ast2700-pcie-cfg", "syscon";
++        reg = <0 0x12c02a00 0x80>;
++      };
++    };
 -- 
 2.43.0
 
