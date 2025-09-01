@@ -1,101 +1,96 @@
-Return-Path: <linux-pci+bounces-35291-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35292-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9D83B3EEB2
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 21:48:30 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4305BB3EF92
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 22:26:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50C6D1A884AF
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 19:48:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4E6C37AF19A
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 20:25:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F134D345733;
-	Mon,  1 Sep 2025 19:46:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0116F26CE3A;
+	Mon,  1 Sep 2025 20:26:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W5wZJk/w"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Efs6hQT/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C8F345722;
-	Mon,  1 Sep 2025 19:46:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFAB526CE05;
+	Mon,  1 Sep 2025 20:26:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756755980; cv=none; b=GbxtzJB/GwYi1olI/orWnOZNgdGysOIF6YmYCm4EGr3RB/ydRO1wTiX+6VHNUh1ViVk5zFw+O0VsK5ouocRHgIfUgvXRVZAtF9gPjXHu58wOykF51jSnuj2azZ6cBZUstrx7wDDeENRG3OkrB5OGfBrC0uTwlhRcm4QaxD9Umss=
+	t=1756758389; cv=none; b=nxVboSbVA6XQl5VcqUeD7PEY9c/D4ewHFQI+gPXQzJA5LglW86OPMmvHEwb6b6nX1DQfL/K5v4kYb/7vbSwxHcFQzqc0fqyPJtsNxnvwTPFkav2ndaRqzu8sZWnnhFGlozzMIQC1FykAwHK5BSIgzr2T1DOwVCdQYDm03Q09tL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756755980; c=relaxed/simple;
-	bh=NhV9B8K4cZUejZjeirB3GBztoD5Bg3AS6ut3OfnT9AU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gMGF3kwpqaOQaOwPCYep58E4VWEhHPQ59S49on0+vd4MOMeQ95Nj/Hax1bHK/+C8CLGSlIKbJarBknAV+im48RA5IUpuhqkEkB8pbueCuOut/Ctp3X45K/amMIJ0YpPDEbvUIbzcAo2M8KEzIeX3d08rf+eJsEOf9QEWGD1kZHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W5wZJk/w; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D9E3C4CEF0;
-	Mon,  1 Sep 2025 19:46:19 +0000 (UTC)
+	s=arc-20240116; t=1756758389; c=relaxed/simple;
+	bh=eF5HEy70tfeo1yW+uH2DRuxqaYZppSmTaxduRb9MIZY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
+	 References:In-Reply-To; b=G0oTu59PDUtUHzQKpZmmOc64bPmMZqeNY00SEl1zho4lr7Mn1gnKzCG1B9vb9ZQeqAcejGNxKOMpE4sX63V7mJXuCEwhSw/tP7l6OaWnIZ310GgA1wA/9YAZegW/FBTMRF4KO12CohSG313dlCZ3f7NBzWNR7/Lggwa0a12X4WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Efs6hQT/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02503C4CEF0;
+	Mon,  1 Sep 2025 20:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756755980;
-	bh=NhV9B8K4cZUejZjeirB3GBztoD5Bg3AS6ut3OfnT9AU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W5wZJk/wzC+HRZv29+XrUPvxvKisuswlqs+QR1ZxWu0+64+KeAC1NDg/fdKeCfUqN
-	 qjOr+QIkUpNOF7aU3oCOaIHZpOtHwtd3UwWCdBDwyAICN2XZY1H38Ihqk93HLGc4Ao
-	 cDq3na0OwyyQq7xQi2uLu3DoiA81jmP3x4sjGqOW+AHLPsf9QZxH2hKlgGqWhmtBDL
-	 irE9U7+GbfbxX84+57i12kYQP54pKsVzCs1t9DILl/yoMSjbQRsXIGN8hbsKy4JzFH
-	 0KzZ6FPAiwOIjcH6T6WStFQgwq0MvecB1nTyNyRLMTCf6QDGPTh0X5F4PCc8j9CPO8
-	 aBcgV0E1cIW3Q==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	quic_vbadigan@quicinc.com,
-	quic_mrana@quicinc.com
-Subject: Re: (subset) [PATCH v3 0/3] arm64: dts: qcom: Add PCIe Support for sm8750
-Date: Mon,  1 Sep 2025 14:46:01 -0500
-Message-ID: <175675595917.1796591.7933074887018259640.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250826-pakala-v3-0-721627bd5bb0@oss.qualcomm.com>
-References: <20250826-pakala-v3-0-721627bd5bb0@oss.qualcomm.com>
+	s=k20201202; t=1756758389;
+	bh=eF5HEy70tfeo1yW+uH2DRuxqaYZppSmTaxduRb9MIZY=;
+	h=Date:To:From:Subject:Cc:References:In-Reply-To:From;
+	b=Efs6hQT/z3OP2aSlyCKjerM6VE+/hjqwZEEEoxacgYAA8Mj0rZtK+PGz65I04d7dH
+	 YTdzUr7z0tfxgqJM2BoSCquSZF2sRtIrbCkP5SO9oSchNtqZav5hwvMmMquW0J0ot5
+	 OLcFT+YNoO8s+Wv1Ftdrz3t70PECmC5eDU8rX35dgxVuAax2yp1D7q/odl77PkI8Mo
+	 yiU0cfTUaQKf6rWIiavJ/1/mUvYsQAklbh2KB2dSEzUSqXtTt7YXkwMiivgU/JIXpQ
+	 9lUae+CoQ+JxFN0aMpyIt2JPVljdpIjbESYNcRFkfruixuuwyhAOW9IeBmnpbh4ZaM
+	 sGPPSkWDtJ0aA==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 01 Sep 2025 22:26:23 +0200
+Message-Id: <DCHQVFTUYTLV.3F0N1WIXZHO96@kernel.org>
+To: "John Hubbard" <jhubbard@nvidia.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+Subject: Re: [PATCH v8 0/6] rust, nova-core: PCI Class, Vendor support
+Cc: "Alexandre Courbot" <acourbot@nvidia.com>, "Joel Fernandes"
+ <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>, "Alistair Popple"
+ <apopple@nvidia.com>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
+ <simona@ffwll.ch>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Miguel
+ Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
+ Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
+ Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ <nouveau@lists.freedesktop.org>, <linux-pci@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>,
+ "Elle Rhumsaa" <elle@weathered-steel.dev>
+References: <20250829223632.144030-1-jhubbard@nvidia.com>
+In-Reply-To: <20250829223632.144030-1-jhubbard@nvidia.com>
 
+On Sat Aug 30, 2025 at 12:36 AM CEST, John Hubbard wrote:
+> John Hubbard (6):
 
-On Tue, 26 Aug 2025 16:32:52 +0530, Krishna Chaitanya Chundru wrote:
-> Describe PCIe controller and PHY. Also add required system resources like
-> regulators, clocks, interrupts and registers configuration for PCIe.
-> 
-> The qcom_pcie_parse_ports() function currently iterates over all available
-> child nodes of the PCIe controller's device tree node. This includes
-> unrelated nodes such as OPP (Operating Performance Points) nodes, which do
-> not contain the expected 'reset' and 'phy' properties. As a result, parsing
-> fails and the driver falls back to the legacy method of parsing the
-> controller node directly. However, this fallback also fails when properties
-> are shifted to the root port, leading to probe failure.
-> 
-> [...]
+Applied to driver-core-testing, thanks!
 
-Applied, thanks!
+>   rust: pci: provide access to PCI Class and Class-related items
 
-[2/3] arm64: dts: qcom: sm8750: Add PCIe PHY and controller node
-      commit: 19f1395333f80479a3a5fce29e4c7a8255322a9c
+    [ Minor doc-comment improvements, align Debug and Display. - Danilo ]
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+>   rust: pci: provide access to PCI Vendor values
+
+    [ Minor doc-comment improvements, align Debug and Display. - Danilo ]
+
+>   rust: pci: add DeviceId::from_class_and_vendor() method
+
+    [ Minor doc-comment improvements. - Danilo ]
+
+>   gpu: nova-core: avoid probing non-display/compute PCI functions
+>   rust: pci: use pci::Vendor instead of bindings::PCI_VENDOR_ID_*
+
+    [ Replace "as a validated vendor" with "as [`Vendor`]". - Danilo ]
+
+>   rust: pci: inline several tiny functions
 
