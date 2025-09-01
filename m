@@ -1,176 +1,204 @@
-Return-Path: <linux-pci+bounces-35241-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35242-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34969B3DA5D
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 08:56:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DD9FB3DB5C
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 09:45:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A0FF188BEB0
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 06:56:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 40F9E16D010
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 07:45:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCB7E25A341;
-	Mon,  1 Sep 2025 06:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="THgSErlX"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D895E2DE6F1;
+	Mon,  1 Sep 2025 07:45:34 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E61D2367C1
-	for <linux-pci@vger.kernel.org>; Mon,  1 Sep 2025 06:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B8A2DC353
+	for <linux-pci@vger.kernel.org>; Mon,  1 Sep 2025 07:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756709774; cv=none; b=TOA6CeRnK50b0ZguCbnj9pZ/1abs/CeyLJkQ2lk/5etQBshuTJqhf1eF8wtkDccM/dNFmH81GzxNn2GRcvmVk0iHDAc5d2Ouy9NPQMoJsYgWjYzeMQ2BUvIMg4Czq0CUfME5lRDbFMdE/7I/5mAAFjuK5MdQt9XEC+zJLfWoJK8=
+	t=1756712734; cv=none; b=iXatzpugp3L5aW5iRb/3p4mN0NPhyQAzTs9zeJf1ZnR4iymqprr3jCdMX/HQu8W+hcPpzRMfExv3WxzlwKfNDG/cMuBs8tUTavIznTzCiPXMShlIjAxQUHMx2r5r5Nkul50EuCmZro9akouW/c9/bf3gPOq7BLcsT5OCJqzxPDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756709774; c=relaxed/simple;
-	bh=Kr7bzmorPtSCUASbDkgAHM3jzfUg4k7jSAJIfdMlUUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k8sQd40UGkUY1EzDBBy4B/XqqDYbqZDNfyz5i+ULOKs6OgHuK/Pf0gyzEI3FIlv5U5nWumVPw9ClTQu2fcRRuGN59cP22Pg0FyC7vF9d+ZTZVMdW4rdngVddyBj0ZA9HUAuDTcizkIp3lg9NbnlpY2i7hxRrEmcRsOkgmSZkKPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=THgSErlX; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57VNwMCE031143
-	for <linux-pci@vger.kernel.org>; Mon, 1 Sep 2025 06:56:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	EUTMpiJXGYapQKmYjxRPfwmA/QRa+grJXv3ZH9iFjRA=; b=THgSErlXkxFPhrDP
-	QdsXzrF1SbsD/3nYOoVqP/InZd+C12uq6dgO3yUcHhVMuniE+IsH5bkq51bT1YYC
-	+4tS+P15GoMQti7suWRACpJYSXbJRdPbKntmzXZmRCJc7tgEO/Ar7DISVEwPy5x8
-	XKblqNqSKrFOwqyyRC238PKH13UkmLJG+BBGpjMHqVASyfKnS8KRwBm0zSQwm+8S
-	iO4/eyP3wM/E/xL3CRI4NvzQFcm91Mcz8peksXHQECckOvYpZmHSGDEe3uKqI2Tf
-	wDLoXNxRhaLJZNEOLbm+vNAPmwhG+bHFHwGwiEbz9hwEdDI6Jj7MwRC0RsmTUND+
-	Jot0bQ==
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48urmjbmc9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Mon, 01 Sep 2025 06:56:11 +0000 (GMT)
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-76e55665b05so3453978b3a.2
-        for <linux-pci@vger.kernel.org>; Sun, 31 Aug 2025 23:56:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756709770; x=1757314570;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EUTMpiJXGYapQKmYjxRPfwmA/QRa+grJXv3ZH9iFjRA=;
-        b=W9f98EIa9DIvkOaaDGga3ZVZNoiyHDlUIktjx7BCp28wEdYQA4DLFBeuuR6+Da6Pma
-         vF4B2E3bSaNeyXG9K1bDN+mhljh8I4cgK6VgVIdO3WgKsK8L4TTs1KWP4NrR2msDg7yB
-         wMMCJMwoSTw8ERJrGwFORnQh8eYVSYvR/okzE6I0Y06raPPBEwRTQLqtkC+wsnbbnCRz
-         fMcqvHdi4JB5lu5O6/w25WCq5bAQ9lnoRg6s9/WdFI1CLBbdTzXY4/LJOLu/jxop3+HE
-         ukPZGXY8FJ/bioE25BtZSCwL0I0U18IcP2+7yYl9MuMKIPM6PukOCv5/CcdVoO9U99qr
-         pdbg==
-X-Forwarded-Encrypted: i=1; AJvYcCU4U8lcM94P4LvWZdCl+mZGwL/mtH8aNbMnvNOpb9/n61DH5POpgsEhQoB6VLWd33rc5mLZveRXul8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXCN6d72sE85RwoHf9kSCVE0f+OTIoUQebnn5pZczO9tBeDSTB
-	+V1qfOW0J61YF3jRMQJV7YXv0YXqas1nUq2Bsi6mgHDoIIbb0n61DJ7EjO18ZHgAFyw6lMWLjdM
-	BSkvPXZz+XD2XO1lCUoj3l0OO6cH4AeiDfGPrEb0CXn2sAZc47zTp3+Jn49wJm7g=
-X-Gm-Gg: ASbGncuuXuV/NIGun+3uz99lEAMwKdqYQL2jMnGoasys1WztbeefdP24YRpgWzw0O49
-	DYrEYxY0e03Pb2Ex6RCtUGqO1AhAHb2qNhAAylCrMeEX+7Ga9foP9KbMIUYsE6oFgvuxpRND//7
-	zAaoyKCNEXuB1LOFe45N6PA+vJ5Zc2fl7eHE0TjAJgb7yTlGairGDROIWrw8n2vmwx0/CwPO1vN
-	VWM5Ge2FMM7MYVSoBo/1MORQ+n9IOrSra6pX3FYQ9p19V7pE3tchaO1tRrzQo1HbyCMon473j7v
-	Q+EmD2aofOqES7+iCNCSCuTZCzHWf5SVGx68J155JyYwWW8g3k0Q0FHVJo3xo5WgCzlNEQOMMPq
-	Ya8NQApozxBGk9Nf+3OJX8ROFvfcqcXeAQw==
-X-Received: by 2002:a05:6a20:7fa8:b0:243:a91c:6564 with SMTP id adf61e73a8af0-243d6f431a3mr8852516637.50.1756709769861;
-        Sun, 31 Aug 2025 23:56:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHSaKYhdRZRLVbaVGgPFjyPsISXyEB6DA5LnZU9TaTrGjeZVotxSEaTfa85XU0yVwRM0haE6w==
-X-Received: by 2002:a05:6a20:7fa8:b0:243:a91c:6564 with SMTP id adf61e73a8af0-243d6f431a3mr8852476637.50.1756709769320;
-        Sun, 31 Aug 2025 23:56:09 -0700 (PDT)
-Received: from ?IPV6:2405:201:c40a:785d:2c0b:e596:ead5:2f45? ([2405:201:c40a:785d:2c0b:e596:ead5:2f45])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7724284fa02sm5689324b3a.102.2025.08.31.23.55.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 31 Aug 2025 23:56:08 -0700 (PDT)
-Message-ID: <3cbe6692-2ada-4034-8cb2-bc246bca5611@oss.qualcomm.com>
-Date: Mon, 1 Sep 2025 12:25:58 +0530
+	s=arc-20240116; t=1756712734; c=relaxed/simple;
+	bh=cuqPKFliJxTb3U0VJ7xcTa+OjbCJy7Ambg6IME9eOiY=;
+	h=Message-Id:From:Date:Subject:To:Cc; b=s5d+S/1kRTBu+SOfofNbeVVbpe523g5R5/ryuI8MIGD1FvwQyQhtnAh57tetppOJ/ega+Vx3F4V+APF8XqW9MYk9GWkGwmQW2OQNRLAorOExeUGGLMl2d6QX+V7kzRofT9vSMP6uJLq9r7S+eSno+nuEHcHRgyw84gldugRnHfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 434312C0131F;
+	Mon,  1 Sep 2025 09:45:22 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 2E4BD4F1F6C; Mon,  1 Sep 2025 09:45:22 +0200 (CEST)
+Message-Id: <5f707caf1260bd8f15012bb032f7da9a9b898aba.1756712066.git.lukas@wunner.de>
+From: Lukas Wunner <lukas@wunner.de>
+Date: Mon, 1 Sep 2025 09:44:52 +0200
+Subject: [PATCH] PCI/AER: Print TLP Log for errors introduced since PCIe r1.1
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/5] PCI: dwc: Add support for ELBI resource mapping
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: cros-qcom-dts-watchers@chromium.org,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
-        quic_vpernami@quicinc.com, mmareddy@quicinc.com
-References: <20250828-ecam_v4-v8-0-92a30e0fa02d@oss.qualcomm.com>
- <20250828-ecam_v4-v8-2-92a30e0fa02d@oss.qualcomm.com>
- <ymsoyadz2gkura5evnex3m6jeeyzlcmcssdyuvddl25o5ci4bo@6ie4z5tgnpvz>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <ymsoyadz2gkura5evnex3m6jeeyzlcmcssdyuvddl25o5ci4bo@6ie4z5tgnpvz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=OemYDgTY c=1 sm=1 tr=0 ts=68b5438b cx=c_pps
- a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=yJojWOMRYYMA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=8Rd1e7yjQrnBmPj41GQA:9
- a=QEXdDO2ut3YA:10 a=OpyuDcXvxspvyRM73sMx:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: Olo8xRsbj87XsJ9OgLZM2EycmeLcwsfx
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODMwMDAyNCBTYWx0ZWRfX4ka1TY49topx
- ZKEIIKH8JkUA/gawwVRVTkG+qQ1m4yhiF92GzGE+IEwRoRTHDyheD6f6UrzHZEMb7oEWjrv/5kf
- VRrpsoHZ4hCR7MqaygG5cEM9eB+c+tSY6FKPP5VHTYw5CD/dN1H/Qx7d+jwcq9U2mCIlrZ49iKu
- irYhiBqj3GKyP4KmOho8KiK7eh+GrjmnWZU2lwfBvGV93w0BEItIB6lA9woP3zsTjFBk1VnVoha
- Ogb/tVh73gC3ZBznFbr+ocjHOKLLtNuE3vBE3FxEwmSW1QklFcDjo7t2FCCl9jALoMcho81QlPk
- X7XmHabOrkDvcRAvaXP+VhnHQbjDNTeyCuB7rpnLWctmUs1T+RazyMxHLjrekxDjw6yHChPdAXC
- 046NTSQH
-X-Proofpoint-ORIG-GUID: Olo8xRsbj87XsJ9OgLZM2EycmeLcwsfx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-01_03,2025-08-28_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 priorityscore=1501
- adultscore=0 clxscore=1015 phishscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508300024
 
+When reporting an error, the AER driver prints the TLP Header / Prefix Log
+only for errors enumerated in the AER_LOG_TLP_MASKS macro.
 
+The macro was never amended since its introduction in 2006 with commit
+6c2b374d7485 ("PCI-Express AER implemetation: AER core and aerdriver").
+At the time, PCIe r1.1 was the latest spec revision.
 
-On 8/31/2025 5:18 PM, Manivannan Sadhasivam wrote:
-> On Thu, Aug 28, 2025 at 01:04:23PM GMT, Krishna Chaitanya Chundru wrote:
->> External Local Bus Interface(ELBI) registers are optional registers in
->> DWC IPs having vendor specific registers.
->>
->> Since ELBI register space is applicable for all DWC based controllers,
->> move the resource get code to DWC core and make it optional.
->>
->> Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-designware.c | 9 +++++++++
->>   drivers/pci/controller/dwc/pcie-designware.h | 1 +
->>   2 files changed, 10 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->> index 89aad5a08928cc29870ab258d33bee9ff8f83143..4684c671a81bee468f686a83cc992433b38af59d 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->> @@ -167,6 +167,15 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
->>   		}
->>   	}
->>   
->> +	if (!pci->elbi_base) {
-> 
-> Why this check is needed? Are we expecting any DWC glue drivers to supply
-> 'dw_pcie::elbi_base' on their own?
-> 
-I was following the same way that existed for for dbi_base, where we are
-allowing DWC glue drivers to supply if they had any different approach
-like ./pci-dra7xx.c driver.
+Amend the macro with errors defined since then to avoid omitting the TLP
+Header / Prefix Log for newer errors.
 
-- Krishna Chaitanya.
-> - Mani
-> 
+The order of the errors in AER_LOG_TLP_MASKS follows PCIe r1.1 sec 6.2.7
+rather than 7.10.2, because only the former documents for which errors a
+TLP Header / Prefix is logged.  Retain this order.  The section number is
+still 6.2.7 in today's PCIe r7.0.
+
+For Completion Timeouts, the TLP Header / Prefix is only logged if the
+Completion Timeout Prefix / Header Log Capable bit is set in the AER
+Capabilities and Control register.  Introduce a tlp_header_logged() helper
+to check whether the TLP Header / Prefix Log is populated and use it in
+the two places which currently match against AER_LOG_TLP_MASKS directly.
+
+For Uncorrectable Internal Errors, logging of the TLP Header / Prefix is
+optional per PCIe r7.0 sec 6.2.7.  If needed, drivers could indicate
+through a flag whether devices are capable and tlp_header_logged() could
+then check that flag.
+
+pcitools introduced macros for newer errors with commit 144b0911cc0b
+("ls-ecaps: extend decode support for more fields for AER CE and UE
+status"):
+  https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/commit/?id=144b0911cc0b
+
+Unfortunately some of those macros are overly long:
+  PCI_ERR_UNC_POISONED_TLP_EGRESS
+  PCI_ERR_UNC_DMWR_REQ_EGRESS_BLOCKED
+  PCI_ERR_UNC_IDE_CHECK
+  PCI_ERR_UNC_MISR_IDE_TLP
+  PCI_ERR_UNC_PCRC_CHECK
+  PCI_ERR_UNC_TLP_XLAT_EGRESS_BLOCKED
+
+This seems unsuitable for <linux/pci_regs.h>, so shorten to:
+  PCI_ERR_UNC_POISON_BLK
+  PCI_ERR_UNC_DMWR_BLK
+  PCI_ERR_UNC_IDE_CHECK
+  PCI_ERR_UNC_MISR_IDE
+  PCI_ERR_UNC_PCRC_CHECK
+  PCI_ERR_UNC_XLAT_BLK
+
+Note that some of the existing macros in <linux/pci_regs.h> do not match
+exactly with pcitools (e.g. PCI_ERR_UNC_SDES versus PCI_ERR_UNC_SURPDN),
+so it does not seem mandatory for them to be identical.
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ drivers/pci/pcie/aer.c        | 30 +++++++++++++++++++++++++++---
+ include/uapi/linux/pci_regs.h |  8 ++++++++
+ 2 files changed, 35 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 15ed541..62c74b5 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -96,11 +96,21 @@ struct aer_info {
+ };
+ 
+ #define AER_LOG_TLP_MASKS		(PCI_ERR_UNC_POISON_TLP|	\
++					PCI_ERR_UNC_POISON_BLK |	\
+ 					PCI_ERR_UNC_ECRC|		\
+ 					PCI_ERR_UNC_UNSUP|		\
+ 					PCI_ERR_UNC_COMP_ABORT|		\
+ 					PCI_ERR_UNC_UNX_COMP|		\
+-					PCI_ERR_UNC_MALF_TLP)
++					PCI_ERR_UNC_ACSV |		\
++					PCI_ERR_UNC_MCBTLP |		\
++					PCI_ERR_UNC_ATOMEG |		\
++					PCI_ERR_UNC_DMWR_BLK |		\
++					PCI_ERR_UNC_XLAT_BLK |		\
++					PCI_ERR_UNC_TLPPRE |		\
++					PCI_ERR_UNC_MALF_TLP |		\
++					PCI_ERR_UNC_IDE_CHECK |		\
++					PCI_ERR_UNC_MISR_IDE |		\
++					PCI_ERR_UNC_PCRC_CHECK)
+ 
+ #define SYSTEM_ERROR_INTR_ON_MESG_MASK	(PCI_EXP_RTCTL_SECEE|	\
+ 					PCI_EXP_RTCTL_SENFEE|	\
+@@ -796,6 +806,20 @@ static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
+ 	}
+ }
+ 
++static bool tlp_header_logged(u32 status, u32 capctl)
++{
++	/* Errors for which a header is always logged (PCIe r7.0 sec 6.2.7) */
++	if (status & AER_LOG_TLP_MASKS)
++		return true;
++
++	/* Completion Timeout header is only logged on capable devices */
++	if (status & PCI_ERR_UNC_COMP_TIME &&
++	    capctl & PCI_ERR_CAP_COMP_TIME_LOG)
++		return true;
++
++	return false;
++}
++
+ static void __aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+ {
+ 	const char **strings;
+@@ -910,7 +934,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+ 		status = aer->uncor_status;
+ 		mask = aer->uncor_mask;
+ 		info.level = KERN_ERR;
+-		tlp_header_valid = status & AER_LOG_TLP_MASKS;
++		tlp_header_valid = tlp_header_logged(status, aer->cap_control);
+ 	}
+ 
+ 	info.status = status;
+@@ -1401,7 +1425,7 @@ int aer_get_device_error_info(struct aer_err_info *info, int i)
+ 		pci_read_config_dword(dev, aer + PCI_ERR_CAP, &aercc);
+ 		info->first_error = PCI_ERR_CAP_FEP(aercc);
+ 
+-		if (info->status & AER_LOG_TLP_MASKS) {
++		if (tlp_header_logged(info->status, aercc)) {
+ 			info->tlp_header_valid = 1;
+ 			pcie_read_tlp_log(dev, aer + PCI_ERR_HEADER_LOG,
+ 					  aer + PCI_ERR_PREFIX_LOG,
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index f5b1774..d2e1bbb 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -776,6 +776,13 @@
+ #define  PCI_ERR_UNC_MCBTLP	0x00800000	/* MC blocked TLP */
+ #define  PCI_ERR_UNC_ATOMEG	0x01000000	/* Atomic egress blocked */
+ #define  PCI_ERR_UNC_TLPPRE	0x02000000	/* TLP prefix blocked */
++#define  PCI_ERR_UNC_POISON_BLK	0x04000000	/* Poisoned TLP Egress Blocked */
++#define  PCI_ERR_UNC_DMWR_BLK	0x08000000	/* DMWr Request Egress Blocked */
++#define  PCI_ERR_UNC_IDE_CHECK	0x10000000	/* IDE Check Failed */
++#define  PCI_ERR_UNC_MISR_IDE	0x20000000	/* Misrouted IDE TLP */
++#define  PCI_ERR_UNC_PCRC_CHECK	0x40000000	/* PCRC Check Failed */
++#define  PCI_ERR_UNC_XLAT_BLK	0x80000000	/* TLP Translation Egress Blocked */
++
+ #define PCI_ERR_UNCOR_MASK	0x08	/* Uncorrectable Error Mask */
+ 	/* Same bits as above */
+ #define PCI_ERR_UNCOR_SEVER	0x0c	/* Uncorrectable Error Severity */
+@@ -798,6 +805,7 @@
+ #define  PCI_ERR_CAP_ECRC_CHKC		0x00000080 /* ECRC Check Capable */
+ #define  PCI_ERR_CAP_ECRC_CHKE		0x00000100 /* ECRC Check Enable */
+ #define  PCI_ERR_CAP_PREFIX_LOG_PRESENT	0x00000800 /* TLP Prefix Log Present */
++#define  PCI_ERR_CAP_COMP_TIME_LOG	0x00001000 /* Completion Timeout Prefix/Header Log Capable */
+ #define  PCI_ERR_CAP_TLP_LOG_FLIT	0x00040000 /* TLP was logged in Flit Mode */
+ #define  PCI_ERR_CAP_TLP_LOG_SIZE	0x00f80000 /* Logged TLP Size (only in Flit mode) */
+ #define PCI_ERR_HEADER_LOG	0x1c	/* Header Log Register (16 bytes) */
+-- 
+2.50.1
+
 
