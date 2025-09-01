@@ -1,225 +1,220 @@
-Return-Path: <linux-pci+bounces-35278-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35279-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7D1EB3E7F9
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 16:56:21 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48B62B3EA7B
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 17:31:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 184801A83D50
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 14:56:42 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 095C04E2DC7
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 15:31:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7CD6305068;
-	Mon,  1 Sep 2025 14:56:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BFBB30C608;
+	Mon,  1 Sep 2025 15:20:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Q1Sk9kq2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGIvI9AR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2062.outbound.protection.outlook.com [40.107.243.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F346025FA0E;
-	Mon,  1 Sep 2025 14:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756738576; cv=fail; b=lSSdCU4vSXPNcxRuyLUtxqeHie+NN1mJDjrl7kuZaijpS5DMGILBl7ljDrLlwaj7xOm/2uBMMqJZxUOtnVhe55yJ4+HCfE4j56OcTKkxyJ98H6g7t6w0Qzf/AgasvW+dl9d8Jqxzdmf1NE6kMN9XcDQXC8MfWLGfOOfFVvrA48U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756738576; c=relaxed/simple;
-	bh=DLayZMlBu6BSjyby8vLsq48fRLzy0QMH0UfxwA9S7qA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=M3NQaLKtRsn2Z5yAPNXM649WF/9B6/MBH4lnvM358ekBV4l0lBrkCqKBnzbX7yVuiUBuYmc6O6YKJxGAubLCqL24q+VcQEjvwKvyajqjKUXuVGD0+GFN938AdeRDufec89+UY9TBpv6jmTkuwKNenPQs47k6WYq7IZyzfp6Vbd0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Q1Sk9kq2; arc=fail smtp.client-ip=40.107.243.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IL+tkH393I0vfKX3UpeOPiO0v2Q0GhGheeeOKTxrWG+YmBa3OvWeqOnVgbcKJIS8PvND/Dfh8QhKHe7dUpgw8gkjc+ePqia3FaCBnt0nX1n+s+eyazmjcjiFqVFhvEH57spzolQKnhNmNI3Kr4ajn41H87UlNz9W+VSxTW/Iqwa5Djx5iDHF5qSZtWkXubw1g7/tMqkmcK9KLZf/cmuRom58gm+B696zrK/6sV/6+JCC5oysmNQyU5M0D+Pbk96N9w0I+K8Ef6qQbDAQpwOivonepb80ZEkAxUUTwnvRqwUhTuOzfBPCS158K4ZwF8hJ8qqFpdzAxTjae6DatC2/4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yUFbMNxP1pRXw3pjRE+5IM2T+dImfmn2x82ceXg4BWM=;
- b=X3bstafmLiqE5Aqwk/YCYZS35oU9dx0ik0MLK6DX0rcS+/AqWrBRYT7/qfxEaeVU3Fi+BibjAcWP1F2U7Hyofe4HWEfC6gCzm3358D5MmiSQuXegbKyaQ/MqYQ8uCFDg7y8Okj8EDqO5Wl7wH/1VCnlMYuVqzYpJNJBwH3B4maZEiBK5PbNsXQnKPB1dJnvCD9ACgnjeZLFmzcuzRjLAaWdziFECTZAuivaLQoaFJ9A4xaphcKZA5VupdAFtNcqzdkgyXXcLL6p94X5lzYvF+jPbSyj6vu5KiHJi2hTzoGAJH691oNetx/MLvHw+2/sw6qC9fqZErJo1S4nqSmfB6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yUFbMNxP1pRXw3pjRE+5IM2T+dImfmn2x82ceXg4BWM=;
- b=Q1Sk9kq2+gxfrx1ywgS8Kz5BGUjGNelVQMmw0dyUVUYM3KoV0PeUqMLIktSn3ZbqBG3VUuJuGNyeTBwBoRgwb0u3+45aDSYMuqpywyWa4etAHlBPfERxTMckorOFUFnm/ypC+ALbZJet3FibSjo4jdoQ47sM0gJp3J6PX/xTZ10opmIG/6sXHJnfOVSSOQjAeAtb//ZyTl9r3d/PHq1cu4nFys3eX/FNwOs3bST0KH7/73UDRGrc7000ySabkCOkOcXKIneGbCJ8ski4R3mknxsJ7x/qDRdiHEsvKEcpdG6Gmj2xLla9xt9TFX0pWA6oPqNylgtW+z3pQA9jnrO0pA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
- by IA1PR12MB7664.namprd12.prod.outlook.com (2603:10b6:208:423::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.21; Mon, 1 Sep
- 2025 14:56:10 +0000
-Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
- ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
- ([fe80::1660:3173:eef6:6cd9%5]) with mapi id 15.20.9073.021; Mon, 1 Sep 2025
- 14:56:10 +0000
-Message-ID: <07dea655-faac-4033-852c-91674c5f09e8@nvidia.com>
-Date: Mon, 1 Sep 2025 15:56:04 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI/MSI: Check MSI_FLAG_PCI_MSI_MASK_PARENT in
- cond_[startup|shutdown]_parent()
-To: Anders Roxell <anders.roxell@linaro.org>,
- Inochi Amaoto <inochiama@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner
- <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Shradha Gupta <shradhagupta@linux.microsoft.com>,
- Chen Wang <unicorn_wang@outlook.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
- Longbin Li <looong.bin@gmail.com>,
- Linux Kernel Functional Testing <lkft@linaro.org>,
- Nathan Chancellor <nathan@kernel.org>, Wei Fang <wei.fang@nxp.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>
-References: <20250827230943.17829-1-inochiama@gmail.com>
- <CADYN=9K7317Pte=dp7Q7HOhfLMMDAfRGcmaWCfvOtCLZ00uC+g@mail.gmail.com>
-From: Jon Hunter <jonathanh@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <CADYN=9K7317Pte=dp7Q7HOhfLMMDAfRGcmaWCfvOtCLZ00uC+g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0288.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:38f::16) To SJ2PR12MB8784.namprd12.prod.outlook.com
- (2603:10b6:a03:4d0::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060011DF271
+	for <linux-pci@vger.kernel.org>; Mon,  1 Sep 2025 15:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756740046; cv=none; b=WO2r2BywBxqncY9anuZg1MyvHzxU++hmsJWFpoe6k7PwT5sCrF9Hi6N2mspXGUcx2boqjWfmo8PtRDAeUItbWXW1akzKPZTMj/x/CQJVmlEJK8d79gWjQRBeyxiBjW6FkayStHLt7C5vwP5HyJzBU5vDPORtLjgiC7Qz9XXhWxg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756740046; c=relaxed/simple;
+	bh=mel0sP1S1UZU3Xkn/7UnF8o+gUk0oxpwGtXR4J6IJ+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=jW7YvPy90Jq3qOAJWuMO9J0SjD805vcejRXdL9APMcUWrbP+qkRn0F13xJEO+ItEt912gkJiOownjUwciIqRO3FIEB6Ir6CUe3e3C6y6DNmUHcfAmQCQ+B2aoNM0/DY78WhM6v7tf9z6ymkjg8CJkRYbZDqx5yIk35GfV3AlBoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGIvI9AR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 660E4C4CEF0;
+	Mon,  1 Sep 2025 15:20:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756740045;
+	bh=mel0sP1S1UZU3Xkn/7UnF8o+gUk0oxpwGtXR4J6IJ+g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=CGIvI9ARWQzSHMZs2628PIHsARqcZ9TczW4GcSf5zDL6rEtTv0g4j6awo17XMxCj1
+	 iT1xMU9XmJooZfUaxeCb+vOZYlqWVzvzIrEVIOoTc+ygUNxgKJ/B/hqxWsyK9VLo8h
+	 fyeslylBNNzUag6aXyfLRwQriWt2lMJ6bzbTGEGLI9uPIVrT4cdVhtOrK65HDGo3fs
+	 E7TIEeshmA1iShgtkpHVJbGS9SrDzVpx/zn/0OzsvWor5814LHYUjRisOljUK2M6rh
+	 Hf4QL0bP5G3b0RDnOLXnU9aims+hwKKYSrUHap4pwocxBTDY1U3VlVHbrNGyiKGl1P
+	 SvDVUWDensJ3w==
+Date: Mon, 1 Sep 2025 10:20:44 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/AER: Print TLP Log for errors introduced since PCIe
+ r1.1
+Message-ID: <20250901152044.GA1114640@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|IA1PR12MB7664:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5d50ecb5-343d-4db0-1079-08dde967b02e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WW9UQzFJK0xCNjVWQTlodjkveDIxMk0ycnhiQ2piMlU2cldDczBWZ0lYQW95?=
- =?utf-8?B?M3V3Ry9ONDVXWjZOZ1NrbjkyRE0zTW5EU0o5R2RtSS8wck9Da0pTWTRGeWJt?=
- =?utf-8?B?Q0ZzM2VQUU5iTmZkWXkvTTY5NXgrTUEza3U4TGsrdmpubEtTWnJFVXd1aVpp?=
- =?utf-8?B?cW5aall4ODdoSzBCRjJFdVBoM0xuRVVmY1lBWlh5aUl4UGVleVFuZE5SN0k1?=
- =?utf-8?B?cG9aQ1VrUStaTHJsR2RJbW1YWXc1QW93SitYSVArWitYZTE0b1A5aS9ITUh1?=
- =?utf-8?B?U1U5U2RwcVdzS2ZMdU5mYmpLc0lnZWxqa29aRCtlbUU4a3JOM24vTUJ6REwr?=
- =?utf-8?B?b0hDWG1iSWZCZ1oybWs3blZ5KzJ4QzZ6ZXpVVmtpWVdQVkZWb3dFaTdNL2Ix?=
- =?utf-8?B?MldTUC9weHpLYy8wKzZHYStoQlBMVGh1bE4wNU0vaFBTWHVDY0JlTXNnOEp5?=
- =?utf-8?B?OXd2alVRc0VrbENadGhYbVNCbjhZUXpFRmphbjcvUzdIOGZxV3JySnliWnZY?=
- =?utf-8?B?YU9Yb2dOaGNvY2IxN2ZTdDU2a2k0eFhDeXAvYnlHR1NYSHk2Z2tsc0tBd242?=
- =?utf-8?B?cWZoOGM5OU9jYmtpdkUvYTFKekUrN1ZLUXRCRW4rc3BnYzVtdk05TkdseUJQ?=
- =?utf-8?B?bnhoWVlwVDhwVVU0RTg5L0JMODEwNEtUaTdYMFVmdklNM3pQODhvT1pwUGlN?=
- =?utf-8?B?bEFHZWdHMWtiZTBPdmw3Q2JVUWlXNzBmeTVPWHJneStKQXdONmJwV3hZZjA1?=
- =?utf-8?B?bFp5TFJZSVI5d0o4bncreUpEalNvNXU3aU8wZFdibVpCNy9qNDRIUkh6OTZ5?=
- =?utf-8?B?VEpSRjg1MkdRakNrQkd1OHNvNVBzSUZTMDBsditpWFZxdWJoWDNDeStkblBP?=
- =?utf-8?B?Qzh4RWVjWDgxMFpFSVhRU0F2cy9iNUcvU0Rjc3dIeFFVVWQ1Zmh3cEtnK1FU?=
- =?utf-8?B?YUNOTmJkcmN0amVNbWJpL0tEL0pWUENxckhpZzdFSWQ0MHJXSkozQ21KNmUr?=
- =?utf-8?B?VDc4TmNXRVhYbkIyUG03WmJ1Y2FuaU15cEFnRURkelNFY0hUaEovYVNIODY4?=
- =?utf-8?B?Qng4eGhQaVdlZ1ZJb3g3YnBJem9WcVZ2N0JTSkM3UVZtTGN5NmF5RnZpRHNZ?=
- =?utf-8?B?K3ZuTkVqUDZkczhOa3BYci9GNFhVZDRkWWlCdVJBS20vdS81MU5YTzk2QnV5?=
- =?utf-8?B?RVVNaDJVK1luN1ZyT0RCSXZtczhDcWdKRHl5clNaTDF6WmxValdzT3dZbEM0?=
- =?utf-8?B?bStwdEpoVHZRM3RwNFprMVhUQjFXNy9DaWtIVVlYUWVXemVVbXpPdUtFclY3?=
- =?utf-8?B?d1ZMb2xaQXdDcGc1SXUwRnJ2cEZaNm5uWXN4VVYzRG1mVHA5Y3Bmb1FPTVM3?=
- =?utf-8?B?bitlMEc1U0ZwdktMcHhzTEVTWmNSTG53VUlMNVU3dkcwc0dCNnVtT2hWSmU1?=
- =?utf-8?B?UW5hL0lqc1BDYUVIcGp4MWUwaXR1UE9SUnY3M0ZZT0h3aTZIUTV2bEkzNmlz?=
- =?utf-8?B?aHRmb3hnL1BGbDg3L205OFBiQU1aUFRoZWV0eFZuaWdKU1ZJSXIwSllqb0JU?=
- =?utf-8?B?WGxjYVY5S3dKWEhzVkpZMjk3Wm80bTZHUkFXb0VZZnllVkNxSW1HdHZLOTYr?=
- =?utf-8?B?ZDRkb1BpaW5DT3RNSXAvQTBUS09FK0MxR2lRamtnbTljQzlPbUVmbVZIdlE1?=
- =?utf-8?B?MWlWZDRmYmprSXdsSWpqRStzMjlrWUhZWE14NUo3ZkJ4SHMwOEgwcEZHNHZX?=
- =?utf-8?B?UGpEcnNLQXNoQm9xeWt4U0dZVEdwU0VwY1FXcGVaUVpjUE9CSXZGQnhuelVu?=
- =?utf-8?B?WGFleXRUWjFhdDVTY3prWEdvNW5tN3lVTnQrTThiS3kxTWpKTC9DcmlDZ2FC?=
- =?utf-8?B?ajVXaFFlUmZ3NHVrSGFRYTBnc0IrakwyTWxqaU80NTJGeWE3SDErTzRvbXRm?=
- =?utf-8?Q?fDqTonRdVxk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Ky9GS2FvSTdnM2FkZVBUbkZyMVExL3o3ZThQNFE2MnZmMXRTSzRCMGMraS9w?=
- =?utf-8?B?ajhDaURMZzQ4VzNPRk05QXQ2ZXYzLzY5Tmc1QnI2VjVkVDh3QlIzN0pZR1dX?=
- =?utf-8?B?QWFMb1IvMDVMaXpySVlTY0JyeEtPM3R5WWZOSmFKa0dTcDJGajd3cjYvWnls?=
- =?utf-8?B?OVVzanlrZGtMd2x3bzE5cWJqZUpPNjJWeXpYeWoxRFB6WXZRSE5teENRZmVK?=
- =?utf-8?B?SmIrWHFZMHJMaUtsTmVoTnhTSWtlcytLTE9DUUZDZHJTYS9HUXpQMFZiYzRz?=
- =?utf-8?B?UUZJVEYzYk10azZnQUlGVU52NnVDK3ZVVUg0dUg0QjQxcFp6Z1A5T1YvS0Z1?=
- =?utf-8?B?QjRuQ2kreFZTbEU5TFQxdnlYUHAyVkFSL2xyMWpMcVBPVnlMS3JRTEdCYmNh?=
- =?utf-8?B?TGJUa0cwbEMzczA0bEppTXhUY2F3VGR4WkNubWpBd3BudjdONk9GVUluLzVX?=
- =?utf-8?B?SVZlMjZiUENESWpVS0pPcFVWYjFGcllEVThYVkNDSHg4RUxMUkdGNms2M2dj?=
- =?utf-8?B?SWw5aVVMQmFLY0V4ZElUK1BkQTF4aGR0WCsxTVdocHB1UTdjYm1YMjlReWxa?=
- =?utf-8?B?WEM3dFhSRE1yZXAxVVVFUUhVajhBRmxadDhvQk1wRUxQSGNIZ3hXUFVhMkdz?=
- =?utf-8?B?ZGNZZmVLU1IxSGdrcEpKWFBGTSs5bnJOVTZiZ1U5TGFJanV1a3QvOTcyS2dP?=
- =?utf-8?B?RUxnMW9COUlrL1NpUkw1YkRVSzdoSkRsTGRlajF0bGZhTDJUaHdiKzdTVHE2?=
- =?utf-8?B?Qk5YVUdQVTNRRXoreTJ5QzFpeXdlQUMrbktJYkJEUVArSEpkcWtxcmYxdTZh?=
- =?utf-8?B?TkN3UmgreUVlemo2cnlYT0VYZ3RMNE1mSXJGL055MGVZNjJWdW5vcm5HU2Qr?=
- =?utf-8?B?aGQvV2ZPT052S0EwT0Ftd0dvVUVkMVBwNGZiNHQvTG90QmtNVSt1MXRNaHo1?=
- =?utf-8?B?dVdyZWJVdldNRDJkR3VkbVk3YytEd1dPR1lRMDVDeFV6ajZWSTM5NmFROVNG?=
- =?utf-8?B?OE9WOU1EdXdHVHJIaVRsOE5MZHBiUzRjTXpTU2RqWkF2dWpTZTU3UFdybi9h?=
- =?utf-8?B?Rk55TzdraldtZThIU2J0aE9KYUlkWTZLNURLSlVIZ3dBaHJpa3VLRkNYUi81?=
- =?utf-8?B?LytKT2hIZWxQZ2RrZG1EM3d0Z08rUHpZaVB1UW43QitENGcwWklkYy8rczVU?=
- =?utf-8?B?SjRVdEVsem0xcktzZWdJUHpHamYzZDVmdG1HREw2QkdGVTViTFdobDlLTmY2?=
- =?utf-8?B?SUtHUCtBTnl3b2YxRGJ2VnZ4ZzMxWmNSZXNwZ1FQNUNadnFQN1l0ZnFHdi9o?=
- =?utf-8?B?VHVKaStOb1ZrYlVOMXRwb1AyaVJWT0pVSitwMjJLaDhEMjVCZG1LQ05rbk9X?=
- =?utf-8?B?VHh5S1plczloMnNvcWExMm9YandhUzVNZEdKcGpZbFFOaHd2eDdDOE9VMkp5?=
- =?utf-8?B?ZlBCOW5veFpDVXVhWGRWUlFBK1ExNVBINzBVZXB3RzFNZmxVemVKMWVtdnhh?=
- =?utf-8?B?cnVrRlQ4b1ZLTzdhb28rU1haS1NWeTE3UEhzdENXQ0FiWEMveXdNYmdMWGJx?=
- =?utf-8?B?WUxLMWh1SFpMc3RsWW5QWDlUR2RYYnpPb0FES2FUeVdxTUVzUU1DUHlObVFs?=
- =?utf-8?B?SUR4Vmd3eS9teDVtaXY5QUNRc3ZYV2hJanJpSWRJTm1ZQzdXL20yTlBkdzF0?=
- =?utf-8?B?Tk1wRUxqYlExTHgzSG5XMThYblg3cTlIUXFMdlMzQUF5cVpMdzl3ZUJHRW9M?=
- =?utf-8?B?WEl5OWZjZXU0ME5hYkRFdUIxRlQ5Vk1PalNDNjVyeDVwUkFmaW1jQUh2dEtQ?=
- =?utf-8?B?dWpFVEwwUCtLY1BTaDgyNGx2SExMK0NNNk95SExkRVQ2WVdWVzFTREpqQ2V5?=
- =?utf-8?B?NkI2QUU0UHNrVzBtWVlOQ010WVIxTVo3Zms2V1Nxa1hyY1ppUnRNd2IwaE90?=
- =?utf-8?B?MlNEV0FQdzloZXdzOVlnUDZXaUpWRWFVQlQxbnVqSjZLYUZyL0NvMjgyNEhF?=
- =?utf-8?B?NWpUb0ZpUy9IVjhkUXdRWlRnUzRGRXpHdUQxU2U4K0Q1WmN1TVdLNzlxQXdp?=
- =?utf-8?B?bE9LeHNCZElXODFremtVVk13QWljQTg0MjFRbGViSHVXNFRaTVo5NUNtZVNz?=
- =?utf-8?B?TTJJK2RIcXJhTGdFQzRxcitNRTFaVFlxQldBbDNRZXBHcE5HNDdPenMybnhy?=
- =?utf-8?Q?/yS0sQej4H3RhlHcZbXBXIu6+IBxhDjyYcjGdl8IGEpb?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d50ecb5-343d-4db0-1079-08dde967b02e
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2025 14:56:10.5770
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YzeL6x3PHlkUkO2mUWGTvcmAnnjKrrycGUibjCDwLJR6CT+LlSjwU51n90PyX5vEWPj/vaMvx2dMavEzLnQxSw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7664
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f707caf1260bd8f15012bb032f7da9a9b898aba.1756712066.git.lukas@wunner.de>
 
-
-On 01/09/2025 14:30, Anders Roxell wrote:
-> On Thu, 28 Aug 2025 at 01:10, Inochi Amaoto <inochiama@gmail.com> wrote:
->>
->> For msi controller that only supports MSI_FLAG_PCI_MSI_MASK_PARENT,
->> the newly added callback irq_startup() and irq_shutdown() for
->> pci_msi[x]_template will not unmask/mask the interrupt when startup/
->> shutdown the interrupt. This will prevent the interrupt from being
->> enabled/disabled normally.
->>
->> Add the missing check for MSI_FLAG_PCI_MSI_MASK_PARENT in the
->> cond_[startup|shutdown]_parent(). So the interrupt can be normally
->> unmasked/masked if it does not support MSI_FLAG_PCI_MSI_MASK_PARENT.
->>
->> Fixes: 54f45a30c0d0 ("PCI/MSI: Add startup/shutdown for per device domains")
->> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->> Closes: https://lore.kernel.org/regressions/aK4O7Hl8NCVEMznB@monster/
->> Reported-by: Nathan Chancellor <nathan@kernel.org>
->> Closes: https://lore.kernel.org/regressions/20250826220959.GA4119563@ax162/
->> Reported-by: Wei Fang <wei.fang@nxp.com>
->> Closes: https://lore.kernel.org/all/20250827093911.1218640-1-wei.fang@nxp.com/
->> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
->> Tested-by: Nathan Chancellor <nathan@kernel.org>
->> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
->> Tested-by: Jon Hunter <jonathanh@nvidia.com>
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+On Mon, Sep 01, 2025 at 09:44:52AM +0200, Lukas Wunner wrote:
+> When reporting an error, the AER driver prints the TLP Header / Prefix Log
+> only for errors enumerated in the AER_LOG_TLP_MASKS macro.
 > 
-> Any updates on this?  It pretty much breaks testing on linux-next for ARM.
+> The macro was never amended since its introduction in 2006 with commit
+> 6c2b374d7485 ("PCI-Express AER implemetation: AER core and aerdriver").
+> At the time, PCIe r1.1 was the latest spec revision.
+> 
+> Amend the macro with errors defined since then to avoid omitting the TLP
+> Header / Prefix Log for newer errors.
+> 
+> The order of the errors in AER_LOG_TLP_MASKS follows PCIe r1.1 sec 6.2.7
+> rather than 7.10.2, because only the former documents for which errors a
+> TLP Header / Prefix is logged.  Retain this order.  The section number is
+> still 6.2.7 in today's PCIe r7.0.
+> 
+> For Completion Timeouts, the TLP Header / Prefix is only logged if the
+> Completion Timeout Prefix / Header Log Capable bit is set in the AER
+> Capabilities and Control register.  Introduce a tlp_header_logged() helper
+> to check whether the TLP Header / Prefix Log is populated and use it in
+> the two places which currently match against AER_LOG_TLP_MASKS directly.
+> 
+> For Uncorrectable Internal Errors, logging of the TLP Header / Prefix is
+> optional per PCIe r7.0 sec 6.2.7.  If needed, drivers could indicate
+> through a flag whether devices are capable and tlp_header_logged() could
+> then check that flag.
+> 
+> pcitools introduced macros for newer errors with commit 144b0911cc0b
+> ("ls-ecaps: extend decode support for more fields for AER CE and UE
+> status"):
+>   https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/commit/?id=144b0911cc0b
+> 
+> Unfortunately some of those macros are overly long:
+>   PCI_ERR_UNC_POISONED_TLP_EGRESS
+>   PCI_ERR_UNC_DMWR_REQ_EGRESS_BLOCKED
+>   PCI_ERR_UNC_IDE_CHECK
+>   PCI_ERR_UNC_MISR_IDE_TLP
+>   PCI_ERR_UNC_PCRC_CHECK
+>   PCI_ERR_UNC_TLP_XLAT_EGRESS_BLOCKED
+> 
+> This seems unsuitable for <linux/pci_regs.h>, so shorten to:
+>   PCI_ERR_UNC_POISON_BLK
+>   PCI_ERR_UNC_DMWR_BLK
+>   PCI_ERR_UNC_IDE_CHECK
+>   PCI_ERR_UNC_MISR_IDE
+>   PCI_ERR_UNC_PCRC_CHECK
+>   PCI_ERR_UNC_XLAT_BLK
+> 
+> Note that some of the existing macros in <linux/pci_regs.h> do not match
+> exactly with pcitools (e.g. PCI_ERR_UNC_SDES versus PCI_ERR_UNC_SURPDN),
+> so it does not seem mandatory for them to be identical.
+> 
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
 
-Also does it make sense to squash this fix with the original patch? It 
-caused boot failures on at least 3 of our boards and so could impact the 
-ability to bisect other issues.
+Applied to pci/aer for v6.18, thanks, Lukas!
 
-Jon
-
--- 
-nvpublic
-
+> ---
+>  drivers/pci/pcie/aer.c        | 30 +++++++++++++++++++++++++++---
+>  include/uapi/linux/pci_regs.h |  8 ++++++++
+>  2 files changed, 35 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 15ed541..62c74b5 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -96,11 +96,21 @@ struct aer_info {
+>  };
+>  
+>  #define AER_LOG_TLP_MASKS		(PCI_ERR_UNC_POISON_TLP|	\
+> +					PCI_ERR_UNC_POISON_BLK |	\
+>  					PCI_ERR_UNC_ECRC|		\
+>  					PCI_ERR_UNC_UNSUP|		\
+>  					PCI_ERR_UNC_COMP_ABORT|		\
+>  					PCI_ERR_UNC_UNX_COMP|		\
+> -					PCI_ERR_UNC_MALF_TLP)
+> +					PCI_ERR_UNC_ACSV |		\
+> +					PCI_ERR_UNC_MCBTLP |		\
+> +					PCI_ERR_UNC_ATOMEG |		\
+> +					PCI_ERR_UNC_DMWR_BLK |		\
+> +					PCI_ERR_UNC_XLAT_BLK |		\
+> +					PCI_ERR_UNC_TLPPRE |		\
+> +					PCI_ERR_UNC_MALF_TLP |		\
+> +					PCI_ERR_UNC_IDE_CHECK |		\
+> +					PCI_ERR_UNC_MISR_IDE |		\
+> +					PCI_ERR_UNC_PCRC_CHECK)
+>  
+>  #define SYSTEM_ERROR_INTR_ON_MESG_MASK	(PCI_EXP_RTCTL_SECEE|	\
+>  					PCI_EXP_RTCTL_SENFEE|	\
+> @@ -796,6 +806,20 @@ static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
+>  	}
+>  }
+>  
+> +static bool tlp_header_logged(u32 status, u32 capctl)
+> +{
+> +	/* Errors for which a header is always logged (PCIe r7.0 sec 6.2.7) */
+> +	if (status & AER_LOG_TLP_MASKS)
+> +		return true;
+> +
+> +	/* Completion Timeout header is only logged on capable devices */
+> +	if (status & PCI_ERR_UNC_COMP_TIME &&
+> +	    capctl & PCI_ERR_CAP_COMP_TIME_LOG)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  static void __aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+>  	const char **strings;
+> @@ -910,7 +934,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>  		status = aer->uncor_status;
+>  		mask = aer->uncor_mask;
+>  		info.level = KERN_ERR;
+> -		tlp_header_valid = status & AER_LOG_TLP_MASKS;
+> +		tlp_header_valid = tlp_header_logged(status, aer->cap_control);
+>  	}
+>  
+>  	info.status = status;
+> @@ -1401,7 +1425,7 @@ int aer_get_device_error_info(struct aer_err_info *info, int i)
+>  		pci_read_config_dword(dev, aer + PCI_ERR_CAP, &aercc);
+>  		info->first_error = PCI_ERR_CAP_FEP(aercc);
+>  
+> -		if (info->status & AER_LOG_TLP_MASKS) {
+> +		if (tlp_header_logged(info->status, aercc)) {
+>  			info->tlp_header_valid = 1;
+>  			pcie_read_tlp_log(dev, aer + PCI_ERR_HEADER_LOG,
+>  					  aer + PCI_ERR_PREFIX_LOG,
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index f5b1774..d2e1bbb 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -776,6 +776,13 @@
+>  #define  PCI_ERR_UNC_MCBTLP	0x00800000	/* MC blocked TLP */
+>  #define  PCI_ERR_UNC_ATOMEG	0x01000000	/* Atomic egress blocked */
+>  #define  PCI_ERR_UNC_TLPPRE	0x02000000	/* TLP prefix blocked */
+> +#define  PCI_ERR_UNC_POISON_BLK	0x04000000	/* Poisoned TLP Egress Blocked */
+> +#define  PCI_ERR_UNC_DMWR_BLK	0x08000000	/* DMWr Request Egress Blocked */
+> +#define  PCI_ERR_UNC_IDE_CHECK	0x10000000	/* IDE Check Failed */
+> +#define  PCI_ERR_UNC_MISR_IDE	0x20000000	/* Misrouted IDE TLP */
+> +#define  PCI_ERR_UNC_PCRC_CHECK	0x40000000	/* PCRC Check Failed */
+> +#define  PCI_ERR_UNC_XLAT_BLK	0x80000000	/* TLP Translation Egress Blocked */
+> +
+>  #define PCI_ERR_UNCOR_MASK	0x08	/* Uncorrectable Error Mask */
+>  	/* Same bits as above */
+>  #define PCI_ERR_UNCOR_SEVER	0x0c	/* Uncorrectable Error Severity */
+> @@ -798,6 +805,7 @@
+>  #define  PCI_ERR_CAP_ECRC_CHKC		0x00000080 /* ECRC Check Capable */
+>  #define  PCI_ERR_CAP_ECRC_CHKE		0x00000100 /* ECRC Check Enable */
+>  #define  PCI_ERR_CAP_PREFIX_LOG_PRESENT	0x00000800 /* TLP Prefix Log Present */
+> +#define  PCI_ERR_CAP_COMP_TIME_LOG	0x00001000 /* Completion Timeout Prefix/Header Log Capable */
+>  #define  PCI_ERR_CAP_TLP_LOG_FLIT	0x00040000 /* TLP was logged in Flit Mode */
+>  #define  PCI_ERR_CAP_TLP_LOG_SIZE	0x00f80000 /* Logged TLP Size (only in Flit mode) */
+>  #define PCI_ERR_HEADER_LOG	0x1c	/* Header Log Register (16 bytes) */
+> -- 
+> 2.50.1
+> 
 
