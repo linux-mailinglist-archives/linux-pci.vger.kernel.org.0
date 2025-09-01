@@ -1,216 +1,202 @@
-Return-Path: <linux-pci+bounces-35283-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35284-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1940B3EB85
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 17:53:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD4BCB3EB92
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 17:54:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E6DE5165E12
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 15:50:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CBBF87AE681
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 15:53:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81C8632F77F;
-	Mon,  1 Sep 2025 15:50:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F33512D5939;
+	Mon,  1 Sep 2025 15:54:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RzLqP9gE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VDsaAdUj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F791FBEB9
-	for <linux-pci@vger.kernel.org>; Mon,  1 Sep 2025 15:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE32E2D5924;
+	Mon,  1 Sep 2025 15:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756741835; cv=none; b=piVJtq9Erh4K6nlUF7qx2bEm7SXw5pfAn9a2fMKECIsL1kyNiVLQThr0Qdo0jEUuk3H7u7+AcOy+BiXV9OXwtdfaTv2P0MgQlFQMTzBIlhdoWnrKW3ez+rFN+1pF/q5ieX3RVuPeMxybnY7B7yB/PqSnoXIFq0l2HDj3bYaa+tQ=
+	t=1756742076; cv=none; b=lZ7n0dYDkf53JNbKCrHZKcTWBTt9pUenoeH8PyG7l9JuzZnl+vFA0eYutqPDinOjYuDvTvRGAsPlwGhYYRgM4K4zvJbABLYe5Sb9BH/7odoNUKlpb6Xm4D6GhnY0QateAOYgj1B49JdhmN+zmRAPPmADrAfoaKWNo/AlBp4jk+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756741835; c=relaxed/simple;
-	bh=DMnX/N7trPPR7m7TLJzFjgQ3Owtcg4Cjc0SYqK2Elis=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=t3DBuKlGLsHljfP6/TgmPsixDjIK1It9FGYCwEpjGEjuliWLtniSINd6QeiN4YOTZiaplcTguy5QFOgOtle7epiBSKWzbL2Gtgo9JnaPoXvDlhhmAmAuOa6wcdTpz0xhB3f18tuWFlekKdRgnLgL4ODrxIMPXzPIO8MQVfl3ONw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RzLqP9gE; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756741834; x=1788277834;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=DMnX/N7trPPR7m7TLJzFjgQ3Owtcg4Cjc0SYqK2Elis=;
-  b=RzLqP9gEeCEo9Gk+ErsVePMbTnwkt/9p29rRvvBrkrgcIppY5lemvhhI
-   /D/hsaDH7xCC6BE4Hn8wD+IazaT/bZ2jxASZAyfQrbWpBkEQm5mvxFHNG
-   ZDdxzlhPlMiY/q+ckxutHoTpGBVk0DFp0g+iTfvNsNWrW2R0e949se651
-   dkkhCPHXt8CLxf6HtlUSsvHgwJvLkjahkijHqhkdzfEJRyzsBU+9Z/eu5
-   z2WVXu0mW+Mu+UzaAn8T1HISN+j8PhUcd89oVTKVN+sYm7952ybNmS5qo
-   PXofc7fbZIUuKPO4Hmtvj0vAx9bQ30q4EU/LaNwk71sN4LI7VOjeTGaOv
-   Q==;
-X-CSE-ConnectionGUID: RBfG5bSfQUemeCyIV/7uYw==
-X-CSE-MsgGUID: SQ/NYmU+R/2cT9M0XNF+6g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11540"; a="84417510"
-X-IronPort-AV: E=Sophos;i="6.18,225,1751266800"; 
-   d="scan'208";a="84417510"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2025 08:50:33 -0700
-X-CSE-ConnectionGUID: QVf3PfRTSPmkaV0Mk+9dYA==
-X-CSE-MsgGUID: jGs9bkVCQKuQP/0PYQDuEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,225,1751266800"; 
-   d="scan'208";a="170330812"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.193])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2025 08:50:32 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 1 Sep 2025 18:50:27 +0300 (EEST)
-To: Steve Oswald <stevepeter.oswald@gmail.com>
-cc: linux-pci@vger.kernel.org
-Subject: Re: [BUG] Thunderbolt eGPU PCI BARs incorrectly assigned, fails to
- assign memory
-In-Reply-To: <9254be77-46ea-992f-a1bd-98bea3943520@linux.intel.com>
-Message-ID: <f743efbe-56b7-ad85-f278-743af9385f10@linux.intel.com>
-References: <CAN95MYEaO8QYYL=5cN19nv_qDGuuP5QOD17pD_ed6a7UqFVZ-g@mail.gmail.com> <9254be77-46ea-992f-a1bd-98bea3943520@linux.intel.com>
+	s=arc-20240116; t=1756742076; c=relaxed/simple;
+	bh=zbaUuwR137ygPnpQ0YzRAfrhZCcuUrJu1SPf+nLYCsI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g07qFA6FIso2Agu+WDoo950XJeGX6GyxHzymnpd2A/+pAKgYFrg2qCMrxW5TMud+vn8AcYNMuf4eVb7fEFWe0FOFk6IOH3L5hJqEFqT/0XPFCdJaiBSTndu22scOR74Z9HYt9dfKH6H2+ZiTXVoJhuO9wV7R+UvcJTJTypSbo1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VDsaAdUj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B14BC4CEF0;
+	Mon,  1 Sep 2025 15:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756742076;
+	bh=zbaUuwR137ygPnpQ0YzRAfrhZCcuUrJu1SPf+nLYCsI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VDsaAdUjDt21AAz1YuepphxiXMwMEqxbceRWO1eDFCn3hMyTS0P1AIdUaMqjd9LaY
+	 w4UYGZg7mlCI1TfIxr73JZ4GUGJmOZAv8B0LamR11GLZSQZ99JmN3kwYnbn79q668f
+	 +xy2lfiIDihfknyZ0KSJCXvKeOoWoloviYzJkK3zlAg3++z2h4I4LDqCL113xr9ORu
+	 TrNNLs3a5QVAYlsSPLGOs/oLWL7G2++Qr6o0Zf+LSESwfXV92gYCO8t2zWyoVEy8sp
+	 Wt7ejild3mAw1jXg8Pa8V9BNc2/j0KJcP+ldmmtYXzIGj/EMgFnwE4RMTSwqRNxnoX
+	 5N7daNBwPszmw==
+Date: Mon, 1 Sep 2025 21:24:25 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>, bhelgaas@google.com, 
+	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org, 
+	mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de, lizhi.hou@amd.com, 
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v3 5/9] PCI: rzg3s-host: Add Initial PCIe Host Driver for
+ Renesas RZ/G3S SoC
+Message-ID: <vdn4lomtgr6htab7uodgm75iphju6yyimhlnfonysxxdpudib7@qm4yettsvsrs>
+References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250704161410.3931884-6-claudiu.beznea.uj@bp.renesas.com>
+ <ddxayjj5wcuuish4kvyluzrujkes5seo7zlusmomyjfjcgzcyj@xe3zzzmy2zaj>
+ <8ef466aa-b470-4dcb-9024-0a9c36eb9a6a@tuxon.dev>
+ <zsgncwvhykw4ja3bbqaxwupppjsqq4pcrdgrsduahokmt72xsm@twekpse6uzzh>
+ <CAMuHMdUu0uXBJndcwWoZp8NNyBJox5dZw4aoB8Ex50vBDDtP7g@mail.gmail.com>
+ <6f2hpdkonomgrfzqoupcex2rpqtlhql4lmsqm7hqk25qakp7ax@bfrzflghmnev>
+ <CAMuHMdUEqKc+qtRXiPzgjhWaer5KLroZ+hCSVLCQ497h3BtOAw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-625503797-1756741827=:947"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdUEqKc+qtRXiPzgjhWaer5KLroZ+hCSVLCQ497h3BtOAw@mail.gmail.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, Sep 01, 2025 at 04:22:16PM GMT, Geert Uytterhoeven wrote:
+> Hi Mani,
+> 
+> On Mon, 1 Sept 2025 at 16:04, Manivannan Sadhasivam <mani@kernel.org> wrote:
+> > On Mon, Sep 01, 2025 at 11:25:30AM GMT, Geert Uytterhoeven wrote:
+> > > On Sun, 31 Aug 2025 at 06:07, Manivannan Sadhasivam <mani@kernel.org> wrote:
+> > > > On Sat, Aug 30, 2025 at 02:22:45PM GMT, Claudiu Beznea wrote:
+> > > > > On 30.08.2025 09:59, Manivannan Sadhasivam wrote:
+> > > > > > On Fri, Jul 04, 2025 at 07:14:05PM GMT, Claudiu wrote:
+> > > > > >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> > > > > >>
+> > > > > >> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+> > > > > >> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+> > > > > >> only as a root complex, with a single-lane (x1) configuration. The
+> > > > > >> controller includes Type 1 configuration registers, as well as IP
+> > > > > >> specific registers (called AXI registers) required for various adjustments.
+> > > > > >>
+> > > > > >> Hardware manual can be downloaded from the address in the "Link" section.
+> > > > > >> The following steps should be followed to access the manual:
+> > > > > >> 1/ Click the "User Manual" button
+> > > > > >> 2/ Click "Confirm"; this will start downloading an archive
+> > > > > >> 3/ Open the downloaded archive
+> > > > > >> 4/ Navigate to r01uh1014ej*-rzg3s-users-manual-hardware -> Deliverables
+> > > > > >> 5/ Open the file r01uh1014ej*-rzg3s.pdf
+> > > > > >>
+> > > > > >> Link: https://www.renesas.com/en/products/rz-g3s?queryID=695cc067c2d89e3f271d43656ede4d12
+> > > > > >> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > > > > >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> > >
+> > > > > >> +  ret = pm_runtime_resume_and_get(dev);
+> > > > > >> +  if (ret)
+> > > > > >> +          return ret;
+> > > > > >> +
+> > > > > >
+> > > > > > Do you really need to do resume_and_get()? If not, you should do:
+> > > > >
+> > > > > It it's needed to enable the clock PM domain the device is part of.
+> > > > >
+> > > >
+> > > > I've replied below.
+> > > >
+> > > > > >
+> > > > > >     pm_runtime_set_active()
+> > > > > >     pm_runtime_no_callbacks()
+> > > > > >     devm_pm_runtime_enable()
+> > >
+> > > > > >> +static int rzg3s_pcie_suspend_noirq(struct device *dev)
+> > > > > >> +{
+> > > > > >> +  struct rzg3s_pcie_host *host = dev_get_drvdata(dev);
+> > > > > >> +  const struct rzg3s_pcie_soc_data *data = host->data;
+> > > > > >> +  struct regmap *sysc = host->sysc;
+> > > > > >> +  int ret;
+> > > > > >> +
+> > > > > >> +  ret = pm_runtime_put_sync(dev);
+> > > > > >> +  if (ret)
+> > > > > >> +          return ret;
+> > > > > >
+> > > > > > Since there are no runtime callbacks present, managing runtime PM in the driver
+> > > > > > makes no sense.
+> > > > >
+> > > > > The PCIe device is part of a clock power domain. Dropping
+> > > > > pm_runtime_enable()/pm_runtime_put_sync() in this driver will lead to this
+> > > > > IP failing to work as its clocks will not be enabled/disabled. If you don't
+> > > > > like the pm_runtime_* approach that could be replaced with:
+> > > > >
+> > > > > devm_clk_get_enabled() in probe and clk_disable()/clk_enable() on
+> > > > > suspend/resume. W/o clocks the IP can't work.
+> > > >
+> > > > Yes, you should explicitly handle clocks in the driver. Runtime PM makes sense
+> > > > if you have a power domain attached to the IP, which you also do as I see now.
+> > > > So to conclude, you should enable/disable the clocks explicitly for managing
+> > > > clocks and use runtime PM APIs for managing the power domain associated with
+> > > > clock controller.
+> > >
+> > > Why? For the past decade, we've been trying to get rid of explicit
+> > > module clock handling for all devices that are always part of a
+> > > clock domain.
+> > >
+> > > The Linux PM Domain abstraction is meant for both power and clock
+> > > domains.  This is especially useful when a device is present on multiple
+> > > SoCs, on some also part of a power domain,  and the number of module
+> > > clocks that needs to be enabled for it to function is not the same on
+> > > all SoCs.  In such cases, the PM Domain abstraction takes care of many
+> > > of the integration-specific differences.
+> >
+> > Hmm, my understanding was that we need to explicitly handle clocks from the
+> > consumer drivers. But that maybe because, the client drivers I've dealt with
+> > requires configuring the clocks (like setting the rate, re-parenting etc...) on
+> > their own. But if there is no such requirement, then I guess it is OK to rely on
+> > the PM core and clock controller drivers.
+> 
+> When you need to know the actual clock rate, or change it, you
+> indeed have to handle the clock explicitly.  But it still may be enabled
+> automatically through the clock domain.
+> 
 
---8323328-625503797-1756741827=:947
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Yeah!
 
-On Mon, 1 Sep 2025, Ilpo J=C3=A4rvinen wrote:
-> On Sun, 31 Aug 2025, Steve Oswald wrote:
->=20
-> > I=E2=80=99ve encountered an issue with Thunderbolt eGPU (externally con=
-nected
-> > gpu via thunderbolt 4). The change from kernel 6.10.14 to 6.11.0 broke
-> > the pci memory assignment of the external pcie device. I figured out
-> > which version broke it by using ubuntu 25.04 and downgrading the
-> > kernel (https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel=
-=2Esh/master/ubuntu-mainline-kernel.sh).
-> >=20
-> > >From the dmesg output, on the broken 6.11.0 I see 'failed to assign'.
-> > The issue occurs (almost never) on previous kernel version 6.10.14.
-> > Using pci=3Drealloc did not change the behavior (I can produce the dmes=
-g
-> > output if necessary).
-> >=20
-> > The issue was tested with 2 egpus (Radeon Instinct MI50 32GB, NVIDIA
-> > 3080 10GB). Both the amd and the nvidia driver fail to initialize the
-> > device because they cannot write the pcie messages.
-> >=20
-> > System details:
-> > - Kernel: Linux 6.10.14-061014-generic (Ubuntu build) > 6.11.0-061100
-> > - Laptop: TUXEDO InfinityBook Pro 16 - Gen8 with Thunderbolt 4
-> > - eGPU: Radeon Instinct MI50 32GB, NVIDIA 3080 10GB
-> >=20
-> > Steps to reproduce:
-> > 1. Boot the system with the eGPU.
-> > 2. Observe PCI BAR message in `dmesg`.
-> >=20
-> > Logs:
-> > both kernel messages, lspci can be found here:
-> > https://gist.github.com/stepeos/cd060c7d66ab195f51ab4d5675b4e4af
-> > raw files:
-> > - dmesg_linux_6.11.0.log
-> > https://gist.githubusercontent.com/stepeos/cd060c7d66ab195f51ab4d5675b4=
-e4af/raw/f9470a06ff929d386c50ec6b5d07e0ff3f053dcf/dmesg_linux_6.11.0.log
-> > - dmesg_linux_6.10.14.log
-> > https://gist.githubusercontent.com/stepeos/cd060c7d66ab195f51ab4d5675b4=
-e4af/raw/f9470a06ff929d386c50ec6b5d07e0ff3f053dcf/dmesg_linux_6.10.14.log
-> >=20
-> > If additional info is needed, I'm happy to help.
->=20
-> Hi Steve,
->=20
-> Thanks for the report.
->=20
-> My analysis is that the problem boils down to lack of this line with 6.11=
-:
->=20
-> pcieport 0000:00:07.0: resource 15 [mem 0x6000000000-0x601bffffff 64bit p=
-ref] released
->=20
-> It means one of the upstream bridge windows could not be released for=20
-> resize as it is printed from pci_reassign_bridge_resources() which likely=
-=20
-> occurs inside pci_resize_resource() call from amdgpu(?).
->=20
-> The very likely cause is this check:
->=20
->                         /* Ignore BARs which are still in use */
->                         if (res->child)
->                                 continue;
->=20
-> ...which (until very recently) is entirely silent so there's no warning=
-=20
-> whatsover what is the root cause.
+> > > > But please add a comment above pm_runtime_resume_and_get() to make it clear as
+> > > > most of the controller drivers are calling it for no reason.
+> > >
+> > > Note that any child device that uses Runtime PM depends on all
+> > > its parents in the hierarchy to call pm_runtime_enable() and
+> > > pm_runtime_resume_and_get().
+> >
+> > Two things to note from your statement:
+> >
+> > 1. 'child device that uses runtime PM' - Not all child drivers are doing
+> > runtime PM on their own. So there is no need to do pm_runtime_resume_and_get()
+> > unless they depend on the parent for resource enablement as below.
+> 
+> It indeed depends on the child device, and on the bus.  For e.g. an
+> Ethernet controller connected to a simple SoC expansion bus, the bus must
+> be powered and clock, which is what "simple-pm-bus" takes care of
+> ("simple-bus" does not).
+> 
 
-Hi again,
+Right. But most of the PCI controller drivers call pm_runtime_resume_and_get()
+for no good reasons. They might have just copied the code from a driver that did
+it on purpose. So I tend to scrutinize these calls whenever they get added for a
+driver.
 
-Actually, scratch most of that. It's not during resize as the log should=20
-say "releasing" (I don't know how I got this confused). "released" is from=
-=20
-pci_bridge_release_resources() which is called from=20
-pci_bus_release_bridge_resources() doesn't even try to walk upwards.
+- Mani
 
-But that begs question, why didn't also the bridge windows fail their=20
-assignments.
-
-Resource fitting calculates size for the bridge window:
-
-pci 0000:03:00.0: bridge window [mem 0x800000000-0x10003fffff 64bit pref] t=
-o [bus 04-2c] add_size 100000 add_align 100000
-
-=2E..but I cannot see assignment for that even being attempted as almost=20
-immediately, this occurs:
-
-pci 0000:03:00.0: bridge window [mem 0x6000000000-0x601bffffff 64bit pref]:=
- assigned
-
-=2E..which is much less than 0x10003fffff-0x800000000. I cannot think of=20
-anything what could make it shrink like that.
-
-I'll have to think this more, it might require a debug patch but I'll=20
-think until tomorrow to see if I can understand it from the code alone.
-
-> What this means, is that there's some assigned resource underneath=20
-> 0000:00:07.0 with 6.11 that wasn't there with 6.10. And it is because 6.1=
-1=20
-> tried harder to get your resources assigned and was successful here and=
-=20
-> there resulting in pinning the bridge window in its place, whereas 6.10=
-=20
-> failed to assign the same resource.
->=20
-> Could you provide /proc/iomem (it's enough to do that for 6.11 for now)?
->=20
->=20
-> You could try to use hpmmioprefsize=3D on kernel's command line to reserv=
-e=20
-> more space for the bridge windows, the default is only 2M and these GPUs=
-=20
-> need a magnitude more (gigabytes), you can check from 6.10 what the sizes=
-=20
-> of the BARs on the GPU are, and round the sum upwards to the next power o=
-f=20
-> two multiple.
->
-> I'd also be interested to see why pci=3Drealloc failed to solve this prob=
-lem=20
-> as it should reconfigure the entire resource tree so if you could provide=
-=20
-> the logs with that. Please take lspci with -vvv.
->=20
->=20
->=20
-
---=20
- i.
-
---8323328-625503797-1756741827=:947--
+-- 
+மணிவண்ணன் சதாசிவம்
 
