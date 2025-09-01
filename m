@@ -1,181 +1,123 @@
-Return-Path: <linux-pci+bounces-35269-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35270-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF82FB3E4DF
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 15:26:52 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FA46B3E501
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 15:31:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 56C9F7AF604
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 13:24:23 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4E9AC4E2B47
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Sep 2025 13:31:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E34A71DE2A0;
-	Mon,  1 Sep 2025 13:25:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5E7D149C6F;
+	Mon,  1 Sep 2025 13:31:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mrabhnCm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Icl8e9Vo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38321DED7B
-	for <linux-pci@vger.kernel.org>; Mon,  1 Sep 2025 13:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BD2198A11
+	for <linux-pci@vger.kernel.org>; Mon,  1 Sep 2025 13:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756733133; cv=none; b=rorYuMQVwUBV9k81Hu85Udp0ELuZk7ZlWs3a8qqWAsWBiByQ6jllNNQiMA/BTS2Q5injk73inz0rT/eP+rYHFZnO1r1eEG3wo/maZgeBKU4iN86ULw7rEoxzzT0VYpXkB/b5pphOYgujYrwa7OgmDPEwhWgfqsNztOX6uDzk+oI=
+	t=1756733469; cv=none; b=h5YIpSSGkxzIYBKY2QexL1mzWCmDB8AX/1lU1WbwZrWY7hPvJ7cqKHBWv0lGdYC658aFF9UXjF6UWdYb640PaFA/QTsfAr39XGvAawDS+AK8lzyLjYTtqY7qwzgWqUh+lUNsQbiVLVRsUXaa/SlCVbA0gZo4fYtgpGDwazV9SnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756733133; c=relaxed/simple;
-	bh=A1H+mKr/xOmEJhkxcxqtkC/kXHHkQIr5vRJz82Gbu5I=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=uG1CFI8b7lyowxVQ+CnLeVWkCs4PNINULTvY2zWGQiETWPm5qyahsF0HwbT7ElRLM69WnlFrf7vUn4+cCQ9I9dSI1oflyEyRUlE8Y4fRVI/LDESToGkFW2rzOMVXSZ1+eIcaEgjc/xsYKPVO+FnWcQ6Mra5YmkRhSWdC1jzJ6V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mrabhnCm; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756733132; x=1788269132;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=A1H+mKr/xOmEJhkxcxqtkC/kXHHkQIr5vRJz82Gbu5I=;
-  b=mrabhnCmywtFxxDivWSD3qC2QzffLb6IWR5oDoAv8AgJ8m852Dm2LJ3p
-   64kyhDXUZlKEYwT1GLDV+qqsF4QIMXfgZAFrzBPXGiVcH9uQONmUMJOxw
-   zhS74pf/M6eub5ivAmPUXqLWHiW6E1K8x5SeBaaLowDZMNUDlywugg7xZ
-   XJZCrL3fBYcxju3etpxX285jn+PDPRfOsAf+CxZTVnbJ/JnrgMTvQFDTK
-   g+WqVIHu3J8o2S27I40oWntjaMgh+QeKAABD3+ib8Qzr8EvVZj4fuUq2Z
-   v9A32lRkGb1s6BVHTTHm9magUjyCAdpQbCFNEp8QedC4dqejLzxXvMbLR
-   Q==;
-X-CSE-ConnectionGUID: vTm/PDKhRuulZHfB+wBwHA==
-X-CSE-MsgGUID: 9qZ772w3R/SkEmhG1HkfmQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11540"; a="62808968"
-X-IronPort-AV: E=Sophos;i="6.18,225,1751266800"; 
-   d="scan'208";a="62808968"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2025 06:25:31 -0700
-X-CSE-ConnectionGUID: xetoECzxRjWqmS0z+saipg==
-X-CSE-MsgGUID: 1/6TXXsOREyufo6HSJLT3Q==
-X-ExtLoop1: 1
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.193])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2025 06:25:30 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 1 Sep 2025 16:25:26 +0300 (EEST)
-To: Steve Oswald <stevepeter.oswald@gmail.com>
-cc: linux-pci@vger.kernel.org
-Subject: Re: [BUG] Thunderbolt eGPU PCI BARs incorrectly assigned, fails to
- assign memory
-In-Reply-To: <CAN95MYEaO8QYYL=5cN19nv_qDGuuP5QOD17pD_ed6a7UqFVZ-g@mail.gmail.com>
-Message-ID: <9254be77-46ea-992f-a1bd-98bea3943520@linux.intel.com>
-References: <CAN95MYEaO8QYYL=5cN19nv_qDGuuP5QOD17pD_ed6a7UqFVZ-g@mail.gmail.com>
+	s=arc-20240116; t=1756733469; c=relaxed/simple;
+	bh=lCpYxwNZ0fd3/4JdB2UP6w7/TzeFfxBQeM/QCFqRP3U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SCKmD9K6TwZoqzVk8v+4kxhvTfPJeTncY6ZUNoK7T41gR4lAqyBzTwr+YHUsK97uecB1xZiit7IHB0FZn5l0ugXnk+uvtddsBD2HK1gPUFRdHLHJGWiBmwBd9gFFr93B3dT8zxsDfCa60ek0imXB7MbXtyVRdRSIwgrO3iHM99k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Icl8e9Vo; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-802dd2ae55dso3112585a.1
+        for <linux-pci@vger.kernel.org>; Mon, 01 Sep 2025 06:31:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756733467; x=1757338267; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wCDjZSgl76mrff4NwHQBbFuq61Q1zOmaA8xgmtQ4BxM=;
+        b=Icl8e9Vo+CCN/HQsblT8Yxly/YK+mCbUaDsBQQjUzAAexLHAq8Ex7Gi9+SQfk96woo
+         SyDiTYWOfclLgdO3amCVcIuEWTs9BoeB/0IEcjlGjyRZfM9ZIb79v83al0hXgSxZLmCo
+         EtcqOsOkY5wVS/WA7ERT4Y2TmvZPUcgu1JuVwhPswGeOU8yc/2qI6dG2o7c1aj7c74N8
+         FmSVqJmWCGBUVhytDEXI6rVzazGlrU22FsGJoJKWkvhFhA6OBdRkOXxBpnGISHBo4xUQ
+         sl4R71ejjgQtG0nGqu1yV1vMLQBdi1m5twNnn4Lb0l2X8yW9vO+LDsAmp8RGP/tgyETk
+         i2hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756733467; x=1757338267;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wCDjZSgl76mrff4NwHQBbFuq61Q1zOmaA8xgmtQ4BxM=;
+        b=bSF8Ih15T75hjC7f8aK4HXBa5gjgXDjvn686Ak1yEiKDaboy5Be2NNaamNjDv5zzQ8
+         uWSw8mfmT7rVSaxwoc4BvDw47RFmjbp+TLQdLebj8vHd8GHrpgdKeq64kH/cMQFMQvnw
+         DtIk+4BVcE1YcoQKd4QDM2IyMEgc4rhLxphBwQS4A0s/Gf5/b26iVfE67Z9SDifoXzw5
+         Ljc3XlJTwkgGudc2+3FDcWhwRrLmSmI886EY3tiMVbd68txixNm7vJfL2kcT8Cn9Zfds
+         MaFC8w6yepN7bGSlba8w1to4Rm1SoUEfFVAIY7w9UGLNRjhCRswwbtKCOeLCHohXqhAB
+         Ompw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGRpOqS77S0TP7EkXjqUVbDAKG0KTMNoDOZzNLVbgolriNhbppMs9evWMIID6c+YPeRKDaTONUmN0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEeHLndeYw5vWQbRzmlIzdEQp7+cYezUYWMyKSduJUVGHj8LiH
+	Mzl0kEJ4YAmg/ZNptbTs9iVjrWq7aMoXa2nd6a6cX3BR8W4JLlofSajHSyF+1j6Evwf0rayf70o
+	j59BYkHMRFkXYjrLeyPCl5Y4l0Ea9Kl6sbhtUnaeIhQ==
+X-Gm-Gg: ASbGncvBMVKAEIoxmBM7nsoSabPdgZeR5zpO5Z2irDklI4Eq/5ieRGbXWYDA8xPbF0q
+	DZ5T9wilBsIcVfMio75jomcd9aBCnbieVqVZ+CFEuLTrms6e5Hwr5tHbUZEWietYmsP3VZ875E/
+	K3ZVF2YNBZFbcHTOcFT/PnSGWsGVl2afB9mYMEcYondyzu22p3eBBmGx0yfBJdM7+ZiTr7euoeE
+	bzP7sCua6PrewSGDm1FU+DKzhA=
+X-Google-Smtp-Source: AGHT+IErB4PfzzopI14tCGiVeZs7a9//buOSDYOobMbsVWlDMHk7o0uJw941KlS7WlEBD+FlW1zvW/7hPA+tGMwbVWE=
+X-Received: by 2002:a05:620a:4495:b0:7e8:5bb:b393 with SMTP id
+ af79cd13be357-7fd808341d0mr758728985a.4.1756733466773; Mon, 01 Sep 2025
+ 06:31:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1407081250-1756731395=:947"
-Content-ID: <9ad813cf-e1e2-8477-74d8-36eb1e20854d@linux.intel.com>
+References: <20250827230943.17829-1-inochiama@gmail.com>
+In-Reply-To: <20250827230943.17829-1-inochiama@gmail.com>
+From: Anders Roxell <anders.roxell@linaro.org>
+Date: Mon, 1 Sep 2025 15:30:55 +0200
+X-Gm-Features: Ac12FXyONJJHG25VQtRqcoXABg35o0Wz0jSFgjK27pZDOrhzFTzQjZ7eUFY1fUI
+Message-ID: <CADYN=9K7317Pte=dp7Q7HOhfLMMDAfRGcmaWCfvOtCLZ00uC+g@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/MSI: Check MSI_FLAG_PCI_MSI_MASK_PARENT in cond_[startup|shutdown]_parent()
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Marc Zyngier <maz@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Shradha Gupta <shradhagupta@linux.microsoft.com>, Chen Wang <unicorn_wang@outlook.com>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>, 
+	Linux Kernel Functional Testing <lkft@linaro.org>, Nathan Chancellor <nathan@kernel.org>, Wei Fang <wei.fang@nxp.com>, 
+	Jon Hunter <jonathanh@nvidia.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 28 Aug 2025 at 01:10, Inochi Amaoto <inochiama@gmail.com> wrote:
+>
+> For msi controller that only supports MSI_FLAG_PCI_MSI_MASK_PARENT,
+> the newly added callback irq_startup() and irq_shutdown() for
+> pci_msi[x]_template will not unmask/mask the interrupt when startup/
+> shutdown the interrupt. This will prevent the interrupt from being
+> enabled/disabled normally.
+>
+> Add the missing check for MSI_FLAG_PCI_MSI_MASK_PARENT in the
+> cond_[startup|shutdown]_parent(). So the interrupt can be normally
+> unmasked/masked if it does not support MSI_FLAG_PCI_MSI_MASK_PARENT.
+>
+> Fixes: 54f45a30c0d0 ("PCI/MSI: Add startup/shutdown for per device domains")
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Closes: https://lore.kernel.org/regressions/aK4O7Hl8NCVEMznB@monster/
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Closes: https://lore.kernel.org/regressions/20250826220959.GA4119563@ax162/
+> Reported-by: Wei Fang <wei.fang@nxp.com>
+> Closes: https://lore.kernel.org/all/20250827093911.1218640-1-wei.fang@nxp.com/
+> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> Tested-by: Nathan Chancellor <nathan@kernel.org>
+> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Tested-by: Jon Hunter <jonathanh@nvidia.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
---8323328-1407081250-1756731395=:947
-Content-Type: text/plain; CHARSET=ISO-8859-7
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <c142e57f-e57a-b405-106f-271b73ddc10d@linux.intel.com>
+Any updates on this?  It pretty much breaks testing on linux-next for ARM.
 
-On Sun, 31 Aug 2025, Steve Oswald wrote:
-
-> Hello,
->=20
-> I=A2ve encountered an issue with Thunderbolt eGPU (externally connected
-> gpu via thunderbolt 4). The change from kernel 6.10.14 to 6.11.0 broke
-> the pci memory assignment of the external pcie device. I figured out
-> which version broke it by using ubuntu 25.04 and downgrading the
-> kernel (https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.s=
-h/master/ubuntu-mainline-kernel.sh).
->=20
-> >From the dmesg output, on the broken 6.11.0 I see 'failed to assign'.
-> The issue occurs (almost never) on previous kernel version 6.10.14.
-> Using pci=3Drealloc did not change the behavior (I can produce the dmesg
-> output if necessary).
->=20
-> The issue was tested with 2 egpus (Radeon Instinct MI50 32GB, NVIDIA
-> 3080 10GB). Both the amd and the nvidia driver fail to initialize the
-> device because they cannot write the pcie messages.
->=20
-> System details:
-> - Kernel: Linux 6.10.14-061014-generic (Ubuntu build) > 6.11.0-061100
-> - Laptop: TUXEDO InfinityBook Pro 16 - Gen8 with Thunderbolt 4
-> - eGPU: Radeon Instinct MI50 32GB, NVIDIA 3080 10GB
->=20
-> Steps to reproduce:
-> 1. Boot the system with the eGPU.
-> 2. Observe PCI BAR message in `dmesg`.
->=20
-> Logs:
-> both kernel messages, lspci can be found here:
-> https://gist.github.com/stepeos/cd060c7d66ab195f51ab4d5675b4e4af
-> raw files:
-> - dmesg_linux_6.11.0.log
-> https://gist.githubusercontent.com/stepeos/cd060c7d66ab195f51ab4d5675b4e4=
-af/raw/f9470a06ff929d386c50ec6b5d07e0ff3f053dcf/dmesg_linux_6.11.0.log
-> - dmesg_linux_6.10.14.log
-> https://gist.githubusercontent.com/stepeos/cd060c7d66ab195f51ab4d5675b4e4=
-af/raw/f9470a06ff929d386c50ec6b5d07e0ff3f053dcf/dmesg_linux_6.10.14.log
->=20
-> If additional info is needed, I'm happy to help.
-
-Hi Steve,
-
-Thanks for the report.
-
-My analysis is that the problem boils down to lack of this line with 6.11:
-
-pcieport 0000:00:07.0: resource 15 [mem 0x6000000000-0x601bffffff 64bit pre=
-f] released
-
-It means one of the upstream bridge windows could not be released for=20
-resize as it is printed from pci_reassign_bridge_resources() which likely=
-=20
-occurs inside pci_resize_resource() call from amdgpu(?).
-
-The very likely cause is this check:
-
-                        /* Ignore BARs which are still in use */
-                        if (res->child)
-                                continue;
-
-=2E..which (until very recently) is entirely silent so there's no warning=
-=20
-whatsover what is the root cause.
-
-What this means, is that there's some assigned resource underneath=20
-0000:00:07.0 with 6.11 that wasn't there with 6.10. And it is because 6.11=
-=20
-tried harder to get your resources assigned and was successful here and=20
-there resulting in pinning the bridge window in its place, whereas 6.10=20
-failed to assign the same resource.
-
-Could you provide /proc/iomem (it's enough to do that for 6.11 for now)?
-
-
-You could try to use hpmmioprefsize=3D on kernel's command line to reserve=
-=20
-more space for the bridge windows, the default is only 2M and these GPUs=20
-need a magnitude more (gigabytes), you can check from 6.10 what the sizes=
-=20
-of the BARs on the GPU are, and round the sum upwards to the next power of=
-=20
-two multiple.
-
-
-I'd also be interested to see why pci=3Drealloc failed to solve this proble=
-m=20
-as it should reconfigure the entire resource tree so if you could provide=
-=20
-the logs with that. Please take lspci with -vvv.
-
-
---=20
- i.
---8323328-1407081250-1756731395=:947--
+Cheers,
+Anders
 
