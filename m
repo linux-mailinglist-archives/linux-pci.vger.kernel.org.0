@@ -1,161 +1,83 @@
-Return-Path: <linux-pci+bounces-35320-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35321-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08FB5B400A6
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 14:32:52 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56704B400C5
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 14:36:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 067761707D5
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 12:29:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C83347B996A
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 12:34:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EC081E5B7C;
-	Tue,  2 Sep 2025 12:28:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F79C256C8D;
+	Tue,  2 Sep 2025 12:35:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="A0YfiPSK"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BQcWOFhi";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DdHE4rcb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7938C2EF675;
-	Tue,  2 Sep 2025 12:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73AF3253B52;
+	Tue,  2 Sep 2025 12:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756816136; cv=none; b=qfnp1MkyqDKqS3q4sGbOcC5fIyGdukI2RTjA+x7uA4aCeby+jObzPM41li9NNhJm15MmeUihzAdUg0AQGgWHKouzN4++FNuT7SV3yTqPg0Vp5mZEFMlRKD1ARR9QiMlolgoK5xVErKxxNUWSnfFQF65j7s3yOQQH/vrfJDpBClc=
+	t=1756816554; cv=none; b=LxPASxIl8j8J2HjnbUGFPAaRy8HpXKGO2qpvreoHqYlJNuBzFhJXD7aZeAOdA5iu5kyJHoeMIHtnj2v8CS+OKRFkW9UuqOq1gYOE+GGA7gbsZ8upw/4eclbS+N139rnqHlbvahm0XHoynf1GTWDr2bn9Eo+jbt0Fl1T0rdG5SZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756816136; c=relaxed/simple;
-	bh=2K8Wa1jFthMFdE8QPjoxHvOvSzTJHjAVI6ze1n/BO6A=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nCsFc7atvVtAjhRhbL3/nLRUoW8xrSStLVZjHVGVgBLrJvTS+0P7yIs11HOI49DXhhgmqZLZJngoffN0X8E4evgzDFh944MISjEdcgmWjpbqDvvGdYz40gvUG0lqThKkNC/t4/YZDJbFGPYNKoaOu0WFCUjYgVYPPixs9NqWuhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=A0YfiPSK; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5829o0Vr014977;
-	Tue, 2 Sep 2025 14:28:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=rc26TBA8kHE73g2W9MG6AU
-	932qr0T6b9mLZVD7CCCYk=; b=A0YfiPSKYFpUj/5k9h9nBv802d874hQs16bM6s
-	ppPFAwDNKj8Etul0xG3jGEhlD+3oR1m9EFSCi/RpwGossBrz3AcXgb9ffD6B8cL2
-	ebvrA4UlRrDwuPY695rA0N9clKvqNkUQ4dOTGQU8FNbDgLOmLw/WCgvICfwpaXbU
-	upZHQoaW7FhHxYWrlEKuyGHMMmOrc/ivsX2HywsxzNtsSiTRb0ABWbX8vabHSK5o
-	yr6AoKBBwXeXXw5JFFCTvVU5l6ZGSS65PZvr7qvWCsYMOXWNopq4SQQG9Qv48B7J
-	SfmjFuyPPpXR8WpkVwLl4rvWhCdTe3AwohinkJ7XYYPRywwA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 48vc8m1e20-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Sep 2025 14:28:29 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B8DC840047;
-	Tue,  2 Sep 2025 14:27:31 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1B1BC39EDB5;
-	Tue,  2 Sep 2025 14:26:46 +0200 (CEST)
-Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.57; Tue, 2 Sep
- 2025 14:26:45 +0200
-From: Christian Bruel <christian.bruel@foss.st.com>
-To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>,
-        <kwilczynski@kernel.org>, <mani@kernel.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@foss.st.com>
-CC: <linux-pci@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] PCI: stm32: Remove link_status in PCIe EP.
-Date: Tue, 2 Sep 2025 14:26:41 +0200
-Message-ID: <20250902122641.269725-1-christian.bruel@foss.st.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1756816554; c=relaxed/simple;
+	bh=ofPVTEywHjbZi7xI7CE4Pos2/8kJGdtAszi9dDtY1Yw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QVX3T18o9xlg/wEhigl1Efctx1fAvenWnmDq4UqSZxrXdH5MAdiEpgKf0kVwJzdqTMJa2Swu5+sxzUtPmxq4fB3KEovEtEhrslIpIQlmCEx6dKGDwiNR+3mYhTjJbqV3uQpEU5yIGDd4TsckKMmVyxyCt9/kefEMhrTxZAlOcm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BQcWOFhi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DdHE4rcb; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1756816549;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ofPVTEywHjbZi7xI7CE4Pos2/8kJGdtAszi9dDtY1Yw=;
+	b=BQcWOFhi1s9XaHj3atjY/jHB2pGHgZbpv2VJpo2dMhwugS46f2d+JgTvZn0Qd4KDMb3LCO
+	qDfgwnQ9znqdmU2XSJvtSc21L+EJAcx/eZJTutVHJIgix7xQByCwsiEz/EfIa+cAXz6Tj4
+	u4yuLz6E/X3nZggYB1t6lROqu50+Q7iDw1YVo+XdaEs2nXp/h2lYV/W6jjZXKfEcRRw/y7
+	1UA4JgrueoqF2xbcl3d4LGg0cgvmdT8YldhFwNu5Jmc9Lw+pMjrlD51MoSOP1D51IwYDcZ
+	ET92AdLLNctiKv652dhzOrUPlo6wRIG4GuOS6azAOcpVMFaKgdFtilYC7ryHew==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1756816549;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ofPVTEywHjbZi7xI7CE4Pos2/8kJGdtAszi9dDtY1Yw=;
+	b=DdHE4rcb+q0FXllbsuEWCmur2wEAZj0Ge4LIL3leGp+wKUqDKwE3E0WOOCVGCnBm+2FV2r
+	zE9wH682NbQG6EDg==
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <maz@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Inochi Amaoto
+ <inochiama@gmail.com>, Shradha Gupta <shradhagupta@linux.microsoft.com>,
+ Chen Wang <unicorn_wang@outlook.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, Longbin Li
+ <looong.bin@gmail.com>, Linux Kernel Functional Testing <lkft@linaro.org>,
+ Nathan Chancellor <nathan@kernel.org>, Wei Fang <wei.fang@nxp.com>, Jon
+ Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v2] PCI/MSI: Check MSI_FLAG_PCI_MSI_MASK_PARENT in
+ cond_[startup|shutdown]_parent()
+In-Reply-To: <fqnwjgkqpvgxnzqocsdzqxyrczitjrztaxupjk43sk3gcgwbk2@3b6624izsfny>
+References: <20250827230943.17829-1-inochiama@gmail.com>
+ <fqnwjgkqpvgxnzqocsdzqxyrczitjrztaxupjk43sk3gcgwbk2@3b6624izsfny>
+Date: Tue, 02 Sep 2025 14:35:43 +0200
+Message-ID: <874itl2fs0.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-02_04,2025-08-28_01,2025-03-28_01
 
-Guarding enable_irq/disable_irq against successive link start
-link does not seem necessary, since it is not possible to start
-the link twice. Similarly for stop.
+On Tue, Sep 02 2025 at 06:20, Inochi Amaoto wrote:
+> Could you take this patch? I think this fix is good to go now.
 
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
-Message-ID: <20250828192054.GA957771@bhelgaas>
----
- drivers/pci/controller/dwc/pcie-stm32-ep.c | 20 --------------------
- 1 file changed, 20 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-stm32-ep.c b/drivers/pci/controller/dwc/pcie-stm32-ep.c
-index 1f46bcf0c79f..a00edb6067f1 100644
---- a/drivers/pci/controller/dwc/pcie-stm32-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-stm32-ep.c
-@@ -18,11 +18,6 @@
- #include "pcie-designware.h"
- #include "pcie-stm32.h"
- 
--enum stm32_pcie_ep_link_status {
--	STM32_PCIE_EP_LINK_DISABLED,
--	STM32_PCIE_EP_LINK_ENABLED,
--};
--
- struct stm32_pcie {
- 	struct dw_pcie pci;
- 	struct regmap *regmap;
-@@ -30,7 +25,6 @@ struct stm32_pcie {
- 	struct phy *phy;
- 	struct clk *clk;
- 	struct gpio_desc *perst_gpio;
--	enum stm32_pcie_ep_link_status link_status;
- 	unsigned int perst_irq;
- };
- 
-@@ -66,11 +60,6 @@ static int stm32_pcie_start_link(struct dw_pcie *pci)
- 	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
- 	int ret;
- 
--	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_ENABLED) {
--		dev_dbg(pci->dev, "Link is already enabled\n");
--		return 0;
--	}
--
- 	dev_dbg(pci->dev, "Enable link\n");
- 
- 	ret = stm32_pcie_enable_link(pci);
-@@ -81,8 +70,6 @@ static int stm32_pcie_start_link(struct dw_pcie *pci)
- 
- 	enable_irq(stm32_pcie->perst_irq);
- 
--	stm32_pcie->link_status = STM32_PCIE_EP_LINK_ENABLED;
--
- 	return 0;
- }
- 
-@@ -90,18 +77,11 @@ static void stm32_pcie_stop_link(struct dw_pcie *pci)
- {
- 	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
- 
--	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_DISABLED) {
--		dev_dbg(pci->dev, "Link is already disabled\n");
--		return;
--	}
--
- 	dev_dbg(pci->dev, "Disable link\n");
- 
- 	disable_irq(stm32_pcie->perst_irq);
- 
- 	stm32_pcie_disable_link(pci);
--
--	stm32_pcie->link_status = STM32_PCIE_EP_LINK_DISABLED;
- }
- 
- static int stm32_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
--- 
-2.34.1
-
+I was AFK last week. Looking at it now.
 
