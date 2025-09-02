@@ -1,166 +1,152 @@
-Return-Path: <linux-pci+bounces-35318-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35319-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E71BB3FD4E
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 13:07:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB634B3FEB8
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 13:56:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6CB4488498
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 11:07:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 239D34E1B0B
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 11:54:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA0DE2765C5;
-	Tue,  2 Sep 2025 11:06:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AD0D2F3C2F;
+	Tue,  2 Sep 2025 11:47:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="luXQtemq"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="n3pPskEY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BEB2E92C5;
-	Tue,  2 Sep 2025 11:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5C6285058
+	for <linux-pci@vger.kernel.org>; Tue,  2 Sep 2025 11:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756811217; cv=none; b=eDk0SJ9NglRtWAlWPjUwtEUFQqcupDCysSz+EyS3VbUDTWPjrL1+qkx7IIP35TZHwbs+7LWIUdqGFEznoNKS+TonOsiy5FADH96/LfuWtJLsw3FkOaxmJJPzLwTDpoVee9n8qKrb/1vqJQFrNKp4xUxeLH+hsUG9FE5+cqbnooM=
+	t=1756813649; cv=none; b=tZ1MUjHaPSa+ezNjQSmKWG8Gxq5fEetlhhyt/VXkEa61esj4T3DIH4rsRJknlIRc4ITnQspshSOsbQjIoFO+jq5qYZ581dlFOS5L1FoYHf2Io+7sexdK16Y9SUoZXphAd6aRYu65PdFywZjJceYo+m5Ge8cfiyoTpM5+K5PkkNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756811217; c=relaxed/simple;
-	bh=hCa1C3d5MBR18h+mVpk4RAM474rjo1/g4TQSzEy0Gzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Extkj077px/uWP8AStzNqcoYDBdI4QigYu/2389Wp9czN2sOFY7gBxnV8gXCjD/1Zy7iqTcp1u02J/zbETj0bbRgLrQlS8Sbw2m/93EPtR4DYngxC9KrVDurGh8VyYDwDDC7NYHXEbub+wvOkidabjEOKzyqJAJGlTs5MllBlCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=luXQtemq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D67BC4CEED;
-	Tue,  2 Sep 2025 11:06:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756811217;
-	bh=hCa1C3d5MBR18h+mVpk4RAM474rjo1/g4TQSzEy0Gzo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=luXQtemqwauDCW1OGofW7KOn0Ed3TXz+7wSyh4Rq/4C4pBNfrCav73O7nhlQqKsu9
-	 pJwS6fgD10XM5MWzc2V32cauwX2xcs5uKtg2Bn+xWgyC8SmOfVZ8jKdythn+ZO4vAa
-	 0h7EOGiI+UMeKypfX8GCyk9wrCAP4tCX2z8kMskVDMEaLSOSdX6db0uWHaJchKjybu
-	 MaLbWwVqK1itWBWz4FOiOlTEHChtIjiBEjBS0WHuFG4wArCchdxmDkRdChfk7RgGoF
-	 PbQcn5XJw0e6Ezn8C5XZTAc61l/+qt/LvKdGUrn6ovVC7JKrzqR3GHSc85H+bG5dhG
-	 nrqyYFGPfwuJg==
-Date: Tue, 2 Sep 2025 14:06:51 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Christoph Hellwig <hch@lst.de>, dri-devel@lists.freedesktop.org,
-	iommu@lists.linux.dev, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v1 01/10] PCI/P2PDMA: Remove redundant bus_offset from
- map state
-Message-ID: <20250902110651.GF10073@unreal>
-References: <cover.1754311439.git.leon@kernel.org>
- <c9b6237964b9606418af400bb6bec5178fcffff2.1754311439.git.leon@kernel.org>
- <20250806145825.2654ee59.alex.williamson@redhat.com>
+	s=arc-20240116; t=1756813649; c=relaxed/simple;
+	bh=Efg1Sal0KX5O8uYenvTI/MzkTGbrZNd4ohf0F8McEG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ub5Ggkvl2FhgTIgPa8u0t3i6pYu3Tu0sasFuXXs1Izev/mJnzmkVwwcG6mi1o2KQ+8HjaNn1rNHGjqbCiso8A6ZAt54JVymN0VAd63TD7KXa+2XK+oDyNkNBcCgvJdaUyodGzeMFIGuOIPJ+6X8T7wXh2L2vZPFERyeFHhAdcE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=n3pPskEY; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 582BSrDq030925
+	for <linux-pci@vger.kernel.org>; Tue, 2 Sep 2025 11:47:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	2vTMTDMliYIWA3QTZWruvIxOrprzqsFuQP3qBWa983E=; b=n3pPskEY+Eh83K48
+	/AyIcuimWmqNruTTtWvxMDhNVoW2VQtC9rKYwTLztaLXfKdbZklJBtG1Dk+Mt8bm
+	YXEM83F6t/MKboEyU/t+omkD2O3hp1ckF8phDoztzkunBXbqb9ROnyIaBwmZTaRy
+	Z6riUIPl3GnJwacNqqXWcfbh8a5SNV/c+DTPNwrhzKFD1M5VyttREfZqgvCBZeu/
+	pKgT0GAdFUIoAuMuqapYv1HWrtyzFH+3MXUPPJt7i0BcFKQsieaLweLFM3MB8h5A
+	ZVHqMbX0iXUan4RJ8jUvYNhyDCqe/3uGRYTcrtXTyHwdRn8hDnUeOjW8V9f3oAs2
+	urVuRA==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48ush2yhkg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 02 Sep 2025 11:47:26 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4b3037bd983so28866381cf.1
+        for <linux-pci@vger.kernel.org>; Tue, 02 Sep 2025 04:47:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756813645; x=1757418445;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2vTMTDMliYIWA3QTZWruvIxOrprzqsFuQP3qBWa983E=;
+        b=TGmsYvhetNjOZ20DTJCgm5NC+gP4NC8dn96ic4R4tmAk9gaxoqPj1P1Uh4Dv1HPKdG
+         9cRaGM0H+QM5MQNA8UZPjmiK95sLIqTppQoXcl2b/gIe9DvF+hBbrdDgnbYfbDaGWKsM
+         XFKwaDqeb5ZAsE6lvICIWuauaUdrCcclNKEHQswh3Wl24krvE1YBx33Kpb/vuZWqvcEL
+         E8kEpXjKRHy34oiOCLEG5wh5DW6V7L/7D674yQkvu7Sdxiozgby7b+piGsrFtoGbo5x9
+         vclxWoeZxp5QRkoS4B6Lw71NODs121Psu8hadRUogieQVrkgfUQ8wTWPIwb6+EKT0MBM
+         kTiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgu7RNBesfrx09VXDTPiR921XAtGsj6oLiIoZbj7FHTRaujHMW2HI5LzO3T4B2y+HMY527cRnIqQA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2JHfIOSZvuogNkdTuO4vrpRP3B6gpZNX4BRmRW7ZBo4XYfX9A
+	PDtbq5Vk+pOYMMZfflyo6FpPop/TQQqZqUwgIgzi57d8MHbuhlOB8Fg6N/n186QiAAqAXP/Bs5w
+	KjzvbLF7YWdhEb1DBs4fNDdvEPTvd2nZMAmL/4i+XYAcYYSIb3UfXNwb+TkwM3QQ=
+X-Gm-Gg: ASbGncvZUzSE4FYaxQg0MCTOCO1PTt6bnUuves1uLrmDYCHgGGH8A4oAzaEa+5XEyyW
+	L/sTYPwEQqtU7sKGUjjpd7vyfw2jFKgiQqZTVitbc97fsR+q9xRdhJGAlWvLk63aVw8Qd61n5tR
+	kZKkbNH6kmuaEUFws9HToViClXsEoOWViac7ZzEu0CIrQK5nsIcs1BfbZGAL3eswI3tVC8MLan2
+	/KhJYiuAZhCKS9daQGtah3jAnVEralIflu9KNVn+UIheymA29r/RXRzl6SkEiM+QHVNsfW3uafp
+	t7IMGpliAvTXFW/9/JWNVRgzPxed7dyyc0ukZWiJfaPMQhG1p+tlykfhc0T6Hc6xkaPCM3JDx2o
+	aiWHW/c4u0nVxwaRT9g92sA==
+X-Received: by 2002:ac8:5804:0:b0:4b2:b591:4602 with SMTP id d75a77b69052e-4b313f0e2ebmr130498421cf.9.1756813645495;
+        Tue, 02 Sep 2025 04:47:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEa/TiGzm5CdFf5W/mtmjzpcHIClEM9pOfrKxv/RTV2a1ZzxsQKuK48Yvc6XvUx5Q34m34s4w==
+X-Received: by 2002:ac8:5804:0:b0:4b2:b591:4602 with SMTP id d75a77b69052e-4b313f0e2ebmr130498241cf.9.1756813645033;
+        Tue, 02 Sep 2025 04:47:25 -0700 (PDT)
+Received: from [192.168.149.223] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b041f00d4c2sm571868366b.97.2025.09.02.04.47.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Sep 2025 04:47:24 -0700 (PDT)
+Message-ID: <6f9b7f9d-9ec7-4827-b6d5-51c42b5eb7b9@oss.qualcomm.com>
+Date: Tue, 2 Sep 2025 13:47:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250806145825.2654ee59.alex.williamson@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] arm64: dts: qcom: sm8450: Add opp-level to
+ indicate PCIe data rates
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20250819-opp_pcie-v3-0-f8bd7e05ce41@oss.qualcomm.com>
+ <20250819-opp_pcie-v3-2-f8bd7e05ce41@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250819-opp_pcie-v3-2-f8bd7e05ce41@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODMwMDAzMiBTYWx0ZWRfXwF0KcgMe9db1
+ bU44xcM323MQDP+CWySsXrWAvlJCNSTWWQIEQ4Je3eQ0zrSOycZhta2NZ8lNZRKzdfSfNfUfBKQ
+ J3vc24wOJXFPF8KteOhqrVmUcncsBi2pxrRcB78dgczIghf9XfAjdE3pMcdQH7MwQst1j47/0Eb
+ gWwwZWSSYumqNpW/BXgRyEhy/Oy/6hNnvIg/sgM7wU9WIHwqzQ08NbYcaZTILiee4JNX9XQO9PQ
+ tDS96alaXfYV0DoelEmPn0Ww+Mfe7pH/AhUXk1KKcREAg1z0dhTDxMdcJySCeUmNp6syZGClNLL
+ nclf+CCI5wFAq5xSwC64VXN475BG2eeEuuzvdT4vsOqb0CRWxVEA8DWDqrx7awwySAB1pP6UW+t
+ 2cKP3suw
+X-Proofpoint-ORIG-GUID: aRxayvgrEwlrBl37wOFMJTpMuAhpOX1c
+X-Proofpoint-GUID: aRxayvgrEwlrBl37wOFMJTpMuAhpOX1c
+X-Authority-Analysis: v=2.4 cv=M9NNKzws c=1 sm=1 tr=0 ts=68b6d94e cx=c_pps
+ a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=EUspDBNiAAAA:8 a=6pHcnep46kEejBPVP2gA:9
+ a=QEXdDO2ut3YA:10 a=a_PwQJl-kcHnX1M80qC6:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-02_03,2025-08-28_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 adultscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ clxscore=1015 suspectscore=0 phishscore=0 bulkscore=0 classifier=typeunknown
+ authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2507300000 definitions=main-2508300032
 
-On Wed, Aug 06, 2025 at 02:58:25PM -0600, Alex Williamson wrote:
-> On Mon,  4 Aug 2025 16:00:36 +0300
-> Leon Romanovsky <leon@kernel.org> wrote:
+On 8/19/25 7:34 AM, Krishna Chaitanya Chundru wrote:
+> Add opp-level to indicate PCIe data rates and also define OPP enteries
+> for each link width and data rate. Append the opp level to name of the
+> opp node to indicate both frequency and level.
 > 
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> > 
-> > Remove the bus_off field from pci_p2pdma_map_state since it duplicates
-> > information already available in the pgmap structure. The bus_offset
-> > is only used in one location (pci_p2pdma_bus_addr_map) and is always
-> > identical to pgmap->bus_offset.
-> > 
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > ---
-> >  drivers/pci/p2pdma.c       | 1 -
-> >  include/linux/pci-p2pdma.h | 3 +--
-> >  2 files changed, 1 insertion(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> > index da5657a020074..274bb7bcc0bc5 100644
-> > --- a/drivers/pci/p2pdma.c
-> > +++ b/drivers/pci/p2pdma.c
-> > @@ -1009,7 +1009,6 @@ void __pci_p2pdma_update_state(struct pci_p2pdma_map_state *state,
-> >  {
-> >  	state->pgmap = page_pgmap(page);
-> >  	state->map = pci_p2pdma_map_type(state->pgmap, dev);
-> > -	state->bus_off = to_p2p_pgmap(state->pgmap)->bus_offset;
-> >  }
-> >  
-> >  /**
-> > diff --git a/include/linux/pci-p2pdma.h b/include/linux/pci-p2pdma.h
-> > index 075c20b161d98..b502fc8b49bf9 100644
-> > --- a/include/linux/pci-p2pdma.h
-> > +++ b/include/linux/pci-p2pdma.h
-> > @@ -146,7 +146,6 @@ enum pci_p2pdma_map_type {
-> >  struct pci_p2pdma_map_state {
-> >  	struct dev_pagemap *pgmap;
-> >  	enum pci_p2pdma_map_type map;
-> > -	u64 bus_off;
-> >  };
-> >  
-> >  /* helper for pci_p2pdma_state(), do not use directly */
-> > @@ -186,7 +185,7 @@ static inline dma_addr_t
-> >  pci_p2pdma_bus_addr_map(struct pci_p2pdma_map_state *state, phys_addr_t paddr)
-> >  {
-> >  	WARN_ON_ONCE(state->map != PCI_P2PDMA_MAP_BUS_ADDR);
-> > -	return paddr + state->bus_off;
-> > +	return paddr + to_p2p_pgmap(state->pgmap)->bus_offsetf;
-> >  }
-> >  
-> >  #endif /* _LINUX_PCI_P2P_H */
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
 
-Sorry for long time to reply, I waited to see what is going on with DMA
-phys_vec basic series and together with my summer vacation, it took a
-while.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-> 
-> Looks like you're relying on this bogus code getting resolved in the
-> next patch...
-> 
-> In file included from kernel/dma/direct.c:16:
-> ./include/linux/pci-p2pdma.h: In function ‘pci_p2pdma_bus_addr_map’:
-> ./include/linux/pci-p2pdma.h:188:24: error: implicit declaration of function ‘to_p2p_pgmap’ [-Wimplicit-function-declaration]
->   188 |         return paddr + to_p2p_pgmap(state->pgmap)->bus_offsetf;
->       |                        ^~~~~~~~~~~~
-> ./include/linux/pci-p2pdma.h:188:50: error: invalid type argument of ‘->’ (have ‘int’)
->   188 |         return paddr + to_p2p_pgmap(state->pgmap)->bus_offsetf;
->       |                                                  ^~
-> ./include/linux/pci-p2pdma.h:189:1: error: control reaches end of non-void function [-Werror=return-type]
->   189 | }
->       | ^
-> 
-> to_p2p_pgmap() is a static function and struct pci_p2pdma_pagemap
-> doesn't have a bus_offsetf member.  Thanks,
+Are there any other SoCs affected?
 
-You are right, probably the best way to fix the error is simply squash
-this change into the next patch.
-
-Thanks
-
-
-
-> 
-> Alex
-> 
+Konrad
 
