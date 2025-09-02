@@ -1,175 +1,165 @@
-Return-Path: <linux-pci+bounces-35315-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35316-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1767B3F9E4
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 11:11:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A1536B3FC50
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 12:26:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7BCD8203487
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 09:11:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 196C316878D
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 10:26:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC3432EA482;
-	Tue,  2 Sep 2025 09:09:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D26A8283689;
+	Tue,  2 Sep 2025 10:24:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h51pyqSW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kB9mGtfc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80912580CF
-	for <linux-pci@vger.kernel.org>; Tue,  2 Sep 2025 09:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A831280CCE;
+	Tue,  2 Sep 2025 10:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756804193; cv=none; b=lrKUGzFkt22POkJCvHkpvsL1iBTba4Hp1OYYCp1AfrVYB3CbyVH2/aW1hF3DXKcpO3hqxqyjEZbyVWE+Y8Yqgvq29CU2feCzkx4jaJcJIzaHvlCW0JM9AyYRwscCXcNPq4XHUxpCcNnc9PZDCa3xTfEqZSGfbPNACPZwLeMU4EU=
+	t=1756808654; cv=none; b=S2igG0DtqgN39RXhj1KKTPLmSr+LamOIEzVFGyPZx5SS+Ws6JLw7SFATuoaFWC1nwqeSXS0FSDvkPRyNLJugyiJVAReQ9v1Hx8LodQu5Sr8mz+h2kSs6KXiNNetZVwR0UBsHf672iIqw98OSsOZ8Kh2kOfktDzL+2CvkN/BOozQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756804193; c=relaxed/simple;
-	bh=A8eyEfj3BP3VmKLPbiefQOv3kForpLTfoyzNz1iTBI4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JN0FWgF6ud7T9BdZlL0enNsW7vVRsPy5tI8GSD1WnEk9jsDoTmZhWUb4DMsi2ejJAMO67epdDKn7JleWqskKuD7rpQugdfMDy4xl56TlMDAp7h7QGV8PFBs1GoRwNrgqRmJtZAYhOwU5SC7k5dAI2U8Pe1E8MqMnGEbzx3wszUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h51pyqSW; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3dae49b1293so202220f8f.1
-        for <linux-pci@vger.kernel.org>; Tue, 02 Sep 2025 02:09:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756804189; x=1757408989; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bw74ZDWYln3R5EhzIwK/dVcSfr5R7Z8FO22rXgIrEXw=;
-        b=h51pyqSWiwtgflJSplJzl/iUlW4iDx/e2JTWmW0GolDn/SsBlNWvrEczOHxaLp/cOM
-         /MovHLU0mPDro3pzKibG96WNguelkR+yOJ3/T/PtKb2iXsykZkzmSPeY1l6AmAwKiJKc
-         OWKRb+lJtdybwXl1ZfkIEBypsYe3IagXV0pMDZcP1d106Tve3JuvhmnmANjYRVEwfQa/
-         wrgfoCJ+G+PyWWVfwjhaV+EQPgtBB3DhMtgyHtmlaFuqbs5pr/Lbmhqnn2P2Ddamb100
-         AjMHafIcAyZ8NLh7nA2LE4Ahie6/uZKOES1DXS17YT/woUh3rz/FG3sEo5MQ/wBqgFsy
-         0qyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756804189; x=1757408989;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bw74ZDWYln3R5EhzIwK/dVcSfr5R7Z8FO22rXgIrEXw=;
-        b=j5o5NdONjAbv31f7RNC4DPgepZO/1GY3ZqVhjedTHsvEe8EgNDfZqG2iKyN1Y9JofE
-         i+CNp52mOtx86/PIPMu7xInx56IzsjBgb7VkEC7lJndIkTDi7jrlla2oKET8yiQxJb82
-         gHo1+B218gkwr9QHgZilVe5OvplexJb4bSx+Rowg4cWHwrCR5jCDVnlN/ql9fmGKWStw
-         xuULQclXyajAMhFiLnfY5ZuLsD292cNKprZSahFiOY3eQLWo6VCgXM+RTnccLhW3xpTb
-         2rS110K6oSa8fl2iJ7H6d3WW8VUx09kgN1cbXJ6/soij6o4ZXMVsCM6gSoz9Y6i7wqYi
-         ZGYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVanN2mHEg//DoQvV1yxB0SPWPj5EoalrX58LE9Af2O2YQBalj9QX1UEq2cR0ayvwS2kJaJihjyiiw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIh2zbsdGaKwWvGD9HE+er2Ik5YkU5TYrWj6yY8nlsnifXElCT
-	lmb1+GWZ4lCHs3X0DofQ5PHj2wjCkCH4ALcb/DizSIVIEO50PcTI/5rs
-X-Gm-Gg: ASbGncvCy8RMC0IydIkixzugcEOJYpdrxUpS4uNrVNBMIIGBCYotsB1rr8fa+ofMwNm
-	ndGy4JzxUkNxK7ZuFQurHtlqqLLpgnHPRd1zmcTsnxWx72jt0oKQPvQvWUPEyengN+3PtnP/Xas
-	dzHHcX5BWMN4aBC+VjNPO6YIReQKvZDEuy9nkD/fbcLgX6VpmLuYDAXfMtf9FGaIM4kzv5T4xDl
-	gQDako/o+YhBt4b9heTAzCViUvg/mHoCs1wdG3pzKjEpXmDifCrtZzQ+EH/2u3Q4/f6I7k8D/5y
-	DvwECvNxyI1Wcvnkb/T9bt+b0ydJYTWC2kYhI6bRmSWpWAr7zKdY+aukmAW5MwFQRzX+33gjxRa
-	iUIbMnwPbHI6qb6KjnOLXSUXCJRQ7rtVt5cVm4PF4+JhcfS4FyH8PmGBsGOsVgZz3OH1jIA==
-X-Google-Smtp-Source: AGHT+IHNGi1WlUp37oda1jCD0mIQM+pwLYeo9d0bEci6H/DuqNOy5AfU0gRE95Kv3q/RMJ5wltAJRg==
-X-Received: by 2002:a05:6000:2586:b0:3cd:c10d:3b6b with SMTP id ffacd0b85a97d-3d1de4b9891mr7783573f8f.27.1756804188869;
-        Tue, 02 Sep 2025 02:09:48 -0700 (PDT)
-Received: from ?IPv6:2a02:168:6806:0:3f02:d36b:e22e:74c6? ([2a02:168:6806:0:3f02:d36b:e22e:74c6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf33add294sm20017536f8f.29.2025.09.02.02.09.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Sep 2025 02:09:48 -0700 (PDT)
-Message-ID: <1cc6781ea584aa00a8cda23db1fc8cd59f852a3d.camel@gmail.com>
-Subject: Re: [Bug 220479] New: [regression 6.16] mvebu: no pci devices
- detected on turris omnia
-From: Klaus Kudielka <klaus.kudielka@gmail.com>
-To: Jan Palus <jpalus@fastmail.com>, Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Thomas Petazzoni	
- <thomas.petazzoni@bootlin.com>, Pali =?ISO-8859-1?Q?Roh=E1r?=
- <pali@kernel.org>, 	linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, 	regressions@lists.linux.dev
-Date: Tue, 02 Sep 2025 11:09:47 +0200
-In-Reply-To: <42rznc7krv3gdwmdzfz6o5nalnzleiwfg44yleqjet67cu4ijm@pwap3ph2n2u7>
-References: <bug-220479-41252@https.bugzilla.kernel.org/>
-	 <20250820184603.GA633069@bhelgaas>
-	 <42rznc7krv3gdwmdzfz6o5nalnzleiwfg44yleqjet67cu4ijm@pwap3ph2n2u7>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-2+b1 
+	s=arc-20240116; t=1756808654; c=relaxed/simple;
+	bh=v5NDjFO8lUrsXYBoNk20x/0jTMsSJewfLyzSWN2NvCQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kvv88kFlhyubbDwm4bw5uzwXb5xQpufioAoBaMqU9x4x+c3hO4HyAPcbfvJSD8QNoghj7YDyQgcy2nsSd39AkoC/Ig5h5MhI/m05qiNInHjimOtUxARwWihq+ctVpTMv3cWcOm+rN5jnHHzGIgipKpmFAETyliNPsVuQtF3PE48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kB9mGtfc; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756808653; x=1788344653;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=v5NDjFO8lUrsXYBoNk20x/0jTMsSJewfLyzSWN2NvCQ=;
+  b=kB9mGtfcuA0QRGswH0l8MKRJysn3eD5noDeyI/wAzG86Y4zWE3tYwKvm
+   725NxrVwV7mLuKTNwcDh7kap5+IMVyRet/MAIL429UCLFP30H1d3BV0xI
+   r6h1D/XxqOY5EjWawVd0iFhN/dX7qZa8x6i0xic8Gh+dodxWXegOplvBK
+   BsYWaNOIJnzEby7NQQvIDEOId21CaGiU8sQ2YjHh2ty9khkf27NvKGrOF
+   0p/JcOvgt3E5JVIZmZZYTQILslfHp4zYnjCJ1qhqKd3e7Jshl9A+qj3V0
+   1WDkdk1vbOFGO3lBdlTz0Zxoeu+0h2GQJESmD0ixsrJ+umZG2IUcBj4vt
+   w==;
+X-CSE-ConnectionGUID: mhFdhiLGQx2Tgqo/8RcBqw==
+X-CSE-MsgGUID: dLNMD7Y/RnKqDfNwY72UjQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11540"; a="62719596"
+X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
+   d="scan'208";a="62719596"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 03:24:12 -0700
+X-CSE-ConnectionGUID: I6HlhqjdSHGTNm9QxC555Q==
+X-CSE-MsgGUID: qaZkQZ/4QvmaUvY93+nUTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
+   d="scan'208";a="176556266"
+Received: from lkp-server02.sh.intel.com (HELO 06ba48ef64e9) ([10.239.97.151])
+  by orviesa005.jf.intel.com with ESMTP; 02 Sep 2025 03:24:06 -0700
+Received: from kbuild by 06ba48ef64e9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1utOBI-0001pP-0p;
+	Tue, 02 Sep 2025 10:24:04 +0000
+Date: Tue, 2 Sep 2025 18:23:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jacky Chou <jacky_chou@aspeedtech.com>, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
+	vkoul@kernel.org, kishon@kernel.org, linus.walleij@linaro.org,
+	p.zabel@pengutronix.de, linux-aspeed@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org, linux-phy@lists.infradead.org,
+	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, jacky_chou@aspeedtech.com
+Subject: Re: [PATCH v3 07/10] PHY: aspeed: Add ASPEED PCIe PHY driver
+Message-ID: <202509021806.1NtrcLpF-lkp@intel.com>
+References: <20250901055922.1553550-8-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250901055922.1553550-8-jacky_chou@aspeedtech.com>
 
-On Thu, 2025-08-21 at 02:45 +0200, Jan Palus wrote:
->=20
-> Relevant fragment of mvebu_get_tgt_attr() in mentioned commit:
->=20
-> +		u32 slot =3D upper_32_bits(range.bus_addr);
-> =C2=A0
-> -		if (DT_FLAGS_TO_TYPE(flags) =3D=3D DT_TYPE_IO)
-> +		if (DT_FLAGS_TO_TYPE(range.flags) =3D=3D DT_TYPE_IO)
-> =C2=A0			rtype =3D IORESOURCE_IO;
-> -		else if (DT_FLAGS_TO_TYPE(flags) =3D=3D DT_TYPE_MEM32)
-> +		else if (DT_FLAGS_TO_TYPE(range.flags) =3D=3D DT_TYPE_MEM32)
-> =C2=A0			rtype =3D IORESOURCE_MEM;
-> =C2=A0		else
-> =C2=A0			continue;
-> =C2=A0
-> =C2=A0		if (slot =3D=3D PCI_SLOT(devfn) && type =3D=3D rtype) {
->=20
+Hi Jacky,
 
-As far as I understand the situation, of_pci_range_parser_one() inherently =
-uses bus->get_flags()
-aka of_bus_pci_get_flags() to determine range.flags (see drivers/of/address=
-.c).
+kernel test robot noticed the following build errors:
 
-And of_bus_pci_get_flags() does essentially the same thing as the code abov=
-e in mvebu_get_tgt_attr().
-So, now the translation logic is applied twice - which probably was not int=
-ended.
+[auto build test ERROR on pci/for-linus]
+[also build test ERROR on robh/for-next linusw-pinctrl/devel linusw-pinctrl/for-next linus/master v6.17-rc4 next-20250902]
+[cannot apply to pci/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-To restore the original behaviour, I think the determination of rtype from =
-range.flags must be=C2=A0
-completely removed, and rtype must be replaced by range.flags.
+url:    https://github.com/intel-lab-lkp/linux/commits/Jacky-Chou/dt-bindings-soc-aspeed-Add-ASPEED-PCIe-Config/20250901-140231
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+patch link:    https://lore.kernel.org/r/20250901055922.1553550-8-jacky_chou%40aspeedtech.com
+patch subject: [PATCH v3 07/10] PHY: aspeed: Add ASPEED PCIe PHY driver
+config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20250902/202509021806.1NtrcLpF-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250902/202509021806.1NtrcLpF-lkp@intel.com/reproduce)
 
-Something like this on top of mainline - completely untested, but maybe wor=
-th a try.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509021806.1NtrcLpF-lkp@intel.com/
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pc=
-i-mvebu.c
-index 755651f338..3fce4a2b63 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -1168,9 +1168,6 @@ static void __iomem *mvebu_pcie_map_registers(struct =
-platform_device *pdev,
-        return devm_ioremap_resource(&pdev->dev, &port->regs);
- }
-=20
--#define DT_FLAGS_TO_TYPE(flags)       (((flags) >> 24) & 0x03)
--#define    DT_TYPE_IO                 0x1
--#define    DT_TYPE_MEM32              0x2
- #define DT_CPUADDR_TO_TARGET(cpuaddr) (((cpuaddr) >> 56) & 0xFF)
- #define DT_CPUADDR_TO_ATTR(cpuaddr)   (((cpuaddr) >> 48) & 0xFF)
-=20
-@@ -1189,17 +1186,9 @@ static int mvebu_get_tgt_attr(struct device_node *np=
-, int devfn,
-                return -EINVAL;
-=20
-        for_each_of_range(&parser, &range) {
--               unsigned long rtype;
-                u32 slot =3D upper_32_bits(range.bus_addr);
-=20
--               if (DT_FLAGS_TO_TYPE(range.flags) =3D=3D DT_TYPE_IO)
--                       rtype =3D IORESOURCE_IO;
--               else if (DT_FLAGS_TO_TYPE(range.flags) =3D=3D DT_TYPE_MEM32=
-)
--                       rtype =3D IORESOURCE_MEM;
--               else
--                       continue;
--
--               if (slot =3D=3D PCI_SLOT(devfn) && type =3D=3D rtype) {
-+               if (slot =3D=3D PCI_SLOT(devfn) && type =3D=3D range.flags)=
- {
-                        *tgt =3D DT_CPUADDR_TO_TARGET(range.cpu_addr);
-                        *attr =3D DT_CPUADDR_TO_ATTR(range.cpu_addr);
-                        return 0;
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/phy/aspeed/phy-aspeed-pcie.c:14:
+>> drivers/phy/aspeed/phy-aspeed-pcie.c:195:25: error: 'aspeed_pcie_of_match_table' undeclared here (not in a function); did you mean 'aspeed_pcie_phy_of_match_table'?
+     195 | MODULE_DEVICE_TABLE(of, aspeed_pcie_of_match_table);
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/module.h:250:15: note: in definition of macro 'MODULE_DEVICE_TABLE'
+     250 | static typeof(name) __mod_device_table__##type##__##name                \
+         |               ^~~~
+>> include/linux/module.h:250:21: error: '__mod_device_table__of__aspeed_pcie_of_match_table' aliased to undefined symbol 'aspeed_pcie_of_match_table'
+     250 | static typeof(name) __mod_device_table__##type##__##name                \
+         |                     ^~~~~~~~~~~~~~~~~~~~
+   drivers/phy/aspeed/phy-aspeed-pcie.c:195:1: note: in expansion of macro 'MODULE_DEVICE_TABLE'
+     195 | MODULE_DEVICE_TABLE(of, aspeed_pcie_of_match_table);
+         | ^~~~~~~~~~~~~~~~~~~
+--
+   In file included from phy-aspeed-pcie.c:14:
+   phy-aspeed-pcie.c:195:25: error: 'aspeed_pcie_of_match_table' undeclared here (not in a function); did you mean 'aspeed_pcie_phy_of_match_table'?
+     195 | MODULE_DEVICE_TABLE(of, aspeed_pcie_of_match_table);
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/module.h:250:15: note: in definition of macro 'MODULE_DEVICE_TABLE'
+     250 | static typeof(name) __mod_device_table__##type##__##name                \
+         |               ^~~~
+>> include/linux/module.h:250:21: error: '__mod_device_table__of__aspeed_pcie_of_match_table' aliased to undefined symbol 'aspeed_pcie_of_match_table'
+     250 | static typeof(name) __mod_device_table__##type##__##name                \
+         |                     ^~~~~~~~~~~~~~~~~~~~
+   phy-aspeed-pcie.c:195:1: note: in expansion of macro 'MODULE_DEVICE_TABLE'
+     195 | MODULE_DEVICE_TABLE(of, aspeed_pcie_of_match_table);
+         | ^~~~~~~~~~~~~~~~~~~
 
 
+vim +195 drivers/phy/aspeed/phy-aspeed-pcie.c
+
+   183	
+   184	static const struct of_device_id aspeed_pcie_phy_of_match_table[] = {
+   185		{
+   186			.compatible = "aspeed,ast2600-pcie-phy",
+   187			.data = &pcie_phy_ast2600,
+   188		},
+   189		{
+   190			.compatible = "aspeed,ast2700-pcie-phy",
+   191			.data = &pcie_phy_ast2700,
+   192		},
+   193		{ },
+   194	};
+ > 195	MODULE_DEVICE_TABLE(of, aspeed_pcie_of_match_table);
+   196	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
