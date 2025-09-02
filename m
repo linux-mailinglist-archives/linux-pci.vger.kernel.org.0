@@ -1,118 +1,118 @@
-Return-Path: <linux-pci+bounces-35313-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35314-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 377D6B3F8F8
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 10:45:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D77B8B3F92E
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 10:54:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3E9641B2233E
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 08:45:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DAB03BD456
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 08:54:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2419526E704;
-	Tue,  2 Sep 2025 08:44:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141172E36F4;
+	Tue,  2 Sep 2025 08:54:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S84ZD/1u"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WH8TmCPq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2B623AB9C;
-	Tue,  2 Sep 2025 08:44:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6B932F742;
+	Tue,  2 Sep 2025 08:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756802653; cv=fail; b=kruBpBFxL5CpM2OuDooUMTufO/6dOrbkRBm1z2AZxP4wOt2uK0ZhRZcNT3726PtaW+HYK8HHSKkiGk715r0nKJEab6KvTK0HIVnp/JJyVDht5nSbB/FytK3UhGNOrICg2Efp/ghInaRfXVgJcZedR6JnZrmQiLJlFVOEtmDcNKM=
+	t=1756803264; cv=fail; b=ZJA6q8UgB/viiSo8KzJGqG3ubnAjXcXGEqltqHaBHW0yJldqulfsThGatK1ubRYxYsxgvpXk1fv4Kt5PLlWi8XuUuCmOS3kVWy98HeDqCR+fM6UKzIcGuB9wqN5xJwpOh2eMr956jwcPv8fxApYhWZiFGTTSROIEgC/dqdXaznU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756802653; c=relaxed/simple;
-	bh=SbTRKK2bXvlPvYT1Dih/WT3saF5Ys4F2hdKTUKjJrQw=;
+	s=arc-20240116; t=1756803264; c=relaxed/simple;
+	bh=tAsC0FdRCETGnEKeD7mZjJ3VMJwRYgN1w9UP6fnk2pQ=;
 	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=H3aJaf6GpncVer8VmjQ66wUYexQux4AL9BCNtaoJXGZUXP2o67jWo+avH1Xvh/O2c8UEXN6QH+6RN+yJcxA3BzFsb3Gzmi93ph9BGKqLL1GJGDmY+6A2pUYnKDAh+DN7dfLDDQ+wEdXNuZD0L5+mQ2zfQo66nQBYUTYzVTgDpK8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S84ZD/1u; arc=fail smtp.client-ip=198.175.65.16
+	 Content-Type:MIME-Version; b=C4SUUNMLAl35lEMG1SQKSm8pcYD+I58m0wJYIWEO5wg8msIzxLsKXnGte8ywiA6jD2uOBk2jC4XsIj4abHR1fyI48SKzBhw1TfMO/rBnK4COeWFfRF/Z/N4oEdQf9ozy/PBHFFv3DIFo3ZNGa41whDDQ9LpNKCxck7iKD42RmiU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WH8TmCPq; arc=fail smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756802651; x=1788338651;
+  t=1756803262; x=1788339262;
   h=message-id:date:subject:to:cc:references:from:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=SbTRKK2bXvlPvYT1Dih/WT3saF5Ys4F2hdKTUKjJrQw=;
-  b=S84ZD/1uePB6mT/X5nYkwlE2VIwHrg8i/IZh95HYLTG3T/lG86sCNJCa
-   AeCC0T8bIYlel5TVZVuFAMRN4nuunNq6n+NEn9OXsuHyd6k1sSv5+Flnh
-   0DpC25Jn4eEV8kHGm3cjiW9OcYIWj/aYqK8V5i9DQfEc5uAcP4WIx7lmT
-   SgpmIerQUoMMdGzmQKnU3Sc3zfmOyXqxGixD2VU4d9N8FOfBpPRQu5BNu
-   U/Lhbx99G24VGHBU5z5/WM+/gb9DHPbuUACMGrcNb041DDlwolE0M4BHs
-   afB8EGUtgWC2B5GkTFim1vK3/hX5eyg7pEvXNzYswDC/e2CPTOonq460W
-   w==;
-X-CSE-ConnectionGUID: Wnz+ZbKrSxOzX8co8wAykQ==
-X-CSE-MsgGUID: ihC+MDD1TTe+j57pB0uSvw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11540"; a="59203303"
+  bh=tAsC0FdRCETGnEKeD7mZjJ3VMJwRYgN1w9UP6fnk2pQ=;
+  b=WH8TmCPqP5pouTs9wqt4AKkNEuo8vBGQbYQThQn0zSBj5qGgEj8L0hEV
+   BDUus/VSpKHTJyonPFrp8ShEIfoqUZt59w48Elpa96GZvCR5qfZcBStvR
+   DPaw1lInaULGfyTglqYtBCm99hBePaeXv/EvbbBPpzkW4rbmBrdAts63Z
+   q4uFRPc2YPr+Imj/ks3Azge3xZbI5R4CA/FB0xWXgUhbfAndD8WN9++po
+   fcnzVbKIsPxOvkHkiOvkfSt6tpHqwLLitN2Jg3cd6uoOdztQM1ba3V/RT
+   n6akMPRVj8FKUOvZ0Qw1ITW/Uw6AAnZehhchVIDLq9YIAzZLTeKSLuXOf
+   Q==;
+X-CSE-ConnectionGUID: VZwRjftvQ5SoQuBP+vBJoQ==
+X-CSE-MsgGUID: NwOpnaS9R1mCNqWNRxn8WA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11540"; a="62887158"
 X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
-   d="scan'208";a="59203303"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 01:44:10 -0700
-X-CSE-ConnectionGUID: 1SWjy/72QsesgQ0/pHDzRw==
-X-CSE-MsgGUID: ohn0uTpSTB6eACY1OMr14A==
+   d="scan'208";a="62887158"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 01:54:16 -0700
+X-CSE-ConnectionGUID: T2hChO/uTc2JGukeu2rE8A==
+X-CSE-MsgGUID: 7q/9qV0HRwaUmPQ9mbragA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
-   d="scan'208";a="171099494"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 01:44:11 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Tue, 2 Sep 2025 01:44:10 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+   d="scan'208";a="208418448"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 01:54:16 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
  ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Tue, 2 Sep 2025 01:44:10 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (40.107.94.83) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ 15.2.2562.17; Tue, 2 Sep 2025 01:54:15 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Tue, 2 Sep 2025 01:43:58 -0700
+ 15.2.2562.17 via Frontend Transport; Tue, 2 Sep 2025 01:54:15 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.86)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Tue, 2 Sep 2025 01:54:14 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dkgCgtmvkBWbcvfaZVID8zm56ra7FcfWHBRN+yVN1ySSkoAQz3fV83oKRKhcf4ch1QgPy4lv+bbvqW0jaMPXhJHgEZNfTTqa9rHLrQG4UdTPPi0SgWsVa0fcZ9pUkBKC4FbziF+g9FB7TH2gj1fQnoIWM9pUuYi3ACHe6eLFSqNqNF6TFIQxaL3+B1vTvkWboftNX3df49OTIr4tw7sHDE2FTdQiBOd/kJaAfbEulqreBw9gmddtntJdb4KdhuYLRBgXo/knxVuymHk1eYLxwMS7E9IcJjkAjWzAl3REiC4QJSKVrTXZQYebr71cxfg8z1suga0Ab8vmHqvThKdUgA==
+ b=SPKMMW8SqAXiHTqfiG/ri8uooGTMvh2Sxv/YfX5KYtHPjt8BoGXot6sHr/VYPjvrO23zm6BIhl683Y+dNHSz6xt5JpVMX9stCTidOEjvMbrSESwXCvNaPOqnSRYv8BD5eQpFE6UT6nPlqiLkxQHSbk8M2yLIjE5lquLb1wIzmCs1QnxiawOake8wOXu4sqkpCmEE89z+MaLHEOoqNF3WrbyID07fXQsJgfq9DY6DCjWkZ6AMtDwkCblhJjwkCNE8Cp1vFfP8vCvZ2yXCHzrcY8O40iNY+4jCDw1CskV4lDZs2X8AUSu+Ons4uQu4G04iL+4Yf97GiBYvJIITg03Byw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3s5OY1xNLdm6Vveu6zqb2qQDRBCzMSmmoRmS733zOFg=;
- b=s2nJm3rwEmgI1GGjVFhIx0NjngRuANKmn3dUcpZYIgh9HWhjNXiuudigJbEXD/qZRCxds9dVicUppLrR8rCA5nJt9RjAUUDy1BCetPfJ3UeG6YV7l54hXPAxLIVwBJht/yCMncmvj89OmJ4MHPMBEuZhjBNm/LTS4eoBCbYsVrPP9Q+PdX5qq603skW1Dto1uqKujd69E7lnnmQmrCDfb4Wtvc7r58QAPEiCL2Ur28IDxGlWlJ9/kmkhZLslsCk30WP2wpzvDyEkHsv0rrOlnmuXSL3+gIDWWzRm9UGo47ki6gnxEuarsstuqnmESdisaLt9H+z7AhXOhtOGnp5+uw==
+ bh=fy7ny+wAnTYrl4KJ+POB7qts7ewOrHo72SRKhxaDm8k=;
+ b=P63NcjWmnpH8XGuavAq8MiRO3UcQAzRJLQBeIbB+RWfaoVp+AFz535Dygw7sgRDMY1VFeUeei9zcvQ2tkI92omABFaqnjXm5M3pEtqzWMQysCufmu/j2xgiOyfc08oJX4MLM4T6aS7u1ufW+6HRahSqHazoqKINpVDz8c1InhuOUt65+pX4PpNHqqxSHTrGXT8st4VHxL9zWxV2SA2KsW0eKTb6j+M/xlNQnoT/DUgufN3lqnon5lg5Qg9JRGgOAXjIJmgTgR1UDqmun48rmvk1Cjv2LreaYYAquVog5Ji7nop2wAZkBrv5CPA+GeGjSQgh2DHwwy5aIBHURpEuedA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from BN9PR11MB5530.namprd11.prod.outlook.com (2603:10b6:408:103::8)
- by CO1PR11MB4771.namprd11.prod.outlook.com (2603:10b6:303:9f::9) with
+ by SN7PR11MB8281.namprd11.prod.outlook.com (2603:10b6:806:26b::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Tue, 2 Sep
- 2025 08:43:55 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.19; Tue, 2 Sep
+ 2025 08:54:07 +0000
 Received: from BN9PR11MB5530.namprd11.prod.outlook.com
  ([fe80::13bd:eb49:2046:32a9]) by BN9PR11MB5530.namprd11.prod.outlook.com
  ([fe80::13bd:eb49:2046:32a9%7]) with mapi id 15.20.9073.021; Tue, 2 Sep 2025
- 08:43:55 +0000
-Message-ID: <92b3b8b5-30c6-46b8-81fb-407d1b980995@intel.com>
-Date: Tue, 2 Sep 2025 14:13:46 +0530
+ 08:54:07 +0000
+Message-ID: <57da5d38-13d1-4e82-97de-a40e34c27125@intel.com>
+Date: Tue, 2 Sep 2025 14:23:56 +0530
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v4 02/11] PCI/ACPI: Per root port allow one Aux power
  limit request
-To: "Rafael J. Wysocki" <rafael@kernel.org>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 CC: <intel-xe@lists.freedesktop.org>, <linux-acpi@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <anshuman.gupta@intel.com>, <lenb@kernel.org>,
-	<bhelgaas@google.com>, <ilpo.jarvinen@linux.intel.com>,
+	<linux-pci@vger.kernel.org>, <anshuman.gupta@intel.com>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, <lenb@kernel.org>, <bhelgaas@google.com>,
 	<lucas.demarchi@intel.com>, <rodrigo.vivi@intel.com>,
 	<varun.gupta@intel.com>, <ville.syrjala@linux.intel.com>,
 	<uma.shankar@intel.com>
 References: <20250529111654.3140766-1-badal.nilawar@intel.com>
  <20250529111654.3140766-3-badal.nilawar@intel.com>
- <CAJZ5v0izykarC5yXNbd=Gdycfk7Qdy+U8uehhHK0bmXbt40O2g@mail.gmail.com>
+ <ec3bd3a0-98d3-3b55-198e-a27a2c1dfe8a@linux.intel.com>
 Content-Language: en-US
 From: "Nilawar, Badal" <badal.nilawar@intel.com>
-In-Reply-To: <CAJZ5v0izykarC5yXNbd=Gdycfk7Qdy+U8uehhHK0bmXbt40O2g@mail.gmail.com>
+In-Reply-To: <ec3bd3a0-98d3-3b55-198e-a27a2c1dfe8a@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA0P287CA0010.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:d9::15) To BN9PR11MB5530.namprd11.prod.outlook.com
+X-ClientProxiedBy: MA5PR01CA0012.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:174::7) To BN9PR11MB5530.namprd11.prod.outlook.com
  (2603:10b6:408:103::8)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -121,98 +121,99 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN9PR11MB5530:EE_|CO1PR11MB4771:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2982eb88-0948-43f2-1f5b-08dde9fcd9eb
+X-MS-TrafficTypeDiagnostic: BN9PR11MB5530:EE_|SN7PR11MB8281:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e11500a-a1d1-42d0-e937-08dde9fe469d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?SG5mR2pJRjQ4bXZuNnR1UW5TbmVUY0svQUc1dDQ0czhvc3BrT0JJNVh6R3kr?=
- =?utf-8?B?VDY5c0wva0dYRmZPeUUrM3pnR2ZDRllRYlVrdnlnVFliL3NZN2VwSzNRMmQx?=
- =?utf-8?B?Yk9oMHVXVk5mQWJmTWU1OHQ2c25CMkRYS1R1RmIvc0N5U09rL3lXdG5UV2lR?=
- =?utf-8?B?eVFkZUVPSzF1YVdEZ3BwdFJKMzJ5WUVuZkUyRWZnT01rMWNlSHFNZGN3dVV3?=
- =?utf-8?B?d3ZmVzFKaFcybk5nMkpuSnFJZzViMm1nb0gzc1NWZlBUVE5aWEhhOXVxZm92?=
- =?utf-8?B?NnJneWcxR1FHUDhDcmZFcTdaU1BJNnlnVFNMenNDd1AwcTJwc3hKd09XZFFs?=
- =?utf-8?B?NGJ6NzE1aG1KUzk0NHV6YTI0NXRzT2h5TDMwSVNrUSsvZEFtaUt1cGtGZURv?=
- =?utf-8?B?amFQaWpxTis5S3FYLzZYVlk4SkhSZEZzcWxqRzc5dXZ3NThmQ0xQUmt0MnJM?=
- =?utf-8?B?MGZyQlZ1SHlXaGNUUzhwUXdDMHNna24xY1o3cEtVT21FaExMRHJBTy9tNzA0?=
- =?utf-8?B?YVFVWmdRMU4ySTh4Y0FuQS9nVlNvWFhkTE00SEdOZzhDY1ZHNjFsaUJ6TGNM?=
- =?utf-8?B?TDNXYU9qTTlBMHhFajI4OXhOcTJDYnIvVUpjK0pXSC8zcVNKL3JZQXBNZTVi?=
- =?utf-8?B?LzdCRzBVcGxTWFBLR0kvRnJ2MXEya204U3NER21LMUFFdVFYTEppRlQ1d203?=
- =?utf-8?B?N3I5NVJPc3pURGRyVTlGTjBHL3FnM2ZYN0xCcm9wdVo4dXRTdS85eDc0Z0JP?=
- =?utf-8?B?U1ZvaDhCZXQvNGp4cExzWTZxQ3dJNGVIRlNjR1hjUVc5dkEvZHdGQjJMa2t5?=
- =?utf-8?B?SDZ5bHg0YXpGMEZ2SUZkS0htR1Z0R0hpUllmRjgrOHdabVJOblNzN0NQQU41?=
- =?utf-8?B?TVRwWW56elJqbFJ2MnQ3RFRVemFTQ3NRUVAyYU9kZjRqMmsrL3pQZHN3YVVy?=
- =?utf-8?B?RDk4OGR1QmFtSVFMaHVKZzVjSlBWaEUxWDFIT1ExK1IxaDVPLzFPSG9Jc3VE?=
- =?utf-8?B?L1c2cWJybTNKcDVIaGN1aFVPRVQxcy9IcUNMRmczTEhYc0JtNlhQVCtPZjlR?=
- =?utf-8?B?Vy9qZkNJcTEvNGVqc3dlQjE2VUpHTDBoejV4NC9tSzlXTUUwS1hHT2VFV1ZQ?=
- =?utf-8?B?dlRnYXd5MXR1NFlIR3I5NW9WV2h6ZHViSzVTd1EzRi9SVFJ1b0ZiRmRTWWhP?=
- =?utf-8?B?NUtMcTZNdGd3OS8yaHJTM3B5Nm1iQjY1TVIvbFVmUTgxanhHVi9MTWE0aGMw?=
- =?utf-8?B?a3NGcnRFak5idmsxcWJ3MzU5L09USzRHQXdEekpqRVRHc1NmNG9nYzRLOFlY?=
- =?utf-8?B?eW9xOFJsaDdnd0lxcC9ZWDZuTVQ5NzI3VVd4Y2tpaUkxcWJoUDVObHpiSy8w?=
- =?utf-8?B?dDdsOHBZSU5VYnhMRGpJcWFUZkpOYmRnMGJNS3ZrZi9ZSDZJQ2hLanBqZ0Jw?=
- =?utf-8?B?VU1oRzF0clFOMjFRcHRlaDJ2SU1icUZuWUpMeElzUWNneTRtZVlJMjNXVGdU?=
- =?utf-8?B?RlA5TjE4eHY0TGVYVEFMUFBXa1BoM3hCeS9SUHlKaFV5elRqQ0QxaEZSaUZZ?=
- =?utf-8?B?VW5oUXlDUkJlNzl4TTRwZmUyOU9PYkptQ0RkcnhkVzhCaEgrUjVJWmJVTXY5?=
- =?utf-8?B?NFd2WUhiNGVwcjZOOW1MTnBkdU9FQnQ5OHNOTnkwSmJaVEJCU0MzSmdBVnYz?=
- =?utf-8?B?Y3ZjcDg5bCtJN1NHNVRMN2NLaVNPVXgxNmNkNzEzYVFwUVNBZmxZb2FEUHQz?=
- =?utf-8?B?RHFjcGZuM3R6NEZqT0paa1lYZWlzb1Q3bXJsL0p3RE5MVlUxbHJ6UE9Edkcv?=
- =?utf-8?B?S1VOdGt0SDRNRWE5R2thSkJNcUtwSDMwVmhTTUYvQXBuNGxrTUtBTzg0eVg3?=
- =?utf-8?B?M05nTFBoNGdrQng5OEY3dTU4WE5qSnlJbEpHZFR6UlNQelNwVzU4VXN2U0Jy?=
- =?utf-8?Q?igvq16TRltg=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5530.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?dUR6bFlRTTh3cFFRN1hXaDVkcndaUWhYOXFXNGdHSEgxYmg5VFdvVjZYdjFF?=
+ =?utf-8?B?a1A0TlE0YmVZeXBnOEhxaTJKV2V4ZmV3eFUvQnIzb2hFNS9Wb2NtOERPNTZj?=
+ =?utf-8?B?TkdpaVVjcHpDTFE3S05wV2h0amw1T3N6aUl0b2I4ZFk2aHRFWDQyaytyeWFr?=
+ =?utf-8?B?SlliOUY3U013T2d0dnpMbW9oL00ydjVNQURkUCtpazZTMFFud1d6VkpSU1VO?=
+ =?utf-8?B?a3FNM2xVaU5mTnBsK2JlY2U2VVZhWDVic2NkbDUwM2IzQ1dRVnhvNXJGV082?=
+ =?utf-8?B?Z3BnR1FaNWdBYXlJcjRYU1RvNDM1bkhiZHN5eWUwRWcxSWdMSkV3c0lJRHBF?=
+ =?utf-8?B?SWlDWHRtZ25xeURFdW5NNGxRLzJBK2d3T0tPN1VuVU1yWnlVeHlpM2EvSXU1?=
+ =?utf-8?B?YmszUUZWMXlGR0cwUklLcDFlM1A3S2NxZFRkOUJKdFpibVJoSXR4S1ZFY05K?=
+ =?utf-8?B?aFdzaEFKMm9iQkEzOEZDZ2dGMEJBS2tSS2dJY0xyM293Ujg1SE8zM2pEYnU0?=
+ =?utf-8?B?SHBnTUJIT2ZmRUp1RUJUYkY4ckxuK3RleU05OE5FTTArOGFqckxySjlOR2hu?=
+ =?utf-8?B?dTA4RTNGczdUUHpzSllNa2xzbmNYS1d0QUE1bDhMejd4Q1JNZzZET2NFMXlS?=
+ =?utf-8?B?ci9idzNEOGFYYldiL2pTRlltQ1V1WlBvNWpyL09pTXlDdkZpY0M5RkV6NURO?=
+ =?utf-8?B?ZVdlN2t0Uzh6ZGp1WnA4QTlLRXkvOERjZVY1ZURCcmFLVEdzWFFTVGd1OWVu?=
+ =?utf-8?B?UmcrZzAvTW1UelF1T0Yxb281eHFmVDd1em15K2ZTKzAreE9tTnFkdTRJNFlu?=
+ =?utf-8?B?VDRuemlPeGIxNkFMdlU3MW5KRDlFdG9Ca1pHcWxXZ0NtZE5JRVBRTFJ0eGpk?=
+ =?utf-8?B?cFVlUC84dThqYVdnSnd0SHh4NGNldzIwWGY5WGFFQ2Rlb0F4bTF2T3AvVUda?=
+ =?utf-8?B?eEpTU3B3Y3grZm9tQ29sc1FPVjlacGk0TzFwTkVCc0VYa1RiWVdZamVjbjVv?=
+ =?utf-8?B?cjh3a256Ulhia2RhNVJtT3FPRmszK211eUptKzF0RHVqR3IrQ1U0RWE0NnRR?=
+ =?utf-8?B?VlhsQzYvQUY0NlM3eWw4Vmo0d1Z2Rkt4RUxHU3piM0Nlc0NsMHB3U3FQbzlz?=
+ =?utf-8?B?cTdOT0FDeHB2ZTlCaEt0MGw5NTF6UXJ5NlorSzcwYlVoRWZScjNxenBCRDZH?=
+ =?utf-8?B?bUN6WUVxWkNKM2NTTHhvSjgra1B5Tk5kdDdOd0RxQVlTY2IwLzAvTEpEd2RS?=
+ =?utf-8?B?Q3QzcHVvU2MwWFpxd3pobGt4M2toYXlXcmkxNUJ4OXpveUtTZElpMG14cHY1?=
+ =?utf-8?B?WWNWTFdqUW5mWW1xdnhJdW1PN05iSkNweG8wMjRjRngyNU1yY2ZlWHJrMDZq?=
+ =?utf-8?B?TkZPdmczVE8xdFkrK2tyUFVsV2J1L3MwNFo2cHBxNm9QK0FHMmpVV294ZWxE?=
+ =?utf-8?B?NENaN29KVHFOYzBxZGpEeGkwSG5wUUtJZnBaakw0cmptcWt1NEJSek9wbjhx?=
+ =?utf-8?B?cWZkdTJ5SG5vNG1yNnNxU2oyUStrV20zcmp0ZUlSOVZCN3QrN1EzWFE5Qzh0?=
+ =?utf-8?B?OVRBY0NvK3FjaVhOZUN2VnVabjZIWENoS1lxblV6RlF3OHVKQmREOW5xNVVi?=
+ =?utf-8?B?bGg4WGthMnZHSzJoMDUzOWZkeEQ0ejhVYXE4RzdJRC9vS1ZYT3M3cDRod1FX?=
+ =?utf-8?B?ek8wdVg1OTNQY3hBMGVpdkRqQnJPZEJULzVjVkRON3V5VGl4YjZZdVNJUWhT?=
+ =?utf-8?B?NWhDRmxFRVl0dzlSL1pJNGVGREErM0xKcGZpZmR5OEUyeDVPelgxYnA1RXE1?=
+ =?utf-8?B?cjYySkdxcXV1bDZhckVXUU5SUHZkbTM0c0RNb2xPRHpzcVRRMWMrdGhGZjRy?=
+ =?utf-8?B?QW5lMkRJWmJQL1VCeW5lOFBQWGFKWnVsRTA4VDlDcDlHcTVjdWJmK1VuZE56?=
+ =?utf-8?Q?+46DSK3PSp4=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5530.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SUxWQnoyd000cm1YdVp6MmorZTBDMEplNitsbGZHTCtndXFHWlM3amIxRE1u?=
- =?utf-8?B?em1OVkNLeGFkQ1I4aHBHYUlXSU5ldE9kQW1kS3BFMlJ3ZS9LYjZucWJRcTFV?=
- =?utf-8?B?aWRsUGRSZmZSenVEd3QzanZkdFdiWmZ0dHFIb1hhWHZXTGVvZyt4d1A2a2hC?=
- =?utf-8?B?UjByRWFlTnJyYnYzVkN6UUh3bmQ0U1AvY0wvLzIyT29MYTdWS0pwZ3VFMWtE?=
- =?utf-8?B?KzIrekZSb09pYlJHVDdkeUJxODExRCt1bTBNbFZjM0F5WllPVzhQRWpLbTlW?=
- =?utf-8?B?T3phaExtdUl3YzlXYWVIOWdMZFE0dC9ncko5VmpSTHhPbkhScmcyTENldnMv?=
- =?utf-8?B?UjNWTE54UnlIcUlxRHFCS01Td2JkaDJBK052N1lZQWJDSXZLUXZFUndiWGFC?=
- =?utf-8?B?Y0VuR3g3ZzJBQUxMQ3NHaTZLZ2FkRnFCeVpRY0hXTlYzOXFSa3hvWlhwdnNw?=
- =?utf-8?B?YXhjK3RNQ2F1MUhiMmFZNWF2VTFOeWRLOGNRY0hJR3NlQkNKRCtVQUgxRDdr?=
- =?utf-8?B?czNCdVF2dHZ1WXVjblFYTVBJRFQ3WGZGMVU3RmpHNkJTT1ZpSTJBbzFQai9E?=
- =?utf-8?B?SUNadnNqampIVmtHV3F4Z3ZiUTh0c3djcEdoRTcxYkQzWVZrRDk5RmFRd2ZN?=
- =?utf-8?B?Q2cxV1oyWVpDdVUwM2xwT3JrclUxR2gwZ0xaakJKOC80N2VEb044SlBFNHZo?=
- =?utf-8?B?T3F0bytudzlDbWUrQlAzZk55b1Z0Q2NHSktoeFFONmZ5NFFnb1ZzeFdlamhI?=
- =?utf-8?B?RzlaV1FGT0gzcWFUL1I1Q29sdGErRCtmZkVFRm10QXNBc0JhbGVGTC9DMVRk?=
- =?utf-8?B?ajRsUFFOV3dyMHloaC9saDkybkpKcmlPSlZNUnFtY3ErRXJpN3phV3NPVHJV?=
- =?utf-8?B?bGdxS3FiS1h5d0JLR0lCNUk2VUhoYTRwNXNaWE9DdDZEUUhEYjNVcjFEZk5x?=
- =?utf-8?B?YUI3d1d4RmswekZvS1kzTmpJaldKeHFZZjhMcE1KdTM5UTNyazRBTVhPNEI3?=
- =?utf-8?B?RzJhTTJRSEhsOFBVZDYxb1RDVVNCSmt3TVFscHRyenk1R09HVUNCWVh1THli?=
- =?utf-8?B?Z0lyNnlzakdPeTFtc2J4L2NkRzZCb2M4RGplRjNGK29QM0tyZkZxN2pEb05T?=
- =?utf-8?B?dEoyMXF2RUNkakxmdGRKNjlaZWovS2k0Vkk2SFBCMWtnZTJ4a2pwQys4c1lG?=
- =?utf-8?B?YzZlSlVEZmdtU1NWZG11N1dBWlpsV25VRzBiRGFLbTMzR2xrZ2hoSjdtSE5m?=
- =?utf-8?B?TVh6T2lVZytaTlZvaTY4WEtmejFqU3R1WVEreU81OURGTGNaNG9nRzFXN0Zj?=
- =?utf-8?B?WnVKK1Jla1J1em53dkxFMWowc1VaeGp0N1NhVUJBU3BOUkVpTFdNRk9uOUJN?=
- =?utf-8?B?TzczWHcyaWlqa0JEZnBtQ2huZzJtV200UnRzbzk2T0RZZVBqZEdjNVN4cmJB?=
- =?utf-8?B?NklUVjB2cEhSczhmY2FhZVVGTVRXZ2VPVHpiT0RGeVNadktmWWxjckZaSUZj?=
- =?utf-8?B?bDUzKzlWWGlEVTJBZm1zZ0ZoUmVRVnJIMWtUbk9uZHczSXNZUzhJQjEwQWJZ?=
- =?utf-8?B?amdza3E3MDNyOWk5bEM2WUlabUlPYUFoQXdYaVhsQzVOV09oWWI1R0pVK0VE?=
- =?utf-8?B?UkZiR2w0dWJTaDdZaTdWMEJKK1BodHJrK0VxR0VSWkQ4bEJ2STcrL1NZdFhX?=
- =?utf-8?B?TlBHQVdPbkQ4YnI3b293amNndFVnamwzblZ1Mk51YXhXOWgzTGE2c2p2cllt?=
- =?utf-8?B?MFdzOTNQQTB4ZE9GaURqUzdHNHJ5a3JqOFVKSmxTSlVLb0xzcVluWXhMRFly?=
- =?utf-8?B?U0wyK0xNVDhNL1V1N0NUMDFtcjMvNXI4YlI5TXJjZ1pzRGxVOGxydVR5WVFH?=
- =?utf-8?B?cWdXOU5NZzMrU3BqZ0ZFejg5WlcvUkFoZjhhemxXS2JHQUM5UitZcXVNRHZy?=
- =?utf-8?B?dW01OXhoamFDZklqQVJIaUV0OTNjbDZUcXNpTHVMenQvYWFZRjNuNSs3Qkx5?=
- =?utf-8?B?Slc5RnFEelU4KytGQWI2czR5NFY1OFJGYlhsQXYrSDZ1MEE4eXVFR3A1TE9q?=
- =?utf-8?B?eFdibkZpWitUbE5FS2pYTitMRFVRTkhBaUdrSjY3a3JsMXE2NEh4bTdZMkMw?=
- =?utf-8?B?RDYrMjdObkx0RHBvbzMwbHB2SldJVC9HSGU3aEZ6ek5oQW5qT1ZDdDFHQ25S?=
- =?utf-8?B?clE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2982eb88-0948-43f2-1f5b-08dde9fcd9eb
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ak5jMWVJbWdwY1NBRVkxVmNtSDVNNFVvZG5kdUxIVUdmQ1hQclVOcnhNV2Qv?=
+ =?utf-8?B?aUFuSGI1SnZ2ZTc1Mzd2elR1dGlVdC8wRS9kdWVaZUd2OVdnenBJSHloTUhk?=
+ =?utf-8?B?Z01Qbk9YekhWc29YU3B0aU9iazVzbE5oaVkvM1orS2JJOU9HRHZ6QkxQdnI4?=
+ =?utf-8?B?amE3Y0dESGdEaGtRa0ZVZjFwV0FKcDVaZThmNmgxemFKa1N4ak9Za2RKbjN0?=
+ =?utf-8?B?M1BIVXgrWG91eUVzbzZYUDhwbVQ5d3ZaL3JpNENoem1NNy9Xc2NZeGg5Uksz?=
+ =?utf-8?B?Y0lwT0lsUFhuQWxjN1o0cTNUcmFFZGFaR3Y0OFhqUFU3RzlnRmFSV3A5aWdU?=
+ =?utf-8?B?T09ZZWU1MkNtQlpBVGF2K05UWHRKejMzZVQ3VHYrZVQ1K1I4cU14SmlMMDZU?=
+ =?utf-8?B?N25nOXcwQmkxWlJJdE5qNkpPVDVqdndJa2FDc0svckdBTk9FZkZDZHpnZ3Er?=
+ =?utf-8?B?QzZha0JXeGpFbnVTY3E4WUZhVkw5aHp6YWt6ZmJPMlFQNU9yVFJMVSs4Q2ZC?=
+ =?utf-8?B?aFY5eExGQWJPalhSNGZOL1R3WFJGNGdTZDNRV2Q1dXZkNCtlSEVNamR6d1Z4?=
+ =?utf-8?B?ZHhsNEJSdGNIL2V6K0ZhMHBxNmxXZzJubk5ld3drZHRTWUpvcGl5dHJUYlBK?=
+ =?utf-8?B?NU9IbUsvZlNvZzJCV0xEUzB3WnhsOVYxZk53YjVobTViR0ZCejV2SXRRVlVP?=
+ =?utf-8?B?cU1sVnBvNkxMdFV1eXBGbE1FRzNHOFB2T1dkV0IzMzhmcEk3M3BmMm5pZDZH?=
+ =?utf-8?B?cE5CRWRWNG1zYi91YUdzTVpUUEJaZy90SGtaNzVqNXlDYmQ0V2pVN1R3VUJH?=
+ =?utf-8?B?TFVIRW5zN0tCVGZBajd1dFBvTzJLOVJMa2tnTlIrVjVzTi9Nb3U4WkpmaXdt?=
+ =?utf-8?B?eitWLzRDMHRGeGRMNjRpZWYwRG9kUVUyMDFxemRrZGNMWFUvM1JwZDhHd0x2?=
+ =?utf-8?B?c2ZUdFdMTUFLQUJYV2IzWE1NcDVRa0ZmZlpkbURXVWs2QmdpYnNTbmNpaWtV?=
+ =?utf-8?B?VlVDcCtzYVg0UU82M3hkRFB1VWRXWGdqbG1jQ1owT2w5UFJEeHdndS9WYUND?=
+ =?utf-8?B?aks5TktaQXJGK3BVRHpFSWNoUUl4VFY2TlU0WGhXWTZ5TWpyNmY4M1ZETitU?=
+ =?utf-8?B?bzhuMjV5ZzVLY3l2alZGZWdGVFRxTElHZUNsTVZmTUZyOUxBWFpOK3NCR3VP?=
+ =?utf-8?B?bE41UUFWUzNKSDFpYnJKVEJ5dlhWOVRzVHE0ZHlSS0FsYmhPVG1qWGt4L0I3?=
+ =?utf-8?B?a0VYUjZRZ3k3ejluZmwzMHRvRG02dnc3b2pIaWlBTUwwMU5CY3FjN2NFQjgz?=
+ =?utf-8?B?blBvOWtHby9xRVdleENsQVFxT0RQajJIWU5WV0xmRmVEc21XUzd2QjhQcTFp?=
+ =?utf-8?B?VWRJOENlazI0cFROOHAwYTA1T1pueS96L1RkelBtWEtIbWRjYkUzYVZucW5H?=
+ =?utf-8?B?Rkh6dzNJRTBEV2lINEtRSVBkWW5ZNTNubjNvOTZXdCtuc3ZTT2tFN082ZHVk?=
+ =?utf-8?B?RVEvdjA5MHQ2YUxMdDdxcUdIMVJwK1dValM2NVA2TGJud3Q1dzZhaTZxeU1P?=
+ =?utf-8?B?Z1ZDcHA1M0d6Rk9KR0tKTVJzbXB1WDkrdnZSQXhRRnh2c2tad3g4bmN1eTBU?=
+ =?utf-8?B?OFNnSEtvM0pqWkdKUkpiT3Q3cDkvZzlFMUMrWUd4QU1YekhwcFMyT2V5WWwx?=
+ =?utf-8?B?RnFDRFVDWS9qUUNweTZYckVxRjYxRWl4ZTROK2NEU2lnaEI4UUJZTlVXb3NR?=
+ =?utf-8?B?S2lFbzh5TzNTcWV1QmZOcGx4Q2NGSHNFcTlVRjJCejdvWDF1eFlrRVhCNFBz?=
+ =?utf-8?B?UnhIOGduWkhwRUdCZktlY0hhOU1rOExYOU9pS0duQWlqTWIyNkxiemFxNkpF?=
+ =?utf-8?B?RldhWFBtdmc5TzAwdlJOQW85WlIxeUlFNmZDdXB5bFh6L2YxSXhPcjc0NlRS?=
+ =?utf-8?B?YUhVTnhGU3h4T0djeVRLbFRPcmxhV3A5T0N2TlBZL2gzdE5oKzkyVjJXNlNr?=
+ =?utf-8?B?eWtZcVFUSDNRSDNBNHZqWmozckdZaVVTSUYwaEFjT3JKVFk5THNGSFBwTkh0?=
+ =?utf-8?B?cEEzSk1RZUxFN2h1cXZXR2V4WU9kRHNUTlFoYU0xWFF6TDNxODhocWZ1a0Yx?=
+ =?utf-8?B?NXp1VDZJd2krK3k3ZkZ3ZUlxQlFwakt0M1VDaGx0T2I4enpVNitVOCswYVdT?=
+ =?utf-8?B?R0E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e11500a-a1d1-42d0-e937-08dde9fe469d
 X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5530.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2025 08:43:55.6518
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2025 08:54:07.5838
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tabJf/7p5Fcz64BbHmCaHYa5G1uO5ElB3Fw8HPyBfVT2XAlf0aUUrHuPIJRYrjRGKt1Ztob9v8AnxHZJ7nYZuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4771
+X-MS-Exchange-CrossTenant-UserPrincipalName: eTTzgnX3PWijhAbapDJTL5GpjwRa3sPp7D7ISqAcRZmvujTrH8RMHhbQxlp4pwmNpha1tmJymHWaK4YXDRl3vw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB8281
 X-OriginatorOrg: intel.com
 
 
-On 02-07-2025 16:51, Rafael J. Wysocki wrote:
-> On Thu, May 29, 2025 at 1:14 PM Badal Nilawar <badal.nilawar@intel.com> wrote:
+On 02-07-2025 16:58, Ilpo Järvinen wrote:
+> On Thu, 29 May 2025, Badal Nilawar wrote:
+>
 >> For given root port allow one Aux power limit request.
 >>
 >> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
@@ -229,113 +230,108 @@ On 02-07-2025 16:51, Rafael J. Wysocki wrote:
 >> --- a/drivers/acpi/scan.c
 >> +++ b/drivers/acpi/scan.c
 >> @@ -745,6 +745,7 @@ int acpi_device_add(struct acpi_device *device)
->>          INIT_LIST_HEAD(&device->physical_node_list);
->>          INIT_LIST_HEAD(&device->del_list);
->>          mutex_init(&device->physical_node_lock);
->> +       mutex_init(&device->power.aux_pwr_lock);
->>
->>          mutex_lock(&acpi_device_lock);
->>
->> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
->> index 87f30910a5f1..d33efba4ca94 100644
->> --- a/drivers/pci/pci-acpi.c
->> +++ b/drivers/pci/pci-acpi.c
->> @@ -1451,6 +1451,7 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
->>          union acpi_object *out_obj;
->>          acpi_handle handle;
->>          int result, ret = -EINVAL;
->> +       struct acpi_device *adev;
->>
->>          if (!dev || !retry_interval)
->>                  return -EINVAL;
->> @@ -1464,11 +1465,27 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
->>                  return -ENODEV;
->>          }
->>
->> +       adev = ACPI_COMPANION(&dev->dev);
->> +       if (!adev)
->> +               return -EINVAL;
->> +
->> +       mutex_lock(&adev->power.aux_pwr_lock);
-> Use a mutex locking guard for this new lock, please.
-Sure.
+>>   	INIT_LIST_HEAD(&device->physical_node_list);
+>>   	INIT_LIST_HEAD(&device->del_list);
+>>   	mutex_init(&device->physical_node_lock);
+>> +	mutex_init(&device->power.aux_pwr_lock);
+> Hi,
 >
->> +
->> +       /* Check if aux power already granted */
->> +       if (adev->power.aux_power_limit) {
->> +               pci_info(dev, "D3cold Aux Power request already granted: %u mW\n",
->> +                        adev->power.aux_power_limit);
->> +               mutex_unlock(&adev->power.aux_pwr_lock);
->> +               return -EPERM;
-> Maybe -EALREADY?
+> mutex_destroy() also exists but I don't find any added by this patch?
+> I think the pre-existing mutex might also have this same problem.
 
- From definition it is for operation in progress. Not sure if it 
-appropriate for "allow once" scenario.
-
-#define EALREADY        114     /* Operation already in progress */
+I will add mutex_destroy in acpi_device_release().
 
 Thanks,
 Badal
 
 >
->> +       }
+>>   
+>>   	mutex_lock(&acpi_device_lock);
+>>   
+>> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+>> index 87f30910a5f1..d33efba4ca94 100644
+>> --- a/drivers/pci/pci-acpi.c
+>> +++ b/drivers/pci/pci-acpi.c
+>> @@ -1451,6 +1451,7 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>>   	union acpi_object *out_obj;
+>>   	acpi_handle handle;
+>>   	int result, ret = -EINVAL;
+>> +	struct acpi_device *adev;
+>>   
+>>   	if (!dev || !retry_interval)
+>>   		return -EINVAL;
+>> @@ -1464,11 +1465,27 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>>   		return -ENODEV;
+>>   	}
+>>   
+>> +	adev = ACPI_COMPANION(&dev->dev);
+>> +	if (!adev)
+>> +		return -EINVAL;
 >> +
->>          out_obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4,
->>                                            DSM_PCI_D3COLD_AUX_POWER_LIMIT,
->>                                            &in_obj, ACPI_TYPE_INTEGER);
->> -       if (!out_obj)
->> +       if (!out_obj) {
->> +               mutex_unlock(&adev->power.aux_pwr_lock);
->>                  return -EINVAL;
->> +       }
->>
->>          result = out_obj->integer.value;
->>          if (retry_interval)
+>> +	mutex_lock(&adev->power.aux_pwr_lock);
+>> +
+>> +	/* Check if aux power already granted */
+>> +	if (adev->power.aux_power_limit) {
+>> +		pci_info(dev, "D3cold Aux Power request already granted: %u mW\n",
+>> +			 adev->power.aux_power_limit);
+>> +		mutex_unlock(&adev->power.aux_pwr_lock);
+>> +		return -EPERM;
+>> +	}
+>> +
+>>   	out_obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4,
+>>   					  DSM_PCI_D3COLD_AUX_POWER_LIMIT,
+>>   					  &in_obj, ACPI_TYPE_INTEGER);
+>> -	if (!out_obj)
+>> +	if (!out_obj) {
+>> +		mutex_unlock(&adev->power.aux_pwr_lock);
+>>   		return -EINVAL;
+>> +	}
+>>   
+>>   	result = out_obj->integer.value;
+>>   	if (retry_interval)
 >> @@ -1478,14 +1495,17 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
->>          case 0x0:
->>                  pci_dbg(dev, "D3cold Aux Power %u mW request denied\n",
->>                          requested_power);
->> +               adev->power.aux_power_limit = 0;
->>                  break;
->>          case 0x1:
->>                  pci_info(dev, "D3cold Aux Power request granted: %u mW\n",
->>                           requested_power);
->> +               adev->power.aux_power_limit = requested_power;
->>                  ret = 0;
->>                  break;
->>          case 0x2:
->>                  pci_info(dev, "D3cold Aux Power: Main power won't be removed\n");
->> +               adev->power.aux_power_limit = 0;
->>                  ret = -EBUSY;
->>                  break;
->>          default:
+>>   	case 0x0:
+>>   		pci_dbg(dev, "D3cold Aux Power %u mW request denied\n",
+>>   			requested_power);
+>> +		adev->power.aux_power_limit = 0;
+>>   		break;
+>>   	case 0x1:
+>>   		pci_info(dev, "D3cold Aux Power request granted: %u mW\n",
+>>   			 requested_power);
+>> +		adev->power.aux_power_limit = requested_power;
+>>   		ret = 0;
+>>   		break;
+>>   	case 0x2:
+>>   		pci_info(dev, "D3cold Aux Power: Main power won't be removed\n");
+>> +		adev->power.aux_power_limit = 0;
+>>   		ret = -EBUSY;
+>>   		break;
+>>   	default:
 >> @@ -1500,9 +1520,12 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
->>                          pci_err(dev, "D3cold Aux Power: Reserved or unsupported response: 0x%x\n",
->>                                  result);
->>                  }
->> +               adev->power.aux_power_limit = 0;
->>                  break;
->>          }
->>
->> +       mutex_unlock(&adev->power.aux_pwr_lock);
+>>   			pci_err(dev, "D3cold Aux Power: Reserved or unsupported response: 0x%x\n",
+>>   				result);
+>>   		}
+>> +		adev->power.aux_power_limit = 0;
+>>   		break;
+>>   	}
+>>   
+>> +	mutex_unlock(&adev->power.aux_pwr_lock);
 >> +
->>          ACPI_FREE(out_obj);
->>          return ret;
+>>   	ACPI_FREE(out_obj);
+>>   	return ret;
 >>   }
 >> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
 >> index aad1a95e6863..c4ce3d84be00 100644
 >> --- a/include/acpi/acpi_bus.h
 >> +++ b/include/acpi/acpi_bus.h
 >> @@ -294,6 +294,8 @@ struct acpi_device_power {
->>          struct acpi_device_power_flags flags;
->>          struct acpi_device_power_state states[ACPI_D_STATE_COUNT];      /* Power states (D0-D3Cold) */
->>          u8 state_for_enumeration; /* Deepest power state for enumeration */
->> +       u32 aux_power_limit;            /* aux power limit granted by bios */
->> +       struct mutex aux_pwr_lock;      /* prevent concurrent aux power limit requests */
+>>   	struct acpi_device_power_flags flags;
+>>   	struct acpi_device_power_state states[ACPI_D_STATE_COUNT];	/* Power states (D0-D3Cold) */
+>>   	u8 state_for_enumeration; /* Deepest power state for enumeration */
+>> +	u32 aux_power_limit;		/* aux power limit granted by bios */
+>> +	struct mutex aux_pwr_lock;	/* prevent concurrent aux power limit requests */
 >>   };
->>
+>>   
 >>   struct acpi_dep_data {
->> --
->> 2.34.1
 >>
 
