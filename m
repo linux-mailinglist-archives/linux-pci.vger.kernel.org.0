@@ -1,104 +1,126 @@
-Return-Path: <linux-pci+bounces-35336-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35337-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73ADFB40CA3
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 19:59:16 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED838B40CC5
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 20:06:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2DCEA483611
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 17:59:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3EFD77A78FB
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Sep 2025 18:05:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 351692C11C9;
-	Tue,  2 Sep 2025 17:59:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E04DC3128D1;
+	Tue,  2 Sep 2025 18:06:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DrC8IFSK"
+	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="dtSR+rlz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout9.mo534.mail-out.ovh.net (smtpout9.mo534.mail-out.ovh.net [178.33.251.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114393594B
-	for <linux-pci@vger.kernel.org>; Tue,  2 Sep 2025 17:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7142FD1DC;
+	Tue,  2 Sep 2025 18:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.33.251.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756835953; cv=none; b=DoxAedDT1e/6v0MkHdsTk8LEGUh/zYuRdiqk3I0SnL5OIeaK63nYJBBThuzVSTGxRV4yterToZp4Ap/Q6lFO1L7HV/0vd3xtN8hHT7G7qs3Tzmlopnsld/YEYmEjc+n3vHrpFHopU4l1PuUkvX+zPNcS3eEiPfDFf5mw1SdUht4=
+	t=1756836405; cv=none; b=pw7fRpKQOkXxrhGaOuwggTUtnEB3I//Dvupbx7UNO8H4ld9ZSYondQ9JS7AXSz1hyy3wumdfL8Cq1Rz8wA00QQoywQgF9li5ExexcbQtWbMWY7Hd/YS46b2ho01QEAGg1kCHtRIJHzJw1iaU2Z1Dz8WoLn8xPgYajbt16IGygxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756835953; c=relaxed/simple;
-	bh=1cDDLYwNMNRUHQHN5kr48FfOWVX7l2DH/qKDgh5ojfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bih8dHuX2DPpru6pOSDRoRggJfyvXg8jNRhjlnzagp/XNo5naAerdG2Lt+8Ri/pELGrSPrdw2KsjjB273vvB+BkaBUcddFhiqc90n8lJrOeQdy20F1vnyA2qNEK1OAhUyKfwEAER2BvVGalYTQgKA3xN7w9aWV8+mH+j8P5apM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DrC8IFSK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B896CC4CEED;
-	Tue,  2 Sep 2025 17:59:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756835952;
-	bh=1cDDLYwNMNRUHQHN5kr48FfOWVX7l2DH/qKDgh5ojfo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DrC8IFSK7sb6AZMYuu7G+KtADyx2e6Dg49v5c91tfZPEq6lb2bWElEg0dtROPxqYY
-	 ErvJd+jgzMNZoUIALfsA/+KkmGjFP9n3EwbQCEbbOlSDR4BXEOMg1ru1/nGyCPvtwo
-	 tXgd3I9mwhirXw3sBgOjupl+F+nh6ysWP6V1ex/ADCvSV53Oqw0avV1xaJ5ackG81K
-	 Hrj+t0LQSCKiNcooT/Mlx2uI0HbyCFtjFMBjSm5F9QwUFDRuuxIE1eYAJ5UM3psV9B
-	 LkUR6QxvVeFRCFLgHkniiiFL5cFy/oIwXSjIW5sMxblLJLYAPtBaqw4W7qGcjggXO5
-	 w2P5l+Q4NrkQA==
-Date: Tue, 2 Sep 2025 11:59:11 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] pciehp: sync interrupts for bus resets
-Message-ID: <aLcwb0TA0rMtu2kI@kbusch-mbp>
-References: <20250827224514.3162098-1-kbusch@meta.com>
- <aLRRh_4YhAZjWeEW@wunner.de>
+	s=arc-20240116; t=1756836405; c=relaxed/simple;
+	bh=Od+kByzKMtlKwxWTpbaY2oui20iYJ8JhWWg6aV/Lr2s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ksHTIxZLaFzmq++XNCT45iBzYylwGuWO7zpqBsCvWi/9H+MPvbQVal2NByfW0mxVJUQJuksxZvI5hs4nzAjJ6qfBBw9ePb4QofF51CtXU9RyNnHSRR4qSn+T3xiuDfgEdgO7z9NQB3wTRKP4SopOYO8rKbkEKTImtocavnrCsLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=dtSR+rlz; arc=none smtp.client-ip=178.33.251.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
+Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net [152.228.215.222])
+	by mo534.mail-out.ovh.net (Postfix) with ESMTPS id 4cGYbL69wnz6XLN;
+	Tue,  2 Sep 2025 18:06:38 +0000 (UTC)
+Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net. [127.0.0.1])
+        by director3.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
+        for <brgl@bgdev.pl>; Tue,  2 Sep 2025 18:06:38 +0000 (UTC)
+Received: from mta3.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.109.231.133])
+	by director3.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4cGYbL0rDGz5wFY;
+	Tue,  2 Sep 2025 18:06:38 +0000 (UTC)
+Received: from orca.pet (unknown [10.1.6.9])
+	by mta3.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id BA95894332F;
+	Tue,  2 Sep 2025 18:06:36 +0000 (UTC)
+Authentication-Results:garm.ovh; auth=pass (GARM-104R005f80e0bac-1c8b-4e6a-b81b-3b0d9acbbebe,
+                    B677A376967D575A53C78FE4FF5C940A066EF03B) smtp.auth=marcos@orca.pet
+X-OVh-ClientIp:79.117.41.176
+Message-ID: <45b84c38-4046-4fb0-89af-6a2cc4de99cf@orca.pet>
+Date: Tue, 2 Sep 2025 20:06:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aLRRh_4YhAZjWeEW@wunner.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] mfd: vortex: implement new driver for Vortex
+ southbridges
+To: Lee Jones <lee@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Michael Walle <mwalle@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250822135816.739582-1-marcos@orca.pet>
+ <20250822135816.739582-4-marcos@orca.pet>
+ <20250902151828.GU2163762@google.com>
+Content-Language: es-ES
+From: Marcos Del Sol Vives <marcos@orca.pet>
+In-Reply-To: <20250902151828.GU2163762@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 3615827553760990822
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdelfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepofgrrhgtohhsucffvghlucfuohhlucggihhvvghsuceomhgrrhgtohhssehorhgtrgdrphgvtheqnecuggftrfgrthhtvghrnheptdegudfgiedugfekudfhlefgjefguedvjeffieevgeetjedvvdeihfeiudejvdehnecukfhppeduvdejrddtrddtrddupdejledruddujedrgedurddujeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehmrghrtghoshesohhrtggrrdhpvghtpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhifrghllhgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvh
+ hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehfeegmgdpmhhouggvpehsmhhtphhouhht
+DKIM-Signature: a=rsa-sha256; bh=BShoJ9CtShHpPKQfSV3go4koAPboGRUp6AQIugmCTyM=;
+ c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1756836399;
+ v=1;
+ b=dtSR+rlz6mvtRdeeIRrhsNfIdY8db6C6KPVunAs2rwNt+gfj4kcrHPT1qwr93+yKjZYRlfKB
+ 9UeGMly98dojMoe9yQ+xqJuy8UMn6+PdqtyGso0VsLTxr3MzSaU55mG7VbMkgdTY23rp39hpBtH
+ 6AUyGAR7IdypAqJvcTHojpSaOWgxVd7gDFhR00cwunLvkTKdA/8HW2QBqhXg/B4zCJTQcRVHA8r
+ tfSJ+JRuPFjGM6GyVniEVmhSm4Kfmmyi6HMEjtsrNq4y/HwMKV3B6OhgMTteWcNUELOz2Y5osbV
+ V0y70B20wNX6u6vcvQwxQq6x3CVcnArt6HomtuQop1BjA==
 
-On Sun, Aug 31, 2025 at 03:43:35PM +0200, Lukas Wunner wrote:
-> On Wed, Aug 27, 2025 at 03:45:14PM -0700, Keith Busch wrote:
-> > Synchronize the interrupt to ensure the reset isn't going to disrupt a
-> > previously pending handler from igoring the reset's link flap. Back to
-> > back secondary bus resets create a window when the previous reset
-> > proceeds with DLLLA, waking the pending pciehp interrupt thread, but the
-> > subsequent reset tears it down while the irq thread tries to confirm the
-> > link is active, triggering unexpected re-enumeration.
+El 02/09/2025 a las 17:18, Lee Jones escribió:
+>> +
+>> +struct vortex_southbridge {
+>> +	const struct mfd_cell *cells;
+>> +	int n_cells;
+>> +};
 > 
-> Help me understand this:
+> Why is this needed?
 > 
-> I think what you mean is that pciehp_reset_slot() runs and the
-> Secondary Bus Reset causes a spurious link change. So pciehp_ist() runs,
-> waits for the reset to finish with pci_hp_spurious_link_change(),
-> then calls pciehp_ignore_link_change(), which tests whether the link
-> is active again by calling pciehp_check_link_active().
-> 
-> And you're saying that at the same time, pciehp_reset_slot() runs,
-> performs a Secondary Bus Reset, thus brings down the link,
-> confusing the concurrent pciehp_check_link_active().
-> Did I understand that correctly?
-> 
-> I don't quite see how this can happen, given pciehp_reset_slot()
-> acquires ctrl->reset_lock for writing and the same lock is held
-> for reading for the call to pciehp_check_link_active().
-> 
-> Moreover pciehp_ist() ignores the link flap in the first iteration
-> (it clears the flags in the local variable "events") and if
-> pciehp_check_link_active() would indeed fail, then the bits would
-> only be set in ctrl->pending_events and a rerun of pciehp_ist()
-> would be triggered.  That second iteration of pciehp_ist() would
-> then find the PCI_LINK_CHANGED flag set and ignore the link change
-> (again).
-> 
-> So this should all work fine.
 
-Hm, I think you're right. We are definitely seeing pciehp requeue itself
-with the link/presence events that we want to be ignored, so we're
-getting re-enumeration when we didn't expect it. I thought the
-back-to-back resets that we're causing vfio to initiate was the problem,
-but maybe not. I think the switch and/or end device we're using have
-some unusual link timings that defeats the pciehp ignore logic.
+To have a variable amount of cells. Currently I am only implementing the
+GPIO device because it's the most critical (required for device shutdown),
+but I plan on implementing once this gets merged at least also the watchdog,
+which is provided by the same southbridge.
+
+Adding support for this is should make adding that simpler.
+
+>> +static const struct mfd_cell vortex_dx_sb_cells[] = {
+>> +	{
+>> +		.name		= "vortex-gpio",
+>> +		.resources	= vortex_dx_gpio_resources,
+>> +		.num_resources	= ARRAY_SIZE(vortex_dx_gpio_resources),
+>> +	},
+>> +};
+> 
+> It's not an MFD until you have more than one device.
+
+Same as above.
+
+>> +static const struct pci_device_id vortex_sb_table[] = {
+>> +	/* Vortex86DX */
+>> +	{ PCI_DEVICE_DATA(RDC, R6031, &vortex_dx_sb) },
+> 
+> We're not passing one initialisation API's data (MFD) through another (PCI).
+
+Unless I understood you incorrectly, you mean I should not pass MFD cells/
+data as private data?
+
+vortex_dx_sb are "struct vortex_southbridge" type, not raw MFD API data.
 
