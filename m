@@ -1,89 +1,106 @@
-Return-Path: <linux-pci+bounces-35393-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35394-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AC1EB4263D
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 18:08:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58C6FB426A2
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 18:20:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E41271667A2
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 16:08:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB4991BA5872
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 16:20:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1914A2BD013;
-	Wed,  3 Sep 2025 16:08:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70F2D2C0F7A;
+	Wed,  3 Sep 2025 16:19:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="YwFopzdn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUYWc7rV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A072BCF6A
-	for <linux-pci@vger.kernel.org>; Wed,  3 Sep 2025 16:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4C52C0F63
+	for <linux-pci@vger.kernel.org>; Wed,  3 Sep 2025 16:19:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756915723; cv=none; b=mxIIPwDgHqXrJLhVU8FR+X83epvl/fWEKxxb31BiARYJslnxOU0FMUo1yLfQJDf7uMttmDQsyEi9CAM4n+L00oONKzx+O/wUqxniHBanFW3/0xj04YkiFeMiF1MDh1wV61wuwDe5qXGblS0+fLCivP9uD3I5HrQMpBQZOFK8Tfg=
+	t=1756916370; cv=none; b=eTdoK/CL9E7Tpr+9A2e6OqDpEmgTKsbK2fPovQOf2YH4RijEX2gVLS4KEXNwPky2iG59UX84fZ1Asrcz3fneplCtUoqmfziSbs8v+U6GkKIJG95yW+ETZuHeEANe8cHkVn+oFcbe7f9zLMufgeSTbom7bbLltrelNweyPLYH2Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756915723; c=relaxed/simple;
-	bh=awkF7dKZwj1rInUhM5TYfJVYvC91r3wssrGZNRHiQVw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=HhYIGDnAs3r3Vh2Df5DaAs1LjfdgApl5UXsYQ+yzqLDW4QSOb9w9RYbL/jJOPx4U4bhXNex0Sn6YJrLxxFr5KBHRe/vKZzdh8Kfwn+YKNGtO2Zp7Oh61EDOw4bolIVLV955R5AVsiJWHKA2H5Tjy5aPLPl5KApdwEVCOZm9MqUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=YwFopzdn; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=BFLvhs+eiyuLL1I8N487xESWVCYSUAQZNAew51LgL1I=; b=YwFopzdnHSFjP2DJWebQRFJ4Wn
-	Fdga8wHKbZnHet2ajGbNjobF4G6PBTIp9Ul2yumRPtz1p512xlJM3bwpWGgDsn583I4lWh1eZiJWV
-	86LFSNEO7Z6L5VBI+TDbVre+s0Nfgsyxmac/I8uebBPA8iQn2td7vA1DN2L4Yv9aZtNSB8j7Onc4y
-	wSx4XXJD+ezyKkawJyoDydalorYxhLI4cTDLL96aLqxpdGX3nJNc6puxjmPzdijEDh/rzcVMCC2+K
-	NbeMid5PVDERLtkt8lDkStsmIQLHPo38+V0tD1v0+fpiGDHpXVIyRU6RQn7TtCaKBPEs36b0G6oa8
-	A44v7fTQ==;
-Received: from d172-219-145-75.abhsia.telus.net ([172.219.145.75] helo=[192.168.11.155])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <logang@deltatee.com>)
-	id 1utq26-00CVaF-2u;
-	Wed, 03 Sep 2025 10:08:27 -0600
-Message-ID: <fe4dc929-2c7c-4164-917c-c9e3107e7387@deltatee.com>
-Date: Wed, 3 Sep 2025 10:08:26 -0600
+	s=arc-20240116; t=1756916370; c=relaxed/simple;
+	bh=b8Mo/ybkdZO5CdV6tnrnTeqgFF1wt8BFYu6BkCI3GMc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PI5zamthBuwAsNcS22Wdfv2xxsM1WoTgxLjgL0GChVmCS73hdP0ACB3vAJeGMQgKxYzhdbbaYfzcN0gBaiXelnSvtFt4eFNWX3xygF4YDTrTSf3BG2vs472C84eCeG4znvRrT6lC9LWjiklUAT/a+YeeeoJ99pZF9Mkdh94s57E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUYWc7rV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFB60C4CEE7;
+	Wed,  3 Sep 2025 16:19:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756916369;
+	bh=b8Mo/ybkdZO5CdV6tnrnTeqgFF1wt8BFYu6BkCI3GMc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AUYWc7rVKp06qYj3GwQe849qqiBgag3F3gDUVCqRcasGSAQ0EjnqTsX3bj8D3guOY
+	 U37dskMjKFOeStxOBv00+jJ5S2Ca0wtdVSVUvQquySQCJ9OXiE5VYvfMWLTZLVmwPf
+	 uueZ9Ki/2VYWSbhH1M+gTNge6rr/pgh0cSVuEnbFFFIL+hk1lzex/76cBHS55fgWsE
+	 ZCShtsQGbUrE4nyTaO1d6hFTFcnsEOEcpha3CpjMhnYL5A3kM/VE1bXCPSzpUx7PLx
+	 782J4RofvYLgIs778omh3Ccz/kBuzedfFGPGWUx77A3zYCHEsRTOZoykAFWTPmUC8V
+	 r0uVUni/0CJzg==
+Date: Wed, 3 Sep 2025 10:19:28 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] pciehp: sync interrupts for bus resets
+Message-ID: <aLhqkO8Uaohghm97@kbusch-mbp>
+References: <20250827224514.3162098-1-kbusch@meta.com>
+ <aLRRh_4YhAZjWeEW@wunner.de>
+ <aLcwb0TA0rMtu2kI@kbusch-mbp>
+ <aLf6jkqAYkM3GBvt@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>, linux-pci@vger.kernel.org
-References: <d40f3f1decf54c9236bc38b48a6aae612a5c182f.1756900291.git.leon@kernel.org>
-Content-Language: en-US
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <d40f3f1decf54c9236bc38b48a6aae612a5c182f.1756900291.git.leon@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.219.145.75
-X-SA-Exim-Rcpt-To: leon@kernel.org, bhelgaas@google.com, leonro@nvidia.com, linux-pci@vger.kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH] PCI/P2PDMA: Reduce scope of pci_has_p2pmem function
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aLf6jkqAYkM3GBvt@wunner.de>
 
-
-
-On 2025-09-03 05:52, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
+On Wed, Sep 03, 2025 at 10:21:34AM +0200, Lukas Wunner wrote:
+> On Tue, Sep 02, 2025 at 11:59:11AM -0600, Keith Busch wrote:
+> > Hm, I think you're right. We are definitely seeing pciehp requeue itself
+> > with the link/presence events that we want to be ignored, so we're
+> > getting re-enumeration when we didn't expect it. I thought the
+> > back-to-back resets that we're causing vfio to initiate was the problem,
+> > but maybe not. I think the switch and/or end device we're using have
+> > some unusual link timings that defeats the pciehp ignore logic.
 > 
-> pci_has_p2pmem() function is not used outside of p2pdma.c and there is
-> no need in EXPORT_SYMBOL_GPL for this function at all.
+> pci_bridge_secondary_bus_reset() calls pci_bridge_wait_for_secondary_bus()
+> to await Link Up.  So unless the link flaps afterwards, this should be
+> fine.
 > 
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> Another possibility is that the pciehp_device_replaced() check triggers,
+> e.g. because the Endpoint's Device Serial Number or other data in Config
+> Space changed after the second reset.
 
-Makes sense to me, thanks.
+That can happen because we're using switches that insert a fake
+"placeholder" device when a link is down.
+ 
+> Maybe you can instrument the code with a few printk()'s to see what's
+> going on.
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+But it looks like we're more frequently seeing the link not active.
+Here's the existing messages printed:
 
 
+[ 7904.749658] vfio-pci 0000:05:00.0: disabling bus mastering
+[ 7904.756595] vfio-pci 0000:05:00.0: reset via bus
+[ 7904.759975] pcieport 0000:02:02.0: waiting 100 ms for downstream link, after activation
+[ 7905.908987] vfio-pci 0000:05:00.0: ready 0ms after bus reset
+[ 7905.909003] pcieport 0000:02:02.0: pciehp: Slot(314): Link Down/Up ignored
+[ 7906.847973] vfio-pci 0000:05:00.0: resetting
+[ 7906.856312] vfio-pci 0000:05:00.0: reset via bus
+[ 7906.862967] pcieport 0000:02:02.0: waiting 100 ms for downstream link, after activation
+[ 7909.915925] pcieport 0000:02:02.0: Data Link Layer Link Active not set in 100 msec
+[ 7909.915953] pcieport 0000:02:02.0: pciehp: Slot(314): Link Down/Up ignored
+[ 7909.915977] pcieport 0000:02:02.0: pciehp: Slot(314): Link Down
+[ 7909.915978] pcieport 0000:02:02.0: pciehp: Slot(314): Card not present
+[ 7909.918934] pcieport 0000:02:02.0: waiting 100 ms for downstream link, after activation
+[ 7911.923899] vfio-pci 0000:05:00.0: disconnected; not waiting
+[ 7911.923905] vfio-pci 0000:05:00.0: bus failed with -25
 
