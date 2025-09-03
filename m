@@ -1,166 +1,106 @@
-Return-Path: <linux-pci+bounces-35411-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35410-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0B75B42CD6
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 00:36:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE769B42CCF
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 00:32:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC86A1740F4
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 22:36:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 61A0E1BC4768
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 22:32:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A8392D7DE1;
-	Wed,  3 Sep 2025 22:36:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB9CF29827E;
+	Wed,  3 Sep 2025 22:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jaKXL5Gl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nrz9NKhM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B20333E7
-	for <linux-pci@vger.kernel.org>; Wed,  3 Sep 2025 22:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8101233E7;
+	Wed,  3 Sep 2025 22:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756938970; cv=none; b=UVVVtKgh71h3LmXBfzDRz9AhKYkmESZU5TCYriCHLVI15jvO4YOxad4G2cgNfG+aBKX1DUcS+8sePkb1UpiNu8WSM/C17L2huKEjfkPbVUDL96heVNvvd1i9cZKpZMVu6I73b7ITfUf8OooaUYIOc/wg51eylJh2ejnpFveaTps=
+	t=1756938724; cv=none; b=UDyfNczqSbJrTRVzYTOpH4BbodQR88wNMPw0e4e92dnJmJ89v9jnOA27qW3P00Gm+iaSdxEXm5TGYSlhza7ckkLissvlTj6H1B0ah/IoQR03oyr4EY85IHCCi5BsDHpEagsFJHwwoOYkzER8UEaZKk+cQLR0jpPQrDmQc7y2fBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756938970; c=relaxed/simple;
-	bh=q6jbjKDI9nsCsNJFWRTcxs+Iv8N1MnmBEeqQ4uk8O6E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OaK11dyTaQV5zJYEzi857Bqp9EJnYQQp5J09nW5ZzJasl+6syt/1hoamnyfAX8TGy3uoYScmmyfX7POcDzp//S0QjA6MKW022/zlfGbsvYcIOYgZ0PCFPOjtURULH3yx3TFf0qntvW0DWGo93zoAUeEA77+dzdex/WCvlrrN1eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jaKXL5Gl; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756938969; x=1788474969;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=q6jbjKDI9nsCsNJFWRTcxs+Iv8N1MnmBEeqQ4uk8O6E=;
-  b=jaKXL5GlbIEPLp+TIciL/z7tUnUQNgvmZa+pkGbfdzFJgwxr8AvA8pgd
-   wFaq6TAsGLlNf5xv3WPTGiJBDytRQv1tghhEZ0qdCHD0C7hNxQ1hO10B8
-   kasCUBRvDLs8wfRBHiCsmQejdKgM6Ukus6fA2pC789QB/1VrIIy58oU0o
-   jeeTFhjPaEiOLO6TgbN7I0d87F5U/Cpal4LDjp7rSd4w6unjFdBdbjM3w
-   NrON7yCKmrYR/kT+rvvvNWWLB2a4C+6NJSgHQ3K5JPZ56kzdYdHbxj6RD
-   0lSmIiiiLvOhfBYML/E6a+hZC4KtNTP6Ob6Oxug5HO3unGdF1nFxIzXU7
-   g==;
-X-CSE-ConnectionGUID: 5EZ5pSlSTd+Ww67a6wSjNQ==
-X-CSE-MsgGUID: UiK9NX7+Ts6xf1EyrYoE6g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11542"; a="76715635"
-X-IronPort-AV: E=Sophos;i="6.18,236,1751266800"; 
-   d="scan'208";a="76715635"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2025 15:36:08 -0700
-X-CSE-ConnectionGUID: cDNSDO/RTRuSzHTmtKU3tg==
-X-CSE-MsgGUID: Cas7qhDrSt+k+H60t6fD4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,236,1751266800"; 
-   d="scan'208";a="202570670"
-Received: from vkasired-desk2.fm.intel.com ([10.105.128.132])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2025 15:36:07 -0700
-From: Vivek Kasireddy <vivek.kasireddy@intel.com>
-To: dri-devel@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org
-Cc: Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v3 1/5] PCI/P2PDMA: Don't enforce ACS check for device functions of Intel GPUs
-Date: Wed,  3 Sep 2025 15:30:54 -0700
-Message-ID: <20250903223403.1261824-2-vivek.kasireddy@intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250903223403.1261824-1-vivek.kasireddy@intel.com>
-References: <20250903223403.1261824-1-vivek.kasireddy@intel.com>
+	s=arc-20240116; t=1756938724; c=relaxed/simple;
+	bh=0zNxbRiK/0aMy5wdBnW9WCgQpg46kf3uIF2gp8dwHmQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=tnFqHtAO2+j9/TbqYQK4UBV1UI7yZMEFghRCtik2vaztzjB9xbh1+W2Nk/HpHa37zpwAv/mkfCVERuhnzUkDXzEoT5wg0eOaHjRUpE5x2vuH5PCbXCMUo6b9gAZMwPmrdWrK0TqvLg84PCRD/yLDDBOGv8Ii5lGDuj0heKQcp5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nrz9NKhM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEB75C4CEE7;
+	Wed,  3 Sep 2025 22:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756938724;
+	bh=0zNxbRiK/0aMy5wdBnW9WCgQpg46kf3uIF2gp8dwHmQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Nrz9NKhMC5qUarkd7J+XDkSpZDWKsfS09dlIk7Cm6jJKudqb+qGchlrAH1B3u2qBH
+	 NxOy+gtbBuB6w0bqYYfEWi6QfniE4omkp5oXpUbC7VLbCjyLivl1eW2YWrxQSCgOQn
+	 VgGPsYF3+fxTUZ6f1T5fgq3F9L1J6DD5DIIzMXE1D8K+S5CpeYQAtX21OXz4pK8HK3
+	 ucbSC3pRXndnyQYZVRe5JXO5apjS3rw8iMp5mtKLM4kbwKatUSPZcMYOaY0aSJMEtt
+	 hOUFxBzIzmltmb5JpiQmUMLEbEuVkvToIWP1FFS3F4jtQfq9Hm+T16ydICw5SgYNLz
+	 oybtOg+x53FlA==
+Date: Wed, 3 Sep 2025 17:32:02 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bhelgaas@google.com,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	joel@jms.id.au, andrew@codeconstruct.com.au, vkoul@kernel.org,
+	kishon@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
+	linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+	linux-phy@lists.infradead.org, openbmc@lists.ozlabs.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 08/10] PCI: Add FMT and TYPE definition for TLP header
+Message-ID: <20250903223202.GA1235935@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250901055922.1553550-9-jacky_chou@aspeedtech.com>
 
-Typically, functions of the same PCI device (such as a PF and a VF)
-share the same bus and have a common root port and the PF provisions
-resources for the VF. Given this model, they can be considered
-compatible as far as P2PDMA access is considered.
+On Mon, Sep 01, 2025 at 01:59:20PM +0800, Jacky Chou wrote:
+> According to PCIe specification, add FMT and TYPE definition
+> for TLP header.
+> 
+> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+> ---
+>  drivers/pci/pci.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 34f65d69662e..45d47d6c4f53 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -81,6 +81,18 @@ struct pcie_tlp_log;
+>  #define PCIE_MSG_CODE_DEASSERT_INTC	0x26
+>  #define PCIE_MSG_CODE_DEASSERT_INTD	0x27
+>  
+> +/* Format of TLP; PCIe r5.0, sec 2.2.1 */
 
-Currently, although the distance (2) is correctly calculated for
-functions of the same device, an ACS check failure prevents P2P DMA
-access between them. Therefore, introduce a small function named
-pci_devfns_support_p2pdma() to determine if the provider and client
-belong to the same device and facilitate P2PDMA between them by
-not enforcing the ACS check.
+Please update to PCIe r7.0.
 
-However, since it is hard to determine if the device functions of
-any given PCI device are P2PDMA compatible, we only relax the ACS
-check enforcement for device functions of Intel GPUs, specifically
-the case where the provider is an Intel GPU VF and the client is
-an Intel GPU PF. This is because the P2PDMA communication between
-the PF and VF of Intel GPUs is handled internally and does not
-typically involve the PCIe fabric.
-
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: <linux-pci@vger.kernel.org>
-Signed-off-by: Vivek Kasireddy <vivek.kasireddy@intel.com>
----
-v1 -> v2:
-- Relax the enforcment of ACS check only for Intel GPU functions
-  as they are P2PDMA compatible given the way the PF provisions
-  the resources among multiple VFs.
-
-v2 -> v3:
-- s/pci_devs_are_p2pdma_compatible/pci_devfns_support_p2pdma
-- Improve the commit message to explain the reasoning behind
-  relaxing the ACS check enforcement only for Intel GPU functions.
----
- drivers/pci/p2pdma.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index da5657a02007..9484991c4765 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -544,6 +544,18 @@ static unsigned long map_types_idx(struct pci_dev *client)
- 	return (pci_domain_nr(client->bus) << 16) | pci_dev_id(client);
- }
- 
-+static bool pci_devfns_support_p2pdma(struct pci_dev *provider,
-+				      struct pci_dev *client)
-+{
-+	if (provider->vendor == PCI_VENDOR_ID_INTEL) {
-+		if ((pci_is_vga(provider) && pci_is_vga(client)) ||
-+		    (pci_is_display(provider) && pci_is_display(client)))
-+			return pci_physfn(provider) == pci_physfn(client);
-+	}
-+
-+	return false;
-+}
-+
- /*
-  * Calculate the P2PDMA mapping type and distance between two PCI devices.
-  *
-@@ -643,7 +655,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 
- 	*dist = dist_a + dist_b;
- 
--	if (!acs_cnt) {
-+	if (!acs_cnt || pci_devfns_support_p2pdma(provider, client)) {
- 		map_type = PCI_P2PDMA_MAP_BUS_ADDR;
- 		goto done;
- 	}
-@@ -705,7 +717,9 @@ int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
- 		return -1;
- 
- 	for (i = 0; i < num_clients; i++) {
--		pci_client = find_parent_pci_dev(clients[i]);
-+		pci_client = dev_is_pf(clients[i]) ?
-+				pci_dev_get(to_pci_dev(clients[i])) :
-+				find_parent_pci_dev(clients[i]);
- 		if (!pci_client) {
- 			if (verbose)
- 				dev_warn(clients[i],
--- 
-2.50.1
-
+> +#define PCIE_TLP_FMT_3DW_NO_DATA	0x00 /* 3DW header, no data */
+> +#define PCIE_TLP_FMT_4DW_NO_DATA	0x01 /* 4DW header, no data */
+> +#define PCIE_TLP_FMT_3DW_DATA		0x02 /* 3DW header, with data */
+> +#define PCIE_TLP_FMT_4DW_DATA		0x03 /* 4DW header, with data */
+> +
+> +/* Type of TLP; PCIe r5.0, sec 2.2.1 */
+> +#define PCIE_TLP_TYPE_CFG0_RD		0x04 /* Config Type 0 Read Request */
+> +#define PCIE_TLP_TYPE_CFG0_WR		0x04 /* Config Type 0 Write Request */
+> +#define PCIE_TLP_TYPE_CFG1_RD		0x05 /* Config Type 1 Read Request */
+> +#define PCIE_TLP_TYPE_CFG1_WR		0x05 /* Config Type 1 Write Request */
+> +
+>  extern const unsigned char pcie_link_speed[];
+>  extern bool pci_early_dump;
+>  
+> -- 
+> 2.43.0
+> 
 
