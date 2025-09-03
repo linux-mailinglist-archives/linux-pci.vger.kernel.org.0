@@ -1,237 +1,218 @@
-Return-Path: <linux-pci+bounces-35352-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35353-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC3C9B414C1
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 08:12:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE317B415F1
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 09:13:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71FCE167774
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 06:12:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A59B71BA0150
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 07:14:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1BFE2D73BA;
-	Wed,  3 Sep 2025 06:12:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39AC92D9EE8;
+	Wed,  3 Sep 2025 07:13:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="Hdu0nLy/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="In/zw0Bw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023081.outbound.protection.outlook.com [40.107.44.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB0C14A9B;
-	Wed,  3 Sep 2025 06:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756879970; cv=fail; b=sceISSBe1vdsp3alk19onnO88rG/UXdgCMpGkU5boQJXVxSfmmDS1zH1tkpfbEtabL2OxLNPMWX9wAaUbWSwhWd5I/w/0HDK6k+Gki+1L7xNg6aM7PA6x+z0jElPTHUlOOmmCWU+stn6rU+bSp4qPX8FYOWUpmotvLpoD1mMK9U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756879970; c=relaxed/simple;
-	bh=CXDIQ3er/C0K9MrWG7Ki5wfKS6RaLHRHFGZiI/WuGuI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GoHZTEVwvLi8GDUnehUlfCVCA/TWCYhyaT0GNBg5gFcxG21ZrXzr4aKdQ3g4YDtkUana5R/Qql+byIQPscWyt/lhwt3/fsyTOTYcFXeN+hmEZlzc0Jmpeh3dB1XsxNijeviCzOacuUUkHWA2Nnv1/88VLppr36sncb+xrkeA1Uk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=Hdu0nLy/; arc=fail smtp.client-ip=40.107.44.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JblDCFHFxjVfFBW9Nxm+R350MEwlZHCw0FRCATtE+LFT4H88QcZMdSNGdslQ/ZeGMTZVKplMF7QC9+8y+FjFG8rBUTm9iDZ5HIq/w9y/JY+XIHZS/wBLMLzKcW0cweO6SyhhCy9z6NLduCseydfM2znZ7SpFFIZc61wk1f9UgUKxkbjyzkuWpR+/3K0Ucy5U7DXZafWr4NUQ5p1CH3LJ8GTEdzYj2OcOyvvV4HAW/CDVZY8zHI4M6/FlE+BGQwcZsgWEvgdPS5YS1/Q9b1/P22pGQI466ofpvyeZUNnSt5yCWC/Bqw3fnvFlsVobSzvrLmEcGCRXHf6jSptw3v7FhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pEow0o3ceypLjB8Iqku7pgwDNZutIIUzm7PuvAeqQBM=;
- b=ukMjGD5wVCd4PMA4SkCs5vfVtJBtjVp8ynqVJ5DAz9yMulYHrS7gPSucGtWjjQFJz69E4FMx/MHI0K+bQAK0XDi4o+NpHEOOg90LSJiW4TdDgGTjQ9XuIR7n854YU1Kg1btkst271BCglNM+8T8RA1WQyBqNeZ9xmgVSVUrTBBfA+BmBLHVrshEo9q+5dfLsS/EkOqEtPXMPYEPxIpfLPNxAUVp1DeQpuvLazOqLc19qoYrTgeqshNo0ahclER14YXZ1VMI8o/KX1N9iYBQwGm+5gOUv9fUXLfiilNC4TJfRbDm034fSlP9NOXpTSPc2/9T9JRsgp5jia3VfCnHdUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pEow0o3ceypLjB8Iqku7pgwDNZutIIUzm7PuvAeqQBM=;
- b=Hdu0nLy/t4tkQiofPQ1R387OgNBcWfHoAqb3fCPCgSTxmoQbqya2U6+Zm5isD3bebAVjt0Ma7Y970fMuPDQV+ITb6P1ry+06IBr9F3LfK6OEYyUcxGslmRBbgdhYX4rabrcTgMAPRFZR42OfFpD4NnIl73UrBs5iz3Hh3qCtaipUNkThsvOV0mPbVlz21HT/6YNow1+6w8GHiVCZoFtPdCzzCRw94a8QTOmvArkiKtUyclGkbypA51JQOct94Kl3O0biXkfchZx93yuE+gIMFNeiVDZSWL3fTiW9HW6OcfdTbK/AdXlUtw9zclCSnMXTpEq8uNuPPlWBdAxG9uAbVA==
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
- by KL1PR0601MB5550.apcprd06.prod.outlook.com (2603:1096:820:c1::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.17; Wed, 3 Sep
- 2025 06:12:44 +0000
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28%7]) with mapi id 15.20.9073.026; Wed, 3 Sep 2025
- 06:12:44 +0000
-From: Jacky Chou <jacky_chou@aspeedtech.com>
-To: Rob Herring <robh@kernel.org>
-CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"joel@jms.id.au" <joel@jms.id.au>, "andrew@codeconstruct.com.au"
-	<andrew@codeconstruct.com.au>, "vkoul@kernel.org" <vkoul@kernel.org>,
-	"kishon@kernel.org" <kishon@kernel.org>, "linus.walleij@linaro.org"
-	<linus.walleij@linaro.org>, "p.zabel@pengutronix.de"
-	<p.zabel@pengutronix.de>, "linux-aspeed@lists.ozlabs.org"
-	<linux-aspeed@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-phy@lists.infradead.org"
-	<linux-phy@lists.infradead.org>, "openbmc@lists.ozlabs.org"
-	<openbmc@lists.ozlabs.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>
-Subject: [PATCH v3 03/10] dt-bindings: PCI: Add ASPEED PCIe RC support
-Thread-Topic: [PATCH v3 03/10] dt-bindings: PCI: Add ASPEED PCIe RC support
-Thread-Index: AQHcGwWW5d3OP3gN0EOH5yEQdLB1CbSAZn+AgACUtzA=
-Date: Wed, 3 Sep 2025 06:12:43 +0000
-Message-ID:
- <SEYPR06MB5134D2683D1FBD637955D2099D01A@SEYPR06MB5134.apcprd06.prod.outlook.com>
-References: <20250901055922.1553550-1-jacky_chou@aspeedtech.com>
- <20250901055922.1553550-4-jacky_chou@aspeedtech.com>
- <20250902211221.GA1179675-robh@kernel.org>
-In-Reply-To: <20250902211221.GA1179675-robh@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|KL1PR0601MB5550:EE_
-x-ms-office365-filtering-correlation-id: 0787d4b7-acae-4054-9c35-08ddeab0e54d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?F9izYmWxS3wRVKe4EMtgezauE5KZ7h8HbrVKO7rYr3gXphjjI9yYRWckKvoy?=
- =?us-ascii?Q?xt69v0XWNLPgHk05RbUeVC10Gzy+43YP7BqTCwLT+sken2u8/5ua7nlkf+xO?=
- =?us-ascii?Q?s3X7cA5tHucRMb6o5mWNiGPZIxmostswIlV0Xm5MLpUelmca6les+LTZI9vf?=
- =?us-ascii?Q?IRm9794VGFBhaXSjhUyIP0AhbVQufiKe4v1hDKEtMLGm0nPq98WH7rfrqCCg?=
- =?us-ascii?Q?o3g2vIb5aSNlYSsCsVSW4B9xxu++TGtDlh9z1nJAQEPrfmTfN8aOnypiSgVm?=
- =?us-ascii?Q?BFT/bOa1iM8pFn60wCNzNJNBsc/hFqBg7MbQy74Wph8adjxOIN+H8/5bmixD?=
- =?us-ascii?Q?txGHPraVDmFPOPSoku9hoXXlvya09Hf560qhgIDLcdcTH7xjbu0Dwqv3Q8pP?=
- =?us-ascii?Q?PeBwe5JsUaiWrGl/3cM5cadvBUXqdDU+iVEUQX4DMHrX4TU4t/OW4FoFeSM6?=
- =?us-ascii?Q?MV8GntAYFUtcoUZXR+Z+RF2hZ2YwpFtFd9rtCQ3Co0wS80McjrXHKgVAkNwM?=
- =?us-ascii?Q?gMgvDRq9u9dUI0Fuaib4DJwyM+SuFrGkrzXbuVjpGG7carfGcKvgt7MqzZov?=
- =?us-ascii?Q?I4yRowinSULfvKsJN67ZKfvP7kMOGFF0+yX74vGBRqnum2jZFJLet+5w/uoG?=
- =?us-ascii?Q?8UJPkd83Mv2Dh5wLaAC+PNkaKmjHs69gDKIGWBiTefz0hLmDRU223KLAJDcb?=
- =?us-ascii?Q?VGj0YlWl9aiKLcD0MD2fWdsXfuC8vxqrGwaM1A9JNQc6RR0s0skxgCKhQhAm?=
- =?us-ascii?Q?dUw3b703vX84SZN08N1IkNiJ+EPAkaAixcNTUqyFyx+L/vCr0HXp4N+pZDNb?=
- =?us-ascii?Q?Fz8s2RVkhaO2n3XFEeOdjJDEvMCl9o8vRJWUlR3lqu+fiCfWYzfIX1pVslNw?=
- =?us-ascii?Q?Oprlv/xZOYB58Yr2wp2Xbdv09lmfwisdJlCwBb395La7T7wzJuFxEaBgD949?=
- =?us-ascii?Q?uU/8msls2KO3zbdI84YQIOpLmKf32sxgbCwl99fkyFyTG8sJpjjKZyn6FU+k?=
- =?us-ascii?Q?iVFkobBPyi/waG9hLIE6CSef6gaO47IdMgQJUIKJ7xB9PlujEKcCsG7uyv+G?=
- =?us-ascii?Q?IHarX/ocJR0v+3/tsPIPJ0B4cxJJ6uS8OvURm0fMcDpKMbmsc1bCVP1mVb1g?=
- =?us-ascii?Q?C2OHmLK7t849Hy8jI0VEj0BdrV46j5cP7y1lDtKgfFLAncCNH5Oy5t4LJC+7?=
- =?us-ascii?Q?Haa8+4UyacDdj5NNLNw4++Xp1L2NvVfADwr/LBL1k8XGEuzO2atzk+dSZhtI?=
- =?us-ascii?Q?phPTDFf20jlrr28UGQZyYn234xgYRqbjoBRUCjI6t6T5M545tFjLD14oTj13?=
- =?us-ascii?Q?aKnVPQetSsi5LMU7/Y7u+f/1DLVkWL8j3+JM45ndhn3SA/REG3xLYDfLLsTK?=
- =?us-ascii?Q?N0h41rZlQ1IvNbD9mukj7T66xC6SyoJLerFCgFI39Ti7NB6dLlFGcEzKJ85u?=
- =?us-ascii?Q?8vYjTu4rdpQNdV7mCDiIEqArsgyeLyX2ez7tFGtDbmV+OKOelcofTw=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Z9oPKLkbMIGoYupseEy5yYVmmYnWDFDQiqDDwh9zcJ1T7V+r9YC8lbItMFws?=
- =?us-ascii?Q?Q55zqJzN/x9chj++0hddgqcLZqkspjA17qmbgHN3YqQTS1CHCbQ+9HmGyhH8?=
- =?us-ascii?Q?65I7Fd7uILCX8cbfNMM7kPHIzkI2qa9PdTOVtu1g7yrmKZSQFObouTFfxkAX?=
- =?us-ascii?Q?KJeY+RjhVwccMVNLVLDSYc+F7jreqIA8jE196D1V9bmmLfcDZ9mkS6EbR1BR?=
- =?us-ascii?Q?Xs4FUBCcyV8qoLuS8WYPXdmWf7UuW3dbkL1HuflbQMbfuNOSTuxWa+bZADMk?=
- =?us-ascii?Q?EU3qdUfD++SCJ5dFEbNZZYwVPnwTQXvYYbnQ8VNSzmvQyuhM2HPE66kk8Cbj?=
- =?us-ascii?Q?XAEBW6719strtk+PaIy9ybmGK+pw3HOXOdm4ziW5H+Xl1UA6wt3S+Wt+ODBO?=
- =?us-ascii?Q?sTI/jJB9gEu5AAugxNPHvgeqXMX1+sxVvsB74Rs6GmmQcnKu37JJLJ2PqPTH?=
- =?us-ascii?Q?b0iYr4S6EQHffN8caTBqiYkbEl1PDhT3rr3BZOtuFZbVoNDCkz5T+H2lqQoW?=
- =?us-ascii?Q?ARk45bjYlKDHbtJNm0f5ZzV6BOf3A9iGbpKTgDEBWcnrEtmPHhpHvOEd8eCw?=
- =?us-ascii?Q?tCBvY9CNNULHe1wFbzmkZQwtkEhm0Xf3Oq2xQ1/wQOruRMxalcxTSs1WERtY?=
- =?us-ascii?Q?YU4wbkmktWP8ZmAJyWF1RcZQwck+lFtJ/iqZ4N0199dW7xk60FUJgJUqqlW2?=
- =?us-ascii?Q?jfzkzO4eWHFPwZLHCJ3NPYwqVNXCFCY1/7mdtEguW9HLQws5GLGkKmu2uH3p?=
- =?us-ascii?Q?7UEAcIdc1sDu3hJVWAd0bGzpUSWxNgKpKJGdpJl2raklUXmWizMmK0KepmoC?=
- =?us-ascii?Q?c+jfIakVuJRzMUhvPJqRncaHDDTJCij2UtF6diQF2vmXNgxch+ktMA8p+OTS?=
- =?us-ascii?Q?Esa4W5mFIw+JSz54Q9+fEoMPvorA4xdEnQbz1cfkFeoPhOMetOgtseD8jM9y?=
- =?us-ascii?Q?L4XO8v86X2PuetIUvAyBtJUm47HriRX/MfxK4OBCZphSlAJ/MKYiYEEas0Bk?=
- =?us-ascii?Q?+/xFzkZVEp8px/kQK+rT4a/ivTD57HAhXih/yjozeTUO8VmjVpA5AXXy15Yc?=
- =?us-ascii?Q?Xqc78FzicsyXr55KDpYeIxOdsQFAktrimiqXolcBnC6/sGdbcXHLesPRXapE?=
- =?us-ascii?Q?R7e2uAS2Bg5HRE7kC6zCebzpQbDNDSCNPYlOUjp8WILQel04aQ3TH6c2ow8Z?=
- =?us-ascii?Q?DoJc+bptogxNrzLtjWJcEtupETeeOO6XvI6Bw6/bjkNczxyw4TG0zrQaaIPW?=
- =?us-ascii?Q?X/s5Djd0gdapqkBqGCavWlakmnoEi/+FHmNijk8ua1H2LekxyJXpgwtzyJo/?=
- =?us-ascii?Q?qYJu1JCJRuMdy/cg7NdSDu4sq/g6olbJCPCAI3HEpPJGOBXzqztUo+UVOF5v?=
- =?us-ascii?Q?scrWh5KBx43TfMwdBAjEjisGemtTK8efUCb/Visv1Lt5CyNfJPm5Ri4VRfAt?=
- =?us-ascii?Q?JPe9KsQfOnHCmo+fbEGDfjO29Pq3iQQTznRCWx5WtzPGdbnQQvgiLRSN/uAg?=
- =?us-ascii?Q?VxYQbsUoFq7aoEuvgpuS3njiJGPYkCyGy9tj+P8E/iC4AWuYjICeTMXwOVdM?=
- =?us-ascii?Q?2wJPVxthrQHtFjxy3rBkfTODAm17BNAU94zHUA0z?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029392D8776;
+	Wed,  3 Sep 2025 07:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756883614; cv=none; b=mhyctR6BTJZ3AciOov3nzmGgg5jlhGH4v923USgMMM7Qp3owitZj54LuO2bxcB3k5TBNwHF5T0K642k9ya/MqT8rtbzu+VUdRJR5RK5rxVxi8X6Q4C/qe9tetAG8GvUbM4L+izCV6Jz5XXzozkqyaSvNvgHJ5b3Qil+0ObXVkWI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756883614; c=relaxed/simple;
+	bh=CjWEsI0D1WEENvjg5BgWaePrND9PK9GPQKlp2IJGocc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lP2+tQZsH6B7rEqfoc3KfuOlbXwBirlRvGiGdzEFBXZsRGWOOUD/9tZvztG9SeP8TdZziQEEozc6MbGFR7xGCrt1K8JEOQIQ3Fnio+XtPu/XIoOiLbXrH1eN4HxEU2Qjk8uMoteJ1/xuDVeS7lRGhMOVvhb6q8c0+bfjZYQaDLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=In/zw0Bw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 84CF7C4CEF0;
+	Wed,  3 Sep 2025 07:13:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756883613;
+	bh=CjWEsI0D1WEENvjg5BgWaePrND9PK9GPQKlp2IJGocc=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=In/zw0Bwi0BMPezPTtpYpKpV/1SK7697YfokqLjuYFrf/bbr36tJZ7KjqN7zTQMZI
+	 nOCu6n6hDkWTbuzWEkRMJYYN287RyXoJyTOnywlqsobXKRYAM3CSbNd4LBbTh+UDQu
+	 +EqnIonw0T8bUcgTEATkFXa9Xcil/vQZ9YkguBQBmuBhSxvvLvYseZs4U1P19lvLwN
+	 ibcvHkxscoDFid9h//EA4oqBELKfOFYDLnCPS4k4BbsZIrynLagBjm/mBNaX9LMexS
+	 IBkAZ8nsKDCu4OcMMSEfZaQ95GnVw0yT47jr7Dx2ZoOqpg4MYmenJUqRPhO62aK9DQ
+	 jod0SxeFBvcDQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C93CCA0FF2;
+	Wed,  3 Sep 2025 07:13:33 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
+Subject: [PATCH v2 0/5] PCI/pwrctrl: Allow pwrctrl framework to control
+ PERST# if available
+Date: Wed, 03 Sep 2025 12:43:22 +0530
+Message-Id: <20250903-pci-pwrctrl-perst-v2-0-2d461ed0e061@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0787d4b7-acae-4054-9c35-08ddeab0e54d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2025 06:12:43.8267
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vORN54ZhoKI3N7g5uRvg10aH/CLIjF+iW2S4U7jeG9P3tsc+Nn4nMbcs2mJFQ9bCSUJAXkX/E1rvwtDqKNhM8IhJ2WQDQYSlbbAHSietzUI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR0601MB5550
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJLqt2gC/22NzQ6CMBCEX4Xs2SWlAQuefA/Dgf4omwCtXUQN4
+ d2tJN68TPJNMt+swC6SYzhlK0S3EJOfEshDBqbvpptDsolBClmJuqgxGMLwjGaOAwYXeUahtbL
+ 2KHVVSki7EN2VXrvz0ibuiWcf3/vFUnzbn635Y1sKFFhqVTaqtlIIdfbM+f3RDcaPY54C2m3bP
+ m2pPqW5AAAA
+X-Change-ID: 20250818-pci-pwrctrl-perst-0bb7dd62b542
+To: Manivannan Sadhasivam <mani@kernel.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Saravana Kannan <saravanak@google.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+ Brian Norris <briannorris@chromium.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+ stable+noautosel@kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6128;
+ i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
+ bh=CjWEsI0D1WEENvjg5BgWaePrND9PK9GPQKlp2IJGocc=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBot+qahLcTsVR64Sssq95Ewa30gNa8yStCg7VQb
+ +JSdC8Y4i6JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaLfqmgAKCRBVnxHm/pHO
+ 9SBoB/9baU5hLiZITOWBpw8czXI0iQaeYmcT+NZDrH5AOZZfiwY7/2y35TeCcDZpwgjZR4KC2vY
+ iBnEZVXwb0GVI1P8NVH820LrcHo6efKJCek5snfH1l6RNryyNoK/Y5nNLRayuRwXmrshcwOpUi1
+ +lFSMrYjn4tqhVe/0Csmzy8YbPQTSma2gp6ezlurp+/1tQCgezs+Nr1ahtKuzw05KKz/CII6L97
+ vXPeUsnHIiga7JaPHLOCDSBKWY+IygbE38vXS9BvThx+XPIEGwRnAHo5hm8fPVouKz7FegPcTkj
+ yXCq2VUn4DPpEs3xHwKzdMvPIgBRCwmMQsUXWfmvneRb+sTV
+X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@oss.qualcomm.com/default with auth_id=461
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
-Hi Rob,
+Hi,
 
-Thank you for your reply.
+This series is the proper version for toggling PERST# from the pwrctrl
+framework after the initial RFC posted earlier [1].
 
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/clock/ast2600-clock.h>
-> > +
-> > +    apb {
-> > +      #address-cells =3D <1>;
-> > +      #size-cells =3D <1>;
->=20
-> No need to show this node.
->=20
+Problem statement
+=================
 
-Agreed.
-I will remove the apb node in next version.
+Pwrctrl framework is intented to control the supplies to the components on the
+PCI bus. However, if the platform supports the PERST# signal, it should be
+toggled as per the requirements in the electromechanical specifications like
+PCIe CEM, Mini, and M.2. Since the pwrctrl framework is controlling the power
+supplies, it should also toggle PERST# as per the requirements in the above
+mentioned specifications. Right now, it is just controlling the power to the
+components and rely on controller drivers to toggle PERST#, which goes against
+the specs. For instance, controller drivers will deassert PERST# even before the
+pwrctrl driver enables the supplies. This causes the device to see PERST#
+deassert immediately after power on, thereby violating the delay requirements in
+the electromechanical specs.
 
-> > +
-> > +      pcie0: pcie@1e770000 {
-> > +        compatible =3D "aspeed,ast2600-pcie";
-> > +        device_type =3D "pci";
-> > +        reg =3D <0x1e770000 0x100>;
-> > +        linux,pci-domain =3D <0>;
-> > +        #address-cells =3D <3>;
-> > +        #size-cells =3D <2>;
-> > +        interrupts =3D <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
-> > +        bus-range =3D <0x80 0xff>;
-> > +
-> > +        ranges =3D <0x01000000 0x0 0x00018000 0x00018000 0x0
-> 0x00008000
-> > +            0x02000000 0x0 0x70000000 0x70000000 0x0 0x10000000>;
-> > +
-> > +        status =3D "disabled";
->=20
-> Examples should be enabled. Drop.
->=20
+Proposal
+========
 
-Agreed.
-I will remove it in next version.
+To fix this issue, the pwrctrl framework has to control the PERST# signal. But
+unfortunately, it is not straightforward. This is mostly due to controller
+drivers still need to assert PERST# as a part of their own initialization
+sequence. The controller drivers will parse PERST# from the devicetree nodes
+even before the pwrctrl drivers get probed. So the PERST# control needs to be
+shared between both drivers in a logical manner.
 
-> > +
-> > +        resets =3D <&syscon ASPEED_RESET_H2X>;
-> > +        reset-names =3D "h2x";
-> > +
-> > +        #interrupt-cells =3D <1>;
-> > +        msi-parent =3D <&pcie0>;
->=20
-> There shouldn't be any need to point to yourself.
->=20
+This is achieved by adding a new callback, 'pci_host_bridge::toggle_perst'. This
+callback if available, will be called by the pwrctrl framework during the power
+on and power off scenarios. The callback implementation in the controller driver
+has to take care of asserting/deasserting PERST# in an implementation specific
+way i.e., if the PERST# signal is a GPIO, then it should be toggled using gpiod
+APIs, or if the signal is implemented as a CSR, then the relevant registers
+should be written.
 
-Agreed.
-Since this RC implements its own MSI controller, the self-referential msi-p=
-arent isn't needed.
-I will remove it in next version.
+Ideally, the PERST# delay requirements should be implemented in the pwrctrl
+framework (before/after calling the callback), but some controller drivers
+perform some post-link_up operations requiring them to control the delay within
+the driver. Those drivers may use this callback to assert/deassert PERST# and
+perform post-link_up operations.
 
-Thanks,
-Jacky
+For reference, I've implemented the callback in the Qcom RC driver where it just
+toggles PERST# and implements the delay as per the CEM spec (which seem to
+satisfy the delay requirements of other electromechanical specs also). Since the
+Qcom driver supports both legacy DT binding (all Root Port properties in host
+bridge node) and new binding (Root Port properies in Root Port node), I've moved
+the PERST# handling to pwrctrl driver only if new binding is used. A recently
+merged patch to PCI tree [2] makes sure that the pwrctrl slot driver is selected
+with the RC driver.
+
+DT binding requirement
+======================
+
+This series has some assumptions on the DT binding. But some of them are not
+enforced right now:
+
+1. Pwrctrl driver requires the PCIe device node to have atleast one -supply
+property. Those supplies are already documented in the dtschema [3], but they
+are optional. So if those supplies are not present, pwrctrl driver will not get
+probed. For platforms having a fixed power supply to the endpoint, they should
+describe those fixed supplies in DT. Otherwise, they cannot use pwrctrl drivers.
+(NOT ENFROCED)
+
+2. Optional PERST# GPIO (reset-gpios property) is only allowed in the bridge
+node in the DT binding [4]. So for looking up the PERST# for an endpoint node,
+the controller driver has to look up the parent node where PERST# would be
+available. (ENFORCED)
+
+3. If shared PERST# is implemented, all the bridge nodes (Root port and switch
+downstream) should have the same 'reset-gpios' property. This way, the
+controller drivers parsing PERST# could know if it is shared and invoke relevant
+gpiod APIs/flags. (NOT ENFORCED)
+
+I don't know how we can make sure DT binding enforces option 1 and 3.
+
+Testing
+=======
+
+This series is tested on Qcom X1E based T14s laptop, SM8250 based RB5 board, and
+QCS6490 based RB3Gen2 board with both legacy and new DT binding.
+
+[1] https://lore.kernel.org/linux-pci/20250707-pci-pwrctrl-perst-v1-0-c3c7e513e312@kernel.org/
+[2] https://lore.kernel.org/linux-pci/20250722091151.1423332-2-quic_wenbyao@quicinc.com/
+[3] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-bus-common.yaml#L173
+[4] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-bus-common.yaml#L141
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+---
+Changes in v2:
+- Reworked the PERST# lookup logic to use the node pointer instead of BDF
+- Added PWRCTRL guard to the toggle_perst callback
+- Link to v1: https://lore.kernel.org/r/20250819-pci-pwrctrl-perst-v1-0-4b74978d2007@oss.qualcomm.com
+
+Changes since RFC:
+* Implemented PERST# toggling using a callback since GPIO based PERST# is not
+  available on all platforms. This also moves all PERST# handling to the
+  controller drivers allowing them to add any additional post-link_up logic.
+
+---
+Manivannan Sadhasivam (5):
+      PCI: qcom: Wait for PCIE_RESET_CONFIG_WAIT_MS after PERST# deassert
+      PCI/pwrctrl: Move pci_pwrctrl_init() before turning ON the supplies
+      PCI/pwrctrl: Add support for toggling PERST#
+      PCI: qcom: Parse PERST# from all PCIe bridge nodes
+      PCI: qcom: Allow pwrctrl core to toggle PERST# for new DT binding
+
+ drivers/pci/controller/dwc/pcie-qcom.c   | 186 ++++++++++++++++++++++++++-----
+ drivers/pci/pwrctrl/core.c               |  27 +++++
+ drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c |   4 +-
+ drivers/pci/pwrctrl/slot.c               |   4 +-
+ include/linux/pci.h                      |   3 +
+ 5 files changed, 190 insertions(+), 34 deletions(-)
+---
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+change-id: 20250818-pci-pwrctrl-perst-0bb7dd62b542
+
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+
+
 
