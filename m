@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-35357-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35356-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7746B415FB
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 09:13:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97F70B415FA
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 09:13:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A971617F162
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 07:13:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 545A65E812A
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 07:13:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CDB82DA771;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 570E92DA767;
 	Wed,  3 Sep 2025 07:13:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J2lUtnxl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hidk4h3w"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E88B2D94BB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8022D94AF;
 	Wed,  3 Sep 2025 07:13:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756883614; cv=none; b=HKiGbDSoYgtWaztfU7TpNU1YFwd2Ie1krGsWvDky5nats5uW4TjeXUQtjYmI5GLZQnKcJ/IP56kRNBOXb2SfKvXsHTBtC+O48EVX6m4+uKHJHVqoXbBnugJNtdiemhqMdlqzB78CO8lrcIIBAe4BGM6bYzTtFyXTFb1rOThEnms=
+	t=1756883614; cv=none; b=oRZKEG/tl2O+OklJlhCu+vejD/OfiE/ZDyFjlGvRzyOpyDB2ZS6Cz7e1J8BUoELtiglHYJDeAz6hHw8QUhjn96YSe24K/tgo4XgUS3TIB0AWOeOiUKcmN5n4iRk3iSPjlyqmJR4B63JvnmK7Fs5LM4G12h0F2W4jxJNNhuuAXa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1756883614; c=relaxed/simple;
-	bh=maiVLm37ymmwT1M55VwLwvJeZ1s/3l1kJVolnRGJHx0=;
+	bh=w8gq1jN0KiRRbkHHXaDjSTc4CGx+3z84B6Oc0xZb3Z4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=An77HWcG1FDlZ2NNW/UwteggggfM3nSCI7UIucX6epfAz+/msbmavgjCCRQAn6YoTUej9f80jFM+u6lFaaojO9MaKKp2kL4JIbxkYdLf0GW4Llx/IjtXiuHw7Ow7uI4xif2m3FieXxlVEmtZZMQa6tEN8gM8FvymF9irFgqKipQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J2lUtnxl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 94BBEC4CEF1;
+	 In-Reply-To:To:Cc; b=gDQwthgw+1JGi7XjoEO7tZFLNGEyuFASlmyKWB/3GP3D/3rxNBcXCFMUYEFOFh04i+EeoLs3uBYY8aYtJRthHUFHjDiXOaGaBMEFamOS28DfduM4Nnt2LzPRZA2ll2XbOFOn5laOvLv/wnt0WdrgERwrpX3v+FiLK/N1RWDqzGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hidk4h3w; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A80F9C4CEFA;
 	Wed,  3 Sep 2025 07:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1756883613;
-	bh=maiVLm37ymmwT1M55VwLwvJeZ1s/3l1kJVolnRGJHx0=;
+	bh=w8gq1jN0KiRRbkHHXaDjSTc4CGx+3z84B6Oc0xZb3Z4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=J2lUtnxlaynleS+f7Jjjduz8/w0gBNwHVk9Os6v6f0wqh6OJjJdjq9A+8W6Ux65Tu
-	 L7RF1emAXwdQGaCF03m3QYpjhhvCEbQXYZOxSHrT59J/q6c9jc4vZ7Hf8BTzisy+OV
-	 JoORkT5uHxDFrvTePmll3igCR7B+qtMlmG+IovDNrBVWxG3gujC8WrrPPWc0QIpc/C
-	 rEGKaOtGSJmy5ytwp+Ph/1J4+CULRQall7Gwv3djmRcNXpraoQ7uXZTZKo80LhtXXn
-	 7Hn5Kq8L2iW07XqXmzqb8Umg9BJZW+SCcZumU/4FPAm1u6nLiAEesAtdk8pbUMymqH
-	 rrQe9x8Ks5aRg==
+	b=Hidk4h3wUwL7NN0tIlgeZSF0+SQX3Z9CsduLUGnjHVz4NBf9suV3+mQIbAGH5CYbB
+	 89f+YsYPgnaDyVzBkYL5eVrdm9cxU8EzaHs0222zMqAldJyjJfFdCjiLZCipbP/Q5s
+	 LnkmGAP+lZmXDdItYUJDC2SNxmLTa0+NieAmvHGfPXOziesmdv1w2weJ82jBLdZ/Lc
+	 XO3vTs77qnK0GQDyot26krUMXWkkOIlKg17UCTo9dCuVNhiYThmxiB0No5LEa1VQh5
+	 yy2qJmRUJdca3C07yxcij/j0pPqtwZkT7/Z5m6NSpN3K1DJkGQ/LOeCZgw9wyPUwXI
+	 i3G0+DRHUp7Aw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81749CA100C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9696DCA1012;
 	Wed,  3 Sep 2025 07:13:33 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Wed, 03 Sep 2025 12:43:23 +0530
-Subject: [PATCH v2 1/5] PCI: qcom: Wait for PCIE_RESET_CONFIG_WAIT_MS after
- PERST# deassert
+Date: Wed, 03 Sep 2025 12:43:24 +0530
+Subject: [PATCH v2 2/5] PCI/pwrctrl: Move pci_pwrctrl_init() before turning
+ ON the supplies
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250903-pci-pwrctrl-perst-v2-1-2d461ed0e061@oss.qualcomm.com>
+Message-Id: <20250903-pci-pwrctrl-perst-v2-2-2d461ed0e061@oss.qualcomm.com>
 References: <20250903-pci-pwrctrl-perst-v2-0-2d461ed0e061@oss.qualcomm.com>
 In-Reply-To: <20250903-pci-pwrctrl-perst-v2-0-2d461ed0e061@oss.qualcomm.com>
 To: Manivannan Sadhasivam <mani@kernel.org>, 
@@ -69,18 +69,18 @@ Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
  Brian Norris <briannorris@chromium.org>, 
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
- stable+noautosel@kernel.org
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2070;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2110;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=9ldRJtoT9M8aIUvYrNpDc1xJbqnMXRAhHx884nJXoBk=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBot+qbui6myA5xhx7BATXkqArIl0o8QxQQnuK7Z
- cRMxOQwU8aJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaLfqmwAKCRBVnxHm/pHO
- 9VegB/9Zeph4VheLjB+IkKOTL0NC98YO8yp/4Y7o5Br7lKcS1HBWFZym4tMuSvJ+3R5h1WjAqSx
- sUnTb43WgIAKjNjUcnp6KwHC05keIiJ47/d/aPLZAZi4QU8X6fKCvzmWYzWrO4eRBGYRUz7dynP
- Q3QzgU/dB9UiFCHmY3bEDAesLv5BcgHaU7fegwZepA2r1DVv7/mc2J61H4BVy/iv6qGMYuteHFN
- 0z8ouEe4TqxQl+3EnK8aDerbeZ25hfem1mM177TgX1DPqVHru29t7i/uN9YLaqmhKaQWM7ggepi
- 8SErUATmakiKAp26iHqDdepifCgMxOf0ns1bplB2vn3rrdHK
+ bh=R+1x069ihDCZtvKq09JWHM41uYbGfvNk9pQz/Px8wHE=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBot+qbO/xAACNP9KEFSGn85ypDyLWrklnda6PLW
+ A/JAA7/dF2JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaLfqmwAKCRBVnxHm/pHO
+ 9a/oB/9cLJ/bC8+2232mXn53qeplk4yY1tuKr3ytZ4bABj//fCdG3P3vCCRDdcK1h/cEJTaTwFe
+ WFo8qg4ztA2dZ44hYfAsMTuBxQevynq+o3D3aCZFFBgfNka4o79kUljSLOgw8PiBmgtaCIo5KQf
+ PkpV0pWqoLid6lJyjGzEYLUCFi5XLwBNH8/Rjhxh7nO/i6Mt0XRPFGgBwSxY7PMftEg1EWmUBo6
+ u3tHO73tWhyPNIn0ni6o4NW2pGXKfTl9z8a8gy5+ea4tGN4w9Jlrj0xRGI0weKG+FTvosjGtrPF
+ fZ0uT7oIiuOiFd+9B5SYQuu7HpaRXLncvPkJDdAOj3YVrtjv
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -90,56 +90,60 @@ Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-PCIe spec r6.0, sec 6.6.1 mandates waiting for 100ms before deasserting
-PERST# if the downstream port does not support Link speeds greater than
-5.0 GT/s. But in practice, this delay seem to be required irrespective of
-the supported link speed as it gives the endpoints enough time to
-initialize.
+To allow pwrctrl core to parse the generic resources such as PERST# GPIO
+before turning on the supplies.
 
-Hence, add the delay by reusing the PCIE_RESET_CONFIG_WAIT_MS definition if
-the linkup_irq is not supported. If the linkup_irq is supported, the driver
-already waits for 100ms in the IRQ handler post link up.
-
-Also, remove the redundant comment for PCIE_T_PVPERL_MS. Finally, the
-PERST_DELAY_US sleep can be moved to PERST# assert where it should be.
-
-Cc: stable+noautosel@kernel.org # non-trivial dependency
-Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c | 4 ++--
+ drivers/pci/pwrctrl/slot.c               | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 294babe1816e4d0c2b2343fe22d89af72afcd6cd..bcd080315d70e64eafdefd852740fe07df3dbe75 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -302,20 +302,22 @@ static void qcom_perst_assert(struct qcom_pcie *pcie, bool assert)
- 	else
- 		list_for_each_entry(port, &pcie->ports, list)
- 			gpiod_set_value_cansleep(port->reset, val);
--
--	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
- }
+diff --git a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
+index 4e664e7b8dd23f592c0392efbf6728fc5bf9093f..b65955adc7bd44030593e8c49d60db0f39b03d03 100644
+--- a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
++++ b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
+@@ -80,6 +80,8 @@ static int pci_pwrctrl_pwrseq_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
  
- static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
- {
- 	qcom_perst_assert(pcie, true);
-+	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
- }
- 
- static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
- {
--	/* Ensure that PERST has been asserted for at least 100 ms */
-+	struct dw_pcie_rp *pp = &pcie->pci->pp;
++	pci_pwrctrl_init(&data->ctx, dev);
 +
- 	msleep(PCIE_T_PVPERL_MS);
- 	qcom_perst_assert(pcie, false);
-+	if (!pp->use_linkup_irq)
-+		msleep(PCIE_RESET_CONFIG_WAIT_MS);
- }
+ 	data->pwrseq = devm_pwrseq_get(dev, pdata->target);
+ 	if (IS_ERR(data->pwrseq))
+ 		return dev_err_probe(dev, PTR_ERR(data->pwrseq),
+@@ -95,8 +97,6 @@ static int pci_pwrctrl_pwrseq_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
- static int qcom_pcie_start_link(struct dw_pcie *pci)
+-	pci_pwrctrl_init(&data->ctx, dev);
+-
+ 	ret = devm_pci_pwrctrl_device_set_ready(dev, &data->ctx);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret,
+diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
+index 6e138310b45b9f7e930b6814e0a24f7111d25fee..b68406a6b027e4d9f853e86d4340e0ab267b6126 100644
+--- a/drivers/pci/pwrctrl/slot.c
++++ b/drivers/pci/pwrctrl/slot.c
+@@ -38,6 +38,8 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+ 	if (!slot)
+ 		return -ENOMEM;
+ 
++	pci_pwrctrl_init(&slot->ctx, dev);
++
+ 	ret = of_regulator_bulk_get_all(dev, dev_of_node(dev),
+ 					&slot->supplies);
+ 	if (ret < 0) {
+@@ -63,8 +65,6 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+ 				     "Failed to enable slot clock\n");
+ 	}
+ 
+-	pci_pwrctrl_init(&slot->ctx, dev);
+-
+ 	ret = devm_pci_pwrctrl_device_set_ready(dev, &slot->ctx);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Failed to register pwrctrl driver\n");
 
 -- 
 2.45.2
