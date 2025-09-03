@@ -1,144 +1,148 @@
-Return-Path: <linux-pci+bounces-35399-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35400-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE03CB42804
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 19:33:43 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D520B42808
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 19:35:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D21227ADBC1
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 17:32:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1EA177A203E
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 17:33:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C9DB2BE646;
-	Wed,  3 Sep 2025 17:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF6AB274FDF;
+	Wed,  3 Sep 2025 17:35:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="BpPy2gUq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VvNkCiz9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOZUP0mp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72EA4C92;
-	Wed,  3 Sep 2025 17:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72A14C92;
+	Wed,  3 Sep 2025 17:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756920815; cv=none; b=fOuTIfT+GoqsFDt9EcWnnOZZOYNS2BJJRbZGkSQW1LZeYUZR2WAXXdr93/4KGBe5BHLK/C5Ifva1c7hjvd+be5LcuY8z46LiBlVu6YAlBhe3MsTevBbWIJ1YLt8njzjMcASp9PCj/CqNC8JhskogE4lrGBwvsPTNxnlO0EGBuUg=
+	t=1756920916; cv=none; b=WB4BA2C17OS7nbyuXbh+SdrtAuU1cbSJNVGmYReW7VfZrmtru7E+xShbI4VmjrH7kk3m6vWmcN9myiopPlw72BXLlKePHHS6YwX4i6PupT58QXZVCgbqYtLazqHH20rxWU/cIPK+zRP90kMP0WMWe22BF7Bxjfkb/QRzfpRCmLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756920815; c=relaxed/simple;
-	bh=7NdrYuGFYwsKWCgftnQXPOGs8B1+f1ykKQoWQgrkJMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Me5/MvnfcLYQjczWL9Gn5E1cmLVsmbx92SVoF8irhjbiiVEjcTdSPUjRLquYKw3ZWcM2UiElI/nAxZyuVqVpBxcBdDjn4rV+3eSBinqPifb7Ajb2GVydneAGNRaW7p4JbXeQ6NHYN8ErdunJ9gbFST7H8s3m38Q+e5nN9MO2yvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=BpPy2gUq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VvNkCiz9; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
-Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id C54BCEC0398;
-	Wed,  3 Sep 2025 13:33:32 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Wed, 03 Sep 2025 13:33:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1756920812; x=1757007212; bh=1XNf5/0MJV
-	7kREAd04x9fYTARlNqLAp/5VDO0xJS12E=; b=BpPy2gUqB9aVf5uXHsQaXF1n1H
-	Rz7jCUrhVcziqgZ2dwc/yv1S6HQA02ms9KtH4Y6LwShA1QZAs46m93l0ybNCUmXa
-	dVztJ7uFBT0BOVGQMxzORwlXeANEUodBhb9eeLLLE22mHal/G4O6dwBLOIkAWJff
-	qOcqqYVAz6WlqsnzmapRGJW8t91aZmFdhB7pcd2JvEKFIOJWz91DCalCNTChqY7k
-	0eJhQ1FrzdOcP/opIqJQ4A0mTijQYZShiSwTxwBLiIWp+9vDxSSXU0knlEY1PIqa
-	tT6qbkS7d5gJ5243xLecGNVfJtpA/sD6etWPoRXY24d/MhMjfbsvCjLT4bpQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1756920812; x=1757007212; bh=1XNf5/0MJV7kREAd04x9fYTARlNqLAp/5VD
-	O0xJS12E=; b=VvNkCiz9s85LG7PTTvYBnR7hlmVj83MSdm8BS1ymnbALXLuUoHt
-	ZyrSRz4vW7ZIYUmCOA9X5Z0Ks8udVThysof0bAvQwrM67uu9HIiDc6dqCzBh6/DI
-	lhW6Qpx2Fqypcl4uc2Fshn2aDA81e93Nmt7w+qC36ppoyzdNaXcc3UtbdDOYL4Xz
-	kCBRNyjDj/qbDHbEMfrjVqL4RZu+yLFFH7vPsD+9uoi1FEKBPLnfJ0PyZeXX4rD0
-	H+iSvjmGP4CzapzeCejGCQgn5TM45oC3p+S1/Hshv/PwQXwGl8J0mJALGBvUf2t4
-	JA3dWsmO6ZUTh2t36RP4dVVvN9BK1x3cw2Q==
-X-ME-Sender: <xms:7Hu4aLTFTLuiWEfOPnWdBudGG7RZeFQF-7JKiMBVDqHq7SBamjPvjg>
-    <xme:7Hu4aHPz2NzDKUuX-ZysFiPZuglL2EinF194MQkQK-Cbob-k2lp1Efnk3XbYNy5l_
-    j6ICthyq01dWvsXxg>
-X-ME-Received: <xmr:7Hu4aIV4h23v9Wca_czC-YYHxdQaKvYzNOqStKO5Zu4hu3ozQAzzve9ZnY43vR1uZ7JOY3dbjLQ2YVpFOdD1ZHjQc9msp_g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdefjeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujggfsehttdfstddtreejnecuhfhrohhmpeflrghnucfrrghl
-    uhhsuceojhhprghluhhssehfrghsthhmrghilhdrtghomheqnecuggftrfgrthhtvghrnh
-    epveehvdfhkefhueeitddtgffgfeetjefggfetleduvdeggffhueehgefhkeekkeffnecu
-    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehjphgrlhhushesfhgrshhtmhgrihhlrdgtohhmpdhn
-    sggprhgtphhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepkhhlrg
-    hushdrkhhuughivghlkhgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhhohhmrghs
-    rdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepphgrlhhise
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehlphhivghrrghlihhsiheskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepkhifihhltgiihihnshhkiheskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepmhgrnhhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshhes
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtg
-    homhdprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:7Hu4aCjwgUbGTTqfgpsDrVz3DGUYa_G95wBr-xOfaR4mOJDw6JYPcg>
-    <xmx:7Hu4aJjQZD3DzuqQgfaWyOskn4YLr6bu93Hp1LCL5ErxdAGINxj0nA>
-    <xmx:7Hu4aIFrX2xIvocCAbMxC1rQTOjmFGRKcSs_8aJjIc5KqdMtVpWq9Q>
-    <xmx:7Hu4aOD3zOUkfPh6xOQRTlbuly4rg4e9ZTrIkfUQszu8TBcInXPI5g>
-    <xmx:7Hu4aDNhCzPnNJmwOw_RR1_8LWiGkDIyDn7nnMstHxqO_fwSsH0LB5SQ>
-Feedback-ID: i01894241:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 3 Sep 2025 13:33:32 -0400 (EDT)
-Date: Wed, 3 Sep 2025 19:33:30 +0200
-From: Jan Palus <jpalus@fastmail.com>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] PCI: mvebu: Fix the use of the for_each_of_range()
- iterator
-Message-ID: <pedyo2xru5fmbh6ordly2o3gj63k2vakheqp75ri47mzuupi66@qchlw4pmwhny>
-References: <20250902151543.147439-1-klaus.kudielka@gmail.com>
+	s=arc-20240116; t=1756920916; c=relaxed/simple;
+	bh=q6ydgpRA1n1VIVTSnFUEGYa1rwgxWt3LP1v3p67itsg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ZHCndFxyjWgM5Wkh/YiJeb4S4u098Qu1DYquuQ4iBYjW4d8UKSUeWMhiYLu10G+GjPtFggehFazZ7oB6GFUDYenrkwZe8UYaYSp76VghoWcgGVUKf2cVhJ9/oOJbyYW0H0klhvJgDgTZREKcDeGW14mDGglggglLZwDoOwIhZiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOZUP0mp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19105C4CEE7;
+	Wed,  3 Sep 2025 17:35:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756920916;
+	bh=q6ydgpRA1n1VIVTSnFUEGYa1rwgxWt3LP1v3p67itsg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=sOZUP0mp3NJ6r81IFD9cb54V0EIXSHPX4quWZcx7vduX1mse2py9qfzIn+h5zuWlv
+	 IGIC8P0JLeQCX7+F9zxFxViT/V0bbbGHfszPFQCw3zic8XAUhHytPYFc0Fxn/E0xtL
+	 qep8q3Ow1ncZvuj/xkcI5usGLSfQF8fAyLDdHx6wdbfKmeXfcBPL2e3n71Gipez7HM
+	 LvU6ILGBUSCQd53RY2UApho63BbVysdM2MY263lNWtLOgxkLLk/DcTYCNJx2DeT9Bh
+	 X9nDUEjFog3CwA+rj3KD4PuZBQM9JxKXdruBrmZ6kg59MR2SetrlWmH39myq1Zqtjh
+	 A1fPV98oJ59HA==
+Date: Wed, 3 Sep 2025 12:35:14 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	heiko@sntech.de, mani@kernel.org, yue.wang@amlogic.com,
+	pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v5 1/2] PCI: Configure root port MPS during host probing
+Message-ID: <20250903173514.GA1207260@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250902151543.147439-1-klaus.kudielka@gmail.com>
-User-Agent: NeoMutt/20250510
+In-Reply-To: <76cdf841-2c72-4faa-b2b9-7b2098337de0@163.com>
 
-On 02.09.2025 17:13, Klaus Kudielka wrote:
-> The blamed commit simplifies code, by using the for_each_of_range()
-> iterator. But it results in no pci devices being detected anymore on
-> Turris Omnia (and probably other mvebu targets).
-> 
-> Analysis:
-> 
-> To determine range.flags, of_pci_range_parser_one() uses bus->get_flags(),
-> which resolves to of_bus_pci_get_flags(). That function already returns an
-> IORESOURCE bit field, and NOT the original flags from the "ranges"
-> resource.
-> 
-> Then mvebu_get_tgt_attr() attempts the very same conversion again.
-> But this is a misinterpretation of range.flags.
-> 
-> Remove the misinterpretation of range.flags in mvebu_get_tgt_addr(),
-                                                               ^^^^
+On Thu, Sep 04, 2025 at 01:11:22AM +0800, Hans Zhang wrote:
+> On 2025/9/3 01:48, Bjorn Helgaas wrote:
+> > On Fri, Jun 20, 2025 at 11:55:06PM +0800, Hans Zhang wrote:
+> > > Current PCIe initialization logic may leave root ports operating with
+> > > non-optimal Maximum Payload Size (MPS) settings. While downstream device
+> > > configuration is handled during bus enumeration, root port MPS values
+> > > inherited from firmware or hardware defaults ...
+> > 
+> > Apparently Root Port MPS configuration is different from that for
+> > downstream devices?
 
-Just noticed the typo. Should be mvebu_get_tgt_attr().
+> Yes, at the very beginning, the situation I tested was like the previous
+> reply:
+> https://lore.kernel.org/linux-pci/bb40385c-6839-484c-90b2-d6c7ecb95ba9@163.com/
 
-> to restore the intended behavior.
+I meant that this commit log suggests the *code path* is different for
+Root Ports than other devices.
+
+> > > might not utilize the full
+> > > capabilities supported by the controller hardware. This can result in
+> > > suboptimal data transfer efficiency across the PCIe hierarchy.
+> > > 
+> > > During host controller probing phase, when PCIe bus tuning is enabled,
+> > > the implementation now configures root port MPS settings to their
+> > > hardware-supported maximum values. Specifically, when configuring the MPS
+> > > for a PCIe device, if the device is a root port and the bus tuning is not
+> > > disabled (PCIE_BUS_TUNE_OFF), the MPS is set to 128 << dev->pcie_mpss to
+> > > match the Root Port's maximum supported payload size. The Max Read Request
+> > > Size (MRRS) is subsequently adjusted through existing companion logic to
+> > > maintain compatibility with PCIe specifications.
+> > > 
+> > > Note that this initial setting of the root port MPS to the maximum might
+> > > be reduced later during the enumeration of downstream devices if any of
+> > > those devices do not support the maximum MPS of the root port.
+> > > 
+> > > Explicit initialization at host probing stage ensures consistent PCIe
+> > > topology configuration before downstream devices perform their own MPS
+> > > negotiations. This proactive approach addresses platform-specific
+> > > requirements where controller drivers depend on properly initialized
+> > > root port settings, while maintaining backward compatibility through
+> > > PCIE_BUS_TUNE_OFF conditional checks. Hardware capabilities are fully
+> > > utilized without altering existing device negotiation behaviors.
+
+> > Update the MRRS "to maintain compatibility" part.  I'm dubious about
+> > there being a spec compatibility issue with respect to MRRS.  Cite the
+> > relevant section if there is an issue.
 > 
-> Signed-off-by: Klaus Kudielka <klaus.kudielka@gmail.com>
-> Fixes: 5da3d94a23c6 ("PCI: mvebu: Use for_each_of_range() iterator for parsing "ranges"")
-> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-> Closes: https://lore.kernel.org/r/20250820184603.GA633069@bhelgaas/
-> Reported-by: Jan Palus <jpalus@fastmail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220479
-> ---
->  drivers/pci/controller/pci-mvebu.c | 14 ++------------
->  1 file changed, 2 insertions(+), 12 deletions(-)
+> The description is inaccurate. I will correct it.
+> 
+> I plan to modify the commit message as follows:
+> If there are any incorrect descriptions, please correct them. Thank you very
+> much.
+> 
+> Current PCIe initialization logic may leave Root Ports operating with
+> non-optimal Maximum Payload Size (MPS) settings. While downstream device
+> configuration is handled during bus enumeration, Root Port MPS values
+> inherited from firmware or hardware defaults might not utilize the full
+> capabilities supported by the controller hardware. This can result in
+> suboptimal data transfer efficiency across the PCIe hierarchy.
+> 
+> With this patch, during the host controller probing phase and when PCIe
+> bus tuning is enabled, the implementation configures Root Port MPS
+> settings to their hardware-supported maximum values. Specifically, when
+> configuring the MPS for a PCIe device, if the device is a Root Port and
+> the bus tuning is not disabled (PCIE_BUS_TUNE_OFF), the MPS is set to
+> 128 << dev->pcie_mpss to match the Root Port's maximum supported payload
+> size. The Max Read Request Size (MRRS) is subsequently adjusted by
+> existing logic in pci_configure_mps() to ensure it is not less than the
+> MPS, maintaining compliance with PCIe specifications (see PCIe r7.0,
+> sec 7.5.3.4).
+
+AFAICS, sec 7.5.3.4 doesn't say anything about a relationship between
+MRRS and MPS.  MPS is a constraint on the payload size of TLPs with
+data (Memory Writes, Completions with Data, etc).  MRRS is a
+constraint on the Length field in a Memory Read Request.  A single
+Memory Read can be satisified with several Completions.  MPS is one of
+the things that determines how many Completions are required.
+
+This has more details and a lot of good discussion:
+https://www.xilinx.com/support/documentation/white_papers/wp350.pdf
 
