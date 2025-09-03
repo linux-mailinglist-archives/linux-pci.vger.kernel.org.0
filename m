@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-35350-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35351-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7A1AB41396
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 06:41:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1F8CB4139E
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 06:43:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8F19C680108
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 04:41:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 86D855432B3
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 04:43:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF6A82D3EC0;
-	Wed,  3 Sep 2025 04:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BF692D3EFD;
+	Wed,  3 Sep 2025 04:43:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/wbSSBA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjFXhU0c"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2C02D3A71;
-	Wed,  3 Sep 2025 04:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90F22D3EF6;
+	Wed,  3 Sep 2025 04:42:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756874516; cv=none; b=B+NgY05FhnMe9/GGYizIUfc2kR89n73Qit/Q3xbIKge6nxlqgdmB03IS0TtbJN51cnLTpoerHgMQy6rqFBSX1uJKWl1a/Bic9JuNo0iuiOLlkUuAN/EPitQKsSlbJAq03UrA6yL9Y+tPHui0MGRCvaFt7SGygDOZ42UDrHQIIJA=
+	t=1756874579; cv=none; b=RyRMmx+RYwWNTxF2fVaInkns8fb+YyFimaS9G6pdWIf+LMQsTzb0zVH3Z9Eoe3goWtZSbCLWanmpO9bYMnNtCjSGiBvj2eN84f3EBEwZnEytYCBcpJ2OaS1V9z+tk3QGfinV0NKtwzFBUO0geY1aUT6Q3dk5ofZIePF49O/BlT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756874516; c=relaxed/simple;
-	bh=Ce5ETH+F6WnWDEeaq7pLglfV4JdFcr3PKEJyxp/keno=;
+	s=arc-20240116; t=1756874579; c=relaxed/simple;
+	bh=aWz5MDl+vUp3tC2LaOmVwlwThf5DJzTm0+LvRWNW0BU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XN1gnNkX7wy3aXifhWNBNemX2RmarO9zHhtk1Ze6t0g6gjegt/ZxAMu8qTJ6Hi/Yt/LwYqJAyhhuOmXvSkrZQx7UFXHeLf9Rr93OO5gXQrCVwHhHApvfKP981Mpzds8AMMnBpMoCYBI5jbjN4aFiDKh14WrcYF49m2VMjN3vIqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/wbSSBA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C2AAC4CEF0;
-	Wed,  3 Sep 2025 04:41:53 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=HoyiMtgQL2/zhKYyD1ISj7WBvpfa6YSAF6spdP+sc9AVb1VXCUvT9oeFn0yZRRG7uuYFUiEdaEMN8lMIsD1lfsthHaOIObFSLK1t+VvO+MvhSE4XJjW1sOxG6F4mgTvITGbh19vfE1aE1HtED8h1DPm8GznYrbzzOxuQdOcvWGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjFXhU0c; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFC1AC4CEF0;
+	Wed,  3 Sep 2025 04:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756874516;
-	bh=Ce5ETH+F6WnWDEeaq7pLglfV4JdFcr3PKEJyxp/keno=;
+	s=k20201202; t=1756874579;
+	bh=aWz5MDl+vUp3tC2LaOmVwlwThf5DJzTm0+LvRWNW0BU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=s/wbSSBARIKT8Fd9JqzskawfzifT7+BPOBAzwXDl6WBxhU410noLNvQWfHvv+Nb4Q
-	 SbPcIb3hxSHQY5dHlRH7uTb7j/F/Gu7pEGr7MuO33HXsvNskDBMUab0jPLJFQsfQGn
-	 DBDR9JuXyqBeBGip1IjfApmvbUcrJdSUfPe1zWbEw+SMhMPPGSNw74IL9FARn5fKmF
-	 zjHgI792YdyiwMwWOpQd3S9Oo3Edup8Zqq77sQ1wl2zqgUT6OeYww9IfARtdlcDtB3
-	 vOHV/VFLi6+2jqm//3XxZoeker+XP6Xe8Qrr8AEKkb368Q3fZA1sXUVv4Sn/GGGapn
-	 XGwAwOPKYtzMA==
-Message-ID: <29e61472-5f41-4e76-9b5b-f3e106d6a629@kernel.org>
-Date: Tue, 2 Sep 2025 23:41:52 -0500
+	b=CjFXhU0cO5IsSRZTwXpbGzZrNsCGG3WbO57KNfS3fpMcQ6VCmn0L76qI2+Scs931C
+	 kMMPcYyiw3RPL6gj0gkM/dfrL+33sX9He6/18ykz5xBTZp7QVg1PYJ3ELRLitwB/qE
+	 8ctu6g6/+eo+OsuoggDLPxRpR0NgJz7HjpiHNKqOj2ts8se92yJitpiEF9w/AnQkiv
+	 WyVAgHzzJqKqNOhe4e8IKfqWXaALmAuzlXRif9C8UM5S4oBeGeDLTVp4CBCiIh2zQ4
+	 ewx0NUjbKG+3psobCjDMIdr2unEij/Y3e1gImlSEGCn3ksoyJ5CoOHim7SDgk2oAZ4
+	 X8goCEB0EbShA==
+Message-ID: <4e3d62bb-11de-4538-a244-251bd7d0d52e@kernel.org>
+Date: Tue, 2 Sep 2025 23:42:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,89 +50,98 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/11] Improvements to S5 power consumption
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>,
+Subject: Re: [PATCH v10 0/4] Adjust fbcon console device detection
+To: David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
  =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- Steven Rostedt <rostedt@goodmis.org>,
- "open list:HIBERNATION (aka Software Suspend, aka swsusp)"
- <linux-pm@vger.kernel.org>,
- "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+ Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
  "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
  "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- "open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
- "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
- "open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
- AceLan Kao <acelan.kao@canonical.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- =?UTF-8?Q?Merthan_Karaka=C5=9F?= <m3rthn.k@gmail.com>,
- Eric Naim <dnaim@cachyos.org>
-References: <20250818020101.3619237-1-superm1@kernel.org>
+ Daniel Dadap <ddadap@nvidia.com>
+References: <20250811162606.587759-1-superm1@kernel.org>
 Content-Language: en-US
 From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250818020101.3619237-1-superm1@kernel.org>
+In-Reply-To: <20250811162606.587759-1-superm1@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 8/17/2025 9:00 PM, Mario Limonciello (AMD) wrote:
-> A variety of issues both in function and in power consumption have been
-> raised as a result of devices not being put into a low power state when
-> the system is powered off.
+On 8/11/2025 11:26 AM, Mario Limonciello (AMD) wrote:
+> Systems with more than one GPU userspace doesn't know which one to be
+> used to treat as primary.  The concept of primary is important to be
+> able to decide which GPU is used for display and  which is used for
+> rendering.  If it's guessed wrong then both GPUs will be kept awake
+> burning a lot of power.
 > 
-> There have been some localized changes[1] to PCI core to help these issues,
-> but they have had various downsides.
+> Historically it would use the "boot_vga" attribute but this isn't
+> present on modern GPUs.
 > 
-> This series instead tries to use the S4 flow when the system is being
-> powered off.  This lines up the behavior with what other operating systems
-> do as well.  If for some reason that fails or is not supported, run their
-> shutdown() callbacks.
+> This series started out as changes to VGA arbiter to try to handle a case
+> of a system with 2 GPUs that are not VGA devices and avoid changes to
+> userspace.  This was discussed but decided not to overload the VGA arbiter
+> for non VGA devices.
 > 
-> Cc: AceLan Kao <acelan.kao@canonical.com>
-> Cc: Kai-Heng Feng <kaihengf@nvidia.com>
-> Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Cc: Merthan Karakaş <m3rthn.k@gmail.com>
-> Cc: Eric Naim <dnaim@cachyos.org>
+> Instead move the x86 specific detection of framebuffer resources into x86
+> specific code that the fbcon can use to properly identify the primary
+> device. This code is still called from the VGA arbiter, and the logic does
+> not change there. To avoid regression default to VGA arbiter and only fall
+> back to looking up with x86 specific detection method.
+> 
+> In order for userspace to also be able to discover which device was the
+> primary video display device create a new sysfs file 'boot_display'.
+> 
+> A matching userspace implementation for this file is available here:
+> Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/39
+> Link: https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/2038
+> 
+> Dave Airlie has been pinged for a comment on this approach.
+> Dave had suggested in the past [1]:
+> 
+> "
+>   But yes if that doesn't work, then maybe we need to make the boot_vga
+>   flag mean boot_display_gpu, and fix it in the kernel
+> "
+> 
+> This was one of the approached tried in earlier revisions and it was
+> rejected in favor of creating a new sysfs file (which is what this
+> version does).
+> 
+> As the dependendent symbols are in 6.17-rc1 this can merge through
+> drm-misc-next.
+> 
+> Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/37#note_2938602 [1]
+> 
 > ---
-> v5->v6:
->   * Fix for LKP robot issue
->   * Some commit message changes
->   * Rebase on 6.17-rc2
+> v10:
+>   * Add patches that didn't merge to v6.17-rc1 in
+>   * Move sysfs file to drm ownership
 > 
-> Mario Limonciello (AMD) (11):
->    PM: Introduce new PMSG_POWEROFF event
->    scsi: Add PM_EVENT_POWEROFF into suspend callbacks
->    usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
->    USB: Pass PMSG_POWEROFF event to suspend_common() for poweroff with S4
->      flow
->    PCI: PM: Disable device wakeups when halting system through S4 flow
->    PCI: PM: Split out code from pci_pm_suspend_noirq() into helper
->    PCI: PM: Run bridge power up actions as part of restore phase
->    PCI: PM: Use pci_power_manageable() in pci_pm_poweroff_noirq()
->    PCI: Put PCIe bridges with downstream devices into D3 at hibernate
->    drm/amd: Avoid evicting resources at S5
->    PM: Use hibernate flows for system power off
+> Mario Limonciello (AMD) (4):
+>    Fix access to video_is_primary_device() when compiled without
+>      CONFIG_VIDEO
+>    PCI/VGA: Replace vga_is_firmware_default() with a screen info check
+>    fbcon: Use screen info to find primary device
+>    DRM: Add a new 'boot_display' attribute
 > 
->   drivers/base/power/main.c                  |  7 ++
->   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  4 +
->   drivers/pci/pci-driver.c                   | 99 +++++++++++++++-------
->   drivers/scsi/mesh.c                        |  1 +
->   drivers/scsi/stex.c                        |  1 +
->   drivers/usb/core/hcd-pci.c                 | 11 ++-
->   drivers/usb/host/sl811-hcd.c               |  1 +
->   include/linux/pm.h                         |  5 +-
->   include/trace/events/power.h               |  3 +-
->   kernel/reboot.c                            |  6 ++
->   10 files changed, 103 insertions(+), 35 deletions(-)
+>   Documentation/ABI/testing/sysfs-class-drm |  8 +++++
+>   arch/parisc/include/asm/video.h           |  2 +-
+>   arch/sparc/include/asm/video.h            |  2 ++
+>   arch/x86/include/asm/video.h              |  2 ++
+>   arch/x86/video/video-common.c             | 25 +++++++++++++-
+>   drivers/gpu/drm/drm_sysfs.c               | 41 +++++++++++++++++++++++
+>   drivers/pci/vgaarb.c                      | 31 +++--------------
+>   7 files changed, 83 insertions(+), 28 deletions(-)
+>   create mode 100644 Documentation/ABI/testing/sysfs-class-drm
 > 
+> 
+> base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
 
-Rafael, Bjorn,
+Bjorn,
 
 Any feedback for this series?
 
 Thanks,
+
 
