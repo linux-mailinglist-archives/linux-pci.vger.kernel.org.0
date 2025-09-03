@@ -1,82 +1,98 @@
-Return-Path: <linux-pci+bounces-35364-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35365-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 318C1B41849
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 10:22:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 779B6B419B5
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 11:14:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D08431BA3AE0
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 08:22:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A71416AB6D
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 09:14:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEC0F2E7631;
-	Wed,  3 Sep 2025 08:21:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF2E327D77B;
+	Wed,  3 Sep 2025 09:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0GD9JZj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806642EAB73
-	for <linux-pci@vger.kernel.org>; Wed,  3 Sep 2025 08:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E1F17BA6;
+	Wed,  3 Sep 2025 09:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756887703; cv=none; b=bP/R7rYZYwqJYN4keaxAt6oPQV24ju42kMTfRpQj/xucQ64HKteQ1x8omSQZ8m3GLdmXnsCvPuFd9IH1OplEE6UhP4ShDnR6FjKPj1M7TgSo1qIOTNsvHyZqPAekCSn5RdDY4WUma/CIgq0kkRJ7G0u4BvuFsyo1TBB+OxR/mJg=
+	t=1756890882; cv=none; b=N2SqXSdXWJLt4F+7TRvmHdf91tmsp+/f0FXxHNZKAXSXj6OaZ3sIzm8ecWUGBdAUiuYgRdZgWE+KDtE6swHH2V+4PN7UdvBKKZett5t8XMmoA+CRD1/6cG9ffsrisqu/CknZLGnD24Q20XgQi4WLDoTKxuPzhea9n71ikGQlkU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756887703; c=relaxed/simple;
-	bh=AMqpeFkQSXX7APuN6GdRTr+0NKId9OwkJUHtgIzCfEI=;
+	s=arc-20240116; t=1756890882; c=relaxed/simple;
+	bh=sceKBbEjuX10A+AkYDSZ/1ERhAyghC9G3UJ1z+F65x0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jyAgiDoG6YkuLo16fe83rNBQcdfK56rBsleh48w+XRZ88rCM6JS0ng7JsgPOmctKAn0D85wICn2dMs4ptyiwZDd8R5/fJ9XF35EwKR9cv23cr0AMKZubHQLwLFJOjOqej5lZ3ySK+xad70XSZ8mufLF6UxvmU2Cb35jS3wVZGTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 7BD6C2C06654;
-	Wed,  3 Sep 2025 10:21:34 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 73A3854C7B; Wed,  3 Sep 2025 10:21:34 +0200 (CEST)
-Date: Wed, 3 Sep 2025 10:21:34 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] pciehp: sync interrupts for bus resets
-Message-ID: <aLf6jkqAYkM3GBvt@wunner.de>
-References: <20250827224514.3162098-1-kbusch@meta.com>
- <aLRRh_4YhAZjWeEW@wunner.de>
- <aLcwb0TA0rMtu2kI@kbusch-mbp>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QLU1VmslpqeHf6V3nQE2y7MfGnZ3xhT3qI7MoF8wWzPOvXspca1ik98gmrWc5WMJlmF7pvblGtdgIggMBUPaLaXseyty3IMfz3koMRttpRjQLhZRJEeKHDBuyKbIlpdgEpN9XESk8pHTyWA8DPkOpGlnfF58HBkJAzdNGgUaPl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0GD9JZj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B1A9C4CEF0;
+	Wed,  3 Sep 2025 09:14:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756890882;
+	bh=sceKBbEjuX10A+AkYDSZ/1ERhAyghC9G3UJ1z+F65x0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R0GD9JZjjefoWeI3TbF79xIHLv8wuFwc9BCe+YuMZ4NQJ+IhGu0DVKZJnms7NU5wk
+	 fj0RMGdssIHdVWJTwyNqDGV8oo5O8miB+wS3VRybTtoaS/hvS/OiGUHoTawa8zqZy7
+	 1UnUI98gRVNtUaxxWSCWdRFWgo1Hxod2qeNyCiaK1Vk8bEkOaBFnbGufpbYmqVFIe3
+	 r9deubPalAMiVQ2EjLlzB9sSPKu4TmIZOoqv18LN0g+BKuijRajtIAwcmsZFXqudky
+	 fswPb4GxTnOX742c7AMF5ufi0CtZW1W37xgmo+dMMIIofMiZq9zOzzUiPesuaq/iEh
+	 mhmhqQFf5X6wg==
+Date: Wed, 3 Sep 2025 10:14:37 +0100
+From: Lee Jones <lee@kernel.org>
+To: Marcos Del Sol Vives <marcos@orca.pet>
+Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Michael Walle <mwalle@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] mfd: vortex: implement new driver for Vortex
+ southbridges
+Message-ID: <20250903091437.GF2163762@google.com>
+References: <20250822135816.739582-1-marcos@orca.pet>
+ <20250822135816.739582-4-marcos@orca.pet>
+ <20250902151828.GU2163762@google.com>
+ <45b84c38-4046-4fb0-89af-6a2cc4de99cf@orca.pet>
+ <20250903072117.GY2163762@google.com>
+ <4057768b-82f3-4b5b-b301-afae30bd5bca@orca.pet>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aLcwb0TA0rMtu2kI@kbusch-mbp>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4057768b-82f3-4b5b-b301-afae30bd5bca@orca.pet>
 
-On Tue, Sep 02, 2025 at 11:59:11AM -0600, Keith Busch wrote:
-> Hm, I think you're right. We are definitely seeing pciehp requeue itself
-> with the link/presence events that we want to be ignored, so we're
-> getting re-enumeration when we didn't expect it. I thought the
-> back-to-back resets that we're causing vfio to initiate was the problem,
-> but maybe not. I think the switch and/or end device we're using have
-> some unusual link timings that defeats the pciehp ignore logic.
+On Wed, 03 Sep 2025, Marcos Del Sol Vives wrote:
 
-pci_bridge_secondary_bus_reset() calls pci_bridge_wait_for_secondary_bus()
-to await Link Up.  So unless the link flaps afterwards, this should be
-fine.
+> El 03/09/2025 a las 9:21, Lee Jones escribió:
+> >> vortex_dx_sb are "struct vortex_southbridge" type, not raw MFD API data.
+> > 
+> > I like your style, but nope!
+> > 
+> > vortex_southbridge contains MFD data and shouldn't exist anyway.
+> 
+> I'm not sure if I follow.
+> 
+> You're suggesting not using driver_data at all and using a big "if" instead,
+> matching manually myself on the correct cells to register against the PCI
+> device ID, instead of relying on PCI matching giving me already the cells
+> structure inside driver_data?
 
-Another possibility is that the pciehp_device_replaced() check triggers,
-e.g. because the Endpoint's Device Serial Number or other data in Config
-Space changed after the second reset.
+Yes.
 
-Maybe you can instrument the code with a few printk()'s to see what's
-going on.
+> That seems to increase code size and be more error prone for no reason.
 
-Thanks,
+It may make sense for your use-case, but believe me, I've seen some
+crazy implementations of this.  I found it's easier just to have a no
+cross contamination of early init APSs rule and call it a day.
 
-Lukas
+-- 
+Lee Jones [李琼斯]
 
