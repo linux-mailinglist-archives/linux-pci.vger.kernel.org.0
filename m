@@ -1,60 +1,57 @@
-Return-Path: <linux-pci+bounces-35412-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35413-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 797F8B42CF0
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 00:48:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32AB1B42D16
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 00:55:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34AE23AED1B
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 22:48:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 722E6189D59E
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Sep 2025 22:56:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1C5F2E6CD4;
-	Wed,  3 Sep 2025 22:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 971492EFDAC;
+	Wed,  3 Sep 2025 22:55:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhyLpheo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lXnHhCdj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964FB19C560;
-	Wed,  3 Sep 2025 22:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696172EFD80;
+	Wed,  3 Sep 2025 22:55:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756939702; cv=none; b=a9GG/CxpbRMVX/eIr5Nd1R1yreeRbuXKR2ZMglDkoy7EiTzwpCFl9HwvifM2stTJnwzDDM5/INOzCABpLW/niAJIJO2tsXU3R1MjqimxO7al54LLr3ZcruhMsF+ZTDaeSyuK431O0YK07xZ+tJJaHQrqJHM4w7xRXnjzT1xF854=
+	t=1756940129; cv=none; b=JlgLxYUk9DhaPD/Bv3JqA65w3mNy72eWJ6y0utf02wiysUPiXTg7LvWeqf5sGRQ1hknamwrzmD16Wak2f+oADDJYzvSLlkfunaKOS+NEWOBBYmuU+y6YpFt5eqmP31w+ZCWD6kIEqt8lVKSAcdFdfu2nL/0dmcsbuIoFCrlA/Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756939702; c=relaxed/simple;
-	bh=YcfB4l+gmOM4aOgmEy4a8CGvNnhQdJHOOYqURSHDj/g=;
+	s=arc-20240116; t=1756940129; c=relaxed/simple;
+	bh=1VgGtMZsWvs80zyeZmeX0N1kSokjzXOz9E4Nb9E9dD8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Pvd7DHB7MvJguOZttH71Inyadc3WcRk5cZnHmMDfgEwPv0qhd/YB8psKpfKRbEZo4c4QV5LqHoVSO6Os6tRokCvye4BRhTjzg3srlin5WgYz0CpEitxPV//YsQLMu1JQT9kEFq0fx6mkFuTcfyRn7jYN5nJPPzpuE4boigC/AA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhyLpheo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B871C4CEE7;
-	Wed,  3 Sep 2025 22:48:22 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Maiiw0XdHRz54JOJifMLEOc2areYNOCoJuAD4rCF9ycQ3E7xGjzAavmG6yNvU/+t4aTT7w+wZrNNIc+mQU7xDWCMV8kqYykX0I0QCbqylHVWYL7lZ3x20YBiNUqOSJLPWL3gccs/xXYmBruVYy6YH2FeGiaB6es6WSusVo4CP88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lXnHhCdj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2FD3C4CEE7;
+	Wed,  3 Sep 2025 22:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756939702;
-	bh=YcfB4l+gmOM4aOgmEy4a8CGvNnhQdJHOOYqURSHDj/g=;
+	s=k20201202; t=1756940128;
+	bh=1VgGtMZsWvs80zyeZmeX0N1kSokjzXOz9E4Nb9E9dD8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=qhyLpheof5ut+vh/LbKCU6pWpxhQ66XWnCqc2B5sVd0zmTjqvde3dV1OMZrH/YTbR
-	 FTXUkWtQY0JcfaUF1fEzYX6/YFTIxAO9ZZN6LoNW7lwkpDaRDa+yVD92hrCkEjzqoH
-	 r4GPh0qGNf1IFkgXD6VKEt5ABn7AwepPj3ao3bN2cGQNt86Krw5aCetyOmHxFucaAh
-	 473zQTCG1yuEu0QYAAxClYv+CS2rKoAhokY0RIjPXXoABWNBxEkqxVZNMxaEQthLv0
-	 qsa3AE+wWhNLwtKsVthiPoJ1qrCrpFy60yRB70u62qhIl/T3MSBh1Bom4snBP/y0mU
-	 D9/fNGSiGMTgw==
-Date: Wed, 3 Sep 2025 17:48:20 -0500
+	b=lXnHhCdjC99sj9uGG9oV9sG4kb9KCqUAT4Ys+KBfjrMN9j2nv1062Z10Cc0bw8ncn
+	 Gw43AHBHHydaTnX/Z2mgF5PSwEuwuRptsY9a/D7QcFym6D76UrbYEROrV3WhJST/OO
+	 wUEE3J9XFZ1rRErS5mmfJf1yNb6zATqF45fxbEl5Oquy49lbqvzlkxl3yO7UwWBwK3
+	 UHbv4lNgom2seevc25qo591uc9K7s8dYJYojsKTu9l9aIKcWvC0UYOiwmEVno4s5jc
+	 F/veSmKPMcH/mkmzn07HNkcmrlzDxcu1Z8jYmsOfgUCx4b5mrjSy3+j3xsxphgIDH2
+	 8rCDRufj1ZYug==
+Date: Wed, 3 Sep 2025 17:55:27 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bhelgaas@google.com,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	joel@jms.id.au, andrew@codeconstruct.com.au, vkoul@kernel.org,
-	kishon@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
-	linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-	linux-phy@lists.infradead.org, openbmc@lists.ozlabs.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 09/10] PCI: aspeed: Add ASPEED PCIe RC driver
-Message-ID: <20250903224820.GA1234878@bhelgaas>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: "David E. Box" <david.e.box@linux.intel.com>, rafael@kernel.org,
+	bhelgaas@google.com, vicamo.yang@canonical.com, kenny@panix.com,
+	ilpo.jarvinen@linux.intel.com, nirmal.patel@linux.intel.com,
+	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 1/2] PCI/ASPM: Add host-bridge API to override default
+ ASPM/CLKPM link state
+Message-ID: <20250903225527.GA1236657@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,325 +60,57 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250901055922.1553550-10-jacky_chou@aspeedtech.com>
+In-Reply-To: <2fo64esrc5v5vj46iff2ptgcthaeahwicuzug46popwqrryfsi@yt62sqsnv4e3>
 
-On Mon, Sep 01, 2025 at 01:59:21PM +0800, Jacky Chou wrote:
-> Introduce PCIe Root Complex driver for ASPEED SoCs. Support RC
-> initialization, reset, clock, IRQ domain, and MSI domain setup.
-> Implement platform-specific setup and register configuration for
-> ASPEED. And provide PCI config space read/write and INTx/MSI
-> interrupt handling.
+On Sun, Aug 31, 2025 at 06:28:53PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Aug 28, 2025 at 03:43:45PM GMT, Bjorn Helgaas wrote:
+> > On Mon, Aug 25, 2025 at 01:35:22PM -0700, David E. Box wrote:
+> > > Synthetic PCIe hierarchies, such as those created by Intel VMD, are not
+> > > enumerated by firmware and do not receive BIOS-provided ASPM or CLKPM
+> > > defaults. Devices in such domains may therefore run without the intended
+> > > power management.
+> > > 
+> > > Add a host-bridge mechanism that lets controller drivers supply their own
+> > > defaults. A new aspm_default_link_state field in struct pci_host_bridge is
+> > > set via pci_host_set_default_pcie_link_state(). During link initialization,
+> > > if this field is non-zero, ASPM and CLKPM defaults come from it instead of
+> > > BIOS.
+> > > 
+> > > This enables drivers like VMD to align link power management with platform
+> > > expectations and avoids embedding controller-specific quirks in ASPM core
+> > > logic.
+> > 
+> > I think this kind of sidesteps the real issue.  Drivers for host
+> > controllers or PCI devices should tell us about *broken* things, but
+> > not about things advertised by the hardware and available for use.
+> > 
+> > The only documented policy controls I'm aware of for ASPM are:
+> > 
+> >   - FADT "PCIe ASPM Controls" bit ("if set, OS must not enable ASPM
+> >     control on this platform")
+> > 
+> >   - _OSC negotiation for control of the PCIe Capability (OS is only
+> >     allowed to write PCI_EXP_LNKCTL if platform has granted control to
+> >     the OS)
+> > 
+> > I think what we *should* be doing is enabling ASPM when it's
+> > advertised, subject to those platform policy controls and user choices
+> > like CONFIG_PCIEASPM_PERFORMANCE/POWERSAVE/etc and sysfs attributes.
+> > 
+> > So basically I think link->aspm_default should be PCIE_LINK_STATE_ALL
+> > without drivers doing anything at all.  Maybe we have to carve out
+> > exceptions, e.g., "VMD hierarchies are exempt from _OSC," or "devices
+> > on x86 systems before 2026 can't enable more ASPM than BIOS did," or
+> > whatever.  Is there any baby step we can make in that direction?
+> 
+> I'm not sure about the ACPI world, but for devicetree platforms,
+> BIOS or the bootloader won't configure ASPM for the devices
+> (mostly). So the baby step would be to set PCIE_LINK_STATE_ALL for
+> all devicetree platforms :)
 
-> +/* TLP configuration type 0 and type 1 */
-> +#define CRG0_READ_FMTTYPE                                        \
-> +	FIELD_PREP(ASPEED_TLP_COMMON_FIELDS,                     \
-> +		   ASPEED_TLP_FMT_TYPE(PCIE_TLP_FMT_3DW_NO_DATA, \
-> +				       PCIE_TLP_TYPE_CFG0_RD))
-> +#define CRG0_WRITE_FMTTYPE                                    \
-> +	FIELD_PREP(ASPEED_TLP_COMMON_FIELDS,                  \
-> +		   ASPEED_TLP_FMT_TYPE(PCIE_TLP_FMT_3DW_DATA, \
-> +				       PCIE_TLP_TYPE_CFG0_WR))
-> +#define CRG1_READ_FMTTYPE                                        \
-> +	FIELD_PREP(ASPEED_TLP_COMMON_FIELDS,                     \
-> +		   ASPEED_TLP_FMT_TYPE(PCIE_TLP_FMT_3DW_NO_DATA, \
-> +				       PCIE_TLP_TYPE_CFG1_RD))
-> +#define CRG1_WRITE_FMTTYPE                                    \
-> +	FIELD_PREP(ASPEED_TLP_COMMON_FIELDS,                  \
-> +		   ASPEED_TLP_FMT_TYPE(PCIE_TLP_FMT_3DW_DATA, \
-> +				       PCIE_TLP_TYPE_CFG1_WR))
-> +#define CRG_PAYLOAD_SIZE		0x01 /* 1 DWORD */
+Yes.  How likely would this be to break something?
 
-What does "CRG" in the above mean?  If it means the same as "CFG",
-i.e., an abbreviation for "configuration", can you use "CFG" instead?
-It it's to match an internal spec, go ahead and keep "CRG".
-
-> + * struct aspeed_pcie_rc_platform - Platform information
-> + * @setup: initialization function
-> + * @reg_intx_en: INTx enable register offset
-> + * @reg_intx_sts: INTx status register offset
-> + * @reg_msi_en: MSI enable register offset
-> + * @reg_msi_sts: MSI enable register offset
-> + * @msi_address: HW fixed MSI address
-> + */
-> +struct aspeed_pcie_rc_platform {
-> +	int (*setup)(struct platform_device *pdev);
-> +	int reg_intx_en;
-> +	int reg_intx_sts;
-> +	int reg_msi_en;
-> +	int reg_msi_sts;
-> +	int msi_address;
-
-I think this should be u32 to match struct msi_msg.address_lo.
-
-> +static irqreturn_t aspeed_pcie_intr_handler(int irq, void *dev_id)
-> +{
-> +	struct aspeed_pcie *pcie = dev_id;
-> +	const struct aspeed_pcie_rc_platform *platform = pcie->platform;
-> +	unsigned long status;
-> +	unsigned long intx;
-> +	u32 bit;
-> +	int i;
-> +
-> +	intx = FIELD_GET(PCIE_INTX_STS,
-> +			 readl(pcie->reg + platform->reg_intx_sts));
-> +	for_each_set_bit(bit, &intx, PCI_NUM_INTX)
-> +		generic_handle_domain_irq(pcie->intx_domain, bit);
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +		for (i = 0; i < 2; i++) {
-> +			int msi_sts_reg = platform->reg_msi_sts + (i * 4);
-> +
-> +			status = readl(pcie->reg + msi_sts_reg);
-> +			writel(status, pcie->reg + msi_sts_reg);
-> +
-> +			/*
-> +			 * AST2700 A1 workaround:
-> +			 * The MSI status needs to clear one more time.
-> +			 */
-> +			if (of_device_is_compatible(pcie->dev->of_node,
-> +						    "aspeed,ast2700-pcie"))
-
-It looks pretty expensive to look this up for every interrupt.  It's
-constant for the life of the driver, so you only need to do it once at
-probe time.
-
-> +				writel(status, pcie->reg + msi_sts_reg);
-> +
-> +			for_each_set_bit(bit, &status, 32) {
-> +				bit += (i * 32);
-> +				generic_handle_domain_irq(pcie->msi_domain,
-> +							  bit);
-> +			}
-> +		}
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-> +static int aspeed_msi_set_affinity(struct irq_data *irq_data,
-> +				   const struct cpumask *mask, bool force)
-> +{
-> +	return -EINVAL;
-> +}
-
-From comparing with other drivers, I doubt this is needed.
-
-> +
-> +static struct irq_chip aspeed_msi_bottom_irq_chip = {
-> +	.name = "ASPEED MSI",
-> +	.irq_compose_msi_msg = aspeed_msi_compose_msi_msg,
-
-I would prefer a name that matches irq_chip.irq_compose_msi_msg, e.g.,
-"aspeed_irq_compose_msi_msg()".
-
-> +static int aspeed_pcie_msi_init(struct aspeed_pcie *pcie)
-> +{
-> +	int ret = 0;
-> +
-> +	writel(~0, pcie->reg + pcie->platform->reg_msi_en);
-> +	writel(~0, pcie->reg + pcie->platform->reg_msi_en + 0x04);
-> +	writel(~0, pcie->reg + pcie->platform->reg_msi_sts);
-> +	writel(~0, pcie->reg + pcie->platform->reg_msi_sts + 0x04);
-> +
-> +	struct irq_domain_info info = {
-> +		.fwnode		= dev_fwnode(pcie->dev),
-> +		.ops		= &aspeed_msi_domain_ops,
-> +		.host_data	= pcie,
-> +		.size		= MAX_MSI_HOST_IRQS,
-> +	};
-> +
-> +	pcie->msi_domain = msi_create_parent_irq_domain(&info,
-> +							&aspeed_msi_parent_ops);
-> +	if (!pcie->msi_domain)
-> +		return dev_err_probe(pcie->dev, -ENOMEM,
-> +				     "failed to create MSI domain\n");
-> +
-> +	return ret;
-
-Useless "ret".  Remove it and just "return 0;"
-
-> +static int aspeed_ast2600_setup(struct platform_device *pdev)
-> +{
-> +	struct aspeed_pcie *pcie = platform_get_drvdata(pdev);
-> +	struct device *dev = pcie->dev;
-> +
-> +	if (pcie->host_bus_num != 0x80)
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "The host bus must be 0x80\n");
-
-Why not check this at the point you read it from the devicetree?
-
-> +	pcie->ahbc = syscon_regmap_lookup_by_phandle(dev->of_node,
-> +						     "aspeed,ahbc");
-> +	if (IS_ERR(pcie->ahbc))
-> +		return dev_err_probe(dev, PTR_ERR(pcie->ahbc),
-> +				     "failed to map ahbc base\n");
-
-Same here.  Looks like a devicetree validation check.
-
-> +static int aspeed_pcie_parse_port(struct aspeed_pcie *pcie,
-> +				  struct device_node *node,
-> +				  int slot)
-> +{
-> +	struct aspeed_pcie_port *port;
-> +	struct device *dev = pcie->dev;
-> +	int ret;
-> +
-> +	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-> +	if (!port)
-> +		return -ENOMEM;
-> +
-> +	port->clk = devm_get_clk_from_child(dev, node, NULL);
-> +	if (IS_ERR(port->clk))
-> +		return dev_err_probe(dev, PTR_ERR(port->clk),
-> +				     "failed to get pcie%d clock\n", slot);
-> +
-> +	port->phy = devm_of_phy_get(dev, node, NULL);
-> +	if (IS_ERR(port->phy))
-> +		return dev_err_probe(dev, PTR_ERR(port->phy),
-> +				     "failed to get phy pcie%d\n",
-> +				     port->slot);
-
-port->slot hasn't been set yet.
-
-> +	port->perst = of_reset_control_get_exclusive(node, "perst");
-> +	if (IS_ERR(port->perst))
-> +		return dev_err_probe(dev, PTR_ERR(port->perst),
-> +				     "failed to get pcie%d reset control\n",
-> +				     slot);
-> +	ret = devm_add_action_or_reset(dev, aspeed_pcie_reset_release,
-> +				       port->perst);
-> +	if (ret)
-> +		return ret;
-> +	reset_control_assert(port->perst);
-> +
-> +	port->slot = slot;
-> +	port->pcie = pcie;
-> +
-> +	INIT_LIST_HEAD(&port->list);
-> +	list_add_tail(&port->list, &pcie->ports);
-> +
-> +	return 0;
-> +}
-
-> +static int aspeed_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct pci_host_bridge *host;
-> +	struct aspeed_pcie *pcie;
-> +	struct device_node *node = dev->of_node;
-> +	const struct aspeed_pcie_rc_platform *md;
-> +	u32 bus_range[2];
-> +	int irq, ret;
-> +
-> +	md = of_device_get_match_data(dev);
-> +	if (!md)
-> +		return -ENODEV;
-> +
-> +	host = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-> +	if (!host)
-> +		return -ENOMEM;
-> +
-> +	pcie = pci_host_bridge_priv(host);
-> +	pcie->dev = dev;
-> +	pcie->tx_tag = 0;
-> +	platform_set_drvdata(pdev, pcie);
-> +
-> +	pcie->platform = md;
-> +	pcie->host = host;
-> +	INIT_LIST_HEAD(&pcie->ports);
-> +
-> +	ret = of_property_read_u32_array(node, "bus-range", bus_range,
-> +					 ARRAY_SIZE(bus_range));
-
-No other drivers do this; why do you need it?
-
-> +	if (ret) {
-> +		dev_warn(dev, "failed to get bus range, assuming bus is 0\n");
-> +		pcie->host_bus_num = 0;
-> +	}
-> +	pcie->host_bus_num = bus_range[0];
-> +
-> +	pcie->reg = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(pcie->reg))
-> +		return PTR_ERR(pcie->reg);
-> +
-> +	pcie->domain = of_get_pci_domain_nr(node);
-
-Almost no drivers use this; why do you need it?
-
-> +	pcie->h2xrst = devm_reset_control_get_exclusive(dev, "h2x");
-> +	if (IS_ERR(pcie->h2xrst))
-> +		return dev_err_probe(dev, PTR_ERR(pcie->h2xrst),
-> +				     "failed to get h2x reset\n");
-> +
-> +	ret = devm_mutex_init(dev, &pcie->lock);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to init mutex\n");
-> +
-> +	ret = pcie->platform->setup(pdev);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to setup PCIe RC\n");
-> +
-> +	ret = aspeed_pcie_parse_dt(pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = aspeed_pcie_init_ports(pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	host->sysdata = pcie;
-> +
-> +	ret = aspeed_pcie_init_irq_domain(pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	ret = devm_add_action_or_reset(dev, aspeed_pcie_irq_domain_free, pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_request_irq(dev, irq, aspeed_pcie_intr_handler, IRQF_SHARED,
-> +			       dev_name(dev), pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = pci_host_probe(host);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-
-This is the same as:
-
-  return pci_host_probe(hoste);
-
-> +}
-> +
-> +const struct aspeed_pcie_rc_platform pcie_rc_ast2600 = {
-> +	.setup = aspeed_ast2600_setup,
-> +	.reg_intx_en = 0xc4,
-> +	.reg_intx_sts = 0xc8,
-> +	.reg_msi_en = 0xe0,
-> +	.reg_msi_sts = 0xe8,
-> +	.msi_address = 0x1e77005c,
-
-Where does this .msi_address come from?  Does this depend on an
-address map that could vary based on the platform?  Should it come
-from devicetree?
-
-> +};
-> +
-> +const struct aspeed_pcie_rc_platform pcie_rc_ast2700 = {
-> +	.setup = aspeed_ast2700_setup,
-> +	.reg_intx_en = 0x40,
-> +	.reg_intx_sts = 0x48,
-> +	.reg_msi_en = 0x50,
-> +	.reg_msi_sts = 0x58,
-> +	.msi_address = 0x000000f0,
-> +};
+Before doing that, I think we need to add some logging, at least at
+pci_dbg(), of what is already enabled and what we change, so we have
+some kind of hint when things do break.
 
