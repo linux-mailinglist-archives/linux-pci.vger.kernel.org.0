@@ -1,150 +1,177 @@
-Return-Path: <linux-pci+bounces-35418-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35419-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A66A5B42FE8
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 04:43:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AA9D0B43074
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 05:23:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3AC3A48729A
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 02:43:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6F135E7C6B
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 03:23:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A23AF1F9F51;
-	Thu,  4 Sep 2025 02:43:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D74B2293C4E;
+	Thu,  4 Sep 2025 03:22:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TqmfuwO0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nW/g39gI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723B21F8ADD;
-	Thu,  4 Sep 2025 02:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955632877E3;
+	Thu,  4 Sep 2025 03:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756953797; cv=none; b=Hnn3bJq1dd8G8Mw+ZJEYyHJfb/DFGdcjCKxSNYa+LKlf6gsTdNGXtl2CnFtpMb42wwV/+LY4SHhWbeL3pKK/yVJcP5AWV110T7lLcgOV62Lc0oDCmLj5sjsPA0jwL7TsY0DQTIzlsIFnyjs+dH+sP1FGYjB4GQx4BV9AhZ7vq+k=
+	t=1756956157; cv=none; b=hkN1OBYLi0YD/5tGf5db9zeZGA56iVPLJM3vXrkmEL1Y3+lMv96pn1fiAXOvEkd4Scgt6yCpr2ws2nBECaZI+/LI4ZJQ87HvDuipMO2KPgfV75LroNAanPwlyZ9kITbfSUcqMZLX6k4QF+1tgS+LbhUWrRN3lSlh01Wm0NFagZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756953797; c=relaxed/simple;
-	bh=UIH7ADUUQjVWgw2DD5w8NGuzPpDVd4VV6TWvbS74P2c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kArYOxC431EZCYXLTxfFs3Li3YXAeZIsRIZJGwwHjSe06YuWsItehTqO9cDvqrncApax1I2flEAZ8tY8LOWrMD4MDgbjXNRR4F2qMFBqQnwrtXSogHMRugi5GpLRBxXl8S/ml9zElOZucS6ZMHwg9hOqr3bzQGZ1qfjFm8+eF4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TqmfuwO0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27B7AC4CEE7;
-	Thu,  4 Sep 2025 02:43:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756953797;
-	bh=UIH7ADUUQjVWgw2DD5w8NGuzPpDVd4VV6TWvbS74P2c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TqmfuwO07Nelf4xjhnWrMpQ2PEzf5mEuLZs+QOvwBhfbKX/q7MBBdl7IkPtTfbkZ6
-	 Uiiy787F3ckcVY1iezpNznJojVOk8r/kGHEu7Z2hl/sb9By2/v2Ykl5l3RcCbDjF3G
-	 Z7x9zd5VVi8WJ/hXHC9Cnj73HvaGwGh+kI1OKsqx8XYdiCN6AuPHQ2E36Bkc2G7BPr
-	 Be85zhNh2Ta3NDYttIN6BPU+A4rLjHSGq4L2gCdKl7c+NEkRTvfoe+AcOJlMov7hVb
-	 +KQPNhV+M1HRwCFxiElqglUd0oaylEFwW5W/3UdXngV5gCJUirfFxxu3uu8cduL8BO
-	 KpaN359HULjRA==
-Message-ID: <b3d5773d-c573-4491-b799-90405a8af6a9@kernel.org>
-Date: Thu, 4 Sep 2025 11:40:15 +0900
+	s=arc-20240116; t=1756956157; c=relaxed/simple;
+	bh=bNSAahrLsh5lIaRJtRcrZ2VrezcQXtPhuB+zZ94/O9Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BkNZWFdPt1o4Nbr0ktpwPaoxVn4IpcUhU6b1rsQcdJUZ066F4T8P8/gJhAgoXSRyTb0+o0cA//pKXdL8ldCSNjsCZNzwjIf3kfVuSBoPZOc4S4myW12gIuH50/OaOwuOfyu64ABDNievEk/L5IBPmULaq5/9H41K03bdpVIshx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nW/g39gI; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756956156; x=1788492156;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bNSAahrLsh5lIaRJtRcrZ2VrezcQXtPhuB+zZ94/O9Q=;
+  b=nW/g39gI6GK2t0cLfd2hQg4s+31u2Nm0nLHA27HdUYSWozlntN7n9seN
+   ajeyO2b6W2fs4aY9ESQAYoze4pYF2+cSsG6C1/2RmTihON1NmK3bKCB9L
+   XQmhZtDZxfn0vDXzvPivDtYVc0GbCp6ub/BWEQR0HSSyBNNDBaPPf/rpQ
+   4vjN0MJ9erj0CvO1+rJRfoisBsWDhgZV+qytfAfoDtq4HdW6apObWB0Er
+   XKNy+/PN9z+wvAtzrFOsEkrNNbcWHa/g0Ctb/TXbHvZMMx/mgyt1+UxZ0
+   0+2992AKu9yMe2+uDFvSEM3LPNj9+eomFlf1l/i2laRI7Kw9glHUpvi+Y
+   Q==;
+X-CSE-ConnectionGUID: W05EzdIMR9OWrDpDlxtI/w==
+X-CSE-MsgGUID: P8HsuEztSSCEME/G9pnarQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11542"; a="76888141"
+X-IronPort-AV: E=Sophos;i="6.18,237,1751266800"; 
+   d="scan'208";a="76888141"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2025 20:22:35 -0700
+X-CSE-ConnectionGUID: 5lDAPx0BTNOEIpwwL2WBRA==
+X-CSE-MsgGUID: oUclYMeDRJiAetZVddROEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,237,1751266800"; 
+   d="scan'208";a="171056164"
+Received: from lkp-server02.sh.intel.com (HELO 06ba48ef64e9) ([10.239.97.151])
+  by orviesa010.jf.intel.com with ESMTP; 03 Sep 2025 20:22:31 -0700
+Received: from kbuild by 06ba48ef64e9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uu0YO-0004hL-2j;
+	Thu, 04 Sep 2025 03:22:28 +0000
+Date: Thu, 4 Sep 2025 11:19:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Saravana Kannan <saravanak@google.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v2 5/5] PCI: qcom: Allow pwrctrl core to toggle PERST#
+ for new DT binding
+Message-ID: <202509041110.4DgQKyf1-lkp@intel.com>
+References: <20250903-pci-pwrctrl-perst-v2-5-2d461ed0e061@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: Limit PCIe BAR size for
- fixed BARs
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-pci@vger.kernel.org
-Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Frank Li <Frank.Li@nxp.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Niklas Cassel <cassel@kernel.org>,
- Wang Jiang <jiangwang@kylinos.cn>, linux-kernel@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org
-References: <20250904023753.494147-1-marek.vasut+renesas@mailbox.org>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <20250904023753.494147-1-marek.vasut+renesas@mailbox.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250903-pci-pwrctrl-perst-v2-5-2d461ed0e061@oss.qualcomm.com>
 
-On 9/4/25 11:37 AM, Marek Vasut wrote:
-> Currently, the test allocates BAR sizes according to fixed table
-> bar_size[] = { 512, 512, 1024, 16384, 131072, 1048576 } . This
-> does not work with controllers which have fixed size BARs, like
-> Renesas R-Car V4H PCIe controller, which has BAR4 size limited
-> to 256 Bytes, which is much less than 131072 currently requested
-> by this test.
-> 
-> Adjust the test such, that in case a fixed size BAR is detected
-> on a controller, minimum of requested size and fixed size BAR
-> size is used during the test instead.
-> 
-> This helps with test failures reported as follows:
-> "
-> pci_epf_test pci_epf_test.0: requested BAR size is larger than fixed size
-> pci_epf_test pci_epf_test.0: Failed to allocate space for BAR4
-> "
-> 
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
-> ---
-> Cc: "Krzysztof Wilczyński" <kwilczynski@kernel.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Damien Le Moal <dlemoal@kernel.org>
-> Cc: Frank Li <Frank.Li@nxp.com>
-> Cc: Kishon Vijay Abraham I <kishon@kernel.org>
-> Cc: Manivannan Sadhasivam <mani@kernel.org>
-> Cc: Niklas Cassel <cassel@kernel.org>
-> Cc: Wang Jiang <jiangwang@kylinos.cn>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-renesas-soc@vger.kernel.org
-> ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index e091193bd8a8a..d9c950d4c9a9e 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -1022,7 +1022,8 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
->  	enum pci_barno bar;
->  	const struct pci_epc_features *epc_features = epf_test->epc_features;
-> -	size_t test_reg_size;
-> +	size_t test_reg_size, test_bar_size;
-> +	u64 bar_fixed_size;
->  
->  	test_reg_bar_size = ALIGN(sizeof(struct pci_epf_test_reg), 128);
->  
-> @@ -1050,7 +1051,13 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->  		if (bar == test_reg_bar)
->  			continue;
->  
-> -		base = pci_epf_alloc_space(epf, bar_size[bar], bar,
-> +		test_bar_size = bar_size[bar];
-> +
-> +		bar_fixed_size = epc_features->bar[bar].fixed_size;
-> +		if (epc_features->bar[bar].type == BAR_FIXED && bar_fixed_size)
-> +			test_bar_size = min(bar_size[bar], bar_fixed_size);
+Hi Manivannan,
 
-I think this can be simplified to:
+kernel test robot noticed the following build errors:
 
-		if (epc_features->bar[bar].type == BAR_FIXED)
-			test_bar_size = epc_features->bar[bar].fixed_size;
-		else
-			test_bar_size = bar_size[bar];
+[auto build test ERROR on 8f5ae30d69d7543eee0d70083daf4de8fe15d585]
 
-because if the bar type is BAR_FIXED, then the size of the bar can only be its
-fixed size.
+url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam-via-B4-Relay/PCI-qcom-Wait-for-PCIE_RESET_CONFIG_WAIT_MS-after-PERST-deassert/20250903-151623
+base:   8f5ae30d69d7543eee0d70083daf4de8fe15d585
+patch link:    https://lore.kernel.org/r/20250903-pci-pwrctrl-perst-v2-5-2d461ed0e061%40oss.qualcomm.com
+patch subject: [PATCH v2 5/5] PCI: qcom: Allow pwrctrl core to toggle PERST# for new DT binding
+config: i386-buildonly-randconfig-002-20250904 (https://download.01.org/0day-ci/archive/20250904/202509041110.4DgQKyf1-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.4.0-5) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250904/202509041110.4DgQKyf1-lkp@intel.com/reproduce)
 
-> +
-> +		base = pci_epf_alloc_space(epf, test_bar_size, bar,
->  					   epc_features, PRIMARY_INTERFACE);
->  		if (!base)
->  			dev_err(dev, "Failed to allocate space for BAR%d\n",
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509041110.4DgQKyf1-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
+
+   drivers/pci/controller/dwc/pcie-qcom.c: In function 'qcom_pcie_host_init':
+>> drivers/pci/controller/dwc/pcie-qcom.c:1405:23: error: 'struct pci_host_bridge' has no member named 'toggle_perst'
+    1405 |         pci->pp.bridge->toggle_perst = qcom_pcie_toggle_perst;
+         |                       ^~
+
+
+vim +1405 drivers/pci/controller/dwc/pcie-qcom.c
+
+  1368	
+  1369	static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+  1370	{
+  1371		struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+  1372		struct qcom_pcie *pcie = to_qcom_pcie(pci);
+  1373		int ret;
+  1374	
+  1375		qcom_ep_reset_assert(pcie, NULL);
+  1376	
+  1377		ret = pcie->cfg->ops->init(pcie);
+  1378		if (ret)
+  1379			return ret;
+  1380	
+  1381		ret = qcom_pcie_phy_power_on(pcie);
+  1382		if (ret)
+  1383			goto err_deinit;
+  1384	
+  1385		if (pcie->cfg->ops->post_init) {
+  1386			ret = pcie->cfg->ops->post_init(pcie);
+  1387			if (ret)
+  1388				goto err_disable_phy;
+  1389		}
+  1390	
+  1391		/*
+  1392		 * Only deassert PERST# for all devices here if legacy binding is used.
+  1393		 * For the new binding, pwrctrl driver is expected to toggle PERST# for
+  1394		 * individual devices.
+  1395		 */
+  1396		if (list_empty(&pcie->perst))
+  1397			qcom_ep_reset_deassert(pcie, NULL);
+  1398	
+  1399		if (pcie->cfg->ops->config_sid) {
+  1400			ret = pcie->cfg->ops->config_sid(pcie);
+  1401			if (ret)
+  1402				goto err_assert_reset;
+  1403		}
+  1404	
+> 1405		pci->pp.bridge->toggle_perst = qcom_pcie_toggle_perst;
+  1406	
+  1407		return 0;
+  1408	
+  1409	err_assert_reset:
+  1410		qcom_ep_reset_assert(pcie, NULL);
+  1411	err_disable_phy:
+  1412		qcom_pcie_phy_power_off(pcie);
+  1413	err_deinit:
+  1414		pcie->cfg->ops->deinit(pcie);
+  1415	
+  1416		return ret;
+  1417	}
+  1418	
 
 -- 
-Damien Le Moal
-Western Digital Research
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
