@@ -1,121 +1,146 @@
-Return-Path: <linux-pci+bounces-35439-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35440-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9A5CB43659
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 10:57:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A09DAB436BA
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 11:13:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 657E316F6B9
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 08:57:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1573D1BC475D
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 09:13:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BFDB2D061E;
-	Thu,  4 Sep 2025 08:57:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01AFE2E11C9;
+	Thu,  4 Sep 2025 09:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D9rxwAfY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [4.193.249.245])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32FED2D2395;
-	Thu,  4 Sep 2025 08:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.193.249.245
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C821D2DFA5C;
+	Thu,  4 Sep 2025 09:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756976266; cv=none; b=AwnOVVGL6jg3TH5WuxBXsI6gagq400B2rCZ89cQz9ikGeUwrAzfOVhWgfXRFH8ZHSlRGKmxlaGVa7jRc15GzqZbqdiLYzynEj4IqMXKkHHzSQpk8w/vWXGAS6lhxtRTTshori2fwpMkTugxtDCBpVIghP2XfgES8eHtCDlNQp8k=
+	t=1756977191; cv=none; b=PtdEwkbCNr9YA/R07nSd0/ee73tiaxZndSCSCLGYIU0E875CgHYc1GfTwrJ13HGotTGEZ9Zqp9OMTUoxZV2ornhxfSqf0W5pQFk1D5BzOlugex01ZKly6u0uQNiK3y1AC+2sJ/RGD381JBxQkVcicoyVwGRkDwGFPf5/NF/mplM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756976266; c=relaxed/simple;
-	bh=PecU5S/YvplRGNNqQebJDBuQ2AEn8c874tdcD5AFogE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=E2F37RKmkJob+bDmcONzO/TWuzZlCt9IwpbCfXTlVGy52QJbwq92SWiGsWkMppGTg9dnAOuQ5WWssJU/K8+YnXztbObd5Hi93nA3SfiVlB1by4zjd/zuR0eyXG83pCX4LvXHvLlnOz5DYZe6amI7KVE4vjaBSd7pnln6UmAMng0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=4.193.249.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
- ajax-webmail-app2 (Coremail) ; Thu, 4 Sep 2025 16:57:17 +0800 (GMT+08:00)
-Date: Thu, 4 Sep 2025 16:57:17 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-To: "Manivannan Sadhasivam" <mani@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, p.zabel@pengutronix.de,
-	johan+linaro@kernel.org, quic_schintav@quicinc.com,
-	shradha.t@samsung.com, cassel@kernel.org,
-	thippeswamy.havalige@amd.com, mayank.rana@oss.qualcomm.com,
-	inochiama@gmail.com, ningyu@eswincomputing.com,
-	linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com
-Subject: Re: Re: [PATCH v2 2/2] PCI: eic7700: Add Eswin eic7700 PCIe host
- controller driver
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <jghozurjqyhmtunivotitgs67h6xo4sb46qcycnbbwyvjcm4ek@vgq75olazmoi>
-References: <20250829082021.49-1-zhangsenchuan@eswincomputing.com>
- <20250829082405.1203-1-zhangsenchuan@eswincomputing.com>
- <jghozurjqyhmtunivotitgs67h6xo4sb46qcycnbbwyvjcm4ek@vgq75olazmoi>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1756977191; c=relaxed/simple;
+	bh=ajRMAuu+hpz6WMa0YxOA/IekyX/4DAV89P21uWHYgcY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gHUEm0eacwAElDNSi7daAKJ3eFZ5z0Et4HgPEj6BXEU901Qhkf8Sf9jWqNtx5PcgRaZZv+kqpN6ACV1M10V2FgPP7FzsjLFhgRM9eeVxy4nkfx7jBAtuZxxZld/XCgD0aqTdLXI3LY48NvSmfa0GncQlT9eSHeOPxMXnJRRb44E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=D9rxwAfY; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5849Cl9c3476356;
+	Thu, 4 Sep 2025 04:12:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1756977167;
+	bh=6cfOekzhoclFCm+LWn+5CpA0OPOwnIdUmFfLhBpoTmE=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=D9rxwAfYltIFcAjtwe3bCFvCgZ08dx1fMKFRi0gaqhHkw3fM8rXENUuxsFRPU72SZ
+	 dNOUlIPIwIuvWOUuJfaGzNYv2H/9hKPHLxjJM86KROHOAanxXkFPqzIU648hxMkpa9
+	 9pXujYPsqyB+tebuOepQbiHsPKgrQZb2owLu4u1g=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5849ClU93707400
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 4 Sep 2025 04:12:47 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 4
+ Sep 2025 04:12:47 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 4 Sep 2025 04:12:47 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.231.84])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5849CjkL3027798;
+	Thu, 4 Sep 2025 04:12:46 -0500
+Date: Thu, 4 Sep 2025 14:42:45 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Jiri Slaby <jirislaby@kernel.org>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <kwilczynski@kernel.org>, <mani@kernel.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <jingoohan1@gmail.com>, <fan.ni@samsung.com>,
+        <quic_wenbyao@quicinc.com>, <namcao@linutronix.de>,
+        <mayank.rana@oss.qualcomm.com>, <thippeswamy.havalige@amd.com>,
+        <quic_schintav@quicinc.com>, <shradha.t@samsung.com>,
+        <inochiama@gmail.com>, <cassel@kernel.org>, <kishon@kernel.org>,
+        <18255117159@163.com>, <rongqianfeng@vivo.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
+Subject: Re: [PATCH 09/11] PCI: keystone: Switch to devm_request_irq() for
+ "ks-pcie-error-irq" IRQ
+Message-ID: <249d79be-deed-4277-96c3-845bafcec37a@ti.com>
+References: <20250903124505.365913-1-s-vadapalli@ti.com>
+ <20250903124505.365913-10-s-vadapalli@ti.com>
+ <3d3a4b52-e343-42f3-9d69-94c259812143@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4fa48331.ce3.19913f1cc89.Coremail.zhangsenchuan@eswincomputing.com>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:TQJkCgDHZpVtVLlopF_IAA--.24357W
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAgEPBmi4b
-	dEVxAABs2
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <3d3a4b52-e343-42f3-9d69-94c259812143@kernel.org>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-RGVhciBNYW5pdmFubmFuCgpUaGFuayB5b3UgZm9yIHlvdXIgdGhvcm91Z2ggcmV2aWV3LkhlcmUg
-YXJlIHNvbWUgb2YgbXkgY2xhcmlmaWNhdGlvbnMgYW5kIHF1ZXN0aW9ucy4KTG9va2luZyBmb3J3
-YXJkIHRvIHlvdXIgYW5zd2VyLCBUaGFuayB5b3UgdmVyeSBtdWNoLgoKPiAtLS0tLU9yaWdpbmFs
-IE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiTWFuaXZhbm5hbiBTYWRoYXNpdmFtIiA8bWFuaUBrZXJu
-ZWwub3JnPgo+IFNlbmQgdGltZTpNb25kYXksIDAxLzA5LzIwMjUgMTQ6NDA6NDEKPiBUbzogemhh
-bmdzZW5jaHVhbkBlc3dpbmNvbXB1dGluZy5jb20KPiBDYzogYmhlbGdhYXNAZ29vZ2xlLmNvbSwg
-bHBpZXJhbGlzaUBrZXJuZWwub3JnLCBrd2lsY3p5bnNraUBrZXJuZWwub3JnLCByb2JoQGtlcm5l
-bC5vcmcsIGtyemsrZHRAa2VybmVsLm9yZywgY29ub3IrZHRAa2VybmVsLm9yZywgbGludXgtcGNp
-QHZnZXIua2VybmVsLm9yZywgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmcsIHAuemFiZWxAcGVuZ3V0cm9uaXguZGUsIGpvaGFuK2xpbmFyb0Br
-ZXJuZWwub3JnLCBxdWljX3NjaGludGF2QHF1aWNpbmMuY29tLCBzaHJhZGhhLnRAc2Ftc3VuZy5j
-b20sIGNhc3NlbEBrZXJuZWwub3JnLCB0aGlwcGVzd2FteS5oYXZhbGlnZUBhbWQuY29tLCBtYXlh
-bmsucmFuYUBvc3MucXVhbGNvbW0uY29tLCBpbm9jaGlhbWFAZ21haWwuY29tLCBuaW5neXVAZXN3
-aW5jb21wdXRpbmcuY29tLCBsaW5taW5AZXN3aW5jb21wdXRpbmcuY29tLCBwaW5rZXNoLnZhZ2hl
-bGFAZWluZm9jaGlwcy5jb20KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDIvMl0gUENJOiBlaWM3
-NzAwOiBBZGQgRXN3aW4gZWljNzcwMCBQQ0llIGhvc3QgY29udHJvbGxlciBkcml2ZXIKCgo+ID4g
-KwkvKiBjb25maWcgZXN3aW4gdmVuZG9yIGlkIGFuZCBlaWM3NzAwIGRldmljZSBpZCAqLwo+ID4g
-Kwlkd19wY2llX3dyaXRlbF9kYmkocGNpLCBQQ0lFX1RZUEVfREVWX1ZFTkRfSUQsIDB4MjAzMDFm
-ZTEpOwo+IAo+IERvZXMgaXQgbmVlZCB0byBiZSBjb25maWd1cmVkIGFsbCB0aGUgdGltZT8KCkNs
-YXJpZmljYXRpb27vvJoKT3VyIGhhcmR3YXJlIGluaXRpYWxpemF0aW9uIGRpZCBub3QgY29uZmln
-dXJlIHRoZSBkZXZpY2UgSWQgYW5kIHZlbmRvciBJZC4KTm93LCB3ZSBjYW4gb25seSByZXdyaXRl
-IHRoZSBkZXZpY2UgSWQgYW5kIHZlbmRvciBJZCBpbiB0aGUgY29kZS4KCj4gCj4gPiArCj4gPiAr
-CS8qIGxhbmUgZml4IGNvbmZpZywgcmVhbCBkcml2ZXIgTk9UIG5lZWQsIGRlZmF1bHQgeDQgKi8K
-PiAKPiBXaGF0IGRvIHlvdSBtZWFuIGJ5ICdyZWFkbCBkcml2ZXIgTk9UIG5lZWQnPwo+IAoKQ2xh
-cmlmaWNhdGlvbu+8mgpTb3JyeSwgdGhpcyB3YXMgYWRkZWQgZHVyaW5nIHRoZSBjb21wYXRpYmls
-aXR5IHBsYXRmb3JtIHRlc3QuIEl0IGlzIG5vdCBuZWVkZWQgZm9yIHJlYWwgZGV2aWNlcy4gCkkg
-d2lsbCByZW1vdmUgaXQgbGF0ZXIuCgo+ID4gKwl2YWwgPSBkd19wY2llX3JlYWRsX2RiaShwY2ks
-IFBDSUVfUE9SVF9NVUxUSV9MQU5FX0NUUkwpOwo+ID4gKwl2YWwgJj0gMHhmZmZmZmY4MDsKPiA+
-ICsJdmFsIHw9IDB4NDQ7Cj4gPiArCWR3X3BjaWVfd3JpdGVsX2RiaShwY2ksIFBDSUVfUE9SVF9N
-VUxUSV9MQU5FX0NUUkwsIHZhbCk7Cj4gPiArCj4gPiArCXZhbCA9IGR3X3BjaWVfcmVhZGxfZGJp
-KHBjaSwgREVWSUNFX0NPTlRST0xfREVWSUNFX1NUQVRVUyk7Cj4gPiArCXZhbCAmPSB+KDB4NyA8
-PCA1KTsKPiA+ICsJdmFsIHw9ICgweDIgPDwgNSk7Cj4gPiArCWR3X3BjaWVfd3JpdGVsX2RiaShw
-Y2ksIERFVklDRV9DT05UUk9MX0RFVklDRV9TVEFUVVMsIHZhbCk7Cj4gPiArCj4gPiArCS8qICBj
-b25maWcgc3VwcG9ydCAzMiBtc2kgdmVjdG9ycyAqLwo+ID4gKwl2YWwgPSBkd19wY2llX3JlYWRs
-X2RiaShwY2ksIFBDSUVfRFNQX1BGMF9NU0lfQ0FQKTsKPiA+ICsJdmFsICY9IH5QQ0lFX01TSV9N
-VUxUSVBMRV9NU0dfTUFTSzsKPiA+ICsJdmFsIHw9IFBDSUVfTVNJX01VTFRJUExFX01TR18zMjsK
-PiA+ICsJZHdfcGNpZV93cml0ZWxfZGJpKHBjaSwgUENJRV9EU1BfUEYwX01TSV9DQVAsIHZhbCk7
-Cj4gPiArCj4gPiArCS8qIGRpc2FibGUgbXNpeCBjYXAgKi8KPiAKPiBXaHk/IEh3IGRvZXNuJ3Qg
-c3VwcG9ydCBNU0ktWCBidXQgaXQgYWR2ZXJ0aXNlcyBNU0ktWCBjYXBhYmlsaXR5Pwo+IAoKSSdt
-IG5vdCBxdWl0ZSBzdXJlIHdoYXQgdGhpcyBjb21tZW50IG1lYW5zPyBJbmRlZWQsIG91ciBoYXJk
-d2FyZSBkb2Vzbid0IHN1cHBvcnQgTVNJLVguCldlIGNhbid0IGRpc2FibGUgdGhlIE1TSS1YIGNh
-cGFiaWxpdHkgdXNpbmcgdGhlIFBDSUVfTkVYVF9DQVBfUFRSIHJlZ2lzdGVyPyBUaGVuIHdoaWNo
-IApyZWdpc3RlciBpcyBuZWVkZWQgdG8gZGlzYWJsZSB0aGUgTVNJLVggY2FwYWJpbGl0eT8KCj4g
-PiArCXZhbCA9IGR3X3BjaWVfcmVhZGxfZGJpKHBjaSwgUENJRV9ORVhUX0NBUF9QVFIpOwo+ID4g
-Kwl2YWwgJj0gMHhmZmZmMDBmZjsKPiA+ICsJZHdfcGNpZV93cml0ZWxfZGJpKHBjaSwgUENJRV9O
-RVhUX0NBUF9QVFIsIHZhbCk7Cj4gPiArCj4gPiArCXJldHVybiAwOwo+ID4gKwo+ID4gK2Vycl9j
-bG9jazoKPiA+ICsJcmVzZXRfY29udHJvbF9hc3NlcnQocGNpZS0+cGVyc3QpOwo+ID4gK2Vycl9w
-ZXJzdDoKPiA+ICsJZXN3aW5fcGNpZV9wb3dlcl9vZmYocGNpZSk7Cj4gPiArCXJldHVybiByZXQ7
-Cj4gPiArfQo+ID4gKwoKCgoKQmVzdCBSZWdhcmRzLApTZW5jaHVhbiBaaGFuZwoKCgo=
+On Thu, Sep 04, 2025 at 09:24:01AM +0200, Jiri Slaby wrote:
+> On 03. 09. 25, 14:44, Siddharth Vadapalli wrote:
+> > In preparation for enabling loadable module support for the driver,
+> > there is motivation to switch to devm_request_irq() to simplify the
+> > cleanup on driver removal. Additionally, since the interrupt handler
+> > associated with the "ks-pcie-error-irq" namely "ks_pcie_handle_error_irq()
+> > is only printing the error and is clearing the interrupt, there is no
+> > necessity to prefer devm_request_threaded_irq() over devm_request_irq().
+> > Hence, switch from request_irq() to devm_request_irq().
+> > 
+> > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> > ---
+> >   drivers/pci/controller/dwc/pci-keystone.c | 4 ++--
+> >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> > index bb93559f6468..02f9a6d0e4a8 100644
+> > --- a/drivers/pci/controller/dwc/pci-keystone.c
+> > +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> > @@ -1277,8 +1277,8 @@ static int ks_pcie_probe(struct platform_device *pdev)
+> >   	if (irq < 0)
+> >   		return irq;
+> > -	ret = request_irq(irq, ks_pcie_err_irq_handler, IRQF_SHARED,
+> > -			  "ks-pcie-error-irq", ks_pcie);
+> > +	ret = devm_request_irq(dev, irq, ks_pcie_err_irq_handler, IRQF_SHARED,
+> > +			       "ks-pcie-error-irq", ks_pcie);
+> >   	if (ret < 0) {
+> >   		dev_err(dev, "failed to request error IRQ %d\n",
+> >   			irq);
+> 
+> Ugh, so you are not removing any free_irq() from anywhere?
+> 
+> <me checking>
+> 
+> Because there is none...
+> 
+> So you are actually fixing an IRQ leak in case something later fails -- I
+> guess this needs Fixes and Cc stable tags, right?
+
+Yes! While working on this series and unloading the module, I had seen
+the issue and narrowed it down to the absence of a free_irq() in the
+driver's .remove callback. Since the driver cannot be unloaded prior to
+this series (driver can only be built-in), I had felt that a separate
+fix may not be required for adding the missing free_irq() in the .remove
+callback. However, after you pointed it out now, I realize that there
+are other places during the driver's probe where we may exit in the
+event of an error, without freeing the interrupt. Thank you for noticing
+this. The commit to be fixed is:
+0790eb175ee0 PCI: keystone: Cleanup error_irq configuration
+Link to the commit is:
+https://github.com/torvalds/linux/commit/0790eb175ee0
+I will include the Fixes tag for the above commit and also Cc stable when
+I post the v2 series. I will wait for feedback on the remaining patches
+in the series before posting the v2 series.
+
+Regards,
+Siddharth.
 
