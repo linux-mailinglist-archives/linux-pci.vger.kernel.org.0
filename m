@@ -1,124 +1,181 @@
-Return-Path: <linux-pci+bounces-35444-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35445-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D49CB43B8A
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 14:27:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B18CDB43B98
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 14:29:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E28B83A9EB8
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 12:27:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A51F566C46
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 12:29:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBB5D2E8B69;
-	Thu,  4 Sep 2025 12:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E9C32EBDD0;
+	Thu,  4 Sep 2025 12:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="hT4WE83t"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rf8A+Q/h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtpout7.mo534.mail-out.ovh.net (smtpout7.mo534.mail-out.ovh.net [54.36.140.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950E82EA480
-	for <linux-pci@vger.kernel.org>; Thu,  4 Sep 2025 12:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.36.140.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6832EB871;
+	Thu,  4 Sep 2025 12:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756988863; cv=none; b=AM7tbj+n2KF7zCwlS3CwNeWEWDsYsFL8nSVQzYHpGAo7ORG2YaWuWjtLb/UuJ/u7mdW/DxHtJkDCrwx7CEBWHmNzjVwecv9yWGTXFqWU+WHiX398ed/Di+mI6Cyjs4PsyQSvFmM9h7LO2qgYxrfLqqZNoVX+c/3YANkizRB+ljM=
+	t=1756988938; cv=none; b=UaHC3sn8vHV7RHEKXkmYMw7bZRVjMek8JiLZdq/uU2K0eyWcQxpcyRCdIJ0dGKtcbxeYC7TiuRVjUMUcwP+zfbmn544I5n9j49U5wO3h1Uj7FGHgkRABdgkTr2S5ha0L5vfnzfvBloMP8pYgfFNEbsorz2KVN2F+XLgZP55hLHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756988863; c=relaxed/simple;
-	bh=7X4O6HXlH9iQ1Hsrlwz3r/yjl54fpwY6CM802gdqlPo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UqyfPfqTqfCqETGbM/XPgRimGN/N87G2QoMwD+ubqcar+/ikY8wOiTdzF/kH0of+LI2PArikTTZSw3hpXdEiuLrvd8cQsp0fgAQZDSugTgmmQn9GdmKyG3igvnYPlGzChAcDosDXdUIfuL2SgnuUv850JhNq6qmTBPtGd8e1cDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=hT4WE83t; arc=none smtp.client-ip=54.36.140.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
-Received: from director4.derp.mail-out.ovh.net (director4.derp.mail-out.ovh.net [79.137.60.37])
-	by mo534.mail-out.ovh.net (Postfix) with ESMTPS id 4cHdqs29Ytz6FjT;
-	Thu,  4 Sep 2025 12:21:13 +0000 (UTC)
-Received: from director4.derp.mail-out.ovh.net (director4.derp.mail-out.ovh.net. [127.0.0.1])
-        by director4.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
-        for <brgl@bgdev.pl>; Thu,  4 Sep 2025 12:21:12 +0000 (UTC)
-Received: from mta6.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.118.83])
-	by director4.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4cHdqr3Bd0z1xsB;
-	Thu,  4 Sep 2025 12:21:12 +0000 (UTC)
-Received: from orca.pet (unknown [10.1.6.8])
-	by mta6.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id DB2708E337B;
-	Thu,  4 Sep 2025 12:21:10 +0000 (UTC)
-Authentication-Results:garm.ovh; auth=pass (GARM-97G002c5ec3bc3-e4fe-4836-9217-05bc8e07bcaf,
-                    9D83928BDD5912CB49B4BF67D3C99AFCADCD49FA) smtp.auth=marcos@orca.pet
-X-OVh-ClientIp:79.117.41.176
-Message-ID: <75920526-64f4-4eda-8552-58de165f6597@orca.pet>
-Date: Thu, 4 Sep 2025 14:21:11 +0200
+	s=arc-20240116; t=1756988938; c=relaxed/simple;
+	bh=Hxa1aMEFLaONCF/Z4hf/tCWlMBHGKFUBQC+vB4D1feU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TDf1/bBNyT/ST4mI4Tpq5rBNRJLd8nGhERYxtkeTuO1uOcFoO/TNPE8//RJwFMHSdVSquMcpQ1KmrGirecMfs70FVFAOEnDk8tJPIIpcdFDwFSYdYM57ST7SIo8Css+icq3lqyLMcJ5S8HLXPSw8lZfoCLunOV1gTwqyAmLfnW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rf8A+Q/h; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C19FC4CEF4;
+	Thu,  4 Sep 2025 12:28:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756988938;
+	bh=Hxa1aMEFLaONCF/Z4hf/tCWlMBHGKFUBQC+vB4D1feU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rf8A+Q/hq0H5TXLZc6VFkn0MLRiZETdXvxGb+qtgOIXgW1VpXpSFhc4EcN0B/Bkep
+	 z7sLJcwhIfZBGN5SmE77IaO/fqeexboclGtAt5EWykQKtR+RLhs/PdtodgJI2dm3Tt
+	 j3zKA0jRHNHnjpeLs445vMJNcsEWoa12ZNrPozUxocKPDZBE+xf0omZlSXdhfVsK6r
+	 aQz5IuyUBumMOMMaI8ahc9GDv7GmDZfry88DeFDoGJZZrajQtpsRuvVAt5CsFdTPMU
+	 4YlRmGmq4TKnGmSvmmTuntQ4vf8ctasLdaIkoLzs/lx8IvnXbsbpD1oKU912OI1Hoy
+	 m3349uZv5lflw==
+Date: Thu, 4 Sep 2025 14:28:53 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	linux-pci@vger.kernel.org,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Frank Li <Frank.Li@nxp.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Wang Jiang <jiangwang@kylinos.cn>, linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: Limit PCIe BAR size for
+ fixed BARs
+Message-ID: <aLmGBYOVevP5hH0X@ryzen>
+References: <20250904023753.494147-1-marek.vasut+renesas@mailbox.org>
+ <b3d5773d-c573-4491-b799-90405a8af6a9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] mfd: vortex: implement new driver for Vortex
- southbridges
-To: Lee Jones <lee@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Michael Walle <mwalle@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
- linux-pci@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>
-References: <20250822135816.739582-1-marcos@orca.pet>
- <20250822135816.739582-4-marcos@orca.pet>
- <20250902151828.GU2163762@google.com>
- <45b84c38-4046-4fb0-89af-6a2cc4de99cf@orca.pet>
- <20250903072117.GY2163762@google.com>
- <1d4352b6-c27e-4946-be36-87765f3fb7c3@orca.pet>
- <20250903140115.GC2764654@google.com>
- <b11dcd50-a87e-47ff-b406-776e432f07bd@orca.pet>
- <20250904101705.GH2764654@google.com>
-Content-Language: es-ES
-From: Marcos Del Sol Vives <marcos@orca.pet>
-In-Reply-To: <20250904101705.GH2764654@google.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 9527365014460520038
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeitddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeforghrtghoshcuffgvlhcuufholhcugghivhgvshcuoehmrghrtghoshesohhrtggrrdhpvghtqeenucggtffrrghtthgvrhhnpeelteejgeejhfdutdelhffgvedtfeffteevgefhgfetueeltddtfeeuveefgefhvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdejledruddujedrgedurddujeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehmrghrtghoshesohhrtggrrdhpvghtpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkohesihhnthgvlhdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpd
- hrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-DKIM-Signature: a=rsa-sha256; bh=rJzm0HSs8UGGmqFisPR6K2tkEBXOcV7SXVx5vxgiMRY=;
- c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1756988473;
- v=1;
- b=hT4WE83tetDttzT70Nyi/9SDmvMZzbXCCUvwY1cC49rEfEvcgYpnTp1o6sBck+m05gH97l91
- IyQT5UWUnS38bAZn69IIpL8CrVEa6SAWqdkvwvFh5GOGE/HFznxFLtCtKA8WQIWi7ZOGI1RbgYo
- 6ihH0ZhOcT1M6JGptNQZg78sJaYxctcYzGc/2Y3IBrp0Xxta7uImGmOcpN0GGO5HZ7Oerkh3cEH
- 7CIyaS/owdiHqml2ivPVO2agYEwwloSr+2QDaGQGAT48j4Jdrqh6AkF4HdWwoIKYcraf2bLFwKO
- PJ5b1dEpwZzj4VOg6Uh6JXTRMrloznscZJkuEDbjV7h8A==
+In-Reply-To: <b3d5773d-c573-4491-b799-90405a8af6a9@kernel.org>
 
-El 04/09/2025 a las 12:17, Lee Jones escribió:
->> That GPIO is something required to perform the poweroff sequence, a must
->> for any machine, while WDT is just a "nice to have".
->>
->> Implementing now the WDT just because of a linguistic preference means
->> delaying something more important in favour of a "nice to have".
+On Thu, Sep 04, 2025 at 11:40:15AM +0900, Damien Le Moal wrote:
+> On 9/4/25 11:37 AM, Marek Vasut wrote:
+> > Currently, the test allocates BAR sizes according to fixed table
+> > bar_size[] = { 512, 512, 1024, 16384, 131072, 1048576 } . This
+> > does not work with controllers which have fixed size BARs, like
+> > Renesas R-Car V4H PCIe controller, which has BAR4 size limited
+> > to 256 Bytes, which is much less than 131072 currently requested
+> > by this test.
+> > 
+> > Adjust the test such, that in case a fixed size BAR is detected
+> > on a controller, minimum of requested size and fixed size BAR
+> > size is used during the test instead.
+> > 
+> > This helps with test failures reported as follows:
+> > "
+> > pci_epf_test pci_epf_test.0: requested BAR size is larger than fixed size
+> > pci_epf_test pci_epf_test.0: Failed to allocate space for BAR4
+> > "
+> > 
+> > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+> > ---
+> > Cc: "Krzysztof Wilczyński" <kwilczynski@kernel.org>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Damien Le Moal <dlemoal@kernel.org>
+> > Cc: Frank Li <Frank.Li@nxp.com>
+> > Cc: Kishon Vijay Abraham I <kishon@kernel.org>
+> > Cc: Manivannan Sadhasivam <mani@kernel.org>
+> > Cc: Niklas Cassel <cassel@kernel.org>
+> > Cc: Wang Jiang <jiangwang@kylinos.cn>
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-pci@vger.kernel.org
+> > Cc: linux-renesas-soc@vger.kernel.org
+> > ---
+> >  drivers/pci/endpoint/functions/pci-epf-test.c | 11 +++++++++--
+> >  1 file changed, 9 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > index e091193bd8a8a..d9c950d4c9a9e 100644
+> > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > @@ -1022,7 +1022,8 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+> >  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+> >  	enum pci_barno bar;
+> >  	const struct pci_epc_features *epc_features = epf_test->epc_features;
+> > -	size_t test_reg_size;
+> > +	size_t test_reg_size, test_bar_size;
+> > +	u64 bar_fixed_size;
+> >  
+> >  	test_reg_bar_size = ALIGN(sizeof(struct pci_epf_test_reg), 128);
+> >  
+> > @@ -1050,7 +1051,13 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+> >  		if (bar == test_reg_bar)
+> >  			continue;
+> >  
+> > -		base = pci_epf_alloc_space(epf, bar_size[bar], bar,
+> > +		test_bar_size = bar_size[bar];
+> > +
+> > +		bar_fixed_size = epc_features->bar[bar].fixed_size;
+> > +		if (epc_features->bar[bar].type == BAR_FIXED && bar_fixed_size)
+> > +			test_bar_size = min(bar_size[bar], bar_fixed_size);
 > 
-> You use the word "delaying" here.  What's the rush?
+> I think this can be simplified to:
 > 
-> If you only need a GPIO driver, then you don't need the MFD part.
+> 		if (epc_features->bar[bar].type == BAR_FIXED)
+> 			test_bar_size = epc_features->bar[bar].fixed_size;
+> 		else
+> 			test_bar_size = bar_size[bar];
+
++1
+
 > 
+> because if the bar type is BAR_FIXED, then the size of the bar can only be its
+> fixed size.
 
-I would honestly like that my machines can turn off properly and pretty
-sure others using these platforms would agree on that, as having to yank
-out the power cable is far from ideal.
+Correct, see:
+f015b53d634a ("PCI: endpoint: Add size check for fixed size BARs in pci_epc_set_bar()")
 
-Adding WDT would lengthen even further the review process. That ignoring
-I am doing this as a hobby on my spare time and I'd rather spend my
-scarce free time implementing the power off driver than the WDT
-(something I'd do out of completion, I have absolutely no use for a WDT
-in this machine).
+Actually, Jerome Brunet was also using this weird Renesas R-Car V4H PCIe
+controller where BAR4 is a really small fixed-size BAR.
 
-The reason I am using an MFD is that I was asked to back in v2
-(https://lore.kernel.org/all/aHElavFTptu0q4Kj@smile.fi.intel.com/).
-I'll be CC'ing him.
+(Even smaller than the iATU minimum alignment requirement for that same
+controller.)
 
-I was told to create a southbridge driver that would match on PCI
-and registered other devices exposed by it as platform drivers.
-GPIO was the only functionality implemented at the time, and is
-the only functionality implemented right now. So I simply delivered was
-I was asked for.
+See:
+793908d60b87 ("PCI: endpoint: Retain fixed-size BAR size as well as aligned size")
+
+But he only appears to have used the vntb epf driver.
+
+Jerome, I suppose that you never ran with the pci-epf-test driver?
+
+
+pci_epf_alloc_space() works like this:
+If the user requests a BAR size that is smaller than the fixed-size BAR,
+it will allocate space matching the fixed-size.
+
+As in most cases, having a BAR larger than needed by an EPF driver is
+still acceptable.
+
+However, if the user requests a size larger than the fixed-size BAR,
+as in your case, we will return an error, as we cannot fulfill the
+user's request.
+
+I don't see any alternative other than your/Damien's proposal above.
+
+Unfortunately, all EPF drivers would probably need this same change.
+
+
+Kind regards,
+Niklas
 
