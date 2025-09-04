@@ -1,146 +1,175 @@
-Return-Path: <linux-pci+bounces-35440-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35441-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A09DAB436BA
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 11:13:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2E23B43879
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 12:19:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1573D1BC475D
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 09:13:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 58071A009D0
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 10:17:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01AFE2E11C9;
-	Thu,  4 Sep 2025 09:13:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF9212FB988;
+	Thu,  4 Sep 2025 10:13:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D9rxwAfY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbaN6Yjz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C821D2DFA5C;
-	Thu,  4 Sep 2025 09:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04222F83C0;
+	Thu,  4 Sep 2025 10:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756977191; cv=none; b=PtdEwkbCNr9YA/R07nSd0/ee73tiaxZndSCSCLGYIU0E875CgHYc1GfTwrJ13HGotTGEZ9Zqp9OMTUoxZV2ornhxfSqf0W5pQFk1D5BzOlugex01ZKly6u0uQNiK3y1AC+2sJ/RGD381JBxQkVcicoyVwGRkDwGFPf5/NF/mplM=
+	t=1756980830; cv=none; b=aS2fCvOOo5422Edg3/onw89J2+uTiqz9Fc2yOIYIX8KFqaGyE2bFMxWojexbst6n+q28thf8cp2YloY+9LHuS5J1JJKjNLCy1z1TQ/+75mQdWMKdDhlJXA3q9gqq50XuJVC0lkalafL1njncU7POcYLCw35UkY/bifzhMZQw6pI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756977191; c=relaxed/simple;
-	bh=ajRMAuu+hpz6WMa0YxOA/IekyX/4DAV89P21uWHYgcY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gHUEm0eacwAElDNSi7daAKJ3eFZ5z0Et4HgPEj6BXEU901Qhkf8Sf9jWqNtx5PcgRaZZv+kqpN6ACV1M10V2FgPP7FzsjLFhgRM9eeVxy4nkfx7jBAtuZxxZld/XCgD0aqTdLXI3LY48NvSmfa0GncQlT9eSHeOPxMXnJRRb44E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=D9rxwAfY; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5849Cl9c3476356;
-	Thu, 4 Sep 2025 04:12:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1756977167;
-	bh=6cfOekzhoclFCm+LWn+5CpA0OPOwnIdUmFfLhBpoTmE=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=D9rxwAfYltIFcAjtwe3bCFvCgZ08dx1fMKFRi0gaqhHkw3fM8rXENUuxsFRPU72SZ
-	 dNOUlIPIwIuvWOUuJfaGzNYv2H/9hKPHLxjJM86KROHOAanxXkFPqzIU648hxMkpa9
-	 9pXujYPsqyB+tebuOepQbiHsPKgrQZb2owLu4u1g=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5849ClU93707400
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 4 Sep 2025 04:12:47 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 4
- Sep 2025 04:12:47 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 4 Sep 2025 04:12:47 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.231.84])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5849CjkL3027798;
-	Thu, 4 Sep 2025 04:12:46 -0500
-Date: Thu, 4 Sep 2025 14:42:45 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Jiri Slaby <jirislaby@kernel.org>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
-        <kwilczynski@kernel.org>, <mani@kernel.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <jingoohan1@gmail.com>, <fan.ni@samsung.com>,
-        <quic_wenbyao@quicinc.com>, <namcao@linutronix.de>,
-        <mayank.rana@oss.qualcomm.com>, <thippeswamy.havalige@amd.com>,
-        <quic_schintav@quicinc.com>, <shradha.t@samsung.com>,
-        <inochiama@gmail.com>, <cassel@kernel.org>, <kishon@kernel.org>,
-        <18255117159@163.com>, <rongqianfeng@vivo.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
-Subject: Re: [PATCH 09/11] PCI: keystone: Switch to devm_request_irq() for
- "ks-pcie-error-irq" IRQ
-Message-ID: <249d79be-deed-4277-96c3-845bafcec37a@ti.com>
-References: <20250903124505.365913-1-s-vadapalli@ti.com>
- <20250903124505.365913-10-s-vadapalli@ti.com>
- <3d3a4b52-e343-42f3-9d69-94c259812143@kernel.org>
+	s=arc-20240116; t=1756980830; c=relaxed/simple;
+	bh=TaCx2xdJ0PkyIQESevtrNgnqTCDtw2YcyYY/Mn7haVg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VjdxU73xUAXL0e9OPTL56/fWqGZGURtYJSuAw71h8KAd3sUvirMFkZ4Ypu3bI4Wni1Vh4OPO6hWGbkeDKmr6khdEbitU6U5GthEzHHYVQJwS4FdayryuzRpg2jWm8cAMAJnzrc3kc8YtNLvkuJH5gE6y8UDyzgP8FLq8wP/ofO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbaN6Yjz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A65C4CEF0;
+	Thu,  4 Sep 2025 10:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756980830;
+	bh=TaCx2xdJ0PkyIQESevtrNgnqTCDtw2YcyYY/Mn7haVg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HbaN6Yjznr5n3Gogxrsx99hUcU54nZ3/fhnW5jw8827xmZUpTdL0M+x2zcrkKwdSr
+	 trKtFHUXICoR0Xtx3Wbnyr5gw63yTDdUsLaUsHsVCp7HunCjNBGw/MB5D+pb1lpr5G
+	 wMBAHcGyWwaUHK1j8FAbAVsfuDRbUjmc16AiEWPvPSb21XPNUNlCPL+h8f9sV6Joqw
+	 NDiK8o1f1BuiCRt7RsPXBmzmB6YyWWEquxW3QZAMneehJos4WyLbIVxIAgLfcgW8Zy
+	 TSB/mkGN5d2iXf0RkLf7zYyD/C7Z68NpUDPcWEKUrY/jDeyFfWcM59N1y8QeTidVnP
+	 JcmXOFrYFRL2w==
+Date: Thu, 4 Sep 2025 12:13:43 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, bhelgaas@google.com, heiko@sntech.de,
+	mani@kernel.org, yue.wang@amlogic.com, pali@kernel.org,
+	neil.armstrong@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+	khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v5 1/2] PCI: Configure root port MPS during host probing
+Message-ID: <aLlmV8Qiaph1PHFY@ryzen>
+References: <20250620155507.1022099-2-18255117159@163.com>
+ <20250902174828.GA1165373@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3d3a4b52-e343-42f3-9d69-94c259812143@kernel.org>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <20250902174828.GA1165373@bhelgaas>
 
-On Thu, Sep 04, 2025 at 09:24:01AM +0200, Jiri Slaby wrote:
-> On 03. 09. 25, 14:44, Siddharth Vadapalli wrote:
-> > In preparation for enabling loadable module support for the driver,
-> > there is motivation to switch to devm_request_irq() to simplify the
-> > cleanup on driver removal. Additionally, since the interrupt handler
-> > associated with the "ks-pcie-error-irq" namely "ks_pcie_handle_error_irq()
-> > is only printing the error and is clearing the interrupt, there is no
-> > necessity to prefer devm_request_threaded_irq() over devm_request_irq().
-> > Hence, switch from request_irq() to devm_request_irq().
+On Tue, Sep 02, 2025 at 12:48:28PM -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 20, 2025 at 11:55:06PM +0800, Hans Zhang wrote:
+> > Current PCIe initialization logic may leave root ports operating with
+> > non-optimal Maximum Payload Size (MPS) settings. While downstream device
+> > configuration is handled during bus enumeration, root port MPS values
+> > inherited from firmware or hardware defaults ...
+> 
+> Apparently Root Port MPS configuration is different from that for
+> downstream devices?
+
+pci_host_probe() will call pci_scan_root_bus_bridge(), which will call
+pci_scan_single_device(), which will call pci_device_add(), which will
+call pci_configure_device(), which will call pci_configure_mps().
+
+This will be done for both bridges and endpoints.
+
+The bridge will be scanned/added first, before devices behind the bridge.
+
+
+While pci_configure_device()/pci_configure_mps() will be called for both
+bridges and endpoints, pci_configure_mps() will do an early return for
+devices where pci_upstream_bridge() returns NULL, i.e. for devices where
+that does not have an upstream bridge, i.e. for the root bridge itself:
+https://github.com/torvalds/linux/blob/v6.17-rc4/drivers/pci/probe.c#L2181-L2182
+
+So MPS will not be touched for root bridges.
+
+This patch ensures that MPS for root bridges gets initialized to MPSS
+(Max supported MPS).
+
+Later, when pci_configure_device()/pci_configure_mps() is called for a
+device behind the bridge, if the MPSS of the device behind the bridge is
+smaller than the MPS of the bridge, the code reduces the MPS of the bridge:
+https://github.com/torvalds/linux/blob/v6.17-rc4/drivers/pci/probe.c#L2205
+
+
+My only question with this patch is if there is a bridge behind a bridge,
+will the bridge behind the bridge still have pci_pcie_type() ==
+PCI_EXP_TYPE_ROOT_PORT ?
+
+If so, perhaps we should modify this patch from:
+
++       if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
++           pcie_bus_config != PCIE_BUS_TUNE_OFF) {
++               pcie_write_mps(dev, 128 << dev->pcie_mpss);
++       }
++
+        if (!bridge || !pci_is_pcie(bridge))
+                return;
+
+
+to:
+
++       if (!bridge && pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
++           pcie_bus_config != PCIE_BUS_TUNE_OFF) {
++               pcie_write_mps(dev, 128 << dev->pcie_mpss);
++       }
++
+        if (!bridge || !pci_is_pcie(bridge))
+                return;
+
+
+
+> > During host controller probing phase, when PCIe bus tuning is enabled,
+> > the implementation now configures root port MPS settings to their
+> > hardware-supported maximum values. Specifically, when configuring the MPS
+> > for a PCIe device, if the device is a root port and the bus tuning is not
+> > disabled (PCIE_BUS_TUNE_OFF), the MPS is set to 128 << dev->pcie_mpss to
+> > match the Root Port's maximum supported payload size. The Max Read Request
+> > Size (MRRS) is subsequently adjusted through existing companion logic to
+> > maintain compatibility with PCIe specifications.
 > > 
-> > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > ---
-> >   drivers/pci/controller/dwc/pci-keystone.c | 4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > Note that this initial setting of the root port MPS to the maximum might
+> > be reduced later during the enumeration of downstream devices if any of
+> > those devices do not support the maximum MPS of the root port.
 > > 
-> > diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> > index bb93559f6468..02f9a6d0e4a8 100644
-> > --- a/drivers/pci/controller/dwc/pci-keystone.c
-> > +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> > @@ -1277,8 +1277,8 @@ static int ks_pcie_probe(struct platform_device *pdev)
-> >   	if (irq < 0)
-> >   		return irq;
-> > -	ret = request_irq(irq, ks_pcie_err_irq_handler, IRQF_SHARED,
-> > -			  "ks-pcie-error-irq", ks_pcie);
-> > +	ret = devm_request_irq(dev, irq, ks_pcie_err_irq_handler, IRQF_SHARED,
-> > +			       "ks-pcie-error-irq", ks_pcie);
-> >   	if (ret < 0) {
-> >   		dev_err(dev, "failed to request error IRQ %d\n",
-> >   			irq);
+> > Explicit initialization at host probing stage ensures consistent PCIe
+> > topology configuration before downstream devices perform their own MPS
+> > negotiations. This proactive approach addresses platform-specific
+> > requirements where controller drivers depend on properly initialized
+> > root port settings, while maintaining backward compatibility through
+> > PCIE_BUS_TUNE_OFF conditional checks. Hardware capabilities are fully
+> > utilized without altering existing device negotiation behaviors.
 > 
-> Ugh, so you are not removing any free_irq() from anywhere?
+> This last paragraph seems kind of like marketing without any real
+> content.  Is there something important in there?
 > 
-> <me checking>
+> Nits:
+> s/root port/Root Port/
 > 
-> Because there is none...
+> Reword "implementation now configures" to be clear about whether "now"
+> refers to before this patch or after.
 > 
-> So you are actually fixing an IRQ leak in case something later fails -- I
-> guess this needs Fixes and Cc stable tags, right?
+> Update the MRRS "to maintain compatibility" part.  I'm dubious about
+> there being a spec compatibility issue with respect to MRRS.  Cite the
+> relevant section if there is an issue.
 
-Yes! While working on this series and unloading the module, I had seen
-the issue and narrowed it down to the absence of a free_irq() in the
-driver's .remove callback. Since the driver cannot be unloaded prior to
-this series (driver can only be built-in), I had felt that a separate
-fix may not be required for adding the missing free_irq() in the .remove
-callback. However, after you pointed it out now, I realize that there
-are other places during the driver's probe where we may exit in the
-event of an error, without freeing the interrupt. Thank you for noticing
-this. The commit to be fixed is:
-0790eb175ee0 PCI: keystone: Cleanup error_irq configuration
-Link to the commit is:
-https://github.com/torvalds/linux/commit/0790eb175ee0
-I will include the Fixes tag for the above commit and also Cc stable when
-I post the v2 series. I will wait for feedback on the remaining patches
-in the series before posting the v2 series.
+I'm not sure why the commit message mentions MRRS at all.
 
-Regards,
-Siddharth.
+Sure, pcie_write_mrrs() might set MRRS to MPS, but that is existing logic
+and not really related to the change in this patch IMO.
+
+
+Kind regards,
+Niklas
 
