@@ -1,121 +1,136 @@
-Return-Path: <linux-pci+bounces-35466-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35467-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 608BCB4440C
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 19:11:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26FC6B44418
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 19:12:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A69C6188AB8A
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 17:11:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 15F4A5A4696
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 17:12:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E17E431987B;
-	Thu,  4 Sep 2025 17:09:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 410713093C3;
+	Thu,  4 Sep 2025 17:12:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPSwdcJP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0bxKWok"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AD7319866;
-	Thu,  4 Sep 2025 17:09:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145092FE04B;
+	Thu,  4 Sep 2025 17:11:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757005786; cv=none; b=QOEoznD5XlvvLBFGW+qi/UGvDoHPfYdZb75N0zBE4aOp8dZGkMQpKsa31WZn/hNSCkVIhJCWJye7TJwTR19LR/mOxOqY0+sua/y0+h/Z48FRieV+0wCBwXu+nTCSIfhCv8gLBHNJ1kBhODIu6aWPRCW1cFm4CMhmLBTIQiAHWMo=
+	t=1757005920; cv=none; b=QSZJ7IPID4fxUP5831J+MX+CWmh7M0KhBCIO8RNcYlUWZGvrXB62/uyxK87cC0tEhtlUPSIPxR4K+boY7cOUKGj1thovVg+uCV007tcwGUpE32YFBBSe2rkBhnDjAUXi+4DKIBcSaGezrFBtwjJ9tcIewFYS4+cacZvAYrMUei8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757005786; c=relaxed/simple;
-	bh=Kb5OEk6CH681dR8WwdpshUf8PEmUll6MbXBONva8auo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IW3Vlf9U2HdaU4Xt8PUiFxJ6uqawztnZ+R9yqXmigK7yGrJ43OYJ3qgdyv3V+Ai0ftn1k47rmP0176EIuzfRBjf1Uy5Pm6SkI/Wj/SJeRdkI5FG5NN+S2AGTvlOfgQjZ8WavDCU55cxvEfqqfCQf+3qlaKPYHnXc+BQ6KSHFo30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPSwdcJP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9297BC4CEF0;
-	Thu,  4 Sep 2025 17:09:40 +0000 (UTC)
+	s=arc-20240116; t=1757005920; c=relaxed/simple;
+	bh=f7w3DBoJ9ODVGCtDdMJAlM4c3N8LvQ5pSyBZEoaI1Cc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=FsSrGa9GqEkBSgTjP7Dqopmtnp24xOiq2u/GgdVsE5bkbYBT6u8sdxxoMpnHhoavQbxuUosDbOtbnNk2iJ3Sc73GX3fwwoI3tF6s9xFZjpZbmEu5bawEFqEpbHW+NPWV0XBXojqRVWrWNYb1J+/X2D2CqvRKajUlG8WMzBDdLzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0bxKWok; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 896ACC4CEF0;
+	Thu,  4 Sep 2025 17:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757005786;
-	bh=Kb5OEk6CH681dR8WwdpshUf8PEmUll6MbXBONva8auo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gPSwdcJP4MCiJ8QOfsVD77rIQdkXbfYiHaf4DPc/qOL1RGsR7t1mB26BNa/wvie6/
-	 ts8MIC5y8oLbQYvx0SMK33g32n5jSPH56QYrTHBu58/OwGaH4ZukJobGqMjoJfrDIL
-	 eIi1ufaEBTSeaoJQ1Ob4zLrTGy+/35sR7cL2JoNSPhdlU8Lrll1PsE86mPd9dxw1X1
-	 VsUcDNGjRIGA7Ti6yC45ONK39KNjqcXDi71D4bz33iTtNq6s/A+P/Kcuf5z57Ds/QV
-	 afQ/Sn8+EkWLyvj5vV81lEF2v2UuedyRrmT89OraQjWTmYe2ZW5/pFcMeANV7zKhPt
-	 aQ1vSw3Vn+lCg==
-Date: Thu, 4 Sep 2025 22:39:34 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de, 
-	kernel@pengutronix.de, festevam@gmail.com, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	s=k20201202; t=1757005919;
+	bh=f7w3DBoJ9ODVGCtDdMJAlM4c3N8LvQ5pSyBZEoaI1Cc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=o0bxKWok9GRdQgM3wXsBgRWWdIaD8bRw2Z3CwNfbzghaTAdsu/dtADJwCiZ9AgRX5
+	 oXgsBK/UNI6xe+qQjjBN6Ab8ezqp4h7a4AinCVymE4eWvxw0D0XpOzkR+Z9rfL/Cml
+	 UY9fqrkFNqD/tDYnnabV8y24J7NJ8MKuQEk//UFUXQCd/lc+Yfbe4y+aSUrNR1bmnJ
+	 AKQomkwWym9Did3RImhyuJ8FfMHHapgV25Fq1nov2S7nrriSDs5JXnrZWNFlYblfnH
+	 enN0bdwngy9YAJvg1f+F7niADqj5Kj5gD7isApxzNT11rGw4+9gxijnnP8lhHB8RFd
+	 vkZs9q/ecNGpQ==
+Date: Thu, 4 Sep 2025 12:11:58 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: "David E. Box" <david.e.box@linux.intel.com>, rafael@kernel.org,
+	bhelgaas@google.com, vicamo.yang@canonical.com, kenny@panix.com,
+	ilpo.jarvinen@linux.intel.com, nirmal.patel@linux.intel.com,
+	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] PCI: imx6: Enable the vpcie3v3aux regulator when
- fetch it
-Message-ID: <piirka3qlna6k33r2eutg26s2iepnvubzbdps6rh5b2tzhxxmg@c7nv3jgkwxpw>
-References: <20250820022328.2143374-1-hongxing.zhu@nxp.com>
+Subject: Re: [PATCH V3 1/2] PCI/ASPM: Add host-bridge API to override default
+ ASPM/CLKPM link state
+Message-ID: <20250904171158.GA1268495@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250820022328.2143374-1-hongxing.zhu@nxp.com>
+In-Reply-To: <a47sg5ahflhvzyzqnfxvpk3dw4clkhqlhznjxzwqpf4nyjx5dk@bcghz5o6zolk>
 
-On Wed, Aug 20, 2025 at 10:23:28AM GMT, Richard Zhu wrote:
-> Refer to PCIe CEM r6.0, sec 2.3 WAKE# Signal, WAKE# signal is only
-> asserted by the Add-in Card when all its functions are in D3Cold state
-> and at least one of its functions is enabled for wakeup generation. The
-> 3.3V auxiliary power (+3.3Vaux) must be present and used for wakeup
-> process.
+On Thu, Sep 04, 2025 at 10:15:44PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Sep 03, 2025 at 05:55:27PM GMT, Bjorn Helgaas wrote:
+> > On Sun, Aug 31, 2025 at 06:28:53PM +0530, Manivannan Sadhasivam wrote:
+> > > On Thu, Aug 28, 2025 at 03:43:45PM GMT, Bjorn Helgaas wrote:
+> > > > On Mon, Aug 25, 2025 at 01:35:22PM -0700, David E. Box wrote:
+> > > > > Synthetic PCIe hierarchies, such as those created by Intel VMD, are not
+> > > > > enumerated by firmware and do not receive BIOS-provided ASPM or CLKPM
+> > > > > defaults. Devices in such domains may therefore run without the intended
+> > > > > power management.
+> > > > > 
+> > > > > Add a host-bridge mechanism that lets controller drivers supply their own
+> > > > > defaults. A new aspm_default_link_state field in struct pci_host_bridge is
+> > > > > set via pci_host_set_default_pcie_link_state(). During link initialization,
+> > > > > if this field is non-zero, ASPM and CLKPM defaults come from it instead of
+> > > > > BIOS.
+> > > > > 
+> > > > > This enables drivers like VMD to align link power management with platform
+> > > > > expectations and avoids embedding controller-specific quirks in ASPM core
+> > > > > logic.
+> > > > 
+> > > > I think this kind of sidesteps the real issue.  Drivers for host
+> > > > controllers or PCI devices should tell us about *broken* things, but
+> > > > not about things advertised by the hardware and available for use.
+> > > > 
+> > > > The only documented policy controls I'm aware of for ASPM are:
+> > > > 
+> > > >   - FADT "PCIe ASPM Controls" bit ("if set, OS must not enable ASPM
+> > > >     control on this platform")
+> > > > 
+> > > >   - _OSC negotiation for control of the PCIe Capability (OS is only
+> > > >     allowed to write PCI_EXP_LNKCTL if platform has granted control to
+> > > >     the OS)
+> > > > 
+> > > > I think what we *should* be doing is enabling ASPM when it's
+> > > > advertised, subject to those platform policy controls and user choices
+> > > > like CONFIG_PCIEASPM_PERFORMANCE/POWERSAVE/etc and sysfs attributes.
+> > > > 
+> > > > So basically I think link->aspm_default should be PCIE_LINK_STATE_ALL
+> > > > without drivers doing anything at all.  Maybe we have to carve out
+> > > > exceptions, e.g., "VMD hierarchies are exempt from _OSC," or "devices
+> > > > on x86 systems before 2026 can't enable more ASPM than BIOS did," or
+> > > > whatever.  Is there any baby step we can make in that direction?
+> > > 
+> > > I'm not sure about the ACPI world, but for devicetree platforms,
+> > > BIOS or the bootloader won't configure ASPM for the devices
+> > > (mostly). So the baby step would be to set PCIE_LINK_STATE_ALL for
+> > > all devicetree platforms :)
+> > 
+> > Yes.  How likely would this be to break something?
 > 
-> When the 3.3V auxiliary power is present, fetch this auxiliary regulator
-> at probe time and keep it enabled for the entire PCIe controller
-> lifecycle. This ensures support for outbound wake-up mechanism such as
-> WAKE# signaling.
+> I don't know :) If we want to bite the bullet, let's do it.
+> Otherwise, let's keep waiting for the time to come ;) For sure there
+> will be breakages reported, but it won't be like on x86 which people
+> use for day to day work.  There are IBM Power and MIPS based servers
+> using devicetree as well, so they might also get impacted.
 > 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> ---
-> v5 changes:
-> - Use the vpcie3v3aux property instead of adding a duplicated one.
-> - Move the comments from the code changes into the description of
->   commit.
+> But it would be the optimal test bed if we ever want to start
+> enabling ASPM by default.
 > 
-> v4 changes:
-> Move the dt-binding to snps,dw-pcie-common.yaml.
+> > Before doing that, I think we need to add some logging, at least
+> > at pci_dbg(), of what is already enabled and what we change, so we
+> > have some kind of hint when things do break.
 > 
-> v3 changes:
-> Add a new vaux power supply used to specify the regulator powered up the
-> WAKE# circuit on the connector when WAKE# is supported.
+> Sure. Even if we want to make it pci_info(), I think it would be
+> worth doing it as it will make the reporting much easier.
 > 
-> v2 changes:
-> Update the commit message, and add reviewed-by from Frank.
-> https://patchwork.kernel.org/project/linux-pci/patch/20250619072438.125921-1-hongxing.zhu@nxp.com/
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 5a38cfaf989b1..5067da14bc053 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -1739,6 +1739,10 @@ static int imx_pcie_probe(struct platform_device *pdev)
->  	pci->max_link_speed = 1;
->  	of_property_read_u32(node, "fsl,max-link-speed", &pci->max_link_speed);
->  
-> +	ret = devm_regulator_get_enable_optional(&pdev->dev, "vpcie3v3aux");
-> +	if (ret < 0 && ret != -ENODEV)
-> +		return dev_err_probe(dev, ret, "failed to enable pcie3v3vaux");
-> +
+> Let me know if I can proceed with this.
 
-So if Vaux is available, do we still need the IMX95_PCIE_SYS_AUX_PWR_DET setting
-in imx95_pcie_init_phy()?
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Yes, I think so.  I would likely target v6.19 for upstream to give us
+more time, but if we can get in -next for a bit now, that would be
+great.  
 
