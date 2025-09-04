@@ -1,154 +1,224 @@
-Return-Path: <linux-pci+bounces-35478-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35479-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24631B44794
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 22:43:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9434B4482E
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 23:12:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D92063BD91E
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 20:43:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5D37546876
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 21:12:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19B1C283FD5;
-	Thu,  4 Sep 2025 20:42:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF51829B8D0;
+	Thu,  4 Sep 2025 21:11:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCZ7Bgh6"
+	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="OoJuMGG+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55B92253FB;
-	Thu,  4 Sep 2025 20:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBC328D8FD;
+	Thu,  4 Sep 2025 21:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757018579; cv=none; b=TaQEdqoEOQjetFFrflRrvsChdK4NvHB8vbRthOa7zsBRxfbWXN2vR8JqKvzs3SfE/iFLbcZq46TYVwhu39iBtcDE9LXS/jSG476PvUQCgs7uyb3R3X20D9ihu5kWS8LSmtOT1jLAaiMm/1gXUA89sk76AXD4bLlUfsq+f+LjGi4=
+	t=1757020319; cv=none; b=QpwObaeWX5cEfIWS4G9zWFnwRvcFL865p1rhBjWAATrz00PhO4rRJjip6+1vF+kzcp+uNGeTN6kKGNzp8vp50+K1518qaMFN2hdeeaL6RGug0ehMTph66DfDalDp/K18T5Nbxj1u8z1bzmjQFoAFRXLlNJ/JXQiqLd9R7xgjstE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757018579; c=relaxed/simple;
-	bh=gl6feTJt/B+TOZvG57z5VrXnOhVpynrQD6B5PUvbN1Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rPGP0kmi3iNCa/lQUjSS77XiCuFkqqISze81v+Y4wo+AkyNZvF6gT7xTcgKJF5tM6qU04gPUJeFjnZ+O5XgNU2cLsmJ0T0c2lyYFUXt1YNXAiPQ6jFAidqRaLwhbYy1+8haecInqglOetpPlpgKL7dnEezXQbBrM1ALVwBdGLoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCZ7Bgh6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F1EC4CEF0;
-	Thu,  4 Sep 2025 20:42:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757018578;
-	bh=gl6feTJt/B+TOZvG57z5VrXnOhVpynrQD6B5PUvbN1Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jCZ7Bgh6T2k6NL9SXYmBR+3vZgQiykuOeKOay4XKp5Ym9hPplZwgMUqiO6utxiUhH
-	 BTUYEmBS5yzuMUpLe7p0j6vIealxoJE7ENcLCSZVh7JNuIa+xGaxMeZREnwHs/muLO
-	 Kwz7f0WpcDpzwhzaGojx8Dwi67YZP7utHWrec3YEfoEM2UtuOnkx3gGhY7ntvHwNHi
-	 1+YFt5oIHK//Dc9QVJEOoPXMgwWyHMNYMSLByyGh4VSeZQp/ghZfTF3YvlcdsyHkPF
-	 tEeVXPWs1JhaNXWuE1W+FPydbcF5m67/7Gg2vZsQfHI5qroM7hsXxrqMy1kiJ079lf
-	 QhMltA3H3mmhA==
-Date: Thu, 4 Sep 2025 15:42:56 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Mario Limonciello (AMD)" <superm1@kernel.org>
-Cc: David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	Daniel Dadap <ddadap@nvidia.com>
-Subject: Re: [PATCH v10 3/4] fbcon: Use screen info to find primary device
-Message-ID: <20250904204256.GA1277756@bhelgaas>
+	s=arc-20240116; t=1757020319; c=relaxed/simple;
+	bh=bVpTdvqZQwctg8yn5l2gjB3RXA0ZvRDSr4BwQH5FB5E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iri9pdj/LtCuOhB/M8EktltlsRkERW7cVnVHJ+Yn13LskjJbKgg/xpYgA9t7Z1dZ+jCvKtywtrmP7c7DsCxplsYQkFsLP1VN705m+rNvObTOmNMa2u+bykEnSMBsIRDPkTPQRC51XP615Gc2vm1/pk5EnsW8CLW9/uKM7XQ+ODo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=OoJuMGG+; arc=none smtp.client-ip=166.84.1.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
+Received: from [192.168.8.212] (kenny-tx.gotdns.com [162.196.229.233])
+	by mailbackend.panix.com (Postfix) with ESMTPSA id 4cHsc96tgSz1CL8;
+	Thu,  4 Sep 2025 17:11:53 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
+	t=1757020314; bh=bVpTdvqZQwctg8yn5l2gjB3RXA0ZvRDSr4BwQH5FB5E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=OoJuMGG+k846EenbEViB6+3Sg86TppjTSiaBpBTtHC2BTe5/Vg9ZqN3zCwRK5L+45
+	 Iy2nSSwCrVKiVqGSitORI9M0AWd4OqnplWyHzM6IF6/zglXprqbiez7IFL0kR4qj1b
+	 LMOszSGyafZQrvWtY52OjgMJlarVpopw+SuCbZLA=
+Message-ID: <603984dc-f29b-498d-9723-1d6aa27bc7fd@panix.com>
+Date: Thu, 4 Sep 2025 14:11:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250811162606.587759-4-superm1@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 1/2] PCI/ASPM: Add host-bridge API to override default
+ ASPM/CLKPM link state
+To: "David E. Box" <david.e.box@linux.intel.com>, rafael@kernel.org,
+ bhelgaas@google.com, vicamo.yang@canonical.com,
+ ilpo.jarvinen@linux.intel.com, nirmal.patel@linux.intel.com, mani@kernel.org
+Cc: linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250825203542.3502368-1-david.e.box@linux.intel.com>
+Content-Language: en-US
+From: Kenneth Crudup <kenny@panix.com>
+In-Reply-To: <20250825203542.3502368-1-david.e.box@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 11, 2025 at 11:26:05AM -0500, Mario Limonciello (AMD) wrote:
-> On systems with non VGA GPUs fbcon can't find the primary GPU because
-> video_is_primary_device() only checks the VGA arbiter.
+
+Tested-by: Kenneth R. Crudup <kenny@panix.com>
+
+On 8/25/25 13:35, David E. Box wrote:
+> Synthetic PCIe hierarchies, such as those created by Intel VMD, are not
+> enumerated by firmware and do not receive BIOS-provided ASPM or CLKPM
+> defaults. Devices in such domains may therefore run without the intended
+> power management.
 > 
-> Add a screen info check to video_is_primary_device() so that callers
-> can get accurate data on such systems.
+> Add a host-bridge mechanism that lets controller drivers supply their own
+> defaults. A new aspm_default_link_state field in struct pci_host_bridge is
+> set via pci_host_set_default_pcie_link_state(). During link initialization,
+> if this field is non-zero, ASPM and CLKPM defaults come from it instead of
+> BIOS.
 > 
-> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
-
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-
-I don't think you need my ack for this, but it does look fine to me.
-
-I wish __screen_info_pci_dev() didn't have to use pci_get_base_class()
-to iterate through all the devices, but you didn't change that and
-maybe somebody will dream up a more efficient way someday.
-
-Let me know if you need anything more from me.  Thanks for persevering
-with this!
-
+> This enables drivers like VMD to align link power management with platform
+> expectations and avoids embedding controller-specific quirks in ASPM core
+> logic.
+> 
+> Link: https://patchwork.ozlabs.org/project/linux-pci/patch/20250720190140.2639200-1-david.e.box%40linux.intel.com/
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Tested-by: Manivannan Sadhasivam <mani@kernel.org>
+> Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
 > ---
-> v10:
->  * Rebase on 6.17-rc1
->  * Squash 'fbcon: Stop using screen_info_pci_dev()'
-> ---
->  arch/x86/video/video-common.c | 25 ++++++++++++++++++++++++-
->  1 file changed, 24 insertions(+), 1 deletion(-)
+> Changes in V3:
+>    -- Changed pci_host_get_default_pcie_link_state() argument name from
+>       parent to dev.
+>    -- Applied changelog tags
 > 
-> diff --git a/arch/x86/video/video-common.c b/arch/x86/video/video-common.c
-> index 81fc97a2a837a..e0aeee99bc99e 100644
-> --- a/arch/x86/video/video-common.c
-> +++ b/arch/x86/video/video-common.c
-> @@ -9,6 +9,7 @@
->  
->  #include <linux/module.h>
->  #include <linux/pci.h>
-> +#include <linux/screen_info.h>
->  #include <linux/vgaarb.h>
->  
->  #include <asm/video.h>
-> @@ -27,6 +28,11 @@ EXPORT_SYMBOL(pgprot_framebuffer);
->  
->  bool video_is_primary_device(struct device *dev)
->  {
-> +#ifdef CONFIG_SCREEN_INFO
-> +	struct screen_info *si = &screen_info;
-> +	struct resource res[SCREEN_INFO_MAX_RESOURCES];
-> +	ssize_t i, numres;
-> +#endif
->  	struct pci_dev *pdev;
->  
->  	if (!dev_is_pci(dev))
-> @@ -34,7 +40,24 @@ bool video_is_primary_device(struct device *dev)
->  
->  	pdev = to_pci_dev(dev);
->  
-> -	return (pdev == vga_default_device());
-> +	if (!pci_is_display(pdev))
-> +		return false;
-> +
-> +	if (pdev == vga_default_device())
-> +		return true;
-> +
-> +#ifdef CONFIG_SCREEN_INFO
-> +	numres = screen_info_resources(si, res, ARRAY_SIZE(res));
-> +	for (i = 0; i < numres; ++i) {
-> +		if (!(res[i].flags & IORESOURCE_MEM))
-> +			continue;
-> +
-> +		if (pci_find_resource(pdev, &res[i]))
-> +			return true;
-> +	}
-> +#endif
-> +
-> +	return false;
->  }
->  EXPORT_SYMBOL(video_is_primary_device);
->  
-> -- 
-> 2.43.0
+> Changes in V2:
 > 
+>    -- Host field name changed to aspm_default_link_state.
+>    -- Added get/set functions for aspm_default_link_state. Only the
+>       setter is exported. Added a kernel-doc describing usage and
+>       particulars around meaning of 0.
+> 
+> Changes in V1 from RFC:
+> 
+>    -- Rename field to aspm_dflt_link_state since it stores
+>       PCIE_LINK_STATE_XXX flags, not a policy enum.
+>    -- Move the field to struct pci_host_bridge since it's being applied to
+>       the entire host bridge per Mani's suggestion.
+>    -- During testing noticed that clkpm remained disabled and this was
+>       also handled by the formerly used pci_enable_link_state(). Add a
+>       check in pcie_clkpm_cap_init() as well to enable clkpm during init.
+> 
+>   drivers/pci/pcie/aspm.c | 42 +++++++++++++++++++++++++++++++++++++++--
+>   include/linux/pci.h     |  9 +++++++++
+>   2 files changed, 49 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 919a05b97647..851ca3d68e55 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -373,6 +373,39 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+>   	pcie_set_clkpm_nocheck(link, enable);
+>   }
+>   
+> +/**
+> + * pci_host_set_default_pcie_link_state - set controller-provided default ASPM/CLKPM mask
+> + * @host: host bridge on which to apply the defaults
+> + * @state: PCIE_LINK_STATE_XXX flags
+> + *
+> + * Allows a PCIe controller driver to specify the default ASPM and/or
+> + * Clock Power Management (CLKPM) link state mask that will be used
+> + * for links under this host bridge during ASPM/CLKPM capability init.
+> + *
+> + * The value is consumed in pcie_aspm_cap_init() and pcie_clkpm_cap_init()
+> + * to override the firmware-discovered defaults.
+> + *
+> + * Interpretation of aspm_default_link_state:
+> + *   - Nonzero: bitmask of PCIE_LINK_STATE_* values to be used as defaults
+> + *   - Zero:    no override provided; ASPM/CLKPM defaults fall back to
+> + *              values discovered in hardware/firmware
+> + *
+> + * Note: zero is always treated as "unset", not as "force ASPM/CLKPM off".
+> + */
+> +void pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
+> +					  unsigned int state)
+> +{
+> +	host->aspm_default_link_state = state;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_host_set_default_pcie_link_state);
+> +
+> +static u32 pci_host_get_default_pcie_link_state(struct pci_dev *dev)
+> +{
+> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> +
+> +	return host ? host->aspm_default_link_state : 0;
+> +}
+> +
+>   static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+>   {
+>   	int capable = 1, enabled = 1;
+> @@ -394,7 +427,10 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+>   			enabled = 0;
+>   	}
+>   	link->clkpm_enabled = enabled;
+> -	link->clkpm_default = enabled;
+> +	if (pci_host_get_default_pcie_link_state(link->pdev) & PCIE_LINK_STATE_CLKPM)
+> +		link->clkpm_default = 1;
+> +	else
+> +		link->clkpm_default = enabled;
+>   	link->clkpm_capable = capable;
+>   	link->clkpm_disable = blacklist ? 1 : 0;
+>   }
+> @@ -866,7 +902,9 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+>   	}
+>   
+>   	/* Save default state */
+> -	link->aspm_default = link->aspm_enabled;
+> +	link->aspm_default = pci_host_get_default_pcie_link_state(parent);
+> +	if (!link->aspm_default)
+> +		link->aspm_default = link->aspm_enabled;
+>   
+>   	/* Setup initial capable state. Will be updated later */
+>   	link->aspm_capable = link->aspm_support;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 59876de13860..8947cbaf9fa6 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -620,6 +620,10 @@ struct pci_host_bridge {
+>   	unsigned int	size_windows:1;		/* Enable root bus sizing */
+>   	unsigned int	msi_domain:1;		/* Bridge wants MSI domain */
+>   
+> +#ifdef CONFIG_PCIEASPM
+> +	unsigned int	aspm_default_link_state;	/* Controller-provided default */
+> +#endif
+> +
+>   	/* Resource alignment requirements */
+>   	resource_size_t (*align_resource)(struct pci_dev *dev,
+>   			const struct resource *res,
+> @@ -1849,6 +1853,8 @@ int pci_disable_link_state(struct pci_dev *pdev, int state);
+>   int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
+>   int pci_enable_link_state(struct pci_dev *pdev, int state);
+>   int pci_enable_link_state_locked(struct pci_dev *pdev, int state);
+> +void pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
+> +					  unsigned int state);
+>   void pcie_no_aspm(void);
+>   bool pcie_aspm_support_enabled(void);
+>   bool pcie_aspm_enabled(struct pci_dev *pdev);
+> @@ -1861,6 +1867,9 @@ static inline int pci_enable_link_state(struct pci_dev *pdev, int state)
+>   { return 0; }
+>   static inline int pci_enable_link_state_locked(struct pci_dev *pdev, int state)
+>   { return 0; }
+> +static inline void
+> +pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
+> +				     unsigned int state) { }
+>   static inline void pcie_no_aspm(void) { }
+>   static inline bool pcie_aspm_support_enabled(void) { return false; }
+>   static inline bool pcie_aspm_enabled(struct pci_dev *pdev) { return false; }
+> 
+> base-commit: c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9
+
+-- 
+Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
+County CA
+
 
