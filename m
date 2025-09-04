@@ -1,97 +1,121 @@
-Return-Path: <linux-pci+bounces-35465-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35466-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D243FB443B5
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 18:56:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 608BCB4440C
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 19:11:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F99A1727D5
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 16:56:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A69C6188AB8A
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 17:11:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73E652D6630;
-	Thu,  4 Sep 2025 16:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E17E431987B;
+	Thu,  4 Sep 2025 17:09:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MRds77gt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPSwdcJP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA76161302;
-	Thu,  4 Sep 2025 16:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AD7319866;
+	Thu,  4 Sep 2025 17:09:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757004993; cv=none; b=uU8jWjdhfA7OE28mSAEjYyKfFW9ilmOsqtGlaaatrEMse8z4hIAhMs8UhKd3+nNVMEE+dZZPStwSuWJsQoj46G8pZqSq/aNRz6z3qagE2EM/XF5d0eKQAhqANO3paBNKg92y7lh5/LT5dxk1IqdpbAXexhLc+jc8e93VVs7/ajc=
+	t=1757005786; cv=none; b=QOEoznD5XlvvLBFGW+qi/UGvDoHPfYdZb75N0zBE4aOp8dZGkMQpKsa31WZn/hNSCkVIhJCWJye7TJwTR19LR/mOxOqY0+sua/y0+h/Z48FRieV+0wCBwXu+nTCSIfhCv8gLBHNJ1kBhODIu6aWPRCW1cFm4CMhmLBTIQiAHWMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757004993; c=relaxed/simple;
-	bh=ImW7nHIDuggd5SOCEFLJtg//+l9EU7YE2MdTLZBVX0U=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=CLglbMRCyhiGL9zszxaG9dWReC2hM69HQMj/XgIujTRyaIs0XxxZAFG1mVMmzExYDIBnW8G3Z1jwckl1urctaKyYKsuVVkfHKCFyeT5nieVZxv5GFIeUrl7XZzn00vG3CSNCgCNr5CBBv9vQXagHOnCkoLVQxdf36I879lupfiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MRds77gt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5F2BC4CEF0;
-	Thu,  4 Sep 2025 16:56:25 +0000 (UTC)
+	s=arc-20240116; t=1757005786; c=relaxed/simple;
+	bh=Kb5OEk6CH681dR8WwdpshUf8PEmUll6MbXBONva8auo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IW3Vlf9U2HdaU4Xt8PUiFxJ6uqawztnZ+R9yqXmigK7yGrJ43OYJ3qgdyv3V+Ai0ftn1k47rmP0176EIuzfRBjf1Uy5Pm6SkI/Wj/SJeRdkI5FG5NN+S2AGTvlOfgQjZ8WavDCU55cxvEfqqfCQf+3qlaKPYHnXc+BQ6KSHFo30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPSwdcJP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9297BC4CEF0;
+	Thu,  4 Sep 2025 17:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757004992;
-	bh=ImW7nHIDuggd5SOCEFLJtg//+l9EU7YE2MdTLZBVX0U=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=MRds77gtY9/UIeTs6xJ1na4Y+fEwwHKz8RbrhEw05lVhJg2qjBU4jA/gd/Qt20PoL
-	 RQ8373z6Ew8Y8Ec9JEdo8yzm6XYY0LjgG82cnO22GjbgDKIgSoqQkkmhFDtO89odxl
-	 ArtVUrFmn3bXv1307ZupGQg9x2VOZWj2DEt6pxhJnIrQFX3KJVoIUtXs7c9kca/frT
-	 TqIFEa3XwwHkQem7GIEupiMkUEdS4EvBGTR3Mq0+nlqbcjDi/BY0K/D1FTumqTUprj
-	 fFKtAJTPeUSeUVhX0ltlGOIF8y6mkKPG3cq8rynmAq2E0MjQC7rLFu9QxLM+EKKSwd
-	 q2vYvZlEY+SZw==
+	s=k20201202; t=1757005786;
+	bh=Kb5OEk6CH681dR8WwdpshUf8PEmUll6MbXBONva8auo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gPSwdcJP4MCiJ8QOfsVD77rIQdkXbfYiHaf4DPc/qOL1RGsR7t1mB26BNa/wvie6/
+	 ts8MIC5y8oLbQYvx0SMK33g32n5jSPH56QYrTHBu58/OwGaH4ZukJobGqMjoJfrDIL
+	 eIi1ufaEBTSeaoJQ1Ob4zLrTGy+/35sR7cL2JoNSPhdlU8Lrll1PsE86mPd9dxw1X1
+	 VsUcDNGjRIGA7Ti6yC45ONK39KNjqcXDi71D4bz33iTtNq6s/A+P/Kcuf5z57Ds/QV
+	 afQ/Sn8+EkWLyvj5vV81lEF2v2UuedyRrmT89OraQjWTmYe2ZW5/pFcMeANV7zKhPt
+	 aQ1vSw3Vn+lCg==
+Date: Thu, 4 Sep 2025 22:39:34 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
- krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com, 
- lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, 
- johan+linaro@kernel.org, vkoul@kernel.org, kishon@kernel.org, 
- neil.armstrong@linaro.org, abel.vesa@linaro.org, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com, 
- quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
-In-Reply-To: <20250904065225.1762793-1-ziyue.zhang@oss.qualcomm.com>
-References: <20250904065225.1762793-1-ziyue.zhang@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH v6 0/3] Add Equalization Settings for 8.0 GT/s
- and 32.0 GT/s and Add PCIe Lane Equalization Preset Properties for 8.0
- GT/s and 16.0 GT/s
-Message-Id: <175700498544.244191.11713819385906991702.b4-ty@kernel.org>
-Date: Thu, 04 Sep 2025 22:26:25 +0530
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] PCI: imx6: Enable the vpcie3v3aux regulator when
+ fetch it
+Message-ID: <piirka3qlna6k33r2eutg26s2iepnvubzbdps6rh5b2tzhxxmg@c7nv3jgkwxpw>
+References: <20250820022328.2143374-1-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250820022328.2143374-1-hongxing.zhu@nxp.com>
 
-
-On Thu, 04 Sep 2025 14:52:22 +0800, Ziyue Zhang wrote:
-> This series adds add equalization settings for 8.0 GT/s and 32.0 GT/s,
-> and add PCIe lane equalization preset properties for 8.0 GT/s and
-> 16.0 GT/s for sa8775p ride platform, which fix AER errors.
+On Wed, Aug 20, 2025 at 10:23:28AM GMT, Richard Zhu wrote:
+> Refer to PCIe CEM r6.0, sec 2.3 WAKE# Signal, WAKE# signal is only
+> asserted by the Add-in Card when all its functions are in D3Cold state
+> and at least one of its functions is enabled for wakeup generation. The
+> 3.3V auxiliary power (+3.3Vaux) must be present and used for wakeup
+> process.
 > 
-> While equalization settings for 16 GT/s have already been set, this
-> update adds the required equalization settings for PCIe operating at
-> 8.0 GT/s and 32.0 GT/s, including the configuration of shadow registers,
-> ensuring optimal performance and stability.
+> When the 3.3V auxiliary power is present, fetch this auxiliary regulator
+> at probe time and keep it enabled for the entire PCIe controller
+> lifecycle. This ensures support for outbound wake-up mechanism such as
+> WAKE# signaling.
 > 
-> [...]
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+> v5 changes:
+> - Use the vpcie3v3aux property instead of adding a duplicated one.
+> - Move the comments from the code changes into the description of
+>   commit.
+> 
+> v4 changes:
+> Move the dt-binding to snps,dw-pcie-common.yaml.
+> 
+> v3 changes:
+> Add a new vaux power supply used to specify the regulator powered up the
+> WAKE# circuit on the connector when WAKE# is supported.
+> 
+> v2 changes:
+> Update the commit message, and add reviewed-by from Frank.
+> https://patchwork.kernel.org/project/linux-pci/patch/20250619072438.125921-1-hongxing.zhu@nxp.com/
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 5a38cfaf989b1..5067da14bc053 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -1739,6 +1739,10 @@ static int imx_pcie_probe(struct platform_device *pdev)
+>  	pci->max_link_speed = 1;
+>  	of_property_read_u32(node, "fsl,max-link-speed", &pci->max_link_speed);
+>  
+> +	ret = devm_regulator_get_enable_optional(&pdev->dev, "vpcie3v3aux");
+> +	if (ret < 0 && ret != -ENODEV)
+> +		return dev_err_probe(dev, ret, "failed to enable pcie3v3vaux");
+> +
 
-Applied, thanks!
+So if Vaux is available, do we still need the IMX95_PCIE_SYS_AUX_PWR_DET setting
+in imx95_pcie_init_phy()?
 
-[1/3] PCI: qcom: Add equalization settings for 8.0 GT/s and 32.0 GT/s
-      commit: 37bf0f4e39de9b53bc6f8d3702b021e2c6b5bae3
-[2/3] PCI: qcom: fix macro typo for CURSOR
-      commit: ea5fbbc15906abdef174c88cecfec4b2a0c748b9
+- Mani
 
-Best regards,
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
-
+மணிவண்ணன் சதாசிவம்
 
