@@ -1,133 +1,199 @@
-Return-Path: <linux-pci+bounces-35436-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35437-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED055B433FC
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 09:30:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33EB9B4350C
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 10:11:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6EBBA7A942E
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 07:28:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29F336839A1
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 08:11:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC2C7242D92;
-	Thu,  4 Sep 2025 07:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V1NcJy0u";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gx6iCLxA"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24F6D2C0296;
+	Thu,  4 Sep 2025 08:10:57 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260951E04AD
-	for <linux-pci@vger.kernel.org>; Thu,  4 Sep 2025 07:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 169702C028B;
+	Thu,  4 Sep 2025 08:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756971029; cv=none; b=uI2PGo1Y6TgtZivlPE7mgEbHIdSX/UBSjV0qC8A6vhL5+zYOW9Qf2YtJ464IZ7F+Ybi8PAifpB4od7tn3h70l73UAgwQZla8v6pHJ/LVj08CEbvHp2ayVwjhJ3xWG99n9TUXnTo8O3Ay+Weyq1soJELqQ2XtW9gConLPMxiiYa8=
+	t=1756973457; cv=none; b=CtD+VPVXl9Keif7jNQyfIv7hzbAGzt3OiZ4ZdHZHhaSiLAEKMF44aHKNN8TiKCe64BNKh74UP34gRiLXC+O2l8bkYt41wFpgWHOMjPcbh8PmJbgROOHV7NiZ78/N7AoeKQbV5sz+EBS7EqAWuLUoOiGSzulhglAHcKoCs3ZyvmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756971029; c=relaxed/simple;
-	bh=Ixc98y50p4OgaTFwWHSM5zW9l2ONIM7iWep6P8DAQHk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SbxlmruYAwt9dKCNzqgZZ8ZVDxFP4hsGq60fLhZF5TEu0bb/0rYEuI9elI5N76GYojvsZwJ0jyrhHVjkfCtKSpng5STyklMMsYvoOJa5BFKicODH3IMDtm1BjOZVZWeG55ZuYR1dVSCW5/KFqhHmr254xR6vhkr8vTQs7cJ9xbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V1NcJy0u; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Gx6iCLxA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Date: Thu, 4 Sep 2025 09:30:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1756971026;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v19daYK7RwpDzpCxMt4efA2yMOM1nVWdKgeweEfjHSg=;
-	b=V1NcJy0uNeI3ubyp9McqZGo4tLpcgTDb/CzKO0rOO+2BbeYix7emyfrfet+68QCvQdBDhd
-	cOH5ANhZ4u+WhpQcSkVCu1tKwFuOSDP/YVzfBaGb1zcXRAt/o16pDfIfZZvt4oTihkAvul
-	HzMDjiSMuaLV40MQq1iLM7gIt9Xg/GUC7fRa8B1d0ZDirQmidQIqZaIQKsEsy3ylxEvJVu
-	/mfkfKSjffcJF6S5cJBLqLQYXmGbqHSQAQAQB+5Ij7dXe1A+2x4jcvp5mKUvNMeQ/v62fI
-	XU234yXPNjS440XAwczceH6QYE/8cznqLHz61T4A3hi8K3BZhac5cH2Qg7rLiA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1756971026;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v19daYK7RwpDzpCxMt4efA2yMOM1nVWdKgeweEfjHSg=;
-	b=Gx6iCLxAmkpVk52DjHEfnd9NV0p+6i6pzm4L8sM7xE6f/mC/LGrCR1PW346OmMhYTFMZZZ
-	1WIVGwWFze2T6fCg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Crystal Wood <crwood@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Attila Fazekas <afazekas@redhat.com>, linux-pci@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH] PCI/AER: Use IRQF_NO_THREAD on aer_irq
-Message-ID: <20250904073024.YsLeZqK_@linutronix.de>
-References: <20250902224441.368483-1-crwood@redhat.com>
+	s=arc-20240116; t=1756973457; c=relaxed/simple;
+	bh=qTz5Q3dBw3oX8QOJDlh3RtZii4ROKC8FKHxOsPE7448=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=duOXfV64ifX4rVRFl7MTCQ5zeHtvw1vWb+aos4lfnvpQNrpQI6mTADUhXsqxJQfHPSQiPELBKgLixw899PPTnJV5ckh4F/nrMD1bQxVpMYYIyHityAjp9cOLHprM7SlusEfNdQuhKX1Lw6m70PCEnN/qYCrl2+jwVtQ/+aLGzDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
+ ajax-webmail-app2 (Coremail) ; Thu, 4 Sep 2025 16:10:23 +0800 (GMT+08:00)
+Date: Thu, 4 Sep 2025 16:10:23 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
+To: "Manivannan Sadhasivam" <mani@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, p.zabel@pengutronix.de,
+	johan+linaro@kernel.org, quic_schintav@quicinc.com,
+	shradha.t@samsung.com, cassel@kernel.org,
+	thippeswamy.havalige@amd.com, mayank.rana@oss.qualcomm.com,
+	inochiama@gmail.com, ningyu@eswincomputing.com,
+	linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com
+Subject: Re: Re: [PATCH v2 1/2] dt-bindings: PCI: eic7700: Add Eswin eic7700
+ PCIe host controller
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
+ 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <nq3xoih7kbjdaxnwoduz3o2nxt2ikahbogqdraibznrlqwqw5r@ovjarka5eagm>
+References: <20250829082021.49-1-zhangsenchuan@eswincomputing.com>
+ <20250829082237.1064-1-zhangsenchuan@eswincomputing.com>
+ <nq3xoih7kbjdaxnwoduz3o2nxt2ikahbogqdraibznrlqwqw5r@ovjarka5eagm>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250902224441.368483-1-crwood@redhat.com>
+Message-ID: <9cb374f.cc7.19913c6dd06.Coremail.zhangsenchuan@eswincomputing.com>
+X-Coremail-Locale: en_US
+X-CM-TRANSID:TQJkCgA31pRvSblowVjIAA--.24043W
+X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAgEPBmi4b
+	dETlAABsg
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-On 2025-09-02 17:44:41 [-0500], Crystal Wood wrote:
-> On PREEMPT_RT, currently both aer_irq and aer_isr run in separate threads,
-> at the same FIFO priority.  This can lead to the aer_isr thread starving
-> the aer_irq thread, particularly if multi_error_valid causes a scan of
-> all devices, and multiple errors are raised during the scan.
-> 
-> On !PREEMPT_RT, or if aer_irq runs at a higher priority than aer_isr, these
-> errors can be queued as single-error events as they happen.  But if aer_irq
-> can't run until aer_isr finishes, by that time the multi event bit will be
-> set again, causing a new scan and an infinite loop.
-
-So if aer_irq is too slow we get new "work" pilled up? Is it because
-there is a timing constrains how long until the error needs to be
-acknowledged?
-
-Another way would be to let the secondary handler run at a slightly lower
-priority than the primary handler. In this case making the primary
-non-threaded should not cause any harm.
-
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-
-> Signed-off-by: Crystal Wood <crwood@redhat.com>
-> ---
-> I'm seeing this on a particular ARM server when using /sys/bus/pci/rescan,
-> though the internal reporter sometimes saw it happen on boot as well.
-> On !PREEMPT_RT, or with this patch, a finite number of errors are emitted
-> and the scan completes.
-> ---
->  drivers/pci/pcie/aer.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 15ed541d2fbe..6945a112a5cd 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1671,7 +1671,8 @@ static int aer_probe(struct pcie_device *dev)
->  	set_service_data(dev, rpc);
->  
->  	status = devm_request_threaded_irq(device, dev->irq, aer_irq, aer_isr,
-> -					   IRQF_SHARED, "aerdrv", dev);
-> +					   IRQF_NO_THREAD | IRQF_SHARED,
-> +					   "aerdrv", dev);
-
-I'm not sure if this works with IRQF_SHARED. Your primary handler is
-IRQF_SHARED + IRQF_NO_THREAD and another shared handler which is
-forced-threaded will have IRQF_SHARED + IRQF_ONESHOT. 
-If the core does not complain, all good. Worst case might be the shared
-ONESHOT lets your primary handler starve. It would be nice if you could
-check if you have shared handler here (I have no aer I three boxes I
-checked).
-
->  	if (status) {
->  		pci_err(port, "request AER IRQ %d failed\n", dev->irq);
->  		return status;
-
-Sebastian
+CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiTWFuaXZhbm5hbiBTYWRo
+YXNpdmFtIiA8bWFuaUBrZXJuZWwub3JnPgo+IFNlbmQgdGltZTpNb25kYXksIDAxLzA5LzIwMjUg
+MTQ6MDQ6NTAKPiBUbzogemhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1dGluZy5jb20KPiBDYzogYmhl
+bGdhYXNAZ29vZ2xlLmNvbSwgbHBpZXJhbGlzaUBrZXJuZWwub3JnLCBrd2lsY3p5bnNraUBrZXJu
+ZWwub3JnLCByb2JoQGtlcm5lbC5vcmcsIGtyemsrZHRAa2VybmVsLm9yZywgY29ub3IrZHRAa2Vy
+bmVsLm9yZywgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZywgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmcsIGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsIHAuemFiZWxAcGVuZ3V0cm9uaXgu
+ZGUsIGpvaGFuK2xpbmFyb0BrZXJuZWwub3JnLCBxdWljX3NjaGludGF2QHF1aWNpbmMuY29tLCBz
+aHJhZGhhLnRAc2Ftc3VuZy5jb20sIGNhc3NlbEBrZXJuZWwub3JnLCB0aGlwcGVzd2FteS5oYXZh
+bGlnZUBhbWQuY29tLCBtYXlhbmsucmFuYUBvc3MucXVhbGNvbW0uY29tLCBpbm9jaGlhbWFAZ21h
+aWwuY29tLCBuaW5neXVAZXN3aW5jb21wdXRpbmcuY29tLCBsaW5taW5AZXN3aW5jb21wdXRpbmcu
+Y29tLCBwaW5rZXNoLnZhZ2hlbGFAZWluZm9jaGlwcy5jb20KPiBTdWJqZWN0OiBSZTogW1BBVENI
+IHYyIDEvMl0gZHQtYmluZGluZ3M6IFBDSTogZWljNzcwMDogQWRkIEVzd2luIGVpYzc3MDAgUENJ
+ZSBob3N0IGNvbnRyb2xsZXIKPiAKPiBPbiBGcmksIEF1ZyAyOSwgMjAyNSBhdCAwNDoyMjozN1BN
+IEdNVCwgemhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1dGluZy5jb20gd3JvdGU6Cj4gPiBGcm9tOiBT
+ZW5jaHVhbiBaaGFuZyA8emhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1dGluZy5jb20+Cj4gPiAKPiA+
+IEFkZCBEZXZpY2UgVHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIHRoZSBFU1dJTiBFSUM3
+NzAwCj4gPiBQQ0llIGNvbnRyb2xsZXIgbW9kdWxlLHRoZSBQQ0llIGNvbnRyb2xsZXIgZW5hYmxl
+cyB0aGUgY29yZQo+ID4gdG8gY29ycmVjdGx5IGluaXRpYWxpemUgYW5kIG1hbmFnZSB0aGUgUENJ
+ZSBidXMgYW5kIGNvbm5lY3RlZAo+ID4gZGV2aWNlcy4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTog
+WXUgTmluZyA8bmluZ3l1QGVzd2luY29tcHV0aW5nLmNvbT4KPiA+IFNpZ25lZC1vZmYtYnk6IFNl
+bmNodWFuIFpoYW5nIDx6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbT4KPiA+IC0tLQo+
+ID4gIC4uLi9iaW5kaW5ncy9wY2kvZXN3aW4sZWljNzcwMC1wY2llLnlhbWwgICAgICB8IDE0MiAr
+KysrKysrKysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTQyIGluc2VydGlvbnMoKykK
+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3BjaS9lc3dpbixlaWM3NzAwLXBjaWUueWFtbAo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9lc3dpbixlaWM3NzAwLXBjaWUueWFtbCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZXN3aW4sZWljNzcwMC1wY2ll
+LnlhbWwKPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjY1
+ZjY0MDkwMmIxMQo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3BjaS9lc3dpbixlaWM3NzAwLXBjaWUueWFtbAo+ID4gQEAgLTAsMCAr
+MSwxNDIgQEAKPiA+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMC1vbmx5IE9S
+IEJTRC0yLUNsYXVzZSkKPiA+ICslWUFNTCAxLjIKPiA+ICstLS0KPiA+ICskaWQ6IGh0dHA6Ly9k
+ZXZpY2V0cmVlLm9yZy9zY2hlbWFzL3BjaS9lc3dpbixlaWM3NzAwLXBjaWUueWFtbCMKPiA+ICsk
+c2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMKPiA+
+ICsKPiA+ICt0aXRsZTogRXN3aW4gRUlDNzcwMCBQQ0llIGhvc3QgY29udHJvbGxlcgo+ID4gKwo+
+ID4gK21haW50YWluZXJzOgo+ID4gKyAgLSBZdSBOaW5nIDxuaW5neXVAZXN3aW5jb21wdXRpbmcu
+Y29tPgo+ID4gKyAgLSBTZW5jaHVhbiBaaGFuZyA8emhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1dGlu
+Zy5jb20+Cj4gPiArCj4gPiArZGVzY3JpcHRpb246Cj4gPiArICBUaGUgUENJZSBjb250cm9sbGVy
+IG9uIEVJQzc3MDAgU29DLgo+ID4gKwo+ID4gK2FsbE9mOgo+ID4gKyAgLSAkcmVmOiAvc2NoZW1h
+cy9wY2kvcGNpLWhvc3QtYnJpZGdlLnlhbWwjCj4gPiArCj4gPiArcHJvcGVydGllczoKPiA+ICsg
+IGNvbXBhdGlibGU6Cj4gPiArICAgIGNvbnN0OiBlc3dpbixlaWM3NzAwLXBjaWUKPiA+ICsKPiA+
+ICsgIHJlZzoKPiA+ICsgICAgbWF4SXRlbXM6IDMKPiA+ICsKPiA+ICsgIHJlZy1uYW1lczoKPiA+
+ICsgICAgaXRlbXM6Cj4gPiArICAgICAgLSBjb25zdDogZGJpCj4gPiArICAgICAgLSBjb25zdDog
+Y29uZmlnCj4gPiArICAgICAgLSBjb25zdDogbWdtdAo+ID4gKwo+ID4gKyAgcmFuZ2VzOgo+ID4g
+KyAgICBtYXhJdGVtczogMwo+ID4gKwo+ID4gKyAgbnVtLWxhbmVzOgo+ID4gKyAgICBjb25zdDog
+NAo+ID4gKwo+ID4gKyAgJyNpbnRlcnJ1cHQtY2VsbHMnOgo+ID4gKyAgICBjb25zdDogMQo+ID4g
+Kwo+ID4gKyAgaW50ZXJydXB0czoKPiA+ICsgICAgbWF4SXRlbXM6IDkKPiA+ICsKPiA+ICsgIGlu
+dGVycnVwdC1uYW1lczoKPiA+ICsgICAgaXRlbXM6Cj4gPiArICAgICAgLSBjb25zdDogbXNpCj4g
+PiArICAgICAgLSBjb25zdDogaW50YQo+ID4gKyAgICAgIC0gY29uc3Q6IGludGIKPiA+ICsgICAg
+ICAtIGNvbnN0OiBpbnRjCj4gPiArICAgICAgLSBjb25zdDogaW50ZAo+ID4gKyAgICAgIC0gY29u
+c3Q6IGludGUKPiA+ICsgICAgICAtIGNvbnN0OiBpbnRmCj4gPiArICAgICAgLSBjb25zdDogaW50
+Zwo+ID4gKyAgICAgIC0gY29uc3Q6IGludGgKPiAKPiBXaGF0PyBBcmUgdGhlc2Ugc3RhbmRhcmQg
+SU5UeCBvciBzb21ldGhpbmcgZWxlc2U/IFBDSShlKSBzcGVjIGRlZmluZXMgb25seQo+IElOVHtB
+LUR9Lgo+IAoKRGVhciBNYW5pdmFubmFuCgpUaGFuayB5b3UgZm9yIHlvdXIgdGhvcm91Z2ggcmV2
+aWV3IC4KWW91IGFyZSByaWdodCwgdGhlIFBDSShlKSBzcGVjIGRlZmluZXMgb25seSBmb3VyIGxl
+Z2FjeSBJTlR4IGludGVycnVwdHMgKElOVEEjLCBJTlRCIywgSU5UQyMsICBJTlREIykuIApQQ0ko
+ZSkgc3BlYyBkZWZpbmVzIGFsc28gbWVudGlvbnMgdGhhdCBJTlRYIGludGVycnVwdHMgaGF2ZSB0
+d28gY29udHJvbCBzdGF0ZXMgKEFzc2VydF9JTlR4L0RlYXNzZXJ0X0lOVHggTWVzc2FnZSkuCklu
+IG91ciB5YW1sLCBpbnRhfmludGQgY29ycmVzcG9uZHMgdG8gQXNzZXJ0X0lOVEF+QXNzZXJ0X0lO
+VEQsIGFuZCBpbnRlfmludGggY29ycmVzcG9uZHMgdG8gRGVhc3NlcnRfSU5UQX5EZWFzc2VydF9J
+TlRELiAKTWF5IEkgYXNrIGlmIGludGV+aW50aCBuZWVkcyB0byBiZSByZW1vdmVkIG9yIGlmIHRo
+ZSBuYW1pbmcgbmVlZHMgdG8gYmUgc3RhbmRhcmRpemVkPyAKSSBzYXcgdGhhdCBpbiAic2lmaXZl
+LGZ1NzQwLXBjaWUueWFtbCIsIGludGVycnVwdC1uYW1lcyBvbmx5IHJldGFpbiBpbnRhIHRvIGlu
+dGQuCgo+ID4gKwo+ID4gKyAgaW50ZXJydXB0LW1hcDoKPiA+ICsgICAgbWF4SXRlbXM6IDQKPiA+
+ICsKPiA+ICsgIGludGVycnVwdC1tYXAtbWFzazoKPiA+ICsgICAgaXRlbXM6Cj4gPiArICAgICAg
+LSBjb25zdDogMAo+ID4gKyAgICAgIC0gY29uc3Q6IDAKPiA+ICsgICAgICAtIGNvbnN0OiAwCj4g
+PiArICAgICAgLSBjb25zdDogNwo+ID4gKwo+ID4gKyAgY2xvY2tzOgo+ID4gKyAgICBtYXhJdGVt
+czogNAo+ID4gKwo+ID4gKyAgY2xvY2stbmFtZXM6Cj4gPiArICAgIGl0ZW1zOgo+ID4gKyAgICAg
+IC0gY29uc3Q6IG1zdHIKPiA+ICsgICAgICAtIGNvbnN0OiBkYmkKPiA+ICsgICAgICAtIGNvbnN0
+OiBwY2xrCj4gPiArICAgICAgLSBjb25zdDogYXV4Cj4gPiArCj4gPiArICByZXNldHM6Cj4gPiAr
+ICAgIG1heEl0ZW1zOiAzCj4gPiArCj4gPiArICByZXNldC1uYW1lczoKPiA+ICsgICAgaXRlbXM6
+Cj4gPiArICAgICAgLSBjb25zdDogY2ZnCj4gPiArICAgICAgLSBjb25zdDogcG93ZXJ1cAo+ID4g
+KyAgICAgIC0gY29uc3Q6IHB3cmVuCj4gPiArCj4gPiArcmVxdWlyZWQ6Cj4gPiArICAtIGNvbXBh
+dGlibGUKPiA+ICsgIC0gcmVnCj4gPiArICAtIHJhbmdlcwo+ID4gKyAgLSBudW0tbGFuZXMKPiA+
+ICsgIC0gaW50ZXJydXB0cwo+ID4gKyAgLSBpbnRlcnJ1cHQtbmFtZXMKPiA+ICsgIC0gaW50ZXJy
+dXB0LW1hcC1tYXNrCj4gPiArICAtIGludGVycnVwdC1tYXAKPiA+ICsgIC0gJyNpbnRlcnJ1cHQt
+Y2VsbHMnCj4gPiArICAtIGNsb2Nrcwo+ID4gKyAgLSBjbG9jay1uYW1lcwo+ID4gKyAgLSByZXNl
+dHMKPiA+ICsgIC0gcmVzZXQtbmFtZXMKPiA+ICsKPiA+ICt1bmV2YWx1YXRlZFByb3BlcnRpZXM6
+IGZhbHNlCj4gPiArCj4gPiArZXhhbXBsZXM6Cj4gPiArICAtIHwKPiA+ICsgICAgc29jIHsKPiA+
+ICsgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDI+Owo+ID4gKyAgICAgICAgI3NpemUtY2VsbHMg
+PSA8Mj47Cj4gPiArCj4gPiArICAgICAgICBwY2llQDU0MDAwMDAwIHsKPiA+ICsgICAgICAgICAg
+ICBjb21wYXRpYmxlID0gImVzd2luLGVpYzc3MDAtcGNpZSI7Cj4gPiArICAgICAgICAgICAgcmVn
+ID0gPDB4MCAweDU0MDAwMDAwIDB4MCAweDQwMDAwMDA+LAo+ID4gKyAgICAgICAgICAgICAgICAg
+IDwweDAgMHg0MDAwMDAwMCAweDAgMHg4MDAwMDA+LAo+ID4gKyAgICAgICAgICAgICAgICAgIDww
+eDAgMHg1MDAwMDAwMCAweDAgMHgxMDAwMDA+Owo+ID4gKyAgICAgICAgICAgIHJlZy1uYW1lcyA9
+ICJkYmkiLCAiY29uZmlnIiwgIm1nbXQiOwo+ID4gKyAgICAgICAgICAgICNhZGRyZXNzLWNlbGxz
+ID0gPDM+Owo+ID4gKyAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDI+Owo+ID4gKyAgICAgICAg
+ICAgICNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47Cj4gPiArICAgICAgICAgICAgcmFuZ2VzID0gPDB4
+ODEwMDAwMDAgMHgwIDB4NDA4MDAwMDAgMHgwIDB4NDA4MDAwMDAgMHgwIDB4ODAwMDAwPiwKPiAK
+PiBJL08gQ1BVIHJhbmdlIHN0YXJ0cyBmcm9tIDB4MAo+IAo+IEFsc28sIEkgZG9uJ3QgdGhpbmsg
+eW91IG5lZWQgdG8gc2V0IHRoZSByZWxvY2F0YWJsZSBmbGFnIChiaXQgMzEpIGZvciBhbnkKPiBy
+ZWdpb25zLgoKaWYgY2Fubm90IHNldCB0aGUgcmVsb2NhdGFibGUgZmxhZyAoYml0IDMxKSBmb3Ig
+YW55IHJlZ2lvbnMuSXMgaXQgYXBwcm9wcmlhdGUgdG8gd3JpdGUgaXQgdGhpcyB3YXnvvJoKcmFu
+Z2VzID0gPDB4MDEwMDAwMDAgMHgwIDB4NDA4MDAwMDAgMHgwIDB4NDA4MDAwMDAgMHgwIDB4ODAw
+MDAwPiwKICAgICAgICAgPDB4MDIwMDAwMDAgMHgwIDB4NDEwMDAwMDAgMHgwIDB4NDEwMDAwMDAg
+MHgwIDB4ZjAwMDAwMD4sCiAgICAgICAgIDwweDQzMDAwMDAwIDB4ODAgMHgwMDAwMDAwMCAweDgw
+IDB4MDAwMDAwMDAgMHgyIDB4MDAwMDAwMDA+OwoKPiAKPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICA8MHg4MjAwMDAwMCAweDAgMHg0MTAwMDAwMCAweDAgMHg0MTAwMDAwMCAweDAgMHhmMDAwMDAw
+PiwKPiA+ICsgICAgICAgICAgICAgICAgICAgICA8MHhjMzAwMDAwMCAweDgwIDB4MDAwMDAwMDAg
+MHg4MCAweDAwMDAwMDAwIDB4MiAweDAwMDAwMDAwPjsKPiA+ICsgICAgICAgICAgICBidXMtcmFu
+Z2UgPSA8MHgwIDB4ZmY+Owo+ID4gKyAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2sgNTYyPiwK
+PiA+ICsgICAgICAgICAgICAgICAgICAgICA8JmNsb2NrIDU2Mz4sCj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgPCZjbG9jayA1NjQ+LAo+ID4gKyAgICAgICAgICAgICAgICAgICAgIDwmY2xvY2sg
+NTY1PjsKPiAKPiBEb24ndCB5b3UgaGF2ZSBjbG9jayBkZWZpbml0aW9ucyBmb3IgdGhlc2UgdmFs
+dWVzPwo+IAoKT3VyIGNsb2NrIGFuZCByZXNldCBkcml2ZXJzIGhhdmUgdGhlIGRlZmluaXRpb25z
+IG9mIHRoZXNlIHZhbHVlcywgYnV0IHRoZSBjbG9jayBhbmQgcmVzZXQgZHJpdmVycyBhcmUgdW5k
+ZXIgcmV2aWV3LiAKQ3VycmVudGx5LCB0aGVzZSB2YWx1ZXMgY2FuIG9ubHkgYmUgcmVwbGFjZWQg
+YnkgY29uc3RhbnRzLgoKPiA+ICsgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJtc3RyIiwgImRi
+aSIsICJwY2xrIiwgImF1eCI7Cj4gPiArICAgICAgICAgICAgcmVzZXRzID0gPCZyZXNldCA4ICgx
+IDw8IDApPiwKPiA+ICsgICAgICAgICAgICAgICAgICAgICA8JnJlc2V0IDggKDEgPDwgMSk+LAo+
+ID4gKyAgICAgICAgICAgICAgICAgICAgIDwmcmVzZXQgOCAoMSA8PCAyKT47Cj4gCj4gU2FtZSBo
+ZXJlLgo+IAo+ID4gKyAgICAgICAgICAgIHJlc2V0LW5hbWVzID0gImNmZyIsICJwb3dlcnVwIiwg
+InB3cmVuIjsKPiA+ICsgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDIyMD4sIDwxNzk+LCA8MTgw
+PiwgPDE4MT4sIDwxODI+LCA8MTgzPiwgPDE4ND4sIDwxODU+LCA8MTg2PjsKPiA+ICsgICAgICAg
+ICAgICBpbnRlcnJ1cHQtbmFtZXMgPSAibXNpIiwgImludGEiLCAiaW50YiIsICJpbnRjIiwgImlu
+dGQiLAo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJpbnRlIiwgImludGYiLCAi
+aW50ZyIsICJpbnRoIjsKPiA+ICsgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZwbGlj
+PjsKPiA+ICsgICAgICAgICAgICBpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MHgwIDB4MCAweDAgMHg3
+PjsKPiA+ICsgICAgICAgICAgICBpbnRlcnJ1cHQtbWFwID0gPDB4MCAweDAgMHgwIDB4MSAmcGxp
+YyAxNzk+LAo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHgwIDB4MCAweDAgMHgy
+ICZwbGljIDE4MD4sCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwweDAgMHgwIDB4
+MCAweDMgJnBsaWMgMTgxPiwKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDB4MCAw
+eDAgMHgwIDB4NCAmcGxpYyAxODI+Owo+ID4gKyAgICAgICAgICAgIGRldmljZV90eXBlID0gInBj
+aSI7Cj4gPiArICAgICAgICAgICAgbnVtLWxhbmVzID0gPDB4ND47Cj4gCj4gbml0OiBNb3N0IG9m
+IHRoZSBiaW5kaW5ncyBkZWZpbmUgbnVtLWxhbmVzIGFzIGRlY2ltYWwuCj4gCgoKCgpCZXN0IFJl
+Z2FyZHMsCgpTZW5jaHVhbiBaaGFuZwoKCg==
 
