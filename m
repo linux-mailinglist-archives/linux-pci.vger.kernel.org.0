@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-35472-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35473-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69131B4456A
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 20:30:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72C95B44590
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 20:37:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 28727172C73
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 18:30:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32CD7481196
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 18:37:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C7101A23A9;
-	Thu,  4 Sep 2025 18:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A767F30BBBC;
+	Thu,  4 Sep 2025 18:37:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OF4hLLQk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fK9TtnAK"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2462136988;
-	Thu,  4 Sep 2025 18:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1622D6630;
+	Thu,  4 Sep 2025 18:37:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757010648; cv=none; b=Id8hD+X3BrV0QGxmAO9OcO6XQkR0s62ZOrCQoS8G+tGp19w1zPfK4WZr8v9OPFZ3PQ3537y2ebJf9XHN7xWQ+hruUxbcSf3Q3PuSyG8LqiPqEvZoN0sHvEu3DQVZxcbrQaqS9p6XRiGS1AnMCnd6IWeQeMw5yf8PK1w+menPCOc=
+	t=1757011021; cv=none; b=jW5uednLDTDFrpp328hYJsD3FYWK37zCXESbnRS0NpDl2+2enbP2UV1ZVzDtY7zITvQD7HWb68UrC4BMYAghw2c+TDbpFNrO9O1k8Tweibc4DwkVj/09Ju0N8+u+bbkxI16jcwwDqE9v7fu2Jd2iDTqFQCoWnSRs0F/mLZyOoWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757010648; c=relaxed/simple;
-	bh=clsffvWNe7CRZlbmQww0liyl8L1BsLLcWkfBfiG4m5I=;
+	s=arc-20240116; t=1757011021; c=relaxed/simple;
+	bh=ftjP0BgBhol/aJqy+0EAcs43kMLIGJAJVDQe4elAqE4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=NVZBz59u8J7kQdhP0GjEO4d+HLLjpfWbPRGruwKaUwsHkPw2p4j1NkEB++uXkhrVpSM6YzoQ+j12E/q9LpEmFS9eEXpI0vArcFYODJXUtuWtf+aZg8a2a/JpliVsjrVmcyA2zB5Q2mEOoUqQSWYVBhtRNHb0C9S6LtveqJ1tbXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OF4hLLQk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35AE1C4CEF0;
-	Thu,  4 Sep 2025 18:30:48 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=h0ACGuTdABIgH0uFNJcnfgrKPGvV3NyvZRMb1PWCXYHBluFNGn44hpWzAHncvatmxbR+USsvsvBlYl/a7rncQ6br+xqYzyMkp4g34Q3P2C5YJ1EgSOEas06uQsmjD+g4S/j7WpOI8bhAiZB4W9ngmM42GBsZ5bn+qq+dUodOx1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fK9TtnAK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB9FC4CEF0;
+	Thu,  4 Sep 2025 18:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757010648;
-	bh=clsffvWNe7CRZlbmQww0liyl8L1BsLLcWkfBfiG4m5I=;
+	s=k20201202; t=1757011021;
+	bh=ftjP0BgBhol/aJqy+0EAcs43kMLIGJAJVDQe4elAqE4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=OF4hLLQkzLqgwsgK2b+/HKVukhj+CPaxsLKNdALf8BwJmyXgekeig/pBRN9JYLORi
-	 hAmsXMlMpfyLDTYHh/+E6JnecT7LqpUNe/xMwFTfIlRUc3+3GoXh+OzO/5skIcy1Te
-	 GLqOVrTo/6D/4K0KgffnVXT5IuTN+idbR4hCh4yEHFumrXpq0hv7+ZT+YJBE0KC6qs
-	 2ET1r6mKQOvuax7oDp7iEqQJrYzEOyqJLv8jZu5OBcsuSR2L+rgFKUU1SQM/kMU5/U
-	 d9LLGRa/YcnPwctwWNpGwvGeUN3GzYwreGL8ZwFLQDOARIFnWgChB2v4hWtthBWpvq
-	 RfpBKe2jOnQZg==
-Date: Thu, 4 Sep 2025 13:30:46 -0500
+	b=fK9TtnAKgXX/kekyaKxa6YXvorPUEg6avFCJKW5o6hy8TneIFexM7MlDX4I167iE3
+	 EwO9anL4coTCc35WrDYsxvkW4xgN5a5ivg89pJUyIySyWFa9wi0bOTYCknilvZtMWT
+	 8hjAzcy9qigvBk6oo2MNBYxfOGHKrv/2gK7BjRuL64TMZePW2DN72v8JMTED5g0KMi
+	 z1AJHjUwEiMGdTrlnis2laZaZzD58lgLmtgLjgnVy0HTpl07f9o+9yCjA7NSH+QZya
+	 4oP2mYzZxuGn9s8W9f/Qkw7FdkwKY26cWuuNAEv5WSDDoQW6iE/WQWc5H1/+NikuVn
+	 EBV7fea9xR9nA==
+Date: Thu, 4 Sep 2025 13:36:59 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Badal Nilawar <badal.nilawar@intel.com>
 Cc: intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org,
@@ -50,8 +50,9 @@ Cc: intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org,
 	ilpo.jarvinen@linux.intel.com, lucas.demarchi@intel.com,
 	rodrigo.vivi@intel.com, varun.gupta@intel.com,
 	ville.syrjala@linux.intel.com, uma.shankar@intel.com
-Subject: Re: [PATCH v4 01/11] PCI/ACPI: Add D3cold Aux Power Limit_DSM method
-Message-ID: <20250904183046.GA1267851@bhelgaas>
+Subject: Re: [PATCH v4 02/11] PCI/ACPI: Per root port allow one Aux power
+ limit request
+Message-ID: <20250904183659.GA1271032@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,237 +61,128 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250529111654.3140766-2-badal.nilawar@intel.com>
+In-Reply-To: <20250529111654.3140766-3-badal.nilawar@intel.com>
 
-On Thu, May 29, 2025 at 04:46:44PM +0530, Badal Nilawar wrote:
-> From: Anshuman Gupta <anshuman.gupta@intel.com>
-> 
-> Implement _DSM method 0Ah according to PCI firmware specifications,
-> section 4.6.10 Rev 3.3., to request auxilary power needed for the
-> device when in D3Cold.
+On Thu, May 29, 2025 at 04:46:45PM +0530, Badal Nilawar wrote:
+> For given root port allow one Aux power limit request.
 
-Cite as "PCI Firmware r3.3, sec 4.6.10"
-> 
-> Note that this implementation assumes only a single device below the
-> Downstream Port will request for Aux Power Limit under a given
-> Root Port because it does not track and aggregate requests
-> from all child devices below the Downstream Port as required
-> by Section 4.6.10 Rev 3.3.
+Please include the reason why we do this.  I don't think we need it.
 
-Wrap to fill 75 columns.  Update citation as above.
+PCI Firmware r3.3, sec 4.6.10 says this _DSM function can be invoked
+multiple times with different requests.
 
-> One possible mitigation would be only allowing only first PCIe
-> Non-Bridge Endpoint Function 0 driver to call_DSM method 0Ah.
+We might need a mutex just to avoid concurrent evaluations of this
+_DSM function by different drivers; I'm not sure whether there's a
+requirement to avoid that or whether the ACPI core already enforces
+something like that.  But that would be a separate thing from
+aux_power_limit.
 
-I don't quite understand how this mitigation would address the lack of
-aggregation or how the mitigation could be enforced.  Maybe just drop
-this?
-
-s/call_DSM/call _DSM/
-
-> Signed-off-by: Varun Gupta <varun.gupta@intel.com>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Cc: Anshuman Gupta <anshuman.gupta@intel.com>
 > Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-> Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
 > ---
-> V2(Bjorn/Rafael):
->   - Call acpi_dsm_check() to find method 0Ah supported
->   - Return retry interval to caller
-> V3(Kuppuswamy)
->   - Add NULL check for retry interval
-> ---
->  drivers/pci/pci-acpi.c   | 87 ++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci-acpi.h |  8 ++++
->  2 files changed, 95 insertions(+)
+>  drivers/acpi/scan.c     |  1 +
+>  drivers/pci/pci-acpi.c  | 25 ++++++++++++++++++++++++-
+>  include/acpi/acpi_bus.h |  2 ++
+>  3 files changed, 27 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index fb1fe9f3b1a3..9ae7be9db01a 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -745,6 +745,7 @@ int acpi_device_add(struct acpi_device *device)
+>  	INIT_LIST_HEAD(&device->physical_node_list);
+>  	INIT_LIST_HEAD(&device->del_list);
+>  	mutex_init(&device->physical_node_lock);
+> +	mutex_init(&device->power.aux_pwr_lock);
+>  
+>  	mutex_lock(&acpi_device_lock);
+>  
 > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index af370628e583..87f30910a5f1 100644
+> index 87f30910a5f1..d33efba4ca94 100644
 > --- a/drivers/pci/pci-acpi.c
 > +++ b/drivers/pci/pci-acpi.c
-> @@ -1421,6 +1421,93 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
->  	ACPI_FREE(obj);
+> @@ -1451,6 +1451,7 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>  	union acpi_object *out_obj;
+>  	acpi_handle handle;
+>  	int result, ret = -EINVAL;
+> +	struct acpi_device *adev;
+>  
+>  	if (!dev || !retry_interval)
+>  		return -EINVAL;
+> @@ -1464,11 +1465,27 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>  		return -ENODEV;
+>  	}
+>  
+> +	adev = ACPI_COMPANION(&dev->dev);
+> +	if (!adev)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&adev->power.aux_pwr_lock);
+> +
+> +	/* Check if aux power already granted */
+> +	if (adev->power.aux_power_limit) {
+> +		pci_info(dev, "D3cold Aux Power request already granted: %u mW\n",
+> +			 adev->power.aux_power_limit);
+> +		mutex_unlock(&adev->power.aux_pwr_lock);
+> +		return -EPERM;
+> +	}
+> +
+>  	out_obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4,
+>  					  DSM_PCI_D3COLD_AUX_POWER_LIMIT,
+>  					  &in_obj, ACPI_TYPE_INTEGER);
+> -	if (!out_obj)
+> +	if (!out_obj) {
+> +		mutex_unlock(&adev->power.aux_pwr_lock);
+>  		return -EINVAL;
+> +	}
+>  
+>  	result = out_obj->integer.value;
+>  	if (retry_interval)
+> @@ -1478,14 +1495,17 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>  	case 0x0:
+>  		pci_dbg(dev, "D3cold Aux Power %u mW request denied\n",
+>  			requested_power);
+> +		adev->power.aux_power_limit = 0;
+>  		break;
+>  	case 0x1:
+>  		pci_info(dev, "D3cold Aux Power request granted: %u mW\n",
+>  			 requested_power);
+> +		adev->power.aux_power_limit = requested_power;
+>  		ret = 0;
+>  		break;
+>  	case 0x2:
+>  		pci_info(dev, "D3cold Aux Power: Main power won't be removed\n");
+> +		adev->power.aux_power_limit = 0;
+>  		ret = -EBUSY;
+>  		break;
+>  	default:
+> @@ -1500,9 +1520,12 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
+>  			pci_err(dev, "D3cold Aux Power: Reserved or unsupported response: 0x%x\n",
+>  				result);
+>  		}
+> +		adev->power.aux_power_limit = 0;
+>  		break;
+>  	}
+>  
+> +	mutex_unlock(&adev->power.aux_pwr_lock);
+> +
+>  	ACPI_FREE(out_obj);
+>  	return ret;
 >  }
+> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> index aad1a95e6863..c4ce3d84be00 100644
+> --- a/include/acpi/acpi_bus.h
+> +++ b/include/acpi/acpi_bus.h
+> @@ -294,6 +294,8 @@ struct acpi_device_power {
+>  	struct acpi_device_power_flags flags;
+>  	struct acpi_device_power_state states[ACPI_D_STATE_COUNT];	/* Power states (D0-D3Cold) */
+>  	u8 state_for_enumeration; /* Deepest power state for enumeration */
+> +	u32 aux_power_limit;		/* aux power limit granted by bios */
+> +	struct mutex aux_pwr_lock;	/* prevent concurrent aux power limit requests */
+>  };
 >  
-> +/**
-> + * pci_acpi_request_d3cold_aux_power - Request aux power while device is in D3Cold
-> + * @dev: PCI device instance
-> + * @requested_power: Requested auxiliary power in milliwatts
-> + * @retry_interval: Retry interval returned by platform to retry auxiliary
-> + *                  power request
-> + *
-> + * This function sends a request to the host BIOS via root port ACPI _DSM Function 0Ah
-> + * for the auxiliary power needed by the PCI device when it is in D3Cold.
-> + * It checks and evaluates the _DSM (Device Specific Method) to request the auxiliary
-> + * power and handles the response accordingly.
-
-s/This functions sends a request/Request auxiliary power .../ (imperative mood)
-s/the host BIOS/platform firmware/ (non-x86 firmware may not be BIOS)
-s/D3Cold/D3cold/ (twice) to match other usage
-s/root port/Root Port/ to match spec usage
-s/It checks and evaluates the/Evaluate the/
-s/and handles/and handle/
-
-It's not quite clear from this description, but the code assumes this
-is called for a Root Port.  I don't think that's quite the right
-approach because the spec only says this _DSM function is implemented
-in the scope of a Downstream Port.  That *could* be a Root Port, but
-it doesn't have to be; it could be a Switch Downstream Port.
-
-The caller shouldn't have to traverse up the tree, checking whether
-this _DSM function is implemented at each level.  So I think the
-driver should call this with *its* device, and
-pci_acpi_request_d3cold_aux_power() should walk up the tree looking
-for this _DSM function.
-
-> + * This function shall be only called by 1st non-bridge Endpoint driver
-> + * on Function 0. For a Multi-Function Device, the driver for Function 0 is
-> + * required to report an aggregate power requirement covering all
-> + * functions contained within the device.
-
-This last paragraph covers two separate issues:
-
-  1) Sec 4.6.10 requires driver for function 0 to aggregate power
-     requirements for all functions in a multi-function device.  We
-     can't enforce that the driver, e.g., xe, does this, but it seems
-     like this is a hint that we should only evaluate this _DSM for
-     function 0 of a multi-function device.  So it seems like we
-     should return an error if called for a function other than 0.
-
-  2) The "Location" part of sec 4.6.10 has a separate restriction
-     that system software, i.e., the PCI core, should aggregate
-     requests from child devices, which we don't do so far.
-
-     If drivers call pci_acpi_request_d3cold_aux_power() for their
-     devices (not the Root Port), there might be a way to do this
-     aggregation by tracking the sum of all requests at the Downstream
-     Port where we find this _DSM function implemented.  But I don't
-     know whether it's worth trying to implement this now because it
-     seems complicated.
-
-I don't know what "1st non-bridge Endpoint driver" means.  How does a
-driver writer know whether the driver qualifies?  Maybe just keep the
-part about this only being supported for function 0 and note that we
-don't support the aggregation across multiple devices?
-
-Wrap this all to fit in 80 columns like the rest of the file.
-
-> + * Return: Returns 0 on success and errno on failure.
-> + */
-> +int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
-> +				      u32 *retry_interval)
-
-Name the parameter "requested_power_mw" or even just "requested_mw" so
-we know the units.  Also in header file.
-
-> +{
-> +	union acpi_object in_obj = {
-> +		.integer.type = ACPI_TYPE_INTEGER,
-> +		.integer.value = requested_power,
-> +	};
-> +
-> +	union acpi_object *out_obj;
-> +	acpi_handle handle;
-> +	int result, ret = -EINVAL;
-> +
-> +	if (!dev || !retry_interval)
-> +		return -EINVAL;
-
-I think it's reasonable to allow retry_interval to be NULL if the
-caller doesn't want to bother with retries.
-
-> +	handle = ACPI_HANDLE(&dev->dev);
-> +	if (!handle)
-> +		return -EINVAL;
-> +
-> +	if (!acpi_check_dsm(handle, &pci_acpi_dsm_guid, 4, 1 << DSM_PCI_D3COLD_AUX_POWER_LIMIT)) {
-> +		pci_dbg(dev, "ACPI _DSM 0%Xh not supported\n", DSM_PCI_D3COLD_AUX_POWER_LIMIT);
-> +		return -ENODEV;
-> +	}
-> +
-> +	out_obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4,
-> +					  DSM_PCI_D3COLD_AUX_POWER_LIMIT,
-> +					  &in_obj, ACPI_TYPE_INTEGER);
-> +	if (!out_obj)
-> +		return -EINVAL;
-> +
-> +	result = out_obj->integer.value;
-> +	if (retry_interval)
-> +		*retry_interval = 0;
-> +
-> +	switch (result) {
-> +	case 0x0:
-> +		pci_dbg(dev, "D3cold Aux Power %u mW request denied\n",
-> +			requested_power);
-> +		break;
-> +	case 0x1:
-> +		pci_info(dev, "D3cold Aux Power request granted: %u mW\n",
-> +			 requested_power);
-> +		ret = 0;
-> +		break;
-> +	case 0x2:
-> +		pci_info(dev, "D3cold Aux Power: Main power won't be removed\n");
-> +		ret = -EBUSY;
-> +		break;
-> +	default:
-> +		if (result >= 0x11 && result <= 0x1F) {
-> +			if (retry_interval) {
-> +				*retry_interval = result & 0xF;
-> +				pci_warn(dev, "D3cold Aux Power request needs retry interval: %u seconds\n",
-> +					 *retry_interval);
-
-Seems like pci_info() to me; the user can't do anything about this,
-nothing is really wrong, and the message shouldn't prompt a bug
-report.
-
-> +				ret = -EAGAIN;
-> +			}
-> +		} else {
-> +			pci_err(dev, "D3cold Aux Power: Reserved or unsupported response: 0x%x\n",
-> +				result);
-> +		}
-> +		break;
-> +	}
-> +
-> +	ACPI_FREE(out_obj);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_acpi_request_d3cold_aux_power);
-> +
->  static void pci_acpi_set_external_facing(struct pci_dev *dev)
->  {
->  	u8 val;
-> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-> index 078225b514d4..6079306ad754 100644
-> --- a/include/linux/pci-acpi.h
-> +++ b/include/linux/pci-acpi.h
-> @@ -121,6 +121,7 @@ extern const guid_t pci_acpi_dsm_guid;
->  #define DSM_PCI_DEVICE_NAME			0x07
->  #define DSM_PCI_POWER_ON_RESET_DELAY		0x08
->  #define DSM_PCI_DEVICE_READINESS_DURATIONS	0x09
-> +#define DSM_PCI_D3COLD_AUX_POWER_LIMIT		0x0A
->  
->  #ifdef CONFIG_PCIE_EDR
->  void pci_acpi_add_edr_notifier(struct pci_dev *pdev);
-> @@ -132,10 +133,17 @@ static inline void pci_acpi_remove_edr_notifier(struct pci_dev *pdev) { }
->  
->  int pci_acpi_set_companion_lookup_hook(struct acpi_device *(*func)(struct pci_dev *));
->  void pci_acpi_clear_companion_lookup_hook(void);
-> +int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
-> +				      u32 *retry_interval);
->  
->  #else	/* CONFIG_ACPI */
->  static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
->  static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
-> +static inline int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
-> +						    u32 *retry_interval)
-
-Wrap this to fit in 80 columns like the rest of the file.
-
-> +{
-> +	return -EOPNOTSUPP;
-> +}
->  #endif	/* CONFIG_ACPI */
->  
->  #endif	/* _PCI_ACPI_H_ */
+>  struct acpi_dep_data {
 > -- 
 > 2.34.1
 > 
