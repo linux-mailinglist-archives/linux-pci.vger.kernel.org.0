@@ -1,124 +1,191 @@
-Return-Path: <linux-pci+bounces-35469-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35470-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 708E5B4448A
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 19:38:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFBB8B44536
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 20:18:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A6D6D7BFB21
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 17:34:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 57D133B2760
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Sep 2025 18:18:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F2113126D2;
-	Thu,  4 Sep 2025 17:35:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EEA7341ACF;
+	Thu,  4 Sep 2025 18:18:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="LjXuITN9"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oLu6V+pW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E013126D6;
-	Thu,  4 Sep 2025 17:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5498E2FFDC6;
+	Thu,  4 Sep 2025 18:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757007350; cv=none; b=a40k1O6BfGSj37ummEsgJJvnrj1V4e2Gw9V3I7ygYF1Dwr7BlcMQuYKGB5f9W1EzTV5cBXCr5LQ0i+SHcNsNTAwJOPSvVXqmcdJ5uef02ZgtOdh9THYcDkw2/rxGs0LmzHrPv7o9Q7jMW7cxzOjiAHP5YKzBeW1gkqO2i4Meqis=
+	t=1757009926; cv=none; b=PqNC4WDQhcr5X4cTaLQapQN3f0wfZch5ZHIBGdXEf65EsCgrAFPlX1ho0TrPGH3tPW0DV48NQSRtacoziAOuONNR8cBvF0xEqOjQh9R3MAWauYqx/LaPGo04SR5sOywgSbYMuMMO5D1fzGdBxY6LHHF/KPlFWPjXEiT2vHi676w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757007350; c=relaxed/simple;
-	bh=I5l8HeIeL8M4xT4ZLCPiFE/LiBzoMDGO0Wa0gTJRy/Y=;
+	s=arc-20240116; t=1757009926; c=relaxed/simple;
+	bh=7c8nj6KxULONPPQj8MkFkKHnBlddpgD0kXlRJfUjxGA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aBh01YQSAoyUGfLd4OCyDkLSW3zpilkY72SMJQtkEKeDieQtPOBH4/847vL+eNgDSuBMD1RMBosLdgbwRedp8tE+OlFa5Dva05qQeuJCKk+Ox/GWVNWFw4xjHU/JDlAeoLZYuKvlYXAYSzk+puazrhLHyH1XVyWe1aVBPlks+zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=LjXuITN9; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4cHmpm4Q4Lz9tNK;
-	Thu,  4 Sep 2025 19:35:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1757007344;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e95i9l9G/Z4xlkgEuINxoEkC5v++NR7rDqNrFRZm2JM=;
-	b=LjXuITN9FWthrTCnuHvooWLXHnEDH833SSN8sq57FCu+DwTehQ7hICYnrsyV5SfaN0TcJ2
-	AGSf60FHpE/55ThMi+wJLrjak5UXl7QwooT+RICq9VnBjspQWkJ2UMJtjZIIuTwrUf1mh/
-	o4MS9v3p5wzIobW8Mqk0SN1M1gygjZNVCQ1tJ4gImZsErczRYoHRxlPvH4eYpEz+5rrzzM
-	f+zK3cjBeJX2gYlZujmOKZpAjDJwFVZofMmG8567hkTDzFm7+oPQp/NXSAOW4EmzYaYkUq
-	v61PdH+iUR5S45XX9gQ10LHcRpbQudx8IZFwNMMzmoi6YNHUz/34sKm9NXJcew==
-Message-ID: <99657eb0-e70d-4db3-ac09-6d15c0eb73dd@mailbox.org>
-Date: Thu, 4 Sep 2025 19:35:41 +0200
+	 In-Reply-To:Content-Type; b=sqD79JzV802fdS+RCelu9vaq6qx8m0lyWVf+88uTEQPhpD3XyWzH1odZhlEvERvLKTJcwzNQzMAypYisWzE13dL84xYOMztZLl2K9OduRUKx/wBjnKV0KJ7r7f55EEx2d1PWGQARFRH++RAANZREtTSzA3Yx6pkxWBFQzSSuIEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oLu6V+pW; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6A3772119CB7;
+	Thu,  4 Sep 2025 11:18:42 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6A3772119CB7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1757009923;
+	bh=d/D6Qrj0sP6g8qAnJASJd8z3FHjIIoC1QYzFJbAmmgM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oLu6V+pWgKTtTfQLhdxwHfvtkUJ0N0iCi/cfaSJbTLxtH/SZHgcXWgxsK9ZoNkfuI
+	 Jhe+3szLxA45hPC786Cup2SrThBmJ//Jy32lAGJDJ0uCT8yGVHH2WlO1x+gdZ2XUBb
+	 VnhKgbbsVrL7mHJ17eqOI/RKV3FeYxFdGYLhbtKQ=
+Message-ID: <4f38c613-255c-eaf6-0d50-28f8ffc02fff@linux.microsoft.com>
+Date: Thu, 4 Sep 2025 11:18:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: Limit PCIe BAR size for
- fixed BARs
-To: Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
-Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Frank Li <Frank.Li@nxp.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Niklas Cassel <cassel@kernel.org>,
- Wang Jiang <jiangwang@kylinos.cn>, linux-kernel@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org
-References: <20250904023753.494147-1-marek.vasut+renesas@mailbox.org>
- <b3d5773d-c573-4491-b799-90405a8af6a9@kernel.org>
- <4b8ee973-5201-4936-a248-6f145b958f45@mailbox.org>
- <d7bf992f-0342-450d-8830-f0523ac11e2a@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH V0 0/2] Fix CONFIG_HYPERV and vmbus related anamoly
 Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <d7bf992f-0342-450d-8830-f0523ac11e2a@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: c8d87fa5fccde935584
-X-MBO-RS-META: ubo3kjpnaoagjj5r5jczyk6kyyg9t6fo
+To: Michael Kelley <mhklinux@outlook.com>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
+Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>, "jikos@kernel.org" <jikos@kernel.org>,
+ "bentiss@kernel.org" <bentiss@kernel.org>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+ "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
+ "James.Bottomley@HansenPartnership.com"
+ <James.Bottomley@HansenPartnership.com>,
+ "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "deller@gmx.de" <deller@gmx.de>, "arnd@arndb.de" <arnd@arndb.de>,
+ "sgarzare@redhat.com" <sgarzare@redhat.com>,
+ "horms@kernel.org" <horms@kernel.org>
+References: <20250828005952.884343-1-mrathor@linux.microsoft.com>
+ <SN6PR02MB4157917D84D00DBDAF54BD69D406A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <ff4c58f1-564d-ddfa-bdff-48ffee6e0d72@linux.microsoft.com>
+ <SN6PR02MB41573C5451F21286667C5441D400A@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41573C5451F21286667C5441D400A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 9/4/25 5:39 AM, Damien Le Moal wrote:
-> On 9/4/25 12:32 PM, Marek Vasut wrote:
->> On 9/4/25 4:40 AM, Damien Le Moal wrote:
+On 9/4/25 09:26, Michael Kelley wrote:
+> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Wednesday, September 3, 2025 7:17 PM
 >>
->> Hello Damien,
->>
->>>> @@ -1050,7 +1051,13 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->>>>            if (bar == test_reg_bar)
->>>>                continue;
->>>>    -        base = pci_epf_alloc_space(epf, bar_size[bar], bar,
->>>> +        test_bar_size = bar_size[bar];
->>>> +
->>>> +        bar_fixed_size = epc_features->bar[bar].fixed_size;
->>>> +        if (epc_features->bar[bar].type == BAR_FIXED && bar_fixed_size)
->>>> +            test_bar_size = min(bar_size[bar], bar_fixed_size);
+>> On 9/2/25 07:42, Michael Kelley wrote:
+>>> From: Mukesh Rathor <mrathor@linux.microsoft.com> Sent: Wednesday, August 27, 2025 6:00 PM
+>>>>
+>>>> At present, drivers/Makefile will subst =m to =y for CONFIG_HYPERV for hv
+>>>> subdir. Also, drivers/hv/Makefile replaces =m to =y to build in
+>>>> hv_common.c that is needed for the drivers. Moreover, vmbus driver is
+>>>> built if CONFIG_HYPER is set, either loadable or builtin.
+>>>>
+>>>> This is not a good approach. CONFIG_HYPERV is really an umbrella config that
+>>>> encompasses builtin code and various other things and not a dedicated config
+>>>> option for VMBUS. Vmbus should really have a config option just like
+>>>> CONFIG_HYPERV_BALLOON etc. This small series introduces CONFIG_HYPERV_VMBUS
+>>>> to build VMBUS driver and make that distinction explicit. With that
+>>>> CONFIG_HYPERV could be changed to bool.
 >>>
->>> I think this can be simplified to:
+>>> Separating the core hypervisor support (CONFIG_HYPERV) from the VMBus
+>>> support (CONFIG_HYPERV_VMBUS) makes sense to me. Overall the code
+>>> is already mostly in separate source files code, though there's some
+>>> entanglement in the handling of VMBus interrupts, which could be
+>>> improved later.
 >>>
->>>          if (epc_features->bar[bar].type == BAR_FIXED)
->>>              test_bar_size = epc_features->bar[bar].fixed_size;
->>>          else
->>>              test_bar_size = bar_size[bar];
+>>> However, I have a compatibility concern. Consider this scenario:
 >>>
->>> because if the bar type is BAR_FIXED, then the size of the bar can only be its
->>> fixed size.
->> That is correct, however, please consider the following case:
+>>> 1) Assume running in a Hyper-V VM with a current Linux kernel version
+>>>     built with CONFIG_HYPERV=m.
+>>> 2) Grab a new version of kernel source code that contains this patch set.
+>>> 3) Run 'make olddefconfig' to create the .config file for the new kernel.
+>>> 4) Build the new kernel. This succeeds.
+>>> 5) Install and run the new kernel in the Hyper-V VM. This fails.
+>>>
+>>> The failure occurs because CONFIG_HYPERV=m is no longer legal,
+>>> so the .config file created in Step 3 has CONFIG_HYPERV=n. The
+>>> newly built kernel has no Hyper-V support and won't run in a
+>>> Hyper-V VM.
+>>>
+>>> As a second issue, if in Step 1 the current kernel was built with
+>>> CONFIG_HYPERV=y, then the .config file for the new kernel will have
+>>> CONFIG_HYPERV=y, which is better. But CONFIG_HYPERV_VMBUS
+>>> defaults to 'n', so the new kernel doesn't have any VMBus drivers
+>>> and won't run in a typical Hyper-V VM.
+>>>
+>>> The second issue could be fixed by assigning CONFIG_HYPERV_VMBUS
+>>> a default value, such as whatever CONFIG_HYPERV is set to. But
+>>> I'm not sure how to fix the first issue, except by continuing to
+>>> allow CONFIG_HYPERV=m.
 >>
->> - The BAR under test is BAR4 , therefore the size requested by this driver is
->> bar_size[4] = 131072 Bytes
->> - The BAR4 on a hypothetical hardware is a fixed size BAR , 262144 Bytes large
->>
->> With your proposed change, the "test_bar_size" would end up being 262144
->> Bytes , instead of 131072 Bytes without your proposed change , which I think is
->> not the desired behavior.
->>
->> What do you think ?
+>> To certain extent, imo, users are expected to check config files
+>> for changes when moving to new versions/releases, so it would be a
+>> one time burden. 
 > 
-> The bar size for the test is arbitrary. If the bar being tested is not a fixed
-> bar, anything is OK. But in the case of a fixed bar, you can only use the fixed
-> bar size so we should force that.
-OK, understood. I'll run tests on V2 and then submit a V2.
+> I'm not so sanguine about the impact. For those of us who work with
+> Hyper-V frequently, yes, it's probably not that big of an issue -- we can
+> figure it out. But a lot of Azure/Hyper-V users aren't that familiar with
+> the details of how the Kconfig files are put together. And the issue occurs
+> with no error messages that something has gone wrong in building
+> the kernel, except that it won't boot. Just running "make olddefconfig"
+> has worked in the past, so some users will be befuddled and end up
+> generating Azure support incidents. I also wonder about breaking
+> automated test suites for new kernels, as they are likely to be running
+> "make olddefconfig" or something similar as part of the automation.
+> 
+>> CONFIG_HYPERV=m is just broken imo as one sees that
+>> in .config but magically symbols in drivers/hv are in kerenel.
+>>
+> 
+> I agree that's not ideal. But note that some Hyper-V code and symbols
+> like ms_hyperv_init_platform() and related functions show up when
+> CONFIG_HYPERVISOR_GUEST=y, even if CONFIG_HYPERV=n. That's
+> the code in arch/x86/kernel/cpu/mshyperv.c and it's because Hyper-V
+> is one of the recognized and somewhat hardwired hypervisors (like
+> VMware, for example).
+> 
+> Finally, there are about a dozen other places in the kernel that use
+> the same Makefile construct to make some code built-in even though
+> the CONFIG option is set to "m". That may not be enough occurrences
+> to make it standard practice, but Hyper-V guests are certainly not the
+> only case.
+> 
+> In my mind, this is judgment call with no absolute right answer. What
+> do others think about the tradeoffs?
 
-Thanks !
+Wei had said in private message that he agrees this is a good idea. Nuno
+said earlier above: 
+
+"FWIW I think it's a good idea, interested to hear what others think."
+
+Thanks,
+-Mukesh
+
+
 
