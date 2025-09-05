@@ -1,139 +1,199 @@
-Return-Path: <linux-pci+bounces-35516-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35517-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C9D2B450D9
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 10:05:19 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF79CB4511A
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 10:16:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6EEAE1BC50F1
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 08:05:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AF38E7ADCDF
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 08:15:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D0362FDC2F;
-	Fri,  5 Sep 2025 08:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6549813E898;
+	Fri,  5 Sep 2025 08:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WcfCalSB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VqH1H+KC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBADDF71
-	for <linux-pci@vger.kernel.org>; Fri,  5 Sep 2025 08:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A64B26E717
+	for <linux-pci@vger.kernel.org>; Fri,  5 Sep 2025 08:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757059468; cv=none; b=KLWp7PkcmyEPPm/+NGBHaevap1Atiz+aWy5wIcUHlEUjq2w1Sy5i1qwJd+1cG1o9QLvKakpp7ODPY8lJFm+bUUlyI2yzFlpWTkW6JSJGeTM9BVb99UfKm1nKQowpc4b5yKeHJiOEByDugHHGfDoN4fFhG91O2e2HoB5f9sjV0+I=
+	t=1757060208; cv=none; b=FLO7O8rDPciUKHzlGXDLpy1THBXlEYceiJ5xqp0EB9ua4ILmTFve25FA7J38gRyolbks1TUvPCIAbK3skKceyGNyEGcaRb5cK2tMUqOw8QW0Z5RWv4QwMbaFLcUdO1YKFyJamIUtnj6EGvGZycYbBmCOnUWrUgF9BNtw72iN7hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757059468; c=relaxed/simple;
-	bh=BK69GKXDo5Lr+Qkt1GmUdgKZZr1aJR2lLdycYBt0bJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bsoGtVVSm0rHcXheBrBRJo/Yn3ADJgALRXlWvRuz6TBxKg5UOFAeVmGw51wljM1Hvdm4qyVX06aOlUVLHaOI8e7vLyaiklBNsWFj8JBRmMDrUfKXoZUgjqh51fwqcC4i6y1jMqz1X39qeXcp2bf3rlQKine3hTXucrMnbBsj8Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WcfCalSB; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1757060208; c=relaxed/simple;
+	bh=r34BaPjjnAxEk0pYZF1gJK7z2l/adNB3vzB+6aApLLk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CABf7Ongzlz6YI7NsVehajKrxkoZu6upriwCpzRIc/n/odnuymEpP6RpFO0Q1z7Ybi0XjA/eufxWlo0gY/tMlTIW1t5Knykg9zFNkEsLHV0aFNqspA6wnx/QMrfJm0W5u8KAsI4ruCx0ii/y1AME+/tyPzbIi/AzqxrdOgSQOBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VqH1H+KC; arc=none smtp.client-ip=209.85.219.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-45b84367affso16449575e9.3
-        for <linux-pci@vger.kernel.org>; Fri, 05 Sep 2025 01:04:26 -0700 (PDT)
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-70fa1287cffso707406d6.0
+        for <linux-pci@vger.kernel.org>; Fri, 05 Sep 2025 01:16:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757059465; x=1757664265; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mEyqxPQTlvHE7Rb9nf0Ka5S6ku97HAqdoQLaDQei9o8=;
-        b=WcfCalSBQX5L5ITP6TimiMFu5LeZmc5lCsiv4UcIC7sgdWIAeacQi+ivcACERdRbJo
-         5K+hEqjm9Fzx8dyl2G/09eXEa8r9AjQKrB/SfEVqduRj6IGOGznuC+vvebSPNFePhQHW
-         HKQXFYWm04kQNz7C9nHmUfUYlqNdoVY+hzr8kXZQ0Ep2iS8+SYwifQaTV4lKRVpPWCKl
-         kQ8uOBE8MdobqhEks0IiblQjB9vZv7D+MJinT19M5p7sm17udyD5jxCtjpKuYo2cUC1b
-         UTJVhz2viI9Ds5vlyWoaH6DAn02bpN8b1jeyekVLEpRK/XX3hkAtqbCiyUnmQWNyxwzS
-         rSVg==
+        d=linaro.org; s=google; t=1757060205; x=1757665005; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=pmRMEuNmJqUQDrfbifQMhcZYMdkhFlWyXwwtuzWLPlM=;
+        b=VqH1H+KCUWU4657PsFvLhiEzB1qE8Kz5Dc0tHJuwxVRlG3AKc1tco7REkHb2AllmsU
+         GDaOX8YedV7ETQmapML4qR5fmjrv5FkeodrmTA5FLt7PGQArdFI+howebmZIuatxcZQt
+         4IoRmgG0D8pubpRF69bml6Rs6kyk8KDREK9GerWjncrSWLJwfm6RHvXpdNLeFQoMJWUL
+         nKqOwQoaBII1A0r2HBlr6MwrIfZnxs+jtTXz+x/HLdnTA2GvAo25Ucao+iDqA0XDTYtH
+         FHU/8A9qbWGX2nWFUNeBeeYYk3FAMaaRQbmfF+D5pQbsYq5BkN7bAQV66orOPlVadfSF
+         RFMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757059465; x=1757664265;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mEyqxPQTlvHE7Rb9nf0Ka5S6ku97HAqdoQLaDQei9o8=;
-        b=VsaU+BRHrhpWbkH+sq+q8jHyx8XqLI3C4KBnF+xBmlOiuKi8cHLAj2I2xCtP2AySGD
-         nWxYP2UnNKplYUK6N6LF55yyOf5vYcybktOS45Mj69LEWp/3KJXJ/o+G2IRvTe1ylLR9
-         kEApCFpYLUfFN4zbgLEQbKCnVaRbhPutz7S30B+ilr5woPWJXgadGMp1dHr+nUoJV3NC
-         SkuCHkryQO/sYKNf5XQtZ/TdbjiaD39GIX4tOQfhBHTHYA9XDVB5JCWpzN3a5///0ZkM
-         UCrVu4NirJApBBi3zSv3TToAztAVjqsfswlgYuS903eLVt7drU5wINCv2TAgq443p/Pd
-         KYxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWI6JGksapcc5oK1pGbTGeZG/PsvBaBbs/fuQ7C9xr/C6Q3TzVQy7REbfoAVwA+CVxBlwIV72n9qh4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFAJdHXLPSU2I9s2D6oP1p7Zb4swonJuNeRE2kRtLFkTN1IZxm
-	/6aSn/QHRqRdKnP+QmboZf8emC7tabp3CG/amkiQtOKVzIdcL6wO4XKCYobcOnbXB3w=
-X-Gm-Gg: ASbGncuLpEdrQ4+SuMDZ8qSLCc5rFDeryj8Gmkmuc/livswqhP/ho7YKH5+WuochSI2
-	jfTS41GDd/AjuhbgGHVuKyGz84HhxokZXbsf85IF7GFBoeeS1t4Dx5S4J3Y0mvXRF9uGNu35ODH
-	P67WkJ00XDfjYDwyq75RVhHVaiqX+ZpeQ+1kBso4C6sSs6Mh2KxT78ugptFZCdqgF4hYW+zQ2tz
-	TkpqODDhcDoiNcGtBFdkH/SzS0lbeWJ9z/+fJOJpaxlOo4TlnEQ1T5S5USagAc5oSX+Ve2ZRhHN
-	zdYflUSuK32z/py2hZb9h8imeCMxGoGlJBze+mY7J0bU8UTdg3y/q7pgXLPrvBlshsEpVLCqGcW
-	j2VVKJX61fdj7r/fjvXk2M+inGv6HpkdSOu7yAIhQbMPl6uiA
-X-Google-Smtp-Source: AGHT+IFg31bO3+yEGrU5RDt0pIsHa2/S7Tm9NAlDysnLBMH3Sorox3ujEfiAyqMx4B2CxZfrtHTl2w==
-X-Received: by 2002:a05:600c:35c5:b0:45d:cf5f:cff8 with SMTP id 5b1f17b1804b1-45dcf67429bmr53251585e9.11.1757059464523;
-        Fri, 05 Sep 2025 01:04:24 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3cf276d204asm30777648f8f.24.2025.09.05.01.04.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Sep 2025 01:04:24 -0700 (PDT)
-Date: Fri, 5 Sep 2025 11:04:20 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] PCI: stm32: clean up some error handling in probe()
-Message-ID: <aLqZhL-DV4LOnHlD@stanley.mountain>
+        d=1e100.net; s=20230601; t=1757060205; x=1757665005;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pmRMEuNmJqUQDrfbifQMhcZYMdkhFlWyXwwtuzWLPlM=;
+        b=p4arpEpbnP5xH8nmYjCIlZAe+qpdICX8kqXIXAs359Fcs2hBHqCW/0vdeIOGfeHldp
+         RxIofCM5WxswVD8BVo7mUGgHOufBK8IqpO7soQBtw/ECr56fW3+I5WoQmKUwhx+AY1Xw
+         U4vcN3/qeSogcKbvl53/aY/rk+Bag+AShfBuCRv9Yjz/40zb4sYJl/3oHgy/shWHmfsu
+         XW+zZpdakPU/xWgC9NSb8jPBcaV3QcM2NYSF1Dblm0m4b1AR5ADOwyQVOGQAZew+TII9
+         EOCnLEtWZ1j7NqGwF3nwnqKyUguGxcyDe6u0/OXqk/IMsMtpc+G7zkF2ctWLV+yRtROe
+         DR3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXXRfuB6CayY4Z3xbC5MNdp6PWbobJ7DcpTKM0QmQ4j0LHRUEdW8L2wciJwW/CK2uOSijVX/3i/SXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdFTEzB1acqhyf3+l96PkdsWpB5IsbYqodKM2MXAPsefJJmBxE
+	GSH+mtwZZv8TJvFp3Q+go/LYW5GRpcXTkfLBVLTMJxFm9BUOwffeYoZz3ONl12ucSex+MDkbA33
+	n+UhsITYNLHZKZh0shx2EAHmXETVbONxZwy9kyh6CgQ==
+X-Gm-Gg: ASbGncsedwSArAcJN68X3TxVBAf7NKxgXKky4TasQ/VBYbdWSjJtIYJUPmmvWSqrWl6
+	CGxmPcb7w8pxt6p2tewSxdO/OpDOG0ZNsuw24SvaFnnY1eBvcFE2I9hNpe0SNUqwjn+ylkbrHni
+	/7CCimTv3eJPPSFFjPsdfgj9arOlRUMDmNZtPi6HGmJnYVuxd+/vBfRMhr7qcexmNpfzcvQFCLg
+	82wFfBVjgX9ZySzH6Vp2gNA41NL3bT19ICnJw==
+X-Google-Smtp-Source: AGHT+IG1/H0XgF1Z0mVwgA+Hm/3Z8WnWU7aR5gwqaxhSAw9EmueUjpEcG/rJ6rBmj73ByYwqulnJNifibNyClBj0MK0=
+X-Received: by 2002:a05:6214:4405:b0:72f:27de:9443 with SMTP id
+ 6a1803df08f44-72f27deb20bmr6495506d6.0.1757060205056; Fri, 05 Sep 2025
+ 01:16:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+References: <20250905052836.work.425-kees@kernel.org>
+In-Reply-To: <20250905052836.work.425-kees@kernel.org>
+From: Anders Roxell <anders.roxell@linaro.org>
+Date: Fri, 5 Sep 2025 10:16:33 +0200
+X-Gm-Features: Ac12FXxXBCiJZ6j6Q-_OR5jc0zqm4NYxAPnOlmCg3M0Qu-SVhJpAaiy5I8LGFng
+Message-ID: <CADYN=9Kd9w0pAMJJD1jq4RSum5+Xzk04yPZiQxi9tmEBtHPEMA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Test for bit underflow in pcie_set_readrq()
+To: Kees Cook <kees@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Linux Kernel Functional Testing <lkft@linaro.org>, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Smatch complains that the other error paths use gotos to clean up and
-these two don't.  Generally, the implication with that warning is that
-the error handly has been ommitted.  In this case, the error handling is
-fine, but we can avoid a bit of code duplication by using gotos to clean
-up.
+On Fri, 5 Sept 2025 at 07:28, Kees Cook <kees@kernel.org> wrote:
+>
+> After commit cbc654d18d37 ("bitops: Add __attribute_const__ to generic
+> ffs()-family implementations"), which allows GCC's value range tracker
+> to see past ffs(), GCC 8 on ARM thinks that it might be possible that
+> "ffs(rq) - 8" used here:
+>
+>         v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+>
+> could wrap below 0, leading to a very large value, which would be out of
+> range for the FIELD_PREP() usage:
+>
+> drivers/pci/pci.c: In function 'pcie_set_readrq':
+> include/linux/compiler_types.h:572:38: error: call to '__compiletime_assert_471' declared with attribute error: FIELD_PREP: value too large for the field
+> ...
+> drivers/pci/pci.c:5896:6: note: in expansion of macro 'FIELD_PREP'
+>   v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+>       ^~~~~~~~~~
+>
+> If the result of the ffs() is bounds checked before being used in
+> FIELD_PREP(), the value tracker seems happy again. :)
+>
+> Fixes: cbc654d18d37 ("bitops: Add __attribute_const__ to generic ffs()-family implementations")
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Closes: https://lore.kernel.org/linux-pci/CA+G9fYuysVr6qT8bjF6f08WLyCJRG7aXAeSd2F7=zTaHHd7L+Q@mail.gmail.com/
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Anders Roxell <anders.roxell@linaro.org>
+> Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Cc: lkft-triage@lists.linaro.org
+> Cc: Linux Regressions <regressions@lists.linux.dev>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Dan Carpenter <dan.carpenter@linaro.org>
+> Cc: Ben Copeland <benjamin.copeland@linaro.org>
+> Cc: <lkft-triage@lists.linaro.org>
+> Cc: <linux-pci@vger.kernel.org>
+> Cc: <linux-kernel@vger.kernel.org>
+> ---
+>  drivers/pci/pci.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b0f4d98036cd..005b92e6585e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5932,6 +5932,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+>  {
+>         u16 v;
+>         int ret;
+> +       unsigned int firstbit;
+>         struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+>
+>         if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
+> @@ -5949,7 +5950,10 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+>                         rq = mps;
+>         }
+>
+> -       v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+> +       firstbit = ffs(rq);
+> +       if (firstbit < 8)
+> +               return -EINVAL;
+> +       v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, firstbit - 8);
 
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/pci/controller/dwc/pcie-stm32.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+Hi Kees,
 
-diff --git a/drivers/pci/controller/dwc/pcie-stm32.c b/drivers/pci/controller/dwc/pcie-stm32.c
-index 964fa6f674c8..96a5fb893af4 100644
---- a/drivers/pci/controller/dwc/pcie-stm32.c
-+++ b/drivers/pci/controller/dwc/pcie-stm32.c
-@@ -287,18 +287,16 @@ static int stm32_pcie_probe(struct platform_device *pdev)
- 
- 	ret = pm_runtime_set_active(dev);
- 	if (ret < 0) {
--		clk_disable_unprepare(stm32_pcie->clk);
--		stm32_remove_pcie_port(stm32_pcie);
--		return dev_err_probe(dev, ret, "Failed to activate runtime PM\n");
-+		dev_err_probe(dev, ret, "Failed to activate runtime PM\n");
-+		goto err_disable_clk;
- 	}
- 
- 	pm_runtime_no_callbacks(dev);
- 
- 	ret = devm_pm_runtime_enable(dev);
- 	if (ret < 0) {
--		clk_disable_unprepare(stm32_pcie->clk);
--		stm32_remove_pcie_port(stm32_pcie);
--		return dev_err_probe(dev, ret, "Failed to enable runtime PM\n");
-+		dev_err_probe(dev, ret, "Failed to enable runtime PM\n");
-+		goto err_disable_clk;
- 	}
- 
- 	ret = dw_pcie_host_init(&stm32_pcie->pci.pp);
--- 
-2.47.2
+Thank you for looking into this.
 
+These warnings are not a one time thing.  the later versions of gcc
+can figure it
+out that firstbit is at least 8 based on the "rq < 128" (i guess), so
+we're adding
+bogus code.  maybe we should just disable the check for gcc-8.
+
+Maybe something like this:
+
+diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+index 5355f8f806a9..4716025c98c7 100644
+--- a/include/linux/bitfield.h
++++ b/include/linux/bitfield.h
+@@ -65,9 +65,20 @@
+                BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),          \
+                                 _pfx "mask is not constant");          \
+                BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");    \
+-               BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
+-                                ~((_mask) >> __bf_shf(_mask)) &        \
+-                                       (0 + (_val)) : 0,               \
++               /* Value validation disabled for gcc < 9 due to
+__attribute_const__ issues.
++                */ \
++               BUILD_BUG_ON_MSG(__GNUC__ >= 9 &&
+__builtin_constant_p(_val) ?  \
++                                ~((_mask) >> __bf_shf(_mask)) &
+         \
++                                       (0 + (_val)) : 0,
+         \
+                                 _pfx "value too large for the field"); \
+                BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
+                                 __bf_cast_unsigned(_reg, ~0ull),       \
+
+I found similar patterns with ffs and FIELD_PREP here
+drivers/dma/uniphier-xdmac.c row 156 and 165
+drivers/gpu/drm/i915/display/intel_cursor_regs.h row 17
+
+Cheers,
+Anders
 
