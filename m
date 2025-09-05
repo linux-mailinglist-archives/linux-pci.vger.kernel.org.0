@@ -1,278 +1,207 @@
-Return-Path: <linux-pci+bounces-35573-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35574-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 563E4B46452
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 22:06:34 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACB86B4645F
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 22:08:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CB1716BB99
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 20:06:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8EB27A7FF6
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 20:06:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D97F327B50F;
-	Fri,  5 Sep 2025 20:06:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBF492868A9;
+	Fri,  5 Sep 2025 20:08:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gu4BNMO+"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bsZ+Tv9v"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1645C2868A9
-	for <linux-pci@vger.kernel.org>; Fri,  5 Sep 2025 20:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757102777; cv=fail; b=J710fx4MHQDyFOh7FF40Ve2TEzkoYdjQAiH96xhaHyRifEI69J9WJnfi2iGqYzSJOVkAgtjfTp+r7ThooOVAdm5I/HqgWtVWOQZzLYhO28pBTZdg36aY2GsSJ0oTnpHnWnCOurU/laXvWpwe5dKDwHFHFBWFrRzl4Gv1Ef/uCcQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757102777; c=relaxed/simple;
-	bh=/GiFxvatIbMbflJ9y1Kegcmefk4lL8c3dEzxC/t3+1Y=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=aUAwwNCRnIS5gNs5Q++u9TpcdHAMoX6PVPQHDXX4XTZobr7nnHJYSPm9CprXy49LGoRZAeNqhsch3Iod61cOpwZCrLd9jlCsExP/0WP19XssjGvfExLgWVMDvOxzgUerxpOuOcL7aLSOV+a3M3LUNMGEPL/ut3nB9NtYekpzyOo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gu4BNMO+; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757102776; x=1788638776;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=/GiFxvatIbMbflJ9y1Kegcmefk4lL8c3dEzxC/t3+1Y=;
-  b=Gu4BNMO+uUvArZHL7bK6VozcTTRPnQ1wx4AaIiHuqTMZGrRc6eNVQ42T
-   bnov5VDAy/9a1fkcmpm9jpeTobO/0+nBIduy+ToQbgKcbO96XhXWOvb82
-   EUZwUL8bUSo9CXRe5BjoKpEURuOcoJVLmlqXFjrRdpwQavSFkdGtxZmMK
-   gEbajM5NAXIg0EsVqshizPodDH+DSHoyeOyWtKjoH3YeE0kPr1yDTgKUm
-   Di0GMfDwsf1nP/2MSrdGcBd7rgxzEiS2wBjPeLo1Tyqy68CQ5i9zXcIL4
-   FBQfze19UqqnbitND4nn3iC7RQ1Gc9eZXFLSDocdzFhGusHmDnFavCW73
-   g==;
-X-CSE-ConnectionGUID: AknOiogpSZejABw8c5T/Rw==
-X-CSE-MsgGUID: zSqPcF+pTDyb5oxHwADvcg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11544"; a="70076915"
-X-IronPort-AV: E=Sophos;i="6.18,242,1751266800"; 
-   d="scan'208";a="70076915"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2025 13:06:15 -0700
-X-CSE-ConnectionGUID: tmUz+7G6RNmiIK1+GF3WtA==
-X-CSE-MsgGUID: uJfuJ9frTkmJ2ehtNIOQgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,242,1751266800"; 
-   d="scan'208";a="172126916"
-Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2025 13:06:15 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Fri, 5 Sep 2025 13:06:13 -0700
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Fri, 5 Sep 2025 13:06:13 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.70) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Fri, 5 Sep 2025 13:06:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gsQBl7tnIgeq5zFKrYgIHyrdg2VbvBjvYNhZZmIbfL8/T04kIPLaBx6z5tKVM9s646fqEPWBqU+GDnHI9tVNiM5X1CSBzrx+8izi2uaFn11RjqILJKAylgUE9x3OopX5eQMjnWZU+wRcRMTIlAZdkoKgr2poeystSAXxS5Jh5o2ZBum76+zdnvAgQy7+T61gij44OnJ7S9X+xUa8l8ELkSoMKxQJDQRnG7d7f0kFnfTeVS72OtGB+4tspOQEPOdc/dudl34/X8S5nI8oLySJN4VNzFn/gyPRHfWsOHFZT8QxQMqhFcIuymlaVcFv8bBs3tyclwh8FhswpQd6VxDeEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MFjNaWDfE71KPMlgSu6uu4vpbdFNX5rGboBaXYk84Vc=;
- b=x5h29m6rIvrTaFOezcRJWlvuL+T1dgmh9+ESer4OeAGD7509Cv040cQMg3biEkdZtcXiD5bTHDaZf5stWsohyaV0/c7z60ARk7kYJEyn154VjaeCsHEXOzrJmeVqfTb2hs8o3YI60XelDC4y3fU0sv3F854QN0TxUJrNnc2jW4YHkZkmaEkk27MTstMCSyssH2LhtzGf3keGhqiXMSvlwIiVwkBIy/ZwIqtG6I79xkS/Recd3gxjP5DIIIj3seU/54S1C8qCnwttxpcFQXvWqn3dw9V2IrzZOYbI+JFszYIg02Ro/tYnx6B/9mWvh9VtZ3HkgrAFtunOhO8UqJbTYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com (2603:10b6:806:2f1::13)
- by SJ5PPF183C9380E.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::815) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.19; Fri, 5 Sep
- 2025 20:06:07 +0000
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::c4e2:f07:bdaa:21ec]) by SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::c4e2:f07:bdaa:21ec%4]) with mapi id 15.20.9073.026; Fri, 5 Sep 2025
- 20:06:05 +0000
-From: <dan.j.williams@intel.com>
-Date: Fri, 5 Sep 2025 13:06:03 -0700
-To: Alexey Kardashevskiy <aik@amd.com>, Aneesh Kumar K.V
-	<aneesh.kumar@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
-	<linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>
-CC: <yilun.xu@linux.intel.com>, <gregkh@linuxfoundation.org>, Lukas Wunner
-	<lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>, Bjorn Helgaas
-	<bhelgaas@google.com>
-Message-ID: <68bb42ab7e542_75db100a1@dwillia2-mobl4.notmuch>
-In-Reply-To: <71d8abc2-82b1-491f-9075-d5259e83f9e3@amd.com>
-References: <20250827035126.1356683-1-dan.j.williams@intel.com>
- <20250827035126.1356683-5-dan.j.williams@intel.com>
- <yq5a4itk3n9f.fsf@kernel.org>
- <71d8abc2-82b1-491f-9075-d5259e83f9e3@amd.com>
-Subject: Re: [PATCH v5 04/10] PCI/TSM: Authenticate devices via platform TSM
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR08CA0043.namprd08.prod.outlook.com
- (2603:10b6:a03:117::20) To SA3PR11MB8118.namprd11.prod.outlook.com
- (2603:10b6:806:2f1::13)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34184280A5F;
+	Fri,  5 Sep 2025 20:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757102884; cv=none; b=esA16IQtJunG5a/yJlCxqpuHOTonFUMzxg8Cho092RblnRaQJs+A/xWdfhapuaemdUf6VJB3grEGd5/QmCZ8LHFMR+hYxF7ckA4XSXnQA7t2cyqTiAZgZLvfvxBeYby7n9ctEb1AGOi3Vio3OYLNdllXTe4KK0IixudKBpblwWE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757102884; c=relaxed/simple;
+	bh=2m6fPzkCRC92qTFZavMPj/0W9huhFTFWzZEWQiM0e+Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XHkWP3iDOcjvFbJHx4muxFHr7g4fXfk81u3/MHI+YSg72AqwIglilC0FypKhl+1OanhWhH+U1qG/f8bzr7/WRGgS4cfuZKeNrjkQvqDgsSsE8bZqa08UVVeWVgeK443OLjG8LY89tUgG3QaCLNZlLMJsPE6TqsvI9oI9XolngIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bsZ+Tv9v; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 98B5220171C4;
+	Fri,  5 Sep 2025 13:08:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 98B5220171C4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1757102882;
+	bh=uotTTD65zan8TmCm5oKAbPiE7QB78kRP80SKbUy3768=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bsZ+Tv9vlFvx3FSsyyJQ00ypVCg071rBzhVBQzQ/LnPzkj/syqiM8BQWw8v4Czew8
+	 +mS7K/hwRDMDO3GD3r5fPtl8h2fOvZArSQGq0dxtTszR8YTrcw26eytE3rGQ7MMIqk
+	 vnwEKn2ou0NMnA2ymmTpNmSgop+6sZ4I9ED+9giU=
+Message-ID: <231f05cb-4f33-48ac-bb2e-1359ed52e606@linux.microsoft.com>
+Date: Fri, 5 Sep 2025 13:08:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR11MB8118:EE_|SJ5PPF183C9380E:EE_
-X-MS-Office365-Filtering-Correlation-Id: 10cec562-9630-4b97-6287-08ddecb7a569
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?dlM4MU43K0ZCeTFhWGxQeWVUejdtd2pyUlhCRzZNemdrYU9TZG96dEViTTdG?=
- =?utf-8?B?UHAva29BSXhhQnNBNGppdXRaZG5heXQ4MzNzWUNIMll4WjFLSHV4YlhiSEJX?=
- =?utf-8?B?Qzl0cVMwdFpZemo3U3ZmZFNmVzd5STBncFZqM25QNzVZRTA5VVpUeFRkRi9U?=
- =?utf-8?B?U282dVJSM3g2cHVXV2o5bU1ubXZPY1ZmczUrd24zQ054T05PbFRaL29Qbmhp?=
- =?utf-8?B?c3U2Q0Q1bm5nRkJ1Y1RZRzkzN0tOeE52Nld0YmpEYy9VclZ5U0lOaDAyV25k?=
- =?utf-8?B?Z0xTdWU1QWp1OFRmMXFaazYrb2NOclhUN2pXRDhOaDFsc0srRWdGcFN5blZy?=
- =?utf-8?B?QXdvWmVEUGMyR0tNUFJyVzNpb0RBSkZidFRORG1yQjBtSVZxMzdZU3YzeWpv?=
- =?utf-8?B?ZTNwTjRLT2ZXNDF4Nzlid1F5Q0NDbEdvTGQ0OGZ6ZDM0UWIxcXdLVmllTS9L?=
- =?utf-8?B?Qm5PQmpGczdHK013TWkzc3h0U0ZxZGJaZUtHcWNaSnFVZUlhS3hsOXRiN0Jm?=
- =?utf-8?B?elBoVFh5STJDY1pjT2swQmJSTWV4ZjFUbnVLSXR2cUo2K00xTDlPUHdKeVNl?=
- =?utf-8?B?UTVvOEpOZG9VcXlxTGJyelF3TlAvVnhkcFJyMWdxejI0UDVHbnhRaWRWQ3o3?=
- =?utf-8?B?UTFyWjVFbHNZeGR4cVZVemI4Q3VqWnMvNisxK3ptNWJRSC9qQ2lBMmcrYjJh?=
- =?utf-8?B?VlpWSzNvaU1XaVF3ZlgwUjlrQm9ab2E1ZGlsS2ltaFZJYzFTMTBHU2RlNHN1?=
- =?utf-8?B?OUZSbitqOXRmdXhIbnFiV1lHaklYTHIrVTNPNlU5aTBpbll1b0l2YjNnYkY1?=
- =?utf-8?B?bWozNzhjSEt6ODFFTlJMSkpxcjQrNm9EbnlNZlJ0RUtZVDFSdWdaOVplNW1X?=
- =?utf-8?B?Q3l1ekovcFROVVZVS1VISndONXpoN0xoYXBWa2JaRC8yTXVWU3RQb2xvZXEv?=
- =?utf-8?B?VXhaK3VqWXp0cjE4bkhkdFVRdHE3bGRvYmZlWUdnMlZ0aGN2d0JDaVdNaDBK?=
- =?utf-8?B?b09UMUtBTVF1dWh6U3ZNUE9QazNNdmhVZjVrdXdxZjFhN1BkRXZpZ1d2VUZK?=
- =?utf-8?B?K0NIU2tvNDhHaStRS2NVTkphTVhtLzFJWnhEY2JnUWFwTDVrSzFNc3dzanRR?=
- =?utf-8?B?NGdubDBYZW9EUm5zeVJ5bWNYNmkrblpzeS8rMVpnZ2t6VmJuU0tld0hGRUdP?=
- =?utf-8?B?anZSL2NsYTBKVUhTUGlHZWxRMWdMaDlVZDd3K2RURlNlcjVaOC8ycERKQS9R?=
- =?utf-8?B?NE9WN0VCY0FvUm1yMHFveWduQTZlVFQ0ZHlQclhUcER1NGJrbDdDRVhZTEQx?=
- =?utf-8?B?UXowQlY2RDhjcGU3ZklNTzJVcmdwOWhtQ1prZ0RQK1BsWTZROFM3ek1NdUZ4?=
- =?utf-8?B?bzNHeldyMU0rYUp1ZXdicFNzNUxwV2txVHNsWnZiZ3dTS0wzYURNYkVqaFRR?=
- =?utf-8?B?R1N0czhKYTlGeURJQXJoaUszUi9MTEFuMk5rZXpNTVBkbmg4QUNFQmFUN2JC?=
- =?utf-8?B?M1FueFZDb0Rmc01kSVA3STFNRGNKQjZNSzZTYUx5VWtrcGlrNXJhOS9NK1VX?=
- =?utf-8?B?aW9GTmpWTm5BM1Vsc1praVpUMzJ1SGVYTWtRRDdlQm94MGdPTDk1eHQ5VUk5?=
- =?utf-8?B?cDc1OVBXbHNnK3hnNEZFTFNnZDNtbWExSlYxMmVQTE1LckJNRlRVNENlVmFu?=
- =?utf-8?B?V3dpalhrUmZBanJpaW8vdlhKTzBqNmdQQ1BIdXhndWZaZkpUeDBmMWJWbFEw?=
- =?utf-8?B?QjVHV1AvNWtxY2xCdjFXVmthZXE3WUQzSmJXaFhveXlRSjZTcUUxZWlTUHcv?=
- =?utf-8?B?Ym1kUDJ1S3dNd3ZxU1RKRXl2Lzc1RUhYcGYvWE1ZWHl5MmV1Y280TThCbzQ2?=
- =?utf-8?B?UURCZUZBSGxEMVNwekJielFpakhsK0R2bTFsV2NvOGxtRjBRK2NtNDg4djdJ?=
- =?utf-8?Q?oPfBxd/Lz8s=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB8118.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dHNLT0dET21kVDAvdGZXbFdEaFV2SVhCS1VaU0MveGF4OVZ3L2w2bkh6dmJa?=
- =?utf-8?B?YW9pbU9IOUlCVnpObVV3QXRXckZMWVFCR0NWZXRKQ0NyTE1BY1daZ3pDNWth?=
- =?utf-8?B?VFFFdzFjMFU4SUpmWXZzNlBLaDEybXIxQ1B1U3k2MldSSE96QUF2R09PSGVM?=
- =?utf-8?B?OEdKNkpHdlFpR2Y3Ry9odFZ0K0pPWEVpc3hlM3krNWhkeG4zUGRDV0RUUkNV?=
- =?utf-8?B?dGVoMWYyd011VFUyblFwUVQ4TzlxcTVMdVh4Y1JHdWxrSWNuQkRsNTdxOFh1?=
- =?utf-8?B?dFBjVlFrcTBvWkhodG9mK05NME5QaklQeFAzd1pTZUNLbzI0dDFCeUhJcTRY?=
- =?utf-8?B?Umk0N0t6OS85VU04enpVSXpncDJiVHptRkVJcThZSm5Cc015d3BJaDNBVEMz?=
- =?utf-8?B?d090V1ljclNjUDI0ZFVGenJNWlcrSHo5ekJRV1dOY01NbHVaQ1h6Vk1Bc2hM?=
- =?utf-8?B?NDFyTk5uZVk4bGVlK1lOdmt1ZTIwYkZOQkRSUHh3RUhtMENlZ3JRNDBUWFp2?=
- =?utf-8?B?WkptdnF0SUpaTjlXQ3JoUWhtK2Q0VGJHZVcyVTVWYUlaMTVnWldEbXUxb0Ex?=
- =?utf-8?B?Y2ZYTWlqRXZlZWJ3ZG05dnM0c1M4ZmVmMWlLd09hbFJjRUtvUVFvNUdWNXlt?=
- =?utf-8?B?Y0ZYS1owSzIrRHE1eS9CWko3cEg5b1k3bVB3QTJGYXFzWUVtNjBMQ3o1Qm9s?=
- =?utf-8?B?OG5vN3FXb21HT3JEb2xseGlPMTVwMll1eEdaNjMzbnFnMm9FdzVYblRmVUY4?=
- =?utf-8?B?R3MzNTdacDI3c29qekdCcVJia3ZqMFo4cWJCWk5HMzk3dlFOaDd1TkhIelFE?=
- =?utf-8?B?TGx3WUlKUmF4ZUJQQ2xsRkFYZ2V4cHFYbE83NXJBaWZiYVd6TXpnZGtTUisw?=
- =?utf-8?B?eEdwS2xwUitFRFRaTzJRVXc3VG1RRmcxZktta1pMTGNkU0Y5OUFablpNQjNt?=
- =?utf-8?B?ZHQ0N1FLOGF2aEIrWjQ3RUpPMVh0cTcvVzF2T1JwVFRwY28wNjM0TXNZWGYw?=
- =?utf-8?B?OXl1UVcxRXdMclhUYnV5NDhZUnlHMHBhVmh5TXVacHR3L0h2NkgrbTZqWXBZ?=
- =?utf-8?B?Vk4xUy9IUUVobmdHUmJYaHR6T2NwTVpsd1N4cjFSeWowN2IyY2NvN2RodDVJ?=
- =?utf-8?B?aThIQVhYWi96Q0N1WldOZ2dTaGJqVzNQQkhZdEw3RXJYNUQ4a2xqc05RN0JN?=
- =?utf-8?B?eU1tRmZSeEZzdElMZkM0ajhrSzRpb2hxd2pVVFpPRGpjL0IwaHZxN1N1ME16?=
- =?utf-8?B?MVYzRUxEWkVCNnBNdHd6d3VyNzZsa1J3VGZTQmhDOUhRd0NEOGhnVFZYN0ph?=
- =?utf-8?B?UHdDRFJ6blR0ZzVSN3IzTlc4U05CbTkwZGdqUEs5WmUvQm9aaW9nRDdwTlp1?=
- =?utf-8?B?VWdPVDQ4RDJOa1ZIeml2TEwrWmZKY1pLRHowM0Rnc1BXTVh2TkRBQldIVzAy?=
- =?utf-8?B?WDR1dFVocDEySnE5MHhYZy8yNWdmQW1KOG1RZDhXaGlJc0ozenZxK0pVby9Y?=
- =?utf-8?B?RnZUMDhadUdQM0YzWWp4ZHlTdEhxN2ticXoyTGRIU2xtMm1iWHFIcTZxcXZH?=
- =?utf-8?B?ZmFCMysyQmdhaEpKbXZOUzVxeFZtSjdMb3ZVd0JEa0pBNjVpQlZHTlh3YzRD?=
- =?utf-8?B?NjMxell6RmV6TkhLV25hbkoyT0FTZUJBT3RmVVdsVVp1RVdSbDVFckZBeCs1?=
- =?utf-8?B?VXNCTjN2c2NMaGM2Nms1emtzdFdDRFl5b1owRVVEOXRUZG5nUVUwV0RaTmpy?=
- =?utf-8?B?U0VxclFNbWpMdktQVlZveVpHYTZHN1FsTUdHM3RLRk1BT2loSGhoNlZpWWJh?=
- =?utf-8?B?akNvc1RnZkkycEpJSmUzZFNDTllQdFFlQ2tkdEpOOHJRSERrVTFiRjRHRVF1?=
- =?utf-8?B?ZzdhOG9adXNXV3VlcTFIRjhsazBvZzA3UThwV21rQXZkWml6VXo5dzZ6Y2dm?=
- =?utf-8?B?T21lQ01oQWoxMnRIMXc3VmFZNWJwT2JJQ1hNOHd6b1Y4cGtiTzRZYXNHK3Jm?=
- =?utf-8?B?a3d4QjZldTdlZTI3R1VMazVzWFJFemJGeWUzc3F3SXZhZkpQM0cxcEpDekdI?=
- =?utf-8?B?TUFKKytvb0tsVlVDTGRLWHhSOUFXa1JKeFZhOFNLMGRSb3hwM1Q3L1JSeUJj?=
- =?utf-8?B?UEtVUmNNSFlVWWlucHdEVG9kekFmcGVlRnMxZHkvN2tucHk1WWFoZXpka3Zl?=
- =?utf-8?B?cXc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10cec562-9630-4b97-6287-08ddecb7a569
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB8118.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2025 20:06:05.5997
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Mx1jlCR+RlWU9sgvh0hwQQ/mriuqlCnl/fUNZErYoaQsbz+AuNNibbB4VVrGlG04U8DrR8CoufWS/NU9zaQ4o1LFVtEqjiJ+aD+t8ztEw0I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF183C9380E
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V0 0/2] Fix CONFIG_HYPERV and vmbus related anamoly
+To: Mukesh R <mrathor@linux.microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
+Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>, "jikos@kernel.org" <jikos@kernel.org>,
+ "bentiss@kernel.org" <bentiss@kernel.org>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+ "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
+ "James.Bottomley@HansenPartnership.com"
+ <James.Bottomley@HansenPartnership.com>,
+ "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "deller@gmx.de" <deller@gmx.de>, "arnd@arndb.de" <arnd@arndb.de>,
+ "sgarzare@redhat.com" <sgarzare@redhat.com>,
+ "horms@kernel.org" <horms@kernel.org>
+References: <20250828005952.884343-1-mrathor@linux.microsoft.com>
+ <SN6PR02MB4157917D84D00DBDAF54BD69D406A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <ff4c58f1-564d-ddfa-bdff-48ffee6e0d72@linux.microsoft.com>
+ <SN6PR02MB41573C5451F21286667C5441D400A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <4f38c613-255c-eaf6-0d50-28f8ffc02fff@linux.microsoft.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <4f38c613-255c-eaf6-0d50-28f8ffc02fff@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Alexey Kardashevskiy wrote:
+On 9/4/2025 11:18 AM, Mukesh R wrote:
+> On 9/4/25 09:26, Michael Kelley wrote:
+>> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Wednesday, September 3, 2025 7:17 PM
+>>>
+>>> On 9/2/25 07:42, Michael Kelley wrote:
+>>>> From: Mukesh Rathor <mrathor@linux.microsoft.com> Sent: Wednesday, August 27, 2025 6:00 PM
+>>>>>
+>>>>> At present, drivers/Makefile will subst =m to =y for CONFIG_HYPERV for hv
+>>>>> subdir. Also, drivers/hv/Makefile replaces =m to =y to build in
+>>>>> hv_common.c that is needed for the drivers. Moreover, vmbus driver is
+>>>>> built if CONFIG_HYPER is set, either loadable or builtin.
+>>>>>
+>>>>> This is not a good approach. CONFIG_HYPERV is really an umbrella config that
+>>>>> encompasses builtin code and various other things and not a dedicated config
+>>>>> option for VMBUS. Vmbus should really have a config option just like
+>>>>> CONFIG_HYPERV_BALLOON etc. This small series introduces CONFIG_HYPERV_VMBUS
+>>>>> to build VMBUS driver and make that distinction explicit. With that
+>>>>> CONFIG_HYPERV could be changed to bool.
+>>>>
+>>>> Separating the core hypervisor support (CONFIG_HYPERV) from the VMBus
+>>>> support (CONFIG_HYPERV_VMBUS) makes sense to me. Overall the code
+>>>> is already mostly in separate source files code, though there's some
+>>>> entanglement in the handling of VMBus interrupts, which could be
+>>>> improved later.
+>>>>
+>>>> However, I have a compatibility concern. Consider this scenario:
+>>>>
+>>>> 1) Assume running in a Hyper-V VM with a current Linux kernel version
+>>>>     built with CONFIG_HYPERV=m.
+>>>> 2) Grab a new version of kernel source code that contains this patch set.
+>>>> 3) Run 'make olddefconfig' to create the .config file for the new kernel.
+>>>> 4) Build the new kernel. This succeeds.
+>>>> 5) Install and run the new kernel in the Hyper-V VM. This fails.
+>>>>
+>>>> The failure occurs because CONFIG_HYPERV=m is no longer legal,
+>>>> so the .config file created in Step 3 has CONFIG_HYPERV=n. The
+>>>> newly built kernel has no Hyper-V support and won't run in a
+>>>> Hyper-V VM.
+
+It surprises me a little that =m doesn't get 'fixed up' to =y in this case.
+I guess any invalid value turns to =n, which makes sense most of the time.
+
+>>>>
+>>>> As a second issue, if in Step 1 the current kernel was built with
+>>>> CONFIG_HYPERV=y, then the .config file for the new kernel will have
+>>>> CONFIG_HYPERV=y, which is better. But CONFIG_HYPERV_VMBUS
+>>>> defaults to 'n', so the new kernel doesn't have any VMBus drivers
+>>>> and won't run in a typical Hyper-V VM.
+>>>>
+>>>> The second issue could be fixed by assigning CONFIG_HYPERV_VMBUS
+>>>> a default value, such as whatever CONFIG_HYPERV is set to. But
+>>>> I'm not sure how to fix the first issue, except by continuing to
+>>>> allow CONFIG_HYPERV=m.
+
+I'm wondering, is there a path for this change, then? Are there some
+intermediate step/s we could take to minimize the problem?
+
+>>>
+>>> To certain extent, imo, users are expected to check config files
+>>> for changes when moving to new versions/releases, so it would be a
+>>> one time burden. 
+>>
+>> I'm not so sanguine about the impact. For those of us who work with
+>> Hyper-V frequently, yes, it's probably not that big of an issue -- we can
+>> figure it out. But a lot of Azure/Hyper-V users aren't that familiar with
+>> the details of how the Kconfig files are put together. And the issue occurs
+>> with no error messages that something has gone wrong in building
+>> the kernel, except that it won't boot. Just running "make olddefconfig"
+>> has worked in the past, so some users will be befuddled and end up
+>> generating Azure support incidents. I also wonder about breaking
+>> automated test suites for new kernels, as they are likely to be running
+>> "make olddefconfig" or something similar as part of the automation.
+>>
+>>> CONFIG_HYPERV=m is just broken imo as one sees that
+>>> in .config but magically symbols in drivers/hv are in kerenel.
+>>>
+>>
+>> I agree that's not ideal. But note that some Hyper-V code and symbols
+>> like ms_hyperv_init_platform() and related functions show up when
+>> CONFIG_HYPERVISOR_GUEST=y, even if CONFIG_HYPERV=n. That's
+>> the code in arch/x86/kernel/cpu/mshyperv.c and it's because Hyper-V
+>> is one of the recognized and somewhat hardwired hypervisors (like
+>> VMware, for example).
+>>
+>> Finally, there are about a dozen other places in the kernel that use
+>> the same Makefile construct to make some code built-in even though
+>> the CONFIG option is set to "m". That may not be enough occurrences
+>> to make it standard practice, but Hyper-V guests are certainly not the
+>> only case.
+>>
+>> In my mind, this is judgment call with no absolute right answer. What
+>> do others think about the tradeoffs?
+> 
+> Wei had said in private message that he agrees this is a good idea. Nuno
+> said earlier above: 
+> 
+> "FWIW I think it's a good idea, interested to hear what others think."
+> 
+That was before Michael pointed out the potential issues which I was
+unaware of. Let's see if there's a path that is smoother for all the
+downstream users who may be compiling with CONFIG_HYPERV=m.
+
+Nuno
+
+> Thanks,> -Mukesh
 > 
 > 
-> On 3/9/25 01:08, Aneesh Kumar K.V wrote:
-> > Dan Williams <dan.j.williams@intel.com> writes:
-> > 
-> >> The PCIe 7.0 specification, section 11, defines the Trusted Execution
-> >> Environment (TEE) Device Interface Security Protocol (TDISP).  This
-> >> protocol definition builds upon Component Measurement and Authentication
-> >> (CMA), and link Integrity and Data Encryption (IDE). It adds support for
-> >> assigning devices (PCI physical or virtual function) to a confidential VM
-> >> such that the assigned device is enabled to access guest private memory
-> >> protected by technologies like Intel TDX, AMD SEV-SNP, RISCV COVE, or ARM
-> >> CCA.
-> >>
-> >> The "TSM" (TEE Security Manager) is a concept in the TDISP specification
-> >> of an agent that mediates between a "DSM" (Device Security Manager) and
-> >> system software in both a VMM and a confidential VM. A VMM uses TSM ABIs
-> >> to setup link security and assign devices. A confidential VM uses TSM
-> >> ABIs to transition an assigned device into the TDISP "RUN" state and
-> >> validate its configuration. From a Linux perspective the TSM abstracts
-> >> many of the details of TDISP, IDE, and CMA. Some of those details leak
-> >> through at times, but for the most part TDISP is an internal
-> >> implementation detail of the TSM.
-> >>
-> >> CONFIG_PCI_TSM adds an "authenticated" attribute and "tsm/" subdirectory
-> >> to pci-sysfs. Consider that the TSM driver may itself be a PCI driver.
-> >> Userspace can watch for the arrival of a "TSM" device,
-> >> /sys/class/tsm/tsm0/uevent KOBJ_CHANGE, to know when the PCI core has
-> >> initialized TSM services.
-> >>
-> >> The operations that can be executed against a PCI device are split into
-> >> two mutually exclusive operation sets, "Link" and "Security" (struct
-> >> pci_tsm_{link,security}_ops). The "Link" operations manage physical link
-> >> security properties and communication with the device's Device Security
-> >> Manager firmware. These are the host side operations in TDISP. The
-> >> "Security" operations coordinate the security state of the assigned
-> >> virtual device (TDI). These are the guest side operations in TDISP. Only
-> >> link management operations are defined at this stage and placeholders
-> >> provided for the security operations.
-> >>
-> >> The locking allows for multiple devices to be executing commands
-> >> simultaneously, one outstanding command per-device and an rwsem
-> >> synchronizes the implementation relative to TSM
-> >> registration/unregistration events.
-> >>
-> >> Thanks to Wu Hao for his work on an early draft of this support.
-> >>
-> >> Cc: Lukas Wunner <lukas@wunner.de>
-> >> Cc: Samuel Ortiz <sameo@rivosinc.com>
-> >> Cc: Alexey Kardashevskiy <aik@amd.com>
-> >> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> >> Co-developed-by: Xu Yilun <yilun.xu@linux.intel.com>
-> >> Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> >> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > 
-> > you dropped pci_tsm_doe_transfer from an earlier version of this patch
-> > in this series. Any reason for that?
-> 
-> yeah, me, it was rather useless wrapper.
 
-...but then you did say ok to bring back later.
-
-> https://lore.kernel.org/r/68ae4a0c45650_75db10016@dwillia2-mobl4.notmuch
-
-The type safety of to_pci_tsm_pf0() probably has some value. Yilun has a
-user. You are free to ignore in the SEV-TIO case, it's just a library
-helper.
 
