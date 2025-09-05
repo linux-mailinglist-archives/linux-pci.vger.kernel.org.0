@@ -1,159 +1,130 @@
-Return-Path: <linux-pci+bounces-35577-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35578-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C1EDB464ED
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 22:48:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 555F7B46545
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 23:14:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 76F5F1C8578B
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 20:49:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F34BC3B2725
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 21:14:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 405672D8781;
-	Fri,  5 Sep 2025 20:48:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 912012EDD7A;
+	Fri,  5 Sep 2025 21:14:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oYpgh0SC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dKugqIPh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076812868B5;
-	Fri,  5 Sep 2025 20:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A94284886;
+	Fri,  5 Sep 2025 21:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757105331; cv=none; b=qeGt1K65cZBR9wcn2En8oL1tpRmNZ/TlntQ82uMlYDcA2o+o3AsECrvMKb68SSaOfL0UiqRApaODPkGIBhVQ7zzPotPnO/qdWnmr9yvdhOFpt/6UOEx0AAh3rEu/PQfjDyKo+5jga9G78LGfYpagyaceWsedId4BJ6ygRJ+xQe4=
+	t=1757106891; cv=none; b=dNzKa7Y9oNDdfu3Iw5Z0d8aQFs4RGgFwBRUo5791QvSXa0eMffE/ILe8+Kab/ZBmHzJDwuPBdOXBQUlQ2i6SBaaritqSQS3PCYI1okpYyR0mftyO1MN2eD70lB0HQfdUKUwqv4mz9IDVE9WDaQWyhzM1+ax603Uzd0Xx0cBuG14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757105331; c=relaxed/simple;
-	bh=UM//CX27PEjyc+M1WSMpVvolKTZDb7r8NPB0I7aQ4F0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Xd1qra9JN10KZT6LfWudXO/Z89JzLicko0E8isH2+bs+Sw+9343AhfatUIe2fstxqUh7EHEUNl13BriMs7T9UHdKGYqa02zNs01/JdVL6qLoaGvzXQ/nY8uV2orRhK8ORYp62DBZibNQ09Q05bhVr6ngXzZrPkpeZG/7x3bmP+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oYpgh0SC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5473BC4CEF1;
-	Fri,  5 Sep 2025 20:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757105330;
-	bh=UM//CX27PEjyc+M1WSMpVvolKTZDb7r8NPB0I7aQ4F0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=oYpgh0SC9Go9u5mDCbyzQI281mbVwTpMLnfZ/IC1pLODSKF/G7jXzTnQfIi2KZTUG
-	 bsClwvoMVAJ0cUzucv0llj6Y1igSeObJy6wYJaN/fKTx7Wmmtvu9cekHHqkZR4ZlGp
-	 znVTjHKrzHyegtCyMNywhLuZzXZBKGxlCwJbojXxqyrUJpQ2rQ4JtUkDAQy0Em7MUZ
-	 CdGnloJJbe8uW7uYeLqyy6dacht2ptbeHDdqRyRGb0hFeegLU7S9h4feP9wa9HNQGx
-	 jMAGcpOikpXHVD18Uk5wyN+tlpcjKeQCGbcGbUyLtbraOJ2n9nugCTW05NtwFb5F46
-	 Ehso0Ga8pV5sQ==
-Date: Fri, 5 Sep 2025 15:48:48 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, leijitang@huawei.com,
-	linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-	christian.brauner@ubuntu.com, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] PCI: Fix the int overflow in proc_bus_pci_write()
-Message-ID: <20250905204848.GA1322742@bhelgaas>
+	s=arc-20240116; t=1757106891; c=relaxed/simple;
+	bh=wT8x2IGgVEao6/cCmkDlAreApT8kXJlKNuy8RcfE5kU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dii/bb7O3pUynsskugGgtSXH09/ogzpCHWnOJutVkuvb5M8gazPH4sDeVInDLIFC68RIT68Hcg5GSKBpKLL1XGLNuDLY9ubzCmWJzjpOG+pBS3UgIVQthS4mPJ/87aZwmu0d8ejD/u3I4jTpdKb1CyTkcAOdSCm1WDAyPoYXSWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dKugqIPh; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 585LEe1h000688;
+	Fri, 5 Sep 2025 21:14:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=MNTVaRidqIqXgAKjCzr+BWLK86N6w
+	+7fH73KgXvjBA0=; b=dKugqIPhq9ZC+89Ri9k61+v/Yno3dFKMTAsRVWZHfTcQW
+	j6VnbAulUJW4u6GsEP4VG9nbIWCLrhJEFevcbtHge8ppYtqASWh2BifrpqNRITaS
+	hE8RFhZUVZDk0wulv+mxPtTvUHIrK5rAWb/FXkc3xrDakp2u3F8GTeK7Ux4Bd56T
+	1hMZpR+buEhGlmgZINmDiB7TVNPT63icoryfDQPO6alWbcfOxSwi1K1gnL6y2OHT
+	NcnNvqRf5Y3wKA7aKylL6oceZhF16jnb+QJRT3GuPadC8/S88sVeZc6vZAxKZbrX
+	trnovOtZUBlrox6fNfbqOfv/SAkmgHmuyyiufEkOQ==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4907ktg004-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 05 Sep 2025 21:14:40 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 585JoCav033333;
+	Fri, 5 Sep 2025 21:14:39 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 48uqrd4qvc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 05 Sep 2025 21:14:39 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 585LEcuq038219;
+	Fri, 5 Sep 2025 21:14:38 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 48uqrd4quv-1;
+	Fri, 05 Sep 2025 21:14:38 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: vigneshr@ti.com, s-vadapalli@ti.com, lpieralisi@kernel.org,
+        kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
+        bhelgaas@google.com, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: j721e: Fix incorrect error message in probe
+Date: Fri,  5 Sep 2025 14:14:34 -0700
+Message-ID: <20250905211436.3048282-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250905104730.2833673-1-bobo.shaobowang@huawei.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-05_07,2025-09-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2508110000
+ definitions=main-2509050209
+X-Proofpoint-GUID: yjoYByN9Zdo31DNY6AEfeu0WOeY1RLep
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA1MDIwOSBTYWx0ZWRfX7Dv9FNCmvvf3
+ in+cAPNtPOam6g7FcUOaEcgI3VwbLkiSCe/oFlLyTSltTsosiFhdfA3mlqQ1W2qnIIyYLNaA9lA
+ EUMuGNdm7e7yy8MzV7ZQbOH+g9C124Njm6iHHx7Z1UgzM3sFb6kIre95FiPEeY0JmSgkuYxZuu8
+ U6RqbJ3t8zpLiONRxnpHnfCXu9NS6AHIr4pE2fZMvxKLY3Y1PQnpotyD2D6ZyUTJ0tZg9ywein3
+ MyHxJR2gsfsDorJy6WdkkHk+sKyofb9KEcdz9fsZzIeJ5IqfFsGpWplyjKYsHK2+osRVJh3bauL
+ eC1maQsYSv0c71zxSdAXCe7QBP2c66EXq/PweM4Y/U+UGJmRNl9Cpf+w2qrcMXUrFcac0f7BQzG
+ qlybUAoN
+X-Proofpoint-ORIG-GUID: yjoYByN9Zdo31DNY6AEfeu0WOeY1RLep
+X-Authority-Analysis: v=2.4 cv=P9Y6hjAu c=1 sm=1 tr=0 ts=68bb52c0 cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
+ a=yJojWOMRYYMA:10 a=yPCof4ZbAAAA:8 a=kyFhivpCSvuUZvO-LAYA:9
 
-[+cc linux-hardening]
+The probe function printed "pm_runtime_get_sync failed" when
+j721e_pcie_ctrl_init() returned an error. This is misleading since
+the failure was not from pm_runtime but from the controller init
+routine. Update the error message to correctly reflect the source.
 
-On Fri, Sep 05, 2025 at 06:47:30PM +0800, Wang ShaoBo wrote:
-> Following testcase can trigger a softlockup BUG.
-> syscall(__NR_pwritev, /*fd=*/..., /*vec=*/..., /*vlen=*/...,
->         /*pos_l=*/0x80010000, /*pos_h=*/0x100);
-> 
-> watchdog: BUG: soft lockup - CPU#11 stuck for 22s! [test:537]
-> Modules linked in:
-> CPU: 11 PID: 537 Comm: test Not tainted 5.10.0+ #67
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
-> RIP: 0010:pci_user_write_config_dword+0x67/0xc0
-> Code: 00 00 44 89 e2 48 8b 87 e0 00 00 00 48 8b 40 20 e8 9e 54 7e 00 48 c7 c7 20 48 a2 83 41 89 c0 c6 07 00 0f 1f 40 00 fb 45 85 c0 <7e> 12 41 8d 80 7f ff ff ff 41 b8 de ff ff ff 83 f8 08 76 0c 5b 44
-> RSP: 0018:ffffc900016c3d30 EFLAGS: 00000246
-> RAX: 0000000000000000 RBX: ffff888042058000 RCX: 0000000000000005
-> RDX: ffff888004058a00 RSI: 0000000000000046 RDI: ffffffff83a24820
-> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000001
-> R10: ffff888005c25900 R11: 0000000000000000 R12: 0000000080c48680
-> R13: 0000000020c38684 R14: 0000000080010000 R15: ffff888004702408
-> FS:  000000003ae91880(0000) GS:ffff88801f380000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020c00000 CR3: 0000000006f2c000 CR4: 00000000000006e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  proc_bus_pci_write+0x22c/0x260
->  proc_reg_write+0x40/0x90
->  do_loop_readv_writev.part.0+0x97/0xc0
->  do_iter_write+0xf6/0x150
->  vfs_writev+0x97/0x130
->  ? files_cgroup_alloc_fd+0x5c/0x70
->  ? do_sys_openat2+0x1c9/0x320
->  __x64_sys_pwritev+0xb1/0x100
->  do_syscall_64+0x2b/0x40
->  entry_SYSCALL_64_after_hwframe+0x6c/0xd6
-> 
-> The pos_l parameter for pwritev syscall may be an integer negative value,
-> which will make the variable pos in proc_bus_pci_write() negative and
-> variable cnt a very large number.
+No functional changes.
 
-Sounds like a problem; have you looked for similar problems in other
-.proc_write() and .proc_read() functions?  validate_flash_write() is
-one that also looks suspicious to me.
+Fixes: f3e25911a430 ("PCI: j721e: Add TI J721E PCIe driver")
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+Not sure if a Fixes tag is required here
+---
+ drivers/pci/controller/cadence/pci-j721e.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I think you're describing this code:
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+index 6c93f39d0288..5e445a7bda33 100644
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -549,7 +549,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 
+ 	ret = j721e_pcie_ctrl_init(pcie);
+ 	if (ret < 0) {
+-		dev_err_probe(dev, ret, "pm_runtime_get_sync failed\n");
++		dev_err_probe(dev, ret, "j721e_pcie_ctrl_init failed\n");
+ 		goto err_get_sync;
+ 	}
+ 
+-- 
+2.50.1
 
-  static ssize_t proc_bus_pci_write(struct file *file, const char __user *buf,
-				    size_t nbytes, loff_t *ppos)
-  {
-        int pos = *ppos;
-        int size = dev->cfg_size;
-        int cnt, ret;
-
-        if (pos + nbytes > size)
-                nbytes = size - pos;
-        cnt = nbytes;
-	...
-	while (cnt >= 4) {
-		...
-                pos += 4;
-                cnt -= 4;
-	}
-
-proc_bus_pci_read() is quite similar but "pos", "cnt", and "size" are
-unsigned:
-
-  static ssize_t proc_bus_pci_read(struct file *file, char __user *buf,
-				   size_t nbytes, loff_t *ppos)
-  {
-        unsigned int pos = *ppos;
-        unsigned int cnt, size;
-
-It seems like they should use the same strategy to avoid this problem.
-
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-> ---
->  drivers/pci/proc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-> index 9348a0fb8084..ef7a33affb3b 100644
-> --- a/drivers/pci/proc.c
-> +++ b/drivers/pci/proc.c
-> @@ -121,7 +121,7 @@ static ssize_t proc_bus_pci_write(struct file *file, const char __user *buf,
->  	if (ret)
->  		return ret;
->  
-> -	if (pos >= size)
-> +	if (pos < 0 || pos >= size)
->  		return 0;
->  	if (nbytes >= size)
->  		nbytes = size;
-> -- 
-> 2.25.1
-> 
 
