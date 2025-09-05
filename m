@@ -1,237 +1,143 @@
-Return-Path: <linux-pci+bounces-35514-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35515-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 735EDB44FF4
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 09:35:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1203BB45021
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 09:43:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0D482B631A2
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 07:31:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAC0B16DA5F
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 07:43:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E53541DDC37;
-	Fri,  5 Sep 2025 07:32:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D899265637;
+	Fri,  5 Sep 2025 07:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="J9wFGA5K"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="LKtWmL/9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7B972618
-	for <linux-pci@vger.kernel.org>; Fri,  5 Sep 2025 07:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622A4263F2D
+	for <linux-pci@vger.kernel.org>; Fri,  5 Sep 2025 07:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757057528; cv=none; b=cYtzAaPznDWT+wyfvYQaigoAwrXrpWOLt4MDKlVNoYL/bdgXAgwiFQF7y+Aj2bIkEnh5TmSLXD4y6MGEvQx1bsB//6jhaK8w5riT2/wvWqA0vc8E5nB1N8xEJkBz6q02aMnBnbZML9mH1tafm4YGeHaFbt604cgGDuHo3Ty2MIs=
+	t=1757058210; cv=none; b=npYF0B/I2XPgtiKj/5szBsfKTDIoPoHOfX7yitwOPn4pExyRkpJiyynPrREPx2Ot+oRmXxtPaCEZ03XONuvlyQ8MilZwm8D3OiehkvG5+4KDqEzD10Cuhi6JXeqbhc4HEtELNtJJdQMunK5syayeNHeSjx7KlzDhIjy4EOSMwoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757057528; c=relaxed/simple;
-	bh=xvwXm3Pv9vYvSSWIuT+Z3MQ1o5JDE7sFfcsSDOx2q9M=;
+	s=arc-20240116; t=1757058210; c=relaxed/simple;
+	bh=bsdXiRg5jpsxkzgX7jVctkBK26SfSXlpC0q/1gug0lU=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=c9ZhGONQUE5SyEVk9sJIW2Gt5OplnKJuyY9+mOEtZBqIuvgFnxsMn16r6WhYDm9sbCF9Gygdz6Ty/5O5M7nNoKP6ks9oQNwyFsWRvgIf4tHtFOZQv8TAhNP76lcU7f135TE9mHRp465M+ondIzKN6vaNZKn48Mz1DzT0+x/NLdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=J9wFGA5K; arc=none smtp.client-ip=209.85.221.54
+	 MIME-Version:Content-Type; b=RgbgeHZqzzaMjbm5jlXE08k+IJxsSzCdP5mKuZj+AOnHVZv/+d95wt9KXIJiEjk8Ox5jucNXbmS7xxphbNnxD71IQT+dry+p+OdNJaVkEayz9SD1xisQHn0L41HqZa3bpFHTE3u/Mj9A59nCOU+j3cCHQ6cRLzxBKimEPvYBgGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=LKtWmL/9; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3dcce361897so1239074f8f.3
-        for <linux-pci@vger.kernel.org>; Fri, 05 Sep 2025 00:32:05 -0700 (PDT)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-45b89147cfbso19959745e9.3
+        for <linux-pci@vger.kernel.org>; Fri, 05 Sep 2025 00:43:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1757057524; x=1757662324; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r+x/G5OyWmx9S1N11lvbbbjr7uTWa/HEiipZ5biWNJA=;
-        b=J9wFGA5KtDV31XM+ieh8kQdvmrz8LUk/itaJLbOsbYThlp9w4j5ZHf4NbnzhddXNB8
-         IqKVsoJNEzakXWn2+MCmu0J52X8FH2nJWG3s7oxAnc4+RJps2GnsX4HWfSNzXvQ3rHSJ
-         BNEk1Mm/GJRfm8uJOHnw/xkUbq0w8W6D2CNvEJtLpYV5j09bLrAKT5aH2HdL1yH0CLHJ
-         kxue972sVbuzLm34daAhHf5DV2ao7cWFCXuShuNjsqUtd5zw8frGNtIBfZplhpu1w0T+
-         D4XKTirZ62EVdQXg+EBajKThMaqe6tT3/9TiF3gvku7vhLSKol0g2Xc2P2LKKfppRLIi
-         19ww==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1757058206; x=1757663006; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mcFCT9zW4aA60fZ7BLnEw73ykCEqS3kxh9SMpfaPMuI=;
+        b=LKtWmL/9mZjRiFHkXt/BZ5UmcXFskWcCR7l1+sdCxkNbNl272KwAOAmrQz0qqLGgEI
+         bH1Lwp+/ikays8wJ27SYslmwB7owquYaVQrz45GLQhsTO+4tARW5CUbBfNr2fV/zPQ7i
+         F07cL2yhHR/65RI2bQkvt1nujiufYigAUKG1QOo5K7wVJO8QX4Ut6OPR/XUYXFa+UONh
+         0NOL87fJdbZk0mOu8VtdnBh09MQhyipIRK8tY6kdSPLWlTPGz7b/97ZB5EGAfDJrAPGp
+         ePQH7HdmN+QQey6Iw9A0KA054dC/fIhvmpagN0En+x8XL033nY2Zh1l+YNm82JXk3tYP
+         LLjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757057524; x=1757662324;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=r+x/G5OyWmx9S1N11lvbbbjr7uTWa/HEiipZ5biWNJA=;
-        b=dx3X8UedMz+/LfJ/TFiT+7LfLK1OaoM5Tns3RsymYvU4esdCeHR5kXcLlcWiYv51Sz
-         i7aDnYLq37F28SjMfUKDeNbzrX1gzEBZrpksvfTkdSVHBafrtGOtDhhuQu5vaG5stHc2
-         7kMMhMIJ2ISzdAdiQHZeotGnpcJqwtnCFp64va8ERR8ZBG9LXnPatBGSZoCTWZukTlzM
-         ZT1SjuGIE1NOKsZD8x+WkGTyXXiLXwXLFwCVojf7A+cnlykJg2KdkDab+KmyjRFYoH5F
-         ZBGbO80QMDL9IgP70A6yiJgS3TdxG60A4gSRquRZmu1iue5Q4Jz5mIgSwc6ipgp8VJcm
-         5bAA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWFt5Xc9BWiFk6jM59fe9Jxz+4LOnp3UaQAk4u/rq8LYsHmpoj8MRzaGE9tIHt7A+vaCVtMzOfwHo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxs0ZiW9hjwkSrshxjv8iQ6EYTYb3JeYXKyhTAX0dAkhAfqn663
-	qeKrQX2eWD0EGFoqGO4caL8lKZZaqPvvHYtX1wA/JSeriV2EHO1kb5rRKccaJl9qwjg=
-X-Gm-Gg: ASbGncsuyPbDHFzu1uIlS4A7SvXjb6qXuCDauNiks6IpxnOx5gNRTkDZWeADFUFMk3N
-	0xyyaYgkSCgiFGGcD2dV5R59XPFmJl5NRW5mBIKHxPrlCLNHb9Ymk8tYzrDv0kR5tQqUIVRyyq/
-	iuIsgFWqJO7SpJ4D7/U1gcrb5/WZol5P8sdxX+uRk5bNerPa8xyf5I48U1NHKB2jzDvtTgLtVXq
-	+TBSvvQ0DESyMUOhba5F3uzARpuIhETXanDbIIIkUfG6Vk3OZp+q+h9TuzBqmpeOQGS1+BH54kA
-	3CuBdpPN7udZVY2qhZOkUk7AjNrZEhT7n3Su+8751NvKCcJ5ozYYCj0QPp2NBf6UsuA8cdvZKDl
-	I4ykZ0Yr2V6qMUjAIHVvcSg==
-X-Google-Smtp-Source: AGHT+IE/edIEyJSVF31RWvvWzi7ImsiFPZN9hfcyP5rc42uQs8rb9WrkD+dUKuAD84MRpef6VXJY2w==
-X-Received: by 2002:adf:8b8a:0:b0:3d2:eea2:f483 with SMTP id ffacd0b85a97d-3d2eea2f990mr12656102f8f.43.1757057524391;
-        Fri, 05 Sep 2025 00:32:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1757058206; x=1757663006;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mcFCT9zW4aA60fZ7BLnEw73ykCEqS3kxh9SMpfaPMuI=;
+        b=rIAF4cgaiGIO1tjUc9pdvjhlvE6iF4uWu2zlxFuGmsasM+9oAj2BsdzX5teS8Dj1Fj
+         09NOni8GpygrK/B/yNPzCgPsq2sJx7xD5U/H6RonxGlk+ENtmogLz4cuF2i9Dh1h+JVD
+         Gz2r0D72Xk3F47fSuK9E3Mwq0FzOjLYNoMQhhEOL9gx1gMzwSfmxRmftbxJJLlqgTM4C
+         RbOj1iE3HEnIyGnGaNmNwtz/BI8mWm83kmOzia6Gs7wwuQ+ZFPDuCxoTWYh2+wLv45El
+         571tpanaQBI/jGMF0JCmSK4ReIUqUYZy2ZxP+13XSyFNqnBNDiQm62jBmhscRCX4GkDj
+         aNaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdY8+mi10nyOzm0VzluzMQ7XJXrMzqUl6A8BaLO7+/oHPMOAaFr7TTf46/BWI4A2GMF2Hr+WvAdjM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVHEgGBXKQWYtHGm+nLSyp/JgKBCpg3O/9srtubMxO7H4zJBzy
+	JvirxKAXvAgpikOp5bLOaP9EBnpEzaJpWI4PCjq1/3KZbK4ahSZOjnM50Tu5R9OpDF0=
+X-Gm-Gg: ASbGncuQRLHhgASbEF7VQvosnl691zH+lzp7PYwD8tjld8fnb+RiiutUPLewrCAAFpW
+	yIqjqiXI+18e2usL5zBeV6ib5OU+37KejvCmmRDUZSrsHMRZYzEJ/72wwQ9nzIl0BpSvOd58TV/
+	Qh24ODnw0iRjOFLvh8JuKN9ILGBozcLCfGu0p+2sFv4B71YMQcHX9+4D7lSnLCXgZfH7neR3n12
+	o2q2KFP4hO/RRwbn4/7a7qenqt3YLoYLTNPMaJKjWp//kW9nUnX6/YFowDv1v50c/KCGQGbBoqU
+	aniayAOpNJ/0WiuF1QOX+kW/DlyEpU6H0Cljv5xBwcqh/Jw93G1iYHC5wCflQydt6LVznoPS+1E
+	x0Y8mraz9kIPZb3CTuEJVGRaqVGsQM5kH
+X-Google-Smtp-Source: AGHT+IElpZ/nNxUYJfXoPhKCLi6yxVHIT8+Ii77o8BHY6J90x7XkcR0yo3B1qo8+VJT1qApCcEJbSw==
+X-Received: by 2002:a05:6000:2f81:b0:3e0:b982:ca3d with SMTP id ffacd0b85a97d-3e0b982cdd7mr4374615f8f.59.1757058205661;
+        Fri, 05 Sep 2025 00:43:25 -0700 (PDT)
 Received: from localhost ([2a01:e0a:3c5:5fb1:f203:7a74:e497:6da7])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3d53fda847dsm21207010f8f.0.2025.09.05.00.32.03
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3e23d29bb9esm3900639f8f.4.2025.09.05.00.43.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Sep 2025 00:32:03 -0700 (PDT)
+        Fri, 05 Sep 2025 00:43:25 -0700 (PDT)
 From: Jerome Brunet <jbrunet@baylibre.com>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Damien Le Moal <dlemoal@kernel.org>,  Marek Vasut
- <marek.vasut+renesas@mailbox.org>,  linux-pci@vger.kernel.org,  Krzysztof
- =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,  Bjorn Helgaas
- <bhelgaas@google.com>,
-  Frank Li <Frank.Li@nxp.com>,  Kishon Vijay Abraham I <kishon@kernel.org>,
+To: Marek Vasut <marek.vasut@mailbox.org>
+Cc: Niklas Cassel <cassel@kernel.org>,  Damien Le Moal <dlemoal@kernel.org>,
+  Marek Vasut <marek.vasut+renesas@mailbox.org>,
+  linux-pci@vger.kernel.org,  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>,  Bjorn Helgaas <bhelgaas@google.com>,  Frank Li
+ <Frank.Li@nxp.com>,  Kishon Vijay Abraham I <kishon@kernel.org>,
   Manivannan Sadhasivam <mani@kernel.org>,  Wang Jiang
  <jiangwang@kylinos.cn>,  linux-kernel@vger.kernel.org,
   linux-renesas-soc@vger.kernel.org
 Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: Limit PCIe BAR size for
  fixed BARs
-In-Reply-To: <aLmGBYOVevP5hH0X@ryzen> (Niklas Cassel's message of "Thu, 4 Sep
-	2025 14:28:53 +0200")
+In-Reply-To: <62584e30-72ab-49df-bfaa-9730679b2dbe@mailbox.org> (Marek Vasut's
+	message of "Thu, 4 Sep 2025 23:29:15 +0200")
 References: <20250904023753.494147-1-marek.vasut+renesas@mailbox.org>
 	<b3d5773d-c573-4491-b799-90405a8af6a9@kernel.org>
 	<aLmGBYOVevP5hH0X@ryzen>
+	<62584e30-72ab-49df-bfaa-9730679b2dbe@mailbox.org>
 User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Fri, 05 Sep 2025 09:32:03 +0200
-Message-ID: <1jplc54aoc.fsf@starbuckisacylon.baylibre.com>
+Date: Fri, 05 Sep 2025 09:43:24 +0200
+Message-ID: <1jjz2d4a5f.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu 04 Sep 2025 at 14:28, Niklas Cassel <cassel@kernel.org> wrote:
+On Thu 04 Sep 2025 at 23:29, Marek Vasut <marek.vasut@mailbox.org> wrote:
 
-> On Thu, Sep 04, 2025 at 11:40:15AM +0900, Damien Le Moal wrote:
->> On 9/4/25 11:37 AM, Marek Vasut wrote:
->> > Currently, the test allocates BAR sizes according to fixed table
->> > bar_size[] =3D { 512, 512, 1024, 16384, 131072, 1048576 } . This
->> > does not work with controllers which have fixed size BARs, like
->> > Renesas R-Car V4H PCIe controller, which has BAR4 size limited
->> > to 256 Bytes, which is much less than 131072 currently requested
->> > by this test.
->> >=20
->> > Adjust the test such, that in case a fixed size BAR is detected
->> > on a controller, minimum of requested size and fixed size BAR
->> > size is used during the test instead.
->> >=20
->> > This helps with test failures reported as follows:
->> > "
->> > pci_epf_test pci_epf_test.0: requested BAR size is larger than fixed s=
-ize
->> > pci_epf_test pci_epf_test.0: Failed to allocate space for BAR4
->> > "
->> >=20
->> > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
->> > ---
->> > Cc: "Krzysztof Wilczy=C5=84ski" <kwilczynski@kernel.org>
->> > Cc: Bjorn Helgaas <bhelgaas@google.com>
->> > Cc: Damien Le Moal <dlemoal@kernel.org>
->> > Cc: Frank Li <Frank.Li@nxp.com>
->> > Cc: Kishon Vijay Abraham I <kishon@kernel.org>
->> > Cc: Manivannan Sadhasivam <mani@kernel.org>
->> > Cc: Niklas Cassel <cassel@kernel.org>
->> > Cc: Wang Jiang <jiangwang@kylinos.cn>
->> > Cc: linux-kernel@vger.kernel.org
->> > Cc: linux-pci@vger.kernel.org
->> > Cc: linux-renesas-soc@vger.kernel.org
->> > ---
->> >  drivers/pci/endpoint/functions/pci-epf-test.c | 11 +++++++++--
->> >  1 file changed, 9 insertions(+), 2 deletions(-)
->> >=20
->> > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/p=
-ci/endpoint/functions/pci-epf-test.c
->> > index e091193bd8a8a..d9c950d4c9a9e 100644
->> > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
->> > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
->> > @@ -1022,7 +1022,8 @@ static int pci_epf_test_alloc_space(struct pci_e=
-pf *epf)
->> >  	enum pci_barno test_reg_bar =3D epf_test->test_reg_bar;
->> >  	enum pci_barno bar;
->> >  	const struct pci_epc_features *epc_features =3D epf_test->epc_featur=
-es;
->> > -	size_t test_reg_size;
->> > +	size_t test_reg_size, test_bar_size;
->> > +	u64 bar_fixed_size;
->> >=20=20
->> >  	test_reg_bar_size =3D ALIGN(sizeof(struct pci_epf_test_reg), 128);
->> >=20=20
->> > @@ -1050,7 +1051,13 @@ static int pci_epf_test_alloc_space(struct pci_=
-epf *epf)
->> >  		if (bar =3D=3D test_reg_bar)
->> >  			continue;
->> >=20=20
->> > -		base =3D pci_epf_alloc_space(epf, bar_size[bar], bar,
->> > +		test_bar_size =3D bar_size[bar];
->> > +
->> > +		bar_fixed_size =3D epc_features->bar[bar].fixed_size;
->> > +		if (epc_features->bar[bar].type =3D=3D BAR_FIXED && bar_fixed_size)
->> > +			test_bar_size =3D min(bar_size[bar], bar_fixed_size);
->>=20
->> I think this can be simplified to:
->>=20
->> 		if (epc_features->bar[bar].type =3D=3D BAR_FIXED)
->> 			test_bar_size =3D epc_features->bar[bar].fixed_size;
->> 		else
->> 			test_bar_size =3D bar_size[bar];
+> On 9/4/25 2:28 PM, Niklas Cassel wrote:
 >
-> +1
+> Hello Niklas,
+>
+> [...]
+>
+>> pci_epf_alloc_space() works like this:
+>> If the user requests a BAR size that is smaller than the fixed-size BAR,
+>> it will allocate space matching the fixed-size.
+>> As in most cases, having a BAR larger than needed by an EPF driver is
+>> still acceptable.
+>> However, if the user requests a size larger than the fixed-size BAR,
+>> as in your case, we will return an error, as we cannot fulfill the
+>> user's request.
+>> I don't see any alternative other than your/Damien's proposal above.
+>> Unfortunately, all EPF drivers would probably need this same change.
+>
+> It seems that pci-epf-ntb and pci-epf-vntb only use BAR0 (BAR_CONFIG) and
+> BAR0+BAR1 (BAR_CONFIG and BAR_DB) , so those should be OK on this
+> controller. NVMe EPF also seems to use only BAR0 and it specifically
+> handles fixed size BAR. It seems everything that is in the tree so far
+> managed to sidestep hitting fixed-size BAR4 problems on this hardware,
+> except for the test driver.
 
-It's what pci_epf_alloc_space() does too. so it makes sense but it also
-means the side must stay aligned.
+As it stands, a vNTB device needs 3 BARs minimum (CFG, DB and MW). The
+NTB one may get away with with 2 BARs, with DB and MW sharing one.
 
-If a rework is needed, maybe it would be better to get size from
-pci_epf_alloc_space() instead of recomputing it ?
+If you referring to Renesas about that BAR4, I did use it for vNTB.
+It is indeed not upstream ... yet [1]
 
->
->>=20
->> because if the bar type is BAR_FIXED, then the size of the bar can only =
-be its
->> fixed size.
->
-> Correct, see:
-> f015b53d634a ("PCI: endpoint: Add size check for fixed size BARs in pci_e=
-pc_set_bar()")
->
-> Actually, Jerome Brunet was also using this weird Renesas R-Car V4H PCIe
-> controller where BAR4 is a really small fixed-size BAR.
->
-> (Even smaller than the iATU minimum alignment requirement for that same
-> controller.)
->
-> See:
-> 793908d60b87 ("PCI: endpoint: Retain fixed-size BAR size as well as align=
-ed size")
->
-> But he only appears to have used the vntb epf driver.
->
-> Jerome, I suppose that you never ran with the pci-epf-test driver?
->
+I think it is possible to have vNTB on 2 BARs with some tweaks, putting
+CFG and DB on the same one.
 
-Indeed no. I've gone with with ntb-test driver on top or ntb-netdev
+[1]: https://lore.kernel.org/r/20250702-ntb-rcar-support-v3-2-4268d9c85eb7@baylibre.com
 
->
-> pci_epf_alloc_space() works like this:
-> If the user requests a BAR size that is smaller than the fixed-size BAR,
-> it will allocate space matching the fixed-size.
->
-> As in most cases, having a BAR larger than needed by an EPF driver is
-> still acceptable.
->
-> However, if the user requests a size larger than the fixed-size BAR,
-> as in your case, we will return an error, as we cannot fulfill the
-> user's request.
->
-> I don't see any alternative other than your/Damien's proposal above.
->
-> Unfortunately, all EPF drivers would probably need this same change.
->
->
-> Kind regards,
-> Niklas
-
---=20
+-- 
 Jerome
 
