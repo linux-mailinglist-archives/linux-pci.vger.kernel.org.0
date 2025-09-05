@@ -1,286 +1,138 @@
-Return-Path: <linux-pci+bounces-35530-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35531-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B086B4576D
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 14:13:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF413B45773
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 14:15:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E29AD5C274A
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 12:13:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9B59C7AEBB4
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 12:13:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F16234AB1D;
-	Fri,  5 Sep 2025 12:13:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30E4034A33E;
+	Fri,  5 Sep 2025 12:14:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n6f1VqYl"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Iv9m+fzY";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="RCgZtvh3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DCB34AB10;
-	Fri,  5 Sep 2025 12:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803CE34AB0F;
+	Fri,  5 Sep 2025 12:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757074406; cv=none; b=TRMdWvnvIZ4kFW9F+Wm0RTnhidrKJoYBVlVs66dA7yLDaWZ3yuhFwOyjx75hCb/nBQ7kM6A4EjJBhYXIftEemfhmI8XAHk+qEq/11o99yU/vdl/szaxj62b2JuMmskxopm02KCxlW4z56eGJfo7pD7P6GO1sCwwHBsAKK/uvp/s=
+	t=1757074494; cv=none; b=DuPbC/QD9hKWAse8JxAf5DeAOLgews27awBKgeCvlHvcLymh1Gl9q2PCnil0WcEh07o/oGCNlOLL7UhCCNuRl9fJ1BXktPs9g2QIrRKcnGOdhkVEd05Mw9teJpa70TOxLmRc12gMsd53TrKS7+BSB0P6gmsK0GUe3EuLKoZmQkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757074406; c=relaxed/simple;
-	bh=aYtHYUpq1lVoXsuFtSw4MmwA2EnrvTNy8bUG/G2z+20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZsjRSllzR/BVPJ6qb4yZnivpmORbSLXBvSczC93ecjWESBQJtkg8Ioz2MDRrIQTpvUQnL+34fmD4QiUiL/KVE6EGdU6dnjzPZOylTGgQBEIeaU/jOw553xXN0zWqj5Xr7OsOJp8IJJXauf6iynWhU8oImIVsuRSSOJ9ZvUAq95Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n6f1VqYl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AFDBC4CEF1;
-	Fri,  5 Sep 2025 12:13:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757074405;
-	bh=aYtHYUpq1lVoXsuFtSw4MmwA2EnrvTNy8bUG/G2z+20=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n6f1VqYliaOFK4CitZ+uv44jLGPX9Mto+zoTAtB3LHKy2uIPf5R6Pf/ZDKxIIh6Jq
-	 Pke+JYfvlW2iXMJLIngiqhWpBkjlvBnG9uf581+uHPwickAYOu0THPJMr/K+ElRF8F
-	 qGyFEEl+WF4V4PQoufhUyCGS1ruhZCg9lZIB2h0BGdK98XB0RZwYCZG2KpdJofNXSU
-	 ZciiI+D9w7W5tAK4hPqJwBQEZNlapuY0bS4N7x3KUSzt1CZ8a7vt9rJHpjp5q6NsMt
-	 QGs+984A1wtwPffiOJ1Ji6aIpnje3fqJRmVLywQLzuE/mqmm06tc8AsERF0FphgyUk
-	 Pt4Zk2VNFw0UA==
-Date: Fri, 5 Sep 2025 17:43:15 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-	cros-qcom-dts-watchers@chromium.org, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, quic_vpernami@quicinc.com, 
-	mmareddy@quicinc.com, Jonathan Chocron <jonnyc@amazon.com>
-Subject: Re: [PATCH v8 4/5] PCI: dwc: Add ECAM support with iATU configuration
-Message-ID: <6uhdibyaz6djjkmvme2pmulvloxfi5ce5cfegyrivdxwe7wewy@zmzmcq4f32q3>
-References: <20250828-ecam_v4-v8-4-92a30e0fa02d@oss.qualcomm.com>
- <20250903201012.GA1217030@bhelgaas>
+	s=arc-20240116; t=1757074494; c=relaxed/simple;
+	bh=8ds04XjGb4G3SLQo3Edkhd7NAoBCJhwTSnyssLuQBwE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uM0es1SMAuOtUPONmf6uMU3FlXZ3E57gQwiXatEcsERkLrqRK6ZKreKs0ZIx2tPah4yMCNuacxt6jMnUzpLBdnhR6nheobqxvqWet5LEBwDgdAdbgdDaIfBI5YqYYAzOi70UH32gnHHc2F65dd/bcFiFoOoTlyfVPYcPbOH8H54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Iv9m+fzY; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=RCgZtvh3; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4cJFf247hPz9t6b;
+	Fri,  5 Sep 2025 14:14:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1757074490;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XN/fRqEiYtlayEBesAxR9TsT6/h5XgQP+y1PhI5KoO8=;
+	b=Iv9m+fzYsVs3Jow37HoPisbjGbHvtqHt8+qKjSrBLOvZtgudjH2x2gckGS1M/CrLowrP8E
+	DYsaMQpM5MNuQpkRaxv8RWHC3nWaTxo25O+fYmpFIIRSJrxFIIw/RCJLLciTAfcjJnvggN
+	878He3jZm6g/gWvJDZqr73bXoC3pRcYKojKwSvMeWGOeLF1q7SQyM5w0jaOOVOSy+O2ACH
+	Kdz/Yj/GIRznwSaksKyDA0jDaK8mXTQVdyicc0OZzBsi+O3jFpabORo/abiZm3MLD3k4xM
+	HehjTNu7jZGxUlQ6FLawgirOEoWuzh5QkujJ/sd0679wmbNqT3GJ7F1Y2iZBIg==
+Message-ID: <caa01cf5-1ae4-439a-ab70-18cfcfce7a92@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1757074488;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XN/fRqEiYtlayEBesAxR9TsT6/h5XgQP+y1PhI5KoO8=;
+	b=RCgZtvh33Bu5yG435GwPZN59nC+G9S4DTRYcSBztpDxT2Kr4N6Rhg/DbIKFHsFDWqgbndJ
+	ILbWX8M/L2Oi4mpfPiyvC7v9hHLNl46GBF0YBupULpVtXzNc14N9vnGXLZs5+MlEH0VIYX
+	ddpSZmDQ2zNriD3mDz7XQ68vILl53HVmnJAntaWkLVoy6dl0obb0eT6P20GaHHs9uVDO8d
+	tOZdlFzD890stUHV2+fl4Dsz9juowQZWOzJoEeE8BpOf/rnhwDpXrQmAfpuf4QocWzb0OF
+	ag6nfboTabV3s6z3j5jvOJny9VYZiO4xZwXvAHlXdNg/KbIwlvmk8qwPLbViaw==
+Date: Fri, 5 Sep 2025 14:14:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250903201012.GA1217030@bhelgaas>
+Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: Limit PCIe BAR size for
+ fixed BARs
+To: Niklas Cassel <cassel@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>,
+ Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Frank Li <Frank.Li@nxp.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Wang Jiang <jiangwang@kylinos.cn>,
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20250904023753.494147-1-marek.vasut+renesas@mailbox.org>
+ <b3d5773d-c573-4491-b799-90405a8af6a9@kernel.org> <aLmGBYOVevP5hH0X@ryzen>
+ <1jplc54aoc.fsf@starbuckisacylon.baylibre.com> <aLqg90KqEJ8wSEPi@ryzen>
+Content-Language: en-US
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <aLqg90KqEJ8wSEPi@ryzen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MBO-RS-ID: d4e7a0328dfa46c6505
+X-MBO-RS-META: o1unrme6t9rk56kzwrhfetokkhmoxp5m
 
-On Wed, Sep 03, 2025 at 03:10:12PM GMT, Bjorn Helgaas wrote:
-> [+cc Jonathan for potential issue in pcie-al.c]
+On 9/5/25 10:36 AM, Niklas Cassel wrote:
+> On Fri, Sep 05, 2025 at 09:32:03AM +0200, Jerome Brunet wrote:
+>> On Thu 04 Sep 2025 at 14:28, Niklas Cassel <cassel@kernel.org> wrote:
+>>>>
+>>>> I think this can be simplified to:
+>>>>
+>>>> 		if (epc_features->bar[bar].type == BAR_FIXED)
+>>>> 			test_bar_size = epc_features->bar[bar].fixed_size;
+>>>> 		else
+>>>> 			test_bar_size = bar_size[bar];
+>>>
+>>> +1
+>>
+>> It's what pci_epf_alloc_space() does too. so it makes sense but it also
+>> means the side must stay aligned.
 > 
-> On Thu, Aug 28, 2025 at 01:04:25PM +0530, Krishna Chaitanya Chundru wrote:
-> > The current implementation requires iATU for every configuration
-> > space access which increases latency & cpu utilization.
-> > 
-> > Designware databook 5.20a, section 3.10.10.3 says about CFG Shift Feature,
-> > which shifts/maps the BDF (bits [31:16] of the third header DWORD, which
-> > would be matched against the Base and Limit addresses) of the incoming
-> > CfgRd0/CfgWr0 down to bits[27:12]of the translated address.
-> > 
-> > Configuring iATU in config shift feature enables ECAM feature to access the
-> > config space, which avoids iATU configuration for every config access.
-> > 
-> > Add "ctrl2" into struct dw_pcie_ob_atu_cfg  to enable config shift feature.
-> > 
-> > As DBI comes under config space, this avoids remapping of DBI space
-> > separately. Instead, it uses the mapped config space address returned from
-> > ECAM initialization. Change the order of dw_pcie_get_resources() execution
-> > to achieve this.
-> > 
-> > Enable the ECAM feature if the config space size is equal to size required
-> > to represent number of buses in the bus range property.
-> > 
-> > As per PCIe spec 6, sec 7.2.2 the memory should be aligned to 256MB for
-> > ECAM. The synopsys iATU also uses bits [27:12] to form BDF, so the base
-> > address must be 256MB aligned. Add a check to ensure the configuration
-> > space base address is 256MB aligned before enabling ECAM.
-> > 
-> > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > ---
-> >  drivers/pci/controller/dwc/Kconfig                |   1 +
-> >  drivers/pci/controller/dwc/pcie-designware-host.c | 145 +++++++++++++++++++---
-> >  drivers/pci/controller/dwc/pcie-designware.c      |   2 +-
-> >  drivers/pci/controller/dwc/pcie-designware.h      |   5 +
-> >  4 files changed, 138 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > index ff6b6d9e18ecfa44273e87931551f9e63fbe3cba..a0e7ad3fb5afec63b0f919732a50147229623186 100644
-> > --- a/drivers/pci/controller/dwc/Kconfig
-> > +++ b/drivers/pci/controller/dwc/Kconfig
-> > @@ -20,6 +20,7 @@ config PCIE_DW_HOST
-> >  	bool
-> >  	select PCIE_DW
-> >  	select IRQ_MSI_LIB
-> > +	select PCI_HOST_COMMON
-> >  
-> >  config PCIE_DW_EP
-> >  	bool
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index 952f8594b501254d2b2de5d5e056e16d2aa8d4b7..eda7affcdcb2075d07ba6eeab70e41b6548a4b18 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -8,6 +8,7 @@
-> >   * Author: Jingoo Han <jg1.han@samsung.com>
-> >   */
-> >  
-> > +#include <linux/align.h>
-> >  #include <linux/iopoll.h>
-> >  #include <linux/irqchip/chained_irq.h>
-> >  #include <linux/irqchip/irq-msi-lib.h>
-> > @@ -32,6 +33,8 @@ static struct pci_ops dw_child_pcie_ops;
-> >  				     MSI_FLAG_PCI_MSIX			| \
-> >  				     MSI_GENERIC_FLAGS_MASK)
-> >  
-> > +#define IS_256MB_ALIGNED(x) IS_ALIGNED(x, SZ_256M)
-> > +
-> >  static const struct msi_parent_ops dw_pcie_msi_parent_ops = {
-> >  	.required_flags		= DW_PCIE_MSI_FLAGS_REQUIRED,
-> >  	.supported_flags	= DW_PCIE_MSI_FLAGS_SUPPORTED,
-> > @@ -413,6 +416,92 @@ static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
-> >  	}
-> >  }
-> >  
-> > +static int dw_pcie_config_ecam_iatu(struct dw_pcie_rp *pp)
-> > +{
-> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > +	struct dw_pcie_ob_atu_cfg atu = {0};
-> > +	resource_size_t bus_range_max;
-> > +	struct resource_entry *bus;
-> > +	int ret;
-> > +
-> > +	bus = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS);
-> > +
-> > +	/*
-> > +	 * Root bus under the host bridge doesn't require any iATU configuration
-> > +	 * as DBI region will be used to access root bus config space.
-> > +	 * Immediate bus under Root Bus, needs type 0 iATU configuration and
-> > +	 * remaining buses need type 1 iATU configuration.
-> > +	 */
-> > +	atu.index = 0;
-> > +	atu.type = PCIE_ATU_TYPE_CFG0;
-> > +	atu.parent_bus_addr = pp->cfg0_base + SZ_1M;
-> > +	/* 1MiB is to cover 1 (bus) * 32 (devices) * 8 (functions) */
-> > +	atu.size = SZ_1M;
-> > +	atu.ctrl2 = PCIE_ATU_CFG_SHIFT_MODE_ENABLE;
-> > +	ret = dw_pcie_prog_outbound_atu(pci, &atu);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	bus_range_max = resource_size(bus->res);
-> > +
-> > +	if (bus_range_max < 2)
-> > +		return 0;
-> > +
-> > +	/* Configure remaining buses in type 1 iATU configuration */
-> > +	atu.index = 1;
-> > +	atu.type = PCIE_ATU_TYPE_CFG1;
-> > +	atu.parent_bus_addr = pp->cfg0_base + SZ_2M;
-> > +	atu.size = (SZ_1M * bus_range_max) - SZ_2M;
-> > +	atu.ctrl2 = PCIE_ATU_CFG_SHIFT_MODE_ENABLE;
-> > +
-> > +	return dw_pcie_prog_outbound_atu(pci, &atu);
-> > +}
-> > +
-> > +static int dw_pcie_create_ecam_window(struct dw_pcie_rp *pp, struct resource *res)
-> > +{
-> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > +	struct device *dev = pci->dev;
-> > +	struct resource_entry *bus;
-> > +
-> > +	bus = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS);
-> > +	if (!bus)
-> > +		return -ENODEV;
-> > +
-> > +	pp->cfg = pci_ecam_create(dev, res, bus->res, &pci_generic_ecam_ops);
-> > +	if (IS_ERR(pp->cfg))
-> > +		return PTR_ERR(pp->cfg);
-> > +
-> > +	pci->dbi_base = pp->cfg->win;
-> > +	pci->dbi_phys_addr = res->start;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static bool dw_pcie_ecam_enabled(struct dw_pcie_rp *pp, struct resource *config_res)
-> > +{
-> > +	struct resource *bus_range;
-> > +	u64 nr_buses;
-> > +
-> > +	/*
-> > +	 * 256MB alignment is required for Enhanced Configuration Address Mapping (ECAM),
-> > +	 * as per PCIe Spec 6, Sec 7.2.2. It ensures proper mapping of memory addresses
-> > +	 * to Bus-Device-Function (BDF) fields in config TLPs.
-> > +	 *
-> > +	 * The synopsys iATU also uses bits [27:12] to form BDF, so the base address must
-> > +	 * be 256MB aligned.
-> > +	 */
-> > +	if (!IS_256MB_ALIGNED(config_res->start))
-> > +		return false;
-> > +
-> > +	bus_range = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS)->res;
-> > +	if (!bus_range)
-> > +		return false;
-> > +
-> > +	nr_buses = resource_size(config_res) >> PCIE_ECAM_BUS_SHIFT;
-> > +
-> > +	return !!(nr_buses >= resource_size(bus_range));
-> > +}
-> > +
-> >  static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
-> >  {
-> >  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > @@ -422,10 +511,6 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
-> >  	struct resource *res;
-> >  	int ret;
-> >  
-> > -	ret = dw_pcie_get_resources(pci);
-> > -	if (ret)
-> > -		return ret;
-> > -
-> >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
-> >  	if (!res) {
-> >  		dev_err(dev, "Missing \"config\" reg space\n");
-> > @@ -435,9 +520,32 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
-> >  	pp->cfg0_size = resource_size(res);
-> >  	pp->cfg0_base = res->start;
-> >  
-> > -	pp->va_cfg0_base = devm_pci_remap_cfg_resource(dev, res);
-> > -	if (IS_ERR(pp->va_cfg0_base))
-> > -		return PTR_ERR(pp->va_cfg0_base);
-> > +	pp->ecam_enabled = dw_pcie_ecam_enabled(pp, res);
-> > +	if (pp->ecam_enabled) {
-> > +		ret = dw_pcie_create_ecam_window(pp, res);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		pp->bridge->ops = (struct pci_ops *)&pci_generic_ecam_ops.pci_ops;
-> > +		pp->bridge->sysdata = pp->cfg;
-> > +		pp->cfg->priv = pp;
-> > +	} else {
-> > +		pp->va_cfg0_base = devm_pci_remap_cfg_resource(dev, res);
+> Not really, pci_epf_alloc_space() will give you 'fixed_size'
+> if you request size < fixed_size.
 > 
-> Now we only set va_cfg0_base when dw_pcie_ecam_enabled() returned
-> false.  dw_pcie_ecam_enabled() only depends on the "config" resource
-> alignment and size, which come straight from the devicetree.
+> If you request more, it will give you an error.
 > 
-> Doesn't that mean that other users of va_cfg0_base (keystone and al)
-> will potentially be broken if their devicetree has a "config" resource
-> that causes dw_pcie_ecam_enabled() to return true?
+>>
+>> If a rework is needed, maybe it would be better to get size from
+>> pci_epf_alloc_space() instead of recomputing it ?
 > 
+> The pci-epf-test driver is just a test driver and we can use whatever
+> BAR size we want for each BAR.
+> 
+> However, I don't think that pci_epf_alloc_space() can always give us
+> a BAR size. Sure, for fixed_size BARs, there is only a single size
+> that is possible. But for Programmable and Resizable BARs, there are
+> many possible sizes, so which size should pci_epf_alloc_space() then
+> return?
+> 
+> And not all EPF drivers might be happy with an aribitrary BAR size
+> (which is the case for pci-epf-test), some EPF drivers might have
+> strict minimum sizes for a BAR.
+> 
+> So, I still think this proposal is the best thing we can do.
+> 
+> At least it appears that we only need to patch pci-epf-test.
+In the meantime, I sent a tested V2, so it is on the list.
 
-Good catch! Keystone platforms are not using ECAM, so they will have no issues
-(for now). But 'al' driver is going to break, not just because of
-'va_cfg0_base', but might also because of using 'pci_generic_ecam_ops' for
-accessing the Root Port.
-
-So we need to exclude this driver from using DWC ECAM. I guess using a flag like
-'dw_pcie_rp::native_ecam' and using it inside dw_pcie_ecam_enabled() would work.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks !
 
