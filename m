@@ -1,566 +1,258 @@
-Return-Path: <linux-pci+bounces-35491-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35492-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAC9FB44B4F
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 03:41:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C063B44B84
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 04:14:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 508291C21E76
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 01:41:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 978C0188F0E8
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 02:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B4631B0437;
-	Fri,  5 Sep 2025 01:41:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 811AA2163B2;
+	Fri,  5 Sep 2025 02:14:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="VeG3D/IC"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tGi3mqHz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023084.outbound.protection.outlook.com [52.101.127.84])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2041.outbound.protection.outlook.com [40.107.220.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04066145329;
-	Fri,  5 Sep 2025 01:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FF71F239B
+	for <linux-pci@vger.kernel.org>; Fri,  5 Sep 2025 02:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757036481; cv=fail; b=fOaXXwZtG0x3blYUYexPy5RtpYMwlOOlOAuF+Kp0250O7ln04fWZ9rUTerMs8+Hq95TpOyFnzN7RcjQHwzx5oKW2r0m8XiQ49fFHjam4Hhoo9t6e4dnXoncpxwVYn4y/aOyu0S2poM9ie60tkqY4bFQ5gn7rwyIXrhC5DoqpPSU=
+	t=1757038487; cv=fail; b=DdZANHUQaNIf5wUXcphjduq1Pzj3MNtXhow7s0DDVoApIKvKWTyLBJ/1e6zT+0lvFkO5OqSUU1mp6waYt0NG5yJ99C9FqnZf4pAhJuIaX6qCgZe2ZkwS76ej56jjauDdDZ1CErtHZq/RfkFvISB+x5UA6/QyrCKf7qkKpdNpaCY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757036481; c=relaxed/simple;
-	bh=+cOJRJg9lMzmO2ChCaU2MYsMnMyY62ROPuHi4Ssz5IQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BCCUbJSV0ynOwKmvRE2PNIL2PRTy+Fnp0asmkDN1QxOuAIAZ5VfyOR9RROcWMZ+iKgUGHGMy8ISCrHaaMhwXqLapbFCmVEdupOq+hkrKWNqYexx0ZnU83ZOMsS3kBKlogYNxMfxin5smZjrBgDt0/0W7itL05y1RyM89MhO3fVQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=VeG3D/IC; arc=fail smtp.client-ip=52.101.127.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+	s=arc-20240116; t=1757038487; c=relaxed/simple;
+	bh=R5AmJaim5UtqGTIm73rPwAPWuZCdZHxpk38BdRh1odQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=UaLcfrxcLxEXmA3KJVUlDCAqd4oO176Fq1ksJC9M2CpHS2R0YhEzxKI+D8/pFWF/Znx0YToAf9FcXuPj26ZYvfP7WFFKC+zhPpFAJ9oUh2flI9ZrwGE3qhenEUxn90m/BMvUBCBQvwLBkqKDJBJhLneSFk5rD/itHoJs/hZ0dWE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tGi3mqHz; arc=fail smtp.client-ip=40.107.220.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Og3XgnfxNOlEW2kin+E3Bfvelahx1YIyc78zsPCGHLzsgrntEfVb6LfA/K46xY+HPLV1F5w+falT9l1puGaZxCzF67ELfjELXR8gqM9MlJ1JILvOyr+koBU7aNmqDP83ThO9RJpY2myCRd7fRr7q9vDhqHaFAiSNguaqmEp1zlZgihiBD0aLHaKWducsohS4aRsL7FyTgZLI31oVFoC/crxOxW/+9jdSqWKGNrsVzUpltG55/we2IuVhDyKVHhbdy+RHARrCWPEZIApv3Q0aewZtpZN4rhqKS7dzVCzdniSKBz0q6kHJkHVymhsaHtk+Zd8I60ZpdO1xY1A9lK+xRA==
+ b=VTlLnXjo0q+Ma2GThVQ+haOy5Lpbghmvp48K+t45u49G1WqHHEvsr7MKzDHaF0kYWZ5AEVZJlQnaSmKQZKNQuYVU/D1kRvFYhM1UOX9a/i+oMiERPC1eteZ8mstms6w2yVGVxcKFOoYFK5DHmzNBsGpBH/U5u9jLz5e5IYsaT2dAnhxwA6PRrGTHIxwaqhj1GPkMfseJecNH1+RUr/gYVEUNjgsSPAjBgiMtJAkPHqKSjC8+mDm5jlknjhROnyUwWZQhZfnVkPTXzrVIaXwf1lJS+IEcFv5RofFtgqd6NA0z7itWTjAuEx3llM3o4+x0LEwBcXjYthlpBi7k9YRmqQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5qO1kRcHfW3GUuZMT7GD6MofdTG5ccKj8GCpFfhN9i0=;
- b=SAUNxfTFZEUzpIR82e97oFm2OMcWMV/HRTb6nlj7ibKRhKLa/DIJLEssbdYOEP4lToCUT80LvKID1b6KpxesAClnblaHzJukYYLJ6hwB9WoLkev7/AmYDKu+EAEllCainmNkBrgxyFNGWTgfA6r2jWtsvBWI6rIU61D54f8Isc8rVv8WgBxV5IBJ0pe0ab3dvqv42Oa5hUe97DZ7rvkeiIrmXqvYd7ygxFdgBXwJiTPsm3NsG5j0WNfsZkKL/SLWdX8x9+xqgEK9mBDlpon+7VLZoD8Rwwmc1kskS4NAXSTdJrsD9E0nodvDGe4pcvgAcXu7KeIUBZcU400gL+iZsg==
+ bh=9AlPctCQmAj7S0ExyqN8d+OLc96112cOOaPVAxpJY94=;
+ b=o50PkbmZGVYnCCE9aUqvnVWVuzrQgPmN+nsNgSCtBqSPpUF9Lg3DBTMBxgjGlzGW5+ebnD7pxAKuZI1LnRoY0E3FH0ePdB8Lj7BAuJ3HFI9peYWhmxgvDufOs4YRMjjVUlxA4IGoDs9vkp1QOZl2mfTJ3zavaF6fhjHKUGzEFax7HmY6OET1R1aTVkNeCdFT8Z4LajV9jMRWP4muSaLAv8aJa0zW3lNHZiwlz6q2o5y0TW4ZqvVU0H+F7DBxKw2b32kPtH/7YLGHlZVEtKNB1W/R21t2njhcKuyCbOZ7/8tkYqZFVhnljmwAYDUeahlVyp4W8d3jkF6Fj7irb9SGMg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector1;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5qO1kRcHfW3GUuZMT7GD6MofdTG5ccKj8GCpFfhN9i0=;
- b=VeG3D/ICsQReLFm6zXy7VJuN6qRaXOR8GNcRJDwhFUeRxUuczoCsPcHfYL2hEAI9fpFpEUk0HfZfTffzLJS9eo8+jWTWLYQp7qfPYZP0v4ZVlIhmxm3Fo6ddZaiK0tSXh6wpF7mERFr+wnBqYg+4WewAWmjmrU+tXWCyaebjnvzgG9sUerv0Ta3UOUMn2y3y1xnCh8I+J50uLdHXpFzkvwnsub1RioiogL2+6l1otq+W0gS5dZnsQ/BcJJUI0Huc4u4BK80TiL+vFZxrES8nyS9mf6sVWUK8SQMWtZ/WQRX4r3GG6atJbLx0EVPWtV4mLhxMzmIYo+fcnP3x9blhAg==
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
- by JH0PR06MB7210.apcprd06.prod.outlook.com (2603:1096:990:8d::5) with
+ bh=9AlPctCQmAj7S0ExyqN8d+OLc96112cOOaPVAxpJY94=;
+ b=tGi3mqHzv2rw4isdcQLXy3p+lBHkFnp9FZ7E43dsBtAMjYez23xKM0Jfm1gszOdCFcSVPFKLJ/99nIkfcfAqfDyVbCkuxT9nKLUByMgp1zmaety5EQXjwMqxaQ42E3awbEHkUzhPV9pL+YFwIikoeDf2h4oHokFvLfMtszTjIUI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by DM6PR12MB4249.namprd12.prod.outlook.com (2603:10b6:5:223::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.18; Fri, 5 Sep
- 2025 01:41:13 +0000
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28%7]) with mapi id 15.20.9094.017; Fri, 5 Sep 2025
- 01:41:13 +0000
-From: Jacky Chou <jacky_chou@aspeedtech.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "joel@jms.id.au" <joel@jms.id.au>,
-	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
-	"vkoul@kernel.org" <vkoul@kernel.org>, "kishon@kernel.org"
-	<kishon@kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-phy@lists.infradead.org"
-	<linux-phy@lists.infradead.org>, "openbmc@lists.ozlabs.org"
-	<openbmc@lists.ozlabs.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>
-Subject: [PATCH v3 09/10] PCI: aspeed: Add ASPEED PCIe RC driver
-Thread-Topic: [PATCH v3 09/10] PCI: aspeed: Add ASPEED PCIe RC driver
-Thread-Index: AQHcGwWaph4aFqMwQkOoce6H5iMHG7SCE6UAgAGyyVA=
-Date: Fri, 5 Sep 2025 01:41:13 +0000
-Message-ID:
- <SEYPR06MB5134E916ABFBF7FBB8744F189D03A@SEYPR06MB5134.apcprd06.prod.outlook.com>
-References: <20250901055922.1553550-10-jacky_chou@aspeedtech.com>
- <20250903224820.GA1234878@bhelgaas>
-In-Reply-To: <20250903224820.GA1234878@bhelgaas>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|JH0PR06MB7210:EE_
-x-ms-office365-filtering-correlation-id: 8cf39087-8218-4162-c769-08ddec1d4c5e
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?3G4OGqqYJEpS1hcn72gZG0s0BkbQfL9SC8qEvdYhKlTtcJP5BZ2JVn7uYzj8?=
- =?us-ascii?Q?CugYCIGdPbfOh4Jrwj5USe5/k4GeeW753w2IxAk+ACZPn6BYU+6Kc0OYioM6?=
- =?us-ascii?Q?jq31ygDjljv2iJM2muhsKFKB1OH4iseG6lwgbUT3JI42b1xDZ6hTwN/l32a6?=
- =?us-ascii?Q?7D1P86pw1jrMegRmkVK7vncDqGyKBrQKDI2trnlB1wBMopNrzP7e2ptc22Vs?=
- =?us-ascii?Q?42xJ9C8/6BQTeenR+YzKAkvhG2OXFd3f7UvclYAtaFS63fDHFVzu5IWrOqvU?=
- =?us-ascii?Q?TQkIrUH2L40cp/DwPRyO0uQAhHYjvm55MZ/3/okHuAZe1Av5fDaamrcxk1WV?=
- =?us-ascii?Q?NqOr3Lrqz3955sY1LEsSC0M14G3N+bfJGYqi/bUsXtdmyTNLWzazeZhBAsr7?=
- =?us-ascii?Q?TRUtymq8/D+h4zRxFym6p39u/N/RlFnrjJb1s4+lWjfbDEtH/C1LSrglgckH?=
- =?us-ascii?Q?PoenvvYlMQv6Jt0pItyo5OUIiPHLML7cDKjIGTIDJtiinGPd5+Nbo77gktef?=
- =?us-ascii?Q?Pw/N3Ee+nS+m+r7YbSPJBOIgV1s7qfBrBV9eNYMc1Ktcor771qxAX19YzFdU?=
- =?us-ascii?Q?/y9KUFTLPaPVZfUATBwVBuWJCF9U2dU+J/6xEvxcgbtc83kMXkStpIgyIO3/?=
- =?us-ascii?Q?dFD1Iddk6RNhpVKAMBXqM5MHQvLhDYjMQ79LhGPe5CCjTQSVfvhPvUwYhUix?=
- =?us-ascii?Q?OmUqERhsKImqbvhtyxfQCGt80hKn97+xU+VjWmQRiwbZjABnyNk0i5D64M6t?=
- =?us-ascii?Q?NHg2f0VU5uS8g794u/A0NLJgvPmUNkhJ4s12FIheQYcEaJcICyoJ2uWSZXrL?=
- =?us-ascii?Q?I0lXy6E+bWBwWjqh2FrZGRYzV7fp6MfLPCGvg7lDP81tEGozCOGCY/Faom5n?=
- =?us-ascii?Q?ebEqBSePKdpskqGrkVF8rRovmvYNGmD/G+EI1wzpnK6CJ51IH3BVchM7piMz?=
- =?us-ascii?Q?L/XS0pyLSParw7i6VO0nRjPUolfF6N/WU+5F+oetzwrf40xOM659gWb1bNuQ?=
- =?us-ascii?Q?cFr8gZyngigTz/jNf14OpOWCC6ztKnXlWFYsgfquoCxBaOO9Pait9lGunmrt?=
- =?us-ascii?Q?rGkvZbEbUrJpY+BKTp3lPaHMaCl0sOxVe/dVs8B1ESUBMWyNaDSkLmhk+70B?=
- =?us-ascii?Q?MlNJHoUFt0M6uzwe7wbOMjIGQmqfRX/61DXCuRWUAum6QgMCHfhb0N8kALrq?=
- =?us-ascii?Q?XuFOv4xiAeyxgvPK9DoRpjjbB1PKDKEB4XN9wW2YkhFLiqg4w+eJJuDmIzZ5?=
- =?us-ascii?Q?yicLePE7w2OwdpwsZSeiQCtrB4Ucqs0dRv3PVeQ6oGAQOtLUUCzMFLUMFo+b?=
- =?us-ascii?Q?nTT5/F7yp332nWHDt8qeeYuPY/BtK3BFn43TnCWkNtRkAmhEU8WTAI/G4/kL?=
- =?us-ascii?Q?bP+ZAlbDcVuMpL2n+zmS5O1mEatqioWCFgbkI793pYGX2x1bDdO25Erd4/W+?=
- =?us-ascii?Q?FiotyckX41Nf61CoolqPWhlCxf4vtcouZvWhDVC4pqVf3rLv9L3D2w=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?0koKuglpQa2zik8kfT/uPeJdYiIjJRC1AnlwZWK45JZUJ/akcsv2LnTmt/Vu?=
- =?us-ascii?Q?md1O3a+tRR34l02H6+RamlAY0qJT2eDQP6hn4CofymY/n8s8aKuPexjX7rwb?=
- =?us-ascii?Q?tCrNLbcPSDp2olCcHbY1DeZqcGcdR4zGFHjO0MNgwZHMb7auOXcIZyLEYtN6?=
- =?us-ascii?Q?VhIpr5cFQ/LAHK9vdRHwzogrDAiQOmTNKVtkjO2XWwLKkxBgAkKSnU1/chYk?=
- =?us-ascii?Q?dnOOTHT5G5MtG0GMO9cDxFOhKHn6OPu62+pF10TA1swTUBHuCSeMT+uP7/Y+?=
- =?us-ascii?Q?HKFiJE8Pn14/97LBjnDUMJklptETqYuj5OFZgq943uTZfbKZTjIQtq7D3VPz?=
- =?us-ascii?Q?TGvu4BwAIVZDy0v/fvmrTqEVOE+CSP+qWhlgV5UAHoAhNbvlgr7s9dfGMEk9?=
- =?us-ascii?Q?/aG3hmWAiKu4WQq55eN9jELMlve65xvf6eiBAkMe5FWh/msOiwIN+t/LK/iq?=
- =?us-ascii?Q?2TDjv0DK/p7ZchBBgHFG3qKYxd/tzkhfTKG3pkOJM6qgYLV+49pfIVHf2fpH?=
- =?us-ascii?Q?+iE/cDCCYN7WrmfP75HD3P30c0P8HFGI8DOHAPnZOdveFiNetgJ+tCx12h7r?=
- =?us-ascii?Q?fhLWEMJ8+IrdhAUEOr3KkjYBL51ROeAtpMYaz2fJENyDKQcu4cmmCa4ab55B?=
- =?us-ascii?Q?Tt9w4OTpYwNHXyP/L/zZtyvUuFsXuUKZRfOfn5j04R+AbbPpkD2LGATQf1AM?=
- =?us-ascii?Q?wweyI05ZSy7C1yGcOXBEVtCnbmoVs1chwCnF6NPlHE5MFga2dYsxdFbryPE/?=
- =?us-ascii?Q?m+K7Jj33KE8357Lezd3FtS6Eo0IQt9G6aM3QerqdbYiruqqnPk/PcMBORGwK?=
- =?us-ascii?Q?aJBjU8perIzWh1XciCp0JKxCeNEbxVxWoR7+EjnNOlmoUVKXS+zGbMUZMLBG?=
- =?us-ascii?Q?g5/q+A6ML88uHZo1UFoW6B7EjZsydLBFlyZGhu+F5dJY3V1Ze09Ydkro13yf?=
- =?us-ascii?Q?60C0GDSUhZudvYGhp8FhitgM5AR9mIM7VucOwiGr54VTQXbEBAbTF9O/7jpd?=
- =?us-ascii?Q?ShBcVwTsvmXqqq+LxhWUkWdaVB5Jmp1x0+zxq8ZmF/7idK6tRHkbNIu3YSEG?=
- =?us-ascii?Q?sUfxTDHULJOMvpVgk0MfZIeNtucH0eNkxbpPPZ09WnO4HyR7oOHzLbzmsiun?=
- =?us-ascii?Q?dM0h6VQUorfm/wfZ/VfIOIgFYAwxgNrPE5UQ8MiuzLlbvjgUgVLwQe0khD7m?=
- =?us-ascii?Q?rfxD87IUi3QMKTn4WVOfMGfIoRCMe5BYTcAKeIeU76x4kedJb9WCm4t1+mmh?=
- =?us-ascii?Q?6UEDFs6ZimADLgdYxzCO1y21B78TtVPjjJHmqMGbtxZB7ylSvrH0zteXV7vS?=
- =?us-ascii?Q?pZdPaPlTGFr/CjuTMTz+LN4ekUp8Alecu6s6qFAUN1EFI3Xw7h0+BDl8Tj1C?=
- =?us-ascii?Q?azrGgqu1an6/CQX4Ug5+foxzxMpNlAiyVBEffZPVI+OT1zA36Huyk5gYQH/b?=
- =?us-ascii?Q?N3fTooCnmG2Sh5Pw8xScAOtecSApu73ZUthcFuJx8S79j93YcbRgsdYZNqwg?=
- =?us-ascii?Q?JIvE6ZAn+rOxgZo+NM70kVq2jBZFM453PdtBvs/DhOgxl3wBSzZiUHBQPUBr?=
- =?us-ascii?Q?4g837rSTjVbW2QVJ35LA2wb91cugabynPKdZ1n/H?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.19; Fri, 5 Sep
+ 2025 02:14:43 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.9094.018; Fri, 5 Sep 2025
+ 02:14:43 +0000
+Message-ID: <14144093-c3e3-49a1-96d3-acd527cfe32a@amd.com>
+Date: Fri, 5 Sep 2025 12:14:35 +1000
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v5 07/10] PCI/IDE: Add IDE establishment helpers
+To: dan.j.williams@intel.com, linux-coco@lists.linux.dev,
+ linux-pci@vger.kernel.org
+Cc: yilun.xu@linux.intel.com, aneesh.kumar@kernel.org,
+ gregkh@linuxfoundation.org, Bjorn Helgaas <bhelgaas@google.com>,
+ Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>
+References: <20250827035126.1356683-1-dan.j.williams@intel.com>
+ <20250827035126.1356683-8-dan.j.williams@intel.com>
+ <eeca3820-01dd-4abc-a437-cf46dc718ab6@amd.com>
+ <6608a45f-b789-48c9-9418-5d6c2956975f@amd.com>
+ <68ba3f725b284_75e3100a5@dwillia2-mobl4.notmuch>
+From: Alexey Kardashevskiy <aik@amd.com>
+Content-Language: en-US
+In-Reply-To: <68ba3f725b284_75e3100a5@dwillia2-mobl4.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SGAP274CA0020.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::32)
+ To CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DM6PR12MB4249:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8d0445d8-8244-4b74-44a1-08ddec21f9f2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bUtET3RaamtGd0dGUGpOdy93Nnc1ZXljNkxHZkhiRGtVcXFkR0JIL1ZUbWtv?=
+ =?utf-8?B?Z1lqdFdqdmpkc3hZdGVUSXVnbWtLWm5Rd293U3dhZUEveTE5NG9SQms4OUd4?=
+ =?utf-8?B?T25SaWVZVTNqckpBTG0vVi9wWDJoUDdKNVJRNXFkTWtyTGRVZTBQV1YrMkc2?=
+ =?utf-8?B?UjZ6c1BEMkQyMlg3REFFWmdEUzRUUFd0ZThrdGJzVDRJdUgwSDlEZXd6YXk1?=
+ =?utf-8?B?UUJxcC9hWk51d1ZUcEVVZHBaYk1nNTU0cTJxVHJaTkw0elFIcnBKdzh1STRC?=
+ =?utf-8?B?d00wWVpIRytzU3pEb1ZZU0NDeHNoNklCc291NXdmUmEwcHpHQnBhUlVCMS83?=
+ =?utf-8?B?c2RweWVTQW9BVmpKdXNZNDdqRDVOYktpbWQvMThYSElUVHhUOEx4NVpUTTY3?=
+ =?utf-8?B?bzI2aUQvbFNVdDhad0RTbEpHMXdCc2I0SnhWbUlsZW1oT1lUUkx1ZnVOcWRY?=
+ =?utf-8?B?TGo0c1NlVng2SS9LZklQZVc1a3dtRWdOSW03aWJtNDJqSDFSWWZ1RzczcTM1?=
+ =?utf-8?B?RXhCdlA5dDRaaS95NXdnK0JHKzBWdjNzQlRHUVBPckNaOUhCd25heGYyMTdC?=
+ =?utf-8?B?amVsZlg2dUE2cVFDMmFLeFBzVnVHcHNZc3BpVk9NNzllUjd0bmFHVjZHVzRj?=
+ =?utf-8?B?UWl6UzJpWlcrNFBVZE4zOHlsODlHeW1Cc2RLYlFuTTZUS1lEQmpZWFVJekEw?=
+ =?utf-8?B?WGFsZ2tBM2MyT0dmNVY3c3dhQXhCcm4zNGh5SklyRDRmenlDaXJlNUdoZlJp?=
+ =?utf-8?B?Ym82K1I4YmtnN2tWdFVMZzNxRjJaaVNOazlpNFhhTmR0MjZPQjk5eWo4bk1T?=
+ =?utf-8?B?V1BKcXlxa0taUXRvM2JYYXNJQ3h6bDg5ZEZFU0QrNGpobHVHRHBSNGdLZzNp?=
+ =?utf-8?B?N3VHOEE1VTJ1NlZYelJpZG1mcnd6bnBGUGhLcnp2VVdJNVZ1bUV2Ny9oakpX?=
+ =?utf-8?B?TW9IdXh6bFpwRCtTRlBTTEVXRit0OFZxU0N6em5FUGtBcjZiZEdhR0NUa0h2?=
+ =?utf-8?B?czIzVTkxZkcwSitnTDNSc3ZmS2N3WGp1TGljTnVveDhFa2JKckh3MmFwSzlr?=
+ =?utf-8?B?cGo2ZGNSQUZ4endUQk9rYkhtOC9mSnVMcHR1b2tJL2syVENNU253M3BZeGM3?=
+ =?utf-8?B?MG5IQ2FsR044MEVvVnEvZXBDdmdlc1daY1AzVWhvQWEvUmJZdXEvTFJkdkhZ?=
+ =?utf-8?B?T0ttc0pOOHMrM1RlNUpxbTNrNElMUytpeEJMcU1IUndUcUdqZmFwSEFQU1M1?=
+ =?utf-8?B?NituNFgzL1hPbGxXNlo2SkNKQ1AvZ1VUUS9XVncybW82ZWsyMlNPTWplbjVN?=
+ =?utf-8?B?cy9GYjliZUE1OCtLc3BkNXlGUjVFRm4vMjdScmxSZEV2a01XT1NJTGhabjIv?=
+ =?utf-8?B?RlZqYVZGU1ZmQk1zM1piUG4vd3NhcThDZ0NqeHl0N1RTSVAzMGdHZ3NVQTA1?=
+ =?utf-8?B?ak9VQVR4SHFYWUs0YnY0RE9vNEVkK3BRYlpTelAyZ0Q1ZWRxeTFXOW1odWJo?=
+ =?utf-8?B?YWhVR0dxU0lUMEtDdHFDV1Y0ZExOaHUvSXNIT2lSVUtlenR0U2pkZk91amFW?=
+ =?utf-8?B?UlpmWlBUWkh6cDVVWlp1TTZ0a2JhVEpabjRPNXJneVNibGRhQzRjTG4wMDAz?=
+ =?utf-8?B?M1RkZ29BOWthNy9tNDFmVlY2Y0VwTER2S0owVjBDOEhzQi9INXpLSFVjTnpV?=
+ =?utf-8?B?OEdNcmhKQzRGYTlwNTMwZGxUdi9uZ0hjMHBYREdzM1lPR3paUXRkSWZHU01q?=
+ =?utf-8?B?ZHFKWHlndENEZEplbUJIa0RxaTR1L0dlNnZGdkpsYzBUSkdsSWplMDN4L3E3?=
+ =?utf-8?Q?DH4lSyuThf6dy+BHs7l6TD8UqrYxnhyKqqt08=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YitJY3NjMCtZaGZMcHRleGUxUGVnN1BsMVEybWIrSDJXODdnYTNLaFFVbFJy?=
+ =?utf-8?B?NEFGUUF2MjZmeG1KNXJYUFF2OXk1SHUyOEYzRkF5UVRjeW5zTVY4YTdZKzJR?=
+ =?utf-8?B?Q0k4MVdBM0QrRXVGT3BDOUljbjJFT1VWY0U1SjlQZzBHYWVRR3RWTEQ1bXZJ?=
+ =?utf-8?B?K0RIKzBhTHFSUEY1c1o0WlpQbnp3Wm5sRjhpWTI4T040eWYxRVlQZ0tWUVpm?=
+ =?utf-8?B?SFhHSUY4TEROekxzUHJsaWxyYmZuRmNOampYUG4wME90VjZKUElOcnRMaTRS?=
+ =?utf-8?B?OEtDQWtkMlN6OFBmRWxwdk4zUEpOQk1TeG94eFJINit0dUplN2lpc1BuZzhO?=
+ =?utf-8?B?MFVURlN0S0l4SkU1YlEzcm9UQytjdERaQjIxV0trazVsMGZ2MXlSOGFHWGU1?=
+ =?utf-8?B?TDhmQVJpZ21Mak92QXA3WUoyYnRjYW9vUG1lNkFrN2VRajlnZUlMemllWnp0?=
+ =?utf-8?B?YnZ2U0gvbDVHekFONlBwLzE4blZhYnVQK2ZtYWRMVEhseVJEdnlHTzQrVmxE?=
+ =?utf-8?B?ZDliM0hSVnlFUmF2NU9ZWWdudTBsODJTU2pSQmtEWHZSa29RWWVDNmVybzdk?=
+ =?utf-8?B?bElVdnM1VGxKUUl0ZFhOejFRS2E5dlp0YnRSbW96NzRWVUJhNUtwZ2hScnpC?=
+ =?utf-8?B?TlBOTWdMZzk1bDh5VmovSWc4MER5NkpnT2IzbnJLbFd3V3Buc0JPY0pEWVRD?=
+ =?utf-8?B?R2VuV0N6OW9yNWhJTXVsY2ZERFh2TkVMaUdUQUZ3R2ROWGVBbGFJN3ZtTGJo?=
+ =?utf-8?B?Z3lBYlkzT0V2cWNMRGxVMjVneVNxUjl5d3p6MmV5U0dTaTdkYlBmL0hYR1po?=
+ =?utf-8?B?NWtBMTV5a3IvQXB0M242M3cyZWRHR1owOWpnT1JPT0dKOW54Z3oyQ2lxa1Fx?=
+ =?utf-8?B?R1dDVmJxQjJwc2xvc25pVEhuQnpiTi9lZ0Nrc09yTkhWWXF4dUoyeGM0dGM2?=
+ =?utf-8?B?RERTZG95Z1IzOG1DOFJRbUswTjJtZzloQ0RLVm9FWjFRTHFnWmh0Sm5CU01K?=
+ =?utf-8?B?cDhFVXVDUDI4THlyaVgrVHErMDdWRmdpdmZkZ2Z4V2diSm45VUxYbXMzSzE1?=
+ =?utf-8?B?TzRmWGZoSDlHZHVXNEI5bXZlaHQySkZla3UzZXVjQVExV2luOEo3VEJHZVdV?=
+ =?utf-8?B?RDhkY05Ib2FXYSswRVJYcDN4N3pPdTNzTElKbTFReTdBcTBWNUJWS0Q0Vmgv?=
+ =?utf-8?B?R0RMa21CMXZLQVptZzVuTEVnN2ROd3p3MWxKR1B0YkZXajkwcmlOVk9Sc2Ns?=
+ =?utf-8?B?Nnh3V1g5V3A0Y1RCUHRJWkVleHNvOGVpamlHcnFvblhUS1ZDSVhEa0tMa2pt?=
+ =?utf-8?B?VEk2MEpuS1UyQTE3Z1ZHeDQwZzBzR3g5YU5VMnRUdnNoM05KVk1CTElrNlFy?=
+ =?utf-8?B?YTJqTi9pUnF1RHlaL3NOVmcxa1B0SGlaUmkrVWRWWkpVK0lZQ2Q0VFNJUHhx?=
+ =?utf-8?B?ODVUdFhGRzlTdkZ6d2xadHRsOUszeFc0OVVrcG1DUmtXaXpyWlFucVFIRGJl?=
+ =?utf-8?B?amh4dEJYNFBEeDNnTGl2V29YWmRwN2FmTzVrVlhneWw3UnphMVZkalV0NDBv?=
+ =?utf-8?B?djROeGplMGlmTlYyQ3Qrd1NUck1QNTkveWMrMUYraGV6bWRWbEM4U0RGM1lJ?=
+ =?utf-8?B?ZjZkc0hqNFBPZ3lVTTl2enZpaTVNaU5uc3JZWFBXaHpSM1BTYUlmTVVuUFVh?=
+ =?utf-8?B?bDZMcTRySC9UV1ZFZ2prWjVPNnBuZUlkVnE2NlVFaTV0UlVzZlhrTmJNMEFB?=
+ =?utf-8?B?SnpmeXd4V2E0MVFwQzhpN3EzNjhiUFhTSmRFK3BnUzd5SkJONU9yZkQ2T3hD?=
+ =?utf-8?B?KzFyMTFhZ3gyZ1VST3AwUFRWbE4wYUMrbmI1RDgyVURWMzU1OGJ2bHI5RC81?=
+ =?utf-8?B?UXJZOVQ5WEM2RHF0YUpEc1lSK3JVUW9LK016YVp0WTZrejVHTEl5VENIL1ZD?=
+ =?utf-8?B?NUw4UzFkaVZLbUgvRGlzMXJjeG5QUE8wN2JJVlhjR0VSNWt3c1NSN2VGL0dj?=
+ =?utf-8?B?TnJZY1czdkpBKytNNHB2dVNLZHYzREFDeTl6akNhaHROaCtqWXBTZUpGMURo?=
+ =?utf-8?B?OWxmWnlYZ3JkY053a1BjSWFXZkNUMlhVb3RNNE9qMTJzZjlPaDlwOHhEenF1?=
+ =?utf-8?Q?hNpZ79bJxeOt+xv3NOL7Qt3Iw?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d0445d8-8244-4b74-44a1-08ddec21f9f2
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8cf39087-8218-4162-c769-08ddec1d4c5e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2025 01:41:13.5733
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2025 02:14:42.9822
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4cHLPrvtqhSanP7jm81q7jyhmS2J07epe0PUr/k6L2LeOefoLm5b03GROVSPLKm4r9QdvJ8XWZut1KaB5MqAVUKOaY6cyJd9iJgajQBGjDw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB7210
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PeSATYztPlF92WUCCMgIpRzGW/kqsEMqL3eMK3e4eSs1gJ1HfPuckzFfAYIf5wypvST3R8gHkrtmgsL5tC+arw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4249
 
-Hi Bjorn,
 
-Thank you for your reply.
 
-> > +/* TLP configuration type 0 and type 1 */
-> > +#define CRG0_READ_FMTTYPE
-> \
-> > +	FIELD_PREP(ASPEED_TLP_COMMON_FIELDS,                     \
-> > +		   ASPEED_TLP_FMT_TYPE(PCIE_TLP_FMT_3DW_NO_DATA, \
-> > +				       PCIE_TLP_TYPE_CFG0_RD))
-> > +#define CRG0_WRITE_FMTTYPE
-> \
-> > +	FIELD_PREP(ASPEED_TLP_COMMON_FIELDS,                  \
-> > +		   ASPEED_TLP_FMT_TYPE(PCIE_TLP_FMT_3DW_DATA, \
-> > +				       PCIE_TLP_TYPE_CFG0_WR))
-> > +#define CRG1_READ_FMTTYPE
-> \
-> > +	FIELD_PREP(ASPEED_TLP_COMMON_FIELDS,                     \
-> > +		   ASPEED_TLP_FMT_TYPE(PCIE_TLP_FMT_3DW_NO_DATA, \
-> > +				       PCIE_TLP_TYPE_CFG1_RD))
-> > +#define CRG1_WRITE_FMTTYPE
-> \
-> > +	FIELD_PREP(ASPEED_TLP_COMMON_FIELDS,                  \
-> > +		   ASPEED_TLP_FMT_TYPE(PCIE_TLP_FMT_3DW_DATA, \
-> > +				       PCIE_TLP_TYPE_CFG1_WR))
-> > +#define CRG_PAYLOAD_SIZE		0x01 /* 1 DWORD */
->=20
-> What does "CRG" in the above mean?  If it means the same as "CFG", i.e., =
-an
-> abbreviation for "configuration", can you use "CFG" instead?
-> It it's to match an internal spec, go ahead and keep "CRG".
->=20
+On 5/9/25 11:40, dan.j.williams@intel.com wrote:
+> Alexey Kardashevskiy wrote:
+> [..]
+>>>> +/**
+>>>> + * pci_ide_stream_enable() - enable a Selective IDE Stream
+>>>> + * @pdev: PCIe device object for either a Root Port or Endpoint Partner Port
+>>>> + * @ide: registered and setup IDE settings descriptor
+>>>> + *
+>>>> + * Activate the stream by writing to the Selective IDE Stream Control
+>>>> + * Register.
+>>>> + *
+>>>> + * Return: 0 if the stream successfully entered the "secure" state, and -ENXIO
+>>>> + * otherwise.
+>>>> + *
+>>>> + * Note that the state may go "insecure" at any point after returning 0, but
+>>>> + * those events are equivalent to a "link down" event and handled via
+>>>> + * asynchronous error reporting.
+>>>> + */
+>>>> +int pci_ide_stream_enable(struct pci_dev *pdev, struct pci_ide *ide)
+>>>> +{
+>>>> +    struct pci_ide_partner *settings = pci_ide_to_settings(pdev, ide);
+>>>> +    int pos;
+>>>> +    u32 val;
+>>>> +
+>>>> +    if (!settings)
+>>>> +        return -ENXIO;
+>>>> +
+>>>> +    pos = sel_ide_offset(pdev, settings);
+>>>> +
+>>>> +    set_ide_sel_ctl(pdev, ide, pos, true);
+>>>> +
+>>>> +    pci_read_config_dword(pdev, pos + PCI_IDE_SEL_STS, &val);
+>>>> +    if (FIELD_GET(PCI_IDE_SEL_STS_STATE, val) !=
+>>>> +        PCI_IDE_SEL_STS_STATE_SECURE) {
+>>>> +        set_ide_sel_ctl(pdev, ide, pos, false);
+>>
+>>
+>> Ah this is an actual problem, this is not right. The PCIe r6.1 spec says:
+>>
+>> "It is permitted, but strongly not recommended, to Set the Enable bit in the IDE Extended Capability
+>> entry for a Stream prior to the completion of key programming for that Stream".
+> 
+> This ordering is controlled by the TSM driver though...
 
-It is "configuration". I will change "CRG" to "CFG" in next version.
+yes so pci_ide_stream_enable() should just do what it was asked - enable the bit, the PCIe spec says the stream does not have to go to the secure state right away.
 
-> > + * struct aspeed_pcie_rc_platform - Platform information
-> > + * @setup: initialization function
-> > + * @reg_intx_en: INTx enable register offset
-> > + * @reg_intx_sts: INTx status register offset
-> > + * @reg_msi_en: MSI enable register offset
-> > + * @reg_msi_sts: MSI enable register offset
-> > + * @msi_address: HW fixed MSI address  */ struct
-> > +aspeed_pcie_rc_platform {
-> > +	int (*setup)(struct platform_device *pdev);
-> > +	int reg_intx_en;
-> > +	int reg_intx_sts;
-> > +	int reg_msi_en;
-> > +	int reg_msi_sts;
-> > +	int msi_address;
->=20
-> I think this should be u32 to match struct msi_msg.address_lo.
->=20
 
-Agreed.
+>> And I have a device like that where the links goes secure after the last
+>> key is SET_GO. So it is okay to return an error here but not ok to clear
+>> the Enabled bit.
+> 
+> ...can you not simply wait to call pci_ide_stream_enable() until after the
+> SET_GO?
+Nope, if they keys are programmed without the enabled bit set, the stream never goes secure on this device.
 
-> > +static irqreturn_t aspeed_pcie_intr_handler(int irq, void *dev_id) {
-> > +	struct aspeed_pcie *pcie =3D dev_id;
-> > +	const struct aspeed_pcie_rc_platform *platform =3D pcie->platform;
-> > +	unsigned long status;
-> > +	unsigned long intx;
-> > +	u32 bit;
-> > +	int i;
-> > +
-> > +	intx =3D FIELD_GET(PCIE_INTX_STS,
-> > +			 readl(pcie->reg + platform->reg_intx_sts));
-> > +	for_each_set_bit(bit, &intx, PCI_NUM_INTX)
-> > +		generic_handle_domain_irq(pcie->intx_domain, bit);
-> > +
-> > +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> > +		for (i =3D 0; i < 2; i++) {
-> > +			int msi_sts_reg =3D platform->reg_msi_sts + (i * 4);
-> > +
-> > +			status =3D readl(pcie->reg + msi_sts_reg);
-> > +			writel(status, pcie->reg + msi_sts_reg);
-> > +
-> > +			/*
-> > +			 * AST2700 A1 workaround:
-> > +			 * The MSI status needs to clear one more time.
-> > +			 */
-> > +			if (of_device_is_compatible(pcie->dev->of_node,
-> > +						    "aspeed,ast2700-pcie"))
->=20
-> It looks pretty expensive to look this up for every interrupt.  It's cons=
-tant for
-> the life of the driver, so you only need to do it once at probe time.
->=20
+The way to think about it (an AMD hw engineer told me): devices do not have extra memory to store all these keys before deciding which stream they are for, they really (really) want to write the keys to the PHYs (or whatever that hardware piece is called) as they come. And after the device reset, say, both link stream #0 and selective stream #0 have the same streamid=0.
 
-Calling of_device_is_compatible() in the interrupt path is unnecessary.
-In next version, I will add a variable in private at probe and=20
-have the ISR check the variable instead.
+Now, the devices need to know which stream it is - link or selective. One way is: enable a stream beforehand and then the device will store keys in that streams's slot. The other way is: wait till SET_GO but before that every stream on the device needs an unique stream id assigned to it.
 
-> > +				writel(status, pcie->reg + msi_sts_reg);
-> > +
-> > +			for_each_set_bit(bit, &status, 32) {
-> > +				bit +=3D (i * 32);
-> > +				generic_handle_domain_irq(pcie->msi_domain,
-> > +							  bit);
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
->=20
-> > +static int aspeed_msi_set_affinity(struct irq_data *irq_data,
-> > +				   const struct cpumask *mask, bool force) {
-> > +	return -EINVAL;
-> > +}
->=20
-> From comparing with other drivers, I doubt this is needed.
->=20
+I even have this in my tree (to fight another device):
 
-Agreed.
-It seems unnecessary. I will remove in next version.
+https://github.com/AMDESE/linux-kvm/commit/ddd1f401665a4f0b6036330eea6662aec566986b
 
-> > +
-> > +static struct irq_chip aspeed_msi_bottom_irq_chip =3D {
-> > +	.name =3D "ASPEED MSI",
-> > +	.irq_compose_msi_msg =3D aspeed_msi_compose_msi_msg,
->=20
-> I would prefer a name that matches irq_chip.irq_compose_msi_msg, e.g.,
-> "aspeed_irq_compose_msi_msg()".
->=20
+> Are you saying the problem is that the shutdown path needs to do the
+> reverse SET_STOP before disabling the stream?
 
-Agreed.
+Nah, I did not get that far. Thanks,
 
-> > +static int aspeed_pcie_msi_init(struct aspeed_pcie *pcie) {
-> > +	int ret =3D 0;
-> > +
-> > +	writel(~0, pcie->reg + pcie->platform->reg_msi_en);
-> > +	writel(~0, pcie->reg + pcie->platform->reg_msi_en + 0x04);
-> > +	writel(~0, pcie->reg + pcie->platform->reg_msi_sts);
-> > +	writel(~0, pcie->reg + pcie->platform->reg_msi_sts + 0x04);
-> > +
-> > +	struct irq_domain_info info =3D {
-> > +		.fwnode		=3D dev_fwnode(pcie->dev),
-> > +		.ops		=3D &aspeed_msi_domain_ops,
-> > +		.host_data	=3D pcie,
-> > +		.size		=3D MAX_MSI_HOST_IRQS,
-> > +	};
-> > +
-> > +	pcie->msi_domain =3D msi_create_parent_irq_domain(&info,
-> > +							&aspeed_msi_parent_ops);
-> > +	if (!pcie->msi_domain)
-> > +		return dev_err_probe(pcie->dev, -ENOMEM,
-> > +				     "failed to create MSI domain\n");
-> > +
-> > +	return ret;
->=20
-> Useless "ret".  Remove it and just "return 0;"
->=20
+>> Was it "Do or do not, there is no try for pci_ide_stream_enable() (Bjorn)" in the changelog? Not very descriptive :-/ Thanks,
+> 
+> I understand he was taking issue with the comment, but this practical issue
+> is much more serious. I will push error detection and cleanup out of this
+> helper, and make it return void.
+> 
+> Thanks for the hardware testing!
 
-Agreed.
 
-> > +static int aspeed_ast2600_setup(struct platform_device *pdev) {
-> > +	struct aspeed_pcie *pcie =3D platform_get_drvdata(pdev);
-> > +	struct device *dev =3D pcie->dev;
-> > +
-> > +	if (pcie->host_bus_num !=3D 0x80)
-> > +		return dev_err_probe(dev, -EINVAL,
-> > +				     "The host bus must be 0x80\n");
->=20
-> Why not check this at the point you read it from the devicetree?
->=20
+-- 
+Alexey
 
-Sorry.
-Do you mean this check put in aspeed_pcie_parse_dt()?
-
-> > +	pcie->ahbc =3D syscon_regmap_lookup_by_phandle(dev->of_node,
-> > +						     "aspeed,ahbc");
-> > +	if (IS_ERR(pcie->ahbc))
-> > +		return dev_err_probe(dev, PTR_ERR(pcie->ahbc),
-> > +				     "failed to map ahbc base\n");
->=20
-> Same here.  Looks like a devicetree validation check.
->=20
-
-And this also puts to aspeed_pcie_parse_dt()?
-
-> > +static int aspeed_pcie_parse_port(struct aspeed_pcie *pcie,
-> > +				  struct device_node *node,
-> > +				  int slot)
-> > +{
-> > +	struct aspeed_pcie_port *port;
-> > +	struct device *dev =3D pcie->dev;
-> > +	int ret;
-> > +
-> > +	port =3D devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-> > +	if (!port)
-> > +		return -ENOMEM;
-> > +
-> > +	port->clk =3D devm_get_clk_from_child(dev, node, NULL);
-> > +	if (IS_ERR(port->clk))
-> > +		return dev_err_probe(dev, PTR_ERR(port->clk),
-> > +				     "failed to get pcie%d clock\n", slot);
-> > +
-> > +	port->phy =3D devm_of_phy_get(dev, node, NULL);
-> > +	if (IS_ERR(port->phy))
-> > +		return dev_err_probe(dev, PTR_ERR(port->phy),
-> > +				     "failed to get phy pcie%d\n",
-> > +				     port->slot);
->=20
-> port->slot hasn't been set yet.
->=20
-
-Agreed.
-I will change it to "slot" in next version.
-
-> > +	port->perst =3D of_reset_control_get_exclusive(node, "perst");
-> > +	if (IS_ERR(port->perst))
-> > +		return dev_err_probe(dev, PTR_ERR(port->perst),
-> > +				     "failed to get pcie%d reset control\n",
-> > +				     slot);
-> > +	ret =3D devm_add_action_or_reset(dev, aspeed_pcie_reset_release,
-> > +				       port->perst);
-> > +	if (ret)
-> > +		return ret;
-> > +	reset_control_assert(port->perst);
-> > +
-> > +	port->slot =3D slot;
-> > +	port->pcie =3D pcie;
-> > +
-> > +	INIT_LIST_HEAD(&port->list);
-> > +	list_add_tail(&port->list, &pcie->ports);
-> > +
-> > +	return 0;
-> > +}
->=20
-> > +static int aspeed_pcie_probe(struct platform_device *pdev) {
-> > +	struct device *dev =3D &pdev->dev;
-> > +	struct pci_host_bridge *host;
-> > +	struct aspeed_pcie *pcie;
-> > +	struct device_node *node =3D dev->of_node;
-> > +	const struct aspeed_pcie_rc_platform *md;
-> > +	u32 bus_range[2];
-> > +	int irq, ret;
-> > +
-> > +	md =3D of_device_get_match_data(dev);
-> > +	if (!md)
-> > +		return -ENODEV;
-> > +
-> > +	host =3D devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-> > +	if (!host)
-> > +		return -ENOMEM;
-> > +
-> > +	pcie =3D pci_host_bridge_priv(host);
-> > +	pcie->dev =3D dev;
-> > +	pcie->tx_tag =3D 0;
-> > +	platform_set_drvdata(pdev, pcie);
-> > +
-> > +	pcie->platform =3D md;
-> > +	pcie->host =3D host;
-> > +	INIT_LIST_HEAD(&pcie->ports);
-> > +
-> > +	ret =3D of_property_read_u32_array(node, "bus-range", bus_range,
-> > +					 ARRAY_SIZE(bus_range));
->=20
-> No other drivers do this; why do you need it?
->=20
-
-I need to get the number of root bus.
-At 2700 configuration command, it needs to use the next number of root bus
-to send the header type of cfg command of TLP.
-
-static int aspeed_ast2700_child_config(struct pci_bus *bus, unsigned int de=
-vfn,
-				       int where, int size, u32 *val,
-				       bool write)
-{
-
-.....
-
-	if (write)
-		cfg_val |=3D (bus->number =3D=3D (pcie->host_bus_num + 1)) ?
-				   CFG0_WRITE_FMTTYPE :
-				   CFG1_WRITE_FMTTYPE;
-	else
-		cfg_val |=3D (bus->number =3D=3D (pcie->host_bus_num + 1)) ?
-				   CFG0_READ_FMTTYPE :
-				   CFG1_READ_FMTTYPE;
-	writel(cfg_val, pcie->reg + H2X_CFGE_TLP_1ST);
-
-....
-
-> > +	if (ret) {
-> > +		dev_warn(dev, "failed to get bus range, assuming bus is 0\n");
-> > +		pcie->host_bus_num =3D 0;
-> > +	}
-> > +	pcie->host_bus_num =3D bus_range[0];
-> > +
-> > +	pcie->reg =3D devm_platform_ioremap_resource(pdev, 0);
-> > +	if (IS_ERR(pcie->reg))
-> > +		return PTR_ERR(pcie->reg);
-> > +
-> > +	pcie->domain =3D of_get_pci_domain_nr(node);
->=20
-> Almost no drivers use this; why do you need it?
->=20
-
-It is just used for message, must not be requirement.
-I will remove it in next version.
-
-> > +	pcie->h2xrst =3D devm_reset_control_get_exclusive(dev, "h2x");
-> > +	if (IS_ERR(pcie->h2xrst))
-> > +		return dev_err_probe(dev, PTR_ERR(pcie->h2xrst),
-> > +				     "failed to get h2x reset\n");
-> > +
-> > +	ret =3D devm_mutex_init(dev, &pcie->lock);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret, "failed to init mutex\n");
-> > +
-> > +	ret =3D pcie->platform->setup(pdev);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret, "failed to setup PCIe RC\n");
-> > +
-> > +	ret =3D aspeed_pcie_parse_dt(pcie);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret =3D aspeed_pcie_init_ports(pcie);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	host->sysdata =3D pcie;
-> > +
-> > +	ret =3D aspeed_pcie_init_irq_domain(pcie);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	irq =3D platform_get_irq(pdev, 0);
-> > +	if (irq < 0)
-> > +		return irq;
-> > +
-> > +	ret =3D devm_add_action_or_reset(dev, aspeed_pcie_irq_domain_free,
-> pcie);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret =3D devm_request_irq(dev, irq, aspeed_pcie_intr_handler,
-> IRQF_SHARED,
-> > +			       dev_name(dev), pcie);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret =3D pci_host_probe(host);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return 0;
->=20
-> This is the same as:
->=20
->   return pci_host_probe(hoste);
->=20
-
-Agreed.
-
-> > +}
-> > +
-> > +const struct aspeed_pcie_rc_platform pcie_rc_ast2600 =3D {
-> > +	.setup =3D aspeed_ast2600_setup,
-> > +	.reg_intx_en =3D 0xc4,
-> > +	.reg_intx_sts =3D 0xc8,
-> > +	.reg_msi_en =3D 0xe0,
-> > +	.reg_msi_sts =3D 0xe8,
-> > +	.msi_address =3D 0x1e77005c,
->=20
-> Where does this .msi_address come from?  Does this depend on an address
-> map that could vary based on the platform?  Should it come from devicetre=
-e?
->=20
-
-The .msi_address is a SoC-fixed MSI doorbell target address used by the RC
-to capture MSI writes. The memory write of MSI will not be mapped to RAM.
-I think it should be keep in the SoC match data rather than Devicetree.
-
-> > +};
-> > +
-> > +const struct aspeed_pcie_rc_platform pcie_rc_ast2700 =3D {
-> > +	.setup =3D aspeed_ast2700_setup,
-> > +	.reg_intx_en =3D 0x40,
-> > +	.reg_intx_sts =3D 0x48,
-> > +	.reg_msi_en =3D 0x50,
-> > +	.reg_msi_sts =3D 0x58,
-> > +	.msi_address =3D 0x000000f0,
-> > +};
-
-Thanks,
-Jacky
 
