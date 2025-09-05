@@ -1,187 +1,149 @@
-Return-Path: <linux-pci+bounces-35518-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35519-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 492D1B4514D
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 10:26:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06114B45156
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 10:29:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E32671C2013D
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 08:26:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB9D63A6A1C
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 08:29:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BEA03002C4;
-	Fri,  5 Sep 2025 08:26:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 889502FD1A4;
+	Fri,  5 Sep 2025 08:29:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="VJ4n1zk4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FYDfoGiZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kDKqYhuH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7652A2EBDC7;
-	Fri,  5 Sep 2025 08:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD222EBDC7;
+	Fri,  5 Sep 2025 08:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757060773; cv=none; b=C8DzpCFKbbxlCHxAMuDIP11tLfA3/HeVQr+9ebBOpM7+PxdO0R8GalnbVYPxn3OV3waN9r1EhJMYz5a2TYxj1Uwh4wOZBM3r2N+DMCL3mD2eD8EZJGebp6IrXQbWlCQ1ZnoCRzyOUHDlnSpLRCbz8xvlr3CqYB4V7bcDo6RwVk0=
+	t=1757060941; cv=none; b=JjJ+PEFgIX/7wlTVvokdgJU9ddY8XlA7IjiVwFtEP34DYhwtfGEZ8fzdTHNLiArMPR+MTmCkAm4ZxtmgS/jHuRW0aGOrJH1dmuqnASPQJQlSiQ1xB2/zN1gvxN4VcoSz0t8VmphVYGfcJzvtuu62A+Bb+7YqcZLlGZNp3NNrXQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757060773; c=relaxed/simple;
-	bh=3/EUyVSXw7ZBzcFANZXOOB2TNuayGC6MtQRvvDpVK7I=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=fnIYjxmdhpKlGO5hkO0tslagdjY/fahOO3qt5IfNE62gs/GsH7udoOUUGeWOUcrD/FFa2X00NzdmzWpwhx2hVjJyBD+bIphH9cOlnszhNyvlPhKHROTpXF6R0BuBsuDEW+6MWQIjCdHdW/AjsOWnJdUS4KJlOUYpS0tBE7QltFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=VJ4n1zk4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FYDfoGiZ; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 93A09EC03E5;
-	Fri,  5 Sep 2025 04:26:10 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Fri, 05 Sep 2025 04:26:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1757060770;
-	 x=1757147170; bh=46Gf8YV7inpP79cT31JMwJ9zdtW7od2OINqJDqlzb0Y=; b=
-	VJ4n1zk4hXV58Qsiz7ZHwS+VtME25cWGVlG5GfvcxTEzgVcJ/lm2lwj+PX5gj/34
-	JfdJeXeaQL7yx9nwT+x8gi7qxA0c4K4fDtG/FkCZCFzN1CUTQHgVCL6Z/Gf6eRkd
-	RfgHGBpSUn8pCdMv3RIE3YAZwX0gRXHLRxz3yZNfE4G7NfvO0doYqsL9e3/kVKSq
-	nTdfKyHy4uz5XYDG+DB0g8SBu+Y5qa8qMKcwR+/625hkTKcuohzgq67bJA8I13s/
-	zDsUyuSaYY2XZiUwcnB6vE0rHEqSPE1BrHE2ipPOI08pRVahSpuoJv2wGLxANRe1
-	WXkIKgbm1luXp16ZZ9vf9w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1757060770; x=
-	1757147170; bh=46Gf8YV7inpP79cT31JMwJ9zdtW7od2OINqJDqlzb0Y=; b=F
-	YDfoGiZXEFyTPFB2CGXAhT4i7V836VnksZorSOjm8v2363Mo6NJpoSsBAMiyuvk9
-	qXqcIF6NEaRhI9kPfxdYrQEqYOID3RsAVgN2ONhOjqCipCDGWPRxQQpwG40P4+1i
-	2MrmzEDLhNg+GeiVYi5uSMQDOMWySmt1YSd5I4kcLJNj4D7XI25J7AipmOivIqLT
-	W7VapMInyPo6MWUMlsZn8TFnCIduPCk5b9RmALgSxGi50ASPi/eCkMzmjr4FAMjS
-	5SJm0G/Rq10R9luYnKJJL0Gbkd8eHKwkXdZI1BWOf4UBphLo1phQ0WxK5w7tubPA
-	1NXu0Af+Xwq9KynkGOSCw==
-X-ME-Sender: <xms:op66aGQ-RsuVUFNkZr4UFTFwQxLNAVaKnIvpZkIuE_ezbYJWoQXAyw>
-    <xme:op66aLyEHC2ljzxZ-CmN5GQ1rl3dOr0D2ci7KdUCYUPoLxoX6a8kXXRwnduM5ZqeA
-    mHeX-7lQ5fH1Wc5NoA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdekgeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceu
-    vghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnh
-    epfefhheetffduvdfgieeghfejtedvkeetkeejfeekkeelffejteevvdeghffhiefhnecu
-    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphht
-    thhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghhvghlghgrrghsse
-    hgohhoghhlvgdrtghomhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdr
-    ohhrghdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprg
-    hnuggvrhhsrdhrohigvghllheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsggvnhhj
-    rghmihhnrdgtohhpvghlrghnugeslhhinhgrrhhordhorhhgpdhrtghpthhtohepuggrnh
-    drtggrrhhpvghnthgvrheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhkfhhtsehl
-    ihhnrghrohdrohhrghdprhgtphhtthhopehnrghrvghshhdrkhgrmhgsohhjuheslhhinh
-    grrhhordhorhhgpdhrtghpthhtoheplhhkfhhtqdhtrhhirghgvgeslhhishhtshdrlhhi
-    nhgrrhhordhorhhg
-X-ME-Proxy: <xmx:op66aCbnxvvIFpBFKThejSSZRVGNvGdPZSuVSQxB-6IHC-JVhvB42g>
-    <xmx:op66aJ8i4NRTjbFcyuMWPI6ML38DE854QfiSO1QC8wqr9k00SE3j7A>
-    <xmx:op66aKEX_g-E95x55WeQ-QGpIGU06uk0K5XUGZdrbDl1SI_qM4BZ_Q>
-    <xmx:op66aLdGksGkDFFlf6_CozAODynMQ_ZpZYJnrEtuKAZx9-MtW4sd1Q>
-    <xmx:op66aDHxl1tQ3z5cm0pz_IyQiihs7DyiYW6v36RjOIb6ZMngPUrWDAXp>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 05BD2700065; Fri,  5 Sep 2025 04:26:10 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1757060941; c=relaxed/simple;
+	bh=eLSPT4SvjiaM5pd479/XZ2eZwilGWqS+QIx8bq1ijsM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=To4lwwlC+E7dl9iOVHx9WpocTIJBZFSD3zPFqs0U6W7fuljNoRU91I7Ffy1w85Y1J6gcuQjA0jJKuumGKR9FhLpzHSH/wM1dx6jMQpWRNhTt2plC1xxqe5M94jfoU6f9cfjCyy23QwuO2a+AnadVLyO9C3MGYc5G3CxDpoSQJqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kDKqYhuH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA606C4CEF1;
+	Fri,  5 Sep 2025 08:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757060941;
+	bh=eLSPT4SvjiaM5pd479/XZ2eZwilGWqS+QIx8bq1ijsM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kDKqYhuHwbUI58PukjGi61n+u9vY8RWhwT4lsaqzR0RkwQZwio5Xugnc+wEoYPtyd
+	 IXQjTUpYf5H59w1ThetcDTlmfCDG5Q1mnxUKEF2jR/TUr/kwkiKzJdLd1aasWz33L1
+	 xhUn0ObO9sm9CJd70EVvYoytLPe1+pl4M0lNEzzZLW+xq2JmvmuYErXYXDLkydBEV7
+	 /NKul4+jUc5QfeNjuIQCGzeW8DIVxfzJOK1Dvcv8vkX1v3sSx4It2XHEMsaPEkOT4u
+	 HJr9Xb/S+kE/RPI1H/c6TNW1cLd8uzACUqWNVhZCBlbvXQkdAagtRv/gCQdjozI3x/
+	 N2PCp1CFiaIVQ==
+Message-ID: <8705ef37-45b2-44cf-8223-2dceb211ad53@kernel.org>
+Date: Fri, 5 Sep 2025 10:28:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ABrrY9NwCfcB
-Date: Fri, 05 Sep 2025 10:25:49 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kees Cook" <kees@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>
-Cc: "Linaro Kernel Functional Testing" <lkft@linaro.org>,
- "Anders Roxell" <anders.roxell@linaro.org>,
- "Naresh Kamboju" <naresh.kamboju@linaro.org>, lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Benjamin Copeland" <benjamin.copeland@linaro.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Peter Zijlstra" <peterz@infradead.org>, linux-hardening@vger.kernel.org
-Message-Id: <d430f9ac-153c-41da-9cbe-53aa2f9d0fc3@app.fastmail.com>
-In-Reply-To: <20250905052836.work.425-kees@kernel.org>
-References: <20250905052836.work.425-kees@kernel.org>
-Subject: Re: [PATCH] PCI: Test for bit underflow in pcie_set_readrq()
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: imx: fix device node reference leak in
+ imx_pcie_probe
+To: Miaoqian Lin <linmq006@gmail.com>, Richard Zhu <hongxing.zhu@nxp.com>,
+ Lucas Stach <l.stach@pengutronix.de>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Trent Piepho <tpiepho@impinj.com>,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20250903135150.2527259-1-linmq006@gmail.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250903135150.2527259-1-linmq006@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 5, 2025, at 07:28, Kees Cook wrote:
-> After commit cbc654d18d37 ("bitops: Add __attribute_const__ to generic
-> ffs()-family implementations"), which allows GCC's value range tracker
-> to see past ffs(), GCC 8 on ARM thinks that it might be possible that
-> "ffs(rq) - 8" used here:
->
-> 	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
->
-> could wrap below 0, leading to a very large value, which would be out of
-> range for the FIELD_PREP() usage:
->
-> drivers/pci/pci.c: In function 'pcie_set_readrq':
-> include/linux/compiler_types.h:572:38: error: call to 
-> '__compiletime_assert_471' declared with attribute error: FIELD_PREP: 
-> value too large for the field
-> ...
-> drivers/pci/pci.c:5896:6: note: in expansion of macro 'FIELD_PREP'
->   v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
->       ^~~~~~~~~~
->
-> If the result of the ffs() is bounds checked before being used in
-> FIELD_PREP(), the value tracker seems happy again. :)
->
-> Fixes: cbc654d18d37 ("bitops: Add __attribute_const__ to generic 
-> ffs()-family implementations")
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Closes: 
-> https://lore.kernel.org/linux-pci/CA+G9fYuysVr6qT8bjF6f08WLyCJRG7aXAeSd2F7=zTaHHd7L+Q@mail.gmail.com/
-> Signed-off-by: Kees Cook <kees@kernel.org>
+On 03. 09. 25, 15:51, Miaoqian Lin wrote:
+> As the doc of of_parse_phandle() states:
+> "The device_node pointer with refcount incremented.  Use
+>   * of_node_put() on it when done."
+> Add missing of_node_put() after of_parse_phandle() call to properly
+> release the device node reference.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+How did you verify the node can go after of_address_to_resource()?
 
-This looks good to me individually, however I have now tried to
-do more randconfig tests with the __attribute_const change
-and gcc-8.5.0, and so far found two other files with the
-same issue:
+> Fixes: 1df82ec46600 ("PCI: imx: Add workaround for e10728, IMX7d PCIe PLL failure")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+> ---
+>   drivers/pci/controller/dwc/pci-imx6.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 80e48746bbaf..618bc4b08a8b 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -1636,6 +1636,7 @@ static int imx_pcie_probe(struct platform_device *pdev)
+>   		struct resource res;
+>   
+>   		ret = of_address_to_resource(np, 0, &res);
+> +		of_node_put(np);
 
-In file included from <command-line>:
-In function 'mtk_dai_etdm_out_configure.constprop',
-    inlined from 'mtk_dai_etdm_configure' at sound/soc/mediatek/mt8188/mt8188-dai-etdm.c:2168:3:
-include/linux/compiler_types.h:575:38: error: call to '__compiletime_assert_416' declared with attribute error: FIELD_PREP: value too large for the field
-sound/soc/mediatek/mt8188/mt8188-dai-etdm.c:2065:10: note: in expansion of macro 'FIELD_PREP'
-   val |= FIELD_PREP(ETDM_OUT_CON4_FS_MASK, get_etdm_fs_timing(rate));
-sound/soc/mediatek/mt8188/mt8188-dai-etdm.c:1971:10: note: in expansion of macro 'FIELD_PREP'
-   val |= FIELD_PREP(ETDM_IN_CON3_FS_MASK, get_etdm_fs_timing(rate));
+So why not to use __free(device_node)?
 
-drivers/mmc/host/meson-gx-mmc.c: In function 'meson_mmc_start_cmd':
-drivers/mmc/host/meson-gx-mmc.c:811:14: note: in expansion of macro 'FIELD_PREP'
-   cmd_cfg |= FIELD_PREP(CMD_CFG_TIMEOUT_MASK,
+thanks,
+-- 
+js
+suse labs
 
-This is fairly rare, but over time there are likely going to be
-others like them. I see three possible ways forward here:
-
-a) fix them individually as we run into them, hoping for the best
-b) skip that one compile time check on older compilers, like Anders'
-   new patch
-c) try to come up with a more robust FIELD_PREP() implementation
-
-I already tried hacking on FIELD_PREP(), but my feeling is that it
-is already getting out of hand with its complexity, and needs to
-become simpler instead. The root cause for the warning here is
-apparently the way it evaluates the macro arguments multiple times,
-and that causes both extra compile-time complexity and extra code
-paths where part of the invocation goes through an inline function
-and another path that does not. It may be possible to change this
-in a way that moves the BUILD_BUG_ON() portions into an __always_inline
-function, and only uses the macro to deal with the type differences.
-
-     Arnd
 
