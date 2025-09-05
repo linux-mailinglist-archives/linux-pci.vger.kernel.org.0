@@ -1,228 +1,311 @@
-Return-Path: <linux-pci+bounces-35537-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35539-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFC35B46086
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 19:45:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 183C5B461B2
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 20:06:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D1E11C201CC
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 17:45:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C25DF3B8919
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 18:06:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF52E36CDF4;
-	Fri,  5 Sep 2025 17:45:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B4BF2F1FF3;
+	Fri,  5 Sep 2025 18:06:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDVR8G1c"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Ut2rLNVh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2044.outbound.protection.outlook.com [40.107.92.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F91635CED5;
-	Fri,  5 Sep 2025 17:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757094303; cv=none; b=o7uDq2BF7yxTJXmsYuGHOtqW4d1mcFnX0UgH+xPghe4CPPyWxO1EbHdYgC2NTIw/LBYJuoFs8iGPJeI+zY4HCRkIB+MgIkfD4B+qH2MEgnv5lr6TCXQp6WQ22TV+KflmgdIGGndkfaOJxO3aNFoVR/6KyZ58FdTqq2D2IlW54eM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757094303; c=relaxed/simple;
-	bh=JRoj6Ci9wHU172Ie2bm2KbIB7z/ZxMXoAI7uwTju8l8=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=g4anGc/h2+PpKVw9dNFpWTWPG1rNy76n+TmiVW+wsXOSVSHybpqWtEPhOp2Da9xqsiRhyRt8mBHP3ojJMRAMVpYG/aXxTgQ4vZRSAP5Bx5VqAegcT2G7yh7H5QoZWHqOJUi8GPHUOomCA/dI2ykhod4ItJMcXp9iCSLBkv16GF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDVR8G1c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDEA9C4CEF1;
-	Fri,  5 Sep 2025 17:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757094303;
-	bh=JRoj6Ci9wHU172Ie2bm2KbIB7z/ZxMXoAI7uwTju8l8=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=qDVR8G1cHnoOKaISEn3ILawg4lLl5ZxilJnEWSgjJRinykFT9ihy9ASczjxCypy49
-	 MxncKaEWPiS6iZV76aoax8IAhqp00Wed5VmASI8vg4PkIxFBtNWzk+uYYeunxumOvA
-	 2Mntv+1Tb3txhkWAoWOuTC6xl9R54QvQigtyDpA4uFu5Q4ci71agKxN8JWQ/8Rm605
-	 Xx4eXNZ53V9b5rln4k32L2DV9A0sRnrK/zDR4NqJ0vtyr2sZ+AHmf09R2o956ufAA0
-	 M1QIzWoD2dflMJlCo9AYlOy8XiYzRDD+aM6JHSMbnkeL7xO7jJ7Lu0CvpO+fGIdGIg
-	 CWW4A88Y+q55w==
-Date: Fri, 05 Sep 2025 12:45:02 -0500
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0FD37289D;
+	Fri,  5 Sep 2025 18:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757095598; cv=fail; b=O0MANH+Q/c2Rci2oKI17VISwmmgOROgNG723CzpJsaRYH0pWk9YkICCMLk4l1J8QT9eFZxnwYETi+TDij+ciT85O7SPhLMjsfZfJ9cJL9vKOadnIzp/5X85p6m+mYZ31WmQyNaw8/VSrwc06HWvRC8Pm6KLyQW+ssQNpKyGFeSE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757095598; c=relaxed/simple;
+	bh=J8j0hyobKGjpEzfUJkM1po1tHD5Y0kortsJrp3hNUZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=UW9rD2vBAyb7yW2ONGkuI4UoDbtFpws0tckfX+lpika9h8CZTTlB/6Zqgp0zgtDDaSDfhb2TvZ6FouIrsTQEbM0YokY1KUBb5O+XFI0i0b2ieFm4AHxqFFibJjrZQFpPD5bvgf+eUeUZEqCN1moMtsZaJ/2T3PtM3jYwJMWUy/0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Ut2rLNVh; arc=fail smtp.client-ip=40.107.92.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nq/bwRKGfk0PNEJtXy+aQWrJ2LpcMC+D/V0dx8PHzJ8s1llTPmEAYJPEl0TcU0y/tc2JbzBQh0dubTLDQLTNedYhrutyDE4iXQuQ79dx1mUoYUdfwigRpIfnzhvhpIx+jTUBdqxUVC67tIaQkyMV9qWo2QDHs1+Qme1ywXlnhBRyhWRXieEKm/eTDH547z1fJabtxlO6JVL6246D5NyvXN7fCU5D0JADlfHQAohvSWkZ3s+5M1uhlV3zyclAuj4fDR4lWXRJWhibMUbjnIeiMe/hNqwDYDOP7RJdIr596zkCRq+ZXw8Kwt930L9h4gcWKS2E8oNaoDwsa5mULzkeiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ns5YRS3pjSixFQUoprRq4zIPic3IzEtiJRvda8t/FFE=;
+ b=PYxrEzhRByrJgzhLQPRcu3jfpbmzX6/BfoynoWX/228PIC/IjirUhh+4BGxEfY0ZqAq20wvVaLwjog5C0JbT8V5IrBpsaedQyJQvNFyrjB2zUHJ/kVw1E8ebbH46V2AJ0MzVJTQi0Rv4MYZFQ2uO6QZRuo0qrEzh4mJjXKu1YPqS1E4xjQLbEg3HdU39W+45lWsFoN7AjEihxfORJhNs3Ut/6M3VI/nTtrTqFljZ6Y1xgrpMchPROrFemqlF8FCFwAiDW/sIPH5BuLEImeLupvax+SwIpBvx8fKhWCk2e1FkEQUnsOE0RaQhpRWe4ODXHSz0dVOXSujDQfzgNfOgCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ns5YRS3pjSixFQUoprRq4zIPic3IzEtiJRvda8t/FFE=;
+ b=Ut2rLNVhPDasmrJc413vxDrpLywqeK/AOoBmGy/csblbsUUfl7EfWgVPmyGvB1fq8g/f8JGJSsMPKNBEuVDzjOMeUXMC3ug3/4vf9JVh8oU2l41ahRtbmGDZzL2a1i2r+gfpSc1e8OWLtLFVDne5HAmB426nbQot2Lw9+ijI/ygoHjNPJx//097YtC7YRTyuNowEITJX4VNzDakwEC8w3OHbDEkkBu6AQ22eEhSJ41F+O8n+BaVMu5i+IRq541oB1hQzat0XE/1kKbHlYd3ULY5sN55WmJbXOLpboM+6uOPrKcDUGy/5yYQ70EQPum+Gjm+FXTTstsEkNzPTyVhqKw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
+ by DM4PR12MB7696.namprd12.prod.outlook.com (2603:10b6:8:100::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.17; Fri, 5 Sep
+ 2025 18:06:31 +0000
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9094.017; Fri, 5 Sep 2025
+ 18:06:31 +0000
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	iommu@lists.linux.dev,
+	Joerg Roedel <joro@8bytes.org>,
+	linux-pci@vger.kernel.org,
+	Robin Murphy <robin.murphy@arm.com>,
+	Will Deacon <will@kernel.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Donald Dutile <ddutile@redhat.com>,
+	galshalom@nvidia.com,
+	Joerg Roedel <jroedel@suse.de>,
+	Kevin Tian <kevin.tian@intel.com>,
+	kvm@vger.kernel.org,
+	maorg@nvidia.com,
+	patches@lists.linux.dev,
+	tdave@nvidia.com,
+	Tony Zhu <tony.zhu@intel.com>
+Subject: [PATCH v3 00/11] Fix incorrect iommu_groups with PCIe ACS
+Date: Fri,  5 Sep 2025 15:06:15 -0300
+Message-ID: <0-v3-8827cc7fc4e0+23f-pcie_switch_groups_jgg@nvidia.com>
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: YT4PR01CA0002.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:d1::15) To PH7PR12MB5757.namprd12.prod.outlook.com
+ (2603:10b6:510:1d0::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: kwilczynski@kernel.org, Ziyue Zhang <quic_ziyuzhan@quicinc.com>, 
- andersson@kernel.org, krzk+dt@kernel.org, devicetree@vger.kernel.org, 
- vkoul@kernel.org, conor+dt@kernel.org, quic_vbadigan@quicinc.com, 
- linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- abel.vesa@linaro.org, neil.armstrong@linaro.org, 
- linux-kernel@vger.kernel.org, mani@kernel.org, jingoohan1@gmail.com, 
- lpieralisi@kernel.org, kw@linux.com, kishon@kernel.org, bhelgaas@google.com, 
- qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com, 
- johan+linaro@kernel.org, konradybcio@kernel.org, linux-pci@vger.kernel.org
-To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-In-Reply-To: <20250905071448.2034594-1-ziyue.zhang@oss.qualcomm.com>
-References: <20250905071448.2034594-1-ziyue.zhang@oss.qualcomm.com>
-Message-Id: <175709416167.988659.7965157702094931260.robh@kernel.org>
-Subject: Re: [PATCH v12 0/5] pci: qcom: Add QCS8300 PCIe support
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|DM4PR12MB7696:EE_
+X-MS-Office365-Filtering-Correlation-Id: f3afc60d-268f-43b2-d301-08ddeca6f0b6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?iuWomNZdNxaYmN9yB82Mcr6Mk/MpWtfRSNgQsoOxPw94yu/dkxET2GKOT+rA?=
+ =?us-ascii?Q?uhg6X4pzhg7pbu42Ekiozj62No7GCyE4HgYaZ4PBIPTdnTvmjlKMF+deJkiv?=
+ =?us-ascii?Q?QQZ+B4k9yCGaxBs5X6W1diuDNUNgYhBFwyVOujoPm+xY21wAathxtzFzvyW4?=
+ =?us-ascii?Q?Y/Rn7XJP9WYhMzff9/DjA9wVNVxIFmClmA3jNyCOWgdIoSWxia7As/z94vuB?=
+ =?us-ascii?Q?UQ7VuOG83+7TGQeA2LgMaqyhPq9TOISYs8TFDzZrtbVRgyDaiF1sjGSZfM3G?=
+ =?us-ascii?Q?XtGW6yhZ7zWhtQy4hiu7WDi+gEZGDVaE8RFyEHrbkzeCQ+SrTEcLHxuwK7Vu?=
+ =?us-ascii?Q?Sr6gfcr2l6V5qIJaMs2Cw8PnsmmIsOUeLa4F+DVVjfu9gRax58GW6eY6EEeX?=
+ =?us-ascii?Q?o4HmEO9PPQ2Jp2c/OU+qbXlL0mgoV0Exq3JXuiMntVa0oeortANDdsSAL6sC?=
+ =?us-ascii?Q?dOiZpMbGCALPXTBhaBVGiA0OZvH7f1vjWfI/itXRBz7/0lhnM+rDcWWjFwmP?=
+ =?us-ascii?Q?umSyiPn2hxL4IwUPwP1LzwcrIXhoGy3ksvHBUcXncHRa0kXbgHPFfU8DhrFN?=
+ =?us-ascii?Q?btQxyr//SPKUbPg/Pmesnudls9Zv0thbSO8vKzd3oS8NvBnExcwlQr+FFgwk?=
+ =?us-ascii?Q?mJ2O2azhQp66L9PJ6MeMylgr6tEonn3XS+aWogfkipCPDG7Q9O61HaoNy9nV?=
+ =?us-ascii?Q?xoXfU5AZ3qJ36Sa+0KJBMWD9i2q8ZfhOIKxEisX5HZbHtJhoEZGT2eFm5USW?=
+ =?us-ascii?Q?kp5Dz7+WT4mCyoCyE+QPRLwH6grrJKqaw1lh/WRtMbC+4N/EsPJS/DIUtKC0?=
+ =?us-ascii?Q?EU1LfE1idUvSK0L9RkNhSGEEV9Sh0kRXGcyuF+ma/U+J76XLV1zsgrftJ4Bu?=
+ =?us-ascii?Q?jQzq9kHffRSGFC0cRt9fo0rsHaQvmjavS1unZIWrReO2CsZROByGB5Sq8P1K?=
+ =?us-ascii?Q?1/Ah8yCosnKKVC4ppAiA0lsS3b381B9oFbk2hEAW//jNMz3KnIlaHhlm7o9G?=
+ =?us-ascii?Q?IKawTetDLKpQi1YmUAwL0IG5aubvArAVn5LTyM2sc1zhW5Guq6NiZCh+6eAT?=
+ =?us-ascii?Q?E2aY+B5LSWJhUxDqbQB6xk9tO0hs7ODVgPeoRvMSdEsMwP8H51Gf4Teowi26?=
+ =?us-ascii?Q?5QJC50GCMymJOsrWQKopZYuK4ZwIH/IxpP0TKaXEVvybezksWgsWiOBw2H3x?=
+ =?us-ascii?Q?BX90aT1wZWO5WA6TsCZSYgWXOD6T4EGEZ1RE5/bnrZf/FRE3Tdba3drPvEMx?=
+ =?us-ascii?Q?k2+rFwEl159MgApSbwu32bw7/oMiQGjtn2/dO6vN+lCg68kVWck8QfXevaJO?=
+ =?us-ascii?Q?PzIiMfkLRbqgr2uIfLYntH9RD0axf0xpO4Ho7uO/7Y2bn4obRCaHy6daP7o4?=
+ =?us-ascii?Q?0W+7C3NeKIcRqvREeuv9iTdcYmqzgcHZUmDiOUjUedSYC6PYawtD36ZOGOfs?=
+ =?us-ascii?Q?qynBhXaAdis=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?lmiuZ05gugLXZFlbMvyICFgNv/nIoMzuM19uEp8IHwpc2LKIbcoL7pPtDMyB?=
+ =?us-ascii?Q?5HQFYkrmgDJG53G4AJ6oe4BnWX1z/Uq1ATN6I9bJu95JIUt62bAT553y0HPF?=
+ =?us-ascii?Q?yR/6omhxkWNB6NhVNBO+P5gleVPC6Bmu7KyuPEjdfp4t2ZdU81MCNyIYAnd6?=
+ =?us-ascii?Q?pJ8vv25PFGmbvUE9EPi+l1+SZKOD+gbqAw/Fg4rcXOX60J4xMXfC08I5fbRB?=
+ =?us-ascii?Q?X5UToe9m/03KjIzW3sitgQHl5ssx0LLNkAisbnyLtwGmN7r+l2StkPpQHMT3?=
+ =?us-ascii?Q?P+/zfbaT7jWEoxwwINCtYGXik4Vocky0a5ZigXIvLR3+9l0+Du+i7rpSfNpb?=
+ =?us-ascii?Q?vtYcZ9Y65/OuybSZk7TrY1s+WHj+l5GbFKVHuEyFzBqE/meR4yGBiuFIbVMS?=
+ =?us-ascii?Q?g8ywYhK+R2RleokfBFIF77PKd1kbHmJVJnPq4HlPsV3YylYJMRnKKhGvi8vI?=
+ =?us-ascii?Q?ndIETz9Z8qD4RvPsTXf5BYDinhO8XdOO2/9s2P8SWKfDKsxijuz5RTB+iUAm?=
+ =?us-ascii?Q?Ry/j2GCQHw2MaR/YzXtsR30XjxasokseNPC9Esz+e101o6u/OW+ePAcyDEPe?=
+ =?us-ascii?Q?XQeyVrn7s4IVzHdXnHnzOc7h/oN5XtJAzcYU9mHuA66NDMhqv+pZboWD2/ss?=
+ =?us-ascii?Q?ewXTG/rqN8RT27feeKYN1D6vqyj1iiTYDBUmGFTlwjWBq48NEyZPfCgxTA2p?=
+ =?us-ascii?Q?TpiIe0O6kh/Usmo4l7YyNvYENmVz4lPljynmCQY5+sIpRFTIGv0jeOr/Yzvz?=
+ =?us-ascii?Q?Ag29Oah656wNMlMjZylCcE6Je5fDg5zWFWxwXu/ueggNYLueT0cuVYP5zoS2?=
+ =?us-ascii?Q?/PXeOHh8My2mO2l1QtPiDVsOn8sPmLKK4i2VLFF8hhoQqfj47MYcpjcMkygk?=
+ =?us-ascii?Q?PAKPCKyhwRQ7A0xrmWcDRavkqKS59J4L3gkp2ysT0H9LZ1EtQsFljtOqoIYb?=
+ =?us-ascii?Q?QNj4hhPEpLQxZ+uBcTRmUXWwqctjAcCXZ8hEbchGFum5xsswHvB8UkAoZHSc?=
+ =?us-ascii?Q?TLQokAu9SwpGq1ytMwtCmMJ8TCHlJe7Jv3SXVxupVuGHuXH1YvsttxG/sMm7?=
+ =?us-ascii?Q?HgeS/vROtj+yjMJcyh/iNcXXig+C9ZV9yvTRs7o0qfRAfwdR7nLJWO2BuVaF?=
+ =?us-ascii?Q?hyvbyzm3XwLECEww86upuEhN5AHtgMQ0VeUA/t0uDEyz6RtRTPX3AJogcFF0?=
+ =?us-ascii?Q?N4/wLjvJR2WQh9fUYKBxUFDbFoeKVlOC5GNJPIDCm5XoDy1rH+1S4t8SPzRl?=
+ =?us-ascii?Q?q2FZAkRT/nuxvst1wv6Kf7/cOx66vH62abmQri8a1xdbS2gXo8rOSbHlZw3Y?=
+ =?us-ascii?Q?8ZuLDP/WDS2KfN87Y7AycUWrTOVoPDTWI/oo8zDvmHeuX4YyNis+5JVGuMO1?=
+ =?us-ascii?Q?Fi2GaEHbo2xgE3oWNT/a8PwNazosjXkC6ql90v08zCh4bpXfGahFHTbL/5oR?=
+ =?us-ascii?Q?TNlUze2U9ofI8jZA0HQ24A0ZDEpAEosXEYGDVcdmeZX5n0ik2QrVRqHnhE4A?=
+ =?us-ascii?Q?SyO+2lFU9DNXJzr2q22YI0GqTAHqgZlTDC+KgXP34u4t/spaZCv8OkAhkhaQ?=
+ =?us-ascii?Q?4xzuoAlj4sMcpNxAnkY=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3afc60d-268f-43b2-d301-08ddeca6f0b6
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2025 18:06:30.5090
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TlRbN2dz4b4KLDb60GPcaeycTCt73s11+WxaPyNm1UAoD/zLqAdFSm/pW0qIlNjf
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7696
+
+The series patches have extensive descriptions as to the problem and
+solution, but in short the ACS flags are not analyzed according to the
+spec to form the iommu_groups that VFIO is expecting for security.
+
+ACS is an egress control only. For a path the ACS flags on each hop only
+effect what other devices the TLP is allowed to reach. It does not prevent
+other devices from reaching into this path.
+
+For VFIO if device A is permitted to access device B's MMIO then A and B
+must be grouped together. This says that even if a path has isolating ACS
+flags on each hop, off-path devices with non-isolating ACS can still reach
+into that path and must be grouped gother.
+
+For switches, a PCIe topology like:
+
+                               -- DSP 02:00.0 -> End Point A
+ Root 00:00.0 -> USP 01:00.0 --|
+                               -- DSP 02:03.0 -> End Point B
+
+Will generate unique single device groups for every device even if ACS is
+not enabled on the two DSP ports. It should at least group A/B together
+because no ACS means A can reach the MMIO of B. This is a serious failure
+for the VFIO security model.
+
+For multi-function-devices, a PCIe topology like:
+
+                  -- MFD 00:1f.0 ACS not supported
+  Root 00:00.00 --|- MFD 00:1f.2 ACS not supported
+                  |- MFD 00:1f.6 ACS = REQ_ACS_FLAGS
+
+Will group [1f.0, 1f.2] and 1f.6 gets a single device group. However from
+a spec perspective each device should get its own group, because ACS not
+supported can assume no loopback is possible by spec.
+
+For root-ports a PCIe topology like:
+                                         -- Dev 01:00.0
+  Root  00:00.00 --- Root Port 00:01.0 --|
+                  |                      -- Dev 01:00.1
+		  |- Dev 00:17.0
+
+Previously would group [00:01.0, 01:00.0, 01:00.1] together if there is no
+ACS capability in the root port.
+
+While ACS on root ports is underspecified in the spec, it should still
+function as an egress control and limit access to either the MMIO of the
+root port itself, or perhaps some other devices upstream of the root
+complex - 00:17.0 perhaps in this example.
+
+Historically the grouping in Linux has assumed the root port routes all
+traffic into the TA/IOMMU and never bypasses the TA to go to other
+functions in the root complex. Following the new understanding that ACS is
+required for internal loopback also treat root ports with no ACS
+capability as lacking internal loopback as well.
+
+There is also some confusing spec language about how ACS and SRIOV works
+which this series does not address.
 
 
-On Fri, 05 Sep 2025 15:14:43 +0800, Ziyue Zhang wrote:
-> This series depend on this patch
-> https://lore.kernel.org/all/20250826-pakala-v2-3-74f1f60676c6@oss.qualcomm.com/
-> 
-> This series adds document, phy, configs support for PCIe in QCS8300.
-> It also adds 'link_down' reset for sa8775p.
-> 
-> Have follwing changes:
-> 	- Add dedicated schema for the PCIe controllers found on QCS8300.
-> 	- Add compatible for qcs8300 platform.
-> 	- Add configurations in devicetree for PCIe0, including registers, clocks, interrupts and phy setting sequence.
-> 	- Add configurations in devicetree for PCIe1, including registers, clocks, interrupts and phy setting sequence.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> ---
-> Changes in v12:
-> - rebased pcie phy bindings
-> - Link to v11: https://lore.kernel.org/all/20250826091205.3625138-1-ziyue.zhang@oss.qualcomm.com/
-> 
-> Changes in v11:
-> - move phy/perst/wake to pcie bridge node (Mani)
-> - Link to v10: https://lore.kernel.org/all/20250811071131.982983-1-ziyue.zhang@oss.qualcomm.com/
-> 
-> Changes in v10:
-> - Update PHY max_items (Johan)
-> - Link to v9: https://lore.kernel.org/all/20250725104037.4054070-1-ziyue.zhang@oss.qualcomm.com/
-> 
-> Changes in v9:
-> - Fix DTB error (Vinod)
-> - Link to v8: https://lore.kernel.org/all/20250714081529.3847385-1-ziyue.zhang@oss.qualcomm.com/
-> 
-> Changes in v8:
-> - rebase sc8280xp-qmp-pcie-phy change to solve conflicts.
-> - Add Fixes tag to phy change (Johan)
-> - Link to v7: https://lore.kernel.org/all/20250625092539.762075-1-quic_ziyuzhan@quicinc.com/
-> 
-> Changes in v7:
-> - rebase qcs8300-ride.dtsi change to solve conflicts.
-> - Link to v6: https://lore.kernel.org/all/20250529035635.4162149-1-quic_ziyuzhan@quicinc.com/
-> 
-> Changes in v6:
-> - move the qcs8300 and sa8775p phy compatibility entry into the list of PHYs that require six clocks
-> - Update QCS8300 and sa8775p phy dt, remove aux clock.
-> - Fixed compile error found by kernel test robot
-> - Link to v5: https://lore.kernel.org/all/20250507031019.4080541-1-quic_ziyuzhan@quicinc.com/
-> 
-> Changes in v5:
-> - Add QCOM PCIe controller version in commit msg (Mani)
-> - Modify platform dts change subject (Dmitry)
-> - Fixed compile error found by kernel test robot
-> - Link to v4: https://lore.kernel.org/linux-phy/20241220055239.2744024-1-quic_ziyuzhan@quicinc.com/
-> 
-> Changes in v4:
-> - Add received tag
-> - Fixed compile error found by kernel test robot
-> - Link to v3: https://lore.kernel.org/lkml/202412211301.bQO6vXpo-lkp@intel.com/T/#mdd63e5be39acbf879218aef91c87b12d4540e0f7
-> 
-> Changes in v3:
-> - Add received tag(Rob & Dmitry)
-> - Update pcie_phy in gcc node to soc dtsi(Dmitry & Konrad)
-> - remove pcieprot0 node(Konrad & Mani)
-> - Fix format comments(Konrad)
-> - Update base-commit to tag: next-20241213(Bjorn)
-> - Corrected of_device_id.data from 1.9.0 to 1.34.0.
-> - Link to v2: https://lore.kernel.org/all/20241128081056.1361739-1-quic_ziyuzhan@quicinc.com/
-> 
-> Changes in v2:
-> - Fix some format comments and match the style in x1e80100(Konrad)
-> - Add global interrupt for PCIe0 and PCIe1(Konrad)
-> - split the soc dtsi and the platform dts into two changes(Konrad)
-> - Link to v1: https://lore.kernel.org/all/20241114095409.2682558-1-quic_ziyuzhan@quicinc.com/
-> 
-> Ziyue Zhang (5):
->   dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
->     for qcs8300
->   arm64: dts: qcom: qcs8300: enable pcie0
->   arm64: dts: qcom: qcs8300-ride: enable pcie0 interface
->   arm64: dts: qcom: qcs8300: enable pcie1
->   arm64: dts: qcom: qcs8300-ride: enable pcie1 interface
-> 
->  .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |   5 +-
->  arch/arm64/boot/dts/qcom/qcs8300-ride.dts     |  84 +++++
->  arch/arm64/boot/dts/qcom/qcs8300.dtsi         | 310 +++++++++++++++++-
->  3 files changed, 394 insertions(+), 5 deletions(-)
-> 
-> 
-> base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
-> --
-> 2.43.0
-> 
-> 
-> 
+This entire series goes further and makes some additional improvements to
+the ACS validation found while studying this problem. The groups around a
+PCIe to PCI bridge are shrunk to not include the PCIe bridge.
+
+The last patches implement "ACS Enhanced" on top of it. Due to how ACS
+Enhanced was defined as a non-backward compatible feature it is important
+to get SW support out there.
+
+Due to the potential of iommu_groups becoming wider and thus non-usable
+for VFIO this should go to a linux-next tree to give it some more
+exposure.
+
+I have now tested this a few systems I could get:
+
+ - Various Intel client systems:
+   * Raptor Lake, with VMD enabled and using the real_dev mechanism
+   * 6/7th generation 100 Series/C320
+   * 5/6th generation 100 Series/C320 with a NIC MFD quirk
+   * Tiger Lake
+   * 5/6th generation Sunrise Point
+
+  The 6/7th gen system has a root port without an ACS capability and it
+  becomes ungrouped as described above.
+
+  All systems have changes, the MFDs in the root complex all become ungrouped.
+
+ - NVIDIA Grace system with 5 different PCI switches from two vendors
+   Bug fix widening the iommu_groups works as expected here
+
+This is on github: https://github.com/jgunthorpe/linux/commits/pcie_switch_groups
+
+v3:
+ - Rebase to v6.17-rc4
+ - Drop the quirks related patches
+ - Change the MFD logic to process no ACS cap as meaning no internal
+   loopback. This avoids creating non-isolated groups for MFD root ports in
+   common AMD and Intel systems
+ - Fix matching MFDs to ignore SRIOV VFs
+ - Fix some kbuild splats
+v2: https://patch.msgid.link/r/0-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com
+ - Revise comments and commit messages
+ - Rename struct pci_alias_set to pci_reachable_set
+ - Make more sense of the special bus->self = NULL case for SRIOV
+ - Add pci_group_alloc_non_isolated() for readability
+ - Rename BUS_DATA_PCI_UNISOLATED to BUS_DATA_PCI_NON_ISOLATED
+ - Propogate BUS_DATA_PCI_NON_ISOLATED downstream from a MFD in case a MFD
+   function is a bridge
+ - New patches to add pci_mfd_isolation() to retain more cases of narrow
+   groups on MFDs with missing ACS.
+ - Redescribe the MFD related change as a bug fix. For a MFD to be
+   isolated all functions must have egress control on their P2P.
+v1: https://patch.msgid.link/r/0-v1-74184c5043c6+195-pcie_switch_groups_jgg@nvidia.com
+
+Cc: galshalom@nvidia.com
+Cc: tdave@nvidia.com
+Cc: maorg@nvidia.com
+Cc: kvm@vger.kernel.org
+Cc: Ceric Le Goater" <clg@redhat.com>
+Cc: Donald Dutile <ddutile@redhat.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+
+Jason Gunthorpe (11):
+  PCI: Move REQ_ACS_FLAGS into pci_regs.h as PCI_ACS_ISOLATED
+  PCI: Add pci_bus_isolated()
+  iommu: Compute iommu_groups properly for PCIe switches
+  iommu: Organize iommu_group by member size
+  PCI: Add pci_reachable_set()
+  iommu: Compute iommu_groups properly for PCIe MFDs
+  iommu: Validate that pci_for_each_dma_alias() matches the groups
+  PCI: Add the ACS Enhanced Capability definitions
+  PCI: Enable ACS Enhanced bits for enable_acs and config_acs
+  PCI: Check ACS DSP/USP redirect bits in pci_enable_pasid()
+  PCI: Check ACS Extended flags for pci_bus_isolated()
+
+ drivers/iommu/iommu.c         | 510 +++++++++++++++++++++++-----------
+ drivers/pci/ats.c             |   4 +-
+ drivers/pci/pci.c             |  73 ++++-
+ drivers/pci/search.c          | 274 ++++++++++++++++++
+ include/linux/pci.h           |  46 +++
+ include/uapi/linux/pci_regs.h |  18 ++
+ 6 files changed, 759 insertions(+), 166 deletions(-)
 
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: using specified base-commit 8f5ae30d69d7543eee0d70083daf4de8fe15d585
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250905071448.2034594-1-ziyue.zhang@oss.qualcomm.com:
-
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clocks: [[57, 66], [57, 68], [57, 94], [57, 72], [57, 74], [57, 77], [57, 70]] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clocks: [[57, 80], [57, 82], [57, 94], [57, 86], [57, 88], [57, 91], [57, 84]] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clocks: [[57, 66], [57, 68], [57, 94], [57, 72], [57, 74], [57, 77], [57, 70]] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clocks: [[57, 80], [57, 82], [57, 94], [57, 86], [57, 88], [57, 91], [57, 84]] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clocks: [[57, 66], [57, 68], [57, 94], [57, 72], [57, 74], [57, 77], [57, 70]] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clocks: [[57, 80], [57, 82], [57, 94], [57, 86], [57, 88], [57, 91], [57, 84]] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2'] is too short
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clocks: [[50, 70], [50, 68], [50, 80], [50, 72], [50, 74], [50, 77]] is too short
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clocks: [[57, 66], [57, 68], [57, 94], [57, 72], [57, 74], [57, 77], [57, 70]] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clocks: [[57, 80], [57, 82], [57, 94], [57, 86], [57, 88], [57, 91], [57, 84]] is too long
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-
-
-
-
+base-commit: b320789d6883cc00ac78ce83bccbfe7ed58afcf0
+-- 
+2.43.0
 
 
