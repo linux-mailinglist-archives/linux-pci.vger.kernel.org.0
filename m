@@ -1,130 +1,215 @@
-Return-Path: <linux-pci+bounces-35578-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35579-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 555F7B46545
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 23:14:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99FABB46611
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 23:46:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F34BC3B2725
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 21:14:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A366C1710FD
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 21:46:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 912012EDD7A;
-	Fri,  5 Sep 2025 21:14:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A389C2F83B4;
+	Fri,  5 Sep 2025 21:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dKugqIPh"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RBETcqgZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A94284886;
-	Fri,  5 Sep 2025 21:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 837102F83AF;
+	Fri,  5 Sep 2025 21:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757106891; cv=none; b=dNzKa7Y9oNDdfu3Iw5Z0d8aQFs4RGgFwBRUo5791QvSXa0eMffE/ILe8+Kab/ZBmHzJDwuPBdOXBQUlQ2i6SBaaritqSQS3PCYI1okpYyR0mftyO1MN2eD70lB0HQfdUKUwqv4mz9IDVE9WDaQWyhzM1+ax603Uzd0Xx0cBuG14=
+	t=1757108520; cv=none; b=MQJqL/pGz2CFe2fkZl2KyT1aejkWRldRcNFE+8xoZ3zWm1i48uR7NWuUXgw0qFdnX7h9JBM75j0I9yf9Lq2m1mFTqeTeOs/z28I50wmnOqPnOviCO47QnkTP8X4OCWGMfd+Uz0J8saOBYMgUPNNXwPyWZiUxsPGFq2Ho6OsVRaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757106891; c=relaxed/simple;
-	bh=wT8x2IGgVEao6/cCmkDlAreApT8kXJlKNuy8RcfE5kU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dii/bb7O3pUynsskugGgtSXH09/ogzpCHWnOJutVkuvb5M8gazPH4sDeVInDLIFC68RIT68Hcg5GSKBpKLL1XGLNuDLY9ubzCmWJzjpOG+pBS3UgIVQthS4mPJ/87aZwmu0d8ejD/u3I4jTpdKb1CyTkcAOdSCm1WDAyPoYXSWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dKugqIPh; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 585LEe1h000688;
-	Fri, 5 Sep 2025 21:14:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=MNTVaRidqIqXgAKjCzr+BWLK86N6w
-	+7fH73KgXvjBA0=; b=dKugqIPhq9ZC+89Ri9k61+v/Yno3dFKMTAsRVWZHfTcQW
-	j6VnbAulUJW4u6GsEP4VG9nbIWCLrhJEFevcbtHge8ppYtqASWh2BifrpqNRITaS
-	hE8RFhZUVZDk0wulv+mxPtTvUHIrK5rAWb/FXkc3xrDakp2u3F8GTeK7Ux4Bd56T
-	1hMZpR+buEhGlmgZINmDiB7TVNPT63icoryfDQPO6alWbcfOxSwi1K1gnL6y2OHT
-	NcnNvqRf5Y3wKA7aKylL6oceZhF16jnb+QJRT3GuPadC8/S88sVeZc6vZAxKZbrX
-	trnovOtZUBlrox6fNfbqOfv/SAkmgHmuyyiufEkOQ==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4907ktg004-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 05 Sep 2025 21:14:40 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 585JoCav033333;
-	Fri, 5 Sep 2025 21:14:39 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 48uqrd4qvc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 05 Sep 2025 21:14:39 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 585LEcuq038219;
-	Fri, 5 Sep 2025 21:14:38 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 48uqrd4quv-1;
-	Fri, 05 Sep 2025 21:14:38 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: vigneshr@ti.com, s-vadapalli@ti.com, lpieralisi@kernel.org,
-        kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
-        bhelgaas@google.com, linux-omap@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: j721e: Fix incorrect error message in probe
-Date: Fri,  5 Sep 2025 14:14:34 -0700
-Message-ID: <20250905211436.3048282-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1757108520; c=relaxed/simple;
+	bh=n1zL1dghlRy0+A8PIhiVW/ZsMjbvNqyCZS6VPJicZms=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ULjqqPZZB6CNffRIHL9Z1SeaR67XtwP2lg2+kcfxU7Nyc4F30/DxK6V/2O+1C8z8kaPttbr7PT+7Du6Rh6RgA4SDDzAXYoDwnsrBtzOmW2iWhvSepkNDvhdWuyASaLfoGav0xNT6xEvX7ApAn0a7ZixX3aXj/A5eIB3+OMOwKp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RBETcqgZ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 7E61E20171D3;
+	Fri,  5 Sep 2025 14:41:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7E61E20171D3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1757108514;
+	bh=pLTx4Rr8G6NQmZqkGo3pXfMpnw5bZX2ma0h+xMq8JrA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RBETcqgZyxhP4vA+SY74JeEifpJbs8CGGsV8LNL4b3jFuP9zvIq+hI8kC5wZPgcC6
+	 1WT2cgW4wYPCxkj6xOu4yy4jAknNRtnBrBlRHaMKitBQ2PX1olNc+ZlDBCF0VUFtnh
+	 NIUJ2ivqX8aQgh1dtNqaU2+PbzVKxt32fdpclyYk=
+Message-ID: <6a26cbf8-7877-4f39-0ed3-7bbc306f9fe5@linux.microsoft.com>
+Date: Fri, 5 Sep 2025 14:41:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-05_07,2025-09-04_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 spamscore=0
- malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2508110000
- definitions=main-2509050209
-X-Proofpoint-GUID: yjoYByN9Zdo31DNY6AEfeu0WOeY1RLep
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA1MDIwOSBTYWx0ZWRfX7Dv9FNCmvvf3
- in+cAPNtPOam6g7FcUOaEcgI3VwbLkiSCe/oFlLyTSltTsosiFhdfA3mlqQ1W2qnIIyYLNaA9lA
- EUMuGNdm7e7yy8MzV7ZQbOH+g9C124Njm6iHHx7Z1UgzM3sFb6kIre95FiPEeY0JmSgkuYxZuu8
- U6RqbJ3t8zpLiONRxnpHnfCXu9NS6AHIr4pE2fZMvxKLY3Y1PQnpotyD2D6ZyUTJ0tZg9ywein3
- MyHxJR2gsfsDorJy6WdkkHk+sKyofb9KEcdz9fsZzIeJ5IqfFsGpWplyjKYsHK2+osRVJh3bauL
- eC1maQsYSv0c71zxSdAXCe7QBP2c66EXq/PweM4Y/U+UGJmRNl9Cpf+w2qrcMXUrFcac0f7BQzG
- qlybUAoN
-X-Proofpoint-ORIG-GUID: yjoYByN9Zdo31DNY6AEfeu0WOeY1RLep
-X-Authority-Analysis: v=2.4 cv=P9Y6hjAu c=1 sm=1 tr=0 ts=68bb52c0 cx=c_pps
- a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
- a=yJojWOMRYYMA:10 a=yPCof4ZbAAAA:8 a=kyFhivpCSvuUZvO-LAYA:9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH V0 0/2] Fix CONFIG_HYPERV and vmbus related anamoly
+Content-Language: en-US
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
+Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>, "jikos@kernel.org" <jikos@kernel.org>,
+ "bentiss@kernel.org" <bentiss@kernel.org>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+ "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
+ "James.Bottomley@HansenPartnership.com"
+ <James.Bottomley@HansenPartnership.com>,
+ "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "deller@gmx.de" <deller@gmx.de>, "arnd@arndb.de" <arnd@arndb.de>,
+ "sgarzare@redhat.com" <sgarzare@redhat.com>,
+ "horms@kernel.org" <horms@kernel.org>
+References: <20250828005952.884343-1-mrathor@linux.microsoft.com>
+ <SN6PR02MB4157917D84D00DBDAF54BD69D406A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <ff4c58f1-564d-ddfa-bdff-48ffee6e0d72@linux.microsoft.com>
+ <SN6PR02MB41573C5451F21286667C5441D400A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <4f38c613-255c-eaf6-0d50-28f8ffc02fff@linux.microsoft.com>
+ <231f05cb-4f33-48ac-bb2e-1359ed52e606@linux.microsoft.com>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <231f05cb-4f33-48ac-bb2e-1359ed52e606@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The probe function printed "pm_runtime_get_sync failed" when
-j721e_pcie_ctrl_init() returned an error. This is misleading since
-the failure was not from pm_runtime but from the controller init
-routine. Update the error message to correctly reflect the source.
+On 9/5/25 13:08, Nuno Das Neves wrote:
+> On 9/4/2025 11:18 AM, Mukesh R wrote:
+>> On 9/4/25 09:26, Michael Kelley wrote:
+>>> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Wednesday, September 3, 2025 7:17 PM
+>>>>
+>>>> On 9/2/25 07:42, Michael Kelley wrote:
+>>>>> From: Mukesh Rathor <mrathor@linux.microsoft.com> Sent: Wednesday, August 27, 2025 6:00 PM
+>>>>>>
+>>>>>> At present, drivers/Makefile will subst =m to =y for CONFIG_HYPERV for hv
+>>>>>> subdir. Also, drivers/hv/Makefile replaces =m to =y to build in
+>>>>>> hv_common.c that is needed for the drivers. Moreover, vmbus driver is
+>>>>>> built if CONFIG_HYPER is set, either loadable or builtin.
+>>>>>>
+>>>>>> This is not a good approach. CONFIG_HYPERV is really an umbrella config that
+>>>>>> encompasses builtin code and various other things and not a dedicated config
+>>>>>> option for VMBUS. Vmbus should really have a config option just like
+>>>>>> CONFIG_HYPERV_BALLOON etc. This small series introduces CONFIG_HYPERV_VMBUS
+>>>>>> to build VMBUS driver and make that distinction explicit. With that
+>>>>>> CONFIG_HYPERV could be changed to bool.
+>>>>>
+>>>>> Separating the core hypervisor support (CONFIG_HYPERV) from the VMBus
+>>>>> support (CONFIG_HYPERV_VMBUS) makes sense to me. Overall the code
+>>>>> is already mostly in separate source files code, though there's some
+>>>>> entanglement in the handling of VMBus interrupts, which could be
+>>>>> improved later.
+>>>>>
+>>>>> However, I have a compatibility concern. Consider this scenario:
+>>>>>
+>>>>> 1) Assume running in a Hyper-V VM with a current Linux kernel version
+>>>>>     built with CONFIG_HYPERV=m.
+>>>>> 2) Grab a new version of kernel source code that contains this patch set.
+>>>>> 3) Run 'make olddefconfig' to create the .config file for the new kernel.
+>>>>> 4) Build the new kernel. This succeeds.
+>>>>> 5) Install and run the new kernel in the Hyper-V VM. This fails.
+>>>>>
+>>>>> The failure occurs because CONFIG_HYPERV=m is no longer legal,
+>>>>> so the .config file created in Step 3 has CONFIG_HYPERV=n. The
+>>>>> newly built kernel has no Hyper-V support and won't run in a
+>>>>> Hyper-V VM.
+> 
+> It surprises me a little that =m doesn't get 'fixed up' to =y in this case.
+> I guess any invalid value turns to =n, which makes sense most of the time.
+> 
+>>>>>
+>>>>> As a second issue, if in Step 1 the current kernel was built with
+>>>>> CONFIG_HYPERV=y, then the .config file for the new kernel will have
+>>>>> CONFIG_HYPERV=y, which is better. But CONFIG_HYPERV_VMBUS
+>>>>> defaults to 'n', so the new kernel doesn't have any VMBus drivers
+>>>>> and won't run in a typical Hyper-V VM.
+>>>>>
+>>>>> The second issue could be fixed by assigning CONFIG_HYPERV_VMBUS
+>>>>> a default value, such as whatever CONFIG_HYPERV is set to. But
+>>>>> I'm not sure how to fix the first issue, except by continuing to
+>>>>> allow CONFIG_HYPERV=m.
+> 
+> I'm wondering, is there a path for this change, then? Are there some
+> intermediate step/s we could take to minimize the problem?
+> 
+>>>>
+>>>> To certain extent, imo, users are expected to check config files
+>>>> for changes when moving to new versions/releases, so it would be a
+>>>> one time burden. 
+>>>
+>>> I'm not so sanguine about the impact. For those of us who work with
+>>> Hyper-V frequently, yes, it's probably not that big of an issue -- we can
+>>> figure it out. But a lot of Azure/Hyper-V users aren't that familiar with
+>>> the details of how the Kconfig files are put together. And the issue occurs
+>>> with no error messages that something has gone wrong in building
+>>> the kernel, except that it won't boot. Just running "make olddefconfig"
+>>> has worked in the past, so some users will be befuddled and end up
+>>> generating Azure support incidents. I also wonder about breaking
+>>> automated test suites for new kernels, as they are likely to be running
+>>> "make olddefconfig" or something similar as part of the automation.
+>>>
+>>>> CONFIG_HYPERV=m is just broken imo as one sees that
+>>>> in .config but magically symbols in drivers/hv are in kerenel.
+>>>>
+>>>
+>>> I agree that's not ideal. But note that some Hyper-V code and symbols
+>>> like ms_hyperv_init_platform() and related functions show up when
+>>> CONFIG_HYPERVISOR_GUEST=y, even if CONFIG_HYPERV=n. That's
+>>> the code in arch/x86/kernel/cpu/mshyperv.c and it's because Hyper-V
+>>> is one of the recognized and somewhat hardwired hypervisors (like
+>>> VMware, for example).
+>>>
+>>> Finally, there are about a dozen other places in the kernel that use
+>>> the same Makefile construct to make some code built-in even though
+>>> the CONFIG option is set to "m". That may not be enough occurrences
+>>> to make it standard practice, but Hyper-V guests are certainly not the
+>>> only case.
+>>>
+>>> In my mind, this is judgment call with no absolute right answer. What
+>>> do others think about the tradeoffs?
+>>
+>> Wei had said in private message that he agrees this is a good idea. Nuno
+>> said earlier above: 
+>>
+>> "FWIW I think it's a good idea, interested to hear what others think."
+>>
+> That was before Michael pointed out the potential issues which I was
+> unaware of. Let's see if there's a path that is smoother for all the
+> downstream users who may be compiling with CONFIG_HYPERV=m.
 
-No functional changes.
+Ok, we've already thought of it for sometime and not able to come up
+with any. IMO, it's a minor hickup, not major. This is stalling
+upcoming iommu and other patches which will use CONFIG_HYPERV and 
+add more dependencies, and it would be much harder to straighten 
+out then. So I hope you guys can come up with some solution sooner than
+later, I can't think of any.
 
-Fixes: f3e25911a430 ("PCI: j721e: Add TI J721E PCIe driver")
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
----
-Not sure if a Fixes tag is required here
----
- drivers/pci/controller/cadence/pci-j721e.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+-Mukesh
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 6c93f39d0288..5e445a7bda33 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -549,7 +549,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 
- 	ret = j721e_pcie_ctrl_init(pcie);
- 	if (ret < 0) {
--		dev_err_probe(dev, ret, "pm_runtime_get_sync failed\n");
-+		dev_err_probe(dev, ret, "j721e_pcie_ctrl_init failed\n");
- 		goto err_get_sync;
- 	}
- 
--- 
-2.50.1
 
 
