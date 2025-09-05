@@ -1,120 +1,158 @@
-Return-Path: <linux-pci+bounces-35524-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35525-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D7D8B45545
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 12:49:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 612C6B45552
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 12:53:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3BB3AB61A6F
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 10:47:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 215A5585C0E
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 10:53:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6209E3019D2;
-	Fri,  5 Sep 2025 10:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D3892F619D;
+	Fri,  5 Sep 2025 10:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="jH4lr9KD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QmEL5ag9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FED431A54D;
-	Fri,  5 Sep 2025 10:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E208D179BD;
+	Fri,  5 Sep 2025 10:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757069261; cv=none; b=GJn99C2aNdPDqiAUdWmYnel17TdSon15e1rtXp91yXiozESwSqipVDGIGftmJrUkf1hky+mkJ6TDzZCi1i3XahvItsy8I997RyobvEM9A9uqSXZmxAduPB0GoEPBUkFU6axsD9J/mI+koA5mqY4cXmu/NlFGUX2zcWUyxouq6xc=
+	t=1757069593; cv=none; b=V4LzuaQMeKj05wfs1tGs/KHyu6b6eYC9iYuqHyEbxUKBsWIHWlAny2b0VQMJXGoDgSR1mDJ+EKdyXDyCVeB4QoJpYcZb5ARKhCKCmWAQ4/HF57vEgKT0U9ZzWWxBBTRh/egFawBBcqdQrykOIrt823TE7y8ybYOvO+Qd58T1hYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757069261; c=relaxed/simple;
-	bh=6mVlPIMDxjfP6B5qNGIno+UPsZ4bnt+4cfTqfW4op/s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Uu8Rl8LW0Rap53AIW1Zauf1VMDp0FjZIkhGPD/POrFTAwDc9+UC0cfbbpgON0qB7X3xtbHcCkNWTDRw7fMg0/E7f1thCK38lNlaIj9uI/i+mUURt4f92vRb9kObsCKzkLpwSkKrE60M74X86lNpWK0xenIEuIKbSsHoQXVJnjkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4cJCkc16G9z3tZWP;
-	Fri,  5 Sep 2025 18:48:40 +0800 (CST)
-Received: from kwepemh100012.china.huawei.com (unknown [7.202.181.97])
-	by mail.maildlp.com (Postfix) with ESMTPS id E0AC01A0188;
-	Fri,  5 Sep 2025 18:47:31 +0800 (CST)
-Received: from huawei.com (10.175.103.91) by kwepemh100012.china.huawei.com
- (7.202.181.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 5 Sep
- 2025 18:47:31 +0800
-From: Wang ShaoBo <bobo.shaobowang@huawei.com>
-To: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>
-CC: <leijitang@huawei.com>, <linux-kernel@vger.kernel.org>,
-	<akpm@linux-foundation.org>, <christian.brauner@ubuntu.com>
-Subject: [PATCH] PCI: Fix the int overflow in proc_bus_pci_write()
-Date: Fri, 5 Sep 2025 18:47:30 +0800
-Message-ID: <20250905104730.2833673-1-bobo.shaobowang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1757069593; c=relaxed/simple;
+	bh=o7v/HNWnjHt/Uzn1Ge3TzJ7eh0hyU3DB0ZeYdCA8Zk8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Jj4cNL6316CnbAYksra0BurB0fqMpcXcACG4Awjr3wD0z1SOFBGhT5U5aOzERt5kDX/2oVaw4kMHhGltsjXadv4kZVLDqoQddefWpTXR7y8Z1otIPStc/oCGciar2rVHKHGIzX0tuY+yhGluvwpk1lEAYC+o1VUfmzvLvQH8qU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=jH4lr9KD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QmEL5ag9; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 24212EC03F9;
+	Fri,  5 Sep 2025 06:53:10 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Fri, 05 Sep 2025 06:53:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1757069590;
+	 x=1757155990; bh=LLX3L6AOVZij89L899m4GOoTR6qvTds5RNaEn3slUp0=; b=
+	jH4lr9KDGzqJf3o9wPt8s35oNXSKy5YUhWK4AWy+zrd2Lz7QDfZUNbRmjME6kf63
+	u2lOCEwcjey642T8NpEBeEHLbQyufe4Tp0z0klSpY+HyXfd2D8NBBE0OdoRQxmW6
+	Avu0bnOg3dMWvCWoSHPlTZUcK6qaAE03Ee0f1BpFM7CoaDA8atty/6EUP78QoeXA
+	1ExaSub1qp38LG6DIB1PACOmgoha68w/FUK8nM+hqfwQErfExKUtaCevx8EaYND8
+	L+axBmjn5NivHKsVAkeO8OBpTj2/BnyiTodlvMWQTAgbxMDtpl0BAsS/tTTkfm8N
+	6nC8iHOl/V7RqW4pY0glKA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1757069590; x=
+	1757155990; bh=LLX3L6AOVZij89L899m4GOoTR6qvTds5RNaEn3slUp0=; b=Q
+	mEL5ag9goV29QlI2c24+hx/oAx4oWyV8b5vCwUVAExSeA5fjX1NNQp34EY0iDF9z
+	5KRq5vGbIkT/v9rDc+Qo/G2sAFepcOCShNhWOzdBOqier1GPAXzsKcd1i5n1Llqt
+	nnrpCdLuJ3mNDRQAaN3uly/GD8PPOoLjE81W4kYL0SbSipE6IP4nMXZPgxxrL8YE
+	jQwCTwxg7b2Oag9SZ9y3MxlN2DpF9C2//gGoYXqU0VgCTbUWQMmTCkTBQMPL5/s0
+	FLJplIgZxgSRlLyCCyMVy809F6BiRTTETCTRie2vMHn77PBvgb9uGSdKn0p+CEga
+	Hkg7QvG61EGlriR5/JygA==
+X-ME-Sender: <xms:FcG6aG48mVVtE-tVka-hZF0wTFYusVXo9DWMC914E8dZEDjSjHv0IA>
+    <xme:FcG6aP6q538NkYX-o-njEIuQLMk5FQFUnBshrms8GQHILltbLC8unsYuZ4Gvne9ZI
+    zURj8l_zjKNlbtufQ4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdekjedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceu
+    vghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnh
+    ephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhguse
+    grrhhnuggsrdguvgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdp
+    rhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepph
+    gvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepkhgvvghssehkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopegrnhguvghrshdrrhhogigvlhhlsehlihhnrghroh
+    drohhrghdprhgtphhtthhopegsvghnjhgrmhhinhdrtghophgvlhgrnhgusehlihhnrghr
+    ohdrohhrghdprhgtphhtthhopegurghnrdgtrghrphgvnhhtvghrsehlihhnrghrohdroh
+    hrghdprhgtphhtthhopehlkhhftheslhhinhgrrhhordhorhhgpdhrtghpthhtohepnhgr
+    rhgvshhhrdhkrghmsghojhhusehlihhnrghrohdrohhrghdprhgtphhtthhopehlkhhfth
+    dqthhrihgrghgvsehlihhsthhsrdhlihhnrghrohdrohhrgh
+X-ME-Proxy: <xmx:FcG6aABbyTmpwQCB5B1ukcfVsjGJ8ALCSDbQGb915dStrKnMhfBBwA>
+    <xmx:FcG6aHFS-Ugn6hBNjQVt_BhZ8V2QqzKuTOlBT3OjYVhP1CtzB1IJVg>
+    <xmx:FcG6aAsgRlGuUAz_TUFvY3Dht7UDMpqqpM6wBD7rRTDDDILlLs3w8w>
+    <xmx:FcG6aNkXhfJ3-_wPhSXJa4CVMG4EyMK5XJdkj18KPS3kJTz6jgzPCw>
+    <xmx:FsG6aMOQcHjgRB3ah_2HvCAog_UPeWTqXlgVtrAS07LZLHqhj86HCRr6>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 6A4E0700065; Fri,  5 Sep 2025 06:53:09 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: ABrrY9NwCfcB
+Date: Fri, 05 Sep 2025 12:52:44 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Anders Roxell" <anders.roxell@linaro.org>, "Kees Cook" <kees@kernel.org>
+Cc: "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Linaro Kernel Functional Testing" <lkft@linaro.org>,
+ "Naresh Kamboju" <naresh.kamboju@linaro.org>, lkft-triage@lists.linaro.org,
+ "Linux Regressions" <regressions@lists.linux.dev>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Benjamin Copeland" <benjamin.copeland@linaro.org>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Peter Zijlstra" <peterz@infradead.org>, linux-hardening@vger.kernel.org
+Message-Id: <f5db760e-c143-4f6c-9389-309a362f0baf@app.fastmail.com>
+In-Reply-To: 
+ <CADYN=9Kd9w0pAMJJD1jq4RSum5+Xzk04yPZiQxi9tmEBtHPEMA@mail.gmail.com>
+References: <20250905052836.work.425-kees@kernel.org>
+ <CADYN=9Kd9w0pAMJJD1jq4RSum5+Xzk04yPZiQxi9tmEBtHPEMA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Test for bit underflow in pcie_set_readrq()
 Content-Type: text/plain
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemh100012.china.huawei.com (7.202.181.97)
+Content-Transfer-Encoding: 7bit
 
-Following testcase can trigger a softlockup BUG.
-syscall(__NR_pwritev, /*fd=*/..., /*vec=*/..., /*vlen=*/...,
-        /*pos_l=*/0x80010000, /*pos_h=*/0x100);
+On Fri, Sep 5, 2025, at 10:16, Anders Roxell wrote:
+> On Fri, 5 Sept 2025 at 07:28, Kees Cook <kees@kernel.org> wrote:
+>> @@ -5949,7 +5950,10 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+>>                         rq = mps;
+>>         }
+>>
+>> -       v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+>> +       firstbit = ffs(rq);
+>> +       if (firstbit < 8)
+>> +               return -EINVAL;
+>> +       v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, firstbit - 8);
+>
+> Hi Kees,
+>
+> Thank you for looking into this.
+>
+> These warnings are not a one time thing.  the later versions of gcc
+> can figure it
+> out that firstbit is at least 8 based on the "rq < 128" (i guess), so
+> we're adding
+> bogus code.  maybe we should just disable the check for gcc-8.
 
-watchdog: BUG: soft lockup - CPU#11 stuck for 22s! [test:537]
-Modules linked in:
-CPU: 11 PID: 537 Comm: test Not tainted 5.10.0+ #67
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
-RIP: 0010:pci_user_write_config_dword+0x67/0xc0
-Code: 00 00 44 89 e2 48 8b 87 e0 00 00 00 48 8b 40 20 e8 9e 54 7e 00 48 c7 c7 20 48 a2 83 41 89 c0 c6 07 00 0f 1f 40 00 fb 45 85 c0 <7e> 12 41 8d 80 7f ff ff ff 41 b8 de ff ff ff 83 f8 08 76 0c 5b 44
-RSP: 0018:ffffc900016c3d30 EFLAGS: 00000246
-RAX: 0000000000000000 RBX: ffff888042058000 RCX: 0000000000000005
-RDX: ffff888004058a00 RSI: 0000000000000046 RDI: ffffffff83a24820
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000001
-R10: ffff888005c25900 R11: 0000000000000000 R12: 0000000080c48680
-R13: 0000000020c38684 R14: 0000000080010000 R15: ffff888004702408
-FS:  000000003ae91880(0000) GS:ffff88801f380000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020c00000 CR3: 0000000006f2c000 CR4: 00000000000006e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- proc_bus_pci_write+0x22c/0x260
- proc_reg_write+0x40/0x90
- do_loop_readv_writev.part.0+0x97/0xc0
- do_iter_write+0xf6/0x150
- vfs_writev+0x97/0x130
- ? files_cgroup_alloc_fd+0x5c/0x70
- ? do_sys_openat2+0x1c9/0x320
- __x64_sys_pwritev+0xb1/0x100
- do_syscall_64+0x2b/0x40
- entry_SYSCALL_64_after_hwframe+0x6c/0xd6
+Out of the three failures I saw, two also happened with gcc-9, but
+gcc-10 looks clean so far.
 
-The pos_l parameter for pwritev syscall may be an integer negative value,
-which will make the variable pos in proc_bus_pci_write() negative and
-variable cnt a very large number.
+>          \
+> +                                       (0 + (_val)) : 0,
+>          \
+>                                  _pfx "value too large for the field"); \
+>                 BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
+>                                  __bf_cast_unsigned(_reg, ~0ull),       \
+>
+> I found similar patterns with ffs and FIELD_PREP here
+> drivers/dma/uniphier-xdmac.c row 156 and 165
+> drivers/gpu/drm/i915/display/intel_cursor_regs.h row 17
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
----
- drivers/pci/proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I did not come across build failures for these.
 
-diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index 9348a0fb8084..ef7a33affb3b 100644
---- a/drivers/pci/proc.c
-+++ b/drivers/pci/proc.c
-@@ -121,7 +121,7 @@ static ssize_t proc_bus_pci_write(struct file *file, const char __user *buf,
- 	if (ret)
- 		return ret;
- 
--	if (pos >= size)
-+	if (pos < 0 || pos >= size)
- 		return 0;
- 	if (nbytes >= size)
- 		nbytes = size;
--- 
-2.25.1
-
+    Arnd
 
