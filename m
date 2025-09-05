@@ -1,115 +1,116 @@
-Return-Path: <linux-pci+bounces-35550-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35551-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 691A4B46261
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 20:38:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 679ECB4627B
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 20:42:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0CBF4A4807E
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 18:38:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A11063A2273
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 18:42:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA068273D81;
-	Fri,  5 Sep 2025 18:38:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE222274B37;
+	Fri,  5 Sep 2025 18:42:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oo8UjTLl"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="CLgxvrlH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E8C273D68;
-	Fri,  5 Sep 2025 18:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DB227467F;
+	Fri,  5 Sep 2025 18:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757097515; cv=none; b=E4E3y1LLQ1GcS18E5VAOHlStSel1oXcVo0Uo2F4wTwqCHKX+Re10dtjXfmLYcb0buUnCRph0PUaA6qH0+jo6MBex5f6RKufDLVTtqwGPkgoeAcH/U8rbkbpWfwFa1E6GEWq6dqNDlBon9yNHhlcUqlkfUNHyurJjw34fC9i983Y=
+	t=1757097721; cv=none; b=OfPfkG8vavooxAAHoAiedQ8M6w3tteEZl89NRbQi5VBbbLtTu4YtOjC04zuqEmCd8Lv04WfO+K6/9fxJHBRSifuMVvLrFtdY4mZ5Orp5DI/V4AC6MheD6SIT8e5vg/FHNgAjwGv9C9LS+yQQHCxv1rtd7xLscAijLESpmRLaiLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757097515; c=relaxed/simple;
-	bh=0TTUMJ7XySbVmAWG6wHF3oscIjGqPW8iA/o4X2XB1ds=;
+	s=arc-20240116; t=1757097721; c=relaxed/simple;
+	bh=K9jtQs5j3QRMxeewLxNfsL/mNQI/uM1HUPGRB0r9uEE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fH7oRCkl34lSgkGNQP9iJ5NwbJTnfDEK+9S+x3U8obZScYOrxPA1UAAJv1U4CDagAJw0lN8ddCYZuGMsGYOkT7geKNDYMxtel54GaMfGU8nZBPMbQ7T+M+TPNi/v2yHavUmOfesczyUREqkONvppnQdzr2kXz0rA7e+6NxCgZ0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oo8UjTLl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A19CC4CEF1;
-	Fri,  5 Sep 2025 18:38:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757097515;
-	bh=0TTUMJ7XySbVmAWG6wHF3oscIjGqPW8iA/o4X2XB1ds=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Oo8UjTLlCxxp8s08LT+xd+bvVecZFjW+ww5Li+G+KZveun8DFDB61mS5cp1Bfp2Ze
-	 DaDoGIMhsx/RJVEGTDN0/FoiALzZgU0HuXdvv59EiQfZmcrLRyAfnGxI/k/JbLNikN
-	 PaPH9wmolpmdsoSOb5m65lifuykvgyDSg5bSw/LBThlzYZrpJaWki1M0yteKbuoy8z
-	 H7GaaXVm/a4eFkuC743XdrtdDST8/CSDIwYBecdZN7vDlplsQdNR/vUsovJFa2XEE4
-	 2KwkJ6jgZtYsv5MbGQ4NVOSPbhpSWPvw+iqmeb5jV0qtfcBAWLmpDKrFAktAKanrR6
-	 hxXILQXQsKuWw==
-Message-ID: <ccad60cf-7aad-4cb7-9ac2-545e7ff4afe1@kernel.org>
-Date: Fri, 5 Sep 2025 13:38:33 -0500
+	 In-Reply-To:Content-Type; b=EQcPpUxres3UVKxrwzUlHnmybojZLagD6hQYr0fy9mTCtEG1mnp3zr35jCfpugPRw/2g1BOYUJGtKSWpt2C5lfvKJXYVt51c4ECxpb2v2JHfVXhxC9n38z5kPot0vAU1JBbDJQSaHVfHUJkW6N7Uwwng/0VQL3R70baIaVqqMZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=CLgxvrlH; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4cJQDh0tYWz9tgf;
+	Fri,  5 Sep 2025 20:41:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1757097716;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NFlUyN+7jtcnbZceOxFSBadwGYBOZh16DUAu7RRTqBA=;
+	b=CLgxvrlHXdbd7QLy8sNA763rx4NjevBE+ctoGzY7xBuzCmWowUx+pcPPAyzWKyQy8W0MfP
+	ZdBNPPh7q2PITsenJs/H/QZdFZzS4dMJlfoTE9riP5f1vzQOPD31AsPFSzEyJIosel2dYR
+	KJGQ5wnVRa/q3esLVkA/hE0K6EqDh32gefSPNS3GUCTHv+GL7ycbVYOj8SlmOnfuDIfw1d
+	91Y4LDlilTyC1tdPJlYbP3z34kMzrWZ/L7jdtSZ5S7ru6pRl0k2w2c2Z2Wz6k2KlpDqL4E
+	dtQgBaD+ErIDv7Je5VpMaJqYECaBd8nrCqauZePQrLk4fpa06wUNGjfxIoQeUQ==
+Message-ID: <23b3e8e2-ba9d-4cb3-907e-3de7f2693b60@mailbox.org>
+Date: Fri, 5 Sep 2025 20:41:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] PCI/PM: Skip resuming to D0 if disconnected
-To: Bjorn Helgaas <bhelgaas@google.com>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
-Cc: linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>,
- Lukas Wunner <lukas@wunner.de>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Rafael J . Wysocki" <rafael@kernel.org>
-References: <20250811163510.601103-1-superm1@kernel.org>
+Subject: Re: [PATCH v2] PCI: endpoint: pci-epf-test: Limit PCIe BAR size for
+ fixed BARs
+To: Niklas Cassel <cassel@kernel.org>
+Cc: linux-pci@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Wang Jiang <jiangwang@kylinos.cn>,
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20250905121259.9378-1-marek.vasut+renesas@mailbox.org>
+ <aLrXQGzYBB8JVE0Z@ryzen>
 Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250811163510.601103-1-superm1@kernel.org>
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <aLrXQGzYBB8JVE0Z@ryzen>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-MBO-RS-META: ez4feoizgzobrxefods6gmzf5wtgdnh9
+X-MBO-RS-ID: 61fd2360f4c34ad6a9f
 
-On 8/11/2025 11:35 AM, Mario Limonciello (AMD) wrote:
-> When a USB4 dock is unplugged the PCIe bridge it's connected to will
-> issue a "Link Down" and "Card not detected event". The PCI core will
-> treat this as a surprise hotplug event and unconfigure all downstream
-> devices. This involves setting the device error state to
-> `pci_channel_io_perm_failure` which pci_dev_is_disconnected() will check.
+On 9/5/25 2:27 PM, Niklas Cassel wrote:
+> On Fri, Sep 05, 2025 at 02:12:43PM +0200, Marek Vasut wrote:
+>> Currently, the test allocates BAR sizes according to fixed table
+>> bar_size[] = { 512, 512, 1024, 16384, 131072, 1048576 } . This
+>> does not work with controllers which have fixed size BARs, like
+>> Renesas R-Car V4H PCIe controller, which has BAR4 size limited
+>> to 256 Bytes, which is much less than 131072 currently requested
+>> by this test.
 > 
-> It doesn't make sense to runtime resume disconnected devices to D0 and
-> report the (expected) error, so bail early.
+> Perhaps rephase this to more clearly state that:
+> This does not work with controllers with have fixed size BARs that is
+> smaller than the requested BAR size.
 > 
-> Suggested-by: Lukas Wunner <lukas@wunner.de>
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
-> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
-
-Bjorn,
-
-Can you take a look at this one?
-
-> ---
-> v6:
->   * rebase on v6.17-rc1
-> v5:
->   * Pick up tags, rebase on linux-next
->   * https://lore.kernel.org/linux-pci/20250709205948.3888045-1-superm1@kernel.org/T/#mbd784f786c50a3d1b5ab1833520995c01eae2fd2
-> ---
->   drivers/pci/pci.c | 5 +++++
->   1 file changed, 5 insertions(+)
+> (Since a lot of controllers drivers in-tree have fixed size BARs,
+> and they do work perfectly fine, but it is only because their fixed
+> size is larger than the size requested by pci-epf-test.c)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b0f4d98036cdd..036511f5b2625 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1374,6 +1374,11 @@ int pci_power_up(struct pci_dev *dev)
->   		return -EIO;
->   	}
->   
-> +	if (pci_dev_is_disconnected(dev)) {
-> +		dev->current_state = PCI_D3cold;
-> +		return -EIO;
-> +	}
-> +
->   	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->   	if (PCI_POSSIBLE_ERROR(pmcsr)) {
->   		pci_err(dev, "Unable to change power state from %s to D0, device inaccessible\n",
 > 
-> base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+>>
+>> Adjust the test such, that in case a fixed size BAR is detected
+>> on a controller, minimum of requested size and fixed size BAR
+>> size is used during the test instead.
+> 
+> This sentence needs to be updated, since you no longer take the minimum
+> of requested size and fixed size BAR.
+> 
+> Perhaps simply:
+> "Adjust the test such that in case a fixed size BAR is detected,
+> the fixed BAR size is used, as that is the only possibly option."
+> 
+> 
+> With that:
+> Reviewed-by: Niklas Cassel <cassel@kernel.org>
+All done in V3, which I will send shortly.
 
+Thank you
 
