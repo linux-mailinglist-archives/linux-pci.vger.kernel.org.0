@@ -1,141 +1,159 @@
-Return-Path: <linux-pci+bounces-35527-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35528-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18387B4568B
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 13:38:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E1B84B456BA
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 13:43:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D42875A730D
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 11:38:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 81E7C16EEB1
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 11:43:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56FAD34A31B;
-	Fri,  5 Sep 2025 11:38:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D54253451CF;
+	Fri,  5 Sep 2025 11:43:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="tjMHMEP5";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="fd6PWDUK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVAAp2p5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D20534575B;
-	Fri,  5 Sep 2025 11:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E42334320C;
+	Fri,  5 Sep 2025 11:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757072302; cv=none; b=oM8w0+WWX25Zq3CSauWXwe168D6uMRk8lTgLak3VHdm4Dyjq2z59oeczfqGWqDzGBdeXGwkflHFeob5xNvJivhTAPrYtUwkbzz5XU83fVg776zI4LMTOHTMtD3EaKMl91ntp1UOCIKapWsKGTx4bPcpJXZnXbPqqGeLo+ptvrlg=
+	t=1757072623; cv=none; b=l7FEe+mMZd8SiajPrMJWNL6Sgd98NEbkqzxm7mZG5NrqGVw0H3VkJkzLu1sSutC1AdajjeW9qZZw++KY3g3UOi5IcQ2DSMrmjp++A+ud+PQ/8DVqrycNDY409akGC3v72u3nNFMc2dzFyuOwj2+sYUwQRs5jmt1xTRYn6SK6Dzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757072302; c=relaxed/simple;
-	bh=ZPns/E0T+dL+fbNArdsQk5euEzuxkfVAOLBxozxBLY0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ffAmlwkByYVObMkx8rUdqpv4XEvPfa5tq4Q7xzgYqmce184emx3pNGd7qQflHZ2Smc53sUGsouC3A0CAKCJ9HAbo1K2T7uvZ12rFQb8o0Q9kzujzjAYWQHQ2wCHWnKzKE/w83RkeLTe2690fje8X5CP6BW8Q9rL/0GID9yxf3hY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=tjMHMEP5; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=fd6PWDUK; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4cJDqt1s2Pz9tQX;
-	Fri,  5 Sep 2025 13:38:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1757072298;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MO0EsRZEsZcP3glGTAz2xEr89JP4xqyMOHjX8yMhfU8=;
-	b=tjMHMEP5jtD7Y7v1SWnelqbrqikZaazajTVqtUBLfrSuD3na08IoA4uevPStplw4+R3Dxh
-	Ce+zCDD+0meTF7A28bXdnvh82zzKaePNXfv+7GmWTZ6Jwstq9GympmleEiL+E55A2m4M00
-	bR1kKrirbS9n/p8d+rxfvqhfBH0s3m5sDavFUTXn9y4WDx8OXhAjOEGZr+aXhNKEKCjZj5
-	FoJoHG/cdo3jpAXJykL0fGWZVI1Ts8+JHXWm3GfnmMsFoq1BKr8FCOloMJKP4hXtCFsTR6
-	X+CC+QGrHesTC4K5X4sTmlPSx62+o88Ah8/sJTkeJuYJt8dEnrKKfFrlm6MyKQ==
-Authentication-Results: outgoing_mbo_mout;
-	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=fd6PWDUK;
-	spf=pass (outgoing_mbo_mout: domain of marek.vasut@mailbox.org designates 2001:67c:2050:b231:465::1 as permitted sender) smtp.mailfrom=marek.vasut@mailbox.org
-Message-ID: <a63db205-ca63-436e-a63a-871bb527f5b7@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1757072296;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MO0EsRZEsZcP3glGTAz2xEr89JP4xqyMOHjX8yMhfU8=;
-	b=fd6PWDUKhkiEQPjTH4128iuIO1lbba42e041TZxj7wsffkJxYzPzhFTYjnCihr67gSm0Oo
-	Dr6eKkM593P/wendrOeboFCwc01+LzCFoPVEycHBpMHeHWZhRhC8v+cxX6Anmbnlk0Hs9n
-	btBpVkERjxRl+hVVISewP3QMxzF69SI29qf46myEEwyYXqug6jXrYjjjCnEgrT/1fui+hD
-	1D81Q2rONy0m5qEBW8JiWRK5SfOBeXwxTN0ruTjW6AU7egh1l6XbuHP2QYalWY6bP9PkGl
-	XP5HJb5DgUSYTbQ820CrVCkkVLXQ+LzpqjEvjG5mtU0SUQ7Dk3sVvZBcXQzKrQ==
-Date: Fri, 5 Sep 2025 13:38:12 +0200
+	s=arc-20240116; t=1757072623; c=relaxed/simple;
+	bh=NLML2PKuwuj+OYNgyIRQX3jQ9i3GAYhKH/CptvLMsng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=shs882tuPaKcNAorrmjVvvUHBk8AH4L5vFRLrATnPv+/1/bwq2JocrjQRU4xCPZauRulN/Krm3A2smRXUP30S9SVx/oMRRCR8/Gu8VFOw8qbu7bVJV/nYMaDbTo/CjCNRDrrUmnRqpacp3dVkAxFbVBX+DNKe6BnS2n4UCrDV/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVAAp2p5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F9BFC4CEF1;
+	Fri,  5 Sep 2025 11:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757072623;
+	bh=NLML2PKuwuj+OYNgyIRQX3jQ9i3GAYhKH/CptvLMsng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gVAAp2p5/E4CwAUtDQOLmC0Gc6y8NUeC9WK4IOPuAgfHEZGqaOwEdx5Ns+KcST7/F
+	 PEiLR4ES6kjCMJyP6JUoVYMTwauVS/C7EN+6JOLI8e72dxBRpxFsC670XT1tosCbIV
+	 +j2RxEFGc6BShuQ1ucZEqIo+44s6Kht+owFiJHJjxVDsCtrAa7o/EPQJr/P0ngV6p8
+	 CepXm6zV9tHmjLVHYf7uNmY7a1AB+gCUry6uzhfAh48NzCuj2RIyu3bpBa64JvnL5v
+	 4xNb3pI81ElcUK7Wg2+2tOA7IY5h/8L4hQrj8mjFDE6JML/QZG1ahsZRhqJGKGIU8k
+	 N0S/XtwEcZzZg==
+Date: Fri, 5 Sep 2025 17:13:31 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	cros-qcom-dts-watchers@chromium.org, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, quic_vpernami@quicinc.com, 
+	mmareddy@quicinc.com, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v8 3/5] PCI: dwc: qcom: Switch to dwc ELBI resource
+ mapping
+Message-ID: <xzzyhcuwfva6vqzmxkdqt5x7f7vxpkkyqnml6vjclb75f4ozwa@gugsrqfsbuor>
+References: <20250828-ecam_v4-v8-3-92a30e0fa02d@oss.qualcomm.com>
+ <20250903191459.GA1214624@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: Limit PCIe BAR size for
- fixed BARs
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Niklas Cassel <cassel@kernel.org>, Damien Le Moal <dlemoal@kernel.org>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-pci@vger.kernel.org,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Frank Li <Frank.Li@nxp.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Wang Jiang <jiangwang@kylinos.cn>,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-References: <20250904023753.494147-1-marek.vasut+renesas@mailbox.org>
- <b3d5773d-c573-4491-b799-90405a8af6a9@kernel.org> <aLmGBYOVevP5hH0X@ryzen>
- <62584e30-72ab-49df-bfaa-9730679b2dbe@mailbox.org>
- <1jjz2d4a5f.fsf@starbuckisacylon.baylibre.com>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <1jjz2d4a5f.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: 57dep6m3kpc71wh6mtfwmq93y3wuf7rz
-X-MBO-RS-ID: eec7c26669da71c3eb0
-X-Rspamd-Queue-Id: 4cJDqt1s2Pz9tQX
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250903191459.GA1214624@bhelgaas>
 
-On 9/5/25 9:43 AM, Jerome Brunet wrote:
-
-Hello Jerome,
-
->>> pci_epf_alloc_space() works like this:
->>> If the user requests a BAR size that is smaller than the fixed-size BAR,
->>> it will allocate space matching the fixed-size.
->>> As in most cases, having a BAR larger than needed by an EPF driver is
->>> still acceptable.
->>> However, if the user requests a size larger than the fixed-size BAR,
->>> as in your case, we will return an error, as we cannot fulfill the
->>> user's request.
->>> I don't see any alternative other than your/Damien's proposal above.
->>> Unfortunately, all EPF drivers would probably need this same change.
->>
->> It seems that pci-epf-ntb and pci-epf-vntb only use BAR0 (BAR_CONFIG) and
->> BAR0+BAR1 (BAR_CONFIG and BAR_DB) , so those should be OK on this
->> controller. NVMe EPF also seems to use only BAR0 and it specifically
->> handles fixed size BAR. It seems everything that is in the tree so far
->> managed to sidestep hitting fixed-size BAR4 problems on this hardware,
->> except for the test driver.
+On Wed, Sep 03, 2025 at 02:14:59PM GMT, Bjorn Helgaas wrote:
+> On Thu, Aug 28, 2025 at 01:04:24PM +0530, Krishna Chaitanya Chundru wrote:
+> > Instead of using qcom ELBI resources mapping let the DWC core map it
+> > ELBI is DWC specific.
 > 
-> As it stands, a vNTB device needs 3 BARs minimum (CFG, DB and MW). The
-> NTB one may get away with with 2 BARs, with DB and MW sharing one.
-
-I clearly missed the MW, thanks for pointing this out.
-
-> If you referring to Renesas about that BAR4, I did use it for vNTB.
-> It is indeed not upstream ... yet [1]
+> This seems like basically the same change you (Mani) added to the
+> "[PATCH v8 2/5] PCI: dwc: Add support for ELBI resource mapping"
+> patch?  (The patch with Mani's additions is at
+> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/dwc-ecam&id=d39e0103e38f9889271a77a837b6179b42d6730d)
 > 
-> I think it is possible to have vNTB on 2 BARs with some tweaks, putting
-> CFG and DB on the same one.
-> 
-> [1]: https://lore.kernel.org/r/20250702-ntb-rcar-support-v3-2-4268d9c85eb7@baylibre.com
 
-Nitpick, commit message, "Renesas R-Car Gen4" (Gen3 has a different PCIe 
-controller) . Please CC linux-renesas-soc@vger.kernel.org on V3 , thank 
-you !
+Doh! This should've been squashed to patch 2/5 as we cannot split the conversion
+patches. The reason is, we cannot ioremap() the same region twice.
+
+This is now taken care in the branch.
+
+- Mani
+
+> If this qcom change is separated out, why can't the exynos and qcom-ep
+> changes from patch 2/5 be separated out?  If we ever had to bisect
+> and/or revert parts of this, it seems like it would be simpler to do
+> them consistently like this:
+> 
+>   - PCI: dwc: Add ELBI resource mapping
+>   - PCI: exynos: Switch to dwc ELBI resource mapping
+>   - PCI: qcom: Switch to dwc ELBI resource mapping
+>   - PCI: qcom-ep: Switch to dwc ELBI resource mapping
+> 
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 16 +++++++---------
+> >  1 file changed, 7 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 294babe1816e4d0c2b2343fe22d89af72afcd6cd..5092752de23866ef95036bb3f8fae9bb06e8ea1e 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -276,7 +276,6 @@ struct qcom_pcie_port {
+> >  struct qcom_pcie {
+> >  	struct dw_pcie *pci;
+> >  	void __iomem *parf;			/* DT parf */
+> > -	void __iomem *elbi;			/* DT elbi */
+> >  	void __iomem *mhi;
+> >  	union qcom_pcie_resources res;
+> >  	struct phy *phy;
+> > @@ -414,12 +413,17 @@ static void qcom_pcie_configure_dbi_atu_base(struct qcom_pcie *pcie)
+> >  
+> >  static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
+> >  {
+> > +	struct dw_pcie *pci = pcie->pci;
+> >  	u32 val;
+> >  
+> > +	if (!pci->elbi_base) {
+> > +		dev_err(pci->dev, "ELBI is not present\n");
+> > +		return;
+> > +	}
+> >  	/* enable link training */
+> > -	val = readl(pcie->elbi + ELBI_SYS_CTRL);
+> > +	val = readl(pci->elbi_base + ELBI_SYS_CTRL);
+> >  	val |= ELBI_SYS_CTRL_LT_ENABLE;
+> > -	writel(val, pcie->elbi + ELBI_SYS_CTRL);
+> > +	writel(val, pci->elbi_base + ELBI_SYS_CTRL);
+> >  }
+> >  
+> >  static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+> > @@ -1861,12 +1865,6 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+> >  		goto err_pm_runtime_put;
+> >  	}
+> >  
+> > -	pcie->elbi = devm_platform_ioremap_resource_byname(pdev, "elbi");
+> > -	if (IS_ERR(pcie->elbi)) {
+> > -		ret = PTR_ERR(pcie->elbi);
+> > -		goto err_pm_runtime_put;
+> > -	}
+> > -
+> >  	/* MHI region is optional */
+> >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mhi");
+> >  	if (res) {
+> > 
+> > -- 
+> > 2.34.1
+> > 
 
 -- 
-Best regards,
-Marek Vasut
+மணிவண்ணன் சதாசிவம்
 
