@@ -1,232 +1,286 @@
-Return-Path: <linux-pci+bounces-35535-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35536-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 240C4B45E55
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 18:39:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCD43B45F64
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 18:54:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD3533B958F
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 16:39:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92AE817AE7D
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 16:54:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76002309EE0;
-	Fri,  5 Sep 2025 16:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5AD0306B3E;
+	Fri,  5 Sep 2025 16:54:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cyx6siAC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OICIoC7/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E046306B17;
-	Fri,  5 Sep 2025 16:39:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8720231D736;
+	Fri,  5 Sep 2025 16:54:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757090346; cv=none; b=aobp78Zt0rEf2ugaJdvoUFT029iGPMGZz4jny1K69VHLLAdXwFb37gWJGdyNjBYYy9wsr6tjkpOPj1SRZ0o5+D5gyOXMraPczxD/GhdsCM8TW+vsGOX3asniRfDx3jrcawvwQa56/36TTPHuaWX05kwpI9FWHn+j47CWfP6O0xQ=
+	t=1757091268; cv=none; b=SyF1EMj0w5Zxqx/Z2Ze0r3NjSHrK3nzru4U7sDVPCX1aL3MyPZBfqzP1dOfRGIKvqM7xdXZbXTiPN52OJK6wXOsZ72lUqURVTI+Mk/iJbv3R6vHsC6VjpRpt9kss8RnQSO0KBqn1AmRObxpsEWzI0PfGjxZYx/274LzdUmVWxoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757090346; c=relaxed/simple;
-	bh=ZTdnF+C/S88gBhkB6Pc82Wg6hlAE2konqqf80SckUek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WXQCvp2n+1QFCHK91p3fj2M8jNlvriddpoNH5hYwJ4VRnEiWiCs9sZ/nWjLlDG99en4K0QZ4cSQcFtmMHnokjm4cctXe4ZP4BU3mRBru8KRtEKcRhO9qoV7gV/uM+MnhC36/cvDs6KyPu57HOcUxM2NHMUg6xn0DhxQof/8jXCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cyx6siAC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53622C4CEF1;
-	Fri,  5 Sep 2025 16:38:59 +0000 (UTC)
+	s=arc-20240116; t=1757091268; c=relaxed/simple;
+	bh=Iz8mTq/GEt9A4ZHGarw24hhU9Mlb6/EwBsMoab+mPtk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=GgW51QQysqJ2ehjZ5ZMNa31Qu8EmsNw28rKWh/tY2ljph/Uf6cgdJe5L49t0ml4AdR7ibI73apwytHZ0iFn9zqoupE2mdDG9sGxXOosJfodW+Z5N/ed5ZCOYp3jDWVK3yKgALzVbpdxKeUWKtSwYbzwVpc+Frn904g+xxLN1sag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OICIoC7/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC5E4C4CEF1;
+	Fri,  5 Sep 2025 16:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757090345;
-	bh=ZTdnF+C/S88gBhkB6Pc82Wg6hlAE2konqqf80SckUek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Cyx6siACrJv1UDhxtLvA5Dri3myVq5wdUJAaVm93147d0weeSC5PKxKkSfHilXkgL
-	 MgzvI+vwHhQQoVg7dgB4gPVA4rVVK1mlpjFhjqX1CIK3WTkaFamuBAttl0xV69+6Y9
-	 RvQppAjpLTt58Rpo2E1wvYU0CjCZWa6pX3/Y7KISyFbbfyM+jmytJch2RPbdqxf36D
-	 qpl3qLXvCBIR9NhPQC6bD1qktLRyMdosihguRSBTyN23ptgWnmhWJQr8GgM+r+Xf1q
-	 8z4DQ/csYXolvX6QpLh2FejVaxqSmNNw+yrsXADf4kq728y5Kczu89kQ23qQ5FcTup
-	 CXzYltoaqSDEw==
-Date: Fri, 5 Sep 2025 22:08:54 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, quic_vpernami@quicinc.com, 
-	mmareddy@quicinc.com
-Subject: Re: [PATCH v8 5/5] PCI: qcom: Add support for ECAM feature
-Message-ID: <gwaz7563akxeai4gar7etf4jp3c775fphkipn37alzjcjy6t66@2pa3ykv6kejp>
-References: <20250903201233.GA1216782@bhelgaas>
- <79d44c24-d853-4128-b966-8a25aaefad73@oss.qualcomm.com>
+	s=k20201202; t=1757091268;
+	bh=Iz8mTq/GEt9A4ZHGarw24hhU9Mlb6/EwBsMoab+mPtk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=OICIoC7/LLKx9fTTyxBxRcGy4DbUKkKVichVDNEOiapVC4hlwFdwbzVpx3HaZIScj
+	 LAN12dddrAPyuDATCQpXKBcBwOs6DGvCsPOdl3A1mVq3uVaIA/LQ6Zeo6llPEaVNOP
+	 42E286+2qeHqhaE8QZ2lvMQpwjZHGGa4AuzVHULiUBaDPoJazjPZ8CHXq8WsV1nyPc
+	 iWDsoHrd/R6sVt+aYYdab8MJOzuo8OR5CRayL3P5HpHwAm9c8vEtSnZQX1h/fOE58o
+	 7CNKIqS5XTp/9h9AGrP7+zDOSDJVYj/g8gRFQrqgHwvG744dhAUcMUevtbuNHIWAWZ
+	 W4OcFT6Sd0t7A==
+Date: Fri, 5 Sep 2025 11:54:26 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Devendra K Verma <devendra.verma@amd.com>
+Cc: bhelgaas@google.com, mani@kernel.org, vkoul@kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, michal.simek@amd.com
+Subject: Re: [PATCH 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
+Message-ID: <20250905165426.GA1307227@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <79d44c24-d853-4128-b966-8a25aaefad73@oss.qualcomm.com>
+In-Reply-To: <20250905101659.95700-2-devendra.verma@amd.com>
 
-On Fri, Sep 05, 2025 at 10:47:42AM GMT, Krishna Chaitanya Chundru wrote:
+On Fri, Sep 05, 2025 at 03:46:58PM +0530, Devendra K Verma wrote:
+> AMD MDB PCIe endpoint support. For AMD specific support
+> added the following
+>   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
+>   - AMD MDB specific driver data
+>   - AMD MDB specific VSEC capability to retrieve the device DDR
+>     base address.
 > 
+> Signed-off-by: Devendra K Verma <devendra.verma@amd.com>
+> ---
+>  drivers/dma/dw-edma/dw-edma-pcie.c | 83 +++++++++++++++++++++++++++++++++++++-
+>  include/linux/pci_ids.h            |  1 +
+>  2 files changed, 82 insertions(+), 2 deletions(-)
 > 
-> On 9/4/2025 1:42 AM, Bjorn Helgaas wrote:
-> > On Thu, Aug 28, 2025 at 01:04:26PM +0530, Krishna Chaitanya Chundru wrote:
-> > > The ELBI registers falls after the DBI space, PARF_SLV_DBI_ELBI register
-> > > gives us the offset from which ELBI starts. So override ELBI with the
-> > > offset from PARF_SLV_DBI_ELBI and cfg win to map these regions.
-> > > 
-> > > On root bus, we have only the root port. Any access other than that
-> > > should not go out of the link and should return all F's. Since the iATU
-> > > is configured for the buses which starts after root bus, block the
-> > > transactions starting from function 1 of the root bus to the end of
-> > > the root bus (i.e from dbi_base + 4kb to dbi_base + 1MB) from going
-> > > outside the link through ECAM blocker through PARF registers.
-> > > 
-> > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > > ---
-> > >   drivers/pci/controller/dwc/pcie-qcom.c | 70 ++++++++++++++++++++++++++++++++++
-> > >   1 file changed, 70 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > index 5092752de23866ef95036bb3f8fae9bb06e8ea1e..8f3c86c77e2604fd7826083f63b66b4cb62a341d 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > @@ -55,6 +55,7 @@
-> > >   #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
-> > >   #define PARF_Q2A_FLUSH				0x1ac
-> > >   #define PARF_LTSSM				0x1b0
-> > > +#define PARF_SLV_DBI_ELBI			0x1b4
-> > >   #define PARF_INT_ALL_STATUS			0x224
-> > >   #define PARF_INT_ALL_CLEAR			0x228
-> > >   #define PARF_INT_ALL_MASK			0x22c
-> > > @@ -64,6 +65,16 @@
-> > >   #define PARF_DBI_BASE_ADDR_V2_HI		0x354
-> > >   #define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
-> > >   #define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35c
-> > > +#define PARF_BLOCK_SLV_AXI_WR_BASE		0x360
-> > > +#define PARF_BLOCK_SLV_AXI_WR_BASE_HI		0x364
-> > > +#define PARF_BLOCK_SLV_AXI_WR_LIMIT		0x368
-> > > +#define PARF_BLOCK_SLV_AXI_WR_LIMIT_HI		0x36c
-> > > +#define PARF_BLOCK_SLV_AXI_RD_BASE		0x370
-> > > +#define PARF_BLOCK_SLV_AXI_RD_BASE_HI		0x374
-> > > +#define PARF_BLOCK_SLV_AXI_RD_LIMIT		0x378
-> > > +#define PARF_BLOCK_SLV_AXI_RD_LIMIT_HI		0x37c
-> > > +#define PARF_ECAM_BASE				0x380
-> > > +#define PARF_ECAM_BASE_HI			0x384
-> > >   #define PARF_NO_SNOOP_OVERRIDE			0x3d4
-> > >   #define PARF_ATU_BASE_ADDR			0x634
-> > >   #define PARF_ATU_BASE_ADDR_HI			0x638
-> > > @@ -87,6 +98,7 @@
-> > >   /* PARF_SYS_CTRL register fields */
-> > >   #define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
-> > > +#define PCIE_ECAM_BLOCKER_EN			BIT(26)
-> > >   #define MST_WAKEUP_EN				BIT(13)
-> > >   #define SLV_WAKEUP_EN				BIT(12)
-> > >   #define MSTR_ACLK_CGC_DIS			BIT(10)
-> > > @@ -134,6 +146,9 @@
-> > >   /* PARF_LTSSM register fields */
-> > >   #define LTSSM_EN				BIT(8)
-> > > +/* PARF_SLV_DBI_ELBI */
-> > > +#define SLV_DBI_ELBI_ADDR_BASE			GENMASK(11, 0)
-> > > +
-> > >   /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
-> > >   #define PARF_INT_ALL_LINK_UP			BIT(13)
-> > >   #define PARF_INT_MSI_DEV_0_7			GENMASK(30, 23)
-> > > @@ -317,6 +332,48 @@ static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
-> > >   	qcom_perst_assert(pcie, false);
-> > >   }
-> > > +static void qcom_pci_config_ecam(struct dw_pcie_rp *pp)
-> > > +{
-> > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > > +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-> > > +	u64 addr, addr_end;
-> > > +	u32 val;
-> > > +
-> > > +	/* Set the ECAM base */
-> > > +	writel_relaxed(lower_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE);
-> > > +	writel_relaxed(upper_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE_HI);
-> > > +
-> > > +	/*
-> > > +	 * The only device on root bus is the Root Port. Any access to the PCIe
-> > > +	 * region will go outside the PCIe link. As part of enumeration the PCI
-> > > +	 * sw can try to read to vendor ID & device ID with different device
-> > > +	 * number and function number under root bus. As any access other than
-> > > +	 * root bus, device 0, function 0, should not go out of the link and
-> > > +	 * should return all F's. Since the iATU is configured for the buses
-> > > +	 * which starts after root bus, block the transactions starting from
-> > > +	 * function 1 of the root bus to the end of the root bus (i.e from
-> > > +	 * dbi_base + 4kb to dbi_base + 1MB) from going outside the link.
-> > > +	 */
-> > > +	addr = pci->dbi_phys_addr + SZ_4K;
-> > > +	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE);
-> > > +	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE_HI);
-> > > +
-> > > +	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE);
-> > > +	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE_HI);
-> > > +
-> > > +	addr_end = pci->dbi_phys_addr + SZ_1M - 1;
-> > > +
-> > > +	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT);
-> > > +	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT_HI);
-> > > +
-> > > +	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT);
-> > > +	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT_HI);
-> > > +
-> > > +	val = readl_relaxed(pcie->parf + PARF_SYS_CTRL);
-> > > +	val |= PCIE_ECAM_BLOCKER_EN;
-> > > +	writel_relaxed(val, pcie->parf + PARF_SYS_CTRL);
-> > > +}
-> > > +
-> > >   static int qcom_pcie_start_link(struct dw_pcie *pci)
-> > >   {
-> > >   	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-> > > @@ -326,6 +383,9 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
-> > >   		qcom_pcie_common_set_16gt_lane_margining(pci);
-> > >   	}
-> > > +	if (pci->pp.ecam_enabled)
-> > > +		qcom_pci_config_ecam(&pci->pp);
-> > > +
-> > >   	/* Enable Link Training state machine */
-> > >   	if (pcie->cfg->ops->ltssm_enable)
-> > >   		pcie->cfg->ops->ltssm_enable(pcie);
-> > > @@ -1314,6 +1374,7 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
-> > >   {
-> > >   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > >   	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-> > > +	u16 offset;
-> > >   	int ret;
-> > >   	qcom_ep_reset_assert(pcie);
-> > > @@ -1322,6 +1383,15 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
-> > >   	if (ret)
-> > >   		return ret;
-> > > +	if (pp->ecam_enabled) {
-> > > +		/*
-> > > +		 * Override ELBI when ECAM is enabled, as when ECAM
-> > > +		 * is enabled ELBI moves along with the dbi config space.
-> > > +		 */
-> > > +		offset = FIELD_GET(SLV_DBI_ELBI_ADDR_BASE, readl(pcie->parf + PARF_SLV_DBI_ELBI));
-> > > +		pci->elbi_base = pci->dbi_base + offset;
-> > 
-> > This looks like there might be a bisection hole between this patch and
-> > the previous patch that enables ECAM in the DWC core?  Obviously I
-> > would want to avoid a bisection hole.
-> > 
+> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> index 3371e0a7..749067b 100644
+> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> @@ -18,10 +18,12 @@
+>  #include "dw-edma-core.h"
+>  
+>  #define DW_PCIE_VSEC_DMA_ID			0x6
+> +#define DW_PCIE_AMD_MDB_VSEC_ID			0x20
+>  #define DW_PCIE_VSEC_DMA_BAR			GENMASK(10, 8)
+>  #define DW_PCIE_VSEC_DMA_MAP			GENMASK(2, 0)
+>  #define DW_PCIE_VSEC_DMA_WR_CH			GENMASK(9, 0)
+>  #define DW_PCIE_VSEC_DMA_RD_CH			GENMASK(25, 16)
+> +#define DW_PCIE_AMD_MDB_INVALID_ADDR		(~0ULL)
+>  
+>  #define DW_BLOCK(a, b, c) \
+>  	{ \
+> @@ -50,6 +52,7 @@ struct dw_edma_pcie_data {
+>  	u8				irqs;
+>  	u16				wr_ch_cnt;
+>  	u16				rd_ch_cnt;
+> +	u64				phys_addr;
+>  };
+>  
+>  static const struct dw_edma_pcie_data snps_edda_data = {
+> @@ -90,6 +93,44 @@ struct dw_edma_pcie_data {
+>  	.rd_ch_cnt			= 2,
+>  };
+>  
+> +static const struct dw_edma_pcie_data amd_mdb_data = {
+> +	/* MDB registers location */
+> +	.rg.bar				= BAR_0,
+> +	.rg.off				= 0x00001000,	/*  4 Kbytes */
+> +	.rg.sz				= 0x00002000,	/*  8 Kbytes */
+> +	/* MDB memory linked list location */
+> +	.ll_wr = {
+> +		/* Channel 0 - BAR 2, offset 0 Mbytes, size 2 Kbytes */
+> +		DW_BLOCK(BAR_2, 0x00000000, 0x00000800)
+> +		/* Channel 1 - BAR 2, offset 2 Mbytes, size 2 Kbytes */
+> +		DW_BLOCK(BAR_2, 0x00200000, 0x00000800)
+> +	},
+> +	.ll_rd = {
+> +		/* Channel 0 - BAR 2, offset 4 Mbytes, size 2 Kbytes */
+> +		DW_BLOCK(BAR_2, 0x00400000, 0x00000800)
+> +		/* Channel 1 - BAR 2, offset 6 Mbytes, size 2 Kbytes */
+> +		DW_BLOCK(BAR_2, 0x00600000, 0x00000800)
+> +	},
+> +	/* MDB memory data location */
+> +	.dt_wr = {
+> +		/* Channel 0 - BAR 2, offset 8 Mbytes, size 2 Kbytes */
+> +		DW_BLOCK(BAR_2, 0x00800000, 0x00000800)
+> +		/* Channel 1 - BAR 2, offset 9 Mbytes, size 2 Kbytes */
+> +		DW_BLOCK(BAR_2, 0x00900000, 0x00000800)
+> +	},
+> +	.dt_rd = {
+> +		/* Channel 0 - BAR 2, offset 10 Mbytes, size 2 Kbytes */
+> +		DW_BLOCK(BAR_2, 0x00a00000, 0x00000800)
+> +		/* Channel 1 - BAR 2, offset 11 Mbytes, size 2 Kbytes */
+> +		DW_BLOCK(BAR_2, 0x00b00000, 0x00000800)
+> +	},
+> +	/* Other */
+> +	.mf				= EDMA_MF_HDMA_NATIVE,
+> +	.irqs				= 1,
+> +	.wr_ch_cnt			= 2,
+> +	.rd_ch_cnt			= 2,
+> +};
+> +
+>  static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
+>  {
+>  	return pci_irq_vector(to_pci_dev(dev), nr);
+> @@ -120,9 +161,14 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
+>  	u32 val, map;
+>  	u16 vsec;
+>  	u64 off;
+> +	u16 vendor;
+>  
+> -	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
+> -					DW_PCIE_VSEC_DMA_ID);
+> +	vendor = pdev->vendor;
+> +	if (vendor != PCI_VENDOR_ID_SYNOPSYS &&
+> +	    vendor != PCI_VENDOR_ID_XILINX)
+> +		return;
+> +
+> +	vsec = pci_find_vsec_capability(pdev, vendor, DW_PCIE_VSEC_DMA_ID);
 
-Theoretically there is a hole, but practically there isn't. ELBI register is
-only used by legacy Qcom SoCs and they do not support ECAM. So they will
-continue to use the valid ELBI register region from DT.
+The vendor of a device assigns VSEC IDs and determines what each ID
+means, so the semantics of a VSEC Capability are determined by the
+tuple of (device Vendor ID, VSEC ID), where the Vendor ID is the value
+at 0x00 in config space.
 
-> > What happens to qcom ELBI accesses between these two patches?  It
-> > looks like they would go to the wrong address until this elbi_base
-> > update.
+This code assumes that Synopsys and Xilinx agreed on the same VSEC ID
+(6) and semantics of that Capability.
 
-Though there is no practical issue, it still makes sense to set 'elbi_base' to a
-valid region before enabling ECAM.
+I assume you know this is true in this particular case, but it is not
+safe for in general because even if other vendors incorporate this
+same IP into their devices, they may choose different VSEC IDs because
+they may have already assigned the VSEC ID 6 for something else.
 
-- Mani
+So you should add a comment to the effect that "Synopsys and Xilinx
+happened to use the same VSEC ID and semantics.  This may vary for
+other vendors."
 
--- 
-மணிவண்ணன் சதாசிவம்
+The DVSEC Capability is a more generic solution to this problem.  The
+VSEC ID namespace is determined by the Vendor ID of the *device*.
+
+By contrast, the DVSEC ID namespace is determined by a Vendor ID in
+the DVSEC Capability itself, not by the Vendor ID of the device.
+
+So AMD could define a DVSEC ID, e.g., 6, and define the semantics of
+that DVSEC.  Then devices from *any* vendor could include a DVSEC
+Capability with (PCI_VENDOR_ID_AMD, 6), and generic code could look
+for that DVSEC independent of what is at 0x00 in config space.
+
+>  	if (!vsec)
+>  		return;
+>  
+> @@ -155,6 +201,27 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
+>  	off <<= 32;
+>  	off |= val;
+>  	pdata->rg.off = off;
+> +
+> +	/* AMD specific VSEC capability */
+> +	if (vendor != PCI_VENDOR_ID_XILINX)
+> +		return;
+> +
+> +	vsec = pci_find_vsec_capability(pdev, vendor,
+> +					DW_PCIE_AMD_MDB_VSEC_ID);
+
+pci_find_vsec_capability() finds a Vendor-Specific Extended Capability
+defined by the vendor of the device (Xilinx in this case).
+
+pci_find_vsec_capability() already checks that dev->vendor matches the
+vendor argument so you don't need the "vendor != PCI_VENDOR_ID_XILINX"
+check above.
+
+DW_PCIE_AMD_MDB_VSEC_ID should include "XILINX" because this ID is in
+the namespace created by PCI_VENDOR_ID_XILINX, i.e., it's somewhere in
+the (PCI_VENDOR_ID_XILINX, x) space.
+
+This code should look something like this (you could add "MDB" or
+something if it makes sense):
+
+  #define PCI_VSEC_ID_XILINX_DMA_DATA               0x20
+
+  vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
+                                  PCI_VSEC_ID_XILINX_DMA_DATA);
+
+> +	if (!vsec)
+> +		return;
+> +
+> +	pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
+> +	if (PCI_VNDR_HEADER_ID(val) != 0x20 ||
+> +	    PCI_VNDR_HEADER_REV(val) != 0x1)
+> +		return;
+> +
+> +	pci_read_config_dword(pdev, vsec + 0xc, &val);
+> +	off = val;
+> +	pci_read_config_dword(pdev, vsec + 0x8, &val);
+> +	off <<= 32;
+> +	off |= val;
+> +	pdata->phys_addr = off;
+>  }
+>  
+>  static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> @@ -179,6 +246,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  	}
+>  
+>  	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
+> +	vsec_data->phys_addr = DW_PCIE_AMD_MDB_INVALID_ADDR;
+>  
+>  	/*
+>  	 * Tries to find if exists a PCIe Vendor-Specific Extended Capability
+> @@ -186,6 +254,15 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  	 */
+>  	dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
+>  
+> +	if (pdev->vendor == PCI_VENDOR_ID_XILINX) {
+> +		/*
+> +		 * There is no valid address found for the LL memory
+> +		 * space on the device side.
+> +		 */
+> +		if (vsec_data->phys_addr == DW_PCIE_AMD_MDB_INVALID_ADDR)
+> +			return -EINVAL;
+> +	}
+> +
+>  	/* Mapping PCI BAR regions */
+>  	mask = BIT(vsec_data->rg.bar);
+>  	for (i = 0; i < vsec_data->wr_ch_cnt; i++) {
+> @@ -367,6 +444,8 @@ static void dw_edma_pcie_remove(struct pci_dev *pdev)
+>  
+>  static const struct pci_device_id dw_edma_pcie_id_table[] = {
+>  	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, &snps_edda_data) },
+> +	{ PCI_VDEVICE(XILINX, PCI_DEVICE_ID_AMD_MDB_B054),
+> +	  (kernel_ulong_t)&amd_mdb_data },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(pci, dw_edma_pcie_id_table);
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 92ffc43..c15607d 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -636,6 +636,7 @@
+>  #define PCI_DEVICE_ID_AMD_HUDSON2_SMBUS		0x780b
+>  #define PCI_DEVICE_ID_AMD_HUDSON2_IDE		0x780c
+>  #define PCI_DEVICE_ID_AMD_KERNCZ_SMBUS  0x790b
+> +#define PCI_DEVICE_ID_AMD_MDB_B054	0xb054
+
+Unless PCI_DEVICE_ID_AMD_MDB_B054 is used in more than one driver,
+move the #define into the file that uses it.  See the note at the top
+of pci_ids.h.
 
